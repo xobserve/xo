@@ -1,4 +1,4 @@
-# MeQ(米Q)
+# MeQ
 
 MeQ is a distributed, fault-tolerant technology that allows the creation of large-scale instant messaging applications. The server can reliably support hundreds of thousands of simultaneous users on a single server with massive throughput.
 
