@@ -1,1 +1,1 @@
-# ![](static/prod_schema.jpg)
+![](static/prod_schema.jpg)
