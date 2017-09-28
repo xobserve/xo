@@ -1,1 +1,1 @@
-# ![](static/logo_white_35_24.png)
+# ![](static/prod_schema.jpg)
