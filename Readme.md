@@ -17,8 +17,11 @@ Key Features
 Product Architecture
 ------------
 
-![](static/prod_schema.jpg)
+### English
+![](static/prod_schema_en.jpg)
 
+### Chinese
+![](static/prod_schema_cn.jpg)
 
 System  Architecture
 ------------
