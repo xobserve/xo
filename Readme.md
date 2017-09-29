@@ -22,6 +22,3 @@ Product Architecture
 
 ### Chinese
 ![](static/prod_schema_cn.jpg)
-
-System  Architecture
-------------
