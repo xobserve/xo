@@ -22,3 +22,9 @@ Product Architecture
 
 ### Chinese
 ![](static/prod_schema_cn.jpg)
+
+Flow Chart of some key process
+------------
+
+### Login Process
+![](static/client_login_cn.jpg)
