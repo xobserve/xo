@@ -18,8 +18,8 @@ Product Architecture
 ------------
 
 ### English
-![](static/prod_schema_en.jpg)
+![](readme_static/prod_schema_en.jpg)
 
 ### Chinese
-![](static/prod_schema_cn.jpg)
+![](readme_static/prod_schema_cn.jpg)
 
