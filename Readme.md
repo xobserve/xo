@@ -4,7 +4,7 @@ MeQ is a distributed, fault-tolerant technology that allows the creation of larg
 
 MeQ is written in pure go, so you can easily deploy a standalone binary in mainstream os, and yes, it's cloud native.
 
-Key Features
+Key Features 
 ------------
 - **Cross-platform**  
 - **Easily-Ops**
