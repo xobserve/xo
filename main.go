@@ -14,7 +14,7 @@
 
 package main
 
-import "github.com/teamsaas/meq/third-push/cmd"
+import "github.com/teamsaas/meq/cmd"
 
 func main() {
 	cmd.Execute()
