@@ -15,9 +15,8 @@
 package cmd
 
 import (
-	"fmt"
-
 	"github.com/spf13/cobra"
+	"github.com/teamsaas/meq/messager"
 )
 
 // messagerCmd represents the messager command
@@ -31,8 +30,7 @@ Cobra is a CLI library for Go that empowers applications.
 This application is a tool to generate the needed files
 to quickly create a Cobra application.`,
 	Run: func(cmd *cobra.Command, args []string) {
-		// TODO: Work your own magic here
-		fmt.Println("messager called")
+		messager.Start()
 	},
 }
 

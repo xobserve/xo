@@ -14,7 +14,6 @@ type Config struct {
 		LogPath  string
 		LogLevel string
 		Service  string
-		RealIp   string
 	}
 }
 
