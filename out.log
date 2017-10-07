@@ -1,4 +1,0 @@
-{"level":"info","ts":"2017-10-07T17:36:11.344+0800","caller":"sdks/logger.go:42","msg":"logger初始化成功","service":""}
-{"level":"info","ts":"2017-10-07T17:36:11.344+0800","caller":"messager/messager.go:6","msg":"aaaa","service":""}
-{"level":"info","ts":"2017-10-07T17:40:31.299+0800","caller":"sdks/logger.go:42","msg":"logger初始化成功","service":""}
-{"level":"info","ts":"2017-10-07T17:40:31.300+0800","caller":"messager/messager.go:10","msg":"aaa","service":"","conf":"out.log"}
