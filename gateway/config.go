@@ -3,7 +3,6 @@ package gateway
 import (
 	"io/ioutil"
 	"log"
-
 	"gopkg.in/yaml.v2"
 )
 
