@@ -18,6 +18,11 @@ import (
 	"fmt"
 
 	"github.com/spf13/cobra"
+	"os"
+	"os/signal"
+	"syscall"
+	"github.com/teamsaas/meq/gateway"
+	"log"
 )
 
 // gatewayCmd represents the gateway command
@@ -30,10 +35,7 @@ and usage of using your command. For example:
 Cobra is a CLI library for Go that empowers applications.
 This application is a tool to generate the needed files
 to quickly create a Cobra application.`,
-	Run: func(cmd *cobra.Command, args []string) {
-		// TODO: Work your own magic here
-		fmt.Println("gateway called")
-	},
+	Run: start,
 }
 
 func init() {
@@ -49,4 +51,14 @@ func init() {
 	// is called directly, e.g.:
 	// gatewayCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
 
+}
+
+func start(cmd *cobra.Command, args []string)  {
+	gateway := gateway.NewGateWay()
+	//start service
+	gateway.Start()
+
+	chSig := make(chan os.Signal)
+	signal.Notify(chSig, syscall.SIGINT, syscall.SIGTERM)
+	log.Println("api service received Signal: ", <-chSig)
 }
