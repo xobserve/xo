@@ -1,5 +1,7 @@
 package gateway
 
+import "github.com/teamsaas/sdks"
+
 type GateWay struct {
 	TcpServer       *TcpServer
 	WebSocketServer *WebSocketServer
@@ -13,7 +15,7 @@ func NewGateWay() *GateWay {
 }
 
 func (gw *GateWay) Start() {
-	InitLogger()
+	sdks.InitLogger(Conf.Common.LogPath, Conf.Common.LogLevel, Conf.Common.IsDebug,"gateway" )
 	go gw.TcpServer.Start()
 	go gw.WebSocketServer.Start()
 }

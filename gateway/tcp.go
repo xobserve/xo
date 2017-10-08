@@ -6,8 +6,8 @@ import (
 	"strings"
 	"time"
 	"go.uber.org/zap"
-	"github.com/openapm/talents"
-	"github.com/openapm/ipmanager"
+	"github.com/teamsaas/sdks"
+	"github.com/teamsaas/tools/ipmanager"
 )
 
 type TcpServer struct {
@@ -25,7 +25,7 @@ func (ts *TcpServer) Start() {
 	//开始接收tcp连接请求
 	ln, err := net.Listen("tcp", Conf.GateWay.TcpHost)
 	if err != nil {
-		Logger.Panic("Listen", zap.Error(err))
+		sdks.Logger.Panic("Listen", zap.Error(err))
 	}
 	ts.ln = ln
 
@@ -33,7 +33,7 @@ func (ts *TcpServer) Start() {
 	for {
 		c, err := ts.acceptConn(ln, &lastPerIPErrorTime)
 		if err != nil {
-			Logger.Panic("GateWay", zap.String("acceptConn", err.Error()))
+			sdks.Logger.Panic("GateWay", zap.String("acceptConn", err.Error()))
 			break
 		}
 		// 启动worker去处理连接
@@ -46,15 +46,15 @@ func (ts *TcpServer) acceptConn(ln net.Listener, lastPerIPErrorTime *time.Time) 
 		c, err := ln.Accept()
 		if err != nil {
 			if c != nil {
-				Logger.Error("[FATAL] net.Listener returned non-nil conn and non-nil error : ", zap.Error(err))
+				sdks.Logger.Error("[FATAL] net.Listener returned non-nil conn and non-nil error : ", zap.Error(err))
 			}
 			if netErr, ok := err.(net.Error); ok && netErr.Temporary() {
-				Logger.Error("[ERROR] Temporary error when accepting new connections: ", zap.Error(err), zap.Any("Accept", netErr))
+				sdks.Logger.Error("[ERROR] Temporary error when accepting new connections: ", zap.Error(err), zap.Any("Accept", netErr))
 				time.Sleep(time.Second)
 				continue
 			}
 			if err != io.EOF && !strings.Contains(err.Error(), "use of closed network connection") {
-				Logger.Error("[ERROR] Permanent error when accepting new connections: ", zap.String("Accept", err.Error()))
+				sdks.Logger.Error("[ERROR] Permanent error when accepting new connections: ", zap.String("Accept", err.Error()))
 				return nil, err
 			}
 			return nil, io.EOF
@@ -67,7 +67,7 @@ func (ts *TcpServer) acceptConn(ln net.Listener, lastPerIPErrorTime *time.Time) 
 			pic := ts.wrapPerIPConn(c)
 			if pic == nil {
 				if time.Since(*lastPerIPErrorTime) > time.Minute {
-					Logger.Error("[ERROR] The number of connections from ", zap.String("ip", ipmanager.GetConnIP4(c).String()), zap.Int("maxConnSperIp", Conf.Dapper.MaxConnSperIp))
+					sdks.Logger.Error("[ERROR] The number of connections from ", zap.String("ip", ipmanager.GetConnIP4(c).String()), zap.Int("maxConnSperIp", Conf.GateWay.MaxConnSperIp))
 					*lastPerIPErrorTime = time.Now()
 				}
 				continue
@@ -96,12 +96,12 @@ func (ts *TcpServer) serve(conn net.Conn) {
 	defer func() {
 		conn.Close()
 		if err := recover(); err != nil {
-			Logger.Error("readPacket", zap.Any("recover", err))
+			sdks.Logger.Error("readPacket", zap.Any("recover", err))
 			return
 		}
 	}()
 	handMsg()
-	Logger.Info("LogOut close conn", zap.String("conn", talents.Any(conn.LocalAddr())))
+	sdks.Logger.Info("LogOut close conn", zap.String("conn", conn.LocalAddr().String()))
 }
 
 func (ts *TcpServer) Close() {
