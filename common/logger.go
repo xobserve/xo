@@ -1,4 +1,4 @@
-package sdks
+package common
 
 import (
 	"encoding/json"

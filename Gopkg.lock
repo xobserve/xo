@@ -99,12 +99,6 @@
 
 [[projects]]
   branch = "master"
-  name = "github.com/teamsaas/sdks"
-  packages = ["."]
-  revision = "735ec839eab157ee5faa0191dba3d748b0d2e61e"
-
-[[projects]]
-  branch = "master"
   name = "github.com/valyala/bytebufferpool"
   packages = ["."]
   revision = "e746df99fe4a3986f4d4f79e13c1e0117ce9c2f7"
@@ -166,6 +160,6 @@
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "579a2516d7958529560ab64da9c162618a6498102923912e5ad34a87125c3e0a"
+  inputs-digest = "3a999f1fd8a22a5b1b50728d1053256bbb039f3a6bdb60bd8de0cef28d2e4f92"
   solver-name = "gps-cdcl"
   solver-version = 1

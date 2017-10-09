@@ -31,7 +31,7 @@ Key Features
 - **Mqtt protocol** 
 - **Websocket、Tcp**
 - **Open source, No commercail**
-- **message Pub/Sub*  
+- **message Pub/Sub**
 - **Message Queue supported**
 - **Message Push supported**
 - **IM chat supported** 

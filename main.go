@@ -17,11 +17,10 @@ package main
 import (
 	"github.com/teamsaas/meq/cmd"
 	"github.com/teamsaas/meq/common"
-	"github.com/teamsaas/sdks"
 )
 
 func main() {
 	common.InitConfig()
-	sdks.InitLogger(common.Conf.Common.LogPath, common.Conf.Common.LogLevel, common.Conf.Common.IsDebug, common.Conf.Common.Service)
+	common.InitLogger(common.Conf.Common.LogPath, common.Conf.Common.LogLevel, common.Conf.Common.IsDebug, common.Conf.Common.Service)
 	cmd.Execute()
 }
