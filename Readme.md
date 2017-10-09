@@ -37,5 +37,12 @@ Key Features
 - **IM chat supported** 
 
 
+Product Architecture
+------------
 
+### English
+![](readme_static/prod_schema_en.jpg)
+
+### Chinese
+![](readme_static/prod_schema_cn.jpg)
 
