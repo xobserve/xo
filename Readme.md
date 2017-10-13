@@ -42,9 +42,9 @@ Product Architecture
 
 
 ### Chinese
-![](readme_static/prod_schema_cn.jpg)
+![](prod_schema_cn.jpg)
 
 ### English
-![](readme_static/prod_schema_en.jpg)
+![](prod_schema_en.jpg)
 
 

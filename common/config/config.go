@@ -1,4 +1,4 @@
-package common
+package config
 
 import (
 	"io/ioutil"
@@ -20,7 +20,7 @@ type Config struct {
 var Conf = &Config{}
 
 func InitConfig() {
-	data, err := ioutil.ReadFile("conf.yaml")
+	data, err := ioutil.ReadFile("meq.yaml")
 	if err != nil {
 		log.Fatal("read config error :", err)
 	}

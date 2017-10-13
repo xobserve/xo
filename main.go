@@ -16,11 +16,12 @@ package main
 
 import (
 	"github.com/teamsaas/meq/cmd"
-	"github.com/teamsaas/meq/common"
+	"github.com/teamsaas/meq/common/config"
+	"github.com/teamsaas/meq/common/logging"
 )
 
 func main() {
-	common.InitConfig()
-	common.InitLogger(common.Conf.Common.LogPath, common.Conf.Common.LogLevel, common.Conf.Common.IsDebug, common.Conf.Common.Service)
+	config.InitConfig()
+	logging.InitLogger(config.Conf.Common.LogPath, config.Conf.Common.LogLevel, config.Conf.Common.IsDebug, config.Conf.Common.Service)
 	cmd.Execute()
 }
