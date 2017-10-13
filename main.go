@@ -14,14 +14,8 @@
 
 package main
 
-import (
-	"github.com/teamsaas/meq/cmd"
-	"github.com/teamsaas/meq/common/config"
-	"github.com/teamsaas/meq/common/logging"
-)
+import "github.com/teamsaas/meq/cmd"
 
 func main() {
-	config.InitConfig()
-	logging.InitLogger(config.Conf.Common.LogPath, config.Conf.Common.LogLevel, config.Conf.Common.IsDebug, config.Conf.Common.Service)
 	cmd.Execute()
 }

@@ -30,5 +30,5 @@ func InitConfig() {
 		log.Fatal("yaml decode error :", err)
 	}
 
-	log.Println(Conf)
+	log.Printf("config of meq broker: %#v\n", Conf)
 }
