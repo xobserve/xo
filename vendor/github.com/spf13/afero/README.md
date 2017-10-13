@@ -81,7 +81,10 @@ So if my application before had:
 ```go
 os.Open('/tmp/foo')
 ```
-We would replace it with a call to `AppFs.Open('/tmp/foo')`.
+We would replace it with:
+```go
+AppFs.Open('/tmp/foo')
+```
 
 `AppFs` being the variable we defined above.
 
@@ -166,8 +169,8 @@ f, err := afero.TempFile(fs,"", "ioutil-test")
 ### Calling via Afero
 
 ```go
-fs := afero.NewMemMapFs
-afs := &Afero{Fs: fs}
+fs := afero.NewMemMapFs()
+afs := &afero.Afero{Fs: fs}
 f, err := afs.TempFile("", "ioutil-test")
 ```
 

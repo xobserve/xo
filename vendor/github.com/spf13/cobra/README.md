@@ -42,8 +42,7 @@ Many of the most widely used Go projects are built using Cobra including:
   * [Usage Message](#usage-message)
   * [PreRun and PostRun Hooks](#prerun-and-postrun-hooks)
   * [Suggestions when "unknown command" happens](#suggestions-when-unknown-command-happens)
-  * [Generating Markdown-formatted docs](#generating-markdown-formatted-docs)
-  * [Generating man pages](#generating-man-pages)
+  * [Generating documentation for your command](#generating-documentation-for-your-command)
   * [Generating bash completions](#generating-bash-completions)
 - [Contributing](#contributing)
 - [License](#license)
@@ -342,6 +341,19 @@ A flag can also be assigned locally which will only apply to that specific comma
 
 ```go
 RootCmd.Flags().StringVarP(&Source, "source", "s", "", "Source directory to read from")
+```
+
+### Local Flag on Parent Commands
+
+By default Cobra only parses local flags on the target command, any local flags on 
+parent commands are ignored. By enabling `Command.TraverseChildren` Cobra will 
+parse local flags on each command before executing the target command.
+
+```go
+command := cobra.Command{
+  Use: "print [OPTIONS] [COMMANDS]",
+  TraverseChildren: true,
+}
 ```
 
 ### Bind Flags with Config
@@ -682,13 +694,13 @@ Did you mean this?
 Run 'kubectl help' for usage.
 ```
 
-## Generating Markdown-formatted docs
+## Generating documentation for your command
 
-Cobra can generate a Markdown-formatted document based on the subcommands, flags, etc. A simple example of how to do this for your command can be found in [Markdown Docs](doc/md_docs.md).
+Cobra can generate documentation based on subcommands, flags, etc. in the following formats:
 
-## Generating man pages
-
-Cobra can generate a man page based on the subcommands, flags, etc. A simple example of how to do this for your command can be found in [Man Docs](doc/man_docs.md).
+- [Markdown](doc/md_docs.md)
+- [ReStructured Text](doc/rest_docs.md)
+- [Man Page](doc/man_docs.md)
 
 ## Generating bash completions
 
