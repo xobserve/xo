@@ -15,6 +15,7 @@ type Config struct {
 		LogLevel string
 		Service  string
 	}
+	Broder
 }
 
 var Conf = &Config{}
