@@ -15,7 +15,12 @@ type Config struct {
 		LogLevel string
 		Service  string
 	}
-	Broder
+	Broker struct {
+		HttpAddr          string
+		TcpHost           string
+		ConnectionTimeout int
+		MaxConnSperIp     int
+	}
 }
 
 var Conf = &Config{}
