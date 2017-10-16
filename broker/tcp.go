@@ -1,4 +1,4 @@
-package network
+package broker
 
 import (
 	"io"
@@ -9,7 +9,6 @@ import (
 	"github.com/teamsaas/tools/ipmanager"
 	"github.com/teamsaas/meq/broker/config"
 	"github.com/teamsaas/meq/common/logging"
-	"github.com/teamsaas/meq/broker/protocol/data"
 )
 
 type TcpProvider struct {
@@ -39,7 +38,7 @@ func (tp *TcpProvider) Start() {
 			break
 		}
 
-		conn := data.NewConn(c)
+		conn := bk.NewConn(c)
 		go conn.Process()
 	}
 }

@@ -16,7 +16,7 @@ type Config struct {
 		Service  string
 	}
 	Broker struct {
-		HttpAddr          string
+		HttpHost          string
 		TcpHost           string
 		ConnectionTimeout int
 		MaxConnSperIp     int

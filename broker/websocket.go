@@ -1,4 +1,4 @@
-package network
+package broker
 
 import (
 	"time"
@@ -7,13 +7,12 @@ import (
 	"io"
 	"net/http"
 	"net"
-	"github.com/teamsaas/meq/broker/protocol/data"
 )
 
 //webSocket fun
 func webSocketFunc(w http.ResponseWriter, r *http.Request)  {
 	if ws, ok := TryUpgrade(w, r); ok {
-		c := data.NewConn(ws)
+		c := bk.NewConn(ws)
 		go c.Process()
 		return
 	}

@@ -1,13 +1,13 @@
-package data
+package broker
 
-/* 所有数据协议都要实现Dataer接口 */
 import (
 	"sync"
 	"bufio"
+	"fmt"
 	"net"
 	"github.com/teamsaas/meq/common/logging"
+	"github.com/teamsaas/meq/broker/protocol"
 	"go.uber.org/zap"
-	"fmt"
 )
 
 // Conn represents an incoming connection.
@@ -18,7 +18,7 @@ type Conn struct {
 	guid     string                 // The globally unique id of the connection.
 }
 
-func NewConn(t net.Conn)  *Conn{
+func (bk *Broker)NewConn(t net.Conn)  *Conn{
 	c := &Conn{
 		socket:  t,
 	}
@@ -37,7 +37,7 @@ func (c *Conn) Process() error {
 
 	for {
 		// Decode an incoming MQTT packet
-		msg, err := DecodePacket(reader)
+		msg, err := protocol.DecodePacket(reader)
 		if err != nil {
 			return err
 		}
@@ -45,21 +45,21 @@ func (c *Conn) Process() error {
 		switch msg.Type() {
 
 		// We got an attempt to connect to MQTT.
-		case TypeOfConnect:
-			packet := msg.(*Connect)
+		case protocol.TypeOfConnect:
+			packet := msg.(*protocol.Connect)
 			c.username = string(packet.Username)
-			fmt.Println(TypeOfConnect, packet, string(packet.Username))
+			fmt.Println(protocol.TypeOfConnect, packet, string(packet.Username))
 
 			// Write the ack
-			ack := Connack{ReturnCode: 0x00}
+			ack := protocol.Connack{ReturnCode: 0x00}
 			if _, err := ack.EncodeTo(c.socket); err != nil {
 				return err
 			}
 
 			// We got an attempt to subscribe to a channel.
-		case TypeOfSubscribe:
-			packet := msg.(*Subscribe)
-			ack := Suback{
+		case protocol.TypeOfSubscribe:
+			packet := msg.(*protocol.Subscribe)
+			ack := protocol.Suback{
 				MessageID: packet.MessageID,
 				Qos:       make([]uint8, 0, len(packet.Subscriptions)),
 			}
@@ -80,9 +80,9 @@ func (c *Conn) Process() error {
 			}
 
 			// We got an attempt to unsubscribe from a channel.
-		case TypeOfUnsubscribe:
-			packet := msg.(*Unsubscribe)
-			ack := Unsuback{MessageID: packet.MessageID}
+		case protocol.TypeOfUnsubscribe:
+			packet := msg.(*protocol.Unsubscribe)
+			ack := protocol.Unsuback{MessageID: packet.MessageID}
 
 			// Unsubscribe from each subscription
 			//for _, sub := range packet.Topics {
@@ -95,16 +95,16 @@ func (c *Conn) Process() error {
 			}
 
 			// We got an MQTT ping response, respond appropriately.
-		case TypeOfPingreq:
-			ack := Pingresp{}
+		case protocol.TypeOfPingreq:
+			ack := protocol.Pingresp{}
 			if _, err := ack.EncodeTo(c.socket); err != nil {
 				return err
 			}
 
-		case TypeOfDisconnect:
+		case protocol.TypeOfDisconnect:
 			return nil
 
-		case TypeOfPublish:
+		case protocol.TypeOfPublish:
 			return nil
 		}
 	}

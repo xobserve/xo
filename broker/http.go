@@ -1,4 +1,4 @@
-package network
+package broker
 
 import (
 	"net/http"
@@ -17,9 +17,9 @@ func (hp *HttpProvider) Start() {
 	// http mqtt or http json
 	http.HandleFunc("/Connect", connectFunc)
 
-	logging.Logger.Info("webSocket and Http provider startted", zap.String("addr", config.Conf.Broker.HttpAddr))
+	logging.Logger.Info("webSocket and Http provider startted", zap.String("addr", config.Conf.Broker.HttpHost))
 
-	err := http.ListenAndServe(config.Conf.Broker.HttpAddr, nil)
+	err := http.ListenAndServe(config.Conf.Broker.HttpHost, nil)
 	if err != nil {
 		logging.Logger.Fatal("webSocket and Http ListenAndServe error ", zap.Error(err))
 	}
