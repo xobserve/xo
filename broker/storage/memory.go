@@ -24,6 +24,11 @@ func (m *InMemory) Del(key string, msgid string) error {
 	return nil
 }
 
+// Len counted quantity
+func (m *InMemory) Len(key string) (int, error) {
+	return 0, nil
+}
+
 // Name get store name
 func (m *InMemory) Name() string {
 	return "InMemory"
