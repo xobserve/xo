@@ -18,6 +18,7 @@ type Config struct {
 	Broker struct {
 		HttpHost          string
 		TcpHost           string
+		AdminHost         string
 		ConnectionTimeout int
 		MaxConnSperIp     int
 	}

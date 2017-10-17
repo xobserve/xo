@@ -2,8 +2,9 @@ package broker
 
 import (
 	"net/http"
-	"github.com/teamsaas/meq/common/logging"
+
 	"github.com/teamsaas/meq/broker/config"
+	"github.com/teamsaas/meq/common/logging"
 	"go.uber.org/zap"
 )
 
