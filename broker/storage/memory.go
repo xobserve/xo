@@ -1,35 +1,26 @@
 package storage
 
-// InMemory  a memory storage
-type InMemory struct {
+import "sync"
+
+// Memory memory cache
+type Memory struct {
+	ssidStore  sync.Map // ssid store
+	topicStore sync.Map // topic store
 }
 
-// Init init memory server
-func (m *InMemory) Init() error {
-	return nil
+type topicStore struct {
+	// 消息列表 queue  有序
+	// 已发送列表 map
+	// Ack列表 map
+	msgStore sync.Map // message store
 }
 
-// Store store message
-func (m *InMemory) Store(key string, value []byte, msgid string, ttl int64) error {
-	return nil
+type ssidStore struct {
+	msgidStore sync.Map // received message cache, key is topic , value map[msgid]status
 }
 
-// Get get message
-func (m *InMemory) Get(key string, limit int) ([][]byte, error) {
-	return nil, nil
-}
-
-// Del delete message
-func (m *InMemory) Del(key string, msgid string) error {
-	return nil
-}
-
-// Len counted quantity
-func (m *InMemory) Len(key string) (int, error) {
-	return 0, nil
-}
-
-// Name get store name
-func (m *InMemory) Name() string {
-	return "InMemory"
+type msgMsg struct {
+	ttl        int64
+	insertTime int64
+	value      []byte
 }
