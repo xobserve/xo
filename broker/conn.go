@@ -12,12 +12,13 @@ import (
 	"go.uber.org/zap"
 )
 
-// Conn represents an incoming connection.
+const MaxMessageSize int = 65536
+
+// tcp or webSocket Conn
 type Conn struct {
 	sync.Mutex
 	socket   net.Conn // The transport used to read and write messages.
 	username string   // The username provided by the client during MQTT connect.
-
 	luid security.ID // The locally unique id of the connection.
 	guid string      // The globally unique id of the connection.
 }
@@ -34,11 +35,11 @@ func (bk *Broker) NewConn(t net.Conn) *Conn {
 func (c *Conn) Process() error {
 	defer func() {
 		if err := recover(); err != nil {
-			logging.Logger.Info("user's main goroutine has a panic error", zap.Error(err.(error)))
+			logging.Logger.Info("conn process goroutine has a panic error", zap.Error(err.(error)))
 		}
 		c.Close()
 	}()
-	reader := bufio.NewReaderSize(c.socket, 65536)
+	reader := bufio.NewReaderSize(c.socket, MaxMessageSize)
 
 	for {
 		// Decode an incoming MQTT packet
@@ -48,43 +49,32 @@ func (c *Conn) Process() error {
 		}
 
 		switch msg.Type() {
-
-		// We got an attempt to connect to MQTT.
 		case protocol.TypeOfConnect:
 			packet := msg.(*protocol.Connect)
 			c.username = string(packet.Username)
 			fmt.Println(protocol.TypeOfConnect, packet, string(packet.Username))
-
-			// Write the ack
 			ack := protocol.Connack{ReturnCode: 0x00}
-			if _, err := ack.EncodeTo(c.socket); err != nil {
+			if	 _, err := ack.EncodeTo(c.socket); err != nil {
 				return err
 			}
-
-			// We got an attempt to subscribe to a channel.
 		case protocol.TypeOfSubscribe:
 			packet := msg.(*protocol.Subscribe)
+			fmt.Println("Subscribe", packet)
 			ack := protocol.Suback{
 				MessageID: packet.MessageID,
 				Qos:       make([]uint8, 0, len(packet.Subscriptions)),
 			}
-
-			// Subscribe for each subscription
 			for _, sub := range packet.Subscriptions {
 				//if err := c.onSubscribe(sub.Topic); err != nil {
-				//	// TODO: Handle Error
 				//}
 
 				// Append the QoS
 				ack.Qos = append(ack.Qos, sub.Qos)
 			}
 
-			// Acknowledge the subscription
 			if _, err := ack.EncodeTo(c.socket); err != nil {
 				return err
 			}
-
-			// We got an attempt to unsubscribe from a channel.
 		case protocol.TypeOfUnsubscribe:
 			packet := msg.(*protocol.Unsubscribe)
 			ack := protocol.Unsuback{MessageID: packet.MessageID}
@@ -98,17 +88,13 @@ func (c *Conn) Process() error {
 			if _, err := ack.EncodeTo(c.socket); err != nil {
 				return err
 			}
-
-			// We got an MQTT ping response, respond appropriately.
 		case protocol.TypeOfPingreq:
 			ack := protocol.Pingresp{}
 			if _, err := ack.EncodeTo(c.socket); err != nil {
 				return err
 			}
-
 		case protocol.TypeOfDisconnect:
 			return nil
-
 		case protocol.TypeOfPublish:
 			return nil
 		}

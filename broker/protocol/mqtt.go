@@ -26,7 +26,7 @@ type Message interface {
 
 // MQTT message types
 const (
-	TypeOfConnect = uint8(iota + 1)
+	TypeOfConnect     = uint8(iota + 1)
 	TypeOfConnack
 	TypeOfPublish
 	TypeOfPuback
@@ -40,6 +40,23 @@ const (
 	TypeOfPingreq
 	TypeOfPingresp
 	TypeOfDisconnect
+)
+
+const (
+	// QoS  0 : 最多发送一次，接收方也不需要发送回执
+	QosAtMostOnce byte = iota
+
+	// QoS 1 : 至少发送一次，这个等级会确保消息至少被接收方收到一次
+	// QoS 1 的PUBLISH变长包头中有唯一的标示符，而且接收方会通过发送PUBACK包来告知服务器消息已经收到
+	QosAtLeastOnce
+
+	// QoS 2 : 刚好一次
+	// 这是等级最高的服务，该服务下发送方仅发送一次包，接收方也只接收一次，不能丢包也不能重复发包
+	// 该等级会给通信带来较大的负担，需要4次通信
+	QosExactlyOnce
+
+	// 若客户端订阅某个特定主题时，服务器发生了错误，那么会返回QosFailure
+	QosFailure = 0x80
 )
 
 // StaticHeader as defined in http://public.dhe.ibm.com/software/dw/webservices/ws-mqtt/mqtt-v3r1.html#fixed-header
@@ -190,27 +207,27 @@ func DecodePacket(rdr io.Reader) (Message, error) {
 	var msg Message
 	switch messageType {
 	case TypeOfConnect:
-		msg = decodeConnect(buffer, hdr)
+		msg, err = decodeConnect(buffer, hdr)
 	case TypeOfConnack:
-		msg = decodeConnack(buffer, hdr)
+		msg, err = decodeConnack(buffer, hdr)
 	case TypeOfPublish:
-		msg = decodePublish(buffer, hdr)
+		msg, err = decodePublish(buffer, hdr)
 	case TypeOfPuback:
-		msg = decodePuback(buffer, hdr)
+		msg, err = decodePuback(buffer, hdr)
 	case TypeOfPubrec:
-		msg = decodePubrec(buffer, hdr)
+		msg, err = decodePubrec(buffer, hdr)
 	case TypeOfPubrel:
-		msg = decodePubrel(buffer, hdr)
+		msg, err = decodePubrel(buffer, hdr)
 	case TypeOfPubcomp:
-		msg = decodePubcomp(buffer, hdr)
+		msg, err = decodePubcomp(buffer, hdr)
 	case TypeOfSubscribe:
-		msg = decodeSubscribe(buffer, hdr)
+		msg, err = decodeSubscribe(buffer, hdr)
 	case TypeOfSuback:
-		msg = decodeSuback(buffer, hdr)
+		msg, err = decodeSuback(buffer, hdr)
 	case TypeOfUnsubscribe:
-		msg = decodeUnsubscribe(buffer, hdr)
+		msg, err = decodeUnsubscribe(buffer, hdr)
 	case TypeOfUnsuback:
-		msg = decodeUnsuback(buffer, hdr)
+		msg, err = decodeUnsuback(buffer, hdr)
 	default:
 		return nil, fmt.Errorf("Invalid zero-length packet with type %d", messageType)
 	}
@@ -550,8 +567,7 @@ func decodeStaticHeader(rdr io.Reader) (hdr *StaticHeader, length uint32, messag
 	return hdr, uint32(length), messageType, nil
 }
 
-func decodeConnect(data []byte, hdr *StaticHeader) Message {
-	//TODO: Decide how to recover rom invalid packets (offsets don't equal actual reading?)
+func decodeConnect(data []byte, hdr *StaticHeader) (Message, error) {
 	bookmark := uint32(0)
 
 	protoname := readString(data, &bookmark)
@@ -573,6 +589,16 @@ func decodeConnect(data []byte, hdr *StaticHeader) Message {
 		WillFlag:       flags&(1<<2) > 0,
 		CleanSeshFlag:  flags&(1<<1) > 0,
 	}
+	//wt do
+	if connect.WillQOS > QosExactlyOnce {
+		return nil, fmt.Errorf("connect/decodeMessage: Invalid QoS level (%d) for %s message", connect.WillQOS, hdr)
+	}
+
+	if connect.UsernameFlag && !connect.PasswordFlag {
+		return nil, fmt.Errorf("connect/decodeMessage: Username flag is set but Password flag is not set")
+	}
+
+	//end wt do
 
 	if connect.WillFlag {
 		connect.WillTopic = readString(data, &bookmark)
@@ -586,20 +612,20 @@ func decodeConnect(data []byte, hdr *StaticHeader) Message {
 	if connect.PasswordFlag {
 		connect.Password = readString(data, &bookmark)
 	}
-	return connect
+	return connect, nil
 }
 
-func decodeConnack(data []byte, hdr *StaticHeader) Message {
+func decodeConnack(data []byte, hdr *StaticHeader) (Message, error) {
 	//first byte is weird in connack
 	bookmark := uint32(1)
 	retcode := data[bookmark]
 
 	return &Connack{
 		ReturnCode: retcode,
-	}
+	}, nil
 }
 
-func decodePublish(data []byte, hdr *StaticHeader) Message {
+func decodePublish(data []byte, hdr *StaticHeader) (Message, error) {
 	bookmark := uint32(0)
 	topic := readString(data, &bookmark)
 	var msgID uint16
@@ -612,43 +638,43 @@ func decodePublish(data []byte, hdr *StaticHeader) Message {
 		Header:    hdr,
 		Payload:   data[bookmark:],
 		MessageID: msgID,
-	}
+	}, nil
 }
 
-func decodePuback(data []byte, hdr *StaticHeader) Message {
+func decodePuback(data []byte, hdr *StaticHeader) (Message, error) {
 	bookmark := uint32(0)
 	msgID := readUint16(data, &bookmark)
 	return &Puback{
 		MessageID: msgID,
-	}
+	}, nil
 }
 
-func decodePubrec(data []byte, hdr *StaticHeader) Message {
+func decodePubrec(data []byte, hdr *StaticHeader) (Message, error) {
 	bookmark := uint32(0)
 	msgID := readUint16(data, &bookmark)
 	return &Pubrec{
 		MessageID: msgID,
-	}
+	}, nil
 }
 
-func decodePubrel(data []byte, hdr *StaticHeader) Message {
+func decodePubrel(data []byte, hdr *StaticHeader) (Message, error) {
 	bookmark := uint32(0)
 	msgID := readUint16(data, &bookmark)
 	return &Pubrel{
 		Header:    hdr,
 		MessageID: msgID,
-	}
+	}, nil
 }
 
-func decodePubcomp(data []byte, hdr *StaticHeader) Message {
+func decodePubcomp(data []byte, hdr *StaticHeader) (Message, error) {
 	bookmark := uint32(0)
 	msgID := readUint16(data, &bookmark)
 	return &Pubcomp{
 		MessageID: msgID,
-	}
+	}, nil
 }
 
-func decodeSubscribe(data []byte, hdr *StaticHeader) Message {
+func decodeSubscribe(data []byte, hdr *StaticHeader) (Message, error) {
 	bookmark := uint32(0)
 	msgID := readUint16(data, &bookmark)
 	var topics []TopicQOSTuple
@@ -665,10 +691,10 @@ func decodeSubscribe(data []byte, hdr *StaticHeader) Message {
 		Header:        hdr,
 		MessageID:     msgID,
 		Subscriptions: topics,
-	}
+	}, nil
 }
 
-func decodeSuback(data []byte, hdr *StaticHeader) Message {
+func decodeSuback(data []byte, hdr *StaticHeader) (Message, error) {
 	bookmark := uint32(0)
 	msgID := readUint16(data, &bookmark)
 	var qoses []uint8
@@ -682,10 +708,10 @@ func decodeSuback(data []byte, hdr *StaticHeader) Message {
 	return &Suback{
 		MessageID: msgID,
 		Qos:       qoses,
-	}
+	}, nil
 }
 
-func decodeUnsubscribe(data []byte, hdr *StaticHeader) Message {
+func decodeUnsubscribe(data []byte, hdr *StaticHeader) (Message, error) {
 	bookmark := uint32(0)
 	var topics []TopicQOSTuple
 	msgID := readUint16(data, &bookmark)
@@ -702,27 +728,27 @@ func decodeUnsubscribe(data []byte, hdr *StaticHeader) Message {
 		Header:    hdr,
 		MessageID: msgID,
 		Topics:    topics,
-	}
+	}, nil
 }
 
-func decodeUnsuback(data []byte, hdr *StaticHeader) Message {
+func decodeUnsuback(data []byte, hdr *StaticHeader) (Message, error) {
 	bookmark := uint32(0)
 	msgID := readUint16(data, &bookmark)
 	return &Unsuback{
 		MessageID: msgID,
-	}
+	}, nil
 }
 
-func decodePingreq(data []byte, hdr *StaticHeader) Message {
-	return &Pingreq{}
+func decodePingreq(data []byte, hdr *StaticHeader) (Message, error) {
+	return &Pingreq{}, nil
 }
 
-func decodePingresp(data []byte, hdr *StaticHeader) Message {
-	return &Pingresp{}
+func decodePingresp(data []byte, hdr *StaticHeader) (Message, error) {
+	return &Pingresp{}, nil
 }
 
-func decodeDisconnect(data []byte, hdr *StaticHeader) Message {
-	return &Disconnect{}
+func decodeDisconnect(data []byte, hdr *StaticHeader) (Message, error) {
+	return &Disconnect{}, nil
 }
 
 // -------------------------------------------------------------
@@ -739,7 +765,7 @@ func writeUint16(buf *bytes.Buffer, tupac uint16) {
 
 func readString(b []byte, startsAt *uint32) []byte {
 	l := readUint16(b, startsAt)
-	v := b[*startsAt : uint32(l)+*startsAt]
+	v := b[*startsAt: uint32(l) + *startsAt]
 	*startsAt += uint32(l)
 	return v
 }
