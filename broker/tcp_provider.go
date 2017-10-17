@@ -5,10 +5,11 @@ import (
 	"net"
 	"strings"
 	"time"
-	"go.uber.org/zap"
-	"github.com/teamsaas/tools/ipmanager"
+
 	"github.com/teamsaas/meq/broker/config"
 	"github.com/teamsaas/meq/common/logging"
+	"github.com/teamsaas/tools/ipmanager"
+	"go.uber.org/zap"
 )
 
 type TcpProvider struct {
@@ -29,7 +30,6 @@ func (tp *TcpProvider) Start() {
 	}
 	tp.ln = ln
 	logging.Logger.Info("tcp provider startted", zap.String("addr", config.Conf.Broker.TcpHost))
-
 
 	for {
 		c, err := tp.acceptConn(ln, &lastPerIPErrorTime)

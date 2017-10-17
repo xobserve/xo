@@ -6,8 +6,9 @@ import (
 )
 
 type Broker struct {
-	Tp  *TcpProvider
+	Tp *TcpProvider
 	Hp *HttpProvider
+	Ap *AdminProvider
 }
 
 var bk *Broker
@@ -15,12 +16,14 @@ var bk *Broker
 func Start() {
 	config.InitConfig()
 	logging.InitLogger(config.Conf.Common.LogPath, config.Conf.Common.LogLevel, config.Conf.Common.IsDebug, config.Conf.Common.Service)
-
 	gw := &Broker{
-		Tp:  NewTcpProvider(),
+		Tp: NewTcpProvider(),
+		Ap: NewAdminProvider(),
 	}
 
 	go gw.Tp.Start()
 	go gw.Hp.Start()
-	select {}
+
+	// start admin api
+	gw.Ap.Start()
 }
