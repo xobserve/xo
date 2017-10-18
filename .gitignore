@@ -17,7 +17,12 @@
 # logs
 out.log
 
+# configuratione
+meq.yaml
+
 meq
 
+# license and master key
+license.key
 #idea
 .idea/
