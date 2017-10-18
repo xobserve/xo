@@ -29,7 +29,7 @@ type Config struct {
 var Conf = &Config{}
 
 func InitConfig() {
-	data, err := ioutil.ReadFile("meq.yaml")
+	data, err := ioutil.ReadFile("meq.conf")
 	if err != nil {
 		log.Fatal("read config error :", err)
 	}
