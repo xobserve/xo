@@ -1,6 +1,9 @@
 package broker
 
 import (
+	"net/http"
+	"time"
+
 	"github.com/labstack/echo"
 	"github.com/teamsaas/meq/broker/config"
 	"github.com/teamsaas/meq/common/security"
@@ -16,37 +19,47 @@ func NewAdmin() *Admin {
 func (ap *Admin) Start() {
 	e := echo.New()
 
-	e.POST("/admin/api/keygen", ap.keyGen)
+	e.POST("/admin/keygen", ap.keyGen)
 	e.Logger.Fatal(e.Start(":" + config.Conf.Broker.AdminHost))
 }
 
+type keyGenResponse struct {
+	Status  int    `json:"status"`
+	Key     string `json:"key"`
+	Channel string `json:"channel"`
+}
+
 func (ap *Admin) keyGen(c echo.Context) error {
-	// mk := c.FormValue("master_key")
-	// channel := c.FormValue("channel")
+	mk := c.FormValue("master_key")
+	channel := c.FormValue("channel")
 
-	// masterKey, err := c.service.Cipher.DecryptKey([]byte(mk))
-	// if err != nil || !masterKey.IsMaster() || masterKey.IsExpired() {
-	// 	return ErrUnauthorized, false
-	// }
+	masterKey, err := broker.Cipher.DecryptKey([]byte(mk))
+	if err != nil || !masterKey.IsMaster() || masterKey.IsExpired() {
+		return c.String(http.StatusOK, ErrUnauthorized.Message)
+	}
 
-	// // Attempt to fetch the contract using the key. Underneath, it's cached.
-	// contract, contractFound := c.service.contracts.Get(masterKey.Contract())
-	// if !contractFound {
-	// 	return ErrNotFound, false
-	// }
+	// Attempt to fetch the contract using the key. Underneath, it's cached.
+	contract, contractFound := broker.Contract.Get(masterKey.Contract())
+	if !contractFound {
+		return c.String(http.StatusOK, ErrNotFound.Message)
+	}
 
-	// // Validate the contract
-	// if !contract.Validate(masterKey) {
-	// 	return ErrUnauthorized, false
-	// }
+	// Validate the contract
+	if !contract.Validate(masterKey) {
+		return c.String(http.StatusOK, ErrUnauthorized.Message)
+	}
 
 	// // Use the cipher to generate the key
-	// key, err := c.service.Cipher.GenerateKey(masterKey, message.Channel, message.access(), message.expires(), -1)
-	// if err != nil {
-	// 	return ErrServerError, false
-	// }
+	key, err := broker.Cipher.GenerateKey(masterKey, channel, keyAccess(), time.Unix(0, 0), -1)
+	if err != nil {
+		return c.String(http.StatusOK, ErrServerError.Message)
+	}
 
-	return nil
+	return c.JSON(http.StatusOK, &keyGenResponse{
+		Status:  200,
+		Key:     key,
+		Channel: channel,
+	})
 }
 
 func keyAccess() uint32 {

@@ -13,8 +13,9 @@ type Broker struct {
 
 	Ap *Admin
 
-	License *security.License
-	Cipher  *security.Cipher
+	License  *security.License
+	Cipher   *security.Cipher
+	Contract *security.SingleContractProvider
 }
 
 func Start() {
@@ -43,6 +44,11 @@ func Start() {
 		logging.Logger.Warn("Cipher generate error: ", zap.Error(err))
 		return
 	}
+
+	b.Contract =
+		security.NewSingleContractProvider(b.License)
+
+	broker = b
 
 	go b.Tp.Start()
 	go b.Hp.Start()
