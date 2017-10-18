@@ -21,6 +21,8 @@ type Config struct {
 		AdminHost         string
 		ConnectionTimeout int
 		MaxConnSperIp     int
+
+		License string
 	}
 }
 
