@@ -1,14 +1,15 @@
 package protocol
 
 import (
-	"fmt"
 	"bytes"
+	"fmt"
 	"io"
-	"github.com/teamsaas/meq/common/collection"
+
+	"github.com/teamsaas/meq/broker/collection"
 )
 
 const (
-	MaxMessageSize   = 65536 // Maximum message size allowed from/to the peer.
+	MaxMessageSize = 65536 // Maximum message size allowed from/to the peer.
 )
 
 // buffers are reusable fixed-side buffers for faster encoding.
