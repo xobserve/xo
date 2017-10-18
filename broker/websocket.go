@@ -1,18 +1,19 @@
 package broker
 
 import (
-	"time"
-	"sync"
-	"github.com/gorilla/websocket"
 	"io"
-	"net/http"
 	"net"
+	"net/http"
+	"sync"
+	"time"
+
+	"github.com/gorilla/websocket"
 )
 
 //webSocket fun
-func webSocketFunc(w http.ResponseWriter, r *http.Request)  {
+func webSocketFunc(w http.ResponseWriter, r *http.Request) {
 	if ws, ok := TryUpgrade(w, r); ok {
-		c := bk.NewConn(ws)
+		c := broker.NewConn(ws)
 		go c.Process()
 		return
 	}

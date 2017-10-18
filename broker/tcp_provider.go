@@ -38,7 +38,7 @@ func (tp *TcpProvider) Start() {
 			break
 		}
 
-		conn := bk.NewConn(c)
+		conn := broker.NewConn(c)
 		go conn.Process()
 	}
 }

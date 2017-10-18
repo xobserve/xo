@@ -20,7 +20,7 @@ import (
 
 // Access types for a security key.
 const (
-	AllowNone      = uint32(0)              // Key has no privileges.
+	AllowDefault   = uint32(0)              // Key has no privileges.
 	AllowMaster    = uint32(1 << 0)         // Key should be allowed to generate other keys.
 	AllowRead      = uint32(1 << 1)         // Key should be allowed to subscribe to the target channel.
 	AllowWrite     = uint32(1 << 2)         // Key should be allowed to publish to the target channel.

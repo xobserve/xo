@@ -3,15 +3,19 @@ package broker
 import (
 	"github.com/teamsaas/meq/broker/config"
 	"github.com/teamsaas/meq/common/logging"
+	"github.com/teamsaas/meq/common/security"
+	"go.uber.org/zap"
 )
 
 type Broker struct {
 	Tp *TcpProvider
 	Hp *HttpProvider
-	Ap *AdminProvider
-}
 
-var bk *Broker
+	Ap *Admin
+
+	License *security.License
+	Cipher  *security.Cipher
+}
 
 func Start() {
 	config.InitConfig()
@@ -22,14 +26,27 @@ func Start() {
 		logging.Logger.Warn("Please generate license first by calling 'meq gen',then update meq.yaml's broker.license with your license ")
 		return
 	}
-	gw := &Broker{
+
+	b := &Broker{
 		Tp: NewTcpProvider(),
-		Ap: NewAdminProvider(),
+		Ap: NewAdmin(),
 	}
 
-	go gw.Tp.Start()
-	go gw.Hp.Start()
+	var err error
+	if b.License, err = security.ParseLicense(config.Conf.Broker.License); err != nil {
+		logging.Logger.Warn("license parse error: ", zap.Error(err))
+		return
+	}
+
+	// Create a new cipher from the licence provided
+	if b.Cipher, err = b.License.Cipher(); err != nil {
+		logging.Logger.Warn("Cipher generate error: ", zap.Error(err))
+		return
+	}
+
+	go b.Tp.Start()
+	go b.Hp.Start()
 
 	// start admin api
-	gw.Ap.Start()
+	b.Ap.Start()
 }
