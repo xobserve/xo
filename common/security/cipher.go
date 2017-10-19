@@ -9,7 +9,7 @@ import (
 	"strconv"
 	"time"
 
-	"github.com/emitter-io/emitter/utils"
+	"github.com/teamsaas/tools"
 )
 
 const (
@@ -130,7 +130,7 @@ func (c *Cipher) GenerateKey(masterKey Key, channel string, permissions uint32, 
 	key.SetContract(masterKey.Contract())
 	key.SetSignature(masterKey.Signature())
 	key.SetPermissions(permissions)
-	key.SetTarget(utils.GetHash([]byte(channel)))
+	key.SetTarget(tools.GetHash([]byte(channel)))
 	key.SetExpires(expires)
 	return c.EncryptKey(key)
 }
