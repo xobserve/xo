@@ -2,6 +2,7 @@ package cluster
 
 import (
 	"bytes"
+	"fmt"
 	"net"
 	"strings"
 	"sync"
@@ -155,6 +156,7 @@ func (s *Cluster) update() {
 	// Mark a peer as offline
 	s.members.Range(func(k, v interface{}) bool {
 		if p, ok := v.(*Peer); ok && !p.IsActive() {
+			fmt.Println("node offline:", p.name)
 			s.onPeerOffline(p.name)
 		}
 		return true
@@ -315,7 +317,7 @@ func getLocalPeerName() mesh.PeerName {
 	peerName := mesh.PeerName(address.Hardware())
 	if config.Conf.Broker.Cluster.NodeName != "" {
 		if name, err := mesh.PeerNameFromString(config.Conf.Broker.Cluster.NodeName); err != nil {
-			logging.Logger.Info("cluster getting node name error", zap.Error(err))
+			logging.Logger.Fatal("cluster getting node name error", zap.Error(err))
 		} else {
 			peerName = name
 		}

@@ -25,8 +25,8 @@ type Broker struct {
 	subscriptions *subscription.Trie
 }
 
-func Start() {
-	config.InitConfig()
+func Start(conf string) {
+	config.InitConfig(conf)
 	logging.InitLogger(config.Conf.Common.LogPath, config.Conf.Common.LogLevel, config.Conf.Common.IsDebug, config.Conf.Common.Service)
 
 	// check license exists
@@ -62,6 +62,13 @@ func Start() {
 	b.cluster.OnMessage = b.onPeerMessage
 	b.cluster.OnSubscribe = b.onSubscribe
 	b.cluster.OnUnsubscribe = b.onUnsubscribe
+
+	if b.cluster.Listen(); err != nil {
+		panic(err)
+	}
+
+	// Join our seed
+	b.cluster.Join(config.Conf.Broker.Cluster.SeedAddr)
 
 	broker = b
 

@@ -35,8 +35,15 @@ type Config struct {
 
 var Conf = &Config{}
 
-func InitConfig() {
-	data, err := ioutil.ReadFile("meq.conf")
+func InitConfig(conf string) {
+	var data []byte
+	var err error
+	if conf == "" {
+		data, err = ioutil.ReadFile("meq.conf")
+	} else {
+		data, err = ioutil.ReadFile(conf)
+	}
+
 	if err != nil {
 		log.Fatal("read config error :", err)
 	}
