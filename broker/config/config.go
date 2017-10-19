@@ -16,13 +16,20 @@ type Config struct {
 		Service  string
 	}
 	Broker struct {
-		HttpHost          string
-		TcpHost           string
-		AdminHost         string
-		ConnectionTimeout int
-		MaxConnSperIp     int
+		HttpAddr          string `yaml:"http_addr"`
+		TcpAddr           string `yaml:"tcp_addr"`
+		AdminAddr         string `yaml:"admin_addr"`
+		ConnectionTimeout int    `yaml:"connection_timeout"`
+		MaxConnSperIp     int    `yaml:"max_conns_per_ip"`
 
 		License string
+		Cluster struct {
+			NodeName      string `yaml:"node_name"`
+			ListenAddr    string `yaml:"listen_addr"`
+			AdvertiseAddr string `yaml:"advertise_addr"`
+			SeedAddr      string `yaml:"seed_addr"`
+			Passphrase    string `yaml:"passphrase"`
+		}
 	}
 }
 

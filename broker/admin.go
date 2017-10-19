@@ -20,7 +20,7 @@ func (ap *Admin) Start() {
 	e := echo.New()
 
 	e.POST("/admin/keygen", ap.keyGen)
-	e.Logger.Fatal(e.Start(":" + config.Conf.Broker.AdminHost))
+	e.Logger.Fatal(e.Start(":" + config.Conf.Broker.AdminAddr))
 }
 
 type keyGenResponse struct {

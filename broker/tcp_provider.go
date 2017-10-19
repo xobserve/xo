@@ -24,12 +24,12 @@ func NewTcpProvider() *TcpProvider {
 // start tcp server
 func (tp *TcpProvider) Start() {
 	var lastPerIPErrorTime time.Time
-	ln, err := net.Listen("tcp", config.Conf.Broker.TcpHost)
+	ln, err := net.Listen("tcp", config.Conf.Broker.TcpAddr)
 	if err != nil {
 		logging.Logger.Panic("Listen", zap.Error(err))
 	}
 	tp.ln = ln
-	logging.Logger.Info("tcp provider startted", zap.String("addr", config.Conf.Broker.TcpHost))
+	logging.Logger.Info("tcp provider startted", zap.String("addr", config.Conf.Broker.TcpAddr))
 
 	for {
 		c, err := tp.acceptConn(ln, &lastPerIPErrorTime)

@@ -1,6 +1,8 @@
 package broker
 
 import (
+	"github.com/emitter-io/emitter/broker/subscription"
+	"github.com/teamsaas/meq/broker/cluster"
 	"github.com/teamsaas/meq/broker/config"
 	"github.com/teamsaas/meq/common/logging"
 	"github.com/teamsaas/meq/common/security"
@@ -16,6 +18,11 @@ type Broker struct {
 	License  *security.License
 	Cipher   *security.Cipher
 	Contract *security.SingleContractProvider
+
+	cluster *cluster.Cluster
+	Closing chan bool
+
+	subscriptions *subscription.Trie
 }
 
 func Start() {
@@ -48,6 +55,16 @@ func Start() {
 	b.Contract =
 		security.NewSingleContractProvider(b.License)
 
+	// start the cluster
+	// Create a new cluster if we have this configured
+	// if cfg.Cluster != nil {
+	// 	b.cluster = cluster.NewCluster(cfg.Cluster, b.Closing)
+	// 	b.cluster.OnMessage = b.onPeerMessage
+	// 	b.cluster.OnSubscribe = b.onSubscribe
+	// 	b.cluster.OnUnsubscribe = b.onUnsubscribe
+
+	// }
+
 	broker = b
 
 	go b.Tp.Start()
@@ -55,4 +72,34 @@ func Start() {
 
 	// start admin api
 	b.Ap.Start()
+}
+
+// Occurs when a message is received from a peer.
+func (s *Broker) onPeerMessage(m *cluster.Message) {
+	// Iterate through all subscribers and send them the message
+	for _, subscriber := range s.subscriptions.Lookup(m.Ssid) {
+		if subscriber.Type() == subscription.SubscriberDirect {
+
+			// Send to the local subscriber
+			subscriber.Send(m.Ssid, m.Channel, m.Payload)
+		}
+	}
+}
+
+// Occurs when a peer has a new subscription.
+func (s *Broker) onSubscribe(ssid subscription.Ssid, sub subscription.Subscriber) bool {
+	if _, err := s.subscriptions.Subscribe(ssid, sub); err != nil {
+		return false // Unable to subscribe
+	}
+
+	return true
+}
+
+// Occurs when a peer has unsubscribed.
+func (s *Broker) onUnsubscribe(ssid subscription.Ssid, sub subscription.Subscriber) (ok bool) {
+	subscribers := s.subscriptions.Lookup(ssid)
+	if ok = subscribers.Contains(sub); ok {
+		s.subscriptions.Unsubscribe(ssid, sub)
+	}
+	return
 }

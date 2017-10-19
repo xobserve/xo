@@ -18,9 +18,9 @@ func (hp *HttpProvider) Start() {
 	// http mqtt or http json
 	http.HandleFunc("/Connect", connectFunc)
 
-	logging.Logger.Info("webSocket and Http provider startted", zap.String("addr", config.Conf.Broker.HttpHost))
+	logging.Logger.Info("webSocket and Http provider startted", zap.String("addr", config.Conf.Broker.HttpAddr))
 
-	err := http.ListenAndServe(config.Conf.Broker.HttpHost, nil)
+	err := http.ListenAndServe(config.Conf.Broker.HttpAddr, nil)
 	if err != nil {
 		logging.Logger.Fatal("webSocket and Http ListenAndServe error ", zap.Error(err))
 	}
