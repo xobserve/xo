@@ -1,11 +1,11 @@
 package broker
 
 import (
-	"github.com/emitter-io/emitter/broker/subscription"
 	"github.com/teamsaas/meq/broker/cluster"
-	"github.com/teamsaas/meq/broker/config"
+	"github.com/teamsaas/meq/broker/subscription"
 	"github.com/teamsaas/meq/common/logging"
 	"github.com/teamsaas/meq/common/security"
+	"github.com/teamsaas/meq/config"
 	"go.uber.org/zap"
 )
 
@@ -36,8 +36,9 @@ func Start() {
 	}
 
 	b := &Broker{
-		Tp: NewTcpProvider(),
-		Ap: NewAdmin(),
+		Tp:      NewTcpProvider(),
+		Ap:      NewAdmin(),
+		Closing: make(chan bool),
 	}
 
 	var err error
@@ -57,13 +58,10 @@ func Start() {
 
 	// start the cluster
 	// Create a new cluster if we have this configured
-	// if cfg.Cluster != nil {
-	// 	b.cluster = cluster.NewCluster(cfg.Cluster, b.Closing)
-	// 	b.cluster.OnMessage = b.onPeerMessage
-	// 	b.cluster.OnSubscribe = b.onSubscribe
-	// 	b.cluster.OnUnsubscribe = b.onUnsubscribe
-
-	// }
+	b.cluster = cluster.NewCluster(b.Closing)
+	b.cluster.OnMessage = b.onPeerMessage
+	b.cluster.OnSubscribe = b.onSubscribe
+	b.cluster.OnUnsubscribe = b.onUnsubscribe
 
 	broker = b
 

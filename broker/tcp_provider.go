@@ -6,8 +6,8 @@ import (
 	"strings"
 	"time"
 
-	"github.com/teamsaas/meq/broker/config"
 	"github.com/teamsaas/meq/common/logging"
+	"github.com/teamsaas/meq/config"
 	"github.com/teamsaas/tools/ipmanager"
 	"go.uber.org/zap"
 )

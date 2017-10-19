@@ -7,28 +7,29 @@ import (
 	"sync"
 	"time"
 
-	"github.com/emitter-io/emitter/broker/subscription"
-	"github.com/emitter-io/emitter/config"
-	"github.com/emitter-io/emitter/encoding"
-	"github.com/emitter-io/emitter/logging"
-	"github.com/emitter-io/emitter/network/address"
-	"github.com/emitter-io/emitter/security"
-	"github.com/emitter-io/emitter/utils"
 	"github.com/golang/snappy"
+	"github.com/teamsaas/meq/common/address"
+	"github.com/teamsaas/meq/common/security"
+	"github.com/teamsaas/tools"
+	"go.uber.org/zap"
+
+	"github.com/teamsaas/meq/broker/subscription"
+	"github.com/teamsaas/meq/common/encode"
+	"github.com/teamsaas/meq/common/logging"
+	"github.com/teamsaas/meq/config"
 	"github.com/weaveworks/mesh"
 )
 
 // Cluster represents a gossiper.
 type Cluster struct {
 	sync.Mutex
-	name    mesh.PeerName         // The name of ourselves.
-	actions chan func()           // The action queue for the peer.
-	closing chan bool             // The closing channel.
-	config  *config.ClusterConfig // The configuration for the cluster.
-	state   *subscriptionState    // The state to synchronise.
-	router  *mesh.Router          // The mesh router.
-	gossip  mesh.Gossip           // The gossip protocol.
-	members *sync.Map             // The map of members in the peer set.
+	name    mesh.PeerName      // The name of ourselves.
+	actions chan func()        // The action queue for the peer.
+	closing chan bool          // The closing channel.
+	state   *subscriptionState // The state to synchronise.
+	router  *mesh.Router       // The mesh router.
+	gossip  mesh.Gossip        // The gossip protocol.
+	members *sync.Map          // The map of members in the peer set.
 
 	OnSubscribe   func(subscription.Ssid, subscription.Subscriber) bool // Delegate to invoke when the subscription event is received.
 	OnUnsubscribe func(subscription.Ssid, subscription.Subscriber) bool // Delegate to invoke when the subscription event is received.
@@ -39,24 +40,23 @@ type Cluster struct {
 var _ mesh.Gossiper = &Cluster{}
 
 // NewCluster creates a new Cluster messaging layer.
-func NewCluster(cfg *config.ClusterConfig, closing chan bool) *Cluster {
+func NewCluster(closing chan bool) *Cluster {
 	cluster := &Cluster{
-		name:    getLocalPeerName(cfg),
+		name:    getLocalPeerName(),
 		actions: make(chan func()),
 		closing: closing,
-		config:  cfg,
 		state:   newSubscriptionState(),
 		members: new(sync.Map),
 	}
 
 	// Get the cluster binding address
-	listenAddr, err := parseAddr(cfg.ListenAddr)
+	listenAddr, err := parseAddr(config.Conf.Broker.Cluster.ListenAddr)
 	if err != nil {
 		panic(err)
 	}
 
 	// Get the advertised address
-	advertiseAddr, err := parseAddr(cfg.AdvertiseAddr)
+	advertiseAddr, err := parseAddr(config.Conf.Broker.Cluster.AdvertiseAddr)
 	if err != nil {
 		panic(err)
 	}
@@ -66,7 +66,7 @@ func NewCluster(cfg *config.ClusterConfig, closing chan bool) *Cluster {
 		Host:               listenAddr.IP.String(),
 		Port:               listenAddr.Port,
 		ProtocolMinVersion: mesh.ProtocolMinVersion,
-		Password:           []byte(cfg.Passphrase),
+		Password:           []byte(config.Conf.Broker.Cluster.Passphrase),
 		ConnLimit:          128,
 		PeerDiscovery:      true,
 		TrustedSubnets:     []*net.IPNet{},
@@ -91,7 +91,7 @@ func NewCluster(cfg *config.ClusterConfig, closing chan bool) *Cluster {
 func (s *Cluster) onPeerOffline(name mesh.PeerName) {
 	if v, ok := s.members.Load(name); ok {
 		peer := v.(*Peer)
-		logging.LogTarget("Cluster", "peer removed", peer.name)
+		logging.Logger.Info("Cluster peer removed", zap.String("peer_name", peer.name.String()))
 		peer.Close() // Close the peer on our end
 
 		// We also need to remove the peer from our set, so next time a new peer can be created.
@@ -114,7 +114,7 @@ func (s *Cluster) FindPeer(name mesh.PeerName) *Peer {
 	peer := s.newPeer(name)
 	v, ok := s.members.LoadOrStore(name, peer)
 	if !ok {
-		logging.LogTarget("Cluster", "peer created", peer.name)
+		logging.Logger.Info("Cluster peer created", zap.String("peer_name", peer.name.String()))
 	}
 	return v.(*Peer)
 }
@@ -129,7 +129,7 @@ func (s *Cluster) Listen() {
 
 	// Every few seconds, attempt to reinforce our cluster structure by
 	// initiating connections with all of our peers.
-	utils.Repeat(s.update, 5*time.Second, s.closing)
+	tools.Repeat(s.update, 5*time.Second, s.closing)
 
 	// Start the router
 	s.router.Start()
@@ -225,7 +225,7 @@ func (s *Cluster) OnGossip(buf []byte) (delta mesh.GossipData, err error) {
 	}
 
 	if delta, err = s.merge(buf); err != nil {
-		logging.LogError("merge", "merging", err)
+		logging.Logger.Info("merge error", zap.Error(err))
 	}
 	return
 }
@@ -234,7 +234,7 @@ func (s *Cluster) OnGossip(buf []byte) (delta mesh.GossipData, err error) {
 // of the received data (typically a delta) for further propagation.
 func (s *Cluster) OnGossipBroadcast(src mesh.PeerName, buf []byte) (delta mesh.GossipData, err error) {
 	if delta, err = s.merge(buf); err != nil {
-		logging.LogError("merge", "merging", err)
+		logging.Logger.Info("merge error", zap.Error(err))
 	}
 	return
 }
@@ -245,12 +245,12 @@ func (s *Cluster) OnGossipUnicast(src mesh.PeerName, buf []byte) error {
 
 	// Make a reader and a decoder for the frame
 	snappy := snappy.NewReader(bytes.NewReader(buf))
-	reader := encoding.NewDecoder(snappy)
+	reader := encode.NewDecoder(snappy)
 
 	// Decode an incoming message frame
 	frame, err := decodeMessageFrame(reader)
 	if err != nil {
-		logging.LogError("Cluster", "decode frame", err)
+		logging.Logger.Info("cluster decode frame", zap.Error(err))
 		return err
 	}
 
@@ -311,11 +311,11 @@ func parseAddr(text string) (*net.TCPAddr, error) {
 }
 
 // getLocalPeerName retrieves or generates a local node name.
-func getLocalPeerName(cfg *config.ClusterConfig) mesh.PeerName {
+func getLocalPeerName() mesh.PeerName {
 	peerName := mesh.PeerName(address.Hardware())
-	if cfg.NodeName != "" {
-		if name, err := mesh.PeerNameFromString(cfg.NodeName); err != nil {
-			logging.LogError("Cluster", "getting node name", err)
+	if config.Conf.Broker.Cluster.NodeName != "" {
+		if name, err := mesh.PeerNameFromString(config.Conf.Broker.Cluster.NodeName); err != nil {
+			logging.Logger.Info("cluster getting node name error", zap.Error(err))
 		} else {
 			peerName = name
 		}

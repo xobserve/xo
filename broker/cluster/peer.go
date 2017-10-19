@@ -6,12 +6,13 @@ import (
 	"sync/atomic"
 	"time"
 
-	"github.com/emitter-io/emitter/broker/subscription"
-	"github.com/emitter-io/emitter/encoding"
-	"github.com/emitter-io/emitter/logging"
-	"github.com/emitter-io/emitter/utils"
 	"github.com/golang/snappy"
+	"github.com/teamsaas/meq/broker/subscription"
+	"github.com/teamsaas/meq/common/encode"
+	"github.com/teamsaas/meq/common/logging"
+	"github.com/teamsaas/tools"
 	"github.com/weaveworks/mesh"
+	"go.uber.org/zap"
 )
 
 // Peer implements subscription.Subscriber
@@ -40,7 +41,7 @@ func (s *Cluster) newPeer(name mesh.PeerName) *Peer {
 	}
 
 	// Spawn the send queue processor
-	utils.Repeat(peer.processSendQueue, 5*time.Millisecond, peer.closing)
+	tools.Repeat(peer.processSendQueue, 5*time.Millisecond, peer.closing)
 	return peer
 }
 
@@ -106,7 +107,7 @@ func (p *Peer) processSendQueue() {
 	// Compress in-memory. TODO: Optimize the shit out of that, we don't really need to use binc
 	buffer := bytes.NewBuffer(nil)
 	snappy := snappy.NewBufferedWriter(buffer)
-	writer := encoding.NewEncoder(snappy)
+	writer := encode.NewEncoder(snappy)
 
 	// Encode the current frame
 	p.Lock()
@@ -116,7 +117,7 @@ func (p *Peer) processSendQueue() {
 
 	// Something went wrong during the encoding
 	if err != nil {
-		logging.LogError("peer", "encoding frame", err)
+		logging.Logger.Info("peer decoding frame error", zap.Error(err))
 	}
 
 	// Send the frame directly to the peer.

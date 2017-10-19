@@ -1,0 +1,3 @@
+package gdata
+
+const ChannelSeparator = '/'

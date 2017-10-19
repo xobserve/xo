@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"io"
 
-	"github.com/teamsaas/meq/broker/collection"
+	"github.com/teamsaas/meq/common/collection"
 )
 
 const (

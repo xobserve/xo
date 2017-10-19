@@ -2,6 +2,7 @@ package logging
 
 import (
 	"encoding/json"
+	"io/ioutil"
 	"log"
 	"time"
 
@@ -14,6 +15,7 @@ import (
 )
 
 var Logger *zap.Logger
+var Discard = log.New(ioutil.Discard, "", 0)
 
 func InitLogger(lp string, lv string, isDebug bool, service string) {
 	js := fmt.Sprintf(`{

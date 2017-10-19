@@ -5,8 +5,8 @@ import (
 	"time"
 
 	"github.com/labstack/echo"
-	"github.com/teamsaas/meq/broker/config"
 	"github.com/teamsaas/meq/common/security"
+	"github.com/teamsaas/meq/config"
 )
 
 /* apis for broker admin: topic access、key gen etc */

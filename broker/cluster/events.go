@@ -4,10 +4,10 @@ import (
 	"bytes"
 	"encoding/binary"
 
-	"github.com/emitter-io/emitter/broker/subscription"
-	"github.com/emitter-io/emitter/collection"
-	"github.com/emitter-io/emitter/encoding"
-	"github.com/emitter-io/emitter/security"
+	"github.com/teamsaas/meq/broker/subscription"
+	"github.com/teamsaas/meq/common/collection"
+	"github.com/teamsaas/meq/common/encode"
+	"github.com/teamsaas/meq/common/security"
 	"github.com/weaveworks/mesh"
 )
 
@@ -23,7 +23,7 @@ type Message struct {
 }
 
 // decodeMessageFrame decodes the message frame from the decoder.
-func decodeMessageFrame(decoder encoding.Decoder) (out MessageFrame, err error) {
+func decodeMessageFrame(decoder encode.Decoder) (out MessageFrame, err error) {
 	out = make(MessageFrame, 0, 64)
 	err = decoder.Decode(&out)
 	return
@@ -99,7 +99,7 @@ func newSubscriptionState() *subscriptionState {
 func decodeSubscriptionState(buf []byte) (*subscriptionState, error) {
 	out := map[interface{}]collection.LWWTime{}
 
-	err := encoding.Decode(buf, &out)
+	err := encode.Decode(buf, &out)
 	return &subscriptionState{Set: out}, err
 }
 
@@ -109,7 +109,7 @@ func (st *subscriptionState) Encode() [][]byte {
 	lww.Lock()
 	defer lww.Unlock()
 
-	buf, err := encoding.Encode(lww.Set)
+	buf, err := encode.Encode(lww.Set)
 	if err != nil {
 		panic(err)
 	}

@@ -8,7 +8,7 @@ import (
 	"time"
 	"unsafe"
 
-	"github.com/emitter-io/emitter/security"
+	"github.com/teamsaas/meq/common/channel"
 )
 
 // Various constant parts of the SSID.
@@ -27,7 +27,7 @@ var Query = Ssid{system, query}
 type Ssid []uint32
 
 // NewSsid creates a new SSID.
-func NewSsid(contract uint32, c *security.Channel) Ssid {
+func NewSsid(contract uint32, c *channel.Channel) Ssid {
 	ssid := make([]uint32, 0, len(c.Query)+1)
 	ssid = append(ssid, uint32(contract))
 	ssid = append(ssid, c.Query...)

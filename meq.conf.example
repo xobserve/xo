@@ -12,19 +12,24 @@ common:
 #                           Broker                            #
 ###############################################################################
 broker:
-  httphost: :9000
-  tcphost: :9001
-  adminhost: 19002
+  http_addr: :9000
+  tcp_addr: :9001
+  admin_addr: 19002
 
   # 一条连接从建立连接到发送CONNECT包的最大时间间隔，超过则关闭连接 单位：60秒
-  connectiontimeout: 60
+  connection_timeout: 60
   #  服务端 允许 的最大ip链接数
-  maxconnsperip: 1024000
+  max_conns_per_ip: 1024000
 
   # security
   license: 
-  
 
+  cluster:
+    node_name: test
+    listen_addr: ":4000"
+    advertise_addr: "public:4000"
+    seed_addr: "localhost:4000"
+    passphrase: "meq-io"
 ###############################################################################
 #                           Admin                             #
 ###############################################################################
