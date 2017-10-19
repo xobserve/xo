@@ -312,7 +312,7 @@ func parseAddr(text string) (*net.TCPAddr, error) {
 	return net.ResolveTCPAddr("tcp", addr)
 }
 
-// getLocalPeerName retrieves or generates a local node name.
+// getLocalPeerName retrieves or generates a local node name. a
 func getLocalPeerName() mesh.PeerName {
 	peerName := mesh.PeerName(address.Hardware())
 	if config.Conf.Broker.Cluster.NodeName != "" {
