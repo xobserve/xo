@@ -1,26 +1,31 @@
 package broker
 
 import (
-	"sync"
 	"bufio"
 	"fmt"
 	"net"
-	"github.com/teamsaas/meq/common/logging"
+	"sync"
+
 	"github.com/teamsaas/meq/broker/protocol"
+	"github.com/teamsaas/meq/common/logging"
+	"github.com/teamsaas/meq/common/security"
 	"go.uber.org/zap"
 )
 
 // Conn represents an incoming connection.
 type Conn struct {
 	sync.Mutex
-	socket   net.Conn            // The transport used to read and write messages.
-	username string                 // The username provided by the client during MQTT connect.
-	guid     string                 // The globally unique id of the connection.
+	socket   net.Conn // The transport used to read and write messages.
+	username string   // The username provided by the client during MQTT connect.
+
+	luid security.ID // The locally unique id of the connection.
+	guid string      // The globally unique id of the connection.
 }
 
-func (bk *Broker)NewConn(t net.Conn)  *Conn{
+func (bk *Broker) NewConn(t net.Conn) *Conn {
 	c := &Conn{
-		socket:  t,
+		socket: t,
+		luid:   security.NewID(),
 	}
 	return c
 }
@@ -109,7 +114,6 @@ func (c *Conn) Process() error {
 		}
 	}
 }
-
 
 func (c *Conn) Close() error {
 	return c.socket.Close()

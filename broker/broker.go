@@ -108,3 +108,21 @@ func (s *Broker) onUnsubscribe(ssid subscription.Ssid, sub subscription.Subscrib
 	}
 	return
 }
+
+// NotifySubscribe notifies the swarm when a subscription occurs.
+func (s *Broker) notifySubscribe(conn *Conn, ssid subscription.Ssid, channel []byte) {
+
+	// Notify our cluster that the client just subscribed.
+	if s.cluster != nil {
+		s.cluster.NotifySubscribe(conn.luid, ssid)
+	}
+}
+
+// NotifyUnsubscribe notifies the swarm when an unsubscription occurs.
+func (s *Broker) notifyUnsubscribe(conn *Conn, ssid subscription.Ssid, channel []byte) {
+
+	// Notify our cluster that the client just unsubscribed.
+	if s.cluster != nil {
+		s.cluster.NotifyUnsubscribe(conn.luid, ssid)
+	}
+}
