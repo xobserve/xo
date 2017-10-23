@@ -75,6 +75,7 @@ func ParseLicense(data string) (*License, error) {
 
 	// Decode from base64 first
 	raw, err := base64.RawURLEncoding.DecodeString(data)
+	fmt.Printf("raw", string(raw))
 	if err != nil {
 		return nil, err
 	}

@@ -7,6 +7,7 @@ import (
 	"github.com/teamsaas/meq/common/security"
 	"github.com/teamsaas/meq/config"
 	"go.uber.org/zap"
+	"fmt"
 )
 
 type Broker struct {
@@ -56,6 +57,8 @@ func Start(conf string) {
 	b.Contract =
 		security.NewSingleContractProvider(b.License)
 
+	fmt.Println(b.Contract)
+
 	// start the cluster
 	// Create a new cluster if we have this configured
 	b.cluster = cluster.NewCluster(b.Closing)
@@ -96,7 +99,7 @@ func (s *Broker) onSubscribe(ssid subscription.Ssid, sub subscription.Subscriber
 	if _, err := s.subscriptions.Subscribe(ssid, sub); err != nil {
 		return false // Unable to subscribe
 	}
-
+	logging.Logger.Info("subscribe", zap.Uint32s("ssid", ssid))
 	return true
 }
 
@@ -106,6 +109,7 @@ func (s *Broker) onUnsubscribe(ssid subscription.Ssid, sub subscription.Subscrib
 	if ok = subscribers.Contains(sub); ok {
 		s.subscriptions.Unsubscribe(ssid, sub)
 	}
+	logging.Logger.Info("unsubscribe", zap.Uint32s("ssid", ssid))
 	return
 }
 

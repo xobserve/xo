@@ -10,6 +10,8 @@ import (
 	"github.com/teamsaas/meq/common/logging"
 	"github.com/teamsaas/meq/common/security"
 	"go.uber.org/zap"
+	"github.com/teamsaas/meq/common/address"
+	"github.com/teamsaas/meq/broker/subscription"
 )
 
 const MaxMessageSize int = 65536
@@ -17,17 +19,19 @@ const MaxMessageSize int = 65536
 // tcp or webSocket Conn
 type Conn struct {
 	sync.Mutex
-	socket   net.Conn // The transport used to read and write messages.
-	username string   // The username provided by the client during MQTT connect.
-	luid security.ID // The locally unique id of the connection.
-	guid string      // The globally unique id of the connection.
+	socket   net.Conn               // The transport used to read and write messages.
+	username string                 // The username provided by the client during MQTT connect.
+	luid     security.ID            // The locally unique id
+	guid     string                 // The cluster unique id
+	subs     *subscription.Counters // The subscriptions for this connection.
 }
 
-func (bk *Broker) NewConn(t net.Conn) *Conn {
+func (b *Broker) NewConn(t net.Conn) *Conn {
 	c := &Conn{
 		socket: t,
 		luid:   security.NewID(),
 	}
+	c.guid = c.luid.Unique(uint64(address.Hardware()), "emitter")
 	return c
 }
 
@@ -54,7 +58,7 @@ func (c *Conn) Process() error {
 			c.username = string(packet.Username)
 			fmt.Println(protocol.TypeOfConnect, packet, string(packet.Username))
 			ack := protocol.Connack{ReturnCode: 0x00}
-			if	 _, err := ack.EncodeTo(c.socket); err != nil {
+			if _, err := ack.EncodeTo(c.socket); err != nil {
 				return err
 			}
 		case protocol.TypeOfSubscribe:
@@ -65,8 +69,8 @@ func (c *Conn) Process() error {
 				Qos:       make([]uint8, 0, len(packet.Subscriptions)),
 			}
 			for _, sub := range packet.Subscriptions {
-				//if err := c.onSubscribe(sub.Topic); err != nil {
-				//}
+				if err := c.onSubscribe(sub.Topic); err != nil {
+				}
 
 				// Append the QoS
 				ack.Qos = append(ack.Qos, sub.Qos)
@@ -99,6 +103,36 @@ func (c *Conn) Process() error {
 			return nil
 		}
 	}
+}
+
+func (c *Conn) Subscribe(ssid subscription.Ssid, channel []byte) {
+	c.Lock()
+	defer c.Unlock()
+
+	// Add the subscription
+	if first := c.subs.Increment(ssid, channel); first {
+		// subscribe to trie
+		broker.onSubscribe(ssid, c)
+
+		// Broadcast the subscription within our cluster
+		broker.notifySubscribe(c, ssid, channel)
+	}
+
+}
+
+
+// ID returns the unique identifier of the subsriber.
+func (c *Conn) ID() string {
+	return c.guid
+}
+
+// Type returns the type of the subscriber
+func (c *Conn) Type() subscription.SubscriberType {
+	return subscription.SubscriberDirect
+}
+
+func (c *Conn) Send(ssid subscription.Ssid, channel []byte, payload []byte) error {
+	return nil
 }
 
 func (c *Conn) Close() error {

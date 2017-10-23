@@ -216,12 +216,14 @@ func (s *Cluster) NumPeers() int {
 
 // Gossip returns the state of everything we know; gets called periodically.
 func (s *Cluster) Gossip() (complete mesh.GossipData) {
+	fmt.Println("Gossip")
 	return s.state
 }
 
 // OnGossip merges received data into state and returns "everything new I've just
 // learnt", or nil if nothing in the received data was new.
 func (s *Cluster) OnGossip(buf []byte) (delta mesh.GossipData, err error) {
+	fmt.Println("OnGossip", string(buf))
 	if len(buf) <= 1 {
 		return nil, nil
 	}
