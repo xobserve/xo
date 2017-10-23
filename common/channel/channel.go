@@ -7,7 +7,6 @@ import (
 
 	"github.com/teamsaas/meq/common/gdata"
 	"github.com/teamsaas/tools"
-	"fmt"
 )
 
 // Channel types
@@ -221,7 +220,6 @@ func (c *Channel) parseChannel(text []byte) (i int) {
 }
 
 func (c *Channel) parseChannel2(text []byte) (i int) {
-	fmt.Println("chanel", string(text))
 	length, offset := len(text), 0
 	chanChars := 0
 	for ; i < length; i++ {
