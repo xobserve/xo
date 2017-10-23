@@ -7,11 +7,12 @@ import (
 
 	"github.com/teamsaas/meq/common/gdata"
 	"github.com/teamsaas/tools"
+	"fmt"
 )
 
 // Channel types
 const (
-	ChannelInvalid = uint8(iota)
+	ChannelInvalid  = uint8(iota)
 	ChannelStatic
 	ChannelWildcard
 )
@@ -95,6 +96,50 @@ func ParseChannel(text []byte) (channel *Channel) {
 	return channel
 }
 
+// ParseChannel2 attempts to parse the channel from the underlying slice.
+func ParsePublishChannel(text []byte) (channel *Channel) {
+	channel = new(Channel)
+	channel.Query = make([]uint32, 0, 6)
+	offset := 0
+
+	// First we need to parse the key part
+	i, ok := channel.parseKey(text)
+	if !ok {
+		channel.ChannelType = ChannelInvalid
+		return channel
+	}
+
+	// Now parse the channel
+	offset += i
+	channel.parseChannel2(text[offset:])
+
+	if len(channel.Query)>1{
+		channel.Query = []uint32{channel.Query[len(channel.Query)-1]}
+	}
+
+	return channel
+}
+
+// ParseChannel2 attempts to parse the channel from the underlying slice.
+func ParseChannel2(text []byte) (channel *Channel) {
+	channel = new(Channel)
+	channel.Query = make([]uint32, 0, 6)
+	offset := 0
+
+	// First we need to parse the key part
+	i, ok := channel.parseKey(text)
+	if !ok {
+		channel.ChannelType = ChannelInvalid
+		return channel
+	}
+
+	// Now parse the channel
+	offset += i
+	channel.parseChannel2(text[offset:])
+
+	return channel
+}
+
 // ParseKey reads the provided API key, this should be the 32-character long
 // key or 'emitter' string for custom API requests.
 func (c *Channel) parseKey(text []byte) (i int, ok bool) {
@@ -146,7 +191,7 @@ func (c *Channel) parseChannel(text []byte) (i int) {
 			chanChars = 0
 			wildcards = 0
 			continue
-		// If this symbol is a wildcard symbol
+			// If this symbol is a wildcard symbol
 		case symbol == '+' || symbol == '*':
 			if chanChars > 0 || wildcards > 0 {
 				c.ChannelType = ChannelInvalid
@@ -156,7 +201,7 @@ func (c *Channel) parseChannel(text []byte) (i int) {
 			c.ChannelType = ChannelWildcard
 			continue
 
-		// Valid character, but nothing special
+			// Valid character, but nothing special
 		case (symbol >= 45 && symbol <= 58) || (symbol >= 65 && symbol <= 122):
 			if wildcards > 0 {
 				c.ChannelType = ChannelInvalid
@@ -165,13 +210,51 @@ func (c *Channel) parseChannel(text []byte) (i int) {
 			chanChars++
 			continue
 
-		// Weird character, fail.
+			// Weird character, fail.
 		default:
 			c.ChannelType = ChannelInvalid
 			return i
 		}
 	}
 	c.ChannelType = ChannelInvalid
+	return i
+}
+
+func (c *Channel) parseChannel2(text []byte) (i int) {
+	fmt.Println("chanel", string(text))
+	length, offset := len(text), 0
+	chanChars := 0
+	for ; i < length; i++ {
+		symbol := text[i] // The current byte
+		switch {
+
+		// If we're reading a separator compute the SSID.
+		case symbol == gdata.ChannelSeparator:
+			if chanChars == 0 {
+				return i
+			}
+			c.Query = append(c.Query, tools.GetHash(text[offset:i]))
+			c.Channel = text[offset:i]
+			chanChars = 0
+			continue
+		case symbol == '+' || symbol == '*' || symbol == '?'|| symbol == '='|| symbol == '@':
+			if chanChars > 0 {
+				c.Query = append(c.Query, tools.GetHash(text[offset:i]))
+				c.Channel = text[offset:i]
+				return i
+			} else {
+				return i
+			}
+		case i+1 == length:
+			c.Query = append(c.Query, tools.GetHash(text[offset:length]))
+			c.Channel = text[offset:length]
+		case (symbol >= 45 && symbol <= 58) || (symbol >= 65 && symbol <= 122):
+			chanChars++
+			continue
+		default:
+			return i
+		}
+	}
 	return i
 }
 
@@ -195,7 +278,7 @@ func (c *Channel) parseOptions(text []byte) (i int, ok bool) {
 			j++
 
 			if symbol == '=' {
-				key = text[i : j-1]
+				key = text[i: j-1]
 				i = j
 				break
 			} else if !((symbol >= 48 && symbol <= 57) || (symbol >= 65 && symbol <= 90) || (symbol >= 97 && symbol <= 122)) {
@@ -209,7 +292,7 @@ func (c *Channel) parseOptions(text []byte) (i int, ok bool) {
 			j++
 
 			if symbol == '&' {
-				val = text[i : j-1]
+				val = text[i: j-1]
 				i = j
 				break
 			} else if !((symbol >= 48 && symbol <= 57) || (symbol >= 65 && symbol <= 90) || (symbol >= 97 && symbol <= 122)) {

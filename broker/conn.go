@@ -2,10 +2,8 @@ package broker
 
 import (
 	"bufio"
-	"fmt"
 	"net"
 	"sync"
-
 	"github.com/teamsaas/meq/broker/protocol"
 	"github.com/teamsaas/meq/common/logging"
 	"github.com/teamsaas/meq/common/security"
@@ -19,19 +17,22 @@ const MaxMessageSize int = 65536
 // tcp or webSocket Conn
 type Conn struct {
 	sync.Mutex
-	socket   net.Conn               // The transport used to read and write messages.
-	username string                 // The username provided by the client during MQTT connect.
-	luid     security.ID            // The locally unique id
-	guid     string                 // The cluster unique id
-	subs     *subscription.Counters // The subscriptions for this connection.
+	socket    net.Conn               // The transport used to read and write messages.
+	username  string                 // The username provided by the client during MQTT connect.
+	luid      security.ID            // The locally unique id
+	guid      string                 // The cluster unique id
+	subs      *subscription.Counters // The subscriptions for this connection.
+	messageId uint16
 }
 
 func (b *Broker) NewConn(t net.Conn) *Conn {
 	c := &Conn{
 		socket: t,
 		luid:   security.NewID(),
+		subs:   subscription.NewCounters(),
 	}
 	c.guid = c.luid.Unique(uint64(address.Hardware()), "emitter")
+	logging.Logger.Info("conn created", zap.String("guid",c.guid))
 	return c
 }
 
@@ -56,14 +57,12 @@ func (c *Conn) Process() error {
 		case protocol.TypeOfConnect:
 			packet := msg.(*protocol.Connect)
 			c.username = string(packet.Username)
-			fmt.Println(protocol.TypeOfConnect, packet, string(packet.Username))
 			ack := protocol.Connack{ReturnCode: 0x00}
 			if _, err := ack.EncodeTo(c.socket); err != nil {
 				return err
 			}
 		case protocol.TypeOfSubscribe:
 			packet := msg.(*protocol.Subscribe)
-			fmt.Println("Subscribe", packet)
 			ack := protocol.Suback{
 				MessageID: packet.MessageID,
 				Qos:       make([]uint8, 0, len(packet.Subscriptions)),
@@ -71,8 +70,6 @@ func (c *Conn) Process() error {
 			for _, sub := range packet.Subscriptions {
 				if err := c.onSubscribe(sub.Topic); err != nil {
 				}
-
-				// Append the QoS
 				ack.Qos = append(ack.Qos, sub.Qos)
 			}
 
@@ -83,10 +80,10 @@ func (c *Conn) Process() error {
 			packet := msg.(*protocol.Unsubscribe)
 			ack := protocol.Unsuback{MessageID: packet.MessageID}
 
-			// Unsubscribe from each subscription
-			//for _, sub := range packet.Topics {
-			//	//c.onUnsubscribe(sub.Topic) // TODO: Handle error or just ignore?
-			//}
+			 //Unsubscribe from each subscription
+			for _, sub := range packet.Topics {
+				c.onUnsubscribe(sub.Topic)
+			}
 
 			// Acknowledge the unsubscription
 			if _, err := ack.EncodeTo(c.socket); err != nil {
@@ -100,15 +97,25 @@ func (c *Conn) Process() error {
 		case protocol.TypeOfDisconnect:
 			return nil
 		case protocol.TypeOfPublish:
-			return nil
+			packet := msg.(*protocol.Publish)
+
+			if err := c.onPublish(packet.Topic, packet.Payload); err != nil {
+				logging.Logger.Error("onPublish error", zap.String("Topic", string(packet.Topic)))
+			}
+
+			// Acknowledge the publication
+			if packet.Header.QOS > 0 {
+				ack := protocol.Puback{MessageID: packet.MessageID}
+				if _, err := ack.EncodeTo(c.socket); err != nil {
+					return err
+				}
+			}
 		}
 	}
 }
 
+// Subscribe subscribes to a particular channel.
 func (c *Conn) Subscribe(ssid subscription.Ssid, channel []byte) {
-	c.Lock()
-	defer c.Unlock()
-
 	// Add the subscription
 	if first := c.subs.Increment(ssid, channel); first {
 		// subscribe to trie
@@ -117,9 +124,19 @@ func (c *Conn) Subscribe(ssid subscription.Ssid, channel []byte) {
 		// Broadcast the subscription within our cluster
 		broker.notifySubscribe(c, ssid, channel)
 	}
-
 }
 
+// Unsubscribe unsubscribes this client from a particular channel.
+func (c *Conn)Unsubscribe(ssid subscription.Ssid, channel []byte) {
+	// Decrement the counter and if there's no more subscriptions, notify everyone.
+	if last := c.subs.Decrement(ssid); last {
+		// Unsubscribe the subscriber
+		broker.onUnsubscribe(ssid, c)
+
+		// Broadcast the unsubscription within our cluster
+		broker.notifyUnsubscribe(c, ssid, channel)
+	}
+}
 
 // ID returns the unique identifier of the subsriber.
 func (c *Conn) ID() string {
@@ -132,9 +149,30 @@ func (c *Conn) Type() subscription.SubscriberType {
 }
 
 func (c *Conn) Send(ssid subscription.Ssid, channel []byte, payload []byte) error {
+	packet := protocol.Publish{
+		Header: &protocol.StaticHeader{
+			QOS: 0,
+		},
+		MessageID: c.messageId,
+		Topic:     channel, // The channel for this message.
+		Payload:   payload, // The payload for this message.
+	}
+
+	// Acknowledge the publication
+	_, err := packet.EncodeTo(c.socket)
+	c.messageId++
+	if err != nil {
+		logging.Logger.Error("message send", zap.Error(err))
+		return err
+	}
+
 	return nil
 }
 
 func (c *Conn) Close() error {
+	for _, counter := range c.subs.All() {
+		broker.onUnsubscribe(counter.Ssid, c)
+		broker.notifyUnsubscribe(c, counter.Ssid, counter.Channel)
+	}
 	return c.socket.Close()
 }

@@ -182,16 +182,16 @@ func (log *Logger) Debug(msg string, fields ...zapcore.Field) {
 
 // Info logs a message at InfoLevel. The message includes any fields passed
 // at the log site, as well as any fields accumulated on the logger.
-func (log *Logger) Info(msg string, fields ...zapcore.Field) {
-	if ce := log.check(InfoLevel, msg); ce != nil {
+func (log *Logger) Warn(msg string, fields ...zapcore.Field) {
+	if ce := log.check(WarnLevel, msg); ce != nil {
 		ce.Write(fields...)
 	}
 }
 
 // Warn logs a message at WarnLevel. The message includes any fields passed
 // at the log site, as well as any fields accumulated on the logger.
-func (log *Logger) Warn(msg string, fields ...zapcore.Field) {
-	if ce := log.check(WarnLevel, msg); ce != nil {
+func (log *Logger) Info(msg string, fields ...zapcore.Field) {
+	if ce := log.check(InfoLevel, msg); ce != nil {
 		ce.Write(fields...)
 	}
 }

@@ -23,7 +23,7 @@ type Broker struct {
 	cluster *cluster.Cluster
 	Closing chan bool
 
-	subscriptions *subscription.Trie
+	Smap *subscription.Smap
 }
 
 func Start(conf string) {
@@ -40,6 +40,7 @@ func Start(conf string) {
 		Tp:      NewTcpProvider(),
 		Ap:      NewAdmin(),
 		Closing: make(chan bool),
+		Smap:    subscription.NewSmap(),
 	}
 
 	var err error
@@ -83,9 +84,9 @@ func Start(conf string) {
 }
 
 // Occurs when a message is received from a peer.
-func (s *Broker) onPeerMessage(m *cluster.Message) {
+func (b *Broker) onPeerMessage(m *cluster.Message) {
 	// Iterate through all subscribers and send them the message
-	for _, subscriber := range s.subscriptions.Lookup(m.Ssid) {
+	for _, subscriber := range b.Smap.Lookup(m.Ssid) {
 		if subscriber.Type() == subscription.SubscriberDirect {
 
 			// Send to the local subscriber
@@ -94,9 +95,17 @@ func (s *Broker) onPeerMessage(m *cluster.Message) {
 	}
 }
 
+// Publish publishes a message to everyone and returns the number of outgoing bytes written.
+func (b *Broker) publish(ssid subscription.Ssid, channel, payload []byte){
+	for _, subscriber := range b.Smap.Lookup(ssid) {
+		fmt.Println("Lookup", subscriber.ID())
+		subscriber.Send(ssid, channel, payload)
+	}
+}
+
 // Occurs when a peer has a new subscription.
-func (s *Broker) onSubscribe(ssid subscription.Ssid, sub subscription.Subscriber) bool {
-	if _, err := s.subscriptions.Subscribe(ssid, sub); err != nil {
+func (b *Broker) onSubscribe(ssid subscription.Ssid, sub subscription.Subscriber) bool {
+	if _, err := b.Smap.Subscribe(ssid, sub); err != nil {
 		return false // Unable to subscribe
 	}
 	logging.Logger.Info("subscribe", zap.Uint32s("ssid", ssid))
@@ -104,29 +113,26 @@ func (s *Broker) onSubscribe(ssid subscription.Ssid, sub subscription.Subscriber
 }
 
 // Occurs when a peer has unsubscribed.
-func (s *Broker) onUnsubscribe(ssid subscription.Ssid, sub subscription.Subscriber) (ok bool) {
-	subscribers := s.subscriptions.Lookup(ssid)
-	if ok = subscribers.Contains(sub); ok {
-		s.subscriptions.Unsubscribe(ssid, sub)
-	}
+func (b *Broker) onUnsubscribe(ssid subscription.Ssid, sub subscription.Subscriber) (ok bool) {
+	b.Smap.Unsubscribe(ssid, sub)
 	logging.Logger.Info("unsubscribe", zap.Uint32s("ssid", ssid))
 	return
 }
 
 // NotifySubscribe notifies the swarm when a subscription occurs.
-func (s *Broker) notifySubscribe(conn *Conn, ssid subscription.Ssid, channel []byte) {
+func (b *Broker) notifySubscribe(conn *Conn, ssid subscription.Ssid, channel []byte) {
 
 	// Notify our cluster that the client just subscribed.
-	if s.cluster != nil {
-		s.cluster.NotifySubscribe(conn.luid, ssid)
+	if b.cluster != nil {
+		b.cluster.NotifySubscribe(conn.luid, ssid)
 	}
 }
 
 // NotifyUnsubscribe notifies the swarm when an unsubscription occurs.
-func (s *Broker) notifyUnsubscribe(conn *Conn, ssid subscription.Ssid, channel []byte) {
+func (b *Broker) notifyUnsubscribe(conn *Conn, ssid subscription.Ssid, channel []byte) {
 
 	// Notify our cluster that the client just unsubscribed.
-	if s.cluster != nil {
-		s.cluster.NotifyUnsubscribe(conn.luid, ssid)
+	if b.cluster != nil {
+		b.cluster.NotifyUnsubscribe(conn.luid, ssid)
 	}
 }
