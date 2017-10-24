@@ -1,17 +1,14 @@
 package address
 
 import (
-	"errors"
 	"io/ioutil"
 	"math/rand"
 	"net"
 	"net/http"
 	"strings"
 	"time"
-
-	"github.com/teamsaas/meq/common/logging"
-	"go.uber.org/zap"
 )
+
 
 var hardware uint64
 var external net.IP
@@ -68,7 +65,6 @@ func initExternal() net.IP {
 
 	// Make sure we have an IP address, otherwise panic
 	if !ok || external == nil {
-		logging.Logger.Warn("address", zap.Error(errors.New("unable to retrieve external IP address")))
 		return net.ParseIP("127.0.0.1")
 	}
 

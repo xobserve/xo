@@ -1,3 +1,7 @@
 package gdata
 
-const ChannelSeparator = '/'
+const (
+	ChannelSeparator = '/'
+	TypeChannelPublic = '0'
+	TypeChannelPrivate= '1'
+)

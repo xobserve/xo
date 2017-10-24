@@ -8,6 +8,7 @@ import (
 	"github.com/teamsaas/meq/config"
 	"go.uber.org/zap"
 	"fmt"
+	"github.com/teamsaas/meq/broker/storage"
 )
 
 type Broker struct {
@@ -24,6 +25,9 @@ type Broker struct {
 	Closing chan bool
 
 	Smap *subscription.Smap
+
+	Mysql      *storage.Mysql
+	ChannelMap storage.ChannelMap
 }
 
 func Start(conf string) {
@@ -37,10 +41,12 @@ func Start(conf string) {
 	}
 
 	b := &Broker{
-		Tp:      NewTcpProvider(),
-		Ap:      NewAdmin(),
-		Closing: make(chan bool),
-		Smap:    subscription.NewSmap(),
+		Tp:         NewTcpProvider(),
+		Ap:         NewAdmin(),
+		Closing:    make(chan bool),
+		Smap:       subscription.NewSmap(),
+		Mysql:      storage.NewMysql(config.Conf.Broker.Mysql.Addr, config.Conf.Broker.Mysql.Acc, config.Conf.Broker.Mysql.Pw, config.Conf.Broker.Mysql.Port, config.Conf.Broker.Mysql.Database),
+		ChannelMap: storage.NewChannelMap(),
 	}
 
 	var err error
@@ -58,7 +64,7 @@ func Start(conf string) {
 	b.Contract =
 		security.NewSingleContractProvider(b.License)
 
-	fmt.Println(b.Contract)
+	b.Mysql.Start()
 
 	// start the cluster
 	// Create a new cluster if we have this configured
@@ -96,7 +102,7 @@ func (b *Broker) onPeerMessage(m *cluster.Message) {
 }
 
 // Publish publishes a message to everyone and returns the number of outgoing bytes written.
-func (b *Broker) publish(ssid subscription.Ssid, channel, payload []byte){
+func (b *Broker) publish(ssid subscription.Ssid, channel, payload []byte) {
 	for _, subscriber := range b.Smap.Lookup(ssid) {
 		fmt.Println("Lookup", subscriber.ID())
 		subscriber.Send(ssid, channel, payload)

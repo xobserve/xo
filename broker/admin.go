@@ -54,6 +54,10 @@ func (ap *Admin) keyGen(c echo.Context) error {
 	if err != nil {
 		return c.String(http.StatusOK, ErrServerError.Message)
 	}
+	ok, e := broker.ChannelMap.Exist(channel)
+	if e == nil && !ok {
+		broker.ChannelMap.Store(channel, 0)
+	}
 
 	return c.JSON(http.StatusOK, &keyGenResponse{
 		Status:  200,

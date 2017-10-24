@@ -4,10 +4,10 @@ import (
 	"crypto/rand"
 	"encoding/base64"
 	"encoding/binary"
-	"fmt"
 	"math"
 	"math/big"
 	"time"
+	"fmt"
 )
 
 // Gets the beginning of time for the timestamp, which is 2010/1/1 00:00:00
@@ -75,7 +75,6 @@ func ParseLicense(data string) (*License, error) {
 
 	// Decode from base64 first
 	raw, err := base64.RawURLEncoding.DecodeString(data)
-	fmt.Printf("raw", string(raw))
 	if err != nil {
 		return nil, err
 	}

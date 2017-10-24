@@ -31,8 +31,8 @@ func (b *Broker) NewConn(t net.Conn) *Conn {
 		luid:   security.NewID(),
 		subs:   subscription.NewCounters(),
 	}
-	c.guid = c.luid.Unique(uint64(address.Hardware()), "emitter")
-	logging.Logger.Info("conn created", zap.String("guid",c.guid))
+	c.guid = c.luid.Unique(uint64(address.Hardware()), "meq")
+	logging.Logger.Info("conn created", zap.String("guid", c.guid))
 	return c
 }
 
@@ -57,10 +57,15 @@ func (c *Conn) Process() error {
 		case protocol.TypeOfConnect:
 			packet := msg.(*protocol.Connect)
 			c.username = string(packet.Username)
-			ack := protocol.Connack{ReturnCode: 0x00}
+			var returnCode byte = 0x00
+			if c.username == "" {
+				returnCode = 0x04
+			}
+			ack := protocol.Connack{ReturnCode: returnCode}
 			if _, err := ack.EncodeTo(c.socket); err != nil {
 				return err
 			}
+			logging.Logger.Info("conn connect", zap.String("username", c.username))
 		case protocol.TypeOfSubscribe:
 			packet := msg.(*protocol.Subscribe)
 			ack := protocol.Suback{
@@ -69,6 +74,8 @@ func (c *Conn) Process() error {
 			}
 			for _, sub := range packet.Subscriptions {
 				if err := c.onSubscribe(sub.Topic); err != nil {
+					logging.Logger.Info("onSubscribe err", zap.Error(err))
+					goto stop
 				}
 				ack.Qos = append(ack.Qos, sub.Qos)
 			}
@@ -80,7 +87,7 @@ func (c *Conn) Process() error {
 			packet := msg.(*protocol.Unsubscribe)
 			ack := protocol.Unsuback{MessageID: packet.MessageID}
 
-			 //Unsubscribe from each subscription
+			//Unsubscribe from each subscription
 			for _, sub := range packet.Topics {
 				c.onUnsubscribe(sub.Topic)
 			}
@@ -100,7 +107,7 @@ func (c *Conn) Process() error {
 			packet := msg.(*protocol.Publish)
 
 			if err := c.onPublish(packet.Topic, packet.Payload); err != nil {
-				logging.Logger.Error("onPublish error", zap.String("Topic", string(packet.Topic)))
+				logging.Logger.Info("onPublish error", zap.String("Topic", string(packet.Topic)))
 			}
 
 			// Acknowledge the publication
@@ -112,6 +119,8 @@ func (c *Conn) Process() error {
 			}
 		}
 	}
+stop:
+	return nil
 }
 
 // Subscribe subscribes to a particular channel.
@@ -127,7 +136,7 @@ func (c *Conn) Subscribe(ssid subscription.Ssid, channel []byte) {
 }
 
 // Unsubscribe unsubscribes this client from a particular channel.
-func (c *Conn)Unsubscribe(ssid subscription.Ssid, channel []byte) {
+func (c *Conn) Unsubscribe(ssid subscription.Ssid, channel []byte) {
 	// Decrement the counter and if there's no more subscriptions, notify everyone.
 	if last := c.subs.Decrement(ssid); last {
 		// Unsubscribe the subscriber
@@ -174,5 +183,6 @@ func (c *Conn) Close() error {
 		broker.onUnsubscribe(counter.Ssid, c)
 		broker.notifyUnsubscribe(c, counter.Ssid, counter.Channel)
 	}
+	logging.Logger.Info("conn closed", zap.String("guid", c.guid))
 	return c.socket.Close()
 }

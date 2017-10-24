@@ -30,6 +30,13 @@ type Config struct {
 			SeedAddr      string `yaml:"seed_addr"`
 			Passphrase    string `yaml:"passphrase"`
 		}
+		Mysql struct {
+			Addr     string
+			Port     int
+			Acc      string
+			Pw       string
+			Database string
+		}
 	}
 }
 

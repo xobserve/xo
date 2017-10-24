@@ -4,16 +4,17 @@ import (
 	"reflect"
 	"strconv"
 	"unsafe"
-
 	"github.com/teamsaas/meq/common/gdata"
 	"github.com/teamsaas/tools"
+	"strings"
 )
 
 // Channel types
 const (
-	ChannelInvalid  = uint8(iota)
-	ChannelStatic
-	ChannelWildcard
+	ChannelInvalid = uint8(iota)
+	ChannelError
+
+	ChannelSeparatorMax int = 3
 )
 
 // ChannelOption represents a key/value pair option.
@@ -23,19 +24,14 @@ type ChannelOption struct {
 }
 
 // Channel represents a parsed MQTT topic.
-// topic: emitter/keygen/
-// Key: emitter  Channel: keygen/
 type Channel struct {
 	Key         []byte          // Gets or sets the API key of the channel.
 	Channel     []byte          // Gets or sets the channel string.
 	Query       []uint32        // Gets or sets the full ssid.
+	Type        []byte          // Query Type
 	Options     []ChannelOption // Gets or sets the options.
 	ChannelType uint8
-}
-
-// Target returns the channel target (first element of the query, second element of an SSID)
-func (c *Channel) Target() uint32 {
-	return c.Query[0]
+	ChannelNum  int
 }
 
 // TTL returns a Time-To-Live option
@@ -46,6 +42,37 @@ func (c *Channel) TTL() (uint32, bool) {
 // Last returns the 'last' option
 func (c *Channel) Last() (uint32, bool) {
 	return c.getOptUint("last")
+}
+
+// append user owner channel
+func (c *Channel) AppnedUserChannel(username []byte) {
+	length := len(c.Channel)
+	newChanel :=make([]byte, length)
+	copy(newChanel, c.Channel)
+	var buf []byte
+	for i := 0; i < length; i++ {
+		symbol := newChanel[i]
+		switch {
+		case symbol == gdata.ChannelSeparator:
+			buf = make([]byte, i+1+len(username))
+			copy(buf[0:i], newChanel[0:i])
+			buf[i] = gdata.ChannelSeparator
+			copy(buf[i+1:], username)
+			c.Query = append(c.Query, tools.GetHash(buf))
+			c.Type = append(c.Type, gdata.TypeChannelPrivate)
+			buf = buf[:0]
+		case i+1 == length:
+			buf = make([]byte, length+1+len(username))
+			copy(buf[0:length], newChanel)
+			buf[length] = gdata.ChannelSeparator
+			copy(buf[length+1:], username)
+			c.Query = append(c.Query, tools.GetHash(buf))
+			c.Type = append(c.Type, gdata.TypeChannelPrivate)
+			buf = buf[:0]
+		default:
+			continue
+		}
+	}
 }
 
 // getOptUint retrieves a Uint option
@@ -61,40 +88,6 @@ func (c *Channel) getOptUint(name string) (uint32, bool) {
 	return 0, false
 }
 
-// ParseChannel attempts to parse the channel from the underlying slice.
-func ParseChannel(text []byte) (channel *Channel) {
-	channel = new(Channel)
-	channel.Query = make([]uint32, 0, 6)
-	offset := 0
-
-	// First we need to parse the key part
-	i, ok := channel.parseKey(text)
-	if !ok {
-		channel.ChannelType = ChannelInvalid
-		return channel
-	}
-
-	// Now parse the channel
-	offset += i
-	i = channel.parseChannel(text[offset:])
-	if channel.ChannelType == ChannelInvalid {
-		return channel
-	}
-
-	// Now parse the options
-	offset += i
-	if offset < len(text) {
-		i, ok = channel.parseOptions(text[offset:])
-		if !ok {
-			channel.ChannelType = ChannelInvalid
-			return channel
-		}
-	}
-
-	// We've processed everything now
-	return channel
-}
-
 // ParseChannel2 attempts to parse the channel from the underlying slice.
 func ParsePublishChannel(text []byte) (channel *Channel) {
 	channel = new(Channel)
@@ -104,15 +97,14 @@ func ParsePublishChannel(text []byte) (channel *Channel) {
 	// First we need to parse the key part
 	i, ok := channel.parseKey(text)
 	if !ok {
-		channel.ChannelType = ChannelInvalid
+		channel.ChannelType = ChannelError
 		return channel
 	}
 
 	// Now parse the channel
 	offset += i
-	channel.parseChannel2(text[offset:])
-
-	if len(channel.Query)>1{
+	channel.parseChannel(text[offset:])
+	if len(channel.Query) > 1 {
 		channel.Query = []uint32{channel.Query[len(channel.Query)-1]}
 	}
 
@@ -120,27 +112,36 @@ func ParsePublishChannel(text []byte) (channel *Channel) {
 }
 
 // ParseChannel2 attempts to parse the channel from the underlying slice.
-func ParseChannel2(text []byte) (channel *Channel) {
+func ParseChannel(text []byte) (channel *Channel) {
 	channel = new(Channel)
 	channel.Query = make([]uint32, 0, 6)
-	offset := 0
+	channel.Type = make([]byte, 0, 6)
 
 	// First we need to parse the key part
 	i, ok := channel.parseKey(text)
 	if !ok {
-		channel.ChannelType = ChannelInvalid
+		channel.ChannelType = ChannelError
 		return channel
 	}
 
-	// Now parse the channel
-	offset += i
-	channel.parseChannel2(text[offset:])
+	ts := strings.Split(tools.Bytes2String(text[i:]), "?")
+
+	o := channel.parseChannel([]byte(ts[0]))
+	if !o {
+		return channel
+	}
+	if channel.ChannelNum > ChannelSeparatorMax {
+		channel.ChannelType = ChannelError
+	}
+	if len(ts) > 1 {
+		channel.parseOptions([]byte(ts[1]))
+	}
 
 	return channel
 }
 
 // ParseKey reads the provided API key, this should be the 32-character long
-// key or 'emitter' string for custom API requests.
+// key or 'meq' string for custom API requests.
 func (c *Channel) parseKey(text []byte) (i int, ok bool) {
 	//keyChars := 0
 	for ; i < len(text); i++ {
@@ -154,106 +155,46 @@ func (c *Channel) parseKey(text []byte) (i int, ok bool) {
 	return i, false
 }
 
-// ParseKey reads the provided API key, this should be the 32-character long
-// key or 'emitter' string for custom API requests.
-func (c *Channel) parseChannel(text []byte) (i int) {
-	length, offset := len(text), 0
+func (c *Channel) parseChannel(text []byte) (ok bool) {
+	length := len(text)
 	chanChars := 0
-	wildcards := 0
-	for ; i < length; i++ {
+	for i := 0; i < length; i++ {
 		symbol := text[i] // The current byte
 		switch {
-
-		// If we're reading a separator compute the SSID.
-		case symbol == gdata.ChannelSeparator:
-			if chanChars == 0 && wildcards == 0 {
-				c.ChannelType = ChannelInvalid
-				return i
-			}
-			c.Query = append(c.Query, tools.GetHash(text[offset:i]))
-
-			if i+1 == length { // The end flag
-				c.Channel = text[:i+1]
-				if c.ChannelType != ChannelWildcard {
-					c.ChannelType = ChannelStatic
-				}
-				return i + 1
-			} else if text[i+1] == '?' {
-				c.Channel = text[:i+1]
-				if c.ChannelType != ChannelWildcard {
-					c.ChannelType = ChannelStatic
-				}
-				return i + 2
-			}
-
-			offset = i + 1
-			chanChars = 0
-			wildcards = 0
-			continue
-			// If this symbol is a wildcard symbol
-		case symbol == '+' || symbol == '*':
-			if chanChars > 0 || wildcards > 0 {
-				c.ChannelType = ChannelInvalid
-				return i
-			}
-			wildcards++
-			c.ChannelType = ChannelWildcard
-			continue
-
-			// Valid character, but nothing special
-		case (symbol >= 45 && symbol <= 58) || (symbol >= 65 && symbol <= 122):
-			if wildcards > 0 {
-				c.ChannelType = ChannelInvalid
-				return i
-			}
-			chanChars++
-			continue
-
-			// Weird character, fail.
-		default:
-			c.ChannelType = ChannelInvalid
-			return i
-		}
-	}
-	c.ChannelType = ChannelInvalid
-	return i
-}
-
-func (c *Channel) parseChannel2(text []byte) (i int) {
-	length, offset := len(text), 0
-	chanChars := 0
-	for ; i < length; i++ {
-		symbol := text[i] // The current byte
-		switch {
-
 		// If we're reading a separator compute the SSID.
 		case symbol == gdata.ChannelSeparator:
 			if chanChars == 0 {
-				return i
+				return true
 			}
-			c.Query = append(c.Query, tools.GetHash(text[offset:i]))
-			c.Channel = text[offset:i]
+			c.Query = append(c.Query, tools.GetHash(text[0:i]))
+			c.Type = append(c.Type, gdata.TypeChannelPublic)
+			c.Channel = text[0:i]
+			c.ChannelNum++
 			chanChars = 0
 			continue
-		case symbol == '+' || symbol == '*' || symbol == '?'|| symbol == '='|| symbol == '@':
+		case symbol == '+' || symbol == '*' || symbol == '=' || symbol == '@' || symbol == '?':
 			if chanChars > 0 {
-				c.Query = append(c.Query, tools.GetHash(text[offset:i]))
-				c.Channel = text[offset:i]
-				return i
+				c.Query = append(c.Query, tools.GetHash(text[0:i]))
+				c.Type = append(c.Type, gdata.TypeChannelPublic)
+				c.Channel = text[0:i]
+				c.ChannelNum++
+				return false
 			} else {
-				return i
+				return false
 			}
 		case i+1 == length:
-			c.Query = append(c.Query, tools.GetHash(text[offset:length]))
-			c.Channel = text[offset:length]
+			c.Query = append(c.Query, tools.GetHash(text[0:length]))
+			c.Type = append(c.Type, gdata.TypeChannelPublic)
+			c.Channel = text[0:length]
+			c.ChannelNum++
 		case (symbol >= 45 && symbol <= 58) || (symbol >= 65 && symbol <= 122):
 			chanChars++
 			continue
 		default:
-			return i
+			return true
 		}
 	}
-	return i
+	return true
 }
 
 // ParseOptions parses the key/value pairs of options, encoded as URL Query string.

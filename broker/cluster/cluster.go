@@ -216,7 +216,6 @@ func (s *Cluster) NumPeers() int {
 
 // Gossip returns the state of everything we know; gets called periodically.
 func (s *Cluster) Gossip() (complete mesh.GossipData) {
-	fmt.Println("Gossip")
 	return s.state
 }
 

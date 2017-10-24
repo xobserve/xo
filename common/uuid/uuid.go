@@ -9,7 +9,6 @@ const (
 
 // GetHash returns a murmur32 hash for the data slice.
 func GetHash(data []byte) uint32 {
-	// Seed is set to 37, same as C# version of emitter
 	var h1 uint32 = 37
 
 	nblocks := len(data) / 4

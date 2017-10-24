@@ -2,10 +2,10 @@ package protocol
 
 import (
 	"bytes"
-	"fmt"
 	"io"
 
 	"github.com/teamsaas/meq/common/collection"
+	"fmt"
 )
 
 const (
@@ -594,17 +594,12 @@ func decodeConnect(data []byte, hdr *StaticHeader) (Message, error) {
 		return nil, fmt.Errorf("connect/decodeMessage: Invalid QoS level (%d) for %s message", connect.WillQOS, hdr)
 	}
 
-	if connect.UsernameFlag && !connect.PasswordFlag {
-		return nil, fmt.Errorf("connect/decodeMessage: Username flag is set but Password flag is not set")
-	}
-
 	//end wt do
 
 	if connect.WillFlag {
 		connect.WillTopic = readString(data, &bookmark)
 		connect.WillMessage = readString(data, &bookmark)
 	}
-
 	if connect.UsernameFlag {
 		connect.Username = readString(data, &bookmark)
 	}
