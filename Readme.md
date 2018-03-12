@@ -8,6 +8,10 @@ Meq can be used for any message passing service by satisfying the requirements f
 
 MeQ is written in pure go, so you can easily deploy a standalone binary in linux、unix、macos、windows,  it's **cloud native**.
 
+Develop status
+---
+This project is under re-develop, the release date is around 2018-03-30
+
 Design Goals
 ------------
 - **HA** : Replication and Data migration
