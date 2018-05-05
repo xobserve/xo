@@ -16,7 +16,7 @@ Design Goals
 - Ops friendly
 
 
-Product Architecture
+Architecture
 ------------
 
 ![](MeQ.jpeg)
