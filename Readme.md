@@ -19,10 +19,6 @@ Design Goals
 Product Architecture
 ------------
 
-### Chinese
-![](prod_schema_cn.jpg)
-
-### English
-![](prod_schema_en.jpg)
+![](MeQ.jpeg)
 
 
