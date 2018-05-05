@@ -1,11 +1,6 @@
-# MeQ 
+# MeQ [mi:kju]
 
-MeQ is a real-time communication service for connecting online devices. Infrastructure and APIs for Message Push,IM Chat, IoT, gaming, apps and real-time web. 
-
-MeQ is a distributed, scalable and fault-tolerant publish-subscribe messaging platform based on MQTT protocol and multiple message storage.
-
-Meq can be used for any message passing service by satisfying the requirements for low latency, binary messaging and high throughput.
-
+MeQ— A new composable messaging platform for Message Queue/ Push、IM、IoT etc.
 MeQ is written in pure go, so you can easily deploy a standalone binary in linux、unix、macos、windows,  it's **cloud native**.
 
 Develop status
