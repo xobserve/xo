@@ -12,7 +12,7 @@ Design Goals
 - HA and Scale out
 - High Performance、Low Latency
 - support Message Push 、MQ、IM  through **Composition**
-- Message trace by **opentracing**
+- Message trace by **Opentracing**
 - Ops friendly
 
 
