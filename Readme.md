@@ -9,35 +9,15 @@ This project is under re-develop, the release date is around 2018-05-30
 
 Design Goals
 ------------
-- **HA** : Replication and Data migration
-- **Scale out** : Sharding and Consistent hash
-- **Massive throughput**
-- **Very low latency**
-- **Qos 0 and 1 supported**
-- **Delay 、Timing and Repeated send supported**
-- **History Consuming**
-- **Message Durable and TTL supported**
-- **Message life trace**
-- **Ops friendly**
-- **Beautiful web interface**
-- **Variety of clients Supported**
-
-Key Features 
-------------
-- **Extremely Performance** 
-- **Always Secure**
-- **Mqtt protocol** 
-- **Websocket、Tcp**
-- **Open source, No commercail**
-- **message Pub/Sub**
-- **Message Queue supported**
-- **Message Push supported**
-- **IM chat supported** 
+- HA and Scale out
+- High Performance、Low Latency
+- support Message Push 、MQ、IM  through **Composition**
+- Message trace by ***opentracing**
+- Ops friendly
 
 
 Product Architecture
 ------------
-
 
 ### Chinese
 ![](prod_schema_cn.jpg)
