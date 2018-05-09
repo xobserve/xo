@@ -1,0 +1,11 @@
+common:
+  version: 0.0.1
+  debug:   false
+  logpath: "./out.log"
+  loglevel: debug
+
+broker:
+  host: localhost
+  port: 3904
+  
+  store: mem
