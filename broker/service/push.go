@@ -10,7 +10,7 @@ func (c *client) Push(m Message) {
 	msgid := m.ID
 	payload := m.Payload
 	c.bk.Lock()
-	cids := c.bk.store.FindConnByTopic(t)
+	cids := c.bk.FindConnByTopic(t)
 	c.bk.Unlock()
 
 	// header

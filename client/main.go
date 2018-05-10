@@ -8,7 +8,7 @@ import (
 )
 
 var topic = "im-test"
-var host = "localhost:3908"
+var host = "localhost:"
 
 const (
 	MSG_PUB        = 'a'
@@ -24,11 +24,16 @@ const (
 )
 
 var op = flag.String("op", "", "")
+var port = flag.String("p", "", "")
 
 func main() {
 	flag.Parse()
 
-	conn, err := net.Dial("tcp", host)
+	if *port == "" {
+		panic("port invalid")
+	}
+
+	conn, err := net.Dial("tcp", host+*port)
 	if err != nil {
 		panic(err)
 	}

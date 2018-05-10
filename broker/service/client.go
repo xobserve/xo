@@ -80,7 +80,6 @@ func (c *client) readLoop() error {
 				return errors.New("the pub topic is null")
 			}
 			c.bk.store.Put(&Message{msgid, topic, payload, false})
-
 			// push to online clients
 			c.pusher <- Message{msgid, topic, payload, false}
 		case MSG_SUB: // clients subscribe the specify topic
@@ -109,7 +108,6 @@ func (c *client) readLoop() error {
 				c.conn.SetWriteDeadline(time.Now().Add(WRITE_DEADLINE))
 				c.conn.Write(msg)
 			}
-
 		case MSG_UNSUB: // clients unsubscribe the specify topic
 			topic := c.parseSub(buf)
 			if topic == nil {

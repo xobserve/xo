@@ -1,4 +1,4 @@
-package dotray
+package network
 
 import (
 	"encoding/binary"

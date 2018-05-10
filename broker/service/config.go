@@ -24,6 +24,10 @@ type Config struct {
 		Addr   string
 		Seed   string
 	}
+
+	Router struct {
+		Addr string
+	}
 }
 
 var Conf = &Config{}

@@ -9,5 +9,4 @@ type Storer interface {
 	Flush()
 	Sub([]byte, uint64)
 	Unsub([]byte, uint64)
-	FindConnByTopic([]byte) []uint64
 }

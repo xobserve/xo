@@ -8,7 +8,7 @@ import (
 	"sync"
 	"time"
 
-	"github.com/meqio/meq/broker/service/dotray"
+	"github.com/meqio/meq/broker/service/network"
 	"go.uber.org/zap"
 )
 
@@ -19,8 +19,8 @@ type MemStore struct {
 	DBIDIndex map[string]string
 	bk        *Broker
 	cache     []*Message
-	topicConn map[string][]uint64
-	ackCache  [][]byte
+
+	ackCache [][]byte
 
 	send  chan []byte
 	recv  chan []byte
@@ -74,10 +74,10 @@ func (ms *MemStore) Init() {
 	// data transfar and synchronization
 	go func() {
 		ms.recv = make(chan []byte, 100)
-		ms.send = make(chan []byte, 100)
+		ms.send = make(chan []byte, 1000)
 
 		go func() {
-			err := dotray.StartNode(Conf.Store.Addr, Conf.Store.Seed, ms.send, ms.recv)
+			err := network.StartNode(Conf.Store.Addr, Conf.Store.Seed, ms.send, ms.recv)
 			if err != nil {
 				log.Panic("启动P2P节点失败: " + err.Error())
 			}
@@ -109,6 +109,7 @@ func (ms *MemStore) Put(msg *Message) {
 	newb[0] = MEM_MSG_ADD
 	copy(newb[1:], b)
 
+	// @todo bug,没有启动dotray的其它节点，send会满
 	ms.send <- newb
 }
 
@@ -260,25 +261,18 @@ func (ms *MemStore) FlushAck() {
 func (ms *MemStore) Sub(topic []byte, cid uint64) {
 	t := string(topic)
 	ms.Lock()
-	ms.topicConn[t] = append(ms.topicConn[t], cid)
+	ms.bk.topicConn[t] = append(ms.bk.topicConn[t], cid)
 	ms.Unlock()
 }
 
 func (ms *MemStore) Unsub(topic []byte, cid uint64) {
 	t := string(topic)
 	ms.Lock()
-	cids := ms.topicConn[t]
+	cids := ms.bk.topicConn[t]
 	for i, id := range cids {
 		if id == cid {
-			ms.topicConn[t] = append(cids[:i], cids[i+1:]...)
+			ms.bk.topicConn[t] = append(cids[:i], cids[i+1:]...)
 		}
 	}
 	ms.Unlock()
-}
-
-func (ms *MemStore) FindConnByTopic(topic []byte) []uint64 {
-	ms.Lock()
-	cids := ms.topicConn[string(topic)]
-	ms.Unlock()
-	return cids
 }
