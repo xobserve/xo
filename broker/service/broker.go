@@ -45,7 +45,7 @@ func (b *Broker) Start() {
 	b.running = true
 
 	// init store
-	switch Conf.Broker.Store {
+	switch Conf.Store.Engine {
 	case "mem":
 		b.store = &MemStore{
 			bk:        b,

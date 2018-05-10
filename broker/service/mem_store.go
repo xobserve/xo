@@ -2,8 +2,14 @@ package service
 
 import (
 	"bytes"
+	"encoding/json"
+	"log"
+	"net"
 	"sync"
 	"time"
+
+	"github.com/meqio/meq/broker/service/dotray"
+	"go.uber.org/zap"
 )
 
 type MemStore struct {
@@ -15,12 +21,21 @@ type MemStore struct {
 	cache     []*Message
 	topicConn map[string][]uint64
 	ackCache  [][]byte
+
+	send  chan []byte
+	recv  chan []byte
+	nodes map[uint64]net.Conn
 	sync.Mutex
 }
 
 const (
 	MaxCacheLength    = 10000
 	MaxMemFlushLength = 100
+)
+
+const (
+	MEM_MSG_ADD = 'a'
+	MEM_MSG_ACK = 'b'
 )
 
 func (ms *MemStore) Init() {
@@ -55,10 +70,46 @@ func (ms *MemStore) Init() {
 			ms.FlushAck()
 		}
 	}()
+
+	// data transfar and synchronization
+	go func() {
+		ms.recv = make(chan []byte, 100)
+		ms.send = make(chan []byte, 100)
+
+		go func() {
+			err := dotray.StartNode(Conf.Store.Addr, Conf.Store.Seed, ms.send, ms.recv)
+			if err != nil {
+				log.Panic("启动P2P节点失败: " + err.Error())
+			}
+		}()
+
+		for {
+			r := <-ms.recv
+			switch r[0] {
+			case MEM_MSG_ADD:
+				msg := &Message{}
+				if err := json.Unmarshal(r[1:], &msg); err != nil {
+					L.Info("unmarshal error", zap.Error(err))
+				}
+				ms.In <- msg
+			case MEM_MSG_ACK:
+				ms.Lock()
+				ms.ackCache = append(ms.ackCache, r[1:])
+				ms.Unlock()
+			}
+		}
+	}()
 }
 
 func (ms *MemStore) Put(msg *Message) {
 	ms.In <- msg
+
+	b, _ := json.Marshal(msg)
+	newb := make([]byte, len(b)+1)
+	newb[0] = MEM_MSG_ADD
+	copy(newb[1:], b)
+
+	ms.send <- newb
 }
 
 func (ms *MemStore) Flush() {
@@ -68,6 +119,10 @@ func (ms *MemStore) Flush() {
 	ms.Lock()
 	defer ms.Unlock()
 	for _, msg := range ms.cache {
+		if _, ok := ms.DBIDIndex[string(msg.ID)]; ok {
+			continue
+		}
+
 		t := string(msg.Topic)
 		_, ok := ms.DB[t]
 		if !ok {
@@ -155,11 +210,22 @@ func (ms *MemStore) ACK(msgid []byte) {
 	ms.Lock()
 	ms.ackCache = append(ms.ackCache, msgid)
 	ms.Unlock()
+
+	// sync ack to other nodes
+	newb := make([]byte, len(msgid)+1)
+	newb[0] = MEM_MSG_ACK
+	copy(newb[1:], msgid)
+
+	ms.send <- newb
 }
 
 func (ms *MemStore) FlushAck() {
 	ms.Lock()
 	defer ms.Unlock()
+
+	if len(ms.ackCache) == 0 {
+		return
+	}
 
 	var newCache [][]byte
 	for _, msgid := range ms.ackCache {
@@ -181,6 +247,7 @@ func (ms *MemStore) FlushAck() {
 					}
 				}
 			}
+			delete(ms.DBIDIndex, string(msgid))
 		} else {
 			// set message status to acked
 			msg := ms.DB[t][string(msgid)]

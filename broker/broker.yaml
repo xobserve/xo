@@ -6,6 +6,9 @@ common:
 
 broker:
   host: localhost
-  port: 3904
+  port: 3910
   
-  store: mem
+store:
+  engine: mem
+  addr: "localhost:6015"
+  seed: "localhost:6014"

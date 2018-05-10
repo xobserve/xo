@@ -46,12 +46,15 @@ func sub(conn net.Conn) {
 			acked := msg[7+ml+pl]
 			fmt.Println("收到消息：", string(msgid), string(payload), string(acked))
 
-			// 回复ack
-			msg = make([]byte, 4+1+len(msgid))
-			binary.PutUvarint(msg[:4], uint64(1+len(msgid)))
-			msg[4] = MSG_PUBACK
-			copy(msg[5:], msgid)
-			conn.Write(msg)
+			if acked == '0' {
+				// 回复ack
+				msg = make([]byte, 4+1+len(msgid))
+				binary.PutUvarint(msg[:4], uint64(1+len(msgid)))
+				msg[4] = MSG_PUBACK
+				copy(msg[5:], msgid)
+				conn.Write(msg)
+			}
+
 		case MSG_COUNT:
 			tl, _ := binary.Uvarint(msg[1:3])
 			topic := msg[3 : 3+tl]

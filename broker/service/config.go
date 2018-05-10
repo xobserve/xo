@@ -15,9 +15,14 @@ type Config struct {
 		LogLevel string
 	}
 	Broker struct {
-		Host  string
-		Port  string
-		Store string
+		Host string
+		Port string
+	}
+
+	Store struct {
+		Engine string
+		Addr   string
+		Seed   string
 	}
 }
 

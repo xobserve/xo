@@ -14,9 +14,9 @@ const (
 )
 
 var (
-	MSG_PUSH_PREFIX = []byte("01")
-	IM_PREFIX       = []byte("02")
-	MQ_PREFIX       = []byte("03")
+	MSG_PUSH_PREFIX = []byte("mp")
+	IM_PREFIX       = []byte("im")
+	MQ_PREFIX       = []byte("mq")
 
 	MSG_NEWEST_OFFSET = []byte("0")
 )

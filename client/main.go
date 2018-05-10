@@ -7,8 +7,8 @@ import (
 	"time"
 )
 
-var topic = "02-test"
-var host = "localhost:3904"
+var topic = "im-test"
+var host = "localhost:3908"
 
 const (
 	MSG_PUB        = 'a'
