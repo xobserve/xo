@@ -22,6 +22,7 @@ Performance(early stage)
 In this benchmark, I use the memory engine, all is done in my macbook pro laptop.
 - A client with 5 gourtine can  publish 2700K messages to meq per second
 - A client with 5 goroutine can consume 2000K messages from meq per second
+
 Architecture
 ------------
 
