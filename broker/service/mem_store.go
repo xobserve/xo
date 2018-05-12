@@ -257,18 +257,17 @@ func (ms *MemStore) GetCount(topic []byte) int {
 	return count
 }
 
-func (ms *MemStore) ACK(msgid []byte) {
+func (ms *MemStore) ACK(msgids [][]byte) {
 	ms.Lock()
-	ms.ackCache = append(ms.ackCache, msgid)
+	for _, msgid := range msgids {
+		ms.ackCache = append(ms.ackCache, msgid)
+	}
 	ms.Unlock()
 
-	// sync ack to other nodes
-	newb := make([]byte, len(msgid)+1)
-	newb[0] = MEM_MSG_ACK
-	copy(newb[1:], msgid)
-
+	// route ack to other nodes
+	msg := proto.PackAckBody(msgids, MEM_MSG_ACK)
 	select {
-	case ms.send <- newb:
+	case ms.send <- msg:
 	default:
 	}
 }

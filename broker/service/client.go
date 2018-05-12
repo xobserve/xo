@@ -82,7 +82,7 @@ func (c *client) readLoop() error {
 			c.subs[string(topic)] = group
 			if bytes.Compare(topic[:2], MQ_PREFIX) == 0 {
 				// push out the stored messages
-				msgs := c.bk.store.Get(topic, -1, []byte{})
+				msgs := c.bk.store.Get(topic, 0, MSG_NEWEST_OFFSET)
 				c.spusher <- msgs
 			} else {
 				// push out the count of the stored messages
@@ -100,9 +100,9 @@ func (c *client) readLoop() error {
 			delete(c.subs, string(topic))
 
 		case proto.MSG_PUBACK: // clients receive the publish message
-			msgid := proto.UnpackAck(buf[1:])
+			msgids := proto.UnpackAck(buf[1:])
 			// ack the message
-			c.bk.store.ACK(msgid)
+			c.bk.store.ACK(msgids)
 		case proto.MSG_PING: // receive client's 'ping', respond with 'pong'
 			msg := proto.PackPong()
 			c.conn.SetWriteDeadline(time.Now().Add(WRITE_DEADLINE))
@@ -121,7 +121,7 @@ func (c *client) readLoop() error {
 			m := proto.UnpackTimerMsg(buf[1:])
 			c.bk.store.PutTimerMsg(m)
 			// ack the msg
-			msg := proto.PackAck(m.ID)
+			msg := proto.PackAck([][]byte{m.ID}, proto.MSG_PUBACK)
 			c.conn.Write(msg)
 		}
 	}

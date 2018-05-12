@@ -22,6 +22,10 @@ meq.yaml
 
 meq
 
+broker
+
+client
+
 # license and master key
 license.key
 #idea

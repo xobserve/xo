@@ -7,7 +7,7 @@ type Storer interface {
 	Put([]*proto.Message)
 	Get([]byte, int, []byte) []*proto.Message
 	GetCount([]byte) int
-	ACK([]byte)
+	ACK([][]byte)
 	Flush()
 	Sub([]byte, []byte, uint64)
 	Unsub([]byte, []byte, uint64)
