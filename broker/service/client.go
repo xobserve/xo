@@ -22,7 +22,7 @@ type client struct {
 	cid     uint64
 	conn    net.Conn
 	bk      *Broker
-	spusher chan proto.Message
+	spusher chan []*proto.Message
 	gpusher chan pushPacket
 	closed  bool
 	subs    map[string][]byte
@@ -83,12 +83,7 @@ func (c *client) readLoop() error {
 			if bytes.Compare(topic[:2], MQ_PREFIX) == 0 {
 				// push out the stored messages
 				msgs := c.bk.store.Get(topic, -1, []byte{})
-				for _, m := range msgs {
-					select {
-					case c.spusher <- *m:
-					default:
-					}
-				}
+				c.spusher <- msgs
 			} else {
 				// push out the count of the stored messages
 				count := c.bk.store.GetCount(topic)
@@ -121,9 +116,7 @@ func (c *client) readLoop() error {
 				return errors.New("ull messages without subscribe the topic:" + string(topic))
 			}
 			msgs := c.bk.store.Get(topic, count, offset)
-			for _, m := range msgs {
-				c.spusher <- *m
-			}
+			c.spusher <- msgs
 		case proto.MSG_PUB_TIMER:
 			m := proto.UnpackTimerMsg(buf[1:])
 			c.bk.store.PutTimerMsg(m)
@@ -147,11 +140,14 @@ func (c *client) writeLoop() {
 	//@todo if error occurs,return
 	for !c.closed || len(c.spusher) > 0 || len(c.gpusher) > 0 {
 		select {
-		case msg := <-c.spusher:
-			// fmt.Println(string(msg.ID))
-			err := pushOne(c.conn, msg)
-			if err != nil {
-				return
+		case msgs := <-c.spusher:
+			batches := (len(msgs) / MAX_MESSAGE_BATCH) + 1
+			for i := 1; i <= batches; i++ {
+				if i < batches {
+					pushOne(c.conn, msgs[(i-1)*MAX_MESSAGE_BATCH:i*MAX_MESSAGE_BATCH])
+				} else {
+					pushOne(c.conn, msgs[(i-1)*MAX_MESSAGE_BATCH:])
+				}
 			}
 		case p := <-c.gpusher:
 			for _, m := range p.msgs {

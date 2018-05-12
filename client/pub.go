@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"net"
 	"sync"
+	"sync/atomic"
 
 	"github.com/meqio/meq/proto"
 )
@@ -11,17 +12,19 @@ import (
 func pub(conns []net.Conn) {
 	wg := &sync.WaitGroup{}
 	wg.Add(len(conns))
+
+	var pushed int64
 	for i, conn := range conns {
 		go func(i int, conn net.Conn) {
 			defer wg.Done()
 			n := 1
-			cache := make([]proto.Message, 0, 100)
+			cache := make([]*proto.Message, 0, 100)
 			for {
-				if n > 100000 {
+				if n > 200000 {
 					break
 				}
 				// 27
-				m := proto.Message{
+				m := &proto.Message{
 					ID:      []byte(fmt.Sprintf("%d-%010d", i, n)),
 					Topic:   []byte(topic),
 					Payload: []byte("123456789"),
@@ -36,6 +39,7 @@ func pub(conns []net.Conn) {
 					if err != nil {
 						panic(err)
 					}
+					atomic.AddInt64(&pushed, int64(len(cache)))
 					cache = cache[:0]
 				}
 				n++
@@ -44,6 +48,8 @@ func pub(conns []net.Conn) {
 	}
 
 	wg.Wait()
+
+	fmt.Println("共计推送消息：", pushed)
 }
 
 func pubTimer(conn net.Conn) {

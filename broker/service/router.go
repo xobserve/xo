@@ -153,7 +153,7 @@ func (r *Router) process(conn net.Conn, cid uint64) {
 			}
 			c, ok := r.bk.clients[cid]
 			if ok {
-				c.spusher <- msg
+				c.spusher <- []*proto.Message{&msg}
 			}
 		case ROUTER_MSG_PING:
 			msg := make([]byte, 5)

@@ -134,8 +134,8 @@ func (b *Broker) process(conn net.Conn, id uint64) {
 		cid:     id,
 		conn:    conn,
 		bk:      b,
-		spusher: make(chan proto.Message, 100),
-		gpusher: make(chan pushPacket, 100),
+		spusher: make(chan []*proto.Message, 1000),
+		gpusher: make(chan pushPacket, 1000),
 		subs:    make(map[string][]byte),
 	}
 

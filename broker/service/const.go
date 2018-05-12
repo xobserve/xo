@@ -11,6 +11,8 @@ const (
 	MAX_IDLE_TIME = 60
 
 	WRITE_DEADLINE = 1 * time.Second
+
+	MAX_MESSAGE_BATCH = 500
 )
 
 var (

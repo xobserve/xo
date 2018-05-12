@@ -13,7 +13,7 @@ type pushPacket struct {
 }
 
 func pushOnline(from uint64, bk *Broker, m proto.Message, cids []uint64) {
-	msg := proto.PackMsgs([]proto.Message{m}, proto.MSG_PUB)
+	msg := proto.PackMsgs([]*proto.Message{&m}, proto.MSG_PUB)
 	for _, cid := range cids {
 		if cid == from {
 			continue
@@ -32,8 +32,8 @@ func pushOnline(from uint64, bk *Broker, m proto.Message, cids []uint64) {
 	}
 }
 
-func pushOne(conn net.Conn, m proto.Message) error {
-	msg := proto.PackMsgs([]proto.Message{m}, proto.MSG_PUB)
+func pushOne(conn net.Conn, m []*proto.Message) error {
+	msg := proto.PackMsgs(m, proto.MSG_PUB)
 	conn.SetWriteDeadline(time.Now().Add(MAX_IDLE_TIME * time.Second))
 	_, err := conn.Write(msg)
 	return err

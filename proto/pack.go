@@ -332,7 +332,7 @@ func UnpackTimerMsg(b []byte) *TimerMsg {
 // 	return msg
 // }
 
-func PackMsgs(ms []Message, cmd byte) []byte {
+func PackMsgs(ms []*Message, cmd byte) []byte {
 	bl := 10 * len(ms)
 	for _, m := range ms {
 		bl += (len(m.ID) + len(m.Topic) + len(m.Payload))

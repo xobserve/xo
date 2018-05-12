@@ -16,9 +16,12 @@ func sub(conn net.Conn) {
 	if err != nil {
 		panic(err)
 	}
-	n := 0
+
+	n1 := 0
+	var unread uint64
+	setCount := false
 	for {
-		if n > 400000 {
+		if uint64(n1) >= unread && setCount {
 			break
 		}
 		header := make([]byte, 4)
@@ -41,13 +44,14 @@ func sub(conn net.Conn) {
 		case proto.MSG_PUB:
 			ms := proto.UnpackMsgs(msg[1:])
 			for _, m := range ms {
-				// fmt.Println(string(m.ID))
 				if !m.Acked {
 					// 回复ack
 					msg := proto.PackAck(m.ID)
 					conn.Write(msg)
 				}
 			}
+			n1 += len(ms)
+			// fmt.Println("累积消费消息：", n1)
 		case proto.MSG_COUNT:
 			topic, count := proto.UnpackMsgCount(msg[1:])
 			fmt.Printf("%s当前有%d条未读消息\n", string(topic), count)
@@ -56,7 +60,13 @@ func sub(conn net.Conn) {
 			// 拉取最新消息
 			msg := proto.PackPullMsg(msgid, topic, 0)
 			conn.Write(msg)
+
+			unread = count
+			setCount = true
+			fmt.Println(unread)
 		}
 
 	}
+
+	fmt.Println("累积消费未ACK消息数：", n1)
 }
