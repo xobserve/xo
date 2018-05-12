@@ -43,13 +43,18 @@ func sub(conn net.Conn) {
 
 		case proto.MSG_PUB:
 			ms := proto.UnpackMsgs(msg[1:])
+			var unacked [][]byte
 			for _, m := range ms {
 				if !m.Acked {
-					// 回复ack
-					msg := proto.PackAck(m.ID)
-					conn.Write(msg)
+					unacked = append(unacked, m.ID)
 				}
 			}
+			// 回复ack
+			if len(unacked) != 0 {
+				msg := proto.PackAck(unacked, proto.MSG_PUBACK)
+				conn.Write(msg)
+			}
+
 			n1 += len(ms)
 			// fmt.Println("累积消费消息：", n1)
 		case proto.MSG_COUNT:

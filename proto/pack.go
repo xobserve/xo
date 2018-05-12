@@ -161,16 +161,57 @@ func UnpackSub(b []byte) ([]byte, []byte) {
 	return b[2 : 2+tl], b[2+tl:]
 }
 
-func PackAck(msgid []byte) []byte {
-	msg := make([]byte, 4+1+len(msgid))
-	binary.PutUvarint(msg[:4], uint64(1+len(msgid)))
-	msg[4] = MSG_PUBACK
-	copy(msg[5:], msgid)
+func PackAck(msgids [][]byte, cmd byte) []byte {
+	body := PackAckBody(msgids, cmd)
+	msg := make([]byte, len(body)+4)
+	binary.PutUvarint(msg[:4], uint64(len(body)))
+	copy(msg[4:], body)
 	return msg
 }
 
-func UnpackAck(b []byte) []byte {
-	return b
+func PackAckBody(msgids [][]byte, cmd byte) []byte {
+	total := 1 + 2 + 2*len(msgids)
+	for _, msgid := range msgids {
+		total += len(msgid)
+	}
+
+	body := make([]byte, total)
+	// command
+	body[0] = cmd
+	// msgs count
+	binary.PutUvarint(body[1:3], uint64(len(msgids)))
+
+	last := 3
+	for _, msgid := range msgids {
+		ml := len(msgid)
+		binary.PutUvarint(body[last:last+2], uint64(ml))
+		copy(body[last+2:last+2+ml], msgid)
+		last = last + 2 + ml
+	}
+
+	return body
+}
+
+func UnpackAck(b []byte) [][]byte {
+	msl, _ := binary.Uvarint(b[:2])
+	msgids := make([][]byte, msl)
+
+	var last uint64 = 2
+	index := 0
+	bl := uint64(len(b))
+	for {
+		if last >= bl {
+			break
+		}
+		ml, _ := binary.Uvarint(b[last : last+2])
+		msgid := b[last+2 : last+2+ml]
+		msgids[index] = msgid
+
+		index++
+		last = last + 2 + ml
+	}
+
+	return msgids
 }
 
 func PackPing() []byte {
