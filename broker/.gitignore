@@ -22,9 +22,8 @@ meq.yaml
 
 meq
 
-broker
 
-client
+client/client
 
 # license and master key
 license.key
