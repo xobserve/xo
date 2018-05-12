@@ -63,7 +63,6 @@ func sub(conn net.Conn) {
 
 			unread = count
 			setCount = true
-			fmt.Println(unread)
 		}
 
 	}
