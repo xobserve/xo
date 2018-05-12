@@ -1,30 +1,20 @@
 package main
 
 import (
-	"encoding/binary"
 	"flag"
 	"net"
 	"time"
+
+	"github.com/chaingod/talent"
+	"github.com/meqio/meq/proto"
 )
 
 var topic = "im-test"
 var host = "localhost:"
 
-const (
-	MSG_PUB        = 'a'
-	MSG_SUB        = 'b'
-	MSG_PUBACK     = 'c'
-	MSG_PING       = 'd'
-	MSG_PONG       = 'e'
-	MSG_UNSUB      = 'f'
-	MSG_COUNT      = 'g'
-	MSG_PULL       = 'h'
-	MSG_CONNECT    = 'i'
-	MSG_CONNECT_OK = 'j'
-)
-
 var op = flag.String("op", "", "")
 var port = flag.String("p", "", "")
+var thread = flag.Int("t", 1, "")
 
 func main() {
 	flag.Parse()
@@ -33,44 +23,51 @@ func main() {
 		panic("port invalid")
 	}
 
-	conn, err := net.Dial("tcp", host+*port)
-	if err != nil {
-		panic(err)
-	}
-	defer conn.Close()
-
-	connect(conn)
+	conns := connect()
 	switch *op {
 	case "pub":
-		pub(conn)
+		pub(conns)
+	case "pub_timer":
+		pubTimer(conns[0])
 	case "sub":
-		sub(conn)
+		sub(conns[0])
 	}
 }
 
-func connect(conn net.Conn) {
-	msg := make([]byte, 5)
-	binary.PutUvarint(msg[:4], 1)
-	msg[4] = 'i'
-	conn.Write(msg)
+func connect() []net.Conn {
+	n := 0
+	var conns []net.Conn
+	for {
+		if n >= *thread {
+			break
+		}
+		conn, err := net.Dial("tcp", host+*port)
+		if err != nil {
+			panic(err)
+		}
+		msg := proto.PackConnect()
+		conn.Write(msg)
 
-	_, err := conn.Read(msg)
-	if err != nil {
-		panic(err)
+		_, err = talent.ReadFull(conn, msg, 0)
+		if err != nil {
+			panic(err)
+		}
+
+		if msg[4] != proto.MSG_CONNECT_OK {
+			panic("connect failed")
+		}
+		go ping(conn)
+
+		conns = append(conns, conn)
+		n++
 	}
 
-	if msg[4] != MSG_CONNECT_OK {
-		panic("connect failed")
-	}
-
-	go ping(conn)
+	return conns
 }
 
 func ping(conn net.Conn) {
 	for {
-		msg := make([]byte, 5)
-		binary.PutUvarint(msg[:4], 1)
-		msg[4] = 'd'
+		msg := proto.PackPing()
 		conn.Write(msg)
 		time.Sleep(30 * time.Second)
 	}

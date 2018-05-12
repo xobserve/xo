@@ -4,74 +4,57 @@ import (
 	"encoding/binary"
 	"fmt"
 	"net"
+
+	"github.com/chaingod/talent"
+	"github.com/meqio/meq/proto"
 )
 
 func sub(conn net.Conn) {
-
-	msg := make([]byte, 14)
-	// 设置header
-	binary.PutUvarint(msg[:4], 10)
-	// 设置control flag
-	msg[4] = MSG_SUB
-	// topic len
-	binary.PutUvarint(msg[5:7], 7)
-	// topic
-	copy(msg[7:14], topic)
+	msg := proto.PackSub([]byte(topic), []byte("robot"))
 
 	_, err := conn.Write(msg)
 	if err != nil {
 		panic(err)
 	}
-
+	n := 0
 	for {
+		if n > 400000 {
+			break
+		}
 		header := make([]byte, 4)
-		_, err := conn.Read(header)
+		_, err := talent.ReadFull(conn, header, 0)
 		if err != nil {
 			panic(err)
 		}
 
 		hl, _ := binary.Uvarint(header)
+		if hl <= 0 {
+			fmt.Println("here1111:", header, hl)
+			break
+		}
 		msg := make([]byte, hl)
-		conn.Read(msg)
+		talent.ReadFull(conn, msg, 0)
 
 		switch msg[0] {
-		case MSG_PONG:
+		case proto.MSG_PONG:
 
-		case MSG_PUB:
-			ml, _ := binary.Uvarint(msg[1:3])
-			msgid := msg[3 : 3+ml]
-
-			pl, _ := binary.Uvarint(msg[3+ml : 7+ml])
-			payload := msg[7+ml : 7+ml+pl]
-			acked := msg[7+ml+pl]
-			fmt.Println("收到消息：", string(msgid), string(payload), string(acked))
-
-			if acked == '0' {
-				// 回复ack
-				msg = make([]byte, 4+1+len(msgid))
-				binary.PutUvarint(msg[:4], uint64(1+len(msgid)))
-				msg[4] = MSG_PUBACK
-				copy(msg[5:], msgid)
-				conn.Write(msg)
+		case proto.MSG_PUB:
+			ms := proto.UnpackMsgs(msg[1:])
+			for _, m := range ms {
+				// fmt.Println(string(m.ID))
+				if !m.Acked {
+					// 回复ack
+					msg := proto.PackAck(m.ID)
+					conn.Write(msg)
+				}
 			}
-
-		case MSG_COUNT:
-			tl, _ := binary.Uvarint(msg[1:3])
-			topic := msg[3 : 3+tl]
-
-			count, _ := binary.Uvarint(msg[3+tl : 7+tl])
+		case proto.MSG_COUNT:
+			topic, count := proto.UnpackMsgCount(msg[1:])
 			fmt.Printf("%s当前有%d条未读消息\n", string(topic), count)
 
 			msgid := []byte("0")
 			// 拉取最新消息
-			msg = make([]byte, 4+1+2+len(topic)+1+len(msgid))
-			binary.PutUvarint(msg[:4], uint64(1+2+len(topic)+1+len(msgid)))
-			msg[4] = MSG_PULL
-			binary.PutUvarint(msg[5:7], tl)
-			copy(msg[7:7+tl], topic)
-			binary.PutUvarint(msg[7+tl:8+tl], 10)
-			copy(msg[8+tl:8+int(tl)+len(msgid)], msgid)
-
+			msg := proto.PackPullMsg(msgid, topic, 0)
 			conn.Write(msg)
 		}
 

@@ -7,19 +7,9 @@ import (
 	"fmt"
 	"net"
 	"time"
-)
 
-const (
-	MSG_PUB        = 'a'
-	MSG_SUB        = 'b'
-	MSG_PUBACK     = 'c'
-	MSG_PING       = 'd'
-	MSG_PONG       = 'e'
-	MSG_UNSUB      = 'f'
-	MSG_COUNT      = 'g'
-	MSG_PULL       = 'h'
-	MSG_CONNECT    = 'i'
-	MSG_CONNECT_OK = 'j'
+	"github.com/chaingod/talent"
+	"github.com/meqio/meq/proto"
 )
 
 // For controlling dynamic buffer sizes.
@@ -29,106 +19,102 @@ const (
 )
 
 type client struct {
-	cid    uint64
-	conn   net.Conn
-	bk     *Broker
-	pusher chan Message
-	closed bool
-	subs   map[string]struct{}
-}
-
-type Message struct {
-	ID      []byte
-	Topic   []byte
-	Payload []byte
-	Acked   bool
+	cid     uint64
+	conn    net.Conn
+	bk      *Broker
+	spusher chan proto.Message
+	gpusher chan pushPacket
+	closed  bool
+	subs    map[string][]byte
 }
 
 func (c *client) readLoop() error {
 	defer func() {
 		c.closed = true
+		// unsub topics
+		for topic, group := range c.subs {
+			c.bk.store.Unsub([]byte(topic), group, c.cid)
+		}
+
 		if err := recover(); err != nil {
-			fmt.Println("panic happened:", err)
 			return
 		}
 	}()
 	// Start read buffer.
 	header := make([]byte, headerSize)
-	for {
+	for !c.closed {
 		// read header
 		var bl uint64
-		c.conn.SetReadDeadline(time.Now().Add(MAX_IDLE_TIME))
-		if _, err := c.conn.Read(header); err != nil {
+		if _, err := talent.ReadFull(c.conn, header, MAX_IDLE_TIME); err != nil {
 			return err
 		}
 		if bl, _ = binary.Uvarint(header); bl <= 0 || bl >= maxBodySize {
-			return errors.New("packet not valid")
+			return fmt.Errorf("packet not valid,header:%v,bl:%v", header, bl)
 		}
 
 		// read body
 		buf := make([]byte, bl)
-		if _, err := c.conn.Read(buf); err != nil {
+		if _, err := talent.ReadFull(c.conn, buf, MAX_IDLE_TIME); err != nil {
 			return err
 		}
-
 		switch buf[0] {
-		case MSG_CONNECT:
+		case proto.MSG_CONNECT:
 
-		case MSG_PUB: // clients publish the message
-			topic, payload, msgid := c.parsePub(buf)
-			if topic == nil {
-				return errors.New("the pub topic is null")
+		case proto.MSG_PUB: // clients publish the message
+			ms := proto.UnpackMsgs(buf[1:])
+			c.bk.store.Put(ms)
+			// push to online clients of this node
+			// choose a topic group
+			select {
+			case c.gpusher <- pushPacket{
+				msgs: ms,
+			}:
+			default:
 			}
-			c.bk.store.Put(&Message{msgid, topic, payload, false})
-			// push to online clients
-			c.pusher <- Message{msgid, topic, payload, false}
-		case MSG_SUB: // clients subscribe the specify topic
-			topic := c.parseSub(buf)
-			if topic == nil {
+
+		case proto.MSG_SUB: // clients subscribe the specify topic
+			topic, group := proto.UnpackSub(buf[1:])
+			if topic == nil || len(group) == 0 {
 				return errors.New("the sub topic is null")
 			}
-			c.bk.store.Sub(topic, c.cid)
-			c.subs[string(topic)] = struct{}{}
+
+			c.bk.store.Sub(topic, group, c.cid)
+			c.subs[string(topic)] = group
 			if bytes.Compare(topic[:2], MQ_PREFIX) == 0 {
 				// push out the stored messages
 				msgs := c.bk.store.Get(topic, -1, []byte{})
 				for _, m := range msgs {
-					c.pusher <- *m
+					select {
+					case c.spusher <- *m:
+					default:
+					}
 				}
 			} else {
 				// push out the count of the stored messages
 				count := c.bk.store.GetCount(topic)
-				msg := make([]byte, 4+1+2+len(topic)+4)
-				binary.PutUvarint(msg[:4], uint64(1+2+len(topic)+4))
-				msg[4] = MSG_COUNT
-				binary.PutUvarint(msg[5:7], uint64(len(topic)))
-				copy(msg[7:7+len(topic)], topic)
-				binary.PutUvarint(msg[7+len(topic):11+len(topic)], uint64(count))
-
+				msg := proto.PackMsgCount(topic, count)
 				c.conn.SetWriteDeadline(time.Now().Add(WRITE_DEADLINE))
 				c.conn.Write(msg)
 			}
-		case MSG_UNSUB: // clients unsubscribe the specify topic
-			topic := c.parseSub(buf)
+		case proto.MSG_UNSUB: // clients unsubscribe the specify topic
+			topic, group := proto.UnpackSub(buf[1:])
 			if topic == nil {
 				return errors.New("the unsub topic is null")
 			}
-			c.bk.store.Unsub(topic, c.cid)
+			c.bk.store.Unsub(topic, group, c.cid)
 			delete(c.subs, string(topic))
 
-		case MSG_PUBACK: // clients receive the publish message
-			msgid := c.parseAck(buf)
+		case proto.MSG_PUBACK: // clients receive the publish message
+			msgid := proto.UnpackAck(buf[1:])
 			// ack the message
 			c.bk.store.ACK(msgid)
-		case MSG_PING: // receive client's 'ping', respond with 'pong'
-			msg := make([]byte, 5)
-			binary.PutUvarint(msg[:4], 1)
-			msg[4] = MSG_PONG
+		case proto.MSG_PING: // receive client's 'ping', respond with 'pong'
+			msg := proto.PackPong()
 			c.conn.SetWriteDeadline(time.Now().Add(WRITE_DEADLINE))
 			c.conn.Write(msg)
 
-		case MSG_PULL: // client request to pulls some messages from the specify position
-			topic, count, offset := c.parsePull(buf)
+		case proto.MSG_PULL: // client request to pulls some messages from the specify position
+			topic, count, offset := proto.UnPackPullMsg(buf[1:])
 			// check the topic is already subed
 			_, ok := c.subs[string(topic)]
 			if !ok {
@@ -136,23 +122,47 @@ func (c *client) readLoop() error {
 			}
 			msgs := c.bk.store.Get(topic, count, offset)
 			for _, m := range msgs {
-				c.pusher <- *m
+				c.spusher <- *m
 			}
+		case proto.MSG_PUB_TIMER:
+			m := proto.UnpackTimerMsg(buf[1:])
+			c.bk.store.PutTimerMsg(m)
+			// ack the msg
+			msg := proto.PackAck(m.ID)
+			c.conn.Write(msg)
 		}
 	}
+
+	return nil
 }
 
 func (c *client) writeLoop() {
 	defer func() {
+		c.closed = true
 		if err := recover(); err != nil {
 			return
 		}
 	}()
 
-	for !c.closed || len(c.pusher) > 0 {
+	//@todo if error occurs,return
+	for !c.closed || len(c.spusher) > 0 || len(c.gpusher) > 0 {
 		select {
-		case msg := <-c.pusher:
-			c.Push(msg)
+		case msg := <-c.spusher:
+			// fmt.Println(string(msg.ID))
+			err := pushOne(c.conn, msg)
+			if err != nil {
+				return
+			}
+		case p := <-c.gpusher:
+			for _, m := range p.msgs {
+				local, outer := c.bk.store.FindRoutes(m.Topic)
+				pushOnline(c.cid, c.bk, *m, local)
+				// route to other nodes
+				c.bk.router.route(*m, outer)
+				// ack the msg
+				// msg := proto.PackAck(m.ID)
+				// c.conn.Write(msg)
+			}
 		case <-time.After(2 * time.Second):
 		}
 	}
@@ -162,8 +172,7 @@ func (c *client) waitForConnect() error {
 	header := make([]byte, headerSize)
 
 	var bl uint64
-	c.conn.SetReadDeadline(time.Now().Add(MAX_IDLE_TIME))
-	if _, err := c.conn.Read(header); err != nil {
+	if _, err := talent.ReadFull(c.conn, header, MAX_IDLE_TIME); err != nil {
 		return err
 	}
 
@@ -173,18 +182,16 @@ func (c *client) waitForConnect() error {
 
 	// read body
 	buf := make([]byte, bl)
-	if _, err := c.conn.Read(buf); err != nil {
+	if _, err := talent.ReadFull(c.conn, buf, MAX_IDLE_TIME); err != nil {
 		return err
 	}
 
-	if buf[0] != MSG_CONNECT {
+	if buf[0] != proto.MSG_CONNECT {
 		return errors.New("first packet is not MSG_CONNECT")
 	}
 
 	// response to client
-	msg := make([]byte, 5)
-	binary.PutUvarint(msg[:4], 1)
-	msg[4] = MSG_CONNECT_OK
+	msg := proto.PackConnectOK()
 
 	c.conn.SetWriteDeadline(time.Now().Add(5 * WRITE_DEADLINE))
 	if _, err := c.conn.Write(msg); err != nil {

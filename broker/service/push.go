@@ -1,48 +1,40 @@
 package service
 
 import (
-	"encoding/binary"
+	"net"
 	"time"
+
+	"github.com/meqio/meq/proto"
 )
 
-func (c *client) Push(m Message) {
-	t := m.Topic
-	msgid := m.ID
-	payload := m.Payload
-	c.bk.Lock()
-	cids := c.bk.FindConnByTopic(t)
-	c.bk.Unlock()
+type pushPacket struct {
+	msgs []*proto.Message
+	cids []uint64
+}
 
-	// header
-	msg := make([]byte, 1+4+2+len(msgid)+4+len(payload)+1)
-	binary.PutUvarint(msg[:4], uint64(1+2+len(msgid)+4+len(payload)+1))
-	msg[4] = MSG_PUB
-	// msgid
-	binary.PutUvarint(msg[5:7], uint64(len(msgid)))
-	copy(msg[7:7+len(msgid)], msgid)
-
-	// payload
-	binary.PutUvarint(msg[7+len(msgid):11+len(msgid)], uint64(len(payload)))
-	copy(msg[11+len(msgid):11+len(msgid)+len(payload)], payload)
-
-	// acked
-	if m.Acked {
-		msg[11+len(msgid)+len(payload)] = '1'
-	} else {
-		msg[11+len(msgid)+len(payload)] = '0'
-	}
-
+func pushOnline(from uint64, bk *Broker, m proto.Message, cids []uint64) {
+	msg := proto.PackMsgs([]proto.Message{m}, proto.MSG_PUB)
 	for _, cid := range cids {
-		c.bk.Lock()
-		conn, ok := c.bk.clients[cid]
-		c.bk.Unlock()
+		if cid == from {
+			continue
+		}
+		bk.Lock()
+		c, ok := bk.clients[cid]
+		bk.Unlock()
 		if !ok { // clients offline,delete it
-			c.bk.Lock()
-			delete(c.bk.clients, cid)
-			c.bk.Unlock()
+			bk.Lock()
+			delete(bk.clients, cid)
+			bk.Unlock()
 		} else { // push to clients
-			conn.SetWriteDeadline(time.Now().Add(WRITE_DEADLINE))
-			conn.Write(msg)
+			c.conn.SetWriteDeadline(time.Now().Add(WRITE_DEADLINE))
+			c.conn.Write(msg)
 		}
 	}
+}
+
+func pushOne(conn net.Conn, m proto.Message) error {
+	msg := proto.PackMsgs([]proto.Message{m}, proto.MSG_PUB)
+	conn.SetWriteDeadline(time.Now().Add(MAX_IDLE_TIME * time.Second))
+	_, err := conn.Write(msg)
+	return err
 }

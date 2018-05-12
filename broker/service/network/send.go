@@ -3,6 +3,7 @@ package network
 import (
 	"encoding/binary"
 	"net"
+	"time"
 )
 
 // the outer application send messages
@@ -22,10 +23,12 @@ func localSend(node *Node) {
 			}
 
 			// send to the downstream
+			node.RLock()
 			for _, conn := range node.downstreams {
 				send(msg, conn)
 				n++
 			}
+			node.RUnlock()
 		}
 	}
 }
@@ -36,6 +39,7 @@ func routeSend(node *Node, msg []byte, cid int64) {
 		send(msg, node.seedConn)
 	}
 
+	node.RLock()
 	for id, conn := range node.downstreams {
 		if cid != id {
 			nmsg := make([]byte, 4+len(msg))
@@ -44,7 +48,7 @@ func routeSend(node *Node, msg []byte, cid int64) {
 			send(nmsg, conn)
 		}
 	}
-
+	node.RUnlock()
 	// send to the outer application
 	node.recv <- msg[1:]
 }
@@ -52,11 +56,13 @@ func routeSend(node *Node, msg []byte, cid int64) {
 func encode(command byte, r []byte) []byte {
 	msg := make([]byte, 4+1+len(r))
 	binary.PutUvarint(msg[:4], uint64(1+len(r)))
+	// fmt.Println("encode: ", msg[:4])
 	msg[4] = command
-	copy(msg[5:], r)
-	return msg
+	copy(msg[5:5+len(r)], r)
+	return msg[:5+len(r)]
 }
 
 func send(msg []byte, conn net.Conn) {
+	conn.SetWriteDeadline(time.Now().Add(2 * time.Second))
 	conn.Write(msg)
 }

@@ -8,7 +8,7 @@ const (
 	// ACCEPT_MAX_SLEEP is the maximum acceptable sleep times on temporary errors
 	ACCEPT_MAX_SLEEP = 1 * time.Second
 
-	MAX_IDLE_TIME = 60 * time.Second
+	MAX_IDLE_TIME = 60
 
 	WRITE_DEADLINE = 1 * time.Second
 )

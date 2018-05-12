@@ -2,28 +2,34 @@ package service
 
 import (
 	"fmt"
+	"log"
 	"net"
 	"sync"
 	"time"
 
+	"net/http"
+	_ "net/http/pprof"
+
+	"github.com/chaingod/talent"
+	"github.com/meqio/meq/proto"
 	"go.uber.org/zap"
 )
 
 type Broker struct {
-	wg        *sync.WaitGroup
-	running   bool
-	listener  net.Listener
-	clients   map[uint64]net.Conn
-	store     Storer
-	topicConn map[string][]uint64
+	wg       *sync.WaitGroup
+	running  bool
+	listener net.Listener
+	clients  map[uint64]*client
+	store    Storer
+	router   *Router
+	timer    *Timer
 	sync.Mutex
 }
 
 func NewBroker() *Broker {
 	b := &Broker{
-		wg:        &sync.WaitGroup{},
-		clients:   make(map[uint64]net.Conn),
-		topicConn: make(map[string][]uint64),
+		wg:      &sync.WaitGroup{},
+		clients: make(map[uint64]*client),
 	}
 	// init base config
 	InitConfig()
@@ -45,6 +51,11 @@ func (b *Broker) Start() {
 	go b.Accept()
 
 	b.running = true
+	// init Router
+	b.router = &Router{
+		bk: b,
+	}
+	b.router.Init()
 
 	// init store
 	switch Conf.Store.Engine {
@@ -55,19 +66,30 @@ func (b *Broker) Start() {
 	}
 
 	b.store.Init()
+
+	// init timer
+	b.timer = &Timer{
+		bk: b,
+	}
+	b.timer.Init()
+
+	go func() {
+		log.Println(http.ListenAndServe("localhost:6061", nil))
+	}()
+
 }
 func (b *Broker) Shutdown() {
 	b.running = false
 	b.listener.Close()
 
-	for _, conn := range b.clients {
-		conn.Close()
+	for _, c := range b.clients {
+		//@todo
+		// send stop signal instead
+		c.conn.Close()
 	}
 
 	L.Sync()
-	fmt.Println("hjere111")
 	b.wg.Wait()
-	fmt.Println("hjere2222")
 }
 
 func (b *Broker) Accept() {
@@ -90,46 +112,39 @@ func (b *Broker) Accept() {
 		}
 		tmpDelay = ACCEPT_MIN_SLEEP
 		id++
-		fmt.Println("here-1-1-1")
 		go b.process(conn, id)
 	}
 }
 
 func (b *Broker) process(conn net.Conn, id uint64) {
 	defer func() {
-		fmt.Println("hereaaaa")
 		b.Lock()
-		fmt.Println("hereccccc")
 		delete(b.clients, id)
-
 		b.Unlock()
-		fmt.Println("herebbbb")
 		conn.Close()
 		L.Info("关闭连接", zap.Uint64("conn_id", id))
 	}()
 
 	b.wg.Add(1)
 	defer b.wg.Done()
-	fmt.Println("here-2-2-2")
-
-	b.Lock()
-	fmt.Println("here0000")
-	b.clients[id] = conn
-	b.Unlock()
 
 	L.Info("发现新的连接", zap.Uint64("conn_id", id))
 
-	fmt.Println("here0011")
 	cli := &client{
-		cid:    id,
-		conn:   conn,
-		bk:     b,
-		pusher: make(chan Message, 100),
-		subs:   make(map[string]struct{}),
+		cid:     id,
+		conn:    conn,
+		bk:      b,
+		spusher: make(chan proto.Message, 100),
+		gpusher: make(chan pushPacket, 100),
+		subs:    make(map[string][]byte),
 	}
-	fmt.Println("here11111")
+
+	b.Lock()
+	b.clients[id] = cli
+	b.Unlock()
+
 	err := cli.waitForConnect()
-	fmt.Println("here2222")
+
 	if err != nil {
 		fmt.Println("客户端长时间不发送Connect报文,error:", err)
 		return
@@ -138,13 +153,8 @@ func (b *Broker) process(conn net.Conn, id uint64) {
 	go cli.writeLoop()
 	err = cli.readLoop()
 	if err != nil {
-		fmt.Println("read loop,error:", err)
+		if !talent.IsEOF(err) {
+			fmt.Println("read loop,error:", err)
+		}
 	}
-}
-
-func (b *Broker) FindConnByTopic(topic []byte) []uint64 {
-	b.Lock()
-	cids := b.topicConn[string(topic)]
-	b.Unlock()
-	return cids
 }

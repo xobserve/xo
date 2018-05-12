@@ -1,43 +1,66 @@
 package main
 
 import (
-	"encoding/binary"
 	"fmt"
 	"net"
+	"sync"
+
+	"github.com/meqio/meq/proto"
 )
 
-func pub(conn net.Conn) {
-	n := 1
-	for {
-		if n > 100 {
-			break
-		}
-		// 27
-		msg := make([]byte, 45)
-		// 设置header
-		binary.PutUvarint(msg[:4], 41)
-		// 设置control flag
-		msg[4] = 'a'
-		// topic len
-		binary.PutUvarint(msg[5:7], 7)
-		// topic
-		copy(msg[7:14], topic)
-		// payload len
-		binary.PutUvarint(msg[14:18], 16)
-		// payload
-		copy(msg[18:34], "1234567891234567")
-
-		// msgid len
-		binary.PutUvarint(msg[34:35], 10)
-
-		// msgid
-		msgid := fmt.Sprintf("%010d", n)
-		copy(msg[35:45], msgid)
-		_, err := conn.Write(msg)
-		if err != nil {
-			panic(err)
-		}
-		n++
-
+func pub(conns []net.Conn) {
+	wg := &sync.WaitGroup{}
+	wg.Add(len(conns))
+	for i, conn := range conns {
+		go func(i int, conn net.Conn) {
+			defer wg.Done()
+			n := 1
+			cache := make([]proto.Message, 0, 100)
+			for {
+				if n > 100000 {
+					break
+				}
+				// 27
+				m := proto.Message{
+					ID:      []byte(fmt.Sprintf("%d-%010d", i, n)),
+					Topic:   []byte(topic),
+					Payload: []byte("123456789"),
+					Type:    1,
+				}
+				if len(cache) < 500 {
+					cache = append(cache, m)
+				} else {
+					cache = append(cache, m)
+					msg := proto.PackMsgs(cache, proto.MSG_PUB)
+					_, err := conn.Write(msg)
+					if err != nil {
+						panic(err)
+					}
+					cache = cache[:0]
+				}
+				n++
+			}
+		}(i, conn)
 	}
+
+	wg.Wait()
+}
+
+func pubTimer(conn net.Conn) {
+
+	m := proto.TimerMsg{
+		ID:      []byte(fmt.Sprintf("%010d", 1)),
+		Topic:   []byte(topic),
+		Payload: []byte("1234567891234567"),
+		Delay:   30,
+		Count:   2,
+		Base:    10,
+		Power:   1,
+	}
+	msg := proto.PackTimerMsg(&m)
+	_, err := conn.Write(msg)
+	if err != nil {
+		panic(err)
+	}
+
 }

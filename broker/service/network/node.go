@@ -5,7 +5,9 @@ import (
 	"errors"
 	"fmt"
 	"sync"
-	"sync/atomic"
+	"time"
+
+	"github.com/chaingod/talent"
 
 	"net"
 )
@@ -25,7 +27,7 @@ type Node struct {
 	send chan []byte
 	recv chan []byte
 
-	sync.Mutex
+	sync.RWMutex
 }
 
 // Seed structure
@@ -82,19 +84,28 @@ func StartNode(laddr, saddr string, send, recv chan []byte) error {
 
 	// the main logic of seed manage
 	if saddr != "" {
-		err := node.connectSeed(saddr)
-		if err != nil {
-			fmt.Println("dotray dial seed error:", err)
-			return err
+		retries := 0
+		for {
+			err := node.connectSeed(saddr)
+			if err != nil {
+				fmt.Println("dotray dial seed error:", err)
+				retries++
+				if retries > 15 {
+					return err
+				}
+				time.Sleep(1 * time.Second)
+				continue
+			}
+			retries = 0
+			// start to receive messages from the current seed
+			node.receiveFrom(node.seedConn, true)
 		}
 
-		// start to receive messages from the current seed
-		node.receiveFrom(node.seedConn, true)
 	} else {
 		select {}
 	}
 
-	return errors.New("dotray : disconnected from seed node")
+	// 	return errors.New("dotray : disconnected from seed node")
 }
 
 // receive messages from remote node
@@ -103,7 +114,11 @@ func (node *Node) receiveFrom(conn net.Conn, isSeed bool) error {
 	//set connection id
 	count++
 	cid := count
-	node.downstreams[cid] = conn
+	if isSeed {
+		node.seedID = cid
+	} else {
+		node.downstreams[cid] = conn
+	}
 	node.Unlock()
 
 	// close the connection
@@ -117,15 +132,21 @@ func (node *Node) receiveFrom(conn net.Conn, isSeed bool) error {
 
 	for {
 		header := make([]byte, 4)
-		_, err := conn.Read(header)
+		n, err := talent.ReadFull(conn, header, 0)
 		if err != nil {
+			fmt.Println("here111:", n, err, talent.IsEOF(err), time.Now().UnixNano())
 			return err
 		}
-		bl, _ := binary.Uvarint(header)
+		bl, n1 := binary.Uvarint(header)
+		if bl <= 0 {
+			fmt.Println("here222:", err, header, bl, n1, time.Now().UnixNano())
+			return err
+		}
 
 		body := make([]byte, bl)
-		_, err = conn.Read(body)
+		_, err = talent.ReadFull(conn, body, 0)
 		if err != nil {
+			fmt.Println("here333:", err)
 			return err
 		}
 		switch body[0] {
@@ -160,7 +181,5 @@ func (node *Node) connectSeed(addr string) error {
 
 	node.seedConn = conn
 	node.seedAddr = addr
-	atomic.AddInt64(&count, 1)
-	node.seedID = count
 	return nil
 }
