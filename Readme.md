@@ -5,7 +5,7 @@ MeQ is written in pure go, so you can easily deploy a standalone binary in linux
 
 Develop status
 ---
-This project is under re-develop, the release date is around 2018-05-30
+V0.3.0 was released on 2018.5.13, V0.5.0 will be released before 2018.5.20
 
 Design Goals
 ------------
