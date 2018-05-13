@@ -13,25 +13,30 @@ type pushPacket struct {
 	cids []uint64
 }
 
-func pushOnline(from uint64, bk *Broker, m []*proto.Message, cid uint64) {
-	if from == cid {
-		return
-	}
-	msg := proto.PackMsgs(m, proto.MSG_PUB)
-	bk.Lock()
-	c, ok := bk.clients[cid]
-	bk.Unlock()
-	if !ok { // clients offline,delete it
+func pushOnline(from uint64, bk *Broker, msgs []*proto.Message) {
+	local, outer := bk.store.FindRoutes(msgs)
+	for s, ms := range local {
+		cid := s.Cid
+		if from == cid {
+			continue
+		}
+		msg := proto.PackMsgs(ms, proto.MSG_PUB)
 		bk.Lock()
-		delete(bk.clients, cid)
+		c, ok := bk.clients[cid]
 		bk.Unlock()
-	} else { // push to clients
-		c.conn.SetWriteDeadline(time.Now().Add(WRITE_DEADLINE))
-		_, err := c.conn.Write(msg)
-		if err != nil {
-			L.Info("push online error", zap.Error(err))
+		if !ok { // clients offline,delete it
+			bk.Lock()
+			delete(bk.clients, cid)
+			bk.Unlock()
+		} else { // push to clients
+			c.conn.SetWriteDeadline(time.Now().Add(WRITE_DEADLINE))
+			_, err := c.conn.Write(msg)
+			if err != nil {
+				L.Info("push online error", zap.Error(err))
+			}
 		}
 	}
+	bk.router.route(outer)
 }
 
 func pushOne(conn net.Conn, m []*proto.Message) error {

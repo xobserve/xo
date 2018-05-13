@@ -14,5 +14,5 @@ type Storer interface {
 	Unsub([]byte, []byte, uint64)
 	FindRoutes([]*proto.Message) (map[Sess][]*proto.Message, map[Sess][]*proto.Message)
 	PutTimerMsg(*proto.TimerMsg)
-	ScanTimerMsg()
+	GetTimerMsg() []*proto.Message
 }

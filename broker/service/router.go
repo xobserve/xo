@@ -46,23 +46,21 @@ func (r *Router) Init() {
 		for r.bk.running {
 			tmpDelay := ACCEPT_MIN_SLEEP
 			var id uint64
-			for r.bk.running {
-				conn, err := r.listener.Accept()
-				if err != nil {
-					if ne, ok := err.(net.Error); ok && ne.Temporary() {
-						L.Error("Temporary Client Accept Error ", zap.Error(err))
-						time.Sleep(tmpDelay)
-						tmpDelay *= 2
-						if tmpDelay > ACCEPT_MAX_SLEEP {
-							tmpDelay = ACCEPT_MAX_SLEEP
-						}
+			conn, err := r.listener.Accept()
+			if err != nil {
+				if ne, ok := err.(net.Error); ok && ne.Temporary() {
+					L.Error("Temporary Client Accept Error ", zap.Error(err))
+					time.Sleep(tmpDelay)
+					tmpDelay *= 2
+					if tmpDelay > ACCEPT_MAX_SLEEP {
+						tmpDelay = ACCEPT_MAX_SLEEP
 					}
-					continue
 				}
-				tmpDelay = ACCEPT_MIN_SLEEP
-				id++
-				go r.process(conn, id)
+				continue
 			}
+			tmpDelay = ACCEPT_MIN_SLEEP
+			id++
+			go r.process(conn, id)
 		}
 	}()
 

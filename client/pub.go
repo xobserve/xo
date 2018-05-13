@@ -5,6 +5,7 @@ import (
 	"net"
 	"sync"
 	"sync/atomic"
+	"time"
 
 	"github.com/meqio/meq/proto"
 )
@@ -29,6 +30,7 @@ func pub(conns []net.Conn) {
 					Topic:   []byte(topic),
 					Payload: []byte("123456789"),
 					Type:    1,
+					QoS:     1,
 				}
 				if len(cache) < 10 {
 					cache = append(cache, m)
@@ -58,12 +60,10 @@ func pubTimer(conn net.Conn) {
 		ID:      []byte(fmt.Sprintf("%010d", 1)),
 		Topic:   []byte(topic),
 		Payload: []byte("1234567891234567"),
+		Trigger: time.Now().Add(60 * time.Second).Unix(),
 		Delay:   30,
-		Count:   2,
-		Base:    10,
-		Power:   1,
 	}
-	msg := proto.PackTimerMsg(&m)
+	msg := proto.PackTimerMsg(&m, proto.MSG_PUB_RESTORE)
 	_, err := conn.Write(msg)
 	if err != nil {
 		panic(err)

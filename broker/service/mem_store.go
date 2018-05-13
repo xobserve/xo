@@ -3,6 +3,7 @@ package service
 import (
 	"bytes"
 	"encoding/binary"
+	"fmt"
 	"log"
 	"math/rand"
 	"sync"
@@ -56,7 +57,7 @@ func (ms *MemStore) Init() {
 	go func() {
 		ms.bk.wg.Add(1)
 		defer ms.bk.wg.Done()
-		for ms.bk.running || len(ms.In) != 0 {
+		for ms.bk.running {
 			msg := <-ms.In
 			if msg == nil {
 				return
@@ -73,7 +74,8 @@ func (ms *MemStore) Init() {
 	go func() {
 		ms.bk.wg.Add(1)
 		defer ms.bk.wg.Done()
-		for ms.bk.running || len(ms.cache) != 0 {
+
+		for ms.bk.running {
 			time.Sleep(1 * time.Second)
 			ms.Flush()
 		}
@@ -82,7 +84,8 @@ func (ms *MemStore) Init() {
 	go func() {
 		ms.bk.wg.Add(1)
 		defer ms.bk.wg.Done()
-		for ms.bk.running || len(ms.ackCache) != 0 {
+
+		for ms.bk.running {
 			time.Sleep(1 * time.Second)
 			ms.FlushAck()
 		}
@@ -112,8 +115,12 @@ func (ms *MemStore) Init() {
 				msg := unpackMsgAdd(r[1:])
 				ms.In <- &msg
 			case MEM_MSG_ACK:
+				msgids := proto.UnpackAck(r[1:])
 				ms.Lock()
-				ms.ackCache = append(ms.ackCache, r[1:])
+				for _, msgid := range msgids {
+					fmt.Println(string(msgid))
+					ms.ackCache = append(ms.ackCache, msgid)
+				}
 				ms.Unlock()
 			case MEM_MSG_NODE:
 				ms.Lock()
@@ -172,7 +179,10 @@ func (ms *MemStore) Close() {
 
 func (ms *MemStore) Put(msgs []*proto.Message) {
 	for _, msg := range msgs {
-		ms.In <- msg
+		if msg.QoS == proto.QOS1 {
+			// qos 1 need to be persistent
+			ms.In <- msg
+		}
 		m := packMsgAdd(*msg)
 		select {
 		case ms.send <- m:
@@ -475,15 +485,32 @@ func (ms *MemStore) PutTimerMsg(m *proto.TimerMsg) {
 	ms.Unlock()
 }
 
-func (ms *MemStore) ScanTimerMsg() {
+func (ms *MemStore) GetTimerMsg() []*proto.Message {
+	now := time.Now().Unix()
 
+	var newM []*proto.TimerMsg
+	var msgs []*proto.Message
+	ms.Lock()
+	for _, m := range ms.timerDB {
+		if m.Trigger <= now {
+			msgs = append(msgs, &proto.Message{m.ID, m.Topic, m.Payload, false, proto.TIMER_MSG, 1})
+		} else {
+			newM = append(newM, m)
+		}
+	}
+	ms.timerDB = newM
+	ms.Unlock()
+
+	ms.Put(msgs)
+
+	return msgs
 }
 
 func packMsgAdd(m proto.Message) []byte {
 	msgid := m.ID
 	payload := m.Payload
 
-	msg := make([]byte, 1+2+len(msgid)+4+len(payload)+1+2+len(m.Topic)+1)
+	msg := make([]byte, 1+2+len(msgid)+4+len(payload)+1+2+len(m.Topic)+1+1)
 	msg[0] = MEM_MSG_ADD
 	// msgid
 	binary.PutUvarint(msg[1:3], uint64(len(msgid)))
@@ -506,6 +533,9 @@ func packMsgAdd(m proto.Message) []byte {
 
 	// type
 	binary.PutUvarint(msg[7+len(msgid)+len(payload)+3+len(m.Topic):7+len(msgid)+len(payload)+3+len(m.Topic)+1], uint64(m.Type))
+
+	// qos
+	binary.PutUvarint(msg[7+len(msgid)+len(payload)+3+len(m.Topic)+1:7+len(msgid)+len(payload)+3+len(m.Topic)+2], uint64(m.QoS))
 	return msg
 }
 
@@ -529,5 +559,8 @@ func unpackMsgAdd(b []byte) proto.Message {
 
 	// type
 	tp, _ := binary.Uvarint(b[6+ml+pl+3+tl : 7+ml+pl+3+tl])
-	return proto.Message{msgid, topic, payload, acked, int8(tp)}
+
+	// qos
+	qos, _ := binary.Uvarint(b[7+ml+pl+3+tl : 8+ml+pl+3+tl])
+	return proto.Message{msgid, topic, payload, acked, int8(tp), int8(qos)}
 }

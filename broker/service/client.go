@@ -66,6 +66,7 @@ func (c *client) readLoop() error {
 			if err != nil {
 				return err
 			}
+
 			c.bk.store.Put(ms)
 			// push to online clients of this node
 			// choose a topic group
@@ -75,6 +76,17 @@ func (c *client) readLoop() error {
 			}:
 			default:
 			}
+
+			// ack the msgs
+			var toack [][]byte
+			for _, m := range ms {
+				if m.QoS == proto.QOS1 {
+					toack = append(toack, m.ID)
+				}
+			}
+			msg := proto.PackAck(toack, proto.MSG_PUBACK)
+			c.conn.SetWriteDeadline(time.Now().Add(WRITE_DEADLINE))
+			c.conn.Write(msg)
 
 		case proto.MSG_SUB: // clients subscribe the specify topic
 			topic, group := proto.UnpackSub(buf[1:])
@@ -125,11 +137,21 @@ func (c *client) readLoop() error {
 			}
 			msgs := c.bk.store.Get(topic, count, offset)
 			c.spusher <- msgs
-		case proto.MSG_PUB_TIMER:
+		case proto.MSG_PUB_TIMER, proto.MSG_PUB_RESTORE:
 			m := proto.UnpackTimerMsg(buf[1:])
-			c.bk.store.PutTimerMsg(m)
-			// ack the msg
-			msg := proto.PackAck([][]byte{m.ID}, proto.MSG_PUBACK)
+			now := time.Now().Unix()
+			// trigger first
+			if m.Trigger == 0 {
+				if m.Delay != 0 {
+					m.Trigger = now + int64(m.Delay)
+				}
+			}
+			if m.Trigger > now {
+				c.bk.store.PutTimerMsg(m)
+			}
+
+			// ack the timer msg
+			msg := proto.PackAck([][]byte{m.ID}, proto.MSG_PUB_TIMER_ACK)
 			c.conn.SetWriteDeadline(time.Now().Add(WRITE_DEADLINE))
 			c.conn.Write(msg)
 		}
@@ -146,11 +168,7 @@ func (c *client) writeLoop() {
 		c.conn.Close()
 
 		if len(gcache) != 0 {
-			local, outer := c.bk.store.FindRoutes(gcache)
-			for s, ms := range local {
-				pushOnline(c.cid, c.bk, ms, s.Cid)
-			}
-			c.bk.router.route(outer)
+			pushOnline(c.cid, c.bk, gcache)
 		}
 
 		if err := recover(); err != nil {
@@ -175,7 +193,6 @@ func (c *client) writeLoop() {
 						err = pushOne(c.conn, new[(i-1)*MAX_MESSAGE_BATCH:])
 					}
 				}
-				// pushOne(c.conn, scache)
 				scache = scache[:0]
 			}
 			if err != nil {
@@ -187,12 +204,7 @@ func (c *client) writeLoop() {
 				gcache = append(gcache, p.msgs...)
 			} else {
 				msgs := append(gcache, p.msgs...)
-				local, outer := c.bk.store.FindRoutes(msgs)
-				for s, ms := range local {
-					pushOnline(c.cid, c.bk, ms, s.Cid)
-				}
-
-				c.bk.router.route(outer)
+				pushOnline(c.cid, c.bk, msgs)
 			}
 		case <-time.After(500 * time.Millisecond):
 			var err error
@@ -202,11 +214,7 @@ func (c *client) writeLoop() {
 			}
 
 			if len(gcache) > 0 {
-				local, outer := c.bk.store.FindRoutes(gcache)
-				for s, ms := range local {
-					pushOnline(c.cid, c.bk, ms, s.Cid)
-				}
-				c.bk.router.route(outer)
+				pushOnline(c.cid, c.bk, gcache)
 				gcache = gcache[:0]
 			}
 

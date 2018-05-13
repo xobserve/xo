@@ -6,12 +6,12 @@ common:
 
 broker:
   host: localhost
-  port: 4003
+  port: 4010
   
 store:
   engine: mem
-  addr: "localhost:7003"
-  seed: ""
+  addr: "localhost:7010"
+  seed: "localhost:7009"
 
 router:
-  addr: "localhost:8103"
+  addr: "localhost:8110"

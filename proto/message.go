@@ -6,14 +6,13 @@ type Message struct {
 	Payload []byte
 	Acked   bool
 	Type    int8
+	QoS     int8
 }
 
 type TimerMsg struct {
 	ID      []byte
 	Topic   []byte
 	Payload []byte
+	Trigger int64
 	Delay   int
-	Count   int8
-	Base    int8
-	Power   int8
 }

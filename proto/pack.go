@@ -7,7 +7,7 @@ import (
 )
 
 func PackRouteMsgs(ms []*Message, cmd byte, cid uint64) []byte {
-	bl := 10 * len(ms)
+	bl := 11 * len(ms)
 	for _, m := range ms {
 		bl += (len(m.ID) + len(m.Topic) + len(m.Payload))
 	}
@@ -33,7 +33,9 @@ func PackRouteMsgs(ms []*Message, cmd byte, cid uint64) []byte {
 		}
 		//type
 		binary.PutUvarint(body[last+9+ml+tl+pl:last+10+ml+tl+pl], uint64(m.Type))
-		last = last + 8 + ml + tl + pl + 2
+		//qos
+		binary.PutUvarint(body[last+10+ml+tl+pl:last+11+ml+tl+pl], uint64(m.QoS))
+		last = last + 11 + ml + tl + pl
 	}
 
 	// 压缩body
@@ -89,10 +91,12 @@ func UnpackRouteMsgs(m []byte) ([]*Message, uint64, error) {
 		}
 		//type
 		tp, _ := binary.Uvarint(b[last+9+ml+tl+pl : last+10+ml+tl+pl])
-		msgs[index] = &Message{msgid, topic, payload, acked, int8(tp)}
+		//qos
+		qos, _ := binary.Uvarint(b[last+10+ml+tl+pl : last+11+ml+tl+pl])
+		msgs[index] = &Message{msgid, topic, payload, acked, int8(tp), int8(qos)}
 
 		index++
-		last = last + 10 + ml + tl + pl
+		last = last + 11 + ml + tl + pl
 	}
 
 	return msgs, cid, nil
@@ -314,16 +318,16 @@ func UnPackPullMsg(b []byte) ([]byte, int, []byte) {
 	return b[2 : 2+tl], int(count), b[3+tl:]
 }
 
-func PackTimerMsg(m *TimerMsg) []byte {
+func PackTimerMsg(m *TimerMsg, cmd byte) []byte {
 	ml := uint64(len(m.ID))
 	tl := uint64(len(m.Topic))
 	pl := uint64(len(m.Payload))
-	msg := make([]byte, 4+1+2+ml+2+tl+4+pl+4+1+1+1)
+	msg := make([]byte, 4+1+2+ml+2+tl+4+pl+8+4)
 
 	//header
-	binary.PutUvarint(msg[:4], 1+2+ml+2+tl+4+pl+4+1+1+1)
+	binary.PutUvarint(msg[:4], 1+2+ml+2+tl+4+pl+8+4)
 	//command
-	msg[4] = MSG_PUB_TIMER
+	msg[4] = cmd
 	//msgid
 	binary.PutUvarint(msg[5:7], ml)
 	copy(msg[7:7+ml], m.ID)
@@ -333,14 +337,10 @@ func PackTimerMsg(m *TimerMsg) []byte {
 	//payload
 	binary.PutUvarint(msg[9+ml+tl:13+ml+tl], pl)
 	copy(msg[13+ml+tl:13+ml+tl+pl], m.Payload)
-	//start time
-	binary.PutUvarint(msg[13+ml+tl+pl:17+ml+tl+pl], uint64(m.Delay))
-	//count
-	binary.PutUvarint(msg[17+ml+tl+pl:18+ml+tl+pl], uint64(m.Count))
-	//base
-	binary.PutUvarint(msg[18+ml+tl+pl:19+ml+tl+pl], uint64(m.Base))
-	//power
-	binary.PutUvarint(msg[19+ml+tl+pl:20+ml+tl+pl], uint64(m.Power))
+	//trigger time
+	binary.PutVarint(msg[13+ml+tl+pl:21+ml+tl+pl], m.Trigger)
+	//delay
+	binary.PutUvarint(msg[21+ml+tl+pl:25+ml+tl+pl], uint64(m.Delay))
 	return msg
 }
 
@@ -354,15 +354,11 @@ func UnpackTimerMsg(b []byte) *TimerMsg {
 	//payload 4
 	pl, _ := binary.Uvarint(b[4+ml+tl : 8+ml+tl])
 	payload := b[8+ml+tl : 8+ml+tl+pl]
-	//start time 4
-	st, _ := binary.Uvarint(b[8+ml+tl+pl : 12+ml+tl+pl])
-	//count 1
-	count, _ := binary.Uvarint(b[12+ml+tl+pl : 13+ml+tl+pl])
-	//base 1
-	base, _ := binary.Uvarint(b[13+ml+tl+pl : 14+ml+tl+pl])
-	//power 1
-	power, _ := binary.Uvarint(b[14+ml+tl+pl : 15+ml+tl+pl])
-	return &TimerMsg{msgid, topic, payload, int(st), int8(count), int8(base), int8(power)}
+	//trigger time 8
+	st, _ := binary.Varint(b[8+ml+tl+pl : 16+ml+tl+pl])
+	//delay 4
+	delay, _ := binary.Uvarint(b[16+ml+tl+pl : 20+ml+tl+pl])
+	return &TimerMsg{msgid, topic, payload, st, int(delay)}
 }
 
 // func PackMsgs(ms []Message, cmd byte) []byte {
@@ -404,7 +400,7 @@ func UnpackTimerMsg(b []byte) *TimerMsg {
 // }
 
 func PackMsgs(ms []*Message, cmd byte) []byte {
-	bl := 10 * len(ms)
+	bl := 11 * len(ms)
 	for _, m := range ms {
 		bl += (len(m.ID) + len(m.Topic) + len(m.Payload))
 	}
@@ -430,7 +426,9 @@ func PackMsgs(ms []*Message, cmd byte) []byte {
 		}
 		//type
 		binary.PutUvarint(body[last+9+ml+tl+pl:last+10+ml+tl+pl], uint64(m.Type))
-		last = last + 8 + ml + tl + pl + 2
+		//qos
+		binary.PutUvarint(body[last+10+ml+tl+pl:last+11+ml+tl+pl], uint64(m.QoS))
+		last = last + 11 + ml + tl + pl
 	}
 
 	// 压缩body
@@ -478,10 +476,12 @@ func UnpackMsgs(m []byte) ([]*Message, error) {
 		}
 		//type
 		tp, _ := binary.Uvarint(b[last+9+ml+tl+pl : last+10+ml+tl+pl])
-		msgs[index] = &Message{msgid, topic, payload, acked, int8(tp)}
+		// qos
+		qos, _ := binary.Uvarint(b[last+10+ml+tl+pl : last+11+ml+tl+pl])
+		msgs[index] = &Message{msgid, topic, payload, acked, int8(tp), int8(qos)}
 
 		index++
-		last = last + 10 + ml + tl + pl
+		last = last + 11 + ml + tl + pl
 	}
 
 	return msgs, nil
