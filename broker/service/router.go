@@ -41,7 +41,9 @@ func (r *Router) Init() {
 	r.listener = l
 
 	go func() {
-		for {
+		r.bk.wg.Add(1)
+		defer r.bk.wg.Done()
+		for r.bk.running {
 			tmpDelay := ACCEPT_MIN_SLEEP
 			var id uint64
 			for r.bk.running {
@@ -98,6 +100,10 @@ func (r *Router) Init() {
 	}()
 }
 
+func (r *Router) Close() {
+	r.listener.Close()
+}
+
 func (r *Router) ping(addr string, c net.Conn) {
 	go func() {
 		for r.bk.running {
@@ -146,14 +152,14 @@ func (r *Router) process(conn net.Conn, cid uint64) {
 
 		switch body[0] {
 		case ROUTER_MSG_ADD:
-			msg, cid, err := proto.UnpackRouteMsg(body[1:])
+			msgs, cid, err := proto.UnpackRouteMsgs(body[1:])
 			if err != nil {
 				L.Warn("route process error", zap.Error(err))
 				return
 			}
 			c, ok := r.bk.clients[cid]
 			if ok {
-				c.spusher <- []*proto.Message{&msg}
+				c.spusher <- msgs
 			}
 		case ROUTER_MSG_PING:
 			msg := make([]byte, 5)
@@ -164,13 +170,13 @@ func (r *Router) process(conn net.Conn, cid uint64) {
 	}
 }
 
-func (r *Router) route(msg proto.Message, outer []Sess) {
-	for _, s := range outer {
+func (r *Router) route(outer map[Sess][]*proto.Message) {
+	for s, ms := range outer {
 		conn, ok := r.conns[s.Addr]
 		if !ok {
 			continue
 		}
-		m := proto.PackRouteMsg(msg, ROUTER_MSG_ADD, s.Cid)
+		m := proto.PackRouteMsgs(ms, ROUTER_MSG_ADD, s.Cid)
 		conn.SetWriteDeadline(time.Now().Add(2 * time.Second))
 		conn.Write(m)
 	}

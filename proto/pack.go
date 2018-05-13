@@ -2,70 +2,100 @@ package proto
 
 import (
 	"encoding/binary"
-	"fmt"
 
 	"github.com/golang/snappy"
 )
 
-func PackRouteMsg(m Message, cmd byte, cid uint64) []byte {
-	msgid := m.ID
-	payload := m.Payload
-	// header
-	msg := make([]byte, 1+4+2+len(msgid)+4+len(payload)+1+2+len(m.Topic)+4+1)
-	binary.PutUvarint(msg[:4], uint64(1+2+len(msgid)+4+len(payload)+1+2+len(m.Topic)+4+1))
-	msg[4] = cmd
-	// msgid
-	binary.PutUvarint(msg[5:7], uint64(len(msgid)))
-	copy(msg[7:7+len(msgid)], msgid)
+func PackRouteMsgs(ms []*Message, cmd byte, cid uint64) []byte {
+	bl := 10 * len(ms)
+	for _, m := range ms {
+		bl += (len(m.ID) + len(m.Topic) + len(m.Payload))
+	}
+	body := make([]byte, bl)
 
-	// payload
-	binary.PutUvarint(msg[7+len(msgid):11+len(msgid)], uint64(len(payload)))
-	copy(msg[11+len(msgid):11+len(msgid)+len(payload)], payload)
-
-	// acked
-	if m.Acked {
-		msg[11+len(msgid)+len(payload)] = '1'
-	} else {
-		msg[11+len(msgid)+len(payload)] = '0'
+	last := 0
+	for _, m := range ms {
+		ml, tl, pl := len(m.ID), len(m.Topic), len(m.Payload)
+		//msgid
+		binary.PutUvarint(body[last:last+2], uint64(ml))
+		copy(body[last+2:last+2+ml], m.ID)
+		//topic
+		binary.PutUvarint(body[last+2+ml:last+4+ml], uint64(tl))
+		copy(body[last+4+ml:last+4+ml+tl], m.Topic)
+		//payload
+		binary.PutUvarint(body[last+4+ml+tl:last+8+ml+tl], uint64(pl))
+		copy(body[last+8+ml+tl:last+8+ml+tl+pl], m.Payload)
+		//Acked
+		if m.Acked {
+			body[last+8+ml+tl+pl] = '1'
+		} else {
+			body[last+8+ml+tl+pl] = '0'
+		}
+		//type
+		binary.PutUvarint(body[last+9+ml+tl+pl:last+10+ml+tl+pl], uint64(m.Type))
+		last = last + 8 + ml + tl + pl + 2
 	}
 
-	// topic
-	binary.PutUvarint(msg[11+len(msgid)+len(payload)+1:11+len(msgid)+len(payload)+3], uint64(len(m.Topic)))
-	copy(msg[11+len(msgid)+len(payload)+3:11+len(msgid)+len(payload)+3+len(m.Topic)], m.Topic)
+	// 压缩body
+	cbody := snappy.Encode(nil, body)
 
+	msg := make([]byte, len(cbody)+11)
+	//header
+	binary.PutUvarint(msg[:4], uint64(len(cbody)+7))
+	//command
+	msg[4] = cmd
+	//msg count
+	binary.PutUvarint(msg[5:7], uint64(len(ms)))
 	//cid
-	binary.PutUvarint(msg[11+len(msgid)+len(payload)+3+len(m.Topic):11+len(msgid)+len(payload)+3+len(m.Topic)+4], cid)
-
-	// type 1
-	binary.PutUvarint(msg[11+len(msgid)+len(payload)+3+len(m.Topic)+4:11+len(msgid)+len(payload)+3+len(m.Topic)+5], uint64(m.Type))
+	binary.PutUvarint(msg[7:11], cid)
+	//body
+	copy(msg[11:], cbody)
 	return msg
 }
 
-func UnpackRouteMsg(b []byte) (Message, uint64, error) {
-	// msgid
-	ml, _ := binary.Uvarint(b[:2])
-	msgid := b[2 : 2+ml]
+func UnpackRouteMsgs(m []byte) ([]*Message, uint64, error) {
+	// msg count
+	msl, _ := binary.Uvarint(m[:2])
+	msgs := make([]*Message, msl)
+	// cid
+	cid, _ := binary.Uvarint(m[2:6])
 
-	// payload
-	pl, _ := binary.Uvarint(b[2+ml : 6+ml])
-	payload := b[6+ml : 6+ml+pl]
-
-	//acked
-	var acked bool
-	if b[6+ml+pl] == '1' {
-		acked = true
+	// decompress
+	b, err := snappy.Decode(nil, m[6:])
+	if err != nil {
+		return nil, 0, err
 	}
 
-	// topic
-	tl, _ := binary.Uvarint(b[6+ml+pl+1 : 6+ml+pl+3])
-	topic := b[6+ml+pl+3 : 6+ml+pl+3+tl]
+	var last uint64
+	bl := uint64(len(b))
+	index := 0
+	for {
+		if last >= bl {
+			break
+		}
+		//msgid
+		ml, _ := binary.Uvarint(b[last : last+2])
+		msgid := b[last+2 : last+2+ml]
+		//topic
+		tl, _ := binary.Uvarint(b[last+2+ml : last+4+ml])
+		topic := b[last+4+ml : last+4+ml+tl]
+		//payload
+		pl, _ := binary.Uvarint(b[last+4+ml+tl : last+8+ml+tl])
+		payload := b[last+8+ml+tl : last+8+ml+tl+pl]
+		//acked
+		var acked bool
+		if b[last+8+ml+tl+pl] == '1' {
+			acked = true
+		}
+		//type
+		tp, _ := binary.Uvarint(b[last+9+ml+tl+pl : last+10+ml+tl+pl])
+		msgs[index] = &Message{msgid, topic, payload, acked, int8(tp)}
 
-	// cid
-	cid, _ := binary.Uvarint(b[6+ml+pl+3+tl : 10+ml+pl+3+tl])
+		index++
+		last = last + 10 + ml + tl + pl
+	}
 
-	// type
-	tp, _ := binary.Uvarint(b[10+ml+pl+3+tl:])
-	return Message{msgid, topic, payload, acked, int8(tp)}, cid, nil
+	return msgs, cid, nil
 }
 
 func PackMsg(m Message, cmd byte) []byte {
@@ -416,14 +446,14 @@ func PackMsgs(ms []*Message, cmd byte) []byte {
 	return msg
 }
 
-func UnpackMsgs(m []byte) []*Message {
+func UnpackMsgs(m []byte) ([]*Message, error) {
 	msl, _ := binary.Uvarint(m[:2])
 	msgs := make([]*Message, msl)
 
 	// decompress
 	b, err := snappy.Decode(nil, m[2:])
 	if err != nil {
-		fmt.Println("snappy decode error")
+		return nil, err
 	}
 	var last uint64
 	bl := uint64(len(b))
@@ -454,5 +484,5 @@ func UnpackMsgs(m []byte) []*Message {
 		last = last + 10 + ml + tl + pl
 	}
 
-	return msgs
+	return msgs, nil
 }

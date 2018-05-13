@@ -12,7 +12,8 @@ const (
 
 	WRITE_DEADLINE = 1 * time.Second
 
-	MAX_MESSAGE_BATCH = 100
+	MAX_MESSAGE_BATCH      = 200
+	MAX_MESSAGE_PULL_COUNT = 200
 )
 
 var (

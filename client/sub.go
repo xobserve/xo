@@ -10,7 +10,7 @@ import (
 )
 
 func sub(conn net.Conn) {
-	msg := proto.PackSub([]byte(topic), []byte("robot"))
+	msg := proto.PackSub([]byte(topic), []byte("robot1"))
 
 	_, err := conn.Write(msg)
 	if err != nil {
@@ -18,12 +18,12 @@ func sub(conn net.Conn) {
 	}
 
 	n1 := 0
-	var unread uint64
-	setCount := false
+	// var unread uint64
+	// setCount := false
 	for {
-		if uint64(n1) >= unread && setCount {
-			break
-		}
+		// if uint64(n1) >= unread && setCount {
+		// 	break
+		// }
 		header := make([]byte, 4)
 		_, err := talent.ReadFull(conn, header, 0)
 		if err != nil {
@@ -42,9 +42,11 @@ func sub(conn net.Conn) {
 		case proto.MSG_PONG:
 
 		case proto.MSG_PUB:
-			ms := proto.UnpackMsgs(msg[1:])
+			ms, _ := proto.UnpackMsgs(msg[1:])
 			var unacked [][]byte
 			for _, m := range ms {
+				fmt.Println("收到消息：", string(m.ID))
+				// fmt.Println(string(m.ID))
 				if !m.Acked {
 					unacked = append(unacked, m.ID)
 				}
@@ -56,18 +58,18 @@ func sub(conn net.Conn) {
 			}
 
 			n1 += len(ms)
-			// fmt.Println("累积消费消息：", n1)
+
 		case proto.MSG_COUNT:
 			topic, count := proto.UnpackMsgCount(msg[1:])
 			fmt.Printf("%s当前有%d条未读消息\n", string(topic), count)
 
 			msgid := []byte("0")
 			// 拉取最新消息
-			msg := proto.PackPullMsg(msgid, topic, 0)
+			msg := proto.PackPullMsg(msgid, topic, 100)
 			conn.Write(msg)
 
-			unread = count
-			setCount = true
+			// unread = count
+			// setCount = true
 		}
 
 	}

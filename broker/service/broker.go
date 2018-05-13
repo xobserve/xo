@@ -87,7 +87,9 @@ func (b *Broker) Shutdown() {
 		// send stop signal instead
 		c.conn.Close()
 	}
-
+	b.store.Close()
+	b.router.Close()
+	b.timer.Close()
 	L.Sync()
 	b.wg.Wait()
 }
@@ -128,14 +130,14 @@ func (b *Broker) process(conn net.Conn, id uint64) {
 	b.wg.Add(1)
 	defer b.wg.Done()
 
-	L.Info("发现新的连接", zap.Uint64("conn_id", id))
+	L.Info("发现新的连接", zap.Uint64("conn_id", id), zap.String("ip", conn.RemoteAddr().String()))
 
 	cli := &client{
 		cid:     id,
 		conn:    conn,
 		bk:      b,
-		spusher: make(chan []*proto.Message, 1000),
-		gpusher: make(chan pushPacket, 1000),
+		spusher: make(chan []*proto.Message, 10000),
+		gpusher: make(chan pushPacket, 10000),
 		subs:    make(map[string][]byte),
 	}
 
@@ -154,7 +156,7 @@ func (b *Broker) process(conn net.Conn, id uint64) {
 	err = cli.readLoop()
 	if err != nil {
 		if !talent.IsEOF(err) {
-			fmt.Println("read loop,error:", err)
+			L.Info("client read loop error", zap.Error(err), zap.Uint64("cid", cli.cid))
 		}
 	}
 }

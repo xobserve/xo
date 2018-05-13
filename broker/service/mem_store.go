@@ -54,8 +54,13 @@ func (ms *MemStore) Init() {
 	ms.topics = make(map[string][]*Group)
 
 	go func() {
+		ms.bk.wg.Add(1)
+		defer ms.bk.wg.Done()
 		for ms.bk.running || len(ms.In) != 0 {
 			msg := <-ms.In
+			if msg == nil {
+				return
+			}
 			ms.Lock()
 			ms.cache = append(ms.cache, msg)
 			ms.Unlock()
@@ -66,6 +71,8 @@ func (ms *MemStore) Init() {
 	}()
 
 	go func() {
+		ms.bk.wg.Add(1)
+		defer ms.bk.wg.Done()
 		for ms.bk.running || len(ms.cache) != 0 {
 			time.Sleep(1 * time.Second)
 			ms.Flush()
@@ -73,6 +80,8 @@ func (ms *MemStore) Init() {
 	}()
 
 	go func() {
+		ms.bk.wg.Add(1)
+		defer ms.bk.wg.Done()
 		for ms.bk.running || len(ms.ackCache) != 0 {
 			time.Sleep(1 * time.Second)
 			ms.FlushAck()
@@ -81,6 +90,8 @@ func (ms *MemStore) Init() {
 
 	// data transfar and synchronization
 	go func() {
+		ms.bk.wg.Add(1)
+		defer ms.bk.wg.Done()
 		ms.recv = make(chan []byte, 1000)
 		ms.send = make(chan []byte, 1000)
 
@@ -91,8 +102,11 @@ func (ms *MemStore) Init() {
 			}
 		}()
 
-		for {
+		for ms.bk.running {
 			r := <-ms.recv
+			if len(r) == 0 {
+				return
+			}
 			switch r[0] {
 			case MEM_MSG_ADD:
 				msg := unpackMsgAdd(r[1:])
@@ -135,7 +149,7 @@ func (ms *MemStore) Init() {
 
 	// register self to the cluster
 	go func() {
-		for {
+		for ms.bk.running {
 			ar := []byte(Conf.Router.Addr)
 			msg := make([]byte, 1+len(ar))
 			msg[0] = MEM_MSG_NODE
@@ -149,6 +163,11 @@ func (ms *MemStore) Init() {
 			time.Sleep(5 * time.Second)
 		}
 	}()
+}
+
+func (ms *MemStore) Close() {
+	close(ms.In)
+	close(ms.recv)
 }
 
 func (ms *MemStore) Put(msgs []*proto.Message) {
@@ -426,22 +445,24 @@ func (ms *MemStore) unsub(topic []byte, group []byte, cid uint64, addr string) {
 	}
 }
 
-func (ms *MemStore) FindRoutes(topic []byte) ([]uint64, []Sess) {
-	t := string(topic)
-	groups, ok := ms.topics[t]
-	if !ok || len(groups) == 0 {
-		return nil, nil
-	}
+func (ms *MemStore) FindRoutes(msgs []*proto.Message) (map[Sess][]*proto.Message, map[Sess][]*proto.Message) {
+	local := make(map[Sess][]*proto.Message)
+	outer := make(map[Sess][]*proto.Message)
 
-	var outer []Sess
-	var local []uint64
+	for _, msg := range msgs {
+		t := string(msg.Topic)
+		groups, ok := ms.topics[t]
+		if !ok || len(groups) == 0 {
+			continue
+		}
 
-	for _, g := range groups {
-		s := g.sess[rand.Intn(len(g.sess))]
-		if s.Addr == Conf.Router.Addr {
-			local = append(local, s.Cid)
-		} else {
-			outer = append(outer, s)
+		for _, g := range groups {
+			s := g.sess[rand.Intn(len(g.sess))]
+			if s.Addr == Conf.Router.Addr {
+				local[s] = append(local[s], msg)
+			} else {
+				outer[s] = append(outer[s], msg)
+			}
 		}
 	}
 

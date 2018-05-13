@@ -14,3 +14,7 @@ func (t *Timer) Init() {
 
 	}()
 }
+
+func (t *Timer) Close() {
+
+}

@@ -132,21 +132,18 @@ func (node *Node) receiveFrom(conn net.Conn, isSeed bool) error {
 
 	for {
 		header := make([]byte, 4)
-		n, err := talent.ReadFull(conn, header, 0)
+		_, err := talent.ReadFull(conn, header, 0)
 		if err != nil {
-			fmt.Println("here111:", n, err, talent.IsEOF(err), time.Now().UnixNano())
 			return err
 		}
-		bl, n1 := binary.Uvarint(header)
+		bl, _ := binary.Uvarint(header)
 		if bl <= 0 {
-			fmt.Println("here222:", err, header, bl, n1, time.Now().UnixNano())
 			return err
 		}
 
 		body := make([]byte, bl)
 		_, err = talent.ReadFull(conn, body, 0)
 		if err != nil {
-			fmt.Println("here333:", err)
 			return err
 		}
 		switch body[0] {

@@ -10,6 +10,7 @@ import (
 
 	"github.com/chaingod/talent"
 	"github.com/meqio/meq/proto"
+	"go.uber.org/zap"
 )
 
 // For controlling dynamic buffer sizes.
@@ -19,7 +20,7 @@ const (
 )
 
 type client struct {
-	cid     uint64
+	cid     uint64 // do not exceeds max(int32)
 	conn    net.Conn
 	bk      *Broker
 	spusher chan []*proto.Message
@@ -61,7 +62,10 @@ func (c *client) readLoop() error {
 		case proto.MSG_CONNECT:
 
 		case proto.MSG_PUB: // clients publish the message
-			ms := proto.UnpackMsgs(buf[1:])
+			ms, err := proto.UnpackMsgs(buf[1:])
+			if err != nil {
+				return err
+			}
 			c.bk.store.Put(ms)
 			// push to online clients of this node
 			// choose a topic group
@@ -83,6 +87,7 @@ func (c *client) readLoop() error {
 			if bytes.Compare(topic[:2], MQ_PREFIX) == 0 {
 				// push out the stored messages
 				msgs := c.bk.store.Get(topic, 0, MSG_NEWEST_OFFSET)
+				fmt.Println(len(msgs))
 				c.spusher <- msgs
 			} else {
 				// push out the count of the stored messages
@@ -110,10 +115,13 @@ func (c *client) readLoop() error {
 
 		case proto.MSG_PULL: // client request to pulls some messages from the specify position
 			topic, count, offset := proto.UnPackPullMsg(buf[1:])
+			if count > MAX_MESSAGE_PULL_COUNT || count <= 0 {
+				return fmt.Errorf("the pull count %d is larger than :%d or equal/smaller than 0", count, MAX_MESSAGE_PULL_COUNT)
+			}
 			// check the topic is already subed
 			_, ok := c.subs[string(topic)]
 			if !ok {
-				return errors.New("ull messages without subscribe the topic:" + string(topic))
+				return errors.New("pull messages without subscribe the topic:" + string(topic))
 			}
 			msgs := c.bk.store.Get(topic, count, offset)
 			c.spusher <- msgs
@@ -122,6 +130,7 @@ func (c *client) readLoop() error {
 			c.bk.store.PutTimerMsg(m)
 			// ack the msg
 			msg := proto.PackAck([][]byte{m.ID}, proto.MSG_PUBACK)
+			c.conn.SetWriteDeadline(time.Now().Add(WRITE_DEADLINE))
 			c.conn.Write(msg)
 		}
 	}
@@ -130,8 +139,20 @@ func (c *client) readLoop() error {
 }
 
 func (c *client) writeLoop() {
+	scache := make([]*proto.Message, 0, MAX_MESSAGE_BATCH)
+	gcache := make([]*proto.Message, 0, MAX_MESSAGE_BATCH)
 	defer func() {
 		c.closed = true
+		c.conn.Close()
+
+		if len(gcache) != 0 {
+			local, outer := c.bk.store.FindRoutes(gcache)
+			for s, ms := range local {
+				pushOnline(c.cid, c.bk, ms, s.Cid)
+			}
+			c.bk.router.route(outer)
+		}
+
 		if err := recover(); err != nil {
 			return
 		}
@@ -141,25 +162,58 @@ func (c *client) writeLoop() {
 	for !c.closed || len(c.spusher) > 0 || len(c.gpusher) > 0 {
 		select {
 		case msgs := <-c.spusher:
-			batches := (len(msgs) / MAX_MESSAGE_BATCH) + 1
-			for i := 1; i <= batches; i++ {
-				if i < batches {
-					pushOne(c.conn, msgs[(i-1)*MAX_MESSAGE_BATCH:i*MAX_MESSAGE_BATCH])
-				} else {
-					pushOne(c.conn, msgs[(i-1)*MAX_MESSAGE_BATCH:])
+			var err error
+			if len(msgs)+len(scache) < MAX_MESSAGE_BATCH {
+				scache = append(scache, msgs...)
+			} else {
+				new := append(scache, msgs...)
+				batches := (len(new) / MAX_MESSAGE_BATCH) + 1
+				for i := 1; i <= batches; i++ {
+					if i < batches {
+						err = pushOne(c.conn, new[(i-1)*MAX_MESSAGE_BATCH:i*MAX_MESSAGE_BATCH])
+					} else {
+						err = pushOne(c.conn, new[(i-1)*MAX_MESSAGE_BATCH:])
+					}
 				}
+				// pushOne(c.conn, scache)
+				scache = scache[:0]
+			}
+			if err != nil {
+				L.Info("push one error", zap.Error(err))
+				return
 			}
 		case p := <-c.gpusher:
-			for _, m := range p.msgs {
-				local, outer := c.bk.store.FindRoutes(m.Topic)
-				pushOnline(c.cid, c.bk, *m, local)
-				// route to other nodes
-				c.bk.router.route(*m, outer)
-				// ack the msg
-				// msg := proto.PackAck(m.ID)
-				// c.conn.Write(msg)
+			if len(p.msgs)+len(gcache) < MAX_MESSAGE_BATCH {
+				gcache = append(gcache, p.msgs...)
+			} else {
+				msgs := append(gcache, p.msgs...)
+				local, outer := c.bk.store.FindRoutes(msgs)
+				for s, ms := range local {
+					pushOnline(c.cid, c.bk, ms, s.Cid)
+				}
+
+				c.bk.router.route(outer)
 			}
-		case <-time.After(2 * time.Second):
+		case <-time.After(500 * time.Millisecond):
+			var err error
+			if len(scache) > 0 {
+				err = pushOne(c.conn, scache)
+				scache = scache[:0]
+			}
+
+			if len(gcache) > 0 {
+				local, outer := c.bk.store.FindRoutes(gcache)
+				for s, ms := range local {
+					pushOnline(c.cid, c.bk, ms, s.Cid)
+				}
+				c.bk.router.route(outer)
+				gcache = gcache[:0]
+			}
+
+			if err != nil {
+				L.Info("push one error", zap.Error(err))
+				return
+			}
 		}
 	}
 }

@@ -5,6 +5,7 @@ import (
 	"time"
 
 	"github.com/meqio/meq/proto"
+	"go.uber.org/zap"
 )
 
 type pushPacket struct {
@@ -12,22 +13,23 @@ type pushPacket struct {
 	cids []uint64
 }
 
-func pushOnline(from uint64, bk *Broker, m proto.Message, cids []uint64) {
-	msg := proto.PackMsgs([]*proto.Message{&m}, proto.MSG_PUB)
-	for _, cid := range cids {
-		if cid == from {
-			continue
-		}
+func pushOnline(from uint64, bk *Broker, m []*proto.Message, cid uint64) {
+	if from == cid {
+		return
+	}
+	msg := proto.PackMsgs(m, proto.MSG_PUB)
+	bk.Lock()
+	c, ok := bk.clients[cid]
+	bk.Unlock()
+	if !ok { // clients offline,delete it
 		bk.Lock()
-		c, ok := bk.clients[cid]
+		delete(bk.clients, cid)
 		bk.Unlock()
-		if !ok { // clients offline,delete it
-			bk.Lock()
-			delete(bk.clients, cid)
-			bk.Unlock()
-		} else { // push to clients
-			c.conn.SetWriteDeadline(time.Now().Add(WRITE_DEADLINE))
-			c.conn.Write(msg)
+	} else { // push to clients
+		c.conn.SetWriteDeadline(time.Now().Add(WRITE_DEADLINE))
+		_, err := c.conn.Write(msg)
+		if err != nil {
+			L.Info("push online error", zap.Error(err))
 		}
 	}
 }
