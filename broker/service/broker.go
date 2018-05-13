@@ -83,8 +83,6 @@ func (b *Broker) Shutdown() {
 	b.listener.Close()
 
 	for _, c := range b.clients {
-		//@todo
-		// send stop signal instead
 		c.conn.Close()
 	}
 	b.store.Close()
@@ -124,13 +122,13 @@ func (b *Broker) process(conn net.Conn, id uint64) {
 		delete(b.clients, id)
 		b.Unlock()
 		conn.Close()
-		L.Info("关闭连接", zap.Uint64("conn_id", id))
+		L.Info("client closed", zap.Uint64("conn_id", id))
 	}()
 
 	b.wg.Add(1)
 	defer b.wg.Done()
 
-	L.Info("发现新的连接", zap.Uint64("conn_id", id), zap.String("ip", conn.RemoteAddr().String()))
+	L.Info("new client", zap.Uint64("conn_id", id), zap.String("ip", conn.RemoteAddr().String()))
 
 	cli := &client{
 		cid:     id,
@@ -148,7 +146,7 @@ func (b *Broker) process(conn net.Conn, id uint64) {
 	err := cli.waitForConnect()
 
 	if err != nil {
-		fmt.Println("客户端长时间不发送Connect报文,error:", err)
+		fmt.Println("cant receive connect packet from client", err, zap.Uint64("cid", id))
 		return
 	}
 

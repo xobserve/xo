@@ -101,7 +101,7 @@ func (ms *MemStore) Init() {
 		go func() {
 			err := network.StartNode(Conf.Store.Addr, Conf.Store.Seed, ms.send, ms.recv)
 			if err != nil {
-				log.Panic("启动P2P节点失败: " + err.Error())
+				log.Panic("start p2p network failed" + err.Error())
 			}
 		}()
 
