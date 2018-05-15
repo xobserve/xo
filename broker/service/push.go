@@ -14,7 +14,7 @@ type pushPacket struct {
 }
 
 func pushOnline(from uint64, bk *Broker, msgs []*proto.Message) {
-	local, outer := bk.store.FindRoutes(msgs)
+	local, outer := bk.router.FindRoutes(msgs)
 	for s, ms := range local {
 		cid := s.Cid
 		if from == cid {

@@ -28,6 +28,12 @@ type Config struct {
 	Router struct {
 		Addr string
 	}
+
+	Cluster struct {
+		HwAddr    string
+		Port      string
+		SeedPeers []string
+	}
 }
 
 var Conf = &Config{}

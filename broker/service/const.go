@@ -23,3 +23,8 @@ var (
 
 	MSG_NEWEST_OFFSET = []byte("0")
 )
+
+var (
+	CLUSTER_SUB   = 1
+	CLUSTER_UNSUB = 2
+)

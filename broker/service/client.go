@@ -34,7 +34,9 @@ func (c *client) readLoop() error {
 		c.closed = true
 		// unsub topics
 		for topic, group := range c.subs {
-			c.bk.store.Unsub([]byte(topic), group, c.cid)
+			c.bk.store.Unsub([]byte(topic), group, c.cid, c.bk.cluster.peer.name)
+			submsg := SubMessage{CLUSTER_UNSUB, []byte(topic), group, c.cid}
+			c.bk.cluster.peer.send.GossipBroadcast(submsg)
 		}
 
 		if err := recover(); err != nil {
@@ -94,7 +96,10 @@ func (c *client) readLoop() error {
 				return errors.New("the sub topic is null")
 			}
 
-			c.bk.store.Sub(topic, group, c.cid)
+			c.bk.store.Sub(topic, group, c.cid, c.bk.cluster.peer.name)
+			submsg := SubMessage{CLUSTER_SUB, topic, group, c.cid}
+			c.bk.cluster.peer.send.GossipBroadcast(submsg)
+
 			c.subs[string(topic)] = group
 			if bytes.Compare(topic[:2], MQ_PREFIX) == 0 {
 				// push out the stored messages
@@ -113,7 +118,10 @@ func (c *client) readLoop() error {
 			if topic == nil {
 				return errors.New("the unsub topic is null")
 			}
-			c.bk.store.Unsub(topic, group, c.cid)
+			c.bk.store.Unsub(topic, group, c.cid, c.bk.cluster.peer.name)
+			submsg := SubMessage{CLUSTER_UNSUB, topic, group, c.cid}
+			c.bk.cluster.peer.send.GossipBroadcast(submsg)
+
 			delete(c.subs, string(topic))
 
 		case proto.MSG_PUBACK: // clients receive the publish message

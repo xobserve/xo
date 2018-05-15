@@ -3,11 +3,11 @@ package service
 import (
 	"bytes"
 	"encoding/binary"
-	"fmt"
 	"log"
-	"math/rand"
 	"sync"
 	"time"
+
+	"github.com/weaveworks/mesh"
 
 	"github.com/meqio/meq/broker/service/network"
 	"github.com/meqio/meq/proto"
@@ -29,7 +29,6 @@ type MemStore struct {
 	send chan []byte
 	recv chan []byte
 
-	topics map[string][]*Group
 	sync.Mutex
 }
 
@@ -39,11 +38,8 @@ const (
 )
 
 const (
-	MEM_MSG_ADD   = 'a'
-	MEM_MSG_ACK   = 'b'
-	MEM_MSG_NODE  = 'c'
-	MEM_MSG_SUB   = 'd'
-	MEM_MSG_UNSUB = 'e'
+	MEM_MSG_ADD = 'a'
+	MEM_MSG_ACK = 'b'
 )
 
 func (ms *MemStore) Init() {
@@ -52,7 +48,6 @@ func (ms *MemStore) Init() {
 	ms.DBIndex = make(map[string][]string)
 	ms.DBIDIndex = make(map[string]string)
 	ms.cache = make([]*proto.Message, 0)
-	ms.topics = make(map[string][]*Group)
 
 	go func() {
 		ms.bk.wg.Add(1)
@@ -118,58 +113,13 @@ func (ms *MemStore) Init() {
 				msgids := proto.UnpackAck(r[1:])
 				ms.Lock()
 				for _, msgid := range msgids {
-					fmt.Println(string(msgid))
 					ms.ackCache = append(ms.ackCache, msgid)
 				}
 				ms.Unlock()
-			case MEM_MSG_NODE:
-				ms.Lock()
-				ms.bk.router.cluster[string(r[1:])] = struct{}{}
-				ms.Unlock()
-			case MEM_MSG_SUB:
-				tl, _ := binary.Uvarint(r[1:3])
-				topic := r[3 : 3+tl]
-				// group
-				gl, _ := binary.Uvarint(r[3+tl : 4+tl])
-				group := r[4+tl : 4+tl+gl]
-				// cid
-				cid, _ := binary.Uvarint(r[4+tl+gl : 8+tl+gl])
-				// addr
-				addr := r[8+tl+gl:]
-				ms.sub(topic, group, cid, string(addr))
-
-			case MEM_MSG_UNSUB:
-				tl, _ := binary.Uvarint(r[1:3])
-				topic := r[3 : 3+tl]
-				// group
-				gl, _ := binary.Uvarint(r[3+tl : 4+tl])
-				group := r[4+tl : 4+tl+gl]
-				// cid
-				cid, _ := binary.Uvarint(r[4+tl+gl : 8+tl+gl])
-				// addr
-				addr := r[8+tl+gl:]
-				ms.unsub(topic, group, cid, string(addr))
-
 			}
 		}
 	}()
 
-	// register self to the cluster
-	go func() {
-		for ms.bk.running {
-			ar := []byte(Conf.Router.Addr)
-			msg := make([]byte, 1+len(ar))
-			msg[0] = MEM_MSG_NODE
-			copy(msg[1:], ar)
-
-			select {
-			case ms.send <- msg:
-			default:
-			}
-
-			time.Sleep(5 * time.Second)
-		}
-	}()
 }
 
 func (ms *MemStore) Close() {
@@ -339,53 +289,28 @@ func (ms *MemStore) FlushAck() {
 
 	ms.ackCache = newCache
 }
-func (ms *MemStore) Sub(topic []byte, group []byte, cid uint64) {
-	ms.sub(topic, group, cid, Conf.Router.Addr)
-
-	// sync to other nodes
-	tl := uint64(len(topic))
-	gl := uint64(len(group))
-	addr := []byte(Conf.Router.Addr)
-
-	msg := make([]byte, 1+2+tl+1+gl+4+uint64(len(addr)))
-	// control
-	msg[0] = MEM_MSG_SUB
-	// topic
-	binary.PutUvarint(msg[1:3], tl)
-	copy(msg[3:3+tl], topic)
-	// group
-	binary.PutUvarint(msg[3+tl:4+tl], gl)
-	copy(msg[4+tl:4+tl+gl], group)
-	// cid
-	binary.PutUvarint(msg[4+tl+gl:8+tl+gl], cid)
-	// addr
-	copy(msg[8+tl+gl:], addr)
-
-	ms.send <- msg
-}
-
-func (ms *MemStore) sub(topic []byte, group []byte, cid uint64, addr string) {
+func (ms *MemStore) Sub(topic []byte, group []byte, cid uint64, addr mesh.PeerName) {
 	t := string(topic)
 	ms.Lock()
 	ms.Unlock()
-	t1, ok := ms.topics[t]
+	t1, ok := ms.bk.subs[t]
 	if !ok {
 		// []group
-		g := &Group{
+		g := &SubGroup{
 			ID: group,
-			sess: []Sess{
+			Sesses: []Sess{
 				Sess{
 					Addr: addr,
 					Cid:  cid,
 				},
 			},
 		}
-		ms.topics[t] = []*Group{g}
+		ms.bk.subs[t] = []*SubGroup{g}
 	} else {
 		for _, g := range t1 {
 			// group already exist,add to group
 			if bytes.Compare(g.ID, group) == 0 {
-				g.sess = append(g.sess, Sess{
+				g.Sesses = append(g.Sesses, Sess{
 					Addr: addr,
 					Cid:  cid,
 				})
@@ -393,90 +318,43 @@ func (ms *MemStore) sub(topic []byte, group []byte, cid uint64, addr string) {
 			}
 		}
 		// create group
-		g := &Group{
+		g := &SubGroup{
 			ID: group,
-			sess: []Sess{
+			Sesses: []Sess{
 				Sess{
 					Addr: addr,
 					Cid:  cid,
 				},
 			},
 		}
-		ms.topics[t] = append(ms.topics[t], g)
+		ms.bk.subs[t] = append(ms.bk.subs[t], g)
 	}
 }
 
-func (ms *MemStore) Unsub(topic []byte, group []byte, cid uint64) {
-	ms.unsub(topic, group, cid, Conf.Router.Addr)
-
-	// sync to other nodes
-	tl := uint64(len(topic))
-	gl := uint64(len(group))
-	addr := []byte(Conf.Router.Addr)
-	msg := make([]byte, 1+2+tl+1+gl+4+uint64(len(addr)))
-	// control
-	msg[0] = MEM_MSG_UNSUB
-	// topic
-	binary.PutUvarint(msg[1:3], tl)
-	copy(msg[3:3+tl], topic)
-	// group
-	binary.PutUvarint(msg[3+tl:4+tl], gl)
-	copy(msg[4+tl:4+tl+gl], group)
-	// cid
-	binary.PutUvarint(msg[4+tl+gl:8+tl+gl], cid)
-	// addr
-	copy(msg[8+tl+gl:], addr)
-	ms.send <- msg
-}
-
-func (ms *MemStore) unsub(topic []byte, group []byte, cid uint64, addr string) {
+func (ms *MemStore) Unsub(topic []byte, group []byte, cid uint64, addr mesh.PeerName) {
 	t := string(topic)
 	ms.Lock()
 	defer ms.Unlock()
-	t1, ok := ms.topics[t]
+	t1, ok := ms.bk.subs[t]
 	if !ok {
 		return
 	}
 	for j, g := range t1 {
 		if bytes.Compare(g.ID, group) == 0 {
 			// group exist
-			for i, c := range g.sess {
+			for i, c := range g.Sesses {
 				if c.Cid == cid && addr == c.Addr {
 					// delete sess
-					g.sess = append(g.sess[:i], g.sess[i+1:]...)
-					if len(g.sess) == 0 {
+					g.Sesses = append(g.Sesses[:i], g.Sesses[i+1:]...)
+					if len(g.Sesses) == 0 {
 						//delete group
-						ms.topics[t] = append(ms.topics[t][:j], ms.topics[t][j+1:]...)
+						ms.bk.subs[t] = append(ms.bk.subs[t][:j], ms.bk.subs[t][j+1:]...)
 					}
 					return
 				}
 			}
 		}
 	}
-}
-
-func (ms *MemStore) FindRoutes(msgs []*proto.Message) (map[Sess][]*proto.Message, map[Sess][]*proto.Message) {
-	local := make(map[Sess][]*proto.Message)
-	outer := make(map[Sess][]*proto.Message)
-
-	for _, msg := range msgs {
-		t := string(msg.Topic)
-		groups, ok := ms.topics[t]
-		if !ok || len(groups) == 0 {
-			continue
-		}
-
-		for _, g := range groups {
-			s := g.sess[rand.Intn(len(g.sess))]
-			if s.Addr == Conf.Router.Addr {
-				local[s] = append(local[s], msg)
-			} else {
-				outer[s] = append(outer[s], msg)
-			}
-		}
-	}
-
-	return local, outer
 }
 
 func (ms *MemStore) PutTimerMsg(m *proto.TimerMsg) {
