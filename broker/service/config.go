@@ -25,10 +25,6 @@ type Config struct {
 		Seed   string
 	}
 
-	Router struct {
-		Addr string
-	}
-
 	Cluster struct {
 		HwAddr    string
 		Port      string

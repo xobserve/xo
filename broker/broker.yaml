@@ -13,8 +13,6 @@ store:
   addr: "localhost:7011"
   seed: "localhost:7010"
 
-router:
-  addr: "localhost:8111"
 
 cluster:
   hwaddr: "00:00:00:00:00:02"
