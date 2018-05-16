@@ -92,8 +92,8 @@ func (ms *MemStore) Init() {
 	}()
 
 	go func() {
-		ackTimer := time.NewTicker(50 * time.Millisecond).C
-		msgTimer := time.NewTicker(50 * time.Millisecond).C
+		ackTimer := time.NewTicker(100 * time.Millisecond).C
+		msgTimer := time.NewTicker(100 * time.Millisecond).C
 		for {
 			select {
 			case <-ackTimer: // sync acks
