@@ -9,7 +9,7 @@ import (
 	"time"
 
 	"github.com/chaingod/talent"
-	"github.com/meqio/meq/proto"
+	"github.com/meqio/proto"
 	"go.uber.org/zap"
 )
 

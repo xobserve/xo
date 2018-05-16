@@ -6,7 +6,7 @@ import (
 	"net"
 
 	"github.com/chaingod/talent"
-	"github.com/meqio/meq/proto"
+	"github.com/meqio/proto"
 )
 
 func sub(conn net.Conn) {

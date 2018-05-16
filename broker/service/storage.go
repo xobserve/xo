@@ -1,7 +1,7 @@
 package service
 
 import (
-	"github.com/meqio/meq/proto"
+	"github.com/meqio/proto"
 	"github.com/weaveworks/mesh"
 )
 

@@ -4,7 +4,7 @@ import (
 	"math/rand"
 	"sync"
 
-	"github.com/meqio/meq/proto"
+	"github.com/meqio/proto"
 	"go.uber.org/zap"
 )
 
