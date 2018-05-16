@@ -80,15 +80,17 @@ func (c *client) readLoop() error {
 			}
 
 			// ack the msgs
-			var toack [][]byte
-			for _, m := range ms {
-				if m.QoS == proto.QOS1 {
-					toack = append(toack, m.ID)
-				}
-			}
-			msg := proto.PackAck(toack, proto.MSG_PUBACK)
-			c.conn.SetWriteDeadline(time.Now().Add(WRITE_DEADLINE))
-			c.conn.Write(msg)
+			//@performance
+			// when extremly benchmark, this will make read too slow
+			// var toack [][]byte
+			// for _, m := range ms {
+			// 	if m.QoS == proto.QOS1 {
+			// 		toack = append(toack, m.ID)
+			// 	}
+			// }
+			// msg := proto.PackAck(toack, proto.MSG_PUBACK)
+			// c.conn.SetWriteDeadline(time.Now().Add(WRITE_DEADLINE))
+			// c.conn.Write(msg)
 
 		case proto.MSG_SUB: // clients subscribe the specify topic
 			topic, group := proto.UnpackSub(buf[1:])

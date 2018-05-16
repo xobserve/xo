@@ -45,7 +45,9 @@ func sub(conn net.Conn) {
 			ms, _ := proto.UnpackMsgs(msg[1:])
 			var unacked [][]byte
 			for _, m := range ms {
-				fmt.Println("收到消息：", string(m.ID), m.QoS)
+				if m.ID[len(m.ID)-1] == 48 {
+					fmt.Println("收到消息：", string(m.ID), m.QoS, m.Acked)
+				}
 				// fmt.Println(string(m.ID))
 				if !m.Acked {
 					unacked = append(unacked, m.ID)

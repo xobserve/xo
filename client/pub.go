@@ -1,12 +1,14 @@
 package main
 
 import (
+	"encoding/binary"
 	"fmt"
 	"net"
 	"sync"
 	"sync/atomic"
 	"time"
 
+	"github.com/chaingod/talent"
 	"github.com/meqio/meq/proto"
 )
 
@@ -19,9 +21,9 @@ func pub(conns []net.Conn) {
 		go func(i int, conn net.Conn) {
 			defer wg.Done()
 			n := 1
-			cache := make([]*proto.Message, 0, 100)
+			cache := make([]*proto.Message, 0, 1000)
 			for {
-				if n > 50000 {
+				if n > 200000 {
 					break
 				}
 				// 27
@@ -32,7 +34,7 @@ func pub(conns []net.Conn) {
 					Type:    1,
 					QoS:     1,
 				}
-				if len(cache) < 200 {
+				if len(cache) < 500 {
 					cache = append(cache, m)
 				} else {
 					cache = append(cache, m)
@@ -47,6 +49,24 @@ func pub(conns []net.Conn) {
 				n++
 			}
 		}(i, conn)
+
+		go func(conn net.Conn) {
+			for {
+				header := make([]byte, 4)
+				_, err := talent.ReadFull(conn, header, 0)
+				if err != nil {
+					panic(err)
+				}
+
+				hl, _ := binary.Uvarint(header)
+				if hl <= 0 {
+					fmt.Println("here1111:", header, hl)
+					break
+				}
+				msg := make([]byte, hl)
+				talent.ReadFull(conn, msg, 0)
+			}
+		}(conn)
 	}
 
 	wg.Wait()

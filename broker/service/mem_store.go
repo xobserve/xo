@@ -2,14 +2,11 @@ package service
 
 import (
 	"bytes"
-	"encoding/binary"
-	"log"
 	"sync"
 	"time"
 
 	"github.com/weaveworks/mesh"
 
-	"github.com/meqio/meq/broker/service/network"
 	"github.com/meqio/meq/proto"
 )
 
@@ -26,8 +23,11 @@ type MemStore struct {
 
 	ackCache [][]byte
 
-	send chan []byte
-	recv chan []byte
+	//cluster
+	send         mesh.Gossip
+	pn           mesh.PeerName
+	msgSyncCache []*proto.Message
+	ackSyncCache [][]byte
 
 	sync.Mutex
 }
@@ -35,6 +35,9 @@ type MemStore struct {
 const (
 	MaxCacheLength    = 10000
 	MaxMemFlushLength = 100
+
+	MaxSyncMsgLen = 1000
+	MaxSyncAckLen = 5000
 )
 
 const (
@@ -48,6 +51,8 @@ func (ms *MemStore) Init() {
 	ms.DBIndex = make(map[string][]string)
 	ms.DBIDIndex = make(map[string]string)
 	ms.cache = make([]*proto.Message, 0)
+	ms.msgSyncCache = make([]*proto.Message, 0, 1000)
+	ms.ackSyncCache = make([][]byte, 0, 1000)
 
 	go func() {
 		ms.bk.wg.Add(1)
@@ -86,60 +91,62 @@ func (ms *MemStore) Init() {
 		}
 	}()
 
-	// data transfar and synchronization
 	go func() {
-		ms.bk.wg.Add(1)
-		defer ms.bk.wg.Done()
-		ms.recv = make(chan []byte, 1000)
-		ms.send = make(chan []byte, 1000)
+		ackTimer := time.NewTicker(50 * time.Millisecond).C
+		msgTimer := time.NewTicker(50 * time.Millisecond).C
+		for {
+			select {
+			case <-ackTimer: // sync acks
+				if len(ms.ackSyncCache) > 0 {
+					ms.Lock()
+					m := proto.PackAck(ms.ackSyncCache, MEM_MSG_ACK)
+					ms.ackSyncCache = ms.ackSyncCache[:0]
+					ms.Unlock()
 
-		go func() {
-			err := network.StartNode(Conf.Store.Addr, Conf.Store.Seed, ms.send, ms.recv)
-			if err != nil {
-				log.Panic("start p2p network failed" + err.Error())
-			}
-		}()
-
-		for ms.bk.running {
-			r := <-ms.recv
-			if len(r) == 0 {
-				return
-			}
-			switch r[0] {
-			case MEM_MSG_ADD:
-				msg := unpackMsgAdd(r[1:])
-				ms.In <- &msg
-			case MEM_MSG_ACK:
-				msgids := proto.UnpackAck(r[1:])
-				ms.Lock()
-				for _, msgid := range msgids {
-					ms.ackCache = append(ms.ackCache, msgid)
+					ms.send.GossipBroadcast(MemMsg(m))
 				}
-				ms.Unlock()
+			case <-msgTimer: // sync msgs
+				if len(ms.msgSyncCache) > 0 {
+					ms.Lock()
+					m := proto.PackMsgs(ms.msgSyncCache, MEM_MSG_ADD)
+					ms.msgSyncCache = ms.msgSyncCache[:0]
+					ms.Unlock()
+
+					ms.send.GossipBroadcast(MemMsg(m))
+				}
 			}
 		}
 	}()
-
 }
 
 func (ms *MemStore) Close() {
 	close(ms.In)
-	close(ms.recv)
 }
 
 func (ms *MemStore) Put(msgs []*proto.Message) {
+	if len(msgs) == 0 {
+		return
+	}
 	for _, msg := range msgs {
 		if msg.QoS == proto.QOS1 {
 			// qos 1 need to be persistent
 			ms.In <- msg
 		}
-		m := packMsgAdd(*msg)
-		select {
-		case ms.send <- m:
-		default:
-		}
 	}
 
+	ms.Lock()
+	ms.msgSyncCache = append(ms.msgSyncCache, msgs...)
+	ms.Unlock()
+}
+
+func (ms *MemStore) ACK(msgids [][]byte) {
+	ms.Lock()
+	for _, msgid := range msgids {
+		ms.ackCache = append(ms.ackCache, msgid)
+	}
+
+	ms.ackSyncCache = append(ms.ackSyncCache, msgids...)
+	ms.Unlock()
 }
 
 func (ms *MemStore) Flush() {
@@ -234,21 +241,6 @@ func (ms *MemStore) GetCount(topic []byte) int {
 		}
 	}
 	return count
-}
-
-func (ms *MemStore) ACK(msgids [][]byte) {
-	ms.Lock()
-	for _, msgid := range msgids {
-		ms.ackCache = append(ms.ackCache, msgid)
-	}
-	ms.Unlock()
-
-	// route ack to other nodes
-	msg := proto.PackAckBody(msgids, MEM_MSG_ACK)
-	select {
-	case ms.send <- msg:
-	default:
-	}
 }
 
 func (ms *MemStore) FlushAck() {
@@ -384,61 +376,55 @@ func (ms *MemStore) GetTimerMsg() []*proto.Message {
 	return msgs
 }
 
-func packMsgAdd(m proto.Message) []byte {
-	msgid := m.ID
-	payload := m.Payload
-
-	msg := make([]byte, 1+2+len(msgid)+4+len(payload)+1+2+len(m.Topic)+1+1)
-	msg[0] = MEM_MSG_ADD
-	// msgid
-	binary.PutUvarint(msg[1:3], uint64(len(msgid)))
-	copy(msg[3:3+len(msgid)], msgid)
-
-	// payload
-	binary.PutUvarint(msg[3+len(msgid):7+len(msgid)], uint64(len(payload)))
-	copy(msg[7+len(msgid):7+len(msgid)+len(payload)], payload)
-
-	// acked
-	if m.Acked {
-		msg[7+len(msgid)+len(payload)] = '1'
-	} else {
-		msg[7+len(msgid)+len(payload)] = '0'
-	}
-
-	// topic
-	binary.PutUvarint(msg[7+len(msgid)+len(payload)+1:7+len(msgid)+len(payload)+3], uint64(len(m.Topic)))
-	copy(msg[7+len(msgid)+len(payload)+3:7+len(msgid)+len(payload)+3+len(m.Topic)], m.Topic)
-
-	// type
-	binary.PutUvarint(msg[7+len(msgid)+len(payload)+3+len(m.Topic):7+len(msgid)+len(payload)+3+len(m.Topic)+1], uint64(m.Type))
-
-	// qos
-	binary.PutUvarint(msg[7+len(msgid)+len(payload)+3+len(m.Topic)+1:7+len(msgid)+len(payload)+3+len(m.Topic)+2], uint64(m.QoS))
-	return msg
+/* -------------------------- cluster part -----------------------------------------------*/
+// Return a copy of our complete state.
+func (ms *MemStore) Gossip() (complete mesh.GossipData) {
+	return ms.bk.subs
 }
 
-func unpackMsgAdd(b []byte) proto.Message {
-	ml, _ := binary.Uvarint(b[:2])
-	msgid := b[2 : 2+ml]
+// Merge the gossiped data represented by buf into our state.
+// Return the state information that was modified.
+func (ms *MemStore) OnGossip(buf []byte) (delta mesh.GossipData, err error) {
+	return
+}
 
-	// payload
-	pl, _ := binary.Uvarint(b[2+ml : 6+ml])
-	payload := b[6+ml : 6+ml+pl]
+// Merge the gossiped data represented by buf into our state.
+// Return the state information that was modified.
+func (ms *MemStore) OnGossipBroadcast(src mesh.PeerName, buf []byte) (received mesh.GossipData, err error) {
+	command := buf[4]
+	switch command {
+	case MEM_MSG_ADD:
+		msgs, _ := proto.UnpackMsgs(buf[5:])
+		for _, msg := range msgs {
+			ms.In <- msg
+		}
 
-	//acked
-	var acked bool
-	if b[6+ml+pl] == '1' {
-		acked = true
+	case MEM_MSG_ACK:
+		msgids := proto.UnpackAck(buf[5:])
+		ms.Lock()
+		for _, msgid := range msgids {
+			ms.ackCache = append(ms.ackCache, msgid)
+		}
+		ms.Unlock()
 	}
+	return
+}
 
-	// topic
-	tl, _ := binary.Uvarint(b[6+ml+pl+1 : 6+ml+pl+3])
-	topic := b[6+ml+pl+3 : 6+ml+pl+3+tl]
+// Merge the gossiped data represented by buf into our state.
+func (ms *MemStore) OnGossipUnicast(src mesh.PeerName, buf []byte) error {
+	return nil
+}
 
-	// type
-	tp, _ := binary.Uvarint(b[6+ml+pl+3+tl : 7+ml+pl+3+tl])
+func (ms *MemStore) register(send mesh.Gossip) {
+	ms.send = send
+}
 
-	// qos
-	qos, _ := binary.Uvarint(b[7+ml+pl+3+tl : 8+ml+pl+3+tl])
-	return proto.Message{msgid, topic, payload, acked, int8(tp), int8(qos)}
+type MemMsg []byte
+
+func (mm MemMsg) Encode() [][]byte {
+	return [][]byte{mm}
+}
+
+func (mm MemMsg) Merge(new mesh.GossipData) (complete mesh.GossipData) {
+	return
 }

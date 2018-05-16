@@ -57,6 +57,17 @@ func (b *Broker) Start() {
 	go b.Accept()
 
 	b.running = true
+
+	// init store
+	switch Conf.Store.Engine {
+	case "memory":
+		b.store = &MemStore{
+			bk: b,
+		}
+	}
+
+	b.store.Init()
+
 	// init cluster
 	b.cluster = &cluster{
 		bk: b,
@@ -68,16 +79,6 @@ func (b *Broker) Start() {
 		bk: b,
 	}
 	b.router.Init()
-
-	// init store
-	switch Conf.Store.Engine {
-	case "mem":
-		b.store = &MemStore{
-			bk: b,
-		}
-	}
-
-	b.store.Init()
 
 	// init timer
 	b.timer = &Timer{

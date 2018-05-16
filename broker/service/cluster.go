@@ -3,6 +3,7 @@ package service
 import (
 	"bytes"
 	"encoding/gob"
+	"fmt"
 	"io/ioutil"
 	"log"
 	"net"
@@ -68,6 +69,17 @@ func (c *cluster) Init() {
 	peer.register(gossip)
 	c.peer = peer
 
+	ms, ok := c.bk.store.(*MemStore)
+	if ok {
+		fmt.Println("init mem cluster-channel")
+		ms.pn = name
+		g, err := router.NewGossip("mem-store", ms)
+		if err != nil {
+			L.Fatal("Could not create cluster gossip", zap.Error(err))
+		}
+		ms.register(g)
+	}
+
 	func() {
 		L.Debug("cluster starting", zap.String("listen_addr", meshListen))
 		router.Start()
@@ -94,11 +106,9 @@ func (c *cluster) Close() {
 // and the resulting Gossip registered in turn,
 // before calling mesh.Router.Start.
 type peer struct {
-	name    mesh.PeerName
-	bk      *Broker
-	send    mesh.Gossip
-	actions chan<- func()
-	quit    chan struct{}
+	name mesh.PeerName
+	bk   *Broker
+	send mesh.Gossip
 }
 
 // peer implements mesh.Gossiper.

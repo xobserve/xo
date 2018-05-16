@@ -6,16 +6,14 @@ common:
 
 broker:
   host: localhost
-  port: 4011
+  port: 4012
   
 store:
-  engine: mem
-  addr: "localhost:7011"
-  seed: "localhost:7010"
+  engine: memory
 
 
 cluster:
   hwaddr: "00:00:00:00:00:02"
-  port: "6002"
+  port: "6003"
   seedpeers: 
-    - "localhost:6001"
+    - "localhost:6002"

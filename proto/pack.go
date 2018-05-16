@@ -204,7 +204,7 @@ func PackAck(msgids [][]byte, cmd byte) []byte {
 }
 
 func PackAckBody(msgids [][]byte, cmd byte) []byte {
-	total := 1 + 2 + 2*len(msgids)
+	total := 1 + 4 + 2*len(msgids)
 	for _, msgid := range msgids {
 		total += len(msgid)
 	}
@@ -213,9 +213,9 @@ func PackAckBody(msgids [][]byte, cmd byte) []byte {
 	// command
 	body[0] = cmd
 	// msgs count
-	binary.PutUvarint(body[1:3], uint64(len(msgids)))
+	binary.PutUvarint(body[1:5], uint64(len(msgids)))
 
-	last := 3
+	last := 5
 	for _, msgid := range msgids {
 		ml := len(msgid)
 		binary.PutUvarint(body[last:last+2], uint64(ml))
@@ -227,10 +227,10 @@ func PackAckBody(msgids [][]byte, cmd byte) []byte {
 }
 
 func UnpackAck(b []byte) [][]byte {
-	msl, _ := binary.Uvarint(b[:2])
+	msl, _ := binary.Uvarint(b[:4])
 	msgids := make([][]byte, msl)
 
-	var last uint64 = 2
+	var last uint64 = 4
 	index := 0
 	bl := uint64(len(b))
 	for {
@@ -435,21 +435,20 @@ func PackMsgs(ms []*Message, cmd byte) []byte {
 	cbody := snappy.Encode(nil, body)
 
 	//header
-	msg := make([]byte, len(cbody)+7)
-	binary.PutUvarint(msg[:4], uint64(len(cbody)+3))
+	msg := make([]byte, len(cbody)+9)
+	binary.PutUvarint(msg[:4], uint64(len(cbody)+5))
 	msg[4] = cmd
-	binary.PutUvarint(msg[5:7], uint64(len(ms)))
+	binary.PutUvarint(msg[5:9], uint64(len(ms)))
 
-	copy(msg[7:], cbody)
+	copy(msg[9:], cbody)
 	return msg
 }
 
 func UnpackMsgs(m []byte) ([]*Message, error) {
-	msl, _ := binary.Uvarint(m[:2])
+	msl, _ := binary.Uvarint(m[:4])
 	msgs := make([]*Message, msl)
-
 	// decompress
-	b, err := snappy.Decode(nil, m[2:])
+	b, err := snappy.Decode(nil, m[4:])
 	if err != nil {
 		return nil, err
 	}

@@ -21,8 +21,6 @@ type Config struct {
 
 	Store struct {
 		Engine string
-		Addr   string
-		Seed   string
 	}
 
 	Cluster struct {
