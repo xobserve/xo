@@ -1,0 +1,16 @@
+{
+    "name": "meq",
+    "description": "NodeJS MQTT client to use with emitter.io platform",
+    "main": "src/meq.js",
+    "authors": [
+      "Misakai Ltd."
+    ],
+    "license": "MIT",
+    "ignore": [
+      "**/.*",
+      "node_modules",
+      "bower_components",
+      "test",
+      "tests"
+    ]
+  }

@@ -1,0 +1,76 @@
+package service
+
+import (
+	"encoding/binary"
+	"fmt"
+	"sync"
+
+	"github.com/cosmos-gg/meq/proto"
+	"github.com/weaveworks/mesh"
+	"go.uber.org/zap"
+)
+
+type Router struct {
+	bk *Broker
+	sync.RWMutex
+}
+
+type RouterTarget struct {
+	Addr string
+	Cid  uint64
+}
+
+func (r *Router) Init() {
+
+}
+
+func (r *Router) Close() {
+
+}
+
+// first byte: command
+// second four byte : cid
+// other : msg body
+func (r *Router) recvRoute(src mesh.PeerName, buf []byte) {
+	cid := uint64(binary.LittleEndian.Uint32(buf[:4]))
+	cmd := buf[4]
+
+	fmt.Println(cmd, cid)
+	r.RLock()
+	c, ok := r.bk.clients[cid]
+	r.RUnlock()
+	if !ok {
+		return
+	}
+	fmt.Println(cmd, cid)
+	switch cmd {
+	case proto.MSG_PUB_BATCH:
+		msgs, err := proto.UnpackPubBatch(buf[5:])
+		if err != nil {
+			L.Warn("route process pub batch error", zap.Error(err))
+			return
+		}
+		c.msgSender <- msgs
+	case proto.MSG_JOIN_CHAT: // notify someone has join the chat
+		fmt.Println("recv join chat msgs:")
+		fmt.Println(proto.UnpackJoinChatNotify(buf[5:]))
+		notifyOne(c.conn, buf[5:])
+	}
+}
+
+// notify!!
+// the first byte of m must be command byte
+func (r *Router) route(s Sub, m []byte) {
+	msg := make([]byte, 9+len(m))
+	// 4 bytes header
+	binary.PutUvarint(msg[:4], 5+uint64(len(m)))
+	// 1 byte command
+	msg[4] = CLUSTER_MSG_ROUTE
+	// cid
+	binary.LittleEndian.PutUint32(msg[5:9], uint32(s.Cid))
+	// body
+	copy(msg[9:], m)
+	//@todo
+	// async + batch,current implementation will block the client's read loop
+	r.bk.cluster.peer.send.GossipUnicast(s.Addr, msg)
+}

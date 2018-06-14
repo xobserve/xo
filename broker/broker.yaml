@@ -1,0 +1,25 @@
+common:
+  version: 0.0.1
+  debug:   false
+  logpath: "./out.log"
+  loglevel: debug
+
+broker:
+  host: localhost
+  tcpport: 8909
+  wsport: 9009
+  httpport: 9109
+  token: "meq-test"
+
+store:
+  engine: fdb
+  fdb: 
+    namespace: meq-store
+    threads: 5
+  mem:
+    
+cluster:
+  hwaddr: "00:00:00:00:00:02"
+  port: "8919"
+  seedpeers: 
+    - "localhost:8918"
