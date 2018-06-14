@@ -154,7 +154,7 @@ func (ms *MemStore) MarkRead(topic []byte, msgids [][]byte) {
 	}
 }
 
-func (ms *MemStore) ReduceCount(topic []byte, count int) {
+func (ms *MemStore) UpdateUnreadCount(topic []byte, isAdd bool, count int) {
 
 }
 

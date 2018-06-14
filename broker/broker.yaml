@@ -6,9 +6,9 @@ common:
 
 broker:
   host: localhost
-  tcpport: 8909
-  wsport: 9009
-  httpport: 9109
+  tcpport: 8908
+  wsport: 9008
+  httpport: 9108
   token: "meq-test"
 
 store:
@@ -19,7 +19,7 @@ store:
   mem:
     
 cluster:
-  hwaddr: "00:00:00:00:00:02"
-  port: "8919"
+  hwaddr: "00:00:00:00:00:01"
+  port: "8918"
   seedpeers: 
-    - "localhost:8918"
+    - ""

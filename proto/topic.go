@@ -21,8 +21,8 @@ const (
 	TopicSendOne = '1'
 	TopicSendAll = '2'
 
-	TopicTypePush = '1'
-	TopicTypeChat = '2'
+	TopicTypeNormal = '1'
+	TopicTypeChat   = '2'
 
 	AppIdLen = 10
 )
@@ -140,13 +140,12 @@ func AppidAndSendTag(topic []byte) ([]byte, byte, byte, error) {
 	}
 
 	typetag := topic[i2+2]
-	if sendtag != TopicTypePush && sendtag != TopicTypeChat {
+	if sendtag != TopicTypeNormal && sendtag != TopicTypeChat {
 		return nil, 0, 0, errors.New("topic invalid9")
 	}
 	return appid, sendtag, typetag, nil
 }
 
-func GetTopicType(topic []byte) (byte, error) {
-	_, _, tp, err := AppidAndSendTag(topic)
-	return tp, err
+func GetTopicType(topic []byte) byte {
+	return topic[13]
 }

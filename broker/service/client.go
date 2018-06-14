@@ -140,6 +140,12 @@ func (c *client) readLoop(isWs bool) error {
 
 					now := time.Now().Unix()
 					for _, m := range ms {
+						// validate msg
+						_, _, _, err := proto.AppidAndSendTag(m.Topic)
+						if err != nil {
+							L.Info("pub msg topic invalid", zap.Error(err), zap.ByteString("topic", m.Topic))
+							continue
+						}
 						// update the ttl to a unix time
 						if m.TTL != proto.NeverExpires {
 							m.TTL = now + m.TTL
@@ -162,6 +168,12 @@ func (c *client) readLoop(isWs bool) error {
 					m, err := proto.UnpackMsg(packet.Payload[1:])
 					if err != nil {
 						return err
+					}
+					// validate msg
+					_, _, _, err = proto.AppidAndSendTag(m.Topic)
+					if err != nil {
+						L.Info("pub msg topic invalid", zap.Error(err), zap.ByteString("topic", m.Topic))
+						continue
 					}
 
 					now := time.Now().Unix()
@@ -193,11 +205,11 @@ func (c *client) readLoop(isWs bool) error {
 				case proto.MSG_REDUCE_COUNT:
 					topic := packet.Topic
 					count := proto.UnpackReduceCount(packet.Payload[1:])
-					if count < 0 && count != proto.REDUCE_ALL_COUNT {
+					if count < 0 {
 						return fmt.Errorf("malice ack count, topic:%s,count:%d", string(topic), count)
 					}
 
-					c.bk.store.ReduceCount(topic, count)
+					c.bk.store.UpdateUnreadCount(topic, false, count)
 				case proto.MSG_MARK_READ: // clients receive the publish message
 					topic, msgids := proto.UnpackMarkRead(packet.Payload[1:])
 					if len(msgids) > 0 {
@@ -220,12 +232,15 @@ func (c *client) readLoop(isWs bool) error {
 
 				case proto.MSG_JOIN_CHAT:
 					topic := proto.UnpackJoinChat(packet.Payload[1:])
-					// check the topic is TopicTypeChat
-					tp, err := proto.GetTopicType(topic)
+					// validate msg
+					_, _, _, err := proto.AppidAndSendTag(topic)
 					if err != nil {
-						L.Info("join chat error", zap.Error(err), zap.ByteString("topic", topic))
+						L.Info("leave chat topic invalid", zap.Error(err), zap.ByteString("topic", topic))
 						return err
 					}
+
+					// check the topic is TopicTypeChat
+					tp := proto.GetTopicType(topic)
 
 					if tp == proto.TopicTypeChat {
 						c.bk.store.JoinChat(topic, c.username)
@@ -234,11 +249,14 @@ func (c *client) readLoop(isWs bool) error {
 
 				case proto.MSG_LEAVE_CHAT:
 					topic := proto.UnpackLeaveChat(packet.Payload[1:])
-					tp, err := proto.GetTopicType(topic)
+					// validate msg
+					_, _, _, err := proto.AppidAndSendTag(topic)
 					if err != nil {
-						L.Info("leave chat error", zap.Error(err), zap.ByteString("topic", topic))
+						L.Info("leave chat topic invalid", zap.Error(err), zap.ByteString("topic", topic))
 						return err
 					}
+
+					tp := proto.GetTopicType(topic)
 
 					if tp == proto.TopicTypeChat {
 						c.bk.store.LeaveChat(topic, c.username)

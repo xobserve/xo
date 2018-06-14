@@ -78,3 +78,9 @@ func TestAppidAndSendTag(t *testing.T) {
 	_, _, _, err = AppidAndSendTag(topic)
 	assert.Error(t, err)
 }
+
+func TestGetTopicType(t *testing.T) {
+	topic := []byte("/1234567890/12/c")
+	tp := GetTopicType(topic)
+	assert.EqualValues(t, '2', tp)
+}

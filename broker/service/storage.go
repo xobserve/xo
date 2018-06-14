@@ -14,7 +14,7 @@ type Storage interface {
 
 	UnreadCount(topic []byte) int
 	MarkRead(topic []byte, msgids [][]byte)
-	ReduceCount(topic []byte, count int)
+	UpdateUnreadCount(topic []byte, isAdd bool, count int)
 
 	Query(topic []byte, count int, offset []byte, acked bool) []*proto.PubMsg
 

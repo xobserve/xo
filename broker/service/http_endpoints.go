@@ -24,7 +24,9 @@ func (b *Broker) clearStore(c echo.Context) error {
 
 	_, err := d.db.Transact(func(tr fdb.Transaction) (ret interface{}, err error) {
 		tr.ClearRange(d.msgsp)
-		tr.ClearRange(d.countsp)
+		tr.ClearRange(d.normalCountSP)
+		tr.ClearRange(d.chatCountSP)
+		tr.ClearRange(d.chatroomSP)
 		return
 	})
 	if err != nil {

@@ -29,6 +29,16 @@ func publishOnline(from uint64, bk *Broker, msgs []*proto.PubMsg, broadcast bool
 			L.Info("Subtrie lookup error", zap.Error(err), zap.String("topic", t))
 			continue
 		}
+
+		// update the topic unread count
+		tp := proto.GetTopicType([]byte(t))
+		if tp == proto.TopicTypeNormal {
+			// no user online,update the count
+			if len(sesses) == 0 {
+				bk.store.UpdateUnreadCount([]byte(t), true, len(msgs))
+			}
+		}
+
 		for _, sess := range sesses {
 			if broadcast { // change the topic to the concrete subscrite topic
 				for _, m := range msgs {
