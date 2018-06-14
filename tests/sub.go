@@ -32,6 +32,9 @@ func sub(conn *meq.Connection) {
 		fmt.Println(err)
 	}
 
+	// 加入聊天
+	conn.JoinChat([]byte(topic))
+
 	select {}
 	// fmt.Println("累积消费未ACK消息数：", n1)
 }

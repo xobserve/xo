@@ -12,9 +12,9 @@ type Storage interface {
 
 	Store(msgs []*proto.PubMsg)
 
-	UnreadCount(topic []byte) int
+	UnreadCount(topic []byte, user []byte) int
 	MarkRead(topic []byte, msgids [][]byte)
-	UpdateUnreadCount(topic []byte, isAdd bool, count int)
+	UpdateUnreadCount(topic []byte, user []byte, isAdd bool, count int)
 
 	Query(topic []byte, count int, offset []byte, acked bool) []*proto.PubMsg
 
@@ -23,6 +23,7 @@ type Storage interface {
 
 	JoinChat(topic []byte, user []byte) error
 	LeaveChat(topic []byte, user []byte) error
+	GetChatUsers(topic []byte) [][]byte
 }
 
 func PackStoreMessage(m *proto.PubMsg) []byte {

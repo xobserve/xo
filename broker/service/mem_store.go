@@ -154,7 +154,7 @@ func (ms *MemStore) MarkRead(topic []byte, msgids [][]byte) {
 	}
 }
 
-func (ms *MemStore) UpdateUnreadCount(topic []byte, isAdd bool, count int) {
+func (ms *MemStore) UpdateUnreadCount(topic []byte, user []byte, isAdd bool, count int) {
 
 }
 
@@ -228,7 +228,7 @@ func (ms *MemStore) Query(t []byte, count int, offset []byte, acked bool) []*pro
 	return newMsgs
 }
 
-func (ms *MemStore) UnreadCount(topic []byte) int {
+func (ms *MemStore) UnreadCount(topic []byte, user []byte) int {
 	t := string(topic)
 	ms.Lock()
 	defer ms.Unlock()
@@ -274,6 +274,10 @@ func (ms *MemStore) JoinChat(topic []byte, user []byte) error {
 }
 
 func (ms *MemStore) LeaveChat(topic []byte, user []byte) error {
+	return nil
+}
+
+func (ms *MemStore) GetChatUsers(topic []byte) [][]byte {
 	return nil
 }
 

@@ -13,7 +13,8 @@ import (
 )
 
 type ConfigOption struct {
-	Hosts []string
+	Username string
+	Hosts    []string
 }
 
 type Connection struct {
@@ -58,6 +59,8 @@ func Connect(conf *ConfigOption) (*Connection, error) {
 
 	// connect to server
 	ack := mqtt.Connect{}
+	ack.Username = []byte(conf.Username)
+	ack.UsernameFlag = true
 	if _, err := ack.EncodeTo(conn); err != nil {
 		return nil, err
 	}
@@ -99,6 +102,8 @@ func (c *Connection) loop(conf *ConfigOption) {
 
 		// connect to server
 		ack := mqtt.Connect{}
+		ack.Username = []byte(conf.Username)
+		ack.UsernameFlag = true
 		if _, err := ack.EncodeTo(conn); err != nil {
 			time.Sleep(2000 * time.Millisecond)
 			continue

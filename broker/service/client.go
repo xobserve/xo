@@ -50,6 +50,12 @@ func (c *client) readLoop(isWs bool) error {
 		c.closech <- struct{}{}
 		// unsub topics
 		for topic := range c.subs {
+			tp := proto.GetTopicType([]byte(topic))
+			if tp == proto.TopicTypeChat {
+				// because when we send a message to a chat topic,we will add one unread count for every user,
+				// so when unconnected,we need to se chat topic's unread count to 0
+				c.bk.store.UpdateUnreadCount([]byte(topic), c.username, false, 0)
+			}
 			c.bk.subtrie.UnSubscribe([]byte(topic), c.cid, c.bk.cluster.peer.name)
 			//@todo
 			// aync + batch
@@ -58,7 +64,7 @@ func (c *client) readLoop(isWs bool) error {
 		}
 		c.bk.wg.Done()
 		if err := recover(); err != nil {
-			L.Info("read loop panic:", zap.Error(err.(error)))
+			L.Info("read loop panic:", zap.Error(err.(error)), zap.Stack("stack"))
 			return
 		}
 	}()
@@ -86,7 +92,7 @@ func (c *client) readLoop(isWs bool) error {
 
 				c.subs[string(t)] = struct{}{}
 				//@todo
-				count := c.bk.store.UnreadCount(t)
+				count := c.bk.store.UnreadCount(t, c.username)
 				// push out the count of the unread messages
 				msg := mqtt.Publish{
 					Header: &mqtt.StaticHeader{
@@ -209,7 +215,7 @@ func (c *client) readLoop(isWs bool) error {
 						return fmt.Errorf("malice ack count, topic:%s,count:%d", string(topic), count)
 					}
 
-					c.bk.store.UpdateUnreadCount(topic, false, count)
+					c.bk.store.UpdateUnreadCount(topic, c.username, false, count)
 				case proto.MSG_MARK_READ: // clients receive the publish message
 					topic, msgids := proto.UnpackMarkRead(packet.Payload[1:])
 					if len(msgids) > 0 {
@@ -356,6 +362,9 @@ func (c *client) waitForConnect() error {
 
 	if msg.Type() == mqtt.TypeOfConnect {
 		packet := msg.(*mqtt.Connect)
+		if len(packet.Username) <= 0 {
+			return errors.New("no username exist")
+		}
 		c.username = packet.Username
 
 		// reply the connect ack

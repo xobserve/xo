@@ -8,12 +8,13 @@ import (
 	meq "github.com/cosmos-gg/meq/sdks/go-meq"
 )
 
-var topic = "/1234567890/11/test/a"
+var topic = "/1234567890/12/test/a"
 var host = "localhost:"
 
 var op = flag.String("op", "", "")
 var port = flag.String("p", "", "")
 var thread = flag.Int("t", 1, "")
+var user = flag.String("u", "", "")
 
 func main() {
 	flag.Parse()
@@ -26,7 +27,11 @@ func main() {
 		panic("port invalid")
 	}
 
-	conns := connect()
+	if *user == "" {
+		panic("user invalid")
+	}
+
+	conns := connect(*user)
 	switch *op {
 	case "pub":
 		pub(conns)
@@ -37,7 +42,7 @@ func main() {
 	}
 }
 
-func connect() []*meq.Connection {
+func connect(user string) []*meq.Connection {
 	n := 0
 	var conns []*meq.Connection
 	for {
@@ -46,7 +51,8 @@ func connect() []*meq.Connection {
 		}
 
 		conf := &meq.ConfigOption{
-			Hosts: []string{host + *port},
+			Username: user,
+			Hosts:    []string{host + *port},
 		}
 		conn, err := meq.Connect(conf)
 		if err != nil {

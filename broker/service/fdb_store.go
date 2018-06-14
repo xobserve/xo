@@ -35,7 +35,6 @@ type database struct {
 	db            fdb.Database
 	msgsp         subspace.Subspace
 	normalCountSP subspace.Subspace
-	chatCountSP   subspace.Subspace
 	chatroomSP    subspace.Subspace
 }
 
@@ -58,16 +57,18 @@ func (f *FdbStore) Init() {
 	}
 
 	normalTopicCount := make(map[string]int)
+	chatTopicCount := make(map[string]int)
 	go func() {
+		c1 := time.NewTicker(2 * time.Second).C
 		for f.bk.running {
 			select {
 			case c := <-f.countch:
 				if proto.GetTopicType(c.topic) == proto.TopicTypeNormal {
 					normalTopicCount[string(c.topic)] += c.count
 				} else {
-
+					chatTopicCount[string(c.topic)] += c.count
 				}
-			case <-time.NewTicker(2 * time.Second).C:
+			case <-c1:
 				if len(normalTopicCount) > 0 {
 					d := f.dbs[0]
 					_, err := d.db.Transact(func(tr fdb.Transaction) (ret interface{}, err error) {
@@ -78,10 +79,49 @@ func (f *FdbStore) Init() {
 						return
 					})
 					if err != nil {
-						L.Info("put messsage count error", zap.Error(err))
+						L.Info("put normal count error", zap.Error(err))
 						continue
 					}
 					normalTopicCount = make(map[string]int)
+				}
+			}
+		}
+	}()
+
+	go func() {
+		c1 := time.NewTicker(3 * time.Second).C
+		for f.bk.running {
+			select {
+			case <-c1:
+				if len(chatTopicCount) > 0 {
+					d := f.dbs[0]
+					_, err := d.db.Transact(func(tr fdb.Transaction) (ret interface{}, err error) {
+						for topic, count := range chatTopicCount {
+							t := []byte(topic)
+							pr, _ := fdb.PrefixRange(d.chatroomSP.Pack(tuple.Tuple{t}))
+							ir := tr.GetRange(pr, fdb.RangeOptions{}).Iterator()
+
+							for ir.Advance() {
+								v := ir.MustGet()
+								key := v.Key
+								val := v.Value
+
+								ocount := binary.LittleEndian.Uint32(val)
+								ncount := ocount + uint32(count)
+
+								b := make([]byte, 4)
+								binary.LittleEndian.PutUint32(b, ncount)
+
+								tr.Set(key, b)
+							}
+						}
+						return
+					})
+					if err != nil {
+						L.Info("put chat count error", zap.Error(err))
+						continue
+					}
+					chatTopicCount = make(map[string]int)
 				}
 			}
 		}
@@ -164,17 +204,38 @@ func (f *FdbStore) Query(t []byte, count int, offset []byte, acked bool) []*prot
 	return msgs
 }
 
-func (f *FdbStore) UnreadCount(topic []byte) int {
+func (f *FdbStore) UnreadCount(topic []byte, user []byte) int {
 	i := getcounts % uint64(f.bk.conf.Store.FDB.Threads)
 	getcounts++
 
 	d := f.dbs[i]
-	ck := d.normalCountSP.Pack(tuple.Tuple{topic})
-	count, _ := getCount(d.db, ck)
-	return int(count)
+
+	var count int
+	tp := proto.GetTopicType(topic)
+	if tp == proto.TopicTypeNormal {
+		ck := d.normalCountSP.Pack(tuple.Tuple{topic})
+		c, _ := getCount(d.db, ck)
+		count = int(c)
+	} else {
+		k := d.chatroomSP.Pack(tuple.Tuple{topic, user})
+		v, err := getK(d.db, k)
+		if err != nil {
+			L.Info("unread count error", zap.Error(err), zap.ByteString("topic", topic), zap.ByteString("user", user))
+			count = 0
+		} else {
+			if len(v) == 4 {
+				c := binary.LittleEndian.Uint32(v)
+				count = int(c)
+			} else {
+				count = 0
+			}
+		}
+	}
+
+	return count
 }
 
-func (f *FdbStore) UpdateUnreadCount(topic []byte, isAdd bool, count int) {
+func (f *FdbStore) UpdateUnreadCount(topic []byte, user []byte, isAdd bool, count int) {
 	tp := proto.GetTopicType(topic)
 	if tp == proto.TopicTypeNormal {
 		if !isAdd {
@@ -185,6 +246,20 @@ func (f *FdbStore) UpdateUnreadCount(topic []byte, isAdd bool, count int) {
 			ck := d.normalCountSP.Pack(tuple.Tuple{topic})
 
 			decrCount(d.db, ck, count)
+		} else {
+			f.countch <- countMsg{topic, nil, count}
+		}
+	} else {
+		if !isAdd {
+			i := getcounts % uint64(f.bk.conf.Store.FDB.Threads)
+			getcounts++
+
+			d := f.dbs[i]
+			k := d.chatroomSP.Pack(tuple.Tuple{topic, user})
+
+			// for chat topic, read means set unread to 0
+			b := make([]byte, 4)
+			setKV(d.db, k, b)
 		} else {
 			f.countch <- countMsg{topic, nil, count}
 		}
@@ -207,7 +282,9 @@ func (f *FdbStore) JoinChat(topic []byte, user []byte) error {
 	ck := d.chatroomSP.Pack(tuple.Tuple{topic, user})
 	exist := keyExist(d.db, ck)
 	if !exist {
-		incrCount(d.db, ck, 0)
+		b := make([]byte, 4)
+		binary.LittleEndian.PutUint32(b, 0)
+		setKV(d.db, ck, b)
 	}
 
 	return nil
@@ -224,6 +301,10 @@ func (f *FdbStore) LeaveChat(topic []byte, user []byte) error {
 	if exist {
 		delKey(d.db, ck)
 	}
+	return nil
+}
+
+func (f *FdbStore) GetChatUsers(topic []byte) [][]byte {
 	return nil
 }
 
@@ -251,9 +332,8 @@ func (f *FdbStore) process(i int) {
 	}
 	msgsp := dir.Sub("messages")
 	normalCountSP := dir.Sub("msg-count")
-	chatCountSP := dir.Sub("chat-count")
 	chatroomSP := dir.Sub("chat-room")
-	f.dbs[i] = &database{db, msgsp, normalCountSP, chatCountSP, chatroomSP}
+	f.dbs[i] = &database{db, msgsp, normalCountSP, chatroomSP}
 
 	pubch := make(chan []*proto.PubMsg, FdbCacheInitLen)
 	readch := make(chan []proto.Ack, FdbCacheInitLen)
@@ -381,7 +461,6 @@ func decrCount(tor fdb.Transactor, k fdb.Key, delta int) error {
 			tr.Add(k, negativeOne)
 			return nil, nil
 		}
-
 	SET_0:
 		// ack all,set count to 0
 		buf := new(bytes.Buffer)
@@ -443,4 +522,19 @@ func delKey(tor fdb.Transactor, k fdb.Key) {
 	if err != nil {
 		L.Info("del key error", zap.Error(err))
 	}
+}
+
+func setKV(tor fdb.Transactor, k fdb.Key, v []byte) error {
+	_, err := tor.Transact(func(tr fdb.Transaction) (ret interface{}, err error) {
+		tr.Set(k, v)
+		return
+	})
+	return err
+}
+
+func getK(tor fdb.Transactor, k fdb.Key) ([]byte, error) {
+	ret, err := tor.Transact(func(tr fdb.Transaction) (ret interface{}, err error) {
+		return tr.Get(k).Get()
+	})
+	return ret.([]byte), err
 }
