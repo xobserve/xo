@@ -1,3 +1,16 @@
+//  Copyright © 2018 Sunface <CTO@188.com>
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
 package service
 
 import (
@@ -35,6 +48,18 @@ var mockExactMsgs = []*proto.PubMsg{
 	&proto.PubMsg{[]byte("002"), []byte("/test/g1"), []byte("hello world2"), false, 0, 1, 100},
 	&proto.PubMsg{[]byte("001"), []byte("/test/g1"), []byte("hello world1"), false, 0, 1, 100},
 }
+
+// var mockSubs = []SubData{
+// 	SubData{[]byte("/test/g1/a1/b1"), 1, mesh.PeerName(1)},
+// 	SubData{[]byte("/test/g2/a1/b1/c1"), 2, mesh.PeerName(2)},
+// 	SubData{[]byte("/test/g1/a1/b1/c1"), 3, mesh.PeerName(1)},
+// 	SubData{[]byte("/test/g2/a1/b1/c1"), 4, mesh.PeerName(2)},
+// 	SubData{[]byte("/test/g1/a1/b1/c1/d1/e1"), 5, mesh.PeerName(1)},
+// 	SubData{[]byte("/test/g1/a1/b1/c1/d1/e2"), 5, mesh.PeerName(2)},
+// 	SubData{[]byte("/test/g2/a1/b2/c1"), 6, mesh.PeerName(2)},
+// 	SubData{[]byte("/test/g1/a1/b2/c2"), 7, mesh.PeerName(2)},
+// 	SubData{[]byte("/test/g2/a2/b1/c1"), 8, mesh.PeerName(1)},
+// }
 
 func populateSubs(st *SubTrie) {
 	n := 0

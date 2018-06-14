@@ -1,3 +1,16 @@
+//  Copyright © 2018 Sunface <CTO@188.com>
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
 package service
 
 import (
@@ -30,14 +43,14 @@ func TestTrieSubAndLookup(t *testing.T) {
 		SubData{[]byte("/1234567890/1/a1/b1/c2/d1"), 8, mesh.PeerName(1)},
 	}
 	outputs := topicSubs{
-		TopicSub{[]byte("/1234567890/1/a1/b1/c2/d1"), Sub{mesh.PeerName(1), 8}},
-		TopicSub{[]byte("/1234567890/1/a1/b2/c2"), Sub{mesh.PeerName(2), 7}},
-		TopicSub{[]byte("/1234567890/1/a1/b1/c2/d1/e1"), Sub{mesh.PeerName(1), 5}},
+		TopicSub{[]byte("/1234567890/1/a1/b1/c2/d1"), Sub{mesh.PeerName(1), 8, nil}},
+		TopicSub{[]byte("/1234567890/1/a1/b2/c2"), Sub{mesh.PeerName(2), 7, nil}},
+		TopicSub{[]byte("/1234567890/1/a1/b1/c2/d1/e1"), Sub{mesh.PeerName(1), 5, nil}},
 	}
 	sort.Sort(outputs)
 
 	for _, input := range inputs {
-		st.Subscribe(input.Topic, input.Cid, input.Addr)
+		st.Subscribe(input.Topic, input.Cid, input.Addr, nil)
 	}
 
 	vs, _ := st.Lookup([]byte("/1234567890/1/a1/+/c2"))
@@ -59,12 +72,12 @@ func TestTrieSubAndLookupExactlyOne(t *testing.T) {
 	}
 
 	outputs := topicSubs{
-		TopicSub{[]byte("/1234567890/1/a1/b1/c1"), Sub{mesh.PeerName(2), 2}},
+		TopicSub{[]byte("/1234567890/1/a1/b1/c1"), Sub{mesh.PeerName(2), 2, nil}},
 	}
 	sort.Sort(outputs)
 
 	for _, input := range inputs {
-		st.Subscribe(input.Topic, input.Cid, input.Addr)
+		st.Subscribe(input.Topic, input.Cid, input.Addr, nil)
 	}
 
 	vs, _ := st.LookupExactly([]byte("/1234567890/1/a1/b1/c1"))
@@ -86,15 +99,15 @@ func TestTrieSubAndLookupExactlyAll(t *testing.T) {
 	}
 
 	outputs := topicSubs{
-		TopicSub{[]byte("/1234567890/2/a1/b1/c1"), Sub{mesh.PeerName(1), 1}},
-		TopicSub{[]byte("/1234567890/2/a1/b1/c1"), Sub{mesh.PeerName(2), 2}},
-		TopicSub{[]byte("/1234567890/2/a1/b1/c1"), Sub{mesh.PeerName(1), 3}},
-		TopicSub{[]byte("/1234567890/2/a1/b1/c1"), Sub{mesh.PeerName(2), 4}},
+		TopicSub{[]byte("/1234567890/2/a1/b1/c1"), Sub{mesh.PeerName(1), 1, nil}},
+		TopicSub{[]byte("/1234567890/2/a1/b1/c1"), Sub{mesh.PeerName(2), 2, nil}},
+		TopicSub{[]byte("/1234567890/2/a1/b1/c1"), Sub{mesh.PeerName(1), 3, nil}},
+		TopicSub{[]byte("/1234567890/2/a1/b1/c1"), Sub{mesh.PeerName(2), 4, nil}},
 	}
 	sort.Sort(outputs)
 
 	for _, input := range inputs {
-		st.Subscribe(input.Topic, input.Cid, input.Addr)
+		st.Subscribe(input.Topic, input.Cid, input.Addr, nil)
 	}
 
 	vs, _ := st.LookupExactly([]byte("/1234567890/2/a1/b1/c1"))
@@ -116,7 +129,7 @@ func TestTrieUnsubAndLookup(t *testing.T) {
 	}
 
 	for _, input := range inputs {
-		st.Subscribe(input.Topic, input.Cid, input.Addr)
+		st.Subscribe(input.Topic, input.Cid, input.Addr, nil)
 	}
 
 	unsubdata := inputs[0]
@@ -125,9 +138,9 @@ func TestTrieUnsubAndLookup(t *testing.T) {
 	st.UnSubscribe(unsubdata.Topic, unsubdata.Cid, unsubdata.Addr)
 
 	outputs := topicSubs{
-		TopicSub{[]byte("/1234567890/2/a1/b1/c1"), Sub{mesh.PeerName(2), 2}},
-		TopicSub{[]byte("/1234567890/2/a1/b1/c1/d1/e1"), Sub{mesh.PeerName(1), 5}},
-		TopicSub{[]byte("/1234567890/2/a1/b2/c1"), Sub{mesh.PeerName(2), 6}},
+		TopicSub{[]byte("/1234567890/2/a1/b1/c1"), Sub{mesh.PeerName(2), 2, nil}},
+		TopicSub{[]byte("/1234567890/2/a1/b1/c1/d1/e1"), Sub{mesh.PeerName(1), 5, nil}},
+		TopicSub{[]byte("/1234567890/2/a1/b2/c1"), Sub{mesh.PeerName(2), 6, nil}},
 	}
 	sort.Sort(outputs)
 

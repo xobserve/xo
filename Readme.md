@@ -12,9 +12,9 @@ Our goal is to be the best messaging platform in the world, like the iphone to o
      <img  width="200" src="./logo.png"></a>
 </p>
 
-Status
+Now Status
 ------------
-Alpha V0.5.0
+The version is Alpha V0.5.0. The website,documents and a group chat demo will soon be possible to access(before 2018.6.30)
 
 
 Features
@@ -36,6 +36,13 @@ Features
 - IM
 - IoT messaging
 - Real time Web interaction,like dashboard、online collaboration etc
+### Group chat
+- Join and leave the group
+- Each user has a separate unread message number,e.g. you have 97 unread messages in ethereum-welcom group
+- You can retrive your message even after sended
+- History messages playback
+- Query all the users or online users in the group
+- Every message will store only once, all the users share the message
 ### Advanced feature
 - Topic wild match, e.g. you can  push to /china/+/city1, then **all** the **china** province which has city named **city1**, will receive the message.
 - Mqtt and websocket,tcp etc
