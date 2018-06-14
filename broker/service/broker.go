@@ -30,8 +30,6 @@ type Broker struct {
 	timer   *Timer
 	cluster *cluster
 
-	topicChatCounter *TopicChatCount
-
 	subtrie   *SubTrie
 	subSynced bool
 
@@ -101,10 +99,6 @@ func (b *Broker) Start() {
 	}
 	b.timer.Init()
 
-	// init topic chat counter
-	b.topicChatCounter = &TopicChatCount{}
-	b.topicChatCounter.Init(b)
-
 	go func() {
 		log.Println(http.ListenAndServe("localhost:6070", nil))
 	}()
@@ -120,7 +114,7 @@ func (b *Broker) Shutdown() {
 	b.store.Close()
 	b.router.Close()
 	b.timer.Close()
-	b.topicChatCounter.Close()
+
 	L.Sync()
 	b.wg.Wait()
 }
