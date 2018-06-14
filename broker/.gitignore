@@ -30,3 +30,5 @@ client/client
 license.key
 #idea
 .idea/
+
+.DS_Store
