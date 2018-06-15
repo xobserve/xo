@@ -209,6 +209,7 @@ func (c *client) readLoop(isWs bool) error {
 					// save the messages
 					ms := []*proto.PubMsg{m}
 					c.bk.store.Store(ms)
+
 					// push to online clients in all nodes
 					publishOnline(c.cid, c.bk, ms, false)
 

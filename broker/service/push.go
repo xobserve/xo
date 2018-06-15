@@ -63,9 +63,6 @@ func publishOnline(from uint64, bk *Broker, msgs []*proto.PubMsg, broadcast bool
 			}
 
 			if sess.Sub.Addr == bk.cluster.peer.name {
-				if sess.Sub.Cid == from {
-					continue
-				}
 				bk.RLock()
 				c, ok := bk.clients[sess.Sub.Cid]
 				bk.RUnlock()
