@@ -1,11 +1,11 @@
 //  Copyright © 2018 Sunface <CTO@188.com>
-
+//
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
-
+//
 //     http://www.apache.org/licenses/LICENSE-2.0
-
+//
 // Unless required by applicable law or agreed to in writing, software
 // distributed under the License is distributed on an "AS IS" BASIS,
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -124,7 +124,7 @@ var Meq = (function() {
     };
 
     Meq.prototype.publish = function(topic,payload,ttl) {
-        var id = newID()
+        var id = ''
         var ml = id.length
         var tl = topic.length
         var pl = payload.length
@@ -236,7 +236,9 @@ function Message(id,topic,payload,acked) {
 exports.Message = Message;
 
 function newID() {
-    return ''
+    var timestamp = (new Date()).valueOf();
+    var r = random(100000,999999)
+    return timestamp+r
 }
 
 function random(Min,Max){

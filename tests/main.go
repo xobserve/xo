@@ -8,7 +8,7 @@ import (
 	meq "github.com/cosmos-gg/meq/sdks/go-meq"
 )
 
-var topic = "/1234567890/12/test/a"
+var topic = "/1234567890/22/test/a"
 var host = "localhost:"
 
 var op = flag.String("op", "", "")
