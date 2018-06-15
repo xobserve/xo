@@ -8,17 +8,17 @@ import (
 )
 
 var mockMsgs = []*PubMsg{
-	&PubMsg{[]byte("001"), []byte("test"), []byte("hello world1"), false, 0, 1, 100},
-	&PubMsg{[]byte("002"), []byte("test"), []byte("hello world2"), false, 0, 1, 101},
-	&PubMsg{[]byte("003"), []byte("test"), []byte("hello world3"), false, 0, 1, 102},
-	&PubMsg{[]byte("004"), []byte("test"), []byte("hello world4"), true, 0, 1, 100},
-	&PubMsg{[]byte("005"), []byte("test"), []byte("hello world5"), false, 0, 1, 100},
-	&PubMsg{[]byte("006"), []byte("test"), []byte("hello world6"), false, 0, 1, 100},
-	&PubMsg{[]byte("007"), []byte("test"), []byte("hello world7"), false, 0, 1, 100},
-	&PubMsg{[]byte("008"), []byte("test"), []byte("hello world8"), false, 0, 1, 100},
-	&PubMsg{[]byte("009"), []byte("test"), []byte("hello world9"), true, 0, 1, 100},
-	&PubMsg{[]byte("010"), []byte("test"), []byte("hello world10"), false, 0, 1, 100},
-	&PubMsg{[]byte("011"), []byte("test"), []byte("hello world11"), false, 0, 1, 100},
+	&PubMsg{[]byte(""), []byte("test"), []byte("hello world1"), false, 0, 1, 100},
+	&PubMsg{[]byte(""), []byte("test"), []byte("hello world2"), false, 0, 1, 101},
+	&PubMsg{[]byte(""), []byte("test"), []byte("hello world3"), false, 0, 1, 102},
+	&PubMsg{[]byte(""), []byte("test"), []byte("hello world4"), true, 0, 1, 100},
+	&PubMsg{[]byte(""), []byte("test"), []byte("hello world5"), false, 0, 1, 100},
+	&PubMsg{[]byte(""), []byte("test"), []byte("hello world6"), false, 0, 1, 100},
+	&PubMsg{[]byte(""), []byte("test"), []byte("hello world7"), false, 0, 1, 100},
+	&PubMsg{[]byte(""), []byte("test"), []byte("hello world8"), false, 0, 1, 100},
+	&PubMsg{[]byte(""), []byte("test"), []byte("hello world9"), true, 0, 1, 100},
+	&PubMsg{[]byte(""), []byte("test"), []byte("hello world10"), false, 0, 1, 100},
+	&PubMsg{[]byte(""), []byte("test"), []byte("hello world11"), false, 0, 1, 100},
 }
 
 func TestPubMsgOnePackUnpack(t *testing.T) {

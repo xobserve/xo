@@ -236,9 +236,7 @@ function Message(id,topic,payload,acked) {
 exports.Message = Message;
 
 function newID() {
-    var timestamp = (new Date()).valueOf();
-    var r = random(100000,999999)
-    return timestamp+r
+    return ''
 }
 
 function random(Min,Max){

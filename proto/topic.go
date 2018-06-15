@@ -57,14 +57,14 @@ func ParseTopic(t []byte, exactly bool) ([]uint32, error) {
 	for i, b := range t {
 		if i == 0 { // first byte must be topic sep
 			if b != TopicSep {
-				err = errors.New("topic invalid1")
+				err = errors.New("first byte must  be topic sperator")
 				return nil, err
 			}
 			continue
 		}
 		if i == len(t)-1 { // last byte must not be topic sep
 			if b == TopicSep {
-				err = errors.New("topic invalid2")
+				err = errors.New("last byte must not be topic sperator")
 				return nil, err
 			}
 		}
@@ -74,7 +74,7 @@ func ParseTopic(t []byte, exactly bool) ([]uint32, error) {
 		}
 
 		if len(buf) == 0 {
-			err = errors.New("topic invalid3")
+			err = errors.New("topic invalid,maybe you cant use like '//a' ")
 			return nil, err
 		}
 		tid := talent.MurMurHash(buf)
@@ -88,7 +88,7 @@ func ParseTopic(t []byte, exactly bool) ([]uint32, error) {
 	}
 
 	if len(tids) < 3 {
-		return nil, errors.New("topic invalid4")
+		return nil, errors.New("topic need contain at least 3 components")
 	}
 
 	// first three parts of topic cant be wildcard
@@ -117,7 +117,7 @@ func AppidAndSendTag(topic []byte) ([]byte, byte, byte, error) {
 		if i == 0 {
 			// first byte must be topic sep
 			if b != TopicSep {
-				return nil, 0, 0, errors.New("topic invalid5")
+				return nil, 0, 0, errors.New("first byte must  be topic sperator")
 			}
 			continue
 		}
@@ -133,28 +133,28 @@ func AppidAndSendTag(topic []byte) ([]byte, byte, byte, error) {
 
 	// last byte cant be topic sep
 	if i3 == len(topic)-1 {
-		return nil, 0, 0, errors.New("topic invalid6")
+		return nil, 0, 0, errors.New("last byte must not be topic sperator")
 	}
 
 	// sendtag's length must be 2
 	if i3 != i2+3 {
-		return nil, 0, 0, errors.New("topic invalid7")
+		return nil, 0, 0, errors.New("invalid topic tags")
 	}
 
 	// appid's length must be AppIdLen
 	appid := topic[1:i2]
 	if len(appid) != AppIdLen {
-		return nil, 0, 0, errors.New("topic invalid8")
+		return nil, 0, 0, errors.New("invalid topic appid")
 	}
 
 	sendtag := topic[i2+1]
 	if sendtag != TopicSendOne && sendtag != TopicSendAll {
-		return nil, 0, 0, errors.New("topic invalid9")
+		return nil, 0, 0, errors.New("invalid topic send tag")
 	}
 
 	typetag := topic[i2+2]
 	if sendtag != TopicTypeNormal && sendtag != TopicTypeChat {
-		return nil, 0, 0, errors.New("topic invalid9")
+		return nil, 0, 0, errors.New("invalid topic type tag")
 	}
 	return appid, sendtag, typetag, nil
 }

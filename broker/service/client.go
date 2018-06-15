@@ -160,6 +160,8 @@ func (c *client) readLoop(isWs bool) error {
 
 					now := time.Now().Unix()
 					for _, m := range ms {
+						// gen msg id
+						m.ID = c.bk.idgen.Generate().Bytes()
 						// validate msg
 						_, _, _, err := proto.AppidAndSendTag(m.Topic)
 						if err != nil {
@@ -197,6 +199,8 @@ func (c *client) readLoop(isWs bool) error {
 					}
 
 					now := time.Now().Unix()
+					// generate messageID
+					m.ID = c.bk.idgen.Generate().Bytes()
 					// update the ttl to a unix time
 					if m.TTL != proto.NeverExpires {
 						m.TTL = now + m.TTL
@@ -219,6 +223,10 @@ func (c *client) readLoop(isWs bool) error {
 					ms, err := proto.UnpackPubBatch(packet.Payload[1:])
 					if err != nil {
 						return err
+					}
+					for _, m := range ms {
+						// gen msg id
+						m.ID = c.bk.idgen.Generate().Bytes()
 					}
 					publishOnline(c.cid, c.bk, ms, true)
 

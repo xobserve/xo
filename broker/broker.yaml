@@ -10,6 +10,7 @@ broker:
   wsport: 9008
   httpport: 9108
   token: "meq-test"
+  serverid: 1
 
 store:
   engine: fdb

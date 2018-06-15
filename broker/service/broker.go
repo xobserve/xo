@@ -25,6 +25,7 @@ import (
 	"net/http"
 	_ "net/http/pprof"
 
+	"github.com/bwmarrin/snowflake"
 	"github.com/cosmos-gg/meq/proto/websocket"
 	"github.com/labstack/echo"
 	"github.com/sunface/talent"
@@ -47,6 +48,7 @@ type Broker struct {
 	subtrie   *SubTrie
 	subSynced bool
 
+	idgen  *snowflake.Node
 	topics *Topics
 
 	conf *Config
@@ -112,6 +114,9 @@ func (b *Broker) Start() {
 		bk: b,
 	}
 	b.timer.Init()
+
+	// init messsage id generator
+	StartIDGenerator(b)
 
 	go func() {
 		log.Println(http.ListenAndServe("localhost:6070", nil))

@@ -25,7 +25,7 @@ func pub(conns []*meq.Connection) {
 				}
 				// 27
 				m := &proto.PubMsg{
-					ID:      []byte(fmt.Sprintf("%d-%010d", i, n)),
+					ID:      []byte(""),
 					Topic:   []byte(topic),
 					Payload: []byte("hello world4"),
 					Type:    1,

@@ -34,6 +34,7 @@ type Config struct {
 		WsPort   string
 		HttpPort string
 		Token    string
+		ServerID int64
 	}
 	Store struct {
 		Engine string
