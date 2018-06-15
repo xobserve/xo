@@ -113,8 +113,52 @@ var Meq = (function() {
                     var m = new Message(msgid.toString(),topic.toString(),payload,acked)
                     _this._tryInvoke('message', m);
                     break
+                case 115: //joinchat
+                    var tl = msg.readUInt16LE(1)
+                    var topic = msg.slice(3,3+tl)
+
+                    var user = msg.slice(3+tl)
+
+                    _this._tryInvoke('joinchat',{
+                        topic: topic,
+                        user: user
+                    })
+                    break
+                case 116: //leavechat
+                    var tl = msg.readUInt16LE(1)
+                    var topic = msg.slice(3,3+tl)
+
+                    var user = msg.slice(3+tl)
+
+                    _this._tryInvoke('leavechat',{
+                        topic: topic,
+                        user: user
+                    })
+                    break
+                case 117: //user online
+                    var tl = msg.readUInt16LE(1)
+                    var topic = msg.slice(3,3+tl)
+
+                    var user = msg.slice(3+tl)
+
+                    _this._tryInvoke('online',{
+                        topic: topic,
+                        user: user
+                    })
+                    break
+                case 118: //user offline
+                    var tl = msg.readUInt16LE(1)
+                    var topic = msg.slice(3,3+tl)
+
+                    var user = msg.slice(3+tl)
+
+                    _this._tryInvoke('offline',{
+                        topic: topic,
+                        user: user
+                    })
+                    break
                 default: 
-                _this.logError("unknown message command:",cmd);
+                _this.logError("unknown message command:"+cmd);
             }
         });
     };
@@ -209,7 +253,14 @@ var Meq = (function() {
             case "message":
             case "offline":
             case "error":
+            // @todo change to query
             case "unread":
+            
+            //chat
+            case "joinchat":
+            case "leavechat":
+            case "online":
+            case "offline":
             break;
             default:
                 this.logError("meq.on: unknown event type, supported values are 'connect', 'disconnect', 'message' and 'keygen'.");

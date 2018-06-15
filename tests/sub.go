@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"time"
 
 	"github.com/cosmos-gg/meq/proto"
 	meq "github.com/cosmos-gg/meq/sdks/go-meq"
@@ -35,6 +36,9 @@ func sub(conn *meq.Connection) {
 	// 加入聊天
 	conn.JoinChat([]byte(topic))
 
+	time.Sleep(5 * time.Second)
+	// 离开聊天
+	conn.LeaveChat([]byte(topic))
 	select {}
 	// fmt.Println("累积消费未ACK消息数：", n1)
 }

@@ -64,13 +64,20 @@ func (c *client) readLoop(isWs bool) error {
 		c.closech <- struct{}{}
 		// unsub topics
 		for topic := range c.subs {
-			tp := proto.GetTopicType([]byte(topic))
+			t := []byte(topic)
+			tp := proto.GetTopicType(t)
 			if tp == proto.TopicTypeChat {
 				// because when we send a message to a chat topic,we will add one unread count for every user,
 				// so when unconnected,we need to se chat topic's unread count to 0
-				c.bk.store.UpdateUnreadCount([]byte(topic), c.username, false, 0)
+				c.bk.store.UpdateUnreadCount(t, c.username, false, 0)
+
+				// notify to all the user in topic ,that someone has been offline
+				if tp == proto.TopicTypeChat {
+					notifyOnline(c.bk, t, proto.PackOfflineNotify(t, c.username))
+				}
 			}
-			c.bk.subtrie.UnSubscribe([]byte(topic), c.cid, c.bk.cluster.peer.name)
+			c.bk.subtrie.UnSubscribe(t, c.cid, c.bk.cluster.peer.name)
+
 			//@todo
 			// aync + batch
 			submsg := SubMessage{CLUSTER_UNSUB, []byte(topic), c.cid, []byte("")}
@@ -116,6 +123,14 @@ func (c *client) readLoop(isWs bool) error {
 					Payload: proto.PackMsgCount(count),
 				}
 				msg.EncodeTo(c.conn)
+
+				// check the topic is TopicTypeChat
+				// notify to all the user in topic ,that someone has been online
+				tp := proto.GetTopicType(t)
+
+				if tp == proto.TopicTypeChat {
+					notifyOnline(c.bk, t, proto.PackOnlineNotify(t, c.username))
+				}
 			}
 
 			ack := mqtt.Suback{

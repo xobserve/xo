@@ -29,6 +29,9 @@ const (
 
 	MSG_JOIN_CHAT  = 's'
 	MSG_LEAVE_CHAT = 't'
+
+	MSG_PRESENCE_ONLINE  = 'u'
+	MSG_PRESENCE_OFFLINE = 'v'
 )
 
 const (

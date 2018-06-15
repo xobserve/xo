@@ -515,7 +515,7 @@ func PackLeaveChatNotify(topic []byte, user []byte) []byte {
 	tl := uint16(len(topic))
 	ul := uint16(len(user))
 	m := make([]byte, 1+2+tl+ul)
-	m[0] = MSG_JOIN_CHAT
+	m[0] = MSG_LEAVE_CHAT
 
 	binary.LittleEndian.PutUint16(m[1:3], tl)
 	copy(m[3:3+tl], topic)
@@ -544,4 +544,50 @@ func PackLeaveChat(topic []byte) []byte {
 
 func UnpackLeaveChat(b []byte) []byte {
 	return b
+}
+
+func PackOnlineNotify(topic []byte, user []byte) []byte {
+	tl := uint16(len(topic))
+	ul := uint16(len(user))
+	m := make([]byte, 1+2+tl+ul)
+	m[0] = MSG_PRESENCE_ONLINE
+
+	binary.LittleEndian.PutUint16(m[1:3], tl)
+	copy(m[3:3+tl], topic)
+
+	copy(m[3+tl:3+tl+ul], user)
+
+	return m
+}
+
+func UnpackOnlineNotify(b []byte) ([]byte, []byte) {
+	tl := binary.LittleEndian.Uint16(b[:2])
+	topic := b[2 : 2+tl]
+
+	user := b[2+tl:]
+
+	return topic, user
+}
+
+func PackOfflineNotify(topic []byte, user []byte) []byte {
+	tl := uint16(len(topic))
+	ul := uint16(len(user))
+	m := make([]byte, 1+2+tl+ul)
+	m[0] = MSG_PRESENCE_OFFLINE
+
+	binary.LittleEndian.PutUint16(m[1:3], tl)
+	copy(m[3:3+tl], topic)
+
+	copy(m[3+tl:3+tl+ul], user)
+
+	return m
+}
+
+func UnpackOfflineNotify(b []byte) ([]byte, []byte) {
+	tl := binary.LittleEndian.Uint16(b[:2])
+	topic := b[2 : 2+tl]
+
+	user := b[2+tl:]
+
+	return topic, user
 }

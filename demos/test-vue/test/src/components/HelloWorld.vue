@@ -5,7 +5,7 @@
 </template>
 
 <script>
-var meq = require("meq");
+var meq = require("/Users/sunface/GoLibs/src/github.com/cosmos-gg/meq/sdks/js-meq");
 export default {
   name: "HelloWorld",
   data() {
@@ -18,12 +18,13 @@ export default {
     var _this=this
     var m = meq.connect({
       host: "localhost",
-      port: 9008
+      port: 9008,
+      username: 'sunface'
     });
 
     m.on("connect", function() {
       console.log("connect ok!");
-      m.subscribe("/1234567890/12/test/a");
+      m.subscribe("/1234567890/22/test/a");
     });
 
     m.on("unread", function(res) {
@@ -35,6 +36,22 @@ export default {
     m.on("message", function(msg) {
         _this.msg = msg.payload
     });
+
+    m.on("joinchat",function (msg) {
+      console.log("a user has joined the chat room",msg.topic.toString(),msg.user.toString())
+    })
+
+    m.on("leavechat",function (msg) { 
+      console.log("a user has leave the chat room",msg.topic.toString(),msg.user.toString())
+    })
+
+     m.on("online",function (msg) {
+      console.log("a user is online now",msg.topic.toString(),msg.user.toString())
+    })
+
+    m.on("leavechat",function (msg) { 
+      console.log("a user is offline now",msg.topic.toString(),msg.user.toString())
+    })
   }
 };
 </script>

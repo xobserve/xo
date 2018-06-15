@@ -10,7 +10,7 @@
     "build": "node build/build.js"
   },
   "dependencies": {
-    "meq": "^0.6.5",
+    "meq": "^0.7.0",
     "vue": "^2.5.2",
     "vue-router": "^3.0.1"
   },

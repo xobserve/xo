@@ -148,6 +148,28 @@ func TestPackJoinChatNotify(t *testing.T) {
 	assert.Equal(t, user, uuser)
 }
 
+func TestPackOnlineNotify(t *testing.T) {
+	topic := []byte("/1234567890/12/test/a")
+	user := []byte("sunface")
+
+	packet := PackOnlineNotify(topic, user)
+	utopic, uuser := UnpackOnlineNotify(packet[1:])
+
+	assert.Equal(t, topic, utopic)
+	assert.Equal(t, user, uuser)
+}
+
+func TestPackOfflineNotify(t *testing.T) {
+	topic := []byte("/1234567890/12/test/a")
+	user := []byte("sunface")
+
+	packet := PackOfflineNotify(topic, user)
+	utopic, uuser := UnpackOfflineNotify(packet[1:])
+
+	assert.Equal(t, topic, utopic)
+	assert.Equal(t, user, uuser)
+}
+
 func BenchmarkPubMsgPack(b *testing.B) {
 	b.ReportAllocs()
 	b.ResetTimer()
