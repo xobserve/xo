@@ -264,13 +264,24 @@ func (c *client) readLoop(isWs bool) error {
 				case proto.MSG_PRESENCE_ALL:
 					topic := proto.UnpackPresence(packet.Payload[1:])
 					users := c.bk.subtrie.GetPrensence(topic)
-
 					msg := mqtt.Publish{
 						Header: &mqtt.StaticHeader{
 							QOS: 0,
 						},
 						Topic:   topic,
-						Payload: proto.PackPresenceUsers(users),
+						Payload: proto.PackPresenceUsers(users, proto.MSG_PRESENCE_ALL),
+					}
+					msg.EncodeTo(c.conn)
+
+				case proto.MSG_ALL_CHAT_USERS:
+					topic := proto.UnpackAllChatUsers(packet.Payload[1:])
+					users := c.bk.store.GetChatUsers(topic)
+					msg := mqtt.Publish{
+						Header: &mqtt.StaticHeader{
+							QOS: 0,
+						},
+						Topic:   topic,
+						Payload: proto.PackPresenceUsers(users, proto.MSG_ALL_CHAT_USERS),
 					}
 					msg.EncodeTo(c.conn)
 

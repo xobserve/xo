@@ -10,7 +10,8 @@ export default {
   name: "HelloWorld",
   data() {
     return {
-      msg: "Welcome to Your Vue.js App"
+      msg: "Welcome to Your Vue.js App",
+      topic :  "/1234567890/22/test/a"
     };
   },
 
@@ -24,7 +25,18 @@ export default {
 
     m.on("connect", function() {
       console.log("connect ok!");
-      m.subscribe("/1234567890/22/test/a");
+      m.subscribe(_this.topic);
+      m.presenceAll(_this.topic,function(users) {
+        for (var i =0;i< users.length;i++) {
+          console.log("presence: ",users[i].toString())
+        }
+      }) 
+
+      m.usersAll(_this.topic,function(users) {
+        for (var i =0;i< users.length;i++) {
+          console.log("users: ",users[i].toString())
+        }
+      }) 
     });
 
     m.on("unread", function(res) {
@@ -49,7 +61,7 @@ export default {
       console.log("a user is online now",msg.topic.toString(),msg.user.toString())
     })
 
-    m.on("leavechat",function (msg) { 
+    m.on("offline",function (msg) { 
       console.log("a user is offline now",msg.topic.toString(),msg.user.toString())
     })
   }

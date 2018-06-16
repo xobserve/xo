@@ -23,15 +23,14 @@ const (
 	MSG_BROADCAST = 'o'
 
 	MSG_REDUCE_COUNT = 'p'
-	MSG_PRESENCE_ALL = 'q'
+	MSG_MARK_READ    = 'r'
 
-	MSG_MARK_READ = 'r'
-
-	MSG_JOIN_CHAT  = 's'
-	MSG_LEAVE_CHAT = 't'
-
+	MSG_JOIN_CHAT        = 's'
+	MSG_LEAVE_CHAT       = 't'
 	MSG_PRESENCE_ONLINE  = 'u'
 	MSG_PRESENCE_OFFLINE = 'v'
+	MSG_PRESENCE_ALL     = 'q'
+	MSG_ALL_CHAT_USERS   = 'w'
 )
 
 const (

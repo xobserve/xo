@@ -21,6 +21,8 @@ var Meq = (function() {
         this.REDUCE_ALL_COUNT = 0
         this._callbacks = {}
         this.unread = {}
+        this.presenceAllCallback = {}
+        this.usersAllCallback = {}
     }
 
 
@@ -113,6 +115,18 @@ var Meq = (function() {
                     var m = new Message(msgid.toString(),topic.toString(),payload,acked)
                     _this._tryInvoke('message', m);
                     break
+                case 113: // all presence users
+                    var users = []
+                    var last = 1
+                    while (last < msg.slice(1).length) {
+                        var ul = msg[last]
+                        var u = msg.slice(last+1,last+1+ul)
+                        users.push(u)
+
+                        last = last+1+ul
+                    }    
+                    var callback = _this.presenceAllCallback[topic]
+                    callback(users)
                 case 115: //joinchat
                     var tl = msg.readUInt16LE(1)
                     var topic = msg.slice(3,3+tl)
@@ -156,6 +170,19 @@ var Meq = (function() {
                         topic: topic,
                         user: user
                     })
+                    break
+                case 119: // all  users in chat room
+                    var users = []
+                    var last = 1
+                    while (last < msg.slice(1).length) {
+                        var ul = msg[last]
+                        var u = msg.slice(last+1,last+1+ul)
+                        users.push(u)
+
+                        last = last+1+ul
+                    }    
+                    var callback = _this.usersAllCallback[topic]
+                    callback(users)
                     break
                 default: 
                 _this.logError("unknown message command:"+cmd);
@@ -245,6 +272,34 @@ var Meq = (function() {
 
         this._mqtt.publish(topic,m)
     }
+
+    Meq.prototype.presenceAll = function(topic,callback) {
+        this.presenceAllCallback[topic] = callback
+
+        var tl = topic.length
+        var m = Buffer.allocUnsafe(1 + tl)
+        m.fill(0)
+
+        m[0] = 113
+        m.write(topic,1)
+
+        this._mqtt.publish(topic,m)
+    }
+
+    Meq.prototype.usersAll= function(topic,callback) {
+        this.usersAllCallback[topic] = callback
+
+        var tl = topic.length
+        var m = Buffer.allocUnsafe(1 + tl)
+        m.fill(0)
+
+        m[0] = 119
+        m.write(topic,1)
+
+        this._mqtt.publish(topic,m)
+    }
+
+
     Meq.prototype.on = function (event, callback) {
         // Validate the type
         switch (event) {

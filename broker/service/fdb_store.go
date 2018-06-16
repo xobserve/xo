@@ -317,8 +317,29 @@ func (f *FdbStore) LeaveChat(topic []byte, user []byte) error {
 	return nil
 }
 
-func (f *FdbStore) GetChatUsers(topic []byte) [][]byte {
-	return nil
+func (f *FdbStore) GetChatUsers(t []byte) [][]byte {
+	i := getcounts % uint64(f.bk.conf.Store.FDB.Threads)
+	getcounts++
+
+	var users [][]byte
+	d := f.dbs[i]
+	_, err := d.db.Transact(func(tr fdb.Transaction) (ret interface{}, err error) {
+
+		pr, _ := fdb.PrefixRange(d.chatroomSP.Pack(tuple.Tuple{t}))
+		ir := tr.GetRange(pr, fdb.RangeOptions{}).Iterator()
+
+		for ir.Advance() {
+			v := ir.MustGet()
+			user := v.Key
+			tp, _ := d.chatroomSP.Unpack(user)
+			users = append(users, tp[1].([]byte))
+		}
+		return
+	})
+	if err != nil {
+		L.Info("put chat count error", zap.Error(err))
+	}
+	return users
 }
 
 /*------------------------------Storage interface implemented------------------------*/

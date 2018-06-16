@@ -441,14 +441,25 @@ func UnpackPresence(b []byte) []byte {
 	return b
 }
 
-func PackPresenceUsers(users [][]byte) []byte {
+func PackAllChatUsers(topic []byte) {
+	tl := uint64(len(topic))
+	m := make([]byte, 1+tl)
+	m[0] = MSG_ALL_CHAT_USERS
+	copy(m[1:1+tl], topic)
+}
+
+func UnpackAllChatUsers(b []byte) []byte {
+	return b
+}
+
+func PackPresenceUsers(users [][]byte, cmd byte) []byte {
 	ul := 1
 	for _, u := range users {
 		ul = ul + 1 + len(u)
 	}
 
 	m := make([]byte, ul)
-	m[0] = MSG_PRESENCE_ALL
+	m[0] = cmd
 
 	last := 1
 	for _, u := range users {
