@@ -200,7 +200,7 @@ func (f *FdbStore) Query(t []byte, count int, offset []byte, acked bool) []*prot
 		ir := tr.GetRange(pr, fdb.RangeOptions{Limit: count, Reverse: true}).Iterator()
 		for ir.Advance() {
 			b := ir.MustGet().Value
-			m := UnpackStoreMessage(b)
+			m, _ := proto.UnpackMsg(b)
 			if m.TTL == proto.NeverExpires || m.TTL > now {
 				msgs = append(msgs, m)
 				continue
@@ -348,7 +348,7 @@ func put(d *database, msgs []*proto.PubMsg) {
 	_, err := d.db.Transact(func(tr fdb.Transaction) (ret interface{}, err error) {
 		for _, msg := range msgs {
 			key := d.msgsp.Pack(tuple.Tuple{msg.Topic, msg.ID})
-			tr.Set(key, PackStoreMessage(msg))
+			tr.Set(key, proto.PackMsg(msg))
 		}
 		return
 	})

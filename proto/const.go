@@ -31,6 +31,7 @@ const (
 	MSG_PRESENCE_OFFLINE = 'v'
 	MSG_PRESENCE_ALL     = 'q'
 	MSG_ALL_CHAT_USERS   = 'w'
+	MSG_RETRIEVE         = 'x'
 )
 
 const (

@@ -23,8 +23,9 @@ func PackMsg(m *PubMsg) []byte {
 	ml := len(m.ID)
 	tl := len(m.Topic)
 	pl := len(m.Payload)
+	fl := len(m.Sender)
 	// header
-	msg := make([]byte, 20+ml+tl+pl)
+	msg := make([]byte, 20+ml+tl+pl+fl)
 	msg[0] = MSG_PUB_ONE
 	// msgid
 	binary.LittleEndian.PutUint16(msg[1:3], uint16(ml))
@@ -51,7 +52,10 @@ func PackMsg(m *PubMsg) []byte {
 	msg[11+ml+pl+tl] = byte(m.QoS)
 	//ttl
 	binary.LittleEndian.PutUint64(msg[12+ml+pl+tl:20+ml+pl+tl], uint64(m.TTL))
-
+	//from
+	if fl != 0 {
+		copy(msg[20+ml+pl+tl:], m.Sender)
+	}
 	return msg
 }
 
@@ -80,7 +84,12 @@ func UnpackMsg(b []byte) (*PubMsg, error) {
 	qos := b[10+ml+pl+tl]
 	// ttl
 	ttl := binary.LittleEndian.Uint64(b[11+ml+pl+tl : 19+ml+pl+tl])
-	return &PubMsg{msgid, topic, payload, acked, int8(tp), int8(qos), int64(ttl)}, nil
+	// from
+	from := b[19+ml+pl+tl:]
+	if len(from) == 0 {
+		from = nil
+	}
+	return &PubMsg{msgid, topic, payload, acked, int8(tp), int8(qos), int64(ttl), from}, nil
 }
 
 func PackSub(topic []byte) []byte {
@@ -323,15 +332,15 @@ func UnpackTimerMsg(b []byte) *TimerMsg {
 }
 
 func PackPubBatch(ms []*PubMsg, cmd byte) []byte {
-	bl := 19 * len(ms)
+	bl := 21 * len(ms)
 	for _, m := range ms {
-		bl += (len(m.ID) + len(m.Topic) + len(m.Payload))
+		bl += (len(m.ID) + len(m.Topic) + len(m.Payload)) + len(m.Sender)
 	}
 	body := make([]byte, bl)
 
 	last := 0
 	for _, m := range ms {
-		ml, tl, pl := len(m.ID), len(m.Topic), len(m.Payload)
+		ml, tl, pl, fl := len(m.ID), len(m.Topic), len(m.Payload), len(m.Sender)
 		//msgid
 		binary.LittleEndian.PutUint16(body[last:last+2], uint16(ml))
 		copy(body[last+2:last+2+ml], m.ID)
@@ -353,7 +362,10 @@ func PackPubBatch(ms []*PubMsg, cmd byte) []byte {
 		body[last+10+ml+tl+pl] = byte(m.QoS)
 		// TTL
 		binary.LittleEndian.PutUint64(body[last+11+ml+tl+pl:last+19+ml+tl+pl], uint64(m.TTL))
-		last = last + 19 + ml + tl + pl
+		// from
+		binary.LittleEndian.PutUint16(body[last+19+ml+tl+pl:last+21+ml+tl+pl], uint16(fl))
+		copy(body[last+21+ml+tl+pl:last+21+ml+tl+pl+fl], m.Sender)
+		last = last + 21 + ml + tl + pl + fl
 	}
 
 	// 压缩body
@@ -406,10 +418,16 @@ func UnpackPubBatch(m []byte) ([]*PubMsg, error) {
 		// qos, _ := binary.Uvarint(b[last+10+ml+tl+pl : last+11+ml+tl+pl])
 		//ttl
 		ttl := binary.LittleEndian.Uint64(b[last+11+ml+tl+pl : last+19+ml+tl+pl])
-		msgs[index] = &PubMsg{msgid, topic, payload, acked, int8(tp), int8(qos), int64(ttl)}
+		//from
+		fl := binary.LittleEndian.Uint16(b[last+19+ml+tl+pl : last+21+ml+tl+pl])
+		from := b[last+21+ml+tl+pl : last+21+ml+tl+pl+uint32(fl)]
+		if len(from) == 0 {
+			from = nil
+		}
+		msgs[index] = &PubMsg{msgid, topic, payload, acked, int8(tp), int8(qos), int64(ttl), from}
 
 		index++
-		last = last + 19 + ml + tl + pl
+		last = last + 21 + ml + tl + pl + uint32(fl)
 	}
 
 	return msgs, nil

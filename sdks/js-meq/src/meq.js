@@ -112,7 +112,8 @@ var Meq = (function() {
                     var tl = msg.readUInt16LE(8+ml+pl)
                     var topic = msg.slice(10+ml+pl,10+ml+pl+tl)
 
-                    var m = new Message(msgid.toString(),topic.toString(),payload,acked)
+                    var sender = msg.slice(10+ml+pl+tl)
+                    var m = new Message(msgid.toString(),topic.toString(),payload,acked,sender.toString())
                     _this._tryInvoke('message', m);
                     break
                 case 113: // all presence users
@@ -333,11 +334,12 @@ var Meq = (function() {
 }());
 exports.Meq = Meq;
 
-function Message(id,topic,payload,acked) {
+function Message(id,topic,payload,acked,sender) {
     this.id = id
     this.topic = topic
     this.payload = payload
     this.acked = acked
+    this.sender = sender
 }
 exports.Message = Message;
 

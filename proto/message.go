@@ -8,6 +8,7 @@ type PubMsg struct {
 	Type    int8
 	QoS     int8
 	TTL     int64
+	Sender  []byte
 }
 
 type TimerMsg struct {

@@ -46,6 +46,7 @@ export default {
     });
 
     m.on("message", function(msg) {
+      console.log(msg)
         _this.msg = msg.payload
     });
 

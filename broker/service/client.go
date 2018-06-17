@@ -177,6 +177,7 @@ func (c *client) readLoop(isWs bool) error {
 					for _, m := range ms {
 						// gen msg id
 						m.ID = c.bk.idgen.Generate().Bytes()
+						m.Sender = c.username
 						// validate msg
 						_, _, _, err := proto.AppidAndSendTag(m.Topic)
 						if err != nil {
@@ -216,6 +217,8 @@ func (c *client) readLoop(isWs bool) error {
 					now := time.Now().Unix()
 					// generate messageID
 					m.ID = c.bk.idgen.Generate().Bytes()
+					// set sender user
+					m.Sender = c.username
 					// update the ttl to a unix time
 					if m.TTL != proto.NeverExpires {
 						m.TTL = now + m.TTL
