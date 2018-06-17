@@ -625,3 +625,23 @@ func UnpackOfflineNotify(b []byte) ([]byte, []byte) {
 
 	return topic, user
 }
+
+func PackRetrieve(topic []byte, msgid []byte) []byte {
+	tl := len(topic)
+	ml := len(msgid)
+	m := make([]byte, 3+tl+ml)
+	m[0] = MSG_RETRIEVE
+	binary.LittleEndian.PutUint16(m[1:3], uint16(tl))
+	copy(m[3:3+tl], topic)
+	copy(m[3+tl:3+tl+ml], msgid)
+
+	return m
+}
+
+func UnpackRetrieve(b []byte) ([]byte, []byte) {
+	tl := binary.LittleEndian.Uint16(b[:2])
+	topic := b[2 : 2+tl]
+	msgid := b[2+tl:]
+
+	return topic, msgid
+}

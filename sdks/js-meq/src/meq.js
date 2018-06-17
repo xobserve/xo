@@ -188,6 +188,14 @@ var Meq = (function() {
                     var callback = _this.usersAllCallback[topic]
                     callback(users)
                     break
+                case 120: // a client request to retrieve one message,we need to remove from our store
+                    var tl = msg.readUInt16LE(1)
+                    var topic = msg.slice(3,3+tl)
+                    var msgid = msg.slice(3+tl)
+                    _this._tryInvoke('retrieve',{
+                        topic: topic,
+                        msgid: msgid
+                    })
                 default: 
                 _this.logError("unknown message command:"+cmd);
             }
@@ -303,6 +311,18 @@ var Meq = (function() {
         this._mqtt.publish(topic,m)
     }
 
+    Meq.prototype.retrieve = function(topic,msgid) {
+        var tl = topic.length
+        var ml = msgid.length
+        var m = Buffer.allocUnsafe(1 + 2 + tl + ml)
+        m.fill(0)
+        m[0] = 120
+        m.writeUInt16LE(tl,1)
+        m.write(topic,3)
+        m.write(msgid,3+tl)
+
+        this._mqtt.publish(topic,m)
+    }
 
     Meq.prototype.on = function (event, callback) {
         // Validate the type
@@ -320,6 +340,7 @@ var Meq = (function() {
             case "leavechat":
             case "online":
             case "offline":
+            case "retrieve":
             break;
             default:
                 this.logError("meq.on: unknown event type, supported values are 'connect', 'disconnect', 'message' and 'keygen'.");

@@ -294,6 +294,10 @@ func (ms *MemStore) GetChatUsers(topic []byte) [][]byte {
 	return nil
 }
 
+func (ms *MemStore) Del(topic []byte, msgid []byte) error {
+	return nil
+}
+
 /*--------------------------------Internal funcitons--------------------------------*/
 func (ms *MemStore) flush() {
 	temp := ms.cache

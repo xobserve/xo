@@ -26,7 +26,7 @@ type Storage interface {
 	UnreadCount(topic []byte, user []byte) int
 	MarkRead(topic []byte, msgids [][]byte)
 	UpdateUnreadCount(topic []byte, user []byte, isAdd bool, count int)
-
+	Del(topic []byte, msgid []byte) error
 	Query(topic []byte, count int, offset []byte, acked bool) []*proto.PubMsg
 
 	StoreTM(*proto.TimerMsg)

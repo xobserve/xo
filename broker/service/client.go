@@ -43,6 +43,8 @@ type client struct {
 
 	username []byte
 
+	rawMsgCache map[string]struct{}
+
 	closed  bool
 	closech chan struct{}
 }
@@ -149,6 +151,7 @@ func (c *client) readLoop(isWs bool) error {
 			packet := msg.(*mqtt.Publish)
 			if len(packet.Payload) > 0 {
 				cmd := packet.Payload[0]
+				fmt.Println(cmd)
 				switch cmd {
 				case proto.MSG_PULL:
 					count, offset := proto.UnPackPullMsg(packet.Payload[1:])
@@ -319,6 +322,13 @@ func (c *client) readLoop(isWs bool) error {
 					if tp == proto.TopicTypeChat {
 						c.bk.store.LeaveChat(topic, c.username)
 						notifyOnline(c.bk, topic, proto.PackLeaveChatNotify(topic, c.username))
+					}
+
+				case proto.MSG_RETRIEVE:
+					topic, msgid := proto.UnpackRetrieve(packet.Payload[1:])
+					err := c.bk.store.Del(topic, msgid)
+					if err == nil {
+						notifyOnline(c.bk, topic, packet.Payload)
 					}
 				}
 			}

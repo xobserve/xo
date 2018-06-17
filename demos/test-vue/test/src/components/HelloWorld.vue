@@ -1,6 +1,7 @@
 <template>
   <div class="hello">
       <textarea v-model="msg"></textarea>
+      <button @click="retrieve">retrieve</button>
   </div>
 </template>
 
@@ -11,10 +12,15 @@ export default {
   data() {
     return {
       msg: "Welcome to Your Vue.js App",
-      topic :  "/1234567890/22/test/a"
+      topic :  "/1234567890/22/test/a",
+      cli : {}
     };
   },
-
+  methods: {
+    retrieve() {
+      this.cli.retrieve(this.topic,'1008242665877147654')
+    }
+  },
   mounted() {
     var _this=this
     var m = meq.connect({
@@ -22,7 +28,7 @@ export default {
       port: 9008,
       username: 'sunface'
     });
-
+    _this.cli = m
     m.on("connect", function() {
       console.log("connect ok!");
       m.subscribe(_this.topic);
@@ -64,6 +70,10 @@ export default {
 
     m.on("offline",function (msg) { 
       console.log("a user is offline now",msg.topic.toString(),msg.user.toString())
+    })
+
+    m.on("retrieve",function(msg) {
+      console.log("msg retrieve",msg.topic.toString(),msg.msgid.toString())
     })
   }
 };

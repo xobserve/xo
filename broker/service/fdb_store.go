@@ -342,6 +342,15 @@ func (f *FdbStore) GetChatUsers(t []byte) [][]byte {
 	return users
 }
 
+func (f *FdbStore) Del(topic []byte, msgid []byte) error {
+	i := getcounts % uint64(f.bk.conf.Store.FDB.Threads)
+	getcounts++
+
+	d := f.dbs[i]
+	key := d.msgsp.Pack(tuple.Tuple{topic, msgid})
+	return delKey(d.db, key)
+}
+
 /*------------------------------Storage interface implemented------------------------*/
 
 func put(d *database, msgs []*proto.PubMsg) {
@@ -548,7 +557,7 @@ func keyExist(tor fdb.Transactor, k fdb.Key) bool {
 	return true
 }
 
-func delKey(tor fdb.Transactor, k fdb.Key) {
+func delKey(tor fdb.Transactor, k fdb.Key) error {
 	_, err := tor.Transact(func(tr fdb.Transaction) (ret interface{}, err error) {
 		tr.Clear(k)
 		return
@@ -556,6 +565,8 @@ func delKey(tor fdb.Transactor, k fdb.Key) {
 	if err != nil {
 		L.Info("del key error", zap.Error(err))
 	}
+
+	return err
 }
 
 func setKV(tor fdb.Transactor, k fdb.Key, v []byte) error {

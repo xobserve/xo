@@ -185,6 +185,16 @@ func TestPackOfflineNotify(t *testing.T) {
 	assert.Equal(t, user, uuser)
 }
 
+func TestPackRetrieve(t *testing.T) {
+	topic := []byte("1234")
+	msgid := []byte("sunface")
+
+	packed := PackRetrieve(topic, msgid)
+	utopic, umsgid := UnpackRetrieve(packed[1:])
+
+	assert.Equal(t, topic, utopic)
+	assert.Equal(t, msgid, umsgid)
+}
 func BenchmarkPubMsgPack(b *testing.B) {
 	b.ReportAllocs()
 	b.ResetTimer()
