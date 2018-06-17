@@ -200,7 +200,7 @@ func (f *FdbStore) Query(t []byte, count int, offset []byte, acked bool) []*prot
 		ir := tr.GetRange(pr, fdb.RangeOptions{Limit: count, Reverse: true}).Iterator()
 		for ir.Advance() {
 			b := ir.MustGet().Value
-			m, _ := proto.UnpackMsg(b)
+			m, _ := proto.UnpackMsg(b[1:])
 			if m.TTL == proto.NeverExpires || m.TTL > now {
 				msgs = append(msgs, m)
 				continue

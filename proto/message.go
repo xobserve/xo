@@ -1,6 +1,7 @@
 package proto
 
 type PubMsg struct {
+	RawID   []byte
 	ID      []byte
 	Topic   []byte
 	Payload []byte

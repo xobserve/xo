@@ -112,8 +112,11 @@ var Meq = (function() {
                     var tl = msg.readUInt16LE(8+ml+pl)
                     var topic = msg.slice(10+ml+pl,10+ml+pl+tl)
 
-                    var sender = msg.slice(10+ml+pl+tl)
-                    var m = new Message(msgid.toString(),topic.toString(),payload,acked,sender.toString())
+                    var sl = msg.readUInt16LE(20+ml+pl+tl)
+                    var sender = msg.slice(22+ml+pl+tl,22+ml+pl+tl+sl)
+
+                    var rawid = msg.slice(22+ml+pl+tl+sl)
+                    var m = new Message(rawid.toString(),msgid.toString(),topic.toString(),payload,acked,sender.toString())
                     _this._tryInvoke('message', m);
                     break
                 case 113: // all presence users
@@ -196,7 +199,7 @@ var Meq = (function() {
     };
 
     Meq.prototype.publish = function(topic,payload,ttl) {
-        var id = ''
+        var id = newID()
         var ml = id.length
         var tl = topic.length
         var pl = payload.length
@@ -334,7 +337,8 @@ var Meq = (function() {
 }());
 exports.Meq = Meq;
 
-function Message(id,topic,payload,acked,sender) {
+function Message(rawid,id,topic,payload,acked,sender) {
+    this.rawid = rawid
     this.id = id
     this.topic = topic
     this.payload = payload

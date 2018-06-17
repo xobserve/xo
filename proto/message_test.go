@@ -8,17 +8,17 @@ import (
 )
 
 var mockMsgs = []*PubMsg{
-	&PubMsg{[]byte(""), []byte("test"), []byte("hello world1"), false, 0, 1, 100, []byte("sunface")},
-	&PubMsg{[]byte(""), []byte("test"), []byte("hello world2"), false, 0, 1, 101, []byte("sunface")},
-	&PubMsg{[]byte(""), []byte("test"), []byte("hello world3"), false, 0, 1, 102, []byte("sunface")},
-	&PubMsg{[]byte(""), []byte("test"), []byte("hello world4"), true, 0, 1, 100, []byte("sunface")},
-	&PubMsg{[]byte(""), []byte("test"), []byte("hello world5"), false, 0, 1, 100, []byte("sunface")},
-	&PubMsg{[]byte(""), []byte("test"), []byte("hello world6"), false, 0, 1, 100, []byte("sunface")},
-	&PubMsg{[]byte(""), []byte("test"), []byte("hello world7"), false, 0, 1, 100, []byte("sunface")},
-	&PubMsg{[]byte(""), []byte("test"), []byte("hello world8"), false, 0, 1, 100, []byte("sunface")},
-	&PubMsg{[]byte(""), []byte("test"), []byte("hello world9"), true, 0, 1, 100, []byte("sunface")},
-	&PubMsg{[]byte(""), []byte("test"), []byte("hello world10"), false, 0, 1, 100, []byte("sunface")},
-	&PubMsg{[]byte(""), []byte("test"), []byte("hello world11"), false, 0, 1, 100, []byte("sunface")},
+	&PubMsg{[]byte("123"), []byte(""), []byte("test"), []byte("hello world1"), false, 0, 1, 100, []byte("sunface")},
+	&PubMsg{[]byte("123"), []byte(""), []byte("test"), []byte("hello world2"), false, 0, 1, 101, []byte("sunface")},
+	&PubMsg{[]byte("123"), []byte(""), []byte("test"), []byte("hello world3"), false, 0, 1, 102, []byte("sunface")},
+	&PubMsg{[]byte("123"), []byte(""), []byte("test"), []byte("hello world4"), true, 0, 1, 100, []byte("sunface")},
+	&PubMsg{[]byte("123"), []byte(""), []byte("test"), []byte("hello world5"), false, 0, 1, 100, []byte("sunface")},
+	&PubMsg{[]byte("123"), []byte(""), []byte("test"), []byte("hello world6"), false, 0, 1, 100, []byte("sunface")},
+	&PubMsg{[]byte("123"), []byte(""), []byte("test"), []byte("hello world7"), false, 0, 1, 100, []byte("sunface")},
+	&PubMsg{[]byte("123"), []byte(""), []byte("test"), []byte("hello world8"), false, 0, 1, 100, []byte("sunface")},
+	&PubMsg{[]byte("123"), []byte(""), []byte("test"), []byte("hello world9"), true, 0, 1, 100, []byte("sunface")},
+	&PubMsg{[]byte("123"), []byte(""), []byte("test"), []byte("hello world10"), false, 0, 1, 100, []byte("sunface")},
+	&PubMsg{[]byte("123"), []byte(""), []byte("test"), []byte("hello world11"), false, 0, 1, 100, []byte("sunface")},
 }
 
 var mockMsgs1 = []*PubMsg{
