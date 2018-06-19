@@ -44,12 +44,7 @@ var Meq = (function() {
     Meq.prototype._onDisconnect = function () {
         this._tryInvoke('disconnect', this);
     };
-    Meq.prototype._onOffline = function () {
-        this._tryInvoke('offline', this);
-    };
-    Meq.prototype._onOffline = function () {
-        this._tryInvoke('offline', this);
-    };
+
   
     Meq.prototype._onMessage
     
@@ -78,9 +73,6 @@ var Meq = (function() {
         });
         this._mqtt.on('close', function () {
             _this._onDisconnect();
-        });
-        this._mqtt.on('offline', function () {
-            _this._onOffline();
         });
         this._mqtt.on('error', function (error) {
             _this._onError(error);
@@ -131,6 +123,7 @@ var Meq = (function() {
                     }    
                     var callback = _this.presenceAllCallback[topic]
                     callback(users)
+                    break
                 case 115: //joinchat
                     var tl = msg.readUInt16LE(1)
                     var topic = msg.slice(3,3+tl)
@@ -167,7 +160,6 @@ var Meq = (function() {
                 case 118: //user offline
                     var tl = msg.readUInt16LE(1)
                     var topic = msg.slice(3,3+tl)
-
                     var user = msg.slice(3+tl)
 
                     _this._tryInvoke('offline',{
@@ -196,6 +188,7 @@ var Meq = (function() {
                         topic: topic,
                         msgid: msgid
                     })
+                    break
                 default: 
                 _this.logError("unknown message command:"+cmd);
             }
@@ -206,12 +199,12 @@ var Meq = (function() {
         this._mqtt.subscribe(topic);
     };
 
-    Meq.prototype.publish = function(topic,payload,ttl) {
+    Meq.prototype.publish = function(topic,payload,ttl,qos) {
         var id = newID()
         var ml = id.length
         var tl = topic.length
         var pl = payload.length
-        var m = Buffer.allocUnsafe(20 + ml + tl + pl)
+        var m = Buffer.allocUnsafe(24 + ml + tl + pl+ml)
         m.fill(0)
         m[0] = 98
         //id
@@ -233,13 +226,21 @@ var Meq = (function() {
         //type
         m.writeUInt8(1,10+ml+tl+pl)
         //qos
-        m.writeUInt8(0,11+ml+tl+pl)
+        m.writeUInt8(qos,11+ml+tl+pl)
         //ttl   
         var big = new UInt64LE(ttl);
         big.toBuffer().copy(m,12+ml+tl+pl)
+        //from
+        m.writeUInt16LE(0,20+ml+tl+pl)
+        //raw msgid
+        m.writeUInt16LE(ml,22+ml+tl+pl)
+        m.write(id,24+ml+tl+pl)
 
-    
-        this._mqtt.publish(topic,m);
+        this._mqtt.publish(topic,m,{
+            qos: qos
+        }, function(err,granted) {
+            console.log(err,granted,granted.payload.toString())
+        });
     }
 
     Meq.prototype.pull = function(topic,offset,count) {
@@ -320,6 +321,26 @@ var Meq = (function() {
         m.writeUInt16LE(tl,1)
         m.write(topic,3)
         m.write(msgid,3+tl)
+
+        this._mqtt.publish(topic,m)
+    }
+
+    Meq.prototype.joinchat = function(topic) {
+        var m = Buffer.allocUnsafe(1+topic.length)
+        m.fill(0)
+
+        m[0] = 115
+        m.write(topic,1)
+
+        this._mqtt.publish(topic,m)
+    }
+
+    Meq.prototype.leavechat = function(topic) {
+        var m = Buffer.allocUnsafe(1+topic.length)
+        m.fill(0)
+
+        m[0] = 116
+        m.write(topic,1)
 
         this._mqtt.publish(topic,m)
     }

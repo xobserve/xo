@@ -57,7 +57,7 @@ const (
 
 	REDUCE_ALL_COUNT = 0
 
-	MAX_IDLE_TIME = 60
+	MAX_IDLE_TIME = 120
 
 	NeverExpires = 0
 

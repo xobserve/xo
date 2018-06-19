@@ -14,7 +14,7 @@ func TestGenMessageID(t *testing.T) {
 	b2.conf.Broker.ServerID = 2
 	StartIDGenerator(b2)
 	id1 := b1.idgen.Generate().Int64()
-	id2 := b1.idgen.Generate().Int64()
+	id2 := b1.idgen.Generate().Time()
 
 	assert.NotEqual(t, id1, id2)
 

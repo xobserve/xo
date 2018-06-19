@@ -356,8 +356,10 @@ func (f *FdbStore) Del(topic []byte, msgid []byte) error {
 func put(d *database, msgs []*proto.PubMsg) {
 	_, err := d.db.Transact(func(tr fdb.Transaction) (ret interface{}, err error) {
 		for _, msg := range msgs {
-			key := d.msgsp.Pack(tuple.Tuple{msg.Topic, msg.ID})
-			tr.Set(key, proto.PackMsg(msg))
+			if msg.QoS != proto.QOS0 {
+				key := d.msgsp.Pack(tuple.Tuple{msg.Topic, msg.ID})
+				tr.Set(key, proto.PackMsg(msg))
+			}
 		}
 		return
 	})

@@ -15,7 +15,6 @@ package service
 
 import (
 	"encoding/binary"
-	"fmt"
 	"sync"
 
 	"github.com/cosmos-gg/meq/proto"
@@ -48,14 +47,13 @@ func (r *Router) recvRoute(src mesh.PeerName, buf []byte) {
 	cid := uint64(binary.LittleEndian.Uint32(buf[:4]))
 	cmd := buf[4]
 
-	fmt.Println(cmd, cid)
 	r.RLock()
 	c, ok := r.bk.clients[cid]
 	r.RUnlock()
 	if !ok {
 		return
 	}
-	fmt.Println(cmd, cid)
+
 	switch cmd {
 	case proto.MSG_PUB_BATCH:
 		msgs, err := proto.UnpackPubBatch(buf[5:])
@@ -65,8 +63,6 @@ func (r *Router) recvRoute(src mesh.PeerName, buf []byte) {
 		}
 		c.msgSender <- msgs
 	case proto.MSG_JOIN_CHAT: // notify someone has join the chat
-		fmt.Println("recv join chat msgs:")
-		fmt.Println(proto.UnpackJoinChatNotify(buf[5:]))
 		notifyOne(c.conn, buf[5:])
 	}
 }

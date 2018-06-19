@@ -60,7 +60,6 @@ func initClient(cid uint64, conn net.Conn, bk *Broker) *client {
 	}
 }
 func (c *client) readLoop(isWs bool) error {
-	c.bk.wg.Add(1)
 	defer func() {
 		c.closed = true
 		c.closech <- struct{}{}
@@ -85,7 +84,6 @@ func (c *client) readLoop(isWs bool) error {
 			submsg := SubMessage{CLUSTER_UNSUB, []byte(topic), c.cid, []byte("")}
 			c.bk.cluster.peer.send.GossipBroadcast(submsg)
 		}
-		c.bk.wg.Done()
 		if err := recover(); err != nil {
 			L.Info("read loop panic:", zap.Error(err.(error)), zap.Stack("stack"))
 			return
@@ -95,7 +93,6 @@ func (c *client) readLoop(isWs bool) error {
 	reader := bufio.NewReaderSize(c.conn, 65536)
 	for !c.closed {
 		c.conn.SetDeadline(time.Now().Add(time.Second * proto.MAX_IDLE_TIME))
-
 		msg, err := mqtt.DecodePacket(reader)
 		if err != nil {
 			return err
@@ -151,7 +148,6 @@ func (c *client) readLoop(isWs bool) error {
 			packet := msg.(*mqtt.Publish)
 			if len(packet.Payload) > 0 {
 				cmd := packet.Payload[0]
-				fmt.Println(cmd)
 				switch cmd {
 				case proto.MSG_PULL:
 					count, offset := proto.UnPackPullMsg(packet.Payload[1:])
@@ -242,14 +238,14 @@ func (c *client) readLoop(isWs bool) error {
 				case proto.MSG_BROADCAST:
 					// clients publish messges to a broadcast topic
 					// broadcast will not store the messages
-					ms, err := proto.UnpackPubBatch(packet.Payload[1:])
+					m, err := proto.UnpackMsg(packet.Payload[1:])
 					if err != nil {
 						return err
 					}
-					for _, m := range ms {
-						// gen msg id
-						m.ID = c.bk.idgen.Generate().Bytes()
-					}
+					// gen msg id
+					m.ID = c.bk.idgen.Generate().Bytes()
+
+					ms := []*proto.PubMsg{m}
 					publishOnline(c.cid, c.bk, ms, true)
 
 				case proto.MSG_REDUCE_COUNT:

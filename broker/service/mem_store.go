@@ -30,6 +30,9 @@ type MemStore struct {
 	DBIndex   map[string][]string
 	DBIDIndex map[string]string
 
+	chatroom   map[string]map[string]int
+	topicCount map[string]int
+
 	timerDB []*proto.TimerMsg
 
 	bk    *Broker
@@ -69,7 +72,8 @@ func (ms *MemStore) Init() {
 	ms.cache = make([]*proto.PubMsg, 0, MaxCacheLength)
 	ms.msgSyncCache = make([]*proto.PubMsg, 0, MaxSyncMsgLen)
 	ms.readSyncCache = make([]proto.Ack, 0, MaxSyncAckLen)
-
+	ms.chatroom = make(map[string]map[string]int)
+	ms.topicCount = make(map[string]int)
 	go func() {
 		ms.bk.wg.Add(1)
 		defer ms.bk.wg.Done()
@@ -168,7 +172,44 @@ func (ms *MemStore) MarkRead(topic []byte, msgids [][]byte) {
 }
 
 func (ms *MemStore) UpdateUnreadCount(topic []byte, user []byte, isAdd bool, count int) {
-
+	tp := proto.GetTopicType(topic)
+	if tp == proto.TopicTypeNormal {
+		c, ok := ms.topicCount[talent.Bytes2String(topic)]
+		if !isAdd {
+			if ok {
+				if count == proto.REDUCE_ALL_COUNT {
+					ms.topicCount[talent.Bytes2String(topic)] = 0
+				} else {
+					if c-count > 0 {
+						ms.topicCount[talent.Bytes2String(topic)] = c - count
+					} else {
+						ms.topicCount[talent.Bytes2String(topic)] = 0
+					}
+				}
+			}
+		} else {
+			if !ok {
+				ms.topicCount[talent.Bytes2String(topic)] = count
+			} else {
+				ms.topicCount[talent.Bytes2String(topic)] = c + count
+			}
+		}
+	} else {
+		t, ok := ms.chatroom[talent.Bytes2String(topic)]
+		if !ok {
+			return
+		}
+		if !isAdd {
+			_, ok := t[talent.Bytes2String(user)]
+			if ok {
+				t[talent.Bytes2String(user)] = 0
+			}
+		} else {
+			for u, c := range t {
+				t[u] = c + count
+			}
+		}
+	}
 }
 
 func (ms *MemStore) Query(t []byte, count int, offset []byte, acked bool) []*proto.PubMsg {
@@ -242,17 +283,20 @@ func (ms *MemStore) Query(t []byte, count int, offset []byte, acked bool) []*pro
 }
 
 func (ms *MemStore) UnreadCount(topic []byte, user []byte) int {
-	t := string(topic)
-	ms.Lock()
-	defer ms.Unlock()
+	ms.RLock()
+	defer ms.RUnlock()
 
-	var count int
-	for _, m := range ms.DB[t] {
-		if !m.Acked {
-			count++
+	tp := proto.GetTopicType(topic)
+	if tp == proto.TopicTypeNormal {
+		return ms.topicCount[talent.Bytes2String(topic)]
+	} else {
+		t, ok := ms.chatroom[talent.Bytes2String(topic)]
+		if !ok {
+			return 0
 		}
+
+		return t[talent.Bytes2String(user)]
 	}
-	return count
 }
 
 func (ms *MemStore) StoreTM(m *proto.TimerMsg) {
@@ -283,15 +327,49 @@ func (ms *MemStore) QueryTM() []*proto.PubMsg {
 }
 
 func (ms *MemStore) JoinChat(topic []byte, user []byte) error {
+	ms.Lock()
+	defer ms.Unlock()
+
+	t, ok := ms.chatroom[talent.Bytes2String(topic)]
+	if !ok {
+		ms.chatroom[talent.Bytes2String(topic)] = map[string]int{
+			talent.Bytes2String(user): 0,
+		}
+	} else {
+		_, ok := t[talent.Bytes2String(user)]
+		if !ok {
+			t[talent.Bytes2String(user)] = 0
+		}
+	}
+
 	return nil
 }
 
 func (ms *MemStore) LeaveChat(topic []byte, user []byte) error {
+	ms.Lock()
+	defer ms.Unlock()
+
+	t, ok := ms.chatroom[talent.Bytes2String(topic)]
+	if ok {
+		delete(t, talent.Bytes2String(user))
+	}
+
 	return nil
 }
 
 func (ms *MemStore) GetChatUsers(topic []byte) [][]byte {
-	return nil
+	ms.Lock()
+	defer ms.Unlock()
+
+	users := make([][]byte, 0)
+	t, ok := ms.chatroom[talent.Bytes2String(topic)]
+	if ok {
+		for u := range t {
+			users = append(users, talent.String2Bytes(u))
+		}
+	}
+
+	return users
 }
 
 func (ms *MemStore) Del(topic []byte, msgid []byte) error {
@@ -321,6 +399,7 @@ func (ms *MemStore) flush() {
 			ms.DB[t][talent.Bytes2String(msg.ID)] = msg
 			ms.DBIndex[t] = append(ms.DBIndex[t], talent.Bytes2String(msg.ID))
 			ms.DBIDIndex[talent.Bytes2String(msg.ID)] = t
+			ms.topicCount[t]++
 			ms.Unlock()
 		}
 		ms.Lock()

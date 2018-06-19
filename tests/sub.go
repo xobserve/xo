@@ -38,7 +38,7 @@ func sub(conn *meq.Connection) {
 
 	time.Sleep(5 * time.Second)
 	// 离开聊天
-	conn.LeaveChat([]byte(topic))
+	// conn.LeaveChat([]byte(topic))
 	select {}
 	// fmt.Println("累积消费未ACK消息数：", n1)
 }
