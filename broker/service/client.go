@@ -163,7 +163,9 @@ func (c *client) readLoop(isWs bool) error {
 					}
 
 					msgs := c.bk.store.Query(packet.Topic, count, offset, true)
-					c.msgSender <- msgs
+					if len(msgs) > 0 {
+						c.msgSender <- msgs
+					}
 				case proto.MSG_PUB_BATCH: //batch pub
 					// clients publish  messages to a concrete topic
 					// single publish will store the messages according to the message qos

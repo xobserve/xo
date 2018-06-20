@@ -37,6 +37,7 @@ func sub(conn *meq.Connection) {
 	conn.JoinChat([]byte(topic))
 
 	time.Sleep(5 * time.Second)
+
 	// 离开聊天
 	// conn.LeaveChat([]byte(topic))
 	select {}

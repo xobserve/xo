@@ -95,7 +95,6 @@ var Meq = (function() {
                     var pl = msg.readUInt32LE(3+ml)
                     var payload = msg.slice(7+ml,7+ml+pl)
 
-
                     var acked = false 
                     if (msg[7+ml+pl] == 49) {
                         acked = true
@@ -195,15 +194,15 @@ var Meq = (function() {
         });
     };
     
-    Meq.prototype.subscribe = function (topic) {
-        this._mqtt.subscribe(topic);
+    Meq.prototype.subscribe = function (topic,h) {
+        this._mqtt.subscribe(topic,h);
     };
 
     Meq.prototype.publish = function(topic,payload,ttl,qos) {
         var id = newID()
         var ml = id.length
         var tl = topic.length
-        var pl = payload.length
+        var pl = getStrLeng(payload)
         var m = Buffer.allocUnsafe(24 + ml + tl + pl+ml)
         m.fill(0)
         m[0] = 98
@@ -214,7 +213,6 @@ var Meq = (function() {
         //payload
         m.writeUInt32LE(pl,3+ml)
         m.write(payload,7+ml)
-
         //ack
         m[7+ml+pl]='0'
 
@@ -238,8 +236,6 @@ var Meq = (function() {
 
         this._mqtt.publish(topic,m,{
             qos: qos
-        }, function(err,granted) {
-            console.log(err,granted,granted.payload.toString())
         });
     }
 
@@ -412,3 +408,20 @@ function connect(request) {
     return c;
 }
 exports.connect = connect;
+
+
+function getStrLeng(str){ 
+    var realLength = 0; 
+    var len = str.length; 
+    var charCode = -1; 
+    for(var i = 0; i < len; i++){ 
+        charCode = str.charCodeAt(i); 
+        if (charCode >= 0 && charCode <= 128) {  
+            realLength += 1; 
+        }else{  
+            // 如果是中文则长度加3 
+            realLength += 3; 
+        } 
+    }  
+    return realLength; 
+}

@@ -172,6 +172,8 @@ func (ms *MemStore) MarkRead(topic []byte, msgids [][]byte) {
 }
 
 func (ms *MemStore) UpdateUnreadCount(topic []byte, user []byte, isAdd bool, count int) {
+	ms.Lock()
+	defer ms.Unlock()
 	tp := proto.GetTopicType(topic)
 	if tp == proto.TopicTypeNormal {
 		c, ok := ms.topicCount[talent.Bytes2String(topic)]

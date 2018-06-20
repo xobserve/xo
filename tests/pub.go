@@ -28,7 +28,7 @@ func pub(conns []*meq.Connection) {
 					RawID:   []byte("1234"),
 					ID:      []byte(""),
 					Topic:   []byte(topic),
-					Payload: []byte("hello world4"),
+					Payload: []byte("我是😯"),
 					Type:    1,
 					QoS:     1,
 				}
