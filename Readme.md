@@ -12,10 +12,31 @@ Our goal is to be the best messaging platform in the world, like the iphone to o
      <img  width="200" src="./logo.png"></a>
 </p>
 
+Example of Chatting room
+------------
+### Download meq
+```bash
+go get github.com/cosmos-gg/meq
+```
+### Start meq broker
+
+```bash
+> cd $GOPATH/src/github.comcosmos-gg/meq/broker
+> go run main.go
+```
+
+### Start chatting example
+```bash
+> cd ../demos/chatting
+> npm install
+> npm run dev
+```
+### Chatting now!
+Open your browser and accsess http://localhost:8080,you can open two browser tabs as two users,and then start chatting.
+
 Now Status
 ------------
 The version is Alpha V0.5.0. The website,documents and a group chat demo will soon be possible to access(before 2018.6.30)
-
 
 Features
 ------------
