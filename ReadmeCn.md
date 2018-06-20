@@ -13,6 +13,31 @@ MeQ的目标是成为世界上最好的消息平台，就像手机中的Iphone�
      <img  width="200" src="./logo.png"></a>
 </p>
 
+
+聊天室例子
+------------
+### 下载Meq
+```bash
+go get github.com/cosmos-gg/meq
+```
+### 启动Meq broker
+```bash
+> cd $GOPATH/src/github.comcosmos-gg/meq/broker
+> go run main.go
+```
+
+### 启动聊天室
+```bash
+> cd ../demos/chatting
+> npm install
+> npm run dev
+```
+### 开始聊天!
+打开浏览器，然后打开两个页面分别访问
+http://localhost:8080,在第一个页面输入用户名A,第二个页面输入用户名B，然后开始聊天吧！
+### 小提示
+刷新其中A用户的页面，然后使用另外一个B用户发送几条消息，再回到之前A用户页面输入用户名A(用户名要保持一致)，然后看看会发生什么：你获取到了自己的历史消息和所有未读消息
+
 当前状态
 ------------
 目前项目的版本号是Alpha V0.5.0，官方网站、文档以及一个聊天室Demo很快将与大家见面(2018年6月30日之前)

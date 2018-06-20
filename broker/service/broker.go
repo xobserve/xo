@@ -173,9 +173,6 @@ func (b *Broker) process(conn net.Conn, id uint64, isWs bool) {
 		L.Info("client closed", zap.Uint64("conn_id", id))
 	}()
 
-	b.wg.Add(1)
-	defer b.wg.Done()
-
 	L.Info("new client", zap.Uint64("conn_id", id), zap.String("ip", conn.RemoteAddr().String()))
 
 	cli := initClient(id, conn, b)

@@ -44,7 +44,7 @@
 </template>   
 
 <script>
-var meq = require("/Users/sunface/GoLibs/src/github.com/cosmos-gg/meq/sdks/js-meq");
+var meq = require("meq");
 import gdata from "./gdata";
 
 
