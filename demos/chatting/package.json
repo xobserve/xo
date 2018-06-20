@@ -10,8 +10,10 @@
     "build": "node build/build.js"
   },
   "dependencies": {
+    "int64-buffer": "^0.1.10",
     "iview": "^2.14.2",
-    "meq": "^0.8.3",
+    "meq": "^0.8.5",
+    "mqtt": "^2.18.1",
     "vue": "^2.5.2",
     "vue-router": "^3.0.1"
   },

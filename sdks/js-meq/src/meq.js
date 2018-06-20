@@ -106,8 +106,14 @@ var Meq = (function() {
                     var sl = msg.readUInt16LE(20+ml+pl+tl)
                     var sender = msg.slice(22+ml+pl+tl,22+ml+pl+tl+sl)
 
-                    var rawid = msg.slice(22+ml+pl+tl+sl)
-                    var m = new Message(rawid.toString(),msgid.toString(),topic.toString(),payload,acked,sender.toString())
+                    var tsl = msg.readUInt16LE(22+ml+pl+tl+sl)
+                    var ts = msg.slice(24+ml+pl+tl+sl,24+ml+pl+tl+sl+tsl)
+
+                    var rawid = msg.slice(24+ml+pl+tl+sl+tsl)
+
+                    var newDate = new Date();
+                    newDate.setTime(ts.toString())
+                    var m = new Message(rawid.toString(),msgid.toString(),topic.toString(),payload,acked,sender.toString(),newDate.toLocaleString())
                     _this._tryInvoke('message', m);
                     break
                 case 113: // all presence users
@@ -230,10 +236,12 @@ var Meq = (function() {
         big.toBuffer().copy(m,12+ml+tl+pl)
         //from
         m.writeUInt16LE(0,20+ml+tl+pl)
+        //timestamp
+        m.writeUInt16LE(0,22+ml+tl+pl)
         //raw msgid
-        m.writeUInt16LE(ml,22+ml+tl+pl)
         m.write(id,24+ml+tl+pl)
 
+        
         this._mqtt.publish(topic,m,{
             qos: qos
         });
@@ -257,7 +265,7 @@ var Meq = (function() {
         var m = Buffer.allocUnsafe(3)
         m.fill(0)
         
-        //command
+        //comm4d
         m[0] = 112
         m.writeUInt16LE(count,1)
 
@@ -375,13 +383,14 @@ var Meq = (function() {
 }());
 exports.Meq = Meq;
 
-function Message(rawid,id,topic,payload,acked,sender) {
+function Message(rawid,id,topic,payload,acked,sender,ts) {
     this.rawid = rawid
     this.id = id
     this.topic = topic
     this.payload = payload
     this.acked = acked
     this.sender = sender
+    this.timestamp = ts
 }
 exports.Message = Message;
 

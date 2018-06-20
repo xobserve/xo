@@ -19,7 +19,10 @@ import (
 	"errors"
 	"fmt"
 	"net"
+	"strconv"
 	"time"
+
+	"github.com/sunface/talent"
 
 	"github.com/cosmos-gg/meq/proto"
 	"github.com/cosmos-gg/meq/proto/mqtt"
@@ -217,7 +220,9 @@ func (c *client) readLoop(isWs bool) error {
 
 					now := time.Now().Unix()
 					// generate messageID
-					m.ID = c.bk.idgen.Generate().Bytes()
+					id := c.bk.idgen.Generate()
+					m.ID = id.Bytes()
+					c.bk.idgen.Generate().Time()
 					// set sender user
 					m.Sender = c.username
 					// update the ttl to a unix time
@@ -225,6 +230,7 @@ func (c *client) readLoop(isWs bool) error {
 						m.TTL = now + m.TTL
 					}
 
+					m.Timestamp = talent.String2Bytes(strconv.FormatInt(id.Time(), 10))
 					// save the messages
 					ms := []*proto.PubMsg{m}
 					c.bk.store.Store(ms)

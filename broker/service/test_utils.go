@@ -22,31 +22,31 @@ import (
 )
 
 var mockMsgs = []*proto.PubMsg{
-	&proto.PubMsg{[]byte("123"), []byte("001"), []byte("/test/g1/+/b1"), []byte("hello world1"), false, 0, 1, 100, []byte("sunface")},
-	&proto.PubMsg{[]byte("123"), []byte("002"), []byte("/test/g1/+/b1"), []byte("hello world2"), false, 0, 1, 100, []byte("sunface")},
-	&proto.PubMsg{[]byte("123"), []byte("003"), []byte("/test/g1/+/b1"), []byte("hello world3"), false, 0, 1, 100, []byte("sunface")},
-	&proto.PubMsg{[]byte("123"), []byte("004"), []byte("/test/g1/+/b1"), []byte("hello world4"), false, 0, 1, 100, []byte("sunface")},
-	&proto.PubMsg{[]byte("123"), []byte("005"), []byte("/test/g1/+/b1"), []byte("hello world5"), false, 0, 1, 100, []byte("sunface")},
-	&proto.PubMsg{[]byte("123"), []byte("006"), []byte("/test/g1/+/b1"), []byte("hello world6"), false, 0, 1, 100, []byte("sunface")},
-	&proto.PubMsg{[]byte("123"), []byte("007"), []byte("/test/g1/+/b1"), []byte("hello world7"), false, 0, 1, 100, []byte("sunface")},
-	&proto.PubMsg{[]byte("123"), []byte("008"), []byte("/test/g1/+/b1"), []byte("hello world8"), false, 0, 1, 100, []byte("sunface")},
-	&proto.PubMsg{[]byte("123"), []byte("009"), []byte("/test/g1/+/b1"), []byte("hello world9"), false, 0, 1, 100, []byte("sunface")},
-	&proto.PubMsg{[]byte("123"), []byte("010"), []byte("/test/g1/+/b1"), []byte("hello world10"), false, 0, 1, 100, []byte("sunface")},
-	&proto.PubMsg{[]byte("123"), []byte("011"), []byte("/test/g1/+/b1"), []byte("hello world11"), false, 0, 1, 100, []byte("sunface")},
+	&proto.PubMsg{[]byte("123"), []byte("001"), []byte("/test/g1/+/b1"), []byte("hello world1"), false, 0, 1, 100, []byte("sunface"), []byte("111")},
+	&proto.PubMsg{[]byte("123"), []byte("002"), []byte("/test/g1/+/b1"), []byte("hello world2"), false, 0, 1, 100, []byte("sunface"), []byte("111")},
+	&proto.PubMsg{[]byte("123"), []byte("003"), []byte("/test/g1/+/b1"), []byte("hello world3"), false, 0, 1, 100, []byte("sunface"), []byte("111")},
+	&proto.PubMsg{[]byte("123"), []byte("004"), []byte("/test/g1/+/b1"), []byte("hello world4"), false, 0, 1, 100, []byte("sunface"), []byte("111")},
+	&proto.PubMsg{[]byte("123"), []byte("005"), []byte("/test/g1/+/b1"), []byte("hello world5"), false, 0, 1, 100, []byte("sunface"), []byte("111")},
+	&proto.PubMsg{[]byte("123"), []byte("006"), []byte("/test/g1/+/b1"), []byte("hello world6"), false, 0, 1, 100, []byte("sunface"), []byte("111")},
+	&proto.PubMsg{[]byte("123"), []byte("007"), []byte("/test/g1/+/b1"), []byte("hello world7"), false, 0, 1, 100, []byte("sunface"), []byte("111")},
+	&proto.PubMsg{[]byte("123"), []byte("008"), []byte("/test/g1/+/b1"), []byte("hello world8"), false, 0, 1, 100, []byte("sunface"), []byte("111")},
+	&proto.PubMsg{[]byte("123"), []byte("009"), []byte("/test/g1/+/b1"), []byte("hello world9"), false, 0, 1, 100, []byte("sunface"), []byte("111")},
+	&proto.PubMsg{[]byte("123"), []byte("010"), []byte("/test/g1/+/b1"), []byte("hello world10"), false, 0, 1, 100, []byte("sunface"), []byte("111")},
+	&proto.PubMsg{[]byte("123"), []byte("011"), []byte("/test/g1/+/b1"), []byte("hello world11"), false, 0, 1, 100, []byte("sunface"), []byte("111")},
 }
 
 var mockExactMsgs = []*proto.PubMsg{
-	&proto.PubMsg{[]byte("123"), []byte("011"), []byte("/test/g1"), []byte("hello world11"), false, 0, 1, 100, []byte("sunface")},
-	&proto.PubMsg{[]byte("123"), []byte("010"), []byte("/test/g1"), []byte("hello world10"), false, 0, 1, 100, []byte("sunface")},
-	&proto.PubMsg{[]byte("123"), []byte("009"), []byte("/test/g1"), []byte("hello world9"), false, 0, 1, 100, []byte("sunface")},
-	&proto.PubMsg{[]byte("123"), []byte("008"), []byte("/test/g1"), []byte("hello world8"), false, 0, 1, 100, []byte("sunface")},
-	&proto.PubMsg{[]byte("123"), []byte("007"), []byte("/test/g1"), []byte("hello world7"), false, 0, 1, 100, []byte("sunface")},
-	&proto.PubMsg{[]byte("123"), []byte("006"), []byte("/test/g1"), []byte("hello world6"), false, 0, 1, 100, []byte("sunface")},
-	&proto.PubMsg{[]byte("123"), []byte("005"), []byte("/test/g1"), []byte("hello world5"), false, 0, 1, 100, []byte("sunface")},
-	&proto.PubMsg{[]byte("123"), []byte("004"), []byte("/test/g1"), []byte("hello world4"), false, 0, 1, 100, []byte("sunface")},
-	&proto.PubMsg{[]byte("123"), []byte("003"), []byte("/test/g1"), []byte("hello world3"), false, 0, 1, 100, []byte("sunface")},
-	&proto.PubMsg{[]byte("123"), []byte("002"), []byte("/test/g1"), []byte("hello world2"), false, 0, 1, 100, []byte("sunface")},
-	&proto.PubMsg{[]byte("123"), []byte("001"), []byte("/test/g1"), []byte("hello world1"), false, 0, 1, 100, []byte("sunface")},
+	&proto.PubMsg{[]byte("123"), []byte("011"), []byte("/test/g1"), []byte("hello world11"), false, 0, 1, 100, []byte("sunface"), []byte("111")},
+	&proto.PubMsg{[]byte("123"), []byte("010"), []byte("/test/g1"), []byte("hello world10"), false, 0, 1, 100, []byte("sunface"), []byte("111")},
+	&proto.PubMsg{[]byte("123"), []byte("009"), []byte("/test/g1"), []byte("hello world9"), false, 0, 1, 100, []byte("sunface"), []byte("111")},
+	&proto.PubMsg{[]byte("123"), []byte("008"), []byte("/test/g1"), []byte("hello world8"), false, 0, 1, 100, []byte("sunface"), []byte("111")},
+	&proto.PubMsg{[]byte("123"), []byte("007"), []byte("/test/g1"), []byte("hello world7"), false, 0, 1, 100, []byte("sunface"), []byte("111")},
+	&proto.PubMsg{[]byte("123"), []byte("006"), []byte("/test/g1"), []byte("hello world6"), false, 0, 1, 100, []byte("sunface"), []byte("111")},
+	&proto.PubMsg{[]byte("123"), []byte("005"), []byte("/test/g1"), []byte("hello world5"), false, 0, 1, 100, []byte("sunface"), []byte("111")},
+	&proto.PubMsg{[]byte("123"), []byte("004"), []byte("/test/g1"), []byte("hello world4"), false, 0, 1, 100, []byte("sunface"), []byte("111")},
+	&proto.PubMsg{[]byte("123"), []byte("003"), []byte("/test/g1"), []byte("hello world3"), false, 0, 1, 100, []byte("sunface"), []byte("111")},
+	&proto.PubMsg{[]byte("123"), []byte("002"), []byte("/test/g1"), []byte("hello world2"), false, 0, 1, 100, []byte("sunface"), []byte("111")},
+	&proto.PubMsg{[]byte("123"), []byte("001"), []byte("/test/g1"), []byte("hello world1"), false, 0, 1, 100, []byte("sunface"), []byte("111")},
 }
 
 // var mockSubs = []SubData{

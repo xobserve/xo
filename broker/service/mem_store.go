@@ -315,7 +315,7 @@ func (ms *MemStore) QueryTM() []*proto.PubMsg {
 	ms.Lock()
 	for _, m := range ms.timerDB {
 		if m.Trigger <= now {
-			msgs = append(msgs, &proto.PubMsg{m.ID, m.ID, m.Topic, m.Payload, false, proto.TIMER_MSG, 1, 0, nil})
+			msgs = append(msgs, &proto.PubMsg{m.ID, m.ID, m.Topic, m.Payload, false, proto.TIMER_MSG, 1, 0, nil, nil})
 		} else {
 			newM = append(newM, m)
 		}

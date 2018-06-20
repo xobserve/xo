@@ -8,48 +8,33 @@ import (
 )
 
 var mockMsgs = []*PubMsg{
-	&PubMsg{[]byte("123"), []byte(""), []byte("test"), []byte("hello world1"), false, 0, 1, 100, []byte("sunface")},
-	&PubMsg{[]byte("123"), []byte(""), []byte("test"), []byte("hello world2"), false, 0, 1, 101, []byte("sunface")},
-	&PubMsg{[]byte("123"), []byte(""), []byte("test"), []byte("hello world3"), false, 0, 1, 102, []byte("sunface")},
-	&PubMsg{[]byte("123"), []byte(""), []byte("test"), []byte("hello world4"), true, 0, 1, 100, []byte("sunface")},
-	&PubMsg{[]byte("123"), []byte(""), []byte("test"), []byte("hello world5"), false, 0, 1, 100, []byte("sunface")},
-	&PubMsg{[]byte("123"), []byte(""), []byte("test"), []byte("hello world6"), false, 0, 1, 100, []byte("sunface")},
-	&PubMsg{[]byte("123"), []byte(""), []byte("test"), []byte("hello world7"), false, 0, 1, 100, []byte("sunface")},
-	&PubMsg{[]byte("123"), []byte(""), []byte("test"), []byte("hello world8"), false, 0, 1, 100, []byte("sunface")},
-	&PubMsg{[]byte("123"), []byte(""), []byte("test"), []byte("hello world9"), true, 0, 1, 100, []byte("sunface")},
-	&PubMsg{[]byte("123"), []byte(""), []byte("test"), []byte("hello world10"), false, 0, 1, 100, []byte("sunface")},
-	&PubMsg{[]byte("123"), []byte(""), []byte("test"), []byte("hello world11"), false, 0, 1, 100, []byte("sunface")},
-}
-
-var mockMsgs1 = []*PubMsg{
-	&PubMsg{
-		ID:      []byte(""),
-		Topic:   []byte("test"),
-		Payload: []byte("hello world1"),
-		TTL:     100,
-	},
-	&PubMsg{
-		ID:      []byte(""),
-		Topic:   []byte("test"),
-		Payload: []byte("hello world1"),
-		TTL:     100,
-	},
+	&PubMsg{[]byte("123"), []byte("11"), []byte("test"), []byte("hello world1"), false, 0, 1, 100, []byte("sunface"), []byte("1223123")},
+	&PubMsg{[]byte("123"), []byte("11"), []byte("test"), []byte("hello world2"), false, 0, 1, 101, []byte("sunface"), []byte("1223123")},
+	&PubMsg{[]byte("123"), []byte("11"), []byte("test"), []byte("hello world3"), false, 0, 1, 102, []byte("sunface"), []byte("1223123")},
+	&PubMsg{[]byte("123"), []byte("11"), []byte("test"), []byte("hello world4"), true, 0, 1, 100, []byte("sunface"), []byte("1223123")},
+	&PubMsg{[]byte("123"), []byte("11"), []byte("test"), []byte("hello world5"), false, 0, 1, 100, []byte("sunface"), []byte("1223123")},
+	&PubMsg{[]byte("123"), []byte("11"), []byte("test"), []byte("hello world6"), false, 0, 1, 100, []byte("sunface"), []byte("1223123")},
+	&PubMsg{[]byte("123"), []byte("11"), []byte("test"), []byte("hello world7"), false, 0, 1, 100, []byte("sunface"), []byte("1223123")},
+	&PubMsg{[]byte("123"), []byte("11"), []byte("test"), []byte("hello world8"), false, 0, 1, 100, []byte("sunface"), []byte("1223123")},
+	&PubMsg{[]byte("123"), []byte("11"), []byte("test"), []byte("hello world9"), true, 0, 1, 100, []byte("sunface"), []byte("1223123")},
+	&PubMsg{[]byte("123"), []byte("11"), []byte("test"), []byte("hello world10"), false, 0, 1, 100, []byte("sunface"), []byte("1223123")},
+	&PubMsg{[]byte("123"), []byte("11"), []byte("test"), []byte("hello world11"), false, 0, 1, 100, []byte("sunface"), []byte("1223123")},
 }
 
 func TestPubMsgOnePackUnpack(t *testing.T) {
-	packed := PackMsg(mockMsgs1[0])
+	packed := PackMsg(mockMsgs[0])
 	unpacked, err := UnpackMsg(packed[1:])
 
 	assert.NoError(t, err)
-	assert.Equal(t, mockMsgs1[0], unpacked)
+	assert.Equal(t, mockMsgs[0], unpacked)
 }
 
 func TestPubMsgsPackUnpack(t *testing.T) {
-	packed := PackPubBatch(mockMsgs1, MSG_PUB_BATCH)
+	packed := PackPubBatch(mockMsgs, MSG_PUB_BATCH)
 	unpacked, err := UnpackPubBatch(packed[1:])
 
 	assert.NoError(t, err)
-	assert.Equal(t, mockMsgs1, unpacked)
+	assert.Equal(t, mockMsgs, unpacked)
 }
 
 func TestSubPackUnpack(t *testing.T) {

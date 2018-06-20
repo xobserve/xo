@@ -11,7 +11,7 @@
               <div  id="chat-room" style="overflow-y:scroll;max-height:600px;">
                   <Row v-for="msg in messages" :key="msg.id" class="animated bounceInRight" style="margin-top:8px;">
                     <div>
-                      <div style="font-size:15px;color:#777">{{msg.sender}} <span style="float:right">{{msg.id}}</span></div>
+                      <div style="font-size:15px;color:#777">{{msg.sender}} <span style="float:right;font-size:13px;">{{msg.timestamp}}</span></div>
                       <span :class="{'bg-green':msg.sender==username}" style="padding:3px 5px;margin-top:2px'">{{msg.payload.toString()}}</span>
                     </div>
                 </Row>
@@ -152,8 +152,6 @@ export default {
 
       m.on("message", function(msg) {
         var l = _this.messages.length
-
-        console.log(msg.id, _this.messages[l-1])
         if (l ==0 ){
            _this.messages.push(msg);
            _this.offset = msg.id

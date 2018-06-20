@@ -1,15 +1,16 @@
 package proto
 
 type PubMsg struct {
-	RawID   []byte
-	ID      []byte
-	Topic   []byte
-	Payload []byte
-	Acked   bool
-	Type    int8
-	QoS     int8
-	TTL     int64
-	Sender  []byte
+	RawID     []byte
+	ID        []byte
+	Topic     []byte
+	Payload   []byte
+	Acked     bool
+	Type      int8
+	QoS       int8
+	TTL       int64
+	Sender    []byte
+	Timestamp []byte
 }
 
 type TimerMsg struct {

@@ -25,8 +25,9 @@ func PackMsg(m *PubMsg) []byte {
 	tl := len(m.Topic)
 	pl := len(m.Payload)
 	fl := len(m.Sender)
+	tsl := len(m.Timestamp)
 	// header
-	msg := make([]byte, 22+ml+tl+pl+fl+rml)
+	msg := make([]byte, 24+ml+tl+pl+fl+rml+tsl)
 	msg[0] = MSG_PUB_ONE
 	// msgid
 	binary.LittleEndian.PutUint16(msg[1:3], uint16(ml))
@@ -56,8 +57,11 @@ func PackMsg(m *PubMsg) []byte {
 	//from
 	binary.LittleEndian.PutUint16(msg[20+ml+pl+tl:22+ml+pl+tl], uint16(fl))
 	copy(msg[22+ml+pl+tl:22+ml+pl+tl+fl], m.Sender)
+	//timestamp
+	binary.LittleEndian.PutUint16(msg[22+ml+pl+tl+fl:24+ml+pl+tl+fl], uint16(tsl))
+	copy(msg[24+ml+pl+tl+fl:24+ml+pl+tl+fl+tsl], m.Timestamp)
 	//raw msg id
-	copy(msg[22+ml+pl+tl+fl:], m.RawID)
+	copy(msg[24+ml+pl+tl+fl+tsl:], m.RawID)
 	return msg
 }
 
@@ -89,9 +93,13 @@ func UnpackMsg(b []byte) (*PubMsg, error) {
 	// from
 	fl := uint32(binary.LittleEndian.Uint16(b[19+ml+pl+tl : 21+ml+pl+tl]))
 	from := b[21+ml+pl+tl : 21+ml+pl+tl+fl]
+	// timestamp
+	tsl := uint32(binary.LittleEndian.Uint16(b[21+ml+pl+tl+fl : 23+ml+pl+tl+fl]))
+	ts := b[23+ml+pl+tl+fl : 23+ml+pl+tl+fl+tsl]
+
 	// raw msg id
-	rid := b[21+ml+pl+tl+fl:]
-	return &PubMsg{rid, msgid, topic, payload, acked, int8(tp), int8(qos), int64(ttl), from}, nil
+	rid := b[23+ml+pl+tl+fl+tsl:]
+	return &PubMsg{rid, msgid, topic, payload, acked, int8(tp), int8(qos), int64(ttl), from, ts}, nil
 }
 
 func PackSub(topic []byte) []byte {
@@ -334,15 +342,15 @@ func UnpackTimerMsg(b []byte) *TimerMsg {
 }
 
 func PackPubBatch(ms []*PubMsg, cmd byte) []byte {
-	bl := 23 * len(ms)
+	bl := 25 * len(ms)
 	for _, m := range ms {
-		bl += (len(m.ID) + len(m.Topic) + len(m.Payload)) + len(m.Sender) + len(m.RawID)
+		bl += (len(m.ID) + len(m.Topic) + len(m.Payload)) + len(m.Sender) + len(m.RawID) + len(m.Timestamp)
 	}
 	body := make([]byte, bl)
 
 	last := 0
 	for _, m := range ms {
-		ml, tl, pl, fl, rml := len(m.ID), len(m.Topic), len(m.Payload), len(m.Sender), len(m.RawID)
+		ml, tl, pl, fl, rml, tsl := len(m.ID), len(m.Topic), len(m.Payload), len(m.Sender), len(m.RawID), len(m.Timestamp)
 		//msgid
 		binary.LittleEndian.PutUint16(body[last:last+2], uint16(ml))
 		copy(body[last+2:last+2+ml], m.ID)
@@ -370,7 +378,10 @@ func PackPubBatch(ms []*PubMsg, cmd byte) []byte {
 		// raw msg id
 		binary.LittleEndian.PutUint16(body[last+21+ml+tl+pl+fl:last+23+ml+tl+pl+fl], uint16(rml))
 		copy(body[last+23+ml+tl+pl+fl:last+23+ml+tl+pl+fl+rml], m.RawID)
-		last = last + 23 + ml + tl + pl + fl + rml
+		// timestamp
+		binary.LittleEndian.PutUint16(body[last+23+ml+tl+pl+fl+rml:last+25+ml+tl+pl+fl+rml], uint16(tsl))
+		copy(body[last+25+ml+tl+pl+fl+rml:last+25+ml+tl+pl+fl+rml+tsl], m.Timestamp)
+		last = last + 25 + ml + tl + pl + fl + rml + tsl
 	}
 
 	// 压缩body
@@ -429,10 +440,13 @@ func UnpackPubBatch(m []byte) ([]*PubMsg, error) {
 		// raw msg id
 		rml := uint32(binary.LittleEndian.Uint16(b[last+21+ml+tl+pl+fl : last+23+ml+tl+pl+fl]))
 		rid := b[last+23+ml+tl+pl+fl : last+23+ml+tl+pl+fl+rml]
-		msgs[index] = &PubMsg{rid, msgid, topic, payload, acked, int8(tp), int8(qos), int64(ttl), from}
+		// timestamp
+		tsl := uint32(binary.LittleEndian.Uint16(b[last+23+ml+tl+pl+fl+rml : last+25+ml+tl+pl+fl+rml]))
+		ts := b[last+25+ml+tl+pl+fl+rml : last+25+ml+tl+pl+fl+rml+tsl]
+		msgs[index] = &PubMsg{rid, msgid, topic, payload, acked, int8(tp), int8(qos), int64(ttl), from, ts}
 
 		index++
-		last = last + 23 + ml + tl + pl + fl + rml
+		last = last + 25 + ml + tl + pl + fl + rml + tsl
 	}
 
 	return msgs, nil
