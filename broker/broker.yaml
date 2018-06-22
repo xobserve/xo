@@ -5,7 +5,7 @@ common:
   loglevel: debug
 
 broker:
-  host: localhost
+  host: ''
   tcpport: 8908
   wsport: 9008
   httpport: 9108

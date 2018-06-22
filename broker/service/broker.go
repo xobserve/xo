@@ -86,10 +86,10 @@ func (b *Broker) Start() {
 		b.store = &MemStore{
 			bk: b,
 		}
-	case "fdb":
-		b.store = &FdbStore{
-			bk: b,
-		}
+	// case "fdb":
+	// 	b.store = &FdbStore{
+	// 		bk: b,
+	// 	}
 	}
 
 	b.store.Init()
@@ -119,7 +119,7 @@ func (b *Broker) Start() {
 	StartIDGenerator(b)
 
 	go func() {
-		log.Println(http.ListenAndServe("localhost:6070", nil))
+		log.Println(http.ListenAndServe(":6070", nil))
 	}()
 }
 func (b *Broker) Shutdown() {
@@ -167,7 +167,7 @@ func (b *Broker) Accept() {
 func (b *Broker) process(conn net.Conn, id uint64, isWs bool) {
 	defer func() {
 		b.Lock()
-		delete(b.clients, id)
+		delete(b.clients, id) 
 		b.Unlock()
 		conn.Close()
 		L.Info("client closed", zap.Uint64("conn_id", id))
