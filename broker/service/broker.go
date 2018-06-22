@@ -86,10 +86,10 @@ func (b *Broker) Start() {
 		b.store = &MemStore{
 			bk: b,
 		}
-	// case "fdb":
-	// 	b.store = &FdbStore{
-	// 		bk: b,
-	// 	}
+	case "fdb":
+		b.store = &FdbStore{
+			bk: b,
+		}
 	}
 
 	b.store.Init()

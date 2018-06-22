@@ -13,7 +13,7 @@ broker:
   serverid: 1
 
 store:
-  engine: memory
+  engine: fdb
   fdb: 
     namespace: meq-store
     threads: 5
