@@ -16,8 +16,11 @@ Example of Chatting room
 ------------
 ### Install the foundationdb client(required!)
 Mac OS: https://www.foundationdb.org/downloads/5.1.7/macOS/installers/FoundationDB-5.1.7.pkg
+
 CentOS7: https://www.foundationdb.org/downloads/5.1.7/rhel7/installers/foundationdb-clients-5.1.7-1.el7.x86_64.rpm
+
 CentOS6: https://www.foundationdb.org/downloads/5.1.7/rhel6/installers/foundationdb-clients-5.1.7-1.el6.x86_64.rpm
+
 Other Os: https://www.foundationdb.org/download/
 ### Download meq
 ```bash
