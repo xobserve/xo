@@ -22,17 +22,14 @@ CentOS7: https://www.foundationdb.org/downloads/5.1.7/rhel7/installers/foundatio
 CentOS6: https://www.foundationdb.org/downloads/5.1.7/rhel6/installers/foundationdb-clients-5.1.7-1.el6.x86_64.rpm
 
 Other Os: https://www.foundationdb.org/download/
-### Download meq
+
+### Start MeQ
 ```bash
-go get github.com/cosmos-gg/meq
-```
-### Start meq broker
-```bash
+>go get github.com/cosmos-gg/meq
 > cd $GOPATH/src/github.comcosmos-gg/meq/broker
 > go run main.go
 ```
-
-### Start chatting example
+### Start example
 ```bash
 > cd ../demos/chatting
 > npm install
@@ -41,9 +38,7 @@ go get github.com/cosmos-gg/meq
 ### Chatting now!
 Open your browser and accsess http://localhost:8080 in two seperate pages,in one page input username A,in other page input username B, then you can start chatting!
 
-### Tips
-You can refresh page of user A, then use B sending several messages, go back to page A and input username A, and see what happens: 
-A will get all the history messages and all the unread messages.
+
 
 Now Status
 ------------

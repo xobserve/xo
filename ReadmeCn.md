@@ -25,12 +25,9 @@ Centos6: https://www.foundationdb.org/downloads/5.1.7/rhel6/installers/foundatio
 
 其它操作系统 : https://www.foundationdb.org/download/
 
-### 下载Meq
+### 启动MeQ
 ```bash
-go get github.com/cosmos-gg/meq
-```
-### 启动Meq broker
-```bash
+> go get github.com/cosmos-gg/meq
 > cd $GOPATH/src/github.comcosmos-gg/meq/broker
 > go run main.go
 ```
@@ -44,8 +41,7 @@ go get github.com/cosmos-gg/meq
 ### 开始聊天!
 打开浏览器，然后打开两个页面分别访问
 http://localhost:8080,在第一个页面输入用户名A,第二个页面输入用户名B，然后开始聊天吧！
-### 小提示
-刷新其中A用户的页面，然后使用另外一个B用户发送几条消息，再回到之前A用户页面输入用户名A(用户名要保持一致)，然后看看会发生什么：你获取到了自己的历史消息和所有未读消息
+
 
 当前状态
 ------------
