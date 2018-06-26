@@ -1,0 +1,4 @@
+testTitle=FastTriggeredWatchesTest
+    testName=FastTriggeredWatches
+connectionFailuresDisableDuration=100000
+timeout=700
