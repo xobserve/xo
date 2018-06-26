@@ -16,6 +16,12 @@ MeQ的目标是成为世界上最好的消息平台，就像手机中的Iphone�
 
 聊天室例子
 ------------
+### 安装FoudationDB客户端(必须要安装的依赖！)
+Mac OS: https://www.foundationdb.org/downloads/5.1.7/macOS/installers/FoundationDB-5.1.7.pkg
+Centos7: https://www.foundationdb.org/downloads/5.1.7/rhel7/installers/foundationdb-clients-5.1.7-1.el7.x86_64.rpm
+Centos6: https://www.foundationdb.org/downloads/5.1.7/rhel6/installers/foundationdb-clients-5.1.7-1.el6.x86_64.rpm
+其它操作系统 : https://www.foundationdb.org/download/
+
 ### 下载Meq
 ```bash
 go get github.com/cosmos-gg/meq
