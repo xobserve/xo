@@ -25,7 +25,7 @@ Other Os: https://www.foundationdb.org/download/
 
 ### Start MeQ
 ```bash
->go get github.com/cosmos-gg/meq
+> go get github.com/cosmos-gg/meq
 > cd $GOPATH/src/github.comcosmos-gg/meq/broker
 > go run main.go
 ```
