@@ -27,7 +27,6 @@ import (
 
 	"github.com/bwmarrin/snowflake"
 	"github.com/cosmos-gg/meq/proto/websocket"
-	"github.com/labstack/echo"
 	"github.com/sunface/talent"
 	"go.uber.org/zap"
 )
@@ -77,8 +76,10 @@ func (b *Broker) Start() {
 	b.startTcp()
 	// websocket listenser
 	b.startWS()
-	// http listener
-	b.startHTTP()
+
+	// admin
+	admin := &Admin{}
+	admin.Init(b)
 
 	// init store
 	switch b.conf.Store.Engine {
@@ -167,7 +168,7 @@ func (b *Broker) Accept() {
 func (b *Broker) process(conn net.Conn, id uint64, isWs bool) {
 	defer func() {
 		b.Lock()
-		delete(b.clients, id) 
+		delete(b.clients, id)
 		b.Unlock()
 		conn.Close()
 		L.Info("client closed", zap.Uint64("conn_id", id))
@@ -225,16 +226,4 @@ func (b *Broker) startWS() {
 
 	go http.Serve(lis, mux)
 	L.Info("websocket listening at :", zap.String("addr", addr))
-}
-
-func (b *Broker) startHTTP() {
-	go func() {
-		e := echo.New()
-		e.POST("/clear/store", b.clearStore)
-
-		addr := net.JoinHostPort(b.conf.Broker.Host, b.conf.Broker.HttpPort)
-		e.Logger.Fatal(e.Start(addr))
-		L.Info("http listening at :", zap.String("addr", addr))
-	}()
-
 }

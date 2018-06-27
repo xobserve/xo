@@ -35,4 +35,7 @@ type Storage interface {
 	JoinChat(topic []byte, user []byte) error
 	LeaveChat(topic []byte, user []byte) error
 	GetChatUsers(topic []byte) [][]byte
+
+	SaveAdminInfo(tp int, data interface{})
+	QueryAdminInfo(tp int) interface{}
 }

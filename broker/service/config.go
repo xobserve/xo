@@ -32,9 +32,11 @@ type Config struct {
 		Host     string
 		TcpPort  string
 		WsPort   string
-		HttpPort string
 		Token    string
 		ServerID int64
+	}
+	Admin struct {
+		Port string
 	}
 	Store struct {
 		Engine string

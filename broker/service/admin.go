@@ -15,19 +15,41 @@ package service
 
 import (
 	"fmt"
+	"net"
 	"net/http"
 
 	"github.com/apple/foundationdb/bindings/go/src/fdb"
 	"github.com/labstack/echo"
+	"go.uber.org/zap"
 )
 
-func (b *Broker) clearStore(c echo.Context) error {
+type Admin struct {
+	bk *Broker
+}
+
+func (ad *Admin) Init(bk *Broker) {
+	ad.bk = bk
+}
+
+func (ad *Admin) startAdmin() {
+	go func() {
+		e := echo.New()
+		e.POST("/clear/store", ad.clearStore)
+
+		addr := net.JoinHostPort(ad.bk.conf.Broker.Host, ad.bk.conf.Admin.Port)
+		e.Logger.Fatal(e.Start(addr))
+		L.Info("http listening at :", zap.String("addr", addr))
+	}()
+
+}
+
+func (ad *Admin) clearStore(c echo.Context) error {
 	token := c.FormValue("token")
-	if token != b.conf.Broker.Token {
+	if token != ad.bk.conf.Broker.Token {
 		return c.String(http.StatusOK, "invalid admin token")
 	}
 
-	f, ok := b.store.(*FdbStore)
+	f, ok := ad.bk.store.(*FdbStore)
 	if !ok {
 		return c.String(http.StatusOK, "not fdb store engine,ignore")
 	}

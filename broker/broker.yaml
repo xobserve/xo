@@ -1,5 +1,5 @@
 common:
-  version: 0.0.1
+  version: 0.9.0-alpha
   debug:   false
   logpath: "./out.log"
   loglevel: debug
@@ -8,10 +8,12 @@ broker:
   host: ''
   tcpport: 8908
   wsport: 9008
-  httpport: 9108
   token: "meq-test"
   serverid: 1
 
+admin:
+  port: 9010
+  
 store:
   engine: fdb
   fdb: 

@@ -351,6 +351,15 @@ func (f *FdbStore) Del(topic []byte, msgid []byte) error {
 	return delKey(d.db, key)
 }
 
+// Admin part
+func (f *FdbStore) SaveAdminInfo(tp int, data interface{}) {
+
+}
+
+func (f *FdbStore) QueryAdminInfo(tp int) interface{} {
+	return nil
+}
+
 /*------------------------------Storage interface implemented------------------------*/
 
 func put(d *database, msgs []*proto.PubMsg) {
