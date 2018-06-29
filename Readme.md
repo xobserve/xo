@@ -3,7 +3,7 @@ MeQ [mi:kju]
 ------------
 A modern messaging platform for Message Push、IM、Group Chatting、IoT etc, based on [MQTT protocol](https://github.com/cosmos-gg/meq/tree/master/proto/mqtt). MeQ is written in pure go and standard library,nearly no messy dependencies. so you can easily deploy a standalone binary in linux、unix、macos、windows.
 
-Our goal is to be the best messaging platform in the world, like the iphone to others.
+Our goal is to be the best messaging platform in the world.
 
 - Homepage: http://meq.io
 - <a href="ReadmeCn.md">中文Readme</a>
