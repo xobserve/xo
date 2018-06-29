@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"time"
 
-	meq "github.com/cosmos-gg/meq/sdks/go-meq"
+	meq "github.com/meqio/meq/sdks/go-meq"
 )
 
 var topic = "/1234567890/22/chat/001"

@@ -21,7 +21,7 @@ import (
 	"github.com/sunface/talent"
 	"github.com/weaveworks/mesh"
 
-	"github.com/cosmos-gg/meq/proto"
+	"github.com/meqio/meq/proto"
 )
 
 type MemStore struct {

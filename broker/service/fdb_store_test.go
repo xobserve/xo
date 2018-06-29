@@ -19,7 +19,7 @@ import (
 
 	"github.com/apple/foundationdb/bindings/go/src/fdb"
 	"github.com/apple/foundationdb/bindings/go/src/fdb/tuple"
-	"github.com/cosmos-gg/meq/proto"
+	"github.com/meqio/meq/proto"
 	"github.com/stretchr/testify/assert"
 )
 

@@ -17,7 +17,7 @@ import (
 	"bytes"
 	"fmt"
 
-	"github.com/cosmos-gg/meq/proto"
+	"github.com/meqio/meq/proto"
 	"github.com/weaveworks/mesh"
 )
 

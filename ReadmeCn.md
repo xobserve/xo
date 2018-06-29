@@ -1,7 +1,7 @@
 
 MeQ [咪Q]
 ------------
-MeQ是一个现代化的消息平台，支持消息推送、即时通讯、群组聊天、物联网IoT等场景，基于[MQTT协议](https://github.com/cosmos-gg/meq/tree/master/proto/mqtt)，完全使用Go语言开发，无任何依赖、无Cgo。目前支持所有主流的平台：Linux、Unix、MacOS、Windows、ARM等。
+MeQ是一个现代化的消息平台，支持消息推送、即时通讯、群组聊天、物联网IoT等场景，基于[MQTT协议](https://github.com/meqio/meq/tree/master/proto/mqtt)，完全使用Go语言开发，无任何依赖、无Cgo。目前支持所有主流的平台：Linux、Unix、MacOS、Windows、ARM等。
 
 MeQ的目标是成为世界上最好的消息平台，就像手机中的Iphone一样，从性能到产品体验都做到最一流。
 
@@ -27,8 +27,8 @@ Centos6: https://www.foundationdb.org/downloads/5.1.7/rhel6/installers/foundatio
 
 ### 启动MeQ
 ```bash
-> go get github.com/cosmos-gg/meq
-> cd $GOPATH/src/github.comcosmos-gg/meq/broker
+> go get github.com/meqio/meq
+> cd $GOPATH/src/github.com/meqio/meq/broker
 > go run main.go
 ```
 

@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/cosmos-gg/meq/proto"
-	meq "github.com/cosmos-gg/meq/sdks/go-meq"
+	"github.com/meqio/meq/proto"
+	meq "github.com/meqio/meq/sdks/go-meq"
 )
 
 func sub(conn *meq.Connection) {

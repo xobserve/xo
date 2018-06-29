@@ -26,7 +26,7 @@ import (
 	_ "net/http/pprof"
 
 	"github.com/bwmarrin/snowflake"
-	"github.com/cosmos-gg/meq/proto/websocket"
+	"github.com/meqio/meq/proto/websocket"
 	"github.com/sunface/talent"
 	"go.uber.org/zap"
 )

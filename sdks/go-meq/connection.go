@@ -20,8 +20,8 @@ import (
 	"net"
 	"time"
 
-	"github.com/cosmos-gg/meq/proto"
-	"github.com/cosmos-gg/meq/proto/mqtt"
+	"github.com/meqio/meq/proto"
+	"github.com/meqio/meq/proto/mqtt"
 	"go.uber.org/zap"
 )
 

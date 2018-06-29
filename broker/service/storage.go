@@ -14,7 +14,7 @@
 package service
 
 import (
-	"github.com/cosmos-gg/meq/proto"
+	"github.com/meqio/meq/proto"
 )
 
 type Storage interface {

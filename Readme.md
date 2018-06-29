@@ -1,7 +1,7 @@
 
 MeQ [mi:kju]
 ------------
-A modern messaging platform for Message Push、IM、Group Chatting、IoT etc, based on [MQTT protocol](https://github.com/cosmos-gg/meq/tree/master/proto/mqtt). MeQ is written in pure go and standard library,nearly no messy dependencies. so you can easily deploy a standalone binary in linux、unix、macos、windows.
+A modern messaging platform for Message Push、IM、Group Chatting、IoT etc, based on [MQTT protocol](https://github.com/meqio/meq/tree/master/proto/mqtt). MeQ is written in pure go and standard library,nearly no messy dependencies. so you can easily deploy a standalone binary in linux、unix、macos、windows.
 
 Our goal is to be the best messaging platform in the world.
 
@@ -25,8 +25,8 @@ Other Os: https://www.foundationdb.org/download/
 
 ### Start MeQ
 ```bash
-> go get github.com/cosmos-gg/meq
-> cd $GOPATH/src/github.comcosmos-gg/meq/broker
+> go get github.com/meqio/meq
+> cd $GOPATH/src/github.com/meqio/meq/broker
 > go run main.go
 ```
 ### Start example

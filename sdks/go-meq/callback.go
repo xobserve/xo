@@ -13,7 +13,7 @@
 // limitations under the License.
 package meq
 
-import "github.com/cosmos-gg/meq/proto"
+import "github.com/meqio/meq/proto"
 
 type PubMsgHandler func(*proto.PubMsg)
 type UnreadHandler func([]byte, int)
