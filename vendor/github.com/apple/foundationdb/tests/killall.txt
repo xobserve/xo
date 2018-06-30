@@ -1,7 +1,0 @@
-testTitle=killall
-
-testName=Attrition
-machinesToKill=100
-machinesToLeave=0
-reboot=true
-testDuration=1

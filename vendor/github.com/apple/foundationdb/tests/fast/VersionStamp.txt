@@ -1,2 +1,0 @@
-testTitle=VersionStamp
-testName=VersionStamp
