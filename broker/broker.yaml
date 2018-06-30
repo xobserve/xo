@@ -15,7 +15,7 @@ admin:
   port: 9010
   
 store:
-  engine: fdb
+  engine: memory
   fdb: 
     namespace: meq-store
     threads: 5
