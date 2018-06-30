@@ -21,7 +21,7 @@ CentOS7: https://www.foundationdb.org/downloads/5.1.7/rhel7/installers/foundatio
 
 CentOS6: https://www.foundationdb.org/downloads/5.1.7/rhel6/installers/foundationdb-clients-5.1.7-1.el6.x86_64.rpm
 
-Other Os: https://www.foundationdb.org/download/
+Other Os: https://www.foundationdb.org/download/ (Please choose version 5.1.7)
 
 ### Start MeQ
 ```bash
@@ -38,6 +38,8 @@ Other Os: https://www.foundationdb.org/download/
 ### Chatting now!
 Open your browser and accsess http://localhost:8080 in two seperate pages,in one page input username A,in other page input username B, then you can start chatting!
 
+### More(persistent storage)
+Broker uses memory storage by default, if you want to use persistent storage, please install [foundationDB server V5.1.7](https://www.foundationdb.org/download/) , and then edit the broker.yaml,change store.engine from memory to fdb.
 
 
 Now Status

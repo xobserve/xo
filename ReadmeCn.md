@@ -23,7 +23,7 @@ Centos7: https://www.foundationdb.org/downloads/5.1.7/rhel7/installers/foundatio
 
 Centos6: https://www.foundationdb.org/downloads/5.1.7/rhel6/installers/foundationdb-clients-5.1.7-1.el6.x86_64.rpm
 
-其它操作系统 : https://www.foundationdb.org/download/
+其它操作系统 : https://www.foundationdb.org/download/  (请选择5.1.7版本)
 
 ### 启动MeQ
 ```bash
@@ -41,6 +41,9 @@ Centos6: https://www.foundationdb.org/downloads/5.1.7/rhel6/installers/foundatio
 ### 开始聊天!
 打开浏览器，然后打开两个页面分别访问
 http://localhost:8080,在第一个页面输入用户名A,第二个页面输入用户名B，然后开始聊天吧！
+
+### 更多(持久化存储)
+Broker默认使用的是内存存储方式，如果你想使用持久化存储，请安装[foundationDB server V5.1.7](https://www.foundationdb.org/download/),然后将broker.yaml中的store.engine从memory修改为fdb即可
 
 
 当前状态
