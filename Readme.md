@@ -99,8 +99,4 @@ In this benchmark, I use the memory engine, all is done in my macbook pro laptop
 - A client with 5 goroutine can consume 2000K messages from meq per second
 
 
-Architecture
-------------
-![](MeQ.jpeg)
-
 
