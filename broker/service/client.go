@@ -40,6 +40,8 @@ type client struct {
 	conn net.Conn
 	bk   *Broker
 
+	initTime time.Time
+
 	msgSender chan []*proto.PubMsg
 
 	subs map[string]struct{}
@@ -57,6 +59,7 @@ func initClient(cid uint64, conn net.Conn, bk *Broker) *client {
 		cid:       cid,
 		conn:      conn,
 		bk:        bk,
+		initTime:  time.Now(),
 		msgSender: make(chan []*proto.PubMsg, MAX_CHANNEL_LEN),
 		subs:      make(map[string]struct{}),
 		closech:   make(chan struct{}),
@@ -64,6 +67,7 @@ func initClient(cid uint64, conn net.Conn, bk *Broker) *client {
 }
 func (c *client) readLoop(isWs bool) error {
 	defer func() {
+		L.Info("user offline,close read", zap.Uint64("conn_id", c.cid))
 		c.closed = true
 		c.closech <- struct{}{}
 		// unsub topics
@@ -80,7 +84,11 @@ func (c *client) readLoop(isWs bool) error {
 					notifyOnline(c.bk, t, proto.PackOfflineNotify(t, c.username))
 				}
 			}
-			c.bk.subtrie.UnSubscribe(t, c.cid, c.bk.cluster.peer.name)
+			L.Info("user offline,unsub topic", zap.Uint64("conn_id", c.cid), zap.String("topic", topic))
+			err := c.bk.subtrie.UnSubscribe(t, c.cid, c.bk.cluster.peer.name)
+			if err != nil {
+				L.Info("user offline,unsub error", zap.Uint64("conn_id", c.cid), zap.Error(err))
+			}
 
 			//@todo
 			// aync + batch
@@ -107,7 +115,7 @@ func (c *client) readLoop(isWs bool) error {
 				t := sub.Topic
 				err := c.bk.subtrie.Subscribe(t, c.cid, c.bk.cluster.peer.name, c.username)
 				if err != nil {
-					L.Info("sub error", zap.ByteString("topic", t))
+					L.Info("sub error", zap.Uint64("conn_id", c.cid), zap.ByteString("topic", t))
 					return err
 				}
 				submsg := SubMessage{CLUSTER_SUB, t, c.cid, c.username}
@@ -395,6 +403,7 @@ func (c *client) readLoop(isWs bool) error {
 
 func (c *client) writeLoop() {
 	defer func() {
+		L.Info("user offline,close write", zap.Uint64("conn_id", c.cid))
 		c.closed = true
 		c.conn.Close()
 		if err := recover(); err != nil {

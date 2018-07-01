@@ -174,8 +174,6 @@ func (b *Broker) process(conn net.Conn, id uint64, isWs bool) {
 		L.Info("client closed", zap.Uint64("conn_id", id))
 	}()
 
-	L.Info("new client", zap.Uint64("conn_id", id), zap.String("ip", conn.RemoteAddr().String()))
-
 	cli := initClient(id, conn, b)
 
 	b.Lock()
@@ -188,11 +186,13 @@ func (b *Broker) process(conn net.Conn, id uint64, isWs bool) {
 		return
 	}
 
+	L.Info("new user online", zap.Uint64("conn_id", id), zap.String("username", string(cli.username)), zap.String("ip", conn.RemoteAddr().String()))
+
 	go cli.writeLoop()
 	err = cli.readLoop(isWs)
 	if err != nil {
 		if !talent.IsEOF(err) {
-			L.Info("client read loop error", zap.Error(err), zap.Uint64("cid", cli.cid))
+			L.Info("client read loop error", zap.Uint64("cid", cli.cid), zap.Error(err))
 		}
 	}
 }

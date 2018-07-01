@@ -18,6 +18,8 @@ import (
 	"net"
 	"net/http"
 
+	"github.com/sunface/talent"
+
 	"github.com/apple/foundationdb/bindings/go/src/fdb"
 	"github.com/labstack/echo"
 	"go.uber.org/zap"
@@ -29,18 +31,15 @@ type Admin struct {
 
 func (ad *Admin) Init(bk *Broker) {
 	ad.bk = bk
-}
-
-func (ad *Admin) startAdmin() {
 	go func() {
 		e := echo.New()
-		e.POST("/clear/store", ad.clearStore)
+		e.POST("/op/clearStore", ad.clearStore)
+		e.GET("/status/users", ad.statusUsers)
 
 		addr := net.JoinHostPort(ad.bk.conf.Broker.Host, ad.bk.conf.Admin.Port)
 		e.Logger.Fatal(e.Start(addr))
 		L.Info("http listening at :", zap.String("addr", addr))
 	}()
-
 }
 
 func (ad *Admin) clearStore(c echo.Context) error {
@@ -68,4 +67,19 @@ func (ad *Admin) clearStore(c echo.Context) error {
 	}
 
 	return c.String(http.StatusOK, "clear store ok")
+}
+
+func (ad *Admin) statusUsers(c echo.Context) error {
+	// token := c.FormValue("token")
+	// if token != ad.bk.conf.Broker.Token {
+	// 	return c.String(http.StatusOK, "invalid admin token")
+	// }
+
+	var ret = make(map[uint64]string)
+	ad.bk.RLock()
+	for _, cli := range ad.bk.clients {
+		ret[cli.cid] = fmt.Sprintf("在线用户%s于%s登录", string(cli.username), talent.Time2String(cli.initTime))
+	}
+	ad.bk.RUnlock()
+	return c.JSONPretty(200, ret, "  ")
 }
