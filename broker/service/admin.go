@@ -78,7 +78,7 @@ func (ad *Admin) statusUsers(c echo.Context) error {
 	var ret = make(map[uint64]string)
 	ad.bk.RLock()
 	for _, cli := range ad.bk.clients {
-		ret[cli.cid] = fmt.Sprintf("在线用户%s于%s登录", string(cli.username), talent.Time2String(cli.initTime))
+		ret[cli.cid] = fmt.Sprintf("user %s login at %s", string(cli.username), talent.Time2String(cli.initTime))
 	}
 	ad.bk.RUnlock()
 	return c.JSONPretty(200, ret, "  ")
