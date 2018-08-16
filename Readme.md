@@ -12,6 +12,10 @@ Our goal is to be the best messaging platform in the world.
      <img  width="200" src="./logo.png"></a>
 </p>
 
+### Project status
+Still in active developing, 2018-08-16
+
+
 Example of Chatting room
 ------------
 ### Install the foundationdb client(required!)
