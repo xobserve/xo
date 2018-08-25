@@ -17,7 +17,7 @@ import (
 	"encoding/binary"
 	"sync"
 
-	"github.com/meqio/meq/proto"
+	"github.com/mafanr/meq/proto"
 	"github.com/weaveworks/mesh"
 	"go.uber.org/zap"
 )

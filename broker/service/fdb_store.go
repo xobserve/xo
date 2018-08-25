@@ -23,7 +23,7 @@ import (
 	"github.com/apple/foundationdb/bindings/go/src/fdb/directory"
 	"github.com/apple/foundationdb/bindings/go/src/fdb/subspace"
 	"github.com/apple/foundationdb/bindings/go/src/fdb/tuple"
-	"github.com/meqio/meq/proto"
+	"github.com/mafanr/meq/proto"
 	"go.uber.org/zap"
 )
 

@@ -17,8 +17,8 @@ import (
 	"errors"
 	"time"
 
-	"github.com/meqio/meq/proto"
-	"github.com/meqio/meq/proto/mqtt"
+	"github.com/mafanr/meq/proto"
+	"github.com/mafanr/meq/proto/mqtt"
 )
 
 func (c *Connection) Subscribe(topic []byte) error {

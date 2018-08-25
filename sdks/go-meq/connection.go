@@ -20,8 +20,8 @@ import (
 	"net"
 	"time"
 
-	"github.com/meqio/meq/proto"
-	"github.com/meqio/meq/proto/mqtt"
+	"github.com/mafanr/meq/proto"
+	"github.com/mafanr/meq/proto/mqtt"
 	"go.uber.org/zap"
 )
 

@@ -4,7 +4,7 @@
             <Col span="20" offset="2" >
                 <img class="align-middle" src="../assets/logo.png" style="height:50px;width:50px;"/>
                 <h2  class="header-font font-weight-600 large-font-size in-line align-middle margin-left-5">MeQ</h2>
-                <div class="align-middle medium-font-size float-right margin-top-10"> <a class="a-hover font-color-normal" @click="gotoDocs">Docs</a> <a class="a-hover margin-left-20 font-color-normal" @click="gotoDocs">AdminSite</a> <a class="a-hover margin-left-20 font-color-normal" href="https://github.com/meqio/meq">Github</a></div>
+                <div class="align-middle medium-font-size float-right margin-top-10"> <a class="a-hover font-color-normal" @click="gotoDocs">Docs</a> <a class="a-hover margin-left-20 font-color-normal" @click="gotoDocs">AdminSite</a> <a class="a-hover margin-left-20 font-color-normal" href="https://github.com/mafanr/meq">Github</a></div>
             </Col>
         </Row>
     </div>

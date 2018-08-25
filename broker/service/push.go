@@ -18,8 +18,8 @@ import (
 
 	"go.uber.org/zap"
 
-	"github.com/meqio/meq/proto"
-	"github.com/meqio/meq/proto/mqtt"
+	"github.com/mafanr/meq/proto"
+	"github.com/mafanr/meq/proto/mqtt"
 )
 
 func publishOnline(from uint64, bk *Broker, msgs []*proto.PubMsg, broadcast bool) {

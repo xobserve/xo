@@ -17,7 +17,7 @@ import (
 	"bytes"
 	"fmt"
 
-	"github.com/meqio/meq/proto"
+	"github.com/mafanr/meq/proto"
 	"github.com/weaveworks/mesh"
 )
 

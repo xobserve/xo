@@ -20,7 +20,7 @@ import (
 	"math/rand"
 	"sync"
 
-	"github.com/meqio/meq/proto"
+	"github.com/mafanr/meq/proto"
 	"github.com/weaveworks/mesh"
 )
 

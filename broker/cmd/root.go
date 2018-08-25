@@ -20,7 +20,7 @@ import (
 	"os/signal"
 	"syscall"
 
-	"github.com/meqio/meq/broker/service"
+	"github.com/mafanr/meq/broker/service"
 	"github.com/spf13/cobra"
 )
 
