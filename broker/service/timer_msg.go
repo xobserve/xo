@@ -39,9 +39,10 @@ func (t *Timer) Init() {
 	go func() {
 		t.bk.wg.Add(1)
 		defer t.bk.wg.Done()
+		tc := time.NewTicker(2 * time.Second).C
 		for {
 			select {
-			case <-time.NewTicker(2 * time.Second).C:
+			case <-tc:
 				msgs := t.bk.store.QueryTM()
 				if len(msgs) > 0 {
 					publishOnline(0, t.bk, msgs, false)
