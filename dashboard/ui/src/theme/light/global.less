@@ -1,0 +1,114 @@
+@import './var.less';
+
+
+body {
+    background:#e4e5e6 !important;
+}
+
+.card {
+    background-color: #fff;
+    border: 1px solid @secondary-color;
+}
+
+.color-primary {
+    color: @primary-color
+}
+.color-secondary {
+    color: @secondary-color
+}
+.color-light {
+    color: @light-text-color
+}
+
+.bg-primary {
+    background: @primary-color !important;
+}
+.bg-success {
+    background: @success-color !important;
+}
+.bg-info {
+    background: @info-color !important;
+}
+.bg-error{
+    background: @error-color !important;
+}
+
+// 表格fixed column
+.ivu-table-fixed {
+    background: white;
+    box-shadow: 2px 0 4px -2px rgba(0, 0, 0, 0.2) !important;
+}
+
+.table-cursor-pointer {
+    .ivu-table-row {
+        cursor:pointer
+    }
+}
+
+
+// 修改表格样式
+.ivu-table-wrapper {
+    // border-left:none;
+    .ivu-table {
+        color: #666;
+        font-size:13px;
+        table {
+            line-height: 1.5 !important;
+            width:100% !important;
+        }
+        td{
+            border-bottom: 0px solid #e8eaec; 
+        }
+    }
+}  
+
+.ivu-date-picker {
+    .ivu-picker-panel-sidebar {
+      text-align: center;
+      padding-top: 11px;
+      .ivu-picker-panel-shortcut {
+        margin-top: 5px;
+      }
+      .ivu-picker-panel-shortcut:hover {
+        cursor: pointer
+      }
+    }
+    .ivu-picker-panel-sidebar::before {
+      content : '距离当前';
+      font-size: 12px;
+      color: #c5c8ce
+    }
+    .ivu-picker-panel-sidebar:hover {
+      cursor: auto  
+    }
+  
+    .ivu-picker-confirm {
+  
+    }
+    input {
+        border:none;
+    }
+  
+    .ivu-date-picker-header {
+      // background: #ebebeb !important;
+      color: #555;
+      // font-weight: bold;
+      height:35px;
+      padding-top: 3px;
+    }
+  
+    .ivu-date-picker-cells-header {
+      font-weight: bold;
+    }
+  
+    .ivu-date-picker-cells-cell{
+      font-size:14px;
+  
+    }
+  
+    .ivu-date-picker-rel {
+      input {
+        font-size:13px;
+      }
+    }
+  }

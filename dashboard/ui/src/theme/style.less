@@ -1,0 +1,64 @@
+// 全局公共样式，所有theme共享
+
+// 鼠标悬浮
+.hover-cursor:hover{
+    cursor: pointer
+}
+
+// 布局动画
+.ui-nav, .ui-footer, .sidebar, .main, .aside-menu {
+    transition: margin-left .25s,margin-right .25s,width .25s,flex .25s;
+    transition: margin-left .25s,margin-right .25s,width .25s,flex .25s,-ms-flex .25s;
+}
+
+
+.no-border {
+    .ivu-select-selection{
+        border:none;
+        // border-bottom: 1px solid @border-color-base !important;
+    }
+
+    .ivu-table-wrapper {
+        border: none;
+        .ivu-table::before  {
+            width:0px
+        }
+        .ivu-table::after  {
+            width:0px
+        }
+    }
+
+    .ivu-input-wrapper {
+        input {
+            border: none;
+        }
+    }
+
+    .ivu-input-number{
+            border:none !important
+    }
+} 
+
+.card {
+    word-wrap: break-word;
+    background-clip: border-box;
+    border-radius: .25rem;
+    padding:15px 15px !important;
+}
+
+.stat-tag.ivu-tag {
+    border: none !important;
+    background: transparent !important
+}
+
+.font-size-18 {
+    font-size:18px;
+}
+
+.font-size-16 {
+    font-size:16px;
+}
+
+.font-size-12 {
+    font-size:12px;
+}
