@@ -27,15 +27,18 @@ Working for <a href="https://github.com/apm-ai/koala/milestone/1">V0.1</a> and <
 
 ## Roadmap
 
-* **V0.1-Server-side agent** - Collect opentelemetry data , send them to Koala-Collector
-* **V0.2-Tracing Support** -  Collect,process and visualize tracing data.
-* **V0.3-Tracing Metrics Support** - Extract general metrics from tracing data, such as url, sql, exception, method etc, visualize them in dashboard
-* **V0.4-Alerting** - Build complex alerting logic using multiple trigger conditions, push alerts to multiple providers(sms, email etc)
-* **V0.5-Dependency Analyzing** - Analyze the dependency data(server,url), output the server-map and url-map)
-* **V0.6-Metrics Support** - Collect infrastructure and user-define metrics,correlate them with tracing data, output metrics to popular metrics storages
-* **V0.7-Pinpoint supported** -1. Modified pinpoint-agent.jar to support OpenTelemery 2. Convert pinpoint-format to opentelemetry-format
-* **V1.0-Production Ready** - Test in real production environment for at least 6 weeks, fix all critical bugs.
-* **Future-Logs Support** - Collect logs in Koala-Agent(integrated with filebeat etc), correlate logs with tracing and metrcs, output logs to popular metrics storages, visualize and search them in Koala-Dashboard
+| Milestone  | Name | Description|
+|:------|:------------:| :----: |
+| **V0.1** | Server-side agent | Collect opentelemetry data , send them to Koala-Collector |
+| **V0.2** | Tracing Support |  Collect,process and visualize tracing data. | 
+| **V0.3** | Tracing Metrics Support | Extract general metrics from tracing data, such as url, sql, exception, method etc, visualize them in dashboard |
+| **V0.4** |  Alerting | Build complex alerting logic using multiple trigger conditions, push alerts to multiple providers(sms, email etc)
+| **V0.5** |Dependency Analyzing| Analyze the dependency data(server,url), output the server-map and url-map) |
+| **V0.6** | Metrics Support | Collect infrastructure and user-define metrics,correlate them with tracing data, output metrics to popular metrics storages |
+| **V0.7** | Pinpoint supported | 1. Modified pinpoint-agent.jar to support OpenTelemery 2. Convert pinpoint-format to opentelemetry-format | 
+| **V1.0** | **Production Ready**  | Test in real production environment for at least 6 weeks, fix all critical bugs | 
+| **Future** | Logs Support | Collect logs in Koala-Agent(integrated with filebeat etc), correlate logs with tracing and metrcs, output logs to popular metrics storages, visualize and search them in Koala-Dashboard | 
+
 
 We are now working at V0.1 and V0.2,it depends on the progress of OpenTelemetry's go sdk.
 
