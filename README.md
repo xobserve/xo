@@ -12,7 +12,7 @@ Koala also supports **pinpoint** format data, it's compatible with OpenTelemetry
 Built in Go/Rust, Koala places high-value on performance, correctness, and  concurrency. It compiles to  several static binary and is very easy for deployment.
 
 ## Current Status
-Working for <a href="https://github.com/apm-ai/koala/milestone/1">V0.1</a> and <a href="https://github.com/apm-ai/koala/milestone/1">V0.2</a> milestones.
+OpenTelemetry reached beta now, so this project will be restart.
 
 
 ## Features
