@@ -39,6 +39,7 @@ import { store } from 'src/store/store';
 import { updateLocation ,LocationState} from 'src/store/reducers/location';
 import SaveDahboard from '../SaveDashboard/SaveDashboard'
 import { cleanUpEditPanel } from 'src/store/reducers/dashboard';
+import { getUrlParams } from 'src/core/library/utils/url';
 
 export const PANEL_EDITOR_UI_STATE_STORAGE_KEY = 'grafana.dashboard.editor.ui';
 
@@ -413,7 +414,7 @@ export const mapStateToProps = (state: StoreState, props: Props) => {
         initDone: state.panelEditor.initDone,
         panel: panel,
         plugin: plugin,
-        tabs: getPanelEditorTabs(plugin)
+        tabs: getPanelEditorTabs(plugin,getUrlParams().tab)
     }
 }
 

@@ -30,7 +30,7 @@ const notPersistedProperties: { [str: string]: boolean } = {
     editSourceId: true,
 };
 
-  const mustKeepProps: { [str: string]: boolean } = {
+const mustKeepProps: { [str: string]: boolean } = {
     id: true,
     gridPos: true,
     type: true,
@@ -65,7 +65,7 @@ const notPersistedProperties: { [str: string]: boolean } = {
     editSourceId: true,
     maxDataPoints: true,
     interval: true,
-  };
+};
 
 const defaults: any = {
     gridPos: { x: 0, y: 0, h: 3, w: 6 },
@@ -110,7 +110,7 @@ export class PanelModel {
     collapsed?: boolean;
 
     pluginVersion?: string;
-    
+
     thresholds?: any;
     // non persisted
     isViewing: boolean;
@@ -239,11 +239,11 @@ export class PanelModel {
             fieldConfigRegistry: this.plugin.fieldConfigRegistry,
             theme: theme,
         };
-    }   
+    }
 
     getFieldConfig() {
         return this.fieldConfig;
-      }
+    }
 
     updateOptions(options: object) {
         this.options = options;
@@ -252,7 +252,7 @@ export class PanelModel {
 
     getOptions() {
         return this.options;
-      }
+    }
 
     render() {
         if (!this.hasRefreshed) {
@@ -376,67 +376,71 @@ export class PanelModel {
         };
     }
 
-
+    setTransformations(transformations: DataTransformerConfig[]) {
+        this.transformations = transformations;
+        this.resendLastResult();
+      }
+      
     changePlugin(newPlugin: PanelPlugin) {
         const pluginId = newPlugin.meta.id;
         const oldOptions: any = this.getOptionsToRemember();
         const oldPluginId = this.type;
-    
+
         // remove panel type specific  options
         for (const key of _.keys(this)) {
-          if (mustKeepProps[key]) {
-            continue;
-          }
-    
-          delete (this as any)[key];
+            if (mustKeepProps[key]) {
+                continue;
+            }
+
+            delete (this as any)[key];
         }
-    
+
         this.cachedPluginOptions[oldPluginId] = oldOptions;
         this.restorePanelOptions(pluginId);
-    
+
         // Let panel plugins inspect options from previous panel and keep any that it can use
         if (newPlugin.onPanelTypeChanged) {
-          let old: any = {};
-    
-          this.options = this.options || {};
-          Object.assign(this.options, newPlugin.onPanelTypeChanged(this, oldPluginId, old));
+            let old: any = {};
+
+            this.options = this.options || {};
+            Object.assign(this.options, newPlugin.onPanelTypeChanged(this, oldPluginId, old));
         }
-    
+
         // switch
         this.type = pluginId;
         this.plugin = newPlugin;
-    
+
         // For some reason I need to rebind replace variables here, otherwise the viz repeater does not work
         this.replaceVariables = this.replaceVariables.bind(this);
         this.applyPluginOptionDefaults(newPlugin);
-    
+
         if (newPlugin.onPanelMigration) {
-          this.pluginVersion = getPluginVersion(newPlugin);
+            this.pluginVersion = getPluginVersion(newPlugin);
         }
-        
-      }
-    
-      private getOptionsToRemember() {
+
+    }
+
+    private getOptionsToRemember() {
         return Object.keys(this).reduce((acc, property) => {
-          if (notPersistedProperties[property] || mustKeepProps[property]) {
-            return acc;
-          }
-          return {
-            ...acc,
-            [property]: (this as any)[property],
-          };
+            if (notPersistedProperties[property] || mustKeepProps[property]) {
+                return acc;
+            }
+            return {
+                ...acc,
+                [property]: (this as any)[property],
+            };
         }, {});
-      }
+    }
 
-      private restorePanelOptions(pluginId: string) {
+    private restorePanelOptions(pluginId: string) {
         const prevOptions = this.cachedPluginOptions[pluginId] || {};
-    
-        Object.keys(prevOptions).map(property => {
-          (this as any)[property] = prevOptions[property];
-        });
-      }
 
-      
+        Object.keys(prevOptions).map(property => {
+            (this as any)[property] = prevOptions[property];
+        });
+    }
+
+
     /*
    * Panel have a different id while in edit mode (to more easily be able to discard changes)
    * Use this to always get the underlying source id

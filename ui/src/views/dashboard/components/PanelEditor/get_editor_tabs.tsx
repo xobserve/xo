@@ -1,15 +1,13 @@
 import memoizeOne from 'memoize-one';
 import { PanelPlugin,config} from 'src/packages/datav-core';
 import { PanelEditorTab, PanelEditorTabId} from './types';
-import { getUrlParams } from 'src/core/library/utils/url';
 
-export const getPanelEditorTabs = memoizeOne((plugin?: PanelPlugin) => {
+
+export const getPanelEditorTabs = memoizeOne((plugin: PanelPlugin,currentTab:string) => {
   const tabs: PanelEditorTab[] = [];
-
   if (!plugin) {
     return tabs;
   }
-
   let defaultTab = PanelEditorTabId.Query;
 
   if (plugin.meta.skipDataQuery) {
@@ -43,7 +41,7 @@ export const getPanelEditorTabs = memoizeOne((plugin?: PanelPlugin) => {
     });
   }
   
-  const activeTab = tabs.find(item => item.id === (getUrlParams().tab || defaultTab)) ?? tabs[0];
+  const activeTab = tabs.find(item => item.id === (currentTab || defaultTab)) ?? tabs[0];
   activeTab.active = true;
 
   return tabs;
