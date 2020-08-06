@@ -1,0 +1,221 @@
+@import "~antd/lib/style/themes/default.less";
+@import "../vars.less";
+
+.layout-selector {
+    &::after {
+        content: '';
+        display: table;
+        clear: both;
+    }
+  
+    margin-left: @margin-md;
+    text-align: right;
+  
+    button {
+      background: @component-background;
+      color: @text-color-secondary;
+      box-shadow: none;
+      border: none;
+      padding: @padding-sm;
+      line-height: 1;
+      font-size: 130%;
+      float: right;
+  
+      &:focus {
+        outline: none;
+      }
+  
+      &.active {
+        background-color: lighten(@component-background, 5%);
+        color: @link-color;
+      }
+  
+      &:nth-child(2) {
+        border-radius: 3px 0 0 3px;
+        border-right: 1px solid @border-color-base;
+      }
+  
+      &:nth-child(1) {
+        border-radius: 0 3px 3px 0;
+      }
+    }
+  }
+  
+  .card-section {
+    margin-bottom: @margin-sm;
+  }
+  
+  .card-list {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    list-style-type: none;
+  }
+  
+  .card-item {
+    display: block;
+    height: 100%;
+    background: @component-background;
+    box-shadow: @card-shadow;
+    padding: @margin-md;
+    border-radius: 4px;
+  
+    &:hover {
+      background: @item-hover-bg;
+    }
+  
+    .label-tag {
+      margin-left: @margin-sm;
+      font-size: 11px;
+      padding: 2px 6px;
+    }
+  }
+  
+  .card-item-body {
+    display: flex;
+    overflow: hidden;
+  }
+  
+  .card-item-details {
+    overflow: hidden;
+  }
+  
+  .card-item-header {
+    margin-bottom: @margin-md;
+  }
+  
+  .card-item-type {
+    color: @text-color-secondary;
+    text-transform: uppercase;
+    font-size: @font-size-sm;
+    font-weight: 500;
+  }
+  
+  .card-item-notice {
+    font-size: @font-size-sm;
+  }
+  
+  .card-item-name {
+    color: @heading-color;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    width: 100%;
+  }
+  
+  .card-item-label {
+    margin-left: @margin-sm;
+  }
+  
+  .card-item-sub-name {
+    color: @text-color-secondary;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    width: 100%;
+  }
+  
+  .card-item-sub-name--header {
+    color: @text-color-secondary;
+    text-transform: uppercase;
+    margin-bottom: @margin-md;
+    font-size: @font-size-sm;
+    font-weight: bold;
+  }
+  
+  .card-list-layout-grid {
+    .card-item-type {
+      display: inline-block;
+    }
+  
+    .card-item-notice {
+      font-size: @font-size-sm;
+      display: inline-block;
+      margin-left: @margin-md;
+    }
+  
+    .card-item-header-action {
+      float: right;
+    }
+  
+    .card-item-wrapper {
+      width: 100%;
+      padding: 0 @padding-md @padding-md 0;
+    }
+  
+    .card-item-wrapper--clickable {
+      cursor: pointer;
+    }
+  
+    .card-item-figure {
+      margin: 0 @margin-md @margin-md 0;
+      height: 80px;
+  
+      img {
+        width: 80px;
+      }
+    }
+  
+    .card-item-name {
+      font-size: @heading-3-size;
+    }
+  
+    @media only screen and (min-width: @screen-md) {
+      .card-item-wrapper {
+        width: 50%;
+      }
+    }
+  
+    @media only screen and (min-width: @screen-lg) {
+      .card-item-wrapper {
+        width: 33.333333%;
+      }
+    }
+  
+    &.card-list-layout-grid--max-2-col {
+     @media only screen and (min-width: @screen-lg) {
+        .card-item-wrapper {
+          width: 50%;
+        }
+      }
+    }
+  }
+  
+  .card-list-layout-list {
+    .card-item-wrapper {
+      padding: 0;
+      width: 100%;
+      margin-bottom: 6px;
+    }
+  
+    .card-item-wrapper--clickable {
+      cursor: pointer;
+    }
+  
+    .card-item {
+      border-radius: 2px;
+    }
+  
+    .card-item-header {
+      float: right;
+      text-align: right;
+    }
+  
+    .card-item-figure {
+      margin: 0 @margin-md 0 0;
+      img {
+        width: 48px;
+      }
+    }
+  
+    .card-item-name {
+      font-size: @heading-4-size;
+    }
+  
+    .card-item-sub-name {
+      font-size: @font-size-sm;
+    }
+  
+    .layout-selector {
+      margin-right: 0;
+    }
+  }
+  

@@ -1,0 +1,110 @@
+@import "vars";
+.ant-card { 
+    // border:1px solid #141414!important;
+    .ant-card-meta-title {
+        color: @text-color
+    } 
+    .ant-card-meta-description {
+        color: @text-color
+    }
+}
+
+.ant-picker.ant-picker-range.date-picker {
+    border:none;
+    input {
+        border:none;
+    }
+}
+
+.react-grid-layout {
+    .react-grid-item {
+        .react-resizable-handle::after{
+            border-right: 2px solid @border-color-base;
+            border-bottom: 2px solid @border-color-base;
+        }
+    }
+}
+
+.ant-input:focus, .ant-input-focused {
+    box-shadow: none;
+}
+
+.ant-menu .ant-menu-submenu-selected {
+    color: @primary-color
+}
+
+.ant-menu .ant-menu-item-selected  .anticon{
+    color: @primary-color
+}
+
+.datav-layouts-dark {
+    .ant-btn{
+        border: 1px solid #2f2f32
+    }
+}
+
+.ant-select {
+    background-color: @component-background !important;
+}
+
+.ant-select-item.ant-select-item-option.ant-select-item-option-selected {
+    background-color: @primary-color !important;
+}
+
+.pointer {
+    cursor: pointer
+}
+
+.text-link {
+    text-decoration: underline;
+    color: @text-color;
+}
+
+.color-primary {
+    color: @primary-color
+}
+
+.color-error {
+    color: @error-color
+}
+
+.ant-form-item {
+    margin-bottom: 12px
+}
+
+.ant-modal-header,.ant-modal-body ,.ant-modal-footer ,.ant-tooltip-inner {
+    background-color:  @item-hover-bg;
+    color: @text-color;
+}
+
+.ant-breadcrumb {
+    .ant-breadcrumb-link {
+        font-size: 17px;
+    }
+}
+
+.datav-layouts-dark {
+    .ant-table {
+        background: @body-background;
+    }
+}
+
+.ant-drawer-left.ant-drawer-open, .ant-drawer-right.ant-drawer-open {
+    width : 50% !important
+}
+
+.ant-tree {
+    .ant-tree-node-content-wrapper.ant-tree-node-selected {
+        background: @item-hover-bg;
+    }
+    .ant-tree-switcher {
+        margin-top: 5px !important
+    }
+    .ant-tree-list-holder-inner .ant-tree-node-content-wrapper {
+        padding: 5px
+    }
+}
+
+.input-line-height {
+    line-height: @height-base;
+}

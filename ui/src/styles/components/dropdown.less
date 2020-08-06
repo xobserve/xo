@@ -1,0 +1,320 @@
+@import "~antd/lib/style/themes/default.less";
+
+.dropup,
+.dropdown {
+  position: relative;
+}
+
+.dropdown-toggle:active,
+.open .dropdown-toggle {
+  outline: 0;
+}
+
+.dropdown-desc {
+  position: relative;
+  top: -3px;
+  width: 250px;
+  font-size: @font-size-sm;
+  margin-left: 22px;
+  white-space: normal;
+}
+
+// Dropdown arrow/caret
+// --------------------
+.caret {
+  display: inline-block;
+  width: 0;
+  height: 0;
+  vertical-align: top;
+  border-top: 4px solid @text-color-secondary;
+  border-right: 4px solid transparent;
+  border-left: 4px solid transparent;
+  content: '';
+}
+
+// Place the caret
+.dropdown .caret {
+  margin-top: 8px;
+  margin-left: 2px;
+}
+
+// The dropdown menu (ul)
+// ----------------------
+.dropdown-menu {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  z-index: @zindex-dropdown;
+  display: none; // none by default, but block on "open" of the menu
+  float: left;
+  min-width: 140px;
+  margin: 0px 0 0; // override default ul
+  list-style: none;
+  background-color: @component-background;
+  border: 1px solid @border-color-base;
+  text-align: left;
+  padding: 0px 0px;
+  padding-left: 0px;
+  // Aligns the dropdown menu to right
+  &.pull-right {
+    right: 0;
+    left: auto;
+  }
+
+  .divider {
+    height: 1px;
+    margin: @margin-sm 0; // 8px 1px
+    overflow: hidden;
+    // background-color: @dropdownDividerTop;
+    border-bottom: 1px solid @border-color-base;
+  }
+
+  // Links within the dropdown menu
+  > li {
+    > a {
+      display: block;
+      padding: 3px 20px 3px 15px;
+      clear: both;
+      font-weight: normal;
+      line-height: @line-height-base;
+      color: @text-color;
+      white-space: nowrap;
+
+      i {
+        display: inline-block;
+        margin-right: 10px;
+        color: @disabled-color;
+        position: relative;
+        top: 3px;
+      }
+
+      .gicon {
+        opacity: 0.7;
+        width: 18px;
+        height: 14px;
+      }
+    }
+  }
+
+  &--navbar {
+    top: 100%;
+    min-width: 100%;
+  }
+
+  &--menu,
+  &--navbar,
+  &--sidemenu {
+    background: @component-background;
+    box-shadow: @box-shadow-base;
+    margin-top: 0px;
+
+    > li > a {
+      display: flex;
+      padding: 5px 10px;
+      border-left: 2px solid transparent;
+
+      &:hover {
+        color: @link-hover-color;
+        background: @item-hover-bg !important;
+      }
+    }
+  }
+
+  &--sidemenu {
+    li.sidemenu-org-switcher {
+      > a {
+        padding: 8px 10px 8px 15px;
+      }
+    }
+  }
+}
+
+.dropdown-item-text {
+  flex-grow: 1;
+}
+
+// Hover/Focus state
+// -----------
+.dropdown-menu > li > a:hover,
+.dropdown-menu > li > a:focus,
+.dropdown-submenu:hover > a,
+.dropdown-submenu:focus > a {
+  text-decoration: none;
+  color:  @link-hover-color;
+  background-color: @item-hover-bg;
+}
+
+// Active state
+// ------------
+.dropdown-menu > .active > a,
+.dropdown-menu > .active > a:hover,
+.dropdown-menu > .active > a:focus {
+  color: @link-hover-color;
+  text-decoration: none;
+  outline: 0;
+  background-color: @item-hover-bg;
+}
+
+// Disabled state
+// --------------
+// Gray out text and ensure the hover/focus state remains gray
+.dropdown-menu > .disabled > a,
+.dropdown-menu > .disabled > a:hover,
+.dropdown-menu > .disabled > a:focus {
+  color: @text-color;
+}
+// Nuke hover/focus effects
+.dropdown-menu > .disabled > a:hover,
+.dropdown-menu > .disabled > a:focus {
+  text-decoration: none;
+  background-color: transparent;
+  background-image: none; // Remove CSS gradient
+  cursor: default;
+}
+
+// Open state for the dropdown
+// ---------------------------
+.open {
+  & > .dropdown-menu {
+    display: block;
+  }
+
+  & > .dropdown > .dropdown-menu {
+    // Panel menu. TODO: See if we can merge this with above
+    display: block;
+  }
+
+  &.cascade-open {
+    .dropdown-menu {
+      display: block;
+    }
+  }
+}
+
+// Backdrop to catch body clicks on mobile, etc.
+// ---------------------------
+.dropdown-backdrop {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  top: 0;
+  z-index: @zindex-dropdown - 10;
+}
+
+// Right aligned dropdowns
+// ---------------------------
+.pull-right > .dropdown-menu {
+  right: 0;
+  left: auto;
+}
+
+// Allow for dropdowns to go bottom up (aka, dropup-menu)
+// ------------------------------------------------------
+// Just add .dropup after the standard .dropdown class and you're set, bro.
+// TODO: abstract this so that the navbar fixed styles are not placed here?
+.dropup,
+.navbar-fixed-bottom .dropdown {
+  // Reverse the caret
+  .caret {
+    border-top: 0;
+    border-bottom: 4px solid @black;
+    content: '';
+  }
+  // Different positioning for bottom up menu
+  .dropdown-menu {
+    top: auto;
+    bottom: 0;
+    margin-bottom: 1px;
+  }
+}
+
+// Sub menus
+// ---------------------------
+.dropdown-submenu {
+  position: relative;
+}
+// Default dropdowns
+.dropdown-submenu > .dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: 0px;
+  margin-left: -1px;
+}
+.dropdown-submenu:hover > .dropdown-menu {
+  display: block;
+}
+
+// Dropups
+.dropup .dropdown-submenu > .dropdown-menu {
+  top: auto;
+  bottom: 0;
+  margin-top: 0;
+  margin-bottom: -2px;
+}
+// .dropdown-submenu > a::after {
+//   position: absolute;
+//   top: 35%;
+//   right: @margin-sm;
+//   background-color: transparent;
+//   color: @text-color-weak;
+//   font: normal normal normal @font-size-sm/1 FontAwesome;
+//   content: '\f0da';
+//   pointer-events: none;
+//   font-size: 11px;
+// }
+.dropdown-submenu:hover > a::after {
+  border-left-color: @border-color-base;
+}
+
+// Left aligned submenus
+.dropdown-submenu.pull-left {
+  // Undo the float
+  // Yes, this is awkward since .pull-left adds a float, but it sticks to our conventions elsewhere.
+  float: none;
+
+  // Positioning the submenu
+  > .dropdown-menu {
+    left: -100%;
+    margin-left: 10px;
+  }
+}
+
+// Tweak nav headers
+// -----------------
+// Increase padding from 15px to 20px on sides
+.dropdown .dropdown-menu .nav-header {
+  padding-left: 20px;
+  padding-right: 20px;
+}
+
+// Typeahead
+// ---------
+.typeahead {
+  z-index: @zindex-popover;
+}
+
+.dropdown-menu-item-shortcut {
+  display: block;
+  margin-left: @margin-md;
+  color: @text-color-secondary;
+  min-width: 47px;
+}
+
+.dropdown-menu.dropdown-menu--new {
+  li a {
+    padding: @margin-md /2 @margin-md;
+    border-left: 2px solid @border-color-base;
+    background: @component-background;
+
+    i {
+      display: inline-block;
+      padding-right: 21px;
+    }
+
+    &:hover {
+      color: @link-hover-color;
+      background: @item-hover-bg;
+    }
+  }
+}

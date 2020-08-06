@@ -1,0 +1,48 @@
+@import "~antd/lib/style/themes/default.less";
+.type-ahead-info-item {
+    z-index: 11;
+    padding: @padding-sm @padding-sm @padding-sm @padding-md;
+    border-radius:  @border-radius-base;
+    border: 1px solid @border-color-base;
+    overflow-y: scroll;
+    overflow-x: hidden;
+    outline: none;
+    background: @component-background;
+    color: @text-color;
+    box-shadow: 0 5px 10px 0 @box-shadow-base;
+    width: 250px;
+    position: relative;
+    word-break: break-word;
+}
+
+.type-ahead-item-group-title {
+    color:  @text-color-secondary;
+    font-size: @font-size-sm;
+    line-height: @line-height-base;
+    padding: @padding-sm;
+}
+
+.type-ahead-highlight {
+    color: @highlight-color;
+    border-bottom: 1px solid @highlight-color;
+    padding: inherit;
+    background: inherit;
+}
+
+.type-ahead-item {
+    height: auto;
+    padding: @padding-sm @padding-sm @padding-sm @padding-md;
+    font-size: @font-size-sm;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    z-index: 11;
+    display: block;
+    white-space: nowrap;
+    cursor: pointer;
+    transition: color 0.3s cubic-bezier(0.645, 0.045, 0.355, 1), border-color 0.3s cubic-bezier(0.645, 0.045, 0.355, 1),
+      background 0.3s cubic-bezier(0.645, 0.045, 0.355, 1), padding 0.15s cubic-bezier(0.645, 0.045, 0.355, 1);
+}
+
+.type-ahead-item-selected {
+    background-color: @select-item-selected-bg ;
+}

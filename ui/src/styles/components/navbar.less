@@ -1,0 +1,215 @@
+@import '../vars.less';
+.navbar {
+    position: relative;
+    z-index: 1000;
+    height: @navbarHeight;
+    padding: 0 16px 0 60px;
+    display: flex;
+    flex-grow: 0;
+    border-bottom: 1px solid transparent;
+    transition-duration: 350ms;
+    transition-timing-function: ease-in-out;
+    transition-property: box-shadow, border-bottom;
+  
+    @media (min-width: @screen-md)  {
+      padding-left: @margin-md;
+      margin-left: 0;
+    }
+  
+    &--edit {
+      background: @component-background;
+      border-bottom: @border-color-base;
+      box-shadow: 0 0 10px @body-background;
+    }
+  }
+  
+  
+  .panel-in-fullscreen,
+  .panel-in-fullscreen.view-mode--tv {
+    .navbar {
+      padding-left: @padding-md;
+    }
+  
+    .navbar-button--add-panel,
+    .navbar-button--star,
+    .navbar-button--tv {
+      display: none;
+    }
+  }
+  
+  .navbar-page-btn {
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+    display: flex;
+    align-items: center;
+    margin: 0;
+    font-size: @font-size-lg;
+    min-height: @navbarHeight;
+  
+    .gicon {
+      top: -2px;
+      position: relative;
+      font-size: 17px;
+      line-height: 8px;
+      opacity: 0.75;
+      margin-right: 10px;
+      display: none;
+  
+      @media (min-width: @screen-md)  {
+        display: inline-block;
+      }
+    }
+  
+    .navbar-page-btn__folder-icon {
+      display: none;
+  
+      @media (min-width: @screen-md)  {
+        display: inline-block;
+      }
+    }
+  }
+  
+  .navbar-page-btn__folder {
+    display: none;
+    padding-right: 4px;
+  
+    @media (min-width: @screen-lg)  {
+      display: inline-block;
+    }
+  }
+  
+  // element is needed here to override font-awesome specificity
+  i.navbar-page-btn__folder-icon {
+    font-size: @font-size-sm;
+    color: @text-color-secondary;
+    padding: 0 @padding-sm;
+    position: relative;
+    top: -1px;
+  }
+  
+  // element is needed here to override font-awesome specificity
+  i.navbar-page-btn__search {
+    font-size: @font-size-sm;
+    padding: 0 @padding-xs;
+  }
+  
+  .navbar-buttons {
+    // height: $navbarHeight;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    margin-left: 10px;
+  
+    &--close {
+      display: none;
+      margin-right: 0;
+    }
+  
+    &--zoom {
+      margin-right: 0;
+    }
+  }
+  
+  .navbar__spacer {
+    flex-grow: 1;
+  }
+  
+  .navbar-button {
+    background-color: @component-background;
+  
+    display: flex;
+    align-items: center;
+    font-weight: 500;
+    padding: 0 @padding-sm;
+    height: 32px;
+    // 2px less then border
+    line-height: 30px;
+    color: @text-color-secondary;
+    border: 1px solid @border-color-base;
+    margin-left: @margin-xs;
+    white-space: nowrap;
+  
+    .gicon {
+      font-size: 16px;
+    }
+  
+    .fa {
+      font-size: 16px;
+    }
+  
+    &--add-panel {
+      padding: 2px 10px;
+  
+      .gicon {
+        font-size: 22px;
+      }
+    }
+  
+    &--refresh {
+      padding-left: 8px;
+      padding-right: 8px;
+    }
+  
+    &--attached {
+      margin-left: 0;
+      border-radius: 0 2px 2px 0;
+    }
+  
+    &--settings {
+      .gicon {
+        filter: brightness(1.5);
+      }
+  
+      &:hover {
+        .gicon {
+          filter: brightness(0.8);
+        }
+      }
+    }
+  
+    &--danger {
+    //   @include buttonBackground($red-base, $red-shade);
+    }
+  
+    &--tight {
+      padding: 0px 4px;
+  
+      .fa {
+        font-size: 14px;
+      }
+    }
+  
+    &--primary {
+    //   @include buttonBackground($btn-primary-bg, $btn-primary-bg-hl);
+    }
+  
+    &--danger {
+    //   @include buttonBackground($red-base, $red-shade);
+    }
+  
+    &:hover {
+      svg {
+        color: @text-color;
+      }
+    }
+  
+    &--danger {
+    //   @include buttonBackground($red-base, $red-shade);
+    }
+  
+    @media (max-width: @screen-md)  { 
+      .btn-title {
+        margin-left: @margin-xs;
+        display: none;
+      }
+    }
+  }
+  
+  .navbar-edit {
+    display: flex;
+    height: @navbarHeight;
+    align-items: center;
+    padding-right: 16px;
+  }
+  

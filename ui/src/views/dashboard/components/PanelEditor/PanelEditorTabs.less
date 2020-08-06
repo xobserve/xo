@@ -1,0 +1,23 @@
+@import "~antd/lib/style/themes/default.less";
+
+.panel-editor-tabs-wrapper {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    .tabBar {
+        padding-left: @padding-md;
+    }
+   
+  .tabContent {
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+    min-height: 0;
+    background: @component-background;
+    border-right: 1px solid @border-color-base;
+    .toolbar {
+        background: transparent;
+      }
+  }
+}

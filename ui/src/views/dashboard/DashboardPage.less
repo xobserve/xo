@@ -1,0 +1,122 @@
+@import "~antd/lib/style/themes/default.less";
+
+.dashboard-container {
+    padding: 0;
+    width: 100%;
+    height: 100%;
+    box-sizing: border-box;
+  }
+  
+  div.flot-text {
+    color: @text-color !important;
+  }
+  
+  .panel {
+    height: 100%;
+  }
+  
+  .dashboard-solo {
+    .footer,
+    .sidemenu {
+      display: none;
+    }
+  }
+  
+  .template-variable {
+    color: @info-color;
+  }
+  
+  .panel-solo {
+    position: fixed;
+    bottom: 0;
+    right: 0;
+    margin: 0;
+    left: 0;
+    top: 0;
+  
+    .panel-container {
+      border: none;
+    }
+  
+    .panel-menu-toggle,
+    .panel-menu {
+      display: none;
+    }
+  }
+  
+  .panel-height-helper {
+    display: block;
+    height: 100%;
+  }
+  
+  .panel-container {
+    background-color: @component-background;
+    border: 1px solid @border-color-base;
+    position: relative;
+    border-radius: 3px;
+    height: 100%;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    flex: 1 1 0;
+  
+    &--transparent {
+      background-color: transparent !important;
+      border: none !important;
+    }
+  
+    &:hover {
+      .panel-menu-toggle {
+        visibility: visible;
+        transition: opacity 0.1s ease-in 0.2s;
+        opacity: 1;
+      }
+    }
+  
+    &--is-editing {
+      height: auto;
+    }
+  
+    &--absolute {
+      position: absolute;
+    }
+  }
+  
+  .panel-content {
+    padding: @padding-xs;
+    width: 100%;
+    flex-grow: 1;
+    height: calc(100% - 28px);
+  
+    &--no-padding {
+      padding: 0;
+    }
+  }
+  .dashboard-header {
+    font-size: @heading-2-size;
+    text-align: center;
+    overflow: hidden;
+    position: relative;
+    top: -10px;
+    span {
+      display: inline-block;
+      padding: @padding-sm @padding-sm @padding-xss @padding-sm;
+    }
+  }
+  
+  .dashboard-loading {
+    height: 60vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  
+    .alert {
+      max-width: 600px;
+      min-width: 600px;
+    }
+  }
+  
+  .dashboard-loading__text {
+    font-size: @font-size-lg;
+  }
+  

@@ -1,0 +1,65 @@
+@import "~antd/lib/style/themes/default.less";
+
+.page-dashboard .footer {
+    display: none;
+  }
+  
+  .footer {
+    text-align: center;
+    color: @text-color-secondary;
+    padding: @padding-md 0 @padding-xss 0;
+    font-size: @font-size-sm;
+    position: relative;
+    width: 98%; /* was causing horiz scrollbars - need to examine */
+    line-height: @line-height-base * 2.1;
+    a {
+      color: @heading-color;
+  
+      &:hover {
+        color: @text-color;
+      }
+  
+      i {
+        display: inline-block;
+        padding-right: @padding-xss;
+      }
+    }
+  
+    ul {
+      list-style: none;
+    }
+  
+    li {
+      display: inline-block;
+  
+      &::after {
+        content: ' | ';
+        padding: 0 @padding-sm;
+      }
+    }
+  
+    li:last-child {
+      &::after {
+        padding-left: 0;
+        content: '';
+      }
+    }
+  }
+  
+  .login-page {
+    .footer {
+      display: block;
+      bottom: @padding-md;
+      position: absolute;
+      padding: @padding-md 0 @padding-md 0;
+    }
+  }
+  
+  @media only screen and (min-width: @screen-sm) {
+    .login-page {
+      .footer {
+        padding: 70px 0 @padding-md 0;
+      }
+    }
+  }
+  

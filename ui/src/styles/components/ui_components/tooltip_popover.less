@@ -1,0 +1,159 @@
+@import "~antd/lib/style/themes/default.less";
+
+@popper-margin-from-ref: 5px;
+
+.popper {
+  position: absolute;
+  z-index: @zindex-tooltip;
+  color: @text-color;
+  max-width: 400px;
+}
+
+.popper__background {
+  background: @component-background;
+  border-radius: @border-radius-base;
+  box-shadow: @box-shadow-base;
+  padding: @padding-sm;
+  color: @text-color;
+  font-weight: 500;
+
+  .popper__arrow {
+    border-color: @component-background;
+  }
+
+  // Theme
+  &.popper__background--error {
+        background: @error-color;
+        color: @white;
+      
+        .popper__arrow {
+          border-color: @error-color;
+        }
+      
+        code {
+          border: none;
+          background: darken(@error-color, 15%);
+          color: lighten(@white, 20%);
+        }
+      
+        strong,
+        em {
+          color: lighten(@white, 20%);
+        }
+  }
+
+  &.popper__background--info {
+        background: @component-background;
+        color: @text-color;
+      
+        .popper__arrow {
+          border-color: @border-color-base
+        }
+      
+        code {
+          border: none;
+          background: darken(@component-background, 15%);
+          color: lighten(@text-color, 20%);
+        }
+      
+        strong,
+        em {
+          color: lighten(@text-color, 20%);
+        }
+      }
+
+}
+
+.popper__arrow {
+  width: 0;
+  height: 0;
+  border-style: solid;
+  position: absolute;
+  margin: 0px;
+}
+
+// Top
+.popper[data-placement^='top'] {
+  padding-bottom: 5px;
+}
+.popper[data-placement^='top'] .popper__arrow {
+  border-width: 5px 5px 0 5px;
+  border-left-color: transparent;
+  border-right-color: transparent;
+  border-bottom-color: transparent;
+  bottom: -5px;
+  left: calc(50% - 5px);
+  padding-top: 5px;
+}
+
+// Bottom
+.popper[data-placement^='bottom'] {
+  padding-top: 5px;
+}
+.popper[data-placement^='bottom'] .popper__arrow {
+  border-width: 0 5px 5px 5px;
+  border-left-color: transparent;
+  border-right-color: transparent;
+  border-top-color: transparent;
+  top: 0;
+  left: calc(50% - 5px);
+}
+
+.popper[data-placement^='bottom-start'] {
+  padding-top: 5px;
+}
+.popper[data-placement^='bottom-start'] .popper__arrow {
+  border-width: 0 5px 5px 5px;
+  border-left-color: transparent;
+  border-right-color: transparent;
+  border-top-color: transparent;
+  top: 0;
+  left: 5px;
+}
+
+.popper[data-placement^='bottom-end'] {
+  padding-top: 5px;
+}
+.popper[data-placement^='bottom-end'] .popper__arrow {
+  border-width: 0 5px 5px 5px;
+  border-left-color: transparent;
+  border-right-color: transparent;
+  border-top-color: transparent;
+  top: 0;
+  left: calc(100% - 5px);
+}
+
+// Right
+.popper[data-placement^='right'] {
+  padding-left: 5px;
+}
+.popper[data-placement^='right'] .popper__arrow {
+  border-width: 5px 5px 5px 0;
+  border-left-color: transparent;
+  border-top-color: transparent;
+  border-bottom-color: transparent;
+  left: 0;
+  top: calc(50% - 5px);
+}
+
+// Left
+.popper[data-placement^='left'] {
+  padding-right: 5px;
+}
+.popper[data-placement^='left'] .popper__arrow {
+  border-width: 5px 0 5px 5px;
+  border-top-color: transparent;
+  border-right-color: transparent;
+  border-bottom-color: transparent;
+  right: -5px;
+  top: calc(50% - 5px);
+}
+
+.popper__target,
+.popper__manager {
+  display: inline-block;
+}
+
+.popper__manager--block {
+  display: block;
+}

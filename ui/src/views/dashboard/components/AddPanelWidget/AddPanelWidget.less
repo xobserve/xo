@@ -1,0 +1,122 @@
+@import "~antd/lib/style/themes/default.less";
+.add-panel-widget-container {
+    height: 100%;
+  }
+  
+  .add-panel-widget {
+    height: 100%;
+  }
+  
+  .add-panel-widget__header {
+    top: 0;
+    position: absolute;
+    padding: 0 8px;
+    display: flex;
+    align-items: center;
+    width: 100%;
+    cursor: move;
+    background: @component-background;
+    box-shadow: @box-shadow-base;
+    border-bottom: 1px solid @border-color-base;
+  
+    .gicon {
+      font-size: 30px;
+      margin-right: @margin-md;
+    }
+  
+    &:hover {
+      transition: background-color 0.1s ease-in-out;
+    //   background-color: @item-hover-bg;
+    }
+  }
+  
+  .add-panel-widget__title {
+    font-size: @font-size-base;
+    font-weight: 500;
+    margin-right: @margin-lg;
+  }
+  
+  .add-panel-widget__link {
+    margin: 0 @margin-sm;
+    width: 170px;
+    height: 88px !important;
+    flex-direction: column !important;
+  }
+  
+  .add-panel-widget__icon {
+    margin-bottom: @margin-sm;
+  
+    .gicon {
+      color: white;
+      height: 44px;
+      width: 53px;
+      position: relative;
+      left: 5px;
+    }
+  }
+  
+  .add-panel-widget__create {
+    display: inherit;
+    margin-bottom: @margin-lg;
+    // this is to have the big button appear centered
+    margin-top: 55px;
+  }
+  
+  .add-panel-widget__actions {
+    display: inherit;
+  }
+  
+  .add-panel-widget__action {
+    margin: 0 @margin-xs;
+  }
+  
+  .add-panel-widget__btn-container {
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+  }
+
+.add-panel-widget-wrapper {
+    border: 1px solid @primary-color !important;
+    
+    .add-panel-widget-actions-wrapper {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        height: 100%;
+        justify-content: center;
+    }
+}
+
+
+
+
+.add-panel-widget-handle {
+    position: absolute;
+    cursor: grab;
+    top: 0;
+    left: 0;
+    height: 26px;
+    padding: 0 @padding-xs;
+    width: 100%;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    transition: background-color 0.1s ease-in-out;
+    &:hover {
+      background: @item-hover-bg;
+    }
+}
+
+.add-panel-widget-create-wrapper {
+    cursor: pointer;
+    display: flex;
+    // flex-direction: column;
+    align-items: center;
+    margin-bottom: @margin-lg;
+    &:hover {
+      background: @item-hover-bg;
+    }
+}

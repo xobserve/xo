@@ -1,0 +1,59 @@
+@import "~antd/lib/style/themes/default.less";
+.datav-icon-button {
+    background: transparent;
+    border: none;
+    padding: 0;
+    margin: 0;
+    outline: none;
+    box-shadow: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    z-index: 0;
+    margin-right: @margin-xs;
+
+    &[disabled],
+    &:disabled {
+      cursor: not-allowed;
+      opacity: 0.65;
+      box-shadow: none;
+    }
+
+    &:before {
+      content: '';
+      display: block;
+      opacity: 1;
+      position: absolute;
+      transition-duration: 0.2s;
+      transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+      z-index: -1;
+      bottom: -8px;
+      left: -8px;
+      right: -8px;
+      top: -8px;
+      background: none;
+      border-radius: 50%;
+      box-sizing: border-box;
+      transform: scale(0);
+      transition-property: transform, opacity;
+    }
+
+    &:hover {
+      color: @link-hover-color;
+
+      &:before {
+        background-color: @item-hover-bg;
+        border: none;
+        box-shadow: none;
+        opacity: 1;
+        transform: scale(0.8);
+      }
+    }
+}
+
+.datav-icon-button-icon {
+    margin-bottom: 0;
+    vertical-align: baseline;
+    display: flex;
+}

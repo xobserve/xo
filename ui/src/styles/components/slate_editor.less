@@ -1,0 +1,162 @@
+@import "~antd/lib/style/themes/default.less";
+.slate-query-field {
+    font-size: @font-size-base;
+    font-family: Menlo, Monaco, Consolas, 'Courier New', monospace;
+    height: auto;
+    word-break: break-word;
+  }
+  
+  .slate-query-field__wrapper {
+    position: relative;
+    display: inline-block;
+    padding: 6px 8px;
+    min-height: @height-base;
+    width: 100%;
+    cursor: text;
+    line-height: @line-height-base - 0.2;
+    color: @text-color;
+    background-color: @input-bg;
+    background-image: none;
+    border: 1px solid @border-color-base;
+    border-radius: @border-radius-base;
+    transition: all 0.3s;
+  }
+  
+  .slate-query-field__wrapper--disabled {
+    background-color: inherit;
+    cursor: not-allowed;
+  }
+  
+  .slate-typeahead {
+    .typeahead {
+      position: relative;
+      z-index: 1030;
+      border-radius: @border-color-base;
+      border: 1px solid @border-color-base;
+      max-height: calc(66vh);
+      overflow-y: scroll;
+      overflow-x: hidden;
+      outline: none;
+      list-style: none;
+      background: @component-background;
+      color: @text-color;
+      box-shadow: @box-shadow-base;
+    }
+  
+    .typeahead-group__title {
+      color: @text-color-secondary;
+      font-size: @font-size-sm;
+      line-height: @line-height-base;
+      padding: @padding-sm;
+    }
+  
+    .typeahead-item {
+      height: auto;
+      font-family: Menlo, Monaco, Consolas, 'Courier New', monospace;
+      padding: @padding-sm @padding-sm @padding-sm @padding-md;
+      font-size: @font-size-sm;
+      text-overflow: ellipsis;
+      overflow: hidden;
+      z-index: 1;
+      display: block;
+      white-space: nowrap;
+      cursor: pointer;
+      transition: color 0.3s cubic-bezier(0.645, 0.045, 0.355, 1), border-color 0.3s cubic-bezier(0.645, 0.045, 0.355, 1),
+        background 0.3s cubic-bezier(0.645, 0.045, 0.355, 1), padding 0.15s cubic-bezier(0.645, 0.045, 0.355, 1);
+    }
+  
+    .typeahead-item__selected {
+      background-color: @item-hover-bg;
+  
+      .typeahead-item-hint {
+        font-size: @font-size-sm;
+        color: @text-color;
+        white-space: normal;
+      }
+    }
+  
+    .typeahead-match {
+      color: @primary-color;
+      border-bottom: 1px solid @primary-color;
+      // Undoing mark styling
+      padding: inherit;
+      background: inherit;
+    }
+  }
+  
+  /* SYNTAX */
+  
+  .slate-query-field {
+    .token.comment,
+    .token.block-comment,
+    .token.prolog,
+    .token.doctype,
+    .token.cdata {
+      color: @text-color-secondary;
+    }
+  
+    .token.variable,
+    .token.entity {
+      color: @text-color;
+    }
+  
+    .token.property,
+    .token.tag,
+    .token.constant,
+    .token.symbol,
+    .token.deleted {
+      color: @error-color;
+    }
+  
+    .token.attr-value,
+    .token.selector,
+    .token.string,
+    .token.char,
+    .token.builtin,
+    .token.inserted {
+      color: @success-color;
+    }
+  
+    .token.boolean,
+    .token.number,
+    .token.operator,
+    .token.url {
+      color: #9954bb;
+    }
+  
+    .token.function,
+    .token.attr-name,
+    .token.function-name,
+    .token.atrule,
+    .token.keyword,
+    .token.class-name {
+      color: @primary-color !important;
+    }
+  
+    .token.punctuation,
+    .token.regex,
+    .token.important {
+      color: @warning-color;
+    }
+  
+    .token.important {
+      font-weight: normal;
+    }
+  
+    .token.bold {
+      font-weight: bold;
+    }
+  
+    .token.italic {
+      font-style: italic;
+    }
+  
+    .token.entity {
+      cursor: help;
+    }
+  
+    .namespace {
+      opacity: 0.7;
+    }
+  }
+  

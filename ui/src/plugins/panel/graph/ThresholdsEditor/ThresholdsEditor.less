@@ -1,0 +1,48 @@
+@import "~antd/lib/style/themes/default.less";
+
+.thresholds-editor-wrapper {
+    display: flex;
+    flex-direction: column;
+    // margin-bottom: -${theme.spacing.formSpacingBase * 2}px;
+}
+
+.thresholds-editor-addButton {
+    margin-bottom: @padding-sm;
+}
+
+.thresholds-editor-thresholds {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: @margin-md;
+}
+
+.thresholds-editor-tem {
+    margin-bottom: @margin-sm;
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+}
+
+.thresholds-editor-inputPrefix {
+    display: flex;
+    align-items: center;
+}
+
+.thresholds-editor-colorPicker {
+    padding: 0 @padding-sm;
+}
+
+.thresholds-editor-percentIcon {
+    font-size: @font-size-sm;
+    color: @text-color-secondary;
+}
+
+.thresholds-editor-trashIcon {
+    color: @text-color-secondary;
+    cursor: pointer;
+
+    &:hover {
+      color: @text-color;
+    }
+}

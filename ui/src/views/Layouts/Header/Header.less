@@ -1,0 +1,24 @@
+.datav-header {
+    height: 46px;
+    line-height: 46px;
+    padding: 0 20px ;
+    position: fixed;
+    z-index: 1;
+    width: calc(100% - 83px);
+    background: transparent;
+    .datav-header-inner {
+        height:100%;
+        display: flex;
+        justify-content: space-between;
+        box-sizing: border-box;
+        &>div{
+            display: flex;
+            align-items: center;
+            &>div{
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+        }
+    }
+}

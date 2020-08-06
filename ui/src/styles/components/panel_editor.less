@@ -1,0 +1,55 @@
+@import "~antd/lib/style/themes/default.less";
+
+.panel-wrapper {
+    height: 100%;
+    position: relative;
+  
+    &--view {
+      flex: 1 1 0;
+      height: 90%;
+      margin: 0 @padding-md;
+      padding-top: @padding-md;
+    }
+  }
+  
+  .panel-editor__scroll {
+    flex-grow: 1;
+    min-width: 0;
+    display: flex;
+    min-height: 0;
+    height: 100%;
+    overflow: hidden;
+  }
+  
+  .panel-editor__content {
+    padding: 0 16px 16px 16px;
+  }
+  
+  .panel-in-fullscreen {
+    .sidemenu {
+      display: none;
+    }
+  
+    .dashboard-container {
+      padding: 0;
+      height: calc(100% - 100px);
+      .panel-wrapper {
+        padding-top: 0
+      }
+    }
+  
+    .submenu-controls {
+      padding: 0 @padding-md @padding-sm @padding-md;
+    }
+  
+    .search-container {
+      left: 0 !important;
+    }
+  }
+  
+  .ds-picker {
+    position: relative;
+    min-width: 200px;
+    max-width: 300px;
+  }
+  

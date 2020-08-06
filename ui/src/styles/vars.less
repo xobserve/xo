@@ -1,0 +1,25 @@
+// This file will contain all varibales, our custom varibales and 
+//those from Ant Design which we want to override.
+@import "~antd/lib/style/themes/default.less";
+
+@primary-color: #33a2e5;
+@brand-gradient-horizontal: linear-gradient(to right, #f05a28 30%, #fbca0a 99%);
+@brand-gradient-vertical: linear-gradient(#f05a28 30%, #fbca0a 99%);
+@gradient-border-color: linear-gradient(@primary-color 30%, @success-color 99%);
+
+// 该变量若被其它less文件使用，则无法在切换白天/黑夜主题时自动切换颜色
+// 因此不要在这个文件中定义依赖主题变化的变量
+@border: 1px solid @border-color-base;
+
+@navbarHeight: 55px;
+
+.left-brand-border-gradient() {
+    border-image: @gradient-border-color;
+    border-image-slice: 1;
+    border-style: solid;
+    border-top: 0;
+    border-right: 0;
+    border-bottom: 0;
+    border-left-width: 2px;
+  }
+

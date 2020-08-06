@@ -1,0 +1,143 @@
+@import "~antd/lib/style/themes/default.less";
+
+@tight-form-func-bg: @component-background;
+.query-keyword {
+    font-weight: 500;
+    color: @primary-color;
+  }
+  
+  .query-segment-operator {
+    color: @warning-color;
+  }
+  
+  .query-placeholder {
+    color: @input-placeholder-color;
+  }
+  
+  .tight-form-func {
+    background: @tight-form-func-bg;
+  
+    &.show-function-controls {
+      padding-top: 5px;
+      min-width: 100px;
+      text-align: center;
+    }
+  }
+  
+  input[type='text'].tight-form-func-param {
+    font-size: @font-size-sm;
+    background: transparent;
+    border: none;
+    margin: 0;
+    padding: 0;
+  }
+  
+  .tight-form-func-controls {
+    text-align: center;
+  
+    .fa-arrow-left {
+      float: left;
+      position: relative;
+      top: 2px;
+    }
+    .fa-arrow-right {
+      float: right;
+      position: relative;
+      top: 2px;
+    }
+    .fa-remove {
+      margin-left: 10px;
+    }
+  }
+  
+  .grafana-metric-options {
+    margin-top: 25px;
+  }
+  
+  .tight-form-func {
+    background: @tight-form-func-bg;
+  
+    &.show-function-controls {
+      padding-top: 5px;
+      min-width: 100px;
+      text-align: center;
+    }
+  }
+  
+  .rst-text::before {
+    content: ' ';
+  }
+  
+  .rst-unknown.rst-directive {
+    font-family: monospace;
+    margin-bottom: @padding-md;
+  }
+  
+  .rst-interpreted_text {
+    font-family: monospace;
+    display: inline;
+  }
+  
+  .rst-bullet-list {
+    padding-left: @padding-lg;
+    margin-bottom: @padding-md;
+  }
+  
+  .rst-paragraph:last-child {
+    margin-bottom: 0;
+  }
+  
+  .drop-element.drop-popover.drop-function-def .drop-content {
+    max-width: 416px;
+  }
+  
+  .rst-literal-block .rst-text {
+    display: block;
+  }
+  
+  .query-editor-row {
+    margin-bottom: 2px;
+  
+    &:hover {
+      .query-editor-row__actions {
+        display: flex;
+      }
+    }
+  
+    &--disabled {
+      .query-keyword {
+        color: @text-color-secondary;
+      }
+    }
+  }
+  
+  .query-editor-row__header {
+    display: flex;
+    padding: 4px 0px 4px 8px;
+    position: relative;
+    height: 35px;
+    background: @item-hover-bg;
+    flex-wrap: nowrap;
+    align-items: center;
+  }
+  
+  .query-editor-row__action {
+    margin-left: 3px;
+    background: transparent;
+    border: none;
+    box-shadow: none;
+  
+    &:hover {
+      color: @text-color;
+    }
+  }
+  
+  .query-editor-row__body {
+    margin: 2px 0 10px 40px;
+    background: @body-background;
+  
+    &--collapsed {
+      display: none;
+    }
+  }
+  

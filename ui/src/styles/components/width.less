@@ -1,0 +1,43 @@
+@spacer : 16px;
+.max-width {
+    width: 100%;
+  }
+  .width-auto {
+    width: auto;
+  }
+.generate-widths(30);
+.generate-widths(@n, @i: 1) when (@i =< @n) {
+  .width-@{i} {
+    width: (@spacer * @i) !important;
+  }
+  .generate-widths(@n, (@i+1));
+}
+
+.generate-maxWidths(30);
+.generate-maxWidths(@n, @i: 1) when (@i =< @n) {
+  .max-width-@{i}  {
+        max-width: (@spacer * @i) !important;
+        flex-grow: 1;
+    }
+  .generate-maxWidths(@n, (@i+1));
+}
+
+.generate-minWidths(30);
+.generate-minWidths(@n, @i: 1) when (@i =< @n) {
+    .min-width-@{i} {
+      min-width: (@spacer * @i) !important;
+    }
+  .generate-minWidths(@n, (@i+1));
+}
+
+  
+.generate-offsetWidths(30);
+.generate-offsetWidths(@n, @i: 1) when (@i =< @n) {
+    .offset-width-@{i} {
+      margin-left: (@spacer * @i) !important;
+    }
+  .generate-offsetWidths(@n, (@i+1));
+}
+  
+
+  

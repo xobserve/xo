@@ -1,0 +1,47 @@
+@import "~antd/lib/style/themes/default.less";
+.markdown-html {
+    img {
+      max-width: 100%;
+    }
+  
+    ul,
+    ol {
+      padding-left: @padding-md * 1.5;
+      margin-bottom: @padding-md;
+    }
+  
+    table {
+      td,
+      th {
+        padding: @padding-md * 0.5 @padding-md;
+      }
+      th {
+        font-weight: 500;
+        background: @table-header-bg;
+      }
+    }
+  
+    table,
+    th,
+    td {
+      border: 1px solid @border-color-base;
+      border-collapse: collapse;
+    }
+  
+    a {
+      text-decoration: underline;
+      color: @link-color;
+      &:hover {
+        color: lighten(@link-color, 10%);
+      }
+    }
+  
+    p:last-child {
+      margin-bottom: 0;
+    }
+  
+    ul:last-child,
+    ol:last-child {
+      margin-bottom: 0;
+    }
+  }

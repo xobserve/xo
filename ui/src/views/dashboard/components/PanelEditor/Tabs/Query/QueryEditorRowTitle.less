@@ -1,0 +1,33 @@
+@import "~antd/lib/style/themes/default.less";
+.query-editor-row-title {
+    .refId {
+        font-weight: 500;
+        color: @primary-color;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+    }
+
+
+    .collapsedText {
+        font-size: @font-size-sm;
+        color: @text-color-secondary;
+        padding: 0 10px;
+        display: flex;
+        align-items: center;
+        flex-grow: 1;
+        overflow: hidden;
+        font-style: italic;
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        min-width: 0;
+    }
+ 
+    .contextInfo {
+        font-size: @font-size-sm;
+        font-style: italic;
+        color: @text-color-secondary;
+        padding-left: 10px;
+    }
+}
