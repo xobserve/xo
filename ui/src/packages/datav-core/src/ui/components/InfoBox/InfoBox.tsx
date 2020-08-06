@@ -5,6 +5,10 @@ import { stylesFactory, useTheme } from '../../themes';
 import { Icon } from '../Icon/Icon';
 import { IconButton } from '../IconButton/IconButton';
 import { HorizontalGroup } from '../Layout/Layout';
+//@ts-ignore
+import panelArtDark from './panelArt_dark.svg';
+//@ts-ignore
+import panelArtLight from './panelArt_light.svg';
 
 export interface InfoBoxProps extends Omit<React.HTMLAttributes<HTMLDivElement>, 'title'> {
   children: React.ReactNode;
@@ -91,7 +95,7 @@ const getInfoBoxStyles = stylesFactory((theme: DatavTheme) => ({
       left: 0;
       width: 100%;
       height: 100%;
-      background-image: url(${theme.isLight ? './panelArt_light.svg' : './panelArt_dark.svg'});
+      background-image: url(${theme.isLight ? panelArtLight : panelArtDark});
       border-radius: ${theme.border.radius.md};
       background-position: 50% 50%;
       background-size: cover;

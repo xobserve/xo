@@ -6,7 +6,6 @@ import { DataSourcePluginCategory,StoreState } from 'src/types';
 import { Card } from '../../components/Card/Card';
 import Button from 'antd/es/button';
 import {buildCategories} from './build_categories'
-import './NewDataSourcePage.less'
 import { withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 import localeData from 'src/core/library/locale';
