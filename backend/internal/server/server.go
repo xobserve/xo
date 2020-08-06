@@ -65,13 +65,14 @@ func (s *Server) Start() error {
 		gin.SetMode(gin.ReleaseMode)
 		r := gin.New()
 		r.Use(Cors())
-		 
+		  
 		// no auth apis
 		{
 			r.POST("/api/login",session.Login)
 			r.POST("/api/logout",session.Logout)
 			r.GET("/api/proxy/:datasourceID/*target", proxy)
 			r.GET("/api/bootConfig", bootConfig.QueryBootConfig)
+			r.POST("/api/testdata",QueryTestdata)
 		}
 
 		// auth apis

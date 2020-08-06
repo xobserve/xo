@@ -87,6 +87,7 @@ export {TagsInput} from './TagsInput/TagsInput'
 export * from './BarGauge/BarGauge'
 // @ts-ignore
 export * from './DataLinks/DataLinksContextMenu'
+export * from './Table/types'
 
 export {FeatureInfoBox} from './InfoBox/FeatureInfoBox'
 export {fieldMatchersUI} from './MatchersUI/fieldMatchersUI'

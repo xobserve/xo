@@ -19,16 +19,21 @@ export interface Props {
 }
 
 interface State {
+    thresholds: Threshold[];
 }
 
 export class ThresholdsEditor extends PureComponent<Props, State> {
+   
     constructor(props: Props) {
         super(props);
-        this.state = {  };
+
+        this.state = { 
+            thresholds: props.value ?? []
+         };
     }
 
     onAddThreshold = () => {
-        this.props.value.push({
+        this.state.thresholds.push({
               colorMode: "critical",
               fill: true,
               line: true,
@@ -36,24 +41,22 @@ export class ThresholdsEditor extends PureComponent<Props, State> {
               value: 0,
               yaxis: "left"}
         )
-        this.props.onChange(this.props.value)
-        const { } = this.state;
+        this.props.onChange(this.state.thresholds)
     };
 
     onRemoveThreshold = (index: number) => {
-        this.props.value.splice(index,1)
-        this.props.onChange(this.props.value)
+        this.state.thresholds.splice(index,1)
+        this.props.onChange(this.state.thresholds)
     };
 
     render() {
-        const { value } = this.props;
-        const {} = this.state;
+        let { thresholds } = this.state;
         return (
             <>
                 {
                     <div className={'thresholds-editor-wrapper'}>
                         {
-                            value.map((t,index) => {
+                            thresholds.map((t,index) => {
                                 return <div className="gf-form-inline ub-mb3" key={index}>
                                     <div className="gf-form">
                                         <label className="gf-form-label">T{index+1}</label>

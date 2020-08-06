@@ -58,7 +58,7 @@ export class TestDataDataSource extends DataSourceApi<TestDataQuery> {
       const req: Promise<DataQueryResponse> = getBackendSrv()
         .datasourceRequest({
           method: 'POST',
-          url: '/api/tsdb/query',
+          url: '/api/testdata',
           data: {
             from: options.range.from.valueOf().toString(),
             to: options.range.to.valueOf().toString(),
