@@ -14,7 +14,7 @@ import { ComponentClass, ComponentType } from 'react';
 import set from 'lodash/set';
 import { deprecationWarning } from '../utils';
 import { FieldConfigOptionsRegistry, standardFieldConfigEditorRegistry } from '../field';
-
+import {currentLang,localeData} from '../config'
 export interface SetFieldConfigOptionsArgs<TFieldConfigOptions = any> {
   /**
    * Array of standard field config properties
@@ -307,10 +307,10 @@ export class PanelPlugin<TOptions = any, TFieldConfigOptions extends object = an
       if (config && config.useCustomConfig) {
         const builder = new FieldConfigEditorBuilder<TFieldConfigOptions>();
         config.useCustomConfig(builder);
-
+        
         for (const customProp of builder.getRegistry().list()) {
           customProp.isCustom = true;
-          customProp.category = ['Custom options'].concat(customProp.category || []);
+          customProp.category = [localeData[currentLang]['panel.customOptions']].concat(customProp.category || []);
           // need to do something to make the custom items not conflict with standard ones
           // problem is id (registry index) is used as property path
           // so sort of need a property path on the FieldPropertyEditorItem

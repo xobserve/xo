@@ -1,4 +1,4 @@
-import { DataFrame, DataLink, VariableSuggestion } from '../../../../data';
+import { DataFrame, DataLink, VariableSuggestion, localeData, currentLang } from '../../../../data';
 import React, { FC, useState } from 'react';
 import { DataLinkEditor } from '../DataLinkEditor';
 import { HorizontalGroup } from '../../Layout/Layout';
@@ -38,10 +38,10 @@ export const DataLinkEditorModalContent: FC<DataLinkEditorModalContentProps> = (
             onSave(index, dirtyLink);
           }}
         >
-          Save
+         {localeData[currentLang]['common.save']}
         </Button>
         <Button variant="secondary" onClick={() => onCancel(index)}>
-          Cancel
+        {localeData[currentLang]['common.cancel']}
         </Button>
       </HorizontalGroup>
     </>

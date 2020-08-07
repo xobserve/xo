@@ -8,8 +8,9 @@ import { connect, MapStateToProps } from 'react-redux';
 import { VizTypePicker, getAllPanelPluginMeta, filterPluginList } from '../VizTypePicker';
 import { loadPanelPlugin } from 'src/plugins/loader';
 import {message} from 'antd'
-import {store} from 'src/store/store'
+import {store, getState} from 'src/store/store'
 import { updatePanel } from 'src/store/reducers/dashboard';
+import localeData from 'src/core/library/locale'
 
 interface OwnProps {
   panel: PanelModel;
@@ -83,7 +84,7 @@ export const VisualizationTabUnconnected = React.forwardRef<HTMLInputElement, Pr
             onKeyPress={onKeyPress}
             prefix={<Icon name="filter" className={styles.icon} />}
             suffix={suffix}
-            placeholder="Filter visualizations"
+            placeholder={localeData[getState().application.locale]['panel.filterVis']}
             ref={ref}
           />
         </Field>

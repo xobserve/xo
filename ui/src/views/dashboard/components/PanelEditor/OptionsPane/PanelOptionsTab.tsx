@@ -8,7 +8,9 @@ import { VisualizationTab } from './VisualizationTab';
 import { OptionsGroup } from './OptionsGroup';
 import { getVariables } from 'src/views/variables/state/selectors';
 import { getPanelLinksVariableSuggestions } from 'src/core/services/link';
-
+import { FormattedMessage } from 'react-intl';
+import localeData from 'src/core/library/locale'
+import { getState } from 'src/store/store';
 const Field = FormField
 
 interface Props {
@@ -49,24 +51,24 @@ export const PanelOptionsTab: FC<Props> = ({
   };
   // Fist common panel settings Title, description
   elements.push(
-    <OptionsGroup title="Settings" id="Panel settings" key="Panel settings">
-      <Field label="Panel title">
+    <OptionsGroup title={<FormattedMessage id="common.setting"/>} id="Panel settings" key="Panel settings">
+      <Field label={localeData[getState().application.locale]['panel.title']}>
         <Input defaultValue={panel.title} onBlur={e => onPanelConfigChange('title', e.currentTarget.value)} />
       </Field>
-      <Field label="Description" description="Panel description supports markdown and links.">
+      <Field label={localeData[getState().application.locale]['common.desc']} description={localeData[getState().application.locale]['panel.panelDescDesc']}>
         <TextArea
           defaultValue={panel.description}
           onBlur={e => onPanelConfigChange('description', e.currentTarget.value)}
         />
       </Field>
-      <Field label="Transparent" description="Display panel without a background.">
+      <Field label={localeData[getState().application.locale]['panel.transparent']}  description={localeData[getState().application.locale]['panel.transparentDesc']}>
         <Switch value={panel.transparent} onChange={e => onPanelConfigChange('transparent', e.currentTarget.checked)} />
       </Field>
     </OptionsGroup>
   );
 
   elements.push(
-    <OptionsGroup title="Visualization" id="Panel type" key="Panel type" defaultToClosed onToggle={focusVisPickerInput}>
+    <OptionsGroup title={localeData[getState().application.locale]['common.visualization']} id="Panel type" key="Panel type" defaultToClosed onToggle={focusVisPickerInput}>
       <VisualizationTab panel={panel} ref={visTabInputRef} />
     </OptionsGroup>
   );
@@ -95,7 +97,7 @@ export const PanelOptionsTab: FC<Props> = ({
   
   elements.push(
     <OptionsGroup
-      renderTitle={isExpanded => <>Links {!isExpanded && panelLinksCount > 0 && <Counter value={panelLinksCount} />}</>}
+      renderTitle={isExpanded => <>{localeData[getState().application.locale]['common.links']} {!isExpanded && panelLinksCount > 0 && <Counter value={panelLinksCount} />}</>}
       id="panel links"
       key="panel links"
       defaultToClosed

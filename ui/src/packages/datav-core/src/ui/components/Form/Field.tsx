@@ -48,6 +48,7 @@ export const Field: React.FC<FieldProps> = ({
     // Retrieve input's id to apply on the label for correct click interaction
     inputId = (child as React.ReactElement<{ id?: string }>).props.id;
   }
+
   const labelElement =
     typeof label === 'string' ? (
       <Label htmlFor={inputId} description={description}>

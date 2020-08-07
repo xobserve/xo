@@ -44,4 +44,9 @@ _.forEach(info, (v,k) => {
     zh['info.' + k] = v
 })
 
+import panel from './panel'
+_.forEach(panel, (v,k) => {
+    zh['panel.' + k] = v
+})
+
 export default zh

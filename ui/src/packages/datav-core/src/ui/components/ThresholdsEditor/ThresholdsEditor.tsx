@@ -7,6 +7,8 @@ import {
   ThresholdsMode,
   SelectableValue,
   DatavTheme,
+  localeData,
+  currentLang,
 } from '../../../data';
 import { colors } from '../../utils';
 import { ThemeContext } from '../../themes/ThemeContext';
@@ -44,6 +46,9 @@ export class ThresholdsEditor extends PureComponent<Props, State> {
     const steps = toThresholdsWithKey(props.thresholds!.steps);
     steps[0].value = -Infinity;
 
+    modes[0].label = localeData[currentLang]['common.absolute']
+    modes[1].label = localeData[currentLang]['common.percentage']
+    
     this.state = { steps };
   }
 
@@ -143,7 +148,7 @@ export class ThresholdsEditor extends PureComponent<Props, State> {
       return (
         <Input
           type="text"
-          value={'Base'}
+          value={localeData[currentLang]['common.base']}
           disabled
           prefix={
             threshold.color && (
@@ -201,7 +206,7 @@ export class ThresholdsEditor extends PureComponent<Props, State> {
             <div className={styles.wrapper}>
               <FullWidthButtonContainer className={styles.addButton}>
                 <Button size="sm" icon="plus" onClick={() => this.onAddThreshold()} variant="secondary">
-                  Add threshold
+                  {localeData[currentLang]['panel.addThreshold']}
                 </Button>
               </FullWidthButtonContainer>
               <div className={styles.thresholds}>
@@ -218,7 +223,7 @@ export class ThresholdsEditor extends PureComponent<Props, State> {
               </div>
 
               <div>
-                <Label description="Percentage means thresholds relative to min & max">Thresholds mode</Label>
+                <Label description={localeData[currentLang]['panel.threshodsModeDesc']}>{localeData[currentLang]['panel.threshodsMode']}</Label>
                 <FullWidthButtonContainer>
                   <RadioButtonGroup size="sm" options={modes} onChange={this.onModeChanged} value={thresholds.mode} />
                 </FullWidthButtonContainer>

@@ -43,4 +43,9 @@ _.forEach(info, (v,k) => {
     en['info.' + k] = v
 })
 
+import panel from './panel'
+_.forEach(panel, (v,k) => {
+    en['panel.' + k] = v
+})
+
 export default en

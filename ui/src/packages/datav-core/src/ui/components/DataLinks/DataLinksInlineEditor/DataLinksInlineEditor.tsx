@@ -1,4 +1,4 @@
-import { DataFrame, DataLink, DatavTheme, VariableSuggestion } from '../../../../data';
+import { DataFrame, DataLink, DatavTheme, VariableSuggestion, localeData, currentLang } from '../../../../data';
 import React, { useState } from 'react';
 import { css } from 'emotion';
 import { Button } from '../../Button/Button';
@@ -83,7 +83,7 @@ export const DataLinksInlineEditor: React.FC<DataLinksInlineEditorProps> = ({ li
 
       {isEditing && editIndex !== null && (
         <Modal
-          title="Edit link"
+          title={localeData[currentLang]['panel.editLink']}
           isOpen={true}
           onDismiss={() => {
             onDataLinkCancel(editIndex);
@@ -101,7 +101,7 @@ export const DataLinksInlineEditor: React.FC<DataLinksInlineEditorProps> = ({ li
       )}
 
       <Button size="sm" icon="plus" onClick={onDataLinkAdd} variant="secondary">
-        Add link
+        {localeData[currentLang]['panel.addLink']}
       </Button>
     </>
   );

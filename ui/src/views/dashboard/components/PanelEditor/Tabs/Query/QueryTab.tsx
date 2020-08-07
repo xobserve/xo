@@ -25,6 +25,7 @@ import { Unsubscribable } from 'rxjs';
 import { PlusOutlined } from '@ant-design/icons';
 import { addParamToUrl } from 'src/core/library/utils/url';
 import './QueryTab.less'
+import { FormattedMessage } from 'react-intl';
 
 interface Props {
   panel: PanelModel;
@@ -187,7 +188,7 @@ export class QueriesTab extends PureComponent<Props, State> {
             <Button
               onClick={this.openQueryInspector}
             >
-              Query inspector
+               <FormattedMessage id="panel.queryInspect"/>
             </Button>
           </div>
         </div>
@@ -261,13 +262,13 @@ export class QueriesTab extends PureComponent<Props, State> {
             icon= {<PlusOutlined />}
             onClick={this.onAddQueryClick}
           >
-            Query
+            <FormattedMessage id="common.query"/>
           </Button>
         )}
         {isAddingMixed && this.renderMixedPicker()}
         {config.featureToggles.expressions && (
           <Button icon= {<PlusOutlined />} onClick={this.onAddExpressionClick}>
-            Expression
+            <FormattedMessage id="common.expression"/>
           </Button>
         )}
       </Row>

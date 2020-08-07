@@ -10,6 +10,8 @@ import { get as lodashGet, set as lodashSet } from 'lodash';
 import { FormField as Field, FormLabel as Label} from 'src/packages/datav-core';
 import groupBy from 'lodash/groupBy';
 import { OptionsGroup } from './OptionsGroup';
+import localeData from 'src/core/library/locale'
+import { getState } from 'src/store/store';
 
 interface PanelOptionsEditorProps<TOptions> {
   plugin: PanelPlugin;
@@ -28,7 +30,7 @@ export const PanelOptionsEditor: React.FC<PanelOptionsEditorProps<any>> = ({
 }) => {
   const optionEditors = useMemo<Record<string, PanelOptionsEditorItem[]>>(() => {
     return groupBy(plugin.optionEditors.list(), i => {
-      return i.category ? i.category[0] : 'Display';
+      return i.category ? i.category[0] : localeData[getState().application.locale]['common.display'];
     });
   }, [plugin]);
 

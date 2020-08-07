@@ -1,6 +1,6 @@
 import React from 'react';
-import { MappingType, ValueMapping } from '../../../data';
-import { Button } from 'antd';
+import { MappingType, ValueMapping, localeData, currentLang } from '../../../data';
+import { Button } from '../Button/Button';
 import { MappingRow } from './MappingRow';
 
 export interface Props {
@@ -64,12 +64,8 @@ export const ValueMappingsEditor: React.FC<Props> = ({ valueMappings, onChange, 
             ))}
         </>
       )}
-      <Button
-        icon="plus"
-        onClick={onAdd}
-        aria-label="ValueMappingsEditor add mapping button"
-      >
-        Add value mapping
+      <Button size="sm" icon="plus" onClick={onAdd} variant="secondary">
+        {localeData[currentLang]['panel.addValueMapping']}
       </Button>
     </>
   );

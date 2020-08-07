@@ -1,5 +1,5 @@
 import React, { ChangeEvent } from 'react';
-import { DataLink, VariableSuggestion, DatavTheme } from '../../../data';
+import { DataLink, VariableSuggestion, DatavTheme, localeData, currentLang } from '../../../data';
 import { Switch } from '../Switch/Switch';
 import { css } from 'emotion';
 import { stylesFactory, useTheme } from '../../themes/index';
@@ -44,15 +44,15 @@ export const DataLinkEditor: React.FC<DataLinkEditorProps> = React.memo(
 
     return (
       <div className={styles.listItem}>
-        <Field label="Title">
-          <Input value={value.title} onChange={onTitleChange} placeholder="Show details" />
+        <Field label={localeData[currentLang]['common.title']}>
+          <Input value={value.title} onChange={onTitleChange} placeholder={localeData[currentLang]['panel.showDetails']} />
         </Field>
 
         <Field label="URL">
           <DataLinkInput value={value.url} onChange={onUrlChange} suggestions={suggestions} />
         </Field>
 
-        <Field label="Open in new tab">
+        <Field label={localeData[currentLang]['common.openInNewTab']}>
           <Switch checked={value.targetBlank || false} onChange={onOpenInNewTabChanged} />
         </Field>
 

@@ -17,6 +17,8 @@ import {
   ValueMappingFieldConfigSettings,
   valueMappingsOverrideProcessor,
   ThresholdsMode,
+  localeData,
+  currentLang,
 } from '../../data';
 
 import { Switch } from '../components/Switch/Switch';
@@ -32,12 +34,12 @@ import { StatsPickerEditor } from '../components/OptionsUI/stats';
  * Returns collection of common field config properties definitions
  */
 export const getStandardFieldConfigs = () => {
-  const category = ['Standard options'];
+  const category = [localeData[currentLang]['panel.standardOptions']];
   const displayName: FieldConfigPropertyItem<any, string, StringFieldConfigSettings> = {
     id: 'displayName',
     path: 'displayName',
-    name: 'Display name',
-    description: 'Change the field or series name',
+    name: localeData[currentLang]['panel.displayName'],
+    description: localeData[currentLang]['panel.displayNameTips'],
     editor: standardEditorsRegistry.get('text').editor as any,
     override: standardEditorsRegistry.get('text').editor as any,
     process: stringOverrideProcessor,
@@ -52,7 +54,7 @@ export const getStandardFieldConfigs = () => {
   const unit: FieldConfigPropertyItem<any, string, StringFieldConfigSettings> = {
     id: 'unit',
     path: 'unit',
-    name: 'Unit',
+    name: localeData[currentLang]['common.unit'],
     description: '',
 
     editor: standardEditorsRegistry.get('unit').editor as any,
@@ -70,8 +72,8 @@ export const getStandardFieldConfigs = () => {
   const min: FieldConfigPropertyItem<any, number, NumberFieldConfigSettings> = {
     id: 'min',
     path: 'min',
-    name: 'Min',
-    description: 'Leave empty to calculate based on all values',
+    name: localeData[currentLang]['common.min'],
+    description: localeData[currentLang]['panel.minMaxTips'],
 
     editor: standardEditorsRegistry.get('number').editor as any,
     override: standardEditorsRegistry.get('number').editor as any,
@@ -87,8 +89,8 @@ export const getStandardFieldConfigs = () => {
   const max: FieldConfigPropertyItem<any, number, NumberFieldConfigSettings> = {
     id: 'max',
     path: 'max',
-    name: 'Max',
-    description: 'Leave empty to calculate based on all values',
+    name: localeData[currentLang]['common.max'],
+    description: localeData[currentLang]['panel.minMaxTips'],
 
     editor: standardEditorsRegistry.get('number').editor as any,
     override: standardEditorsRegistry.get('number').editor as any,
@@ -105,7 +107,7 @@ export const getStandardFieldConfigs = () => {
   const decimals: FieldConfigPropertyItem<any, number, NumberFieldConfigSettings> = {
     id: 'decimals',
     path: 'decimals',
-    name: 'Decimals',
+    name: localeData[currentLang]['common.decimals'],
 
     editor: standardEditorsRegistry.get('number').editor as any,
     override: standardEditorsRegistry.get('number').editor as any,
@@ -125,7 +127,7 @@ export const getStandardFieldConfigs = () => {
   const thresholds: FieldConfigPropertyItem<any, ThresholdsConfig, ThresholdsFieldConfigSettings> = {
     id: 'thresholds',
     path: 'thresholds',
-    name: 'Thresholds',
+    name: localeData[currentLang]['common.thresholds'],
 
     editor: standardEditorsRegistry.get('thresholds').editor as any,
     override: standardEditorsRegistry.get('thresholds').editor as any,
@@ -139,14 +141,14 @@ export const getStandardFieldConfigs = () => {
       ],
     },
     shouldApply: field => field.type === FieldType.number,
-    category: ['Thresholds'],
+    category: [localeData[currentLang]['common.thresholds']],
     getItemsCount: value => (value ? value.steps.length : 0),
   };
 
   const mappings: FieldConfigPropertyItem<any, ValueMapping[], ValueMappingFieldConfigSettings> = {
     id: 'mappings',
     path: 'mappings',
-    name: 'Value mappings',
+    name: localeData[currentLang]['panel.valueMappings'],
 
     editor: standardEditorsRegistry.get('mappings').editor as any,
     override: standardEditorsRegistry.get('mappings').editor as any,
@@ -154,15 +156,15 @@ export const getStandardFieldConfigs = () => {
     settings: {},
     defaultValue: [],
     shouldApply: field => field.type === FieldType.number,
-    category: ['Value mappings'],
+    category: [localeData[currentLang]['panel.valueMappings']],
     getItemsCount: (value?) => (value ? value.length : 0),
   };
 
   const noValue: FieldConfigPropertyItem<any, string, StringFieldConfigSettings> = {
     id: 'noValue',
     path: 'noValue',
-    name: 'No Value',
-    description: 'What to show when there is no value',
+    name: localeData[currentLang]['panel.noValue'],
+    description: localeData[currentLang]['panel.noValueTips'],
 
     editor: standardEditorsRegistry.get('text').editor as any,
     override: standardEditorsRegistry.get('text').editor as any,
@@ -179,7 +181,7 @@ export const getStandardFieldConfigs = () => {
   const links: FieldConfigPropertyItem<any, DataLink[], StringFieldConfigSettings> = {
     id: 'links',
     path: 'links',
-    name: 'Data links',
+    name: localeData[currentLang]['common.dataLinks'],
     editor: standardEditorsRegistry.get('links').editor as any,
     override: standardEditorsRegistry.get('links').editor as any,
     process: dataLinksOverrideProcessor,
@@ -187,7 +189,7 @@ export const getStandardFieldConfigs = () => {
       placeholder: '-',
     },
     shouldApply: () => true,
-    category: ['Data links'],
+    category: [localeData[currentLang]['common.dataLinks']],
     getItemsCount: value => (value ? value.length : 0),
   };
 

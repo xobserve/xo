@@ -10,7 +10,8 @@ import { PanelOptionsTab } from './PanelOptionsTab';
 
 import { usePanelLatestData } from './usePanelLatestData';
 // import { RightOutlined } from '@ant-design/icons';
-
+import localeData from 'src/core/library/locale'
+import { getState } from 'src/store/store';
 interface Props {
   plugin: PanelPlugin;
   panel: PanelModel;
@@ -219,17 +220,17 @@ export const TabsBarContent: React.FC<{
 
 const tabSelections: Array<SelectableValue<string>> = [
   {
-    label: 'Panel',
+    label: localeData[getState().application.locale]['common.panel'],
     value: 'options',
     tooltip: 'Configure panel display options',
   },
   {
-    label: 'Field',
+    label: localeData[getState().application.locale]['common.field'],
     value: 'defaults',
     tooltip: 'Configure field options',
   },
   {
-    label: 'Overrides',
+    label:  localeData[getState().application.locale]['common.overrides'],
     value: 'overrides',
     tooltip: 'Configure field option overrides',
   },

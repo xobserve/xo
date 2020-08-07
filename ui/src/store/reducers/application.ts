@@ -1,7 +1,7 @@
 import { createAction } from '@reduxjs/toolkit';
 
 import storage from 'src/core/library/utils/localStorage'
-import {config} from 'src/packages/datav-core'
+import {config, setCurrentLang} from 'src/packages/datav-core'
 import { Langs } from 'src/core/library/locale/types';
  
 export  interface ApplicationState {
@@ -21,6 +21,7 @@ export const initialState: ApplicationState = {
   breadcrumbText: defaultBreadCrumbText
 }; 
 
+setCurrentLang(initialState.locale)
 
 export const updateLocale = createAction<string>('application/locale');
 export const updateTheme = createAction<string>('application/theme');
@@ -32,6 +33,7 @@ export const applicationReducer = (state = initialState, action: any) => {
   if (updateLocale.match(action)) {
     const locale = state.locale=== Langs.English? Langs.Chinese: Langs.English
     storage.set('app.locale', locale)
+    setCurrentLang(locale)
     return {...state, locale}
   } 
   

@@ -17,6 +17,7 @@ import { PanelModel } from 'src/views/dashboard/model';
 import { QueryOperationRow } from 'src/views/components/QueryOperationRow/QueryOperationRow';
 import { Input,LegacyInputStatus} from 'src/packages/datav-core/src/ui/components/Form/Legacy/Input/Input';
 import { Switch } from 'src/packages/datav-core/src/ui/components/Form/Legacy/Switch/Switch';
+import { FormattedMessage } from 'react-intl';
 
 const timeRangeValidationEvents: ValidationEvents = {
   [EventsWithValidation.onBlur]: [
@@ -300,7 +301,7 @@ export class QueryOptions extends PureComponent<Props, State> {
 
     return (
       <QueryOperationRow
-        title="Query options"
+        title={<FormattedMessage id="panel.queryOptions"/>}
         headerElement={this.renderCollapsedText()}
         isOpen={isOpen}
         onOpen={this.onOpenOptions}

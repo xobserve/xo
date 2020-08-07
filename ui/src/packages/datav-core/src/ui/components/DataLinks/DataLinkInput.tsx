@@ -67,7 +67,7 @@ export const enableDatalinksPrismSyntax = () => {
 // This memoised also because rerendering the slate editor grabs focus which created problem in some cases this
 // was used and changes to different state were propagated here.
 export const DataLinkInput: React.FC<DataLinkInputProps> = memo(
-  ({ value, onChange, suggestions, placeholder = 'http://your-grafana.com/d/000000010/annotations' }) => {
+  ({ value, onChange, suggestions, placeholder = 'http://URL/a/b/c' }) => {
     enableDatalinksPrismSyntax();
     const editorRef = useRef<Editor>() as RefObject<Editor>;
     const theme = useTheme();

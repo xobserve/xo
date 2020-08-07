@@ -1,7 +1,8 @@
 import memoizeOne from 'memoize-one';
 import { PanelPlugin,config} from 'src/packages/datav-core';
 import { PanelEditorTab, PanelEditorTabId} from './types';
-
+import localeData from 'src/core/library/locale'
+import { getState } from 'src/store/store';
 
 export const getPanelEditorTabs = memoizeOne((plugin: PanelPlugin,currentTab:string) => {
   const tabs: PanelEditorTab[] = [];
@@ -19,14 +20,14 @@ export const getPanelEditorTabs = memoizeOne((plugin: PanelPlugin,currentTab:str
 
     tabs.push({
       id: PanelEditorTabId.Query,
-      text: 'Query',
+      text: localeData[getState().application.locale]['common.query'],
       icon: 'database',
       active: false,
     });
 
     tabs.push({
       id: PanelEditorTabId.Transform,
-      text: 'Transform',
+      text: localeData[getState().application.locale]['common.transform'],
       icon: 'process',
       active: false,
     });
@@ -35,7 +36,7 @@ export const getPanelEditorTabs = memoizeOne((plugin: PanelPlugin,currentTab:str
   if (config.alertingEnabled && plugin.meta.id === 'graph') {
     tabs.push({
       id: PanelEditorTabId.Alert,
-      text: 'Alert',
+      text: localeData[getState().application.locale]['common.alert'],
       icon: 'bell',
       active: false,
     });

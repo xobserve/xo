@@ -40,6 +40,7 @@ import { updateLocation ,LocationState} from 'src/store/reducers/location';
 import SaveDahboard from '../SaveDashboard/SaveDashboard'
 import { cleanUpEditPanel } from 'src/store/reducers/dashboard';
 import { getUrlParams } from 'src/core/library/utils/url';
+import { FormattedMessage } from 'react-intl';
 
 export const PANEL_EDITOR_UI_STATE_STORAGE_KEY = 'grafana.dashboard.editor.ui';
 
@@ -310,7 +311,7 @@ export class PanelEditorUnconnected extends PureComponent<Props, State> {
                 <Row justify="space-between" align="middle" style={{width:'100%'}}>
                     <div className={'toolbarLeft'}>
                             <BackButton onClick={this.onPanelExit} surface="panel" />
-                            <span className={'editorTitle'}>{dashboard.title} / Edit Panel</span>
+                            <span className={'editorTitle'}>{dashboard.title} / <FormattedMessage id="panel.edit"/></span>
                     </div>
 
                     <div>
@@ -321,13 +322,13 @@ export class PanelEditorUnconnected extends PureComponent<Props, State> {
                                 title="Open dashboad settings"
                             /> */}
                             <Button onClick={this.onDiscard} title="Undo all changes">
-                                Discard
+                                <FormattedMessage id="common.discard"/>
                              </Button>
                             <Button onClick={this.onSaveDashboard} title="Apply changes and save dashboard">
-                                Save
+                            <FormattedMessage id="common.save"/>
                             </Button>
                             <Button onClick={this.onPanelExit} title="Apply changes and go back to dashboard">
-                                Apply
+                            <FormattedMessage id="common.apply"/>
                             </Button>
                         </Row>
                     </div>

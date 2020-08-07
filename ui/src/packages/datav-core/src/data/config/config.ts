@@ -58,6 +58,17 @@ export const setCurrentTheme = (tt: ThemeType) => {
     currentTheme = tt
 }
 
+export let localeData;
+export const setLocaleData = (data) => {
+    localeData = data
+}
+
+
+// lang
+export let currentLang  = 'en_US'
+export const setCurrentLang = (lang: string) => {
+    currentLang = lang
+}
 
 
 

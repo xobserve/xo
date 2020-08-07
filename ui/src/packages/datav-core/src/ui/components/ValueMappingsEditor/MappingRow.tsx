@@ -5,7 +5,7 @@ import { Field } from '../Form/Field';
 import { Input } from '../Form/Legacy/Input/Input';
 import {Label} from '../Form/Label'
 
-import { MappingType, RangeMap, SelectableValue, ValueMap, ValueMapping } from '../../../data';
+import { MappingType, RangeMap, SelectableValue, ValueMap, ValueMapping, localeData, currentLang } from '../../../data';
 
 export interface Props {
   valueMapping: ValueMapping;
@@ -13,12 +13,13 @@ export interface Props {
   removeValueMapping: () => void;
 }
 
-const MAPPING_OPTIONS: Array<SelectableValue<MappingType>> = [
-  { value: MappingType.ValueToText, label: 'Value' },
-  { value: MappingType.RangeToText, label: 'Range' },
-];
+
 
 export const MappingRow: React.FC<Props> = ({ valueMapping, updateValueMapping, removeValueMapping }) => {
+  const MAPPING_OPTIONS: Array<SelectableValue<MappingType>> = [
+    { value: MappingType.ValueToText, label: localeData[currentLang]['common.value'] },
+    { value: MappingType.RangeToText, label: localeData[currentLang]['common.range']},
+  ];
   const { type } = valueMapping;
 
   const onMappingValueChange = (value: string) => {
@@ -52,7 +53,7 @@ export const MappingRow: React.FC<Props> = ({ valueMapping, updateValueMapping, 
       return (
         <>
           <Row>
-            <Field label="From">
+            <Field label={localeData[currentLang]['common.from'] }>
               <Input
                 type="number"
                 defaultValue={(valueMapping as RangeMap).from!}
@@ -60,7 +61,7 @@ export const MappingRow: React.FC<Props> = ({ valueMapping, updateValueMapping, 
                 onKeyDown={onKeyDown(onMappingFromChange)}
               />
             </Field>
-            <Field label="To">
+            <Field label={localeData[currentLang]['common.to'] }>
               <Input
                 type="number"
                 defaultValue={(valueMapping as RangeMap).to}
@@ -70,7 +71,7 @@ export const MappingRow: React.FC<Props> = ({ valueMapping, updateValueMapping, 
             </Field>
           </Row>
 
-          <Field label="Text">
+          <Field label={localeData[currentLang]['common.text'] }>
             <Input
               defaultValue={valueMapping.text}
               onBlur={e => onMappingTextChange(e.currentTarget.value)}
@@ -83,7 +84,7 @@ export const MappingRow: React.FC<Props> = ({ valueMapping, updateValueMapping, 
 
     return (
       <>
-        <Field label="Value">
+        <Field label={localeData[currentLang]['common.value'] }>
           <Input
             type="number"
             defaultValue={(valueMapping as ValueMap).value}
@@ -92,7 +93,7 @@ export const MappingRow: React.FC<Props> = ({ valueMapping, updateValueMapping, 
           />
         </Field>
 
-        <Field label="Text">
+        <Field label={localeData[currentLang]['common.text'] }>
           <Input
             defaultValue={valueMapping.text}
             onBlur={e => onMappingTextChange(e.currentTarget.value)}
@@ -105,7 +106,7 @@ export const MappingRow: React.FC<Props> = ({ valueMapping, updateValueMapping, 
 
   const label = (
     <Row justify="space-between" align="middle">
-      <Label>Mapping type</Label>
+      <Label>{localeData[currentLang]['panel.mappingType'] }</Label>
       <Button  icon={<CloseOutlined/>} onClick={removeValueMapping} aria-label="ValueMappingsEditor remove button" />
     </Row>
   );

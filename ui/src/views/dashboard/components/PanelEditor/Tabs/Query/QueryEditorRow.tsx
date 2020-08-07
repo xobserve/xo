@@ -28,6 +28,8 @@ import { QueryOperationAction } from 'src/views/components/QueryOperationRow/Que
 
 import { getDatasourceSrv } from 'src/core/services/datasource';
 import { getTimeSrv } from 'src/core/services/time';
+import localeData from 'src/core/library/locale'
+import { getState } from 'src/store/store';
 
 interface Props {
   panel: PanelModel;
@@ -172,7 +174,7 @@ export class QueryEditorRow extends PureComponent<Props, State> {
       <Row align="middle">
         {hasTextEditMode && (
           <QueryOperationAction
-            title="Toggle text edit mode"
+            title={localeData[getState().application.locale]['panel.toggleMode']}
             icon="pen"
             onClick={e => {
               this.onToggleEditMode(e, props);
@@ -180,19 +182,19 @@ export class QueryEditorRow extends PureComponent<Props, State> {
           />
         )}
         <QueryOperationAction
-          title="Move query down"
+          title={localeData[getState().application.locale]['panel.moveQueryDown']}
           icon="arrow-down"
           onClick={() => this.props.onMoveQuery(query, 1)}
         />
-        <QueryOperationAction title="Move query up" icon="arrow-up" onClick={() => this.props.onMoveQuery(query, -1)} />
+        <QueryOperationAction title={localeData[getState().application.locale]['panel.moveQueryUp']} icon="arrow-up" onClick={() => this.props.onMoveQuery(query, -1)} />
 
-        <QueryOperationAction title="Duplicate query" icon="copy" onClick={this.onCopyQuery} />
+        <QueryOperationAction title={localeData[getState().application.locale]['panel.duplicateQueyr']} icon="copy" onClick={this.onCopyQuery} />
         <QueryOperationAction
-          title="Disable/enable query"
+          title={localeData[getState().application.locale]['panel.toggleQuery']}
           icon={isDisabled ? 'eye-slash' : 'eye'}
           onClick={this.onDisableQuery}
         />
-        <QueryOperationAction title="Remove query" icon="trash-alt" onClick={this.onRemoveQuery} />
+        <QueryOperationAction title={localeData[getState().application.locale]['panel.removeQuery']} icon="trash-alt" onClick={this.onRemoveQuery} />
       </Row>
     );
   };
