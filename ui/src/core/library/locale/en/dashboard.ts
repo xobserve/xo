@@ -1,5 +1,12 @@
 const dashboard = {
     addPanel: 'Add Panel',
+    removePanel: 'Remove panel',
+    removePanelConfirm: 'Are you sure you want to remove this panel?',
+    removeRow: 'Remove row',
+    removeRowConfirm: 'Are you sure you want to remove this row and all its panels?',
+    removeRowOnly: 'Remove row only',
+    editRow: 'Edit row',
+    panelCopyTips: 'Panel copied. Open Add Panel to paste',
     changeNotSave: 'Changes not saved, do you want to leave?',
     refresh: 'Refresh Dashboard',
     addUrl: 'Add time/variable/other to url, this helps sharing snapshot to other user',

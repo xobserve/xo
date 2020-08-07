@@ -7,19 +7,28 @@ import templateSrv from 'src/core/services/templating';
 import appEvents from 'src/core/library/utils/app_events';
 import { CoreEvents } from 'src/types';
 import './Row.less'
-import { Input } from 'antd';
+import { Input,Modal,Button} from 'antd';
+import { FormattedMessage } from 'react-intl';
 
 export interface DashboardRowProps {
   panel: PanelModel;
   dashboard: DashboardModel;
 }
 
-export class DashboardRow extends React.Component<DashboardRowProps, any> {
+interface State {
+  collapsed: boolean
+  deleteRowVisible: boolean
+  editRowVisible: boolean
+}
+
+export class DashboardRow extends React.Component<DashboardRowProps, State> {
   constructor(props: DashboardRowProps) {
     super(props);
 
     this.state = {
       collapsed: this.props.panel.collapsed,
+      deleteRowVisible: false,
+      editRowVisible: false
     };
 
     this.props.dashboard.on(CoreEvents.templateVariableValueUpdated, this.onVariableUpdated);
@@ -43,30 +52,24 @@ export class DashboardRow extends React.Component<DashboardRowProps, any> {
 
   onUpdate = () => {
     this.props.dashboard.processRepeats();
-    this.forceUpdate();
+    this.setState({
+      ...this.state,
+      editRowVisible: false
+    })
   };
 
   onOpenSettings = () => {
-    appEvents.emit(CoreEvents.showModal, {
-        title: 'Row title',        
-        component: <Input defaultValue={this.props.panel.title} onChange={(e) =>  this.props.panel.title = e.currentTarget.value}/>,
-        onConfirm: this.onUpdate
-    });
+    this.setState({
+      ...this.state,
+      editRowVisible: true
+    })
   };
 
   onDelete = () => {
-    appEvents.emit(CoreEvents.showConfirmModal, {
-      title: 'Delete Row',
-      text: 'Are you sure you want to remove this row and all its panels?',
-      altActionText: 'Delete row only',
-      icon: 'fa-trash',
-      onConfirm: () => {
-        this.props.dashboard.removeRow(this.props.panel, true);
-      },
-      onAltAction: () => {
-        this.props.dashboard.removeRow(this.props.panel, false);
-      },
-    });
+    this.setState({
+      ...this.state,
+      deleteRowVisible: true
+    })
   };
 
   render() {
@@ -81,6 +84,7 @@ export class DashboardRow extends React.Component<DashboardRowProps, any> {
     const canEdit = this.props.dashboard.meta.canEdit === true;
 
     return (
+      <>
       <div className={classes}>
         <a className="dashboard-row__title pointer" onClick={this.onToggle}>
           <Icon name={this.state.collapsed ? 'angle-right' : 'angle-down'} />
@@ -106,6 +110,35 @@ export class DashboardRow extends React.Component<DashboardRowProps, any> {
         )}
         {canEdit && <div className="dashboard-row__drag grid-drag-handle" />}
       </div>
+
+      <Modal
+          visible={this.state.deleteRowVisible}
+          title={<FormattedMessage id="dashboard.removeRow"/>}
+          onCancel={() => this.setState({...this.state,deleteRowVisible:false})}
+          footer={[
+            <Button key="delete-row-only" onClick={() =>  this.props.dashboard.removeRow(this.props.panel, false)}>
+              {<FormattedMessage id="dashboard.removeRowOnly"/>}
+            </Button>,
+            <Button key="delete-row" type="primary" onClick={() =>  this.props.dashboard.removeRow(this.props.panel, true)} danger>
+              {<FormattedMessage id="common.remove"/>}
+            </Button>,
+            <Button key="cancel" type="primary" onClick={() => this.setState({...this.state,deleteRowVisible:false})}>
+               {<FormattedMessage id="common.cancel"/>}
+          </Button>,
+          ]}
+        >
+          <p>{<FormattedMessage id="dashboard.removeRowConfirm"/>}</p>
+        </Modal>
+
+        <Modal
+          visible={this.state.editRowVisible}
+          title={<FormattedMessage id="dashboard.editRow"/>}
+          onOk={this.onUpdate}
+          onCancel={() => this.setState({...this.state,editRowVisible:false})}
+        >
+         <Input defaultValue={this.props.panel.title} onChange={(e) =>  this.props.panel.title = e.currentTarget.value}/>
+        </Modal>
+      </>
     );
   }
 }

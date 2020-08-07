@@ -6,7 +6,7 @@ import localStore from 'src/core/library/utils/localStore';
 // Models
 import { DashboardModel } from './DashboardModel';
 import { PanelModel } from './PanelModel';
-import { TimeRange,rangeUtil,dateMath,theme} from 'src/packages/datav-core';
+import { TimeRange,rangeUtil,dateMath,theme, localeData, currentLang} from 'src/packages/datav-core';
 import {appEvents} from 'src/core/library/utils/app_events'
 // Utils
 import { isString as _isString } from 'lodash';
@@ -22,9 +22,9 @@ export const removePanel = (dashboard: DashboardModel, panel: PanelModel, ask: b
   // confirm deletion
   if (ask !== false) {
     appEvents.emit(CoreEvents.showConfirmModal, {
-      title: 'Remove Panel',
-      text: 'Are you sure you want to remove this panel?',
-      yesText: 'Remove',
+      title: localeData[currentLang]['dashboard.removePanel'],
+      text: localeData[currentLang]['dashboard.removePanelConfirm'],
+      yesText: localeData[currentLang]['common.remove'],
       onConfirm: () => removePanel(dashboard, panel, false),
     });
     return;
@@ -38,7 +38,7 @@ export const duplicatePanel = (dashboard: DashboardModel, panel: PanelModel) => 
 
 export const copyPanel = (panel: PanelModel) => {
   localStore.set(LS_PANEL_COPY_KEY, JSON.stringify(panel.getSaveModel()));
-  message.success('Panel copied. Open Add Panel to paste')
+  message.success(localeData[currentLang]['dashboard.panelCopyTips'])
 };
 
 

@@ -1,6 +1,13 @@
 const dashboard = {
     addPanel: '新建图表',
+    removePanel: '移除图表',
+    removePanelConfirm: '你确认要删除该图表吗?',
+    removeRow: '移除Row',
+    editRow: '编辑Row',
+    removeRowConfirm: '你确认删除该Row和它下面的所有图表吗?',
+    removeRowOnly: '仅删除Row',
     changeNotSave: '修改还未保存，你确定要离开页面吗？',
+    panelCopyTips: '图表已拷贝，请通过添加图表的方式来粘贴',
     refresh: '刷新图表',
     addUrl: '将当前的时间、变量等参数添加到url中，有助于分享链接给他人',
     absoluteTimePickerTitle: '手动指定时间',
