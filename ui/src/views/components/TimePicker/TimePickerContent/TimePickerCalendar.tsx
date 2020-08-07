@@ -1,65 +1,67 @@
 import React, { memo, useState, useEffect, useCallback } from 'react';
 import { css } from 'emotion';
 import Calendar from 'react-calendar/dist/entry.nostyle';
-import { DateTime, TimeZone, dateTimeParse,stylesFactory,ClickOutsideWrapper} from 'src/packages/datav-core';
+import { DateTime, TimeZone, dateTimeParse,stylesFactory,ClickOutsideWrapper,DatavTheme, useTheme} from 'src/packages/datav-core';
 import { TimePickerTitle } from './TimePickerTitle';
 import { Button } from 'antd';
 import { ClockCircleOutlined, LeftOutlined, RightOutlined } from '@ant-design/icons';
 import { FormattedMessage } from 'react-intl';
+import { getThemeColors } from './colors' 
 
-const getStyles = stylesFactory(() => {
+const getStyles = stylesFactory((theme: DatavTheme) => {
+  const colors = getThemeColors(theme);
+
   return {
     container: css`
-    top: 0;
-    position: absolute;
-    right: 546px;
-    box-shadow: 0px 0px 20px #000000;
-    background-color: #141619;
-    z-index: -1;
-
-    &:after {
-      display: block;
-      background-color: #141619;
-      width: 19px;
-      height: 381px;
-      content: ' ';
-      position: absolute;
       top: 0;
-      right: -19px;
-      border-left: 1px solid #202226;
-    }
-  `,
-  modal: css`
-    position: fixed;
-    top: 20%;
-    width: 100%;
-    z-index: 1060;
-  `,
-  content: css`
-    margin: 0 auto;
-    width: 268px;
-  `,
-  backdrop: css`
-    position: fixed;
-    top: 0;
-    right: 0;
-    bottom: 0;
-    left: 0;
-    background: #202226;
-    opacity: 0.7;
-    z-index: 1050;
-    text-align: center;
-  `,
-    
+      position: absolute;
+      right: 546px;
+      box-shadow: 0px 0px 20px ${colors.shadow};
+      background-color: ${colors.background};
+      z-index: -1;
+
+      &:after {
+        display: block;
+        background-color: ${colors.background};
+        width: 19px;
+        height: 381px;
+        content: ' ';
+        position: absolute;
+        top: 0;
+        right: -19px;
+        border-left: 1px solid ${colors.border};
+      }
+    `,
+    modal: css`
+      position: fixed;
+      top: 20%;
+      width: 100%;
+      z-index: ${theme.zIndex.modal};
+    `,
+    content: css`
+      margin: 0 auto;
+      width: 268px;
+    `,
+    backdrop: css`
+      position: fixed;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      left: 0;
+      background: #202226;
+      opacity: 0.7;
+      z-index: ${theme.zIndex.modalBackdrop};
+      text-align: center;
+    `,
   };
 });
 
-// {border: "#202226", background: "#141619", shadow: "#000000", formBackground: "#202226"}
+const getFooterStyles = stylesFactory((theme: DatavTheme) => {
+  const colors = getThemeColors(theme);
 
-const getFooterStyles = stylesFactory(() => {
   return {
     container: css`
-      background-color: #141619;
+      background-color: ${colors.background};
       display: flex;
       justify-content: center;
       padding: 10px;
@@ -73,12 +75,14 @@ const getFooterStyles = stylesFactory(() => {
   };
 });
 
-const getBodyStyles = stylesFactory(() => {
+const getBodyStyles = stylesFactory((theme: DatavTheme) => {
+  const colors = getThemeColors(theme);
+
   return {
     title: css`
-      color: #c7d0d9;
-      background-color: #141619;
-      font-size: 14px;
+      color: ${theme.colors.text};
+      background-color: ${colors.background};
+      font-size: ${theme.typography.size.md};
       border: 1px solid transparent;
 
       &:hover {
@@ -86,8 +90,8 @@ const getBodyStyles = stylesFactory(() => {
       }
     `,
     body: css`
-      z-index: 1060;
-      background-color: #141619;
+      z-index: ${theme.zIndex.modal};
+      background-color: ${colors.background};
       width: 268px;
 
       abbr {
@@ -101,15 +105,15 @@ const getBodyStyles = stylesFactory(() => {
       .react-calendar__navigation {
         padding-top: 4px;
         background-color: inherit;
-        color: #c7d0d9;
+        color: ${theme.colors.text};
         border: 0;
-        font-weight: 500;
+        font-weight: ${theme.typography.weight.semibold};
       }
 
       .react-calendar__month-view__weekdays {
         background-color: inherit;
         text-align: center;
-        color: #1f60c4;
+        color: ${theme.palette.blue77};
 
         abbr {
           border: 0;
@@ -140,9 +144,9 @@ const getBodyStyles = stylesFactory(() => {
 
       .react-calendar__tile--active,
       .react-calendar__tile--active:hover {
-        color: #fff;
-        font-weight: 500;
-        background: #5794f2;
+        color: ${theme.palette.white};
+        font-weight: ${theme.typography.weight.semibold};
+        background: ${theme.palette.blue95};
         box-shadow: none;
         border: 0px;
       }
@@ -151,14 +155,13 @@ const getBodyStyles = stylesFactory(() => {
       .react-calendar__tile--rangeStart {
         padding: 0;
         border: 0px;
-        color: ;
-        font-weight: 500;
-        background: #1f60c4;
+        color: ${theme.palette.white};
+        font-weight: ${theme.typography.weight.semibold};
+        background: ${theme.palette.blue95};
 
         abbr {
           border-radius: 100px;
           display: block;
-          margin-top: -15px !important;
           height: 26px;
         }
       }
@@ -176,10 +179,12 @@ const getBodyStyles = stylesFactory(() => {
   };
 });
 
-const getHeaderStyles = stylesFactory(() => {
+const getHeaderStyles = stylesFactory((theme: DatavTheme) => {
+  const colors = getThemeColors(theme);
+
   return {
     container: css`
-      background-color: #141619;
+      background-color: ${colors.background};
       display: flex;
       justify-content: space-between;
       padding: 7px;
@@ -201,7 +206,8 @@ interface Props {
 const stopPropagation = (event: React.MouseEvent<HTMLDivElement>) => event.stopPropagation();
 
 export const TimePickerCalendar = memo<Props>(props => {
-  const styles = getStyles();
+  const theme = useTheme()
+  const styles = getStyles(theme);
   const { isOpen, isFullscreen } = props;
   
   if (!isOpen) {
@@ -233,7 +239,8 @@ export const TimePickerCalendar = memo<Props>(props => {
 });
 
 const Header = memo<Props>(({ onClose }) => {
-  const styles = getHeaderStyles();
+  const theme = useTheme()
+  const styles = getHeaderStyles(theme);
 
   return (
     <div className={styles.container}>
@@ -246,7 +253,8 @@ const Header = memo<Props>(({ onClose }) => {
 const Body = memo<Props>(({ onChange, from, to, timeZone }) => {
   const [value, setValue] = useState<Date[]>();
   const onCalendarChange = useOnCalendarChange(onChange, timeZone);
-  const styles = getBodyStyles();
+  const theme = useTheme()
+  const styles = getBodyStyles(theme);
 
   useEffect(() => {
     setValue(inputToValue(from, to));
@@ -269,7 +277,8 @@ const Body = memo<Props>(({ onChange, from, to, timeZone }) => {
 });
 
 const Footer = memo<Props>(({ onClose, onApply }) => {
-  const styles = getFooterStyles();
+  const theme = useTheme()
+  const styles = getFooterStyles(theme);
 
   return (
     <div className={styles.container}>

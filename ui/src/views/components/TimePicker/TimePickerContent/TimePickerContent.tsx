@@ -1,4 +1,4 @@
-import { isDateTime, TimeOption, TimeRange, TimeZone,stylesFactory,CustomScrollbar} from 'src/packages/datav-core';
+import { isDateTime, TimeOption, TimeRange, TimeZone,stylesFactory,CustomScrollbar,DatavTheme, useTheme} from 'src/packages/datav-core';
 import { css } from 'emotion';
 import React, {useState } from 'react';
 import { useMedia } from 'react-use';
@@ -8,27 +8,29 @@ import { TimePickerTitle } from './TimePickerTitle';
 import { TimeRangeForm } from './TimeRangeForm';
 import { TimeRangeList } from './TimeRangeList';
 import { FormattedMessage  as Message} from 'react-intl';
+import { getThemeColors } from './colors' 
 
-const getStyles = stylesFactory(() => {
+const getStyles = stylesFactory((theme: DatavTheme) => {
+  const colors = getThemeColors(theme);
+
   return {
     container: css`
-      color: rgba(255, 255, 255, 0.65);
       display: flex;
-      background: #141619;
-      box-shadow: 0px 0px 20px #000000;
+      background: ${colors.background};
+      box-shadow: 0px 0px 20px ${colors.shadow};
       position: absolute;
-      z-index: 1060;
+      z-index: ${theme.zIndex.modal};
       width: 546px;
       height: 381px;
       top: 116%;
       margin-left: -322px;
 
-      @media only screen and (max-width: 992px) {
+      @media only screen and (max-width: ${theme.breakpoints.lg}) {
         width: 218px;
         margin-left: 6px;
       }
 
-      @media only screen and (max-width: 544px) {
+      @media only screen and (max-width: ${theme.breakpoints.sm}) {
         width: 264px;
         margin-left: -100px;
       }
@@ -36,18 +38,18 @@ const getStyles = stylesFactory(() => {
     leftSide: css`
       display: flex;
       flex-direction: column;
-      border-right: 1px solid #202226;
+      border-right: 1px solid ${colors.border};
       width: 60%;
       overflow: hidden;
 
-      @media only screen and (max-width: 992px) {
+      @media only screen and (max-width: ${theme.breakpoints.lg}) {
         display: none;
       }
     `,
     rightSide: css`
       width: 40% !important;
 
-      @media only screen and (max-width: 992px) {
+      @media only screen and (max-width: ${theme.breakpoints.lg}) {
         width: 100% !important;
       }
     `,
@@ -57,20 +59,22 @@ const getStyles = stylesFactory(() => {
   };
 });
 
-const getNarrowScreenStyles = stylesFactory(() => {
+const getNarrowScreenStyles = stylesFactory((theme: DatavTheme) => {
+  const colors = getThemeColors(theme);
+
   return {
     header: css`
       display: flex;
       flex-direction: row;
       justify-content: space-between;
       align-items: center;
-      border-bottom: 1px solid #202226;
+      border-bottom: 1px solid ${colors.border};
       padding: 7px 9px 7px 9px;
     `,
     body: css`
-      border-bottom: 1px solid #202226;
-      background: #202226;
-      box-shadow: inset 0px 2px 2px #000000;
+      border-bottom: 1px solid ${colors.border};
+      background: ${colors.formBackground};
+      box-shadow: inset 0px 2px 2px ${colors.shadow};
     `,
     form: css`
       padding: 7px 9px 7px 9px;
@@ -78,7 +82,7 @@ const getNarrowScreenStyles = stylesFactory(() => {
   };
 });
 
-const getFullScreenStyles = stylesFactory(() => {
+const getFullScreenStyles = stylesFactory((theme: DatavTheme) => {
   return {
     container: css`
       padding-top: 9px;
@@ -93,6 +97,26 @@ const getFullScreenStyles = stylesFactory(() => {
       display: flex;
       flex-direction: column;
       justify-content: flex-end;
+    `,
+  };
+});
+
+const getEmptyListStyles = stylesFactory((theme: DatavTheme) => {
+  const colors = getThemeColors(theme);
+
+  return {
+    container: css`
+      background-color: ${colors.formBackground};
+      padding: 12px;
+      margin: 12px;
+
+      a,
+      span {
+        font-size: 13px;
+      }
+    `,
+    link: css`
+      color: ${theme.colors.linkExternal};
     `,
   };
 });
@@ -117,7 +141,8 @@ interface FormProps extends Omit<Props, 'history'> {
 }
 
 export const TimePickerContentWithScreenSize: React.FC<PropsWithScreenSize> = props => {
-  const styles = getStyles();
+  const theme = useTheme();
+  const styles = getStyles(theme);
   const historyOptions = mapToHistoryOptions(props.history, props.timeZone);
   const { quickOptions = [], otherOptions = [], isFullscreen } = props;
 
@@ -158,11 +183,15 @@ const NarrowScreenForm: React.FC<FormProps> = props => {
   const isAbsolute = isDateTime(props.value.raw.from) || isDateTime(props.value.raw.to);
   const [collapsed, setCollapsed] = useState(isAbsolute);
 
+  const theme = useTheme();
+
+  const styles = getNarrowScreenStyles(theme);
+
   if (!props.visible) {
     return null;
   }
 
-  const styles = getNarrowScreenStyles();
+
   
   return (
     <>
@@ -187,10 +216,12 @@ const NarrowScreenForm: React.FC<FormProps> = props => {
 };
 
 const FullScreenForm: React.FC<FormProps> = props => {
+  const theme = useTheme();
+  const styles = getFullScreenStyles(theme);
+
   if (!props.visible) {
     return null;
   }
-  const styles = getFullScreenStyles();
 
   return (
     <>
