@@ -8,10 +8,11 @@ import { dashboardInitCompleted, dashboardInitError } from "src/store/reducers/d
 import { annotationsSrv } from 'src/core/services/annotations';
 import { message } from "antd";
 
-export function initDashboard(uid: string | undefined,initOrigin: any): ThunkResult<void>  {
+export function initDashboard(uid: string | undefined,initOrigin?: any): ThunkResult<void>  {
   return async (dispatch, getState) => {
   // try {
-    let ds;
+    let ds: DashboardModel;
+    let gds: DashboardModel;
     if (!uid) {
       // return new dashboard
       ds = new DashboardModel(getNewDashboardModelData().dashboard, getNewDashboardModelData().meta)
@@ -19,13 +20,29 @@ export function initDashboard(uid: string | undefined,initOrigin: any): ThunkRes
       try {
         const res = await getBackendSrv().get(`/api/dashboard/uid/${uid}`)
         ds = new DashboardModel(res.data.dashboard,res.data.meta)
+        gds = new DashboardModel(res.data.gdashboard)
       } catch (error) {
         dispatch(dashboardInitError(error.status))
         return 
       }
     }
 
-
+    // combine dashboard variables and global variables, specially, dashboard ones will overrides global ones
+    for (let i=0;i<gds.templating.list.length;i++) {
+      const gvar = gds.templating.list[i]
+      let exist = false 
+      for (let j=0;j<ds.templating.list.length;j++) {
+        const dvar = ds.templating.list[j]
+        if (dvar.name === gvar.name) {
+          exist = true
+          break 
+        }
+      }
+      if (!exist) {
+        ds.templating.list.push(gvar)
+      }
+    }
+    
     // template values service needs to initialize completely before
     // the rest of the dashboard can load
     try {

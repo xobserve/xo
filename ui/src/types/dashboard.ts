@@ -1,5 +1,7 @@
 import { PanelPlugin } from "src/packages/datav-core";
 
+export const GlobalVariableUid = '-1'
+
 export interface DashboardDTO {
     redirectUri?: string;
     dashboard: DashboardDataDTO;

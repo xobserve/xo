@@ -3,7 +3,7 @@ import { Icon } from 'src/packages/datav-core';
 
 
 import { NEW_VARIABLE_ID, toVariableIdentifier, toVariablePayload, VariableIdentifier } from '../state/types';
-import { StoreState } from '../../../types';
+import { StoreState, GlobalVariableUid } from '../../../types';
 import { VariableEditorList } from './VariableEditorList';
 import { VariableEditorEditor } from './VariableEditorEditor';
 import { MapDispatchToProps, MapStateToProps } from 'react-redux';
@@ -14,8 +14,11 @@ import { switchToEditMode, switchToListMode, switchToNewMode } from './actions';
 import { changeVariableOrder, duplicateVariable, removeVariable } from '../state/sharedReducer';
 import { Button } from 'antd';
 import { FormattedMessage } from 'react-intl';
+import { DashboardModel } from 'src/views/dashboard/model';
 
-interface OwnProps {}
+interface OwnProps {
+  dashboard: DashboardModel
+}
 
 interface ConnectedProps {
   idInEditor: string | null;
@@ -73,14 +76,14 @@ class VariableEditorContainerUnconnected extends PureComponent<Props> {
             <a
               onClick={this.onChangeToListMode}
             >
-              <FormattedMessage id="dashboard.variable"/>
+              <FormattedMessage id="dashboard.variable" />
             </a>
             {this.props.idInEditor === NEW_VARIABLE_ID && (
               <span>
                 <Icon
                   name="angle-right"
                 />
-                <FormattedMessage id="common.new"/>
+                <FormattedMessage id="common.new" />
               </span>
             )}
             {this.props.idInEditor && this.props.idInEditor !== NEW_VARIABLE_ID && (
@@ -88,7 +91,7 @@ class VariableEditorContainerUnconnected extends PureComponent<Props> {
                 <Icon
                   name="angle-right"
                 />
-                 <FormattedMessage id="common.edit"/>
+                <FormattedMessage id="common.edit" />
               </span>
             )}
           </h3>
@@ -98,13 +101,14 @@ class VariableEditorContainerUnconnected extends PureComponent<Props> {
             <Button
               onClick={this.onNewVariable}
             >
-               <FormattedMessage id="common.new"/>
+              <FormattedMessage id="common.new" />
             </Button>
           )}
         </div>
 
         {!variableToEdit && (
           <VariableEditorList
+            dashboard={this.props.dashboard}
             variables={this.props.variables}
             onAddClick={this.onNewVariable}
             onEditClick={this.onEditVariable}
@@ -119,10 +123,22 @@ class VariableEditorContainerUnconnected extends PureComponent<Props> {
   }
 }
 
-const mapStateToProps: MapStateToProps<ConnectedProps, OwnProps, StoreState> = state => ({
-  variables: getVariables(state, true),
-  idInEditor: state.templating.editor.id,
-});
+const mapStateToProps: MapStateToProps<ConnectedProps, OwnProps, StoreState> = (state,props) => {
+  let variables = getVariables(state, true)
+  variables = variables.filter(variable => {
+    // dont render global variables in common dashboards
+    if (props.dashboard.uid !== GlobalVariableUid) {
+      if (variable.global) {
+        return false
+      }
+    }
+    return true
+  })
+  return {
+    variables: variables,
+    idInEditor: state.templating.editor.id,
+  }
+};
 
 const mapDispatchToProps: MapDispatchToProps<DispatchProps, OwnProps> = {
   changeVariableOrder,

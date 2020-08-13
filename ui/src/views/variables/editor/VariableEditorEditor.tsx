@@ -1,7 +1,7 @@
 import React, { ChangeEvent, FormEvent, PureComponent } from 'react';
 import isEqual from 'lodash/isEqual';
-import {VariableType } from 'src/packages/datav-core';
-import { InlineFormLabel } from 'src/packages/datav-core';
+import { VariableType } from 'src/packages/datav-core';
+import { InlineFormLabel, LegacyForms } from 'src/packages/datav-core';
 
 import { variableAdapters } from '../adapters';
 import { NEW_VARIABLE_ID, toVariablePayload, VariableIdentifier } from '../state/types';
@@ -18,6 +18,7 @@ import { changeVariableProp, changeVariableType } from '../state/sharedReducer';
 import { Button, notification } from 'antd';
 import { FormattedMessage } from 'react-intl';
 
+const { LegacySwitch } = LegacyForms
 export interface OwnProps {
   identifier: VariableIdentifier;
 }
@@ -121,11 +122,11 @@ export class VariableEditorEditorUnConnected extends PureComponent<Props> {
     return (
       <div>
         <form aria-label="Variable editor Form" onSubmit={this.onHandleSubmit}>
-          <h5 className="section-heading"><FormattedMessage id="common.general"/></h5>
+          <h5 className="section-heading"><FormattedMessage id="common.general" /></h5>
           <div className="gf-form-group">
             <div className="gf-form-inline">
               <div className="gf-form max-width-19">
-                <span className="gf-form-label width-6"><FormattedMessage id="common.name"/></span>
+                <span className="gf-form-label width-6"><FormattedMessage id="common.name" /></span>
                 <input
                   type="text"
                   className="gf-form-input"
@@ -138,7 +139,7 @@ export class VariableEditorEditorUnConnected extends PureComponent<Props> {
               </div>
               <div className="gf-form max-width-19">
                 <InlineFormLabel width={6} tooltip={variableAdapters.get(this.props.variable.type).description}>
-                  <FormattedMessage id="common.type"/>
+                  <FormattedMessage id="common.type" />
                 </InlineFormLabel>
                 <div className="gf-form-select-wrapper max-width-17">
                   <select
@@ -174,7 +175,7 @@ export class VariableEditorEditorUnConnected extends PureComponent<Props> {
                 />
               </div>
               <div className="gf-form max-width-19">
-                <span className="gf-form-label width-6"><FormattedMessage id="common.hide"/></span>
+                <span className="gf-form-label width-6"><FormattedMessage id="common.hide" /></span>
                 <div className="gf-form-select-wrapper max-width-15">
                   <select
                     className="gf-form-input"
@@ -205,7 +206,7 @@ export class VariableEditorEditorUnConnected extends PureComponent<Props> {
               <Button htmlType="submit" type="primary">Update</Button>
             )}
             {newVariable && (
-              <Button htmlType="submit" type="primary"><FormattedMessage id="common.add"/></Button>
+              <Button htmlType="submit" type="primary"><FormattedMessage id="common.add" /></Button>
             )}
           </div>
         </form>

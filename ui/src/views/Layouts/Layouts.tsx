@@ -27,7 +27,8 @@ const Layouts = () => {
 
   const appClasses = classNames({
     'datav-layouts' : true,
-    'datav-layouts-dark': currentTheme === ThemeType.Dark
+    'datav-layouts-dark': currentTheme === ThemeType.Dark,
+    'datav-layouts-light': currentTheme === ThemeType.Light
   })
 
   return (

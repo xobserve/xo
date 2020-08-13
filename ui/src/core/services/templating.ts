@@ -55,16 +55,6 @@ export class TemplateSrv implements BaseTemplateSrv {
     return this.builtIns.__interval.value;
   }
 
-  /**
-   * @deprecated: this instance variable should not be used and will be removed in future releases
-   *
-   * Use getVariables function instead
-   */
-  get variables(): any[] {
-    deprecationWarning('template_srv.ts', 'variables', 'getVariables');
-    return this.getVariables();
-  }
-
   getVariables(): VariableModel[] {
     if (config.featureToggles.newVariables) {
       return this.dependencies.getVariables();

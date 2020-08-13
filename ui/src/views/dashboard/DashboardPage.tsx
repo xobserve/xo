@@ -13,9 +13,9 @@ import { initDashboard } from './model/initDashboard';
 import { withRouter, RouteComponentProps } from 'react-router-dom';
 import { PanelModel } from './model';
 import { PanelEditor } from './components/PanelEditor/PanelEditor'
-import { store } from 'src/store/store';
+import { store, dispatch } from 'src/store/store';
 import { isInDashboardPage, cleanUpDashboard } from 'src/store/reducers/dashboard';
-import { StoreState, CoreEvents } from 'src/types'
+import { StoreState, CoreEvents, GlobalVariableUid } from 'src/types'
 import { connect } from 'react-redux';
 import appEvents from 'src/core/library/utils/app_events';
 import { updateBreadcrumbText } from 'src/store/reducers/application';
@@ -29,6 +29,7 @@ import { PanelInspector, InspectTab } from '../components/Inspector/PanelInspect
 import impressionSrv from 'src/core/services/impression'
 
 import { FormattedMessage as Message} from 'react-intl';
+import { onTimeRangeUpdated } from '../variables/state/actions';
 
 interface DashboardPageProps {
     routeID?: string
@@ -258,7 +259,8 @@ class DashboardPage extends React.PureComponent<DashboardPageProps & RouteCompon
         return panel
     }
 
-    timeRangeUpdated = (_: TimeRange) => {
+    timeRangeUpdated = (range: TimeRange) => {
+        dispatch(onTimeRangeUpdated(range));
         this.props.dashboard?.startRefresh()
     }
 
@@ -333,7 +335,7 @@ class DashboardPage extends React.PureComponent<DashboardPageProps & RouteCompon
                 
                 {inspectPanel && <PanelInspector dashboard={dashboard} panel={inspectPanel} defaultTab={inspectTab} />}
                 {editPanel && <PanelEditor dashboard={dashboard} sourcePanel={editPanel} />}
-                {settingView && <DashboardSettings dashboard={dashboard} viewId={this.props.settingView} />}
+                {settingView && <DashboardSettings dashboard={dashboard} viewId={this.props.dashboard.uid !== GlobalVariableUid? this.props.settingView:'variables'} />}
             </div>
         )
     }

@@ -45,7 +45,9 @@ const dashboard = {
     changeOwnerConfirm: "你确定要把仪表盘转交给另外一个团队吗？转交后，你将丢失该仪表板的所有权和管理权!",
     importTip: '输入JSON元数据来导入仪表盘',
     add: '新建仪表盘',
-    uid: '仪表盘uid'
+    uid: '仪表盘uid',
+    globalVisible: '全局可见',
+    globalTooltip: '当勾选后，该变量将变为全局变量，每个仪表盘都可见',
 }
 
 export default dashboard

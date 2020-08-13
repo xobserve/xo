@@ -137,10 +137,18 @@ export const BottomNavLinks = (props:Props) => {
             }) 
             return (
               <li key={`${child.title}-${index}`} className={subMenuItemClasses}>
-                <Link to={child.url} rel="noopener">
-                  {/* {child.icon && <Icon name={child.icon as IconName} className={subMenuIconClassName} />} */}
-                  {child.title}
-                </Link>
+                {
+                  child.redirectTo ?      
+                  <Link to={child.redirectTo} rel="noopener">
+                    {/* {child.icon && <Icon name={child.icon as IconName} className={subMenuIconClassName} />} */}
+                    {child.title}
+                  </Link> :
+                     <Link to={child.url} rel="noopener">
+                     {/* {child.icon && <Icon name={child.icon as IconName} className={subMenuIconClassName} />} */}
+                     {child.title}
+                   </Link>
+                }
+           
               </li>
             );
           })}

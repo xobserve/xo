@@ -6,8 +6,10 @@ import { QueryVariableModel, VariableModel,StoreState } from 'src/types';
 import { toVariableIdentifier, VariableIdentifier } from '../state/types';
 import { connect } from 'react-redux';
 import { Langs } from 'src/core/library/locale/types';
+import { DashboardModel } from 'src/views/dashboard/model';
 
 export interface Props {
+  dashboard: DashboardModel
   variables: VariableModel[];
   onAddClick: (event: MouseEvent<HTMLAnchorElement>) => void;
   onEditClick: (identifier: VariableIdentifier) => void;
@@ -108,6 +110,7 @@ export class VariableEditorList extends PureComponent<Props> {
                 <tbody>
                   {this.props.variables.map((state, index) => {
                     const variable = state as QueryVariableModel;
+
                     return (
                       <tr key={`${variable.name}-${index}`}>
                         <td style={{ width: '1%' }}>

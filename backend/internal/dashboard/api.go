@@ -1,6 +1,7 @@
 package dashboard
 
 import (
+	// "fmt"
 	"database/sql"
 	"encoding/json"
 	"sort"
@@ -243,9 +244,17 @@ func GetDashboard(c *gin.Context) {
 	data.Set("id", id)
 	data.Set("uid", uid)
 
+	// get global variables 
+	gdata := simplejson.New()
+	var gRawJSON []byte
+
+	db.SQL.QueryRow(`SELECT data FROM dashboard WHERE uid=?`, -1).Scan(&gRawJSON)
+	gdata.UnmarshalJSON(gRawJSON)
+
 	c.JSON(200, common.ResponseSuccess(utils.Map{
 		"dashboard": data,
 		"meta":      dashMeta,
+		"gdashboard":  gdata,
 	}))
 }
 

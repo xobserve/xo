@@ -45,7 +45,9 @@ const dashboard = {
     changeOwnerConfirm: "Are you sure you want to change owner to another team? You will lost control to this dashboard",
     importTip: 'Import via panel json',
     add: 'Add dashboard',
-    uid: 'Dashboard uid'
+    uid: 'Dashboard uid',
+    globalVisible: 'Global visible',
+    globalTooltip: 'When checked,this variable will be global variable,it will be seen in every dashboard',
 }
 
 export default dashboard

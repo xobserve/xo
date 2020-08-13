@@ -96,7 +96,8 @@ const common = {
     absolute: '绝对值',
     percentage: '百分比',
     discard: '丢弃',
-    apply: '应用'
+    apply: '应用',
+    globalVariable: '全局变量',
 }
 
 export default common

@@ -18,6 +18,7 @@ import GeneralSetting from './General'
 import JsonSetting from './JsonSetting'
 import Permission from './Permission'
 import { FormattedMessage } from 'react-intl';
+import { GlobalVariableUid } from 'src/types';
 
 export interface Props {
   dashboard: DashboardModel | null;
@@ -41,11 +42,14 @@ export class DashboardSettings extends PureComponent<Props> {
     this.sections = [];
 
     if (this.props.dashboard.meta.canEdit) {
-      this.sections.push({
-        title: <FormattedMessage id="dashboard.general"/>,
-        id: 'general',
-        icon: 'sliders-v-alt',
-      });
+      if (this.props.dashboard.uid != GlobalVariableUid) {
+        this.sections.push({
+          title: <FormattedMessage id="dashboard.general"/>,
+          id: 'general',
+          icon: 'sliders-v-alt',
+        });
+      }
+
       //   this.sections.push({
       //     title: 'Annotations',
       //     id: 'annotations',
@@ -72,26 +76,22 @@ export class DashboardSettings extends PureComponent<Props> {
     // }
 
     if (this.props.dashboard.id && this.props.dashboard.meta.canAdmin) {
-      this.sections.push({
-        title: <FormattedMessage id="dashboard.permission"/>,
-        id: 'permissions',
-        icon: 'lock',
-      });
+      if (this.props.dashboard.uid != GlobalVariableUid) {
+        this.sections.push({
+          title: <FormattedMessage id="dashboard.permission"/>,
+          id: 'permissions',
+          icon: 'lock',
+        });
+      }
     }
 
-    // if (this.props.dashboard.meta.canMakeEditable) {
-    //   this.sections.push({
-    //     title: 'General',
-    //     icon: 'sliders-v-alt',
-    //     id: 'make_editable',
-    //   });
-    // }
-
-    this.sections.push({
-      title: <FormattedMessage id="dashboard.jsonMeta"/>,
-      id: 'dashboard_json',
-      icon: 'arrow',
-    });
+    if (this.props.dashboard.uid != GlobalVariableUid) {
+      this.sections.push({
+        title: <FormattedMessage id="dashboard.jsonMeta"/>,
+        id: 'dashboard_json',
+        icon: 'arrow',
+      });
+    }
 
     const params = getUrlParams();
     const url = window.location.pathname;
@@ -146,9 +146,9 @@ export class DashboardSettings extends PureComponent<Props> {
               </aside>
                 <div className="dashboard-settings__content">
                 {
-                  this.props.viewId === 'variables' && <VariableEditorContainer />
+                  this.props.viewId === 'variables' && <VariableEditorContainer dashboard={this.props.dashboard} />
                 }
-                {
+                { 
                   this.props.viewId === 'general' && <GeneralSetting dashboard={this.props.dashboard} />
                 }
                 {

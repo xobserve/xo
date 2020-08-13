@@ -1,0 +1,628 @@
+{
+    "annotations": {
+        "list": []
+    },
+    "description": "A new dashboard",
+    "editable": true,
+    "graphTooltip": 0,
+    "id": 2,
+    "links": [],
+    "panels": [
+        {
+            "collapsed": false,
+            "datasource": null,
+            "gridPos": {
+                "h": 1,
+                "w": 24,
+                "x": 0,
+                "y": 0
+            },
+            "id": 13,
+            "panels": [],
+            "title": "Row title22233",
+            "type": "row"
+        },
+        {
+            "datasource": null,
+            "fieldConfig": {
+                "defaults": {
+                    "custom": {},
+                    "mappings": [],
+                    "thresholds": {
+                        "mode": "absolute",
+                        "steps": [
+                            {
+                                "color": "green",
+                                "value": null
+                            },
+                            {
+                                "color": "red",
+                                "value": 80
+                            }
+                        ]
+                    }
+                },
+                "overrides": []
+            },
+            "gridPos": {
+                "h": 5,
+                "w": 7,
+                "x": 0,
+                "y": 1
+            },
+            "id": 2,
+            "links": [
+                {
+                    "targetBlank": true,
+                    "title": "zhihu",
+                    "url": "https://zhihu.com"
+                }
+            ],
+            "options": {
+                "orientation": "auto",
+                "reduceOptions": {
+                    "calcs": [
+                        "mean"
+                    ],
+                    "fields": "",
+                    "values": false
+                },
+                "showThresholdLabels": false,
+                "showThresholdMarkers": true
+            },
+            "targets": [
+                {
+                    "expr": "sum(scrape_duration_seconds)",
+                    "interval": "1m",
+                    "intervalFactor": 5,
+                    "legendFormat": "",
+                    "refId": "A"
+                }
+            ],
+            "title": "Panel Title1111",
+            "type": "gauge"
+        },
+        {
+            "datasource": null,
+            "fieldConfig": {
+                "defaults": {
+                    "custom": {},
+                    "mappings": [],
+                    "thresholds": {
+                        "mode": "absolute",
+                        "steps": [
+                            {
+                                "color": "green",
+                                "value": null
+                            },
+                            {
+                                "color": "red",
+                                "value": 80
+                            }
+                        ]
+                    }
+                },
+                "overrides": []
+            },
+            "gridPos": {
+                "h": 5,
+                "w": 6,
+                "x": 7,
+                "y": 1
+            },
+            "id": 5,
+            "links": [
+                {
+                    "targetBlank": true,
+                    "title": "zhihu",
+                    "url": "https://zhihu.com"
+                }
+            ],
+            "options": {
+                "colorMode": "value",
+                "graphMode": "area",
+                "justifyMode": "auto",
+                "orientation": "auto",
+                "reduceOptions": {
+                    "calcs": [
+                        "mean"
+                    ],
+                    "fields": "",
+                    "values": false
+                }
+            },
+            "targets": [
+                {
+                    "expr": "sum(scrape_duration_seconds)",
+                    "interval": "1m",
+                    "intervalFactor": 5,
+                    "legendFormat": "",
+                    "refId": "A"
+                }
+            ],
+            "title": "Panel Title1111",
+            "type": "stat"
+        },
+        {
+            "datasource": null,
+            "fieldConfig": {
+                "defaults": {
+                    "custom": {}
+                },
+                "overrides": []
+            },
+            "gridPos": {
+                "h": 5,
+                "w": 11,
+                "x": 13,
+                "y": 1
+            },
+            "id": 9,
+            "options": {
+                "aliasColors": {},
+                "bars": false,
+                "dashLength": 10,
+                "dashes": false,
+                "datasource": null,
+                "decimals": 3,
+                "fill": "1",
+                "fillGradient": "0",
+                "hiddenSeries": false,
+                "legend": {
+                    "alignAsTable": false,
+                    "avg": false,
+                    "current": false,
+                    "hideEmpty": false,
+                    "hideZero": false,
+                    "max": false,
+                    "min": false,
+                    "rightSide": false,
+                    "show": true,
+                    "total": false,
+                    "values": false
+                },
+                "lines": true,
+                "linewidth": "1",
+                "nullPointMode": "null",
+                "options": {
+                    "dataLinks": []
+                },
+                "percentage": false,
+                "pointradius": "1",
+                "points": false,
+                "renderer": "flot",
+                "seriesOverrides": [],
+                "spaceLength": 10,
+                "stack": false,
+                "steppedLine": false,
+                "targets": [
+                    {}
+                ],
+                "thresholds": [
+                    {
+                        "colorMode": "critical",
+                        "fill": true,
+                        "line": true,
+                        "op": "gt",
+                        "value": 0.2,
+                        "yaxis": "left"
+                    },
+                    {
+                        "colorMode": "ok",
+                        "fill": true,
+                        "line": false,
+                        "op": "lt",
+                        "value": 0.2,
+                        "yaxis": "left"
+                    }
+                ],
+                "timeFrom": null,
+                "timeRegions": [],
+                "timeShift": null,
+                "tooltip": {
+                    "shared": true,
+                    "sort": 2,
+                    "value_type": "individual"
+                },
+                "xaxis": {
+                    "buckets": null,
+                    "mode": "time",
+                    "name": null,
+                    "show": true,
+                    "values": []
+                },
+                "yaxes": [
+                    {
+                        "format": "none",
+                        "label": "",
+                        "logBase": 1,
+                        "show": true
+                    },
+                    {
+                        "format": "none",
+                        "label": "",
+                        "logBase": 1,
+                        "show": true
+                    }
+                ],
+                "yaxis": {
+                    "align": false,
+                    "alignLevel": null
+                }
+            },
+            "targets": [
+                {
+                    "expr": "scrape_duration_seconds",
+                    "interval": "",
+                    "legendFormat": "",
+                    "refId": "A"
+                }
+            ],
+            "title": "Panel Title",
+            "type": "graph"
+        },
+        {
+            "datasource": "testdata",
+            "fieldConfig": {
+                "defaults": {
+                    "custom": {
+                        "align": null
+                    },
+                    "mappings": [],
+                    "max": 100,
+                    "min": 0,
+                    "thresholds": {
+                        "mode": "percentage",
+                        "steps": [
+                            {
+                                "color": "orange",
+                                "value": null
+                            },
+                            {
+                                "color": "red",
+                                "value": 50
+                            }
+                        ]
+                    }
+                },
+                "overrides": [
+                    {
+                        "matcher": {
+                            "id": "byName",
+                            "options": "Value"
+                        },
+                        "properties": [
+                            {
+                                "id": "custom.displayMode",
+                                "value": "gradient-gauge"
+                            }
+                        ]
+                    },
+                    {
+                        "matcher": {
+                            "id": "byName",
+                            "options": "Info"
+                        },
+                        "properties": [
+                            {
+                                "id": "custom.width",
+                                "value": 92
+                            }
+                        ]
+                    },
+                    {
+                        "matcher": {
+                            "id": "byName",
+                            "options": "Min"
+                        },
+                        "properties": [
+                            {
+                                "id": "custom.width",
+                                "value": 111
+                            }
+                        ]
+                    },
+                    {
+                        "matcher": {
+                            "id": "byName",
+                            "options": "Max"
+                        },
+                        "properties": [
+                            {
+                                "id": "custom.width",
+                                "value": 89
+                            }
+                        ]
+                    },
+                    {
+                        "matcher": {
+                            "id": "byName",
+                            "options": "Time"
+                        },
+                        "properties": [
+                            {
+                                "id": "custom.width",
+                                "value": 165
+                            }
+                        ]
+                    }
+                ]
+            },
+            "gridPos": {
+                "h": 12,
+                "w": 12,
+                "x": 0,
+                "y": 6
+            },
+            "id": 11,
+            "options": {
+                "showHeader": true
+            },
+            "targets": [
+                {
+                    "refId": "A",
+                    "scenarioId": "random_walk_table"
+                }
+            ],
+            "title": "Panel Title",
+            "transformations": [],
+            "type": "table"
+        },
+        {
+            "datasource": null,
+            "fieldConfig": {
+                "defaults": {
+                    "custom": {},
+                    "mappings": [],
+                    "thresholds": {
+                        "mode": "absolute",
+                        "steps": [
+                            {
+                                "color": "green",
+                                "value": null
+                            },
+                            {
+                                "color": "red",
+                                "value": 80
+                            }
+                        ]
+                    }
+                },
+                "overrides": []
+            },
+            "gridPos": {
+                "h": 12,
+                "w": 12,
+                "x": 12,
+                "y": 6
+            },
+            "id": 4,
+            "options": {
+                "aliasColors": {},
+                "bars": false,
+                "dashLength": 10,
+                "dashes": false,
+                "datasource": null,
+                "decimals": 3,
+                "fill": "1",
+                "fillGradient": 7,
+                "hiddenSeries": false,
+                "legend": {
+                    "alignAsTable": false,
+                    "avg": false,
+                    "current": false,
+                    "hideEmpty": false,
+                    "hideZero": false,
+                    "max": false,
+                    "min": false,
+                    "rightSide": false,
+                    "show": true,
+                    "total": false,
+                    "values": false
+                },
+                "lines": true,
+                "linewidth": "1",
+                "nullPointMode": "null",
+                "options": {
+                    "dataLinks": []
+                },
+                "percentage": false,
+                "pointradius": "1",
+                "points": false,
+                "renderer": "flot",
+                "seriesOverrides": [],
+                "spaceLength": 10,
+                "stack": false,
+                "steppedLine": false,
+                "targets": [
+                    {}
+                ],
+                "thresholds": [
+                    {
+                        "colorMode": "ok",
+                        "fill": true,
+                        "line": true,
+                        "op": "gt",
+                        "value": 0.2,
+                        "yaxis": "left"
+                    }
+                ],
+                "timeFrom": null,
+                "timeRegions": [],
+                "timeShift": null,
+                "tooltip": {
+                    "shared": true,
+                    "sort": 2,
+                    "value_type": "individual"
+                },
+                "xaxis": {
+                    "buckets": null,
+                    "mode": "time",
+                    "name": null,
+                    "show": true,
+                    "values": []
+                },
+                "yaxes": [
+                    {
+                        "format": "none",
+                        "label": "",
+                        "logBase": 1,
+                        "show": true
+                    },
+                    {
+                        "format": "none",
+                        "label": "",
+                        "logBase": 1,
+                        "show": true
+                    }
+                ],
+                "yaxis": {
+                    "align": false,
+                    "alignLevel": null
+                }
+            },
+            "targets": [
+                {
+                    "expr": "scrape_duration_seconds",
+                    "interval": "",
+                    "legendFormat": "",
+                    "refId": "A"
+                }
+            ],
+            "title": "Panel Title",
+            "type": "graph"
+        },
+        {
+            "datasource": null,
+            "fieldConfig": {
+                "defaults": {
+                    "custom": {},
+                    "mappings": [],
+                    "thresholds": {
+                        "mode": "absolute",
+                        "steps": [
+                            {
+                                "color": "blue",
+                                "value": null
+                            },
+                            {
+                                "color": "orange",
+                                "value": 0.2
+                            }
+                        ]
+                    }
+                },
+                "overrides": []
+            },
+            "gridPos": {
+                "h": 8,
+                "w": 12,
+                "x": 0,
+                "y": 18
+            },
+            "id": 7,
+            "options": {
+                "displayMode": "lcd",
+                "orientation": "horizontal",
+                "reduceOptions": {
+                    "calcs": [
+                        "mean"
+                    ],
+                    "fields": "",
+                    "values": false
+                },
+                "showUnfilled": true
+            },
+            "targets": [
+                {
+                    "expr": "sum (scrape_duration_seconds)",
+                    "interval": "",
+                    "legendFormat": "",
+                    "refId": "A"
+                }
+            ],
+            "title": "Panel Title",
+            "type": "bargauge"
+        }
+    ],
+    "schemaVersion": 0,
+    "tags": [],
+    "templating": {
+        "list": [
+            {
+                "auto": false,
+                "auto_count": 30,
+                "auto_min": "10s",
+                "current": {
+                    "selected": false,
+                    "text": "1m",
+                    "value": "1m"
+                },
+                "global": true,
+                "hide": 0,
+                "label": null,
+                "name": "test",
+                "options": [
+                    {
+                        "selected": true,
+                        "text": "1m",
+                        "value": "1m"
+                    },
+                    {
+                        "selected": false,
+                        "text": "10m",
+                        "value": "10m"
+                    },
+                    {
+                        "selected": false,
+                        "text": "30m",
+                        "value": "30m"
+                    },
+                    {
+                        "selected": false,
+                        "text": "1h",
+                        "value": "1h"
+                    },
+                    {
+                        "selected": false,
+                        "text": "6h",
+                        "value": "6h"
+                    },
+                    {
+                        "selected": false,
+                        "text": "12h",
+                        "value": "12h"
+                    },
+                    {
+                        "selected": false,
+                        "text": "1d",
+                        "value": "1d"
+                    },
+                    {
+                        "selected": false,
+                        "text": "7d",
+                        "value": "7d"
+                    },
+                    {
+                        "selected": false,
+                        "text": "14d",
+                        "value": "14d"
+                    },
+                    {
+                        "selected": false,
+                        "text": "30d",
+                        "value": "30d"
+                    }
+                ],
+                "query": "1m,10m,30m,1h,6h,12h,1d,7d,14d,30d",
+                "refresh": 2,
+                "skipUrlSync": false,
+                "type": "interval"
+            }
+        ]
+    },
+    "timezone": "browser",
+    "title": "New dashboard Copy",
+    "uid": "home",
+    "version": 0
+}

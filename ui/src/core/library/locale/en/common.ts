@@ -97,7 +97,8 @@ const common = {
     absolute: 'Absolute',
     percentage: 'Percentage',
     discard: 'Discard',
-    apply: 'Apply'
+    apply: 'Apply',
+    globalVariable: 'Global variable',
 }
 
 export default common

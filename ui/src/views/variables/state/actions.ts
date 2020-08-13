@@ -69,7 +69,8 @@ export const initDashboardTemplating = (list: VariableModel[]): ThunkResult<void
         continue;
       }
 
-      dispatch(addVariable(toVariablePayload(model, { global: false, index: orderIndex++, model })));
+      console.log(model.global)
+      dispatch(addVariable(toVariablePayload(model, { global: model.global ?? false, index: orderIndex++, model })));
     }
 
     templateSrv.updateTimeRange(getTimeSrv().timeRange());

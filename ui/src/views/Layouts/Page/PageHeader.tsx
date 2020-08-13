@@ -59,8 +59,8 @@ const SelectNav = ({ children, customCss }: { children: MenuItem[]; customCss: s
 
 const Navigation = ({ children }: { children: MenuItem[] }) => {
   const history = useHistory()
-  const goToUrl = (url: string) => {
-    history.push(url)
+  const goToUrl = (child) => {
+    child.redirectTo ?history.push(child.redirectTo) :history.push(child.url)
  };
 
 
@@ -81,7 +81,7 @@ const Navigation = ({ children }: { children: MenuItem[] }) => {
                 active={child.active}
                 key={`${child.url}-${index}`}
                 icon={child.icon as IconName}
-                onChangeTab={() => goToUrl(child.url)}
+                onChangeTab={() => goToUrl(child)}
               />
             )
           );

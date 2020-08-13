@@ -2,7 +2,7 @@ import _ from 'lodash'
 import { PanelModel } from './PanelModel'
 import { Emitter } from 'src/core/library/utils/emitter'
 import { AppEvent, PanelEvents,dateTimeFormat,DateTimeInput,config} from 'src/packages/datav-core'
-import { DashboardMeta, CoreEvents } from 'src/types'
+import { DashboardMeta, CoreEvents, GlobalVariableUid } from 'src/types'
 import {GRID_COLUMN_COUNT,REPEAT_DIR_VERTICAL} from 'src/core/constants'
 import {panelAdded,panelRemoved,GridPos} from './PanelModel'
 import { getTimeSrv } from 'src/core/services/time'
@@ -623,7 +623,7 @@ export class DashboardModel {
       }
   
       this.updateTemplatingSaveModelClone(copy, defaults);
-  
+      
       // get panel save models
       copy.panels = this.panels
         .filter((panel: PanelModel) => panel.type !== 'add-panel')
@@ -800,12 +800,28 @@ export class DashboardModel {
       defaults: { saveVariables: boolean } & CloneOptions
     ) {
       const originalVariables = this.originalTemplating;
-      const currentVariables = this.getVariablesFromState();
-      
+      let currentVariables = this.getVariablesFromState();
+
+      currentVariables = currentVariables.filter(variable => {
+        // common dashboards cant save global variables
+        if (this.uid !== GlobalVariableUid) {
+          if (variable.global) {
+            return false
+          }
+        }
+        return true
+      })
+
       copy.templating = {
-        list: currentVariables.map(variable => variableAdapters.get(variable.type).getSaveModel(variable)),
+        list: currentVariables.map(variable => {
+          const model = variableAdapters.get(variable.type).getSaveModel(variable)
+          if (this.uid === GlobalVariableUid) {
+            model.global = true
+          }
+          return  model
+        }),
       };
-  
+    
       if (!defaults.saveVariables) {
         for (let i = 0; i < copy.templating.list.length; i++) {
           const current = copy.templating.list[i];

@@ -26,7 +26,6 @@ const sharedReducerSlice = createSlice({
         index: action.payload.data.index,
         global: action.payload.data.global,
       };
-
       state[id] = variable;
     },
     addInitLock: (state: VariablesState, action: PayloadAction<VariablePayload>) => {

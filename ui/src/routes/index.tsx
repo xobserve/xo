@@ -170,6 +170,15 @@ export const initRoutes = (store: Store<StoreState>) => {
                     exact: true,
                     component: React.lazy(() => import('src/views/cfg/teams/TeamsPage'))
                 },
+                { 
+                    icon: "calculator-alt",
+                    id: "datav-fix-menu-globalVariable",
+                    title:<Message id={'common.globalVariable'}/>,
+                    url: "/cfg/globalVariable",
+                    redirectTo: '/d/-1',
+                    exact: true,
+                    component: React.lazy(() => import('src/views/cfg/globalVariable/GlobalVariablePage'))
+                },
             ]
         },
         {
