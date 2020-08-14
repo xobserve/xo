@@ -30,6 +30,7 @@ import impressionSrv from 'src/core/services/impression'
 
 import { FormattedMessage as Message} from 'react-intl';
 import { onTimeRangeUpdated } from '../variables/state/actions';
+import HeaderWrapper from './components/Header/Header'
 
 interface DashboardPageProps {
     routeID?: string
@@ -313,6 +314,7 @@ class DashboardPage extends React.PureComponent<DashboardPageProps & RouteCompon
         
         return (
             <div>
+                <HeaderWrapper />
                 <div className="scroll-canvas scroll-canvas--dashboard">
                     <CustomScrollbar
                         autoHeightMin="100%"

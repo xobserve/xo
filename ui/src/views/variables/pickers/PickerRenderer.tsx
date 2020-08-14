@@ -2,6 +2,7 @@ import React, { FunctionComponent, useMemo } from 'react';
 import { VariableHide, VariableModel } from 'src/types';
 import { variableAdapters } from '../adapters';
 import { Tooltip } from 'antd'
+import { FormattedMessage } from 'react-intl';
 interface Props {
   variable: VariableModel;
 }
@@ -21,7 +22,7 @@ export const PickerRenderer: FunctionComponent<Props> = props => {
   </label>
 
   const labelName = props.variable.global ?
-    <Tooltip title="This variable is global visible">
+    <Tooltip title={<FormattedMessage id="common.globalVariable"/>}>
       {label}
     </Tooltip> :
     label

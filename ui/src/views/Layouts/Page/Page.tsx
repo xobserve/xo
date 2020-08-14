@@ -6,7 +6,6 @@ import React, { Component } from 'react';
 import PageContents from './PageContent';
 import { CustomScrollbar,NavModel} from 'src/packages/datav-core';
 import { Footer } from '../Footer/Footer'; 
-import appEvents from 'src/core/library/utils/app_events';
 import PageHeader from './PageHeader'
 
 
@@ -19,15 +18,12 @@ class Page extends Component<Props> {
   static Contents = PageContents;
 
   componentWillMount() {
-    appEvents.emit("hide-layouts-header")
     // this.updateTitle();
   }
   componentWillUnmount() {
-    appEvents.emit("show-layouts-header")
   }
 
   componentDidUpdate(prevProps: Props) {
-    appEvents.emit("hide-layouts-header")
     // this.updateTitle();
   }
 

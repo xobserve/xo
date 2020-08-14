@@ -5,7 +5,7 @@ import { Prompt} from "react-router-dom";
 
 import { Layout} from 'antd'
 
-import BreadcrumbWrapper from '../Breadcrumb/Breadcrumb'
+import BreadcrumbWrapper from './Breadcrumb/Breadcrumb'
 
 import {StoreState} from 'src/types'  
 import {TimePickerWrapper} from 'src/views/components/TimePicker/TimePickerWrapper'
