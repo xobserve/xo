@@ -9,7 +9,8 @@ Datav is forked from **@grafana**, but changed a lot, e.g :
 - multi spoken languages supported
 - large screen supported
 - different team and acl design,no orgs any more 
-- **No enterprise version, 100% open-source**
+- 100% free. Forever and always
+
 
 ## Key Features
 

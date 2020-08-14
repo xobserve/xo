@@ -10,6 +10,7 @@ import { VariableOption, VariableTag, VariableWithMultiSupport, VariableWithOpti
 import { VariableOptions } from '../shared/VariableOptions';
 import { isQuery } from '../../guard';
 import { VariablePickerProps } from '../types';
+import localStore from 'src/core/library/utils/localStore';
 
 interface OwnProps extends VariablePickerProps<VariableWithMultiSupport> {}
 
@@ -49,6 +50,10 @@ export class OptionsPickerUnconnected extends PureComponent<Props> {
 
   render() {
     const { variable, picker } = this.props;
+    if (variable.global) {
+      localStore.set('datav.global.variable.' + variable.name, JSON.stringify(variable.current))
+    }
+   
     const showOptions = picker.id === variable.id;
 
     return (
