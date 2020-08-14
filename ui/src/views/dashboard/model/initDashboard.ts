@@ -91,6 +91,7 @@ export function initDashboard(uid: string | undefined,initOrigin?: any): ThunkRe
 function getNewDashboardModelData(): DashboardDTO {
   const data = {
     meta: {
+      canEdit: true,
       canStar: true,
       canShare: true,
       canSave: true,

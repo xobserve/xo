@@ -60,6 +60,9 @@ const SaveDashboard = (props: Props) => {
 
         appEvents.emit(CoreEvents.dashboardSaved, dashboard);
 
+        if(!dashboard.id) {
+            history.push(res.data.url)
+        }
        
         globalEvents.showMessage(() => notification['success']({
             message: "Success",
