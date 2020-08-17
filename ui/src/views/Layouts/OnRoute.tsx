@@ -36,7 +36,7 @@ const OnRoute = () =>{
 
     useEffect(() => {
       // is login in
-      if (isEmpty(getToken()) || !store.getState().user.id) {
+      if (!store.getState().user.id) {
         history.push('/login')
       }
       

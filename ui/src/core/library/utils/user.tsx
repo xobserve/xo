@@ -1,8 +1,8 @@
 import {removeToken } from './auth';
-import storage from './localStorage'
+import localStore from './localStore'
 
 export function logout() {
-    storage.set("lastPath", window.location.pathname+window.location.search)
+    localStore.set("lastPath", window.location.pathname+window.location.search)
     removeToken()
     window.location.href = "/login"
 }

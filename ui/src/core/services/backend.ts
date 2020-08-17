@@ -483,7 +483,7 @@ export class BackendSrv implements BackendService {
     const fetchErrorResponse: ErrorResponse = { status, statusText, data };
 
     if (status === 401) { // need login
-      setTimeout(logout, 2000)
+      setTimeout(logout, 1000)
     }
 
     return fetchErrorResponse

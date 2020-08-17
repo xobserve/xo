@@ -3,9 +3,8 @@ import { Form, Input, Button } from 'antd';
 import { useHistory } from 'react-router-dom';
 
 
-import { UserOutlined, LockOutlined } from '@ant-design/icons';
 
-import storage from 'src/core/library/utils/localStorage'
+import localStore from 'src/core/library/utils/localStore'
 
 import { isEmpty } from 'src/core/library/utils/validate'
 import { setToken } from 'src/core/library/utils/auth';
@@ -29,9 +28,9 @@ function Login() {
                 setToken(res.data.token)
                 store.dispatch(updateUser(res.data.user))
                 setTimeout(() => {
-                    const oldPath = storage.get('lastPath')
+                    const oldPath = localStore.get('lastPath')
                     if (!isEmpty(oldPath)) {
-                        storage.remove('lastPath')
+                        localStore.delete('lastPath')
                         history.push(oldPath)
                     } else {
                         history.push('/dashboard')

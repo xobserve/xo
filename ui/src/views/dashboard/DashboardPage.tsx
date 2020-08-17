@@ -1,12 +1,13 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import _ from 'lodash'
 import classNames from 'classnames'
+import queryString from 'query-string'
 
 import { DashboardModel } from './model/DashboardModel'
-import { Button,Result, notification, Tooltip} from 'antd'
+import { Button,Result} from 'antd'
 import { DashboardGrid } from './DashGrid'
 import { getTimeSrv } from 'src/core/services/time'
-import { TimeRange, CustomScrollbar, Icon, config } from 'src/packages/datav-core'
+import { TimeRange, CustomScrollbar, config } from 'src/packages/datav-core'
 
 import './DashboardPage.less'
 import { initDashboard } from './model/initDashboard';
@@ -19,7 +20,6 @@ import { StoreState, CoreEvents, GlobalVariableUid } from 'src/types'
 import { connect } from 'react-redux';
 import appEvents from 'src/core/library/utils/app_events';
 import { updateBreadcrumbText } from 'src/store/reducers/application';
-import { SaveOutlined, SettingOutlined } from '@ant-design/icons';
 import tracker from 'src/core/services/changeTracker'
 import { DashboardSettings } from './components/Setting/Setting'
 import { updateLocation } from 'src/store/reducers/location';
@@ -28,9 +28,10 @@ import { BackButton } from '../components/BackButton/BackButton';
 import { PanelInspector, InspectTab } from '../components/Inspector/PanelInspector';
 import impressionSrv from 'src/core/services/impression'
 
-import { FormattedMessage as Message} from 'react-intl';
 import { onTimeRangeUpdated } from '../variables/state/actions';
 import HeaderWrapper from './components/Header/Header'
+import { updateUrl,getUrlParams } from 'src/core/library/utils/url';
+import {getVariables} from 'src/views/variables/state/selectors'
 
 interface DashboardPageProps {
     routeID?: string
@@ -90,6 +91,8 @@ class DashboardPage extends React.PureComponent<DashboardPageProps & RouteCompon
         getTimeSrv().notifyTimeUpdate = this.timeRangeUpdated
 
         this.saveDashboard = this.saveDashboard.bind(this)
+        this.onUpdateUrl = this.onUpdateUrl.bind(this)
+
         appEvents.on(CoreEvents.keybindingSaveDashboard, this.saveDashboard)
 
         appEvents.on(CoreEvents.dashboardSaved, this.setOriginDash);
@@ -231,6 +234,27 @@ class DashboardPage extends React.PureComponent<DashboardPageProps & RouteCompon
         appEvents.emit('open-dashboard-save-modal', this.props.dashboard)
     }
 
+    onUpdateUrl() {
+        const timeSrv = getTimeSrv()
+        const urlRange = timeSrv.timeRangeForUrl();
+        // const currentQuery = getUrlParams()
+        // _.extend(currentQuery, urlRange)
+        const times = queryString.stringify(urlRange)
+
+        const variables = getVariables()
+        let vars = ""
+        variables.forEach((variable:any) => {
+            if (variable.multi) {
+                variable.current.value.forEach((v) => {
+                    vars = vars + '&var-' + variable.name +'=' + v
+                })
+            } else {
+                vars = vars + '&var-' + variable.name +'=' + variable.current.value
+            }
+        })
+
+        updateUrl(times + vars)
+    }
     getPanelByIdFromUrlParam(rawPanelId: string): PanelModel {
         const { dashboard } = this.props;
 
@@ -299,7 +323,7 @@ class DashboardPage extends React.PureComponent<DashboardPageProps & RouteCompon
         
         return (
             <div>
-                <HeaderWrapper onAddPanel={this.onAddPanel} onSaveDashboard={this.saveDashboard}/>
+                <HeaderWrapper onAddPanel={this.onAddPanel} onSaveDashboard={this.saveDashboard} onUpdateUrl={this.onUpdateUrl}/>
                 <div className="scroll-canvas scroll-canvas--dashboard">
                     <CustomScrollbar
                         autoHeightMin="100%"

@@ -18,7 +18,7 @@ import { DashboardModel } from 'src/views/dashboard/model';
 import localeData from 'src/core/library/locale'
 import { FormattedMessage as Message } from 'react-intl';
 import { Icon } from 'src/packages/datav-core/src';
-import { SaveOutlined, SettingOutlined } from '@ant-design/icons';
+import { SaveOutlined, SettingOutlined,PlusOutlined} from '@ant-design/icons';
 import { store } from 'src/store/store';
 import { updateLocation } from 'src/store/reducers/location';
 
@@ -27,6 +27,7 @@ interface Props {
     breadcrumbText: string
     onAddPanel: any
     onSaveDashboard: any
+    onUpdateUrl: any
 }
 
 const { Header } = Layout
@@ -60,6 +61,9 @@ function HeaderWrapper(props: Props) {
                             <Button icon={<SettingOutlined />} onClick={
                                 () => store.dispatch(updateLocation({ query: { settingView: 'general' }, partial: true }))
                             } />
+                        </Tooltip>
+                        <Tooltip title={<Message id='dashboard.addUrl'/>} placement="bottom">
+                            <Button icon={  <PlusOutlined />} onClick={() => props.onUpdateUrl()} />
                         </Tooltip>
                     </div>
                     <TimePickerWrapper />

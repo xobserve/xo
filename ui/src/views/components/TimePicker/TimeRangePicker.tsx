@@ -9,8 +9,6 @@ import { TimePickerContent } from './TimePickerContent/TimePickerContent';
 // Types
 import { isDateTime, rangeUtil, dateTimeFormat, timeZoneFormatUserFriendly,stylesFactory,ClickOutsideWrapper} from 'src/packages/datav-core';
 import { TimeRange, TimeOption, TimeZone, dateMath } from 'src/packages/datav-core';
-import {addParamsToUrl} from 'src/core/library/utils/url'
-import { FormattedMessage as Message} from 'react-intl';
 
 const quickOptions: TimeOption[] = [
   { from: 'now-5m', to: 'now', display: 'Last 5 minutes', section: 3 },
@@ -140,10 +138,6 @@ export class UnthemedTimeRangePicker extends PureComponent<Props&any, State> {
     const hasAbsolute = isDateTime(value.raw.from) || isDateTime(value.raw.to);
     const syncedTimePicker = timeSyncButton && isSynced;
     const timePickerIconClass = cx({ 'icon-brand-gradient': syncedTimePicker });
-    
-    const addTimeParamsToUrl = () =>  {
-      addParamsToUrl()
-    }
 
     return (
       <div className={styles.container}>
@@ -181,14 +175,6 @@ export class UnthemedTimeRangePicker extends PureComponent<Props&any, State> {
               <RightOutlined />
             </Button>
           )}
-          <div>
-
-            <Tooltip title={<Message id='dashboard.addUrl'/>} placement="bottom">
-              <Button onClick={addTimeParamsToUrl}>
-                <PlusOutlined />
-              </Button>
-            </Tooltip>
-          </div>
         </div>
       </div>
     );
