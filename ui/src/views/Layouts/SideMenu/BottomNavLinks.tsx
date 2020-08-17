@@ -200,6 +200,9 @@ export const BottomNavLinks = (props:Props) => {
             <Col span="12">
               <div>Dashboard</div>
               <Shortcut value={['cmd','s']} desc="Save dashboard"></Shortcut>
+              <Shortcut value={['e']} desc="Toggle panel edit view"></Shortcut>
+              <Shortcut value={['v']} desc="Toggle panel fullscreen view"></Shortcut>
+              <Shortcut value={['i']} desc="Toggle panel inspect view"></Shortcut>
             </Col>
           </Row>
         </Modal>

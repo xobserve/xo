@@ -89,13 +89,10 @@ class DashboardPage extends React.PureComponent<DashboardPageProps & RouteCompon
         // register time service notifier
         getTimeSrv().notifyTimeUpdate = this.timeRangeUpdated
 
-
         this.saveDashboard = this.saveDashboard.bind(this)
         appEvents.on(CoreEvents.keybindingSaveDashboard, this.saveDashboard)
 
-
         appEvents.on(CoreEvents.dashboardSaved, this.setOriginDash);
-
 
         // because appEvents.off has no effect , so we introduce a state
         store.dispatch(isInDashboardPage(true))

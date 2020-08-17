@@ -97,12 +97,6 @@ export function getPanelMenu(
     });
   }
 
-  menu.push({
-    text: <Message id="common.share"/>,
-    iconClassName: 'share-alt',
-    onClick: onSharePanel,
-    shortcut: 'p s',
-  });
 
   // if (contextSrv.hasAccessToExplore() && !(panel.plugin && panel.plugin.meta.skipDataQuery)) {
   //   menu.push({
@@ -144,13 +138,18 @@ export function getPanelMenu(
     subMenu: inspectMenu,
   });
 
+  menu.push({
+    text: <Message id="common.share"/>,
+    iconClassName: 'share-alt',
+    onClick: onSharePanel
+  });
+
   const subMenu: PanelMenuItem[] = [];
 
   if (dashboard.canEditPanel(panel) && !(panel.isViewing || panel.isEditing)) {
     subMenu.push({
       text: <Message id="common.duplicate"/>,
       onClick: onDuplicatePanel,
-      shortcut: 'p d',
     });
 
     subMenu.push({
@@ -176,8 +175,7 @@ export function getPanelMenu(
     menu.push({
       text: <Message id="common.remove"/>,
       iconClassName: 'trash-alt',
-      onClick: onRemovePanel,
-      shortcut: 'p r',
+      onClick: onRemovePanel
     });
   }
 
