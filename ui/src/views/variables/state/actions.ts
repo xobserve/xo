@@ -69,7 +69,6 @@ export const initDashboardTemplating = (list: VariableModel[]): ThunkResult<void
         continue;
       }
 
-      console.log(model.global)
       dispatch(addVariable(toVariablePayload(model, { global: model.global ?? false, index: orderIndex++, model })));
     }
 

@@ -1,8 +1,8 @@
 import { DashboardModel } from "./DashboardModel";
 import { dashboardMock } from './mocks'
-import { DashboardDTO,ThunkResult, GlobalVariableUid } from "src/types";
-import { getBackendSrv, config } from "src/packages/datav-core/src";
-import {store} from 'src/store/store'
+import { DashboardDTO, ThunkResult, GlobalVariableUid } from "src/types";
+import { getBackendSrv, config, getTemplateSrv } from "src/packages/datav-core/src";
+import { store } from 'src/store/store'
 import { initDashboardTemplating, processVariables, completeDashboardTemplating } from "src/views/variables/state/actions";
 import { dashboardInitCompleted, dashboardInitError } from "src/store/reducers/dashboard";
 import { annotationsSrv } from 'src/core/services/annotations';
@@ -10,9 +10,9 @@ import { message } from "antd";
 import localStore from "src/core/library/utils/localStore";
 import { getKeybindingSrv } from "src/core/services/keybinding";
 
-export function initDashboard(uid: string | undefined,initOrigin?: any): ThunkResult<void>  {
+export function initDashboard(uid: string | undefined, initOrigin?: any): ThunkResult<void> {
   return async (dispatch, getState) => {
-  // try {
+    // try {
     let ds: DashboardModel;
     if (!uid) {
       // return new dashboard
@@ -20,55 +20,56 @@ export function initDashboard(uid: string | undefined,initOrigin?: any): ThunkRe
     } else {
       try {
         const res = await getBackendSrv().get(`/api/dashboard/uid/${uid}`)
-        ds = new DashboardModel(res.data.dashboard,res.data.meta)
+        ds = new DashboardModel(res.data.dashboard, res.data.meta)
       } catch (error) {
         dispatch(dashboardInitError(error.status))
-        return 
+        return
       }
     }
 
-    const gres = await getBackendSrv().get(`/api/dashboard/uid/-1`)
-    const gds = new DashboardModel(gres.data.dashboard,gres.data.meta)
-    
-    // combine dashboard variables and global variables, specially, dashboard ones will overrides global ones
-    for (let i=0;i<gds.templating.list.length;i++) {
-      const gvar = gds.templating.list[i]
-      let exist = false 
-      for (let j=0;j<ds.templating.list.length;j++) {
-        const dvar = ds.templating.list[j]
-        if (dvar.name === gvar.name) {
-          exist = true
-          break 
+    if (ds.enableGlobalVariable) {
+      const gres = await getBackendSrv().get(`/api/dashboard/uid/-1`)
+      const gds = new DashboardModel(gres.data.dashboard, gres.data.meta)
+
+      // combine dashboard variables and global variables, specially, dashboard ones will overrides global ones
+      for (let i = 0; i < gds.templating.list.length; i++) {
+        const gvar = gds.templating.list[i]
+        let exist = false
+        for (let j = 0; j < ds.templating.list.length; j++) {
+          const dvar = ds.templating.list[j]
+          if (dvar.name === gvar.name) {
+            exist = true
+            break
+          }
+        }
+        if (!exist) {
+          ds.templating.list.push(gvar)
         }
       }
-      if (!exist) {
-        ds.templating.list.push(gvar)
-      }
-    }
-    
-    ds.templating.list.forEach((v) => {
-      // for global variables, we need to check cached selections exists in local storage
-      if (v.global) {
-        const cachedGvar = localStore.get('datav.global.variable.' + v.name)
-        if (cachedGvar) {
-          // set current
-          v.current = JSON.parse(cachedGvar)
-          // set option is selected
-          for (let i=0;i<v.options.length;i++) {
-             const option = v.options[i]
-             let exist = false 
-             for (let j=0;j<v.current.value.length;j++) {
-               if (v.current.value[j] === option.value) {
-                 exist = true
-               }
-             }
 
-             option.selected = exist
+      ds.templating.list.forEach((v) => {
+        // for global variables, we need to check cached selections exists in local storage
+        if (v.global) {
+          const cachedGvar = localStore.get('datav.global.variable.' + v.name)
+          if (cachedGvar) {
+            // set current
+            v.current = JSON.parse(cachedGvar)
+            // set option is selected
+            for (let i = 0; i < v.options.length; i++) {
+              const option = v.options[i]
+              let exist = false
+              for (let j = 0; j < v.current.value.length; j++) {
+                if (v.current.value[j] === option.value) {
+                  exist = true
+                }
+              }
+
+              option.selected = exist
+            }
           }
-        } 
-      }
-    })
-    
+        }
+      })
+    }
     // template values service needs to initialize completely before
     // the rest of the dashboard can load
     try {
@@ -83,7 +84,7 @@ export function initDashboard(uid: string | undefined,initOrigin?: any): ThunkRe
     }
 
     getKeybindingSrv().setupDashboardBindings(ds)
-    
+
     annotationsSrv.init(ds);
     initOrigin(ds)
     dispatch(dashboardInitCompleted(ds))
@@ -114,6 +115,7 @@ function getNewDashboardModelData(): DashboardDTO {
           }
         },
       ],
+      enableGlobalVariable: true,
       templating: {
       }
     },

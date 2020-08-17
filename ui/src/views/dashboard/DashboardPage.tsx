@@ -255,6 +255,7 @@ class DashboardPage extends React.PureComponent<DashboardPageProps & RouteCompon
 
         updateUrl(times + vars)
     }
+    
     getPanelByIdFromUrlParam(rawPanelId: string): PanelModel {
         const { dashboard } = this.props;
 

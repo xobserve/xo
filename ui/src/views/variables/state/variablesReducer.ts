@@ -14,17 +14,18 @@ export const variablesReducer = (
   action: PayloadAction<VariablePayload>
 ): VariablesState => {
   if (cleanUpDashboard.match(action)) {
-    const globalVariables = Object.values(state).filter(v => v.global);
-    if (!globalVariables) {
-      return initialVariablesState;
-    }
+    return initialVariablesState
+    // const globalVariables = Object.values(state).filter(v => v.global);
+    // if (!globalVariables) {
+    //   return initialVariablesState;
+    // }
 
-    const variables = globalVariables.reduce((allVariables, state) => {
-      allVariables[state.id!] = state;
-      return allVariables;
-    }, {} as Record<string, VariableModel>);
+    // const variables = globalVariables.reduce((allVariables, state) => {
+    //   allVariables[state.id!] = state;
+    //   return allVariables;
+    // }, {} as Record<string, VariableModel>);
 
-    return variables;
+    // return variables;
   }
 
   if (action?.payload?.type && variableAdapters.getIfExists(action?.payload?.type)) {
