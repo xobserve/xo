@@ -48,4 +48,9 @@ _.forEach(panel, (v,k) => {
     en['panel.' + k] = v
 })
 
+import keybinding from './keybinding'
+_.forEach(keybinding, (v,k) => {
+    en['keybinding.' + k] = v
+})
+
 export default en

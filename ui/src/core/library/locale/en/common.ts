@@ -99,6 +99,7 @@ const common = {
     discard: 'Discard',
     apply: 'Apply',
     globalVariable: 'Global variable',
+    global: 'Global',
 }
 
 export default common

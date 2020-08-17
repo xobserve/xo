@@ -180,7 +180,7 @@ export const BottomNavLinks = (props:Props) => {
           
       <Modal
           visible={keyModalVisible}
-          title="Keyboard shortcuts"
+          title={<Message id="keybinding.shortcuts"/>}
           onOk={() => setKeyModalVisible(false)}
           onCancel={() => setKeyModalVisible(false)}
           footer={null}
@@ -188,21 +188,21 @@ export const BottomNavLinks = (props:Props) => {
         >
           <Row>
             <Col span="12">
-              <div>Global</div>
-              <Shortcut value={['g','h']} desc="Go to Home Dashboard"></Shortcut>
-              <Shortcut value={['g','p']} desc="Go to Plugins Page"></Shortcut>
-              <Shortcut value={['g','t']} desc="Go to Teams Page"></Shortcut>
-              <Shortcut value={['g','u']} desc="Go to Users Page"></Shortcut>
-              <Shortcut value={['o','s']} desc="Open search"></Shortcut>
-              <Shortcut value={['esc']} desc="Exist editing,viewing,search etc"></Shortcut>
+              <div><Message id="common.global"/></div>
+              <Shortcut value={['g','h']} desc={<Message id="keybinding.gh"/>}></Shortcut>
+              <Shortcut value={['g','p']} desc={<Message id="keybinding.gp"/>}></Shortcut>
+              <Shortcut value={['g','t']} desc={<Message id="keybinding.gt"/>}></Shortcut>
+              <Shortcut value={['g','u']} desc={<Message id="keybinding.gu"/>}></Shortcut>
+              <Shortcut value={['o','s']} desc={<Message id="keybinding.os"/>}></Shortcut>
+              <Shortcut value={['esc']} desc={<Message id="keybinding.esc"/>}></Shortcut>
             </Col>
 
             <Col span="12">
-              <div>Dashboard</div>
-              <Shortcut value={['cmd','s']} desc="Save dashboard"></Shortcut>
-              <Shortcut value={['e']} desc="Toggle panel edit view"></Shortcut>
-              <Shortcut value={['v']} desc="Toggle panel fullscreen view"></Shortcut>
-              <Shortcut value={['i']} desc="Toggle panel inspect view"></Shortcut>
+              <div><Message id="common.dashboard"/></div>
+              <Shortcut value={['cmd','s']} desc={<Message id="keybinding.sd"/>}></Shortcut>
+              <Shortcut value={['e']} desc={<Message id="keybinding.e"/>}></Shortcut>
+              <Shortcut value={['v']} desc={<Message id="keybinding.v"/>}></Shortcut>
+              <Shortcut value={['i']} desc={<Message id="keybinding.i"/>}></Shortcut>
             </Col>
           </Row>
         </Modal>

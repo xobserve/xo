@@ -98,6 +98,7 @@ const common = {
     discard: '丢弃',
     apply: '应用',
     globalVariable: '全局变量',
+    global: '全局',
 }
 
 export default common

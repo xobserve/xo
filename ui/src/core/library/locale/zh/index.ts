@@ -49,4 +49,10 @@ _.forEach(panel, (v,k) => {
     zh['panel.' + k] = v
 })
 
+import keybinding from './keybinding'
+_.forEach(keybinding, (v,k) => {
+    zh['keybinding.' + k] = v
+})
+
+
 export default zh
