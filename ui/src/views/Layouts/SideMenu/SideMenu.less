@@ -295,3 +295,28 @@ li.sidemenu-org-switcher {
     }
   }
 }
+
+.shortcut {
+  margin-bottom: @padding-xs;
+  .shortcut-table-key {
+    display: inline-block;
+    text-align: center;
+    margin-right: @padding-xss;
+    padding: 5px 5px;
+    font: 11px Consolas, 'Liberation Mono', Menlo, Courier, monospace;
+    line-height: 10px;
+    vertical-align: middle;
+    background-color: @component-background;
+    border: solid 1px @border-color-base;
+    border-radius: 3px;
+    color: @text-color;
+  }
+  
+  .shortcut-table-description {
+    text-align: left;
+    color: @text-color-secondary;
+    width: 99%;
+    padding: 8px 16px;
+    font-size:13px;
+  }
+}

@@ -8,6 +8,7 @@ import { dashboardInitCompleted, dashboardInitError } from "src/store/reducers/d
 import { annotationsSrv } from 'src/core/services/annotations';
 import { message } from "antd";
 import localStore from "src/core/library/utils/localStore";
+import { getKeybindingSrv } from "src/core/services/keybinding";
 
 export function initDashboard(uid: string | undefined,initOrigin?: any): ThunkResult<void>  {
   return async (dispatch, getState) => {
@@ -81,6 +82,8 @@ export function initDashboard(uid: string | undefined,initOrigin?: any): ThunkRe
       console.log(err);
     }
 
+    getKeybindingSrv().setupDashboardBindings(ds)
+    
     annotationsSrv.init(ds);
     initOrigin(ds)
     dispatch(dashboardInitCompleted(ds))

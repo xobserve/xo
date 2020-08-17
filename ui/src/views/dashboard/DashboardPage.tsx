@@ -109,27 +109,15 @@ class DashboardPage extends React.PureComponent<DashboardPageProps & RouteCompon
 
         store.dispatch(updateBreadcrumbText(ds.title))
 
-        // when dashboard page loaded, we need show setting and save buttons in header nav
-        appEvents.emit('set-dashboard-page-header',
-            <>
-                <Tooltip title={<Message id={'dashboard.addPanel'}/>}><Button icon={<Icon name="panel-add" />} onClick={() => this.onAddPanel()} /></Tooltip>
-                <Tooltip title={<Message id={'common.save'}/>}><Button icon={<SaveOutlined onClick={() => this.saveDashboard()} />} /></Tooltip>
-                <Tooltip title={<Message id={'common.setting'}/>}>
-                    <Button icon={<SettingOutlined />} onClick={
-                        () => store.dispatch(updateLocation({ query: { settingView: 'general' }, partial: true }))
-                    } />
-                </Tooltip>
-            </>)
         impressionSrv.addDashboardImpression(ds.id);
     }
+    
     componentWillUnmount() {
         // unregister from changeTracker
         tracker.unregister()
 
         appEvents.off(CoreEvents.keybindingSaveDashboard, this.saveDashboard)
         appEvents.off(CoreEvents.dashboardSaved, this.setOriginDash);
-
-        appEvents.emit('set-dashboard-page-header', null)
 
 
         // unregister time service notifier
@@ -314,7 +302,7 @@ class DashboardPage extends React.PureComponent<DashboardPageProps & RouteCompon
         
         return (
             <div>
-                <HeaderWrapper />
+                <HeaderWrapper onAddPanel={this.onAddPanel} onSaveDashboard={this.saveDashboard}/>
                 <div className="scroll-canvas scroll-canvas--dashboard">
                     <CustomScrollbar
                         autoHeightMin="100%"

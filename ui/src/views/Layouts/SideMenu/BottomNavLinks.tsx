@@ -1,6 +1,6 @@
 /*eslint-disable*/
 
-import React from 'react';
+import React,{useState} from 'react';
 import _ from 'lodash'
 import { css } from 'emotion';
 import { connect } from 'react-redux'
@@ -20,6 +20,7 @@ import { Langs } from 'src/core/library/locale/types';
 import { updateLocale, updateTheme } from 'src/store/reducers/application';
 import { StoreState ,MenuItem, hasPermission} from 'src/types'
 import { FormattedMessage as Message } from 'react-intl'
+import {Modal,Row,Col} from 'antd'
 
 export interface Props {
   link: MenuItem;
@@ -30,11 +31,10 @@ export interface Props {
 
 
 export const BottomNavLinks = (props:Props) => {
-    // const onOpenShortcuts = () => {
-    //   appEvents.emit(CoreEvents.showModal, {
-    //     templateHtml: '<help-modal></help-modal>',
-    //   });
-    // };
+    const [keyModalVisible,setKeyModalVisible] = useState(false)
+    const onOpenShortcuts = () => {
+      setKeyModalVisible(true)
+    };
     const location = useLocation()
     const { link } = props;
     
@@ -94,6 +94,7 @@ export const BottomNavLinks = (props:Props) => {
     })
     
     return (
+      <>
       <div className={classes}>
         {renderLink}
         <ul className="dropdown-menu dropdown-menu--sidemenu" role="menu">
@@ -164,7 +165,7 @@ export const BottomNavLinks = (props:Props) => {
 
           {link.id === 'datav-fix-menu-help' && (
             <li key="keyboard-shortcuts">
-              <a onClick={() => this.onOpenShortcuts()}>
+              <a onClick={() => onOpenShortcuts()}>
                 {/* <Icon name="keyboard" className={subMenuIconClassName} />  */}
                 <Message id={'common.shortcuts'} />
               </a>
@@ -176,7 +177,46 @@ export const BottomNavLinks = (props:Props) => {
           </li>
         </ul>
       </div>
+          
+      <Modal
+          visible={keyModalVisible}
+          title="Keyboard shortcuts"
+          onOk={() => setKeyModalVisible(false)}
+          onCancel={() => setKeyModalVisible(false)}
+          footer={null}
+          width={600}
+        >
+          <Row>
+            <Col span="12">
+              <div>Global</div>
+              <Shortcut value={['g','h']} desc="Go to Home Dashboard"></Shortcut>
+              <Shortcut value={['g','p']} desc="Go to Plugins Page"></Shortcut>
+              <Shortcut value={['g','t']} desc="Go to Teams Page"></Shortcut>
+              <Shortcut value={['g','u']} desc="Go to Users Page"></Shortcut>
+              <Shortcut value={['o','s']} desc="Open search"></Shortcut>
+              <Shortcut value={['esc']} desc="Exist editing,viewing,search etc"></Shortcut>
+            </Col>
+
+            <Col span="12">
+              <div>Dashboard</div>
+              <Shortcut value={['cmd','s']} desc="Save dashboard"></Shortcut>
+            </Col>
+          </Row>
+        </Modal>
+
+      </>
     );
+}
+
+const Shortcut = (props) => {
+  return (
+    <div className="shortcut">
+      {
+        props.value.map((k) => <span className="shortcut-table-key">{k}</span>)
+      }
+      <span className="shortcut-table-description">{props.desc}</span>
+    </div>
+  )
 }
 
 export const mapStateToProps = (state: StoreState) => ({

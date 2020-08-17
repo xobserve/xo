@@ -231,6 +231,9 @@ export class DashboardModel {
     return this.meta.canEdit && panel && !panel.repeatPanelId;
   }
 
+  canEditPanelById(id: number): boolean {
+    return this.canEditPanel(this.getPanelById(id));
+  }
 
   cycleGraphTooltip() {
     this.graphTooltip = (this.graphTooltip + 1) % 3;
@@ -749,6 +752,9 @@ export class DashboardModel {
         panel.render();
       }
     }
+    
+
+
     
     private hasVariables() {
       if (config.featureToggles.newVariables) {

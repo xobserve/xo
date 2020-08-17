@@ -5,21 +5,19 @@ import appEvents from '../library/utils/app_events';
 import { CoreEvents } from 'src/types';
 import { store } from 'src/store/store'
 import { getUrlParams } from '../library/utils/url';
+import { DashboardModel } from 'src/views/dashboard/model';
 export class KeybindingSrv {
   constructor() {
     this.setupGlobal()
   }
 
   setupGlobal() {
-    this.bind('h', this.goToHome);
-    this.bind('p', this.goToPlugins);
-    this.bind('t', this.gotoTeams);
-    this.bind('u', this.gotoUsers);
-    this.bind('n', this.gotoNewDashboard);
+    this.bind('g h', this.goToHome);
+    this.bind('g p', this.goToPlugins);
+    this.bind('g t', this.gotoTeams);
+    this.bind('g u', this.gotoUsers);
     this.bind('mod+s', this.saveDashboard);
-    this.bind('s', this.openSerach);
-    this.bind('b', this.goBack);
-    this.bind('f', this.goForward);
+    this.bind('o s', this.openSerach);
     this.bind('esc', this.exit);
   }
 
@@ -91,6 +89,29 @@ export class KeybindingSrv {
     if (search.search) {
       getLocationSrv().update({ query: { search: null }, partial: true })
     }
+  }
+
+  setupDashboardBindings(dashboard: DashboardModel) {
+    // edit panel
+    this.bind('e', () => {
+      if (dashboard.canEditPanelById(dashboard.meta.focusPanelId)) {
+        getLocationSrv().update({ query: { editPanel: dashboard.meta.focusPanelId }, partial: true })
+      }
+    });
+
+    // view panel
+    this.bind('v', () => {
+      if (dashboard.meta.focusPanelId) {
+        getLocationSrv().update({ query: { viewPanel: dashboard.meta.focusPanelId  }, partial: true })
+      }
+    });
+
+    // inspect panel
+    this.bind('i', () => {
+      if (dashboard.meta.focusPanelId) {
+        getLocationSrv().update({ query: { inspect: dashboard.meta.focusPanelId }, partial: true })
+      }
+    });
   }
 }
 
