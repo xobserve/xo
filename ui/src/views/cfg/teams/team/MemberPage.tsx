@@ -39,11 +39,11 @@ export class TeamMemberPage extends PureComponent<Props, State> {
         }
 
         this.loadMembers = this.loadMembers.bind(this)
-        appEvents.on('update-team-member', this.loadMembers)
+        appEvents.on('update-team-member', () => this.loadMembers())
     }
         
     componentWillMount() {
-        appEvents.off('update-team-member', this.loadMembers)
+        appEvents.off('update-team-member', () => this.loadMembers)
     }
 
     loadMembers = async () => {

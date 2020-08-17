@@ -11,7 +11,7 @@ import { setToken } from 'src/core/library/utils/auth';
 
 import { store } from 'src/store/store';
 import { updateUser } from 'src/store/reducers/user';
-import { getBackendSrv, config } from 'src/packages/datav-core'
+import { getBackendSrv, config,localeData,currentLang} from 'src/packages/datav-core'
 
 import './Login.less'
 
@@ -42,7 +42,7 @@ function Login() {
     return (
         <div className="datav-login">
             <div className="datav-rectangle">
-                <h3>Welcome to {config.productName}</h3>
+                <h3>{localeData[currentLang]['user.loginTitle'] + config.productName}</h3>
                 <Form
                     name="basic"
                     initialValues={{ remember: true }}
@@ -51,14 +51,14 @@ function Login() {
                 >
                     <Form.Item
                         name="username"
-                        label="Username"
+                        label={localeData[currentLang]['user.username']}
                     >
                         <Input />
                     </Form.Item>
 
                     <Form.Item
                         name="password"
-                        label="Password"
+                        label={localeData[currentLang]['user.password']}
                     >
                         <Input  type="password" />
                     </Form.Item>
@@ -66,7 +66,7 @@ function Login() {
 
                     <Form.Item >
                         <Button type="primary" htmlType="submit" className="ub-mt2" block>
-                            Log in
+                            {localeData[currentLang]['common.login']}
                         </Button>
                     </Form.Item>
                 </Form>

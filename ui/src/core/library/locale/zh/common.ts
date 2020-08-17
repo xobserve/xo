@@ -9,6 +9,7 @@ const common = {
     changeTheme: '切换主题',
     user: '用户',
     help: '帮助',
+    login: '登录',
     logout: '退出登录',
     preferences: '偏好设置',
     shortcuts: '快捷键',

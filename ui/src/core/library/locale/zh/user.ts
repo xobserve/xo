@@ -13,7 +13,8 @@ const user = {
     oldPassword: '旧密码',
     newPassword: '新密码',
     confirmPassword: '确认密码',
-    subTitle: '用户的个人偏好设置'
+    subTitle: '用户的个人偏好设置',
+    loginTitle: '欢迎使用',
 }
 
 export default user

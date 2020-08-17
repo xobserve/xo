@@ -13,6 +13,7 @@ const user = {
     oldPassword: 'Old password',
     newPassword: 'New password',
     confirmPassword: 'Confirm password',
+    loginTitle: 'Welcome to',
 }
 
 export default user

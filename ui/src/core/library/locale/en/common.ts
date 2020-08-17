@@ -10,6 +10,7 @@ const common = {
     user: 'User',
     help: 'Help',
     settings: 'Settings',
+    login: 'Log in',
     logout: 'Logout',
     preferences: 'Preferences',
     shortcuts: 'Keyboard Shortcuts',
