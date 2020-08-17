@@ -28,7 +28,8 @@ const team = {
     transfer: '转移团队',
     toMember: '转移给成员',
     leave: '离开团队',
-    delete: '删除团队'
+    delete: '删除团队',
+    isPublicTips: '是否将团队的自定义菜单对外公开，若设置为是，则非团队的用户也可以选择该菜单',
 }
 
 export default team

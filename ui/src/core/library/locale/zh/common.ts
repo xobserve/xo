@@ -99,6 +99,7 @@ const common = {
     apply: '应用',
     globalVariable: '全局变量',
     global: '全局',
+    public: '公开',
 }
 
 export default common

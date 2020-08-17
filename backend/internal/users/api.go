@@ -122,20 +122,48 @@ func GetSideMenus(c *gin.Context) {
 		return
 	}
 
+	teamIds := make([]int64,0)
+	for _,m := range members {
+		teamIds = append(teamIds,m.TeamId)
+	}
+
+	// get public sidemenu team ids
+	rows, err := db.SQL.Query("SELECT team_id from sidemenu where is_public=? and team_id != ?",true, models.GlobalTeamId)
+	if err != nil {
+		logger.Warn("query public team sidemenus error", "error", err)
+		c.JSON(500, common.ResponseInternalError())
+		return
+	}
+
+	for rows.Next() {
+		var tid int64 
+		rows.Scan(&tid)
+		exist := false 
+		for _,id := range teamIds {
+			if id == tid {
+				exist = true
+			}
+		}
+
+		if !exist {
+			teamIds = append(teamIds,tid)
+		}
+	}
+
 	sidemenus := make([]*models.SideMenu,0) 
 
-	for _,member := range members {
-		sm,err := sidemenu.QuerySideMenu(0,member.TeamId)
+	for _,tid := range teamIds {
+		sm,err := sidemenu.QuerySideMenu(0, tid)
 		if err != nil  {
 			if  err != sql.ErrNoRows {
-				logger.Error("query sidemenu error","teamId:",member.TeamId,"error",err)
+				logger.Error("query sidemenu error","teamId:",tid,"error",err)
 			}		
 			continue
 		}
 		
-		team,err := models.QueryTeam(member.TeamId,"")
+		team,err := models.QueryTeam(tid,"")
 		if err != nil {
-			logger.Error("query team error","teamId:",member.TeamId,"error",err)
+			logger.Error("query team error","teamId:",tid,"error",err)
 			continue
 		}
 

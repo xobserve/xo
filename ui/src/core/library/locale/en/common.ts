@@ -100,6 +100,7 @@ const common = {
     apply: 'Apply',
     globalVariable: 'Global variable',
     global: 'Global',
+    public: 'Public',
 }
 
 export default common

@@ -6,14 +6,16 @@ import Page from 'src/views/Layouts/Page/Page';
 import { getNavModel } from 'src/views/Layouts/Page/navModel'
 import { Team, SideMenu ,StoreState} from 'src/types';
 import { getBackendSrv } from 'src/core/services/backend';
-import { InlineFormLabel,IconName } from 'src/packages/datav-core'
-import { Button, Input,notification, Tree } from 'antd';
+import { InlineFormLabel,IconName,LegacyForms} from 'src/packages/datav-core'
+import { Button, Input,notification, Tooltip } from 'antd';
 import EmptyListCTA from 'src/views/components/EmptyListCTA/EmptyListCTA';
 import MenuManage from './MenuManage/MenuManage'
 import { Langs } from 'src/core/library/locale/types';
 import { connect } from 'react-redux';
 import { injectIntl, FormattedMessage, IntlShape } from 'react-intl';
+import {InfoCircleOutlined} from '@ant-design/icons'
 
+const {LegacySwitch} = LegacyForms
 export interface Props { 
     routeID: string;
     parentRouteID: string;
@@ -115,7 +117,7 @@ export class TeamSettingPage extends PureComponent<Props & IntlProps, State> {
                 id: 'home',
                 title: 'home',
                 url: '/home',
-                icon: 'home'
+                icon: 'home-alt'
             }]
         }
 
@@ -131,6 +133,16 @@ export class TeamSettingPage extends PureComponent<Props & IntlProps, State> {
             ...this.state,
             sidemenu: sidemenu
         })
+    }
+
+    onChangePublic(e) {
+        this.setState({
+            ...this.state,
+            sidemenu: {
+                ...this.state.sidemenu,
+                isPublic: e.currentTarget.checked
+            }
+        })      
     }
 
     render() {
@@ -172,6 +184,10 @@ export class TeamSettingPage extends PureComponent<Props & IntlProps, State> {
                                         className="gf-form-input max-width-14"
                                         onChange={this.onChangeSideMenuDesc}
                                     />
+                                </div>
+                                <div className="gf-form max-width-30">
+                                <InlineFormLabel className="gf-form-label"><FormattedMessage id="common.public"/><Tooltip title={<FormattedMessage id="team.isPublicTips"/>}><InfoCircleOutlined /></Tooltip></InlineFormLabel>
+                                    <LegacySwitch label="" checked={sidemenu.isPublic} onChange={(e) => this.onChangePublic(e)}/>
                                 </div>
                             </form>
                             <h3 className="page-sub-heading"><FormattedMessage id="team.menuManage"/></h3>

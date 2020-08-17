@@ -32,6 +32,7 @@ export enum MenuPosition {
 export interface SideMenu {
     id: number
     teamId : number
+    isPublic?: boolean
     teamName? : string
     desc? : string
     data: MenuItem[]

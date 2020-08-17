@@ -28,7 +28,8 @@ const team = {
     transfer: 'Transfer team',
     toMember: 'To member',
     leave: 'Leave team',
-    delete: 'Delete team'
+    delete: 'Delete team',
+    isPublicTips: 'Set to public means users not in this team can also use this sidemenu',
 }
 
 export default team

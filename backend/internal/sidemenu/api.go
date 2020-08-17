@@ -55,8 +55,8 @@ func CreateMenu(c *gin.Context) {
 	userId := session.CurrentUserId(c)
 	data,_ := json.Marshal(req.Data)
 	now := time.Now()
-	res,err := db.SQL.Exec("INSERT INTO sidemenu (team_id,desc,data,created_by,created,updated) VALUES (?,?,?,?,?,?)",
-		req.TeamId,req.Desc,data,userId,now,now)
+	res,err := db.SQL.Exec("INSERT INTO sidemenu (team_id,is_public,desc,data,created_by,created,updated) VALUES (?,?,?,?,?,?,?)",
+		req.TeamId,false,req.Desc,data,userId,now,now)
 	if err != nil {
 		logger.Error("create sidemenu error", "error", err)
 		c.JSON(500, common.ResponseInternalError())
@@ -84,7 +84,7 @@ func UpdateMenu(c *gin.Context) {
 	}
 	
 	data,_ := json.Marshal(menu.Data)
-	_,err := db.SQL.Exec("UPDATE sidemenu SET desc=?,data=?,updated=? WHERE id=? and team_id=?",menu.Desc,data,time.Now(),menu.Id,menu.TeamId)
+	_,err := db.SQL.Exec("UPDATE sidemenu SET is_public=?,desc=?,data=?,updated=? WHERE id=? and team_id=?",menu.IsPublic,menu.Desc,data,time.Now(),menu.Id,menu.TeamId)
 	if err != nil {
 		logger.Error("update sidemenu error", "error", err)
 		c.JSON(500, common.ResponseInternalError())

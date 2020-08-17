@@ -91,8 +91,8 @@ func CreateTables() {
 		panic(err)
 	}
 
-	_,err = db.SQL.Exec(`INSERT INTO sidemenu (id,team_id,desc,data,created_by,created,updated) VALUES (?,?,?,?,?,?,?)`,
-		models.DefaultMenuId,models.GlobalTeamId, models.DefaultMenuDesc, menuStr,models.SuperAdminId,now,now)
+	_,err = db.SQL.Exec(`INSERT INTO sidemenu (id,team_id,is_public,desc,data,created_by,created,updated) VALUES (?,?,?,?,?,?,?,?)`,
+		models.DefaultMenuId,models.GlobalTeamId, true, models.DefaultMenuDesc, menuStr,models.SuperAdminId,now,now)
 	if err != nil {
 		log.RootLogger.Crit("init default side menu  error","error:",err)
 		panic(err)
@@ -325,16 +325,17 @@ var CreateTableSqls = map[string]string {
 	CREATE TABLE IF NOT EXISTS sidemenu (
 		id 					INTEGER PRIMARY KEY AUTOINCREMENT,
 		team_id             INTEGER NOT NULL,
+		is_public           BOOL NOT NULL,
 		desc                TEXT DEFAUlT '',
 		data                MEDIUMTEXT NOT NULL,
 		created_by          INTEGER NOT NULL,
 		created 			DATETIME NOT NULL DEFAULT CURRENT_DATETIME,
 		updated 			DATETIME NOT NULL DEFAULT CURRENT_DATETIME
 	);
-	CREATE INDEX IF NOT EXISTS sidemenu_team_id
-		ON sidemenu (team_id);
 	CREATE UNIQUE INDEX IF NOT EXISTS sidemenu_team_id
 		ON sidemenu (team_id);
+	CREATE INDEX IF NOT EXISTS sidemenu_is_public
+		ON sidemenu (is_public);
 	`,
 
 	"annotation" : `
