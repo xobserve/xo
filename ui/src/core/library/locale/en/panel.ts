@@ -29,6 +29,10 @@ const panel = {
     addThreshold: 'Add threshold',
     threshodsMode : 'Thresholds mode',
     threshodsModeDesc :'Percentage means thresholds relative to min & max',
+
+    // echarts panel
+    echartsOptions: 'Echarts options',
+    echartsOptionsDesc: `Pass options to echarts by function below, you can use 'console.log(data)' to see the detail of function params`,
 }
  
 export default panel 

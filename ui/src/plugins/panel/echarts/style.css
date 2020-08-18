@@ -1,0 +1,7 @@
+.CodeMirror {
+  /* background: rgba(128, 128, 128, 0.05) !important; */
+  line-height: 1.5 !important;
+  font-size: 13px !important;
+  /* font-family: Hack monospace; */
+  font-family: Consolas, Menlo, Monaco, 'Lucida Console', 'Liberation Mono', 'DejaVu Sans Mono', 'Bitstream Vera Sans Mono', 'Courier New', monospace, serif;
+}

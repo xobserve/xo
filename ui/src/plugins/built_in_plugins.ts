@@ -5,6 +5,7 @@ import * as Gauge from 'src/plugins/panel/gauge/module';
 import * as BarGauge from 'src/plugins/panel/bargauge/module';
 import * as Table from 'src/plugins/panel/table/module';
 import * as Text from 'src/plugins/panel/text/module';
+import * as Echarts from 'src/plugins/panel/echarts/module';
 
 const prometheusPlugin = async () =>
     await import(/* webpackChunkName: "prometheusPlugin" */ 'src/plugins/datasource/prometheus/module');
@@ -21,4 +22,5 @@ export const builtInPlugins = {
     'src/plugins/panel/bargauge/module': BarGauge,
     'src/plugins/panel/table/module': Table,
     'src/plugins/panel/text/module': Text,
+    'src/plugins/panel/echarts/module': Echarts,
 }
