@@ -30,6 +30,8 @@ const team = {
     leave: 'Leave team',
     delete: 'Delete team',
     isPublicTips: 'Set to public means users not in this team can also use this sidemenu',
+    menuNotExist: 'Target sidemenu is not exist',
+    menuNotPublic: 'Target sidement is not public',
 }
 
 export default team

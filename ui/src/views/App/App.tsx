@@ -15,7 +15,7 @@
 import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 import { Route, Switch, BrowserRouter as Router } from 'react-router-dom';
-import { Modal } from 'antd';
+import { Modal,notification } from 'antd';
 import { ExclamationCircleOutlined } from '@ant-design/icons'
 import Login from '../Login/Login'
 
@@ -32,7 +32,7 @@ import darkVars from 'src/styles/dark.json';
 import lightVars from 'src/styles/light.json';
 import { StoreState } from 'src/types'
 
-import { LocationUpdate, setDataSourceService, setBackendSrv, ThemeType, setCurrentTheme, setMarkdownOptions, getBackendSrv, setBootConfig, ThemeContext, getTheme, setLocationSrv,standardFieldConfigEditorRegistry, getStandardFieldConfigs,standardTransformersRegistry} from 'src/packages/datav-core'
+import { LocationUpdate, setDataSourceService, setBackendSrv, ThemeType, setCurrentTheme, setMarkdownOptions, getBackendSrv, setBootConfig, ThemeContext, getTheme, setLocationSrv,standardFieldConfigEditorRegistry, getStandardFieldConfigs,standardTransformersRegistry, currentLang} from 'src/packages/datav-core'
 import { DatasourceSrv } from 'src/core/services/datasource'
 import { backendSrv } from 'src/core/services/backend'
 
@@ -47,6 +47,9 @@ import { getDefaultVariableAdapters, variableAdapters } from 'src/views/variable
 import { initRoutes } from 'src/routes';
 import { setLinkSrv, LinkSrv } from 'src/core/services/link';
 import { getStandardTransformers } from 'src/core/library/utils/standardTransformers';
+import { getUrlParams } from 'src/core/library/utils/url'
+import localeData from 'src/core/library/locale';
+
 interface Props {
   theme: string 
 }
@@ -69,6 +72,8 @@ const UIApp = (props: Props) => {
 
 
 
+
+
   const initAll = async () => {
     // init backend service
     initBackendService()
@@ -76,6 +81,25 @@ const UIApp = (props: Props) => {
     // init time service
     initTimeService()
 
+        
+    // set sidemenu
+    const params = getUrlParams()
+    const teamId = params['sidemenu']
+    if (teamId) {
+      try {
+        // check user can use this sidemenu
+        const res = await getBackendSrv().get(`/api/users/user/sidemenu/${teamId}`)
+        // set menu for user in backend
+        await getBackendSrv().put("/api/users/user/sidemenu", {menuId: res.data})
+      } catch (error) {
+        notification['error']({
+          message: "Error",
+          description: localeData[currentLang][error.data.message],
+          duration: 5
+        });
+      }
+    }
+    
     // load boot config
     const res = await getBackendSrv().get('/api/bootConfig');
     setBootConfig(res.data)

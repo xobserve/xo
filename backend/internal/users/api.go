@@ -187,6 +187,11 @@ func UpdateSideMenu(c *gin.Context) {
 	req := &UpdateSideMenuReq{}
 	c.Bind(&req)
 
+	if req.MenuId == 0 {
+		c.JSON(400,common.ResponseI18nError(i18n.BadRequestData))
+		return 
+	}
+
 	_,err := db.SQL.Exec("UPDATE user SET sidemenu=? WHERE id=?",req.MenuId,userId)
 	if err != nil {
 		logger.Warn("update side menu error", "error", err)
@@ -240,4 +245,48 @@ func GetUserTeamRoles(c *gin.Context) {
 	}
 
 	c.JSON(200, common.ResponseSuccess(roles))
+}
+
+func CanUseMenu(c *gin.Context) {
+	teamId,_ := strconv.ParseInt(c.Param("teamId"),10,64)
+	if teamId == 0 {
+		invasion.Add(c)
+		c.JSON(400, common.ResponseI18nError(i18n.BadRequestData))
+		return 
+	}
+
+	userId := session.CurrentUserId(c)
+
+	// check menu is exist
+	menu,err := sidemenu.QuerySideMenu(0,teamId)
+	if err != nil && err != sql.ErrNoRows{
+		logger.Warn("query team sidemenu error", "error", err)
+		c.JSON(500, common.ResponseInternalError())
+		return
+	}
+
+	if err == sql.ErrNoRows {
+		c.JSON(404, common.ResponseI18nError("team.menuNotExist"))
+		return 
+	}
+
+	// check whether user is in team
+	member,err := models.QueryTeamMember(teamId,userId)
+	if err != nil {
+		logger.Warn("query team member error", "error", err)
+		c.JSON(500, common.ResponseInternalError())
+		return
+	}
+
+	if member.Id == userId {
+		c.JSON(200, common.ResponseSuccess(menu.Id))
+		return 
+	}
+
+	if menu.IsPublic {
+		c.JSON(200, common.ResponseSuccess(menu.Id))
+		return 
+	}
+
+	c.JSON(403, common.ResponseI18nError("team.menuNotPublic"))
 }

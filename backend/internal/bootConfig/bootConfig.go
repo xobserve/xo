@@ -1,6 +1,7 @@
 package bootConfig
 
 import (
+	"database/sql"
 	"github.com/apm-ai/datav/backend/internal/session"
 	"github.com/apm-ai/datav/backend/pkg/models"
 	"github.com/apm-ai/datav/backend/internal/sidemenu"
@@ -72,10 +73,14 @@ func QueryBootConfig(c *gin.Context) {
 		smId = user.SideMenu 
 	}
 	menu,err  := sidemenu.QuerySideMenu(smId,0)
-	if err != nil {
+	if err != nil && err != sql.ErrNoRows{
 		logger.Error("query side menu error","error",err)
 		c.JSON(500, common.ResponseInternalError())
 		return 
+	}
+
+	if err == sql.ErrNoRows {
+		menu,err  = sidemenu.QuerySideMenu(models.DefaultMenuId,0)
 	}
 
 	c.JSON(200, common.ResponseSuccess(bootConfig{plugins.DataSources,datasources, panels,menu.Data}))

@@ -11,7 +11,6 @@ import AddMember from './Member/AddMember'
 import { TeamMember } from 'src/types';
 import appEvents from 'src/core/library/utils/app_events';
 import { getState } from 'src/store/store';
-import { Button } from 'antd';
 import { LinkButton } from 'src/packages/datav-core/src';
 import { FormattedMessage } from 'react-intl';
 

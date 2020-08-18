@@ -134,6 +134,7 @@ func (s *Server) Start() error {
 				userR.PUT("/user/sidemenu",users.UpdateSideMenu)
 				userR.PUT("/user/info",users.UpdateUserInfo)
 				userR.GET("/user/teamRoles", users.GetUserTeamRoles)	
+				userR.GET("/user/sidemenu/:teamId", users.CanUseMenu)
 			}
 
 			teamR := authR.Group("/api/teams") 

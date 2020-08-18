@@ -7,7 +7,7 @@ import { getNavModel } from 'src/views/Layouts/Page/navModel'
 import { Team, SideMenu ,StoreState} from 'src/types';
 import { getBackendSrv } from 'src/core/services/backend';
 import { InlineFormLabel,IconName,LegacyForms} from 'src/packages/datav-core'
-import { Button, Input,notification, Tooltip } from 'antd';
+import { Button, Input,notification, Tooltip, Tag } from 'antd';
 import EmptyListCTA from 'src/views/components/EmptyListCTA/EmptyListCTA';
 import MenuManage from './MenuManage/MenuManage'
 import { Langs } from 'src/core/library/locale/types';
@@ -175,6 +175,10 @@ export class TeamSettingPage extends PureComponent<Props & IntlProps, State> {
                         <div>
                             <h3 className="page-sub-heading"><FormattedMessage id="common.basicSetting"/></h3>
                             <form name="teamDetailsForm" className="gf-form-group">
+                                <div className="gf-form max-width-30">
+                                    <InlineFormLabel>ID</InlineFormLabel>
+                                    <Tag>{team.id}</Tag>
+                                </div>
                                 <div className="gf-form max-width-30">
                                     <InlineFormLabel><FormattedMessage id="common.desc"/></InlineFormLabel>
                                     <Input
