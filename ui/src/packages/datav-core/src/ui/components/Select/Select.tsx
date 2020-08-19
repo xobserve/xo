@@ -1,8 +1,7 @@
 import React from 'react';
-import { SelectableValue } from '../../..';
+import { SelectableValue } from '../../../data';
 import { SelectCommonProps, MultiSelectCommonProps, SelectAsyncProps } from './types';
 import { SelectBase } from './SelectBase';
-import './Select.less'
 
 export function Select<T>(props: SelectCommonProps<T>) {
   return <SelectBase {...props} />;

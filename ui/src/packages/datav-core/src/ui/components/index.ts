@@ -5,6 +5,7 @@ import { Input as LegacyInput, LegacyInputStatus } from './Form/Legacy/Input/Inp
 import { Switch as LegacySwitch} from './Form/Legacy/Switch/Switch';
 import { Select as LegacySelect} from './Form/Legacy/Select/Select';
 import {FormField as LegacyFormField} from './Form/Legacy/Field/FormField'
+import CodeEditor from './CodeEditor/CodeEditor'
 
 export {Label as FormLabel} from './Form/Label'
 export { getFormStyles } from './Form/getFormStyles';
@@ -92,6 +93,7 @@ export * from './Table/types'
 export {FeatureInfoBox} from './InfoBox/FeatureInfoBox'
 export {fieldMatchersUI} from './MatchersUI/fieldMatchersUI'
 export {ValuePicker} from './ValuePicker/ValuePicker'
+export {CodeEditor}
 const LegacyForms = {
     LegacyInput,
     LegacySwitch,

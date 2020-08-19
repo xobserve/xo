@@ -17,7 +17,7 @@ const fs = require('fs');
 const webpack = require('webpack');
 
 const { fixBabelImports, addLessLoader, override ,addWebpackPlugin,addWebpackAlias,useEslintRc} = require('customize-cra');
-
+const MonacoWebpackPlugin = require('monaco-editor-webpack-plugin');
   
 const path = require('path')
 const { getLessVars } = require('antd-theme-generator')
@@ -85,4 +85,10 @@ module.exports = override(
     jQuery:"jquery",
     "window.jQuery":"jquery"
   })),
+  addWebpackPlugin(
+    new MonacoWebpackPlugin({
+      // available options are documented at https://github.com/Microsoft/monaco-editor-webpack-plugin#options
+      languages: ['json','javascript']
+    })
+  )
 )

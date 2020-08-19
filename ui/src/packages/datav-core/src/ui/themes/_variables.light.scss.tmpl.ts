@@ -91,10 +91,10 @@ $text-color-emphasis: ${theme.colors.textStrong};
 $text-blue: ${theme.colors.textBlue};
 
 $text-shadow-faint: none;
-
+ 
 // gradients
-$brand-gradient-horizontal: linear-gradient(to right, #f05a28 30%, #fbca0a 99%);
-$brand-gradient-vertical: linear-gradient(#f05a28 30%, #fbca0a 99%);
+$brand-gradient-horizontal: linear-gradient(to right,#33a2e5 30%, #52c41a 99%);
+$brand-gradient-vertical: linear-gradient(#33a2e5 30%, #52c41a 99%);
 
 // Links
 // -------------------------

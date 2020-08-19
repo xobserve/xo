@@ -184,7 +184,7 @@ export class EditDataSourcePage extends PureComponent<Props, State> {
                 ...this.state,
                 testingStatus: {
                     status: true,
-                    message: err.message
+                    message: err.message ?? err.data.message
                 }
             })
         })

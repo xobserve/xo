@@ -33,6 +33,10 @@ const panel = {
     // echarts panel
     echartsOptions: 'Echarts options',
     echartsOptionsDesc: `Pass options to echarts by function below, you can use 'console.log(data)' to see the detail of function params`,
+
+    // http panel
+    formatAs: 'Format as',
+    adittionalJson: 'Additional json data',
 }
  
 export default panel 

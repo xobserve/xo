@@ -1,6 +1,6 @@
-import { SelectableValue } from '../../../data';
+import { SelectableValue } from '../../..//data';
 import React from 'react';
- 
+
 export type SelectValue<T> = T | SelectableValue<T> | T[] | Array<SelectableValue<T>>;
 export type InputActionMeta = {
   action: 'set-value' | 'input-change' | 'input-blur' | 'menu-close';

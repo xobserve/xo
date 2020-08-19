@@ -19,6 +19,8 @@ import { DropdownIndicator } from './DropdownIndicator';
 import { SelectOptionGroup } from './SelectOptionGroup';
 import { SingleValue } from './SingleValue';
 import { MultiValueContainer, MultiValueRemove } from './MultiValue';
+import { useTheme } from '../../themes';
+import { getSelectStyles } from './getSelectStyles';
 import { cleanValue } from './utils';
 import { SelectBaseProps, SelectValue } from './types';
 
@@ -132,6 +134,8 @@ export function SelectBase<T>({
   value,
   width,
 }: SelectBaseProps<T>) {
+  const theme = useTheme();
+  const styles = getSelectStyles(theme);
   const onChangeWithEmpty = useCallback(
     (value: SelectValue<T>) => {
       if (isMulti && (value === undefined || value === null)) {
@@ -139,7 +143,6 @@ export function SelectBase<T>({
       }
       onChange(value);
     },
-    // eslint-disable-next-line
     [isMulti, value, onChange]
   );
   let ReactSelectComponent: ReactSelect | Creatable = ReactSelect;
@@ -236,7 +239,15 @@ export function SelectBase<T>({
               {...props.innerProps}
               className={cx(
                 css(props.getStyles('placeholder', props)),
-                'select-placeholder'
+                css`
+                  display: inline-block;
+                  color: ${theme.colors.formInputPlaceholderText};
+                  position: absolute;
+                  top: 50%;
+                  transform: translateY(-50%);
+                  box-sizing: border-box;
+                  line-height: 1;
+                `
               )}
             >
               {props.children}
@@ -284,11 +295,11 @@ export function SelectBase<T>({
             return <Icon className="fa-spin" name="fa fa-spinner" />;
           },
           LoadingMessage: (props: any) => {
-            return <div className={'select-loading-message'}>{loadingMessage}</div>;
+            return <div className={styles.loadingMessage}>{loadingMessage}</div>;
           },
           NoOptionsMessage: (props: any) => {
             return (
-              <div className={'select-loading-message'} aria-label="No options provided">
+              <div className={styles.loadingMessage} aria-label="No options provided">
                 {noOptionsMessage}
               </div>
             );
@@ -304,7 +315,7 @@ export function SelectBase<T>({
           menuPortal: ({ position, width }: any) => ({
             position,
             width,
-            zIndex: 1050,
+            zIndex: theme.zIndex.dropdown,
           }),
           //These are required for the menu positioning to function
           menu: ({ top, bottom, position }: any) => ({
@@ -313,7 +324,7 @@ export function SelectBase<T>({
             position,
             marginBottom: !!bottom ? '10px' : '0',
             minWidth: '100%',
-            zIndex: 1050,
+            zIndex: theme.zIndex.dropdown,
           }),
           container: () => ({
             position: 'relative',

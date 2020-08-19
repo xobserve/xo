@@ -70,7 +70,8 @@ func (s *Server) Start() error {
 		{
 			r.POST("/api/login",session.Login)
 			r.POST("/api/logout",session.Logout)
-			r.GET("/api/proxy/:datasourceID/*target", proxy)
+			r.Any("/api/proxy/:datasourceID/*target", proxy)
+			r.Any("/api/proxy/:datasourceID", proxy)
 			r.GET("/api/bootConfig", bootConfig.QueryBootConfig)
 			r.POST("/api/testdata",QueryTestdata)
 		}

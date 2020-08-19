@@ -34,8 +34,12 @@ func proxy(c *gin.Context)  {
 	}
 
 	var url1 = ds.Url + targetURL + "?" + params.Encode()
+	
+	// read request json body and write to new request body
+	jsonData,_ := c.GetRawData()
+	reqBody := bytes.NewBuffer(jsonData)
 
-	outReq, err := http.NewRequest("GET", url1, nil)
+	outReq, err := http.NewRequest(c.Request.Method, url1, reqBody)
 	if err != nil {
 		fmt.Println(err)
 	}

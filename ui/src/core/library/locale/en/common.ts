@@ -102,6 +102,7 @@ const common = {
     globalVariable: 'Global variable',
     global: 'Global',
     public: 'Public',
+    metric: 'Metric',
 }
 
 export default common

@@ -101,6 +101,7 @@ const common = {
     globalVariable: '全局变量',
     global: '全局',
     public: '公开',
+    metric: '指标',
 }
 
 export default common

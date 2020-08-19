@@ -1,4 +1,4 @@
-import { SelectableValue } from '../../..';
+import { SelectableValue } from '../../../data';
 import { kebabCase } from 'lodash';
 
 export const generateOptions = (desc = false) => {

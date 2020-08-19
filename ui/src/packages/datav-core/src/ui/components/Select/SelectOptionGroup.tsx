@@ -1,8 +1,12 @@
 import React, { PureComponent } from 'react';
+import { css } from 'emotion';
+import { DatavTheme } from '../../../data';
 import { GroupProps } from 'react-select';
+import { stylesFactory, withTheme, selectThemeVariant } from '../../themes';
+import { Themeable } from '../../types';
 import { Icon } from '../Icon/Icon';
- 
-interface ExtendedGroupProps extends GroupProps<any> {
+
+interface ExtendedGroupProps extends GroupProps<any>, Themeable {
   data: {
     label: string;
     expanded: boolean;
@@ -14,6 +18,34 @@ interface State {
   expanded: boolean;
 }
 
+const getSelectOptionGroupStyles = stylesFactory((theme: DatavTheme) => {
+  const optionBorder = selectThemeVariant(
+    {
+      light: theme.palette.gray4,
+      dark: theme.palette.dark9,
+    },
+    theme.type
+  );
+  return {
+    header: css`
+      display: flex;
+      align-items: center;
+      justify-content: flex-start;
+      justify-items: center;
+      cursor: pointer;
+      padding: 7px 10px;
+      width: 100%;
+      border-bottom: 1px solid ${optionBorder};
+      text-transform: capitalize;
+    `,
+    label: css`
+      flex-grow: 1;
+    `,
+    icon: css`
+      padding-right: 2px;
+    `,
+  };
+});
 
 class UnthemedSelectOptionGroup extends PureComponent<ExtendedGroupProps, State> {
   state = {
@@ -45,13 +77,14 @@ class UnthemedSelectOptionGroup extends PureComponent<ExtendedGroupProps, State>
   };
 
   render() {
-    const { children, label } = this.props;
+    const { children, label, theme } = this.props;
     const { expanded } = this.state;
+    const styles = getSelectOptionGroupStyles(theme);
     return (
       <div>
-        <div className={'select-option-group-header '} onClick={this.onToggleChildren}>
-          <span className={'select-option-group-label'}>{label}</span>
-          <Icon className={'select-option-group-icon'} name={expanded ? 'angle-left' : 'angle-down'} />{' '}
+        <div className={styles.header} onClick={this.onToggleChildren}>
+          <span className={styles.label}>{label}</span>
+          <Icon className={styles.icon} name={expanded ? 'angle-left' : 'angle-down'} />{' '}
         </div>
         {expanded && children}
       </div>
@@ -59,4 +92,4 @@ class UnthemedSelectOptionGroup extends PureComponent<ExtendedGroupProps, State>
   }
 }
 
-export const SelectOptionGroup = UnthemedSelectOptionGroup
+export const SelectOptionGroup = withTheme(UnthemedSelectOptionGroup);

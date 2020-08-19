@@ -1,7 +1,10 @@
 import React, { ReactNode } from 'react';
 import { cx } from 'emotion';
+import { DatavTheme } from '../../../data';
+import { withTheme } from '../../themes/ThemeContext';
+import { getSelectStyles } from './getSelectStyles';
 
-class UnthemedValueContainer extends React.Component<any> {
+class UnthemedValueContainer extends React.Component<any & { theme: DatavTheme }> {
   render() {
     const { children } = this.props;
     const { selectProps } = this.props;
@@ -23,11 +26,11 @@ class UnthemedValueContainer extends React.Component<any> {
   }
 
   renderContainer(children?: ReactNode) {
-    const { isMulti } = this.props;
- 
-    const className = cx('select-value-container', isMulti && 'select-multi-value-container');
+    const { isMulti, theme } = this.props;
+    const styles = getSelectStyles(theme);
+    const className = cx(styles.valueContainer, isMulti && styles.valueContainerMulti);
     return <div className={className}>{children}</div>;
   }
 }
 
-export const ValueContainer = UnthemedValueContainer;
+export const ValueContainer = withTheme(UnthemedValueContainer);
