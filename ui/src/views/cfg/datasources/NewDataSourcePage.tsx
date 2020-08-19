@@ -1,10 +1,9 @@
 import React, { FC, PureComponent } from 'react';
-import { DataSourcePluginMeta, NavModel, getBackendSrv } from 'src/packages/datav-core';
+import { DataSourcePluginMeta, NavModel, getBackendSrv,Button} from 'src/packages/datav-core';
 import { List } from 'src/packages/datav-core';
 import Page from '../../Layouts/Page/Page';
 import { DataSourcePluginCategory,StoreState } from 'src/types';
 import { Card } from '../../components/Card/Card';
-import Button from 'antd/es/button';
 import {buildCategories} from './build_categories'
 import { withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
@@ -122,8 +121,6 @@ interface DataSourceTypeCardProps {
 
 const DataSourceTypeCard: FC<DataSourceTypeCardProps> = props => {
   const { plugin, onLearnMoreClick } = props;
-  const isPhantom = plugin.module === 'phantom';
-  const onClick = !isPhantom ? props.onClick : () => {};
 
   // find first plugin info link
   const learnMoreLink = plugin.info.links && plugin.info.links.length > 0 ? plugin.info.links[0] : null;
@@ -145,11 +142,11 @@ const DataSourceTypeCard: FC<DataSourceTypeCardProps> = props => {
               <FormattedMessage id="common.learnMore"/>
             </a>
           )}
-          {!isPhantom && <Button type="primary" ghost><FormattedMessage id="common.select"/></Button>}
+           
+          {<Button variant="secondary"><FormattedMessage id="common.select"/></Button>}
         </>
       }
-      className={isPhantom ? 'add-data-source-item--phantom' : ''}
-      onClick={onClick}
+      onClick={props.onClick}
     />
   );
 };

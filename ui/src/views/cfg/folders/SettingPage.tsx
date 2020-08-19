@@ -4,11 +4,10 @@ import _ from 'lodash'
 
 import Page from 'src/views/Layouts/Page/Page';
 import { getNavModel } from 'src/views/Layouts/Page/navModel'
-import { Team, FolderDTO } from 'src/types';
+import { FolderDTO } from 'src/types';
 import { getBackendSrv } from 'src/core/services/backend';
-import { InlineFormLabel, ConfirmModal, getHistory } from 'src/packages/datav-core'
-import { Button, Input,notification, message } from 'antd';
-import TeamMemberPicker from 'src/views/components/Pickers/TeamMemberPicker'
+import { InlineFormLabel, ConfirmModal, getHistory,Button} from 'src/packages/datav-core'
+import {  Input,notification } from 'antd';
 import globalEvents from 'src/views/App/globalEvents';
 import { injectIntl, FormattedMessage, IntlShape } from 'react-intl';
 import localeData from 'src/core/library/locale'
@@ -143,12 +142,8 @@ export class FolderSettingPage extends PureComponent<Props, State> {
                                     />
                                 </div>
                                 <div className="gf-form-button-row">
-                                    <Button htmlType="submit" type="primary" ghost>
-                                        <FormattedMessage id="common.update"/>
-                                    </Button>
-                                    <Button className="ub-ml2"  type="primary" onClick={() => this.setState({...this.state, confirmVisible:true})} danger>
-                                    <FormattedMessage id="common.delete"/>
-                                </Button>
+                                    <Button variant="secondary"  type="submit"> <FormattedMessage id="common.update"/></Button>
+                                    <Button variant="destructive"  onClick={() => this.setState({...this.state, confirmVisible:true})}><FormattedMessage id="common.delete"/></Button>
                                 </div>
                             </form>
                         </div>

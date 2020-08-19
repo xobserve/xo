@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react'
 import { DashboardModel } from '../../model';
-import { notification, Button, Tooltip } from 'antd';
+import { notification, Tooltip } from 'antd';
 import TeamPicker from 'src/views/components/Pickers/TeamPicker'
 import { getBackendSrv } from 'src/core/services/backend';
-import { ConfirmModal } from 'src/packages/datav-core/src';
+import { ConfirmModal,Button} from 'src/packages/datav-core';
 import AddExtraPermission from './components/AddExtraPermission'
 import UserPermissions from './components/UserPermissions'
 import { InfoCircleOutlined } from '@ant-design/icons';
@@ -111,12 +111,12 @@ const Permission = (props: Props) => {
                             <div className="gf-form">
                                 <label className="gf-form-label width-12"><FormattedMessage id="dashboard.ownedByTeam"/></label>
                                 <TeamPicker value={[ownedBy]} onChange={(v) => onChangeOwnedBy(v)} />
-                                <Button className="ub-ml2" type="primary" ghost danger onClick={() => setConfirmVisible(true)}><FormattedMessage id="common.update"/></Button>
+                                <Button className="ub-ml2"  variant="destructive"  onClick={() => setConfirmVisible(true)}><FormattedMessage id="common.update"/></Button>
                             </div>
                             <div className="gf-form">
                                 <label className="gf-form-label width-12"><FormattedMessage id="dashboard.teamCanView"/></label>
                                 <TeamPicker value={teamsCanView} onChange={(v) => onChangeTeamCanView(v)} mutiple />
-                                <Button className="ub-ml2" type="primary" onClick={() => updateTeamCanView()} ghost><FormattedMessage id="common.update"/></Button>
+                                <Button className="ub-ml2"  variant="secondary"  onClick={() => updateTeamCanView()} ><FormattedMessage id="common.update"/></Button>
                             </div>
                         </div>
 
@@ -126,7 +126,7 @@ const Permission = (props: Props) => {
                                     <h3 style={{display: 'inline-block'}} className="dashboard-settings__header ub-mr1"><FormattedMessage id="dashboard.userPermissions"/></h3>
                                     <Tooltip title={<FormattedMessage id="dashboard.userPermissionTooltip"/>}><InfoCircleOutlined /></Tooltip>
                                 </div>
-                                <Button type="primary" onClick={() => setAddPermissionVisible(true)}><FormattedMessage id="dashboard.addUserPermission"/></Button>
+                                <Button className="ub-ml2"  variant="secondary"   onClick={() => setAddPermissionVisible(true)} ><FormattedMessage id="dashboard.addUserPermission"/></Button>
                             </div>
                             <UserPermissions permissions={userPermissions} onChange={(userId,permission) => onChangeUserPermission(userId,permission)} onDelete={(userId) => onDeleteUserPermission(userId)}/>
                             <AddExtraPermission visible={addPermissionVisible} setVisible={setAddPermissionVisible} onSubmit={(user,permission) => onSubmitExtraPermission(user,permission)}/>

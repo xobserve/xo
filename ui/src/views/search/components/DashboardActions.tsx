@@ -1,6 +1,6 @@
 import React, { FC, useState } from 'react';
-import { HorizontalGroup, LinkButton, Form ,FormField as Field,Input, config, getHistory} from 'src/packages/datav-core';
-import { Modal,Button, message } from 'antd';
+import { HorizontalGroup, LinkButton, Form ,FormField as Field,Input, config, getHistory,Button} from 'src/packages/datav-core';
+import { Modal, message } from 'antd';
 import { getBackendSrv } from 'src/core/services/backend';
 import globalEvents from 'src/views/App/globalEvents';
 import { FormattedMessage } from 'react-intl';
@@ -81,7 +81,7 @@ export const DashboardActions: FC<Props> = ({ folderId, isEditor, canEdit }) => 
                     })}
                   />
                 </Field>
-                <Button htmlType="submit" type="primary" ghost><FormattedMessage id="common.submit"/></Button>
+                <Button variant="secondary"  type="submit"><FormattedMessage id="common.submit"/></Button>
               </>
             )}
           </Form>

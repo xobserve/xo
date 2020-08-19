@@ -1,9 +1,9 @@
 import React, { PureComponent } from 'react';
-import { getBootConfig, InlineFormLabel } from 'src/packages/datav-core';
+import { getBootConfig, InlineFormLabel, Button} from 'src/packages/datav-core';
 
 import Page from 'src/views/Layouts/Page/Page';
 import { getNavModel } from 'src/views/Layouts/Page/navModel';
-import { Button, Input, notification,Select, Tooltip} from 'antd';
+import { Input, notification,Select, Tooltip} from 'antd';
 
 import { getBackendSrv } from 'src/core/services/backend';
 import { getState } from 'src/store/store';
@@ -186,7 +186,7 @@ class UserPreferencePage extends PureComponent<Props & IntlProps, State> {
 
 
                         <div className="gf-form-button-row">
-                            <Button type="primary" onClick={() => this.onUpdateUser()} ghost>
+                            <Button variant="secondary" onClick={() => this.onUpdateUser()}>
                                 <FormattedMessage id="common.submit"/>
                             </Button>
                         </div>
@@ -221,7 +221,7 @@ class UserPreferencePage extends PureComponent<Props & IntlProps, State> {
                         </div>
 
                         <div className="gf-form-button-row">
-                            <Button type="primary" onClick={() => this.onUpdatePassword()} ghost>
+                            <Button variant="secondary" onClick={() => this.onUpdatePassword()}>
                                 <FormattedMessage id="common.submit"/>
                             </Button>
                         </div>
@@ -246,7 +246,7 @@ class UserPreferencePage extends PureComponent<Props & IntlProps, State> {
                                     })
                                 }
                             </Select>
-                            <Button type="primary" className="ub-ml2" onClick={() => this.onUpdateUserSidemenu()} ghost>
+                            <Button variant="secondary" onClick={() => this.onUpdateUserSidemenu()}>
                                 <FormattedMessage id="common.update"/>
                             </Button>
                         </div>

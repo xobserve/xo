@@ -6,8 +6,8 @@ import Page from 'src/views/Layouts/Page/Page';
 import { getNavModel } from 'src/views/Layouts/Page/navModel'
 import { Team } from 'src/types';
 import { getBackendSrv } from 'src/core/services/backend';
-import { InlineFormLabel, ConfirmModal, getHistory } from 'src/packages/datav-core'
-import { Button, Input,notification, message } from 'antd';
+import { InlineFormLabel, ConfirmModal, getHistory,Button } from 'src/packages/datav-core'
+import {Input,notification } from 'antd';
 import TeamMemberPicker from 'src/views/components/Pickers/TeamMemberPicker'
 import globalEvents from 'src/views/App/globalEvents';
 import TeamPermission from './Setting/TeamPermission'
@@ -171,9 +171,7 @@ export class TeamSettingPage extends PureComponent<Props, State> {
                                     />
                                 </div>
                                 <div className="gf-form-button-row">
-                                    <Button htmlType="submit" type="primary" ghost>
-                                        <FormattedMessage id="common.update"/>
-                                    </Button>
+                                    <Button variant="secondary"  type="submit"> <FormattedMessage id="common.update"/></Button>
                                 </div>
                             </form>
                             
@@ -189,20 +187,15 @@ export class TeamSettingPage extends PureComponent<Props, State> {
                               
                                 </div>
                                 <div className="gf-form-button-row">
-                                <Button  type="primary" onClick={() => this.setState({...this.state, confirmVisible:true,confirmContent: {title:'Transfer Team Confirm',onConfirm: this.onTransfer,action: 'Transfer'}})} ghost>
-                                    <FormattedMessage id="common.submit"/>
-                                </Button>
+                                    <Button variant="secondary" onClick={() => this.setState({...this.state, confirmVisible:true,confirmContent: {title:'Transfer Team Confirm',onConfirm: this.onTransfer,action: 'Transfer'}})}>   <FormattedMessage id="common.submit"/></Button>
                                 </div>
                             </form>
 
                             <h3 className="page-sub-heading"><FormattedMessage id="common.dangerousSection"/></h3>
                             <form name="teamDetailsForm" className="gf-form-group" onSubmit={(e) => this.updateSetting(e)}>
-                                <Button onClick={() => this.setState({...this.state, confirmVisible:true,confirmContent: {title:'Leave Team Confirm',onConfirm: this.onLeave,action: 'Leave'}})} danger>
-                                    <FormattedMessage id="team.leave"/>
-                                </Button>
-                                <Button className="ub-ml2"  type="primary" onClick={() => this.setState({...this.state, confirmVisible:true,confirmContent: {title:'Delete Team Confirm',onConfirm: this.onDelete,action: 'Delete'}})} danger>
-                                    <FormattedMessage id="team.delete"/>
-                                </Button>
+                                <Button variant="secondary" onClick={() => this.setState({...this.state, confirmVisible:true,confirmContent: {title:'Leave Team Confirm',onConfirm: this.onLeave,action: 'Leave'}})}>  <FormattedMessage id="team.leave"/></Button>
+
+                                <Button className="ub-ml2"  variant="destructive" onClick={() => this.setState({...this.state, confirmVisible:true,confirmContent: {title:'Delete Team Confirm',onConfirm: this.onDelete,action: 'Delete'}})}>  <FormattedMessage id="team.delete"/></Button>
                             </form>
                         </div>
                     }

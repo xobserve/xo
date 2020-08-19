@@ -1,16 +1,16 @@
 import React, { PureComponent } from 'react';
 import _ from 'lodash';
 import { NavModel, DataSourcePluginMeta, getBootConfig, DataSourcePlugin, DataSourceApi, DataQuery, DataSourceJsonData, DataSourceSettings, getBackendSrv, setBootConfig } from 'src/packages/datav-core'
-import { InlineFormLabel, LegacyForms ,ConfirmModal} from 'src/packages/datav-core'
+import { InlineFormLabel, LegacyForms, ConfirmModal, Button } from 'src/packages/datav-core'
 import { withRouter } from 'react-router-dom';
-import { Input, message,Button,notification ,Alert} from 'antd';
+import { Input, notification, Alert } from 'antd';
 
 import Page from 'src/views/Layouts/Page/Page';
 import { loadDataSourcePlugin, testDataSource } from 'src/plugins/loader';
 import { PluginSettings } from './PluginSettings'
 import globalEvents from 'src/views/App/globalEvents';
 import { connect } from 'react-redux';
-import {StoreState} from 'src/types'
+import { StoreState } from 'src/types'
 import localeData from 'src/core/library/locale'
 import { getState } from 'src/store/store';
 import { FormattedMessage } from 'react-intl';
@@ -25,7 +25,7 @@ interface Props {
 }
 
 
-  
+
 interface State {
     mode: string
     dataSource: DataSourceSettings;
@@ -114,7 +114,7 @@ export class EditDataSourcePage extends PureComponent<Props, State> {
                 id: 'datasource-new',
                 title: localeData[getState().application.locale]['datasource.edit'],
                 href: 'datasources/new',
-                subTitle: localeData[getState().application.locale]['common.type']  + ' : ' + meta.name,
+                subTitle: localeData[getState().application.locale]['common.type'] + ' : ' + meta.name,
             }
 
             this.setState({
@@ -144,11 +144,11 @@ export class EditDataSourcePage extends PureComponent<Props, State> {
         setBootConfig(res1.data)
 
         if (res.status === 'success') {
-            globalEvents.showMessage(() =>  notification['success']({
+            globalEvents.showMessage(() => notification['success']({
                 message: "Success",
-                description: <FormattedMessage id="info.targetDeleted"/>,
+                description: <FormattedMessage id="info.targetDeleted" />,
                 duration: 5
-              }))
+            }))
 
 
             this.props.history.push('/cfg/datasources')
@@ -201,76 +201,77 @@ export class EditDataSourcePage extends PureComponent<Props, State> {
         })
     };
     render() {
-        const {locale} = this.props
+        const { locale } = this.props
         return (
             <Page navModel={this.state.navModel}>
                 <Page.Contents isLoading={!this.state.hasFetched}>
                     {
                         this.state.hasFetched &&
                         <>
-                        <h3 className="page-heading"><FormattedMessage id="common.basicSetting"/></h3>
-                        <div className="gf-form-group">
-                            <div className="gf-form-inline">
-                                <div className="gf-form max-width-30" style={{ marginRight: '3px' }}>
-                                    <InlineFormLabel
-                                        tooltip={<FormattedMessage id="datasource.nameTooltip"/>}
-                                    >
-                                        <FormattedMessage id="common.name"/>
-                                </InlineFormLabel>
-                                    <Input placeholder="Name" defaultValue={this.state.dataSource.name} onChange={(e) => { this.setState({ ...this.state, dataSource: { ...this.state.dataSource, name: e.currentTarget.value } }) }} />
-                                </div>
-                                <LegacySwitch
-                                    label={localeData[locale]['common.default']}
-                                    checked={this.state.dataSource.isDefault}
-                                    //@ts-ignore
-                                    onChange={(e) => { this.setState({ ...this.state, dataSource: { ...this.state.dataSource, isDefault: e.target.checked } }) }}
-                                />
-                            </div>
-                        </div>
-                        {this.state.plugin && (
-                                    <PluginSettings
-                                        plugin={this.state.plugin}
-                                        dataSource={this.state.dataSource}
-                                        dataSourceMeta={this.state.datasourceMeta}
-                                        onChange={this.onModelChange}
+                            <h3 className="page-heading"><FormattedMessage id="common.basicSetting" /></h3>
+                            <div className="gf-form-group">
+                                <div className="gf-form-inline">
+                                    <div className="gf-form max-width-30" style={{ marginRight: '3px' }}>
+                                        <InlineFormLabel
+                                            tooltip={<FormattedMessage id="datasource.nameTooltip" />}
+                                        >
+                                            <FormattedMessage id="common.name" />
+                                        </InlineFormLabel>
+                                        <Input placeholder="Name" defaultValue={this.state.dataSource.name} onChange={(e) => { this.setState({ ...this.state, dataSource: { ...this.state.dataSource, name: e.currentTarget.value } }) }} />
+                                    </div>
+                                    <LegacySwitch
+                                        label={localeData[locale]['common.default']}
+                                        checked={this.state.dataSource.isDefault}
+                                        //@ts-ignore
+                                        onChange={(e) => { this.setState({ ...this.state, dataSource: { ...this.state.dataSource, isDefault: e.target.checked } }) }}
                                     />
-                        )}                        
-                        <div className="gf-form-group max-width-30">
-                             {
-                                     this.state.testingStatus && this.state.testingStatus.status && !this.state.testingStatus.message && <Alert
+                                </div>
+                            </div>
+                            {this.state.plugin && (
+                                <PluginSettings
+                                    plugin={this.state.plugin}
+                                    dataSource={this.state.dataSource}
+                                    dataSourceMeta={this.state.datasourceMeta}
+                                    onChange={this.onModelChange}
+                                />
+                            )}
+                            <div className="gf-form-group max-width-30">
+                                {
+                                    this.state.testingStatus && this.state.testingStatus.status && !this.state.testingStatus.message && <Alert
                                         className="ub-mb2"
-                                       message={<FormattedMessage id="common.congratulations"/>}
-                                        description={<FormattedMessage id="datasource.isWorking"/>}
+                                        message={<FormattedMessage id="common.congratulations" />}
+                                        description={<FormattedMessage id="datasource.isWorking" />}
                                         type="success"
                                         showIcon
                                     />
                                 }
-                                 {
+                                {
                                     this.state.testingStatus && this.state.testingStatus.status && this.state.testingStatus.message && <Alert
                                         className="ub-mb2"
-                                        message={<FormattedMessage id="datasource.testFailed"/>}
+                                        message={<FormattedMessage id="datasource.testFailed" />}
                                         description={this.state.testingStatus.message}
                                         type="error"
                                         showIcon
                                     />
-                                 }
-                                 <Button type="primary" onClick={() => this.onFinish()} ghost>
-                                     <FormattedMessage id="common.save"/> & <FormattedMessage id="common.test"/> 
-                                 </Button>
-                                    <Button type="primary" danger className="ub-ml2" ghost onClick={() => this.setState({...this.state,confirmVisible:true})}>
-                                        <FormattedMessage id="common.delete"/> 
-                                    </Button>
+                                }
+                                <Button variant="secondary" onClick={() => this.onFinish()}>
+                                    <FormattedMessage id="common.save" /> & <FormattedMessage id="common.test" />
+                                </Button>
 
-                                 <ConfirmModal
+                                <Button variant="destructive" className="ub-ml2" onClick={() => this.setState({ ...this.state, confirmVisible: true })}>
+                                    <FormattedMessage id="common.delete" />
+                                </Button>
+
+                                <ConfirmModal
                                     isOpen={this.state.confirmVisible}
                                     title={localeData[locale]['datasource.delete']}
-                                    body= {<FormattedMessage id="datasource.deleteTitle"/>}
-                                    confirmText= {<FormattedMessage id="common.delete"/>}
+                                    body={<FormattedMessage id="datasource.deleteTitle" />}
+                                    confirmText={<FormattedMessage id="common.delete" />}
                                     onConfirm={() => this.delDataSource()}
-                                    onDismiss={() => this.setState({...this.state,confirmVisible :false})}
+                                    onDismiss={() => this.setState({ ...this.state, confirmVisible: false })}
                                 />
 
-                        </div>
+                            </div>
                         </>
                     }
                 </Page.Contents>
@@ -283,8 +284,8 @@ export class EditDataSourcePage extends PureComponent<Props, State> {
 
 export const mapStateToProps = (state: StoreState) => ({
     locale: state.application.locale
-  });
-  
-  
-  
-  export default withRouter(connect(mapStateToProps)(EditDataSourcePage));
+});
+
+
+
+export default withRouter(connect(mapStateToProps)(EditDataSourcePage));
