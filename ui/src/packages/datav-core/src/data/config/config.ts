@@ -83,12 +83,16 @@ export const config = {
     viewersCanEdit: false,
     defaultDatasource: 'Prometheus',
     disableSanitizeHtml: false,
-    alertingEnabled: true,
     rootFolderName: 'General',
     panel: { newTitle: 'Panel Title' },
     dashboard: { newTitle: 'New Dashboard Copy' },
     defaultAdminName: 'admin',
     
+    alertingEnabled: true,
+    alertingErrorOrTimeout: '',
+    alertingNoDataOrNullValues: '',
+    alertingMinInterval: 1,
+
     application: {
         startDate: () => 'now-3h',
         endDate: () => 'now',

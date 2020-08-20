@@ -2,8 +2,8 @@ import React, { useCallback } from 'react';
 import { IconName,  Tab, TabContent, TabsBar } from 'src/packages/datav-core'; 
 import { PanelEditorTab, PanelEditorTabId } from './types';
 import { DashboardModel,PanelModel} from '../../model';
-import { QueriesTab } from './Tabs/Query/QueryTab'
-// import { AlertTab } from 'app/features/alerting/AlertTab';
+import { QueriesTab } from './Tabs/Query/QueryTab' 
+import { AlertTab } from 'src/views/alerting/AlertTab'; 
 import { TransformationsEditor } from './TransformationsEditor/TransformationsEditor';
 import './PanelEditorTabs.less'
 
@@ -55,7 +55,7 @@ export const PanelEditorTabs: React.FC<PanelEditorTabsProps> = ({ panel, dashboa
       </TabsBar>
       <TabContent className={'tabContent'}>
         {activeTab.id === PanelEditorTabId.Query && <QueriesTab panel={panel} dashboard={dashboard} />}
-        {/* {activeTab.id === PanelEditorTabId.Alert && <AlertTab panel={panel} dashboard={dashboard} />} */}
+        {activeTab.id === PanelEditorTabId.Alert && <AlertTab panel={panel} dashboard={dashboard} />}
         {activeTab.id === PanelEditorTabId.Transform && <TransformationsEditor panel={panel} />}
       </TabContent>
     </div>

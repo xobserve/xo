@@ -12,9 +12,6 @@ export * from './acl'
 export * from './folder'
 export * from './menu'
 export * from './teams'
-
-export type KeyValuePair = {
-    key: string;
-    value: any;
-};
-
+export * from './appNotifications'
+export * from './alerting'
+export * from './misc'

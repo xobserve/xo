@@ -7,6 +7,7 @@ import dashboardReducer from './dashboard'
 import locationReducer from './location'
 import menuReducer from './menu'
 import templatingReducers from 'src/views/variables/state/reducers';
+import alertingReducers from 'src/views/alerting/state/reducers';
 
 import { CleanUp, cleanUpAction } from '../actions/cleanUp';
  
@@ -18,7 +19,8 @@ const rootReducers = {
     ...panelEditorReducer,
     ...dashboardReducer,
     ...locationReducer,
-    ...menuReducer
+    ...menuReducer,
+    ...alertingReducers,
 };
 
 

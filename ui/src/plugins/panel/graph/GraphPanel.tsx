@@ -105,6 +105,10 @@ export class GraphPanel extends PureComponent<PanelProps<GraphPanelOptions>, Sta
     this.ctrl.setAnnotations()
   }
 
+  getCtrl() {
+    return this.ctrl
+  }
+  
   showAnnotationEditor(data) {
     let drop: any;
     const onChange = async (v) => {
