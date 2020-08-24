@@ -1,7 +1,7 @@
 package search
 
 import (
-	"github.com/apm-ai/datav/backend/pkg/models"
+	"github.com/datadefeat/datav/backend/pkg/models"
 	"strings"
 )
 

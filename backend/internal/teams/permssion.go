@@ -1,8 +1,8 @@
 package teams
 
 import (
-	"github.com/apm-ai/datav/backend/pkg/models"
-	"github.com/apm-ai/datav/backend/pkg/db"
+	"github.com/datadefeat/datav/backend/pkg/models"
+	"github.com/datadefeat/datav/backend/pkg/db"
 	"time"
 )
 

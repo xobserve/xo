@@ -2,14 +2,14 @@ package sqls
 
 import (
 	"encoding/json"
-	"github.com/apm-ai/datav/backend/internal/teams"
-	"github.com/apm-ai/datav/backend/pkg/utils"
+	"github.com/datadefeat/datav/backend/internal/teams"
+	"github.com/datadefeat/datav/backend/pkg/utils"
 	"time"
 	"fmt"
-	"github.com/apm-ai/datav/backend/pkg/models"
-	"github.com/apm-ai/datav/backend/pkg/db"
+	"github.com/datadefeat/datav/backend/pkg/models"
+	"github.com/datadefeat/datav/backend/pkg/db"
 	"database/sql"
-	"github.com/apm-ai/datav/backend/pkg/log"
+	"github.com/datadefeat/datav/backend/pkg/log"
 )
 
 var adminSalt,adminPW string 
@@ -359,6 +359,29 @@ var CreateTableSqls = map[string]string {
 		ON annotation (time);
 	CREATE INDEX IF NOT EXISTS annotation_time_end
 		ON annotation (time_end);
+	`,
+
+	"alert_notification": `
+	CREATE TABLE IF NOT EXISTS alert_notification (
+		id 						INTEGER PRIMARY KEY AUTOINCREMENT,
+		name        			VARCHAR(255) NOT NULL,
+		type                	VARCHAR(255) NOT NULL,
+
+		is_default          	BOOL NOT NULL,
+		disable_resolve_message BOOL NOT NULL,
+		send_reminder           BOOL NOT NULL,
+		upload_image            BOOL NOT NULL,
+
+		settings                TEXT,
+
+		created_by          	INTEGER NOT NULL,
+		created 				DATETIME NOT NULL DEFAULT CURRENT_DATETIME,
+		updated 				DATETIME NOT NULL DEFAULT CURRENT_DATETIME
+	);
+	CREATE UNIQUE INDEX IF NOT EXISTS alert_notification_name
+		ON alert_notification (name);
+	CREATE INDEX IF NOT EXISTS alert_notification_is_default
+		ON alert_notification (is_default);
 	`,
 }
 

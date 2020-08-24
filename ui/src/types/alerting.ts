@@ -42,7 +42,10 @@ export interface AlertRuleDTO {
   export interface AlertNotification {
     isDefault: boolean;
     name: string;
-    id: number;
+    id?: number;
     type: string;
+    settings?: any;
+    uploadImage?: boolean;
+    disableResolveMessage? : boolean
   }
   

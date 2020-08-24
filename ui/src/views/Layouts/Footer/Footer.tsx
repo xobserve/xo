@@ -39,7 +39,7 @@ export let getFooterLinks = (): FooterLink[] => {
       id:4,
       title: 'Github',
       icon: 'github',
-      url: 'https://github.com/apm-ai/datav',
+      url: 'https://github.com/datadefeat/datav',
       target: '_blank',
     },
   ];

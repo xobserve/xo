@@ -93,6 +93,8 @@ export const config = {
     alertingNoDataOrNullValues: '',
     alertingMinInterval: 1,
 
+    rendererAvailable: false,
+    
     application: {
         startDate: () => 'now-3h',
         endDate: () => 'now',

@@ -1,7 +1,7 @@
 package common
 
 import (
-	"github.com/apm-ai/datav/backend/pkg/i18n"
+	"github.com/datadefeat/datav/backend/pkg/i18n"
 )
 
 type Response struct {

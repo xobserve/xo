@@ -1,11 +1,11 @@
 package plugins
 
 import (
-	"github.com/apm-ai/datav/backend/internal/registry"
-	"github.com/apm-ai/datav/backend/pkg/log"
-	"github.com/apm-ai/datav/backend/pkg/config"
-	"github.com/apm-ai/datav/backend/pkg/utils/errutil"
-	"github.com/apm-ai/datav/backend/pkg/utils"
+	"github.com/datadefeat/datav/backend/internal/registry"
+	"github.com/datadefeat/datav/backend/pkg/log"
+	"github.com/datadefeat/datav/backend/pkg/config"
+	"github.com/datadefeat/datav/backend/pkg/utils/errutil"
+	"github.com/datadefeat/datav/backend/pkg/utils"
 	"path"
 	"os"
 	"path/filepath"

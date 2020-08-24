@@ -16,14 +16,14 @@ limitations under the License.
 package cmd
 
 import (
-	"github.com/apm-ai/datav/backend/cmd/sqls"
+	"github.com/datadefeat/datav/backend/cmd/sqls"
 	// "fmt"
 
 	"github.com/spf13/cobra"
 	"github.com/spf13/pflag"
 
-	"github.com/apm-ai/datav/backend/pkg/config"
-	"github.com/apm-ai/datav/backend/pkg/log"
+	"github.com/datadefeat/datav/backend/pkg/config"
+	"github.com/datadefeat/datav/backend/pkg/log"
 )
 
 var createFlags []string

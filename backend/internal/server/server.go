@@ -1,33 +1,34 @@
 package server
 
 import (
-	"github.com/apm-ai/datav/backend/internal/annotation"
-	"github.com/apm-ai/datav/backend/internal/bootConfig"
-	"github.com/apm-ai/datav/backend/internal/acl"
-	"github.com/apm-ai/datav/backend/internal/users"
-	"github.com/apm-ai/datav/backend/internal/datasources"
+	"github.com/datadefeat/datav/backend/internal/annotation"
+	"github.com/datadefeat/datav/backend/internal/bootConfig"
+	"github.com/datadefeat/datav/backend/internal/acl"
+	"github.com/datadefeat/datav/backend/internal/users"
+	"github.com/datadefeat/datav/backend/internal/datasources"
 	"errors"
-	"github.com/apm-ai/datav/backend/pkg/utils"
+	"github.com/datadefeat/datav/backend/pkg/utils"
 	// "net/http"
 
 	"database/sql"
 
-	"github.com/apm-ai/datav/backend/internal/session"
-	"github.com/apm-ai/datav/backend/pkg/config"
-	"github.com/apm-ai/datav/backend/pkg/common"
-	"github.com/apm-ai/datav/backend/pkg/db"
-	"github.com/apm-ai/datav/backend/pkg/i18n"
-	"github.com/apm-ai/datav/backend/pkg/log"
-	"github.com/apm-ai/datav/backend/internal/registry"	
+	"github.com/datadefeat/datav/backend/internal/session"
+	"github.com/datadefeat/datav/backend/pkg/config"
+	"github.com/datadefeat/datav/backend/pkg/common"
+	"github.com/datadefeat/datav/backend/pkg/db"
+	"github.com/datadefeat/datav/backend/pkg/i18n"
+	"github.com/datadefeat/datav/backend/pkg/log"
+	"github.com/datadefeat/datav/backend/internal/registry"	
 	_ "github.com/mattn/go-sqlite3"
-	"github.com/apm-ai/datav/backend/internal/plugins"
-	"github.com/apm-ai/datav/backend/internal/dashboard"
-	"github.com/apm-ai/datav/backend/internal/cache"
-	"github.com/apm-ai/datav/backend/internal/search"
-	"github.com/apm-ai/datav/backend/internal/folders"
-	"github.com/apm-ai/datav/backend/internal/teams"
-	"github.com/apm-ai/datav/backend/internal/admin"
-	"github.com/apm-ai/datav/backend/internal/sidemenu"
+	"github.com/datadefeat/datav/backend/internal/plugins"
+	"github.com/datadefeat/datav/backend/internal/dashboard"
+	"github.com/datadefeat/datav/backend/internal/cache"
+	"github.com/datadefeat/datav/backend/internal/search"
+	"github.com/datadefeat/datav/backend/internal/folders"
+	"github.com/datadefeat/datav/backend/internal/teams"
+	"github.com/datadefeat/datav/backend/internal/admin"
+	"github.com/datadefeat/datav/backend/internal/sidemenu"
+	"github.com/datadefeat/datav/backend/internal/alerting"
 	"github.com/gin-gonic/gin"
 	"net/http"
 )
@@ -177,6 +178,11 @@ func (s *Server) Start() error {
 				adminR.DELETE("/user/:id", admin.DeleteUser)
 				adminR.POST("/user/new", admin.NewUser)
 				adminR.POST("/team/new", admin.NewTeam)
+			}
+			
+			alertingR := authR.Group("/api/alerting",AdminAuth()) 
+			{
+				alertingR.POST("/notification", alerting.AddNotification)
 			}
 		}
 

@@ -5,8 +5,8 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/apm-ai/datav/backend/pkg/config"
-	"github.com/apm-ai/datav/backend/pkg/models"
+	"github.com/datadefeat/datav/backend/pkg/config"
+	"github.com/datadefeat/datav/backend/pkg/models"
 )
 
 var (

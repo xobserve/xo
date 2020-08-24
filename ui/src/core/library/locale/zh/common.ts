@@ -102,6 +102,10 @@ const common = {
     global: '全局',
     public: '公开',
     metric: '指标',
+    alerting: '告警管理',
+    alertingSubTitle: '管理告警和通道配置',
+    notificationChannel: '推送通道',
+    rules: '告警规则',
 }
 
 export default common

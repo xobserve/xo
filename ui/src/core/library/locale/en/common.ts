@@ -103,6 +103,10 @@ const common = {
     global: 'Global',
     public: 'Public',
     metric: 'Metric',
+    alerting: 'Alerting',
+    alertingSubTitle: 'Alerting & Notifications manage',
+    notificationChannel: 'Notification channels',
+    rules: 'Rules',
 }
 
 export default common

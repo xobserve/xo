@@ -182,6 +182,34 @@ export const initRoutes = (store: Store<StoreState>) => {
             ]
         },
         {
+            id: 'datav-fix-menu-alerting',
+            url: '/alerting',
+            title: <Message id={'common.alerting'}/>,
+            icon: 'bell',
+            subTitle: <Message id={'common.alertingSubTitle'}/>,
+            showPosition: MenuPosition.Bottom,
+            redirectTo: null,
+            exact: true,
+            children: [
+                { 
+                    icon: "list-ul",
+                    id: "datav-fix-menu-alerting-rules",
+                    title:<Message id={'common.rules'}/>,
+                    url: "/alerting/rules",
+                    exact: true,
+                    component: React.lazy(() => import('src/views/alerting/RulesPage'))
+                },
+                { 
+                    icon: "at",
+                    id: "datav-fix-menu-alerting-notifications",
+                    title:<Message id={'common.notificationChannel'}/>,
+                    url: "/alerting/notifications",
+                    exact: true,
+                    component: React.lazy(() => import('src/views/alerting/NotificationPage'))
+                },
+            ]
+        },
+        {
             id: 'datav-fix-menu-team-manage',
             url: null,
             title: 'Team',

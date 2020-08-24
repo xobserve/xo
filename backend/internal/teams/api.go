@@ -1,12 +1,12 @@
 package teams
 
 import (
-	"github.com/apm-ai/datav/backend/internal/session"
+	"github.com/datadefeat/datav/backend/internal/session"
 	"database/sql"
 
-	"github.com/apm-ai/datav/backend/internal/acl"
-	"github.com/apm-ai/datav/backend/internal/invasion"
-	"github.com/apm-ai/datav/backend/pkg/utils"
+	"github.com/datadefeat/datav/backend/internal/acl"
+	"github.com/datadefeat/datav/backend/internal/invasion"
+	"github.com/datadefeat/datav/backend/pkg/utils"
 
 	"fmt"
 	"sort"
@@ -14,10 +14,10 @@ import (
 	"strings"
 	"time"
 
-	"github.com/apm-ai/datav/backend/pkg/common"
-	"github.com/apm-ai/datav/backend/pkg/db"
-	"github.com/apm-ai/datav/backend/pkg/i18n"
-	"github.com/apm-ai/datav/backend/pkg/models"
+	"github.com/datadefeat/datav/backend/pkg/common"
+	"github.com/datadefeat/datav/backend/pkg/db"
+	"github.com/datadefeat/datav/backend/pkg/i18n"
+	"github.com/datadefeat/datav/backend/pkg/models"
 	"github.com/gin-gonic/gin"
 )
 

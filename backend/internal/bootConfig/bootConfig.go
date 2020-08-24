@@ -2,14 +2,14 @@ package bootConfig
 
 import (
 	"database/sql"
-	"github.com/apm-ai/datav/backend/internal/session"
-	"github.com/apm-ai/datav/backend/pkg/models"
-	"github.com/apm-ai/datav/backend/internal/sidemenu"
-	"github.com/apm-ai/datav/backend/internal/datasources"
+	"github.com/datadefeat/datav/backend/internal/session"
+	"github.com/datadefeat/datav/backend/pkg/models"
+	"github.com/datadefeat/datav/backend/internal/sidemenu"
+	"github.com/datadefeat/datav/backend/internal/datasources"
 	// "fmt"
-	"github.com/apm-ai/datav/backend/internal/plugins" 
-	"github.com/apm-ai/datav/backend/pkg/common"
-	"github.com/apm-ai/datav/backend/pkg/log"
+	"github.com/datadefeat/datav/backend/internal/plugins" 
+	"github.com/datadefeat/datav/backend/pkg/common"
+	"github.com/datadefeat/datav/backend/pkg/log"
 	"github.com/gin-gonic/gin"
 	
 	"strconv"

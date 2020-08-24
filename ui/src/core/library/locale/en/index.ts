@@ -53,4 +53,10 @@ _.forEach(keybinding, (v,k) => {
     en['keybinding.' + k] = v
 })
 
+import alerting from './alerting'
+_.forEach(alerting, (v,k) => {
+    en['alerting.' + k] = v
+})
+
+
 export default en

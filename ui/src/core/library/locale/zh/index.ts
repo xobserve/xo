@@ -54,5 +54,10 @@ _.forEach(keybinding, (v,k) => {
     zh['keybinding.' + k] = v
 })
 
+import alerting from './alerting'
+_.forEach(alerting, (v,k) => {
+    zh['alerting.' + k] = v
+})
+
 
 export default zh
