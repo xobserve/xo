@@ -5,8 +5,8 @@ import _ from 'lodash'
 import Page from 'src/views/Layouts/Page/Page';
 import { getBackendSrv, LinkButton, Button, HorizontalGroup,currentLang, localeData } from 'src/packages/datav-core';
 import { getNavModel } from 'src/views/Layouts/Page/navModel'
-import { AlertNotification, CoreEvents } from 'src/types';
-import EmptyListCTA from '../components/EmptyListCTA/EmptyListCTA';
+import { AlertNotification, CoreEvents, Team } from 'src/types';
+import EmptyListCTA from '../../../components/EmptyListCTA/EmptyListCTA';
 import appEvents from 'src/core/library/utils/app_events';
 import { Langs } from 'src/core/library/locale/types';
 import {Modal, notification} from 'antd'
@@ -22,6 +22,7 @@ interface State {
     notifications: AlertNotification[]
     addChannelVisible: boolean
     tempNotification: AlertNotification
+    team: Team
 }
 
 
@@ -60,10 +61,11 @@ export class NotificationPage extends PureComponent<Props, State> {
     constructor(props) {
         super(props)
         this.state = {
-            hasFetched: true,
+            hasFetched: false,
             notifications: [],
             addChannelVisible: false,
-            tempNotification: null
+            tempNotification: null,
+            team: null
         }
 
         this.fetchData = this.fetchData.bind(this)
@@ -73,11 +75,13 @@ export class NotificationPage extends PureComponent<Props, State> {
     }
 
     async fetchData() {
-        const res = await getBackendSrv().get('/api/teams')
-        const res0 = await getBackendSrv().get('/api/users/user/teamRoles')
-        if (res.data) {
-            console.log(res.data)
-        }
+        //@ts-ignore
+        const res = await getBackendSrv().get('/api/teams/team', { id: this.props.match.params['id'] })
+        this.setState({
+            ...this.state,
+            team: res.data,
+            hasFetched: true
+        })
     }
 
     deleteNotification = (id: number) => {
@@ -141,9 +145,22 @@ export class NotificationPage extends PureComponent<Props, State> {
     }
     render() {
         const { routeID, parentRouteID } = this.props
-        const navModel = getNavModel(routeID, parentRouteID)
+        const { hasFetched, notifications,addChannelVisible,tempNotification,team} = this.state
 
-        const { hasFetched, notifications,addChannelVisible,tempNotification} = this.state
+        let navModel;
+        if (team) {
+            navModel = _.cloneDeep(getNavModel(routeID,parentRouteID))
+            const {node,main} = navModel
+              node.url = node.url.replace(":id",team.id)
+              main.children.forEach((n) => {
+                  n.url = n.url.replace(":id",team.id)
+              })
+    
+            navModel.main.title = navModel.main.title + ' / ' + team.name
+        } else {
+            navModel = _.cloneDeep(getNavModel(routeID,parentRouteID))
+        }
+        
         return (
             <>
             <Page navModel={navModel}>

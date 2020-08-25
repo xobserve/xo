@@ -65,7 +65,7 @@ export const NotificationEdit = (props:Props) =>{
 
                 <div className="gf-form">
                     <InlineFormLabel className="width-12" tooltip="Use this notification for all alerts">Include image</InlineFormLabel>
-                    <Switch  defaultChecked={props.notification.settings.uploadImage} onChange={(checked) => { props.notification.settings.uploadImage = checked ; props.onEditChange()}}/>
+                    <Switch  defaultChecked={props.notification.uploadImage} onChange={(checked) => { props.notification.uploadImage = checked ; props.onEditChange()}}/>
                 </div>
                 {
                     props.notification.uploadImage && !config.rendererAvailable && 
