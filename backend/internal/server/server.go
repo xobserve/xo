@@ -182,7 +182,10 @@ func (s *Server) Start() error {
 			
 			alertingR := authR.Group("/api/alerting",AdminAuth()) 
 			{
-				alertingR.POST("/notification", alerting.AddNotification)
+				alertingR.POST("/notification/:teamId", alerting.AddNotification)
+				alertingR.PUT("/notification/:teamId", alerting.UpdateNotification)
+				alertingR.DELETE("/notification/:id", alerting.DeleteNotification)
+				alertingR.GET("/notification/:teamId", alerting.GetNotifications)
 			}
 		}
 

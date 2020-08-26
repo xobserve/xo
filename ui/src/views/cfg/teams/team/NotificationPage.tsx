@@ -11,6 +11,7 @@ import appEvents from 'src/core/library/utils/app_events';
 import { Langs } from 'src/core/library/locale/types';
 import {Modal, notification} from 'antd'
 import {NotificationEdit} from './NotificationEdit'
+import { FormattedMessage } from 'react-intl';
 
 export interface Props {
     routeID: string;
@@ -77,21 +78,28 @@ export class NotificationPage extends PureComponent<Props, State> {
     async fetchData() {
         //@ts-ignore
         const res = await getBackendSrv().get('/api/teams/team', { id: this.props.match.params['id'] })
+        const notifications = await this.loadNotifications(res.data.id)
         this.setState({
             ...this.state,
             team: res.data,
+            notifications: notifications,
             hasFetched: true
         })
     }
 
+    async loadNotifications(teamId) {
+        const res = await getBackendSrv().get(`/api/alerting/notification/${teamId}`)
+        return res.data
+    }
+
     deleteNotification = (id: number) => {
         appEvents.emit(CoreEvents.showConfirmModal, {
-            title: 'Delete',
-            text: 'Do you want to delete this notification channel?',
+            title: localeData[currentLang]['alerting.deleteChannel'],
+            text: localeData[currentLang]['alerting.deleteChannelTips'],
             text2: `Deleting this notification channel will not delete from alerts any references to it`,
             icon: 'trash-alt',
-            confirmText: 'Delete',
-            yesText: 'Delete',
+            confirmText: localeData[currentLang]['common.delete'],
+            yesText: localeData[currentLang]['common.delete'],
             onConfirm: async () => {
                 this.deleteNotificationConfirmed(id);
             },
@@ -99,6 +107,23 @@ export class NotificationPage extends PureComponent<Props, State> {
     };
 
     deleteNotificationConfirmed = async (id: number) => {
+        const {team} = this.state
+        await getBackendSrv().delete(`/api/alerting/notification/${id}`)
+
+        const notifications = await this.loadNotifications(team.id)
+
+        this.setState({
+            ...this.state,
+            addChannelVisible: false,
+            tempNotification: null,
+            notifications: notifications,
+        })
+        
+        notification['success']({
+            message: "Success",
+            description: localeData[currentLang]['info.targetDeleted'],
+            duration: 5
+        })  
 
     };
 
@@ -110,15 +135,24 @@ export class NotificationPage extends PureComponent<Props, State> {
         })
     }
     
+    onEditChannel = (n) => {
+        this.setState({
+            ...this.state,
+            addChannelVisible: true,
+            tempNotification: n
+        })
+    }
+
     onCancelEdit = () => {
         this.setState({
             ...this.state,
-            addChannelVisible: false
+            addChannelVisible: false,
+            tempNotification: null,
         })
     }
 
     onEditSubmit = async () => {
-        const {tempNotification} = this.state
+        const {tempNotification,team} = this.state
         if (tempNotification.name.trim() === '') {
             notification['error']({
                 message: "Error",
@@ -129,12 +163,25 @@ export class NotificationPage extends PureComponent<Props, State> {
         }
 
         if (tempNotification.id) {
-            await getBackendSrv().put(`/api/alerting/notification/${tempNotification.id}`,tempNotification)
+            await getBackendSrv().put(`/api/alerting/notification/${team.id}`,tempNotification)
         } else {
-            await getBackendSrv().post(`/api/alerting/notification`,tempNotification)
+            await getBackendSrv().post(`/api/alerting/notification/${team.id}`,tempNotification)
         }
         
-        alert(1)
+        const notifications = await this.loadNotifications(team.id)
+
+        this.setState({
+            ...this.state,
+            addChannelVisible: false,
+            tempNotification: null,
+            notifications: notifications,
+        })
+        
+        notification['success']({
+            message: "Success",
+            description: localeData[currentLang]['info.targetUpdated'],
+            duration: 5
+        })  
     }
 
     onEditChange = () => {
@@ -169,17 +216,17 @@ export class NotificationPage extends PureComponent<Props, State> {
                         <>
                             <div className="page-action-bar">
                                 <div className="page-action-bar__spacer" />
-                                <LinkButton icon="channel-add" href="alerting/notification/new">
-                                    New channel
+                                <LinkButton icon="channel-add" onClick={() => this.onAddChannel()}>
+                                    <FormattedMessage id="alerting.addChannel"/>
                                 </LinkButton>
                             </div>
                             <table className="filter-table filter-table--hover">
                                 <thead>
                                     <tr>
                                         <th style={{ minWidth: '200px' }}>
-                                            <strong>Name</strong>
+                                            <strong>{<FormattedMessage id="common.name"/>}</strong>
                                         </th>
-                                        <th style={{ minWidth: '100px' }}>Type</th>
+                                        <th style={{ minWidth: '100px' }}>{<FormattedMessage id="common.type"/>}</th>
                                         <th style={{ width: '1%' }}></th>
                                     </tr>
                                 </thead>
@@ -187,16 +234,16 @@ export class NotificationPage extends PureComponent<Props, State> {
                                     {notifications.map(notification => (
                                         <tr key={notification.id}>
                                             <td className="link-td">
-                                                <a href={`alerting/notification/${notification.id}/edit`}>{notification.name}</a>
+                                                <a onClick={() => this.onEditChannel(notification)}>{notification.name}</a>
                                             </td>
                                             <td className="link-td">
-                                                <a href={`alerting/notification/${notification.id}/edit`}>{notification.type}</a>
+                                                <a onClick={() => this.onEditChannel(notification)}>{notification.type}</a>
                                             </td>
                                             <td className="text-right">
                                                 <HorizontalGroup justify="flex-end">
                                                     {notification.isDefault && (
                                                         <Button disabled variant="secondary" size="sm">
-                                                            default
+                                                            {<FormattedMessage id="common.default"/>}
                                                         </Button>
                                                     )}
                                                     <Button

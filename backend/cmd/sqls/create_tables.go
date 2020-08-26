@@ -364,6 +364,7 @@ var CreateTableSqls = map[string]string {
 	"alert_notification": `
 	CREATE TABLE IF NOT EXISTS alert_notification (
 		id 						INTEGER PRIMARY KEY AUTOINCREMENT,
+		team_id                 INTEGER NOT NULL,
 		name        			VARCHAR(255) NOT NULL,
 		type                	VARCHAR(255) NOT NULL,
 
@@ -378,8 +379,10 @@ var CreateTableSqls = map[string]string {
 		created 				DATETIME NOT NULL DEFAULT CURRENT_DATETIME,
 		updated 				DATETIME NOT NULL DEFAULT CURRENT_DATETIME
 	);
-	CREATE UNIQUE INDEX IF NOT EXISTS alert_notification_name
-		ON alert_notification (name);
+	CREATE INDEX IF NOT EXISTS alert_notification_teamid
+		ON alert_notification (team_id);
+	CREATE UNIQUE INDEX IF NOT EXISTS alert_notification_teamid_name
+		ON alert_notification (team_id,name);
 	CREATE INDEX IF NOT EXISTS alert_notification_is_default
 		ON alert_notification (is_default);
 	`,

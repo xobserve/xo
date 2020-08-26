@@ -64,7 +64,7 @@ export const NotificationEdit = (props:Props) =>{
                 </div>
 
                 <div className="gf-form">
-                    <InlineFormLabel className="width-12" tooltip="Use this notification for all alerts">Include image</InlineFormLabel>
+                    <InlineFormLabel className="width-12" tooltip="Captures an image and include it in the notification">Include image</InlineFormLabel>
                     <Switch  defaultChecked={props.notification.uploadImage} onChange={(checked) => { props.notification.uploadImage = checked ; props.onEditChange()}}/>
                 </div>
                 {
@@ -79,7 +79,7 @@ export const NotificationEdit = (props:Props) =>{
                     <InlineFormLabel className="width-12" tooltip="Disable the resolve message [OK] that is sent when alerting state returns to false">Disable Resolve Message</InlineFormLabel>
                     <Switch  defaultChecked={props.notification.disableResolveMessage} onChange={(checked) => { props.notification.disableResolveMessage = checked}}/>
                 </div>
-
+                
                 {
                     <Notifier className="ub-mt4" notification={props.notification} onChange={() => onNotifieChange()}/>
                 }   

@@ -213,7 +213,7 @@ export const initRoutes = (store: Store<StoreState>) => {
                     title:<Message id={'common.rules'}/>,
                     url: "/team/rules/:id",
                     exact: true,
-                    component: React.lazy(() => import('src/views/alerting/RulesPage'))
+                    component: React.lazy(() => import('src/views/cfg/teams/team/RulesPage'))
                 },
                 { 
                     icon: "at",
