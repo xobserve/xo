@@ -65,6 +65,8 @@ const error = {
     loadDatasourceError: "加载数据源时出错了",
     requestDatasourceError: "请求数据源时出错了",
     customHttpHeaderEmpty: "自定义HTTP header的键值不能为空",
+    notifierNotExist: '目标通道在服务器端不存在',
+    buildNotifierError: '构建通道时发生了错误，请查看服务器端日志',
 }
 
 export default error

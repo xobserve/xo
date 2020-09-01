@@ -15,6 +15,7 @@ type Config struct {
 		LogLevel       string
 		StaticRootPath string `yaml:"static_root_path"`
 		HomePath string `yaml:"home_path"`
+		UIRootURL string `yaml:"ui_root_url"`
 	}
 
 	Plugins struct {
@@ -28,6 +29,18 @@ type Config struct {
 
 	Web struct {
 		Addr string
+	}
+
+	SMTP struct {
+		Enabled bool
+		Host string 
+		User string 
+		Password string 
+		CertFile string `yaml:"cert_file"`
+		KeyFile string `yaml:"key_file"`
+		skipVerify bool `yaml:"skip_verify"`
+		FromAddress string   `yaml:"from_address"`
+		FromName string  `yaml:"from_name"`
 	}
 }
 

@@ -9,6 +9,12 @@ import (
 	"time"
 	"github.com/datadefeat/datav/backend/pkg/utils/simplejson"
 )
+
+type DashboardRef struct {
+	Uid  string
+	Slug string
+}
+
 // Dashboard model
 type Dashboard struct {
 	Id       int64 `json:"id"`
@@ -157,3 +163,21 @@ func QueryUserHasDashboardPermssion(dashId int64, userId int64,permission int) i
 
 	return UserAcl_PermissionForbidden
 } 
+
+func QueryDashboard(id int64) (*Dashboard,error) {
+	dash := &Dashboard{}
+
+	var rawJSON []byte
+	err := db.SQL.QueryRow("SELECT uid,title,slug,data FROM dashboard WHERE id = ?", id).Scan(&dash.Uid,&dash.Title,&dash.Slug,&rawJSON)
+	if err != nil {
+		return  nil,err
+	}
+
+	data := simplejson.New()
+	err = data.UnmarshalJSON(rawJSON)
+	dash.Data = data
+
+	dash.Id = id
+
+	return dash, nil
+}

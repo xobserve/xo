@@ -186,6 +186,7 @@ func (s *Server) Start() error {
 				alertingR.PUT("/notification/:teamId", alerting.UpdateNotification)
 				alertingR.DELETE("/notification/:id", alerting.DeleteNotification)
 				alertingR.GET("/notification/:teamId", alerting.GetNotifications)
+				alertingR.POST("/test/notification", alerting.TestNotification)
 			}
 		}
 

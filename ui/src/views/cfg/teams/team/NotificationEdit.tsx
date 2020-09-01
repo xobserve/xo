@@ -3,7 +3,7 @@ import _ from 'lodash'
 import {Modal} from 'antd'
 import { FormattedMessage } from 'react-intl';
 import {AlertNotification} from 'src/types'
-import {Input,Select,Switch,Alert} from 'antd'
+import {Input,Select,Switch,Alert,Button} from 'antd'
 import { InlineFormLabel,config} from 'src/packages/datav-core';
 import Email from './Notifiers/Email'
 const {Option} = Select
@@ -13,6 +13,7 @@ interface Props {
     onCancel: any
     onEditSubmit: any
     onEditChange: any
+    onTest: any
     notification: AlertNotification
 }
 
@@ -34,12 +35,26 @@ export const NotificationEdit = (props:Props) =>{
         console.log(props.notification)
     }
 
+    const testNotification = () => {
+        
+    }
+
     return (
      props.notification &&
      <Modal
         title={props.notification.id ===0 ?<FormattedMessage id='alerting.addChannel' /> : <FormattedMessage id='alerting.editChannel' />}
         visible={props.visible}
-        onOk={props.onEditSubmit}
+        footer={[
+            <Button  type="primary" onClick={props.onEditSubmit}>
+              {<FormattedMessage id="common.save"/>}
+            </Button>,
+            <Button onClick={props.onTest} >
+              {<FormattedMessage id="common.test"/>}
+            </Button>,
+            <Button onClick={props.onCancel}>
+               {<FormattedMessage id="common.cancel"/>}
+          </Button>,
+          ]}
         onCancel={() => props.onCancel()}
         width={700}
         >

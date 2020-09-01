@@ -1,10 +1,27 @@
 package models
 
 import (
+	"github.com/datadefeat/datav/backend/pkg/utils/null"
 	"time"
 	"github.com/datadefeat/datav/backend/pkg/utils/simplejson"
 	"github.com/datadefeat/datav/backend/pkg/db"
 )
+
+type AlertStateType string
+
+const (
+	AlertStateNoData   AlertStateType = "no_data"
+	AlertStatePaused   AlertStateType = "paused"
+	AlertStateAlerting AlertStateType = "alerting"
+	AlertStateOK       AlertStateType = "ok"
+	AlertStatePending  AlertStateType = "pending"
+	AlertStateUnknown  AlertStateType = "unknown"
+)
+
+type AlertMetric struct {
+	Name string `json:"name"`
+	Value null.Float `json:"value"`
+}
 
 type AlertNotification struct {
 	Id                    int64            `json:"id"`

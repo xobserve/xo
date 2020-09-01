@@ -190,6 +190,23 @@ export class NotificationPage extends PureComponent<Props, State> {
             tempNotification: _.cloneDeep(this.state.tempNotification)
         })
     }
+
+    onTest = async () => {
+        const {tempNotification,team} = this.state
+        await getBackendSrv().post(`/api/alerting/test/notification`,{
+            name: tempNotification.name,
+            type: tempNotification.type,
+            settings: tempNotification.settings,
+            teamId: team.id,
+        })
+
+        notification['success']({
+            message: "Success",
+            description: localeData[currentLang]['info.testOK'],
+            duration: 5
+        })  
+    }
+
     render() {
         const { routeID, parentRouteID } = this.props
         const { hasFetched, notifications,addChannelVisible,tempNotification,team} = this.state
@@ -268,7 +285,7 @@ export class NotificationPage extends PureComponent<Props, State> {
                     )}
                 </Page.Contents>
             </Page>
-            <NotificationEdit visible={addChannelVisible} notification={tempNotification} onCancel={() => this.onCancelEdit()} onEditSubmit={this.onEditSubmit} onEditChange={this.onEditChange}/>
+            <NotificationEdit visible={addChannelVisible} notification={tempNotification} onTest={this.onTest} onCancel={this.onCancelEdit} onEditSubmit={this.onEditSubmit} onEditChange={this.onEditChange}/>
             </>
         );
     }
