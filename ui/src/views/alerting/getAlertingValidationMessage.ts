@@ -3,10 +3,11 @@ import { DataQuery,DataSourceService,DataTransformerConfig} from 'src/packages/d
 
 export const getDefaultCondition = () => ({
   type: 'query',
-  query: { params: ['A', '5m', 'now'] },
-  reducer: { type: 'avg', params: [] as any[] },
+  queryRefId: 'A',
+  lastFor: '5m',
+  reducer: 'avg',
   evaluator: { type: 'gt', params: [0.2] as any[] },
-  operator: { type: 'and' },
+  operator: 'and',
 });
 
 export const getAlertingValidationMessage = async (

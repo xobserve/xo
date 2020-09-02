@@ -17,6 +17,8 @@ const alertQueryDef = new QueryPartDef({
 
 const conditionTypes = [{ text: 'Query', value: 'query' }];
 
+const lastForOptions = ['10s','1m','5m','10m','15m','1h','3h','12h','24h','48h']
+
 const alertStateSortScore = {
   alerting: 1,
   no_data: 2,
@@ -168,4 +170,5 @@ export default {
   createReducerPart: createReducerPart,
   getAlertAnnotationInfo: getAlertAnnotationInfo,
   alertStateSortScore: alertStateSortScore,
+  lastForOptions: lastForOptions
 };
