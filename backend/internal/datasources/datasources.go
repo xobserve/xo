@@ -1,6 +1,7 @@
 package datasources
 
 import (
+	"github.com/datadefeat/datav/backend/pkg/models"
 	// "fmt"
 	"strconv"
 	"time"
@@ -9,13 +10,13 @@ import (
 	"github.com/datadefeat/datav/backend/pkg/log"
 	"github.com/datadefeat/datav/backend/pkg/utils/simplejson"
 )
-
+ 
 var logger = log.RootLogger.New("logger", "datasources")
 
 const InitDataSourceVersion = 1
 
-func LoadAllDataSources() []*DataSource {
-	datasources := make([]*DataSource, 0)
+func LoadAllDataSources() []*models.DataSource {
+	datasources := make([]*models.DataSource, 0)
 	rows, err := db.SQL.Query("select id,name, uid, version, type, url, is_default, json_data,basic_auth,created,updated from data_source")
 	if err != nil {
 		logger.Warn("get datasources error", "error", err)
@@ -42,7 +43,7 @@ func LoadAllDataSources() []*DataSource {
 			continue
 		}
 
-		ds := &DataSource{
+		ds := &models.DataSource{
 			Id:        id,
 			Name:      name,
 			Uid:       uid,
@@ -62,7 +63,7 @@ func LoadAllDataSources() []*DataSource {
 	return datasources
 }
 
-func LoadDataSource(id string) *DataSource {
+func LoadDataSource(id string) *models.DataSource {
 	var version int
 	var name, uid, tp, url string
 	var isDefault, basicAuth bool
@@ -99,7 +100,7 @@ func LoadDataSource(id string) *DataSource {
 
 
 	idN, _ := strconv.ParseInt(id, 10, 64)
-	ds := &DataSource{
+	ds := &models.DataSource{
 		Id:        idN,
 		Name:      name,
 		Uid:       uid,
@@ -118,7 +119,7 @@ func LoadDataSource(id string) *DataSource {
 	return ds
 }
 
-func updateIsDefaultFlag(ds *DataSource) error {
+func updateIsDefaultFlag(ds *models.DataSource) error {
 	// Handle is default flag
 	if ds.IsDefault {
 		_, err := db.SQL.Exec("UPDATE data_source SET is_default=? WHERE  id <> ?", false, ds.Id)

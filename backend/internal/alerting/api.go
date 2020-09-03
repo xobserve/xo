@@ -1,6 +1,7 @@
 package alerting
 
 import (
+	_ "github.com/datadefeat/datav/backend/pkg/tsdb"
 	"fmt"
 	"strconv"
 	"time"
@@ -16,6 +17,7 @@ import (
 	"github.com/datadefeat/datav/backend/pkg/utils/simplejson"
 	"github.com/gin-gonic/gin"
 )
+
 
 func AddNotification(c *gin.Context) {
 	nf := &models.AlertNotification{}
@@ -177,4 +179,8 @@ func TestNotification(c *gin.Context) {
 		c.JSON(400, common.ResponseErrorMessage(nil, i18n.OFF, err.Error()))
 		return
 	}
+}
+
+func TestRule(c *gin.Context) {
+	
 }

@@ -1,6 +1,7 @@
 package datasources
 
 import (
+	"github.com/datadefeat/datav/backend/pkg/models"
 	"strings"
 	"github.com/datadefeat/datav/backend/internal/acl"
 	"github.com/datadefeat/datav/backend/internal/plugins"
@@ -20,7 +21,7 @@ import (
 
 func NewDataSource(c *gin.Context) {
 	userId :=  session.CurrentUserId(c)
-	ds := &DataSource{}
+	ds := &models.DataSource{}
 	c.BindJSON(&ds)
 
 	if !acl.IsGlobalAdmin(c) {
@@ -32,7 +33,7 @@ func NewDataSource(c *gin.Context) {
 	ds.Version = InitDataSourceVersion
 	ds.Created = time.Now()
 	ds.Updated = time.Now()
-	if ds.JsonData == nil {
+	if ds.JsonData == nil { 
 		ds.JsonData = simplejson.New()
 	}
 	if ds.SecureJsonData == nil {
@@ -96,7 +97,7 @@ func GetDataSource(c *gin.Context) {
 }
 
 func EditDataSource(c *gin.Context) {
-	ds := &DataSource{}
+	ds := &models.DataSource{}
 	c.BindJSON(&ds)
 
 	if !acl.IsGlobalAdmin(c) {

@@ -8,6 +8,8 @@ import (
 )
 
 type AlertStateType string
+type NoDataOption string
+type ExecutionErrorOption string
 
 const (
 	AlertStateNoData   AlertStateType = "no_data"
@@ -16,6 +18,18 @@ const (
 	AlertStateOK       AlertStateType = "ok"
 	AlertStatePending  AlertStateType = "pending"
 	AlertStateUnknown  AlertStateType = "unknown"
+)
+
+const (
+	NoDataSetOK       NoDataOption = "ok"
+	NoDataSetNoData   NoDataOption = "no_data"
+	NoDataKeepState   NoDataOption = "keep_state"
+	NoDataSetAlerting NoDataOption = "alerting"
+)
+
+const (
+	ExecutionErrorSetAlerting ExecutionErrorOption = "alerting"
+	ExecutionErrorKeepState   ExecutionErrorOption = "keep_state"
 )
 
 type AlertMetric struct {
