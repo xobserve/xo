@@ -1,7 +1,7 @@
 import React, { PureComponent } from 'react';
 import _ from 'lodash';
 import { css } from 'emotion';
-import { Alert, Button, Icon, IconName, CustomScrollbar, Container, HorizontalGroup, ConfirmModal, Modal, InlineFormLabel } from 'src/packages/datav-core';
+import { Alert, Button, Icon, IconName, CustomScrollbar, Container, HorizontalGroup, ConfirmModal, Modal, InlineFormLabel, getBackendSrv, currentLang } from 'src/packages/datav-core';
 import { getDataSourceService, config } from 'src/packages/datav-core';
 import { getAlertingValidationMessage, getDefaultCondition } from './getAlertingValidationMessage';
 
@@ -10,14 +10,15 @@ import StateHistory from './StateHistory';
 
 import { DashboardModel, PanelModel } from 'src/views/dashboard/model';
 import { TestRuleResult } from './TestRuleResult';
-import { AppNotificationSeverity } from 'src/types';
+import { AppNotificationSeverity, AlertNotification } from 'src/types';
 
 import { PanelEditorTabId } from '../dashboard/components/PanelEditor/types';
 import { updateLocation } from 'src/store/reducers/location';
 import kbn from 'src/core/library/utils/kbn';
 import alertDef from './state/alertDef';
 import { ThresholdMapper } from './state/ThresholdMapper';
-import { Select, InputNumber } from 'antd'
+import { Select, InputNumber,notification as Notification, Input } from 'antd'
+import localeData from 'src/core/library/locale';
 const { Option } = Select
 
 interface OwnProps {
@@ -34,11 +35,10 @@ interface State {
   showDeleteConfirmation: boolean;
   showTestRule: boolean;
   frequencyWarning: string
+  notifications: AlertNotification[]
 }
 
 class UnConnectedAlertTab extends PureComponent<Props, State> {
-  notifications: any;
-  alertNotifications: any;
   alertingMinIntervalSecs: number;
   alertingMinInterval: string;
   evalOperators: any;
@@ -48,8 +48,6 @@ class UnConnectedAlertTab extends PureComponent<Props, State> {
 
     this.alertingMinIntervalSecs = config.alertingMinInterval;
     this.alertingMinInterval = kbn.secondsToHms(config.alertingMinInterval);
-    this.notifications = [];
-    this.alertNotifications = [];
     this.evalOperators = alertDef.evalOperators
     this.evalFunctions = alertDef.evalFunctions;
     this.state = {
@@ -57,11 +55,22 @@ class UnConnectedAlertTab extends PureComponent<Props, State> {
       showStateHistory: false,
       showDeleteConfirmation: false,
       showTestRule: false,
-      frequencyWarning: null
+      frequencyWarning: null,
+      notifications: []
     }
   }
 
-  componentDidMount() {
+  async componentDidMount() {
+    // get all notifications this dashboard can use
+    const res = await getBackendSrv().get(`/api/alerting/notification/${this.props.dashboard.meta.ownedBy}`)
+    for (const n of res.data) {
+       n.icon = this.getNotificationIcon(n.type)
+    }
+
+    this.setState({
+      ...this.state,
+      notifications: res.data
+    })
     this.loadAlertTab();
     this.initAlertModel()
   }
@@ -126,31 +135,42 @@ class UnConnectedAlertTab extends PureComponent<Props, State> {
 
     ThresholdMapper.alertToGraphThresholds(this.props.panel);
 
-    for (const addedNotification of alert.notifications) {
-      // lookup notifier type by uid
-      let model: any = _.find(this.notifications, { uid: addedNotification.uid });
+    for (const id of alert.notifications) {
+      let model: any = _.find(this.state.notifications, { id: id });
 
-      // fallback to using id if uid is missing
+       // notification not exist any more, set to to-remove state
       if (!model) {
-        model = _.find(this.notifications, { id: addedNotification.id });
-      }
-
-      if (model && model.isDefault === false) {
-        model.iconClass = this.getNotificationIcon(model.type);
-        this.alertNotifications.push(model);
+        _.remove(this.props.panel.alert.notifications, (nid) => nid === id)
+        Notification['error']({
+          message: "Error",
+          description: localeData[currentLang]['alerting.notificationNotExist'],
+          duration: 5
+        });
       }
     }
 
-    for (const notification of this.notifications) {
+    for (const notification of this.state.notifications) {
       if (notification.isDefault) {
-        notification.iconClass = this.getNotificationIcon(notification.type);
-        this.alertNotifications.push(notification);
+         // insert default notification into alert
+         let exist = false 
+         for (const id of alert.notifications) {
+           if (id === notification.id) {
+             exist = true
+           }
+         }
+         if (!exist) {
+            alert.notifications.push(notification.id)
+         }
       }
     }
 
+    this.forceUpdate()
     this.props.panel.render();
   }
 
+  notificationAdded = (ids) => {
+    this.props.panel.alert.notifications = ids
+  }
 
   getNotificationIcon(type: string): string {
     switch (type) {
@@ -175,7 +195,7 @@ class UnConnectedAlertTab extends PureComponent<Props, State> {
       case 'teams':
         return 'fa fa-windows';
     }
-    return 'bell';
+    return 'question';
   }
 
   checkFrequency = (v) => {
@@ -301,6 +321,11 @@ class UnConnectedAlertTab extends PureComponent<Props, State> {
     );
   };
 
+  evaluatorParamsChanged = () => {
+    ThresholdMapper.alertToGraphThresholds(this.props.panel);
+    this.props.panel.render();
+  }
+
   addCondition = () => {
     const condition = getDefaultCondition();
     // add to persited model
@@ -319,12 +344,13 @@ class UnConnectedAlertTab extends PureComponent<Props, State> {
   }
   render() {
     const { transformations, alert, targets } = this.props.panel;
-    const { validatonMessage, frequencyWarning } = this.state;
+    const { validatonMessage, frequencyWarning, notifications } = this.state;
     const hasTransformations = transformations && transformations.length > 0;
 
     if (!alert && validatonMessage) {
       return this.renderValidationMessage();
     }
+
 
     const model = {
       title: 'Panel has no alert rule defined',
@@ -389,33 +415,32 @@ class UnConnectedAlertTab extends PureComponent<Props, State> {
                     <h4 className="section-heading">Conditions</h4>
                     {
                       alert.conditions.map((c, i) => {
-                        console.log(i,c)
                         return <div className="gf-form-inline" key={i}>
                           <div className="gf-form">
                             {i === 0 ?
                               <span className="gf-form-label query-keyword width-5">WHEN</span> :
                               <span className="width-5 ub-mr2">
-                                <Select value={c.operator} onChange={(v) => {c.operator = v;this.forceUpdate()}} style={{ width: '100%' }}>
+                                <Select value={c.operator} onChange={(v) => { c.operator = v; this.forceUpdate() }} style={{ width: '100%' }}>
                                   <Option value="and">AND</Option>
                                   <Option value="or">OR</Option>
                                 </Select>
                               </span>
                             }
-                            <Select className="width-5" value={c.reducer} onChange={(v) => {c.reducer = v;this.forceUpdate()}}>
+                            <Select className="width-5" value={c.reducer} onChange={(v) => { c.reducer = v; this.forceUpdate() }}>
                               {alertDef.reducerTypes.map((r, i) => <Option value={r.value} key={i}>{r.text}</Option>)}
                             </Select>
                             <span className="gf-form-label query-keyword width-5 ub-ml2">OF QUERY</span>
-                            <Select className="width-4" value={c.queryRefId} onChange={(v) => {c.queryRefId = v;this.forceUpdate()}}>
+                            <Select className="width-4" value={c.queryRefId} onChange={(v) => { c.queryRefId = v; this.forceUpdate() }}>
                               {targets.map((r, i) => <Option value={r.refId} key={i}>{r.refId}</Option>)}
                             </Select>
 
-                            <Select className="width-11 ub-ml2" value={c.evaluator.type} onChange={(v) => { c.evaluator.type = v; this.forceUpdate() }}>
+                            <Select className="width-11 ub-ml2" value={c.evaluator.type} onChange={(v) => { c.evaluator.type = v; this.evaluatorParamsChanged(); this.forceUpdate() }}>
                               {alertDef.evalFunctions.map((r, i) => <Option value={r.value} key={i}>{r.text}</Option>)}
                             </Select>
                             {c.evaluator.type !== 'no_value' && <InputNumber
                               className="ub-ml2 width-4"
                               value={c.evaluator.params[0]}
-                              onChange={(v) => {c.evaluator.params[0] = v;this.forceUpdate()}}
+                              onChange={(v) => { c.evaluator.params[0] = v; this.evaluatorParamsChanged(); this.forceUpdate() }}
                               placeholder="5"
                             />}
                             {(c.evaluator.type === 'outside_range' || c.evaluator.type === 'within_range') &&
@@ -424,13 +449,13 @@ class UnConnectedAlertTab extends PureComponent<Props, State> {
                                 <InputNumber
                                   className="width-4"
                                   value={c.evaluator.params[1]}
-                                  onChange={(v) => {c.evaluator.params[1] = v;this.forceUpdate()}}
+                                  onChange={(v) => { c.evaluator.params[1] = v; this.evaluatorParamsChanged(); this.forceUpdate() }}
                                   placeholder="5"
                                 />
                               </>}
 
                             <span className="gf-form-label query-keyword width-3 ub-ml2">LAST</span>
-                            <Select className="width-4" value={c.lastFor} onChange={(v) => { c.lastFor = v;this.forceUpdate() }}>
+                            <Select className="width-5" value={c.lastFor} onChange={(v) => { c.lastFor = v; this.forceUpdate() }}>
                               {alertDef.lastForOptions.map((r, i) => <Option value={r} key={i}>{r}</Option>)}
                             </Select>
 
@@ -450,6 +475,76 @@ class UnConnectedAlertTab extends PureComponent<Props, State> {
 
                   </div>
                 </>}
+
+              {
+                alert && <div className="gf-form-group">
+                  <h4 className="section-heading">No Data & Error Handling</h4>
+                  <div className="gf-form-inline">
+                    <div className="gf-form">
+                      <span className="gf-form-label width-15">If no data or all values are null</span>
+                    </div>
+                    <div className="gf-form">
+                      <span className="gf-form-label query-keyword">SET STATE TO</span>
+                      <Select
+                        className="width-10"
+                        defaultValue={alert.noDataState}
+                        onChange={(v) => this.props.panel.alert.noDataState = v}
+                      >
+                        {
+                          alertDef.noDataModes.map((mode) =>
+                            <Option value={mode.value} key={mode.value}>{mode.text}</Option>
+                          )
+                        }
+                      </Select>
+                    </div>
+                  </div>
+
+                  <div className="gf-form-inline">
+                    <div className="gf-form">
+                      <span className="gf-form-label width-15">If execution error or timeout</span>
+                    </div>
+                    <div className="gf-form">
+                      <span className="gf-form-label query-keyword">SET STATE TO</span>
+                      <Select
+                        className="width-10"
+                        defaultValue={alert.executionErrorState}
+                        onChange={(v) => this.props.panel.alert.executionErrorState = v}
+                      >
+                        {
+                          alertDef.executionErrorModes.map((mode) =>
+                            <Option value={mode.value} key={mode.value}>{mode.text}</Option>
+                          )
+                        }
+                      </Select>
+                    </div>
+                  </div>
+                </div>
+              }
+
+              {
+                alert && <div className="gf-form-group">
+                  <h4 className="section-heading">Notifications</h4>
+                  <div className="gf-form-inline">
+                    <div className="gf-form">
+                      <span className="gf-form-label width-8">Send to</span>
+                    </div>
+                    <Select mode="multiple" defaultValue={alert.notifications} className="width-10" onChange={this.notificationAdded}>
+                      {notifications.map((n) => <Option value={n.id} key={n.id}><Icon name={n.icon}/> <span className="ub-ml1">{n.name}</span></Option>)}
+                    </Select>
+                  </div>
+
+                  <div className="gf-form gf-form--v-stretch">
+                    <span className="gf-form-label width-8">Message</span>
+                    <Input.TextArea
+                      className="gf-form-input"
+                      rows={5}
+                      defaultValue={alert.message}
+                      onBlur={(e) => this.props.panel.alert.message=e.currentTarget.value}
+                      placeholder="Notification message details..."
+                    ></Input.TextArea>
+                  </div>
+                </div>
+              }
 
               {alert && (
                 <HorizontalGroup>

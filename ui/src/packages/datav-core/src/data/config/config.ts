@@ -89,8 +89,8 @@ export const config = {
     defaultAdminName: 'admin',
     
     alertingEnabled: true,
-    alertingErrorOrTimeout: '',
-    alertingNoDataOrNullValues: '',
+    alertingErrorOrTimeout: 'alerting',
+    alertingNoDataOrNullValues: 'no_data',
     alertingMinInterval: 1,
 
     rendererAvailable: false,

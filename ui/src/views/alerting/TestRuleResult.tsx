@@ -45,7 +45,7 @@ export class TestRuleResult extends PureComponent<Props, State> {
     const payload = { dashboard: model, panelId: panel.id };
 
     this.setState({ isLoading: true });
-    const testRuleResponse = await getBackendSrv().post(`/api/alerts/test`, payload);
+    const testRuleResponse = await getBackendSrv().post(`/api/alerting/test/rule`, payload);
     this.setState({ isLoading: false, testRuleResponse });
   }
 

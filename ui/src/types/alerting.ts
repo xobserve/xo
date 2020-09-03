@@ -47,5 +47,6 @@ export interface AlertRuleDTO {
     settings?: any;
     uploadImage?: boolean;
     disableResolveMessage? : boolean
+    icon? : string
   }
   
