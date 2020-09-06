@@ -9,8 +9,6 @@ import (
 
 )
 
-
-
 var (
 	defaultRes         int64 = 1500
 	defaultMinInterval       = time.Millisecond * 1
