@@ -1,52 +1,55 @@
 package server
 
 import (
+	"errors"
+
+	"github.com/datadefeat/datav/backend/internal/acl"
 	"github.com/datadefeat/datav/backend/internal/annotation"
 	"github.com/datadefeat/datav/backend/internal/bootConfig"
-	"github.com/datadefeat/datav/backend/internal/acl"
-	"github.com/datadefeat/datav/backend/internal/users"
 	"github.com/datadefeat/datav/backend/internal/datasources"
-	"errors"
+	"github.com/datadefeat/datav/backend/internal/users"
 	"github.com/datadefeat/datav/backend/pkg/utils"
+
 	// "net/http"
 
 	"database/sql"
 
+	"net/http"
+
+	"github.com/datadefeat/datav/backend/internal/admin"
+	"github.com/datadefeat/datav/backend/internal/alerting"
+	"github.com/datadefeat/datav/backend/internal/cache"
+	"github.com/datadefeat/datav/backend/internal/dashboard"
+	"github.com/datadefeat/datav/backend/internal/folders"
+	"github.com/datadefeat/datav/backend/internal/plugins"
+	"github.com/datadefeat/datav/backend/internal/registry"
+	"github.com/datadefeat/datav/backend/internal/search"
 	"github.com/datadefeat/datav/backend/internal/session"
-	"github.com/datadefeat/datav/backend/pkg/config"
+	"github.com/datadefeat/datav/backend/internal/sidemenu"
+	"github.com/datadefeat/datav/backend/internal/teams"
 	"github.com/datadefeat/datav/backend/pkg/common"
+	"github.com/datadefeat/datav/backend/pkg/config"
 	"github.com/datadefeat/datav/backend/pkg/db"
 	"github.com/datadefeat/datav/backend/pkg/i18n"
 	"github.com/datadefeat/datav/backend/pkg/log"
-	"github.com/datadefeat/datav/backend/internal/registry"	
-	_ "github.com/mattn/go-sqlite3"
-	"github.com/datadefeat/datav/backend/internal/plugins"
-	"github.com/datadefeat/datav/backend/internal/dashboard"
-	"github.com/datadefeat/datav/backend/internal/cache"
-	"github.com/datadefeat/datav/backend/internal/search"
-	"github.com/datadefeat/datav/backend/internal/folders"
-	"github.com/datadefeat/datav/backend/internal/teams"
-	"github.com/datadefeat/datav/backend/internal/admin"
-	"github.com/datadefeat/datav/backend/internal/sidemenu"
-	"github.com/datadefeat/datav/backend/internal/alerting"
 	"github.com/gin-gonic/gin"
-	"net/http"
+	_ "github.com/mattn/go-sqlite3"
 )
- 
+
 // Web ...
 type Server struct {
 }
 
-// New ... 
+// New ...
 func New() *Server {
 	return &Server{}
-} 
+}
 
-var logger = log.RootLogger.New("logger","server")
+var logger = log.RootLogger.New("logger", "server")
 
 // Start ...1
 func (s *Server) Start() error {
-	logger.Debug("server config", "config",*config.Data)
+	logger.Debug("server config", "config", *config.Data)
 	// start registered services
 	services := registry.GetServices()
 	for _, service := range services {
@@ -55,7 +58,7 @@ func (s *Server) Start() error {
 
 	err := s.initDB()
 	if err != nil {
-		logger.Error("open sqlite error","error",err.Error())
+		logger.Error("open sqlite error", "error", err.Error())
 		return err
 	}
 
@@ -66,19 +69,19 @@ func (s *Server) Start() error {
 		gin.SetMode(gin.ReleaseMode)
 		r := gin.New()
 		r.Use(Cors())
-		  
+
 		// no auth apis
 		{
-			r.POST("/api/login",session.Login)
-			r.POST("/api/logout",session.Logout)
+			r.POST("/api/login", session.Login)
+			r.POST("/api/logout", session.Logout)
 			r.Any("/api/proxy/:datasourceID/*target", proxy)
 			r.Any("/api/proxy/:datasourceID", proxy)
 			r.GET("/api/bootConfig", bootConfig.QueryBootConfig)
-			r.POST("/api/testdata",QueryTestdata)
+			r.POST("/api/testdata", QueryTestdata)
 		}
 
 		// auth apis
-		authR := r.Group("",Auth())
+		authR := r.Group("", Auth())
 		{
 			pluginR := authR.Group("/api/plugins")
 			{
@@ -109,53 +112,53 @@ func (s *Server) Start() error {
 				dashboardR.DELETE("/acl/user/:dashId/:userId", dashboard.DeleteUserAcl)
 				dashboardR.GET("/acl/user/:dashId", dashboard.GetUserAcl)
 				dashboardR.PUT("/ownedBy", dashboard.UpdateOwnedBy)
-			} 
+			}
 
-			searchR := authR.Group("/api/search") 
+			searchR := authR.Group("/api/search")
 			{
 				searchR.GET("", search.Search)
 				searchR.GET("/dashboard", search.Dashboard)
-			} 
+			}
 
-			folderR := authR.Group("/api/folder") 
+			folderR := authR.Group("/api/folder")
 			{
 				folderR.GET("/checkExistByName", folders.CheckExistByName)
 				folderR.GET("/uid/:uid", folders.GetByUid)
 				folderR.PUT("/id/:id", folders.UpdateFolder)
-				folderR.DELETE("/id/:id",folders.DeleteFolder)
-				folderR.POST("/new",folders.NewFolder)
-				folderR.GET("/all",folders.GetAll)
+				folderR.DELETE("/id/:id", folders.DeleteFolder)
+				folderR.POST("/new", folders.NewFolder)
+				folderR.GET("/all", folders.GetAll)
 			}
 
-			userR := authR.Group("/api/users") 
-			{ 
+			userR := authR.Group("/api/users")
+			{
 				userR.GET("", users.GetUsers)
-				userR.GET("/user", users.GetUser)	
-				userR.PUT("/user/password", users.ChangePassword)		
-				userR.GET("/user/sidemenus",users.GetSideMenus)
-				userR.PUT("/user/sidemenu",users.UpdateSideMenu)
-				userR.PUT("/user/info",users.UpdateUserInfo)
-				userR.GET("/user/teamRoles", users.GetUserTeamRoles)	
+				userR.GET("/user", users.GetUser)
+				userR.PUT("/user/password", users.ChangePassword)
+				userR.GET("/user/sidemenus", users.GetSideMenus)
+				userR.PUT("/user/sidemenu", users.UpdateSideMenu)
+				userR.PUT("/user/info", users.UpdateUserInfo)
+				userR.GET("/user/teamRoles", users.GetUserTeamRoles)
 				userR.GET("/user/sidemenu/:teamId", users.CanUseMenu)
 			}
 
-			teamR := authR.Group("/api/teams") 
+			teamR := authR.Group("/api/teams")
 			{
 				teamR.GET("", teams.GetTeams)
 				teamR.GET("/team", teams.GetTeam)
-				teamR.GET("/members/:teamId", teams.GetTeamMembers)	
-				teamR.GET("/member/:teamId/:userId", teams.GetTeamMember)	
-				teamR.POST("/leave/:teamId",teams.LeaveTeam)
-				teamR.POST("/members/:teamId", teams.AddTeamMembers)	
-				teamR.DELETE("/:teamId/:memberId", teams.DeleteTeamMember)	
+				teamR.GET("/members/:teamId", teams.GetTeamMembers)
+				teamR.GET("/member/:teamId/:userId", teams.GetTeamMember)
+				teamR.POST("/leave/:teamId", teams.LeaveTeam)
+				teamR.POST("/members/:teamId", teams.AddTeamMembers)
+				teamR.DELETE("/:teamId/:memberId", teams.DeleteTeamMember)
 				teamR.PUT("/team/:teamId", teams.UpdateTeam)
-				teamR.POST("/team/:teamId/member", teams.UpdateTeamMember)	
-				teamR.POST("/transfer/:teamId", teams.TransferTeam)	
-				teamR.DELETE("/:teamId", teams.DeleteTeam)	
+				teamR.POST("/team/:teamId/member", teams.UpdateTeamMember)
+				teamR.POST("/transfer/:teamId", teams.TransferTeam)
+				teamR.DELETE("/:teamId", teams.DeleteTeam)
 				teamR.GET("/permissions/:teamId", teams.GetTeamPermissions)
-				teamR.POST("/permissions/:teamId", teams.UpdateTeamPermission)	
-			} 
-			
+				teamR.POST("/permissions/:teamId", teams.UpdateTeamPermission)
+			}
+
 			sidemenuR := authR.Group("/api/sidemenu")
 			{
 				sidemenuR.GET(":teamId", sidemenu.GetMenu)
@@ -165,13 +168,13 @@ func (s *Server) Start() error {
 
 			annotationR := authR.Group("/api/annotations")
 			{
-				annotationR.GET("",annotation.GetAnnotations)
-				annotationR.POST("",annotation.CreateAnnotation)
-				annotationR.PUT("/:id",annotation.UpdateAnnotation)
-				annotationR.DELETE("/:id",annotation.DeleteAnnotation)
+				annotationR.GET("", annotation.GetAnnotations)
+				annotationR.POST("", annotation.CreateAnnotation)
+				annotationR.PUT("/:id", annotation.UpdateAnnotation)
+				annotationR.DELETE("/:id", annotation.DeleteAnnotation)
 			}
 
-			adminR := authR.Group("/api/admin",AdminAuth())
+			adminR := authR.Group("/api/admin", AdminAuth())
 			{
 				adminR.PUT("/password", admin.UpdatePassword)
 				adminR.PUT("/user/:id", admin.UpdateUser)
@@ -179,8 +182,8 @@ func (s *Server) Start() error {
 				adminR.POST("/user/new", admin.NewUser)
 				adminR.POST("/team/new", admin.NewTeam)
 			}
-			
-			alertingR := authR.Group("/api/alerting",AdminAuth()) 
+
+			alertingR := authR.Group("/api/alerting", AdminAuth())
 			{
 				alertingR.POST("/notification/:teamId", alerting.AddNotification)
 				alertingR.PUT("/notification/:teamId", alerting.UpdateNotification)
@@ -194,7 +197,6 @@ func (s *Server) Start() error {
 		r.Run(config.Data.Web.Addr)
 	}()
 
-
 	return nil
 }
 
@@ -203,10 +205,8 @@ func (s *Server) Close() error {
 	return nil
 }
 
-
-
 func (s *Server) initDB() error {
-	exist,_ := utils.FileExists("./datav.db")
+	exist, _ := utils.FileExists("./datav.db")
 	if !exist {
 		return errors.New("db file not exist, please run init commant")
 	}
@@ -222,39 +222,38 @@ func (s *Server) initDB() error {
 // Cors is a gin middleware for cross domain.
 func Cors() gin.HandlerFunc {
 	return func(c *gin.Context) {
-	   method := c.Request.Method
- 
-	   c.Header("Access-Control-Allow-Origin", "*")
-	   c.Header("Access-Control-Allow-Headers", "Content-Type,AccessToken,X-CSRF-Token, Authorization,X-Token, X-PANEL-ID, X-DASHBOARD-ID,*")
-	   c.Header("Access-Control-Allow-Methods", "POST, GET, PUT, DELETE, OPTIONS")
-	   c.Header("Access-Control-Expose-Headers", "Content-Length, Access-Control-Allow-Origin, Access-Control-Allow-Headers, Content-Type")
-	   c.Header("Access-Control-Allow-Credentials", "true")
- 
-	   //放行所有OPTIONS方法
-	   if method == "OPTIONS" {
-		  c.AbortWithStatus(http.StatusNoContent)
-	   }
-	   // 处理请求
-	   c.Next()
-	}
- }
+		method := c.Request.Method
 
- // Auth is a gin middleware for user auth
- func Auth() gin.HandlerFunc {
-	return func(c *gin.Context)  {
+		c.Header("Access-Control-Allow-Origin", "*")
+		c.Header("Access-Control-Allow-Headers", "Content-Type,AccessToken,X-CSRF-Token, Authorization,X-Token, X-PANEL-ID, X-DASHBOARD-ID,*")
+		c.Header("Access-Control-Allow-Methods", "POST, GET, PUT, DELETE, OPTIONS")
+		c.Header("Access-Control-Expose-Headers", "Content-Length, Access-Control-Allow-Origin, Access-Control-Allow-Headers, Content-Type")
+		c.Header("Access-Control-Allow-Credentials", "true")
+
+		//放行所有OPTIONS方法
+		if method == "OPTIONS" {
+			c.AbortWithStatus(http.StatusNoContent)
+		}
+		// 处理请求
+		c.Next()
+	}
+}
+
+// Auth is a gin middleware for user auth
+func Auth() gin.HandlerFunc {
+	return func(c *gin.Context) {
 		user := session.CurrentUser(c)
 		if user == nil {
 			c.JSON(http.StatusUnauthorized, common.ResponseI18nError("error.needLogin"))
 			c.Abort()
-			return 
+			return
 		}
 		c.Next()
 	}
 }
 
-
 func AdminAuth() gin.HandlerFunc {
-	return func(c *gin.Context)  {
+	return func(c *gin.Context) {
 		if !acl.IsGlobalAdmin(c) {
 			c.JSON(403, common.ResponseI18nError(i18n.NoPermission))
 			c.Abort()

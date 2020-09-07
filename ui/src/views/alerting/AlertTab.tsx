@@ -430,7 +430,7 @@ class UnConnectedAlertTab extends PureComponent<Props, State> {
                               {alertDef.reducerTypes.map((r, i) => <Option value={r.value} key={i}>{r.text}</Option>)}
                             </Select>
                             <span className="gf-form-label query-keyword width-5 ub-ml2">OF QUERY</span>
-                            <Select className="width-4" value={c.queryRefId} onChange={(v) => { c.queryRefId = v; this.forceUpdate() }}>
+                            <Select className="width-4" value={c.query.refId} onChange={(v) => { c.query.refId = v; this.forceUpdate() }}>
                               {targets.map((r, i) => <Option value={r.refId} key={i}>{r.refId}</Option>)}
                             </Select>
 
@@ -455,7 +455,7 @@ class UnConnectedAlertTab extends PureComponent<Props, State> {
                               </>}
 
                             <span className="gf-form-label query-keyword width-3 ub-ml2">LAST</span>
-                            <Select className="width-5" value={c.lastFor} onChange={(v) => { c.lastFor = v; this.forceUpdate() }}>
+                            <Select className="width-5" value={c.query.lastFor} onChange={(v) => { c.query.lastFor = v; this.forceUpdate() }}>
                               {alertDef.lastForOptions.map((r, i) => <Option value={r} key={i}>{r}</Option>)}
                             </Select>
 

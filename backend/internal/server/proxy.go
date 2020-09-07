@@ -1,26 +1,31 @@
 package server
 
 import (
+	"strconv"
+
 	"github.com/datadefeat/datav/backend/pkg/i18n"
+	"github.com/datadefeat/datav/backend/pkg/models"
+
 	// "time"
-	"github.com/datadefeat/datav/backend/pkg/common"
-	"github.com/datadefeat/datav/backend/internal/datasources"
 	"bytes"
 	"fmt"
 	"io"
 	"net/http"
 	"net/url"
 
+	"github.com/datadefeat/datav/backend/pkg/common"
+
 	"github.com/gin-gonic/gin"
 )
 
-func proxy(c *gin.Context)  {
-	dsID := c.Param("datasourceID")
-	// find datasource store url 
-	ds := datasources.LoadDataSource(dsID)
-	if ds == nil {
+func proxy(c *gin.Context) {
+	dsID, _ := strconv.ParseInt(c.Param("datasourceID"), 10, 64)
+	// find datasource store url
+	ds, err := models.QueryDataSource(dsID, "")
+	if err != nil {
+		logger.Warn("query datasource error", "error", err)
 		c.JSON(500, common.ResponseI18nError("error.loadDatasourceError"))
-		return 
+		return
 	}
 
 	targetURL := c.Param("target")
@@ -29,14 +34,14 @@ func proxy(c *gin.Context)  {
 
 	var params = url.Values{}
 
-	for k, v := range c.Request.URL.Query(){
+	for k, v := range c.Request.URL.Query() {
 		params.Add(k, v[0])
 	}
 
 	var url1 = ds.Url + targetURL + "?" + params.Encode()
-	
+
 	// read request json body and write to new request body
-	jsonData,_ := c.GetRawData()
+	jsonData, _ := c.GetRawData()
 	reqBody := bytes.NewBuffer(jsonData)
 
 	outReq, err := http.NewRequest(c.Request.Method, url1, reqBody)
@@ -57,9 +62,9 @@ func proxy(c *gin.Context)  {
 
 	res, err := client.Do(outReq)
 	if err != nil {
-		logger.Warn("request to datasource error","url",url1,"error",err.Error())
-		c.JSON(502, common.ResponseErrorMessage(nil,i18n.OFF,err.Error()))
-		return 
+		logger.Warn("request to datasource error", "url", url1, "error", err.Error())
+		c.JSON(502, common.ResponseErrorMessage(nil, i18n.OFF, err.Error()))
+		return
 	}
 
 	buffer := bytes.NewBuffer(nil)

@@ -3,8 +3,10 @@ import { DataQuery,DataSourceService,DataTransformerConfig} from 'src/packages/d
 
 export const getDefaultCondition = () => ({
   type: 'query',
-  queryRefId: 'A',
-  lastFor: '5m',
+  query: {
+    refId: 'A',
+    lastFor: '5m'
+  },
   reducer: 'avg',
   evaluator: { type: 'gt', params: [0.2] as any[] },
   operator: 'and',

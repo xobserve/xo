@@ -4,7 +4,10 @@ go 1.14
 
 require (
 	github.com/gin-gonic/gin v1.6.3
+	github.com/go-macaron/session v0.0.0-20200329073812-7d919ce6a8d2 // indirect
+	github.com/go-sql-driver/mysql v1.5.0 // indirect
 	github.com/gosimple/slug v1.9.0
+	github.com/grafana/grafana v6.1.6+incompatible
 	github.com/grafana/grafana-plugin-sdk-go v0.77.0
 	github.com/inconshreveable/log15 v0.0.0-20200109203555-b30bc20e4fd1
 	github.com/jordan-wright/email v4.0.1-0.20200824153738-3f5bafa1cd84+incompatible
@@ -19,5 +22,7 @@ require (
 	github.com/timberio/go-datemath v0.1.1-0.20200323150745-74ddef604fff
 	golang.org/x/crypto v0.0.0-20190701094942-4def268fd1a4
 	golang.org/x/xerrors v0.0.0-20191204190536-9bdfabe68543
+	gopkg.in/ini.v1 v1.61.0 // indirect
+	gopkg.in/macaron.v1 v1.3.9 // indirect
 	gopkg.in/yaml.v2 v2.3.0
 )

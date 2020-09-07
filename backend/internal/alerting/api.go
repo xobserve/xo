@@ -1,10 +1,11 @@
 package alerting
 
 import (
-	_ "github.com/datadefeat/datav/backend/pkg/tsdb"
 	"fmt"
 	"strconv"
 	"time"
+
+	_ "github.com/datadefeat/datav/backend/pkg/tsdb"
 
 	"github.com/datadefeat/datav/backend/internal/acl"
 	"github.com/datadefeat/datav/backend/internal/alerting/notifiers"
@@ -17,7 +18,6 @@ import (
 	"github.com/datadefeat/datav/backend/pkg/utils/simplejson"
 	"github.com/gin-gonic/gin"
 )
-
 
 func AddNotification(c *gin.Context) {
 	nf := &models.AlertNotification{}
@@ -169,9 +169,8 @@ func TestNotification(c *gin.Context) {
 		},
 	}
 
-
 	if model.Settings.Get("uploadImage").MustBool(true) {
-		content.ImageURL =  "https://grafana.com/assets/img/blog/mixed_styles.png"
+		content.ImageURL = "https://grafana.com/assets/img/blog/mixed_styles.png"
 	}
 
 	err = notifier.Notify(content)
@@ -181,6 +180,25 @@ func TestNotification(c *gin.Context) {
 	}
 }
 
+type TestRuleReq struct {
+	Dashboard *simplejson.Json
+	PanelID   int64
+}
+
 func TestRule(c *gin.Context) {
-	
+	req := &TestRuleReq{}
+	c.Bind(&req)
+
+	dash := models.NewDashboardFromJson(req.Dashboard)
+	extractor := &DashAlertExtractor{dash}
+	alerts, err := extractor.GetAlerts()
+	if err != nil {
+		logger.Warn("get alerts error", "error", err)
+		c.JSON(400, common.ResponseI18nError(i18n.BadRequestData))
+		return
+	}
+
+	for _, alert := range alerts {
+		fmt.Println(alert)
+	}
 }

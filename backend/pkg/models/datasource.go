@@ -1,11 +1,24 @@
 package models
 
 import (
+	"errors"
+	"fmt"
 	"strings"
 
 	"time"
 
+	"github.com/datadefeat/datav/backend/pkg/db"
 	"github.com/datadefeat/datav/backend/pkg/utils/simplejson"
+)
+
+var (
+	ErrDataSourceNotFound                = errors.New("Data source not found")
+	ErrDataSourceNameExists              = errors.New("Data source with the same name already exists")
+	ErrDataSourceUidExists               = errors.New("Data source with the same uid already exists")
+	ErrDataSourceUpdatingOldVersion      = errors.New("Trying to update old version of datasource")
+	ErrDatasourceIsReadOnly              = errors.New("Data source is readonly. Can only be updated from configuration")
+	ErrDataSourceAccessDenied            = errors.New("Data source access denied")
+	ErrDataSourceFailedGenerateUniqueUid = errors.New("Failed to generate unique datasource id")
 )
 
 type DataSource struct {
@@ -50,4 +63,65 @@ func (slice DataSourceList) Less(i, j int) bool {
 
 func (slice DataSourceList) Swap(i, j int) {
 	slice[i], slice[j] = slice[j], slice[i]
+}
+
+func QueryDataSource(id int64, name string) (*DataSource, error) {
+	q := fmt.Sprintf("select id,name, uid, version, type, url, is_default, json_data,secure_json_data,basic_auth,created,updated from data_source where id='%d' or name='%s'", id, name)
+	return queryDataSource(q)
+}
+
+func QueryDefaultDataSource() (*DataSource, error) {
+	q := fmt.Sprintf("select id,name, uid, version, type, url, is_default, json_data,secure_json_data,basic_auth,created,updated from data_source where is_default='1'")
+	return queryDataSource(q)
+}
+
+func queryDataSource(q string) (*DataSource, error) {
+	var id int64
+	var version int
+	var uid, tp, url, name string
+	var isDefault, basicAuth bool
+	var created, updated time.Time
+	var rawJSON []byte
+	var rawSecureJson []byte
+
+	err := db.SQL.QueryRow(q).Scan(&id, &name, &uid, &version, &tp, &url, &isDefault, &rawJSON, &rawSecureJson, &basicAuth, &created, &updated)
+	if err != nil {
+		return nil, err
+	}
+
+	jsonData := simplejson.New()
+	err = jsonData.UnmarshalJSON(rawJSON)
+	if err != nil {
+		return nil, err
+	}
+
+	secureJsonData := simplejson.New()
+	err = secureJsonData.UnmarshalJSON(rawSecureJson)
+	if err != nil {
+		return nil, err
+	}
+
+	sjMap, _ := secureJsonData.Map()
+	secureJsonFields := make(map[string]bool)
+	for k := range sjMap {
+		secureJsonFields[k] = true
+	}
+
+	ds := &DataSource{
+		Id:               id,
+		Name:             name,
+		Uid:              uid,
+		Version:          version,
+		Type:             tp,
+		Url:              url,
+		IsDefault:        isDefault,
+		JsonData:         jsonData,
+		SecureJsonData:   secureJsonData,
+		BasicAuth:        basicAuth,
+		Created:          created,
+		Updated:          updated,
+		SecureJsonFields: secureJsonFields,
+	}
+
+	return ds, nil
 }
