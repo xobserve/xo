@@ -1,21 +1,22 @@
 package alerting
 
 import (
+	"context"
 	"fmt"
 	"strconv"
 	"time"
 
-	_ "github.com/datadefeat/datav/backend/pkg/tsdb"
+	_ "github.com/codecc-com/datav/backend/pkg/tsdb"
 
-	"github.com/datadefeat/datav/backend/internal/acl"
-	"github.com/datadefeat/datav/backend/internal/alerting/notifiers"
-	"github.com/datadefeat/datav/backend/internal/session"
-	"github.com/datadefeat/datav/backend/pkg/common"
-	"github.com/datadefeat/datav/backend/pkg/db"
-	"github.com/datadefeat/datav/backend/pkg/i18n"
-	"github.com/datadefeat/datav/backend/pkg/models"
-	"github.com/datadefeat/datav/backend/pkg/utils/null"
-	"github.com/datadefeat/datav/backend/pkg/utils/simplejson"
+	"github.com/codecc-com/datav/backend/internal/acl"
+	"github.com/codecc-com/datav/backend/internal/alerting/notifiers"
+	"github.com/codecc-com/datav/backend/internal/session"
+	"github.com/codecc-com/datav/backend/pkg/common"
+	"github.com/codecc-com/datav/backend/pkg/db"
+	"github.com/codecc-com/datav/backend/pkg/i18n"
+	"github.com/codecc-com/datav/backend/pkg/models"
+	"github.com/codecc-com/datav/backend/pkg/utils/null"
+	"github.com/codecc-com/datav/backend/pkg/utils/simplejson"
 	"github.com/gin-gonic/gin"
 )
 
@@ -185,6 +186,16 @@ type TestRuleReq struct {
 	PanelID   int64
 }
 
+type AlertTestResult struct {
+	Firing         bool                         `json:"firing"`
+	State          models.AlertStateType        `json:"state"`
+	ConditionEvals string                       `json:"conditionEvals"`
+	TimeMs         string                       `json:"timeMs"`
+	Error          string                       `json:"error,omitempty"`
+	EvalMatches    []*models.EvalMatch          `json:"matches,omitempty"`
+	Logs           []*models.AlertTestResultLog `json:"logs,omitempty"`
+}
+
 func TestRule(c *gin.Context) {
 	req := &TestRuleReq{}
 	c.Bind(&req)
@@ -199,6 +210,53 @@ func TestRule(c *gin.Context) {
 	}
 
 	for _, alert := range alerts {
-		fmt.Println(alert)
+		if alert.PanelId == req.PanelID {
+			rule, err := NewRuleFromDBAlert(alert)
+			if err != nil {
+				logger.Warn("get alert rule error", "error", err)
+				c.JSON(400, common.ResponseI18nError(i18n.BadRequestData))
+				return
+			}
+
+			res := testAlertRule(rule)
+
+			resp := &AlertTestResult{
+				Firing:         res.Firing,
+				ConditionEvals: res.ConditionEvals,
+				State:          res.Rule.State,
+			}
+
+			if res.Error != nil {
+				resp.Error = res.Error.Error()
+			}
+
+			for _, log := range res.Logs {
+				resp.Logs = append(resp.Logs, &models.AlertTestResultLog{Message: log.Message, Data: log.Data})
+			}
+
+			for _, match := range res.EvalMatches {
+				resp.EvalMatches = append(resp.EvalMatches, &models.EvalMatch{Metric: match.Metric, Value: match.Value})
+			}
+
+			resp.TimeMs = fmt.Sprintf("%1.3fms", res.GetDurationMs())
+
+			c.JSON(200, common.ResponseSuccess(resp))
+			return
+		}
 	}
+
+	c.JSON(400, common.ResponseI18nError(i18n.BadRequestData))
+}
+
+func testAlertRule(rule *models.Rule) *models.EvalContext {
+	handler := NewEvalHandler()
+
+	context := models.NewEvalContext(context.Background(), rule, logger)
+	context.IsTestRun = true
+	context.IsDebug = true
+
+	handler.Eval(context)
+	context.Rule.State = context.GetNewState()
+
+	return context
 }

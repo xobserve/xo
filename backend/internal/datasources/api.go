@@ -1,23 +1,26 @@
 package datasources
 
 import (
+	"encoding/json"
 	"strconv"
 	"strings"
 
-	"github.com/datadefeat/datav/backend/internal/acl"
-	"github.com/datadefeat/datav/backend/internal/plugins"
-	"github.com/datadefeat/datav/backend/internal/session"
-	"github.com/datadefeat/datav/backend/pkg/common"
-	"github.com/datadefeat/datav/backend/pkg/i18n"
-	"github.com/datadefeat/datav/backend/pkg/models"
+	"github.com/codecc-com/datav/backend/pkg/utils/securejson"
+
+	"github.com/codecc-com/datav/backend/internal/acl"
+	"github.com/codecc-com/datav/backend/internal/plugins"
+	"github.com/codecc-com/datav/backend/internal/session"
+	"github.com/codecc-com/datav/backend/pkg/common"
+	"github.com/codecc-com/datav/backend/pkg/i18n"
+	"github.com/codecc-com/datav/backend/pkg/models"
 
 	// "fmt"
 
 	"time"
 
-	"github.com/datadefeat/datav/backend/pkg/db"
-	"github.com/datadefeat/datav/backend/pkg/utils"
-	"github.com/datadefeat/datav/backend/pkg/utils/simplejson"
+	"github.com/codecc-com/datav/backend/pkg/db"
+	"github.com/codecc-com/datav/backend/pkg/utils"
+	"github.com/codecc-com/datav/backend/pkg/utils/simplejson"
 	"github.com/gin-gonic/gin"
 )
 
@@ -39,15 +42,14 @@ func NewDataSource(c *gin.Context) {
 		ds.JsonData = simplejson.New()
 	}
 	if ds.SecureJsonData == nil {
-		ds.SecureJsonData = simplejson.New()
+		ds.SecureJsonData = make(securejson.SecureJsonData)
 	}
 
 	jsonData, err := ds.JsonData.Encode()
-	secureJsonData, err := ds.SecureJsonData.Encode()
+	secureJsonData, err := json.Marshal(ds.SecureJsonData)
 
-	sjMap, _ := ds.SecureJsonData.Map()
-	for k, v := range sjMap {
-		v1 := v.(string)
+	for k, v := range ds.SecureJsonData {
+		v1 := string(v)
 		if strings.TrimSpace(v1) == "" || strings.TrimSpace(k) == "" {
 			c.JSON(403, common.ResponseI18nError("error.customHttpHeaderEmpty"))
 			return
@@ -117,10 +119,9 @@ func EditDataSource(c *gin.Context) {
 
 	ds.Updated = time.Now()
 	jsonData, err := ds.JsonData.Encode()
-	secureJsonData, err := ds.SecureJsonData.Encode()
-	sjMap, _ := ds.SecureJsonData.Map()
-	for k, v := range sjMap {
-		v1 := v.(string)
+	secureJsonData, err := json.Marshal(ds.SecureJsonData)
+	for k, v := range ds.SecureJsonData {
+		v1 := string(v)
 		if strings.TrimSpace(v1) == "" || strings.TrimSpace(k) == "" {
 			c.JSON(403, common.ResponseI18nError("error.customHttpHeaderEmpty"))
 			return

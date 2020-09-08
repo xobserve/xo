@@ -1,8 +1,8 @@
 package notifiers
 
 import (
-	"github.com/datadefeat/datav/backend/pkg/log"
-	"github.com/datadefeat/datav/backend/pkg/models"
+	"github.com/codecc-com/datav/backend/pkg/log"
+	"github.com/codecc-com/datav/backend/pkg/models"
 )
 
 var logger = log.RootLogger.New("logger","notifiers")

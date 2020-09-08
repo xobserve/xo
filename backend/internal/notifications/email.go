@@ -1,8 +1,8 @@
 package notifications
 
 import (
-	"github.com/datadefeat/datav/backend/pkg/config"
-	"github.com/datadefeat/datav/backend/pkg/models"
+	"github.com/codecc-com/datav/backend/pkg/config"
+	"github.com/codecc-com/datav/backend/pkg/models"
 	"bytes"
 	"html/template"
 	"fmt"

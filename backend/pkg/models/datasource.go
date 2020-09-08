@@ -1,14 +1,17 @@
 package models
 
 import (
+	"encoding/json"
 	"errors"
 	"fmt"
 	"strings"
 
+	"github.com/codecc-com/datav/backend/pkg/utils/securejson"
+
 	"time"
 
-	"github.com/datadefeat/datav/backend/pkg/db"
-	"github.com/datadefeat/datav/backend/pkg/utils/simplejson"
+	"github.com/codecc-com/datav/backend/pkg/db"
+	"github.com/codecc-com/datav/backend/pkg/utils/simplejson"
 )
 
 var (
@@ -41,9 +44,9 @@ type DataSource struct {
 	BasicAuthPassword string `json:"basicAuthPassword"`
 	WithCredentials   bool   `json:"withCredentials"`
 
-	JsonData         *simplejson.Json `json:"jsonData,omitempty"`
-	SecureJsonData   *simplejson.Json `json:"secureJsonData,omitempty"`
-	SecureJsonFields map[string]bool  `json:"secureJsonFields"`
+	JsonData         *simplejson.Json          `json:"jsonData,omitempty"`
+	SecureJsonData   securejson.SecureJsonData `json:"secureJsonData,omitempty"`
+	SecureJsonFields map[string]bool           `json:"secureJsonFields"`
 
 	ReadOnly bool `json:"readOnly"`
 
@@ -63,6 +66,20 @@ func (slice DataSourceList) Less(i, j int) bool {
 
 func (slice DataSourceList) Swap(i, j int) {
 	slice[i], slice[j] = slice[j], slice[i]
+}
+
+// DecryptedBasicAuthPassword returns data source basic auth password in plain text. It uses either deprecated
+// basic_auth_password field or encrypted secure_json_data[basicAuthPassword] variable.
+func (ds *DataSource) DecryptedBasicAuthPassword() string {
+	return ds.decryptedValue("basicAuthPassword", ds.BasicAuthPassword)
+}
+
+// decryptedValue returns decrypted value from secureJsonData
+func (ds *DataSource) decryptedValue(field string, fallback string) string {
+	if value, ok := ds.DecryptedValue(field); ok {
+		return value
+	}
+	return fallback
 }
 
 func QueryDataSource(id int64, name string) (*DataSource, error) {
@@ -95,15 +112,14 @@ func queryDataSource(q string) (*DataSource, error) {
 		return nil, err
 	}
 
-	secureJsonData := simplejson.New()
-	err = secureJsonData.UnmarshalJSON(rawSecureJson)
+	secureJsonData := make(securejson.SecureJsonData)
+	err = json.Unmarshal(rawSecureJson, &secureJsonData)
 	if err != nil {
 		return nil, err
 	}
 
-	sjMap, _ := secureJsonData.Map()
 	secureJsonFields := make(map[string]bool)
-	for k := range sjMap {
+	for k := range secureJsonData {
 		secureJsonFields[k] = true
 	}
 

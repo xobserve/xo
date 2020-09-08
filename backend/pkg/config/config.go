@@ -4,8 +4,9 @@ import (
 	"io/ioutil"
 	"log"
 
-	"gopkg.in/yaml.v2"
 	"path/filepath"
+
+	"gopkg.in/yaml.v2"
 )
 
 // Config ...
@@ -14,8 +15,8 @@ type Config struct {
 		Version        string
 		LogLevel       string
 		StaticRootPath string `yaml:"static_root_path"`
-		HomePath string `yaml:"home_path"`
-		UIRootURL string `yaml:"ui_root_url"`
+		HomePath       string `yaml:"home_path"`
+		UIRootURL      string `yaml:"ui_root_url"`
 	}
 
 	Plugins struct {
@@ -32,15 +33,19 @@ type Config struct {
 	}
 
 	SMTP struct {
-		Enabled bool
-		Host string 
-		User string 
-		Password string 
-		CertFile string `yaml:"cert_file"`
-		KeyFile string `yaml:"key_file"`
-		skipVerify bool `yaml:"skip_verify"`
-		FromAddress string   `yaml:"from_address"`
-		FromName string  `yaml:"from_name"`
+		Enabled     bool
+		Host        string
+		User        string
+		Password    string
+		CertFile    string `yaml:"cert_file"`
+		KeyFile     string `yaml:"key_file"`
+		skipVerify  bool   `yaml:"skip_verify"`
+		FromAddress string `yaml:"from_address"`
+		FromName    string `yaml:"from_name"`
+	}
+
+	Security struct {
+		SecretKey string `yaml:"secret_key"`
 	}
 }
 
@@ -61,11 +66,10 @@ func Init(path string) {
 	}
 
 	if conf.Common.HomePath == "" {
-		conf.Common.HomePath,_ = filepath.Abs(".")
-		conf.Plugins.ExternalPluginsPath = makeAbsolute(conf.Plugins.ExternalPluginsPath,conf.Common.HomePath)
+		conf.Common.HomePath, _ = filepath.Abs(".")
+		conf.Plugins.ExternalPluginsPath = makeAbsolute(conf.Plugins.ExternalPluginsPath, conf.Common.HomePath)
 	}
 
-	
 	Data = conf
 }
 

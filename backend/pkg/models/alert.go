@@ -3,9 +3,9 @@ package models
 import (
 	"time"
 
-	"github.com/datadefeat/datav/backend/pkg/db"
-	"github.com/datadefeat/datav/backend/pkg/utils/null"
-	"github.com/datadefeat/datav/backend/pkg/utils/simplejson"
+	"github.com/codecc-com/datav/backend/pkg/db"
+	"github.com/codecc-com/datav/backend/pkg/utils/null"
+	"github.com/codecc-com/datav/backend/pkg/utils/simplejson"
 )
 
 type AlertStateType string
@@ -32,6 +32,31 @@ const (
 	ExecutionErrorSetAlerting ExecutionErrorOption = "alerting"
 	ExecutionErrorKeepState   ExecutionErrorOption = "keep_state"
 )
+
+func (s AlertStateType) IsValid() bool {
+	return s == AlertStateOK ||
+		s == AlertStateNoData ||
+		s == AlertStatePaused ||
+		s == AlertStatePending ||
+		s == AlertStateAlerting ||
+		s == AlertStateUnknown
+}
+
+func (s NoDataOption) IsValid() bool {
+	return s == NoDataSetNoData || s == NoDataSetAlerting || s == NoDataKeepState || s == NoDataSetOK
+}
+
+func (s NoDataOption) ToAlertState() AlertStateType {
+	return AlertStateType(s)
+}
+
+func (s ExecutionErrorOption) IsValid() bool {
+	return s == ExecutionErrorSetAlerting || s == ExecutionErrorKeepState
+}
+
+func (s ExecutionErrorOption) ToAlertState() AlertStateType {
+	return AlertStateType(s)
+}
 
 type AlertMetric struct {
 	Name  string     `json:"name"`
@@ -147,4 +172,55 @@ func (alert *Alert) GetTagsFromSettings() []*Tag {
 
 func (alert *Alert) ValidToSave() bool {
 	return alert.DashboardId != 0 && alert.PanelId != 0
+}
+
+// ConditionResult is the result of a condition evaluation.
+type ConditionResult struct {
+	Firing      bool
+	NoDataFound bool
+	Operator    string
+	EvalMatches []*EvalMatch
+}
+
+// Condition is responsible for evaluating an alert condition.
+type Condition interface {
+	Eval(result *EvalContext) (*ConditionResult, error)
+}
+
+// EvalMatch represents the series violating the threshold.
+type EvalMatch struct {
+	Value  null.Float        `json:"value"`
+	Metric string            `json:"metric"`
+	Tags   map[string]string `json:"tags"`
+}
+
+// ResultLogEntry represents log data for the alert evaluation.
+type ResultLogEntry struct {
+	Message string
+	Data    interface{}
+}
+
+// Rule is the in-memory version of an alert rule.
+type Rule struct {
+	ID                  int64
+	DashboardID         int64
+	PanelID             int64
+	Frequency           int64
+	Name                string
+	Message             string
+	LastStateChange     time.Time
+	For                 time.Duration
+	NoDataState         NoDataOption
+	ExecutionErrorState ExecutionErrorOption
+	State               AlertStateType
+	Conditions          []Condition
+	Notifications       []int64
+	AlertRuleTags       []*Tag
+
+	StateChanges int64
+}
+
+type AlertTestResultLog struct {
+	Message string      `json:"message"`
+	Data    interface{} `json:"data"`
 }

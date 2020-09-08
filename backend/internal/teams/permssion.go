@@ -1,8 +1,8 @@
 package teams
 
 import (
-	"github.com/datadefeat/datav/backend/pkg/models"
-	"github.com/datadefeat/datav/backend/pkg/db"
+	"github.com/codecc-com/datav/backend/pkg/models"
+	"github.com/codecc-com/datav/backend/pkg/db"
 	"time"
 )
 

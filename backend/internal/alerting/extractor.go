@@ -7,8 +7,8 @@ import (
 	"strconv"
 	"time"
 
-	"github.com/datadefeat/datav/backend/pkg/models"
-	"github.com/datadefeat/datav/backend/pkg/utils/simplejson"
+	"github.com/codecc-com/datav/backend/pkg/models"
+	"github.com/codecc-com/datav/backend/pkg/utils/simplejson"
 )
 
 // DashAlertExtractor extracts alerts from the dashboard json.
@@ -120,7 +120,6 @@ func (e *DashAlertExtractor) getAlertFromPanels(jsonWithPanels *simplejson.Json,
 			var datasource *models.DataSource
 			var err1 error
 			if dsName == "" {
-				fmt.Println("here11111")
 				datasource, err1 = models.QueryDefaultDataSource()
 			} else {
 				datasource, err1 = models.QueryDataSource(0, dsName)

@@ -2,14 +2,14 @@ package bootConfig
 
 import (
 	"database/sql"
-	"github.com/datadefeat/datav/backend/internal/session"
-	"github.com/datadefeat/datav/backend/pkg/models"
-	"github.com/datadefeat/datav/backend/internal/sidemenu"
-	"github.com/datadefeat/datav/backend/internal/datasources"
+	"github.com/codecc-com/datav/backend/internal/session"
+	"github.com/codecc-com/datav/backend/pkg/models"
+	"github.com/codecc-com/datav/backend/internal/sidemenu"
+	"github.com/codecc-com/datav/backend/internal/datasources"
 	// "fmt"
-	"github.com/datadefeat/datav/backend/internal/plugins" 
-	"github.com/datadefeat/datav/backend/pkg/common"
-	"github.com/datadefeat/datav/backend/pkg/log"
+	"github.com/codecc-com/datav/backend/internal/plugins" 
+	"github.com/codecc-com/datav/backend/pkg/common"
+	"github.com/codecc-com/datav/backend/pkg/log"
 	"github.com/gin-gonic/gin"
 	
 	"strconv"

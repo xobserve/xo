@@ -1,7 +1,7 @@
 package search
 
 import (
-	"github.com/datadefeat/datav/backend/pkg/log"
+	"github.com/codecc-com/datav/backend/pkg/log"
 )
 
 var logger = log.RootLogger.New("logger", "search")

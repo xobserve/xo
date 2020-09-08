@@ -1,9 +1,9 @@
 package tsdb
 
 import (
-	"github.com/datadefeat/datav/backend/pkg/models"
 	"context"
 
+	"github.com/codecc-com/datav/backend/pkg/models"
 )
 
 type HandleRequestFunc func(ctx context.Context, dsInfo *models.DataSource, req *TsdbQuery) (*Response, error)

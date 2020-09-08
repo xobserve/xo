@@ -21,7 +21,7 @@ func NewFakeTimeRange(from, to string, now time.Time) *TimeRange {
 		From: from,
 		To:   to,
 		now:  now,
-	} 
+	}
 }
 
 type TimeRange struct {
@@ -102,8 +102,8 @@ func parse(s string, now time.Time, withRoundUp bool, location *time.Location) (
 
 	diff, err := time.ParseDuration("-" + s)
 	if err != nil {
-		options := []func(*datemath.Options){ 
-			datemath.WithNow(now), 
+		options := []func(*datemath.Options){
+			datemath.WithNow(now),
 			datemath.WithRoundUp(withRoundUp),
 		}
 		if location != nil {

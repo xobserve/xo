@@ -4,16 +4,16 @@ import (
 	// "fmt"
 	"time"
 
-	"github.com/datadefeat/datav/backend/internal/acl"
-	"github.com/datadefeat/datav/backend/internal/dashboard"
-	"github.com/datadefeat/datav/backend/internal/session"
-	"github.com/datadefeat/datav/backend/pkg/db"
+	"github.com/codecc-com/datav/backend/internal/acl"
+	"github.com/codecc-com/datav/backend/internal/dashboard"
+	"github.com/codecc-com/datav/backend/internal/session"
+	"github.com/codecc-com/datav/backend/pkg/db"
 
 	"strconv"
 
-	"github.com/datadefeat/datav/backend/pkg/common"
-	"github.com/datadefeat/datav/backend/pkg/i18n"
-	"github.com/datadefeat/datav/backend/pkg/models"
+	"github.com/codecc-com/datav/backend/pkg/common"
+	"github.com/codecc-com/datav/backend/pkg/i18n"
+	"github.com/codecc-com/datav/backend/pkg/models"
 	"github.com/gin-gonic/gin"
 )
 

@@ -4,7 +4,7 @@ import (
 	"net/url"
 	"path"
 	"strings"
-	"github.com/datadefeat/datav/backend/pkg/config"
+	"github.com/codecc-com/datav/backend/pkg/config"
 )
 
 type FrontendPluginBase struct {

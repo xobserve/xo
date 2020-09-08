@@ -2,32 +2,12 @@ package alerting
 
 import (
 	"fmt"
-	"time"
 
-	"github.com/datadefeat/datav/backend/pkg/models"
+	"github.com/codecc-com/datav/backend/internal/alerting/conditions"
+	"github.com/codecc-com/datav/backend/pkg/models"
 
-	"github.com/datadefeat/datav/backend/pkg/utils/simplejson"
+	"github.com/codecc-com/datav/backend/pkg/utils/simplejson"
 )
-
-// Rule is the in-memory version of an alert rule.
-type Rule struct {
-	ID                  int64
-	DashboardID         int64
-	PanelID             int64
-	Frequency           int64
-	Name                string
-	Message             string
-	LastStateChange     time.Time
-	For                 time.Duration
-	NoDataState         models.NoDataOption
-	ExecutionErrorState models.ExecutionErrorOption
-	State               models.AlertStateType
-	Conditions          []Condition
-	Notifications       []int64
-	AlertRuleTags       []*models.Tag
-
-	StateChanges int64
-}
 
 // ValidationError is a typed error with meta data
 // about the validation error.
@@ -62,8 +42,8 @@ func (e ValidationError) Error() string {
 
 // NewRuleFromDBAlert maps a db version of
 // alert to an in-memory version.
-func NewRuleFromDBAlert(ruleDef *models.Alert) (*Rule, error) {
-	model := &Rule{}
+func NewRuleFromDBAlert(ruleDef *models.Alert) (*models.Rule, error) {
+	model := &models.Rule{}
 	model.ID = ruleDef.Id
 	model.DashboardID = ruleDef.DashboardId
 	model.PanelID = ruleDef.PanelId
@@ -96,7 +76,7 @@ func NewRuleFromDBAlert(ruleDef *models.Alert) (*Rule, error) {
 	for index, condition := range ruleDef.Settings.Get("conditions").MustArray() {
 		conditionModel := simplejson.NewFromAny(condition)
 		conditionType := conditionModel.Get("type").MustString()
-		factory, exist := conditionFactories[conditionType]
+		factory, exist := conditions.Factories[conditionType]
 		if !exist {
 			return nil, ValidationError{Reason: "Unknown alert condition: " + conditionType, DashboardID: model.DashboardID, AlertID: model.ID, PanelID: model.PanelID}
 		}
@@ -112,14 +92,4 @@ func NewRuleFromDBAlert(ruleDef *models.Alert) (*Rule, error) {
 	}
 
 	return model, nil
-}
-
-// ConditionFactory is the function signature for creating `Conditions`.
-type ConditionFactory func(model *simplejson.Json, index int) (Condition, error)
-
-var conditionFactories = make(map[string]ConditionFactory)
-
-// RegisterCondition adds support for alerting conditions.
-func RegisterCondition(typeName string, factory ConditionFactory) {
-	conditionFactories[typeName] = factory
 }

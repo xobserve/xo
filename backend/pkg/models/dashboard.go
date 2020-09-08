@@ -3,11 +3,11 @@ package models
 import (
 	"encoding/json"
 	"database/sql"
-	"github.com/datadefeat/datav/backend/pkg/db"
-	"github.com/datadefeat/datav/backend/pkg/utils"
+	"github.com/codecc-com/datav/backend/pkg/db"
+	"github.com/codecc-com/datav/backend/pkg/utils"
 	"fmt"
 	"time"
-	"github.com/datadefeat/datav/backend/pkg/utils/simplejson"
+	"github.com/codecc-com/datav/backend/pkg/utils/simplejson"
 )
 
 type DashboardRef struct {

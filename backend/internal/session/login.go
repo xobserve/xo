@@ -1,16 +1,16 @@
 package session
 
 import (
-	"github.com/datadefeat/datav/backend/pkg/utils"
-	"github.com/datadefeat/datav/backend/pkg/models"
+	"github.com/codecc-com/datav/backend/pkg/utils"
+	"github.com/codecc-com/datav/backend/pkg/models"
 	// "fmt"
 	"net/http"
 	"strconv"
 	"time"
 
-	"github.com/datadefeat/datav/backend/pkg/common"
-	"github.com/datadefeat/datav/backend/pkg/db"
-	"github.com/datadefeat/datav/backend/pkg/i18n"
+	"github.com/codecc-com/datav/backend/pkg/common"
+	"github.com/codecc-com/datav/backend/pkg/db"
+	"github.com/codecc-com/datav/backend/pkg/i18n"
 	"github.com/gin-gonic/gin"
 )
 

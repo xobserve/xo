@@ -1,6 +1,6 @@
 package plugins
 
-import "github.com/datadefeat/datav/backend/pkg/models"
+import "github.com/codecc-com/datav/backend/pkg/models"
 
 type PluginRoute struct {
 	Path         string                `json:"path"`

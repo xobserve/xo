@@ -1,9 +1,9 @@
 package annotation
 
 import (
-	"github.com/datadefeat/datav/backend/pkg/db"
-	"github.com/datadefeat/datav/backend/pkg/models"
-	"github.com/datadefeat/datav/backend/pkg/log"
+	"github.com/codecc-com/datav/backend/pkg/db"
+	"github.com/codecc-com/datav/backend/pkg/models"
+	"github.com/codecc-com/datav/backend/pkg/log"
 )
 
 var logger = log.RootLogger.New("logger","bootConfig")

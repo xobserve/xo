@@ -1,11 +1,11 @@
 package plugins
 
 import (
-	"github.com/datadefeat/datav/backend/internal/registry"
-	"github.com/datadefeat/datav/backend/pkg/log"
-	"github.com/datadefeat/datav/backend/pkg/config"
-	"github.com/datadefeat/datav/backend/pkg/utils/errutil"
-	"github.com/datadefeat/datav/backend/pkg/utils"
+	"github.com/codecc-com/datav/backend/internal/registry"
+	"github.com/codecc-com/datav/backend/pkg/log"
+	"github.com/codecc-com/datav/backend/pkg/config"
+	"github.com/codecc-com/datav/backend/pkg/utils/errutil"
+	"github.com/codecc-com/datav/backend/pkg/utils"
 	"path"
 	"os"
 	"path/filepath"

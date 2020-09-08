@@ -16,9 +16,9 @@ limitations under the License.
 package cmd
  
 import (
-	"github.com/datadefeat/datav/backend/cmd/sqls"
-	"github.com/datadefeat/datav/backend/pkg/config"
-	"github.com/datadefeat/datav/backend/pkg/log"
+	"github.com/codecc-com/datav/backend/cmd/sqls"
+	"github.com/codecc-com/datav/backend/pkg/config"
+	"github.com/codecc-com/datav/backend/pkg/log"
 	"github.com/spf13/cobra"
 )
 

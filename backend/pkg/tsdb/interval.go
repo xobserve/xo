@@ -1,12 +1,12 @@
 package tsdb
 
 import (
-	"github.com/datadefeat/datav/backend/pkg/models"
-	"github.com/datadefeat/datav/backend/pkg/utils/simplejson"
 	"fmt"
 	"strings"
 	"time"
 
+	"github.com/codecc-com/datav/backend/pkg/models"
+	"github.com/codecc-com/datav/backend/pkg/utils/simplejson"
 )
 
 var (
@@ -47,7 +47,7 @@ func NewIntervalCalculator(opt *IntervalOptions) *intervalCalculator {
 	}
 
 	return calc
-} 
+}
 
 func (i *Interval) Milliseconds() int64 {
 	return i.Value.Nanoseconds() / int64(time.Millisecond)
