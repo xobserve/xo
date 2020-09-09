@@ -3,10 +3,10 @@ package alerting
 import (
 	"fmt"
 
-	"github.com/codecc-com/datav/backend/internal/alerting/conditions"
-	"github.com/codecc-com/datav/backend/pkg/models"
+	"github.com/CodeCreatively/datav/backend/internal/alerting/conditions"
+	"github.com/CodeCreatively/datav/backend/pkg/models"
 
-	"github.com/codecc-com/datav/backend/pkg/utils/simplejson"
+	"github.com/CodeCreatively/datav/backend/pkg/utils/simplejson"
 )
 
 // ValidationError is a typed error with meta data
@@ -34,10 +34,10 @@ func (e ValidationError) Error() string {
 	}
 
 	if e.Err != nil {
-		return fmt.Sprintf("Alert validation error: %s%s", e.Err.Error(), extraInfo)
+		return fmt.Sprintf("Alert validation error1: %s%s", e.Err.Error(), extraInfo)
 	}
 
-	return fmt.Sprintf("Alert validation error: %s", extraInfo)
+	return fmt.Sprintf("Alert validation error2: %s", extraInfo)
 }
 
 // NewRuleFromDBAlert maps a db version of
@@ -65,11 +65,8 @@ func NewRuleFromDBAlert(ruleDef *models.Alert) (*models.Rule, error) {
 
 	for _, v := range ruleDef.Settings.Get("notifications").MustArray() {
 		jsonModel := simplejson.NewFromAny(v)
-		if id, err := jsonModel.Get("id").Int64(); err == nil {
-			model.Notifications = append(model.Notifications, id)
-		} else {
-			return nil, ValidationError{Reason: "Neither id nor uid is specified in 'notifications' block, " + err.Error(), DashboardID: model.DashboardID, AlertID: model.ID, PanelID: model.PanelID}
-		}
+		id, _ := jsonModel.Int64()
+		model.Notifications = append(model.Notifications, id)
 	}
 	model.AlertRuleTags = ruleDef.GetTagsFromSettings()
 

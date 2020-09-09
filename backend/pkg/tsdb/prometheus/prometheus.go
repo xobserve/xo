@@ -7,12 +7,10 @@ import (
 	"strings"
 	"time"
 
-	"github.com/codecc-com/datav/backend/pkg/log"
-	"github.com/codecc-com/datav/backend/pkg/models"
-	"github.com/codecc-com/datav/backend/pkg/tsdb"
-	"github.com/codecc-com/datav/backend/pkg/utils/null"
-
-	"github.com/opentracing/opentracing-go"
+	"github.com/CodeCreatively/datav/backend/pkg/log"
+	"github.com/CodeCreatively/datav/backend/pkg/models"
+	"github.com/CodeCreatively/datav/backend/pkg/tsdb"
+	"github.com/CodeCreatively/datav/backend/pkg/utils/null"
 
 	"net/http"
 
@@ -106,12 +104,6 @@ func (e *PrometheusExecutor) Query(ctx context.Context, dsInfo *models.DataSourc
 		}
 
 		logger.Debug("Sending query", "start", timeRange.Start, "end", timeRange.End, "step", timeRange.Step, "query", query.Expr)
-
-		span, ctx := opentracing.StartSpanFromContext(ctx, "alerting.prometheus")
-		span.SetTag("expr", query.Expr)
-		span.SetTag("start_unixnano", query.Start.UnixNano())
-		span.SetTag("stop_unixnano", query.End.UnixNano())
-		defer span.Finish()
 
 		value, _, err := client.QueryRange(ctx, query.Expr, timeRange)
 

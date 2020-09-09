@@ -16,14 +16,14 @@ limitations under the License.
 package cmd
 
 import (
-	"github.com/codecc-com/datav/backend/cmd/sqls"
+	"github.com/CodeCreatively/datav/backend/cmd/sqls"
 	// "fmt"
 
 	"github.com/spf13/cobra"
 	"github.com/spf13/pflag"
 
-	"github.com/codecc-com/datav/backend/pkg/config"
-	"github.com/codecc-com/datav/backend/pkg/log"
+	"github.com/CodeCreatively/datav/backend/pkg/config"
+	"github.com/CodeCreatively/datav/backend/pkg/log"
 )
 
 var createFlags []string

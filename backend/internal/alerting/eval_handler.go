@@ -5,8 +5,12 @@ import (
 	"strings"
 	"time"
 
-	"github.com/codecc-com/datav/backend/pkg/models"
+	"github.com/CodeCreatively/datav/backend/pkg/models"
 )
+
+type evalHandler interface {
+	Eval(evalContext *models.EvalContext)
+}
 
 // DefaultEvalHandler is responsible for evaluating the alert rule.
 type DefaultEvalHandler struct {

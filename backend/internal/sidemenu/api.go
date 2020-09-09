@@ -2,16 +2,16 @@ package sidemenu
 
 import (
 	"database/sql"
-	"github.com/codecc-com/datav/backend/internal/session"
+	"github.com/CodeCreatively/datav/backend/internal/session"
 	// "fmt"
 	"time"
 	"encoding/json"
-	"github.com/codecc-com/datav/backend/pkg/db"
-	"github.com/codecc-com/datav/backend/internal/acl"
-	"github.com/codecc-com/datav/backend/pkg/models"
-	"github.com/codecc-com/datav/backend/internal/invasion"
-	"github.com/codecc-com/datav/backend/pkg/i18n"
-	"github.com/codecc-com/datav/backend/pkg/common"
+	"github.com/CodeCreatively/datav/backend/pkg/db"
+	"github.com/CodeCreatively/datav/backend/internal/acl"
+	"github.com/CodeCreatively/datav/backend/pkg/models"
+	"github.com/CodeCreatively/datav/backend/internal/invasion"
+	"github.com/CodeCreatively/datav/backend/pkg/i18n"
+	"github.com/CodeCreatively/datav/backend/pkg/common"
 	"github.com/gin-gonic/gin"
 	"strconv"
 )

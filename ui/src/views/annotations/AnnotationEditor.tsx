@@ -1,12 +1,11 @@
 import React,{useState } from 'react'
 import _ from 'lodash'
 
-import { dateTime } from 'src/packages/datav-core'
+import { dateTime, currentLang ,localeData} from 'src/packages/datav-core'
 import { AnnotationEvent } from 'src/packages/datav-core'
 import { DashboardModel } from 'src/views/dashboard/model/DashboardModel'
 import { annotationsSrv } from 'src/core/services/annotations'
 import { Button,notification } from 'antd'
-import { useIntl } from 'react-intl'
 
 interface Props {
     rawEvent: AnnotationEvent
@@ -16,7 +15,6 @@ interface Props {
 
 
 const AnnotationEditor = (props: Props) => {
-    const intl = useIntl()
     const [text, setText] = useState(props.rawEvent.text)
 
     let event: AnnotationEvent = {};
@@ -50,14 +48,14 @@ const AnnotationEditor = (props: Props) => {
            await annotationsSrv.updateAnnotationEvent(saveModel)
            notification['success']({
             message: "Success",
-            description: intl.formatMessage({id: "info.targetUpdated"}),
+            description: localeData[currentLang]['info.targetUpdated'],
             duration: 5
           });
         } else {
            await annotationsSrv.saveAnnotationEvent(saveModel)
            notification['success']({
             message: "Success",
-            description: intl.formatMessage({id: "info.targetCreated"}),
+            description: localeData[currentLang]['info.targetCreated'],
             duration: 5
           });
         }
@@ -74,7 +72,7 @@ const AnnotationEditor = (props: Props) => {
         await annotationsSrv.getAnnotations()
         notification['success']({
             message: "Success",
-            description: intl.formatMessage({id: "info.targetDeleted"}),
+            description: localeData[currentLang]['info.targetDeleted'],
             duration: 5
           });
 

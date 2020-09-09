@@ -5,8 +5,8 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/codecc-com/datav/backend/pkg/config"
-	"github.com/codecc-com/datav/backend/pkg/models"
+	"github.com/CodeCreatively/datav/backend/pkg/config"
+	"github.com/CodeCreatively/datav/backend/pkg/models"
 )
 
 var (

@@ -47,6 +47,15 @@ type Config struct {
 	Security struct {
 		SecretKey string `yaml:"secret_key"`
 	}
+
+	Alerting struct {
+		Enabled             bool
+		ExecuteAlerts       bool  `yaml:"execute_alerts"`
+		EvaluationTimeout   int   `yaml:"evaluation_timeout_seconds"`
+		NotificationTimeout int   `yaml:"notification_timeout_seconds"`
+		MaxAttempts         int   `yaml:"max_attempts"`
+		MinInterval         int64 `yaml:"min_interval_seconds"`
+	}
 }
 
 // Data ...

@@ -3,8 +3,8 @@ package server
 import (
 	"strconv"
 
-	"github.com/codecc-com/datav/backend/pkg/i18n"
-	"github.com/codecc-com/datav/backend/pkg/models"
+	"github.com/CodeCreatively/datav/backend/pkg/i18n"
+	"github.com/CodeCreatively/datav/backend/pkg/models"
 
 	// "time"
 	"bytes"
@@ -13,7 +13,7 @@ import (
 	"net/http"
 	"net/url"
 
-	"github.com/codecc-com/datav/backend/pkg/common"
+	"github.com/CodeCreatively/datav/backend/pkg/common"
 
 	"github.com/gin-gonic/gin"
 )

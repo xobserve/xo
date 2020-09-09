@@ -1,7 +1,7 @@
 package teams
 
 import (
-	"github.com/codecc-com/datav/backend/pkg/log"
+	"github.com/CodeCreatively/datav/backend/pkg/log"
 )
 
 var logger = log.RootLogger.New("logger", "teams")

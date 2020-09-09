@@ -2,18 +2,16 @@ package annotation
 
 import (
 	// "fmt"
-	"time"
 
-	"github.com/codecc-com/datav/backend/internal/acl"
-	"github.com/codecc-com/datav/backend/internal/dashboard"
-	"github.com/codecc-com/datav/backend/internal/session"
-	"github.com/codecc-com/datav/backend/pkg/db"
+	"github.com/CodeCreatively/datav/backend/internal/acl"
+	"github.com/CodeCreatively/datav/backend/internal/dashboard"
+	"github.com/CodeCreatively/datav/backend/internal/session"
 
 	"strconv"
 
-	"github.com/codecc-com/datav/backend/pkg/common"
-	"github.com/codecc-com/datav/backend/pkg/i18n"
-	"github.com/codecc-com/datav/backend/pkg/models"
+	"github.com/CodeCreatively/datav/backend/pkg/common"
+	"github.com/CodeCreatively/datav/backend/pkg/i18n"
+	"github.com/CodeCreatively/datav/backend/pkg/models"
 	"github.com/gin-gonic/gin"
 )
 
@@ -32,25 +30,17 @@ func GetAnnotations(c *gin.Context) {
 		c.JSON(400, common.ResponseI18nError(i18n.BadRequestData))
 		return
 	}
+	annRepo := models.GetAnnotationRep()
+	ans, err := annRepo.Find(&models.AnnotationQuery{
+		DashboardId: dashId,
+		From:        from,
+		To:          to,
+	})
 
-	ans := make([]*models.Annotation,0)
-	rows, err := db.SQL.Query("SELECT id,panel_id,text,time,time_end FROM annotation WHERE dashboard_id=? and time >= ? and time <= ?",
-		dashId, from, to)
 	if err != nil {
-		logger.Warn("query annotations error", "error", err)
+		logger.Warn("find annotations  error", "error", err)
 		c.JSON(500, common.ResponseInternalError())
-
 		return
-	}
-
-	for rows.Next() {
-		an := &models.Annotation{}
-		err := rows.Scan(&an.Id, &an.PanelId, &an.Text, &an.Time, &an.TimeEnd)
-		if err != nil {
-			logger.Warn("query annotations scan error", "error", err)
-			continue
-		}
-		ans= append(ans,an)
 	}
 
 	c.JSON(200, common.ResponseSuccess(ans))
@@ -76,10 +66,10 @@ func CreateAnnotation(c *gin.Context) {
 		c.JSON(403, common.ResponseI18nError(i18n.NoPermission))
 		return
 	}
+	an.CreatedBy = session.CurrentUserId(c)
 
-	now := time.Now()
-	_, err = db.SQL.Exec("INSERT INTO annotation (dashboard_id, panel_id, text, time, time_end, created_by, created,updated) VALUES (?,?,?,?,?,?,?,?)",
-		an.DashboardId, an.PanelId, an.Text, an.Time, an.TimeEnd, session.CurrentUserId(c), now, now)
+	annRepo := models.GetAnnotationRep()
+	err = annRepo.Create(an)
 	if err != nil {
 		logger.Warn("create annotation  error", "error", err)
 		c.JSON(500, common.ResponseInternalError())
@@ -89,9 +79,8 @@ func CreateAnnotation(c *gin.Context) {
 	c.JSON(200, common.ResponseSuccess(nil))
 }
 
-
 func UpdateAnnotation(c *gin.Context) {
-	anId,_ := strconv.ParseInt(c.Param("id"),10,64)
+	anId, _ := strconv.ParseInt(c.Param("id"), 10, 64)
 	an := &models.Annotation{}
 	c.Bind(&an)
 
@@ -104,13 +93,13 @@ func UpdateAnnotation(c *gin.Context) {
 		return
 	}
 
-	if !canManageAnnotation(anId,c) {
+	if !canManageAnnotation(anId, c) {
 		c.JSON(403, common.ResponseI18nError(i18n.NoPermission))
 		return
 	}
 
-	now := time.Now()
-	_, err := db.SQL.Exec("UPDATE annotation SET text=?, updated=? WHERE id=?",an.Text,now,an.Id)
+	annRepo := models.GetAnnotationRep()
+	err := annRepo.Update(an)
 	if err != nil {
 		logger.Warn("update annotation  error", "error", err)
 		c.JSON(500, common.ResponseInternalError())
@@ -121,19 +110,20 @@ func UpdateAnnotation(c *gin.Context) {
 }
 
 func DeleteAnnotation(c *gin.Context) {
-	anId,_ := strconv.ParseInt(c.Param("id"),10,64)
+	anId, _ := strconv.ParseInt(c.Param("id"), 10, 64)
 
 	if anId == 0 {
 		c.JSON(400, common.ResponseI18nError(i18n.BadRequestData))
 		return
 	}
 
-	if !canManageAnnotation(anId,c) {
+	if !canManageAnnotation(anId, c) {
 		c.JSON(403, common.ResponseI18nError(i18n.NoPermission))
 		return
 	}
 
-	_, err := db.SQL.Exec("DELETE FROM annotation WHERE id=?",anId)
+	annRepo := models.GetAnnotationRep()
+	err := annRepo.Delete(anId)
 	if err != nil {
 		logger.Warn("delete annotation  error", "error", err)
 		c.JSON(500, common.ResponseInternalError())
@@ -143,26 +133,24 @@ func DeleteAnnotation(c *gin.Context) {
 	c.JSON(200, common.ResponseSuccess(nil))
 }
 
-
-func canManageAnnotation(anId int64,c *gin.Context) bool {
-	an,err := QueryAnnotation(anId)
+func canManageAnnotation(anId int64, c *gin.Context) bool {
+	an, err := QueryAnnotation(anId)
 	if err != nil {
-		logger.Warn("query annotation error","error",err,"annotation_id",anId)
+		logger.Warn("query annotation error", "error", err, "annotation_id", anId)
 		return false
 	}
 
-	
 	if an.CreatedBy == session.CurrentUserId(c) {
 		return true
 	}
 
-	meta,err := dashboard.QueryDashboardMeta(an.DashboardId)
+	meta, err := dashboard.QueryDashboardMeta(an.DashboardId)
 	if err != nil {
-		logger.Warn("query dashboard error","error",err,"dash_id",an.DashboardId)
+		logger.Warn("query dashboard error", "error", err, "dash_id", an.DashboardId)
 		return false
 	}
 
-	if acl.CanEditDashboard(an.DashboardId,meta.OwnedBy,c) {
+	if acl.CanEditDashboard(an.DashboardId, meta.OwnedBy, c) {
 		return true
 	}
 

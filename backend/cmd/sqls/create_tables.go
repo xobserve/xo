@@ -1,29 +1,30 @@
 package sqls
 
 import (
-	"encoding/json"
-	"github.com/codecc-com/datav/backend/internal/teams"
-	"github.com/codecc-com/datav/backend/pkg/utils"
-	"time"
-	"fmt"
-	"github.com/codecc-com/datav/backend/pkg/models"
-	"github.com/codecc-com/datav/backend/pkg/db"
 	"database/sql"
-	"github.com/codecc-com/datav/backend/pkg/log"
+	"encoding/json"
+	"fmt"
+	"time"
+
+	"github.com/CodeCreatively/datav/backend/internal/teams"
+	"github.com/CodeCreatively/datav/backend/pkg/db"
+	"github.com/CodeCreatively/datav/backend/pkg/log"
+	"github.com/CodeCreatively/datav/backend/pkg/models"
+	"github.com/CodeCreatively/datav/backend/pkg/utils"
 )
 
-var adminSalt,adminPW string 
+var adminSalt, adminPW string
 
 func init() {
-	salt,err  := utils.GetRandomString(10)
+	salt, err := utils.GetRandomString(10)
 	if err != nil {
 		panic(err)
 	}
 
 	adminSalt = salt
 
-	pw,err := utils.EncodePassword("admin",salt)
-	if (err != nil) {
+	pw, err := utils.EncodePassword("admin", salt)
+	if err != nil {
 		panic(err)
 	}
 
@@ -33,7 +34,7 @@ func init() {
 func openSql() {
 	d, err := sql.Open("sqlite3", "./datav.db")
 	if err != nil {
-		log.RootLogger.Crit("open sqlite error", "error:",err)
+		log.RootLogger.Crit("open sqlite error", "error:", err)
 		panic(err)
 	}
 	db.SQL = d
@@ -45,31 +46,31 @@ func CreateTables() {
 	for _, q := range CreateTableSqls {
 		_, err := db.SQL.Exec(q)
 		if err != nil {
-			log.RootLogger.Crit("sqlite create table error", "error:",err, "sql:", q)
+			log.RootLogger.Crit("sqlite create table error", "error:", err, "sql:", q)
 			panic(err)
 		}
 	}
-	
+
 	now := time.Now()
 	// insert init data
-	_,err := db.SQL.Exec(`INSERT INTO user (id,username,password,salt,email,sidemenu,created,updated) VALUES (?,?,?,?,?,?,?,?)`,
-		models.SuperAdminId,models.SuperAdminUsername,adminPW,adminSalt,models.SuperAdminUsername+"@localhost",models.DefaultMenuId,now,now)
+	_, err := db.SQL.Exec(`INSERT INTO user (id,username,password,salt,email,sidemenu,created,updated) VALUES (?,?,?,?,?,?,?,?)`,
+		models.SuperAdminId, models.SuperAdminUsername, adminPW, adminSalt, models.SuperAdminUsername+"@localhost", models.DefaultMenuId, now, now)
 	if err != nil {
-		log.RootLogger.Crit("init super admin error","error:",err)
+		log.RootLogger.Crit("init super admin error", "error:", err)
 		panic(err)
 	}
 
-	_,err = db.SQL.Exec(`INSERT INTO team (id,name,created_by,created,updated) VALUES (?,?,?,?,?)`,
-		models.GlobalTeamId,models.GlobalTeamName,models.SuperAdminId,now,now)
+	_, err = db.SQL.Exec(`INSERT INTO team (id,name,created_by,created,updated) VALUES (?,?,?,?,?)`,
+		models.GlobalTeamId, models.GlobalTeamName, models.SuperAdminId, now, now)
 	if err != nil {
-		log.RootLogger.Crit("init global team error","error:",err)
+		log.RootLogger.Crit("init global team error", "error:", err)
 		panic(err)
 	}
 
-	_,err = db.SQL.Exec(`INSERT INTO team_member (team_id,user_id,role,created,updated) VALUES (?,?,?,?,?)`,
-		models.GlobalTeamId,models.SuperAdminId,models.ROLE_ADMIN,now,now)
+	_, err = db.SQL.Exec(`INSERT INTO team_member (team_id,user_id,role,created,updated) VALUES (?,?,?,?,?)`,
+		models.GlobalTeamId, models.SuperAdminId, models.ROLE_ADMIN, now, now)
 	if err != nil {
-		log.RootLogger.Crit("init global team member error","error:",err)
+		log.RootLogger.Crit("init global team member error", "error:", err)
 		panic(err)
 	}
 
@@ -77,81 +78,80 @@ func CreateTables() {
 	teams.InitTeamPermission(models.GlobalTeamId)
 
 	// insert default sidemenu
-	menu := []map[string]string {
+	menu := []map[string]string{
 		{
-			"id": "home",
-			"url": "/dashboard",
+			"id":    "home",
+			"url":   "/dashboard",
 			"title": "Home Dashboard",
-			"icon": "home-alt",
+			"icon":  "home-alt",
 		},
 	}
 	menuStr, err := json.Marshal(menu)
 	if err != nil {
-		log.RootLogger.Crit("json encode default menu error ","error:",err)
+		log.RootLogger.Crit("json encode default menu error ", "error:", err)
 		panic(err)
 	}
 
-	_,err = db.SQL.Exec(`INSERT INTO sidemenu (id,team_id,is_public,desc,data,created_by,created,updated) VALUES (?,?,?,?,?,?,?,?)`,
-		models.DefaultMenuId,models.GlobalTeamId, true, models.DefaultMenuDesc, menuStr,models.SuperAdminId,now,now)
+	_, err = db.SQL.Exec(`INSERT INTO sidemenu (id,team_id,is_public,desc,data,created_by,created,updated) VALUES (?,?,?,?,?,?,?,?)`,
+		models.DefaultMenuId, models.GlobalTeamId, true, models.DefaultMenuDesc, menuStr, models.SuperAdminId, now, now)
 	if err != nil {
-		log.RootLogger.Crit("init default side menu  error","error:",err)
+		log.RootLogger.Crit("init default side menu  error", "error:", err)
 		panic(err)
 	}
 
-	_,err = db.SQL.Exec(`INSERT INTO dashboard (id,uid,title,version,created_by,folder_id,data,created,updated) VALUES (?,?,?,?,?,?,?,?,?)`,
-	-1,"-1","global variables",1,1,-1,`{"annotations":{"list":[]},"editable":true,"id":-1,"uid":"-1","links":[],"panels":[],"schemaVersion":0,"tags":[],"templating":{"list":[]},"title":"global variables","version":0}`,now,now)
+	_, err = db.SQL.Exec(`INSERT INTO dashboard (id,uid,title,version,created_by,folder_id,data,created,updated) VALUES (?,?,?,?,?,?,?,?,?)`,
+		-1, "-1", "global variables", 1, 1, -1, `{"annotations":{"list":[]},"editable":true,"id":-1,"uid":"-1","links":[],"panels":[],"schemaVersion":0,"tags":[],"templating":{"list":[]},"title":"global variables","version":0}`, now, now)
 	if err != nil {
-		log.RootLogger.Crit("init global variables  error","error:",err)
+		log.RootLogger.Crit("init global variables  error", "error:", err)
 		panic(err)
 	}
 }
 
-
 func CreateTable(names []string) {
 	defer func() {
-		if err := recover();err != nil {
+		if err := recover(); err != nil {
 			DropTable(names)
 		}
 	}()
 	openSql()
-	for _,tbl := range names {
-		q,ok := CreateTableSqls[tbl]
+	for _, tbl := range names {
+		q, ok := CreateTableSqls[tbl]
 		if !ok {
-			log.RootLogger.Crit("target sql table not exist","table_name",tbl)
+			log.RootLogger.Crit("target sql table not exist", "table_name", tbl)
 			panic("create sql of '" + tbl + "' table not exist")
 		}
 
 		// check table already exists
-		_,err :=db.SQL.Query(fmt.Sprintf("SELECT * from %s LIMIT 1",tbl))
+		_, err := db.SQL.Query(fmt.Sprintf("SELECT * from %s LIMIT 1", tbl))
 		if err == nil || err == sql.ErrNoRows {
-			log.RootLogger.Info("Table already exist,skip creating","table_name",tbl)
+			log.RootLogger.Info("Table already exist,skip creating", "table_name", tbl)
 			continue
 		}
 
-		_,err = db.SQL.Exec(q)
+		_, err = db.SQL.Exec(q)
 		if err != nil {
-			log.RootLogger.Crit("database error","error",err.Error())
+			log.RootLogger.Crit("database error", "error", err.Error())
 			panic(err.Error())
 		}
 
-		log.RootLogger.Info("sql table created ok","table_name",tbl)
+		log.RootLogger.Info("sql table created ok", "table_name", tbl)
 	}
 }
 
 func DropTable(names []string) {
 	openSql()
-	for _,tbl := range names {
-		q := fmt.Sprintf("DROP TABLE IF EXISTS %s",tbl)
-		_,err := db.SQL.Exec(q)
+	for _, tbl := range names {
+		q := fmt.Sprintf("DROP TABLE IF EXISTS %s", tbl)
+		_, err := db.SQL.Exec(q)
 		if err != nil {
-			log.RootLogger.Warn("drop table error", "error",err,"query",q)
+			log.RootLogger.Warn("drop table error", "error", err, "query", q)
 		}
-		log.RootLogger.Info("sql table dropped ok","table_name",tbl)
+		log.RootLogger.Info("sql table dropped ok", "table_name", tbl)
 	}
 }
 
-var CreateTableSqls = map[string]string {
-	"user" : `CREATE TABLE IF NOT EXISTS user (
+var CreateTableSqls = map[string]string{
+	"user": `CREATE TABLE IF NOT EXISTS user (
 		id INTEGER PRIMARY KEY AUTOINCREMENT,
 		username VARCHAR(255) NOT NULL UNIQUE,
 		name VARCHAR(255) DEFAULT '',
@@ -174,13 +174,13 @@ var CreateTableSqls = map[string]string {
 	CREATE INDEX IF NOT EXISTS user_email
 		ON user (email);`,
 
-	"sessions" : `CREATE TABLE IF NOT EXISTS sessions (
+	"sessions": `CREATE TABLE IF NOT EXISTS sessions (
 		sid              VARCHAR(255) primary key,   
 		user_id          INTEGER
 	);
 	`,
 
-	"data_source" : `CREATE TABLE IF NOT EXISTS data_source (
+	"data_source": `CREATE TABLE IF NOT EXISTS data_source (
 		id INTEGER PRIMARY KEY AUTOINCREMENT,
 		uid VARCHAR(40) NOT NULL UNIQUE,
 		name VARCHAR(255) NOT NULL UNIQUE,
@@ -213,7 +213,7 @@ var CreateTableSqls = map[string]string {
 		ON data_source (uid);
 	`,
 
-	"dashboard" : `CREATE TABLE IF NOT EXISTS dashboard (
+	"dashboard": `CREATE TABLE IF NOT EXISTS dashboard (
 		id 					INTEGER PRIMARY KEY AUTOINCREMENT,
 		uid                 VARCHAR(40) NOT NULL UNIQUE,
 		title               VARCHAR(255) NOT NULL UNIQUE,
@@ -235,7 +235,7 @@ var CreateTableSqls = map[string]string {
 		ON dashboard (folder_id);
 	`,
 
-	"dashboard_acl" : `CREATE TABLE IF NOT EXISTS dashboard_acl (
+	"dashboard_acl": `CREATE TABLE IF NOT EXISTS dashboard_acl (
 		id 					INTEGER PRIMARY KEY AUTOINCREMENT,
 		dashboard_id        INTEGER NOT NULL,
 		team_id             INTEGER NOT NULL,
@@ -248,7 +248,7 @@ var CreateTableSqls = map[string]string {
 	CREATE UNIQUE INDEX IF NOT EXISTS dashboard_acl_dashboard_team_id
 		ON dashboard_acl (dashboard_id,team_id);
 	`,
-	
+
 	"dashboard_user_acl": `CREATE TABLE IF NOT EXISTS dashboard_user_acl (
 		id 					INTEGER PRIMARY KEY AUTOINCREMENT,
 		dashboard_id        INTEGER NOT NULL,
@@ -262,7 +262,7 @@ var CreateTableSqls = map[string]string {
 	CREATE UNIQUE INDEX IF NOT EXISTS dashboard_user_acl_dash_id_user_id
 		ON dashboard_user_acl (dashboard_id,user_id);
 	`,
-	
+
 	"team_acl": `CREATE TABLE IF NOT EXISTS team_acl (
 		id 					INTEGER PRIMARY KEY AUTOINCREMENT,
 		team_id        		INTEGER NOT NULL,
@@ -276,7 +276,7 @@ var CreateTableSqls = map[string]string {
 		ON team_acl (team_id,role,permission);
 	`,
 
-	"folder" : `CREATE TABLE IF NOT EXISTS folder (
+	"folder": `CREATE TABLE IF NOT EXISTS folder (
 		id 					INTEGER PRIMARY KEY AUTOINCREMENT,
 		parent_id           INT NOT NULL,
 		uid                 VARCHAR(40) NOT NULL UNIQUE,
@@ -292,7 +292,7 @@ var CreateTableSqls = map[string]string {
 		ON folder (owned_by);
 	`,
 
-	"team" : `CREATE TABLE IF NOT EXISTS team (
+	"team": `CREATE TABLE IF NOT EXISTS team (
 		id 					INTEGER PRIMARY KEY AUTOINCREMENT,
 		name                VARCHAR(255) NOT NULL UNIQUE,
 		created_by          INTEGER NOT NULL,        
@@ -305,7 +305,7 @@ var CreateTableSqls = map[string]string {
 		ON team (created_by);
 	`,
 
-	"team_member" : `CREATE TABLE IF NOT EXISTS team_member (
+	"team_member": `CREATE TABLE IF NOT EXISTS team_member (
 		id 					INTEGER PRIMARY KEY AUTOINCREMENT,
 		team_id             INTEGER NOT NULL,
 		user_id 			INTEGER NOT NULL,   
@@ -321,7 +321,7 @@ var CreateTableSqls = map[string]string {
 		ON team_member (team_id, user_id);
 	`,
 
-	"sidemenu" : `
+	"sidemenu": `
 	CREATE TABLE IF NOT EXISTS sidemenu (
 		id 					INTEGER PRIMARY KEY AUTOINCREMENT,
 		team_id             INTEGER NOT NULL,
@@ -338,14 +338,16 @@ var CreateTableSqls = map[string]string {
 		ON sidemenu (is_public);
 	`,
 
-	"annotation" : `
+	"annotation": `
 	CREATE TABLE IF NOT EXISTS annotation (
 		id 					INTEGER PRIMARY KEY AUTOINCREMENT,
 		dashboard_id        INTEGER,
 		panel_id            INTEGER,
 		text                TEXT NOT NULL,
 		alert_id            INTEGER,
-
+		prev_state			VARCHAR(25) NOT NULL,
+		new_state			VARCHAR(25) NOT NULL,
+		data 				TEXT NOT NULL,
 		time                INTEGER NOT NULL,
 		time_end            INTEGER NOT NULL,
 		
@@ -386,5 +388,31 @@ var CreateTableSqls = map[string]string {
 	CREATE INDEX IF NOT EXISTS alert_notification_is_default
 		ON alert_notification (is_default);
 	`,
-}
 
+	"alert": `
+	CREATE TABLE IF NOT EXISTS alert (
+		id 						INTEGER PRIMARY KEY AUTOINCREMENT,
+		dashboard_id            INTEGER NOT NULL,
+		panel_id                INTEGER NOT NULL,
+		name					VARCHAR(255) NOT NULL,
+		message 				TEXT NOT NULL,
+		state					VARCHAR(255) NOT NULL,
+		new_state_date			DATETIME NOT NULL,
+		state_changes			INTEGER NOT NULL,
+		frequency				INTEGER NOT NULL,
+		for						INTEGER NOT NULL,
+		handler					INTEGER NOT NULL,
+		silenced				BOOL NOT NULL,
+		execution_error			TEXT NOT NULL,
+		eval_data				TEXT,
+		eval_date				DATETIME,
+		settings   				TEXT NOT NULL,
+		created					DATETIME NOT NULL,
+		updated					DATETIME NOT NULL
+	);
+	CREATE INDEX IF NOT EXISTS alert_state
+		ON alert (state);
+	CREATE INDEX IF NOT EXISTS alert_dashboard_id
+		ON alert (dashboard_id);	
+	`,
+}

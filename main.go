@@ -14,7 +14,7 @@
 
 package main
 
-import "github.com/codecc-com/datav/backend/cmd"
+import "github.com/CodeCreatively/datav/backend/cmd"
 
 func main() {
 	cmd.Execute()

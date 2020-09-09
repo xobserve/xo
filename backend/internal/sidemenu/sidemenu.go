@@ -2,9 +2,9 @@ package sidemenu
 
 import (
 	"encoding/json"
-	"github.com/codecc-com/datav/backend/pkg/models"
-	"github.com/codecc-com/datav/backend/pkg/db"
-	"github.com/codecc-com/datav/backend/pkg/log"
+	"github.com/CodeCreatively/datav/backend/pkg/models"
+	"github.com/CodeCreatively/datav/backend/pkg/db"
+	"github.com/CodeCreatively/datav/backend/pkg/log"
 )
 
 var logger = log.RootLogger.New("logger","server")

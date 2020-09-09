@@ -4,7 +4,7 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/codecc-com/datav/backend/pkg/models"
+	"github.com/CodeCreatively/datav/backend/pkg/models"
 )
 
 type TsdbQueryEndpoint interface {

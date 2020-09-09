@@ -1,14 +1,14 @@
 package datasources
 
 import (
-	"github.com/codecc-com/datav/backend/pkg/models"
+	"github.com/CodeCreatively/datav/backend/pkg/models"
 	// "fmt"
 
 	"time"
 
-	"github.com/codecc-com/datav/backend/pkg/db"
-	"github.com/codecc-com/datav/backend/pkg/log"
-	"github.com/codecc-com/datav/backend/pkg/utils/simplejson"
+	"github.com/CodeCreatively/datav/backend/pkg/db"
+	"github.com/CodeCreatively/datav/backend/pkg/log"
+	"github.com/CodeCreatively/datav/backend/pkg/utils/simplejson"
 )
 
 var logger = log.RootLogger.New("logger", "datasources")

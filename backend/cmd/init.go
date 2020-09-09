@@ -16,9 +16,9 @@ limitations under the License.
 package cmd
  
 import (
-	"github.com/codecc-com/datav/backend/cmd/sqls"
-	"github.com/codecc-com/datav/backend/pkg/config"
-	"github.com/codecc-com/datav/backend/pkg/log"
+	"github.com/CodeCreatively/datav/backend/cmd/sqls"
+	"github.com/CodeCreatively/datav/backend/pkg/config"
+	"github.com/CodeCreatively/datav/backend/pkg/log"
 	"github.com/spf13/cobra"
 )
 

@@ -5,6 +5,7 @@ import appEvents from 'src/core/library/utils/app_events';
 import { CopyToClipboard } from 'src/views/components/CopyToClipboard/CopyToClipboard';
 import { DashboardModel, PanelModel } from 'src/views/dashboard/model';
 import { getBackendSrv,AppEvents } from 'src/packages/datav-core';
+import {Button} from 'antd'
 
 export interface Props {
   dashboard: DashboardModel;
@@ -45,8 +46,8 @@ export class TestRuleResult extends PureComponent<Props, State> {
     const payload = { dashboard: model, panelId: panel.id };
 
     this.setState({ isLoading: true });
-    const testRuleResponse = await getBackendSrv().post(`/api/alerting/test/rule`, payload);
-    this.setState({ isLoading: false, testRuleResponse });
+    const res = await getBackendSrv().post(`/api/alerting/test/rule`, payload);
+    this.setState({ isLoading: false, testRuleResponse:res.data });
   }
 
   setFormattedJson = (formattedJson: any) => {
@@ -105,16 +106,17 @@ export class TestRuleResult extends PureComponent<Props, State> {
     return (
       <>
         <div className="pull-right">
-          <button className="btn btn-transparent btn-p-x-0 m-r-1" onClick={this.onToggleExpand}>
+          <Button size="small" type="primary" ghost onClick={this.onToggleExpand}>
             {this.renderExpandCollapse()}
-          </button>
-          <CopyToClipboard
-            className="btn btn-transparent btn-p-x-0"
+          </Button>
+          {/* <CopyToClipboard
             text={this.getTextForClipboard}
             onSuccess={this.onClipboardSuccess}
           >
-            <Icon name="copy" /> Copy to Clipboard
-          </CopyToClipboard>
+            <Button size="small" type="primary" ghost onClick={this.onToggleExpand}>
+              <Icon name="copy" /> Copy to Clipboard
+            </Button>
+          </CopyToClipboard> */}
         </div>
 
         <JSONFormatter json={testRuleResponse} open={openNodes} onDidRender={this.setFormattedJson} />

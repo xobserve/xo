@@ -19,9 +19,9 @@ import (
 	"os/signal"
 	"syscall"
 
-	server "github.com/codecc-com/datav/backend/internal/server"
-	"github.com/codecc-com/datav/backend/pkg/config"
-	"github.com/codecc-com/datav/backend/pkg/log"
+	server "github.com/CodeCreatively/datav/backend/internal/server"
+	"github.com/CodeCreatively/datav/backend/pkg/config"
+	"github.com/CodeCreatively/datav/backend/pkg/log"
 	"github.com/spf13/cobra"
 )
 

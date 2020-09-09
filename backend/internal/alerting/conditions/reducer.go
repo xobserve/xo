@@ -5,8 +5,8 @@ import (
 
 	"sort"
 
-	"github.com/codecc-com/datav/backend/pkg/tsdb"
-	"github.com/codecc-com/datav/backend/pkg/utils/null"
+	"github.com/CodeCreatively/datav/backend/pkg/tsdb"
+	"github.com/CodeCreatively/datav/backend/pkg/utils/null"
 )
 
 // queryReducer reduces a timeseries to a nullable float

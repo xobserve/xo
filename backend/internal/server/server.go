@@ -3,12 +3,12 @@ package server
 import (
 	"errors"
 
-	"github.com/codecc-com/datav/backend/internal/acl"
-	"github.com/codecc-com/datav/backend/internal/annotation"
-	"github.com/codecc-com/datav/backend/internal/bootConfig"
-	"github.com/codecc-com/datav/backend/internal/datasources"
-	"github.com/codecc-com/datav/backend/internal/users"
-	"github.com/codecc-com/datav/backend/pkg/utils"
+	"github.com/CodeCreatively/datav/backend/internal/acl"
+	"github.com/CodeCreatively/datav/backend/internal/annotation"
+	"github.com/CodeCreatively/datav/backend/internal/bootConfig"
+	"github.com/CodeCreatively/datav/backend/internal/datasources"
+	"github.com/CodeCreatively/datav/backend/internal/users"
+	"github.com/CodeCreatively/datav/backend/pkg/utils"
 
 	// "net/http"
 
@@ -16,22 +16,22 @@ import (
 
 	"net/http"
 
-	"github.com/codecc-com/datav/backend/internal/admin"
-	"github.com/codecc-com/datav/backend/internal/alerting"
-	"github.com/codecc-com/datav/backend/internal/cache"
-	"github.com/codecc-com/datav/backend/internal/dashboard"
-	"github.com/codecc-com/datav/backend/internal/folders"
-	"github.com/codecc-com/datav/backend/internal/plugins"
-	"github.com/codecc-com/datav/backend/internal/registry"
-	"github.com/codecc-com/datav/backend/internal/search"
-	"github.com/codecc-com/datav/backend/internal/session"
-	"github.com/codecc-com/datav/backend/internal/sidemenu"
-	"github.com/codecc-com/datav/backend/internal/teams"
-	"github.com/codecc-com/datav/backend/pkg/common"
-	"github.com/codecc-com/datav/backend/pkg/config"
-	"github.com/codecc-com/datav/backend/pkg/db"
-	"github.com/codecc-com/datav/backend/pkg/i18n"
-	"github.com/codecc-com/datav/backend/pkg/log"
+	"github.com/CodeCreatively/datav/backend/internal/admin"
+	"github.com/CodeCreatively/datav/backend/internal/alerting"
+	"github.com/CodeCreatively/datav/backend/internal/cache"
+	"github.com/CodeCreatively/datav/backend/internal/dashboard"
+	"github.com/CodeCreatively/datav/backend/internal/folders"
+	"github.com/CodeCreatively/datav/backend/internal/plugins"
+	"github.com/CodeCreatively/datav/backend/internal/registry"
+	"github.com/CodeCreatively/datav/backend/internal/search"
+	"github.com/CodeCreatively/datav/backend/internal/session"
+	"github.com/CodeCreatively/datav/backend/internal/sidemenu"
+	"github.com/CodeCreatively/datav/backend/internal/teams"
+	"github.com/CodeCreatively/datav/backend/pkg/common"
+	"github.com/CodeCreatively/datav/backend/pkg/config"
+	"github.com/CodeCreatively/datav/backend/pkg/db"
+	"github.com/CodeCreatively/datav/backend/pkg/i18n"
+	"github.com/CodeCreatively/datav/backend/pkg/log"
 	"github.com/gin-gonic/gin"
 	_ "github.com/mattn/go-sqlite3"
 )
@@ -61,6 +61,9 @@ func (s *Server) Start() error {
 		logger.Error("open sqlite error", "error", err.Error())
 		return err
 	}
+
+	// init annotation sql store
+	annotation.Init()
 
 	// init search cache
 	cache.InitCache()

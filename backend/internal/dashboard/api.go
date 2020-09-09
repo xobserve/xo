@@ -5,8 +5,10 @@ import (
 	"encoding/json"
 	"sort"
 
-	"github.com/codecc-com/datav/backend/internal/acl"
-	"github.com/codecc-com/datav/backend/internal/cache"
+	"github.com/CodeCreatively/datav/backend/internal/alerting"
+
+	"github.com/CodeCreatively/datav/backend/internal/acl"
+	"github.com/CodeCreatively/datav/backend/internal/cache"
 
 	"time"
 
@@ -14,13 +16,13 @@ import (
 
 	"strconv"
 
-	"github.com/codecc-com/datav/backend/internal/session"
-	"github.com/codecc-com/datav/backend/pkg/common"
-	"github.com/codecc-com/datav/backend/pkg/db"
-	"github.com/codecc-com/datav/backend/pkg/i18n"
-	"github.com/codecc-com/datav/backend/pkg/models"
-	"github.com/codecc-com/datav/backend/pkg/utils"
-	"github.com/codecc-com/datav/backend/pkg/utils/simplejson"
+	"github.com/CodeCreatively/datav/backend/internal/session"
+	"github.com/CodeCreatively/datav/backend/pkg/common"
+	"github.com/CodeCreatively/datav/backend/pkg/db"
+	"github.com/CodeCreatively/datav/backend/pkg/i18n"
+	"github.com/CodeCreatively/datav/backend/pkg/models"
+	"github.com/CodeCreatively/datav/backend/pkg/utils"
+	"github.com/CodeCreatively/datav/backend/pkg/utils/simplejson"
 	"github.com/gin-gonic/gin"
 )
 
@@ -98,12 +100,12 @@ func SaveDashboard(c *gin.Context) {
 			if db.IsErrUniqueConstraint(err) {
 				c.JSON(409, common.ResponseI18nError(i18n.TargetAlreadyExist))
 			} else {
-				logger.Error("add dashboard error","error",err)
+				logger.Error("add dashboard error", "error", err)
 				c.JSON(500, common.ResponseInternalError())
 			}
-			return 
+			return
 		}
-		
+
 		id, _ := res.LastInsertId()
 		dash.Id = id
 
@@ -136,11 +138,18 @@ func SaveDashboard(c *gin.Context) {
 			if db.IsErrUniqueConstraint(err) {
 				c.JSON(409, common.ResponseI18nError(i18n.TargetAlreadyExist))
 			} else {
-				logger.Error("update dashboard error","error",err)
+				logger.Error("update dashboard error", "error", err)
 				c.JSON(500, common.ResponseInternalError())
 			}
-			return 
+			return
 		}
+	}
+
+	// save alerts
+	err = alerting.UpdateDashboardAlerts(dash)
+	if err != nil {
+		c.JSON(500, common.ResponseInternalError())
+		return
 	}
 
 	c.JSON(200, common.ResponseSuccess(utils.Map{
@@ -282,7 +291,6 @@ func ImportDashboard(c *gin.Context) {
 		return
 	}
 
-
 	if !utils.IsValidShortUID(dash.Uid) {
 		c.JSON(400, common.ResponseI18nError("error.dashUidInvalid"))
 		return
@@ -304,10 +312,10 @@ func ImportDashboard(c *gin.Context) {
 		if db.IsErrUniqueConstraint(err) {
 			c.JSON(409, common.ResponseI18nError(i18n.TargetAlreadyExist))
 		} else {
-			logger.Error("import dashboard error","error",err)
+			logger.Error("import dashboard error", "error", err)
 			c.JSON(500, common.ResponseInternalError())
 		}
-		return 
+		return
 	}
 
 	id, _ := res.LastInsertId()

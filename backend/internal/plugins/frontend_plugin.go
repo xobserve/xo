@@ -4,7 +4,7 @@ import (
 	"net/url"
 	"path"
 	"strings"
-	"github.com/codecc-com/datav/backend/pkg/config"
+	"github.com/CodeCreatively/datav/backend/pkg/config"
 )
 
 type FrontendPluginBase struct {

@@ -1,11 +1,11 @@
 package notifiers
 
 import (
-	"github.com/codecc-com/datav/backend/pkg/log"
-	"github.com/codecc-com/datav/backend/pkg/models"
+	"github.com/CodeCreatively/datav/backend/pkg/log"
+	"github.com/CodeCreatively/datav/backend/pkg/models"
 )
 
-var logger = log.RootLogger.New("logger","notifiers")
+var logger = log.RootLogger.New("logger", "notifiers")
 
 // Notifier is responsible for sending alert notifications.
 type Notifier interface {
@@ -21,24 +21,23 @@ var NotifierFactories = make(map[string]NotifierFactory)
 func RegisterNotifier(tp string, notifier NotifierFactory) {
 	NotifierFactories[tp] = notifier
 }
- 
+
 // AlertContent contains infos for alerting notifier
 type AlertContent struct {
-	ID int64 
+	ID    int64
 	State models.AlertStateType
 
-	DashboardID int64 
-	PanelID int64 
+	DashboardID int64
+	PanelID     int64
 
-	Title string 
-	Name string
-	Message string 
-	Error error 
+	Title    string
+	Name     string
+	Message  string
+	Error    error
 	ImageURL string
 
 	Metrics []*models.AlertMetric
 }
-
 
 // GetNotificationTitle returns the title of the alert rule including alert state.
 func (a *AlertContent) GetNotificationTitle() string {
@@ -77,4 +76,9 @@ func (a *AlertContent) GetStateModel() *StateDescription {
 	default:
 		panic("Unknown rule state for alert " + a.State)
 	}
+}
+
+func SendIfNeeded(evalCtx *models.EvalContext) error {
+	//@todo: alert
+	return nil
 }

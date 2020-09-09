@@ -1,10 +1,10 @@
 package notifiers
 
 import (
-	"github.com/codecc-com/datav/backend/pkg/config"
-	"github.com/codecc-com/datav/backend/internal/notifications"
+	"github.com/CodeCreatively/datav/backend/pkg/config"
+	"github.com/CodeCreatively/datav/backend/internal/notifications"
 	"fmt"
-	"github.com/codecc-com/datav/backend/pkg/models"
+	"github.com/CodeCreatively/datav/backend/pkg/models"
 	"errors"
 	"strings"
 	"strconv"

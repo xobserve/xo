@@ -1,7 +1,7 @@
 package search
 
 import (
-	"github.com/codecc-com/datav/backend/pkg/models"
+	"github.com/CodeCreatively/datav/backend/pkg/models"
 	"strings"
 )
 

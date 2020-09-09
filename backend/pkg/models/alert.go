@@ -1,11 +1,13 @@
 package models
 
 import (
+	"fmt"
+	"sync"
 	"time"
 
-	"github.com/codecc-com/datav/backend/pkg/db"
-	"github.com/codecc-com/datav/backend/pkg/utils/null"
-	"github.com/codecc-com/datav/backend/pkg/utils/simplejson"
+	"github.com/CodeCreatively/datav/backend/pkg/db"
+	"github.com/CodeCreatively/datav/backend/pkg/utils/null"
+	"github.com/CodeCreatively/datav/backend/pkg/utils/simplejson"
 )
 
 type AlertStateType string
@@ -31,6 +33,11 @@ const (
 const (
 	ExecutionErrorSetAlerting ExecutionErrorOption = "alerting"
 	ExecutionErrorKeepState   ExecutionErrorOption = "keep_state"
+)
+
+var (
+	ErrCannotChangeStateOnPausedAlert = fmt.Errorf("Cannot change state on pause alert")
+	ErrRequiresNewState               = fmt.Errorf("update alert state requires a new state")
 )
 
 func (s AlertStateType) IsValid() bool {
@@ -132,7 +139,6 @@ func NewDashboardFromJson(data *simplejson.Json) *Dashboard {
 
 type Alert struct {
 	Id             int64
-	Version        int64
 	DashboardId    int64
 	PanelId        int64
 	Name           string
@@ -145,7 +151,9 @@ type Alert struct {
 	Frequency      int64
 	For            time.Duration
 
-	EvalData     *simplejson.Json
+	EvalData *simplejson.Json
+	EvalDate time.Time
+
 	NewStateDate time.Time
 	StateChanges int64
 
@@ -223,4 +231,28 @@ type Rule struct {
 type AlertTestResultLog struct {
 	Message string      `json:"message"`
 	Data    interface{} `json:"data"`
+}
+
+// Job holds state about when the alert rule should be evaluated.
+type Job struct {
+	Offset      int64
+	OffsetWait  bool
+	Delay       bool
+	running     bool
+	Rule        *Rule
+	runningLock sync.Mutex // Lock for running property which is used in the Scheduler and AlertEngine execution
+}
+
+// GetRunning returns true if the job is running. A lock is taken and released on the Job to ensure atomicity.
+func (j *Job) GetRunning() bool {
+	defer j.runningLock.Unlock()
+	j.runningLock.Lock()
+	return j.running
+}
+
+// SetRunning sets the running property on the Job. A lock is taken and released on the Job to ensure atomicity.
+func (j *Job) SetRunning(b bool) {
+	j.runningLock.Lock()
+	j.running = b
+	j.runningLock.Unlock()
 }

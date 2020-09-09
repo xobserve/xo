@@ -147,6 +147,10 @@ func (c *EvalContext) GetNewState() AlertStateType {
 	return AlertStatePending
 }
 
+func (c *EvalContext) ShouldUpdateAlertState() bool {
+	return c.Rule.State != c.PrevAlertState
+}
+
 func getNewStateInternal(c *EvalContext) AlertStateType {
 	if c.Error != nil {
 
