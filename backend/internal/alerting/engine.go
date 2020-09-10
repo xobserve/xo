@@ -10,6 +10,7 @@ import (
 	"github.com/CodeCreatively/datav/backend/pkg/models"
 	"github.com/benbjohnson/clock"
 	"golang.org/x/sync/errgroup"
+	"golang.org/x/xerrors"
 )
 
 // AlertEngine is the background process that
@@ -180,7 +181,13 @@ func (e *AlertEngine) processJob(attemptID int, attemptChan chan int, cancelChan
 		evalContext.Ctx = resultHandleCtx
 		evalContext.Rule.State = evalContext.GetNewState()
 		if err := e.resultHandler.handle(evalContext); err != nil {
-
+			if xerrors.Is(err, context.Canceled) {
+				logger.Debug("Result handler returned context.Canceled")
+			} else if xerrors.Is(err, context.DeadlineExceeded) {
+				logger.Debug("Result handler returned context.DeadlineExceeded")
+			} else {
+				logger.Error("Failed to handle result", "err", err)
+			}
 		}
 
 		close(attemptChan)

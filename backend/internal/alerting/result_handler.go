@@ -4,7 +4,6 @@ import (
 	"context"
 	"time"
 
-	"github.com/CodeCreatively/datav/backend/internal/alerting/notifiers"
 	"github.com/CodeCreatively/datav/backend/pkg/models"
 
 	"github.com/CodeCreatively/datav/backend/pkg/utils/simplejson"
@@ -16,10 +15,13 @@ type resultHandler interface {
 }
 
 type defaultResultHandler struct {
+	notifier *notificationService
 }
 
 func newResultHandler() *defaultResultHandler {
-	return &defaultResultHandler{}
+	return &defaultResultHandler{
+		notifier: newNotificationService(),
+	}
 }
 
 func (handler *defaultResultHandler) handle(evalContext *models.EvalContext) error {
@@ -64,6 +66,7 @@ func (handler *defaultResultHandler) handle(evalContext *models.EvalContext) err
 			evalContext.Rule.LastStateChange = time.Now()
 		}
 
+		now := time.Now()
 		// save annotation
 		ann := models.Annotation{
 			DashboardId: evalContext.Rule.DashboardID,
@@ -74,6 +77,8 @@ func (handler *defaultResultHandler) handle(evalContext *models.EvalContext) err
 			PrevState:   string(evalContext.PrevAlertState),
 			Time:        time.Now().UnixNano() / int64(time.Millisecond),
 			Data:        annotationData,
+			Created:     now.Unix(),
+			Updated:     now.Unix(),
 		}
 
 		annotationRepo := models.GetAnnotationRep()
@@ -82,7 +87,7 @@ func (handler *defaultResultHandler) handle(evalContext *models.EvalContext) err
 		}
 	}
 
-	if err := notifiers.SendIfNeeded(evalContext); err != nil {
+	if err := handler.notifier.SendIfNeeded(evalContext); err != nil {
 		if xerrors.Is(err, context.Canceled) {
 			logger.Debug("handler.notifier.SendIfNeeded returned context.Canceled")
 		} else if xerrors.Is(err, context.DeadlineExceeded) {

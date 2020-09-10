@@ -1,6 +1,7 @@
 package alerting
 
 import (
+	"encoding/json"
 	"time"
 
 	"github.com/CodeCreatively/datav/backend/pkg/db"
@@ -53,17 +54,105 @@ func GetAllAlerts() ([]*models.Alert, error) {
 	for rows.Next() {
 		alert := &models.Alert{}
 		var settings []byte
-
-		rows.Scan(&alert.Id, &alert.DashboardId, &alert.PanelId, &alert.Name, &alert.Message,
-			&alert.State, &alert.NewStateDate, &alert.NewStateDate, &alert.Frequency, &alert.For,
-			&alert.Handler, &alert.Silenced, &alert.ExecutionError, &alert.EvalData, &alert.EvalDate, &settings,
+		var evalData []byte
+		err := rows.Scan(&alert.Id, &alert.DashboardId, &alert.PanelId, &alert.Name, &alert.Message,
+			&alert.State, &alert.NewStateDate, &alert.StateChanges, &alert.Frequency, &alert.For,
+			&alert.Handler, &alert.Silenced, &alert.ExecutionError, &evalData, &alert.EvalDate, &settings,
 			&alert.Created, &alert.Updated)
+		if err != nil {
+			logger.Warn("scan all alerts error", "error", err)
+		}
+
+		err = json.Unmarshal(settings, &alert.Settings)
+		if err != nil {
+			logger.Warn("unmarshal all alerts error", "error", err)
+		}
+
+		if evalData != nil {
+			err = json.Unmarshal(evalData, &alert.EvalData)
+			if err != nil {
+				logger.Warn("unmarshal all alerts error", "error", err)
+			}
+		}
+
+		alerts = append(alerts, alert)
 	}
 
 	return alerts, nil
 }
 
+func GetAlert(id int64) (*models.Alert, error) {
+	alert := &models.Alert{}
+	var settings []byte
+	var evalData []byte
+	err := db.SQL.QueryRow("SELECT * FROM alert WHERE id=?", id).Scan(&alert.Id, &alert.DashboardId, &alert.PanelId, &alert.Name, &alert.Message,
+		&alert.State, &alert.NewStateDate, &alert.StateChanges, &alert.Frequency, &alert.For,
+		&alert.Handler, &alert.Silenced, &alert.ExecutionError, &evalData, &alert.EvalDate, &settings,
+		&alert.Created, &alert.Updated)
+	if err != nil {
+		logger.Warn("get alert error", "error", err)
+		return nil, err
+	}
+
+	err = json.Unmarshal(settings, &alert.Settings)
+	if err != nil {
+		logger.Warn("unmarshal all alerts error", "error", err)
+		return nil, err
+	}
+
+	if evalData != nil {
+		err = json.Unmarshal(evalData, &alert.EvalData)
+		if err != nil {
+			logger.Warn("unmarshal all alerts error", "error", err)
+			return nil, err
+		}
+	}
+
+	return alert, nil
+}
+
+func UpdateAlert(alert *models.Alert) error {
+	now := time.Now()
+	evalData, _ := alert.EvalData.Encode()
+	_, err := db.SQL.Exec("UPDATE alert SET state=?, new_state_date=?, state_changes=?, eval_data=?, execution_error=?, updated=? WHERE id=?",
+		alert.State, alert.NewStateDate, alert.StateChanges, evalData, alert.ExecutionError, now, alert.Id)
+	if err != nil {
+		logger.Warn("update alert error", "error", err)
+		return err
+	}
+
+	return nil
+}
+
 func SetAlertState(alertId int64, state models.AlertStateType, annotationData *simplejson.Json, executionError string) (*models.Alert, error) {
-	//@todo: alert
-	return nil, nil
+	alert, err := GetAlert(alertId)
+	if err != nil {
+		return nil, err
+	}
+
+	if alert.State == models.AlertStatePaused {
+		return nil, models.ErrCannotChangeStateOnPausedAlert
+	}
+
+	if alert.State == state {
+		return nil, models.ErrRequiresNewState
+	}
+
+	alert.State = state
+	alert.StateChanges++
+	alert.NewStateDate = time.Now()
+	alert.EvalData = annotationData
+
+	if executionError == "" {
+		alert.ExecutionError = "" //without this space, xorm skips updating this field
+	} else {
+		alert.ExecutionError = executionError
+	}
+
+	err = UpdateAlert(alert)
+	if err != nil {
+		return nil, err
+	}
+
+	return alert, nil
 }

@@ -1,6 +1,7 @@
 package server
 
 import (
+	"context"
 	"errors"
 
 	"github.com/CodeCreatively/datav/backend/internal/acl"
@@ -34,15 +35,25 @@ import (
 	"github.com/CodeCreatively/datav/backend/pkg/log"
 	"github.com/gin-gonic/gin"
 	_ "github.com/mattn/go-sqlite3"
+	"golang.org/x/sync/errgroup"
 )
 
 // Web ...
 type Server struct {
+	context       context.Context
+	shutdownFn    context.CancelFunc
+	childRoutines *errgroup.Group
 }
 
 // New ...
 func New() *Server {
-	return &Server{}
+	rootCtx, shutdownFn := context.WithCancel(context.Background())
+	childRoutines, childCtx := errgroup.WithContext(rootCtx)
+	return &Server{
+		context:       childCtx,
+		shutdownFn:    shutdownFn,
+		childRoutines: childRoutines,
+	}
 }
 
 var logger = log.RootLogger.New("logger", "server")
@@ -52,8 +63,31 @@ func (s *Server) Start() error {
 	logger.Debug("server config", "config", *config.Data)
 	// start registered services
 	services := registry.GetServices()
-	for _, service := range services {
-		service.Instance.Init()
+	for _, srv := range services {
+		err := srv.Instance.Init()
+		if err != nil {
+			return err
+		}
+
+		service, ok := srv.Instance.(registry.BackgroundService)
+		if !ok {
+			continue
+		}
+
+		s.childRoutines.Go(func() error {
+			err := service.Run(s.context)
+			if err != nil {
+				if err != context.Canceled {
+					// Server has crashed.
+					logger.Error("Stopped "+srv.Name, "reason", err)
+				} else {
+					logger.Debug("Stopped "+srv.Name, "reason", err)
+				}
+				return err
+			}
+			return nil
+		})
+
 	}
 
 	err := s.initDB()

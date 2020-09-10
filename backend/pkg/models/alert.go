@@ -1,6 +1,8 @@
 package models
 
 import (
+	"database/sql"
+	"errors"
 	"fmt"
 	"sync"
 	"time"
@@ -8,6 +10,7 @@ import (
 	"github.com/CodeCreatively/datav/backend/pkg/db"
 	"github.com/CodeCreatively/datav/backend/pkg/utils/null"
 	"github.com/CodeCreatively/datav/backend/pkg/utils/simplejson"
+	"github.com/grafana/grafana/pkg/cmd/grafana-cli/logger"
 )
 
 type AlertStateType string
@@ -152,7 +155,7 @@ type Alert struct {
 	For            time.Duration
 
 	EvalData *simplejson.Json
-	EvalDate time.Time
+	EvalDate *time.Time
 
 	NewStateDate time.Time
 	StateChanges int64
@@ -255,4 +258,113 @@ func (j *Job) SetRunning(b bool) {
 	j.runningLock.Lock()
 	j.running = b
 	j.runningLock.Unlock()
+}
+
+type AlertNotificationStateType string
+
+type AlertNotificationState struct {
+	Id                           int64
+	OrgId                        int64
+	AlertId                      int64
+	NotifierId                   int64
+	State                        AlertNotificationStateType
+	Version                      int64
+	UpdatedAt                    int64
+	AlertRuleStateUpdatedVersion int64
+}
+
+func GetAlertNotificationsByIds(ids []int64) []*AlertNotification {
+	nos := make([]*AlertNotification, 0)
+	for _, id := range ids {
+		n := &AlertNotification{}
+		var rawSetting []byte
+		err := db.SQL.QueryRow(`SELECT id,team_id,name,type,is_default, disable_resolve_message, send_reminder, upload_image, settings FROM alert_notification WHERE id=?`, id).Scan(&n.Id, &n.TeamId, &n.Name, &n.Type, &n.IsDefault, &n.DisableResolveMessage, &n.SendReminder, &n.UploadImage, &rawSetting)
+		if err != nil {
+			logger.Warn("scan alerting notification error", "error", err)
+			continue
+		}
+
+		setting := simplejson.New()
+		err = setting.UnmarshalJSON(rawSetting)
+		if err != nil {
+			logger.Warn("unmarshal alerting notification setting error", "error", err)
+			continue
+		}
+		n.Settings = setting
+
+		nos = append(nos, n)
+	}
+
+	return nos
+}
+
+var (
+	AlertNotificationStatePending   = AlertNotificationStateType("pending")
+	AlertNotificationStateCompleted = AlertNotificationStateType("completed")
+	AlertNotificationStateUnknown   = AlertNotificationStateType("unknown")
+)
+
+var (
+	ErrNotificationFrequencyNotFound            = errors.New("Notification frequency not specified")
+	ErrAlertNotificationStateNotFound           = errors.New("alert notification state not found")
+	ErrAlertNotificationStateVersionConflict    = errors.New("alert notification state update version conflict")
+	ErrAlertNotificationStateAlreadyExist       = errors.New("alert notification state already exists")
+	ErrAlertNotificationFailedGenerateUniqueUid = errors.New("Failed to generate unique alert notification uid")
+)
+
+func GetOrCreateAlertNotificationState(alertId int64, notifierId int64) (*AlertNotificationState, error) {
+	ans := &AlertNotificationState{
+		AlertId:    alertId,
+		NotifierId: notifierId,
+	}
+	err := db.SQL.QueryRow("SELECT id,state,version,updated_at,alert_rule_state_updated_version FROM alert_notification_state WHERE alert_id=? and notifier_uid=?", alertId, notifierId).Scan(
+		&ans.Id, &ans.State, &ans.Version, &ans.UpdatedAt, &ans.AlertRuleStateUpdatedVersion,
+	)
+
+	if err == nil {
+		return ans, nil
+	}
+
+	if err != nil && err != sql.ErrNoRows {
+		return nil, err
+	}
+
+	ans.State = AlertNotificationStateUnknown
+	ans.UpdatedAt = time.Now().Unix()
+
+	res, err := db.SQL.Exec("INSERT INTO alert_notification_state (alert_id, notifier_id, state,version,updated_at,alert_rule_state_updated_version) VALUES (?,?,?,?,?,?)",
+		ans.AlertId, ans.NotifierId, ans.State, ans.Version, ans.UpdatedAt, ans.AlertRuleStateUpdatedVersion)
+	if err != nil {
+		return nil, err
+	}
+
+	nid, _ := res.LastInsertId()
+	ans.Id = nid
+
+	return ans, nil
+}
+
+func SetAlertNotificationStateToComplete(id int64, version int64) error {
+	_, err := db.SQL.Exec("UPDATE alert_notification_state SET state=?, version=?, updated_at=? WHERE id=?",
+		AlertNotificationStateCompleted, version+1, time.Now().Unix(), id)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func SetAlertNotificationStateToPendingCommand(id int64, version int64, updateVersion int64) (int64, error) {
+	newVer := version + 1
+	res, err := db.SQL.Exec("UPDATE alert_notification_state SET state=?, version=?, updated_at=? ,alert_rule_state_updated_version=?  WHERE id=? AND (version = ? OR alert_rule_state_updated_version < ?)",
+		AlertNotificationStatePending, newVer, time.Now().Unix(), updateVersion, id, version, updateVersion)
+	if err != nil && err != sql.ErrNoRows {
+		return 0, err
+	}
+	affected, _ := res.RowsAffected()
+	if affected == 0 {
+		return 0, ErrAlertNotificationStateVersionConflict
+	}
+
+	return newVer, nil
 }

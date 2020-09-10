@@ -4,6 +4,7 @@ go 1.14
 
 require (
 	github.com/VividCortex/mysqlerr v0.0.0-20200629151747-c28746d985dd // indirect
+	github.com/aws/aws-sdk-go v1.34.20 // indirect
 	github.com/benbjohnson/clock v1.0.3
 	github.com/datadefeat/datav v0.0.0-20200907094654-0e7cc3e92c39
 	github.com/gin-gonic/gin v1.6.3
