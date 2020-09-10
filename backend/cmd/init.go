@@ -14,7 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 package cmd
- 
+
 import (
 	"github.com/CodeCreatively/datav/backend/cmd/sqls"
 	"github.com/CodeCreatively/datav/backend/pkg/config"
@@ -29,7 +29,7 @@ var initCmd = &cobra.Command{
 	Long:  ``,
 	Run: func(cmd *cobra.Command, args []string) {
 		config.Init("web.conf")
-		log.InitLogger(config.Data.Common.LogLevel)
+		log.InitLogger(config.Data.Log.Level)
 
 		sqls.CreateTables()
 		log.RootLogger.Info("create tables ok")
@@ -50,5 +50,3 @@ func init() {
 	// is called directly, e.g.:
 	// initCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
 }
-
-

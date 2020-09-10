@@ -13,10 +13,13 @@ import (
 type Config struct {
 	Common struct {
 		Version        string
-		LogLevel       string
 		StaticRootPath string `yaml:"static_root_path"`
 		HomePath       string `yaml:"home_path"`
 		UIRootURL      string `yaml:"ui_root_url"`
+	}
+
+	Log struct {
+		Level string
 	}
 
 	Plugins struct {

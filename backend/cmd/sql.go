@@ -33,19 +33,19 @@ var dropFlags []string
 var sqlCmd = &cobra.Command{
 	Use:   "sql",
 	Short: "Manage sqls,e.g create/drop table",
-	Long: ``,
+	Long:  ``,
 	Run: func(cmd *cobra.Command, args []string) {
 		config.Init("web.conf")
-		log.InitLogger(config.Data.Common.LogLevel)
+		log.InitLogger(config.Data.Log.Level)
 
-		cmd.Flags().VisitAll(func (f *pflag.Flag) {
+		cmd.Flags().VisitAll(func(f *pflag.Flag) {
 			switch f.Name {
-			case "create" :
+			case "create":
 				if len(createFlags) > 0 {
 					sqls.CreateTable(createFlags)
 				}
 				break
-			case "drop" :
+			case "drop":
 				if len(dropFlags) > 0 {
 					sqls.DropTable(dropFlags)
 				}
@@ -58,9 +58,7 @@ var sqlCmd = &cobra.Command{
 func init() {
 	rootCmd.AddCommand(sqlCmd)
 
+	sqlCmd.Flags().StringSliceVar(&createFlags, "create", nil, "Create Sql Tables")
 
-	sqlCmd.Flags().StringSliceVar(&createFlags,"create",nil, "Create Sql Tables")
-
-
-	sqlCmd.Flags().StringSliceVar(&dropFlags,"drop",nil, "Drop Sql Tables")
+	sqlCmd.Flags().StringSliceVar(&dropFlags, "drop", nil, "Drop Sql Tables")
 }

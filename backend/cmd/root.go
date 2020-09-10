@@ -29,16 +29,16 @@ import (
 var rootCmd = &cobra.Command{
 	Use:   "datav",
 	Short: "",
-	Long: ``,
+	Long:  ``,
 	// Uncomment the following line if your bare application
 	// has an action associated with it:
 	Run: func(cmd *cobra.Command, args []string) {
 		config.Init("web.conf")
-		log.InitLogger(config.Data.Common.LogLevel)
+		log.InitLogger(config.Data.Log.Level)
 		service := server.New()
 		err := service.Start()
 		if err != nil {
-			return 
+			return
 		}
 		// 等待服务器停止信号
 		chSig := make(chan os.Signal)
@@ -56,4 +56,3 @@ func Execute() {
 		os.Exit(1)
 	}
 }
-

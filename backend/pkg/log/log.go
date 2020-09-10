@@ -9,7 +9,9 @@ var RootLogger = log.New()
 
 func InitLogger(level string) {
 	l := log.CallerFileHandler(log.StdoutHandler)
-	RootLogger.SetHandler(l)
+	RootLogger.SetHandler(log.MultiHandler(
+		log.LvlFilterHandler(log.LvlInfo, l),
+	))
 }
 
 func Stack(skip int) string {
