@@ -45,7 +45,7 @@ func (s *SqlStore) Delete(id int64) error {
 
 func (s *SqlStore) Find(query *models.AnnotationQuery) ([]*models.Annotation, error) {
 	ans := make([]*models.Annotation, 0)
-	rows, err := db.SQL.Query("SELECT id,panel_id,text,time,time_end FROM annotation WHERE dashboard_id=? and time >= ? and time <= ?",
+	rows, err := db.SQL.Query("SELECT id,panel_id,text,time,time_end,prev_state,new_state,alert_id FROM annotation WHERE dashboard_id=? and time >= ? and time <= ?",
 		query.DashboardId, query.From, query.To)
 	if err != nil {
 		return nil, err
@@ -53,7 +53,7 @@ func (s *SqlStore) Find(query *models.AnnotationQuery) ([]*models.Annotation, er
 
 	for rows.Next() {
 		an := &models.Annotation{}
-		err := rows.Scan(&an.Id, &an.PanelId, &an.Text, &an.Time, &an.TimeEnd)
+		err := rows.Scan(&an.Id, &an.PanelId, &an.Text, &an.Time, &an.TimeEnd, &an.PrevState, &an.NewState, &an.AlertId)
 		if err != nil {
 			logger.Warn("query annotations scan error", "error", err)
 			continue

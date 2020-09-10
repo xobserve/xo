@@ -1,7 +1,8 @@
 import React from 'react'
 import { AnnotationEvent } from 'src/packages/datav-core'
 import { DashboardModel } from 'src/views/dashboard/model/DashboardModel'
-import {Button} from 'antd'
+import { Button } from 'antd'
+import alertDef from '../alerting/state/alertDef'
 
 interface Props {
     event: AnnotationEvent
@@ -10,7 +11,16 @@ interface Props {
 
 
 const AnnotationTooltip = (props: Props) => {
+    const event = props.event
     const timeFormated = new DashboardModel({}).formatDate(props.event.time)
+    let title = event.title
+    let titleClass = ""
+    if (event.alertId) {
+        const stateModel = alertDef.getStateDisplayModel(event.newState)
+        titleClass = stateModel.stateClass
+        title = stateModel.text;
+    }
+    // <i class="${stateModel.iconClass}"></i>
     return (
         <div className="graph-annotation">
             <div className="graph-annotation__header">
@@ -18,7 +28,7 @@ const AnnotationTooltip = (props: Props) => {
                 </div>
 
                 <div className="graph-annotation__title">
-                    <span>Annotation</span>
+                    <span className={titleClass}>{title}</span>
                 </div>
 
                 <div className="graph-annotation__time">{timeFormated}</div>
