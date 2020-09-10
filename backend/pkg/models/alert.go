@@ -83,10 +83,10 @@ type AlertNotification struct {
 	DisableResolveMessage bool             `json:"disableResolveMessage"`
 	UploadImage           bool             `json:"uploadImage"`
 	Settings              *simplejson.Json `json:"settings"`
-
-	CreatedBy int64     `json:"createdBy"`
-	Created   time.Time `json:"created"`
-	Updated   time.Time `json:"updated"`
+	Frequency             time.Duration    `json:"frequency"`
+	CreatedBy             int64            `json:"createdBy"`
+	Created               time.Time        `json:"created"`
+	Updated               time.Time        `json:"updated"`
 }
 
 func QueryNotification(id int64) (*AlertNotification, error) {
@@ -216,6 +216,7 @@ type Rule struct {
 	ID                  int64
 	DashboardID         int64
 	PanelID             int64
+	TeamID              int64
 	Frequency           int64
 	Name                string
 	Message             string
@@ -317,7 +318,7 @@ func GetOrCreateAlertNotificationState(alertId int64, notifierId int64) (*AlertN
 		AlertId:    alertId,
 		NotifierId: notifierId,
 	}
-	err := db.SQL.QueryRow("SELECT id,state,version,updated_at,alert_rule_state_updated_version FROM alert_notification_state WHERE alert_id=? and notifier_uid=?", alertId, notifierId).Scan(
+	err := db.SQL.QueryRow("SELECT id,state,version,updated_at,alert_rule_state_updated_version FROM alert_notification_state WHERE alert_id=? and notifier_id=?", alertId, notifierId).Scan(
 		&ans.Id, &ans.State, &ans.Version, &ans.UpdatedAt, &ans.AlertRuleStateUpdatedVersion,
 	)
 

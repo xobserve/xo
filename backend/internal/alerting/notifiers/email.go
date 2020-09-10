@@ -1,27 +1,34 @@
 package notifiers
 
 import (
-	"github.com/CodeCreatively/datav/backend/pkg/config"
-	"github.com/CodeCreatively/datav/backend/internal/notifications"
-	"fmt"
-	"github.com/CodeCreatively/datav/backend/pkg/models"
 	"errors"
-	"strings"
 	"strconv"
+	"strings"
+
+	"github.com/CodeCreatively/datav/backend/internal/alerting"
+	"github.com/CodeCreatively/datav/backend/internal/notifications"
+	"github.com/CodeCreatively/datav/backend/pkg/config"
+	"github.com/CodeCreatively/datav/backend/pkg/models"
+	"github.com/grafana/grafana/pkg/cmd/grafana-cli/logger"
 )
 
 const EmailType = "email"
 
 func init() {
-	RegisterNotifier(EmailType,NewEmailNotifier)
+	alerting.RegisterNotifier(&alerting.NotifierPlugin{
+		Type:        "email",
+		Name:        "Email",
+		Description: "Sends notifications using Grafana server configured SMTP settings",
+		Factory:     NewEmailNotifier,
+	})
 }
 
 type EmailNotifier struct {
-	models.AlertNotification
-	Addresses []string 
-} 
+	NotifierBase
+	Addresses []string
+}
 
-func NewEmailNotifier(model *models.AlertNotification) (Notifier, error) {
+func NewEmailNotifier(model *models.AlertNotification) (alerting.Notifier, error) {
 	addressesString := model.Settings.Get("addresses").MustString()
 	if addressesString == "" {
 		return nil, errors.New("Could not find addresses in settings")
@@ -30,10 +37,9 @@ func NewEmailNotifier(model *models.AlertNotification) (Notifier, error) {
 	// split addresses with a few different ways
 	addresses := splitEmails(addressesString)
 
-	fmt.Println("email notifier:",addresses)
 	return &EmailNotifier{
-		*model,
-		addresses,
+		NotifierBase: NewNotifierBase(model),
+		Addresses:    addresses,
 	}, nil
 }
 
@@ -41,22 +47,27 @@ func (e *EmailNotifier) GetType() string {
 	return e.Type
 }
 
-func (e *EmailNotifier) Notify(content *AlertContent) error {
+func (e *EmailNotifier) Notify(evalContext *models.EvalContext) error {
+	err0 := ""
+	if evalContext.Error != nil {
+		err0 = evalContext.Error.Error()
+	}
+
 	err := notifications.SendEmail(&models.EmailContent{
-		Subject: content.GetNotificationTitle(),
+		Subject: evalContext.GetNotificationTitle(),
 		Data: map[string]interface{}{
-			"Title":         content.GetNotificationTitle(),
-			"State":         content.State,
-			"Name":        	 content.Name,
-			"StateModel":    content.GetStateModel(),
-			"Message":       content.Message,
-			"Error":         content.Error.Error(),
-			"ImageURL":     content.ImageURL,
+			"Title":         evalContext.GetNotificationTitle(),
+			"State":         evalContext.Rule.State,
+			"Name":          evalContext.Rule.Name,
+			"StateModel":    evalContext.GetStateModel(),
+			"Message":       evalContext.Rule.Message,
+			"Error":         err0,
+			"ImageURL":      "",
 			"EmbeddedImage": "",
-			"AlertPageUrl":  config.Data.Common.UIRootURL + "/team/rules/" + strconv.FormatInt(e.TeamId,10),
-			"Metrics":     content.Metrics,
+			"AlertPageUrl":  config.Data.Common.UIRootURL + "/team/rules/" + strconv.FormatInt(evalContext.Rule.TeamID, 10),
+			"Metrics":       evalContext.EvalMatches,
 		},
-		To: e.Addresses,
+		To:       e.Addresses,
 		Template: "alert_notifaction.tmpl",
 	})
 

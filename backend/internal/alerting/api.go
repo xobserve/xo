@@ -9,7 +9,6 @@ import (
 	_ "github.com/CodeCreatively/datav/backend/pkg/tsdb"
 
 	"github.com/CodeCreatively/datav/backend/internal/acl"
-	"github.com/CodeCreatively/datav/backend/internal/alerting/notifiers"
 	"github.com/CodeCreatively/datav/backend/internal/session"
 	"github.com/CodeCreatively/datav/backend/pkg/common"
 	"github.com/CodeCreatively/datav/backend/pkg/db"
@@ -144,41 +143,53 @@ func TestNotification(c *gin.Context) {
 	model := &models.AlertNotification{}
 	c.Bind(&model)
 
-	notifyFactory, ok := notifiers.NotifierFactories[model.Type]
-	if !ok {
-		c.JSON(400, common.ResponseI18nError("error.notifierNotExist"))
-		return
-	}
+	notifier := newNotificationService()
 
-	notifier, err := notifyFactory(model)
+	notifiers, err := InitNotifier(model)
 	if err != nil {
-		logger.Warn("build notify error", "error", err)
+		logger.Error("Failed to create notifier", "error", err.Error())
 		c.JSON(400, common.ResponseI18nError("error.buildNotifierError"))
 		return
 	}
 
-	content := &notifiers.AlertContent{
-		DashboardID: 1,
-		PanelID:     1,
-		Title:       "Test notification",
-		Message:     "Someone is testing the alert notification within grafana.",
-		Error:       fmt.Errorf("This is only a test"),
-		State:       models.AlertStateAlerting,
-		Metrics: []*models.AlertMetric{
-			&models.AlertMetric{"High Value", null.FloatFrom(100)},
-			&models.AlertMetric{"Higher Value", null.FloatFrom(200)},
-		},
-	}
-
-	if model.Settings.Get("uploadImage").MustBool(true) {
-		content.ImageURL = "https://grafana.com/assets/img/blog/mixed_styles.png"
-	}
-
-	err = notifier.Notify(content)
+	err = notifier.sendNotifications(createTestEvalContext(), notifierStateSlice{{notifier: notifiers}})
 	if err != nil {
 		c.JSON(400, common.ResponseErrorMessage(nil, i18n.OFF, err.Error()))
 		return
 	}
+}
+
+func createTestEvalContext() *models.EvalContext {
+	testRule := &models.Rule{
+		DashboardID: 1,
+		PanelID:     1,
+		Name:        "Test notification",
+		Message:     "Someone is testing the alert notification within Grafana.",
+		State:       models.AlertStateAlerting,
+	}
+
+	ctx := models.NewEvalContext(context.Background(), testRule, logger)
+	ctx.IsTestRun = true
+	ctx.Firing = true
+	ctx.Error = fmt.Errorf("This is only a test")
+	ctx.EvalMatches = evalMatchesBasedOnState()
+
+	return ctx
+}
+
+func evalMatchesBasedOnState() []*models.EvalMatch {
+	matches := make([]*models.EvalMatch, 0)
+	matches = append(matches, &models.EvalMatch{
+		Metric: "High value",
+		Value:  null.FloatFrom(100),
+	})
+
+	matches = append(matches, &models.EvalMatch{
+		Metric: "Higher Value",
+		Value:  null.FloatFrom(200),
+	})
+
+	return matches
 }
 
 type TestRuleReq struct {

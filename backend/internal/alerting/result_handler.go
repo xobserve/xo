@@ -72,7 +72,7 @@ func (handler *defaultResultHandler) handle(evalContext *models.EvalContext) err
 			DashboardId: evalContext.Rule.DashboardID,
 			PanelId:     evalContext.Rule.PanelID,
 			AlertId:     evalContext.Rule.ID,
-			Text:        "",
+			Text:        string(evalContext.Rule.State),
 			NewState:    string(evalContext.Rule.State),
 			PrevState:   string(evalContext.PrevAlertState),
 			Time:        time.Now().UnixNano() / int64(time.Millisecond),
