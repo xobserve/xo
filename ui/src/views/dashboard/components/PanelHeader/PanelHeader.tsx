@@ -127,7 +127,6 @@ export class PanelHeader extends Component<Props, State> {
     const { menuItems } = this.state;
     const title = templateSrv.replaceWithText(panel.title, scopedVars);
 
-    console.log(alertState)
     const panelHeaderClass = classNames({
       'panel-header': true,
       'grid-drag-handle': !(isViewing || isEditing),

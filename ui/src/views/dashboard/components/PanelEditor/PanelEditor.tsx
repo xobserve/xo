@@ -159,7 +159,7 @@ export class PanelEditorUnconnected extends PureComponent<Props, State> {
     };
 
     onSaveDashboard = () => {
-        appEvents.emit('open-dashboard-save-modal',this.props.dashboard)
+        appEvents.emit(CoreEvents.keybindingSaveDashboard,this.props.dashboard)
     };
 
     setModalVisible(status) {

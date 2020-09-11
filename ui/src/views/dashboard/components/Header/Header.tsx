@@ -35,7 +35,7 @@ const { Header } = Layout
 function HeaderWrapper(props: Props) {
     const [dashboard, setDashboard] = useState(null)
 
-    appEvents.on('open-dashboard-save-modal', (dash: DashboardModel) => {
+    appEvents.on('open-dashboard-save-modal', (dash) => {
         setDashboard(dash)
     })
 
@@ -70,7 +70,7 @@ function HeaderWrapper(props: Props) {
                 </div>
             </div>
 
-            {dashboard && <SaveDashboard dashboard={dashboard} setDashboard={setDashboard} />}
+            {dashboard && <SaveDashboard dashboard={dashboard[0]} originDashbord={dashboard[1]} setDashboard={setDashboard} />}
 
             <Prompt message={
                 () =>

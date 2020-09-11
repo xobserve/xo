@@ -32,7 +32,7 @@ type ReqDashboardData struct {
 	FolderId     int              `json:"folderId"`
 	IsFolder     bool             `json:"isFolder"`
 	FromTeam     int64            `json:"fromTeam"` // whether this dashboard is created in team page
-	UpdateAlerts bool             `json:"updateAlerts"`
+	AlertChanged bool             `json:"alertChanged"`
 }
 
 func SaveDashboard(c *gin.Context) {
@@ -147,10 +147,13 @@ func SaveDashboard(c *gin.Context) {
 	}
 
 	// save alerts
-	err = alerting.UpdateDashboardAlerts(dash)
-	if err != nil {
-		c.JSON(500, common.ResponseInternalError())
-		return
+	if dsData.AlertChanged {
+		logger.Info("dashboard alert changed")
+		err = alerting.UpdateDashboardAlerts(dash)
+		if err != nil {
+			c.JSON(500, common.ResponseInternalError())
+			return
+		}
 	}
 
 	c.JSON(200, common.ResponseSuccess(utils.Map{

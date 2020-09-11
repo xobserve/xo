@@ -252,8 +252,10 @@ class DashboardPage extends React.PureComponent<DashboardPageProps & RouteCompon
         this.setState({ updateScrollTop: 0 });
     };
 
-    saveDashboard() {
-        appEvents.emit('open-dashboard-save-modal', this.props.dashboard)
+    saveDashboard(data?: DashboardModel) {
+        const dash = data??this.props.dashboard
+
+        appEvents.emit('open-dashboard-save-modal', [dash,this.originDash])
     }
 
     onUpdateUrl() {
