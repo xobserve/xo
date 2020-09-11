@@ -1,7 +1,7 @@
 package plugins
 
 import (
-	"github.com/CodeCreatively/datav/backend/pkg/utils/errutil"
+	"github.com/code-creatively/datav/backend/pkg/utils/errutil"
 	"encoding/json"
 )
 type DataSourcePlugin struct {

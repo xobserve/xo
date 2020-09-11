@@ -2,7 +2,7 @@ package models
 
 import (
 	"database/sql"
-	"github.com/CodeCreatively/datav/backend/pkg/db"
+	"github.com/code-creatively/datav/backend/pkg/db"
 	"time"
 )
 

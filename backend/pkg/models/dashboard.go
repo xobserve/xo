@@ -3,11 +3,11 @@ package models
 import (
 	"encoding/json"
 	"database/sql"
-	"github.com/CodeCreatively/datav/backend/pkg/db"
-	"github.com/CodeCreatively/datav/backend/pkg/utils"
+	"github.com/code-creatively/datav/backend/pkg/db"
+	"github.com/code-creatively/datav/backend/pkg/utils"
 	"fmt"
 	"time"
-	"github.com/CodeCreatively/datav/backend/pkg/utils/simplejson"
+	"github.com/code-creatively/datav/backend/pkg/utils/simplejson"
 )
 
 type DashboardRef struct {

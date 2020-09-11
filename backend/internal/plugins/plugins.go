@@ -1,11 +1,11 @@
 package plugins
 
 import (
-	"github.com/CodeCreatively/datav/backend/internal/registry"
-	"github.com/CodeCreatively/datav/backend/pkg/log"
-	"github.com/CodeCreatively/datav/backend/pkg/config"
-	"github.com/CodeCreatively/datav/backend/pkg/utils/errutil"
-	"github.com/CodeCreatively/datav/backend/pkg/utils"
+	"github.com/code-creatively/datav/backend/internal/registry"
+	"github.com/code-creatively/datav/backend/pkg/log"
+	"github.com/code-creatively/datav/backend/pkg/config"
+	"github.com/code-creatively/datav/backend/pkg/utils/errutil"
+	"github.com/code-creatively/datav/backend/pkg/utils"
 	"path"
 	"os"
 	"path/filepath"

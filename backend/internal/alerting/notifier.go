@@ -5,7 +5,7 @@ import (
 	"errors"
 	"time"
 
-	"github.com/CodeCreatively/datav/backend/pkg/models"
+	"github.com/code-creatively/datav/backend/pkg/models"
 )
 
 // NotifierPlugin holds meta information about a notifier.

@@ -7,10 +7,10 @@ import (
 	"strings"
 	"time"
 
-	"github.com/CodeCreatively/datav/backend/pkg/log"
-	"github.com/CodeCreatively/datav/backend/pkg/models"
-	"github.com/CodeCreatively/datav/backend/pkg/tsdb"
-	"github.com/CodeCreatively/datav/backend/pkg/utils/null"
+	"github.com/code-creatively/datav/backend/pkg/log"
+	"github.com/code-creatively/datav/backend/pkg/models"
+	"github.com/code-creatively/datav/backend/pkg/tsdb"
+	"github.com/code-creatively/datav/backend/pkg/utils/null"
 
 	"net/http"
 

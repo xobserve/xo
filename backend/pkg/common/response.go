@@ -1,7 +1,7 @@
 package common
 
 import (
-	"github.com/CodeCreatively/datav/backend/pkg/i18n"
+	"github.com/code-creatively/datav/backend/pkg/i18n"
 )
 
 type Response struct {

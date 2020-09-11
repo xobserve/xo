@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/CodeCreatively/datav/backend/pkg/config"
+	"github.com/code-creatively/datav/backend/pkg/config"
 
 	"github.com/inconshreveable/log15"
 )

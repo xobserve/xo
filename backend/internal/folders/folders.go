@@ -3,10 +3,10 @@ package folders
 import (
 	"database/sql"
 
-	"github.com/CodeCreatively/datav/backend/internal/cache"
-	"github.com/CodeCreatively/datav/backend/pkg/db"
-	"github.com/CodeCreatively/datav/backend/pkg/log"
-	"github.com/CodeCreatively/datav/backend/pkg/models"
+	"github.com/code-creatively/datav/backend/internal/cache"
+	"github.com/code-creatively/datav/backend/pkg/db"
+	"github.com/code-creatively/datav/backend/pkg/log"
+	"github.com/code-creatively/datav/backend/pkg/models"
 )
 
 var logger = log.RootLogger.New("logger", "dashboard")

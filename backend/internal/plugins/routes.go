@@ -1,6 +1,6 @@
 package plugins
 
-import "github.com/CodeCreatively/datav/backend/pkg/models"
+import "github.com/code-creatively/datav/backend/pkg/models"
 
 type PluginRoute struct {
 	Path         string                `json:"path"`

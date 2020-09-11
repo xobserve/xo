@@ -4,9 +4,9 @@ import (
 	"encoding/json"
 	"time"
 
-	"github.com/CodeCreatively/datav/backend/pkg/db"
-	"github.com/CodeCreatively/datav/backend/pkg/models"
-	"github.com/CodeCreatively/datav/backend/pkg/utils/simplejson"
+	"github.com/code-creatively/datav/backend/pkg/db"
+	"github.com/code-creatively/datav/backend/pkg/models"
+	"github.com/code-creatively/datav/backend/pkg/utils/simplejson"
 )
 
 func UpdateDashboardAlerts(dash *models.Dashboard) error {

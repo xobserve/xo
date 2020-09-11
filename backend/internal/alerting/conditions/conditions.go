@@ -1,8 +1,8 @@
 package conditions
 
 import (
-	"github.com/CodeCreatively/datav/backend/pkg/models"
-	"github.com/CodeCreatively/datav/backend/pkg/utils/simplejson"
+	"github.com/code-creatively/datav/backend/pkg/models"
+	"github.com/code-creatively/datav/backend/pkg/utils/simplejson"
 )
 
 // ConditionFactory is the function signature for creating `Conditions`.

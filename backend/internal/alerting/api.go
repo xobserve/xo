@@ -7,16 +7,16 @@ import (
 	"strconv"
 	"time"
 
-	_ "github.com/CodeCreatively/datav/backend/pkg/tsdb"
+	_ "github.com/code-creatively/datav/backend/pkg/tsdb"
 
-	"github.com/CodeCreatively/datav/backend/internal/acl"
-	"github.com/CodeCreatively/datav/backend/internal/session"
-	"github.com/CodeCreatively/datav/backend/pkg/common"
-	"github.com/CodeCreatively/datav/backend/pkg/db"
-	"github.com/CodeCreatively/datav/backend/pkg/i18n"
-	"github.com/CodeCreatively/datav/backend/pkg/models"
-	"github.com/CodeCreatively/datav/backend/pkg/utils/null"
-	"github.com/CodeCreatively/datav/backend/pkg/utils/simplejson"
+	"github.com/code-creatively/datav/backend/internal/acl"
+	"github.com/code-creatively/datav/backend/internal/session"
+	"github.com/code-creatively/datav/backend/pkg/common"
+	"github.com/code-creatively/datav/backend/pkg/db"
+	"github.com/code-creatively/datav/backend/pkg/i18n"
+	"github.com/code-creatively/datav/backend/pkg/models"
+	"github.com/code-creatively/datav/backend/pkg/utils/null"
+	"github.com/code-creatively/datav/backend/pkg/utils/simplejson"
 	"github.com/gin-gonic/gin"
 )
 

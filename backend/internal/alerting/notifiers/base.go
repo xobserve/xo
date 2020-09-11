@@ -4,7 +4,7 @@ import (
 	"context"
 	"time"
 
-	"github.com/CodeCreatively/datav/backend/pkg/models"
+	"github.com/code-creatively/datav/backend/pkg/models"
 )
 
 const (

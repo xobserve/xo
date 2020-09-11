@@ -1,10 +1,10 @@
 package annotation
 
 import (
-	"github.com/CodeCreatively/datav/backend/internal/annotation/repo"
-	"github.com/CodeCreatively/datav/backend/pkg/db"
-	"github.com/CodeCreatively/datav/backend/pkg/log"
-	"github.com/CodeCreatively/datav/backend/pkg/models"
+	"github.com/code-creatively/datav/backend/internal/annotation/repo"
+	"github.com/code-creatively/datav/backend/pkg/db"
+	"github.com/code-creatively/datav/backend/pkg/log"
+	"github.com/code-creatively/datav/backend/pkg/models"
 )
 
 var logger = log.RootLogger.New("logger", "bootConfig")

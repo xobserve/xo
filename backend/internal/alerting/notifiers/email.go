@@ -5,10 +5,10 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/CodeCreatively/datav/backend/internal/alerting"
-	"github.com/CodeCreatively/datav/backend/internal/notifications"
-	"github.com/CodeCreatively/datav/backend/pkg/config"
-	"github.com/CodeCreatively/datav/backend/pkg/models"
+	"github.com/code-creatively/datav/backend/internal/alerting"
+	"github.com/code-creatively/datav/backend/internal/notifications"
+	"github.com/code-creatively/datav/backend/pkg/config"
+	"github.com/code-creatively/datav/backend/pkg/models"
 	"github.com/grafana/grafana/pkg/cmd/grafana-cli/logger"
 )
 

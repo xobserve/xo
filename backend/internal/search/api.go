@@ -6,12 +6,12 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/CodeCreatively/datav/backend/internal/cache"
-	"github.com/CodeCreatively/datav/backend/internal/dashboard"
-	"github.com/CodeCreatively/datav/backend/internal/folders"
-	"github.com/CodeCreatively/datav/backend/pkg/common"
-	"github.com/CodeCreatively/datav/backend/pkg/i18n"
-	"github.com/CodeCreatively/datav/backend/pkg/models"
+	"github.com/code-creatively/datav/backend/internal/cache"
+	"github.com/code-creatively/datav/backend/internal/dashboard"
+	"github.com/code-creatively/datav/backend/internal/folders"
+	"github.com/code-creatively/datav/backend/pkg/common"
+	"github.com/code-creatively/datav/backend/pkg/i18n"
+	"github.com/code-creatively/datav/backend/pkg/models"
 	"github.com/gin-gonic/gin"
 )
 

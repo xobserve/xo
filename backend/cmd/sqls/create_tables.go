@@ -6,11 +6,11 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/CodeCreatively/datav/backend/internal/teams"
-	"github.com/CodeCreatively/datav/backend/pkg/db"
-	"github.com/CodeCreatively/datav/backend/pkg/log"
-	"github.com/CodeCreatively/datav/backend/pkg/models"
-	"github.com/CodeCreatively/datav/backend/pkg/utils"
+	"github.com/code-creatively/datav/backend/internal/teams"
+	"github.com/code-creatively/datav/backend/pkg/db"
+	"github.com/code-creatively/datav/backend/pkg/log"
+	"github.com/code-creatively/datav/backend/pkg/models"
+	"github.com/code-creatively/datav/backend/pkg/utils"
 )
 
 var adminSalt, adminPW string

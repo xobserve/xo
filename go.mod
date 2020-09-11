@@ -1,4 +1,4 @@
-module github.com/CodeCreatively/datav
+module github.com/code-creatively/datav
 
 go 1.14
 

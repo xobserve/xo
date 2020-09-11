@@ -3,7 +3,7 @@ package alerting
 import (
 	"sync"
 
-	"github.com/CodeCreatively/datav/backend/pkg/models"
+	"github.com/code-creatively/datav/backend/pkg/models"
 )
 
 type ruleReader interface {

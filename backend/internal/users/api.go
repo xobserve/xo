@@ -1,20 +1,20 @@
 package users
 
 import (
-	"github.com/CodeCreatively/datav/backend/pkg/i18n"
-	"github.com/CodeCreatively/datav/backend/internal/invasion"
+	"github.com/code-creatively/datav/backend/pkg/i18n"
+	"github.com/code-creatively/datav/backend/internal/invasion"
 	"database/sql"
-	"github.com/CodeCreatively/datav/backend/internal/sidemenu"
-	"github.com/CodeCreatively/datav/backend/pkg/utils"
-	"github.com/CodeCreatively/datav/backend/internal/session"
+	"github.com/code-creatively/datav/backend/internal/sidemenu"
+	"github.com/code-creatively/datav/backend/pkg/utils"
+	"github.com/code-creatively/datav/backend/internal/session"
 	// "fmt"
 	"sort"
 	"strconv"
 	"strings"
 
-	"github.com/CodeCreatively/datav/backend/pkg/common"
-	"github.com/CodeCreatively/datav/backend/pkg/db"
-	"github.com/CodeCreatively/datav/backend/pkg/models"
+	"github.com/code-creatively/datav/backend/pkg/common"
+	"github.com/code-creatively/datav/backend/pkg/db"
+	"github.com/code-creatively/datav/backend/pkg/models"
 	"github.com/gin-gonic/gin"
 	"time"
 )

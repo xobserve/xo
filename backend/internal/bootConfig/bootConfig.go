@@ -2,14 +2,14 @@ package bootConfig
 
 import (
 	"database/sql"
-	"github.com/CodeCreatively/datav/backend/internal/session"
-	"github.com/CodeCreatively/datav/backend/pkg/models"
-	"github.com/CodeCreatively/datav/backend/internal/sidemenu"
-	"github.com/CodeCreatively/datav/backend/internal/datasources"
+	"github.com/code-creatively/datav/backend/internal/session"
+	"github.com/code-creatively/datav/backend/pkg/models"
+	"github.com/code-creatively/datav/backend/internal/sidemenu"
+	"github.com/code-creatively/datav/backend/internal/datasources"
 	// "fmt"
-	"github.com/CodeCreatively/datav/backend/internal/plugins" 
-	"github.com/CodeCreatively/datav/backend/pkg/common"
-	"github.com/CodeCreatively/datav/backend/pkg/log"
+	"github.com/code-creatively/datav/backend/internal/plugins" 
+	"github.com/code-creatively/datav/backend/pkg/common"
+	"github.com/code-creatively/datav/backend/pkg/log"
 	"github.com/gin-gonic/gin"
 	
 	"strconv"

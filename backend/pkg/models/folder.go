@@ -2,7 +2,7 @@ package models
 
 import (
 	"time"
-	"github.com/CodeCreatively/datav/backend/pkg/utils"
+	"github.com/code-creatively/datav/backend/pkg/utils"
 	"fmt"
 )
 

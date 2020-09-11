@@ -3,9 +3,9 @@ package tsdb
 import (
 	"encoding/json"
 
-	"github.com/CodeCreatively/datav/backend/pkg/models"
-	"github.com/CodeCreatively/datav/backend/pkg/utils/null"
-	"github.com/CodeCreatively/datav/backend/pkg/utils/simplejson"
+	"github.com/code-creatively/datav/backend/pkg/models"
+	"github.com/code-creatively/datav/backend/pkg/utils/null"
+	"github.com/code-creatively/datav/backend/pkg/utils/simplejson"
 
 	"github.com/grafana/grafana-plugin-sdk-go/data"
 )

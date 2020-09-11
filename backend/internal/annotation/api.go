@@ -3,15 +3,15 @@ package annotation
 import (
 	// "fmt"
 
-	"github.com/CodeCreatively/datav/backend/internal/acl"
-	"github.com/CodeCreatively/datav/backend/internal/dashboard"
-	"github.com/CodeCreatively/datav/backend/internal/session"
+	"github.com/code-creatively/datav/backend/internal/acl"
+	"github.com/code-creatively/datav/backend/internal/dashboard"
+	"github.com/code-creatively/datav/backend/internal/session"
 
 	"strconv"
 
-	"github.com/CodeCreatively/datav/backend/pkg/common"
-	"github.com/CodeCreatively/datav/backend/pkg/i18n"
-	"github.com/CodeCreatively/datav/backend/pkg/models"
+	"github.com/code-creatively/datav/backend/pkg/common"
+	"github.com/code-creatively/datav/backend/pkg/i18n"
+	"github.com/code-creatively/datav/backend/pkg/models"
 	"github.com/gin-gonic/gin"
 )
 

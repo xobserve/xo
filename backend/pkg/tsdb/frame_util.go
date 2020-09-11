@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/CodeCreatively/datav/backend/pkg/utils/errutil"
-	"github.com/CodeCreatively/datav/backend/pkg/utils/null"
+	"github.com/code-creatively/datav/backend/pkg/utils/errutil"
+	"github.com/code-creatively/datav/backend/pkg/utils/null"
 
 	"github.com/grafana/grafana-plugin-sdk-go/data"
 )

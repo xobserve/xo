@@ -3,10 +3,10 @@ package alerting
 import (
 	"fmt"
 
-	"github.com/CodeCreatively/datav/backend/internal/alerting/conditions"
-	"github.com/CodeCreatively/datav/backend/pkg/models"
+	"github.com/code-creatively/datav/backend/internal/alerting/conditions"
+	"github.com/code-creatively/datav/backend/pkg/models"
 
-	"github.com/CodeCreatively/datav/backend/pkg/utils/simplejson"
+	"github.com/code-creatively/datav/backend/pkg/utils/simplejson"
 )
 
 // ValidationError is a typed error with meta data

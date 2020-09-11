@@ -128,7 +128,7 @@ class DashboardPage extends React.PureComponent<DashboardPageProps & RouteCompon
                     ...this.state,
                     panelAlertStates: res.data
                 })
-            }, 5000)
+            }, 30000)
         }
     }
 
