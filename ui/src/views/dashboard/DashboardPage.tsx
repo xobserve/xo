@@ -4,10 +4,10 @@ import classNames from 'classnames'
 import queryString from 'query-string'
 
 import { DashboardModel } from './model/DashboardModel'
-import { Button,Result} from 'antd'
+import { Button, Result } from 'antd'
 import { DashboardGrid } from './DashGrid'
 import { getTimeSrv } from 'src/core/services/time'
-import { TimeRange, CustomScrollbar, config } from 'src/packages/datav-core'
+import { TimeRange, CustomScrollbar, config, getBackendSrv } from 'src/packages/datav-core'
 
 import './DashboardPage.less'
 import { initDashboard } from './model/initDashboard';
@@ -30,17 +30,17 @@ import impressionSrv from 'src/core/services/impression'
 
 import { onTimeRangeUpdated } from '../variables/state/actions';
 import HeaderWrapper from './components/Header/Header'
-import { updateUrl,getUrlParams } from 'src/core/library/utils/url';
-import {getVariables} from 'src/views/variables/state/selectors'
+import { updateUrl, getUrlParams } from 'src/core/library/utils/url';
+import { getVariables } from 'src/views/variables/state/selectors'
 
 interface DashboardPageProps {
     routeID?: string
     dashboard: DashboardModel | null;
-    editPanelId?: string | null 
+    editPanelId?: string | null
     viewPanelId?: string | null
     settingView?: string | null
-    inspectPanelId?: string | null 
-    inspectTab? : InspectTab
+    inspectPanelId?: string | null
+    inspectTab?: InspectTab
     initDashboard: typeof initDashboard
     initErrorStatus: number
 }
@@ -53,12 +53,13 @@ interface State {
 
     editPanel: PanelModel | null
     viewPanel: PanelModel | null
+    panelAlertStates: any
 }
 
 class DashboardPage extends React.PureComponent<DashboardPageProps & RouteComponentProps, State> {
     // first init dashboard or just saved dashboard
     originDash: DashboardModel;
-
+    getAlertStateHandler: any;
     constructor(props) {
         super(props)
         this.state = {
@@ -67,7 +68,8 @@ class DashboardPage extends React.PureComponent<DashboardPageProps & RouteCompon
             rememberScrollTop: 0,
 
             editPanel: null,
-            viewPanel: null
+            viewPanel: null,
+            panelAlertStates: {}
         };
 
 
@@ -110,8 +112,26 @@ class DashboardPage extends React.PureComponent<DashboardPageProps & RouteCompon
         store.dispatch(updateBreadcrumbText(ds.title))
 
         impressionSrv.addDashboardImpression(ds.id);
+
+        if (ds.id) {
+            getBackendSrv().get(`/api/alerting/state/${ds.id}`).then((res) => {
+                this.setState({
+                    ...this.state,
+                    panelAlertStates: res.data
+                })
+            })
+
+            // looply get alert states
+            this.getAlertStateHandler = setInterval(async () => {
+                const res = await getBackendSrv().get(`/api/alerting/state/${ds.id}`)
+                this.setState({
+                    ...this.state,
+                    panelAlertStates: res.data
+                })
+            }, 5000)
+        }
     }
-    
+
     componentWillUnmount() {
         // unregister from changeTracker
         tracker.unregister()
@@ -126,13 +146,15 @@ class DashboardPage extends React.PureComponent<DashboardPageProps & RouteCompon
         store.dispatch(isInDashboardPage(false))
 
         store.dispatch(cleanUpDashboard())
+
+        clearInterval(this.getAlertStateHandler)
     }
 
     componentDidUpdate() {
         if (this.props.initErrorStatus === 403) {
-            return 
+            return
         }
-        
+
         const { dashboard, editPanelId, viewPanelId } = this.props
         const { editPanel, viewPanel } = this.state
 
@@ -179,7 +201,7 @@ class DashboardPage extends React.PureComponent<DashboardPageProps & RouteCompon
                 { viewPanel: null, updateScrollTop: this.state.rememberScrollTop },
                 this.triggerPanelsRendering.bind(this)
             );
-            appEvents.emit('set-panel-viewing-back-button',null)
+            appEvents.emit('set-panel-viewing-back-button', null)
         }
     }
 
@@ -243,19 +265,19 @@ class DashboardPage extends React.PureComponent<DashboardPageProps & RouteCompon
 
         const variables = getVariables()
         let vars = ""
-        variables.forEach((variable:any) => {
+        variables.forEach((variable: any) => {
             if (variable.multi) {
                 variable.current.value.forEach((v) => {
-                    vars = vars + '&var-' + variable.name +'=' + v
+                    vars = vars + '&var-' + variable.name + '=' + v
                 })
             } else {
-                vars = vars + '&var-' + variable.name +'=' + variable.current.value
+                vars = vars + '&var-' + variable.name + '=' + variable.current.value
             }
         })
 
         updateUrl(times + vars)
     }
-    
+
     getPanelByIdFromUrlParam(rawPanelId: string): PanelModel {
         const { dashboard } = this.props;
 
@@ -279,14 +301,14 @@ class DashboardPage extends React.PureComponent<DashboardPageProps & RouteCompon
     getInspectPanel() {
         const { dashboard, inspectPanelId } = this.props;
         if (!dashboard || !inspectPanelId) {
-        return null;
+            return null;
         }
 
         const inspectPanel = dashboard.getPanelById(parseInt(inspectPanelId, 10));
 
         // cannot inspect panels plugin is not already loaded
         if (!inspectPanel) {
-        return null;
+            return null;
         }
 
         return inspectPanel;
@@ -296,9 +318,9 @@ class DashboardPage extends React.PureComponent<DashboardPageProps & RouteCompon
         const target = e.target as HTMLElement;
         this.setState({ scrollTop: target.scrollTop, updateScrollTop: null });
     };
-    
+
     render() {
-        const { dashboard, settingView,inspectTab,initErrorStatus} = this.props
+        const { dashboard, settingView, inspectTab, initErrorStatus } = this.props
         if (initErrorStatus == 403) {
             return (
                 <div>
@@ -311,7 +333,7 @@ class DashboardPage extends React.PureComponent<DashboardPageProps & RouteCompon
                 </div>
             )
         }
-        const { updateScrollTop, scrollTop, editPanel, viewPanel } = this.state
+        const { updateScrollTop, scrollTop, editPanel, viewPanel, panelAlertStates} = this.state
         if (!dashboard) {
             return null
         }
@@ -321,10 +343,10 @@ class DashboardPage extends React.PureComponent<DashboardPageProps & RouteCompon
             'dashboard-container': true,
             'dashboard-container--has-submenu': dashboard.meta.submenuEnabled,
         });
-        
+
         return (
             <div>
-                <HeaderWrapper onAddPanel={this.onAddPanel} onSaveDashboard={this.saveDashboard} onUpdateUrl={this.onUpdateUrl}/>
+                <HeaderWrapper onAddPanel={this.onAddPanel} onSaveDashboard={this.saveDashboard} onUpdateUrl={this.onUpdateUrl} />
                 <div className="scroll-canvas scroll-canvas--dashboard">
                     <CustomScrollbar
                         autoHeightMin="100%"
@@ -336,6 +358,7 @@ class DashboardPage extends React.PureComponent<DashboardPageProps & RouteCompon
                         <div className={gridWrapperClasses}>
                             {!editPanel && config.featureToggles.newVariables && <SubMenu dashboard={dashboard} />}
                             <DashboardGrid
+                                alertStates={panelAlertStates}
                                 dashboard={dashboard}
                                 viewPanel={viewPanel}
                                 isPanelEditorOpen={!editPanel}
@@ -344,10 +367,10 @@ class DashboardPage extends React.PureComponent<DashboardPageProps & RouteCompon
                         </div>
                     </CustomScrollbar>
                 </div>
-                
+
                 {inspectPanel && <PanelInspector dashboard={dashboard} panel={inspectPanel} defaultTab={inspectTab} />}
                 {editPanel && <PanelEditor dashboard={dashboard} sourcePanel={editPanel} />}
-                {settingView && <DashboardSettings dashboard={dashboard} viewId={this.props.dashboard.uid !== GlobalVariableUid? this.props.settingView:'variables'} />}
+                {settingView && <DashboardSettings dashboard={dashboard} viewId={this.props.dashboard.uid !== GlobalVariableUid ? this.props.settingView : 'variables'} />}
             </div>
         )
     }

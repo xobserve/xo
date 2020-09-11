@@ -5,7 +5,8 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/grafana/grafana/pkg/setting"
+	"github.com/CodeCreatively/datav/backend/pkg/config"
+
 	"github.com/inconshreveable/log15"
 )
 
@@ -82,10 +83,6 @@ func (c *EvalContext) GetStateModel() *StateDescription {
 	}
 }
 
-func (c *EvalContext) shouldUpdateAlertState() bool {
-	return c.Rule.State != c.PrevAlertState
-}
-
 // GetDurationMs returns the duration of the alert evaluation.
 func (c *EvalContext) GetDurationMs() float64 {
 	return float64(c.EndTime.Nanosecond()-c.StartTime.Nanosecond()) / float64(1000000)
@@ -118,7 +115,7 @@ const urlFormat = "%s?tab=alert&editPanel=%d"
 // GetRuleURL returns the url to the dashboard containing the alert.
 func (c *EvalContext) GetRuleURL() (string, error) {
 	if c.IsTestRun {
-		return setting.AppUrl, nil
+		return config.Data.Common.UIRootURL, nil
 	}
 
 	ref, err := c.GetDashboardUID()
@@ -148,6 +145,14 @@ func (c *EvalContext) GetNewState() AlertStateType {
 }
 
 func (c *EvalContext) ShouldUpdateAlertState() bool {
+	return c.Rule.State != c.PrevAlertState
+}
+
+func (c *EvalContext) ShouldNotify() bool {
+	if c.PrevAlertState == AlertStateUnknown && c.Rule.State == AlertStateOK {
+		return false
+	}
+
 	return c.Rule.State != c.PrevAlertState
 }
 

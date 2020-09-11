@@ -313,7 +313,7 @@ var (
 	ErrAlertNotificationFailedGenerateUniqueUid = errors.New("Failed to generate unique alert notification uid")
 )
 
-func GetOrCreateAlertNotificationState(alertId int64, notifierId int64) (*AlertNotificationState, error) {
+func GetOrCreateAlertNotificationState(dashId int64, alertId int64, notifierId int64) (*AlertNotificationState, error) {
 	ans := &AlertNotificationState{
 		AlertId:    alertId,
 		NotifierId: notifierId,
@@ -333,8 +333,8 @@ func GetOrCreateAlertNotificationState(alertId int64, notifierId int64) (*AlertN
 	ans.State = AlertNotificationStateUnknown
 	ans.UpdatedAt = time.Now().Unix()
 
-	res, err := db.SQL.Exec("INSERT INTO alert_notification_state (alert_id, notifier_id, state,version,updated_at,alert_rule_state_updated_version) VALUES (?,?,?,?,?,?)",
-		ans.AlertId, ans.NotifierId, ans.State, ans.Version, ans.UpdatedAt, ans.AlertRuleStateUpdatedVersion)
+	res, err := db.SQL.Exec("INSERT INTO alert_notification_state (dashboard_id,alert_id, notifier_id, state,version,updated_at,alert_rule_state_updated_version) VALUES (?,?,?,?,?,?,?)",
+		dashId, ans.AlertId, ans.NotifierId, ans.State, ans.Version, ans.UpdatedAt, ans.AlertRuleStateUpdatedVersion)
 	if err != nil {
 		return nil, err
 	}

@@ -419,6 +419,7 @@ var CreateTableSqls = map[string]string{
 	"alert_notification_state": `
 	CREATE TABLE IF NOT EXISTS alert_notification_state (
 		id 						INTEGER PRIMARY KEY AUTOINCREMENT,
+		dashboard_id			INTEGER NOT NULL,
 		alert_id				INTEGER NOT NULL,
 		notifier_id				INTEGER NOT NULL,
 		state					VARCHAR(50) NOT NULL,
@@ -426,6 +427,8 @@ var CreateTableSqls = map[string]string{
 		updated_at				INTEGER NOT NULL,
 		alert_rule_state_updated_version INTEGER NOT NULL
 	);
+	CREATE INDEX IF NOT EXISTS alert_notification_state_dash_id
+		ON alert_notification_state (dashboard_id);
 	CREATE UNIQUE INDEX IF NOT EXISTS alert_notification_state_alert_notifier_id
 		ON alert_notification_state (alert_id,notifier_id);
 	`,

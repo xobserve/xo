@@ -7,7 +7,7 @@ import * as DefaultIcon from '@iconscout/react-unicons';
 import * as MonoIcon from './assets';
 import './_Icon.less'
 
-const alwaysMonoIcons = ['grafana', 'favorite'];
+const alwaysMonoIcons = ['grafana', 'favorite', 'heart-break', 'heart'];
 
 export interface IconProps extends React.HTMLAttributes<HTMLDivElement> {
   name: any;
@@ -37,16 +37,16 @@ export const Icon = React.forwardRef<HTMLDivElement, IconProps>(
     const Component = type === 'default' ? DefaultIcon[iconName] : MonoIcon[iconName];
 
     if (!Component) {
-      return <div />;
+      return <div className="no-icon-founded"/>;
     }
 
     return (
       <div className="datav-icon-container" {...divElementProps} ref={ref}>
-        {type === 'default' && <Component size={svgSize} className={"datav-icon"} style={style} />}
+        {type === 'default' && <Component size={svgSize} className={cx("datav-icon", className)} style={style} />}
         {type === 'mono' && (
           <Component
             size={svgSize}
-            className={ {"datav-icon": true, "datav-orange": name === 'favorite' }}
+            className={cx("datav-icon", { 'datav-orange': name === 'favorite' }, className)}
             style={style}
           />
         )}

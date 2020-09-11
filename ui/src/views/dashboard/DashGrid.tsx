@@ -92,6 +92,7 @@ export interface Props {
   viewPanel: PanelModel | null;
   scrollTop: number;
   isPanelEditorOpen?: boolean;
+  alertStates: any
 }
 
 export class DashboardGrid extends PureComponent<Props> {
@@ -247,6 +248,7 @@ export class DashboardGrid extends PureComponent<Props> {
     }
   
     renderPanel(panel: PanelModel) {
+      const alertState = this.props.alertStates[panel.id]
       if (panel.type === 'row') {
         return <DashboardRow panel={panel} dashboard={this.props.dashboard} />;
       }
@@ -262,6 +264,7 @@ export class DashboardGrid extends PureComponent<Props> {
           isEditing={panel.isEditing}
           isViewing={panel.isViewing}
           isInView={panel.isInView}
+          alertState={alertState}
         />
       );
     }

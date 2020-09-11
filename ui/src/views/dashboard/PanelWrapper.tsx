@@ -20,6 +20,7 @@ interface Props {
     isEditing: boolean;
     isViewing: boolean;
     isInView: boolean;
+    alertState: string;
 }
 
 interface State {
@@ -81,7 +82,7 @@ class PanelWrapper extends PureComponent<Props, State>{
     };
   
     renderPanel(plugin: PanelPlugin) {
-      const { dashboard, panel, isViewing, isInView, isEditing } = this.props;
+      const { dashboard, panel, isViewing, isInView, isEditing,alertState} = this.props;
       return (
         <AutoSizer>
           {({ width, height }) => {
@@ -99,6 +100,7 @@ class PanelWrapper extends PureComponent<Props, State>{
                 isInView={isInView}
                 width={width}
                 height={height}
+                alertState={alertState}
               />
             );
           }}

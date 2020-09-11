@@ -127,6 +127,7 @@ export class PanelHeader extends Component<Props, State> {
     const { menuItems } = this.state;
     const title = templateSrv.replaceWithText(panel.title, scopedVars);
 
+    console.log(alertState)
     const panelHeaderClass = classNames({
       'panel-header': true,
       'grid-drag-handle': !(isViewing || isEditing),
@@ -163,7 +164,7 @@ export class PanelHeader extends Component<Props, State> {
             <div className="panel-title">
               {Object.values(notices).map(this.renderNotice)}
               {alertState && (
-                <Icon
+                <Icon 
                   name={alertState === 'alerting' ? 'heart-break' : 'heart'}
                   className="icon-gf panel-alert-icon"
                   style={{ marginRight: '4px' }}

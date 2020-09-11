@@ -138,3 +138,21 @@
 .alert-state-critical {
   color: #e02f44; 
 }
+
+.panel-alert-icon {
+    display: none; }
+  
+  .panel-has-alert .panel-alert-icon {
+    display: inline-block; }
+  
+  .panel-alert-state--alerting svg.panel-alert-icon {
+    color: #e02f44;
+    -webkit-animation: alerting-panel 1s cubic-bezier(1, 0.1, 0.73, 1) 0s infinite alternate;
+            animation: alerting-panel 1s cubic-bezier(1, 0.1, 0.73, 1) 0s infinite alternate; }
+  
+  .panel-alert-state--ok svg.panel-alert-icon {
+    color: #299c46; }
+  
+  .panel-alert-state--pending svg.panel-alert-icon {
+    color: #f79520; }
+  

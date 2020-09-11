@@ -2,6 +2,7 @@ package alerting
 
 import (
 	"context"
+	"database/sql"
 	"fmt"
 	"strconv"
 	"time"
@@ -270,4 +271,35 @@ func testAlertRule(rule *models.Rule) *models.EvalContext {
 	context.Rule.State = context.GetNewState()
 
 	return context
+}
+
+func GetDashboardState(c *gin.Context) {
+	dashId, _ := strconv.ParseInt(c.Param("dashId"), 10, 64)
+	if dashId == 0 {
+		common.ResponseI18nError(i18n.BadRequestData)
+		return
+	}
+
+	res := make(map[int64]string)
+	rows, err := db.SQL.Query("SELECT panel_id,state FROM alert WHERE dashboard_id=?", dashId)
+	if err != nil && err != sql.ErrNoRows {
+		logger.Warn("get dashboard alert error", "error", err)
+		c.JSON(500, common.ResponseInternalError())
+		return
+	}
+
+	for rows.Next() {
+		var pid int64
+		var state string
+		err := rows.Scan(&pid, &state)
+		if err != nil {
+			logger.Warn("scan dashboard state error", "error", err)
+			c.JSON(500, common.ResponseInternalError())
+			return
+		}
+
+		res[pid] = state
+	}
+
+	c.JSON(200, common.ResponseSuccess(res))
 }

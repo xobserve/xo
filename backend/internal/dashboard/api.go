@@ -27,11 +27,12 @@ import (
 )
 
 type ReqDashboardData struct {
-	Dashboard *simplejson.Json `json:"dashboard"`
-	Overwrite bool             `json:"overwrite"`
-	FolderId  int              `json:"folderId"`
-	IsFolder  bool             `json:"isFolder"`
-	FromTeam  int64            `json:"fromTeam"` // whether this dashboard is created in team page
+	Dashboard    *simplejson.Json `json:"dashboard"`
+	Overwrite    bool             `json:"overwrite"`
+	FolderId     int              `json:"folderId"`
+	IsFolder     bool             `json:"isFolder"`
+	FromTeam     int64            `json:"fromTeam"` // whether this dashboard is created in team page
+	UpdateAlerts bool             `json:"updateAlerts"`
 }
 
 func SaveDashboard(c *gin.Context) {

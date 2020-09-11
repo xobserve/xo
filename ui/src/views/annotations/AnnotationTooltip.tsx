@@ -20,7 +20,7 @@ const AnnotationTooltip = (props: Props) => {
         titleClass = stateModel.stateClass
         title = stateModel.text;
     }
-    // <i class="${stateModel.iconClass}"></i>
+
     return (
         <div className="graph-annotation">
             <div className="graph-annotation__header">

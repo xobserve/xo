@@ -191,7 +191,7 @@ func (n *notificationService) getNeededNotifiers(notificationIds []int64, evalCo
 			continue
 		}
 
-		ans, err := models.GetOrCreateAlertNotificationState(notification.Id, evalContext.Rule.ID)
+		ans, err := models.GetOrCreateAlertNotificationState(evalContext.Rule.DashboardID, notification.Id, evalContext.Rule.ID)
 		if err != nil {
 			logger.Error("Could not get notification state.", "notifier", notification.Id, "error", err)
 			continue

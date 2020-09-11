@@ -24,6 +24,13 @@ func UpdateDashboardAlerts(dash *models.Dashboard) error {
 		return err
 	}
 
+	// delete old alerts notification state
+	_, err = db.SQL.Exec("DELETE FROM alert_notification_state WHERE dashboard_id=?", dash.Id)
+	if err != nil {
+		logger.Warn("delete alert notification state error", "error", err)
+		return err
+	}
+
 	now := time.Now()
 	for _, alert := range alerts {
 		alert.Created = now

@@ -38,6 +38,7 @@ export interface Props {
   isInView: boolean;
   width: number;
   height: number;
+  alertState: string;
 }
 
 export interface State {
@@ -292,7 +293,7 @@ export class Panel extends PureComponent<Props, State> {
   }
 
   render() {
-    const { dashboard, panel, isViewing, isEditing, width, height } = this.props;
+    const { dashboard, panel, isViewing, isEditing, width, height,alertState} = this.props;
     const { errorMessage, data } = this.state;
     const { transparent } = panel;
 
@@ -301,6 +302,8 @@ export class Panel extends PureComponent<Props, State> {
       'panel-container--absolute': true,
       'panel-container--transparent': transparent,
       'panel-container--no-title': this.hasOverlayHeader(),
+      'panel-has-alert': panel.alert !== undefined,
+      [`panel-alert-state--${alertState}`]: alertState !== undefined,
     });
 
     return (
@@ -315,6 +318,7 @@ export class Panel extends PureComponent<Props, State> {
           isEditing={isEditing}
           isViewing={isViewing}
           data={data}
+          alertState={alertState}
         />
         <ErrorBoundary>
           {({ error }) => {

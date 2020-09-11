@@ -40,7 +40,7 @@ func (handler *defaultResultHandler) handle(evalContext *models.EvalContext) err
 	}
 
 	if evalContext.ShouldUpdateAlertState() {
-		logger.Info("New state change", "ruleId", evalContext.Rule.ID, "newState", evalContext.Rule.State, "prev state", evalContext.PrevAlertState)
+		logger.Info("New state change", "ruleId", evalContext.Rule.ID, "newState", evalContext.Rule.State, "prevState", evalContext.PrevAlertState)
 
 		newAlert, err := SetAlertState(evalContext.Rule.ID, evalContext.Rule.State, annotationData, executionError)
 		if err != nil {
@@ -65,7 +65,9 @@ func (handler *defaultResultHandler) handle(evalContext *models.EvalContext) err
 			// Update the last state change of the alert rule in memory
 			evalContext.Rule.LastStateChange = time.Now()
 		}
+	}
 
+	if evalContext.ShouldNotify() {
 		now := time.Now()
 		// save annotation
 		ann := models.Annotation{
@@ -85,15 +87,15 @@ func (handler *defaultResultHandler) handle(evalContext *models.EvalContext) err
 		if err := annotationRepo.Create(&ann); err != nil {
 			logger.Error("Failed to save annotation for new alert state", "error", err)
 		}
-	}
 
-	if err := handler.notifier.SendIfNeeded(evalContext); err != nil {
-		if xerrors.Is(err, context.Canceled) {
-			logger.Debug("handler.notifier.SendIfNeeded returned context.Canceled")
-		} else if xerrors.Is(err, context.DeadlineExceeded) {
-			logger.Debug("handler.notifier.SendIfNeeded returned context.DeadlineExceeded")
-		} else {
-			logger.Error("handler.notifier.SendIfNeeded failed", "err", err)
+		if err := handler.notifier.SendIfNeeded(evalContext); err != nil {
+			if xerrors.Is(err, context.Canceled) {
+				logger.Debug("handler.notifier.SendIfNeeded returned context.Canceled")
+			} else if xerrors.Is(err, context.DeadlineExceeded) {
+				logger.Debug("handler.notifier.SendIfNeeded returned context.DeadlineExceeded")
+			} else {
+				logger.Error("handler.notifier.SendIfNeeded failed", "err", err)
+			}
 		}
 	}
 
