@@ -1,7 +1,7 @@
 import React, { PureComponent } from 'react';
 import _ from 'lodash';
 import { css } from 'emotion';
-import { Alert, Button, Icon, IconName, CustomScrollbar, Container, HorizontalGroup, ConfirmModal, Modal, InlineFormLabel, getBackendSrv, currentLang } from 'src/packages/datav-core';
+import { Alert, Button, Icon, IconName, CustomScrollbar, Container, HorizontalGroup, ConfirmModal, Modal, InlineFormLabel, getBackendSrv, currentLang, DataQuery,DataSourceApi} from 'src/packages/datav-core';
 import { getDataSourceService, config } from 'src/packages/datav-core';
 import { getAlertingValidationMessage, getDefaultCondition } from './getAlertingValidationMessage';
 
@@ -36,6 +36,7 @@ interface State {
   showTestRule: boolean;
   frequencyWarning: string
   notifications: AlertNotification[]
+  error: any
 }
 
 class UnConnectedAlertTab extends PureComponent<Props, State> {
@@ -56,7 +57,8 @@ class UnConnectedAlertTab extends PureComponent<Props, State> {
       showDeleteConfirmation: false,
       showTestRule: false,
       frequencyWarning: null,
-      notifications: []
+      notifications: [],
+      error: null
     }
   }
 
@@ -164,10 +166,69 @@ class UnConnectedAlertTab extends PureComponent<Props, State> {
       }
     }
 
+    this.validateModel(alert)
+
     this.forceUpdate()
     this.props.panel.render();
   }
+  
+  validateModel(alert) {
+    let firstTarget;
+    let foundTarget: DataQuery = null;
+    const promises: Array<Promise<any>> = [];
+    for (const condition of alert.conditions) {
+      if (condition.type !== 'query') {
+        continue;
+      }
 
+      for (const target of this.props.panel.targets) {
+        if (!firstTarget) {
+          firstTarget = target;
+        }
+        if (condition.query.refId === target.refId) {
+          foundTarget = target;
+          break;
+        }
+      }
+
+      if (!foundTarget) {
+        if (firstTarget) {
+          condition.query.refId = firstTarget.refId;
+          foundTarget = firstTarget;
+        } else {
+          this.setState({
+            ...this.state,
+            error: 'Could not find any metric queries'
+          })
+          return;
+        }
+      }
+
+      const datasourceName = foundTarget.datasource || this.props.panel.datasource;
+      promises.push(
+        getDataSourceService().get(datasourceName).then(
+          (foundTarget => (ds: DataSourceApi) => {
+            if (!ds.meta.alerting) {
+              return Promise.reject('The datasource does not support alerting queries');
+            } else if (ds.targetContainsTemplate && ds.targetContainsTemplate(foundTarget)) {
+              return Promise.reject('Template variables are not supported in alert queries');
+            }
+            return Promise.resolve();
+          })(foundTarget)
+        )
+      );
+    }
+    Promise.all(promises).then(
+      () => {},
+      e => {
+        this.setState({
+          ...this.state,
+          error: e
+        })
+      }
+    );
+  }
+  
   notificationAdded = (ids) => {
     this.props.panel.alert.notifications = ids
   }
@@ -344,7 +405,7 @@ class UnConnectedAlertTab extends PureComponent<Props, State> {
   }
   render() {
     const { transformations, alert, targets } = this.props.panel;
-    const { validatonMessage, frequencyWarning, notifications } = this.state;
+    const { validatonMessage, frequencyWarning, notifications,error} = this.state;
     const hasTransformations = transformations && transformations.length > 0;
 
     if (!alert && validatonMessage) {
@@ -364,6 +425,11 @@ class UnConnectedAlertTab extends PureComponent<Props, State> {
         <CustomScrollbar autoHeightMin="100%">
           <Container padding="md">
             <div>
+              {
+                error && <div className="alert alert-error m-b-2">
+                <Icon name="'exclamation-triangle'" /> {error}
+              </div>
+              }
               {alert && hasTransformations && (
                 <Alert
                   severity={AppNotificationSeverity.Error}

@@ -23,8 +23,6 @@ export class DatasourceSrv implements DataSourceService {
             name = getDefaultDatasourceName()
         }
 
-
-
         if (name === 'default') {
             name = getDefaultDatasourceName()
         }
