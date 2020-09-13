@@ -1,6 +1,8 @@
 import _ from 'lodash';
 import { QueryPartDef, QueryPart } from 'src/views/components/QueryPart/queryPart';
 
+const defaultEvaluatorParamLabel = '__Default'
+
 const alertQueryDef = new QueryPartDef({
   type: 'query',
   params: [
@@ -170,5 +172,6 @@ export default {
   createReducerPart: createReducerPart,
   getAlertAnnotationInfo: getAlertAnnotationInfo,
   alertStateSortScore: alertStateSortScore,
-  lastForOptions: lastForOptions
+  lastForOptions: lastForOptions,
+  defaultEvaluatorParamLabel: defaultEvaluatorParamLabel
 };

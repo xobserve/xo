@@ -1,4 +1,5 @@
 import { PanelModel } from 'src/views/dashboard/model';
+import alertDef from './alertDef';
 
 export class ThresholdMapper {
   static alertToGraphThresholds(panel: PanelModel) {
@@ -11,20 +12,21 @@ export class ThresholdMapper {
       const evaluator = condition.evaluator;
       const thresholds: any[] = (panel.options.thresholds = []);
 
+      const anyParam = getEvaluatorAnyParam(evaluator)
       switch (evaluator.type) {
         case 'gt': {
-          const value = evaluator.params[0];
+          const value = anyParam.value[0];
           thresholds.push({ value: value, op: 'gt' });
           break;
         }
         case 'lt': {
-          const value = evaluator.params[0];
+          const value = anyParam.value[0];
           thresholds.push({ value: value, op: 'lt' });
           break;
         }
         case 'outside_range': {
-          const value1 = evaluator.params[0];
-          const value2 = evaluator.params[1];
+          const value1 = anyParam.value[0];
+          const value2 = anyParam.value[1];
 
           if (value1 > value2) {
             thresholds.push({ value: value1, op: 'gt' });
@@ -37,8 +39,8 @@ export class ThresholdMapper {
           break;
         }
         case 'within_range': {
-          const value1 = evaluator.params[0];
-          const value2 = evaluator.params[1];
+          const value1 = anyParam.value[0];
+          const value2 = anyParam.value[1];
 
           if (value1 > value2) {
             thresholds.push({ value: value1, op: 'lt' });
@@ -61,5 +63,15 @@ export class ThresholdMapper {
 
     const updated = true;
     return updated;
+  }
+}
+
+
+
+function getEvaluatorAnyParam(evaluator) {
+  for (const param of evaluator.params) {
+    if (param.labelName=== alertDef.defaultEvaluatorParamLabel) {
+      return param
+    }
   }
 }

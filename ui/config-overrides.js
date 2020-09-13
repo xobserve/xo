@@ -73,7 +73,8 @@ module.exports = override(
       '@zindex-modal': 1050,
       '@zindex-modal-mask': 1050,
       '@zindex-message':1100,
-      '@zindex-notification': 1100
+      '@zindex-notification': 1100,
+      '@zindex-dropdown': 2000
     }
   }),
   addWebpackAlias({

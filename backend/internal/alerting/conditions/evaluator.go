@@ -28,24 +28,44 @@ func (e *noValueEvaluator) Eval(reducedValue null.Float) bool {
 }
 
 type thresholdEvaluator struct {
-	Type      string
-	Threshold float64
+	Type       string
+	Threshold  float64
+	LabelName  string
+	LabelValue string
 }
 
-func newThresholdEvaluator(typ string, model *simplejson.Json) (*thresholdEvaluator, error) {
+type EvaluatorParam struct {
+	LabelName  string    `json:"labelName"`
+	LabelValue string    `json:"labelValue"`
+	Value      []float64 `json:"value"`
+}
+
+func newThresholdEvaluator(typ string, model *simplejson.Json) ([]*thresholdEvaluator, error) {
 	params := model.Get("params").MustArray()
 	if len(params) == 0 || params[0] == nil {
 		return nil, fmt.Errorf("Evaluator '%v' is missing the threshold parameter", HumanThresholdType(typ))
 	}
 
-	firstParam, ok := params[0].(json.Number)
-	if !ok {
-		return nil, fmt.Errorf("Evaluator has invalid parameter")
+	evaluators := make([]*thresholdEvaluator, 0)
+	for _, paramI := range params {
+		b, _ := json.Marshal(paramI)
+		param := &EvaluatorParam{}
+		err := json.Unmarshal(b, &param)
+		if err != nil {
+			return nil, errors.New("Evaluator has invalid range parameter")
+		}
+
+		rangedEval := &thresholdEvaluator{
+			Type:       typ,
+			LabelName:  param.LabelName,
+			LabelValue: param.LabelValue,
+			Threshold:  param.Value[0],
+		}
+
+		evaluators = append(evaluators, rangedEval)
 	}
 
-	defaultEval := &thresholdEvaluator{Type: typ}
-	defaultEval.Threshold, _ = firstParam.Float64()
-	return defaultEval, nil
+	return evaluators, nil
 }
 
 func (e *thresholdEvaluator) Eval(reducedValue null.Float) bool {
@@ -64,31 +84,40 @@ func (e *thresholdEvaluator) Eval(reducedValue null.Float) bool {
 }
 
 type rangedEvaluator struct {
-	Type  string
-	Lower float64
-	Upper float64
+	Type       string
+	LabelName  string
+	LabelValue string
+	Lower      float64
+	Upper      float64
 }
 
-func newRangedEvaluator(typ string, model *simplejson.Json) (*rangedEvaluator, error) {
+func newRangedEvaluator(typ string, model *simplejson.Json) ([]*rangedEvaluator, error) {
 	params := model.Get("params").MustArray()
 	if len(params) == 0 {
 		return nil, errors.New("Evaluator missing threshold parameter")
 	}
 
-	firstParam, ok := params[0].(json.Number)
-	if !ok {
-		return nil, errors.New("Evaluator has invalid parameter")
+	evaluators := make([]*rangedEvaluator, 0)
+	for _, paramI := range params {
+		b, _ := json.Marshal(paramI)
+		param := &EvaluatorParam{}
+		err := json.Unmarshal(b, &param)
+		if err != nil {
+			return nil, errors.New("Evaluator has invalid range parameter")
+		}
+
+		rangedEval := &rangedEvaluator{
+			Type:       typ,
+			LabelName:  param.LabelName,
+			LabelValue: param.LabelValue,
+			Lower:      param.Value[0],
+			Upper:      param.Value[1],
+		}
+
+		evaluators = append(evaluators, rangedEval)
 	}
 
-	secondParam, ok := params[1].(json.Number)
-	if !ok {
-		return nil, errors.New("Evaluator has invalid second parameter")
-	}
-
-	rangedEval := &rangedEvaluator{Type: typ}
-	rangedEval.Lower, _ = firstParam.Float64()
-	rangedEval.Upper, _ = secondParam.Float64()
-	return rangedEval, nil
+	return evaluators, nil
 }
 
 func (e *rangedEvaluator) Eval(reducedValue null.Float) bool {
@@ -117,11 +146,19 @@ func NewAlertEvaluator(model *simplejson.Json) (AlertEvaluator, error) {
 	}
 
 	if inSlice(typ, defaultTypes) {
-		return newThresholdEvaluator(typ, model)
+		evals, err := newThresholdEvaluator(typ, model)
+		if err != nil {
+			return nil, err
+		}
+		return evals[0], err
 	}
 
 	if inSlice(typ, rangedTypes) {
-		return newRangedEvaluator(typ, model)
+		evals, err := newRangedEvaluator(typ, model)
+		if err != nil {
+			return nil, err
+		}
+		return evals[0], err
 	}
 
 	if typ == "no_value" {

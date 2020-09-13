@@ -1,7 +1,7 @@
 import React, { PureComponent } from 'react';
 import _ from 'lodash';
 import { css } from 'emotion';
-import { Alert, Button, Icon, IconName, CustomScrollbar, Container, HorizontalGroup, ConfirmModal, Modal, InlineFormLabel, getBackendSrv, currentLang, DataQuery,DataSourceApi} from 'src/packages/datav-core';
+import { Alert, Button, Icon, IconName, CustomScrollbar, Container, HorizontalGroup, ConfirmModal, Modal, InlineFormLabel, getBackendSrv, currentLang, DataQuery, DataSourceApi } from 'src/packages/datav-core';
 import { getDataSourceService, config } from 'src/packages/datav-core';
 import { getAlertingValidationMessage, getDefaultCondition } from './getAlertingValidationMessage';
 
@@ -17,7 +17,7 @@ import { updateLocation } from 'src/store/reducers/location';
 import kbn from 'src/core/library/utils/kbn';
 import alertDef from './state/alertDef';
 import { ThresholdMapper } from './state/ThresholdMapper';
-import { Select, InputNumber,notification as Notification, Input } from 'antd'
+import { Select, InputNumber, notification as Notification, Input } from 'antd'
 import localeData from 'src/core/library/locale';
 const { Option } = Select
 
@@ -37,6 +37,8 @@ interface State {
   frequencyWarning: string
   notifications: AlertNotification[]
   error: any
+  conditionInEdit: number
+  evaluatorInEdit: any
 }
 
 class UnConnectedAlertTab extends PureComponent<Props, State> {
@@ -58,7 +60,9 @@ class UnConnectedAlertTab extends PureComponent<Props, State> {
       showTestRule: false,
       frequencyWarning: null,
       notifications: [],
-      error: null
+      error: null,
+      conditionInEdit: null,
+      evaluatorInEdit: null
     }
   }
 
@@ -66,7 +70,7 @@ class UnConnectedAlertTab extends PureComponent<Props, State> {
     // get all notifications this dashboard can use
     const res = await getBackendSrv().get(`/api/alerting/notification/${this.props.dashboard.meta.ownedBy}`)
     for (const n of res.data) {
-       n.icon = this.getNotificationIcon(n.type)
+      n.icon = this.getNotificationIcon(n.type)
     }
 
     this.setState({
@@ -140,7 +144,7 @@ class UnConnectedAlertTab extends PureComponent<Props, State> {
     for (const id of alert.notifications) {
       let model: any = _.find(this.state.notifications, { id: id });
 
-       // notification not exist any more, set to to-remove state
+      // notification not exist any more, set to to-remove state
       if (!model) {
         _.remove(this.props.panel.alert.notifications, (nid) => nid === id)
         Notification['error']({
@@ -153,16 +157,16 @@ class UnConnectedAlertTab extends PureComponent<Props, State> {
 
     for (const notification of this.state.notifications) {
       if (notification.isDefault) {
-         // insert default notification into alert
-         let exist = false 
-         for (const id of alert.notifications) {
-           if (id === notification.id) {
-             exist = true
-           }
-         }
-         if (!exist) {
-            alert.notifications.push(notification.id)
-         }
+        // insert default notification into alert
+        let exist = false
+        for (const id of alert.notifications) {
+          if (id === notification.id) {
+            exist = true
+          }
+        }
+        if (!exist) {
+          alert.notifications.push(notification.id)
+        }
       }
     }
 
@@ -171,7 +175,7 @@ class UnConnectedAlertTab extends PureComponent<Props, State> {
     this.forceUpdate()
     this.props.panel.render();
   }
-  
+
   validateModel(alert) {
     let firstTarget;
     let foundTarget: DataQuery = null;
@@ -219,7 +223,7 @@ class UnConnectedAlertTab extends PureComponent<Props, State> {
       );
     }
     Promise.all(promises).then(
-      () => {},
+      () => { },
       e => {
         this.setState({
           ...this.state,
@@ -228,7 +232,7 @@ class UnConnectedAlertTab extends PureComponent<Props, State> {
       }
     );
   }
-  
+
   notificationAdded = (ids) => {
     this.props.panel.alert.notifications = ids
   }
@@ -400,12 +404,44 @@ class UnConnectedAlertTab extends PureComponent<Props, State> {
     const conditions = _.cloneDeep(this.props.panel.alert.conditions)
     conditions.splice(i, 1)
     this.props.panel.alert.conditions = conditions
-    console.log(_.cloneDeep(this.props.panel.alert.conditions))
     this.forceUpdate()
   }
+
+  dismissEvaluatorInEdit = () => {
+    this.props.panel.alert.conditions[this.state.conditionInEdit].evaluator = this.state.evaluatorInEdit
+    this.setState({
+      ...this.state,
+      evaluatorInEdit: null
+    })
+
+    this.evaluatorParamsChanged()
+    
+    this.forceUpdate()
+  }
+
+  addEvaluatorParam = () => {
+    this.setState({
+      ...this.state,
+      evaluatorInEdit:  {
+        ...this.state.evaluatorInEdit,
+        params:  _.concat(this.state.evaluatorInEdit.params, [{labelName: '',labelValue:'',value: [0.2,1]}])
+      }
+    })
+  }
+
+  removeEvaluatorParam = (i) => {
+    const evaluator = _.cloneDeep(this.state.evaluatorInEdit)
+    evaluator.params.splice(i,1)
+
+    this.setState({
+      ...this.state,
+      evaluatorInEdit: evaluator
+    })
+  }
+
   render() {
     const { transformations, alert, targets } = this.props.panel;
-    const { validatonMessage, frequencyWarning, notifications,error} = this.state;
+    const { validatonMessage, frequencyWarning, notifications, error, evaluatorInEdit } = this.state;
     const hasTransformations = transformations && transformations.length > 0;
 
     if (!alert && validatonMessage) {
@@ -427,8 +463,8 @@ class UnConnectedAlertTab extends PureComponent<Props, State> {
             <div>
               {
                 error && <div className="alert alert-error m-b-2">
-                <Icon name="'exclamation-triangle'" /> {error}
-              </div>
+                  <Icon name="'exclamation-triangle'" /> {error}
+                </div>
               }
               {alert && hasTransformations && (
                 <Alert
@@ -499,28 +535,9 @@ class UnConnectedAlertTab extends PureComponent<Props, State> {
                             <Select className="width-4" value={c.query.refId} onChange={(v) => { c.query.refId = v; this.forceUpdate() }}>
                               {targets.map((r, i) => <Option value={r.refId} key={i}>{r.refId}</Option>)}
                             </Select>
+                            <span className="gf-form-label query-keyword width-11 ub-ml2 pointer" onClick={() => this.setState({ ...this.state, evaluatorInEdit: c.evaluator, conditionInEdit: i})}>WITH LABELS AND VALUES</span>
 
-                            <Select className="width-11 ub-ml2" value={c.evaluator.type} onChange={(v) => { c.evaluator.type = v; this.evaluatorParamsChanged(); this.forceUpdate() }}>
-                              {alertDef.evalFunctions.map((r, i) => <Option value={r.value} key={i}>{r.text}</Option>)}
-                            </Select>
-                            {c.evaluator.type !== 'no_value' && <InputNumber
-                              className="ub-ml2 width-4"
-                              value={c.evaluator.params[0]}
-                              onChange={(v) => { c.evaluator.params[0] = v; this.evaluatorParamsChanged(); this.forceUpdate() }}
-                              placeholder="5"
-                            />}
-                            {(c.evaluator.type === 'outside_range' || c.evaluator.type === 'within_range') &&
-                              <>
-                                <span className="gf-form-label query-keyword width-2 ub-ml2">TO</span>
-                                <InputNumber
-                                  className="width-4"
-                                  value={c.evaluator.params[1]}
-                                  onChange={(v) => { c.evaluator.params[1] = v; this.evaluatorParamsChanged(); this.forceUpdate() }}
-                                  placeholder="5"
-                                />
-                              </>}
-
-                            <span className="gf-form-label query-keyword width-3 ub-ml2">LAST</span>
+                            <span className="gf-form-label query-keyword width-3">LAST</span>
                             <Select className="width-5" value={c.query.lastFor} onChange={(v) => { c.query.lastFor = v; this.forceUpdate() }}>
                               {alertDef.lastForOptions.map((r, i) => <Option value={r} key={i}>{r}</Option>)}
                             </Select>
@@ -595,7 +612,7 @@ class UnConnectedAlertTab extends PureComponent<Props, State> {
                       <span className="gf-form-label width-8">Send to</span>
                     </div>
                     <Select mode="multiple" defaultValue={alert.notifications} className="width-10" onChange={this.notificationAdded}>
-                      {notifications.map((n) => <Option value={n.id} key={n.id}><Icon name={n.icon}/> <span className="ub-ml1">{n.name}</span></Option>)}
+                      {notifications.map((n) => <Option value={n.id} key={n.id}><Icon name={n.icon} /> <span className="ub-ml1">{n.name}</span></Option>)}
                     </Select>
                   </div>
 
@@ -605,7 +622,7 @@ class UnConnectedAlertTab extends PureComponent<Props, State> {
                       className="gf-form-input"
                       rows={5}
                       defaultValue={alert.message}
-                      onBlur={(e) => this.props.panel.alert.message=e.currentTarget.value}
+                      onBlur={(e) => this.props.panel.alert.message = e.currentTarget.value}
                       placeholder="Notification message details..."
                     ></Input.TextArea>
                   </div>
@@ -633,6 +650,55 @@ class UnConnectedAlertTab extends PureComponent<Props, State> {
         {this.renderTestRule()}
         {this.renderDeleteConfirmation()}
         {this.renderStateHistory()}
+
+
+        {evaluatorInEdit && <Modal isOpen={true} icon="edit" title="Edit condition labels ande values" onDismiss={this.dismissEvaluatorInEdit}>
+          <>
+            {evaluatorInEdit.params.map((param, i) => {
+              return <div className="gf-form-inline" key={i}>
+                <div className="gf-form">
+                  <span className="gf-form-label query-keyword width-7 ub-ml2">WITH LABEL</span>
+                  <Input placeholder="name" defaultValue={param.labelName} onChange={(e) => { param.labelName = e.currentTarget.value; this.forceUpdate() }} style={{ width: '100px' }} disabled={param.labelName===alertDef.defaultEvaluatorParamLabel}></Input>
+                  <Input placeholder="value" defaultValue={param.labelValue} onChange={(e) => { param.labelValue = e.currentTarget.value; this.forceUpdate() }} style={{ width: '100px' }} disabled={param.labelName===alertDef.defaultEvaluatorParamLabel}></Input>
+
+                  <Select className="width-11 ub-ml2" value={evaluatorInEdit.type} onChange={(v) => { evaluatorInEdit.type = v; this.forceUpdate()}}>
+                    {alertDef.evalFunctions.map((r, i) => <Option value={r.value} key={i}>{r.text}</Option>)}
+                  </Select>
+                  {evaluatorInEdit.type !== 'no_value' && <InputNumber
+                    className="ub-ml2 width-4"
+                    value={param.value[0]}
+                    onChange={(v) => { param.value[0] = v; this.forceUpdate() }}
+                    placeholder="5"
+                  />}
+                  {(evaluatorInEdit.type === 'outside_range' || evaluatorInEdit.type === 'within_range') &&
+                    <>
+                      <span className="gf-form-label query-keyword width-2 ub-ml2">TO</span>
+                      <InputNumber
+                        className="width-4"
+                        defaultValue={param.value[1]}
+                        onChange={(v) => { param.value[1] = v; this.forceUpdate() }}
+                        placeholder="5"
+                      />
+                    </>}
+                  
+                    <span className="gf-form-label query-keyword width-3 ub-ml2">OR</span>
+
+                  { param.labelName!==alertDef.defaultEvaluatorParamLabel && <label className="gf-form-label pointer" onClick={() => this.removeEvaluatorParam(i)}>
+                    <Icon name="trash-alt" />
+                  </label>}
+                 
+                </div>
+              </div>
+
+            })}
+
+            <div className="gf-form ub-ml2">
+              <label className="gf-form-label dropdown pointer" onClick={this.addEvaluatorParam}>
+                <Icon name="plus-circle" />
+              </label>
+            </div>
+          </>
+        </Modal>}
       </>
     );
   }

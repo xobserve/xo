@@ -1,4 +1,6 @@
 import { DataQuery,DataSourceService,DataTransformerConfig} from 'src/packages/datav-core';
+import alertDef from './state/alertDef';
+
 
 
 export const getDefaultCondition = () => ({
@@ -8,7 +10,7 @@ export const getDefaultCondition = () => ({
     lastFor: '5m'
   },
   reducer: 'avg',
-  evaluator: { type: 'gt', params: [0.2] as any[] },
+  evaluator: { type: 'gt', params: [{labelName: alertDef.defaultEvaluatorParamLabel,labelValue:alertDef.defaultEvaluatorParamLabel,value: [0.2,1]}] as any[] },
   operator: 'and',
 });
 
