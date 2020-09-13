@@ -13,6 +13,8 @@ import (
 	"github.com/grafana/grafana/pkg/cmd/grafana-cli/logger"
 )
 
+const DefaultEvaluatorParamLabel = "__Default"
+
 type AlertStateType string
 type NoDataOption string
 type ExecutionErrorOption string
