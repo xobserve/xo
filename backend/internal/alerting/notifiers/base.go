@@ -4,8 +4,11 @@ import (
 	"context"
 	"time"
 
+	"github.com/code-creatively/datav/backend/pkg/log"
 	"github.com/code-creatively/datav/backend/pkg/models"
 )
+
+var logger = log.RootLogger.New("logger", "alerting/notifiers")
 
 const (
 	triggMetrString = "Triggered metrics:\n\n"

@@ -27,7 +27,7 @@ type QueryCondition struct {
 	Index         int
 	Query         AlertQuery
 	Reducer       *queryReducer
-	Evaluator     AlertEvaluator
+	Evaluator     []AlertEvaluator
 	Operator      string
 	HandleRequest tsdb.HandleRequestFunc
 }
@@ -55,8 +55,20 @@ func (c *QueryCondition) Eval(context *models.EvalContext) (*models.ConditionRes
 
 	for _, series := range seriesList {
 		reducedValue := c.Reducer.Reduce(series)
+		// find the evaluator corresponding to specify label
+		evaluator := c.Evaluator[0]
+		for i, eval := range c.Evaluator {
+			if i > 0 {
+				labelName, labelValue := eval.GetLabel()
+				v, ok := series.Tags[labelName]
+				if ok && v == labelValue {
+					logger.Debug("find specify evaluator", "label_name", labelName, "label_value", labelValue)
+					evaluator = c.Evaluator[i]
+				}
+			}
+		}
 
-		evalMatch := c.Evaluator.Eval(reducedValue)
+		evalMatch := evaluator.Eval(reducedValue)
 
 		if !reducedValue.Valid {
 			emptySeriesCount++
@@ -82,7 +94,7 @@ func (c *QueryCondition) Eval(context *models.EvalContext) (*models.ConditionRes
 	// handle no series special case
 	if len(seriesList) == 0 {
 		// eval condition for null value
-		evalMatch := c.Evaluator.Eval(null.FloatFromPtr(nil))
+		evalMatch := c.Evaluator[0].Eval(null.FloatFromPtr(nil))
 
 		if context.IsTestRun {
 			context.Logs = append(context.Logs, &models.ResultLogEntry{

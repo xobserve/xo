@@ -10,7 +10,6 @@ import (
 	"github.com/code-creatively/datav/backend/pkg/db"
 	"github.com/code-creatively/datav/backend/pkg/utils/null"
 	"github.com/code-creatively/datav/backend/pkg/utils/simplejson"
-	"github.com/grafana/grafana/pkg/cmd/grafana-cli/logger"
 )
 
 const DefaultEvaluatorParamLabel = "__Default"

@@ -9,7 +9,6 @@ import (
 	"github.com/code-creatively/datav/backend/internal/notifications"
 	"github.com/code-creatively/datav/backend/pkg/config"
 	"github.com/code-creatively/datav/backend/pkg/models"
-	"github.com/grafana/grafana/pkg/cmd/grafana-cli/logger"
 )
 
 const EmailType = "email"

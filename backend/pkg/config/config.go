@@ -59,6 +59,10 @@ type Config struct {
 		MaxAttempts         int   `yaml:"max_attempts"`
 		MinInterval         int64 `yaml:"min_interval_seconds"`
 	}
+
+	Dataproxy struct {
+		Timeout int
+	}
 }
 
 // Data ...

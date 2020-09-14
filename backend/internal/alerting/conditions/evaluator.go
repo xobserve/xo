@@ -5,6 +5,8 @@ import (
 	"errors"
 	"fmt"
 
+	"github.com/code-creatively/datav/backend/pkg/models"
+
 	"github.com/code-creatively/datav/backend/pkg/utils/null"
 	"github.com/code-creatively/datav/backend/pkg/utils/simplejson"
 )
@@ -19,12 +21,17 @@ var (
 // ex: ThresholdEvaluator, NoValueEvaluator, RangeEvaluator
 type AlertEvaluator interface {
 	Eval(reducedValue null.Float) bool
+	GetLabel() (string, string)
 }
 
 type noValueEvaluator struct{}
 
 func (e *noValueEvaluator) Eval(reducedValue null.Float) bool {
 	return !reducedValue.Valid
+}
+
+func (e *noValueEvaluator) GetLabel() (string, string) {
+	return models.DefaultEvaluatorParamLabel, models.DefaultEvaluatorParamLabel
 }
 
 type thresholdEvaluator struct {
@@ -40,13 +47,13 @@ type EvaluatorParam struct {
 	Value      []float64 `json:"value"`
 }
 
-func newThresholdEvaluator(typ string, model *simplejson.Json) ([]*thresholdEvaluator, error) {
+func newThresholdEvaluator(typ string, model *simplejson.Json) ([]AlertEvaluator, error) {
 	params := model.Get("params").MustArray()
 	if len(params) == 0 || params[0] == nil {
 		return nil, fmt.Errorf("Evaluator '%v' is missing the threshold parameter", HumanThresholdType(typ))
 	}
 
-	evaluators := make([]*thresholdEvaluator, 0)
+	evaluators := make([]AlertEvaluator, 0)
 	for _, paramI := range params {
 		b, _ := json.Marshal(paramI)
 		param := &EvaluatorParam{}
@@ -83,6 +90,10 @@ func (e *thresholdEvaluator) Eval(reducedValue null.Float) bool {
 	return false
 }
 
+func (e *thresholdEvaluator) GetLabel() (string, string) {
+	return e.LabelName, e.LabelValue
+}
+
 type rangedEvaluator struct {
 	Type       string
 	LabelName  string
@@ -91,13 +102,13 @@ type rangedEvaluator struct {
 	Upper      float64
 }
 
-func newRangedEvaluator(typ string, model *simplejson.Json) ([]*rangedEvaluator, error) {
+func newRangedEvaluator(typ string, model *simplejson.Json) ([]AlertEvaluator, error) {
 	params := model.Get("params").MustArray()
 	if len(params) == 0 {
 		return nil, errors.New("Evaluator missing threshold parameter")
 	}
 
-	evaluators := make([]*rangedEvaluator, 0)
+	evaluators := make([]AlertEvaluator, 0)
 	for _, paramI := range params {
 		b, _ := json.Marshal(paramI)
 		param := &EvaluatorParam{}
@@ -137,9 +148,13 @@ func (e *rangedEvaluator) Eval(reducedValue null.Float) bool {
 	return false
 }
 
+func (e *rangedEvaluator) GetLabel() (string, string) {
+	return e.LabelName, e.LabelValue
+}
+
 // NewAlertEvaluator is a factory function for returning
 // an `AlertEvaluator` depending on the json model.
-func NewAlertEvaluator(model *simplejson.Json) (AlertEvaluator, error) {
+func NewAlertEvaluator(model *simplejson.Json) ([]AlertEvaluator, error) {
 	typ := model.Get("type").MustString()
 	if typ == "" {
 		return nil, fmt.Errorf("Evaluator missing type property")
@@ -150,7 +165,7 @@ func NewAlertEvaluator(model *simplejson.Json) (AlertEvaluator, error) {
 		if err != nil {
 			return nil, err
 		}
-		return evals[0], err
+		return evals, err
 	}
 
 	if inSlice(typ, rangedTypes) {
@@ -158,11 +173,11 @@ func NewAlertEvaluator(model *simplejson.Json) (AlertEvaluator, error) {
 		if err != nil {
 			return nil, err
 		}
-		return evals[0], err
+		return evals, err
 	}
 
 	if typ == "no_value" {
-		return &noValueEvaluator{}, nil
+		return []AlertEvaluator{&noValueEvaluator{}}, nil
 	}
 
 	return nil, fmt.Errorf("Evaluator invalid evaluator type: %s", typ)

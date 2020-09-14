@@ -3,17 +3,14 @@ package repo
 import (
 	"time"
 
+	"github.com/code-creatively/datav/backend/pkg/log"
 	"github.com/code-creatively/datav/backend/pkg/utils/simplejson"
 
 	"github.com/code-creatively/datav/backend/pkg/db"
 	"github.com/code-creatively/datav/backend/pkg/models"
-	"github.com/grafana/grafana/pkg/cmd/grafana-cli/logger"
 )
 
-// Create(ann *Annotation) error
-// 	Update(ann *Annotation) error
-// 	Find(query *AnnotationQuery) ([]*models.Annotation, error)
-// 	Delete(query *AnnotationQuery) error
+var logger = log.RootLogger.New("logger", "annotation/repo")
 
 type SqlStore struct{}
 
