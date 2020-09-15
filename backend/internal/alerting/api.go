@@ -169,9 +169,8 @@ func createTestEvalContext() *models.EvalContext {
 		State:       models.AlertStateAlerting,
 	}
 
-	ctx := models.NewEvalContext(context.Background(), testRule, logger)
+	ctx := models.NewEvalContext(context.Background(), testRule, logger, make(map[string]*models.AlertState))
 	ctx.IsTestRun = true
-	ctx.Firing = true
 	ctx.Error = fmt.Errorf("This is only a test")
 	ctx.EvalMatches = evalMatchesBasedOnState()
 
@@ -181,11 +180,13 @@ func createTestEvalContext() *models.EvalContext {
 func evalMatchesBasedOnState() []*models.EvalMatch {
 	matches := make([]*models.EvalMatch, 0)
 	matches = append(matches, &models.EvalMatch{
-		Metric: "High value",
+		Firing: true,
+		Metric: "Low value",
 		Value:  null.FloatFrom(100),
 	})
 
 	matches = append(matches, &models.EvalMatch{
+		Firing: true,
 		Metric: "Higher Value",
 		Value:  null.FloatFrom(200),
 	})
@@ -233,7 +234,7 @@ func TestRule(c *gin.Context) {
 			res := testAlertRule(rule)
 
 			resp := &AlertTestResult{
-				Firing:         res.Firing,
+				Firing:         res.EvalMatches[0].Firing,
 				ConditionEvals: res.ConditionEvals,
 				State:          res.Rule.State,
 			}
@@ -263,12 +264,12 @@ func TestRule(c *gin.Context) {
 func testAlertRule(rule *models.Rule) *models.EvalContext {
 	handler := NewEvalHandler()
 
-	context := models.NewEvalContext(context.Background(), rule, logger)
+	context := models.NewEvalContext(context.Background(), rule, logger, make(map[string]*models.AlertState))
 	context.IsTestRun = true
 	context.IsDebug = true
 
 	handler.Eval(context)
-	context.Rule.State = context.GetNewState()
+	context.SetNewStates()
 
 	return context
 }

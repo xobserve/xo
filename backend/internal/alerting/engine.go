@@ -4,11 +4,11 @@ import (
 	"context"
 	"time"
 
+	"github.com/benbjohnson/clock"
 	"github.com/code-creatively/datav/backend/internal/registry"
 	"github.com/code-creatively/datav/backend/pkg/config"
 	"github.com/code-creatively/datav/backend/pkg/log"
 	"github.com/code-creatively/datav/backend/pkg/models"
-	"github.com/benbjohnson/clock"
 	"golang.org/x/sync/errgroup"
 	"golang.org/x/xerrors"
 )
@@ -151,7 +151,14 @@ func (e *AlertEngine) processJob(attemptID int, attemptChan chan int, cancelChan
 	alertCtx, cancelFn := context.WithTimeout(context.Background(), time.Duration(config.Data.Alerting.EvaluationTimeout)*time.Second)
 	cancelChan <- cancelFn
 
-	evalContext := models.NewEvalContext(alertCtx, job.Rule, logger)
+	// get prev alert states
+	prevStates, err := models.GetOrCreateAlertStates(job.Rule.DashboardID, job.Rule.ID)
+	if err != nil {
+		logger.Error("get alert states error", "error", err)
+		return
+	}
+
+	evalContext := models.NewEvalContext(alertCtx, job.Rule, logger, prevStates.States)
 	evalContext.Ctx = alertCtx
 
 	go func() {
@@ -179,7 +186,8 @@ func (e *AlertEngine) processJob(attemptID int, attemptChan chan int, cancelChan
 		// don't respond within the timeout limit. We should rewrite this so notifications
 		// don't reuse the evalContext and get its own context.
 		evalContext.Ctx = resultHandleCtx
-		evalContext.Rule.State = evalContext.GetNewState()
+		evalContext.SetNewStates()
+
 		if err := e.resultHandler.handle(evalContext); err != nil {
 			if xerrors.Is(err, context.Canceled) {
 				logger.Debug("Result handler returned context.Canceled")

@@ -1,8 +1,6 @@
 package alerting
 
 import (
-	"strconv"
-	"strings"
 	"time"
 
 	"github.com/code-creatively/datav/backend/pkg/models"
@@ -26,12 +24,10 @@ func NewEvalHandler() *DefaultEvalHandler {
 
 // Eval evaluated the alert rule.
 func (e *DefaultEvalHandler) Eval(context *models.EvalContext) {
-	firing := true
-	noDataFound := true
-	conditionEvals := ""
-
+	metrics := make(map[string]*models.EvalMatch)
 	for i := 0; i < len(context.Rule.Conditions); i++ {
 		condition := context.Rule.Conditions[i]
+		//@todo: 这里每个条件都会执行一次查询语句，效率过于低下
 		cr, err := condition.Eval(context)
 		if err != nil {
 			context.Error = err
@@ -42,31 +38,27 @@ func (e *DefaultEvalHandler) Eval(context *models.EvalContext) {
 			break
 		}
 
-		if i == 0 {
-			firing = cr.Firing
-			noDataFound = cr.NoDataFound
-		}
+		for _, match := range cr.EvalMatches {
+			metric, ok := metrics[match.Metric]
+			if !ok {
+				metrics[match.Metric] = metric
+				continue
+			}
 
-		// calculating Firing based on operator
-		if cr.Operator == "or" {
-			firing = firing || cr.Firing
-			noDataFound = noDataFound || cr.NoDataFound
-		} else {
-			firing = firing && cr.Firing
-			noDataFound = noDataFound && cr.NoDataFound
+			// calculating Firing based on operator
+			if cr.Operator == "or" {
+				metric.Firing = metric.Firing || match.Firing
+				metric.NoDataFound = metric.NoDataFound || match.NoDataFound
+			} else {
+				metric.Firing = metric.Firing && match.Firing
+				metric.NoDataFound = metric.NoDataFound && match.NoDataFound
+			}
 		}
-
-		if i > 0 {
-			conditionEvals = "[" + conditionEvals + " " + strings.ToUpper(cr.Operator) + " " + strconv.FormatBool(cr.Firing) + "]"
-		} else {
-			conditionEvals = strconv.FormatBool(firing)
-		}
-
-		context.EvalMatches = append(context.EvalMatches, cr.EvalMatches...)
 	}
 
-	context.ConditionEvals = conditionEvals + " = " + strconv.FormatBool(firing)
-	context.Firing = firing
-	context.NoDataFound = noDataFound
+	for _, metric := range metrics {
+		context.EvalMatches = append(context.EvalMatches, metric)
+	}
+
 	context.EndTime = time.Now()
 }

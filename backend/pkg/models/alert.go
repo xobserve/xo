@@ -2,6 +2,7 @@ package models
 
 import (
 	"database/sql"
+	"encoding/json"
 	"errors"
 	"fmt"
 	"sync"
@@ -155,9 +156,6 @@ type Alert struct {
 	Frequency      int64
 	For            time.Duration
 
-	EvalData *simplejson.Json
-	EvalDate *time.Time
-
 	NewStateDate time.Time
 	StateChanges int64
 
@@ -188,8 +186,6 @@ func (alert *Alert) ValidToSave() bool {
 
 // ConditionResult is the result of a condition evaluation.
 type ConditionResult struct {
-	Firing      bool
-	NoDataFound bool
 	Operator    string
 	EvalMatches []*EvalMatch
 }
@@ -201,9 +197,11 @@ type Condition interface {
 
 // EvalMatch represents the series violating the threshold.
 type EvalMatch struct {
-	Value  null.Float        `json:"value"`
-	Metric string            `json:"metric"`
-	Tags   map[string]string `json:"tags"`
+	Firing      bool
+	NoDataFound bool
+	Value       null.Float        `json:"value"`
+	Metric      string            `json:"metric"`
+	Tags        map[string]string `json:"tags"`
 }
 
 // ResultLogEntry represents log data for the alert evaluation.
@@ -214,7 +212,7 @@ type ResultLogEntry struct {
 
 // Rule is the in-memory version of an alert rule.
 type Rule struct {
-	ID                  int64
+	ID                  int64 // alert id
 	DashboardID         int64
 	PanelID             int64
 	TeamID              int64
@@ -236,6 +234,11 @@ type Rule struct {
 type AlertTestResultLog struct {
 	Message string      `json:"message"`
 	Data    interface{} `json:"data"`
+}
+
+type AlertState struct {
+	LastStateChange time.Time      `json:"lastStateChange"`
+	State           AlertStateType `json:"state"`
 }
 
 // Job holds state about when the alert rule should be evaluated.
@@ -264,12 +267,11 @@ func (j *Job) SetRunning(b bool) {
 
 type AlertNotificationStateType string
 
-type AlertNotificationState struct {
+type AlertStates struct {
 	Id                           int64
-	OrgId                        int64
+	DashId                       int64
 	AlertId                      int64
-	NotifierId                   int64
-	State                        AlertNotificationStateType
+	States                       map[string]*AlertState
 	Version                      int64
 	UpdatedAt                    int64
 	AlertRuleStateUpdatedVersion int64
@@ -314,16 +316,18 @@ var (
 	ErrAlertNotificationFailedGenerateUniqueUid = errors.New("Failed to generate unique alert notification uid")
 )
 
-func GetOrCreateAlertNotificationState(dashId int64, alertId int64, notifierId int64) (*AlertNotificationState, error) {
-	ans := &AlertNotificationState{
-		AlertId:    alertId,
-		NotifierId: notifierId,
+func GetOrCreateAlertStates(dashId int64, alertId int64) (*AlertStates, error) {
+	ans := &AlertStates{
+		DashId:  dashId,
+		AlertId: alertId,
 	}
-	err := db.SQL.QueryRow("SELECT id,state,version,updated_at,alert_rule_state_updated_version FROM alert_notification_state WHERE alert_id=? and notifier_id=?", alertId, notifierId).Scan(
-		&ans.Id, &ans.State, &ans.Version, &ans.UpdatedAt, &ans.AlertRuleStateUpdatedVersion,
-	)
 
+	var states []byte
+	err := db.SQL.QueryRow("SELECT id,states,version,updated_at,alert_rule_state_updated_version FROM alert_states WHERE alert_id=?", alertId).Scan(
+		&ans.Id, states, &ans.Version, &ans.UpdatedAt, &ans.AlertRuleStateUpdatedVersion,
+	)
 	if err == nil {
+		json.Unmarshal(states, &ans.States)
 		return ans, nil
 	}
 
@@ -331,11 +335,12 @@ func GetOrCreateAlertNotificationState(dashId int64, alertId int64, notifierId i
 		return nil, err
 	}
 
-	ans.State = AlertNotificationStateUnknown
+	ans.States = make(map[string]*AlertState)
 	ans.UpdatedAt = time.Now().Unix()
 
-	res, err := db.SQL.Exec("INSERT INTO alert_notification_state (dashboard_id,alert_id, notifier_id, state,version,updated_at,alert_rule_state_updated_version) VALUES (?,?,?,?,?,?,?)",
-		dashId, ans.AlertId, ans.NotifierId, ans.State, ans.Version, ans.UpdatedAt, ans.AlertRuleStateUpdatedVersion)
+	states, err = json.Marshal(ans.States)
+	res, err := db.SQL.Exec("INSERT INTO alert_states (dashboard_id,alert_id, states,version,updated_at,alert_rule_state_updated_version) VALUES (?,?,?,?,?,?,?)",
+		dashId, ans.AlertId, states, ans.Version, ans.UpdatedAt, ans.AlertRuleStateUpdatedVersion)
 	if err != nil {
 		return nil, err
 	}
@@ -347,7 +352,7 @@ func GetOrCreateAlertNotificationState(dashId int64, alertId int64, notifierId i
 }
 
 func SetAlertNotificationStateToComplete(id int64, version int64) error {
-	_, err := db.SQL.Exec("UPDATE alert_notification_state SET state=?, version=?, updated_at=? WHERE id=?",
+	_, err := db.SQL.Exec("UPDATE alert_states SET state=?, version=?, updated_at=? WHERE id=?",
 		AlertNotificationStateCompleted, version+1, time.Now().Unix(), id)
 	if err != nil {
 		return err
@@ -358,7 +363,7 @@ func SetAlertNotificationStateToComplete(id int64, version int64) error {
 
 func SetAlertNotificationStateToPendingCommand(id int64, version int64, updateVersion int64) (int64, error) {
 	newVer := version + 1
-	res, err := db.SQL.Exec("UPDATE alert_notification_state SET state=?, version=?, updated_at=? ,alert_rule_state_updated_version=?  WHERE id=? AND (version = ? OR alert_rule_state_updated_version < ?)",
+	res, err := db.SQL.Exec("UPDATE alert_states SET state=?, version=?, updated_at=? ,alert_rule_state_updated_version=?  WHERE id=? AND (version = ? OR alert_rule_state_updated_version < ?)",
 		AlertNotificationStatePending, newVer, time.Now().Unix(), updateVersion, id, version, updateVersion)
 	if err != nil && err != sql.ErrNoRows {
 		return 0, err

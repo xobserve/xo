@@ -404,8 +404,6 @@ var CreateTableSqls = map[string]string{
 		handler					INTEGER NOT NULL,
 		silenced				BOOL NOT NULL,
 		execution_error			TEXT NOT NULL,
-		eval_data				TEXT,
-		eval_date				DATETIME,
 		settings   				TEXT NOT NULL,
 		created					DATETIME NOT NULL,
 		updated					DATETIME NOT NULL
@@ -416,20 +414,19 @@ var CreateTableSqls = map[string]string{
 		ON alert (dashboard_id);	
 	`,
 
-	"alert_notification_state": `
-	CREATE TABLE IF NOT EXISTS alert_notification_state (
+	"alert_states": `
+	CREATE TABLE IF NOT EXISTS alert_states (
 		id 						INTEGER PRIMARY KEY AUTOINCREMENT,
 		dashboard_id			INTEGER NOT NULL,
 		alert_id				INTEGER NOT NULL,
-		notifier_id				INTEGER NOT NULL,
-		state					VARCHAR(50) NOT NULL,
+		states					TEXT NOT NULL,
 		version					INTEGER NOT NULL,
 		updated_at				INTEGER NOT NULL,
 		alert_rule_state_updated_version INTEGER NOT NULL
 	);
-	CREATE INDEX IF NOT EXISTS alert_notification_state_dash_id
-		ON alert_notification_state (dashboard_id);
-	CREATE UNIQUE INDEX IF NOT EXISTS alert_notification_state_alert_notifier_id
-		ON alert_notification_state (alert_id,notifier_id);
+	CREATE INDEX IF NOT EXISTS alert_states_dash_id
+		ON alert_states (dashboard_id);
+	CREATE UNIQUE INDEX IF NOT EXISTS alert_states_alert_id
+		ON alert_states (alert_id);
 	`,
 }

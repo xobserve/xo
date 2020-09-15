@@ -12,7 +12,6 @@ import (
 
 // EvalContext is the context object for an alert evaluation.
 type EvalContext struct {
-	Firing         bool
 	IsTestRun      bool
 	IsDebug        bool
 	EvalMatches    []*EvalMatch
@@ -29,22 +28,24 @@ type EvalContext struct {
 
 	ImagePublicURL  string
 	ImageOnDiskPath string
-	NoDataFound     bool
-	PrevAlertState  AlertStateType
+
+	// series hash id : alert state
+	States          map[string]*AlertState
+	PrevAlertStates map[string]*AlertState
 
 	Ctx context.Context
 }
 
 // NewEvalContext is the EvalContext constructor.
-func NewEvalContext(alertCtx context.Context, rule *Rule, logger log15.Logger) *EvalContext {
+func NewEvalContext(alertCtx context.Context, rule *Rule, logger log15.Logger, alertStates map[string]*AlertState) *EvalContext {
 	return &EvalContext{
-		Ctx:            alertCtx,
-		StartTime:      time.Now(),
-		Rule:           rule,
-		Logs:           make([]*ResultLogEntry, 0),
-		EvalMatches:    make([]*EvalMatch, 0),
-		PrevAlertState: rule.State,
-		log:            logger,
+		Ctx:             alertCtx,
+		StartTime:       time.Now(),
+		Rule:            rule,
+		Logs:            make([]*ResultLogEntry, 0),
+		EvalMatches:     make([]*EvalMatch, 0),
+		PrevAlertStates: alertStates,
+		log:             logger,
 	}
 }
 
@@ -126,66 +127,92 @@ func (c *EvalContext) GetRuleURL() (string, error) {
 }
 
 // GetNewState returns the new state from the alert rule evaluation.
-func (c *EvalContext) GetNewState() AlertStateType {
-	ns := getNewStateInternal(c)
-	if ns != AlertStateAlerting || c.Rule.For == 0 {
-		return ns
-	}
+func (c *EvalContext) SetNewStates() {
+	//@todo: 处理 EvalContext中的error
 
-	since := time.Since(c.Rule.LastStateChange)
-	if c.PrevAlertState == AlertStatePending && since > c.Rule.For {
-		return AlertStateAlerting
-	}
+	now := time.Now()
+	for _, match := range c.EvalMatches {
+		prevState, ok := c.PrevAlertStates[match.Metric]
+		if !ok {
+			if match.NoDataFound {
+				if c.Rule.NoDataState != NoDataKeepState {
+					c.States[match.Metric] = &AlertState{now, AlertStateNoData}
+					continue
+				}
+			}
 
-	if c.PrevAlertState == AlertStateAlerting {
-		return AlertStateAlerting
-	}
+			if match.Firing && c.Rule.For == 0 {
+				// instantly fire
+				c.States[match.Metric] = &AlertState{now, AlertStateAlerting}
+				continue
+			}
 
-	return AlertStatePending
-}
+			if match.Firing {
+				c.States[match.Metric] = &AlertState{now, AlertStatePending}
+				continue
+			}
 
-func (c *EvalContext) ShouldUpdateAlertState() bool {
-	return c.Rule.State != c.PrevAlertState
-}
-
-func (c *EvalContext) ShouldNotify() bool {
-	if c.PrevAlertState == AlertStateUnknown && c.Rule.State == AlertStateOK {
-		return false
-	}
-
-	return c.Rule.State != c.PrevAlertState
-}
-
-func getNewStateInternal(c *EvalContext) AlertStateType {
-	if c.Error != nil {
-
-		c.log.Error("Alert Rule Result Error",
-			"ruleId", c.Rule.ID,
-			"name", c.Rule.Name,
-			"error", c.Error,
-			"changing state to", c.Rule.ExecutionErrorState.ToAlertState())
-
-		if c.Rule.ExecutionErrorState == ExecutionErrorKeepState {
-			return c.PrevAlertState
+			c.States[match.Metric] = &AlertState{now, AlertStateOK}
+			continue
 		}
-		return c.Rule.ExecutionErrorState.ToAlertState()
-	}
 
-	if c.Firing {
-		return AlertStateAlerting
-	}
-
-	if c.NoDataFound {
-		c.log.Info("Alert Rule returned no data",
-			"ruleId", c.Rule.ID,
-			"name", c.Rule.Name,
-			"changing state to", c.Rule.NoDataState.ToAlertState())
-
-		if c.Rule.NoDataState == NoDataKeepState {
-			return c.PrevAlertState
+		if match.NoDataFound {
+			if c.Rule.NoDataState == NoDataKeepState {
+				c.States[match.Metric] = &AlertState{prevState.LastStateChange, prevState.State}
+			} else {
+				if prevState.State != AlertStateNoData {
+					c.States[match.Metric] = &AlertState{now, AlertStateNoData}
+				}
+			}
+			continue
 		}
-		return c.Rule.NoDataState.ToAlertState()
-	}
 
-	return AlertStateOK
+		if match.Firing && c.Rule.For == 0 {
+			if prevState.State != AlertStateAlerting {
+				c.States[match.Metric] = &AlertState{now, AlertStateAlerting}
+			} else {
+				c.States[match.Metric] = &AlertState{prevState.LastStateChange, prevState.State}
+			}
+			continue
+		}
+
+		if match.Firing {
+			since := time.Since(prevState.LastStateChange)
+			if prevState.State == AlertStatePending {
+				if since > c.Rule.For {
+					c.States[match.Metric] = &AlertState{now, AlertStateAlerting}
+				} else {
+					c.States[match.Metric] = &AlertState{prevState.LastStateChange, prevState.State}
+				}
+
+				continue
+			}
+
+			if prevState.State == AlertStateAlerting {
+				c.States[match.Metric] = &AlertState{prevState.LastStateChange, prevState.State}
+				continue
+			}
+
+			c.States[match.Metric] = &AlertState{now, AlertStatePending}
+		}
+
+		if prevState.State != AlertStateOK {
+			c.States[match.Metric] = &AlertState{now, AlertStateOK}
+			continue
+		}
+
+		c.States[match.Metric] = &AlertState{prevState.LastStateChange, prevState.State}
+	}
 }
+
+// func (c *EvalContext) ShouldUpdateAlertState() bool {
+// 	return c.Rule.State != c.PrevAlertState
+// }
+
+// func (c *EvalContext) ShouldNotify() bool {
+// 	if c.PrevAlertState == AlertStateUnknown && c.Rule.State == AlertStateOK {
+// 		return false
+// 	}
+
+// 	return c.Rule.State != c.PrevAlertState
+// }

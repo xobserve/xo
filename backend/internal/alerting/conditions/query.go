@@ -49,10 +49,9 @@ func (c *QueryCondition) Eval(context *models.EvalContext) (*models.ConditionRes
 		return nil, err
 	}
 
-	emptySeriesCount := 0
-	evalMatchCount := 0
 	var matches []*models.EvalMatch
 
+	seriesMap := make(map[string]*models.EvalMatch)
 	for _, series := range seriesList {
 		reducedValue := c.Reducer.Reduce(series)
 		// find the evaluator corresponding to specify label
@@ -70,25 +69,33 @@ func (c *QueryCondition) Eval(context *models.EvalContext) (*models.ConditionRes
 
 		evalMatch := evaluator.Eval(reducedValue)
 
-		if !reducedValue.Valid {
-			emptySeriesCount++
-		}
-
 		if context.IsTestRun {
 			context.Logs = append(context.Logs, &models.ResultLogEntry{
 				Message: fmt.Sprintf("Condition[%d]: Eval: %v, Metric: %s, Value: %s", c.Index, evalMatch, series.Name, reducedValue),
 			})
 		}
 
-		if evalMatch {
-			evalMatchCount++
-
-			matches = append(matches, &models.EvalMatch{
-				Metric: series.Name,
-				Value:  reducedValue,
-				Tags:   series.Tags,
-			})
+		seriesMap[series.Name] = &models.EvalMatch{
+			Firing:      evalMatch,
+			NoDataFound: false,
+			Metric:      series.Name,
+			Value:       reducedValue,
+			Tags:        series.Tags,
 		}
+	}
+
+	// set those in prev states but not in current series to no data
+	for metric, _ := range context.PrevAlertStates {
+		_, ok := seriesMap[metric]
+		if !ok {
+			seriesMap[metric] = &models.EvalMatch{
+				NoDataFound: true,
+			}
+		}
+	}
+
+	for _, series := range seriesMap {
+		matches = append(matches, series)
 	}
 
 	// handle no series special case
@@ -103,14 +110,11 @@ func (c *QueryCondition) Eval(context *models.EvalContext) (*models.ConditionRes
 		}
 
 		if evalMatch {
-			evalMatchCount++
-			matches = append(matches, &models.EvalMatch{Metric: "NoData", Value: null.FloatFromPtr(nil)})
+			matches = append(matches, &models.EvalMatch{Firing: false, Metric: "NoData", Value: null.FloatFromPtr(nil)})
 		}
 	}
 
 	return &models.ConditionResult{
-		Firing:      evalMatchCount > 0,
-		NoDataFound: emptySeriesCount == len(seriesList),
 		Operator:    c.Operator,
 		EvalMatches: matches,
 	}, nil
