@@ -46,6 +46,7 @@ func NewEvalContext(alertCtx context.Context, rule *Rule, logger log15.Logger, a
 		EvalMatches:     make([]*EvalMatch, 0),
 		PrevAlertStates: alertStates,
 		log:             logger,
+		States:          make(map[string]*AlertState),
 	}
 }
 
@@ -136,32 +137,33 @@ func (c *EvalContext) SetNewStates() {
 		if !ok {
 			if match.NoDataFound {
 				if c.Rule.NoDataState != NoDataKeepState {
-					c.States[match.Metric] = &AlertState{now, AlertStateNoData}
+					c.States[match.Metric] = &AlertState{now, AlertStateNoData, true}
 					continue
 				}
 			}
 
 			if match.Firing && c.Rule.For == 0 {
 				// instantly fire
-				c.States[match.Metric] = &AlertState{now, AlertStateAlerting}
+				c.States[match.Metric] = &AlertState{now, AlertStateAlerting, true}
 				continue
 			}
 
 			if match.Firing {
-				c.States[match.Metric] = &AlertState{now, AlertStatePending}
+				c.States[match.Metric] = &AlertState{now, AlertStatePending, true}
 				continue
 			}
 
-			c.States[match.Metric] = &AlertState{now, AlertStateOK}
 			continue
 		}
 
 		if match.NoDataFound {
 			if c.Rule.NoDataState == NoDataKeepState {
-				c.States[match.Metric] = &AlertState{prevState.LastStateChange, prevState.State}
+				c.States[match.Metric] = &AlertState{prevState.LastStateChange, prevState.State, false}
 			} else {
 				if prevState.State != AlertStateNoData {
-					c.States[match.Metric] = &AlertState{now, AlertStateNoData}
+					c.States[match.Metric] = &AlertState{now, AlertStateNoData, true}
+				} else {
+					c.States[match.Metric] = &AlertState{prevState.LastStateChange, prevState.State, false}
 				}
 			}
 			continue
@@ -169,9 +171,9 @@ func (c *EvalContext) SetNewStates() {
 
 		if match.Firing && c.Rule.For == 0 {
 			if prevState.State != AlertStateAlerting {
-				c.States[match.Metric] = &AlertState{now, AlertStateAlerting}
+				c.States[match.Metric] = &AlertState{now, AlertStateAlerting, true}
 			} else {
-				c.States[match.Metric] = &AlertState{prevState.LastStateChange, prevState.State}
+				c.States[match.Metric] = &AlertState{prevState.LastStateChange, prevState.State, false}
 			}
 			continue
 		}
@@ -180,28 +182,25 @@ func (c *EvalContext) SetNewStates() {
 			since := time.Since(prevState.LastStateChange)
 			if prevState.State == AlertStatePending {
 				if since > c.Rule.For {
-					c.States[match.Metric] = &AlertState{now, AlertStateAlerting}
+					c.States[match.Metric] = &AlertState{now, AlertStateAlerting, true}
 				} else {
-					c.States[match.Metric] = &AlertState{prevState.LastStateChange, prevState.State}
+					c.States[match.Metric] = &AlertState{prevState.LastStateChange, prevState.State, false}
 				}
 
 				continue
 			}
 
 			if prevState.State == AlertStateAlerting {
-				c.States[match.Metric] = &AlertState{prevState.LastStateChange, prevState.State}
+				c.States[match.Metric] = &AlertState{prevState.LastStateChange, prevState.State, false}
 				continue
 			}
 
-			c.States[match.Metric] = &AlertState{now, AlertStatePending}
+			c.States[match.Metric] = &AlertState{now, AlertStatePending, true}
 		}
 
-		if prevState.State != AlertStateOK {
-			c.States[match.Metric] = &AlertState{now, AlertStateOK}
-			continue
+		if prevState.State != AlertStateOK && prevState.State != AlertStatePending {
+			c.States[match.Metric] = &AlertState{now, AlertStateOK, true}
 		}
-
-		c.States[match.Metric] = &AlertState{prevState.LastStateChange, prevState.State}
 	}
 }
 

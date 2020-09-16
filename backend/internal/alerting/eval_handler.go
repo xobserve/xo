@@ -41,7 +41,7 @@ func (e *DefaultEvalHandler) Eval(context *models.EvalContext) {
 		for _, match := range cr.EvalMatches {
 			metric, ok := metrics[match.Metric]
 			if !ok {
-				metrics[match.Metric] = metric
+				metrics[match.Metric] = match
 				continue
 			}
 

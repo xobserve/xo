@@ -144,16 +144,16 @@ func TestNotification(c *gin.Context) {
 	model := &models.AlertNotification{}
 	c.Bind(&model)
 
-	notifier := newNotificationService()
+	notifierService := newNotificationService()
 
-	notifiers, err := InitNotifier(model)
+	notifier, err := InitNotifier(model)
 	if err != nil {
 		logger.Error("Failed to create notifier", "error", err.Error())
 		c.JSON(400, common.ResponseI18nError("error.buildNotifierError"))
 		return
 	}
 
-	err = notifier.sendNotifications(createTestEvalContext(), notifierStateSlice{{notifier: notifiers}})
+	err = notifierService.sendNotification(createTestEvalContext(), []Notifier{notifier})
 	if err != nil {
 		c.JSON(400, common.ResponseErrorMessage(nil, i18n.OFF, err.Error()))
 		return

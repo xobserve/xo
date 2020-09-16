@@ -1,7 +1,6 @@
 package notifiers
 
 import (
-	"context"
 	"time"
 
 	"github.com/code-creatively/datav/backend/pkg/log"
@@ -44,67 +43,6 @@ func NewNotifierBase(model *models.AlertNotification) NotifierBase {
 		DisableResolveMessage: model.DisableResolveMessage,
 		Frequency:             model.Frequency,
 	}
-}
-
-// ShouldNotify checks this evaluation should send an alert notification
-func (n *NotifierBase) ShouldNotify(ctx context.Context, context *models.EvalContext, notifierState *models.AlertNotificationState) bool {
-	prevState := context.PrevAlertState
-	newState := context.Rule.State
-
-	// Only notify on state change.
-	if prevState == newState && !n.SendReminder {
-		return false
-	}
-
-	if prevState == newState && n.SendReminder {
-		// Do not notify if interval has not elapsed
-		lastNotify := time.Unix(notifierState.UpdatedAt, 0)
-		if notifierState.UpdatedAt != 0 && lastNotify.Add(n.Frequency).After(time.Now()) {
-			return false
-		}
-
-		// Do not notify if alert state is OK or pending even on repeated notify
-		if newState == models.AlertStateOK || newState == models.AlertStatePending {
-			return false
-		}
-	}
-
-	okOrPending := newState == models.AlertStatePending || newState == models.AlertStateOK
-
-	// Do not notify when new state is ok/pending when previous is unknown
-	if prevState == models.AlertStateUnknown && okOrPending {
-		return false
-	}
-
-	// Do not notify when we become Pending for the first
-	if prevState == models.AlertStateNoData && newState == models.AlertStatePending {
-		return false
-	}
-
-	// Do not notify when we become OK from pending
-	if prevState == models.AlertStatePending && newState == models.AlertStateOK {
-		return false
-	}
-
-	// Do not notify when we OK -> Pending
-	if prevState == models.AlertStateOK && newState == models.AlertStatePending {
-		return false
-	}
-
-	// Do not notify if state pending and it have been updated last minute
-	if notifierState.State == models.AlertNotificationStatePending {
-		lastUpdated := time.Unix(notifierState.UpdatedAt, 0)
-		if lastUpdated.Add(1 * time.Minute).After(time.Now()) {
-			return false
-		}
-	}
-
-	// Do not notify when state is OK if DisableResolveMessage is set to true
-	if newState == models.AlertStateOK && n.DisableResolveMessage {
-		return false
-	}
-
-	return true
 }
 
 // GetType returns the notifier type.

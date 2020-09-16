@@ -26,6 +26,10 @@ const (
 	AlertStateOK       AlertStateType = "ok"
 	AlertStatePending  AlertStateType = "pending"
 	AlertStateUnknown  AlertStateType = "unknown"
+
+	AnnotationAlerting   = "alerting"
+	AnnotationAlertingOk = "alerting_ok"
+	AnnotationOk         = "ok"
 )
 
 const (
@@ -239,6 +243,7 @@ type AlertTestResultLog struct {
 type AlertState struct {
 	LastStateChange time.Time      `json:"lastStateChange"`
 	State           AlertStateType `json:"state"`
+	Changed         bool           `json:"-"`
 }
 
 // Job holds state about when the alert rule should be evaluated.
@@ -324,7 +329,7 @@ func GetOrCreateAlertStates(dashId int64, alertId int64) (*AlertStates, error) {
 
 	var states []byte
 	err := db.SQL.QueryRow("SELECT id,states,version,updated_at,alert_rule_state_updated_version FROM alert_states WHERE alert_id=?", alertId).Scan(
-		&ans.Id, states, &ans.Version, &ans.UpdatedAt, &ans.AlertRuleStateUpdatedVersion,
+		&ans.Id, &states, &ans.Version, &ans.UpdatedAt, &ans.AlertRuleStateUpdatedVersion,
 	)
 	if err == nil {
 		json.Unmarshal(states, &ans.States)
@@ -339,7 +344,7 @@ func GetOrCreateAlertStates(dashId int64, alertId int64) (*AlertStates, error) {
 	ans.UpdatedAt = time.Now().Unix()
 
 	states, err = json.Marshal(ans.States)
-	res, err := db.SQL.Exec("INSERT INTO alert_states (dashboard_id,alert_id, states,version,updated_at,alert_rule_state_updated_version) VALUES (?,?,?,?,?,?,?)",
+	res, err := db.SQL.Exec("INSERT INTO alert_states (dashboard_id,alert_id, states,version,updated_at,alert_rule_state_updated_version) VALUES (?,?,?,?,?,?)",
 		dashId, ans.AlertId, states, ans.Version, ans.UpdatedAt, ans.AlertRuleStateUpdatedVersion)
 	if err != nil {
 		return nil, err
@@ -351,27 +356,16 @@ func GetOrCreateAlertStates(dashId int64, alertId int64) (*AlertStates, error) {
 	return ans, nil
 }
 
-func SetAlertNotificationStateToComplete(id int64, version int64) error {
-	_, err := db.SQL.Exec("UPDATE alert_states SET state=?, version=?, updated_at=? WHERE id=?",
-		AlertNotificationStateCompleted, version+1, time.Now().Unix(), id)
+func SetAlertStates(alertId int64, states map[string]*AlertState, version int64) error {
+	data, err := json.Marshal(states)
+	if err != nil {
+		return err
+	}
+
+	_, err = db.SQL.Exec("UPDATE alert_states SET states=?,version=?,updated_at=? WHERE alert_id=?", data, version, time.Now().Unix(), alertId)
 	if err != nil {
 		return err
 	}
 
 	return nil
-}
-
-func SetAlertNotificationStateToPendingCommand(id int64, version int64, updateVersion int64) (int64, error) {
-	newVer := version + 1
-	res, err := db.SQL.Exec("UPDATE alert_states SET state=?, version=?, updated_at=? ,alert_rule_state_updated_version=?  WHERE id=? AND (version = ? OR alert_rule_state_updated_version < ?)",
-		AlertNotificationStatePending, newVer, time.Now().Unix(), updateVersion, id, version, updateVersion)
-	if err != nil && err != sql.ErrNoRows {
-		return 0, err
-	}
-	affected, _ := res.RowsAffected()
-	if affected == 0 {
-		return 0, ErrAlertNotificationStateVersionConflict
-	}
-
-	return newVer, nil
 }

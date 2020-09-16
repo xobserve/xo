@@ -7,11 +7,18 @@ import (
 
 var RootLogger = log.New()
 
-func InitLogger(level string) {
+func InitLogger(level string) error {
 	l := log.CallerFileHandler(log.StdoutHandler)
+	lvl, err := log.LvlFromString(level)
+	if err != nil {
+		return err
+	}
+
 	RootLogger.SetHandler(log.MultiHandler(
-		log.LvlFilterHandler(log.LvlInfo, l),
+		log.LvlFilterHandler(lvl, l),
 	))
+
+	return nil
 }
 
 func Stack(skip int) string {

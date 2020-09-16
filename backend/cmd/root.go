@@ -15,6 +15,7 @@
 package cmd
 
 import (
+	"fmt"
 	"os"
 	"os/signal"
 	"syscall"
@@ -34,9 +35,14 @@ var rootCmd = &cobra.Command{
 	// has an action associated with it:
 	Run: func(cmd *cobra.Command, args []string) {
 		config.Init("web.conf")
-		log.InitLogger(config.Data.Log.Level)
+		err := log.InitLogger(config.Data.Log.Level)
+		if err != nil {
+			fmt.Println("init logger error", err)
+			return
+		}
+
 		service := server.New()
-		err := service.Start()
+		err = service.Start()
 		if err != nil {
 			return
 		}

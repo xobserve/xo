@@ -1,7 +1,6 @@
 package alerting
 
 import (
-	"context"
 	"errors"
 	"time"
 
@@ -40,31 +39,11 @@ type Notifier interface {
 	GetType() string
 	NeedsImage() bool
 
-	// ShouldNotify checks this evaluation should send an alert notification
-	ShouldNotify(ctx context.Context, evalContext *models.EvalContext, notificationState *models.AlertNotificationState) bool
-
 	GetNotifierID() int64
 	GetIsDefault() bool
 	GetSendReminder() bool
 	GetDisableResolveMessage() bool
 	GetFrequency() time.Duration
-}
-
-type notifierState struct {
-	notifier Notifier
-	state    *models.AlertNotificationState
-}
-
-type notifierStateSlice []*notifierState
-
-func (notifiers notifierStateSlice) ShouldUploadImage() bool {
-	for _, ns := range notifiers {
-		if ns.notifier.NeedsImage() {
-			return true
-		}
-	}
-
-	return false
 }
 
 // InputType is the type of input that can be rendered in the frontend.
@@ -110,80 +89,48 @@ func newNotificationService() *notificationService {
 type notificationService struct {
 }
 
-func (n *notificationService) SendIfNeeded(evalCtx *models.EvalContext) error {
-	notifierStates, err := n.getNeededNotifiers(evalCtx.Rule.Notifications, evalCtx)
+func (n *notificationService) Send(okContext *models.EvalContext, alertContext *models.EvalContext) error {
+	notifiers, err := n.getNeededNotifiers(okContext.Rule.Notifications)
 	if err != nil {
 		logger.Error("Failed to get alert notifiers", "error", err)
 		return err
 	}
 
-	if len(notifierStates) == 0 {
+	if len(notifiers) == 0 {
+		logger.Debug("zero notifiers configured", "alert_id", okContext.Rule.ID)
 		return nil
 	}
 
-	return n.sendNotifications(evalCtx, notifierStates)
-}
-
-func (n *notificationService) sendAndMarkAsComplete(evalContext *models.EvalContext, notifierState *notifierState) error {
-	notifier := notifierState.notifier
-
-	logger.Debug("Sending notification", "type", notifier.GetType(), "id", notifier.GetNotifierID(), "isDefault", notifier.GetIsDefault())
-
-	err := notifier.Notify(evalContext)
+	err = n.sendNotification(okContext, notifiers)
 	if err != nil {
-		logger.Error("failed to send notification", "id", notifier.GetNotifierID(), "error", err)
 		return err
 	}
 
-	if evalContext.IsTestRun {
+	return n.sendNotification(alertContext, notifiers)
+}
+
+func (n *notificationService) sendNotification(context *models.EvalContext, notifiers []Notifier) error {
+	if len(context.EvalMatches) == 0 {
 		return nil
 	}
 
-	err = models.SetAlertNotificationStateToComplete(notifierState.state.Id, notifierState.state.Version)
-	if err != nil {
-		logger.Error("set state to complete error", "error", err)
-		return err
-	}
+	for _, notifier := range notifiers {
+		logger.Debug("Sending notification", "type", notifier.GetType(), "id", notifier.GetNotifierID(), "isDefault", notifier.GetIsDefault())
 
-	return nil
-}
-
-func (n *notificationService) sendNotification(evalContext *models.EvalContext, notifierState *notifierState) error {
-	if !evalContext.IsTestRun {
-		newVer, err := models.SetAlertNotificationStateToPendingCommand(notifierState.state.Id, notifierState.state.Version, evalContext.Rule.StateChanges)
-		if err == models.ErrAlertNotificationStateVersionConflict {
-			return nil
-		}
-
+		err := notifier.Notify(context)
 		if err != nil {
+			logger.Error("failed to send notification", "id", notifier.GetNotifierID(), "error", err)
 			return err
 		}
-
-		// We need to update state version to be able to log
-		// unexpected version conflicts when marking notifications as ok
-		notifierState.state.Version = newVer
 	}
 
-	return n.sendAndMarkAsComplete(evalContext, notifierState)
-}
-
-func (n *notificationService) sendNotifications(evalContext *models.EvalContext, notifierStates notifierStateSlice) error {
-	for _, notifierState := range notifierStates {
-		err := n.sendNotification(evalContext, notifierState)
-		if err != nil {
-			logger.Error("failed to send notification", "id", notifierState.notifier.GetNotifierID(), "error", err)
-			if evalContext.IsTestRun {
-				return err
-			}
-		}
-	}
 	return nil
 }
 
-func (n *notificationService) getNeededNotifiers(notificationIds []int64, evalContext *models.EvalContext) (notifierStateSlice, error) {
+func (n *notificationService) getNeededNotifiers(notificationIds []int64) ([]Notifier, error) {
 	nos := models.GetAlertNotificationsByIds(notificationIds)
 
-	var result notifierStateSlice
+	notifiers := make([]Notifier, 0)
 	for _, notification := range nos {
 		not, err := InitNotifier(notification)
 		if err != nil {
@@ -191,21 +138,10 @@ func (n *notificationService) getNeededNotifiers(notificationIds []int64, evalCo
 			continue
 		}
 
-		ans, err := models.GetOrCreateAlertNotificationState(evalContext.Rule.DashboardID, notification.Id, evalContext.Rule.ID)
-		if err != nil {
-			logger.Error("Could not get notification state.", "notifier", notification.Id, "error", err)
-			continue
-		}
-
-		if not.ShouldNotify(evalContext.Ctx, evalContext, ans) {
-			result = append(result, &notifierState{
-				notifier: not,
-				state:    ans,
-			})
-		}
+		notifiers = append(notifiers, not)
 	}
 
-	return result, nil
+	return notifiers, nil
 }
 
 // InitNotifier instantiate a new notifier based on the model.

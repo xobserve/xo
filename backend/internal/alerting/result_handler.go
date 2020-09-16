@@ -28,55 +28,57 @@ func (handler *defaultResultHandler) handle(evalContext *models.EvalContext) err
 	executionError := ""
 	annotationData := simplejson.New()
 
-	if len(evalContext.EvalMatches) > 0 {
-		annotationData.Set("evalMatches", simplejson.NewFromAny(evalContext.EvalMatches))
+	shouldNotifyOk := make([]*models.EvalMatch, 0)
+	shouldNotifyAlerting := make([]*models.EvalMatch, 0)
+	for _, match := range evalContext.EvalMatches {
+		state, ok := evalContext.States[match.Metric]
+		if !ok || !state.Changed {
+			continue
+		}
+
+		if state.State == models.AlertStateOK {
+			shouldNotifyOk = append(shouldNotifyOk, match)
+			continue
+		}
+
+		if state.State == models.AlertStateAlerting {
+			shouldNotifyAlerting = append(shouldNotifyAlerting, match)
+			continue
+		}
+	}
+
+	if len(evalContext.EvalMatches) == 0 {
+		annotationData.Set("noData", true)
+		// annotationData.Set("evalMatches", simplejson.NewFromAny(evalContext.EvalMatches))
 	}
 
 	if evalContext.Error != nil {
 		executionError = evalContext.Error.Error()
 		annotationData.Set("error", executionError)
-	} else if evalContext.NoDataFound {
-		annotationData.Set("noData", true)
 	}
 
-	if evalContext.ShouldUpdateAlertState() {
-		logger.Info("New state change", "ruleId", evalContext.Rule.ID, "newState", evalContext.Rule.State, "prevState", evalContext.PrevAlertState)
-
-		newAlert, err := SetAlertState(evalContext.Rule.ID, evalContext.Rule.State, annotationData, executionError)
-		if err != nil {
-			if err == models.ErrCannotChangeStateOnPausedAlert {
-				logger.Error("Cannot change state on alert that's paused", "error", err)
-				return err
-			}
-
-			if err == models.ErrRequiresNewState {
-				logger.Info("Alert already updated")
-				return nil
-			}
-
-			logger.Error("Failed to save state", "error", err)
-		} else {
-
-			// StateChanges is used for de duping alert notifications
-			// when two servers are raising. This makes sure that the server
-			// with the last state change always sends a notification.
-			evalContext.Rule.StateChanges = newAlert.StateChanges
-
-			// Update the last state change of the alert rule in memory
-			evalContext.Rule.LastStateChange = time.Now()
-		}
+	var annState string
+	if len(shouldNotifyOk) != 0 && len(shouldNotifyAlerting) == 0 {
+		annState = models.AnnotationOk
 	}
 
-	if evalContext.ShouldNotify() {
+	if len(shouldNotifyOk) == 0 && len(shouldNotifyAlerting) != 0 {
+		annState = models.AnnotationAlerting
+	}
+
+	if len(shouldNotifyOk) != 0 && len(shouldNotifyAlerting) != 0 {
+		annState = models.AnnotationAlertingOk
+	}
+
+	if annState != "" {
 		now := time.Now()
 		// save annotation
 		ann := models.Annotation{
 			DashboardId: evalContext.Rule.DashboardID,
 			PanelId:     evalContext.Rule.PanelID,
 			AlertId:     evalContext.Rule.ID,
-			Text:        string(evalContext.Rule.State),
-			NewState:    string(evalContext.Rule.State),
-			PrevState:   string(evalContext.PrevAlertState),
+			Text:        annState,
+			NewState:    annState,
 			Time:        time.Now().UnixNano() / int64(time.Millisecond),
 			Data:        annotationData,
 			Created:     now.Unix(),
@@ -87,15 +89,41 @@ func (handler *defaultResultHandler) handle(evalContext *models.EvalContext) err
 		if err := annotationRepo.Create(&ann); err != nil {
 			logger.Error("Failed to save annotation for new alert state", "error", err)
 		}
+	}
 
-		if err := handler.notifier.SendIfNeeded(evalContext); err != nil {
-			if xerrors.Is(err, context.Canceled) {
-				logger.Debug("handler.notifier.SendIfNeeded returned context.Canceled")
-			} else if xerrors.Is(err, context.DeadlineExceeded) {
-				logger.Debug("handler.notifier.SendIfNeeded returned context.DeadlineExceeded")
-			} else {
-				logger.Error("handler.notifier.SendIfNeeded failed", "err", err)
-			}
+	okContext := &models.EvalContext{
+		Error:       evalContext.Error,
+		EvalMatches: shouldNotifyOk,
+		Rule: &models.Rule{
+			ID:            evalContext.Rule.ID,
+			Name:          evalContext.Rule.Name,
+			Message:       evalContext.Rule.Message,
+			State:         models.AlertStateOK,
+			Notifications: evalContext.Rule.Notifications,
+			AlertRuleTags: evalContext.Rule.AlertRuleTags,
+		},
+	}
+
+	alertContext := &models.EvalContext{
+		Error:       evalContext.Error,
+		EvalMatches: shouldNotifyAlerting,
+		Rule: &models.Rule{
+			ID:            evalContext.Rule.ID,
+			Name:          evalContext.Rule.Name,
+			Message:       evalContext.Rule.Message,
+			State:         models.AlertStateAlerting,
+			Notifications: evalContext.Rule.Notifications,
+			AlertRuleTags: evalContext.Rule.AlertRuleTags,
+		},
+	}
+
+	if err := handler.notifier.Send(okContext, alertContext); err != nil {
+		if xerrors.Is(err, context.Canceled) {
+			logger.Debug("handler.notifier.Send returned context.Canceled")
+		} else if xerrors.Is(err, context.DeadlineExceeded) {
+			logger.Debug("handler.notifier.Send returned context.DeadlineExceeded")
+		} else {
+			logger.Error("handler.notifier.Send failed", "err", err)
 		}
 	}
 

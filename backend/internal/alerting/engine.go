@@ -164,13 +164,15 @@ func (e *AlertEngine) processJob(attemptID int, attemptChan chan int, cancelChan
 	go func() {
 		defer func() {
 			if err := recover(); err != nil {
+				logger.Error("panic", "error", err, "stack", log.Stack(1))
 				close(attemptChan)
 			}
 		}()
 
 		e.evalHandler.Eval(evalContext)
-
+		logger.Debug("eval matches", "count", len(evalContext.EvalMatches))
 		if evalContext.Error != nil {
+			logger.Warn("eval error", "error", evalContext.Error)
 			if attemptID < config.Data.Alerting.MaxAttempts {
 				attemptChan <- (attemptID + 1)
 				return
@@ -187,6 +189,18 @@ func (e *AlertEngine) processJob(attemptID int, attemptChan chan int, cancelChan
 		// don't reuse the evalContext and get its own context.
 		evalContext.Ctx = resultHandleCtx
 		evalContext.SetNewStates()
+		err := models.SetAlertStates(evalContext.Rule.ID, evalContext.States, prevStates.Version+1)
+		if err != nil {
+			logger.Error("set new alert states error", "alert_id", evalContext.Rule.ID, "error", err)
+			close(attemptChan)
+			return
+		}
+
+		for metric, v := range evalContext.States {
+			if v.Changed {
+				logger.Info("new state", "metric", metric, "state", v.State, "changed", v.Changed)
+			}
+		}
 
 		if err := e.resultHandler.handle(evalContext); err != nil {
 			if xerrors.Is(err, context.Canceled) {
