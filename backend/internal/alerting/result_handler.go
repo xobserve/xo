@@ -30,20 +30,27 @@ func (handler *defaultResultHandler) handle(evalContext *models.EvalContext) err
 
 	shouldNotifyOk := make([]*models.EvalMatch, 0)
 	shouldNotifyAlerting := make([]*models.EvalMatch, 0)
+	alertState := models.AlertStateOK
 	for _, match := range evalContext.EvalMatches {
 		state, ok := evalContext.States[match.Metric]
-		if !ok || !state.Changed {
-			continue
-		}
-
-		if state.State == models.AlertStateOK {
-			shouldNotifyOk = append(shouldNotifyOk, match)
+		if !ok {
 			continue
 		}
 
 		if state.State == models.AlertStateAlerting {
-			shouldNotifyAlerting = append(shouldNotifyAlerting, match)
-			continue
+			alertState = models.AlertStateAlerting
+		}
+
+		if state.Changed {
+			if state.State == models.AlertStateOK {
+				shouldNotifyOk = append(shouldNotifyOk, match)
+				continue
+			}
+
+			if state.State == models.AlertStateAlerting {
+				shouldNotifyAlerting = append(shouldNotifyAlerting, match)
+				continue
+			}
 		}
 	}
 
@@ -57,17 +64,14 @@ func (handler *defaultResultHandler) handle(evalContext *models.EvalContext) err
 		annotationData.Set("error", executionError)
 	}
 
-	var annState string
+	var annState models.AlertStateType
+
 	if len(shouldNotifyOk) != 0 && len(shouldNotifyAlerting) == 0 {
-		annState = models.AnnotationOk
+		annState = models.AlertStateOK
 	}
 
-	if len(shouldNotifyOk) == 0 && len(shouldNotifyAlerting) != 0 {
-		annState = models.AnnotationAlerting
-	}
-
-	if len(shouldNotifyOk) != 0 && len(shouldNotifyAlerting) != 0 {
-		annState = models.AnnotationAlertingOk
+	if len(shouldNotifyAlerting) != 0 {
+		annState = models.AlertStateAlerting
 	}
 
 	if annState != "" {
@@ -77,8 +81,8 @@ func (handler *defaultResultHandler) handle(evalContext *models.EvalContext) err
 			DashboardId: evalContext.Rule.DashboardID,
 			PanelId:     evalContext.Rule.PanelID,
 			AlertId:     evalContext.Rule.ID,
-			Text:        annState,
-			NewState:    annState,
+			Text:        string(annState),
+			NewState:    string(annState),
 			Time:        time.Now().UnixNano() / int64(time.Millisecond),
 			Data:        annotationData,
 			Created:     now.Unix(),
@@ -90,6 +94,9 @@ func (handler *defaultResultHandler) handle(evalContext *models.EvalContext) err
 			logger.Error("Failed to save annotation for new alert state", "error", err)
 		}
 	}
+
+	// set alert rule state
+	models.SetAlertState(evalContext.Rule.ID, alertState, evalContext.Rule.StateChanges+1)
 
 	okContext := &models.EvalContext{
 		Error:       evalContext.Error,

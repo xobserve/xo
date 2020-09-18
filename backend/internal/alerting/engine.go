@@ -198,7 +198,7 @@ func (e *AlertEngine) processJob(attemptID int, attemptChan chan int, cancelChan
 
 		for metric, v := range evalContext.States {
 			if v.Changed {
-				logger.Info("new state", "metric", metric, "state", v.State, "changed", v.Changed)
+				logger.Debug("new state", "metric", metric, "state", v.State, "changed", v.Changed)
 			}
 		}
 

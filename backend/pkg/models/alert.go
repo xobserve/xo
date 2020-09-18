@@ -26,10 +26,6 @@ const (
 	AlertStateOK       AlertStateType = "ok"
 	AlertStatePending  AlertStateType = "pending"
 	AlertStateUnknown  AlertStateType = "unknown"
-
-	AnnotationAlerting   = "alerting"
-	AnnotationAlertingOk = "alerting_ok"
-	AnnotationOk         = "ok"
 )
 
 const (
@@ -363,6 +359,17 @@ func SetAlertStates(alertId int64, states map[string]*AlertState, version int64)
 	}
 
 	_, err = db.SQL.Exec("UPDATE alert_states SET states=?,version=?,updated_at=? WHERE alert_id=?", data, version, time.Now().Unix(), alertId)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func SetAlertState(alertId int64, state AlertStateType, stateChanges int64) error {
+	now := time.Now()
+	_, err := db.SQL.Exec("UPDATE alert SET state=?, new_state_date=?,state_changes=?, updated=? WHERE id=?",
+		state, now, stateChanges, now, alertId)
 	if err != nil {
 		return err
 	}
