@@ -5,7 +5,8 @@ import { FormattedMessage } from 'react-intl';
 import {AlertNotification} from 'src/types'
 import {Input,Select,Switch,Alert,Button} from 'antd'
 import { InlineFormLabel,config} from 'src/packages/datav-core';
-import Email from './Notifiers/Email'
+import {NotifierPicker,notifiers} from './Notifiers/Picker'
+
 const {Option} = Select
 
 interface Props {
@@ -17,15 +18,8 @@ interface Props {
     notification: AlertNotification
 }
 
-const notifiers = {
-    'email' : Email
-}
 
-export const NotificationEdit = (props:Props) =>{
-    const notifierOptions = _.keys(notifiers).map((notifier) => {
-    return <Option value={notifier} key={notifier}>{notifier}</Option>
-    })
-    
+export const NotificationEdit = (props:Props) =>{    
     let Notifier = null
     if (props.notification) {
         Notifier = notifiers[props.notification.type]
@@ -68,9 +62,7 @@ export const NotificationEdit = (props:Props) =>{
 
                 <div className="gf-form">
                     <span className="gf-form-label width-12">Type</span>
-                    <Select className="max-width-15" defaultValue={props.notification.type} onChange={(v) => {props.notification.type = v; props.onEditChange()}} >
-                        {notifierOptions}
-                    </Select>
+                    <NotifierPicker className="max-width-15" value={props.notification.type} onChange={(v) => {props.notification.type = v; props.onEditChange()}}  />
                 </div>
 
                 <div className="gf-form">

@@ -1,6 +1,7 @@
 package alerting
 
 import (
+	"encoding/json"
 	"errors"
 	"fmt"
 	"regexp"
@@ -154,6 +155,12 @@ func (e *DashAlertExtractor) getAlertFromPanels(jsonWithPanels *simplejson.Json,
 		if !validateAlertFunc(alert) {
 			return nil, fmt.Errorf("Panel id is not correct, alertName=%v, panelId=%v", alert.Name, alert.PanelId)
 		}
+
+		expBuf, _ := json.Marshal(jsonAlert.Get("sendExceptions"))
+		var exp []*models.SendException
+		json.Unmarshal(expBuf, &exp)
+
+		alert.SendExceptions = exp
 
 		alerts = append(alerts, alert)
 	}

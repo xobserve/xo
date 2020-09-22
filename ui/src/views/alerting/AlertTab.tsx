@@ -19,6 +19,8 @@ import alertDef from './state/alertDef';
 import { ThresholdMapper } from './state/ThresholdMapper';
 import { Select, InputNumber, notification as Notification, Input } from 'antd'
 import localeData from 'src/core/library/locale';
+import { NotifierPicker } from '../cfg/teams/team/Notifiers/Picker';
+
 const { Option } = Select
 
 interface OwnProps {
@@ -39,6 +41,7 @@ interface State {
   error: any
   conditionInEdit: number
   evaluatorInEdit: any
+  sendExcepitonsInEdit: boolean
 }
 
 class UnConnectedAlertTab extends PureComponent<Props, State> {
@@ -62,7 +65,8 @@ class UnConnectedAlertTab extends PureComponent<Props, State> {
       notifications: [],
       error: null,
       conditionInEdit: null,
-      evaluatorInEdit: null
+      evaluatorInEdit: null,
+      sendExcepitonsInEdit: false
     }
   }
 
@@ -135,7 +139,7 @@ class UnConnectedAlertTab extends PureComponent<Props, State> {
     alert.notifications = alert.notifications || [];
     alert.for = alert.for || '0m';
     alert.alertRuleTags = alert.alertRuleTags || {};
-
+    alert.sendExceptions = alert.sendExceptions || [];
     const defaultName = this.props.panel.title + ' alert';
     alert.name = alert.name || defaultName;
 
@@ -481,9 +485,33 @@ removeEvaluatorParam = (i) => {
   })
 }
 
+dismissSendExceptionsEdit = () => {
+  this.setState({
+    ...this.state,
+    sendExcepitonsInEdit: false
+  })
+}
+
+addSendException = () => {
+  this.props.panel.alert.sendExceptions.push({
+    type: 'email',
+    label: '',
+    setting: ''
+  })
+  this.forceUpdate()
+}
+
+removeSendException = (i) => {
+  const exceptions = _.cloneDeep(this.props.panel.alert.sendExceptions)
+  exceptions.splice(i,1)
+
+  this.props.panel.alert.sendExceptions = exceptions
+  this.forceUpdate()
+}
+
 render() {
   const { transformations, alert, targets } = this.props.panel;
-  const { validatonMessage, frequencyWarning, notifications, error, evaluatorInEdit } = this.state;
+  const { validatonMessage, frequencyWarning, notifications, error, evaluatorInEdit, sendExcepitonsInEdit} = this.state;
   const hasTransformations = transformations && transformations.length > 0;
 
   if (!alert && validatonMessage) {
@@ -535,7 +563,7 @@ render() {
                 <div className="gf-form">
                   <InlineFormLabel className="gf-form-label" tooltip="If an alert rule has a configured For and the query violates the configured threshold it will first go from OK to Pending. Going from OK to Pending Grafana will not send any notifications. Once the alert rule has been firing for more than For duration, it will change to Alerting and send alert notifications.">
                     For
-                    </InlineFormLabel>
+                  </InlineFormLabel>
                   <input
                     type="text"
                     className="gf-form-input max-width-10 gf-form-input--has-help-icon"
@@ -652,10 +680,13 @@ render() {
                 <div className="gf-form-inline">
                   <div className="gf-form">
                     <span className="gf-form-label width-8">Send to</span>
+                    <span className="gf-form-label query-keyword">COMMON CASES</span>
+                    <Select mode="multiple" defaultValue={alert.notifications} className="width-10" onChange={this.notificationAdded}>
+                      {notifications.map((n) => <Option value={n.id} key={n.id}><Icon name={n.icon} /> <span className="ub-ml1">{n.name}</span></Option>)}
+                    </Select>
+                    <span className="gf-form-label query-keyword width-11 ub-ml2 pointer" onClick={() => this.setState({ ...this.state, sendExcepitonsInEdit: true })}>SET EXCEPTIONS</span>
                   </div>
-                  <Select mode="multiple" defaultValue={alert.notifications} className="width-10" onChange={this.notificationAdded}>
-                    {notifications.map((n) => <Option value={n.id} key={n.id}><Icon name={n.icon} /> <span className="ub-ml1">{n.name}</span></Option>)}
-                  </Select>
+               
                 </div>
 
                 <div className="gf-form gf-form--v-stretch">
@@ -736,6 +767,30 @@ render() {
 
           <div className="gf-form ub-ml2">
             <label className="gf-form-label dropdown pointer" onClick={this.addEvaluatorParam}>
+              <Icon name="plus-circle" />
+            </label>
+          </div>
+        </>
+      </Modal>}
+      
+      {sendExcepitonsInEdit && <Modal isOpen={true} icon="edit" title="Edit condition labels ande values" onDismiss={this.dismissSendExceptionsEdit}>
+        <>
+          {alert.sendExceptions.map((exp, i) => {
+            return <div className="gf-form-inline" key={i}>
+              <span className="gf-form-label query-keyword width-7">LABEL</span>
+              <Input placeholder="name" value={exp.label} onChange={(e) => { exp.label = e.currentTarget.value; this.forceUpdate() }} style={{ width: '100px' }} />
+              <span className="gf-form-label query-keyword width-7 ub-ml2">Type</span>
+              <NotifierPicker value={exp.type} onChange={(v) => {exp.type = v; this.forceUpdate()}} />
+              <span className="gf-form-label query-keyword width-7 ub-ml2">Setting</span>
+              <Input placeholder="e.g test@gmail.com,ok@gmail.com" value={exp.setting} onChange={(e) => { exp.setting = e.currentTarget.value; this.forceUpdate() }} style={{ width: '200px' }} />
+              <label className="gf-form-label pointer" onClick={() => this.removeSendException(i)}>
+                  <Icon name="trash-alt" />
+                </label>
+            </div>
+          })}
+
+          <div className="gf-form ">
+            <label className="gf-form-label dropdown pointer" onClick={this.addSendException}>
               <Icon name="plus-circle" />
             </label>
           </div>

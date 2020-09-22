@@ -155,14 +155,20 @@ type Alert struct {
 	ExecutionError string
 	Frequency      int64
 	For            time.Duration
-
-	NewStateDate time.Time
-	StateChanges int64
+	SendExceptions []*SendException
+	NewStateDate   time.Time
+	StateChanges   int64
 
 	Created time.Time
 	Updated time.Time
 
 	Settings *simplejson.Json
+}
+
+type SendException struct {
+	Type    string `json:"type"`
+	Label   string `json:"label"`
+	Setting string `json:"setting"`
 }
 
 func (alert *Alert) GetTagsFromSettings() []*Tag {
