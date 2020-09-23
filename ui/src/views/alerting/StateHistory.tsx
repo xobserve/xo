@@ -26,16 +26,21 @@ class StateHistory extends PureComponent<Props, State> {
 
     getBackendSrv()
       .get(
-        `/api/annotations?dashboardId=${dashboard.id}&panelId=${panelId}&limit=50&type=alert`,
-        {},
+        `/api/alerting/history`,
+        {
+          type : 'panel',
+          dashId: dashboard.id,
+          panelId: panelId
+        },
         `state-history-${dashboard.id}-${panelId}`
       )
-      .then(data => {
+      .then(res => {
+        const data = res.data
         const items = data.map((item: any) => {
           return {
-            stateModel: alertDef.getStateDisplayModel(item.newState),
+            stateModel: alertDef.getStateDisplayModel(item.state),
             time: dashboard.formatDate(item.time, 'MMM D, YYYY HH:mm:ss'),
-            info: alertDef.getAlertAnnotationInfo(item),
+            info: alertDef.getAlertAnnotationInfo(item.matches),
           };
         });
 
@@ -45,17 +50,6 @@ class StateHistory extends PureComponent<Props, State> {
       });
   }
 
-  clearHistory = async () => {
-    const { dashboard, panelId, onRefresh } = this.props;
-
-    await getBackendSrv().post('/api/annotations/mass-delete', {
-      dashboardId: dashboard.id,
-      panelId: panelId,
-    });
-
-    this.setState({ stateHistoryItems: [] });
-    onRefresh();
-  };
 
   render() {
     const { stateHistoryItems } = this.state;
@@ -64,21 +58,10 @@ class StateHistory extends PureComponent<Props, State> {
       <div>
         {stateHistoryItems.length > 0 && (
           <div className="p-b-1">
-            <span className="muted">Last 50 state changes</span>
-            <ConfirmButton onConfirm={this.clearHistory} confirmVariant="destructive" confirmText="Clear">
-              <Button
-                className={css`
-                  direction: ltr;
-                `}
-                variant="destructive"
-                icon="trash-alt"
-              >
-                Clear history
-              </Button>
-            </ConfirmButton>
+            <span className="muted">Last 50 alert history</span>
           </div>
         )}
-        <ol className="alert-rule-list">
+        <ol className="alert-rule-list ub-mt2">
           {stateHistoryItems.length > 0 ? (
             stateHistoryItems.map((item, index) => {
               return (

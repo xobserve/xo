@@ -384,3 +384,37 @@ func SetAlertState(alertId int64, state AlertStateType, stateChanges int64) erro
 
 	return nil
 }
+
+type AlertHistory struct {
+	ID          int64          `json:"id"`
+	DashboardID int64          `json:"dashId"`
+	PanelID     int64          `json:"panelId"`
+	State       AlertStateType `json:"state"`
+	Matches     []*EvalMatch   `json:"matches"`
+	Time        int64          `json:"time"`
+}
+type AlertHistories []*AlertHistory
+
+func (ah AlertHistories) Len() int      { return len(ah) }
+func (ah AlertHistories) Swap(i, j int) { ah[i], ah[j] = ah[j], ah[i] }
+func (ah AlertHistories) Less(i, j int) bool {
+	return ah[i].Time > ah[j].Time
+}
+
+func AddAlertHistory(context *EvalContext) {
+	dashId := context.Rule.DashboardID
+	panelId := context.Rule.PanelID
+	if dashId == 0 || panelId == 0 {
+		logger.Error("add alert history param error", "error", "dashid or panelid is empty")
+		return
+	}
+
+	now := time.Now()
+	matches, _ := json.Marshal(context.EvalMatches)
+	_, err := db.SQL.Exec("INSERT INTO alert_history (dashboard_id,panel_id,state,matches,created) VALUES (?,?,?,?,?)",
+		context.Rule.DashboardID, context.Rule.PanelID, context.Rule.State, matches, now)
+	if err != nil {
+		logger.Error("add alert history error", "error", err)
+	}
+
+}

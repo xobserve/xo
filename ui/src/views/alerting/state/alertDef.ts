@@ -142,22 +142,8 @@ function joinEvalMatches(matches: any, separator: string) {
   ).join(separator);
 }
 
-function getAlertAnnotationInfo(ah: any) {
-  // backward compatibility, can be removed in grafana 5.x
-  // old way stored evalMatches in data property directly,
-  // new way stores it in evalMatches property on new data object
-
-  if (_.isArray(ah.data)) {
-    return joinEvalMatches(ah.data, ', ');
-  } else if (_.isArray(ah.data.evalMatches)) {
-    return joinEvalMatches(ah.data.evalMatches, ', ');
-  }
-
-  if (ah.data.error) {
-    return 'Error: ' + ah.data.error;
-  }
-
-  return '';
+function getAlertAnnotationInfo(matches: any) {
+  return joinEvalMatches(matches, ', ');
 }
 
 export default {

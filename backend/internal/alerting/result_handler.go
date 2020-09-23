@@ -103,6 +103,8 @@ func (handler *defaultResultHandler) handle(evalContext *models.EvalContext) err
 		EvalMatches: shouldNotifyOk,
 		Rule: &models.Rule{
 			ID:             evalContext.Rule.ID,
+			DashboardID:    evalContext.Rule.DashboardID,
+			PanelID:        evalContext.Rule.PanelID,
 			Name:           evalContext.Rule.Name,
 			Message:        evalContext.Rule.Message,
 			State:          models.AlertStateOK,
@@ -117,6 +119,8 @@ func (handler *defaultResultHandler) handle(evalContext *models.EvalContext) err
 		EvalMatches: shouldNotifyAlerting,
 		Rule: &models.Rule{
 			ID:             evalContext.Rule.ID,
+			DashboardID:    evalContext.Rule.DashboardID,
+			PanelID:        evalContext.Rule.PanelID,
 			Name:           evalContext.Rule.Name,
 			Message:        evalContext.Rule.Message,
 			State:          models.AlertStateAlerting,
@@ -124,6 +128,15 @@ func (handler *defaultResultHandler) handle(evalContext *models.EvalContext) err
 			AlertRuleTags:  evalContext.Rule.AlertRuleTags,
 			SendExceptions: evalContext.Rule.SendExceptions,
 		},
+	}
+
+	// insert alert history
+	if len(shouldNotifyOk) > 0 {
+		models.AddAlertHistory(okContext)
+	}
+
+	if len(shouldNotifyAlerting) > 0 {
+		models.AddAlertHistory(alertContext)
 	}
 
 	if err := handler.notifier.Send(okContext, alertContext); err != nil {

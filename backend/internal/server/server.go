@@ -229,6 +229,7 @@ func (s *Server) Start() error {
 				alertingR.POST("/test/notification", alerting.TestNotification)
 				alertingR.POST("/test/rule", alerting.TestRule)
 				alertingR.GET("/state/:dashId", alerting.GetDashboardState)
+				alertingR.GET("/history", alerting.GetHistory)
 			}
 		}
 

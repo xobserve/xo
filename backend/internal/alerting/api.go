@@ -3,7 +3,9 @@ package alerting
 import (
 	"context"
 	"database/sql"
+	"encoding/json"
 	"fmt"
+	"sort"
 	"strconv"
 	"time"
 
@@ -303,4 +305,69 @@ func GetDashboardState(c *gin.Context) {
 	}
 
 	c.JSON(200, common.ResponseSuccess(res))
+}
+
+func GetHistory(c *gin.Context) {
+	tp := c.Query("type")
+	dashId, _ := strconv.ParseInt(c.Query("dashId"), 10, 64)
+	panelId, _ := strconv.ParseInt(c.Query("panelId"), 10, 64)
+	limit, _ := strconv.ParseInt(c.Query("limit"), 10, 64)
+	if dashId == 0 || panelId == 0 {
+		c.JSON(400, common.ResponseI18nError(i18n.BadRequestData))
+		return
+	}
+
+	if limit == 0 {
+		limit = 50
+	}
+
+	histories := make(models.AlertHistories, 0)
+	var rows *sql.Rows
+	var err error
+	switch tp {
+	case "panel":
+		rows, err = db.SQL.Query("SELECT id,state,matches,created FROM alert_history WHERE dashboard_id=? and panel_id=? order by created desc limit ?",
+			dashId, panelId, limit)
+	default:
+		c.JSON(400, common.ResponseI18nError(i18n.BadRequestData))
+		return
+	}
+
+	if err != nil && err != sql.ErrNoRows {
+		logger.Warn("get alert history error", "error", err)
+		c.JSON(500, common.ResponseInternalError())
+		return
+	}
+
+	if err == sql.ErrNoRows {
+		c.JSON(200, common.ResponseSuccess(histories))
+		return
+	}
+
+	for rows.Next() {
+		ah := &models.AlertHistory{
+			DashboardID: dashId,
+			PanelID:     panelId,
+		}
+		var matches []byte
+		var created time.Time
+		err := rows.Scan(&ah.ID, &ah.State, &matches, &created)
+		if err != nil {
+			logger.Warn("scan alert history error", "error", err)
+			continue
+		}
+
+		err = json.Unmarshal(matches, &ah.Matches)
+		if err != nil {
+			logger.Warn("unmarshl alert history matches error", "error", err)
+			continue
+		}
+
+		ah.Time = created.UnixNano() / 1e6
+		histories = append(histories, ah)
+	}
+
+	sort.Sort(histories)
+	c.JSON(200, common.ResponseSuccess(histories))
+	return
 }

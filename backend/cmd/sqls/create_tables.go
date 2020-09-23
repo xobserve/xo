@@ -430,4 +430,19 @@ var CreateTableSqls = map[string]string{
 	CREATE UNIQUE INDEX IF NOT EXISTS alert_states_alert_id
 		ON alert_states (alert_id);
 	`,
+
+	"alert_history": `
+	CREATE TABLE IF NOT EXISTS alert_history (
+		id 						INTEGER PRIMARY KEY AUTOINCREMENT,
+		dashboard_id            INTEGER NOT NULL,
+		panel_id                INTEGER NOT NULL,     
+		state					VARCHAR(255) NOT NULL,
+		matches					TEXT NOT NULL,
+		created					DATETIME NOT NULL
+	);
+	CREATE INDEX IF NOT EXISTS alert_history_dash_id
+		ON alert_history (dashboard_id);
+	CREATE INDEX IF NOT EXISTS alert_history_dash_panel_id
+		ON alert_history (dashboard_id,panel_id);
+	`,
 }
