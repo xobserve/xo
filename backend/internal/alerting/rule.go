@@ -55,7 +55,7 @@ func NewRuleFromDBAlert(ruleDef *models.Alert) (*models.Rule, error) {
 	model.NoDataState = models.NoDataOption(ruleDef.Settings.Get("noDataState").MustString("no_data"))
 	model.ExecutionErrorState = models.ExecutionErrorOption(ruleDef.Settings.Get("executionErrorState").MustString("alerting"))
 	model.StateChanges = ruleDef.StateChanges
-
+	model.SendExceptions = ruleDef.SendExceptions
 	model.Frequency = ruleDef.Frequency
 	// frequency cannot be zero since that would not execute the alert rule.
 	// so we fallback to 60 seconds if `Frequency` is missing

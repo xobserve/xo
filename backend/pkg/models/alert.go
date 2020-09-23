@@ -166,9 +166,10 @@ type Alert struct {
 }
 
 type SendException struct {
-	Type    string `json:"type"`
-	Label   string `json:"label"`
-	Setting string `json:"setting"`
+	Type       string `json:"type"`
+	LabelName  string `json:"labelName"`
+	LabelValue string `json:"labelValue"`
+	Setting    string `json:"setting"`
 }
 
 func (alert *Alert) GetTagsFromSettings() []*Tag {
@@ -233,6 +234,7 @@ type Rule struct {
 	Conditions          []Condition
 	Notifications       []int64
 	AlertRuleTags       []*Tag
+	SendExceptions      []*SendException
 
 	StateChanges int64
 }

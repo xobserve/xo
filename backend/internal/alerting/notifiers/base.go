@@ -3,6 +3,8 @@ package notifiers
 import (
 	"time"
 
+	"github.com/code-creatively/datav/backend/pkg/utils/simplejson"
+
 	"github.com/code-creatively/datav/backend/pkg/log"
 	"github.com/code-creatively/datav/backend/pkg/models"
 )
@@ -23,6 +25,7 @@ type NotifierBase struct {
 	SendReminder          bool
 	DisableResolveMessage bool
 	Frequency             time.Duration
+	Settings              *simplejson.Json
 }
 
 // NewNotifierBase returns a new `NotifierBase`.
@@ -42,12 +45,17 @@ func NewNotifierBase(model *models.AlertNotification) NotifierBase {
 		SendReminder:          model.SendReminder,
 		DisableResolveMessage: model.DisableResolveMessage,
 		Frequency:             model.Frequency,
+		Settings:              model.Settings,
 	}
 }
 
 // GetType returns the notifier type.
 func (n *NotifierBase) GetType() string {
 	return n.Type
+}
+
+func (n *NotifierBase) GetSettings() *simplejson.Json {
+	return n.Settings
 }
 
 // NeedsImage returns true if an image is expected in the notification.

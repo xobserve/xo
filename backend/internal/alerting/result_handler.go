@@ -102,12 +102,13 @@ func (handler *defaultResultHandler) handle(evalContext *models.EvalContext) err
 		Error:       evalContext.Error,
 		EvalMatches: shouldNotifyOk,
 		Rule: &models.Rule{
-			ID:            evalContext.Rule.ID,
-			Name:          evalContext.Rule.Name,
-			Message:       evalContext.Rule.Message,
-			State:         models.AlertStateOK,
-			Notifications: evalContext.Rule.Notifications,
-			AlertRuleTags: evalContext.Rule.AlertRuleTags,
+			ID:             evalContext.Rule.ID,
+			Name:           evalContext.Rule.Name,
+			Message:        evalContext.Rule.Message,
+			State:          models.AlertStateOK,
+			Notifications:  evalContext.Rule.Notifications,
+			AlertRuleTags:  evalContext.Rule.AlertRuleTags,
+			SendExceptions: evalContext.Rule.SendExceptions,
 		},
 	}
 
@@ -115,12 +116,13 @@ func (handler *defaultResultHandler) handle(evalContext *models.EvalContext) err
 		Error:       evalContext.Error,
 		EvalMatches: shouldNotifyAlerting,
 		Rule: &models.Rule{
-			ID:            evalContext.Rule.ID,
-			Name:          evalContext.Rule.Name,
-			Message:       evalContext.Rule.Message,
-			State:         models.AlertStateAlerting,
-			Notifications: evalContext.Rule.Notifications,
-			AlertRuleTags: evalContext.Rule.AlertRuleTags,
+			ID:             evalContext.Rule.ID,
+			Name:           evalContext.Rule.Name,
+			Message:        evalContext.Rule.Message,
+			State:          models.AlertStateAlerting,
+			Notifications:  evalContext.Rule.Notifications,
+			AlertRuleTags:  evalContext.Rule.AlertRuleTags,
+			SendExceptions: evalContext.Rule.SendExceptions,
 		},
 	}
 

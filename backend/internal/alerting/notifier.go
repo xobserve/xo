@@ -4,6 +4,8 @@ import (
 	"errors"
 	"time"
 
+	"github.com/code-creatively/datav/backend/pkg/utils/simplejson"
+
 	"github.com/code-creatively/datav/backend/pkg/models"
 )
 
@@ -35,8 +37,9 @@ type NotifierOption struct {
 
 // Notifier is responsible for sending alert notifications.
 type Notifier interface {
-	Notify(evalContext *models.EvalContext) error
+	Notify(evalContext *models.EvalContext, settings *simplejson.Json) error
 	GetType() string
+	GetSettings() *simplejson.Json
 	NeedsImage() bool
 
 	GetNotifierID() int64
@@ -109,21 +112,103 @@ func (n *notificationService) Send(okContext *models.EvalContext, alertContext *
 	return n.sendNotification(alertContext, notifiers)
 }
 
+func (n *notificationService) sendOk(okContext *models.EvalContext, alertContext *models.EvalContext) error {
+	notifiers, err := n.getNeededNotifiers(okContext.Rule.Notifications)
+	if err != nil {
+		logger.Error("Failed to get alert notifiers", "error", err)
+		return err
+	}
+
+	if len(notifiers) == 0 {
+		logger.Debug("zero notifiers configured", "alert_id", okContext.Rule.ID)
+		return nil
+	}
+
+	err = n.sendNotification(okContext, notifiers)
+	if err != nil {
+		return err
+	}
+
+	return n.sendNotification(alertContext, notifiers)
+}
+
+type expMatch struct {
+	tp      string
+	matches []*models.EvalMatch
+}
+
 func (n *notificationService) sendNotification(context *models.EvalContext, notifiers []Notifier) error {
 	if len(context.EvalMatches) == 0 {
 		return nil
 	}
 
-	for _, notifier := range notifiers {
-		logger.Debug("Sending notification", "type", notifier.GetType(), "id", notifier.GetNotifierID(), "isDefault", notifier.GetIsDefault())
+	// matches for common cases notification
+	// matches for exception cases notification
+	commonMatches := make([]*models.EvalMatch, 0)
+	expMatches := make(map[string]*expMatch)
 
-		err := notifier.Notify(context)
-		if err != nil {
-			logger.Error("failed to send notification", "id", notifier.GetNotifierID(), "error", err)
-			return err
+	matchHasExp := make(map[string]bool)
+	for _, exp := range context.Rule.SendExceptions {
+		for _, match := range context.EvalMatches {
+			for k, v := range match.Tags {
+				if exp.LabelName == k && exp.LabelValue == v {
+					oldexp, ok := expMatches[exp.Setting]
+					if !ok {
+						expMatches[exp.Setting] = &expMatch{exp.Type, []*models.EvalMatch{match}}
+					} else {
+						oldexp.matches = append(oldexp.matches, match)
+					}
+
+					matchHasExp[match.Metric] = true
+					continue
+				}
+			}
 		}
 	}
 
+	for _, match := range context.EvalMatches {
+		_, ok := matchHasExp[match.Metric]
+		if !ok {
+			commonMatches = append(commonMatches, match)
+		}
+	}
+
+	// send common case notifications
+	if len(commonMatches) > 0 {
+		context.EvalMatches = commonMatches
+		for _, notifier := range notifiers {
+			logger.Info("Sending common notification", "type", notifier.GetType(), "id", notifier.GetNotifierID(), "isDefault", notifier.GetIsDefault())
+
+			err := notifier.Notify(context, notifier.GetSettings())
+			if err != nil {
+				logger.Error("failed to send notification", "id", notifier.GetNotifierID(), "error", err)
+				return err
+			}
+		}
+	}
+
+	// send exception case notifications
+	for settingStr, exp := range expMatches {
+		setting := simplejson.New()
+		setting.FromDB([]byte(settingStr))
+
+		notifier, err := InitNotifier(&models.AlertNotification{
+			Type:     exp.tp,
+			Settings: setting,
+		})
+		if err != nil {
+			logger.Error("failed to init exception notifier", "type", exp.tp, "error", err)
+			continue
+		}
+
+		logger.Info("Sending exception notification", "type", notifier.GetType(), "setting", settingStr)
+
+		context.EvalMatches = exp.matches
+		err = notifier.Notify(context, setting)
+		if err != nil {
+			logger.Error("failed to send exception notification", "type", exp.tp, "error", err)
+		}
+	}
 	return nil
 }
 

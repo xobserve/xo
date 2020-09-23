@@ -5,6 +5,8 @@ import (
 	"strconv"
 	"strings"
 
+	"github.com/code-creatively/datav/backend/pkg/utils/simplejson"
+
 	"github.com/code-creatively/datav/backend/internal/alerting"
 	"github.com/code-creatively/datav/backend/internal/notifications"
 	"github.com/code-creatively/datav/backend/pkg/config"
@@ -24,21 +26,11 @@ func init() {
 
 type EmailNotifier struct {
 	NotifierBase
-	Addresses []string
 }
 
 func NewEmailNotifier(model *models.AlertNotification) (alerting.Notifier, error) {
-	addressesString := model.Settings.Get("addresses").MustString()
-	if addressesString == "" {
-		return nil, errors.New("Could not find addresses in settings")
-	}
-
-	// split addresses with a few different ways
-	addresses := splitEmails(addressesString)
-
 	return &EmailNotifier{
 		NotifierBase: NewNotifierBase(model),
-		Addresses:    addresses,
 	}, nil
 }
 
@@ -46,13 +38,20 @@ func (e *EmailNotifier) GetType() string {
 	return e.Type
 }
 
-func (e *EmailNotifier) Notify(evalContext *models.EvalContext) error {
+func (e *EmailNotifier) Notify(evalContext *models.EvalContext, settings *simplejson.Json) error {
 	err0 := ""
 	if evalContext.Error != nil {
 		err0 = evalContext.Error.Error()
 	}
 
-	err := notifications.SendEmail(&models.EmailContent{
+	addressesString := settings.Get("addresses").MustString()
+	if addressesString == "" {
+		return errors.New("Could not find addresses in settings")
+	}
+
+	addresses := splitEmails(addressesString)
+
+	content := &models.EmailContent{
 		Subject: evalContext.GetNotificationTitle(),
 		Data: map[string]interface{}{
 			"Title":         evalContext.GetNotificationTitle(),
@@ -66,9 +65,10 @@ func (e *EmailNotifier) Notify(evalContext *models.EvalContext) error {
 			"AlertPageUrl":  config.Data.Common.UIRootURL + "/team/rules/" + strconv.FormatInt(evalContext.Rule.TeamID, 10),
 			"Metrics":       evalContext.EvalMatches,
 		},
-		To:       e.Addresses,
+		To:       addresses,
 		Template: "alert_notifaction.tmpl",
-	})
+	}
+	err := notifications.SendEmail(content)
 
 	if err != nil {
 		logger.Warn("Failed to send alert notification email", "error", err)

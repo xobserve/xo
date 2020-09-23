@@ -495,7 +495,8 @@ dismissSendExceptionsEdit = () => {
 addSendException = () => {
   this.props.panel.alert.sendExceptions.push({
     type: 'email',
-    label: '',
+    labelName: '',
+    labelValue:'',
     setting: ''
   })
   this.forceUpdate()
@@ -778,11 +779,12 @@ render() {
           {alert.sendExceptions.map((exp, i) => {
             return <div className="gf-form-inline" key={i}>
               <span className="gf-form-label query-keyword width-7">LABEL</span>
-              <Input placeholder="name" value={exp.label} onChange={(e) => { exp.label = e.currentTarget.value; this.forceUpdate() }} style={{ width: '100px' }} />
+              <Input placeholder="name" value={exp.labelName} onChange={(e) => { exp.labelName = e.currentTarget.value; this.forceUpdate() }} style={{ width: '100px' }} />
+              <Input placeholder="value" value={exp.labelValue} onChange={(e) => { exp.labelValue = e.currentTarget.value; this.forceUpdate() }} style={{ width: '100px' }} />
               <span className="gf-form-label query-keyword width-7 ub-ml2">Type</span>
               <NotifierPicker value={exp.type} onChange={(v) => {exp.type = v; this.forceUpdate()}} />
               <span className="gf-form-label query-keyword width-7 ub-ml2">Setting</span>
-              <Input placeholder="e.g test@gmail.com,ok@gmail.com" value={exp.setting} onChange={(e) => { exp.setting = e.currentTarget.value; this.forceUpdate() }} style={{ width: '200px' }} />
+              <Input placeholder="e.g test@gmail.com,ok@gmail.com" value={exp.setting} onChange={(e) => { exp.setting = e.currentTarget.value; this.forceUpdate() }} style={{ width: '300px' }} />
               <label className="gf-form-label pointer" onClick={() => this.removeSendException(i)}>
                   <Icon name="trash-alt" />
                 </label>

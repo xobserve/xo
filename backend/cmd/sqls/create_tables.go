@@ -405,6 +405,7 @@ var CreateTableSqls = map[string]string{
 		silenced				BOOL NOT NULL,
 		execution_error			TEXT NOT NULL,
 		settings   				TEXT NOT NULL,
+		send_exceptions         TEXT NOT NULL,
 		created					DATETIME NOT NULL,
 		updated					DATETIME NOT NULL
 	);
