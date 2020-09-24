@@ -1,14 +1,33 @@
-import React from 'react'
-import {AlertHistory} from 'src/types'
-import { Icon, getHistory } from 'src/packages/datav-core/src'
+import React, { useState } from 'react'
+// @ts-ignore
+import Highlighter from 'react-highlight-words';
+
+import { AlertHistory } from 'src/types'
+import { Icon, getHistory, Select } from 'src/packages/datav-core/src'
 import classNames from 'classnames'
+import { FilterInput } from '../components/FilterInput/FilterInput'
+import alertDef from './state/alertDef'
 
 interface Props {
-    histories : AlertHistory[]
+    histories: AlertHistory[]
     enableSnapshot?: boolean
+    onStateFilterChange?: any
 }
 
 const AlertHistoryList = (props: Props) => {
+    const [search, setSearch] = useState('')
+    const [stateFilter, setStateFilter] = useState('all')
+
+    const renderText = (text: string) => {
+        return (
+          <Highlighter
+            highlightClassName="highlight-search-match"
+            textToHighlight={text}
+            searchWords={[search]}
+          />
+        );
+      }
+
     const gotoSnapshot = (history: AlertHistory) => {
         if (props.enableSnapshot) {
             // snapshot timerange is [current -15m, current + 15m]
@@ -20,6 +39,36 @@ const AlertHistoryList = (props: Props) => {
 
     return (
         <div>
+            {
+                props.onStateFilterChange && <div className="page-action-bar">
+                    <div className="gf-form gf-form--grow">
+                        <FilterInput
+                            labelClassName="gf-form--has-input-icon gf-form--grow"
+                            inputClassName="gf-form-input"
+                            placeholder="Search alerts"
+                            value={search}
+                            onChange={(v) => setSearch(v)}
+                        />
+                    </div>
+                    <div className="gf-form">
+                        <label className="gf-form-label">State filter</label>
+
+                        <div className="width-13">
+                            <Select
+                                options={alertDef.stateFilters}
+                                onChange={(option) => { setStateFilter(option.value); props.onStateFilterChange(option) }}
+                                value={stateFilter}
+                            />
+                        </div>
+                    </div>
+                    <div className="page-action-bar__spacer" />
+                    {/* <Button variant="secondary" onClick={this.onOpenHowTo}>
+                            How to add an alert
+            </Button> */}
+                </div>
+            }
+
+
             {props.histories.length > 0 && (
                 <div className="p-b-1">
                     <span className="muted">Last 50 alert history</span>
@@ -36,12 +85,12 @@ const AlertHistoryList = (props: Props) => {
                                 </div>
                                 <div className="alert-rule-item__body">
                                     <div className="alert-rule-item__header">
-                                        <p className="alert-rule-item__name">{item.alertName}</p>
+                                        <p className="alert-rule-item__name">{renderText(item.alertName)}</p>
                                         <div className="alert-rule-item__text">
                                             <span className={`${item.stateModel.stateClass}`}>{item.stateModel.text}</span>
                                         </div>
                                     </div>
-                                    {item.info}
+                                    {renderText(item.info)}
                                 </div>
                                 <div className="alert-rule-item__time">{item.time}</div>
                             </li>

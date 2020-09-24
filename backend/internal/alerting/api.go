@@ -316,7 +316,7 @@ func GetHistory(c *gin.Context) {
 	dashId, _ := strconv.ParseInt(c.Query("dashId"), 10, 64)
 	panelId, _ := strconv.ParseInt(c.Query("panelId"), 10, 64)
 	limit, _ := strconv.ParseInt(c.Query("limit"), 10, 64)
-	// stateFilter := c.Query("stateFilter")
+	stateFilter := c.Query("stateFilter")
 
 	if limit == 0 {
 		limit = 50
@@ -398,7 +398,9 @@ func GetHistory(c *gin.Context) {
 			ah.DashboardUrl = fmt.Sprintf("/d/%s/%s", dash.Uid, dash.Slug)
 		}
 
-		histories = append(histories, ah)
+		if stateFilter == "" || stateFilter == "all" || stateFilter == string(ah.State) {
+			histories = append(histories, ah)
+		}
 	}
 
 	sort.Sort(histories)

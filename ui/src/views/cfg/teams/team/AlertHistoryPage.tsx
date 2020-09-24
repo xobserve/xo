@@ -102,7 +102,7 @@ export class AlertHistoryPage extends PureComponent<Props, State> {
         return (
             <Page navModel={navModel}>
                 <Page.Contents isLoading={!hasFetched}>
-                    <AlertHistoryList histories={alertHistories} enableSnapshot/>
+                    <AlertHistoryList histories={alertHistories} onStateFilterChange={this.onStateFilterChange} enableSnapshot/>
                 </Page.Contents>
             </Page>
         );
