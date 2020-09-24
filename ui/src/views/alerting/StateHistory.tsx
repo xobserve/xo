@@ -5,7 +5,7 @@ import { Icon, ConfirmButton, Button } from 'src/packages/datav-core';
 import alertDef from './state/alertDef';
 import { DashboardModel } from 'src/views/dashboard/model/DashboardModel';
 import { css } from 'emotion';
-
+import AlertHistoryList from './AlertHistoryList'
 interface Props {
   dashboard: DashboardModel;
   panelId: number;
@@ -13,7 +13,7 @@ interface Props {
 }
 
 interface State {
-  stateHistoryItems: any[];
+  stateHistoryItems: any;
 }
 
 class StateHistory extends PureComponent<Props, State> {
@@ -55,38 +55,7 @@ class StateHistory extends PureComponent<Props, State> {
     const { stateHistoryItems } = this.state;
 
     return (
-      <div>
-        {stateHistoryItems.length > 0 && (
-          <div className="p-b-1">
-            <span className="muted">Last 50 alert history</span>
-          </div>
-        )}
-        <ol className="alert-rule-list ub-mt2">
-          {stateHistoryItems.length > 0 ? (
-            stateHistoryItems.map((item, index) => {
-              return (
-                <li className="alert-rule-item" key={`${item.time}-${index}`}>
-                  <div className={`alert-rule-item__icon ${item.stateModel.stateClass}`}>
-                    <Icon name={item.stateModel.iconClass} size="xl" />
-                  </div>
-                  <div className="alert-rule-item__body">
-                    <div className="alert-rule-item__header">
-                      <p className="alert-rule-item__name">{item.alertName}</p>
-                      <div className="alert-rule-item__text">
-                        <span className={`${item.stateModel.stateClass}`}>{item.stateModel.text}</span>
-                      </div>
-                    </div>
-                    {item.info}
-                  </div>
-                  <div className="alert-rule-item__time">{item.time}</div>
-                </li>
-              );
-            })
-          ) : (
-            <i>No state changes recorded</i>
-          )}
-        </ol>
-      </div>
+      <AlertHistoryList histories={stateHistoryItems} />
     );
   }
 }

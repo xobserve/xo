@@ -3,13 +3,15 @@ import { withRouter } from 'react-router-dom'
 import _ from 'lodash'
 
 import Page from 'src/views/Layouts/Page/Page';
-import { getBackendSrv, Select, dateTime} from 'src/packages/datav-core';
+import { getBackendSrv, Select, dateTime,dateTimeFormat} from 'src/packages/datav-core';
 import { getNavModel } from 'src/views/Layouts/Page/navModel'
 import { Team } from 'src/types';
 import { FilterInput } from 'src/views/components/FilterInput/FilterInput';
 import {AlertHistory} from 'src/types'
 import AlertRuleItem from 'src/views/alerting/AlertRuleItem'
 import alertDef from 'src/views/alerting/state/alertDef';
+import { getTimeSrv } from 'src/core/services/time';
+import AlertHistoryList from 'src/views/alerting/AlertHistoryList';
 
 export interface Props {
     routeID: string;
@@ -56,10 +58,20 @@ export class AlertHistoryPage extends PureComponent<Props, State> {
     }
 
     async fetchHistory(stateFilter) {
-        const res = await getBackendSrv().get('/api/alerting/history', { teamId: this.teamId, stateFilter: stateFilter })
+        const res = await getBackendSrv().get('/api/alerting/history', {type:'team', teamId: this.teamId, stateFilter: stateFilter })
+        const data = res.data
+        const items = data.map((item: any) => {
+           item.stateModel = alertDef.getStateDisplayModel(item.state)
+           item.time = dateTimeFormat(item.time, {
+            format : 'MMM D, YYYY HH:mm:ss',
+            timeZone: getTimeSrv().timezone,
+          })
+          item.info =  alertDef.getAlertAnnotationInfo(item.matches)
+          return item
+        });
         this.setState({
             ...this.state,
-            alertHistories: res.data
+            alertHistories: items
         })
     }
 
@@ -90,7 +102,7 @@ export class AlertHistoryPage extends PureComponent<Props, State> {
         return (
             <Page navModel={navModel}>
                 <Page.Contents isLoading={!hasFetched}>
-                    
+                    <AlertHistoryList histories={alertHistories} enableSnapshot/>
                 </Page.Contents>
             </Page>
         );

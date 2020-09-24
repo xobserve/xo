@@ -52,41 +52,6 @@ func UpdateDashboardAlerts(dash *models.Dashboard) error {
 	return nil
 }
 
-func GetAllAlerts() ([]*models.Alert, error) {
-	rows, err := db.SQL.Query("SELECT * FROM alert")
-	if err != nil {
-		return nil, err
-	}
-
-	alerts := make([]*models.Alert, 0)
-	for rows.Next() {
-		alert := &models.Alert{}
-		var settings []byte
-		var sendexp []byte
-		err := rows.Scan(&alert.Id, &alert.DashboardId, &alert.PanelId, &alert.Name, &alert.Message,
-			&alert.State, &alert.NewStateDate, &alert.StateChanges, &alert.Frequency, &alert.For,
-			&alert.Handler, &alert.Silenced, &alert.ExecutionError, &settings, &sendexp,
-			&alert.Created, &alert.Updated)
-		if err != nil {
-			logger.Warn("scan all alerts error", "error", err)
-		}
-
-		err = json.Unmarshal(settings, &alert.Settings)
-		if err != nil {
-			logger.Warn("unmarshal all alerts error", "error", err)
-		}
-
-		err = json.Unmarshal(sendexp, &alert.SendExceptions)
-		if err != nil {
-			logger.Warn("unmarshal all alerts error", "error", err)
-		}
-
-		alerts = append(alerts, alert)
-	}
-
-	return alerts, nil
-}
-
 func GetAlert(id int64) (*models.Alert, error) {
 	alert := &models.Alert{}
 	var settings []byte

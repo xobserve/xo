@@ -3,6 +3,8 @@ package alerting
 import (
 	"sync"
 
+	"github.com/code-creatively/datav/backend/internal/cache"
+
 	"github.com/code-creatively/datav/backend/pkg/models"
 )
 
@@ -23,11 +25,7 @@ func newRuleReader() *defaultRuleReader {
 func (arr *defaultRuleReader) fetch() []*models.Rule {
 	res := make([]*models.Rule, 0)
 
-	alerts, err := GetAllAlerts()
-	if err != nil {
-		return res
-	}
-
+	alerts := cache.Alerts
 	for _, ruleDef := range alerts {
 		if model, err := NewRuleFromDBAlert(ruleDef); err != nil {
 			logger.Error("Could not build alert model for rule", "ruleId", ruleDef.Id, "error", err)

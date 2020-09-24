@@ -59,9 +59,16 @@ export interface AlertRuleDTO {
   export interface AlertHistory {
     id : number 
     alertName: string
-    dashboardId: number 
+    dashboardId: number
+    dashboardUrl: string 
     panelId: number
     State: string 
-    matches: EvalMatch[]
-    time: number
+    time: string
+    timeUnix: number
+    info: string
+    stateModel : {
+      text: string,
+      iconClass: string,
+      stateClass: string,
+    }
   }

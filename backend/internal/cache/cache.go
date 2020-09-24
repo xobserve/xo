@@ -2,82 +2,92 @@ package cache
 
 import (
 	"time"
+
 	"github.com/code-creatively/datav/backend/pkg/db"
-	"github.com/code-creatively/datav/backend/pkg/models"
 	"github.com/code-creatively/datav/backend/pkg/log"
+	"github.com/code-creatively/datav/backend/pkg/models"
 	"github.com/code-creatively/datav/backend/pkg/utils/simplejson"
 )
 
 var logger = log.RootLogger.New("logger", "cache")
 
-var Dashboards = make(map[string]*models.Dashboard)
-var Folders =  make(map[int]*models.Folder)
+var Dashboards = make(map[int64]*models.Dashboard)
+var Folders = make(map[int]*models.Folder)
+var Alerts []*models.Alert
 
 // InitCache load dashboard data from sql store periodically
 func InitCache() {
 	go func() {
 		for {
-			dashboards := make(map[string]*models.Dashboard)
-			rows,err := db.SQL.Query(`SELECT id,title,uid,folder_id,data FROM dashboard`)
+			dashboards := make(map[int64]*models.Dashboard)
+			rows, err := db.SQL.Query(`SELECT id,title,uid,folder_id,data FROM dashboard`)
 			if err != nil {
-				logger.Warn("load dashboard into search cache,query error","error",err)
+				logger.Warn("load dashboard into search cache,query error", "error", err)
 				time.Sleep(5 * time.Second)
-				continue 
+				continue
 			}
 
-			var id,ownedBy int64 
+			var id, ownedBy int64
 			var folderId int
-			var title,uid string
+			var title, uid string
 			var rawJSON []byte
 			for rows.Next() {
-				err := rows.Scan(&id,&title,&uid,&folderId,&rawJSON)
+				err := rows.Scan(&id, &title, &uid, &folderId, &rawJSON)
 				if err != nil {
-					logger.Warn("load dashboard into search cache,scan error","error",err)
+					logger.Warn("load dashboard into search cache,scan error", "error", err)
 					continue
 				}
 
 				data := simplejson.New()
 				err = data.UnmarshalJSON(rawJSON)
 
-				dashboards[title] = &models.Dashboard{
-					Id: id,
-					Uid: uid,
-					Title: title,
+				dash := &models.Dashboard{
+					Id:       id,
+					Uid:      uid,
+					Title:    title,
 					FolderId: folderId,
-					Data: data,
+					Data:     data,
 				}
+				dash.UpdateSlug()
+				dashboards[id] = dash
 			}
 			Dashboards = dashboards
 
-
-			folders :=  make(map[int]*models.Folder)
-			rows,err = db.SQL.Query(`SELECT id,title,uid,owned_by,parent_id FROM folder`)
+			folders := make(map[int]*models.Folder)
+			rows, err = db.SQL.Query(`SELECT id,title,uid,owned_by,parent_id FROM folder`)
 			if err != nil {
-				logger.Warn("load dashboard into search cache,query error","error",err)
+				logger.Warn("load dashboard into search cache,query error", "error", err)
 				time.Sleep(5 * time.Second)
-				continue 
+				continue
 			}
 
 			var fid int
 			for rows.Next() {
-				err := rows.Scan(&fid,&title,&uid,&ownedBy,&folderId)
+				err := rows.Scan(&fid, &title, &uid, &ownedBy, &folderId)
 				if err != nil {
-					logger.Warn("load dashboard into search cache,scan error","error",err)
+					logger.Warn("load dashboard into search cache,scan error", "error", err)
 					continue
 				}
 
 				folders[fid] = &models.Folder{
-					Id: fid,
-					Uid: uid,
-					Title: title,
-					OwnedBy: ownedBy,
+					Id:       fid,
+					Uid:      uid,
+					Title:    title,
+					OwnedBy:  ownedBy,
 					ParentId: folderId,
 				}
 			}
 			Folders = folders
 
+			alerts, err := models.GetAllAlerts()
+			if err != nil {
+				logger.Warn("load all alerts into  cache error", "error", err)
+				time.Sleep(5 * time.Second)
+				continue
+			}
+			Alerts = alerts
+
 			time.Sleep(10 * time.Second)
 		}
 	}()
 }
-

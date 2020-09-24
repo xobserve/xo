@@ -36,13 +36,13 @@ func Search(c *gin.Context) {
 	tags := c.QueryArray("tag")
 
 	dashIds := c.QueryArray("dashboardIds")
-	if (len(dashIds) > 0) {
+	if len(dashIds) > 0 {
 		// get dashboards by ids
 		res := make(SearchHitList, 0)
 		dashes := dashboard.QueryDashboardsByIds(dashIds)
-		for _,dash := range dashes {
+		for _, dash := range dashes {
 			dtags := dash.Data.Get("tags").MustStringArray()
-			if !filterTags(dtags,tags) {
+			if !filterTags(dtags, tags) {
 				continue
 			}
 
@@ -70,18 +70,18 @@ func Search(c *gin.Context) {
 
 			res = append(res, r)
 		}
-		c.JSON(200,common.ResponseSuccess(res))
+		c.JSON(200, common.ResponseSuccess(res))
 		return
 	}
 
 	// search folders and dashboard with query
-	if  (query != "") || (folderIds == models.RootFolderId && layout == FoldersLayout) {
+	if (query != "") || (folderIds == models.RootFolderId && layout == FoldersLayout) {
 		res := make(SearchHitList, 0)
 		if layout == FoldersLayout {
 			// folders and dashboard
 			fs := folders.QueryAll()
 			for _, f := range fs {
-				if (query != "") {
+				if query != "" {
 					if !strings.Contains(strings.ToLower(f.Title), query) {
 						continue
 					}
@@ -101,20 +101,20 @@ func Search(c *gin.Context) {
 			}
 		}
 		for _, dash := range cache.Dashboards {
-			if (c.Query("folderIds") != "") {
-				if (dash.FolderId != folderIds) {
+			if c.Query("folderIds") != "" {
+				if dash.FolderId != folderIds {
 					continue
 				}
 			}
 
-			if (query != "") {
+			if query != "" {
 				if !strings.Contains(strings.ToLower(dash.Title), query) {
 					continue
 				}
 			}
 
 			dtags := dash.Data.Get("tags").MustStringArray()
-			if !filterTags(dtags,tags) {
+			if !filterTags(dtags, tags) {
 				continue
 			}
 
@@ -142,9 +142,9 @@ func Search(c *gin.Context) {
 
 			res = append(res, r)
 		}
-		
+
 		sort.Sort(res)
-		
+
 		c.JSON(200, common.ResponseSuccess(res))
 		return
 
@@ -177,7 +177,7 @@ func Search(c *gin.Context) {
 			}
 
 			dtags := dash.Data.Get("tags").MustStringArray()
-			if !filterTags(dtags,tags) {
+			if !filterTags(dtags, tags) {
 				continue
 			}
 			f := folders.QueryById(dash.FolderId)
@@ -206,7 +206,7 @@ func Search(c *gin.Context) {
 		}
 
 		sort.Sort(res)
-		
+
 		c.JSON(200, common.ResponseSuccess(res))
 		return
 	}
@@ -228,7 +228,7 @@ func Search(c *gin.Context) {
 				}
 			}
 			dtags := dash.Data.Get("tags").MustStringArray()
-			if !filterTags(dtags,tags) {
+			if !filterTags(dtags, tags) {
 				continue
 			}
 			dash.UpdateSlug()
@@ -270,9 +270,10 @@ func Dashboard(c *gin.Context) {
 	case Search_Dash_By_Title:
 		if !fuzzy {
 			dashboard := &models.Dashboard{}
-			d, ok := cache.Dashboards[query]
-			if ok {
-				dashboard = d
+			for _, dash := range cache.Dashboards {
+				if dash.Title == query {
+					dashboard = dash
+				}
 			}
 
 			c.JSON(200, common.ResponseSuccess(dashboard))
@@ -282,18 +283,17 @@ func Dashboard(c *gin.Context) {
 	}
 }
 
-
-func filterTags(dtags []string,tags []string) bool {
+func filterTags(dtags []string, tags []string) bool {
 	// filter by tags
 	if len(tags) > 0 {
-		for _,tag := range tags {
+		for _, tag := range tags {
 			exist := false
-			for _,dtag := range dtags {
+			for _, dtag := range dtags {
 				if tag == dtag {
 					exist = true
 				}
 			}
-			if (!exist) {
+			if !exist {
 				return false
 			}
 		}

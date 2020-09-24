@@ -7,7 +7,10 @@ import (
 	"fmt"
 	"sort"
 	"strconv"
+	"strings"
 	"time"
+
+	"github.com/code-creatively/datav/backend/internal/cache"
 
 	_ "github.com/code-creatively/datav/backend/pkg/tsdb"
 
@@ -309,13 +312,11 @@ func GetDashboardState(c *gin.Context) {
 
 func GetHistory(c *gin.Context) {
 	tp := c.Query("type")
+	teamId, _ := strconv.ParseInt(c.Query("teamId"), 10, 64)
 	dashId, _ := strconv.ParseInt(c.Query("dashId"), 10, 64)
 	panelId, _ := strconv.ParseInt(c.Query("panelId"), 10, 64)
 	limit, _ := strconv.ParseInt(c.Query("limit"), 10, 64)
-	if dashId == 0 || panelId == 0 {
-		c.JSON(400, common.ResponseI18nError(i18n.BadRequestData))
-		return
-	}
+	// stateFilter := c.Query("stateFilter")
 
 	if limit == 0 {
 		limit = 50
@@ -326,8 +327,31 @@ func GetHistory(c *gin.Context) {
 	var err error
 	switch tp {
 	case "panel":
-		rows, err = db.SQL.Query("SELECT id,state,matches,created FROM alert_history WHERE dashboard_id=? and panel_id=? order by created desc limit ?",
+		rows, err = db.SQL.Query("SELECT id,dashboard_id,panel_id,state,matches,created FROM alert_history WHERE dashboard_id=? and panel_id=? order by created desc limit ?",
 			dashId, panelId, limit)
+	case "team":
+		// get team dashboards
+		dashboards, err := models.QueryDashboardsByTeamId(teamId)
+		if err != nil && err != sql.ErrNoRows {
+			logger.Warn("get team dashboard error", "error", err)
+			c.JSON(500, common.ResponseInternalError())
+			return
+		}
+
+		if err == sql.ErrNoRows {
+			c.JSON(200, common.ResponseSuccess(histories))
+			return
+		}
+
+		dashIds := make([]string, 0)
+		for _, dash := range dashboards {
+			dashIds = append(dashIds, strconv.FormatInt(dash.Id, 10))
+		}
+
+		dashIdStr := strings.Join(dashIds, "','")
+		q := fmt.Sprintf("SELECT id,dashboard_id,panel_id,state,matches,created FROM alert_history WHERE dashboard_id in ('%s') order by created desc limit %d",
+			dashIdStr, limit)
+		rows, err = db.SQL.Query(q)
 	default:
 		c.JSON(400, common.ResponseI18nError(i18n.BadRequestData))
 		return
@@ -345,13 +369,10 @@ func GetHistory(c *gin.Context) {
 	}
 
 	for rows.Next() {
-		ah := &models.AlertHistory{
-			DashboardID: dashId,
-			PanelID:     panelId,
-		}
+		ah := &models.AlertHistory{}
 		var matches []byte
 		var created time.Time
-		err := rows.Scan(&ah.ID, &ah.State, &matches, &created)
+		err := rows.Scan(&ah.ID, &ah.DashboardID, &ah.PanelID, &ah.State, &matches, &created)
 		if err != nil {
 			logger.Warn("scan alert history error", "error", err)
 			continue
@@ -364,6 +385,19 @@ func GetHistory(c *gin.Context) {
 		}
 
 		ah.Time = created.UnixNano() / 1e6
+		ah.TimeUnix = created.Unix()
+
+		for _, alert := range cache.Alerts {
+			if alert.DashboardId == ah.DashboardID && alert.PanelId == ah.PanelID {
+				ah.AlertName = alert.Name
+			}
+		}
+
+		dash, ok := cache.Dashboards[ah.DashboardID]
+		if ok {
+			ah.DashboardUrl = fmt.Sprintf("/d/%s/%s", dash.Uid, dash.Slug)
+		}
+
 		histories = append(histories, ah)
 	}
 

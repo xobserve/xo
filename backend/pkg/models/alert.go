@@ -387,13 +387,15 @@ func SetAlertState(alertId int64, state AlertStateType, stateChanges int64) erro
 }
 
 type AlertHistory struct {
-	ID          int64          `json:"id"`
-	AlertName   string         `json:"alertName"`
-	DashboardID int64          `json:"dashId"`
-	PanelID     int64          `json:"panelId"`
-	State       AlertStateType `json:"state"`
-	Matches     []*EvalMatch   `json:"matches"`
-	Time        int64          `json:"time"`
+	ID           int64          `json:"id"`
+	AlertName    string         `json:"alertName"`
+	DashboardID  int64          `json:"dashId"`
+	PanelID      int64          `json:"panelId"`
+	DashboardUrl string         `json:"dashboardUrl"`
+	State        AlertStateType `json:"state"`
+	Matches      []*EvalMatch   `json:"matches"`
+	Time         int64          `json:"time"`
+	TimeUnix     int64          `json:"timeUnix"`
 }
 type AlertHistories []*AlertHistory
 
@@ -419,4 +421,39 @@ func AddAlertHistory(context *EvalContext) {
 		logger.Error("add alert history error", "error", err)
 	}
 
+}
+
+func GetAllAlerts() ([]*Alert, error) {
+	rows, err := db.SQL.Query("SELECT * FROM alert")
+	if err != nil {
+		return nil, err
+	}
+
+	alerts := make([]*Alert, 0)
+	for rows.Next() {
+		alert := &Alert{}
+		var settings []byte
+		var sendexp []byte
+		err := rows.Scan(&alert.Id, &alert.DashboardId, &alert.PanelId, &alert.Name, &alert.Message,
+			&alert.State, &alert.NewStateDate, &alert.StateChanges, &alert.Frequency, &alert.For,
+			&alert.Handler, &alert.Silenced, &alert.ExecutionError, &settings, &sendexp,
+			&alert.Created, &alert.Updated)
+		if err != nil {
+			logger.Warn("scan all alerts error", "error", err)
+		}
+
+		err = json.Unmarshal(settings, &alert.Settings)
+		if err != nil {
+			logger.Warn("unmarshal all alerts error", "error", err)
+		}
+
+		err = json.Unmarshal(sendexp, &alert.SendExceptions)
+		if err != nil {
+			logger.Warn("unmarshal all alerts error", "error", err)
+		}
+
+		alerts = append(alerts, alert)
+	}
+
+	return alerts, nil
 }
