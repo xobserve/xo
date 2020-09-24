@@ -50,3 +50,18 @@ export interface AlertRuleDTO {
     icon? : string
   }
   
+
+  export interface EvalMatch {
+    Value : number 
+    metric : string 
+  }
+
+  export interface AlertHistory {
+    id : number 
+    alertName: string
+    dashboardId: number 
+    panelId: number
+    State: string 
+    matches: EvalMatch[]
+    time: number
+  }

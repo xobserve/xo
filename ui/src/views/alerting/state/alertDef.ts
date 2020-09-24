@@ -29,6 +29,15 @@ const alertStateSortScore = {
   paused: 5,
 };
 
+const stateFilters = [
+  { label: 'All', value: 'all' },
+  { label: 'OK', value: 'ok' },
+  { label: 'Alerting', value: 'alerting' },
+  { label: 'No Data', value: 'no_data' },
+  { label: 'Paused', value: 'paused' },
+  { label: 'Pending', value: 'pending' },
+];
+
 const evalFunctions = [
   { text: 'IS ABOVE', value: 'gt' },
   { text: 'IS BELOW', value: 'lt' },
@@ -159,5 +168,6 @@ export default {
   getAlertAnnotationInfo: getAlertAnnotationInfo,
   alertStateSortScore: alertStateSortScore,
   lastForOptions: lastForOptions,
-  defaultEvaluatorParamLabel: defaultEvaluatorParamLabel
+  defaultEvaluatorParamLabel: defaultEvaluatorParamLabel,
+  stateFilters : stateFilters,
 };

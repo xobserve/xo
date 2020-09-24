@@ -106,6 +106,7 @@ const common = {
     alertingSubTitle: '管理告警和通道配置',
     notificationChannel: '推送通道',
     rules: '告警规则',
+    history: '告警历史',
 }
 
 export default common

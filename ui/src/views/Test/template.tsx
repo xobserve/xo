@@ -1,4 +1,4 @@
-import React,{ReactNode} from 'react'
+import React,{ReactNode,useReducer} from 'react'
 
 import { connect } from 'react-redux';
 import {StoreState} from 'src/types'  
@@ -10,6 +10,8 @@ interface Props {
 }
 
 const Config = (props:Props) =>{
+    const [ignored,forceUpdate] = useReducer(x => x+ 1, 0)
+
     return (
         <>
             <div>

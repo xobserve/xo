@@ -96,7 +96,9 @@ func (handler *defaultResultHandler) handle(evalContext *models.EvalContext) err
 	}
 
 	// set alert rule state
-	models.SetAlertState(evalContext.Rule.ID, alertState, evalContext.Rule.StateChanges+1)
+	if evalContext.Rule.State != alertState {
+		models.SetAlertState(evalContext.Rule.ID, alertState, evalContext.Rule.StateChanges+1)
+	}
 
 	okContext := &models.EvalContext{
 		Error:       evalContext.Error,

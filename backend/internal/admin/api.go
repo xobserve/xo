@@ -1,12 +1,13 @@
 package admin
 
 import (
-	"github.com/code-creatively/datav/backend/internal/teams"
-	"github.com/code-creatively/datav/backend/internal/acl"
 	"fmt"
 	"strconv"
 	"strings"
 	"time"
+
+	"github.com/code-creatively/datav/backend/internal/acl"
+	"github.com/code-creatively/datav/backend/internal/teams"
 
 	"github.com/code-creatively/datav/backend/internal/session"
 	"github.com/code-creatively/datav/backend/pkg/common"
@@ -48,7 +49,7 @@ func NewUser(c *gin.Context) {
 		if !acl.IsSuperAdmin(c) {
 			c.JSON(403, common.ResponseI18nError(i18n.NoPermission))
 			return
-		} 
+		}
 	}
 
 	salt, _ := utils.GetRandomString(10)
@@ -66,8 +67,8 @@ func NewUser(c *gin.Context) {
 	id, _ := res.LastInsertId()
 
 	// add user to global team
-	_,err = db.SQL.Exec("INSERT INTO team_member (team_id,user_id,role,created,updated) VALUES (?,?,?,?,?)",
-	models.GlobalTeamId,id,role,now,now)
+	_, err = db.SQL.Exec("INSERT INTO team_member (team_id,user_id,role,created,updated) VALUES (?,?,?,?,?)",
+		models.GlobalTeamId, id, role, now, now)
 	if err != nil {
 		logger.Warn("new user error", "error", err)
 		c.JSON(500, common.ResponseInternalError())
@@ -97,13 +98,12 @@ func DeleteUser(c *gin.Context) {
 		return
 	}
 
-
 	if !acl.IsGlobalAdmin(c) {
 		c.JSON(403, common.ResponseI18nError(i18n.NoPermission))
 		return
 	}
 
-	targetUser,err := models.QueryUser(userId,"","")
+	targetUser, err := models.QueryUser(userId, "", "")
 	if err != nil {
 		logger.Warn("query user error", "error", err)
 		c.JSON(500, common.ResponseInternalError())
@@ -119,12 +119,12 @@ func DeleteUser(c *gin.Context) {
 	}
 
 	if targetUser.Username == models.SuperAdminUsername {
-		c.JSON(400,common.ResponseI18nError("error.changeAdminUser"))
-		return 
+		c.JSON(400, common.ResponseI18nError("error.changeAdminUser"))
+		return
 	}
 
 	var teamCount int
-	err = db.SQL.QueryRow("SELECT count(*) FROM team WHERE created_by=?",userId).Scan(&teamCount)
+	err = db.SQL.QueryRow("SELECT count(*) FROM team WHERE created_by=?", userId).Scan(&teamCount)
 	if err != nil {
 		logger.Warn("delete user error", "error", err)
 		c.JSON(500, common.ResponseInternalError())
@@ -132,8 +132,8 @@ func DeleteUser(c *gin.Context) {
 	}
 
 	if teamCount > 0 {
-		c.JSON(400,common.ResponseI18nError("deleteUserHasTeams"))
-		return 
+		c.JSON(400, common.ResponseI18nError("deleteUserHasTeams"))
+		return
 	}
 
 	_, err = db.SQL.Exec("DELETE FROM user WHERE id=?", userId)
@@ -150,7 +150,6 @@ func DeleteUser(c *gin.Context) {
 		return
 	}
 
-
 	c.JSON(200, nil)
 }
 
@@ -162,43 +161,42 @@ func UpdateUser(c *gin.Context) {
 		c.JSON(400, common.ResponseI18nError("error.badUserRole"))
 		return
 	}
-	
+
 	if !acl.IsGlobalAdmin(c) {
 		c.JSON(403, common.ResponseI18nError(i18n.NoPermission))
 		return
 	}
-	
-	
+
 	// if user want to be role admin or is role admin, need super admin to do this
-	oldUser,err := models.QueryUser(user.Id,"","")
+	oldUser, err := models.QueryUser(user.Id, "", "")
 	if err != nil {
 		logger.Warn("query old user error", "error", err)
 		c.JSON(500, common.ResponseInternalError())
 		return
 	}
 
-	if !acl.IsUserSelf(user.Id,c) {
+	if !acl.IsUserSelf(user.Id, c) {
 		if user.Role.IsAdmin() || oldUser.Role.IsAdmin() {
 			if !acl.IsSuperAdmin(c) {
 				c.JSON(403, common.ResponseI18nError(i18n.NoPermission))
 				return
-			} 
+			}
 		}
-	
+
 		// super admin's user name can't be changed
 		if oldUser.Username == models.SuperAdminUsername {
-			if user.Username != models.SuperAdminUsername  {
-				c.JSON(400,common.ResponseI18nError("error.changeAdminUser"))
-				return 
+			if user.Username != models.SuperAdminUsername {
+				c.JSON(400, common.ResponseI18nError("error.changeAdminUser"))
+				return
 			}
-	
+
 			if !user.Role.IsAdmin() {
-				c.JSON(400,common.ResponseI18nError("error.changeAdminUser"))
-				return 
+				c.JSON(400, common.ResponseI18nError("error.changeAdminUser"))
+				return
 			}
 		}
 	}
-	
+
 	now := time.Now()
 	_, err = db.SQL.Exec("UPDATE user SET username=?,name=?,email=?,updated=? WHERE id=?",
 		user.Username, user.Name, user.Email, now, user.Id)
@@ -209,7 +207,7 @@ func UpdateUser(c *gin.Context) {
 	}
 
 	_, err = db.SQL.Exec("UPDATE team_member SET role=?,updated=? WHERE team_id=? and user_id=?",
-		user.Role,now,models.GlobalTeamId,user.Id)
+		user.Role, now, models.GlobalTeamId, user.Id)
 	if err != nil {
 		logger.Warn("update user error", "error", err)
 		c.JSON(500, common.ResponseInternalError())
@@ -227,14 +225,14 @@ func UpdatePassword(c *gin.Context) {
 	password := req["password"]
 
 	if userId == 0 || password == "" {
-		c.JSON(400,common.ResponseI18nError(i18n.BadRequestData))
+		c.JSON(400, common.ResponseI18nError(i18n.BadRequestData))
 		return
 	}
 
-	user,err := models.QueryUser(userId,"","")
+	user, err := models.QueryUser(userId, "", "")
 	if err != nil {
 		c.JSON(500, common.ResponseInternalError())
-		return 
+		return
 	}
 
 	if user.Id == 0 {
@@ -248,18 +246,18 @@ func UpdatePassword(c *gin.Context) {
 		c.JSON(403, common.ResponseI18nError(i18n.NoPermission))
 		return
 	}
-	
+
 	if user.Role.IsAdmin() {
-		if !acl.IsSuperAdmin(c) && !acl.IsUserSelf(userId,c) {
+		if !acl.IsSuperAdmin(c) && !acl.IsUserSelf(userId, c) {
 			c.JSON(403, common.ResponseI18nError(i18n.NoPermission))
 			return
-		} 
+		}
 	}
 
 	if user.Username == models.SuperAdminUsername {
 		if !acl.IsSuperAdmin(c) {
-			c.JSON(400,common.ResponseI18nError("error.changeAdminUser"))
-			return 
+			c.JSON(400, common.ResponseI18nError("error.changeAdminUser"))
+			return
 		}
 	}
 
@@ -274,14 +272,12 @@ func UpdatePassword(c *gin.Context) {
 	c.JSON(200, common.ResponseSuccess(nil))
 }
 
-
-
 func NewTeam(c *gin.Context) {
 	req := make(map[string]string)
 	c.Bind(&req)
 	name := strings.TrimSpace(req["name"])
 	if name == "" {
-		c.JSON(400,common.ResponseI18nError(i18n.BadRequestData))
+		c.JSON(400, common.ResponseI18nError(i18n.BadRequestData))
 		return
 	}
 
@@ -309,23 +305,23 @@ func NewTeam(c *gin.Context) {
 	id, _ := res.LastInsertId()
 
 	// insert self as first team member
-	_,err = db.SQL.Exec("INSERT INTO team_member (team_id,user_id,role,created,updated) VALUES (?,?,?,?,?)",id,user.Id,models.ROLE_ADMIN,now,now)
+	_, err = db.SQL.Exec("INSERT INTO team_member (team_id,user_id,role,created,updated) VALUES (?,?,?,?,?)", id, user.Id, models.ROLE_ADMIN, now, now)
 	if err != nil {
 		logger.Warn("insert team member error", "error", err)
-		db.SQL.Exec("DELETE FROM team WHERE id=?",id)
+		db.SQL.Exec("DELETE FROM team WHERE id=?", id)
 		c.JSON(500, common.ResponseInternalError())
 		return
 	}
 
 	// init team permission
 	teams.InitTeamPermission(id)
-	
+
 	c.JSON(200, common.ResponseSuccess(&models.Team{
-		Id:       id,
-		Name:  name,
-		CreatedBy: user.Username, 
-		Created:  now,
-		Updated:  now,
+		Id:          id,
+		Name:        name,
+		CreatedBy:   user.Username,
+		Created:     now,
+		Updated:     now,
 		MemberCount: 1,
 	}))
 }

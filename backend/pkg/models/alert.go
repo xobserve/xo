@@ -20,6 +20,7 @@ type NoDataOption string
 type ExecutionErrorOption string
 
 const (
+	AlertStateAll      AlertStateType = "all"
 	AlertStateNoData   AlertStateType = "no_data"
 	AlertStatePaused   AlertStateType = "paused"
 	AlertStateAlerting AlertStateType = "alerting"
@@ -387,6 +388,7 @@ func SetAlertState(alertId int64, state AlertStateType, stateChanges int64) erro
 
 type AlertHistory struct {
 	ID          int64          `json:"id"`
+	AlertName   string         `json:"alertName"`
 	DashboardID int64          `json:"dashId"`
 	PanelID     int64          `json:"panelId"`
 	State       AlertStateType `json:"state"`

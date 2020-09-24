@@ -371,3 +371,113 @@ func GetHistory(c *gin.Context) {
 	c.JSON(200, common.ResponseSuccess(histories))
 	return
 }
+
+type DashboardAlertRule struct {
+	ID           int64     `json:"id"`
+	Name         string    `json:"name"`
+	State        string    `json:"state"`
+	NewStateDate time.Time `json:"newStateDate"`
+	DashId       int64     `json:"dashboardId"`
+	DashUid      string    `json:"dashboardUid"`
+	DashSlug     string    `json:"dashboardSlug"`
+	PanelId      int64     `json:"panelId"`
+}
+
+func GetRules(c *gin.Context) {
+	teamId, _ := strconv.ParseInt(c.Query("teamId"), 10, 64)
+	stateFilter := c.Query("stateFilter")
+
+	rules := make([]*DashboardAlertRule, 0)
+	if teamId != 0 {
+		// get team dashboards
+		dashboards, err := models.QueryDashboardsByTeamId(teamId)
+		if err != nil && err != sql.ErrNoRows {
+			logger.Warn("get team dashboard error", "error", err)
+			c.JSON(500, common.ResponseInternalError())
+			return
+		}
+
+		if err == sql.ErrNoRows {
+			c.JSON(200, common.ResponseSuccess(rules))
+			return
+		}
+
+		for _, dash := range dashboards {
+			rows, err := db.SQL.Query("SELECT id,panel_id, name, state,new_state_date FROM alert WHERE dashboard_id=?", dash.Id)
+			if err != nil {
+				if err != sql.ErrNoRows {
+					logger.Warn("get alert rules by dashboard error", "error", err)
+				}
+				continue
+			}
+
+			for rows.Next() {
+				dar := &DashboardAlertRule{
+					DashId:   dash.Id,
+					DashUid:  dash.Uid,
+					DashSlug: dash.Slug,
+				}
+
+				err := rows.Scan(&dar.ID, &dar.PanelId, &dar.Name, &dar.State, &dar.NewStateDate)
+				if err != nil {
+					logger.Warn("get dashboard alert rule scan error", "eror", err)
+					continue
+				}
+
+				if stateFilter == string(models.AlertStateAll) || stateFilter == dar.State {
+					rules = append(rules, dar)
+				}
+			}
+		}
+
+	} else {
+
+	}
+
+	c.JSON(200, common.ResponseSuccess(rules))
+}
+
+type PauseAlertReq struct {
+	AlertId int64 `json:"alertId"`
+	Paused  bool  `json:"paused"`
+}
+
+func PauseAlert(c *gin.Context) {
+	req := &PauseAlertReq{}
+	c.Bind(&req)
+
+	alert, err := GetAlert(req.AlertId)
+	if err != nil {
+		c.JSON(500, common.ResponseInternalError())
+		return
+	}
+
+	// operator must be global admin or admin of team that alert belongs to
+	if !acl.IsGlobalAdmin(c) {
+		dashboard, err := models.QueryDashboard(alert.DashboardId)
+		if err != nil {
+			logger.Warn("get  dashboard error", "error", err)
+			c.JSON(500, common.ResponseInternalError())
+			return
+		}
+
+		if !acl.IsTeamAdmin(dashboard.OwnedBy, c) {
+			c.JSON(403, common.ResponseI18nError(i18n.NoPermission))
+			return
+		}
+	}
+
+	newState := models.AlertStateOK
+	if req.Paused {
+		newState = models.AlertStatePaused
+	}
+
+	_, err = db.SQL.Exec("UPDATE alert SET state=?, new_state_date=? WHERE id=?", newState, time.Now(), req.AlertId)
+	if err != nil {
+		logger.Warn("update alert state error", "error", err)
+		c.JSON(500, common.ResponseInternalError())
+		return
+	}
+
+	c.JSON(200, common.ResponseSuccess(newState))
+}

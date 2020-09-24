@@ -106,7 +106,8 @@ const common = {
     alerting: 'Alerting',
     alertingSubTitle: 'Alerting & Notifications manage',
     notificationChannel: 'Notification channels',
-    rules: 'Rules',
+    rules: 'Alert rules',
+    history: 'Alert history',
 }
 
 export default common

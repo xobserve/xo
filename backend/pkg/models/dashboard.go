@@ -1,12 +1,13 @@
 package models
 
 import (
-	"encoding/json"
 	"database/sql"
-	"github.com/code-creatively/datav/backend/pkg/db"
-	"github.com/code-creatively/datav/backend/pkg/utils"
+	"encoding/json"
 	"fmt"
 	"time"
+
+	"github.com/code-creatively/datav/backend/pkg/db"
+	"github.com/code-creatively/datav/backend/pkg/utils"
 	"github.com/code-creatively/datav/backend/pkg/utils/simplejson"
 )
 
@@ -17,23 +18,23 @@ type DashboardRef struct {
 
 // Dashboard model
 type Dashboard struct {
-	Id       int64 `json:"id"`
-	Uid      string `json:"uid"`
-	Slug     string `json:"slug,omitempty"`
-	Title    string `json:"title"`
-	Version  int `json:"version,omitempty"`
-	
+	Id      int64  `json:"id"`
+	Uid     string `json:"uid"`
+	Slug    string `json:"slug,omitempty"`
+	Title   string `json:"title"`
+	Version int    `json:"version,omitempty"`
+
 	Editable bool `json:"editable,omitempty"`
 
-	Created  time.Time `json:"created,omitempty"`
-	Updated  time.Time `json:"updated,omitempty"`
+	Created time.Time `json:"created,omitempty"`
+	Updated time.Time `json:"updated,omitempty"`
 
 	CreatedBy int64 `json:"createdBy,omitempty"`
-	FolderId  int `json:"folderId,omitempty"`
-	IsFolder  bool `json:"isFolder,omitempty"`
-	
+	OwnedBy   int64 `json:"ownedBy,omitempty"` // team that ownes this dashboard
+	FolderId  int   `json:"folderId,omitempty"`
+	IsFolder  bool  `json:"isFolder,omitempty"`
 
-	Data  *simplejson.Json `json:"data,omitempty"`
+	Data *simplejson.Json `json:"data,omitempty"`
 }
 
 func (d *Dashboard) SetId(id int64) {
@@ -77,7 +78,7 @@ func GetDashboardFolderUrl(isFolder bool, uid string, slug string) string {
 
 // GetDashboardUrl return the html url for a dashboard
 func GetDashboardUrl(uid string, slug string) string {
-	return fmt.Sprintf("/d/%s/%s",  uid, slug)
+	return fmt.Sprintf("/d/%s/%s", uid, slug)
 }
 
 // GetFullDashboardUrl return the full url for a dashboard
@@ -87,7 +88,7 @@ func GetFullDashboardUrl(uid string, slug string) string {
 
 // GetFolderUrl return the html url for a folder
 func GetFolderUrl(folderUid string, slug string) string {
-	return fmt.Sprintf("/dashboards/f/%s/%s",  folderUid, slug)
+	return fmt.Sprintf("/dashboards/f/%s/%s", folderUid, slug)
 }
 
 type DashboardMeta struct {
@@ -117,60 +118,61 @@ type DashboardMeta struct {
 	ProvisionedExternalId string    `json:"provisionedExternalId"`
 }
 
-func QueryAclTeamIds(dashId int64) ([]int64,error) {
-	teamIds := make([]int64,0)
-	rows,err := db.SQL.Query("SELECT team_id FROM dashboard_acl WHERE dashboard_id=?",dashId)
-	if err !=nil  {
+func QueryAclTeamIds(dashId int64) ([]int64, error) {
+	teamIds := make([]int64, 0)
+	rows, err := db.SQL.Query("SELECT team_id FROM dashboard_acl WHERE dashboard_id=?", dashId)
+	if err != nil {
 		if err != sql.ErrNoRows {
-			return teamIds,err
+			return teamIds, err
 		}
-		return teamIds,nil
+		return teamIds, nil
 	}
 
 	for rows.Next() {
-		var teamId int64 
+		var teamId int64
 		err := rows.Scan(&teamId)
 		if err != nil {
 			continue
 		}
-		teamIds = append(teamIds,teamId)
+		teamIds = append(teamIds, teamId)
 	}
 
-	return teamIds,nil
+	return teamIds, nil
 }
 
 const (
-	UserAcl_NoPermissionRules = 0
-	UserAcl_PermissionAllow= 1
+	UserAcl_NoPermissionRules   = 0
+	UserAcl_PermissionAllow     = 1
 	UserAcl_PermissionForbidden = 2
 )
+
 // the second param stands for 'user can do nothing to the dashboard'
-func QueryUserHasDashboardPermssion(dashId int64, userId int64,permission int) int8 {
+func QueryUserHasDashboardPermssion(dashId int64, userId int64, permission int) int8 {
 	var rawJSON []byte
-	err := db.SQL.QueryRow("SELECT permission from dashboard_user_acl WHERE dashboard_id=? and user_id=?",dashId,userId).Scan(&rawJSON)
+	err := db.SQL.QueryRow("SELECT permission from dashboard_user_acl WHERE dashboard_id=? and user_id=?", dashId, userId).Scan(&rawJSON)
 	if err != nil {
 		return UserAcl_NoPermissionRules
 	}
-	
-	var permissions []int
-	json.Unmarshal(rawJSON,&permissions)
 
-	for _,p := range permissions {
+	var permissions []int
+	json.Unmarshal(rawJSON, &permissions)
+
+	for _, p := range permissions {
 		if p == permission {
 			return UserAcl_PermissionAllow
 		}
 	}
 
 	return UserAcl_PermissionForbidden
-} 
+}
 
-func QueryDashboard(id int64) (*Dashboard,error) {
+func QueryDashboard(id int64) (*Dashboard, error) {
 	dash := &Dashboard{}
 
 	var rawJSON []byte
-	err := db.SQL.QueryRow("SELECT uid,title,slug,data FROM dashboard WHERE id = ?", id).Scan(&dash.Uid,&dash.Title,&dash.Slug,&rawJSON)
+	err := db.SQL.QueryRow("SELECT uid,title,slug,data,owned_by FROM dashboard WHERE id = ?", id).Scan(&dash.Uid, &dash.Title, &dash.Slug, &rawJSON, &dash.OwnedBy)
 	if err != nil {
-		return  nil,err
+		return nil, err
 	}
 
 	data := simplejson.New()
@@ -180,4 +182,27 @@ func QueryDashboard(id int64) (*Dashboard,error) {
 	dash.Id = id
 
 	return dash, nil
+}
+
+func QueryDashboardsByTeamId(teamId int64) ([]*Dashboard, error) {
+	dashboards := make([]*Dashboard, 0)
+	rows, err := db.SQL.Query(`SELECT id,uid,title FROM dashboard WHERE owned_by=?`, teamId)
+	if err != nil {
+		return nil, err
+	}
+
+	for rows.Next() {
+		dash := &Dashboard{OwnedBy: teamId}
+		err := rows.Scan(&dash.Id, &dash.Uid, &dash.Title)
+		if err != nil {
+			logger.Warn("query dash by team id scan error", "error", err)
+			continue
+		}
+
+		dash.UpdateSlug()
+
+		dashboards = append(dashboards, dash)
+	}
+
+	return dashboards, nil
 }

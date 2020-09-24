@@ -213,7 +213,15 @@ export const initRoutes = (store: Store<StoreState>) => {
                     title:<Message id={'common.rules'}/>,
                     url: "/team/rules/:id",
                     exact: true,
-                    component: React.lazy(() => import('src/views/cfg/teams/team/RulesPage'))
+                    component: React.lazy(() => import('src/views/cfg/teams/team/AlertRulesPage'))
+                },
+                { 
+                    icon: "list-ul",
+                    id: "datav-fix-menu-alerting-history", 
+                    title:<Message id={'common.history'}/>,
+                    url: "/team/history/:id",
+                    exact: true,
+                    component: React.lazy(() => import('src/views/cfg/teams/team/AlertHistoryPage'))
                 },
                 { 
                     icon: "at",
