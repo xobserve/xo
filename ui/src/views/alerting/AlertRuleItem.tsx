@@ -2,8 +2,9 @@ import React, { PureComponent } from 'react';
 // @ts-ignore
 import Highlighter from 'react-highlight-words';
 import { AlertRule, Team } from '../../types';
-import { Icon, IconName, Button, Tooltip, LinkButton, HorizontalGroup } from 'src/packages/datav-core';
+import { Icon, IconName, Button, Tooltip, LinkButton, HorizontalGroup, localeData, currentLang } from 'src/packages/datav-core';
 import { Link } from 'react-router-dom';
+import { FormattedMessage } from 'react-intl';
 
 export interface Props {
   rule: AlertRule;
@@ -37,7 +38,7 @@ class AlertRuleItem extends PureComponent<Props> {
             </div>
             <div className="alert-rule-item__text">
               <span className={`${rule.stateClass}`}>{this.renderText(rule.stateText)}</span>
-              <span className="alert-rule-item__time"> for {rule.stateAge}</span>
+              <span className="alert-rule-item__time"> {localeData[currentLang]['common.for']} {rule.stateAge}</span>
             </div>
           </div>
           {rule.info && <div className="small muted alert-rule-item__info">{this.renderText(rule.info)}</div>}
@@ -45,7 +46,7 @@ class AlertRuleItem extends PureComponent<Props> {
 
         <div className="alert-rule-item__actions">
           <HorizontalGroup spacing="sm"> 
-            <Tooltip placement="bottom" content="Pausing an alert rule prevents it from executing">
+            <Tooltip placement="bottom" content={localeData[currentLang]['alerting.pauseTooltip']}>
               <Button
                 variant="secondary"
                 size="sm"
@@ -53,7 +54,7 @@ class AlertRuleItem extends PureComponent<Props> {
                 onClick={this.props.onTogglePause}
               />
             </Tooltip>
-            <Tooltip placement="right" content="Edit alert rule">
+            <Tooltip placement="right" content={localeData[currentLang]['alerting.editTooltip']}>
               <LinkButton size="sm" variant="secondary" href={ruleUrl} icon="cog" />
             </Tooltip>
           </HorizontalGroup>

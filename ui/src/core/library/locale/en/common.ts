@@ -108,6 +108,11 @@ const common = {
     notificationChannel: 'Notification channels',
     rules: 'Alert rules',
     history: 'Alert history',
+    for: 'for',
+    settingDefault: 'Default',
+    addresses: 'Addresses',
+    rule: 'Rule',
+    message: 'Message',
 }
 
 export default common

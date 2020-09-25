@@ -17,9 +17,12 @@ import { updateLocation } from 'src/store/reducers/location';
 import kbn from 'src/core/library/utils/kbn';
 import alertDef from './state/alertDef';
 import { ThresholdMapper } from './state/ThresholdMapper';
-import { Select, InputNumber, notification as Notification, Input } from 'antd'
+import { Select, InputNumber, notification as Notification, Input, Tooltip } from 'antd'
 import localeData from 'src/core/library/locale';
 import { NotifierPicker } from '../cfg/teams/team/Notifiers/Picker';
+import { injectIntl, IntlShape, FormattedMessage } from 'react-intl';
+import { Langs } from 'src/core/library/locale/types';
+
 
 const { Option } = Select
 
@@ -28,6 +31,9 @@ interface OwnProps {
   panel: PanelModel;
 }
 
+interface IntlProps {
+  intl: IntlShape
+}
 
 export type Props = OwnProps;
 
@@ -44,7 +50,7 @@ interface State {
   sendExcepitonsInEdit: boolean
 }
 
-class UnConnectedAlertTab extends PureComponent<Props, State> {
+class UnConnectedAlertTab extends PureComponent<Props & IntlProps, State> {
   alertingMinIntervalSecs: number;
   alertingMinInterval: string;
   evalOperators: any;
@@ -206,7 +212,7 @@ class UnConnectedAlertTab extends PureComponent<Props, State> {
         } else {
           this.setState({
             ...this.state,
-            error: 'Could not find any metric queries'
+            error: localeData[currentLang]['alerting.metricNotFound']
           })
           return;
         }
@@ -217,9 +223,9 @@ class UnConnectedAlertTab extends PureComponent<Props, State> {
         getDataSourceService().get(datasourceName).then(
           (foundTarget => (ds: DataSourceApi) => {
             if (!ds.meta.alerting) {
-              return Promise.reject('The datasource does not support alerting queries');
+              return Promise.reject(localeData[currentLang]['alerting.dsNotSupport'])
             } else if (ds.targetContainsTemplate && ds.targetContainsTemplate(foundTarget)) {
-              return Promise.reject('Template variables are not supported in alert queries');
+              return Promise.reject(localeData[currentLang]['alerting.templateNotSupport']);
             }
             return Promise.resolve();
           })(foundTarget)
@@ -276,10 +282,7 @@ class UnConnectedAlertTab extends PureComponent<Props, State> {
       const frequencySecs = kbn.interval_to_seconds(v);
       if (frequencySecs < this.alertingMinIntervalSecs) {
         this.setState({
-          frequencyWarning: 'A minimum evaluation interval of ' +
-            this.alertingMinInterval +
-            ' have been configured in Grafana and will be used for this alert rule. ' +
-            'Please contact the administrator to configure a lower interval.'
+          frequencyWarning: this.props.intl.formatMessage({ id: "alerting.frequencyMinViolate" }, { interval: this.alertingMinInterval }),
         })
 
       } else {
@@ -289,7 +292,7 @@ class UnConnectedAlertTab extends PureComponent<Props, State> {
       }
     } catch (err) {
       this.setState({
-        frequencyWarning: `Invalid interval string, has to be either unit-less or end with one of the following units: "y, M, w, d, h, m, s, ms"`
+        frequencyWarning: localeData[currentLang]['alerting.frequencyInvalid']
       })
     }
   }
@@ -351,15 +354,15 @@ class UnConnectedAlertTab extends PureComponent<Props, State> {
       <ConfirmModal
         isOpen={true}
         icon="trash-alt"
-        title="Delete"
+        title={localeData[currentLang]['common.delete']}
         body={
           <div>
-            Are you sure you want to delete this alert rule?
+            <FormattedMessage id="alerting.deleteRuleConfirm" />
             <br />
-            <small>You need to save dashboard for the delete to take effect.</small>
+            <small><FormattedMessage id="alerting.deleteRuleTips" /></small>
           </div>
         }
-        confirmText="Delete Alert"
+        confirmText={localeData[currentLang]['alerting.deleteConfirmText']}
         onDismiss={onDismiss}
         onConfirm={() => {
           delete panel.alert;
@@ -380,7 +383,7 @@ class UnConnectedAlertTab extends PureComponent<Props, State> {
     const onDismiss = () => this.onToggleModal('showStateHistory');
 
     return (
-      <Modal isOpen={true} icon="history" title="State history" onDismiss={onDismiss} onClickBackdrop={onDismiss}>
+      <Modal isOpen={true} icon="history" title={localeData[currentLang]['common.history']} onDismiss={onDismiss} onClickBackdrop={onDismiss}>
         <StateHistory
           dashboard={dashboard}
           panelId={panel.editSourceId ?? panel.id}
@@ -421,7 +424,7 @@ class UnConnectedAlertTab extends PureComponent<Props, State> {
       if (i === 0 && param.labelName !== alertDef.defaultEvaluatorParamLabel) {
         Notification['error']({
           message: "Error",
-          description: 'First param label name must be __Default',
+          description: localeData[currentLang]['alerting.evaFirstParamError'],
           duration: 5
         });
         param.labelName = alertDef.defaultEvaluatorParamLabel
@@ -433,10 +436,10 @@ class UnConnectedAlertTab extends PureComponent<Props, State> {
         if (param.labelName === alertDef.defaultEvaluatorParamLabel) {
           Notification['error']({
             message: "Error",
-            description: 'Cant use __Default as custom label name',
+            description: localeData[currentLang]['alerting.evalParamLabelUseDefault'],
             duration: 5
           });
-          evaluator.params.splice(i,1) 
+          evaluator.params.splice(i, 1)
           return
         }
 
@@ -444,10 +447,10 @@ class UnConnectedAlertTab extends PureComponent<Props, State> {
         if (exist === param.labelValue) {
           Notification['error']({
             message: "Error",
-            description: 'Same label value cant exist under same label name',
+            description: localeData[currentLang]['alerting.evalParamSame'],
             duration: 5
           });
-          evaluator.params.splice(i,1) 
+          evaluator.params.splice(i, 1)
           return
         }
 
@@ -455,354 +458,354 @@ class UnConnectedAlertTab extends PureComponent<Props, State> {
       }
     })
     this.props.panel.alert.conditions[this.state.conditionInEdit].evaluator = evaluator
-this.setState({
-  ...this.state,
-  evaluatorInEdit: null
-})
+    this.setState({
+      ...this.state,
+      evaluatorInEdit: null
+    })
 
-this.evaluatorParamsChanged()
+    this.evaluatorParamsChanged()
 
-this.forceUpdate()
+    this.forceUpdate()
   }
 
-addEvaluatorParam = () => {
-  this.setState({
-    ...this.state,
-    evaluatorInEdit: {
-      ...this.state.evaluatorInEdit,
-      params: _.concat(this.state.evaluatorInEdit.params, [{ labelName: '', labelValue: '', value: [0.2, 1] }])
+  addEvaluatorParam = () => {
+    this.setState({
+      ...this.state,
+      evaluatorInEdit: {
+        ...this.state.evaluatorInEdit,
+        params: _.concat(this.state.evaluatorInEdit.params, [{ labelName: '', labelValue: '', value: [0.2, 1] }])
+      }
+    })
+  }
+
+  removeEvaluatorParam = (i) => {
+    const evaluator = _.cloneDeep(this.state.evaluatorInEdit)
+    evaluator.params.splice(i, 1)
+
+    this.setState({
+      ...this.state,
+      evaluatorInEdit: evaluator
+    })
+  }
+
+  dismissSendExceptionsEdit = () => {
+    this.setState({
+      ...this.state,
+      sendExcepitonsInEdit: false
+    })
+  }
+
+  addSendException = () => {
+    this.props.panel.alert.sendExceptions.push({
+      type: 'email',
+      labelName: '',
+      labelValue: '',
+      setting: ''
+    })
+    this.forceUpdate()
+  }
+
+  removeSendException = (i) => {
+    const exceptions = _.cloneDeep(this.props.panel.alert.sendExceptions)
+    exceptions.splice(i, 1)
+
+    this.props.panel.alert.sendExceptions = exceptions
+    this.forceUpdate()
+  }
+
+  render() {
+    const { transformations, alert, targets } = this.props.panel;
+    const { validatonMessage, frequencyWarning, notifications, error, evaluatorInEdit, sendExcepitonsInEdit } = this.state;
+    const hasTransformations = transformations && transformations.length > 0;
+
+    if (!alert && validatonMessage) {
+      return this.renderValidationMessage();
     }
-  })
-}
-
-removeEvaluatorParam = (i) => {
-  const evaluator = _.cloneDeep(this.state.evaluatorInEdit)
-  evaluator.params.splice(i, 1)
-
-  this.setState({
-    ...this.state,
-    evaluatorInEdit: evaluator
-  })
-}
-
-dismissSendExceptionsEdit = () => {
-  this.setState({
-    ...this.state,
-    sendExcepitonsInEdit: false
-  })
-}
-
-addSendException = () => {
-  this.props.panel.alert.sendExceptions.push({
-    type: 'email',
-    labelName: '',
-    labelValue:'',
-    setting: ''
-  })
-  this.forceUpdate()
-}
-
-removeSendException = (i) => {
-  const exceptions = _.cloneDeep(this.props.panel.alert.sendExceptions)
-  exceptions.splice(i,1)
-
-  this.props.panel.alert.sendExceptions = exceptions
-  this.forceUpdate()
-}
-
-render() {
-  const { transformations, alert, targets } = this.props.panel;
-  const { validatonMessage, frequencyWarning, notifications, error, evaluatorInEdit, sendExcepitonsInEdit} = this.state;
-  const hasTransformations = transformations && transformations.length > 0;
-
-  if (!alert && validatonMessage) {
-    return this.renderValidationMessage();
-  }
 
 
-  const model = {
-    title: 'Panel has no alert rule defined',
-    buttonIcon: 'bell' as IconName,
-    onClick: this.onAddAlert,
-    buttonTitle: 'Create Alert',
-  };
+    const model = {
+      title: localeData[currentLang]['alerting.emptyAlertTitle'],
+      buttonIcon: 'bell' as IconName,
+      onClick: this.onAddAlert,
+      buttonTitle: localeData[currentLang]['alerting.emptyAlertButton'],
+    };
 
-  return (
-    <>
-      <CustomScrollbar autoHeightMin="100%">
-        <Container padding="md">
-          <div>
-            {
-              error && <div className="alert alert-error m-b-2">
-                <Icon name="'exclamation-triangle'" /> {error}
-              </div>
-            }
-            {alert && hasTransformations && (
-              <Alert
-                severity={AppNotificationSeverity.Error}
-                title="Transformations are not supported in alert queries"
-              />
-            )}
-
-            {alert && <div className="gf-form-group">
-              <h4 className="section-heading">Rule</h4>
-              <div className="gf-form-inline">
-                <div className="gf-form">
-                  <span className="gf-form-label width-5">Name</span>
-                  <input type="text" className="gf-form-input" defaultValue={alert.name} onChange={(e) => alert.name = e.currentTarget.value} />
+    return (
+      <>
+        <CustomScrollbar autoHeightMin="100%">
+          <Container padding="md">
+            <div>
+              {
+                error && <div className="alert alert-error m-b-2">
+                  <Icon name="'exclamation-triangle'" /> {error}
                 </div>
-                <div className="gf-form">
-                  <span className="gf-form-label width-7">Evaluate every</span>
-                  <input
-                    className="gf-form-input max-width-5"
-                    type="text"
-                    defaultValue={alert.frequency}
-                    onChange={(e) => this.props.panel.alert.frequency = e.currentTarget.value}
-                    onBlur={(e) => this.checkFrequency(e.currentTarget.value)}
-                  />
-                </div>
-                <div className="gf-form">
-                  <InlineFormLabel className="gf-form-label" tooltip="If an alert rule has a configured For and the query violates the configured threshold it will first go from OK to Pending. Going from OK to Pending Grafana will not send any notifications. Once the alert rule has been firing for more than For duration, it will change to Alerting and send alert notifications.">
-                    For
-                  </InlineFormLabel>
-                  <input
-                    type="text"
-                    className="gf-form-input max-width-10 gf-form-input--has-help-icon"
-                    defaultValue={alert.for}
-                    onChange={(e) => this.props.panel.alert.for = e.currentTarget.value}
-                    placeholder="5m"
-                    onBlur={(e) => this.checkFrequency(e.currentTarget.value)}
-                  />
-                </div>
-              </div>
-              {frequencyWarning && <div className="gf-form">
-                <label className="gf-form-label text-warning">
-                  <Icon name="'exclamation-triangle'"></Icon> {frequencyWarning}
-                </label>
-              </div>}
-            </div>}
+              }
+              {alert && hasTransformations && (
+                <Alert
+                  severity={AppNotificationSeverity.Error}
+                  title="Transformations are not supported in alert queries"
+                />
+              )}
 
-            {alert &&
-              <>
-                <div className="gf-form-group">
-                  <h4 className="section-heading">Conditions</h4>
-                  {
-                    alert.conditions.map((c, i) => {
-                      return <div className="gf-form-inline" key={i}>
-                        <div className="gf-form">
-                          {i === 0 ?
-                            <span className="gf-form-label query-keyword width-5">WHEN</span> :
-                            <span className="width-5 ub-mr2">
-                              <Select value={c.operator} onChange={(v) => { c.operator = v; this.forceUpdate() }} style={{ width: '100%' }}>
-                                <Option value="and">AND</Option>
-                                <Option value="or">OR</Option>
-                              </Select>
-                            </span>
-                          }
-                          <Select className="width-5" value={c.reducer} onChange={(v) => { c.reducer = v; this.forceUpdate() }}>
-                            {alertDef.reducerTypes.map((r, i) => <Option value={r.value} key={i}>{r.text}</Option>)}
-                          </Select>
-                          <span className="gf-form-label query-keyword width-5 ub-ml2">OF QUERY</span>
-                          <Select className="width-4" value={c.query.refId} onChange={(v) => { c.query.refId = v; this.forceUpdate() }}>
-                            {targets.map((r, i) => <Option value={r.refId} key={i}>{r.refId}</Option>)}
-                          </Select>
-                          <span className="gf-form-label query-keyword width-11 ub-ml2 pointer" onClick={() => this.setState({ ...this.state, evaluatorInEdit: c.evaluator, conditionInEdit: i })}>WITH LABELS AND VALUES</span>
-
-                          <span className="gf-form-label query-keyword width-3">LAST</span>
-                          <Select className="width-5" value={c.query.lastFor} onChange={(v) => { c.query.lastFor = v; this.forceUpdate() }}>
-                            {alertDef.lastForOptions.map((r, i) => <Option value={r} key={i}>{r}</Option>)}
-                          </Select>
-
-                          <label className="gf-form-label dropdown pointer ub-ml2" onClick={() => this.removeCondition(i)}>
-                            <Icon name="trash-alt" />
-                          </label>
-                        </div>
-
-                      </div>
-                    })
-                  }
-                  <div className="gf-form">
-                    <label className="gf-form-label dropdown pointer" onClick={this.addCondition}>
-                      <Icon name="plus-circle" />
-                    </label>
-                  </div>
-
-                </div>
-              </>}
-
-            {
-              alert && <div className="gf-form-group">
-                <h4 className="section-heading">No Data & Error Handling</h4>
+              {alert && <div className="gf-form-group">
+                <h4 className="section-heading"><FormattedMessage id="common.rule" /></h4>
                 <div className="gf-form-inline">
                   <div className="gf-form">
-                    <span className="gf-form-label width-15">If no data or all values are null</span>
+                    <span className="gf-form-label width-5"><FormattedMessage id="common.name" /></span>
+                    <input type="text" className="gf-form-input" defaultValue={alert.name} onChange={(e) => alert.name = e.currentTarget.value} />
                   </div>
                   <div className="gf-form">
-                    <span className="gf-form-label query-keyword">SET STATE TO</span>
-                    <Select
-                      className="width-10"
-                      defaultValue={alert.noDataState}
-                      onChange={(v) => this.props.panel.alert.noDataState = v}
-                    >
-                      {
-                        alertDef.noDataModes.map((mode) =>
-                          <Option value={mode.value} key={mode.value}>{mode.text}</Option>
-                        )
-                      }
-                    </Select>
-                  </div>
-                </div>
-
-                <div className="gf-form-inline">
-                  <div className="gf-form">
-                    <span className="gf-form-label width-15">If execution error or timeout</span>
-                  </div>
-                  <div className="gf-form">
-                    <span className="gf-form-label query-keyword">SET STATE TO</span>
-                    <Select
-                      className="width-10"
-                      defaultValue={alert.executionErrorState}
-                      onChange={(v) => this.props.panel.alert.executionErrorState = v}
-                    >
-                      {
-                        alertDef.executionErrorModes.map((mode) =>
-                          <Option value={mode.value} key={mode.value}>{mode.text}</Option>
-                        )
-                      }
-                    </Select>
-                  </div>
-                </div>
-              </div>
-            }
-
-            {
-              alert && <div className="gf-form-group">
-                <h4 className="section-heading">Notifications</h4>
-                <div className="gf-form-inline">
-                  <div className="gf-form">
-                    <span className="gf-form-label width-8">Send to</span>
-                    <span className="gf-form-label query-keyword">COMMON CASES</span>
-                    <Select mode="multiple" defaultValue={alert.notifications} className="width-10" onChange={this.notificationAdded}>
-                      {notifications.map((n) => <Option value={n.id} key={n.id}><Icon name={n.icon} /> <span className="ub-ml1">{n.name}</span></Option>)}
-                    </Select>
-                    <span className="gf-form-label query-keyword width-11 ub-ml2 pointer" onClick={() => this.setState({ ...this.state, sendExcepitonsInEdit: true })}>SET EXCEPTIONS</span>
-                  </div>
-               
-                </div>
-
-                <div className="gf-form gf-form--v-stretch">
-                  <span className="gf-form-label width-8">Message</span>
-                  <Input.TextArea
-                    className="gf-form-input"
-                    rows={5}
-                    defaultValue={alert.message}
-                    onBlur={(e) => this.props.panel.alert.message = e.currentTarget.value}
-                    placeholder="Notification message details..."
-                  ></Input.TextArea>
-                </div>
-              </div>
-            }
-
-            {alert && (
-              <HorizontalGroup>
-                <Button onClick={() => this.onToggleModal('showStateHistory')} variant="secondary">
-                  State history
-                  </Button>
-                <Button onClick={() => this.onToggleModal('showTestRule')} variant="secondary">
-                  Test rule
-                  </Button>
-                <Button onClick={() => this.onToggleModal('showDeleteConfirmation')} variant="destructive">
-                  Delete
-                  </Button>
-              </HorizontalGroup>
-            )}
-            {!alert && !validatonMessage && <EmptyListCTA {...model} />}
-          </div>
-        </Container>
-      </CustomScrollbar>
-
-      {this.renderTestRule()}
-      {this.renderDeleteConfirmation()}
-      {this.renderStateHistory()}
-
-
-      {evaluatorInEdit && <Modal isOpen={true} icon="edit" title="Edit condition labels ande values" onDismiss={this.dismissEvaluatorInEdit}>
-        <>
-          {evaluatorInEdit.params.map((param, i) => {
-            return <div className="gf-form-inline" key={i}>
-              <div className="gf-form">
-                <span className="gf-form-label query-keyword width-7 ub-ml2">WITH LABEL</span>
-                <Input placeholder="name" defaultValue={param.labelName} onChange={(e) => { param.labelName = e.currentTarget.value; this.forceUpdate() }} style={{ width: '100px' }} disabled={param.labelName === alertDef.defaultEvaluatorParamLabel}></Input>
-                <Input placeholder="value" defaultValue={param.labelValue} onChange={(e) => { param.labelValue = e.currentTarget.value; this.forceUpdate() }} style={{ width: '100px' }} disabled={param.labelName === alertDef.defaultEvaluatorParamLabel}></Input>
-
-                <Select className="width-11 ub-ml2" value={evaluatorInEdit.type} onChange={(v) => { evaluatorInEdit.type = v; this.forceUpdate() }}>
-                  {alertDef.evalFunctions.map((r, i) => <Option value={r.value} key={i}>{r.text}</Option>)}
-                </Select>
-                {evaluatorInEdit.type !== 'no_value' && <InputNumber
-                  className="ub-ml2 width-4"
-                  value={param.value[0]}
-                  onChange={(v) => { param.value[0] = v; this.forceUpdate() }}
-                  placeholder="5"
-                />}
-                {(evaluatorInEdit.type === 'outside_range' || evaluatorInEdit.type === 'within_range') &&
-                  <>
-                    <span className="gf-form-label query-keyword width-2 ub-ml2">TO</span>
-                    <InputNumber
-                      className="width-4"
-                      defaultValue={param.value[1]}
-                      onChange={(v) => { param.value[1] = v; this.forceUpdate() }}
-                      placeholder="5"
+                    <span className="gf-form-label width-7"><FormattedMessage id="alerting.evaluateEvery" /></span>
+                    <input
+                      className="gf-form-input max-width-5"
+                      type="text"
+                      defaultValue={alert.frequency}
+                      onChange={(e) => this.props.panel.alert.frequency = e.currentTarget.value}
+                      onBlur={(e) => this.checkFrequency(e.currentTarget.value)}
                     />
-                  </>}
+                  </div>
+                  <div className="gf-form">
+                    <InlineFormLabel className="gf-form-label" tooltip={localeData[currentLang]['alerting.forTooltip']}>
+                      <FormattedMessage id="common.for" />
+                    </InlineFormLabel>
+                    <input
+                      type="text"
+                      className="gf-form-input max-width-10 gf-form-input--has-help-icon"
+                      defaultValue={alert.for}
+                      onChange={(e) => this.props.panel.alert.for = e.currentTarget.value}
+                      placeholder="5m"
+                      onBlur={(e) => this.checkFrequency(e.currentTarget.value)}
+                    />
+                  </div>
+                </div>
+                {frequencyWarning && <div className="gf-form">
+                  <label className="gf-form-label text-warning">
+                    <Icon name="'exclamation-triangle'"></Icon> {frequencyWarning}
+                  </label>
+                </div>}
+              </div>}
 
-                <span className="gf-form-label query-keyword width-3 ub-ml2">OR</span>
+              {alert &&
+                <>
+                  <div className="gf-form-group">
+                    <h4 className="section-heading"><FormattedMessage id="alerting.conditions" />{currentLang === Langs.Chinese && <Tooltip title={<FormattedMessage id="alerting.conditionTips" />}><Icon name="info-circle" style={{ marginLeft: '10px' }} /></Tooltip>}</h4>
+                    {
+                      alert.conditions.map((c, i) => {
+                        return <div className="gf-form-inline" key={i}>
+                          <div className="gf-form">
+                            {i === 0 ?
+                              <span className="gf-form-label query-keyword width-5">WHEN</span> :
+                              <span className="width-5 ub-mr2">
+                                <Select value={c.operator} onChange={(v) => { c.operator = v; this.forceUpdate() }} style={{ width: '100%' }}>
+                                  <Option value="and">AND</Option>
+                                  <Option value="or">OR</Option>
+                                </Select>
+                              </span>
+                            }
+                            <Select className="width-5" value={c.reducer} onChange={(v) => { c.reducer = v; this.forceUpdate() }}>
+                              {alertDef.reducerTypes.map((r, i) => <Option value={r.value} key={i}>{r.text}</Option>)}
+                            </Select>
+                            <span className="gf-form-label query-keyword width-5 ub-ml2">OF QUERY</span>
+                            <Select className="width-4" value={c.query.refId} onChange={(v) => { c.query.refId = v; this.forceUpdate() }}>
+                              {targets.map((r, i) => <Option value={r.refId} key={i}>{r.refId}</Option>)}
+                            </Select>
+                            <span className="gf-form-label query-keyword width-11 ub-ml2 pointer" onClick={() => this.setState({ ...this.state, evaluatorInEdit: c.evaluator, conditionInEdit: i })}>WITH LABELS AND VALUES</span>
 
-                {param.labelName !== alertDef.defaultEvaluatorParamLabel && <label className="gf-form-label pointer" onClick={() => this.removeEvaluatorParam(i)}>
-                  <Icon name="trash-alt" />
-                </label>}
+                            <span className="gf-form-label query-keyword width-3">LAST</span>
+                            <Select className="width-5" value={c.query.lastFor} onChange={(v) => { c.query.lastFor = v; this.forceUpdate() }}>
+                              {alertDef.lastForOptions.map((r, i) => <Option value={r} key={i}>{r}</Option>)}
+                            </Select>
 
-              </div>
+                            <label className="gf-form-label dropdown pointer ub-ml2" onClick={() => this.removeCondition(i)}>
+                              <Icon name="trash-alt" />
+                            </label>
+                          </div>
+
+                        </div>
+                      })
+                    }
+                    <div className="gf-form">
+                      <label className="gf-form-label dropdown pointer" onClick={this.addCondition}>
+                        <Icon name="plus-circle" />
+                      </label>
+                    </div>
+
+                  </div>
+                </>}
+
+              {
+                alert && <div className="gf-form-group">
+                  <h4 className="section-heading"><FormattedMessage id="alerting.noDataTitle" /></h4>
+                  <div className="gf-form-inline">
+                    <div className="gf-form">
+                      <span className="gf-form-label width-15"><FormattedMessage id="alerting.noDataLabel" /></span>
+                    </div>
+                    <div className="gf-form">
+                      <span className="gf-form-label query-keyword"><FormattedMessage id="alerting.setStateTo" /></span>
+                      <Select
+                        className="width-10"
+                        defaultValue={alert.noDataState}
+                        onChange={(v) => this.props.panel.alert.noDataState = v}
+                      >
+                        {
+                          alertDef.noDataModes.map((mode) =>
+                            <Option value={mode.value} key={mode.value}>{mode.text}</Option>
+                          )
+                        }
+                      </Select>
+                    </div>
+                  </div>
+
+                  <div className="gf-form-inline">
+                    <div className="gf-form">
+                      <span className="gf-form-label width-15"><FormattedMessage id="alerting.excecutionErrorLabel" /></span>
+                    </div>
+                    <div className="gf-form">
+                      <span className="gf-form-label query-keyword"><FormattedMessage id="alerting.setStateTo" /></span>
+                      <Select
+                        className="width-10"
+                        defaultValue={alert.executionErrorState}
+                        onChange={(v) => this.props.panel.alert.executionErrorState = v}
+                      >
+                        {
+                          alertDef.executionErrorModes.map((mode) =>
+                            <Option value={mode.value} key={mode.value}>{mode.text}</Option>
+                          )
+                        }
+                      </Select>
+                    </div>
+                  </div>
+                </div>
+              }
+
+              {
+                alert && <div className="gf-form-group">
+                  <h4 className="section-heading"><FormattedMessage id="common.notificationChannel" /></h4>
+                  <div className="gf-form-inline">
+                    <div className="gf-form">
+                      <span className="gf-form-label width-8"><FormattedMessage id="alerting.sendTo" /></span>
+                      <span className="gf-form-label query-keyword"><FormattedMessage id="alerting.commonCases" /></span>
+                      <Select mode="multiple" defaultValue={alert.notifications} className="width-10" onChange={this.notificationAdded}>
+                        {notifications.map((n) => <Option value={n.id} key={n.id}><Icon name={n.icon} /> <span className="ub-ml1">{n.name}</span></Option>)}
+                      </Select>
+                      <span className="gf-form-label query-keyword width-11 ub-ml2 pointer" onClick={() => this.setState({ ...this.state, sendExcepitonsInEdit: true })}><FormattedMessage id="alerting.setExcetpions" /></span>
+                    </div>
+
+                  </div>
+
+                  <div className="gf-form gf-form--v-stretch">
+                    <span className="gf-form-label width-8"><FormattedMessage id="common.message" /></span>
+                    <Input.TextArea
+                      className="gf-form-input"
+                      rows={5}
+                      defaultValue={alert.message}
+                      onBlur={(e) => this.props.panel.alert.message = e.currentTarget.value}
+                      placeholder={localeData[currentLang]['alerting.messagePlaceholder']}
+                    ></Input.TextArea>
+                  </div>
+                </div>
+              }
+
+              {alert && (
+                <HorizontalGroup>
+                  <Button onClick={() => this.onToggleModal('showStateHistory')} variant="secondary">
+                    <FormattedMessage id="common.history" />
+                  </Button>
+                  <Button onClick={() => this.onToggleModal('showTestRule')} variant="secondary">
+                    <FormattedMessage id="alerting.testRule" />
+                  </Button>
+                  <Button onClick={() => this.onToggleModal('showDeleteConfirmation')} variant="destructive">
+                    <FormattedMessage id="common.delete" />
+                  </Button>
+                </HorizontalGroup>
+              )}
+              {!alert && !validatonMessage && <EmptyListCTA {...model} />}
             </div>
+          </Container>
+        </CustomScrollbar>
 
-          })}
+        {this.renderTestRule()}
+        {this.renderDeleteConfirmation()}
+        {this.renderStateHistory()}
 
-          <div className="gf-form ub-ml2">
-            <label className="gf-form-label dropdown pointer" onClick={this.addEvaluatorParam}>
-              <Icon name="plus-circle" />
-            </label>
-          </div>
-        </>
-      </Modal>}
-      
-      {sendExcepitonsInEdit && <Modal isOpen={true} icon="edit" title="Edit condition labels ande values" onDismiss={this.dismissSendExceptionsEdit}>
-        <>
-          {alert.sendExceptions.map((exp, i) => {
-            return <div className="gf-form-inline" key={i}>
-              <span className="gf-form-label query-keyword width-7">LABEL</span>
-              <Input placeholder="name" value={exp.labelName} onChange={(e) => { exp.labelName = e.currentTarget.value; this.forceUpdate() }} style={{ width: '100px' }} />
-              <Input placeholder="value" value={exp.labelValue} onChange={(e) => { exp.labelValue = e.currentTarget.value; this.forceUpdate() }} style={{ width: '100px' }} />
-              <span className="gf-form-label query-keyword width-7 ub-ml2">Type</span>
-              <NotifierPicker value={exp.type} onChange={(v) => {exp.type = v; this.forceUpdate()}} />
-              <span className="gf-form-label query-keyword width-7 ub-ml2">Setting</span>
-              <Input placeholder="e.g test@gmail.com,ok@gmail.com" value={exp.setting} onChange={(e) => { exp.setting = e.currentTarget.value; this.forceUpdate() }} style={{ width: '300px' }} />
-              <label className="gf-form-label pointer" onClick={() => this.removeSendException(i)}>
+
+        {evaluatorInEdit && <Modal isOpen={true} icon="edit" title="Edit condition labels ande values" onDismiss={this.dismissEvaluatorInEdit}>
+          <>
+            {evaluatorInEdit.params.map((param, i) => {
+              return <div className="gf-form-inline" key={i}>
+                <div className="gf-form">
+                  <span className="gf-form-label query-keyword width-7 ub-ml2">WITH LABEL</span>
+                  <Input placeholder="name" defaultValue={param.labelName} onChange={(e) => { param.labelName = e.currentTarget.value; this.forceUpdate() }} style={{ width: '100px' }} disabled={param.labelName === alertDef.defaultEvaluatorParamLabel}></Input>
+                  <Input placeholder="value" defaultValue={param.labelValue} onChange={(e) => { param.labelValue = e.currentTarget.value; this.forceUpdate() }} style={{ width: '100px' }} disabled={param.labelName === alertDef.defaultEvaluatorParamLabel}></Input>
+
+                  <Select className="width-11 ub-ml2" value={evaluatorInEdit.type} onChange={(v) => { evaluatorInEdit.type = v; this.forceUpdate() }}>
+                    {alertDef.evalFunctions.map((r, i) => <Option value={r.value} key={i}>{r.text}</Option>)}
+                  </Select>
+                  {evaluatorInEdit.type !== 'no_value' && <InputNumber
+                    className="ub-ml2 width-4"
+                    value={param.value[0]}
+                    onChange={(v) => { param.value[0] = v; this.forceUpdate() }}
+                    placeholder="5"
+                  />}
+                  {(evaluatorInEdit.type === 'outside_range' || evaluatorInEdit.type === 'within_range') &&
+                    <>
+                      <span className="gf-form-label query-keyword width-2 ub-ml2">TO</span>
+                      <InputNumber
+                        className="width-4"
+                        defaultValue={param.value[1]}
+                        onChange={(v) => { param.value[1] = v; this.forceUpdate() }}
+                        placeholder="5"
+                      />
+                    </>}
+
+                  <span className="gf-form-label query-keyword width-3 ub-ml2">OR</span>
+
+                  {param.labelName !== alertDef.defaultEvaluatorParamLabel && <label className="gf-form-label pointer" onClick={() => this.removeEvaluatorParam(i)}>
+                    <Icon name="trash-alt" />
+                  </label>}
+
+                </div>
+              </div>
+
+            })}
+
+            <div className="gf-form ub-ml2">
+              <label className="gf-form-label dropdown pointer" onClick={this.addEvaluatorParam}>
+                <Icon name="plus-circle" />
+              </label>
+            </div>
+          </>
+        </Modal>}
+
+        {sendExcepitonsInEdit && <Modal isOpen={true} icon="edit" title={localeData[currentLang]['alerting.excepitonTitle']} onDismiss={this.dismissSendExceptionsEdit}>
+          <>
+            {alert.sendExceptions.map((exp, i) => {
+              return <div className="gf-form-inline" key={i}>
+                <span className="gf-form-label query-keyword width-7">LABEL</span>
+                <Input placeholder="name" value={exp.labelName} onChange={(e) => { exp.labelName = e.currentTarget.value; this.forceUpdate() }} style={{ width: '100px' }} />
+                <Input placeholder="value" value={exp.labelValue} onChange={(e) => { exp.labelValue = e.currentTarget.value; this.forceUpdate() }} style={{ width: '100px' }} />
+                <span className="gf-form-label query-keyword width-7 ub-ml2">Type</span>
+                <NotifierPicker value={exp.type} onChange={(v) => { exp.type = v; this.forceUpdate() }} />
+                <span className="gf-form-label query-keyword width-7 ub-ml2">Setting</span>
+                <Input placeholder="e.g test@gmail.com,ok@gmail.com" value={exp.setting} onChange={(e) => { exp.setting = e.currentTarget.value; this.forceUpdate() }} style={{ width: '300px' }} />
+                <label className="gf-form-label pointer" onClick={() => this.removeSendException(i)}>
                   <Icon name="trash-alt" />
                 </label>
+              </div>
+            })}
+
+            <div className="gf-form ">
+              <label className="gf-form-label dropdown pointer" onClick={this.addSendException}>
+                <Icon name="plus-circle" />
+              </label>
             </div>
-          })}
-
-          <div className="gf-form ">
-            <label className="gf-form-label dropdown pointer" onClick={this.addSendException}>
-              <Icon name="plus-circle" />
-            </label>
-          </div>
-        </>
-      </Modal>}
-    </>
-  );
-}
+          </>
+        </Modal>}
+      </>
+    );
+  }
 }
 
 
 
-export const AlertTab = UnConnectedAlertTab;
+export const AlertTab = injectIntl(UnConnectedAlertTab);

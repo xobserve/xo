@@ -3,12 +3,12 @@ import React, { useState } from 'react'
 import Highlighter from 'react-highlight-words';
 
 import { AlertHistory, Team } from 'src/types'
-import { Icon, getHistory, Select } from 'src/packages/datav-core/src'
+import { Icon, getHistory, Select ,localeData, currentLang} from 'src/packages/datav-core/src'
 import classNames from 'classnames'
 import { FilterInput } from '../components/FilterInput/FilterInput'
 import alertDef from './state/alertDef'
 import TeamPicker from '../components/Pickers/TeamPicker';
-
+import { FormattedMessage } from 'react-intl';
 
 interface Props {
     histories: AlertHistory[]
@@ -70,13 +70,13 @@ const AlertHistoryList = (props: Props) => {
                         <FilterInput
                             labelClassName="gf-form--has-input-icon gf-form--grow"
                             inputClassName="gf-form-input"
-                            placeholder="Search alerts"
+                            placeholder={localeData[currentLang]['common.search']}
                             value={search}
                             onChange={(v) => setSearch(v)}
                         />
                     </div>
                     <div className="gf-form ub-ml3">
-                        <label className="gf-form-label">State filter</label>
+                        <label className="gf-form-label">{localeData[currentLang]['alerting.stateFilter']}</label>
 
                         <div className="width-13">
                             <Select
@@ -88,7 +88,7 @@ const AlertHistoryList = (props: Props) => {
                     </div>
 
                     {props.teams && props.teams.length != 0 && <div className="gf-form ub-ml3">
-                        <label className="gf-form-label">Team filter</label>
+                        <label className="gf-form-label">{localeData[currentLang]['alerting.teamFilter']}</label>
 
                         <div className="width-13">
                             <TeamPicker value={[teamId]} onChange={(v) => { setTeamId(v); props.onTeamChange(v) }} enableAll />
@@ -104,7 +104,7 @@ const AlertHistoryList = (props: Props) => {
 
             {props.histories.length > 0 && (
                 <div className="p-b-1">
-                    <span className="muted">Last 50 alert history</span>
+                    <span className="muted"> <FormattedMessage id="alerting.historiesCount" values={{count: props.histories.length}}/></span>
                 </div>
             )}
             <ol className="alert-rule-list ub-mt2">

@@ -107,6 +107,11 @@ const common = {
     notificationChannel: '推送通道',
     rules: '告警规则',
     history: '告警历史',
+    for: '持续',
+    settingDefault: '设为默认',
+    addresses: '地址',
+    rule: '告警规则',
+    message: '消息内容',
 }
 
 export default common

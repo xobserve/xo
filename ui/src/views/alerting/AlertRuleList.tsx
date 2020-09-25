@@ -4,7 +4,7 @@ import { FilterInput } from 'src/views/components/FilterInput/FilterInput';
 import { AlertRule, Team} from 'src/types'
 import AlertRuleItem from 'src/views/alerting/AlertRuleItem'
 import alertDef from 'src/views/alerting/state/alertDef';
-import { Select, getBackendSrv } from 'src/packages/datav-core'
+import { Select, getBackendSrv, localeData, currentLang } from 'src/packages/datav-core'
 import TeamPicker from '../components/Pickers/TeamPicker';
 
 interface Props {
@@ -47,13 +47,13 @@ const AlertRuleList = (props: Props) => {
                     <FilterInput
                         labelClassName="gf-form--has-input-icon gf-form--grow"
                         inputClassName="gf-form-input"
-                        placeholder="Search alerts"
+                        placeholder={localeData[currentLang]['common.search']}
                         value={search}
                         onChange={(v) => setSearch(v)}
                     />
                 </div>
                 <div className="gf-form ub-ml3">
-                    <label className="gf-form-label">State filter</label>
+                    <label className="gf-form-label">{localeData[currentLang]['alerting.stateFilter']}</label>
 
                     <div className="width-13">
                         <Select
@@ -65,7 +65,7 @@ const AlertRuleList = (props: Props) => {
                 </div>
 
                 {props.teams && props.teams.length != 0 && <div className="gf-form ub-ml3">
-                        <label className="gf-form-label">Team filter</label>
+                        <label className="gf-form-label">{localeData[currentLang]['alerting.teamFilter']}</label>
 
                         <div className="width-13">
                             <TeamPicker value={[teamId]} onChange={(v) => { setTeamId(v); props.onTeamChange(v) }} enableAll />
