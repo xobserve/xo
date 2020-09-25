@@ -20,7 +20,7 @@ func InitCache() {
 	go func() {
 		for {
 			dashboards := make(map[int64]*models.Dashboard)
-			rows, err := db.SQL.Query(`SELECT id,title,uid,folder_id,data FROM dashboard`)
+			rows, err := db.SQL.Query(`SELECT id,title,uid,folder_id,data,owned_by FROM dashboard`)
 			if err != nil {
 				logger.Warn("load dashboard into search cache,query error", "error", err)
 				time.Sleep(5 * time.Second)
@@ -32,7 +32,7 @@ func InitCache() {
 			var title, uid string
 			var rawJSON []byte
 			for rows.Next() {
-				err := rows.Scan(&id, &title, &uid, &folderId, &rawJSON)
+				err := rows.Scan(&id, &title, &uid, &folderId, &rawJSON, &ownedBy)
 				if err != nil {
 					logger.Warn("load dashboard into search cache,scan error", "error", err)
 					continue
@@ -47,6 +47,7 @@ func InitCache() {
 					Title:    title,
 					FolderId: folderId,
 					Data:     data,
+					OwnedBy:  ownedBy,
 				}
 				dash.UpdateSlug()
 				dashboards[id] = dash

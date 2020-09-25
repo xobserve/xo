@@ -9,12 +9,19 @@ interface Props {
     value : number[]
     onChange: any
     mutiple?: boolean
+    enableAll? : boolean
 }
 
 const TeamPicker = (props:Props) =>{
     const [teams,setTeams]: [Team[],any] = useState([])
     const loadTeams = async () => {
         const res = await getBackendSrv().get(`/api/teams`)
+        if (props.enableAll) {
+            res.data.unshift({
+                id: 0,
+                name: 'All'
+            })
+        }
         setTeams(res.data)
     }
 

@@ -389,6 +389,7 @@ func SetAlertState(alertId int64, state AlertStateType, stateChanges int64) erro
 type AlertHistory struct {
 	ID           int64          `json:"id"`
 	AlertName    string         `json:"alertName"`
+	TeamId       int64          `json:"teamId"`
 	DashboardID  int64          `json:"dashId"`
 	PanelID      int64          `json:"panelId"`
 	DashboardUrl string         `json:"dashboardUrl"`

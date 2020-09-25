@@ -15,6 +15,7 @@ export interface AlertRuleDTO {
   
   export interface AlertRule {
     id: number;
+    teamId?: number;
     dashboardId: number;
     dashboardUid?: string;
     dashboardSlug?: string;
@@ -58,6 +59,7 @@ export interface AlertRuleDTO {
 
   export interface AlertHistory {
     id : number 
+    teamId: number
     alertName: string
     dashboardId: number
     dashboardUrl: string 

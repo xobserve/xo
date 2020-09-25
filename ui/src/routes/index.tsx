@@ -119,6 +119,34 @@ export const initRoutes = (store: Store<StoreState>) => {
             ],
         },
         {
+            id: 'datav-fix-menu-alerting',
+            url: '/alerting',
+            title: <Message id={'common.alerting'}/>,
+            icon: 'bell',
+            subTitle: <Message id={'common.alertingSubTitle'}/>,
+            showPosition: MenuPosition.Bottom,
+            redirectTo: null,
+            exact: true,
+            children: [
+                { 
+                    icon: "list-ul",
+                    id: "datav-fix-menu-alerting-rules",
+                    title:<Message id={'common.rules'}/>,
+                    url: "/alerting/rules",
+                    exact: true,
+                    component: React.lazy(() => import('src/views/alerting/AlertRulesPage'))
+                },
+                { 
+                    icon: "history",
+                    id: "datav-fix-menu-alerting-history", 
+                    title:<Message id={'common.history'}/>,
+                    url: "/alerting/history",
+                    exact: true, 
+                    component: React.lazy(() => import('src/views/alerting/AlertHistoryPage'))
+                },
+            ]
+        },
+        {
             id: 'datav-fix-menu-cfg',
             url: '/cfg',
             title: <Message id={'common.configuration'}/>,
@@ -216,7 +244,7 @@ export const initRoutes = (store: Store<StoreState>) => {
                     component: React.lazy(() => import('src/views/cfg/teams/team/AlertRulesPage'))
                 },
                 { 
-                    icon: "list-ul",
+                    icon: "history",
                     id: "datav-fix-menu-alerting-history", 
                     title:<Message id={'common.history'}/>,
                     url: "/team/history/:id",

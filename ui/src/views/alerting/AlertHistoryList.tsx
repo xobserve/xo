@@ -2,31 +2,36 @@ import React, { useState } from 'react'
 // @ts-ignore
 import Highlighter from 'react-highlight-words';
 
-import { AlertHistory } from 'src/types'
+import { AlertHistory, Team } from 'src/types'
 import { Icon, getHistory, Select } from 'src/packages/datav-core/src'
 import classNames from 'classnames'
 import { FilterInput } from '../components/FilterInput/FilterInput'
 import alertDef from './state/alertDef'
+import TeamPicker from '../components/Pickers/TeamPicker';
+
 
 interface Props {
     histories: AlertHistory[]
     enableSnapshot?: boolean
     onStateFilterChange?: any
+    teams?: Team[]
+    onTeamChange?: any
 }
 
 const AlertHistoryList = (props: Props) => {
     const [search, setSearch] = useState('')
     const [stateFilter, setStateFilter] = useState('all')
+    const [teamId, setTeamId] = useState(0)
 
     const renderText = (text: string) => {
         return (
-          <Highlighter
-            highlightClassName="highlight-search-match"
-            textToHighlight={text}
-            searchWords={[search]}
-          />
+            <Highlighter
+                highlightClassName="highlight-search-match"
+                textToHighlight={text}
+                searchWords={[search]}
+            />
         );
-      }
+    }
 
     const gotoSnapshot = (history: AlertHistory) => {
         if (props.enableSnapshot) {
@@ -37,11 +42,31 @@ const AlertHistoryList = (props: Props) => {
         }
     }
 
+    const getTeamName = (teamId) => {
+        if (!props.teams) {
+            return undefined
+        }
+
+        let name
+        for (const team of props.teams) {
+            if (team.id === teamId) {
+                name = team.name
+            }
+        }
+
+        return name
+    }
+
+    const gotoTeam = (e, teamId) => {
+        e.stopPropagation()
+        getHistory().push(`/team/history/${teamId}`)
+    }
+
     return (
         <div>
             {
                 props.onStateFilterChange && <div className="page-action-bar">
-                    <div className="gf-form gf-form--grow">
+                    <div className="gf-form">
                         <FilterInput
                             labelClassName="gf-form--has-input-icon gf-form--grow"
                             inputClassName="gf-form-input"
@@ -50,7 +75,7 @@ const AlertHistoryList = (props: Props) => {
                             onChange={(v) => setSearch(v)}
                         />
                     </div>
-                    <div className="gf-form">
+                    <div className="gf-form ub-ml3">
                         <label className="gf-form-label">State filter</label>
 
                         <div className="width-13">
@@ -61,6 +86,14 @@ const AlertHistoryList = (props: Props) => {
                             />
                         </div>
                     </div>
+
+                    {props.teams && props.teams.length != 0 && <div className="gf-form ub-ml3">
+                        <label className="gf-form-label">Team filter</label>
+
+                        <div className="width-13">
+                            <TeamPicker value={[teamId]} onChange={(v) => { setTeamId(v); props.onTeamChange(v) }} enableAll />
+                        </div>
+                    </div>}
                     <div className="page-action-bar__spacer" />
                     {/* <Button variant="secondary" onClick={this.onOpenHowTo}>
                             How to add an alert
@@ -85,7 +118,7 @@ const AlertHistoryList = (props: Props) => {
                                 </div>
                                 <div className="alert-rule-item__body">
                                     <div className="alert-rule-item__header">
-                                        <p className="alert-rule-item__name">{renderText(item.alertName)}</p>
+                                        <span className="alert-rule-item__name">{renderText(item.alertName)} {props.teams && <a onClick={(e) => gotoTeam(e, item.teamId)} style={{textDecoration: 'underline'}}>{' (' + getTeamName(item.teamId) + ')'}</a>}</span>
                                         <div className="alert-rule-item__text">
                                             <span className={`${item.stateModel.stateClass}`}>{item.stateModel.text}</span>
                                         </div>

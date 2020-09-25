@@ -1,12 +1,14 @@
 import React, { PureComponent } from 'react';
 // @ts-ignore
 import Highlighter from 'react-highlight-words';
-import { AlertRule } from '../../types';
+import { AlertRule, Team } from '../../types';
 import { Icon, IconName, Button, Tooltip, LinkButton, HorizontalGroup } from 'src/packages/datav-core';
+import { Link } from 'react-router-dom';
 
 export interface Props {
   rule: AlertRule;
   search: string;
+  team?: Team
   onTogglePause: () => void;
 }
 
@@ -22,8 +24,7 @@ class AlertRuleItem extends PureComponent<Props> {
   }
 
   render() {
-    const { rule, onTogglePause } = this.props;
-
+    const { rule, onTogglePause ,team} = this.props;
     const ruleUrl = `${rule.url}?editPanel=${rule.panelId}&tab=alert`;
 
     return (
@@ -32,7 +33,7 @@ class AlertRuleItem extends PureComponent<Props> {
         <div className="alert-rule-item__body">
           <div className="alert-rule-item__header">
             <div className="alert-rule-item__name">
-              <a href={ruleUrl}>{this.renderText(rule.name)}</a>
+              <Link to={ruleUrl}>{this.renderText(rule.name)}</Link>{team && <Link to={`/team/rules/${team.id}`} style={{textDecoration: 'underline'}}>{' (' +team.name+ ')'}</Link>}
             </div>
             <div className="alert-rule-item__text">
               <span className={`${rule.stateClass}`}>{this.renderText(rule.stateText)}</span>

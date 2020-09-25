@@ -330,27 +330,34 @@ func GetHistory(c *gin.Context) {
 		rows, err = db.SQL.Query("SELECT id,dashboard_id,panel_id,state,matches,created FROM alert_history WHERE dashboard_id=? and panel_id=? order by created desc limit ?",
 			dashId, panelId, limit)
 	case "team":
-		// get team dashboards
-		dashboards, err := models.QueryDashboardsByTeamId(teamId)
-		if err != nil && err != sql.ErrNoRows {
-			logger.Warn("get team dashboard error", "error", err)
-			c.JSON(500, common.ResponseInternalError())
-			return
+		var q string
+		if teamId == 0 {
+			// get all dashboards of all teams
+			q = fmt.Sprintf("SELECT id,dashboard_id,panel_id,state,matches,created FROM alert_history order by created desc limit %d", limit)
+		} else {
+			// get team dashboards
+			dashboards, err := models.QueryDashboardsByTeamId(teamId)
+			if err != nil && err != sql.ErrNoRows {
+				logger.Warn("get team dashboard error", "error", err)
+				c.JSON(500, common.ResponseInternalError())
+				return
+			}
+
+			if err == sql.ErrNoRows {
+				c.JSON(200, common.ResponseSuccess(histories))
+				return
+			}
+
+			dashIds := make([]string, 0)
+			for _, dash := range dashboards {
+				dashIds = append(dashIds, strconv.FormatInt(dash.Id, 10))
+			}
+
+			dashIdStr := strings.Join(dashIds, "','")
+			q = fmt.Sprintf("SELECT id,dashboard_id,panel_id,state,matches,created FROM alert_history WHERE dashboard_id in ('%s') order by created desc limit %d",
+				dashIdStr, limit)
 		}
 
-		if err == sql.ErrNoRows {
-			c.JSON(200, common.ResponseSuccess(histories))
-			return
-		}
-
-		dashIds := make([]string, 0)
-		for _, dash := range dashboards {
-			dashIds = append(dashIds, strconv.FormatInt(dash.Id, 10))
-		}
-
-		dashIdStr := strings.Join(dashIds, "','")
-		q := fmt.Sprintf("SELECT id,dashboard_id,panel_id,state,matches,created FROM alert_history WHERE dashboard_id in ('%s') order by created desc limit %d",
-			dashIdStr, limit)
 		rows, err = db.SQL.Query(q)
 	default:
 		c.JSON(400, common.ResponseI18nError(i18n.BadRequestData))
@@ -396,6 +403,7 @@ func GetHistory(c *gin.Context) {
 		dash, ok := cache.Dashboards[ah.DashboardID]
 		if ok {
 			ah.DashboardUrl = fmt.Sprintf("/d/%s/%s", dash.Uid, dash.Slug)
+			ah.TeamId = dash.OwnedBy
 		}
 
 		if stateFilter == "" || stateFilter == "all" || stateFilter == string(ah.State) {
@@ -410,6 +418,7 @@ func GetHistory(c *gin.Context) {
 
 type DashboardAlertRule struct {
 	ID           int64     `json:"id"`
+	TeamId       int64     `json:"teamId"`
 	Name         string    `json:"name"`
 	State        string    `json:"state"`
 	NewStateDate time.Time `json:"newStateDate"`
@@ -452,6 +461,7 @@ func GetRules(c *gin.Context) {
 					DashId:   dash.Id,
 					DashUid:  dash.Uid,
 					DashSlug: dash.Slug,
+					TeamId:   teamId,
 				}
 
 				err := rows.Scan(&dar.ID, &dar.PanelId, &dar.Name, &dar.State, &dar.NewStateDate)
@@ -467,7 +477,39 @@ func GetRules(c *gin.Context) {
 		}
 
 	} else {
+		// get all rules
+		rows, err := db.SQL.Query("SELECT id,panel_id,dashboard_id,name, state,new_state_date FROM alert")
+		if err != nil {
+			if err == sql.ErrNoRows {
+				c.JSON(200, common.ResponseSuccess(rules))
+			} else {
+				logger.Warn("get team dashboard error", "error", err)
+				c.JSON(500, common.ResponseInternalError())
+			}
+			return
 
+		}
+
+		for rows.Next() {
+			dar := &DashboardAlertRule{}
+
+			err := rows.Scan(&dar.ID, &dar.PanelId, &dar.DashId, &dar.Name, &dar.State, &dar.NewStateDate)
+			if err != nil {
+				logger.Warn("get dashboard alert rule scan error", "eror", err)
+				continue
+			}
+
+			dash, ok := cache.Dashboards[dar.DashId]
+			if ok {
+				dar.DashUid = dash.Uid
+				dar.DashSlug = dash.Slug
+				dar.TeamId = dash.OwnedBy
+			}
+
+			if stateFilter == string(models.AlertStateAll) || stateFilter == dar.State {
+				rules = append(rules, dar)
+			}
+		}
 	}
 
 	c.JSON(200, common.ResponseSuccess(rules))

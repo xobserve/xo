@@ -104,7 +104,7 @@ const common = {
     public: 'Public',
     metric: 'Metric',
     alerting: 'Alerting',
-    alertingSubTitle: 'Alerting & Notifications manage',
+    alertingSubTitle: 'Alerting & histories',
     notificationChannel: 'Notification channels',
     rules: 'Alert rules',
     history: 'Alert history',

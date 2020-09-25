@@ -103,7 +103,7 @@ const common = {
     public: '公开',
     metric: '指标',
     alerting: '告警管理',
-    alertingSubTitle: '管理告警和通道配置',
+    alertingSubTitle: '告警规则管理 & 告警历史查询',
     notificationChannel: '推送通道',
     rules: '告警规则',
     history: '告警历史',
