@@ -112,6 +112,11 @@ const common = {
     addresses: '地址',
     rule: '告警规则',
     message: '消息内容',
+    legend: '图例',
+    axes: '坐标轴',
+    leftY : '左Y轴',
+    rightY: '右Y轴',
+    xAxe: 'X轴',
 }
 
 export default common

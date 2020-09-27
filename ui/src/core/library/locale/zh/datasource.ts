@@ -22,6 +22,31 @@ const datasource = {
     scrapeIntervalTooltip: "这里的设置对应的是Prometheus采集数据的时间间隔，默认为15秒",
     queryTimeoutTooltip: "设置查询Prometheus时的超时时间",
     httpMethodTooltip: "指定查询Prometheus时的HTTP方法(POST需要Prometheus的版本 >= v2.1.0)",
+
+    // prometheus
+    promLegendTips: `控制曲线的图例名称，你可以通过字符串和格式化组合的方式来生成自己想要的名称。例如，用{{hostname}}的格式化语句来从曲线中取出对应的hostname标签值.`,
+    promMinStepTips: `min step为Promethues的查询语句中的'step'参数额外设置一个最小值，通过min step和resolution的配合，你可以控制曲线点和点之间的时间间隔，当曲线查询较慢时，可以考虑增大这个间隔.`,
+    promTips: '在Promethes自带后台中查看该图表',
+    promInstantTips: '只查询最近时间点的值',
+    promLineTips: '显示/隐藏图表曲线',
+    promLineWidthTips: '控制图表曲线的像素宽度',
+    promAreaFillTips: '使用颜色填充图表的闭合区域',
+    promFillGradientTips: '使用渐变色填充图表的闭合区域',
+    promStairCaseTips: '使图表曲线呈阶梯状显示',
+    promBarTips: '显示/隐藏柱状图模式',
+    promPointTips: '显示/隐藏曲线的点',
+    promPointRadiusTips: '点的像素半径',
+    promStackTips : '用堆叠的方式来展示图表，一般配合柱状图来使用',
+    promStackPerTips: '让堆叠模式展示百分比而不是总值',
+    promNullTips:'处理值为null的情况',
+    promDecimalTips: '这里的设置将影响图表的Legend和鼠标悬浮提示框显示值的精度',
+    promTooltipMode: '控制值的展示方式，当鼠标在图表曲线上悬浮时',
+    promTooltipOrder: '控制值的排序，当鼠标在图表曲线上悬浮时',
+    promTooltipStack: '控制值的展示方式，当鼠标在堆叠图表上悬浮时',
+    promUnitTips:'为图表曲线的值设定单位',
+    promScaleTips: 'Y轴的坐标刻度',
+    promMinYTips: '设置Y轴坐标刻度的最小值',
+    promMaxYTips: '设置Y轴坐标刻度的最大值',
 }
 
 export default datasource

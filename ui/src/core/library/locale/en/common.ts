@@ -113,6 +113,12 @@ const common = {
     addresses: 'Addresses',
     rule: 'Rule',
     message: 'Message',
+    legentd: 'Legend',
+    axes: 'Axes',
+    leftY : 'Left Y',
+    rightY: 'Right Y',
+    scale: 'Scale',
+    xAxe: 'X-Axis',
 }
 
 export default common

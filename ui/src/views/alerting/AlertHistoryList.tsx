@@ -38,7 +38,7 @@ const AlertHistoryList = (props: Props) => {
             // snapshot timerange is [current -15m, current + 15m]
             const from = (history.timeUnix - 15 * 60) * 1000
             const to = (history.timeUnix + 15 * 60) * 1000
-            getHistory().push(history.dashboardUrl + '?from=' + from + '&to=' + to + '&viewPanel=' + history.panelId)
+            getHistory().push(history.dashboardUrl + '?from=' + from + '&to=' + to)
         }
     }
 

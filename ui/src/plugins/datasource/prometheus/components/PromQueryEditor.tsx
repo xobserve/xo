@@ -2,7 +2,7 @@ import _ from 'lodash';
 import React, { PureComponent } from 'react';
 
 // Types
-import { InlineFormLabel, Switch, Select } from 'src/packages/datav-core';
+import { InlineFormLabel, LegacyForms, Select, localeData, currentLang } from 'src/packages/datav-core';
 import { SelectableValue, QueryEditorProps } from 'src/packages/datav-core';
 
 import { PrometheusDatasource } from '../datasource';
@@ -11,7 +11,7 @@ import { PromQuery, PromOptions } from '../types';
 import PromQueryField from './PromQueryField';
 import PromLink from './PromLink';
 
-
+const {LegacySwitch : Switch} = LegacyForms
 
 export type Props = QueryEditorProps<PrometheusDatasource, PromQuery, PromOptions>;
 
@@ -115,8 +115,7 @@ export class PromQueryEditor extends PureComponent<Props, State> {
           <div className="gf-form">
             <InlineFormLabel 
               width={7}
-              tooltip="Controls the name of the time series, using name or pattern. For example
-        {{hostname}} will be replaced with label value for the label hostname."
+              tooltip={localeData[currentLang]['datasource.promLegendTips']}
             >
               Legend
             </InlineFormLabel>
@@ -133,12 +132,7 @@ export class PromQueryEditor extends PureComponent<Props, State> {
           <div className="gf-form">
             <InlineFormLabel
               width={7}
-              tooltip={
-                <>
-                  An additional lower limit for the step parameter of the Prometheus query and for the{' '}
-                  <code>$__interval</code> variable. The limit is absolute and not modified by the "Resolution" setting.
-                </>
-              }
+              tooltip={localeData[currentLang]['datasource.promMinStepTips']}
             >
               Min step
             </InlineFormLabel>
@@ -171,9 +165,17 @@ export class PromQueryEditor extends PureComponent<Props, State> {
               onChange={this.onFormatChange}
               value={formatOption}
             />
-            {/* <Switch label="Instant" checked={instant} onChange={this.onInstantChange} /> */}
+            <InlineFormLabel
+              className="ub-ml2"
+              width={5}
+              tooltip={localeData[currentLang]['datasource.promInstantTips']}
+            >
+              Instant
+            </InlineFormLabel>
+            <Switch label="" checked={instant} onChange={this.onInstantChange}/>
+           
 
-            <InlineFormLabel width={10} tooltip="Link to Graph in Prometheus" className="ub-ml2">
+            <InlineFormLabel width={10} tooltip={localeData[currentLang]['datasource.promTips']} >
               <PromLink
                 datasource={datasource}
                 query={this.query} // Use modified query

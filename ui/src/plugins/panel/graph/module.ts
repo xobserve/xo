@@ -1,4 +1,4 @@
-import { PanelPlugin ,TagsInput} from 'src/packages/datav-core';
+import { PanelPlugin ,TagsInput, localeData, currentLang} from 'src/packages/datav-core';
 import { GraphPanelOptions } from './types';
 import { GraphPanel } from './GraphPanel';
 import {ThresholdsEditor} from './ThresholdsEditor/ThresholdsEditor'
@@ -9,13 +9,13 @@ export const plugin = new PanelPlugin<GraphPanelOptions>(GraphPanel)
     .addBooleanSwitch({
       path: 'lines',
       name: 'Lines',
-      description:'show/hide lines',
+      description: localeData[currentLang]['datasource.promLineTips'],
       defaultValue: true
     })
     .addSelect({
       path: 'linewidth',
       name: 'Line Width',
-      description:'show/hide lines',
+      description:localeData[currentLang]['datasource.promLineWidthTips'],
       defaultValue: '1',
       settings: {
         options: poitsRadiusOptions()
@@ -25,7 +25,7 @@ export const plugin = new PanelPlugin<GraphPanelOptions>(GraphPanel)
     .addSelect({
       path: 'fill',
       name: 'Area Fill',
-      description:'fill factor of the graph area',
+      description:localeData[currentLang]['datasource.promAreaFillTips'],
       defaultValue: '1',
       settings: {
         options: poitsRadiusOptions()
@@ -35,7 +35,7 @@ export const plugin = new PanelPlugin<GraphPanelOptions>(GraphPanel)
     .addSelect({
       path: 'fillGradient',
       name: 'Fill Gradient',
-      description:'fill gradient of the graph area',
+      description:localeData[currentLang]['datasource.promFillGradientTips'],
       defaultValue: '0',
       settings: {
         options: poitsRadiusOptions()
@@ -45,26 +45,26 @@ export const plugin = new PanelPlugin<GraphPanelOptions>(GraphPanel)
     .addBooleanSwitch({
       path: 'steppedLine',
       name: 'Staircase',
-      description: 'line width in pixels',
+      description: localeData[currentLang]['datasource.promStairCaseTips'],
       defaultValue:false,
       showIf: options => options.lines === true
     })
     .addBooleanSwitch({
       path: 'bars',
       name: 'Bars',
-      description: 'show/hide bars',
+      description: localeData[currentLang]['datasource.promBarTips'],
       defaultValue:false
     })
     .addBooleanSwitch({
       path: 'points',
       name: 'Points',
-      description:'show/hide points',
+      description:localeData[currentLang]['datasource.promPointTips'],
       defaultValue: false
     }) 
     .addSelect({
       path: 'pointradius',
       name: 'Point Radius',
-      description: 'point radius in pixels',
+      description: localeData[currentLang]['datasource.promPointRadiusTips'],
       defaultValue: '1',
       settings: {
         options: poitsRadiusOptions()
@@ -74,19 +74,20 @@ export const plugin = new PanelPlugin<GraphPanelOptions>(GraphPanel)
     .addBooleanSwitch({
       path: 'stack',
       name: 'Stack',
+      description: localeData[currentLang]['datasource.promStackTips'],
       defaultValue: false
     }) 
     .addBooleanSwitch({
       path: 'percentage',
       name: 'Stack Percentage',
-      description: 'stack percentage mode',
+      description: localeData[currentLang]['datasource.promStackPerTips'],
       defaultValue: false,
       showIf: options => options.stack === true
     }) 
     .addSelect({
       path: 'nullPointMode',
       name: 'Null Value',
-      description: 'how null points should be handled',
+      description: localeData[currentLang]['datasource.promNullTips'],
       defaultValue: 'null',
       settings: {
         options: [
@@ -99,7 +100,7 @@ export const plugin = new PanelPlugin<GraphPanelOptions>(GraphPanel)
     .addNumberInput({
       path: 'decimals',
       name: 'Decimals',
-      description: 'Override automatic decimal precision for legend and tooltips',
+      description: localeData[currentLang]['datasource.promDecimalTips'],
       settings: {
         placeholder: 'auto'
       },
@@ -107,6 +108,7 @@ export const plugin = new PanelPlugin<GraphPanelOptions>(GraphPanel)
     .addRadio({
       path: 'tooltip.shared',
       name: 'Hover Tooltip Mode',
+      description: localeData[currentLang]['datasource.promTooltipMode'],
       defaultValue: true,
       settings: {
         options: [
@@ -120,6 +122,7 @@ export const plugin = new PanelPlugin<GraphPanelOptions>(GraphPanel)
     .addRadio({
       path: 'tooltip.sort',
       name: 'Hover Tooltip Sort Order',
+      description: localeData[currentLang]['datasource.promTooltipOrder'],
       defaultValue: 2,
       settings: {
         options: [
@@ -132,6 +135,7 @@ export const plugin = new PanelPlugin<GraphPanelOptions>(GraphPanel)
     .addRadio({
       path: 'tooltip.value_type',
       name: 'Hover Tooltip Stacked Value',
+      description: localeData[currentLang]['datasource.promTooltipStack'],
       defaultValue: 'individual',
       settings: {
         options: [
@@ -146,19 +150,21 @@ export const plugin = new PanelPlugin<GraphPanelOptions>(GraphPanel)
     .addBooleanSwitch({
       path: 'yaxes[0].show',
       name: 'Show',
-      category: ['Axes','Left Y'],
+      category: [localeData[currentLang]['common.axes'],localeData[currentLang]['common.leftY']],
       defaultValue: true,
     })
     .addUnitPicker({
       path: 'yaxes[0].format',
       name: 'Unit',
-      category: ['Axes'],
+      description: localeData[currentLang]['datasource.promUnitTips'],
+      category: [localeData[currentLang]['common.axes']],
       defaultValue: 'none'
     })
     .addSelect({
       path: 'yaxes[0].logBase',
       name: 'Scale',
-      category: ['Axes'],
+      description: localeData[currentLang]['datasource.promScaleTips'],
+      category: [localeData[currentLang]['common.axes']],
       defaultValue: 1,
       settings: {
         options: [
@@ -173,7 +179,8 @@ export const plugin = new PanelPlugin<GraphPanelOptions>(GraphPanel)
     .addNumberInput({
       path: 'yaxes[0].min',
       name: 'Y-Min',
-      category: ['Axes'],
+      description: localeData[currentLang]['datasource.promMinYTips'],
+      category: [localeData[currentLang]['common.axes']],
       settings: {
         placeholder: 'auto'
       },
@@ -181,7 +188,8 @@ export const plugin = new PanelPlugin<GraphPanelOptions>(GraphPanel)
     .addNumberInput({
       path: 'yaxes[0].max',
       name: 'Y-Max',
-      category: ['Axes'],
+      description: localeData[currentLang]['datasource.promMaxYTips'],
+      category: [localeData[currentLang]['common.axes']],
       settings: {
         placeholder: 'auto'
       },
@@ -189,26 +197,28 @@ export const plugin = new PanelPlugin<GraphPanelOptions>(GraphPanel)
     .addTextInput({
       path: 'yaxes[0].label',
       name: 'Label',
-      category: ['Axes'],
+      category: [localeData[currentLang]['common.axes']],
       defaultValue: '',
     })
      // Right Y
      .addBooleanSwitch({
       path: 'yaxes[1].show',
       name: 'Show',
-      category: ['Axes','Right Y'],
+      category: [localeData[currentLang]['common.axes'],localeData[currentLang]['common.rightY']],
       defaultValue: true,
     })
     .addUnitPicker({
       path: 'yaxes[1].format',
       name: 'Unit',
-      category: ['Axes'],
+      description: localeData[currentLang]['datasource.promUnitTips'],
+      category: [localeData[currentLang]['common.axes']],
       defaultValue: 'none'
     })
     .addSelect({
       path: 'yaxes[1].logBase',
       name: 'Scale',
-      category: ['Axes'],
+      description: localeData[currentLang]['datasource.promScaleTips'],
+      category: [localeData[currentLang]['common.axes']],
       defaultValue: 1,
       settings: {
         options: [
@@ -223,7 +233,8 @@ export const plugin = new PanelPlugin<GraphPanelOptions>(GraphPanel)
     .addNumberInput({
       path: 'yaxes[1].min',
       name: 'Y-Min',
-      category: ['Axes'],
+      description: localeData[currentLang]['datasource.promMinYTips'],
+      category: [localeData[currentLang]['common.axes']],
       settings: {
         placeholder: 'auto'
       },
@@ -231,7 +242,8 @@ export const plugin = new PanelPlugin<GraphPanelOptions>(GraphPanel)
     .addNumberInput({
       path: 'yaxes[1].max',
       name: 'Y-Max',
-      category: ['Axes'],
+      description: localeData[currentLang]['datasource.promMaxYTips'],
+      category: [localeData[currentLang]['common.axes']],
       settings: {
         placeholder: 'auto'
       },
@@ -239,14 +251,14 @@ export const plugin = new PanelPlugin<GraphPanelOptions>(GraphPanel)
     .addTextInput({
       path: 'yaxes[1].label',
       name: 'Label',
-      category: ['Axes'],
+      category: [localeData[currentLang]['common.axes']],
       defaultValue: '',
     })
     // X 
     .addBooleanSwitch({
       path: 'xaxis.show',
       name: 'Show',
-      category: ['Axes','X-Axis'],
+      category: [localeData[currentLang]['common.axes'],localeData[currentLang]['common.xAxe']],
       defaultValue: true,
     })
     // Legent
@@ -281,7 +293,7 @@ export const plugin = new PanelPlugin<GraphPanelOptions>(GraphPanel)
     .addBooleanSwitch({
       path: 'legend.current',
       name: 'Current',
-      category: ['Legend','Options'],
+      category: ['Legend','Values'],
       defaultValue: false,
     })
     .addBooleanSwitch({
@@ -332,7 +344,7 @@ export const plugin = new PanelPlugin<GraphPanelOptions>(GraphPanel)
 
 const poitsRadiusOptions = () => {
   let r = []
-  for (var i=1;i<=10;i++) {
+  for (var i=0;i<=10;i++) {
     r.push({value:i,label:i.toString()})
   }
 
