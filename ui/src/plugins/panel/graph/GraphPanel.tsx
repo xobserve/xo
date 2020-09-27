@@ -18,7 +18,7 @@ import Drop from 'tether-drop';
 
 import {
   PanelProps, PanelEvents, toUtc, LinkModelSupplier, FieldDisplay, hasLinks, getDisplayProcessor, FieldType,
-  DataFrameView, ContextMenuGroup, ContextMenuItem, currentTheme, ThemeType
+  DataFrameView, ContextMenuGroup, ContextMenuItem, currentTheme, ThemeType, currentLang
 } from 'src/packages/datav-core';
 import { GraphPanelOptions } from './types'
 import { GraphPanelCtrl } from './GraphPanelCtrl'
@@ -38,6 +38,7 @@ import { GraphContextMenu } from './GraphContextMenu';
 import AnnotationEdior from 'src/views/annotations/AnnotationEditor'
 import AnnotationTooltip from 'src/views/annotations/AnnotationTooltip'
 import { annotationsSrv } from 'src/core/services/annotations';
+import localeData from 'src/core/library/locale';
 
 interface State {
   contextMenuVisible: boolean
@@ -313,7 +314,7 @@ export class GraphPanel extends PureComponent<PanelProps<GraphPanelOptions>, Sta
         {
           items: [
             {
-              label: 'Add annotation',
+              label: localeData[currentLang]['panel.addAnnotation'],
               icon: 'comment-alt',
               onClick: () => {
                 this.eventManager.updateTime({ from: flotPosition.x, to: null })

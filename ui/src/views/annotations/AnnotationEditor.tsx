@@ -92,7 +92,7 @@ const AnnotationEditor = (props: Props) => {
                 </div>
 
                 <div className="graph-annotation__title">
-                    {props.rawEvent.id === undefined ? <span>Add Annotation</span> : <span>Edit Annotation</span>}
+                    {props.rawEvent.id === undefined ? <span>{localeData[currentLang]['panel.addAnnotation']}</span> : <span>{localeData[currentLang]['panel.editAnnotation']}</span>}
                 </div>
 
                 <div className="graph-annotation__time">{timeFormated}</div>
@@ -101,17 +101,17 @@ const AnnotationEditor = (props: Props) => {
             <div className="graph-annotation__body text-center gf-form">
                 <div style={{ display: "inline-block" }}>
                     <div className="gf-form gf-form--v-stretch">
-                        <span className="gf-form-label width-7">Description</span>
+                        <span className="gf-form-label width-7">{localeData[currentLang]['common.content']}</span>
                         <textarea className="gf-form-input width-17" value={text} onChange={handelChange} rows={3} ></textarea>
                     </div>
 
 
 
                     <div className="gf-form-button-row">
-                        <Button type="primary" onClick={saveAnnotation} ghost size="middle">Save</Button>
-                        {props.rawEvent.id  !== undefined  && <Button  onClick={deleteAnnotation} danger ghost>Delete</Button>}
+                        <Button type="primary" onClick={saveAnnotation} ghost size="middle">{localeData[currentLang]['common.save']}</Button>
+                        {props.rawEvent.id  !== undefined  && <Button  onClick={deleteAnnotation} danger ghost>{localeData[currentLang]['common.delete']}</Button>}
                         {/* eslint-disable-next-line  */}
-                        <a className="btn-text" onClick={props.close}>Cancel</a>
+                        <a className="btn-text" onClick={props.close}>{localeData[currentLang]['common.cancel']}</a>
                     </div>
                 </div>
             </div>

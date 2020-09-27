@@ -30,6 +30,9 @@ const panel = {
     threshodsMode : '阈值类型',
     threshodsModeDesc :'百分比意味着阈值和最大/最小值是相关联的',
 
+    // graph panel
+    addAnnotation: '添加注释',
+    editAnnotation: '编辑注释',
     // echarts panel
     echartsOptions: 'Echarts图表配置',
     echartsOptionsDesc: `通过下面的函数可以对Echarts图表进行配置，你可以使用'console.log(data)'来查看具体的函数参数和传入的数据`,

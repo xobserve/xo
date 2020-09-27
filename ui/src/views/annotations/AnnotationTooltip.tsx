@@ -1,5 +1,5 @@
 import React from 'react'
-import { AnnotationEvent } from 'src/packages/datav-core'
+import { AnnotationEvent, localeData, currentLang } from 'src/packages/datav-core'
 import { DashboardModel } from 'src/views/dashboard/model/DashboardModel'
 import { Button } from 'antd'
 import alertDef from '../alerting/state/alertDef'
@@ -28,7 +28,7 @@ const AnnotationTooltip = (props: Props) => {
                 </div>
 
                 <div className="graph-annotation__title">
-                    <span className={titleClass}>{title}</span>
+                    <span className={titleClass}>{title??localeData[currentLang]['common.annotation']}</span>
                 </div>
 
                 <div className="graph-annotation__time">{timeFormated}</div>
@@ -37,12 +37,12 @@ const AnnotationTooltip = (props: Props) => {
             <div className="graph-annotation__body text-center gf-form">
                 <div style={{ display: "inline-block" }}>
                     <div className="gf-form gf-form--v-stretch">
-                        <span className="gf-form-label width-7">Description</span>
+                        <span className="gf-form-label width-7">{localeData[currentLang]['common.content']}</span>
                         <div className="width-20 input-line-height">{props.event.text}</div>
                     </div>
 
                     <div className="gf-form-button-row">
-                        <Button className="btn btn-primary" onClick={props.onEdit} type="primary" ghost>Edit</Button>
+                        <Button className="btn btn-primary" onClick={props.onEdit} type="primary" ghost>{localeData[currentLang]['common.edit']}</Button>
                     </div>
                 </div>
             </div>

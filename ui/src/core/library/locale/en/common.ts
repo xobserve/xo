@@ -119,6 +119,8 @@ const common = {
     rightY: 'Right Y',
     scale: 'Scale',
     xAxe: 'X-Axis',
+    content: 'Content',
+    annotation: 'Annotation',
 }
 
 export default common

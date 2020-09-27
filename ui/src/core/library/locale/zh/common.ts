@@ -117,6 +117,8 @@ const common = {
     leftY : '左Y轴',
     rightY: '右Y轴',
     xAxe: 'X轴',
+    content: '内容',
+    annotation: '注释',
 }
 
 export default common
