@@ -2,10 +2,11 @@ package plugins
 
 import (
 	// "fmt"
-	"sort"
-	"github.com/gin-gonic/gin"
-	"github.com/code-creatively/datav/backend/pkg/common"
 	"net/http"
+	"sort"
+
+	"github.com/code-creatively/datav/backend/pkg/common"
+	"github.com/gin-gonic/gin"
 )
 
 func GetPlugins(c *gin.Context) {
@@ -16,7 +17,7 @@ func GetPlugins(c *gin.Context) {
 		if tp != "" && tp != pluginDef.Type {
 			continue
 		}
-		listItem :=  PluginListItem{
+		listItem := PluginListItem{
 			Id:            pluginDef.Id,
 			Name:          pluginDef.Name,
 			Type:          pluginDef.Type,
@@ -26,23 +27,23 @@ func GetPlugins(c *gin.Context) {
 			HasUpdate:     pluginDef.GrafanaNetHasUpdate,
 			State:         pluginDef.State,
 			Signature:     pluginDef.Signature,
-			Enabled: true,
+			Enabled:       true,
 		}
 
 		result = append(result, listItem)
 	}
 
 	sort.Sort(result)
-	c.JSON(http.StatusOK,common.ResponseSuccess(result))
+	c.JSON(http.StatusOK, common.ResponseSuccess(result))
 }
 
 func GetPluginSetting(c *gin.Context) {
 	pluginID := c.Query("id")
 	def, exists := Plugins[pluginID]
 	if !exists {
-		logger.Warn("Plugin not found, no installed plugin with that id","pluginID",pluginID)
+		logger.Warn("Plugin not found, no installed plugin with that id", "pluginID", pluginID)
 		c.JSON(http.StatusNotFound, common.ResponseI18nError("pluginNotFound"))
-		return 
+		return
 	}
 
 	dto := &PluginSetting{
@@ -71,7 +72,7 @@ func GetPluginSetting(c *gin.Context) {
 	// 	dto.JsonData = query.Result.JsonData
 	// }
 
-	 c.JSON(http.StatusOK, common.ResponseSuccess(dto))
+	c.JSON(http.StatusOK, common.ResponseSuccess(dto))
 }
 
 func GetPluginMarkdown(c *gin.Context) {
@@ -79,7 +80,7 @@ func GetPluginMarkdown(c *gin.Context) {
 
 	content, err := getPluginMarkdown(pluginID, "readme")
 	if err != nil {
-		logger.Warn("Could not get markdown file","error",err)
+		logger.Warn("Could not get markdown file", "error", err)
 		c.JSON(501, common.ResponseI18nError("pluginMdError"))
 		return
 	}

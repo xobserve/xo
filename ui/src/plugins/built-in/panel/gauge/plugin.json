@@ -1,0 +1,16 @@
+{
+  "type": "panel",
+  "name": "Gauge",
+  "id": "gauge",
+
+  "info": {
+    "author": {
+      "name": "Grafana Labs",
+      "url": "https://grafana.com"
+    },
+    "logos": {
+      "small": "gauge-logo.svg",
+      "large": "gauge-logo.svg"
+    }
+  }
+}

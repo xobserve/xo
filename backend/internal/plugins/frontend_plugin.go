@@ -1,10 +1,11 @@
 package plugins
 
 import (
+	"io"
 	"net/url"
+	"os"
 	"path"
 	"strings"
-	"github.com/code-creatively/datav/backend/pkg/config"
 )
 
 type FrontendPluginBase struct {
@@ -12,13 +13,6 @@ type FrontendPluginBase struct {
 }
 
 func (fp *FrontendPluginBase) initFrontendPlugin() {
-	if isExternalPlugin(fp.PluginDir) {
-		StaticRoutes = append(StaticRoutes, &PluginStaticRoute{
-			Directory: fp.PluginDir,
-			PluginId:  fp.Id,
-		})
-	}
-
 	fp.handleModuleDefaults()
 
 	fp.Info.Logos.Small = getPluginLogoUrl(fp.Type, fp.Info.Logos.Small, fp.BaseUrl)
@@ -26,6 +20,11 @@ func (fp *FrontendPluginBase) initFrontendPlugin() {
 
 	for i := 0; i < len(fp.Info.Screenshots); i++ {
 		fp.Info.Screenshots[i].Path = evalRelativePluginUrlPath(fp.Info.Screenshots[i].Path, fp.BaseUrl)
+	}
+
+	// copy plugin img to public directory
+	if fp.Id == 'clock' {
+		copyFile("./ui/public/plugins/panel/clock/clock-logo.svg")
 	}
 }
 
@@ -37,23 +36,21 @@ func getPluginLogoUrl(pluginType, path, baseUrl string) string {
 	return evalRelativePluginUrlPath(path, baseUrl)
 }
 
-
 func (fp *FrontendPluginBase) handleModuleDefaults() {
+	fp.BaseUrl = path.Join("plugins", fp.Type, fp.Id)
 
 	if isExternalPlugin(fp.PluginDir) {
-		//@todo
-		fp.Module = path.Join("plugins", fp.Id, "module")
-		fp.BaseUrl = path.Join("public/plugins", fp.Id)
+		fp.IsCorePlugin = false
+		fp.Module = path.Join("src/plugins/external", fp.Type, fp.Id, "module")
 		return
 	}
 
 	fp.IsCorePlugin = true
-	fp.Module = path.Join("src/plugins", fp.Type, fp.Id, "module")
-	fp.BaseUrl = path.Join("plugins", fp.Type, fp.Id)
+	fp.Module = path.Join("src/plugins/built-in", fp.Type, fp.Id, "module")
 }
 
 func isExternalPlugin(pluginDir string) bool {
-	return !strings.Contains(pluginDir, config.Data.Common.StaticRootPath)
+	return strings.Contains(pluginDir, "/external/")
 }
 
 func evalRelativePluginUrlPath(pathStr string, baseUrl string) string {
@@ -66,4 +63,20 @@ func evalRelativePluginUrlPath(pathStr string, baseUrl string) string {
 		return pathStr
 	}
 	return path.Join(baseUrl, pathStr)
+}
+
+func copyFile(dstName, srcName string) (written int64, err error) {
+	src, err := os.Open(srcName)
+	if err != nil {
+		return
+	}
+	defer src.Close()
+
+	dst, err := os.Create(dstName)
+	if err != nil {
+		return
+	}
+	defer dst.Close()
+
+	return io.Copy(dst, src)
 }

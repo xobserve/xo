@@ -2135,11 +2135,6 @@
   resolved "https://registry.yarnpkg.com/@types/stack-utils/-/stack-utils-1.0.1.tgz#0a851d3bd96498fa25c33ab7278ed3bd65f06c3e"
   integrity sha512-l42BggppR6zLmpfU6fq9HEa2oGPEI8yrSPL3GITjfRInppYFahObbIQOQK3UGxEnyQpltZLaPe75046NOZQikw==
 
-"@types/systemjs@^0.20.6":
-  version "0.20.7"
-  resolved "https://registry.yarnpkg.com/@types/systemjs/-/systemjs-0.20.7.tgz#73281a628736336f6c645304f31d6fe8669d387d"
-  integrity sha512-sCMqKfN5KEacy+cLfNOV66EYAs7a2c4m/Z86Ph81Anzj39/A0Tij8bVjlvAnwRgdC1pOewNhIDFQV0peZ9/K1w==
-
 "@types/tern@*":
   version "0.23.3"
   resolved "https://registry.npm.taobao.org/@types/tern/download/@types/tern-0.23.3.tgz#4b54538f04a88c9ff79de1f6f94f575a7f339460"
@@ -13066,16 +13061,6 @@ symbol-tree@^3.2.2:
   version "3.2.4"
   resolved "https://registry.yarnpkg.com/symbol-tree/-/symbol-tree-3.2.4.tgz#430637d248ba77e078883951fb9aa0eed7c63fa2"
   integrity sha512-9QNk5KwDF+Bvz+PyObkmSYjI5ksVUYtjW7AU22r2NKcfLJcXp96hkDWU3+XndOsUb+AQ9QhfzfCT2O+CNWT5Tw==
-
-systemjs-plugin-css@0.1.37:
-  version "0.1.37"
-  resolved "https://registry.yarnpkg.com/systemjs-plugin-css/-/systemjs-plugin-css-0.1.37.tgz#684847252ca69b7da24a1201094c86274324e82f"
-  integrity sha512-wCGG62zYXuOlNji5FlBjeMFAnLeAO/HQmFg+8UBX/mlHoAKLHlGFYRstlhGKibRU2oxk/BH9DaihOuhhNLi7Kg==
-
-systemjs@0.20.19:
-  version "0.20.19"
-  resolved "https://registry.yarnpkg.com/systemjs/-/systemjs-0.20.19.tgz#c2b9e79c19f4bea53a19b1ed3f974ffb463be949"
-  integrity sha512-H/rKwNEEyej/+IhkmFNmKFyJul8tbH/muiPq5TyNoVTwsGhUjRsN3NlFnFQUvFXA3+GQmsXkCNXU6QKPl779aw==
 
 table-layout@^0.4.3:
   version "0.4.5"

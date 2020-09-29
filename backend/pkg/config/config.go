@@ -22,9 +22,6 @@ type Config struct {
 		Level string
 	}
 
-	Plugins struct {
-		ExternalPluginsPath string `yaml:"plugins_path"`
-	}
 	Storage struct {
 		Keyspace string
 		Cluster  []string
@@ -79,11 +76,6 @@ func Init(path string) {
 	err = yaml.Unmarshal(data, &conf)
 	if err != nil {
 		log.Fatal("yaml decode error :", err)
-	}
-
-	if conf.Common.HomePath == "" {
-		conf.Common.HomePath, _ = filepath.Abs(".")
-		conf.Plugins.ExternalPluginsPath = makeAbsolute(conf.Plugins.ExternalPluginsPath, conf.Common.HomePath)
 	}
 
 	Data = conf

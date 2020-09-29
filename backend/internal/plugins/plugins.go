@@ -1,37 +1,38 @@
 package plugins
 
 import (
-	"github.com/code-creatively/datav/backend/internal/registry"
-	"github.com/code-creatively/datav/backend/pkg/log"
-	"github.com/code-creatively/datav/backend/pkg/config"
-	"github.com/code-creatively/datav/backend/pkg/utils/errutil"
-	"github.com/code-creatively/datav/backend/pkg/utils"
-	"path"
-	"os"
-	"path/filepath"
-	"golang.org/x/xerrors"
 	"encoding/json"
 	"errors"
 	"fmt"
+	"io/ioutil"
+	"os"
+	"path"
+	"path/filepath"
 	"reflect"
 	"strings"
-	"io/ioutil"
+
+	"github.com/code-creatively/datav/backend/internal/registry"
+	"github.com/code-creatively/datav/backend/pkg/config"
+	"github.com/code-creatively/datav/backend/pkg/log"
+	"github.com/code-creatively/datav/backend/pkg/utils"
+	"github.com/code-creatively/datav/backend/pkg/utils/errutil"
+	"golang.org/x/xerrors"
 )
 
-var logger = log.RootLogger.New("logger","plugins")
+var logger = log.RootLogger.New("logger", "plugins")
 var (
 	DataSources  map[string]*DataSourcePlugin
-	Panels  map[string]*PanelPlugin
-	Plugins map[string]*PluginBase
+	Panels       map[string]*PanelPlugin
+	Plugins      map[string]*PluginBase
 	PluginTypes  map[string]interface{}
 	StaticRoutes []*PluginStaticRoute
 )
 
 type PluginManager struct {
-	scanningErrors       []error
+	scanningErrors []error
 }
 
-func init() { 
+func init() {
 	registry.RegisterService(&PluginManager{})
 }
 
@@ -42,34 +43,15 @@ func (p *PluginManager) Init() error {
 	PluginTypes = map[string]interface{}{
 		"panel":      PanelPlugin{},
 		"datasource": DataSourcePlugin{},
-	}	
+	}
 	StaticRoutes = []*PluginStaticRoute{}
-	
+
 	logger.Info("Starting plugin search")
 
-	// load internal plugins
+	// load internal built-in plugins
 	plugDir := path.Join(config.Data.Common.StaticRootPath, "/src/plugins")
 	if err := p.scan(plugDir, false); err != nil {
 		return errutil.Wrapf(err, "failed to scan core plugin directory '%s'", plugDir)
-	}
-
-	// load external plugins 
-	exists, err := utils.FileExists(config.Data.Plugins.ExternalPluginsPath)
-	if err != nil {
-		return err
-	}
-	if !exists {
-		if err = os.MkdirAll(config.Data.Plugins.ExternalPluginsPath, os.ModePerm); err != nil {
-			logger.Error("failed to create external plugins directory", "dir", config.Data.Plugins.ExternalPluginsPath,"errpr", err)
-		} else {
-			logger.Info("External plugins directory created", "directory", config.Data.Plugins.ExternalPluginsPath)
-		}
-	} else {
-		logger.Debug("Scanning external plugins directory", "dir", config.Data.Plugins.ExternalPluginsPath)
-		if err := p.scan(config.Data.Plugins.ExternalPluginsPath, true); err != nil {
-			return errutil.Wrapf(err, "failed to scan external plugins directory '%s'",
-			config.Data.Plugins.ExternalPluginsPath)
-		}
 	}
 
 	for _, panel := range Panels {
@@ -92,9 +74,10 @@ func (p *PluginManager) Init() error {
 
 // scan a directory for plugins.
 func (pm *PluginManager) scan(pluginDir string, requireSigned bool) error {
+	logger.Info("start scan plugin dir", "dir", pluginDir)
 	scanner := &PluginScanner{
-		pluginPath:           pluginDir,
-		requireSigned:        requireSigned,
+		pluginPath:    pluginDir,
+		requireSigned: requireSigned,
 	}
 
 	if err := utils.Walk(pluginDir, true, true, scanner.walker); err != nil {
@@ -103,28 +86,27 @@ func (pm *PluginManager) scan(pluginDir string, requireSigned bool) error {
 			return nil
 		}
 		if xerrors.Is(err, os.ErrPermission) {
-			logger.Debug("Couldn't scan directory due to lack of permissions","pluginDir", pluginDir)
+			logger.Debug("Couldn't scan directory due to lack of permissions", "pluginDir", pluginDir)
 			return nil
 		}
 		if pluginDir != "data/plugins" {
-			logger.Warn("Could not scan dir", "pluginDir", pluginDir,"error",err)
+			logger.Warn("Could not scan dir", "pluginDir", pluginDir, "error", err)
 		}
 		return err
 	}
 
 	if len(scanner.errors) > 0 {
-		logger.Warn("Some plugins failed to load","errors", scanner.errors)
+		logger.Warn("Some plugins failed to load", "errors", scanner.errors)
 		pm.scanningErrors = scanner.errors
 	}
 
 	return nil
 }
 
-
 type PluginScanner struct {
-	pluginPath           string
-	errors               []error
-	requireSigned        bool
+	pluginPath    string
+	errors        []error
+	requireSigned bool
 }
 
 func (scanner *PluginScanner) walker(currentPath string, f os.FileInfo, err error) error {
@@ -143,10 +125,10 @@ func (scanner *PluginScanner) walker(currentPath string, f os.FileInfo, err erro
 		return nil
 	}
 
-	if f.Name() == "plugin.json" { 
+	if f.Name() == "plugin.json" {
 		err := scanner.loadPlugin(currentPath)
 		if err != nil {
-			logger.Error("Failed to load plugin", "pluginPath",filepath.Dir(currentPath),"error",err)
+			logger.Error("Failed to load plugin", "pluginPath", filepath.Dir(currentPath), "error", err)
 			scanner.errors = append(scanner.errors, err)
 		}
 	}
@@ -172,9 +154,7 @@ func (scanner *PluginScanner) loadPlugin(pluginJsonFilePath string) error {
 		return errors.New("did not find type or id properties in plugin.json")
 	}
 
-
 	pluginCommon.PluginDir = filepath.Dir(pluginJsonFilePath)
-
 
 	pluginGoType, exists := PluginTypes[pluginCommon.Type]
 	if !exists {
@@ -186,24 +166,23 @@ func (scanner *PluginScanner) loadPlugin(pluginJsonFilePath string) error {
 	if !strings.HasPrefix(pluginJsonFilePath, config.Data.Common.StaticRootPath) {
 		module := filepath.Join(filepath.Dir(pluginJsonFilePath), "module.js")
 		exists, err := utils.FileExists(module)
-		if err != nil { 
+		if err != nil {
 			return err
 		}
-		if !exists { 
+		if !exists {
 			logger.Warn("Plugin missing module.js",
-			"name", pluginCommon.Name,
-			"warning", "Missing module.js, If you loaded this plugin from git, make sure to compile it.",
-			"path", module)
+				"name", pluginCommon.Name,
+				"warning", "Missing module.js, If you loaded this plugin from git, make sure to compile it.",
+				"path", module)
 		}
 	}
 
 	if _, err := reader.Seek(0, 0); err != nil {
 		return err
-	} 
+	}
 
 	return loader.Load(jsonParser, currentDir)
 }
-
 
 func getPluginMarkdown(pluginId string, name string) ([]byte, error) {
 	plug, exists := Plugins[pluginId]
@@ -213,7 +192,7 @@ func getPluginMarkdown(pluginId string, name string) ([]byte, error) {
 
 	path := filepath.Join(plug.PluginDir, fmt.Sprintf("%s.md", strings.ToUpper(name)))
 
-	exists, err := 	utils.FileExists(path)
+	exists, err := utils.FileExists(path)
 	if err != nil {
 		return nil, err
 	}
@@ -221,14 +200,13 @@ func getPluginMarkdown(pluginId string, name string) ([]byte, error) {
 		path = filepath.Join(plug.PluginDir, fmt.Sprintf("%s.md", strings.ToLower(name)))
 	}
 
-	exists, err = 	utils.FileExists(path)
+	exists, err = utils.FileExists(path)
 	if err != nil {
 		return nil, err
 	}
 	if !exists {
 		return make([]byte, 0), nil
 	}
-
 
 	data, err := ioutil.ReadFile(path)
 	if err != nil {

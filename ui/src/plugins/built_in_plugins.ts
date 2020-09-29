@@ -1,29 +1,30 @@
 /* Datasource Plugins*/
-import * as singlestatPanel2 from 'src/plugins/panel/stat/module';
-import * as GraphPanel from 'src/plugins/panel/graph/module';
-import * as Gauge from 'src/plugins/panel/gauge/module';
-import * as BarGauge from 'src/plugins/panel/bargauge/module';
-import * as Table from 'src/plugins/panel/table/module';
-import * as Text from 'src/plugins/panel/text/module';
-import * as Echarts from 'src/plugins/panel/echarts/module';
+import * as singlestatPanel2 from 'src/plugins/built-in/panel/stat/module';
+import * as GraphPanel from 'src/plugins/built-in/panel/graph/module';
+import * as Gauge from 'src/plugins/built-in/panel/gauge/module';
+import * as BarGauge from 'src/plugins/built-in/panel/bargauge/module';
+import * as Table from 'src/plugins/built-in/panel/table/module';
+import * as Text from 'src/plugins/built-in/panel/text/module';
+import * as Echarts from 'src/plugins/built-in/panel/echarts/module';
 
 const prometheusPlugin = async () =>
-    await import(/* webpackChunkName: "prometheusPlugin" */ 'src/plugins/datasource/prometheus/module');
+    await import(/* webpackChunkName: "prometheusPlugin" */ 'src/plugins/built-in/datasource/prometheus/module');
 const testdataPlugin = async () =>
-    await import(/* webpackChunkName: "testDataPlugin" */ 'src/plugins/datasource/testdata/module');
+    await import(/* webpackChunkName: "testDataPlugin" */ 'src/plugins/built-in/datasource/testdata/module');
 const httpPlugin = async () =>
-    await import(/* webpackChunkName: "httpPlugin" */ 'src/plugins/datasource/http/module');
+    await import(/* webpackChunkName: "httpPlugin" */ 'src/plugins/built-in/datasource/http/module');
 
 export const builtInPlugins = {
-    'src/plugins/datasource/prometheus/module': prometheusPlugin,
-    'src/plugins/datasource/testdata/module': testdataPlugin,
-    'src/plugins/datasource/http/module': httpPlugin,
+    'src/plugins/built-in/datasource/prometheus/module': prometheusPlugin,
+    'src/plugins/built-in/datasource/testdata/module': testdataPlugin,
+    'src/plugins/built-in/datasource/http/module': httpPlugin,
 
-    'src/plugins/panel/stat/module': singlestatPanel2,
-    'src/plugins/panel/graph/module': GraphPanel,
-    'src/plugins/panel/gauge/module': Gauge,
-    'src/plugins/panel/bargauge/module': BarGauge,
-    'src/plugins/panel/table/module': Table,
-    'src/plugins/panel/text/module': Text,
-    'src/plugins/panel/echarts/module': Echarts,
+    'src/plugins/built-in/panel/stat/module': singlestatPanel2,
+    'src/plugins/built-in/panel/graph/module': GraphPanel,
+    'src/plugins/built-in/panel/gauge/module': Gauge,
+    'src/plugins/built-in/panel/bargauge/module': BarGauge,
+    'src/plugins/built-in/panel/table/module': Table,
+    'src/plugins/built-in/panel/text/module': Text,
+    'src/plugins/built-in/panel/echarts/module': Echarts,
 }
+ 

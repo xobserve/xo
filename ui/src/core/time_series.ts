@@ -1,7 +1,7 @@
 import { getFlotTickDecimals } from 'src/core/library/utils/ticks';
 import _ from 'lodash';
 import { getValueFormat, ValueFormatter, stringToJsRegex, DecimalCount, formattedValueToString } from 'src/packages/datav-core';
-import { GraphOptions } from 'src/plugins/panel/graph/GraphPanelCtrl';
+import { GraphOptions } from 'src/plugins/built-in/panel/graph/GraphPanelCtrl';
 
 function matchSeriesOverride(aliasOrRegex: string, seriesAlias: string) {
   if (!aliasOrRegex) {

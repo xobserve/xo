@@ -1,0 +1,16 @@
+{
+    "type": "panel",
+    "name": "Echarts",
+    "id": "echarts",
+    "info": {
+      "description": "Echarts panel for datav",
+      "author": {
+        "name": "datav",
+        "url": "https://datav.dev"
+      },
+      "logos": {
+        "small": "echarts-logo.png",
+        "large": "echarts-logo.png"
+      }
+    }
+  }

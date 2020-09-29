@@ -1,12 +1,14 @@
-import { DataSourcePluginMeta, SystemJS, PanelPlugin, PanelPluginMeta, PluginState, PluginType, getBootConfig } from 'src/packages/datav-core'
+import { DataSourcePluginMeta, PanelPlugin, PanelPluginMeta, PluginState, PluginType, getBootConfig } from 'src/packages/datav-core'
 import { GenericDataSourcePlugin } from './settings'
 import { builtInPlugins } from './built_in_plugins'
+import { externalPlugins } from './external_plugins'
 import { getPanelPluginNotFound, getPanelPluginLoadError } from 'src/views/dashboard/PanelPluginError'
 import { getBackendSrv } from 'src/core/services/backend';
 import { getDatasourceSrv } from 'src/core/services/datasource';
 import { message } from 'antd'
 import { store } from 'src/store/store';
 import { setPanelPlugin } from 'src/store/reducers/plugins';
+
 
 export async function importPluginModule(path: string): Promise<any> {
   const builtIn = builtInPlugins[path];
@@ -17,8 +19,19 @@ export async function importPluginModule(path: string): Promise<any> {
     } else {
       return Promise.resolve(builtIn);
     }
-  }
-  return SystemJS.import(path);
+  } 
+
+  const external = externalPlugins[path]
+  if (external) {
+    // for handling dynamic imports
+    if (typeof external === 'function') {
+      return await external();
+    } else {
+      return Promise.resolve(external);
+    }
+  } 
+
+  return Promise.reject('no plugin found')
 }
 
 
