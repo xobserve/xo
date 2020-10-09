@@ -41,5 +41,5 @@ Contrary to Grafana's big and all, DataV's design goal is small and beautiful.We
 ## Community
 ### Creator
 - Michal Sopor
-### Contributors
+### Core Contributors
 - Sunface
