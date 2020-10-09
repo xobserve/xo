@@ -16,6 +16,7 @@ type FrontendPluginBase struct {
 }
 
 func (fp *FrontendPluginBase) initFrontendPlugin() {
+	fp.IsExternal = isExternalPlugin(fp.PluginDir)
 	fp.handleModuleDefaults()
 
 	for i := 0; i < len(fp.Info.Screenshots); i++ {

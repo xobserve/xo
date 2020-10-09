@@ -121,6 +121,8 @@ const common = {
     xAxe: 'X-Axis',
     content: 'Content',
     annotation: 'Annotation',
+    builtin: 'Built in',
+    external: 'External',
 }
 
 export default common

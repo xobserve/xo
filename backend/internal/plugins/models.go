@@ -59,10 +59,11 @@ type PluginBase struct {
 	State        PluginState        `json:"state,omitempty"`
 	Signature    PluginSignature    `json:"signature"`
 	// metrics, logs, tracing ,http
-	Category     string             `json:"category"`
+	Category   string `json:"category"`
+	IsExternal bool   `json:"isExternal"`
 
-	PluginDir       string `json:"-"`
-	IsCorePlugin    bool   `json:"-"`
+	PluginDir    string `json:"-"`
+	IsCorePlugin bool   `json:"-"`
 
 	GrafanaNetVersion   string `json:"-"`
 	GrafanaNetHasUpdate bool   `json:"-"`
@@ -74,7 +75,7 @@ func (pb *PluginBase) registerPlugin(pluginDir string) error {
 	}
 
 	if !strings.HasPrefix(pluginDir, config.Data.Common.StaticRootPath) {
-		logger.Info("Registering plugin","name", pb.Name)
+		logger.Info("Registering plugin", "name", pb.Name)
 	}
 
 	if len(pb.Dependencies.Plugins) == 0 {
@@ -171,20 +172,20 @@ func NewEnabledPlugins() EnabledPlugins {
 	}
 }
 
-
 type PluginListItem struct {
-	Name          string                  `json:"name"`
-	Type          string                  `json:"type"`
-	Id            string                  `json:"id"`
-	Enabled       bool                    `json:"enabled"`
-	Pinned        bool                    `json:"pinned"`
+	Name          string          `json:"name"`
+	Type          string          `json:"type"`
+	Id            string          `json:"id"`
+	Enabled       bool            `json:"enabled"`
+	Pinned        bool            `json:"pinned"`
 	Info          *PluginInfo     `json:"info"`
-	LatestVersion string                  `json:"latestVersion"`
-	HasUpdate     bool                    `json:"hasUpdate"`
-	DefaultNavUrl string                  `json:"defaultNavUrl"`
-	Category      string                  `json:"category"`
+	LatestVersion string          `json:"latestVersion"`
+	HasUpdate     bool            `json:"hasUpdate"`
+	DefaultNavUrl string          `json:"defaultNavUrl"`
+	Category      string          `json:"category"`
 	State         PluginState     `json:"state"`
 	Signature     PluginSignature `json:"signature"`
+	IsExternal    bool            `json:"isExternal"`
 }
 
 type PluginList []PluginListItem
@@ -202,21 +203,21 @@ func (slice PluginList) Swap(i, j int) {
 }
 
 type PluginSetting struct {
-	Name          string                      `json:"name"`
-	Type          string                      `json:"type"`
-	Id            string                      `json:"id"`
-	Enabled       bool                        `json:"enabled"`
-	Pinned        bool                        `json:"pinned"`
-	Module        string                      `json:"module"`
-	BaseUrl       string                      `json:"baseUrl"`
-	Info          *PluginInfo         `json:"info"`
-	Includes      []*PluginInclude    `json:"includes"`
-	Dependencies  *PluginDependencies `json:"dependencies"`
-	JsonData      map[string]interface{}      `json:"jsonData"`
-	DefaultNavUrl string                      `json:"defaultNavUrl"`
+	Name          string                 `json:"name"`
+	Type          string                 `json:"type"`
+	Id            string                 `json:"id"`
+	Enabled       bool                   `json:"enabled"`
+	Pinned        bool                   `json:"pinned"`
+	Module        string                 `json:"module"`
+	BaseUrl       string                 `json:"baseUrl"`
+	Info          *PluginInfo            `json:"info"`
+	Includes      []*PluginInclude       `json:"includes"`
+	Dependencies  *PluginDependencies    `json:"dependencies"`
+	JsonData      map[string]interface{} `json:"jsonData"`
+	DefaultNavUrl string                 `json:"defaultNavUrl"`
 
-	LatestVersion string                  `json:"latestVersion"`
-	HasUpdate     bool                    `json:"hasUpdate"`
+	LatestVersion string          `json:"latestVersion"`
+	HasUpdate     bool            `json:"hasUpdate"`
 	State         PluginState     `json:"state"`
 	Signature     PluginSignature `json:"signature"`
 }

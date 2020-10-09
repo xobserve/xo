@@ -28,6 +28,7 @@ func GetPlugins(c *gin.Context) {
 			State:         pluginDef.State,
 			Signature:     pluginDef.Signature,
 			Enabled:       true,
+			IsExternal:    pluginDef.IsExternal,
 		}
 
 		result = append(result, listItem)

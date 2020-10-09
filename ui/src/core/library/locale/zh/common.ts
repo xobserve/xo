@@ -119,6 +119,8 @@ const common = {
     xAxe: 'X轴',
     content: '内容',
     annotation: '注释',
+    builtin: '内置插件',
+    external: '外部插件',
 }
 
 export default common

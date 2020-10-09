@@ -47,6 +47,7 @@ export interface PluginMeta<T extends KeyValue = {}> {
   latestVersion?: string;
   pinned?: boolean;
   signature?: PluginSignatureStatus;
+  isExternal? : boolean
 }
 
 interface PluginDependencyInfo {
