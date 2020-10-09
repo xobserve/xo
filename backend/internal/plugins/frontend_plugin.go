@@ -1,11 +1,14 @@
 package plugins
 
 import (
+	"fmt"
 	"io"
 	"net/url"
 	"os"
 	"path"
 	"strings"
+
+	"github.com/code-creatively/datav/backend/pkg/utils"
 )
 
 type FrontendPluginBase struct {
@@ -15,17 +18,25 @@ type FrontendPluginBase struct {
 func (fp *FrontendPluginBase) initFrontendPlugin() {
 	fp.handleModuleDefaults()
 
-	fp.Info.Logos.Small = getPluginLogoUrl(fp.Type, fp.Info.Logos.Small, fp.BaseUrl)
-	fp.Info.Logos.Large = getPluginLogoUrl(fp.Type, fp.Info.Logos.Large, fp.BaseUrl)
-
 	for i := 0; i < len(fp.Info.Screenshots); i++ {
 		fp.Info.Screenshots[i].Path = evalRelativePluginUrlPath(fp.Info.Screenshots[i].Path, fp.BaseUrl)
 	}
 
 	// copy plugin img to public directory
-	if fp.Id == 'clock' {
-		copyFile("./ui/public/plugins/panel/clock/clock-logo.svg")
+	publicPath := "ui/public/plugins"
+	dirPath := fmt.Sprintf("%s/%s/%s/", publicPath, fp.Type, fp.Id)
+	exist, _ := utils.FileExists(dirPath)
+	if !exist {
+		err := os.MkdirAll(dirPath, os.ModePerm)
+		if err != nil {
+			logger.Error("create plugin public dir error", "dst_path", dirPath, "error", err)
+		}
+
+		copyFile(dirPath+fp.Info.Logos.Small, fp.PluginDir+"/img/"+fp.Info.Logos.Small)
 	}
+
+	fp.Info.Logos.Small = getPluginLogoUrl(fp.Type, fp.Info.Logos.Small, fp.BaseUrl)
+	fp.Info.Logos.Large = getPluginLogoUrl(fp.Type, fp.Info.Logos.Large, fp.BaseUrl)
 }
 
 func getPluginLogoUrl(pluginType, path, baseUrl string) string {

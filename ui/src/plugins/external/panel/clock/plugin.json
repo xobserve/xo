@@ -13,8 +13,8 @@
     },
     "keywords": ["clock", "panel"],
     "logos": {
-      "small": "img/clock.svg",
-      "large": "img/clock.svg"
+      "small": "clock-logo.svg",
+      "large": "clock-logo.svg"
     },
     "links": [
       {"name": "Project site", "url": "https://github.com/grafana/clock-panel"},
