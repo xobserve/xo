@@ -3,7 +3,7 @@ package alerting
 import (
 	"time"
 
-	"github.com/code-creatively/datav/backend/pkg/models"
+	"github.com/apm-ai/datav/backend/pkg/models"
 )
 
 type evalHandler interface {

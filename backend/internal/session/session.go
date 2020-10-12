@@ -1,19 +1,22 @@
 package session
 
 import (
-	"github.com/code-creatively/datav/backend/pkg/models"
+	"database/sql"
+
+	"github.com/apm-ai/datav/backend/pkg/models"
+
 	// "fmt"
 	"time"
 
-	"github.com/code-creatively/datav/backend/pkg/db"
-	"github.com/code-creatively/datav/backend/pkg/log"
+	"github.com/apm-ai/datav/backend/pkg/db"
+	"github.com/apm-ai/datav/backend/pkg/log"
 	"github.com/gin-gonic/gin"
 )
 
 var logger = log.RootLogger.New("logger", "session")
 
 type Session struct {
-	Token      string      `json:"token"`
+	Token      string       `json:"token"`
 	User       *models.User `json:"user"`
 	CreateTime time.Time
 }
@@ -33,13 +36,15 @@ func loadSession(sid string) *Session {
 	q := `SELECT user_id FROM sessions WHERE sid=?`
 	err := db.SQL.QueryRow(q, sid).Scan(&userid)
 	if err != nil {
-		logger.Warn("query session error", "error", err)
+		if err != sql.ErrNoRows {
+			logger.Warn("query session error", "error", err)
+		}
 		return nil
 	}
 
-	user,err := models.QueryUser(userid,"","")
+	user, err := models.QueryUser(userid, "", "")
 	if err != nil {
-		logger.Warn("query user error","error",err)
+		logger.Warn("query user error", "error", err)
 		return nil
 	}
 
@@ -60,7 +65,7 @@ func deleteSession(sid string) {
 		logger.Info("delete session error", "error", err)
 	}
 }
- 
+
 func getToken(c *gin.Context) string {
 	return c.Request.Header.Get("X-Token")
 }
@@ -68,7 +73,7 @@ func getToken(c *gin.Context) string {
 func CurrentUser(c *gin.Context) *models.User {
 	token := getToken(c)
 	sess := loadSession(token)
-	if sess == nil { 
+	if sess == nil {
 		// 用户未登陆或者session失效
 		return nil
 	}

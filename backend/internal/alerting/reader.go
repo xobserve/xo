@@ -3,9 +3,9 @@ package alerting
 import (
 	"sync"
 
-	"github.com/code-creatively/datav/backend/internal/cache"
+	"github.com/apm-ai/datav/backend/internal/cache"
 
-	"github.com/code-creatively/datav/backend/pkg/models"
+	"github.com/apm-ai/datav/backend/pkg/models"
 )
 
 type ruleReader interface {

@@ -5,12 +5,12 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/code-creatively/datav/backend/pkg/utils/simplejson"
+	"github.com/apm-ai/datav/backend/pkg/utils/simplejson"
 
-	"github.com/code-creatively/datav/backend/internal/alerting"
-	"github.com/code-creatively/datav/backend/internal/notifications"
-	"github.com/code-creatively/datav/backend/pkg/config"
-	"github.com/code-creatively/datav/backend/pkg/models"
+	"github.com/apm-ai/datav/backend/internal/alerting"
+	"github.com/apm-ai/datav/backend/internal/notifications"
+	"github.com/apm-ai/datav/backend/pkg/config"
+	"github.com/apm-ai/datav/backend/pkg/models"
 )
 
 const EmailType = "email"

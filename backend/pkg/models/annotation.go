@@ -1,7 +1,7 @@
 package models
 
 import (
-	"github.com/code-creatively/datav/backend/pkg/utils/simplejson"
+	"github.com/apm-ai/datav/backend/pkg/utils/simplejson"
 )
 
 type Annotation struct {

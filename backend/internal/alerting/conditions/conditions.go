@@ -1,9 +1,9 @@
 package conditions
 
 import (
-	"github.com/code-creatively/datav/backend/pkg/log"
-	"github.com/code-creatively/datav/backend/pkg/models"
-	"github.com/code-creatively/datav/backend/pkg/utils/simplejson"
+	"github.com/apm-ai/datav/backend/pkg/log"
+	"github.com/apm-ai/datav/backend/pkg/models"
+	"github.com/apm-ai/datav/backend/pkg/utils/simplejson"
 )
 
 var logger = log.RootLogger.New("logger", "alerting/conditions")

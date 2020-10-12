@@ -5,24 +5,16 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    background: url('/img/login-bg.jpg');
+    background: url('/img/login-bg.png');
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
-    button {
-        background: #5cbef2;
-        border:none;
-    }
+    background-color: #33a2e5;
     .datav-rectangle{
-        width: 360px;
+        width: 900px;
         border-radius: 6px;
-        padding: 20px 30px;
-        color:white;
-        background: #36393f;
-        h2,h3 {
-            text-align: center;
-            color:white;
-        }
+        box-shadow: -4px 5px 10px rgba(0,0,0,.4);
+        margin-top: -30px;
         .ant-form {
             label {
                 color: #8e9297 !important;
@@ -35,6 +27,41 @@
             }
             input:focus {
                 border-color: #5cbef2
+            }
+        }
+        .login-left {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            .logo {
+                height: 140px;
+                width: 120px;
+                margin-left: -10px;
+            }
+            .content {
+                font-size:26px;
+                color:white;
+                font-weight: bold;
+            }
+        }
+        .login-right {
+            background-color: hsla(0,0%,100%,.9);
+            padding: 60px 60px;
+            .login-title {
+                text-align: center;
+                margin-bottom: 10px;
+            }
+            .login-button {
+                margin-top: 30px;
+                // background: #5cbef2;
+                border:none;
+            }
+            input {
+                border: 1px solid rgba(0,0,0,.1);
+                background-color: white;
+                color: #606266;
+                margin-top:20px;
             }
         }
     }

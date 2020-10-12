@@ -14,7 +14,7 @@ const user = {
     newPassword: '新密码',
     confirmPassword: '确认密码',
     subTitle: '用户的个人偏好设置',
-    loginTitle: '欢迎使用',
+    loginTitle: '欢迎登录',
 }
 
 export default user

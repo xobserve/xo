@@ -1,6 +1,6 @@
 package server
 
 import (
-	_ "github.com/code-creatively/datav/backend/internal/alerting/notifiers"
-	_ "github.com/code-creatively/datav/backend/pkg/tsdb/prometheus"
+	_ "github.com/apm-ai/datav/backend/internal/alerting/notifiers"
+	_ "github.com/apm-ai/datav/backend/pkg/tsdb/prometheus"
 )

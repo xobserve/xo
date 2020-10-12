@@ -1,8 +1,8 @@
 package teams
 
 import (
-	"github.com/code-creatively/datav/backend/pkg/models"
-	"github.com/code-creatively/datav/backend/pkg/db"
+	"github.com/apm-ai/datav/backend/pkg/models"
+	"github.com/apm-ai/datav/backend/pkg/db"
 	"time"
 )
 
