@@ -15,13 +15,16 @@ const httpPlugin = async () =>
     await import(/* webpackChunkName: "httpPlugin" */ 'src/plugins/built-in/datasource/http/module');
 const staticDataPlugin = async () =>
     await import(/* webpackChunkName: "httpPlugin" */ 'src/plugins/built-in/datasource/staticdata/module');
+const jaegerPlugin = async () =>
+    await import(/* webpackChunkName: "httpPlugin" */ 'src/plugins/built-in/datasource/jaeger/module');
 
 export const builtInPlugins = {
     'src/plugins/built-in/datasource/prometheus/module': prometheusPlugin,
     'src/plugins/built-in/datasource/testdata/module': testdataPlugin,
     'src/plugins/built-in/datasource/http/module': httpPlugin,
     'src/plugins/built-in/datasource/staticdata/module': staticDataPlugin,
-    
+    'src/plugins/built-in/datasource/jaeger/module': jaegerPlugin,
+
     'src/plugins/built-in/panel/stat/module': singlestatPanel2,
     'src/plugins/built-in/panel/graph/module': GraphPanel,
     'src/plugins/built-in/panel/gauge/module': Gauge,

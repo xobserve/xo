@@ -455,7 +455,7 @@ export class PrometheusDatasource extends DataSourceApi<PromQuery, PromOptions> 
         data[key] = value;
       }
     }
-
+    
     return this._request(url, data, { requestId: query.requestId, headers: query.headers }).catch((err: any) => {
       if (err.cancelled) {
         return err;

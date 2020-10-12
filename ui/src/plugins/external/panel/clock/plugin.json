@@ -8,7 +8,7 @@
   "info": {
     "description": "Clock panel for grafana",
     "author": {
-      "name": "Grafana Labs",
+      "name": "Datav",
       "url": "https://grafana.com"
     },
     "keywords": ["clock", "panel"],

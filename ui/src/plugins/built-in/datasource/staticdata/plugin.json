@@ -7,7 +7,7 @@
   "info": {
     "description": "A data source plugin for Grafana for static data.",
     "author": {
-      "name": "Marcus Olsson",
+      "name": "Datav",
       "url": "https://marcus.se.net"
     },
     "keywords": ["static", "test", "development", "mock"],

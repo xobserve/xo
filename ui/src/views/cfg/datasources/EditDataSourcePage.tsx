@@ -1,6 +1,6 @@
 import React, { PureComponent } from 'react';
 import _ from 'lodash';
-import { NavModel, DataSourcePluginMeta, getBootConfig, DataSourcePlugin, DataSourceApi, DataQuery, DataSourceJsonData, DataSourceSettings, getBackendSrv, setBootConfig } from 'src/packages/datav-core'
+import { NavModel, DataSourcePluginMeta, getBootConfig, DataSourcePlugin, DataSourceApi, DataQuery, DataSourceJsonData, DataSourceSettings, getBackendSrv, setBootConfig, currentLang } from 'src/packages/datav-core'
 import { InlineFormLabel, LegacyForms, ConfirmModal, Button } from 'src/packages/datav-core'
 import { withRouter } from 'react-router-dom';
 import { Input, notification, Alert } from 'antd';
@@ -81,9 +81,9 @@ export class EditDataSourcePage extends PureComponent<Props, State> {
             node = {
                 img: meta.info.logos.small,
                 id: 'datasource-new',
-                title: 'Add Data Source',
+                title: localeData[currentLang]['datasource.add'],
                 href: 'datasources/new',
-                subTitle: 'Type: ' + meta.name,
+                subTitle:  localeData[currentLang]['common.type'] + ': ' + meta.name,
             }
             hasFetched = true
         }

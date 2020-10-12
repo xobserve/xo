@@ -36,3 +36,4 @@ export * from './flot';
 export * from './config'
 export * from './oldConfig'
 export * from './annotations' 
+export * from './trace'
