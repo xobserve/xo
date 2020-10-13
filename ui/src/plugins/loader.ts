@@ -31,6 +31,7 @@ export async function importPluginModule(path: string): Promise<any> {
     }
   } 
 
+  console.log("plugin not found:",path)
   return Promise.reject('no plugin found')
 }
 

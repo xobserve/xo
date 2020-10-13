@@ -9,6 +9,7 @@ import {
   DataQuery,
   FieldType,
 } from 'src/packages/datav-core';
+import _ from 'lodash'
 import { getBackendSrv} from 'src/packages/datav-core';
 import { Observable, from, of } from 'rxjs';
 import { map } from 'rxjs/operators';
@@ -19,6 +20,8 @@ import { serializeParams } from 'src/core/library/utils/fetch';
 
 export type JaegerQuery = {
   query: string;
+  queryText?: string;
+  constant?: number;
 } & DataQuery;
 
 export class JaegerDatasource extends DataSourceApi<JaegerQuery> {
@@ -77,11 +80,46 @@ export class JaegerDatasource extends DataSourceApi<JaegerQuery> {
     }
   }
 
-  async testDatasource(): Promise<any> {
-    // http://localhost:3000/api/datasources/proxy/2/api/services
-    // http://localhost:9085/api/proxy/1/api/v1/query?query=1%2B1&time=1602485767.66
+  async findServices() {
+    const url = `/api/proxy/${this.instanceSettings.id}/api/services`
+    
+    
+    const req = {
+      url,
+      method: 'GET',
+      headers: {},
+    };
 
-    // /api/proxy/2/api/services
+    return  getBackendSrv().datasourceRequest(req);
+  }
+
+  async findOperations(service: string) {
+    const url = `/api/services/${encodeURIComponent(service)}/operations`;
+    try {
+      const ops =  await this.metadataRequest(url);
+      return _.concat(['all'],ops)
+    } catch (error) {
+      alert('Failed to load operations from Jaeger')
+    }
+    return ['all'];
+  };
+
+  async findTraces(options)  {
+    const { from, to } = getTimeSrv().timeRange();
+
+    options.start = from.unix() * 1000000
+    options.end = to.unix() * 1000000
+
+    const url = '/api/traces';
+    try {
+      return await this.metadataRequest(url, options);
+    } catch (error) {
+      console.log('Failed to load traces from Jaeger', error)
+    }
+    return [];
+  };
+
+  async testDatasource(): Promise<any> {
     const url = `/api/proxy/${this.instanceSettings.id}/api/services`
     
     
@@ -110,7 +148,7 @@ export class JaegerDatasource extends DataSourceApi<JaegerQuery> {
 
   private _request(apiUrl: string, data?: any, options?: DatasourceRequestOptions): Observable<Record<string, any>> {
     // Hack for proxying metadata requests
-    const baseUrl = `/api/datasources/proxy/${this.instanceSettings.id}`;
+    const baseUrl = `/api/proxy/${this.instanceSettings.id}`;
     const params = data ? serializeParams(data) : '';
     const url = `${baseUrl}${apiUrl}${params.length ? `?${params}` : ''}`;
     const req = {

@@ -2,7 +2,11 @@ import { DataSourcePlugin } from 'src/packages/datav-core';
 import { JaegerDatasource } from './datasource';
 import { JaegerQueryField } from './QueryField';
 import { ConfigEditor } from './ConfigEditor';
-
+import {QueryEditor} from './QueryEdtitor'
 export const plugin = new DataSourcePlugin(JaegerDatasource)
   .setConfigEditor(ConfigEditor)
-  .setExploreQueryField(JaegerQueryField);
+  // .setExploreQueryField(JaegerQueryField)
+  .setQueryEditor(
+    QueryEditor
+  );
+ 

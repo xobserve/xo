@@ -6,6 +6,7 @@ import * as BarGauge from 'src/plugins/built-in/panel/bargauge/module';
 import * as Table from 'src/plugins/built-in/panel/table/module';
 import * as Text from 'src/plugins/built-in/panel/text/module';
 import * as Echarts from 'src/plugins/built-in/panel/echarts/module';
+import * as Jaeger from 'src/plugins/built-in/panel/jaeger-panel/module';
 
 const prometheusPlugin = async () =>
     await import(/* webpackChunkName: "prometheusPlugin" */ 'src/plugins/built-in/datasource/prometheus/module');
@@ -32,5 +33,6 @@ export const builtInPlugins = {
     'src/plugins/built-in/panel/table/module': Table,
     'src/plugins/built-in/panel/text/module': Text,
     'src/plugins/built-in/panel/echarts/module': Echarts,
+    'src/plugins/built-in/panel/jaeger-panel/module': Jaeger,
 }
  

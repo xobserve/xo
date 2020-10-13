@@ -1,0 +1,29 @@
+{
+  "type": "panel",
+  "name": "Jaeger Panel",
+  "id": "jaeger-panel",
+
+  "info": {
+    "description": "Jager panel for tracing",
+    "author": {
+      "name": "Datav"
+    },
+    "keywords": ["panel", "template"],
+    "logos": {
+      "small": "jaeger-panel-logo.svg",
+      "large": "jaeger-panel-logo.svg"
+    },
+    "links": [
+      {"name": "Website", "url": "https://github.com/grafana/simple-react-panel"},
+      {"name": "License", "url": "https://github.com/grafana/simple-react-panel/blob/master/LICENSE"}
+    ],
+    "screenshots": [],
+    "version": "%VERSION%",
+    "updated": "%TODAY%"
+  },
+
+  "dependencies": {
+    "grafanaVersion": "7.0.x",
+    "plugins": []
+  }
+}
