@@ -1,24 +1,25 @@
 package notifications
 
 import (
+	"bytes"
+	"fmt"
+	"html/template"
+
 	"github.com/apm-ai/datav/backend/pkg/config"
 	"github.com/apm-ai/datav/backend/pkg/models"
-	"bytes"
-	"html/template"
-	"fmt"
 	"github.com/jordan-wright/email"
 )
 
 var mailTemplates *template.Template
 
 func init() {
-	mailTemplates = template.New("name") 
-	tmpl, err := template.ParseGlob("./templates/*.tmpl")
-    if err != nil {
-        logger.Crit("parse email template failed","error", err)
-        panic(err)
+	mailTemplates = template.New("name")
+	tmpl, err := template.ParseGlob("./backend/templates/*.tmpl")
+	if err != nil {
+		logger.Crit("parse email template failed", "error", err)
+		panic(err)
 	}
-	
+
 	mailTemplates = tmpl
 }
 
@@ -43,17 +44,14 @@ func setDefaultEmailData(data map[string]interface{}) {
 	data["Subject"] = map[string]interface{}{}
 }
 
-
-
 func SendEmail(content *models.EmailContent) error {
-	if (!config.Data.SMTP.Enabled) {
+	if !config.Data.SMTP.Enabled {
 		return models.ErrSmtpNotEnabled
 	}
 
-
 	msg, err := buildEmail(content)
 	if err != nil {
-		return err 
+		return err
 	}
 
 	messages := []*EmailMessage{}
@@ -63,15 +61,15 @@ func SendEmail(content *models.EmailContent) error {
 		messages = append(messages, &copy)
 	}
 
-	for _,msg := range messages {
+	for _, msg := range messages {
 		e := email.NewEmail()
 		e.From = msg.From
 		e.To = msg.To
 		e.Subject = msg.Subject
 		e.HTML = []byte(msg.Body)
-		err = e.Send(config.Data.SMTP.Host,nil)
+		err = e.Send(config.Data.SMTP.Host, nil)
 		if err != nil {
-			logger.Warn("send email error", "error",err)
+			logger.Warn("send email error", "error", err)
 		}
 	}
 
@@ -88,9 +86,9 @@ func buildEmail(content *models.EmailContent) (*EmailMessage, error) {
 	}
 
 	setDefaultEmailData(data)
-	
+
 	err = mailTemplates.ExecuteTemplate(&buffer, content.Template, data)
-	if err !=nil {
+	if err != nil {
 		return nil, err
 	}
 
@@ -98,13 +96,13 @@ func buildEmail(content *models.EmailContent) (*EmailMessage, error) {
 		content.Subject = "Subject is missing"
 	}
 
-	return &EmailMessage {
-		To: content.To,
-		SingleEmail: content.SingleEmail,
-		From:    fmt.Sprintf("%s <%s>", config.Data.SMTP.FromName, config.Data.SMTP.FromAddress),
-		Subject: content.Subject,
-		Body: buffer.String(),
-		EmbededFiles: content.EmbededFiles,
+	return &EmailMessage{
+		To:            content.To,
+		SingleEmail:   content.SingleEmail,
+		From:          fmt.Sprintf("%s <%s>", config.Data.SMTP.FromName, config.Data.SMTP.FromAddress),
+		Subject:       content.Subject,
+		Body:          buffer.String(),
+		EmbededFiles:  content.EmbededFiles,
 		AttachedFiles: content.AttachedFiles,
 	}, nil
 }

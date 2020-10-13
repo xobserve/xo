@@ -138,11 +138,11 @@ export function getPanelMenu(
     subMenu: inspectMenu,
   });
 
-  menu.push({
-    text: <Message id="common.share"/>,
-    iconClassName: 'share-alt',
-    onClick: onSharePanel
-  });
+  // menu.push({
+  //   text: <Message id="common.share"/>,
+  //   iconClassName: 'share-alt',
+  //   onClick: onSharePanel
+  // });
 
   const subMenu: PanelMenuItem[] = [];
 
