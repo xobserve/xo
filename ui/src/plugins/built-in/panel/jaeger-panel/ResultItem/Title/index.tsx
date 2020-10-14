@@ -31,7 +31,7 @@ export default class ResultItemTitle extends React.PureComponent<any> {
     } = this.props;
     return (
       <div className="ResultItemTitle">
-        <a className="ResultItemTitle--item ub-flex-auto" href={'/trace/' + traceID}>
+        <div className="ResultItemTitle--item ub-flex-auto">
           <span
             className="ResultItemTitle--durationBar"
             style={{ width: `${durationPercent || DEFAULT_DURATION_PERCENT}%` }}
@@ -41,7 +41,7 @@ export default class ResultItemTitle extends React.PureComponent<any> {
             {traceName}
             <small className="ResultItemTitle--idExcerpt">{traceID.slice(0, 7)}</small>
           </h3>
-        </a>
+        </div>
       </div>
     );
   }

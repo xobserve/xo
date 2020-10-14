@@ -4,7 +4,6 @@ import './index.less';
 import ResultItemTitle from './Title';
 import moment from 'moment';
 import { KeyValuePair } from 'src/types';
-import { Link } from 'react-router-dom';
 import { formatRelativeDate } from 'src/core/library/utils/date';
 import colorGenerator from 'src/core/library/utils/color-generator';
 import { sortBy } from 'lodash';
@@ -13,7 +12,7 @@ const isErrorTag = ({ key, value }: KeyValuePair) => key === 'error' && (value =
 function Index(props: any) {
     const {
         trace,
-        durationPercent
+        durationPercent,
     } = props;
     const { duration, services, startTime, spans, traceName, traceID } = trace;
     const mDate = moment(startTime / 1000);
@@ -21,7 +20,7 @@ function Index(props: any) {
     const fromNow = mDate.fromNow();
     const numSpans = spans.length;
     const numErredSpans = spans.filter((sp: any) => sp.tags.some(isErrorTag)).length;
-
+    
     return (
         <div className="trace-result-item"> 
             <ResultItemTitle
@@ -31,7 +30,7 @@ function Index(props: any) {
                 traceName={traceName}
             />
 
-            <Link to='/trace/3d1a8df214e156ba'>
+            {/* <a href={`/t/${traceID}?datasource=${datasource}`} target="_blank"> */}
                 <Row>
                     <Col span={4} className="ub-p2">
                         <Tag className="ub-m1">
@@ -57,7 +56,7 @@ function Index(props: any) {
                       </Tag>
                                     </li>
                                 );
-                            })}
+                            })} 
                         </ul>
                     </Col>
                     <Col span={6} className="ub-p3 ub-tx-right-align">
@@ -68,7 +67,7 @@ function Index(props: any) {
                         <small>{fromNow}</small>
                     </Col>
                 </Row>
-            </Link>
+            {/* </a> */}
         </div>
     );
 }

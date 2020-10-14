@@ -1,19 +1,20 @@
 import React, { PureComponent } from 'react';
 import _ from 'lodash'
 import memoizeOne from 'memoize-one';
-import { PanelProps, withTheme, DatavTheme } from 'src/packages/datav-core';
+import { PanelProps, withTheme, DatavTheme, TraceData,TraceSpanData} from 'src/packages/datav-core';
 import { SimpleOptions,Trace } from './types';
 import { css, cx } from 'emotion';
 import { stylesFactory } from 'src/packages/datav-core';
 import { getDatasourceSrv } from 'src/core/services/datasource';
 import { Form, Input, Button, Select, Row, Col,notification} from 'antd';
-import { values } from 'lodash';
 import ScatterPlot from './ScatterPlot/ScatterPlot';
 import transformTraceData from './transformTraceData'
 import { getPercentageOfDuration } from 'src/core/library/utils/date';
 import ResultItem from './ResultItem'
 import { localeStringComparator } from 'src/core/library/utils/sort';
 import {sortTraces , LEAST_SPANS, LONGEST_FIRST, MOST_RECENT, MOST_SPANS, SHORTEST_FIRST} from './sortTraces'
+import {convTagsLogfmt} from './utils'
+import { addParamToUrl, getUrlParams } from 'src/core/library/utils/url';
 
 const { Option } = Select;
 const maxTraceDuration = 814199
@@ -26,6 +27,7 @@ interface State {
   services: string[]
   operations: string[]
   traces: Trace[]
+  currentTrace: TraceData & { spans: TraceSpanData[] };
 }
 
 const getStyles = stylesFactory(() => {
@@ -39,6 +41,9 @@ const styles = getStyles();
 
 class JaegerPanel extends PureComponent<Props, State> {
   sortBy = MOST_RECENT
+  rawTraces =  []
+  urlQuery = getUrlParams()
+
   constructor(props) {
     super(props)
   }
@@ -47,7 +52,8 @@ class JaegerPanel extends PureComponent<Props, State> {
     this.setState({
       services: [],
       operations: ['all'],
-      traces: []
+      traces: [],
+      currentTrace: null,
     })
   }
 
@@ -98,15 +104,21 @@ class JaegerPanel extends PureComponent<Props, State> {
       delete(options['tags'])
     }
 
+
     if (options.operation === 'all') {
       delete(options['operation'])
     }
+
+    // conver tags from log format to json format
+    const jsonTags = convTagsLogfmt(options.tags)
+    options.tags = jsonTags
     // get traces from jaeger datasource
     // get operations from jaeger datasource
     const ds = await getDatasourceSrv().get(this.props.panel.datasource)
 
     //@ts-ignore
     const rawTraces = await ds.findTraces(options)
+    this.rawTraces = rawTraces
     const traces = []
     for (const rawTrace of rawTraces) {
       const trace = transformTraceData(rawTrace)
@@ -118,6 +130,8 @@ class JaegerPanel extends PureComponent<Props, State> {
       ...this.state,
       traces:traceResults
     })
+
+    addParamToUrl({service: options.service})
   };
 
   changeSort = (sort) => {
@@ -130,9 +144,19 @@ class JaegerPanel extends PureComponent<Props, State> {
     })
   }
 
-  render() {
-    const { options, data, width, height, theme } = this.props;
+  onTraceSelected = (traceID) => {
+    for (const trace of this.rawTraces) {
+      if (trace.traceID === traceID) {
+        this.setState({
+          ...this.state,
+          currentTrace: trace
+        })
+      } 
+    }
+  }
 
+  render() {
+    const { options, data, width, height, theme, panel} = this.props;
     if (!this.state) {
       return null
     }
@@ -151,6 +175,7 @@ class JaegerPanel extends PureComponent<Props, State> {
             style={{ padding: '10px' }}
             // size="small"
             initialValues={{
+              service: this.urlQuery['service'],
               'limit': 20,
               'operation': 'all',
               'minDuration': '',
@@ -227,7 +252,7 @@ class JaegerPanel extends PureComponent<Props, State> {
                   name: t.traceName,
                 }))}
                 onValueClick={t => {
-                  // goToTrace(t.traceID);
+                  this.onTraceSelected(t.traceID)
                 }}
               />
               <div className="trace-search-overview">
@@ -253,7 +278,7 @@ class JaegerPanel extends PureComponent<Props, State> {
 
                     <ul className="ub-list-reset" style={{height: resultListHeight + 'px', overflowY: 'scroll'}}>
                         {traces.map(trace => (
-                        <li className="ub-my3 ub-pl3 ub-pr3" key={trace.traceID}>
+                        <li className="ub-my3 ub-pl3 ub-pr3 pointer" key={trace.traceID} onClick={() => this.onTraceSelected(trace.traceID)}>
                             <ResultItem
                             durationPercent={getPercentageOfDuration(trace.duration, maxTraceDuration)}
                             trace={trace}
