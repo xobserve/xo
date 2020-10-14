@@ -50,3 +50,16 @@ interface JQuery {
   accessKey: any;
   tooltip: any;
 }
+
+declare module 'combokeys' {
+  export default class Combokeys {
+    constructor(element: HTMLElement);
+    bind: (binding: string | string[], handler: CombokeysHandler) => void;
+    reset: () => void;
+  }
+}
+
+declare module 'react-helmet';
+declare module 'json-markup';
+declare module 'react-vis-force';
+declare module 'tween-functions';

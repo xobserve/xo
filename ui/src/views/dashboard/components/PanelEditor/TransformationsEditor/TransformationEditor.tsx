@@ -74,7 +74,9 @@ const getStyles = (theme: DatavTheme) => {
         color: ${theme.colors.text};
       }
     `,
-    editor: css``,
+    editor: css`
+      label: editor
+    `,
     debugWrapper: css`
       display: flex;
       flex-direction: row;

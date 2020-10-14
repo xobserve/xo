@@ -273,7 +273,6 @@ const getStyles = stylesFactory((theme: DatavTheme) => {
       background: ${theme.colors.bodyBg};
       border-left: 1px solid ${theme.colors.pageHeaderBorder};
     `,
-    tabsButton: css``,
     legacyOptions: css`
       label: legacy-options;
       .panel-options-grid {

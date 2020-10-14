@@ -13,5 +13,8 @@
 // limitations under the License.
 
 module.exports = {
-};
+  "rules": {
+    "no-restricted-imports": 2
+  }
+}
   

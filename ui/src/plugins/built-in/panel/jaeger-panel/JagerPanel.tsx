@@ -1,20 +1,21 @@
 import React, { PureComponent } from 'react';
 import _ from 'lodash'
 import memoizeOne from 'memoize-one';
-import { PanelProps, withTheme, DatavTheme, TraceData,TraceSpanData} from 'src/packages/datav-core';
-import { SimpleOptions,Trace } from './types';
+import { PanelProps, withTheme, DatavTheme, TraceData, TraceSpanData } from 'src/packages/datav-core';
+import { SimpleOptions, Trace } from './types';
 import { css, cx } from 'emotion';
 import { stylesFactory } from 'src/packages/datav-core';
 import { getDatasourceSrv } from 'src/core/services/datasource';
-import { Form, Input, Button, Select, Row, Col,notification} from 'antd';
+import { Form, Input, Button, Select, Row, Col, notification,Modal} from 'antd';
 import ScatterPlot from './ScatterPlot/ScatterPlot';
 import transformTraceData from './transformTraceData'
 import { getPercentageOfDuration } from 'src/core/library/utils/date';
 import ResultItem from './ResultItem'
 import { localeStringComparator } from 'src/core/library/utils/sort';
-import {sortTraces , LEAST_SPANS, LONGEST_FIRST, MOST_RECENT, MOST_SPANS, SHORTEST_FIRST} from './sortTraces'
-import {convTagsLogfmt} from './utils'
+import { sortTraces, LEAST_SPANS, LONGEST_FIRST, MOST_RECENT, MOST_SPANS, SHORTEST_FIRST } from './sortTraces'
+import { convTagsLogfmt } from './utils'
 import { addParamToUrl, getUrlParams } from 'src/core/library/utils/url';
+import {TraceView} from './TraceView/TraceView'
 
 const { Option } = Select;
 const maxTraceDuration = 814199
@@ -41,7 +42,7 @@ const styles = getStyles();
 
 class JaegerPanel extends PureComponent<Props, State> {
   sortBy = MOST_RECENT
-  rawTraces =  []
+  rawTraces = []
   urlQuery = getUrlParams()
 
   constructor(props) {
@@ -62,7 +63,7 @@ class JaegerPanel extends PureComponent<Props, State> {
     const ds = await getDatasourceSrv().get(this.props.panel.datasource)
     //@ts-ignore
     const res = await ds.findServices()
-    const services: string[] = res.data.data 
+    const services: string[] = res.data.data
     services.sort(localeStringComparator)
     this.setState({
       ...this.state,
@@ -97,16 +98,16 @@ class JaegerPanel extends PureComponent<Props, State> {
         description: 'Select a serivce first',
         duration: 5
       });
-      return 
+      return
     }
 
     if (options.tags.trim() === '') {
-      delete(options['tags'])
+      delete (options['tags'])
     }
 
 
     if (options.operation === 'all') {
-      delete(options['operation'])
+      delete (options['operation'])
     }
 
     // conver tags from log format to json format
@@ -128,14 +129,14 @@ class JaegerPanel extends PureComponent<Props, State> {
     const traceResults = this.sortedTracesXformer(traces)
     this.setState({
       ...this.state,
-      traces:traceResults
+      traces: traceResults
     })
 
-    addParamToUrl({service: options.service})
+    addParamToUrl({ service: options.service })
   };
 
   changeSort = (sort) => {
-    this.sortBy = sort 
+    this.sortBy = sort
     const traces = _.cloneDeep(this.state.traces)
     const traceResults = this.sortedTracesXformer(traces)
     this.setState({
@@ -151,16 +152,23 @@ class JaegerPanel extends PureComponent<Props, State> {
           ...this.state,
           currentTrace: trace
         })
-      } 
+      }
     }
   }
 
+  cancelTraceModal = () => {
+    this.setState({
+      ...this.state,
+      currentTrace: null
+    })
+  }
+
   render() {
-    const { options, data, width, height, theme, panel} = this.props;
+    const { options, data, width, height, theme, panel } = this.props;
     if (!this.state) {
       return null
     }
-    const { services, operations,traces} = this.state
+    const { services, operations, traces,currentTrace} = this.state
     let srvOptions = services.map(srv => <Option value={srv} key={srv}>{srv}</Option>);
     let opOptions = operations.map(op => <Option value={op} key={op}>{op}</Option>)
 
@@ -244,50 +252,64 @@ class JaegerPanel extends PureComponent<Props, State> {
         <Col span="16" offset="1">
           {traces.length > 0 && <div>
             <ScatterPlot
-                data={traces.map(t => ({
-                  x: t.startTime,
-                  y: t.duration,
-                  traceID: t.traceID,
-                  size: t.spans.length,
-                  name: t.traceName,
-                }))}
-                onValueClick={t => {
-                  this.onTraceSelected(t.traceID)
-                }}
-              />
-              <div className="trace-search-overview">
-                        <h2>
-                            {traces.length} Trace{traces.length > 1 && 's'}
-                        </h2>
-                        <div>
-                            <span className="ub-mr2">Sort:</span>
-                            <Select
-                                placeholder="Please select"
-                                defaultValue={MOST_RECENT}
-                                onChange={this.changeSort}
-                            >
-                                <Option value={MOST_RECENT}>Most Recent</Option>
-                                <Option value={LONGEST_FIRST}>Longest First</Option>
-                                <Option value={SHORTEST_FIRST}>Shortest First</Option>
-                                <Option value={MOST_SPANS}>Most Spans</Option>
-                                <Option value={LEAST_SPANS}>Least Spans</Option>
-                            </Select>
-                        </div>
+              data={traces.map(t => ({
+                x: t.startTime,
+                y: t.duration,
+                traceID: t.traceID,
+                size: t.spans.length,
+                name: t.traceName,
+              }))}
+              onValueClick={t => {
+                this.onTraceSelected(t.traceID)
+              }}
+            />
+            <div className="trace-search-overview">
+              <h2>
+                {traces.length} Trace{traces.length > 1 && 's'}
+              </h2>
+              <div>
+                <span className="ub-mr2">Sort:</span>
+                <Select
+                  placeholder="Please select"
+                  defaultValue={MOST_RECENT}
+                  onChange={this.changeSort}
+                >
+                  <Option value={MOST_RECENT}>Most Recent</Option>
+                  <Option value={LONGEST_FIRST}>Longest First</Option>
+                  <Option value={SHORTEST_FIRST}>Shortest First</Option>
+                  <Option value={MOST_SPANS}>Most Spans</Option>
+                  <Option value={LEAST_SPANS}>Least Spans</Option>
+                </Select>
+              </div>
 
-                    </div>
+            </div>
 
-                    <ul className="ub-list-reset" style={{height: resultListHeight + 'px', overflowY: 'scroll'}}>
-                        {traces.map(trace => (
-                        <li className="ub-my3 ub-pl3 ub-pr3 pointer" key={trace.traceID} onClick={() => this.onTraceSelected(trace.traceID)}>
-                            <ResultItem
-                            durationPercent={getPercentageOfDuration(trace.duration, maxTraceDuration)}
-                            trace={trace}
-                            />
-                        </li>
-                        ))}
-                    </ul>
-                    </div>}
+            <ul className="ub-list-reset" style={{ height: resultListHeight + 'px', overflowY: 'scroll' }}>
+              {traces.map(trace => (
+                <li className="ub-my3 ub-pl3 ub-pr3 pointer" key={trace.traceID} onClick={() => this.onTraceSelected(trace.traceID)}>
+                  <ResultItem
+                    durationPercent={getPercentageOfDuration(trace.duration, maxTraceDuration)}
+                    trace={trace}
+                  />
+                </li>
+              ))}
+            </ul>
+          </div>}
+
+        
         </Col>
+
+        <Modal
+          visible={currentTrace != null}
+          title={null}
+          onCancel={this.cancelTraceModal}
+          footer={null}
+          width={'100%'}
+          style={{ top: 0}}
+          className="no-padding-modal"
+        >
+            {currentTrace && <TraceView trace={currentTrace} />}
+        </Modal>
       </Row>
     );
   }
