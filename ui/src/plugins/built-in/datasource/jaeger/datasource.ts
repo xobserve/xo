@@ -96,12 +96,11 @@ export class JaegerDatasource extends DataSourceApi<JaegerQuery> {
   async findOperations(service: string) {
     const url = `/api/services/${encodeURIComponent(service)}/operations`;
     try {
-      const ops =  await this.metadataRequest(url);
-      return _.concat(['all'],ops)
+      return await this.metadataRequest(url)
     } catch (error) {
       alert('Failed to load operations from Jaeger')
     }
-    return ['all'];
+    return [];
   };
 
   async findTraces(options)  {
