@@ -29,6 +29,7 @@ const panel = {
     addThreshold: '添加阈值',
     threshodsMode : '阈值类型',
     threshodsModeDesc :'百分比意味着阈值和最大/最小值是相关联的',
+    needJaegerDatasource: '你需要先创建一个Jaeger数据源并使用它',
 
     // graph panel
     addAnnotation: '添加注释',

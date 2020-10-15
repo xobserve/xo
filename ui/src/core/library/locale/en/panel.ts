@@ -29,7 +29,7 @@ const panel = {
     addThreshold: 'Add threshold',
     threshodsMode : 'Thresholds mode',
     threshodsModeDesc :'Percentage means thresholds relative to min & max',
-
+    needJaegerDatasource: 'You must create and select a jaeger datasource first',
     // graph panel
     addAnnotation: 'Add annotation',
     editAnnotation: 'Edit annotation',

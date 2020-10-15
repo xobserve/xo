@@ -118,6 +118,16 @@ export class JaegerDatasource extends DataSourceApi<JaegerQuery> {
     return [];
   };
 
+  async findTrace(traceID) {
+    const url = `/api/traces/${traceID}`
+    try {
+      return await this.metadataRequest(url);
+    } catch (error) {
+      console.log('Failed to load traces from Jaeger', error)
+    }
+    return null;
+  }
+
   async testDatasource(): Promise<any> {
     const url = `/api/proxy/${this.instanceSettings.id}/api/services`
     

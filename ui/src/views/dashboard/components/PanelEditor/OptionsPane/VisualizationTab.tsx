@@ -1,13 +1,13 @@
 import React, { useCallback, useState } from 'react';
 import { css } from 'emotion';
-import { DatavTheme, PanelPlugin, PanelPluginMeta, getBootConfig } from 'src/packages/datav-core';
+import { DatavTheme, PanelPlugin, PanelPluginMeta, getBootConfig, currentLang } from 'src/packages/datav-core';
 import { useTheme, stylesFactory, Icon, Input, FormField as Field} from 'src/packages/datav-core';
 import { StoreState } from 'src/types';
 import { PanelModel } from '../../../model';
 import { connect, MapStateToProps } from 'react-redux';
 import { VizTypePicker, getAllPanelPluginMeta, filterPluginList } from '../VizTypePicker';
 import { loadPanelPlugin } from 'src/plugins/loader';
-import {message} from 'antd'
+import {message, notification} from 'antd'
 import {store, getState} from 'src/store/store'
 import { updatePanel } from 'src/store/reducers/dashboard';
 import localeData from 'src/core/library/locale'
@@ -39,6 +39,17 @@ export const VisualizationTabUnconnected = React.forwardRef<HTMLInputElement, Pr
     }
     
     const onPluginTypeChange = async (meta: PanelPluginMeta) => {
+      if (meta.id === 'jaeger-panel') {
+        // jaeger panel must be used with jaeger datasource
+        if (panel.datasource !== 'jaeger') {
+          notification['error']({
+            message: "Error",
+            description: localeData[currentLang]['panel.needJaegerDatasource'],
+            duration: 8
+          });
+          return 
+        }
+      }
       if (panel.type === meta.id) {
         return;
       }

@@ -14,7 +14,7 @@ import ResultItem from './ResultItem'
 import { localeStringComparator } from 'src/core/library/utils/sort';
 import { sortTraces, LEAST_SPANS, LONGEST_FIRST, MOST_RECENT, MOST_SPANS, SHORTEST_FIRST } from './sortTraces'
 import { convTagsLogfmt } from './utils'
-import { addParamToUrl, getUrlParams } from 'src/core/library/utils/url';
+import { addParamToUrl, getUrlParams, removeParamFromUrl } from 'src/core/library/utils/url';
 import { TraceView } from './TraceView/TraceView'
 
 const { Option } = Select;
@@ -70,22 +70,24 @@ class JaegerPanel extends PureComponent<Props, State> {
         ...this.state,
         services: res.data.data
       })
-    }
-  }
 
-  async componentDidUpdate() {
-    if (this.state.services.length === 0) {
-      // get services from jaeger datasource
-      const ds = await getDatasourceSrv().get(this.props.panel.datasource)
-      if (ds) {
+      // if service exist in url, we need get operations for it
+      const urlService = this.urlQuery['service']
+      if (urlService) {
+        this.onServiceChange(urlService)
+      }
+
+      // if trace id exist in url, we need to show this trace
+      const urlTraceID = this.urlQuery['traceID']
+      if (urlTraceID) {
         //@ts-ignore
-        const res = await ds.findServices()
-        const services: string[] = res.data.data
-        services.sort(localeStringComparator)
-        this.setState({
-          ...this.state,
-          services: res.data.data
-        })
+        const traces = await ds.findTrace(urlTraceID)
+        if (traces && traces.length >0) {
+          this.setState({
+            ...this.state,
+            currentTrace:traces[0]
+          })
+        }
       }
     }
   }
@@ -135,6 +137,7 @@ class JaegerPanel extends PureComponent<Props, State> {
     }
 
     // conver tags from log format to json format
+    const rawTags = options.tags
     const jsonTags = convTagsLogfmt(options.tags)
     options.tags = jsonTags
     // get traces from jaeger datasource
@@ -156,9 +159,31 @@ class JaegerPanel extends PureComponent<Props, State> {
       traces: traceResults
     })
 
+    const urlParams = {}
     if (!this.props.options.useVariable) {
-      addParamToUrl({ service: options.service })
+      urlParams['service'] = options.service
     }
+
+    if (options.operation) {
+      urlParams['operation'] = options.operation
+    }
+
+    if (options.tags) {
+      urlParams['tags'] = rawTags
+    }
+
+    if (options.minDuration != '') {
+      urlParams['minDuration'] = options.minDuration
+    }
+
+    if (options.maxDuration != '') {
+      urlParams['maxDuration'] = options.maxDuration
+    }
+
+    if (options.limit) {
+      urlParams['limit'] = options.limit
+    }
+    addParamToUrl(urlParams)
   };
 
   changeSort = (sort) => {
@@ -173,7 +198,8 @@ class JaegerPanel extends PureComponent<Props, State> {
 
   onTraceSelected = (traceID) => {
     for (const trace of this.rawTraces) {
-      if (trace.traceID === traceID) {
+      if (trace.traceID ===traceID) {
+        addParamToUrl({ traceID: traceID })
         this.setState({
           ...this.state,
           currentTrace: trace
@@ -183,6 +209,7 @@ class JaegerPanel extends PureComponent<Props, State> {
   }
 
   cancelTraceModal = () => {
+    removeParamFromUrl(['traceID'])
     this.setState({
       ...this.state,
       currentTrace: null
@@ -211,11 +238,11 @@ class JaegerPanel extends PureComponent<Props, State> {
             // size="small"
             initialValues={{
               service: options.useVariable ? options.variable : this.urlQuery['service'],
-              'limit': 20,
-              'operation': 'all',
-              'minDuration': '',
-              'maxDuration': '',
-              'tags': ''
+              'limit': this.urlQuery['limit'] ?? 20,
+              'operation': this.urlQuery['operation'] ?? 'all',
+              'minDuration': this.urlQuery['minDuration'] ?? '',
+              'maxDuration': this.urlQuery['maxDuration'] ?? '',
+              'tags': this.urlQuery['tags'] ?? ''
             }}
           >
             <Form.Item
