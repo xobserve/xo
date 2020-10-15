@@ -1,12 +1,12 @@
 import React, { PureComponent } from 'react';
 import _ from 'lodash'
 import memoizeOne from 'memoize-one';
-import { PanelProps, withTheme, DatavTheme, TraceData, TraceSpanData } from 'src/packages/datav-core';
+import { PanelProps, withTheme, DatavTheme, TraceData, TraceSpanData, getTemplateSrv } from 'src/packages/datav-core';
 import { SimpleOptions, Trace } from './types';
 import { css, cx } from 'emotion';
 import { stylesFactory } from 'src/packages/datav-core';
 import { getDatasourceSrv } from 'src/core/services/datasource';
-import { Form, Input, Button, Select, Row, Col, notification,Modal} from 'antd';
+import { Form, Input, Button, Select, Row, Col, notification, Modal } from 'antd';
 import ScatterPlot from './ScatterPlot/ScatterPlot';
 import transformTraceData from './transformTraceData'
 import { getPercentageOfDuration } from 'src/core/library/utils/date';
@@ -15,7 +15,7 @@ import { localeStringComparator } from 'src/core/library/utils/sort';
 import { sortTraces, LEAST_SPANS, LONGEST_FIRST, MOST_RECENT, MOST_SPANS, SHORTEST_FIRST } from './sortTraces'
 import { convTagsLogfmt } from './utils'
 import { addParamToUrl, getUrlParams } from 'src/core/library/utils/url';
-import {TraceView} from './TraceView/TraceView'
+import { TraceView } from './TraceView/TraceView'
 
 const { Option } = Select;
 const maxTraceDuration = 814199
@@ -61,14 +61,33 @@ class JaegerPanel extends PureComponent<Props, State> {
   async componentDidMount() {
     // get services from jaeger datasource
     const ds = await getDatasourceSrv().get(this.props.panel.datasource)
-    //@ts-ignore
-    const res = await ds.findServices()
-    const services: string[] = res.data.data
-    services.sort(localeStringComparator)
-    this.setState({
-      ...this.state,
-      services: res.data.data
-    })
+    if (ds) {
+      //@ts-ignore
+      const res = await ds.findServices()
+      const services: string[] = res.data.data
+      services.sort(localeStringComparator)
+      this.setState({
+        ...this.state,
+        services: res.data.data
+      })
+    }
+  }
+
+  async componentDidUpdate() {
+    if (this.state.services.length === 0) {
+      // get services from jaeger datasource
+      const ds = await getDatasourceSrv().get(this.props.panel.datasource)
+      if (ds) {
+        //@ts-ignore
+        const res = await ds.findServices()
+        const services: string[] = res.data.data
+        services.sort(localeStringComparator)
+        this.setState({
+          ...this.state,
+          services: res.data.data
+        })
+      }
+    }
   }
 
   onServiceChange = async (srv) => {
@@ -101,6 +120,11 @@ class JaegerPanel extends PureComponent<Props, State> {
       return
     }
 
+    if (this.props.options.useVariable) {
+      options.service = getTemplateSrv().replace(options.service)
+    }
+
+    console.log(options.service)
     if (options.tags.trim() === '') {
       delete (options['tags'])
     }
@@ -132,7 +156,9 @@ class JaegerPanel extends PureComponent<Props, State> {
       traces: traceResults
     })
 
-    addParamToUrl({ service: options.service })
+    if (!this.props.options.useVariable) {
+      addParamToUrl({ service: options.service })
+    }
   };
 
   changeSort = (sort) => {
@@ -168,11 +194,12 @@ class JaegerPanel extends PureComponent<Props, State> {
     if (!this.state) {
       return null
     }
-    const { services, operations, traces,currentTrace} = this.state
+    const { services, operations, traces, currentTrace } = this.state
     let srvOptions = services.map(srv => <Option value={srv} key={srv}>{srv}</Option>);
     let opOptions = operations.map(op => <Option value={op} key={op}>{op}</Option>)
 
     const resultListHeight = height - 280
+
     return (
       <Row className={cx(styles.wrapper, css`width: ${width}px;height: ${height}px;`)}>
         <Col span="6">
@@ -183,7 +210,7 @@ class JaegerPanel extends PureComponent<Props, State> {
             style={{ padding: '10px' }}
             // size="small"
             initialValues={{
-              service: this.urlQuery['service'],
+              service: options.useVariable ? options.variable : this.urlQuery['service'],
               'limit': 20,
               'operation': 'all',
               'minDuration': '',
@@ -195,12 +222,16 @@ class JaegerPanel extends PureComponent<Props, State> {
               label="Service"
               name="service"
             >
-              <Select
-                placeholder="Select a service"
-                onChange={this.onServiceChange}
-              >
-                {srvOptions}
-              </Select>
+              {
+                options.useVariable ?
+                  <Input disabled /> :
+                  <Select
+                    placeholder="Select a service"
+                    onChange={this.onServiceChange}
+                  >
+                    {srvOptions}
+                  </Select>
+              }
             </Form.Item>
 
             <Form.Item
@@ -296,7 +327,7 @@ class JaegerPanel extends PureComponent<Props, State> {
             </ul>
           </div>}
 
-        
+
         </Col>
 
         <Modal
@@ -305,10 +336,10 @@ class JaegerPanel extends PureComponent<Props, State> {
           onCancel={this.cancelTraceModal}
           footer={null}
           width={'100%'}
-          style={{ top: 0}}
+          style={{ top: 0 }}
           className="no-padding-modal"
         >
-            {currentTrace && <TraceView trace={currentTrace} />}
+          {currentTrace && <TraceView trace={currentTrace} />}
         </Modal>
       </Row>
     );
