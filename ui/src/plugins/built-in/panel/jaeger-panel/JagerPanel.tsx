@@ -226,7 +226,7 @@ class JaegerPanel extends PureComponent<Props, State> {
     let opOptions = operations.map(op => <Option value={op} key={op}>{op}</Option>)
 
     const resultListHeight = height - 280
-
+    
     return (
       <Row className={cx(styles.wrapper, css`width: ${width}px;height: ${height}px;`)}>
         <Col span="6">

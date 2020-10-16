@@ -56,9 +56,9 @@ export const PanelOptionsEditor: React.FC<PanelOptionsEditorProps<any>> = ({
             const subTitle = e.category?.slice(1)
             const label = (<>
               {subTitle && <h5>{subTitle}</h5>}
-              <Label description={e.description}>
+              {e.name && <Label description={e.description}>
                 {e.name}
-              </Label>
+              </Label>}
               </>
             );
 

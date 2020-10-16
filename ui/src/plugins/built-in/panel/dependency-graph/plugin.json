@@ -1,0 +1,29 @@
+{
+  "type": "panel",
+  "name": "Dependency graph",
+  "id": "dependency-graph",
+
+  "info": {
+    "description": "Dependency graph panel plugin",
+    "author": {
+      "name": "Datav"
+    },
+    "keywords": ["panel", "template"],
+    "logos": {
+      "small": "dependency-graph-logo.svg",
+      "large": "dependency-graph-logo.svg"
+    },
+    "links": [
+      {"name": "Website", "url": "https://github.com/grafana/simple-react-panel"},
+      {"name": "License", "url": "https://github.com/grafana/simple-react-panel/blob/master/LICENSE"}
+    ],
+    "screenshots": [],
+    "version": "%VERSION%",
+    "updated": "%TODAY%"
+  },
+
+  "dependencies": {
+    "grafanaVersion": "7.0.x",
+    "plugins": []
+  }
+}

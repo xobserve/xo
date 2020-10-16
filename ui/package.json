@@ -110,9 +110,14 @@
     "validator": "^13.1.1",
     "xss": "1.0.6",
     "deep-freeze": "^0.0.1",
-    "lru-memoize": "^1.1.0"
+    "lru-memoize": "^1.1.0",
+    "cytoscape": "^3.14.2",
+    "cytoscape-canvas": "^3.0.1",
+    "cytoscape-cola": "^2.3.1",
+    "human-format": "^0.10.1"
   },
   "devDependencies": {
+    "@types/cytoscape": "^3.8.5",
     "@types/classnames": "^2.2.7",
     "@types/clipboard": "2.0.1",
     "@types/codemirror": "^0.0.95",

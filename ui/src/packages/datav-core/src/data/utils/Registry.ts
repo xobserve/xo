@@ -11,6 +11,7 @@ export interface RegistryItem {
    *  like: 'all' and 'any' matchers;
    */
   excludeFromPicker?: boolean;
+  defaultValue? : any
 }
 
 export interface RegistryItemWithOptions<TOptions = any> extends RegistryItem {

@@ -7,6 +7,7 @@ import * as Table from 'src/plugins/built-in/panel/table/module';
 import * as Text from 'src/plugins/built-in/panel/text/module';
 import * as Echarts from 'src/plugins/built-in/panel/echarts/module';
 import * as Jaeger from 'src/plugins/built-in/panel/jaeger-panel/module';
+import * as DependencyGraph from 'src/plugins/built-in/panel/dependency-graph/module';
 
 const prometheusPlugin = async () =>
     await import(/* webpackChunkName: "prometheusPlugin" */ 'src/plugins/built-in/datasource/prometheus/module');
@@ -18,6 +19,7 @@ const staticDataPlugin = async () =>
     await import(/* webpackChunkName: "httpPlugin" */ 'src/plugins/built-in/datasource/staticdata/module');
 const jaegerPlugin = async () =>
     await import(/* webpackChunkName: "httpPlugin" */ 'src/plugins/built-in/datasource/jaeger/module');
+    
 
 export const builtInPlugins = {
     'src/plugins/built-in/datasource/prometheus/module': prometheusPlugin,
@@ -34,5 +36,6 @@ export const builtInPlugins = {
     'src/plugins/built-in/panel/text/module': Text,
     'src/plugins/built-in/panel/echarts/module': Echarts,
     'src/plugins/built-in/panel/jaeger-panel/module': Jaeger,
+    'src/plugins/built-in/panel/dependency-graph/module': DependencyGraph,
 }
  

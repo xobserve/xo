@@ -1,0 +1,104 @@
+.service-dependency-graph-panel {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    height: 100%;
+    width: 100%;
+  }
+  
+  .graph-container {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: row;
+  }
+  
+  .service-dependency-graph {
+    position: relative;
+    flex-grow: 1;
+    min-width: 0;
+  }
+  
+  .zoom-button-container {
+    position: absolute;
+    top: 0;
+    right: 1rem;
+    z-index: 99;
+  }
+  
+  .statistics {
+    flex-basis: 0;
+    transition: flex-basis 250ms ease-in-out;
+    overflow-y: scroll;
+    
+  }
+  
+  .statistics.show {
+    flex-basis: 30rem;
+    padding-left: 0.5%;
+  }
+  
+  .header--selection {
+    font-size: 1.25em;
+    text-align: center;
+    border-bottom: 2px solid #161719;
+    font-weight: 500;
+    color: rgb(216, 217, 218);
+  }
+  
+  .secondHeader--selection {
+    font-size: 1.2em;
+    text-align: center;
+    padding-top: 1.5rem;
+    padding-bottom: 0.5rem;
+  }
+  
+  .no-data--selection{
+    color: #888888;
+    text-align: center;
+  }
+  
+  .table--selection {
+    width: 99%;
+    table-layout: fixed;
+  }
+  
+  .table--selection th, .table--selection td {
+    padding: 3px 5px;
+  }
+  
+  .table--selection tr {
+    border-bottom: 2px solid #161719;
+  }
+  
+  .table--td--selection {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  
+  .threshold--bad {
+    color:#f2495c;
+  }
+  
+  .threshold--good {
+    color: #73bf69;
+  }
+  
+  .table--th--selectionSmall {
+    width: 5.5rem;
+  }
+  
+  .table--th--selectionMedium {
+    width: 8rem;
+  }
+  
+  .table--selection--head {
+    background-color: #28282a;
+    border-top: 2px solid #161719;
+    color: #33b5e5;
+  }
+  
+  
+  

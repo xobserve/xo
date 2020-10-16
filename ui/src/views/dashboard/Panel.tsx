@@ -268,7 +268,7 @@ export class Panel extends PureComponent<Props, State> {
             onChangeTimeRange={this.onChangeTimeRange}
             // only legacy grafana panels need these
             panel={panel}
-            dashboard={panel.type === 'graph' ? dashboard : null}
+            dashboard={dashboard}
           />
         </div>
       </>
