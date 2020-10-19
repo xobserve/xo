@@ -84,7 +84,6 @@ export interface QueryResponseColumn {
 export interface QueryResponse {
   columns: QueryResponseColumn[];
   refId?: string;
-  meta?: string;
   rows: any[];
 };
 

@@ -11,7 +11,6 @@ const dummyData: QueryResponse[] = [
             { text: "in_count" }
         ],
         refId: undefined,
-        meta: undefined,
         rows: [
             [0, "", "", "http", "api-gateway", 508],
             [0, "", "", "http", "config-server", 0],
@@ -39,7 +38,6 @@ const dummyData: QueryResponse[] = [
             { text: "out_count" }
         ],
         refId: undefined,
-        meta: undefined,
         rows: [
             [0, "http", "api-gateway", "", "api-gateway", 100],
             [0, "http", "api-gateway", "", "customers-service", 347],
@@ -68,7 +66,6 @@ const dummyData: QueryResponse[] = [
             { text: "in_timesum" }
         ],
         refId: undefined,
-        meta: undefined,
         rows: [
             [0, "", "http", "api-gateway", "", 45140.008427999986],
             [0, "", "http", "config-server", "", 0],
@@ -95,7 +92,6 @@ const dummyData: QueryResponse[] = [
 
         ],
         refId: undefined,
-        meta: undefined,
         rows: [
             [0, "http", "api-gateway", "", "api-gateway", 1700.468872999987],
             [0, "http", "api-gateway", "", "customers-service", 1481.533606999972],
@@ -123,7 +119,6 @@ const dummyData: QueryResponse[] = [
             { text: "error_in" }
         ],
         refId: undefined,
-        meta: undefined,
         rows: [
             [0, "", "http", "api-gateway", "", 14],
             [0, "", "http", "discovery-server", "", 20],
@@ -142,7 +137,6 @@ const dummyData: QueryResponse[] = [
             { text: "error_out" }
         ],
         refId: undefined,
-        meta: undefined,
         rows: [
             [0, "api-gateway", "http", "customers-service", "", 14],
             [0, "api-gateway", "http", "vets-service", "", 0],
@@ -158,7 +152,6 @@ const dummyData: QueryResponse[] = [
             { text: "threshold" }
         ],
         refId: undefined,
-        meta: undefined,
         rows: [
             [0, "api-gateway", 40.40604300000001],
             [0, "customers-service", 10]
