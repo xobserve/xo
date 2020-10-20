@@ -7,13 +7,13 @@ import { stylesFactory } from 'src/packages/datav-core';
 import { NodeSingular, EdgeSingular, EventObject, EdgeCollection } from 'cytoscape';
 
 import './index.less'
-import { PlayCircleOutlined, PauseCircleOutlined, ApartmentOutlined, AimOutlined, PlusOutlined, MinusOutlined } from '@ant-design/icons';
+import { PlayCircleOutlined, PauseCircleOutlined, ApartmentOutlined, AimOutlined, PlusOutlined, MinusOutlined ,LinkOutlined} from '@ant-design/icons';
 import { Tooltip, Button } from 'antd';
 import dummyData from "./dummyData";
 import PreProcessor from './processing/preProcessor'
 import GraphGenerator from './processing/graphGenerator'
 
-import { initCytoscape, graphContainer, graphCanvas } from './cytoscape'
+import { initCytoscape, graphCanvas } from './cytoscape'
 import layoutOptions from './layoutOptions'
 
 interface Props extends PanelProps<DependencyGraphOptions> {
@@ -24,6 +24,7 @@ interface State {
   showStatistics: boolean
 }
 
+export let serviceIcons = [];
 export class DependencyGraph extends PureComponent<Props, State> {
   validQueryTypes: boolean;
   currentData: CurrentData | undefined;
@@ -40,6 +41,16 @@ export class DependencyGraph extends PureComponent<Props, State> {
 
   constructor(props) {
     super(props)
+    fetch(this.getAssetUrl('service_icons/icon_index.json'))
+      .then(response => response.json())
+      .then(data => {
+        data.sort();
+        serviceIcons = data;
+        console.log("Load service icons:", serviceIcons)
+      })
+      .catch(() => {
+        console.error('Could not load service icons mapping index. Please verify the "icon_index.json" in the plugin\'s asset directory.');
+      });
   }
 
   componentWillMount() {
@@ -225,6 +236,8 @@ export class DependencyGraph extends PureComponent<Props, State> {
       this.updateStatisticTable();
     }
 
+    console.log(this.resolvedDrillDownLink)
+
     this.setState({
       ...this.state,
       showStatistics: isSelected
@@ -319,7 +332,7 @@ export class DependencyGraph extends PureComponent<Props, State> {
   }
 
   getAssetUrl(assetName: string) {
-    var baseUrl = 'public/plugins/' + this.props.panel.type;
+    var baseUrl = '/plugins/panel/' + this.props.panel.type;
     return baseUrl + '/assets/' + assetName;
   }
 
@@ -396,7 +409,8 @@ export class DependencyGraph extends PureComponent<Props, State> {
     let errorRate = 0
     if (this.selectionStatistics && this.selectionStatistics.requests > 0) {
       errorRate = 100 / this.selectionStatistics.requests * this.selectionStatistics.errors
-    } 
+    }
+
     return (
       <div
         className={cx(
@@ -422,13 +436,12 @@ export class DependencyGraph extends PureComponent<Props, State> {
             </div>
             {showStatistics && <div className="statistics show">
 
-              <div className="header--selection">{ this.selectionId }
-                {this.resolvedDrillDownLink 
-                  && this.resolvedDrillDownLink.length > 0 
-                  && this.currentType === 'INTERNAL' 
+              <div className="header--selection">{this.selectionId}
+                {this.resolvedDrillDownLink
+                  && this.resolvedDrillDownLink.length > 0
                   && <a target="_blank" href={this.resolvedDrillDownLink}>
-                  <i className="fa fa-paper-plane-o"></i>
-                </a>}
+                    <LinkOutlined className="ub-ml2"/>
+                  </a>}
               </div>
 
               <div className="secondHeader--selection">Statistics</div>
@@ -439,58 +452,58 @@ export class DependencyGraph extends PureComponent<Props, State> {
                 </tr>
                 {this.selectionStatistics.requests >= 0 && <tr>
                   <td className="table--td--selection">Requests</td>
-                  <td className="table--td--selection">{ this.selectionStatistics.requests }</td>
+                  <td className="table--td--selection">{this.selectionStatistics.requests}</td>
                 </tr>}
                 {this.selectionStatistics.errors >= 0 && <tr>
                   <td className="table--td--selection">Errors</td>
-                  <td className="table--td--selection">{ this.selectionStatistics.errors }</td>
+                  <td className="table--td--selection">{this.selectionStatistics.errors}</td>
                 </tr>}
-                {this.selectionStatistics.requests >= 0 && this.selectionStatistics.errors >= 0 &&<tr>
+                {this.selectionStatistics.requests >= 0 && this.selectionStatistics.errors >= 0 && <tr>
                   <td className="table--td--selection">Error Rate</td>
                   <td className="table--td--selection">{errorRate}%</td>
                 </tr>}
-                {this.selectionStatistics.responseTime >= 0&&<tr>
+                {this.selectionStatistics.responseTime >= 0 && <tr>
                   <td className="table--td--selection">Avg. Response Time</td>
-                  <td className="table--td--selection">{ this.selectionStatistics.responseTime } ms</td>
+                  <td className="table--td--selection">{this.selectionStatistics.responseTime} ms</td>
                 </tr>}
                 {options.showBaselines && this.selectionStatistics.threshold && <tr>
                   <td className="table--td--selection">Response Time Health (Upper Baseline)</td>
-                  {!this.selectionStatistics.thresholdViolation && <td className="table--td--selection threshold--good">Good (&lt;= { this.selectionStatistics.threshold }ms)</td>}
-                  {this.selectionStatistics.thresholdViolation &&<td className="table--td--selection threshold--bad">Bad (&gt; { this.selectionStatistics.threshold }ms)</td>}
+                  {!this.selectionStatistics.thresholdViolation && <td className="table--td--selection threshold--good">Good (&lt;= {this.selectionStatistics.threshold}ms)</td>}
+                  {this.selectionStatistics.thresholdViolation && <td className="table--td--selection threshold--bad">Bad (&gt; {this.selectionStatistics.threshold}ms)</td>}
                 </tr>}
               </table>
 
               <div className="secondHeader--selection">Incoming Statistics</div>
               {this.receiving.length == 0 && <div className="no-data--selection">No incoming statistics available.</div>}
-              {this.receiving.length > 0 &&<table className="table--selection">
+              {this.receiving.length > 0 && <table className="table--selection">
                 <tr className="table--selection--head">
                   <th>Name</th>
                   <th className="table--th--selectionSmall">Time</th>
                   <th className="table--th--selectionSmall">Requests</th>
                   <th className="table--th--selectionSmall">Error Rate</th>
                 </tr>
-                {this.receiving.map(node => <tr>
-                  <td className="table--td--selection" title="{{node.name}}">{ node.name }</td>
-                  <td className="table--td--selection">{ node.responseTime }</td>
-                  <td className="table--td--selection">{ node.rate }</td>
-                  <td className="table--td--selection">{ node.error }</td>
+                {this.receiving.map((node, i) => <tr key={i}>
+                  <td className="table--td--selection" title="{{node.name}}">{node.name}</td>
+                  <td className="table--td--selection">{node.responseTime}</td>
+                  <td className="table--td--selection">{node.rate}</td>
+                  <td className="table--td--selection">{node.error}</td>
                 </tr>)}
               </table>}
 
               <div className="secondHeader--selection">Outgoing Statistics</div>
               {this.sending.length == 0 && <div className="no-data--selection">No outgoing statistics available.</div>}
-              {this.sending.length>0 &&<table className="table--selection">
+              {this.sending.length > 0 && <table className="table--selection">
                 <tr className="table--selection--head">
                   <th>Name</th>
                   <th className="table--th--selectionSmall">Time</th>
                   <th className="table--th--selectionSmall">Requests</th>
                   <th className="table--th--selectionSmall">Error Rate</th>
                 </tr>
-                {this.sending.map(node => <tr>
-                  <td className="table--td--selection" title="{{node.name}}">{ node.name }</td>
-                  <td className="table--td--selection">{ node.responseTime }</td>
-                  <td className="table--td--selection">{ node.rate }</td>
-                  <td className="table--td--selection">{ node.error }</td>
+                {this.sending.map((node, i) => <tr key={i}>
+                  <td className="table--td--selection" title="{{node.name}}">{node.name}</td>
+                  <td className="table--td--selection">{node.responseTime}</td>
+                  <td className="table--td--selection">{node.rate}</td>
+                  <td className="table--td--selection">{node.error}</td>
                 </tr>)}
 
               </table>}

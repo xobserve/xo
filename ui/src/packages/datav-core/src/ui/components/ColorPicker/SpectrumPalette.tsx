@@ -83,7 +83,6 @@ const SpectrumPicker = CustomPicker(({ rgb, hsl, onChange }) => {
 });
 
 const SpectrumPalette: React.FunctionComponent<SpectrumPaletteProps> = ({ color, onChange,theme }) => {
-  console.log(color)
   return (
     <div>
       <SpectrumPicker

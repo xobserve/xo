@@ -3,6 +3,7 @@ import ParticleEngine from './particle_engine';
 import { CyCanvas, IGraphMetrics, Particle, EGraphNodeType, Particles } from '../types';
 import humanFormat from 'human-format';
 import { DependencyGraph } from '../DependencyGraph';
+import { iconMap } from 'src/views/dashboard/components/SubMenu/DashboardLinks';
 
 export default class CanvasDrawer {
 
@@ -166,6 +167,11 @@ export default class CanvasDrawer {
         const now = Date.now();
         const elapsedTime = now - this.lastRenderTime;
 
+        // 30 frames per seconds
+        if (elapsedTime < 33) {
+            return true
+        }
+
         if (this.particleEngine.count() > 0) {
             return false;
         }
@@ -173,6 +179,7 @@ export default class CanvasDrawer {
         if (this.controller.state.paused && elapsedTime < 1000) {
             return true;
         }
+
         return false;
 
     }
@@ -181,6 +188,7 @@ export default class CanvasDrawer {
         if (!forceRepaint && this._skipFrame()) {
             return;
         }
+
         this.lastRenderTime = Date.now();
 
         const ctx = this.context;
@@ -530,28 +538,28 @@ export default class CanvasDrawer {
     }
 
     _drawServiceIcon(ctx: CanvasRenderingContext2D, node: cytoscape.NodeSingular) {
-        // const nodeId: string = node.id();
+        const nodeId: string = node.id();
 
-        // const iconMappings = this.controller.props.options.serviceIcons;
+        const iconMappings = this.controller.props.options.serviceIcons;
+        
+        const mapping = _.find(iconMappings, (v,k) => {
+            try {
+                return new RegExp(k).test(nodeId);
+            } catch (error) {
+                return false;
+            }
+        });
 
-        // const mapping = _.find(iconMappings, ({ pattern }) => {
-        //     try {
-        //         return new RegExp(pattern).test(nodeId);
-        //     } catch (error) {
-        //         return false;
-        //     }
-        // });
+        if (mapping) {
+            const image = this._getAsset(mapping, 'service_icons/' + mapping + '.png');
+            if (image != null) {
+                const cX = node.position().x;
+                const cY = node.position().y;
+                const iconSize = 16;
 
-        // if (mapping) {
-        //     const image = this._getAsset(mapping.filename, 'service_icons/' + mapping.filename + '.png');
-        //     if (image != null) {
-        //         const cX = node.position().x;
-        //         const cY = node.position().y;
-        //         const iconSize = 16;
-
-        //         ctx.drawImage(image, cX - iconSize / 2, cY - iconSize / 2, iconSize, iconSize);
-        //     }
-        // }
+                ctx.drawImage(image, cX - iconSize / 2, cY - iconSize / 2, iconSize, iconSize);
+            }
+        }
     }
 
     _drawNodeStatistics(ctx: CanvasRenderingContext2D, node: cytoscape.NodeSingular) {

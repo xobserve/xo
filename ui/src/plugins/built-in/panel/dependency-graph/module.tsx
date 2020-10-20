@@ -3,7 +3,7 @@ import _ from 'lodash'
 
 import { PanelPlugin } from 'src/packages/datav-core';
 import { DependencyGraphOptions } from './types';
-import DependencyGraph from './DependencyGraph';
+import DependencyGraph, {serviceIcons} from './DependencyGraph';
 import { Input, Select, Button, Divider, notification } from 'antd';
 import { PlusOutlined, CloseOutlined } from '@ant-design/icons';
 const { Option } = Select
@@ -167,16 +167,16 @@ export const plugin = new PanelPlugin<DependencyGraphOptions>(DependencyGraph).s
 });
 
 const ServiceEditor = props => {
-  let value = props.value
+  let value = _.cloneDeep(props.value)
   if (!props.value) {
-    value = props.item.defaultValue
+    value = _.cloneDeep(props.item.defaultValue)
   }
 
   const [tempService,setTempService] = useState(null)
   const [tempIcon,setTempIcon] = useState(null)
 
   const onAddService = () => {
-    if (props.value[tempService]) {
+    if (value[tempService]) {
       notification['error']({
         message: "Error",
         description: "A same service already exist",
@@ -186,7 +186,7 @@ const ServiceEditor = props => {
     }
 
     props.onChange({
-      ...props.value,
+      ...value,
       [tempService]: tempIcon
     })
 
@@ -195,7 +195,6 @@ const ServiceEditor = props => {
   }
 
   const onDelService = (service) => {
-    const value = _.cloneDeep(props.value)
     delete value[service]
     props.onChange(value)
   }
@@ -205,14 +204,14 @@ const ServiceEditor = props => {
     <>
       <div className="gf-form-inline">
         <div className="gf-form">
-          <label className="gf-form-label width-8">Target Type</label>
+          <label className="gf-form-label width-8">Name (RegEx)</label>
           <label className="gf-form-label width-8">Icon</label>
         </div>
         {
           services.map((service) => <div className="gf-form-inline" key={service}>
             <div className="gf-form">
               <Input className="gf-form-input width-8" value={service} disabled={service != ''} />
-              <Select className="width-8" value={props.value && props.value[service]} onChange={(v) => props.onChange({...props.value, [service]: v})}>{getIconOptions().map(icon => <Option value={icon} key={icon}>{icon}</Option>)}</Select>
+              <Select className="width-8" value={value && value[service]} onChange={(v) => props.onChange({...value, [service]: v})}>{serviceIcons.map(icon => <Option value={icon} key={icon}>{icon}</Option>)}</Select>
               <CloseOutlined onClick={() => onDelService(service)} className="ub-ml2 gf-form-label"/>
             </div>
           </div>)
@@ -222,18 +221,14 @@ const ServiceEditor = props => {
               <Divider />
               <div className="gf-form">
                 <Input className="gf-form-input width-8" value={tempService} onChange={(e) => setTempService(e.currentTarget.value)}/>
-                <Select className="width-8" value={tempIcon} onChange={(v) => setTempIcon(v)}>{getIconOptions().map(icon => <Option value={icon} key={icon}>{icon}</Option>)}</Select>
+                <Select className="width-8" value={tempIcon} onChange={(v) => setTempIcon(v)}>{serviceIcons.map(icon => <Option value={icon} key={icon}>{icon}</Option>)}</Select>
                 <PlusOutlined onClick={onAddService} className="ub-ml2 gf-form-label"/>
                 <CloseOutlined onClick={() => {setTempService(null);setTempIcon(null)}} className="gf-form-label"/>
               </div>
             </>
         }
-        {tempService === null && <Button type="primary" onClick={() => {setTempService('YOUR TYPE');setTempIcon('default')}}>Add new mappting</Button>}
+        {tempService === null && <Button type="primary" onClick={() => {setTempService('YOUR NAME');setTempIcon('default')}}>Add new mappting</Button>}
       </div>
     </>
   );
-}
-
-function getIconOptions() {
-  return ['default', 'message', 'database', 'http', 'web', 'balancer', 'ldap', 'mainframe', 'smtp', 'ftp'];
 }
