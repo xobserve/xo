@@ -156,6 +156,14 @@ export const plugin = new PanelPlugin<DependencyGraphOptions>(DependencyGraph).s
       },
       editor: ServiceEditor
     })
+
+    .addTextInput({
+      path: "drillDownLink",
+      name: "URL",
+      category: ['Options','Tracing Drilldown'],
+      defaultValue: '',
+      description: 'This URL will be used as a drilldown URL for selected service nodes, You can use variables , you can also use {} for selected node id,'
+    })
 });
 
 const ServiceEditor = props => {

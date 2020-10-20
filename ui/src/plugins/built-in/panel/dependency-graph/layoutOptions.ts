@@ -5,7 +5,7 @@ const options = {
     maxSimulationTime: 3000, // max length in ms to run the layout
     ungrabifyWhileSimulating: false, // so you can't drag nodes during layout
     fit: true, // set by controller // on every layout reposition of nodes, fit the viewport
-    padding: 90, // padding around the simulation
+    padding: 30, // padding around the simulation
     boundingBox: undefined, // constrain layout bounds; { x1, y1, x2, y2 } or { x1, y1, w, h }
     nodeDimensionsIncludeLabels: false, // whether labels should be included in determining the space used by a node
 

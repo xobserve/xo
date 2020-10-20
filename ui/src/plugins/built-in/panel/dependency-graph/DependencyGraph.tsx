@@ -1,6 +1,6 @@
 import React, { PureComponent } from 'react';
 import _, { find, map, isUndefined, remove, each, has } from 'lodash';
-import { PanelProps, withTheme, DatavTheme, toLegacyTableData } from 'src/packages/datav-core';
+import { PanelProps, withTheme, DatavTheme, toLegacyTableData, getTemplateSrv } from 'src/packages/datav-core';
 import { DependencyGraphOptions, CurrentData, QueryResponse, TableContent, ISelectionStatistics, IGraphMetrics, IGraph, IGraphNode, CyData, IGraphEdge } from './types';
 import { css, cx } from 'emotion';
 import { stylesFactory } from 'src/packages/datav-core';
@@ -21,6 +21,7 @@ interface Props extends PanelProps<DependencyGraphOptions> {
 }
 interface State {
   paused: boolean
+  showStatistics: boolean
 }
 
 export class DependencyGraph extends PureComponent<Props, State> {
@@ -29,7 +30,6 @@ export class DependencyGraph extends PureComponent<Props, State> {
   preProcessor: PreProcessor = new PreProcessor(this);
   graphGenerator: GraphGenerator = new GraphGenerator(this);
   cy: cytoscape.Core;
-  showStatistics: boolean = false;
   selectionId: string;
   receiving: TableContent[];
   sending: TableContent[];
@@ -44,7 +44,8 @@ export class DependencyGraph extends PureComponent<Props, State> {
 
   componentWillMount() {
     this.setState({
-      paused: false
+      paused: false,
+      showStatistics: false
     })
   }
 
@@ -219,13 +220,15 @@ export class DependencyGraph extends PureComponent<Props, State> {
   onSelectionChange(event: EventObject) {
     const selection = this.cy.$(':selected');
 
-    if (selection.length === 1) {
-      this.showStatistics = true;
+    const isSelected = selection.length === 1
+    if (isSelected) {
       this.updateStatisticTable();
-    } else {
-      this.showStatistics = false;
     }
-    this.forceUpdate()
+
+    this.setState({
+      ...this.state,
+      showStatistics: isSelected
+    })
   }
 
   updateStatisticTable() {
@@ -311,7 +314,8 @@ export class DependencyGraph extends PureComponent<Props, State> {
   generateDrillDownLink() {
     const { drillDownLink } = this.props.options;
     const link = drillDownLink.replace('{}', this.selectionId);
-    this.resolvedDrillDownLink = this.props.dashboard.templateSrv.replace(link);
+    this.resolvedDrillDownLink = getTemplateSrv().replace(link);
+    console.log(this.resolvedDrillDownLink)
   }
 
   getAssetUrl(assetName: string) {
@@ -367,7 +371,7 @@ export class DependencyGraph extends PureComponent<Props, State> {
   render() {
     const { options, data, width, height, theme, panel } = this.props
 
-    const { paused } = this.state
+    const { paused, showStatistics } = this.state
 
     if (this.props.options.showDummyData) {
       this.processQueryData(dummyData);
@@ -388,6 +392,11 @@ export class DependencyGraph extends PureComponent<Props, State> {
         this._updateGraph(graph);
       }
     }, 500)
+
+    let errorRate = 0
+    if (this.selectionStatistics && this.selectionStatistics.requests > 0) {
+      errorRate = 100 / this.selectionStatistics.requests * this.selectionStatistics.errors
+    } 
     return (
       <div
         className={cx(
@@ -411,6 +420,81 @@ export class DependencyGraph extends PureComponent<Props, State> {
                 <Tooltip placement="right" title="Zoom out"><Button className="btn navbar-button" onClick={() => this.zoom(-1)}><MinusOutlined /></Button></Tooltip>
               </div>
             </div>
+            {showStatistics && <div className="statistics show">
+
+              <div className="header--selection">{ this.selectionId }
+                {this.resolvedDrillDownLink 
+                  && this.resolvedDrillDownLink.length > 0 
+                  && this.currentType === 'INTERNAL' 
+                  && <a target="_blank" href={this.resolvedDrillDownLink}>
+                  <i className="fa fa-paper-plane-o"></i>
+                </a>}
+              </div>
+
+              <div className="secondHeader--selection">Statistics</div>
+              <table className="table--selection">
+                <tr className="table--selection--head">
+                  <th>Name</th>
+                  <th className="table--th--selectionMedium">Value</th>
+                </tr>
+                {this.selectionStatistics.requests >= 0 && <tr>
+                  <td className="table--td--selection">Requests</td>
+                  <td className="table--td--selection">{ this.selectionStatistics.requests }</td>
+                </tr>}
+                {this.selectionStatistics.errors >= 0 && <tr>
+                  <td className="table--td--selection">Errors</td>
+                  <td className="table--td--selection">{ this.selectionStatistics.errors }</td>
+                </tr>}
+                {this.selectionStatistics.requests >= 0 && this.selectionStatistics.errors >= 0 &&<tr>
+                  <td className="table--td--selection">Error Rate</td>
+                  <td className="table--td--selection">{errorRate}%</td>
+                </tr>}
+                {this.selectionStatistics.responseTime >= 0&&<tr>
+                  <td className="table--td--selection">Avg. Response Time</td>
+                  <td className="table--td--selection">{ this.selectionStatistics.responseTime } ms</td>
+                </tr>}
+                {options.showBaselines && this.selectionStatistics.threshold && <tr>
+                  <td className="table--td--selection">Response Time Health (Upper Baseline)</td>
+                  {!this.selectionStatistics.thresholdViolation && <td className="table--td--selection threshold--good">Good (&lt;= { this.selectionStatistics.threshold }ms)</td>}
+                  {this.selectionStatistics.thresholdViolation &&<td className="table--td--selection threshold--bad">Bad (&gt; { this.selectionStatistics.threshold }ms)</td>}
+                </tr>}
+              </table>
+
+              <div className="secondHeader--selection">Incoming Statistics</div>
+              {this.receiving.length == 0 && <div className="no-data--selection">No incoming statistics available.</div>}
+              {this.receiving.length > 0 &&<table className="table--selection">
+                <tr className="table--selection--head">
+                  <th>Name</th>
+                  <th className="table--th--selectionSmall">Time</th>
+                  <th className="table--th--selectionSmall">Requests</th>
+                  <th className="table--th--selectionSmall">Error Rate</th>
+                </tr>
+                {this.receiving.map(node => <tr>
+                  <td className="table--td--selection" title="{{node.name}}">{ node.name }</td>
+                  <td className="table--td--selection">{ node.responseTime }</td>
+                  <td className="table--td--selection">{ node.rate }</td>
+                  <td className="table--td--selection">{ node.error }</td>
+                </tr>)}
+              </table>}
+
+              <div className="secondHeader--selection">Outgoing Statistics</div>
+              {this.sending.length == 0 && <div className="no-data--selection">No outgoing statistics available.</div>}
+              {this.sending.length>0 &&<table className="table--selection">
+                <tr className="table--selection--head">
+                  <th>Name</th>
+                  <th className="table--th--selectionSmall">Time</th>
+                  <th className="table--th--selectionSmall">Requests</th>
+                  <th className="table--th--selectionSmall">Error Rate</th>
+                </tr>
+                {this.sending.map(node => <tr>
+                  <td className="table--td--selection" title="{{node.name}}">{ node.name }</td>
+                  <td className="table--td--selection">{ node.responseTime }</td>
+                  <td className="table--td--selection">{ node.rate }</td>
+                  <td className="table--td--selection">{ node.error }</td>
+                </tr>)}
+
+              </table>}
+            </div>}
           </div>
         </div>
       </div>

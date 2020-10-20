@@ -341,15 +341,15 @@ export default class CanvasDrawer {
         }
         if (requestCount >= 0) {
             const decimals = requestCount >= 1000 ? 1 : 0;
-            statistics.push(humanFormat(requestCount, { decimals }) + ' Requests');
+            statistics.push(humanFormat(requestCount, { decimals }) + ' req');
         }
         if (errorCount >= 0) {
             const decimals = errorCount >= 1000 ? 1 : 0;
-            statistics.push(humanFormat(errorCount, { decimals }) + ' Errors');
+            statistics.push(humanFormat(errorCount, { decimals }) + ' err');
         }
 
         if (statistics.length > 0) {
-            const edgeLabel = statistics.join(', ');
+            const edgeLabel = statistics.join('/ ');
             this._drawLabel(ctx, edgeLabel, xMid, yMid);
         }
     }
