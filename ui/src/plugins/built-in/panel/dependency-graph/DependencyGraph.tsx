@@ -14,7 +14,7 @@ import PreProcessor from './processing/preProcessor'
 import GraphGenerator from './processing/graphGenerator'
 
 import { initCytoscape, graphCanvas } from './cytoscape'
-import layoutOptions from './layoutOptions'
+import {editOptions,rawOptions} from './layoutOptions'
 
 interface Props extends PanelProps<DependencyGraphOptions> {
   theme: DatavTheme
@@ -107,9 +107,15 @@ export class DependencyGraph extends PureComponent<Props, State> {
 
   runLayout(unlockNodes: boolean = false) {
     const that = this;
+    
+    let layout = _.extend(editOptions,rawOptions)
+    if (this.props.options.layoutSetting) {
+      layout = _.extend(JSON.parse(this.props.options.layoutSetting),rawOptions)
+    }
 
+    console.log(layout)
     const options = {
-      ...layoutOptions,
+      ...layout,
       stop: function () {
         if (unlockNodes) {
           that.unlockNodes();

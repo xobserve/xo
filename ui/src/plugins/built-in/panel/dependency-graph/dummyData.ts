@@ -8,7 +8,7 @@ const dummyData: QueryResponse[] = [
             { text: "origin_service" },
             { text: "protocol" },
             { text: "service" },
-            { text: "in_count" }
+            { text: "request-rate" }
         ],
         refId: undefined,
         rows: [
@@ -35,7 +35,7 @@ const dummyData: QueryResponse[] = [
             { text: "service" },
             { text: "target_external" },
             { text: "target_service" },
-            { text: "out_count" }
+            { text: "request-rate-out" }
         ],
         refId: undefined,
         rows: [
@@ -63,7 +63,7 @@ const dummyData: QueryResponse[] = [
             { text: "protocol" },
             { text: "service" },
             { text: "target_external" },
-            { text: "in_timesum" }
+            { text: "response-time" }
         ],
         refId: undefined,
         rows: [
@@ -88,7 +88,7 @@ const dummyData: QueryResponse[] = [
             { text: "service" },
             { text: "target_external" },
             { text: "target_service" },
-            { text: "out_timesum" }
+            { text: "response-time-out" }
 
         ],
         refId: undefined,
@@ -116,7 +116,7 @@ const dummyData: QueryResponse[] = [
             { text: "protocol" },
             { text: "service" },
             { text: "target_external" },
-            { text: "error_in" }
+            { text: "error-rate" }
         ],
         refId: undefined,
         rows: [
@@ -134,7 +134,7 @@ const dummyData: QueryResponse[] = [
             { text: "protocol" },
             { text: "service" },
             { text: "target_external" },
-            { text: "error_out" }
+            { text: "error-rate-out" }
         ],
         refId: undefined,
         rows: [

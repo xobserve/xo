@@ -1,11 +1,14 @@
 import React, { useState } from 'react'
 import _ from 'lodash'
 
-import { PanelPlugin } from 'src/packages/datav-core';
+import { PanelPlugin, CodeEditor} from 'src/packages/datav-core';
 import { DependencyGraphOptions } from './types';
 import DependencyGraph, {serviceIcons} from './DependencyGraph';
 import { Input, Select, Button, Divider, notification } from 'antd';
 import { PlusOutlined, CloseOutlined } from '@ant-design/icons';
+import {editOptions}  from './layoutOptions'
+import styleOptions from './styleOptions'
+
 const { Option } = Select
 
 export const plugin = new PanelPlugin<DependencyGraphOptions>(DependencyGraph).setPanelOptions(builder => {
@@ -164,7 +167,51 @@ export const plugin = new PanelPlugin<DependencyGraphOptions>(DependencyGraph).s
       defaultValue: '',
       description: 'This URL will be used as a drilldown URL for selected service nodes, You can use variables , you can also use {} for selected node id,'
     })
+
+    .addCustomEditor({
+      id: 'dependency-layout-setting',
+      path: "layoutSetting",
+      name: 'Layout setting',
+      category: ['Layout and Style'],
+      defaultValue: JSON.stringify(editOptions, null, 2),
+      editor: OptionEditor
+    })
+
+    .addCustomEditor({
+      id: 'dependency-style-setting',
+      path: "styleSetting",
+      name: 'Style setting',
+      category: ['Layout and Style'],
+      defaultValue: JSON.stringify(styleOptions,null,2),
+      editor: OptionEditor
+    })
 });
+
+
+ 
+
+const OptionEditor = props => {
+  let value = _.cloneDeep(props.value) 
+  if (!props.value) {
+    value = _.cloneDeep(props.item.defaultValue)
+  }
+
+  const onDataChange = v => {
+     props.onChange(v)
+  }
+  return (
+      <CodeEditor
+        width="100%"
+        height="200px"
+        language="json"
+        showLineNumbers={true}
+        showMiniMap={false}
+        value={value}
+        onBlur={(v) => onDataChange(v)}
+
+      />
+  )
+}
 
 const ServiceEditor = props => {
   let value = _.cloneDeep(props.value)

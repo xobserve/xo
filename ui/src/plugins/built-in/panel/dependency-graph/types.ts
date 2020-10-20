@@ -29,6 +29,9 @@ export interface DependencyGraphOptions {
   serviceIcons: {string:string}
 
   drillDownLink: string
+
+  layoutSetting: string
+  styleSetting: string
 }
 
 

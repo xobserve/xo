@@ -3,11 +3,12 @@ import cola from 'cytoscape-cola';
 import cyCanvas from 'cytoscape-canvas';
 import GraphCanvas from './canvas/graph_canvas';
 import { DependencyGraph } from './DependencyGraph';
+import styleOptions from './styleOptions'
 
 // Register cytoscape extensions
 cyCanvas(cytoscape);
 cytoscape.use(cola);
-
+ 
 export let graphCanvas: GraphCanvas;
 export let graphContainer: any
 
@@ -20,22 +21,14 @@ export function initCytoscape(controller:DependencyGraph) {
 
     console.log("Initialize cytoscape..");
 
+    let settings =  styleOptions
+    if (controller.props.options.styleSetting) {
+        settings = JSON.parse(controller.props.options.styleSetting)
+    }
+
     controller.cy = cytoscape({
         container: graphContainer,
-        style: <any>[
-            {
-                "selector": "node",
-                "style": {
-                    "background-opacity": 0
-                }
-            },
-            {
-                "selector": "edge",
-                "style": {
-                    "visibility": "hidden"
-                }
-            }
-        ],
+        style: settings,
         wheelSensitivity: 0.125
     });
 
