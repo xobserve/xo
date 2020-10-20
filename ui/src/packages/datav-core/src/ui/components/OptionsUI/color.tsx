@@ -19,7 +19,7 @@ export const ColorValueEditor: React.FC<FieldConfigEditorProps<string, ColorFiel
   const theme = getTheme();
   const color = value || (item.defaultValue as string) || theme.colors.panelBg;
   return (
-    <ColorPicker color={undefined} onChange={onChange}>
+    <ColorPicker color={color} onChange={onChange}>
       {({ ref, showColorPicker, hideColorPicker }) => {
         return (
           <div className={'options-ui-spot'} onBlur={hideColorPicker}>

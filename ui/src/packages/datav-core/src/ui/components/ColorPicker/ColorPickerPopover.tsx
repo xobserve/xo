@@ -64,7 +64,6 @@ export class ColorPickerPopover<T extends CustomPickersDescriptor> extends React
   renderPicker = () => {
     const { activePicker } = this.state;
     const { color,theme } = this.props;
-
     switch (activePicker) {
       case 'spectrum':
         return <SpectrumPalette color={color} onChange={this.handleChange}  theme={theme} />;
@@ -78,14 +77,13 @@ export class ColorPickerPopover<T extends CustomPickersDescriptor> extends React
   };
 
   renderCustomPicker = (tabKey: keyof T) => {
-    const { customPickers, color } = this.props;
+    const { customPickers, color,theme } = this.props;
     if (!customPickers) {
       return null;
     }
 
     return React.createElement(customPickers[tabKey].tabComponent, {
       color,
-       //@ts-ignore
       theme,
       onChange: this.handleChange,
     });
