@@ -1,5 +1,5 @@
 import React, { PureComponent } from 'react';
-import _, { find, map, isUndefined, remove, each, has } from 'lodash';
+import _, { find, map, isUndefined, remove, each, has, filter } from 'lodash';
 import { PanelProps, withTheme, DatavTheme, toLegacyTableData, getTemplateSrv } from 'src/packages/datav-core';
 import { DependencyGraphOptions, CurrentData, QueryResponse, TableContent, ISelectionStatistics, IGraphMetrics, IGraph, IGraphNode, CyData, IGraphEdge } from './types';
 import { css, cx } from 'emotion';
@@ -7,7 +7,7 @@ import { stylesFactory } from 'src/packages/datav-core';
 import { NodeSingular, EdgeSingular, EventObject, EdgeCollection } from 'cytoscape';
 
 import './index.less'
-import { PlayCircleOutlined, PauseCircleOutlined, ApartmentOutlined, AimOutlined, PlusOutlined, MinusOutlined ,LinkOutlined} from '@ant-design/icons';
+import { PlayCircleOutlined, PauseCircleOutlined, ApartmentOutlined, AimOutlined, PlusOutlined, MinusOutlined ,LinkOutlined, FilterOutlined} from '@ant-design/icons';
 import { Tooltip, Button } from 'antd';
 import dummyData from "./dummyData";
 import PreProcessor from './processing/preProcessor'
@@ -15,6 +15,7 @@ import GraphGenerator from './processing/graphGenerator'
 
 import { initCytoscape, graphCanvas } from './cytoscape'
 import {editOptions,rawOptions} from './layoutOptions'
+import FilterPanel from './FilterPanel'
 
 interface Props extends PanelProps<DependencyGraphOptions> {
   theme: DatavTheme
@@ -22,6 +23,7 @@ interface Props extends PanelProps<DependencyGraphOptions> {
 interface State {
   paused: boolean
   showStatistics: boolean
+  filterData: IGraph
 }
 
 export let serviceIcons = [];
@@ -56,7 +58,8 @@ export class DependencyGraph extends PureComponent<Props, State> {
   componentWillMount() {
     this.setState({
       paused: false,
-      showStatistics: false
+      showStatistics: false,
+      filterData: null
     })
   }
 
@@ -113,7 +116,6 @@ export class DependencyGraph extends PureComponent<Props, State> {
       layout = _.extend(JSON.parse(this.props.options.layoutSetting),rawOptions)
     }
 
-    console.log(layout)
     const options = {
       ...layout,
       stop: function () {
@@ -160,7 +162,6 @@ export class DependencyGraph extends PureComponent<Props, State> {
         data: {
           id: node.name,
           type: node.type,
-          external_type: node.external_type,
           metrics: {
             ...node.metrics
           }
@@ -198,8 +199,7 @@ export class DependencyGraph extends PureComponent<Props, State> {
   processQueryData(data: QueryResponse[]) {
     this.validQueryTypes = this.hasOnlyTableQueries(data);
 
-    if (this.hasAggregationVariable() && this.validQueryTypes) {
-
+    if (this.validQueryTypes) {
       const graphData = this.preProcessor.processData(data);
 
       console.groupCollapsed('Processed received data');
@@ -225,13 +225,6 @@ export class DependencyGraph extends PureComponent<Props, State> {
     return result;
   }
 
-  hasAggregationVariable() {
-    const templateVariable: any = _.find(this.props.dashboard.templating.list, {
-      name: 'aggregationType'
-    });
-
-    return !!templateVariable;
-  }
 
 
   onSelectionChange(event: EventObject) {
@@ -262,9 +255,9 @@ export class DependencyGraph extends PureComponent<Props, State> {
       const edges: EdgeCollection = selection.connectedEdges();
 
       const metrics: IGraphMetrics = selection.nodes()[0].data('metrics');
-      const requestCount = _.defaultTo(metrics.rate, -1);
-      const errorCount = _.defaultTo(metrics.error_rate, -1);
-      const duration = _.defaultTo(metrics.response_time, -1);
+      const requestCount = _.defaultTo(metrics.requests, -1);
+      const errorCount = _.defaultTo(metrics.errors, -1);
+      const duration = _.defaultTo(metrics.responseTime, -1);
       const threshold = _.defaultTo(metrics.threshold, -1);
 
       this.selectionStatistics = {};
@@ -305,16 +298,16 @@ export class DependencyGraph extends PureComponent<Props, State> {
         };
 
         const edgeMetrics: IGraphMetrics = actualEdge.data('metrics');
-        const { response_time, rate, error_rate } = edgeMetrics;
+        const { responseTime, requests, errors } = edgeMetrics;
 
-        if (rate != undefined) {
-          sendingObject.rate = Math.floor(rate).toString();
+        if (requests != undefined) {
+          sendingObject.rate = Math.floor(requests).toString();
         }
-        if (response_time != undefined) {
-          sendingObject.responseTime = Math.floor(response_time) + " ms";
+        if (responseTime != undefined) {
+          sendingObject.responseTime = Math.floor(responseTime) + " ms";
         }
-        if (error_rate != undefined && rate != undefined) {
-          sendingObject.error = Math.floor(error_rate / (rate / 100)) + "%";
+        if (errors != undefined && requests != undefined) {
+          sendingObject.error = Math.floor(errors / (requests / 100)) + "%";
         }
 
         if (sendingCheck) {
@@ -387,10 +380,29 @@ export class DependencyGraph extends PureComponent<Props, State> {
     this.cy.zoom(zoomLevel);
   }
 
-  render() {
-    const { options, data, width, height, theme, panel } = this.props
+  showFilterPanel = () => {
+    const graph: IGraph = this.graphGenerator.generateGraph(this.currentData.graph);
+     this.setState({
+       ...this.state,
+       filterData: graph
+     })
+  }
 
-    const { paused, showStatistics } = this.state
+  closeFilterPanel = () => {
+    this.setState({
+      ...this.state,
+      filterData: null
+    })
+  }
+
+  onFilterChange = (v) => {
+    console.log(v)
+  }
+
+  render() {
+    const { options, data, width, height, panel } = this.props
+
+    const { paused, showStatistics, filterData} = this.state
 
     if (this.props.options.showDummyData) {
       this.processQueryData(dummyData);
@@ -438,6 +450,7 @@ export class DependencyGraph extends PureComponent<Props, State> {
                 <Tooltip placement="right" title="Fit to the canvas"><Button className="btn navbar-button" onClick={this.fit}><AimOutlined /></Button></Tooltip>
                 <Tooltip placement="right" title="Zoom in"><Button className="btn navbar-button" onClick={() => this.zoom(+1)}><PlusOutlined /></Button></Tooltip>
                 <Tooltip placement="right" title="Zoom out"><Button className="btn navbar-button" onClick={() => this.zoom(-1)}><MinusOutlined /></Button></Tooltip>
+                <Tooltip placement="right" title="Filter the nodes and edges"><Button className="btn navbar-button" onClick={() => this.showFilterPanel()}><FilterOutlined /></Button></Tooltip>
               </div>
             </div>
             {showStatistics && <div className="statistics show">
@@ -516,6 +529,7 @@ export class DependencyGraph extends PureComponent<Props, State> {
             </div>}
           </div>
         </div>
+        {filterData && <FilterPanel onClose={this.closeFilterPanel} onChange={this.onFilterChange} value={filterData}/>}
       </div>
     );
   }

@@ -43,13 +43,13 @@ export default class ParticleEngine {
                 return;
             }
 
-            const rate = defaultTo(metrics.rate, 0);
-            const error_rate = defaultTo(metrics.error_rate, 0);
-            const volume = rate + error_rate;
+            const requests = defaultTo(metrics.requests, 0);
+            const errors = defaultTo(metrics.errors, 0);
+            const volume = requests + errors;
 
             let errorRate;
-            if (rate >= 0 && error_rate >= 0) {
-                errorRate = error_rate / rate;
+            if (requests > 0 && errors >= 0) {
+                errorRate = errors / requests;
             } else {
                 errorRate = 0;
             }

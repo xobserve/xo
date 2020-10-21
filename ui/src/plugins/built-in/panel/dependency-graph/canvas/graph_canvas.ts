@@ -168,7 +168,7 @@ export default class CanvasDrawer {
         const elapsedTime = now - this.lastRenderTime;
 
         // 30 frames per seconds
-        if (elapsedTime < 33) {
+        if (elapsedTime < 100) {
             return true
         }
 
@@ -314,6 +314,7 @@ export default class CanvasDrawer {
             base = 140;
         } else {
             ctx.lineWidth = 1;
+            ctx.lineCap = 'round'
             base = 80;
         }
 
@@ -339,9 +340,9 @@ export default class CanvasDrawer {
         let statistics: string[] = [];
 
         const metrics: IGraphMetrics = edge.data('metrics');
-        const duration = _.defaultTo(metrics.response_time, -1);
-        const requestCount = _.defaultTo(metrics.rate, -1);
-        const errorCount = _.defaultTo(metrics.error_rate, -1);
+        const duration = _.defaultTo(metrics.responseTime, -1);
+        const requestCount = _.defaultTo(metrics.requests, -1);
+        const errorCount = _.defaultTo(metrics.errors, -1);
 
         if (duration >= 0) {
             const decimals = duration >= 1000 ? 1 : 0;
@@ -420,15 +421,15 @@ export default class CanvasDrawer {
     }
 
     _drawLabel(ctx: CanvasRenderingContext2D, label: string, cX: number, cY: number) {
-        const labelPadding = 1;
-        ctx.font = '6px Arial';
+        const labelPadding = 0;
+        ctx.font = '4px Arial';
 
         const labelWidth = ctx.measureText(label).width;
         const xPos = cX - labelWidth / 2;
         const yPos = cY + 3;
 
         ctx.fillStyle = this.colors.default;
-        ctx.fillRect(xPos - labelPadding, yPos - 6 - labelPadding, labelWidth + 2 * labelPadding, 6 + 2 * labelPadding);
+        ctx.fillRect(xPos - 1, yPos - 5 - labelPadding, labelWidth + 2, 6 + 2 * labelPadding);
 
         ctx.fillStyle = this.colors.background;
         ctx.fillText(label, xPos, yPos);
@@ -492,9 +493,9 @@ export default class CanvasDrawer {
         const metrics: IGraphMetrics = node.data('metrics');
 
         if (type === EGraphNodeType.INTERNAL) {
-            const requestCount = _.defaultTo(metrics.rate, -1);
-            const errorCount = _.defaultTo(metrics.error_rate, 0);
-            const responseTime = _.defaultTo(metrics.response_time, -1);
+            const requestCount = _.defaultTo(metrics.requests, -1);
+            const errorCount = _.defaultTo(metrics.errors, 0);
+            const responseTime = _.defaultTo(metrics.responseTime, -1);
             const threshold = _.defaultTo(metrics.threshold, -1);
 
             var unknownPct;
@@ -532,9 +533,9 @@ export default class CanvasDrawer {
         }
 
         // draw statistics
-        if (cy.zoom() > 1) {
-            this._drawNodeStatistics(ctx, node);
-        }
+        // if (cy.zoom() > 1) {
+        //     this._drawNodeStatistics(ctx, node);
+        // }
     }
 
     _drawServiceIcon(ctx: CanvasRenderingContext2D, node: cytoscape.NodeSingular) {
@@ -566,9 +567,9 @@ export default class CanvasDrawer {
         const lines: string[] = [];
 
         const metrics: IGraphMetrics = node.data('metrics');
-        const requestCount = _.defaultTo(metrics.rate, -1);
-        const errorCount = _.defaultTo(metrics.error_rate, -1);
-        const responseTime = _.defaultTo(metrics.response_time, -1);
+        const requestCount = _.defaultTo(metrics.requests, -1);
+        const errorCount = _.defaultTo(metrics.errors, -1);
+        const responseTime = _.defaultTo(metrics.responseTime, -1);
 
         if (requestCount >= 0) {
             const decimals = requestCount >= 1000 ? 1 : 0;
@@ -661,7 +662,7 @@ export default class CanvasDrawer {
     _drawNodeLabel(ctx: CanvasRenderingContext2D, node: cytoscape.NodeSingular) {
         const pos = node.position();
         let label: string = node.id();
-        const labelPadding = 1;
+        const labelPadding = 0;
 
         if (this.selectionNeighborhood.empty() || !this.selectionNeighborhood.has(node)) {
             if (label.length > 20) {
@@ -669,7 +670,7 @@ export default class CanvasDrawer {
             }
         }
 
-        ctx.font = '6px Arial';
+        ctx.font = '5px Arial';
 
         const labelWidth = ctx.measureText(label).width;
         const xPos = pos.x - labelWidth / 2;
@@ -677,7 +678,7 @@ export default class CanvasDrawer {
 
         const showBaselines = this.controller.props.options.showBaselines;
         const metrics: IGraphMetrics = node.data('metrics');
-        const responseTime = _.defaultTo(metrics.response_time, -1);
+        const responseTime = _.defaultTo(metrics.responseTime, -1);
         const threshold = _.defaultTo(metrics.threshold, -1);
 
         if (!showBaselines || threshold < 0 || responseTime < 0 || responseTime <= threshold) {
@@ -686,7 +687,7 @@ export default class CanvasDrawer {
             ctx.fillStyle = '#FF7383';
         }
 
-        ctx.fillRect(xPos - labelPadding, yPos - 6 - labelPadding, labelWidth + 2 * labelPadding, 6 + 2 * labelPadding);
+        ctx.fillRect(xPos - 1, yPos - 5 - labelPadding, labelWidth + 2 , 6 + 2 * labelPadding);
 
         ctx.fillStyle = this.colors.background;
         ctx.fillText(label, xPos, yPos);

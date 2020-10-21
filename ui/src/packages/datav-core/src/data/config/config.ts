@@ -31,12 +31,13 @@ export const getDefaultDatasourceName = () => {
 // @todo : need to be loaded from backend
 export const colorConfig = {
     light: {
-        test1: 'green'
+        componentBG: '#fff'
     },
     dark: {
-        test1: 'red'
+        componentBG: '#141619'
     }
 }
+
 export const getColorFromConfig = (theme: ThemeType, name:string) => {
     return colorConfig[theme][name]
 }

@@ -14,71 +14,41 @@ const { Option } = Select
 export const plugin = new PanelPlugin<DependencyGraphOptions>(DependencyGraph).setPanelOptions(builder => {
   return builder
     .addTextInput({
-      path: "dataMapping.sourceComponentPrefix",
-      name: 'Source Component Column Prefix',
+      path: "dataMapping.source",
+      name: 'Source Service Column',
       category: ['Options', 'Connection Mapping'],
-      defaultValue: 'origin_',
+      defaultValue: 'source',
     })
     .addTextInput({
-      path: "dataMapping.targetComponentPrefix",
-      name: 'Target Component Column Prefix',
+      path: "dataMapping.target",
+      name: 'Target Service Column',
       category: ['Options'],
-      defaultValue: 'target_',
+      defaultValue: 'target',
     })
     .addTextInput({
-      path: "dataMapping.type",
-      name: 'Type',
+      path: "dataMapping.externalType",
+      name: 'External Type',
       category: ['Options'],
-      defaultValue: 'type',
-    })
-    .addTextInput({
-      path: "dataMapping.extOrigin",
-      name: 'External Origin',
-      category: ['Options'],
-      defaultValue: 'external_origin',
-    })
-    .addTextInput({
-      path: "dataMapping.extTarget",
-      name: 'External Target',
-      category: ['Options'],
-      defaultValue: 'external_target',
+      defaultValue: 'external_type',
     })
 
     .addTextInput({
       path: "dataMapping.responseTimeColumn",
       name: 'Response Time Column',
       category: ['Options', 'Data Mapping'],
-      defaultValue: 'response-time',
+      defaultValue: 'response_time',
     })
     .addTextInput({
-      path: "dataMapping.requestRateColumn",
-      name: 'Request Rate Column',
+      path: "dataMapping.requestColumn",
+      name: 'Requests Column',
       category: ['Options'],
-      defaultValue: 'request-rate',
+      defaultValue: 'requests',
     })
     .addTextInput({
-      path: "dataMapping.errorRateColumn",
-      name: 'Error Rate Column',
+      path: "dataMapping.errorsColumn",
+      name: 'Errors Column',
       category: ['Options'],
-      defaultValue: 'error-rate',
-    })
-    .addTextInput({
-      path: "dataMapping.responseTimeOutgoingColumn",
-      name: 'Response Time Column (Outgoing)',
-      category: ['Options'],
-      defaultValue: 'response-time-out',
-    })
-    .addTextInput({
-      path: "dataMapping.requestRateOutgoingColumn",
-      name: 'Request Rate Column (Outgoing)',
-      category: ['Options'],
-      defaultValue: 'request-rate-out',
-    })
-    .addTextInput({
-      path: "dataMapping.errorRateOutgoingColumn",
-      name: 'Error Rate Column (Outgoing)',
-      category: ['Options'],
-      defaultValue: 'error-rate-out',
+      defaultValue: 'errors',
     })
     .addTextInput({
       path: "dataMapping.baselineRtUpper",

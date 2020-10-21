@@ -26,6 +26,19 @@ export function initCytoscape(controller:DependencyGraph) {
         settings = JSON.parse(controller.props.options.styleSetting)
     }
 
+    const eee = document.getElementsByClassName('panel-container')
+    if (eee.length > 0) {
+        const styles = window.getComputedStyle(eee[0],null)
+        if (styles && styles['backgroundColor']) {
+            settings.forEach(setting => {
+                if (setting.selector === 'edge') {
+                    setting['style']['line-color'] = styles['backgroundColor']
+                }
+            })
+        }
+    }
+
+
     controller.cy = cytoscape({
         container: graphContainer,
         style: settings,

@@ -1,18 +1,5 @@
 export interface DependencyGraphOptions {
-  dataMapping: {
-    sourceComponentPrefix: string 
-    targetComponentPrefix: string 
-    type: string
-    extOrigin:string
-    extTarget: string
-    responseTimeColumn: string 
-    requestRateColumn: string
-    errorRateColumn: string
-    responseTimeOutgoingColumn: string
-    requestRateOutgoingColumn: string
-    errorRateOutgoingColumn: string 
-    baselineRtUpper : string
-  }
+  dataMapping: DataMapping
   showConnectionStats: boolean
   sumTimings: boolean
   filterEmptyConnections: boolean
@@ -51,21 +38,13 @@ export interface PanelSettings {
 };
 
 export interface DataMapping {
-  sourceComponentPrefix: string;
-  targetComponentPrefix: string;
-
-  responseTimeColumn: string;
-  requestRateColumn: string;
-  errorRateColumn: string;
-  responseTimeOutgoingColumn: string;
-  requestRateOutgoingColumn: string;
-  errorRateOutgoingColumn: string;
-
-  extOrigin: string;
-  extTarget: string;
-  type: string;
-
-  baselineRtUpper: string;
+  source: string 
+  target: string 
+  externalType: string
+  responseTimeColumn: string 
+  requestColumn: string
+  errorsColumn: string
+  baselineRtUpper : string
 };
 
 export interface PanelStyleSettings {
@@ -112,17 +91,14 @@ export interface GraphDataElement {
   source?: string;
   target: string;
   data: DataElement;
-  type: GraphDataType;
+  type?: GraphDataType;
+  externalType: ExternalType;
 };
 
 export interface DataElement {
-  rate_in?: number;
-  rate_out?: number;
-  response_time_in?: number;
-  response_time_out?: number;
-  error_rate_in?: number;
-  error_rate_out?: number;
-  type?: string;
+  requests?: number;
+  errors?: number;
+  responseTime?: number;
   threshold?: number;
 };
 
@@ -133,6 +109,13 @@ export enum GraphDataType {
   EXTERNAL_IN = 'EXTERNAL_IN'
 };
 
+export enum ExternalType {
+  NoExternal = 0,
+  SourceExternal = 1,
+  TargetExternal = 2
+}
+
+/*--------data structures for cytoscape------*/
 export interface IGraph {
   nodes: IGraphNode[],
   edges: IGraphEdge[]
@@ -142,16 +125,16 @@ export interface IGraphNode {
   name: string;
   type: EGraphNodeType;
   metrics?: IGraphMetrics;
-  external_type?: string;
 };
 
 export interface IGraphMetrics {
-  rate?: number;
-  error_rate?: number;
-  response_time?: number;
-  success_rate?: number;
+  requests?: number;   // requests count
+  errors?: number;
+  responseTime?: number;
+  errorRate?: number;
   threshold?: number;
 };
+
 
 export enum EGraphNodeType {
   INTERNAL = 'INTERNAL',
@@ -163,6 +146,8 @@ export interface IGraphEdge {
   target: string;
   metrics?: IGraphMetrics;
 };
+/*---------------------------------------------------*/
+
 
 export interface Particle {
   velocity: number;

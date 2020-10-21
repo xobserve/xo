@@ -1,7 +1,7 @@
 import _, { map, flattenDeep, has, groupBy, values, reduce, merge, forOwn, keys } from 'lodash';
 import Utils from '../utils';
 import {DependencyGraph}  from '../DependencyGraph';
-import { QueryResponse, GraphDataElement, GraphDataType, CurrentData } from '../types';
+import { QueryResponse, GraphDataElement, GraphDataType, CurrentData, ExternalType } from '../types';
 
 class PreProcessor {
 
@@ -33,63 +33,25 @@ class PreProcessor {
 	}
 
 	_transformObjects(data: any[]): GraphDataElement[] {
-		const { extOrigin: externalSource, extTarget: externalTarget, sourceComponentPrefix, targetComponentPrefix } = this.controller.props.options.dataMapping;
-		const aggregationSuffix: string = Utils.getTemplateVariable(this.controller, 'aggregationType');
+		const { source: sourceColumn, target: targetColumn ,externalType} = this.controller.props.options.dataMapping;
 
-		const sourceColumn = sourceComponentPrefix + aggregationSuffix;
-		const targetColumn = targetComponentPrefix + aggregationSuffix;
 
 		const result = map(data, dataObject => {
-			let source = has(dataObject, sourceColumn);
-			let target = has(dataObject, targetColumn);
-			const extSource = has(dataObject, externalSource);
-			const extTarget = has(dataObject, externalTarget);
+			let hasSource = has(dataObject, sourceColumn);
+			let hasTarget = has(dataObject, targetColumn);
 
-			let trueCount = [source, target, extSource, extTarget].filter(e => e).length;
-
-			if (trueCount > 1) {
-				if (target && extTarget) {
-					target = false;
-				} else if (source && extSource) {
-					source = false;
-				} else {
-					console.error("soruce-target conflict for data element", dataObject);
-					return;
-				}
+			if (!hasSource || !hasTarget) {
+				console.log("dependency-graph data has no source or target column")
+				return 
 			}
 
 			const result: GraphDataElement = {
-				target: "",
+				source: dataObject[sourceColumn],
+				target: dataObject[targetColumn],
 				data: dataObject,
-				type: GraphDataType.INTERNAL
+				externalType: dataObject[externalType]?? ExternalType.NoExternal
 			};
 
-			if (trueCount == 0) {
-				result.target = dataObject[aggregationSuffix];
-				result.type = GraphDataType.EXTERNAL_IN;
-			} else {
-				if (source || target) {
-					if (source) {
-						result.source = dataObject[sourceColumn];
-						result.target = dataObject[aggregationSuffix];
-					} else {
-						result.source = dataObject[aggregationSuffix];
-						result.target = dataObject[targetColumn];
-					}
-
-					if (result.source === result.target) {
-						result.type = GraphDataType.SELF;
-					}
-				} else if (extSource) {
-					result.source = dataObject[externalSource];
-					result.target = dataObject[aggregationSuffix];
-					result.type = GraphDataType.EXTERNAL_IN;
-				} else if (extTarget) {
-					result.source = dataObject[aggregationSuffix];
-					result.target = dataObject[externalTarget];
-					result.type = GraphDataType.EXTERNAL_OUT;
-				}
-			}
 			return result;
 		});
 
@@ -123,13 +85,9 @@ class PreProcessor {
 
 	_cleanData(data: GraphDataElement[]): GraphDataElement[] {
 		const columnMapping = {};
-		columnMapping['response_time_in'] = Utils.getConfig(this.controller, 'responseTimeColumn');
-		columnMapping['rate_in'] = Utils.getConfig(this.controller, 'requestRateColumn');
-		columnMapping['error_rate_in'] = Utils.getConfig(this.controller, 'errorRateColumn');
-		columnMapping['response_time_out'] = Utils.getConfig(this.controller, 'responseTimeOutgoingColumn');
-		columnMapping['rate_out'] = Utils.getConfig(this.controller, 'requestRateOutgoingColumn');
-		columnMapping['error_rate_out'] = Utils.getConfig(this.controller, 'errorRateOutgoingColumn');
-		columnMapping['type'] = Utils.getConfig(this.controller, 'type');
+		columnMapping['responseTime'] = Utils.getConfig(this.controller, 'responseTimeColumn');
+		columnMapping['requests'] = Utils.getConfig(this.controller, 'requestColumn');
+		columnMapping['errors'] = Utils.getConfig(this.controller, 'errorsColumn');
 		columnMapping["threshold"] = Utils.getConfig(this.controller, 'baselineRtUpper');
 
 		const cleanedData = map(data, dataElement => {
@@ -162,8 +120,9 @@ class PreProcessor {
 		const flattenData = flattenDeep(objectTables);
 
 		const graphElements = this._transformObjects(flattenData);
-
+	
 		const mergedData = this._mergeGraphData(graphElements);
+
 		const columnNames = this._extractColumnNames(mergedData);
 
 		const cleanData = this._cleanData(mergedData);
