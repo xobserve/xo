@@ -310,11 +310,10 @@ export default class CanvasDrawer {
 
         let base;
         if (!this.selectionNeighborhood.empty() && this.selectionNeighborhood.has(edge)) {
-            ctx.lineWidth = 3;
+            ctx.lineWidth = 2;
             base = 140;
         } else {
-            ctx.lineWidth = 1;
-            ctx.lineCap = 'round'
+            ctx.lineWidth = 0.6;
             base = 80;
         }
 

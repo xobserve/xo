@@ -180,3 +180,39 @@ export interface ISelectionStatistics {
   threshold?: number;
   thresholdViolation?: boolean;
 };
+
+
+export interface FilterConditions {
+  nodes: {
+    type: NodeFilterType
+    names: string[]
+  }
+  conditions: FilterCondition[],
+
+  store: boolean
+}
+
+export interface FilterCondition {
+  type: ConditionFilterType 
+  metric: string
+  operator: string 
+  value: number
+}
+
+export enum NodeFilterType {
+  ALL = 'ALL',
+  IN = 'IN',
+  OUT_OF = 'OUT_OF'
+}
+
+export enum ConditionFilterType {
+  OR = 'OR',
+  AND = 'AND'
+}
+
+export enum ConditionMetric {
+  REQUESTS = 'requests',
+  ERRORS = 'errors',
+  RESP_TIME = 'responseTime',
+  ERRORS_RATE = 'errorRtate'
+}

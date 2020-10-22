@@ -1,7 +1,7 @@
 import React, { PureComponent } from 'react';
 import _, { find, map, isUndefined, remove, each, has, filter } from 'lodash';
 import { PanelProps, withTheme, DatavTheme, toLegacyTableData, getTemplateSrv } from 'src/packages/datav-core';
-import { DependencyGraphOptions, CurrentData, QueryResponse, TableContent, ISelectionStatistics, IGraphMetrics, IGraph, IGraphNode, CyData, IGraphEdge } from './types';
+import { DependencyGraphOptions, CurrentData, QueryResponse, TableContent, ISelectionStatistics, IGraphMetrics, IGraph, IGraphNode, CyData, IGraphEdge, FilterConditions, NodeFilterType } from './types';
 import { css, cx } from 'emotion';
 import { stylesFactory } from 'src/packages/datav-core';
 import { NodeSingular, EdgeSingular, EventObject, EdgeCollection } from 'cytoscape';
@@ -16,6 +16,9 @@ import GraphGenerator from './processing/graphGenerator'
 import { initCytoscape, graphCanvas } from './cytoscape'
 import {editOptions,rawOptions} from './layoutOptions'
 import FilterPanel from './FilterPanel'
+import {filterGraph} from './filterGraph'
+import { store } from 'src/store/store';
+import storage from 'src/core/library/utils/localStorage';
 
 interface Props extends PanelProps<DependencyGraphOptions> {
   theme: DatavTheme
@@ -23,7 +26,8 @@ interface Props extends PanelProps<DependencyGraphOptions> {
 interface State {
   paused: boolean
   showStatistics: boolean
-  filterData: IGraph
+  graphData: IGraph
+  filterConditions: FilterConditions
 }
 
 export let serviceIcons = [];
@@ -40,6 +44,14 @@ export class DependencyGraph extends PureComponent<Props, State> {
   selectionStatistics: ISelectionStatistics;
   resolvedDrillDownLink: string;
   initResize: boolean = true;
+  filterConditions: FilterConditions = storage.get('dependency-graph-filter') ?? {
+    nodes: {
+      type: NodeFilterType.ALL,
+      names: []
+    },
+    conditions: [],
+    store: false
+  }
 
   constructor(props) {
     super(props)
@@ -59,7 +71,8 @@ export class DependencyGraph extends PureComponent<Props, State> {
     this.setState({
       paused: false,
       showStatistics: false,
-      filterData: null
+      graphData: null,
+      filterConditions: null
     })
   }
 
@@ -384,25 +397,46 @@ export class DependencyGraph extends PureComponent<Props, State> {
     const graph: IGraph = this.graphGenerator.generateGraph(this.currentData.graph);
      this.setState({
        ...this.state,
-       filterData: graph
+       graphData: graph,
+       filterConditions: _.cloneDeep(this.filterConditions)
      })
   }
 
   closeFilterPanel = () => {
     this.setState({
       ...this.state,
-      filterData: null
+      graphData: null,
+      filterConditions: null
     })
   }
 
-  onFilterChange = (v) => {
-    console.log(v)
+  onFilterChange = (conditions) => {
+    const cons = _.cloneDeep(conditions)
+    this.setState({
+      ...this.state,
+      filterConditions: cons
+    })
+  }
+
+  onFilterSubmit = () => {
+    this.filterConditions = _.cloneDeep(this.state.filterConditions)
+    this.setState({
+      ...this.state,
+      graphData: null,
+      filterConditions: null
+    })
+
+    if (this.filterConditions.store) {
+      storage.set('dependency-graph-filter',this.filterConditions)
+    } else {
+      storage.remove('dependency-graph-filter')
+    }
   }
 
   render() {
     const { options, data, width, height, panel } = this.props
 
-    const { paused, showStatistics, filterData} = this.state
+    const { paused, showStatistics, graphData, filterConditions} = this.state
 
     if (this.props.options.showDummyData) {
       this.processQueryData(dummyData);
@@ -419,7 +453,10 @@ export class DependencyGraph extends PureComponent<Props, State> {
 
     setTimeout(() => {
       if (this.cy && this.isDataAvailable()) {
-        const graph: IGraph = this.graphGenerator.generateGraph(this.currentData.graph);
+        const rawGraph: IGraph = this.graphGenerator.generateGraph(this.currentData.graph);
+        const graph = filterGraph(rawGraph,this.filterConditions)
+        
+        console.log(this.filterConditions)
         this._updateGraph(graph);
       }
     }, 500)
@@ -529,7 +566,7 @@ export class DependencyGraph extends PureComponent<Props, State> {
             </div>}
           </div>
         </div>
-        {filterData && <FilterPanel onClose={this.closeFilterPanel} onChange={this.onFilterChange} value={filterData}/>}
+        {graphData && <FilterPanel onSubmit={this.onFilterSubmit} onClose={this.closeFilterPanel} onChange={this.onFilterChange} graph={graphData} conditions={filterConditions}/>}
       </div>
     );
   }
