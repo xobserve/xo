@@ -18,7 +18,11 @@ export interface DependencyGraphOptions {
   drillDownLink: string
 
   layoutSetting: string
-  styleSetting: string
+  styleSetting: string,
+  threshold: {
+    type: string,
+    value: number
+  }
 }
 
 
@@ -131,6 +135,7 @@ export interface IGraphMetrics {
   requests?: number;   // requests count
   errors?: number;
   responseTime?: number;
+  requestRate? : number;
   errorRate?: number;
   threshold?: number;
 };
@@ -214,5 +219,5 @@ export enum ConditionMetric {
   REQUESTS = 'requests',
   ERRORS = 'errors',
   RESP_TIME = 'responseTime',
-  ERRORS_RATE = 'errorRtate'
+  ERRORS_RATE = 'errorRate'
 }

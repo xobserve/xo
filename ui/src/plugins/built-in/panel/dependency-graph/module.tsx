@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import _ from 'lodash'
 
 import { PanelPlugin, CodeEditor} from 'src/packages/datav-core';
-import { DependencyGraphOptions } from './types';
+import { DependencyGraphOptions,ConditionMetric} from './types';
 import DependencyGraph, {serviceIcons} from './DependencyGraph';
 import { Input, Select, Button, Divider, notification } from 'antd';
 import { PlusOutlined, CloseOutlined } from '@ant-design/icons';
@@ -10,6 +10,7 @@ import {editOptions}  from './layoutOptions'
 import styleOptions from './styleOptions'
 
 const { Option } = Select
+const { REQUESTS, ERRORS, ERRORS_RATE, RESP_TIME } = ConditionMetric
 
 export const plugin = new PanelPlugin<DependencyGraphOptions>(DependencyGraph).setPanelOptions(builder => {
   return builder
@@ -98,6 +99,27 @@ export const plugin = new PanelPlugin<DependencyGraphOptions>(DependencyGraph).s
       name: 'Show Baselines',
       category: ['Options'],
       defaultValue: false,
+    })
+
+    .addSelect({
+      path: 'threshold.type',
+      name: 'Threshold type',
+      category: ['Options','Threshold'],
+      defaultValue: null,
+      settings: {
+        options: [
+          {value: REQUESTS, label: REQUESTS},
+          {value: ERRORS, label:ERRORS},
+          {value: ERRORS_RATE, label: ERRORS_RATE},
+          {value: RESP_TIME, label:RESP_TIME},
+        ]
+      }
+    })
+    .addNumberInput({
+      path: 'threshold.value',
+      name: 'Threshold value',
+      category: ['Options'],
+      defaultValue: 0,
     })
 
     .addColorPicker({

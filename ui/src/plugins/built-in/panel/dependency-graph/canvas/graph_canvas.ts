@@ -522,9 +522,8 @@ export default class CanvasDrawer {
 
             // drawing the baseline status
             const showBaselines = this.controller.props.options.showBaselines;
-            if (showBaselines && responseTime >= 0 && threshold >= 0) {
-                const thresholdViolation = threshold < responseTime;
-
+            const thresholdViolation = this.thresholdViolate(this.controller.props.options.threshold, metrics)
+            if (showBaselines && thresholdViolation) {
                 this._drawThresholdStroke(ctx, node, thresholdViolation, 15, 5, 0.5);
             }
         } else {
@@ -535,6 +534,15 @@ export default class CanvasDrawer {
         // if (cy.zoom() > 1) {
         //     this._drawNodeStatistics(ctx, node);
         // }
+    }
+
+    thresholdViolate(threshold: {type:string,value:number}, metrics: IGraphMetrics) : boolean {
+        const value = metrics[threshold.type]
+        if (value > threshold.value) {
+            return true
+        }
+
+        return false
     }
 
     _drawServiceIcon(ctx: CanvasRenderingContext2D, node: cytoscape.NodeSingular) {
