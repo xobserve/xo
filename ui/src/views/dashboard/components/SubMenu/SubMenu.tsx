@@ -55,9 +55,16 @@ class SubMenuUnConnected extends PureComponent<Props> {
       return null;
     }
 
+    // only show dashboard variables here
+    const dashVars: VariableModel[] = []
+    variables.forEach(v => {
+      if (!v.global) {
+        dashVars.push(v)
+      }
+    })
     return (
       <div className="submenu-controls">
-        <SubMenuItems variables={variables} />
+        <SubMenuItems variables={dashVars} />
         <Annotations annotations={dashboard.annotations.list} onAnnotationChanged={this.onAnnotationStateChanged} />
         <div className="gf-form gf-form--grow" />
         {dashboard && <DashboardLinks dashboard={dashboard} />}

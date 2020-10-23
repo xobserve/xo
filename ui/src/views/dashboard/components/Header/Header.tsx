@@ -3,11 +3,11 @@ import React, { useState } from 'react'
 import { connect } from 'react-redux';
 import { Prompt } from "react-router-dom";
 
-import { Layout, Tooltip, Button } from 'antd'
+import { Layout, Tooltip, Button, Modal} from 'antd'
 
 import BreadcrumbWrapper from './Breadcrumb/Breadcrumb'
 
-import { StoreState } from 'src/types'
+import { StoreState, VariableModel } from 'src/types'
 import { TimePickerWrapper } from 'src/views/components/TimePicker/TimePickerWrapper'
 import SaveDashboard from 'src/views/dashboard/components/SaveDashboard/SaveDashboard';
 import appEvents from 'src/core/library/utils/app_events';
@@ -18,9 +18,12 @@ import { DashboardModel } from 'src/views/dashboard/model';
 import localeData from 'src/core/library/locale'
 import { FormattedMessage as Message } from 'react-intl';
 import { Icon } from 'src/packages/datav-core/src';
-import { SaveOutlined, SettingOutlined,PlusOutlined} from '@ant-design/icons';
+import { SaveOutlined, SettingOutlined,PlusOutlined, CalculatorOutlined} from '@ant-design/icons';
 import { store } from 'src/store/store';
 import { updateLocation } from 'src/store/reducers/location';
+import { getVariables } from 'src/views/variables/state/selectors';
+import { SubMenuItems } from '../SubMenu/SubMenuItems';
+
 
 interface Props {
     locale: string
@@ -28,13 +31,14 @@ interface Props {
     onAddPanel: any
     onSaveDashboard: any
     onUpdateUrl: any
+    variables: VariableModel[]
 }
 
 const { Header } = Layout
 
 function HeaderWrapper(props: Props) {
     const [dashboard, setDashboard] = useState(null)
-
+    const [showGlobalVar, setShowGlobalVar] = useState(false)
     appEvents.on('open-dashboard-save-modal', (dash) => {
         setDashboard(dash)
     })
@@ -43,6 +47,13 @@ function HeaderWrapper(props: Props) {
     appEvents.on('set-panel-viewing-back-button', (component) => {
         if (!backButtonComponent) {
             setBackButtonComponent(component)
+        }
+    })
+
+    const globalVars = []
+    props.variables.forEach(v => {
+        if (v.global) {
+            globalVars.push(v)
         }
     })
 
@@ -62,6 +73,9 @@ function HeaderWrapper(props: Props) {
                                 () => store.dispatch(updateLocation({ query: { settingView: 'general' }, partial: true }))
                             } />
                         </Tooltip>
+                        {globalVars.length > 0 && <Tooltip title={<Message id={'common.globalVariable'} />}>
+                            <Button icon={<CalculatorOutlined />} onClick={() => setShowGlobalVar(true)} />
+                        </Tooltip>}
                         <Tooltip title={<Message id='dashboard.addUrl'/>} placement="bottom">
                             <Button icon={  <PlusOutlined />} onClick={() => props.onUpdateUrl()} />
                         </Tooltip>
@@ -71,7 +85,15 @@ function HeaderWrapper(props: Props) {
             </div>
 
             {dashboard && <SaveDashboard dashboard={dashboard[0]} originDashbord={dashboard[1]} setDashboard={setDashboard} />}
-
+            
+            <Modal
+                title={<Message id={'dashboard.setGlobalVar'}/>}
+                visible={showGlobalVar}
+                footer={null}
+                onCancel={() => setShowGlobalVar(false)}
+                >
+                <SubMenuItems variables={globalVars} />
+            </Modal>
             <Prompt message={
                 () =>
                     tracker.canLeave()
@@ -86,6 +108,7 @@ function HeaderWrapper(props: Props) {
 export const mapStateToProps = (state: StoreState) => ({
     locale: state.application.locale,
     breadcrumbText: state.application.breadcrumbText,
+    variables: getVariables(state, false),
 });
 
 export default connect(mapStateToProps)(HeaderWrapper);

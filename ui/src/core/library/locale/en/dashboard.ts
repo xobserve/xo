@@ -49,6 +49,8 @@ const dashboard = {
     globalVisible: 'Global visible',
     globalTooltip: 'When checked,this variable will be global variable,it will be seen in every dashboard',
     enableGlobalVariable: 'Enalble global variable',
+
+    setGlobalVar: 'Set global variables',
 }
 
 export default dashboard
