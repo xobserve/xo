@@ -49,7 +49,8 @@ const dashboard = {
     globalVisible: '全局可见',
     globalTooltip: '当勾选后，该变量将变为全局变量，每个仪表盘都可见',
     enableGlobalVariable: '开启全局变量',
-    setGlobalVar: '设置全局变量',
+    globalVariables: '全局变量',
+    dashVariables: '仪表盘变量',
 }
 
 export default dashboard

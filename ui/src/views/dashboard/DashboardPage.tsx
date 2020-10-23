@@ -358,7 +358,7 @@ class DashboardPage extends React.PureComponent<DashboardPageProps & RouteCompon
                         className="custom-scrollbar--page"
                     >
                         <div className={gridWrapperClasses}>
-                            {!editPanel && config.featureToggles.newVariables && <SubMenu dashboard={dashboard} />}
+                            {!editPanel && config.featureToggles.newVariables && dashboard.links.length > 0 &&  <SubMenu dashboard={dashboard} />}
                             <DashboardGrid
                                 alertStates={panelAlertStates}
                                 dashboard={dashboard}

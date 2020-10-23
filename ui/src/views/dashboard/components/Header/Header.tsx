@@ -3,7 +3,7 @@ import React, { useState } from 'react'
 import { connect } from 'react-redux';
 import { Prompt } from "react-router-dom";
 
-import { Layout, Tooltip, Button, Modal} from 'antd'
+import { Layout, Tooltip, Button, Modal, Divider} from 'antd'
 
 import BreadcrumbWrapper from './Breadcrumb/Breadcrumb'
 
@@ -51,10 +51,9 @@ function HeaderWrapper(props: Props) {
     })
 
     const globalVars = []
+    const localVars = []
     props.variables.forEach(v => {
-        if (v.global) {
-            globalVars.push(v)
-        }
+        v.global ?  globalVars.push(v) : localVars.push(v) 
     })
 
     return (
@@ -87,12 +86,18 @@ function HeaderWrapper(props: Props) {
             {dashboard && <SaveDashboard dashboard={dashboard[0]} originDashbord={dashboard[1]} setDashboard={setDashboard} />}
             
             <Modal
-                title={<Message id={'dashboard.setGlobalVar'}/>}
+                title={null}
                 visible={showGlobalVar}
                 footer={null}
                 onCancel={() => setShowGlobalVar(false)}
                 >
+                <h3><Message id={'dashboard.globalVariables'}/></h3>
                 <SubMenuItems variables={globalVars} />
+
+                <Divider />
+
+                <h3><Message id={'dashboard.dashVariables'}/></h3>
+                <SubMenuItems variables={localVars} />
             </Modal>
             <Prompt message={
                 () =>

@@ -50,7 +50,8 @@ const dashboard = {
     globalTooltip: 'When checked,this variable will be global variable,it will be seen in every dashboard',
     enableGlobalVariable: 'Enalble global variable',
 
-    setGlobalVar: 'Set global variables',
+    globalVariables: 'Global variables',
+    dashVariables: 'Dashboard variables',
 }
 
 export default dashboard
