@@ -138,7 +138,7 @@ class JaegerPanel extends PureComponent<Props, State> {
 
     // conver tags from log format to json format
     const rawTags = options.tags
-    const jsonTags = convTagsLogfmt(options.tags)
+    const jsonTags = getTemplateSrv().replace(convTagsLogfmt(rawTags))
     options.tags = jsonTags
     // get traces from jaeger datasource
     // get operations from jaeger datasource
