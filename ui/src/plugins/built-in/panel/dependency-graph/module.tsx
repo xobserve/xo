@@ -112,6 +112,7 @@ export const plugin = new PanelPlugin<DependencyGraphOptions>(DependencyGraph).s
           {value: ERRORS, label:ERRORS},
           {value: ERRORS_RATE, label: ERRORS_RATE},
           {value: RESP_TIME, label:RESP_TIME},
+          {value: null, label: "Disable"},
         ]
       }
     })
