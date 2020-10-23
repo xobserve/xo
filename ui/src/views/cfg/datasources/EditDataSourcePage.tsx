@@ -146,7 +146,7 @@ export class EditDataSourcePage extends PureComponent<Props, State> {
         if (res.status === 'success') {
             globalEvents.showMessage(() => notification['success']({
                 message: "Success",
-                description: <FormattedMessage id="info.targetDeleted" />,
+                description: localeData[currentLang]['info.targetDeleted'],
                 duration: 5
             }))
 
