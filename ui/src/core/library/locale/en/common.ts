@@ -123,6 +123,8 @@ const common = {
     annotation: 'Annotation',
     builtin: 'Built in',
     external: 'External',
+    back: 'Back',
+
 }
 
 export default common

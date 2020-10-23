@@ -67,6 +67,9 @@ const error = {
     customHttpHeaderEmpty: "自定义HTTP header的键值不能为空",
     notifierNotExist: '目标通道在服务器端不存在',
     buildNotifierError: '构建通道时发生了错误，请查看服务器端日志',
+
+    // datasource
+    sameNameExist: "同样名称的datasource已经存在",
 }
 
 export default error

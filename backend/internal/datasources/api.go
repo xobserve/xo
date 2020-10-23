@@ -5,6 +5,7 @@ import (
 	"strconv"
 	"strings"
 
+	"github.com/apm-ai/datav/backend/pkg/utils/errutil"
 	"github.com/apm-ai/datav/backend/pkg/utils/securejson"
 
 	"github.com/apm-ai/datav/backend/internal/acl"
@@ -59,6 +60,11 @@ func NewDataSource(c *gin.Context) {
 	res, err := db.SQL.Exec(`INSERT INTO data_source (name, uid, version, type, url, is_default, json_data,secure_json_data,basic_auth,created_by,created,updated) VALUES (?,?,?,?,?,?,?,?,?,?,?,?)`,
 		ds.Name, ds.Uid, ds.Version, ds.Type, ds.Url, ds.IsDefault, jsonData, secureJsonData, ds.BasicAuth, userId, ds.Created, ds.Updated)
 	if err != nil {
+		if errutil.IsDBUniqueConstraintError(err) {
+			c.JSON(409, common.ResponseI18nError("error.sameNameExist"))
+			return
+		}
+
 		logger.Warn("add datasource error", "error", err)
 		c.JSON(500, common.ResponseInternalError())
 		return

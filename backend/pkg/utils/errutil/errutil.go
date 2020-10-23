@@ -2,8 +2,9 @@ package errutil
 
 import (
 	"fmt"
+	"strings"
 
-	"golang.org/x/xerrors" 
+	"golang.org/x/xerrors"
 )
 
 // Wrap is a simple wrapper around Errorf that is doing error wrapping. You can read how that works in
@@ -26,4 +27,8 @@ func Wrapf(err error, message string, a ...interface{}) error {
 	}
 
 	return Wrap(fmt.Sprintf(message, a...), err)
+}
+
+func IsDBUniqueConstraintError(err error) bool {
+	return strings.Contains(err.Error(), "UNIQUE constraint failed")
 }

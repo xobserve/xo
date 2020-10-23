@@ -1,6 +1,6 @@
 import React, { PureComponent } from 'react';
 import _ from 'lodash';
-import { NavModel, DataSourcePluginMeta, getBootConfig, DataSourcePlugin, DataSourceApi, DataQuery, DataSourceJsonData, DataSourceSettings, getBackendSrv, setBootConfig, currentLang } from 'src/packages/datav-core'
+import { NavModel, DataSourcePluginMeta, getBootConfig, DataSourcePlugin, DataSourceApi, DataQuery, DataSourceJsonData, DataSourceSettings, getBackendSrv, setBootConfig, currentLang, getHistory } from 'src/packages/datav-core'
 import { InlineFormLabel, LegacyForms, ConfirmModal, Button } from 'src/packages/datav-core'
 import { withRouter } from 'react-router-dom';
 import { Input, notification, Alert } from 'antd';
@@ -159,14 +159,15 @@ export class EditDataSourcePage extends PureComponent<Props, State> {
         // save options to backend
         if (this.state.mode === DatasourceMode.New) {
             const res = await getBackendSrv().post('/api/datasources/new', this.state.dataSource)
-            this.setState({
-                ...this.state,
-                dataSource: res.data
-            })
             const res1 = await getBackendSrv().get('/api/bootConfig');
             setBootConfig(res1.data)
             // replace url with datasource id
-            this.props.history.replace('/datasources/edit/' + this.state.dataSource.id)
+            this.props.history.replace('/datasources/edit/' + res.data.id)
+            this.setState({
+                ...this.state,
+                dataSource: res.data,
+                mode: DatasourceMode.Edit
+            })
         } else {
             getBackendSrv().put('/api/datasources/edit', this.state.dataSource)
         }
@@ -254,12 +255,16 @@ export class EditDataSourcePage extends PureComponent<Props, State> {
                                         showIcon
                                     />
                                 }
-                                <Button variant="secondary" onClick={() => this.onFinish()}>
+                                <Button variant="primary" onClick={() => this.onFinish()}>
                                     <FormattedMessage id="common.save" /> & <FormattedMessage id="common.test" />
                                 </Button>
 
                                 <Button variant="destructive" className="ub-ml2" onClick={() => this.setState({ ...this.state, confirmVisible: true })}>
                                     <FormattedMessage id="common.delete" />
+                                </Button>
+
+                                <Button variant="secondary" className="ub-ml2" onClick={() => getHistory().push('/cfg/datasources')}>
+                                    <FormattedMessage id="common.back" />
                                 </Button>
 
                                 <ConfirmModal
