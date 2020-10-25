@@ -11,8 +11,7 @@ Datav is forked from **@grafana**, but changed a lot, e.g :
 - 100% free. Forever and always
 
 
-## Key Features
-
+## Key Features 
 - **Plugins** Performance,Extensible,Beautiful,Configurable
 - **Dynamic Dashboards** Create dynamic & reusable dashboards with template variables
 - **Beautifult Large Screen** Customize your own big data large screen,it's very very cool
