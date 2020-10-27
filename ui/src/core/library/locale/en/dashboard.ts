@@ -52,6 +52,8 @@ const dashboard = {
 
     globalVariables: 'Global variables',
     dashVariables: 'Dashboard variables',
+    autoSave: 'Auto save',
+    autoSaveTips: 'Dashboard will be saved every 10 seconds',
 }
 
 export default dashboard

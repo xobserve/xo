@@ -48,6 +48,7 @@ export class DashboardModel {
     schemaVersion: number;
     version: number;
     enableGlobalVariable: boolean;
+    autoSave: boolean;
 
     private originalTemplating: any;
 
@@ -84,7 +85,8 @@ export class DashboardModel {
         this.tags = data.tags || [];
         this.editable = data.editable !== false;
         this.enableGlobalVariable = data.enableGlobalVariable;
-
+        this.autoSave = data.autoSave;
+        
         this.panels =  _.map(data.panels || [], (panelData: any) => new PanelModel(panelData));
         this.description = data.description || 'A new dashboard';
 

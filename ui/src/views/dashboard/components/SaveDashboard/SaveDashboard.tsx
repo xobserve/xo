@@ -15,7 +15,8 @@ import { useIntl, FormattedMessage } from 'react-intl';
 const { Option } = Select
 
 interface Props {
-    setDashboard: any
+    onSave: any
+    onCancel: any
     dashboard: DashboardModel
     originDashbord: DashboardModel
 }
@@ -87,7 +88,7 @@ const SaveDashboard = (props: Props) => {
             duration: 5
         }))
 
-        props.setDashboard(null)
+        props.onSave()
     }
 
     const defaultValues = {
@@ -105,7 +106,7 @@ const SaveDashboard = (props: Props) => {
                 title={<FormattedMessage id="dashboard.save" />}
                 visible={true}
                 footer={null}
-                onCancel={() => props.setDashboard(null)}
+                onCancel={() => props.onCancel()}
             >
                 <Form
                     layout="vertical"
@@ -137,7 +138,7 @@ const SaveDashboard = (props: Props) => {
                         <Button type="primary" htmlType="submit" className="ub-mt2">
                             <FormattedMessage id="common.submit" />
                         </Button>
-                        <Button htmlType="button" onClick={() => props.setDashboard(null)} className="ub-ml1">
+                        <Button htmlType="button" onClick={() => props.onCancel()} className="ub-ml1">
                             <FormattedMessage id="common.cancel" />
                         </Button>
                     </Form.Item>

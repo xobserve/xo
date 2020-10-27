@@ -51,6 +51,8 @@ const dashboard = {
     enableGlobalVariable: '开启全局变量',
     globalVariables: '全局变量',
     dashVariables: '仪表盘变量',
+    autoSave: '自动保存',
+    autoSaveTips: '仪表盘每10秒将自动保存一次',
 }
 
 export default dashboard

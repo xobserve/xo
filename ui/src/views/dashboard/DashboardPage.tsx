@@ -60,6 +60,8 @@ class DashboardPage extends React.PureComponent<DashboardPageProps & RouteCompon
     // first init dashboard or just saved dashboard
     originDash: DashboardModel;
     getAlertStateHandler: any;
+    autoSaveHandler = null
+
     constructor(props) {
         super(props)
         this.state = {
@@ -94,13 +96,26 @@ class DashboardPage extends React.PureComponent<DashboardPageProps & RouteCompon
 
         this.saveDashboard = this.saveDashboard.bind(this)
         this.onUpdateUrl = this.onUpdateUrl.bind(this)
+        this.handleAutoSave = this.handleAutoSave.bind(this)
 
         appEvents.on(CoreEvents.keybindingSaveDashboard, this.saveDashboard)
 
         appEvents.on(CoreEvents.dashboardSaved, this.setOriginDash);
 
+        appEvents.on('dashboard-auto-save', this.handleAutoSave)
         // because appEvents.off has no effect , so we introduce a state
         store.dispatch(isInDashboardPage(true))
+    }
+
+    // when dashboard init or saved, we need to handle auto save for this dashboard
+    handleAutoSave(autoSave) {
+        clearInterval(this.autoSaveHandler)
+        if (autoSave){
+            const _this = this
+            this.autoSaveHandler = setInterval(() => {
+                _this.saveDashboard()
+            },10000)
+        }
     }
 
     setOriginDash() {
@@ -129,6 +144,9 @@ class DashboardPage extends React.PureComponent<DashboardPageProps & RouteCompon
                     panelAlertStates: res.data
                 })
             }, 30000)
+
+            // init auto save option
+            this.handleAutoSave(ds.autoSave)
         }
     }
 
@@ -138,7 +156,7 @@ class DashboardPage extends React.PureComponent<DashboardPageProps & RouteCompon
 
         appEvents.off(CoreEvents.keybindingSaveDashboard, this.saveDashboard)
         appEvents.off(CoreEvents.dashboardSaved, this.setOriginDash);
-
+        appEvents.off('dashboard-auto-save', this.handleAutoSave)
 
         // unregister time service notifier
         getTimeSrv().notifyTimeUpdate = null
