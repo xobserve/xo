@@ -32,6 +32,8 @@ import { onTimeRangeUpdated } from '../variables/state/actions';
 import HeaderWrapper from './components/Header/Header'
 import { updateUrl, getUrlParams } from 'src/core/library/utils/url';
 import { getVariables } from 'src/views/variables/state/selectors'
+import { saveDashboard } from './components/SaveDashboard/SaveDashboard';
+
 
 interface DashboardPageProps {
     routeID?: string
@@ -113,7 +115,7 @@ class DashboardPage extends React.PureComponent<DashboardPageProps & RouteCompon
         if (autoSave){
             const _this = this
             this.autoSaveHandler = setInterval(() => {
-                _this.saveDashboard()
+                saveDashboard(this.props.dashboard.title,this.props.dashboard.meta.folderId,this.props.dashboard,this.originDash)
             },10000)
         }
     }

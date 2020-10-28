@@ -4,7 +4,7 @@ import { Modal, Form, Input, Button, message, Select, notification } from 'antd'
 import { DashboardModel, PanelModel } from 'src/views/dashboard/model'
 import { getBackendSrv } from 'src/core/services/backend';
 
-import { locationUtil } from 'src/packages/datav-core/src';
+import { locationUtil, localeData, currentLang } from 'src/packages/datav-core/src';
 import { useHistory } from 'react-router-dom';
 import appEvents from 'src/core/library/utils/app_events';
 import { CoreEvents, FolderDTO } from 'src/types';
@@ -21,6 +21,43 @@ interface Props {
     originDashbord: DashboardModel
 }
 
+export async function saveDashboard(title,folderId,dashboard,originDashboard) {
+    if (!dashboard.meta.canSave) {
+        notification['error']({
+            message: "Error",
+            description: localeData[currentLang]["info.noPermission"],
+            duration: 5
+        });
+        return
+    }
+
+    dashboard.title = title
+    dashboard.meta.folderId = folderId
+    const clone = getSaveAsDashboardClone(dashboard);
+
+    const fromTeam = _.toNumber(getUrlParams()['fromTeam'])
+
+    let alertChanged = false
+    // check which panel's alerts has changed
+    for (const panel of clone.panels) {
+        for (const panel1 of originDashboard.panels) {
+            if (panel.id === panel1.id) {
+                const alert = JSON.stringify(panel.alert)
+                const alert1 = JSON.stringify(panel1.alert)
+
+                if (alert !== alert1) {
+                    alertChanged = true
+                }
+            }
+        }
+    }
+
+    const res = await getBackendSrv().saveDashboard(clone, { folderId: folderId, fromTeam: fromTeam, alertChanged: alertChanged})
+
+    appEvents.emit(CoreEvents.dashboardSaved, dashboard)
+
+    return res
+}
 
 const SaveDashboard = (props: Props) => {
     const intl = useIntl()
@@ -43,40 +80,8 @@ const SaveDashboard = (props: Props) => {
     }, [])
 
 
-    const saveDashboard = async (val) => {
-        if (!dashboard.meta.canSave) {
-            notification['error']({
-                message: "Error",
-                description: intl.formatMessage({ id: "info.noPermission" }),
-                duration: 5
-            });
-            return
-        }
-
-        dashboard.title = val.title
-        dashboard.meta.folderId = val.folderId
-        const clone = getSaveAsDashboardClone(dashboard);
-
-        const fromTeam = _.toNumber(getUrlParams()['fromTeam'])
-
-        let alertChanged = false
-        // check which panel's alerts has changed
-        for (const panel of clone.panels) {
-            for (const panel1 of props.originDashbord.panels) {
-                if (panel.id === panel1.id) {
-                    const alert = JSON.stringify(panel.alert)
-                    const alert1 = JSON.stringify(panel1.alert)
-
-                    if (alert !== alert1) {
-                        alertChanged = true
-                    }
-                }
-            }
-        }
-
-        const res = await getBackendSrv().saveDashboard(clone, { folderId: val.folderId, fromTeam: fromTeam, alertChanged: alertChanged})
-
-        appEvents.emit(CoreEvents.dashboardSaved, dashboard);
+    const submitDashboard = async (val) => {
+       const res = await saveDashboard(val.title,val.folderId,props.dashboard,props.originDashbord)
 
         if (!dashboard.id) {
             history.push(res.data.url)
@@ -112,7 +117,7 @@ const SaveDashboard = (props: Props) => {
                     layout="vertical"
                     name="basic"
                     initialValues={initialValues}
-                    onFinish={saveDashboard}
+                    onFinish={submitDashboard}
                 >
                     <Form.Item
                         label={<FormattedMessage id="dashboard.title" />}
