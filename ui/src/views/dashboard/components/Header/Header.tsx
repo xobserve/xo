@@ -4,11 +4,11 @@ import { connect } from 'react-redux';
 import { Prompt } from "react-router-dom";
 
 
-import { Layout, Tooltip, Button, Modal, Divider} from 'antd'
+import { Layout, Tooltip, Button, Modal, Divider, notification} from 'antd'
 
 import BreadcrumbWrapper from './Breadcrumb/Breadcrumb'
 
-import { StoreState, VariableModel, CoreEvents } from 'src/types'
+import { StoreState, VariableModel, CoreEvents, ViewState } from 'src/types'
 import { TimePickerWrapper } from 'src/views/components/TimePicker/TimePickerWrapper'
 import SaveDashboard from 'src/views/dashboard/components/SaveDashboard/SaveDashboard';
 import appEvents from 'src/core/library/utils/app_events';
@@ -18,8 +18,8 @@ import './Header.less'
 import { DashboardModel } from 'src/views/dashboard/model';
 import localeData from 'src/core/library/locale'
 import { FormattedMessage as Message } from 'react-intl';
-import { Icon } from 'src/packages/datav-core/src';
-import { SaveOutlined, SettingOutlined,PlusOutlined, CalculatorOutlined, LoadingOutlined} from '@ant-design/icons';
+import { Icon, currentLang } from 'src/packages/datav-core/src';
+import { SaveOutlined, SettingOutlined,PlusOutlined, CalculatorOutlined, LoadingOutlined, DesktopOutlined} from '@ant-design/icons';
 import { store } from 'src/store/store';
 import { updateLocation } from 'src/store/reducers/location';
 import { getVariables } from 'src/views/variables/state/selectors';
@@ -34,6 +34,7 @@ interface Props {
     variables: VariableModel[]
     isFullscreen?: boolean;
     dashboard: DashboardModel
+    viewState: any
 }
 
 const { Header } = Layout
@@ -76,7 +77,38 @@ function HeaderWrapper(props: Props) {
         setDashboard(null)
     }
 
- 
+    const body = $('body');
+    switch (props.viewState) {
+        case ViewState.TV:
+            body.addClass('view-mode--tv');
+            break;
+        case ViewState.Fullscreen:
+            body.addClass('view-mode--kiosk');
+        default:
+            break;
+    }
+    console.log()
+
+    const toggleViewMode = () => {
+       if (props.viewState === ViewState.TV) {
+           body.removeClass('view-mode--tv')
+           store.dispatch(updateLocation({
+               query: {view : ViewState.Fullscreen},
+               partial: true,
+           }))
+           notification['success']({
+            message: "Tips",
+            description: localeData[currentLang]["dashboard.fullscreenTips"],
+            duration: 5
+          });
+           return 
+       }
+
+       store.dispatch(updateLocation({
+            query: {view : ViewState.TV},
+            partial: true,
+        }))
+    }
 
     return (
         <Header className="datav-header">
@@ -97,6 +129,7 @@ function HeaderWrapper(props: Props) {
                         {globalVars.length > 0 && <Tooltip title={<Message id={'common.globalVariable'} />}>
                             <Button icon={<CalculatorOutlined />} onClick={() => setShowGlobalVar(true)} />
                         </Tooltip>}
+                        <Tooltip title={<Message id={'dashboard.viewMode'} />}>{<Button icon={<DesktopOutlined onClick={toggleViewMode} />} />}</Tooltip>
                         <Tooltip title={<Message id='dashboard.addUrl'/>} placement="bottom">
                             <Button icon={  <PlusOutlined />} onClick={() => props.onUpdateUrl()} />
                         </Tooltip>

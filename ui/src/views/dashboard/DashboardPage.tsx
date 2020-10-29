@@ -16,7 +16,7 @@ import { PanelModel } from './model';
 import { PanelEditor } from './components/PanelEditor/PanelEditor'
 import { store, dispatch } from 'src/store/store';
 import { isInDashboardPage, cleanUpDashboard } from 'src/store/reducers/dashboard';
-import { StoreState, CoreEvents, GlobalVariableUid } from 'src/types'
+import { StoreState, CoreEvents, GlobalVariableUid, ViewState } from 'src/types'
 import { connect } from 'react-redux';
 import appEvents from 'src/core/library/utils/app_events';
 import { updateBreadcrumbText } from 'src/store/reducers/application';
@@ -30,7 +30,7 @@ import impressionSrv from 'src/core/services/impression'
 
 import { onTimeRangeUpdated } from '../variables/state/actions';
 import HeaderWrapper from './components/Header/Header'
-import { updateUrl, getUrlParams } from 'src/core/library/utils/url';
+import { updateUrl } from 'src/core/library/utils/url';
 import { getVariables } from 'src/views/variables/state/selectors'
 import { saveDashboard } from './components/SaveDashboard/SaveDashboard';
 
@@ -45,6 +45,7 @@ interface DashboardPageProps {
     inspectTab?: InspectTab
     initDashboard: typeof initDashboard
     initErrorStatus: number
+    viewState: ViewState
 }
 
 interface State {
@@ -343,7 +344,7 @@ class DashboardPage extends React.PureComponent<DashboardPageProps & RouteCompon
     };
 
     render() {
-        const { dashboard, settingView, inspectTab, initErrorStatus } = this.props
+        const { dashboard, settingView, inspectTab, initErrorStatus,viewState} = this.props
         if (initErrorStatus == 403) {
             return (
                 <div>
@@ -369,7 +370,7 @@ class DashboardPage extends React.PureComponent<DashboardPageProps & RouteCompon
 
         return (
             <div>
-                <HeaderWrapper dashboard={dashboard} onAddPanel={this.onAddPanel} onSaveDashboard={this.saveDashboard} onUpdateUrl={this.onUpdateUrl} />
+                <HeaderWrapper viewState={viewState} dashboard={dashboard} onAddPanel={this.onAddPanel} onSaveDashboard={this.saveDashboard} onUpdateUrl={this.onUpdateUrl} />
                 <div className="scroll-canvas scroll-canvas--dashboard">
                     <CustomScrollbar
                         autoHeightMin="100%"
@@ -442,6 +443,7 @@ function cleanDashboardFromIgnoredChanges(dashData: any) {
 
 
 export const mapStateToProps = (state: StoreState) => {
+    const viewState = state.location.query.view ?? ViewState.Normal
     return {
         initPhase: state.dashboard.initPhase,
         isInitSlow: state.dashboard.isInitSlow,
@@ -453,6 +455,7 @@ export const mapStateToProps = (state: StoreState) => {
         isPanelEditorOpen: state.panelEditor.isOpen,
         inspectPanelId: state.location.query.inspect,
         inspectTab: state.location.query.inspectTab,
+        viewState: viewState,
     }
 }
 

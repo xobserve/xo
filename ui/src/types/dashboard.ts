@@ -54,3 +54,9 @@ export interface DashboardDTO {
     Completed = 'Completed',
   }
   
+
+  export enum ViewState {
+    Normal = 'normal',
+    TV = 'tv',
+    Fullscreen = 'fullscreen'
+  }

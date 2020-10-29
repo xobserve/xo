@@ -54,6 +54,9 @@ const dashboard = {
     dashVariables: 'Dashboard variables',
     autoSave: 'Auto save',
     autoSaveTips: 'Dashboard will be saved every 10 seconds',
+
+    viewMode: 'Cycle view mode',
+    fullscreenTips: 'Press ESC to exit Fullscreen mode',
 }
 
 export default dashboard

@@ -89,6 +89,12 @@ export class KeybindingSrv {
     if (search.search) {
       getLocationSrv().update({ query: { search: null }, partial: true })
     }
+
+    if (search.view) {
+      const body = $('body');
+      body.removeClass('view-mode--kiosk')
+      getLocationSrv().update({ query: { view: null }, partial: true })
+    }
   }
 
   setupDashboardBindings(dashboard: DashboardModel) {
