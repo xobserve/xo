@@ -168,6 +168,7 @@ class DashboardPage extends React.PureComponent<DashboardPageProps & RouteCompon
         store.dispatch(cleanUpDashboard())
 
         clearInterval(this.getAlertStateHandler)
+        clearInterval(this.autoSaveHandler)
     }
 
     componentDidUpdate() {
@@ -368,7 +369,7 @@ class DashboardPage extends React.PureComponent<DashboardPageProps & RouteCompon
 
         return (
             <div>
-                <HeaderWrapper onAddPanel={this.onAddPanel} onSaveDashboard={this.saveDashboard} onUpdateUrl={this.onUpdateUrl} />
+                <HeaderWrapper dashboard={dashboard} onAddPanel={this.onAddPanel} onSaveDashboard={this.saveDashboard} onUpdateUrl={this.onUpdateUrl} />
                 <div className="scroll-canvas scroll-canvas--dashboard">
                     <CustomScrollbar
                         autoHeightMin="100%"

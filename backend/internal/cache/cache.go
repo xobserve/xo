@@ -78,6 +78,16 @@ func InitCache() {
 					ParentId: folderId,
 				}
 			}
+			generalFolder := &models.Folder{
+				Id:       0,
+				ParentId: -1,
+				Uid:      "general",
+				Title:    "General",
+			}
+			generalFolder.UpdatSlug()
+			generalFolder.UpdateUrl()
+
+			folders[0] = generalFolder
 			Folders = folders
 
 			alerts, err := models.GetAllAlerts()

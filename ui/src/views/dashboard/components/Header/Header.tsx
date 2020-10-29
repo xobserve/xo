@@ -3,11 +3,12 @@ import React, { useState } from 'react'
 import { connect } from 'react-redux';
 import { Prompt } from "react-router-dom";
 
+
 import { Layout, Tooltip, Button, Modal, Divider} from 'antd'
 
 import BreadcrumbWrapper from './Breadcrumb/Breadcrumb'
 
-import { StoreState, VariableModel } from 'src/types'
+import { StoreState, VariableModel, CoreEvents } from 'src/types'
 import { TimePickerWrapper } from 'src/views/components/TimePicker/TimePickerWrapper'
 import SaveDashboard from 'src/views/dashboard/components/SaveDashboard/SaveDashboard';
 import appEvents from 'src/core/library/utils/app_events';
@@ -18,7 +19,7 @@ import { DashboardModel } from 'src/views/dashboard/model';
 import localeData from 'src/core/library/locale'
 import { FormattedMessage as Message } from 'react-intl';
 import { Icon } from 'src/packages/datav-core/src';
-import { SaveOutlined, SettingOutlined,PlusOutlined, CalculatorOutlined} from '@ant-design/icons';
+import { SaveOutlined, SettingOutlined,PlusOutlined, CalculatorOutlined, LoadingOutlined} from '@ant-design/icons';
 import { store } from 'src/store/store';
 import { updateLocation } from 'src/store/reducers/location';
 import { getVariables } from 'src/views/variables/state/selectors';
@@ -27,11 +28,12 @@ import { SubMenuItems } from '../SubMenu/SubMenuItems';
 
 interface Props {
     locale: string
-    breadcrumbText: string
     onAddPanel: any
     onSaveDashboard: any
     onUpdateUrl: any
     variables: VariableModel[]
+    isFullscreen?: boolean;
+    dashboard: DashboardModel
 }
 
 const { Header } = Layout
@@ -51,6 +53,14 @@ function HeaderWrapper(props: Props) {
         }
     })
 
+    const [inSave,SetInSave] = useState(false)
+    appEvents.on(CoreEvents.dashboardSaving, () => {
+        SetInSave(true)
+    });
+    appEvents.on(CoreEvents.dashboardSaved, () => {
+        SetInSave(false)
+    });
+    
     const globalVars = []
     const localVars = []
     props.variables.forEach(v => {
@@ -66,17 +76,19 @@ function HeaderWrapper(props: Props) {
         setDashboard(null)
     }
 
+ 
+
     return (
         <Header className="datav-header">
             <div className='datav-header-inner'>
                 <div>
                     <div className="ub-mr1">{backButtonComponent}</div>
-                    <BreadcrumbWrapper text={props.breadcrumbText} />
+                    <BreadcrumbWrapper  dashboard={props.dashboard} isFullscreen={false}/>
                 </div>
                 <div>
                     <div className="ub-mr1">
                         <Tooltip title={<Message id={'dashboard.addPanel'} />}><Button icon={<Icon name="panel-add" />} onClick={() => props.onAddPanel()} /></Tooltip>
-                        <Tooltip title={<Message id={'common.save'} />}><Button icon={<SaveOutlined onClick={() => props.onSaveDashboard()} />} /></Tooltip>
+                        <Tooltip title={<Message id={'common.save'} />}>{<Button icon={!inSave ? <SaveOutlined onClick={() => props.onSaveDashboard()} /> : <LoadingOutlined className="color-success" />} />}</Tooltip>
                         <Tooltip title={<Message id={'common.setting'} />}>
                             <Button icon={<SettingOutlined />} onClick={
                                 () => store.dispatch(updateLocation({ query: { settingView: 'general' }, partial: true }))

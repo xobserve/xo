@@ -2,6 +2,7 @@ package search
 
 import (
 	"sort"
+
 	// "fmt"
 	"strconv"
 	"strings"
@@ -158,6 +159,62 @@ func Search(c *gin.Context) {
 			f.Tags = make([]string, 0)
 		}
 		c.JSON(200, common.ResponseSuccess(fs))
+		return
+	}
+
+	// search by folder id which is not General folder
+	if folderIds > 0 && layout == FoldersLayout {
+		res := make(SearchHitList, 0)
+
+		f, ok := cache.Folders[folderIds]
+		if ok {
+			res = append(res, &SearchHit{
+				Id:    int64(f.Id),
+				Uid:   f.Uid,
+				Title: f.Title,
+				Url:   f.Url,
+				Tags:  make([]string, 0),
+				Type:  TypeFolder,
+			})
+		}
+
+		for _, dash := range cache.Dashboards {
+			if dash.FolderId != folderIds {
+				continue
+			}
+
+			if query != "" {
+				if !strings.Contains(strings.ToLower(dash.Title), query) {
+					continue
+				}
+			}
+
+			dtags := dash.Data.Get("tags").MustStringArray()
+			if !filterTags(dtags, tags) {
+				continue
+			}
+
+			dash.UpdateSlug()
+			r := &SearchHit{
+				Id:          dash.Id,
+				Uid:         dash.Uid,
+				Title:       dash.Title,
+				Url:         dash.GenerateUrl(),
+				Slug:        dash.Slug,
+				Type:        TypeDashboard,
+				Tags:        dtags,
+				IsStarred:   false,
+				FolderId:    f.Id,
+				FolderTitle: f.Title,
+				FolderUid:   f.Uid,
+				FolderUrl:   f.Url,
+			}
+
+			res = append(res, r)
+		}
+
+		sort.Sort(res)
+		c.JSON(200, common.ResponseSuccess(res))
 		return
 	}
 

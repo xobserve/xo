@@ -245,6 +245,11 @@ func GetDashboard(c *gin.Context) {
 	dashMeta.CanSave = acl.CanSaveDashboard(id, dashMeta.OwnedBy, c)
 	dashMeta.CanAdmin = acl.CanAdminDashboard(id, dashMeta.OwnedBy, c)
 
+	folder, ok := cache.Folders[int(dashMeta.FolderId)]
+	if ok {
+		dashMeta.FolderTitle = folder.Title
+	}
+
 	data := simplejson.New()
 	err = data.UnmarshalJSON(rawJSON)
 	if err != nil {

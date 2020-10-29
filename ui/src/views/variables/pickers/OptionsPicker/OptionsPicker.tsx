@@ -79,7 +79,7 @@ export class OptionsPickerUnconnected extends PureComponent<Props> {
     if (!showOptions) {
       return null;
     }
-
+    
     return (
       <ClickOutsideWrapper onClick={this.onHideOptions}>
         <VariableInput

@@ -100,7 +100,7 @@ class PreProcessor {
 
 			return result;
 		});
-
+		
 		return cleanedData;
 	}
 

@@ -30,7 +30,8 @@ export async function saveDashboard(title,folderId,dashboard,originDashboard) {
         });
         return
     }
-
+    
+    appEvents.emit(CoreEvents.dashboardSaving)
     dashboard.title = title
     dashboard.meta.folderId = folderId
     const clone = getSaveAsDashboardClone(dashboard);
@@ -54,7 +55,10 @@ export async function saveDashboard(title,folderId,dashboard,originDashboard) {
 
     const res = await getBackendSrv().saveDashboard(clone, { folderId: folderId, fromTeam: fromTeam, alertChanged: alertChanged})
 
-    appEvents.emit(CoreEvents.dashboardSaved, dashboard)
+    setTimeout(() => {
+        appEvents.emit(CoreEvents.dashboardSaved, dashboard)
+    },2000)
+
 
     return res
 }

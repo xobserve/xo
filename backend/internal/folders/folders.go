@@ -44,16 +44,6 @@ func QueryAll() []*models.Folder {
 		f.UpdateUrl()
 		folders = append(folders, f)
 	}
-	// add general folder
-	generalFolder := &models.Folder{
-		Id:       0,
-		ParentId: -1,
-		Uid:      "general",
-		Title:    "General",
-	}
-	generalFolder.UpdatSlug()
-	generalFolder.UpdateUrl()
-	folders = append(folders, generalFolder)
 
 	return folders
 }
@@ -81,12 +71,11 @@ func QueryById(id int) *models.Folder {
 	return f
 }
 
-
 func GetDashboardByFolderId(id int) []*models.Dashboard {
-	dashes := make([]*models.Dashboard,0)
-	for _,dash := range cache.Dashboards {
+	dashes := make([]*models.Dashboard, 0)
+	for _, dash := range cache.Dashboards {
 		if dash.FolderId == id {
-			dashes = append(dashes,dash)
+			dashes = append(dashes, dash)
 		}
 	}
 
