@@ -87,7 +87,6 @@ function HeaderWrapper(props: Props) {
         default:
             break;
     }
-    console.log()
 
     const toggleViewMode = () => {
        if (props.viewState === ViewState.TV) {
@@ -99,7 +98,7 @@ function HeaderWrapper(props: Props) {
            notification['success']({
             message: "Tips",
             description: localeData[currentLang]["dashboard.fullscreenTips"],
-            duration: 5
+            duration: 3
           });
            return 
        }

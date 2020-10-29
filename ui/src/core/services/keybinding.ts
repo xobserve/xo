@@ -93,6 +93,7 @@ export class KeybindingSrv {
     if (search.view) {
       const body = $('body');
       body.removeClass('view-mode--kiosk')
+      body.removeClass('view-mode--tv')
       getLocationSrv().update({ query: { view: null }, partial: true })
     }
   }

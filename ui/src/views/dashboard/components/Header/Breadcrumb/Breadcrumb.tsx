@@ -63,12 +63,12 @@ const BreadcrumbWrapper = (props:Props) =>{
                 {!isFullscreen && <Icon name={icon} size="lg" className={mainIconClassName} />}
                 {haveFolder && (
                   <>
-                    <a className="navbar-page-btn__folder" onClick={onFolderNameClick}>
+                    <a className="navbar-page-btn__folder hover-primary" onClick={onFolderNameClick}>
                       {folderTitle} <span className={folderSymbol}>/</span>
                     </a>
                   </>
                 )}
-                <a onClick={onDashboardNameClick}>{dashboard.title}</a>
+                <a onClick={onDashboardNameClick} className="hover-primary">{dashboard.title}</a>
               </div>
             </div>
             <div className="navbar__spacer" />

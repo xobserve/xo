@@ -162,7 +162,7 @@ export class PanelHeader extends Component<Props, State> {
           >
             <div className="panel-title">
               {Object.values(notices).map(this.renderNotice)}
-              {alertState && (
+              {title !== '' && alertState && (
                 <Icon 
                   name={alertState === 'alerting' ? 'heart-break' : 'heart'}
                   className="icon-gf panel-alert-icon"
@@ -172,7 +172,7 @@ export class PanelHeader extends Component<Props, State> {
               )}
               <span className="panel-title-text">
                 {title}
-                <Icon name="angle-down" className="panel-menu-toggle" />
+                {/* <Icon name="angle-down" className="panel-menu-toggle" /> */}
               </span>
               {this.state.panelMenuOpen && (
                 <ClickOutsideWrapper onClick={this.closeMenu}>
