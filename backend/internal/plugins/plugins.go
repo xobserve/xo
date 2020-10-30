@@ -28,12 +28,6 @@ var (
 	StaticRoutes []*PluginStaticRoute
 )
 
-var internalImports = make([]string, 0)
-var internalExport = make([]string, 0)
-
-var externalImports = make([]string, 0)
-var externalExport = make([]string, 0)
-
 type PluginManager struct {
 	scanningErrors []error
 }
@@ -74,8 +68,6 @@ func (p *PluginManager) Init() error {
 		} else {
 		}
 	}
-
-	generatePluginFile()
 
 	return nil
 }

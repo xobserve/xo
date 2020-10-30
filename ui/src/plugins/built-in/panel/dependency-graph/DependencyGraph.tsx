@@ -456,7 +456,6 @@ export class DependencyGraph extends PureComponent<Props, State> {
         const rawGraph: IGraph = this.graphGenerator.generateGraph(this.currentData.graph);
         const graph = filterGraph(rawGraph,this.filterConditions)
         
-        console.log(this.filterConditions)
         this._updateGraph(graph);
       }
     }, 500)

@@ -54,8 +54,7 @@ const BreadcrumbWrapper = (props:Props) =>{
     
         const folderTitle = dashboard.meta.folderTitle;
         const haveFolder = dashboard.meta.folderId >= 0;
-        
-        console.log(dashboard.meta)
+
         return (
           <>
             <div>
