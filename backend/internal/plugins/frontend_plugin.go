@@ -17,6 +17,7 @@ type FrontendPluginBase struct {
 }
 
 func (fp *FrontendPluginBase) initFrontendPlugin() {
+
 	fp.IsExternal = isExternalPlugin(fp.PluginDir)
 	fp.handleModuleDefaults()
 
@@ -42,6 +43,23 @@ func (fp *FrontendPluginBase) initFrontendPlugin() {
 
 	fp.Info.Logos.Small = getPluginLogoUrl(fp.Type, fp.Info.Logos.Small, fp.BaseUrl)
 	fp.Info.Logos.Large = getPluginLogoUrl(fp.Type, fp.Info.Logos.Large, fp.BaseUrl)
+
+	pluginName := "plugin" + utils.MD5(fp.Id)
+	s0 := fmt.Sprintf("\t'%s': %s,\n", fp.Module, pluginName)
+	var s string
+	if fp.Type == "panel" {
+		s = fmt.Sprintf("import * as %s from '%s'; \n", pluginName, fp.Module)
+	} else if fp.Type == "datasource" {
+		s = fmt.Sprintf("const %s = async () => await import(/* webpackChunkName: '%s' */ '%s'); \n", pluginName, pluginName, fp.Module)
+	}
+
+	if isExternalPlugin(fp.PluginDir) {
+		externalImports = append(externalImports, s)
+		externalExport = append(externalExport, s0)
+	} else {
+		internalImports = append(internalImports, s)
+		internalExport = append(internalExport, s0)
+	}
 }
 
 func getPluginLogoUrl(pluginType, path, baseUrl string) string {

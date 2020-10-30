@@ -2,8 +2,10 @@ package utils
 
 import (
 	"bytes"
+	"crypto/md5"
 	"crypto/rand"
 	"encoding/base64"
+	"fmt"
 	"io"
 	"reflect"
 	"regexp"
@@ -19,6 +21,13 @@ func RandString() string {
 		return ""
 	}
 	return base64.URLEncoding.EncodeToString(b)
+}
+
+func MD5(str string) string {
+	w := md5.New()
+	io.WriteString(w, str)
+	md5str := fmt.Sprintf("%x", w.Sum(nil))
+	return md5str
 }
 
 // zero-copy, []byte转为string类型
