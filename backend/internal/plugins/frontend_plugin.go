@@ -5,6 +5,7 @@ import (
 	"io"
 	"net/url"
 	"os"
+	"os/exec"
 	"path"
 	"strings"
 
@@ -32,8 +33,11 @@ func (fp *FrontendPluginBase) initFrontendPlugin() {
 		if err != nil {
 			logger.Error("create plugin public dir error", "dst_path", dirPath, "error", err)
 		}
+	}
 
-		copyFile(dirPath+fp.Info.Logos.Small, fp.PluginDir+"/img/"+fp.Info.Logos.Small)
+	cmd := exec.Command("bash", "-c", fmt.Sprintf("cp -r %s %s", fp.PluginDir+"/img/", dirPath))
+	if _, err := cmd.CombinedOutput(); err != nil {
+		logger.Error("copy plugin img dir error", "error", err)
 	}
 
 	fp.Info.Logos.Small = getPluginLogoUrl(fp.Type, fp.Info.Logos.Small, fp.BaseUrl)
