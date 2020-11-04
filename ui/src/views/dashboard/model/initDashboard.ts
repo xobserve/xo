@@ -10,6 +10,7 @@ import { message } from "antd";
 import localStore from "src/core/library/utils/localStore";
 import { getKeybindingSrv } from "src/core/services/keybinding";
 
+
 export function initDashboard(uid: string | undefined, initOrigin?: any): ThunkResult<void> {
   return async (dispatch, getState) => {
     // try {
@@ -75,7 +76,7 @@ export function initDashboard(uid: string | undefined, initOrigin?: any): ThunkR
     try {
       if (config.featureToggles.newVariables) {
         dispatch(initDashboardTemplating(ds.templating.list));
-        await dispatch(processVariables());
+        await dispatch(processVariables(true));
         dispatch(completeDashboardTemplating(ds));
       }
     } catch (err) {
@@ -91,6 +92,25 @@ export function initDashboard(uid: string | undefined, initOrigin?: any): ThunkR
   }
 }
 
+export function resetDashboardVariables(ds: DashboardModel): ThunkResult<void> {
+  return async (dispatch, getState) => {
+    console.log(ds.templating.list)
+    // template values service needs to initialize completely before
+    // the rest of the dashboard can load
+    try {
+      if (config.featureToggles.newVariables) {
+        dispatch(initDashboardTemplating(ds.templating.list));
+        await dispatch(processVariables(false));
+        dispatch(completeDashboardTemplating(ds));
+      }
+    } catch (err) {
+      message.error('Templating init failed')
+      console.log(err);
+    }
+
+    dispatch(dashboardInitCompleted(ds))
+  }
+}
 
 function getNewDashboardModelData(): DashboardDTO {
   const data = {

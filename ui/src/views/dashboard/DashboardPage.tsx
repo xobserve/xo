@@ -368,6 +368,7 @@ class DashboardPage extends React.PureComponent<DashboardPageProps & RouteCompon
             'dashboard-container--has-submenu': dashboard.meta.submenuEnabled,
         });
 
+        const variables = getVariables()
         return (
             <div>
                 <HeaderWrapper viewState={viewState} dashboard={dashboard} onAddPanel={this.onAddPanel} onSaveDashboard={this.saveDashboard} onUpdateUrl={this.onUpdateUrl} />
@@ -380,7 +381,7 @@ class DashboardPage extends React.PureComponent<DashboardPageProps & RouteCompon
                         className="custom-scrollbar--page"
                     >
                         <div className={gridWrapperClasses}>
-                            {!editPanel && config.featureToggles.newVariables && dashboard.links.length > 0 &&  <SubMenu dashboard={dashboard} />}
+                            {!editPanel && config.featureToggles.newVariables && variables.length > 0 &&  <SubMenu dashboard={dashboard} />}
                             <DashboardGrid
                                 alertStates={panelAlertStates}
                                 dashboard={dashboard}

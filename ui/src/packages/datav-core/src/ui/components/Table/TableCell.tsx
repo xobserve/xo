@@ -23,7 +23,9 @@ export const TableCell: FC<Props> = ({ cell, field, tableStyles, onCellClick }) 
       cellProps.style.cursor = 'pointer';
     }
 
-    onClick = () => onCellClick(cell.column.Header as string, cell.value);
+    onClick = () => {
+      onCellClick(cell.column.Header as string, cell.value)
+    };
   }
 
   if (cellProps.style) {

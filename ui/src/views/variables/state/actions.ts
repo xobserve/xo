@@ -124,18 +124,22 @@ export const processVariableDependencies = async (variable: VariableModel, state
 
 export const processVariable = (
   identifier: VariableIdentifier,
-  queryParams: UrlQueryMap
+  queryParams: UrlQueryMap,
+  useUrl: boolean
 ): ThunkResult<Promise<void>> => {
   return async (dispatch, getState) => {
     const variable = getVariable(identifier.id!, getState());
     await processVariableDependencies(variable, getState());
 
-    const urlValue = queryParams['var-' + variable.name];
-    if (urlValue !== void 0) {
-      await variableAdapters.get(variable.type).setValueFromUrl(variable, urlValue ?? '');
-      dispatch(resolveInitLock(toVariablePayload(variable)));
-      return;
+    if (useUrl) {
+      const urlValue = queryParams['var-' + variable.name];
+      if (urlValue !== void 0) {
+        await variableAdapters.get(variable.type).setValueFromUrl(variable, urlValue ?? '');
+        dispatch(resolveInitLock(toVariablePayload(variable)));
+        return;
+      }
     }
+
 
     if (variable.hasOwnProperty('refresh')) {
       const refreshableVariable = variable as QueryVariableModel;
@@ -153,11 +157,11 @@ export const processVariable = (
   };
 };
 
-export const processVariables = (): ThunkResult<Promise<void>> => {
+export const processVariables = (useUrl?: boolean): ThunkResult<Promise<void>> => {
   return async (dispatch, getState) => {
     const queryParams = getState().location.query;
     const promises = getVariables(getState()).map(
-      async (variable: VariableModel) => await dispatch(processVariable(toVariableIdentifier(variable), queryParams))
+      async (variable: VariableModel) => await dispatch(processVariable(toVariableIdentifier(variable), queryParams,useUrl))
     );
 
     await Promise.all(promises);

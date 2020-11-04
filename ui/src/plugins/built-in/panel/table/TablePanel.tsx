@@ -1,15 +1,21 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
 
-import { Table, Select, getTheme } from 'src/packages/datav-core';
+import { Table, Select, getTheme, getHistory } from 'src/packages/datav-core';
 import { FieldMatcherID, PanelProps, DataFrame, SelectableValue, getFrameDisplayName } from 'src/packages/datav-core';
 import { Options } from './types';
 import { css } from 'emotion';
 
 import { TableSortByFieldState } from 'src/packages/datav-core';
+import { resetDashboardVariables } from 'src/views/dashboard/model/initDashboard'
+import { join, indexOf,cloneDeep} from 'lodash';
 
-interface Props extends PanelProps<Options> {}
 
-export class TablePanel extends Component<Props> {
+interface Props extends PanelProps<Options> {
+  resetDashboardVariables: typeof resetDashboardVariables
+}
+
+export class TablePanelUnconnected extends Component<Props> {
   constructor(props: Props) {
     super(props);
   }
@@ -62,9 +68,61 @@ export class TablePanel extends Component<Props> {
     this.forceUpdate();
   };
 
+  setVariable = (name, value) => {
+    const vars = this.props.dashboard.templating.list
+    for (const v of vars) {
+      console.log(cloneDeep(v))
+      if (v.name === 'test') {
+        if (!v.multi) {
+          v.current = {
+            text: 'b',
+            value: 'b',
+            selected: false
+          }
+
+          for (const o of v.options) {
+            if (o.text === 'b') {
+              o.selected = true
+            } else {
+              o.selected = false
+            }
+          }
+        } else {
+          const values = cloneDeep(v.current.value)
+          if (indexOf(values, 'c') === -1) {
+            values.push('c')
+            v.current = {
+              text: join(values, "+"),
+              value: values,
+              selected: true,
+            }
+  
+            for (const o of v.options) {
+              if (indexOf(values, o.text) !== -1) {
+                o.selected = true
+              } else {
+                o.selected = false
+              }
+            }
+          }
+        }
+      }
+    }
+     this.props.resetDashboardVariables(this.props.dashboard)
+  }
+
   renderTable(frame: DataFrame, width: number, height: number) {
     const { options } = this.props;
 
+
+    //     {option: {…}, clearOthers: false, forceSelect: false}
+    // clearOthers: false
+    // forceSelect: false
+    // option: {selected: false, text: "c", value: "c"}
+
+    const onRowClick = new Function('data,history,setVariable', `
+      setVariable()
+    `)
     return (
       <Table
         height={height}
@@ -75,6 +133,7 @@ export class TablePanel extends Component<Props> {
         initialSortBy={options.sortBy}
         onSortByChange={this.onSortByChange}
         onColumnResize={this.onColumnResize}
+        onRowClick={(data) => onRowClick(data, getHistory(), this.setVariable)}
       />
     );
   }
@@ -118,6 +177,17 @@ export class TablePanel extends Component<Props> {
     return this.renderTable(data.series[0], width, height - 12);
   }
 }
+
+const mapDispatchToProps = {
+  resetDashboardVariables,
+};
+
+const mapStateToProps = (state) => {
+  return {
+
+  }
+}
+export const TablePanel = connect(null, mapDispatchToProps)(TablePanelUnconnected)
 
 const tableStyles = {
   wrapper: css`

@@ -62,11 +62,11 @@ function HeaderWrapper(props: Props) {
         SetInSave(false)
     });
     
-    const globalVars = []
-    const localVars = []
-    props.variables.forEach(v => {
-        v.global ?  globalVars.push(v) : localVars.push(v) 
-    })
+    // const globalVars = []
+    // const localVars = []
+    // props.variables.forEach(v => {
+    //     v.global ?  globalVars.push(v) : localVars.push(v) 
+    // })
 
     const onSaveDashboard = () => {
         appEvents.emit('dashboard-auto-save',dashboard[0].autoSave)
@@ -125,9 +125,9 @@ function HeaderWrapper(props: Props) {
                                 () => store.dispatch(updateLocation({ query: { settingView: 'general' }, partial: true }))
                             } />
                         </Tooltip>
-                        {globalVars.length > 0 && <Tooltip title={<Message id={'common.globalVariable'} />}>
+                        {/* {props.variables.length > 0 && <Tooltip title={<Message id={'common.globalVariable'} />}>
                             <Button icon={<CalculatorOutlined />} onClick={() => setShowGlobalVar(true)} />
-                        </Tooltip>}
+                        </Tooltip>} */}
                         <Tooltip title={<Message id={'dashboard.viewMode'} />}>{<Button icon={<DesktopOutlined onClick={toggleViewMode} />} />}</Tooltip>
                         <Tooltip title={<Message id='dashboard.addUrl'/>} placement="bottom">
                             <Button icon={  <PlusOutlined />} onClick={() => props.onUpdateUrl()} />
@@ -139,7 +139,7 @@ function HeaderWrapper(props: Props) {
 
             {dashboard && <SaveDashboard dashboard={dashboard[0]} originDashbord={dashboard[1]} onSave={onSaveDashboard} onCancel={onCancelSaveDash}/>}
             
-            <Modal
+            {/* <Modal
                 title={null}
                 visible={showGlobalVar}
                 footer={null}
@@ -159,7 +159,7 @@ function HeaderWrapper(props: Props) {
                         ? true
                         : localeData[props.locale]['dashboard.changeNotSave']
             }
-            />
+            /> */}
         </Header>
     )
 }

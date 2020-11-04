@@ -1,5 +1,7 @@
 import React, { FC, memo, useCallback, useMemo } from 'react';
 import { DataFrame, Field, getFieldDisplayName } from '../../../data';
+import classNames from 'classnames'
+
 import {
   Cell,
   Column,
@@ -37,6 +39,7 @@ export interface Props {
   resizable?: boolean;
   initialSortBy?: TableSortByFieldState[];
   onCellClick?: TableFilterActionCallback;
+  onRowClick?: any;
   onColumnResize?: TableColumnResizeActionCallback;
   onSortByChange?: TableSortByActionCallback;
 }
@@ -150,12 +153,14 @@ export const Table: FC<Props> = memo((props: Props) => {
     useResizeColumns
   );
 
+  const inputClassName = classNames(tableStyles.row, { pointer: props.onRowClick !== undefined});
   const RenderRow = React.useCallback(
     ({ index, style }) => {
       const row = rows[index];
       prepareRow(row);
+      console.log(row)
       return (
-        <div {...row.getRowProps({ style })} className={tableStyles.row}>
+        <div {...row.getRowProps({ style })} className={inputClassName} onClick={() => props.onRowClick(row.values)}>
           {row.cells.map((cell: Cell, index: number) => (
             <TableCell
               key={index}
