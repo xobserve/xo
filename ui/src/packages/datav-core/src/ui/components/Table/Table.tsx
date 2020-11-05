@@ -153,7 +153,7 @@ export const Table: FC<Props> = memo((props: Props) => {
     useResizeColumns
   );
 
-  const inputClassName = classNames(tableStyles.row, { pointer: props.onRowClick !== undefined});
+  const inputClassName = classNames(tableStyles.row, { pointer: props.onRowClick !== null});
   const RenderRow = React.useCallback(
     ({ index, style }) => {
       const row = rows[index];

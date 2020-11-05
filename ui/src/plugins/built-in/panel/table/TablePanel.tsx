@@ -1,14 +1,14 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
-import { Table, Select, getTheme, getHistory } from 'src/packages/datav-core';
+import { Table, Select, getTheme, getHistory, getTemplateSrv } from 'src/packages/datav-core';
 import { FieldMatcherID, PanelProps, DataFrame, SelectableValue, getFrameDisplayName } from 'src/packages/datav-core';
 import { Options } from './types';
 import { css } from 'emotion';
 
 import { TableSortByFieldState } from 'src/packages/datav-core';
 import { resetDashboardVariables } from 'src/views/dashboard/model/initDashboard'
-import { join, indexOf,cloneDeep} from 'lodash';
+import { join, indexOf,cloneDeep, isArray} from 'lodash';
 
 
 interface Props extends PanelProps<Options> {
@@ -71,28 +71,32 @@ export class TablePanelUnconnected extends Component<Props> {
   setVariable = (name, value) => {
     const vars = this.props.dashboard.templating.list
     for (const v of vars) {
-      console.log(cloneDeep(v))
-      if (v.name === 'test') {
+      if (v.name === name) {
         if (!v.multi) {
           v.current = {
-            text: 'b',
-            value: 'b',
+            text: value,
+            value: value,
             selected: false
           }
 
           for (const o of v.options) {
-            if (o.text === 'b') {
+            if (o.text === value) {
               o.selected = true
             } else {
               o.selected = false
             }
           }
         } else {
-          const values = cloneDeep(v.current.value)
-          if (indexOf(values, 'c') === -1) {
-            values.push('c')
+          let values = cloneDeep(v.current.value)
+          if (indexOf(values, value) === -1 && values !== value) {
+            if (isArray(values)) {
+              values.push(value)
+            } else {
+              values = [values,value]
+            }
+
             v.current = {
-              text: join(values, "+"),
+              text: join(values, " + "),
               value: values,
               selected: true,
             }
@@ -113,16 +117,8 @@ export class TablePanelUnconnected extends Component<Props> {
 
   renderTable(frame: DataFrame, width: number, height: number) {
     const { options } = this.props;
-
-
-    //     {option: {…}, clearOthers: false, forceSelect: false}
-    // clearOthers: false
-    // forceSelect: false
-    // option: {selected: false, text: "c", value: "c"}
-
-    const onRowClick = new Function('data,history,setVariable', `
-      setVariable()
-    `)
+    
+    const onRowClickFunc = new Function("data,history,setVariable", getTemplateSrv().replace(options.rowClickEvent))
     return (
       <Table
         height={height}
@@ -133,7 +129,7 @@ export class TablePanelUnconnected extends Component<Props> {
         initialSortBy={options.sortBy}
         onSortByChange={this.onSortByChange}
         onColumnResize={this.onColumnResize}
-        onRowClick={(data) => onRowClick(data, getHistory(), this.setVariable)}
+        onRowClick={options.enableRowClick ? (data) => onRowClickFunc(data, getHistory(), this.setVariable) : null}
       />
     );
   }
@@ -182,11 +178,6 @@ const mapDispatchToProps = {
   resetDashboardVariables,
 };
 
-const mapStateToProps = (state) => {
-  return {
-
-  }
-}
 export const TablePanel = connect(null, mapDispatchToProps)(TablePanelUnconnected)
 
 const tableStyles = {

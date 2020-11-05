@@ -1,4 +1,6 @@
-import { PanelPlugin } from 'src/packages/datav-core';
+import React from 'react'
+import { PanelPlugin, CodeEditor } from 'src/packages/datav-core';
+import _ from 'lodash'
 import { TablePanel } from './TablePanel';
 import { CustomFieldConfig, Options } from './types';
 import { TableCellDisplayMode } from 'src/packages/datav-core';
@@ -49,10 +51,55 @@ export const plugin = new PanelPlugin<Options, CustomFieldConfig>(TablePanel)
     },
   })
   .setPanelOptions(builder => {
-    builder.addBooleanSwitch({
-      path: 'showHeader',
-      name: 'Show header',
-      description: "To display table's header or not to display",
-      defaultValue: true,
-    });
+    builder
+      .addBooleanSwitch({
+        path: 'showHeader',
+        name: 'Show header',
+        description: "To display table's header or not to display",
+        defaultValue: true,
+      })
+      .addBooleanSwitch({
+        path: 'enableRowClick',
+        name: 'Enable row click',
+        category: ['Row click'],
+        description: "When enabled, click on table row will trigger a event",
+        defaultValue: false
+      })
+      .addCustomEditor({
+        id: 'table-row-click-editor',
+        path: "rowClickEvent",
+        name: 'Event editor',
+        category: ['Row click'],
+        defaultValue: `setVariable('test',data['0'])`,
+        editor: OptionEditor,
+        showIf:  options => options.enableRowClick === true
+      })
   });
+
+
+  const OptionEditor = props => {
+    let value = _.cloneDeep(props.value) 
+    if (!props.value) {
+      value = _.cloneDeep(props.item.defaultValue)
+    }
+  
+    const onDataChange = v => {
+       props.onChange(v)
+    }
+    return (
+      <div>
+        <div>function(data, history, setVariable) <span className="color-primary">&nbsp;{` {`}</span></div>
+           <CodeEditor
+          width="100%"
+          height="200px"
+          language="javascript"
+          showLineNumbers={true}
+          showMiniMap={false}
+          value={value}
+          onBlur={(v) => onDataChange(v)}
+  
+        />
+        <span className="color-primary">{` }`}</span>
+      </div>
+    )
+  }

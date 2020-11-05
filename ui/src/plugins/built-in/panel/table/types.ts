@@ -4,6 +4,8 @@ export interface Options {
   frameIndex: number;
   showHeader: boolean;
   sortBy?: TableSortByFieldState[];
+  enableRowClick: boolean;
+  rowClickEvent: string
 }
 
 export interface TableSortBy {

@@ -36,9 +36,3 @@ Contrary to Grafana's big and all, DataV's design goal is small and beautiful.We
 4. The needs of the bosses must be taken into account
 > Our bosses usually have different sights, so datav will take their needs too, e.g big screen dashboard, data report, **data association** etc
 
-
-## Community
-### Creator
-- Michal Sopor
-### Core Contributors
-- Sunface
