@@ -1,4 +1,6 @@
-import { PanelPlugin ,TagsInput, localeData, currentLang} from 'src/packages/datav-core';
+import React from 'react'
+import _ from 'lodash'
+import { PanelPlugin ,TagsInput, localeData, currentLang, CodeEditor} from 'src/packages/datav-core';
 import { GraphPanelOptions } from './types';
 import { GraphPanel } from './GraphPanel';
 import {ThresholdsEditor} from './ThresholdsEditor/ThresholdsEditor'
@@ -335,6 +337,22 @@ export const plugin = new PanelPlugin<GraphPanelOptions>(GraphPanel)
       category: ['Thresholds'],
       editor: ThresholdsEditor as any
     })
+    .addBooleanSwitch({
+      path: 'enableClickEvent',
+      name: 'Enable click event',
+      category: ['Click event'],
+      description: "When enabled, click on graph point/serries will trigger a event",
+      defaultValue: false
+    })
+    .addCustomEditor({
+      id: 'graph-click-event-editor',
+      path: "clickEvent",
+      name: 'Event editor',
+      category: ['Click event'],
+      defaultValue: ``,
+      editor: OptionEditor,
+      showIf:  options => options.enableClickEvent === true
+    })
     .addDataLinks({
        path: 'options.dataLinks',
        name: 'Link list',
@@ -351,3 +369,31 @@ const poitsRadiusOptions = () => {
   return r
 }
 
+
+const OptionEditor = props => {
+  let value = _.cloneDeep(props.value) 
+  if (!props.value) {
+    value = _.cloneDeep(props.item.defaultValue)
+  }
+
+  const onDataChange = v => {
+     props.onChange(v)
+  }
+  
+  return (
+    <div>
+      <div>function(data, history, setVariable) <span className="color-primary">&nbsp;{` {`}</span></div>
+         <CodeEditor
+        width="100%"
+        height="200px"
+        language="javascript"
+        showLineNumbers={true}
+        showMiniMap={false}
+        value={value}
+        onBlur={(v) => onDataChange(v)}
+
+      />
+      <span className="color-primary">{` }`}</span>
+    </div>
+  )
+}

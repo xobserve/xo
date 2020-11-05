@@ -178,6 +178,23 @@ export const plugin = new PanelPlugin<DependencyGraphOptions>(DependencyGraph).s
       defaultValue: JSON.stringify(styleOptions,null,2),
       editor: OptionEditor
     })
+
+    .addBooleanSwitch({
+      path: 'enableClickEvent',
+      name: 'Enable click event',
+      category: ['Click event'],
+      description: "When enabled, click on node will trigger a event",
+      defaultValue: false
+    })
+    .addCustomEditor({
+      id: 'dependency-graph-click-event-editor',
+      path: "clickEvent",
+      name: 'Event editor',
+      category: ['Click event'],
+      defaultValue: ``,
+      editor: ClickEditor,
+      showIf:  options => options.enableClickEvent === true
+    })
 });
 
 
@@ -271,4 +288,32 @@ const ServiceEditor = props => {
       </div>
     </>
   );
+}
+
+
+const ClickEditor = props => {
+  let value = _.cloneDeep(props.value) 
+  if (!props.value) {
+    value = _.cloneDeep(props.item.defaultValue)
+  }
+
+  const onDataChange = v => {
+     props.onChange(v)
+  }
+  return (
+    <div>
+      <div>function(data, history, setVariable) <span className="color-primary">&nbsp;{` {`}</span></div>
+         <CodeEditor
+        width="100%"
+        height="200px"
+        language="javascript"
+        showLineNumbers={true}
+        showMiniMap={false}
+        value={value}
+        onBlur={(v) => onDataChange(v)}
+
+      />
+      <span className="color-primary">{` }`}</span>
+    </div>
+  )
 }

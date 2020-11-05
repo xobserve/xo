@@ -23,6 +23,9 @@ export interface DependencyGraphOptions {
     type: string,
     value: number
   }
+
+  enableClickEvent: boolean
+  clickEvent: string
 }
 
 

@@ -1,6 +1,7 @@
 import React, { PureComponent } from 'react';
-import _, { find, map, isUndefined, remove, each, has, filter } from 'lodash';
-import { PanelProps, withTheme, DatavTheme, toLegacyTableData, getTemplateSrv } from 'src/packages/datav-core';
+import _, { find, map, isUndefined, remove, each, has } from 'lodash';
+import { join, indexOf,cloneDeep, isArray} from 'lodash';
+import { PanelProps, withTheme, DatavTheme, toLegacyTableData, getTemplateSrv, Icon, getHistory } from 'src/packages/datav-core';
 import { DependencyGraphOptions, CurrentData, QueryResponse, TableContent, ISelectionStatistics, IGraphMetrics, IGraph, IGraphNode, CyData, IGraphEdge, FilterConditions, NodeFilterType } from './types';
 import { css, cx } from 'emotion';
 import { stylesFactory } from 'src/packages/datav-core';
@@ -19,9 +20,12 @@ import FilterPanel from './FilterPanel'
 import {filterGraph} from './filterGraph'
 import { store } from 'src/store/store';
 import storage from 'src/core/library/utils/localStorage';
+import { resetDashboardVariables } from 'src/views/dashboard/model/initDashboard';
+import { connect } from 'react-redux';
 
 interface Props extends PanelProps<DependencyGraphOptions> {
   theme: DatavTheme
+  resetDashboardVariables : typeof resetDashboardVariables
 }
 interface State {
   paused: boolean
@@ -433,10 +437,59 @@ export class DependencyGraph extends PureComponent<Props, State> {
     }
   }
 
+  setVariable = (name, value) => {
+    const vars = this.props.dashboard.templating.list
+    for (const v of vars) {
+      if (v.name === name) {
+        if (!v.multi) {
+          v.current = {
+            text: value,
+            value: value,
+            selected: false
+          }
+
+          for (const o of v.options) {
+            if (o.text === value) {
+              o.selected = true
+            } else {
+              o.selected = false
+            }
+          }
+        } else {
+          let values = cloneDeep(v.current.value)
+          if (indexOf(values, value) === -1 && values !== value) {
+            if (isArray(values)) {
+              values.push(value)
+            } else {
+              values = [values,value]
+            }
+
+            v.current = {
+              text: join(values, " + "),
+              value: values,
+              selected: true,
+            }
+  
+            for (const o of v.options) {
+              if (indexOf(values, o.text) !== -1) {
+                o.selected = true
+              } else {
+                o.selected = false
+              }
+            }
+          }
+        }
+      }
+    }
+     this.props.resetDashboardVariables(this.props.dashboard)
+  }
+
   render() {
     const { options, data, width, height, panel } = this.props
 
     const { paused, showStatistics, graphData, filterConditions} = this.state
+
+    const onClickFunc = new Function("data,history,setVariable", getTemplateSrv().replace(this.props.options.clickEvent))
 
     if (this.props.options.showDummyData) {
       this.processQueryData(dummyData);
@@ -494,9 +547,11 @@ export class DependencyGraph extends PureComponent<Props, State> {
               <div className="header--selection">{this.selectionId}
                 {this.resolvedDrillDownLink
                   && this.resolvedDrillDownLink.length > 0
-                  && <a target="_blank" href={this.resolvedDrillDownLink}>
+                  && <Tooltip title="Drilldown link"><a target="_blank" href={this.resolvedDrillDownLink}>
                     <LinkOutlined className="ub-ml2"/>
-                  </a>}
+                  </a></Tooltip>}
+
+                {options.clickEvent && <Tooltip title="Trigger click event"><Icon name="mouse-alt" className="pointer ub-ml2" size="lg" onClick={() => onClickFunc(this.selectionId,getHistory(),this.setVariable)}/></Tooltip>}
               </div>
 
               <div className="secondHeader--selection">Statistics</div>
@@ -571,9 +626,14 @@ export class DependencyGraph extends PureComponent<Props, State> {
   }
 }
 
+const mapDispatchToProps = {
+  resetDashboardVariables,
+};
 
 
-export default withTheme(DependencyGraph)
+
+export default withTheme(connect(null, mapDispatchToProps)(DependencyGraph))
+
 
 const getStyles = stylesFactory(() => {
   return {

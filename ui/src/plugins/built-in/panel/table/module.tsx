@@ -71,13 +71,13 @@ export const plugin = new PanelPlugin<Options, CustomFieldConfig>(TablePanel)
         name: 'Event editor',
         category: ['Row click'],
         defaultValue: `setVariable('test',data['0'])`,
-        editor: OptionEditor,
+        editor: ClickEditor,
         showIf:  options => options.enableRowClick === true
       })
   });
 
 
-  const OptionEditor = props => {
+  const ClickEditor = props => {
     let value = _.cloneDeep(props.value) 
     if (!props.value) {
       value = _.cloneDeep(props.item.defaultValue)

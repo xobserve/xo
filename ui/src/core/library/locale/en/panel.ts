@@ -33,6 +33,7 @@ const panel = {
     // graph panel
     addAnnotation: 'Add annotation',
     editAnnotation: 'Edit annotation',
+    
     // echarts panel
     echartsOptions: 'Echarts options',
     echartsOptionsDesc: `Pass options to echarts by function below, you can use 'console.log(data)' to see the detail of function params`,

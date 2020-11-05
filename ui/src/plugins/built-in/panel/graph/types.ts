@@ -10,6 +10,8 @@ export interface GraphPanelOptions  {
   points: boolean
   pointradius: number
   stack: boolean
+  enableClickEvent: boolean;
+  clickEvent: string
 }
 
 export interface DataWarning {
