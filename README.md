@@ -1,5 +1,4 @@
 # Datav
-
 The open-source platform for data monitoring and observability. 
 
 Datav is forked from **@grafana**, but changed a lot, e.g :
@@ -9,6 +8,9 @@ Datav is forked from **@grafana**, but changed a lot, e.g :
 - large screen supported
 - different team and acl design,no orgs any more 
 - 100% free. Forever and always
+
+## Status
+v0.8.0 has been released, official website and docs will be released before 2020-11-13 .
 
 ## How to start(developing mode)
 ```bash
@@ -25,8 +27,7 @@ Datav is forked from **@grafana**, but changed a lot, e.g :
 ```
 then open http://localhost:3000, and login with admin/admin
 
-## Status
-0.8.0 has been released, we are in progress of official website and docs now.
+
 
 ## Key Features 
 - **Plugins** Performance,Extensible,Beautiful,Configurable
