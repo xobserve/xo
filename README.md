@@ -10,6 +10,8 @@ Datav is forked from **@grafana**, but changed a lot, e.g :
 - different team and acl design,no orgs any more 
 - 100% free. Forever and always
 
+## Status
+0.8.0 has been released, we are in progress of official website and docs now.
 
 ## Key Features 
 - **Plugins** Performance,Extensible,Beautiful,Configurable
