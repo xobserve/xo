@@ -12,6 +12,16 @@ Datav is forked from **@grafana**, but changed a lot, e.g :
 ## Status
 v0.8.0 has been released, official website and docs will be released before 2020-11-13 .
 
+## Key Features 
+- **Plugins** Performance,Extensible,Beautiful,Configurable
+- **Dynamic Dashboards** Create dynamic & reusable dashboards with template variables
+- **Interactive Panel** You can set click events for panels, like: go to a page, set variable etc
+- **Beautifult Large Screen** Customize your own big data large screen,it's very very cool
+- **Alerting** Visually define alert rules for your most important metrics
+- **Variables**  Global and Dashboard scope, global vars can help you achieve personalized features such as multiple environments etc
+- **Teams and ACL** Besides global dashboards, you can create teams, manage and share dashboards in your team
+- **Custom sidemenu**  Link dashboards to sidemenu items, build your own sidemenu and websites.
+
 ## How to start(developing mode)
 ```bash
 > git clone https://github.com/apm-ai/datav
@@ -26,18 +36,6 @@ v0.8.0 has been released, official website and docs will be released before 2020
 > yarn start
 ```
 then open http://localhost:3000, and login with admin/admin
-
-
-
-## Key Features 
-- **Plugins** Performance,Extensible,Beautiful,Configurable
-- **Dynamic Dashboards** Create dynamic & reusable dashboards with template variables
-- **Beautifult Large Screen** Customize your own big data large screen,it's very very cool
-- **Alerting** Visually define alert rules for your most important metrics
-- **Powerful Iframe API** Embed datav to your website With powerful iframe api
-- **Variables**  Global and Dashboard, global vars can help you achieve personalized features such as multiple environments
-- **Teams and ACL** Besides global dashboards, you can create teams, manage and share dashboards in your team.
-
 
 ## Screenshots
 ![screenshot1](ui/public/img/screenshot1.jpg)
