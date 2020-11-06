@@ -2,27 +2,30 @@ package bootConfig
 
 import (
 	"database/sql"
-	"github.com/apm-ai/datav/backend/internal/session"
-	"github.com/apm-ai/datav/backend/pkg/models"
-	"github.com/apm-ai/datav/backend/internal/sidemenu"
+
 	"github.com/apm-ai/datav/backend/internal/datasources"
+	"github.com/apm-ai/datav/backend/internal/session"
+	"github.com/apm-ai/datav/backend/internal/sidemenu"
+	"github.com/apm-ai/datav/backend/pkg/models"
+
 	// "fmt"
-	"github.com/apm-ai/datav/backend/internal/plugins" 
+	"github.com/apm-ai/datav/backend/internal/plugins"
 	"github.com/apm-ai/datav/backend/pkg/common"
 	"github.com/apm-ai/datav/backend/pkg/log"
 	"github.com/gin-gonic/gin"
-	
+
 	"strconv"
 )
 
 type bootConfig struct {
 	DataSourceMetas map[string]*plugins.DataSourcePlugin `json:"datasourceMetas"`
-	DataSources map[string]interface{} `json:"datasources"`
-	Panels      map[string]interface{} `json:"panels"`
-	SideMenu    interface{} `json:"sidemenu"`
+	DataSources     map[string]interface{}               `json:"datasources"`
+	Panels          map[string]interface{}               `json:"panels"`
+	SideMenu        interface{}                          `json:"sidemenu"`
 }
 
-var logger = log.RootLogger.New("logger","bootConfig")
+var logger = log.RootLogger.New("logger", "bootConfig")
+
 func QueryBootConfig(c *gin.Context) {
 	user := session.CurrentUser(c)
 
@@ -31,21 +34,21 @@ func QueryBootConfig(c *gin.Context) {
 
 	datasources := make(map[string]interface{})
 	for _, ds := range rawDatasources {
-		plugin,ok := plugins.DataSources[ds.Type]
+		plugin, ok := plugins.DataSources[ds.Type]
 		if !ok {
-			logger.Warn("cant find datasrouce plugin","plugin",ds.Type)
+			logger.Warn("cant find datasrouce plugin", "plugin", ds.Type)
 			continue
 		}
 
-		ds.JsonData.Set("directUrl",ds.Url)
-		newDs := map[string]interface{} {
-			"id": ds.Id,
-			"uid": ds.Uid,
-			"type": ds.Type,
-			"name": ds.Name,
-			"url":  "/api/proxy/" + strconv.FormatInt(ds.Id, 10),
-			"meta":plugin,
-			"jsonData": ds.JsonData,
+		ds.JsonData.Set("directUrl", ds.Url)
+		newDs := map[string]interface{}{
+			"id":        ds.Id,
+			"uid":       ds.Uid,
+			"type":      ds.Type,
+			"name":      ds.Name,
+			"url":       "/api/proxy/" + strconv.FormatInt(ds.Id, 10),
+			"meta":      plugin,
+			"jsonData":  ds.JsonData,
 			"isDefault": ds.IsDefault,
 		}
 		datasources[ds.Name] = newDs
@@ -65,25 +68,25 @@ func QueryBootConfig(c *gin.Context) {
 			"skipDataQuery": panel.SkipDataQuery,
 			"state":         panel.State,
 		}
-	} 
+	}
 
 	// load side menu
 	smId := int64(models.DefaultMenuId)
 	if user != nil {
-		smId = user.SideMenu 
+		smId = user.SideMenu
 	}
-	menu,err  := sidemenu.QuerySideMenu(smId,0)
-	if err != nil && err != sql.ErrNoRows{
-		logger.Error("query side menu error","error",err)
+	menu, err := sidemenu.QuerySideMenu(smId, 0)
+	if err != nil && err != sql.ErrNoRows {
+		logger.Error("query side menu error", "error", err)
 		c.JSON(500, common.ResponseInternalError())
-		return 
+		return
 	}
 
 	if err == sql.ErrNoRows {
-		menu,err  = sidemenu.QuerySideMenu(models.DefaultMenuId,0)
+		menu, err = sidemenu.QuerySideMenu(models.DefaultMenuId, 0)
 	}
 
-	c.JSON(200, common.ResponseSuccess(bootConfig{plugins.DataSources,datasources, panels,menu.Data}))
+	c.JSON(200, common.ResponseSuccess(bootConfig{plugins.DataSources, datasources, panels, menu.Data}))
 }
 
 func getPanelSort(id string) int {

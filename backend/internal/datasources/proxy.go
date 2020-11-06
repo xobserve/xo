@@ -1,4 +1,4 @@
-package server
+package datasources
 
 import (
 	"strconv"
@@ -18,7 +18,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func proxy(c *gin.Context) {
+func Proxy(c *gin.Context) {
 	dsID, _ := strconv.ParseInt(c.Param("datasourceID"), 10, 64)
 	// find datasource store url
 	ds, err := models.QueryDataSource(dsID, "")

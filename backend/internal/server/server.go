@@ -111,8 +111,8 @@ func (s *Server) Start() error {
 		{
 			r.POST("/api/login", session.Login)
 			r.POST("/api/logout", session.Logout)
-			r.Any("/api/proxy/:datasourceID/*target", proxy)
-			r.Any("/api/proxy/:datasourceID", proxy)
+			r.Any("/api/proxy/:datasourceID/*target", datasources.Proxy)
+			r.Any("/api/proxy/:datasourceID", datasources.Proxy)
 			r.GET("/api/bootConfig", bootConfig.QueryBootConfig)
 			r.POST("/api/testdata", QueryTestdata)
 		}

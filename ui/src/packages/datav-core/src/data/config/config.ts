@@ -120,13 +120,13 @@ export const config = {
     },
     buildInfo: {
         buildstamp: 1592571942,
-        commit: "unknown-dev",
+        commit: "",
         edition: "Open Source",
         env: "development",
         hasUpdate: false,
         isEnterprise: false,
-        latestVersion: "0.1.0",
-        version: "0.1.0",
+        latestVersion: "0.8.0",
+        version: "0.8.0",
     },
     licenseInfo: {
         expiry: 0,

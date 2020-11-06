@@ -92,7 +92,7 @@ export const BottomNavLinks = (props:Props) => {
       'dropdown': true,
       'dropup': true
     })
-    
+
     return (
       <>
       <div className={classes}>
@@ -130,8 +130,8 @@ export const BottomNavLinks = (props:Props) => {
             </li>
           )}
 
-
-          {children.map((child, index) => {
+              
+          {link.id !== 'datav-fix-menu-help' && children.map((child, index) => {
             const subMenuItemSelected = _.startsWith(location.pathname, child.url)
             const  subMenuItemClasses = classNames({
               'sidemenu-dropdown-item-selected' : subMenuItemSelected
@@ -150,6 +150,17 @@ export const BottomNavLinks = (props:Props) => {
                    </Link>
                 }
            
+              </li>
+            );
+          })}
+
+          {link.id === 'datav-fix-menu-help' && children.map((child, index) => {
+            return (
+              <li key={`${child.title}-${index}`} >
+                     <a href={child.url} rel="noopener" target="_blank">
+                     {/* {child.icon && <Icon name={child.icon as IconName} className={subMenuIconClassName} />} */}
+                     {child.title}
+                   </a>
               </li>
             );
           })}
