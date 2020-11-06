@@ -39,6 +39,11 @@ then open http://localhost:3000, and login with admin/admin
 - **Teams and ACL** Besides global dashboards, you can create teams, manage and share dashboards in your team.
 
 
+## Screenshots
+![screenshot1](ui/public/img/screenshot1.jpg)
+![screenshot2](ui/public/img/screenshot2.jpg)
+![screenshot3](ui/public/img/screenshot3.jpg)
+
 ## Design Philosophy
 Contrary to Grafana's big and all, DataV's design goal is small and beautiful.We support 90% of common usage scenarios.In these scenarios, DataV can ensure that it is simple enough and easy to use. Plug-in development will also be very simple. 
 
