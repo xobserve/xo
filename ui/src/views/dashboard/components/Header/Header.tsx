@@ -152,14 +152,14 @@ function HeaderWrapper(props: Props) {
 
                 <h3><Message id={'dashboard.dashVariables'}/></h3>
                 <SubMenuItems variables={localVars} />
-            </Modal>
+            </Modal> */}
             <Prompt message={
                 () =>
                     tracker.canLeave()
                         ? true
                         : localeData[props.locale]['dashboard.changeNotSave']
             }
-            /> */}
+            />
         </Header>
     )
 }

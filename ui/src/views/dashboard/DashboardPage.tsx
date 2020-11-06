@@ -87,8 +87,7 @@ class DashboardPage extends React.PureComponent<DashboardPageProps & RouteCompon
 
     componentDidMount() {
         // register to changeTracker
-        //@todo : 为了方便测试，暂时屏蔽
-        // tracker.register(this.hasChanges.bind(this))
+        tracker.register(this.hasChanges.bind(this))
 
         this.init = this.init.bind(this)
         this.setOriginDash = this.setOriginDash.bind(this)

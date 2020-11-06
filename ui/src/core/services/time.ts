@@ -22,8 +22,7 @@ import {timer} from './timer'
 import { store } from 'src/store/store';
 import { updateStartDate,updateEndDate } from 'src/store/reducers/application';
 import {addParamsToUrl,getUrlParams,addParamToUrl,removeParamFromUrl} from 'src/core/library/utils/url'
-//@todo
-// 替换成真实的url参数
+
 export class TimeSrv {
   time: any;
   refreshTimer: any;
