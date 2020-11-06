@@ -20,8 +20,11 @@ Datav is forked from **@grafana**, but changed a lot, e.g :
 > ./datav &
 > cd ui
 > nvm use    
+> yarn install
 > yarn start
 ```
+then open http://localhost:3000, and login with admin/admin
+
 ## Status
 0.8.0 has been released, we are in progress of official website and docs now.
 
