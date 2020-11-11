@@ -21,7 +21,7 @@ import { merge as mergeShortcuts } from '../keyboard-shortcuts';
 import { Accessors } from '../ScrollManager';
 import { TUpdateViewRangeTimeFunction, ViewRange, ViewRangeTimeUpdate } from './types';
 import { TNil } from '../types';
-import { TraceSpan, Trace, TraceLog, TraceKeyValuePair, TraceLink } from 'src/packages/datav-core';
+import { TraceSpan, Trace, TraceLog, TraceKeyValuePair, TraceLink } from 'src/packages/datav-core/src';
 import TTraceTimeline from '../types/TTraceTimeline';
 import { autoColor, createStyle, Theme, withTheme } from '../Theme';
 import ExternalLinkContext from '../url/externalLinkContext';

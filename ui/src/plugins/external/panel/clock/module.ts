@@ -1,4 +1,4 @@
-import { PanelPlugin } from 'src/packages/datav-core';
+import { PanelPlugin } from 'src/packages/datav-core/src';
 
 import { ClockPanel } from './ClockPanel';
 import { ClockOptions } from './types';

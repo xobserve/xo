@@ -3,8 +3,8 @@ import React, { FC } from 'react';
 import { css } from 'emotion';
 // @ts-ignore
 import { components } from '@torkelo/react-select';
-import { AsyncSelect, stylesFactory, useTheme, resetSelectStyles, Icon } from 'src/packages/datav-core';
-import { escapeStringForRegex, DatavTheme } from 'src/packages/datav-core';
+import { AsyncSelect, stylesFactory, useTheme, resetSelectStyles, Icon } from 'src/packages/datav-core/src';
+import { escapeStringForRegex, DatavTheme } from 'src/packages/datav-core/src';
 // Components
 import { TagOption } from './TagOption';
 import { TagBadge } from './TagBadge';

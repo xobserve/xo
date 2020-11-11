@@ -1,5 +1,5 @@
 import kbn from '../library/utils/kbn';
-import {config} from 'src/packages/datav-core'
+import {config} from 'src/packages/datav-core/src'
 import { isEmpty } from 'lodash';
 import { getToken } from '../library/utils/auth';
 import {store} from 'src/store/store'

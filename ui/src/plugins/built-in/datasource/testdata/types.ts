@@ -1,4 +1,4 @@
-import { DataQuery } from 'src/packages/datav-core';
+import { DataQuery } from 'src/packages/datav-core/src';
 
 export interface Scenario {
   id: string;

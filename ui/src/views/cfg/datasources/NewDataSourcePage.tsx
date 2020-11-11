@@ -1,6 +1,6 @@
 import React, { FC, PureComponent } from 'react';
-import { DataSourcePluginMeta, NavModel, getBackendSrv,Button} from 'src/packages/datav-core';
-import { List } from 'src/packages/datav-core';
+import { DataSourcePluginMeta, NavModel, getBackendSrv,Button} from 'src/packages/datav-core/src';
+import { List } from 'src/packages/datav-core/src';
 import Page from '../../Layouts/Page/Page';
 import { DataSourcePluginCategory,StoreState } from 'src/types';
 import { Card } from '../../components/Card/Card';

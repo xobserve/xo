@@ -1,12 +1,12 @@
 import React from 'react';
-import { StatsPicker } from 'src/packages/datav-core';
+import { StatsPicker } from 'src/packages/datav-core/src';
 import {
   DataTransformerID,
   ReducerID,
   standardTransformers,
   TransformerRegistyItem,
   TransformerUIProps,
-} from 'src/packages/datav-core';
+} from 'src/packages/datav-core/src';
 
 import { ReduceTransformerOptions } from 'src/packages/datav-core/src/data/transformations/transformers/reduce';
 

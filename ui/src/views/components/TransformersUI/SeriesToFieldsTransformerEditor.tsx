@@ -5,9 +5,9 @@ import {
   standardTransformers,
   TransformerRegistyItem,
   TransformerUIProps,
-} from 'src/packages/datav-core';
+} from 'src/packages/datav-core/src';
 import { getAllFieldNamesFromDataFrames } from './OrganizeFieldsTransformerEditor';
-import { Select } from 'src/packages/datav-core';
+import { Select } from 'src/packages/datav-core/src';
 
 import { SeriesToColumnsOptions } from 'src/packages/datav-core/src/data/transformations/transformers/seriesToColumns';
 

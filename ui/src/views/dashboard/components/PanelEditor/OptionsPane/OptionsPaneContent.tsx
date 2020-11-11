@@ -1,8 +1,8 @@
 import React, { CSSProperties, useCallback, useState } from 'react';
 import Transition from 'react-transition-group/Transition';
-import { FieldConfigSource, DatavTheme, PanelPlugin, SelectableValue } from 'src/packages/datav-core';
+import { FieldConfigSource, DatavTheme, PanelPlugin, SelectableValue } from 'src/packages/datav-core/src';
 import { DashboardModel, PanelModel } from '../../../model';
-import { CustomScrollbar, Icon, Input, Select, stylesFactory, Tab, TabContent, TabsBar, useTheme } from 'src/packages/datav-core';
+import { CustomScrollbar, Icon, Input, Select, stylesFactory, Tab, TabContent, TabsBar, useTheme } from 'src/packages/datav-core/src';
 import { DefaultFieldConfigEditor, OverrideFieldConfigEditor } from './FieldConfigEditor';
 import { css } from 'emotion';
 // import {Button} from 'antd'

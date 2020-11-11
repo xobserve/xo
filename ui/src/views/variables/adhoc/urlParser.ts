@@ -1,5 +1,5 @@
 import { AdHocVariableFilter } from 'src/types';
-import { UrlQueryValue } from 'src/packages/datav-core';
+import { UrlQueryValue } from 'src/packages/datav-core/src';
 import { isArray, isString } from 'lodash';
 
 export const toUrl = (filters: AdHocVariableFilter[]): string[] => {

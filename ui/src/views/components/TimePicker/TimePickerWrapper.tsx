@@ -1,6 +1,6 @@
 // Libaries
 import React, { Component } from 'react';
-import { dateMath,TimeRange,config,stylesFactory} from 'src/packages/datav-core';
+import { dateMath,TimeRange,config,stylesFactory} from 'src/packages/datav-core/src';
 import { css } from 'emotion';
 
 

@@ -1,4 +1,4 @@
-import { VizOrientation, SelectableValue ,SingleStatBaseOptions} from 'src/packages/datav-core';
+import { VizOrientation, SelectableValue ,SingleStatBaseOptions} from 'src/packages/datav-core/src';
 
 export interface GaugeOptions extends SingleStatBaseOptions {
   showThresholdLabels: boolean;

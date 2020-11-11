@@ -1,6 +1,6 @@
 import { useCallback, useState } from 'react';
 import { DetailState } from './JaegerComponents';
-import { TraceLog } from 'src/packages/datav-core';
+import { TraceLog } from 'src/packages/datav-core/src';
 
 /**
  * Keeps state of the span detail. This means whether span details are open but also state of each detail subitem

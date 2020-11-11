@@ -1,6 +1,6 @@
 import React, { FC, memo } from 'react';
 import { css } from 'emotion';
-import { useTheme, CustomScrollbar, stylesFactory, IconButton,DatavTheme} from 'src/packages/datav-core';
+import { useTheme, CustomScrollbar, stylesFactory, IconButton,DatavTheme} from 'src/packages/datav-core/src';
 import { useSearchQuery } from '../hooks/useSearchQuery';
 import { useDashboardSearch } from '../hooks/useDashboardSearch';
 import { SearchField } from './SearchField';

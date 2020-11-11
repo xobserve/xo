@@ -6,7 +6,7 @@ import Page from 'src/views/Layouts/Page/Page';
 import { getNavModel } from 'src/views/Layouts/Page/navModel'
 import { Team, SideMenu ,StoreState} from 'src/types';
 import { getBackendSrv } from 'src/core/services/backend';
-import { InlineFormLabel,IconName,LegacyForms} from 'src/packages/datav-core'
+import { InlineFormLabel,IconName,LegacyForms} from 'src/packages/datav-core/src'
 import { Button, Input,notification, Tooltip, Tag } from 'antd';
 import EmptyListCTA from 'src/views/components/EmptyListCTA/EmptyListCTA';
 import MenuManage from './MenuManage/MenuManage'

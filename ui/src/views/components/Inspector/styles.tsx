@@ -1,5 +1,5 @@
 import { css } from 'emotion';
-import { stylesFactory, getTheme, currentTheme } from 'src/packages/datav-core';
+import { stylesFactory, getTheme, currentTheme } from 'src/packages/datav-core/src';
 
 
 export const getPanelInspectorStyles = stylesFactory(() => {

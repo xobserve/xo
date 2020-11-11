@@ -5,7 +5,7 @@ import React, { PureComponent } from 'react';
 import Page from '../../Layouts/Page/Page';
 import DataSourceList from './DataSourceList'
 // Types
-import { DataSourceSettings, NavModel, getBackendSrv,IconName, LinkButton} from 'src/packages/datav-core';
+import { DataSourceSettings, NavModel, getBackendSrv,IconName, LinkButton} from 'src/packages/datav-core/src';
 import EmptyListCTA from 'src/views/components/EmptyListCTA/EmptyListCTA'
 import { getNavModel } from '../../Layouts/Page/navModel';
 import { withRouter } from 'react-router-dom';

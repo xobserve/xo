@@ -1,4 +1,4 @@
-import { NavModel } from 'src/packages/datav-core';
+import { NavModel } from 'src/packages/datav-core/src';
 import { MenuItem, hasPermission } from 'src/types';
 import {store} from 'src/store/store'
 

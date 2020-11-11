@@ -1,6 +1,6 @@
 import React, { FC, memo, useCallback, useEffect, useState } from 'react';
 import { css, cx } from 'emotion';
-import { DatavTheme ,Icon, stylesFactory, useTheme } from 'src/packages/datav-core';
+import { DatavTheme ,Icon, stylesFactory, useTheme } from 'src/packages/datav-core/src';
 import { PANEL_EDITOR_UI_STATE_STORAGE_KEY } from '../PanelEditor';
 import { useLocalStorage } from 'react-use';
 

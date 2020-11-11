@@ -12,9 +12,9 @@ import {
   base64StringToArrowTable,
   arrowTableToDataFrame,
   DataFrame,
-} from 'src/packages/datav-core';
+} from 'src/packages/datav-core/src';
 import { Scenario, TestDataQuery } from './types';
-import { getBackendSrv, toDataQueryError } from 'src/packages/datav-core';
+import { getBackendSrv, toDataQueryError } from 'src/packages/datav-core/src';
 import { queryMetricTree } from './metricTree';
 import { from, merge, Observable, of } from 'rxjs';
 import { runStream } from './runStreams';

@@ -1,8 +1,8 @@
 import React from 'react';
 import { ButtonProps, Elements } from './JaegerComponents';
-import { Button, Input, stylesFactory, useTheme } from 'src/packages/datav-core';
+import { Button, Input, stylesFactory, useTheme } from 'src/packages/datav-core/src';
 import { css } from 'emotion';
-import { DatavTheme } from 'src/packages/datav-core';
+import { DatavTheme } from 'src/packages/datav-core/src';
 import cx from 'classnames';
 
 /**

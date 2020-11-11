@@ -4,9 +4,9 @@ import {
     Threshold,
     ThresholdsMode,
     SelectableValue,
-} from 'src/packages/datav-core';
+} from 'src/packages/datav-core/src';
 import {  Button,InputNumber,Select} from 'antd';
-import { FullWidthButtonContainer ,LegacyForms,Icon} from 'src/packages/datav-core';
+import { FullWidthButtonContainer ,LegacyForms,Icon} from 'src/packages/datav-core/src';
 import { PlusOutlined } from '@ant-design/icons';
 import './ThresholdsEditor.less'
 

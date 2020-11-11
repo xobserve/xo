@@ -1,6 +1,6 @@
-import { DataFrame } from 'src/packages/datav-core';
+import { DataFrame } from 'src/packages/datav-core/src';
 import React, { useState } from 'react';
-import { HorizontalGroup } from 'src/packages/datav-core';
+import { HorizontalGroup } from 'src/packages/datav-core/src';
 import { TransformationEditor } from './TransformationEditor';
 import { QueryOperationRow } from 'src/views/components/QueryOperationRow/QueryOperationRow';
 import { QueryOperationAction } from 'src/views/components/QueryOperationRow/QueryOperationAction';

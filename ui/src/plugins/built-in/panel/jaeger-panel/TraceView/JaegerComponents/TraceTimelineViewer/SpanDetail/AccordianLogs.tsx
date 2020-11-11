@@ -21,7 +21,7 @@ import { css } from 'emotion';
 import AccordianKeyValues from './AccordianKeyValues';
 import { formatDuration } from '../utils';
 import { TNil } from '../../types';
-import { TraceLog, TraceKeyValuePair, TraceLink } from 'src/packages/datav-core';
+import { TraceLog, TraceKeyValuePair, TraceLink } from 'src/packages/datav-core/src';
 import { autoColor, createStyle, Theme, useTheme } from '../../Theme';
 import { uAlignIcon, ubMb1 } from '../../uberUtilityStyles';
 

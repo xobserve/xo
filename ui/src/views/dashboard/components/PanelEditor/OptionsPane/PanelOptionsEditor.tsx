@@ -5,9 +5,9 @@ import {
   DataFrame,
   StandardEditorContext,
   InterpolateFunction,
-} from 'src/packages/datav-core';
+} from 'src/packages/datav-core/src';
 import { get as lodashGet, set as lodashSet } from 'lodash';
-import { FormField as Field, FormLabel as Label} from 'src/packages/datav-core';
+import { FormField as Field, FormLabel as Label} from 'src/packages/datav-core/src';
 import groupBy from 'lodash/groupBy';
 import { OptionsGroup } from './OptionsGroup';
 import localeData from 'src/core/library/locale'

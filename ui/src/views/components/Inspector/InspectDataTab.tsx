@@ -13,8 +13,8 @@ import {
   FormattedVector,
   DisplayProcessor,
   getDisplayProcessor,
-} from 'src/packages/datav-core'; 
-import { Button, FormField as Field, Icon, LegacyForms, Select, Table } from 'src/packages/datav-core';
+} from 'src/packages/datav-core/src'; 
+import { Button, FormField as Field, Icon, LegacyForms, Select, Table } from 'src/packages/datav-core/src';
 import AutoSizer from 'react-virtualized-auto-sizer';
 
 import { getPanelInspectorStyles } from './styles';

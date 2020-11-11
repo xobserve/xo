@@ -12,11 +12,11 @@ import {
   toUtc,
   dateTime,
   isDateTime,
-} from 'src/packages/datav-core';
+} from 'src/packages/datav-core/src';
 import { contextSrv } from './context';
 import { getZoomedTimeRange, getShiftedTimeRange } from '../library/utils/timePicker';
 
-import { config} from 'src/packages/datav-core';
+import { config} from 'src/packages/datav-core/src';
 import {timer} from './timer'
 
 import { store } from 'src/store/store';

@@ -4,7 +4,7 @@ import React, { Component } from 'react';
 // Components
 // import { Footer } from './PageFooter';
 import PageContents from './PageContent';
-import { CustomScrollbar,NavModel} from 'src/packages/datav-core';
+import { CustomScrollbar,NavModel} from 'src/packages/datav-core/src';
 import { Footer } from '../Footer/Footer'; 
 import PageHeader from './PageHeader'
 

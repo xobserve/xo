@@ -1,5 +1,5 @@
 import React from 'react'; 
-import { IconButton, IconName} from 'src/packages/datav-core';
+import { IconButton, IconName} from 'src/packages/datav-core/src';
 
 
 interface QueryOperationActionProps {

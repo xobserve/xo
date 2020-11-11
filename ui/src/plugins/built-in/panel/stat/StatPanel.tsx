@@ -7,7 +7,7 @@ import {
   BigValue,
   BigValueGraphMode,
   BigValueSparkline,
-} from 'src/packages/datav-core'
+} from 'src/packages/datav-core/src'
 
 import {
   DisplayValueAlignmentFactors,
@@ -16,7 +16,7 @@ import {
   getFieldDisplayValues,
   PanelProps,
   ReducerID,
-} from 'src/packages/datav-core';
+} from 'src/packages/datav-core/src';
 
 import { StatPanelOptions } from './types';
 

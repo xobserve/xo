@@ -1,4 +1,4 @@
-import { SingleStatBaseOptions, BigValueColorMode, BigValueGraphMode, BigValueJustifyMode } from 'src/packages/datav-core';
+import { SingleStatBaseOptions, BigValueColorMode, BigValueGraphMode, BigValueJustifyMode } from 'src/packages/datav-core/src';
 
 import {
   ReducerID,
@@ -8,7 +8,7 @@ import {
   getFieldDisplayName,
   escapeStringForRegex,
   PanelOptionsEditorBuilder
-} from 'src/packages/datav-core';
+} from 'src/packages/datav-core/src';
 
 export interface StatPanelOptions extends SingleStatBaseOptions {
   graphMode: BigValueGraphMode;

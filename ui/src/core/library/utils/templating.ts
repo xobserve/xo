@@ -1,5 +1,5 @@
 import isString from 'lodash/isString';
-import { ScopedVars } from 'src/packages/datav-core';
+import { ScopedVars } from 'src/packages/datav-core/src';
 
 /*
  * This regex matches 3 types of variable reference with an optional format specifier

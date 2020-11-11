@@ -1,4 +1,4 @@
-import { DataQuery, DataSourceJsonData } from 'src/packages/datav-core';
+import { DataQuery, DataSourceJsonData } from 'src/packages/datav-core/src';
 
 export interface PromQuery extends DataQuery {
   expr: string;

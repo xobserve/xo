@@ -1,7 +1,7 @@
 import React, { Dispatch, FC, FormEvent, SetStateAction } from 'react';
 import { css } from 'emotion';
-import { HorizontalGroup, RadioButtonGroup, stylesFactory, useTheme, Checkbox } from 'src/packages/datav-core';
-import { DatavTheme, SelectableValue } from 'src/packages/datav-core';
+import { HorizontalGroup, RadioButtonGroup, stylesFactory, useTheme, Checkbox } from 'src/packages/datav-core/src';
+import { DatavTheme, SelectableValue } from 'src/packages/datav-core/src';
 import { TagFilter } from 'src/views/components/TagFilter/TagFilter';
 import { SearchSrv } from 'src/core/services/search';
 import { DashboardQuery, SearchLayout } from '../types';

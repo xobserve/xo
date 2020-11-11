@@ -1,5 +1,5 @@
 import React from 'react';
-import { ExploreStartPageProps, DataQuery } from 'src/packages/datav-core';
+import { ExploreStartPageProps, DataQuery } from 'src/packages/datav-core/src';
  
 const CHEAT_SHEET_ITEMS = [
   {

@@ -11,7 +11,7 @@ import {
 
   colors,
   currentTheme
-} from 'src/packages/datav-core';
+} from 'src/packages/datav-core/src';
 import TimeSeries from 'src/core/time_series';
 import { GraphOptions} from './GraphPanelCtrl'
 

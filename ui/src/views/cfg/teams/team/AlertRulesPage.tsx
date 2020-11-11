@@ -3,7 +3,7 @@ import { withRouter } from 'react-router-dom'
 import _ from 'lodash'
 
 import Page from 'src/views/Layouts/Page/Page';
-import { getBackendSrv, dateTime} from 'src/packages/datav-core';
+import { getBackendSrv, dateTime} from 'src/packages/datav-core/src';
 import { getNavModel } from 'src/views/Layouts/Page/navModel'
 import { Team } from 'src/types';
 

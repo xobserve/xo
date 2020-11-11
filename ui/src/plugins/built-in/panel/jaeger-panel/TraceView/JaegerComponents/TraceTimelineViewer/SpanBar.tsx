@@ -22,7 +22,7 @@ import AccordianLogs from './SpanDetail/AccordianLogs';
 
 import { ViewedBoundsFunctionType } from './utils';
 import { TNil } from '../types';
-import { TraceSpan } from 'src/packages/datav-core';
+import { TraceSpan } from 'src/packages/datav-core/src';
 import { UIPopover } from '../uiElementsContext';
 import { createStyle } from '../Theme';
 

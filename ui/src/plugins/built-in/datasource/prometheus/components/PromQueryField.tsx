@@ -12,14 +12,14 @@ import {
   BracesPlugin,
   DOMUtil,
   SuggestionsState 
-} from 'src/packages/datav-core';
+} from 'src/packages/datav-core/src';
  
 import Prism from 'prismjs';
 
 // dom also includes Element polyfills
 import { PromQuery, PromOptions, PromMetricsMetadata } from '../types';
 import { CancelablePromise, makePromiseCancelable } from 'src/core/library/utils/cancelable-promise';
-import { ExploreQueryFieldProps, QueryHint, isDataFrame, toLegacyResponseData, HistoryItem } from 'src/packages/datav-core';
+import { ExploreQueryFieldProps, QueryHint, isDataFrame, toLegacyResponseData, HistoryItem } from 'src/packages/datav-core/src';
 
 import { PrometheusDatasource } from '../datasource';
 

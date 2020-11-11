@@ -1,7 +1,7 @@
 import defaults from 'lodash/defaults';
 
 import React, { ChangeEvent, PureComponent } from 'react';
-import { LegacyForms,QueryEditorProps} from 'src/packages/datav-core';
+import { LegacyForms,QueryEditorProps} from 'src/packages/datav-core/src';
 import { JaegerDatasource,JaegerQuery } from './datasource';
 import { defaultQuery } from './types'; 
 

@@ -1,5 +1,5 @@
-import { DataQuery, DataQueryRequest, DataSourceJsonData, VariableModel } from 'src/packages/datav-core';
-import { TemplateSrv as GrafanaTemplateSrv } from 'src/packages/datav-core';
+import { DataQuery, DataQueryRequest, DataSourceJsonData, VariableModel } from 'src/packages/datav-core/src';
+import { TemplateSrv as GrafanaTemplateSrv } from 'src/packages/datav-core/src';
 import { Format } from './format';
 
 declare module '@grafana/runtime' {

@@ -1,8 +1,8 @@
 import React, { useCallback, useMemo } from 'react';
 
 import VizTypePickerPlugin from './VizTypePickerPlugin'; 
-import { EmptySearchResult, stylesFactory, useTheme } from 'src/packages/datav-core';
-import { DatavTheme, PanelPluginMeta, PluginState ,getBootConfig} from 'src/packages/datav-core';
+import { EmptySearchResult, stylesFactory, useTheme } from 'src/packages/datav-core/src';
+import { DatavTheme, PanelPluginMeta, PluginState ,getBootConfig} from 'src/packages/datav-core/src';
 import { css } from 'emotion';
 
 export interface Props {

@@ -1,6 +1,6 @@
 import _ from 'lodash';
 import { Action, createAction } from '@reduxjs/toolkit';
-import {LocationUpdate, UrlQueryMap,urlUtil} from 'src/packages/datav-core';
+import {LocationUpdate, UrlQueryMap,urlUtil} from 'src/packages/datav-core/src';
 import {   setParamToUrl } from 'src/core/library/utils/url';
  
 export interface LocationState {

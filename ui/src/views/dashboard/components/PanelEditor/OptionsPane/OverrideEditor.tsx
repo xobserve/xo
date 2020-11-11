@@ -7,7 +7,7 @@ import {
   FieldConfigProperty,
   DatavTheme,
   VariableSuggestionsScope,
-} from 'src/packages/datav-core';
+} from 'src/packages/datav-core/src';
 import {
   FormField as Field,
   fieldMatchersUI,
@@ -18,7 +18,7 @@ import {
   stylesFactory,
   useTheme,
   ValuePicker,
-} from 'src/packages/datav-core';
+} from 'src/packages/datav-core/src';
 import { DynamicConfigValueEditor } from './DynamicConfigValueEditor';
 
 import { getDataLinksVariableSuggestions } from 'src/core/services/link';

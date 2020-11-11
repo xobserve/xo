@@ -4,7 +4,7 @@ import {Modal} from 'antd'
 import { FormattedMessage } from 'react-intl';
 import {AlertNotification} from 'src/types'
 import {Input,Select,Switch,Alert,Button} from 'antd'
-import { InlineFormLabel,config, localeData, currentLang} from 'src/packages/datav-core';
+import { InlineFormLabel,config, localeData, currentLang} from 'src/packages/datav-core/src';
 import {NotifierPicker,notifiers} from './Notifiers/Picker'
 
 const {Option} = Select

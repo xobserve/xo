@@ -1,7 +1,7 @@
 import React, { ChangeEvent, FormEvent, PureComponent } from 'react';
 import isEqual from 'lodash/isEqual';
-import { VariableType } from 'src/packages/datav-core';
-import { InlineFormLabel, LegacyForms } from 'src/packages/datav-core';
+import { VariableType } from 'src/packages/datav-core/src';
+import { InlineFormLabel, LegacyForms } from 'src/packages/datav-core/src';
 
 import { variableAdapters } from '../adapters';
 import { NEW_VARIABLE_ID, toVariablePayload, VariableIdentifier } from '../state/types';

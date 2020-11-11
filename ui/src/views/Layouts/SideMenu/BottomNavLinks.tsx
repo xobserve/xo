@@ -8,7 +8,7 @@ import { useLocation } from 'react-router-dom'
 import classNames from 'classnames'
 
 import { User } from 'src/core/services/context';
-import { Icon, IconName, ThemeType, setCurrentTheme } from 'src/packages/datav-core';
+import { Icon, IconName, ThemeType, setCurrentTheme } from 'src/packages/datav-core/src';
 
 import { getFooterLinks } from '../Footer/Footer';
 // import appEvents from 'src/core/library/utils/app_events';

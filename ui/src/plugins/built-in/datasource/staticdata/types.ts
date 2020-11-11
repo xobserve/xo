@@ -1,4 +1,4 @@
-import { DataQuery, DataSourceJsonData, DataFrameDTO, FieldType } from 'src/packages/datav-core';
+import { DataQuery, DataSourceJsonData, DataFrameDTO, FieldType } from 'src/packages/datav-core/src';
 
 export type NullableString = string | null;
 

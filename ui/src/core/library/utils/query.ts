@@ -1,5 +1,5 @@
 import _ from 'lodash';
-import { DataQuery } from 'src/packages/datav-core';
+import { DataQuery } from 'src/packages/datav-core/src';
 
 export const getNextRefIdChar = (queries: DataQuery[]): string | undefined => {
   const letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';

@@ -8,7 +8,7 @@ import {
   VariablePayload,
 } from '../state/types';
 import { initialVariablesState, VariablesState } from '../state/variablesReducer';
-import { DataSourceSelectItem } from 'src/packages/datav-core';
+import { DataSourceSelectItem } from 'src/packages/datav-core/src';
 
 export interface DataSourceVariableEditorState {
   dataSourceTypes: Array<{ text: string; value: string }>;

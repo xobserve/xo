@@ -1,8 +1,8 @@
 import React, { FC, useRef,useMemo } from 'react';
 import _ from 'lodash';
 import { DashboardModel, PanelModel } from '../../../model';
-import { PanelData, PanelPlugin, SelectableValue,Counter} from 'src/packages/datav-core';
-import { FormField, Input,TextArea,Switch,DataLinksInlineEditor} from 'src/packages/datav-core';
+import { PanelData, PanelPlugin, SelectableValue,Counter} from 'src/packages/datav-core/src';
+import { FormField, Input,TextArea,Switch,DataLinksInlineEditor} from 'src/packages/datav-core/src';
 import { PanelOptionsEditor } from './PanelOptionsEditor';
 import { VisualizationTab } from './VisualizationTab';
 import { OptionsGroup } from './OptionsGroup';

@@ -1,6 +1,6 @@
 import React, { PureComponent } from 'react';
 import { PanelHeaderMenuItem } from './PanelHeaderMenuItem';
-import { PanelMenuItem } from 'src/packages/datav-core';
+import { PanelMenuItem } from 'src/packages/datav-core/src';
 
 export interface Props {
   items: PanelMenuItem[];

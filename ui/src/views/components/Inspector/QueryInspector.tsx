@@ -1,6 +1,6 @@
 import React, { PureComponent } from 'react';
-import { Button, JSONFormatter, LoadingPlaceholder } from 'src/packages/datav-core';
-import { AppEvents, PanelEvents } from 'src/packages/datav-core';
+import { Button, JSONFormatter, LoadingPlaceholder } from 'src/packages/datav-core/src';
+import { AppEvents, PanelEvents } from 'src/packages/datav-core/src';
 
 import appEvents from 'src/core/library/utils/app_events';
 import { CopyToClipboard } from 'src/views/components/CopyToClipboard/CopyToClipboard';

@@ -3,7 +3,7 @@ import React, { PureComponent } from 'react';
 // Components
 import { DataSourcePicker } from 'src/views/components/Pickers/DataSourcePicker';
 import { QueryOptions } from './QueryOptions'
-import { CustomScrollbar, FormField as Field } from 'src/packages/datav-core';
+import { CustomScrollbar, FormField as Field } from 'src/packages/datav-core/src';
 import {Row,Button} from 'antd'
 import { QueryEditorRows } from './QueryEditorRows';
 // Services
@@ -19,7 +19,7 @@ import {
   PanelData,
   DataSourceApi,
   config
-} from 'src/packages/datav-core';
+} from 'src/packages/datav-core/src';
 import { addQuery } from 'src/core/library/utils/query';
 import { Unsubscribable } from 'rxjs';
 import { PlusOutlined } from '@ant-design/icons';

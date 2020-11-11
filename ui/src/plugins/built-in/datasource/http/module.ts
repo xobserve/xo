@@ -1,4 +1,4 @@
-import { DataSourcePlugin } from 'src/packages/datav-core';
+import { DataSourcePlugin } from 'src/packages/datav-core/src';
 import { ConfigEditor } from './ConfigEditor';
 import { DataSource } from './DataSource';
 import { QueryEditor } from './QueryEditor';

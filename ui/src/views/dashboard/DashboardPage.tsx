@@ -7,7 +7,7 @@ import { DashboardModel } from './model/DashboardModel'
 import { Button, Result } from 'antd'
 import { DashboardGrid } from './DashGrid'
 import { getTimeSrv } from 'src/core/services/time'
-import { TimeRange, CustomScrollbar, config, getBackendSrv } from 'src/packages/datav-core'
+import { TimeRange, CustomScrollbar, config, getBackendSrv } from 'src/packages/datav-core/src'
 
 import './DashboardPage.less'
 import { initDashboard } from './model/initDashboard';

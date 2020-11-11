@@ -1,4 +1,4 @@
-import { DataQuery, DataSourceJsonData } from 'src/packages/datav-core';
+import { DataQuery, DataSourceJsonData } from 'src/packages/datav-core/src';
 
 export interface MyQuery extends DataQuery {
   queryText?: string;

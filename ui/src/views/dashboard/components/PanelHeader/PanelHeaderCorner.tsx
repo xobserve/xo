@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 
-import { renderMarkdown, LinkModelSupplier, ScopedVars, getLocationSrv } from 'src/packages/datav-core';
-import { Tooltip, PopoverContent } from 'src/packages/datav-core';
+import { renderMarkdown, LinkModelSupplier, ScopedVars, getLocationSrv } from 'src/packages/datav-core/src';
+import { Tooltip, PopoverContent } from 'src/packages/datav-core/src';
 
 
 import { PanelModel } from '../../model';

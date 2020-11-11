@@ -1,6 +1,6 @@
 import { AlertRule, AlertRuleDTO, AlertRulesState } from 'src/types';
 import alertDef from './alertDef';
-import { dateTime } from 'src/packages/datav-core';
+import { dateTime } from 'src/packages/datav-core/src';
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 export const initialState: AlertRulesState = { items: [], searchQuery: '', isLoading: false };

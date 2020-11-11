@@ -1,6 +1,6 @@
 import $ from 'jquery';
 
-import { textUtil } from 'src/packages/datav-core';
+import { textUtil } from 'src/packages/datav-core/src';
 import appEvents from 'src/core/library/utils/app_events';
 import { CoreEvents } from 'src/types';
 import {GraphPanelCtrl} from './GraphPanelCtrl'

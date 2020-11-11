@@ -1,5 +1,5 @@
 import React, { MouseEvent, PureComponent } from 'react';
-import { Icon } from 'src/packages/datav-core';
+import { Icon } from 'src/packages/datav-core/src';
 
 
 import { NEW_VARIABLE_ID, toVariableIdentifier, toVariablePayload, VariableIdentifier } from '../state/types';

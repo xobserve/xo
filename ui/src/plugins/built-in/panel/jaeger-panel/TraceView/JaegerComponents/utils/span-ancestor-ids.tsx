@@ -16,7 +16,7 @@ import _find from 'lodash/find';
 import _get from 'lodash/get';
 
 import { TNil } from '../types';
-import { TraceSpan } from 'src/packages/datav-core';
+import { TraceSpan } from 'src/packages/datav-core/src';
 
 function getFirstAncestor(span: TraceSpan): TraceSpan | TNil {
   return _get(

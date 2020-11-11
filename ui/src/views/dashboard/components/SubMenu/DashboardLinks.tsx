@@ -1,6 +1,6 @@
 import React, { FC } from 'react';
-import { Icon, IconName, Tooltip } from 'src/packages/datav-core';
-import { textUtil} from 'src/packages/datav-core';
+import { Icon, IconName, Tooltip } from 'src/packages/datav-core/src';
+import { textUtil} from 'src/packages/datav-core/src';
 import { DashboardLinksDashboard } from './DashboardLinksDashboard';
 import { getLinkSrv } from 'src/core/services/link';
 

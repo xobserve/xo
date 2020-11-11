@@ -1,4 +1,4 @@
-import {DataSourcePluginMeta} from 'src/packages/datav-core'
+import {DataSourcePluginMeta} from 'src/packages/datav-core/src'
 
 export interface DataSourceResponse<T> {
     data: T;

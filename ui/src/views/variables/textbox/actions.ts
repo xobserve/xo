@@ -5,7 +5,7 @@ import { variableAdapters } from '../adapters';
 import { createTextBoxOptions } from './reducer';
 import { toVariableIdentifier, toVariablePayload, VariableIdentifier } from '../state/types';
 import { setOptionFromUrl } from '../state/actions';
-import { UrlQueryValue } from 'src/packages/datav-core';
+import { UrlQueryValue } from 'src/packages/datav-core/src';
 import { changeVariableProp } from '../state/sharedReducer';
 
 export const updateTextBoxVariableOptions = (identifier: VariableIdentifier): ThunkResult<void> => {

@@ -1,6 +1,6 @@
 import React, { PureComponent, RefObject } from 'react';
-import { FormField as Field, Switch, currentTheme, ThemeType, localeData, currentLang } from 'src/packages/datav-core';
-import { PanelEditorProps } from 'src/packages/datav-core';
+import { FormField as Field, Switch, currentTheme, ThemeType, localeData, currentLang } from 'src/packages/datav-core/src';
+import { PanelEditorProps } from 'src/packages/datav-core/src';
 import { css } from 'emotion';
 import CodeMirror from 'codemirror';
 

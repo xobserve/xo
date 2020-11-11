@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { TraceKeyValuePair, TraceSpan } from 'src/packages/datav-core';
+import { TraceKeyValuePair, TraceSpan } from 'src/packages/datav-core/src';
 import { TNil } from '../types';
 
 export default function filterSpans(textFilter: string, spans: TraceSpan[] | TNil) {

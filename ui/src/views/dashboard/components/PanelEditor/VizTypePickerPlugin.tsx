@@ -1,7 +1,7 @@
 import React from 'react';
 
-import { DatavTheme, PanelPluginMeta, PluginState } from 'src/packages/datav-core';
-import { Badge, BadgeProps, styleMixins, stylesFactory, useTheme } from 'src/packages/datav-core';
+import { DatavTheme, PanelPluginMeta, PluginState } from 'src/packages/datav-core/src';
+import { Badge, BadgeProps, styleMixins, stylesFactory, useTheme } from 'src/packages/datav-core/src';
 import { css, cx } from 'emotion';
 
 interface Props {

@@ -6,7 +6,7 @@ import {
   HorizontalGroup,
   Input,
   FormField as Field
-} from 'src/packages/datav-core';
+} from 'src/packages/datav-core/src';
 import { FolderPicker } from 'src/views/components/Pickers/FolderPicker';
 import DataSourcePicker from 'src/views/components/Pickers/DataSourcePicker';
 import  {DashboardInputs,ImportDashboardDTO,DataSourceInput,DashboardInput}  from '../../model/import'

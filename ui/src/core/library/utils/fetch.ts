@@ -1,4 +1,4 @@
-import { BackendSrvRequest } from 'src/packages/datav-core';
+import { BackendSrvRequest } from 'src/packages/datav-core/src';
 import omitBy from 'lodash/omitBy';
 
 export const parseInitFromOptions = (options: BackendSrvRequest): RequestInit => {

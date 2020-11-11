@@ -15,7 +15,7 @@
 import React from 'react';
 import { css } from 'emotion';
 import NewWindowIcon from '../common/NewWindowIcon';
-import { TraceSpanReference } from 'src/packages/datav-core';
+import { TraceSpanReference } from 'src/packages/datav-core/src';
 import { UITooltip, UIDropdown, UIMenuItem, UIMenu, TooltipPlacement } from '../uiElementsContext';
 
 import ReferenceLink from '../url/ReferenceLink';

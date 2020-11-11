@@ -1,5 +1,5 @@
 import React, { PureComponent } from 'react';
-import { renderMarkdown,getBackendSrv} from 'src/packages/datav-core';
+import { renderMarkdown,getBackendSrv} from 'src/packages/datav-core/src';
 
 interface Props {
   plugin: {

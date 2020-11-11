@@ -6,7 +6,7 @@ import _ from 'lodash';
 
 // Types
 import { PanelModel,DashboardModel} from '../../../../model';
-import { DataQuery, PanelData, DataSourceSelectItem } from 'src/packages/datav-core';
+import { DataQuery, PanelData, DataSourceSelectItem } from 'src/packages/datav-core/src';
 import { QueryEditorRow } from  './QueryEditorRow'
 import { addQuery } from 'src/core/library/utils/query';
 

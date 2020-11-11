@@ -1,6 +1,6 @@
 import React from 'react'
 import _ from 'lodash'
-import { PanelPlugin ,TagsInput, localeData, currentLang, CodeEditor} from 'src/packages/datav-core';
+import { PanelPlugin ,TagsInput, localeData, currentLang, CodeEditor} from 'src/packages/datav-core/src';
 import { GraphPanelOptions } from './types';
 import { GraphPanel } from './GraphPanel';
 import {ThresholdsEditor} from './ThresholdsEditor/ThresholdsEditor'

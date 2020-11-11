@@ -28,7 +28,7 @@ import SpanBar from './SpanBar';
 import Ticks from './Ticks';
 
 import { TNil } from '../types';
-import { TraceSpan } from 'src/packages/datav-core';
+import { TraceSpan } from 'src/packages/datav-core/src';
 import { autoColor, createStyle, Theme, withTheme } from '../Theme';
 
 const getStyles = createStyle((theme: Theme) => {

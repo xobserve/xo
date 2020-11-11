@@ -21,7 +21,7 @@ import {
   updateOptionsFromSearch,
   updateSearchQuery,
 } from './reducer';
-import { getDataSourceService } from 'src/packages/datav-core';
+import { getDataSourceService } from 'src/packages/datav-core/src';
 import { getTimeSrv } from 'src/core/services/time';
 import { changeVariableProp, setCurrentVariableValue } from '../../state/sharedReducer';
 import { toVariablePayload } from '../../state/types';

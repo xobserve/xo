@@ -1,4 +1,4 @@
-import { TableSortByFieldState } from 'src/packages/datav-core';
+import { TableSortByFieldState } from 'src/packages/datav-core/src';
 
 export interface Options {
   frameIndex: number;

@@ -8,9 +8,9 @@ import {
   DataQueryResponse,
   DataQuery,
   FieldType,
-} from 'src/packages/datav-core';
+} from 'src/packages/datav-core/src';
 import _ from 'lodash'
-import { getBackendSrv} from 'src/packages/datav-core';
+import { getBackendSrv} from 'src/packages/datav-core/src';
 import { Observable, from, of } from 'rxjs';
 import { map } from 'rxjs/operators';
 

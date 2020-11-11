@@ -1,7 +1,7 @@
 import React, { FormEvent, PureComponent } from 'react';
 import { css } from 'emotion';
-import { AppEvents, NavModel, getBootConfig } from 'src/packages/datav-core';
-import { stylesFactory, Input, TextArea, FormField as Field, Form, DataSourceInstanceSettings,DataSourceSelectItem } from 'src/packages/datav-core';
+import { AppEvents, NavModel, getBootConfig } from 'src/packages/datav-core/src';
+import { stylesFactory, Input, TextArea, FormField as Field, Form, DataSourceInstanceSettings,DataSourceSelectItem } from 'src/packages/datav-core/src';
 import Page from 'src/views/Layouts/Page/Page';
 // import { ImportDashboardOverview } from './components/ImportDashboardOverview';
 import { validateDashboardJson, validateGcomDashboard } from './utils/validation';

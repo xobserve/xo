@@ -2,7 +2,7 @@ import React, { ChangeEvent, FocusEvent, PureComponent } from 'react';
 
 import { IntervalVariableModel } from 'src/types';
 import { VariableEditorProps } from '../editor/types';
-import { InlineFormLabel, LegacyForms } from 'src/packages/datav-core';
+import { InlineFormLabel, LegacyForms } from 'src/packages/datav-core/src';
 const { LegacySwitch } = LegacyForms;
 
 export interface Props extends VariableEditorProps<IntervalVariableModel> {}

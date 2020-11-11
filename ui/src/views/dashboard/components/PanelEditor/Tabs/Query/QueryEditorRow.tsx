@@ -20,7 +20,7 @@ import {
   TimeRange,
   toLegacyResponseData,
   ErrorBoundaryAlert
-} from 'src/packages/datav-core';
+} from 'src/packages/datav-core/src';
 import { QueryEditorRowTitle } from './QueryEditorRowTitle';
 import { QueryOperationRow } from 'src/views/components/QueryOperationRow/QueryOperationRow';
 import { QueryOperationAction } from 'src/views/components/QueryOperationRow/QueryOperationAction';

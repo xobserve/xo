@@ -9,7 +9,7 @@ import {
   REGION_FILL_ALPHA,
   AnnotationEvent,
   EventManagerCtrl
-} from 'src/packages/datav-core';
+} from 'src/packages/datav-core/src';
 
 // import { MetricsPanelCtrl } from 'app/plugins/sdk';
 

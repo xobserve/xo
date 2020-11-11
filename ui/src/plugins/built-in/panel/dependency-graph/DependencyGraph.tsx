@@ -1,10 +1,10 @@
 import React, { PureComponent } from 'react';
 import _, { find, map, isUndefined, remove, each, has } from 'lodash';
 import { join, indexOf,cloneDeep, isArray} from 'lodash';
-import { PanelProps, withTheme, DatavTheme, toLegacyTableData, getTemplateSrv, Icon, getHistory } from 'src/packages/datav-core';
+import { PanelProps, withTheme, DatavTheme, toLegacyTableData, getTemplateSrv, Icon, getHistory } from 'src/packages/datav-core/src';
 import { DependencyGraphOptions, CurrentData, QueryResponse, TableContent, ISelectionStatistics, IGraphMetrics, IGraph, IGraphNode, CyData, IGraphEdge, FilterConditions, NodeFilterType } from './types';
 import { css, cx } from 'emotion';
-import { stylesFactory } from 'src/packages/datav-core';
+import { stylesFactory } from 'src/packages/datav-core/src';
 import { NodeSingular, EdgeSingular, EventObject, EdgeCollection } from 'cytoscape';
 
 import './index.less'

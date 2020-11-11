@@ -1,5 +1,5 @@
-import { DataQueryResponse, DataSourceApi, DataSourceInstanceSettings,AnnotationEvent,AnnotationQueryRequest} from 'src/packages/datav-core';
-import { getBackendSrv, getTemplateSrv } from 'src/packages/datav-core';
+import { DataQueryResponse, DataSourceApi, DataSourceInstanceSettings,AnnotationEvent,AnnotationQueryRequest} from 'src/packages/datav-core/src';
+import { getBackendSrv, getTemplateSrv } from 'src/packages/datav-core/src';
 import { isEqual, isObject } from 'lodash';
 import {
   GenericOptions,

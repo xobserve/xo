@@ -1,6 +1,6 @@
 import { VariableModel } from 'src/types';
 import { VariablesState } from './variablesReducer';
-import { VariableType } from 'src/packages/datav-core';
+import { VariableType } from 'src/packages/datav-core/src';
 
 export const NEW_VARIABLE_ID = '00000000-0000-0000-0000-000000000000';
 export const ALL_VARIABLE_TEXT = 'All';

@@ -7,7 +7,7 @@ import {
   DataQuery,
   DataSourceJsonData,
   DataSourcePluginMeta
-} from 'src/packages/datav-core';
+} from 'src/packages/datav-core/src';
 export type GenericDataSourcePlugin = DataSourcePlugin<DataSourceApi<DataQuery, DataSourceJsonData>>;
 
 export interface Props {

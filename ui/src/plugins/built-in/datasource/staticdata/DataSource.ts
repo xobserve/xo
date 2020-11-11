@@ -7,9 +7,9 @@ import {
   DataFrame,
   FieldType,
   ArrayVector,
-} from 'src/packages/datav-core';
+} from 'src/packages/datav-core/src';
 
-import { getTemplateSrv } from 'src/packages/datav-core';
+import { getTemplateSrv } from 'src/packages/datav-core/src';
 import { StaticQuery, StaticDataSourceOptions } from './types';
 
 // DataSource returns the data frame returned in the query model.

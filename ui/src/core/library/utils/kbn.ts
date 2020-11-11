@@ -8,7 +8,7 @@ import {
   deprecationWarning,
   DecimalCount,
   formattedValueToString,
-} from 'src/packages/datav-core';
+} from 'src/packages/datav-core/src';
 
 const kbn: any = {};
 

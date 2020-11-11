@@ -1,5 +1,5 @@
 import React, { MouseEvent, PureComponent } from 'react';
-import { IconButton } from 'src/packages/datav-core';
+import { IconButton } from 'src/packages/datav-core/src';
 
 import EmptyListCTA from 'src/views/components/EmptyListCTA/EmptyListCTA';
 import { QueryVariableModel, VariableModel,StoreState } from 'src/types';

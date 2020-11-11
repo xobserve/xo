@@ -1,4 +1,4 @@
-import { LogLevel } from 'src/packages/datav-core';
+import { LogLevel } from 'src/packages/datav-core/src';
 
 let index = 0;
 

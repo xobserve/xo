@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import classNames from 'classnames';
 import { isEqual } from 'lodash';
-import { DataLink, LoadingState, PanelData, PanelMenuItem, QueryResultMetaNotice, ScopedVars ,ClickOutsideWrapper, Icon} from 'src/packages/datav-core';
+import { DataLink, LoadingState, PanelData, PanelMenuItem, QueryResultMetaNotice, ScopedVars ,ClickOutsideWrapper, Icon} from 'src/packages/datav-core/src';
 
 import { PanelHeaderMenu } from './PanelHeaderMenu';
 import templateSrv from 'src/core/services/templating';

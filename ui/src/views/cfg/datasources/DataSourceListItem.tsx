@@ -1,6 +1,6 @@
 import React, { PureComponent } from 'react';
 import {Link} from 'react-router-dom';
-import { DataSourceSettings } from 'src/packages/datav-core';
+import { DataSourceSettings } from 'src/packages/datav-core/src';
 import { Tag } from 'antd';
 import { FormattedMessage } from 'react-intl';
 

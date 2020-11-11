@@ -32,7 +32,7 @@ import darkVars from 'src/styles/dark.json';
 import lightVars from 'src/styles/light.json';
 import { StoreState } from 'src/types'
 
-import { LocationUpdate, setDataSourceService, setBackendSrv, ThemeType, setCurrentTheme, setMarkdownOptions, getBackendSrv, setBootConfig, ThemeContext, getTheme, setLocationSrv,standardFieldConfigEditorRegistry, getStandardFieldConfigs,standardTransformersRegistry, currentLang} from 'src/packages/datav-core'
+import { LocationUpdate, setDataSourceService, setBackendSrv, ThemeType, setCurrentTheme, setMarkdownOptions, getBackendSrv, setBootConfig, ThemeContext, getTheme, setLocationSrv,standardFieldConfigEditorRegistry, getStandardFieldConfigs,standardTransformersRegistry, currentLang} from 'src/packages/datav-core/src'
 import { DatasourceSrv } from 'src/core/services/datasource'
 import { backendSrv } from 'src/core/services/backend'
 

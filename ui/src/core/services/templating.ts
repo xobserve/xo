@@ -1,12 +1,12 @@
 import kbn from '../library/utils/kbn';
 import _ from 'lodash';
-import { deprecationWarning, ScopedVars, textUtil, TimeRange } from 'src/packages/datav-core';
+import { deprecationWarning, ScopedVars, textUtil, TimeRange } from 'src/packages/datav-core/src';
 import { getFilteredVariables, getVariables, getVariableWithName } from 'src/views/variables/state/selectors';
-import { config } from 'src/packages/datav-core';
+import { config } from 'src/packages/datav-core/src';
 import { variableRegex } from '../library/utils/templating';
 import { isAdHoc } from 'src/views/variables/guard';
 import { VariableModel } from 'src/types/templating';
-import { setTemplateSrv, TemplateSrv as BaseTemplateSrv } from 'src/packages/datav-core';
+import { setTemplateSrv, TemplateSrv as BaseTemplateSrv } from 'src/packages/datav-core/src';
 import { variableAdapters } from 'src/views/variables/adapters';
 
 function luceneEscape(value: string) {

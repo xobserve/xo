@@ -1,5 +1,5 @@
 import React, { PureComponent } from 'react';
-import { Form, DataSourceSelectItem, locationUtil, getHistory } from 'src/packages/datav-core';
+import { Form, DataSourceSelectItem, locationUtil, getHistory } from 'src/packages/datav-core/src';
 import { ImportDashboardForm } from './ImportDashboardForm';
 import { getUrlParams } from 'src/core/library/utils/url';
 import  {DashboardInputs,DashboardSource,ImportDashboardDTO}  from '../../model/import'

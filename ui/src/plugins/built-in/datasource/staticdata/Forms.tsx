@@ -1,5 +1,5 @@
 import React, { useState, InputHTMLAttributes } from 'react';
-import { Icon, IconName, useTheme } from 'src/packages/datav-core';
+import { Icon, IconName, useTheme } from 'src/packages/datav-core/src';
 import { NullableString } from './types';
 import { css, cx } from 'emotion';
 

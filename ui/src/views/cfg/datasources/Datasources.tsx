@@ -2,7 +2,7 @@ import React, { PureComponent } from 'react';
 import {withRouter} from 'react-router-dom'
 
 import Page from 'src/views/Layouts/Page/Page';
-import {PluginMeta, getBackendSrv } from 'src/packages/datav-core';
+import {PluginMeta, getBackendSrv } from 'src/packages/datav-core/src';
 import PluginList from '../plugins/PluginList';
 import {getNavModel} from '../../Layouts/Page/navModel'
 

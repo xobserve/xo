@@ -1,11 +1,11 @@
 import { KeyboardEvent, useReducer } from 'react';
-import { getLocationSrv } from 'src/packages/datav-core';
+import { getLocationSrv } from 'src/packages/datav-core/src';
 import { DashboardQuery, DashboardSearchItemType, DashboardSection } from '../types';
 import { MOVE_SELECTION_DOWN, MOVE_SELECTION_UP } from '../reducers/actionTypes';
 import { dashboardsSearchState, DashboardsSearchState, searchReducer } from '../reducers/dashboardSearch';
 import { findSelected } from '../utils';
 import { useSearch } from './useSearch';
-import { locationUtil } from 'src/packages/datav-core';
+import { locationUtil } from 'src/packages/datav-core/src';
 
 export const useDashboardSearch = (query: DashboardQuery, onCloseSearch: () => void) => {
   const reducer = useReducer(searchReducer, dashboardsSearchState);

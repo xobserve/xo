@@ -1,8 +1,8 @@
 import React, { PureComponent } from 'react';
 import _ from 'lodash';
 import { css } from 'emotion';
-import { Alert, Button, Icon, IconName, CustomScrollbar, Container, HorizontalGroup, ConfirmModal, Modal, InlineFormLabel, getBackendSrv, currentLang, DataQuery, DataSourceApi } from 'src/packages/datav-core';
-import { getDataSourceService, config } from 'src/packages/datav-core';
+import { Alert, Button, Icon, IconName, CustomScrollbar, Container, HorizontalGroup, ConfirmModal, Modal, InlineFormLabel, getBackendSrv, currentLang, DataQuery, DataSourceApi } from 'src/packages/datav-core/src';
+import { getDataSourceService, config } from 'src/packages/datav-core/src';
 import { getAlertingValidationMessage, getDefaultCondition } from './getAlertingValidationMessage';
 
 import EmptyListCTA from 'src/views/components/EmptyListCTA/EmptyListCTA';

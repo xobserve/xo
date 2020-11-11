@@ -8,7 +8,7 @@ import {
   useTheme,
   ValuePicker,
   VerticalGroup,
-} from 'src/packages/datav-core';
+} from 'src/packages/datav-core/src';
 import {
   DataTransformerConfig,
   FeatureState,
@@ -18,7 +18,7 @@ import {
   transformDataFrame,
   DataFrame,
   PanelData,
-} from 'src/packages/datav-core';
+} from 'src/packages/datav-core/src';
 import { TransformationOperationRow } from './TransformationOperationRow';
 import { Card, CardProps } from 'src/views/components/Card/Card';
 import { css } from 'emotion';

@@ -1,4 +1,4 @@
-import { isDateTime, TimeOption, TimeRange, TimeZone,stylesFactory,CustomScrollbar,DatavTheme, useTheme} from 'src/packages/datav-core';
+import { isDateTime, TimeOption, TimeRange, TimeZone,stylesFactory,CustomScrollbar,DatavTheme, useTheme} from 'src/packages/datav-core/src';
 import { css } from 'emotion';
 import React, {useState } from 'react';
 import { useMedia } from 'react-use';

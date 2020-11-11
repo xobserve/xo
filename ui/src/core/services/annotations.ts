@@ -8,7 +8,7 @@ import cloneDeep from 'lodash/cloneDeep';
 import {DashboardModel} from 'src/views/dashboard/model/DashboardModel'
 import { PanelModel } from 'src/views/dashboard/model/PanelModel';
 
-import { AnnotationEvent, AppEvents, DataSourceApi, PanelEvents, TimeRange ,getBackendSrv, getDataSourceService } from 'src/packages/datav-core';
+import { AnnotationEvent, AppEvents, DataSourceApi, PanelEvents, TimeRange ,getBackendSrv, getDataSourceService } from 'src/packages/datav-core/src';
 
 import appEvents from '../library/utils/app_events';
 import { getTimeSrv } from './time';

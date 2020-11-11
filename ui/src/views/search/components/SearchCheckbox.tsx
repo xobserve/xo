@@ -1,6 +1,6 @@
 import React, { FC, memo } from 'react';
 import { css } from 'emotion';
-import { Checkbox, stylesFactory } from 'src/packages/datav-core';
+import { Checkbox, stylesFactory } from 'src/packages/datav-core/src';
 
 interface Props {
   checked?: boolean;

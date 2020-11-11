@@ -17,7 +17,7 @@ import {
   VariableIdentifier,
 } from '../state/types';
 import cloneDeep from 'lodash/cloneDeep';
-import { VariableType } from 'src/packages/datav-core';
+import { VariableType } from 'src/packages/datav-core/src';
 import { addVariable, removeVariable, storeNewVariable } from '../state/sharedReducer';
 
 export const variableEditorMount = (identifier: VariableIdentifier): ThunkResult<void> => {

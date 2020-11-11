@@ -9,7 +9,7 @@ import {
   CSVReader,
   Field,
   LoadingState,
-} from 'src/packages/datav-core';
+} from 'src/packages/datav-core/src';
 
 import { TestDataQuery, StreamingQuery } from './types';
 import { getRandomLine } from './LogIpsum';

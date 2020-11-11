@@ -15,7 +15,7 @@
 // limitations under the License.
 
 import { ApiError } from './api-error';
-import { Trace } from 'src/packages/datav-core';
+import { Trace } from 'src/packages/datav-core/src';
 
 export { default as TTraceTimeline } from './TTraceTimeline';
 export { default as TNil } from './TNil';

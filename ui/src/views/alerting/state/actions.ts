@@ -1,4 +1,4 @@
-import { getBackendSrv } from 'src/packages/datav-core';
+import { getBackendSrv } from 'src/packages/datav-core/src';
 import { AlertRuleDTO, ThunkResult } from 'src/types';
 import { loadAlertRules, loadedAlertRules } from './reducers';
 

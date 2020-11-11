@@ -1,4 +1,4 @@
-import { PanelPlugin } from 'src/packages/datav-core';
+import { PanelPlugin } from 'src/packages/datav-core/src';
 import { GaugePanel } from './GaugePanel';
 import { GaugeOptions } from './types';
 import { addStandardDataReduceOptions } from '../stat/types';

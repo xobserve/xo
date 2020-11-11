@@ -9,8 +9,8 @@ import {
   TransformerRegistyItem,
   TransformerUIProps,
   getFieldDisplayName,
-} from 'src/packages/datav-core';
-import { stylesFactory, useTheme, Input, IconButton } from 'src/packages/datav-core';
+} from 'src/packages/datav-core/src';
+import { stylesFactory, useTheme, Input, IconButton } from 'src/packages/datav-core/src';
 
 import { OrganizeFieldsTransformerOptions } from 'src/packages/datav-core/src/data/transformations/transformers/organize';
 import { createOrderFieldsComparer } from 'src/packages/datav-core/src/data/transformations/transformers/order';

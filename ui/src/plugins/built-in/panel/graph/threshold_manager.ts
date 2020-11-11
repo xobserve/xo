@@ -3,7 +3,7 @@ import $ from 'jquery';
 import _ from 'lodash';
 import { GraphPanelCtrl } from './GraphPanelCtrl';
 import { CoreEvents } from 'src/types';
-import { getColorFromHexRgbOrName } from 'src/packages/datav-core';
+import { getColorFromHexRgbOrName } from 'src/packages/datav-core/src';
 import TimeSeries from 'src/core/time_series';
 
 export class ThresholdManager {

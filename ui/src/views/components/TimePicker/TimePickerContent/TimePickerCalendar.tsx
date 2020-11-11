@@ -1,7 +1,7 @@
 import React, { memo, useState, useEffect, useCallback } from 'react';
 import { css } from 'emotion';
 import Calendar from 'react-calendar/dist/entry.nostyle';
-import { DateTime, TimeZone, dateTimeParse,stylesFactory,ClickOutsideWrapper,DatavTheme, useTheme} from 'src/packages/datav-core';
+import { DateTime, TimeZone, dateTimeParse,stylesFactory,ClickOutsideWrapper,DatavTheme, useTheme} from 'src/packages/datav-core/src';
 import { TimePickerTitle } from './TimePickerTitle';
 import { Button } from 'antd';
 import { ClockCircleOutlined, LeftOutlined, RightOutlined } from '@ant-design/icons';

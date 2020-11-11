@@ -1,6 +1,6 @@
 import React, { FC } from 'react';
 import PluginListItem from './PluginListItem';
-import { PluginMeta } from 'src/packages/datav-core';
+import { PluginMeta } from 'src/packages/datav-core/src';
 import { FormattedMessage } from 'react-intl';
 
 interface Props {

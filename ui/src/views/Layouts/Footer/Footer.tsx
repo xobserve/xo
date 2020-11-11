@@ -1,6 +1,6 @@
 import React, { FC } from 'react';
 
-import { Icon, IconName,config} from 'src/packages/datav-core';
+import { Icon, IconName,config} from 'src/packages/datav-core/src';
 import './Footer.less'
 import { FormattedMessage } from 'react-intl';
 

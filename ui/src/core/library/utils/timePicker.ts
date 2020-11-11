@@ -1,4 +1,4 @@
-import { TimeRange, toUtc, AbsoluteTimeRange } from 'src/packages/datav-core';
+import { TimeRange, toUtc, AbsoluteTimeRange } from 'src/packages/datav-core/src';
 
 export const getShiftedTimeRange = (direction: number, origRange: TimeRange): AbsoluteTimeRange => {
   const range = {

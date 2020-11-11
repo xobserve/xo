@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 
 import {Modal,Button} from 'antd'
-import {Form,FormField as Field} from 'src/packages/datav-core' 
+import {Form,FormField as Field} from 'src/packages/datav-core/src' 
 import UserPicker from 'src/views/components/Pickers/UserPicker'
 import PermissionPicker from 'src/views/components/Pickers/PermissionPicker'
 import { FormattedMessage } from 'react-intl'

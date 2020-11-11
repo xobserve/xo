@@ -1,7 +1,7 @@
 import React, { FC } from 'react';
 import { css, cx } from 'emotion';
-import { useTheme, stylesFactory } from 'src/packages/datav-core';
-import { DatavTheme } from 'src/packages/datav-core';
+import { useTheme, stylesFactory } from 'src/packages/datav-core/src';
+import { DatavTheme } from 'src/packages/datav-core/src';
 
 import { OptionProps } from 'react-select/src/components/Option';
 import { TagBadge } from './TagBadge';

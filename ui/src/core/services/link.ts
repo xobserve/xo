@@ -19,7 +19,7 @@ import {
   urlUtil,
   textUtil,
   config
-} from 'src/packages/datav-core';
+} from 'src/packages/datav-core/src';
 
 const timeRangeVars = [
   {

@@ -1,5 +1,5 @@
 import _ from 'lodash';
-import { QueryHint, QueryFix } from 'src/packages/datav-core';
+import { QueryHint, QueryFix } from 'src/packages/datav-core/src';
 import { PrometheusDatasource } from './datasource';
 
 /**

@@ -1,7 +1,7 @@
 import React, { FC } from 'react';
 import { css } from 'emotion';
-import { stylesFactory, Tab, TabsBar, useTheme } from 'src/packages/datav-core';
-import { DatavTheme, SelectableValue, PanelData, getValueFormat, formattedValueToString } from 'src/packages/datav-core';
+import { stylesFactory, Tab, TabsBar, useTheme } from 'src/packages/datav-core/src';
+import { DatavTheme, SelectableValue, PanelData, getValueFormat, formattedValueToString } from 'src/packages/datav-core/src';
 import { InspectTab } from './PanelInspector';
 
 interface Props {

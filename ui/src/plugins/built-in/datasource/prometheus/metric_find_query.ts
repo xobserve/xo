@@ -1,5 +1,5 @@
 import _ from 'lodash';
-import { TimeRange } from 'src/packages/datav-core';
+import { TimeRange } from 'src/packages/datav-core/src';
 import { PrometheusDatasource, PromDataQueryResponse } from './datasource';
 import { PromQueryRequest } from './types';
 import { getTimeSrv } from 'src/core/services/time';

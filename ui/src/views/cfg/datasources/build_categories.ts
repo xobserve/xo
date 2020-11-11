@@ -1,4 +1,4 @@
-import { DataSourcePluginMeta } from 'src/packages/datav-core';
+import { DataSourcePluginMeta } from 'src/packages/datav-core/src';
 import { DataSourcePluginCategory } from 'src/types';
 import localeData from 'src/core/library/locale'
 import { getState } from 'src/store/store';

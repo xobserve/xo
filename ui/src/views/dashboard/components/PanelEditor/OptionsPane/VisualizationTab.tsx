@@ -1,7 +1,7 @@
 import React, { useCallback, useState } from 'react';
 import { css } from 'emotion';
-import { DatavTheme, PanelPlugin, PanelPluginMeta, getBootConfig, currentLang } from 'src/packages/datav-core';
-import { useTheme, stylesFactory, Icon, Input, FormField as Field} from 'src/packages/datav-core';
+import { DatavTheme, PanelPlugin, PanelPluginMeta, getBootConfig, currentLang } from 'src/packages/datav-core/src';
+import { useTheme, stylesFactory, Icon, Input, FormField as Field} from 'src/packages/datav-core/src';
 import { StoreState } from 'src/types';
 import { PanelModel } from '../../../model';
 import { connect, MapStateToProps } from 'react-redux';

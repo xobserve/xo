@@ -1,10 +1,10 @@
 import React, { SyntheticEvent } from 'react';
-import { EventsWithValidation, InlineFormLabel, regexValidation, LegacyForms } from 'src/packages/datav-core';
+import { EventsWithValidation, InlineFormLabel, regexValidation, LegacyForms } from 'src/packages/datav-core/src';
 import {
   SelectableValue,
   onUpdateDatasourceJsonDataOptionChecked,
   DataSourcePluginOptionsEditorProps,
-} from 'src/packages/datav-core';
+} from 'src/packages/datav-core/src';
 import { PromOptions } from '../types';
 import { FormattedMessage } from 'react-intl';
 

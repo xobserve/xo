@@ -2,8 +2,8 @@ import _ from 'lodash';
 import React, { PureComponent } from 'react';
 
 // Types
-import { InlineFormLabel, LegacyForms, Select, localeData, currentLang } from 'src/packages/datav-core';
-import { SelectableValue, QueryEditorProps } from 'src/packages/datav-core';
+import { InlineFormLabel, LegacyForms, Select, localeData, currentLang } from 'src/packages/datav-core/src';
+import { SelectableValue, QueryEditorProps } from 'src/packages/datav-core/src';
 
 import { PrometheusDatasource } from '../datasource';
 import { PromQuery, PromOptions } from '../types';

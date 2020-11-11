@@ -1,6 +1,6 @@
 import React, { FC, memo, useState } from 'react';
 import { css } from 'emotion';
-import { HorizontalGroup, stylesFactory, useTheme, Spinner ,DatavTheme} from 'src/packages/datav-core';
+import { HorizontalGroup, stylesFactory, useTheme, Spinner ,DatavTheme} from 'src/packages/datav-core/src';
 
 import { contextSrv } from 'src/core/services/context';
 import EmptyListCTA from 'src/views/components/EmptyListCTA/EmptyListCTA';

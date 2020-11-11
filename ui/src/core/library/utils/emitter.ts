@@ -1,5 +1,5 @@
 import EventEmitter3, { EventEmitter } from 'eventemitter3';
-import { AppEvent } from 'src/packages/datav-core';
+import { AppEvent } from 'src/packages/datav-core/src';
 
 export class Emitter {
   emitter: EventEmitter3;

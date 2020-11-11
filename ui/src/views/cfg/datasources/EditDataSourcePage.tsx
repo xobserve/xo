@@ -1,7 +1,7 @@
 import React, { PureComponent } from 'react';
 import _ from 'lodash';
-import { NavModel, DataSourcePluginMeta, getBootConfig, DataSourcePlugin, DataSourceApi, DataQuery, DataSourceJsonData, DataSourceSettings, getBackendSrv, setBootConfig, currentLang, getHistory } from 'src/packages/datav-core'
-import { InlineFormLabel, LegacyForms, ConfirmModal, Button } from 'src/packages/datav-core'
+import { NavModel, DataSourcePluginMeta, getBootConfig, DataSourcePlugin, DataSourceApi, DataQuery, DataSourceJsonData, DataSourceSettings, getBackendSrv, setBootConfig, currentLang, getHistory } from 'src/packages/datav-core/src'
+import { InlineFormLabel, LegacyForms, ConfirmModal, Button } from 'src/packages/datav-core/src'
 import { withRouter } from 'react-router-dom';
 import { Input, notification, Alert } from 'antd';
 

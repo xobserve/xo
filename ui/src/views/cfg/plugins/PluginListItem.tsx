@@ -1,5 +1,5 @@
 import React, { FC } from 'react';
-import { PluginMeta } from 'src/packages/datav-core';
+import { PluginMeta } from 'src/packages/datav-core/src';
 import { Link } from 'react-router-dom';
 
 interface Props {

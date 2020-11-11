@@ -13,7 +13,7 @@
 // limitations under the License.
 
 import React from 'react';
-import { TraceSpanReference } from 'src/packages/datav-core';
+import { TraceSpanReference } from 'src/packages/datav-core/src';
 import ExternalLinkContext from './externalLinkContext';
 
 type ReferenceLinkProps = {

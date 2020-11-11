@@ -1,5 +1,5 @@
 import React from 'react';
-import { getTagColorsFromName, Icon } from 'src/packages/datav-core';
+import { getTagColorsFromName, Icon } from 'src/packages/datav-core/src';
 
 export interface Props {
   label: string;

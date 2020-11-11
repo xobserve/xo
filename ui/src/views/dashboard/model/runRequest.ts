@@ -18,7 +18,7 @@ import {
   DataFrame,
   guessFieldTypes,
   toDataQueryError
-} from 'src/packages/datav-core';
+} from 'src/packages/datav-core/src';
 
 type MapOfResponsePackets = { [str: string]: DataQueryResponse };
 

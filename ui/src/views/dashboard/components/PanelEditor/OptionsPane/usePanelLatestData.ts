@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import { PanelData } from 'src/packages/datav-core';
+import { PanelData } from 'src/packages/datav-core/src';
 import { PanelModel } from '../../../model';
 import { Unsubscribable } from 'rxjs';
 import { GetDataOptions } from '../../../model/PanelQueryRunner';

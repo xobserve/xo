@@ -7,8 +7,8 @@ import {
   TransformerUIProps,
   getFieldDisplayName,
   stringToJsRegex,
-} from 'src/packages/datav-core';
-import { FormField as Field, Input, FilterPill, HorizontalGroup } from 'src/packages/datav-core';
+} from 'src/packages/datav-core/src';
+import { FormField as Field, Input, FilterPill, HorizontalGroup } from 'src/packages/datav-core/src';
 import { css } from 'emotion';
 import { FilterFieldsByNameTransformerOptions } from 'src/packages/datav-core/src/data/transformations/transformers/filterByName';
 

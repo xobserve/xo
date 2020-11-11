@@ -3,7 +3,7 @@ import React, { Component } from 'react';
 
 import { PrometheusDatasource } from '../datasource';
 import { PromQuery } from '../types';
-import { DataQueryRequest, PanelData } from 'src/packages/datav-core';
+import { DataQueryRequest, PanelData } from 'src/packages/datav-core/src';
 import { getDatasourceSrv } from 'src/core/services/datasource';
 
 interface Props {

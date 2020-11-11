@@ -1,6 +1,6 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import _ from 'lodash';
-import { DataSourceApi, DataSourceSelectItem, stringToJsRegex, MetricFindValue } from 'src/packages/datav-core';
+import { DataSourceApi, DataSourceSelectItem, stringToJsRegex, MetricFindValue } from 'src/packages/datav-core/src';
 
 import {
   QueryVariableModel,

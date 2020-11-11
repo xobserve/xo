@@ -1,4 +1,4 @@
-import { Dimension, Dimensions } from 'src/packages/datav-core';
+import { Dimension, Dimensions } from 'src/packages/datav-core/src';
 
 export interface GraphPanelOptions  {
   lines: boolean

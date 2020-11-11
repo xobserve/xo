@@ -19,7 +19,7 @@ import CanvasSpanGraph from './CanvasSpanGraph';
 import TickLabels from './TickLabels';
 import ViewingLayer from './ViewingLayer';
 import { TUpdateViewRangeTimeFunction, ViewRange, ViewRangeTimeUpdate } from '../..';
-import { TraceSpan, Trace } from 'src/packages/datav-core';
+import { TraceSpan, Trace } from 'src/packages/datav-core/src';
 import { ubPb2, ubPx2, ubRelative } from '../../uberUtilityStyles';
 
 const DEFAULT_HEIGHT = 60;

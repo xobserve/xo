@@ -1,4 +1,4 @@
-import { TimeOption, TimeRange, TimeZone, rangeUtil, dateTimeFormat, dateTimeFormatISO } from 'src/packages/datav-core';
+import { TimeOption, TimeRange, TimeZone, rangeUtil, dateTimeFormat, dateTimeFormatISO } from 'src/packages/datav-core/src';
 
 export const mapOptionToTimeRange = (option: TimeOption, timeZone?: TimeZone): TimeRange => {
   return rangeUtil.convertRawToRange({ from: option.from, to: option.to }, timeZone);

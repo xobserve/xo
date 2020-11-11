@@ -1,5 +1,5 @@
 import { FormEvent, useReducer } from 'react';
-import { SelectableValue } from 'src/packages/datav-core';
+import { SelectableValue } from 'src/packages/datav-core/src';
 import { defaultQuery, queryReducer } from '../reducers/searchQueryReducer';
 import {
   ADD_TAG,

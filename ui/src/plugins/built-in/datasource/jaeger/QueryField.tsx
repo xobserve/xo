@@ -1,8 +1,8 @@
 import React from 'react';
 import { JaegerDatasource, JaegerQuery } from './datasource';
-import { ButtonCascader, CascaderOption } from 'src/packages/datav-core';
+import { ButtonCascader, CascaderOption } from 'src/packages/datav-core/src';
 
-import { AppEvents, ExploreQueryFieldProps, TraceSpan, TraceData } from 'src/packages/datav-core';
+import { AppEvents, ExploreQueryFieldProps, TraceSpan, TraceData } from 'src/packages/datav-core/src';
 import { appEvents } from 'src/core/library/utils/app_events';
 
 const ALL_OPERATIONS_KEY = '__ALL__';

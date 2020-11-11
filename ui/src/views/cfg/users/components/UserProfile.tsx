@@ -2,7 +2,7 @@ import React, { PureComponent, FC } from 'react';
 import _ from 'lodash'
 import { UserState } from 'src/store/reducers/user'
 import { cx, css } from 'emotion';
-import { ConfirmButton, ConfirmModal, LegacyInputStatus, Button, stylesFactory, Input, DatavTheme, currentTheme, getTheme,RadioButtonGroup } from 'src/packages/datav-core';
+import { ConfirmButton, ConfirmModal, LegacyInputStatus, Button, stylesFactory, Input, DatavTheme, currentTheme, getTheme,RadioButtonGroup } from 'src/packages/datav-core/src';
 import { Role } from 'src/types';
 import { getBackendSrv } from 'src/core/services/backend';
 import { notification } from 'antd';

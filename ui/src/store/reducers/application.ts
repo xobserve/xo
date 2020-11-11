@@ -1,7 +1,7 @@
 import { createAction } from '@reduxjs/toolkit';
 
 import storage from 'src/core/library/utils/localStorage'
-import {config, setCurrentLang} from 'src/packages/datav-core'
+import {config, setCurrentLang} from 'src/packages/datav-core/src'
 import { Langs } from 'src/core/library/locale/types';
  
 export  interface ApplicationState {

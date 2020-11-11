@@ -1,5 +1,5 @@
 import React from 'react'
-import { AnnotationEvent, localeData, currentLang } from 'src/packages/datav-core'
+import { AnnotationEvent, localeData, currentLang } from 'src/packages/datav-core/src'
 import { DashboardModel } from 'src/views/dashboard/model/DashboardModel'
 import { Button } from 'antd'
 import alertDef from '../alerting/state/alertDef'

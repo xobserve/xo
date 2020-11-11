@@ -3,7 +3,7 @@ import React from 'react';
 import TopSection from './TopSection';
 import BottomSection from './BottomSection';
 // import { Branding } from '../Branding/Branding'
-import { Icon } from 'src/packages/datav-core';
+import { Icon } from 'src/packages/datav-core/src';
 import appEvents from 'src/core/library/utils/app_events';
 import { CoreEvents } from 'src/types';
 import './SideMenu.less'

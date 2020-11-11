@@ -1,4 +1,4 @@
-import { DataSourceService, DataSourceApi, DataSourceInstanceSettings, getDataSourceService, getBootConfig, getDefaultDatasourceName, DataSourceSelectItem, getTemplateSrv } from 'src/packages/datav-core'
+import { DataSourceService, DataSourceApi, DataSourceInstanceSettings, getDataSourceService, getBootConfig, getDefaultDatasourceName, DataSourceSelectItem, getTemplateSrv } from 'src/packages/datav-core/src'
 import { importDataSourcePlugin } from 'src/plugins/loader'
 import {DataSourceVariableModel} from 'src/types'
 

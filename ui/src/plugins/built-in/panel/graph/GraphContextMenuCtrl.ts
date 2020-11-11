@@ -1,4 +1,4 @@
-import { FlotDataPoint,ContextMenuItem} from 'src/packages/datav-core';
+import { FlotDataPoint,ContextMenuItem} from 'src/packages/datav-core/src';
 
 export class GraphContextMenuCtrl {
   private source?: FlotDataPoint | null;

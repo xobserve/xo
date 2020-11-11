@@ -1,7 +1,7 @@
 import React, { Dispatch, FC, SetStateAction } from 'react';
 import { css } from 'emotion';
-import { Button, Checkbox, stylesFactory, useTheme, HorizontalGroup } from 'src/packages/datav-core';
-import { DatavTheme, SelectableValue } from 'src/packages/datav-core';
+import { Button, Checkbox, stylesFactory, useTheme, HorizontalGroup } from 'src/packages/datav-core/src';
+import { DatavTheme, SelectableValue } from 'src/packages/datav-core/src';
 import { DashboardQuery } from '../types';
 import { ActionRow } from './ActionRow';
 import { FormattedMessage } from 'react-intl';

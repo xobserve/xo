@@ -1,6 +1,6 @@
 import React, { PureComponent } from 'react';
-import { getBackendSrv } from 'src/packages/datav-core';
-import { Icon, ConfirmButton, Button } from 'src/packages/datav-core';
+import { getBackendSrv } from 'src/packages/datav-core/src';
+import { Icon, ConfirmButton, Button } from 'src/packages/datav-core/src';
 
 import alertDef from './state/alertDef';
 import { DashboardModel } from 'src/views/dashboard/model/DashboardModel';

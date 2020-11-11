@@ -2,7 +2,7 @@ import { toVariablePayload, VariableIdentifier } from '../state/types';
 import { ThunkResult } from '../../../types';
 import { createDataSourceOptions } from './reducer';
 import { validateVariableSelectionState } from '../state/actions';
-import { DataSourceSelectItem, stringToJsRegex } from 'src/packages/datav-core';
+import { DataSourceSelectItem, stringToJsRegex } from 'src/packages/datav-core/src';
 import { getDatasourceSrv } from 'src/core/services/datasource';
 import { getVariable } from '../state/selectors';
 import { DataSourceVariableModel } from 'src/types';

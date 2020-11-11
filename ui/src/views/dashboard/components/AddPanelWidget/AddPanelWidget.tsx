@@ -1,7 +1,7 @@
 // Libraries
 import React, { useMemo } from 'react';
 import _ from 'lodash';
-import {getBootConfig } from 'src/packages/datav-core';
+import {getBootConfig } from 'src/packages/datav-core/src';
 import {Button,Row} from 'antd'
 import { DashboardModel, PanelModel } from '../../model';
 import { LS_PANEL_COPY_KEY } from 'src/core/constants';

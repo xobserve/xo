@@ -1,8 +1,8 @@
 import React from 'react';
-import { PanelOptionsEditorBuilder, DatavTheme, dateTime, getTheme } from 'src/packages/datav-core';
-import { ColorPicker, Input, Icon, stylesFactory } from 'src/packages/datav-core';
+import { PanelOptionsEditorBuilder, DatavTheme, dateTime, getTheme } from 'src/packages/datav-core/src';
+import { ColorPicker, Input, Icon, stylesFactory } from 'src/packages/datav-core/src';
 import { css } from 'emotion';
-import { config } from 'src/packages/datav-core';
+import { config } from 'src/packages/datav-core/src';
 
 import { ClockOptions, ClockMode, ClockType, FontWeight, ZoneFormat } from './types';
 import { getTimeZoneNames } from './ClockPanel';

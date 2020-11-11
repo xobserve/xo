@@ -1,5 +1,5 @@
-import { QueryEditorProps, SelectableValue, localeData,currentLang } from 'src/packages/datav-core';
-import { AsyncSelect, CodeEditor, FormLabel as Label, Select,InlineFormLabel } from 'src/packages/datav-core';
+import { QueryEditorProps, SelectableValue, localeData,currentLang } from 'src/packages/datav-core/src';
+import { AsyncSelect, CodeEditor, FormLabel as Label, Select,InlineFormLabel } from 'src/packages/datav-core/src';
 import { find } from 'lodash';
 
 import React, { ComponentType } from 'react';

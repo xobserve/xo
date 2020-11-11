@@ -1,7 +1,7 @@
 import React, { PureComponent } from 'react';
 import { chain } from 'lodash';
-import { AppEvents, PanelData, SelectableValue } from 'src/packages/datav-core';
-import { Button, ClipboardButton, FormField as Field, JSONFormatter, Select, TextArea } from 'src/packages/datav-core';
+import { AppEvents, PanelData, SelectableValue } from 'src/packages/datav-core/src';
+import { Button, ClipboardButton, FormField as Field, JSONFormatter, Select, TextArea } from 'src/packages/datav-core/src';
 
 import { appEvents } from 'src/core/library/utils/app_events';
 import { DashboardModel, PanelModel } from 'src/views/dashboard/model';

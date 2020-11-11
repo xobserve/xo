@@ -1,9 +1,9 @@
 /*eslint-disable*/
 import React, { FC, ReactElement, useState } from 'react';
-import { SegmentAsync, Icon } from 'src/packages/datav-core';
+import { SegmentAsync, Icon } from 'src/packages/datav-core/src';
 import { OperatorSegment } from './OperatorSegment';
 import { AdHocVariableFilter } from 'src/types';
-import { SelectableValue } from 'src/packages/datav-core';
+import { SelectableValue } from 'src/packages/datav-core/src';
 
 interface Props {
   onLoadKeys: () => Promise<Array<SelectableValue<string>>>;

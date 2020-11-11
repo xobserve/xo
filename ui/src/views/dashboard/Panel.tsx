@@ -23,7 +23,7 @@ import {
   FieldConfigSource,
   theme,
   ErrorBoundary,
-} from 'src/packages/datav-core';
+} from 'src/packages/datav-core/src';
 
 
 

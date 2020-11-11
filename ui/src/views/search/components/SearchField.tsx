@@ -1,6 +1,6 @@
 import React, { FC, useContext } from 'react';
 import { css, cx } from 'emotion';
-import { ThemeContext,DatavTheme } from 'src/packages/datav-core';
+import { ThemeContext,DatavTheme } from 'src/packages/datav-core/src';
 import { DashboardQuery } from '../types';
 import { getState } from 'src/store/store';
 import localeData from 'src/core/library/locale'

@@ -1,6 +1,6 @@
 import React, { useRef, useState, useEffect } from 'react';
-import { PanelProps, DatavTheme } from 'src/packages/datav-core';
-import { withTheme } from 'src/packages/datav-core';
+import { PanelProps, DatavTheme } from 'src/packages/datav-core/src';
+import { withTheme } from 'src/packages/datav-core/src';
 import { debounce } from 'lodash';
 import echarts from 'echarts';
 import { css, cx } from 'emotion';

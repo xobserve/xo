@@ -10,7 +10,7 @@ import {
   rangeUtil,
   RawTimeRange,
   FormField
-} from 'src/packages/datav-core';
+} from 'src/packages/datav-core/src';
 
 import { TimePickerCalendar } from './TimePickerCalendar';
 import { Button,Input } from 'antd';

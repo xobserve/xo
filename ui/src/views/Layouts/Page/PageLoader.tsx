@@ -1,5 +1,5 @@
 import React, { FC } from 'react';
-import { LoadingPlaceholder } from 'src/packages/datav-core';
+import { LoadingPlaceholder } from 'src/packages/datav-core/src';
 
 interface Props {
   pageName?: string;

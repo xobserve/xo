@@ -20,7 +20,7 @@ import Drop from 'tether-drop';
 import {
   PanelProps, PanelEvents, toUtc, LinkModelSupplier, FieldDisplay, hasLinks, getDisplayProcessor, FieldType,
   DataFrameView, ContextMenuGroup, ContextMenuItem, currentTheme, ThemeType, currentLang, getTemplateSrv, getHistory
-} from 'src/packages/datav-core';
+} from 'src/packages/datav-core/src';
 import { GraphPanelOptions } from './types'
 import { GraphPanelCtrl } from './GraphPanelCtrl'
 import { CoreEvents } from 'src/types';

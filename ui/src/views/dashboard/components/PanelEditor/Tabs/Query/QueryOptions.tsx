@@ -2,7 +2,7 @@
 import React, { PureComponent, ChangeEvent, FocusEvent } from 'react';
 
 // Utils
-import { rangeUtil, PanelData, DataSourceApi } from 'src/packages/datav-core';
+import { rangeUtil, PanelData, DataSourceApi } from 'src/packages/datav-core/src';
 
 
 // Components
@@ -10,7 +10,7 @@ import {
   EventsWithValidation,
   ValidationEvents,
   InlineFormLabel
-} from 'src/packages/datav-core';
+} from 'src/packages/datav-core/src';
 
 // Types
 import { PanelModel } from 'src/views/dashboard/model';

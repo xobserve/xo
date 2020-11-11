@@ -1,4 +1,4 @@
-import { DataSourcePluginMeta, DataSourceSelectItem } from 'src/packages/datav-core';
+import { DataSourcePluginMeta, DataSourceSelectItem } from 'src/packages/datav-core/src';
 import { validateVariableSelectionState } from '../state/actions';
 import { QueryVariableModel, VariableRefresh } from 'src/types';
 import { ThunkResult } from '../../../types';

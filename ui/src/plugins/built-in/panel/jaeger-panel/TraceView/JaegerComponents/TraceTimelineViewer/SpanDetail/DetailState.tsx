@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { TraceLog } from 'src/packages/datav-core';
+import { TraceLog } from 'src/packages/datav-core/src';
 
 /**
  * Which items of a {@link SpanDetail} component are expanded.

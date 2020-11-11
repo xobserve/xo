@@ -1,5 +1,5 @@
 import React, { FunctionComponent, useEffect, useState } from 'react';
-import { LegacyForms } from 'src/packages/datav-core';
+import { LegacyForms } from 'src/packages/datav-core/src';
 const { LegacySwitch } = LegacyForms;
 
 interface Props {

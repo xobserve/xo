@@ -1,6 +1,6 @@
 import _ from 'lodash'
 import { Emitter } from 'src/core/library/utils/emitter';
-import { PanelEvents, DataQuery, ScopedVars, DataTransformerConfig, PanelPlugin, FieldConfigSource, theme, DataLink, AppEvents, config } from 'src/packages/datav-core'
+import { PanelEvents, DataQuery, ScopedVars, DataTransformerConfig, PanelPlugin, FieldConfigSource, theme, DataLink, AppEvents, config } from 'src/packages/datav-core/src'
 import templateSrv from 'src/core/services/templating'
 import { getNextRefIdChar } from 'src/core/library/utils/query'
 import { PanelQueryRunner } from './PanelQueryRunner'

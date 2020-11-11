@@ -1,5 +1,5 @@
 import React, { PureComponent } from 'react';
-import { PanelProps } from 'src/packages/datav-core';
+import { PanelProps } from 'src/packages/datav-core/src';
 import { ClockOptions, ClockType, ZoneFormat, ClockMode } from './types';
 import { css } from 'emotion';
 

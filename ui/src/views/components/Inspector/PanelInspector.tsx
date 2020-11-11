@@ -6,9 +6,9 @@ import { InspectJSONTab } from './InspectJSONTab';
 import { QueryInspector } from './QueryInspector';
 
 import { DashboardModel, PanelModel } from 'src/views/dashboard/model';
-import { CustomScrollbar, Drawer, JSONFormatter, TabContent } from 'src/packages/datav-core';
+import { CustomScrollbar, Drawer, JSONFormatter, TabContent } from 'src/packages/datav-core/src';
 
-import { getDataSourceService, getLocationSrv } from 'src/packages/datav-core';
+import { getDataSourceService, getLocationSrv } from 'src/packages/datav-core/src';
 import {
   DataFrame,
   DataQueryError,
@@ -22,7 +22,7 @@ import {
   QueryResultMetaStat,
   SelectableValue,
   TimeZone
-} from 'src/packages/datav-core';
+} from 'src/packages/datav-core/src';
 import { getPanelInspectorStyles } from './styles';
 import { StoreState } from 'src/types';
 import { InspectDataTab } from './InspectDataTab';

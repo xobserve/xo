@@ -1,6 +1,6 @@
 import React, { memo } from 'react';
 import { css } from 'emotion';
-import { TimeOption,stylesFactory,selectThemeVariant,DatavTheme, useTheme} from 'src/packages/datav-core';
+import { TimeOption,stylesFactory,selectThemeVariant,DatavTheme, useTheme} from 'src/packages/datav-core/src';
 import { CheckOutlined} from '@ant-design/icons';
 
 const getStyles = stylesFactory((theme: DatavTheme) => {

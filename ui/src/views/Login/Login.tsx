@@ -10,7 +10,7 @@ import { setToken } from 'src/core/library/utils/auth';
 
 import { store } from 'src/store/store';
 import { updateUser } from 'src/store/reducers/user';
-import { getBackendSrv, localeData, currentLang } from 'src/packages/datav-core'
+import { getBackendSrv, localeData, currentLang } from 'src/packages/datav-core/src'
 
 import './Login.less'
 

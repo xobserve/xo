@@ -25,12 +25,12 @@ import CopyIcon from '../../common/CopyIcon';
 import LabeledList from '../../common/LabeledList';
 
 import { TNil } from '../../types';
-import { TraceKeyValuePair, TraceLink, TraceLog, TraceSpan } from 'src/packages/datav-core';
+import { TraceKeyValuePair, TraceLink, TraceLog, TraceSpan } from 'src/packages/datav-core/src';
 import AccordianReferences from './AccordianReferences';
 import { autoColor, createStyle, Theme, useTheme } from '../../Theme';
 import { UIDivider } from '../../uiElementsContext';
 import { ubFlex, ubFlexAuto, ubItemsCenter, ubM0, ubMb1, ubMy1, ubTxRightAlign } from '../../uberUtilityStyles';
-import { TextArea } from 'src/packages/datav-core';
+import { TextArea } from 'src/packages/datav-core/src';
 
 const getStyles = createStyle((theme: Theme) => {
   return {

@@ -1,5 +1,5 @@
 import React, { PureComponent } from 'react';
-import { getTagColorsFromName, Icon } from 'src/packages/datav-core';
+import { getTagColorsFromName, Icon } from 'src/packages/datav-core/src';
 
 import { VariableTag } from 'src/types';
 

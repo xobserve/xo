@@ -1,6 +1,6 @@
 import { Dispatch } from 'react';
 import { Action } from 'redux';
-import { SelectableValue } from 'src/packages/datav-core';
+import { SelectableValue } from 'src/packages/datav-core/src';
 import { FolderInfo } from '../../types';
 
 export enum DashboardSearchItemType {

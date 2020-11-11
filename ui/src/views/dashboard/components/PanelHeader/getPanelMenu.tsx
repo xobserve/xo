@@ -1,5 +1,5 @@
 import React from 'react'
-import { PanelMenuItem } from 'src/packages/datav-core';
+import { PanelMenuItem } from 'src/packages/datav-core/src';
 import { copyPanel, duplicatePanel, removePanel } from '../../model/panel';
 import { PanelModel,DashboardModel } from '../../model';
 // import { contextSrv } from '../../../core/services/context_srv';

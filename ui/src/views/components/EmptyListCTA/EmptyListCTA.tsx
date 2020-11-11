@@ -1,5 +1,5 @@
 import React, { MouseEvent, useContext } from 'react';
-import { CallToActionCard, LinkButton, ThemeContext, Icon, IconName } from 'src/packages/datav-core';
+import { CallToActionCard, LinkButton, ThemeContext, Icon, IconName } from 'src/packages/datav-core/src';
 import { css } from 'emotion';
 import { Link } from 'react-router-dom';
 

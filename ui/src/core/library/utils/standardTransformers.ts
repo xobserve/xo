@@ -1,4 +1,4 @@
-import { TransformerRegistyItem } from 'src/packages/datav-core';
+import { TransformerRegistyItem } from 'src/packages/datav-core/src';
 import { reduceTransformRegistryItem } from 'src/views/components/TransformersUI/ReduceTransformerEditor';
 import { filterFieldsByNameTransformRegistryItem } from 'src/views/components/TransformersUI/FilterByNameTransformerEditor';
 import { filterFramesByRefIdTransformRegistryItem } from 'src/views/components/TransformersUI/FilterByRefIdTransformerEditor';

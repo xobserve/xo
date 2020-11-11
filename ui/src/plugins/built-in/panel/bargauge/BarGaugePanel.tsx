@@ -8,8 +8,8 @@ import {
   DataLinksContextMenuApi,
   currentTheme,
   getTheme
-} from 'src/packages/datav-core';
-import { BarGauge, DataLinksContextMenu, VizRepeater, VizRepeaterRenderValueProps } from 'src/packages/datav-core';
+} from 'src/packages/datav-core/src';
+import { BarGauge, DataLinksContextMenu, VizRepeater, VizRepeaterRenderValueProps } from 'src/packages/datav-core/src';
 
 import { BarGaugeOptions } from './types';
 

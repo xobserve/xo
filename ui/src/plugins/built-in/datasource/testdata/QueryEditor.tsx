@@ -3,11 +3,11 @@ import React, { PureComponent } from 'react';
 import _ from 'lodash';
 
 // Services & Utils
-import { getBackendSrv } from 'src/packages/datav-core';
+import { getBackendSrv } from 'src/packages/datav-core/src';
 
 // Components
-import { InlineFormLabel, LegacyForms } from 'src/packages/datav-core';
-import { QueryEditorProps, SelectableValue } from 'src/packages/datav-core';
+import { InlineFormLabel, LegacyForms } from 'src/packages/datav-core/src';
+import { QueryEditorProps, SelectableValue } from 'src/packages/datav-core/src';
 
 // Types
 import { TestDataDataSource } from './datasource';

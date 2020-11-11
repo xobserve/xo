@@ -1,8 +1,8 @@
 import React,{useState } from 'react'
 import _ from 'lodash'
 
-import { dateTime, currentLang ,localeData} from 'src/packages/datav-core'
-import { AnnotationEvent } from 'src/packages/datav-core'
+import { dateTime, currentLang ,localeData} from 'src/packages/datav-core/src'
+import { AnnotationEvent } from 'src/packages/datav-core/src'
 import { DashboardModel } from 'src/views/dashboard/model/DashboardModel'
 import { annotationsSrv } from 'src/core/services/annotations'
 import { Button,notification } from 'antd'

@@ -4,7 +4,7 @@ import { useLocation } from 'react-router-dom'
 import classNames from 'classnames'
 
 import SideMenuDropDown from './SideMenuDropDown';
-import { Icon } from 'src/packages/datav-core';
+import { Icon } from 'src/packages/datav-core/src';
 import { MenuItem } from 'src/types'
 import { Link } from 'react-router-dom'
 export interface Props {

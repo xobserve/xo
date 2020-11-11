@@ -1,4 +1,4 @@
-import { DataFrame, ReducerID, reduceField, AbsoluteTimeRange, FieldType } from 'src/packages/datav-core';
+import { DataFrame, ReducerID, reduceField, AbsoluteTimeRange, FieldType } from 'src/packages/datav-core/src';
 
 /**
  * Find the min and max time that covers all data

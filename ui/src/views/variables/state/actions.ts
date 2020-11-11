@@ -1,5 +1,5 @@
 import castArray from 'lodash/castArray';
-import { AppEvents, TimeRange, UrlQueryMap, UrlQueryValue } from 'src/packages/datav-core';
+import { AppEvents, TimeRange, UrlQueryMap, UrlQueryValue } from 'src/packages/datav-core/src';
 
 import {
   QueryVariableModel,

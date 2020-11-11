@@ -1,5 +1,5 @@
 import React, { FC, useState } from 'react';
-import { HorizontalGroup, LinkButton, Form ,FormField as Field,Input, config, getHistory,Button} from 'src/packages/datav-core';
+import { HorizontalGroup, LinkButton, Form ,FormField as Field,Input, config, getHistory,Button} from 'src/packages/datav-core/src';
 import { Modal, message } from 'antd';
 import { getBackendSrv } from 'src/core/services/backend';
 import globalEvents from 'src/views/App/globalEvents';

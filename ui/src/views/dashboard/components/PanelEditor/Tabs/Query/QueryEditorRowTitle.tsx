@@ -1,5 +1,5 @@
 import React from 'react';
-import { DataQuery, DataSourceApi } from 'src/packages/datav-core';
+import { DataQuery, DataSourceApi } from 'src/packages/datav-core/src';
 import {Row} from 'antd'
 import './QueryEditorRowTitle.less'
 

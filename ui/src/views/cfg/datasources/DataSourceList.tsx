@@ -6,7 +6,7 @@ import classNames from 'classnames';
 import DataSourceListItem from './DataSourceListItem';
 
 // Types
-import { DataSourceSettings } from 'src/packages/datav-core';
+import { DataSourceSettings } from 'src/packages/datav-core/src';
  
 export interface Props {
   dataSources: DataSourceSettings[];

@@ -1,5 +1,5 @@
 import memoizeOne from 'memoize-one';
-import { PanelPlugin,config} from 'src/packages/datav-core';
+import { PanelPlugin,config} from 'src/packages/datav-core/src';
 import { PanelEditorTab, PanelEditorTabId} from './types';
 import localeData from 'src/core/library/locale'
 import { getState } from 'src/store/store';

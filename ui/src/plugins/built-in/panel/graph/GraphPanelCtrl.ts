@@ -2,7 +2,7 @@ import _ from 'lodash'
 import {
     PanelProps, PanelData, DataFrame, TimeRange, PanelEvents,getValueFormat,formattedValueToString,dateTimeFormat,
     getFlotPairsConstant,getColorFromHexRgbOrName,getTimeField,AnnotationEvent,currentTheme
-} from 'src/packages/datav-core';
+} from 'src/packages/datav-core/src';
 import { DashboardModel } from 'src/views/dashboard/model/DashboardModel'
 import { PanelModel } from 'src/views/dashboard/model/PanelModel'
 import { DataProcessor } from './data_processor'

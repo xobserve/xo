@@ -14,7 +14,7 @@ var mailTemplates *template.Template
 
 func init() {
 	mailTemplates = template.New("name")
-	tmpl, err := template.ParseGlob("./backend/templates/*.tmpl")
+	tmpl, err := template.ParseGlob("./templates/*.tmpl")
 	if err != nil {
 		logger.Crit("parse email template failed", "error", err)
 		panic(err)

@@ -1,6 +1,6 @@
 import React, { PureComponent } from 'react';
-import { FieldDisplay, getFieldDisplayValues, PanelProps, VizOrientation, currentTheme, getTheme } from 'src/packages/datav-core';
-import { DataLinksContextMenu, Gauge, VizRepeater, VizRepeaterRenderValueProps ,DataLinksContextMenuApi} from 'src/packages/datav-core';
+import { FieldDisplay, getFieldDisplayValues, PanelProps, VizOrientation, currentTheme, getTheme } from 'src/packages/datav-core/src';
+import { DataLinksContextMenu, Gauge, VizRepeater, VizRepeaterRenderValueProps ,DataLinksContextMenuApi} from 'src/packages/datav-core/src';
 import { GaugeOptions } from './types';
 
 export class GaugePanel extends PureComponent<PanelProps<GaugeOptions>> {

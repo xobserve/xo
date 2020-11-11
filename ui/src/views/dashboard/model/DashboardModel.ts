@@ -1,7 +1,7 @@
 import _ from 'lodash'
 import { PanelModel } from './PanelModel'
 import { Emitter } from 'src/core/library/utils/emitter'
-import { AppEvent, PanelEvents,dateTimeFormat,DateTimeInput,config} from 'src/packages/datav-core'
+import { AppEvent, PanelEvents,dateTimeFormat,DateTimeInput,config} from 'src/packages/datav-core/src'
 import { DashboardMeta, CoreEvents, GlobalVariableUid } from 'src/types'
 import {GRID_COLUMN_COUNT,REPEAT_DIR_VERTICAL} from 'src/core/constants'
 import {panelAdded,panelRemoved,GridPos} from './PanelModel'
@@ -86,7 +86,7 @@ export class DashboardModel {
         this.editable = data.editable !== false;
         this.enableGlobalVariable = data.enableGlobalVariable;
         this.autoSave = data.autoSave;
-        
+
         this.panels =  _.map(data.panels || [], (panelData: any) => new PanelModel(panelData));
         this.description = data.description || 'A new dashboard';
 

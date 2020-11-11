@@ -1,4 +1,4 @@
-import { DataSourcePlugin } from 'src/packages/datav-core';
+import { DataSourcePlugin } from 'src/packages/datav-core/src';
 import { TestDataDataSource } from './datasource';
 import { QueryEditor } from './QueryEditor';
 import { TestInfoTab } from './TestInfoTab';

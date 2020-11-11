@@ -1,6 +1,6 @@
 import React, { PureComponent } from 'react';
 import _ from 'lodash'
-import { FieldConfigSource, PanelPlugin } from 'src/packages/datav-core';
+import { FieldConfigSource, PanelPlugin } from 'src/packages/datav-core/src';
 import { Row, Button, message} from 'antd'
 import { cx } from 'emotion';
 import AutoSizer from 'react-virtualized-auto-sizer';

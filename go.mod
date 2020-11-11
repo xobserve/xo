@@ -8,6 +8,7 @@ require (
 	github.com/go-macaron/session v0.0.0-20200329073812-7d919ce6a8d2 // indirect
 	github.com/go-sql-driver/mysql v1.5.0 // indirect
 	github.com/go-stack/stack v1.8.0
+	github.com/gorilla/mux v1.8.0
 	github.com/gosimple/slug v1.9.0
 	github.com/grafana/grafana v6.1.6+incompatible
 	github.com/grafana/grafana-plugin-sdk-go v0.77.0

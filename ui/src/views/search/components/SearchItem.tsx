@@ -1,7 +1,7 @@
 import React, { FC, useCallback, CSSProperties } from 'react';
 import { css, cx } from 'emotion';
-import { DatavTheme } from 'src/packages/datav-core';
-import { useTheme, TagList, styleMixins, stylesFactory } from 'src/packages/datav-core';
+import { DatavTheme } from 'src/packages/datav-core/src';
+import { useTheme, TagList, styleMixins, stylesFactory } from 'src/packages/datav-core/src';
 import { DashboardSectionItem, OnToggleChecked } from '../types';
 import { SearchCheckbox } from './SearchCheckbox';
 import { SEARCH_ITEM_HEIGHT, SEARCH_ITEM_MARGIN } from '../constants';

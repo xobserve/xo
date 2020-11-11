@@ -1,7 +1,7 @@
 import React, { PureComponent } from 'react';
 import { connect, MapDispatchToProps, MapStateToProps } from 'react-redux';
 import { StoreState } from 'src/types';
-import { ClickOutsideWrapper } from 'src/packages/datav-core';
+import { ClickOutsideWrapper } from 'src/packages/datav-core/src';
 import { VariableLink } from '../shared/VariableLink';
 import { VariableInput } from '../shared/VariableInput';
 import { commitChangesToVariable, filterOrSearchOptions, navigateOptions, toggleAndFetchTag } from './actions';

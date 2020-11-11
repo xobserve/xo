@@ -1,4 +1,4 @@
-import { PanelPlugin } from 'src/packages/datav-core';
+import { PanelPlugin } from 'src/packages/datav-core/src';
 import { StatPanelOptions, addStandardDataReduceOptions } from './types';
 import { StatPanel } from './StatPanel';
 

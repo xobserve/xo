@@ -2,7 +2,7 @@
 import React, { PureComponent } from 'react';
 
 // Types
-import { PluginConfigPageProps, DataSourcePluginMeta, DataSourceJsonData } from 'src/packages/datav-core';
+import { PluginConfigPageProps, DataSourcePluginMeta, DataSourceJsonData } from 'src/packages/datav-core/src';
 
 interface Props extends PluginConfigPageProps<DataSourcePluginMeta<DataSourceJsonData>> {}
 

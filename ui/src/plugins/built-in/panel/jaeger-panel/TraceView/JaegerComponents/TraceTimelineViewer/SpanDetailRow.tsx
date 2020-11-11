@@ -21,7 +21,7 @@ import SpanTreeOffset from './SpanTreeOffset';
 import TimelineRow from './TimelineRow';
 import { autoColor, createStyle, Theme, withTheme } from '../Theme';
 
-import { TraceLog, TraceSpan, TraceKeyValuePair, TraceLink } from 'src/packages/datav-core';
+import { TraceLog, TraceSpan, TraceKeyValuePair, TraceLink } from 'src/packages/datav-core/src';
 
 const getStyles = createStyle((theme: Theme) => {
   return {

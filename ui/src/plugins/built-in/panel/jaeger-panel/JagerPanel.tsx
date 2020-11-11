@@ -1,10 +1,10 @@
 import React, { PureComponent } from 'react';
 import _ from 'lodash'
 import memoizeOne from 'memoize-one';
-import { PanelProps, withTheme, DatavTheme, TraceData, TraceSpanData, getTemplateSrv } from 'src/packages/datav-core';
+import { PanelProps, withTheme, DatavTheme, TraceData, TraceSpanData, getTemplateSrv } from 'src/packages/datav-core/src';
 import { SimpleOptions, Trace } from './types';
 import { css, cx } from 'emotion';
-import { stylesFactory } from 'src/packages/datav-core';
+import { stylesFactory } from 'src/packages/datav-core/src';
 import { getDatasourceSrv } from 'src/core/services/datasource';
 import { Form, Input, Button, Select, Row, Col, notification, Modal } from 'antd';
 import ScatterPlot from './ScatterPlot/ScatterPlot';

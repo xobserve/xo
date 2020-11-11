@@ -2,7 +2,7 @@ import { CSSProperties } from 'react';
 import { PanelModel } from '../../model/PanelModel';
 import { DisplayMode } from './types';
 import { GRID_CELL_HEIGHT, GRID_CELL_VMARGIN, GRID_COLUMN_COUNT } from 'src/core/constants';
-import { PanelPlugin } from 'src/packages/datav-core';
+import { PanelPlugin } from 'src/packages/datav-core/src';
 
 export function calculatePanelSize(mode: DisplayMode, width: number, height: number, panel: PanelModel): CSSProperties {
   if (mode === DisplayMode.Fill) {

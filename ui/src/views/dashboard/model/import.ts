@@ -1,4 +1,4 @@
-import {DataSourceSelectItem} from 'src/packages/datav-core'
+import {DataSourceSelectItem} from 'src/packages/datav-core/src'
 
 export enum DashboardSource {
     Gcom = 0,

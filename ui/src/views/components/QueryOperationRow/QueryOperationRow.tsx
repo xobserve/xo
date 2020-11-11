@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Icon} from 'src/packages/datav-core';
+import { Icon} from 'src/packages/datav-core/src';
 import {Row} from 'antd'
 import { useUpdateEffect } from 'react-use';
 import {renderOrCallToRender} from 'src/core/library/utils/renderOrCallToRender'

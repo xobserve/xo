@@ -29,7 +29,8 @@ type Config struct {
 	}
 
 	Web struct {
-		Addr string
+		BackendAddr string `yaml:"backend_addr"`
+		UIAddr      string `yaml:"ui_addr"`
 	}
 
 	SMTP struct {

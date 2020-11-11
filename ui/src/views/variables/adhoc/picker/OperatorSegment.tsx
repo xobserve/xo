@@ -1,5 +1,5 @@
 import React, { FC } from 'react';
-import { Segment,SelectableValue } from 'src/packages/datav-core';
+import { Segment,SelectableValue } from 'src/packages/datav-core/src';
 
 interface Props {
   value: string;

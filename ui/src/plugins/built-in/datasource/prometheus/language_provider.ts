@@ -2,8 +2,8 @@ import _ from 'lodash';
 import LRU from 'lru-cache';
 import { Value } from 'slate';
 
-import { dateTime, LanguageProvider, HistoryItem } from 'src/packages/datav-core';
-import { CompletionItem, TypeaheadInput, TypeaheadOutput, CompletionItemGroup } from 'src/packages/datav-core';
+import { dateTime, LanguageProvider, HistoryItem } from 'src/packages/datav-core/src';
+import { CompletionItem, TypeaheadInput, TypeaheadOutput, CompletionItemGroup } from 'src/packages/datav-core/src';
 
 import { parseSelector, processLabels, processHistogramLabels, fixSummariesMetadata } from './language_utils';
 import PromqlSyntax, { FUNCTIONS, RATE_RANGES } from './promql';

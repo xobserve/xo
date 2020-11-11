@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { TraceSpan } from 'src/packages/datav-core';
+import { TraceSpan } from 'src/packages/datav-core/src';
 
 /**
  * Searches the span.references to find 'CHILD_OF' reference type or returns null.

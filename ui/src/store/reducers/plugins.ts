@@ -1,4 +1,4 @@
-import {PanelPlugin,PluginMeta} from 'src/packages/datav-core'
+import {PanelPlugin,PluginMeta} from 'src/packages/datav-core/src'
 import { createAction } from '@reduxjs/toolkit';
 import {PluginDashboard,PanelPluginsIndex} from 'src/types'
 

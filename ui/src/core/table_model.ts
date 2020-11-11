@@ -1,5 +1,5 @@
 import _ from 'lodash';
-import { Column, TableData, QueryResultMeta } from 'src/packages/datav-core';
+import { Column, TableData, QueryResultMeta } from 'src/packages/datav-core/src';
 
 
 export interface MutableColumn extends Column {

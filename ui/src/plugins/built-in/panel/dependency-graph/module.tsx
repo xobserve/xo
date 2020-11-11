@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import _ from 'lodash'
 
-import { PanelPlugin, CodeEditor} from 'src/packages/datav-core';
+import { PanelPlugin, CodeEditor} from 'src/packages/datav-core/src';
 import { DependencyGraphOptions,ConditionMetric} from './types';
 import DependencyGraph, {serviceIcons} from './DependencyGraph';
 import { Input, Select, Button, Divider, notification } from 'antd';

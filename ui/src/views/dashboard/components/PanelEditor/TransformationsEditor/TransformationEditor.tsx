@@ -1,7 +1,7 @@
 import React, { useContext } from 'react';
 import { css } from 'emotion';
-import { Icon, JSONFormatter, ThemeContext } from 'src/packages/datav-core';
-import { DatavTheme, DataFrame } from 'src/packages/datav-core';
+import { Icon, JSONFormatter, ThemeContext } from 'src/packages/datav-core/src';
+import { DatavTheme, DataFrame } from 'src/packages/datav-core/src';
 
 interface TransformationEditorProps {
   name: string;

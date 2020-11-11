@@ -5,7 +5,7 @@ import _ from 'lodash'
 // Components
 import Page from '../../Layouts/Page/Page';
 // Types
-import {  NavModel } from 'src/packages/datav-core';
+import {  NavModel } from 'src/packages/datav-core/src';
 import { getNavModel } from '../../Layouts/Page/navModel';
 import { withRouter } from 'react-router-dom';
 

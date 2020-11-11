@@ -12,8 +12,8 @@ import {
   SelectableValue,
   binaryOperators,
   getFieldDisplayName,
-} from 'src/packages/datav-core';
-import { Select, StatsPicker, LegacyForms, Input, FilterPill, HorizontalGroup } from 'src/packages/datav-core';
+} from 'src/packages/datav-core/src';
+import { Select, StatsPicker, LegacyForms, Input, FilterPill, HorizontalGroup } from 'src/packages/datav-core/src';
 import {
   CalculateFieldTransformerOptions,
   CalculateFieldMode,

@@ -1,6 +1,6 @@
 import $ from 'jquery';
 import _ from 'lodash';
-import { CreatePlotOverlay } from 'src/packages/datav-core';
+import { CreatePlotOverlay } from 'src/packages/datav-core/src';
 import appEvents from 'src/core/library/utils/app_events';
 
 // import {Modal} from 'antd'

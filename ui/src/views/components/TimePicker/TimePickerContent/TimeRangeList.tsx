@@ -1,6 +1,6 @@
 import React, { ReactNode } from 'react';
 import { css } from 'emotion';
-import { TimeOption, TimeZone,TimeRange ,stylesFactory} from 'src/packages/datav-core';
+import { TimeOption, TimeZone,TimeRange ,stylesFactory} from 'src/packages/datav-core/src';
 import { TimePickerTitle } from './TimePickerTitle';
 import { TimeRangeOption } from './TimeRangeOption';
 import { mapOptionToTimeRange } from './mapper';

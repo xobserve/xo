@@ -7,8 +7,8 @@ import { UpOutlined, DownOutlined, ClockCircleOutlined, LeftOutlined, RightOutli
 import { TimePickerContent } from './TimePickerContent/TimePickerContent';
 
 // Types
-import { isDateTime, rangeUtil, dateTimeFormat, timeZoneFormatUserFriendly,stylesFactory,ClickOutsideWrapper} from 'src/packages/datav-core';
-import { TimeRange, TimeOption, TimeZone, dateMath } from 'src/packages/datav-core';
+import { isDateTime, rangeUtil, dateTimeFormat, timeZoneFormatUserFriendly,stylesFactory,ClickOutsideWrapper} from 'src/packages/datav-core/src';
+import { TimeRange, TimeOption, TimeZone, dateMath } from 'src/packages/datav-core/src';
 
 const quickOptions: TimeOption[] = [
   { from: 'now-5m', to: 'now', display: 'Last 5 minutes', section: 3 },

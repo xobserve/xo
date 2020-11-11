@@ -1,4 +1,4 @@
-import { DataSourcePluginMeta, PanelPlugin, PanelPluginMeta, PluginState, PluginType, getBootConfig } from 'src/packages/datav-core'
+import { DataSourcePluginMeta, PanelPlugin, PanelPluginMeta, PluginState, PluginType, getBootConfig } from 'src/packages/datav-core/src'
 import { GenericDataSourcePlugin } from './settings'
 import { builtInPlugins } from './built_in_plugins'
 import { externalPlugins } from './external_plugins'

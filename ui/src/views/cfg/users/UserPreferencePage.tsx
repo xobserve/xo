@@ -1,5 +1,5 @@
 import React, { PureComponent } from 'react';
-import { getBootConfig, InlineFormLabel, Button} from 'src/packages/datav-core';
+import { getBootConfig, InlineFormLabel, Button} from 'src/packages/datav-core/src';
 
 import Page from 'src/views/Layouts/Page/Page';
 import { getNavModel } from 'src/views/Layouts/Page/navModel';

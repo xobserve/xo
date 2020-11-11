@@ -1,6 +1,6 @@
-import { DynamicConfigValue, FieldConfigOptionsRegistry, FieldOverrideContext, DatavTheme } from 'src/packages/datav-core';
+import { DynamicConfigValue, FieldConfigOptionsRegistry, FieldOverrideContext, DatavTheme } from 'src/packages/datav-core/src';
 import React from 'react';
-import { Counter, FormField as Field, HorizontalGroup, IconButton, FormLabel as Label, stylesFactory, useTheme } from 'src/packages/datav-core';
+import { Counter, FormField as Field, HorizontalGroup, IconButton, FormLabel as Label, stylesFactory, useTheme } from 'src/packages/datav-core/src';
 import { css, cx } from 'emotion';
 import { OptionsGroup } from './OptionsGroup';
 

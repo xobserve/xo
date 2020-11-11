@@ -1,7 +1,7 @@
 import { merge, MonoTypeOperatorFunction, Observable, of, Subject, throwError } from 'rxjs';
 import { catchError, filter, map, mergeMap, share, takeUntil, tap, throwIfEmpty } from 'rxjs/operators';
 import { fromFetch } from 'rxjs/fetch';
-import { BackendSrv as BackendService, BackendSrvRequest, config } from 'src/packages/datav-core';
+import { BackendSrv as BackendService, BackendSrvRequest, config } from 'src/packages/datav-core/src';
 
 import { DataSourceResponse, CoreEvents } from 'src/types';
 import { DashboardDTO, FolderInfo, DashboardDataDTO } from 'src/types';

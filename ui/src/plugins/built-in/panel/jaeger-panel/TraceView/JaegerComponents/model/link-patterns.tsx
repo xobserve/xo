@@ -17,7 +17,7 @@ import memoize from 'lru-memoize';
 import { getConfigValue } from '../utils/config/get-config';
 import { getParent } from './span';
 import { TNil } from '../types';
-import { TraceSpan, TraceLink, TraceKeyValuePair, Trace } from 'src/packages/datav-core';
+import { TraceSpan, TraceLink, TraceKeyValuePair, Trace } from 'src/packages/datav-core/src';
 
 const parameterRegExp = /#\{([^{}]*)\}/g;
 

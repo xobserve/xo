@@ -1,4 +1,4 @@
-import { DatavTheme ,selectThemeVariant} from 'src/packages/datav-core';
+import { DatavTheme ,selectThemeVariant} from 'src/packages/datav-core/src';
 
 export const getThemeColors = (theme: DatavTheme) => {
   return {

@@ -1,7 +1,7 @@
 import React, { memo } from 'react';
 
 // Types
-import { ExploreQueryFieldProps } from 'src/packages/datav-core';
+import { ExploreQueryFieldProps } from 'src/packages/datav-core/src';
 
 import { PrometheusDatasource } from '../datasource';
 import { PromQuery, PromOptions } from '../types';

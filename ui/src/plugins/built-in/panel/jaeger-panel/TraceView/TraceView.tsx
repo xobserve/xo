@@ -15,8 +15,8 @@ import { useSearch } from './useSearch';
 import { useChildrenState } from './useChildrenState';
 import { useDetailState } from './useDetailState';
 import { useHoverIndentGuide } from './useHoverIndentGuide';
-import { colors, useTheme } from 'src/packages/datav-core';
-import { TraceData, TraceSpanData, Trace, TraceSpan, TraceKeyValuePair, TraceLink } from 'src/packages/datav-core';
+import { colors, useTheme } from 'src/packages/datav-core/src';
+import { TraceData, TraceSpanData, Trace, TraceSpan, TraceKeyValuePair, TraceLink } from 'src/packages/datav-core/src';
 
 type Props = {
   trace: TraceData & { spans: TraceSpanData[] };

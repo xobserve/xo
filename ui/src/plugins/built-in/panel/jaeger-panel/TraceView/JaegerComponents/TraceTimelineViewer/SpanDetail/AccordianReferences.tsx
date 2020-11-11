@@ -18,7 +18,7 @@ import cx from 'classnames';
 
 import IoIosArrowDown from 'react-icons/lib/io/ios-arrow-down';
 import IoIosArrowRight from 'react-icons/lib/io/ios-arrow-right';
-import { TraceSpanReference } from 'src/packages/datav-core';
+import { TraceSpanReference } from 'src/packages/datav-core/src';
 import ReferenceLink from '../../url/ReferenceLink';
 
 import { createStyle } from '../../Theme';

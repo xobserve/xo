@@ -1,8 +1,8 @@
 import React, { FC } from 'react';
 import { css } from 'emotion';
-import { DatavTheme } from 'src/packages/datav-core';
-import { ConfirmModal, stylesFactory, useTheme } from 'src/packages/datav-core';
-import { getLocationSrv } from 'src/packages/datav-core';
+import { DatavTheme } from 'src/packages/datav-core/src';
+import { ConfirmModal, stylesFactory, useTheme } from 'src/packages/datav-core/src';
+import { getLocationSrv } from 'src/packages/datav-core/src';
 import { backendSrv } from 'src/core/services/backend';
 import { DashboardSection, OnDeleteItems } from '../types';
 import { getCheckedUids } from '../utils';

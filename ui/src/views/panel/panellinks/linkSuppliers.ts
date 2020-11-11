@@ -12,7 +12,7 @@ import {
   LinkModelSupplier,
   ScopedVar,
   ScopedVars
-} from 'src/packages/datav-core';
+} from 'src/packages/datav-core/src';
 import { getLinkSrv } from 'src/core/services/link';
 
 

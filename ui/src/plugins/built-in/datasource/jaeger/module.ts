@@ -1,4 +1,4 @@
-import { DataSourcePlugin } from 'src/packages/datav-core';
+import { DataSourcePlugin } from 'src/packages/datav-core/src';
 import { JaegerDatasource } from './datasource';
 import { JaegerQueryField } from './QueryField';
 import { ConfigEditor } from './ConfigEditor';

@@ -1,5 +1,5 @@
 import React, { ChangeEvent, PureComponent } from 'react';
-import { InlineFormLabel, LegacyForms } from 'src/packages/datav-core';
+import { InlineFormLabel, LegacyForms } from 'src/packages/datav-core/src';
 
 import templateSrv from 'src/core/services/templating';
 import { SelectionOptionsEditor } from '../editor/SelectionOptionsEditor';

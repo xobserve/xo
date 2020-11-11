@@ -1,4 +1,4 @@
-import { DataSourcePlugin } from 'src/packages/datav-core';
+import { DataSourcePlugin } from 'src/packages/datav-core/src';
 import { ANNOTATION_QUERY_STEP_DEFAULT, PrometheusDatasource } from './datasource';
 
 import { PromQueryEditor } from './components/PromQueryEditor';

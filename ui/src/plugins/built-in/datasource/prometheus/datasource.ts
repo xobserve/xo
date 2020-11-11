@@ -19,13 +19,13 @@ import {
   ScopedVars,
   TimeRange,
   TimeSeries,
-} from 'src/packages/datav-core';
+} from 'src/packages/datav-core/src';
 import { forkJoin, from, merge, Observable, of } from 'rxjs';
 import { filter, map, tap } from 'rxjs/operators';
 
 import PrometheusMetricFindQuery from './metric_find_query';
 import { ResultTransformer } from './result_transformer';
-import { getBackendSrv} from 'src/packages/datav-core';
+import { getBackendSrv} from 'src/packages/datav-core/src';
 import addLabelToQuery from './add_label_to_query';
 import { getQueryHints } from './query_hints';
 // Types

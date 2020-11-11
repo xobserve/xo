@@ -2,7 +2,7 @@ import React, { PureComponent } from 'react';
 // @ts-ignore
 import Highlighter from 'react-highlight-words';
 import { AlertRule, Team } from '../../types';
-import { Icon, IconName, Button, Tooltip, LinkButton, HorizontalGroup, localeData, currentLang } from 'src/packages/datav-core';
+import { Icon, IconName, Button, Tooltip, LinkButton, HorizontalGroup, localeData, currentLang } from 'src/packages/datav-core/src';
 import { Link } from 'react-router-dom';
 import { FormattedMessage } from 'react-intl';
 

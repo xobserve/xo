@@ -3,7 +3,7 @@ import { withRouter } from 'react-router-dom'
 import _ from 'lodash'
 
 import Page from 'src/views/Layouts/Page/Page';
-import { getBackendSrv, LinkButton, Button, HorizontalGroup,currentLang, localeData } from 'src/packages/datav-core';
+import { getBackendSrv, LinkButton, Button, HorizontalGroup,currentLang, localeData } from 'src/packages/datav-core/src';
 import { getNavModel } from 'src/views/Layouts/Page/navModel'
 import { AlertNotification, CoreEvents, Team } from 'src/types';
 import EmptyListCTA from '../../../components/EmptyListCTA/EmptyListCTA';

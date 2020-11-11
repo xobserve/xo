@@ -29,7 +29,7 @@ import LabeledList from '../common/LabeledList';
 import TraceName from '../common/TraceName';
 import { getTraceName } from '../model/trace-viewer';
 import { TNil } from '../types';
-import { Trace } from 'src/packages/datav-core';
+import { Trace } from 'src/packages/datav-core/src';
 import { formatDatetime, formatDuration } from '../utils/date';
 import { getTraceLinks } from '../model/link-patterns';
 

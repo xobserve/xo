@@ -5,8 +5,8 @@ import {
   standardTransformers,
   TransformerRegistyItem,
   TransformerUIProps,
-} from 'src/packages/datav-core';
-import { HorizontalGroup, FilterPill } from 'src/packages/datav-core';
+} from 'src/packages/datav-core/src';
+import { HorizontalGroup, FilterPill } from 'src/packages/datav-core/src';
 
 import { FilterFramesByRefIdTransformerOptions } from 'src/packages/datav-core/src/data/transformations/transformers/filterByRefId';
 

@@ -24,7 +24,7 @@ import {
   applyFieldOverrides,
   DataConfigSource,
   TimeZone,
-} from 'src/packages/datav-core';
+} from 'src/packages/datav-core/src';
 
 export interface QueryRunnerOptions<
   TQuery extends DataQuery = DataQuery,

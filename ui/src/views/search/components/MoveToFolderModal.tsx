@@ -1,7 +1,7 @@
 import React, { FC, useState } from 'react';
 import { css } from 'emotion';
-import { Button, HorizontalGroup, Modal, stylesFactory, useTheme } from 'src/packages/datav-core';
-import {  DatavTheme } from 'src/packages/datav-core';
+import { Button, HorizontalGroup, Modal, stylesFactory, useTheme } from 'src/packages/datav-core/src';
+import {  DatavTheme } from 'src/packages/datav-core/src';
 import { FolderInfo } from 'src/types';
 import { FolderPicker } from 'src/views/components/Pickers/FolderPicker';
 

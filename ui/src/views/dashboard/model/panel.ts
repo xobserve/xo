@@ -6,7 +6,7 @@ import localStore from 'src/core/library/utils/localStore';
 // Models
 import { DashboardModel } from './DashboardModel';
 import { PanelModel } from './PanelModel';
-import { TimeRange,rangeUtil,dateMath,theme, localeData, currentLang} from 'src/packages/datav-core';
+import { TimeRange,rangeUtil,dateMath,theme, localeData, currentLang} from 'src/packages/datav-core/src';
 import {appEvents} from 'src/core/library/utils/app_events'
 // Utils
 import { isString as _isString } from 'lodash';

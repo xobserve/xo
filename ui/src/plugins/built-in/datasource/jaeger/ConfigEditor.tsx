@@ -1,5 +1,5 @@
 import React from 'react';
-import { DataSourcePluginOptionsEditorProps, DataSourceHttpSettings} from 'src/packages/datav-core';
+import { DataSourcePluginOptionsEditorProps, DataSourceHttpSettings} from 'src/packages/datav-core/src';
 
 export type Props = DataSourcePluginOptionsEditorProps;
 

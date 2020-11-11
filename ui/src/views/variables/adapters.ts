@@ -1,6 +1,6 @@
 import { ComponentType } from 'react';
 import { Reducer } from 'redux';
-import { Registry, UrlQueryValue, VariableType } from 'src/packages/datav-core';
+import { Registry, UrlQueryValue, VariableType } from 'src/packages/datav-core/src';
 
 import {
   AdHocVariableModel,

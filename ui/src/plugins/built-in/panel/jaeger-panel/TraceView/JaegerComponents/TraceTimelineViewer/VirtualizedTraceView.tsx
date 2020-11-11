@@ -29,7 +29,7 @@ import {
 import { Accessors } from '../ScrollManager';
 import { getColorByKey } from '../utils/color-generator';
 import { TNil } from '../types';
-import { TraceLog, TraceSpan, Trace, TraceKeyValuePair, TraceLink } from 'src/packages/datav-core';
+import { TraceLog, TraceSpan, Trace, TraceKeyValuePair, TraceLink } from 'src/packages/datav-core/src';
 import TTraceTimeline from '../types/TTraceTimeline';
 
 import { createStyle, Theme, withTheme } from '../Theme';

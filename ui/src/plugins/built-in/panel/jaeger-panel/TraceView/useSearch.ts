@@ -1,6 +1,6 @@
 import { useMemo, useState } from 'react';
 import { filterSpans } from './JaegerComponents';
-import { TraceSpan } from 'src/packages/datav-core';
+import { TraceSpan } from 'src/packages/datav-core/src';
 
 /**
  * Controls the state of search input that highlights spans if they match the search string.

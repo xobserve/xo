@@ -1,4 +1,4 @@
-import { DataQuery,DataSourceService,DataTransformerConfig} from 'src/packages/datav-core';
+import { DataQuery,DataSourceService,DataTransformerConfig} from 'src/packages/datav-core/src';
 import alertDef from './state/alertDef';
 
 

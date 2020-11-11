@@ -1,5 +1,5 @@
 import React from 'react';
-import { DataTransformerID, standardTransformers, TransformerRegistyItem, TransformerUIProps } from 'src/packages/datav-core';
+import { DataTransformerID, standardTransformers, TransformerRegistyItem, TransformerUIProps } from 'src/packages/datav-core/src';
 
 import { LabelsToFieldsOptions } from 'src/packages/datav-core/src/data/transformations/transformers/labelsToFields';
 

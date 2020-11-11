@@ -1,4 +1,4 @@
-import { VariableModel as BaseVariableModel } from 'src/packages/datav-core';
+import { VariableModel as BaseVariableModel } from 'src/packages/datav-core/src';
 import { Deferred } from 'src/core/library/utils/deferred'
 
 

@@ -21,7 +21,7 @@ import cx from 'classnames';
 import * as markers from './AccordianKeyValues.markers';
 import KeyValuesTable from './KeyValuesTable';
 import { TNil } from '../../types';
-import { TraceKeyValuePair, TraceLink } from 'src/packages/datav-core';
+import { TraceKeyValuePair, TraceLink } from 'src/packages/datav-core/src';
 import { autoColor, createStyle, Theme, useTheme } from '../../Theme';
 import { uAlignIcon, uTxEllipsis } from '../../uberUtilityStyles';
 

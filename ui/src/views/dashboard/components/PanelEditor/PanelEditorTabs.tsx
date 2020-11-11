@@ -1,5 +1,5 @@
 import React, { useCallback } from 'react';
-import { IconName,  Tab, TabContent, TabsBar } from 'src/packages/datav-core'; 
+import { IconName,  Tab, TabContent, TabsBar } from 'src/packages/datav-core/src'; 
 import { PanelEditorTab, PanelEditorTabId } from './types';
 import { DashboardModel,PanelModel} from '../../model';
 import { QueriesTab } from './Tabs/Query/QueryTab' 

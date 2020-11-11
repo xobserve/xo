@@ -1,6 +1,6 @@
 import React from 'react';
 import classNames from 'classnames';
-import { Icon } from 'src/packages/datav-core';
+import { Icon } from 'src/packages/datav-core/src';
 import { PanelModel,DashboardModel} from '../../model';
 
 import templateSrv from 'src/core/services/templating';

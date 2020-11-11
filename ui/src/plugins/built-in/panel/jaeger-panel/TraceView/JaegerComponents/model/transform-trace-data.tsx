@@ -17,7 +17,7 @@ import _isEqual from 'lodash/isEqual';
 // @ts-ignore
 import { getTraceSpanIdsAsTree } from '../selectors/trace';
 import { getConfigValue } from '../utils/config/get-config';
-import { TraceKeyValuePair, TraceSpan, TraceSpanData, Trace, TraceData } from 'src/packages/datav-core';
+import { TraceKeyValuePair, TraceSpan, TraceSpanData, Trace, TraceData } from 'src/packages/datav-core/src';
 // @ts-ignore
 import TreeNode from '../utils/TreeNode';
 

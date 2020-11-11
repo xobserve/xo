@@ -6,7 +6,7 @@ import Page from 'src/views/Layouts/Page/Page';
 import { getNavModel } from 'src/views/Layouts/Page/navModel'
 import { FolderDTO } from 'src/types';
 import { getBackendSrv } from 'src/core/services/backend';
-import { InlineFormLabel, ConfirmModal, getHistory,Button} from 'src/packages/datav-core'
+import { InlineFormLabel, ConfirmModal, getHistory,Button} from 'src/packages/datav-core/src'
 import {  Input,notification } from 'antd';
 import globalEvents from 'src/views/App/globalEvents';
 import { injectIntl, FormattedMessage, IntlShape } from 'react-intl';

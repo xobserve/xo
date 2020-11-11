@@ -10,7 +10,7 @@ import {
   TimeZone,
   ContextMenu,
   ContextMenuProps
-} from 'src/packages/datav-core';
+} from 'src/packages/datav-core/src';
 import { SeriesIcon } from './Legend/LegendSeriesItem'
 import './GraphContextMenu.less'
 

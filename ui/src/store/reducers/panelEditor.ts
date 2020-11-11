@@ -1,4 +1,4 @@
-import { PanelData, DefaultTimeRange, LoadingState } from 'src/packages/datav-core'
+import { PanelData, DefaultTimeRange, LoadingState } from 'src/packages/datav-core/src'
 import { PanelModel } from 'src/views/dashboard/model'
 import { createAction } from '@reduxjs/toolkit';
 

@@ -3,7 +3,7 @@ import React, { PureComponent, ReactNode } from 'react';
 
 
 import { Alert } from 'antd';
-import { PanelProps, PanelPlugin, PanelPluginMeta ,PluginType} from 'src/packages/datav-core';
+import { PanelProps, PanelPlugin, PanelPluginMeta ,PluginType} from 'src/packages/datav-core/src';
 
 interface Props {
   title: string;

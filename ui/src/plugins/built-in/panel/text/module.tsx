@@ -1,4 +1,4 @@
-import { PanelModel, PanelPlugin } from 'src/packages/datav-core';
+import { PanelModel, PanelPlugin } from 'src/packages/datav-core/src';
 
 import { TextPanel } from './TextPanel';
 import { TextOptions } from './types';

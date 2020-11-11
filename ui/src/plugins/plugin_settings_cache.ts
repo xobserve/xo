@@ -1,4 +1,4 @@
-import { getBackendSrv,PluginMeta} from 'src/packages/datav-core';
+import { getBackendSrv,PluginMeta} from 'src/packages/datav-core/src';
 
 type PluginCache = {
   [key: string]: PluginMeta;

@@ -20,7 +20,7 @@ import cx from 'classnames';
 import CopyIcon from '../../common/CopyIcon';
 
 import { TNil } from '../../types';
-import { TraceKeyValuePair, TraceLink } from 'src/packages/datav-core';
+import { TraceKeyValuePair, TraceLink } from 'src/packages/datav-core/src';
 import { UIDropdown, UIIcon, UIMenu, UIMenuItem } from '../../uiElementsContext';
 import { autoColor, createStyle, Theme, useTheme } from '../../Theme';
 import { ubInlineBlock, uWidth100 } from '../../uberUtilityStyles';

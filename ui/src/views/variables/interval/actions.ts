@@ -1,4 +1,4 @@
-import { AppEvents } from 'src/packages/datav-core';
+import { AppEvents } from 'src/packages/datav-core/src';
 
 import { toVariablePayload, VariableIdentifier } from '../state/types';
 import { createIntervalOptions } from './reducer';

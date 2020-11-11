@@ -1,7 +1,7 @@
 // Libraries
 import React, { PureComponent } from 'react';
 
-import { DataSourcePluginOptionsEditorProps } from 'src/packages/datav-core';
+import { DataSourcePluginOptionsEditorProps } from 'src/packages/datav-core/src';
 
 type Props = DataSourcePluginOptionsEditorProps<any>;
 

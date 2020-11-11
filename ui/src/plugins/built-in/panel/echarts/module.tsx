@@ -1,4 +1,4 @@
-import { PanelPlugin } from 'src/packages/datav-core';
+import { PanelPlugin } from 'src/packages/datav-core/src';
 import { EchartsOptions, defaultOptions } from './types';
 import EchartsPanel from './EchartsPanel';
 import { OptionEditor } from './OptionEditor';

@@ -8,8 +8,8 @@ import {
   PanelPlugin,
   SelectableValue,
   VariableSuggestionsScope,
-} from 'src/packages/datav-core';
-import { Container, Counter, FeatureInfoBox, FormField as Field, fieldMatchersUI, FormLabel as Label, useTheme, ValuePicker } from 'src/packages/datav-core';
+} from 'src/packages/datav-core/src';
+import { Container, Counter, FeatureInfoBox, FormField as Field, fieldMatchersUI, FormLabel as Label, useTheme, ValuePicker } from 'src/packages/datav-core/src';
 import { getDataLinksVariableSuggestions } from 'src/core/services/link';
 import { OverrideEditor } from './OverrideEditor';
 import groupBy from 'lodash/groupBy';

@@ -1,5 +1,5 @@
-import { sharedSingleStatPanelChangedHandler } from 'src/packages/datav-core';
-import { PanelPlugin } from 'src/packages/datav-core';
+import { sharedSingleStatPanelChangedHandler } from 'src/packages/datav-core/src';
+import { PanelPlugin } from 'src/packages/datav-core/src';
 import { BarGaugePanel } from './BarGaugePanel';
 import { BarGaugeOptions, displayModes } from './types';
 import { addStandardDataReduceOptions } from '../stat/types';

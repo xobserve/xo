@@ -162,7 +162,6 @@ func (scanner *PluginScanner) loadPlugin(pluginJsonFilePath string) error {
 	}
 	loader := reflect.New(reflect.TypeOf(pluginGoType)).Interface().(PluginLoader)
 
-	// External plugins need a module.js file for SystemJS to load
 	if !strings.HasPrefix(pluginJsonFilePath, config.Data.Common.StaticRootPath) {
 		module := filepath.Join(filepath.Dir(pluginJsonFilePath), "module.js")
 		exists, err := utils.FileExists(module)

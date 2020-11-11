@@ -1,6 +1,6 @@
 import _ from 'lodash';
 import TableModel from 'src/core/table_model';
-import { TimeSeries, FieldType, Labels, formatLabels, QueryResultMeta } from 'src/packages/datav-core';
+import { TimeSeries, FieldType, Labels, formatLabels, QueryResultMeta } from 'src/packages/datav-core/src';
 import { TemplateSrv } from 'src/core/services/templating';
 
 export class ResultTransformer {

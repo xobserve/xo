@@ -3,7 +3,7 @@ import { withRouter } from 'react-router-dom'
 import _ from 'lodash'
 
 import Page from 'src/views/Layouts/Page/Page';
-import { getBackendSrv } from 'src/packages/datav-core';
+import { getBackendSrv } from 'src/packages/datav-core/src';
 import { getNavModel } from '../../Layouts/Page/navModel'
 import { UserState } from 'src/store/reducers/user';
 import UserTable from './UserTable'

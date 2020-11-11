@@ -1,5 +1,5 @@
 import validationSrv from 'src/core/services/validation';
-import { getBackendSrv } from 'src/packages/datav-core';
+import { getBackendSrv } from 'src/packages/datav-core/src';
 
 export const validateDashboardJson = (json: string) => {
   try {

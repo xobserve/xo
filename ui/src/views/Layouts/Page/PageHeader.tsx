@@ -1,9 +1,9 @@
 import React, { FormEvent } from 'react';
 import { css } from 'emotion';
 
-import { Tab, TabsBar, Icon, IconName } from 'src/packages/datav-core';
+import { Tab, TabsBar, Icon, IconName } from 'src/packages/datav-core/src';
  
-import { NavModel, NavModelBreadcrumb } from 'src/packages/datav-core';
+import { NavModel, NavModelBreadcrumb } from 'src/packages/datav-core/src';
 import { CoreEvents ,MenuItem} from 'src/types';
 import appEvents from 'src/core/library/utils/app_events';
 import './PageHeader.less'
