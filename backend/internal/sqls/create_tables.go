@@ -14,6 +14,7 @@ import (
 )
 
 var adminSalt, adminPW string
+var tables []string
 
 func init() {
 	salt, err := utils.GetRandomString(10)
@@ -29,25 +30,30 @@ func init() {
 	}
 
 	adminPW = pw
+
+	for name := range CreateTableSqls {
+		tables = append(tables, name)
+	}
 }
 
-func openSql() {
+func ConnectDatabase() error {
 	d, err := sql.Open("sqlite3", "./datav.db")
 	if err != nil {
 		log.RootLogger.Crit("open sqlite error", "error:", err)
-		panic(err)
+		return err
 	}
 	db.SQL = d
+
+	return nil
 }
 
-func CreateTables() {
-	openSql()
+func InitTables() error {
 	// create tables
 	for _, q := range CreateTableSqls {
 		_, err := db.SQL.Exec(q)
 		if err != nil {
 			log.RootLogger.Crit("sqlite create table error", "error:", err, "sql:", q)
-			panic(err)
+			return err
 		}
 	}
 
@@ -57,26 +63,28 @@ func CreateTables() {
 		models.SuperAdminId, models.SuperAdminUsername, adminPW, adminSalt, models.SuperAdminUsername+"@localhost", models.DefaultMenuId, now, now)
 	if err != nil {
 		log.RootLogger.Crit("init super admin error", "error:", err)
-		panic(err)
+		return err
 	}
 
 	_, err = db.SQL.Exec(`INSERT INTO team (id,name,created_by,created,updated) VALUES (?,?,?,?,?)`,
 		models.GlobalTeamId, models.GlobalTeamName, models.SuperAdminId, now, now)
 	if err != nil {
 		log.RootLogger.Crit("init global team error", "error:", err)
-		panic(err)
+		return err
 	}
 
 	_, err = db.SQL.Exec(`INSERT INTO team_member (team_id,user_id,role,created,updated) VALUES (?,?,?,?,?)`,
 		models.GlobalTeamId, models.SuperAdminId, models.ROLE_ADMIN, now, now)
 	if err != nil {
 		log.RootLogger.Crit("init global team member error", "error:", err)
-		panic(err)
+		return err
 	}
 
 	// init global team permission
-	teams.InitTeamPermission(models.GlobalTeamId)
-
+	err = teams.InitTeamPermission(models.GlobalTeamId)
+	if err != nil {
+		return err
+	}
 	// insert default sidemenu
 	menu := []map[string]string{
 		{
@@ -89,22 +97,24 @@ func CreateTables() {
 	menuStr, err := json.Marshal(menu)
 	if err != nil {
 		log.RootLogger.Crit("json encode default menu error ", "error:", err)
-		panic(err)
+		return err
 	}
 
 	_, err = db.SQL.Exec(`INSERT INTO sidemenu (id,team_id,is_public,desc,data,created_by,created,updated) VALUES (?,?,?,?,?,?,?,?)`,
 		models.DefaultMenuId, models.GlobalTeamId, true, models.DefaultMenuDesc, menuStr, models.SuperAdminId, now, now)
 	if err != nil {
 		log.RootLogger.Crit("init default side menu  error", "error:", err)
-		panic(err)
+		return err
 	}
 
 	_, err = db.SQL.Exec(`INSERT INTO dashboard (id,uid,title,version,created_by,folder_id,data,created,updated) VALUES (?,?,?,?,?,?,?,?,?)`,
 		-1, "-1", "global variables", 1, 1, -1, `{"annotations":{"list":[]},"editable":true,"id":-1,"uid":"-1","links":[],"panels":[],"schemaVersion":0,"tags":[],"templating":{"list":[]},"title":"global variables","version":0}`, now, now)
 	if err != nil {
 		log.RootLogger.Crit("init global variables  error", "error:", err)
-		panic(err)
+		return err
 	}
+
+	return nil
 }
 
 func CreateTable(names []string) {
@@ -113,7 +123,11 @@ func CreateTable(names []string) {
 			DropTable(names)
 		}
 	}()
-	openSql()
+	err := ConnectDatabase()
+	if err != nil {
+		panic(err)
+	}
+
 	for _, tbl := range names {
 		q, ok := CreateTableSqls[tbl]
 		if !ok {
@@ -139,7 +153,11 @@ func CreateTable(names []string) {
 }
 
 func DropTable(names []string) {
-	openSql()
+	err := ConnectDatabase()
+	if err != nil {
+		panic(err)
+	}
+
 	for _, tbl := range names {
 		q := fmt.Sprintf("DROP TABLE IF EXISTS %s", tbl)
 		_, err := db.SQL.Exec(q)

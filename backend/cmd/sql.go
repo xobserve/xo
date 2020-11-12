@@ -16,12 +16,12 @@ limitations under the License.
 package cmd
 
 import (
-	"github.com/apm-ai/datav/backend/cmd/sqls"
 	// "fmt"
 
 	"github.com/spf13/cobra"
 	"github.com/spf13/pflag"
 
+	"github.com/apm-ai/datav/backend/internal/sqls"
 	"github.com/apm-ai/datav/backend/pkg/config"
 	"github.com/apm-ai/datav/backend/pkg/log"
 )
@@ -35,7 +35,7 @@ var sqlCmd = &cobra.Command{
 	Short: "Manage sqls,e.g create/drop table",
 	Long:  ``,
 	Run: func(cmd *cobra.Command, args []string) {
-		config.Init("web.conf")
+		config.Init("datav.conf")
 		log.InitLogger(config.Data.Log.Level)
 
 		cmd.Flags().VisitAll(func(f *pflag.Flag) {

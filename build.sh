@@ -1,13 +1,47 @@
-go run main.go generate
+if [ "$1" = "" ];
+then
+    echo "Env paramether mustn't be empty,you can specify macos or linux by './build.sh macos'"
+    exit 0
+fi 
 
+## clean the build files
+if [ "$1" = "clean" ];
+then
+rm -rf out
+exit 0 
+fi
+
+## build the binary
+if [ "$1" = "macos" ];
+then
+GOOS=darwin GOARCH=amd64 go build 
+else
+GOOS=linux GOARCH=amd64 go build 
+fi
+
+## generate ui plugin static files
+./datav generate
+
+## create out directory
 mkdir out
+
+
+## copy go templates files 
 cp -r ./templates ./out/
 
-GOOS=darwin GOARCH=amd64 go build 
+## copy datav binary
 mv datav ./out
-cp web.conf ./out
 
+## copy config file
+cp datav.conf ./out
+
+## build ui static files
 cd ui
 yarn build
 cd ..
-mv ui/build out/
+
+## copy ui files to out, for backend using
+mv ui/node_modules .
+cp -r ui out/
+mv node_modules ui/
+

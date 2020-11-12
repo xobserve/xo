@@ -2,7 +2,6 @@ package server
 
 import (
 	"context"
-	"errors"
 	"os"
 	"path/filepath"
 	"time"
@@ -12,11 +11,8 @@ import (
 	"github.com/apm-ai/datav/backend/internal/bootConfig"
 	"github.com/apm-ai/datav/backend/internal/datasources"
 	"github.com/apm-ai/datav/backend/internal/users"
-	"github.com/apm-ai/datav/backend/pkg/utils"
 
 	// "net/http"
-
-	"database/sql"
 
 	"net/http"
 
@@ -33,7 +29,6 @@ import (
 	"github.com/apm-ai/datav/backend/internal/teams"
 	"github.com/apm-ai/datav/backend/pkg/common"
 	"github.com/apm-ai/datav/backend/pkg/config"
-	"github.com/apm-ai/datav/backend/pkg/db"
 	"github.com/apm-ai/datav/backend/pkg/i18n"
 	"github.com/apm-ai/datav/backend/pkg/log"
 	"github.com/gin-gonic/gin"
@@ -94,9 +89,9 @@ func (s *Server) Start() error {
 
 	}
 
-	err := s.initDB()
+	err := initDatabase()
 	if err != nil {
-		logger.Error("open sqlite error", "error", err.Error())
+		logger.Error("init database error", "error", err.Error())
 		return err
 	}
 
@@ -249,7 +244,7 @@ func (s *Server) Start() error {
 	go func() {
 		router := mux.NewRouter()
 
-		spa := spaHandler{staticPath: "ui/build", indexPath: "index.html"}
+		spa := spaHandler{staticPath: "ui/build/", indexPath: "index.html"}
 		router.PathPrefix("/").Handler(spa)
 
 		srv := &http.Server{
@@ -267,20 +262,6 @@ func (s *Server) Start() error {
 
 // Close ...
 func (s *Server) Close() error {
-	return nil
-}
-
-func (s *Server) initDB() error {
-	exist, _ := utils.FileExists("./datav.db")
-	if !exist {
-		return errors.New("db file not exist, please run init commant")
-	}
-	d, err := sql.Open("sqlite3", "./datav.db")
-	if err != nil {
-		return err
-	}
-
-	db.SQL = d
 	return nil
 }
 

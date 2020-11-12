@@ -4,8 +4,9 @@ import (
 	"database/sql"
 	"time"
 
-	"github.com/apm-ai/datav/backend/pkg/db"
 	"errors"
+
+	"github.com/apm-ai/datav/backend/pkg/db"
 )
 
 // dont change !
@@ -71,7 +72,7 @@ func QueryTeam(id int64, name string) (*Team, error) {
 	return team, nil
 }
 
-func IsTeamExist(id int64, name string) (bool) {
+func IsTeamExist(id int64, name string) bool {
 	var qid int64
 	err := db.SQL.QueryRow(`SELECT id FROM team WHERE id=? or name=?`,
 		id, name).Scan(&qid)
@@ -85,8 +86,6 @@ func IsTeamExist(id int64, name string) (bool) {
 
 	return false
 }
-
-
 
 func QueryTeamMember(teamId int64, userId int64) (*TeamMember, error) {
 	member := &TeamMember{}
@@ -125,7 +124,7 @@ func QueryTeamPermissions(teamId int64) (map[RoleType][]int, error) {
 	}
 
 	if err == sql.ErrNoRows {
-		return minPermission,errors.New("Bad data happend, this team has no permission rules")
+		return minPermission, errors.New("Bad data happend, this team has no permission rules")
 	}
 
 	for rows.Next() {
@@ -144,17 +143,16 @@ func QueryTeamPermissions(teamId int64) (map[RoleType][]int, error) {
 	return permissions, nil
 }
 
-
 func QueryTeamRolePermission(teamId int64, role RoleType) ([]int, error) {
 	permission := make([]int, 0)
 
-	rows, err := db.SQL.Query("SELECT permission FROM team_acl WHERE team_id=? and role=?", teamId,role)
+	rows, err := db.SQL.Query("SELECT permission FROM team_acl WHERE team_id=? and role=?", teamId, role)
 	if err != nil && err != sql.ErrNoRows {
 		return minPermission[role], err
 	}
 
 	if err == sql.ErrNoRows {
-		return minPermission[role],errors.New("Bad data happend, this team has no permission rules")
+		return minPermission[role], errors.New("Bad data happend, this team has no permission rules")
 	}
 
 	for rows.Next() {
@@ -170,48 +168,48 @@ func QueryTeamRolePermission(teamId int64, role RoleType) ([]int, error) {
 	return permission, nil
 }
 
-func TeamRoleHasPermission(teamId int64, role RoleType, permission int) (bool, error){
+func TeamRoleHasPermission(teamId int64, role RoleType, permission int) (bool, error) {
 	var id int64
-	err := db.SQL.QueryRow("SELECT id FROM team_acl WHERE team_id=? and role=? and permission=?", 
-		teamId,role,permission).Scan(&id)
+	err := db.SQL.QueryRow("SELECT id FROM team_acl WHERE team_id=? and role=? and permission=?",
+		teamId, role, permission).Scan(&id)
 	if err != nil && err != sql.ErrNoRows {
-		return isInminPermission(role,permission), err
+		return isInminPermission(role, permission), err
 	}
 
 	if err == sql.ErrNoRows {
-		return isInminPermission(role,permission),errors.New("Bad data happend, this team has no permission rules")
+		return isInminPermission(role, permission), nil
 	}
 
 	if id == 0 {
-		return false,nil
+		return false, nil
 	}
 
 	return true, nil
 }
 
-func QueryTeamMembersByUserId(userId int64) ([]*TeamMember,error) {
-	members := make([]*TeamMember,0)
-	rows,err := db.SQL.Query("SELECT team_id,role from team_member WHERE user_id=?",userId)
+func QueryTeamMembersByUserId(userId int64) ([]*TeamMember, error) {
+	members := make([]*TeamMember, 0)
+	rows, err := db.SQL.Query("SELECT team_id,role from team_member WHERE user_id=?", userId)
 	if err != nil && err != sql.ErrNoRows {
-		return nil,err
+		return nil, err
 	}
 
 	for rows.Next() {
 		m := &TeamMember{}
-		err := rows.Scan(&m.TeamId,&m.Role)
+		err := rows.Scan(&m.TeamId, &m.Role)
 		if err != nil {
 			return nil, err
 		}
 
-		members = append(members,m)
+		members = append(members, m)
 	}
 
-	return  members,nil
+	return members, nil
 }
 
 func isInminPermission(role RoleType, permission int) bool {
 	permissions := minPermission[role]
-	for _,p := range permissions {
+	for _, p := range permissions {
 		if p == permission {
 			return true
 		}

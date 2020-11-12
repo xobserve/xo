@@ -29,7 +29,7 @@ var generateCmd = &cobra.Command{
 	Short: "generate the necessary files for datav",
 	Long:  ``,
 	Run: func(cmd *cobra.Command, args []string) {
-		config.Init("web.conf")
+		config.Init("datav.conf")
 		log.InitLogger(config.Data.Log.Level)
 
 		services := registry.GetServices()
