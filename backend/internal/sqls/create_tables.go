@@ -4,7 +4,12 @@ import (
 	"database/sql"
 	"encoding/json"
 	"fmt"
+	"os"
+	"strings"
 	"time"
+
+	"github.com/apm-ai/datav/backend/pkg/config"
+	"github.com/grafana/grafana/pkg/cmd/grafana-cli/logger"
 
 	"github.com/apm-ai/datav/backend/internal/teams"
 	"github.com/apm-ai/datav/backend/pkg/db"
@@ -37,7 +42,24 @@ func init() {
 }
 
 func ConnectDatabase() error {
-	d, err := sql.Open("sqlite3", "./datav.db")
+	var path string
+	dataPath := strings.TrimSpace(config.Data.Paths.Data)
+	if dataPath == "" {
+		path = "datav.db"
+	} else {
+		exist, _ := utils.FileExists(dataPath)
+		if !exist {
+			err := os.MkdirAll(dataPath, os.ModePerm)
+			if err != nil {
+				logger.Error("create data dir error", "data_path", dataPath, "error", err)
+				return err
+			}
+		}
+
+		path = dataPath + "/datav.db"
+	}
+
+	d, err := sql.Open("sqlite3", path)
 	if err != nil {
 		log.RootLogger.Crit("open sqlite error", "error:", err)
 		return err

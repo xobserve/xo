@@ -30,7 +30,7 @@ var generateCmd = &cobra.Command{
 	Long:  ``,
 	Run: func(cmd *cobra.Command, args []string) {
 		config.Init("datav.conf")
-		log.InitLogger(config.Data.Log.Level)
+		log.InitLogger(config.Data.Common.LogLevel)
 
 		services := registry.GetServices()
 		for _, service := range services {

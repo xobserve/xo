@@ -35,7 +35,7 @@ var rootCmd = &cobra.Command{
 	// has an action associated with it:
 	Run: func(cmd *cobra.Command, args []string) {
 		config.Init("datav.conf")
-		err := log.InitLogger(config.Data.Log.Level)
+		err := log.InitLogger(config.Data.Common.LogLevel)
 		if err != nil {
 			fmt.Println("init logger error", err)
 			return

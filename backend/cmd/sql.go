@@ -36,7 +36,7 @@ var sqlCmd = &cobra.Command{
 	Long:  ``,
 	Run: func(cmd *cobra.Command, args []string) {
 		config.Init("datav.conf")
-		log.InitLogger(config.Data.Log.Level)
+		log.InitLogger(config.Data.Common.LogLevel)
 
 		cmd.Flags().VisitAll(func(f *pflag.Flag) {
 			switch f.Name {
