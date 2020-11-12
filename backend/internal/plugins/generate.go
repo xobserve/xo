@@ -29,7 +29,7 @@ func (p *PluginManager) Generate() error {
 	logger.Info("Starting plugin search")
 
 	// load internal built-in plugins
-	plugDir := path.Join(config.Data.Common.StaticRootPath, "/src/plugins")
+	plugDir := path.Join(config.Data.Server.StaticRootPath, "/src/plugins")
 	if err := p.scan(plugDir, false); err != nil {
 		return errutil.Wrapf(err, "failed to scan core plugin directory '%s'", plugDir)
 	}

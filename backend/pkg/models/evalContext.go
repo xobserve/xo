@@ -117,7 +117,7 @@ const urlFormat = "%s?tab=alert&editPanel=%d"
 // GetRuleURL returns the url to the dashboard containing the alert.
 func (c *EvalContext) GetRuleURL() (string, error) {
 	if c.IsTestRun {
-		return config.Data.Common.UIRootURL, nil
+		return config.Data.Server.UIRootURL, nil
 	}
 
 	ref, err := c.GetDashboardUID()

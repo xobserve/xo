@@ -74,7 +74,7 @@ func (pb *PluginBase) registerPlugin(pluginDir string) error {
 		return fmt.Errorf("Plugin with ID %q already exists", pb.Id)
 	}
 
-	if !strings.HasPrefix(pluginDir, config.Data.Common.StaticRootPath) {
+	if !strings.HasPrefix(pluginDir, config.Data.Server.StaticRootPath) {
 		logger.Info("Registering plugin", "name", pb.Name)
 	}
 

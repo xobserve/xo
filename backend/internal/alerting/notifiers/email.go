@@ -62,7 +62,7 @@ func (e *EmailNotifier) Notify(evalContext *models.EvalContext, settings *simple
 			"Error":         err0,
 			"ImageURL":      "",
 			"EmbeddedImage": "",
-			"AlertPageUrl":  config.Data.Common.UIRootURL + "/team/rules/" + strconv.FormatInt(evalContext.Rule.TeamID, 10),
+			"AlertPageUrl":  config.Data.Server.UIRootURL + "/team/rules/" + strconv.FormatInt(evalContext.Rule.TeamID, 10),
 			"Metrics":       evalContext.EvalMatches,
 		},
 		To:       addresses,

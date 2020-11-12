@@ -12,22 +12,15 @@ import (
 // Config ...
 type Config struct {
 	Common struct {
-		Version        string
-		StaticRootPath string `yaml:"static_root_path"`
-		HomePath       string `yaml:"home_path"`
+		Version  string
+		LogLevel string `yaml:"log_level"`
+	}
+
+	Server struct {
+		BackendPort    string `yaml:"backend_port"`
+		UIPort         string `yaml:"ui_port"`
 		UIRootURL      string `yaml:"ui_root_url"`
-		LogLevel       string `yaml:"log_level"`
-	}
-
-	Storage struct {
-		Keyspace string
-		Cluster  []string
-		NumConns int
-	}
-
-	Web struct {
-		BackendAddr string `yaml:"backend_addr"`
-		UIAddr      string `yaml:"ui_addr"`
+		StaticRootPath string `yaml:"static_root_path"`
 	}
 
 	SMTP struct {

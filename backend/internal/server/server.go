@@ -234,7 +234,7 @@ func (s *Server) Start() error {
 			}
 		}
 
-		err := r.Run(config.Data.Web.BackendAddr)
+		err := r.Run(config.Data.Server.BackendPort)
 		if err != nil {
 			logger.Crit("start backend server error", "error", err)
 			panic(err)
@@ -249,7 +249,7 @@ func (s *Server) Start() error {
 
 		srv := &http.Server{
 			Handler: router,
-			Addr:    "127.0.0.1:3003",
+			Addr:    config.Data.Server.UIPort,
 			// Good practice: enforce timeouts for servers you create!
 			WriteTimeout: 15 * time.Second,
 			ReadTimeout:  15 * time.Second,

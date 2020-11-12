@@ -49,7 +49,7 @@ func (p *PluginManager) Init() error {
 	logger.Info("Starting plugin search")
 
 	// load internal built-in plugins
-	plugDir := path.Join(config.Data.Common.StaticRootPath, "/src/plugins")
+	plugDir := path.Join(config.Data.Server.StaticRootPath, "/src/plugins")
 	if err := p.scan(plugDir, false); err != nil {
 		return errutil.Wrapf(err, "failed to scan core plugin directory '%s'", plugDir)
 	}
@@ -162,7 +162,7 @@ func (scanner *PluginScanner) loadPlugin(pluginJsonFilePath string) error {
 	}
 	loader := reflect.New(reflect.TypeOf(pluginGoType)).Interface().(PluginLoader)
 
-	if !strings.HasPrefix(pluginJsonFilePath, config.Data.Common.StaticRootPath) {
+	if !strings.HasPrefix(pluginJsonFilePath, config.Data.Server.StaticRootPath) {
 		module := filepath.Join(filepath.Dir(pluginJsonFilePath), "module.js")
 		exists, err := utils.FileExists(module)
 		if err != nil {
