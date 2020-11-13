@@ -146,7 +146,6 @@ export function tickStep(start: number, stop: number, count: number): number {
     size *= magn;
   
     const tickDecimals = Math.max(0, -Math.floor(Math.log(delta) / Math.LN10) + 1);
-    // grafana addition
     const scaledDecimals = tickDecimals - Math.floor(Math.log(size) / Math.LN10);
     return { tickDecimals, scaledDecimals };
   }

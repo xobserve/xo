@@ -15,16 +15,6 @@
       "small": "staticdata-logo.svg",
       "large": "staticdata-logo.svg"
     },
-    "links": [
-      {
-        "name": "Website",
-        "url": "https://github.com/marcusolsson/grafana-static-datasource"
-      },
-      {
-        "name": "License",
-        "url": "https://github.com/marcusolsson/grafana-static-datasource/blob/master/LICENSE"
-      }
-    ],
     "screenshots": [{ "name": "Logs", "path": "img/screenshot.png" }],
     "version": "%VERSION%",
     "updated": "%TODAY%"

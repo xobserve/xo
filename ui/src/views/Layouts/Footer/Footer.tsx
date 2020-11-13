@@ -1,6 +1,6 @@
 import React, { FC } from 'react';
 
-import { Icon, IconName,config} from 'src/packages/datav-core/src';
+import { Icon, IconName,config, getBootConfig} from 'src/packages/datav-core/src';
 import './Footer.less'
 import { FormattedMessage } from 'react-intl';
 
@@ -13,6 +13,39 @@ export interface FooterLink {
 }
 
 export let getFooterLinks = (): FooterLink[] => {
+  if (getBootConfig().common.enableCommunity) {
+    return [
+      {
+        id:1,
+        title: <FormattedMessage id="common.documentation"/>,
+        icon: 'document-info',
+        url: 'https://datav.dev/docs',
+        target: '_blank',
+      },
+      {
+        id:2,
+        title: <FormattedMessage id="common.support"/>,
+        icon: 'question-circle',
+        url: 'https://datav.dev/support',
+        target: '_blank',
+      },
+      {
+        id:3,
+        title: <FormattedMessage id="common.community"/>,
+        icon: 'comments-alt',
+        url: 'https://datav.dev/community',
+        target: '_blank',
+      },
+      {
+        id:4,
+        title: 'Github',
+        icon: 'github',
+        url: 'https://github.com/datadefeat/datav',
+        target: '_blank',
+      },
+    ];
+  }
+
   return [
     {
       id:1,
@@ -20,28 +53,7 @@ export let getFooterLinks = (): FooterLink[] => {
       icon: 'document-info',
       url: 'https://datav.dev/docs',
       target: '_blank',
-    },
-    {
-      id:2,
-      title: <FormattedMessage id="common.support"/>,
-      icon: 'question-circle',
-      url: 'https://datav.dev/support',
-      target: '_blank',
-    },
-    {
-      id:3,
-      title: <FormattedMessage id="common.community"/>,
-      icon: 'comments-alt',
-      url: 'https://datav.dev/community',
-      target: '_blank',
-    },
-    {
-      id:4,
-      title: 'Github',
-      icon: 'github',
-      url: 'https://github.com/datadefeat/datav',
-      target: '_blank',
-    },
+    }
   ];
 };
 
@@ -51,14 +63,14 @@ export let getVersionLinks = (): FooterLink[] => {
   const stateInfo = licenseInfo.stateInfo ? ` (${licenseInfo.stateInfo})` : '';
 
   // links.push({ text: `${buildInfo.edition}${stateInfo}`, url: licenseInfo.licenseUrl });
-  links.push({ title: `V${buildInfo.version}` , id : 0});
+  links.push({ title: `V${getBootConfig().common.version}` , id : 0});
 
   if (buildInfo.hasUpdate) {
     links.push({
       id:5,
       title: `New version available!`,
       icon: 'download-alt',
-      url: 'https://grafana.com/grafana/download?utm_source=grafana_footer',
+      url: `${config.officialWebsite}/docs/download`,
       target: '_blank',
     });
   }

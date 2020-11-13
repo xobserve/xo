@@ -152,7 +152,7 @@ export function describeTextRange(expr: any) {
 }
 
 /**
- * Use this function to get a properly formatted string representation of a {@link @grafana/data:RawTimeRange | range}.
+ * Use this function to get a properly formatted string representation of a {RawTimeRange | range}.
  *
  * @example
  * ```

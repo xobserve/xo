@@ -253,11 +253,6 @@ kbn.slugifyForUrl = (str: string) => {
     .replace(/ +/g, '-');
 };
 
-/** deprecated since 6.1, use grafana/data */
-kbn.stringToJsRegex = (str: string) => {
-  deprecationWarning('kbn.ts', 'kbn.stringToJsRegex()', '@grafana/data');
-  return stringToJsRegex(str);
-};
 
 kbn.toFixed = (value: number | null, decimals: number) => {
   if (value === null) {

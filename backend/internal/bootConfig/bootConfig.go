@@ -3,6 +3,8 @@ package bootConfig
 import (
 	"database/sql"
 
+	"github.com/apm-ai/datav/backend/pkg/config"
+
 	"github.com/apm-ai/datav/backend/internal/datasources"
 	"github.com/apm-ai/datav/backend/internal/session"
 	"github.com/apm-ai/datav/backend/internal/sidemenu"
@@ -17,7 +19,14 @@ import (
 	"strconv"
 )
 
+type CommonSettings struct {
+	AppName         string `json:"appName"`
+	Version         string `json:"version"`
+	EnableCommunity bool   `json:"enableCommunity"`
+}
+
 type bootConfig struct {
+	Common          *CommonSettings                      `json:"common"`
 	DataSourceMetas map[string]*plugins.DataSourcePlugin `json:"datasourceMetas"`
 	DataSources     map[string]interface{}               `json:"datasources"`
 	Panels          map[string]interface{}               `json:"panels"`
@@ -86,7 +95,17 @@ func QueryBootConfig(c *gin.Context) {
 		menu, err = sidemenu.QuerySideMenu(models.DefaultMenuId, 0)
 	}
 
-	c.JSON(200, common.ResponseSuccess(bootConfig{plugins.DataSources, datasources, panels, menu.Data}))
+	c.JSON(200, common.ResponseSuccess(bootConfig{
+		Common: &CommonSettings{
+			AppName:         config.Data.Common.AppName,
+			Version:         config.Data.Common.Version,
+			EnableCommunity: config.Data.Common.EnableCommunity,
+		},
+		DataSourceMetas: plugins.DataSources,
+		DataSources:     datasources,
+		Panels:          panels,
+		SideMenu:        menu.Data,
+	}))
 }
 
 func getPanelSort(id string) int {

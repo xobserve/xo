@@ -17,7 +17,7 @@
     "description": "Generates test data in different forms",
     "author": {
       "name": "Datav",
-      "url": "https://grafana.com"
+      "url": "https://datav.dev"
     },
     "logos": {
       "small": "testdata-logo.svg",

@@ -4,23 +4,6 @@
   "id": "prometheus",
   "category": "metrics",
 
-  "includes": [
-    {
-      "type": "dashboard",
-      "name": "Prometheus Stats",
-      "path": "dashboards/prometheus_stats.json"
-    },
-    {
-      "type": "dashboard",
-      "name": "Prometheus 2.0 Stats",
-      "path": "dashboards/prometheus_2_stats.json"
-    },
-    {
-      "type": "dashboard",
-      "name": "Grafana Stats",
-      "path": "dashboards/grafana_stats.json"
-    }
-  ],
   "metrics": true,
   "alerting": true,
   "annotations": true,
@@ -31,7 +14,7 @@
     "description": "Open source time series database & alerting",
     "author": {
       "name": "DataV",
-      "url": "https://grafana.com"
+      "url": "https://datav.dev"
     },
     "logos": {
       "small": "prometheus-logo.svg",

@@ -9,32 +9,6 @@
       "pluginName": "TestData DB"
     }
   ],
-  "__requires": [
-    {
-      "type": "grafana",
-      "id": "grafana",
-      "name": "Grafana",
-      "version": "6.3.0-pre"
-    },
-    {
-      "type": "panel",
-      "id": "graph",
-      "name": "Graph",
-      "version": ""
-    },
-    {
-      "type": "panel",
-      "id": "graph",
-      "name": "React Graph",
-      "version": ""
-    },
-    {
-      "type": "datasource",
-      "id": "testdata",
-      "name": "TestData DB",
-      "version": "1.0.0"
-    }
-  ],
   "annotations": {
     "list": [
       {

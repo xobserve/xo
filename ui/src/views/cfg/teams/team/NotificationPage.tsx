@@ -3,7 +3,7 @@ import { withRouter } from 'react-router-dom'
 import _ from 'lodash'
 
 import Page from 'src/views/Layouts/Page/Page';
-import { getBackendSrv, LinkButton, Button, HorizontalGroup,currentLang, localeData } from 'src/packages/datav-core/src';
+import { getBackendSrv, LinkButton, Button, HorizontalGroup,currentLang, localeData,config } from 'src/packages/datav-core/src';
 import { getNavModel } from 'src/views/Layouts/Page/navModel'
 import { AlertNotification, CoreEvents, Team } from 'src/types';
 import EmptyListCTA from '../../../components/EmptyListCTA/EmptyListCTA';
@@ -44,8 +44,7 @@ export class NotificationPage extends PureComponent<Props, State> {
             buttonIcon="channel-add"
             onClick={() => this.onAddChannel()}
             buttonTitle={localeData[currentLang]['alerting.addChannel']}
-            proTip="You can include images in your alert notifications."
-            proTipLink="http://docs.grafana.org/alerting/notifications/"
+            proTipLink={`${config.officialWebsite}/docs/alerting/notifications/`}
             proTipLinkTitle={localeData[currentLang]['common.learnMore']}
             proTipTarget="_blank"
         /> :
@@ -55,7 +54,7 @@ export class NotificationPage extends PureComponent<Props, State> {
             onClick={() => this.onAddChannel()}
             buttonTitle={localeData[currentLang]['alerting.addChannel']}
             proTip="你还能在通知消息中添加图表."
-            proTipLink="http://docs.grafana.org/alerting/notifications/"
+            proTipLink={`${config.officialWebsite}/docs/alerting/notifications`}
             proTipLinkTitle={localeData[currentLang]['common.learnMore']}
             proTipTarget="_blank"
         /> 

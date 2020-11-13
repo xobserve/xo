@@ -1,5 +1,5 @@
 import React, { MouseEvent, PureComponent } from 'react';
-import { IconButton } from 'src/packages/datav-core/src';
+import { IconButton ,config} from 'src/packages/datav-core/src';
 
 import EmptyListCTA from 'src/views/components/EmptyListCTA/EmptyListCTA';
 import { QueryVariableModel, VariableModel,StoreState } from 'src/types';
@@ -58,7 +58,7 @@ export class VariableEditorList extends PureComponent<Props> {
               or sensor names in your metric queries you can use variables in their place. Variables are shown as
               dropdown select boxes at the top of the dashboard. These dropdowns make it easy to change the data
               being displayed in your dashboard. Check out the
-              <a class="external-link" href="http://docs.grafana.org/reference/templating/" target="_blank">
+              <a class="external-link" href="${config.officialWebsite}/docs/reference/templating/" target="_blank">
                 Templating documentation
               </a>
               for more information.
@@ -77,7 +77,7 @@ export class VariableEditorList extends PureComponent<Props> {
               有了变量后，我们的仪表盘将变得更加有交互性、更加动态。在以往，你只能把主机名、应用名等字段硬编码到查询语句中，这样你想要为每一个主机名
               都创建一条语句，有了变量后，你只要在查询语句中使用变量，然后在仪表盘中选择变量，就可以轻松切换主机、应用，一套查询语句就够了。
               详情参加
-              <a class="external-link" href="http://docs.grafana.org/reference/templating/" target="_blank">
+              <a class="external-link" href="${config.officialWebsite}/docs/reference/templating/" target="_blank">
                 模版变量文档
               </a>
             </p>`,

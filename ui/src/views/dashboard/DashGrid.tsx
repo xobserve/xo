@@ -58,7 +58,7 @@ let ignoreNextWidthChange = false;
   
     /*
       Disable draggable if mobile device, solving an issue with unintentionally
-       moving panels. https://github.com/grafana/grafana/issues/18497
+       moving panels.
     */
     const draggable = width <= 420 ? false : isDraggable;
   

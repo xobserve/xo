@@ -15,7 +15,7 @@
     "description": "Open source, end-to-end distributed tracing",
     "author": {
       "name": "Datav",
-      "url": "https://grafana.com"
+      "url": "https://datav.dev"
     },
     "logos": {
       "small": "jaeger-logo.svg",

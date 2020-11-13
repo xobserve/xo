@@ -32,6 +32,7 @@ const team = {
     isPublicTips: 'Set to public means users not in this team can also use this sidemenu',
     menuNotExist: 'Target sidemenu is not exist',
     menuNotPublic: 'Target sidement is not public',
+    mainTeamTips: 'Every user will be in global team,this team cannot be changed',
 }
 
 export default team

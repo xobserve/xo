@@ -114,7 +114,7 @@ export class TestDataDataSource extends DataSourceApi<TestDataQuery> {
       events.push({
         annotation: options.annotation,
         time: timeWalker,
-        text: 'This is the text, <a href="https://grafana.com">Grafana.com</a>',
+        text: 'This is the text, <a href="https://datav.dev">datav.dev</a>',
         tags: ['text', 'server'],
       });
       timeWalker += step;

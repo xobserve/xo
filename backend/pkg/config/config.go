@@ -12,8 +12,10 @@ import (
 // Config ...
 type Config struct {
 	Common struct {
-		Version  string
-		LogLevel string `yaml:"log_level"`
+		Version         string
+		LogLevel        string `yaml:"log_level"`
+		AppName         string `yaml:"app_name"`
+		EnableCommunity bool   `yaml:"enable_community_entry"`
 	}
 
 	Server struct {

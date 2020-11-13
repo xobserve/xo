@@ -15,6 +15,8 @@ const user = {
     confirmPassword: '确认密码',
     subTitle: '用户的个人偏好设置',
     loginTitle: '欢迎登录',
+    superAdminTips: "admin账户是默认的超级管理员账户，部分属性无法修改",
+    currentUser: '当前用户',
 }
 
 export default user

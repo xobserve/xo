@@ -6,4 +6,4 @@ The Singlestat Panel allows you to show the one main summary stat of a SINGLE se
 
 Read more about it here:
 
-[http://docs.grafana.org/reference/singlestat/](http://docs.grafana.org/reference/singlestat/)
+[http://datav.dev/docs/reference/singlestat/](http://datav.dev/docs/reference/singlestat/)

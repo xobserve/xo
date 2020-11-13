@@ -42,7 +42,7 @@ import { cleanUpEditPanel } from 'src/store/reducers/dashboard';
 import { getUrlParams } from 'src/core/library/utils/url';
 import { FormattedMessage } from 'react-intl';
 
-export const PANEL_EDITOR_UI_STATE_STORAGE_KEY = 'grafana.dashboard.editor.ui';
+export const PANEL_EDITOR_UI_STATE_STORAGE_KEY = 'datav.dashboard.editor.ui';
 
 export const DEFAULT_PANEL_EDITOR_UI_STATE: PanelEditorUIState = {
     isPanelOptionsVisible: true,

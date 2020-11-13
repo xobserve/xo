@@ -33,6 +33,7 @@ import HeaderWrapper from './components/Header/Header'
 import { updateUrl } from 'src/core/library/utils/url';
 import { getVariables } from 'src/views/variables/state/selectors'
 import { saveDashboard } from './components/SaveDashboard/SaveDashboard';
+import { formatDocumentTitle } from 'src/core/library/utils/date';
 
 
 interface DashboardPageProps {
@@ -123,7 +124,7 @@ class DashboardPage extends React.PureComponent<DashboardPageProps & RouteCompon
     setOriginDash() {
         this.originDash = _.cloneDeep(this.props.dashboard.getSaveModelClone());
     }
-    init(ds) {
+    init(ds:DashboardModel) {
         this.originDash = _.cloneDeep(ds)
 
         store.dispatch(updateBreadcrumbText(ds.title))
@@ -150,6 +151,8 @@ class DashboardPage extends React.PureComponent<DashboardPageProps & RouteCompon
             // init auto save option
             this.handleAutoSave(ds.autoSave)
         }
+ 
+        document.title = formatDocumentTitle(ds.title)
     }
 
     componentWillUnmount() {

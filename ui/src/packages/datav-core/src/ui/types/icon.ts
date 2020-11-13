@@ -4,7 +4,6 @@ export type IconSize = ComponentSize | 'xl' | 'xxl' | 'xxxl';
 
 export type IconName =
   | 'fa fa-spinner'
-  | 'grafana'
   | 'question-circle'
   | 'angle-up'
   | 'history'
@@ -118,7 +117,6 @@ export type IconName =
 
 export const getAvailableIcons = (): IconName[] => [
   'fa fa-spinner',
-  'grafana',
   'question-circle',
   'angle-up',
   'history',

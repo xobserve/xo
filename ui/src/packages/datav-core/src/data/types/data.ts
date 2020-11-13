@@ -66,7 +66,7 @@ export interface QueryResultMetaNotice {
 
   /**
    * An optional link that may be displayed in the UI.
-   * This value may be an absolute URL or relative to grafana root
+   * This value may be an absolute URL or relative to datav root
    */
   link?: string;
 

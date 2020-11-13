@@ -86,15 +86,6 @@ class NewDataSourcePage extends PureComponent<Props & StoreProps,State> {
             {this.renderPlugins(category.plugins)}
           </div>
         ))}
-        {/* <div className="add-data-source-more">
-          <a
-            href="https://grafana.com/plugins?type=datasource&utm_source=grafana_add_ds"
-            target="_blank"
-            rel="noopener"
-          >
-            Find more data source plugins on grafana.com
-          </a>
-        </div> */}
       </>
     );
   }

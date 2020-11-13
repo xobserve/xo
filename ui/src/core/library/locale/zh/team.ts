@@ -31,7 +31,7 @@ const team = {
     delete: '删除团队',
     isPublicTips: '是否将团队的自定义菜单对外公开，若设置为是，则非团队的用户也可以选择该菜单',
     menuNotExist: '目标菜单不存在',
-    menuNotPublic: '目标菜单是非公开的，你无权访问',
+    mainTeamTips: '所有用户都在Global团队下，因此该团队的部分属性无法被修改',
 }
 
 export default team

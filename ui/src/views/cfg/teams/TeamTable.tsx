@@ -45,7 +45,7 @@ const TeamTable = (props: Props) => {
         render: (_, team:Team) => (
             <>
             <span>{team.name}</span>
-            {team.id == 1 && <Tooltip title="Every user in datav will be in global team,this team cannot be changed"><Tag className="ub-ml1">Main Team</Tag></Tooltip>}
+            {team.id == 1 && <Tooltip title={<FormattedMessage id="team.mainTeamTips"/>}><Tag className="ub-ml1">Main Team</Tag></Tooltip>}
             {formatUserRole(team)}
             </>
         ),

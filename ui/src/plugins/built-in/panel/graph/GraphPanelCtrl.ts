@@ -668,8 +668,6 @@ export class GraphPanelCtrl {
     /** This is one added to handle the scenario where we have null values in
      *  the time series data and the: "visualization options -> null value"
      *  set to "connected". In this scenario we will get the wrong dataIndex.
-     *
-     *  https://github.com/grafana/grafana/issues/22651
      */
     const { datapoint, dataIndex } = item;
 

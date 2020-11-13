@@ -1,14 +1,16 @@
-import { DatavConfig, DataSourceInstanceSettings, ThemeType,DataSourcePluginMeta} from '../types'
+import { DatavConfig, DataSourceInstanceSettings, ThemeType,DataSourcePluginMeta,CommonConfig} from '../types'
 import { History as RouterHistory } from 'history';
 import _ from 'lodash'
 
 // boot configs ,loaded from backend 
 export interface BootConfig {
+    common:CommonConfig
     datasourceMetas: {string:DataSourcePluginMeta}
     datasources: {string:DataSourceInstanceSettings}
     panels:{string: any}
     sidemenu: any[]
 }
+
 let bootConfig:BootConfig = null
 export const setBootConfig = (config:BootConfig) => {
     bootConfig = config
@@ -76,7 +78,7 @@ export const setCurrentLang = (lang: string) => {
 //@legacy
 // config examples, remove in future
 export const config = {
-    productName: 'datav',
+    officialWebsite: 'https://datav.dev',
     baseUrl: 'http://localhost:9085/',
     appSubUrl: '/',
     minRefreshInterval: '5s',

@@ -226,7 +226,7 @@ const Shortcut = (props) => {
   return (
     <div className="shortcut">
       {
-        props.value.map((k) => <span className="shortcut-table-key">{k}</span>)
+        props.value.map((k) => <span className="shortcut-table-key" key={k}>{k}</span>)
       }
       <span className="shortcut-table-description">{props.desc}</span>
     </div>

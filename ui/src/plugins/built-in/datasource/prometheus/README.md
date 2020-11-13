@@ -4,4 +4,4 @@ Grafana ships with **built in** support for Prometheus, the open-source service 
 
 Read more about it here:
 
-[http://docs.grafana.org/datasources/prometheus/](http://docs.grafana.org/datasources/prometheus/)
+[http://datav.dev/docs/datasources/prometheus/](http://datav.dev/docs/datasources/prometheus/)

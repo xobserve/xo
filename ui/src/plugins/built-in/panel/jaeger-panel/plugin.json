@@ -13,10 +13,6 @@
       "small": "jaeger-panel-logo.svg",
       "large": "jaeger-panel-logo.svg"
     },
-    "links": [
-      {"name": "Website", "url": "https://github.com/grafana/simple-react-panel"},
-      {"name": "License", "url": "https://github.com/grafana/simple-react-panel/blob/master/LICENSE"}
-    ],
     "screenshots": [],
     "version": "%VERSION%",
     "updated": "%TODAY%"

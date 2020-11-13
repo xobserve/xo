@@ -7,7 +7,7 @@ import * as DefaultIcon from '@iconscout/react-unicons';
 import * as MonoIcon from './assets';
 import './_Icon.less'
 
-const alwaysMonoIcons = ['grafana', 'favorite', 'heart-break', 'heart'];
+const alwaysMonoIcons = ['favorite', 'heart-break', 'heart'];
 
 export interface IconProps extends React.HTMLAttributes<HTMLDivElement> {
   name: any;

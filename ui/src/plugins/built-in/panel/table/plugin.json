@@ -7,7 +7,7 @@
     "description": "Table Panel for Grafana",
     "author": {
       "name": "Datav",
-      "url": "https://grafana.com"
+      "url": "https://datav.dev"
     },
     "logos": {
       "small": "table-logo.svg",

@@ -19,6 +19,7 @@ const common = {
     import: 'Import',
     folder: 'Folder',
     team: 'Team',
+    teamManage: 'Team manage',
     datasource: 'Data source',
     plugin: 'Plugin',
     save: 'Save',

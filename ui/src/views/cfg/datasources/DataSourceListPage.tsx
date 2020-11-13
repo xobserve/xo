@@ -5,7 +5,7 @@ import React, { PureComponent } from 'react';
 import Page from '../../Layouts/Page/Page';
 import DataSourceList from './DataSourceList'
 // Types
-import { DataSourceSettings, NavModel, getBackendSrv,IconName, LinkButton} from 'src/packages/datav-core/src';
+import { DataSourceSettings, NavModel, getBackendSrv,IconName, LinkButton,config} from 'src/packages/datav-core/src';
 import EmptyListCTA from 'src/views/components/EmptyListCTA/EmptyListCTA'
 import { getNavModel } from '../../Layouts/Page/navModel';
 import { withRouter } from 'react-router-dom';
@@ -22,7 +22,7 @@ const emptyEnListModel = {
   buttonLink: '/datasources/new',
   buttonTitle: 'Add data source',
   proTip: 'You can also define data sources through configuration files.',
-  proTipLink: 'http://docs.grafana.org/administration/provisioning/#datasources?utm_source=grafana_ds_list',
+  proTipLink: `${config.officialWebsite}/docs/administration/provisioning/#datasources?utm_source=grafana_ds_list`,
   proTipLinkTitle: 'Learn more',
   proTipTarget: '_blank',
 };
@@ -33,7 +33,7 @@ const emptyCnListModel = {
   buttonLink: '/datasources/new',
   buttonTitle: '新建数据源',
   proTip: '你还可以通过配置文件来定义数据源',
-  proTipLink: 'http://docs.grafana.org/administration/provisioning/#datasources?utm_source=grafana_ds_list',
+  proTipLink: `${config.officialWebsite}docs/administration/provisioning/#datasources?utm_source=grafana_ds_list`,
   proTipLinkTitle: '查看更多',
   proTipTarget: '_blank',
 };

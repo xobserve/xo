@@ -18,6 +18,7 @@ const common = {
     import: '导入',
     folder: '文件夹',
     team: '团队',
+    teamManage: '团队管理',
     datasource: '数据源',
     plugin: '插件',
     save: '保存',
