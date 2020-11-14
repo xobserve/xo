@@ -49,7 +49,7 @@ import { setLinkSrv, LinkSrv } from 'src/core/services/link';
 import { getStandardTransformers } from 'src/core/library/utils/standardTransformers';
 import { getUrlParams } from 'src/core/library/utils/url'
 import localeData from 'src/core/library/locale';
-
+import PreloadError from './PreloadError'
 interface Props {
   theme: string 
 }
@@ -177,7 +177,7 @@ const UIApp = (props: Props) => {
         </Intl>
       </ThemeContext.Provider>
       :
-      <></>
+     <PreloadError />
   return render
 }
 

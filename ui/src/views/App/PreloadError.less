@@ -1,0 +1,31 @@
+.preloader {
+    height: 100%;
+    flex-direction: column;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+.preloader__text {
+    color: #ff5705 !important;
+    font-size: 16px;
+    font-weight: 500;
+    font-family: Sans-serif;
+    opacity: 0;
+    animation-name: preloader-fade-in;
+    animation-duration: 0.9s;
+    animation-delay: 1.8s;
+    animation-fill-mode: forwards;
+}
+
+@keyframes preloader-fade-in {
+    0% {
+      opacity: 0;
+      /*animation-timing-function: linear;*/
+      animation-timing-function: cubic-bezier(0, 0, 0.5, 1);
+    }
+    100% {
+      opacity: 1;
+    }
+  }
+
