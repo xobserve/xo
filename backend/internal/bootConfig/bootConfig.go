@@ -23,6 +23,7 @@ type CommonSettings struct {
 	AppName         string `json:"appName"`
 	Version         string `json:"version"`
 	EnableCommunity bool   `json:"enableCommunity"`
+	RootUrlRedirect string `json:"rootUrlRedirect"`
 }
 
 type bootConfig struct {
@@ -100,6 +101,7 @@ func QueryBootConfig(c *gin.Context) {
 			AppName:         config.Data.Common.AppName,
 			Version:         config.Data.Common.Version,
 			EnableCommunity: config.Data.Common.EnableCommunity,
+			RootUrlRedirect: config.Data.Server.RootUrlRedirect,
 		},
 		DataSourceMetas: plugins.DataSources,
 		DataSources:     datasources,

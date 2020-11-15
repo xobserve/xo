@@ -635,5 +635,18 @@ func DelDashboard(c *gin.Context) {
 		return
 	}
 
+	// get current ownedby
+	meta, err := QueryDashboardMeta(dashId)
+	if err != nil {
+		logger.Warn("query team error", "error", err)
+		c.JSON(500, common.ResponseInternalError())
+		return
+	}
+
+	if !acl.CanAdminDashboard(dashId, meta.OwnedBy, c) {
+		c.JSON(403, common.ResponseI18nError(i18n.NoPermission))
+		return
+	}
+
 	DeleteDashboard(dashId)
 }

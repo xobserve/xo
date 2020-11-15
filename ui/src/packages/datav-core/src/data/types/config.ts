@@ -9,6 +9,7 @@ export interface CommonConfig {
   appName: string 
   version: string
   enableCommunity: boolean
+  rootUrlRedirect: string
 }
 
 export interface PanelConfig {

@@ -3,7 +3,7 @@ import { useHistory } from 'react-router-dom'
 import {store} from 'src/store/store'
 import { updateLocation } from 'src/store/reducers/location'
 import { getUrlParams } from 'src/core/library/utils/url'
-import { setHistory} from 'src/packages/datav-core/src'
+import { setHistory, getBootConfig} from 'src/packages/datav-core/src'
 import { getTimeSrv } from 'src/core/services/time'
 import appEvents from 'src/core/library/utils/app_events'
 import { CoreEvents } from 'src/types'
@@ -19,7 +19,11 @@ const OnRoute = () =>{
     
     // redirect root path to home url
     if (history.location.pathname === '/') {
-      history.push('/dashboard')
+      if (getBootConfig().common.rootUrlRedirect) {
+        history.push(getBootConfig().common.rootUrlRedirect)
+      } else {
+        history.push('/home')
+      }
     }
     
     // on page refresh
