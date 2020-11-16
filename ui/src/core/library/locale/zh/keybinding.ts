@@ -10,6 +10,7 @@ const keybinding = {
     e: '进入图表编辑面板',
     v: '进入图表全屏查看模式',
     i: '进入图表检查面板',
+    s: '进入仪表盘设置面板',
 }
 
 export default keybinding

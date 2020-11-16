@@ -124,6 +124,7 @@ export const BottomNavLinks = (props:Props) => {
             <li key="change-lang">
               <a onClick={() => {
                 store.dispatch(updateLocale())
+                window.location.reload()
               }}>
                 {props.locale === Langs.Chinese ? '当前语言-中文' : 'Current Lang - Enlgish'}
               </a>
@@ -214,6 +215,7 @@ export const BottomNavLinks = (props:Props) => {
               <Shortcut value={['e']} desc={<Message id="keybinding.e"/>}></Shortcut>
               <Shortcut value={['v']} desc={<Message id="keybinding.v"/>}></Shortcut>
               <Shortcut value={['i']} desc={<Message id="keybinding.i"/>}></Shortcut>
+              <Shortcut value={['s']} desc={<Message id="keybinding.s"/>}></Shortcut>
             </Col>
           </Row>
         </Modal>

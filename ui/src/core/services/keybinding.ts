@@ -119,6 +119,13 @@ export class KeybindingSrv {
         getLocationSrv().update({ query: { inspect: dashboard.meta.focusPanelId }, partial: true })
       }
     });
+
+    // open settings
+    this.bind('s', () => {
+      if (dashboard.meta.focusPanelId) {
+        getLocationSrv().update({ query: { settingView: 'general' }, partial: true })
+      }
+    });
   }
 }
 

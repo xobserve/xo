@@ -10,6 +10,7 @@ const keybinding = {
     e: 'Toggle panel edit view',
     v: 'Toggle panel fullscreen view',
     i: 'Toggle panel inspect view',
+    s: 'Toggle dashboard setting panel',
 }
 
 export default keybinding
