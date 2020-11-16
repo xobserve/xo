@@ -622,3 +622,18 @@ func GetUserAcl(c *gin.Context) {
 
 	c.JSON(200, common.ResponseSuccess(userAcls))
 }
+
+func DelDashboard(c *gin.Context) {
+	dashId, _ := strconv.ParseInt(c.Param("id"), 10, 64)
+	if dashId == 0 {
+		c.JSON(400, common.ResponseI18nError(i18n.BadRequestData))
+		return
+	}
+
+	if dashId == models.GlobalDashboardId {
+		c.JSON(400, common.ResponseI18nError("error.cantDeleteReserverDash"))
+		return
+	}
+
+	DeleteDashboard(dashId)
+}

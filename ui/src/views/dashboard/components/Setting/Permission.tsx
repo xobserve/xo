@@ -3,7 +3,7 @@ import { DashboardModel } from '../../model';
 import { notification, Tooltip } from 'antd';
 import TeamPicker from 'src/views/components/Pickers/TeamPicker'
 import { getBackendSrv } from 'src/core/services/backend';
-import { ConfirmModal,Button} from 'src/packages/datav-core/src';
+import { ConfirmModal,Button, localeData, currentLang} from 'src/packages/datav-core/src';
 import AddExtraPermission from './components/AddExtraPermission'
 import UserPermissions from './components/UserPermissions'
 import { InfoCircleOutlined } from '@ant-design/icons';
@@ -138,7 +138,7 @@ const Permission = (props: Props) => {
 
             <ConfirmModal
                 isOpen={confirmVisible}
-                title= {<FormattedMessage id="dashboard.changeOwner"/>}
+                title= {localeData[currentLang]["dashboard.changeOwner"]}
                 body={<FormattedMessage id="dashboard.changeOwnerConfirm"/>}
                 confirmText={<FormattedMessage id="common.change"/>}
                 onConfirm={() => updateOwnedBy()}

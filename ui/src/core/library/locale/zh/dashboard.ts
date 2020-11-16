@@ -56,6 +56,10 @@ const dashboard = {
 
     viewMode: '切换显示模式',
     fullscreenTips: '按下ESC来退出全屏模式',
+
+    delDashboard: '删除仪表盘',
+    delDashboardTips: '该操作是不可逆的，请小心操作',
+    delDashboardConfirm: '删除操作是不可逆的，你确认要删除该仪表盘吗？',
 }
 
 export default dashboard

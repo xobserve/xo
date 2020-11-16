@@ -77,40 +77,57 @@ func QueryDashboardsByIds(ids []string) []*models.Dashboard {
 	return dashes
 }
 
-func QueryDashboardMeta(id int64) (*models.DashboardMeta,error) {
+func QueryDashboardMeta(id int64) (*models.DashboardMeta, error) {
 	dashMeta := &models.DashboardMeta{}
 	err := db.SQL.QueryRow(`SELECT version, owned_by,created_by, folder_id, created,updated FROM dashboard WHERE id=?`, id).Scan(
 		&dashMeta.Version, &dashMeta.OwnedBy, &dashMeta.CreatedBy, &dashMeta.FolderId, &dashMeta.Created, &dashMeta.Updated,
 	)
 	if err != nil {
-		return nil,err
+		return nil, err
 	}
 
-	return dashMeta,nil
+	return dashMeta, nil
 }
 
-
 func DeleteDashboard(id int64) error {
-	// delete annotations
-	_, err := db.SQL.Exec("DELETE FROM annotation WHERE dashboard_id=?",id)
+	// delete dashboard annotations
+	_, err := db.SQL.Exec("DELETE FROM annotation WHERE dashboard_id=?", id)
 	if err != nil {
 		return err
 	}
 
 	// delete dashboard team acl
-	_, err = db.SQL.Exec("DELETE FROM dashboard_acl WHERE dashboard_id=?",id)
+	_, err = db.SQL.Exec("DELETE FROM dashboard_acl WHERE dashboard_id=?", id)
 	if err != nil {
 		return err
 	}
 
 	// delete dashboard user acl
-	_, err = db.SQL.Exec("DELETE FROM dashboard_user_acl WHERE dashboard_id=?",id)
+	_, err = db.SQL.Exec("DELETE FROM dashboard_user_acl WHERE dashboard_id=?", id)
+	if err != nil {
+		return err
+	}
+
+	// delete dashboard alert
+	_, err = db.SQL.Exec("DELETE FROM alert WHERE dashboard_id=?", id)
+	if err != nil {
+		return err
+	}
+
+	// delete dashboard alert states
+	_, err = db.SQL.Exec("DELETE FROM alert_states WHERE dashboard_id=?", id)
+	if err != nil {
+		return err
+	}
+
+	// delete dashboard alert history
+	_, err = db.SQL.Exec("DELETE FROM alert_history WHERE dashboard_id=?", id)
 	if err != nil {
 		return err
 	}
 
 	// delete dashboard
-	_, err = db.SQL.Exec("DELETE FROM dashboard WHERE id=?",id)
+	_, err = db.SQL.Exec("DELETE FROM dashboard WHERE id=?", id)
 	if err != nil {
 		return err
 	}

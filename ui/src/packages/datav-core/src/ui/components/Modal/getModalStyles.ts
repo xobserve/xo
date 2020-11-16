@@ -39,6 +39,7 @@ export const getModalStyles = stylesFactory((theme: DatavTheme) => {
       height: 42px;
     `,
     modalHeaderTitle: css`
+      label: modalTitle;
       font-size: ${theme.typography.size.lg};
       margin: 0 ${theme.spacing.md};
       display: flex;

@@ -11,6 +11,10 @@ import (
 	"github.com/apm-ai/datav/backend/pkg/utils/simplejson"
 )
 
+const (
+	GlobalDashboardId = -1
+)
+
 type DashboardRef struct {
 	Uid  string
 	Slug string

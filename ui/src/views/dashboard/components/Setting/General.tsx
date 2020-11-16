@@ -1,8 +1,8 @@
 import React, {useState} from 'react'
 import { DashboardModel } from '../../model';
-import { Tooltip} from 'antd';
+import { Tooltip, Divider,notification} from 'antd';
 import { InfoCircleOutlined } from '@ant-design/icons';
-import { DynamicTagList, LegacyForms} from 'src/packages/datav-core/src';
+import { DynamicTagList, LegacyForms, Button, ConfirmModal, getBackendSrv, getHistory, currentLang,localeData} from 'src/packages/datav-core/src';
 import { FormattedMessage } from 'react-intl';
 const {LegacySwitch} = LegacyForms
 
@@ -14,6 +14,8 @@ const GeneralSetting = (props: Props) => {
     const [editable,setEditable] = useState(props.dashboard.editable)
     const [enableGlobal,setEnableGlobal] = useState(props.dashboard.enableGlobalVariable)
     const [autoSave,setAutoSave] = useState(props.dashboard.autoSave)
+    const [delConfirmVisible,setDelConfirmVisible] = useState(false)
+
     const onChangeEditable = (e) => {
         setEditable(e.currentTarget.checked)
         props.dashboard.editable = e.currentTarget.checked
@@ -27,6 +29,17 @@ const GeneralSetting = (props: Props) => {
     const onChangeAutoSave = (e) => {
         setAutoSave(e.currentTarget.checked)
         props.dashboard.autoSave = e.currentTarget.checked
+    }
+
+    const deleteDashboard = async () => {
+        await getBackendSrv().delete(`/api/dashboard/id/${props.dashboard.id}`)
+        notification['success']({
+            message: "Success",
+            description: localeData[currentLang]["info.targetDeleted"],
+            duration: 3
+          });
+        
+        getHistory().push('/')
     }
 
     return (
@@ -60,7 +73,24 @@ const GeneralSetting = (props: Props) => {
                     <label className="gf-form-label width-9"><FormattedMessage id="dashboard.autoSave"/><Tooltip title={<FormattedMessage id="dashboard.autoSaveTips"/>}><InfoCircleOutlined /></Tooltip></label>
                     <LegacySwitch label="" checked={autoSave} onChange={onChangeAutoSave}/>
                 </div>
+                
+                <Divider />
+
+                <div><FormattedMessage id="common.dangerousSection"/></div>
+                <div className="gf-form ub-mt2">
+                <label className="gf-form-label width-9"><FormattedMessage id="dashboard.delDashboard"/><Tooltip title={<FormattedMessage id="dashboard.delDashboardTips"/>}><InfoCircleOutlined /></Tooltip></label>
+                <Button  variant="destructive"  onClick={() => setDelConfirmVisible(true)}><FormattedMessage id="common.delete"/></Button>
+                </div>
             </div>
+
+            <ConfirmModal
+                isOpen={delConfirmVisible}
+                title= {localeData[currentLang]["dashboard.delDashboard"]}
+                body={localeData[currentLang]["dashboard.delDashboardConfirm"]}
+                confirmText={<FormattedMessage id="common.delete"/>}
+                onConfirm={() => deleteDashboard()}
+                onDismiss={() => setDelConfirmVisible(false)}
+            />
         </>
     )
 }

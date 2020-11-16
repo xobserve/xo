@@ -69,7 +69,8 @@ const error = {
     customHttpHeaderEmpty: "Custom http header's kv cannot be empty",
     notifierNotExist: 'Target notifier does not exist in backend',
     buildNotifierError: 'Build notifier error, please check logs in backend',
-
+    cantDeleteReserverDash: 'This dashboard is reserved, cant be deleted',
+    
     // datasource
     sameNameExist: "A datasource with the same name already exist",
 }

@@ -57,6 +57,10 @@ const dashboard = {
 
     viewMode: 'Cycle view mode',
     fullscreenTips: 'Press ESC to exit Fullscreen mode',
+
+    delDashboard: 'Delete dashboard',
+    delDashboardTips: 'This operation cant be reverted, do it carefully',
+    delDashboardConfirm: 'Delete operation cant be reverted, are you sure you want to delete this dashboard?',
 }
 
 export default dashboard

@@ -138,6 +138,7 @@ func (s *Server) Start() error {
 			dashboardR := authR.Group("/api/dashboard")
 			{
 				dashboardR.POST("/save", dashboard.SaveDashboard)
+				dashboardR.DELETE("/id/:id", dashboard.DelDashboard)
 				dashboardR.GET("/uid/:uid", dashboard.GetDashboard)
 				dashboardR.POST("/import", dashboard.ImportDashboard)
 				dashboardR.GET("/tags", dashboard.GetAllTags)
