@@ -11,6 +11,7 @@ import { CoreEvents, FolderDTO } from 'src/types';
 import globalEvents from 'src/views/App/globalEvents';
 import { getUrlParams } from 'src/core/library/utils/url';
 import { useIntl, FormattedMessage } from 'react-intl';
+import tracker from 'src/core/services/changeTracker';
 
 const { Option } = Select
 
@@ -87,10 +88,6 @@ const SaveDashboard = (props: Props) => {
     const submitDashboard = async (val) => {
        const res = await saveDashboard(val.title,val.folderId,props.dashboard,props.originDashbord)
 
-        if (!dashboard.id) {
-            history.push(res.data.url)
-        }
-
         globalEvents.showMessage(() => notification['success']({
             message: "Success",
             description: intl.formatMessage({ id: "dashboard.saved" }),
@@ -98,6 +95,11 @@ const SaveDashboard = (props: Props) => {
         }))
 
         props.onSave()
+
+        if (!dashboard.id) {
+            tracker.unregister()
+            history.push(res.data.url)
+        }
     }
 
     const defaultValues = {

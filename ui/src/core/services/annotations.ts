@@ -41,15 +41,17 @@ export class AnnotationsSrv {
     }
 
     async getAnnotations() {
-        const range = getTimeSrv().timeRange()
-        const res = await getBackendSrv().get('/api/annotations',{dashboardId: this.dashboard.id,from: range.from.valueOf(),to: range.to.valueOf()})
-        const results = res.data
-        for (const item of results) {
-            item.isRegion = item.timeEnd !== 0 && item.time !== item.timeEnd
-            item.source = {"builtIn":1,"datasource":"-- Grafana --","enable":true,"hide":true,"iconColor":"rgba(0, 211, 255, 1)","name":"Annotations & Alerts","type":"dashboard"}
+        if (this.dashboard.id) {
+            const range = getTimeSrv().timeRange()
+            const res = await getBackendSrv().get('/api/annotations',{dashboardId: this.dashboard.id,from: range.from.valueOf(),to: range.to.valueOf()})
+            const results = res.data
+            for (const item of results) {
+                item.isRegion = item.timeEnd !== 0 && item.time !== item.timeEnd
+                item.source = {"builtIn":1,"datasource":"-- Grafana --","enable":true,"hide":true,"iconColor":"rgba(0, 211, 255, 1)","name":"Annotations & Alerts","type":"dashboard"}
+            }
+        
+            this.annotations = results
         }
-    
-        this.annotations = results
     }
 
     getAlertStates(options: any) {

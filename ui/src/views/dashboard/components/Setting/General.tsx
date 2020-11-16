@@ -4,6 +4,7 @@ import { Tooltip, Divider,notification} from 'antd';
 import { InfoCircleOutlined } from '@ant-design/icons';
 import { DynamicTagList, LegacyForms, Button, ConfirmModal, getBackendSrv, getHistory, currentLang,localeData} from 'src/packages/datav-core/src';
 import { FormattedMessage } from 'react-intl';
+import tracker from 'src/core/services/changeTracker';
 const {LegacySwitch} = LegacyForms
 
 interface Props {
@@ -39,6 +40,7 @@ const GeneralSetting = (props: Props) => {
             duration: 3
           });
         
+        tracker.unregister()
         getHistory().push('/')
     }
 

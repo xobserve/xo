@@ -43,7 +43,6 @@ function HeaderWrapper(props: Props) {
     const [dashboard, setDashboard] = useState(null)
     const [showGlobalVar, setShowGlobalVar] = useState(false)
     appEvents.on('open-dashboard-save-modal', (dash) => {
-        console.log(dash[0].auto)
         setDashboard(dash)
     })
 
@@ -62,11 +61,6 @@ function HeaderWrapper(props: Props) {
         SetInSave(false)
     });
     
-    // const globalVars = []
-    // const localVars = []
-    // props.variables.forEach(v => {
-    //     v.global ?  globalVars.push(v) : localVars.push(v) 
-    // })
 
     const onSaveDashboard = () => {
         appEvents.emit('dashboard-auto-save',dashboard[0].autoSave)
