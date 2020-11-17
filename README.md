@@ -10,7 +10,7 @@ Datav is forked from **@grafana**, but changed a lot, e.g :
 - 100% free. Forever and always
 
 ## Status
-v0.8.0 has been released, official website and docs will be released before 2020-11-13 .
+v0.8.0 has been released, official website and docs will be released before 2020-11-25 .
 
 ## Key Features 
 - **Plugins** Performance,Extensible,Beautiful,Configurable
