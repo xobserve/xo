@@ -104,7 +104,8 @@ function HeaderWrapper(props: Props) {
     }
 
     return (
-        <Header className="datav-header">
+        <>
+        {props.dashboard.showHeader && <Header className="datav-header">
             <div className='datav-header-inner'>
                 <div>
                     <div className="ub-mr1">{backButtonComponent}</div>
@@ -130,8 +131,8 @@ function HeaderWrapper(props: Props) {
                     <TimePickerWrapper />
                 </div>
             </div>
-
-            {dashboard && <SaveDashboard dashboard={dashboard[0]} originDashbord={dashboard[1]} onSave={onSaveDashboard} onCancel={onCancelSaveDash}/>}
+        </Header>}
+        {dashboard && <SaveDashboard dashboard={dashboard[0]} originDashbord={dashboard[1]} onSave={onSaveDashboard} onCancel={onCancelSaveDash}/>}
             
             {/* <Modal
                 title={null}
@@ -154,7 +155,7 @@ function HeaderWrapper(props: Props) {
                         : localeData[props.locale]['dashboard.changeNotSave']
             }
             />
-        </Header>
+        </>
     )
 }
 

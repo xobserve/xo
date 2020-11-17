@@ -35,6 +35,8 @@ const lightVars = {
 const darkComponentBG = '#141619'
 const darkItemHoverBg = '#202226'
 const lightItemHoverBg  = '#f1f5f9'
+const lightBodyBg = 'rgb(247, 250, 252)' // #f7f8fa
+
 const darkBodyBg = '#101010'
 const newDarkVars = {...darkVars, ...customVariables,
   '@body-background':darkBodyBg,'@component-background':darkComponentBG,'@border-color-base':darkItemHoverBg,
@@ -42,7 +44,7 @@ const newDarkVars = {...darkVars, ...customVariables,
    '@warning-color': '#eb7b18','@success-color':'#74e680','@table-header-bg':darkBodyBg,
   '@table-row-hover-bg': darkItemHoverBg,'@popover-background':darkComponentBG,'@disabled-color':'#262628'}
 const newLightVars = {...lightVars, ...customVariables,
-  '@warning-color': '#ff7941','@success-color':'#3eb15b','@body-background':'#f7f8fa','@layout-body-background':'#f7f8fa',
+  '@warning-color': '#ff7941','@success-color':'#3eb15b','@body-background':lightBodyBg,'@layout-body-background':lightBodyBg,
   '@disabled-color': "#dde4ed",
   '@item-hover-bg': lightItemHoverBg,'@table-row-hover-bg': lightItemHoverBg}
 fs.writeFileSync('./src/styles/dark.json', JSON.stringify(newDarkVars));

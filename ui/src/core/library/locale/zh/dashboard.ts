@@ -53,6 +53,7 @@ const dashboard = {
     dashVariables: '仪表盘变量',
     autoSave: '自动保存',
     autoSaveTips: '仪表盘每10秒将自动保存一次',
+    showHeader: '显示顶部菜单',
 
     viewMode: '切换显示模式',
     fullscreenTips: '按下ESC来退出全屏模式',

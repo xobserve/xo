@@ -374,7 +374,7 @@ class DashboardPage extends React.PureComponent<DashboardPageProps & RouteCompon
         return (
             <div>
                 <HeaderWrapper viewState={viewState} dashboard={dashboard} onAddPanel={this.onAddPanel} onSaveDashboard={this.saveDashboard} onUpdateUrl={this.onUpdateUrl} />
-                <div className="scroll-canvas scroll-canvas--dashboard">
+                <div className="scroll-canvas scroll-canvas--dashboard" style={{height: dashboard.showHeader === true ?  'calc(100% - 48px)' : '100%'}}>
                     <CustomScrollbar
                         autoHeightMin="100%"
                         setScrollTop={this.setScrollTop}
@@ -383,7 +383,7 @@ class DashboardPage extends React.PureComponent<DashboardPageProps & RouteCompon
                         className="custom-scrollbar--page"
                     >
                         <div className={gridWrapperClasses}>
-                            {!editPanel && config.featureToggles.newVariables && variables.length > 0 &&  <SubMenu dashboard={dashboard} />}
+                            {dashboard.showHeader && !editPanel && config.featureToggles.newVariables && variables.length > 0 &&  <SubMenu dashboard={dashboard} />}
                             <DashboardGrid
                                 alertStates={panelAlertStates}
                                 dashboard={dashboard}
@@ -426,7 +426,7 @@ function cleanDashboardFromIgnoredChanges(dashData: any) {
 
 
         // ignore panel legend sort
-        if (panel.options.legend) {
+        if (panel.options?.legend) {
             delete panel.options.legend.sort;
             delete panel.options.legend.sortDesc;
         }

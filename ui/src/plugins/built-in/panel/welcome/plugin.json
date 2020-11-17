@@ -1,0 +1,18 @@
+{
+  "type": "panel",
+  "name": "Welcome",
+  "id": "welcome",
+
+  "skipDataQuery": true,
+
+  "info": {
+    "author": {
+      "name": "Datav",
+      "url": "https://datav.dev"
+    },
+    "logos": {
+      "small": "welcome-logo.svg",
+      "large": "welcome-logo.svg"
+    }
+  }
+}

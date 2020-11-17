@@ -16,6 +16,7 @@ const GeneralSetting = (props: Props) => {
     const [enableGlobal,setEnableGlobal] = useState(props.dashboard.enableGlobalVariable)
     const [autoSave,setAutoSave] = useState(props.dashboard.autoSave)
     const [delConfirmVisible,setDelConfirmVisible] = useState(false)
+    const [showHeader,setShowHeader] = useState(props.dashboard.showHeader)
 
     const onChangeEditable = (e) => {
         setEditable(e.currentTarget.checked)
@@ -30,6 +31,11 @@ const GeneralSetting = (props: Props) => {
     const onChangeAutoSave = (e) => {
         setAutoSave(e.currentTarget.checked)
         props.dashboard.autoSave = e.currentTarget.checked
+    }
+
+    const onChangeShowHeader = (e) => {
+        setShowHeader(e.currentTarget.checked)
+        props.dashboard.showHeader = e.currentTarget.checked
     }
 
     const deleteDashboard = async () => {
@@ -75,7 +81,11 @@ const GeneralSetting = (props: Props) => {
                     <label className="gf-form-label width-9"><FormattedMessage id="dashboard.autoSave"/><Tooltip title={<FormattedMessage id="dashboard.autoSaveTips"/>}><InfoCircleOutlined /></Tooltip></label>
                     <LegacySwitch label="" checked={autoSave} onChange={onChangeAutoSave}/>
                 </div>
-                
+                <div className="gf-form">
+                    <label className="gf-form-label width-9"><FormattedMessage id="dashboard.showHeader"/></label>
+                    <LegacySwitch label="" checked={showHeader} onChange={onChangeShowHeader}/>
+                </div>
+
                 <Divider />
 
                 <div><FormattedMessage id="common.dangerousSection"/></div>
