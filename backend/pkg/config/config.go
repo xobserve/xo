@@ -22,6 +22,7 @@ type Config struct {
 		BackendPort     string `yaml:"backend_port"`
 		UIPort          string `yaml:"ui_port"`
 		UIRootURL       string `yaml:"ui_root_url"`
+		DocsPort        string `yaml:"docs_port"`
 		StaticRootPath  string `yaml:"static_root_path"`
 		RootUrlRedirect string `yaml:"root_url_redirect"`
 	}

@@ -1,13 +1,12 @@
 import React, { FC } from 'react';
 import { css } from 'emotion';
-import { stylesFactory, useTheme, DatavTheme, getBootConfig, Icon } from 'src/packages/datav-core/src';
-import lightBackground from './img/background_light.svg';
+import { stylesFactory, useTheme, DatavTheme, getBootConfig, Icon, getHistory } from 'src/packages/datav-core/src';
 import { Row, Col } from 'antd';
-import { Link } from 'react-router-dom';
 import { FormattedMessage } from 'react-intl';
 
 export const WelcomeBanner: FC = () => {
   const styles = getStyles(useTheme());
+
 
   return (
     <>
@@ -15,7 +14,7 @@ export const WelcomeBanner: FC = () => {
         <Row justify="center">
           <Col span="22">
             <Row justify="space-between" align="middle" className={styles.nav}>
-              <div className={styles.navLogo}><img src="/img/logo.png" height="20" width="20" className="ub-mr1" />{getBootConfig().common.appName}</div>
+              <div className={styles.navLogo}><img src="/img/logo.png" height="20" width="20" className="ub-mr1 inline" />{getBootConfig().common.appName}</div>
               <div>
                 <Icon name="github" size="xl" className="ub-mt1 pointer" onClick={() => window.open('https://github.com/apm-ai/datav')} />
               </div>
@@ -30,7 +29,7 @@ export const WelcomeBanner: FC = () => {
             </h1>
             <div className={styles.subTitle}>{getBootConfig().common.appName}<FormattedMessage id="welcomePanel.subTitle"/></div>
             <div className="ub-mt4">
-              <Link to="/docs" className={styles.getStarted}><FormattedMessage id="welcomePanel.viewDocs"/></Link>
+              <a href={`http://${document.domain}${getBootConfig().common.docsPort}/docs/installation`} target="_blank" className={styles.getStarted}><FormattedMessage id="welcomePanel.viewDocs"/></a>
             </div>
           </Col>
           <Col span="15">

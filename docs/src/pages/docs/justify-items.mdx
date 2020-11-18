@@ -1,0 +1,119 @@
+---
+title: "Justify Items"
+description: "Utilities for controlling how grid items are aligned along their inline axis."
+featureVersion: "v1.8.0+"
+---
+
+import plugin from 'tailwindcss/lib/plugins/justifyItems'
+import { Variants } from '@/components/Variants'
+import { Disabling } from '@/components/Disabling'
+import { ResponsiveCodeSample } from '@/components/ResponsiveCodeSample'
+
+export const classes = { plugin }
+
+## Auto
+
+Use `justify-items-auto` to justify grid items automatically on their inline axis:
+
+```html
+<template preview>
+  <div class="grid grid-cols-3 gap-4 justify-items-auto h-48">
+    <div class="text-gray-700 bg-gray-400 flex justify-center items-center px-4 py-2">1</div>
+    <div class="text-gray-700 bg-gray-400 flex justify-center items-center px-4 py-2">2</div>
+    <div class="text-gray-700 bg-gray-400 flex justify-center items-center px-4 py-2">3</div>
+    <div class="text-gray-700 bg-gray-400 flex justify-center items-center px-4 py-2">4</div>
+    <div class="text-gray-700 bg-gray-400 flex justify-center items-center px-4 py-2">5</div>
+    <div class="text-gray-700 bg-gray-400 flex justify-center items-center px-4 py-2">6</div>
+  </div>
+</template>
+```
+
+## Start
+
+Use `justify-items-start` to justify grid items against the start of their inline axis:
+
+```html
+<template preview>
+  <div class="grid grid-cols-3 gap-4 justify-items-start h-48">
+    <div class="text-gray-700 bg-gray-400 flex justify-center items-center px-4 py-2">1</div>
+    <div class="text-gray-700 bg-gray-400 flex justify-center items-center px-4 py-2">2</div>
+    <div class="text-gray-700 bg-gray-400 flex justify-center items-center px-4 py-2">3</div>
+    <div class="text-gray-700 bg-gray-400 flex justify-center items-center px-4 py-2">4</div>
+    <div class="text-gray-700 bg-gray-400 flex justify-center items-center px-4 py-2">5</div>
+    <div class="text-gray-700 bg-gray-400 flex justify-center items-center px-4 py-2">6</div>
+  </div>
+</template>
+```
+
+## End
+
+Use `justify-items-end` to justify grid items against the end of their inline axis:
+
+```html
+<template preview>
+  <div class="grid grid-cols-3 gap-4 justify-items-end h-48">
+      <div class="text-gray-700 bg-gray-400 flex justify-center items-center px-4 py-2">1</div>
+      <div class="text-gray-700 bg-gray-400 flex justify-center items-center px-4 py-2">2</div>
+      <div class="text-gray-700 bg-gray-400 flex justify-center items-center px-4 py-2">3</div>
+      <div class="text-gray-700 bg-gray-400 flex justify-center items-center px-4 py-2">4</div>
+      <div class="text-gray-700 bg-gray-400 flex justify-center items-center px-4 py-2">5</div>
+      <div class="text-gray-700 bg-gray-400 flex justify-center items-center px-4 py-2">6</div>
+    </div>
+</template>
+```
+
+## Center
+
+Use `justify-items-center` to justify grid items along their inline axis:
+
+```html
+<template preview>
+  <div class="grid grid-cols-3 gap-4 justify-items-center h-48">
+    <div class="text-gray-700 bg-gray-400 flex justify-center items-center px-4 py-2">1</div>
+    <div class="text-gray-700 bg-gray-400 flex justify-center items-center px-4 py-2">2</div>
+    <div class="text-gray-700 bg-gray-400 flex justify-center items-center px-4 py-2">3</div>
+    <div class="text-gray-700 bg-gray-400 flex justify-center items-center px-4 py-2">4</div>
+    <div class="text-gray-700 bg-gray-400 flex justify-center items-center px-4 py-2">5</div>
+    <div class="text-gray-700 bg-gray-400 flex justify-center items-center px-4 py-2">6</div>
+  </div>
+</template>
+```
+
+## Stretch
+
+Use `justify-items-stretch` to stretch items along their inline axis:
+
+```html
+<template preview>
+  <div class="grid grid-cols-3 gap-4 justify-items-stretch h-48">
+    <div class="text-gray-700 bg-gray-400 flex justify-center items-center px-4 py-2">1</div>
+    <div class="text-gray-700 bg-gray-400 flex justify-center items-center px-4 py-2">2</div>
+    <div class="text-gray-700 bg-gray-400 flex justify-center items-center px-4 py-2">3</div>
+    <div class="text-gray-700 bg-gray-400 flex justify-center items-center px-4 py-2">4</div>
+    <div class="text-gray-700 bg-gray-400 flex justify-center items-center px-4 py-2">5</div>
+    <div class="text-gray-700 bg-gray-400 flex justify-center items-center px-4 py-2">6</div>
+  </div>
+</template>
+```
+
+## Responsive
+
+To justify flex items at a specific breakpoint, add a `{screen}:` prefix to any existing utility class. For example, use `md:justify-items-center` to apply the `justify-items-center` utility at only medium screen sizes and above.
+
+```html
+<div class="justify-items-start md:justify-items-center">
+  <!-- ... -->
+</div>
+```
+
+For more information about Tailwind's responsive design features, check out the [Responsive Design](/docs/responsive-design) documentation.
+
+## Customizing
+
+### Responsive and pseudo-class variants
+
+<Variants plugin="justifyItems" name="justify-items" />
+
+### Disabling
+
+<Disabling plugin="justifyItems" name="justify-items" />

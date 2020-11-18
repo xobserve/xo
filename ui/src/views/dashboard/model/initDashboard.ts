@@ -1,7 +1,7 @@
 import { DashboardModel } from "./DashboardModel";
 import { dashboardMock } from './mocks'
 import { DashboardDTO, ThunkResult, GlobalVariableUid } from "src/types";
-import { getBackendSrv, config, getTemplateSrv } from "src/packages/datav-core/src";
+import { getBackendSrv, config, getTemplateSrv, currentLang } from "src/packages/datav-core/src";
 import { store } from 'src/store/store'
 import { initDashboardTemplating, processVariables, completeDashboardTemplating } from "src/views/variables/state/actions";
 import { dashboardInitCompleted, dashboardInitError } from "src/store/reducers/dashboard";
@@ -9,6 +9,7 @@ import { annotationsSrv } from 'src/core/services/annotations';
 import { message } from "antd";
 import localStore from "src/core/library/utils/localStore";
 import { getKeybindingSrv } from "src/core/services/keybinding";
+import { Langs } from "src/core/library/locale/types";
 
 
 export function initDashboard(uid: string | undefined, initOrigin?: any): ThunkResult<void> {
@@ -123,7 +124,7 @@ function getNewDashboardModelData(): DashboardDTO {
       folderId: 0,
     },
     dashboard: {
-      title: 'New dashboard',
+      title: currentLang === Langs.Chinese?  '新建仪表盘' : 'New dashboard',
       panels: [
         {
           id: 1,
@@ -136,6 +137,7 @@ function getNewDashboardModelData(): DashboardDTO {
         },
       ],
       enableGlobalVariable: true,
+      showHeader: true,
       templating: {
       }
     },

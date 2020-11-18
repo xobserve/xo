@@ -10,6 +10,7 @@ export interface CommonConfig {
   version: string
   enableCommunity: boolean
   rootUrlRedirect: string
+  docsPort: string
 }
 
 export interface PanelConfig {
