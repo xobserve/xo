@@ -9,6 +9,7 @@ const datasource = {
     testFailed: '数据源测试失败',   
     delete: '删除数据源',
     deleteTitle: '你确认要删除该数据源吗?',
+    emptyDatasources: '还没创建任何数据源，请先创建',
 
     // datasources
     nameTooltip: '后续对数据源的选择都按照名称来。一旦默认的数据源设置后，那么新创建的图表默认都将使用该数据源',

@@ -24,7 +24,7 @@ type CommonSettings struct {
 	Version         string `json:"version"`
 	EnableCommunity bool   `json:"enableCommunity"`
 	RootUrlRedirect string `json:"rootUrlRedirect"`
-	DocsPort        string `json:"docsPort"`
+	DocsAddr        string `json:"docsAddr"`
 }
 
 type bootConfig struct {
@@ -103,7 +103,7 @@ func QueryBootConfig(c *gin.Context) {
 			Version:         config.Data.Common.Version,
 			EnableCommunity: config.Data.Common.EnableCommunity,
 			RootUrlRedirect: config.Data.Server.RootUrlRedirect,
-			DocsPort:        config.Data.Server.DocsPort,
+			DocsAddr:        config.Data.Server.DocsAddr,
 		},
 		DataSourceMetas: plugins.DataSources,
 		DataSources:     datasources,

@@ -4,7 +4,7 @@ import React, { PureComponent } from 'react';
 import { DataSourcePicker } from 'src/views/components/Pickers/DataSourcePicker';
 import { QueryOptions } from './QueryOptions'
 import { CustomScrollbar, FormField as Field } from 'src/packages/datav-core/src';
-import {Row,Button} from 'antd'
+import {Row,Button,notification} from 'antd'
 import { QueryEditorRows } from './QueryEditorRows';
 // Services
 import { getDatasourceSrv } from 'src/core/services/datasource';
@@ -77,6 +77,11 @@ export class QueriesTab extends PureComponent<Props, State> {
       const ds = await getDatasourceSrv().get(panel.datasource);
       this.setState({ dataSource: ds });
     } catch (error) {
+      notification['error']({
+        message: "Error",
+        description: error.message,
+        duration: 5
+      });
       const ds = await getDatasourceSrv().get();
       const dataSourceItem = this.findCurrentDataSource(ds.name);
       this.setState({ dataSource: ds, dataSourceError: error?.message, dataSourceItem });

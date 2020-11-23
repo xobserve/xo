@@ -19,6 +19,7 @@ export class KeybindingSrv {
     this.bind('mod+s', this.saveDashboard);
     this.bind('o s', this.openSerach);
     this.bind('esc', this.exit);
+    this.bind('d s',this.gotoDashboardSetting)
   }
 
   bind(keyArg: string | string[], fn: () => void) {
@@ -68,6 +69,11 @@ export class KeybindingSrv {
   goForward() {
     getHistory().goForward()
   }
+
+  gotoDashboardSetting() {
+    getLocationSrv().update({ query: { settingView: 'general' }, partial: true })
+  }
+
   exit() {
     const search = getUrlParams()
     if (search.settingView) {
@@ -117,13 +123,6 @@ export class KeybindingSrv {
     this.bind('i', () => {
       if (dashboard.meta.focusPanelId) {
         getLocationSrv().update({ query: { inspect: dashboard.meta.focusPanelId }, partial: true })
-      }
-    });
-
-    // open settings
-    this.bind('s', () => {
-      if (dashboard.meta.focusPanelId) {
-        getLocationSrv().update({ query: { settingView: 'general' }, partial: true })
       }
     });
   }

@@ -1,0 +1,23 @@
+---
+title: 添加仪表盘
+---
+
+import { Heading } from '@/components/Heading'
+import { List, ListItemBad } from '@/components/List'
+import Link from 'next/link'
+import stats from '@/utils/stats'
+import { TipCompat } from '@/components/Tip'
+
+## 添加仪表盘
+在[创建数据源](create-datasource)后，我们开始创建第一个仪表盘, 以下分成两个部分介绍：基于prometheus的数据源和基于static data的数据源
+
+<TipCompat>注意：只有的Team管理员才能创建仪表盘，还可以为仪表盘设置丰富的<a href="/docs-cn/dashboard-permissions" className="underline">权限控制</a></TipCompat>
+
+1. 点击左侧菜单栏的 ** + -> 仪表盘 **
+2. 此时，能看到我们的仪表盘已经展示出来，最顶部是仪表板的顶部导航，包含了仪表盘的常用设置项，鼠标悬浮上去，可以看到每个项的简单描述
+3. 点击 ** +添加新图表 **
+
+## 查看已创建的数据源
+
+1. 点击左侧菜单栏的 **配置管理 -> 数据源 **
+2. 点击你想要查看的数据源卡片

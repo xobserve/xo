@@ -1,6 +1,7 @@
-import { DataSourceService, DataSourceApi, DataSourceInstanceSettings, getDataSourceService, getBootConfig, getDefaultDatasourceName, DataSourceSelectItem, getTemplateSrv } from 'src/packages/datav-core/src'
+import { DataSourceService, DataSourceApi, DataSourceInstanceSettings, getDataSourceService, getBootConfig, getDefaultDatasourceName, DataSourceSelectItem, getTemplateSrv, localeData, currentLang } from 'src/packages/datav-core/src'
 import { importDataSourcePlugin } from 'src/plugins/loader'
 import {DataSourceVariableModel} from 'src/types'
+import _ from 'lodash'
 
 export class DatasourceSrv implements DataSourceService {
     // cache for datasource plugins
@@ -22,7 +23,7 @@ export class DatasourceSrv implements DataSourceService {
         if (!name) {
             name = getDefaultDatasourceName()
         }
-
+        
         if (name === 'default') {
             name = getDefaultDatasourceName()
         }
@@ -40,10 +41,20 @@ export class DatasourceSrv implements DataSourceService {
             return this.datasources[name]
         }
 
+        if (!name) {
+            const names = _.keys(getBootConfig().datasources)
+            if (names.length === 0) {
+                return Promise.reject({ message: localeData[currentLang]['datasource.emptyDatasources'] })
+            } 
 
+            name = names[0]
+        }
+
+
+        
         const dsConfig = getBootConfig().datasources[name]
         if (!dsConfig) {
-            return Promise.reject({ message: `Datasource named ${name} was not found in bootConfig` })
+            return Promise.reject({ message: `Datasource named ${name} was  not found in bootConfig` })
         }
 
         try {

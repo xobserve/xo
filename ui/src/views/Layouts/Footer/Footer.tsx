@@ -1,8 +1,9 @@
 import React, { FC } from 'react';
 
-import { Icon, IconName,config, getBootConfig} from 'src/packages/datav-core/src';
+import { Icon, IconName,config, getBootConfig, currentLang} from 'src/packages/datav-core/src';
 import './Footer.less'
 import { FormattedMessage } from 'react-intl';
+import { Langs } from 'src/core/library/locale/types';
 
 export interface FooterLink {
   id: number;
@@ -19,7 +20,7 @@ export let getFooterLinks = (): FooterLink[] => {
         id:1,
         title: <FormattedMessage id="common.documentation"/>,
         icon: 'document-info',
-        url: 'https://datav.dev/docs',
+        url: currentLang === Langs.Chinese ? `${getBootConfig().common.docsAddr}/docs-cn/installation`:`${getBootConfig().common.docsAddr}/docs/installation`,
         target: '_blank',
       },
       {

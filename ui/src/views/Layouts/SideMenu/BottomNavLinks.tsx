@@ -215,7 +215,7 @@ export const BottomNavLinks = (props:Props) => {
               <Shortcut value={['e']} desc={<Message id="keybinding.e"/>}></Shortcut>
               <Shortcut value={['v']} desc={<Message id="keybinding.v"/>}></Shortcut>
               <Shortcut value={['i']} desc={<Message id="keybinding.i"/>}></Shortcut>
-              <Shortcut value={['s']} desc={<Message id="keybinding.s"/>}></Shortcut>
+              <Shortcut value={['d s']} desc={<Message id="keybinding.s"/>}></Shortcut>
             </Col>
           </Row>
         </Modal>

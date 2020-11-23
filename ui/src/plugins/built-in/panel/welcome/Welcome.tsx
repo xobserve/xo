@@ -29,7 +29,7 @@ export const WelcomeBanner: FC = () => {
             </h1>
             <div className={styles.subTitle}>{getBootConfig().common.appName}<FormattedMessage id="welcomePanel.subTitle"/></div>
             <div className="ub-mt4">
-              <a href={`http://${document.domain}${getBootConfig().common.docsPort}/docs/installation`} target="_blank" className={styles.getStarted}><FormattedMessage id="welcomePanel.viewDocs"/></a>
+              <a href={`${getBootConfig().common.docsAddr}/docs/installation`} target="_blank" className={styles.getStarted}><FormattedMessage id="welcomePanel.viewDocs"/></a>
             </div>
           </Col>
           <Col span="15">
