@@ -116,7 +116,6 @@ export class QueriesTab extends PureComponent<Props, State> {
     }
 
     const dataSource = await getDatasourceSrv().get(newDsItem.value);
-
     panel.datasource = newDsItem.value;
 
     this.setState(
@@ -240,7 +239,7 @@ export class QueriesTab extends PureComponent<Props, State> {
   renderQueries() {
     const { panel, dashboard } = this.props;
     const { dataSourceItem, data } = this.state;
-
+    
     return (
       <div>
         <QueryEditorRows

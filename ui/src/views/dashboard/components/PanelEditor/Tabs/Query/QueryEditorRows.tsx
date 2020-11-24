@@ -80,10 +80,9 @@ export class QueryEditorRows extends PureComponent<Props> {
 
   render() {
     const { props } = this;
-    console.log(props.queries)
     return props.queries.map((query, index) => (
       <QueryEditorRow
-        dataSourceValue={query.datasource&&props.datasource.value}
+        dataSourceValue={query.datasource || props.datasource?.value}
         key={query.refId}
         panel={props.panel}
         dashboard={props.dashboard}
