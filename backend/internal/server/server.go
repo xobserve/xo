@@ -220,7 +220,7 @@ func (s *Server) Start() error {
 				adminR.POST("/team/new", admin.NewTeam)
 			}
 
-			alertingR := authR.Group("/api/alerting", AdminAuth())
+			alertingR := authR.Group("/api/alerting")
 			{
 				alertingR.POST("/notification/:teamId", alerting.AddNotification)
 				alertingR.PUT("/notification/:teamId", alerting.UpdateNotification)

@@ -33,10 +33,16 @@ export function DocumentationLayout(props) {
   let nav;
   if (lang === 'zh_CN') {
     nav = {
-      'Getting started': [
+      '新手引导': [
+        pages['tutorial'],
         pages['installation'],
+        pages['lang-theme'],
         pages['create-datasource'],
         pages['create-dashboard'],
+        pages['search-dashboard'],
+        pages['create-folder'],
+        pages['create-team'],
+        pages['create-user'],
       ],
     }
   } else {

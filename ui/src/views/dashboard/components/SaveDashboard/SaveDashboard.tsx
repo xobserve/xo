@@ -22,16 +22,16 @@ interface Props {
     originDashbord: DashboardModel
 }
 
-export async function saveDashboard(title,folderId,dashboard,originDashboard) {
+export async function saveDashboard(title, folderId, dashboard, originDashboard) {
     if (!dashboard.meta.canSave) {
         notification['error']({
             message: "Error",
-            description: localeData[currentLang]["info.noPermission"],
+            description: localeData[currentLang]["error.noPermission"],
             duration: 5
         });
-        return
+        return null
     }
-    
+
     appEvents.emit(CoreEvents.dashboardSaving)
     dashboard.title = title
     dashboard.meta.folderId = folderId
@@ -54,11 +54,11 @@ export async function saveDashboard(title,folderId,dashboard,originDashboard) {
         }
     }
 
-    const res = await getBackendSrv().saveDashboard(clone, { folderId: folderId, fromTeam: fromTeam, alertChanged: alertChanged})
+    const res = await getBackendSrv().saveDashboard(clone, { folderId: folderId, fromTeam: fromTeam, alertChanged: alertChanged })
 
     setTimeout(() => {
         appEvents.emit(CoreEvents.dashboardSaved, dashboard)
-    },2000)
+    }, 2000)
 
 
     return res
@@ -86,15 +86,18 @@ const SaveDashboard = (props: Props) => {
 
 
     const submitDashboard = async (val) => {
-       const res = await saveDashboard(val.title,val.folderId,props.dashboard,props.originDashbord)
+        const res = await saveDashboard(val.title, val.folderId, props.dashboard, props.originDashbord)
 
-        globalEvents.showMessage(() => notification['success']({
-            message: "Success",
-            description: intl.formatMessage({ id: "dashboard.saved" }),
-            duration: 5
-        }))
+        if (res) {
+            globalEvents.showMessage(() => notification['success']({
+                message: "Success",
+                description: intl.formatMessage({ id: "dashboard.saved" }),
+                duration: 5
+            }))
 
-        props.onSave()
+            props.onSave()
+        }
+
 
         if (!dashboard.id) {
             tracker.unregister()

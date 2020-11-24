@@ -1,5 +1,5 @@
 ---
-title: 添加仪表盘
+title: 仪表盘
 ---
 
 import { Heading } from '@/components/Heading'
@@ -9,15 +9,41 @@ import stats from '@/utils/stats'
 import { TipCompat } from '@/components/Tip'
 
 ## 添加仪表盘
-在[创建数据源](create-datasource)后，我们开始创建第一个仪表盘, 以下分成两个部分介绍：基于prometheus的数据源和基于static data的数据源
+在[新建数据源](create-datasource)后，我们开始创建第一个仪表盘, 以下分成两个部分介绍：基于prometheus的数据源和基于static data的数据源
 
 <TipCompat>注意：只有的Team管理员才能创建仪表盘，还可以为仪表盘设置丰富的<a href="/docs-cn/dashboard-permissions" className="underline">权限控制</a></TipCompat>
 
-1. 点击左侧菜单栏的 ** + -> 仪表盘 **
+1. 点击左侧菜单栏的 **+ -> 仪表盘**
 2. 此时，能看到我们的仪表盘已经展示出来，最顶部是仪表板的顶部导航，包含了仪表盘的常用设置项，鼠标悬浮上去，可以看到每个项的简单描述
-3. 点击 ** +添加新图表 **
 
-## 查看已创建的数据源
+## 添加图表
+点击**+**添加新的图表,然后会进入编辑图表页面，在最右边的侧边设置中，找到可视化一栏，可以选择图表类型。
 
-1. 点击左侧菜单栏的 **配置管理 -> 数据源 **
-2. 点击你想要查看的数据源卡片
+在上一节新建数据源中，我们创建了两种类型的数据源，下面进行分别的说明
+
+### Prometheus数据源
+1. 选择 **可视化 -> Graph**
+2. 在页面左下方的**查询**面板中，选择你创建的prometheus数据源
+3. 在下方的编辑面板中，选择prometheus自身的监控指标，**A -> Metrics -> scrape -> scrape_duration_seconds**
+
+我们的测试图表已经渲染结束，如果想要深入了解，请访问[prometheus数据源](prometheus-datasource)
+
+
+### Static Data数据源
+该数据源是静态数据，主要是用于测试，因此需要我们手动录入一些数据
+1. 选择 **可视化 -> Table**， 该图表是Table表格类型
+2. 在页面左下方的**查询**面板中，选择你创建的static data数据源
+3. 先为我们的表格命个名 **A -> Name**,
+4. 创建表格的结构，定义表格列, **A -> Schema -> +Add a field**, 输入你想要的列名称,这里我们创建两列： test1,test2
+5. 添加表格行数据，**A -> Values -> + Add a row , 依次输入1,2**
+
+你现在已经能看到表格的数据了
+
+## 保存仪表盘
+1. 按ESC，点击左上角的回退，右上角的应用，回到仪表盘页面
+2. 点击右上角导航栏的顶部按钮，或者按下**Command + S **，弹出保存面板
+3. 在面板中修改你想要的仪表盘名称
+4. 在面板中选择文件夹，当前只有General文件夹，该文件夹是默认的文件夹，所有未分类的仪表盘都默认保存其中
+5. 点击提交
+
+至此，我们已经完成创建一个仪表盘，但是当我们处于其它页面时，该如何找到它呢？

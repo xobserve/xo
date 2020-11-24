@@ -1,13 +1,14 @@
 import React, { FC } from 'react';
 import { css } from 'emotion';
-import { stylesFactory, useTheme, DatavTheme, getBootConfig, Icon, getHistory } from 'src/packages/datav-core/src';
+import { stylesFactory, useTheme, DatavTheme, getBootConfig, Icon ,currentLang} from 'src/packages/datav-core/src';
 import { Row, Col } from 'antd';
 import { FormattedMessage } from 'react-intl';
+import { Langs } from 'src/core/library/locale/types';
 
 export const WelcomeBanner: FC = () => {
   const styles = getStyles(useTheme());
 
-
+  const docsUrl =  currentLang === Langs.Chinese ? `${getBootConfig().common.docsAddr}/docs-cn/tutorial`:`${getBootConfig().common.docsAddr}/docs/tutorial`
   return (
     <>
       <div className={styles.header}>
@@ -29,7 +30,7 @@ export const WelcomeBanner: FC = () => {
             </h1>
             <div className={styles.subTitle}>{getBootConfig().common.appName}<FormattedMessage id="welcomePanel.subTitle"/></div>
             <div className="ub-mt4">
-              <a href={`${getBootConfig().common.docsAddr}/docs/installation`} target="_blank" className={styles.getStarted}><FormattedMessage id="welcomePanel.viewDocs"/></a>
+              <a href={docsUrl} target="_blank" className={styles.getStarted}><FormattedMessage id="welcomePanel.viewDocs"/></a>
             </div>
           </Col>
           <Col span="15">
