@@ -130,7 +130,7 @@ func InitTables() error {
 	}
 
 	_, err = db.SQL.Exec(`INSERT INTO dashboard (id,uid,title,version,created_by,folder_id,data,created,updated) VALUES (?,?,?,?,?,?,?,?,?)`,
-		models.GlobalDashboardId, "-1", "global variables", 1, 1, -1, `{"annotations":{"list":[]},"editable":true,"id":-1,"uid":"-1","links":[],"panels":[],"schemaVersion":0,"tags":[],"templating":{"list":[]},"title":"global variables","version":0}`, now, now)
+		models.GlobalDashboardId, "-1", "global variables", 1, 1, -1, `{"annotations":{"list":[]},"editable":true,"id":-1,"uid":"-1","links":[],"panels":[],"showHeader": true,"schemaVersion":0,"tags":[],"templating":{"list":[]},"title":"global variables","version":0}`, now, now)
 	if err != nil {
 		log.RootLogger.Crit("init global variables  error", "error:", err)
 		return err

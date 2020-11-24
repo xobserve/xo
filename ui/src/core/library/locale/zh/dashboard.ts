@@ -35,6 +35,7 @@ const dashboard = {
     onTimeChange: '当时间范围变化时',
     variableRegexTooltip: '该项是可选的，你可以用正则表达式从查询结果中过滤和提取指定的内容',
     variableSortTooltip: '变量的查询结果该如何排序',
+    variableCustomValues: '值,逗号分割',
     teamPermissions: '团队权限设置',
     userPermissions: '用户权限设置',
     ownedByTeam: '所有者(团队)',
@@ -61,6 +62,8 @@ const dashboard = {
     delDashboard: '删除仪表盘',
     delDashboardTips: '该操作是不可逆的，请小心操作',
     delDashboardConfirm: '删除操作是不可逆的，你确认要删除该仪表盘吗？',
+
+    
 }
 
 export default dashboard

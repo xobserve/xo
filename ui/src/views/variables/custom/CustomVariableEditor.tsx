@@ -6,6 +6,7 @@ import { connectWithStore } from 'src/core/library/utils/connectWithReduxStore';
 import { MapDispatchToProps, MapStateToProps } from 'react-redux';
 import { StoreState } from 'src/types';
 import { changeVariableMultiValue } from '../state/actions';
+import { FormattedMessage } from 'react-intl';
 
 interface OwnProps extends VariableEditorProps<CustomVariableModel> {}
 
@@ -43,7 +44,7 @@ class CustomVariableEditorUnconnected extends PureComponent<Props> {
         <div className="gf-form-group">
           <h5 className="section-heading">Custom Options</h5>
           <div className="gf-form">
-            <span className="gf-form-label width-14">Values separated by comma</span>
+            <span className="gf-form-label width-14"><FormattedMessage id="dashboard.variableCustomValues" /></span>
             <input
               type="text"
               className="gf-form-input"

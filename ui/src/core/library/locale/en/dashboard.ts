@@ -35,6 +35,7 @@ const dashboard = {
     onTimeChange: 'On Time Range Change',
     variableRegexTooltip: 'Optional, if you want to extract part of a series name or metric node segment',
     variableSortTooltip: 'How to sort the values of this variable',
+    variableCustomValues: 'Values separated by comma',
     teamPermissions: 'Team Permissions',
     userPermissions: 'User Permissions',
     ownedByTeam: 'Owned By Team',

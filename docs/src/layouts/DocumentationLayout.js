@@ -43,6 +43,7 @@ export function DocumentationLayout(props) {
         pages['create-folder'],
         pages['create-team'],
         pages['create-user'],
+        pages['create-variables'],
       ],
     }
   } else {
