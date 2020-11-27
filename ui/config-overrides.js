@@ -46,7 +46,8 @@ const newDarkVars = {...darkVars, ...customVariables,
 const newLightVars = {...lightVars, ...customVariables,
   '@warning-color': '#ff7941','@success-color':'#3eb15b','@body-background':lightBodyBg,'@layout-body-background':lightBodyBg,
   '@disabled-color': "#dde4ed",
-  '@item-hover-bg': lightItemHoverBg,'@table-row-hover-bg': lightItemHoverBg, '@border-color-base': '#eee'}
+  '@item-hover-bg': lightItemHoverBg,'@table-row-hover-bg': lightItemHoverBg, '@border-color-base': '#eee', '@tooltip-bg': '#fff',
+  '@table-header-bg': '#fff'}
 fs.writeFileSync('./src/styles/dark.json', JSON.stringify(newDarkVars));
 fs.writeFileSync('./src/styles/light.json', JSON.stringify(newLightVars));
 
