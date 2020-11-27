@@ -5,9 +5,9 @@ import _ from 'lodash'
 /*--------define locale data here--------*/
 const enData = {
     sloganFirst: 'Visualization for',
-    sloganSecond: 'metrics, traces and logs.',
+    sloganSecond: 'metrics, traces and logs',
     viewDocs: 'View Docs',
-    subTitle: `  has powerful enterprise features while keeping its lightweight. It uses plug-ins to manage data sources and charts, well support for team and permission control.`,
+    subTitle: `  has powerful enterprise features while keeping its lightweight`,
     feature1Title: `Powerful yet easy to use`,
     feature1Desc: `Quickly and easily explore your data, using built in charts plugins or third party plugins.Multiple languages supported : Engalish, Chinese etc.`,
     feature2Title: `Integrates with modern datasources`,
