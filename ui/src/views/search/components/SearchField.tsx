@@ -28,7 +28,7 @@ const getSearchFieldStyles = (theme: DatavTheme) => ({
     outline: none;
     background-color: transparent;
     background: transparent;
-    border-bottom: 2px solid ${theme.colors.border1};
+    border-bottom: 1px solid ${theme.colors.border1};
     font-size: 20px;
     line-height: 38px;
     width: 100%;

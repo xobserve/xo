@@ -34,7 +34,7 @@ const lightVars = {
 
 const darkComponentBG = '#141619'
 const darkItemHoverBg = '#202226'
-const lightItemHoverBg  = '#f1f5f9'
+const lightItemHoverBg  = '#f9fbfc'
 const lightBodyBg = 'rgb(247, 250, 252)' // #f7f8fa
 
 const darkBodyBg = '#101010'

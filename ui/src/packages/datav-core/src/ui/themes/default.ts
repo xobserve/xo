@@ -3,10 +3,10 @@ import { DatavThemeCommons } from '../../data';
 export const commonColorsPalette = {
   // New greys palette used by next-gen form elements
   gray98: '#f7f8fa',
-  gray97: '#f1f5f9',
+  gray97: '#f9fbfc',
   gray95: '#e9edf2',
   gray90: '#dce1e6',
-  gray85: '#c7d0d9',
+  gray85: '#eee',
   gray70: '#9fa7b3',
   gray60: '#7b8087',
   gray33: '#464c54',

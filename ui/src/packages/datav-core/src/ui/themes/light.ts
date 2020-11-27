@@ -43,9 +43,9 @@ const backgrounds = {
 };
 
 const borders = {
-  border1: basicColors.gray90,
+  border1: basicColors.gray85,
   border2: basicColors.gray85,
-  border3: basicColors.gray70,
+  border3: basicColors.gray85,
 };
 
 const textColors = {
