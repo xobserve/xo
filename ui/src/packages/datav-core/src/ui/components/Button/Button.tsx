@@ -60,7 +60,8 @@ const getPropertiesForVariant = (theme: DatavTheme, variant: ButtonVariant) => {
     default:
       return {
         borderColor: theme.colors.bgBlue1,
-        background: buttonVariantStyles(theme.colors.bgBlue1, theme.colors.bgBlue2, theme.palette.white),
+        background: 'background: linear-gradient(to right,#52A0FD 0%,#00e2fa 80%,#00e2fa 100%)',
+        color: 'color: white'
       };
   }
 };
@@ -76,7 +77,7 @@ export interface StyleProps {
 export const getButtonStyles = stylesFactory((props: StyleProps) => {
   const { theme, variant } = props;
   const { padding, fontSize, height } = getPropertiesForButtonSize(props);
-  const { background, borderColor, variantStyles } = getPropertiesForVariant(theme, variant);
+  const { background, borderColor, variantStyles,color} = getPropertiesForVariant(theme, variant);
 
   return {
     button: cx(
@@ -93,10 +94,10 @@ export const getButtonStyles = stylesFactory((props: StyleProps) => {
         line-height: ${height - 2}px;
         vertical-align: middle;
         cursor: pointer;
-        border: 1px solid ${borderColor};
-        border-radius: ${theme.border.radius.sm};
+        border: none;
+        border-radius: ${theme.border.radius.md};
         ${background};
-
+        ${color};
         &[disabled],
         &:disabled {
           cursor: not-allowed;
@@ -136,16 +137,17 @@ export type ButtonProps = CommonProps & ButtonHTMLAttributes<HTMLButtonElement>;
 export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
   ({ variant, icon, children, className, ...otherProps }, ref) => {
     const theme = useTheme();
+    const v = variant || 'primary'
     const styles = getButtonStyles({
       theme,
       size: otherProps.size || 'md',
-      variant: variant || 'primary',
+      variant: v,
       hasText: children !== undefined,
       hasIcon: icon !== undefined,
     });
 
     return (
-      <button className={cx(styles.button, className)} {...otherProps} ref={ref}>
+      <button className={cx(styles.button, className,'button-' + v)} {...otherProps} ref={ref}>
         <ButtonContent icon={icon} size={otherProps.size}>
           {children}
         </ButtonContent>
@@ -160,21 +162,22 @@ type ButtonLinkProps = CommonProps & ButtonHTMLAttributes<HTMLButtonElement> & A
 export const LinkButton = React.forwardRef<HTMLAnchorElement, ButtonLinkProps>(
   ({ variant, icon, children, className, href, ...otherProps }, ref) => {
     const theme = useTheme()
+    const v = variant || 'primary'
     const styles = getButtonStyles({
       theme,
       size: otherProps.size || 'md',
-      variant: variant || 'primary',
+      variant: v,
       hasText: children !== undefined,
       hasIcon: icon !== undefined,
     });
-
+    
     const render = href ?
-      <Link to={href} className={cx(styles.button, className)} {...otherProps} ref={ref}>
+      <Link to={href} className={cx(styles.button, className,'button-' + v)} {...otherProps} ref={ref}>
         <ButtonContent icon={icon} size={otherProps.size}>
           {children}
-        </ButtonContent>
+        </ButtonContent>    
       </Link> :
-      <span className={cx(styles.button, className)} {...otherProps} ref={ref}>
+      <span className={cx(styles.button, className,'button-' + v)} {...otherProps} ref={ref}>
         <ButtonContent icon={icon} size={otherProps.size}>
           {children}
         </ButtonContent>
