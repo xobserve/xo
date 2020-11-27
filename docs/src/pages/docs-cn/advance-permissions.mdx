@@ -1,0 +1,30 @@
+---
+title: 权限管理
+---
+
+import { Heading } from '@/components/Heading'
+import { List, ListItemBad } from '@/components/List'
+import Link from 'next/link'
+import stats from '@/utils/stats'
+import { TipCompat } from '@/components/Tip'
+
+## <Heading number="1">在Github下载服务</Heading>
+访问<a href="https://github.com/apm-ai/datav/releases" target="_blank">Github</a>下载最新版本的安装包
+
+
+
+## <Heading number="2">启动服务</Heading>
+
+```bash
+## 进入到下载后的datav目录下
+cd YOUR_DATAV_PATH
+
+## 启动datav
+./datav
+```
+
+服务器已经成功启动，访问http://localhost:3003，进行登陆，然后你就能看到datav的UI页面了。
+```css
+默认用户：admin
+默认密码：admin
+```

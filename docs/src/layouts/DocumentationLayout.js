@@ -33,9 +33,11 @@ export function DocumentationLayout(props) {
   let nav;
   if (lang === 'zh_CN') {
     nav = {
-      '新手引导': [
-        pages['tutorial'],
+      '快速开始': [
         pages['installation'],
+        pages['tutorial'],
+      ],
+      '初级教程': [
         pages['lang-theme'],
         pages['create-datasource'],
         pages['create-dashboard'],
@@ -43,8 +45,17 @@ export function DocumentationLayout(props) {
         pages['create-folder'],
         pages['create-team'],
         pages['create-user'],
-        pages['create-variables'],
       ],
+      '进阶教程': [
+        pages['create-variables'],
+        pages['create-sidemenu'],
+        pages['advance-permissions'],
+        pages['alerts'],
+        pages['advance-dashboard'],
+      ],
+      '开发者教程': [
+        pages['developer-installation'],
+      ]
     }
   } else {
     nav = {

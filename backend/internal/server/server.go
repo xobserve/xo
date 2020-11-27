@@ -259,22 +259,25 @@ func (s *Server) Start() error {
 		srv.ListenAndServe()
 	}()
 
-	go func() {
-		router := mux.NewRouter()
+	if config.Data.Server.DocsPort != "" {
+		go func() {
+			router := mux.NewRouter()
 
-		spa := spaHandler{staticPath: "docs/", indexPath: "index.html"}
-		router.PathPrefix("/").Handler(spa)
+			spa := spaHandler{staticPath: "docs/", indexPath: "index.html"}
+			router.PathPrefix("/").Handler(spa)
 
-		srv := &http.Server{
-			Handler: router,
-			Addr:    config.Data.Server.DocsPort,
-			// Good practice: enforce timeouts for servers you create!
-			WriteTimeout: 15 * time.Second,
-			ReadTimeout:  15 * time.Second,
-		}
+			srv := &http.Server{
+				Handler: router,
+				Addr:    config.Data.Server.DocsPort,
+				// Good practice: enforce timeouts for servers you create!
+				WriteTimeout: 15 * time.Second,
+				ReadTimeout:  15 * time.Second,
+			}
 
-		srv.ListenAndServe()
-	}()
+			srv.ListenAndServe()
+		}()
+
+	}
 
 	return nil
 }
