@@ -23,19 +23,32 @@ v0.8.0 has been released, official website and docs will be released before 2020
 - **Custom sidemenu**  Link dashboards to sidemenu items, build your own sidemenu and websites.
 
 ## How to start(developing mode)
+### Start datav main server
 ```bash
 > git clone https://github.com/apm-ai/datav
 > cd datav
 > go build
-> ./datav init
-> ./datav generate
+> ./datav generate ##only needed for first time or new plugins been added
 > ./datav &
+```
+
+### start datav docs server
+```bash
+> cd docs
+> yarn
+> yarn dev
+```
+Access http://localhost:3000/docs-cn/installation to see the results
+
+### Start datav ui server
+```bash
 > cd ui
 > nvm use    
 > yarn install
 > yarn start
 ```
-then open http://localhost:3000, and login with admin/admin
+
+Open http://localhost:3001, then login with admin/admin
 
 ## Screenshots
 ![screenshot1](ui/public/img/screenshot1.jpg)
