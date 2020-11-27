@@ -22,7 +22,7 @@ const zhData = {
     sloganFirst: '可视化你的数据',
     sloganSecond: 'metrics, traces and logs.',
     viewDocs: '查看文档',
-    subTitle: `在保持轻量的同时又具备强大的企业级特性，使用插件来管理数据源和图表，内置完善的团队和权限控制，为用户带来的强大的功能特性和极致的产品体验`,
+    subTitle: `在保持轻量的同时又具备强大的企业级特性，为用户带来的强大的功能特性和极致的产品体验`,
     feature1Title: `强大且简单`,
     feature1Desc: `使用数据将变得前所未有的简单，你可以使用内置的插件，也可以使用三方插件来浏览数据，同时我们支持多种语言，例如英文、中文等`,
     feature2Title: `无缝集成现代化数据源`,

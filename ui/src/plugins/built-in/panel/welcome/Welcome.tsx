@@ -36,7 +36,7 @@ export const WelcomeBanner: FC = () => {
         border-radius: 8px;
       `,
       subTitle: css`
-        font-size: 17px;
+        font-size: 19px;
         margin-top: 15px;
       `,
       navLogo: css`
@@ -82,7 +82,7 @@ export const WelcomeBanner: FC = () => {
           </Col>
         </Row>
         <Row justify="center" align="middle" className="ub-mt4">
-          <Col span="6" style={{ paddingTop: '5px' }}>
+          <Col span="6">
             <h1 style={{ fontSize: '40px',color:titleColor,lineHeight: 1.2}}>
               <FormattedMessage id="welcomePanel.sloganFirst"/>
                <span className="display-block color-primary">metrics, traces and logs</span>
