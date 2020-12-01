@@ -199,6 +199,7 @@ class MenuMange extends React.Component<Props & IntlProps, State> {
     }
 
     isMenuValid(v, menuItems) {
+        console.log(v)
         if (v.title == undefined || v.title.trim() == '') {
             notification['error']({
                 message: "Error",

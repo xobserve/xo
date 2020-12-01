@@ -16,7 +16,7 @@ export const WelcomeBanner: FC = () => {
      
       `url("data:image/svg+xml,%3Csvg viewBox='0 0 1440 190' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Crect width='1440' height='190' /%3E%3Cpath d='M1440 95.4893C790 245.489 650 -54.5107 0 95.4893V0H1440V95.4893Z' /%3E%3Cg stroke-width='1'%3E%3Cg stroke='%23EDF2F7'%3E%3Cpath d='M0 95.4893C650 -54.5107 790 245.489 1440 95.4893'/%3E%3Cpath d='M0 95.4893C650 15.4893 790 175.489 1440 95.4893'/%3E%3Cpath d='M0 95.4893C650 -214.511 790 405.489 1440 95.4893'/%3E%3C/g%3E%3Cpath d='M0 95.4893C650 -134.511 790 325.489 1440 95.4893' stroke='%234FD1C5'/%3E%3C/g%3E%3C/svg%3E") `
       :
-      `url(https://www.metabase.com//images/homepage-bridge@2x.png)`
+      `url(/img/homepage-bridge@2x.png)`
       // `url("data:image/svg+xml,%3Csvg viewBox='0 0 1440 190' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Crect width='1440' height='190' fill='white'/%3E%3Cpath d='M1440 95.4893C790 245.489 650 -54.5107 0 95.4893V0H1440V95.4893Z' fill='%23F7FAFC'/%3E%3Cg stroke-width='2'%3E%3Cg stroke='%23EDF2F7'%3E%3Cpath d='M0 95.4893C650 -54.5107 790 245.489 1440 95.4893'/%3E%3Cpath d='M0 95.4893C650 15.4893 790 175.489 1440 95.4893'/%3E%3Cpath d='M0 95.4893C650 -214.511 790 405.489 1440 95.4893'/%3E%3C/g%3E%3Cpath d='M0 95.4893C650 -134.511 790 325.489 1440 95.4893' stroke='%234FD1C5'/%3E%3C/g%3E%3C/svg%3E")`
     
       return {
@@ -93,7 +93,7 @@ export const WelcomeBanner: FC = () => {
             </div>
           </Col>
           <Col span="15">
-            <div className="display-block ub-ml4" style={{ backgroundImage: 'url(https://www.metabase.com/images/homepage-hero.png)', height: '562px', backgroundSize: 'cover' }}></div>
+            <div className="display-block ub-ml4" style={{ backgroundImage: 'url(/img/homepage-hero.png)', height: '562px', backgroundSize: 'cover' }}></div>
           </Col>
         </Row>
       </div>

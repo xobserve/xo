@@ -30,7 +30,7 @@ const AddMenuItem = (props:Props) =>{
                                 name="id"
                                 label={<FormattedMessage id="dashboard.uid"/>}
                             >   
-                                <Tooltip title={<FormattedMessage id="team.uidTooltip" />}><Input placeholder="uid..."/></Tooltip>
+                                <Input placeholder="uid..."/>
                             </Form.Item>
                         </Col>
                     </Row>
@@ -51,7 +51,7 @@ const AddMenuItem = (props:Props) =>{
                                 name="icon"
                                 label={<FormattedMessage id="common.iconName" />}
                             >
-                                    <Tooltip title={<FormattedMessage id="team.iconTooltip" />}><Input placeholder="e.g : users-alt" /></Tooltip>
+                                <Input placeholder="e.g : users-alt" />
                             </Form.Item> 
                         </Col>
                     </Row>
@@ -70,7 +70,7 @@ const AddMenuItem = (props:Props) =>{
                                 name="url"
                                 label={<FormattedMessage id="team.menuSubUrl" />}
                             >
-                                    <Tooltip title={<FormattedMessage id="team.menuUrlTooltip" />}><Input placeholder="e.g  /app" /></Tooltip>
+                                    <Input placeholder="e.g  /app" />
                             </Form.Item> 
                             <Button htmlType="submit" type="primary" className="ub-mt4" ghost block><FormattedMessage id="common.submit" /></Button>
                         </Col>

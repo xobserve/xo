@@ -56,7 +56,7 @@ const ManageMenuItem = (props:Props) =>{
                                 name="id"
                                 label={<FormattedMessage id="dashboard.uid"/>}
                             >
-                                <Input placeholder="press key 'f' to open search board  and copy it" />
+                                <Input placeholder="press key 'o s' to open search board  and copy it" />
                             </Form.Item>
                         </Col>
                     </Row>
