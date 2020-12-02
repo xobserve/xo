@@ -67,7 +67,7 @@ const getStyles = stylesFactory((theme: DatavTheme) => {
 
       @media only screen and (min-width: ${theme.breakpoints.md}) {
         left: 60px;
-        z-index: ${theme.zIndex.navbarFixed + 1};
+        z-index: 2000;
       }
     `,
     container: css`
