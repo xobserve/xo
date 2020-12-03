@@ -125,7 +125,7 @@ export const initRoutes = (store: Store<StoreState>) => {
             icon: 'bell',
             subTitle: localeData[currentLang]['common.alertingSubTitle'],
             showPosition: MenuPosition.Bottom,
-            redirectTo: null,
+            redirectTo: '/alerting/rules',
             exact: true,
             children: [
                 { 

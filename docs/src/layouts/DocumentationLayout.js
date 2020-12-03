@@ -53,7 +53,7 @@ export function DocumentationLayout(props) {
         pages['alerts'],
       ],
       '插件指南': [
-        pages['plugins'],
+        pages['plugins-overview'],
       ]
     }
   } else {
@@ -78,7 +78,7 @@ export function DocumentationLayout(props) {
         pages['alerts'],
       ],
       'Plugins': [
-        pages['plugins'],
+        pages['plugins-overview'],
       ]
     }
   }
