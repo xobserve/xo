@@ -51,10 +51,9 @@ export function DocumentationLayout(props) {
         pages['create-sidemenu'],
         pages['advance-permissions'],
         pages['alerts'],
-        pages['advance-dashboard'],
       ],
-      '开发者教程': [
-        pages['developer-installation'],
+      '插件指南': [
+        pages['plugins'],
       ]
     }
   } else {
@@ -77,10 +76,9 @@ export function DocumentationLayout(props) {
         pages['create-sidemenu'],
         pages['advance-permissions'],
         pages['alerts'],
-        pages['advance-dashboard'],
       ],
-      'Developer guide': [
-        pages['developer-installation'],
+      'Plugins': [
+        pages['plugins'],
       ]
     }
   }
