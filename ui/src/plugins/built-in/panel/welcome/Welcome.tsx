@@ -64,7 +64,7 @@ export const WelcomeBanner: FC = () => {
   const styles = getStyles(useTheme());
 
 
-  const docsUrl =  currentLang === Langs.Chinese ? `${getBootConfig().common.docsAddr}/docs-cn/tutorial`:`${getBootConfig().common.docsAddr}/docs/tutorial`
+  const docsUrl =  currentLang === Langs.Chinese ? `${getBootConfig().common.docsAddr}/docs-cn`:`${getBootConfig().common.docsAddr}/docs`
   return (
     <>
       <div className={styles.header}>

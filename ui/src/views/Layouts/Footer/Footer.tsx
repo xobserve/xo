@@ -20,7 +20,7 @@ export let getFooterLinks = (): FooterLink[] => {
         id:1,
         title: <FormattedMessage id="common.documentation"/>,
         icon: 'document-info',
-        url: currentLang === Langs.Chinese ? `${getBootConfig().common.docsAddr}/docs-cn/tutorial`:`${getBootConfig().common.docsAddr}/docs/tutorial`,
+        url: currentLang === Langs.Chinese ? `${getBootConfig().common.docsAddr}/docs-cn`:`${getBootConfig().common.docsAddr}/docs`,
         target: '_blank',
       },
       {
