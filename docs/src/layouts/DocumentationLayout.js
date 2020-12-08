@@ -56,7 +56,26 @@ export function DocumentationLayout(props) {
     nav = {
       'Getting started': [
         pages['installation'],
+        pages['tutorial'],
       ],
+      'Beginner tutorial': [
+        pages['lang-theme'],
+        pages['create-datasource'],
+        pages['create-dashboard'],
+        pages['search-dashboard'],
+        pages['create-folder'],
+        pages['create-team'],
+        pages['create-user'],
+      ],
+      'Advanced tutorial': [
+        pages['create-variables'],
+        pages['create-sidemenu'],
+        pages['advance-permissions'],
+        pages['alerts'],
+      ],
+      'Plugins': [
+        pages['plugins-overview'],
+      ]
     }
   }
 

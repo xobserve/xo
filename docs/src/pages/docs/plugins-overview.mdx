@@ -1,0 +1,59 @@
+---
+title: Overview
+---
+
+import { Heading } from '@/components/Heading'
+import { List, ListItemBad } from '@/components/List'
+import Link from 'next/link'
+import stats from '@/utils/stats'
+import { TipCompat } from '@/components/Tip'
+
+Datav的插件分为两种：`Panel图表`和`Datasource数据源`，前者负责展现图表UI给用户看，后者负责读取图表所需要的数据，一个图表的成功展现，两个插件缺一不可。
+
+在你启动Datav时，就自带了默认的插件，涵盖了主要的图表展示形式,以及支持了监控领域常用的Prometheus、Jaeger插件，同时支持Static Data静态数据插件，顾名思义，该
+插件需要你手动输入数据进行模拟，常用于测试场景。
+
+## 插件列表
+选择侧边菜单的**配置管理 ->插件**,就可以看到插件列表，可以看到插件根据来源被划分成两类：
+- 内置插件，由Datav开发
+- 外部插件，往往由三方开发者开发，当我们安装了三方插件后，就会显示在此分类下
+
+点击插件卡片，可以查看插件的详细描述和使用信息。
+
+## 插件引入
+Datav插件和Grafana极其相似，Grafana的插件只要修改下包引用的位置，就可以无缝切换到Datav。但是在插件的引入方式上，两者有极大的不同。
+
+Grafana是通过`systemjs`的方式从外部引入插件，而Datav是把插件放到源码对应的目录下，然后再进行一次编译，完成引入。
+
+<TipCompat>两种方式都有各自的优劣势，Grafana的优点是简单，无需编译，缺点是受制于systemjs，没有原生的高效和稳定，容易出现奇怪的bug；Datav的优缺点和Grafana恰恰相反，也就是我们选择了
+牺牲一定的使用便捷性，换来更好的插件开发环境和运行的高效稳定</TipCompat>
+
+### 如何引入三方插件
+这里用官方的starter-panel插件进行举例
+<TipCompat>在开始之前你需要安装go、nodejs、yarn</TipCompat>
+
+#### <Heading number="1">下载Datav源码</Heading>
+```bash
+git clone https://github.com/apm-ai/datav
+cd datav/ui/src/plugins/external ## 进入外部插件目录
+```
+
+#### <Heading number="2">下载Demo插件源码</Heading>
+```bash
+git clone https://github.com/apm-ai/datav-starter-panel
+cd DATAV_ROOT_DIR  ## 进入datav根目录 
+```
+
+#### <Heading number="3">重新编译Datav</Heading>
+
+**macos下**
+```bash
+./scripts/build macos
+```
+
+**linux下**
+```bash
+./scripts/build linux
+```
+
+编译后的文件在datav/out下，使用他们替换线上服务的文件即可, **在替换时，要注意线上的数据文件夹(默认是data)，不要误删了**

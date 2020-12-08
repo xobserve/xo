@@ -1,11 +1,12 @@
 @screen md {
-  .image {
-    height: 9rem;
+    .image {
+      height: 9rem;
+    }
   }
-}
-
-@screen xl {
-  .image {
-    height: 11.25rem;
+  
+  @screen xl {
+    .image {
+      height: 11.25rem;
+    }
   }
-}
+  

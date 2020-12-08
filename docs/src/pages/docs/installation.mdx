@@ -1,338 +1,53 @@
 ---
 title: Installation
-description: Learn how to get Tailwind CSS up and running in your project.
 ---
 
 import { Heading } from '@/components/Heading'
 import { List, ListItemBad } from '@/components/List'
-import { IntegrationGuides } from '@/components/IntegrationGuides'
 import Link from 'next/link'
 import stats from '@/utils/stats'
+import { TipCompat } from '@/components/Tip'
+
+## 下载并启动
+### <Heading number="1">在Github下载服务</Heading>
+访问<a href="https://github.com/apm-ai/datav/releases" target="_blank">Github</a>下载最新版本的安装包
 
 
 
-## Integration guides
+### <Heading number="2">启动服务</Heading>
 
-Installing Tailwind CSS can be a slightly different process depending on what other frameworks/tools you're using, so we've put together a bunch of guides that cover popular setups.
+```bash
+## 进入到下载后的datav目录下
+cd YOUR_DATAV_PATH
 
-<IntegrationGuides/>
-
-Don't see your favorite tool in the list? We're always working on new guides, but in the mean time you can follow the instructions for [installing Tailwind CSS as a PostCSS plugin](#installing-tailwind-css-as-a-post-css-plugin) instead to get set up in no time.
-
----
-
-
-
-## Installing Tailwind CSS as a PostCSS plugin
-
-For most real-world projects, we recommend installing Tailwind as a PostCSS plugin. Most modern frameworks use PostCSS under the hood already, and there's a good chance you've used or are currently using other PostCSS plugins like [autoprefixer](https://github.com/postcss/autoprefixer).
-
-If you've never heard of PostCSS or are wondering how it's different from tools like Sass, read our guide on [using PostCSS as your preprocessor](/docs/using-with-preprocessors#using-post-css-as-your-preprocessor) for an introduction.
-
-If this is a bit over your head and you'd like to try Tailwind without configuring PostCSS, read our instructions on [using Tailwind without PostCSS](#using-tailwind-without-post-css) instead.
-
-### Install Tailwind via npm
-
-For most projects (and to take advantage of Tailwind's customization features), you'll want to install Tailwind and its peer-dependencies via npm.
-
-```shell
-npm install tailwindcss postcss autoprefixer
+### 启动datav
+./datav
 ```
 
-Since Tailwind [does not automatically add vendor prefixes](/docs/browser-support#vendor-prefixes) to the CSS it generates, we recommend installing [autoprefixer](https://github.com/postcss/autoprefixer) to handle this for you like we've shown in the snippet above.
-
-If you're integrating Tailwind with a tool that relies on an older version of PostCSS, you may see an error like this:
-
-```shell
-Error: PostCSS plugin tailwindcss requires PostCSS 8.
-```
-
-In this case, you should [install the PostCSS 7 compatibility build](#post-css-7-compatibility-build) instead.
-
-### Add Tailwind as a PostCSS plugin
-
-Add `tailwindcss` and `autoprefixer` to your PostCSS configuration. Most of the time this is a `postcss.config.js` file at the root of your project, but it could also be a `.postcssrc` file, or `postcss` key in your `package.json` file.
-
-```js
-// postcss.config.js
-module.exports = {
-  plugins: {
-    tailwindcss: {},
-    autoprefixer: {},
-  }
-}
-```
-
-If you aren't sure where PostCSS plugins are configured for the tools you're using, you'll want to refer to the documentation for those tools to learn where this should go. A search for "configure postcss {my tool}" will get you the answer pretty fast, too.
-
-If you're using any other PostCSS plugins, you should read our documentation on [using PostCSS as your preprocessor](/docs/using-with-preprocessors) for more details about the best way to order them with Tailwind.
-
-### Create your configuration file
-
-If you'd like to customize your Tailwind installation, generate a config file for your project using the Tailwind CLI utility included when you install the `tailwindcss` npm package:
-
-```shell
-npx tailwindcss init
-```
-
-This will create a minimal `tailwind.config.js` file at the root of your project:
-
-```js
-// tailwind.config.js
-module.exports = {
-  purge: [],
-  darkMode: false, // or 'media' or 'class'
-  theme: {
-    extend: {},
-  },
-  variants: {},
-  plugins: [],
-}
-```
-
-Learn more about configuring Tailwind in the [configuration documentation](/docs/configuration).
-
-### Include Tailwind in your CSS
-
-Create a CSS file if you don't already have one, and use the `@tailwind` directive to inject Tailwind's `base`, `components`, and `utilities` styles:
-
+服务器已经成功启动，访问http://localhost:3003，进行登陆，然后你就能看到datav的UI页面了。
 ```css
-/* ./your-css-folder/styles.css */
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+默认用户：admin
+默认密码：admin
 ```
 
-Tailwind will swap these directives out at build-time with all of the styles it generates based on your configured design system.
 
-If you're using `postcss-import` (or a tool that uses it under the hood, such as [Webpacker](https://github.com/rails/webpacker) for Rails), use our imports instead of the `@tailwind` directive to avoid issues when importing any of your own additional files:
+## 开发模式启动
+如果你想对Datav进行二次开发，需要使用源码来启动。
 
-```css
-@import "tailwindcss/base";
-@import "tailwindcss/components";
-@import "tailwindcss/utilities";
+### <Heading number="1">启动后端服务</Heading>
+```bash
+> git clone https://github.com/apm-ai/datav
+> cd datav
+> go build
+> ./datav generate ##只在初次启动或者安装了新插件后需要此步骤
+> ./datav &
 ```
 
-If you're working in a JavaScript framework like React or Vue that supports directly importing CSS files into your JS, you can also skip creating a CSS file altogether and import `tailwindcss/tailwind.css` instead which has all of these directives already in place:
-
-```js
-// app.js
-import "tailwindcss/tailwind.css"
-```
-
-### Building your CSS
-
-How you actually build your project will depend on the tools that you're using. Your framework may include a command like `npm run dev` to start a development server that compiles your CSS in the background, you may be running `webpack` yourself, or maybe you're using `postcss-cli` and running a command like `postcss styles.css -o compiled.css`.
-
-If you're already familiar with PostCSS you probably know what you need to do, if not refer to the documentation for the tool you are using.
-
-When building for production, be sure to configure the `purge` option to remove any unused classes for the smallest file size:
-
-```diff-js
-  // tailwind.config.js
-  module.exports = {
-+   purge: [
-+     './src/**/*.html',
-+     './src/**/*.js',
-+   ],
-    darkMode: false, // or 'media' or 'class'
-    theme: {
-      extend: {},
-    },
-    variants: {},
-    plugins: [],
-  }
-```
-
-Read our separate guide on [optimizing for production](/docs/optimizing-for-production) to learn more about tree-shaking unused styles for best performance.
-
-If you're integrating Tailwind with a tool that relies on an older version of PostCSS, you may see an error like this when trying to build your CSS:
-
-```shell
-Error: PostCSS plugin tailwindcss requires PostCSS 8.
-```
-
-In this case, you should [switch to our PostCSS 7 compatibility build](#post-css-7-compatibility-build) instead.
-
----
-
-## Using Tailwind without PostCSS
-
-For simple projects or just giving Tailwind a spin, you can use the Tailwind CLI tool to generate your CSS without configuring PostCSS or even installing Tailwind as a dependency if you don't want to.
-
-Use `npx` which is a tool that is automatically installed alongside `npm` to generate a fully compiled Tailwind CSS file:
-
-```shell
-npx tailwindcss-cli@latest build -o tailwind.css
-```
-
-This will create a file called `tailwind.css` generated based on Tailwind's [default configuration](https://unpkg.com/browse/tailwindcss@^2/stubs/defaultConfig.stub.js), and automatically add any necessary vendor prefixes using [autoprefixer](https://github.com/postcss/autoprefixer).
-
-Now you can pull this file into your HTML just like any other stylesheet:
-
-```html
-<!doctype html>
-<html>
-<head>
-  <!-- ... -->
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <link href="/tailwind.css" rel="stylesheet">
-</head>
-<body>
-  <!-- ... -->
-</body>
-</html>
-```
-
-### Using a custom CSS file
-
-If you'd like to process any custom CSS alongside the default styles Tailwind generates, create a CSS file wherever you normally would and use the `@tailwind` directive to include Tailwind's `base`, `components`, and `utilities` styles:
-
-```css
-/* ./src/tailwind.css */
-@tailwind base;
-@tailwind components;
-
-.btn {
-  @apply px-4 py-2 bg-blue-600 text-white rounded;
-}
-
-@tailwind utilities;
-```
-
-Then include the path to that file when building your CSS with `npx tailwindcss build`:
-
-```shell
-npx tailwindcss-cli@latest build ./src/tailwind.css -o ./dist/tailwind.css
-```
-
-Read about [adding base styles](/docs/adding-base-styles), [extracting components](/docs/extracting-components), and [adding new utilities](/docs/adding-new-utilities) to learn more about adding custom CSS on top of Tailwind.
-
-
-### Customizing your configuration
-
-If you'd like to customize what Tailwind generates, create a `tailwind.config.js` file using the Tailwind CLI tool:
-
-```shell
-npx tailwindcss-cli@latest init
-```
-
-This will create a minimal `tailwind.config.js` file at the root of your project:
-
-```js
-// tailwind.config.js
-module.exports = {
-  purge: [],
-  darkMode: false, // or 'media' or 'class'
-  theme: {
-    extend: {},
-  },
-  variants: {},
-  plugins: [],
-}
-```
-
-This file will automatically be read when building your CSS with `npx tailwindcss build`:
-
-```shell
-npx tailwindcss-cli@latest build ./src/tailwind.css -o ./dist/tailwind.css
-```
-
-If you'd like to keep your config file in a different location or give it a different name, pass the config file path using the `-c` option when building your CSS:
-
-```shell
-npx tailwindcss-cli@latest build ./src/tailwind.css -c ./.config/tailwind.config.js -o ./dist/tailwind.css
-```
-
-Learn more about configuring Tailwind in the [configuration documentation](/docs/configuration).
-
-### Building for production
-
-When building for production, set `NODE_ENV=production` on the command line when building your CSS:
-
-```shell
-NODE_ENV=production npx tailwindcss-cli@latest build ./src/tailwind.css -o ./dist/tailwind.css
-```
-
-This will make sure Tailwind removes any unused CSS and minifies the CSS file for best performance. Read our separate guide on [optimizing for production](/docs/optimizing-for-production) to learn more.
-
-
----
-
-## Using Tailwind via CDN
-
-Before using the CDN build, please note that many of the features that make Tailwind CSS great are not available without incorporating Tailwind into your build process.
-
-<List>
-  <ListItemBad>You can't customize Tailwind's default theme</ListItemBad>
-  <ListItemBad>You can't use any <a href="/docs/functions-and-directives">directives</a> like <code>@apply</code>, <code>@variants</code>, etc.</ListItemBad>
-  <ListItemBad>You can't enable additional variants like <a href="/docs/hover-focus-and-other-states#group-focus"><code>group-focus</code></a></ListItemBad>
-  <ListItemBad>You can't install third-party plugins</ListItemBad>
-  <ListItemBad>You can't tree-shake unused styles</ListItemBad>
-</List>
-
-To get the most out of Tailwind, you really should [install it as a PostCSS plugin](#installing-tailwind-as-a-post-css-plugin).
-
-To pull in Tailwind for quick demos or just giving the framework a spin, grab the latest default configuration build via CDN:
-
-```html
-<link href="https://unpkg.com/tailwindcss@^2/dist/tailwind.min.css" rel="stylesheet">
-```
-
-<p>
-  Note that while the CDN build is large <em>({stats.default.brotlified} compressed, {stats.default.minified} raw)</em>, <strong>it's not representative of the sizes you see when including Tailwind as part of your build process</strong>.
-</p>
-
-Sites that follow our [best practices](/docs/optimizing-for-production) are almost always under 10kb compressed.
-
----
-
-## HTML starter template
-
-For Tailwind's styles to work as expected, you'll want to use the HTML5 doctype and include the responsive viewport meta tag to properly handle responsive styles on all devices.
-
-```html
-<!doctype html>
-<html>
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <link href="/path/to/tailwind.css" rel="stylesheet">
-  <!-- ... -->
-</head>
-<body>
-  <!-- ... -->
-</body>
-</html>
-```
-
-Many front-end frameworks like Next.js, vue-cli and others do all this for you behind the scenes automatically, so depending on what you're building you might not need to set this up.
-
----
-
-## PostCSS 7 compatibility build
-
-As of v2.0, Tailwind CSS depends on PostCSS 8. Because PostCSS 8 is only a few months old, many other tools in the ecosystem haven't updated yet, which means you might see an error like this in your terminal after installing Tailwind and trying to compile your CSS:
-
-```shell
-Error: PostCSS plugin tailwindcss requires PostCSS 8.
-```
-
-To help bridge the gap until everyone has updated, we also publish a PostCSS 7 compatibility build under the `compat` channel on npm.
-
-If you run into the error mentioned above, uninstall Tailwind and re-install using the compatibility build instead:
-
-```shell
-npm uninstall tailwindcss postcss autoprefixer
-npm install tailwindcss@npm:@tailwindcss/postcss7-compat postcss@^7 autoprefixer@^9
-```
-
-The compatibility build is identical to the main build in every way, so you aren't missing out on any features or anything like that.
-
-Once the rest of your tools have added support for PostCSS 8, you can move off of the compatibility build by re-installing Tailwind and its peer-dependencies using the `latest` tag:
-
-```shell
-npm uninstall tailwindcss @tailwindcss/postcss7-compat
-npm install tailwindcss@latest postcss@latest autoprefixer@latest
+### <Heading number="2">启动UI服务</Heading>
+```bash
+```bash
+> cd ui
+> nvm use    
+> yarn install
+> yarn start
 ```

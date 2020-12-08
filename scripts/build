@@ -44,12 +44,3 @@ cd ..
 mv ui/node_modules .
 cp -r ui out/
 mv node_modules ui/
-
-
-
-## build docs
-cd docs
-yarn export
-mv out docs
-mv docs ../out 
-cd ..

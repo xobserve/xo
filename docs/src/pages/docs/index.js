@@ -167,7 +167,7 @@ export default function DocsLandingPage() {
             <Widont>{isChinese ? '使用官方插件或者第三方插件来构建好看的图表' : "Build beautiful dashboards with official or third-party plugins"}</Widont>
           </p>
           <a
-            href="https://datav.dev/plugins"
+            href="/plugins"
             className="flex-none bg-white hover:bg-gray-100 transition-colors duration-200 text-gray-900 font-semibold rounded-lg py-3 px-4"
           >
             {isChinese ? '浏览插件' : "Browse plugins"}
