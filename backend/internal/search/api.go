@@ -35,6 +35,7 @@ func Search(c *gin.Context) {
 	query := strings.ToLower(strings.TrimSpace(c.Query("query")))
 
 	tags := c.QueryArray("tag")
+	teams := c.QueryArray("teams")
 
 	dashIds := c.QueryArray("dashboardIds")
 	if len(dashIds) > 0 {
@@ -42,6 +43,22 @@ func Search(c *gin.Context) {
 		res := make(SearchHitList, 0)
 		dashes := dashboard.QueryDashboardsByIds(dashIds)
 		for _, dash := range dashes {
+			// filter teams
+			if len(teams) > 0 {
+				exist := false
+				owner := strconv.FormatInt(dash.OwnedBy, 10)
+				for _, teamId := range teams {
+					if teamId == owner {
+						exist = true
+						break
+					}
+				}
+
+				if !exist {
+					continue
+				}
+			}
+
 			dtags := dash.Data.Get("tags").MustStringArray()
 			if !filterTags(dtags, tags) {
 				continue
@@ -82,6 +99,22 @@ func Search(c *gin.Context) {
 			// folders and dashboard
 			fs := folders.QueryAll()
 			for _, f := range fs {
+				// filter teams
+				if len(teams) > 0 {
+					exist := false
+					owner := strconv.FormatInt(f.OwnedBy, 10)
+					for _, teamId := range teams {
+						if teamId == owner {
+							exist = true
+							break
+						}
+					}
+
+					if !exist {
+						continue
+					}
+				}
+
 				if query != "" {
 					if !strings.Contains(strings.ToLower(f.Title), query) {
 						continue
@@ -102,6 +135,22 @@ func Search(c *gin.Context) {
 			}
 		}
 		for _, dash := range cache.Dashboards {
+			// filter teams
+			if len(teams) > 0 {
+				exist := false
+				owner := strconv.FormatInt(dash.OwnedBy, 10)
+				for _, teamId := range teams {
+					if teamId == owner {
+						exist = true
+						break
+					}
+				}
+
+				if !exist {
+					continue
+				}
+			}
+
 			if c.Query("folderIds") != "" {
 				if dash.FolderId != folderIds {
 					continue
@@ -155,6 +204,21 @@ func Search(c *gin.Context) {
 		// get folders and the dashboard of general folder
 		fs := folders.QueryAll()
 		for _, f := range fs {
+			// filter teams
+			if len(teams) > 0 {
+				exist := false
+				owner := strconv.FormatInt(f.OwnedBy, 10)
+				for _, teamId := range teams {
+					if teamId == owner {
+						exist = true
+						break
+					}
+				}
+
+				if !exist {
+					continue
+				}
+			}
 			f.Type = TypeFolder
 			f.Tags = make([]string, 0)
 		}
@@ -179,6 +243,22 @@ func Search(c *gin.Context) {
 		}
 
 		for _, dash := range cache.Dashboards {
+			// filter teams
+			if len(teams) > 0 {
+				exist := false
+				owner := strconv.FormatInt(dash.OwnedBy, 10)
+				for _, teamId := range teams {
+					if teamId == owner {
+						exist = true
+						break
+					}
+				}
+
+				if !exist {
+					continue
+				}
+			}
+
 			if dash.FolderId != folderIds {
 				continue
 			}
@@ -222,6 +302,22 @@ func Search(c *gin.Context) {
 		// get all dashboards
 		res := make(SearchHitList, 0)
 		for _, dash := range cache.Dashboards {
+			// filter teams
+			if len(teams) > 0 {
+				exist := false
+				owner := strconv.FormatInt(dash.OwnedBy, 10)
+				for _, teamId := range teams {
+					if teamId == owner {
+						exist = true
+						break
+					}
+				}
+
+				if !exist {
+					continue
+				}
+			}
+
 			if c.Query("folderIds") != "" {
 				if dash.FolderId != folderIds {
 					continue
@@ -279,6 +375,22 @@ func Search(c *gin.Context) {
 
 		res := make(SearchHitList, 0)
 		for _, dash := range dashes {
+			// filter teams
+			if len(teams) > 0 {
+				exist := false
+				owner := strconv.FormatInt(dash.OwnedBy, 10)
+				for _, teamId := range teams {
+					if teamId == owner {
+						exist = true
+						break
+					}
+				}
+
+				if !exist {
+					continue
+				}
+			}
+
 			if query != "" {
 				if !strings.Contains(strings.ToLower(dash.Title), query) {
 					continue
