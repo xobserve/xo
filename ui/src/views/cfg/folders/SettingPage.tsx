@@ -143,7 +143,7 @@ export class FolderSettingPage extends PureComponent<Props, State> {
                                 </div>
                                 <div className="gf-form-button-row">
                                     <Button variant="secondary"  type="submit"> <FormattedMessage id="common.update"/></Button>
-                                    <Button variant="destructive"  onClick={() => this.setState({...this.state, confirmVisible:true})}><FormattedMessage id="common.delete"/></Button>
+                                    <Button variant="destructive" type="button" onClick={() => this.setState({...this.state, confirmVisible:true})}><FormattedMessage id="common.delete"/></Button>
                                 </div>
                             </form>
                         </div>
