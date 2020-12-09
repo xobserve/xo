@@ -34,6 +34,12 @@ func (p *PluginManager) Generate() error {
 		return errutil.Wrapf(err, "failed to scan core plugin directory '%s'", plugDir)
 	}
 
+	// delete old public plugins dir
+	cmd := exec.Command("bash", "-c", "rm -rf ui/public/plugins")
+	if _, err := cmd.CombinedOutput(); err != nil {
+		logger.Error("delete old public plugins dir error", "error", err)
+	}
+
 	for _, panel := range Panels {
 		panel.generate()
 	}
