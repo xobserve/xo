@@ -539,23 +539,25 @@ export function getBarGradient(props: Props, maxSize: number): string {
     }
   } else {
     const thresholds = field.thresholds!;
-
-    for (let i = 0; i < thresholds.steps.length; i++) {
-      const threshold = thresholds.steps[i];
-      const color = getColorFromHexRgbOrName(threshold.color,currentTheme);
-      const valuePercent = getValuePercent(threshold.value, minValue, maxValue);
-      const pos = valuePercent * maxSize;
-      const offset = Math.round(pos - (pos - lastpos) / 2);
-
-      if (gradient === '') {
-        gradient = `linear-gradient(${cssDirection}, ${color}, ${color}`;
-      } else if (value.numeric < threshold.value) {
-        break;
-      } else {
-        lastpos = pos;
-        gradient += ` ${offset}px, ${color}`;
+    if (thresholds) {
+      for (let i = 0; i < thresholds.steps.length; i++) {
+        const threshold = thresholds.steps[i];
+        const color = getColorFromHexRgbOrName(threshold.color,currentTheme);
+        const valuePercent = getValuePercent(threshold.value, minValue, maxValue);
+        const pos = valuePercent * maxSize;
+        const offset = Math.round(pos - (pos - lastpos) / 2);
+  
+        if (gradient === '') {
+          gradient = `linear-gradient(${cssDirection}, ${color}, ${color}`;
+        } else if (value.numeric < threshold.value) {
+          break;
+        } else {
+          lastpos = pos;
+          gradient += ` ${offset}px, ${color}`;
+        }
       }
     }
+
   }
 
   return gradient + ')';

@@ -60,7 +60,7 @@ class PreProcessor {
 	}
 
 	_mergeGraphData(data: GraphDataElement[]): GraphDataElement[] {
-		const groupedData = values(groupBy(data, element => element.source + '<--->' + element.target));
+		const groupedData = values(groupBy(data, element => element?.source + '<--->' + element?.target));
 
 		const mergedData = map(groupedData, group => {
 			return reduce(group, (result, next) => {

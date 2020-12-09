@@ -24,7 +24,14 @@ const fallbackDefaultExports = {
   'src/pages/course/**/*': ['@/layouts/VideoLayout', 'VideoLayout'],
 }
 
+
 module.exports = withBundleAnalyzer({
+  //这里的配置既可以服务端获取到，也可以在浏览器端获取到
+  //  import getConfig from 'next/config'
+  // const {appName} = getConfig().publicRuntimeConfig
+  publicRuntimeConfig: {
+    appName: 'Datav'
+  },
   pageExtensions: ['js', 'jsx', 'mdx'],
   experimental: {
     modern: true,

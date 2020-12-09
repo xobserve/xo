@@ -47,6 +47,7 @@ export function DocumentationLayout(props) {
         pages['create-sidemenu'],
         pages['advance-permissions'],
         pages['alerts'],
+        pages['panel-interactive'],
       ],
       '插件指南': [
         pages['plugins-overview'],
@@ -72,6 +73,7 @@ export function DocumentationLayout(props) {
         pages['create-sidemenu'],
         pages['advance-permissions'],
         pages['alerts'],
+        pages['panel-interactive'],
       ],
       'Plugins': [
         pages['plugins-overview'],
