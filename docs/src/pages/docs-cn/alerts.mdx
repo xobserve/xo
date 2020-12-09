@@ -44,9 +44,9 @@ import { TipCompat } from '@/components/Tip'
 <TipCompat>Grafana的告警粒度是图表级别，就算图表有1000个曲线，也只有一个曲线可以告警，因此在多曲线的时候，grafana的告警会变得极其不好用。
 与之相比，Datav的告警粒度是图表中的每条曲线</TipCompat> 
 点击WITH LABELS AND VALUES，可以根据标签对图表中的曲线进行过滤，默认是_Default，表示图表中的所有曲线都使用该条件。
-例如有以下图表: <img class="block mx-auto sm:mx-0 sm:flex-shrink-0 h-96" src="/img/docs/alerts-1.jpg" alt="Woman's Face" />
+例如有以下图表: <img class="block mx-auto sm:mx-0 sm:flex-shrink-0 h-96" src="/img/docs/alerts-1.jpg" alt="Image" />
 现在，我们想为标签instance=10.77.0.130:8199这条曲线设置告警阈值`0.2`,为其它曲线设置告警阈值`0.01`，可以进行如下设置：
-<img class="block mx-auto sm:mx-0 sm:flex-shrink-0 h-96" src="/img/docs/alerts-2.jpg" alt="Woman's Face" />
+<img class="block mx-auto sm:mx-0 sm:flex-shrink-0 h-96" src="/img/docs/alerts-2.jpg" alt="Image" />
 
 - 推送通道：`正常通道`就是之前我们创建的告警通道，对所有曲线都有效，而`设置特例`可以针对曲线级别进行单独设置，让某条曲线推送到特例的通道中。
 - 消息内容: 在告警内容中进行补充，你也可以添加KV对，作为标签来进行搜索
