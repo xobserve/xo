@@ -10,6 +10,7 @@ const datasource = {
     delete: 'Delete data source',
     deleteTitle: 'Are you sure you want to delete this data source?',
     emptyDatasources: 'No datasources been found, please create a datasource first', 
+    nameEmpty: 'Datasource name cant be empty',
     // datasources
     nameTooltip: 'The name is used when you select the data source in panels. The Default data source is ' +
     'preselected in new panels.',

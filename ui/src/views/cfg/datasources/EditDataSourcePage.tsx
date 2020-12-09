@@ -156,6 +156,14 @@ export class EditDataSourcePage extends PureComponent<Props, State> {
     }
 
     async onFinish() {
+        if (_.isEmpty(this.state.dataSource.name)) {
+            notification['error']({
+                message: "Error",
+                description: localeData[currentLang]['datasource.nameEmpty'],
+                duration: 5
+            })
+            return 
+        }
         // save options to backend
         if (this.state.mode === DatasourceMode.New) {
             const res = await getBackendSrv().post('/api/datasources/new', this.state.dataSource)
