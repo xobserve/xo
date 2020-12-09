@@ -61,6 +61,7 @@ func SendEmail(content *models.EmailContent) error {
 		messages = append(messages, &copy)
 	}
 
+	var err0 error
 	for _, msg := range messages {
 		e := email.NewEmail()
 		e.From = msg.From
@@ -70,10 +71,11 @@ func SendEmail(content *models.EmailContent) error {
 		err = e.Send(config.Data.SMTP.Host, nil)
 		if err != nil {
 			logger.Warn("send email error", "error", err)
+			err0 = err
 		}
 	}
 
-	return nil
+	return err0
 }
 
 func buildEmail(content *models.EmailContent) (*EmailMessage, error) {
