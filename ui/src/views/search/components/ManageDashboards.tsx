@@ -43,6 +43,7 @@ export const ManageDashboards: FC<Props> = memo(({ folder }) => {
     hasFilters,
     onQueryChange,
     onTagFilterChange,
+    onTeamChange,
     onStarredFilterChange,
     onTagAdd,
     onSortChange,
@@ -119,6 +120,7 @@ export const ManageDashboards: FC<Props> = memo(({ folder }) => {
           onStarredFilterChange={onStarredFilterChange}
           onSortChange={onSortChange}
           onTagFilterChange={onTagFilterChange}
+          onTeamChange={onTeamChange}
           query={query}
           hideLayout={!!folderUid}
           onLayoutChange={onLayoutChange}

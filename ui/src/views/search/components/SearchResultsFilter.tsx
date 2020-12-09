@@ -19,6 +19,7 @@ export interface Props {
   onSortChange: onSelectChange;
   onStarredFilterChange: onSelectChange;
   onTagFilterChange: onSelectChange;
+  onTeamChange: any;
   onToggleAllChecked: () => void;
   query: DashboardQuery;
   editable?: boolean;
@@ -35,6 +36,7 @@ export const SearchResultsFilter: FC<Props> = ({
   onSortChange,
   onStarredFilterChange,
   onTagFilterChange,
+  onTeamChange,
   onToggleAllChecked,
   query,
   editable,
@@ -63,6 +65,7 @@ export const SearchResultsFilter: FC<Props> = ({
             onSortChange,
             onStarredFilterChange,
             onTagFilterChange,
+            onTeamChange,
             query,
           }}
           showStarredFilter

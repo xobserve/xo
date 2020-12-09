@@ -7,6 +7,7 @@ import {
   LAYOUT_CHANGE,
   QUERY_CHANGE,
   SET_TAGS,
+  SET_TEAMS,
   TOGGLE_SORT,
   TOGGLE_STARRED,
 } from '../reducers/actionTypes';
@@ -25,6 +26,9 @@ export const useSearchQuery = (queryParams: Partial<DashboardQuery>) => {
     dispatch({ type: SET_TAGS, payload: tags });
   };
 
+  const onTeamChange = (teams: number[]) => {
+    dispatch({ type: SET_TEAMS, payload: teams });
+  }
   const onTagAdd = (tag: string) => {
     dispatch({ type: ADD_TAG, payload: tag });
   };
@@ -51,6 +55,7 @@ export const useSearchQuery = (queryParams: Partial<DashboardQuery>) => {
     onQueryChange,
     onClearFilters,
     onTagFilterChange,
+    onTeamChange,
     onStarredFilterChange,
     onTagAdd,
     onSortChange,

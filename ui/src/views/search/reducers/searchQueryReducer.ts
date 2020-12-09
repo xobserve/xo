@@ -7,6 +7,7 @@ import {
   REMOVE_STARRED,
   REMOVE_TAG,
   SET_TAGS,
+  SET_TEAMS,
   TOGGLE_SORT,
   TOGGLE_STARRED,
 } from './actionTypes';
@@ -14,6 +15,7 @@ import {
 export const defaultQuery: DashboardQuery = {
   query: '',
   tag: [],
+  teams: [],
   starred: false,
   skipRecent: false,
   skipStarred: false,
@@ -30,6 +32,8 @@ export const queryReducer = (state: DashboardQuery, action: SearchAction) => {
       return { ...state, tag: state.tag.filter(t => t !== action.payload) };
     case SET_TAGS:
       return { ...state, tag: action.payload };
+    case SET_TEAMS:
+      return {...state, teams: action.payload}
     case ADD_TAG: {
       const tag = action.payload;
       return tag && !state.tag.includes(tag) ? { ...state, tag: [...state.tag, tag] } : state;

@@ -10,6 +10,7 @@ interface Props {
     onChange: any
     mutiple?: boolean
     enableAll? : boolean
+    allowClear? : boolean
 }
 
 const TeamPicker = (props:Props) =>{
@@ -40,10 +41,12 @@ const TeamPicker = (props:Props) =>{
                 className="width-14" 
                 mode={props.mutiple? "multiple" : null} 
                 onChange={props.onChange} 
+                placeholder="teams"
                 showSearch
                 filterOption={(input, option) =>
                     option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
                 }
+                allowClear={props.allowClear}
                 >
                 {options}
             </Select>

@@ -6,6 +6,7 @@ import { TagFilter } from 'src/views/components/TagFilter/TagFilter';
 import { SearchSrv } from 'src/core/services/search';
 import { DashboardQuery, SearchLayout } from '../types';
 import { FormattedMessage } from 'react-intl';
+import TeamPicker from 'src/views/components/Pickers/TeamPicker';
 
 export const layoutOptions = [
   { value: SearchLayout.Folders, icon: 'folder' },
@@ -20,6 +21,7 @@ interface Props {
   onSortChange: onSelectChange;
   onStarredFilterChange?: (event: FormEvent<HTMLInputElement>) => void;
   onTagFilterChange: onSelectChange;
+  onTeamChange: any
   query: DashboardQuery;
   showStarredFilter?: boolean;
   hideLayout?: boolean;
@@ -33,6 +35,7 @@ export const ActionRow: FC<Props> = ({
   query,
   showStarredFilter,
   hideLayout,
+  onTeamChange
 }) => {
   const theme = useTheme();
   const styles = getStyles(theme);
@@ -53,7 +56,10 @@ export const ActionRow: FC<Props> = ({
             <Checkbox label={<FormattedMessage id="folder.filterStar"/>} onChange={onStarredFilterChange} />
           </div>
         )}
+
+        <TeamPicker value={query.teams} onChange={onTeamChange} mutiple allowClear/>
         <TagFilter isClearable tags={query.tag} tagOptions={searchSrv.getDashboardTags} onChange={onTagFilterChange} />
+       
       </HorizontalGroup>
     </div>
   );

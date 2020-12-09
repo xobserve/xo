@@ -66,6 +66,7 @@ export interface UidsToDelete {
 export interface DashboardQuery {
   query: string;
   tag: string[];
+  teams?: number[]
   starred: boolean;
   skipRecent: boolean;
   skipStarred: boolean;
