@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from 'react'
 import _ from 'lodash'
-import {Modal} from 'antd'
+import {Modal, Spin} from 'antd'
 import { FormattedMessage } from 'react-intl';
 import {AlertNotification} from 'src/types'
 import {Input,Select,Switch,Alert,Button} from 'antd'
-import { InlineFormLabel,config, localeData, currentLang} from 'src/packages/datav-core/src';
+import { InlineFormLabel,config, localeData, currentLang, LoadingPlaceholder} from 'src/packages/datav-core/src';
 import {NotifierPicker,notifiers} from './Notifiers/Picker'
+import { LoadingIndicator } from 'react-select/src/components/indicators';
 
 const {Option} = Select
 
@@ -16,6 +17,7 @@ interface Props {
     onEditChange: any
     onTest: any
     notification: AlertNotification
+    testLoading: boolean
 }
 
 
@@ -43,7 +45,7 @@ export const NotificationEdit = (props:Props) =>{
               {<FormattedMessage id="common.save"/>}
             </Button>,
             <Button onClick={props.onTest} >
-              {<FormattedMessage id="common.test"/>}
+              {props.testLoading ? <Spin /> : <FormattedMessage id="common.test"/>}
             </Button>,
             <Button onClick={props.onCancel}>
                {<FormattedMessage id="common.cancel"/>}

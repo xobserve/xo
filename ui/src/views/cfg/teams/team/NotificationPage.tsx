@@ -24,6 +24,7 @@ interface State {
     addChannelVisible: boolean
     tempNotification: AlertNotification
     team: Team
+    testLoading: boolean
 }
 
 
@@ -65,7 +66,8 @@ export class NotificationPage extends PureComponent<Props, State> {
             notifications: [],
             addChannelVisible: false,
             tempNotification: null,
-            team: null
+            team: null,
+            testLoading: false
         }
 
         this.fetchData = this.fetchData.bind(this)
@@ -191,24 +193,38 @@ export class NotificationPage extends PureComponent<Props, State> {
     }
 
     onTest = async () => {
+        this.setState({
+            ...this.state,
+            testLoading: true
+        })
         const {tempNotification,team} = this.state
-        await getBackendSrv().post(`/api/alerting/test/notification`,{
+        getBackendSrv().post(`/api/alerting/test/notification`,{
             name: tempNotification.name,
             type: tempNotification.type,
             settings: tempNotification.settings,
             teamId: team.id,
+        }).then(() => {
+            notification['success']({
+                message: "Success",
+                description: localeData[currentLang]['info.testOK'],
+                duration: 5
+            })  
+    
+            this.setState({
+                ...this.state,
+                testLoading: false
+            })
+        }).catch(() => {
+            this.setState({
+                ...this.state,
+                testLoading: false
+            })
         })
-
-        notification['success']({
-            message: "Success",
-            description: localeData[currentLang]['info.testOK'],
-            duration: 5
-        })  
     }
 
     render() {
         const { routeID, parentRouteID } = this.props
-        const { hasFetched, notifications,addChannelVisible,tempNotification,team} = this.state
+        const { hasFetched, notifications,addChannelVisible,tempNotification,team,testLoading} = this.state
 
         let navModel;
         if (team) {
@@ -284,7 +300,7 @@ export class NotificationPage extends PureComponent<Props, State> {
                     )}
                 </Page.Contents>
             </Page>
-            <NotificationEdit visible={addChannelVisible} notification={tempNotification} onTest={this.onTest} onCancel={this.onCancelEdit} onEditSubmit={this.onEditSubmit} onEditChange={this.onEditChange}/>
+            <NotificationEdit visible={addChannelVisible} notification={tempNotification} onTest={this.onTest} onCancel={this.onCancelEdit} onEditSubmit={this.onEditSubmit} onEditChange={this.onEditChange} testLoading={testLoading}/>
             </>
         );
     }
