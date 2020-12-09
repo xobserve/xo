@@ -14,6 +14,7 @@ export interface Props {
 }
 
 const SelectNav = ({ children, customCss }: { children: MenuItem[]; customCss: string }) => {
+  const history = useHistory()
   if (!children || children.length === 0) {
     return null;
   }
@@ -25,7 +26,7 @@ const SelectNav = ({ children, customCss }: { children: MenuItem[]; customCss: s
   const gotoUrl = (evt: FormEvent) => {
     const element = evt.target as HTMLSelectElement;
     const url = element.options[element.selectedIndex].value;
-    appEvents.emit(CoreEvents.locationChange, { href: url });
+    history.push(url)
   };
 
   return (
@@ -47,7 +48,7 @@ const SelectNav = ({ children, customCss }: { children: MenuItem[]; customCss: s
             return null;
           }
           return (
-            <option key={navItem.url} value={navItem.url}>
+            <option key={navItem.url} value={navItem.redirectTo ?? navItem.url}>
               {navItem.title}
             </option>
           );

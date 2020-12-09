@@ -12,24 +12,29 @@ const homeUrl = '/dashboard';
 
 
 export const SideMenu = () => {
+  const body = $('body');
+  
   const toggleSideMenuSmallBreakpoint = () => {
     appEvents.emit(CoreEvents.toggleSidemenuMobile);
+    body.toggleClass('sidemenu-open--xs');
   };
+  
 
-    return (
-      <div className="sidemenu">
-        <a href={homeUrl} className="sidemenu__logo" key="logo">
-          {/* <Branding.MenuLogo /> */}
-        </a>
-        <div className="sidemenu__logo_small_breakpoint" onClick={toggleSideMenuSmallBreakpoint} key="hamburger">
-          <Icon name="bars" size="xl" />
+
+  return (
+    <div className="sidemenu">
+      <a href={homeUrl} className="sidemenu__logo" key="logo">
+        {/* <Branding.MenuLogo /> */}
+      </a>
+      <div className="sidemenu__logo_small_breakpoint" onClick={toggleSideMenuSmallBreakpoint} key="hamburger">
+        <Icon name="bars" size="xl" />
         <span className="sidemenu__close">
           <Icon name="times" />
           &nbsp;Close
         </span>
-        </div>
-        <TopSection key="topsection" />
-        <BottomSection key="bottomsection" />
       </div>
-    )
+      <TopSection key="topsection" />
+      <BottomSection key="bottomsection" />
+    </div>
+  )
 }
