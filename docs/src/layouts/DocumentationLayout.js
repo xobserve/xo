@@ -51,6 +51,10 @@ export function DocumentationLayout(props) {
       ],
       '插件指南': [
         pages['plugins-overview'],
+        pages['echarts-plugin'],
+        pages['graph-plugin'],
+        pages['table-plugin'],
+        pages['dependency-graph-plugin']
       ]
     }
   } else {
@@ -77,6 +81,10 @@ export function DocumentationLayout(props) {
       ],
       'Plugins': [
         pages['plugins-overview'],
+        pages['echarts-plugin'],
+        pages['graph-plugin'],
+        pages['table-plugin'],
+        pages['dependency-graph-plugin']
       ]
     }
   }

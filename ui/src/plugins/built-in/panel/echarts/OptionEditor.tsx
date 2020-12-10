@@ -35,7 +35,7 @@ export class OptionEditor extends PureComponent<PanelEditorProps<EchartsOptions>
       <>
         <Field label={localeData[currentLang]['panel.echartsOptions']} description={localeData[currentLang]['panel.echartsOptionsDesc']}>
           <>
-            <span className={this.styles.span}>{`function (${funcParams}) `} <span className="color-primary">&nbsp;{` {`}</span></span>
+            <span className={this.styles.span}>{`function setEchartsOption (${funcParams}) `} <span className="color-primary">&nbsp;{` {`}</span></span>
             <CodeEditor
                 width="100%"
                 height="400px"
