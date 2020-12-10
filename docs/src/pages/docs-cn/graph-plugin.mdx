@@ -8,46 +8,91 @@ import Link from 'next/link'
 import stats from '@/utils/stats'
 import { TipCompat } from '@/components/Tip'
 
-## 下载并启动
-### <Heading number="1">在Github下载服务</Heading>
-访问<a href="https://github.com/apm-ai/datav/releases" target="_blank">Github</a>下载最新版本的安装包
+Graph图表插件是Datav最核心的图表，可以实现时序数据的曲线图、柱状图、点图的展示，往往配合prometheus、influxdb等时许数据库使用，
+在本章节中，我们将结合prometheus进行示例讲解。
 
+## 前置准备
+1. 安装<a href="https://prometheus.io" target="_blank">prometheus</a>服务
+2. 在Datav中创建基于prometheus的数据源
+3. 创建一个仪表盘 -> 创建图表 -> 进入图表编辑页面
+4. 选择prometheus数据源，输入查询语句`scrape_duration_seconds`
 
+此时，能看到图表已经渲染出来，如下图所示：
+<img class=" mx-auto sm:mx-0 sm:flex-shrink-0 h-100"  src="/img/docs/graph-plugin-1.jpg" alt="Image" />
 
-### <Heading number="2">启动服务</Heading>
+继续保留在当前页面
+ 
+## Graph配置
+在右边一栏，可以配置当前图表的属性，包括曲线、柱状、填充、精度、坐标轴等等，这里就不展开细讲，大家可以根据配置的注释自己尝试下。
 
-```bash
-## 进入到下载后的datav目录下
-cd YOUR_DATAV_PATH
+### Thresholds
+Thresholds是图表阈值，具体表现就是一条线，大于或者小于这条线的区域用特殊颜色进行标记，我们来创建一条Thresholds：
+1. 点击 + Add threshold，然后对新添加的表项进行编辑
+2. gt(大于)/lt(小于)，选择gt
+3. 值填写0.2
+4. Color选择critical的红色
+5. 开启Fill，表示对大于0.2的区域进行填充
+6. 开启Line，是一条y=0.2的直线
+7. 选择Left坐标轴，因为目前我们只有Left
 
-### 启动datav
-./datav
+最终设置完后，是这样的：    
+<img class=" mx-auto sm:mx-0 sm:flex-shrink-0 h-30"  src="/img/docs/graph-plugin-2.jpg" alt="Image" />
+
+代表的含义是： 把曲线值大于0.2的区域填充为critical颜色(红色)，同时对0.2这条线进行标记。
+
+对应的效果就是:
+<img class=" mx-auto sm:mx-0 sm:flex-shrink-0 h-96"  src="/img/docs/graph-plugin-3.jpg" alt="Image" />
+
+<TipCompat>当我们为Graph添加告警时，也会自动创建一个对应告警值的Threshold</TipCompat>
+
+### Click event
+这里在[图表交互](/docs-cn/panel-interactive)章节有详细说明，这里简单进行介绍。
+
+当开启Click event后，点击图表上的点，会触发点击事件，具体的事件就在这里进行定义,来看一个例子，输入以下事件代码：
+```javascript
+function(data, history, setVariable, setTime)   {
+    alert('click graph point!')
+    console.log(data)
+
+    // 设置模版变量
+    // setVariable('app','gatewayt')
+
+    // 跳转到其它页面
+    // history.push('/')
+
+    // 设定当前时间
+    // setTime('2020-12-09 00:00:00', '2020-12-10 00:00:00')
+}
 ```
 
-服务器已经成功启动，访问http://localhost:3003，进行登陆，然后你就能看到datav的UI页面了。
-```css
-默认用户：admin
-默认密码：admin
-```
+然后点击图表上的点，可以看到以下弹出面板：
+<img class=" mx-auto sm:mx-0 sm:flex-shrink-0 h-40"  src="/img/docs/graph-plugin-4.jpg" alt="Image" />
+
+点击`Trigger click event`，就能看到我们设置的事件了。
+
+### Links
+可以为图表创建外部链接，方便进行外部关联。
+
+### Data Links
+该链接是图表上的点的链接，当点击某个点的时候会弹出面板，然后点击前往链接。
+
+先来创建一条链接：
+1. 点击添加链接
+2. 输入标题、Url然后保存提交
+
+此时点击图表上的点，在弹出面板就能看到刚才创建的`test`链接。
+
+### 外部链接
+该链接是图表级的，设置后，在图表的左上角会有一个小图标，鼠标悬浮上去即可看到
 
 
-## 开发模式启动
-如果你想对Datav进行二次开发，需要使用源码来启动。
 
-### <Heading number="1">启动后端服务</Heading>
-```bash
-> git clone https://github.com/apm-ai/datav
-> cd datav
-> go build
-> ./datav generate ##只在初次启动或者安装了新插件后需要此步骤
-> ./datav &
-```
+## 图表注释
+Graph允许我们给图表添加注释，在图表上标记出：**在某个时间点发生了什么事情**，先创建一个注释：
+1. 点击图表，弹出面板
+2. 点击添加注释，弹出注释面板
+3. 输入内容，点击保存
 
-### <Heading number="2">启动UI服务</Heading>
-```bash
-```bash
-> cd ui
-> nvm use    
-> yarn install
-> yarn start
-```
+此时在图表上出现了一条蓝色的竖直线，就是刚才创建的注释，将鼠标悬浮在那条线的底部三角区域，可以看到注释的详细内容，同时可以进行再次编辑。
+<img class=" mx-auto sm:mx-0 sm:flex-shrink-0 h-40"  src="/img/docs/graph-plugin-5.jpg" alt="Image" />
+
