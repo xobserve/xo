@@ -5,7 +5,8 @@ import { css } from 'emotion';
 
 import { join, indexOf,cloneDeep, isArray} from 'lodash';
 import { getTimeSrv } from 'src/core/services/time';
-import { toUtc } from 'src/packages/datav-core/src';
+import { currentLang, localeData, toUtc } from 'src/packages/datav-core/src';
+import { notification } from 'antd';
 
 
 
@@ -58,9 +59,19 @@ export class Interactive {
   }
 
   setTime = (from,to) => {
+    const fromMoment = toUtc(from)
+    const toMoment = toUtc(to)
+    if (!fromMoment.isValid ()|| !toMoment.isValid()) {
+        notification['error']({
+            message: "Error",
+            description: localeData[currentLang]['common.timeInvalid'],
+            duration: 3
+          });
+        return 
+    }
     getTimeSrv().setTime({
-        from: toUtc(from),
-        to: toUtc(to),
+        from: fromMoment,
+        to: toMoment,
       }, true);
   }
 }

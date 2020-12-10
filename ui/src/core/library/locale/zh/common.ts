@@ -123,6 +123,7 @@ const common = {
     builtin: '内置插件',
     external: '外部插件',
     back: '回退',
+    timeInvalid: '时间格式不合法',
 }
 
 export default common

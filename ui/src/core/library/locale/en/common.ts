@@ -125,7 +125,7 @@ const common = {
     builtin: 'Built in',
     external: 'External',
     back: 'Back',
-
+    timeInvalid: 'Time format invalid',
 }
 
 export default common
