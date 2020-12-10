@@ -96,7 +96,7 @@ export default function DocsLandingPage() {
                 <p className="font-medium text-violet-100 text-shadow mb-4">
                   {isChinese ? '学习如何安装和使用Datav' : "Learn how to get Tailwind set up in your project."}
                 </p>
-                <Link href="/docs-cn/installation">
+                <Link href={isChinese ? "/docs-cn/installation" : "/docs/installation"}>
                   <a className="mt-auto bg-violet-800 bg-opacity-50 hover:bg-opacity-75 transition-colors duration-200 rounded-xl font-semibold py-2 px-4 inline-flex">
                     {isChinese ? '开始学习' : "Start learning"}
                   </a>

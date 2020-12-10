@@ -17,9 +17,15 @@ import { TipCompat } from '@/components/Tip'
 ## Click event函数
 点击事件是通过该函数触发的，函数如下方所示：
 ```javascript
-function(data, history, setVariable)   {
+function(data, history, setVariable, setTime)   {
 }
 ```
+
+`data`是点击区域所包含的点数据，`history`用来控制页面跳转行为， `setVariable`用来设置模版变量， `setTime`用来设置当前时间范围，因此我们的点击事件目前可以实现以下的效果：
+1. 前往某一个页面: 实现页面下钻
+2. 设置某一个模版变量: 实现图表联动，例如你点击一个饼图，设置当前的`app`变量为点击的值，那么其它图表就可以随着`app`变量一起联动变化
+
+<TipCompat>小贴士：函数体中能够使用模版变量</TipCompat>
 
 ### 触发点击事件
 这里首先点击`Enable click event`来开启点击事件，开启后，尝试点击图表上的一个点，会看到如下弹框：
@@ -27,22 +33,26 @@ function(data, history, setVariable)   {
 
 然后点击**Trigger click event**，就可以成功触发我们设置的事件了。
 
-### 函数详情
-`data`是点击区域所包含的点数据，`history`用来控制页面跳转行为， `setVariable`用来设置模版变量，因此我们的点击事件目前可以实现以下的效果：
-1. 前往某一个页面: 实现页面下钻
-2. 设置某一个模版变量: 实现图表联动，例如你点击一个饼图，设置当前的`app`变量为点击的值，那么其它图表就可以随着`app`变量一起联动变化
+### data用法
+data就是我们点击的具体的那个点的详细数据，到此为止大家应该已经发现，关键就是在`data`身上，它决定了我们要前往哪个url，也决定了我们要设置变量的值为什么，因此我们需要从data数据中取出想要的那个值。其实很简单，只要打印出data，然后根据data所包含的内容，去获取想要的值即可。
+```javascript
+function(data, history, setVariable, setTime)   {
+   // 打印data数据结构
+   console.log(data)
+}
+```
 
-#### history用法
+### history用法
 history是抽象出的一个`javascript对象`，使用它，我们可以实现**页面跳转、获取当前url**等操作, 如果你想查看该history对象的内容和用法，可以使用`console.log`进行输出：
 ```javascript
-function(data, history, setVariable)   {
+function(data, history, setVariable, setTime)   {
     console.log(history)
 }
 ```
 
 常用的用法:
 ```javascript
-function(data, history, setVariable)   {
+function(data, history, setVariable, setTime)   {
     // 前往某个页面
     history.push('https://google.com')
 
@@ -51,22 +61,25 @@ function(data, history, setVariable)   {
 }
 ```
 
-#### setVariable用法
+### setVariable用法
 该函数很简单，就是把指定的模版变量设置为指定的值，例如设置当前的`app`变量的值为`gateway`: 
 ```javascript
-function(data, history, setVariable)   {
+function(data, history, setVariable, setTime)   {
    setVariable('app','gateway')
 }
 ```
 
-#### data用法
-data就是我们点击的具体的那个点的详细数据，到此为止大家应该已经发现，关键就是在`data`身上，它决定了我们要前往哪个url，也决定了我们要设置变量的值为什么，因此我们需要从data数据中取出想要的那个值。其实很简单，只要打印出data，然后根据data所包含的内容，去获取想要的值即可。
+### setTime用法
+用来设置当前的时间范围，需要传两个参数，一个起始时间，一个截止时间
 ```javascript
-function(data, history, setVariable)   {
-   // 打印data数据结构
-   console.log(data)
+function(data, history, setVariable, setTime)   {
+  // 使用字符串进行设置
+  setTime('2020-12-07 00:00:00', '2020-12-08 00:00:00')
+  // 使用时间戳(必须是毫秒)进行设置
+  setTime(1607270400000, 1607443199000)
 }
 ```
+
 
 ## 支持点击的插件
 不是所有的图表插件都支持点击事件，目前支持的有：

@@ -4,7 +4,7 @@ import { Caption, IconContainer } from './common'
 import styles from './Hero.module.css'
 import { ReactComponent as Icon } from '@/img/icons/home/constraint-based.svg'
 
-export function Visualize({isChinese} = props) {
+export function Visualize({ isChinese } = props) {
     const pin = 'left'
     const tab = 'sizing'
     return (
@@ -14,13 +14,13 @@ export function Visualize({isChinese} = props) {
                     <Icon />
                 </IconContainer>
             </div>
-            <div style={{marginBottom: '0px',marginTop: '-10px'}} className="ml-4">
+            <div style={{ marginBottom: '0px', marginTop: '-10px' }} className="ml-4">
                 <Caption as="h2" className="text-purple-600">
                     {isChinese === true ? '可视化' : 'Visualize'}
                 </Caption>
             </div>
 
-            <div className={`grid ${styles.layout}`} style={{marginTop: '-10px'}}>
+            <div className={`grid ${styles.layout}`} style={{ marginTop: '-10px' }}>
                 <div
                     className={`col-start-1 col-end-2 sm:col-start-2 sm:col-end-3 lg:col-start-1 lg:col-span-full row-start-1 row-span-full xl:col-start-1 xl:col-end-5 xl:row-start-2 xl:row-end-5 lg:py-10 xl:py-16 flex ${pin === 'left' ? '-ml-8 pr-4 sm:ml-0 sm:pr-0' : '-mr-8 pl-4 sm:mr-0 sm:pl-0'
                         }`}
@@ -40,8 +40,12 @@ export function Visualize({isChinese} = props) {
                                 <div className="pt-6 md:p-8 text-center md:text-left space-y-4">
                                     <blockquote>
                                         <p className="text-lg font-semibold text-purple-600">
-                                        {isChinese === true ? "从热力图到分布图，从曲线图到地理信息图，Datav拥有众多美观的图表插件来帮助你理解自己的数据" : 'From heatmaps to histograms. Graphs to geomaps. Datav has a plethora of visualization options to help you understand your data, beautifully.'}
-                        </p>
+                                            {isChinese === true ? "从热力图到分布图，从曲线图到地理信息图，Datav拥有众多美观的图表插件来帮助你理解自己的数据。" : 'From heatmaps to histograms. Graphs to geomaps. Datav has a plethora of visualization options to help you understand your data, beautifully.'}
+                                        </p>
+                                        <br />
+                                        <p className="text-lg font-semibold text-purple-600">
+                                            {isChinese === true ? "同时，Datav的图表非常具有交互性，你可以为图表添加点击事件： 前往页面、设置当前模版变量、设置当前事件等" : 'Also, datav has built-in interactivity for dashboard panels, you can add click event: such as go to a url, set current templating variable, set current time etc.'}
+                                        </p>
                                     </blockquote>
                                     {/* <figcaption className="font-medium">
                                     <div className="text-cyan-600">
