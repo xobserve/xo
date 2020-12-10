@@ -1,4 +1,4 @@
-export const funcParams = 'data, theme, echartsInstance, echarts';
+export const funcParams = 'data, theme, echartsInstance, echarts, setVariable, history';
 
 const funcBody = `const series = data.series.map((s) => {
   const sData = s.fields.find((f) => f.type === 'number').values.buffer;
@@ -34,6 +34,13 @@ const axisOption = {
     },
   },
 };
+
+echartsInstance.off('click') // clear side effects
+echartsInstance.on('click', (point) => {
+  alert('chart on click')
+  console.log(point)
+})
+
 
 return {
   backgroundColor: 'transparent',
