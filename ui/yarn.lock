@@ -1914,13 +1914,6 @@
   resolved "https://registry.yarnpkg.com/@types/clipboard/-/clipboard-2.0.1.tgz#75a74086c293d75b12bc93ff13bc7797fef05a40"
   integrity sha512-gJJX9Jjdt3bIAePQRRjYWG20dIhAgEqonguyHxXuqALxsoDsDLimihqrSg8fXgVTJ4KZCzkfglKtwsh/8dLfbA==
 
-"@types/codemirror@^0.0.95":
-  version "0.0.95"
-  resolved "https://registry.npm.taobao.org/@types/codemirror/download/@types/codemirror-0.0.95.tgz#8fe424989cd5a6d7848f124774d42ef34d91adb8"
-  integrity sha1-j+QkmJzVpteEjxJHdNQu802Rrbg=
-  dependencies:
-    "@types/tern" "*"
-
 "@types/color-name@^1.1.1":
   version "1.1.1"
   resolved "https://registry.yarnpkg.com/@types/color-name/-/color-name-1.1.1.tgz#1c1261bbeaa10a8055bbc5d8ab84b7b2afc846a0"
@@ -1952,11 +1945,6 @@
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/@types/eslint-visitor-keys/-/eslint-visitor-keys-1.0.0.tgz#1ee30d79544ca84d68d4b3cdb0af4f205663dd2d"
   integrity sha512-OCutwjDZ4aFS6PB1UZ988C4YgwlBHJd6wCeQqaLdmadZ/7e+w79+hbMUFC1QXDNCmdyoRfAFdm0RypzwR+Qpag==
-
-"@types/estree@*":
-  version "0.0.45"
-  resolved "https://registry.npm.taobao.org/@types/estree/download/@types/estree-0.0.45.tgz#e9387572998e5ecdac221950dab3e8c3b16af884"
-  integrity sha1-6Th1cpmOXs2sIhlQ2rPow7Fq+IQ=
 
 "@types/file-saver@2.0.1":
   version "2.0.1"
@@ -2295,13 +2283,6 @@
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/@types/stack-utils/-/stack-utils-1.0.1.tgz#0a851d3bd96498fa25c33ab7278ed3bd65f06c3e"
   integrity sha512-l42BggppR6zLmpfU6fq9HEa2oGPEI8yrSPL3GITjfRInppYFahObbIQOQK3UGxEnyQpltZLaPe75046NOZQikw==
-
-"@types/tern@*":
-  version "0.23.3"
-  resolved "https://registry.npm.taobao.org/@types/tern/download/@types/tern-0.23.3.tgz#4b54538f04a88c9ff79de1f6f94f575a7f339460"
-  integrity sha1-S1RTjwSojJ/3neH2+U9XWn8zlGA=
-  dependencies:
-    "@types/estree" "*"
 
 "@types/text-encoding-utf-8@^1.0.1":
   version "1.0.1"
@@ -4092,11 +4073,6 @@ code-point-at@^1.0.0:
   version "1.1.0"
   resolved "https://registry.yarnpkg.com/code-point-at/-/code-point-at-1.1.0.tgz#0d070b4d043a5bea33a2f1a40e2edb3d9a4ccf77"
   integrity sha1-DQcLTQQ6W+ozovGkDi7bPZpMz3c=
-
-codemirror@^5.54.0:
-  version "5.56.0"
-  resolved "https://registry.npm.taobao.org/codemirror/download/codemirror-5.56.0.tgz#675640fcc780105cd22d3faa738b5d7ea6426f61"
-  integrity sha1-Z1ZA/MeAEFzSLT+qc4tdfqZCb2E=
 
 collapse-white-space@^1.0.0, collapse-white-space@^1.0.2:
   version "1.0.6"
