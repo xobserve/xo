@@ -9,6 +9,7 @@ import { css } from 'emotion';
 import { TableSortByFieldState } from 'src/packages/datav-core/src';
 import { resetDashboardVariables } from 'src/views/dashboard/model/initDashboard'
 import { join, indexOf,cloneDeep, isArray} from 'lodash';
+import { interactive } from 'src/core/library/utils/interactive';
 
 
 interface Props extends PanelProps<Options> {
@@ -68,57 +69,12 @@ export class TablePanelUnconnected extends Component<Props> {
     this.forceUpdate();
   };
 
-  setVariable = (name, value) => {
-    const vars = this.props.dashboard.templating.list
-    for (const v of vars) {
-      if (v.name === name) {
-        if (!v.multi) {
-          v.current = {
-            text: value,
-            value: value,
-            selected: false
-          }
-
-          for (const o of v.options) {
-            if (o.text === value) {
-              o.selected = true
-            } else {
-              o.selected = false
-            }
-          }
-        } else {
-          let values = cloneDeep(v.current.value)
-          if (indexOf(values, value) === -1 && values !== value) {
-            if (isArray(values)) {
-              values.push(value)
-            } else {
-              values = [values,value]
-            }
-
-            v.current = {
-              text: join(values, " + "),
-              value: values,
-              selected: true,
-            }
   
-            for (const o of v.options) {
-              if (indexOf(values, o.text) !== -1) {
-                o.selected = true
-              } else {
-                o.selected = false
-              }
-            }
-          }
-        }
-      }
-    }
-     this.props.resetDashboardVariables(this.props.dashboard)
-  }
 
   renderTable(frame: DataFrame, width: number, height: number) {
     const { options } = this.props;
     
-    const onRowClickFunc = new Function("data,history,setVariable", getTemplateSrv().replace(options.rowClickEvent))
+    const onRowClickFunc = new Function("data,history,setVariable,setTime", getTemplateSrv().replace(options.rowClickEvent))
     return (
       <Table
         height={height}
@@ -129,7 +85,7 @@ export class TablePanelUnconnected extends Component<Props> {
         initialSortBy={options.sortBy}
         onSortByChange={this.onSortByChange}
         onColumnResize={this.onColumnResize}
-        onRowClick={options.enableRowClick ? (data) => onRowClickFunc(data, getHistory(), this.setVariable) : null}
+        onRowClick={options.enableRowClick ? (data) => onRowClickFunc(data, getHistory(), (k,v) => interactive.setVariable(k,v,this.props.dashboard,this.props.resetDashboardVariables),interactive.setTime) : null}
       />
     );
   }

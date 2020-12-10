@@ -22,6 +22,7 @@ import { store } from 'src/store/store';
 import storage from 'src/core/library/utils/localStorage';
 import { resetDashboardVariables } from 'src/views/dashboard/model/initDashboard';
 import { connect } from 'react-redux';
+import { interactive } from 'src/core/library/utils/interactive';
 
 interface Props extends PanelProps<DependencyGraphOptions> {
   theme: DatavTheme
@@ -437,59 +438,12 @@ export class DependencyGraph extends PureComponent<Props, State> {
     }
   }
 
-  setVariable = (name, value) => {
-    const vars = this.props.dashboard.templating.list
-    for (const v of vars) {
-      if (v.name === name) {
-        if (!v.multi) {
-          v.current = {
-            text: value,
-            value: value,
-            selected: false
-          }
-
-          for (const o of v.options) {
-            if (o.text === value) {
-              o.selected = true
-            } else {
-              o.selected = false
-            }
-          }
-        } else {
-          let values = cloneDeep(v.current.value)
-          if (indexOf(values, value) === -1 && values !== value) {
-            if (isArray(values)) {
-              values.push(value)
-            } else {
-              values = [values,value]
-            }
-
-            v.current = {
-              text: join(values, " + "),
-              value: values,
-              selected: true,
-            }
-  
-            for (const o of v.options) {
-              if (indexOf(values, o.text) !== -1) {
-                o.selected = true
-              } else {
-                o.selected = false
-              }
-            }
-          }
-        }
-      }
-    }
-     this.props.resetDashboardVariables(this.props.dashboard)
-  }
-
   render() {
     const { options, data, width, height, panel } = this.props
 
     const { paused, showStatistics, graphData, filterConditions} = this.state
 
-    const onClickFunc = new Function("data,history,setVariable", getTemplateSrv().replace(this.props.options.clickEvent))
+    const onClickFunc = new Function("data,history,setVariable,setTime", getTemplateSrv().replace(this.props.options.clickEvent))
 
     if (this.props.options.showDummyData) {
       this.processQueryData(dummyData);
@@ -551,7 +505,7 @@ export class DependencyGraph extends PureComponent<Props, State> {
                     <LinkOutlined className="ub-ml2"/>
                   </a></Tooltip>}
 
-                {options.clickEvent && <Tooltip title="Trigger click event"><Icon name="mouse-alt" className="pointer ub-ml2" size="lg" onClick={() => onClickFunc(this.selectionId,getHistory(),this.setVariable)}/></Tooltip>}
+                {options.clickEvent && <Tooltip title="Trigger click event"><Icon name="mouse-alt" className="pointer ub-ml2" size="lg" onClick={() => onClickFunc(this.selectionId,getHistory(),(k,v) => interactive.setVariable(k,v,this.props.dashboard,this.props.resetDashboardVariables),interactive.setTime)}/></Tooltip>}
               </div>
 
               <div className="secondHeader--selection">Statistics</div>

@@ -42,6 +42,7 @@ import { annotationsSrv } from 'src/core/services/annotations';
 import localeData from 'src/core/library/locale';
 import { resetDashboardVariables } from 'src/views/dashboard/model/initDashboard';
 import { connect } from 'react-redux';
+import { interactive } from 'src/core/library/utils/interactive';
 
 interface State {
   contextMenuVisible: boolean
@@ -244,52 +245,7 @@ class GraphPanelUnconnected extends PureComponent<PanelProps<GraphPanelOptions> 
     }
   }
 
-  setVariable = (name, value) => {
-    const vars = this.props.dashboard.templating.list
-    for (const v of vars) {
-      if (v.name === name) {
-        if (!v.multi) {
-          v.current = {
-            text: value,
-            value: value,
-            selected: false
-          }
-
-          for (const o of v.options) {
-            if (o.text === value) {
-              o.selected = true
-            } else {
-              o.selected = false
-            }
-          }
-        } else {
-          let values = cloneDeep(v.current.value)
-          if (indexOf(values, value) === -1 && values !== value) {
-            if (isArray(values)) {
-              values.push(value)
-            } else {
-              values = [values,value]
-            }
-
-            v.current = {
-              text: join(values, " + "),
-              value: values,
-              selected: true,
-            }
   
-            for (const o of v.options) {
-              if (indexOf(values, o.text) !== -1) {
-                o.selected = true
-              } else {
-                o.selected = false
-              }
-            }
-          }
-        }
-      }
-    }
-     this.props.resetDashboardVariables(this.props.dashboard)
-  }
   
   onPlotClick(event: JQueryEventObject, pos: any, item: any) {
     const scrollContextElement = this.elem.closest('.view') ? this.elem.closest('.view').get()[0] : null;
@@ -364,7 +320,7 @@ class GraphPanelUnconnected extends PureComponent<PanelProps<GraphPanelOptions> 
     flotPosition: { x: number; y: number },
     linksSupplier?: LinkModelSupplier<FieldDisplay>
   ): (() => ContextMenuGroup[]) => {
-    const onClickFunc = new Function("data,history,setVariable", getTemplateSrv().replace(this.props.options.clickEvent))
+    const onClickFunc = new Function("data,history,setVariable,setTime", getTemplateSrv().replace(this.props.options.clickEvent))
     return () => {
       // Fixed context menu items
       const items: ContextMenuGroup[] = [
@@ -389,7 +345,7 @@ class GraphPanelUnconnected extends PureComponent<PanelProps<GraphPanelOptions> 
                 label: 'Trigger click event',
                 icon: 'mouse-alt',
                 onClick: () => {
-                  onClickFunc(data,getHistory(),this.setVariable)
+                  onClickFunc(data,getHistory(), (k,v) => interactive.setVariable(k,v,this.props.dashboard,this.props.resetDashboardVariables), interactive.setTime)
                 }
               }
             ],
