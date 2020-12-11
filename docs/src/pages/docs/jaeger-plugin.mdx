@@ -1,0 +1,75 @@
+---
+title: Jaeger Tracing
+---
+
+import { Heading } from '@/components/Heading'
+import { List, ListItemBad } from '@/components/List'
+import Link from 'next/link'
+import stats from '@/utils/stats'
+import { TipCompat } from '@/components/Tip'
+
+Datav对Jaeger的支持是原生的，插件分为两部分：
+- 数据源插件： 负责从Jaeger查询数据
+- 图表插件：展示全链路数据
+
+## 前置准备
+### 安装Jaeger
+
+首先启动Jaeger的后端服务
+```bash
+$ docker run -d --name jaeger \
+  -e COLLECTOR_ZIPKIN_HTTP_PORT=9411 \
+  -p 5775:5775/udp \
+  -p 6831:6831/udp \
+  -p 6832:6832/udp \
+  -p 5778:5778 \
+  -p 16686:16686 \
+  -p 14268:14268 \
+  -p 14250:14250 \
+  -p 9411:9411 \
+  jaegertracing/all-in-one:1.21
+```
+
+接着启动Jager的官方Demo
+```bash 
+$ docker run --rm -it \
+  --link jaeger \
+  -p8080-8083:8080-8083 \
+  -e JAEGER_AGENT_HOST="jaeger" \
+  jaegertracing/example-hotrod:1.21 \
+  all
+```
+
+服务启动成功后，打开http://localhost:8080，随便点击那4个按钮，就可以发起一次请求，发起几次请求后继续。
+
+### 创建Jaeger数据源
+1. 在侧边菜单底部选择** + -> 数据源 -> Jaeger**
+2. 名称输入`jaeger`或者其它
+3. URL输入`http://localhost:16686`
+4. 点击保存测试
+
+
+## Jaeger图表插件
+
+在完成上述前置准备后，进入一个仪表盘，新建图表，在图表编辑页面的左下角先选择刚创建的`jaeger`数据源，然后在右边选择`Jaeger Panel`图表插件，点击应用回到仪表盘，至此你应该看到以下内容：
+<img class=" mx-auto sm:mx-0 sm:flex-shrink-0 h-30"  src="/img/docs/jaeger-plugin-1.jpg" alt="Image" />
+
+<TipCompat>如果图表溢出了所在的格子，请按着格子的右下角图标调大格子</TipCompat>
+
+接着设置表单中的Service为`customer`,点击查询，可以看到查询结果,**若没有结果，重新去http://localhost:8080发起几次请求，或者调整当前的时间范围**。
+
+<img class=" mx-auto sm:mx-0 sm:flex-shrink-0 h-30"  src="/img/docs/jaeger-plugin-2.jpg" alt="Image" />
+
+点击其中一条全链路，可以查看详情，弹出面板，使用方式跟jaeger自带的ui完全一致：
+<img class=" mx-auto sm:mx-0 sm:flex-shrink-0 h-30"  src="/img/docs/jaeger-plugin-3.jpg" alt="Image" />
+
+
+## 使用模版变量
+在service选择时，可以使用模版变量来自动设置service，具体步骤如下：
+1. 进入图表编辑页面
+2. 在右侧找到`Use variable as service name`，并开启
+3. 在`Variable`中输入你想要替换的模版变量名称，这里因为我使用的是`app`变量，因此输入app
+
+点击应用回到仪表盘，可以看到在service一栏，已经变成灰色，并且使用了app变量，把app变量设置为`customer`，点击查询，此时同样能看到结果，查询数据跟直接选择`customer`一样。
+
+

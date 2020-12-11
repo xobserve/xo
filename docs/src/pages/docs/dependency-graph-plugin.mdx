@@ -1,0 +1,127 @@
+---
+title: Dependency Graph
+---
+
+import { Heading } from '@/components/Heading'
+import { List, ListItemBad } from '@/components/List'
+import Link from 'next/link'
+import stats from '@/utils/stats'
+import { TipCompat } from '@/components/Tip'
+
+Dependency graph是依赖拓扑图，也是服务拓扑图，用来展示服务之间的互相访问状况。
+
+## 创建拓扑图
+1. 创建一个仪表盘 -> 创建图表 -> 进入图表编辑页面
+2. 在右边选择Dependency Graph插件
+3. 在下方的Option配置中找到`Show Dummy data`，设置为开启，该选项代表我们使用测试数据来生成图表
+
+
+此时，能看到图表已经渲染出来，如下图所示：
+<img class=" mx-auto sm:mx-0 sm:flex-shrink-0 h-30"  src="/img/docs/dependency-plugin-1.jpg" alt="Image" />
+
+
+## 配置详解
+在Option中可以对插件进行详细的配置，下面让我们对重要的进行一一讲解：
+
+### 数据格式
+`Connection Mapping`和`Data Mapping`用来定义数据的字段名称，对于拓扑图，展示的就是A服务请求B服务的关系，此处A服务是源服务，B服务是目标服务，A和B的连接，就是它们之间的流量状况。
+
+拓扑图使用的数据格式是表格类数据，包含了六列：
+1. Source Service Column: 源服务的列名称, 默认是source
+2. Target Service Column: 目标服务的列名称，默认是target
+3. External Type: 哪个服务是外部服务(外部服务会用特殊颜色进行标记)，列名称默认是external_type
+4. Response Time Column: 请求相应时间，默认是response_time
+5. Requests Column： 请求总数，默认是requests
+6. Errors Column： 错误总数, 默认是errors
+
+下面给出一个模拟数据表格，方便大家直观的理解：
+
+| source  |  target  | external_type | response_time | requests | errors |
+|:--------|:--------:|:-------------:|:-------------:|:--------:|:------:|
+|10.10.1.1|gateway   | 1            | 165816        | 1028     | 228    |
+|gateway  |mysql     | 0            | 1000          | 2001     | 0    |
+
+在上面表格中： 
+1. 外部ip`10.10.1.1`访问了我们的内部网关`gateway`,请求总耗时165816毫秒，请求总数1028次，错误总数228次
+2. 内部网关`gateway`访问了内部数据库`mysql`，请求总耗时1000毫秒，请求总数2001次，错误总数0次
+
+这里大家可能会有疑问，怎么判定一个服务是内部还是外部的？诀窍就在`external_type`上，当值为:
+- 0 : 都是内部服务
+- 1 : 源服务是外部服务
+- 2 : 目标服务是外部服务
+
+现在如果我们在配置中把`Source Service Column`的值从`source`改成`source_service`，那图表就会消失，因为表格中不存在`source_service`的列。
+
+### Handle Timings as Sums
+该选项用来设置传入的`Response Time Column`是累计耗时还是平均耗时，如果是累计耗时，我们会用该值除以请求总次数，来计算平均耗时。
+
+### Threshold
+Threshold是图表阈值，当满足某个条件时，可以为图表生成醒目的标示。
+
+1. 开启`Show Baselines`选项
+2. 在`Threshold type`中选择`errors`，注意，这里还有一个`errorRate`，前者是错误总数，后者是错误百分比
+3. 在`Threshold value`输入10
+
+可以看到图表上的节点边缘多了一圈齿轮，这些有齿轮的节点就代表它们满足了我们预设的条件，当错误数大于10时，设置为`Danger`状态。
+
+### Service Icon Mapping
+这里可以为圆形节点添加图标，例如api-gateway节点是Java应用，现在来为它添加java图标：
+1. 点击Add new mapping 
+2. 在Your Name一栏填写`api`，因为支持正则表达式，因此无需填写完成的`api-gateway`
+3. 将后面的`default`修改为`java`
+4. 点击`+`
+
+此时，`api-gateway`的圆圈中心被java图标所替代。
+
+
+### Layout and Style
+这里是对拓扑图自身的样式进行配置，详情见[cytoscape](https://github.com/cytoscape/cytoscape.js), 插件的底层使用的是此框架。
+
+
+### Click event
+在[图表交互](/docs-cn/panel-interactive)章节有详细说明,因此这里简单进行介绍。
+
+当开启Click event后，并且设置了函数内容后，点击图表上的节点圆圈，会弹出面板，点击名称后的**小鼠标图标**，具体的事件就在这里进行定义,来看一个例子，输入以下事件代码：
+```javascript
+function(data, history, setVariable, setTime)   {
+    alert('click graph point!')
+    console.log(data)
+
+    // 设置模版变量
+    // setVariable('app','gatewayt')
+
+    // 跳转到其它页面
+    // history.push('/')
+
+    // 设定当前时间
+    // setTime('2020-12-09 00:00:00', '2020-12-10 00:00:00')
+}
+```
+
+
+## 图表过滤
+当拓扑中的节点和连线数量很多时，图表将很难进行查看，此时我们需要进行一些过滤操作。
+
+如下图所示，点击图标，可以弹出过滤面板:
+<img class=" mx-auto sm:mx-0 sm:flex-shrink-0 h-96"  src="/img/docs/dependency-plugin-2.jpg" alt="Image" />
+
+### 节点名称过滤
+`WHEN NODES`就是对节点名称进行过滤，有三种情况：
+1. OF ALL : 选择所有节点，不过滤`
+2. IN : 在值列表中的节点才进行展示，包含关系
+3. OUT OF : 在值列表之外的节点才进行展示，排除关系
+
+例如我们选择`OUT OF`,设置值为`api-gateway`，点击确定，此时`api-gateway`在图表中已被移除，包含它相关的线也会被移除。
+
+### 节点值过滤
+如果要对节点的请求数、错误数等值进行过滤，按如下步骤进行：
+1.点击`WHEN NODES`下方的`+`
+2. 将第一个条件设置为: Error count >= 10
+2. 点击保存
+
+此时剩下的节点都是错误数大于10的。
+
+<TipCompat>不同过滤条件可以通过AND/OR进行组合</TipCompat>
+
+### 保存过滤条件
+开启过滤面板上的`Store conditions`选项，可以将过滤条件保存在浏览器本地，下次访问自动使用该过滤条件

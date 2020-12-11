@@ -1,5 +1,5 @@
 ---
-title: Interactive panel
+title: 图表交互
 ---
 
 import { Heading } from '@/components/Heading'
@@ -8,46 +8,82 @@ import Link from 'next/link'
 import stats from '@/utils/stats'
 import { TipCompat } from '@/components/Tip'
 
-## 下载并启动
-### <Heading number="1">在Github下载服务</Heading>
-访问<a href="https://github.com/apm-ai/datav/releases" target="_blank">Github</a>下载最新版本的安装包
+静态图表最大的问题就是缺少交互性，例如点击某个区域触发事件。在Datav中，我们对常用图表都进行了点击事件的支持，可以通过js编码的方式来完成。
 
+<TipCompat>本文只以Graph插件作为示例，进行简单介绍，详细的交互设置请前往对应的插件详情文档进行查看。</TipCompat>
 
+开始之前，你应该已经创建好基于Prometheus或者其它数据源的Graph图表，进入图表编辑页面，找到右边的**设置面板**,拉到最下方有一个**Click event**。
 
-### <Heading number="2">启动服务</Heading>
-
-```bash
-## 进入到下载后的datav目录下
-cd YOUR_DATAV_PATH
-
-### 启动datav
-./datav
+## Click event函数
+点击事件是通过该函数触发的，函数如下方所示：
+```javascript
+function(data, history, setVariable, setTime)   {
+}
 ```
 
-服务器已经成功启动，访问http://localhost:3003，进行登陆，然后你就能看到datav的UI页面了。
-```css
-默认用户：admin
-默认密码：admin
+`data`是点击区域所包含的点数据，`history`用来控制页面跳转行为， `setVariable`用来设置模版变量， `setTime`用来设置当前时间范围，因此我们的点击事件目前可以实现以下的效果：
+1. 前往某一个页面: 实现页面下钻
+2. 设置某一个模版变量: 实现图表联动，例如你点击一个饼图，设置当前的`app`变量为点击的值，那么其它图表就可以随着`app`变量一起联动变化
+
+<TipCompat>小贴士：函数体中能够使用模版变量</TipCompat>
+
+### 触发点击事件
+这里首先点击`Enable click event`来开启点击事件，开启后，尝试点击图表上的一个点，会看到如下弹框：
+<img class="block mx-auto sm:mx-0 sm:flex-shrink-0 h-96" src="/img/docs/panel-interactive-1.jpg" alt="Image" />
+
+然后点击**Trigger click event**，就可以成功触发我们设置的事件了。
+
+### data用法
+data就是我们点击的具体的那个点的详细数据，到此为止大家应该已经发现，关键就是在`data`身上，它决定了我们要前往哪个url，也决定了我们要设置变量的值为什么，因此我们需要从data数据中取出想要的那个值。其实很简单，只要打印出data，然后根据data所包含的内容，去获取想要的值即可。
+```javascript
+function(data, history, setVariable, setTime)   {
+   // 打印data数据结构
+   console.log(data)
+}
+```
+
+### history用法
+history是抽象出的一个`javascript对象`，使用它，我们可以实现**页面跳转、获取当前url**等操作, 如果你想查看该history对象的内容和用法，可以使用`console.log`进行输出：
+```javascript
+function(data, history, setVariable, setTime)   {
+    console.log(history)
+}
+```
+
+常用的用法:
+```javascript
+function(data, history, setVariable, setTime)   {
+    // 前往某个页面
+    history.push('https://google.com')
+
+    // 使用当前url
+    const currentUrl = history.location.pathname
+}
+```
+
+### setVariable用法
+该函数很简单，就是把指定的模版变量设置为指定的值，例如设置当前的`app`变量的值为`gateway`: 
+```javascript
+function(data, history, setVariable, setTime)   {
+   setVariable('app','gateway')
+}
+```
+
+### setTime用法
+用来设置当前的时间范围，需要传两个参数，一个起始时间，一个截止时间
+```javascript
+function(data, history, setVariable, setTime)   {
+  // 使用字符串进行设置
+  setTime('2020-12-07 00:00:00', '2020-12-08 00:00:00')
+  // 使用时间戳(必须是毫秒)进行设置
+  setTime(1607270400000, 1607443199000)
+}
 ```
 
 
-## 开发模式启动
-如果你想对Datav进行二次开发，需要使用源码来启动。
-
-### <Heading number="1">启动后端服务</Heading>
-```bash
-> git clone https://github.com/apm-ai/datav
-> cd datav
-> go build
-> ./datav generate ##只在初次启动或者安装了新插件后需要此步骤
-> ./datav &
-```
-
-### <Heading number="2">启动UI服务</Heading>
-```bash
-```bash
-> cd ui
-> nvm use    
-> yarn install
-> yarn start
-```
+## 支持点击的插件
+不是所有的图表插件都支持点击事件，目前支持的有：
+- Graph
+- Table
+- Dependency graph
+- Echarts

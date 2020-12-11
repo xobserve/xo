@@ -54,7 +54,7 @@ export function DocumentationLayout(props) {
         pages['echarts-plugin'],
         pages['graph-plugin'],
         pages['dependency-graph-plugin'],
-        pages['table-plugin'],
+        pages['jaeger-plugin'],
       ]
     }
   } else {
@@ -84,7 +84,7 @@ export function DocumentationLayout(props) {
         pages['echarts-plugin'],
         pages['graph-plugin'],
         pages['dependency-graph-plugin'],
-        pages['table-plugin'],
+        pages['jaeger-plugin']
       ]
     }
   }
