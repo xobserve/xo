@@ -1,8 +1,9 @@
 import { gradients } from '@/utils/gradients'
 import React from 'react'
-import { Caption, IconContainer } from './common'
+import { BigText, Caption, IconContainer, Paragraph } from './common'
 import styles from './Hero.module.css'
 import { ReactComponent as Icon } from '@/img/icons/home/dark-mode.svg'
+import { Widont } from '../Widont'
 
 export function Extend({isChinese} = props) {
     const pin = 'left'
@@ -14,9 +15,15 @@ export function Extend({isChinese} = props) {
                 </IconContainer>
             </div>
             <div style={{marginBottom: '0px',marginTop: '-10px'}} className="ml-4">
-                <Caption as="h2" className="text-green-600">
+                <Caption as="h2" className="text-green-600 mb-4">
                     {isChinese === true ? '扩展性' : "EXTEND"}
                 </Caption>
+                <BigText className="mb-8">
+                    <Widont>{isChinese ? "一切皆插件" : 'Everthing is plug-in'}</Widont>
+                </BigText>
+                <Paragraph className="mb-4">
+                  {isChinese ? '插件在Datav无处不在，展示数据用的是插件，加载数据也用的是插件，你可以按照文档开发自己的插件来完成特定的功能' : "Plug-ins are everywhere in Datav. Plug-ins are used to display data and load data. You can develop your own plug-ins according to the documentation to complete specific needs."}  
+                </Paragraph>
             </div>
 
             <div className={`grid ${styles.layout}`} style={{marginTop: '-10px'}}>

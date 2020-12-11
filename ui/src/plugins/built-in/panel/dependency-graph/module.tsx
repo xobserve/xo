@@ -51,12 +51,12 @@ export const plugin = new PanelPlugin<DependencyGraphOptions>(DependencyGraph).s
       category: ['Options'],
       defaultValue: 'errors',
     })
-    .addTextInput({
-      path: "dataMapping.baselineRtUpper",
-      name: 'Response Time Baseline (Upper)',
-      category: ['Options'],
-      defaultValue: 'threshold',
-    })
+    // .addTextInput({
+    //   path: "dataMapping.baselineRtUpper",
+    //   name: 'Response Time Baseline (Upper)',
+    //   category: ['Options'],
+    //   defaultValue: 'threshold',
+    // })
 
     .addBooleanSwitch({
       path: 'showConnectionStats',
@@ -94,12 +94,7 @@ export const plugin = new PanelPlugin<DependencyGraphOptions>(DependencyGraph).s
       category: ['Options'],
       defaultValue: false,
     })
-    .addBooleanSwitch({
-      path: 'showBaselines',
-      name: 'Show Baselines',
-      category: ['Options'],
-      defaultValue: false,
-    })
+
 
     .addSelect({
       path: 'threshold.type',
@@ -122,7 +117,12 @@ export const plugin = new PanelPlugin<DependencyGraphOptions>(DependencyGraph).s
       category: ['Options'],
       defaultValue: 0,
     })
-
+    .addBooleanSwitch({
+      path: 'showBaselines',
+      name: 'Show Baselines',
+      category: ['Options'],
+      defaultValue: false,
+    })
     .addColorPicker({
       path: "style.healthyColor",
       name: 'Healthy Color',

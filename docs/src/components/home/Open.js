@@ -1,8 +1,10 @@
 import { gradients } from '@/utils/gradients'
 import React from 'react'
-import { Caption, IconContainer } from './common'
+import { BigText, Caption, IconContainer, Paragraph } from './common'
 import styles from './Hero.module.css'
 import { ReactComponent as Icon } from '@/img/icons/home/component-driven.svg'
+import { Widont } from '../Widont'
+
 
 export function Open({isChinese} = props) {
     const pin = 'left'
@@ -14,9 +16,15 @@ export function Open({isChinese} = props) {
                 </IconContainer>
             </div>
             <div style={{marginBottom: '0px',marginTop: '-10px'}} className="ml-4">
-                <Caption as="h2" className="text-amber-500">
+                <Caption as="h2" className="text-amber-500 mb-4">
                     {isChinese === true ?  '开源生态' : 'OPEN'}
                 </Caption>
+                <BigText className="mb-8">
+                    <Widont>{isChinese ? "对商业化版本说不" : 'Say no to any commecial version'}</Widont>
+                </BigText>
+                <Paragraph className="mb-4">
+                  {isChinese ? 'Datav所有的特性都是免费的，我们不会提供任何商业化版本，就算你想付钱都找不到入口' : "All the features are free to all the developers, we will never give you commecial version as a option"}  
+                </Paragraph>
             </div>
 
             <div className={`grid ${styles.layout}`} style={{marginTop: '-10px'}}>
@@ -39,7 +47,7 @@ export function Open({isChinese} = props) {
                                 <div className="pt-6 md:p-8 text-center md:text-left space-y-4">
                                     <blockquote>
                                         <p className="text-lg font-semibold text-amber-500">
-                                            {isChinese === true ? 'Datav是完全开源的，没有企业版本，也没有云服务，我们就是一个100%开源的产品'  :'Data is completely open source, no enterprise, no cloud, 100% open!'}
+                                            {isChinese === true ? '百分之七十的开源不是真正的开源，百分之一百才是，所以，请放心使用，不会有任何企业版、云服务版等商业化版本'  :'70% opensource is not opensource, 100% is. So no enteprise,no cloud.'}
                                         </p>
                                     </blockquote>
                                 </div>

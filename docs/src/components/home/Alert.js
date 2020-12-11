@@ -1,8 +1,10 @@
 import { gradients } from '@/utils/gradients'
 import React from 'react'
-import { Caption, IconContainer } from './common'
+import { BigText, Caption, IconContainer, Paragraph } from './common'
 import styles from './Hero.module.css'
 import { ReactComponent as Icon } from '@/img/icons/home/build-anything.svg'
+import { Widont } from '../Widont'
+
 
 export function Alert({isChinese} = props) {
     const pin = 'left'
@@ -14,9 +16,15 @@ export function Alert({isChinese} = props) {
                 </IconContainer>
             </div>
             <div style={{marginBottom: '0px',marginTop: '-10px'}} className="ml-4">
-                <Caption as="h2" className="text-orange-600">
+                <Caption as="h2" className="text-orange-600 mb-4">
                     {isChinese === true ? '告警' : 'Alerts'}
                 </Caption>
+                <BigText className="mb-8">
+                    <Widont>{isChinese ? "不要错失任何重要的错误" : 'Never lose sight of your data errors'}</Widont>
+                </BigText>
+                <Paragraph className="mb-4">
+                  {isChinese ? '为你的数据创建告警阈值，我们会持续对数据进行跟踪和报告，不要让错误影响你的业务' : "Create, track, and report on the errors most critical to your business."}  
+                </Paragraph>
             </div>
 
             <div className={`grid ${styles.layout}`} style={{marginTop: '-10px'}}>

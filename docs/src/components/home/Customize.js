@@ -1,8 +1,9 @@
 import { gradients } from '@/utils/gradients'
 import React from 'react'
-import { Caption, IconContainer } from './common'
+import { BigText, Caption, IconContainer, Paragraph } from './common'
 import styles from './Hero.module.css'
 import { ReactComponent as Icon } from '@/img/icons/home/customization.svg'
+import { Widont } from '../Widont'
 
 export function Customize({isChinese} = props) {
     const pin = 'left'
@@ -14,9 +15,15 @@ export function Customize({isChinese} = props) {
                 </IconContainer>
             </div>
             <div style={{marginBottom: '0px',marginTop: '-10px'}} className="ml-4">
-                <Caption as="h2" className="text-rose-600">
+                <Caption as="h2" className="text-rose-600 mb-4">
                 {isChinese === true ? '个性化' :"Customization"}
                 </Caption>
+                <BigText className="mb-8">
+                    <Widont>{isChinese ? "定义自己的网站" : 'Customize your own website'}</Widont>
+                </BigText>
+                <Paragraph className="mb-4">
+                  {isChinese ? 'Datav在很多方面都支持自定义，外观主题、阅读语言、菜单栏等，使用这些功能，你可以很轻松的打造出自己想要的网站效果，让数据平台不再枯燥单一' : "Datav supports customization in many aspects, such as appearance theme, reading language, menu nav, etc. Using these, you can easily create the website you want, so that the data platform is no longer boring and same"}  
+                </Paragraph>
             </div>
 
             <div className={`grid ${styles.layout}`} style={{marginTop: '-10px'}}>
@@ -44,6 +51,10 @@ export function Customize({isChinese} = props) {
 
                                         <p className="text-lg font-semibold text-rose-500 mt-2">
                                         {isChinese === true ? '中国用户再也不用担心英文的问题了，Datav原生对中文进行了支持'  :"Don’t want to be one of those websites that people can't understand? Use other language, such as chinese."}
+                                        </p>
+
+                                        <p className="text-lg font-semibold text-rose-500 mt-2">
+                                        {isChinese === true ? '自定义导航菜单，把重要的页面放在导航菜单中，而不是搜索中'  :"Customize the navigation menu, link the important pages to the navigation menu instead of searching them"}
                                         </p>
                                     </blockquote>
                                 </div>

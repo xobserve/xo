@@ -1,8 +1,9 @@
 import { gradients } from '@/utils/gradients'
 import React from 'react'
-import { Caption, IconContainer } from './common'
+import { BigText, Caption, IconContainer, Paragraph } from './common'
 import styles from './Hero.module.css'
 import { ReactComponent as Icon } from '@/img/icons/home/constraint-based.svg'
+import { Widont } from '../Widont'
 
 export function Visualize({ isChinese } = props) {
     const pin = 'left'
@@ -15,9 +16,15 @@ export function Visualize({ isChinese } = props) {
                 </IconContainer>
             </div>
             <div style={{ marginBottom: '0px', marginTop: '-10px' }} className="ml-4">
-                <Caption as="h2" className="text-purple-600">
+                <Caption as="h2" className="text-purple-600 mb-4">
                     {isChinese === true ? '可视化' : 'Visualize'}
                 </Caption>
+                <BigText className="mb-8">
+                    <Widont>{isChinese ? "全盘掌控和可视化你的数据" : 'Get full visibility into your data'}</Widont>
+                </BigText>
+                <Paragraph className="mb-10">
+                  {isChinese ? 'Datav拥有直观的可视化数据接口、数量众多且优美的可视化图表组件，同时还具备丰富的特性帮助你创建可交互式的图表' : "Datav has an intuitive interface to visualize datasets, a wide array of beautiful visualizations to showcase your data, and powerful features to  create interactive dashboards，"}  
+                </Paragraph>
             </div>
 
             <div className={`grid ${styles.layout}`} style={{ marginTop: '-10px' }}>
