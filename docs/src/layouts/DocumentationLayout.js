@@ -48,6 +48,7 @@ export function DocumentationLayout(props) {
         pages['advance-permissions'],
         pages['alerts'],
         pages['panel-interactive'],
+        pages['advance-dashboard'],
       ],
       '插件指南': [
         pages['plugins-overview'],
@@ -78,6 +79,7 @@ export function DocumentationLayout(props) {
         pages['advance-permissions'],
         pages['alerts'],
         pages['panel-interactive'],
+        pages['advance-dashboard'],
       ],
       'Plugins': [
         pages['plugins-overview'],
