@@ -1,5 +1,5 @@
 import { Testimonials } from '@/components/Testimonials'
-import {Visualize} from '@/components/home/visualize'
+import { Visualize } from '@/components/home/Visualize'
 import { Search } from '@/components/Search'
 import { BigText, InlineCode, Link, Paragraph, Widont } from '@/components/home/common'
 import { useEffect, useState } from 'react'

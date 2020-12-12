@@ -1,5 +1,5 @@
 ---
-title: 安装启动
+title: Installation
 ---
 
 import { Heading } from '@/components/Heading'
@@ -8,45 +8,45 @@ import Link from 'next/link'
 import stats from '@/utils/stats'
 import { TipCompat } from '@/components/Tip'
 
-## 下载并启动
-### <Heading number="1">在Github下载服务</Heading>
-访问<a href="https://github.com/apm-ai/datav/releases" target="_blank">Github</a>下载最新版本的安装包
+## Precompiled binaries
+### <Heading number="1">Download from Github</Heading>
+Visit <a href="https://github.com/apm-ai/datav/releases" target="_blank">Github</a> to download the latest release.
 
 
 
-### <Heading number="2">启动服务</Heading>
+### <Heading number="2">Running datav</Heading>
 
 ```bash
-## 进入到下载后的datav目录下
+## Switch to the directory datav resides
 cd YOUR_DATAV_PATH
 
-### 启动datav
+### Start datav
 ./datav
 ```
 
-服务器已经成功启动，访问http://localhost:3003，进行登陆，然后你就能看到datav的UI页面了。
+The service is now started, visit http://localhost:3003 and login. Welcome to the datav platform.
 
-<TipCompat>强烈建议使用Chrome或者Safari浏览器，IE/Edge可能会存在不兼容的问题</TipCompat>
+<TipCompat>Chrome or Safari is strongly advised，IE/Edge might be incompatible</TipCompat>
 
 ```css
-默认用户：admin
-默认密码：admin
+Default user: admin
+Default password: admin
 ```
 
 
-## 开发模式启动
-如果你想对Datav进行二次开发，需要使用源码来启动。
+## Running in development mode
+You'll need the source code if you want to work on datav itself.
 
-### <Heading number="1">启动后端服务</Heading>
+### <Heading number="1">Start the backend service</Heading>
 ```bash
 > git clone https://github.com/apm-ai/datav
 > cd datav
 > go build
-> ./datav generate ##只在初次启动或者安装了新插件后需要此步骤
+> ./datav generate ## Required only on fresh start or new plugin added
 > ./datav &
 ```
 
-### <Heading number="2">启动UI服务</Heading>
+### <Heading number="2">Start the UI</Heading>
 ```bash
 ```bash
 > cd ui
