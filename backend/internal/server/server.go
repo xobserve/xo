@@ -232,6 +232,8 @@ func (s *Server) Start() error {
 				alertingR.GET("/history", alerting.GetHistory)
 				alertingR.GET("/rules", alerting.GetRules)
 				alertingR.POST("/pause", alerting.PauseAlert)
+
+				alertingR.GET("/history/filter", alerting.FilterHistory)
 			}
 		}
 

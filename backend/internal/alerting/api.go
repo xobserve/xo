@@ -416,6 +416,10 @@ func GetHistory(c *gin.Context) {
 	return
 }
 
+func FilterHistory(c *gin.Context) {
+
+}
+
 type DashboardAlertRule struct {
 	ID           int64     `json:"id"`
 	TeamId       int64     `json:"teamId"`
