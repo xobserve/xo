@@ -524,7 +524,7 @@ export default class CanvasDrawer {
             const showBaselines = this.controller.props.options.showBaselines;
             const thresholdViolation = this.thresholdViolate(this.controller.props.options.threshold, metrics)
             if (showBaselines && thresholdViolation) {
-                this._drawThresholdStroke(ctx, node, thresholdViolation, 15, 5, 0.5);
+                this._drawThresholdStroke(ctx, node, thresholdViolation, 15, 5, 0.5, false);
             }
         } else {
             this._drawExternalService(ctx, node);
@@ -603,7 +603,7 @@ export default class CanvasDrawer {
         }
     }
 
-    _drawThresholdStroke(ctx: CanvasRenderingContext2D, node: cytoscape.NodeSingular, violation: boolean, radius: number, width: number, baseStrokeWidth: number) {
+    _drawThresholdStroke(ctx: CanvasRenderingContext2D, node: cytoscape.NodeSingular, violation: boolean, radius: number, width: number, baseStrokeWidth: number,drawInner: boolean) {
         const pos = node.position();
         const cX = pos.x;
         const cY = pos.y;
@@ -635,11 +635,13 @@ export default class CanvasDrawer {
         ctx.stroke();
 
         // inner
-        ctx.beginPath();
-        ctx.arc(cX, cY, radius - width - baseStrokeWidth, 0, 2 * Math.PI, false);
-        ctx.closePath();
-        ctx.fillStyle = violation ? 'rgb(184, 36, 36)' : '#37872d';
-        ctx.fill();
+        if (drawInner) {
+            ctx.beginPath();
+            ctx.arc(cX, cY, radius - width - baseStrokeWidth, 0, 2 * Math.PI, false);
+            ctx.closePath();
+            ctx.fillStyle = violation ? 'rgb(184, 36, 36)' : '#37872d';
+            ctx.fill();
+        }
     }
 
     _drawExternalService(ctx: CanvasRenderingContext2D, node: cytoscape.NodeSingular) {
