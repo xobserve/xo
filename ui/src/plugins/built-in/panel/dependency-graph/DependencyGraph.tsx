@@ -218,14 +218,16 @@ export class DependencyGraph extends PureComponent<Props, State> {
     this.validQueryTypes = this.hasOnlyTableQueries(data);
 
     if (this.validQueryTypes) {
-      const graphData = this.preProcessor.processData(data);
+      if (this.props.options.dataMapping !== undefined) {
+        const graphData = this.preProcessor.processData(data);
 
-      console.groupCollapsed('Processed received data');
-      console.log('raw data: ', data);
-      console.log('graph data: ', graphData);
-      console.groupEnd();
-
-      this.currentData = graphData;
+        console.groupCollapsed('Processed received data');
+        console.log('raw data: ', data);
+        console.log('graph data: ', graphData);
+        console.groupEnd();
+  
+        this.currentData = graphData;
+      }
     } else {
       this.currentData = undefined;
     }
@@ -444,6 +446,8 @@ export class DependencyGraph extends PureComponent<Props, State> {
     const { paused, showStatistics, graphData, filterConditions} = this.state
 
     const onClickFunc = new Function("data,history,setVariable,setTime", getTemplateSrv().replace(this.props.options.clickEvent))
+
+
 
     if (this.props.options.showDummyData) {
       this.processQueryData(dummyData);

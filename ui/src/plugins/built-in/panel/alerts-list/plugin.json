@@ -1,0 +1,20 @@
+{
+  "type": "panel",
+  "name": "Alerts List",
+  "id": "alerts-list",
+
+  "info": {
+    "description": "Shows list of alerts and their current status",
+    "author": {
+      "name": "Datav"
+    },
+    "keywords": ["panel", "template"],
+    "logos": {
+      "small": "alerts-list-logo.svg",
+      "large": "alerts-list-logo.svg"
+    },
+    "screenshots": [],
+    "version": "%VERSION%",
+    "updated": "%TODAY%"
+  }
+}

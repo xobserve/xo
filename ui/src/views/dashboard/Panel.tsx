@@ -52,7 +52,8 @@ export interface State {
 export class Panel extends PureComponent<Props, State> {
   timeSrv: TimeSrv = getTimeSrv();
   querySubscription: Unsubscribable;
-
+  unmounted: boolean
+  
   constructor(props: Props) {
     super(props);
 
@@ -153,6 +154,7 @@ export class Panel extends PureComponent<Props, State> {
         break;
     }
 
+    console.log(data)
     this.setState({ isFirstLoad, errorMessage, data });
   }
 
