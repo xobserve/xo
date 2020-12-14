@@ -1,5 +1,5 @@
 import React, { FC } from 'react';
-
+import _ from 'lodash'
 import { Icon, IconName,config, getBootConfig, currentLang} from 'src/packages/datav-core/src';
 import './Footer.less'
 import { FormattedMessage } from 'react-intl';
@@ -14,15 +14,19 @@ export interface FooterLink {
 }
 
 export let getFooterLinks = (): FooterLink[] => {
+  let links = []
+  if (getBootConfig().common.enableDocs) {
+    links.push(   {
+      id:1,
+      title: <FormattedMessage id="common.documentation"/>,
+      icon: 'document-info',
+      url: currentLang === Langs.Chinese ? `${getBootConfig().common.docsAddr}/docs-cn`:`${getBootConfig().common.docsAddr}/docs`,
+      target: '_blank',
+    })
+  }
+
   if (getBootConfig().common.enableCommunity) {
-    return [
-      {
-        id:1,
-        title: <FormattedMessage id="common.documentation"/>,
-        icon: 'document-info',
-        url: currentLang === Langs.Chinese ? `${getBootConfig().common.docsAddr}/docs-cn`:`${getBootConfig().common.docsAddr}/docs`,
-        target: '_blank',
-      },
+    links = _.concat(links,[
       {
         id:2,
         title: <FormattedMessage id="common.support"/>,
@@ -44,18 +48,10 @@ export let getFooterLinks = (): FooterLink[] => {
         url: 'https://github.com/datadefeat/datav',
         target: '_blank',
       },
-    ];
+    ])
   }
 
-  return [
-    {
-      id:1,
-      title: <FormattedMessage id="common.documentation"/>,
-      icon: 'document-info',
-      url: 'https://datav.dev/docs',
-      target: '_blank',
-    }
-  ];
+  return links
 };
 
 export let getVersionLinks = (): FooterLink[] => {

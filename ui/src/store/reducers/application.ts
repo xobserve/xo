@@ -1,7 +1,7 @@
 import { createAction } from '@reduxjs/toolkit';
 
 import storage from 'src/core/library/utils/localStorage'
-import {config, setCurrentLang} from 'src/packages/datav-core/src'
+import {config, getBootConfig, setCurrentLang} from 'src/packages/datav-core/src'
 import { Langs } from 'src/core/library/locale/types';
  
 export  interface ApplicationState {
@@ -16,7 +16,7 @@ const defaultBreadCrumbText = 'Default Title'
 export const initialState: ApplicationState = {
   startDate: storage.get('app.startDate') || config.application.startDate(),
   endDate: storage.get('app.endDate') || config.application.endDate(),
-  locale : storage.get('app.locale') || config.application.locale,
+  locale : storage.get('app.locale') || getBootConfig().common.defaultLang,
   theme: storage.get('app.theme') || config.application.theme,
   breadcrumbText: defaultBreadCrumbText
 }; 

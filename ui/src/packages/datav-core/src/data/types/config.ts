@@ -2,15 +2,18 @@ export interface DatavConfig {
   panel: PanelConfig
   dashboard: DashboardConfig,
   application: ApplicationConfig,
-  user : UserConfig
+  user: UserConfig
 }
 
 export interface CommonConfig {
-  appName: string 
+  appName: string
   version: string
   enableCommunity: boolean
   rootUrlRedirect: string
   docsAddr: string
+  defaultLang: string
+  enableMultiLang: boolean
+  enableDocs: boolean
 }
 
 export interface PanelConfig {
@@ -22,7 +25,7 @@ export interface DashboardConfig {
 }
 
 export interface ApplicationConfig {
-  startDate: any ,
+  startDate: any,
   endDate: any,
   theme: string,
   locale: string

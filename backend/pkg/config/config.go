@@ -16,6 +16,9 @@ type Config struct {
 		LogLevel        string `yaml:"log_level"`
 		AppName         string `yaml:"app_name"`
 		EnableCommunity bool   `yaml:"enable_community_entry"`
+		EnableMultiLang bool   `yaml:"enable_multi_lang"`
+		DefaultLang     string `yaml:"default_lang"`
+		EnableDocs      bool   `yaml:"enable_docs_entry"`
 	}
 
 	Server struct {

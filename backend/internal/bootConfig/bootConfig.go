@@ -23,6 +23,9 @@ type CommonSettings struct {
 	AppName         string `json:"appName"`
 	Version         string `json:"version"`
 	EnableCommunity bool   `json:"enableCommunity"`
+	EnableDocs      bool   `json:"enableDocs"`
+	EnableMultiLang bool   `json:"enableMultiLang"`
+	DefaultLang     string `json:"defaultLang"`
 	RootUrlRedirect string `json:"rootUrlRedirect"`
 	DocsAddr        string `json:"docsAddr"`
 }
@@ -104,6 +107,9 @@ func QueryBootConfig(c *gin.Context) {
 			EnableCommunity: config.Data.Common.EnableCommunity,
 			RootUrlRedirect: config.Data.Server.RootUrlRedirect,
 			DocsAddr:        config.Data.Server.DocsAddr,
+			EnableDocs:      config.Data.Common.EnableDocs,
+			EnableMultiLang: config.Data.Common.EnableMultiLang,
+			DefaultLang:     config.Data.Common.DefaultLang,
 		},
 		DataSourceMetas: plugins.DataSources,
 		DataSources:     datasources,
