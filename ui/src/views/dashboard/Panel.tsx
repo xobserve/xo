@@ -154,7 +154,6 @@ export class Panel extends PureComponent<Props, State> {
         break;
     }
 
-    console.log(data)
     this.setState({ isFirstLoad, errorMessage, data });
   }
 

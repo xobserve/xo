@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react'
+import _ from 'lodash'
 import { getBackendSrv } from 'src/core/services/backend'
 import {Select} from 'antd'
 import { Team } from 'src/types'
@@ -13,14 +14,14 @@ interface Props {
     allowClear? : boolean
 }
 
-const TeamPicker = (props:Props) =>{
+export const TeamPicker = (props:Props) =>{
     const [teams,setTeams]: [Team[],any] = useState([])
     const loadTeams = async () => {
         const res = await getBackendSrv().get(`/api/teams`)
         if (props.enableAll) {
             res.data.unshift({
                 id: 0,
-                name: 'All'
+                name: 'all teams'
             })
         }
         setTeams(res.data)
@@ -34,13 +35,24 @@ const TeamPicker = (props:Props) =>{
         return <Option key={team.id} value={team.id}>{team.name}</Option>
     })
 
+    const onChange = (v) => {
+        if (props.mutiple) {
+            if (_.indexOf(v, 0) !== -1) {
+                props.onChange([0])
+                return 
+            }
+        }
+
+        props.onChange(v)
+    }
+
     return (
         <>
             <Select 
                 value={props.value} 
                 className="width-14" 
                 mode={props.mutiple? "multiple" : null} 
-                onChange={props.onChange} 
+                onChange={onChange} 
                 placeholder="teams"
                 showSearch
                 filterOption={(input, option) =>
