@@ -88,7 +88,7 @@ export const plugin = new PanelPlugin<Options, CustomFieldConfig>(TablePanel)
     }
     return (
       <div>
-        <div>function(data, history, setVariable) <span className="color-primary">&nbsp;{` {`}</span></div>
+        <div>function(data, history, setVariable, setTime) <span className="color-primary">&nbsp;{` {`}</span></div>
            <CodeEditor
           width="100%"
           height="200px"
