@@ -61,7 +61,6 @@ export class AlertHistoryPage extends PureComponent<Props, State> {
 
     async fetchHistory(stateFilter,teamId) {
         const res = await getBackendSrv().get('/api/alerting/history', {type:'team', teamId: teamId, stateFilter: stateFilter })
-        console.log(res.data)
         const data = res.data
         const items = data.map((item: any) => {
            item.stateModel = alertDef.getStateDisplayModel(item.state)
@@ -101,8 +100,8 @@ export class AlertHistoryPage extends PureComponent<Props, State> {
 
         return (
             <Page navModel={navModel}>
-                <Page.Contents isLoading={!hasFetched}>
-                    <AlertHistoryList histories={alertHistories} onStateFilterChange={this.onStateFilterChange} teams={teams} onTeamChange={this.onTeamChange}  enableSnapshot/>
+                <Page.Contents isLoading={!hasFetched}> 
+                    <AlertHistoryList histories={alertHistories} onStateFilterChange={this.onStateFilterChange} teams={teams} onTeamChange={this.onTeamChange} showTotalTips  enableSnapshot/>
                 </Page.Contents>
             </Page>
         );

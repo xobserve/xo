@@ -14,50 +14,51 @@ export const plugin = new PanelPlugin<AlertsListOptions>(StarterPanel).setPanelO
       description: 'max alert items  allowed showing in panel',
       defaultValue: 10,
     })
-    .addSelect({
-      path: 'sortOrder',
-      name: 'Sort order',
-      description: 'how to sort alerts',
-      defaultValue: 1,
-      category: ['Options'],
-      settings: {
-        options: [
-          { label: 'Date desc', value: 1 },
-          { label: 'Date asc', value: 2 },
-        ]
-      }
-    })
+    // .addSelect({
+    //   path: 'sortOrder',
+    //   name: 'Sort order',
+    //   description: 'how to sort alerts',
+    //   defaultValue: 1,
+    //   category: ['Options'],
+    //   settings: {
+    //     options: [
+    //       { label: 'Date desc', value: 1 },
+    //       { label: 'Date asc', value: 2 },
+    //     ]
+    //   }
+    // })
     
     .addTextInput({
-      path: 'filter.dahUID',
+      path: 'dahUID',
       name: 'Dashboard uid',
-      category: ['Filter'],
+      category: ['Options'],
       description: `filter by dashboard uid list, eg : u1dsf,1diisf`,
       defaultValue: '',
     })
     .addCustomEditor({
       id: 'alerts-list-team-picker',
-      path: "filter.teams",
+      path: "teams",
+      description: `filter by teams`,
       name: 'Team',
-      category: ['Filter'],
+      category: ['Options'],
       defaultValue: [0],
       editor: TeamEditor
     })
 
     .addBooleanSwitch({
-      path: 'filter.ok',
-      description: 'show alerts that has ok state',
-      category: ['Filter'],
-      name: 'OK',
-      defaultValue: true,
+      path: 'currentTimeRange',
+      description: 'whether to use current time range',
+      category: ['Options'],
+      name: 'Current time range',
+      defaultValue: false,
     })
-    .addBooleanSwitch({
-      path: 'filter.alerting',
-      description: 'show alerts that has alerting state',
-      category: ['Filter'],
-      name: 'Alerting',
-      defaultValue: true,
-    })
+    // .addBooleanSwitch({
+    //   path: 'filter.alerting',
+    //   description: 'show alerts that has alerting state',
+    //   category: ['Filter'],
+    //   name: 'Alerting',
+    //   defaultValue: true,
+    // })
 });
 
 

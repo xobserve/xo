@@ -16,6 +16,7 @@ interface Props {
     onStateFilterChange?: any
     teams?: Team[]
     onTeamChange?: any
+    showTotalTips?: boolean
 }
 
 const AlertHistoryList = (props: Props) => {
@@ -36,9 +37,9 @@ const AlertHistoryList = (props: Props) => {
     const gotoSnapshot = (history: AlertHistory) => {
         if (props.enableSnapshot) {
             // snapshot timerange is [current -15m, current + 15m]
-            const from = (history.timeUnix - 15 * 60) * 1000
-            const to = (history.timeUnix + 15 * 60) * 1000
-            getHistory().push(history.dashboardUrl + '?from=' + from + '&to=' + to)
+            // const from = (history.timeUnix - 15 * 60) * 1000
+            // const to = (history.timeUnix + 15 * 60) * 1000
+            getHistory().push(history.dashboardUrl)
         }
     }
 
@@ -102,7 +103,7 @@ const AlertHistoryList = (props: Props) => {
             }
 
 
-            {props.histories.length > 0 && (
+            {props.showTotalTips && props.histories.length > 0 && (
                 <div className="p-b-1">
                     <span className="muted"> <FormattedMessage id="alerting.historiesCount" values={{count: props.histories.length}}/></span>
                 </div>

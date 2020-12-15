@@ -233,7 +233,7 @@ func (s *Server) Start() error {
 				alertingR.GET("/rules", alerting.GetRules)
 				alertingR.POST("/pause", alerting.PauseAlert)
 
-				alertingR.GET("/history/filter", alerting.FilterHistory)
+				alertingR.POST("/history/filter", alerting.FilterHistory)
 			}
 		}
 

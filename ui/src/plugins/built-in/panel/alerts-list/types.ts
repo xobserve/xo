@@ -1,9 +1,11 @@
 export interface AlertsListOptions {
   maxItems: number
   sortOrder: number
+  currentTimeRange: boolean
+  teams: number[]
+  dahUID: string 
   filter : {
-    dahUID: string 
-    teams: number[]
+
     ok:boolean
     alerting: boolean
   }

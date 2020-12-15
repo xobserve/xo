@@ -210,3 +210,13 @@ func QueryDashboardsByTeamId(teamId int64) ([]*Dashboard, error) {
 
 	return dashboards, nil
 }
+
+func QueryDashIDByUID(uid string) int64 {
+	var id int64
+	err := db.SQL.QueryRow(`SELECT id from dashboard WHERE uid=?`, uid).Scan(&id)
+	if err != nil && err != sql.ErrNoRows {
+		logger.Warn("query dash id by uid error", "error", err)
+	}
+
+	return id
+}

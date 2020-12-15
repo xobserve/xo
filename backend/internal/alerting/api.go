@@ -416,8 +416,125 @@ func GetHistory(c *gin.Context) {
 	return
 }
 
-func FilterHistory(c *gin.Context) {
+type FilterHistoryReq struct {
+	MaxItems  int                  `json:"maxItems"`
+	SortOrder int                  `json:"sortOrder"`
+	Teams     []int64              `json:"teams"`
+	Filter    *FilterHistoryFilter `json:"filter"`
+	From      int64                `json:"from"`
+	To        int64                `json:"to"`
+	DashUID   string               `json:"dahUID"`
+}
 
+type FilterHistoryFilter struct {
+	OK       bool `json:"ok"`
+	Alerting bool `json:"alerting"`
+}
+
+func FilterHistory(c *gin.Context) {
+	req := &FilterHistoryReq{}
+	c.Bind(&req)
+
+	if req.MaxItems <= 0 {
+		req.MaxItems = 10
+	}
+
+	if req.SortOrder != 1 && req.SortOrder != 2 {
+		req.SortOrder = 1
+	}
+
+	dashIDs := make([]int64, 0)
+	// first filter the dashboards by uids
+	uids := strings.Split(req.DashUID, ",")
+	if len(uids) != 0 {
+		for _, uid := range uids {
+			dashID := models.QueryDashIDByUID(uid)
+			if dashID != 0 {
+				dashIDs = append(dashIDs, dashID)
+			}
+		}
+	}
+
+	if len(dashIDs) == 0 {
+		// second filter the dashboard by teamids
+		for _, teamId := range req.Teams {
+			if teamId == 0 {
+				for id := range cache.Dashboards {
+					dashIDs = append(dashIDs, id)
+				}
+			} else {
+				dashes, _ := models.QueryDashboardsByTeamId(teamId)
+				if len(dashes) > 0 {
+					for _, dash := range dashes {
+						dashIDs = append(dashIDs, dash.Id)
+					}
+				}
+			}
+		}
+	}
+
+	// get all alerts history, then sort them by sortOrder
+	histories := make(models.AlertHistories, 0)
+	for _, dashID := range dashIDs {
+		var rows *sql.Rows
+		var err error
+		if req.From != 0 {
+			from := time.Unix(req.From, 0)
+			to := time.Unix(req.To, 0)
+			rows, err = db.SQL.Query("SELECT id,dashboard_id,panel_id,state,created FROM alert_history WHERE dashboard_id=? and created >= ? and created <= ? order by created desc limit ?", dashID, from, to, req.MaxItems)
+		} else {
+			rows, err = db.SQL.Query("SELECT id,dashboard_id,panel_id,state,created FROM alert_history WHERE dashboard_id=? order by created desc limit ?", dashID, req.MaxItems)
+		}
+
+		if err != nil {
+			if err != sql.ErrNoRows {
+				logger.Warn("query alert history error", "error", err)
+			}
+			continue
+		}
+
+		for rows.Next() {
+			ah := &models.AlertHistory{}
+			var created time.Time
+			err := rows.Scan(&ah.ID, &ah.DashboardID, &ah.PanelID, &ah.State, &created)
+			if err != nil {
+				logger.Warn("scan alert history error", "error", err)
+				continue
+			}
+
+			ah.Time = created.UnixNano() / 1e6
+			ah.TimeUnix = created.Unix()
+
+			alertExist := false
+			for _, alert := range cache.Alerts {
+				if alert.DashboardId == ah.DashboardID && alert.PanelId == ah.PanelID {
+					ah.AlertName = alert.Name
+					alertExist = true
+				}
+			}
+
+			if !alertExist {
+				// alert has been removed, but history has not
+				continue
+			}
+
+			dash, ok := cache.Dashboards[ah.DashboardID]
+			if ok {
+				ah.DashboardUrl = fmt.Sprintf("/d/%s/%s", dash.Uid, dash.Slug)
+				ah.TeamId = dash.OwnedBy
+			}
+
+			histories = append(histories, ah)
+		}
+	}
+
+	sort.Sort(histories)
+
+	if req.MaxItems < len(histories) {
+		histories = histories[:req.MaxItems]
+	}
+
+	c.JSON(200, common.ResponseSuccess(histories))
 }
 
 type DashboardAlertRule struct {
