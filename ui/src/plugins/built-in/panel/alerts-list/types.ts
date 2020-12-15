@@ -2,8 +2,7 @@ export interface AlertsListOptions {
   maxItems: number
   sortOrder: number
   filter : {
-    onlyAlertsOnDashboard: boolean
-    alertName: string 
+    dahUID: string 
     teams: number[]
     ok:boolean
     alerting: boolean

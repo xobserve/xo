@@ -28,17 +28,11 @@ export const plugin = new PanelPlugin<AlertsListOptions>(StarterPanel).setPanelO
       }
     })
     
-    .addBooleanSwitch({
-      path: 'filter.onlyAlertsOnDashboard',
-      category: ['Filter'],
-      name: 'Alerts from this dashboard',
-      defaultValue: false,
-    })
     .addTextInput({
-      path: 'filter.alertName',
-      name: 'Alert name',
+      path: 'filter.dahUID',
+      name: 'Dashboard uid',
       category: ['Filter'],
-      description: 'alert name query',
+      description: `filter by dashboard uid list, eg : u1dsf,1diisf`,
       defaultValue: '',
     })
     .addCustomEditor({

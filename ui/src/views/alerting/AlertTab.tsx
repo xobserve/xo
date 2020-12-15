@@ -22,6 +22,8 @@ import localeData from 'src/core/library/locale';
 import { NotifierPicker } from '../cfg/teams/team/Notifiers/Picker';
 import { injectIntl, IntlShape, FormattedMessage } from 'react-intl';
 import { Langs } from 'src/core/library/locale/types';
+import { getUrlParams } from 'src/core/library/utils/url';
+import team from 'src/core/library/locale/en/team';
 
 
 const { Option } = Select
@@ -78,7 +80,16 @@ class UnConnectedAlertTab extends PureComponent<Props & IntlProps, State> {
 
   async componentDidMount() {
     // get all notifications this dashboard can use
-    const res = await getBackendSrv().get(`/api/alerting/notification/${this.props.dashboard.meta.ownedBy}`)
+    // when in /dashboard/new, no team id is provided
+    let teamId = this.props.dashboard.meta.ownedBy
+    if (!teamId) {
+      teamId = getUrlParams()['fromTeam']
+      if (!teamId) {
+        // defaults belongs to global team
+        teamId = 1
+      }
+    }
+    const res = await getBackendSrv().get(`/api/alerting/notification/${teamId}`)
     for (const n of res.data) {
       n.icon = this.getNotificationIcon(n.type)
     }
