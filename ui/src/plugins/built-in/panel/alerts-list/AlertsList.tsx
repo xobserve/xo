@@ -1,6 +1,6 @@
 import React, { PureComponent } from 'react';
 import _ from 'lodash'
-import { PanelProps, withTheme, DatavTheme, getBackendSrv, dateTimeFormat } from 'src/packages/datav-core/src';
+import { PanelProps, withTheme, DatavTheme, getBackendSrv, dateTimeFormat, Icon } from 'src/packages/datav-core/src';
 import { AlertsListOptions } from './types';
 import { css, cx } from 'emotion';
 import { stylesFactory, useTheme } from 'src/packages/datav-core/src';
@@ -8,7 +8,8 @@ import { getTimeSrv } from 'src/core/services/time';
 import { AlertHistory } from 'src/types';
 import AlertHistoryList from 'src/views/alerting/AlertHistoryList';
 import alertDef from 'src/views/alerting/state/alertDef';
-
+import './AlertsList.less'
+import { FormattedMessage } from 'react-intl';
 interface Props extends PanelProps<AlertsListOptions> {
   theme: DatavTheme
 }
@@ -69,7 +70,8 @@ class AlertsList extends PureComponent<Props, State> {
     return (
       <div className="panel-alert-list">
         {alerts.length === 0 && <div className="panel-alert-list__no-alerts">
-          No alerts
+          <div><Icon name="smile-wink" size="xxxl" className="color-primary"/></div>
+            <div className="alerts-health"><FormattedMessage id="alertsList.healthTips"/></div>
           </div>}
 
         {alerts.length !== 0 &&

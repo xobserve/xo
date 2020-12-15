@@ -1,9 +1,11 @@
 import React from 'react'
-import { PanelPlugin } from 'src/packages/datav-core/src';
+import { currentLang, PanelPlugin } from 'src/packages/datav-core/src';
 import _ from 'lodash'
 import { AlertsListOptions } from './types';
 import StarterPanel  from './AlertsList';
 import TeamPicker from 'src/views/components/Pickers/TeamPicker';
+import './locale'
+import localeData from 'src/core/library/locale';
 
 export const plugin = new PanelPlugin<AlertsListOptions>(StarterPanel).setPanelOptions(builder => {
   return builder
@@ -11,7 +13,7 @@ export const plugin = new PanelPlugin<AlertsListOptions>(StarterPanel).setPanelO
       path: 'maxItems',
       name: 'Max items',
       category: ['Options'],
-      description: 'max alert items  allowed showing in panel',
+      description: localeData[currentLang]['alertsList.maxItemTips'],
       defaultValue: 10,
     })
     // .addSelect({
@@ -32,13 +34,13 @@ export const plugin = new PanelPlugin<AlertsListOptions>(StarterPanel).setPanelO
       path: 'dahUID',
       name: 'Dashboard uid',
       category: ['Options'],
-      description: `filter by dashboard uid list, eg : u1dsf,1diisf`,
+      description: localeData[currentLang]['alertsList.dashUidTips'],
       defaultValue: '',
     })
     .addCustomEditor({
       id: 'alerts-list-team-picker',
       path: "teams",
-      description: `filter by teams`,
+      description:localeData[currentLang]['alertsList.teamTips'],
       name: 'Team',
       category: ['Options'],
       defaultValue: [0],
@@ -47,7 +49,7 @@ export const plugin = new PanelPlugin<AlertsListOptions>(StarterPanel).setPanelO
 
     .addBooleanSwitch({
       path: 'currentTimeRange',
-      description: 'whether to use current time range',
+      description: localeData[currentLang]['alertsList.timeTips'],
       category: ['Options'],
       name: 'Current time range',
       defaultValue: false,
