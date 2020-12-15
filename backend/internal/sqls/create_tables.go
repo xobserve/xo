@@ -475,7 +475,8 @@ var CreateTableSqls = map[string]string{
 	CREATE TABLE IF NOT EXISTS alert_history (
 		id 						INTEGER PRIMARY KEY AUTOINCREMENT,
 		dashboard_id            INTEGER NOT NULL,
-		panel_id                INTEGER NOT NULL,     
+		panel_id                INTEGER NOT NULL,
+		alert_name              TEXT,     
 		state					VARCHAR(255) NOT NULL,
 		matches					TEXT NOT NULL,
 		created					DATETIME NOT NULL

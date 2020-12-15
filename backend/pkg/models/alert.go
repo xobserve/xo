@@ -416,8 +416,8 @@ func AddAlertHistory(context *EvalContext) {
 
 	now := time.Now()
 	matches, _ := json.Marshal(context.EvalMatches)
-	_, err := db.SQL.Exec("INSERT INTO alert_history (dashboard_id,panel_id,state,matches,created) VALUES (?,?,?,?,?)",
-		context.Rule.DashboardID, context.Rule.PanelID, context.Rule.State, matches, now)
+	_, err := db.SQL.Exec("INSERT INTO alert_history (dashboard_id,panel_id,state,matches,created,alert_name) VALUES (?,?,?,?,?,?)",
+		context.Rule.DashboardID, context.Rule.PanelID, context.Rule.State, matches, now, context.Rule.Name)
 	if err != nil {
 		logger.Error("add alert history error", "error", err)
 	}

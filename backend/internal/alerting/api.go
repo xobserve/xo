@@ -327,13 +327,13 @@ func GetHistory(c *gin.Context) {
 	var err error
 	switch tp {
 	case "panel":
-		rows, err = db.SQL.Query("SELECT id,dashboard_id,panel_id,state,matches,created FROM alert_history WHERE dashboard_id=? and panel_id=? order by created desc limit ?",
+		rows, err = db.SQL.Query("SELECT id,dashboard_id,panel_id,state,matches,created,alert_name FROM alert_history WHERE dashboard_id=? and panel_id=? order by created desc limit ?",
 			dashId, panelId, limit)
 	case "team":
 		var q string
 		if teamId == 0 {
 			// get all dashboards of all teams
-			q = fmt.Sprintf("SELECT id,dashboard_id,panel_id,state,matches,created FROM alert_history order by created desc limit %d", limit)
+			q = fmt.Sprintf("SELECT id,dashboard_id,panel_id,state,matches,created,alert_name FROM alert_history order by created desc limit %d", limit)
 		} else {
 			// get team dashboards
 			dashboards, err := models.QueryDashboardsByTeamId(teamId)
@@ -354,7 +354,7 @@ func GetHistory(c *gin.Context) {
 			}
 
 			dashIdStr := strings.Join(dashIds, "','")
-			q = fmt.Sprintf("SELECT id,dashboard_id,panel_id,state,matches,created FROM alert_history WHERE dashboard_id in ('%s') order by created desc limit %d",
+			q = fmt.Sprintf("SELECT id,dashboard_id,panel_id,state,matches,created,alert_name FROM alert_history WHERE dashboard_id in ('%s') order by created desc limit %d",
 				dashIdStr, limit)
 		}
 
@@ -379,7 +379,7 @@ func GetHistory(c *gin.Context) {
 		ah := &models.AlertHistory{}
 		var matches []byte
 		var created time.Time
-		err := rows.Scan(&ah.ID, &ah.DashboardID, &ah.PanelID, &ah.State, &matches, &created)
+		err := rows.Scan(&ah.ID, &ah.DashboardID, &ah.PanelID, &ah.State, &matches, &created, &ah.AlertName)
 		if err != nil {
 			logger.Warn("scan alert history error", "error", err)
 			continue
@@ -394,11 +394,11 @@ func GetHistory(c *gin.Context) {
 		ah.Time = created.UnixNano() / 1e6
 		ah.TimeUnix = created.Unix()
 
-		for _, alert := range cache.Alerts {
-			if alert.DashboardId == ah.DashboardID && alert.PanelId == ah.PanelID {
-				ah.AlertName = alert.Name
-			}
-		}
+		// for _, alert := range cache.Alerts {
+		// 	if alert.DashboardId == ah.DashboardID && alert.PanelId == ah.PanelID {
+		// 		ah.AlertName = alert.Name
+
+		// }
 
 		dash, ok := cache.Dashboards[ah.DashboardID]
 		if ok {
@@ -481,9 +481,9 @@ func FilterHistory(c *gin.Context) {
 		if req.From != 0 {
 			from := time.Unix(req.From, 0)
 			to := time.Unix(req.To, 0)
-			rows, err = db.SQL.Query("SELECT id,dashboard_id,panel_id,state,created FROM alert_history WHERE dashboard_id=? and created >= ? and created <= ? order by created desc limit ?", dashID, from, to, req.MaxItems)
+			rows, err = db.SQL.Query("SELECT id,dashboard_id,panel_id,state,created,alert_name FROM alert_history WHERE dashboard_id=? and created >= ? and created <= ? order by created desc limit ?", dashID, from, to, req.MaxItems)
 		} else {
-			rows, err = db.SQL.Query("SELECT id,dashboard_id,panel_id,state,created FROM alert_history WHERE dashboard_id=? order by created desc limit ?", dashID, req.MaxItems)
+			rows, err = db.SQL.Query("SELECT id,dashboard_id,panel_id,state,created,alert_name FROM alert_history WHERE dashboard_id=? order by created desc limit ?", dashID, req.MaxItems)
 		}
 
 		if err != nil {
@@ -496,7 +496,7 @@ func FilterHistory(c *gin.Context) {
 		for rows.Next() {
 			ah := &models.AlertHistory{}
 			var created time.Time
-			err := rows.Scan(&ah.ID, &ah.DashboardID, &ah.PanelID, &ah.State, &created)
+			err := rows.Scan(&ah.ID, &ah.DashboardID, &ah.PanelID, &ah.State, &created, &ah.AlertName)
 			if err != nil {
 				logger.Warn("scan alert history error", "error", err)
 				continue
@@ -508,7 +508,6 @@ func FilterHistory(c *gin.Context) {
 			alertExist := false
 			for _, alert := range cache.Alerts {
 				if alert.DashboardId == ah.DashboardID && alert.PanelId == ah.PanelID {
-					ah.AlertName = alert.Name
 					alertExist = true
 				}
 			}
