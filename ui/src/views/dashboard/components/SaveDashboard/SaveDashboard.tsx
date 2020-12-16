@@ -58,7 +58,7 @@ export async function saveDashboard(title, folderId, dashboard, originDashboard)
 
     setTimeout(() => {
         appEvents.emit(CoreEvents.dashboardSaved, dashboard)
-    }, 2000)
+    }, 500)
 
 
     return res
