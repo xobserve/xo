@@ -74,12 +74,12 @@ export const setCurrentLang = (lang: string) => {
 }
 
 
-
+console.log(window.location)
 //@legacy
 // config examples, remove in future
 export const config = {
     officialWebsite: 'https://datav.dev',
-    baseUrl: 'http://localhost:9085/',
+    baseUrl: `http://${window.location.hostname}:9085/`,
     appSubUrl: '/',
     minRefreshInterval: '5s',
     exploreEnabled: true,
