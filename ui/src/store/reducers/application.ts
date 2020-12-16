@@ -16,7 +16,7 @@ const defaultBreadCrumbText = 'Default Title'
 export const initialState: ApplicationState = {
   startDate: storage.get('app.startDate') || config.application.startDate(),
   endDate: storage.get('app.endDate') || config.application.endDate(),
-  locale : storage.get('app.locale') || getBootConfig().common.defaultLang,
+  locale : storage.get('app.locale') || config.application.locale ||getBootConfig().common.defaultLang,
   theme: storage.get('app.theme') || config.application.theme,
   breadcrumbText: defaultBreadCrumbText
 }; 
