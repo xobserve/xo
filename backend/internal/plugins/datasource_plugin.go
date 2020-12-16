@@ -1,7 +1,7 @@
 package plugins
 
 import (
-	"github.com/apm-ai/datav/backend/pkg/utils/errutil"
+	"github.com/opendatav/datav/backend/pkg/utils/errutil"
 	"encoding/json"
 )
 type DataSourcePlugin struct {

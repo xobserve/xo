@@ -4,7 +4,7 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/apm-ai/datav/backend/pkg/models"
+	"github.com/opendatav/datav/backend/pkg/models"
 )
 
 type TsdbQueryEndpoint interface {

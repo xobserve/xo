@@ -6,9 +6,9 @@ import (
 	"os/exec"
 	"path"
 
-	"github.com/apm-ai/datav/backend/pkg/config"
-	"github.com/apm-ai/datav/backend/pkg/utils"
-	"github.com/apm-ai/datav/backend/pkg/utils/errutil"
+	"github.com/opendatav/datav/backend/pkg/config"
+	"github.com/opendatav/datav/backend/pkg/utils"
+	"github.com/opendatav/datav/backend/pkg/utils/errutil"
 )
 
 var internalImports = make([]string, 0)

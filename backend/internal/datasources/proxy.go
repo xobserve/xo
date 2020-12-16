@@ -3,8 +3,8 @@ package datasources
 import (
 	"strconv"
 
-	"github.com/apm-ai/datav/backend/pkg/i18n"
-	"github.com/apm-ai/datav/backend/pkg/models"
+	"github.com/opendatav/datav/backend/pkg/i18n"
+	"github.com/opendatav/datav/backend/pkg/models"
 
 	// "time"
 	"bytes"
@@ -13,7 +13,7 @@ import (
 	"net/http"
 	"net/url"
 
-	"github.com/apm-ai/datav/backend/pkg/common"
+	"github.com/opendatav/datav/backend/pkg/common"
 
 	"github.com/gin-gonic/gin"
 )

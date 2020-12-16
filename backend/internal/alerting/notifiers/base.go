@@ -3,10 +3,10 @@ package notifiers
 import (
 	"time"
 
-	"github.com/apm-ai/datav/backend/pkg/utils/simplejson"
+	"github.com/opendatav/datav/backend/pkg/utils/simplejson"
 
-	"github.com/apm-ai/datav/backend/pkg/log"
-	"github.com/apm-ai/datav/backend/pkg/models"
+	"github.com/opendatav/datav/backend/pkg/log"
+	"github.com/opendatav/datav/backend/pkg/models"
 )
 
 var logger = log.RootLogger.New("logger", "alerting/notifiers")

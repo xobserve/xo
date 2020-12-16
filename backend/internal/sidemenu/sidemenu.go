@@ -2,9 +2,9 @@ package sidemenu
 
 import (
 	"encoding/json"
-	"github.com/apm-ai/datav/backend/pkg/models"
-	"github.com/apm-ai/datav/backend/pkg/db"
-	"github.com/apm-ai/datav/backend/pkg/log"
+	"github.com/opendatav/datav/backend/pkg/models"
+	"github.com/opendatav/datav/backend/pkg/db"
+	"github.com/opendatav/datav/backend/pkg/log"
 )
 
 var logger = log.RootLogger.New("logger","server")

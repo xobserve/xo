@@ -5,8 +5,8 @@ import (
 	"fmt"
 	"html/template"
 
-	"github.com/apm-ai/datav/backend/pkg/config"
-	"github.com/apm-ai/datav/backend/pkg/models"
+	"github.com/opendatav/datav/backend/pkg/config"
+	"github.com/opendatav/datav/backend/pkg/models"
 	"github.com/jordan-wright/email"
 )
 

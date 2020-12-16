@@ -3,9 +3,9 @@ package tsdb
 import (
 	"encoding/json"
 
-	"github.com/apm-ai/datav/backend/pkg/models"
-	"github.com/apm-ai/datav/backend/pkg/utils/null"
-	"github.com/apm-ai/datav/backend/pkg/utils/simplejson"
+	"github.com/opendatav/datav/backend/pkg/models"
+	"github.com/opendatav/datav/backend/pkg/utils/null"
+	"github.com/opendatav/datav/backend/pkg/utils/simplejson"
 
 	"github.com/grafana/grafana-plugin-sdk-go/data"
 )

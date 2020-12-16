@@ -4,9 +4,9 @@ import (
 	"errors"
 	"time"
 
-	"github.com/apm-ai/datav/backend/pkg/utils/simplejson"
+	"github.com/opendatav/datav/backend/pkg/utils/simplejson"
 
-	"github.com/apm-ai/datav/backend/pkg/models"
+	"github.com/opendatav/datav/backend/pkg/models"
 )
 
 // NotifierPlugin holds meta information about a notifier.

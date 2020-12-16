@@ -1,6 +1,6 @@
 package plugins
 
-import "github.com/apm-ai/datav/backend/pkg/models"
+import "github.com/opendatav/datav/backend/pkg/models"
 
 type PluginRoute struct {
 	Path         string                `json:"path"`

@@ -21,9 +21,9 @@ import (
 	"github.com/spf13/cobra"
 	"github.com/spf13/pflag"
 
-	"github.com/apm-ai/datav/backend/internal/sqls"
-	"github.com/apm-ai/datav/backend/pkg/config"
-	"github.com/apm-ai/datav/backend/pkg/log"
+	"github.com/opendatav/datav/backend/internal/sqls"
+	"github.com/opendatav/datav/backend/pkg/config"
+	"github.com/opendatav/datav/backend/pkg/log"
 )
 
 var createFlags []string

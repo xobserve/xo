@@ -8,8 +8,8 @@ import (
 	"strconv"
 	"time"
 
-	"github.com/apm-ai/datav/backend/pkg/models"
-	"github.com/apm-ai/datav/backend/pkg/utils/simplejson"
+	"github.com/opendatav/datav/backend/pkg/models"
+	"github.com/opendatav/datav/backend/pkg/utils/simplejson"
 )
 
 // DashAlertExtractor extracts alerts from the dashboard json.

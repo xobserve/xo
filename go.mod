@@ -1,4 +1,4 @@
-module github.com/apm-ai/datav
+module github.com/opendatav/datav
 
 go 1.14
 

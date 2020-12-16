@@ -75,7 +75,7 @@ export const WelcomeBanner: FC = () => {
                 {/* <img src="/img/logo.png" height="20" width="20" className="ub-mr1 inline" /> */}
                 {getBootConfig().common.appName.toUpperCase()}</div>
               <div>
-              <a href="https://github.com/apm-ai/datav" target="_blank" className={cx(styles.getStarted, 'bg-primary')}>GITHUB <Icon name="github" size="xl"  /></a>
+              <a href="https://github.com/opendatav/datav" target="_blank" className={cx(styles.getStarted, 'bg-primary')}>GITHUB <Icon name="github" size="xl"  /></a>
                 
               </div>
             </Row>

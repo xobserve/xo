@@ -16,10 +16,10 @@ limitations under the License.
 package cmd
 
 import (
-	"github.com/apm-ai/datav/backend/internal/plugins"
-	"github.com/apm-ai/datav/backend/internal/registry"
-	"github.com/apm-ai/datav/backend/pkg/config"
-	"github.com/apm-ai/datav/backend/pkg/log"
+	"github.com/opendatav/datav/backend/internal/plugins"
+	"github.com/opendatav/datav/backend/internal/registry"
+	"github.com/opendatav/datav/backend/pkg/config"
+	"github.com/opendatav/datav/backend/pkg/log"
 	"github.com/spf13/cobra"
 )
 

@@ -14,7 +14,7 @@
 
 package main
 
-import "github.com/apm-ai/datav/backend/cmd"
+import "github.com/opendatav/datav/backend/cmd"
 
 func main() {
 	cmd.Execute()

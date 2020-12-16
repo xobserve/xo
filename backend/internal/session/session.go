@@ -3,13 +3,13 @@ package session
 import (
 	"database/sql"
 
-	"github.com/apm-ai/datav/backend/pkg/models"
+	"github.com/opendatav/datav/backend/pkg/models"
 
 	// "fmt"
 	"time"
 
-	"github.com/apm-ai/datav/backend/pkg/db"
-	"github.com/apm-ai/datav/backend/pkg/log"
+	"github.com/opendatav/datav/backend/pkg/db"
+	"github.com/opendatav/datav/backend/pkg/log"
 	"github.com/gin-gonic/gin"
 )
 

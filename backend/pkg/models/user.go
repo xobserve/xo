@@ -2,7 +2,7 @@ package models
 
 import (
 	"database/sql"
-	"github.com/apm-ai/datav/backend/pkg/db"
+	"github.com/opendatav/datav/backend/pkg/db"
 	"time"
 )
 

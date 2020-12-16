@@ -3,15 +3,15 @@ package annotation
 import (
 	// "fmt"
 
-	"github.com/apm-ai/datav/backend/internal/acl"
-	"github.com/apm-ai/datav/backend/internal/dashboard"
-	"github.com/apm-ai/datav/backend/internal/session"
+	"github.com/opendatav/datav/backend/internal/acl"
+	"github.com/opendatav/datav/backend/internal/dashboard"
+	"github.com/opendatav/datav/backend/internal/session"
 
 	"strconv"
 
-	"github.com/apm-ai/datav/backend/pkg/common"
-	"github.com/apm-ai/datav/backend/pkg/i18n"
-	"github.com/apm-ai/datav/backend/pkg/models"
+	"github.com/opendatav/datav/backend/pkg/common"
+	"github.com/opendatav/datav/backend/pkg/i18n"
+	"github.com/opendatav/datav/backend/pkg/models"
 	"github.com/gin-gonic/gin"
 )
 

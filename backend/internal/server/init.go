@@ -3,10 +3,10 @@ package server
 import (
 	"strings"
 
-	_ "github.com/apm-ai/datav/backend/internal/alerting/notifiers"
-	"github.com/apm-ai/datav/backend/internal/sqls"
-	"github.com/apm-ai/datav/backend/pkg/db"
-	_ "github.com/apm-ai/datav/backend/pkg/tsdb/prometheus"
+	_ "github.com/opendatav/datav/backend/internal/alerting/notifiers"
+	"github.com/opendatav/datav/backend/internal/sqls"
+	"github.com/opendatav/datav/backend/pkg/db"
+	_ "github.com/opendatav/datav/backend/pkg/tsdb/prometheus"
 )
 
 func initDatabase() error {

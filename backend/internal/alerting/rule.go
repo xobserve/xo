@@ -3,10 +3,10 @@ package alerting
 import (
 	"fmt"
 
-	"github.com/apm-ai/datav/backend/internal/alerting/conditions"
-	"github.com/apm-ai/datav/backend/pkg/models"
+	"github.com/opendatav/datav/backend/internal/alerting/conditions"
+	"github.com/opendatav/datav/backend/pkg/models"
 
-	"github.com/apm-ai/datav/backend/pkg/utils/simplejson"
+	"github.com/opendatav/datav/backend/pkg/utils/simplejson"
 )
 
 // ValidationError is a typed error with meta data
