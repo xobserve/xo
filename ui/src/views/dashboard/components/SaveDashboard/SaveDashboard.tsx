@@ -42,14 +42,23 @@ export async function saveDashboard(title, folderId, dashboard, originDashboard)
     let alertChanged = false
     // check which panel's alerts has changed
     for (const panel of clone.panels) {
+        let exist = false
         for (const panel1 of originDashboard.panels) {
             if (panel.id === panel1.id) {
+                exist = true
                 const alert = JSON.stringify(panel.alert)
                 const alert1 = JSON.stringify(panel1.alert)
 
                 if (alert !== alert1) {
                     alertChanged = true
                 }
+            }
+        }
+
+        // panel newly created
+        if (exist === false) {
+            if (panel.alert) {
+                alertChanged = true
             }
         }
     }
