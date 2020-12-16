@@ -70,7 +70,7 @@ const error = {
     notifierNotExist: 'Target notifier does not exist in backend',
     buildNotifierError: 'Build notifier error, please check logs in backend',
     cantDeleteReserverDash: 'This dashboard is reserved, cant be deleted',
-    
+    alertsQueryNotExist: "The query of the alert condition is not exist, please add a query for that panel first, or remove the alerts",
     // datasource
     sameNameExist: "A datasource with the same name already exist",
 }

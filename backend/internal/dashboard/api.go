@@ -5,6 +5,8 @@ import (
 	"encoding/json"
 	"sort"
 
+	"github.com/opendatav/datav/backend/pkg/common"
+
 	"github.com/opendatav/datav/backend/internal/alerting"
 
 	"github.com/opendatav/datav/backend/internal/acl"
@@ -16,14 +18,13 @@ import (
 
 	"strconv"
 
+	"github.com/gin-gonic/gin"
 	"github.com/opendatav/datav/backend/internal/session"
-	"github.com/opendatav/datav/backend/pkg/common"
 	"github.com/opendatav/datav/backend/pkg/db"
 	"github.com/opendatav/datav/backend/pkg/i18n"
 	"github.com/opendatav/datav/backend/pkg/models"
 	"github.com/opendatav/datav/backend/pkg/utils"
 	"github.com/opendatav/datav/backend/pkg/utils/simplejson"
-	"github.com/gin-gonic/gin"
 )
 
 type ReqDashboardData struct {
@@ -151,7 +152,7 @@ func SaveDashboard(c *gin.Context) {
 		logger.Info("dashboard alert changed")
 		err = alerting.UpdateDashboardAlerts(dash)
 		if err != nil {
-			c.JSON(500, common.ResponseInternalError())
+			c.JSON(500, common.ResponseErrorMessage(nil, i18n.OFF, err.Error()))
 			return
 		}
 	}

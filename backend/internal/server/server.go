@@ -16,6 +16,9 @@ import (
 
 	"net/http"
 
+	"github.com/gin-gonic/gin"
+	"github.com/gorilla/mux"
+	_ "github.com/mattn/go-sqlite3"
 	"github.com/opendatav/datav/backend/internal/admin"
 	"github.com/opendatav/datav/backend/internal/alerting"
 	"github.com/opendatav/datav/backend/internal/cache"
@@ -31,9 +34,6 @@ import (
 	"github.com/opendatav/datav/backend/pkg/config"
 	"github.com/opendatav/datav/backend/pkg/i18n"
 	"github.com/opendatav/datav/backend/pkg/log"
-	"github.com/gin-gonic/gin"
-	"github.com/gorilla/mux"
-	_ "github.com/mattn/go-sqlite3"
 	"golang.org/x/sync/errgroup"
 )
 
@@ -100,6 +100,9 @@ func (s *Server) Start() error {
 
 	// init search cache
 	cache.InitCache()
+
+	// int timer job
+	startTimer()
 
 	gin.SetMode(gin.ReleaseMode)
 	go func() {

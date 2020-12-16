@@ -68,6 +68,7 @@ const error = {
     notifierNotExist: '目标通道在服务器端不存在',
     buildNotifierError: '构建通道时发生了错误，请查看服务器端日志',
     cantDeleteReserverDash: '当前仪表盘属于系统预留，无法被删除',
+    alertsQueryNotExist: "新建告警条件对应的查询语句不存在，请先为图表创建查询语句，或者先移除告警条件",
     // datasource
     sameNameExist: "同样名称的datasource已经存在",
 }
