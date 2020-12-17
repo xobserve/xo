@@ -10,7 +10,7 @@ import { setToken } from 'src/core/library/utils/auth';
 
 import { store } from 'src/store/store';
 import { updateUser } from 'src/store/reducers/user';
-import { getBackendSrv, localeData, currentLang } from 'src/packages/datav-core/src'
+import { getBackendSrv, localeData, currentLang,getBootConfig} from 'src/packages/datav-core/src'
 
 import './Login.less'
 
@@ -65,7 +65,7 @@ function Login() {
                 <Row className="datav-rectangle">
                     <Col span="12" className="login-left">
                         <div><img src="/img/logo.png" className="logo"/></div>
-                        <div className="content">DATAV</div>
+                        <div className="content">{getBootConfig().common.appName.toUpperCase()}</div>
                     </Col>
                     <Col span="12" className="login-right">
                         <h2 className="login-title">{localeData[currentLang]['user.loginTitle']}</h2>
