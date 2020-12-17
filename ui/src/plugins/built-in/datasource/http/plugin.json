@@ -6,7 +6,8 @@
     "annotations": true,
     "info": {
         "author": {
-            "name": "Datav"
+            "name": "simPod",
+            "url": "https://github.com/simPod"
         },
         "description": "JSON over HTTP datasource",
         "logos": {

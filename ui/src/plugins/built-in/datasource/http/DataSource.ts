@@ -12,7 +12,7 @@ import {
   TextValuePair,
 } from './types';
 
-const supportedVariableTypes = ['adhoc', 'constant', 'custom', 'query'];
+const supportedVariableTypes = ['adhoc', 'constant', 'custom', 'query', 'textbox'];
 
 export class DataSource extends DataSourceApi<GrafanaQuery, GenericOptions> {
   url: string;
@@ -50,13 +50,21 @@ export class DataSource extends DataSourceApi<GrafanaQuery, GenericOptions> {
     });
   }
 
-  async testDatasource(){
+  testDatasource(): Promise<any> {
     return this.doRequest({
       url: this.url,
       method: 'GET',
-    }).then(_ => {
-      return { status: 'success', message: 'Data source is working', title: 'Success' };
-    })
+    }).then(response => {
+      if (response.status === 200) {
+        return { status: 'success', message: 'Data source is working', title: 'Success' };
+      }
+
+      return {
+        status: 'error',
+        message: `Data source is not working: ${response.message}`,
+        title: 'Error',
+      };
+    });
   }
 
   metricFindQuery(query: string, options?: any, type?: string): Promise<MetricFindValue[]> {

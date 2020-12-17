@@ -70,7 +70,7 @@ export const QueryEditor: ComponentType<Props> = ({ datasource, onChange, onRunQ
           <AsyncSelect
             loadOptions={loadMetrics}
             defaultOptions
-            placeholder="Select metric"
+            placeholder="Metric.."
             allowCustomValue
             value={metric}
             onChange={v => {

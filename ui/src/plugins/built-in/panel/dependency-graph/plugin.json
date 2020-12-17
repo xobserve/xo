@@ -6,7 +6,8 @@
   "info": {
     "description": "Dependency graph panel plugin",
     "author": {
-      "name": "Datav"
+      "name": "Novatec",
+      "url": "https://github.com/NovatecConsulting"
     },
     "keywords": ["panel", "template"],
     "logos": {

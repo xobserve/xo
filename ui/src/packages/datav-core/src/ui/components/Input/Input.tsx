@@ -56,6 +56,7 @@ export const getInputStyles = stylesFactory(({ theme, invalid = false, width }: 
     wrapper: cx(
       css`
         label: input-wrapper;
+        min-width: 100px;
         display: flex;
         width: ${width ? `${8 * width}px` : '100%'};
         height: ${height}px;
