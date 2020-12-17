@@ -79,7 +79,7 @@ export const QueryEditor: ComponentType<Props> = ({ datasource, onChange, onRunQ
           />
         </div>
       </div>
-      <div className="gf-form" style={{alignItems:'top'}}>
+      <div className="gf-form">
         <div className="gf-form">
           <InlineFormLabel width={7}>{localeData[currentLang]['panel.adittionalJson']}</InlineFormLabel>
         </div>
