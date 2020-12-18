@@ -6,7 +6,8 @@ import { MenuItem, MenuPosition, hasPermission} from 'src/types';
 import {store} from 'src/store/store'
 import { FormattedMessage as Message } from 'react-intl';
 import TopSectionItem from './TopSectionItem';
-import { getLocationSrv } from 'src/packages/datav-core/src';
+import { currentLang, getLocationSrv, localeData } from 'src/packages/datav-core/src';
+
 
 export default function BottomSection() {
   const menuItems = store.getState().menu.items
@@ -33,10 +34,14 @@ export default function BottomSection() {
   const onOpenSearch = () => {
     getLocationSrv().update({ query: { search: 'open' }, partial: true });
   };
+  
   return (
     <div className="sidemenu__bottom">
        <TopSectionItem link={searchLink} onClick={onOpenSearch} />
       {bottomNav.map((link, index) => {
+        if (link.id === "datav-fix-menu-user") {
+          link.title = localeData[currentLang]['user.currentUser'] + " - " + (store.getState().user.name == '' ? store.getState().user.username : store.getState().user.username + ' / ' + store.getState().user.name)
+        } 
         return <BottomNavLinks link={link} user={contextSrv.user} key={`${link.url}-${index}`} />;
       })}
     </div>

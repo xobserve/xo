@@ -74,7 +74,6 @@ export const setCurrentLang = (lang: string) => {
 }
 
 
-console.log(window.location)
 //@legacy
 // config examples, remove in future
 export const config = {

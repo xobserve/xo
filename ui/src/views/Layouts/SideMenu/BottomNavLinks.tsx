@@ -93,7 +93,6 @@ export const BottomNavLinks = (props:Props) => {
       'dropup': true
     })
 
-
     return (
       <>
       <div className={classes}>

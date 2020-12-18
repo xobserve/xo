@@ -1,9 +1,3 @@
-if [ "$1" = "" ];
-then
-    echo "Env paramether mustn't be empty,you can specify macos or linux by './build.sh macos'"
-    exit 0
-fi 
-
 ## clean the build files
 if [ "$1" = "clean" ];
 then
@@ -12,12 +6,7 @@ exit 0
 fi
 
 ## build the binary
-if [ "$1" = "macos" ];
-then
-GOOS=darwin GOARCH=amd64 go build 
-else
-GOOS=linux GOARCH=amd64 go build 
-fi
+go build
 
 ## generate ui plugin static files
 ./datav generate

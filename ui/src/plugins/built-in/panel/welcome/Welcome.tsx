@@ -1,11 +1,15 @@
 import React, { FC } from 'react';
 import { css, cx } from 'emotion';
-import { stylesFactory, useTheme, DatavTheme, getBootConfig, Icon ,currentLang, currentTheme, ThemeType} from 'src/packages/datav-core/src';
+import {PanelProps, stylesFactory, useTheme, DatavTheme, getBootConfig, Icon ,currentLang, currentTheme, ThemeType} from 'src/packages/datav-core/src';
 import { Row, Col } from 'antd';
 import { FormattedMessage } from 'react-intl';
 import { Langs } from 'src/core/library/locale/types';
+import { WelcomeOptions } from './types';
 
-export const WelcomeBanner: FC = () => {
+interface Props extends PanelProps<WelcomeOptions> {
+}
+
+export const WelcomeBanner: FC = (props:any) => {
   const titleColor = currentTheme === ThemeType.Light ? '#4c5773' : '#fff'
   const textColor = currentTheme === ThemeType.Light ? '#6b7389' : '#fff'
 
@@ -63,8 +67,8 @@ export const WelcomeBanner: FC = () => {
 
   const styles = getStyles(useTheme());
 
-
-  const docsUrl =  currentLang === Langs.Chinese ? `${getBootConfig().common.docsAddr}/docs-cn`:`${getBootConfig().common.docsAddr}/docs`
+  const docsRootUrl = props.options.docsAddr ? props.options.docsAddr : getBootConfig().common.docsAddr
+  const docsUrl =  currentLang === Langs.Chinese ? `${docsRootUrl}/docs-cn`:`${docsRootUrl}/docs`
   return (
     <>
       <div className={styles.header}>
@@ -75,7 +79,7 @@ export const WelcomeBanner: FC = () => {
                 {/* <img src="/img/logo.png" height="20" width="20" className="ub-mr1 inline" /> */}
                 {getBootConfig().common.appName.toUpperCase()}</div>
               <div>
-              <a href="https://github.com/opendatav/datav" target="_blank" className={cx(styles.getStarted, 'bg-primary')}>GITHUB <Icon name="github" size="xl"  /></a>
+              {props.options.showGithub && <a href={!props.options.githubAddr ? "https://github.com/opendatav/datav" : props.options.githubAddr} target="_blank" className={cx(styles.getStarted, 'bg-primary')}>GITHUB <Icon name="github" size="xl"  /></a>}
                 
               </div>
             </Row>
@@ -88,9 +92,9 @@ export const WelcomeBanner: FC = () => {
                <span className="display-block color-primary">metrics, traces and logs</span>
             </h1>
             <div className={styles.subTitle} style={{color: textColor, fontWeight: 450}}>{getBootConfig().common.appName}<FormattedMessage id="welcomePanel.subTitle"/></div>
-            <div style={{marginTop: '2.5rem'}}>
+            {props.options.showDocs &&<div style={{marginTop: '2.5rem'}}>
               <a href={docsUrl} target="_blank" className={cx(styles.getStarted, 'bg-primary')}><FormattedMessage id="welcomePanel.viewDocs"/></a>
-            </div>
+            </div>}
           </Col>
           <Col span="15">
             <div className="display-block ub-ml4" style={{ backgroundImage: 'url(/img/homepage-hero.png)', height: '562px', backgroundSize: 'cover' }}></div>
