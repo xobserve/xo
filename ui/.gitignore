@@ -21,3 +21,5 @@ lerna-debug.log
 
 src/styles/light.json
 src/styles/dark.json
+src/plugins/built_in_plugins.ts
+src/plugins/external_plugins.ts
