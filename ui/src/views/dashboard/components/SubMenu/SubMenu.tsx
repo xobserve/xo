@@ -68,7 +68,7 @@ class SubMenuUnConnected extends PureComponent<Props> {
 
     return (
       <div className="submenu-controls">
-        <div><SubMenuItems variables={localVars} /></div>
+        {localVars.length > 0 && <div><SubMenuItems variables={localVars} /></div>}
         <div><SubMenuItems   variables={globalVars} /></div>
         {/* <Annotations annotations={dashboard.annotations.list} onAnnotationChanged={this.onAnnotationStateChanged} /> */}
         {/* <div className="gf-form gf-form--grow" />
