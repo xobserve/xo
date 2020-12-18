@@ -809,7 +809,7 @@ const graphOptionsDefaults: any = {
     stack: false,
     // stack percentage mode
     percentage: false,
-    decimals: 3,
+    decimals: 2,
     // legend options
     legend: {
         show: true, // disable/enable legend
