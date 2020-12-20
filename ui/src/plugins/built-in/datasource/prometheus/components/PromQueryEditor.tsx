@@ -153,6 +153,7 @@ export class PromQueryEditor extends PureComponent<Props, State> {
               options={INTERVAL_FACTOR_OPTIONS}
               onChange={this.onIntervalFactorChange}
               value={intervalFactorOption}
+              menuPlacement="bottom"
             />
           </div>
 
