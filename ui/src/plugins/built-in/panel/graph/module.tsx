@@ -38,7 +38,7 @@ export const plugin = new PanelPlugin<GraphPanelOptions>(GraphPanel)
       path: 'fillGradient',
       name: 'Fill Gradient',
       description:localeData[currentLang]['datasource.promFillGradientTips'],
-      defaultValue: '0',
+      defaultValue: '5',
       settings: {
         options: poitsRadiusOptions()
       },
@@ -106,6 +106,7 @@ export const plugin = new PanelPlugin<GraphPanelOptions>(GraphPanel)
       settings: {
         placeholder: 'auto'
       },
+      defaultValue: 2
     })
     .addRadio({
       path: 'tooltip.shared',
@@ -160,7 +161,7 @@ export const plugin = new PanelPlugin<GraphPanelOptions>(GraphPanel)
       name: 'Unit',
       description: localeData[currentLang]['datasource.promUnitTips'],
       category: [localeData[currentLang]['common.axes']],
-      defaultValue: 'none'
+      defaultValue: 'short'
     })
     .addSelect({
       path: 'yaxes[0].logBase',
@@ -214,7 +215,7 @@ export const plugin = new PanelPlugin<GraphPanelOptions>(GraphPanel)
       name: 'Unit',
       description: localeData[currentLang]['datasource.promUnitTips'],
       category: [localeData[currentLang]['common.axes']],
-      defaultValue: 'none'
+      defaultValue: 'short'
     })
     .addSelect({
       path: 'yaxes[1].logBase',
@@ -275,7 +276,7 @@ export const plugin = new PanelPlugin<GraphPanelOptions>(GraphPanel)
       path: 'legend.alignAsTable',
       name: 'As table',
       category: ['Legend'],
-      defaultValue: false,
+      defaultValue: true,
     })
     .addBooleanSwitch({
       path: 'legend.rightSide',
@@ -296,7 +297,7 @@ export const plugin = new PanelPlugin<GraphPanelOptions>(GraphPanel)
       path: 'legend.current',
       name: 'Current',
       category: ['Legend','Values'],
-      defaultValue: false,
+      defaultValue: true,
     })
     .addBooleanSwitch({
       path: 'legend.min',

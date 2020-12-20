@@ -58,6 +58,7 @@ export class GraphPanelCtrl {
         this.panelHeight = height
         this.panelWidth = width
        
+        console.log(_.cloneDeep(options))
         _.defaults(options, graphOptionsDefaults);
         _.defaults(options.tooltip, graphOptionsDefaults.tooltip);
         _.defaults(options.legend, graphOptionsDefaults.legend);
