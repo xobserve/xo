@@ -820,6 +820,8 @@ const graphOptionsDefaults: any = {
         total: false,
         avg: false,
         alignAsTable: true,
+        sort: "current",
+        sortDesc: true,
     },
     // how null points should be handled
     nullPointMode: 'null',
