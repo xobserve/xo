@@ -304,7 +304,7 @@ class LegendTableHeaderItem extends PureComponent<LegendTableHeaderProps & Legen
     return (
       <th className="pointer" onClick={this.onClick}>
         {statName}
-        {sort === statName && <Icon name={sortDesc ? 'angle-down' : 'angle-up'} />}
+        {sort === statName && <Icon name={sortDesc ? 'angle-down' : 'angle-up'} size="sm"/>}
       </th>
     );
   }
