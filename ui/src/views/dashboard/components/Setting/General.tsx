@@ -124,7 +124,7 @@ const GeneralSetting = (props: Props) => {
                 <div className="gf-form">
                     <label className="gf-form-label width-9"><FormattedMessage id="dashboard.variablesDisplay" /></label>
                     {variables.map((v) => <CheckableTag key={v.name} checked={displayVariables.indexOf(v.name) > -1} onChange={(checked) => setVariableDiplay(v, checked)}>{v.label ?? v.name}</CheckableTag>)}
-                </div>
+                </div> 
 
                 <Divider />
 

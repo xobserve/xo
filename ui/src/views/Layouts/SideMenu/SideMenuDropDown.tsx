@@ -32,12 +32,6 @@ const SideMenuDropDown: FC<Props> = props => {
         <span className="sidemenu-item-text">{link.title}</span>
       </a>
   } else {
-      if (!link.redirectTo) {
-        renderLink = 
-        <Link className="side-menu-header-link" to={link.url} onClick={onHeaderClick}>
-          <span className="sidemenu-item-text">{link.title}</span>
-        </Link>
-      } else {
         link.redirectTo === null
         ?
         renderLink = 
@@ -49,7 +43,6 @@ const SideMenuDropDown: FC<Props> = props => {
         <Link className="side-menu-header-link" to={link.redirectTo} onClick={onHeaderClick}>
           <span className="sidemenu-item-text">{link.title}</span>
         </Link>
-      }
   }
   return (
     <ul className="dropdown-menu dropdown-menu--sidemenu" role="menu">

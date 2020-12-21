@@ -122,7 +122,6 @@ class MenuMange extends React.Component<Props & IntlProps, State> {
             info.node.props.expanded && // Is expanded
             dropPosition === 1 // On the bottom gap
         ) {
-            alert(1)
             loop(data, dropKey, item => {
                 item.children = item.children || [];
                 // where to insert 示例添加到头部，可以是随意位置
@@ -199,7 +198,6 @@ class MenuMange extends React.Component<Props & IntlProps, State> {
     }
 
     isMenuValid(v, menuItems) {
-        console.log(v)
         if (v.title == undefined || v.title.trim() == '') {
             notification['error']({
                 message: "Error",
@@ -266,17 +264,19 @@ class MenuMange extends React.Component<Props & IntlProps, State> {
                 return false
             }
         }
-
-        if (v.id === undefined || v.id.trim() === '') {
-            notification['error']({
-                message: "Error",
-                description: this.props.intl.formatMessage({id: "error.menuDashUidEmpty"}),
-                duration: 5
-            });
-            return false
+        
+        // if (v.id === undefined || v.id.trim() === '') {
+        //     notification['error']({
+        //         message: "Error",
+        //         description: this.props.intl.formatMessage({id: "error.menuDashUidEmpty"}),
+        //         duration: 5
+        //     });
+        //     return false
+        // }
+        if  (v.id) {
+            v.id = v.id.trim()
         }
-        v.id = v.id.trim()
-
+        
         if (v.icon === undefined || v.icon.trim() === '') {
             notification['error']({
                 message: "Error",
@@ -295,15 +295,15 @@ class MenuMange extends React.Component<Props & IntlProps, State> {
             return
         }
 
-        const [i, j] = findSelectedNode(v.id, menuItems)
-        if (i !== -1) {
-            notification['error']({
-                message: "Error",
-                description: localeData[getState().application.locale]['error.menuDashUidExist'] + ` ${menuItems[i].title}  ${j !== -1 ? ' -> ' + menuItems[i].children[j].title : ''}`,
-                duration: 5
-            });
-            return
-        }
+        // const [i, j] = findSelectedNode(v.id, menuItems)
+        // if (i !== -1) {
+        //     notification['error']({
+        //         message: "Error",
+        //         description: localeData[getState().application.locale]['error.menuDashUidExist'] + ` ${menuItems[i].title}  ${j !== -1 ? ' -> ' + menuItems[i].children[j].title : ''}`,
+        //         duration: 5
+        //     });
+        //     return
+        // }
 
         if (selectedNode.level === 2 && v.position === 2) {
             notification['error']({
@@ -359,7 +359,10 @@ class MenuMange extends React.Component<Props & IntlProps, State> {
         }
 
         try {
-            const res = await getBackendSrv().get(`/api/dashboard/uid/${v.id}`)
+            if (v.id) {
+                const res = await getBackendSrv().get(`/api/dashboard/uid/${v.id}`)
+            }
+
             const [i, j] = findSelectedNode(selectedNode.id, menuItems)
             const item = menuItems[i]
             if (v.position === 1) {
@@ -406,35 +409,35 @@ class MenuMange extends React.Component<Props & IntlProps, State> {
         }
 
         // check if the same dashboard uid exists
-        {
-            for (let i = 0; i < menuItems.length; i++) {
-                if (menuItems[i].id !== selectedNode.id) {
-                    if (menuItems[i].id === v.id) {
-                        notification['error']({
-                            message: "Error",
-                            description: localeData[getState().application.locale]['error.menuDashUidExist'] + ` ${menuItems[i].title}`,
-                            duration: 5
-                        });
-                        return
-                    }
-                }
+        // {
+        //     for (let i = 0; i < menuItems.length; i++) {
+        //         if (menuItems[i].id !== selectedNode.id) {
+        //             if (menuItems[i].id === v.id) {
+        //                 notification['error']({
+        //                     message: "Error",
+        //                     description: localeData[getState().application.locale]['error.menuDashUidExist'] + ` ${menuItems[i].title}`,
+        //                     duration: 5
+        //                 });
+        //                 return
+        //             }
+        //         }
 
 
-                for (let j = 0; j < menuItems[i].children.length; j++) {
-                    const child = menuItems[i].children[j]
-                    if (child.id !== selectedNode.id) {
-                        if (child.id === v.id) {
-                            notification['error']({
-                                message: "Error",
-                                description: localeData[getState().application.locale]['error.menuDashUidExist'] + ` ${menuItems[i].title} -> ${menuItems[i].children[j].title}`,
-                                duration: 5
-                            });
-                            return
-                        }
-                    }
-                }
-            }
-        }
+        //         for (let j = 0; j < menuItems[i].children.length; j++) {
+        //             const child = menuItems[i].children[j]
+        //             if (child.id !== selectedNode.id) {
+        //                 if (child.id === v.id) {
+        //                     notification['error']({
+        //                         message: "Error",
+        //                         description: localeData[getState().application.locale]['error.menuDashUidExist'] + ` ${menuItems[i].title} -> ${menuItems[i].children[j].title}`,
+        //                         duration: 5
+        //                     });
+        //                     return
+        //                 }
+        //             }
+        //         }
+        //     }
+        // }
 
         // check if the same url exists
         {

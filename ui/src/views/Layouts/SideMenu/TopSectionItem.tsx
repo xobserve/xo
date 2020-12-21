@@ -31,11 +31,11 @@ const TopSectionItem: FC<Props> = props => {
       </span>
     </Link>
   } else {
-    renderLink =  <Link to={link.url} className="sidemenu-link" onClick={onClick}>
+    renderLink =  <span className="sidemenu-link">
       <span className="icon-circle sidemenu-icon">
         <Icon name={link.icon as any} size="xl" />
       </span>
-    </Link>
+    </span>
   }
 
   const menuItemSelected =  link.url !== '' ? _.startsWith(location.pathname, link.url) : false

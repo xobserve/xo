@@ -21,6 +21,13 @@ export const initRoutes = (store: Store<StoreState>) => {
         }
 
         item.component = React.lazy(() => import('src/views/dashboard/DashboardPage'))
+
+        if (!item.id) {
+            item.component = null
+            item.redirectTo = null
+        } else {
+            item.redirectTo = item.url
+        }
     })
 
     const dashboardMenumItems = getBootConfig().sidemenu
