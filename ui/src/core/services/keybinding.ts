@@ -93,7 +93,7 @@ export class KeybindingSrv {
     }
 
     if (search.search) {
-      getLocationSrv().update({ query: { search: null }, partial: true })
+      getLocationSrv().update({ query: { search: null, folder:null}, partial: true })
     }
 
     if (search.view) {

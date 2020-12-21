@@ -30,14 +30,14 @@ const BreadcrumbWrapper = (props:Props) =>{
     
     const onFolderNameClick = () => {
         store.dispatch(updateLocation({ 
-            query: { search: 'open', folder: 'current' },
-            partial: true 
+            query: { search: 'open'},
+            partial: true
         }));
     }
-    
+     
     const onDashboardNameClick = () => {
         store.dispatch(updateLocation({
-            query: { search: 'open' },
+            query: { search: 'open' ,folder:'current'},
             partial: true,
           }));
     }
