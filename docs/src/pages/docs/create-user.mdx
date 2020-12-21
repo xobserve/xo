@@ -1,5 +1,5 @@
 ---
-title: 用户权限
+title: User Permissions
 ---
 
 import { Heading } from '@/components/Heading'
@@ -8,45 +8,48 @@ import Link from 'next/link'
 import stats from '@/utils/stats'
 import { TipCompat } from '@/components/Tip'
 
-## 添加新用户
-<TipCompat>你必须是Global团队的管理员，才能添加新用户，因为所有用户都是属于global团队的，一个用户可以同时归属于多个团队</TipCompat>
+## Create a user
+<TipCompat>Only administrator of Global team can create users. All users belongs to the Global team, a user can belong to multiple teams</TipCompat>
 
-1. 在左侧菜单栏，选择**配置管理 -> 用户**，进入页面后，可以看到用户列表
-2. 当前就你一个用户，过于孤单，现在让我们来创建一个伙伴test，点击**添加用户**
-3. 输入用户名test，密码和邮箱(邮箱可以暂时为空，后续再设置),选择global团队的角色，角色分为三种:
-    - Viewer: 查看者，对于所属于global的仪表盘，他只能进行查看，无法编辑保存(可能可以编辑，但是无法保存)
-    - Editor: 编辑者, 对于所属于global的仪表盘，他可以查看和编辑保存
-    - Admin: 管理员，可以任意查看管理所属于global的仪表盘，同时可以管理global团队自身
-4. 为test选择Viewer角色
-5. 点击提交，此时已经能看到用户列表中多了一位小伙伴test
+1. On the left menu panel, click on **Settings -> User**, enter the User configuration page
+2. Click on the **Add user** button
+3. Enter the username test, password and email(the email can be left blank), set the Global Role. There are 3 role for a user:
+   - Viewer: Can view all dashboards, cannot edit and save dashboard settings
+   - Editor: Can view and edit and save dashboard settings
+   - Admin: Can view and edit and save dashboard settings, can manage the Global team
+4. Choose view for test user
+5. Click on Submit, you can see that test user is listed in the user list
 
-## 登陆test
-现在我们登出当前用户admin，重新使用test进行登陆
+## Login as test
+Logout the current admin user and login in again as test.
 
-1. 左边菜单栏选择**用户 -> 退出登录**
-2. 输入test用户和对应的密码
-3. 点击登陆
+1. On the left menu panel, click on ** User -> Logout **
+2. Enter test and the password
+3. Click on Login
 
-## 查看并编辑仪表盘
-再让我们用test用户来查看和编辑下之前的仪表盘，还记得仪表盘的权限设置吧： 仪表板归属于test团队，global团队的成员只能查看，也就意味着
-当前的test用户，只能查看仪表盘，但是无法编辑和保存，现在来验证下我们的猜测:
-1. 打开搜索面板，进入仪表盘
-2. 此时，已经能看到仪表盘，很好，查看权限有了
-3. 点击仪表板的设置按钮，进去后，你会发现tab页全部消失了，只留下json数据
-4. 重新回到仪表盘页面，点击保存
+## Check and edit dashboards
+Let's view and edit the test dashboard created before as test user. It belongs to the test team, global team can only view it, so it means:
+The current test user can view the dashboard but cannot save or edit it.
 
-好了，无权限操作的提示，相应你已经看到，因此我们的猜测是对的：属于global团队的test用户，对于test团队的仪表盘，只有查看，没有编辑保存的权利。
+Let's verify on that.
+1. Open the search page, then enter the dashboard page
+2. The dashboard is shown so we have the view permission
+3. Click on the dashboard settings button, you can see that all the settings tab are gone except for the JSON Model tab
+4. Back to the dashboard page, click on Save
 
-那么接下来，就为test用户增加编辑保存的权利。
+After you click Submit button, a error message will show No Permission. By now we have verified that the test user does have View permission and not Editor permission.
 
-## 添加用户到团队
-1. 退出test用户，重新使用admin进行登陆
-2. 选择**配置管理 -> 团队**, 进入团队管理页面
-3. 点击test查看进入团队详情页面
-4. 点击添加成员(必须是test团队的管理员才能执行此操作)，弹出面板
-5. 点击团队成员的选择框，选择test用户
-6. 成员角色选择Editor
-7. 点击提交
+Next we will add edit permission for test user.
 
-添加成功，在test团队详情页面已经能看到test用户，现在让我们再做一次**查看并编辑仪表盘**，此时，test用户已经可以成功的编辑仪表盘，并进行保存了。
+
+## Add a user to a team
+1. Logout and login again as admin
+2. Click on **Settigns -> Team **, enter the team configuration page
+3. Click on test to enter the team details page
+4. Click on Add member, the Add menber dialog is shown
+5. Click on the menber selection list, select test user
+6. Select Editor on Member role
+7. Click on Submit
+
+Now the test user is listed in the test team. Repeat the **Check and edit dashboads** steps, you can see that the test user can view and edit the test dashboard.
 

@@ -1,5 +1,5 @@
 ---
-title: 仪表盘
+title: Dashboard
 ---
 
 import { Heading } from '@/components/Heading'
@@ -8,42 +8,40 @@ import Link from 'next/link'
 import stats from '@/utils/stats'
 import { TipCompat } from '@/components/Tip'
 
-## 添加仪表盘
-在[新建数据源](create-datasource)后，我们开始创建第一个仪表盘, 以下分成两个部分介绍：基于prometheus的数据源和基于static data的数据源
+## Add dashboard
+After [Add Data Source](create-datasource), we can create our first dashboard. Follow the tutorial based on the type data source you created in the previous **add data source** step(prometheus or Static Data).
 
-<TipCompat>注意：只有的Team管理员才能创建仪表盘，还可以为仪表盘设置丰富的<a href="/docs-cn/dashboard-permissions" className="underline">权限控制</a></TipCompat>
+<TipCompat>Notice: only team manager can create dashboard, and can set flexible <a href="/docs/dashboard-permissions" className="underline">access controll</a></TipCompat>
 
-1. 点击左侧菜单栏的 **+ -> 仪表盘**
-2. 此时，能看到我们的仪表盘已经展示出来，最顶部是仪表板的顶部导航，包含了仪表盘的常用设置项，鼠标悬浮上去，可以看到每个项的简单描述
+1. On the left menu panel click **+ -> Dashboard**
+2. The dashboard should be displayed. On the top is the navigation bar, it includes some common settings of the dashboard. Hover your mouse on them to get a detailed description of each option.
 
-## 添加图表
-点击**+**添加新的图表,然后会进入编辑图表页面，在最右边的侧边设置中，找到可视化一栏，可以选择图表类型。
+## Add panel
+Click **+Add new panel**, now you are on the **Edit Panel** page. On the right settings panel, find **Visualization** column, set the panel type as desired.
 
-在上一节新建数据源中，我们创建了两种类型的数据源，下面进行分别的说明
+### Prometheus data source
+1. Select **Visualization -> Graph**
+2. Select the prometheus data source just created on the **Query** tab
+3. Choose a prometheus metric on the panel below, **A -> Metrics -> scrape -> scrape_duration_seconds**
 
-### Prometheus数据源
-1. 选择 **可视化 -> Graph**
-2. 在页面左下方的**查询**面板中，选择你创建的prometheus数据源
-3. 在下方的编辑面板中，选择prometheus自身的监控指标，**A -> Metrics -> scrape -> scrape_duration_seconds**
-
-我们的测试图表已经渲染结束，如果想要深入了解，请访问[prometheus数据源](prometheus-datasource)
+We have now created a test graph using prometheus, visit [prometheus data source](prometheus-datasource) to get more details.
 
 
-### Static Data数据源
-该数据源是静态数据，主要是用于测试，因此需要我们手动录入一些数据
-1. 选择 **可视化 -> Table**， 该图表是Table表格类型
-2. 在页面左下方的**查询**面板中，选择你创建的static data数据源
-3. 先为我们的表格命个名 **A -> Name**,
-4. 创建表格的结构，定义表格列, **A -> Schema -> +Add a field**, 输入你想要的列名称,这里我们创建两列： test1,test2
-5. 添加表格行数据，**A -> Values -> + Add a row , 依次输入1,2**
+### Static Data data source
+We need to input some data because the Static Data data source is used mainly for testing purpose and does not contain any data by default.
+1. Select **Visualization -> Table**
+2. Select the Static Data data source you just created
+3. Give the table a name **A -> Name**
+4. Create table structure, define the columns. **A -> Schema -> +Add a field**. Enter the column name, we create 2 rows here, test1 and test2
+5. Add data to the table, **A -> Values -> +Add a row**, enter 1 and 2
 
-你现在已经能看到表格的数据了
+You should see the table data by now.
 
-## 保存仪表盘
-1. 按ESC，点击左上角的回退，右上角的应用，回到仪表盘页面
-2. 点击右上角导航栏的顶部按钮，或者按下**Command + S **，弹出保存面板
-3. 在面板中修改你想要的仪表盘名称
-4. 在面板中选择文件夹，当前只有General文件夹，该文件夹是默认的文件夹，所有未分类的仪表盘都默认保存其中
-5. 点击提交
+## Save Dashboard
+1. Enter **ESC** or click on the back arrow on the top-left, go back to the dashboard page
+2. Click on the save button or enter **Command + S**, the save dialog is shown
+3. Enter the name of the dashboard
+4. Choose a folder for the dashboard. The default folder is **General**, all uncategorized dashboards are stored here.
+5. Click on Submit
 
-至此，我们已经完成创建一个仪表盘，但是当我们处于其它页面时，该如何找到它呢？
+We have finished create our first dashboard. But how can we access it if we are on some other pages?
