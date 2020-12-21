@@ -59,10 +59,12 @@ class SubMenuUnConnected extends PureComponent<Props> {
     const localVars: VariableModel[] = []
     const globalVars: VariableModel[] = []
     variables.forEach(v => {
-      if (!v.global) {
-        localVars.push(v)
-      } else {
-        globalVars.push(v)
+      if (dashboard.variablesDiplay.indexOf(v.name) > -1) {
+        if (!v.global) {
+          localVars.push(v)
+        } else {
+          globalVars.push(v)
+        }
       }
     })
 

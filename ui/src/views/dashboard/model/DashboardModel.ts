@@ -50,6 +50,7 @@ export class DashboardModel {
     enableGlobalVariable: boolean;
     autoSave: boolean;
     showHeader: boolean
+    variablesDiplay: string[]
     private originalTemplating: any;
 
      // ------------------
@@ -87,7 +88,7 @@ export class DashboardModel {
         this.enableGlobalVariable = data.enableGlobalVariable;
         this.autoSave = data.autoSave;
         this.showHeader = data.showHeader
-
+        this.variablesDiplay = data.variablesDiplay || []
         this.panels =  _.map(data.panels || [], (panelData: any) => new PanelModel(panelData));
         this.description = data.description || 'A new dashboard';
 

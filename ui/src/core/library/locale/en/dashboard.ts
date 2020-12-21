@@ -63,6 +63,8 @@ const dashboard = {
     delDashboard: 'Delete dashboard',
     delDashboardTips: 'This operation cant be reverted, do it carefully',
     delDashboardConfirm: 'Delete operation cant be reverted, are you sure you want to delete this dashboard?',
+
+    variablesDisplay: 'Display variables',
 }
 
 export default dashboard
