@@ -63,7 +63,7 @@ const dashboard = {
     delDashboardTips: '该操作是不可逆的，请小心操作',
     delDashboardConfirm: '删除操作是不可逆的，你确认要删除该仪表盘吗？',
 
-    variablesDisplay: '显示变量',
+    variablesDisplay: '不显示变量',
 }
 
 export default dashboard
