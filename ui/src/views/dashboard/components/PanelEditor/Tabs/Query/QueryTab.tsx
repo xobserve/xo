@@ -1,16 +1,14 @@
 // Libraries
 import React, { PureComponent } from 'react';
 // Components
-import { DataSourcePicker } from 'src/views/components/Pickers/DataSourcePicker';
-import { QueryOptions } from './QueryOptions'
-import { CustomScrollbar, FormField as Field } from 'src/packages/datav-core/src';
-import {Row,Button,notification} from 'antd'
+
+import { QueryOptions } from './QueryOptions';
+import { Button, CustomScrollbar, HorizontalGroup, Modal, stylesFactory,FormField as Field, config, getTheme } from 'src/packages/datav-core/src';
+import { getLocationSrv } from 'src/packages/datav-core/src';
 import { QueryEditorRows } from './QueryEditorRows';
-// Services
-import { getDatasourceSrv } from 'src/core/services/datasource';
-import { backendSrv } from 'src/core/services/backend';
+
 // Types
-import { DashboardModel,PanelModel } from '../../../../model';
+import { PanelModel ,DashboardModel} from 'src/views/dashboard/model';
 import {
   DataQuery,
   DataSourceSelectItem,
@@ -18,14 +16,18 @@ import {
   LoadingState,
   PanelData,
   DataSourceApi,
-  config
 } from 'src/packages/datav-core/src';
-import { addQuery } from 'src/core/library/utils/query';
+
+
+
 import { Unsubscribable } from 'rxjs';
-import { PlusOutlined } from '@ant-design/icons';
-import { addParamToUrl } from 'src/core/library/utils/url';
-import './QueryTab.less'
-import { FormattedMessage } from 'react-intl';
+import { css } from 'emotion';
+
+import DataSourcePicker from 'src/views/components/Pickers/DataSourcePicker';
+import { getDatasourceSrv } from 'src/core/services/datasource';
+import { backendSrv } from 'src/core/services/backend';
+import { PluginHelp } from 'src/views/cfg/plugins/PluginHelp';
+import { addQuery } from 'src/core/library/utils/query';
 
 interface Props {
   panel: PanelModel;
@@ -36,7 +38,7 @@ interface State {
   dataSource?: DataSourceApi;
   dataSourceItem: DataSourceSelectItem;
   dataSourceError?: string;
-  helpContent: JSX.Element;
+  helpContent: React.ReactNode;
   isLoadingHelp: boolean;
   isPickerOpen: boolean;
   isAddingMixed: boolean;
@@ -77,11 +79,6 @@ export class QueriesTab extends PureComponent<Props, State> {
       const ds = await getDatasourceSrv().get(panel.datasource);
       this.setState({ dataSource: ds });
     } catch (error) {
-      notification['error']({
-        message: "Error",
-        description: error.message,
-        duration: 5
-      });
       const ds = await getDatasourceSrv().get();
       const dataSourceItem = this.findCurrentDataSource(ds.name);
       this.setState({ dataSource: ds, dataSourceError: error?.message, dataSourceItem });
@@ -99,7 +96,7 @@ export class QueriesTab extends PureComponent<Props, State> {
     this.setState({ data });
   }
 
-  findCurrentDataSource(dataSourceName: string = this.props.panel.datasource): DataSourceSelectItem {
+  findCurrentDataSource(dataSourceName: string | null = this.props.panel.datasource): DataSourceSelectItem {
     return this.datasources.find(datasource => datasource.value === dataSourceName) || this.datasources[0];
   }
 
@@ -107,15 +104,15 @@ export class QueriesTab extends PureComponent<Props, State> {
     const { panel } = this.props;
     const { dataSourceItem } = this.state;
 
-
-   if (dataSourceItem) {
+    if (dataSourceItem) {
       if (dataSourceItem.meta.id !== newDsItem.meta.id) {
         // we are changing data source type, clear queries
         panel.targets = [{ refId: 'A' }];
       }
     }
-
+    
     const dataSource = await getDatasourceSrv().get(newDsItem.value);
+
     panel.datasource = newDsItem.value;
 
     this.setState(
@@ -131,7 +128,10 @@ export class QueriesTab extends PureComponent<Props, State> {
   openQueryInspector = () => {
     const { panel } = this.props;
 
-    addParamToUrl({ inspect: panel.id, inspectTab: 'query' })
+    getLocationSrv().update({
+      query: { inspect: panel.id, inspectTab: 'query' },
+      partial: true,
+    });
   };
 
   renderHelp = () => {
@@ -142,7 +142,9 @@ export class QueriesTab extends PureComponent<Props, State> {
    * Sets the queries for the panel
    */
   onUpdateQueries = (queries: DataQuery[]) => {
-    this.props.panel.targets = queries;
+    this.props.panel.updateQueries(queries);
+
+    // Need to force update to rerender query rows.
     this.forceUpdate();
   };
 
@@ -165,7 +167,7 @@ export class QueriesTab extends PureComponent<Props, State> {
     this.setState({ scrollTop: 1000 });
   };
 
-  renderTopSection() {
+  renderTopSection(styles: QueriesTabStyls) {
     const { panel } = this.props;
     const { dataSourceItem, data, dataSource, dataSourceError } = this.state;
 
@@ -175,8 +177,8 @@ export class QueriesTab extends PureComponent<Props, State> {
 
     return (
       <div>
-        <div className={'dataSourceRow'}>
-          <div className={'dataSourceRowItem'}>
+        <div className={styles.dataSourceRow}>
+          <div className={styles.dataSourceRowItem}>
             <Field invalid={!!dataSourceError} error={dataSourceError}>
               <DataSourcePicker
                 datasources={this.datasources}
@@ -185,20 +187,37 @@ export class QueriesTab extends PureComponent<Props, State> {
               />
             </Field>
           </div>
-          <div className={'dataSourceRowItemOptions'}>
+          <div className={styles.dataSourceRowItem}>
+            <Button
+              variant="secondary"
+              icon="question-circle"
+              title="Open data source help"
+              onClick={this.onOpenHelp}
+            />
+          </div>
+          <div className={styles.dataSourceRowItemOptions}>
             <QueryOptions panel={panel} dataSource={dataSource} data={data} />
           </div>
-          <div className={'dataSourceRowItem'}>
+          <div className={styles.dataSourceRowItem}>
             <Button
+              variant="secondary"
               onClick={this.openQueryInspector}
             >
-               <FormattedMessage id="panel.queryInspect"/>
+              Query inspector
             </Button>
           </div>
         </div>
       </div>
     );
   }
+
+  onOpenHelp = () => {
+    this.setState({ isHelpOpen: true });
+  };
+
+  onCloseHelp = () => {
+    this.setState({ isHelpOpen: false });
+  };
 
   renderMixedPicker = () => {
     // We cannot filter on mixed flag as some mixed data sources like external plugin
@@ -212,6 +231,7 @@ export class QueriesTab extends PureComponent<Props, State> {
         current={null}
         autoFocus={true}
         onBlur={this.onMixedPickerBlur}
+        openMenuOnFocus={true}
       />
     );
   };
@@ -239,7 +259,7 @@ export class QueriesTab extends PureComponent<Props, State> {
   renderQueries() {
     const { panel, dashboard } = this.props;
     const { dataSourceItem, data } = this.state;
-    
+
     return (
       <div>
         <QueryEditorRows
@@ -260,27 +280,30 @@ export class QueriesTab extends PureComponent<Props, State> {
     const showAddButton = !(isAddingMixed);
 
     return (
-      <Row>
+      <HorizontalGroup spacing="md" align="flex-start">
         {showAddButton && (
           <Button
-            icon= {<PlusOutlined />}
+            icon="plus"
             onClick={this.onAddQueryClick}
+            variant="secondary"
           >
-            <FormattedMessage id="common.query"/>
+            Query
           </Button>
         )}
         {isAddingMixed && this.renderMixedPicker()}
         {config.featureToggles.expressions && (
-          <Button icon= {<PlusOutlined />} onClick={this.onAddExpressionClick}>
-            <FormattedMessage id="common.expression"/>
+          <Button icon="plus" onClick={this.onAddExpressionClick} variant="secondary">
+            Expression
           </Button>
         )}
-      </Row>
+      </HorizontalGroup>
     );
   }
 
   render() {
     const { scrollTop, isHelpOpen } = this.state;
+    const styles = getStyles();
+
     return (
       <CustomScrollbar
         autoHeightMin="100%"
@@ -289,13 +312,47 @@ export class QueriesTab extends PureComponent<Props, State> {
         scrollTop={scrollTop}
         setScrollTop={this.setScrollTop}
       >
-        <div className={'query-tab-innerWrapper '}>
-          {this.renderTopSection()}
-          <div className={'queriesWrapper'}>{this.renderQueries()}</div>
+        <div className={styles.innerWrapper}>
+          {this.renderTopSection(styles)}
+          <div className={styles.queriesWrapper}>{this.renderQueries()}</div>
           {this.renderAddQueryRow()}
+
+          {isHelpOpen && (
+            <Modal title="Data source help" isOpen={true} onDismiss={this.onCloseHelp}>
+              <PluginHelp plugin={this.state.dataSourceItem.meta} type="query_help" />
+            </Modal>
+          )}
         </div>
       </CustomScrollbar>
     );
   }
 }
 
+const getStyles = stylesFactory(() => {
+  const theme  = getTheme();
+
+  return {
+    innerWrapper: css`
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+      padding: ${theme.spacing.md};
+    `,
+    dataSourceRow: css`
+      display: flex;
+      margin-bottom: ${theme.spacing.md};
+    `,
+    dataSourceRowItem: css`
+      margin-right: ${theme.spacing.inlineFormMargin};
+    `,
+    dataSourceRowItemOptions: css`
+      flex-grow: 1;
+      margin-right: ${theme.spacing.inlineFormMargin};
+    `,
+    queriesWrapper: css`
+      padding-bottom: 16px;
+    `,
+  };
+});
+
+type QueriesTabStyls = ReturnType<typeof getStyles>;

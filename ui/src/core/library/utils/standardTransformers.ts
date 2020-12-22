@@ -6,7 +6,11 @@ import { organizeFieldsTransformRegistryItem } from 'src/views/components/Transf
 import { seriesToFieldsTransformerRegistryItem } from 'src/views/components/TransformersUI/SeriesToFieldsTransformerEditor';
 import { calculateFieldTransformRegistryItem } from 'src/views/components/TransformersUI/CalculateFieldTransformerEditor';
 import { labelsToFieldsTransformerRegistryItem } from 'src/views/components/TransformersUI/LabelsToFieldsTransformerEditor';
- 
+import { groupByTransformRegistryItem } from 'src/views/components/TransformersUI/GroupByTransformerEditor';
+import { mergeTransformerRegistryItem } from 'src/views/components/TransformersUI/MergeTransformerEditor';
+import { seriesToRowsTransformerRegistryItem } from 'src/views/components/TransformersUI/SeriesToRowsTransformerEditor';
+import { concatenateTransformRegistryItem } from 'src/views/components/TransformersUI/ConcatenateTransformerEditor';
+
 export const getStandardTransformers = (): Array<TransformerRegistyItem<any>> => {
   return [
     reduceTransformRegistryItem,
@@ -14,7 +18,11 @@ export const getStandardTransformers = (): Array<TransformerRegistyItem<any>> =>
     filterFramesByRefIdTransformRegistryItem,
     organizeFieldsTransformRegistryItem,
     seriesToFieldsTransformerRegistryItem,
+    seriesToRowsTransformerRegistryItem,
+    concatenateTransformRegistryItem,
     calculateFieldTransformRegistryItem,
     labelsToFieldsTransformerRegistryItem,
+    groupByTransformRegistryItem,
+    mergeTransformerRegistryItem,
   ];
 };

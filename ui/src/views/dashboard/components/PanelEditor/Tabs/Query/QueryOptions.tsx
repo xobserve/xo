@@ -2,22 +2,27 @@
 import React, { PureComponent, ChangeEvent, FocusEvent } from 'react';
 
 // Utils
-import { rangeUtil, PanelData, DataSourceApi } from 'src/packages/datav-core/src';
-
+import { rangeUtil, PanelData, DataSourceApi, getTheme } from 'src/packages/datav-core/src';
 
 // Components
 import {
   EventsWithValidation,
+  LegacyInputStatus,
+  LegacyForms,
   ValidationEvents,
-  InlineFormLabel
+  InlineFormLabel,
+  stylesFactory,
 } from 'src/packages/datav-core/src';
-
 // Types
 import { PanelModel } from 'src/views/dashboard/model';
+
+
+import { css } from 'emotion';
 import { QueryOperationRow } from 'src/views/components/QueryOperationRow/QueryOperationRow';
-import { Input,LegacyInputStatus} from 'src/packages/datav-core/src/ui/components/Form/Legacy/Input/Input';
-import { Switch } from 'src/packages/datav-core/src/ui/components/Form/Legacy/Switch/Switch';
-import { FormattedMessage } from 'react-intl';
+
+const {LegacySwitch: Switch,LegacyInput: Input } = LegacyForms;
+
+
 
 const timeRangeValidationEvents: ValidationEvents = {
   [EventsWithValidation.onBlur]: [
@@ -157,8 +162,8 @@ export class QueryOptions extends PureComponent<Props, State> {
             className="width-6"
             placeholder="60"
             spellCheck={false}
-            onBlur={this.onDataSourceOptionBlur('maxDataPoints')}
-            onChange={this.onDataSourceOptionChange('maxDataPoints')}
+            onBlur={this.onDataSourceOptionBlur('cacheTimeout')}
+            onChange={this.onDataSourceOptionChange('cacheTimeout')}
             value={cacheTimeout}
           />
         </div>
@@ -269,7 +274,7 @@ export class QueryOptions extends PureComponent<Props, State> {
     this.setState({ isOpen: false });
   };
 
-  renderCollapsedText(): React.ReactNode | undefined {
+  renderCollapsedText(styles: StylesType): React.ReactNode | undefined {
     const { data } = this.props;
     const { isOpen, maxDataPoints, interval } = this.state;
 
@@ -289,8 +294,8 @@ export class QueryOptions extends PureComponent<Props, State> {
 
     return (
       <>
-        {<div className={'query-options-collapsedText'}>MD = {mdDesc}</div>}
-        {<div className={'query-options-collapsedText'}>Interval = {intervalDesc}</div>}
+        {<div className={styles.collapsedText}>MD = {mdDesc}</div>}
+        {<div className={styles.collapsedText}>Interval = {intervalDesc}</div>}
       </>
     );
   }
@@ -298,11 +303,14 @@ export class QueryOptions extends PureComponent<Props, State> {
   render() {
     const { hideTimeOverride } = this.state;
     const { relativeTime, timeShift, isOpen } = this.state;
+    const styles = getStyles();
 
     return (
       <QueryOperationRow
-        title={<FormattedMessage id="panel.queryOptions"/>}
-        headerElement={this.renderCollapsedText()}
+        id="Query options"
+        index={0}
+        title="Query options"
+        headerElement={this.renderCollapsedText(styles)}
         isOpen={isOpen}
         onOpen={this.onOpenOptions}
         onClose={this.onCloseOptions}
@@ -353,3 +361,16 @@ export class QueryOptions extends PureComponent<Props, State> {
   }
 }
 
+const getStyles = stylesFactory(() => {
+  const theme = getTheme();
+
+  return {
+    collapsedText: css`
+      margin-left: ${theme.spacing.md};
+      font-size: ${theme.typography.size.sm};
+      color: ${theme.colors.textWeak};
+    `,
+  };
+});
+
+type StylesType = ReturnType<typeof getStyles>;

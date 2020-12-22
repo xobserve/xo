@@ -8,7 +8,7 @@ export interface RegexpOrNamesMatcherOptions {
   pattern?: string;
   names?: string[];
 }
-
+ 
 // General Field matcher
 const fieldNameMatcher: FieldMatcherInfo<string> = {
   id: FieldMatcherID.byName,
@@ -99,7 +99,7 @@ const patternToRegex = (pattern?: string): RegExp | undefined => {
   try {
     return stringToJsRegex(pattern);
   } catch (error) {
-    console.log(error);
+    console.error(error);
     return undefined;
   }
 };
@@ -124,7 +124,7 @@ const frameNameMatcher: FrameMatcherInfo<string> = {
 };
 
 /**
- * Registry Initalization
+ * Registry Initialization
  */
 export function getFieldNameMatchers(): FieldMatcherInfo[] {
   return [fieldNameMatcher, regexpFieldNameMatcher, multipleFieldNamesMatcher, regexpOrMultipleNamesMatcher];

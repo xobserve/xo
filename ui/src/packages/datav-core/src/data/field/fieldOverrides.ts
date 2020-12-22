@@ -22,7 +22,7 @@ import isNumber from 'lodash/isNumber';
 import set from 'lodash/set';
 import unset from 'lodash/unset';
 import get from 'lodash/get';
-import { getDisplayProcessor } from './displayProcessor';
+import { getDisplayProcessor ,getRawDisplayProcessor} from './displayProcessor';
 import { guessFieldTypeForField } from '../dataframe';
 import { standardFieldConfigEditorRegistry } from './standardFieldConfigEditorRegistry';
 import { FieldConfigOptionsRegistry } from './FieldConfigOptionsRegistry';
@@ -422,3 +422,35 @@ export const getLinksSupplier = (
     return info;
   });
 };
+
+
+/**
+ * Return a copy of the DataFrame with raw data
+ */
+export function applyRawFieldOverrides(data: DataFrame[]): DataFrame[] {
+  if (!data || data.length === 0) {
+    return [];
+  }
+
+  const newData = [...data];
+  const processor = getRawDisplayProcessor();
+
+  for (let frameIndex = 0; frameIndex < newData.length; frameIndex++) {
+    const newFrame = { ...newData[frameIndex] };
+    const newFields = [...newFrame.fields];
+
+    for (let fieldIndex = 0; fieldIndex < newFields.length; fieldIndex++) {
+      newFields[fieldIndex] = {
+        ...newFields[fieldIndex],
+        display: processor,
+      };
+    }
+
+    newData[frameIndex] = {
+      ...newFrame,
+      fields: newFields,
+    };
+  }
+
+  return newData;
+}

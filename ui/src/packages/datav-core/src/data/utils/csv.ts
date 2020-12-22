@@ -21,6 +21,7 @@ export interface CSVConfig {
   newline?: string; // default: "\r\n"
   quoteChar?: string; // default: '"'
   encoding?: string; // default: "",
+  useExcelHeader?: boolean; // default: false
   headerStyle?: CSVHeaderStyle;
 }
 

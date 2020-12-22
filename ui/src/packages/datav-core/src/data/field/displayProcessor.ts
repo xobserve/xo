@@ -159,3 +159,11 @@ export function getDecimalsForValue(value: number, decimalOverride?: DecimalCoun
 
   return { decimals, scaledDecimals };
 }
+
+
+export function getRawDisplayProcessor(): DisplayProcessor {
+  return (value: any) => ({
+    text: `${value}`,
+    numeric: (null as unknown) as number,
+  });
+}

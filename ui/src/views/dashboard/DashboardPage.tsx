@@ -25,7 +25,8 @@ import { DashboardSettings } from './components/Setting/Setting'
 import { updateLocation } from 'src/store/reducers/location';
 import { SubMenu } from './components/SubMenu/SubMenu';
 import { BackButton } from '../components/BackButton/BackButton';
-import { PanelInspector, InspectTab } from '../components/Inspector/PanelInspector';
+
+import { PanelInspector } from '../components/Inspector/PanelInspector';
 import impressionSrv from 'src/core/services/impression'
 
 import { onTimeRangeUpdated } from '../variables/state/actions';
@@ -34,6 +35,7 @@ import { updateUrl } from 'src/core/library/utils/url';
 import { getVariables } from 'src/views/variables/state/selectors'
 import { saveDashboard } from './components/SaveDashboard/SaveDashboard';
 import { formatDocumentTitle } from 'src/core/library/utils/date';
+import { InspectTab } from '../components/Inspector/types';
 
 
 interface DashboardPageProps {

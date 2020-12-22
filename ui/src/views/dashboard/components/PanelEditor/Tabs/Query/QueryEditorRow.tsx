@@ -4,13 +4,12 @@ import classNames from 'classnames';
 import _ from 'lodash';
 // Utils & Services
 
-import { Emitter } from 'src/core/library/utils/emitter';
-import {Row} from 'antd'
+
 
 // Types
-import { PanelModel,DashboardModel} from '../../../../model';
+import { PanelModel ,DashboardModel} from 'src/views/dashboard/model';
 
-
+import { ErrorBoundaryAlert, HorizontalGroup } from 'src/packages/datav-core/src';
 import {
   DataQuery,
   DataSourceApi,
@@ -19,29 +18,28 @@ import {
   PanelEvents,
   TimeRange,
   toLegacyResponseData,
-  ErrorBoundaryAlert
 } from 'src/packages/datav-core/src';
 import { QueryEditorRowTitle } from './QueryEditorRowTitle';
-import { QueryOperationRow } from 'src/views/components/QueryOperationRow/QueryOperationRow';
-import { QueryOperationAction } from 'src/views/components/QueryOperationRow/QueryOperationAction';
 
 
 import { getDatasourceSrv } from 'src/core/services/datasource';
+import { Emitter } from 'src/core/library/utils/emitter';
 import { getTimeSrv } from 'src/core/services/time';
-import localeData from 'src/core/library/locale'
-import { getState } from 'src/store/store';
+import { QueryOperationRow } from 'src/views/components/QueryOperationRow/QueryOperationRow';
+import { QueryOperationAction } from 'src/views/components/QueryOperationRow/QueryOperationAction';
 
 interface Props {
   panel: PanelModel;
   data: PanelData;
   query: DataQuery;
   dashboard: DashboardModel;
+  dataSourceValue: string | null;
+  inMixedMode?: boolean;
+  id: string;
+  index: number;
   onAddQuery: (query?: DataQuery) => void;
   onRemoveQuery: (query: DataQuery) => void;
-  onMoveQuery: (query: DataQuery, direction: number) => void;
   onChange: (query: DataQuery) => void;
-  dataSourceValue: string | null;
-  inMixedMode: boolean;
 }
 
 interface State {
@@ -67,16 +65,30 @@ export class QueryEditorRow extends PureComponent<Props, State> {
     this.loadDatasource();
   }
 
-  componentWillUnmount() {
+  getAngularQueryComponentScope(): AngularQueryComponentScope {
+    const { panel, query, dashboard } = this.props;
+    const { datasource } = this.state;
+
+    return {
+      datasource: datasource,
+      target: query,
+      panel: panel,
+      dashboard: dashboard,
+      refresh: () => panel.refresh(),
+      render: () => panel.render(),
+      events: panel.events,
+      range: getTimeSrv().timeRange(),
+    };
   }
 
   async loadDatasource() {
-    const { query, panel } = this.props;
+    const { query, panel, dataSourceValue } = this.props;
     const dataSourceSrv = getDatasourceSrv();
     let datasource;
 
     try {
-      datasource = await dataSourceSrv.get(query.datasource || panel.datasource);
+      const datasourceName = dataSourceValue || query.datasource || panel.datasource;
+      datasource = await dataSourceSrv.get(datasourceName);
     } catch (error) {
       datasource = await dataSourceSrv.get();
     }
@@ -107,6 +119,8 @@ export class QueryEditorRow extends PureComponent<Props, State> {
     }
   }
 
+  onOpen = () => {
+  };
 
   onRunQuery = () => {
     this.props.panel.refresh();
@@ -122,6 +136,7 @@ export class QueryEditorRow extends PureComponent<Props, State> {
 
     if (datasource?.components?.QueryEditor) {
       const QueryEditor = datasource.components.QueryEditor;
+
       return (
         <QueryEditor
           key={datasource?.name}
@@ -130,6 +145,7 @@ export class QueryEditorRow extends PureComponent<Props, State> {
           onChange={onChange}
           onRunQuery={this.onRunQuery}
           data={data}
+          range={getTimeSrv().timeRange()}
         />
       );
     }
@@ -171,31 +187,24 @@ export class QueryEditorRow extends PureComponent<Props, State> {
     const isDisabled = query.hide;
 
     return (
-      <Row align="middle">
+      <HorizontalGroup width="auto">
         {hasTextEditMode && (
           <QueryOperationAction
-            title={localeData[getState().application.locale]['panel.toggleMode']}
+            title="Toggle text edit mode"
             icon="pen"
             onClick={e => {
               this.onToggleEditMode(e, props);
             }}
           />
         )}
+        <QueryOperationAction title="Duplicate query" icon="copy" onClick={this.onCopyQuery} />
         <QueryOperationAction
-          title={localeData[getState().application.locale]['panel.moveQueryDown']}
-          icon="arrow-down"
-          onClick={() => this.props.onMoveQuery(query, 1)}
-        />
-        <QueryOperationAction title={localeData[getState().application.locale]['panel.moveQueryUp']} icon="arrow-up" onClick={() => this.props.onMoveQuery(query, -1)} />
-
-        <QueryOperationAction title={localeData[getState().application.locale]['panel.duplicateQueyr']} icon="copy" onClick={this.onCopyQuery} />
-        <QueryOperationAction
-          title={localeData[getState().application.locale]['panel.toggleQuery']}
+          title="Disable/enable query"
           icon={isDisabled ? 'eye-slash' : 'eye'}
           onClick={this.onDisableQuery}
         />
-        <QueryOperationAction title={localeData[getState().application.locale]['panel.removeQuery']} icon="trash-alt" onClick={this.onRemoveQuery} />
-      </Row>
+        <QueryOperationAction title="Remove query" icon="trash-alt" onClick={this.onRemoveQuery} />
+      </HorizontalGroup>
     );
   };
 
@@ -203,11 +212,12 @@ export class QueryEditorRow extends PureComponent<Props, State> {
     const { query, inMixedMode } = this.props;
     const { datasource } = this.state;
     const isDisabled = query.hide;
+
     return (
       <QueryEditorRowTitle
         query={query}
         inMixedMode={inMixedMode}
-        datasource={datasource}
+        datasource={datasource!}
         disabled={isDisabled}
         onClick={e => this.onToggleEditMode(e, props)}
         collapsedText={!props.isOpen ? this.renderCollapsedText() : null}
@@ -216,7 +226,7 @@ export class QueryEditorRow extends PureComponent<Props, State> {
   };
 
   render() {
-    const { query } = this.props;
+    const { query, id, index } = this.props;
     const { datasource } = this.state;
     const isDisabled = query.hide;
 
@@ -233,7 +243,14 @@ export class QueryEditorRow extends PureComponent<Props, State> {
 
     return (
       <div>
-        <QueryOperationRow title={this.renderTitle} actions={this.renderActions}>
+        <QueryOperationRow
+          id={id}
+          draggable={true}
+          index={index}
+          title={this.renderTitle}
+          actions={this.renderActions}
+          onOpen={this.onOpen}
+        >
           <div className={rowClasses}>
             <ErrorBoundaryAlert>{editor}</ErrorBoundaryAlert>
           </div>
@@ -243,6 +260,10 @@ export class QueryEditorRow extends PureComponent<Props, State> {
   }
 }
 
+// To avoid sending duplicate events for each row we have this global cached object here
+// So we can check if we already emitted this legacy data event
+let globalLastPanelDataCache: PanelData | null = null;
+
 
 export interface AngularQueryComponentScope {
   target: DataQuery;
@@ -251,7 +272,7 @@ export interface AngularQueryComponentScope {
   events: Emitter;
   refresh: () => void;
   render: () => void;
-  datasource: DataSourceApi;
+  datasource: DataSourceApi | null;
   toggleEditorMode?: () => void;
   getCollapsedText?: () => string;
   range: TimeRange;

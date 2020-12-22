@@ -1,15 +1,15 @@
 import React from 'react';
-import { DataQuery, DataSourceApi } from 'src/packages/datav-core/src';
-import {Row} from 'antd'
-import './QueryEditorRowTitle.less'
+import { css } from 'emotion';
+import { DataQuery, DataSourceApi, DatavTheme } from 'src/packages/datav-core/src';
+import { stylesFactory, useTheme } from 'src/packages/datav-core/src';
 
 interface QueryEditorRowTitleProps {
   query: DataQuery;
   datasource: DataSourceApi;
-  inMixedMode: boolean;
-  disabled: boolean;
+  inMixedMode?: boolean;
+  disabled?: boolean;
   onClick: (e: React.MouseEvent) => void;
-  collapsedText: string;
+  collapsedText: string | null;
 }
 
 export const QueryEditorRowTitle: React.FC<QueryEditorRowTitleProps> = ({
@@ -20,19 +20,57 @@ export const QueryEditorRowTitle: React.FC<QueryEditorRowTitleProps> = ({
   onClick,
   collapsedText,
 }) => {
+  const theme = useTheme();
+  const styles = getQueryEditorRowTitleStyles(theme);
+
   return (
-    <Row align="middle" className="query-editor-row-title">
-      <div className={'refId'}>
+    <div className={styles.wrapper}>
+      <div className={styles.refId}>
         <span>{query.refId}</span>
-        {inMixedMode && <em className={'contextInfo'}> ({datasource.name})</em>}
-        {disabled && <em className={'contextInfo'}> Disabled</em>}
+        {inMixedMode && <em className={styles.contextInfo}> ({datasource.name})</em>}
+        {disabled && <em className={styles.contextInfo}> Disabled</em>}
       </div>
       {collapsedText && (
-        <div className={'collapsedText'} onClick={onClick}>
+        <div className={styles.collapsedText} onClick={onClick}>
           {collapsedText}
         </div>
       )}
-    </Row>
+    </div>
   );
 };
 
+const getQueryEditorRowTitleStyles = stylesFactory((theme: DatavTheme) => {
+  return {
+    wrapper: css`
+      display: flex;
+      align-items: center;
+    `,
+
+    refId: css`
+      font-weight: ${theme.typography.weight.semibold};
+      color: ${theme.colors.textBlue};
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+    `,
+    collapsedText: css`
+      font-weight: ${theme.typography.weight.regular};
+      font-size: ${theme.typography.size.sm};
+      color: ${theme.colors.textWeak};
+      padding-left: ${theme.spacing.sm};
+      align-items: center;
+      overflow: hidden;
+      font-style: italic;
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+      min-width: 0;
+    `,
+    contextInfo: css`
+      font-size: ${theme.typography.size.sm};
+      font-style: italic;
+      color: ${theme.colors.textWeak};
+      padding-left: 10px;
+    `,
+  };
+});

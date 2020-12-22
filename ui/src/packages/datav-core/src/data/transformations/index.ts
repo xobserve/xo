@@ -4,5 +4,13 @@ export * from './matchers';
 export { standardTransformers } from './transformers';
 export * from './fieldReducer';
 export { transformDataFrame } from './transformDataFrame';
-export *  from './standardTransformersRegistry';
-export *  from './matchers/nameMatcher';
+export type{
+  TransformerRegistyItem,
+  TransformerUIProps,
+} from './standardTransformersRegistry';
+
+export {
+  standardTransformersRegistry,
+} from './standardTransformersRegistry';
+export type { RegexpOrNamesMatcherOptions } from './matchers/nameMatcher';
+  

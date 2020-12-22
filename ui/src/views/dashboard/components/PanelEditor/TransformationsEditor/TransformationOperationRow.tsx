@@ -1,23 +1,31 @@
-import { DataFrame } from 'src/packages/datav-core/src';
 import React, { useState } from 'react';
+import { DataFrame, DataTransformerConfig, TransformerRegistyItem } from 'src/packages/datav-core/src';
 import { HorizontalGroup } from 'src/packages/datav-core/src';
+
 import { TransformationEditor } from './TransformationEditor';
+
+import { TransformationsEditorTransformation } from './types';
 import { QueryOperationRow } from 'src/views/components/QueryOperationRow/QueryOperationRow';
 import { QueryOperationAction } from 'src/views/components/QueryOperationRow/QueryOperationAction';
 
 interface TransformationOperationRowProps {
-  name: string;
-  description: string;
-  editor?: JSX.Element;
-  onRemove: () => void;
-  input: DataFrame[];
-  output: DataFrame[];
+  id: string;
+  index: number;
+  data: DataFrame[];
+  uiConfig: TransformerRegistyItem<any>;
+  configs: TransformationsEditorTransformation[];
+  onRemove: (index: number) => void;
+  onChange: (index: number, config: DataTransformerConfig) => void;
 }
 
 export const TransformationOperationRow: React.FC<TransformationOperationRowProps> = ({
-  children,
   onRemove,
-  ...props
+  index,
+  id,
+  data,
+  configs,
+  uiConfig,
+  onChange,
 }) => {
   const [showDebug, setShowDebug] = useState(false);
 
@@ -25,6 +33,7 @@ export const TransformationOperationRow: React.FC<TransformationOperationRowProp
     return (
       <HorizontalGroup align="center" width="auto">
         <QueryOperationAction
+          title="Debug"
           disabled={!isOpen}
           icon="bug"
           onClick={() => {
@@ -32,14 +41,21 @@ export const TransformationOperationRow: React.FC<TransformationOperationRowProp
           }}
         />
 
-        <QueryOperationAction icon="trash-alt" onClick={onRemove} />
+        <QueryOperationAction title="Remove" icon="trash-alt" onClick={() => onRemove(index)} />
       </HorizontalGroup>
     );
   };
 
   return (
-    <QueryOperationRow title={props.name} actions={renderActions}>
-      <TransformationEditor {...props} debugMode={showDebug} />
+    <QueryOperationRow id={id} index={index} title={uiConfig.name} draggable actions={renderActions}>
+      <TransformationEditor
+        debugMode={showDebug}
+        index={index}
+        data={data}
+        configs={configs}
+        uiConfig={uiConfig}
+        onChange={onChange}
+      />
     </QueryOperationRow>
   );
 };

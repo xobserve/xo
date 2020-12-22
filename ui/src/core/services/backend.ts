@@ -1,7 +1,7 @@
 import { merge, MonoTypeOperatorFunction, Observable, of, Subject, throwError } from 'rxjs';
 import { catchError, filter, map, mergeMap, share, takeUntil, tap, throwIfEmpty } from 'rxjs/operators';
 import { fromFetch } from 'rxjs/fetch';
-import { BackendSrv as BackendService, BackendSrvRequest, config } from 'src/packages/datav-core/src';
+import { BackendSrv as BackendService, BackendSrvRequest, config ,FetchError} from 'src/packages/datav-core/src';
 
 import { DataSourceResponse, CoreEvents } from 'src/types';
 import { DashboardDTO, FolderInfo, DashboardDataDTO } from 'src/types';
@@ -61,6 +61,7 @@ export class BackendSrv implements BackendService {
   private inFlightRequests: Subject<string> = new Subject<string>();
   private HTTP_REQUEST_CANCELED = -1;
   private noBackendCache: boolean;
+  private inspectorStream: Subject<FetchResponse | FetchError> = new Subject<FetchResponse | FetchError>();
   private dependencies: BackendSrvDependencies = {
     fromFetch: fromFetch,
     logout: () => {
@@ -75,6 +76,11 @@ export class BackendSrv implements BackendService {
         ...deps,
       };
     }
+  }
+
+  
+  getInspectorStream(): Observable<FetchResponse<any> | FetchError> {
+    return this.inspectorStream;
   }
 
   async get(url: string, params?: any, requestId?: string) {

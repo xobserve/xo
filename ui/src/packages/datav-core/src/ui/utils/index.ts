@@ -9,3 +9,5 @@ export * from './scrollbar'
 export * from './tags'
 
 export { DOMUtil };
+
+export { renderOrCallToRender } from './renderOrCallToRender';

@@ -1,26 +1,79 @@
-import React, { useContext } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
+import { mergeMap } from 'rxjs/operators';
 import { css } from 'emotion';
-import { Icon, JSONFormatter, ThemeContext } from 'src/packages/datav-core/src';
-import { DatavTheme, DataFrame } from 'src/packages/datav-core/src';
+import { Icon, JSONFormatter, useStyles } from 'src/packages/datav-core/src';
+import {
+  DataFrame,
+  DataTransformerConfig,
+  DatavTheme,
+  transformDataFrame,
+  TransformerRegistyItem,
+} from 'src/packages/datav-core/src';
+
+import { TransformationsEditorTransformation } from './types';
 
 interface TransformationEditorProps {
-  name: string;
-  description: string;
-  editor?: JSX.Element;
-  input: DataFrame[];
-  output?: DataFrame[];
   debugMode?: boolean;
+  index: number;
+  data: DataFrame[];
+  uiConfig: TransformerRegistyItem<any>;
+  configs: TransformationsEditorTransformation[];
+  onChange: (index: number, config: DataTransformerConfig) => void;
 }
 
-export const TransformationEditor = ({ editor, input, output, debugMode }: TransformationEditorProps) => {
-  const theme = useContext(ThemeContext);
-  const styles = getStyles(theme);
+export const TransformationEditor = ({
+  debugMode,
+  index,
+  data,
+  uiConfig,
+  configs,
+  onChange,
+}: TransformationEditorProps) => {
+  const styles = useStyles(getStyles);
+  const [input, setInput] = useState<DataFrame[]>([]);
+  const [output, setOutput] = useState<DataFrame[]>([]);
+  const config = useMemo(() => configs[index], [configs, index]);
+
+  useEffect(() => {
+    const inputTransforms = configs.slice(0, index).map(t => t.transformation);
+    const outputTransforms = configs.slice(index, index + 1).map(t => t.transformation);
+    const inputSubscription = transformDataFrame(inputTransforms, data).subscribe(setInput);
+    const outputSubscription = transformDataFrame(inputTransforms, data)
+      .pipe(mergeMap(before => transformDataFrame(outputTransforms, before)))
+      .subscribe(setOutput);
+
+    return function unsubscribe() {
+      inputSubscription.unsubscribe();
+      outputSubscription.unsubscribe();
+    };
+  }, [index, data, configs]);
+
+  const editor = useMemo(
+    () =>
+      React.createElement(uiConfig.editor, {
+        options: { ...uiConfig.transformation.defaultOptions, ...config.transformation.options },
+        input,
+        onChange: (opts: any) => {
+          onChange(index, { id: config.transformation.id, options: opts });
+        },
+      }),
+    [
+      uiConfig.editor,
+      uiConfig.transformation.defaultOptions,
+      config.transformation.id,
+      config.transformation.options,
+      input,
+      onChange,
+    ]
+  );
 
   return (
     <div className={styles.editor}>
       {editor}
       {debugMode && (
-        <div className={styles.debugWrapper}>
+        <div
+          className={styles.debugWrapper}
+        >
           <div className={styles.debug}>
             <div className={styles.debugTitle}>Transformation input data</div>
             <div className={styles.debugJson}>
@@ -32,9 +85,7 @@ export const TransformationEditor = ({ editor, input, output, debugMode }: Trans
           </div>
           <div className={styles.debug}>
             <div className={styles.debugTitle}>Transformation output data</div>
-            <div className={styles.debugJson}>
-              <JSONFormatter json={output} />
-            </div>
+            <div className={styles.debugJson}>{output && <JSONFormatter json={output} />}</div>
           </div>
         </div>
       )}
@@ -74,9 +125,7 @@ const getStyles = (theme: DatavTheme) => {
         color: ${theme.colors.text};
       }
     `,
-    editor: css`
-      label: editor
-    `,
+    editor: css``,
     debugWrapper: css`
       display: flex;
       flex-direction: row;

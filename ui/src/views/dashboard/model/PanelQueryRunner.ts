@@ -1,7 +1,7 @@
 // Libraries
 import { cloneDeep } from 'lodash';
-import { ReplaySubject, Unsubscribable, Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
+import {MonoTypeOperatorFunction,of, ReplaySubject, Unsubscribable, Observable } from 'rxjs';
+import { map ,mergeMap} from 'rxjs/operators';
 
 // Services & Utils
 import { getDatasourceSrv } from 'src/core/services/datasource';
@@ -74,24 +74,14 @@ export class PanelQueryRunner {
     const { withFieldConfig, withTransforms } = options;
 
     return this.subject.pipe(
+      this.getTransformationsStream(withTransforms),
       map((data: PanelData) => {
         let processedData = data;
-
-        // Apply transformation
-        if (withTransforms) {
-          const transformations = this.dataConfigSource.getTransformations();
-
-          if (transformations && transformations.length > 0) {
-            processedData = {
-              ...processedData,
-              series: transformDataFrame(transformations, data.series),
-            };
-          }
-        }
 
         if (withFieldConfig) {
           // Apply field defaults & overrides
           const fieldConfig = this.dataConfigSource.getFieldOverrideOptions();
+
           if (fieldConfig) {
             processedData = {
               ...processedData,
@@ -109,6 +99,27 @@ export class PanelQueryRunner {
       })
     );
   }
+
+  
+  private getTransformationsStream = (withTransforms: boolean): MonoTypeOperatorFunction<PanelData> => {
+    return inputStream =>
+      inputStream.pipe(
+        mergeMap(data => {
+          if (!withTransforms) {
+            return of(data);
+          }
+
+          const transformations = this.dataConfigSource.getTransformations();
+
+          if (!transformations || transformations.length === 0) {
+            return of(data);
+          }
+
+          return transformDataFrame(transformations, data.series).pipe(map(series => ({ ...data, series })));
+        })
+      );
+  }
+
 
   async run(options: QueryRunnerOptions) {
     const {

@@ -7,7 +7,7 @@ import { Tooltip, PopoverContent } from 'src/packages/datav-core/src';
 import { PanelModel } from '../../model';
 import templateSrv from 'src/core/services/templating';
 import { getTimeSrv, TimeSrv } from 'src/core/services/time';
-import { InspectTab } from 'src/views/components/Inspector/PanelInspector';
+import { InspectTab } from 'src/views/components/Inspector/types';
 import { InfoOutlined } from '@ant-design/icons';
 
 enum InfoMode {

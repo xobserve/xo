@@ -1,8 +1,9 @@
 import { ComponentType } from 'react';
-import { MatcherConfig, FieldConfig, Field, DataFrame, TimeZone } from '../types';
+import { MatcherConfig, FieldConfig, Field, DataFrame, TimeZone,DataSourceInstanceSettings } from '../types';
 import { InterpolateFunction } from './panel';
 import { StandardEditorProps, FieldConfigOptionsRegistry, StandardEditorContext } from '../field';
 import { OptionsEditorItem } from './OptionsUIRegistryBuilder';
+import { DatavTheme } from './theme';
 
 export interface DynamicConfigValue {
   id: string;
@@ -102,10 +103,13 @@ export interface FieldConfigPropertyItem<TOptions = any, TValue = any, TSettings
   shouldApply: (field: Field) => boolean;
 }
 
+
 export interface ApplyFieldOverrideOptions {
   data?: DataFrame[];
   fieldConfig: FieldConfigSource;
   replaceVariables: InterpolateFunction;
+  getDataSourceSettingsByUid: (uid: string) => DataSourceInstanceSettings | undefined;
+  theme?: DatavTheme;
   timeZone?: TimeZone;
   autoMinMax?: boolean;
   fieldConfigRegistry?: FieldConfigOptionsRegistry;

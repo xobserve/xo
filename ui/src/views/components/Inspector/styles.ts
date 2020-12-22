@@ -1,11 +1,7 @@
 import { css } from 'emotion';
-import { stylesFactory, getTheme, currentTheme } from 'src/packages/datav-core/src';
-
+import { getTheme, stylesFactory } from 'src/packages/datav-core/src';
 
 export const getPanelInspectorStyles = stylesFactory(() => {
-  const theme = getTheme(currentTheme)
-  console.log('inspector theme, 可能存在不生效或者主题切换无效的bug:',theme)
-
   return {
     wrap: css`
       display: flex;
@@ -20,10 +16,10 @@ export const getPanelInspectorStyles = stylesFactory(() => {
       flex-grow: 0;
       align-items: center;
       justify-content: flex-end;
-      margin-bottom: ${theme.spacing.sm};
+      margin-bottom: ${getTheme().spacing.sm};
     `,
     toolbarItem: css`
-      margin-left: ${theme.spacing.md};
+      margin-left: ${getTheme().spacing.md};
     `,
     content: css`
       flex-grow: 1;
@@ -31,7 +27,7 @@ export const getPanelInspectorStyles = stylesFactory(() => {
     `,
     contentQueryInspector: css`
       flex-grow: 1;
-      padding: ${theme.spacing.md} 0;
+      padding: ${getTheme().spacing.md} 0;
     `,
     editor: css`
       font-family: monospace;
@@ -57,24 +53,28 @@ export const getPanelInspectorStyles = stylesFactory(() => {
     `,
     actionsWrapper: css`
       display: flex;
-      flex-wrap: wrap;
     `,
     leftActions: css`
       display: flex;
       flex-grow: 1;
+
+      max-width: 85%;
+      @media (max-width: 1345px) {
+        max-width: 75%;
+      }
     `,
     options: css`
-      margin-top: 19px;
+      padding-top: ${getTheme().spacing.sm};
     `,
     dataDisplayOptions: css`
       flex-grow: 1;
       min-width: 300px;
-      margin-right: ${theme.spacing.sm};
+      margin-right: ${getTheme().spacing.sm};
     `,
     selects: css`
       display: flex;
       > * {
-        margin-right: ${theme.spacing.sm};
+        margin-right: ${getTheme().spacing.sm};
       }
     `,
   };

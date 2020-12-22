@@ -153,3 +153,6 @@ export const closeTimepicker = eventFactory('closeTimepicker');
 export const routeUpdated = eventFactory('$routeUpdate');
 
 export const keybindingSaveDashboard = eventFactory<any>('keybading-save-dashboard');
+
+export const queryChanged = eventFactory('queryChanged');
+export const transformationChanged = eventFactory('transformationChanged');

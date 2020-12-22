@@ -1,13 +1,16 @@
 import _ from 'lodash'
 import { Emitter } from 'src/core/library/utils/emitter';
-import { PanelEvents, DataQuery, ScopedVars, DataTransformerConfig, PanelPlugin, FieldConfigSource, theme, DataLink, AppEvents, config } from 'src/packages/datav-core/src'
+import { PanelEvents, DataQuery, ScopedVars, DataTransformerConfig, PanelPlugin, FieldConfigSource, theme, DataLink, AppEvents, config, getTheme } from 'src/packages/datav-core/src'
 import templateSrv from 'src/core/services/templating'
 import { getNextRefIdChar } from 'src/core/library/utils/query'
 import { PanelQueryRunner } from './PanelQueryRunner'
 import { EDIT_PANEL_ID } from 'src/core/constants';
+import { CoreEvents } from 'src/types';
+import { getDatasourceSrv } from 'src/core/services/datasource';
 
 export const panelAdded = AppEvents.eventFactory<PanelModel | undefined>('panel-added');
 export const panelRemoved = AppEvents.eventFactory<PanelModel | undefined>('panel-removed');
+
 
 export interface GridPos {
     x: number;
@@ -183,6 +186,12 @@ export class PanelModel {
         return templateSrv.replace(value, vars, format);
     }
 
+    
+    updateQueries(queries: DataQuery[]) {
+        this.events.emit(CoreEvents.queryChanged);
+        this.targets = queries;
+      }
+
     updateGridPos(newPos: GridPos) {
         let sizeChanged = false;
 
@@ -230,16 +239,17 @@ export class PanelModel {
 
     getFieldOverrideOptions() {
         if (!this.plugin) {
-            return undefined;
+          return undefined;
         }
-
+    
         return {
-            fieldConfig: this.fieldConfig,
-            replaceVariables: this.replaceVariables,
-            fieldConfigRegistry: this.plugin.fieldConfigRegistry,
-            theme: theme,
+          fieldConfig: this.fieldConfig,
+          replaceVariables: this.replaceVariables,
+          getDataSourceSettingsByUid: getDatasourceSrv().getDataSourceSettingsByUid.bind(getDatasourceSrv()),
+          fieldConfigRegistry: this.plugin.fieldConfigRegistry,
+          theme: getTheme(),
         };
-    }
+      }
 
     getFieldConfig() {
         return this.fieldConfig;

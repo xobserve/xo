@@ -1,5 +1,5 @@
 import React, { useCallback, useMemo } from 'react';
-import { css, cx } from 'emotion';
+import { css } from 'emotion';
 import { DragDropContext, Draggable, Droppable, DropResult } from 'react-beautiful-dnd';
 import {
   DataFrame,
@@ -10,7 +10,7 @@ import {
   TransformerUIProps,
   getFieldDisplayName,
 } from 'src/packages/datav-core/src';
-import { stylesFactory, useTheme, Input, IconButton } from 'src/packages/datav-core/src';
+import { stylesFactory, useTheme, Input, IconButton, Icon } from 'src/packages/datav-core/src';
 
 import { OrganizeFieldsTransformerOptions } from 'src/packages/datav-core/src/data/transformations/transformers/organize';
 import { createOrderFieldsComparer } from 'src/packages/datav-core/src/data/transformations/transformers/order';
@@ -135,7 +135,7 @@ const DraggableFieldName: React.FC<DraggableFieldProps> = ({
         >
           <div className="gf-form gf-form--grow">
             <div className="gf-form-label gf-form-label--justify-left width-30">
-              <i className={cx('fa fa-ellipsis-v', styles.draggable)} />
+              <Icon name="draggabledots" title="Drag and drop to reorder" size="lg" className={styles.draggable} />
               <IconButton
                 className={styles.toggle}
                 size="md"
@@ -168,8 +168,6 @@ const getFieldNameStyles = stylesFactory((theme: DatavTheme) => ({
     color: ${theme.colors.textWeak};
   `,
   draggable: css`
-    padding: 0 ${theme.spacing.xs};
-    font-size: ${theme.typography.size.md};
     opacity: 0.4;
     &:hover {
       color: ${theme.colors.textStrong};

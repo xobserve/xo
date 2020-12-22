@@ -91,3 +91,28 @@ export type BackendSrvRequest = {
    */
   export const getBackendSrv = (): BackendSrv => singletonInstance;
   
+
+  /**
+ * Error type for fetch function in {@link BackendSrv}
+ *
+ * @public
+ */
+export interface FetchErrorDataProps {
+  message?: string;
+  status?: string;
+  error?: string | any;
+}
+
+  /**
+ * Error type for fetch function in {@link BackendSrv}
+ *
+ * @public
+ */
+export interface FetchError<T extends FetchErrorDataProps = any> {
+  status: number;
+  statusText?: string;
+  data: T;
+  cancelled?: boolean;
+  isHandled?: boolean;
+  config: BackendSrvRequest;
+}

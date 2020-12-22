@@ -15,7 +15,11 @@ export enum LoadingState {
   Error = 'Error',
 }
 
-export type PreferredVisualisationType = 'graph' | 'table' | 'trace';
+export enum DataTopic {
+  Annotations = 'annotations',
+}
+
+export type PreferredVisualisationType = 'graph' | 'table' | 'trace' | 'logs';
 
 export interface QueryResultMeta {
   /** DatasSource Specific Values */
@@ -34,16 +38,30 @@ export interface QueryResultMeta {
   preferredVisualisationType?: PreferredVisualisationType;
 
   /**
+   * Optionally identify which topic the frame should be assigned to.
+   * A value specified in the response will override what the request asked for.
+   */
+  dataTopic?: DataTopic;
+
+  /**
+   * This is the raw query sent to the underlying system.  All macros and templating
+   * as been applied.  When metadata contains this value, it will be shown in the query inspector
+   */
+  executedQueryString?: string;
+
+  /**
    * Legacy data source specific, should be moved to custom
    * */
   gmdMeta?: any[]; // used by cloudwatch
-  rawQuery?: string; // used by stackdriver
-  alignmentPeriod?: string; // used by stackdriver
-  query?: string; // used by azure log
+  alignmentPeriod?: number; // used by cloud monitoring
   searchWords?: string[]; // used by log models and loki
   limit?: number; // used by log models and loki
   json?: boolean; // used to keep track of old json doc values
+  instant?: boolean;
+
+  query?: string;
 }
+
 
 export interface QueryResultMetaStat extends FieldConfig {
   displayName: string;
