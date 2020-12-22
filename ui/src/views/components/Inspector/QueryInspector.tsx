@@ -14,6 +14,7 @@ import { Unsubscribable } from 'rxjs';
 import appEvents from 'src/core/library/utils/app_events';
 import { backendSrv } from 'src/core/services/backend';
 import { supportsDataQuery } from 'src/views/dashboard/components/PanelEditor/utils';
+import { CoreEvents } from 'src/types';
 
 interface DsQuery {
   isLoading: boolean;
@@ -60,9 +61,7 @@ export class QueryInspector extends PureComponent<Props, State> {
   }
 
   componentDidMount() {
-    this.subscription = backendSrv.getInspectorStream().subscribe({
-      next: response => this.onDataSourceResponse(response),
-    });
+    appEvents.on(CoreEvents.dsRequestResponse, (res) => this.onDataSourceResponse(res.data));
 
     this.props.panel.events.on(PanelEvents.refresh, this.onPanelRefresh);
     this.updateQueryList();
@@ -134,6 +133,7 @@ export class QueryInspector extends PureComponent<Props, State> {
   };
 
   onDataSourceResponse(response: any) {
+    console.log(response)
     // ignore silent requests
     if (response.config?.hideFromInspector) {
       return;
