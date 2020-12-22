@@ -17,7 +17,7 @@ import { FieldConfigOptionsRegistry, standardFieldConfigEditorRegistry } from '.
 import {currentLang,localeData} from '../config'
 export interface SetFieldConfigOptionsArgs<TFieldConfigOptions = any> {
   /**
-   * Array of standard field config properties
+   * Array of standard field config propertiesaa
    *
    * @example
    * ```typescript
