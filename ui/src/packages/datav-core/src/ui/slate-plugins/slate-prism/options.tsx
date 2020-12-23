@@ -66,8 +66,8 @@ class Options extends React.PureComponent<OptionsFormat> {
 
   constructor(props: OptionsFormat) {
     super(props)
-    this.onlyIn = defaultOnlyIn
-    this.getSyntax = defaultGetSyntax
+    this.onlyIn = props.onlyIn
+    this.getSyntax = props.getSyntax
     this.renderDecoration = defaultRenderDecoration
  
   }

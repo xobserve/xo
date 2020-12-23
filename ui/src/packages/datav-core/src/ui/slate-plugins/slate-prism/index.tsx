@@ -30,7 +30,6 @@ export function SlatePrism(optsParam: OptionsFormat = {}) {
       const block = Block.create(node as Block);
       const grammarName = opts.getSyntax(block);
       const grammar = Prism.languages[grammarName];
-
       if (!grammar) {
         // Grammar not loaded
         return [];
