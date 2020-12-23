@@ -19,7 +19,7 @@ export const Label: React.FC<LabelProps> = ({ children, description, className, 
       <span className={'datav-form-label-categories'} key={`${c}/${i}`}>
         <span>{c}</span>
         <RightOutlined className={'datav-form-label-chevron'} />
-      </span>
+      </span>   
     );
   });
 

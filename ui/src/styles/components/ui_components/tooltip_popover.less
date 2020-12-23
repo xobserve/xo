@@ -61,7 +61,25 @@
           color: lighten(@text-color, 20%);
         }
       }
-
+      &.popper__background--info-alt {
+        background: @component-background;
+        color: @text-color;
+      
+        .popper__arrow {
+          border-color: @border-color-base
+        }
+      
+        code {
+          border: none;
+          background: darken(@component-background, 15%);
+          color: lighten(@text-color, 20%);
+        }
+      
+        strong,
+        em {
+          color: lighten(@text-color, 20%);
+        }
+      }
 }
 
 .popper__arrow {

@@ -47,6 +47,12 @@ export const plugin = new PanelPlugin<Options, CustomFieldConfig>(TablePanel)
               { value: TableCellDisplayMode.JSONView, label: 'JSON View' },
             ],
           },
+        })
+        .addBooleanSwitch({
+          path: 'filterable',
+          name: 'Column filter',
+          description: 'Enables/disables field filters in table',
+          defaultValue: false,
         });
     },
   })

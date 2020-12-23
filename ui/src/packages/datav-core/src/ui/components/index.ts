@@ -102,3 +102,5 @@ const LegacyForms = {
 };
 
 export { LegacyForms, LegacyInputStatus };
+
+export type {FilterItem} from './Table/types'

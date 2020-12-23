@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
-import { Table, Select, getTheme, getHistory, getTemplateSrv } from 'src/packages/datav-core/src';
+import { Table, Select, getTheme, getHistory, getTemplateSrv ,FilterItem} from 'src/packages/datav-core/src';
 import { FieldMatcherID, PanelProps, DataFrame, SelectableValue, getFrameDisplayName } from 'src/packages/datav-core/src';
 import { Options } from './types';
 import { css } from 'emotion';
@@ -10,6 +10,9 @@ import { TableSortByFieldState } from 'src/packages/datav-core/src';
 import { resetDashboardVariables } from 'src/views/dashboard/model/initDashboard'
 import { join, indexOf,cloneDeep, isArray} from 'lodash';
 import { interactive } from 'src/core/library/utils/interactive';
+import { getDatasourceSrv } from 'src/core/services/datasource';
+import { store } from 'src/store/store';
+import { applyFilterFromTable } from 'src/views/variables/adhoc/actions';
 
 
 interface Props extends PanelProps<Options> {
@@ -70,6 +73,18 @@ export class TablePanelUnconnected extends Component<Props> {
   };
 
   
+  onCellFilterAdded = (filter: FilterItem) => {
+    const { key, value, operator } = filter;
+    const panelModel = this.props.panel;
+    const datasource = panelModel?.datasource;
+
+    if (!datasource) {
+      return;
+    }
+
+    //@ts-ignore
+    store.dispatch(applyFilterFromTable({ datasource, key, operator, value }));
+  };
 
   renderTable(frame: DataFrame, width: number, height: number) {
     const { options } = this.props;
@@ -86,6 +101,7 @@ export class TablePanelUnconnected extends Component<Props> {
         onSortByChange={this.onSortByChange}
         onColumnResize={this.onColumnResize}
         onRowClick={options.enableRowClick ? (data) => onRowClickFunc(data, getHistory(), (k,v) => interactive.setVariable(k,v,this.props.dashboard,this.props.resetDashboardVariables),interactive.setTime) : null}
+        onCellFilterAdded={this.onCellFilterAdded}
       />
     );
   }
