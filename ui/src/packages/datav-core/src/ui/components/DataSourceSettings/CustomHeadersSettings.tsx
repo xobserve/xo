@@ -130,7 +130,6 @@ export class CustomHeadersSettings extends PureComponent<Props, State> {
         });
     }
     
-    console.log(jsonData,secureJsonData)
     this.props.onChange({
       ...this.props.dataSourceConfig,
       jsonData,
@@ -175,12 +174,11 @@ export class CustomHeadersSettings extends PureComponent<Props, State> {
   };
 
   onHeaderRemove = (headerId: string) => {
-    console.log(this.state.headers)
     let headers = this.state.headers.filter(h => {
       return h.id !== headerId
     })
 
-    console.log(headers)
+
     this.setState({
       ...this.state,
       headers: headers
@@ -191,12 +189,10 @@ export class CustomHeadersSettings extends PureComponent<Props, State> {
 
     //@ts-ignore
     for (const [index, header] of headers.entries()) {
-      console.log(header)
       jsonData[`httpHeaderName${index + 1}`] = header.name;
       secureJsonData[`httpHeaderValue${index + 1}`] = header.value;
     }
     
-    console.log(jsonData,secureJsonData)
     this.props.onChange({
       ...this.props.dataSourceConfig,
       jsonData,

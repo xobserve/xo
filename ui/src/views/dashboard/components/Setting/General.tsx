@@ -16,7 +16,6 @@ interface Props {
 
 const GeneralSetting = (props: Props) => {
     const variables = getVariables()
-    console.log(variables)
     // if old varibles display not exist in current variables ,delete them
     const newDisplayVars = []
     for (const v1 of props.dashboard.variablesDiplay) {

@@ -255,7 +255,6 @@ const handleTypeahead = async (
       .last();
 
   const labelKey = labelKeyDec && value.focusText.text.slice(labelKeyDec.start.offset, labelKeyDec.end.offset);
-  console.log(labelKeyDec)
   
   const wrapperClasses = filteredDecorations
     .map(decoration => decoration.data.get('className'))

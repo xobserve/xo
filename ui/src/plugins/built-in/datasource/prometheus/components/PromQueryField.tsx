@@ -323,12 +323,10 @@ class PromQueryField extends React.PureComponent<PromQueryFieldProps, PromQueryF
 
     const { history } = this.props;
     const { prefix, text, value, wrapperClasses, labelKey } = typeahead;
-    console.log(typeahead)
     const result = await languageProvider.provideCompletionItems(
       { text, value, prefix, wrapperClasses, labelKey },
       { history }
     );
-      console.log(result)
     // console.log('handleTypeahead', wrapperClasses, text, prefix, labelKey, result.context);
 
     return result;

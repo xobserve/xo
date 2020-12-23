@@ -158,7 +158,6 @@ export const Table: FC<Props> = memo((props: Props) => {
     ({ index, style }) => {
       const row = rows[index];
       prepareRow(row);
-      console.log(row)
       return (
         <div {...row.getRowProps({ style })} className={inputClassName} onClick={() => props.onRowClick(row.values)}>
           {row.cells.map((cell: Cell, index: number) => (

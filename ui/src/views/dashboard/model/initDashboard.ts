@@ -95,7 +95,6 @@ export function initDashboard(uid: string | undefined, initOrigin?: any): ThunkR
 
 export function resetDashboardVariables(ds: DashboardModel): ThunkResult<void> {
   return async (dispatch, getState) => {
-    console.log(ds.templating.list)
     // template values service needs to initialize completely before
     // the rest of the dashboard can load
     try {

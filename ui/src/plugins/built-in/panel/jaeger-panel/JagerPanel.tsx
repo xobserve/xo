@@ -126,7 +126,6 @@ class JaegerPanel extends PureComponent<Props, State> {
       options.service = getTemplateSrv().replace(options.service)
     }
 
-    console.log(options.service)
     if (options.tags.trim() === '') {
       delete (options['tags'])
     }
