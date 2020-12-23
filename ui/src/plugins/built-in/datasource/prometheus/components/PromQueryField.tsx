@@ -165,7 +165,28 @@ class PromQueryField extends React.PureComponent<PromQueryFieldProps, PromQueryF
     const {
       data,
       datasource: { languageProvider },
+      range
     } = this.props;
+
+    const rangeChanged =
+      range &&
+      prevProps.range &&
+      !_.isEqual(
+        { from: range.from.valueOf(), to: range.to.valueOf() },
+        {
+          from: prevProps.range.from.valueOf(),
+          to: prevProps.range.to.valueOf(),
+        }
+      );
+
+    if (languageProvider !== prevProps.datasource.languageProvider) {
+      // We reset this only on DS change so we do not flesh loading state on every rangeChange which happens on every
+      // query run if using relative range.
+      this.setState({
+        metricsOptions: [],
+        syntaxLoaded: false,
+      });
+    }
 
     if (languageProvider !== prevProps.datasource.languageProvider) {
       this.refreshMetrics();
@@ -302,12 +323,12 @@ class PromQueryField extends React.PureComponent<PromQueryFieldProps, PromQueryF
 
     const { history } = this.props;
     const { prefix, text, value, wrapperClasses, labelKey } = typeahead;
-
+    console.log(typeahead)
     const result = await languageProvider.provideCompletionItems(
       { text, value, prefix, wrapperClasses, labelKey },
       { history }
     );
-
+      console.log(result)
     // console.log('handleTypeahead', wrapperClasses, text, prefix, labelKey, result.context);
 
     return result;

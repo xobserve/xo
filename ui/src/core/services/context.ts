@@ -29,7 +29,6 @@ export class ContextSrv {
     this.isAdmin = this.hasRole('Admin')
     this.isEditor = this.hasRole('Editor') || this.hasRole('Admin');
     this.minRefreshInterval = '5s';
-    //@todo : 完善权限
     this.hasEditPermissionInFolders = true;
     this.isSignedIn = !(isEmpty(getToken()) || !store.getState().user.id)
   }

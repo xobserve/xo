@@ -68,7 +68,7 @@
     "mousetrap": "1.6.5",
     "mousetrap-global-bind": "1.1.0",
     "papaparse": "4.6.3",
-    "prismjs": "1.19.0",
+    "prismjs": "1.21.0",
     "prop-types": "^15.5.10",
     "query-string": "^6.3.0",
     "rc-cascader": "1.0.1",

@@ -236,8 +236,6 @@ class GraphPanelUnconnected extends PureComponent<PanelProps<GraphPanelOptions> 
     if ((ranges.ctrlKey || ranges.metaKey) && (this.ctrl.dashboard.meta.canEdit || this.ctrl.dashboard.meta.canMakeEditable)) {
       this.eventManager.updateTime(ranges.xaxis)
     } else {
-      //@todo
-      // maybe need force update
       getTimeSrv().setTime({
         from: toUtc(ranges.xaxis.from),
         to: toUtc(ranges.xaxis.to),

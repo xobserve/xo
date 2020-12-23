@@ -3,12 +3,12 @@ import debounce from 'lodash/debounce';
 import sortBy from 'lodash/sortBy';
 
 import { Editor as CoreEditor } from 'slate';
-import { Plugin as SlatePlugin } from '@grafana/slate-react';
 
 import TOKEN_MARK from './slate-prism/TOKEN_MARK';
 import { Typeahead } from '../components/Typeahead/Typeahead';
 import { CompletionItem, TypeaheadOutput, TypeaheadInput, SuggestionsState } from '../types/completion';
 import { makeFragment } from '../utils/slate';
+import { wrap } from 'lodash';
 
 export const TYPEAHEAD_DEBOUNCE = 250;
 
@@ -28,7 +28,7 @@ export function SuggestionsPlugin({
   cleanText?: (text: string) => string;
   onWillApplySuggestion?: (suggestion: string, state: SuggestionsState) => string;
   portalOrigin: string;
-}): SlatePlugin {
+}) {
   let typeaheadRef: Typeahead;
   let state: SuggestionsState = {
     groupedItems: [],
@@ -67,7 +67,6 @@ export function SuggestionsPlugin({
     onKeyDown: (event: Event, editor, next) => {
       const keyEvent = event as KeyboardEvent;
       const currentSuggestions = state.groupedItems;
-
       const hasSuggestions = currentSuggestions.length;
 
       switch (keyEvent.key) {
@@ -250,18 +249,24 @@ const handleTypeahead = async (
         decoration =>
           decoration!.end.offset <= selectionStartOffset &&
           decoration!.type === TOKEN_MARK &&
-          decoration!.data.get('className').includes('label-key')
+          //@todo: in grafana , className below uses 'label-key', but datav dont have this className ,we cant find the reason at current time
+          decoration!.data.get('className').includes('prism-token')
       )
       .last();
 
   const labelKey = labelKeyDec && value.focusText.text.slice(labelKeyDec.start.offset, labelKeyDec.end.offset);
-
+  console.log(labelKeyDec)
+  
   const wrapperClasses = filteredDecorations
     .map(decoration => decoration.data.get('className'))
     .join(' ')
     .split(' ')
     .filter(className => className.length);
-
+  
+  //@todo: in grafana , className below uses 'context-labels', but datav dont have this className ,we cant find the reason at current time
+  if (wrapperClasses.indexOf('prism-token') > -1) {
+    wrapperClasses.push('context-labels')
+  }
   let text = value.focusText.text;
   let prefix = text.slice(0, selection.focus.offset);
 

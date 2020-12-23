@@ -1,7 +1,7 @@
 import _ from 'lodash';
 import React, { Context } from 'react';
 
-import { Value, Editor as CoreEditor } from 'slate'; 
+import { Value, Editor as CoreEditor } from 'slate';
 import { Editor, Plugin } from '@grafana/slate-react';
 import Plain from 'slate-plain-serializer';
 import classnames from 'classnames';
@@ -13,7 +13,7 @@ import {
   IndentationPlugin,
   ClipboardPlugin,
   RunnerPlugin,
-  SuggestionsPlugin, 
+  SuggestionsPlugin,
 } from '../../slate-plugins';
 
 import { makeValue, SCHEMA, CompletionItemGroup, TypeaheadOutput, TypeaheadInput, SuggestionsState } from '../..';
@@ -25,7 +25,7 @@ export interface QueryFieldProps {
   // We have both value and local state. This is usually an antipattern but we need to keep local state
   // for perf reasons and also have outside value in for example in Explore redux that is mutable from logs
   // creating a two way binding.
-  query: string | null;
+  query?: string | null;
   onRunQuery?: () => void;
   onBlur?: () => void;
   onChange?: (value: string) => void;
@@ -66,7 +66,7 @@ export class QueryField extends React.PureComponent<QueryFieldProps, QueryFieldS
     this.runOnChangeDebounced = _.debounce(this.runOnChange, 500);
 
     const { onTypeahead, cleanText, portalOrigin, onWillApplySuggestion } = props;
-
+    
     // Base plugins
     this.plugins = [
       // SuggestionsPlugin and RunnerPlugin need to be before NewlinePlugin

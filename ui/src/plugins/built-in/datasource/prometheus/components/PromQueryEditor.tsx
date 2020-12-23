@@ -97,7 +97,7 @@ export class PromQueryEditor extends PureComponent<Props, State> {
   };
 
   render() {
-    const { datasource, query, data } = this.props;
+    const { datasource, query, data,range } = this.props;
     const { formatOption, instant, interval, intervalFactorOption, legendFormat } = this.state;
     
     return (
@@ -109,6 +109,7 @@ export class PromQueryEditor extends PureComponent<Props, State> {
           onChange={this.onFieldChange}
           history={[]}
           data={data}
+          range={range}
         />
 
         <div className="gf-form-inline">

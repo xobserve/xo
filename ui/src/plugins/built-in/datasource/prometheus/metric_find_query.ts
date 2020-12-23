@@ -1,8 +1,10 @@
 import _ from 'lodash';
-import { TimeRange } from 'src/packages/datav-core/src';
-import { PrometheusDatasource, PromDataQueryResponse } from './datasource';
-import { PromQueryRequest } from './types';
+import { map } from 'rxjs/operators';
 import { getTimeSrv } from 'src/core/services/time';
+import { MetricFindValue, TimeRange } from 'src/packages/datav-core/src';
+import { PrometheusDatasource ,PromDataQueryResponse} from './datasource';
+import { PromQueryRequest } from './types';
+
 
 export default class PrometheusMetricFindQuery {
   range: TimeRange;
@@ -13,7 +15,7 @@ export default class PrometheusMetricFindQuery {
     this.range = getTimeSrv().timeRange();
   }
 
-  process() {
+  process(): Promise<MetricFindValue[]> {
     const labelNamesRegex = /^label_names\(\)\s*$/;
     const labelValuesRegex = /^label_values\((?:(.+),\s*)?([a-zA-Z_][a-zA-Z0-9_]*)\)\s*$/;
     const metricNamesRegex = /^metrics\((.+)\)\s*$/;
@@ -28,7 +30,7 @@ export default class PrometheusMetricFindQuery {
       if (labelValuesQuery[1]) {
         return this.labelValuesQuery(labelValuesQuery[2], labelValuesQuery[1]);
       } else {
-        return this.labelValuesQuery(labelValuesQuery[2], null);
+        return this.labelValuesQuery(labelValuesQuery[2]);
       }
     }
 
@@ -47,7 +49,15 @@ export default class PrometheusMetricFindQuery {
   }
 
   labelNamesQuery() {
-    const url = '/api/v1/labels';
+    const start = this.datasource.getPrometheusTime(this.range.from, false);
+    const end = this.datasource.getPrometheusTime(this.range.to, true);
+    const params = new URLSearchParams({
+      start: start.toString(),
+      end: end.toString(),
+    });
+
+    const url = `/api/v1/labels?${params.toString()}`;
+
     return this.datasource.metadataRequest(url).then((result: any) => {
       return _.map(result.data.data, value => {
         return { text: value };
@@ -56,11 +66,18 @@ export default class PrometheusMetricFindQuery {
   }
 
   labelValuesQuery(label: string, metric?: string) {
+    const start = this.datasource.getPrometheusTime(this.range.from, false);
+    const end = this.datasource.getPrometheusTime(this.range.to, true);
+
     let url: string;
 
     if (!metric) {
+      const params = new URLSearchParams({
+        start: start.toString(),
+        end: end.toString(),
+      });
       // return label values globally
-      url = '/api/v1/label/' + label + '/values';
+      url = `/api/v1/label/${label}/values?${params.toString()}`;
 
       return this.datasource.metadataRequest(url).then((result: any) => {
         return _.map(result.data.data, value => {
@@ -68,8 +85,6 @@ export default class PrometheusMetricFindQuery {
         });
       });
     } else {
-      const start = this.datasource.getPrometheusTime(this.range.from, false);
-      const end = this.datasource.getPrometheusTime(this.range.to, true);
       const params = new URLSearchParams({
         'match[]': metric,
         start: start.toString(),
@@ -95,7 +110,13 @@ export default class PrometheusMetricFindQuery {
   }
 
   metricNameQuery(metricFilterPattern: string) {
-    const url = '/api/v1/label/__name__/values';
+    const start = this.datasource.getPrometheusTime(this.range.from, false);
+    const end = this.datasource.getPrometheusTime(this.range.to, true);
+    const params = new URLSearchParams({
+      start: start.toString(),
+      end: end.toString(),
+    });
+    const url = `/api/v1/label/__name__/values?${params.toString()}`;
 
     return this.datasource.metadataRequest(url).then((result: any) => {
       return _.chain(result.data.data)
@@ -136,7 +157,7 @@ export default class PrometheusMetricFindQuery {
     });
   }
 
-  metricNameAndLabelsQuery(query: string) {
+  metricNameAndLabelsQuery(query: string): Promise<MetricFindValue[]> {
     const start = this.datasource.getPrometheusTime(this.range.from, false);
     const end = this.datasource.getPrometheusTime(this.range.to, true);
     const params = new URLSearchParams({
@@ -144,10 +165,11 @@ export default class PrometheusMetricFindQuery {
       start: start.toString(),
       end: end.toString(),
     });
-    const url = `/api/v1/series?${params.toString()}`;
 
+    const url = `/api/v1/series?${params.toString()}`;
     const self = this;
-    return this.datasource.metadataRequest(url).then((result: PromDataQueryResponse) => {
+
+    return this.datasource.metadataRequest(url).then((result: any) => {
       return _.map(result.data.data, (metric: { [key: string]: string }) => {
         return {
           text: self.datasource.getOriginalMetricName(metric),

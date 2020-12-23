@@ -136,7 +136,6 @@ export class QueryEditorRow extends PureComponent<Props, State> {
 
     if (datasource?.components?.QueryEditor) {
       const QueryEditor = datasource.components.QueryEditor;
-
       return (
         <QueryEditor
           key={datasource?.name}
