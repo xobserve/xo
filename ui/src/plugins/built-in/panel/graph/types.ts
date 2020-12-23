@@ -12,6 +12,7 @@ export interface GraphPanelOptions  {
   stack: boolean
   enableClickEvent: boolean;
   clickEvent: string
+  seriesOverrides: any[]
 }
 
 export interface DataWarning {

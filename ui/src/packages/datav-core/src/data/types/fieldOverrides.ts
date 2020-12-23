@@ -126,4 +126,5 @@ export enum FieldConfigProperty {
   Mappings = 'mappings',
   Links = 'links',
   Color = 'color',
+  DisplayName = 'displayName',
 }
