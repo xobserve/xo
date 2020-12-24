@@ -419,7 +419,7 @@ const OptionEditor = props => {
       />
       <span className="color-primary">{` }`}</span>
     </div>
-  )
+  ) 
 }
 
 

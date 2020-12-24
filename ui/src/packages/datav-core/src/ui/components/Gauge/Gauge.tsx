@@ -38,7 +38,7 @@ export class Gauge extends PureComponent<Props> {
         mode: ThresholdsMode.Absolute,
         steps: [
           { value: -Infinity, color: 'green' },
-          { value: 80, color: 'red' },
+          // { value: 80, color: 'red' },
         ],
       },
     },

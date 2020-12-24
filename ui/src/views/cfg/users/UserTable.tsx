@@ -111,5 +111,15 @@ const rawColumns = [
         title: <FormattedMessage id="user.mobile"/>,
         dataIndex: 'mobile',
         key: 'mobile',
-    }
+    },
+    // {
+    //     title: 'Last seen',
+    //     dataIndex: 'lastSeenAt',
+    //     key: 'lastSeenAt'
+    // }
 ]
+
+// item.time = dateTimeFormat(item.time, {
+//     format : 'MMM D, YYYY HH:mm:ss',
+//     timeZone: getTimeSrv().timezone,
+//   })

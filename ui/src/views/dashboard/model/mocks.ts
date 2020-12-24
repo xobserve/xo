@@ -53,7 +53,6 @@ export const dashboardMock = new DashboardModel(
                             mode: "absolute",
                             steps: [
                                 { color: "green", value: -Infinity },
-                                { color: "red", value: 80 }
                             ]
                         }
                     },
@@ -107,7 +106,7 @@ export const dashboardMock = new DashboardModel(
                             mode: "absolute",
                             steps: [
                                 { color: "green", value: -Infinity },
-                                { color: "red", value: 80 }
+                                // { color: "red", value: 80 }
                             ]
                         }
                     },
