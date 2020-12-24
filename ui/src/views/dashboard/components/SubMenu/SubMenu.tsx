@@ -59,19 +59,17 @@ class SubMenuUnConnected extends PureComponent<Props> {
     const localVars: VariableModel[] = []
     const globalVars: VariableModel[] = []
     variables.forEach(v => {
-      if (dashboard.variablesDiplay.indexOf(v.name) === -1) {
         if (!v.global) {
           localVars.push(v)
         } else {
           globalVars.push(v)
         }
-      }
     })
 
     return (
       <div className="submenu-controls">
-        {localVars.length > 0 && <div><SubMenuItems variables={localVars} /></div>}
-        <div><SubMenuItems   variables={globalVars} /></div>
+        {localVars.length > 0 && <div><SubMenuItems variables={localVars} dashboard={dashboard}/></div>}
+        <div><SubMenuItems   variables={globalVars} dashboard={dashboard} /></div>
         {/* <Annotations annotations={dashboard.annotations.list} onAnnotationChanged={this.onAnnotationStateChanged} /> */}
         {/* <div className="gf-form gf-form--grow" />
         {dashboard && <DashboardLinks dashboard={dashboard} />}

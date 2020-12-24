@@ -1,7 +1,4 @@
-import { Component } from 'react';
-import { connect } from 'react-redux';
 
-import { css } from 'emotion';
 
 import { join, indexOf,cloneDeep, isArray} from 'lodash';
 import { getTimeSrv } from 'src/core/services/time';
@@ -55,6 +52,7 @@ export class Interactive {
         }
       }
     }
+
     resetDashboardVariables(dashboard)
   }
 

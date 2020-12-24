@@ -239,10 +239,6 @@ class DashboardPage extends React.PureComponent<DashboardPageProps & RouteCompon
         const currentJson = JSON.stringify(current)
         const originalJson = JSON.stringify(original)
 
-
-        console.log(currentJson)
-        console.log()
-        console.log(originalJson)
         return currentJson !== originalJson;
     }
 
