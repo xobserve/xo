@@ -16,6 +16,13 @@ export const getTableStyles = stylesFactory((theme: DatavTheme) => {
   const scollbarWidth = getScrollbarWidth();
 
   const buildCellContainerStyle = (color?: string, background?: string) => {
+    let textColor = color;
+    if (background?.endsWith('rgba(0, 0, 0, 0))')) {
+      textColor = null
+    }
+
+  
+    console.log(background,color)
     return css`
       padding: ${cellPadding}px;
       width: 100%;
@@ -24,7 +31,7 @@ export const getTableStyles = stylesFactory((theme: DatavTheme) => {
       align-items: center;
       border-right: 1px solid ${borderColor};
 
-      ${color ? `color: ${color};` : ''};
+      ${textColor ? `color: ${textColor};` : ''};
       ${background ? `background: ${background};` : ''};
 
       &:last-child {
