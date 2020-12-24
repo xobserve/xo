@@ -12,6 +12,7 @@ import {DashboardRow} from './components/Row/Row'
 
 import './DashGrid.less'
 import { CoreEvents } from 'src/types';
+import { getVariable } from '../variables/state/selectors';
 
 interface GridWrapperProps {
     size: { width: number };
@@ -98,7 +99,7 @@ export interface Props {
 export class DashboardGrid extends PureComponent<Props> {
     panelMap: { [id: string]: PanelModel };
     panelRef: { [id: string]: HTMLElement } = {};
-  
+
     componentDidMount() {
       const { dashboard } = this.props;
       dashboard.on(panelAdded, this.triggerForceUpdate);
@@ -117,11 +118,11 @@ export class DashboardGrid extends PureComponent<Props> {
       dashboard.off(CoreEvents.rowExpanded, this.triggerForceUpdate);
     }
   
-    buildLayout() {
+    buildLayout(panels) {
       const layout = [];
       this.panelMap = {};
   
-      for (const panel of this.props.dashboard.panels) {
+      for (const panel of panels) {
         const stringId = panel.id.toString();
         this.panelMap[stringId] = panel;
   
@@ -231,9 +232,9 @@ export class DashboardGrid extends PureComponent<Props> {
       return !this.props.dashboard.otherPanelInFullscreen(panel);
     };
   
-    renderPanels() {
+    renderPanels(panels) {
       const panelElements = [];
-      for (const panel of this.props.dashboard.panels) {
+      for (const panel of panels) {  
         const panelClasses = classNames({ 'react-grid-item--fullscreen': panel.isViewing });
         const id = panel.id.toString();
         panel.isInView = this.isInView(panel);
@@ -243,7 +244,7 @@ export class DashboardGrid extends PureComponent<Props> {
           </div>
         );
       }
-  
+      
       return panelElements;
     }
   
@@ -271,10 +272,33 @@ export class DashboardGrid extends PureComponent<Props> {
   
     render() {
       const { dashboard, viewPanel } = this.props;
+      const panels = []
+      for (const panel of dashboard.panels) {
+        let canRender = true 
+        try {
+          const renderConditions:string[] = JSON.parse(panel.renderCondition)
+          if (renderConditions.length === 2) {
+            const v = getVariable(renderConditions[0])
+            //@ts-ignore
+            if (v.current.value === renderConditions[1]) {
+              canRender = true
+            } else {
+              canRender = false
+            }
+          }
+        } catch (error) {
+          
+        }
+
+
+        if (canRender) {
+          panels.push(panel)
+        }
+      }
       return (
         <SizedReactLayoutGrid
           className={classNames({ layout: true })} 
-          layout={this.buildLayout()}
+          layout={this.buildLayout(panels)}
           isResizable={dashboard.meta.canEdit}
           isDraggable={dashboard.meta.canEdit}
           onLayoutChange={this.onLayoutChange}
@@ -284,7 +308,7 @@ export class DashboardGrid extends PureComponent<Props> {
           onResizeStop={this.onResizeStop}
           viewPanel={viewPanel}
         >
-          {this.renderPanels()}
+          {this.renderPanels(panels)}
         </SizedReactLayoutGrid>
       );
     }

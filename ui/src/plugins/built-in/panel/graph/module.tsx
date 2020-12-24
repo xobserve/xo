@@ -431,7 +431,6 @@ const SeriesOverrides = props => {
     overrides = _.cloneDeep(props.item.defaultValue)
   }
 
-  console.log(overrides)
 
   const addOverride = () => {
     overrides.push({})

@@ -23,7 +23,6 @@ export const getTableStyles = stylesFactory((theme: DatavTheme) => {
     }
 
   
-    console.log(background,color)
     return css`
       padding: ${cellPadding}px;
       width: 100%;

@@ -11,6 +11,8 @@ const panel = {
     toggleQuery: 'Disable/enable query"',
     transparent: 'Transparent',
     transparentDesc: 'Display panel without a background.',
+    renderCondition: 'Render condition',
+    renderConditionDesc: 'Only rendered when the condition is null, or when the specified variable in the condition is satisfied',
     panelDescDesc: 'Panel description supports markdown and links.',
     filterVis: "Filter visualizations",
     customOptions: 'Custom options',
@@ -41,6 +43,8 @@ const panel = {
     // http panel
     formatAs: 'Format as',
     adittionalJson: 'Additional json data',
+
+
 }
  
 export default panel 

@@ -1,7 +1,7 @@
 import React, { FC, useRef,useMemo } from 'react';
 import _ from 'lodash';
 import { DashboardModel, PanelModel } from '../../../model';
-import { PanelData, PanelPlugin, SelectableValue,Counter} from 'src/packages/datav-core/src';
+import { PanelData, PanelPlugin, SelectableValue,Counter, currentLang} from 'src/packages/datav-core/src';
 import { FormField, Input,TextArea,Switch,DataLinksInlineEditor} from 'src/packages/datav-core/src';
 import { PanelOptionsEditor } from './PanelOptionsEditor';
 import { VisualizationTab } from './VisualizationTab';
@@ -11,6 +11,7 @@ import { getPanelLinksVariableSuggestions } from 'src/core/services/link';
 import { FormattedMessage } from 'react-intl';
 import localeData from 'src/core/library/locale'
 import { getState } from 'src/store/store';
+import { Langs } from 'src/core/library/locale/types';
 const Field = FormField
 
 interface Props {
@@ -64,6 +65,10 @@ export const PanelOptionsTab: FC<Props> = ({
       <Field label={localeData[getState().application.locale]['panel.transparent']}  description={localeData[getState().application.locale]['panel.transparentDesc']}>
         <Switch value={panel.transparent} onChange={e => onPanelConfigChange('transparent', e.currentTarget.checked)} />
       </Field>
+      <Field label={localeData[getState().application.locale]['panel.renderCondition']}  description={localeData[getState().application.locale]['panel.renderConditionDesc']}>
+        <Input defaultValue={panel.renderCondition} onBlur={e => onPanelConfigChange('renderCondition', e.currentTarget.value)} placeholder={currentLang===Langs.Chinese ? `["变量名","变量值"]` :  `["VARIABLE_NAME","VARIABLE_VALUE"]`}/>
+      </Field>
+      
     </OptionsGroup>
   );
 

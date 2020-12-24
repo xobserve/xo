@@ -11,6 +11,8 @@ const panel = {
     toggleQuery: '禁用/启用查询',
     transparent: '透明化',
     transparentDesc: '显示图表时不再显示背景色',
+    renderCondition: '渲染条件',
+    renderConditionDesc: '当条件为空，或者条件中的指定变量被满足时，该图表才会被渲染',
     panelDescDesc: '图表简介支持Markdown和超链接格式',
     filterVis: "选择可视化图表类型",
     customOptions: '自定义选项',

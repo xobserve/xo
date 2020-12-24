@@ -68,6 +68,7 @@ const mustKeepProps: { [str: string]: boolean } = {
     editSourceId: true,
     maxDataPoints: true,
     interval: true,
+    renderCondition: true
 };
 
 const defaults: any = {
@@ -77,6 +78,7 @@ const defaults: any = {
     transparent: false,
     options: {},
     datasource: null,
+    renderCondition: ""
 };
 
 export class PanelModel {
@@ -115,6 +117,8 @@ export class PanelModel {
     pluginVersion?: string;
 
     thresholds?: any;
+    renderCondition? : string
+
     // non persisted
     isViewing: boolean;
     isEditing: boolean;
@@ -124,7 +128,7 @@ export class PanelModel {
     plugin?: PanelPlugin;
     cacheTimeout?: any;
     cachedPluginOptions?: any;
-
+    
     private queryRunner?: PanelQueryRunner;
 
     constructor(model: any) {
