@@ -16,6 +16,7 @@ export const getTableStyles = stylesFactory((theme: DatavTheme) => {
   const scollbarWidth = getScrollbarWidth();
 
   const buildCellContainerStyle = (color?: string, background?: string) => {
+    //@datav-update
     let textColor = color;
     if (background?.endsWith('rgba(0, 0, 0, 0))')) {
       textColor = null

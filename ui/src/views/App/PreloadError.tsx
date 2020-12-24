@@ -8,7 +8,7 @@ const PreloadError = (props: Props) => {
         <div className="preloader">
             <div className="preloader__text preloader__text--fail">
                 <p>
-                    <strong>If you're seeing this, maybe datav has failed to connect to backend server</strong>
+                    <strong>If you're seeing this, maybe we has failed to connect to backend server</strong>
                     <br />
                     <br />
                 </p>
