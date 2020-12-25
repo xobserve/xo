@@ -64,7 +64,7 @@ export class InfoTable extends Component<Props> {
                   {item.name}
                 </Col>
                 <Col  span="12" className={tableStyles.itemValue}>
-                  {tooltip ? <Tooltip title={<div dangerouslySetInnerHTML={{__html: tooltip}}></div>} className="color-success pointer">{value}</Tooltip> : value}
+                  {tooltip ? <Tooltip title={<div dangerouslySetInnerHTML={{__html: tooltip}}></div>} className="color-success pointer" style={{maxWidth: '800px'}}>{value}</Tooltip> : value}
                 </Col>
                 </Row>
               </Col>
