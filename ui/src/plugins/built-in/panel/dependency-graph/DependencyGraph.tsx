@@ -438,7 +438,7 @@ export class DependencyGraph extends PureComponent<Props, State> {
     } else {
       storage.remove('dependency-graph-filter')
     }
-  }
+  } 
 
   render() {
     const { options, data, width, height, panel } = this.props

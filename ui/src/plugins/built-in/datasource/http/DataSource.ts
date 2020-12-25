@@ -11,6 +11,7 @@ import {
   QueryRequest,
   TextValuePair,
 } from './types';
+import { getTimeSrv } from 'src/core/services/time';
 
 const supportedVariableTypes = ['adhoc', 'constant', 'custom', 'query', 'textbox'];
 
@@ -68,9 +69,14 @@ export class DataSource extends DataSourceApi<GrafanaQuery, GenericOptions> {
   }
 
   metricFindQuery(query: string, options?: any, type?: string): Promise<MetricFindValue[]> {
+    const range = getTimeSrv().timeRange()
     const interpolated = {
       type,
       target: getTemplateSrv().replace(query, undefined, 'regex'),
+      range: {
+        from: range.from,
+        to: range.to
+      }
     };
 
     return this.doRequest({
