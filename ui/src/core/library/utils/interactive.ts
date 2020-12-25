@@ -60,7 +60,7 @@ export class Interactive {
     for (const panel of dashboard.panels) {
       panel.events.emit(PanelEvents.refresh)
     }
-  }
+  } 
 
   setTime = (from,to) => {
     const fromMoment = toUtc(from)
