@@ -66,7 +66,7 @@ export class DataSource extends DataSourceApi<GrafanaQuery, GenericOptions> {
         title: 'Error',
       };
     });
-  }
+  } 
 
   metricFindQuery(query: string, options?: any, type?: string): Promise<MetricFindValue[]> {
     const range = getTimeSrv().timeRange()

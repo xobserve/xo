@@ -2,13 +2,15 @@
 
 import { join, indexOf,cloneDeep, isArray} from 'lodash';
 import { getTimeSrv } from 'src/core/services/time';
-import { currentLang, localeData, toUtc } from 'src/packages/datav-core/src';
+import { currentLang, localeData, PanelEvents, toUtc } from 'src/packages/datav-core/src';
 import { notification } from 'antd';
+import { DashboardModel } from 'src/views/dashboard/model';
+import { CoreEvents } from 'src/types';
 
 
 
 export class Interactive {  
-  setVariable = (name, value, dashboard,resetDashboardVariables) => {
+  setVariable = (name, value, dashboard:DashboardModel,resetDashboardVariables) => {
     const vars = dashboard.templating.list
     for (const v of vars) {
       if (v.name === name) {
@@ -54,6 +56,10 @@ export class Interactive {
     }
 
     resetDashboardVariables(dashboard)
+
+    for (const panel of dashboard.panels) {
+      panel.events.emit(PanelEvents.refresh)
+    }
   }
 
   setTime = (from,to) => {
