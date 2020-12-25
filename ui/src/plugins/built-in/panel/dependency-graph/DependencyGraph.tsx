@@ -469,7 +469,7 @@ export class DependencyGraph extends PureComponent<Props, State> {
         
         this._updateGraph(graph);
       }
-    }, 500)
+    }, 1500)
 
     let errorRate = 0
     if (this.selectionStatistics && this.selectionStatistics.requests > 0) {
