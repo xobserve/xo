@@ -1,0 +1,17 @@
+{
+  "type": "panel",
+  "name": "Info table",
+  "id": "info-table",
+
+  "info": {
+    "description": "Show table data in info card layout",
+    "author": {
+      "name": "Datav",
+      "url": "https://datav.dev"
+    },
+    "logos": {
+      "small": "info-table-logo.svg",
+      "large": "info-table-logo.svg"
+    }
+  }
+}
