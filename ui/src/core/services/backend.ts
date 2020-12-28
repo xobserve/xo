@@ -432,7 +432,10 @@ export class BackendSrv implements BackendService {
     options.headers === undefined ? options.headers = { 'X-Token': getToken() } : options.headers['X-Token'] = getToken()
 
     let url = parseUrlFromOptions(options);
-    url = config.baseUrl + url
+    const requestIsLocal = !options.url.match(/^http/);
+    if (requestIsLocal) {
+      url = config.baseUrl + url
+    }
 
     const init = parseInitFromOptions(options);
     return this.dependencies.fromFetch(url, init).pipe(
