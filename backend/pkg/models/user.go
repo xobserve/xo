@@ -58,10 +58,10 @@ func QueryUser(id int64, username string, email string) (*User, error) {
 	return user, nil
 }
 
-func QueryUserById(id int64) (*User, error) {
+func QueryUserByName(username string) (*User, error) {
 	user := &User{}
-	err := db.SQL.QueryRow(`SELECT id,username,name,email,mobile,password,salt,sidemenu,last_seen_at FROM user WHERE id=?`,
-		id).Scan(&user.Id, &user.Username, &user.Name, &user.Email, &user.Mobile, &user.Password, &user.Salt, &user.SideMenu, &user.LastSeenAt)
+	err := db.SQL.QueryRow(`SELECT id,username,name,email,mobile,password,salt,sidemenu,last_seen_at FROM user WHERE username=?`,
+		username).Scan(&user.Id, &user.Username, &user.Name, &user.Email, &user.Mobile, &user.Password, &user.Salt, &user.SideMenu, &user.LastSeenAt)
 	if err != nil && err != sql.ErrNoRows {
 		return user, err
 	}
