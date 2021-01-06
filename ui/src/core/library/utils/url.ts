@@ -1,6 +1,7 @@
 import queryString from 'query-string'
 import _ from 'lodash'
 import {getTimeSrv} from 'src/core/services/time'
+import { getVariables } from 'src/views/variables/state/selectors'
 
 // time params, variable params etc, add all of theme to url
 export const addParamsToUrl = () => {
@@ -10,6 +11,8 @@ export const addParamsToUrl = () => {
     _.extend(currentQuery, urlRange)
     const params = queryString.stringify(currentQuery)
 
+    const vars = getVariables()
+    console.log(vars)
     updateUrl(params)
 }
 

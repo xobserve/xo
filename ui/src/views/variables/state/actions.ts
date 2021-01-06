@@ -374,7 +374,7 @@ export const variableUpdated = (
       if (emitChangeEvents) {
         const dashboard = getState().dashboard.dashboard;
         dashboard?.processRepeats();
-        dispatch(updateLocation({ query: getQueryWithVariables(getState) }));
+        dispatch(updateLocation({ query: getQueryWithVariables(getState),partial: true}));
         dashboard?.startRefresh();
       }
     });

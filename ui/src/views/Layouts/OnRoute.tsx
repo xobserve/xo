@@ -55,7 +55,7 @@ const OnRoute = () =>{
         updateLocation({
           path: history.location.pathname,
           query: getUrlParams(),
-          keepUrl: true
+          keepUrl: true,
         })
       )
   

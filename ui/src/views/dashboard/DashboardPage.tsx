@@ -156,7 +156,7 @@ class DashboardPage extends React.PureComponent<DashboardPageProps & RouteCompon
  
         document.title = formatDocumentTitle(ds.title)
 
-        addParamsToUrl()
+        this.onUpdateUrl()
     }
 
     componentWillUnmount() {
@@ -289,23 +289,24 @@ class DashboardPage extends React.PureComponent<DashboardPageProps & RouteCompon
     onUpdateUrl() {
         const timeSrv = getTimeSrv()
         const urlRange = timeSrv.timeRangeForUrl();
-        // const currentQuery = getUrlParams()
-        // _.extend(currentQuery, urlRange)
-        const times = queryString.stringify(urlRange)
 
         const variables = getVariables()
-        let vars = ""
+
         variables.forEach((variable: any) => {
-            if (variable.multi) {
-                variable.current.value.forEach((v) => {
-                    vars = vars + '&var-' + variable.name + '=' + v
-                })
-            } else {
-                vars = vars + '&var-' + variable.name + '=' + variable.current.value
+            const display =this.originDash.variablesDiplay.indexOf(variable.name) === -1 
+            if (display) {
+                if (variable.multi) {
+                    variable.current.value.forEach((v) => {
+                        urlRange['var-'+variable.name] = v
+                        // vars = vars + '&var-' + variable.name + '=' + v
+                    })
+                } else {
+                    urlRange['var-'+variable.name] = variable.current.value
+                }
             }
         })
 
-        updateUrl(times + vars)
+        store.dispatch(updateLocation({query: urlRange,partial: true}))
     }
 
     getPanelByIdFromUrlParam(rawPanelId: string): PanelModel {
