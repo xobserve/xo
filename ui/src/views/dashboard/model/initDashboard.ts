@@ -112,14 +112,22 @@ export function resetDashboardVariables(ds: DashboardModel): ThunkResult<void> {
   }
 }
 
-export function setVariablesFromUrl(): ThunkResult<void> {
+export function setVariablesFromUrl(ds:any): ThunkResult<void> {
   return async (dispatch, getState) => {
+    // template values service needs to initialize completely before
+    // the rest of the dashboard can load
     try {
+      if (config.featureToggles.newVariables) {
+        dispatch(initDashboardTemplating(ds.templating.list));
         await dispatch(processVariables(true));
+        dispatch(completeDashboardTemplating(ds));
+      }
     } catch (err) {
-      message.error('Templating init failed')
+      // message.error('Templating init failed')
       console.log(err);
     }
+
+    dispatch(dashboardInitCompleted(ds))
   }
 }
 
