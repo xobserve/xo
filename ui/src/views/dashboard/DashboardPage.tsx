@@ -31,7 +31,7 @@ import impressionSrv from 'src/core/services/impression'
 
 import { onTimeRangeUpdated } from '../variables/state/actions';
 import HeaderWrapper from './components/Header/Header'
-import { updateUrl } from 'src/core/library/utils/url';
+import { addParamsToUrl, addParamToUrl, updateUrl } from 'src/core/library/utils/url';
 import { getVariables } from 'src/views/variables/state/selectors'
 import { saveDashboard } from './components/SaveDashboard/SaveDashboard';
 import { formatDocumentTitle } from 'src/core/library/utils/date';
@@ -155,6 +155,8 @@ class DashboardPage extends React.PureComponent<DashboardPageProps & RouteCompon
         }
  
         document.title = formatDocumentTitle(ds.title)
+
+        addParamsToUrl()
     }
 
     componentWillUnmount() {
