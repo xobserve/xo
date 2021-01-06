@@ -119,7 +119,7 @@ class DashboardPage extends React.PureComponent<DashboardPageProps & RouteCompon
 
     updateVariablesFromUrl() {
         if (this.originDash) {
-            this.props.setVariablesFromUrl(this.originDash)
+            setTimeout(() => this.props.setVariablesFromUrl(this.originDash), 100)
         }
     }
 
