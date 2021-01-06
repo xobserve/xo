@@ -10,7 +10,7 @@ import { getTimeSrv } from 'src/core/services/time'
 import { TimeRange, CustomScrollbar, config, getBackendSrv, currentLang } from 'src/packages/datav-core/src'
 
 import './DashboardPage.less'
-import { initDashboard, setVariablesFromUrl, resetDashboardVariables} from './model/initDashboard';
+import { initDashboard, setVariablesFromUrl} from './model/initDashboard';
 import { withRouter, RouteComponentProps } from 'react-router-dom';
 import { PanelModel } from './model';
 import { PanelEditor } from './components/PanelEditor/PanelEditor'
@@ -48,7 +48,6 @@ interface DashboardPageProps {
     inspectTab?: InspectTab
     initDashboard: typeof initDashboard
     setVariablesFromUrl: typeof setVariablesFromUrl
-    resetDashboardVariables: typeof resetDashboardVariables
     initErrorStatus: number
     viewState: ViewState
 }
@@ -119,7 +118,7 @@ class DashboardPage extends React.PureComponent<DashboardPageProps & RouteCompon
 
     updateVariablesFromUrl() {
         if (this.originDash) {
-            setTimeout(() => this.props.setVariablesFromUrl(this.originDash), 100)
+            setTimeout(() => this.props.setVariablesFromUrl(this.originDash), 500)
         }
     }
 
@@ -480,8 +479,7 @@ export const mapStateToProps = (state: StoreState) => {
 
 const mapDispatchToProps = {
     initDashboard,
-    setVariablesFromUrl,
-    resetDashboardVariables
+    setVariablesFromUrl
 };
 
 export default withRouter(connect(mapStateToProps, mapDispatchToProps)(DashboardPage))
