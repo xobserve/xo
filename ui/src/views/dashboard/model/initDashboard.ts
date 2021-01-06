@@ -120,7 +120,7 @@ export function setVariablesFromUrl(ds0:any): ThunkResult<void> {
     // the rest of the dashboard can load
     try {
       if (config.featureToggles.newVariables) {
-        // dispatch(initDashboardTemplating(ds.templating.list));
+        dispatch(initDashboardTemplating(ds.templating.list));
         await dispatch(processVariables(true));
         dispatch(completeDashboardTemplating(ds));
       }
