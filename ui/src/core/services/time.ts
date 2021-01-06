@@ -22,6 +22,7 @@ import {timer} from './timer'
 import { store } from 'src/store/store';
 import { updateStartDate,updateEndDate } from 'src/store/reducers/application';
 import {addParamsToUrl,getUrlParams,addParamToUrl,removeParamFromUrl} from 'src/core/library/utils/url'
+import { updateLocation } from 'src/store/reducers/location';
 
 export class TimeSrv {
   time: any;
@@ -201,7 +202,7 @@ export class TimeSrv {
 
     // update url params
     if (updateUrl) {
-      addParamsToUrl()
+       store.dispatch(updateLocation({query: this.timeRangeForUrl(),partial: true}))
     }
 
     // save timerange to store

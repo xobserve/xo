@@ -48,6 +48,7 @@ const OnRoute = () =>{
           getTimeSrv().init()
           getTimeSrv().setTime(getTimeSrv().time,false)
           appEvents.emit(CoreEvents.timeRangeUpdated)
+          appEvents.emit("update-variables-from-url")
         },100)
       }
   

@@ -112,6 +112,18 @@ export function resetDashboardVariables(ds: DashboardModel): ThunkResult<void> {
   }
 }
 
+export function setVariablesFromUrl(): ThunkResult<void> {
+  return async (dispatch, getState) => {
+    try {
+        await dispatch(processVariables(true));
+    } catch (err) {
+      message.error('Templating init failed')
+      console.log(err);
+    }
+  }
+}
+
+
 function getNewDashboardModelData(): DashboardDTO {
   const data = {
     meta: {

@@ -10,7 +10,7 @@ import { getTimeSrv } from 'src/core/services/time'
 import { TimeRange, CustomScrollbar, config, getBackendSrv, currentLang } from 'src/packages/datav-core/src'
 
 import './DashboardPage.less'
-import { initDashboard } from './model/initDashboard';
+import { initDashboard, setVariablesFromUrl} from './model/initDashboard';
 import { withRouter, RouteComponentProps } from 'react-router-dom';
 import { PanelModel } from './model';
 import { PanelEditor } from './components/PanelEditor/PanelEditor'
@@ -47,6 +47,7 @@ interface DashboardPageProps {
     inspectPanelId?: string | null
     inspectTab?: InspectTab
     initDashboard: typeof initDashboard
+    setVariablesFromUrl: typeof setVariablesFromUrl
     initErrorStatus: number
     viewState: ViewState
 }
@@ -102,14 +103,23 @@ class DashboardPage extends React.PureComponent<DashboardPageProps & RouteCompon
         this.saveDashboard = this.saveDashboard.bind(this)
         this.onUpdateUrl = this.onUpdateUrl.bind(this)
         this.handleAutoSave = this.handleAutoSave.bind(this)
+        this.updateVariablesFromUrl = this.updateVariablesFromUrl.bind(this)
 
         appEvents.on(CoreEvents.keybindingSaveDashboard, this.saveDashboard)
 
         appEvents.on(CoreEvents.dashboardSaved, this.setOriginDash);
 
         appEvents.on('dashboard-auto-save', this.handleAutoSave)
+
+        appEvents.on('update-variables-from-url',this.updateVariablesFromUrl)
         // because appEvents.off has no effect , so we introduce a state
         store.dispatch(isInDashboardPage(true))
+    }
+
+    updateVariablesFromUrl() {
+        if (this.originDash) {
+            this.props.setVariablesFromUrl()
+        }
     }
 
     // when dashboard init or saved, we need to handle auto save for this dashboard
@@ -469,6 +479,7 @@ export const mapStateToProps = (state: StoreState) => {
 
 const mapDispatchToProps = {
     initDashboard,
+    setVariablesFromUrl
 };
 
 export default withRouter(connect(mapStateToProps, mapDispatchToProps)(DashboardPage))
