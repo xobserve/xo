@@ -149,10 +149,19 @@ function HeaderWrapper(props: Props) {
                 <SubMenuItems variables={localVars} />
             </Modal> */}
             <Prompt message={
-                () =>
-                    tracker.canLeave()
+                (location,action) =>
+                    {  
+                        if (action === 'POP') {
+                            //when go back/forward in the same page, directly return true
+                            if (location.pathname === window.location.pathname) {
+                                return true
+                            }
+                        }
+
+                        return tracker.canLeave()
                         ? true
                         : localeData[props.locale]['dashboard.changeNotSave']
+                    }
             }
             />
         </>
