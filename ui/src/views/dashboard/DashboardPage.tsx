@@ -170,6 +170,7 @@ class DashboardPage extends React.PureComponent<DashboardPageProps & RouteCompon
     }
 
     componentWillUnmount() {
+        this.originDash = null
         // unregister from changeTracker
         tracker.unregister()
 
