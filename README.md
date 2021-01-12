@@ -9,8 +9,13 @@ Datav is forked from **@grafana**, but changed a lot, e.g :
 - different team and acl design,no orgs any more 
 - 100% free. Forever and always
 
-## Status
-v0.8.0 has been released, official website and docs will be released before 2020-12-31.
+## TODO list for V1.0.0
+1. English docs
+2. Some bug fixes
+3. Website and a live demo
+
+The release will be launched before 2021-01-31
+
 
 ## Key Features 
 - **Plugins** Performance,Extensible,Beautiful,Configurable
