@@ -60,7 +60,7 @@ const getPropertiesForVariant = (theme: DatavTheme, variant: ButtonVariant) => {
     default:
       return {
         borderColor: theme.colors.bgBlue1,
-        background: 'background: linear-gradient(to right,#52A0FD 0%,#00e2fa 80%,#00e2fa 100%)',
+        background: 'background: linear-gradient(90deg,#0082f0,#47b1fa)',
         color: 'color: white'
       };
   }
