@@ -306,15 +306,6 @@ export class QueriesTab extends PureComponent<Props, State> {
     const { scrollTop, isHelpOpen } = this.state;
     const styles = getStyles();
 
-    if (!this.props.panel.datasource) {
-      notification['error']({
-        message: "Error",
-        description: localeData[currentLang]['datasource.emptyDatasources'],
-        duration: 3
-      });
-      return null
-    }
-
     return (
       <CustomScrollbar
         autoHeightMin="100%"
