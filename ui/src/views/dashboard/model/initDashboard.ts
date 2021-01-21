@@ -90,6 +90,7 @@ export function initDashboard(uid: string | undefined, initOrigin?: any): ThunkR
 
     annotationsSrv.init(ds);
     initOrigin(ds)
+    
     dispatch(dashboardInitCompleted(ds))
   }
 }
@@ -128,7 +129,7 @@ export function setVariablesFromUrl(ds0:any): ThunkResult<void> {
       // message.error('Templating init failed')
       console.log(err);
     }
-
+    
     dispatch(dashboardInitCompleted(ds))
   }
 }
