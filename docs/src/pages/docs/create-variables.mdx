@@ -1,5 +1,5 @@
 ---
-title: 模版变量
+title: Templating variables
 ---
 
 import { Heading } from '@/components/Heading'
@@ -8,16 +8,16 @@ import Link from 'next/link'
 import stats from '@/utils/stats'
 import { TipCompat } from '@/components/Tip'
 
-## 模版变量
-有了模版变量，我们的仪表盘将变得更加有交互性、更加动态。在以往，你只能把主机名、应用名等字段硬编码到查询语句中，这样你想要为每一个主机名 都创建一条语句，有了变量后，你只要在查询语句中使用变量，然后在仪表盘中选择变量，就可以轻松切换主机、应用，一套查询语句就够了
+## Variables
+With template variables, our dashboards will become much more interactive and dynamic. In the past, you can only put the fields such as host name, application name hardcoded into the query, with variable, you only have to use the variable in the query, and then choose the variables in the dashboard.
 
-Datav的模版变量与grafana几乎是一致的,但是也有不同，想象一下，如果多个仪表盘要共用一个变量，你该如何解决？这里就需要
-使用到全局变量了。
+Datav's templating variables are almost the same as Grafana's, but there are differences, imagine that if multiple dashboards share a variable, how do you resolve this? So that's where Global variables are needed.
 
-## 添加本地变量
-如果你已经熟悉Grafana，那么这部分内容与grafana几乎一致。
-1. 进入之前创建的仪表盘，打开设置面板
-2. 在左边的导航栏选择**模版变量**
+
+## Dashboard variables
+If you are already familiar with Grafana, then this part is almost the same as Grafana.
+1. Go to the dashboard you created earlier and open the Settings panel
+2. In the left navigation bar, select the **Variable**
 3. 点击创建模版变量
 4. **名称**填写 `job` ，**类型**选择 `custom`, **值，逗号分割**填写 `/user/login,/user/logout,/user/info`
 5. 点击创建，回退到仪表盘页面
@@ -32,7 +32,7 @@ Datav的模版变量与grafana几乎是一致的,但是也有不同，想象一�
 
 <TipCompat>由于这里是本地变量，因此只能在当前仪表盘生效，切换到其它仪表盘后，是看不到该变量的</TipCompat>
 
-## 添加全局变量
+## Global variables
 现在我们再来添加一个全局变量`app`，用来代表当前选择的应用，因为一个应用可能有多个仪表盘，这些仪表盘应该共享一个变量，而不是为每个仪表盘
 都创建一个本地变量`app`
 

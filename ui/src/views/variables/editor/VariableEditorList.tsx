@@ -1,5 +1,5 @@
 import React, { MouseEvent, PureComponent } from 'react';
-import { IconButton ,config} from 'src/packages/datav-core/src';
+import { IconButton ,config, currentLang} from 'src/packages/datav-core/src';
 
 import EmptyListCTA from 'src/views/components/EmptyListCTA/EmptyListCTA';
 import { QueryVariableModel, VariableModel,StoreState } from 'src/types';
@@ -47,7 +47,7 @@ export class VariableEditorList extends PureComponent<Props> {
   
   render() {
     let emptyList;
-    if (this.props.locale === Langs.English) {
+    if (currentLang === Langs.English) {
       emptyList = <EmptyListCTA
           title="There are no variables yet"
           buttonIcon="calculator-alt"
