@@ -9,7 +9,7 @@ import stats from '@/utils/stats'
 import { TipCompat } from '@/components/Tip'
 
 ## Variables
-With template variables, our dashboards will become much more interactive and dynamic. In the past, you can only put the fields such as host name, application name hardcoded into the query, with variable, you only have to use the variable in the query, and then choose the variables in the dashboard.
+Variables enable more interactive and dynamic dashboards. Instead of hard-coding things like server or sensor names in your metric queries you can use variables in their place. Variables are shown as dropdown select boxes at the top of the dashboard. These dropdowns make it easy to change the data being displayed in your dashboard. Check out the Templating documentation for more information.
 
 Datav's templating variables are almost the same as Grafana's, but there are differences, imagine that if multiple dashboards share a variable, how do you resolve this? So that's where Global variables are needed.
 
@@ -18,33 +18,33 @@ Datav's templating variables are almost the same as Grafana's, but there are dif
 If you are already familiar with Grafana, then this part is almost the same as Grafana.
 1. Go to the dashboard you created earlier and open the Settings panel
 2. In the left navigation bar, select the **Variable**
-3. 点击创建模版变量
-4. **名称**填写 `job` ，**类型**选择 `custom`, **值，逗号分割**填写 `/user/login,/user/logout,/user/info`
-5. 点击创建，回退到仪表盘页面
+3. Click `Add variable`
+4. Fill in these:  **Name** -> `url` ，**Type** -> `Values separated by comma` -> /user/login,/user/logout,/user/info`
+5. Click `Add`, then return to dashboard page
 
-此时，在导航栏的下面，出现了一个`url`的选择框，并且帮助我们自动选择了`/user/login`，接下来，来使用下`url`变量:
-1. 点击之前创建的图表的顶部，当前名称应该是`Panel Title`
-2. 在弹出的下拉面板中，选择编辑,进入编辑图表页面
-3. 在右侧的**设置 -> 图表名称**中，输入`$url`
-4. 点击右上角的应用，返回仪表盘页面
-5. 保存仪表盘
-此时，你应该能看到该图表的名称成功的使用了当前的`url`变量的值。
+At this point, under the navigation bar, a 'URL' selection box appears and helps us automatically select '/user/login'. Next, use the 'URL' variable: 
+1. Click on the top of the chart you created earlier. The current name should be 'Panel Title'
+2. In the pop-up drop-down panel, select Edit to go to the Edit Chart page
+3. In the **Panel -> Settings -> Panel title**, type in '$url'
+4. Click on the `Apply Button` in the upper right corner to return to the dashboard page
+5. Save dashboard
 
-<TipCompat>由于这里是本地变量，因此只能在当前仪表盘生效，切换到其它仪表盘后，是看不到该变量的</TipCompat>
+At this point, you should see that the title of the panel successfully uses the value of the current 'url' variable.
+
+<TipCompat>Because this is a local variable, it only takes effect on the current dashboard and is not visible when you switch to another dashboard</TipCompat>
 
 ## Global variables
-现在我们再来添加一个全局变量`app`，用来代表当前选择的应用，因为一个应用可能有多个仪表盘，这些仪表盘应该共享一个变量，而不是为每个仪表盘
-都创建一个本地变量`app`
+Now let's add a global variable 'app' to represent the currently selected application, since an application may have multiple dashboards, and these dashboards should share a same app variable, in grafana, we need create `app` variable for each dashboardd, in datav, we can only do it once.
 
-1. 在左侧菜单栏选择**配置管理 -> 全局变量**
-2. 此时，你会发现自己进入了一个空的仪表盘，因为我们其实就是用的该仪表盘的本地变量来作为全局变量
-3. 设置 -> 模版变量 -> 创建新变量
-4. **名称**填写`app`, **类型**选择`custom`, **值，逗号分割**填写 `sms,gateway,mysql`
-5. 点击创建，回退到仪表盘页面
-6. 保存仪表盘
+1. On the left menu bar, select ** Configuration  -> Global Variable **
+2. At this point, you'll find yourself in an empty dashboard, because we're actually using the local variables of the dashboard as global variables
+3. Dashboard setting -> Variable -> Add variable
+4. Fill in these : **Name** -> `app`, **Type** -> `custom`, **`Values separated by comma`** -> `sms,gateway,mysql`
+5. Click `Add`, then return to dashboard page
+6. Save dashboard
 
-来验证下效果，先在当前这个全局变量仪表盘把`app`设置为`mysql`, 然后进入我们之前创建的仪表盘，你会在右上角看到`app`的选择框，同时值已经被设置为了
-`mysql`, 如果愿意，你可以再创建一个仪表盘，观察是否存在该全局变量。
+To verify the effect, first set `app` to `mysql` in the current global variable dashboard and then go to the dashboard we created earlier. You will see the select box for 'app' in the upper right corner with the value already set to
+`mysql`.
 
 
-至此，我们的新手引导已经全部结束，你可以在**进阶教程**系列，了解到更加全面、详细的内容。
+At this point, our beginner's guide is complete, you can find more comprehensive and detailed content in the **advanced tutorial** series.
