@@ -8,57 +8,58 @@ import Link from 'next/link'
 import stats from '@/utils/stats'
 import { TipCompat } from '@/components/Tip'
 
-告警是Datav内置的强大功能，目前只支持Graph图表。
+Alerts are a powerful feature built into Datav, which currently only supports Graph charts.
 
 
-## 告警通知
-当告警状态发生变化时，系统会发送告警通知到指定的用户通道。每个团队都可以创建和管理自己的告警通道,下面我们以global团队为例来进行介绍。
+## Alert notification
+When the alert status changes, the system will send an alert notification to the specified user channel. Each team can create and manage their own alert channels, as shown in the Global team example.
 
-在创建告警通道前，**有一个非常重要的配置要完成**：邮件SMTP设置，进入datav的安装目录，打开`datav.conf`文件，找到`smtp`区域，然后进行设置。
+Before creating an alert channel, **A very important configuration need to be completed** : mail SMTP setup, go to the datav installation directory, open the file `datav.conf`, find the `SMTP` area, and then set it up.
 
-### 创建告警通道
-1. 在侧边菜单选择**配置管理 -> 团队 -> 查看global -> 告警通道 -> 新建通道**
-2. 输入名称，类型选择email，在地址栏输入推送的目标邮件地址，用`;`分割
-3. 当`设为默认`开启后，该团队所有告警都会默认给当前的通道推送一次通知；当`忽略告警回复`开启后，只会推送告警触发的通知，而不会推送告警恢复的通知
-4. 点击测试，我们会给你设置的邮件地址发送测试邮件
-5. 点击保存
+### Create alert notification
+1. In the side menu select **Configuration -> Team -> View Global -> Channels -> Add Channel**
+2. Enter the name, select type email, enter the target email addresses in the address area, and use `;` to separate each address
+3. When `Default` is enabled, all alerts of the team will be pushed to the current channel by default. When `Disable Resolve Message` is enabled, only the alert trigger notification will be pushed, but not the alert recovery notification
+4. Click Test, we will send you a test email to the email addresses you set
+5. Click Save
 
-### 管理告警通道
-1. 在侧边菜单选择**配置管理 -> 团队 -> 查看global -> 告警通道**
-2. 点击表格对应的行，弹出面板，进行编辑
+### Manage alert notification
+1.  In the side menu select **Configuration -> Team -> View Global -> Channels**
+2. Click the corresponding row of the table to pop up the panel and edit
 
 
-## 告警规则
-告警规则用于控制告警的触发条件和规则，它是跟仪表盘的图表绑定在一起的，**因此，当你删除图表时，也会同时删除相应的告警规则**。
+## Alert rules
+Alert rules control the trigger conditions and rules for alerts. They are tied to the dashboard chart, ** So when you delete the chart, you also delete the corresponding alert rule **.
 
-在创建告警规则前，我们需要在global团队下有一个仪表盘，如果没有，请新建仪表盘。
-### 创建规则
-1. 进入global团队的仪表盘，创建一个graph图表，使用prometheus数据源或者测试数据来生成图表曲线
-2. 进入图表编辑页面，选择左下方的**告警标签页**，点击创建告警
+Before we can create an alert rule, we need to have a dashboard under the global team. If not, create a new dashboard.
 
-这个页面较为复杂，下面我们来一一进行讲解：
-- 名称 : 给告警起一个贴切的名称，方便后面的索引管理
-- 求值间隔 + 持续：Datav会每隔X分钟查询一次数据，然后根据`告警阈值 & 条件`判断是否达到告警阈值，如果达到阈值，则将当前状态从`OK`更改为`PENDING`，当`PENDING`状态
-持续超过Y分钟后，就会进行告警推送
-- 告警阈值 &条件： 当(When)查询语句A的(OF QUERY A)平均值(avg)符合某个条件(WITH LABELS AND VALUES)且持续时间超过5分钟(LAST 5m)时，则达到告警阈值，将当前状态设置为Pending状态。
-<TipCompat>Grafana的告警粒度是图表级别，就算图表有1000个曲线，也只有一个曲线可以告警，因此在多曲线的时候，grafana的告警会变得极其不好用。
-与之相比，Datav的告警粒度是图表中的每条曲线</TipCompat> 
-点击WITH LABELS AND VALUES，可以根据标签对图表中的曲线进行过滤，默认是_Default，表示图表中的所有曲线都使用该条件。
-例如有以下图表: <img class="block mx-auto sm:mx-0 sm:flex-shrink-0 h-96" src="/img/docs/alerts-1.jpg" alt="Image" />
-现在，我们想为标签instance=10.77.0.130:8199这条曲线设置告警阈值`0.2`,为其它曲线设置告警阈值`0.01`，可以进行如下设置：
+### Create alert rules
+1. Go to the Global team`s dashboard, create a Graph chart, and use the Prometheus data source or test data to generate the graph.
+2. Go to the chart editing page, select the **Alert TAB** at the bottom left, and click Create Alert
+
+This page is quite complicated, let`s explain them one by one:
+- Name : Give the alert an appropriate name
+- Evaluate every + for ：DATAV will query data every X minutes, and then judge whether the alert threshold has been reached according to `Conditions`. If the alert threshold has been reached, the current state will be changed from `OK` to `PENDING`, when the `PENDING` state is
+ lasting more than Y minutes, an alert notification will be pushed
+- Conditions ： When the AVG OF QUERY A matches WITH VALUES AND lasts for more than 5 minutes, the alert threshold is reached AND the current state is set to Pending. 
+<TipCompat>Grafana`s alert granularity is graph level, even if the graph has 1000 curves, only one curve can alert, so Grafana`s alert becomes extremely unusable with multiple curves.
+By contrast, the Datav is for each curve in the graph</TipCompat> 
+If you click With Labels AND Values, you can filter the curves on the graph according to the label. The default is _DEFAULT, which means that all the curves on the graph use this condition.
+e.g : <img class="block mx-auto sm:mx-0 sm:flex-shrink-0 h-96" src="/img/docs/alerts-1.jpg" alt="Image" />
+Now, we want to set the alert threshold `0.2` for the curve tag instance=10.77.0.130:8199, and the alert threshold `0.01` for other curves, which can be set as follows:
 <img class="block mx-auto sm:mx-0 sm:flex-shrink-0 h-96" src="/img/docs/alerts-2.jpg" alt="Image" />
 
-- 推送通道：`正常通道`就是之前我们创建的告警通道，对所有曲线都有效，而`设置特例`可以针对曲线级别进行单独设置，让某条曲线推送到特例的通道中。
-- 消息内容: 在告警内容中进行补充，你也可以添加KV对，作为标签来进行搜索
+- Channels ：`Common cases` is the alert channel we created earlier, which is valid for all curves, while `SET EXCEPTIONS` can be set separately for the curve level.
+- Message : In addition to the alert content, you can also add a KV pair as a tag for searching
 
-## 全局告警管理
-在侧边菜单栏下方点击**告图标**，进入告警管理页面。在这里，用户可以对告警进行统一的管理，而不用手动进入某个仪表盘进行设置。
+## Global alerts manage
+Click the ** alert icon ** in the side menu bar to enter the alert management page, then you can manage the alerts globally, without manually entering a dashboard to set up.
 
-### 告警规则
-在该页面可以看到我们已经设定好的规则，规则名称旁边还用括号注明了所属的团队，点击规则名称可以前往规则编辑页面，点击团队名称可以前往团队页面。
+### Alert rules
+In this page, you can see the rules we have set. Next to the rule name, the team is indicated in brackets. Click the rule name to go to the rule editing page, and click the team name to go to the team page.
 
-### 告警历史
-在该页面可以看到历史发生过的告警推送，点击推送行，可以前往当时的现场快照，方便用户快速查看问题发生的现场
+### Alert histories
+In this page, you can see the alarm push of the history. Click "push off" and you can go to the scene snapshot at that time, so that users can quickly view the scene where the problem occurred
 
 
 
