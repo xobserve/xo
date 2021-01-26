@@ -309,7 +309,6 @@ class DashboardPage extends React.PureComponent<DashboardPageProps & RouteCompon
 
         const variables = getVariables()
 
-        console.log(store.getState().location.query)
         variables.forEach((variable: any) => {
             const display =this.originDash.variablesDiplay.indexOf(variable.name) === -1 
             if (display) {

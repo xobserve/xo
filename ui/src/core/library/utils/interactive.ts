@@ -8,64 +8,65 @@ import { DashboardModel } from 'src/views/dashboard/model';
 import { CoreEvents } from 'src/types';
 import { store } from 'src/store/store';
 import { updateLocation } from 'src/store/reducers/location';
+import appEvents from './app_events';
 
 
 
 export class Interactive {  
   setVariable = (name, value, dashboard:DashboardModel,resetDashboardVariables) => {
-    const vars = dashboard.templating.list
-    for (const v of vars) {
-      if (v.name === name) {
-        if (!v.multi) {
-          v.current = {
-            text: value,
-            value: value,
-            selected: false
-          }
+    // const vars = dashboard.templating.list
+    // for (const v of vars) {
+    //   if (v.name === name) {
+    //     if (!v.multi) {
+    //       v.current = {
+    //         text: value,
+    //         value: value,
+    //         selected: false
+    //       }
 
-          for (const o of v.options) {
-            if (o.text === value) {
-              o.selected = true
-            } else {
-              o.selected = false
-            }
-          }
-        } else {
-          let values = cloneDeep(v.current.value)
-          if (indexOf(values, value) === -1 && values !== value) {
-            if (isArray(values)) {
-              values.push(value)
-            } else {
-              values = [values,value]
-            }
+    //       for (const o of v.options) {
+    //         if (o.text === value) {
+    //           o.selected = true
+    //         } else {
+    //           o.selected = false
+    //         }
+    //       }
+    //     } else {
+    //       let values = cloneDeep(v.current.value)
+    //       if (indexOf(values, value) === -1 && values !== value) {
+    //         if (isArray(values)) {
+    //           values.push(value)
+    //         } else {
+    //           values = [values,value]
+    //         }
 
-            v.current = {
-              text: join(values, " + "),
-              value: values,
-              selected: true,
-            }
+    //         v.current = {
+    //           text: join(values, " + "),
+    //           value: values,
+    //           selected: true,
+    //         }
   
-            for (const o of v.options) {
-              if (indexOf(values, o.text) !== -1) {
-                o.selected = true
-              } else {
-                o.selected = false
-              }
-            }
-          }
-        }
-      }
-    }
+    //         for (const o of v.options) {
+    //           if (indexOf(values, o.text) !== -1) {
+    //             o.selected = true
+    //           } else {
+    //             o.selected = false
+    //           }
+    //         }
+    //       }
+    //     }
+    //   }
+    // }
 
     const query = cloneDeep(store.getState().location.query)
     query['var-'+name] = value
 
     store.dispatch(updateLocation({query: query, partial: true}))
-    resetDashboardVariables(dashboard)
-
-    for (const panel of dashboard.panels) {
-      panel.events.emit(PanelEvents.refresh)
-    }
+    // resetDashboardVariables(dashboard)
+    appEvents.emit("update-variables-from-url")
+    // for (const panel of dashboard.panels) {
+    //   panel.events.emit(PanelEvents.refresh)
+    // }
   } 
 
   setTime = (from,to) => {
