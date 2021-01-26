@@ -120,6 +120,7 @@ class DashboardPage extends React.PureComponent<DashboardPageProps & RouteCompon
         if (this.originDash) {
             const d = this.props.dashboard.getSaveModelClone()
             const ds = new DashboardModel(d)
+            ds.meta = _.cloneDeep(this.props.dashboard.meta)
             setTimeout(() => {this.props.setVariablesFromUrl(ds)}, 500)
         }
     }
