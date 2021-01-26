@@ -248,6 +248,10 @@ class DashboardPage extends React.PureComponent<DashboardPageProps & RouteCompon
 
 
     hasChanges() {
+        if (!this.props.dashboard.meta.canSave) {
+            return false
+        }
+        
         const current = cleanDashboardFromIgnoredChanges(this.props.dashboard.getSaveModelClone());
         const original = cleanDashboardFromIgnoredChanges(this.originDash);
 
