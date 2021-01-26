@@ -6,6 +6,8 @@ import { currentLang, localeData, PanelEvents, toUtc } from 'src/packages/datav-
 import { notification } from 'antd';
 import { DashboardModel } from 'src/views/dashboard/model';
 import { CoreEvents } from 'src/types';
+import { store } from 'src/store/store';
+import { updateLocation } from 'src/store/reducers/location';
 
 
 
@@ -55,6 +57,10 @@ export class Interactive {
       }
     }
 
+    const query = cloneDeep(store.getState().location.query)
+    query['var-'+name] = value
+
+    store.dispatch(updateLocation({query: query, partial: true}))
     resetDashboardVariables(dashboard)
 
     for (const panel of dashboard.panels) {

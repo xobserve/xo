@@ -102,7 +102,7 @@ export function resetDashboardVariables(ds: DashboardModel): ThunkResult<void> {
     try {
       if (config.featureToggles.newVariables) {
         dispatch(initDashboardTemplating(ds.templating.list));
-        await dispatch(processVariables(false));
+        await dispatch(processVariables(true));
         dispatch(completeDashboardTemplating(ds));
       }
     } catch (err) {
