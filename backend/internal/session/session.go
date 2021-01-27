@@ -2,15 +2,18 @@ package session
 
 import (
 	"database/sql"
+	"strconv"
+
+	"github.com/opendatav/datav/backend/pkg/config"
 
 	"github.com/opendatav/datav/backend/pkg/models"
 
 	// "fmt"
 	"time"
 
+	"github.com/gin-gonic/gin"
 	"github.com/opendatav/datav/backend/pkg/db"
 	"github.com/opendatav/datav/backend/pkg/log"
-	"github.com/gin-gonic/gin"
 )
 
 var logger = log.RootLogger.New("logger", "session")
@@ -72,6 +75,15 @@ func getToken(c *gin.Context) string {
 
 func CurrentUser(c *gin.Context) *models.User {
 	token := getToken(c)
+	createTime, _ := strconv.ParseInt(token, 10, 64)
+	if createTime != 0 {
+		// check whether token is expired
+		if (time.Now().Unix() - createTime/1e9) > config.Data.User.SessionExpire {
+			deleteSession(token)
+			return nil
+		}
+	}
+
 	sess := loadSession(token)
 	if sess == nil {
 		// 用户未登陆或者session失效

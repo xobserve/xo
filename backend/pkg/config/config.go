@@ -30,6 +30,10 @@ type Config struct {
 		RootUrlRedirect string `yaml:"root_url_redirect"`
 	}
 
+	User struct {
+		SessionExpire int64 `yaml:"session_expire"`
+	}
+
 	SMTP struct {
 		Enabled     bool
 		Host        string
