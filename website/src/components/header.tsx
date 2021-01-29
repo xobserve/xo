@@ -55,7 +55,7 @@ function HeaderContent() {
 
   return (
     <>
-      <Flex w="100%" h="100%" px="6" align="center" justify="space-between">
+      <Flex w="100%" h="100%" pr="6"  align="center" justify="space-between">
         <Flex align="center">
           <NextLink href="/" passHref>
             <chakra.a display="block" aria-label="Chakra UI, Back to homepage">
@@ -75,7 +75,7 @@ function HeaderContent() {
           color="gray.400"
         >
           <OmniSearch />
-          <VersionSwitcher w="67px" display={{ base: "none", md: "flex" }} />
+          <Box w="67px" display={{ base: "none", md: "flex" }} />
           <HStack spacing="5" display={{ base: "none", md: "flex" }}>
             <Link
               isExternal
@@ -112,7 +112,6 @@ function HeaderContent() {
             onClick={toggleMode}
             icon={<SwitchIcon />}
           />
-          <SponsorButton ml="5" />
           <MobileNavButton
             ref={mobileNavBtnRef}
             aria-label="Open Menu"

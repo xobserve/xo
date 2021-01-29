@@ -3,7 +3,7 @@ import { HTMLMotionProps, motion } from "framer-motion"
 
 const PageTransition = (props: HTMLMotionProps<"div">) => (
   <motion.div
-    initial={{ y: -16, opacity: 0 }}
+    initial={{ y: -16, opacity: 1 }}
     animate={{ y: 0, opacity: 1 }}
     {...props}
   />
