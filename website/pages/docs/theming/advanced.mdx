@@ -1,0 +1,99 @@
+---
+title: Advanced Theming
+description: Documentation for making advanced modifications to themes.
+---
+
+Now that you understand how to use Chakra UI theming API. Let's take a step
+further and see if we can adapt a component to color mode.
+
+When defining the styles for the `sizes` or `variants`, you can either pass a
+style object or a function that returns a style object.
+
+## Single Part Component
+
+For a single part component like button, badge, etc. The style configuration has
+the following signature:
+
+```tsx live=false
+type StyleInterpolation = StyleObject | ((options: StyleOptions) => StyleObject)
+
+interface StyleOptions {
+  theme: Theme
+  colorMode: "light" | "dark"
+  colorScheme: string
+}
+
+interface StyleConfig {
+  baseStyle: StyleInterpolation
+  sizes: { [size: string]: StyleInterpolation }
+  variants: { [variant: string]: StyleInterpolation }
+  defaultProps?: {
+    variant: string
+    size: string
+  }
+}
+```
+
+For example, to create a simple badge that changes its background based on color
+mode. Here's how to go about it.
+
+```jsx live=false
+import { extendTheme } from "@chakra-ui/react"
+
+// 1. define component configuration
+const components = {
+  CustomBadge: {
+    baseStyle: ({ colorMode }) => ({
+      bg: colorMode === "dark" ? "green.300" : "green.500",
+      color: colorMode === "dark" ? "gray.800" : "white",
+      textTransform: "uppercase",
+      fontWeight: "semibold",
+      letterSpacing: "0.02em",
+      padding: "4px",
+      borderRadius: "2px",
+      fontSize: "12px",
+    }),
+  },
+}
+
+// 2. Call `extendTheme` and pass your custom values`
+const theme = extendTheme({ components })
+
+// 3. Use it in your components
+function CustomBadge(props) {
+  const { size, variant, ...rest } = props
+  const styles = useStyleConfig("CustomBadge", { size, variant })
+  return <Box as="span" sx={styles} {...rest} />
+}
+
+// 4. Use the component
+render(<CustomBadge>I am a custom badge</CustomBadge>)
+```
+
+## Multipart or Composite Component
+
+When it comes to multipart components for example tabs or menus etc, that have
+multiple sub-parts, you can also style them based on the color mode. Here's the
+signature:
+
+```tsx live=false
+type StyleInterpolation =
+  | { [part: string]: SystemStyleObject }
+  | ((options: StyleOptions) => { [part: string]: SystemStyleObject })
+
+interface StyleOptions {
+  theme: Theme
+  colorMode: "light" | "dark"
+  colorScheme: string
+}
+
+interface StyleConfig {
+  baseStyle: StyleInterpolation
+  sizes: { [size: string]: StyleInterpolation }
+  variants: { [variant: string]: StyleInterpolation }
+  defaultProps?: {
+    variant: string
+    size: string
+  }
+}
+```
