@@ -14,7 +14,7 @@ Datav is forked from **@grafana**, but changed a lot, e.g :
 2. Some bug fixes
 3. Website and a live demo
 
-The release will be launched before 2021-01-31
+The release will be launched before 2021-02-31
 
 
 ## Key Features 
