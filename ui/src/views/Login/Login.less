@@ -1,5 +1,4 @@
-
-.datav-login{
+.datav-login {
     width: 100vw;
     height: 100vh;
     display: flex;
@@ -10,64 +9,75 @@
     background-position: center;
     background-repeat: no-repeat;
     background-color: #33a2e5;
-    .datav-rectangle{
+
+    .datav-rectangle {
         width: 900px;
         border-radius: 6px;
-        box-shadow: -4px 5px 10px rgba(0,0,0,.4);
+        box-shadow: -4px 5px 10px rgba(0, 0, 0, .4);
         margin-top: -30px;
+
         .ant-form {
             label {
                 color: #8e9297 !important;
-                font-size:13px
+                font-size: 13px
             }
+
             input {
-                background: rgba(0,0,0,0.1);
-                border-color: rgba(0,0,0,0.3);
+                background: rgba(0, 0, 0, 0.1);
+                border-color: rgba(0, 0, 0, 0.3);
                 color: white;
             }
+
             input:focus {
                 border-color: #5cbef2
             }
         }
+
         .login-left {
             display: flex;
             justify-content: center;
             align-items: center;
             flex-direction: column;
+
             .logo {
                 height: 160px;
                 width: 160px;
                 margin-left: -10px;
             }
+
             .content {
-                font-size:26px;
-                color:white;
+                font-size: 26px;
+                color: white;
                 font-weight: bold;
             }
         }
+
         .login-right {
-            background-color: hsla(0,0%,100%,.3);
+            background-color: hsla(0, 0%, 100%, .3);
             padding: 60px 60px;
+
             .login-title {
                 text-align: center;
                 margin-bottom: 10px;
                 color: white;
             }
+
             .login-button {
                 margin-top: 30px;
                 // background: #5cbef2;
-                border:none;
-            }
-            input {
-                border: 1px solid rgba(0,0,0,.1);
-                background-color: transparent;
-                color: white;
-                margin-top:20px;
+                border: none;
             }
 
-            input::-webkit-input-placeholder{
-                color:white;
-                font-size:13px
+            input {
+                border: 1px solid rgba(0, 0, 0, .1);
+                background-color: transparent;
+                color: white;
+                margin-top: 20px;
+            }
+
+            input::-webkit-input-placeholder {
+                color: white;
+                font-size: 13px
             }
         }
     }
