@@ -9,16 +9,6 @@ Datav is forked from **@grafana**, but changed a lot, e.g :
 - different team and acl design,no orgs any more 
 - 100% free. Forever and always
 
-## docs
-- [English Docs](./docs/EN.md)
-## TODO list for V1.0.0
-1. English docs
-2. Some bug fixes
-3. Website and a live demo
-
-The release will be launched before 2021-02-31
-
-
 ## Key Features 
 - **Plugins** Performance,Extensible,Beautiful,Configurable
 - **Dynamic Dashboards** Create dynamic & reusable dashboards with template variables
