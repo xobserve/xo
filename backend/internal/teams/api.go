@@ -1,12 +1,13 @@
 package teams
 
 import (
-	"github.com/opendatav/datav/backend/internal/session"
 	"database/sql"
 
-	"github.com/opendatav/datav/backend/internal/acl"
-	"github.com/opendatav/datav/backend/internal/invasion"
-	"github.com/opendatav/datav/backend/pkg/utils"
+	"github.com/datav-io/datav/backend/internal/session"
+
+	"github.com/datav-io/datav/backend/internal/acl"
+	"github.com/datav-io/datav/backend/internal/invasion"
+	"github.com/datav-io/datav/backend/pkg/utils"
 
 	"fmt"
 	"sort"
@@ -14,10 +15,10 @@ import (
 	"strings"
 	"time"
 
-	"github.com/opendatav/datav/backend/pkg/common"
-	"github.com/opendatav/datav/backend/pkg/db"
-	"github.com/opendatav/datav/backend/pkg/i18n"
-	"github.com/opendatav/datav/backend/pkg/models"
+	"github.com/datav-io/datav/backend/pkg/common"
+	"github.com/datav-io/datav/backend/pkg/db"
+	"github.com/datav-io/datav/backend/pkg/i18n"
+	"github.com/datav-io/datav/backend/pkg/models"
 	"github.com/gin-gonic/gin"
 )
 
@@ -26,9 +27,9 @@ func GetTeams(c *gin.Context) {
 
 	// user can see the teams he is in
 	q := `SELECT id,name,created_by FROM team`
-	if (!acl.IsGlobalAdmin(c)) {
+	if !acl.IsGlobalAdmin(c) {
 		userId := session.CurrentUserId(c)
-		members,err := models.QueryTeamMembersByUserId(userId)
+		members, err := models.QueryTeamMembersByUserId(userId)
 		if err != nil {
 			logger.Warn("get all teams error", "error", err)
 			c.JSON(500, common.ResponseInternalError())
@@ -36,25 +37,25 @@ func GetTeams(c *gin.Context) {
 		}
 
 		if len(members) == 0 {
-			c.JSON(200,common.ResponseSuccess(teams))
-			return 	
+			c.JSON(200, common.ResponseSuccess(teams))
+			return
 		}
-		
+
 		if len(members) == 1 {
-			q = fmt.Sprintf("%s WHERE id = '%d'",q,members[0].TeamId)
+			q = fmt.Sprintf("%s WHERE id = '%d'", q, members[0].TeamId)
 		} else {
-			for i,m := range members {
-				if (i == 0) {
-					q = fmt.Sprintf("%s WHERE id in ('%d'",q,m.TeamId)
+			for i, m := range members {
+				if i == 0 {
+					q = fmt.Sprintf("%s WHERE id in ('%d'", q, m.TeamId)
 					continue
 				}
 
-				if (i == len(members)-1) {
-					q = fmt.Sprintf("%s,'%d')",q,m.TeamId)
+				if i == len(members)-1 {
+					q = fmt.Sprintf("%s,'%d')", q, m.TeamId)
 					continue
 				}
 
-				q = fmt.Sprintf("%s,'%d'",q,m.TeamId)
+				q = fmt.Sprintf("%s,'%d'", q, m.TeamId)
 			}
 		}
 	}
@@ -66,7 +67,6 @@ func GetTeams(c *gin.Context) {
 		return
 	}
 
-
 	for rows.Next() {
 		team := &models.Team{}
 		err := rows.Scan(&team.Id, &team.Name, &team.CreatedById)
@@ -74,7 +74,7 @@ func GetTeams(c *gin.Context) {
 			logger.Warn("get all users scan error", "error", err)
 			continue
 		}
-	
+
 		user, _ := models.QueryUser(team.CreatedById, "", "")
 		team.CreatedBy = user.Username
 
@@ -106,9 +106,9 @@ func GetTeam(c *gin.Context) {
 		if err != sql.ErrNoRows {
 			logger.Warn("get team  error", "error", err)
 			c.JSON(500, common.ResponseInternalError())
-			return 
+			return
 		}
-		
+
 		c.JSON(200, common.ResponseSuccess(models.Team{}))
 		return
 	}
@@ -152,8 +152,8 @@ func GetTeamMembers(c *gin.Context) {
 }
 
 func GetTeamMember(c *gin.Context) {
-	teamId,_ := strconv.ParseInt(c.Param("teamId"), 10, 64)
-	userId,_ := strconv.ParseInt(c.Param("userId"), 10, 64)
+	teamId, _ := strconv.ParseInt(c.Param("teamId"), 10, 64)
+	userId, _ := strconv.ParseInt(c.Param("userId"), 10, 64)
 
 	if teamId == 0 || userId == 0 {
 		invasion.Add(c)
@@ -161,7 +161,7 @@ func GetTeamMember(c *gin.Context) {
 		return
 	}
 
-	member, err := models.QueryTeamMember(teamId,userId)
+	member, err := models.QueryTeamMember(teamId, userId)
 	if err != nil {
 		logger.Warn("get team member error", "error", err)
 		c.JSON(500, common.ResponseInternalError())
@@ -186,7 +186,7 @@ func AddTeamMembers(c *gin.Context) {
 
 	if teamId == models.GlobalTeamId {
 		c.JSON(400, common.ResponseI18nError("error.addMemberToGlobal"))
-		return	
+		return
 	}
 
 	if teamId == 0 || len(members) == 0 || !role.IsValid() {
@@ -203,7 +203,7 @@ func AddTeamMembers(c *gin.Context) {
 	// if target role is admin, only global admin and team creator can do this
 	if role.IsAdmin() {
 		if !acl.IsGlobalAdmin(c) && !acl.IsTeamCreator(teamId, c) {
-			c.JSON(403,common.ResponseI18nError(i18n.NoPermission))
+			c.JSON(403, common.ResponseI18nError(i18n.NoPermission))
 			return
 		}
 	}
@@ -230,7 +230,7 @@ func AddTeamMembers(c *gin.Context) {
 			c.JSON(500, common.ResponseInternalError())
 			return
 		}
- 
+
 		if id != memberId {
 			c.JSON(400, common.ResponseI18nError(i18n.UserNotExist))
 			return
@@ -261,7 +261,7 @@ func DeleteTeamMember(c *gin.Context) {
 
 	if teamId == models.GlobalTeamId {
 		c.JSON(400, common.ResponseI18nError("error.deleteMemberInGlobal"))
-		return	
+		return
 	}
 
 	team, err := models.QueryTeam(teamId, "")
@@ -270,7 +270,7 @@ func DeleteTeamMember(c *gin.Context) {
 		return
 	}
 
-	if err == sql.ErrNoRows  {
+	if err == sql.ErrNoRows {
 		c.JSON(400, common.ResponseI18nError(i18n.TeamNotExist))
 		return
 	}
@@ -281,7 +281,7 @@ func DeleteTeamMember(c *gin.Context) {
 		return
 	}
 
-	if acl.IsUserSelf(memberId,c) {
+	if acl.IsUserSelf(memberId, c) {
 		c.JSON(400, common.ResponseI18nError("error.deleteSelf"))
 		return
 	}
@@ -291,8 +291,6 @@ func DeleteTeamMember(c *gin.Context) {
 		c.JSON(403, common.ResponseI18nError(i18n.NoPermission))
 		return
 	}
-
-
 
 	_, err = db.SQL.Exec("DELETE FROM team_member where team_id=? and user_id=?", teamId, memberId)
 	if err != nil {
@@ -313,13 +311,12 @@ func UpdateTeam(c *gin.Context) {
 		return
 	}
 
-
 	if team.Id == models.GlobalTeamId {
 		c.JSON(400, common.ResponseI18nError("error.globalTeamCantChange"))
-		return	
+		return
 	}
 
-	if !acl.IsTeamAdmin(team.Id,c) {
+	if !acl.IsTeamAdmin(team.Id, c) {
 		c.JSON(403, common.ResponseI18nError(i18n.NoPermission))
 		return
 	}
@@ -347,7 +344,7 @@ func UpdateTeamMember(c *gin.Context) {
 	if err != nil {
 		if err == sql.ErrNoRows {
 			c.JSON(400, common.ResponseI18nError(i18n.TeamNotExist))
-			return 
+			return
 		}
 		c.JSON(500, common.ResponseInternalError())
 		return
@@ -366,7 +363,7 @@ func UpdateTeamMember(c *gin.Context) {
 
 	if member.Role.IsAdmin() {
 		// only global admin and team creator can set team admin
-		if !acl.IsGlobalAdmin(c) && !acl.IsTeamCreator(member.TeamId,c) {
+		if !acl.IsGlobalAdmin(c) && !acl.IsTeamCreator(member.TeamId, c) {
 			c.JSON(403, common.ResponseI18nError(i18n.NoPermission))
 			return
 		}
@@ -393,14 +390,13 @@ func TransferTeam(c *gin.Context) {
 		return
 	}
 
-	
 	if teamId == models.GlobalTeamId {
 		c.JSON(400, common.ResponseI18nError("error.globalTeamTransfer"))
-		return	
+		return
 	}
 
 	// only global admin and team creator can transfer team
-	if !acl.IsGlobalAdmin(c) && !acl.IsTeamCreator(teamId,c) {
+	if !acl.IsGlobalAdmin(c) && !acl.IsTeamCreator(teamId, c) {
 		c.JSON(403, common.ResponseI18nError(i18n.NoPermission))
 		return
 	}
@@ -413,7 +409,7 @@ func TransferTeam(c *gin.Context) {
 	}
 
 	// update new creator's team role to admin
-	_, err = db.SQL.Exec("UPDATE team_member SET role=?,updated=? WHERE team_id=? and user_id=?",models.ROLE_ADMIN, time.Now(),  teamId,memberId)
+	_, err = db.SQL.Exec("UPDATE team_member SET role=?,updated=? WHERE team_id=? and user_id=?", models.ROLE_ADMIN, time.Now(), teamId, memberId)
 	if err != nil {
 		logger.Warn("update team member error", "error", err)
 		c.JSON(500, common.ResponseInternalError())
@@ -433,14 +429,14 @@ func DeleteTeam(c *gin.Context) {
 	}
 
 	// only global admin and team creator can delete team
-	if !acl.IsGlobalAdmin(c) && !acl.IsTeamCreator(teamId,c) {
+	if !acl.IsGlobalAdmin(c) && !acl.IsTeamCreator(teamId, c) {
 		c.JSON(403, common.ResponseI18nError(i18n.NoPermission))
 		return
-	} 
-	
+	}
+
 	if teamId == models.GlobalTeamId {
 		c.JSON(400, common.ResponseI18nError("error.globalTeamDelete"))
-		return	
+		return
 	}
 
 	_, err := db.SQL.Exec("DELETE FROM team WHERE id=?", teamId)
@@ -456,7 +452,7 @@ func DeleteTeam(c *gin.Context) {
 	}
 
 	// delete team sidemenu
-	_, err = db.SQL.Exec("DELETE FROM sidemenu WHERE team_id=?",teamId)
+	_, err = db.SQL.Exec("DELETE FROM sidemenu WHERE team_id=?", teamId)
 	if err != nil {
 		logger.Warn("delete team member error", "error", err)
 	}
@@ -465,7 +461,7 @@ func DeleteTeam(c *gin.Context) {
 }
 
 func LeaveTeam(c *gin.Context) {
-	teamId,_ := strconv.ParseInt(c.Param("teamId"), 10, 64)
+	teamId, _ := strconv.ParseInt(c.Param("teamId"), 10, 64)
 	if teamId == 0 {
 		invasion.Add(c)
 		c.JSON(400, common.ResponseI18nError(i18n.BadRequestData))
@@ -480,7 +476,7 @@ func LeaveTeam(c *gin.Context) {
 
 	if teamId == models.GlobalTeamId {
 		c.JSON(400, common.ResponseI18nError("error.globalTeamLeave"))
-		return	
+		return
 	}
 
 	userId := session.CurrentUserId(c)
@@ -495,63 +491,61 @@ func LeaveTeam(c *gin.Context) {
 }
 
 func GetTeamPermissions(c *gin.Context) {
-	teamId,_ := strconv.ParseInt(c.Param("teamId"), 10, 64)
+	teamId, _ := strconv.ParseInt(c.Param("teamId"), 10, 64)
 	if teamId == 0 {
 		invasion.Add(c)
 		c.JSON(400, common.ResponseI18nError(i18n.BadRequestData))
 		return
 	}
 
-	permissions,err := models.QueryTeamPermissions(teamId)
+	permissions, err := models.QueryTeamPermissions(teamId)
 	if err != nil {
-		logger.Warn("query team permission error","error",err)
+		logger.Warn("query team permission error", "error", err)
 	}
 
 	c.JSON(200, common.ResponseSuccess(permissions))
 }
 
 type UpdatePermissionReq struct {
-	Role models.RoleType `json:"role"`
-	Permission []int `json:"permission"`
+	Role       models.RoleType `json:"role"`
+	Permission []int           `json:"permission"`
 }
 
 func UpdateTeamPermission(c *gin.Context) {
 	req := &UpdatePermissionReq{}
 	c.Bind(&req)
 
-	teamId,_ := strconv.ParseInt(c.Param("teamId"), 10, 64)
+	teamId, _ := strconv.ParseInt(c.Param("teamId"), 10, 64)
 	if teamId == 0 {
 		invasion.Add(c)
 		c.JSON(400, common.ResponseI18nError(i18n.BadRequestData))
 		return
 	}
 
-	if !acl.IsTeamAdmin(teamId,c) {
+	if !acl.IsTeamAdmin(teamId, c) {
 		c.JSON(403, common.ResponseI18nError(i18n.NoPermission))
 		return
 	}
 
 	// must have CanView permission
-	canViewExist := false 
-	for _,p := range req.Permission {
+	canViewExist := false
+	for _, p := range req.Permission {
 		if p == models.CanView {
 			canViewExist = true
 		}
 	}
 
-	if (!canViewExist) {
+	if !canViewExist {
 		c.JSON(400, common.ResponseI18nError("error.mustHaveCanView"))
 		return
 	}
-	
-	_,err := db.SQL.Exec("DELETE FROM team_acl WHERE team_id=? and role=?",teamId,req.Role)
+
+	_, err := db.SQL.Exec("DELETE FROM team_acl WHERE team_id=? and role=?", teamId, req.Role)
 	if err != nil {
 		logger.Warn("delete from team_acl error", "error", err)
 		c.JSON(500, common.ResponseInternalError())
 		return
 	}
-
-
 
 	err = updatePermission(teamId, req.Role, req.Permission)
 	if err != nil {
@@ -560,7 +554,7 @@ func UpdateTeamPermission(c *gin.Context) {
 		return
 	}
 
-	c.JSON(200,common.ResponseSuccess(nil))
+	c.JSON(200, common.ResponseSuccess(nil))
 }
 
 func canChangeTeamMember(teamId, memberId int64, c *gin.Context) bool {

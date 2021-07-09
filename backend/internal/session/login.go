@@ -1,23 +1,24 @@
 package session
 
 import (
-	"github.com/opendatav/datav/backend/pkg/utils"
-	"github.com/opendatav/datav/backend/pkg/models"
+	"github.com/datav-io/datav/backend/pkg/models"
+	"github.com/datav-io/datav/backend/pkg/utils"
+
 	// "fmt"
 	"net/http"
 	"strconv"
 	"time"
 
-	"github.com/opendatav/datav/backend/pkg/common"
-	"github.com/opendatav/datav/backend/pkg/db"
-	"github.com/opendatav/datav/backend/pkg/i18n"
+	"github.com/datav-io/datav/backend/pkg/common"
+	"github.com/datav-io/datav/backend/pkg/db"
+	"github.com/datav-io/datav/backend/pkg/i18n"
 	"github.com/gin-gonic/gin"
 )
 
 // LoginModel ...
 type LoginModel struct {
 	Username string `json:"username"`
-	Password string `json:"password"` 
+	Password string `json:"password"`
 }
 
 // Login ...
@@ -30,20 +31,20 @@ func Login(c *gin.Context) {
 
 	logger.Info("User loged in", "username", username)
 
-	user,err := models.QueryUser(0,username,"")
+	user, err := models.QueryUser(0, username, "")
 	if err != nil {
-		logger.Warn("query user error","error",err)
+		logger.Warn("query user error", "error", err)
 		c.JSON(500, common.ResponseInternalError())
-		return 
+		return
 	}
 
 	if user.Id == 0 {
 		c.JSON(400, common.ResponseI18nError(i18n.UserNotExist))
-		return 
-	} 
+		return
+	}
 
-	encodedPassword,_ := utils.EncodePassword(password,user.Salt)
-	if encodedPassword != user.Password{
+	encodedPassword, _ := utils.EncodePassword(password, user.Salt)
+	if encodedPassword != user.Password {
 		c.JSON(http.StatusForbidden, common.ResponseI18nError(i18n.PasswordIncorrect))
 		return
 	}
@@ -54,8 +55,8 @@ func Login(c *gin.Context) {
 	token = strconv.FormatInt(time.Now().UnixNano(), 10)
 
 	session := &Session{
-		Token: token,
-		User: user,
+		Token:      token,
+		User:       user,
 		CreateTime: time.Now(),
 	}
 	//sub token验证成功，保存session
@@ -63,8 +64,8 @@ func Login(c *gin.Context) {
 	if err != nil {
 		c.JSON(500, common.ResponseInternalError())
 		return
-	} 
- 
+	}
+
 	// 更新数据库中的user表
 	_, err = db.SQL.Exec(`UPDATE user SET last_seen_at=? WHERE id=?`, time.Now(), user.Id)
 	if err != nil {

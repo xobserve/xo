@@ -4,9 +4,9 @@ import (
 	"encoding/json"
 	"time"
 
-	"github.com/opendatav/datav/backend/pkg/db"
-	"github.com/opendatav/datav/backend/pkg/models"
-	"github.com/opendatav/datav/backend/pkg/utils/simplejson"
+	"github.com/datav-io/datav/backend/pkg/db"
+	"github.com/datav-io/datav/backend/pkg/models"
+	"github.com/datav-io/datav/backend/pkg/utils/simplejson"
 )
 
 func UpdateDashboardAlerts(dash *models.Dashboard) error {

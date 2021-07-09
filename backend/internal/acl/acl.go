@@ -2,9 +2,9 @@ package acl
 
 import (
 	// "fmt"
-	"github.com/opendatav/datav/backend/internal/session"
-	"github.com/opendatav/datav/backend/pkg/log"
-	"github.com/opendatav/datav/backend/pkg/models"
+	"github.com/datav-io/datav/backend/internal/session"
+	"github.com/datav-io/datav/backend/pkg/log"
+	"github.com/datav-io/datav/backend/pkg/models"
 	"github.com/gin-gonic/gin"
 )
 

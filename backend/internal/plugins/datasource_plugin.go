@@ -1,9 +1,11 @@
 package plugins
 
 import (
-	"github.com/opendatav/datav/backend/pkg/utils/errutil"
 	"encoding/json"
+
+	"github.com/datav-io/datav/backend/pkg/utils/errutil"
 )
+
 type DataSourcePlugin struct {
 	FrontendPluginBase
 	Annotations  bool            `json:"annotations"`
@@ -22,7 +24,6 @@ type DataSourcePlugin struct {
 	Executable string `json:"executable,omitempty"`
 	SDK        bool   `json:"sdk,omitempty"`
 }
-
 
 func (p *DataSourcePlugin) Load(decoder *json.Decoder, pluginDir string) error {
 	if err := decoder.Decode(p); err != nil {

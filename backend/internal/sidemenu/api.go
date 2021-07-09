@@ -2,36 +2,38 @@ package sidemenu
 
 import (
 	"database/sql"
-	"github.com/opendatav/datav/backend/internal/session"
+
+	"github.com/datav-io/datav/backend/internal/session"
+
 	// "fmt"
-	"time"
 	"encoding/json"
-	"github.com/opendatav/datav/backend/pkg/db"
-	"github.com/opendatav/datav/backend/internal/acl"
-	"github.com/opendatav/datav/backend/pkg/models"
-	"github.com/opendatav/datav/backend/internal/invasion"
-	"github.com/opendatav/datav/backend/pkg/i18n"
-	"github.com/opendatav/datav/backend/pkg/common"
-	"github.com/gin-gonic/gin"
 	"strconv"
+	"time"
+
+	"github.com/datav-io/datav/backend/internal/acl"
+	"github.com/datav-io/datav/backend/internal/invasion"
+	"github.com/datav-io/datav/backend/pkg/common"
+	"github.com/datav-io/datav/backend/pkg/db"
+	"github.com/datav-io/datav/backend/pkg/i18n"
+	"github.com/datav-io/datav/backend/pkg/models"
+	"github.com/gin-gonic/gin"
 )
 
 func GetMenu(c *gin.Context) {
-	teamId,_ := strconv.ParseInt(c.Param("teamId"),10,64)
+	teamId, _ := strconv.ParseInt(c.Param("teamId"), 10, 64)
 	if teamId == 0 {
 		invasion.Add(c)
 		c.JSON(400, common.ResponseI18nError(i18n.BadRequestData))
-		return 
+		return
 	}
 
-
-	menu,err := QuerySideMenu(0,teamId)
+	menu, err := QuerySideMenu(0, teamId)
 	if err != nil {
 		if err != sql.ErrNoRows {
-			logger.Error("query side menu error","error",err)
+			logger.Error("query side menu error", "error", err)
 			c.JSON(500, common.ResponseInternalError())
 		}
-		return 
+		return
 	}
 
 	c.JSON(200, common.ResponseSuccess(menu))
@@ -44,7 +46,7 @@ func CreateMenu(c *gin.Context) {
 	if req.TeamId == 0 {
 		invasion.Add(c)
 		c.JSON(400, common.ResponseI18nError(i18n.BadRequestData))
-		return 
+		return
 	}
 
 	if !acl.IsTeamAdmin(req.TeamId, c) {
@@ -53,26 +55,26 @@ func CreateMenu(c *gin.Context) {
 	}
 
 	userId := session.CurrentUserId(c)
-	data,_ := json.Marshal(req.Data)
+	data, _ := json.Marshal(req.Data)
 	now := time.Now()
-	res,err := db.SQL.Exec("INSERT INTO sidemenu (team_id,is_public,desc,data,created_by,created,updated) VALUES (?,?,?,?,?,?,?)",
-		req.TeamId,false,req.Desc,data,userId,now,now)
+	res, err := db.SQL.Exec("INSERT INTO sidemenu (team_id,is_public,desc,data,created_by,created,updated) VALUES (?,?,?,?,?,?,?)",
+		req.TeamId, false, req.Desc, data, userId, now, now)
 	if err != nil {
 		logger.Error("create sidemenu error", "error", err)
 		c.JSON(500, common.ResponseInternalError())
 		return
 	}
 
-	id,_:=res.LastInsertId()
+	id, _ := res.LastInsertId()
 	c.JSON(200, common.ResponseSuccess(id))
 }
 
 func UpdateMenu(c *gin.Context) {
-	teamId,_ := strconv.ParseInt(c.Param("teamId"),10,64)
+	teamId, _ := strconv.ParseInt(c.Param("teamId"), 10, 64)
 	if teamId == 0 {
 		invasion.Add(c)
 		c.JSON(400, common.ResponseI18nError(i18n.BadRequestData))
-		return 
+		return
 	}
 
 	menu := &models.SideMenu{}
@@ -82,9 +84,9 @@ func UpdateMenu(c *gin.Context) {
 		c.JSON(403, common.ResponseI18nError(i18n.NoPermission))
 		return
 	}
-	
-	data,_ := json.Marshal(menu.Data)
-	_,err := db.SQL.Exec("UPDATE sidemenu SET is_public=?,desc=?,data=?,updated=? WHERE id=? and team_id=?",menu.IsPublic,menu.Desc,data,time.Now(),menu.Id,menu.TeamId)
+
+	data, _ := json.Marshal(menu.Data)
+	_, err := db.SQL.Exec("UPDATE sidemenu SET is_public=?,desc=?,data=?,updated=? WHERE id=? and team_id=?", menu.IsPublic, menu.Desc, data, time.Now(), menu.Id, menu.TeamId)
 	if err != nil {
 		logger.Error("update sidemenu error", "error", err)
 		c.JSON(500, common.ResponseInternalError())

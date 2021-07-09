@@ -5,12 +5,12 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/opendatav/datav/backend/pkg/utils/simplejson"
+	"github.com/datav-io/datav/backend/pkg/utils/simplejson"
 
-	"github.com/opendatav/datav/backend/internal/alerting"
-	"github.com/opendatav/datav/backend/internal/notifications"
-	"github.com/opendatav/datav/backend/pkg/config"
-	"github.com/opendatav/datav/backend/pkg/models"
+	"github.com/datav-io/datav/backend/internal/alerting"
+	"github.com/datav-io/datav/backend/internal/notifications"
+	"github.com/datav-io/datav/backend/pkg/config"
+	"github.com/datav-io/datav/backend/pkg/models"
 )
 
 const EmailType = "email"

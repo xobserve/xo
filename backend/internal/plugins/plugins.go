@@ -11,11 +11,11 @@ import (
 	"reflect"
 	"strings"
 
-	"github.com/opendatav/datav/backend/internal/registry"
-	"github.com/opendatav/datav/backend/pkg/config"
-	"github.com/opendatav/datav/backend/pkg/log"
-	"github.com/opendatav/datav/backend/pkg/utils"
-	"github.com/opendatav/datav/backend/pkg/utils/errutil"
+	"github.com/datav-io/datav/backend/internal/registry"
+	"github.com/datav-io/datav/backend/pkg/config"
+	"github.com/datav-io/datav/backend/pkg/log"
+	"github.com/datav-io/datav/backend/pkg/utils"
+	"github.com/datav-io/datav/backend/pkg/utils/errutil"
 	"golang.org/x/xerrors"
 )
 

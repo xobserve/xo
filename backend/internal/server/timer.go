@@ -3,10 +3,10 @@ package server
 import (
 	"time"
 
-	"github.com/opendatav/datav/backend/pkg/db"
+	"github.com/datav-io/datav/backend/pkg/db"
 
-	"github.com/opendatav/datav/backend/internal/cache"
-	"github.com/opendatav/datav/backend/pkg/utils/simplejson"
+	"github.com/datav-io/datav/backend/internal/cache"
+	"github.com/datav-io/datav/backend/pkg/utils/simplejson"
 )
 
 func startTimer() {

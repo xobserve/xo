@@ -20,9 +20,9 @@ import (
 	"os/signal"
 	"syscall"
 
-	server "github.com/opendatav/datav/backend/internal/server"
-	"github.com/opendatav/datav/backend/pkg/config"
-	"github.com/opendatav/datav/backend/pkg/log"
+	server "github.com/datav-io/datav/backend/internal/server"
+	"github.com/datav-io/datav/backend/pkg/config"
+	"github.com/datav-io/datav/backend/pkg/log"
 	"github.com/spf13/cobra"
 )
 

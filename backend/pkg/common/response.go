@@ -1,7 +1,7 @@
 package common
 
 import (
-	"github.com/opendatav/datav/backend/pkg/i18n"
+	"github.com/datav-io/datav/backend/pkg/i18n"
 )
 
 type Response struct {

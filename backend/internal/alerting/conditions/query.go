@@ -5,14 +5,14 @@ import (
 	"strings"
 	"time"
 
-	"github.com/opendatav/datav/backend/pkg/models"
+	"github.com/datav-io/datav/backend/pkg/models"
 
 	gocontext "context"
 
-	"github.com/opendatav/datav/backend/pkg/tsdb"
-	"github.com/opendatav/datav/backend/pkg/utils/errutil"
-	"github.com/opendatav/datav/backend/pkg/utils/null"
-	"github.com/opendatav/datav/backend/pkg/utils/simplejson"
+	"github.com/datav-io/datav/backend/pkg/tsdb"
+	"github.com/datav-io/datav/backend/pkg/utils/errutil"
+	"github.com/datav-io/datav/backend/pkg/utils/null"
+	"github.com/datav-io/datav/backend/pkg/utils/simplejson"
 )
 
 func init() {

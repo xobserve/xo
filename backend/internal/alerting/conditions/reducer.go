@@ -5,8 +5,8 @@ import (
 
 	"sort"
 
-	"github.com/opendatav/datav/backend/pkg/tsdb"
-	"github.com/opendatav/datav/backend/pkg/utils/null"
+	"github.com/datav-io/datav/backend/pkg/tsdb"
+	"github.com/datav-io/datav/backend/pkg/utils/null"
 )
 
 // queryReducer reduces a timeseries to a nullable float

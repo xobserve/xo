@@ -1,9 +1,9 @@
 package conditions
 
 import (
-	"github.com/opendatav/datav/backend/pkg/log"
-	"github.com/opendatav/datav/backend/pkg/models"
-	"github.com/opendatav/datav/backend/pkg/utils/simplejson"
+	"github.com/datav-io/datav/backend/pkg/log"
+	"github.com/datav-io/datav/backend/pkg/models"
+	"github.com/datav-io/datav/backend/pkg/utils/simplejson"
 )
 
 var logger = log.RootLogger.New("logger", "alerting/conditions")

@@ -1,10 +1,10 @@
 package annotation
 
 import (
-	"github.com/opendatav/datav/backend/internal/annotation/repo"
-	"github.com/opendatav/datav/backend/pkg/db"
-	"github.com/opendatav/datav/backend/pkg/log"
-	"github.com/opendatav/datav/backend/pkg/models"
+	"github.com/datav-io/datav/backend/internal/annotation/repo"
+	"github.com/datav-io/datav/backend/pkg/db"
+	"github.com/datav-io/datav/backend/pkg/log"
+	"github.com/datav-io/datav/backend/pkg/models"
 )
 
 var logger = log.RootLogger.New("logger", "bootConfig")

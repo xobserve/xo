@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/opendatav/datav/backend/pkg/utils/errutil"
-	"github.com/opendatav/datav/backend/pkg/utils/null"
+	"github.com/datav-io/datav/backend/pkg/utils/errutil"
+	"github.com/datav-io/datav/backend/pkg/utils/null"
 
 	"github.com/grafana/grafana-plugin-sdk-go/data"
 )

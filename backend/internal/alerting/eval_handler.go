@@ -3,7 +3,7 @@ package alerting
 import (
 	"time"
 
-	"github.com/opendatav/datav/backend/pkg/models"
+	"github.com/datav-io/datav/backend/pkg/models"
 )
 
 type evalHandler interface {

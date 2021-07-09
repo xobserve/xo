@@ -1,4 +1,4 @@
-module github.com/opendatav/datav
+module github.com/datav-io/datav
 
 go 1.14
 

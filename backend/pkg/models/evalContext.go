@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/opendatav/datav/backend/pkg/config"
+	"github.com/datav-io/datav/backend/pkg/config"
 
 	"github.com/inconshreveable/log15"
 )

@@ -79,7 +79,7 @@ export const WelcomeBanner: FC = (props:any) => {
                 {/* <img src="/img/logo.png" height="20" width="20" className="ub-mr1 inline" /> */}
                 {getBootConfig().common.appName.toUpperCase()}</div>
               <div>
-              {props.options.showGithub && <a href={!props.options.githubAddr ? "https://github.com/opendatav/datav" : props.options.githubAddr} target="_blank" className={cx(styles.getStarted, 'bg-primary')}>GITHUB <Icon name="github" size="xl"  /></a>}
+              {props.options.showGithub && <a href={!props.options.githubAddr ? "https://github.com/datav-io/datav" : props.options.githubAddr} target="_blank" className={cx(styles.getStarted, 'bg-primary')}>GITHUB <Icon name="github" size="xl"  /></a>}
                 
               </div>
             </Row>

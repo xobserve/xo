@@ -22,7 +22,7 @@ Datav is forked from **@grafana**, but changed a lot, e.g :
 ## How to start(developing mode)
 ### Start datav main server
 ```bash
-> git clone https://github.com/opendatav/datav
+> git clone https://github.com/datav-io/datav
 > cd datav
 > go build
 > ./datav generate ##only needed for first time or new plugins been added

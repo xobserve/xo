@@ -10,7 +10,7 @@ import (
 	"sync"
 	"time"
 
-	"github.com/opendatav/datav/backend/pkg/config"
+	"github.com/datav-io/datav/backend/pkg/config"
 )
 
 type proxyTransportCache struct {

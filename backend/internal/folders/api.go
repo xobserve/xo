@@ -2,22 +2,24 @@ package folders
 
 import (
 	// "fmt"
-	"github.com/opendatav/datav/backend/internal/dashboard"
-	"github.com/opendatav/datav/backend/internal/acl"
-	"github.com/opendatav/datav/backend/pkg/utils"
 	"database/sql"
 	"strings"
 
-	"github.com/opendatav/datav/backend/internal/session"
-	"github.com/opendatav/datav/backend/pkg/common"
-	"github.com/opendatav/datav/backend/pkg/db"
-	"github.com/opendatav/datav/backend/pkg/i18n"
-	"github.com/opendatav/datav/backend/pkg/models"
-	"github.com/gin-gonic/gin"
-	"time"
+	"github.com/datav-io/datav/backend/internal/acl"
+	"github.com/datav-io/datav/backend/internal/dashboard"
+	"github.com/datav-io/datav/backend/pkg/utils"
+
 	"strconv"
+	"time"
+
+	"github.com/datav-io/datav/backend/internal/session"
+	"github.com/datav-io/datav/backend/pkg/common"
+	"github.com/datav-io/datav/backend/pkg/db"
+	"github.com/datav-io/datav/backend/pkg/i18n"
+	"github.com/datav-io/datav/backend/pkg/models"
+	"github.com/gin-gonic/gin"
 )
- 
+
 func CheckExistByName(c *gin.Context) {
 	name := c.Query("name")
 
@@ -51,8 +53,8 @@ func GetByUid(c *gin.Context) {
 	}
 
 	folder := &models.Folder{}
-	err := db.SQL.QueryRow("SELECT id,title,created_by,created,updated from folder WHERE uid=?", 
-		uid).Scan(&folder.Id,&folder.Title,&folder.CreatedBy,&folder.Created,&folder.Updated)
+	err := db.SQL.QueryRow("SELECT id,title,created_by,created,updated from folder WHERE uid=?",
+		uid).Scan(&folder.Id, &folder.Title, &folder.CreatedBy, &folder.Created, &folder.Updated)
 	if err != nil {
 		if err != sql.ErrNoRows {
 			c.JSON(500, common.ResponseInternalError())
@@ -60,7 +62,7 @@ func GetByUid(c *gin.Context) {
 		}
 	}
 
-	folder.Uid = uid 
+	folder.Uid = uid
 	folder.UpdatSlug()
 	folder.UpdateUrl()
 
@@ -84,30 +86,29 @@ func NewFolder(c *gin.Context) {
 
 	if !acl.IsGlobalAdmin(c) {
 		c.JSON(403, common.ResponseI18nError(i18n.NoPermission))
-		return 
+		return
 	}
 
 	userId := session.CurrentUserId(c)
 
-	res,err := db.SQL.Exec("INSERT INTO folder (parent_id,title,uid,owned_by,created_by,created,updated) VALUES (?,?,?,?,?,?,?)",
-		folder.ParentId, folder.Title, folder.Uid,models.GlobalTeamId, userId, folder.Created, folder.Updated)
+	res, err := db.SQL.Exec("INSERT INTO folder (parent_id,title,uid,owned_by,created_by,created,updated) VALUES (?,?,?,?,?,?,?)",
+		folder.ParentId, folder.Title, folder.Uid, models.GlobalTeamId, userId, folder.Created, folder.Updated)
 	if err != nil {
 		if db.IsErrUniqueConstraint(err) {
 			c.JSON(409, common.ResponseI18nError(i18n.TargetAlreadyExist))
 		} else {
-			logger.Error("add folder error","error",err)
+			logger.Error("add folder error", "error", err)
 			c.JSON(500, common.ResponseInternalError())
 		}
-		return 
+		return
 	}
 
 	id, _ := res.LastInsertId()
-	c.JSON(200,common.ResponseSuccess(utils.Map{
-		"id": id,
+	c.JSON(200, common.ResponseSuccess(utils.Map{
+		"id":  id,
 		"url": folder.Url,
 	}))
 }
-
 
 func UpdateFolder(c *gin.Context) {
 	folder := &models.Folder{}
@@ -125,60 +126,60 @@ func UpdateFolder(c *gin.Context) {
 
 	if !acl.IsGlobalAdmin(c) {
 		c.JSON(403, common.ResponseI18nError(i18n.NoPermission))
-		return 
+		return
 	}
 
-	_,err := db.SQL.Exec("UPDATE folder SET title=?,updated=? WHERE id=?",folder.Title,time.Now(),folder.Id)
+	_, err := db.SQL.Exec("UPDATE folder SET title=?,updated=? WHERE id=?", folder.Title, time.Now(), folder.Id)
 	if err != nil {
 		c.JSON(500, common.ResponseInternalError())
-		return 
+		return
 	}
 }
 
 func DeleteFolder(c *gin.Context) {
-	id,_ := strconv.ParseInt(c.Param("id"),10,64)
+	id, _ := strconv.ParseInt(c.Param("id"), 10, 64)
 	if id == 0 {
 		c.JSON(400, common.ResponseI18nError(i18n.BadRequestData))
-		return 
+		return
 	}
 
 	if !acl.IsGlobalAdmin(c) {
 		c.JSON(403, common.ResponseI18nError(i18n.NoPermission))
-		return 
+		return
 	}
 
-	_, err := db.SQL.Exec("DELETE FROM folder WHERE id=?",id)
+	_, err := db.SQL.Exec("DELETE FROM folder WHERE id=?", id)
 	if err != nil {
-		logger.Error("delete folder error","error",err)
+		logger.Error("delete folder error", "error", err)
 		c.JSON(500, common.ResponseInternalError())
-		return 
-	}
-	
-	// get dashboards in folder
-	rows, err := db.SQL.Query("SELECT id FROM dashboard WHERE folder_id=?",id)
-	if err != nil && err != sql.ErrNoRows {
-		logger.Error("select dashboard id error","error",err)
-		c.JSON(500, common.ResponseInternalError())
-		return 
+		return
 	}
 
-	dashIds := make([]int64,0)
+	// get dashboards in folder
+	rows, err := db.SQL.Query("SELECT id FROM dashboard WHERE folder_id=?", id)
+	if err != nil && err != sql.ErrNoRows {
+		logger.Error("select dashboard id error", "error", err)
+		c.JSON(500, common.ResponseInternalError())
+		return
+	}
+
+	dashIds := make([]int64, 0)
 	for rows.Next() {
 		var dashId int64
 		err := rows.Scan(&dashId)
 		if err != nil {
-			logger.Error("select dashboard id scan error","error",err)
-			continue 
+			logger.Error("select dashboard id scan error", "error", err)
+			continue
 		}
-		
-		dashIds = append(dashIds,dashId)
+
+		dashIds = append(dashIds, dashId)
 	}
 
-	for _,dashId := range dashIds {
+	for _, dashId := range dashIds {
 		err := dashboard.DeleteDashboard(dashId)
 		if err != nil {
-			logger.Error("delete dashboard error","error",err,"id",dashId)
-			continue 
+			logger.Error("delete dashboard error", "error", err, "id", dashId)
+			continue
 		}
 	}
 }

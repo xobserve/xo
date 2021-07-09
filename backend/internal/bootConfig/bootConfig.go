@@ -3,17 +3,17 @@ package bootConfig
 import (
 	"database/sql"
 
-	"github.com/opendatav/datav/backend/pkg/config"
+	"github.com/datav-io/datav/backend/pkg/config"
 
-	"github.com/opendatav/datav/backend/internal/datasources"
-	"github.com/opendatav/datav/backend/internal/session"
-	"github.com/opendatav/datav/backend/internal/sidemenu"
-	"github.com/opendatav/datav/backend/pkg/models"
+	"github.com/datav-io/datav/backend/internal/datasources"
+	"github.com/datav-io/datav/backend/internal/session"
+	"github.com/datav-io/datav/backend/internal/sidemenu"
+	"github.com/datav-io/datav/backend/pkg/models"
 
 	// "fmt"
-	"github.com/opendatav/datav/backend/internal/plugins"
-	"github.com/opendatav/datav/backend/pkg/common"
-	"github.com/opendatav/datav/backend/pkg/log"
+	"github.com/datav-io/datav/backend/internal/plugins"
+	"github.com/datav-io/datav/backend/pkg/common"
+	"github.com/datav-io/datav/backend/pkg/log"
 	"github.com/gin-gonic/gin"
 
 	"strconv"

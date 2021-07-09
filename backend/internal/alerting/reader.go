@@ -3,9 +3,9 @@ package alerting
 import (
 	"sync"
 
-	"github.com/opendatav/datav/backend/internal/cache"
+	"github.com/datav-io/datav/backend/internal/cache"
 
-	"github.com/opendatav/datav/backend/pkg/models"
+	"github.com/datav-io/datav/backend/pkg/models"
 )
 
 type ruleReader interface {

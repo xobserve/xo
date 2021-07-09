@@ -1,7 +1,7 @@
 package models
 
 import (
-	"github.com/opendatav/datav/backend/pkg/utils/simplejson"
+	"github.com/datav-io/datav/backend/pkg/utils/simplejson"
 )
 
 type Annotation struct {

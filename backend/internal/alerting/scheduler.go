@@ -4,8 +4,8 @@ import (
 	"math"
 	"time"
 
-	"github.com/opendatav/datav/backend/pkg/config"
-	"github.com/opendatav/datav/backend/pkg/models"
+	"github.com/datav-io/datav/backend/pkg/config"
+	"github.com/datav-io/datav/backend/pkg/models"
 )
 
 type scheduler interface {

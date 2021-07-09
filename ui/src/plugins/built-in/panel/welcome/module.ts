@@ -31,6 +31,6 @@ export const plugin = new PanelPlugin<WelcomeOptions>(WelcomeBanner).setNoPaddin
         path: 'githubAddr',
         name: 'Github addr',
         category: ['Options'],
-        defaultValue: "https://github.com/opendatav/datav",
+        defaultValue: "https://github.com/datav-io/datav",
       })
   });

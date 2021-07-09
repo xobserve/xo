@@ -1,7 +1,7 @@
 package search
 
 import (
-	"github.com/opendatav/datav/backend/pkg/log"
+	"github.com/datav-io/datav/backend/pkg/log"
 )
 
 var logger = log.RootLogger.New("logger", "search")
@@ -10,9 +10,9 @@ const (
 	Search_Dash_By_Title = "1"
 
 	FoldersLayout = "folders"
-	ListLayout = "list"
-	NullLayout = ""
+	ListLayout    = "list"
+	NullLayout    = ""
 
-	TypeFolder = "dash-folder"
+	TypeFolder    = "dash-folder"
 	TypeDashboard = "dash-db"
 )
