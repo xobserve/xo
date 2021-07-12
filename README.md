@@ -47,6 +47,11 @@ Access http://localhost:3000/docs-cn/installation to see the results
 
 Open http://localhost:3001, then login with admin/admin
 
+## Visitors Count
+
+<img align="left" src = "https://profile-counter.glitch.me/datav/count.svg" alt ="Loading">
+
+
 ## Screenshots
 ![screenshot1](ui/public/img/screenshot1.jpg)
 ![screenshot2](ui/public/img/screenshot2.jpg)
