@@ -1,5 +1,5 @@
 # Datav
-The open-source platform for data monitoring and observability. 
+The open-source platform for data visualization and observability. 
 
 Datav is forked from **@grafana**, but changed a lot, e.g :
 - remove angular dependency, using pure react
