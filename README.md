@@ -6,7 +6,7 @@
 
 <p align="center">
     <img alt="License" src="https://img.shields.io/badge/license-MIT-brightgreen"> </a>
-    <img alt="Downloads" src="https://img.shields.io/docker/pulls/datav-io/datav?label=Downloads"> </a>
+    <img alt="Downloads" src="https://img.shields.io/docker/pulls/datavio/datav?label=Downloads"> </a>
     <img alt="GitHub issues" src="https://img.shields.io/github/issues/datav-io/datav"> </a>
 </p>
 
