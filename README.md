@@ -22,9 +22,9 @@ Datav is a modern apm solution for enterprises:
 
 👉 Unified UI for traces,metrics,logs, so you can see them in the same place, solve problems much more quickly and very convenient for ops
 
-👉 Datav is built in GO、RUST and Clickhouse, so it's lightning fast This will help you save huge amount of money
+👉 Datav is built in GO、RUST and Clickhouse, so it's lightning fast. This will help you save huge amount of money
 
-## Key Features 
+## Some Features 
 - **Traces,Metrics,Logs** native support for @open-telemetry
 - **Plugins** grafana like plugins,build your own charts
 - **Dynamic Dashboards** grafana like dashboard
