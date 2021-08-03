@@ -1,23 +1,47 @@
-# DataV
+<p align="center">
+  <img src="https://datav.io/img/logo/logo-xs.png" alt="datav-logo" width="240" />
 
-DataV是一个类似Grafana的数据查询、展示、告警平台，支持Metrics、Logs、Traces等常用数据形式。
+  <p align="center">Monitor your applications and troubleshoot problems in your deployed applications, an open-source alternative to DataDog, New Relic, etc.</p>
+</p>
 
-## 设计目标
-与Grafana的大而全相反，DataV的设计目标是小而美。我们支持90%的常用使用场景，在这些场景内，DataV能保证自身足够的简单和易用，插件开发也会非常简单。
+<p align="center">
+    <img alt="License" src="https://img.shields.io/badge/license-MIT-brightgreen"> </a>
+    <img alt="Downloads" src="https://img.shields.io/docker/pulls/datav-io/datav?label=Downloads"> </a>
+    <img alt="GitHub issues" src="https://img.shields.io/github/issues/datav-io/datav"> </a>
+</p>
 
-如果是另外10%的使用场景，用户可以自己写数据拉取服务，DataV会通过HTTP的方式来拉取这些数据进行展示。
+<h3 align="center">
+  <a href="https://datav.io/docs"><b>Documentation</b></a> &bull;
+  <a href="https://github.com/datav-io/datav/blob/main/README_CN.md"><b>ReadMe in Chinese</b></a> &bull;
+</h3>
+
+Datav is a modern apm solution for enterprises:
+👉 100% open source, keep your source code and data in your own infra
+
+👉 Grafana like ui, more beautiful and powerful, seamlessly integrated with APM features.
+
+👉 Unified UI for traces,metrics,logs, so you can see them in the same place, solve problems much more quickly and very convenient for ops
+
+👉 Datav is built in GO、RUST and Clickhouse, so it's lightning fast This will help you save huge amount of money
+
+## Key Features 
+- **Traces,Metrics,Logs** native support for @open-telemetry
+- **Plugins** grafana like plugins,build your own charts
+- **Dynamic Dashboards** grafana like dashboard
+- **Interactive Panel** You can set click events for panels, like: go to a page, set variable etc
+- **Beautifult Large Screen** Customize your own big data large screen,it's very very cool
+- **Alerting** Visually define alert rules for your most important metrics
+- **Teams and ACL** Besides global dashboards, you can create teams, manage and share dashboards in your team
+- **Custom sidemenu**  Link dashboards to sidemenu items, build your own sidemenu and websites.
 
 
-## 功能特性
 
-| 特性  |  描述  |
-|:------|:------------:|
-| **插件化** | 高性能，可扩展，美观，可配置 | 
-| **动态仪表盘** | 使用丰富的配置项来打造强大的动态图表 | 
-| **可交互图表** | 可以为图表设置鼠标点击事件，来自定义图表交互行为 |
-| **数据大屏** | 利用装饰性组件，实现多样化的数据大屏酷炫效果 | 
-| **告警** | 为指标性数据设置告警阈值，可以精确到曲线级别(Grafana是图表级别) |
-| **模版变量** | 本地变量类似grafana，全局变量是多个仪表盘可以共享的变量 | 
-| **权限控制** | 企业级的权限控制，可以实现用户、团队、仪表盘三个维度的同时控制 | 
-| **自定义侧边菜单=** |  通过链接仪表盘到侧边菜单项，你可以实现自定义的二级菜单，打造团队的个性化菜单导航 | 
+## Visitors Count
 
+<img align="left" src = "https://profile-counter.glitch.me/datav/count.svg" alt ="Loading">
+
+
+## Screenshots
+![screenshot1](ui/public/img/screenshot1.jpg)
+![screenshot2](ui/public/img/screenshot2.jpg)
+![screenshot3](ui/public/img/screenshot3.jpg)
