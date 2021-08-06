@@ -35,6 +35,8 @@ Datav is a modern apm solution for enterprises:
 - **Custom sidemenu**  Link dashboards to sidemenu items, build your own sidemenu and websites.
 
 
+## Architecture
+![architecture](ui/public/img/architecture.png)
 
 ## Visitors Count
 
