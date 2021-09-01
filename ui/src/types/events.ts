@@ -1,9 +1,8 @@
 import React from 'react'
-import { AppEvents, TimeRange } from 'src/packages/datav-core/src';
+import { eventFactory, TimeRange } from 'src/packages/datav-core/src';
 import { DashboardModel } from 'src/views/dashboard/model/DashboardModel';
 // import appEvents from 'src/core/library/utils/app_events';
 
-const eventFactory = AppEvents.eventFactory
 /**
  * Event Payloads
  */

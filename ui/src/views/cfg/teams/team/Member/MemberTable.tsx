@@ -2,16 +2,16 @@ import React, { useState } from 'react'
 import { Table, Space, Modal,notification, Tag} from 'antd'
 import { getBackendSrv } from 'src/core/services/backend';
 import { TeamMember, isAdmin } from 'src/types';
-import { ConfirmModal } from 'src/packages/datav-core/src';
+import { ConfirmModal } from 'src/packages/datav-core/src/ui';
 import appEvents from 'src/core/library/utils/app_events';
 import EditMember from './EditMember'
 import { getState } from 'src/store/store';
 import { useIntl,FormattedMessage } from 'react-intl';
 import localeData from 'src/core/library/locale'
 interface Props {
-    teamId: number
+    teamId: string
     members: TeamMember[]
-    teamCreatedBy : number
+    teamCreatedBy : string
     teamMemberOfCurrentUser: TeamMember
 }
 
@@ -80,7 +80,7 @@ const MemberTable = (props: Props) => {
                 isOpen={delModalVisible}
                 title={localeData[getState().application.locale]['team.deleteMember']}
                 body={<FormattedMessage id="team.deleteConfirmBody"/>}
-                confirmText={<FormattedMessage id="common.delete"/>}
+                confirmText="Delete"
                 onConfirm={() => deleteMember()}
                 onDismiss={() =>setDelModalVisible(false)}
             />

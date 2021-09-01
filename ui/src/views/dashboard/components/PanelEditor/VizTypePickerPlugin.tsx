@@ -1,7 +1,7 @@
 import React from 'react';
 
-import { DatavTheme, PanelPluginMeta, PluginState } from 'src/packages/datav-core/src';
-import { Badge, BadgeProps, styleMixins, stylesFactory, useTheme } from 'src/packages/datav-core/src';
+import { GrafanaTheme, PanelPluginMeta, PluginState } from 'src/packages/datav-core/src';
+import { Badge, BadgeProps, styleMixins, stylesFactory, useTheme } from 'src/packages/datav-core/src/ui';
 import { css, cx } from 'emotion';
 
 interface Props {
@@ -40,7 +40,7 @@ const VizTypePickerPlugin: React.FC<Props> = ({ isCurrent, plugin, onClick, disa
 
 VizTypePickerPlugin.displayName = 'VizTypePickerPlugin';
 
-const getStyles = stylesFactory((theme: DatavTheme) => {
+const getStyles = stylesFactory((theme: GrafanaTheme) => {
   return {
     wrapper: css`
       position: relative;

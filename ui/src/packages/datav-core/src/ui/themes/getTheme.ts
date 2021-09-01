@@ -1,14 +1,23 @@
-import darkTheme from './dark';
-import lightTheme from './light';
-import { DatavTheme,ThemeType} from '../../data';
+import { createTheme, GrafanaTheme } from '../../data';
 
-let themeMock: ((name?: string) => DatavTheme) | null;
+let themeMock: ((name?: string) => GrafanaTheme) | null;
 
-export const getTheme = (name?: string) => {
-  return (themeMock && themeMock(name)) || (name === 'light' ? lightTheme : darkTheme);
-}
+/** @public */
+export const getTheme = (mode: 'dark' | 'light' = 'dark') => {
+  if (themeMock) {
+    alert(1)
+    return themeMock(mode);
+  }
 
-export const mockTheme = (mock: (name?: string) => DatavTheme) => {
+  return createTheme({ colors: { mode } }).v1;
+};
+
+export const getTheme2 = (mode: 'dark' | 'light' = 'dark') => {
+  return createTheme({ colors: { mode } });
+};
+
+/** @public */
+export const mockTheme = (mock: (name?: string) => GrafanaTheme) => {
   themeMock = mock;
   return () => {
     themeMock = null;

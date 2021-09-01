@@ -4,7 +4,7 @@ export interface MenuItem {
     id?: string;
     parentID?: string;
     url?: string; // when url set to null, children will have their own direct url to accsess
-    title?: any;
+    text: string;
     subTitle?: any;
     icon?: string;
     img?: string;

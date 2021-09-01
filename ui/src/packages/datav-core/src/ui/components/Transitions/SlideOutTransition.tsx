@@ -1,8 +1,9 @@
 import React from 'react';
-import { css } from 'emotion';
+import { css } from '@emotion/css';
 import { CSSTransition } from 'react-transition-group';
+import { stylesFactory } from '../../themes';
 
-const getStyles = (duration: number, measurement: 'width' | 'height', size: number) => {
+const getStyles = stylesFactory((duration: number, measurement: 'width' | 'height', size: number) => {
   return {
     enter: css`
       label: enter;
@@ -27,7 +28,7 @@ const getStyles = (duration: number, measurement: 'width' | 'height', size: numb
       transition: opacity ${duration}ms ease-out, ${measurement} ${duration}ms ease-out;
     `,
   };
-};
+});
 
 type Props = {
   children: React.ReactNode;

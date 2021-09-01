@@ -5,20 +5,20 @@ import {
   DynamicConfigValue,
   FieldConfigOptionsRegistry,
   FieldConfigProperty,
-  DatavTheme,
+  GrafanaTheme,
   VariableSuggestionsScope,
 } from 'src/packages/datav-core/src';
 import {
-  FormField as Field,
+  Field,
   fieldMatchersUI,
   HorizontalGroup,
   Icon,
   IconButton,
-  FormLabel as Label,
+  Label,
   stylesFactory,
   useTheme,
   ValuePicker,
-} from 'src/packages/datav-core/src';
+} from 'src/packages/datav-core/src/ui';
 import { DynamicConfigValueEditor } from './DynamicConfigValueEditor';
 
 import { getDataLinksVariableSuggestions } from 'src/core/services/link';
@@ -181,7 +181,7 @@ export const OverrideEditor: React.FC<OverrideEditorProps> = ({
   );
 };
 
-const getStyles = stylesFactory((theme: DatavTheme) => {
+const getStyles = stylesFactory((theme: GrafanaTheme) => {
   return {
     matcherUi: css`
       padding: ${theme.spacing.sm};

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { QueryEditorProps, FieldType, DataFrameDTO, toDataFrameDTO, MutableDataFrame } from 'src/packages/datav-core/src';
-import { Select, Input, useTheme } from 'src/packages/datav-core/src';
+import { Select, Input, useTheme } from 'src/packages/datav-core/src/ui';
 import { DataSource } from './DataSource';
 import { withHoverActions } from './withHoverActions';
 import { NullableString, DataFrameViewModel } from './types';

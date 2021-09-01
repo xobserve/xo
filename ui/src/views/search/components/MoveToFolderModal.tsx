@@ -1,7 +1,7 @@
 import React, { FC, useState } from 'react';
 import { css } from 'emotion';
-import { Button, HorizontalGroup, Modal, stylesFactory, useTheme } from 'src/packages/datav-core/src';
-import {  DatavTheme } from 'src/packages/datav-core/src';
+import { Button, HorizontalGroup, Modal, stylesFactory, useTheme } from 'src/packages/datav-core/src/ui';
+import {  GrafanaTheme } from 'src/packages/datav-core/src';
 import { FolderInfo } from 'src/types';
 import { FolderPicker } from 'src/views/components/Pickers/FolderPicker';
 
@@ -87,7 +87,7 @@ export const MoveToFolderModal: FC<Props> = ({ results, onMoveItems, isOpen, onD
   ) : null;
 };
 
-const getStyles = stylesFactory((theme: DatavTheme) => {
+const getStyles = stylesFactory((theme: GrafanaTheme) => {
   return {
     modal: css`
       width: 500px;

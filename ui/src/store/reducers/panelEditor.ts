@@ -1,4 +1,4 @@
-import { PanelData, DefaultTimeRange, LoadingState } from 'src/packages/datav-core/src'
+import { PanelData, getDefaultTimeRange, LoadingState } from 'src/packages/datav-core/src'
 import { PanelModel } from 'src/views/dashboard/model'
 import { createAction } from '@reduxjs/toolkit';
 
@@ -21,7 +21,7 @@ export const initialState = (): PanelEditorState => {
         data: {
             state: LoadingState.NotStarted,
             series: [],
-            timeRange: DefaultTimeRange,
+            timeRange: getDefaultTimeRange(),
         },
         initDone: false,
         shouldDiscardChanges: false,

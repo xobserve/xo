@@ -3,7 +3,8 @@ import { DashboardModel } from '../../model';
 import { notification, Tooltip } from 'antd';
 import TeamPicker from 'src/views/components/Pickers/TeamPicker'
 import { getBackendSrv } from 'src/core/services/backend';
-import { ConfirmModal,Button, localeData, currentLang} from 'src/packages/datav-core/src';
+import {localeData, currentLang} from 'src/packages/datav-core/src';
+import { ConfirmModal,Button} from 'src/packages/datav-core/src/ui';
 import AddExtraPermission from './components/AddExtraPermission'
 import UserPermissions from './components/UserPermissions'
 import { InfoCircleOutlined } from '@ant-design/icons';
@@ -124,7 +125,7 @@ const Permission = (props: Props) => {
                             <div className="ub-mt4" style={{display:'flex',flexDirection: 'row',justifyContent: 'space-between'}}>
                                 <div>
                                     <h3 style={{display: 'inline-block'}} className="dashboard-settings__header ub-mr1"><FormattedMessage id="dashboard.userPermissions"/></h3>
-                                    <Tooltip title={<FormattedMessage id="dashboard.userPermissionTooltip"/>}><InfoCircleOutlined /></Tooltip>
+                                    <Tooltip title={<FormattedMessage id="dashboard.userPermissionTooltip"/>}><InfoCircleOutlined translate/></Tooltip>
                                 </div>
                                 <Button className="ub-ml2"  variant="secondary"   onClick={() => setAddPermissionVisible(true)} ><FormattedMessage id="dashboard.addUserPermission"/></Button>
                             </div>
@@ -140,7 +141,7 @@ const Permission = (props: Props) => {
                 isOpen={confirmVisible}
                 title= {localeData[currentLang]["dashboard.changeOwner"]}
                 body={<FormattedMessage id="dashboard.changeOwnerConfirm"/>}
-                confirmText={<FormattedMessage id="common.change"/>}
+                confirmText="Change"
                 onConfirm={() => updateOwnedBy()}
                 onDismiss={() => setConfirmVisible(false)}
             />

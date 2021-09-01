@@ -1,10 +1,10 @@
 import React, { FC, useCallback, useMemo, useState } from 'react';
-import { Field, DatavTheme, SelectableValue } from '../../../data';
-import { css, cx } from 'emotion';
+import { Field, GrafanaTheme, SelectableValue } from '../../../data';
+import { css, cx } from '@emotion/css';
 
 import { TableStyles } from './styles';
 import { stylesFactory, useStyles } from '../../themes';
-import { Button, ClickOutsideWrapper, HorizontalGroup, FormLabel as Label, VerticalGroup } from '..';
+import { Button, ClickOutsideWrapper, HorizontalGroup, Label, VerticalGroup } from '..';
 import { FilterList } from './FilterList';
 import { calculateUniqueFieldValues, getFilteredOptions, valuesToOptions } from './utils';
 
@@ -64,7 +64,7 @@ export const FilterPopup: FC<Props> = ({ column: { preFilteredRows, filterValue,
             </HorizontalGroup>
             {clearFilterVisible && (
               <HorizontalGroup>
-                <Button variant="link" size="sm" onClick={onClearFilter}>
+                <Button fill="text" size="sm" onClick={onClearFilter}>
                   Clear filter
                 </Button>
               </HorizontalGroup>
@@ -76,7 +76,7 @@ export const FilterPopup: FC<Props> = ({ column: { preFilteredRows, filterValue,
   );
 };
 
-const getStyles = stylesFactory((theme: DatavTheme) => ({
+const getStyles = stylesFactory((theme: GrafanaTheme) => ({
   filterContainer: css`
     label: filterContainer;
     width: 100%;

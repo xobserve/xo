@@ -1,29 +1,58 @@
 import React from 'react';
-import { Icon, getSvgSize } from '../Icon/Icon';
-import { IconName, IconSize, IconType } from '../..';
-import { cx } from 'emotion';
+import { Icon1 as  Icon, getSvgSize } from '../Icon1/Icon';
+import { IconName, IconSize, IconType } from '../../types/icon';
+import { stylesFactory } from '../../themes/stylesFactory';
+import { css, cx } from '@emotion/css';
+import { useTheme2 } from '../../themes/ThemeContext';
+import { GrafanaTheme2, colorManipulator } from '../../../data';
 import { Tooltip } from '../Tooltip/Tooltip';
 import { TooltipPlacement } from '../Tooltip/PopoverController';
-import './IconButton.less'
+import { getFocusStyles, getMouseFocusStyles } from '../../themes/mixins';
 
-export interface IconButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
+export type IconButtonVariant = 'primary' | 'secondary' | 'destructive';
+
+export interface Props extends React.ButtonHTMLAttributes<HTMLButtonElement> {
+  /** Name of the icon **/
   name: IconName;
+  /** Icon size */
   size?: IconSize;
-  /** Need this to change hover effect based on what surface it is on */
+  /** @deprecated */
   surface?: SurfaceType;
+  /** Type od the icon - mono or default */
   iconType?: IconType;
+  /** Tooltip content to display on hover */
   tooltip?: string;
+  /** Position of the tooltip */
   tooltipPlacement?: TooltipPlacement;
+  /** Variant to change the color of the Icon */
+  variant?: IconButtonVariant;
+  /** Text avilable ony for screenscreen readers. Will use tooltip text as fallback. */
+  ariaLabel?: string;
 }
 
 type SurfaceType = 'dashboard' | 'panel' | 'header';
 
-export const IconButton = React.forwardRef<HTMLButtonElement, IconButtonProps>(
-  ({ name, size = 'md', surface = 'panel', iconType, tooltip, tooltipPlacement, className, ...restProps }, ref) => {
-    const pixelSize = getSvgSize(size);
+export const IconButton = React.forwardRef<HTMLButtonElement, Props>(
+  (
+    {
+      name,
+      size = 'md',
+      iconType,
+      tooltip,
+      tooltipPlacement,
+      ariaLabel,
+      className,
+      variant = 'secondary',
+      ...restProps
+    },
+    ref
+  ) => {
+    const theme = useTheme2();
+    const styles = getStyles(theme, size, variant);
+
     const button = (
-      <button ref={ref} {...restProps} className={cx('datav-icon-button', className)} style={{width:`${pixelSize}px`,height:`${pixelSize}px`}}>
-        <Icon name={name} size={size} className={'datav-icon-button-icon'} type={iconType} />
+      <button ref={ref} aria-label={ariaLabel || tooltip || ''} {...restProps} className={cx(styles.button, className)}>
+        <Icon name={name} size={size} className={styles.icon} type={iconType} />
       </button>
     );
 
@@ -41,3 +70,90 @@ export const IconButton = React.forwardRef<HTMLButtonElement, IconButtonProps>(
 
 IconButton.displayName = 'IconButton';
 
+const getStyles = stylesFactory((theme: GrafanaTheme2, size: IconSize, variant: IconButtonVariant) => {
+  const pixelSize = getSvgSize(size);
+  const hoverSize = Math.max(pixelSize / 3, 8);
+  let iconColor = theme.colors.text.primary;
+
+  if (variant === 'primary') {
+    iconColor = theme.colors.primary.text;
+  } else if (variant === 'destructive') {
+    iconColor = theme.colors.error.text;
+  }
+
+  return {
+    button: css`
+      width: ${pixelSize}px;
+      height: ${pixelSize}px;
+      background: transparent;
+      border: none;
+      color: ${iconColor};
+      padding: 0;
+      margin: 0;
+      outline: none;
+      box-shadow: none;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      border-radius: ${theme.shape.borderRadius()};
+      z-index: 0;
+      margin-right: ${theme.spacing(0.5)};
+
+      &[disabled],
+      &:disabled {
+        cursor: not-allowed;
+        color: ${theme.colors.action.disabledText};
+        opacity: 0.65;
+        box-shadow: none;
+      }
+
+      &:before {
+        content: '';
+        display: block;
+        opacity: 1;
+        position: absolute;
+        transition-duration: 0.2s;
+        transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+        z-index: -1;
+        bottom: -${hoverSize}px;
+        left: -${hoverSize}px;
+        right: -${hoverSize}px;
+        top: -${hoverSize}px;
+        background: none;
+        border-radius: 50%;
+        box-sizing: border-box;
+        transform: scale(0);
+        transition-property: transform, opacity;
+      }
+
+      &:focus,
+      &:focus-visible {
+        ${getFocusStyles(theme)}
+      }
+
+      &:focus:not(:focus-visible) {
+        ${getMouseFocusStyles(theme)}
+      }
+
+      &:hover {
+        color: ${iconColor};
+
+        &:before {
+          background-color: ${variant === 'secondary'
+            ? theme.colors.action.hover
+            : colorManipulator.alpha(iconColor, 0.12)};
+          border: none;
+          box-shadow: none;
+          opacity: 1;
+          transform: scale(0.8);
+        }
+      }
+    `,
+    icon: css`
+      margin-bottom: 0;
+      vertical-align: baseline;
+      display: flex;
+    `,
+  };
+});

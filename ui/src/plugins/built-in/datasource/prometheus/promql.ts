@@ -1,4 +1,4 @@
-import { CompletionItem } from 'src/packages/datav-core/src';
+import { CompletionItem } from 'src/packages/datav-core/src/ui';
 
 export const RATE_RANGES: CompletionItem[] = [
   { label: '$__interval', sortText: '$__interval' },

@@ -94,10 +94,10 @@ module.exports = override(
     jQuery:"jquery",
     "window.jQuery":"jquery"
   })),
-  addWebpackPlugin(
-    new MonacoWebpackPlugin({
-      // available options are documented at https://github.com/Microsoft/monaco-editor-webpack-plugin#options
-      languages: ['json','javascript']
-    })
-  )
+  // addWebpackPlugin(
+  //   new MonacoWebpackPlugin({
+  //     // available options are documented at https://github.com/Microsoft/monaco-editor-webpack-plugin#options
+  //     languages: ['json','javascript']
+  //   })
+  // )
 )

@@ -27,7 +27,7 @@ const DropDownChild: FC<Props> = props => {
     <li className={listItemClassName}>
       <Link to={child.url} className="sidemenu-dropdown-child" style={{padding: '8px 10px'}}>
         {/* {child.icon && <Icon name={child.icon as IconName} className={iconClassName} />} */}
-        <span className={iconClassName}>{child.title}</span>
+        <span className={iconClassName}>{child.text}</span>
       </Link>
     </li>
   );

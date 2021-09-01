@@ -30,7 +30,7 @@ import AccordianReferences from './AccordianReferences';
 import { autoColor, createStyle, Theme, useTheme } from '../../Theme';
 import { UIDivider } from '../../uiElementsContext';
 import { ubFlex, ubFlexAuto, ubItemsCenter, ubM0, ubMb1, ubMy1, ubTxRightAlign } from '../../uberUtilityStyles';
-import { TextArea } from 'src/packages/datav-core/src';
+import { TextArea } from 'src/packages/datav-core/src/ui';
 
 const getStyles = createStyle((theme: Theme) => {
   return {

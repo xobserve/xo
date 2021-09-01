@@ -5,21 +5,22 @@ import {
   FormAPI,
   HorizontalGroup,
   Input,
-  FormField as Field
-} from 'src/packages/datav-core/src';
+  Field,
+  FormsOnSubmit
+} from 'src/packages/datav-core/src/ui';
 import { FolderPicker } from 'src/views/components/Pickers/FolderPicker';
 import DataSourcePicker from 'src/views/components/Pickers/DataSourcePicker';
 import  {DashboardInputs,ImportDashboardDTO,DataSourceInput,DashboardInput}  from '../../model/import'
 import { validateTitle, validateUid } from '../../utils/validation';
 
-interface Props extends Omit<FormAPI<ImportDashboardDTO>, 'formState'> {
+interface Props extends Pick<FormAPI<ImportDashboardDTO>, 'register' | 'errors' | 'control' | 'getValues' | 'watch'> {
   uidReset: boolean;
   inputs: DashboardInputs;
   initialFolderId: number;
 
   onCancel: () => void;
   onUidReset: () => void;
-  onSubmit: any;
+  onSubmit: FormsOnSubmit<ImportDashboardDTO>;
 }
 
 export const ImportDashboardForm: FC<Props> = ({
@@ -33,6 +34,7 @@ export const ImportDashboardForm: FC<Props> = ({
   onUidReset,
   onCancel,
   onSubmit,
+  watch
 }) => {
   const [isSubmitted, setSubmitted] = useState(false);
 
@@ -42,7 +44,7 @@ export const ImportDashboardForm: FC<Props> = ({
   */
   useEffect(() => {
     if (isSubmitted && (errors.title || errors.uid)) {
-      onSubmit(getValues({ nest: true }), {} as any);
+      onSubmit(getValues(), {} as any);
     }
   }, [errors]);
 
@@ -51,21 +53,19 @@ export const ImportDashboardForm: FC<Props> = ({
       <h3>Options</h3>
       <Field label="Name" invalid={!!errors.title} error={errors.title && errors.title.message}>
         <Input
-          name="title"
           type="text"
-          ref={register({
+          {...register("title",{
             required: 'Name is required',
             validate: async (v: string) => await validateTitle(v, getValues().folder.id),
           })}
         />
       </Field>
       <Field label="Folder">
-        <InputControl
-          as={FolderPicker}
+      <InputControl
+          render={({ field: { ref, ...field } }) => (
+            <FolderPicker {...field} enableCreateNew initialFolderId={initialFolderId} />
+          )}
           name="folder"
-          useNewForms
-          enableCreateNew
-          initialFolderId={initialFolderId}
           control={control}
         />
       </Field>
@@ -80,13 +80,12 @@ export const ImportDashboardForm: FC<Props> = ({
         <>
           {!uidReset ? (
             <Input
-              name="uid"
               disabled
-              ref={register({ validate: async (v: string) => await validateUid(v)})}
+              {...register("uid",{ validate: async (v: string) => await validateUid(v)})}
               addonAfter={!uidReset && <Button onClick={onUidReset}>Change uid</Button>}
             />
           ) : (
-            <Input name="uid" ref={register({ required: true, validate: async (v: string) => await validateUid(v) })} />
+            <Input {...register('uid', { required: true, validate: async (v: string) => await validateUid(v) })} />
           )}
         </>
       </Field>
@@ -101,11 +100,15 @@ export const ImportDashboardForm: FC<Props> = ({
               error={errors.dataSources && errors.dataSources[index] && 'A data source is required'}
             >
               <InputControl
-                as={DataSourcePicker}
-                name={`${dataSourceOption}`}
-                datasources={input.options}
+                name={dataSourceOption as any}
+                render={({ field: { ref, ...field } }) => (
+                  <DataSourcePicker
+                    {...field}
+                    datasources={input.options}
+                    placeholder={input.info}
+                  />
+                )}
                 control={control}
-                placeholder={input.info}
                 rules={{ required: true }}
               />
             </Field>
@@ -121,7 +124,7 @@ export const ImportDashboardForm: FC<Props> = ({
               invalid={errors.constants && !!errors.constants[index]}
               key={constantIndex}
             >
-              <Input ref={register({ required: true })} name={`${constantIndex}`} defaultValue={input.value} />
+              <Input {...register(constantIndex as any,{ required: true })}  defaultValue={input.value} />
             </Field>
           );
         })}

@@ -1,7 +1,7 @@
 import _ from 'lodash';
 import React, { PureComponent } from 'react';
 import TimeSeries  from 'src/core/time_series';
-import { Icon ,CustomScrollbar} from 'src/packages/datav-core/src';
+import { Icon ,CustomScrollbar} from 'src/packages/datav-core/src/ui';
 import { LegendItem, LEGEND_STATS } from './LegendSeriesItem';
 
 type Sort = 'min' | 'max' | 'avg' | 'current' | 'total';

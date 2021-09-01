@@ -6,7 +6,7 @@ import localStore from 'src/core/library/utils/localStore';
 // Models
 import { DashboardModel } from './DashboardModel';
 import { PanelModel } from './PanelModel';
-import { TimeRange,rangeUtil,dateMath,theme, localeData, currentLang} from 'src/packages/datav-core/src';
+import { TimeRange,rangeUtil,dateMath, localeData, currentLang, getBootConfig} from 'src/packages/datav-core/src';
 import {appEvents} from 'src/core/library/utils/app_events'
 // Utils
 import { isString as _isString } from 'lodash';
@@ -18,6 +18,7 @@ import templateSrv from 'src/core/services/templating';
 import { LS_PANEL_COPY_KEY, PANEL_BORDER } from 'src/core/constants';
 import {CoreEvents} from 'src/types'
 
+const theme = getBootConfig().theme
 export const removePanel = (dashboard: DashboardModel, panel: PanelModel, ask: boolean) => {
   // confirm deletion
   if (ask !== false) {

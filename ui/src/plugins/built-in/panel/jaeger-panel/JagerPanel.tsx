@@ -1,10 +1,10 @@
 import React, { PureComponent } from 'react';
 import _ from 'lodash'
 import memoizeOne from 'memoize-one';
-import { PanelProps, withTheme, DatavTheme, TraceData, TraceSpanData, getTemplateSrv } from 'src/packages/datav-core/src';
+import { PanelProps, GrafanaTheme, getTemplateSrv } from 'src/packages/datav-core/src';
 import { SimpleOptions, Trace } from './types';
 import { css, cx } from 'emotion';
-import { stylesFactory } from 'src/packages/datav-core/src';
+import { stylesFactory ,withTheme,} from 'src/packages/datav-core/src/ui';
 import { getDatasourceSrv } from 'src/core/services/datasource';
 import { Form, Input, Button, Select, Row, Col, notification, Modal } from 'antd';
 import ScatterPlot from './ScatterPlot/ScatterPlot';
@@ -16,12 +16,12 @@ import { sortTraces, LEAST_SPANS, LONGEST_FIRST, MOST_RECENT, MOST_SPANS, SHORTE
 import { convTagsLogfmt } from './utils'
 import { addParamToUrl, getUrlParams, removeParamFromUrl } from 'src/core/library/utils/url';
 import { TraceView } from './TraceView/TraceView'
-
+import {TraceData, TraceSpanData,} from './TraceView/JaegerComponents/types/trace'
 const { Option } = Select;
 const maxTraceDuration = 814199
 
 interface Props extends PanelProps<SimpleOptions> {
-  theme: DatavTheme
+  theme: GrafanaTheme
 }
 
 interface State {

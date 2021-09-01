@@ -1,5 +1,6 @@
 import React, { FC, useState } from 'react';
-import { HorizontalGroup, LinkButton, Form ,FormField as Field,Input, config, getHistory,Button} from 'src/packages/datav-core/src';
+import { HorizontalGroup, LinkButton, Form , Field,Input, Button} from 'src/packages/datav-core/src/ui';
+import {  config, getHistory} from 'src/packages/datav-core/src';
 import { Modal, message } from 'antd';
 import { getBackendSrv } from 'src/core/services/backend';
 import globalEvents from 'src/views/App/globalEvents';
@@ -74,8 +75,7 @@ export const DashboardActions: FC<Props> = ({ folderId, isEditor, canEdit }) => 
                   error={errors.folderName && errors.folderName.message}
                 >
                   <Input
-                    name="folderName"
-                    ref={register({
+                    {...register("folderName",{
                       required: 'Folder name is required.',
                       validate: async v => await validateFolderName(v),
                     })}

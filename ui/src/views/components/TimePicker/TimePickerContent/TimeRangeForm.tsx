@@ -8,10 +8,9 @@ import {
   dateTimeFormat,
   dateTimeParse,
   rangeUtil,
-  RawTimeRange,
-  FormField
+  RawTimeRange
 } from 'src/packages/datav-core/src';
-
+import {Field} from 'src/packages/datav-core/src/ui';
 import { TimePickerCalendar } from './TimePickerCalendar';
 import { Button,Input } from 'antd';
 import { FormattedMessage } from 'react-intl';
@@ -79,22 +78,22 @@ export const TimeRangeForm: React.FC<Props> = props => {
 
   return (
     <>
-      <FormField label="From"  error={errorMessage}>
+      <Field label="From"  error={errorMessage}>
         <Input
           onClick={event => event.stopPropagation()}
           onFocus={onFocus}
           onChange={event => setFrom(eventToState(event, false, timeZone))}
           value={from.value}
         />
-      </FormField>
-      <FormField label="To"  error={errorMessage}>
+      </Field>
+      <Field label="To"  error={errorMessage}>
         <Input
           onClick={event => event.stopPropagation()}
           onFocus={onFocus}
           onChange={event => setTo(eventToState(event, true, timeZone))}
           value={to.value}
         />
-      </FormField>
+      </Field>
       <Button  type="primary" onClick={onApply}><FormattedMessage id="dashboard.applyTimeRange"/></Button>
 
       <TimePickerCalendar

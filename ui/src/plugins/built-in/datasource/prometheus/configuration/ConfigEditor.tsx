@@ -1,5 +1,5 @@
 import React from 'react';
-import { DataSourceHttpSettings } from 'src/packages/datav-core/src'; 
+import { DataSourceHttpSettings } from 'src/packages/datav-core/src/ui'; 
 import { DataSourcePluginOptionsEditorProps } from 'src/packages/datav-core/src';
 import { PromSettings } from './PromSettings';
 import { PromOptions } from '../types';

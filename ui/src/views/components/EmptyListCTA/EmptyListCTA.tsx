@@ -1,5 +1,5 @@
 import React, { MouseEvent, useContext } from 'react';
-import { CallToActionCard, LinkButton, ThemeContext, Icon, IconName } from 'src/packages/datav-core/src';
+import { CallToActionCard, LinkButton, ThemeContext, Icon, IconName } from 'src/packages/datav-core/src/ui';
 import { css } from 'emotion';
 import { Link } from 'react-router-dom';
 
@@ -92,7 +92,6 @@ const EmptyListCTA: React.FunctionComponent<Props> = ({
       message={title}
       footer={footer()}
       callToActionElement={ctaElement}
-      theme={theme}
     />
   );
 };

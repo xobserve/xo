@@ -1,7 +1,7 @@
 import React, { ChangeEvent, FormEvent, PureComponent } from 'react';
 import isEqual from 'lodash/isEqual';
 import { VariableType } from 'src/packages/datav-core/src';
-import { InlineFormLabel, LegacyForms } from 'src/packages/datav-core/src';
+import { InlineFormLabel, LegacyForms } from 'src/packages/datav-core/src/ui';
 
 import { variableAdapters } from '../adapters';
 import { NEW_VARIABLE_ID, toVariablePayload, VariableIdentifier } from '../state/types';
@@ -18,7 +18,7 @@ import { changeVariableProp, changeVariableType } from '../state/sharedReducer';
 import { Button, notification } from 'antd';
 import { FormattedMessage } from 'react-intl';
 
-const { LegacySwitch } = LegacyForms
+const { Switch } = LegacyForms
 export interface OwnProps {
   identifier: VariableIdentifier;
 }

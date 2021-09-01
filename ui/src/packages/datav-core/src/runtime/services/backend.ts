@@ -116,3 +116,20 @@ export interface FetchError<T extends FetchErrorDataProps = any> {
   isHandled?: boolean;
   config: BackendSrvRequest;
 }
+
+/**
+ * Response for fetch function in {@link BackendSrv}
+ *
+ * @public
+ */
+ export interface FetchResponse<T = any> {
+  data: T;
+  readonly status: number;
+  readonly statusText: string;
+  readonly ok: boolean;
+  readonly headers: Headers;
+  readonly redirected: boolean;
+  readonly type: ResponseType;
+  readonly url: string;
+  readonly config: BackendSrvRequest;
+}

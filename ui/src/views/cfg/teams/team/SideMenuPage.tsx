@@ -6,7 +6,7 @@ import Page from 'src/views/Layouts/Page/Page';
 import { getNavModel } from 'src/views/Layouts/Page/navModel'
 import { Team, SideMenu ,StoreState} from 'src/types';
 import { getBackendSrv } from 'src/core/services/backend';
-import { InlineFormLabel,IconName,LegacyForms} from 'src/packages/datav-core/src'
+import { InlineFormLabel,IconName,LegacyForms} from 'src/packages/datav-core/src/ui'
 import { Button, Input,notification, Tooltip, Tag } from 'antd';
 import EmptyListCTA from 'src/views/components/EmptyListCTA/EmptyListCTA';
 import MenuManage from './MenuManage/MenuManage'
@@ -14,8 +14,9 @@ import { Langs } from 'src/core/library/locale/types';
 import { connect } from 'react-redux';
 import { injectIntl, FormattedMessage, IntlShape } from 'react-intl';
 import {InfoCircleOutlined} from '@ant-design/icons'
+import { NavModel } from 'src/packages/datav-core/src';
 
-const {LegacySwitch} = LegacyForms
+const {Switch} = LegacyForms
 export interface Props { 
     routeID: string;
     parentRouteID: string;
@@ -115,7 +116,7 @@ export class TeamSettingPage extends PureComponent<Props & IntlProps, State> {
             desc: 'A menu customized for team',
             data: [{
                 id: 'home',
-                title: 'home',
+                text: 'home',
                 url: '/home',
                 icon: 'home-alt'
             }]
@@ -149,7 +150,7 @@ export class TeamSettingPage extends PureComponent<Props & IntlProps, State> {
         const { routeID, parentRouteID } = this.props
 
         const { sidemenu,team,hasFetched} = this.state
-        let navModel;
+        let navModel:NavModel;
         if (team) {
             navModel = _.cloneDeep(getNavModel(routeID, parentRouteID))
             const { node, main } = navModel
@@ -158,7 +159,7 @@ export class TeamSettingPage extends PureComponent<Props & IntlProps, State> {
                 n.url = n.url.replace(":id", team.id)
             })
 
-            navModel.main.title = navModel.main.title + ' / ' + team.name
+            navModel.main.text = navModel.main.text + ' / ' + team.name
         } else {
             navModel = _.cloneDeep(getNavModel(routeID, parentRouteID))
         }
@@ -190,8 +191,8 @@ export class TeamSettingPage extends PureComponent<Props & IntlProps, State> {
                                     />
                                 </div>
                                 <div className="gf-form max-width-30">
-                                <InlineFormLabel className="gf-form-label"><FormattedMessage id="common.public"/><Tooltip title={<FormattedMessage id="team.isPublicTips"/>}><InfoCircleOutlined /></Tooltip></InlineFormLabel>
-                                    <LegacySwitch label="" checked={sidemenu.isPublic} onChange={(e) => this.onChangePublic(e)}/>
+                                <InlineFormLabel className="gf-form-label"><FormattedMessage id="common.public"/><Tooltip title={<FormattedMessage id="team.isPublicTips"/>}><InfoCircleOutlined translate/></Tooltip></InlineFormLabel>
+                                    <Switch label="" checked={sidemenu.isPublic} onChange={(e) => this.onChangePublic(e)}/>
                                 </div>
                             </form>
                             <h3 className="page-sub-heading"><FormattedMessage id="team.menuManage"/></h3>

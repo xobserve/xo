@@ -1,7 +1,7 @@
 import React, { Dispatch, FC, FormEvent, SetStateAction } from 'react';
 import { css } from 'emotion';
-import { HorizontalGroup, RadioButtonGroup, stylesFactory, useTheme, Checkbox } from 'src/packages/datav-core/src';
-import { DatavTheme, SelectableValue } from 'src/packages/datav-core/src';
+import { HorizontalGroup, RadioButtonGroup, stylesFactory, useTheme, Checkbox } from 'src/packages/datav-core/src/ui';
+import { GrafanaTheme, SelectableValue } from 'src/packages/datav-core/src';
 import { TagFilter } from 'src/views/components/TagFilter/TagFilter';
 import { SearchSrv } from 'src/core/services/search';
 import { DashboardQuery, SearchLayout } from '../types';
@@ -53,7 +53,7 @@ export const ActionRow: FC<Props> = ({
       <HorizontalGroup spacing="md" width="auto">
         {showStarredFilter && (
           <div className={styles.checkboxWrapper}>
-            <Checkbox label={<FormattedMessage id="folder.filterStar"/>} onChange={onStarredFilterChange} />
+            <Checkbox label={<FormattedMessage id="folder.filterStar"/> as any} onChange={onStarredFilterChange} />
           </div>
         )}
 
@@ -67,7 +67,7 @@ export const ActionRow: FC<Props> = ({
 
 ActionRow.displayName = 'ActionRow';
 
-const getStyles = stylesFactory((theme: DatavTheme) => {
+const getStyles = stylesFactory((theme: GrafanaTheme) => {
   return {
     actionRow: css`
       display: none;

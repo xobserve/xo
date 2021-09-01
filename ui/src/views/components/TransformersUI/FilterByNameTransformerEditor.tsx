@@ -3,13 +3,13 @@ import {
   DataTransformerID,
   KeyValue,
   standardTransformers,
-  TransformerRegistyItem,
+  TransformerRegistryItem,
   TransformerUIProps,
   getFieldDisplayName,
   stringToJsRegex,
 } from 'src/packages/datav-core/src';
-import { FormField as Field, Input, FilterPill, HorizontalGroup } from 'src/packages/datav-core/src';
-import { css } from 'emotion';
+import { Field, Input, FilterPill, HorizontalGroup } from 'src/packages/datav-core/src/ui';
+import { css } from '@emotion/css';
 import { FilterFieldsByNameTransformerOptions } from 'src/packages/datav-core/src/data/transformations/transformers/filterByName';
 
 interface FilterByNameTransformerEditorProps extends TransformerUIProps<FilterFieldsByNameTransformerOptions> {}
@@ -85,22 +85,22 @@ export class FilterByNameTransformerEditor extends React.PureComponent<
           }
         }
       } catch (error) {
-        console.log(error);
+        console.error(error);
       }
     }
 
     if (configuredOptions.length) {
-      const selected: FieldNameInfo[] = allNames.filter(n => configuredOptions.includes(n.name));
+      const selected: FieldNameInfo[] = allNames.filter((n) => configuredOptions.includes(n.name));
 
       this.setState({
         options: allNames,
-        selected: selected.map(s => s.name),
+        selected: selected.map((s) => s.name),
         regex: options.include?.pattern,
       });
     } else {
       this.setState({
         options: allNames,
-        selected: allNames.map(n => n.name),
+        selected: allNames.map((n) => n.name),
         regex: options.include?.pattern,
       });
     }
@@ -109,7 +109,7 @@ export class FilterByNameTransformerEditor extends React.PureComponent<
   onFieldToggle = (fieldName: string) => {
     const { selected } = this.state;
     if (selected.indexOf(fieldName) > -1) {
-      this.onChange(selected.filter(s => s !== fieldName));
+      this.onChange(selected.filter((s) => s !== fieldName));
     } else {
       this.onChange([...selected, fieldName]);
     }
@@ -176,7 +176,7 @@ export class FilterByNameTransformerEditor extends React.PureComponent<
               <Input
                 placeholder="Regular expression pattern"
                 value={this.state.regex || ''}
-                onChange={e => this.setState({ regex: e.currentTarget.value })}
+                onChange={(e) => this.setState({ regex: e.currentTarget.value })}
                 onBlur={this.onInputBlur}
                 width={25}
               />
@@ -202,7 +202,7 @@ export class FilterByNameTransformerEditor extends React.PureComponent<
   }
 }
 
-export const filterFieldsByNameTransformRegistryItem: TransformerRegistyItem<FilterFieldsByNameTransformerOptions> = {
+export const filterFieldsByNameTransformRegistryItem: TransformerRegistryItem<FilterFieldsByNameTransformerOptions> = {
   id: DataTransformerID.filterFieldsByName,
   editor: FilterByNameTransformerEditor,
   transformation: standardTransformers.filterFieldsByNameTransformer,

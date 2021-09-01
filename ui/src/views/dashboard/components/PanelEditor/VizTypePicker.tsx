@@ -1,8 +1,8 @@
 import React, { useCallback, useMemo } from 'react';
 
 import VizTypePickerPlugin from './VizTypePickerPlugin'; 
-import { EmptySearchResult, stylesFactory, useTheme } from 'src/packages/datav-core/src';
-import { DatavTheme, PanelPluginMeta, PluginState ,getBootConfig} from 'src/packages/datav-core/src';
+import { EmptySearchResult, stylesFactory, useTheme } from 'src/packages/datav-core/src/ui';
+import { GrafanaTheme, PanelPluginMeta, PluginState ,getBootConfig} from 'src/packages/datav-core/src';
 import { css } from 'emotion';
 
 export interface Props {
@@ -101,7 +101,7 @@ export const VizTypePicker: React.FC<Props> = ({ searchQuery, onTypeChange, curr
 
 VizTypePicker.displayName = 'VizTypePicker';
 
-const getStyles = stylesFactory((theme: DatavTheme) => {
+const getStyles = stylesFactory((theme: GrafanaTheme) => {
   return {
     grid: css`
       max-width: 100%;

@@ -4,9 +4,9 @@ import {Modal, Spin} from 'antd'
 import { FormattedMessage } from 'react-intl';
 import {AlertNotification} from 'src/types'
 import {Input,Select,Switch,Alert,Button} from 'antd'
-import { InlineFormLabel,config, localeData, currentLang, LoadingPlaceholder} from 'src/packages/datav-core/src';
+import { config, localeData, currentLang } from 'src/packages/datav-core/src';
+import {InlineFormLabel} from 'src/packages/datav-core/src/ui';
 import {NotifierPicker,notifiers} from './Notifiers/Picker'
-import { LoadingIndicator } from 'react-select/src/components/indicators';
 
 const {Option} = Select
 

@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { LinkButton,Form,FormField as Field,Input} from 'src/packages/datav-core/src'
+import { LinkButton,Form,Field,Input} from 'src/packages/datav-core/src/ui'
 import {Modal,Button, notification} from 'antd'
 import {getBackendSrv} from 'src/core/services/backend'
 import { useIntl,FormattedMessage } from 'react-intl'
@@ -67,8 +67,7 @@ const AddTeam = (props: Props) => {
                                 error={errors.name && errors.name.message}
                             >
                                 <Input
-                                    name="name"
-                                    ref={register({
+                                    {...register('name',{
                                         required: localeData[getState().application.locale]['error.targetIsRequired'],
                                         validate: async v => await validateName(v),
                                     })}

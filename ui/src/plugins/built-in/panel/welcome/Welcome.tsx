@@ -1,6 +1,7 @@
 import React, { FC } from 'react';
 import { css, cx } from 'emotion';
-import {PanelProps, stylesFactory, useTheme, DatavTheme, getBootConfig, Icon ,currentLang, currentTheme, ThemeType} from 'src/packages/datav-core/src';
+import {PanelProps,  getBootConfig, GrafanaTheme, currentLang, currentTheme, ThemeType} from 'src/packages/datav-core/src';
+import {stylesFactory, useTheme, Icon} from 'src/packages/datav-core/src/ui'
 import { Row, Col } from 'antd';
 import { FormattedMessage } from 'react-intl';
 import { Langs } from 'src/core/library/locale/types';
@@ -13,7 +14,7 @@ export const WelcomeBanner: FC = (props:any) => {
   const titleColor = currentTheme === ThemeType.Light ? '#4c5773' : '#fff'
   const textColor = currentTheme === ThemeType.Light ? '#6b7389' : '#fff'
 
-  const getStyles = stylesFactory((theme: DatavTheme) => {
+  const getStyles = stylesFactory((theme: GrafanaTheme) => {
     const bgColor = theme.isDark ? 'transparent' : 'white';
     const navBorder = theme.isDark ? `1px solid #666;` : `2px solid rgb(237, 242, 247);`
     const imageDivider = theme.isDark ?

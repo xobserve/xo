@@ -1,7 +1,7 @@
 // Libraries
 import React, { PureComponent } from 'react';
 import { debounce } from 'lodash';
-import { PanelProps, renderMarkdown, textUtil,config } from 'src/packages/datav-core/src';
+import { PanelProps, renderMarkdown, textUtil,config } from 'src/packages/datav-core/src/data';
 
 // Types
 import { TextOptions } from './types';

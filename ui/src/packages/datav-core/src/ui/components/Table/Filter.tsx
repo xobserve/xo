@@ -1,6 +1,6 @@
 import React, { FC, useCallback, useMemo, useRef, useState } from 'react';
-import { css, cx } from 'emotion';
-import { Field, DatavTheme } from '../../../data';
+import { css, cx } from '@emotion/css';
+import { Field, GrafanaTheme } from '../../../data';
 
 import { TableStyles } from './styles';
 import { stylesFactory, useStyles } from '../../themes';
@@ -45,7 +45,7 @@ export const Filter: FC<Props> = ({ column, field, tableStyles }) => {
   );
 };
 
-const getStyles = stylesFactory((theme: DatavTheme) => ({
+const getStyles = stylesFactory((theme: GrafanaTheme) => ({
   filterIconEnabled: css`
     label: filterIconEnabled;
     color: ${theme.colors.textBlue};

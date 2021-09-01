@@ -1,42 +1,38 @@
 import React from 'react';
-import {
-  FieldConfigEditorProps,
-  ColorFieldConfigSettings,
-  getColorFromHexRgbOrName
-} from '../../../data';
+import { GrafanaTheme2 } from '../../../data';
 import { ColorPicker } from '../ColorPicker/ColorPicker';
-import { Icon } from '../Icon/Icon';
-import { ColorPickerTrigger } from '../ColorPicker/ColorPickerTrigger';
-import './color.less'
-import { getTheme } from '../../themes';
+import { useTheme2, useStyles2 } from '../../themes';
+import { css } from '@emotion/css';
+import { ColorSwatch } from '../ColorPicker/ColorSwatch';
 
-export const ColorValueEditor: React.FC<FieldConfigEditorProps<string, ColorFieldConfigSettings>> = ({
-  value,
-  onChange,
-  item,
-}) => {
-  const { settings } = item;
-  const theme = getTheme();
-  const color = value || (item.defaultValue as string) || theme.colors.panelBg;
+/**
+ * @alpha
+ * */
+export interface ColorValueEditorProps {
+  value?: string;
+  onChange: (value: string) => void;
+}
+
+/**
+ * @alpha
+ * */
+export const ColorValueEditor: React.FC<ColorValueEditorProps> = ({ value, onChange }) => {
+  const theme = useTheme2();
+  const styles = useStyles2(getStyles);
+
   return (
-    <ColorPicker color={color} onChange={onChange}>
+    <ColorPicker color={value ?? ''} onChange={onChange} enableNamedColors={true}>
       {({ ref, showColorPicker, hideColorPicker }) => {
         return (
-          <div className={'options-ui-spot'} onBlur={hideColorPicker}>
-            <div className={'options-ui-colorPicker'}>
-              <ColorPickerTrigger
+          <div className={styles.spot} onBlur={hideColorPicker}>
+            <div className={styles.colorPicker}>
+              <ColorSwatch
                 ref={ref}
                 onClick={showColorPicker}
                 onMouseLeave={hideColorPicker}
-                color={getColorFromHexRgbOrName(color, theme.type)}
+                color={value ? theme.visualization.getColorByName(value) : theme.components.input.borderColor}
               />
             </div>
-            <div className={'options-ui-colorText'} onClick={showColorPicker}>
-              {value ?? settings.textWhenUndefined ?? 'Pick Color'}
-            </div>
-            {value && settings.allowUndefined && (
-              <Icon className={'options-ui-trashIcon'} name="trash-alt" onClick={() => onChange(undefined)} />
-            )}
           </div>
         );
       }}
@@ -44,3 +40,34 @@ export const ColorValueEditor: React.FC<FieldConfigEditorProps<string, ColorFiel
   );
 };
 
+const getStyles = (theme: GrafanaTheme2) => {
+  return {
+    spot: css`
+      color: ${theme.colors.text};
+      background: ${theme.components.input.background};
+      padding: 3px;
+      height: ${theme.v1.spacing.formInputHeight}px;
+      border: 1px solid ${theme.components.input.borderColor};
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      &:hover {
+        border: 1px solid ${theme.components.input.borderHover};
+      }
+    `,
+    colorPicker: css`
+      padding: 0 ${theme.spacing(1)};
+    `,
+    colorText: css`
+      cursor: pointer;
+      flex-grow: 1;
+    `,
+    trashIcon: css`
+      cursor: pointer;
+      color: ${theme.colors.text.secondary};
+      &:hover {
+        color: ${theme.colors.text};
+      }
+    `,
+  };
+};

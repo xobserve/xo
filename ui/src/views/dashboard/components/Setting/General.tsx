@@ -3,11 +3,14 @@ import _ from 'lodash'
 import { DashboardModel } from '../../model';
 import { Tooltip, Divider, notification, Tag } from 'antd';
 import { InfoCircleOutlined } from '@ant-design/icons';
-import { DynamicTagList, LegacyForms, Button, ConfirmModal, getBackendSrv, getHistory, currentLang, localeData } from 'src/packages/datav-core/src';
+import {  getBackendSrv, getHistory, currentLang, localeData } from 'src/packages/datav-core/src';
+import { LegacyForms, Button, ConfirmModal,} from 'src/packages/datav-core/src/ui';
 import { FormattedMessage } from 'react-intl';
 import tracker from 'src/core/services/changeTracker';
 import { getVariables } from 'src/views/variables/state/selectors';
-const { LegacySwitch } = LegacyForms
+import { DynamicTagList } from 'src/views/components/DynamicTagList/DynamicTagList';
+
+const { Switch } = LegacyForms
 const { CheckableTag } = Tag;
 
 interface Props {
@@ -101,24 +104,24 @@ const GeneralSetting = (props: Props) => {
                     <input type="text" className="gf-form-input width-30" defaultValue={props.dashboard.description} onChange={(e) => { props.dashboard.description = e.currentTarget.value }} />
                 </div>
                 <div className="gf-form">
-                    <label className="gf-form-label width-9"><FormattedMessage id="common.tags" /><Tooltip title={<FormattedMessage id="dashboard.tagTooltip" />}><InfoCircleOutlined /></Tooltip></label>
+                    <label className="gf-form-label width-9"><FormattedMessage id="common.tags" /><Tooltip title={<FormattedMessage id="dashboard.tagTooltip" />}><InfoCircleOutlined translate/></Tooltip></label>
                     <DynamicTagList color="#9933cc" tags={props.dashboard.tags} onConfirm={(tags) => { props.dashboard.tags = tags }} />
                 </div>
                 <div className="gf-form">
-                    <label className="gf-form-label width-9"><FormattedMessage id="dashboard.editable" /><Tooltip title={<FormattedMessage id="dashboard.editableTooltip" />}><InfoCircleOutlined /></Tooltip></label>
-                    <LegacySwitch label="" checked={editable} onChange={onChangeEditable} />
+                    <label className="gf-form-label width-9"><FormattedMessage id="dashboard.editable" /><Tooltip title={<FormattedMessage id="dashboard.editableTooltip" />}><InfoCircleOutlined translate/></Tooltip></label>
+                    <Switch label="" checked={editable} onChange={onChangeEditable} />
                 </div>
                 <div className="gf-form">
                     <label className="gf-form-label width-9"><FormattedMessage id="dashboard.enableGlobalVariable" /></label>
-                    <LegacySwitch label="" checked={enableGlobal} onChange={onChangeEnableGlobal} />
+                    <Switch label="" checked={enableGlobal} onChange={onChangeEnableGlobal} />
                 </div>
                 <div className="gf-form">
-                    <label className="gf-form-label width-9"><FormattedMessage id="dashboard.autoSave" /><Tooltip title={<FormattedMessage id="dashboard.autoSaveTips" />}><InfoCircleOutlined /></Tooltip></label>
-                    <LegacySwitch label="" checked={autoSave} onChange={onChangeAutoSave} />
+                    <label className="gf-form-label width-9"><FormattedMessage id="dashboard.autoSave" /><Tooltip title={<FormattedMessage id="dashboard.autoSaveTips" />}><InfoCircleOutlined translate/></Tooltip></label>
+                    <Switch label="" checked={autoSave} onChange={onChangeAutoSave} />
                 </div>
                 <div className="gf-form">
                     <label className="gf-form-label width-9"><FormattedMessage id="dashboard.showHeader" /></label>
-                    <LegacySwitch label="" checked={showHeader} onChange={onChangeShowHeader} />
+                    <Switch label="" checked={showHeader} onChange={onChangeShowHeader} />
                 </div>
                 <div className="gf-form">
                     <label className="gf-form-label width-9"><FormattedMessage id="dashboard.variablesDisplay" /></label>
@@ -129,7 +132,7 @@ const GeneralSetting = (props: Props) => {
 
                 <div><FormattedMessage id="common.dangerousSection" /></div>
                 <div className="gf-form ub-mt2">
-                    <label className="gf-form-label width-9"><FormattedMessage id="dashboard.delDashboard" /><Tooltip title={<FormattedMessage id="dashboard.delDashboardTips" />}><InfoCircleOutlined /></Tooltip></label>
+                    <label className="gf-form-label width-9"><FormattedMessage id="dashboard.delDashboard" /><Tooltip title={<FormattedMessage id="dashboard.delDashboardTips" />}><InfoCircleOutlined translate/></Tooltip></label>
                     <Button variant="destructive" onClick={() => setDelConfirmVisible(true)}><FormattedMessage id="common.delete" /></Button>
                 </div>
             </div>
@@ -138,7 +141,7 @@ const GeneralSetting = (props: Props) => {
                 isOpen={delConfirmVisible}
                 title={localeData[currentLang]["dashboard.delDashboard"]}
                 body={localeData[currentLang]["dashboard.delDashboardConfirm"]}
-                confirmText={<FormattedMessage id="common.delete" />}
+                confirmText="Delete"
                 onConfirm={() => deleteDashboard()}
                 onDismiss={() => setDelConfirmVisible(false)}
             />

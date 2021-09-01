@@ -1,4 +1,4 @@
-import { getBootConfig, PanelPlugin } from 'src/packages/datav-core/src';
+import { getBootConfig, PanelPlugin } from 'src/packages/datav-core/src/data';
 import { WelcomeBanner } from './Welcome';
 import './locale'
 import {WelcomeOptions} from './types'

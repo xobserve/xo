@@ -4,7 +4,8 @@ import { FilterInput } from 'src/views/components/FilterInput/FilterInput';
 import { AlertRule, Team} from 'src/types'
 import AlertRuleItem from 'src/views/alerting/AlertRuleItem'
 import alertDef from 'src/views/alerting/state/alertDef';
-import { Select, getBackendSrv, localeData, currentLang } from 'src/packages/datav-core/src'
+import {  getBackendSrv, localeData, currentLang } from 'src/packages/datav-core/src'
+import {Select} from 'src/packages/datav-core/src/ui'
 import TeamPicker from '../components/Pickers/TeamPicker';
 
 interface Props {

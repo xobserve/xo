@@ -1,11 +1,10 @@
 export interface Threshold {
-  colorMode?: 'critical' | 'warning' | 'ok' | 'custom'
-  fill?: boolean
-  line?: boolean
-  op?: 'gt' | 'lt'
   value: number;
-  color?: string;
-  yaxis?: 'left' | 'right'
+  color: string;
+  /**
+   *  Warning, Error, LowLow, Low, OK, High, HighHigh etc
+   */
+  state?: string;
 }
 
 /**

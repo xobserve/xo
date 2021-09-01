@@ -2,7 +2,7 @@
 import React, { PureComponent, ChangeEvent, FocusEvent } from 'react';
 
 // Utils
-import { rangeUtil, PanelData, DataSourceApi, getTheme } from 'src/packages/datav-core/src';
+import { rangeUtil, PanelData, DataSourceApi } from 'src/packages/datav-core/src';
 
 // Components
 import {
@@ -12,15 +12,15 @@ import {
   ValidationEvents,
   InlineFormLabel,
   stylesFactory,
-} from 'src/packages/datav-core/src';
+  getTheme,
+} from 'src/packages/datav-core/src/ui';
 // Types
 import { PanelModel } from 'src/views/dashboard/model';
-
 
 import { css } from 'emotion';
 import { QueryOperationRow } from 'src/views/components/QueryOperationRow/QueryOperationRow';
 
-const {LegacySwitch: Switch,LegacyInput: Input } = LegacyForms;
+const {Switch, Input } = LegacyForms;
 
 
 

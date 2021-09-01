@@ -1,7 +1,7 @@
 import React, { PureComponent } from 'react';
 import classNames from 'classnames';
 import TimeSeries  from 'src/core/time_series';
-import { Icon, SeriesColorPicker} from 'src/packages/datav-core/src';
+import { Icon, SeriesColorPicker} from 'src/packages/datav-core/src/ui';
 
 
 

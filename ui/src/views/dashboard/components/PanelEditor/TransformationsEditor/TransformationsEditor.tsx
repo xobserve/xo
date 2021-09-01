@@ -9,12 +9,12 @@ import {
   useTheme,
   ValuePicker,
   VerticalGroup,
-} from 'src/packages/datav-core/src';
+} from 'src/packages/datav-core/src/ui';
 import {
   DataFrame,
   DataTransformerConfig,
   DocsId,
-  DatavTheme,
+  GrafanaTheme,
   PanelData,
   SelectableValue,
   standardTransformersRegistry,
@@ -282,7 +282,7 @@ const TransformationCard: React.FC<CardProps> = props => {
   return <Card {...props} className={styles.card} />;
 };
 
-const getTransformationCardStyles = stylesFactory((theme: DatavTheme) => {
+const getTransformationCardStyles = stylesFactory((theme: GrafanaTheme) => {
   return {
     card: css`
       background: ${theme.colors.bg2};

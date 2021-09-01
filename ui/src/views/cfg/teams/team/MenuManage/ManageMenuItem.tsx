@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react'
 
 import {Drawer, Input, Row, Col, Form ,Button} from 'antd'
 import {MenuItem} from 'src/types'
-import { ConfirmModal } from 'src/packages/datav-core/src'
+import { ConfirmModal } from 'src/packages/datav-core/src/ui'
 import { FormattedMessage } from 'react-intl'
 import localeData from 'src/core/library/locale'
 import { getState } from 'src/store/store'
@@ -22,16 +22,17 @@ const ManageMenuItem = (props:Props) =>{
     
     useEffect(() => {
         form.setFieldsValue({id: selectedNode.id})
-        form.setFieldsValue({title: selectedNode.title})
+        form.setFieldsValue({text: selectedNode.text})
         form.setFieldsValue({url: selectedNode.url})
         form.setFieldsValue({icon: selectedNode.icon})
     },[selectedNode])
 
+    console.log(props.selectedNode)
   
     return (
         <>
         <Drawer
-                title={<FormattedMessage id="team.updateMenuTitle" values={{title:selectedNode && selectedNode.title}} /> }
+                title={<FormattedMessage id="team.updateMenuTitle" values={{text:selectedNode && selectedNode.text}} /> }
                 placement="left"
                 closable={false}
                 visible={drawerVisible}
@@ -74,7 +75,7 @@ const ManageMenuItem = (props:Props) =>{
                     <Row gutter={16}>
                         <Col span="24">
                             <Form.Item
-                                name="title"
+                                name="text"
                                 label={<FormattedMessage id="team.menuName" />}
                             >
                                     <Input placeholder="if name is empty, dashboard title will be shown in menu" />
@@ -96,9 +97,9 @@ const ManageMenuItem = (props:Props) =>{
             </Drawer>
             {selectedNode && <ConfirmModal
                 isOpen={confirmVisible}
-                title={localeData[getState().application.locale]['team.delMenuConfirmTitle'] + selectedNode.title}
+                title={localeData[getState().application.locale]['team.delMenuConfirmTitle'] + selectedNode.text}
                 body= {<FormattedMessage id="team.delMenuConfirmBody" />}
-                confirmText={ <FormattedMessage id="common.delete" />}
+                confirmText="Delete"
                 onConfirm={() => {
                     setConfirmVisible(false)
                     props.onDelete(selectedNode)

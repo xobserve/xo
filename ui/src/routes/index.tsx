@@ -36,7 +36,7 @@ export const initRoutes = (store: Store<StoreState>) => {
         {
             id: 'datav-fix-menu-d',
             url: '/d/:uid',
-            title: 'Dashboard Page',
+            text: 'Dashboard Page',
             icon: 'home-alt',
             subTitle: 'Dashboard Page',
             showPosition: null,
@@ -47,7 +47,7 @@ export const initRoutes = (store: Store<StoreState>) => {
         {
             id: 'datav-fix-menu-plugin',
             url: '/plugin/:pluginID',
-            title: 'Plugin Info',
+            text: 'Plugin Info',
             icon: 'home-alt',
             component: React.lazy(() => import('src/views/cfg/plugins/PluginPage')),
             subTitle: 'Plugin Info',
@@ -58,7 +58,7 @@ export const initRoutes = (store: Store<StoreState>) => {
         {
             id: 'datav-fix-menu-newDataSource',
             url: '/datasources/new',
-            title: 'New Datasource',
+            text: 'New Datasource',
             icon: 'home-alt',
             component: React.lazy(() => import('src/views/cfg/datasources/NewDataSourcePage')),
             subTitle: 'New Datasource',
@@ -69,7 +69,7 @@ export const initRoutes = (store: Store<StoreState>) => {
         {
             id: 'datav-fix-menu-editDataSource',
             url: '/datasources/edit/:datasourceID',
-            title: 'Edit DataSource',
+            text: 'Edit DataSource',
             icon: 'home-alt',
             component: React.lazy(() => import('src/views/cfg/datasources/EditDataSourcePage')),
             subTitle: 'Edit DataSource',
@@ -81,7 +81,7 @@ export const initRoutes = (store: Store<StoreState>) => {
         {
             id: 'datav-fix-menu-new',
             url: '/new',
-            title: localeData[currentLang]['common.new'],
+            text: localeData[currentLang]['common.new'],
             subTitle: localeData[currentLang]['common.addSubTitle'],
             icon: 'plus',
             showPosition: MenuPosition.Bottom,
@@ -93,7 +93,7 @@ export const initRoutes = (store: Store<StoreState>) => {
                     icon: 'apps',
                     id: 'datav-fix-menu-create-dashboard',
                     url: '/new/dashboard',
-                    title: localeData[currentLang]['common.dashboard'], 
+                    text: localeData[currentLang]['common.dashboard'], 
                     exact: true,
                     component: React.lazy(() => import('src/views/dashboard/DashboardPage'))
                 },
@@ -101,7 +101,7 @@ export const initRoutes = (store: Store<StoreState>) => {
                     icon: 'apps',
                     id: 'datav-fix-menu-create-datasource',
                     url: '/datasources/new',
-                    title: localeData[currentLang]['common.datasource'], 
+                    text: localeData[currentLang]['common.datasource'], 
                     exact: true,
                     component: React.lazy(() => import('src/views/cfg/datasources/NewDataSourcePage')),
                 },
@@ -109,14 +109,14 @@ export const initRoutes = (store: Store<StoreState>) => {
                     icon: 'import',
                     id: 'datav-fix-menu-import-dashboard',
                     url: '/new/import',
-                    title: localeData[currentLang]['common.import'],
+                    text: localeData[currentLang]['common.import'],
                     exact: true,
                     component: React.lazy(() => import('src/views/dashboard/ImportPage'))
                 },
                 {
                     icon: 'folder',
                     id: 'datav-fix-menu-new-folder',
-                    title:  localeData[currentLang]['common.folder'],
+                    text:  localeData[currentLang]['common.folder'],
                     url: '/new/folder',
                     needRole: Role.Editor,
                     exact: true,
@@ -125,7 +125,7 @@ export const initRoutes = (store: Store<StoreState>) => {
                 {
                     icon: 'users-alt',
                     id: 'datav-fix-menu-new-team',
-                    title: localeData[currentLang]['common.team'],
+                    text: localeData[currentLang]['common.team'],
                     url: '/new/team',
                     needRole: Role.Admin,
                     exact: true,
@@ -136,7 +136,7 @@ export const initRoutes = (store: Store<StoreState>) => {
         {
             id: 'datav-fix-menu-alerting',
             url: '/alerting',
-            title: localeData[currentLang]['common.alerting'],
+            text: localeData[currentLang]['common.alerting'],
             icon: 'bell',
             subTitle: localeData[currentLang]['common.alertingSubTitle'],
             showPosition: MenuPosition.Bottom,
@@ -146,7 +146,7 @@ export const initRoutes = (store: Store<StoreState>) => {
                 { 
                     icon: "list-ul",
                     id: "datav-fix-menu-alerting-rules",
-                    title: localeData[currentLang]['common.rules'],
+                    text: localeData[currentLang]['common.rules'],
                     url: "/alerting/rules",
                     exact: true,
                     component: React.lazy(() => import('src/views/alerting/AlertRulesPage'))
@@ -154,7 +154,7 @@ export const initRoutes = (store: Store<StoreState>) => {
                 { 
                     icon: "history",
                     id: "datav-fix-menu-alerting-history", 
-                    title: localeData[currentLang]['common.history'],
+                    text: localeData[currentLang]['common.history'],
                     url: "/alerting/history",
                     exact: true, 
                     component: React.lazy(() => import('src/views/alerting/AlertHistoryPage'))
@@ -164,7 +164,7 @@ export const initRoutes = (store: Store<StoreState>) => {
         {
             id: 'datav-fix-menu-cfg',
             url: '/cfg',
-            title: localeData[currentLang]['common.configuration'],
+            text: localeData[currentLang]['common.configuration'],
             icon: 'cog',
             subTitle: localeData[currentLang]['common.cfgSubTitle'],
             showPosition: MenuPosition.Bottom,
@@ -174,7 +174,7 @@ export const initRoutes = (store: Store<StoreState>) => {
                 {
                     icon: "database",
                     id: "datav-fix-menu-datasources",
-                    title: localeData[currentLang]['common.datasource'],
+                    text: localeData[currentLang]['common.datasource'],
                     url: "/cfg/datasources",
                     needRole: Role.Admin,
                     exact: true,
@@ -183,7 +183,7 @@ export const initRoutes = (store: Store<StoreState>) => {
                 {
                     icon: "plug",
                     id: "datav-fix-menu-plugins",
-                    title: localeData[currentLang]['common.plugin'],
+                    text: localeData[currentLang]['common.plugin'],
                     url: "/cfg/plugins",
                     exact: true,
                     component: React.lazy(() => import('src/views/cfg/plugins/Plugins'))
@@ -191,7 +191,7 @@ export const initRoutes = (store: Store<StoreState>) => {
                 {
                     icon: "folder",
                     id: "datav-fix-menu-folders",
-                    title: localeData[currentLang]['common.folder'],
+                    text: localeData[currentLang]['common.folder'],
                     url: "/cfg/folders",
                     needRole: Role.Editor,
                     exact: true,
@@ -200,7 +200,7 @@ export const initRoutes = (store: Store<StoreState>) => {
                 {
                     icon: "users-alt",
                     id: "datav-fix-menu-users",
-                    title: localeData[currentLang]['common.user'], 
+                    text: localeData[currentLang]['common.user'], 
                     url: "/cfg/users",
                     exact: true,
                     component: React.lazy(() => import('src/views/cfg/users/UserPage'))
@@ -208,7 +208,7 @@ export const initRoutes = (store: Store<StoreState>) => {
                 {
                     icon: "users-alt",
                     id: "datav-fix-menu-teams",
-                    title: localeData[currentLang]['common.team'],
+                    text: localeData[currentLang]['common.team'],
                     url: "/cfg/teams",
                     exact: true,
                     component: React.lazy(() => import('src/views/cfg/teams/TeamsPage'))
@@ -216,7 +216,7 @@ export const initRoutes = (store: Store<StoreState>) => {
                 { 
                     icon: "calculator-alt",
                     id: "datav-fix-menu-globalVariable",
-                    title: localeData[currentLang]['common.globalVariable'],
+                    text: localeData[currentLang]['common.globalVariable'],
                     url: "/cfg/globalVariable",
                     redirectTo: '/d/-1',
                     exact: true,
@@ -227,7 +227,7 @@ export const initRoutes = (store: Store<StoreState>) => {
         {
             id: 'datav-fix-menu-team-manage',
             url: null,
-            title:  localeData[currentLang]['common.teamManage'],
+            text:  localeData[currentLang]['common.teamManage'],
             icon: 'users-alt',
             subTitle: localeData[currentLang]['team.subTitle'], 
             showPosition: null,
@@ -237,7 +237,7 @@ export const initRoutes = (store: Store<StoreState>) => {
                 {
                     icon: "users-alt",
                     id: "datav-fix-menu-team-members",
-                    title: localeData[currentLang]['common.member'],
+                    text: localeData[currentLang]['common.member'],
                     url: "/team/members/:id",
                     exact: false,
                     component: React.lazy(() => import('src/views/cfg/teams/team/MemberPage'))
@@ -245,7 +245,7 @@ export const initRoutes = (store: Store<StoreState>) => {
                 {
                     icon: "list-ul",
                     id: "datav-fix-menu-team-sidemenu",
-                    title: localeData[currentLang]['team.sidemenu'],
+                    text: localeData[currentLang]['team.sidemenu'],
                     url: "/team/sidemenu/:id",
                     exact: false,
                     component: React.lazy(() => import('src/views/cfg/teams/team/SideMenuPage'))
@@ -253,7 +253,7 @@ export const initRoutes = (store: Store<StoreState>) => {
                 { 
                     icon: "list-ul",
                     id: "datav-fix-menu-alerting-rules",
-                    title: localeData[currentLang]['common.rules'],
+                    text: localeData[currentLang]['common.rules'],
                     url: "/team/rules/:id",
                     exact: true,
                     component: React.lazy(() => import('src/views/cfg/teams/team/AlertRulesPage'))
@@ -261,7 +261,7 @@ export const initRoutes = (store: Store<StoreState>) => {
                 { 
                     icon: "history",
                     id: "datav-fix-menu-alerting-history", 
-                    title: localeData[currentLang]['common.history'],
+                    text: localeData[currentLang]['common.history'],
                     url: "/team/history/:id",
                     exact: true,
                     component: React.lazy(() => import('src/views/cfg/teams/team/AlertHistoryPage'))
@@ -269,7 +269,7 @@ export const initRoutes = (store: Store<StoreState>) => {
                 { 
                     icon: "at",
                     id: "datav-fix-menu-alerting-notifications",
-                    title: localeData[currentLang]['common.notificationChannel'],
+                    text: localeData[currentLang]['common.notificationChannel'],
                     url: "/team/notifications/:id",
                     exact: true,
                     component: React.lazy(() => import('src/views/cfg/teams/team/NotificationPage'))
@@ -277,7 +277,7 @@ export const initRoutes = (store: Store<StoreState>) => {
                 {
                     icon: "cog",
                     id: "datav-fix-menu-team-setting",
-                    title: localeData[currentLang]['common.setting'],
+                    text: localeData[currentLang]['common.setting'],
                     url: "/team/setting/:id",
                     exact: false,
                     component: React.lazy(() => import('src/views/cfg/teams/team/SettingPage'))
@@ -287,7 +287,7 @@ export const initRoutes = (store: Store<StoreState>) => {
         {
             id: 'datav-fix-menu-manage-folder',
             url: null,
-            title: 'Folder',
+            text: 'Folder',
             icon: 'folder-open',
             subTitle: localeData[currentLang]['folder.subTitle'], 
             showPosition: null,
@@ -297,7 +297,7 @@ export const initRoutes = (store: Store<StoreState>) => {
                 {
                     icon: "th-large",
                     id: "datav-fix-menu-folder-dashboard",
-                    title: "Dashboards",
+                    text: "Dashboards",
                     url: "/f/:uid/dashboards",
                     exact: false,
                     component: React.lazy(() => import('src/views/search/components/DashboardListPage'))
@@ -305,7 +305,7 @@ export const initRoutes = (store: Store<StoreState>) => {
                 {
                     icon: "cog",
                     id: "datav-fix-menu-folder-settings",
-                    title: "Settings",
+                    text: "Settings",
                     url: "/f/:uid/settings",
                     exact: false,
                     component: React.lazy(() => import('src/views/cfg/folders/SettingPage'))
@@ -315,7 +315,7 @@ export const initRoutes = (store: Store<StoreState>) => {
         { 
             id: 'datav-fix-menu-user',
             url: '/user',
-            title: localeData[currentLang]['user.currentUser'] + " - " + (store.getState().user.name == '' ? store.getState().user.username : store.getState().user.username + ' / ' + store.getState().user.name),
+            text: localeData[currentLang]['user.currentUser'] + " - " + (store.getState().user.name == '' ? store.getState().user.username : store.getState().user.username + ' / ' + store.getState().user.name),
             subTitle: localeData[currentLang]['user.subTitle'],
             icon: 'user',
             showPosition: MenuPosition.Bottom,
@@ -325,7 +325,7 @@ export const initRoutes = (store: Store<StoreState>) => {
                 {
                     icon: "sliders-v-alt",
                     id: "datav-fix-menu-preferences",
-                    title: localeData[currentLang]['common.preferences'],
+                    text: localeData[currentLang]['common.preferences'],
                     url: "/user/preferences",
                     exact: true,
                     component: React.lazy(() => import('src/views/cfg/users/UserPreferencePage'))
@@ -335,7 +335,7 @@ export const initRoutes = (store: Store<StoreState>) => {
         {
             id: 'datav-fix-menu-help',
             url: '/help',
-            title: localeData[currentLang]['common.help'],
+            text: localeData[currentLang]['common.help'],
             icon: 'question-circle',
             redirectTo: null,
             exact: true,

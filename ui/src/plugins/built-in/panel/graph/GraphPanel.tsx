@@ -19,7 +19,7 @@ import Drop from 'tether-drop';
 
 import {
   PanelProps, PanelEvents, toUtc, LinkModelSupplier, FieldDisplay, hasLinks, getDisplayProcessor, FieldType,
-  DataFrameView, ContextMenuGroup, ContextMenuItem, currentTheme, ThemeType, currentLang, getTemplateSrv, getHistory
+  DataFrameView,  currentTheme, ThemeType, currentLang, getTemplateSrv, getHistory, getBootConfig
 } from 'src/packages/datav-core/src';
 import { GraphPanelOptions } from './types'
 import { GraphPanelCtrl } from './GraphPanelCtrl'
@@ -35,7 +35,7 @@ import GraphTooltip from './graph_tooltip'
 import { GraphLegendProps, Legend } from './Legend/Legend';
 import { getFieldLinksSupplier } from 'src/views/panel/panellinks/linkSuppliers';
 import { GraphContextMenuCtrl } from './GraphContextMenuCtrl';
-import { GraphContextMenu } from './GraphContextMenu';
+
 import AnnotationEdior from 'src/views/annotations/AnnotationEditor'
 import AnnotationTooltip from 'src/views/annotations/AnnotationTooltip'
 import { annotationsSrv } from 'src/core/services/annotations';
@@ -43,6 +43,7 @@ import localeData from 'src/core/library/locale';
 import { resetDashboardVariables } from 'src/views/dashboard/model/initDashboard';
 import { connect } from 'react-redux';
 import { interactive } from 'src/core/library/utils/interactive';
+import { GraphContextMenu, MenuItemProps, MenuItemsGroup } from 'src/packages/datav-core/src/ui';
 
 interface State {
   contextMenuVisible: boolean
@@ -286,6 +287,7 @@ class GraphPanelUnconnected extends PureComponent<PanelProps<GraphPanelOptions> 
         };
         const fieldDisplay = getDisplayProcessor({
           field: { config: fieldConfig, type: FieldType.number },
+          theme: getBootConfig().theme2,
           timeZone: this.ctrl.timezone,
         })(field.values.get(dataIndex));
         linksSupplier = links.length
@@ -317,15 +319,16 @@ class GraphPanelUnconnected extends PureComponent<PanelProps<GraphPanelOptions> 
     data: any,
     flotPosition: { x: number; y: number },
     linksSupplier?: LinkModelSupplier<FieldDisplay>
-  ): (() => ContextMenuGroup[]) => {
+  ): (() => MenuItemsGroup[]) => {
     const onClickFunc = new Function("data,history,setVariable,setTime", getTemplateSrv().replace(this.props.options.clickEvent))
     return () => {
       // Fixed context menu items
-      const items: ContextMenuGroup[] = [
+      const items: MenuItemsGroup[] = [
         {
           items: [
             {
               label: localeData[currentLang]['panel.addAnnotation'],
+              ariaLabel: 'Add annotation',
               icon: 'comment-alt',
               onClick: () => {
                 this.eventManager.updateTime({ from: flotPosition.x, to: null })
@@ -341,6 +344,7 @@ class GraphPanelUnconnected extends PureComponent<PanelProps<GraphPanelOptions> 
             items: [
               {
                 label: 'Trigger click event',
+                ariaLabel: 'Trigger click event',
                 icon: 'mouse-alt',
                 onClick: () => {
                   onClickFunc(data,getHistory(), (k,v) => interactive.setVariable(k,v,this.props.dashboard,this.props.resetDashboardVariables), interactive.setTime)
@@ -357,9 +361,10 @@ class GraphPanelUnconnected extends PureComponent<PanelProps<GraphPanelOptions> 
 
       const dataLinks = [
         {
-          items: linksSupplier.getLinks(this.ctrl.panel.scopedVars).map<ContextMenuItem>(link => {
+          items: linksSupplier.getLinks(this.ctrl.panel.replaceVariables).map<MenuItemProps>(link => {
             return {
               label: link.title,
+              ariaLabel: link.title,
               url: link.href,
               target: link.target,
               icon: `${link.target === '_self' ? 'link' : 'external-link-alt'}`,
@@ -612,7 +617,7 @@ class GraphPanelUnconnected extends PureComponent<PanelProps<GraphPanelOptions> 
 
         {this.state.contextMenuVisible ?
           <GraphContextMenu
-            items={this.ctrl.contextMenuCtrl.menuItemsSupplier() as any}
+            itemsGroup={this.ctrl.contextMenuCtrl.menuItemsSupplier() as any}
             timeZone={this.ctrl.timezone}
             getContextMenuSource={this.ctrl.contextMenuCtrl.getSource}
             x={this.ctrl.contextMenuCtrl.position.x}

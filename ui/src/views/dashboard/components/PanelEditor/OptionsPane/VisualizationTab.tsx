@@ -1,7 +1,7 @@
 import React, { useCallback, useState } from 'react';
 import { css } from 'emotion';
-import { DatavTheme, PanelPlugin, PanelPluginMeta, getBootConfig, currentLang } from 'src/packages/datav-core/src';
-import { useTheme, stylesFactory, Icon, Input, FormField as Field} from 'src/packages/datav-core/src';
+import { GrafanaTheme, PanelPlugin, PanelPluginMeta, getBootConfig, currentLang } from 'src/packages/datav-core/src';
+import { useTheme, stylesFactory, Icon, Input,  Field} from 'src/packages/datav-core/src/ui';
 import { StoreState } from 'src/types';
 import { PanelModel } from '../../../model';
 import { connect, MapStateToProps } from 'react-redux';
@@ -110,7 +110,7 @@ export const VisualizationTabUnconnected = React.forwardRef<HTMLInputElement, Pr
     );
   }
 );
-const getStyles = stylesFactory((theme: DatavTheme) => {
+const getStyles = stylesFactory((theme: GrafanaTheme) => {
   return {
     icon: css`
       color: ${theme.palette.gray33};

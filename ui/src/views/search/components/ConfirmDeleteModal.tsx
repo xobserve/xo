@@ -1,7 +1,7 @@
 import React, { FC } from 'react';
 import { css } from 'emotion';
-import { DatavTheme } from 'src/packages/datav-core/src';
-import { ConfirmModal, stylesFactory, useTheme } from 'src/packages/datav-core/src';
+import { GrafanaTheme } from 'src/packages/datav-core/src';
+import { ConfirmModal, stylesFactory, useTheme } from 'src/packages/datav-core/src/ui';
 import { getLocationSrv } from 'src/packages/datav-core/src';
 import { backendSrv } from 'src/core/services/backend';
 import { DashboardSection, OnDeleteItems } from '../types';
@@ -62,7 +62,7 @@ export const ConfirmDeleteModal: FC<Props> = ({ results, onDeleteItems, isOpen, 
   ) : null;
 };
 
-const getStyles = stylesFactory((theme: DatavTheme) => {
+const getStyles = stylesFactory((theme: GrafanaTheme) => {
   return {
     subtitle: css`
       font-size: ${theme.typography.size.base};

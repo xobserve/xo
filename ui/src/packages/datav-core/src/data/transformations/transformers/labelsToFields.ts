@@ -17,9 +17,9 @@ export const labelsToFieldsTransformer: DataTransformerInfo<LabelsToFieldsOption
   name: 'Labels to fields',
   description: 'Extract time series labels to fields (columns)',
   defaultOptions: {},
-  operator: options => source =>
+  operator: (options) => (source) =>
     source.pipe(
-      map(data => {
+      map((data) => {
         const result: DataFrame[] = [];
 
         for (const frame of data) {
@@ -52,7 +52,7 @@ export const labelsToFieldsTransformer: DataTransformerInfo<LabelsToFieldsOption
             // add the value field but clear out any labels or displayName
             newFields.push({
               ...field,
-              name, 
+              name,
               config: {
                 ...field.config,
                 // we need to clear thes for this transform as these can contain label names that we no longer want

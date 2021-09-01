@@ -1,13 +1,13 @@
 import React, { createRef } from 'react';
 import ReactDOM from 'react-dom';
-import _ from 'lodash';
+import { isEqual } from 'lodash';
 import { FixedSizeList } from 'react-window';
 
 import { TypeaheadInfo } from './TypeaheadInfo';
 import { TypeaheadItem } from './TypeaheadItem';
 import { flattenGroupItems, calculateLongestLabel, calculateListSizes } from '../../utils/typeahead';
+import { ThemeContext } from '../../themes/ThemeContext';
 import { CompletionItem, CompletionItemGroup, CompletionItemKind } from '../../types/completion';
-import './Typeahead.less' 
 
 const modulo = (a: number, n: number) => a - n * Math.floor(a / n);
 
@@ -30,6 +30,8 @@ export interface State {
 }
 
 export class Typeahead extends React.PureComponent<Props, State> {
+  static contextType = ThemeContext;
+  context!: React.ContextType<typeof ThemeContext>;
   listRef = createRef<FixedSizeList>();
 
   state: State = {
@@ -50,7 +52,7 @@ export class Typeahead extends React.PureComponent<Props, State> {
 
     const allItems = flattenGroupItems(this.props.groupedItems);
     const longestLabel = calculateLongestLabel(allItems);
-    const { listWidth, listHeight, itemHeight } = calculateListSizes(allItems, longestLabel);
+    const { listWidth, listHeight, itemHeight } = calculateListSizes(this.context.v1, allItems, longestLabel);
     this.setState({
       listWidth,
       listHeight,
@@ -81,10 +83,10 @@ export class Typeahead extends React.PureComponent<Props, State> {
       this.listRef.current.scrollToItem(this.state.typeaheadIndex);
     }
 
-    if (_.isEqual(prevProps.groupedItems, this.props.groupedItems) === false) {
+    if (isEqual(prevProps.groupedItems, this.props.groupedItems) === false) {
       const allItems = flattenGroupItems(this.props.groupedItems);
       const longestLabel = calculateLongestLabel(allItems);
-      const { listWidth, listHeight, itemHeight } = calculateListSizes(allItems, longestLabel);
+      const { listWidth, listHeight, itemHeight } = calculateListSizes(this.context.v1, allItems, longestLabel);
       this.setState({ listWidth, listHeight, itemHeight, allItems, typeaheadIndex: null });
     }
   };
@@ -142,9 +144,9 @@ export class Typeahead extends React.PureComponent<Props, State> {
       const scrollX = window.scrollX;
       const scrollY = window.scrollY;
 
-      return `position: absolute; display: flex; top: ${rect.top + scrollY + rect.height + 6}px; left: ${rect.left +
-        scrollX -
-        2}px`;
+      return `position: absolute; display: flex; top: ${rect.top + scrollY + rect.height + 6}px; left: ${
+        rect.left + scrollX - 2
+      }px`;
     }
 
     return '';
@@ -164,7 +166,7 @@ export class Typeahead extends React.PureComponent<Props, State> {
             ref={this.listRef}
             itemCount={allItems.length}
             itemSize={itemHeight}
-            itemKey={index => {
+            itemKey={(index) => {
               const item = allItems && allItems[index];
               const key = item ? `${index}-${item.label}` : `${index}`;
               return key;

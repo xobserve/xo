@@ -1,8 +1,7 @@
 import React, { PureComponent } from 'react';
-import { LoadingPlaceholder, JSONFormatter, Icon } from 'src/packages/datav-core/src';
+import { LoadingPlaceholder, JSONFormatter, Icon } from 'src/packages/datav-core/src/ui';
 
 import appEvents from 'src/core/library/utils/app_events';
-import { CopyToClipboard } from 'src/views/components/CopyToClipboard/CopyToClipboard';
 import { DashboardModel, PanelModel } from 'src/views/dashboard/model';
 import { getBackendSrv,AppEvents } from 'src/packages/datav-core/src';
 import {Button} from 'antd'

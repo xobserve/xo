@@ -2,6 +2,8 @@
  * @preserve jquery-param (c) 2015 KNOWLEDGECODE | MIT
  */
 
+import { ExploreUrlState } from '../types/explore';
+
 /**
  * Type to represent the value of a single query variable.
  *
@@ -103,17 +105,21 @@ function appendQueryToUrl(url: string, stringToAppend: string) {
 /**
  * Return search part (as object) of current url
  */
-function getUrlSearchParams() {
+function getUrlSearchParams(): UrlQueryMap {
   const search = window.location.search.substring(1);
   const searchParamsSegments = search.split('&');
-  const params: any = {};
+  const params: UrlQueryMap = {};
   for (const p of searchParamsSegments) {
     const keyValuePair = p.split('=');
     if (keyValuePair.length > 1) {
       // key-value param
       const key = decodeURIComponent(keyValuePair[0]);
       const value = decodeURIComponent(keyValuePair[1]);
-      params[key] = value;
+      if (key in params) {
+        params[key] = [...(params[key] as any[]), value];
+      } else {
+        params[key] = [value];
+      }
     } else if (keyValuePair.length === 1) {
       // boolean param
       const key = decodeURIComponent(keyValuePair[0]);
@@ -123,9 +129,74 @@ function getUrlSearchParams() {
   return params;
 }
 
+/**
+ * Parses an escaped url query string into key-value pairs.
+ * Attribution: Code dervived from https://github.com/angular/angular.js/master/src/Angular.js#L1396
+ * @returns {Object.<string,boolean|Array>}
+ */
+export function parseKeyValue(keyValue: string) {
+  var obj: any = {};
+  const parts = (keyValue || '').split('&');
+
+  for (let keyValue of parts) {
+    let splitPoint: number | undefined;
+    let key: string | undefined;
+    let val: string | undefined | boolean;
+
+    if (keyValue) {
+      key = keyValue = keyValue.replace(/\+/g, '%20');
+      splitPoint = keyValue.indexOf('=');
+
+      if (splitPoint !== -1) {
+        key = keyValue.substring(0, splitPoint);
+        val = keyValue.substring(splitPoint + 1);
+      }
+
+      key = tryDecodeURIComponent(key);
+
+      if (key !== undefined) {
+        val = val !== undefined ? tryDecodeURIComponent(val as string) : true;
+
+        let parsedVal: any;
+        if (typeof val === 'string' && val !== '') {
+          parsedVal = val === 'true' || val === 'false' ? val === 'true' : val;
+        } else {
+          parsedVal = val;
+        }
+
+        if (!obj.hasOwnProperty(key)) {
+          obj[key] = isNaN(parsedVal) ? val : parsedVal;
+        } else if (Array.isArray(obj[key])) {
+          obj[key].push(val);
+        } else {
+          obj[key] = [obj[key], isNaN(parsedVal) ? val : parsedVal];
+        }
+      }
+    }
+  }
+
+  return obj;
+}
+
+function tryDecodeURIComponent(value: string): string | undefined {
+  try {
+    return decodeURIComponent(value);
+  } catch (e) {
+    return undefined;
+  }
+}
+
 export const urlUtil = {
   renderUrl,
   toUrlParams,
   appendQueryToUrl,
   getUrlSearchParams,
+  parseKeyValue,
 };
+
+export function serializeStateToUrlParam(urlState: ExploreUrlState, compact?: boolean): string {
+  if (compact) {
+    return JSON.stringify([urlState.range.from, urlState.range.to, urlState.datasource, ...urlState.queries]);
+  }
+  return JSON.stringify(urlState);
+}

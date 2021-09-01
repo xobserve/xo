@@ -1,33 +1,36 @@
 ﻿import React, { PureComponent } from 'react';
-import * as PopperJS from 'popper.js';
+import { Placement, VirtualElement } from '@popperjs/core';
 import { Manager, Popper as ReactPopper, PopperArrowProps } from 'react-popper';
 import { Portal } from '../Portal/Portal';
 import Transition from 'react-transition-group/Transition';
 import { PopoverContent } from './Tooltip';
 
 const defaultTransitionStyles = {
-  transition: 'opacity 200ms linear',
-  opacity: 1,
+  transitionProperty: 'opacity',
+  transitionDuration: '200ms',
+  transitionTimingFunction: 'linear',
+  opacity: 0,
 };
 
+const transitionStyles: { [key: string]: object } = {
+  exited: { opacity: 0 },
+  entering: { opacity: 0 },
+  entered: { opacity: 1, transitionDelay: '0s' },
+  exiting: { opacity: 0, transitionDelay: '500ms' },
+};
 
 export type RenderPopperArrowFn = (props: { arrowProps: PopperArrowProps; placement: string }) => JSX.Element;
 
 interface Props extends React.HTMLAttributes<HTMLDivElement> {
   show: boolean;
-  placement?: PopperJS.Placement;
+  placement?: Placement;
   content: PopoverContent;
-  referenceElement: PopperJS.ReferenceObject;
+  referenceElement: HTMLElement | VirtualElement;
   wrapperClassName?: string;
   renderArrow?: RenderPopperArrowFn;
-  eventsEnabled?: boolean;
 }
 
 class Popover extends PureComponent<Props> {
-  static defaultProps: Partial<Props> = {
-    eventsEnabled: true,
-  };
-
   render() {
     const {
       content,
@@ -39,23 +42,26 @@ class Popover extends PureComponent<Props> {
       wrapperClassName,
       renderArrow,
       referenceElement,
-      eventsEnabled,
     } = this.props;
 
     return (
       <Manager>
         <Transition in={show} timeout={100} mountOnEnter={true} unmountOnExit={true}>
-          {transitionState => {
+          {(transitionState) => {
             return (
               <Portal>
                 <ReactPopper
                   placement={placement}
                   referenceElement={referenceElement}
-                  eventsEnabled={eventsEnabled}
-                  // TODO: move modifiers config to popper controller
-                  modifiers={{ preventOverflow: { enabled: true, boundariesElement: 'window' } }}
+                  modifiers={[
+                    { name: 'preventOverflow', enabled: true, options: { rootBoundary: 'viewport' } },
+                    {
+                      name: 'eventListeners',
+                      options: { scroll: true, resize: true },
+                    },
+                  ]}
                 >
-                  {({ ref, style, placement, arrowProps, scheduleUpdate }) => {
+                  {({ ref, style, placement, arrowProps, update }) => {
                     return (
                       <div
                         onMouseEnter={onMouseEnter}
@@ -64,7 +70,7 @@ class Popover extends PureComponent<Props> {
                         style={{
                           ...style,
                           ...defaultTransitionStyles,
-                          // ...transitionStyles[transitionState]
+                          ...transitionStyles[transitionState],
                         }}
                         data-placement={placement}
                         className={`${wrapperClassName}`}
@@ -74,7 +80,7 @@ class Popover extends PureComponent<Props> {
                           {React.isValidElement(content) && React.cloneElement(content)}
                           {typeof content === 'function' &&
                             content({
-                              updatePopperPosition: scheduleUpdate,
+                              updatePopperPosition: update,
                             })}
                           {renderArrow &&
                             renderArrow({

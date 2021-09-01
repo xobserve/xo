@@ -1,5 +1,5 @@
 import { parse, SearchParserResult } from 'search-query-parser';
-import { IconName } from 'src/packages/datav-core/src';
+import { IconName } from 'src/packages/datav-core/src/ui';
 import { DashboardQuery, DashboardSection, DashboardSectionItem, SearchAction, UidsToDelete } from './types';
 import { NO_ID_SECTIONS, SECTION_STORAGE_KEY } from './constants';
 import {store} from 'src/store/store'

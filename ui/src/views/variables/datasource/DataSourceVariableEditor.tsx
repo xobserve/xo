@@ -3,7 +3,7 @@ import React, { ChangeEvent, FocusEvent, PureComponent } from 'react';
 import { DataSourceVariableModel, VariableWithMultiSupport } from 'src/types';
 import { OnPropChangeArguments, VariableEditorProps } from '../editor/types';
 import { SelectionOptionsEditor } from '../editor/SelectionOptionsEditor';
-import { InlineFormLabel } from 'src/packages/datav-core/src';
+import { InlineFormLabel } from 'src/packages/datav-core/src/ui';
 import { VariableEditorState } from '../editor/reducer';
 import { DataSourceVariableEditorState } from './reducer';
 import { initDataSourceVariableEditor } from './actions';

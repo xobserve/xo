@@ -1,6 +1,6 @@
 import React, { FunctionComponent, useEffect, useState } from 'react';
-import { LegacyForms } from 'src/packages/datav-core/src';
-const { LegacySwitch } = LegacyForms;
+import { LegacyForms } from 'src/packages/datav-core/src/ui';
+const { Switch } = LegacyForms;
 
 interface Props {
   annotations: any[];
@@ -25,7 +25,7 @@ export const Annotations: FunctionComponent<Props> = ({ annotations, onAnnotatio
             key={annotation.name}
             className={annotation.enable ? 'submenu-item' : 'submenu-item annotation-disabled'}
           >
-            <LegacySwitch
+            <Switch
               label={annotation.name}
               className="gf-form"
               checked={annotation.enable}

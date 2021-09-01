@@ -32,7 +32,8 @@ import darkVars from 'src/styles/dark.json';
 import lightVars from 'src/styles/light.json';
 import { StoreState } from 'src/types'
 
-import { LocationUpdate, setDataSourceService, setBackendSrv, ThemeType, setCurrentTheme, setMarkdownOptions, getBackendSrv, setBootConfig, ThemeContext, getTheme, setLocationSrv,standardFieldConfigEditorRegistry, getStandardFieldConfigs,standardTransformersRegistry, currentLang} from 'src/packages/datav-core/src'
+import { LocationUpdate, setDataSourceService, setBackendSrv, ThemeType, setCurrentTheme, getBackendSrv, setBootConfig,  setLocationSrv,standardFieldConfigEditorRegistry, standardTransformersRegistry, currentLang, createTheme, BootConfig, currentTheme} from 'src/packages/datav-core/src'
+import {ThemeContext, getTheme ,getStandardFieldConfigs,getStandardOptionEditors, useTheme2} from 'src/packages/datav-core/src/ui'
 import { DatasourceSrv } from 'src/core/services/datasource'
 import { backendSrv } from 'src/core/services/backend'
 
@@ -41,7 +42,7 @@ import { KeybindingSrv, setKeybindingSrv } from 'src/core/services/keybinding'
 import { store } from 'src/store/store'
 import { updateLocation } from 'src/store/reducers/location';
 import { setContextSrv } from 'src/core/services/context';
-import { standardEditorsRegistry, getStandardOptionEditors } from 'src/packages/datav-core/src';
+import { standardEditorsRegistry } from 'src/packages/datav-core/src';
 import globalEvents from './globalEvents'
 import { getDefaultVariableAdapters, variableAdapters } from 'src/views/variables/adapters';
 import { initRoutes } from 'src/routes';
@@ -50,9 +51,10 @@ import { getStandardTransformers } from 'src/core/library/utils/standardTransfor
 import { getUrlParams } from 'src/core/library/utils/url'
 import localeData from 'src/core/library/locale';
 import PreloadError from './PreloadError'
+import { getTheme2 } from 'src/packages/datav-core/src/ui/themes/getTheme';
 
 interface Props {
-  theme: string 
+  theme: ThemeType
 }
 
 const UIApp = (props: Props) => {
@@ -60,6 +62,7 @@ const UIApp = (props: Props) => {
   const { theme } = props
   setCurrentTheme(theme as ThemeType)
 
+  const themeVars = getTheme2(theme)
   useEffect(() => {
     let vars = theme === ThemeType.Light ? lightVars : darkVars;
     const newVars = { ...vars, "a": "b" }
@@ -103,7 +106,10 @@ const UIApp = (props: Props) => {
     
     // load boot config
     const res = await getBackendSrv().get('/api/bootConfig');
-    setBootConfig(res.data)
+    const bc:BootConfig = res.data
+    bc.theme2 = createTheme() 
+    bc.theme = bc.theme2.v1
+    setBootConfig(bc)
 
     variableAdapters.setInit(getDefaultVariableAdapters);
 
@@ -125,8 +131,6 @@ const UIApp = (props: Props) => {
     const linkSrv = new LinkSrv()
     setLinkSrv(linkSrv)
 
-    // set markdown options
-    setMarkdownOptions({ sanitize: true })
 
 
     // init location service
@@ -152,7 +156,7 @@ const UIApp = (props: Props) => {
   const customConfirm = (message, callback) => {
     Modal.confirm({
       title: message,
-      icon: <ExclamationCircleOutlined />,
+      icon: <ExclamationCircleOutlined translate />,
       onCancel: () => {
         callback(false);
       },
@@ -165,7 +169,7 @@ const UIApp = (props: Props) => {
   const render =
     canRender
       ?
-      <ThemeContext.Provider value={getTheme(props.theme)}>
+      <ThemeContext.Provider value={themeVars}>
         <Intl >
           <ConfigProvider>
             <Router getUserConfirmation={customConfirm}>

@@ -17,32 +17,47 @@ import {
   ValueMappingFieldConfigSettings,
   valueMappingsOverrideProcessor,
   ThresholdsMode,
-  localeData,
-  currentLang,
+  identityOverrideProcessor,
+  TimeZone,
+  FieldColor,
+  FieldColorConfigSettings,
+  StatsPickerConfigSettings,
+  displayNameOverrideProcessor,
+  FieldNamePickerConfigSettings,
 } from '../../data';
 
 import { Switch } from '../components/Switch/Switch';
-import { NumberValueEditor, RadioButtonGroup, StringValueEditor, SelectValueEditor } from '../components';
+import {
+  NumberValueEditor,
+  SliderValueEditor,
+  RadioButtonGroup,
+  StringValueEditor,
+  StringArrayEditor,
+  SelectValueEditor,
+  MultiSelectValueEditor,
+} from '../components';
 import { ValueMappingsValueEditor } from '../components/OptionsUI/mappings';
 import { ThresholdsValueEditor } from '../components/OptionsUI/thresholds';
-import { UnitValueEditor } from '../components/OptionsUI/units'; 
+import { UnitValueEditor } from '../components/OptionsUI/units';
 import { DataLinksValueEditor } from '../components/OptionsUI/links';
 import { ColorValueEditor } from '../components/OptionsUI/color';
+import { FieldColorEditor } from '../components/OptionsUI/fieldColor';
 import { StatsPickerEditor } from '../components/OptionsUI/stats';
+import { FieldNamePicker } from '../components/MatchersUI/FieldNamePicker';
 
 /**
  * Returns collection of common field config properties definitions
  */
 export const getStandardFieldConfigs = () => {
-  const category = [localeData[currentLang]['panel.standardOptions']];
+  const category = ['Standard options'];
   const displayName: FieldConfigPropertyItem<any, string, StringFieldConfigSettings> = {
     id: 'displayName',
     path: 'displayName',
-    name: localeData[currentLang]['panel.displayName'],
-    description: localeData[currentLang]['panel.displayNameTips'],
+    name: 'Display name',
+    description: 'Change the field or series name',
     editor: standardEditorsRegistry.get('text').editor as any,
     override: standardEditorsRegistry.get('text').editor as any,
-    process: stringOverrideProcessor,
+    process: displayNameOverrideProcessor,
     settings: {
       placeholder: 'none',
       expandTemplateVars: true,
@@ -54,7 +69,7 @@ export const getStandardFieldConfigs = () => {
   const unit: FieldConfigPropertyItem<any, string, StringFieldConfigSettings> = {
     id: 'unit',
     path: 'unit',
-    name: localeData[currentLang]['common.unit'],
+    name: 'Unit',
     description: '',
 
     editor: standardEditorsRegistry.get('unit').editor as any,
@@ -65,15 +80,15 @@ export const getStandardFieldConfigs = () => {
       placeholder: 'none',
     },
 
-    shouldApply: field => field.type === FieldType.number,
+    shouldApply: () => true,
     category,
   };
 
   const min: FieldConfigPropertyItem<any, number, NumberFieldConfigSettings> = {
     id: 'min',
     path: 'min',
-    name: localeData[currentLang]['common.min'],
-    description: localeData[currentLang]['panel.minMaxTips'],
+    name: 'Min',
+    description: 'Leave empty to calculate based on all values',
 
     editor: standardEditorsRegistry.get('number').editor as any,
     override: standardEditorsRegistry.get('number').editor as any,
@@ -82,15 +97,15 @@ export const getStandardFieldConfigs = () => {
     settings: {
       placeholder: 'auto',
     },
-    shouldApply: field => field.type === FieldType.number,
+    shouldApply: (field) => field.type === FieldType.number,
     category,
   };
 
   const max: FieldConfigPropertyItem<any, number, NumberFieldConfigSettings> = {
     id: 'max',
     path: 'max',
-    name: localeData[currentLang]['common.max'],
-    description: localeData[currentLang]['panel.minMaxTips'],
+    name: 'Max',
+    description: 'Leave empty to calculate based on all values',
 
     editor: standardEditorsRegistry.get('number').editor as any,
     override: standardEditorsRegistry.get('number').editor as any,
@@ -100,14 +115,14 @@ export const getStandardFieldConfigs = () => {
       placeholder: 'auto',
     },
 
-    shouldApply: field => field.type === FieldType.number,
+    shouldApply: (field) => field.type === FieldType.number,
     category,
   };
 
   const decimals: FieldConfigPropertyItem<any, number, NumberFieldConfigSettings> = {
     id: 'decimals',
     path: 'decimals',
-    name: localeData[currentLang]['common.decimals'],
+    name: 'Decimals',
 
     editor: standardEditorsRegistry.get('number').editor as any,
     override: standardEditorsRegistry.get('number').editor as any,
@@ -120,15 +135,14 @@ export const getStandardFieldConfigs = () => {
       integer: true,
     },
 
-    shouldApply: field => field.type === FieldType.number,
+    shouldApply: (field) => field.type === FieldType.number,
     category,
   };
 
   const thresholds: FieldConfigPropertyItem<any, ThresholdsConfig, ThresholdsFieldConfigSettings> = {
     id: 'thresholds',
     path: 'thresholds',
-    name: localeData[currentLang]['common.thresholds'],
-
+    name: 'Thresholds',
     editor: standardEditorsRegistry.get('thresholds').editor as any,
     override: standardEditorsRegistry.get('thresholds').editor as any,
     process: thresholdsOverrideProcessor,
@@ -137,34 +151,35 @@ export const getStandardFieldConfigs = () => {
       mode: ThresholdsMode.Absolute,
       steps: [
         { value: -Infinity, color: 'green' },
-        // { value: 80, color: 'red' },
+        { value: 80, color: 'red' },
       ],
     },
-    shouldApply: field => field.type === FieldType.number,
-    category: [localeData[currentLang]['common.thresholds']],
-    getItemsCount: value => (value ? value.steps.length : 0),
+    shouldApply: () => true,
+    category: ['Thresholds'],
+    getItemsCount: (value) => (value ? value.steps.length : 0),
   };
 
   const mappings: FieldConfigPropertyItem<any, ValueMapping[], ValueMappingFieldConfigSettings> = {
     id: 'mappings',
     path: 'mappings',
-    name: localeData[currentLang]['panel.valueMappings'],
+    name: 'Value mappings',
+    description: 'Modify the display text based on input value',
 
     editor: standardEditorsRegistry.get('mappings').editor as any,
     override: standardEditorsRegistry.get('mappings').editor as any,
     process: valueMappingsOverrideProcessor,
     settings: {},
     defaultValue: [],
-    shouldApply: field => field.type === FieldType.number,
-    category: [localeData[currentLang]['panel.valueMappings']],
+    shouldApply: () => true,
+    category: ['Value mappings'],
     getItemsCount: (value?) => (value ? value.length : 0),
   };
 
   const noValue: FieldConfigPropertyItem<any, string, StringFieldConfigSettings> = {
     id: 'noValue',
     path: 'noValue',
-    name: localeData[currentLang]['panel.noValue'],
-    description: localeData[currentLang]['panel.noValueTips'],
+    name: 'No Value',
+    description: 'What to show when there is no value',
 
     editor: standardEditorsRegistry.get('text').editor as any,
     override: standardEditorsRegistry.get('text').editor as any,
@@ -181,7 +196,7 @@ export const getStandardFieldConfigs = () => {
   const links: FieldConfigPropertyItem<any, DataLink[], StringFieldConfigSettings> = {
     id: 'links',
     path: 'links',
-    name: localeData[currentLang]['common.dataLinks'],
+    name: 'Data links',
     editor: standardEditorsRegistry.get('links').editor as any,
     override: standardEditorsRegistry.get('links').editor as any,
     process: dataLinksOverrideProcessor,
@@ -189,26 +204,26 @@ export const getStandardFieldConfigs = () => {
       placeholder: '-',
     },
     shouldApply: () => true,
-    category: [localeData[currentLang]['common.dataLinks']],
-    getItemsCount: value => (value ? value.length : 0),
+    category: ['Data links'],
+    getItemsCount: (value) => (value ? value.length : 0),
   };
 
-  // const color: FieldConfigPropertyItem<any, string, StringFieldConfigSettings> = {
-  //   id: 'color',
-  //   path: 'color',
-  //   name: 'Color',
-  //   description: 'Customise color',
-  //   editor: standardEditorsRegistry.get('color').editor as any,
-  //   override: standardEditorsRegistry.get('color').editor as any,
-  //   process: identityOverrideProcessor,
-  //   settings: {
-  //     placeholder: '-',
-  //   },
-  //   shouldApply: () => true,
-  //   category: ['Color & thresholds'],
-  // };
+  const color: FieldConfigPropertyItem<any, FieldColor | undefined, FieldColorConfigSettings> = {
+    id: 'color',
+    path: 'color',
+    name: 'Color scheme',
+    editor: standardEditorsRegistry.get('fieldColor').editor as any,
+    override: standardEditorsRegistry.get('fieldColor').editor as any,
+    process: identityOverrideProcessor,
+    shouldApply: () => true,
+    settings: {
+      byValueSupport: true,
+      preferThresholdsMode: true,
+    },
+    category,
+  };
 
-  return [unit, min, max, decimals, displayName, noValue, thresholds, mappings, links];
+  return [unit, min, max, decimals, displayName, color, noValue, thresholds, mappings, links];
 };
 
 /**
@@ -222,6 +237,13 @@ export const getStandardOptionEditors = () => {
     editor: NumberValueEditor as any,
   };
 
+  const slider: StandardEditorsRegistryItem<number> = {
+    id: 'slider',
+    name: 'Slider',
+    description: 'Allows numeric values input',
+    editor: SliderValueEditor as any,
+  };
+
   const text: StandardEditorsRegistryItem<string> = {
     id: 'text',
     name: 'Text',
@@ -229,11 +251,20 @@ export const getStandardOptionEditors = () => {
     editor: StringValueEditor as any,
   };
 
+  const strings: StandardEditorsRegistryItem<string[]> = {
+    id: 'strings',
+    name: 'String array',
+    description: 'An array of strings',
+    editor: StringArrayEditor as any,
+  };
+
   const boolean: StandardEditorsRegistryItem<boolean> = {
     id: 'boolean',
     name: 'Boolean',
     description: 'Allows boolean values input',
-    editor: props => <Switch {...props} onChange={e => props.onChange(e.currentTarget.checked)} />,
+    editor(props) {
+      return <Switch {...props} onChange={(e) => props.onChange(e.currentTarget.checked)} />;
+    },
   };
 
   const select: StandardEditorsRegistryItem<any> = {
@@ -243,11 +274,20 @@ export const getStandardOptionEditors = () => {
     editor: SelectValueEditor as any,
   };
 
+  const multiSelect: StandardEditorsRegistryItem<any> = {
+    id: 'multi-select',
+    name: 'Multi select',
+    description: 'Allows for multiple option selection',
+    editor: MultiSelectValueEditor as any,
+  };
+
   const radio: StandardEditorsRegistryItem<any> = {
     id: 'radio',
     name: 'Radio',
     description: 'Allows option selection',
-    editor: props => <RadioButtonGroup {...props} options={props.item.settings?.options} />,
+    editor(props) {
+      return <RadioButtonGroup {...props} options={props.item.settings?.options} />;
+    },
   };
 
   const unit: StandardEditorsRegistryItem<string> = {
@@ -275,7 +315,16 @@ export const getStandardOptionEditors = () => {
     id: 'color',
     name: 'Color',
     description: 'Allows color selection',
-    editor: ColorValueEditor as any,
+    editor(props) {
+      return <ColorValueEditor value={props.value} onChange={props.onChange} />;
+    },
+  };
+
+  const fieldColor: StandardEditorsRegistryItem<FieldColor> = {
+    id: 'fieldColor',
+    name: 'Field Color',
+    description: 'Field color selection',
+    editor: FieldColorEditor as any,
   };
 
   const links: StandardEditorsRegistryItem<DataLink[]> = {
@@ -285,12 +334,37 @@ export const getStandardOptionEditors = () => {
     editor: DataLinksValueEditor as any,
   };
 
-  const statsPicker: StandardEditorsRegistryItem<string[]> = {
+  const statsPicker: StandardEditorsRegistryItem<string[], StatsPickerConfigSettings> = {
     id: 'stats-picker',
     name: 'Stats Picker',
     editor: StatsPickerEditor as any,
     description: '',
   };
 
-  return [text, number, boolean, radio, select, unit, mappings, thresholds, links, color, statsPicker];
+
+  const fieldName: StandardEditorsRegistryItem<string, FieldNamePickerConfigSettings> = {
+    id: 'field-name',
+    name: 'Field name',
+    description: 'Time zone selection',
+    editor: FieldNamePicker as any,
+  };
+
+  return [
+    text,
+    number,
+    slider,
+    boolean,
+    radio,
+    select,
+    unit,
+    mappings,
+    thresholds,
+    links,
+    statsPicker,
+    strings,
+    fieldColor,
+    color,
+    multiSelect,
+    fieldName,
+  ];
 };

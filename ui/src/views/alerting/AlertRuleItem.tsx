@@ -2,9 +2,9 @@ import React, { PureComponent } from 'react';
 // @ts-ignore
 import Highlighter from 'react-highlight-words';
 import { AlertRule, Team } from '../../types';
-import { Icon, IconName, Button, Tooltip, LinkButton, HorizontalGroup, localeData, currentLang } from 'src/packages/datav-core/src';
+import { localeData, currentLang } from 'src/packages/datav-core/src';
+import { Icon, IconName, Button, Tooltip, LinkButton, HorizontalGroup } from 'src/packages/datav-core/src/ui';
 import { Link } from 'react-router-dom';
-import { FormattedMessage } from 'react-intl';
 
 export interface Props {
   rule: AlertRule;

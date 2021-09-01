@@ -1,13 +1,12 @@
 import React, { PureComponent } from 'react';
-import { css } from 'emotion';
-import uniqueId from 'lodash/uniqueId';
+import { css } from '@emotion/css';
+import { uniqueId } from 'lodash';
 import { DataSourceSettings } from '../../../data';
 import { Button } from '../Button';
-import { FormField } from '../Form/Legacy/Field/FormField';
+import { FormField } from '../FormField/FormField';
 import { Icon } from '../Icon/Icon';
-import { SecretFormField } from '../Form/Legacy/Field/SecretFormField';
+import { SecretFormField } from '../SecretFormField/SecretFormField';
 import { stylesFactory } from '../../themes';
-import { FormattedMessage } from 'react-intl';
 
 export interface CustomHeader {
   id: string;
@@ -53,6 +52,7 @@ const getCustomHeaderRowStyles = stylesFactory(() => {
     `,
   };
 });
+
 const CustomHeaderRow: React.FC<CustomHeaderRowProps> = ({ header, onBlur, onChange, onRemove, onReset }) => {
   const styles = getCustomHeaderRowStyles();
   return (
@@ -63,7 +63,7 @@ const CustomHeaderRow: React.FC<CustomHeaderRowProps> = ({ header, onBlur, onCha
         placeholder="X-Custom-Header"
         labelWidth={5}
         value={header.name || ''}
-        onChange={e => onChange({ ...header, name: e.target.value })}
+        onChange={(e) => onChange({ ...header, name: e.target.value })}
         onBlur={onBlur}
       />
       <SecretFormField
@@ -75,10 +75,16 @@ const CustomHeaderRow: React.FC<CustomHeaderRowProps> = ({ header, onBlur, onCha
         inputWidth={header.configured ? 11 : 12}
         placeholder="Header Value"
         onReset={() => onReset(header.id)}
-        onChange={e => onChange({ ...header, value: e.target.value })}
+        onChange={(e) => onChange({ ...header, value: e.target.value })}
         onBlur={onBlur}
       />
-      <Button variant="secondary" size="xs" onClick={_e => onRemove(header.id)}>
+      <Button
+        type="button"
+        aria-label="Remove header"
+        variant="secondary"
+        size="xs"
+        onClick={(_e) => onRemove(header.id)}
+      >
         <Icon name="trash-alt" />
       </Button>
     </div>
@@ -98,12 +104,12 @@ export class CustomHeadersSettings extends PureComponent<Props, State> {
     this.state = {
       headers: Object.keys(jsonData)
         .sort()
-        .filter(key => key.startsWith('httpHeaderName'))
+        .filter((key) => key.startsWith('httpHeaderName'))
         .map((key, index) => {
           return {
             id: uniqueId(),
             name: jsonData[key],
-            value: secureJsonData !== undefined ? secureJsonData[`httpHeaderValue${index + 1}`] : '',
+            value: secureJsonData !== undefined ? secureJsonData[key] : '',
             configured: (secureJsonFields && secureJsonFields[`httpHeaderValue${index + 1}`]) || false,
           };
         }),
@@ -112,35 +118,38 @@ export class CustomHeadersSettings extends PureComponent<Props, State> {
 
   updateSettings = () => {
     const { headers } = this.state;
-    const { jsonData } = this.props.dataSourceConfig;
-    const secureJsonData = this.props.dataSourceConfig.secureJsonData || {};
-    //@ts-ignore
+
+    // we remove every httpHeaderName* field
+    const newJsonData = Object.fromEntries(
+      Object.entries(this.props.dataSourceConfig.jsonData).filter(([key, val]) => !key.startsWith('httpHeaderName'))
+    );
+
+    // we remove every httpHeaderValue* field
+    const newSecureJsonData = Object.fromEntries(
+      Object.entries(this.props.dataSourceConfig.secureJsonData || {}).filter(
+        ([key, val]) => !key.startsWith('httpHeaderValue')
+      )
+    );
+
+    // then we add the current httpHeader-fields
     for (const [index, header] of headers.entries()) {
-      jsonData[`httpHeaderName${index + 1}`] = header.name;
+      newJsonData[`httpHeaderName${index + 1}`] = header.name;
       if (!header.configured) {
-        secureJsonData[`httpHeaderValue${index + 1}`] = header.value;
+        newSecureJsonData[`httpHeaderValue${index + 1}`] = header.value;
       }
-      Object.keys(jsonData)
-        .filter(
-          key =>
-            key.startsWith('httpHeaderName') && parseInt(key.substring('httpHeaderName'.length), 10) > headers.length
-        )
-        .forEach(key => {
-          delete jsonData[key];
-        });
     }
-    
+
     this.props.onChange({
       ...this.props.dataSourceConfig,
-      jsonData,
-      secureJsonData,
+      jsonData: newJsonData,
+      secureJsonData: newSecureJsonData,
     });
   };
 
   onHeaderAdd = () => {
-    this.setState(prevState => {
+    this.setState((prevState) => {
       return { headers: [...prevState.headers, { id: uniqueId(), name: '', value: '', configured: false }] };
-    }, this.updateSettings);
+    });
   };
 
   onHeaderChange = (headerIndex: number, value: CustomHeader) => {
@@ -174,30 +183,12 @@ export class CustomHeadersSettings extends PureComponent<Props, State> {
   };
 
   onHeaderRemove = (headerId: string) => {
-    let headers = this.state.headers.filter(h => {
-      return h.id !== headerId
-    })
-
-
-    this.setState({
-      ...this.state,
-      headers: headers
-    })
-
-    let jsonData ={}
-    let secureJsonData = {}
-
-    //@ts-ignore
-    for (const [index, header] of headers.entries()) {
-      jsonData[`httpHeaderName${index + 1}`] = header.name;
-      secureJsonData[`httpHeaderValue${index + 1}`] = header.value;
-    }
-    
-    this.props.onChange({
-      ...this.props.dataSourceConfig,
-      jsonData,
-      secureJsonData,
-    });
+    this.setState(
+      ({ headers }) => ({
+        headers: headers.filter((h) => h.id !== headerId),
+      }),
+      this.updateSettings
+    );
   };
 
   render() {
@@ -205,14 +196,14 @@ export class CustomHeadersSettings extends PureComponent<Props, State> {
     return (
       <div className={'gf-form-group'}>
         <div className="gf-form">
-          <h6><FormattedMessage id="datasource.customHttpHeader"/></h6>
+          <h6>Custom HTTP Headers</h6>
         </div>
         <div>
           {headers.map((header, i) => (
             <CustomHeaderRow
               key={header.id}
               header={header}
-              onChange={h => {
+              onChange={(h) => {
                 this.onHeaderChange(i, h);
               }}
               onBlur={this.updateSettings}
@@ -225,11 +216,12 @@ export class CustomHeadersSettings extends PureComponent<Props, State> {
           <Button
             variant="secondary"
             icon="plus"
-            onClick={e => {
+            type="button"
+            onClick={(e) => {
               this.onHeaderAdd();
             }}
           >
-            <FormattedMessage id="datasource.addHeader"/>
+            Add header
           </Button>
         </div>
       </div>

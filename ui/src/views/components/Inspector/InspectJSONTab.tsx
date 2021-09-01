@@ -1,16 +1,16 @@
 import React, { PureComponent } from 'react';
 import { chain } from 'lodash';
-import { AppEvents, PanelData, SelectableValue } from 'src/packages/datav-core/src';
-import { Button, CodeEditor,FormField as  Field, Select } from 'src/packages/datav-core/src';
+import { AppEvents, PanelData, SelectableValue } from 'src/packages/datav-core/src/data';
+import { Button, CodeEditor, Field, Select } from 'src/packages/datav-core/src/ui';
 import AutoSizer from 'react-virtualized-auto-sizer';
 
 import { DashboardModel, PanelModel } from 'src/views/dashboard/model';
-import { getPanelInspectorStyles } from './styles';
+import { getPanelInspectorStyles } from '../inspector/styles';
 import appEvents from 'src/core/library/utils/app_events';
 
 enum ShowContent {
   PanelJSON = 'panel',
-  PanelData = 'data',
+  DataJSON = 'data',
   DataStructure = 'structure',
 }
 
@@ -21,9 +21,9 @@ const options: Array<SelectableValue<ShowContent>> = [
     value: ShowContent.PanelJSON,
   },
   {
-    label: 'Panel data',
+    label: 'Data',
     description: 'The raw model passed to the panel visualization',
-    value: ShowContent.PanelData,
+    value: ShowContent.DataJSON,
   },
   {
     label: 'DataFrame structure',
@@ -33,10 +33,10 @@ const options: Array<SelectableValue<ShowContent>> = [
 ];
 
 interface Props {
-  dashboard: DashboardModel;
-  panel: PanelModel;
-  data?: PanelData;
   onClose: () => void;
+  dashboard?: DashboardModel;
+  panel?: PanelModel;
+  data?: PanelData;
 }
 
 interface State {
@@ -45,11 +45,15 @@ interface State {
 }
 
 export class InspectJSONTab extends PureComponent<Props, State> {
+  hasPanelJSON: boolean;
+
   constructor(props: Props) {
     super(props);
+    this.hasPanelJSON = !!(props.panel && props.dashboard);
+    // If we are in panel, we want to show PanelJSON, otherwise show DataJSON
     this.state = {
-      show: ShowContent.PanelJSON,
-      text: getPrettyJSON(props.panel.getSaveModel()),
+      show: this.hasPanelJSON ? ShowContent.PanelJSON : ShowContent.DataJSON,
+      text: this.hasPanelJSON ? getPrettyJSON(props.panel!.getSaveModel()) : getPrettyJSON(props.data),
     };
   }
 
@@ -65,32 +69,29 @@ export class InspectJSONTab extends PureComponent<Props, State> {
   };
 
   getJSONObject(show: ShowContent) {
-    if (show === ShowContent.PanelData) {
-      return this.props.data;
+    const { data, panel } = this.props;
+    if (show === ShowContent.DataJSON) {
+      return data;
     }
 
     if (show === ShowContent.DataStructure) {
-      const series = this.props.data?.series;
+      const series = data?.series;
       if (!series) {
         return { note: 'Missing Response Data' };
       }
-      return this.props.data!.series.map(frame => {
+      return data!.series.map((frame) => {
         const { table, fields, ...rest } = frame as any; // remove 'table' from arrow response
         return {
           ...rest,
-          fields: frame.fields.map(field => {
-            return chain(field)
-              .omit('values')
-              .omit('state')
-              .omit('display')
-              .value();
+          fields: frame.fields.map((field) => {
+            return chain(field).omit('values').omit('state').omit('display').value();
           }),
         };
       });
     }
 
-    if (show === ShowContent.PanelJSON) {
-      return this.props.panel.getSaveModel();
+    if (this.hasPanelJSON && show === ShowContent.PanelJSON) {
+      return panel!.getSaveModel();
     }
 
     return { note: `Unknown Object: ${show}` };
@@ -98,39 +99,42 @@ export class InspectJSONTab extends PureComponent<Props, State> {
 
   onApplyPanelModel = () => {
     const { panel, dashboard, onClose } = this.props;
-
-    try {
-      if (!dashboard.meta.canEdit) {
-        appEvents.emit(AppEvents.alertError, ['Unable to apply']);
-      } else {
-        const updates = JSON.parse(this.state.text);
-        panel.restoreModel(updates);
-        panel.refresh();
-        appEvents.emit(AppEvents.alertSuccess, ['Panel model updated']);
+    if (this.hasPanelJSON) {
+      try {
+        if (!dashboard!.meta.canEdit) {
+          appEvents.emit(AppEvents.alertError, ['Unable to apply']);
+        } else {
+          const updates = JSON.parse(this.state.text);
+          dashboard!.shouldUpdateDashboardPanelFromJSON(updates, panel!);
+          panel!.restoreModel(updates);
+          panel!.refresh();
+          appEvents.emit(AppEvents.alertSuccess, ['Panel model updated']);
+        }
+      } catch (err) {
+        console.error('Error applying updates', err);
+        appEvents.emit(AppEvents.alertError, ['Invalid JSON text']);
       }
-    } catch (err) {
-      console.error('Error applying updates', err);
-      appEvents.emit(AppEvents.alertError, ['Invalid JSON text']);
-    }
 
-    onClose();
+      onClose();
+    }
   };
 
   render() {
     const { dashboard } = this.props;
     const { show, text } = this.state;
-    const selected = options.find(v => v.value === show);
+    const jsonOptions = this.hasPanelJSON ? options : options.slice(1, options.length);
+    const selected = options.find((v) => v.value === show);
     const isPanelJSON = show === ShowContent.PanelJSON;
-    const canEdit = dashboard.meta.canEdit;
+    const canEdit = dashboard && dashboard.meta.canEdit;
     const styles = getPanelInspectorStyles();
 
     return (
       <>
         <div className={styles.toolbar}>
           <Field label="Select source" className="flex-grow-1">
-            <Select options={options} value={selected} onChange={this.onSelectChanged} />
+            <Select menuShouldPortal options={jsonOptions} value={selected} onChange={this.onSelectChanged} />
           </Field>
-          {isPanelJSON && canEdit && (
+          {this.hasPanelJSON && isPanelJSON && canEdit && (
             <Button className={styles.toolbarItem} onClick={this.onApplyPanelModel}>
               Apply
             </Button>

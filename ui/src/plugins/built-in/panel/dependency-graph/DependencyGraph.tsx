@@ -1,10 +1,10 @@
 import React, { PureComponent } from 'react';
 import _, { find, map, isUndefined, remove, each, has } from 'lodash';
 import { join, indexOf,cloneDeep, isArray} from 'lodash';
-import { PanelProps, withTheme, DatavTheme, toLegacyTableData, getTemplateSrv, Icon, getHistory } from 'src/packages/datav-core/src';
+import { PanelProps, GrafanaTheme, getTemplateSrv, getHistory,DataFrame,TableData,Column} from 'src/packages/datav-core/src';
+import {withTheme,Icon,stylesFactory} from 'src/packages/datav-core/src/ui';
 import { DependencyGraphOptions, CurrentData, QueryResponse, TableContent, ISelectionStatistics, IGraphMetrics, IGraph, IGraphNode, CyData, IGraphEdge, FilterConditions, NodeFilterType } from './types';
 import { css, cx } from 'emotion';
-import { stylesFactory } from 'src/packages/datav-core/src';
 import { NodeSingular, EdgeSingular, EventObject, EdgeCollection } from 'cytoscape';
 
 import './index.less'
@@ -25,7 +25,7 @@ import { connect } from 'react-redux';
 import { interactive } from 'src/core/library/utils/interactive';
 
 interface Props extends PanelProps<DependencyGraphOptions> {
-  theme: DatavTheme
+  theme: GrafanaTheme
   resetDashboardVariables : typeof resetDashboardVariables
 }
 interface State {
@@ -492,12 +492,12 @@ export class DependencyGraph extends PureComponent<Props, State> {
               <div id={`canvas-container-${panel.id}`} style={{ width: '100%', height: '100%', overflow: 'hidden' }}></div>
 
               <div className="zoom-button-container">
-                <Tooltip placement="right" title={paused ? "Play" : "Pause"}><Button className="btn navbar-button" onClick={this.toggleAnimation}>{paused ? <PlayCircleOutlined /> : <PauseCircleOutlined />}</Button></Tooltip>
-                <Tooltip placement="right" title="Layout as a tree"><Button className="btn navbar-button" onClick={() => this.runLayout()}><ApartmentOutlined /></Button></Tooltip>
-                <Tooltip placement="right" title="Fit to the canvas"><Button className="btn navbar-button" onClick={this.fit}><AimOutlined /></Button></Tooltip>
-                <Tooltip placement="right" title="Zoom in"><Button className="btn navbar-button" onClick={() => this.zoom(+1)}><PlusOutlined /></Button></Tooltip>
-                <Tooltip placement="right" title="Zoom out"><Button className="btn navbar-button" onClick={() => this.zoom(-1)}><MinusOutlined /></Button></Tooltip>
-                <Tooltip placement="right" title="Filter the nodes and edges"><Button className="btn navbar-button" onClick={() => this.showFilterPanel()}><FilterOutlined /></Button></Tooltip>
+                <Tooltip placement="right" title={paused ? "Play" : "Pause"}><Button className="btn navbar-button" onClick={this.toggleAnimation}>{paused ? <PlayCircleOutlined translate /> : <PauseCircleOutlined translate />}</Button></Tooltip>
+                <Tooltip placement="right" title="Layout as a tree"><Button className="btn navbar-button" onClick={() => this.runLayout()}><ApartmentOutlined translate/></Button></Tooltip>
+                <Tooltip placement="right" title="Fit to the canvas"><Button className="btn navbar-button" onClick={this.fit}><AimOutlined translate /></Button></Tooltip>
+                <Tooltip placement="right" title="Zoom in"><Button className="btn navbar-button" onClick={() => this.zoom(+1)}><PlusOutlined translate /></Button></Tooltip>
+                <Tooltip placement="right" title="Zoom out"><Button className="btn navbar-button" onClick={() => this.zoom(-1)}><MinusOutlined translate /></Button></Tooltip>
+                <Tooltip placement="right" title="Filter the nodes and edges"><Button className="btn navbar-button" onClick={() => this.showFilterPanel()}><FilterOutlined translate /></Button></Tooltip>
               </div>
             </div>
             {showStatistics && <div className="statistics show">
@@ -506,7 +506,7 @@ export class DependencyGraph extends PureComponent<Props, State> {
                 {this.resolvedDrillDownLink
                   && this.resolvedDrillDownLink.length > 0
                   && <Tooltip title="Drilldown link"><a target="_blank" href={this.resolvedDrillDownLink}>
-                    <LinkOutlined className="ub-ml2"/>
+                    <LinkOutlined translate className="ub-ml2"/>
                   </a></Tooltip>}
 
                 {options.clickEvent && <Tooltip title="Trigger click event"><Icon name="mouse-alt" className="pointer ub-ml2" size="lg" onClick={() => onClickFunc(this.selectionId,getHistory(),(k,v) => interactive.setVariable(k,v,this.props.dashboard,this.props.resetDashboardVariables),interactive.setTime)}/></Tooltip>}
@@ -611,3 +611,39 @@ const getStyles = stylesFactory(() => {
     `,
   };
 });
+
+
+
+ 
+const toLegacyTableData = (frame: DataFrame):  TableData => {
+    const { fields } = frame;
+  
+    const rowCount = frame.length;
+    const rows: any[][] = [];
+  
+    for (let i = 0; i < rowCount; i++) {
+      const row: any[] = [];
+      for (let j = 0; j < fields.length; j++) {
+        row.push(fields[j].values.get(i));
+      }
+      rows.push(row);
+    }
+  
+    return {
+      columns: fields.map(f => {
+        const { name, config } = f;
+        if (config) {
+          // keep unit etc
+          const { ...column } = config;
+          (column as Column).text = name;
+          return column as Column;
+        }
+        return { text: name };
+      }),
+      type: 'table',
+      refId: frame.refId,
+      meta: frame.meta,
+      rows,
+    };
+  };
+  

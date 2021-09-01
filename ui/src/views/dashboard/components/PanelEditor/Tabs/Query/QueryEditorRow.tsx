@@ -9,7 +9,7 @@ import _ from 'lodash';
 // Types
 import { PanelModel ,DashboardModel} from 'src/views/dashboard/model';
 
-import { ErrorBoundaryAlert, HorizontalGroup } from 'src/packages/datav-core/src';
+import { ErrorBoundaryAlert, HorizontalGroup } from 'src/packages/datav-core/src/ui';
 import {
   DataQuery,
   DataSourceApi,

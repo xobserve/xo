@@ -2,9 +2,9 @@
 import React, { FC, useCallback } from 'react';
 import { useDispatch } from 'react-redux';
 import { Dispatch } from 'redux';
-import { Button, VerticalGroup } from 'src/packages/datav-core/src';
+import { Button, VerticalGroup } from 'src/packages/datav-core/src/ui';
+import { Layout } from 'src/packages/datav-core/src/ui/components/Layout/Layout';
 
-import { Layout } from 'src/packages/datav-core/src';
 import { updateLocation } from 'src/store/reducers/location';
 import { PanelEditorTabId } from './types';
 

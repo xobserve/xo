@@ -15,7 +15,7 @@ import {
   UrlQueryMap,
 } from 'src/packages/datav-core/src';
 import { CoreEvents, Role } from 'src/types';
-import { Alert, Tooltip } from 'src/packages/datav-core/src';
+import { Alert, Tooltip } from 'src/packages/datav-core/src/ui';
 
 import Page from '../../Layouts/Page/Page';
 import { getPluginSettings } from 'src/plugins/plugin_settings_cache';

@@ -12,7 +12,7 @@ import {
   BracesPlugin,
   DOMUtil,
   SuggestionsState 
-} from 'src/packages/datav-core/src';
+} from 'src/packages/datav-core/src/ui';
  
 import Prism from 'prismjs';
 

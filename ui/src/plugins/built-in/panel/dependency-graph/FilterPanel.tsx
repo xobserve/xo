@@ -1,11 +1,11 @@
 import React from 'react'
 import _ from 'lodash'
-import { Modal, Input, InputNumber, Divider, Checkbox } from 'antd'
+import { Modal, Input, InputNumber, Divider } from 'antd'
 import { IGraph, FilterConditions, NodeFilterType, ConditionFilterType, ConditionMetric } from './types'
 import { Select, Tag } from 'antd'
 import { PlusOutlined, CloseOutlined } from '@ant-design/icons'
-import { LegacyForms } from 'src/packages/datav-core/src'
-const {LegacySwitch} = LegacyForms
+import { LegacyForms } from 'src/packages/datav-core/src/ui'
+const {Switch} = LegacyForms
 
 const { Option } = Select
 const { ALL, IN, OUT_OF } = NodeFilterType
@@ -92,18 +92,18 @@ const FilterPanel = ({ graph, conditions, onClose, onChange,onSubmit}: Props) =>
                             
                             <InputNumber value={con.value} onBlur={(e) => {con.value = _.toNumber(e.currentTarget.value); onChange(conditions)}} />
                             
-                            <Tag className="ub-ml1 pointer" onClick={() => delCondition(i)}><CloseOutlined /></Tag>
+                            <Tag className="ub-ml1 pointer" onClick={() => delCondition(i)}><CloseOutlined translate={true}/></Tag>
                         </div>)
                 }
 
                 <div className="gf-form">
-                    <Tag className="ub-ml1 pointer" onClick={addCondition}><PlusOutlined /></Tag>
+                    <Tag className="ub-ml1 pointer" onClick={addCondition}><PlusOutlined translate={true}/></Tag>
                 </div>
 
                 <Divider />
                 <div className="gf-form">
                     <label className="gf-form-label width-7">Store conditions</label>
-                    <LegacySwitch label="" checked={conditions.store} onChange={(e) => {conditions.store=e.currentTarget.checked;onChange(conditions)}}/>
+                    <Switch label="" checked={conditions.store} onChange={(e) => {conditions.store=e.currentTarget.checked;onChange(conditions)}}/>
                 </div>
             </Modal>
         </>

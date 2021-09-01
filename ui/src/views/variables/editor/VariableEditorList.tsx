@@ -1,5 +1,5 @@
 import React, { MouseEvent, PureComponent } from 'react';
-import { IconButton ,config, currentLang} from 'src/packages/datav-core/src';
+import { config, currentLang} from 'src/packages/datav-core/src';
 
 import EmptyListCTA from 'src/views/components/EmptyListCTA/EmptyListCTA';
 import { QueryVariableModel, VariableModel,StoreState } from 'src/types';
@@ -7,6 +7,7 @@ import { toVariableIdentifier, VariableIdentifier } from '../state/types';
 import { connect } from 'react-redux';
 import { Langs } from 'src/core/library/locale/types';
 import { DashboardModel } from 'src/views/dashboard/model';
+import { IconButton } from 'src/packages/datav-core/src/ui';
 
 export interface Props {
   dashboard: DashboardModel

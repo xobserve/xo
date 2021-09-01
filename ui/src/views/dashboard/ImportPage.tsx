@@ -1,7 +1,8 @@
 import React, { FormEvent, PureComponent } from 'react';
 import { css } from 'emotion';
 import { AppEvents, NavModel, getBootConfig } from 'src/packages/datav-core/src';
-import { stylesFactory, Input, TextArea, FormField as Field, Form, DataSourceInstanceSettings,DataSourceSelectItem } from 'src/packages/datav-core/src';
+import {  DataSourceInstanceSettings,DataSourceSelectItem } from 'src/packages/datav-core/src';
+import {stylesFactory, Input, TextArea, Field, Form,} from 'src/packages/datav-core/src/ui';
 import Page from 'src/views/Layouts/Page/Page';
 // import { ImportDashboardOverview } from './components/ImportDashboardOverview';
 import { validateDashboardJson, validateGcomDashboard } from './utils/validation';
@@ -155,8 +156,7 @@ class DashboardImportUnConnected extends PureComponent<Props, State> {
                             <>
                                 <Field invalid={!!errors.dashboardJson} error={errors.dashboardJson && errors.dashboardJson.message}>
                                     <TextArea
-                                        name="dashboardJson"
-                                        ref={register({
+                                        {...register("dashboardJson",{
                                             required: 'Need a dashboard json model',
                                             validate: validateDashboardJson,
                                         })}

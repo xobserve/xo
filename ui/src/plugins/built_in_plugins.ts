@@ -15,7 +15,6 @@ const plugin80791b3ae7002cb88c246876d9faa8f8 = async () => await import(/* webpa
 const pluginc769d3f4cac9e43c087b71e074737688 = async () => await import(/* webpackChunkName: 'pluginc769d3f4cac9e43c087b71e074737688' */ 'src/plugins/built-in/datasource/jaeger/module'); 
 const plugine4f00638b8a10e6994e67af2f832d51c = async () => await import(/* webpackChunkName: 'plugine4f00638b8a10e6994e67af2f832d51c' */ 'src/plugins/built-in/datasource/prometheus/module'); 
 const pluginf0d09f6b3c81655fbac6bb78ccbe20ac = async () => await import(/* webpackChunkName: 'pluginf0d09f6b3c81655fbac6bb78ccbe20ac' */ 'src/plugins/built-in/datasource/staticdata/module'); 
-const pluginef654c40ab4f1747fc699915d4f70902 = async () => await import(/* webpackChunkName: 'pluginef654c40ab4f1747fc699915d4f70902' */ 'src/plugins/built-in/datasource/testdata/module'); 
 export const builtInPlugins = { 
 	'src/plugins/built-in/panel/bargauge/module': plugin387dec387138251637f7c5b4d34e6a02,
 	'src/plugins/built-in/panel/dependency-graph/module': plugin4b0f25be95d59e92180340420f162f81,
@@ -33,5 +32,4 @@ export const builtInPlugins = {
 	'src/plugins/built-in/datasource/jaeger/module': pluginc769d3f4cac9e43c087b71e074737688,
 	'src/plugins/built-in/datasource/prometheus/module': plugine4f00638b8a10e6994e67af2f832d51c,
 	'src/plugins/built-in/datasource/staticdata/module': pluginf0d09f6b3c81655fbac6bb78ccbe20ac,
-	'src/plugins/built-in/datasource/testdata/module': pluginef654c40ab4f1747fc699915d4f70902,
 }

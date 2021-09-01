@@ -1,11 +1,12 @@
 import React, { FC, memo } from 'react';
 import { css } from 'emotion';
-import { useTheme, CustomScrollbar, stylesFactory, IconButton,DatavTheme} from 'src/packages/datav-core/src';
+import { useTheme, CustomScrollbar, stylesFactory, IconButton} from 'src/packages/datav-core/src/ui';
 import { useSearchQuery } from '../hooks/useSearchQuery';
 import { useDashboardSearch } from '../hooks/useDashboardSearch';
 import { SearchField } from './SearchField';
 import { SearchResults } from './SearchResults';
 import { ActionRow } from './ActionRow';
+import { GrafanaTheme } from 'src/packages/datav-core/src';
 
 export interface Props {
   onCloseSearch: () => void;
@@ -54,7 +55,7 @@ export const DashboardSearch: FC<Props> = memo(({ onCloseSearch, folder }) => {
   );
 });
 
-const getStyles = stylesFactory((theme: DatavTheme) => {
+const getStyles = stylesFactory((theme: GrafanaTheme) => {
   return {
     overlay: css`
       outline: none;

@@ -1,6 +1,7 @@
 import { Labels } from './data';
-import { GraphSeriesXY } from './graph';
 import { DataFrame } from './dataFrame';
+import { AbsoluteTimeRange } from './time';
+import { DataQuery } from './datasource';
 
 /**
  * Mapping of log level abbreviation to canonical log level.
@@ -19,6 +20,7 @@ export enum LogLevel {
   error = 'error',
   info = 'info',
   information = 'info',
+  informational = 'info',
   notice = 'info',
   dbug = 'debug',
   debug = 'debug',
@@ -26,10 +28,17 @@ export enum LogLevel {
   unknown = 'unknown',
 }
 
+// Used for meta information such as common labels or returned log rows in logs view in Explore
 export enum LogsMetaKind {
   Number,
   String,
   LabelsMap,
+  Error,
+}
+
+export enum LogsSortOrder {
+  Descending = 'Descending',
+  Ascending = 'Ascending',
 }
 
 export interface LogsMetaItem {
@@ -54,6 +63,7 @@ export interface LogRowModel {
   // Actual log line
   entry: string;
   hasAnsi: boolean;
+  hasUnescapedContent: boolean;
   labels: Labels;
   logLevel: LogLevel;
   raw: string;
@@ -73,7 +83,9 @@ export interface LogsModel {
   hasUniqueLabels: boolean;
   meta?: LogsMetaItem[];
   rows: LogRowModel[];
-  series?: GraphSeriesXY[];
+  series?: DataFrame[];
+  visibleRange?: AbsoluteTimeRange;
+  queries?: DataQuery[];
 }
 
 export interface LogSearchMatch {

@@ -8,8 +8,8 @@ import { useLocation } from 'react-router-dom'
 import classNames from 'classnames'
 
 import { User } from 'src/core/services/context';
-import { Icon, IconName, ThemeType, setCurrentTheme, getBootConfig } from 'src/packages/datav-core/src';
-
+import { ThemeType, setCurrentTheme, getBootConfig } from 'src/packages/datav-core/src';
+import { Icon1 as Icon, IconName} from 'src/packages/datav-core/src/ui';
 import { getFooterLinks } from '../Footer/Footer';
 // import appEvents from 'src/core/library/utils/app_events';
 // import { CoreEvents } from 'src/types';
@@ -132,22 +132,22 @@ export const BottomNavLinks = (props:Props) => {
           )}
 
               
-          {link.id !== 'datav-fix-menu-help' && children.map((child, index) => {
+          {link.id !== 'datav-fix-menu-help' && children.map((child:MenuItem, index) => {
             const subMenuItemSelected = _.startsWith(location.pathname, child.url)
             const  subMenuItemClasses = classNames({
               'sidemenu-dropdown-item-selected' : subMenuItemSelected
             }) 
             return (
-              <li key={`${child.title}-${index}`} className={subMenuItemClasses}>
+              <li key={`${child.text}-${index}`} className={subMenuItemClasses}>
                 {
                   child.redirectTo ?      
                   <Link to={child.redirectTo} rel="noopener">
                     {/* {child.icon && <Icon name={child.icon as IconName} className={subMenuIconClassName} />} */}
-                    {child.title}
+                    {child.text}
                   </Link> :
                      <Link to={child.url} rel="noopener">
                      {/* {child.icon && <Icon name={child.icon as IconName} className={subMenuIconClassName} />} */}
-                     {child.title}
+                     {child.text}
                    </Link>
                 }
            
@@ -155,12 +155,12 @@ export const BottomNavLinks = (props:Props) => {
             );
           })}
 
-          {link.id === 'datav-fix-menu-help' && children.map((child, index) => {
+          {link.id === 'datav-fix-menu-help' && children.map((child:MenuItem, index) => {
             return (
-              <li key={`${child.title}-${index}`} >
+              <li key={`${child.text}-${index}`} >
                      <a href={child.url} rel="noopener" target="_blank">
                      {/* {child.icon && <Icon name={child.icon as IconName} className={subMenuIconClassName} />} */}
-                     {child.title}
+                     {child.text}
                    </a>
               </li>
             );
@@ -185,7 +185,7 @@ export const BottomNavLinks = (props:Props) => {
           )}
 
           <li className="side-menu-header">
-            <span className="sidemenu-item-text">{link.title}</span>
+            <span className="sidemenu-item-text">{link.text}</span>
           </li>
         </ul>
       </div>

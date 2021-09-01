@@ -1,13 +1,17 @@
-import { sharedSingleStatPanelChangedHandler } from 'src/packages/datav-core/src';
+import { commonOptionsBuilder } from 'src/packages/datav-core/src/ui';
 import { PanelPlugin } from 'src/packages/datav-core/src';
 import { BarGaugePanel } from './BarGaugePanel';
 import { BarGaugeOptions, displayModes } from './types';
-import { addStandardDataReduceOptions } from '../stat/types';
+import { addOrientationOption, addStandardDataReduceOptions } from '../stat/types';
+
 
 export const plugin = new PanelPlugin<BarGaugeOptions>(BarGaugePanel)
   .useFieldConfig()
-  .setPanelOptions(builder => {
+  .setPanelOptions((builder) => {
     addStandardDataReduceOptions(builder);
+    addOrientationOption(builder);
+    commonOptionsBuilder.addTextSizeOptions(builder);
+
     builder
       .addRadio({
         path: 'displayMode',
@@ -25,4 +29,4 @@ export const plugin = new PanelPlugin<BarGaugeOptions>(BarGaugePanel)
         showIf: (options: BarGaugeOptions) => options.displayMode !== 'lcd',
       });
   })
-  .setPanelChangeHandler(sharedSingleStatPanelChangedHandler)
+

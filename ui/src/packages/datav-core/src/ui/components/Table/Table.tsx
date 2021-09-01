@@ -1,6 +1,5 @@
 import React, { FC, memo, useCallback, useMemo } from 'react';
 import { DataFrame, Field, getFieldDisplayName } from '../../../data';
-import classNames from 'classnames'
 import {
   Cell,
   Column,
@@ -15,8 +14,7 @@ import {
   useTable,
 } from 'react-table';
 import { FixedSizeList } from 'react-window';
-import { getColumns } from './utils';
-import { useTheme } from '../../themes';
+import { getColumns, sortCaseInsensitive, sortNumber } from './utils';
 import {
   TableColumnResizeActionCallback,
   TableFilterActionCallback,
@@ -25,11 +23,14 @@ import {
 } from './types';
 import { getTableStyles, TableStyles } from './styles';
 import { Icon } from '../Icon/Icon';
-import { CustomScrollbar } from '../CustomScrollbar/index';
+import { CustomScrollbar } from '../CustomScrollbar/CustomScrollbar';
 import { Filter } from './Filter';
 import { TableCell } from './TableCell';
+import { useStyles2 } from '../../themes';
+import classNames from 'classnames'
 
 const COLUMN_MIN_WIDTH = 150;
+
 
 export interface Props {
   ariaLabel?: string;
@@ -49,13 +50,12 @@ export interface Props {
 
 interface ReactTableInternalState extends UseResizeColumnsState<{}>, UseSortByState<{}>, UseFiltersState<{}> {}
 
-function useTableStateReducer(props: Props) {
+function useTableStateReducer({ onColumnResize, onSortByChange, data }: Props) {
   return useCallback(
     (newState: ReactTableInternalState, action: any) => {
       switch (action.type) {
         case 'columnDoneResizing':
-          if (props.onColumnResize) {
-            const { data } = props;
+          if (onColumnResize) {
             const info = (newState.columnResizing.headerIdWidths as any)[0];
             const columnIdString = info[0];
             const fieldIndex = parseInt(columnIdString, 10);
@@ -67,11 +67,10 @@ function useTableStateReducer(props: Props) {
             }
 
             const fieldDisplayName = getFieldDisplayName(field, data);
-            props.onColumnResize(fieldDisplayName, width);
+            onColumnResize(fieldDisplayName, width);
           }
         case 'toggleSortBy':
-          if (props.onSortByChange) {
-            const { data } = props;
+          if (onSortByChange) {
             const sortByFields: TableSortByFieldState[] = [];
 
             for (const sortItem of newState.sortBy) {
@@ -86,24 +85,24 @@ function useTableStateReducer(props: Props) {
               });
             }
 
-            props.onSortByChange(sortByFields);
+            onSortByChange(sortByFields);
           }
           break;
       }
 
       return newState;
     },
-    [props.onColumnResize, props.onSortByChange, props.data]
+    [data, onColumnResize, onSortByChange]
   );
 }
 
-function getInitialState(props: Props, columns: Column[]): Partial<ReactTableInternalState> {
+function getInitialState(initialSortBy: Props['initialSortBy'], columns: Column[]): Partial<ReactTableInternalState> {
   const state: Partial<ReactTableInternalState> = {};
 
-  if (props.initialSortBy) {
+  if (initialSortBy) {
     state.sortBy = [];
 
-    for (const sortBy of props.initialSortBy) {
+    for (const sortBy of initialSortBy) {
       for (const col of columns) {
         if (col.Header === sortBy.displayName) {
           state.sortBy.push({ id: col.id as string, desc: sortBy.desc });
@@ -125,9 +124,9 @@ export const Table: FC<Props> = memo((props: Props) => {
     columnMinWidth = COLUMN_MIN_WIDTH,
     noHeader,
     resizable = true,
+    initialSortBy,
   } = props;
-  const theme = useTheme();
-  const tableStyles = getTableStyles(theme);
+  const tableStyles = useStyles2(getTableStyles);
 
   // React table data array. This data acts just like a dummy array to let react-table know how many rows exist
   // The cells use the field to look up values
@@ -153,9 +152,13 @@ export const Table: FC<Props> = memo((props: Props) => {
       data: memoizedData,
       disableResizing: !resizable,
       stateReducer: stateReducer,
-      initialState: getInitialState(props, memoizedColumns),
+      initialState: getInitialState(initialSortBy, memoizedColumns),
+      sortTypes: {
+        number: sortNumber, // should be replace with the builtin number when react-table is upgraded, see https://github.com/tannerlinsley/react-table/pull/3235
+        'alphanumeric-insensitive': sortCaseInsensitive, // should be replace with the builtin string when react-table is upgraded, see https://github.com/tannerlinsley/react-table/pull/3235
+      },
     }),
-    [memoizedColumns, memoizedData, stateReducer, resizable]
+    [initialSortBy, memoizedColumns, memoizedData, resizable, stateReducer]
   );
 
   const { getTableProps, headerGroups, rows, prepareRow, totalColumnsWidth } = useTable(
@@ -166,43 +169,49 @@ export const Table: FC<Props> = memo((props: Props) => {
     useResizeColumns
   );
 
+  const { fields } = data;
+
   const inputClassName = classNames(tableStyles.row, { pointer: props.onRowClick !== null});
 
   const RenderRow = React.useCallback(
-    ({ index, style }) => {
-      const row = rows[index];
+    ({ index: rowIndex, style }) => {
+      const row = rows[rowIndex];
       prepareRow(row);
       return (
-        //@ts-ignore
         <div {...row.getRowProps({ style })} className={inputClassName}  onClick={props.onRowClick ? () => props.onRowClick(row.values) : null}>
           {row.cells.map((cell: Cell, index: number) => (
             <TableCell
               key={index}
-              field={data.fields[index]}
+              field={fields[index]}
               tableStyles={tableStyles}
               cell={cell}
               onCellFilterAdded={onCellFilterAdded}
+              columnIndex={index}
+              columnCount={row.cells.length}
             />
           ))}
         </div>
       );
     },
-    [prepareRow, rows]
+    [fields, onCellFilterAdded, prepareRow, rows, tableStyles]
   );
 
   const headerHeight = noHeader ? 0 : tableStyles.cellHeight;
 
   return (
-    //@ts-ignore
     <div {...getTableProps()} className={tableStyles.table} aria-label={ariaLabel}>
       <CustomScrollbar hideVerticalTrack={true}>
-        <div style={{ width: `${totalColumnsWidth}px` }}>
+        <div style={{ width: totalColumnsWidth ? `${totalColumnsWidth}px` : '100%' }}>
           {!noHeader && (
             <div>
               {headerGroups.map((headerGroup: HeaderGroup) => {
+                const { key, ...headerGroupProps } = headerGroup.getHeaderGroupProps();
                 return (
-                  //@ts-ignore
-                  <div className={tableStyles.thead} {...headerGroup.getHeaderGroupProps()}>
+                  <div
+                    className={tableStyles.thead}
+                    {...headerGroupProps}
+                    key={key}
+                  >
                     {headerGroup.headers.map((column: Column, index: number) =>
                       renderHeaderCell(column, tableStyles, data.fields[index])
                     )}
@@ -211,15 +220,21 @@ export const Table: FC<Props> = memo((props: Props) => {
               })}
             </div>
           )}
-          <FixedSizeList
-            height={height - headerHeight}
-            itemCount={rows.length}
-            itemSize={tableStyles.rowHeight}
-            width={'100%'}
-            style={{ overflow: 'hidden auto' }}
-          >
-            {RenderRow}
-          </FixedSizeList>
+          {rows.length > 0 ? (
+            <FixedSizeList
+              height={height - headerHeight}
+              itemCount={rows.length}
+              itemSize={tableStyles.rowHeight}
+              width={'100%'}
+              style={{ overflow: 'hidden auto' }}
+            >
+              {RenderRow}
+            </FixedSizeList>
+          ) : (
+            <div style={{ height: height - headerHeight }} className={tableStyles.noData}>
+              No data
+            </div>
+          )}
         </div>
       </CustomScrollbar>
     </div>

@@ -1,4 +1,4 @@
-import _ from 'lodash';
+import { debounce } from 'lodash';
 import React, { Context } from 'react';
 
 import { Value, Editor as CoreEditor } from 'slate';
@@ -63,10 +63,10 @@ export class QueryField extends React.PureComponent<QueryFieldProps, QueryFieldS
   constructor(props: QueryFieldProps, context: Context<any>) {
     super(props, context);
 
-    this.runOnChangeDebounced = _.debounce(this.runOnChange, 500);
+    this.runOnChangeDebounced = debounce(this.runOnChange, 500);
 
     const { onTypeahead, cleanText, portalOrigin, onWillApplySuggestion } = props;
-    
+
     // Base plugins
     this.plugins = [
       // SuggestionsPlugin and RunnerPlugin need to be before NewlinePlugin
@@ -79,7 +79,7 @@ export class QueryField extends React.PureComponent<QueryFieldProps, QueryFieldS
       IndentationPlugin(),
       ClipboardPlugin(),
       ...(props.additionalPlugins || []),
-    ].filter(p => p);
+    ].filter((p) => p);
 
     this.state = {
       suggestions: [],
@@ -112,8 +112,7 @@ export class QueryField extends React.PureComponent<QueryFieldProps, QueryFieldS
     // if query changed from the outside
     if (query !== prevProps.query) {
       // and we have a version that differs
-      //@ts-ignore
-      if (query !== Plain.serialize(value)) {
+      if (query !== Plain.serialize(value as any)) {
         this.setState({ value: makeValue(query || '', syntax) });
       }
     }
@@ -134,8 +133,7 @@ export class QueryField extends React.PureComponent<QueryFieldProps, QueryFieldS
       // The diff is needed because the actual value of editor have much more metadata (for example text selection)
       // that is not passed upstream so every change of editor value does not mean change of the query text.
       if (documentChanged) {
-        //@ts-ignore
-        const textChanged = Plain.serialize(prevValue) !== Plain.serialize(value);
+        const textChanged = Plain.serialize(prevValue as any) !== Plain.serialize(value as any);
         if (textChanged && runQuery) {
           this.runOnChangeAndRunQuery();
         }
@@ -149,10 +147,9 @@ export class QueryField extends React.PureComponent<QueryFieldProps, QueryFieldS
 
   runOnChange = () => {
     const { onChange } = this.props;
-
+    const value = Plain.serialize(this.state.value as any);
     if (onChange) {
-      //@ts-ignore
-      onChange(Plain.serialize(this.state.value));
+      onChange(this.cleanText(value));
     }
   };
 
@@ -182,10 +179,8 @@ export class QueryField extends React.PureComponent<QueryFieldProps, QueryFieldS
       onBlur();
     } else {
       // Run query by default on blur
-      //@ts-ignore
-      const previousValue = this.lastExecutedValue ? Plain.serialize(this.lastExecutedValue) : null;
-      //@ts-ignore
-      const currentValue = Plain.serialize(editor.value);
+      const previousValue = this.lastExecutedValue ? Plain.serialize(this.lastExecutedValue as any) : null;
+      const currentValue = Plain.serialize(editor.value as any);
 
       if (previousValue !== currentValue) {
         this.runOnChangeAndRunQuery();
@@ -193,6 +188,12 @@ export class QueryField extends React.PureComponent<QueryFieldProps, QueryFieldS
     }
     return next();
   };
+
+  cleanText(text: string) {
+    // RegExp with invisible characters we want to remove - currently only carriage return (newlines are visible)
+    const newText = text.replace(/[\r]/g, '');
+    return newText;
+  }
 
   render() {
     const { disabled } = this.props;
@@ -202,9 +203,9 @@ export class QueryField extends React.PureComponent<QueryFieldProps, QueryFieldS
 
     return (
       <div className={wrapperClassName}>
-        <div className="slate-query-field">
+        <div className="slate-query-field" >
           <Editor
-            ref={editor => (this.editor = editor!)}
+            ref={(editor) => (this.editor = editor!)}
             schema={SCHEMA}
             autoCorrect={false}
             readOnly={this.props.disabled}

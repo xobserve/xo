@@ -33,7 +33,7 @@ const UserTable = (props: Props) => {
             render: (_, user:UserState) => (
                 <>
                 <span>{user.username}</span>
-                {user.id == 1 && <Tooltip title={<FormattedMessage id="user.superAdminTips"/>}><Tag className="ub-ml1">Super Admin</Tag></Tooltip>}
+                {user.id === "1" && <Tooltip title={<FormattedMessage id="user.superAdminTips"/>}><Tag className="ub-ml1">Super Admin</Tag></Tooltip>}
                 {getState().user.id === user.id && <Tag className="ub-ml1">You</Tag>}
                 </>
             ),
@@ -44,7 +44,7 @@ const UserTable = (props: Props) => {
             key: 'role',
             render: (_, user:UserState) => (
                 <>
-                    {user.id == 1 ? <span>Super Admin</span> :<span>{user.role}</span>}
+                    {user.id === "1"? <span>Super Admin</span> :<span>{user.role}</span>}
                 </>
             ),
         },

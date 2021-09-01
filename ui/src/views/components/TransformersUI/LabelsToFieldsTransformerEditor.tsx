@@ -1,12 +1,12 @@
 import React from 'react';
 import {
   DataTransformerID,
-  standardTransformers,
-  TransformerRegistyItem,
-  TransformerUIProps,
   SelectableValue,
+  standardTransformers,
+  TransformerRegistryItem,
+  TransformerUIProps,
 } from 'src/packages/datav-core/src';
-import { Select } from 'src/packages/datav-core/src';
+import { Select } from 'src/packages/datav-core/src/ui';
 
 import { LabelsToFieldsOptions } from 'src/packages/datav-core/src/data/transformations/transformers/labelsToFields';
 
@@ -42,6 +42,7 @@ export const LabelsAsFieldsTransformerEditor: React.FC<TransformerUIProps<Labels
       <div className="gf-form">
         <div className="gf-form-label width-8">Value field name</div>
         <Select
+          menuShouldPortal
           isClearable={true}
           allowCustomValue={false}
           placeholder="(Optional) Select label"
@@ -49,14 +50,13 @@ export const LabelsAsFieldsTransformerEditor: React.FC<TransformerUIProps<Labels
           className="min-width-18 gf-form-spacing"
           value={options?.valueLabel}
           onChange={onValueLabelChange}
-          menuPlacement="bottom"
         />
       </div>
     </div>
   );
 };
 
-export const labelsToFieldsTransformerRegistryItem: TransformerRegistyItem<LabelsToFieldsOptions> = {
+export const labelsToFieldsTransformerRegistryItem: TransformerRegistryItem<LabelsToFieldsOptions> = {
   id: DataTransformerID.labelsToFields,
   editor: LabelsAsFieldsTransformerEditor,
   transformation: standardTransformers.labelsToFieldsTransformer,

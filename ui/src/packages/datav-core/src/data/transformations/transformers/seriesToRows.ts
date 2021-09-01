@@ -19,12 +19,12 @@ export interface SeriesToRowsTransformerOptions {}
 
 export const seriesToRowsTransformer: DataTransformerInfo<SeriesToRowsTransformerOptions> = {
   id: DataTransformerID.seriesToRows,
-  name: 'Series to rows', 
+  name: 'Series to rows',
   description: 'Combines multiple series into a single serie and appends a column with metric name per value.',
   defaultOptions: {},
-  operator: options => source =>
+  operator: (options) => (source) =>
     source.pipe(
-      map(data => {
+      map((data) => {
         if (!Array.isArray(data) || data.length <= 1) {
           return data;
         }

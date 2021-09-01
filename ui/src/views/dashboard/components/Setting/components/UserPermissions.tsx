@@ -30,7 +30,7 @@ const UserPermissions = (props:Props) =>{
                                 <td>
                                     <span className="color-primary ub-mr2">{permission.permission.length === 0 ? "IS" : "CAN"}</span> 
                                     <PermissionPicker minWidth="447px" value={permission.permission} onChange={(v) => props.onChange(permission.userId,v)}/> 
-                                    <CloseOutlined className="ub-ml1 color-error pointer" onClick={() => props.onDelete(permission.userId)}/>
+                                    <CloseOutlined translate className="ub-ml1 color-error pointer" onClick={() => props.onDelete(permission.userId)}/>
                                 </td>
                             </tr>
                         )

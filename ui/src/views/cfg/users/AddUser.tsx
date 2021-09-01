@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import { Controller as InputControl } from 'react-hook-form';
-import { LinkButton,Form,FormField as Field,Input,config,RadioButtonGroup} from 'src/packages/datav-core/src'
+import { LinkButton,Form,Field,Input} from 'src/packages/datav-core/src/ui'
+
 import {Modal,Button, notification} from 'antd'
 import {getBackendSrv} from 'src/core/services/backend'
 import isEmail from 'validator/lib/isEmail';
@@ -9,6 +10,7 @@ import RolePicker from 'src/views/components/Pickers/RolePicker'
 import { useIntl,FormattedMessage } from 'react-intl';
 import localeData from 'src/core/library/locale';
 import { getState } from 'src/store/store';
+import { config } from 'src/packages/datav-core/src';
 interface Props {
     onAddUser : any
 }
@@ -99,8 +101,7 @@ const AddUser = (props: Props) => {
                                 error={errors.username && errors.username.message}
                             >
                                 <Input
-                                    name="username"
-                                    ref={register({
+                                    {...register("username",{
                                         required: 'Username is required.',
                                         validate: async v => await validateUserName(v),
                                     })}
@@ -114,8 +115,7 @@ const AddUser = (props: Props) => {
                             >
                                 <Input
                                     type="password"
-                                    name="password"
-                                    ref={register({
+                                    {...register("password",{
                                         required: 'Password is required.'
                                     })}
                                 />
@@ -127,15 +127,19 @@ const AddUser = (props: Props) => {
                                 error={errors.email && errors.email.message}
                             >
                                 <Input
-                                    name="email"
                                     placeholder="can be empty"
-                                    ref={register({
+                                    {...register("email",{
                                         validate: async v => await validateEmail(v),
                                     })}
                                 /> 
                             </Field>
                             <Field  label={<FormattedMessage id="user.globalRole" />}>
-                                <InputControl as={RolePicker} control={control}  name="role" />
+                            <InputControl
+                                render={({ field: { ref, ...field } }) => (
+                                    <RolePicker {...field} />
+                                )}
+                                name="role"
+                            />
                             </Field>
 
                             <Button type="primary" htmlType="submit" style={{marginTop: '16px'}}> <FormattedMessage id="common.submit" /></Button>

@@ -1,7 +1,7 @@
 import React from 'react';
 import { IconName } from '../../types';
-import { TabsBar } from '../Tabs/TabBar';
-import { Tab } from '../Tabs/Tabs';
+import { TabsBar } from '../Tabs/TabsBar';
+import { Tab } from '../Tabs/Tab';
 import { ModalHeader } from './ModalHeader';
 
 interface ModalTab {

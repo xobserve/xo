@@ -93,7 +93,7 @@ export class RefreshPickerBase extends PureComponent<Props,State> {
               <Button
                 onClick={onRefresh!}
               >
-                <ReloadOutlined />
+                <ReloadOutlined translate />
               </Button>
             </Tooltip>
           )}

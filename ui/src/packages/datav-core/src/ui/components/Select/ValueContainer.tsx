@@ -1,10 +1,10 @@
 import React, { ReactNode } from 'react';
-import { cx } from 'emotion';
-import { DatavTheme } from '../../../data';
-import { withTheme } from '../../themes/ThemeContext';
+import { cx } from '@emotion/css';
+import { GrafanaTheme } from '../../../data';
+import { withTheme2 } from '../../themes/ThemeContext';
 import { getSelectStyles } from './getSelectStyles';
 
-class UnthemedValueContainer extends React.Component<any & { theme: DatavTheme }> {
+class UnthemedValueContainer extends React.Component<any & { theme: GrafanaTheme }> {
   render() {
     const { children } = this.props;
     const { selectProps } = this.props;
@@ -33,4 +33,4 @@ class UnthemedValueContainer extends React.Component<any & { theme: DatavTheme }
   }
 }
 
-export const ValueContainer = withTheme(UnthemedValueContainer);
+export const ValueContainer = withTheme2(UnthemedValueContainer);

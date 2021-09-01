@@ -1,6 +1,7 @@
 import React, { FC } from 'react';
 import { css } from 'emotion';
-import { PanelMenuItem,useTheme,IconName,Icon} from 'src/packages/datav-core/src';
+import { PanelMenuItem} from 'src/packages/datav-core/src';
+import { useTheme,IconName,Icon} from 'src/packages/datav-core/src/ui';
 
 interface Props {
   children: any;

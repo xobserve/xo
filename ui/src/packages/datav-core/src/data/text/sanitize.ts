@@ -22,7 +22,7 @@ export function sanitize(unsanitizedString: string): string {
   try {
     return sanitizeXSS.process(unsanitizedString);
   } catch (error) {
-    console.log('String could not be sanitized', unsanitizedString);
+    console.error('String could not be sanitized', unsanitizedString);
     return unsanitizedString;
   }
 }
@@ -32,14 +32,9 @@ export function sanitizeUrl(url: string): string {
 }
 
 export function hasAnsiCodes(input: string): boolean {
-  // eslint-disable-next-line
   return /\u001b\[\d{1,2}m/.test(input);
 }
 
 export function escapeHtml(str: string): string {
-  return String(str)
-    .replace(/&/g, '&amp;')
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;')
-    .replace(/"/g, '&quot;');
+  return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
 }

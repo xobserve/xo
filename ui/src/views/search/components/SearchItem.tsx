@@ -1,12 +1,12 @@
 import React, { FC, useCallback, CSSProperties } from 'react';
 import { css, cx } from 'emotion';
-import { DatavTheme } from 'src/packages/datav-core/src';
-import { useTheme, TagList, styleMixins, stylesFactory } from 'src/packages/datav-core/src';
+import { useTheme, TagList, styleMixins, stylesFactory } from 'src/packages/datav-core/src/ui';
 import { DashboardSectionItem, OnToggleChecked } from '../types';
 import { SearchCheckbox } from './SearchCheckbox';
 import { SEARCH_ITEM_HEIGHT, SEARCH_ITEM_MARGIN } from '../constants';
 import { Link } from 'react-router-dom';
 import { Tooltip } from 'antd';
+import { GrafanaTheme } from 'src/packages/datav-core/src';
 
 export interface Props {
   item: DashboardSectionItem;
@@ -56,7 +56,7 @@ export const SearchItem: FC<Props> = ({ item, editable, onToggleChecked, onTagSe
   );
 };
 
-const getResultsItemStyles = stylesFactory((theme: DatavTheme) => ({
+const getResultsItemStyles = stylesFactory((theme: GrafanaTheme) => ({
   wrapper: css`
     ${styleMixins.listItem(theme)};
     label: search-item;

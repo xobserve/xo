@@ -3,7 +3,8 @@ import React, { useState } from 'react'
 import Highlighter from 'react-highlight-words';
 
 import { AlertHistory, Team } from 'src/types'
-import { Icon, getHistory, Select ,localeData, currentLang} from 'src/packages/datav-core/src'
+import { getHistory ,localeData, currentLang} from 'src/packages/datav-core/src'
+import {Icon1 as Icon,Select} from 'src/packages/datav-core/src/ui'
 import classNames from 'classnames'
 import { FilterInput } from '../components/FilterInput/FilterInput'
 import alertDef from './state/alertDef'

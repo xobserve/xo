@@ -2,7 +2,8 @@
 import React, { PureComponent } from 'react';
 
 // Components
-import { Select,SelectableValue, DataSourceSelectItem  } from 'src/packages/datav-core/src';
+import { SelectableValue, DataSourceSelectItem  } from 'src/packages/datav-core/src';
+import  {Select} from 'src/packages/datav-core/src/ui';
 
 
 export interface Props {

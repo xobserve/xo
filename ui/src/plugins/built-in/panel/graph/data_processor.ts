@@ -1,6 +1,5 @@
 import _ from 'lodash';
 import {
-  getColorFromHexRgbOrName,
   TimeRange,
   FieldType,
   Field,
@@ -8,12 +7,14 @@ import {
   getTimeField,
   dateTime,
   getFieldDisplayName,
-
-  colors,
-  currentTheme
+  currentTheme,
+  getColorForTheme,
+  getBootConfig
 } from 'src/packages/datav-core/src';
+import {colors} from 'src/packages/datav-core/src/ui'
 import TimeSeries from 'src/core/time_series';
 import { GraphOptions} from './GraphPanelCtrl'
+import { getTheme, getTheme2 } from 'src/packages/datav-core/src/ui/themes/getTheme';
 
 type Options = {
   dataList: DataFrame[];
@@ -86,10 +87,11 @@ export class DataProcessor {
     const colorIndex = index % colors.length;
     const color = this.options.aliasColors[alias] || colors[colorIndex];
 
+    const config = getBootConfig()
     const series = new TimeSeries({
       datapoints: datapoints || [],
       alias: alias,
-      color: getColorFromHexRgbOrName(color, currentTheme),
+      color: getColorForTheme(color, config.theme),
       unit: field.config ? field.config.unit : undefined,
       dataFrameIndex,
       fieldIndex,

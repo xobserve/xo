@@ -1,5 +1,5 @@
 import React, { FC } from 'react';
-import { Icon, IconName, Tooltip } from 'src/packages/datav-core/src';
+import { Icon, IconName, Tooltip } from 'src/packages/datav-core/src/ui';
 import { textUtil} from 'src/packages/datav-core/src';
 import { DashboardLinksDashboard } from './DashboardLinksDashboard';
 import { getLinkSrv } from 'src/core/services/link';

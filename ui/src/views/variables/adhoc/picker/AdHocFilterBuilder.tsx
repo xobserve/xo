@@ -1,6 +1,6 @@
 /*eslint-disable*/
 import React, { FC, ReactElement, useState } from 'react';
-import { SegmentAsync, Icon } from 'src/packages/datav-core/src';
+import { SegmentAsync, Icon } from 'src/packages/datav-core/src/ui';
 import { OperatorSegment } from './OperatorSegment';
 import { AdHocVariableFilter } from 'src/types';
 import { SelectableValue } from 'src/packages/datav-core/src';

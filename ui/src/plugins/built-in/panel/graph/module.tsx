@@ -1,24 +1,19 @@
 import React, { useState } from 'react'
 import _, { over } from 'lodash'
-import { PanelPlugin, localeData, currentLang, CodeEditor, FieldConfigProperty, Icon, Button, textUtil } from 'src/packages/datav-core/src';
+import { PanelPlugin, localeData, currentLang,  FieldConfigProperty,textUtil } from 'src/packages/datav-core/src';
+import {CodeEditor, Icon, Button } from 'src/packages/datav-core/src/ui'
 import { GraphPanelOptions } from './types';
 import { GraphPanel } from './GraphPanel';
-import { ThresholdsEditor } from './ThresholdsEditor/ThresholdsEditor'
+
 import { Cascader, Select } from 'antd';
+import { ThresholdsEditor } from 'src/packages/datav-core/src/ui/components/ThresholdsEditorNew/ThresholdsEditor';
 
 
 export const plugin = new PanelPlugin<GraphPanelOptions>(GraphPanel)
   .useFieldConfig({
-    standardOptions: [
-      // FieldConfigProperty.Min,
-      // FieldConfigProperty.Max,
-      // FieldConfigProperty.Color,
-      // FieldConfigProperty.Unit,
-      FieldConfigProperty.DisplayName,
-      // FieldConfigProperty.Decimals,
-      // NOT:  FieldConfigProperty.Thresholds,
-      // FieldConfigProperty.Mappings,
-    ]
+    standardOptions: {
+      [FieldConfigProperty.DisplayName]: {}
+    }
   }
   )
   .setPanelOptions(builder => {
@@ -377,11 +372,6 @@ export const plugin = new PanelPlugin<GraphPanelOptions>(GraphPanel)
         editor: OptionEditor,
         showIf: options => options.enableClickEvent === true
       })
-      .addDataLinks({
-        path: 'options.dataLinks',
-        name: 'Link list',
-        category: ['Data links']
-      })
   })
 
 const poitsRadiusOptions = () => {
@@ -499,7 +489,7 @@ const SeriesOverrides = props => {
 
       <div className="gf-form-button-row">
         <Button className="btn btn-inverse" variant="secondary" onClick={addOverride}>
-          <Icon name="'plus'"></Icon>&nbsp;Add series override
+          <Icon name="plus"></Icon>&nbsp;Add series override
       </Button>
       </div>
     </>

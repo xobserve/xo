@@ -1,12 +1,12 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
-import { Table, Select, getTheme, getHistory, getTemplateSrv ,FilterItem} from 'src/packages/datav-core/src';
-import { FieldMatcherID, PanelProps, DataFrame, SelectableValue, getFrameDisplayName } from 'src/packages/datav-core/src';
+import { Table, Select, getTheme,TableSortByFieldState} from 'src/packages/datav-core/src/ui';
+import { FieldMatcherID, PanelProps, DataFrame, SelectableValue, getFrameDisplayName,getHistory} from 'src/packages/datav-core/src/data';
 import { Options } from './types';
 import { css } from 'emotion';
-
-import { TableSortByFieldState } from 'src/packages/datav-core/src';
+import { FilterItem } from 'src/packages/datav-core/src/ui/components/Table/types';
+import { getTemplateSrv } from 'src/packages/datav-core/src/runtime';
 import { resetDashboardVariables } from 'src/views/dashboard/model/initDashboard'
 import { join, indexOf,cloneDeep, isArray} from 'lodash';
 import { interactive } from 'src/core/library/utils/interactive';

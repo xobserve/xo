@@ -19,14 +19,15 @@
     "jsx": "react",
     "experimentalDecorators": true,
     "strict": false,
-    "isolatedModules": true,
-    "downlevelIteration": true
+    "downlevelIteration": true,
+    "isolatedModules": true
   },
   "include": [
     "src",
     "typings"
   ],
   "exclude": [
-    "node_modules/**"
+    "dist",
+    "node_modules"
   ]
 }

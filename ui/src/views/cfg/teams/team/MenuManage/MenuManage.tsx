@@ -197,8 +197,8 @@ class MenuMange extends React.Component<Props & IntlProps, State> {
         this.setState({ ...this.state, drawerVisible: false, selectedNode: null })
     }
 
-    isMenuValid(v, menuItems) {
-        if (v.title == undefined || v.title.trim() == '') {
+    isMenuValid(v:MenuItem, menuItems) {
+        if (v.text == undefined || v.text.trim() == '') {
             notification['error']({
                 message: "Error",
                 description: this.props.intl.formatMessage({id: "error.menuNameEmpty"}),
@@ -206,7 +206,7 @@ class MenuMange extends React.Component<Props & IntlProps, State> {
             });
             return false
         }
-        v.title = v.title.trim()
+        v.text = v.text.trim()
 
         if (v.url == undefined || v.url.trim() == '') {
             notification['error']({
@@ -321,7 +321,7 @@ class MenuMange extends React.Component<Props & IntlProps, State> {
                     if (menuItems[i].url === v.url) {
                         notification['error']({
                             message: "Error",
-                            description: localeData[getState().application.locale]['error.menuSameUrlExist'] + ` ${menuItems[i].title}`,
+                            description: localeData[getState().application.locale]['error.menuSameUrlExist'] + ` ${menuItems[i].text}`,
                             duration: 5
                         });
                         return
@@ -334,7 +334,7 @@ class MenuMange extends React.Component<Props & IntlProps, State> {
                     if (selectedNode.children[i].url === v.url) {
                         notification['error']({
                             message: "Error",
-                            description: localeData[getState().application.locale]['error.menuSameUrlExist'] + `${selectedNode.title} -> ${selectedNode.children[i].title}`,
+                            description: localeData[getState().application.locale]['error.menuSameUrlExist'] + `${selectedNode.text} -> ${selectedNode.children[i].text}`,
                             duration: 5
                         });
                         return
@@ -349,7 +349,7 @@ class MenuMange extends React.Component<Props & IntlProps, State> {
                     if (item.children[i].url === v.url) {
                         notification['error']({
                             message: "Error",
-                            description: localeData[getState().application.locale]['error.menuSameUrlExist'] + ` ${item.title} -> ${item.children[i].title}`,
+                            description: localeData[getState().application.locale]['error.menuSameUrlExist'] + ` ${item.text} -> ${item.children[i].text}`,
                             duration: 5
                         });
                         return
@@ -371,7 +371,7 @@ class MenuMange extends React.Component<Props & IntlProps, State> {
                     url: v.url,
                     key: v.id,
                     level: item.level,
-                    title: v.title,
+                    text: v.text,
                     icon: v.icon
                 })
             } else {
@@ -381,7 +381,7 @@ class MenuMange extends React.Component<Props & IntlProps, State> {
                     key: v.id,
                     level: item.level + 1,
                     icon: v.icon,
-                    title: v.title
+                    text: v.text
                 })
             }
 
@@ -447,7 +447,7 @@ class MenuMange extends React.Component<Props & IntlProps, State> {
                         if (menuItems[i].url === v.url) {
                             notification['error']({
                                 message: "Error",
-                                description: localeData[getState().application.locale]['error.menuSameUrlExist']  + ` ${menuItems[i].title}`,
+                                description: localeData[getState().application.locale]['error.menuSameUrlExist']  + ` ${menuItems[i].text}`,
                                 duration: 5
                             });
                             return
@@ -462,7 +462,7 @@ class MenuMange extends React.Component<Props & IntlProps, State> {
                         if (item.children[i].url === v.url) {
                             notification['error']({
                                 message: "Error",
-                                description: localeData[getState().application.locale]['error.menuSameUrlExist']  + ` ${item.title} -> ${item.children[i].title}`,
+                                description: localeData[getState().application.locale]['error.menuSameUrlExist']  + ` ${item.text} -> ${item.children[i].text}`,
                                 duration: 5
                             });
                             return
@@ -482,7 +482,7 @@ class MenuMange extends React.Component<Props & IntlProps, State> {
         }
 
         item.id = v.id
-        item.title = v.title
+        item.text = v.text
         item.url = v.url
         item.icon = v.icon
 
@@ -524,6 +524,16 @@ class MenuMange extends React.Component<Props & IntlProps, State> {
 
     render() {
         const { drawerVisible, selectedNode, menuItems } = this.state
+        for (const mi of menuItems) {
+            //@ts-ignore 
+            mi.title = mi.text
+            for (const mic of mi.children) {
+                //@ts-ignore
+                mic.title = mic.text
+            }
+        }
+
+        console.log(menuItems)
         return (
             <>
                 <Tree

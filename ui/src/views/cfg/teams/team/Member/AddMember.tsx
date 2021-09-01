@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { LinkButton,Form,FormField as Field,Input} from 'src/packages/datav-core/src'
+import { LinkButton,Form,Field,Input} from 'src/packages/datav-core/src/ui'
 import {Modal,Button, notification, message} from 'antd'
 import {getBackendSrv} from 'src/core/services/backend'
 import appEvents from 'src/core/library/utils/app_events'
@@ -9,7 +9,7 @@ import { Role } from 'src/types'
 import {useIntl, FormattedMessage } from 'react-intl'
 
 interface Props {
-    teamId: number
+    teamId: string
     inTeamMembers: {}
 }
  

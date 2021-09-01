@@ -1,7 +1,7 @@
-import { IconButton, IconName, stylesFactory, useTheme } from 'src/packages/datav-core/src';
+import { IconButton, IconName, stylesFactory, useTheme } from 'src/packages/datav-core/src/ui';
 import React from 'react';
 import { css } from 'emotion';
-import { DatavTheme } from 'src/packages/datav-core/src';
+import { GrafanaTheme } from 'src/packages/datav-core/src';
 
 interface QueryOperationActionProps {
   icon: IconName;
@@ -33,7 +33,7 @@ export const QueryOperationAction: React.FC<QueryOperationActionProps> = ({ icon
 
 QueryOperationAction.displayName = 'QueryOperationAction';
 
-const getStyles = stylesFactory((theme: DatavTheme) => {
+const getStyles = stylesFactory((theme: GrafanaTheme) => {
   return {
     icon: css`
       color: ${theme.colors.textWeak};

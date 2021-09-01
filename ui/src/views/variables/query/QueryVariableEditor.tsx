@@ -1,5 +1,5 @@
 import React, { ChangeEvent, PureComponent } from 'react';
-import { InlineFormLabel, LegacyForms } from 'src/packages/datav-core/src';
+import { InlineFormLabel, LegacyForms } from 'src/packages/datav-core/src/ui';
 
 import templateSrv from 'src/core/services/templating';
 import { SelectionOptionsEditor } from '../editor/SelectionOptionsEditor';
@@ -16,7 +16,7 @@ import { changeVariableMultiValue } from '../state/actions';
 import { FormattedMessage } from 'react-intl';
 import localeData from 'src/core/library/locale'
 
-const { LegacySwitch } = LegacyForms;
+const { Switch } = LegacyForms;
 
 export interface OwnProps extends VariableEditorProps<QueryVariableModel> {}
 

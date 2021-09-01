@@ -1,5 +1,5 @@
 import React, { ButtonHTMLAttributes } from 'react';
-import { IconButton } from 'src/packages/datav-core/src';
+import { IconButton } from 'src/packages/datav-core/src/ui';
 
 export interface Props extends ButtonHTMLAttributes<HTMLButtonElement> {
   surface: 'dashboard' | 'panel' | 'header';

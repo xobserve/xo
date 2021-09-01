@@ -1,8 +1,12 @@
 import React, { FC, memo, useCallback, useEffect, useState } from 'react';
 import { css, cx } from 'emotion';
-import { DatavTheme ,Icon, stylesFactory, useTheme } from 'src/packages/datav-core/src';
+import {  Icon, stylesFactory, useTheme } from 'src/packages/datav-core/src/ui';
+
 import { PANEL_EDITOR_UI_STATE_STORAGE_KEY } from '../PanelEditor';
 import { useLocalStorage } from 'react-use';
+import { GrafanaTheme } from 'src/packages/datav-core/src';
+
+
 
 export interface OptionsGroupProps {
   id: string;
@@ -110,7 +114,7 @@ const CollapsibleSection: FC<Omit<OptionsGroupProps, 'persistMe'>> = ({
   );
 };
 
-const getStyles = stylesFactory((theme: DatavTheme, isExpanded: boolean, isNested: boolean) => {
+const getStyles = stylesFactory((theme: GrafanaTheme, isExpanded: boolean, isNested: boolean) => {
   return {
     box: cx(
       !isNested &&

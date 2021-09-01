@@ -1,148 +1,65 @@
 import React, { useRef, useState, useLayoutEffect } from 'react';
-import useClickAway from 'react-use/lib/useClickAway';
-import {LinkTarget} from '../../../data';
+import { useClickAway } from 'react-use';
+import { Portal } from '../Portal/Portal';
+import { Menu } from '../Menu/Menu';
 
-import { List } from '../index';
-import { Icon } from '../Icon/Icon';
-import { IconName } from '../../types';
-import './_ContextMenu.less'
-
-export interface ContextMenuItem {
-  label: string;
-  target?: LinkTarget;
-  icon?: string;
-  url?: string;
-  onClick?: (event?: React.SyntheticEvent<HTMLElement>) => void;
-  group?: string;
-}
-
-export interface ContextMenuGroup {
-  label?: string;
-  items: ContextMenuItem[];
-}
 export interface ContextMenuProps {
+  /** Starting horizontal position for the menu */
   x: number;
+  /** Starting vertical position for the menu */
   y: number;
-  onClose: () => void;
-  items?: ContextMenuGroup[];
+  /** Callback for closing the menu */
+  onClose?: () => void;
+  /** RenderProp function that returns menu items to display */
+  renderMenuItems?: () => React.ReactNode;
+  /** A function that returns header element */
   renderHeader?: () => React.ReactNode;
 }
 
-export const ContextMenu: React.FC<ContextMenuProps> = React.memo(({ x, y, onClose, items, renderHeader }) => {
-  const menuRef = useRef<HTMLDivElement>(null);
-  const [positionStyles, setPositionStyles] = useState({});
-  
-  useLayoutEffect(() => {
-    const menuElement = menuRef.current;
-    if (menuElement) {
-      const rect = menuElement.getBoundingClientRect();
-      const OFFSET = 5;
-      const collisions = {
-        right: window.innerWidth < x + rect.width,
-        bottom: window.innerHeight < rect.bottom + rect.height + OFFSET,
-      };
+export const ContextMenu: React.FC<ContextMenuProps> = React.memo(
+  ({ x, y, onClose, renderMenuItems, renderHeader }) => {
+    const menuRef = useRef<HTMLDivElement>(null);
+    const [positionStyles, setPositionStyles] = useState({});
 
-      setPositionStyles({
-        position: 'fixed',
-        left: collisions.right ? x - rect.width - OFFSET : x - OFFSET,
-        top: collisions.bottom ? y - rect.height - OFFSET : y + OFFSET,
-      });
-    }
-    // eslint-disable-next-line 
-  }, [menuRef.current]);
+    useLayoutEffect(() => {
+      const menuElement = menuRef.current;
+      if (menuElement) {
+        const rect = menuElement.getBoundingClientRect();
+        const OFFSET = 5;
+        const collisions = {
+          right: window.innerWidth < x + rect.width,
+          bottom: window.innerHeight < rect.bottom + rect.height + OFFSET,
+        };
 
-  useClickAway(menuRef, () => {
-    if (onClose) {
-      onClose();
-    }
-  });
+        setPositionStyles({
+          position: 'fixed',
+          left: collisions.right ? x - rect.width - OFFSET : x - OFFSET,
+          top: collisions.bottom ? y - rect.height - OFFSET : y + OFFSET,
+        });
+      }
+    }, [x, y]);
 
-  const header = renderHeader && renderHeader();
-  return (
-      <div ref={menuRef} style={positionStyles} className={"context-menu-wrapper"}>
-        {header && <div className={"context-menu-header"}>{header}</div>}
-        <List
-          className="context-menu-body"
-          items={items || []}
-          renderItem={(item, index) => {
-            return (
-              <>
-                <ContextMenuGroup group={item} onClick={onClose} />
-              </>
-            );
-          }}
-        />
-      </div>
-  );
-});
+    useClickAway(menuRef, () => {
+      if (onClose) {
+        onClose();
+      }
+    });
+    const header = renderHeader && renderHeader();
+    const menuItems = renderMenuItems && renderMenuItems();
 
-interface ContextMenuItemProps {
-  label: string;
-  icon?: string;
-  url?: string;
-  target?: string;
-  onClick?: (e: React.MouseEvent<HTMLAnchorElement>) => void;
-  className?: string;
-}
-
-const ContextMenuItem: React.FC<ContextMenuItemProps> = React.memo(
-  ({ url, icon, label, target, onClick, className }) => {
     return (
-      <div className={"context-menu-item"}>
-        <a
-          href={url ? url : undefined}
-          target={target}
-          className={"context-menu-link"}
-          onClick={e => {
-            if (onClick) {
-              onClick(e);
-            }
-          }}
+      <Portal>
+        <Menu
+          header={header}
+          ref={menuRef}
+          style={positionStyles}
+          onClick={onClose}
         >
-          {icon && <Icon name={icon as IconName} className={"context-menu-icon"} />} {label}
-        </a>
-      </div>
+          {menuItems}
+        </Menu>
+      </Portal>
     );
   }
 );
 
-interface ContextMenuGroupProps {
-  group: ContextMenuGroup;
-  onClick?: () => void; // Used with 'onClose'
-}
-
-const ContextMenuGroup: React.FC<ContextMenuGroupProps> = ({ group, onClick }) => {
-  if (group.items.length === 0) {
-    return null;
-  }
-
-  return (
-    <div>
-      {group.label && <div className={"context-menu-grouplabel"}>{group.label}</div>}
-      <List
-        items={group.items || []}
-        renderItem={item => {
-          return (
-            <ContextMenuItem
-              url={item.url}
-              label={item.label}
-              target={item.target}
-              icon={item.icon}
-              onClick={(e: React.MouseEvent<HTMLElement>) => {
-                if (item.onClick) {
-                  item.onClick(e);
-                }
-
-                // Typically closes the context menu
-                if (onClick) {
-                  onClick();
-                }
-              }}
-            />
-          );
-        }}
-      />
-    </div>
-  );
-};
 ContextMenu.displayName = 'ContextMenu';

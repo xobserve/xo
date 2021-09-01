@@ -1,7 +1,7 @@
 import React, { FormEvent } from 'react';
 import { css } from 'emotion';
 
-import { Tab, TabsBar, Icon, IconName } from 'src/packages/datav-core/src';
+import { Tab, TabsBar, Icon, IconName } from 'src/packages/datav-core/src/ui';
  
 import { NavModel, NavModelBreadcrumb } from 'src/packages/datav-core/src';
 import { CoreEvents ,MenuItem} from 'src/types';
@@ -49,7 +49,7 @@ const SelectNav = ({ children, customCss }: { children: MenuItem[]; customCss: s
           }
           return (
             <option key={navItem.url} value={navItem.redirectTo ?? navItem.url}>
-              {navItem.title}
+              {navItem.text}
             </option>
           );
         })}
@@ -78,7 +78,7 @@ const Navigation = ({ children }: { children: MenuItem[] }) => {
           return (
             !child.hideFromTabs && (
               <Tab
-                label={child.title}
+                label={child.text}
                 active={child.active}
                 key={`${child.url}-${index}`}
                 icon={child.icon as IconName}
@@ -138,7 +138,7 @@ const PageHeader = (props) => {
         </span>
 
         <div className="page-header__info-block">
-          {renderTitle(main.title, main.breadcrumbs ?? [])}
+          {renderTitle(main.text, main.breadcrumbs ?? [])}
           {main.subTitle && <div className="page-header__sub-title">{main.subTitle}</div>}
         </div>
       </div>

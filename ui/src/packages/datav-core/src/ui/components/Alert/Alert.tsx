@@ -1,62 +1,144 @@
-import React, { FC, ReactNode } from 'react';
-import classNames from 'classnames';
-import {ExclamationOutlined,CloseOutlined} from '@ant-design/icons'
-import './_Alert.less'
+import React, { HTMLAttributes, ReactNode } from 'react';
+import { css, cx } from '@emotion/css';
+import { GrafanaTheme2 } from '../../../data';
+import { useTheme2 } from '../../themes';
+import { Icon } from '../Icon/Icon';
+import { IconName } from '../../types/icon';
+import { IconButton } from '../IconButton/IconButton';
+import { Button } from '../Button/Button';
 
 export type AlertVariant = 'success' | 'warning' | 'error' | 'info';
 
-interface AlertProps {
+export interface AlertProps extends HTMLAttributes<HTMLDivElement> {
   title: string;
-  buttonText?: string;
-  onButtonClick?: (event: React.MouseEvent) => void;
+  /** On click handler for alert button, mostly used for dismissing the alert */
   onRemove?: (event: React.MouseEvent) => void;
   severity?: AlertVariant;
   children?: ReactNode;
+  elevated?: boolean;
+  buttonContent?: React.ReactNode | string;
+  bottomSpacing?: number;
 }
 
-// function getIconFromSeverity(severity: AlertVariant): string {
-//   switch (severity) {
-//     case 'error': {
-//       return 'exclamation-triangle';
-//     }
-//     case 'warning': {
-//       return 'exclamation-triangle';
-//     }
-//     case 'info': {
-//       return 'info-circle';
-//     }
-//     case 'success': {
-//       return 'check';
-//     }
-//     default:
-//       return '';
-//   }
-// }
+function getIconFromSeverity(severity: AlertVariant): string {
+  switch (severity) {
+    case 'error':
+    case 'warning':
+      return 'exclamation-triangle';
+    case 'info':
+      return 'info-circle';
+    case 'success':
+      return 'check';
+    default:
+      return '';
+  }
+}
 
-export const Alert: FC<AlertProps> = ({ title, buttonText, onButtonClick, onRemove, children, severity = 'error' }) => {
-  const alertClass = classNames('alert', `alert-${severity}`);
-  return (
-    <div className="alert-container">
-      <div className={alertClass}>
-        <div className="alert-icon">
-          <ExclamationOutlined />
+export const Alert = React.forwardRef<HTMLDivElement, AlertProps>(
+  (
+    { title, onRemove, children, buttonContent, elevated, bottomSpacing, className, severity = 'error', ...restProps },
+    ref
+  ) => {
+    const theme = useTheme2();
+    const styles = getStyles(theme, severity, elevated, bottomSpacing);
+
+    return (
+      <div
+        ref={ref}
+        className={cx(styles.alert, className)}
+        {...restProps}
+      >
+        <div className={styles.icon}>
+          <Icon size="xl" name={getIconFromSeverity(severity) as IconName} />
         </div>
-        <div className="alert-body">
-          <div className="alert-title">{title}</div>
-          {children && <div className="alert-text">{children}</div>}
+        <div className={styles.body}>
+          <div className={styles.title}>{title}</div>
+          {children && <div className={styles.content}>{children}</div>}
         </div>
-        {/* If onRemove is specified , giving preference to onRemove */}
-        {onRemove && (
-          <button type="button" className="alert-close" onClick={onRemove}>
-            <CloseOutlined />
-          </button>
+        {/* If onRemove is specified, giving preference to onRemove */}
+        {onRemove && !buttonContent && (
+          <div className={styles.close}>
+            <IconButton name="times" onClick={onRemove} size="lg" type="button" />
+          </div>
         )}
-        {onButtonClick && (
-          <button type="button" className="btn btn-outline-danger" onClick={onButtonClick}>
-            {buttonText}
-          </button>
+        {onRemove && buttonContent && (
+          <div className={styles.buttonWrapper}>
+            <Button variant="secondary" onClick={onRemove} type="button">
+              {buttonContent}
+            </Button>
+          </div>
         )}
       </div>
-    </div>
-  );
+    );
+  }
+);
+
+Alert.displayName = 'Alert';
+
+const getStyles = (theme: GrafanaTheme2, severity: AlertVariant, elevated?: boolean, bottomSpacing?: number) => {
+  const color = theme.colors[severity];
+  const borderRadius = theme.shape.borderRadius();
+
+  return {
+    alert: css`
+      flex-grow: 1;
+      position: relative;
+      border-radius: ${borderRadius};
+      display: flex;
+      flex-direction: row;
+      align-items: stretch;
+      background: ${theme.colors.background.secondary};
+      box-shadow: ${elevated ? theme.shadows.z3 : theme.shadows.z1};
+      margin-bottom: ${theme.spacing(bottomSpacing ?? 2)};
+
+      &:before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        bottom: 0;
+        right: 0;
+        background: ${theme.colors.background.primary};
+        z-index: -1;
+      }
+    `,
+    icon: css`
+      padding: ${theme.spacing(2, 3)};
+      background: ${color.main};
+      border-radius: ${borderRadius} 0 0 ${borderRadius};
+      color: ${color.contrastText};
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    `,
+    title: css`
+      font-weight: ${theme.typography.fontWeightMedium};
+      color: ${theme.colors.text.primary};
+    `,
+    body: css`
+      color: ${theme.colors.text.secondary};
+      padding: ${theme.spacing(2)};
+      flex-grow: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      overflow-wrap: break-word;
+      word-break: break-word;
+    `,
+    content: css`
+      color: ${theme.colors.text.secondary};
+      padding-top: ${theme.spacing(1)};
+    `,
+    buttonWrapper: css`
+      padding: ${theme.spacing(1)};
+      background: none;
+      display: flex;
+      align-items: center;
+    `,
+    close: css`
+      padding: ${theme.spacing(2, 1)};
+      background: none;
+      display: flex;
+    `,
+  };
 };

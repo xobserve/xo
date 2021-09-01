@@ -1,15 +1,16 @@
 // Libraries
 import React, { CSSProperties } from 'react';
 import tinycolor from 'tinycolor2';
-import { Chart, Geom } from 'bizcharts';
 
 // Utils
-import { getColorFromHexRgbOrName, formattedValueToString, ThemeType } from '../../../data';
+import { formattedValueToString, DisplayValue, FieldConfig, FieldType } from '../../../data';
 import { calculateFontSize } from '../../utils/measureText';
 
 // Types
-import { BigValueColorMode, Props, BigValueJustifyMode } from './BigValue';
-import { currentTheme } from '../../../data';
+import { BigValueColorMode, Props, BigValueJustifyMode, BigValueTextMode } from './BigValue';
+import { getTextColorForBackground } from '../../utils';
+import { DrawStyle, GraphFieldConfig } from '../uPlot/config';
+import { Sparkline } from '../Sparkline/Sparkline';
 
 const LINE_HEIGHT = 1.2;
 const MAX_TITLE_SIZE = 30;
@@ -26,22 +27,35 @@ export abstract class BigValueLayout {
   valueToAlignTo: string;
   maxTextWidth: number;
   maxTextHeight: number;
+  textValues: BigValueTextValues;
 
   constructor(private props: Props) {
-    const { width, height, value, alignmentFactors } = props;
+    const { width, height, value, text } = props;
 
-    this.valueColor = getColorFromHexRgbOrName(value.color || 'green', currentTheme);
-    this.justifyCenter = shouldJustifyCenter(props);
+    this.valueColor = value.color ?? 'gray';
     this.panelPadding = height > 100 ? 12 : 8;
-    this.titleToAlignTo = alignmentFactors ? alignmentFactors.title : value.title;
-    this.valueToAlignTo = formattedValueToString(alignmentFactors ? alignmentFactors : value);
-
+    this.textValues = getTextValues(props);
+    this.justifyCenter = shouldJustifyCenter(props.justifyMode, this.textValues.title);
+    this.valueToAlignTo = this.textValues.valueToAlignTo;
+    this.titleToAlignTo = this.textValues.titleToAlignTo;
     this.titleFontSize = 14;
     this.valueFontSize = 14;
     this.chartHeight = 0;
     this.chartWidth = 0;
     this.maxTextWidth = width - this.panelPadding * 2;
     this.maxTextHeight = height - this.panelPadding * 2;
+
+    // Explicit font sizing
+    if (text) {
+      if (text.titleSize) {
+        this.titleFontSize = text.titleSize;
+        this.titleToAlignTo = undefined;
+      }
+      if (text.valueSize) {
+        this.valueFontSize = text.valueSize;
+        this.valueToAlignTo = '';
+      }
+    }
   }
 
   getTitleStyles(): CSSProperties {
@@ -51,7 +65,7 @@ export abstract class BigValueLayout {
     };
 
     if (this.props.colorMode === BigValueColorMode.Background) {
-      styles.color = 'white';
+      styles.color = getTextColorForBackground(this.valueColor);
     }
 
     return styles;
@@ -62,14 +76,24 @@ export abstract class BigValueLayout {
       fontSize: this.valueFontSize,
       fontWeight: 500,
       lineHeight: LINE_HEIGHT,
+      position: 'relative',
+      zIndex: 1,
     };
+
+    if (this.justifyCenter) {
+      styles.textAlign = 'center';
+    }
 
     switch (this.props.colorMode) {
       case BigValueColorMode.Value:
         styles.color = this.valueColor;
         break;
       case BigValueColorMode.Background:
-        styles.color = 'white';
+        styles.color = getTextColorForBackground(this.valueColor);
+        break;
+      case BigValueColorMode.None:
+        styles.color = this.props.theme.colors.text.primary;
+        break;
     }
 
     return styles;
@@ -90,7 +114,7 @@ export abstract class BigValueLayout {
   }
 
   getPanelStyles(): CSSProperties {
-    const { width, height, colorMode } = this.props;
+    const { width, height, theme, colorMode } = this.props;
 
     const panelStyles: CSSProperties = {
       width: `${width}px`,
@@ -101,7 +125,7 @@ export abstract class BigValueLayout {
       display: 'flex',
     };
 
-    const themeFactor = currentTheme === ThemeType.Dark ? 1 : -0.7;
+    const themeFactor = theme.isDark ? 1 : -0.7;
 
     switch (colorMode) {
       case BigValueColorMode.Background:
@@ -129,98 +153,55 @@ export abstract class BigValueLayout {
   }
 
   renderChart(): JSX.Element | null {
-    const { sparkline } = this.props;
+    const { sparkline, colorMode } = this.props;
 
-    if (!sparkline || sparkline.data.length === 0) {
+    if (!sparkline || sparkline.y?.type !== FieldType.number) {
       return null;
     }
-
-    const data = sparkline.data.map(values => {
-      return { time: values[0], value: values[1], name: 'A' };
-    });
-
-    const scales = {
-      time: {
-        type: 'time',
-        min: sparkline.xMin,
-        max: sparkline.xMax,
-      },
-      value: {
-        min: sparkline.yMin,
-        max: sparkline.yMax,
-      },
-    };
-
-    if (sparkline.xMax && sparkline.xMin) {
-      // Having the last data point align with the edge of the panel looks good
-      // So if it's close adjust time.max to the last data point time
-      const timeDelta = sparkline.xMax - sparkline.xMin;
-      const lastDataPointTime = data[data.length - 1].time || 0;
-      const lastTimeDiffFromMax = Math.abs(sparkline.xMax - lastDataPointTime);
-
-      // if last data point is just 5% or lower from the edge adjust it
-      if (lastTimeDiffFromMax / timeDelta < 0.05) {
-        scales.time.max = lastDataPointTime;
-      }
-    }
-
-    return (
-      <Chart
-        height={this.chartHeight}
-        width={this.chartWidth}
-        data={data}
-        animate={false}
-        padding={[4, 0, 0, 0]}
-        scale={scales}
-        style={this.getChartStyles()}
-      >
-        {this.renderGeom()}
-      </Chart>
-    );
-  }
-
-  renderGeom(): JSX.Element {
-    const { colorMode } = this.props;
-
-    const lineStyle: any = {
-      opacity: 1,
-      fillOpacity: 1,
-      lineWidth: 2,
-    };
 
     let fillColor: string;
     let lineColor: string;
 
     switch (colorMode) {
-      case BigValueColorMode.Value:
-        lineColor = this.valueColor;
-        fillColor = tinycolor(this.valueColor)
-          .setAlpha(0.2)
-          .toRgbString();
-        break;
       case BigValueColorMode.Background:
         fillColor = 'rgba(255,255,255,0.4)';
-        lineColor = tinycolor(this.valueColor)
-          .brighten(40)
-          .toRgbString();
+        lineColor = tinycolor(this.valueColor).brighten(40).toRgbString();
+        break;
+      case BigValueColorMode.None:
+      case BigValueColorMode.Value:
+      default:
+        lineColor = this.valueColor;
+        fillColor = tinycolor(this.valueColor).setAlpha(0.2).toRgbString();
+        break;
     }
 
-    lineStyle.stroke = lineColor;
+    // The graph field configuration applied to Y values
+    const config: FieldConfig<GraphFieldConfig> = {
+      custom: {
+        drawStyle: DrawStyle.Line,
+        lineWidth: 1,
+        fillColor,
+        lineColor,
+      },
+    };
 
     return (
-      <>
-        <Geom type="area" position="time*value" size={0} color={fillColor} style={lineStyle} shape="smooth" />
-        <Geom type="line" position="time*value" size={1} color={lineColor} style={lineStyle} shape="smooth" />
-      </>
+      <div style={this.getChartStyles()}>
+        <Sparkline
+          height={this.chartHeight}
+          width={this.chartWidth}
+          sparkline={sparkline}
+          config={config}
+          theme={this.props.theme}
+        />
+      </div>
     );
   }
-
   getChartStyles(): CSSProperties {
     return {
       position: 'absolute',
       right: 0,
       bottom: 0,
-      lineHeight: 0.7
     };
   }
 }
@@ -229,9 +210,9 @@ export class WideNoChartLayout extends BigValueLayout {
   constructor(props: Props) {
     super(props);
 
-    const valueWidthPercent = 0.3;
+    const valueWidthPercent = this.titleToAlignTo?.length ? 0.3 : 1.0;
 
-    if (this.titleToAlignTo && this.titleToAlignTo.length > 0) {
+    if (this.valueToAlignTo.length) {
       // initial value size
       this.valueFontSize = calculateFontSize(
         this.valueToAlignTo,
@@ -239,7 +220,9 @@ export class WideNoChartLayout extends BigValueLayout {
         this.maxTextHeight,
         LINE_HEIGHT
       );
+    }
 
+    if (this.titleToAlignTo?.length) {
       // How big can we make the title and still have it fit
       this.titleFontSize = calculateFontSize(
         this.titleToAlignTo,
@@ -251,9 +234,6 @@ export class WideNoChartLayout extends BigValueLayout {
 
       // make sure it's a bit smaller than valueFontSize
       this.titleFontSize = Math.min(this.valueFontSize * 0.7, this.titleFontSize);
-    } else {
-      // if no title wide
-      this.valueFontSize = calculateFontSize(this.valueToAlignTo, this.maxTextWidth, this.maxTextHeight, LINE_HEIGHT);
     }
   }
 
@@ -286,6 +266,7 @@ export class WideWithChartLayout extends BigValueLayout {
     super(props);
 
     const { width, height } = props;
+
     const chartHeightPercent = 0.5;
     const titleWidthPercent = 0.6;
     const valueWidthPercent = 1 - titleWidthPercent;
@@ -294,7 +275,7 @@ export class WideWithChartLayout extends BigValueLayout {
     this.chartWidth = width;
     this.chartHeight = height * chartHeightPercent;
 
-    if (this.titleToAlignTo && this.titleToAlignTo.length > 0) {
+    if (this.titleToAlignTo?.length) {
       this.titleFontSize = calculateFontSize(
         this.titleToAlignTo,
         this.maxTextWidth * titleWidthPercent,
@@ -304,12 +285,14 @@ export class WideWithChartLayout extends BigValueLayout {
       );
     }
 
-    this.valueFontSize = calculateFontSize(
-      this.valueToAlignTo,
-      this.maxTextWidth * valueWidthPercent,
-      this.maxTextHeight * chartHeightPercent,
-      LINE_HEIGHT
-    );
+    if (this.valueToAlignTo.length) {
+      this.valueFontSize = calculateFontSize(
+        this.valueToAlignTo,
+        this.maxTextWidth * valueWidthPercent,
+        this.maxTextHeight * chartHeightPercent,
+        LINE_HEIGHT
+      );
+    }
   }
 
   getValueAndTitleContainerStyles() {
@@ -344,7 +327,7 @@ export class StackedWithChartLayout extends BigValueLayout {
     this.chartHeight = height * chartHeightPercent;
     this.chartWidth = width;
 
-    if (this.titleToAlignTo && this.titleToAlignTo.length > 0) {
+    if (this.titleToAlignTo?.length) {
       this.titleFontSize = calculateFontSize(
         this.titleToAlignTo,
         this.maxTextWidth,
@@ -352,21 +335,24 @@ export class StackedWithChartLayout extends BigValueLayout {
         LINE_HEIGHT,
         MAX_TITLE_SIZE
       );
+    }
+    titleHeight = this.titleFontSize * LINE_HEIGHT;
 
-      titleHeight = this.titleFontSize * LINE_HEIGHT;
+    if (this.valueToAlignTo.length) {
+      this.valueFontSize = calculateFontSize(
+        this.valueToAlignTo,
+        this.maxTextWidth,
+        this.maxTextHeight - this.chartHeight - titleHeight,
+        LINE_HEIGHT
+      );
     }
 
-    this.valueFontSize = calculateFontSize(
-      this.valueToAlignTo,
-      this.maxTextWidth,
-      this.maxTextHeight - this.chartHeight - titleHeight,
-      LINE_HEIGHT
-    );
-
     // make title fontsize it's a bit smaller than valueFontSize
-    this.titleFontSize = Math.min(this.valueFontSize * 0.7, this.titleFontSize);
+    if (this.titleToAlignTo?.length) {
+      this.titleFontSize = Math.min(this.valueFontSize * 0.7, this.titleFontSize);
+    }
 
-    // make chart take up onused space
+    // make chart take up unused space
     this.chartHeight = height - this.titleFontSize * LINE_HEIGHT - this.valueFontSize * LINE_HEIGHT;
   }
 
@@ -392,7 +378,7 @@ export class StackedWithNoChartLayout extends BigValueLayout {
     const titleHeightPercent = 0.15;
     let titleHeight = 0;
 
-    if (this.titleToAlignTo && this.titleToAlignTo.length > 0) {
+    if (this.titleToAlignTo?.length) {
       this.titleFontSize = calculateFontSize(
         this.titleToAlignTo,
         this.maxTextWidth,
@@ -404,12 +390,14 @@ export class StackedWithNoChartLayout extends BigValueLayout {
       titleHeight = this.titleFontSize * LINE_HEIGHT;
     }
 
-    this.valueFontSize = calculateFontSize(
-      this.valueToAlignTo,
-      this.maxTextWidth,
-      this.maxTextHeight - titleHeight,
-      LINE_HEIGHT
-    );
+    if (this.valueToAlignTo.length) {
+      this.valueFontSize = calculateFontSize(
+        this.valueToAlignTo,
+        this.maxTextWidth,
+        this.maxTextHeight - titleHeight,
+        LINE_HEIGHT
+      );
+    }
 
     // make title fontsize it's a bit smaller than valueFontSize
     this.titleFontSize = Math.min(this.valueFontSize * 0.7, this.titleFontSize);
@@ -449,10 +437,68 @@ export function buildLayout(props: Props): BigValueLayout {
   }
 }
 
-export function shouldJustifyCenter(props: Props) {
-  const { value, justifyMode } = props;
+export function shouldJustifyCenter(justifyMode?: BigValueJustifyMode, title?: string) {
   if (justifyMode === BigValueJustifyMode.Center) {
     return true;
   }
-  return (value.title ?? '').length === 0;
+
+  return (title ?? '').length === 0;
+}
+
+export interface BigValueTextValues extends DisplayValue {
+  valueToAlignTo: string;
+  titleToAlignTo?: string;
+  tooltip?: string;
+}
+
+function getTextValues(props: Props): BigValueTextValues {
+  const { value, alignmentFactors, count } = props;
+  let { textMode } = props;
+
+  const titleToAlignTo = alignmentFactors ? alignmentFactors.title : value.title;
+  const valueToAlignTo = formattedValueToString(alignmentFactors ? alignmentFactors : value);
+
+  // In the auto case we only show title if this big value is part of more panes (count > 1)
+  if (textMode === BigValueTextMode.Auto && (count ?? 1) === 1) {
+    textMode = BigValueTextMode.Value;
+  }
+
+  switch (textMode) {
+    case BigValueTextMode.Name:
+      return {
+        ...value,
+        title: undefined,
+        prefix: undefined,
+        suffix: undefined,
+        text: value.title || '',
+        titleToAlignTo: undefined,
+        valueToAlignTo: titleToAlignTo ?? '',
+        tooltip: formattedValueToString(value),
+      };
+    case BigValueTextMode.Value:
+      return {
+        ...value,
+        title: undefined,
+        titleToAlignTo: undefined,
+        valueToAlignTo,
+        tooltip: value.title,
+      };
+    case BigValueTextMode.None:
+      return {
+        numeric: value.numeric,
+        color: value.color,
+        title: undefined,
+        text: '',
+        titleToAlignTo: undefined,
+        valueToAlignTo: '1',
+        tooltip: `Name: ${value.title}\nValue: ${formattedValueToString(value)}`,
+      };
+    case BigValueTextMode.ValueAndName:
+    default:
+      return {
+        ...value,
+        titleToAlignTo,
+        valueToAlignTo,
+      };
+  }
 }

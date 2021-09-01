@@ -15,17 +15,20 @@ import { PanelHeader } from './components/PanelHeader/PanelHeader'
 import {
   LoadingState,
   AbsoluteTimeRange,
-  DefaultTimeRange,
+
   toUtc,
   PanelEvents,
   PanelData, 
   PanelPlugin,
   FieldConfigSource,
-  theme,
-  ErrorBoundary,
+  getBootConfig,
+  getDefaultTimeRange,
+  
+ 
 } from 'src/packages/datav-core/src';
+import {  ErrorBoundary} from 'src/packages/datav-core/src/ui';
 
-
+const theme = getBootConfig().theme
 
 const DEFAULT_PLUGIN_ERROR = 'Error in plugin';
 
@@ -64,14 +67,14 @@ export class Panel extends PureComponent<Props, State> {
       data: {
         state: LoadingState.NotStarted,
         series: [],
-        timeRange: DefaultTimeRange,
+        timeRange: getDefaultTimeRange(),
       },
     };
   }
 
   componentDidMount() {
     const { panel, dashboard } = this.props;
-    panel.events.on(PanelEvents.panelInitialized, () => { });
+    panel.events.on(PanelEvents.initialized, () => { });
     panel.events.on(PanelEvents.refresh, () => this.onRefresh(true));
     panel.events.on(PanelEvents.render, () => this.onRender(true));
 
@@ -97,7 +100,7 @@ export class Panel extends PureComponent<Props, State> {
   componentWillUnmount() {
     this.props.panel.events.off(PanelEvents.refresh, this.onRefresh);
     this.props.panel.events.off(PanelEvents.render, this.onRender);
-    this.props.panel.events.off(PanelEvents.panelInitialized, () => { });
+    this.props.panel.events.off(PanelEvents.initialized, () => { });
 
     if (this.querySubscription) {
       this.querySubscription.unsubscribe();
@@ -253,6 +256,7 @@ export class Panel extends PureComponent<Props, State> {
         <div className={panelContentClassNames}>
           <PanelComponent
             id={panel.id}
+            //@ts-ignore
             dashboardID={dashboard.id}
             data={data}
             timeRange={timeRange}

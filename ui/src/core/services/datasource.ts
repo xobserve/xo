@@ -104,9 +104,11 @@ export class DatasourceSrv implements DataSourceService {
         }
 
         metricSources.sort((a, b) => {
+            //@ts-ignore
             if (a.sort.toLowerCase() > b.sort.toLowerCase()) {
                 return 1;
             }
+            //@ts-ignore
             if (a.sort.toLowerCase() < b.sort.toLowerCase()) {
                 return -1;
             }

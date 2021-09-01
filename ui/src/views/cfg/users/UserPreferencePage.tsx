@@ -1,5 +1,5 @@
 import React, { PureComponent } from 'react';
-import { getBootConfig, InlineFormLabel, Button} from 'src/packages/datav-core/src';
+import {  InlineFormLabel, Button} from 'src/packages/datav-core/src/ui';
 
 import Page from 'src/views/Layouts/Page/Page';
 import { getNavModel } from 'src/views/Layouts/Page/navModel';
@@ -198,7 +198,7 @@ class UserPreferencePage extends PureComponent<Props & IntlProps, State> {
                             <Input.Password
                                 placeholder="******"
                                 onBlur={(v) => this.onChangePassword('old',v)}
-                                iconRender={visible => (visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />)}
+                                iconRender={visible => (visible ? <EyeTwoTone translate/> : <EyeInvisibleOutlined translate/>)}
                             />
                         </div>
 
@@ -207,7 +207,7 @@ class UserPreferencePage extends PureComponent<Props & IntlProps, State> {
                             <Input.Password
                                 placeholder="******"
                                 onChange={(v) => this.onChangePassword('new',v)}
-                                iconRender={visible => (visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />)}
+                                iconRender={visible => (visible ? <EyeTwoTone translate/> : <EyeInvisibleOutlined translate/>)}
                             />
                         </div>
 
@@ -216,7 +216,7 @@ class UserPreferencePage extends PureComponent<Props & IntlProps, State> {
                             <Input.Password
                                 placeholder="******"
                                 onChange={(v) => this.onChangePassword('confirm',v)}
-                                iconRender={visible => (visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />)}
+                                iconRender={visible => (visible ? <EyeTwoTone translate/> : <EyeInvisibleOutlined translate/>)}
                             />
                         </div>
 

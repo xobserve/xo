@@ -2,7 +2,8 @@ import React, { PureComponent, FC } from 'react';
 import _ from 'lodash'
 import { UserState } from 'src/store/reducers/user'
 import { cx, css } from 'emotion';
-import { ConfirmButton, ConfirmModal, LegacyInputStatus, Button, stylesFactory, Input, DatavTheme, currentTheme, getTheme,RadioButtonGroup } from 'src/packages/datav-core/src';
+import { ConfirmButton, ConfirmModal, LegacyInputStatus, Button, stylesFactory, Input, getTheme,RadioButtonGroup } from 'src/packages/datav-core/src/ui';
+import {currentTheme,GrafanaTheme} from 'src/packages/datav-core/src'
 import { Role } from 'src/types';
 import { getBackendSrv } from 'src/core/services/backend';
 import { notification } from 'antd';
@@ -235,7 +236,7 @@ class UserProfile extends PureComponent<Props & IntlProps, State> {
 
 export default injectIntl(UserProfile)
 
-const getStyles = stylesFactory((theme: DatavTheme) => {
+const getStyles = stylesFactory((theme: GrafanaTheme) => {
     return {
         buttonRow: css`
       margin-top: 0.8rem;

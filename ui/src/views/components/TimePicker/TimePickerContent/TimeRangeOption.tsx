@@ -1,9 +1,10 @@
 import React, { memo } from 'react';
 import { css } from 'emotion';
-import { TimeOption,stylesFactory,selectThemeVariant,DatavTheme, useTheme} from 'src/packages/datav-core/src';
+import { TimeOption,GrafanaTheme} from 'src/packages/datav-core/src';
+import { stylesFactory,selectThemeVariant, useTheme} from 'src/packages/datav-core/src/ui';
 import { CheckOutlined} from '@ant-design/icons';
 
-const getStyles = stylesFactory((theme: DatavTheme) => {
+const getStyles = stylesFactory((theme: GrafanaTheme) => {
   const background = selectThemeVariant(
     {
       light: theme.palette.gray7,
@@ -48,7 +49,7 @@ export const TimeRangeOption = memo<Props>(({ value, onSelect, selected = false 
   return (
     <div className={styles.container} onClick={() => onSelect(value)} tabIndex={-1}>
       <span>{value.display}</span>
-      {selected ? <CheckOutlined  /> : null}
+      {selected ? <CheckOutlined translate /> : null}
     </div>
   );
 });

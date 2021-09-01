@@ -1,9 +1,12 @@
+import { ThemeBreakpoints, ThemeColors, ThemeShadows, ThemeShape, ThemeSpacing, ThemeTransitions, ThemeTypography, ThemeVisualizationColors, ThemeZIndices } from '../themes';
+import { ThemeComponents } from '../themes/createComponents';
+
 export enum ThemeType {
   Light = 'light',
   Dark = 'dark',
 }
 
-export interface DatavThemeCommons {
+export interface GrafanaThemeCommons {
   name: string;
   // TODO: not sure if should be a part of theme
   breakpoints: {
@@ -53,6 +56,7 @@ export interface DatavThemeCommons {
     };
   };
   spacing: {
+    base: number;
     insetSquishMd: string;
     d: string;
     xxs: string;
@@ -105,11 +109,12 @@ export interface DatavThemeCommons {
     tooltip: number;
     modalBackdrop: number;
     modal: number;
+    portal: number;
     typeahead: number;
   };
 }
 
-export interface DatavTheme extends DatavThemeCommons {
+export interface GrafanaTheme extends GrafanaThemeCommons {
   type: ThemeType;
   isDark: boolean;
   isLight: boolean;
@@ -136,7 +141,9 @@ export interface DatavTheme extends DatavThemeCommons {
 
     // New greys palette used by next-gen form elements
     gray98: string;
+    gray97: string;
     gray95: string;
+    gray90: string;
     gray85: string;
     gray70: string;
     gray60: string;
@@ -231,17 +238,27 @@ export interface DatavTheme extends DatavThemeCommons {
     formInputPlaceholderText: string;
     formValidationMessageText: string;
     formValidationMessageBg: string;
-    formSwitchBg: string;
-    formSwitchBgActive: string;
-    formSwitchBgActiveHover: string;
-    formSwitchBgHover: string;
-    formSwitchBgDisabled: string;
-    formSwitchDot: string;
-    formCheckboxBgChecked: string;
-    formCheckboxBgCheckedHover: string;
-    formCheckboxCheckmark: string;
   };
   shadows: {
     listItem: string;
   };
+  visualization: ThemeVisualizationColors;
+}
+
+
+export interface GrafanaTheme2 {
+  name: string;
+  isDark: boolean;
+  isLight: boolean;
+  colors: ThemeColors;
+  breakpoints: ThemeBreakpoints;
+  spacing: ThemeSpacing;
+  shape: ThemeShape;
+  components: ThemeComponents;
+  typography: ThemeTypography;
+  zIndex: ThemeZIndices;
+  shadows: ThemeShadows;
+  visualization: ThemeVisualizationColors;
+  transitions: ThemeTransitions;
+  v1: GrafanaTheme;
 }

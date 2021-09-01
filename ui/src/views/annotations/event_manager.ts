@@ -7,11 +7,15 @@ import {
   PENDING_COLOR,
   DEFAULT_ANNOTATION_COLOR,
   REGION_FILL_ALPHA,
-  AnnotationEvent,
-  EventManagerCtrl
-} from 'src/packages/datav-core/src';
-
+} from 'src/packages/datav-core/src/ui';
+import {AnnotationEvent} from 'src/packages/datav-core/src'
 // import { MetricsPanelCtrl } from 'app/plugins/sdk';
+
+interface EventManagerCtrl {
+  render: any;
+  dashboard: any;
+  panel: any;
+}
 
 export class EventManager {
   event: AnnotationEvent;

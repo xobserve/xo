@@ -1,7 +1,6 @@
 // Library
 import React, { PureComponent, CSSProperties, ReactNode } from 'react';
 import tinycolor from 'tinycolor2';
-import * as d3 from 'd3-scale-chromatic';
 import {
   TimeSeriesValue,
   DisplayValue,
@@ -11,37 +10,31 @@ import {
   ThresholdsMode,
   DisplayProcessor,
   FieldConfig,
-  FieldColorMode,
-  currentTheme,
+  FieldColorModeId,
+  getFieldColorMode,
+  FALLBACK_COLOR,
+  TextDisplayOptions,
+  VizOrientation,
 } from '../../../data';
-
-// Compontents
 import { FormattedValueDisplay } from '../FormattedValueDisplay/FormattedValueDisplay';
-
-// Utils
-import { getColorFromHexRgbOrName } from '../../../data';
 import { measureText, calculateFontSize } from '../../utils/measureText';
-
-// Types
-import { VizOrientation } from '../../../data';
-import { Themeable } from '../../types';
-import './BarGauge.css'
+import { Themeable2 } from '../../types';
 
 const MIN_VALUE_HEIGHT = 18;
 const MAX_VALUE_HEIGHT = 50;
-const MIN_VALUE_WIDTH = 50;
 const MAX_VALUE_WIDTH = 150;
 const TITLE_LINE_HEIGHT = 1.5;
 const VALUE_LINE_HEIGHT = 1;
 const VALUE_LEFT_PADDING = 10;
 
-export interface Props extends Themeable {
+export interface Props extends Themeable2 {
   height: number;
   width: number;
   field: FieldConfig;
   display?: DisplayProcessor;
   value: DisplayValue;
   orientation: VizOrientation;
+  text?: TextDisplayOptions;
   itemSpacing?: number;
   lcdCellWidth?: number;
   displayMode: BarGaugeDisplayMode;
@@ -117,7 +110,10 @@ export class BarGauge extends PureComponent<Props> {
 
     return (
       <div style={styles.wrapper}>
-        <FormattedValueDisplay className="bar-gauge__value" value={value} style={styles.value} />
+        <FormattedValueDisplay
+          value={value}
+          style={styles.value}
+        />
         {showUnfilled && <div style={styles.emptyBar} />}
         <div style={styles.bar} />
       </div>
@@ -128,8 +124,8 @@ export class BarGauge extends PureComponent<Props> {
     const { value, display } = this.props;
     if (positionValue === null) {
       return {
-        background: 'gray',
-        border: 'gray',
+        background: FALLBACK_COLOR,
+        border: FALLBACK_COLOR,
       };
     }
 
@@ -139,36 +135,28 @@ export class BarGauge extends PureComponent<Props> {
       // if we are past real value the cell is not "on"
       if (value === null || (positionValue !== null && positionValue > value.numeric)) {
         return {
-          background: tinycolor(color)
-            .setAlpha(0.18)
-            .toRgbString(),
+          background: tinycolor(color).setAlpha(0.18).toRgbString(),
           border: 'transparent',
           isLit: false,
         };
       } else {
         return {
-          background: tinycolor(color)
-            .setAlpha(0.95)
-            .toRgbString(),
-          backgroundShade: tinycolor(color)
-            .setAlpha(0.55)
-            .toRgbString(),
-          border: tinycolor(color)
-            .setAlpha(0.9)
-            .toRgbString(),
+          background: tinycolor(color).setAlpha(0.95).toRgbString(),
+          backgroundShade: tinycolor(color).setAlpha(0.55).toRgbString(),
+          border: tinycolor(color).setAlpha(0.9).toRgbString(),
           isLit: true,
         };
       }
     }
 
     return {
-      background: 'gray',
-      border: 'gray',
+      background: FALLBACK_COLOR,
+      border: FALLBACK_COLOR,
     };
   }
 
   renderRetroBars(): ReactNode {
-    const { field, value, itemSpacing, alignmentFactors, orientation, lcdCellWidth } = this.props;
+    const { field, value, itemSpacing, alignmentFactors, orientation, lcdCellWidth, text } = this.props;
     const {
       valueHeight,
       valueWidth,
@@ -189,7 +177,7 @@ export class BarGauge extends PureComponent<Props> {
     const valueColor = getValueColor(this.props);
 
     const valueToBaseSizeOn = alignmentFactors ? alignmentFactors : value;
-    const valueStyles = getValueStyles(valueToBaseSizeOn, valueColor, valueWidth, valueHeight, orientation);
+    const valueStyles = getValueStyles(valueToBaseSizeOn, valueColor, valueWidth, valueHeight, orientation, text);
 
     const containerStyles: CSSProperties = {
       width: `${wrapperWidth}px`,
@@ -237,7 +225,10 @@ export class BarGauge extends PureComponent<Props> {
     return (
       <div style={containerStyles}>
         {cells}
-        <FormattedValueDisplay className="bar-gauge__value" value={value} style={valueStyles} />
+        <FormattedValueDisplay
+          value={value}
+          style={valueStyles}
+        />
       </div>
     );
   }
@@ -262,7 +253,7 @@ function isVertical(orientation: VizOrientation) {
 }
 
 function calculateTitleDimensions(props: Props): TitleDimensions {
-  const { height, width, alignmentFactors, orientation } = props;
+  const { height, width, alignmentFactors, orientation, text } = props;
   const title = alignmentFactors ? alignmentFactors.title : props.value.title;
 
   if (!title) {
@@ -270,16 +261,26 @@ function calculateTitleDimensions(props: Props): TitleDimensions {
   }
 
   if (isVertical(orientation)) {
+    const fontSize = text?.titleSize ?? 14;
     return {
-      fontSize: 14,
+      fontSize: fontSize,
       width: width,
-      height: 14 * TITLE_LINE_HEIGHT,
+      height: fontSize * TITLE_LINE_HEIGHT,
       placement: 'below',
     };
   }
 
   // if height above 40 put text to above bar
   if (height > 40) {
+    if (text?.titleSize) {
+      return {
+        fontSize: text?.titleSize,
+        width: 0,
+        height: text.titleSize * TITLE_LINE_HEIGHT,
+        placement: 'above',
+      };
+    }
+
     const maxTitleHeightRatio = 0.45;
     const titleHeight = Math.max(Math.min(height * maxTitleHeightRatio, MAX_VALUE_HEIGHT), 17);
 
@@ -298,7 +299,7 @@ function calculateTitleDimensions(props: Props): TitleDimensions {
   const textSize = measureText(title, titleFontSize);
 
   return {
-    fontSize: titleFontSize,
+    fontSize: text?.titleSize ?? titleFontSize,
     height: 0,
     width: textSize.width + 15,
     placement: 'left',
@@ -361,9 +362,15 @@ interface BarAndValueDimensions {
   wrapperWidth: number;
 }
 
-function calculateBarAndValueDimensions(props: Props): BarAndValueDimensions {
-  const { height, width, orientation } = props;
+/**
+ * @internal
+ * Only exported for unit tests
+ **/
+export function calculateBarAndValueDimensions(props: Props): BarAndValueDimensions {
+  const { height, width, orientation, text, alignmentFactors } = props;
   const titleDim = calculateTitleDimensions(props);
+  const value = alignmentFactors ?? props.value;
+  const valueString = formattedValueToString(value);
 
   let maxBarHeight = 0;
   let maxBarWidth = 0;
@@ -372,8 +379,18 @@ function calculateBarAndValueDimensions(props: Props): BarAndValueDimensions {
   let wrapperWidth = 0;
   let wrapperHeight = 0;
 
+  // measure text with title font size or min 14px
+  const fontSizeToMeasureWith = text?.valueSize ?? Math.max(titleDim.fontSize, 12);
+  const realTextSize = measureText(valueString, fontSizeToMeasureWith);
+  const realValueWidth = realTextSize.width + VALUE_LEFT_PADDING * 2;
+
   if (isVertical(orientation)) {
-    valueHeight = Math.min(Math.max(height * 0.1, MIN_VALUE_HEIGHT), MAX_VALUE_HEIGHT);
+    if (text?.valueSize) {
+      valueHeight = text.valueSize * VALUE_LINE_HEIGHT;
+    } else {
+      valueHeight = Math.min(Math.max(height * 0.1, MIN_VALUE_HEIGHT), MAX_VALUE_HEIGHT);
+    }
+
     valueWidth = width;
     maxBarHeight = height - (titleDim.height + valueHeight);
     maxBarWidth = width;
@@ -381,7 +398,8 @@ function calculateBarAndValueDimensions(props: Props): BarAndValueDimensions {
     wrapperHeight = height - titleDim.height;
   } else {
     valueHeight = height - titleDim.height;
-    valueWidth = Math.max(Math.min(width * 0.2, MAX_VALUE_WIDTH), MIN_VALUE_WIDTH);
+    valueWidth = Math.max(Math.min(width * 0.2, MAX_VALUE_WIDTH), realValueWidth);
+
     maxBarHeight = height - titleDim.height;
     maxBarWidth = width - valueWidth - titleDim.width;
 
@@ -412,14 +430,14 @@ export function getValuePercent(value: number, minValue: number, maxValue: numbe
  * Only exported to for unit test
  */
 export function getBasicAndGradientStyles(props: Props): BasicAndGradientStyles {
-  const { displayMode, field, value, alignmentFactors, orientation, theme } = props;
+  const { displayMode, field, value, alignmentFactors, orientation, theme, text } = props;
   const { valueWidth, valueHeight, maxBarHeight, maxBarWidth } = calculateBarAndValueDimensions(props);
 
   const valuePercent = getValuePercent(value.numeric, field.min!, field.max!);
   const valueColor = getValueColor(props);
 
   const valueToBaseSizeOn = alignmentFactors ? alignmentFactors : value;
-  const valueStyles = getValueStyles(valueToBaseSizeOn, valueColor, valueWidth, valueHeight, orientation);
+  const valueStyles = getValueStyles(valueToBaseSizeOn, valueColor, valueWidth, valueHeight, orientation, text);
 
   const isBasic = displayMode === 'basic';
   const wrapperStyles: CSSProperties = {
@@ -457,10 +475,7 @@ export function getBasicAndGradientStyles(props: Props): BasicAndGradientStyles 
 
     if (isBasic) {
       // Basic styles
-      barStyles.background = `${tinycolor(valueColor)
-        .setAlpha(0.35)
-        .toRgbString()}`;
-
+      barStyles.background = `${tinycolor(valueColor).setAlpha(0.35).toRgbString()}`;
       barStyles.borderTop = `2px solid ${valueColor}`;
     } else {
       // Gradient styles
@@ -483,9 +498,7 @@ export function getBasicAndGradientStyles(props: Props): BasicAndGradientStyles 
 
     if (isBasic) {
       // Basic styles
-      barStyles.background = `${tinycolor(valueColor)
-        .setAlpha(0.35)
-        .toRgbString()}`;
+      barStyles.background = `${tinycolor(valueColor).setAlpha(0.35).toRgbString()}`;
       barStyles.borderRight = `2px solid ${valueColor}`;
     } else {
       // Gradient styles
@@ -505,73 +518,74 @@ export function getBasicAndGradientStyles(props: Props): BasicAndGradientStyles 
  * Only exported to for unit test
  */
 export function getBarGradient(props: Props, maxSize: number): string {
-  const { field, value, orientation } = props;
+  const { field, value, orientation, theme } = props;
   const cssDirection = isVertical(orientation) ? '0deg' : '90deg';
   const minValue = field.min!;
   const maxValue = field.max!;
 
   let gradient = '';
   let lastpos = 0;
+  let mode = getFieldColorMode(field.color?.mode);
 
-  if (field.color && field.color.mode === FieldColorMode.Scheme) {
-    const schemeSet = (d3 as any)[`scheme${field.color.schemeName}`] as any[];
-    if (!schemeSet) {
-      // Error: unknown scheme
-      const color = '#F00';
-      gradient = `linear-gradient(${cssDirection}, ${color}, ${color}`;
-      gradient += ` ${maxSize}px, ${color}`;
-      return gradient + ')';
-    }
-    // Get the scheme with as many steps as possible
-    const scheme = schemeSet[schemeSet.length - 1] as string[];
-    for (let i = 0; i < scheme.length; i++) {
-      const color = scheme[i];
-      const valuePercent = i / (scheme.length - 1);
+  if (mode.id === FieldColorModeId.Thresholds) {
+    const thresholds = field.thresholds!;
+
+    for (let i = 0; i < thresholds.steps.length; i++) {
+      const threshold = thresholds.steps[i];
+      const color = props.theme.visualization.getColorByName(threshold.color);
+      const valuePercent =
+        thresholds.mode === ThresholdsMode.Percentage
+          ? threshold.value / 100
+          : getValuePercent(threshold.value, minValue, maxValue);
       const pos = valuePercent * maxSize;
       const offset = Math.round(pos - (pos - lastpos) / 2);
-
+      const thresholdValue =
+        thresholds.mode === ThresholdsMode.Percentage
+          ? minValue + (maxValue - minValue) * valuePercent
+          : threshold.value;
       if (gradient === '') {
         gradient = `linear-gradient(${cssDirection}, ${color}, ${color}`;
+      } else if (value.numeric < thresholdValue) {
+        break;
       } else {
         lastpos = pos;
         gradient += ` ${offset}px, ${color}`;
       }
     }
-  } else {
-    const thresholds = field.thresholds!;
-    if (thresholds) {
-      for (let i = 0; i < thresholds.steps.length; i++) {
-        const threshold = thresholds.steps[i];
-        const color = getColorFromHexRgbOrName(threshold.color,currentTheme);
-        const valuePercent = getValuePercent(threshold.value, minValue, maxValue);
-        const pos = valuePercent * maxSize;
-        const offset = Math.round(pos - (pos - lastpos) / 2);
-  
-        if (gradient === '') {
-          gradient = `linear-gradient(${cssDirection}, ${color}, ${color}`;
-        } else if (value.numeric < threshold.value) {
-          break;
-        } else {
-          lastpos = pos;
-          gradient += ` ${offset}px, ${color}`;
-        }
-      }
-    }
 
+    return gradient + ')';
   }
 
-  return gradient + ')';
+  if (mode.isContinuous && mode.getColors) {
+    const scheme = mode.getColors(theme);
+
+    for (let i = 0; i < scheme.length; i++) {
+      const color = scheme[i];
+
+      if (gradient === '') {
+        gradient = `linear-gradient(${cssDirection}, ${color} 0px`;
+      } else {
+        const valuePercent = i / (scheme.length - 1);
+        const pos = valuePercent * maxSize;
+        gradient += `, ${color} ${pos}px`;
+      }
+    }
+    return gradient + ')';
+  }
+
+  return value.color ?? FALLBACK_COLOR;
 }
 
 /**
  * Only exported to for unit test
  */
 export function getValueColor(props: Props): string {
-  const { theme, value } = props;
+  const { value } = props;
   if (value.color) {
     return value.color;
   }
-  return getColorFromHexRgbOrName('gray', theme.type);
+
+  return FALLBACK_COLOR;
 }
 
 function getValueStyles(
@@ -579,10 +593,11 @@ function getValueStyles(
   color: string,
   width: number,
   height: number,
-  orientation: VizOrientation
+  orientation: VizOrientation,
+  text?: TextDisplayOptions
 ): CSSProperties {
   const styles: CSSProperties = {
-    color: color,
+    color,
     height: `${height}px`,
     width: `${width}px`,
     display: 'flex',
@@ -595,23 +610,17 @@ function getValueStyles(
   const formattedValueString = formattedValueToString(value);
 
   if (isVertical(orientation)) {
-    styles.fontSize = calculateFontSize(formattedValueString, textWidth, height, VALUE_LINE_HEIGHT);
+    styles.fontSize = text?.valueSize ?? calculateFontSize(formattedValueString, textWidth, height, VALUE_LINE_HEIGHT);
     styles.justifyContent = `center`;
   } else {
-    styles.fontSize = calculateFontSize(
-      formattedValueString,
-      textWidth - VALUE_LEFT_PADDING * 2,
-      height,
-      VALUE_LINE_HEIGHT
-    );
+    styles.fontSize =
+      text?.valueSize ??
+      calculateFontSize(formattedValueString, textWidth - VALUE_LEFT_PADDING * 2, height, VALUE_LINE_HEIGHT);
     styles.justifyContent = `flex-end`;
     styles.paddingLeft = `${VALUE_LEFT_PADDING}px`;
     styles.paddingRight = `${VALUE_LEFT_PADDING}px`;
     // Need to remove the left padding from the text width constraints
     textWidth -= VALUE_LEFT_PADDING;
-
-    // adjust width of title box
-    styles.width = measureText(formattedValueString, styles.fontSize).width + VALUE_LEFT_PADDING * 2;
   }
 
   return styles;

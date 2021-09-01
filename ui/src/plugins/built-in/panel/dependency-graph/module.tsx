@@ -1,13 +1,15 @@
 import React, { useState } from 'react'
 import _ from 'lodash'
 
-import { PanelPlugin, CodeEditor} from 'src/packages/datav-core/src';
+import { PanelPlugin} from 'src/packages/datav-core/src';
+import { CodeEditor} from 'src/packages/datav-core/src/ui';
 import { DependencyGraphOptions,ConditionMetric} from './types';
 import DependencyGraph, {serviceIcons} from './DependencyGraph';
 import { Input, Select, Button, Divider, notification } from 'antd';
-import { PlusOutlined, CloseOutlined } from '@ant-design/icons';
+
 import {editOptions}  from './layoutOptions'
 import styleOptions from './styleOptions'
+import { CloseOutlined, PlusOutlined } from '@ant-design/icons';
 
 const { Option } = Select
 const { REQUESTS, ERRORS, ERRORS_RATE, RESP_TIME } = ConditionMetric
@@ -266,10 +268,10 @@ const ServiceEditor = props => {
         </div>
         {
           services.map((service) => <div className="gf-form-inline" key={service}>
-            <div className="gf-form">
+            <div className="gf-form"> 
               <Input className="gf-form-input width-8" value={service} disabled={service != ''} />
               <Select className="width-8" value={value && value[service]} onChange={(v) => props.onChange({...value, [service]: v})}>{serviceIcons.map(icon => <Option value={icon} key={icon}>{icon}</Option>)}</Select>
-              <CloseOutlined onClick={() => onDelService(service)} className="ub-ml2 gf-form-label"/>
+              <CloseOutlined translate onClick={() => onDelService(service)} className="ub-ml2 gf-form-label"/>
             </div>
           </div>)
         }
@@ -279,8 +281,8 @@ const ServiceEditor = props => {
               <div className="gf-form">
                 <Input className="gf-form-input width-8" value={tempService} onChange={(e) => setTempService(e.currentTarget.value)}/>
                 <Select className="width-8" value={tempIcon} onChange={(v) => setTempIcon(v)}>{serviceIcons.map(icon => <Option value={icon} key={icon}>{icon}</Option>)}</Select>
-                <PlusOutlined onClick={onAddService} className="ub-ml2 gf-form-label"/>
-                <CloseOutlined onClick={() => {setTempService(null);setTempIcon(null)}} className="gf-form-label"/>
+                <PlusOutlined translate onClick={onAddService} className="ub-ml2 gf-form-label"/>
+                <CloseOutlined  translate onClick={() => {setTempService(null);setTempIcon(null)}} className="gf-form-label"/>
               </div>
             </>
         }

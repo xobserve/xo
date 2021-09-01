@@ -1,8 +1,9 @@
 import React from 'react';
-import { css } from 'emotion';
+import { css } from '@emotion/css';
 import { CSSTransition } from 'react-transition-group';
+import { stylesFactory } from '../../themes';
 
-const getStyles = (duration: number) => {
+const getStyles = stylesFactory((duration: number) => {
   return {
     enter: css`
       label: enter;
@@ -23,7 +24,7 @@ const getStyles = (duration: number) => {
       transition: opacity ${duration}ms ease-out;
     `,
   };
-};
+});
 
 type Props = {
   children: React.ReactNode;

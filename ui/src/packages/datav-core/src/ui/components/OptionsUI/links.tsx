@@ -4,7 +4,7 @@ import {
   DataLinksFieldConfigSettings,
   FieldConfigEditorProps,
   VariableSuggestionsScope,
-} from '../../../data'; 
+} from '../../../data';
 import { DataLinksInlineEditor } from '../DataLinks/DataLinksInlineEditor/DataLinksInlineEditor';
 
 export const DataLinksValueEditor: React.FC<FieldConfigEditorProps<DataLink[], DataLinksFieldConfigSettings>> = ({
@@ -17,7 +17,7 @@ export const DataLinksValueEditor: React.FC<FieldConfigEditorProps<DataLink[], D
       links={value}
       onChange={onChange}
       data={context.data}
-      suggestions={context.getSuggestions ? context.getSuggestions(VariableSuggestionsScope.Values) : []}
+      getSuggestions={() => (context.getSuggestions ? context.getSuggestions(VariableSuggestionsScope.Values) : [])}
     />
   );
 };

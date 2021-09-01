@@ -23,9 +23,12 @@ import { MutableDataFrame } from './MutableDataFrame';
 import { SortedVector } from '../vector/SortedVector';
 import { ArrayDataFrame } from './ArrayDataFrame';
 import { getFieldDisplayName } from '../field/fieldState';
+import { fieldIndexComparer } from '../field/fieldComparers';
+import { vectorToArray } from '../vector/vectorToArray';
 
 function convertTableToDataFrame(table: TableData): DataFrame {
-  const fields = table.columns.map(c => {
+  const fields = table.columns.map((c) => {
+    // TODO: should be Column but type does not exists there so not sure whats up here.
     const { text, type, ...disp } = c as any;
     return {
       name: text, // rename 'text' to the 'name' field
@@ -67,7 +70,9 @@ function convertTimeSeriesToDataFrame(timeSeries: TimeSeries): DataFrame {
   const times: number[] = [];
   const values: TimeSeriesValue[] = [];
 
-  for (const point of timeSeries.datapoints) {
+  // Sometimes the points are sent as datapoints
+  const points = timeSeries.datapoints || (timeSeries as any).points;
+  for (const point of points) {
     values.push(point[0]);
     times.push(point[1] as number);
   }
@@ -91,11 +96,11 @@ function convertTimeSeriesToDataFrame(timeSeries: TimeSeries): DataFrame {
   ];
 
   if (timeSeries.title) {
-    (fields[1].config as FieldConfig).displayName = timeSeries.title;
+    (fields[1].config as FieldConfig).displayNameFromDS = timeSeries.title;
   }
 
   return {
-    name: timeSeries.target,
+    name: timeSeries.target || (timeSeries as any).name,
     refId: timeSeries.refId,
     meta: timeSeries.meta,
     fields,
@@ -252,7 +257,7 @@ export const guessFieldTypes = (series: DataFrame, guessDefined = false): DataFr
       // Something is missing a type, return a modified copy
       return {
         ...series,
-        fields: series.fields.map(field => {
+        fields: series.fields.map((field) => {
           if (field.type && field.type !== FieldType.other && !guessDefined) {
             return field;
           }
@@ -292,7 +297,7 @@ export function toDataFrame(data: any): DataFrame {
     return convertJSONDocumentDataToDataFrame(data);
   }
 
-  if (data.hasOwnProperty('datapoints')) {
+  if (data.hasOwnProperty('datapoints') || data.hasOwnProperty('points')) {
     return convertTimeSeriesToDataFrame(data);
   }
 
@@ -363,7 +368,7 @@ export const toLegacyResponseData = (frame: DataFrame): TimeSeries | TableData =
   }
 
   return {
-    columns: fields.map(f => {
+    columns: fields.map((f) => {
       const { name, config } = f;
       if (config) {
         // keep unit etc
@@ -391,34 +396,13 @@ export function sortDataFrame(data: DataFrame, sortIndex?: number, reverse = fal
   for (let i = 0; i < data.length; i++) {
     index.push(i);
   }
-  const values = field.values;
 
-  // Numeric Comparison
-  let compare = (a: number, b: number) => {
-    const vA = values.get(a);
-    const vB = values.get(b);
-    return vA - vB; // works for numbers!
-  };
+  const fieldComparer = fieldIndexComparer(field, reverse);
+  index.sort(fieldComparer);
 
-  // String Comparison
-  if (field.type === FieldType.string) {
-    compare = (a: number, b: number) => {
-      const vA: string = values.get(a);
-      const vB: string = values.get(b);
-      return vA.localeCompare(vB);
-    };
-  }
-
-  // Run the sort function
-  index.sort(compare);
-  if (reverse) {
-    index.reverse();
-  }
-
-  // Return a copy that maps sorted values
   return {
     ...data,
-    fields: data.fields.map(f => {
+    fields: data.fields.map((f) => {
       return {
         ...f,
         values: new SortedVector(f.values, index),
@@ -433,7 +417,7 @@ export function sortDataFrame(data: DataFrame, sortIndex?: number, reverse = fal
 export function reverseDataFrame(data: DataFrame): DataFrame {
   return {
     ...data,
-    fields: data.fields.map(f => {
+    fields: data.fields.map((f) => {
       const copy = [...f.values.toArray()];
       copy.reverse();
       return {
@@ -459,18 +443,12 @@ export function getDataFrameRow(data: DataFrame, row: number): any[] {
  * Returns a copy that does not include functions
  */
 export function toDataFrameDTO(data: DataFrame): DataFrameDTO {
-  const fields: FieldDTO[] = data.fields.map(f => {
+  const fields: FieldDTO[] = data.fields.map((f) => {
     let values = f.values.toArray();
-    if (!Array.isArray(values)) {
-      // Apache arrow will pack objects into typed arrays
-      // Float64Array, etc
-      // TODO: Float64Array could be used directly
-      values = [];
-      for (let i = 0; i < f.values.length; i++) {
-        values.push(f.values.get(i));
-      }
+    // The byte buffers serialize like objects
+    if (values instanceof Float64Array) {
+      values = vectorToArray(f.values);
     }
-
     return {
       name: f.name,
       type: f.type,

@@ -3,7 +3,7 @@ import { useLocation } from 'react-router-dom'
 import { css } from 'emotion';
 
 import {routers} from 'src/routes'
-import { Icon } from 'src/packages/datav-core/src'
+import { Icon } from 'src/packages/datav-core/src/ui'
 import { DashboardModel } from 'src/views/dashboard/model'
 import { updateLocation } from 'src/store/reducers/location';
 import { store } from 'src/store/store';

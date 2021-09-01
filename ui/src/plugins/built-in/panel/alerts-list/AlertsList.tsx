@@ -1,9 +1,9 @@
 import React, { PureComponent } from 'react';
 import _ from 'lodash'
-import { PanelProps, withTheme, DatavTheme, getBackendSrv, dateTimeFormat, Icon } from 'src/packages/datav-core/src';
+import { PanelProps,  getBackendSrv, dateTimeFormat,GrafanaTheme } from 'src/packages/datav-core/src';
 import { AlertsListOptions } from './types';
 import { css, cx } from 'emotion';
-import { stylesFactory, useTheme } from 'src/packages/datav-core/src';
+import { stylesFactory, useTheme,Icon,withTheme } from 'src/packages/datav-core/src/ui';
 import { getTimeSrv } from 'src/core/services/time';
 import { AlertHistory } from 'src/types';
 import AlertHistoryList from 'src/views/alerting/AlertHistoryList';
@@ -11,7 +11,7 @@ import alertDef from 'src/views/alerting/state/alertDef';
 import './AlertsList.less'
 import { FormattedMessage } from 'react-intl';
 interface Props extends PanelProps<AlertsListOptions> {
-  theme: DatavTheme
+  theme: GrafanaTheme
 }
 interface State {
   alerts: AlertHistory[]

@@ -81,7 +81,7 @@ export function getPanelMenu(
 
   if (!panel.isEditing) {
     menu.push({
-      text: <Message id="common.view"/>,
+      text: <Message id="common.view"/> as any,
       iconClassName: 'eye',
       onClick: onViewPanel,
       shortcut: 'v',
@@ -90,7 +90,7 @@ export function getPanelMenu(
 
   if (dashboard.canEditPanel(panel) && !panel.isEditing) {
     menu.push({
-      text: <Message id="common.edit"/>,
+      text: <Message id="common.edit"/> as any,
       iconClassName: 'edit',
       onClick: onEditPanel,
       shortcut: 'e',
@@ -131,7 +131,7 @@ export function getPanelMenu(
 
   menu.push({
     type: 'submenu',
-    text: <Message id="common.inspect"/>,
+    text: <Message id="common.inspect"/> as any,
     iconClassName: 'info-circle',
     onClick: (e: React.MouseEvent<any>) => onInspectPanel(e),
     shortcut: 'i',
@@ -148,12 +148,12 @@ export function getPanelMenu(
 
   if (dashboard.canEditPanel(panel) && !(panel.isViewing || panel.isEditing)) {
     subMenu.push({
-      text: <Message id="common.duplicate"/>,
+      text: <Message id="common.duplicate"/> as any,
       onClick: onDuplicatePanel,
     });
 
     subMenu.push({
-      text: <Message id="common.copy"/>,
+      text: <Message id="common.copy"/> as any,
       onClick: onCopyPanel,
     });
   }
@@ -162,7 +162,7 @@ export function getPanelMenu(
   if (!panel.isEditing && subMenu.length) {
     menu.push({
       type: 'submenu',
-      text: <Message id="common.more"/>,
+      text: <Message id="common.more"/> as any,
       iconClassName: 'cube',
       subMenu,
       onClick: onMore,
@@ -170,10 +170,10 @@ export function getPanelMenu(
   }
 
   if (dashboard.canEditPanel(panel) && !panel.isEditing) {
-    menu.push({ type: 'divider' });
+    menu.push({ type: 'divider' } as any);
 
     menu.push({
-      text: <Message id="common.remove"/>,
+      text: <Message id="common.remove"/> as any,
       iconClassName: 'trash-alt',
       onClick: onRemovePanel
     });

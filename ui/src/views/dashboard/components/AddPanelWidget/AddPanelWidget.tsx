@@ -131,7 +131,7 @@ interface AddPanelWidgetHandleProps {
 const AddPanelWidgetHandle: React.FC<AddPanelWidgetHandleProps> = ({ onCancel }) => {
   return (
     <div className={cx('add-panel-widget-handle', 'grid-drag-handle')}>
-      <CloseOutlined onClick={onCancel} className="add-panel-widget__close" />
+      <CloseOutlined  translate onClick={onCancel} className="add-panel-widget__close" />
     </div>
   );
 };
@@ -145,7 +145,7 @@ const AddPanelWidgetCreate: React.FC<AddPanelWidgetCreateProps> = ({ onCreate, o
   const copiedPanelPlugins = useMemo(() => getCopiedPanelPlugins(), []);
   return (
     <div className={'add-panel-widget-create-wrapper'}>
-        <Button type="primary" icon={<PlusOutlined />}  onClick={onCreate}>
+        <Button type="primary" icon={<PlusOutlined translate />}  onClick={onCreate}>
            <FormattedMessage id="dashboard.addNewPanel"/>
         </Button>
         {copiedPanelPlugins.length === 1 && (

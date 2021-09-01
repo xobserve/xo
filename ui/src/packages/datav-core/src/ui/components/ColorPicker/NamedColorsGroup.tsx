@@ -1,83 +1,34 @@
 import React, { FunctionComponent } from 'react';
-import { ColorDefinition, getColorForTheme} from '../../../data';
+import { ThemeVizHue } from '../../../data';
 import { Color } from 'csstype';
-import upperFirst from 'lodash/upperFirst';
-import find from 'lodash/find';
-import { currentTheme } from '../../../data';
+import { ColorSwatch, ColorSwatchVariant } from './ColorSwatch';
+import { upperFirst } from 'lodash';
 
-type ColorChangeHandler = (color: ColorDefinition) => void;
-
-export enum ColorSwatchVariant {
-  Small = 'small',
-  Large = 'large',
-}
-
-interface ColorSwatchProps extends React.DOMAttributes<HTMLDivElement> {
-  color: string;
-  label?: string;
-  variant?: ColorSwatchVariant;
-  isSelected?: boolean;
-}
-
-export const ColorSwatch: FunctionComponent<ColorSwatchProps> = ({
-  color,
-  label,
-  variant = ColorSwatchVariant.Small,
-  isSelected,
-  ...otherProps
-}) => {
-  const isSmall = variant === ColorSwatchVariant.Small;
-  const swatchSize = isSmall ? '16px' : '32px';
-
-  const swatchStyles = {
-    width: swatchSize,
-    height: swatchSize,
-    borderRadius: '50%',
-    background: `${color}`,
-    marginRight: isSmall ? '0px' : '8px',
-    boxShadow: isSelected ? `inset 0 0 0 2px ${color}, inset 0 0 0 4px rgba(0, 0, 0, 0.15)` : 'none',
-  };
-
-  return (
-    <div
-      style={{
-        display: 'flex',
-        alignItems: 'center',
-        cursor: 'pointer',
-      }}
-      {...otherProps}
-    >
-      <div style={swatchStyles} />
-      {variant === ColorSwatchVariant.Large && <span>{label}</span>}
-    </div>
-  );
-};
-
-interface NamedColorsGroupProps  {
-  colors: ColorDefinition[];
+interface NamedColorsGroupProps {
+  hue: ThemeVizHue;
   selectedColor?: Color;
-  onColorSelect: ColorChangeHandler;
+  onColorSelect: (colorName: string) => void;
   key?: string;
 }
 
 const NamedColorsGroup: FunctionComponent<NamedColorsGroupProps> = ({
-  colors,
+  hue,
   selectedColor,
   onColorSelect,
   ...otherProps
 }) => {
-  const primaryColor = find(colors, color => !!color.isPrimary);
+  const primaryShade = hue.shades.find((shade) => shade.primary)!;
 
   return (
     <div {...otherProps} style={{ display: 'flex', flexDirection: 'column' }}>
-      {primaryColor && (
+      {primaryShade && (
         <ColorSwatch
-          key={primaryColor.name}
-          isSelected={primaryColor.name === selectedColor}
+          key={primaryShade.name}
+          isSelected={primaryShade.name === selectedColor}
           variant={ColorSwatchVariant.Large}
-          color={getColorForTheme(primaryColor, currentTheme)}
-          label={upperFirst(primaryColor.hue)}
-          onClick={() => onColorSelect(primaryColor)}
+          color={primaryShade.color}
+          label={upperFirst(hue.name)}
+          onClick={() => onColorSelect(primaryShade.name)}
         />
       )}
       <div
@@ -86,15 +37,15 @@ const NamedColorsGroup: FunctionComponent<NamedColorsGroupProps> = ({
           marginTop: '8px',
         }}
       >
-        {colors.map(
-          color =>
-            !color.isPrimary && (
-              <div key={color.name} style={{ marginRight: '4px' }}>
+        {hue.shades.map(
+          (shade) =>
+            !shade.primary && (
+              <div key={shade.name} style={{ marginRight: '4px' }}>
                 <ColorSwatch
-                  key={color.name}
-                  isSelected={color.name === selectedColor}
-                  color={getColorForTheme(color, currentTheme)}
-                  onClick={() => onColorSelect(color)}
+                  key={shade.name}
+                  isSelected={shade.name === selectedColor}
+                  color={shade.color}
+                  onClick={() => onColorSelect(shade.name)}
                 />
               </div>
             )

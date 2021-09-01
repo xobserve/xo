@@ -7,7 +7,7 @@ import {
   InterpolateFunction,
 } from 'src/packages/datav-core/src';
 import { get as lodashGet, set as lodashSet } from 'lodash';
-import { FormField as Field, FormLabel as Label} from 'src/packages/datav-core/src';
+import { Field,  Label} from 'src/packages/datav-core/src/ui';
 import groupBy from 'lodash/groupBy';
 import { OptionsGroup } from './OptionsGroup';
 import localeData from 'src/core/library/locale'
@@ -39,7 +39,7 @@ export const PanelOptionsEditor: React.FC<PanelOptionsEditorProps<any>> = ({
     onChange(newOptions);
   };
 
-  const context: StandardEditorContext = {
+  const context = {
     data: data ?? [],
     replaceVariables,
   };

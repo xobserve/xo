@@ -1,11 +1,11 @@
 import { TimeZone } from '../types/time';
 /* eslint-disable id-blacklist, no-restricted-imports, @typescript-eslint/ban-types */
-import moment, { Moment, MomentInput, DurationInputArg1 } from 'moment';
+import moment, { Moment, MomentInput, DurationInputArg1, DurationInputArg2 } from 'moment';
 export interface DateTimeBuiltinFormat {
   __momentBuiltinFormatBrand: any;
 }
 export const ISO_8601: DateTimeBuiltinFormat = moment.ISO_8601;
-export type DateTimeInput = Date | string | number | Array<string | number> | DateTime; // null | undefined
+export type DateTimeInput = Date | string | number | Array<string | number> | DateTime | null; // | undefined;
 export type FormatInput = string | DateTimeBuiltinFormat | undefined;
 export type DurationInput = string | number | DateTimeDuration;
 export type DurationUnit =
@@ -17,6 +17,7 @@ export type DurationUnit =
   | 'M'
   | 'week'
   | 'weeks'
+  | 'isoWeek'
   | 'w'
   | 'day'
   | 'days'
@@ -58,6 +59,7 @@ export interface DateTime extends Object {
   fromNow: (withoutSuffix?: boolean) => string;
   from: (formaInput: DateTimeInput) => string;
   isSame: (input?: DateTimeInput, granularity?: DurationUnit) => boolean;
+  isBefore: (input?: DateTimeInput) => boolean;
   isValid: () => boolean;
   local: () => DateTime;
   locale: (locale: string) => DateTime;
@@ -78,6 +80,10 @@ export const setLocale = (language: string) => {
   moment.locale(language);
 };
 
+export const getLocale = () => {
+  return moment.locale();
+};
+
 export const getLocaleData = (): DateTimeLocale => {
   return moment.localeData();
 };
@@ -91,7 +97,8 @@ export const toUtc = (input?: DateTimeInput, formatInput?: FormatInput): DateTim
 };
 
 export const toDuration = (input?: DurationInput, unit?: DurationUnit): DateTimeDuration => {
-  return moment.duration(input as DurationInputArg1, unit) as DateTimeDuration;
+  // moment built-in types are a bit flaky, for example `isoWeek` is not in the type definition but it's present in the js source.
+  return moment.duration(input as DurationInputArg1, unit as DurationInputArg2) as DateTimeDuration;
 };
 
 export const dateTime = (input?: DateTimeInput, formatInput?: FormatInput): DateTime => {

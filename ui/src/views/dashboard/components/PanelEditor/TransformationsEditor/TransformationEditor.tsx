@@ -1,13 +1,13 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { mergeMap } from 'rxjs/operators';
 import { css } from 'emotion';
-import { Icon, JSONFormatter, useStyles } from 'src/packages/datav-core/src';
+import { Icon, JSONFormatter, useStyles } from 'src/packages/datav-core/src/ui';
 import {
   DataFrame,
   DataTransformerConfig,
-  DatavTheme,
+  GrafanaTheme,
   transformDataFrame,
-  TransformerRegistyItem,
+  TransformerRegistryItem,
 } from 'src/packages/datav-core/src';
 
 import { TransformationsEditorTransformation } from './types';
@@ -16,7 +16,7 @@ interface TransformationEditorProps {
   debugMode?: boolean;
   index: number;
   data: DataFrame[];
-  uiConfig: TransformerRegistyItem<any>;
+  uiConfig: TransformerRegistryItem<any>;
   configs: TransformationsEditorTransformation[];
   onChange: (index: number, config: DataTransformerConfig) => void;
 }
@@ -93,7 +93,7 @@ export const TransformationEditor = ({
   );
 };
 
-const getStyles = (theme: DatavTheme) => {
+const getStyles = (theme: GrafanaTheme) => {
   const debugBorder = theme.isLight ? theme.palette.gray85 : theme.palette.gray15;
 
   return {

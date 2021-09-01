@@ -1,6 +1,6 @@
 import React, { FC } from 'react';
 import { escapeStringForRegex, unEscapeStringFromRegex } from 'src/packages/datav-core/src';
-import { Input, Icon } from 'src/packages/datav-core/src';
+import { Input, Icon } from 'src/packages/datav-core/src/ui';
 
 export interface Props {
   value: string | undefined;

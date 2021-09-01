@@ -1,5 +1,6 @@
 import React, { PureComponent } from 'react';
-import { Form, DataSourceSelectItem, locationUtil, getHistory } from 'src/packages/datav-core/src';
+import {locationUtil, getHistory } from 'src/packages/datav-core/src';
+import {Form} from 'src/packages/datav-core/src/ui'
 import { ImportDashboardForm } from './ImportDashboardForm';
 import { getUrlParams } from 'src/core/library/utils/url';
 import  {DashboardInputs,DashboardSource,ImportDashboardDTO}  from '../../model/import'
@@ -79,7 +80,7 @@ export default class ImportDashboardOverview extends PureComponent<Props, State>
                     validateFieldsOnMount={['title', 'uid']}
                     validateOn="onChange"
                 >
-                    {({ register, errors, control, getValues }) => (
+                    {({ register, errors, control,watch, getValues }) => (
                         <ImportDashboardForm
                             register={register}
                             errors={errors}
@@ -90,6 +91,7 @@ export default class ImportDashboardOverview extends PureComponent<Props, State>
                             onCancel={this.onCancel}
                             onUidReset={this.onUidReset}
                             onSubmit={this.onSubmit}
+                            watch={watch}
                             initialFolderId={folder.id}
                         />
                     )}

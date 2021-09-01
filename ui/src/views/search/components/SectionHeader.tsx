@@ -1,8 +1,8 @@
 import React, { FC, useCallback } from 'react';
 import { css, cx } from 'emotion';
 import { useLocalStorage } from 'react-use';
-import { DatavTheme } from 'src/packages/datav-core/src';
-import { Icon, stylesFactory, useTheme } from 'src/packages/datav-core/src';
+import { GrafanaTheme } from 'src/packages/datav-core/src';
+import { Icon, stylesFactory, useTheme } from 'src/packages/datav-core/src/ui';
 import { DashboardSection, OnToggleChecked } from '../types';
 import { SearchCheckbox } from './SearchCheckbox';
 import { getSectionIcon, getSectionStorageKey } from '../utils';
@@ -61,7 +61,7 @@ export const SectionHeader: FC<SectionHeaderProps> = ({
   );
 };
 
-const getSectionHeaderStyles = stylesFactory((theme: DatavTheme, selected = false, editable: boolean) => {
+const getSectionHeaderStyles = stylesFactory((theme: GrafanaTheme, selected = false, editable: boolean) => {
   const { sm } = theme.spacing;
   return {
     wrapper: cx(

@@ -3,13 +3,12 @@ import {
   FieldType,
   formattedValueToString,
   getDisplayProcessor,
-  DatavTheme,
+  GrafanaTheme2,
   QueryResultMetaStat,
   TimeZone,
-  currentTheme,
 } from 'src/packages/datav-core/src';
-import { stylesFactory, useTheme } from 'src/packages/datav-core/src';
-import { css } from 'emotion';
+import { stylesFactory, useTheme2 } from 'src/packages/datav-core/src/ui';
+import { css } from '@emotion/css';
 
 interface InspectStatsTableProps {
   timeZone: TimeZone;
@@ -18,7 +17,7 @@ interface InspectStatsTableProps {
 }
 
 export const InspectStatsTable: React.FC<InspectStatsTableProps> = ({ timeZone, name, stats }) => {
-  const theme = useTheme();
+  const theme = useTheme2();
   const styles = getStyles(theme);
 
   if (!stats || !stats.length) {
@@ -34,7 +33,7 @@ export const InspectStatsTable: React.FC<InspectStatsTableProps> = ({ timeZone, 
             return (
               <tr key={`${stat.displayName}-${index}`}>
                 <td>{stat.displayName}</td>
-                <td className={styles.cell}>{formatStat(stat, timeZone)}</td>
+                <td className={styles.cell}>{formatStat(stat, timeZone, theme)}</td>
               </tr>
             );
           })}
@@ -44,21 +43,22 @@ export const InspectStatsTable: React.FC<InspectStatsTableProps> = ({ timeZone, 
   );
 };
 
-function formatStat(stat: QueryResultMetaStat, timeZone?: TimeZone): string {
+function formatStat(stat: QueryResultMetaStat, timeZone: TimeZone, theme: GrafanaTheme2): string {
   const display = getDisplayProcessor({
     field: {
       type: FieldType.number,
       config: stat,
     },
+    theme,
     timeZone,
   });
   return formattedValueToString(display(stat.value));
 }
 
-const getStyles = stylesFactory((theme: DatavTheme) => {
+const getStyles = stylesFactory((theme: GrafanaTheme2) => {
   return {
     wrapper: css`
-      padding-bottom: ${theme.spacing.md};
+      padding-bottom: ${theme.spacing(2)};
     `,
     cell: css`
       text-align: right;

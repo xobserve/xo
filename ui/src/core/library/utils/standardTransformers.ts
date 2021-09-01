@@ -1,4 +1,4 @@
-import { TransformerRegistyItem } from 'src/packages/datav-core/src';
+import { TransformerRegistryItem } from 'src/packages/datav-core/src';
 import { reduceTransformRegistryItem } from 'src/views/components/TransformersUI/ReduceTransformerEditor';
 import { filterFieldsByNameTransformRegistryItem } from 'src/views/components/TransformersUI/FilterByNameTransformerEditor';
 import { filterFramesByRefIdTransformRegistryItem } from 'src/views/components/TransformersUI/FilterByRefIdTransformerEditor';
@@ -11,7 +11,7 @@ import { mergeTransformerRegistryItem } from 'src/views/components/TransformersU
 import { seriesToRowsTransformerRegistryItem } from 'src/views/components/TransformersUI/SeriesToRowsTransformerEditor';
 import { concatenateTransformRegistryItem } from 'src/views/components/TransformersUI/ConcatenateTransformerEditor';
 
-export const getStandardTransformers = (): Array<TransformerRegistyItem<any>> => {
+export const getStandardTransformers = (): Array<TransformerRegistryItem<any>> => {
   return [
     reduceTransformRegistryItem,
     filterFieldsByNameTransformRegistryItem,

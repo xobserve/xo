@@ -6,7 +6,7 @@ import {store} from 'src/store/store'
 function getNotFoundModel(): NavModel {
     const node: MenuItem = {
         id: 'not-found',
-        title: 'Page not found',
+        text: 'Page not found',
         icon: 'exclamation-triangle',
         subTitle: '404 Error',
         url: 'not-found',
@@ -74,7 +74,7 @@ export function getNotFoundNav(): NavModel {
   
   export function getWarningNav(title: string, subTitle?: string): NavModel {
     const node = {
-      title,
+      text:title,
       subTitle,
       icon: 'exclamation-triangle',
     };

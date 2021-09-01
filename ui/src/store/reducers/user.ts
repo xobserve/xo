@@ -7,7 +7,7 @@ import storage from 'src/core/library/utils/localStorage'
 import {Role} from 'src/types'
 
 export interface UserState {
-  id: number;
+  id: string;
   username: string;
   name: string;
   email: string;

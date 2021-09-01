@@ -26,7 +26,7 @@ export default function BottomSection() {
   // const isSignedIn = contextSrv.isSignedIn;
     
   const searchLink:MenuItem= {
-    title: <Message id={'common.search'}/>,
+    text: <Message id={'common.search'}/> as any,
     icon: 'search',
     url: ''
   };
@@ -40,7 +40,7 @@ export default function BottomSection() {
        <TopSectionItem link={searchLink} onClick={onOpenSearch} />
       {bottomNav.map((link, index) => {
         if (link.id === "datav-fix-menu-user") {
-          link.title = localeData[currentLang]['user.currentUser'] + " - " + (store.getState().user.name == '' ? store.getState().user.username : store.getState().user.username + ' / ' + store.getState().user.name)
+          link.text = localeData[currentLang]['user.currentUser'] + " - " + (store.getState().user.name == '' ? store.getState().user.username : store.getState().user.username + ' / ' + store.getState().user.name)
         } 
         return <BottomNavLinks link={link} user={contextSrv.user} key={`${link.url}-${index}`} />;
       })}

@@ -7,43 +7,44 @@ import { UpOutlined, DownOutlined, ClockCircleOutlined, LeftOutlined, RightOutli
 import { TimePickerContent } from './TimePickerContent/TimePickerContent';
 
 // Types
-import { isDateTime, rangeUtil, dateTimeFormat, timeZoneFormatUserFriendly,stylesFactory,ClickOutsideWrapper} from 'src/packages/datav-core/src';
+import { isDateTime, rangeUtil, dateTimeFormat} from 'src/packages/datav-core/src';
 import { TimeRange, TimeOption, TimeZone, dateMath } from 'src/packages/datav-core/src';
+import {stylesFactory,ClickOutsideWrapper} from 'src/packages/datav-core/src/ui';
 
 const quickOptions: TimeOption[] = [
-  { from: 'now-5m', to: 'now', display: 'Last 5 minutes', section: 3 },
-  { from: 'now-15m', to: 'now', display: 'Last 15 minutes', section: 3 },
-  { from: 'now-30m', to: 'now', display: 'Last 30 minutes', section: 3 },
-  { from: 'now-1h', to: 'now', display: 'Last 1 hour', section: 3 },
-  { from: 'now-3h', to: 'now', display: 'Last 3 hours', section: 3 },
-  { from: 'now-6h', to: 'now', display: 'Last 6 hours', section: 3 },
-  { from: 'now-12h', to: 'now', display: 'Last 12 hours', section: 3 },
-  { from: 'now-24h', to: 'now', display: 'Last 24 hours', section: 3 },
-  { from: 'now-2d', to: 'now', display: 'Last 2 days', section: 3 },
-  { from: 'now-7d', to: 'now', display: 'Last 7 days', section: 3 },
-  { from: 'now-30d', to: 'now', display: 'Last 30 days', section: 3 },
-  { from: 'now-90d', to: 'now', display: 'Last 90 days', section: 3 },
-  { from: 'now-6M', to: 'now', display: 'Last 6 months', section: 3 },
-  { from: 'now-1y', to: 'now', display: 'Last 1 year', section: 3 },
-  { from: 'now-2y', to: 'now', display: 'Last 2 years', section: 3 },
-  { from: 'now-5y', to: 'now', display: 'Last 5 years', section: 3 },
+  { from: 'now-5m', to: 'now', display: 'Last 5 minutes' },
+  { from: 'now-15m', to: 'now', display: 'Last 15 minutes' },
+  { from: 'now-30m', to: 'now', display: 'Last 30 minutes' },
+  { from: 'now-1h', to: 'now', display: 'Last 1 hour' },
+  { from: 'now-3h', to: 'now', display: 'Last 3 hours' },
+  { from: 'now-6h', to: 'now', display: 'Last 6 hours'},
+  { from: 'now-12h', to: 'now', display: 'Last 12 hours' },
+  { from: 'now-24h', to: 'now', display: 'Last 24 hours'},
+  { from: 'now-2d', to: 'now', display: 'Last 2 days'},
+  { from: 'now-7d', to: 'now', display: 'Last 7 days'},
+  { from: 'now-30d', to: 'now', display: 'Last 30 days' },
+  { from: 'now-90d', to: 'now', display: 'Last 90 days'},
+  { from: 'now-6M', to: 'now', display: 'Last 6 months'},
+  { from: 'now-1y', to: 'now', display: 'Last 1 year'},
+  { from: 'now-2y', to: 'now', display: 'Last 2 years'},
+  { from: 'now-5y', to: 'now', display: 'Last 5 years'},
 ];
 
 const otherOptions: TimeOption[] = [
-  { from: 'now-1d/d', to: 'now-1d/d', display: 'Yesterday', section: 3 },
-  { from: 'now-2d/d', to: 'now-2d/d', display: 'Day before yesterday', section: 3 },
-  { from: 'now-7d/d', to: 'now-7d/d', display: 'This day last week', section: 3 },
-  { from: 'now-1w/w', to: 'now-1w/w', display: 'Previous week', section: 3 },
-  { from: 'now-1M/M', to: 'now-1M/M', display: 'Previous month', section: 3 },
-  { from: 'now-1y/y', to: 'now-1y/y', display: 'Previous year', section: 3 },
-  { from: 'now/d', to: 'now/d', display: 'Today', section: 3 },
-  { from: 'now/d', to: 'now', display: 'Today so far', section: 3 },
-  { from: 'now/w', to: 'now/w', display: 'This week', section: 3 },
-  { from: 'now/w', to: 'now', display: 'This week so far', section: 3 },
-  { from: 'now/M', to: 'now/M', display: 'This month', section: 3 },
-  { from: 'now/M', to: 'now', display: 'This month so far', section: 3 },
-  { from: 'now/y', to: 'now/y', display: 'This year', section: 3 },
-  { from: 'now/y', to: 'now', display: 'This year so far', section: 3 },
+  { from: 'now-1d/d', to: 'now-1d/d', display: 'Yesterday' },
+  { from: 'now-2d/d', to: 'now-2d/d', display: 'Day before yesterday' },
+  { from: 'now-7d/d', to: 'now-7d/d', display: 'This day last week' },
+  { from: 'now-1w/w', to: 'now-1w/w', display: 'Previous week'},
+  { from: 'now-1M/M', to: 'now-1M/M', display: 'Previous month' },
+  { from: 'now-1y/y', to: 'now-1y/y', display: 'Previous year' },
+  { from: 'now/d', to: 'now/d', display: 'Today' },
+  { from: 'now/d', to: 'now', display: 'Today so far'},
+  { from: 'now/w', to: 'now/w', display: 'This week' },
+  { from: 'now/w', to: 'now', display: 'This week so far' },
+  { from: 'now/M', to: 'now/M', display: 'This month' },
+  { from: 'now/M', to: 'now', display: 'This month so far' },
+  { from: 'now/y', to: 'now/y', display: 'This year' },
+  { from: 'now/y', to: 'now', display: 'This year so far' },
 ];
 
 
@@ -144,15 +145,15 @@ export class UnthemedTimeRangePicker extends PureComponent<Props&any, State> {
         <div className={styles.buttons}>
           {hasAbsolute && (
             <Button  onClick={onMoveBackward}>
-              <LeftOutlined />
+              <LeftOutlined translate />
             </Button>
           )}
           <div>
             <Tooltip title={<TimePickerTooltip timeRange={value} timeZone={timeZone} />} placement="bottom">
               <Button aria-label="TimePicker Open Button" onClick={this.onOpen}>
-                <ClockCircleOutlined className={cx(styles.clockIcon, timePickerIconClass)} />
+                <ClockCircleOutlined translate className={cx(styles.clockIcon, timePickerIconClass)} />
                 <TimePickerButtonLabel {...this.props} />
-                <span className={styles.caretIcon}>{isOpen ? <UpOutlined /> : <DownOutlined />}</span>
+                <span className={styles.caretIcon}>{isOpen ? <UpOutlined translate /> : <DownOutlined translate />}</span>
               </Button>
             </Tooltip>
             {isOpen && (
@@ -172,7 +173,7 @@ export class UnthemedTimeRangePicker extends PureComponent<Props&any, State> {
 
           {hasAbsolute && (
             <Button  onClick={onMoveForward}>
-              <RightOutlined />
+              <RightOutlined translate />
             </Button>
           )}
         </div>
@@ -207,7 +208,7 @@ const TimePickerButtonLabel = memo<Props & any>(({ hideText, value, timeZone }) 
   return (
     <span className={styles.container}>
       <span>{formattedRange(value, timeZone)}</span>
-      <span className={styles.utc}>{rangeUtil.describeTimeRangeAbbrevation(value, timeZone)}</span>
+      <span className={styles.utc}>{rangeUtil.describeTimeRange(value, timeZone)}</span>
     </span>
   );
 });

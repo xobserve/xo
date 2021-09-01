@@ -1,5 +1,6 @@
 import React, { FC } from 'react';
-import { AsyncSelect, Icon ,SelectableValue} from 'src/packages/datav-core/src';
+import { SelectableValue} from 'src/packages/datav-core/src';
+import { AsyncSelect, Icon} from 'src/packages/datav-core/src/ui';
 import { DEFAULT_SORT } from 'src/views/search/constants';
 import { SearchSrv } from 'src/core/services/search';
 

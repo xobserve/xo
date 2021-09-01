@@ -17,7 +17,7 @@ const ModalService = (props:Props) =>{
             Modal.confirm(
                 {
                     title: title,
-                    icon: <ExclamationCircleOutlined />,
+                    icon: <ExclamationCircleOutlined translate/>,
                     content: text,
                     onOk() {
                         onConfirm()

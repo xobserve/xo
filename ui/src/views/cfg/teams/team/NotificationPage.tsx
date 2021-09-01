@@ -3,7 +3,8 @@ import { withRouter } from 'react-router-dom'
 import _ from 'lodash'
 
 import Page from 'src/views/Layouts/Page/Page';
-import { getBackendSrv, LinkButton, Button, HorizontalGroup,currentLang, localeData,config } from 'src/packages/datav-core/src';
+import { getBackendSrv,currentLang, localeData,config, NavModel } from 'src/packages/datav-core/src';
+import { LinkButton, Button, HorizontalGroup} from 'src/packages/datav-core/src/ui';
 import { getNavModel } from 'src/views/Layouts/Page/navModel'
 import { AlertNotification, CoreEvents, Team } from 'src/types';
 import EmptyListCTA from '../../../components/EmptyListCTA/EmptyListCTA';
@@ -226,7 +227,7 @@ export class NotificationPage extends PureComponent<Props, State> {
         const { routeID, parentRouteID } = this.props
         const { hasFetched, notifications,addChannelVisible,tempNotification,team,testLoading} = this.state
 
-        let navModel;
+        let navModel:NavModel;
         if (team) {
             navModel = _.cloneDeep(getNavModel(routeID,parentRouteID))
             const {node,main} = navModel
@@ -235,7 +236,7 @@ export class NotificationPage extends PureComponent<Props, State> {
                   n.url = n.url.replace(":id",team.id)
               })
     
-            navModel.main.title = navModel.main.title + ' / ' + team.name
+            navModel.main.text = navModel.main.text + ' / ' + team.name
         } else {
             navModel = _.cloneDeep(getNavModel(routeID,parentRouteID))
         }

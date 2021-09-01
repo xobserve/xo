@@ -1,6 +1,6 @@
 import React, { useState, useCallback } from 'react';
-import { Icon, renderOrCallToRender, stylesFactory, useTheme } from 'src/packages/datav-core/src';
-import { DatavTheme } from 'src/packages/datav-core/src';
+import { Icon, renderOrCallToRender, stylesFactory, useTheme } from 'src/packages/datav-core/src/ui';
+import { GrafanaTheme } from 'src/packages/datav-core/src';
 import { css } from 'emotion';
 import { useUpdateEffect } from 'react-use';
 import { Draggable } from 'react-beautiful-dnd';
@@ -103,7 +103,7 @@ export const QueryOperationRow: React.FC<QueryOperationRowProps> = ({
   );
 };
 
-const getQueryOperationRowStyles = stylesFactory((theme: DatavTheme) => {
+const getQueryOperationRowStyles = stylesFactory((theme: GrafanaTheme) => {
   return {
     wrapper: css`
       margin-bottom: ${theme.spacing.md};

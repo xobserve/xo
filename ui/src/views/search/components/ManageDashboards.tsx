@@ -1,6 +1,6 @@
 import React, { FC, memo, useState } from 'react';
 import { css } from 'emotion';
-import { HorizontalGroup, stylesFactory, useTheme, Spinner ,DatavTheme} from 'src/packages/datav-core/src';
+import { HorizontalGroup, stylesFactory, useTheme, Spinner} from 'src/packages/datav-core/src/ui';
 
 import { contextSrv } from 'src/core/services/context';
 import EmptyListCTA from 'src/views/components/EmptyListCTA/EmptyListCTA';
@@ -16,6 +16,7 @@ import { SearchResults } from './SearchResults';
 import { DashboardActions } from './DashboardActions';
 import localeData from 'src/core/library/locale'
 import { getState } from 'src/store/store';
+import { GrafanaTheme } from 'src/packages/datav-core/src';
 
 export interface Props {
   folder: FolderDTO;
@@ -152,7 +153,7 @@ export const ManageDashboards: FC<Props> = memo(({ folder }) => {
   );
 });
 
-const getStyles = stylesFactory((theme: DatavTheme) => {
+const getStyles = stylesFactory((theme: GrafanaTheme) => {
   return {
     container: css`
       label: search-container;

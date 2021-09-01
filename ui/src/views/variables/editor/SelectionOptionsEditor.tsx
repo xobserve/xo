@@ -1,13 +1,13 @@
 /*eslint-disable*/
 import React, { FunctionComponent, useCallback } from 'react';
-import { LegacyForms } from 'src/packages/datav-core/src';
+import { LegacyForms } from 'src/packages/datav-core/src/ui';
 
 
 import { VariableWithMultiSupport } from 'src/types';
 import { VariableEditorProps } from './types';
 import { toVariableIdentifier, VariableIdentifier } from '../state/types';
 
-const { LegacySwitch } = LegacyForms;
+const { Switch } = LegacyForms;
 
 export interface SelectionOptionsEditorProps<Model extends VariableWithMultiSupport = VariableWithMultiSupport>
   extends VariableEditorProps<Model> {
@@ -40,7 +40,7 @@ export const SelectionOptionsEditor: FunctionComponent<SelectionOptionsEditorPro
       <h5 className="section-heading">Selection Options</h5>
       <div className="section">
         <div >
-          <LegacySwitch
+          <Switch
             label="Multi-value"
             labelClass="width-10"
             checked={props.variable.multi}
@@ -49,7 +49,7 @@ export const SelectionOptionsEditor: FunctionComponent<SelectionOptionsEditorPro
           />
         </div>
         <div>
-          <LegacySwitch
+          <Switch
             label="Include All option"
             labelClass="width-10"
             checked={props.variable.includeAll}

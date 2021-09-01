@@ -1,8 +1,8 @@
 import React, { CSSProperties, useCallback, useState } from 'react';
 import Transition from 'react-transition-group/Transition';
-import { FieldConfigSource, DatavTheme, PanelPlugin, SelectableValue } from 'src/packages/datav-core/src';
+import { FieldConfigSource, GrafanaTheme, PanelPlugin, SelectableValue } from 'src/packages/datav-core/src';
 import { DashboardModel, PanelModel } from '../../../model';
-import { CustomScrollbar, Icon, Input, Select, stylesFactory, Tab, TabContent, TabsBar, useTheme } from 'src/packages/datav-core/src';
+import { CustomScrollbar, Icon, Input, Select, stylesFactory, Tab, TabContent, TabsBar, useTheme } from 'src/packages/datav-core/src/ui';
 import { DefaultFieldConfigEditor, OverrideFieldConfigEditor } from './FieldConfigEditor';
 import { css } from 'emotion';
 // import {Button} from 'antd'
@@ -236,7 +236,7 @@ const tabSelections: Array<SelectableValue<string>> = [
   },
 ];
 
-const getStyles = stylesFactory((theme: DatavTheme) => {
+const getStyles = stylesFactory((theme: GrafanaTheme) => {
   return {
     wrapper: css`
       label: options-panel-wrapper;

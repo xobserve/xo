@@ -1,9 +1,10 @@
 import React, { FC, useContext } from 'react';
 import { css, cx } from 'emotion';
-import { ThemeContext,DatavTheme } from 'src/packages/datav-core/src';
+import { ThemeContext, useTheme } from 'src/packages/datav-core/src/ui';
 import { DashboardQuery } from '../types';
 import { getState } from 'src/store/store';
 import localeData from 'src/core/library/locale'
+import { GrafanaTheme } from 'src/packages/datav-core/src';
 
 type Omit<T, K extends keyof T> = Pick<T, Exclude<keyof T, K>>;
 
@@ -15,7 +16,7 @@ interface SearchFieldProps extends Omit<React.InputHTMLAttributes<HTMLInputEleme
   width?: number;
 }
 
-const getSearchFieldStyles = (theme: DatavTheme) => ({
+const getSearchFieldStyles = (theme: GrafanaTheme) => ({
   wrapper: css`
     width: 100%;
     display: flex;
@@ -59,7 +60,7 @@ const getSearchFieldStyles = (theme: DatavTheme) => ({
 });
 
 export const SearchField: FC<SearchFieldProps> = ({ query, onChange, size, clearable, className, ...inputProps }) => {
-  const theme = useContext(ThemeContext);
+  const theme = useTheme()
   const styles = getSearchFieldStyles(theme);
 
   return (

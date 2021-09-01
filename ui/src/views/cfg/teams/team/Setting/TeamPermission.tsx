@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import _ from 'lodash'
-import { InlineFormLabel} from 'src/packages/datav-core/src'
+import { InlineFormLabel} from 'src/packages/datav-core/src/ui'
 import { notification } from 'antd'
 import { LockOutlined } from '@ant-design/icons'
 import { getBackendSrv } from 'src/core/services/backend'
@@ -9,7 +9,7 @@ import PermissionPicker from 'src/views/components/Pickers/PermissionPicker'
 import { useIntl,FormattedMessage } from 'react-intl'
 
 interface Props {
-    teamId: number
+    teamId: string
 }
 
 const TeamPermission = (props:Props) =>{    
@@ -42,7 +42,7 @@ const TeamPermission = (props:Props) =>{
                     <div className="gf-form max-width-50">
                         <InlineFormLabel>Admin</InlineFormLabel>
                         <span className="color-primary ub-mr2">Can</span><PermissionPicker value={permissions[Role.Admin]}  disabled/>
-                        <LockOutlined />
+                        <LockOutlined translate/>
                     </div>
                     <div className="gf-form max-width-50 ub-mt2">
                         <InlineFormLabel>Editor</InlineFormLabel>

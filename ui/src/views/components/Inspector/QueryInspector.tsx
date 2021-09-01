@@ -1,20 +1,22 @@
 import React, { PureComponent } from 'react';
-import { Button, getTheme, JSONFormatter, LoadingPlaceholder } from 'src/packages/datav-core/src';
-import { AppEvents, PanelEvents, DataFrame } from 'src/packages/datav-core/src';
+import { Button, JSONFormatter, LoadingPlaceholder } from 'src/packages/datav-core/src/ui';
+import { AppEvents, DataFrame, getBootConfig } from 'src/packages/datav-core/src';
 
 
 import { CopyToClipboard } from 'src/views/components/CopyToClipboard/CopyToClipboard';
-import { PanelModel } from 'src/views/dashboard/model';
+
 import { getPanelInspectorStyles } from './styles';
 
 
-import { css } from 'emotion';
-import { Unsubscribable } from 'rxjs';
-
-import appEvents from 'src/core/library/utils/app_events';
+import { css } from '@emotion/css';  
+import { Subscription } from 'rxjs';
 import { backendSrv } from 'src/core/services/backend';
+// import { RefreshEvent } from 'app/types/events';
+import appEvents from 'src/core/library/utils/app_events';
+import { PanelModel } from 'src/views/dashboard/model';
 import { supportsDataQuery } from 'src/views/dashboard/components/PanelEditor/utils';
-import { CoreEvents } from 'src/types';
+
+const config = getBootConfig()
 
 interface DsQuery {
   isLoading: boolean;
@@ -29,8 +31,9 @@ interface ExecutedQueryInfo {
 }
 
 interface Props {
-  panel: PanelModel;
   data: DataFrame[];
+  onRefreshQuery: () => void;
+  panel?: PanelModel;
 }
 
 interface State {
@@ -42,9 +45,8 @@ interface State {
 }
 
 export class QueryInspector extends PureComponent<Props, State> {
-  formattedJson: any;
-  clipboard: any;
-  subscription?: Unsubscribable;
+  private formattedJson: any;
+  private subs = new Subscription();
 
   constructor(props: Props) {
     super(props);
@@ -61,10 +63,18 @@ export class QueryInspector extends PureComponent<Props, State> {
   }
 
   componentDidMount() {
-    appEvents.on(CoreEvents.dsRequestResponse, (res) => this.onDataSourceResponse(res.data));
+    const { panel } = this.props;
 
-    this.props.panel.events.on(PanelEvents.refresh, this.onPanelRefresh);
-    this.updateQueryList();
+    this.subs.add(
+      backendSrv.getInspectorStream().subscribe({
+        next: (response) => this.onDataSourceResponse(response),
+      })
+    );
+
+    if (panel) {
+      // this.subs.add(panel.events.subscribe(RefreshEvent, this.onPanelRefresh));
+      this.updateQueryList();
+    }
   }
 
   componentDidUpdate(oldProps: Props) {
@@ -108,22 +118,12 @@ export class QueryInspector extends PureComponent<Props, State> {
     this.setState({ executedQueries });
   }
 
-  onIssueNewQuery = () => {
-    this.props.panel.refresh();
-  };
-
   componentWillUnmount() {
-    const { panel } = this.props;
-
-    if (this.subscription) {
-      this.subscription.unsubscribe();
-    }
-
-    panel.events.off(PanelEvents.refresh, this.onPanelRefresh);
+    this.subs.unsubscribe();
   }
 
   onPanelRefresh = () => {
-    this.setState(prevState => ({
+    this.setState((prevState) => ({
       ...prevState,
       dsQuery: {
         isLoading: true,
@@ -133,7 +133,6 @@ export class QueryInspector extends PureComponent<Props, State> {
   };
 
   onDataSourceResponse(response: any) {
-    console.log(response)
     // ignore silent requests
     if (response.config?.hideFromInspector) {
       return;
@@ -174,7 +173,7 @@ export class QueryInspector extends PureComponent<Props, State> {
       delete response.$$config;
     }
 
-    this.setState(prevState => ({
+    this.setState((prevState) => ({
       ...prevState,
       dsQuery: {
         isLoading: false,
@@ -196,14 +195,14 @@ export class QueryInspector extends PureComponent<Props, State> {
   };
 
   onToggleExpand = () => {
-    this.setState(prevState => ({
+    this.setState((prevState) => ({
       ...prevState,
       allNodesExpanded: !this.state.allNodesExpanded,
     }));
   };
 
   onToggleMocking = () => {
-    this.setState(prevState => ({
+    this.setState((prevState) => ({
       ...prevState,
       isMocking: !this.state.isMocking,
     }));
@@ -220,7 +219,7 @@ export class QueryInspector extends PureComponent<Props, State> {
 
   setMockedResponse = (evt: any) => {
     const mockedResponse = evt.target.value;
-    this.setState(prevState => ({
+    this.setState((prevState) => ({
       ...prevState,
       mockedResponse,
     }));
@@ -233,15 +232,15 @@ export class QueryInspector extends PureComponent<Props, State> {
 
     const styles = {
       refId: css`
-        font-weight: ${getTheme().typography.weight.semibold};
-        color: ${getTheme().colors.textBlue};
+        font-weight: ${config.theme.typography.weight.semibold};
+        color: ${config.theme.colors.textBlue};
         margin-right: 8px;
       `,
     };
 
     return (
       <div>
-        {executedQueries.map(info => {
+        {executedQueries.map((info) => {
           return (
             <div key={info.refId}>
               <div>
@@ -259,12 +258,13 @@ export class QueryInspector extends PureComponent<Props, State> {
 
   render() {
     const { allNodesExpanded, executedQueries } = this.state;
+    const { panel, onRefreshQuery } = this.props;
     const { response, isLoading } = this.state.dsQuery;
     const openNodes = this.getNrOfOpenNodes();
     const styles = getPanelInspectorStyles();
     const haveData = Object.keys(response).length > 0;
 
-    if (!supportsDataQuery(this.props.panel.plugin)) {
+    if (panel && !supportsDataQuery(panel.plugin)) {
       return null;
     }
 
@@ -274,14 +274,14 @@ export class QueryInspector extends PureComponent<Props, State> {
           <h3 className="section-heading">Query inspector</h3>
           <p className="small muted">
             Query inspector allows you to view raw request and response. To collect this data Grafana needs to issue a
-            new query. Hit refresh button below to trigger a new query.
+            new query. Click refresh button below to trigger a new query.
           </p>
         </div>
         {this.renderExecutedQueries(executedQueries)}
         <div className={styles.toolbar}>
           <Button
             icon="sync"
-            onClick={this.onIssueNewQuery}
+            onClick={onRefreshQuery}
           >
             Refresh
           </Button>
@@ -316,7 +316,9 @@ export class QueryInspector extends PureComponent<Props, State> {
           {!isLoading && haveData && (
             <JSONFormatter json={response} open={openNodes} onDidRender={this.setFormattedJson} />
           )}
-          {!isLoading && !haveData && <p className="muted">No request & response collected yet. Hit refresh button</p>}
+          {!isLoading && !haveData && (
+            <p className="muted">No request and response collected yet. Hit refresh button</p>
+          )}
         </div>
       </>
     );

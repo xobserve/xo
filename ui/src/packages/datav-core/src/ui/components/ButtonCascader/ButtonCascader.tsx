@@ -1,17 +1,20 @@
 import React from 'react';
 import { Icon } from '../Icon/Icon';
-import { css, cx } from 'emotion';
+import { IconName } from '../../types/icon';
+import { css, cx } from '@emotion/css';
 
 // @ts-ignore
 import RCCascader from 'rc-cascader';
 import { CascaderOption } from '../Cascader/Cascader';
 import { onChangeCascader, onLoadDataCascader } from '../Cascader/optionMappings';
-import { stylesFactory } from '../../themes';
+import { stylesFactory, useTheme2 } from '../../themes';
+import { GrafanaTheme2 } from '../../../data';
 import './ButtonCascader.less'
 
 export interface ButtonCascaderProps {
   options: CascaderOption[];
   children: string;
+  icon?: IconName;
   disabled?: boolean;
   value?: string[];
   fieldNames?: { label: string; value: string; children: string };
@@ -21,21 +24,27 @@ export interface ButtonCascaderProps {
   className?: string;
 }
 
-const getStyles = stylesFactory(()=> {
+const getStyles = stylesFactory((theme: GrafanaTheme2) => {
   return {
     popup: css`
       label: popup;
-      z-index: 1050;
+      z-index: ${theme.zIndex.dropdown};
     `,
-    icon: css`
-      margin: 1px 0 0 4px;
-    `,
+    icons: {
+      right: css`
+        margin: 1px 0 0 4px;
+      `,
+      left: css`
+        margin: -1px 4px 0 0;
+      `,
+    },
   };
 });
 
-export const ButtonCascader: React.FC<ButtonCascaderProps> = props => {
-  const { onChange, className, loadData, ...rest } = props;
-  const styles = getStyles();
+export const ButtonCascader: React.FC<ButtonCascaderProps> = (props) => {
+  const { onChange, className, loadData, icon, ...rest } = props;
+  const theme = useTheme2();
+  const styles = getStyles(theme);
 
   return (
     <RCCascader
@@ -46,7 +55,9 @@ export const ButtonCascader: React.FC<ButtonCascaderProps> = props => {
       expandIcon={null}
     >
       <button className={cx('gf-form-label', className)} disabled={props.disabled}>
-        {props.children} <Icon name="angle-down" className={styles.icon} />
+        {icon && <Icon name={icon} className={styles.icons.left} />}
+        {props.children}
+        <Icon name="angle-down" className={styles.icons.right} />
       </button>
     </RCCascader>
   );

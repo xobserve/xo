@@ -1,6 +1,6 @@
 import React from 'react';
 import { DataQueryError } from 'src/packages/datav-core/src';
-import { JSONFormatter } from 'src/packages/datav-core/src';
+import { JSONFormatter } from 'src/packages/datav-core/src/ui';
 
 interface InspectErrorTabProps {
   error?: DataQueryError;

@@ -1,5 +1,9 @@
-import { DatavTheme } from '../../data';
+import { GrafanaTheme, GrafanaTheme2 } from '../../data';
 
 export interface Themeable {
-  theme: DatavTheme;
+  theme: GrafanaTheme;
+}
+
+export interface Themeable2 {
+  theme: GrafanaTheme2;
 }

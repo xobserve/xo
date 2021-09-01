@@ -1,6 +1,6 @@
 import React, { useRef, useState, useEffect } from 'react';
-import { PanelProps, DatavTheme, getHistory, getTemplateSrv } from 'src/packages/datav-core/src';
-import { withTheme } from 'src/packages/datav-core/src';
+import { PanelProps, GrafanaTheme, getHistory, getTemplateSrv } from 'src/packages/datav-core/src';
+import { withTheme } from 'src/packages/datav-core/src/ui';
 import { debounce } from 'lodash';
 import echarts from 'echarts';
 import { css, cx } from 'emotion';
@@ -33,7 +33,7 @@ const getStyles = () => ({
 });
 
 interface Props extends PanelProps<EchartsOptions> {
-  theme: DatavTheme;
+  theme: GrafanaTheme;
   resetDashboardVariables: typeof resetDashboardVariables
 }
 

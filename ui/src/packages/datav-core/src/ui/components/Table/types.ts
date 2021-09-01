@@ -5,6 +5,7 @@ import { CSSProperties, FC } from 'react';
 
 export interface TableFieldOptions {
   width: number;
+  minWidth: number;
   align: FieldTextAlignment;
   displayMode: TableCellDisplayMode;
   hidden?: boolean;
@@ -14,6 +15,7 @@ export enum TableCellDisplayMode {
   Auto = 'auto',
   ColorText = 'color-text',
   ColorBackground = 'color-background',
+  ColorBackgroundSolid = 'color-background-solid',
   GradientGauge = 'gradient-gauge',
   LcdGauge = 'lcd-gauge',
   JSONView = 'json-view',
@@ -25,7 +27,7 @@ export type FieldTextAlignment = 'auto' | 'left' | 'right' | 'center';
 
 export interface TableRow {
   [x: string]: any;
-} 
+}
 
 export const FILTER_FOR_OPERATOR = '=';
 export const FILTER_OUT_OPERATOR = '!=';
@@ -45,6 +47,7 @@ export interface TableCellProps extends CellProps<any> {
   cellProps: CSSProperties;
   field: Field;
   onCellFilterAdded: TableFilterActionCallback;
+  innerWidth: number;
 }
 
 export type CellComponent = FC<TableCellProps>;

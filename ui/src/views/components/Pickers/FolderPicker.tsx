@@ -1,6 +1,6 @@
 import React, { PureComponent } from 'react';
 import { debounce } from 'lodash';
-import { AsyncSelect } from 'src/packages/datav-core/src';
+import { AsyncSelect } from 'src/packages/datav-core/src/ui';
 import { AppEvents, SelectableValue } from 'src/packages/datav-core/src';
 import { getBackendSrv } from 'src/packages/datav-core/src';
 

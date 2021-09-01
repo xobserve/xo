@@ -1,6 +1,6 @@
-import { DynamicConfigValue, FieldConfigOptionsRegistry, FieldOverrideContext, DatavTheme } from 'src/packages/datav-core/src';
+import { DynamicConfigValue, FieldConfigOptionsRegistry, FieldOverrideContext, GrafanaTheme } from 'src/packages/datav-core/src';
 import React from 'react';
-import { Counter, FormField as Field, HorizontalGroup, IconButton, FormLabel as Label, stylesFactory, useTheme } from 'src/packages/datav-core/src';
+import { Counter,  Field, HorizontalGroup, IconButton, Label, stylesFactory, useTheme } from 'src/packages/datav-core/src/ui';
 import { css, cx } from 'emotion';
 import { OptionsGroup } from './OptionsGroup';
 
@@ -93,7 +93,7 @@ export const DynamicConfigValueEditor: React.FC<DynamicConfigValueEditorProps> =
   );
 };
 
-const getStyles = stylesFactory((theme: DatavTheme) => {
+const getStyles = stylesFactory((theme: GrafanaTheme) => {
   return {
     collapsibleOverrideEditor: css`
       label: collapsibleOverrideEditor;

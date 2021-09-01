@@ -7,7 +7,8 @@ import { DashboardModel } from './model/DashboardModel'
 import { Button, Result } from 'antd'
 import { DashboardGrid } from './DashGrid'
 import { getTimeSrv } from 'src/core/services/time'
-import { TimeRange, CustomScrollbar, config, getBackendSrv, currentLang } from 'src/packages/datav-core/src'
+import { TimeRange, config, getBackendSrv, currentLang } from 'src/packages/datav-core/src'
+
 
 import './DashboardPage.less'
 import { initDashboard, setVariablesFromUrl} from './model/initDashboard';
@@ -26,7 +27,7 @@ import { updateLocation } from 'src/store/reducers/location';
 import { SubMenu } from './components/SubMenu/SubMenu';
 import { BackButton } from '../components/BackButton/BackButton';
 
-import { PanelInspector } from '../components/Inspector/PanelInspector';
+import { PanelInspector } from './components/Inspector/PanelInspector';
 import impressionSrv from 'src/core/services/impression'
 
 import { onTimeRangeUpdated } from '../variables/state/actions';
@@ -35,7 +36,8 @@ import { addParamsToUrl, addParamToUrl, updateUrl } from 'src/core/library/utils
 import { getVariables } from 'src/views/variables/state/selectors'
 import { saveDashboard } from './components/SaveDashboard/SaveDashboard';
 import { formatDocumentTitle } from 'src/core/library/utils/date';
-import { InspectTab } from '../components/Inspector/types';
+import { InspectTab } from '../components/inspector/types';
+import { CustomScrollbar, ScrollbarPosition } from 'src/packages/datav-core/src/ui';
 
 
 interface DashboardPageProps {
@@ -356,10 +358,10 @@ class DashboardPage extends React.PureComponent<DashboardPageProps & RouteCompon
         return inspectPanel;
     }
 
-    setScrollTop = (e: React.MouseEvent<HTMLElement>): void => {
-        const target = e.target as HTMLElement;
-        this.setState({ scrollTop: target.scrollTop, updateScrollTop: null });
-    };
+    setScrollTop = ({ scrollTop }: ScrollbarPosition): void => {
+        this.setState({ scrollTop, updateScrollTop: undefined });
+      };
+    
 
     render() {
         const { dashboard, settingView, inspectTab, initErrorStatus,viewState} = this.props
@@ -411,7 +413,7 @@ class DashboardPage extends React.PureComponent<DashboardPageProps & RouteCompon
                     </CustomScrollbar>
                 </div>
 
-                {inspectPanel && <PanelInspector dashboard={dashboard} panel={inspectPanel} defaultTab={inspectTab} />}
+                {inspectPanel && <PanelInspector dashboard={dashboard} panel={inspectPanel}  />}
                 {editPanel && <PanelEditor dashboard={dashboard} sourcePanel={editPanel} />}
                 {settingView && <DashboardSettings dashboard={dashboard} viewId={this.props.dashboard.uid !== GlobalVariableUid ? this.props.settingView : 'variables'} />}
             </div>

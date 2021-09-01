@@ -1,8 +1,8 @@
 import React, { FC, useRef,useMemo } from 'react';
 import _ from 'lodash';
 import { DashboardModel, PanelModel } from '../../../model';
-import { PanelData, PanelPlugin, SelectableValue,Counter, currentLang} from 'src/packages/datav-core/src';
-import { FormField, Input,TextArea,Switch,DataLinksInlineEditor} from 'src/packages/datav-core/src';
+import { PanelData, PanelPlugin, SelectableValue, currentLang} from 'src/packages/datav-core/src';
+import { Field, Input,TextArea,Switch,DataLinksInlineEditor,Counter} from 'src/packages/datav-core/src/ui';
 import { PanelOptionsEditor } from './PanelOptionsEditor';
 import { VisualizationTab } from './VisualizationTab';
 import { OptionsGroup } from './OptionsGroup';
@@ -12,7 +12,7 @@ import { FormattedMessage } from 'react-intl';
 import localeData from 'src/core/library/locale'
 import { getState } from 'src/store/store';
 import { Langs } from 'src/core/library/locale/types';
-const Field = FormField
+
 
 interface Props {
   panel: PanelModel;
@@ -110,7 +110,7 @@ export const PanelOptionsTab: FC<Props> = ({
       <DataLinksInlineEditor
         links={panel.links}
         onChange={links => onPanelConfigChange('links', links)}
-        suggestions={linkVariablesSuggestions}
+        getSuggestions={getPanelLinksVariableSuggestions}
         data={[]}
       />
     </OptionsGroup>

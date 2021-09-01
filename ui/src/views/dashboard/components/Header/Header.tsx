@@ -18,7 +18,8 @@ import './Header.less'
 import { DashboardModel } from 'src/views/dashboard/model';
 import localeData from 'src/core/library/locale'
 import { FormattedMessage as Message } from 'react-intl';
-import { Icon, currentLang } from 'src/packages/datav-core/src';
+import {  currentLang } from 'src/packages/datav-core/src';
+import { Icon } from 'src/packages/datav-core/src/ui';
 import { SaveOutlined, SettingOutlined,PlusOutlined, CalculatorOutlined, LoadingOutlined, DesktopOutlined} from '@ant-design/icons';
 import { store } from 'src/store/store';
 import { updateLocation } from 'src/store/reducers/location';
@@ -114,18 +115,18 @@ function HeaderWrapper(props: Props) {
                 <div>
                     <div className="ub-mr1">
                         <Tooltip title={<Message id={'dashboard.addPanel'} />}><Button icon={<Icon name="panel-add" />} onClick={() => props.onAddPanel()} /></Tooltip>
-                        <Tooltip title={<Message id={'common.save'} />}>{<Button icon={!inSave ? <SaveOutlined onClick={() => props.onSaveDashboard()} /> : <LoadingOutlined className="color-success" />} />}</Tooltip>
+                        <Tooltip title={<Message id={'common.save'} />}>{<Button icon={!inSave ? <SaveOutlined translate onClick={() => props.onSaveDashboard()} /> : <LoadingOutlined  translate className="color-success" />} />}</Tooltip>
                         <Tooltip title={<Message id={'common.setting'} />}>
-                            <Button icon={<SettingOutlined />} onClick={
+                            <Button icon={<SettingOutlined translate/>} onClick={
                                 () => store.dispatch(updateLocation({ query: { settingView: 'general' }, partial: true }))
                             } />
                         </Tooltip>
                         {/* {props.variables.length > 0 && <Tooltip title={<Message id={'common.globalVariable'} />}>
                             <Button icon={<CalculatorOutlined />} onClick={() => setShowGlobalVar(true)} />
                         </Tooltip>} */}
-                        <Tooltip title={<Message id={'dashboard.viewMode'} />}>{<Button icon={<DesktopOutlined onClick={toggleViewMode} />} />}</Tooltip>
+                        <Tooltip title={<Message id={'dashboard.viewMode'} />}>{<Button icon={<DesktopOutlined translate onClick={toggleViewMode} />} />}</Tooltip>
                         <Tooltip title={<Message id='dashboard.addUrl'/>} placement="bottom">
-                            <Button icon={  <PlusOutlined />} onClick={() => props.onUpdateUrl()} />
+                            <Button icon={  <PlusOutlined translate />} onClick={() => props.onUpdateUrl()} />
                         </Tooltip>
                     </div>
                     <TimePickerWrapper />

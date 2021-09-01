@@ -1,8 +1,9 @@
-import { FlotDataPoint,ContextMenuItem} from 'src/packages/datav-core/src';
+import { FlotDataPoint} from 'src/packages/datav-core/src';
+import {MenuItemProps} from 'src/packages/datav-core/src/ui'
 
 export class GraphContextMenuCtrl {
   private source?: FlotDataPoint | null;
-  menuItemsSupplier?: () => ContextMenuItem[];
+  menuItemsSupplier?: () => MenuItemProps[];
   scrollContextElement: HTMLElement | null;
   position: {
     x: number;
@@ -62,7 +63,7 @@ export class GraphContextMenuCtrl {
     return this.source;
   };
 
-  setMenuItemsSupplier = (menuItemsSupplier: () => ContextMenuItem[]) => {
+  setMenuItemsSupplier = (menuItemsSupplier: () => MenuItemProps[]) => {
     this.menuItemsSupplier = menuItemsSupplier;
   };
 }

@@ -1,10 +1,10 @@
 import React, { ChangeEvent } from 'react';
-import { DataLink, VariableSuggestion, DatavTheme, localeData, currentLang } from '../../../data';
+import { VariableSuggestion, GrafanaTheme2, DataLink } from '../../../data';
 import { Switch } from '../Switch/Switch';
-import { css } from 'emotion';
-import { stylesFactory, useTheme } from '../../themes/index';
+import { css } from '@emotion/css';
+import { useStyles2 } from '../../themes/index';
 import { DataLinkInput } from './DataLinkInput';
-import { Field } from '../Form/Field';
+import { Field } from '../Forms/Field';
 import { Input } from '../Input/Input';
 
 interface DataLinkEditorProps {
@@ -15,21 +15,20 @@ interface DataLinkEditorProps {
   onChange: (index: number, link: DataLink, callback?: () => void) => void;
 }
 
-const getStyles = stylesFactory((theme: DatavTheme) => ({
+const getStyles = (theme: GrafanaTheme2) => ({
   listItem: css`
-    margin-bottom: ${theme.spacing.sm};
+    margin-bottom: ${theme.spacing()};
   `,
   infoText: css`
-    padding-bottom: ${theme.spacing.md};
+    padding-bottom: ${theme.spacing(2)};
     margin-left: 66px;
-    color: ${theme.colors.textWeak};
+    color: ${theme.colors.text.secondary};
   `,
-}));
+});
 
 export const DataLinkEditor: React.FC<DataLinkEditorProps> = React.memo(
   ({ index, value, onChange, suggestions, isLast }) => {
-    const theme = useTheme();
-    const styles = getStyles(theme);
+    const styles = useStyles2(getStyles);
 
     const onUrlChange = (url: string, callback?: () => void) => {
       onChange(index, { ...value, url }, callback);
@@ -44,16 +43,16 @@ export const DataLinkEditor: React.FC<DataLinkEditorProps> = React.memo(
 
     return (
       <div className={styles.listItem}>
-        <Field label={localeData[currentLang]['common.title']}>
-          <Input value={value.title} onChange={onTitleChange} placeholder={localeData[currentLang]['panel.showDetails']} />
+        <Field label="Title">
+          <Input value={value.title} onChange={onTitleChange} placeholder="Show details" />
         </Field>
 
         <Field label="URL">
           <DataLinkInput value={value.url} onChange={onUrlChange} suggestions={suggestions} />
         </Field>
 
-        <Field label={localeData[currentLang]['common.openInNewTab']}>
-          <Switch checked={value.targetBlank || false} onChange={onOpenInNewTabChanged} />
+        <Field label="Open in new tab">
+          <Switch value={value.targetBlank || false} onChange={onOpenInNewTabChanged} />
         </Field>
 
         {isLast && (

@@ -4,13 +4,13 @@ export * from './matchers';
 export { standardTransformers } from './transformers';
 export * from './fieldReducer';
 export { transformDataFrame } from './transformDataFrame';
-export type{
-  TransformerRegistyItem,
+export type {
+  TransformerRegistryItem,
   TransformerUIProps,
 } from './standardTransformersRegistry';
-
-export {
-  standardTransformersRegistry,
-} from './standardTransformersRegistry';
-export type { RegexpOrNamesMatcherOptions } from './matchers/nameMatcher';
-  
+export {standardTransformersRegistry} from './standardTransformersRegistry'
+export   { ByNamesMatcherMode } from './matchers/nameMatcher';
+export type {RegexpOrNamesMatcherOptions, ByNamesMatcherOptions } from './matchers/nameMatcher';
+export  type { RenameByRegexTransformerOptions } from './transformers/renameByRegex';
+export  { outerJoinDataFrames } from './transformers/joinDataFrames';
+export * from './transformers/histogram';

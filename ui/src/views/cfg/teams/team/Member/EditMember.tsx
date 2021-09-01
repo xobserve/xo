@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import {  Form, FormField as Field } from 'src/packages/datav-core/src'
+import { Form, Field } from 'src/packages/datav-core/src/ui'
 import { Modal, Button, notification } from 'antd'
 import { getBackendSrv } from 'src/core/services/backend'
 import appEvents from 'src/core/library/utils/app_events'
@@ -8,7 +8,7 @@ import {  TeamMember } from 'src/types'
 import {useIntl, FormattedMessage } from 'react-intl'
 
 interface Props {
-    teamId: number
+    teamId: string
     member: TeamMember
     onCancelEdit: any
 }

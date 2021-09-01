@@ -16,7 +16,7 @@ const AddMenuItem = (props:Props) =>{
     const {selectedNode,drawerVisible} = props
     return (
         <Drawer
-                title={<FormattedMessage id="team.addMenuTitle" values={{title:selectedNode && selectedNode.title}} /> }
+                title={<FormattedMessage id="team.addMenuTitle" values={{title:selectedNode && selectedNode.text}} /> }
                 placement="right"
                 closable={false}
                 visible={drawerVisible}
@@ -59,7 +59,7 @@ const AddMenuItem = (props:Props) =>{
                     <Row gutter={16}>
                         <Col span="24">
                             <Form.Item
-                                name="title"
+                                name="text"
                                 label={<FormattedMessage id="team.menuName" />}
                             >
                                     <Input placeholder="e.g App monitoring" />

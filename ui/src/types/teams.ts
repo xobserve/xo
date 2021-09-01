@@ -1,16 +1,16 @@
 import { Role } from "./acl";
 
 export interface Team {
-    id : number 
+    id : string 
     name: string
     createdBy?: string
-    createdById?: number
+    createdById?: string
     memberCount?: number
 }
 
 export interface TeamMember {
-    id: number 
-    teamId?: number
+    id: string 
+    teamId?: string
     username: string 
     created: string 
     role: Role 

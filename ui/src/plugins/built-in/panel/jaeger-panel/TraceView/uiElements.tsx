@@ -1,8 +1,8 @@
 import React from 'react';
 import { ButtonProps, Elements } from './JaegerComponents';
-import { Button, Input, stylesFactory, useTheme } from 'src/packages/datav-core/src';
+import { Button, Input, stylesFactory, useTheme } from 'src/packages/datav-core/src/ui';
 import { css } from 'emotion';
-import { DatavTheme } from 'src/packages/datav-core/src';
+import { GrafanaTheme } from 'src/packages/datav-core/src';
 import cx from 'classnames';
 
 /**
@@ -32,7 +32,7 @@ export const UIElements: Elements = {
   ),
 };
 
-const getStyles = stylesFactory((theme: DatavTheme) => {
+const getStyles = stylesFactory((theme: GrafanaTheme) => {
   return {
     Divider: css`
       display: inline-block;

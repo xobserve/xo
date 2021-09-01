@@ -1,7 +1,8 @@
 import React, { FC } from 'react';
-import { css } from 'emotion';
-import { stylesFactory, Tab, TabsBar, useTheme } from 'src/packages/datav-core/src';
-import { DatavTheme, SelectableValue, PanelData, getValueFormat, formattedValueToString } from 'src/packages/datav-core/src';
+import { css } from '@emotion/css';
+import { stylesFactory, useTheme, Tab, TabsBar } from 'src/packages/datav-core/src/ui';
+import { GrafanaTheme, SelectableValue, PanelData, getValueFormat, formattedValueToString } from 'src/packages/datav-core/src/data';
+//@ts-ignore
 import { InspectTab } from './types';
 
 interface Props {
@@ -34,7 +35,7 @@ export const InspectSubtitle: FC<Props> = ({ tab, tabs, onSelectTab, data }) => 
   );
 };
 
-const getStyles = stylesFactory((theme: DatavTheme) => {
+const getStyles = stylesFactory((theme: GrafanaTheme) => {
   return {
     tabsBar: css`
       padding-left: ${theme.spacing.md};

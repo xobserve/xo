@@ -7,20 +7,22 @@ describe('Array DataFrame', () => {
     { name: 'first', value: 1, time: 123 },
     { name: 'second', value: 2, time: 456, extra: 'here' },
     { name: 'third', value: 3, time: 789 },
+    { name: '4th (NaN)', value: NaN, time: 1000 },
+    { name: '5th (Null)', value: null, time: 1100 },
   ];
 
   const frame = new ArrayDataFrame(input);
   frame.name = 'Hello';
   frame.refId = 'Z';
-  frame.setFieldType('phantom', FieldType.string, v => '🦥');
-  const field = frame.fields.find(f => f.name == 'value');
+  frame.setFieldType('phantom', FieldType.string, (v) => '🦥');
+  const field = frame.fields.find((f) => f.name === 'value');
   field!.config.unit = 'kwh';
 
   test('Should support functional methods', () => {
-    const expectedNames = input.map(row => row.name);
+    const expectedNames = input.map((row) => row.name);
 
     // Check map
-    expect(frame.map(row => row.name)).toEqual(expectedNames);
+    expect(frame.map((row) => row.name)).toEqual(expectedNames);
 
     let names: string[] = [];
     for (const row of frame) {
@@ -29,7 +31,7 @@ describe('Array DataFrame', () => {
     expect(names).toEqual(expectedNames);
 
     names = [];
-    frame.forEach(row => {
+    frame.forEach((row) => {
       names.push(row.name);
     });
     expect(names).toEqual(expectedNames);
@@ -48,6 +50,8 @@ describe('Array DataFrame', () => {
               "first",
               "second",
               "third",
+              "4th (NaN)",
+              "5th (Null)",
             ],
           },
           Object {
@@ -61,6 +65,8 @@ describe('Array DataFrame', () => {
               1,
               2,
               3,
+              NaN,
+              null,
             ],
           },
           Object {
@@ -72,6 +78,8 @@ describe('Array DataFrame', () => {
               123,
               456,
               789,
+              1000,
+              1100,
             ],
           },
           Object {
@@ -80,6 +88,8 @@ describe('Array DataFrame', () => {
             "name": "phantom",
             "type": "string",
             "values": Array [
+              "🦥",
+              "🦥",
               "🦥",
               "🦥",
               "🦥",

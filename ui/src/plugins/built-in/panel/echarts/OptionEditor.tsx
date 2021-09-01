@@ -1,5 +1,6 @@
 import React, { PureComponent } from 'react';
-import { FormField as Field, localeData, currentLang, CodeEditor } from 'src/packages/datav-core/src';
+import {  localeData, currentLang } from 'src/packages/datav-core/src';
+import {Field,CodeEditor} from 'src/packages/datav-core/src/ui';
 import { PanelEditorProps } from 'src/packages/datav-core/src';
 import { css } from 'emotion';
 

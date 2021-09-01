@@ -1,7 +1,8 @@
 import React, { PureComponent } from 'react';
 import _ from 'lodash';
 import { css } from 'emotion';
-import { Alert, Button, Icon, IconName, CustomScrollbar, Container, HorizontalGroup, ConfirmModal, Modal, InlineFormLabel, getBackendSrv, currentLang, DataQuery, DataSourceApi } from 'src/packages/datav-core/src';
+import {  getBackendSrv, currentLang, DataQuery, DataSourceApi } from 'src/packages/datav-core/src';
+import {Alert, Button, Icon1 as Icon, IconName, CustomScrollbar, Container, HorizontalGroup, ConfirmModal, Modal, InlineFormLabel} from 'src/packages/datav-core/src/ui'
 import { getDataSourceService, config } from 'src/packages/datav-core/src';
 import { getAlertingValidationMessage, getDefaultCondition } from './getAlertingValidationMessage';
 

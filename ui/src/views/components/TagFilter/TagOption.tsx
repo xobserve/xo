@@ -1,13 +1,13 @@
 import React, { FC } from 'react';
 import { css, cx } from 'emotion';
-import { useTheme, stylesFactory } from 'src/packages/datav-core/src';
-import { DatavTheme } from 'src/packages/datav-core/src';
+import { useTheme, stylesFactory } from 'src/packages/datav-core/src/ui';
+import { GrafanaTheme } from 'src/packages/datav-core/src';
 
 import { OptionProps } from 'react-select/src/components/Option';
 import { TagBadge } from './TagBadge';
 
 // https://github.com/JedWatson/react-select/issues/3038
-interface ExtendedOptionProps extends OptionProps<any> {
+interface ExtendedOptionProps extends OptionProps<any,any> {
   data: any;
 }
 
@@ -24,7 +24,7 @@ export const TagOption: FC<ExtendedOptionProps> = ({ data, className, label, isF
   );
 };
 
-const getStyles = stylesFactory((theme: DatavTheme) => {
+const getStyles = stylesFactory((theme: GrafanaTheme) => {
   return {
     option: css`
       padding: 8px;

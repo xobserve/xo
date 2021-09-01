@@ -1,6 +1,6 @@
 import React from 'react';
-import { cx } from 'emotion';
-import './_AbstractList.less'
+import { cx, css } from '@emotion/css';
+import { stylesFactory } from '../../themes';
 
 export interface ListProps<T> {
   items: T[];
@@ -13,15 +13,32 @@ interface AbstractListProps<T> extends ListProps<T> {
   inline?: boolean;
 }
 
+const getStyles = stylesFactory((inlineList = false) => ({
+  list: css`
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+  `,
+
+  item: css`
+    display: ${(inlineList && 'inline-block') || 'block'};
+  `,
+}));
+
 export class AbstractList<T> extends React.PureComponent<AbstractListProps<T>> {
+  constructor(props: AbstractListProps<T>) {
+    super(props);
+  }
+
   render() {
     const { items, renderItem, getItemKey, className, inline } = this.props;
+    const styles = getStyles(inline);
 
     return (
-      <ul className={cx('datav-list', className)}>
+      <ul className={cx(styles.list, className)}>
         {items.map((item, i) => {
           return (
-            <li className={'datav-list-item'} key={getItemKey ? getItemKey(item) : i} style={{display: (inline && 'inline-block') || 'block'}}>
+            <li className={styles.item} key={getItemKey ? getItemKey(item) : i}>
               {renderItem(item, i)}
             </li>
           );

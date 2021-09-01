@@ -1,6 +1,6 @@
-import { DatavTheme ,selectThemeVariant} from 'src/packages/datav-core/src';
-
-export const getThemeColors = (theme: DatavTheme) => {
+import { GrafanaTheme } from 'src/packages/datav-core/src';
+import {selectThemeVariant} from 'src/packages/datav-core/src/ui'
+export const getThemeColors = (theme: GrafanaTheme) => {
   return {
     border: theme.colors.border1,
     background: theme.colors.bodyBg,

@@ -1,14 +1,15 @@
 import React, { memo, useState, useEffect, useCallback } from 'react';
 import { css } from 'emotion';
 import Calendar from 'react-calendar/dist/entry.nostyle';
-import { DateTime, TimeZone, dateTimeParse,stylesFactory,ClickOutsideWrapper,DatavTheme, useTheme} from 'src/packages/datav-core/src';
+import { DateTime, TimeZone, dateTimeParse,GrafanaTheme} from 'src/packages/datav-core/src';
+import {stylesFactory,ClickOutsideWrapper, useTheme} from 'src/packages/datav-core/src/ui';
 import { TimePickerTitle } from './TimePickerTitle';
 import { Button } from 'antd';
 import { ClockCircleOutlined, LeftOutlined, RightOutlined } from '@ant-design/icons';
 import { FormattedMessage } from 'react-intl';
 import { getThemeColors } from './colors' 
 
-const getStyles = stylesFactory((theme: DatavTheme) => {
+const getStyles = stylesFactory((theme: GrafanaTheme) => {
   const colors = getThemeColors(theme);
 
   return {
@@ -56,7 +57,7 @@ const getStyles = stylesFactory((theme: DatavTheme) => {
   };
 });
 
-const getFooterStyles = stylesFactory((theme: DatavTheme) => {
+const getFooterStyles = stylesFactory((theme: GrafanaTheme) => {
   const colors = getThemeColors(theme);
 
   return {
@@ -75,7 +76,7 @@ const getFooterStyles = stylesFactory((theme: DatavTheme) => {
   };
 });
 
-const getBodyStyles = stylesFactory((theme: DatavTheme) => {
+const getBodyStyles = stylesFactory((theme: GrafanaTheme) => {
   const colors = getThemeColors(theme);
 
   return {
@@ -179,7 +180,7 @@ const getBodyStyles = stylesFactory((theme: DatavTheme) => {
   };
 });
 
-const getHeaderStyles = stylesFactory((theme: DatavTheme) => {
+const getHeaderStyles = stylesFactory((theme: GrafanaTheme) => {
   const colors = getThemeColors(theme);
 
   return {
@@ -245,7 +246,7 @@ const Header = memo<Props>(({ onClose }) => {
   return (
     <div className={styles.container}>
       <TimePickerTitle>Select a time range</TimePickerTitle>
-      <ClockCircleOutlined onClick={onClose} />
+      <ClockCircleOutlined translate onClick={onClose} />
     </div>
   );
 });
@@ -268,8 +269,8 @@ const Body = memo<Props>(({ onChange, from, to, timeZone }) => {
       className={styles.body}
       tileClassName={styles.title}
       value={value}
-      nextLabel={<RightOutlined />}
-      prevLabel={<LeftOutlined />}
+      nextLabel={<RightOutlined translate />}
+      prevLabel={<LeftOutlined translate />}
       onChange={onCalendarChange}
       locale="en"
     />

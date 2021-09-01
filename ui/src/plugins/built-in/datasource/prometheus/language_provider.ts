@@ -3,7 +3,7 @@ import LRU from 'lru-cache';
 import { Value } from 'slate';
 
 import { dateTime, HistoryItem, LanguageProvider } from 'src/packages/datav-core/src';
-import { CompletionItem, CompletionItemGroup, TypeaheadInput, TypeaheadOutput } from 'src/packages/datav-core/src';
+import { CompletionItem, CompletionItemGroup, TypeaheadInput, TypeaheadOutput } from 'src/packages/datav-core/src/ui';
 
 import { fixSummariesMetadata, parseSelector, processHistogramLabels, processLabels } from './language_utils';
 import PromqlSyntax, { FUNCTIONS, RATE_RANGES } from './promql';

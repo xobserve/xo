@@ -3,8 +3,8 @@ import React, { PureComponent } from 'react';
 // Components
 
 import { QueryOptions } from './QueryOptions';
-import { Button, CustomScrollbar, HorizontalGroup, Modal, stylesFactory,FormField as Field, config, getTheme, currentLang ,localeData} from 'src/packages/datav-core/src';
-import { getLocationSrv } from 'src/packages/datav-core/src';
+import { Button, CustomScrollbar, HorizontalGroup, Modal, stylesFactory,Field, getTheme, ScrollbarPosition} from 'src/packages/datav-core/src/ui';
+import { config, getDefaultTimeRange, getLocationSrv } from 'src/packages/datav-core/src';
 import { QueryEditorRows } from './QueryEditorRows';
 
 // Types
@@ -12,7 +12,6 @@ import { PanelModel ,DashboardModel} from 'src/views/dashboard/model';
 import {
   DataQuery,
   DataSourceSelectItem,
-  DefaultTimeRange,
   LoadingState,
   PanelData,
   DataSourceApi,
@@ -65,7 +64,7 @@ export class QueriesTab extends PureComponent<Props, State> {
     data: {
       state: LoadingState.NotStarted,
       series: [],
-      timeRange: DefaultTimeRange,
+      timeRange: getDefaultTimeRange(),
     },
   };
 
@@ -253,9 +252,8 @@ export class QueriesTab extends PureComponent<Props, State> {
     this.forceUpdate();
   };
 
-  setScrollTop = (event: React.MouseEvent<HTMLElement>) => {
-    const target = event.target as HTMLElement;
-    this.setState({ scrollTop: target.scrollTop });
+  setScrollTop = ({ scrollTop }: ScrollbarPosition) => {
+    this.setState({ scrollTop: scrollTop });
   };
 
   renderQueries() {

@@ -6,7 +6,8 @@ import Page from 'src/views/Layouts/Page/Page';
 import { getNavModel } from 'src/views/Layouts/Page/navModel'
 import { Team } from 'src/types';
 import { getBackendSrv } from 'src/core/services/backend';
-import { InlineFormLabel, ConfirmModal, getHistory,Button } from 'src/packages/datav-core/src'
+import { InlineFormLabel, ConfirmModal,Button } from 'src/packages/datav-core/src/ui'
+import { getHistory } from 'src/packages/datav-core/src'
 import {Input,notification } from 'antd';
 import TeamMemberPicker from 'src/views/components/Pickers/TeamMemberPicker'
 import globalEvents from 'src/views/App/globalEvents';

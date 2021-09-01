@@ -6,7 +6,8 @@ import Page from 'src/views/Layouts/Page/Page';
 import { getNavModel } from 'src/views/Layouts/Page/navModel'
 import { FolderDTO } from 'src/types';
 import { getBackendSrv } from 'src/core/services/backend';
-import { InlineFormLabel, ConfirmModal, getHistory,Button} from 'src/packages/datav-core/src'
+import {  getHistory, NavModel} from 'src/packages/datav-core/src'
+import { InlineFormLabel, ConfirmModal,Button} from 'src/packages/datav-core/src/ui'
 import {  Input,notification } from 'antd';
 import globalEvents from 'src/views/App/globalEvents';
 import { injectIntl, FormattedMessage, IntlShape } from 'react-intl';
@@ -108,7 +109,7 @@ export class FolderSettingPage extends PureComponent<Props, State> {
         const { routeID, parentRouteID } = this.props
 
         const { folder,hasFetched,confirmVisible} = this.state
-        let navModel;
+        let navModel: NavModel;
         if (folder) {
             navModel = _.cloneDeep(getNavModel(routeID, parentRouteID))
             const { node, main } = navModel
@@ -117,7 +118,7 @@ export class FolderSettingPage extends PureComponent<Props, State> {
                 n.url = n.url.replace(":uid", folder.uid)
             })
 
-            navModel.main.title = navModel.main.title + ' / ' + folder.title
+            navModel.main.text = navModel.main.text + ' / ' + folder.title
         } else {
             navModel = _.cloneDeep(getNavModel(routeID, parentRouteID))
         }
@@ -152,7 +153,7 @@ export class FolderSettingPage extends PureComponent<Props, State> {
                             isOpen={confirmVisible}
                             title={localeData[getState().application.locale]["folder.delete"]}
                             body= {<FormattedMessage id="folder.deleteConfirmBody"/>}
-                            confirmText= {<FormattedMessage id="common.delete"/>}
+                            confirmText="Delete"
                             onConfirm={() => this.onDelete()}
                             onDismiss={() => this.setState({...this.state,confirmVisible :false})}
                         />

@@ -1,5 +1,5 @@
 import React from 'react';
-import { ExploreStartPageProps, DataQuery } from 'src/packages/datav-core/src';
+import {  DataQuery } from 'src/packages/datav-core/src';
  
 const CHEAT_SHEET_ITEMS = [
   {
@@ -25,7 +25,7 @@ const CHEAT_SHEET_ITEMS = [
   },
 ];
 
-export default (props: ExploreStartPageProps) => (
+export default (props) => (
   <div>
     <h2>PromQL Cheat Sheet</h2>
     {CHEAT_SHEET_ITEMS.map((item, index) => (

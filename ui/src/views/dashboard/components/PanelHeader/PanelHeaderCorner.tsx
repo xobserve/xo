@@ -1,14 +1,16 @@
 import React, { Component } from 'react';
 
 import { renderMarkdown, LinkModelSupplier, ScopedVars, getLocationSrv } from 'src/packages/datav-core/src';
-import { Tooltip, PopoverContent } from 'src/packages/datav-core/src';
+import { Tooltip, PopoverContent } from 'src/packages/datav-core/src/ui';
 
 
 import { PanelModel } from '../../model';
 import templateSrv from 'src/core/services/templating';
 import { getTimeSrv, TimeSrv } from 'src/core/services/time';
-import { InspectTab } from 'src/views/components/Inspector/types';
+
 import { InfoOutlined } from '@ant-design/icons';
+import { InspectTab } from 'src/views/components/inspector/types';
+
 
 enum InfoMode {
   Error = 'Error',
@@ -48,7 +50,7 @@ export class PanelHeaderCorner extends Component<Props> {
     const markdown = panel.description || '';
     const interpolatedMarkdown = templateSrv.replace(markdown, panel.scopedVars);
     const markedInterpolatedMarkdown = renderMarkdown(interpolatedMarkdown);
-    const links = this.props.links && this.props.links.getLinks(panel);
+    const links = this.props.links && this.props.links.getLinks(panel.replaceVariables);
 
     return (
       <div className="panel-info-content markdown-html">
@@ -83,7 +85,7 @@ export class PanelHeaderCorner extends Component<Props> {
     return (
       <Tooltip content={content} placement="top-start" theme={theme}>
         <div className={`panel-info-corner panel-info-corner--${infoMode.toLowerCase()}`} onClick={onClick}>
-           <InfoOutlined className="fa" />
+           <InfoOutlined translate className="fa" />
           <span className="panel-info-corner-inner" />
         </div>
       </Tooltip>

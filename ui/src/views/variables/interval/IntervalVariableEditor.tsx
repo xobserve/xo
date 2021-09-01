@@ -2,8 +2,8 @@ import React, { ChangeEvent, FocusEvent, PureComponent } from 'react';
 
 import { IntervalVariableModel } from 'src/types';
 import { VariableEditorProps } from '../editor/types';
-import { InlineFormLabel, LegacyForms } from 'src/packages/datav-core/src';
-const { LegacySwitch } = LegacyForms;
+import { InlineFormLabel, LegacyForms } from 'src/packages/datav-core/src/ui';
+const { Switch } = LegacyForms;
 
 export interface Props extends VariableEditorProps<IntervalVariableModel> {}
 
@@ -67,7 +67,7 @@ export class IntervalVariableEditor extends PureComponent<Props> {
           </div>
 
           <div className="gf-form-inline">
-            <LegacySwitch
+            <Switch
               label="Auto Option"
               labelClass="width-9"
               checked={this.props.variable.auto}

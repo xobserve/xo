@@ -3,7 +3,7 @@ import $ from 'jquery';
 import _ from 'lodash';
 import { GraphPanelCtrl } from './GraphPanelCtrl';
 import { CoreEvents } from 'src/types';
-import { getColorFromHexRgbOrName } from 'src/packages/datav-core/src';
+import { getBootConfig, getColorForTheme } from 'src/packages/datav-core/src';
 import TimeSeries from 'src/core/time_series';
 
 export class ThresholdManager {
@@ -155,6 +155,7 @@ export class ThresholdManager {
   }
 
   addFlotOptions(options: any, panel: GraphPanelCtrl) {
+    const config = getBootConfig()
     if (!panel.graphOptions.thresholds || panel.graphOptions.thresholds.length === 0) {
       return;
     }
@@ -227,12 +228,12 @@ export class ThresholdManager {
         if (threshold.yaxis === 'right' && this.hasSecondYAxis) {
           options.grid.markings.push({
             y2axis: { from: threshold.value, to: limit },
-            color: getColorFromHexRgbOrName(fillColor),
+            color: getColorForTheme(fillColor,config.theme),
           });
         } else {
           options.grid.markings.push({
             yaxis: { from: threshold.value, to: limit },
-            color: getColorFromHexRgbOrName(fillColor),
+            color: getColorForTheme(fillColor,config.theme),
           });
         }
       }
@@ -240,12 +241,12 @@ export class ThresholdManager {
         if (threshold.yaxis === 'right' && this.hasSecondYAxis) {
           options.grid.markings.push({
             y2axis: { from: threshold.value, to: threshold.value },
-            color: getColorFromHexRgbOrName(lineColor),
+            color: getColorForTheme(lineColor,config.theme),
           });
         } else {
           options.grid.markings.push({
             yaxis: { from: threshold.value, to: threshold.value },
-            color: getColorFromHexRgbOrName(lineColor),
+            color: getColorForTheme(lineColor,config.theme),
           });
         }
       }

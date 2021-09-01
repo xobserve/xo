@@ -1,5 +1,5 @@
 import { useCallback, useState } from 'react';
-import { TraceSpan } from 'src/packages/datav-core/src';
+import { TraceSpan } from './JaegerComponents/types/trace';
 
 /**
  * Children state means whether spans are collapsed or not. Also provides some functions to manipulate that state.

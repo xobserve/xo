@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import classNames from 'classnames';
 import { isEqual } from 'lodash';
-import { DataLink, LoadingState, PanelData, PanelMenuItem, QueryResultMetaNotice, ScopedVars ,ClickOutsideWrapper, Icon} from 'src/packages/datav-core/src';
+import { DataLink, LoadingState, PanelData, PanelMenuItem, QueryResultMetaNotice, ScopedVars} from 'src/packages/datav-core/src';
+import {ClickOutsideWrapper, Icon} from 'src/packages/datav-core/src/ui'
 
 import { PanelHeaderMenu } from './PanelHeaderMenu';
 import templateSrv from 'src/core/services/templating';
@@ -89,7 +90,7 @@ export class PanelHeader extends Component<Props, State> {
   private renderLoadingState(): JSX.Element {
     return (
       <div className="panel-loading">
-        <SyncOutlined spin />
+        <SyncOutlined spin translate />
       </div>
     );
   }

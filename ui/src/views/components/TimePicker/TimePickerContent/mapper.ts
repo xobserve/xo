@@ -11,7 +11,6 @@ export const mapRangeToTimeOption = (range: TimeRange, timeZone?: TimeZone): Tim
   return {
     from: dateTimeFormatISO(range.from, { timeZone }),
     to: dateTimeFormatISO(range.to, { timeZone }),
-    section: 3,
     display: `${from} to ${to}`,
   };
 };

@@ -11,8 +11,9 @@ import AddMember from './Member/AddMember'
 import { TeamMember } from 'src/types';
 import appEvents from 'src/core/library/utils/app_events';
 import { getState } from 'src/store/store';
-import { LinkButton } from 'src/packages/datav-core/src';
+import { LinkButton } from 'src/packages/datav-core/src/ui';
 import { FormattedMessage } from 'react-intl';
+import { NavModel } from 'src/packages/datav-core/src';
 
 export interface Props {
     routeID: string;
@@ -84,7 +85,7 @@ export class TeamMemberPage extends PureComponent<Props, State> {
         const { routeID, parentRouteID ,history} = this.props
 
         const {team,hasFetched,members,teamMemberOfCurrentUser} = this.state
-        let navModel;
+        let navModel:NavModel;
         if (team) {
             navModel = _.cloneDeep(getNavModel(routeID,parentRouteID))
             const {node,main} = navModel
@@ -93,7 +94,7 @@ export class TeamMemberPage extends PureComponent<Props, State> {
                   n.url = n.url.replace(":id",team.id)
               })
     
-            navModel.main.title = navModel.main.title + ' / ' + team.name
+            navModel.main.text = navModel.main.text + ' / ' + team.name
         } else {
             navModel = _.cloneDeep(getNavModel(routeID,parentRouteID))
         }

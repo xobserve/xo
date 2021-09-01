@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import { DataFrame, DataTransformerConfig, TransformerRegistyItem } from 'src/packages/datav-core/src';
-import { HorizontalGroup } from 'src/packages/datav-core/src';
+import { DataFrame, DataTransformerConfig, TransformerRegistryItem } from 'src/packages/datav-core/src';
+import { HorizontalGroup } from 'src/packages/datav-core/src/ui';
 
 import { TransformationEditor } from './TransformationEditor';
 
@@ -12,7 +12,7 @@ interface TransformationOperationRowProps {
   id: string;
   index: number;
   data: DataFrame[];
-  uiConfig: TransformerRegistyItem<any>;
+  uiConfig: TransformerRegistryItem<any>;
   configs: TransformationsEditorTransformation[];
   onRemove: (index: number) => void;
   onChange: (index: number, config: DataTransformerConfig) => void;

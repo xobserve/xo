@@ -1,7 +1,7 @@
 import React, { PureComponent } from 'react';
 import _ from 'lodash';
 import { NavModel, DataSourcePluginMeta, getBootConfig, DataSourcePlugin, DataSourceApi, DataQuery, DataSourceJsonData, DataSourceSettings, getBackendSrv, setBootConfig, currentLang, getHistory } from 'src/packages/datav-core/src'
-import { InlineFormLabel, LegacyForms, ConfirmModal, Button } from 'src/packages/datav-core/src'
+import { InlineFormLabel, LegacyForms, ConfirmModal, Button } from 'src/packages/datav-core/src/ui'
 import { withRouter } from 'react-router-dom';
 import { Input, notification, Alert } from 'antd';
 
@@ -15,7 +15,7 @@ import localeData from 'src/core/library/locale'
 import { getState } from 'src/store/store';
 import { FormattedMessage } from 'react-intl';
 
-const { LegacySwitch } = LegacyForms
+const { Switch } = LegacyForms
 
 type GenericDataSourcePlugin = DataSourcePlugin<DataSourceApi<DataQuery, DataSourceJsonData>>;
 interface Props {
@@ -112,7 +112,7 @@ export class EditDataSourcePage extends PureComponent<Props, State> {
             const node = {
                 img: meta.info.logos.small,
                 id: 'datasource-new',
-                title: localeData[getState().application.locale]['datasource.edit'],
+                text: localeData[getState().application.locale]['datasource.edit'],
                 href: 'datasources/new',
                 subTitle: localeData[getState().application.locale]['common.type'] + ' : ' + meta.name,
             }
@@ -228,7 +228,7 @@ export class EditDataSourcePage extends PureComponent<Props, State> {
                                         </InlineFormLabel>
                                         <Input placeholder="Name" defaultValue={this.state.dataSource.name} onChange={(e) => { this.setState({ ...this.state, dataSource: { ...this.state.dataSource, name: e.currentTarget.value } }) }} />
                                     </div>
-                                    <LegacySwitch
+                                    <Switch
                                         label={localeData[locale]['common.default']}
                                         checked={this.state.dataSource.isDefault}
                                         //@ts-ignore
@@ -279,7 +279,7 @@ export class EditDataSourcePage extends PureComponent<Props, State> {
                                     isOpen={this.state.confirmVisible}
                                     title={localeData[locale]['datasource.delete']}
                                     body={<FormattedMessage id="datasource.deleteTitle" />}
-                                    confirmText={<FormattedMessage id="common.delete" />}
+                                    confirmText="Delete"
                                     onConfirm={() => this.delDataSource()}
                                     onDismiss={() => this.setState({ ...this.state, confirmVisible: false })}
                                 />

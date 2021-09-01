@@ -1,9 +1,9 @@
 import React, { FC } from 'react';
-import { useStyles } from 'src/packages/datav-core/src';
-import { DatavTheme } from 'src/packages/datav-core/src';
-import { css } from 'emotion';
+import { useStyles } from 'src/packages/datav-core/src/ui';
+import { GrafanaTheme } from 'src/packages/datav-core/src';
+import { css } from '@emotion/css';
 
-const getStyles = (theme: DatavTheme) => css`
+const getStyles = (theme: GrafanaTheme) => css`
   margin: 0;
   margin-left: ${theme.spacing.md};
   font-size: ${theme.typography.size.sm};

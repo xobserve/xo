@@ -1,5 +1,5 @@
 import React from 'react'
-import {RadioButtonGroup} from 'src/packages/datav-core/src'
+import {RadioButtonGroup} from 'src/packages/datav-core/src/ui'
 import { Role } from 'src/types';
 
 export interface Props {

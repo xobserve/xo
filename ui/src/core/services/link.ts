@@ -296,7 +296,7 @@ export class LinkSrv implements LinkService {
           e,
         });
       };
-    }
+    } 
 
     const info: LinkModel<T> = {
       href: locationUtil.assureBaseUrl(href.replace(/\n/g, '')),

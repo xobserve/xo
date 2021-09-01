@@ -1,6 +1,7 @@
 import React, { FC } from 'react';
 import _ from 'lodash'
-import { Icon, IconName,config, getBootConfig, currentLang} from 'src/packages/datav-core/src';
+import { config, getBootConfig, currentLang} from 'src/packages/datav-core/src';
+import {Icon, IconName} from 'src/packages/datav-core/src/ui';
 import './Footer.less'
 import { FormattedMessage } from 'react-intl';
 import { Langs } from 'src/core/library/locale/types';

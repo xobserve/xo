@@ -6,7 +6,7 @@ import { TeamMember } from 'src/types'
 const {Option} = Select
 
 interface Props {
-    teamId : number
+    teamId : string
     onChange: any
     mutiple?: boolean
 }

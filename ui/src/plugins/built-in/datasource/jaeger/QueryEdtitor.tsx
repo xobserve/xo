@@ -1,11 +1,12 @@
 import defaults from 'lodash/defaults';
 
 import React, { ChangeEvent, PureComponent } from 'react';
-import { LegacyForms,QueryEditorProps} from 'src/packages/datav-core/src';
+import { QueryEditorProps} from 'src/packages/datav-core/src';
+import { LegacyForms} from 'src/packages/datav-core/src/ui';
 import { JaegerDatasource,JaegerQuery } from './datasource';
 import { defaultQuery } from './types'; 
 
-const { LegacyFormField:FormField } = LegacyForms;
+const { FormField } = LegacyForms;
 
 type Props = QueryEditorProps<JaegerDatasource, JaegerQuery>;
 

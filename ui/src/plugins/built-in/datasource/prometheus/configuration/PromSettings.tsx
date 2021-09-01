@@ -1,14 +1,14 @@
 import React, { SyntheticEvent } from 'react';
-import { EventsWithValidation, InlineFormLabel, regexValidation, LegacyForms } from 'src/packages/datav-core/src';
+import { EventsWithValidation, InlineFormLabel, regexValidation, LegacyForms } from 'src/packages/datav-core/src/ui';
 import {
   SelectableValue,
   onUpdateDatasourceJsonDataOptionChecked,
   DataSourcePluginOptionsEditorProps,
 } from 'src/packages/datav-core/src';
 import { PromOptions } from '../types';
-import { FormattedMessage } from 'react-intl';
+import { FormattedMessage, useIntl } from 'react-intl';
 
-const { LegacySelect : Select, LegacyInput: Input, LegacyFormField: FormField, LegacySwitch: Switch } = LegacyForms;
+const { Select,  Input, FormField, Switch } = LegacyForms;
 
 const httpOptions = [
   { value: 'GET', label: 'GET' },
@@ -19,14 +19,14 @@ type Props = Pick<DataSourcePluginOptionsEditorProps<PromOptions>, 'options' | '
 
 export const PromSettings = (props: Props) => {
   const { options, onOptionsChange } = props;
-
+  const intl = useIntl()
   return (
     <>
       <div className="gf-form-group">
         <div className="gf-form-inline">
           <div className="gf-form">
             <FormField
-              label={<FormattedMessage id="datasource.scrapeInterval"/>}
+              label={intl.formatMessage({id: "datasource.scrapeInterval"})}
               labelWidth={13}
               inputEl={
                 <Input
@@ -45,7 +45,7 @@ export const PromSettings = (props: Props) => {
         <div className="gf-form-inline">
           <div className="gf-form">
             <FormField
-              label={<FormattedMessage id="datasource.queryTimeout"/>}
+              label={intl.formatMessage({id: "datasource.queryTimeout"})}
               labelWidth={13}
               inputEl={
                 <Input

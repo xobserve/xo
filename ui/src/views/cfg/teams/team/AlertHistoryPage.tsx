@@ -3,12 +3,10 @@ import { withRouter } from 'react-router-dom'
 import _ from 'lodash'
 
 import Page from 'src/views/Layouts/Page/Page';
-import { getBackendSrv, Select, dateTime,dateTimeFormat} from 'src/packages/datav-core/src';
+import { getBackendSrv, dateTime,dateTimeFormat} from 'src/packages/datav-core/src';
 import { getNavModel } from 'src/views/Layouts/Page/navModel'
 import { Team } from 'src/types';
-import { FilterInput } from 'src/views/components/FilterInput/FilterInput';
 import {AlertHistory} from 'src/types'
-import AlertRuleItem from 'src/views/alerting/AlertRuleItem'
 import alertDef from 'src/views/alerting/state/alertDef';
 import { getTimeSrv } from 'src/core/services/time';
 import AlertHistoryList from 'src/views/alerting/AlertHistoryList';

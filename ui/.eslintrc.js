@@ -14,7 +14,18 @@
 
 module.exports = {
   "rules": {
-    "no-restricted-imports": 2
-  }
+    "no-restricted-imports": ["error", { "patterns": ["@grafana/runtime", "@grafana/data/*", "@grafana/ui", "@grafana/e2e"] }]
+  },
+  "overrides": [
+    {
+      "files": ["**/*.{test,story}.{ts,tsx}"],
+      "rules": {
+        "no-restricted-imports": "off",
+        "react/prop-types": "off",
+        "import/imports-first": [ "warn", "DISABLE-absolute-first" ],
+      }
+    }
+  ]
 }
+
   

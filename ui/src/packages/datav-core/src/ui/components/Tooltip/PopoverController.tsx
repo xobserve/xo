@@ -1,5 +1,5 @@
 import React from 'react';
-import * as PopperJS from 'popper.js';
+import { Placement } from '@popperjs/core';
 import { PopoverContent } from './Tooltip';
 
 // This API allows popovers to update Popper's position when e.g. popover content changes
@@ -34,13 +34,13 @@ type PopperControllerRenderProp = (
   hidePopper: () => void,
   popperProps: {
     show: boolean;
-    placement: PopperJS.Placement;
+    placement: Placement;
     content: PopoverContent;
   }
 ) => JSX.Element;
 
 interface Props {
-  placement?: PopperJS.Placement;
+  placement?: Placement;
   content: PopoverContent;
   className?: string;
   children: PopperControllerRenderProp;
@@ -48,63 +48,27 @@ interface Props {
 }
 
 interface State {
-  placement: PopperJS.Placement;
   show: boolean;
 }
 
 class PopoverController extends React.Component<Props, State> {
   private hideTimeout: any;
-
-  constructor(props: Props) {
-    super(props);
-
-    this.state = {
-      placement: this.props.placement || 'auto',
-      show: false,
-    };
-  }
-
-  UNSAFE_componentWillReceiveProps(nextProps: Props) {
-    if (nextProps.placement && nextProps.placement !== this.state.placement) {
-      this.setState((prevState: State) => {
-        return {
-          ...prevState,
-          placement: nextProps.placement || 'auto',
-        };
-      });
-    }
-  }
+  state = { show: false };
 
   showPopper = () => {
-    if (this.hideTimeout) {
-      clearTimeout(this.hideTimeout);
-    }
-
-    this.setState(prevState => ({
-      ...prevState,
-      show: true,
-    }));
+    clearTimeout(this.hideTimeout);
+    this.setState({ show: true });
   };
 
   hidePopper = () => {
-    if (this.props.hideAfter !== 0) {
-      this.hideTimeout = setTimeout(() => {
-        this.setState(prevState => ({
-          ...prevState,
-          show: false,
-        }));
-      }, this.props.hideAfter);
-      return;
-    }
-    this.setState(prevState => ({
-      ...prevState,
-      show: false,
-    }));
+    this.hideTimeout = setTimeout(() => {
+      this.setState({ show: false });
+    }, this.props.hideAfter);
   };
 
   render() {
-    const { children, content } = this.props;
-    const { show, placement } = this.state;
+    const { children, content, placement = 'auto' } = this.props;
+    const { show } = this.state;
 
     return children(this.showPopper, this.hidePopper, {
       show,

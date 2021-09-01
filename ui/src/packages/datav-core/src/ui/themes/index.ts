@@ -1,11 +1,18 @@
-import { ThemeContext, withTheme, useTheme, useStyles, mockThemeContext } from './ThemeContext';
-import { getTheme, mockTheme } from './getTheme';
-import { selectThemeVariant } from './selectThemeVariant';
 import * as styleMixins from './mixins';
 
-export {theme} from './default'
+export {
+  ThemeContext,
+  withTheme,
+  withTheme2,
+  useTheme,
+  useTheme2,
+  useStyles,
+  useStyles2,
+  mockThemeContext,
+} from './ThemeContext';
+export { getTheme, mockTheme } from './getTheme';
 export { stylesFactory } from './stylesFactory';
-export { ThemeContext, withTheme, mockTheme, getTheme, selectThemeVariant, useTheme, mockThemeContext, useStyles };
-
+export { GlobalStyles } from './GlobalStyles/GlobalStyles';
+export * from './selectThemeVariant'
 
 export { styleMixins };

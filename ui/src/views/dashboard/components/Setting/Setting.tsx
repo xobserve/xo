@@ -6,7 +6,7 @@ import _ from 'lodash'
 import { DashboardModel } from '../../model/DashboardModel';
 import { BackButton } from 'src/views/components/BackButton/BackButton';
 
-import { CustomScrollbar, Icon } from 'src/packages/datav-core/src';
+import { CustomScrollbar, Icon } from 'src/packages/datav-core/src/ui';
 import { updateLocation } from 'src/store/reducers/location';
 import './Setting.less'
 import { store } from 'src/store/store';

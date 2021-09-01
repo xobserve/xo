@@ -1,7 +1,8 @@
 import React from 'react'
 import { AlertNotification } from 'src/types'
 import {Input} from 'antd'
-import { InlineFormLabel, localeData, currentLang } from 'src/packages/datav-core/src'
+import {  localeData, currentLang } from 'src/packages/datav-core/src'
+import { InlineFormLabel } from 'src/packages/datav-core/src/ui'
 
 
 interface Props {

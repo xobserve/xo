@@ -1,24 +1,24 @@
-import { DatavThemeCommons } from '../../data';
+import { GrafanaThemeCommons } from '../../data';
 
 export const commonColorsPalette = {
   // New greys palette used by next-gen form elements
   gray98: '#f7f8fa',
-  gray97: '#f9fbfc',
+  gray97: '#f1f5f9',
   gray95: '#e9edf2',
   gray90: '#dce1e6',
-  gray85: '#eee',
+  gray85: '#c7d0d9',
   gray70: '#9fa7b3',
   gray60: '#7b8087',
   gray33: '#464c54',
   gray25: '#2c3235',
   gray15: '#202226',
   gray10: '#141619',
-  gray05: '#141619',
+  gray05: '#0b0c0e',
 
   // New blues palette used by next-gen form elements
   blue95: '#5794f2', // blue95
   blue85: '#33a2e5', // blueText
-  blue80: '#33a2e5', // blue80
+  blue80: '#3274d9', // blue80
   blue77: '#1f60c4', // blue77
 
   // New reds palette used by next-gen form elements
@@ -27,12 +27,12 @@ export const commonColorsPalette = {
 
 const SPACING_BASE = 8;
 
-export const theme: DatavThemeCommons = {
+const theme: GrafanaThemeCommons = {
   name: 'Grafana Default',
   typography: {
     fontFamily: {
       sansSerif: "'Roboto', 'Helvetica Neue', Arial, sans-serif",
-      monospace: "Menlo, Monaco, Consolas, 'Courier New', monospace",
+      monospace: "'Roboto Mono', monospace",
     },
     size: {
       base: '14px',
@@ -53,7 +53,7 @@ export const theme: DatavThemeCommons = {
       light: 300,
       regular: 400,
       semibold: 500,
-      bold: 600,
+      bold: 500,
     },
     lineHeight: {
       xs: 1,
@@ -75,6 +75,7 @@ export const theme: DatavThemeCommons = {
     xxl: '1440px',
   },
   spacing: {
+    base: SPACING_BASE,
     insetSquishMd: '4px 8px',
     d: '16px',
     xxs: '2px',
@@ -130,6 +131,7 @@ export const theme: DatavThemeCommons = {
     tooltip: 1040,
     modalBackdrop: 1050,
     modal: 1060,
+    portal: 1061,
   },
 };
 

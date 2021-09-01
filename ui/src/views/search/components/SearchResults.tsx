@@ -2,12 +2,12 @@ import React, { FC } from 'react';
 import { css } from 'emotion';
 import { FixedSizeList } from 'react-window';
 import AutoSizer from 'react-virtualized-auto-sizer';
-import { DatavTheme } from 'src/packages/datav-core/src';
-import { stylesFactory, useTheme, Spinner } from 'src/packages/datav-core/src';
+import { stylesFactory, useTheme, Spinner } from 'src/packages/datav-core/src/ui';
 import { DashboardSection, OnToggleChecked, SearchLayout } from '../types';
 import { SEARCH_ITEM_HEIGHT, SEARCH_ITEM_MARGIN } from '../constants';
 import { SearchItem } from './SearchItem';
 import { SectionHeader } from './SectionHeader';
+import { GrafanaTheme } from 'src/packages/datav-core/src';
 
 export interface Props {
   editable?: boolean;
@@ -92,7 +92,7 @@ export const SearchResults: FC<Props> = ({
   );
 };
 
-const getSectionStyles = stylesFactory((theme: DatavTheme) => {
+const getSectionStyles = stylesFactory((theme: GrafanaTheme) => {
   const { md } = theme.spacing;
 
   return {

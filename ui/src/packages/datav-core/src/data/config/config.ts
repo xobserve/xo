@@ -1,4 +1,4 @@
-import { DatavConfig, DataSourceInstanceSettings, ThemeType,DataSourcePluginMeta,CommonConfig} from '../types'
+import { DataSourceInstanceSettings, ThemeType,DataSourcePluginMeta,CommonConfig, GrafanaTheme, GrafanaTheme2} from '../types'
 import { History as RouterHistory } from 'history';
 import _ from 'lodash'
 
@@ -9,6 +9,8 @@ export interface BootConfig {
     datasources: {string:DataSourceInstanceSettings}
     panels:{string: any}
     sidemenu: any[]
+    theme: GrafanaTheme
+    theme2: GrafanaTheme2
 }
 
 let bootConfig:BootConfig = null

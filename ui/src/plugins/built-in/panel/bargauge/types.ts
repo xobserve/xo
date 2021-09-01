@@ -1,4 +1,4 @@
-import { SingleStatBaseOptions, BarGaugeDisplayMode } from 'src/packages/datav-core/src';
+import { SingleStatBaseOptions, BarGaugeDisplayMode } from 'src/packages/datav-core/src/ui';
 import { SelectableValue } from 'src/packages/datav-core/src';
 
 export interface BarGaugeOptions extends SingleStatBaseOptions {

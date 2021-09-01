@@ -1,9 +1,9 @@
 import React from 'react'
-import { PanelPlugin, CodeEditor } from 'src/packages/datav-core/src';
+import { PanelPlugin } from 'src/packages/datav-core/src';
 import _ from 'lodash'
 import { InfoTable } from './InfoTable';
 import { CustomFieldConfig, Options } from './types';
-import { TableCellDisplayMode } from 'src/packages/datav-core/src';
+import { TableCellDisplayMode,CodeEditor } from 'src/packages/datav-core/src/ui';
 
 export const plugin = new PanelPlugin<Options, CustomFieldConfig>(InfoTable)
   .setNoPadding()

@@ -1,15 +1,17 @@
 import _ from 'lodash'
 import { Emitter } from 'src/core/library/utils/emitter';
-import { PanelEvents, DataQuery, ScopedVars, DataTransformerConfig, PanelPlugin, FieldConfigSource, theme, DataLink, AppEvents, config, getTheme } from 'src/packages/datav-core/src'
+import { PanelEvents, DataQuery, ScopedVars, DataTransformerConfig, PanelPlugin, FieldConfigSource, DataLink, AppEvents, config, PanelPluginDataSupport, eventFactory } from 'src/packages/datav-core/src'
+import {getTheme} from 'src/packages/datav-core/src/ui'
 import templateSrv from 'src/core/services/templating'
 import { getNextRefIdChar } from 'src/core/library/utils/query'
 import { PanelQueryRunner } from './PanelQueryRunner'
 import { EDIT_PANEL_ID } from 'src/core/constants';
 import { CoreEvents } from 'src/types';
 import { getDatasourceSrv } from 'src/core/services/datasource';
+import { getTheme2 } from 'src/packages/datav-core/src/ui/themes/getTheme';
 
-export const panelAdded = AppEvents.eventFactory<PanelModel | undefined>('panel-added');
-export const panelRemoved = AppEvents.eventFactory<PanelModel | undefined>('panel-removed');
+export const panelAdded = eventFactory<PanelModel | undefined>('panel-added');
+export const panelRemoved =eventFactory<PanelModel | undefined>('panel-removed');
 
 
 export interface GridPos {
@@ -209,16 +211,16 @@ export class PanelModel {
         this.gridPos.h = newPos.h;
 
         if (sizeChanged) {
-            this.events.emit(PanelEvents.panelSizeChanged);
+            this.events.emit(PanelEvents.sizeChanged);
         }
     }
 
     resizeDone() {
-        this.events.emit(PanelEvents.panelSizeChanged);
+        this.events.emit(PanelEvents.sizeChanged);
     }
 
     initialized() {
-        this.events.emit(PanelEvents.panelInitialized);
+        this.events.emit(PanelEvents.initialized);
     }
 
     refresh() {
@@ -237,6 +239,10 @@ export class PanelModel {
         return this.queryRunner;
     }
 
+    getDataSupport(): PanelPluginDataSupport {
+        return this.plugin?.dataSupport ?? { annotations: false, alertStates: false };
+    }
+
     getTransformations() {
         return this.transformations;
     }
@@ -251,7 +257,7 @@ export class PanelModel {
           replaceVariables: this.replaceVariables,
           getDataSourceSettingsByUid: getDatasourceSrv().getDataSourceSettingsByUid.bind(getDatasourceSrv()),
           fieldConfigRegistry: this.plugin.fieldConfigRegistry,
-          theme: getTheme(),
+          theme: getTheme2(),
         };
       }
 
@@ -417,7 +423,7 @@ export class PanelModel {
             let old: any = {};
 
             this.options = this.options || {};
-            Object.assign(this.options, newPlugin.onPanelTypeChanged(this, oldPluginId, old));
+            Object.assign(this.options, newPlugin.onPanelTypeChanged(this, oldPluginId, oldOptions.options,this.fieldConfig));
         }
 
         // switch
@@ -462,6 +468,14 @@ export class PanelModel {
     getSavedId(): number {
         return this.editSourceId ?? this.id;
     }
+
+      /*
+   * This is the title used when displaying the title in the UI so it will include any interpolated variables.
+   * If you need the raw title without interpolation use title property instead.
+   * */
+  getDisplayTitle(): string {
+    return this.replaceVariables(this.title, {}, 'text');
+  }
 }
 
 

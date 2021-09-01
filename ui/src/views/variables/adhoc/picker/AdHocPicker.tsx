@@ -2,7 +2,7 @@ import React, { PureComponent, ReactNode } from 'react';
 import { connect, MapDispatchToProps, MapStateToProps } from 'react-redux';
 import { StoreState } from 'src/types';
 import { AdHocVariableFilter, AdHocVariableModel } from 'src/types';
-import { SegmentAsync } from 'src/packages/datav-core/src';
+import { SegmentAsync } from 'src/packages/datav-core/src/ui';
 import { VariablePickerProps } from '../../pickers/types';
 import { OperatorSegment } from './OperatorSegment';
 import { MetricFindValue, SelectableValue } from 'src/packages/datav-core/src';

@@ -1,75 +1,97 @@
 import React, { PureComponent } from 'react';
-
-
 import {
-  VizRepeater,
-  VizRepeaterRenderValueProps, 
   BigValue,
   BigValueGraphMode,
-  BigValueSparkline,
-} from 'src/packages/datav-core/src'
-
+  DataLinksContextMenu,
+  VizRepeater,
+  VizRepeaterRenderValueProps,
+  BigValueTextMode,
+} from 'src/packages/datav-core/src/ui';
 import {
   DisplayValueAlignmentFactors,
   FieldDisplay,
+  getBootConfig,
   getDisplayValueAlignmentFactors,
   getFieldDisplayValues,
   PanelProps,
-  ReducerID,
-} from 'src/packages/datav-core/src';
+} from 'src/packages/datav-core/src/data';
+
 
 import { StatPanelOptions } from './types';
+import { DataLinksContextMenuApi } from 'src/packages/datav-core/src/ui/components/DataLinks/DataLinksContextMenu';
 
+const config = getBootConfig()
 export class StatPanel extends PureComponent<PanelProps<StatPanelOptions>> {
   renderComponent = (
-    valueProps: VizRepeaterRenderValueProps<FieldDisplay, DisplayValueAlignmentFactors>
+    valueProps: VizRepeaterRenderValueProps<FieldDisplay, DisplayValueAlignmentFactors>,
+    menuProps: DataLinksContextMenuApi
   ): JSX.Element => {
     const { timeRange, options } = this.props;
-    const { value, alignmentFactors, width, height } = valueProps;
-    let sparkline: BigValueSparkline | undefined;
-
-    if (value.sparkline) {
-      sparkline = {
-        data: value.sparkline,
-        xMin: timeRange.from.valueOf(),
-        xMax: timeRange.to.valueOf(),
-        yMin: value.field.min,
-        yMax: value.field.max,
-      };
-
-      const calc = options.reduceOptions.calcs[0];
-      if (calc === ReducerID.last) {
-        sparkline.highlightIndex = sparkline.data.length - 1;
-      }
+    const { value, alignmentFactors, width, height, count } = valueProps;
+    const { openMenu, targetClassName } = menuProps;
+    let sparkline = value.sparkline;
+    if (sparkline) {
+      sparkline.timeRange = timeRange;
     }
 
     return (
       <BigValue
         value={value.display}
+        count={count}
         sparkline={sparkline}
         colorMode={options.colorMode}
         graphMode={options.graphMode}
         justifyMode={options.justifyMode}
+        textMode={this.getTextMode()}
         alignmentFactors={alignmentFactors}
+        text={options.text}
         width={width}
         height={height}
+        theme={config.theme2}
+        onClick={openMenu}
+        className={targetClassName}
       />
     );
   };
 
+  getTextMode() {
+    const { options, fieldConfig, title } = this.props;
+
+    // If we have manually set displayName or panel title switch text mode to value and name
+    if (options.textMode === BigValueTextMode.Auto && (fieldConfig.defaults.displayName || !title)) {
+      return BigValueTextMode.ValueAndName;
+    }
+
+    return options.textMode;
+  }
+
   renderValue = (valueProps: VizRepeaterRenderValueProps<FieldDisplay, DisplayValueAlignmentFactors>): JSX.Element => {
-    return this.renderComponent(valueProps)
+    const { value } = valueProps;
+    const { getLinks, hasLinks } = value;
+
+    if (hasLinks && getLinks) {
+      return (
+        <DataLinksContextMenu links={getLinks} config={value.field}>
+          {(api) => {
+            return this.renderComponent(valueProps, api);
+          }}
+        </DataLinksContextMenu>
+      );
+    }
+
+    return this.renderComponent(valueProps, {});
   };
 
   getValues = (): FieldDisplay[] => {
     const { data, options, replaceVariables, fieldConfig, timeZone } = this.props;
+
     return getFieldDisplayValues({
       fieldConfig,
       reduceOptions: options.reduceOptions,
       replaceVariables,
+      theme: config.theme2,
       data: data.series,
       sparkline: options.graphMode !== BigValueGraphMode.None,
-      autoMinMax: true,
       timeZone,
     });
   };

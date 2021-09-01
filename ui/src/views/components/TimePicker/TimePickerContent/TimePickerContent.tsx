@@ -1,4 +1,5 @@
-import { isDateTime, TimeOption, TimeRange, TimeZone,stylesFactory,CustomScrollbar,DatavTheme, useTheme} from 'src/packages/datav-core/src';
+import { isDateTime, TimeOption, TimeRange, TimeZone,GrafanaTheme} from 'src/packages/datav-core/src';
+import {stylesFactory,CustomScrollbar, useTheme} from 'src/packages/datav-core/src/ui';
 import { css } from 'emotion';
 import React, {useState } from 'react';
 import { useMedia } from 'react-use';
@@ -10,7 +11,7 @@ import { TimeRangeList } from './TimeRangeList';
 import { FormattedMessage  as Message} from 'react-intl';
 import { getThemeColors } from './colors' 
 
-const getStyles = stylesFactory((theme: DatavTheme) => {
+const getStyles = stylesFactory((theme: GrafanaTheme) => {
   const colors = getThemeColors(theme);
 
   return {
@@ -59,7 +60,7 @@ const getStyles = stylesFactory((theme: DatavTheme) => {
   };
 });
 
-const getNarrowScreenStyles = stylesFactory((theme: DatavTheme) => {
+const getNarrowScreenStyles = stylesFactory((theme: GrafanaTheme) => {
   const colors = getThemeColors(theme);
 
   return {
@@ -82,7 +83,7 @@ const getNarrowScreenStyles = stylesFactory((theme: DatavTheme) => {
   };
 });
 
-const getFullScreenStyles = stylesFactory((theme: DatavTheme) => {
+const getFullScreenStyles = stylesFactory((theme: GrafanaTheme) => {
   return {
     container: css`
       padding-top: 9px;
@@ -101,7 +102,7 @@ const getFullScreenStyles = stylesFactory((theme: DatavTheme) => {
   };
 });
 
-const getEmptyListStyles = stylesFactory((theme: DatavTheme) => {
+const getEmptyListStyles = stylesFactory((theme: GrafanaTheme) => {
   const colors = getThemeColors(theme);
 
   return {
@@ -197,7 +198,7 @@ const NarrowScreenForm: React.FC<FormProps> = props => {
     <>
       <div className={styles.header} onClick={() => setCollapsed(!collapsed)}>
         <TimePickerTitle><Message id="dashboard.timePickerTitle" /></TimePickerTitle>
-        {collapsed ? <UpOutlined />: <DownOutlined />}
+        {collapsed ? <UpOutlined translate />: <DownOutlined translate/>}
       </div>
       {collapsed && (
         <div className={styles.body}>

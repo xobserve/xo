@@ -1,7 +1,7 @@
 import _ from 'lodash'
 import {
     PanelProps, PanelData, DataFrame, TimeRange, PanelEvents,getValueFormat,formattedValueToString,dateTimeFormat,
-    getFlotPairsConstant,getColorFromHexRgbOrName,getTimeField,AnnotationEvent,currentTheme
+    getFlotPairsConstant,getTimeField,AnnotationEvent,currentTheme, getBootConfig, getColorForTheme
 } from 'src/packages/datav-core/src';
 import { DashboardModel } from 'src/views/dashboard/model/DashboardModel'
 import { PanelModel } from 'src/views/dashboard/model/PanelModel'
@@ -637,7 +637,8 @@ export class GraphPanelCtrl {
   }
 
   onColorChange = (series: any, color: string) => {
-    series.setColor(getColorFromHexRgbOrName(color, currentTheme));
+    const config = getBootConfig()
+    series.setColor(getColorForTheme(color, config.theme));
     this.graphOptions.aliasColors[series.alias] = color;
     this.render();
   };

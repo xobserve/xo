@@ -1,6 +1,9 @@
-import { css } from 'emotion';
-import { getTheme, stylesFactory } from 'src/packages/datav-core/src';
+import { css } from '@emotion/css';
 
+import { stylesFactory } from 'src/packages/datav-core/src/ui';
+import { getBootConfig } from 'src/packages/datav-core/src';
+
+const config = getBootConfig()
 export const getPanelInspectorStyles = stylesFactory(() => {
   return {
     wrap: css`
@@ -16,18 +19,19 @@ export const getPanelInspectorStyles = stylesFactory(() => {
       flex-grow: 0;
       align-items: center;
       justify-content: flex-end;
-      margin-bottom: ${getTheme().spacing.sm};
+      margin-bottom: ${config.theme.spacing.sm};
     `,
     toolbarItem: css`
-      margin-left: ${getTheme().spacing.md};
+      margin-left: ${config.theme.spacing.md};
     `,
     content: css`
       flex-grow: 1;
+      height: 100%;
       padding-bottom: 16px;
     `,
     contentQueryInspector: css`
       flex-grow: 1;
-      padding: ${getTheme().spacing.md} 0;
+      padding: ${config.theme.spacing.md} 0;
     `,
     editor: css`
       font-family: monospace;
@@ -64,17 +68,17 @@ export const getPanelInspectorStyles = stylesFactory(() => {
       }
     `,
     options: css`
-      padding-top: ${getTheme().spacing.sm};
+      padding-top: ${config.theme.spacing.sm};
     `,
     dataDisplayOptions: css`
       flex-grow: 1;
       min-width: 300px;
-      margin-right: ${getTheme().spacing.sm};
+      margin-right: ${config.theme.spacing.sm};
     `,
     selects: css`
       display: flex;
       > * {
-        margin-right: ${getTheme().spacing.sm};
+        margin-right: ${config.theme.spacing.sm};
       }
     `,
   };

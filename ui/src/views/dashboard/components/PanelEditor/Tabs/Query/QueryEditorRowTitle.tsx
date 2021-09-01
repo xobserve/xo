@@ -1,7 +1,7 @@
 import React from 'react';
 import { css } from 'emotion';
-import { DataQuery, DataSourceApi, DatavTheme } from 'src/packages/datav-core/src';
-import { stylesFactory, useTheme } from 'src/packages/datav-core/src';
+import { DataQuery, DataSourceApi, GrafanaTheme } from 'src/packages/datav-core/src';
+import { stylesFactory, useTheme } from 'src/packages/datav-core/src/ui';
 
 interface QueryEditorRowTitleProps {
   query: DataQuery;
@@ -39,7 +39,7 @@ export const QueryEditorRowTitle: React.FC<QueryEditorRowTitleProps> = ({
   );
 };
 
-const getQueryEditorRowTitleStyles = stylesFactory((theme: DatavTheme) => {
+const getQueryEditorRowTitleStyles = stylesFactory((theme: GrafanaTheme) => {
   return {
     wrapper: css`
       display: flex;

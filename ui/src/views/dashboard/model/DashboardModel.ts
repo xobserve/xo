@@ -1,4 +1,4 @@
-import _ from 'lodash'
+import _, { isEqual } from 'lodash'
 import { PanelModel } from './PanelModel'
 import { Emitter } from 'src/core/library/utils/emitter'
 import { AppEvent, PanelEvents,dateTimeFormat,DateTimeInput,config} from 'src/packages/datav-core/src'
@@ -762,6 +762,12 @@ export class DashboardModel {
     }
     
 
+    shouldUpdateDashboardPanelFromJSON(updatedPanel: PanelModel, panel: PanelModel) {
+      const shouldUpdateGridPositionLayout = !isEqual(updatedPanel?.gridPos, panel?.gridPos);
+      if (shouldUpdateGridPositionLayout) {
+        // this.events.publish(new DashboardPanelsChangedEvent());
+      }
+    }
 
     
     private hasVariables() {
