@@ -55,10 +55,10 @@ function HeaderWrapper(props: Props) {
     })
 
     const [inSave,SetInSave] = useState(false)
-    appEvents.on(CoreEvents.dashboardSaving, () => {
+    appEvents.on(CoreEvents.DashboardSaving, () => {
         SetInSave(true)
     });
-    appEvents.on(CoreEvents.dashboardSaved, () => {
+    appEvents.on(CoreEvents.DashboardSaved, () => {
         SetInSave(false)
     });
     

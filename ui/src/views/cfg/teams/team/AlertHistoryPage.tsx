@@ -3,7 +3,7 @@ import { withRouter } from 'react-router-dom'
 import _ from 'lodash'
 
 import Page from 'src/views/Layouts/Page/Page';
-import { getBackendSrv, dateTime,dateTimeFormat} from 'src/packages/datav-core/src';
+import { getBackendSrv, dateTime,dateTimeFormat, NavModel} from 'src/packages/datav-core/src';
 import { getNavModel } from 'src/views/Layouts/Page/navModel'
 import { Team } from 'src/types';
 import {AlertHistory} from 'src/types'
@@ -83,7 +83,7 @@ export class AlertHistoryPage extends PureComponent<Props, State> {
         const { routeID, parentRouteID } = this.props
         const { hasFetched, team, search, stateFilter, alertHistories} = this.state
 
-        let navModel;
+        let navModel:NavModel;
         if (team) {
             navModel = _.cloneDeep(getNavModel(routeID, parentRouteID))
             const { node, main } = navModel
@@ -92,7 +92,7 @@ export class AlertHistoryPage extends PureComponent<Props, State> {
                 n.url = n.url.replace(":id", team.id)
             })
 
-            navModel.main.title = navModel.main.title + ' / ' + team.name
+            navModel.main.text = navModel.main.text + ' / ' + team.name
         } else {
             navModel = _.cloneDeep(getNavModel(routeID, parentRouteID))
         }

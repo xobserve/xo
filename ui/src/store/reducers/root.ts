@@ -8,8 +8,10 @@ import locationReducer from './location'
 import menuReducer from './menu'
 import templatingReducers from 'src/views/variables/state/reducers';
 import alertingReducers from 'src/views/alerting/state/reducers';
+import appNotificationReducers from './appNotification'
 
 import { CleanUp, cleanUpAction } from '../actions/cleanUp';
+
  
 const rootReducers = {
     ...templatingReducers,
@@ -21,6 +23,7 @@ const rootReducers = {
     ...locationReducer,
     ...menuReducer,
     ...alertingReducers,
+    ...appNotificationReducers
 };
 
 

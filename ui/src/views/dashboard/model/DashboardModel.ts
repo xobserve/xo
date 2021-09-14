@@ -1,8 +1,8 @@
-import _, { isEqual } from 'lodash'
+import _, { indexOf, isEqual, map, pull, some } from 'lodash'
 import { PanelModel } from './PanelModel'
 import { Emitter } from 'src/core/library/utils/emitter'
-import { AppEvent, PanelEvents,dateTimeFormat,DateTimeInput,config} from 'src/packages/datav-core/src'
-import { DashboardMeta, CoreEvents, GlobalVariableUid } from 'src/types'
+import { AppEvent, PanelEvents,dateTimeFormat,DateTimeInput,config, EventBusExtended, EventBusSrv} from 'src/packages/datav-core/src'
+import { DashboardMeta, CoreEvents, GlobalVariableUid, DashboardPanelsChangedEvent } from 'src/types'
 import {GRID_COLUMN_COUNT,REPEAT_DIR_VERTICAL} from 'src/core/constants'
 import {panelAdded,panelRemoved,GridPos} from './PanelModel'
 import { getTimeSrv } from 'src/core/services/time'
@@ -59,7 +59,7 @@ export class DashboardModel {
 
   // repeat process cycles
     iteration: number;
-    events: Emitter;
+    events: EventBusExtended;
     meta: DashboardMeta;
 
     static nonPersistedProperties: { [str: string]: boolean } = {
@@ -78,7 +78,7 @@ export class DashboardModel {
             data = {}
         }
 
-        this.events = new Emitter();
+        this.events = new EventBusSrv();
         this.id = data.id || null;
         this.uid = data.uid || null;
         this.title = data.title || 'No Title';
@@ -324,12 +324,13 @@ export class DashboardModel {
       }
     }
   }
+  
   toggleRow(row: PanelModel) {
-    const rowIndex = _.indexOf(this.panels, row);
+    const rowIndex = indexOf(this.panels, row);
 
     if (row.collapsed) {
       row.collapsed = false;
-      const hasRepeat = _.some(row.panels as PanelModel[], (p: PanelModel) => p.repeat);
+      const hasRepeat = some(row.panels as PanelModel[], (p: PanelModel) => p.repeat);
 
       if (row.panels.length > 0) {
         // Use first panel to figure out if it was moved or pushed
@@ -371,21 +372,22 @@ export class DashboardModel {
       this.sortPanelsByGridPos();
 
       // emit change event
-      this.events.emit(CoreEvents.rowExpanded);
+      this.events.publish(new DashboardPanelsChangedEvent());
       return;
     }
 
     const rowPanels = this.getRowPanels(rowIndex);
 
     // remove panels
-    _.pull(this.panels, ...rowPanels);
+    pull(this.panels, ...rowPanels);
     // save panel models inside row panel
-    row.panels = _.map(rowPanels, (panel: PanelModel) => panel.getSaveModel());
+    row.panels = map(rowPanels, (panel: PanelModel) => panel.getSaveModel());
     row.collapsed = true;
 
     // emit change event
-    this.events.emit(CoreEvents.rowCollapsed);
+    this.events.publish(new DashboardPanelsChangedEvent());
   }
+
 
   processRowRepeats(row: PanelModel) {
     let rowPanels = row.panels;
@@ -706,7 +708,7 @@ export class DashboardModel {
       }
   
       this.sortPanelsByGridPos();
-      this.events.emit(CoreEvents.repeatsProcessed);
+      this.events.publish(new DashboardPanelsChangedEvent());
     }
 
     cleanUpRepeats() {
@@ -733,7 +735,7 @@ export class DashboardModel {
       _.pull(this.panels, ...panelsToRemove);
       panelsToRemove.map(p => p.destroy());
       this.sortPanelsByGridPos();
-      this.events.emit(CoreEvents.repeatsProcessed);
+      this.events.publish(new DashboardPanelsChangedEvent());
     }
 
     destroy() {

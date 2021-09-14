@@ -43,7 +43,7 @@ export class KeybindingSrv {
   }
 
   saveDashboard() {
-    appEvents.emit(CoreEvents.keybindingSaveDashboard)
+    appEvents.emit(CoreEvents.KeybindingSaveDashboard)
   }
 
   openSerach() {

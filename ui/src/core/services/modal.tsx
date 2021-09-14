@@ -13,7 +13,7 @@ interface Props {
 const ModalService = (props:Props) =>{
     const [modal, contextHolder] = Modal.useModal();
     useEffect(() => {
-        appEvents.on(CoreEvents.showConfirmModal, ({title,text,onConfirm}) => {
+        appEvents.on(CoreEvents.ShowConfirmModalEvent, ({title,text,onConfirm}) => {
             Modal.confirm(
                 {
                     title: title,
@@ -25,7 +25,7 @@ const ModalService = (props:Props) =>{
                 }
             )
         });
-        appEvents.on(CoreEvents.showModal, ({title,component,onConfirm}) => {
+        appEvents.on(CoreEvents.ShowConfirmModalEvent, ({title,component,onConfirm}) => {
             Modal.info({
                 title: title,
                 content: component,

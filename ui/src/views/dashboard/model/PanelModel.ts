@@ -1,14 +1,15 @@
 import _ from 'lodash'
 import { Emitter } from 'src/core/library/utils/emitter';
-import { PanelEvents, DataQuery, ScopedVars, DataTransformerConfig, PanelPlugin, FieldConfigSource, DataLink, AppEvents, config, PanelPluginDataSupport, eventFactory } from 'src/packages/datav-core/src'
+import { PanelEvents, DataQuery, ScopedVars, DataTransformerConfig, PanelPlugin, FieldConfigSource, DataLink, AppEvents, config, PanelPluginDataSupport, eventFactory, EventBusSrv } from 'src/packages/datav-core/src'
 import {getTheme} from 'src/packages/datav-core/src/ui'
 import templateSrv from 'src/core/services/templating'
 import { getNextRefIdChar } from 'src/core/library/utils/query'
 import { PanelQueryRunner } from './PanelQueryRunner'
 import { EDIT_PANEL_ID } from 'src/core/constants';
-import { CoreEvents } from 'src/types';
+import { CoreEvents, PanelQueriesChangedEvent } from 'src/types';
 import { getDatasourceSrv } from 'src/core/services/datasource';
 import { getTheme2 } from 'src/packages/datav-core/src/ui/themes/getTheme';
+import { TimeOverrideResult } from './panel';
 
 export const panelAdded = eventFactory<PanelModel | undefined>('panel-added');
 export const panelRemoved =eventFactory<PanelModel | undefined>('panel-removed');
@@ -124,17 +125,23 @@ export class PanelModel {
     // non persisted
     isViewing: boolean;
     isEditing: boolean;
-    events: Emitter;
+    
     hasRefreshed: boolean;
     isInView: boolean;
     plugin?: PanelPlugin;
     cacheTimeout?: any;
     cachedPluginOptions?: any;
     
+      /**
+   * The PanelModel event bus only used for internal and legacy angular support.
+   * The EventBus passed to panels is based on the dashboard event model.
+   */
+  events: EventBusSrv;
+
     private queryRunner?: PanelQueryRunner;
 
     constructor(model: any) {
-        this.events = new Emitter();
+        this.events = new EventBusSrv();
         this.restoreModel(model);
         this.replaceVariables = this.replaceVariables.bind(this);
     }
@@ -194,8 +201,8 @@ export class PanelModel {
 
     
     updateQueries(queries: DataQuery[]) {
-        this.events.emit(CoreEvents.queryChanged);
         this.targets = queries;
+        this.events.publish(new PanelQueriesChangedEvent());
       }
 
     updateGridPos(newPos: GridPos) {
@@ -273,6 +280,23 @@ export class PanelModel {
     getOptions() {
         return this.options;
     }
+
+    runAllPanelQueries(dashboardId: number, dashboardTimezone: string, timeData: TimeOverrideResult, width: number) {
+        this.getQueryRunner().run({
+          datasource: this.datasource,
+          queries: this.targets,
+          panelId: this.editSourceId || this.id,
+          dashboardId: dashboardId,
+          timezone: dashboardTimezone,
+          timeRange: timeData.timeRange,
+          timeInfo: timeData.timeInfo,
+          maxDataPoints: this.maxDataPoints || width,
+          minInterval: this.interval,
+          scopedVars: this.scopedVars,
+          cacheTimeout: this.cacheTimeout,
+          transformations: this.transformations,
+        });
+      }
 
     render() {
         if (!this.hasRefreshed) {

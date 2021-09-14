@@ -13,6 +13,7 @@ import { ErrorBoundaryAlert, HorizontalGroup } from 'src/packages/datav-core/src
 import {
   DataQuery,
   DataSourceApi,
+  EventBusSrv,
   LoadingState,
   PanelData,
   PanelEvents,
@@ -268,7 +269,7 @@ export interface AngularQueryComponentScope {
   target: DataQuery;
   panel: PanelModel;
   dashboard: DashboardModel;
-  events: Emitter;
+  events: EventBusSrv;
   refresh: () => void;
   render: () => void;
   datasource: DataSourceApi | null;

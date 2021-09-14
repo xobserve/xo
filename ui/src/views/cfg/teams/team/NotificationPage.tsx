@@ -95,7 +95,7 @@ export class NotificationPage extends PureComponent<Props, State> {
     }
 
     deleteNotification = (id: number) => {
-        appEvents.emit(CoreEvents.showConfirmModal, {
+        appEvents.emit(CoreEvents.ShowConfirmModalEvent, {
             title: localeData[currentLang]['alerting.deleteChannel'],
             text: localeData[currentLang]['alerting.deleteChannelTips'],
             text2: `Deleting this notification channel will not delete from alerts any references to it`,

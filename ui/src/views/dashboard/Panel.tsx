@@ -1,47 +1,52 @@
 // Libraries
-import React, { PureComponent } from 'react';
+import React, { Component } from 'react';
 import classNames from 'classnames';
-import { Unsubscribable } from 'rxjs';
-
+import { Subscription } from 'rxjs';
+// Components
+import { PanelHeader } from './components/PanelHeader/PanelHeader';
+import { ErrorBoundary, PanelContextProvider, PanelContext, SeriesVisibilityChangeMode } from 'src/packages/datav-core/src/ui';
 // Utils & Services
 import { getTimeSrv, TimeSrv } from 'src/core/services/time';
 
 // Types
-import { PanelModel } from './model/PanelModel';
-import { DashboardModel } from './model/DashboardModel';
-import { PANEL_BORDER } from 'src/core/constants';
-import { PanelHeader } from './components/PanelHeader/PanelHeader'
- 
-import {
-  LoadingState,
-  AbsoluteTimeRange,
+import { DashboardModel, PanelModel } from './model';
 
-  toUtc,
-  PanelEvents,
-  PanelData, 
-  PanelPlugin,
+import {
+  AbsoluteTimeRange,
+  AnnotationChangeEvent,
+  AnnotationEventUIModel,
+  DashboardCursorSync,
+  EventFilterOptions,
   FieldConfigSource,
   getBootConfig,
   getDefaultTimeRange,
-  
- 
+  LoadingState,
+  PanelData,
+  PanelPlugin,
+  PanelPluginMeta,
+  toDataFrameDTO,
+  toUtc,
 } from 'src/packages/datav-core/src';
-import {  ErrorBoundary} from 'src/packages/datav-core/src/ui';
+import { RefreshEvent, RenderEvent } from 'src/types';
+import { changeSeriesColorConfigFactory } from 'src/plugins/built-in/panel/timeseries/overrides/colorSeriesConfigFactory';
+import { seriesVisibilityConfigFactory } from './series_visibility_config_factory';
+import { deleteAnnotation, saveAnnotation, updateAnnotation } from 'src/views/annotations/api';
+import { applyPanelTimeOverrides } from './model/panel';
+import { PANEL_BORDER } from 'src/core/constants';
+import { getDashboardQueryRunner } from './model/DashboardQueryRunner/DashboardQueryRunner';
 
-const theme = getBootConfig().theme
 
 const DEFAULT_PLUGIN_ERROR = 'Error in plugin';
-
+const config = getBootConfig()
 export interface Props {
   panel: PanelModel;
   dashboard: DashboardModel;
   plugin: PanelPlugin;
   isViewing: boolean;
-  isEditing?: boolean;
+  isEditing: boolean;
   isInView: boolean;
   width: number;
   height: number;
-  alertState: string;
 }
 
 export interface State {
@@ -49,34 +54,63 @@ export interface State {
   renderCounter: number;
   errorMessage?: string;
   refreshWhenInView: boolean;
+  context: PanelContext;
   data: PanelData;
 }
 
-export class Panel extends PureComponent<Props, State> {
-  timeSrv: TimeSrv = getTimeSrv();
-  querySubscription: Unsubscribable;
-  unmounted: boolean
-  
+export class PanelChrome extends Component<Props, State> {
+  private readonly timeSrv: TimeSrv = getTimeSrv();
+  private subs = new Subscription();
+  private eventFilter: EventFilterOptions = { onlyLocal: true };
+
   constructor(props: Props) {
     super(props);
+
+    // Can this eventBus be on PanelModel?  when we have more complex event filtering, that may be a better option
+    const eventBus = props.dashboard.events.newScopedBus(`panel:${props.panel.id}`, this.eventFilter);
 
     this.state = {
       isFirstLoad: true,
       renderCounter: 0,
       refreshWhenInView: false,
-      data: {
-        state: LoadingState.NotStarted,
-        series: [],
-        timeRange: getDefaultTimeRange(),
+      context: {
+        sync: props.isEditing ? DashboardCursorSync.Off : props.dashboard.graphTooltip,
+        eventBus,
+        onSeriesColorChange: this.onSeriesColorChange,
+        onToggleSeriesVisibility: this.onSeriesVisibilityChange,
+        onAnnotationCreate: this.onAnnotationCreate,
+        onAnnotationUpdate: this.onAnnotationUpdate,
+        onAnnotationDelete: this.onAnnotationDelete,
+        canAddAnnotations: () => Boolean(props.dashboard.meta.canEdit || props.dashboard.meta.canMakeEditable),
       },
+      data: this.getInitialPanelDataState(),
+    };
+  }
+
+  onSeriesColorChange = (label: string, color: string) => {
+    this.onFieldConfigChange(changeSeriesColorConfigFactory(label, color, this.props.panel.fieldConfig));
+  };
+
+  onSeriesVisibilityChange = (label: string, mode: SeriesVisibilityChangeMode) => {
+    this.onFieldConfigChange(
+      seriesVisibilityConfigFactory(label, mode, this.props.panel.fieldConfig, this.state.data.series)
+    );
+  };
+
+  getInitialPanelDataState(): PanelData {
+    return {
+      state: LoadingState.NotStarted,
+      series: [],
+      timeRange: getDefaultTimeRange(),
     };
   }
 
   componentDidMount() {
     const { panel, dashboard } = this.props;
-    panel.events.on(PanelEvents.initialized, () => { });
-    panel.events.on(PanelEvents.refresh, () => this.onRefresh(true));
-    panel.events.on(PanelEvents.render, () => this.onRender(true));
+
+    // Subscribe to panel events
+    this.subs.add(panel.events.subscribe(RefreshEvent, this.onRefresh));
+    this.subs.add(panel.events.subscribe(RenderEvent, this.onRender));
 
     dashboard.panelInitialized(this.props.panel);
 
@@ -85,30 +119,38 @@ export class Panel extends PureComponent<Props, State> {
       this.setState({ isFirstLoad: false });
     }
 
-
-
-    this.querySubscription = panel
-      .getQueryRunner()
-      .getData({ withTransforms: true, withFieldConfig: true })
-      .subscribe({
-        next: data => {
-          this.onDataUpdate(data)
-        }
-      });
+    this.subs.add(
+      panel
+        .getQueryRunner()
+        .getData({ withTransforms: true, withFieldConfig: true })
+        .subscribe({
+          next: (data) => this.onDataUpdate(data),
+        })
+    );
   }
 
   componentWillUnmount() {
-    this.props.panel.events.off(PanelEvents.refresh, this.onRefresh);
-    this.props.panel.events.off(PanelEvents.render, this.onRender);
-    this.props.panel.events.off(PanelEvents.initialized, () => { });
-
-    if (this.querySubscription) {
-      this.querySubscription.unsubscribe();
-    }
+    this.subs.unsubscribe();
   }
 
   componentDidUpdate(prevProps: Props) {
-    const { isInView } = this.props;
+    const { isInView, isEditing } = this.props;
+
+    if (prevProps.dashboard.graphTooltip !== this.props.dashboard.graphTooltip) {
+      this.setState((s) => {
+        return {
+          context: { ...s.context, sync: isEditing ? DashboardCursorSync.Off : this.props.dashboard.graphTooltip },
+        };
+      });
+    }
+
+    if (isEditing !== prevProps.isEditing) {
+      this.setState((s) => {
+        return {
+          context: { ...s.context, sync: isEditing ? DashboardCursorSync.Off : this.props.dashboard.graphTooltip },
+        };
+      });
+    }
 
     // View state has changed
     if (isInView !== prevProps.isInView) {
@@ -121,13 +163,28 @@ export class Panel extends PureComponent<Props, State> {
     }
   }
 
+  shouldComponentUpdate(prevProps: Props, prevState: State) {
+    const { plugin, panel } = this.props;
+
+    // If plugin changed we need to process fieldOverrides again
+    // We do this by asking panel query runner to resend last result
+    if (prevProps.plugin !== plugin) {
+      panel.getQueryRunner().resendLastResult();
+      return false;
+    }
+
+    return true;
+  }
+
   // Updates the response with information from the stream
   // The next is outside a react synthetic event so setState is not batched
   // So in this context we can only do a single call to setState
   onDataUpdate(data: PanelData) {
-    if (!this.props.isInView) {
-      // Ignore events when not visible.
-      // The call will be repeated when the panel comes into view
+    const { dashboard, panel, plugin } = this.props;
+
+    // Ignore this data update if we are now a non data panel
+    if (plugin.meta.skipDataQuery) {
+      this.setState({ data: this.getInitialPanelDataState() });
       return;
     }
 
@@ -160,41 +217,36 @@ export class Panel extends PureComponent<Props, State> {
     this.setState({ isFirstLoad, errorMessage, data });
   }
 
-  onRefresh = (fromEvents?: boolean) => {
+  onRefresh = () => {
     const { panel, isInView, width } = this.props;
+
     if (!isInView) {
       this.setState({ refreshWhenInView: true });
       return;
     }
 
+    const timeData = applyPanelTimeOverrides(panel, this.timeSrv.timeRange());
 
     // Issue Query
     if (this.wantsQueryExecution) {
       if (width < 0) {
-        console.log('Refresh skippted, no width yet... wait till we know');
         return;
       }
-      panel.getQueryRunner().run({
-        datasource: panel.datasource,
-        queries: panel.targets,
-        panelId: panel.id,
-        dashboardId: this.props.dashboard.id,
-        timezone: this.timeSrv.timezone,
-        timeRange: this.timeSrv.timeRange(),
-        timeInfo: "",
-        maxDataPoints: panel.maxDataPoints || width,
-        minInterval: panel.interval,
-        scopedVars: panel.scopedVars,
-        cacheTimeout: panel.cacheTimeout,
-        transformations: panel.transformations,
-      });
+
+      if (this.state.refreshWhenInView) {
+        this.setState({ refreshWhenInView: false });
+      }
+      panel.runAllPanelQueries(this.props.dashboard.id, this.props.dashboard.timezone, timeData, width);
     } else {
       // The panel should render on refresh as well if it doesn't have a query, like clock panel
-      this.onRender();
+      this.setState({
+        data: { ...this.state.data, timeRange: this.timeSrv.timeRange() },
+        renderCounter: this.state.renderCounter + 1,
+      });
     }
   };
 
-  onRender = (fromEvents?: boolean) => {
+  onRender = () => {
     const stateUpdate = { renderCounter: this.state.renderCounter + 1 };
     this.setState(stateUpdate);
   };
@@ -213,6 +265,46 @@ export class Panel extends PureComponent<Props, State> {
     }
   };
 
+  onAnnotationCreate = async (event: AnnotationEventUIModel) => {
+    const isRegion = event.from !== event.to;
+    const anno = {
+      dashboardId: this.props.dashboard.id,
+      panelId: this.props.panel.id,
+      isRegion,
+      time: event.from,
+      timeEnd: isRegion ? event.to : 0,
+      tags: event.tags,
+      text: event.description,
+    };
+    await saveAnnotation(anno);
+    getDashboardQueryRunner().run({ dashboard: this.props.dashboard, range: this.timeSrv.timeRange() });
+    this.state.context.eventBus.publish(new AnnotationChangeEvent(anno));
+  };
+
+  onAnnotationDelete = async (id: string) => {
+    await deleteAnnotation({ id });
+    getDashboardQueryRunner().run({ dashboard: this.props.dashboard, range: this.timeSrv.timeRange() });
+    this.state.context.eventBus.publish(new AnnotationChangeEvent({ id }));
+  };
+
+  onAnnotationUpdate = async (event: AnnotationEventUIModel) => {
+    const isRegion = event.from !== event.to;
+    const anno = {
+      id: event.id,
+      dashboardId: this.props.dashboard.id,
+      panelId: this.props.panel.id,
+      isRegion,
+      time: event.from,
+      timeEnd: isRegion ? event.to : 0,
+      tags: event.tags,
+      text: event.description,
+    };
+    await updateAnnotation(anno);
+
+    getDashboardQueryRunner().run({ dashboard: this.props.dashboard, range: this.timeSrv.timeRange() });
+    this.state.context.eventBus.publish(new AnnotationChangeEvent(anno));
+  };
+
 
   get wantsQueryExecution() {
     return !(this.props.plugin.meta.skipDataQuery);
@@ -222,25 +314,34 @@ export class Panel extends PureComponent<Props, State> {
     this.timeSrv.setTime({
       from: toUtc(timeRange.from),
       to: toUtc(timeRange.to),
-    }, true);
+    });
   };
 
-  renderPanel(width: number, height: number, dashboard: DashboardModel) {
-    const { panel, plugin } = this.props;
-    const { renderCounter, data, isFirstLoad } = this.state;
+  shouldSignalRenderingCompleted(loadingState: LoadingState, pluginMeta: PanelPluginMeta) {
+    return loadingState === LoadingState.Done || pluginMeta.skipDataQuery;
+  }
 
-    // This is only done to increase a counter that is used by backend
-    // image rendering to know when to capture image
-    const loading = data.state;
-    if (loading === LoadingState.Done) {
-    }
+  skipFirstRender(loadingState: LoadingState) {
+    const { isFirstLoad } = this.state;
+    return (
+      this.wantsQueryExecution &&
+      isFirstLoad &&
+      (loadingState === LoadingState.Loading || loadingState === LoadingState.NotStarted)
+    );
+  }
+
+  renderPanel(width: number, height: number) {
+    const { panel, plugin, dashboard } = this.props;
+    const { renderCounter, data } = this.state;
+    const { theme } = config;
+    const { state: loadingState } = data;
 
     // do not render component until we have first data
-    if (isFirstLoad && (loading === LoadingState.Loading || loading === LoadingState.NotStarted)) {
+    if (this.skipFirstRender(loadingState)) {
       return null;
     }
 
-    const PanelComponent = plugin.panel;
+    const PanelComponent = plugin.panel!;
     const timeRange = data.timeRange || this.timeSrv.timeRange();
     const headerHeight = this.hasOverlayHeader() ? 0 : theme.panelHeaderHeight;
     const chromePadding = plugin.noPadding ? 0 : theme.panelPadding;
@@ -250,31 +351,35 @@ export class Panel extends PureComponent<Props, State> {
       'panel-content': true,
       'panel-content--no-padding': plugin.noPadding,
     });
+    const panelOptions = panel.getOptions();
+
+    // Update the event filter (dashboard settings may have changed)
+    // Yes this is called ever render for a function that is triggered on every mouse move
+    this.eventFilter.onlyLocal = dashboard.graphTooltip === 0;
 
     return (
       <>
         <div className={panelContentClassNames}>
-          <PanelComponent
-            id={panel.id}
-            //@ts-ignore
-            dashboardID={dashboard.id}
-            data={data}
-            timeRange={timeRange}
-            timeZone={this.timeSrv.timezone}
-            options={panel.options}
-            fieldConfig={panel.fieldConfig}
-            transparent={panel.transparent}
-            width={panelWidth}
-            height={innerPanelHeight}
-            renderCounter={renderCounter}
-            replaceVariables={panel.replaceVariables}
-            onOptionsChange={this.onOptionsChange}
-            onFieldConfigChange={this.onFieldConfigChange}
-            onChangeTimeRange={this.onChangeTimeRange}
-            // only legacy grafana panels need these
-            panel={panel}
-            dashboard={dashboard}
-          />
+          <PanelContextProvider value={this.state.context}>
+            <PanelComponent
+              id={panel.id}
+              data={data}
+              title={panel.title}
+              timeRange={timeRange}
+              timeZone={this.props.dashboard.timezone}
+              options={panelOptions}
+              fieldConfig={panel.fieldConfig}
+              transparent={panel.transparent}
+              width={panelWidth}
+              height={innerPanelHeight}
+              renderCounter={renderCounter}
+              replaceVariables={panel.replaceVariables}
+              onOptionsChange={this.onOptionsChange}
+              onFieldConfigChange={this.onFieldConfigChange}
+              onChangeTimeRange={this.onChangeTimeRange}
+              eventBus={dashboard.events}
+            />
+          </PanelContextProvider>
         </div>
       </>
     );
@@ -282,12 +387,7 @@ export class Panel extends PureComponent<Props, State> {
 
   hasOverlayHeader() {
     const { panel } = this.props;
-    const { errorMessage, data } = this.state;
-
-    // always show normal header if we have an error message
-    if (errorMessage) {
-      return false;
-    }
+    const { data } = this.state;
 
     // always show normal header if we have time override
     if (data.request && data.request.timeInfo) {
@@ -298,32 +398,35 @@ export class Panel extends PureComponent<Props, State> {
   }
 
   render() {
-    const { dashboard, panel, isViewing, isEditing, width, height,alertState} = this.props;
+    const { dashboard, panel, isViewing, isEditing, width, height } = this.props;
     const { errorMessage, data } = this.state;
     const { transparent } = panel;
+
+    let alertState = config.featureToggles.ngalert ? undefined : data.alertState?.state;
 
     const containerClassNames = classNames({
       'panel-container': true,
       'panel-container--absolute': true,
       'panel-container--transparent': transparent,
       'panel-container--no-title': this.hasOverlayHeader(),
-      'panel-has-alert': panel.alert !== undefined,
       [`panel-alert-state--${alertState}`]: alertState !== undefined,
     });
 
     return (
-      <div className={containerClassNames}>
+      <section
+        className={containerClassNames}
+      >
         <PanelHeader
           panel={panel}
           dashboard={dashboard}
           title={panel.title}
           description={panel.description}
-          scopedVars={panel.scopedVars}
+          links={panel.links}
           error={errorMessage}
           isEditing={isEditing}
           isViewing={isViewing}
-          data={data}
           alertState={alertState}
+          data={data}
         />
         <ErrorBoundary>
           {({ error }) => {
@@ -331,10 +434,10 @@ export class Panel extends PureComponent<Props, State> {
               this.onPanelError(error.message || DEFAULT_PLUGIN_ERROR);
               return null;
             }
-            return this.renderPanel(width, height, dashboard);
+            return this.renderPanel(width, height);
           }}
         </ErrorBoundary>
-      </div>
+      </section>
     );
   }
 }

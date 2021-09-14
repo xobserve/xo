@@ -32,7 +32,7 @@ import darkVars from 'src/styles/dark.json';
 import lightVars from 'src/styles/light.json';
 import { StoreState } from 'src/types'
 
-import { LocationUpdate, setDataSourceService, setBackendSrv, ThemeType, setCurrentTheme, getBackendSrv, setBootConfig,  setLocationSrv,standardFieldConfigEditorRegistry, standardTransformersRegistry, currentLang, createTheme, BootConfig, currentTheme} from 'src/packages/datav-core/src'
+import { LocationUpdate, setDataSourceService, setBackendSrv, ThemeType, setCurrentTheme, getBackendSrv, setBootConfig,  setLocationSrv,standardFieldConfigEditorRegistry, standardTransformersRegistry, currentLang, createTheme, BootConfig, currentTheme, config} from 'src/packages/datav-core/src'
 import {ThemeContext, getTheme ,getStandardFieldConfigs,getStandardOptionEditors, useTheme2} from 'src/packages/datav-core/src/ui'
 import { DatasourceSrv } from 'src/core/services/datasource'
 import { backendSrv } from 'src/core/services/backend'
@@ -52,6 +52,7 @@ import { getUrlParams } from 'src/core/library/utils/url'
 import localeData from 'src/core/library/locale';
 import PreloadError from './PreloadError'
 import { getTheme2 } from 'src/packages/datav-core/src/ui/themes/getTheme';
+import { extend } from 'jquery';
 
 interface Props {
   theme: ThemeType
@@ -106,7 +107,7 @@ const UIApp = (props: Props) => {
     
     // load boot config
     const res = await getBackendSrv().get('/api/bootConfig');
-    const bc:BootConfig = res.data
+    const bc:BootConfig = extend(config,res.data)
     bc.theme2 = createTheme() 
     bc.theme = bc.theme2.v1
     setBootConfig(bc)

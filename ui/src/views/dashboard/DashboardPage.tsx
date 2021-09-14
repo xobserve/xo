@@ -107,9 +107,9 @@ class DashboardPage extends React.PureComponent<DashboardPageProps & RouteCompon
         this.handleAutoSave = this.handleAutoSave.bind(this)
         this.updateVariablesFromUrl = this.updateVariablesFromUrl.bind(this)
 
-        appEvents.on(CoreEvents.keybindingSaveDashboard, this.saveDashboard)
+        appEvents.on(CoreEvents.KeybindingSaveDashboard, this.saveDashboard)
 
-        appEvents.on(CoreEvents.dashboardSaved, this.setOriginDash);
+        appEvents.on(CoreEvents.DashboardSaved, this.setOriginDash);
 
         appEvents.on('dashboard-auto-save', this.handleAutoSave)
 
@@ -179,8 +179,8 @@ class DashboardPage extends React.PureComponent<DashboardPageProps & RouteCompon
         // unregister from changeTracker
         tracker.unregister()
 
-        appEvents.off(CoreEvents.keybindingSaveDashboard, this.saveDashboard)
-        appEvents.off(CoreEvents.dashboardSaved, this.setOriginDash);
+        appEvents.off(CoreEvents.KeybindingSaveDashboard, this.saveDashboard)
+        appEvents.off(CoreEvents.DashboardSaved, this.setOriginDash);
         appEvents.off('dashboard-auto-save', this.handleAutoSave)
 
         // unregister time service notifier
@@ -403,10 +403,9 @@ class DashboardPage extends React.PureComponent<DashboardPageProps & RouteCompon
                         <div className={gridWrapperClasses}>
                             {dashboard.showHeader && !editPanel && config.featureToggles.newVariables && variables.length > 0 &&  <SubMenu dashboard={dashboard} />}
                             <DashboardGrid
-                                alertStates={panelAlertStates}
                                 dashboard={dashboard}
                                 viewPanel={viewPanel}
-                                isPanelEditorOpen={!editPanel}
+                                editPanel={editPanel}
                                 scrollTop={approximateScrollTop}
                             />
                         </div>

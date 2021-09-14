@@ -16,18 +16,19 @@ import templateSrv from 'src/core/services/templating';
 
 // Constants
 import { LS_PANEL_COPY_KEY, PANEL_BORDER } from 'src/core/constants';
-import {CoreEvents} from 'src/types'
+import {CoreEvents, ShowConfirmModalEvent} from 'src/types'
 
 const theme = getBootConfig().theme
 export const removePanel = (dashboard: DashboardModel, panel: PanelModel, ask: boolean) => {
   // confirm deletion
   if (ask !== false) {
-    appEvents.emit(CoreEvents.showConfirmModal, {
+    appEvents.publish(new ShowConfirmModalEvent({
       title: localeData[currentLang]['dashboard.removePanel'],
       text: localeData[currentLang]['dashboard.removePanelConfirm'],
       yesText: localeData[currentLang]['common.remove'],
+      icon: 'trash-alt',
       onConfirm: () => removePanel(dashboard, panel, false),
-    });
+    }));
     return;
   }
   dashboard.removePanel(panel);

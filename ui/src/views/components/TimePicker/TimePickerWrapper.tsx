@@ -26,11 +26,11 @@ const getStyles = stylesFactory(() => {
 
 class UnthemedDashNavTimeControls extends Component<any> {
   componentDidMount() {
-    appEvents.on(CoreEvents.timeRangeUpdated, this.triggerForceUpdate);
+    appEvents.on(CoreEvents.TimeRangeUpdatedEvent, this.triggerForceUpdate);
   }
 
   componentWillUnmount() {
-    appEvents.off(CoreEvents.timeRangeUpdated, this.triggerForceUpdate);
+    appEvents.off(CoreEvents.TimeRangeUpdatedEvent, this.triggerForceUpdate);
   }
 
   triggerForceUpdate = () => {

@@ -2,7 +2,7 @@ import { DataSourceInstanceSettings, ThemeType,DataSourcePluginMeta,CommonConfig
 import { History as RouterHistory } from 'history';
 import _ from 'lodash'
 
-// boot configs ,loaded from backend 
+// boot configs ,loaded from backend,extended with base config below
 export interface BootConfig {
     common:CommonConfig
     datasourceMetas: {string:DataSourcePluginMeta}
@@ -11,6 +11,7 @@ export interface BootConfig {
     sidemenu: any[]
     theme: GrafanaTheme
     theme2: GrafanaTheme2
+    featureToggles: any
 }
 
 let bootConfig:BootConfig = null
@@ -120,6 +121,7 @@ export const config = {
         newEdit: false,
         meta: false,
         newVariables: true,
+        ngalert:false
     },
     buildInfo: {
         buildstamp: 1592571942,

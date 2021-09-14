@@ -7,7 +7,7 @@ import { getNavModel } from 'src/views/Layouts/Page/navModel'
 import { Team } from 'src/types';
 import { getBackendSrv } from 'src/core/services/backend';
 import { InlineFormLabel, ConfirmModal,Button } from 'src/packages/datav-core/src/ui'
-import { getHistory } from 'src/packages/datav-core/src'
+import { getHistory, NavModel } from 'src/packages/datav-core/src'
 import {Input,notification } from 'antd';
 import TeamMemberPicker from 'src/views/components/Pickers/TeamMemberPicker'
 import globalEvents from 'src/views/App/globalEvents';
@@ -138,7 +138,7 @@ export class TeamSettingPage extends PureComponent<Props, State> {
         const { routeID, parentRouteID } = this.props
 
         const { team,hasFetched,confirmVisible,confirmContent} = this.state
-        let navModel;
+        let navModel:NavModel;
         if (team) {
             navModel = _.cloneDeep(getNavModel(routeID, parentRouteID))
             const { node, main } = navModel
@@ -147,7 +147,7 @@ export class TeamSettingPage extends PureComponent<Props, State> {
                 n.url = n.url.replace(":id", team.id)
             })
 
-            navModel.main.title = navModel.main.title + ' / ' + team.name
+            navModel.main.text = navModel.main.text + ' / ' + team.name
         } else {
             navModel = _.cloneDeep(getNavModel(routeID, parentRouteID))
         }

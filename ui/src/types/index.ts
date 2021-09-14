@@ -1,6 +1,3 @@
-import * as CoreEvents from './events';
-export { CoreEvents };
-
 export * from './store'
 export * from './datasource'
 export * from './dashboard'
@@ -15,3 +12,6 @@ export * from './teams'
 export * from './appNotifications'
 export * from './alerting'
 export * from './misc'
+export * from './events'
+import * as CoreEvents from './events';
+export { CoreEvents };

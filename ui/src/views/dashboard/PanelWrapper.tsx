@@ -8,10 +8,10 @@ import { PanelPlugin } from 'src/packages/datav-core/src';
 import {importPanelPlugin} from 'src/plugins/loader'
 import { store } from 'src/store/store';
 import { setPanelPlugin } from 'src/store/reducers/plugins';
-import {Panel} from './Panel'
 import { updatePanel } from 'src/store/reducers/dashboard';
 import {StoreState} from 'src/types'
 import { connect } from 'react-redux';
+import { PanelChrome } from './Panel';
 
 interface Props {
     panel: PanelModel
@@ -91,7 +91,8 @@ class PanelWrapper extends PureComponent<Props, State>{
             }
             
             return (
-              <Panel
+              <PanelChrome
+              //@ts-ignore
                 plugin={plugin}
                 panel={panel}
                 dashboard={dashboard}
@@ -100,7 +101,6 @@ class PanelWrapper extends PureComponent<Props, State>{
                 isInView={isInView}
                 width={width}
                 height={height}
-                alertState={alertState}
               />
             );
           }}
