@@ -3,7 +3,7 @@ import _ from 'lodash'
 import { MenuItem } from 'src/types'
 import { Tree, notification } from 'antd'
 
-import { getBackendSrv } from 'src/core/services/backend';
+import { getBackendSrv } from 'src/core/services/backend/backend';
 import AddMenuItem from './AddMenuItem'
 import ManageMenuItem from './ManageMenuItem'
 import { reservedUrls } from 'src/routes';

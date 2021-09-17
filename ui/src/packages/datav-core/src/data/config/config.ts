@@ -1,6 +1,7 @@
 import { DataSourceInstanceSettings, ThemeType,DataSourcePluginMeta,CommonConfig, GrafanaTheme, GrafanaTheme2} from '../types'
 import { History as RouterHistory } from 'history';
 import _ from 'lodash'
+import { createTheme } from '../themes';
 
 // boot configs ,loaded from backend,extended with base config below
 export interface BootConfig {
@@ -14,7 +15,10 @@ export interface BootConfig {
     featureToggles: any
 }
 
-let bootConfig:BootConfig = null
+let bootConfig:BootConfig = {} as any
+bootConfig.theme2 = createTheme() 
+bootConfig.theme = bootConfig.theme2.v1
+
 export const setBootConfig = (config:BootConfig) => {
     bootConfig = config
 }
@@ -100,6 +104,8 @@ export const config = {
 
     rendererAvailable: false,
     
+    http2Enabled: false,
+
     application: {
         startDate: () => 'now-3h',
         endDate: () => 'now',

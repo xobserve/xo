@@ -3,7 +3,7 @@ import { css } from 'emotion';
 import { GrafanaTheme } from 'src/packages/datav-core/src';
 import { ConfirmModal, stylesFactory, useTheme } from 'src/packages/datav-core/src/ui';
 import { getLocationSrv } from 'src/packages/datav-core/src';
-import { backendSrv } from 'src/core/services/backend';
+import { backendSrv } from 'src/core/services/backend/backend';
 import { DashboardSection, OnDeleteItems } from '../types';
 import { getCheckedUids } from '../utils';
 

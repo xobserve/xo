@@ -9,7 +9,11 @@ import { getTimeSrv } from 'src/core/services/time'
 import {GetVariables,getVariables} from 'src/views/variables/state/selectors'
 import { variableAdapters } from 'src/views/variables/adapters'
 import sortByKeys from 'src/core/library/utils/sortByKeys'
-import { annotationsSrv } from 'src/core/services/annotations'
+
+/**
+ * @alpha
+ */
+ export const DEFAULT_ANNOTATION_COLOR = 'rgba(0, 211, 255, 1)';
 
 export interface CloneOptions {
   saveVariables?: boolean;
@@ -95,9 +99,6 @@ export class DashboardModel {
         this.templating = this.ensureListExist(data.templating);
         this.annotations = this.ensureListExist(data.annotations);
 
-        this.meta = meta || {
-            canEdit: true
-        }
         this.links = data.links || [];
 
         this.schemaVersion = data.schemaVersion || 0;
@@ -105,9 +106,36 @@ export class DashboardModel {
         
         this.timezone = getTimeSrv().timezone
 
+        this.initMeta()
         this.resetOriginalVariables(true);
 
         this.sortPanelsByGridPos();
+
+        this.addBuiltInAnnotationQuery();
+    }
+
+    addBuiltInAnnotationQuery() {
+      let found = false;
+      for (const item of this.annotations.list) {
+        if (item.builtIn === 1) {
+          found = true;
+          break;
+        }
+      }
+  
+      if (found) {
+        return;
+      }
+  
+      this.annotations.list.unshift({
+        datasource: '-- Grafana --',
+        name: 'Annotations & Alerts',
+        type: 'dashboard',
+        iconColor: DEFAULT_ANNOTATION_COLOR,
+        enable: true,
+        hide: true,
+        builtIn: 1,
+      });
     }
 
     on<T>(event: AppEvent<T>, callback: (payload?: T) => void) {
@@ -128,6 +156,26 @@ export class DashboardModel {
         });
     }
 
+    private initMeta(meta?: DashboardMeta) {
+      meta = meta || {};
+  
+      meta.canShare = meta.canShare !== false;
+      meta.canSave = meta.canSave !== false;
+      meta.canStar = meta.canStar !== false;
+      meta.canEdit = meta.canEdit !== false;
+      meta.showSettings = meta.canEdit;
+      meta.canMakeEditable = meta.canSave && !this.editable;
+  
+      if (!this.editable) {
+        meta.canEdit = false;
+        meta.canDelete = false;
+        meta.canSave = false;
+      }
+  
+      this.meta = meta;
+    }
+
+    
     otherPanelInFullscreen(panel: PanelModel) {
         return (this.panelInEdit || this.panelInView) && !(panel.isViewing || panel.isEditing);
     }
@@ -151,12 +199,11 @@ export class DashboardModel {
     }
 
     exitPanelEditor() {
-      this.panelInEdit.destroy();
+      this.panelInEdit?.destroy();
       this.panelInEdit = undefined;
     }
     
     async startRefresh() {
-        await annotationsSrv.getAnnotations()
         this.events.emit(PanelEvents.refresh);
 
         if (this.panelInEdit) {

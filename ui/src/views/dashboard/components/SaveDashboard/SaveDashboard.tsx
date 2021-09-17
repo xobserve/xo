@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react'
 import _ from 'lodash'
 import { Modal, Form, Input, Button, message, Select, notification } from 'antd'
 import { DashboardModel, PanelModel } from 'src/views/dashboard/model'
-import { getBackendSrv } from 'src/core/services/backend';
+import { getBackendSrv } from 'src/core/services/backend/backend';
 
 import { locationUtil, localeData, currentLang } from 'src/packages/datav-core/src';
 import { useHistory } from 'react-router-dom';

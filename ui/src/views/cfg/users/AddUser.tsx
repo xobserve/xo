@@ -3,7 +3,7 @@ import { Controller as InputControl } from 'react-hook-form';
 import { LinkButton,Form,Field,Input} from 'src/packages/datav-core/src/ui'
 
 import {Modal,Button, notification} from 'antd'
-import {getBackendSrv} from 'src/core/services/backend'
+import {getBackendSrv} from 'src/core/services/backend/backend'
 import isEmail from 'validator/lib/isEmail';
 import { Role } from 'src/types';
 import RolePicker from 'src/views/components/Pickers/RolePicker'

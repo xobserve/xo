@@ -10,7 +10,7 @@ import { getNavModel } from '../../Layouts/Page/navModel';
 import { withRouter } from 'react-router-dom';
 
 import { FolderDTO } from 'src/types';
-import { getBackendSrv } from 'src/core/services/backend';
+import { getBackendSrv } from 'src/core/services/backend/backend';
 import {ManageDashboards} from './ManageDashboards'
   
 

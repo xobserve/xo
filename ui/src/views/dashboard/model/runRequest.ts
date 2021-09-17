@@ -3,7 +3,7 @@ import { Observable, of, timer, merge, from } from 'rxjs';
 import { flatten, map as lodashMap, isArray, isString } from 'lodash';
 import { map, catchError, takeUntil, mapTo, share, finalize } from 'rxjs/operators';
 // Utils & Services
-import { backendSrv } from 'src/core/services/backend';
+import { backendSrv } from 'src/core/services/backend/backend';
 // Types
 import {
   DataSourceApi,

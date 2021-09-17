@@ -5,7 +5,7 @@ import _ from 'lodash'
 import Page from 'src/views/Layouts/Page/Page';
 import { getNavModel } from 'src/views/Layouts/Page/navModel'
 import { Team, isAdmin } from 'src/types';
-import { getBackendSrv } from 'src/core/services/backend';
+import { getBackendSrv } from 'src/core/services/backend/backend';
 import MemberTable from './Member/MemberTable'
 import AddMember from './Member/AddMember'
 import { TeamMember } from 'src/types';

@@ -1,4 +1,4 @@
-import { backendSrv } from './backend';
+import { backendSrv } from './backend/backend';
 
 const hitTypes = {
   FOLDER: 'dash-folder',

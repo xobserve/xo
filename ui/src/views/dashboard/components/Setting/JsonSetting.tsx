@@ -7,7 +7,7 @@ import "ace-builds/src-noconflict/mode-json";
 import "ace-builds/src-noconflict/theme-solarized_light";
 import "ace-builds/src-noconflict/theme-tomorrow_night_blue";
 import { currentTheme, ThemeType, locationUtil } from 'src/packages/datav-core/src';
-import {getBackendSrv} from 'src/core/services/backend'
+import {getBackendSrv} from 'src/core/services/backend/backend'
  import { Button} from 'antd';
 import { FormattedMessage } from 'react-intl';
 

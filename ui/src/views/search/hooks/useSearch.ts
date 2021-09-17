@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
 import { useDebounce } from 'react-use';
 import { SearchSrv } from 'src/core/services/search';
-import { backendSrv } from 'src/core/services/backend';
+import { backendSrv } from 'src/core/services/backend/backend';
 import { FETCH_RESULTS, FETCH_ITEMS, TOGGLE_SECTION, SEARCH_START, FETCH_ITEMS_START } from '../reducers/actionTypes';
 import { DashboardSection, UseSearch } from '../types';
 import { hasId, getParsedQuery } from '../utils';

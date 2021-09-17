@@ -5,7 +5,7 @@ import {  GrafanaTheme } from 'src/packages/datav-core/src';
 import { FolderInfo } from 'src/types';
 import { FolderPicker } from 'src/views/components/Pickers/FolderPicker';
 
-import { backendSrv } from 'src/core/services/backend';
+import { backendSrv } from 'src/core/services/backend/backend';
 import { DashboardSection, OnMoveItems } from '../types';
 import { getCheckedDashboards } from '../utils';
 import { notification } from 'antd';

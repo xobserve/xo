@@ -5,7 +5,7 @@ import _ from 'lodash'
 import Page from 'src/views/Layouts/Page/Page';
 import { getNavModel } from 'src/views/Layouts/Page/navModel'
 import { FolderDTO } from 'src/types';
-import { getBackendSrv } from 'src/core/services/backend';
+import { getBackendSrv } from 'src/core/services/backend/backend';
 import {  getHistory, NavModel} from 'src/packages/datav-core/src'
 import { InlineFormLabel, ConfirmModal,Button} from 'src/packages/datav-core/src/ui'
 import {  Input,notification } from 'antd';

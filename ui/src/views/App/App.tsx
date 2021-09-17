@@ -35,7 +35,7 @@ import { StoreState } from 'src/types'
 import { LocationUpdate, setDataSourceService, setBackendSrv, ThemeType, setCurrentTheme, getBackendSrv, setBootConfig,  setLocationSrv,standardFieldConfigEditorRegistry, standardTransformersRegistry, currentLang, createTheme, BootConfig, currentTheme, config} from 'src/packages/datav-core/src'
 import {ThemeContext, getTheme ,getStandardFieldConfigs,getStandardOptionEditors, useTheme2} from 'src/packages/datav-core/src/ui'
 import { DatasourceSrv } from 'src/core/services/datasource'
-import { backendSrv } from 'src/core/services/backend'
+import { backendSrv } from 'src/core/services/backend/backend'
 
 import { TimeSrv, setTimeSrv } from 'src/core/services/time';
 import { KeybindingSrv, setKeybindingSrv } from 'src/core/services/keybinding'
@@ -53,6 +53,7 @@ import localeData from 'src/core/library/locale';
 import PreloadError from './PreloadError'
 import { getTheme2 } from 'src/packages/datav-core/src/ui/themes/getTheme';
 import { extend } from 'jquery';
+import { dashboardSrv, setDashboardSrv } from '../dashboard/services/dashboard_srv';
 
 interface Props {
   theme: ThemeType
@@ -128,6 +129,9 @@ const UIApp = (props: Props) => {
     // init keybinding service
     initKeybindingService()
 
+    // init dashboard service
+    initDashboardService()
+
     // init link service
     const linkSrv = new LinkSrv()
     setLinkSrv(linkSrv)
@@ -196,6 +200,10 @@ function initDatasourceService() {
 
 function initBackendService() {
   setBackendSrv(backendSrv)
+}
+
+function initDashboardService() {
+  setDashboardSrv(dashboardSrv)
 }
 
 

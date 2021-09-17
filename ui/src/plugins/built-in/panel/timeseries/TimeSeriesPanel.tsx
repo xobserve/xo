@@ -32,7 +32,7 @@ export const TimeSeriesPanel: React.FC<TimeSeriesPanelProps> = ({
       </div>
     );
   }
-
+  
   const enableAnnotationCreation = Boolean(canAddAnnotations && canAddAnnotations());
   return (
     <TimeSeries

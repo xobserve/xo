@@ -4,7 +4,7 @@ import {Form} from 'src/packages/datav-core/src/ui'
 import { ImportDashboardForm } from './ImportDashboardForm';
 import { getUrlParams } from 'src/core/library/utils/url';
 import  {DashboardInputs,DashboardSource,ImportDashboardDTO}  from '../../model/import'
-import {getBackendSrv} from 'src/core/services/backend'
+import {getBackendSrv} from 'src/core/services/backend/backend'
 interface Props {
     dashboard: ImportDashboardDTO;
     inputs: DashboardInputs;

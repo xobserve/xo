@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { getBackendSrv } from 'src/core/services/backend'
+import { getBackendSrv } from 'src/core/services/backend/backend'
 import {Select} from 'antd'
 import { TeamMember } from 'src/types'
 

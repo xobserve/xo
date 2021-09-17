@@ -3,7 +3,7 @@ import { GenericDataSourcePlugin } from './settings'
 import { builtInPlugins } from './built_in_plugins'
 import { externalPlugins } from './external_plugins'
 import { getPanelPluginNotFound, getPanelPluginLoadError } from 'src/views/dashboard/PanelPluginError'
-import { getBackendSrv } from 'src/core/services/backend';
+import { getBackendSrv } from 'src/core/services/backend/backend';
 import { getDatasourceSrv } from 'src/core/services/datasource';
 import { message } from 'antd'
 import { store } from 'src/store/store';

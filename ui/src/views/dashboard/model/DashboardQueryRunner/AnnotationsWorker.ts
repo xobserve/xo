@@ -35,6 +35,7 @@ export class AnnotationsWorker implements DashboardQueryRunnerWorker {
     }
 
     const { dashboard, range } = options;
+
     const annotations = dashboard.annotations.list.filter(AnnotationsWorker.getAnnotationsToProcessFilter);
     const observables = annotations.map((annotation) => {
       const datasourcePromise = getDataSourceService().get(annotation.datasource);

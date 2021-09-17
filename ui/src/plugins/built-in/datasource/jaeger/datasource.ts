@@ -15,7 +15,6 @@ import { Observable, from, of } from 'rxjs';
 import { map } from 'rxjs/operators';
 
 import { getTimeSrv } from 'src/core/services/time';
-import { DatasourceRequestOptions } from 'src/core/services/backend';
 import { serializeParams } from 'src/core/library/utils/fetch';
 
 export type JaegerQuery = {
@@ -155,7 +154,7 @@ export class JaegerDatasource extends DataSourceApi<JaegerQuery> {
     return query.query;
   }
 
-  private _request(apiUrl: string, data?: any, options?: DatasourceRequestOptions): Observable<Record<string, any>> {
+  private _request(apiUrl: string, data?: any, options?): Observable<Record<string, any>> {
     // Hack for proxying metadata requests
     const baseUrl = `/api/proxy/${this.instanceSettings.id}`;
     const params = data ? serializeParams(data) : '';

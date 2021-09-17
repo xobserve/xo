@@ -115,18 +115,18 @@ function HeaderWrapper(props: Props) {
                 <div>
                     <div className="ub-mr1">
                         <Tooltip title={<Message id={'dashboard.addPanel'} />}><Button icon={<Icon name="panel-add" />} onClick={() => props.onAddPanel()} /></Tooltip>
-                        <Tooltip title={<Message id={'common.save'} />}>{<Button icon={!inSave ? <SaveOutlined translate onClick={() => props.onSaveDashboard()} /> : <LoadingOutlined  translate className="color-success" />} />}</Tooltip>
+                        <Tooltip title={<Message id={'common.save'} />}>{<Button icon={!inSave ? <SaveOutlined translate="true" onClick={() => props.onSaveDashboard()} /> : <LoadingOutlined  translate className="color-success" />} />}</Tooltip>
                         <Tooltip title={<Message id={'common.setting'} />}>
-                            <Button icon={<SettingOutlined translate/>} onClick={
+                            <Button icon={<SettingOutlined translate="true"/>} onClick={
                                 () => store.dispatch(updateLocation({ query: { settingView: 'general' }, partial: true }))
                             } />
                         </Tooltip>
                         {/* {props.variables.length > 0 && <Tooltip title={<Message id={'common.globalVariable'} />}>
                             <Button icon={<CalculatorOutlined />} onClick={() => setShowGlobalVar(true)} />
                         </Tooltip>} */}
-                        <Tooltip title={<Message id={'dashboard.viewMode'} />}>{<Button icon={<DesktopOutlined translate onClick={toggleViewMode} />} />}</Tooltip>
+                        <Tooltip title={<Message id={'dashboard.viewMode'} />}>{<Button icon={<DesktopOutlined translate="true" onClick={toggleViewMode} />} />}</Tooltip>
                         <Tooltip title={<Message id='dashboard.addUrl'/>} placement="bottom">
-                            <Button icon={  <PlusOutlined translate />} onClick={() => props.onUpdateUrl()} />
+                            <Button icon={  <PlusOutlined translate="true" />} onClick={() => props.onUpdateUrl()} />
                         </Tooltip>
                     </div>
                     <TimePickerWrapper />

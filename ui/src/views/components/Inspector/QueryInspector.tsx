@@ -10,7 +10,7 @@ import { getPanelInspectorStyles } from './styles';
 
 import { css } from '@emotion/css';  
 import { Subscription } from 'rxjs';
-import { backendSrv } from 'src/core/services/backend';
+import { backendSrv } from 'src/core/services/backend/backend';
 // import { RefreshEvent } from 'app/types/events';
 import appEvents from 'src/core/library/utils/app_events';
 import { PanelModel } from 'src/views/dashboard/model';

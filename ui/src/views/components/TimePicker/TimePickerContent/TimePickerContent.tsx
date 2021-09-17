@@ -198,7 +198,7 @@ const NarrowScreenForm: React.FC<FormProps> = props => {
     <>
       <div className={styles.header} onClick={() => setCollapsed(!collapsed)}>
         <TimePickerTitle><Message id="dashboard.timePickerTitle" /></TimePickerTitle>
-        {collapsed ? <UpOutlined translate />: <DownOutlined translate/>}
+        {collapsed ? <UpOutlined translate="true" />: <DownOutlined translate="true"/>}
       </div>
       {collapsed && (
         <div className={styles.body}>

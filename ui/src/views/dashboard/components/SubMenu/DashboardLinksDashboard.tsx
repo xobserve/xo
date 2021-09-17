@@ -3,7 +3,7 @@ import React, { PureComponent } from 'react';
 import { Icon, Tooltip } from 'src/packages/datav-core/src/ui';
 import { textUtil} from 'src/packages/datav-core/src';
 
-import { getBackendSrv } from 'src/core/services/backend';
+import { getBackendSrv } from 'src/core/services/backend/backend';
 import { getLinkSrv } from 'src/core/services/link';
 import { DashboardLink } from '../../model/DashboardModel';
 import { DashboardSearchHit } from 'src/types';

@@ -90,7 +90,7 @@ export class PanelHeader extends Component<Props, State> {
   private renderLoadingState(): JSX.Element {
     return (
       <div className="panel-loading">
-        <SyncOutlined spin translate />
+        <SyncOutlined spin translate="true" />
       </div>
     );
   }

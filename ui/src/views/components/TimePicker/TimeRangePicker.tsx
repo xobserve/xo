@@ -151,9 +151,9 @@ export class UnthemedTimeRangePicker extends PureComponent<Props&any, State> {
           <div>
             <Tooltip title={<TimePickerTooltip timeRange={value} timeZone={timeZone} />} placement="bottom">
               <Button aria-label="TimePicker Open Button" onClick={this.onOpen}>
-                <ClockCircleOutlined translate className={cx(styles.clockIcon, timePickerIconClass)} />
+                <ClockCircleOutlined translate="true" className={cx(styles.clockIcon, timePickerIconClass)} />
                 <TimePickerButtonLabel {...this.props} />
-                <span className={styles.caretIcon}>{isOpen ? <UpOutlined translate /> : <DownOutlined translate />}</span>
+                <span className={styles.caretIcon}>{isOpen ? <UpOutlined translate="true" /> : <DownOutlined translate="true" />}</span>
               </Button>
             </Tooltip>
             {isOpen && (

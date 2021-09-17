@@ -4,7 +4,7 @@ import _ from 'lodash'
 import { dateTime, currentLang ,localeData} from 'src/packages/datav-core/src'
 import { AnnotationEvent } from 'src/packages/datav-core/src'
 import { DashboardModel } from 'src/views/dashboard/model/DashboardModel'
-import { annotationsSrv } from 'src/core/services/annotations'
+import { annotationsSrv } from 'src/views/annotations/annotations_srv'
 import { Button,notification } from 'antd'
 
 interface Props {
@@ -62,14 +62,14 @@ const AnnotationEditor = (props: Props) => {
 
         props.close()
         // update annotations and re-render this panel
-        await annotationsSrv.getAnnotations()
+        // await annotationsSrv.getAnnotations()
         props.onChange()
     }
 
     const deleteAnnotation = async () => {
         await annotationsSrv.deleteAnnotationEvent(props.rawEvent)     
         // update annotations and re-render this panel
-        await annotationsSrv.getAnnotations()
+        // await annotationsSrv.getAnnotations()
         notification['success']({
             message: "Success",
             description: localeData[currentLang]['info.targetDeleted'],

@@ -246,7 +246,7 @@ const Header = memo<Props>(({ onClose }) => {
   return (
     <div className={styles.container}>
       <TimePickerTitle>Select a time range</TimePickerTitle>
-      <ClockCircleOutlined translate onClick={onClose} />
+      <ClockCircleOutlined translate="true" onClick={onClose} />
     </div>
   );
 });

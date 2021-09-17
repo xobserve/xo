@@ -5,7 +5,7 @@ import _ from 'lodash'
 import Page from 'src/views/Layouts/Page/Page';
 import { getNavModel } from 'src/views/Layouts/Page/navModel'
 import { Team, SideMenu ,StoreState} from 'src/types';
-import { getBackendSrv } from 'src/core/services/backend';
+import { getBackendSrv } from 'src/core/services/backend/backend';
 import { InlineFormLabel,IconName,LegacyForms} from 'src/packages/datav-core/src/ui'
 import { Button, Input,notification, Tooltip, Tag } from 'antd';
 import EmptyListCTA from 'src/views/components/EmptyListCTA/EmptyListCTA';

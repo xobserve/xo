@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { LinkButton,Form,Field,Input} from 'src/packages/datav-core/src/ui'
 import {Modal,Button, notification} from 'antd'
-import {getBackendSrv} from 'src/core/services/backend'
+import {getBackendSrv} from 'src/core/services/backend/backend'
 import { useIntl,FormattedMessage } from 'react-intl'
 import localeData from 'src/core/library/locale'
 import { getState } from 'src/store/store'

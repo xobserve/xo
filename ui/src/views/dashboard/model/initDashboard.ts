@@ -6,13 +6,24 @@ import { getBackendSrv, config, getTemplateSrv, currentLang } from "src/packages
 import { store } from 'src/store/store'
 import { initDashboardTemplating, processVariables, completeDashboardTemplating } from "src/views/variables/state/actions";
 import { dashboardInitCompleted, dashboardInitError } from "src/store/reducers/dashboard";
-import { annotationsSrv } from 'src/core/services/annotations';
+import { annotationsSrv } from 'src/views/annotations/annotations_srv';
 import { message } from "antd";
 import localStore from "src/core/library/utils/localStore";
 import { getKeybindingSrv } from "src/core/services/keybinding";
 import { Langs } from "src/core/library/locale/types";
+import { getTimeSrv, TimeSrv } from "src/core/services/time";
+import { DashboardSrv, getDashboardSrv } from "../services/dashboard_srv";
+import { createDashboardQueryRunner } from "./DashboardQueryRunner/DashboardQueryRunner";
 
-
+/**
+ * This action (or saga) does everything needed to bootstrap a dashboard & dashboard model.
+ * First it handles the process of fetching the dashboard, correcting the url if required (causing redirects/url updates)
+ *
+ * This is used both for single dashboard & solo panel routes, home & new dashboard routes.
+ *
+ * Then it handles the initializing of the old angular services that the dashboard components & panels still depend on
+ *
+ */
 export function initDashboard(uid: string | undefined, initOrigin?: any): ThunkResult<void> {
   return async (dispatch, getState) => {
     // try {
@@ -88,7 +99,16 @@ export function initDashboard(uid: string | undefined, initOrigin?: any): ThunkR
 
     getKeybindingSrv().setupDashboardBindings(ds)
 
-    annotationsSrv.init(ds);
+    // init services
+    const timeSrv:TimeSrv  = getTimeSrv();
+    const dashboardSrv: DashboardSrv = getDashboardSrv();
+    
+    // legacy srv state, we need this value updated for built-in annotations
+    dashboardSrv.setCurrent(ds);
+
+    const runner = createDashboardQueryRunner({ dashboard:ds, timeSrv:timeSrv });
+    runner.run({ dashboard:ds, range: timeSrv.timeRange() });
+
     initOrigin(ds)
     
     dispatch(dashboardInitCompleted(ds))

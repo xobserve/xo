@@ -1,4 +1,4 @@
-import { backendSrv } from 'src/core/services/backend';
+import { backendSrv } from 'src/core/services/backend/backend';
 
 export const loadFolderPage = (uid: string, activeChildId: string) => {
   const navModel = {

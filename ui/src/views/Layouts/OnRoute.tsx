@@ -7,7 +7,7 @@ import { setHistory, getBootConfig} from 'src/packages/datav-core/src'
 import { getTimeSrv } from 'src/core/services/time'
 import appEvents from 'src/core/library/utils/app_events'
 import { CoreEvents } from 'src/types'
-import { getBackendSrv } from 'src/core/services/backend'
+import { getBackendSrv } from 'src/core/services/backend/backend'
 import { updateUser } from 'src/store/reducers/user'
 
 

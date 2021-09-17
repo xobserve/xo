@@ -17,7 +17,7 @@ import { getAnnotationsByPanelId } from './utils';
 import { DashboardModel } from '..';
 import { getTimeSrv, TimeSrv } from 'src/core/services/time';
 import { RefreshEvent } from '../../../../types/events';
-import { dedupAnnotations } from 'src/views/annotations/events_process';
+import { dedupAnnotations } from 'src/views/annotations/events_processing';
 
 class DashboardQueryRunnerImpl implements DashboardQueryRunner {
   private readonly results: ReplaySubject<DashboardQueryRunnerWorkerResult>;

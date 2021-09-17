@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import _ from 'lodash'
-import { getBackendSrv } from 'src/core/services/backend'
+import { getBackendSrv } from 'src/core/services/backend/backend'
 import {Select} from 'antd'
 import { Team } from 'src/types'
 

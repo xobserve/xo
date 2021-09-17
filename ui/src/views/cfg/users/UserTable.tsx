@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import { UserState } from 'src/store/reducers/user'
 import { Table, Space, Modal,notification,Tag,Tooltip} from 'antd'
 import UserProfile from './components/UserProfile'
-import { getBackendSrv } from 'src/core/services/backend';
+import { getBackendSrv } from 'src/core/services/backend/backend';
 import { getState } from 'src/store/store';
 import { isAdmin } from 'src/types';
 import { useIntl,FormattedMessage } from 'react-intl';

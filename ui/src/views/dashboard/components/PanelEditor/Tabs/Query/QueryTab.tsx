@@ -24,7 +24,7 @@ import { css } from 'emotion';
 
 import DataSourcePicker from 'src/views/components/Pickers/DataSourcePicker';
 import { getDatasourceSrv } from 'src/core/services/datasource';
-import { backendSrv } from 'src/core/services/backend';
+import { backendSrv } from 'src/core/services/backend/backend';
 import { PluginHelp } from 'src/views/cfg/plugins/PluginHelp';
 import { addQuery } from 'src/core/library/utils/query';
 import { notification } from 'antd';

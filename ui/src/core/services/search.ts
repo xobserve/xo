@@ -5,7 +5,7 @@ import { contextSrv } from './context';
 import { hasFilters } from 'src/views/search/utils';
 import { SECTION_STORAGE_KEY } from 'src/views/search/constants';
 import { DashboardSection, DashboardSearchItemType, DashboardSearchHit, SearchLayout } from 'src/views/search/types';
-import { backendSrv } from './backend';
+import { backendSrv } from './backend/backend';
 import localStore from '../library/utils/localStore';
 
 interface Sections {

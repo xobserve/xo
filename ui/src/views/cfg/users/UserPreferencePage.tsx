@@ -5,7 +5,7 @@ import Page from 'src/views/Layouts/Page/Page';
 import { getNavModel } from 'src/views/Layouts/Page/navModel';
 import { Input, notification,Select, Tooltip} from 'antd';
 
-import { getBackendSrv } from 'src/core/services/backend';
+import { getBackendSrv } from 'src/core/services/backend/backend';
 import { getState } from 'src/store/store';
 import { UserState } from 'src/store/reducers/user';
 import isEmail from 'validator/lib/isEmail';

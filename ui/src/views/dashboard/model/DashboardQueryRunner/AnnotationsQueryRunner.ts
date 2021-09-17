@@ -5,7 +5,7 @@ import { AnnotationEvent, DataSourceApi } from 'src/packages/datav-core/src';
 import { AnnotationQueryRunner, AnnotationQueryRunnerOptions } from './types';
 import { PanelModel } from '..';
 import { handleAnnotationQueryRunnerError } from './utils';
-import { executeAnnotationQuery } from 'src/core/services/annotations';
+import { executeAnnotationQuery } from 'src/views/annotations/annotations_srv';
 
 export class AnnotationsQueryRunner implements AnnotationQueryRunner {
   canRun(datasource: DataSourceApi): boolean {
@@ -18,9 +18,8 @@ export class AnnotationsQueryRunner implements AnnotationQueryRunner {
     }
 
     const panel: PanelModel = ({} as unknown) as PanelModel; // deliberate setting panel to empty object because executeAnnotationQuery shouldn't depend on panelModel
-
     return executeAnnotationQuery({ dashboard, range, panel }, datasource, annotation).pipe(
-      map((result) => {
+      map((result) => { 
         return result.events ?? [];
       }),
       catchError(handleAnnotationQueryRunnerError)

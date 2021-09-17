@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { DashboardModel } from '../../model';
 import { notification, Tooltip } from 'antd';
 import TeamPicker from 'src/views/components/Pickers/TeamPicker'
-import { getBackendSrv } from 'src/core/services/backend';
+import { getBackendSrv } from 'src/core/services/backend/backend';
 import {localeData, currentLang} from 'src/packages/datav-core/src';
 import { ConfirmModal,Button} from 'src/packages/datav-core/src/ui';
 import AddExtraPermission from './components/AddExtraPermission'

@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { LinkButton,Form,Field,Input} from 'src/packages/datav-core/src/ui'
 import {Modal,Button, notification, message} from 'antd'
-import {getBackendSrv} from 'src/core/services/backend'
+import {getBackendSrv} from 'src/core/services/backend/backend'
 import appEvents from 'src/core/library/utils/app_events'
 import UserPicker from 'src/views/components/Pickers/UserPicker'
 import RolePicker from 'src/views/components/Pickers/RolePicker'

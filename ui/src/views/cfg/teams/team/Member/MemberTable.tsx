@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { Table, Space, Modal,notification, Tag} from 'antd'
-import { getBackendSrv } from 'src/core/services/backend';
+import { getBackendSrv } from 'src/core/services/backend/backend';
 import { TeamMember, isAdmin } from 'src/types';
 import { ConfirmModal } from 'src/packages/datav-core/src/ui';
 import appEvents from 'src/core/library/utils/app_events';

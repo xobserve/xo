@@ -206,6 +206,7 @@ class DashboardPage extends React.PureComponent<DashboardPageProps & RouteCompon
             return
         }
 
+
         if (!editPanel && editPanelId) {
             const panel = this.getPanelByIdFromUrlParam(editPanelId)
             this.setState({

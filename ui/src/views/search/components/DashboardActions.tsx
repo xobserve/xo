@@ -2,7 +2,7 @@ import React, { FC, useState } from 'react';
 import { HorizontalGroup, LinkButton, Form , Field,Input, Button} from 'src/packages/datav-core/src/ui';
 import {  config, getHistory} from 'src/packages/datav-core/src';
 import { Modal, message } from 'antd';
-import { getBackendSrv } from 'src/core/services/backend';
+import { getBackendSrv } from 'src/core/services/backend/backend';
 import globalEvents from 'src/views/App/globalEvents';
 import { FormattedMessage } from 'react-intl';
 
