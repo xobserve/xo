@@ -153,13 +153,13 @@ export class GrafanaDatasource extends DataSourceApi<GrafanaQuery> {
       params.tags = tags;
     }
 
-    const annotations = await getBackendSrv().get(
+    const res = await getBackendSrv().get(
       '/api/annotations',
       params,
       `grafana-data-source-annotations-${annotation.name}-${options.dashboard?.id}`
     );
 
-    return { data: [toDataFrame(annotations)] };
+    return { data: [toDataFrame(res.data)] };
   }
 
   testDatasource() {

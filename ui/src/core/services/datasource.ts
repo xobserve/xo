@@ -49,12 +49,29 @@ export class DatasourceSrv implements DataSourceService {
 
             name = names[0]
         }
-
-
         
-        const dsConfig = getBootConfig().datasources[name]
-        if (!dsConfig) {
-            return Promise.reject({ message: `Datasource named ${name} was  not found in bootConfig` })
+        let dsConfig
+        if (name === "-- Grafana --") {
+            dsConfig = {
+                id:0,
+                uid: "0",
+                name: "-- Grafana --",
+                type: "grafana",
+                isDefault: true,
+                meta: {
+                    annotations: true,
+                    id: "grafana",
+                    metrics: true,
+                    name:  "-- Grafana --",
+                    type: "datasource",
+                    module: "src/plugins/built-in/datasource/grafana/module"
+                }
+            }
+        } else {
+            dsConfig = getBootConfig().datasources[name]
+            if (!dsConfig) {
+                return Promise.reject({ message: `Datasource named ${name} was  not found in bootConfig` })
+            }
         }
 
         try {

@@ -5,5 +5,12 @@
 
   "builtIn": true,
   "annotations": true,
-  "metrics": true
+  "metrics": true,
+  "info": {
+      "description": "Grafana datasource for internal uses",
+      "logos": {
+          "small": "grafana-logo.svg",
+          "large": "grafana-logo.svg"
+      }
+  }
 }

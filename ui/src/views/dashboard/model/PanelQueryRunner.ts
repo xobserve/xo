@@ -1,52 +1,59 @@
 // Libraries
 import { cloneDeep } from 'lodash';
-import {MonoTypeOperatorFunction,of, ReplaySubject, Unsubscribable, Observable } from 'rxjs';
-import { map ,mergeMap} from 'rxjs/operators';
+import { MonoTypeOperatorFunction, Observable, of, ReplaySubject, Unsubscribable } from 'rxjs';
+import { map, mergeMap } from 'rxjs/operators';
 
 // Services & Utils
-import { getDatasourceSrv } from 'src/core/services/datasource';
-import kbn from 'src/core/library/utils/kbn';
-import templateSrv from 'src/core/services/templating';
-import { runRequest, preProcessPanelData } from './runRequest';
+import { preProcessPanelData, runRequest } from './runRequest';
 
 // Types
 import {
-  PanelData,
-  DataQuery,
+  applyFieldOverrides,
+  compareArrayValues,
+  compareDataFrameStructures,
   CoreApp,
+  DataConfigSource,
+  DataFrame,
+  DataQuery,
   DataQueryRequest,
   DataSourceApi,
   DataSourceJsonData,
-  TimeRange,
   DataTransformerConfig,
-  transformDataFrame,
+  LoadingState,
+  PanelData,
+  rangeUtil,
   ScopedVars,
-  applyFieldOverrides,
-  DataConfigSource,
+  TimeRange,
   TimeZone,
-} from 'src/packages/datav-core/src';
+  transformDataFrame,
+} from 'src/packages/datav-core/src/data';
+import { getDashboardQueryRunner } from './DashboardQueryRunner/DashboardQueryRunner';
+import { mergePanelAndDashData } from './mergePanelAndDashData';
+import { getTemplateSrv } from 'src/packages/datav-core/src';
+
+import { PanelModel } from './PanelModel';
+import { getDatasourceSrv } from 'src/core/services/datasource';
 
 export interface QueryRunnerOptions<
   TQuery extends DataQuery = DataQuery,
   TOptions extends DataSourceJsonData = DataSourceJsonData
 > {
-  datasource: string | DataSourceApi<TQuery, TOptions>;
+  datasource: string | DataSourceApi<TQuery, TOptions> | null;
   queries: TQuery[];
-  panelId: number;
+  panelId?: number;
   dashboardId?: number;
-  timezone?: string;
+  timezone: TimeZone;
   timeRange: TimeRange;
   timeInfo?: string; // String description of time range for display
   maxDataPoints: number;
   minInterval: string | undefined | null;
   scopedVars?: ScopedVars;
   cacheTimeout?: string;
-  delayStateNotification?: number; // default 100ms.
   transformations?: DataTransformerConfig[];
 }
 
 let counter = 100;
-function getNextRequestId() {
+export function getNextRequestId() {
   return 'Q' + counter++;
 }
 
@@ -56,11 +63,10 @@ export interface GetDataOptions {
 }
 
 export class PanelQueryRunner {
-  private subject?: ReplaySubject<PanelData>;
+  private subject: ReplaySubject<PanelData>;
   private subscription?: Unsubscribable;
   private lastResult?: PanelData;
   private dataConfigSource: DataConfigSource;
-  private timeZone?: TimeZone;
 
   constructor(dataConfigSource: DataConfigSource) {
     this.subject = new ReplaySubject(1);
@@ -72,38 +78,90 @@ export class PanelQueryRunner {
    */
   getData(options: GetDataOptions): Observable<PanelData> {
     const { withFieldConfig, withTransforms } = options;
+    let structureRev = 1;
+    let lastData: DataFrame[] = [];
+    let processedCount = 0;
+    let lastConfigRev = -1;
+    const fastCompare = (a: DataFrame, b: DataFrame) => {
+      return compareDataFrameStructures(a, b, true);
+    };
 
     return this.subject.pipe(
       this.getTransformationsStream(withTransforms),
       map((data: PanelData) => {
         let processedData = data;
+        let sameStructure = false;
 
-        if (withFieldConfig) {
-          // Apply field defaults & overrides
-          const fieldConfig = this.dataConfigSource.getFieldOverrideOptions();
+        if (withFieldConfig && data.series?.length) {
+          // Apply field defaults and overrides
+          let fieldConfig = this.dataConfigSource.getFieldOverrideOptions();
+          let processFields = fieldConfig != null;
 
-          if (fieldConfig) {
+          // If the shape is the same, we can skip field overrides
+          if (
+            data.state === LoadingState.Streaming &&
+            processFields &&
+            processedCount > 0 &&
+            lastData.length &&
+            lastConfigRev === this.dataConfigSource.configRev
+          ) {
+            const sameTypes = compareArrayValues(lastData, processedData.series, fastCompare);
+            if (sameTypes) {
+              // Keep the previous field config settings
+              processedData = {
+                ...processedData,
+                series: lastData.map((frame, frameIndex) => ({
+                  ...frame,
+                  length: data.series[frameIndex].length,
+                  fields: frame.fields.map((field, fieldIndex) => ({
+                    ...field,
+                    values: data.series[frameIndex].fields[fieldIndex].values,
+                    state: {
+                      ...field.state,
+                      calcs: undefined,
+                      // add global range calculation here? (not optimal for streaming)
+                      range: undefined,
+                    },
+                  })),
+                })),
+              };
+              processFields = false;
+              sameStructure = true;
+            }
+          }
+
+          if (processFields) {
+            lastConfigRev = this.dataConfigSource.configRev!;
+            processedCount++; // results with data
             processedData = {
               ...processedData,
               series: applyFieldOverrides({
-                timeZone: this.timeZone,
+                timeZone: data.request?.timezone ?? 'browser',
                 data: processedData.series,
-                ...fieldConfig,
+                ...fieldConfig!,
               }),
             };
           }
         }
 
-        return processedData;
+        if (!sameStructure) {
+          sameStructure = compareArrayValues(lastData, processedData.series, compareDataFrameStructures);
+        }
+        if (!sameStructure) {
+          structureRev++;
+        }
+
+        lastData = processedData.series;
+
+        return { ...processedData, structureRev };
       })
     );
   }
 
-  
   private getTransformationsStream = (withTransforms: boolean): MonoTypeOperatorFunction<PanelData> => {
-    return inputStream =>
+    return (inputStream) =>
       inputStream.pipe(
-        mergeMap(data => {
+        mergeMap((data) => {
           if (!withTransforms) {
             return of(data);
           }
@@ -114,11 +172,10 @@ export class PanelQueryRunner {
             return of(data);
           }
 
-          return transformDataFrame(transformations, data.series).pipe(map(series => ({ ...data, series })));
+          return transformDataFrame(transformations, data.series).pipe(map((series) => ({ ...data, series })));
         })
       );
-  }
-
+  };
 
   async run(options: QueryRunnerOptions) {
     const {
@@ -135,7 +192,6 @@ export class PanelQueryRunner {
       minInterval,
     } = options;
 
-    this.timeZone = timezone;
 
     const request: DataQueryRequest = {
       app: CoreApp.Dashboard,
@@ -158,19 +214,18 @@ export class PanelQueryRunner {
     (request as any).rangeRaw = timeRange.raw;
 
     try {
-      const ds = await getDataSource(datasource);
+      const ds = await getDataSource(datasource, request.scopedVars);
 
-    
-      // Attach the datasource name to each query
-      request.targets = request.targets.map(query => {
+      // Attach the data source name to each query
+      request.targets = request.targets.map((query) => {
         if (!query.datasource) {
           query.datasource = ds.name;
         }
         return query;
       });
 
-      const lowerIntervalLimit = minInterval ? templateSrv.replace(minInterval, request.scopedVars) : ds.interval;
-      const norm = kbn.calculateInterval(timeRange, maxDataPoints, lowerIntervalLimit);
+      const lowerIntervalLimit = minInterval ? getTemplateSrv().replace(minInterval, request.scopedVars) : ds.interval;
+      const norm = rangeUtil.calculateInterval(timeRange, maxDataPoints, lowerIntervalLimit);
 
       // make shallow copy of scoped vars,
       // and add built in variables interval and interval_ms
@@ -182,24 +237,49 @@ export class PanelQueryRunner {
       request.interval = norm.interval;
       request.intervalMs = norm.intervalMs;
 
-      this.pipeToSubject(runRequest(ds, request));
+      this.pipeToSubject(runRequest(ds, request), panelId);
     } catch (err) {
-      console.log('PanelQueryRunner Error', err);
+      console.error('PanelQueryRunner Error', err);
     }
   }
 
-  private pipeToSubject(observable: Observable<PanelData>) {
+  private pipeToSubject(observable: Observable<PanelData>, panelId?: number) {
     if (this.subscription) {
       this.subscription.unsubscribe();
     }
 
-    this.subscription = observable.subscribe({
-      next: (data: PanelData) => {
+    let panelData = observable;
+    const dataSupport = this.dataConfigSource.getDataSupport();
+
+    if (dataSupport.alertStates || dataSupport.annotations) {
+      const panel = (this.dataConfigSource as unknown) as PanelModel;
+      const id = panel.editSourceId ?? panel.id;
+      panelData = mergePanelAndDashData(observable, getDashboardQueryRunner().getResult(id));
+    }
+
+    this.subscription = panelData.subscribe({
+      next: (data) => {
         this.lastResult = preProcessPanelData(data, this.lastResult);
         // Store preprocessed query results for applying overrides later on in the pipeline
         this.subject.next(this.lastResult);
       },
     });
+  }
+
+  cancelQuery() {
+    if (!this.subscription) {
+      return;
+    }
+
+    this.subscription.unsubscribe();
+
+    // If we have an old result with loading state, send it with done state
+    if (this.lastResult && this.lastResult.state === LoadingState.Loading) {
+      this.subject.next({
+        ...this.lastResult,
+        state: LoadingState.Done,
+      });
+    }
   }
 
   resendLastResult = () => {
@@ -231,13 +311,14 @@ export class PanelQueryRunner {
     }
   }
 
-  getLastResult(): PanelData {
+  getLastResult(): PanelData | undefined {
     return this.lastResult;
   }
 }
 
 async function getDataSource(
   datasource: string | DataSourceApi | null,
+  scopedVars: ScopedVars
 ): Promise<DataSourceApi> {
   if (datasource && (datasource as any).query) {
     return datasource as DataSourceApi;
