@@ -12,7 +12,6 @@ export const addParamsToUrl = () => {
     const params = queryString.stringify(currentQuery)
 
     const vars = getVariables()
-    console.log(vars)
     updateUrl(params)
 }
 

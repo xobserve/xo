@@ -36,7 +36,6 @@ export class InfoTable extends Component<Props> {
   render() {
     const { data, height, width } = this.props;
     const newData = this.transformData(data)
-    console.log(newData)
     const count = newData.length;
 
     if (!count || count < 1) {

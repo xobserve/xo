@@ -117,7 +117,7 @@ export const AnnotationsPlugin: React.FC<AnnotationsPluginProps> = ({ annotation
     [timeZone]
   );
 
-  console.log(annotations)
+
   return (
     <EventsCanvas
       id="annotations"
