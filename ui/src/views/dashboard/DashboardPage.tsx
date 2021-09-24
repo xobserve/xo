@@ -120,9 +120,8 @@ class DashboardPage extends React.PureComponent<DashboardPageProps & RouteCompon
 
     updateVariablesFromUrl() {
         if (this.originDash) {
-            const d = this.props.dashboard.getSaveModelClone()
-            const ds = new DashboardModel(d)
-            ds.meta = _.cloneDeep(this.props.dashboard.meta)
+            // const d = this.props.dashboard.getSaveModelClone()
+            const ds = _.cloneDeep(this.props.dashboard)
             setTimeout(() => {this.props.setVariablesFromUrl(ds)}, 500)
         }
     }
@@ -182,7 +181,6 @@ class DashboardPage extends React.PureComponent<DashboardPageProps & RouteCompon
         appEvents.off(CoreEvents.KeybindingSaveDashboard, this.saveDashboard)
         appEvents.off(CoreEvents.DashboardSaved, this.setOriginDash);
         appEvents.off('dashboard-auto-save', this.handleAutoSave)
-
         // unregister time service notifier
         getTimeSrv().notifyTimeUpdate = null
 
@@ -265,10 +263,6 @@ class DashboardPage extends React.PureComponent<DashboardPageProps & RouteCompon
 
         return currentJson !== originalJson;
     }
-
-    triggerForceUpdate = () => {
-        this.forceUpdate();
-    };
 
     triggerPanelsRendering() {
         try {

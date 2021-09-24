@@ -150,6 +150,8 @@ export function setVariablesFromUrl(ds0:any): ThunkResult<void> {
       console.log(err);
     }
     
+
+
     dispatch(dashboardInitCompleted(ds))
   }
 }

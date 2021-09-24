@@ -22,13 +22,12 @@ const theme = getBootConfig().theme
 export const removePanel = (dashboard: DashboardModel, panel: PanelModel, ask: boolean) => {
   // confirm deletion
   if (ask !== false) {
-    appEvents.publish(new ShowConfirmModalEvent({
+      appEvents.emit(CoreEvents.ShowConfirmModalEvent, {
       title: localeData[currentLang]['dashboard.removePanel'],
       text: localeData[currentLang]['dashboard.removePanelConfirm'],
       yesText: localeData[currentLang]['common.remove'],
-      icon: 'trash-alt',
       onConfirm: () => removePanel(dashboard, panel, false),
-    }));
+    });
     return;
   }
   dashboard.removePanel(panel);

@@ -15,6 +15,7 @@ import { Subscription } from 'rxjs';
 import { DashboardPanelsChangedEvent } from 'src/types/events';
 import PanelWrapper from './PanelWrapper';
 import { getBootConfig } from 'src/packages/datav-core/src';
+import appEvents from 'src/core/library/utils/app_events';
 
 
 

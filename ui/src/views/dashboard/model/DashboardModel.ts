@@ -9,7 +9,8 @@ import { getTimeSrv } from 'src/core/services/time'
 import {GetVariables,getVariables} from 'src/views/variables/state/selectors'
 import { variableAdapters } from 'src/views/variables/adapters'
 import sortByKeys from 'src/core/library/utils/sortByKeys'
-
+import appEvents from 'src/core/library/utils/app_events'
+import { v4 as uuidv4 } from 'uuid';
 /**
  * @alpha
  */
@@ -35,6 +36,7 @@ export interface DashboardLink {
 
 
 export class DashboardModel {
+    objectId:any;
     id: any;
     uid: string;
     title: string;
@@ -83,6 +85,7 @@ export class DashboardModel {
         }
 
         this.events = new EventBusSrv();
+        this.objectId = uuidv4()
         this.id = data.id || null;
         this.uid = data.uid || null;
         this.title = data.title || 'No Title';
@@ -221,7 +224,7 @@ export class DashboardModel {
     removePanel(panel: PanelModel) {
         const index = _.indexOf(this.panels, panel);
         this.panels.splice(index, 1);
-        this.events.emit(panelRemoved, panel);
+        this.events.publish(new DashboardPanelsChangedEvent());
     }
 
     duplicatePanel(panel: PanelModel) {
@@ -258,7 +261,7 @@ export class DashboardModel {
     
         this.sortPanelsByGridPos();
         
-        this.events.emit(panelAdded, panel);
+        this.events.publish(new DashboardPanelsChangedEvent());
       }
 
     

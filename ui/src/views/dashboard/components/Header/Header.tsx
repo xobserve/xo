@@ -114,7 +114,7 @@ function HeaderWrapper(props: Props) {
                 </div>
                 <div>
                     <div className="ub-mr1">
-                        <Tooltip title={<Message id={'dashboard.addPanel'} />}><Button icon={<Icon name="panel-add" />} onClick={() => props.onAddPanel()} /></Tooltip>
+                        <Tooltip title={<Message id={'dashboard.addPanel'} />}><Button icon={<Icon name="panel-add" />} onClick={() => props.onAddPanel(props.dashboard)} /></Tooltip>
                         <Tooltip title={<Message id={'common.save'} />}>{<Button icon={!inSave ? <SaveOutlined translate="true" onClick={() => props.onSaveDashboard()} /> : <LoadingOutlined  translate className="color-success" />} />}</Tooltip>
                         <Tooltip title={<Message id={'common.setting'} />}>
                             <Button icon={<SettingOutlined translate="true"/>} onClick={

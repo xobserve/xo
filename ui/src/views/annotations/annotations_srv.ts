@@ -110,7 +110,7 @@ export class AnnotationsSrv {
     if (this.alertStatesPromise) {
       return this.alertStatesPromise;
     }
-
+    
     this.alertStatesPromise = getBackendSrv().get(
       '/api/alerts/states-for-dashboard',
       {

@@ -2,7 +2,6 @@ import React,{ReactNode,useEffect} from 'react'
 
 import { connect } from 'react-redux';
 import {StoreState, CoreEvents} from 'src/types'  
-import { store } from 'src/store/store';
 import {ExclamationCircleOutlined} from '@ant-design/icons'
 import { Modal } from 'antd';
 import appEvents from '../library/utils/app_events';
@@ -25,7 +24,7 @@ const ModalService = (props:Props) =>{
                 }
             )
         });
-        appEvents.on(CoreEvents.ShowConfirmModalEvent, ({title,component,onConfirm}) => {
+        appEvents.on(CoreEvents.ShowModalEvent, ({title,component,onConfirm}) => {
             Modal.info({
                 title: title,
                 content: component,

@@ -21,7 +21,7 @@ export class AlertStatesWorker implements DashboardQueryRunnerWorker {
     if (!this.canWork(options)) {
       return emptyResult();
     }
-
+    
     const { dashboard } = options;
     return from(
       getBackendSrv().get(
