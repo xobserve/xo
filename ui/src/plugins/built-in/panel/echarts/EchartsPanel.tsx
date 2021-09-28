@@ -14,6 +14,7 @@ import 'echarts-liquidfill';
 import 'echarts-gl';
 import { connect } from 'react-redux';
 import {interactive} from 'src/core/library/utils/interactive'
+import { DashboardModel } from 'src/views/dashboard/model';
 
 // auto register map
 const maps = (require as any).context('./map', false, /\.json/);
@@ -35,6 +36,7 @@ const getStyles = () => ({
 interface Props extends PanelProps<EchartsOptions> {
   theme: GrafanaTheme;
   resetDashboardVariables: typeof resetDashboardVariables
+  dashboard: DashboardModel
 }
 
 

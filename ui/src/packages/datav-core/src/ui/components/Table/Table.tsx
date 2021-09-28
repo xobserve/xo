@@ -69,6 +69,7 @@ function useTableStateReducer({ onColumnResize, onSortByChange, data }: Props) {
             const fieldDisplayName = getFieldDisplayName(field, data);
             onColumnResize(fieldDisplayName, width);
           }
+          break
         case 'toggleSortBy':
           if (onSortByChange) {
             const sortByFields: TableSortByFieldState[] = [];

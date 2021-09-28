@@ -1,4 +1,4 @@
-//@ts-nocheck
+
 
 // Copyright (c) 2017 Uber Technologies, Inc.
 //
@@ -17,8 +17,8 @@
 import { ApiError } from './api-error';
 import { Trace } from 'src/packages/datav-core/src';
 
-export { default as TTraceTimeline } from './TTraceTimeline';
-export { default as TNil } from './TNil';
+export type { default as TTraceTimeline } from './TTraceTimeline';
+export type { default as TNil } from './TNil';
 
 export type FetchedState = 'FETCH_DONE' | 'FETCH_ERROR' | 'FETCH_LOADING';
 

@@ -32,5 +32,5 @@ export * from './live';
 export * from './variables';
 export * from './geometry';
 export { isUnsignedPluginSignature } from './pluginSignature';
-export * from './config';
+export type { GrafanaConfig, BuildInfo, FeatureToggles, LicenseInfo,CommonConfig } from './config';
 export * from './alerts';

@@ -78,7 +78,7 @@ export interface PluginMeta<T extends KeyValue = {}> {
   signatureOrg?: string;
   live?: boolean;
 
-  isExternal? : boolean
+  isExternal?: boolean
 }
 
 interface PluginDependencyInfo {

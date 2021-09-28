@@ -6,8 +6,7 @@ import { InterpolateFunction } from './panel';
  */
 export interface DataLinkClickEvent<T = any> {
   origin: T;
-  replaceVariables?: InterpolateFunction | undefined;
-  scopedVars?: any;
+  replaceVariables: InterpolateFunction | undefined;
   e?: any; // mouse|react event
 }
 

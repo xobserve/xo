@@ -3,13 +3,13 @@ export * from './displayProcessor';
 export * from './standardFieldConfigEditorRegistry';
 export * from './overrides/processors';
 
-export  {
+export {
   getFieldColorModeForField,
   getFieldColorMode,
   fieldColorModeRegistry,
   getFieldSeriesColor,
 } from './fieldColor';
-export type {  FieldColorMode} from './fieldColor'
+export type {FieldColorMode} from './fieldColor'
 export { FieldConfigOptionsRegistry } from './FieldConfigOptionsRegistry';
 export { sortThresholds, getActiveThreshold } from './thresholds';
 export { applyFieldOverrides, validateFieldConfig, applyRawFieldOverrides } from './fieldOverrides';

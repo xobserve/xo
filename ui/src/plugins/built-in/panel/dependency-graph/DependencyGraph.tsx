@@ -23,10 +23,13 @@ import storage from 'src/core/library/utils/localStorage';
 import { resetDashboardVariables } from 'src/views/dashboard/model/initDashboard';
 import { connect } from 'react-redux';
 import { interactive } from 'src/core/library/utils/interactive';
+import { DashboardModel, PanelModel } from 'src/views/dashboard/model';
 
 interface Props extends PanelProps<DependencyGraphOptions> {
   theme: GrafanaTheme
   resetDashboardVariables : typeof resetDashboardVariables
+  panel: PanelModel
+  dashboard: DashboardModel
 }
 interface State {
   paused: boolean
@@ -492,12 +495,12 @@ export class DependencyGraph extends PureComponent<Props, State> {
               <div id={`canvas-container-${panel.id}`} style={{ width: '100%', height: '100%', overflow: 'hidden' }}></div>
 
               <div className="zoom-button-container">
-                <Tooltip placement="right" title={paused ? "Play" : "Pause"}><Button className="btn navbar-button" onClick={this.toggleAnimation}>{paused ? <PlayCircleOutlined translate /> : <PauseCircleOutlined translate />}</Button></Tooltip>
+                <Tooltip placement="right" title={paused ? "Play" : "Pause"}><Button className="btn navbar-button" onClick={this.toggleAnimation}>{paused ? <PlayCircleOutlined  translate/> : <PauseCircleOutlined  translate/>}</Button></Tooltip>
                 <Tooltip placement="right" title="Layout as a tree"><Button className="btn navbar-button" onClick={() => this.runLayout()}><ApartmentOutlined translate/></Button></Tooltip>
-                <Tooltip placement="right" title="Fit to the canvas"><Button className="btn navbar-button" onClick={this.fit}><AimOutlined translate /></Button></Tooltip>
-                <Tooltip placement="right" title="Zoom in"><Button className="btn navbar-button" onClick={() => this.zoom(+1)}><PlusOutlined translate /></Button></Tooltip>
-                <Tooltip placement="right" title="Zoom out"><Button className="btn navbar-button" onClick={() => this.zoom(-1)}><MinusOutlined translate /></Button></Tooltip>
-                <Tooltip placement="right" title="Filter the nodes and edges"><Button className="btn navbar-button" onClick={() => this.showFilterPanel()}><FilterOutlined translate /></Button></Tooltip>
+                <Tooltip placement="right" title="Fit to the canvas"><Button className="btn navbar-button" onClick={this.fit}><AimOutlined  translate/></Button></Tooltip>
+                <Tooltip placement="right" title="Zoom in"><Button className="btn navbar-button" onClick={() => this.zoom(+1)}><PlusOutlined  translate/></Button></Tooltip>
+                <Tooltip placement="right" title="Zoom out"><Button className="btn navbar-button" onClick={() => this.zoom(-1)}><MinusOutlined  translate/></Button></Tooltip>
+                <Tooltip placement="right" title="Filter the nodes and edges"><Button className="btn navbar-button" onClick={() => this.showFilterPanel()}><FilterOutlined  translate/></Button></Tooltip>
               </div>
             </div>
             {showStatistics && <div className="statistics show">
@@ -506,7 +509,7 @@ export class DependencyGraph extends PureComponent<Props, State> {
                 {this.resolvedDrillDownLink
                   && this.resolvedDrillDownLink.length > 0
                   && <Tooltip title="Drilldown link"><a target="_blank" href={this.resolvedDrillDownLink}>
-                    <LinkOutlined translate className="ub-ml2"/>
+                    <LinkOutlined  translate className="ub-ml2"/>
                   </a></Tooltip>}
 
                 {options.clickEvent && <Tooltip title="Trigger click event"><Icon name="mouse-alt" className="pointer ub-ml2" size="lg" onClick={() => onClickFunc(this.selectionId,getHistory(),(k,v) => interactive.setVariable(k,v,this.props.dashboard,this.props.resetDashboardVariables),interactive.setTime)}/></Tooltip>}

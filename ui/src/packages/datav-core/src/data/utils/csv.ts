@@ -73,8 +73,7 @@ export class CSVReader {
   }
 
   // PapaParse callback on each line
-  //@ts-ignore
-  private chunk = (results: ParseResult<any>, parser: Parser): void => {
+  private chunk = (results: ParseResult, parser: Parser): void => {
     for (let i = 0; i < results.data.length; i++) {
       const line: string[] = results.data[i];
       if (line.length < 1) {

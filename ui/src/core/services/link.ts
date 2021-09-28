@@ -1,3 +1,4 @@
+//@ts-nocheck
 import _ from 'lodash';
 import { TimeSrv, getTimeSrv } from './time';
 import templateSrv, { TemplateSrv } from './templating';

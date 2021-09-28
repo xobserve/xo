@@ -3,8 +3,9 @@
   "compilerOptions": {
     "target": "es5",
     "lib": [
-      "es2019",
-      "dom"
+      "dom",
+      "dom.iterable",
+      "esnext"
     ],
     "baseUrl": ".",
     "allowJs": true,
@@ -16,11 +17,12 @@
     "moduleResolution": "node",
     "resolveJsonModule": true,
     "noEmit": true,
-    "jsx": "react",
+    "jsx": "react-jsx",
     "experimentalDecorators": true,
     "strict": false,
     "downlevelIteration": true,
-    "isolatedModules": true
+    "isolatedModules": true,
+    "noFallthroughCasesInSwitch": true
   },
   "include": [
     "src",

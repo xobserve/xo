@@ -96,6 +96,7 @@ export function BracesPlugin(): Plugin {
             editor.deleteBackward(1).deleteForward(1).focus();
             return true;
           }
+          break
         }
 
         default: {

@@ -17,11 +17,14 @@ import { convTagsLogfmt } from './utils'
 import { addParamToUrl, getUrlParams, removeParamFromUrl } from 'src/core/library/utils/url';
 import { TraceView } from './TraceView/TraceView'
 import {TraceData, TraceSpanData,} from './TraceView/JaegerComponents/types/trace'
+import { PanelModel,DashboardModel } from 'src/views/dashboard/model';
 const { Option } = Select;
 const maxTraceDuration = 814199
 
 interface Props extends PanelProps<SimpleOptions> {
   theme: GrafanaTheme
+  panel: PanelModel
+  dashboard: DashboardModel
 }
 
 interface State {

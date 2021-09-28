@@ -41,9 +41,6 @@ export interface TraceSpanRow {
   errorIconColor?: string;
 }
 
-
-
-
 export type TraceLink = {
   url: string;
   text: string;

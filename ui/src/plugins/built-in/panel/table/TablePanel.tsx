@@ -13,10 +13,13 @@ import { interactive } from 'src/core/library/utils/interactive';
 import { getDatasourceSrv } from 'src/core/services/datasource';
 import { store } from 'src/store/store';
 import { applyFilterFromTable } from 'src/views/variables/adhoc/actions';
+import { DashboardModel, PanelModel } from 'src/views/dashboard/model';
 
 
 interface Props extends PanelProps<Options> {
   resetDashboardVariables: typeof resetDashboardVariables
+  panel: PanelModel
+  dashboard: DashboardModel
 }
 
 export class TablePanelUnconnected extends Component<Props> {

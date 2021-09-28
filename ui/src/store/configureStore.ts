@@ -3,7 +3,7 @@ import { ThunkMiddleware } from 'redux-thunk';
 import { setStore } from './store';
 import { StoreState } from 'src/types/store';
 import {  createRootReducer } from './reducers/root';
-
+ 
  
 export function configureStore() {
   const middleware = process.env.NODE_ENV !== 'production' ? [] : [];

@@ -10,7 +10,7 @@ import { useDatasourceMetadata, useInspectTabs } from './hooks';
 import { useLocation } from 'react-router-dom';
 import { GetDataOptions } from '../../model/PanelQueryRunner';
 import { usePanelLatestData } from '../PanelEditor/OptionsPane/usePanelLatestData';
-import { InspectTab } from 'src/views/components/inspector/types';
+import { InspectTab } from 'src/views/components/Inspector/types';
 import { dispatch } from 'src/store/store';
 import { updateLocation } from 'src/store/reducers/location';
 

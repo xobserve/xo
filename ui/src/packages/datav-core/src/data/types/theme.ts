@@ -1,5 +1,4 @@
-import { ThemeBreakpoints, ThemeColors, ThemeShadows, ThemeShape, ThemeSpacing, ThemeTransitions, ThemeTypography, ThemeVisualizationColors, ThemeZIndices } from '../themes';
-import { ThemeComponents } from '../themes/createComponents';
+import { ThemeVisualizationColors } from '../themes';
 
 export enum ThemeType {
   Light = 'light',
@@ -243,22 +242,4 @@ export interface GrafanaTheme extends GrafanaThemeCommons {
     listItem: string;
   };
   visualization: ThemeVisualizationColors;
-}
-
-
-export interface GrafanaTheme2 {
-  name: string;
-  isDark: boolean;
-  isLight: boolean;
-  colors: ThemeColors;
-  breakpoints: ThemeBreakpoints;
-  spacing: ThemeSpacing;
-  shape: ThemeShape;
-  components: ThemeComponents;
-  typography: ThemeTypography;
-  zIndex: ThemeZIndices;
-  shadows: ThemeShadows;
-  visualization: ThemeVisualizationColors;
-  transitions: ThemeTransitions;
-  v1: GrafanaTheme;
 }

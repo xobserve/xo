@@ -108,6 +108,7 @@ export class EditDataSourcePage extends PureComponent<Props, State> {
         if (this.state.mode === DatasourceMode.Edit) {
             const res = await getBackendSrv().get(`/api/datasources/${this.props.match.params.datasourceID}`)
             const ds: DataSourceSettings = res.data
+            console.log(getBootConfig().datasourceMetas)
             const meta = getBootConfig().datasourceMetas[ds.type]
             const node = {
                 img: meta.info.logos.small,

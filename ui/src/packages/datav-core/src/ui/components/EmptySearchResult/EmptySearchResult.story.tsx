@@ -1,6 +1,6 @@
 import React from 'react';
 import { EmptySearchResult } from './EmptySearchResult';
-import { withCenteredStory } from '../..//utils/storybook/withCenteredStory';
+import { withCenteredStory } from '../../utils/storybook/withCenteredStory';
 import mdx from './EmptySearchResult.mdx';
 
 export default {

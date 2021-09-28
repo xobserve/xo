@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { ContextMenu } from '../ContextMenu/ContextMenu';
+import { ContextMenu } from './ContextMenu';
 
 interface WithContextMenuProps {
   /** Menu item trigger that accepts openMenu prop */

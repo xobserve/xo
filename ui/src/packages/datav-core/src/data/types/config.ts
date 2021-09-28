@@ -2,7 +2,7 @@ import { DataSourceInstanceSettings } from './datasource';
 import { PanelPluginMeta } from './panel';
 import { GrafanaTheme } from './theme';
 import { SystemDateFormatSettings } from '../datetime';
-import { GrafanaTheme2 } from '../types';
+import { GrafanaTheme2 } from '../themes';
 import { MapLayerOptions } from '../geo/layer';
 
 /**
@@ -16,7 +16,7 @@ export interface BuildInfo {
   /**
    * Is set to true when running Grafana Enterprise edition.
    *
-   * @deprecated use `licenseInfo.hasLicense` instead 
+   * @deprecated use `licenseInfo.hasLicense` instead
    */
   isEnterprise: boolean;
   env: string;
@@ -131,13 +131,6 @@ export interface GrafanaConfig {
 }
 
 
-export interface DatavConfig {
-  panel: PanelConfig
-  dashboard: DashboardConfig,
-  application: ApplicationConfig,
-  user: UserConfig
-}
-
 export interface CommonConfig {
   appName: string
   version: string
@@ -147,23 +140,4 @@ export interface CommonConfig {
   defaultLang: string
   enableMultiLang: boolean
   enableDocs: boolean
-}
-
-export interface PanelConfig {
-  newTitle: string
-}
-
-export interface DashboardConfig {
-  newTitle: string
-}
-
-export interface ApplicationConfig {
-  startDate: any,
-  endDate: any,
-  theme: string,
-  locale: string
-}
-
-export interface UserConfig {
-  avatarUrl?: string
 }

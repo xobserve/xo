@@ -1,3 +1,4 @@
+
 import React, { memo, cloneElement, FC, ReactNode } from 'react';
 import { css, cx } from '@emotion/css';
 import { GrafanaTheme2 } from '../../../data';
@@ -22,7 +23,7 @@ export interface Props extends Omit<CardContainerProps, 'disableEvents' | 'disab
 
 export interface CardInterface extends FC<Props> {
   Tags: typeof Tags;
-  Figure: typeof Figure;
+  Figure: typeof Figure; 
   Meta: typeof Meta;
   Actions: typeof Actions;
   SecondaryActions: typeof SecondaryActions;

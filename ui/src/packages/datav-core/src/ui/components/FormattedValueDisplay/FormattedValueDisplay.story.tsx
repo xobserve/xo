@@ -1,6 +1,6 @@
 import React from 'react';
 import { FormattedValueDisplay } from './FormattedValueDisplay';
-import { withCenteredStory } from '../..//utils/storybook/withCenteredStory';
+import { withCenteredStory } from '../../utils/storybook/withCenteredStory';
 import mdx from './FormattedValueDisplay.mdx';
 
 export default {

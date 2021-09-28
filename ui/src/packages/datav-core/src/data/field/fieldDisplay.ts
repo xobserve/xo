@@ -9,13 +9,13 @@ import {
   FieldConfig,
   FieldConfigSource,
   FieldType,
-  GrafanaTheme2,
   InterpolateFunction,
   LinkModel,
   TimeRange,
   TimeZone,
 } from '../types';
 import { DataFrameView } from '../dataframe/DataFrameView';
+import { GrafanaTheme2 } from '../themes';
 import { reduceField, ReducerID } from '../transformations/fieldReducer';
 import { ScopedVars } from '../types/ScopedVars';
 import { getTimeField } from '../dataframe/processDataFrame';

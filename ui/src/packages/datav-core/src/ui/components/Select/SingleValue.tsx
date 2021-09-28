@@ -3,8 +3,8 @@ import { css, cx } from '@emotion/css';
 import { components, SingleValueProps } from 'react-select';
 import { useDelayedSwitch } from '../../utils/useDelayedSwitch';
 import { useStyles2 } from '../../themes';
-import { SlideOutTransition } from '../transitions/SlideOutTransition';
-import { FadeTransition } from '../transitions/FadeTransition';
+import { SlideOutTransition } from '../Transitions/SlideOutTransition';
+import { FadeTransition } from '../Transitions/FadeTransition';
 import { Spinner } from '../Spinner/Spinner';
 import { GrafanaTheme2 } from '../../../data';
 

@@ -9,7 +9,7 @@ import templateSrv from 'src/core/services/templating';
 import { getTimeSrv, TimeSrv } from 'src/core/services/time';
 
 import { InfoOutlined } from '@ant-design/icons';
-import { InspectTab } from 'src/views/components/inspector/types';
+import { InspectTab } from 'src/views/components/Inspector/types';
 
 
 enum InfoMode {

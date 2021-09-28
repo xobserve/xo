@@ -5,7 +5,7 @@ import { Button, CodeEditor, Field, Select } from 'src/packages/datav-core/src/u
 import AutoSizer from 'react-virtualized-auto-sizer';
 
 import { DashboardModel, PanelModel } from 'src/views/dashboard/model';
-import { getPanelInspectorStyles } from '../inspector/styles';
+import { getPanelInspectorStyles } from '../Inspector/styles';
 import appEvents from 'src/core/library/utils/app_events';
 
 enum ShowContent {

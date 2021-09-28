@@ -106,9 +106,6 @@ export interface PanelProps<T = any> {
 
   /** Time range change handler */
   onChangeTimeRange: (timeRange: AbsoluteTimeRange) => void;
-
-  panel?: any;
-  dashboard?: any;
 }
 
 export interface PanelEditorProps<T = any> {

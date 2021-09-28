@@ -1,3 +1,4 @@
+/*eslint-disable*/
 import React, { useCallback, useState } from 'react';
 import { css } from 'emotion';
 import { GrafanaTheme, PanelPlugin, PanelPluginMeta, getBootConfig, currentLang } from 'src/packages/datav-core/src';

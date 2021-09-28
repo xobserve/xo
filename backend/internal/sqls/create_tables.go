@@ -9,8 +9,6 @@ import (
 	"time"
 
 	"github.com/datav-io/datav/backend/pkg/config"
-	"github.com/datav-io/datav/backend/pkg/utils/securejson"
-	"github.com/datav-io/datav/backend/pkg/utils/simplejson"
 	"github.com/grafana/grafana/pkg/cmd/grafana-cli/logger"
 
 	"github.com/datav-io/datav/backend/internal/teams"
@@ -101,29 +99,6 @@ func InitTables() error {
 		models.GlobalTeamId, models.SuperAdminId, models.ROLE_ADMIN, now, now)
 	if err != nil {
 		log.RootLogger.Crit("init global team member error", "error:", err)
-		return err
-	}
-
-	// init a testdata datasource
-	ds := &models.DataSource{
-		Name:           "test",
-		Type:           "testdata",
-		IsDefault:      false,
-		Version:        1,
-		Created:        time.Now(),
-		Updated:        time.Now(),
-		JsonData:       simplejson.New(),
-		SecureJsonData: make(securejson.SecureJsonData),
-		Uid:            utils.GenerateShortUID(),
-	}
-
-	jsonData, err := ds.JsonData.Encode()
-	secureJsonData, err := json.Marshal(ds.SecureJsonData)
-
-	_, err = db.SQL.Exec(`INSERT INTO data_source (name, uid, version, type, url, is_default, json_data,secure_json_data,basic_auth,created_by,created,updated) VALUES (?,?,?,?,?,?,?,?,?,?,?,?)`,
-		ds.Name, ds.Uid, ds.Version, ds.Type, ds.Url, ds.IsDefault, jsonData, secureJsonData, ds.BasicAuth, models.SuperAdminId, ds.Created, ds.Updated)
-	if err != nil {
-		log.RootLogger.Crit("init test datasource error", "error", err)
 		return err
 	}
 

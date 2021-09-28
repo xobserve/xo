@@ -1,7 +1,7 @@
-import { DataSourceInstanceSettings, ThemeType,DataSourcePluginMeta,CommonConfig, GrafanaTheme, GrafanaTheme2} from '../types'
+import { CommonConfig, DataSourceInstanceSettings,DataSourcePluginMeta, GrafanaTheme, ThemeType} from  '../types'
 import { History as RouterHistory } from 'history';
 import _ from 'lodash'
-import { createTheme } from '../themes';
+import { createTheme, GrafanaTheme2 } from '../themes';
 
 // boot configs ,loaded from backend,extended with base config below
 export interface BootConfig {

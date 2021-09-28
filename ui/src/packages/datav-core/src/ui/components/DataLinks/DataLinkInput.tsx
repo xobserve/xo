@@ -158,6 +158,7 @@ export const DataLinkInput: React.FC<DataLinkInputProps> = memo(
             {showingSuggestions && (
               <Portal>
                 <ReactPopper
+                //@ts-ignore
                   referenceElement={selectionRef}
                   placement="bottom-end"
                   modifiers={[

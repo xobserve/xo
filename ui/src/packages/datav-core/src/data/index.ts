@@ -13,16 +13,19 @@ export * from './text';
 export * from './valueFormats';
 export * from './field';
 export * from './events';
-export * from './themes'
+export * from './themes';
 export * from './monaco';
 export * from './geo/layer';
 export * from './config'
+
 export type {
   ValueMatcherOptions,
   BasicValueMatcherOptions,
   RangeValueMatcherOptions,
 } from './transformations/matchers/valueMatchers/types';
-export * from './types/layout';
-export * from './panel/PanelPlugin';
+export type { LayoutMode } from './types/layout';
+export { LayoutModes } from './types/layout';
+export { PanelPlugin } from './panel/PanelPlugin';
+export type {  SetFieldConfigOptionsArgs, StandardOptionConfig } from './panel/PanelPlugin';
 export { createFieldConfigRegistry } from './panel/registryFactories';
-export * from './types/queryRunner';
+export type { QueryRunner, QueryRunnerOptions } from './types/queryRunner';

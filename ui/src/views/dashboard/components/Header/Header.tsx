@@ -79,6 +79,7 @@ function HeaderWrapper(props: Props) {
             break;
         case ViewState.Fullscreen:
             body.addClass('view-mode--kiosk');
+            break
         default:
             break;
     }

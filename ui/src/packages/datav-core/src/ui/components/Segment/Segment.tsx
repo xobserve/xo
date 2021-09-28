@@ -2,7 +2,7 @@ import React, { HTMLProps } from 'react';
 import { cx } from '@emotion/css';
 import { isObject } from 'lodash';
 import { SelectableValue } from '../../../data';
-import { SegmentSelect, useExpandableLabel, SegmentProps } from './';
+import { SegmentSelect, useExpandableLabel, SegmentProps } from '.';
 import { getSegmentStyles } from './styles';
 import { InlineLabel } from '../Forms/InlineLabel';
 import { useStyles } from '../../themes';

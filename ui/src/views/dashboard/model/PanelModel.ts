@@ -216,15 +216,8 @@ export class PanelModel {
         this.gridPos.y = newPos.y;
         this.gridPos.w = newPos.w;
         this.gridPos.h = newPos.h;
-
-        if (sizeChanged) {
-            this.events.emit(PanelEvents.sizeChanged);
-        }
     }
 
-    resizeDone() {
-        this.events.emit(PanelEvents.sizeChanged);
-    }
 
     initialized() {
         this.events.emit(PanelEvents.initialized);

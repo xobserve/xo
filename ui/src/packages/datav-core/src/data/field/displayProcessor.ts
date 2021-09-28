@@ -7,8 +7,9 @@ import { DisplayProcessor, DisplayValue } from '../types/displayValue';
 import { getValueFormat, isBooleanUnit } from '../valueFormats/valueFormats';
 import { getValueMappingResult } from '../utils/valueMappings';
 import { dateTime } from '../datetime';
-import { GrafanaTheme2, KeyValue, TimeZone } from '../types';
+import { KeyValue, TimeZone } from '../types';
 import { getScaleCalculator } from './scale';
+import { GrafanaTheme2 } from '../themes/types';
 import { anyToNumber } from '../utils/anyToNumber';
 
 interface DisplayProcessorOptions {

@@ -36,7 +36,7 @@ import { addParamsToUrl, addParamToUrl, updateUrl } from 'src/core/library/utils
 import { getVariables } from 'src/views/variables/state/selectors'
 import { saveDashboard } from './components/SaveDashboard/SaveDashboard';
 import { formatDocumentTitle } from 'src/core/library/utils/date';
-import { InspectTab } from '../components/inspector/types';
+import { InspectTab } from '../components/Inspector/types';
 import { CustomScrollbar, ScrollbarPosition } from 'src/packages/datav-core/src/ui';
 
 
@@ -453,6 +453,8 @@ function cleanDashboardFromIgnoredChanges(dashData: any) {
         variable.filters = null;
     });
 
+    delete(dash.objectId)
+    
     return dash;
 }
 

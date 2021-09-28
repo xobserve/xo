@@ -7,7 +7,7 @@ import { supportsDataQuery } from '../PanelEditor/utils';
 
 import { PanelInspectActionSupplier } from './PanelInspectActions';
 import { getDataSourceService } from 'src/packages/datav-core/src';
-import { InspectTab } from 'src/views/components/inspector/types';
+import { InspectTab } from 'src/views/components/Inspector/types';
 
 /**
  * Given PanelData return first data source supporting metadata inspector

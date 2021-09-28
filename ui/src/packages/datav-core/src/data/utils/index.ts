@@ -16,24 +16,22 @@ export { PanelOptionsEditorBuilder, FieldConfigEditorBuilder } from './OptionsUI
 export { arrayUtils };
 export { getFlotPairs, getFlotPairsConstant } from './flotPairs';
 export { locationUtil } from './location';
-export  { urlUtil,  serializeStateToUrlParam } from './url';
-export type {UrlQueryMap, UrlQueryValue} from './url' 
+export { urlUtil, serializeStateToUrlParam } from './url';
+export type {  UrlQueryMap, UrlQueryValue } from './url';
 export { DataLinkBuiltInVars, mapInternalLinkToExplore } from './dataLinks';
 export { DocsId } from './docs';
 export { makeClassES5Compatible } from './makeClassES5Compatible';
 export { anyToNumber } from './anyToNumber';
-export  { withLoadingIndicator } from './withLoadingIndicator';
-export  type { WithLoadingIndicatorOptions } from './withLoadingIndicator';
-
-export  {
+export { withLoadingIndicator } from './withLoadingIndicator';
+export type {  WithLoadingIndicatorOptions } from './withLoadingIndicator';
+export {
   getMappedValue,
   convertOldAngularValueMappings,
+  LegacyMappingType,
 } from './valueMappings';
-
 export type {
   LegacyValueMapping,
   LegacyValueMap,
   LegacyRangeMap,
   LegacyBaseMap,
-  LegacyMappingType,
-} from './valueMappings';
+} from './valueMappings'
