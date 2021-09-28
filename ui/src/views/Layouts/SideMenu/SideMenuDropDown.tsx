@@ -25,6 +25,7 @@ const SideMenuDropDown: FC<Props> = props => {
   }
   
   let renderLink: any
+  console.log(link)
   if (link.url === '') {
     renderLink =
     // eslint-disable-next-line 

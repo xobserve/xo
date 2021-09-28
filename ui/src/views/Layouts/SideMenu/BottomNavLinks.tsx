@@ -98,12 +98,6 @@ export const BottomNavLinks = (props:Props) => {
       <div className={classes}>
         {renderLink}
         <ul className="dropdown-menu dropdown-menu--sidemenu" role="menu">
-          {/* {link.title && (
-            <li className="sidemenu-subtitle">
-              <span className="sidemenu-item-text">{link.title}</span>
-            </li>
-          )} */}
-
           {link.id === 'datav-fix-menu-user' && (
             <li key="change-theme">
               <a onClick={() => {
@@ -156,6 +150,7 @@ export const BottomNavLinks = (props:Props) => {
           })}
 
           {link.id === 'datav-fix-menu-help' && children.map((child:MenuItem, index) => {
+            console.log(child)
             return (
               <li key={`${child.text}-${index}`} >
                      <a href={child.url} rel="noopener" target="_blank">

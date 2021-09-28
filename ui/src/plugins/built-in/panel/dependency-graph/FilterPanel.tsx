@@ -92,12 +92,12 @@ const FilterPanel = ({ graph, conditions, onClose, onChange,onSubmit}: Props) =>
                             
                             <InputNumber value={con.value} onBlur={(e) => {con.value = _.toNumber(e.currentTarget.value); onChange(conditions)}} />
                             
-                            <Tag className="ub-ml1 pointer" onClick={() => delCondition(i)}><CloseOutlined /></Tag>
+                            <Tag className="ub-ml1 pointer" onClick={() => delCondition(i)}><CloseOutlined translate={true}/></Tag>
                         </div>)
                 }
 
                 <div className="gf-form">
-                    <Tag className="ub-ml1 pointer" onClick={addCondition}><PlusOutlined /></Tag>
+                    <Tag className="ub-ml1 pointer" onClick={addCondition}><PlusOutlined translate={true}/></Tag>
                 </div>
 
                 <Divider />

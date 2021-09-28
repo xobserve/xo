@@ -8,7 +8,7 @@ import { Langs } from 'src/core/library/locale/types';
 
 export interface FooterLink {
   id: number;
-  title: any;
+  text: any;
   icon?: string;
   url?: string;
   target?: string;
@@ -19,7 +19,7 @@ export let getFooterLinks = (): FooterLink[] => {
   if (getBootConfig().common.enableDocs) {
     links.push(   {
       id:1,
-      title: <FormattedMessage id="common.documentation"/>,
+      text: <FormattedMessage id="common.documentation"/>,
       icon: 'document-info',
       url: currentLang === Langs.Chinese ? `${getBootConfig().common.docsAddr}/docs-cn`:`${getBootConfig().common.docsAddr}/docs`,
       target: '_blank',
@@ -30,21 +30,21 @@ export let getFooterLinks = (): FooterLink[] => {
     links = _.concat(links,[
       {
         id:2,
-        title: <FormattedMessage id="common.support"/>,
+        text: <FormattedMessage id="common.support"/>,
         icon: 'question-circle',
         url: 'https://datav.dev/support',
         target: '_blank',
       },
       {
         id:3,
-        title: <FormattedMessage id="common.community"/>,
+        text: <FormattedMessage id="common.community"/>,
         icon: 'comments-alt',
         url: 'https://datav.dev/community',
         target: '_blank',
       },
       {
         id:4,
-        title: 'Github',
+        text: 'Github',
         icon: 'github',
         url: 'https://github.com/datadefeat/datav',
         target: '_blank',
@@ -61,12 +61,12 @@ export let getVersionLinks = (): FooterLink[] => {
   const stateInfo = licenseInfo.stateInfo ? ` (${licenseInfo.stateInfo})` : '';
 
   // links.push({ text: `${buildInfo.edition}${stateInfo}`, url: licenseInfo.licenseUrl });
-  links.push({ title: `V${getBootConfig().common.version}` , id : 0});
+  links.push({ text: `V${getBootConfig().common.version}` , id : 0});
 
   if (buildInfo.hasUpdate) {
     links.push({
       id:5,
-      title: `New version available!`,
+      text: `New version available!`,
       icon: 'download-alt',
       url: `${config.officialWebsite}/docs/download`,
       target: '_blank',
@@ -94,7 +94,7 @@ export const Footer: FC = React.memo(() => {
           {links.map(link => (
             <li key={link.id}>
               <a href={link.url} target={link.target} rel="noopener">
-                <Icon name={link.icon as IconName} /> {link.title}
+                <Icon name={link.icon as IconName} /> {link.text}
               </a>
             </li>
           ))}

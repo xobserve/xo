@@ -110,10 +110,10 @@ func InitTables() error {
 	// insert default sidemenu
 	menu := []map[string]string{
 		{
-			"id":    "home",
-			"url":   "/home",
-			"title": "Home Dashboard",
-			"icon":  "home-alt",
+			"id":   "home",
+			"url":  "/home",
+			"text": "Home Dashboard",
+			"icon": "home-alt",
 		},
 	}
 	menuStr, err := json.Marshal(menu)
