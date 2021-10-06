@@ -30,8 +30,8 @@ class DashboardQueryRunnerImpl implements DashboardQueryRunner {
     private readonly dashboard: DashboardModel,
     private readonly timeSrv: TimeSrv = getTimeSrv(),
     private readonly workers: DashboardQueryRunnerWorker[] = [
-      new AlertStatesWorker(),
-      new SnapshotWorker(),
+      // new AlertStatesWorker(),
+      // new SnapshotWorker(),
       new AnnotationsWorker(),
     ]
   ) {
@@ -57,6 +57,7 @@ class DashboardQueryRunnerImpl implements DashboardQueryRunner {
     return this.results.asObservable().pipe(
       map((result) => {
         const annotations = getAnnotationsByPanelId(result.annotations, panelId);
+        console.log(panelId,annotations)
         const alertState = result.alertStates.find((res) => Boolean(panelId) && res.panelId === panelId);
         return { annotations: dedupAnnotations(annotations), alertState };
       })

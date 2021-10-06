@@ -109,6 +109,7 @@ export const annotationEventNames: AnnotationFieldInfo[] = [
   {
     key: 'id',
   },
+  {key: 'panelId'}
   // { key: 'userId' },
   // { key: 'login' },
   // { key: 'email' },
