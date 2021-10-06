@@ -38,6 +38,7 @@ export const dashboardReducer = (state = initialState, action: any) => {
               pluginId: panel.type,
             };
           }
+          
       return {
           ...state,
           dashboard: action.payload,

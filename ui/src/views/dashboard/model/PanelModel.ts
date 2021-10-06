@@ -1,7 +1,7 @@
 import _ from 'lodash'
 import { Emitter } from 'src/core/library/utils/emitter';
 import { PanelEvents, DataQuery, ScopedVars, DataTransformerConfig, PanelPlugin, FieldConfigSource, DataLink, AppEvents, config, PanelPluginDataSupport, eventFactory, EventBusSrv } from 'src/packages/datav-core/src'
-import {getTheme} from 'src/packages/datav-core/src/ui'
+import { getTheme } from 'src/packages/datav-core/src/ui'
 import templateSrv from 'src/core/services/templating'
 import { getNextRefIdChar } from 'src/core/library/utils/query'
 import { PanelQueryRunner } from './PanelQueryRunner'
@@ -11,11 +11,12 @@ import { getDatasourceSrv } from 'src/core/services/datasource';
 import { getTheme2 } from 'src/packages/datav-core/src/ui/themes/getTheme';
 import { TimeOverrideResult } from './panel';
 
+
 export const panelAdded = eventFactory<PanelModel | undefined>('panel-added');
-export const panelRemoved =eventFactory<PanelModel | undefined>('panel-removed');
+export const panelRemoved = eventFactory<PanelModel | undefined>('panel-removed');
 
 
-export interface GridPos {
+export interface GridPos {  
     x: number;
     y: number;
     w: number;
@@ -85,6 +86,7 @@ const defaults: any = {
 };
 
 export class PanelModel {
+    objectId: string;
     id: number;
     editSourceId: number;
     gridPos: GridPos;
@@ -120,23 +122,23 @@ export class PanelModel {
     pluginVersion?: string;
 
     thresholds?: any;
-    renderCondition? : string
+    renderCondition?: string
 
     // non persisted
     isViewing: boolean;
     isEditing: boolean;
-    
+
     hasRefreshed: boolean;
     isInView: boolean;
     plugin?: PanelPlugin;
     cacheTimeout?: any;
     cachedPluginOptions?: any;
-    
-      /**
-   * The PanelModel event bus only used for internal and legacy angular support.
-   * The EventBus passed to panels is based on the dashboard event model.
-   */
-  events: EventBusSrv;
+
+    /**
+     * The PanelModel event bus only used for internal and legacy angular support.
+     * The EventBus passed to panels is based on the dashboard event model.
+    */
+    events: EventBusSrv;
 
     private queryRunner?: PanelQueryRunner;
 
@@ -199,11 +201,11 @@ export class PanelModel {
         return templateSrv.replace(value, vars, format);
     }
 
-    
+
     updateQueries(queries: DataQuery[]) {
         this.targets = queries;
         this.events.publish(new PanelQueriesChangedEvent());
-      }
+    }
 
     updateGridPos(newPos: GridPos) {
         let sizeChanged = false;
@@ -249,17 +251,17 @@ export class PanelModel {
 
     getFieldOverrideOptions() {
         if (!this.plugin) {
-          return undefined;
+            return undefined;
         }
-    
+
         return {
-          fieldConfig: this.fieldConfig,
-          replaceVariables: this.replaceVariables,
-          getDataSourceSettingsByUid: getDatasourceSrv().getDataSourceSettingsByUid.bind(getDatasourceSrv()),
-          fieldConfigRegistry: this.plugin.fieldConfigRegistry,
-          theme: getTheme2(),
+            fieldConfig: this.fieldConfig,
+            replaceVariables: this.replaceVariables,
+            getDataSourceSettingsByUid: getDatasourceSrv().getDataSourceSettingsByUid.bind(getDatasourceSrv()),
+            fieldConfigRegistry: this.plugin.fieldConfigRegistry,
+            theme: getTheme2(),
         };
-      }
+    }
 
     getFieldConfig() {
         return this.fieldConfig;
@@ -276,20 +278,20 @@ export class PanelModel {
 
     runAllPanelQueries(dashboardId: number, dashboardTimezone: string, timeData: TimeOverrideResult, width: number) {
         this.getQueryRunner().run({
-          datasource: this.datasource,
-          queries: this.targets,
-          panelId: this.editSourceId || this.id,
-          dashboardId: dashboardId,
-          timezone: dashboardTimezone,
-          timeRange: timeData.timeRange,
-          timeInfo: timeData.timeInfo,
-          maxDataPoints: this.maxDataPoints || width,
-          minInterval: this.interval,
-          scopedVars: this.scopedVars,
-          cacheTimeout: this.cacheTimeout,
-          transformations: this.transformations,
+            datasource: this.datasource,
+            queries: this.targets,
+            panelId: this.editSourceId || this.id,
+            dashboardId: dashboardId,
+            timezone: dashboardTimezone,
+            timeRange: timeData.timeRange,
+            timeInfo: timeData.timeInfo,
+            maxDataPoints: this.maxDataPoints || width,
+            minInterval: this.interval,
+            scopedVars: this.scopedVars,
+            cacheTimeout: this.cacheTimeout,
+            transformations: this.transformations,
         });
-      }
+    }
 
     render() {
         if (!this.hasRefreshed) {
@@ -416,8 +418,8 @@ export class PanelModel {
     setTransformations(transformations: DataTransformerConfig[]) {
         this.transformations = transformations;
         this.resendLastResult();
-      }
-      
+    }
+
     changePlugin(newPlugin: PanelPlugin) {
         const pluginId = newPlugin.meta.id;
         const oldOptions: any = this.getOptionsToRemember();
@@ -440,7 +442,7 @@ export class PanelModel {
             let old: any = {};
 
             this.options = this.options || {};
-            Object.assign(this.options, newPlugin.onPanelTypeChanged(this, oldPluginId, oldOptions.options,this.fieldConfig));
+            Object.assign(this.options, newPlugin.onPanelTypeChanged(this, oldPluginId, oldOptions.options, this.fieldConfig));
         }
 
         // switch
@@ -486,13 +488,13 @@ export class PanelModel {
         return this.editSourceId ?? this.id;
     }
 
-      /*
-   * This is the title used when displaying the title in the UI so it will include any interpolated variables.
-   * If you need the raw title without interpolation use title property instead.
-   * */
-  getDisplayTitle(): string {
-    return this.replaceVariables(this.title, {}, 'text');
-  }
+    /*
+ * This is the title used when displaying the title in the UI so it will include any interpolated variables.
+ * If you need the raw title without interpolation use title property instead.
+ * */
+    getDisplayTitle(): string {
+        return this.replaceVariables(this.title, {}, 'text');
+    }
 }
 
 

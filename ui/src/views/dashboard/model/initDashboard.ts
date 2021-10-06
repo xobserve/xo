@@ -110,7 +110,7 @@ export function initDashboard(uid: string | undefined, initOrigin?: any): ThunkR
     runner.run({ dashboard:ds, range: timeSrv.timeRange() });
 
     initOrigin(ds)
-    
+  
     dispatch(dashboardInitCompleted(ds))
   }
 }
@@ -130,7 +130,6 @@ export function resetDashboardVariables(ds: DashboardModel): ThunkResult<void> {
       console.log(err);
     }
 
-    dispatch(dashboardInitCompleted(ds))
   }
 }
 
@@ -149,10 +148,6 @@ export function setVariablesFromUrl(ds0:any): ThunkResult<void> {
       // message.error('Templating init failed')
       console.log(err);
     }
-    
-
-
-    dispatch(dashboardInitCompleted(ds))
   }
 }
 

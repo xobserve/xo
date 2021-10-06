@@ -44,13 +44,13 @@ class PanelWrapper extends PureComponent<Props, State>{
     }
   
     componentDidUpdate() {
-      if (!this.props.plugin) {
-        this.initPlugin(this.props.panel)
-      }
+      // if (!this.props.plugin) {
+      //   this.initPlugin(this.props.panel)
+      // }
 
-      if (this.state.isLazy && this.props.isInView) {
-        this.setState({ isLazy: false });
-      }
+      // if (this.state.isLazy && this.props.isInView) {
+      //   this.setState({ isLazy: false });
+      // }
     }
     
     async initPlugin(panel: PanelModel) {
@@ -92,7 +92,6 @@ class PanelWrapper extends PureComponent<Props, State>{
             
             return (
               <PanelChrome
-              //@ts-ignore
                 plugin={plugin}
                 panel={panel}
                 dashboard={dashboard}
@@ -126,7 +125,8 @@ class PanelWrapper extends PureComponent<Props, State>{
         'panel-wrapper': true,
         'panel-wrapper--view': isViewing,
       });
-  
+    
+
       return (
         <div className={panelWrapperClass} onMouseEnter={this.onMouseEnter} onMouseLeave={this.onMouseLeave}>
           {this.renderPanel(plugin)}
@@ -141,7 +141,7 @@ export const mapStateToProps = (state: StoreState,props) => {
   if (!panelState) {
     return { plugin: null };
   }
-
+  
   return {
     plugin: panelState.plugin,
   };

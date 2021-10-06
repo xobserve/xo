@@ -1,7 +1,7 @@
 // Libraries
 import React, { Component } from 'react';
 import classNames from 'classnames';
-import { Subscription } from 'rxjs';
+import { Subscription, Unsubscribable } from 'rxjs';
 // Components
 import { PanelHeader } from './components/PanelHeader/PanelHeader';
 import { ErrorBoundary, PanelContextProvider, PanelContext, SeriesVisibilityChangeMode } from 'src/packages/datav-core/src/ui';
@@ -34,7 +34,7 @@ import { deleteAnnotation, saveAnnotation, updateAnnotation } from 'src/views/an
 import { applyPanelTimeOverrides } from './model/panel';
 import { PANEL_BORDER } from 'src/core/constants';
 import { getDashboardQueryRunner } from './model/DashboardQueryRunner/DashboardQueryRunner';
-
+import { v4 as uuidv4 } from 'uuid';
 
 const DEFAULT_PLUGIN_ERROR = 'Error in plugin';
 const config = getBootConfig()
@@ -62,10 +62,11 @@ export class PanelChrome extends Component<Props, State> {
   private readonly timeSrv: TimeSrv = getTimeSrv();
   private subs = new Subscription();
   private eventFilter: EventFilterOptions = { onlyLocal: true };
-
+  objectId: string
   constructor(props: Props) {
     super(props);
 
+    this.objectId = uuidv4()
     // Can this eventBus be on PanelModel?  when we have more complex event filtering, that may be a better option
     const eventBus = props.dashboard.events.newScopedBus(`panel:${props.panel.id}`, this.eventFilter);
 
@@ -118,7 +119,7 @@ export class PanelChrome extends Component<Props, State> {
     if (!this.wantsQueryExecution) {
       this.setState({ isFirstLoad: false });
     }
-
+    
     this.subs.add(
       panel
         .getQueryRunner()
