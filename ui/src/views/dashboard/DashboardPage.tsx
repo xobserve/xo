@@ -1,5 +1,5 @@
 import React from 'react';
-import _ from 'lodash'
+import _, { cloneDeep } from 'lodash'
 import classNames from 'classnames'
 import queryString from 'query-string'
 
@@ -384,6 +384,7 @@ class DashboardPage extends React.PureComponent<DashboardPageProps & RouteCompon
         });
 
         const variables = getVariables()
+
         return (
             <div>
                 <HeaderWrapper viewState={viewState} dashboard={dashboard} onAddPanel={this.onAddPanel} onSaveDashboard={this.saveDashboard} onUpdateUrl={this.onUpdateUrl} />

@@ -38,7 +38,7 @@ export const dashboardReducer = (state = initialState, action: any) => {
               pluginId: panel.type,
             };
           }
-          
+
       return {
           ...state,
           dashboard: action.payload,
@@ -59,9 +59,10 @@ export const dashboardReducer = (state = initialState, action: any) => {
     }
 
     if (cleanUpEditPanel.match(action)) {
+        delete state.panels[EDIT_PANEL_ID]
         return {
             ...state,
-            panels: delete state.panels[EDIT_PANEL_ID]
+            panels: state.panels
         }
     }   
 
