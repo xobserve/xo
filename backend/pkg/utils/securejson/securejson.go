@@ -3,9 +3,9 @@ package securejson
 import (
 	"log"
 
-	"github.com/datav-io/datav/backend/pkg/config"
+	"github.com/savecost/datav/backend/pkg/config"
 
-	"github.com/datav-io/datav/backend/pkg/utils"
+	"github.com/savecost/datav/backend/pkg/utils"
 )
 
 // SecureJsonData is used to store encrypted data (for example in data_source table). Only values are separately

@@ -1,7 +1,7 @@
 package common
 
 import (
-	"github.com/datav-io/datav/backend/pkg/i18n"
+	"github.com/savecost/datav/backend/pkg/i18n"
 )
 
 type Response struct {

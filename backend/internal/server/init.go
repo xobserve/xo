@@ -3,10 +3,10 @@ package server
 import (
 	"strings"
 
-	_ "github.com/datav-io/datav/backend/internal/alerting/notifiers"
-	"github.com/datav-io/datav/backend/internal/sqls"
-	"github.com/datav-io/datav/backend/pkg/db"
-	_ "github.com/datav-io/datav/backend/pkg/tsdb/prometheus"
+	_ "github.com/savecost/datav/backend/internal/alerting/notifiers"
+	"github.com/savecost/datav/backend/internal/sqls"
+	"github.com/savecost/datav/backend/pkg/db"
+	_ "github.com/savecost/datav/backend/pkg/tsdb/prometheus"
 )
 
 func initDatabase() error {

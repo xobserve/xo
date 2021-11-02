@@ -1,6 +1,6 @@
 package plugins
 
-import "github.com/datav-io/datav/backend/pkg/models"
+import "github.com/savecost/datav/backend/pkg/models"
 
 type PluginRoute struct {
 	Path         string                `json:"path"`

@@ -1,4 +1,4 @@
-module github.com/datav-io/datav
+module github.com/savecost/datav
 
 go 1.14
 

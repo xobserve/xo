@@ -3,10 +3,10 @@ package alerting
 import (
 	"fmt"
 
-	"github.com/datav-io/datav/backend/internal/alerting/conditions"
-	"github.com/datav-io/datav/backend/pkg/models"
+	"github.com/savecost/datav/backend/internal/alerting/conditions"
+	"github.com/savecost/datav/backend/pkg/models"
 
-	"github.com/datav-io/datav/backend/pkg/utils/simplejson"
+	"github.com/savecost/datav/backend/pkg/utils/simplejson"
 )
 
 // ValidationError is a typed error with meta data
