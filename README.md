@@ -15,6 +15,11 @@
   <a href="https://github.com/datav-io/datav/blob/main/README_CN.md"><b>ReadMe in Chinese</b></a> &bull;
 </h3>
 
+<h1 align="center">
+  Datav is currently being rewritten in Rust
+</h1>
+
+
 Datav is a modern apm solution for enterprises:
 👉 100% open source, keep your source code and data in your own infra
 
