@@ -12,7 +12,7 @@
 
 <h3 align="center">
   <a href="https://datav.io/docs"><b>Documentation</b></a> &bull;
-  <a href="https://github.com/datav-io/datav/blob/main/README_CN.md"><b>ReadMe in Chinese</b></a> &bull;
+  <a href="https://github.com/datav-io/datav/blob/master/README_CN.md"><b>ReadMe in Chinese</b></a> &bull;
 </h3>
 
 <h1 align="center">
