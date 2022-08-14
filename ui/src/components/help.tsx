@@ -1,4 +1,4 @@
-import { Box, Center, Modal, ModalBody, ModalContent, ModalOverlay, Table, TableCaption, TableContainer, Tbody, Td, Text, Th, Thead, Tooltip, Tr, useDisclosure } from "@chakra-ui/react"
+import { Box, Center, Modal, ModalBody, ModalContent, ModalOverlay, Table, Tbody, Td, Text, Th, Thead, Tooltip, Tr, useDisclosure } from "@chakra-ui/react"
 import { memo } from "react"
 import { FaQuestion } from "react-icons/fa"
 import { Help } from "types/misc"
