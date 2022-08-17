@@ -1,4 +1,4 @@
-import { Box, HStack, HTMLChakraProps, Image, Link, Text, useColorMode, useColorModeValue } from "@chakra-ui/react"
+import { Box, HStack, HTMLChakraProps, Image, Text, useColorModeValue } from "@chakra-ui/react"
 import React from "react"
 
 const Logo = (props) => {
