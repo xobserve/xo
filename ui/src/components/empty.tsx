@@ -1,5 +1,5 @@
 import React from "react"
-import { Image, Text, useColorModeValue, VStack } from "@chakra-ui/react"
+import { Image, Text, VStack } from "@chakra-ui/react"
 
 const Empty = () => {
   return (
