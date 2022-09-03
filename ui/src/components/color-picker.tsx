@@ -4,7 +4,6 @@ import {
     Popover,
     PopoverTrigger,
     PopoverContent,
-    Button,
     Center,
 } from "@chakra-ui/react";
 import { PresetColor } from "react-color/lib/components/sketch/Sketch";
