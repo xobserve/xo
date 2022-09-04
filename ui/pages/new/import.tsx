@@ -1,6 +1,6 @@
-import { Box, Button, HStack, Input, InputGroup, InputLeftAddon, Select, Text, Textarea, useToast, VStack } from "@chakra-ui/react"
+import { Box, Button, InputGroup, InputLeftAddon, Select, Text, Textarea, useToast, VStack } from "@chakra-ui/react"
 import Page from "layouts/page/Page"
-import { cloneDeep, isEmpty } from "lodash"
+import { isEmpty } from "lodash"
 import { useRouter } from "next/router"
 import { useEffect, useState } from "react"
 import { FaPlus } from "react-icons/fa"
@@ -10,11 +10,9 @@ import { globalTeamId, Team } from "types/teams"
 import { requestApi } from "utils/axios/request"
 import { isJSON } from "utils/is"
 
-const newTitle = "new dashboard"
 const ImportDashboard = () => {
     const toast = useToast()
     const router = useRouter()
-    const [meta, setMeta] = useState(null)
     const [dashboard, setDashboard] = useState<Dashboard>(null)
     const [teams, setTeams] = useState<Team[]>([])
 
