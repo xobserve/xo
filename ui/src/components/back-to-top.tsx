@@ -1,5 +1,4 @@
-import { Box, Image } from "@chakra-ui/react";
-import Link from "next/link";
+import { Box } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import SvgButton from "./icons/SvgButton";
 
