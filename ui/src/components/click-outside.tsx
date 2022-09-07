@@ -1,5 +1,5 @@
 import { Box } from '@chakra-ui/react';
-import React, { PureComponent, createRef, useEffect, useRef } from 'react';
+import React, { useEffect, useRef } from 'react';
 
 export interface Props {
   /**
