@@ -1,9 +1,7 @@
 import { Button, Heading, Text, VStack } from '@chakra-ui/react'
 import PageContainer1 from 'layouts/page-container'
-import NextLink from 'next/link'
 import * as React from 'react'
 import { FaHome } from 'react-icons/fa'
-import Header from 'src/layouts/header'
 import { t } from 'utils/i18n'
 
 interface Props {
