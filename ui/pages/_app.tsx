@@ -1,12 +1,10 @@
-import { Box, ChakraProvider } from '@chakra-ui/react'
-import { DefaultSeo } from 'next-seo'
+import { ChakraProvider } from '@chakra-ui/react'
 import Head from 'next/head'
-import React, { useEffect } from 'react'
+import React from 'react'
 import FontFace from 'components/font-face'
 import theme from 'theme'
 import { createStandaloneToast } from '@chakra-ui/toast'
 import CommonStyles from "src/theme/common.styles"
-import ErrorBoundary from "components/error-boudary"
 import NoSSR from 'react-no-ssr';
 import dynamic from "next/dynamic"
 
