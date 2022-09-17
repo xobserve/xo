@@ -1,4 +1,4 @@
-import { Box, Button, HStack, Input, InputGroup, InputLeftAddon, Select, Text, useToast, VStack } from "@chakra-ui/react"
+import { Box, Button, Input, InputGroup, InputLeftAddon, Select, Text, useToast, VStack } from "@chakra-ui/react"
 import Page from "layouts/page/Page"
 import { cloneDeep } from "lodash"
 import { useRouter } from "next/router"
