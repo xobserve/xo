@@ -1,4 +1,4 @@
-import { Box, Card, CardBody, CardHeader, Heading, Stack, StackDivider } from "@chakra-ui/react"
+import { Box, Card, CardBody, CardHeader, Stack, StackDivider } from "@chakra-ui/react"
 
 
 interface Props {
