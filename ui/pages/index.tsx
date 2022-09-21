@@ -1,12 +1,8 @@
 import {
-  ChakraProvider,
-  Box,
   Text,
   Link,
   VStack,
   Code,
-  Grid,
-  createStandaloneToast,
 } from "@chakra-ui/react"
 import { t } from "utils/i18n"
 import PageContainer from "layouts/page-container"
