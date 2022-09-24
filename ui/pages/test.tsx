@@ -1,4 +1,4 @@
-import React, { useEffect, useLayoutEffect, useRef, useState } from 'react';
+import React, { useEffect, useLayoutEffect, useRef } from 'react';
 import G6, { Graph } from '@antv/g6';
 import { Box, useColorMode } from '@chakra-ui/react';
 import { ColorModeSwitcher } from 'components/ColorModeSwitcher';
