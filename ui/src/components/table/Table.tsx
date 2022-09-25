@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react'
-import { useTable, useFilters, useGlobalFilter, useAsyncDebounce, useSortBy, usePagination } from 'react-table'
+import { useTable, useFilters, useGlobalFilter,  useSortBy, usePagination } from 'react-table'
 
-import { Table, Tbody, Td, Text, Tfoot, Th, Thead, Tr } from '@chakra-ui/react'
+import { Table, Tbody, Td, Th, Thead, Tr } from '@chakra-ui/react'
 import { DefaultColumnFilter, fuzzyTextFilterFn, GlobalFilter } from './filters'
 
 
