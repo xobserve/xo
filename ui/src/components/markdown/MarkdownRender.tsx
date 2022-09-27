@@ -2,7 +2,7 @@ import React, { useRef, useEffect, useState } from 'react';
 import Markdown from 'markdown-to-jsx';
 import hljs from 'highlight.js';
 import 'highlight.js/styles/atom-one-dark.css';
-import { Box, chakra, Flex, PropsOf } from '@chakra-ui/react';
+import {  chakra, Flex, PropsOf } from '@chakra-ui/react';
 
 
 type Props = PropsOf<typeof chakra.div> & {
