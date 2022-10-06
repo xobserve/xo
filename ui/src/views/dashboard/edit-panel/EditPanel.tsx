@@ -1,8 +1,8 @@
-import { Box, Button, Center, Flex, HStack, Image, Input, Modal, ModalBody, ModalContent, ModalHeader, ModalOverlay, Select, SimpleGrid, Switch, Text, Textarea, useDisclosure, VStack } from "@chakra-ui/react"
+import { Box, Button, Center, Flex, HStack, Image, Input, Modal, ModalBody, ModalContent, ModalHeader, ModalOverlay, SimpleGrid, Switch, Text, Textarea, useDisclosure } from "@chakra-ui/react"
 import { ColorModeSwitcher } from "components/ColorModeSwitcher"
 import AutoSizer from 'react-virtualized-auto-sizer';
-import { cloneDeep, defaults, upperFirst } from "lodash"
-import { useCallback, useEffect, useMemo, useState } from "react"
+import { upperFirst } from "lodash"
+import { useEffect, useState } from "react"
 import { Dashboard, Panel, PanelType } from "types/dashboard"
 import { PanelEventWrapper } from "../grid/PanelGrid"
 import GraphPanelEditor from "../plugins/panel/graph/Editor"
@@ -10,14 +10,12 @@ import TextPanelEditor from "../plugins/panel/text/Editor"
 import PanelAccordion from "./Accordion"
 import PanelEditItem from "./PanelEditItem"
 import EditPanelQuery from "./Query"
-import { Variable } from "types/variable";
 import TablePanelEditor from "../plugins/panel/table/Editor";
 import { useImmer } from "use-immer";
-import { useRouter } from "next/router";
 import { removeParamFromUrl } from "utils/url";
 import { useSearchParam } from "react-use";
 import NodeGraphPanelEditor from "../plugins/panel/nodeGraph/Editor";
-import { FaArrowDown, FaArrowUp, FaUser } from "react-icons/fa";
+import { FaArrowDown, FaArrowUp } from "react-icons/fa";
 
 interface EditPanelProps {
     dashboard: Dashboard
