@@ -1,15 +1,15 @@
 import { Dashboard, DatasourceType, Panel, PanelType } from "types/dashboard"
 import AutoSizer from 'react-virtualized-auto-sizer';
-import { Box, Center, HStack, Input, Menu, MenuButton, MenuDivider, MenuItem, MenuList, Modal, ModalBody, ModalCloseButton, ModalContent, ModalHeader, ModalOverlay, Tab, TabList, TabPanel, TabPanels, Tabs, Text, Textarea, Tooltip, useColorModeValue, useDisclosure, useToast } from "@chakra-ui/react";
-import { FaBook, FaCopy, FaEdit, FaRegCopy, FaTrashAlt } from "react-icons/fa";
+import { Box, Center, HStack,  Menu, MenuButton, MenuDivider, MenuItem, MenuList, Modal, ModalBody, ModalCloseButton, ModalContent, ModalHeader, ModalOverlay, Tab, TabList, TabPanel, TabPanels, Tabs, Textarea, Tooltip, useColorModeValue, useDisclosure, useToast } from "@chakra-ui/react";
+import { FaBook, FaEdit, FaRegCopy, FaTrashAlt } from "react-icons/fa";
 import { IoMdInformation } from "react-icons/io";
 import TextPanel from "../plugins/panel/text/Text";
-import { memo, useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
+import { memo, useEffect, useState } from "react";
 import { run_prometheus_query } from "../plugins/datasource/prometheus/query_runner";
 import { DataFrame } from "types/dataFrame";
 import GraphPanel from "../plugins/panel/graph/Graph";
 import { PANEL_BODY_PADDING, PANEL_HEADER_HEIGHT, StorageCopiedPanelKey } from "src/data/constants";
-import { cloneDeep, isArray, isEmpty, isEqual } from "lodash";
+import { isArray, isEmpty, isEqual } from "lodash";
 import { TimeRange } from "types/time";
 import { Variable } from "types/variable";
 import { replaceWithVariables } from "utils/variable";
