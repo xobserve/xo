@@ -1,16 +1,13 @@
 import { Dashboard, Panel, PanelType } from "types/dashboard"
-import ReactGridLayout, { ItemCallback } from 'react-grid-layout';
+import ReactGridLayout from 'react-grid-layout';
 import sizeMe from 'react-sizeme';
 import { GRID_CELL_HEIGHT, GRID_CELL_VMARGIN, GRID_COLUMN_COUNT } from "src/data/constants";
 import { updateGridPos } from "utils/dashboard/panel";
 import { Box } from "@chakra-ui/react";
 import PanelGrid from "./PanelGrid";
-import { memo, useEffect, useState } from "react";
+import { memo } from "react";
 import EditPanel from "../edit-panel/EditPanel";
-import { TimeRange } from "types/time";
-import { Variable } from "types/variable";
 import uPlot from "uplot";
-import { useRouter } from "next/router";
 
 
 
