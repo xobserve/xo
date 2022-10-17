@@ -1,7 +1,6 @@
 import { Button, Flex, Text, useDisclosure, useToast } from "@chakra-ui/react";
-import { remove } from "lodash";
 import { EditVariable, VariablesTable } from "pages/cfg/variables";
-import { useEffect, useState } from "react";
+import {  useState } from "react";
 import { Dashboard } from "types/dashboard";
 import { Variable } from "types/variable";
 
