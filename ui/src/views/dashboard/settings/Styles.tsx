@@ -1,5 +1,4 @@
-import { Box, HStack, Input, Switch, Tag, TagCloseButton, TagLabel, Text, useToast, VStack } from "@chakra-ui/react"
-import { cloneDeep } from "lodash"
+import { Box, Input, Text, useToast, VStack } from "@chakra-ui/react"
 import { useEffect, useState } from "react"
 import { Dashboard } from "types/dashboard"
 
@@ -9,7 +8,6 @@ interface Props {
 }
 
 const StyleSettings = ({ dashboard, onChange }: Props) => {
-    const toast = useToast()
     useEffect(() => {
         if (!dashboard.data.tags) {
             dashboard.data.tags = []
