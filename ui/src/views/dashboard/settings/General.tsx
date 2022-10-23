@@ -1,5 +1,4 @@
 import { Box, HStack, Input, Switch, Tag, TagCloseButton, TagLabel, Text, useToast, VStack } from "@chakra-ui/react"
-import { cloneDeep } from "lodash"
 import { useEffect, useState } from "react"
 import { Dashboard } from "types/dashboard"
 
