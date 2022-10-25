@@ -6,8 +6,6 @@ import {
     MenuList,
     MenuItem,
     MenuDivider,
-    Image,
-    Button,
     useColorModeValue,
     chakra
 } from "@chakra-ui/react"
@@ -15,12 +13,11 @@ import useSession from "hooks/use-session"
 import { useRouter } from "next/router"
 import storage from "utils/localStorage"
 
-import { FaRegSun, FaUserAlt, FaBookmark, FaSignOutAlt, FaEdit, FaStar, FaThLarge, FaSignInAlt } from "react-icons/fa"
+import { FaRegSun, FaUserAlt, FaSignOutAlt, FaStar, FaSignInAlt } from "react-icons/fa"
 
 
 import Link from "next/link"
 import { isAdmin } from "types/role"
-import { isEmpty } from "lodash"
 
 const UserMenu = ({fontSize="1.2rem"}) => {
     const { session, logout } = useSession()
