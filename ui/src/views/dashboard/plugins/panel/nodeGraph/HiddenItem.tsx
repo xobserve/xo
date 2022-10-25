@@ -1,7 +1,7 @@
 import { Graph, Node } from "@antv/g6"
-import { Box, Button, Center, Divider, Flex, HStack, Popover, PopoverArrow, PopoverBody, PopoverContent, PopoverTrigger, Text, Tooltip, VStack } from "@chakra-ui/react"
+import { Box, Button, Divider, Flex, HStack, Popover, PopoverArrow, PopoverBody, PopoverContent, PopoverTrigger, Text, Tooltip, VStack } from "@chakra-ui/react"
 import { memo, useEffect, useState } from "react"
-import { FaEye, FaEyeSlash, FaTimes } from "react-icons/fa"
+import { FaEye, FaEyeSlash } from "react-icons/fa"
 import { PanelData } from "types/dashboard"
 import { useImmer } from "use-immer"
 
