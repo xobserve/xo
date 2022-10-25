@@ -1,7 +1,6 @@
 import G6 from "@antv/g6";
 import { useToast } from "@chakra-ui/react";
 import { useRouter } from "next/router";
-import { useEffect, useState } from "react";
 import { setVariable } from "src/views/variables/Variables";
 import { NodeGraphSettings } from "types/dashboard";
 
