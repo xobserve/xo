@@ -1,9 +1,9 @@
 
 
-import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import G6,{ Graph } from '@antv/g6';
-import { Box, Text, useColorMode } from '@chakra-ui/react';
-import { Panel, PanelData, PanelProps } from 'types/dashboard';
+import { Box, useColorMode } from '@chakra-ui/react';
+import { Panel, PanelProps } from 'types/dashboard';
 import { initTooltip } from './plugins/tooltip';
 import {  getActiveEdgeLabelCfg } from './default-styles';
 import { initLegend } from './plugins/legend';
