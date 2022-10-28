@@ -1,6 +1,5 @@
-import { Box, Button, Flex, Modal, ModalBody, ModalCloseButton, ModalContent, ModalOverlay, Tab, TabList, TabPanel, TabPanels, Tabs, Text, useDisclosure } from "@chakra-ui/react"
+import {  Modal, ModalBody, ModalCloseButton, ModalContent, ModalOverlay, Tab, TabList, TabPanel, TabPanels, Tabs, Text, useDisclosure } from "@chakra-ui/react"
 import IconButton from "components/button/IconButton"
-import { useState } from "react"
 import { FaCog } from "react-icons/fa"
 import { Dashboard } from "types/dashboard"
 import GeneralSettings from "./General"
