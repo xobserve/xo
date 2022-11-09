@@ -1,13 +1,11 @@
 import { Box, Select, useToast } from "@chakra-ui/react"
-import { variables } from "src/views/dashboard/Dashboard"
 import { NumberRangeColumnFilter } from "components/table/filters"
 import ReactTable from "components/table/Table"
-import { setVariable, setVariableValue } from "src/views/variables/Variables"
+import { setVariable } from "src/views/variables/Variables"
 import { useRouter } from "next/router"
 import React, { useEffect, useMemo } from "react"
 import { PanelProps } from "types/dashboard"
 import { DataFrame } from "types/dataFrame"
-import { Variable } from "types/variable"
 
 const TablePanel = (props: PanelProps) => {
     const router = useRouter()
