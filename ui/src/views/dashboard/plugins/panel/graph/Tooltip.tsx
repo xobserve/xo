@@ -1,4 +1,4 @@
-import { Box, Center, Text } from "@chakra-ui/react";
+import { Box, Text } from "@chakra-ui/react";
 import { Portal } from "components/portal/Portal";
 import SeriesTable, { seriesFilterType } from "components/Tooltip/SeriesTable";
 import { TooltipContainer } from "components/Tooltip/Tooltip";
