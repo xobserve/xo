@@ -1,7 +1,7 @@
-import { Alert, Input, NumberDecrementStepper, NumberIncrementStepper, NumberInput, NumberInputField, NumberInputStepper, Switch, Text, Textarea } from "@chakra-ui/react"
+import { Alert, NumberDecrementStepper, NumberIncrementStepper, NumberInput, NumberInputField, NumberInputStepper, Switch, Text, Textarea } from "@chakra-ui/react"
 import PanelAccordion from "src/views/dashboard/edit-panel/Accordion"
 import PanelEditItem from "src/views/dashboard/edit-panel/PanelEditItem"
-import { Panel, PanelEditorProps } from "types/dashboard"
+import {  PanelEditorProps } from "types/dashboard"
 
 const TablePanelEditor = ({ panel, onChange }: PanelEditorProps) => {
     return (<PanelAccordion title="Table setting">
