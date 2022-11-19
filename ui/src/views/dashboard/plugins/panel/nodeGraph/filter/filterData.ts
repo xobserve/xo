@@ -1,4 +1,3 @@
-import { Graph } from "@antv/g6"
 import { isEmpty } from "lodash"
 import { PanelData } from "types/dashboard"
 import storage from "utils/localStorage"
