@@ -1,7 +1,7 @@
 import G6, { Graph } from "@antv/g6"
 import { Box, HStack, Text, Tooltip } from "@chakra-ui/react"
 import { memo, useEffect, useState } from "react"
-import { FaEye, FaMinus, FaPlus, FaRegCircle, FaSearch } from "react-icons/fa"
+import { FaMinus, FaPlus, FaRegCircle } from "react-icons/fa"
 import Filter from "./filter/Filter"
 
 interface Props {
