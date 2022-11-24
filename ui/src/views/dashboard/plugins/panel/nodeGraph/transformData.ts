@@ -1,5 +1,5 @@
 import G6 from "@antv/g6";
-import { NodeGraphSettings, Panel } from "types/dashboard";
+import { NodeGraphSettings } from "types/dashboard";
 import { NodeGraphData } from "types/dataFrame";
 import { getDefaultEdgeStyle } from "./default-styles";
 
