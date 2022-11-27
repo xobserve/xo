@@ -19,6 +19,7 @@ import { useImmer } from "use-immer"
 import { setAutoFreeze } from "immer";
 import { initPanelSettings } from "./plugins/panel/initSettings"
 import BorderBox8 from "components/largescreen/border/Border8"
+import BorderBox9 from "components/largescreen/border/Border9"
  
 
 
@@ -137,7 +138,7 @@ const DashboardWrapper = ({dashboardId}) => {
         <>
             <PageContainer fullscreen={fullscreen} bg={dashboard?.data.styles?.bg}>
                 {dashboard && <Box pl="6px" pr="6px" width="100%">
-                    <BorderBox8 style={{width:"100%", height:"500px"}} reverse><Box height="100%" width="100%" display="flex" alignItems="center" justifyContent="center">dv-border-box-1</Box></BorderBox8>
+                    <BorderBox9 style={{width:"100%", height:"500px"}} reverse><Box height="100%" width="100%" display="flex" alignItems="center" justifyContent="center">dv-border-box-1</Box></BorderBox9>
                     <DashboardHeader fullscreen={fullscreen} onFullscreenChange={onFullscreenChange} dashboard={dashboard} onTimeChange={t => {dispatch({type:  TimeChangedEvent,data: t});setTimeRange(t)}} timeRange={timeRange}  onChange={onDashbardChange} />
                     <Box mt={fullscreen ? 0 : (visibleVars?.length > 0 ? "67px" : "38px")} py="2">
                         {dashboard.data.panels?.length > 0 && <DashboardGrid dashboard={dashboard} onChange={onDashbardChange} />}
