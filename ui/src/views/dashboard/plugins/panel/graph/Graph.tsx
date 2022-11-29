@@ -1,8 +1,8 @@
 import UplotReact from "components/uPlot/UplotReact"
-import { memo, useCallback, useEffect, useMemo, useRef, useState } from "react"
-import { Panel, PanelProps } from "types/dashboard"
+import { memo, useCallback, useMemo, useRef, useState } from "react"
+import { PanelProps } from "types/dashboard"
 import 'uplot/dist/uPlot.min.css';
-import uPlot, { Series } from "uplot"
+import uPlot from "uplot"
 
 import { parseOptions } from './options';
 import { DataFrame } from "types/dataFrame";
