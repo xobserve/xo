@@ -17,5 +17,6 @@ export interface BorderBoxProps {
     color?: string[]
     backgroundColor?: string
     reverse?: boolean
+    dur?: number
   }
   
