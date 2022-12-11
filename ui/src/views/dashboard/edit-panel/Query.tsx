@@ -1,5 +1,4 @@
 import { Box, Button, Flex, HStack, Image, Select, Text, VStack } from "@chakra-ui/react"
-import { upperFirst } from "lodash"
 import { FaPlus, FaTrashAlt } from "react-icons/fa"
 import { DatasourceType, Panel } from "types/dashboard"
 import JaegerQueryEditor from "../plugins/datasource/jaeger/Editor"
