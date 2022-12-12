@@ -3,7 +3,6 @@
 
 import { Panel, PanelQuery } from "types/dashboard"
 import { DataFrame, FieldType } from "types/dataFrame"
-import { concat } from "lodash"
 import { TimeRange } from "types/time"
 
 export const run_jaeger_query = async (panel: Panel, q: PanelQuery,range: TimeRange) => {
