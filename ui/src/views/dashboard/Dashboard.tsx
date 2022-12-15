@@ -18,10 +18,6 @@ import { TimeChangedEvent, VariableChangedEvent } from "src/data/bus-events"
 import { useImmer } from "use-immer"
 import { setAutoFreeze } from "immer";
 import { initPanelSettings } from "./plugins/panel/initSettings"
-import Decoration12 from "components/largescreen/decoration/Decoration12"
-import Loading from "components/loading/Loading"
-import BorderBox1 from "components/largescreen/border/Border1"
-import BorderBox2 from "components/largescreen/border/Border2"
 import BorderBox3 from "components/largescreen/border/Border3"
  
 
