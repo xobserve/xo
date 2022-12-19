@@ -16,5 +16,6 @@ export interface BorderBoxProps {
     style?: React.CSSProperties
     color?: string[]
     backgroundColor?: string
+    reverse?: boolean
   }
   
