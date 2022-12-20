@@ -1,10 +1,8 @@
-import { Box, HStack, Input, Text, Textarea, VStack } from "@chakra-ui/react"
-import PanelAccordion from "src/views/dashboard/edit-panel/Accordion"
-import PanelEditItem from "src/views/dashboard/edit-panel/PanelEditItem"
+import { HStack, Input,VStack } from "@chakra-ui/react"
 import Label from "components/label/Label"
 import { cloneDeep } from "lodash"
 import { useState } from "react"
-import { Panel, PanelDatasource, PanelQuery } from "types/dashboard"
+import { PanelQuery } from "types/dashboard"
 
 interface Props {
     query : PanelQuery
