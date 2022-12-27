@@ -2,7 +2,6 @@
 // 2. Convert the data to the format which AiAPM expects
 
 import { Panel, PanelQuery, PanelType } from "types/dashboard"
-import { DataFrame, FieldType } from "types/dataFrame"
 import { TimeRange } from "types/time"
 import { prometheusDataToDataFrame } from "../prometheus/query_runner"
 import graphData from './mocks/prometheus_graph.json'
