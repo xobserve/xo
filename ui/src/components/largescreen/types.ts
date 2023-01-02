@@ -9,3 +9,12 @@ export interface DecorationProps {
     scanDur?: number
     haloDur?: number
 }
+
+export interface BorderBoxProps {
+    children?: React.ReactNode
+    className?: string
+    style?: React.CSSProperties
+    color?: string[]
+    backgroundColor?: string
+  }
+  

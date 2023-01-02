@@ -9,21 +9,15 @@ import { deepClone } from '@jiaminghi/c-render/lib/plugin/util'
 
 import useAutoResize from '../autoResize'
 import { Box } from '@chakra-ui/react'
+import { BorderBoxProps } from '../types'
 
 
 const border = ['left-top', 'right-top', 'left-bottom', 'right-bottom']
 const defaultColor = ['#4fd2dd', '#235fa7']
 
-interface BorderBoxProps {
-  children?: React.ReactNode
-  className?: string
-  style?: React.CSSProperties
-  color?: string[]
-  backgroundColor?: string
-}
 
 
-const BorderBox1 = forwardRef(({ children, className, style, color = [], backgroundColor = 'transparent' }:BorderBoxProps, ref) => {
+const BorderBox1 = forwardRef(({ children, className, style, color = [], backgroundColor = 'transparent' }: BorderBoxProps, ref) => {
   const { width, height, domRef } = useAutoResize(ref)
 
   const mergedColor = useMemo(() => deepMerge(deepClone(defaultColor, true), color || []), [color])
