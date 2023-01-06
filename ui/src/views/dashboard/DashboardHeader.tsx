@@ -1,4 +1,4 @@
-import { Box, Flex, HStack, Modal, ModalBody, ModalContent, ModalOverlay, Popover, PopoverArrow, PopoverBody, PopoverContent, PopoverTrigger, Portal, Select, Tooltip, useColorModeValue, useDisclosure, useToast, VStack } from "@chakra-ui/react"
+import { Box, Flex, HStack, Modal, ModalBody, ModalContent, ModalOverlay, Select, Tooltip, useColorModeValue, useDisclosure, useToast, VStack } from "@chakra-ui/react"
 import IconButton from "components/button/IconButton"
 import TimePicker, { getInitTimeRange, TimePickerKey } from "components/TimePicker"
 import SelectVariables from "src/views/variables/Variables"
