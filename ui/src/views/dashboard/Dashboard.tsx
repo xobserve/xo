@@ -18,7 +18,6 @@ import { TimeChangedEvent, VariableChangedEvent } from "src/data/bus-events"
 import { useImmer } from "use-immer"
 import { setAutoFreeze } from "immer";
 import { initPanelSettings } from "./plugins/panel/initSettings"
-import Decoration11 from "components/largescreen/decoration/Decoration11"
 import Decoration12 from "components/largescreen/decoration/Decoration12"
  
 
