@@ -6,4 +6,6 @@ export interface DecorationProps {
     style?: React.CSSProperties
     color?: string[]
     children?: any
+    scanDur?: number
+    haloDur?: number
 }
