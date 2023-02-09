@@ -19,6 +19,7 @@ import { useImmer } from "use-immer"
 import { setAutoFreeze } from "immer";
 import { initPanelSettings } from "./plugins/panel/initSettings"
 import Decoration10 from "components/largescreen/decoration/Decoration10"
+import Decoration11 from "components/largescreen/decoration/Decoration11"
  
 
 
@@ -137,7 +138,7 @@ const DashboardWrapper = ({dashboardId}) => {
         <>
             <PageContainer fullscreen={fullscreen} bg={dashboard?.data.styles?.bg}>
                 {dashboard && <Box pl="6px" pr="6px" width="100%">
-                    <Decoration10 />
+                    <Decoration11 style={{width: '200px',height: '60px'}}>aaa</Decoration11>
                     <DashboardHeader fullscreen={fullscreen} onFullscreenChange={onFullscreenChange} dashboard={dashboard} onTimeChange={t => {dispatch({type:  TimeChangedEvent,data: t});setTimeRange(t)}} timeRange={timeRange}  onChange={onDashbardChange} />
                     <Box mt={fullscreen ? 0 : (visibleVars?.length > 0 ? "67px" : "38px")} py="2">
                         {dashboard.data.panels?.length > 0 && <DashboardGrid dashboard={dashboard} onChange={onDashbardChange} />}
