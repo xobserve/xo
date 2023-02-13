@@ -16,7 +16,7 @@
 </h3>
 
 <h1 align="center">
-  Datav is currently being rewritten in Rust
+  Datav is currently being rewritten in Rust, Coming back soon!
 </h1>
 
 
