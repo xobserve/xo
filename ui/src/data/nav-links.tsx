@@ -1,4 +1,4 @@
-import {  FaBell, FaDatabase, FaHome,FaRegChartBar, FaThLarge, FaUser, FaUserEdit, FaUsersCog } from 'react-icons/fa'
+import {  FaBell, FaDatabase, FaHome,FaRegChartBar, FaTerminal, FaThLarge, FaUser, FaUserEdit, FaUsersCog } from 'react-icons/fa'
 import { Route } from 'types/route'
 
 // 这里是默认的主菜单设置，但是会被服务器的配置所覆盖！
@@ -12,7 +12,7 @@ export const navLinks: Route[] = [
         title: '应用监控',
         url: '/apps',
         icon: "FaThLarge",
-        subLinks: [
+        children: [
             {
                 title: '应用列表',
                 url: '/apps/list',
@@ -52,6 +52,12 @@ export const cfgLinks = [
         url: '/cfg/users',
         baseUrl: '/cfg/users',
         icon: <FaUser />
+    },
+    {
+        title: 'Variables',
+        url: '/cfg/variables',
+        baseUrl: '/cfg/variables',
+        icon: <FaTerminal />
     },
 ]
 

@@ -17,17 +17,17 @@ export interface TeamMember {
 }
 
 export interface SideMenu {
-    id: number
     teamId : number
     isPublic?: boolean
     teamName? : string
-    desc? : string
+    brief? : string
     data: MenuItem[]
 }
 
 export interface MenuItem {
     url: string
     title: string
+    dashboardId: string
     icon?: string
     children?: MenuItem[]
     expanded?: boolean

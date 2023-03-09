@@ -83,32 +83,37 @@ func initTables() error {
 	// insert global sidemenu
 	menu := []map[string]interface{}{
 		{
-			"title":    "首页大盘",
-			"url":      "/",
-			"icon":     "FaHome",
-			"expanded": true,
+			"title":       "首页大盘",
+			"url":         "/",
+			"icon":        "FaHome",
+			"dashboardId": models.HomeDashboardId,
+			"expanded":    true,
 		},
 		{
-			"title": "应用监控",
-			"url":   "/apps",
-			"icon":  "FaCubes",
+			"title":       "应用监控",
+			"url":         "/apps",
+			"icon":        "FaCubes",
+			"dashboardId": models.HomeDashboardId,
 			"children": []map[string]string{
 				{
-					"title": "应用列表",
-					"url":   "/apps/list",
+					"title":       "应用列表",
+					"url":         "/apps/list",
+					"dashboardId": models.HomeDashboardId,
 				},
 				{
-					"title": "接口统计",
-					"url":   "/apps/api",
+					"title":       "接口统计",
+					"url":         "/apps/api",
+					"dashboardId": models.HomeDashboardId,
 				},
 			},
 			"expanded": true,
 		},
 		{
-			"title":    "服务器监控",
-			"url":      "/servers",
-			"icon":     "FaRegChartBar",
-			"expanded": true,
+			"title":       "服务器监控",
+			"url":         "/servers",
+			"icon":        "FaRegChartBar",
+			"dashboardId": models.HomeDashboardId,
+			"expanded":    true,
 		},
 	}
 	menuStr, err := json.Marshal(menu)

@@ -8,6 +8,7 @@ import (
 	"github.com/ai-apm/aiapm/backend/internal/storage"
 	"github.com/ai-apm/aiapm/backend/internal/teams"
 	"github.com/ai-apm/aiapm/backend/internal/user"
+	"github.com/ai-apm/aiapm/backend/internal/variables"
 	"github.com/ai-apm/aiapm/backend/pkg/common"
 	"github.com/ai-apm/aiapm/backend/pkg/config"
 	"github.com/ai-apm/aiapm/backend/pkg/e"
@@ -70,6 +71,13 @@ func (s *Server) Start() error {
 		r.DELETE("/team/leave/:id", IsLogin(), teams.LeaveTeam)
 		r.GET("/team/sidemenu/:id", IsLogin(), teams.GetSideMenu)
 		r.POST("/team/sidemenu", IsLogin(), teams.UpdateSideMenu)
+		r.GET("/team/sidemenus/forUser", IsLogin(), teams.GetAvailableSidMenusForUser)
+		r.POST("/team/sidemenu/select/:teamId", IsLogin(), teams.SelectSideMenuForUser)
+
+		// variable apis
+		r.POST("/variable/new", IsLogin(), variables.AddNewVariable)
+		r.GET("/variable/all", IsLogin(), variables.GetVariables)
+		r.POST("/variable/update", IsLogin(), variables.UpdateVariable)
 
 		// admin apis
 		r.GET("/admin/users", IsLogin(), admin.GetUsers)

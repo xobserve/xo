@@ -8,5 +8,5 @@ export interface Route  {
     title: string 
     disabled?: boolean
     minRole?: Role
-    subLinks?: Route[]
+    children?: Route[]
 }

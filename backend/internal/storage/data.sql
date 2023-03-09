@@ -12,6 +12,7 @@ CREATE TABLE IF NOT EXISTS user (
     email VARCHAR(255) NOT NULL UNIQUE,
     last_seen_at DATETIME,
     is_diabled BOOL NOT NULL DEFAULT false,
+    sidemenu INTEGER DEFAULT 1,
     created DATETIME NOT NULL,
     updated DATETIME NOT NULL
 );
@@ -53,8 +54,7 @@ CREATE INDEX team_member_user_id ON team_member (user_id);
 CREATE UNIQUE INDEX team_member_team_user_id ON team_member (team_id, user_id);
 
 CREATE TABLE IF NOT EXISTS sidemenu (
-    id INTEGER PRIMARY KEY AUTO_INCREMENT,
-    team_id INTEGER NOT NULL,
+    team_id INTEGER PRIMARY KEY  NOT NULL,
     is_public BOOL NOT NULL,
     brief VARCHAR(255) DEFAUlT '',
     data MEDIUMTEXT NOT NULL,
@@ -63,4 +63,14 @@ CREATE TABLE IF NOT EXISTS sidemenu (
     updated DATETIME NOT NULL
 );
 
-CREATE UNIQUE INDEX  sidemenu_team_id ON sidemenu (team_id);
+CREATE TABLE IF NOT EXISTS variable (
+    id INTEGER PRIMARY KEY AUTO_INCREMENT,
+    name VARCHAR(60) NOT NULL,
+    type VARCHAR(10) NOT NULL,
+    value TEXT,
+    external_url VARCHAR(255) DEFAULT '',
+    created DATETIME NOT NULL,
+    updated DATETIME NOT NULL
+);
+
+CREATE UNIQUE INDEX variable_name ON variable (name);

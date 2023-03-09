@@ -16,4 +16,5 @@ export interface User {
     email: string
     created: string
     password?: string
+    sidemenu?: number
 }

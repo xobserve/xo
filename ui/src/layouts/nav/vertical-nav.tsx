@@ -16,7 +16,7 @@ import {
   Divider
 } from "@chakra-ui/react"
 import siteConfig from "src/data/configs/site-config.json"
-import React, { useState } from "react"
+import React, { useEffect, useState } from "react"
 import * as Icons from "react-icons/fa"
 
 import { useRouter } from "next/router"
@@ -30,9 +30,14 @@ import dynamic from "next/dynamic"
 import UserMenu from "components/user/UserMenu"
 import ReserveUrls from "src/data/reserve-urls"
 import Link from "next/link"
+import UserSidemenus from "components/team/UserSidemenus"
+import useSession from "hooks/use-session"
+import { requestApi } from "utils/axios/request"
+import { Route } from "types/route"
 
 
 const VerticalNav = dynamic(async () => (props) => {
+  const {session} = useSession()
   const ref = React.useRef<HTMLHeadingElement>()
 
   const [miniMode, setMiniMode] = useState(true)
@@ -40,9 +45,22 @@ const VerticalNav = dynamic(async () => (props) => {
   const router = useRouter()
   const { asPath } = router
 
+  
 
   const borderColor = useColorModeValue(customColors.borderColor.light, customColors.borderColor.dark)
 
+  const [sidemenu, setSidemenu] = useState<Route[]>(navLinks)
+  useEffect(() => {
+    if (session) {
+      loadSidemenu()
+    }
+  },[session])
+
+  const loadSidemenu = async () => {
+    const res = await requestApi.get(`/team/sidemenu/${session.user.sidemenu}`)
+    setSidemenu(res.data.data)
+  }
+  
   return (
     <Box width="80px">
       <chakra.header
@@ -63,8 +81,8 @@ const VerticalNav = dynamic(async () => (props) => {
               <Box onClick={() => setMiniMode(!miniMode)}>
                 <Logo />
               </Box>
-              {navLinks.length > 0 && asPath && router && <VStack p="0" pt="2" spacing="0" fontSize="1rem" alignItems="left" >
-                {navLinks.map(link => {
+              {sidemenu.length > 0 && asPath && router && <VStack p="0" pt="2" spacing="0" fontSize="1rem" alignItems="left" >
+                {sidemenu.map(link => {
                   let arialCurrent = undefined
                   if (link.url == "/") {
                     if (link.url == asPath) {
@@ -80,16 +98,16 @@ const VerticalNav = dynamic(async () => (props) => {
                     <Popover trigger="hover" placement="right">
                       <PopoverTrigger>
                         <Box>
-                          <NavItem asPath={asPath} url={link.subLinks?.length > 0 ? link.subLinks[0].url : link.url} path={link.url} icon={link.icon} title={link.title} miniMode={miniMode} />
+                          <NavItem asPath={asPath} url={link.children?.length > 0 ? link.children[0].url : link.url} path={link.url} icon={link.icon} title={link.title} miniMode={miniMode} />
                         </Box>
                       </PopoverTrigger>
                       <PopoverContent width="fit-content" minWidth="120px" border="null" pl="1">
-                        <PopoverHeader borderBottomWidth={link.subLinks?.length > 0 ? '1px' : '0px'}>
-                          <Link href={link.subLinks?.length > 0 ? link.subLinks[0].url : link.url}>{link.title}</Link>
+                        <PopoverHeader borderBottomWidth={link.children?.length > 0 ? '1px' : '0px'}>
+                          <Link href={link.children?.length > 0 ? link.children[0].url : link.url}>{link.title}</Link>
                         </PopoverHeader>
-                        {link.subLinks?.length > 0 && <PopoverBody pt="3">
+                        {link.children?.length > 0 && <PopoverBody pt="3">
                           <VStack alignItems="left" spacing="3">
-                            {link.subLinks.map(subLink =>
+                            {link.children.map(subLink =>
                               <Link href={subLink.url}>
                                 <Text color={asPath == subLink.url ? useColorModeValue("brand.500", "brand.200") : useColorModeValue("gray.500", "whiteAlpha.800")}>{subLink.title}</Text>
                               </Link>
@@ -114,6 +132,11 @@ const VerticalNav = dynamic(async () => (props) => {
               <NavItem asPath={asPath} url={`${ReserveUrls.Search}`} path={ReserveUrls.Search} icon="FaSearch" title="探索仪表盘" miniMode={miniMode} />
               <NavItem asPath={asPath} url={`${ReserveUrls.Config}/teams`} path={ReserveUrls.Config} icon="FaCog" title="配置管理" miniMode={miniMode} />
               <Divider />
+              <HStack spacing="0">
+                <UserSidemenus />
+                <Collapse in={!miniMode} ><Text>选择侧菜单</Text></Collapse>
+              </HStack>
+
               <HStack spacing="0">
                 <Link
                   href={siteConfig.repo.url}

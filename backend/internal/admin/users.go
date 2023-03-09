@@ -1,11 +1,13 @@
 package admin
 
 import (
+	"encoding/json"
 	"net/http"
 	"sort"
 	"strconv"
 	"time"
 
+	"github.com/ai-apm/aiapm/backend/internal/teams"
 	"github.com/ai-apm/aiapm/backend/internal/user"
 	"github.com/ai-apm/aiapm/backend/pkg/common"
 	"github.com/ai-apm/aiapm/backend/pkg/db"
@@ -268,6 +270,23 @@ func AddNewTeam(c *gin.Context) {
 	_, err = tx.Exec("INSERT INTO team_member (team_id,user_id,role,created,updated) VALUES (?,?,?,?,?)", id, u.Id, models.ROLE_ADMIN, now, now)
 	if err != nil {
 		logger.Warn("insert team member error", "error", err)
+		c.JSON(500, common.RespInternalError())
+		return
+	}
+
+	// copy global team's sidemenu to new team
+	gMenu, err := teams.QuerySideMenu(0, models.GlobalTeamId)
+	if err != nil {
+		logger.Warn("query team sidemenu error", "error", err)
+		c.JSON(500, common.RespInternalError())
+		return
+	}
+
+	data, _ := json.Marshal(gMenu.Data)
+	_, err = tx.Exec("INSERT INTO sidemenu (team_id,is_public,brief,data,created_by,created,updated) VALUES (?,?,?,?,?,?,?)",
+		id, false, "team's sidemenu,copied from global team initially", data, u.Id, now, now)
+	if err != nil {
+		logger.Error("create sidemenu error", "error", err)
 		c.JSON(500, common.RespInternalError())
 		return
 	}

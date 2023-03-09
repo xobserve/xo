@@ -1,11 +1,11 @@
-import { Box, Input, InputGroup, InputLeftAddon, useDisclosure, useToast, VStack, AlertDialog, AlertDialogBody, AlertDialogContent, AlertDialogFooter, AlertDialogHeader, AlertDialogOverlay, HStack, useColorModeValue, Alert, AlertIcon, Text, Flex, Button } from "@chakra-ui/react"
+import { Box, Input, InputGroup, InputLeftAddon, useDisclosure, useToast, VStack, AlertDialog, AlertDialogBody, AlertDialogContent, AlertDialogFooter, AlertDialogHeader, AlertDialogOverlay, HStack, useColorModeValue, Alert, AlertIcon, Text, Flex, Button, Tooltip } from "@chakra-ui/react"
 import Page from "layouts/page/Page"
-import { cloneDeep } from "lodash"
+import { cloneDeep, isEmpty } from "lodash"
 import { useRouter } from "next/router"
 import { useEffect, useRef, useState } from "react"
 import { FaAlignLeft, FaCog, FaUserFriends } from "react-icons/fa"
 import { Route } from "types/route"
-import { SideMenu, Team } from "types/teams"
+import { MenuItem, SideMenu, Team } from "types/teams"
 import { requestApi } from "utils/axios/request"
 import React, { Component } from 'react';
 import SortableTree, { changeNodeAtPath } from '@nosferatu500/react-sortable-tree';
@@ -54,6 +54,25 @@ const TeamSettingPage = () => {
     const updateSidemenu = async () => {
         for (let i = 0; i < sidemenu.data.length; i++) {
             const item = sidemenu.data[i]
+            if (!item.title) {
+                toast({
+                    title: `title is required`,
+                    status: "warning",
+                    duration: 3000,
+                    isClosable: true,
+                })
+                return
+            }
+
+            if (isEmpty(item.children)  && !item.dashboardId) {
+                toast({
+                    title: `dashboard id is required`,
+                    status: "warning",
+                    duration: 3000,
+                    isClosable: true,
+                })
+                return
+            }
 
             if (!item.icon) {
                 toast({
@@ -100,6 +119,26 @@ const TeamSettingPage = () => {
             if (item.children) {
                 for (let i = 0; i < item.children.length; i++) {
                     const childItem = item.children[i]
+                    
+                    if (!childItem.url.startsWith(item.url)) {
+                        toast({
+                            title: `level 2 url must use level1 url as prefix`,
+                            status: "warning",
+                            duration: 3000,
+                            isClosable: true,
+                        })
+                        return
+                    }
+                    if (!childItem.title || !childItem.dashboardId) {
+                        toast({
+                            title: `title or dashboard id is required`,
+                            status: "warning",
+                            duration: 3000,
+                            isClosable: true,
+                        })
+                        return
+                    }
+
                     if (!childItem.url.startsWith('/') || childItem.url === '/' || childItem.url.endsWith('/')) {
                         toast({
                             title: `"${childItem.url}" is not a valid url`,
@@ -126,20 +165,55 @@ const TeamSettingPage = () => {
 
         await requestApi.post(`/team/sidemenu`, { ...sidemenu })
         toast({
-            title: "Side menu updated",
+            title: "Side menu updated, reloading...",
             status: "success",
             duration: 3000,
             isClosable: true,
         })
+
+        setTimeout(() => {
+            router.reload()
+        }, 1000)
     }
 
+    const removeMenuItem = (item: MenuItem) => {
+        for (const i in sidemenu.data) {
+            const node = sidemenu.data[i]
+            if (node.url == item.url && node.title == item.title) {
+                sidemenu.data.splice(parseInt(i), 1)
+                setSideMenu(cloneDeep(sidemenu))
+                return 
+            } else {
+                if (node.children) {
+                    for (const j in node.children) {
+                        const child = node.children[j]
+                        if (child.url == item.url && child.title == item.title) {
+                            node.children.splice(parseInt(j), 1)
+                            setSideMenu(cloneDeep(sidemenu))
+                            return
+                        }
+                    }
+                }
+            }
+        }
+    }
 
+    const addMenuItem = () => {
+        sidemenu.data.unshift({
+            title: 'new menu item',
+            icon: 'FaQuestion',
+            url: '',
+            dashboardId: ''
+        })
+
+        setSideMenu(cloneDeep(sidemenu))
+    }
     return <>
         {id && sidemenu && team && <Page title={`Manage your team`} subTitle={`Current team - ${team?.name}`} icon={<FaUserFriends />} tabs={tabLinks}>
             <Alert status='info' maxWidth="700px" flexDirection="column" alignItems="left">
                 <Text>Customize the top section of your team's side menu, you can add, edit, delete and reorder the menu items.</Text>
 
-                <Text mt="4">Menu item format: &nbsp; <b>title | url | icon</b> <br /></Text>
+                <Text mt="4">Menu item format: &nbsp; <b>title | url | icon | dashboard id</b> <br /></Text>
 
                 <Text mt="4">url format:</Text>
                 <Text mt="2">&nbsp;&nbsp;level 1: /x, /y, /z</Text>
@@ -149,7 +223,11 @@ const TeamSettingPage = () => {
             </Alert>
             <Flex justifyContent="space-between" my="4" maxWidth="700px">
                 <Box textStyle="subTitle">Modify sidemenu</Box>
-                <Button onClick={updateSidemenu}>Submit</Button>
+                <HStack>
+                    <Button onClick={addMenuItem} variant="outline" leftIcon={<Icons.FaPlus />}>Add menu item</Button>
+                    <Button onClick={updateSidemenu}>Submit</Button>
+                </HStack>
+                
             </Flex>
 
             <Box height="600px" sx={{
@@ -175,7 +253,7 @@ const TeamSettingPage = () => {
                             const Icon = Icons[node.icon]
                             return (
                                 <HStack width="100%">
-                                    {Icon && <Box width="30px" fontSize="25px">{Icon && <Icon />}</Box>}
+                                    <Box width="30px" fontSize="25px">{Icon && <Icon />}</Box>
                                     <Input
                                         width="200px"
                                         value={node.title}
@@ -218,7 +296,24 @@ const TeamSettingPage = () => {
                                         }}
                                         placeholder="icon name"
                                     />
-
+                                    {!node.children?.length  && <Input
+                                        width="140px"
+                                        value={node.dashboardId}
+                                        onChange={(event) => {
+                                            const dashboardId = event.target.value
+                                            const newTreeData = changeNodeAtPath({
+                                                treeData: sidemenu.data,
+                                                path,
+                                                getNodeKey,
+                                                newNode: { ...node, dashboardId },
+                                            })
+                                            setSideMenu({ ...sidemenu, data: newTreeData as any })
+                                        }}
+                                        placeholder="dashboard id"
+                                    />}
+                                    <Tooltip label="remove sidemenu item">
+                                        <Box onClick={() => removeMenuItem(node)}><Icons.FaTimes /></Box>
+                                    </Tooltip>
                                 </HStack>
                             )
                         },
