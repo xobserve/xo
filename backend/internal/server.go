@@ -1,0 +1,168 @@
+package internal
+
+import (
+	"net/http"
+	"time"
+
+	"github.com/ai-apm/aiapm/backend/internal/admin"
+	"github.com/ai-apm/aiapm/backend/internal/storage"
+	"github.com/ai-apm/aiapm/backend/internal/teams"
+	"github.com/ai-apm/aiapm/backend/internal/user"
+	"github.com/ai-apm/aiapm/backend/pkg/common"
+	"github.com/ai-apm/aiapm/backend/pkg/config"
+	"github.com/ai-apm/aiapm/backend/pkg/e"
+	"github.com/ai-apm/aiapm/backend/pkg/log"
+	"github.com/gin-contrib/gzip"
+	"github.com/gin-gonic/gin"
+)
+
+type Server struct {
+	closeCh chan int
+	srv     *http.Server
+}
+
+// New ...
+func New() *Server {
+	return &Server{
+		closeCh: make(chan int),
+	}
+}
+
+var logger = log.RootLogger.New("logger", "server")
+
+// Start ...1=
+func (s *Server) Start() error {
+	err := storage.Init()
+	if err != nil {
+		return err
+	}
+
+	gin.SetMode((gin.ReleaseMode))
+
+	err = user.Init()
+	if err != nil {
+		logger.Crit("初始化用户模块失败", "error", err)
+	}
+
+	go func() {
+		router := gin.New()
+		router.Use(Cors())
+
+		r := router.Group("/api")
+
+		// user apis
+		r.POST("/login", user.Login)
+		r.POST("/logout", user.Logout)
+		r.GET("/user/session", user.GetSession)
+		r.POST("/account/password", IsLogin(), user.UpdateUserPassword)
+		r.POST("/account/info", IsLogin(), user.UpdateUserInfo)
+
+		// teams apis
+		r.GET("/teams/all", IsLogin(), teams.GetTeams)
+		r.GET("/team/:id", IsLogin(), teams.GetTeam)
+		r.GET("/team/:id/members", IsLogin(), teams.GetTeamMembers)
+		r.POST("/team/member", IsLogin(), teams.UpdateTeamMember)
+		r.POST("/team/add/member", IsLogin(), teams.AddTeamMembers)
+		r.DELETE("/team/member/:teamId/:memberId", IsLogin(), teams.DeleteTeamMember)
+		r.POST("/team/update", IsLogin(), teams.UpdateTeam)
+		r.POST("/team/new", IsLogin(), admin.AddNewTeam)
+		r.DELETE("/team/:id", IsLogin(), teams.DeleteTeam)
+		r.DELETE("/team/leave/:id", IsLogin(), teams.LeaveTeam)
+		r.GET("/team/sidemenu/:id", IsLogin(), teams.GetSideMenu)
+		r.POST("/team/sidemenu", IsLogin(), teams.UpdateSideMenu)
+
+		// admin apis
+		r.GET("/admin/users", IsLogin(), admin.GetUsers)
+		r.POST("/admin/user", IsLogin(), admin.UpdateUser)
+		r.POST("/admin/user/password", IsLogin(), admin.UpdateUserPassword)
+		r.POST("/admin/user/new", IsLogin(), admin.AddNewUser)
+		r.POST("/admin/user/role", IsLogin(), admin.UpdateUserRole)
+		r.DELETE("/admin/user/:id", IsLogin(), admin.DeleteUser)
+
+		r.Use(gzip.Gzip(gzip.DefaultCompression))
+
+		s.srv = &http.Server{
+			Addr:    config.Data.Server.Addr,
+			Handler: router,
+		}
+
+		err := s.srv.ListenAndServe()
+		if err != nil && err != http.ErrServerClosed {
+			logger.Crit("start backend server error", "error", err)
+			panic(err)
+		}
+	}()
+	return nil
+}
+
+// Close ...
+func (s *Server) Close() error {
+	var waited time.Duration
+	if config.Data.Common.IsProd {
+		waited = 5 * time.Second
+	} else {
+		waited = 1 * time.Second
+	}
+	close(s.closeCh)
+
+	time.Sleep(waited)
+	return nil
+}
+
+// Cors is a gin middleware for cross domain.
+func Cors() gin.HandlerFunc {
+	return func(c *gin.Context) {
+		method := c.Request.Method
+
+		c.Header("Access-Control-Allow-Origin", "*")
+		c.Header("Access-Control-Allow-Headers", "Content-Type,AccessToken,X-CSRF-Token, Authorization,X-Token,*")
+		c.Header("Access-Control-Allow-Methods", "POST, GET, PUT, DELETE, OPTIONS")
+		c.Header("Access-Control-Expose-Headers", "Content-Length, Access-Control-Allow-Origin, Access-Control-Allow-Headers, Content-Type")
+		c.Header("Access-Control-Allow-Credentials", "true")
+
+		//放行所有OPTIONS方法
+		if method == "OPTIONS" {
+			c.AbortWithStatus(http.StatusNoContent)
+		}
+
+		// 处理请求
+		c.Next()
+	}
+}
+
+// 判断用户是否登录
+func IsLogin() gin.HandlerFunc {
+	return func(c *gin.Context) {
+		logined := user.IsLogin(c)
+		if !logined {
+			c.JSON(http.StatusNotAcceptable, common.RespError(e.NoPermission))
+			c.Abort()
+			return
+		}
+		c.Next()
+	}
+}
+
+// 要求用户必须登录才能继续操作
+func NeedLogin() gin.HandlerFunc {
+	return func(c *gin.Context) {
+		logined := user.IsLogin(c)
+		if !logined {
+			c.JSON(http.StatusUnauthorized, common.RespError(e.NeedLogin))
+			c.Abort()
+			return
+		}
+		c.Next()
+	}
+}
+
+func IsProd() gin.HandlerFunc {
+	return func(c *gin.Context) {
+		if config.Data.Common.IsProd {
+			c.JSON(http.StatusForbidden, common.RespError("测试数据生成功能只能在非生产模式下使用"))
+			c.Abort()
+			return
+		}
+		c.Next()
+	}
+}
