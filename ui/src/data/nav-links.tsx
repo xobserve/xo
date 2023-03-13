@@ -62,3 +62,11 @@ export const cfgLinks = [
 ]
 
 
+export const newLinks = [
+    {
+        title: 'New Dashboard',
+        url: '/new/dashboard',
+        baseUrl: '/new/dashboard',
+        // icon: <FaUsersCog />
+    },
+]

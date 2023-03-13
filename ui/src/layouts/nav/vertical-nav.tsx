@@ -13,7 +13,8 @@ import {
   PopoverContent,
   PopoverHeader,
   PopoverBody,
-  Divider
+  Divider,
+  Tooltip
 } from "@chakra-ui/react"
 import siteConfig from "src/data/configs/site-config.json"
 import React, { useEffect, useState } from "react"
@@ -37,7 +38,7 @@ import { Route } from "types/route"
 
 
 const VerticalNav = dynamic(async () => (props) => {
-  const {session} = useSession()
+  const { session } = useSession()
   const ref = React.useRef<HTMLHeadingElement>()
 
   const [miniMode, setMiniMode] = useState(true)
@@ -45,7 +46,7 @@ const VerticalNav = dynamic(async () => (props) => {
   const router = useRouter()
   const { asPath } = router
 
-  
+
 
   const borderColor = useColorModeValue(customColors.borderColor.light, customColors.borderColor.dark)
 
@@ -54,13 +55,13 @@ const VerticalNav = dynamic(async () => (props) => {
     if (session) {
       loadSidemenu()
     }
-  },[session])
+  }, [session])
 
   const loadSidemenu = async () => {
     const res = await requestApi.get(`/team/sidemenu/${session.user.sidemenu}`)
     setSidemenu(res.data.data)
   }
-  
+
   return (
     <Box width="80px">
       <chakra.header
@@ -98,7 +99,7 @@ const VerticalNav = dynamic(async () => (props) => {
                     <Popover trigger="hover" placement="right">
                       <PopoverTrigger>
                         <Box>
-                          <NavItem asPath={asPath} url={link.children?.length > 0 ? link.children[0].url : link.url} path={link.url} icon={link.icon} title={link.title} miniMode={miniMode} />
+                          <NavItem asPath={asPath} url={link.children?.length > 0 ? link.children[0].url : link.url} path={link.url} icon={link.icon} title={link.title} miniMode={miniMode} fontSize="1.5rem" />
                         </Box>
                       </PopoverTrigger>
                       <PopoverContent width="fit-content" minWidth="120px" border="null" pl="1">
@@ -124,13 +125,14 @@ const VerticalNav = dynamic(async () => (props) => {
             </VStack>
 
             <VStack
-              spacing="2"
+              spacing="3px"
               color={useColorModeValue("gray.500", "gray.400")}
               alignItems="left"
             >
-              <NavItem asPath={asPath} url={`${ReserveUrls.Alerts}`} path={ReserveUrls.Alerts} icon="FaBell" title="告警平台" miniMode={miniMode} />
-              <NavItem asPath={asPath} url={`${ReserveUrls.Search}`} path={ReserveUrls.Search} icon="FaSearch" title="探索仪表盘" miniMode={miniMode} />
-              <NavItem asPath={asPath} url={`${ReserveUrls.Config}/teams`} path={ReserveUrls.Config} icon="FaCog" title="配置管理" miniMode={miniMode} />
+              <NavItem asPath={asPath} url={`${ReserveUrls.New}/dashboard`} path={ReserveUrls.New} icon="FaPlus" title="新建仪表盘" miniMode={miniMode} showTooltip />
+              <NavItem asPath={asPath} url={`${ReserveUrls.Alerts}`} path={ReserveUrls.Alerts} icon="FaBell" title="告警平台" miniMode={miniMode} showTooltip />
+              <NavItem asPath={asPath} url={`${ReserveUrls.Search}`} path={ReserveUrls.Search} icon="FaSearch" title="探索仪表盘" miniMode={miniMode} showTooltip />
+              <NavItem asPath={asPath} url={`${ReserveUrls.Config}/teams`} path={ReserveUrls.Config} icon="FaCog" title="配置管理" miniMode={miniMode} showTooltip />
               <Divider />
               <HStack spacing="0">
                 <UserSidemenus />
@@ -143,7 +145,7 @@ const VerticalNav = dynamic(async () => (props) => {
                 >
                   <IconButton
                     size="md"
-                    fontSize="1.3rem"
+                    fontSize="1.2rem"
                     aria-label=""
                     variant="ghost"
                     color="current"
@@ -155,7 +157,7 @@ const VerticalNav = dynamic(async () => (props) => {
               </HStack>
 
               <HStack spacing="0">
-                <ColorModeSwitcher fontSize="1.3rem" />
+                <ColorModeSwitcher fontSize="1.2rem" />
                 <Collapse in={!miniMode} ><Text>深浅色主题</Text></Collapse>
               </HStack>
 
@@ -163,7 +165,7 @@ const VerticalNav = dynamic(async () => (props) => {
                 <UserMenu />
                 <Collapse in={!miniMode} ><Text>个人设置</Text></Collapse>
               </HStack>
-    
+
             </VStack>
           </Flex>
         </chakra.div>
@@ -177,20 +179,24 @@ const VerticalNav = dynamic(async () => (props) => {
 export default VerticalNav
 
 
-const NavItem = ({ asPath, path, miniMode, title, icon, url }) => {
+const NavItem = ({ asPath, path, miniMode, title, icon, url, fontSize = "1.3rem", showTooltip = false }) => {
   const Icon = Icons[icon]
   return <Link href={url}>
-    <HStack spacing="0"       color={asPath.startsWith(path) ? useColorModeValue("brand.500", "brand.200") : "current"}>
-      <IconButton
-        size="md"
-        fontSize="1.3rem"
-        aria-label=""
-        variant="ghost"
-        color="current"
-        _focus={{ border: null }}
-        icon={<Icon />}
-      />
-      <Collapse in={!miniMode} ><Text>{title}</Text></Collapse>
+    <HStack spacing="0" color={asPath.startsWith(path) ? useColorModeValue("brand.500", "brand.200") : "current"}>
+      <Tooltip label={showTooltip && title} placement="right">
+        <HStack>
+          <IconButton
+            size="md"
+            fontSize={fontSize}
+            aria-label=""
+            variant="ghost"
+            color="current"
+            _focus={{ border: null }}
+            icon={<Icon />}
+          />
+          <Collapse in={!miniMode} ><Text>{title}</Text></Collapse>
+        </HStack>
+      </Tooltip>
     </HStack>
   </Link>
 }

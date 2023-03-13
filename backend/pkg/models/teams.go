@@ -16,8 +16,9 @@ const (
 type Team struct {
 	Id          int64     `json:"id"`
 	Name        string    `json:"name"`
-	CreatedBy   string    `json:"createdBy"`   // creator's username
-	CreatedById int64     `json:"createdById"` // creator's username
+	Brief       string    `json:"brief"`
+	CreatedBy   string    `json:"createdBy,omitempty"`   // creator's username
+	CreatedById int64     `json:"createdById,omitempty"` // creator's username
 	Created     time.Time `json:"created,omitempty"`
 	Updated     time.Time `json:"updated,omitempty"`
 	MemberCount int       `json:"memberCount,omitempty"`

@@ -22,7 +22,7 @@ import Link from "next/link"
 import { isAdmin } from "types/role"
 import { isEmpty } from "lodash"
 
-const UserMenu = () => {
+const UserMenu = ({fontSize="1.2rem"}) => {
     const { session, logout } = useSession()
     const router = useRouter()
 
@@ -41,7 +41,7 @@ const UserMenu = () => {
                     <MenuButton>
                      <IconButton
                         size="md"
-                        fontSize="1.3rem"
+                        fontSize={fontSize}
                         aria-label=""
                         variant="ghost"
                         color={isActive ? useColorModeValue("brand.500","brand.200") : "current"}

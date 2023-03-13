@@ -24,7 +24,7 @@ func GetTeams(c *gin.Context) {
 
 	u := user.CurrentUser(c)
 	// user can see the teams he is in
-	q := `SELECT id,name,created_by FROM team`
+	q := `SELECT id,name,brief,created_by FROM team`
 	if !u.Role.IsAdmin() {
 		userId := user.CurrentUserId(c)
 		members, err := models.QueryTeamMembersByUserId(userId)
@@ -67,7 +67,7 @@ func GetTeams(c *gin.Context) {
 
 	for rows.Next() {
 		team := &models.Team{}
-		err := rows.Scan(&team.Id, &team.Name, &team.CreatedById)
+		err := rows.Scan(&team.Id, &team.Name, &team.Brief, &team.CreatedById)
 		if err != nil {
 			logger.Warn("get all users scan error", "error", err)
 			continue

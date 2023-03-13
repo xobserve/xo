@@ -1,8 +1,11 @@
 import { Role } from "./role"
 
+export const globalTeamId = 1
+
 export interface Team {
     id : number 
     name: string
+    brief?: string
     createdBy?: string
     createdById?: number
     memberCount?: number

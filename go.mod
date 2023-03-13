@@ -16,6 +16,7 @@ require (
 	github.com/json-iterator/go v1.1.12 // indirect
 	github.com/lithammer/shortuuid/v3 v3.0.5
 	github.com/spf13/cobra v1.1.1
+	github.com/teris-io/shortid v0.0.0-20220617161101-71ec9f2aa569 // indirect
 	golang.org/x/crypto v0.0.0-20220622213112-05595931fe9d // indirect
 	golang.org/x/sys v0.0.0-20220422013727-9388b58f7150 // indirect
 	golang.org/x/xerrors v0.0.0-20200804184101-5ec99f83aff1 // indirect

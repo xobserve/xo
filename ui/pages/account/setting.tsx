@@ -101,7 +101,7 @@ const AccountSetting = () => {
                     <Box mb="2" textStyle="subTitle">Basic Information</Box>
                     <InputGroup>
                         <InputLeftAddon children='Nickname' />
-                        <Input placeholder='give yourself a nick name' value={name} onChange={e => setName(e.currentTarget.value.trim())} />
+                        <Input placeholder='give yourself a nick name' value={name} onChange={e => setName(e.currentTarget.value)} />
                     </InputGroup>
                     <InputGroup>
                         <InputLeftAddon children='Email' />

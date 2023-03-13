@@ -5,6 +5,7 @@ import (
 	"time"
 
 	"github.com/ai-apm/aiapm/backend/internal/admin"
+	"github.com/ai-apm/aiapm/backend/internal/dashboard"
 	"github.com/ai-apm/aiapm/backend/internal/storage"
 	"github.com/ai-apm/aiapm/backend/internal/teams"
 	"github.com/ai-apm/aiapm/backend/internal/user"
@@ -78,6 +79,11 @@ func (s *Server) Start() error {
 		r.POST("/variable/new", IsLogin(), variables.AddNewVariable)
 		r.GET("/variable/all", IsLogin(), variables.GetVariables)
 		r.POST("/variable/update", IsLogin(), variables.UpdateVariable)
+
+		// dashboard apis
+		r.GET("/dashboard/byId/:id", IsLogin(), dashboard.GetDashboard)
+		r.POST("/dashboard/save", IsLogin(), dashboard.SaveDashboard)
+		r.GET("/dashboard/team/:id", IsLogin(), dashboard.GetTeamDashboards)
 
 		// admin apis
 		r.GET("/admin/users", IsLogin(), admin.GetUsers)

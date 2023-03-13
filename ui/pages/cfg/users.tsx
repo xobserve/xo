@@ -202,7 +202,7 @@ const UsersPage = () => {
                             </InputGroup>
                             <InputGroup>
                                 <InputLeftAddon children='Nick name' />
-                                <Input placeholder='enter a nick  name' value={userInEdit.name} onChange={e => { userInEdit.name = e.currentTarget.value.trim(); setUserInEdit(cloneDeep(userInEdit)) }} />
+                                <Input placeholder='enter a nick  name' value={userInEdit.name} onChange={e => { userInEdit.name = e.currentTarget.value; setUserInEdit(cloneDeep(userInEdit)) }} />
                             </InputGroup>
 
                             <Button width="fit-content" onClick={updateUser}>Submit</Button>

@@ -224,7 +224,8 @@ func DeleteUser(c *gin.Context) {
 }
 
 type AddNewTeamModel struct {
-	Name string `json:"name"`
+	Name  string `json:"name"`
+	Brief string `json:"brief"`
 }
 
 func AddNewTeam(c *gin.Context) {
@@ -256,8 +257,8 @@ func AddNewTeam(c *gin.Context) {
 	}
 	defer tx.Rollback()
 
-	res, err := tx.Exec("INSERT INTO team (name,created_by,created,updated) VALUES (?,?,?,?)",
-		req.Name, u.Id, now, now)
+	res, err := tx.Exec("INSERT INTO team (name,brief,created_by,created,updated) VALUES (?,?,?,?,?)",
+		req.Name, req.Brief, u.Id, now, now)
 	if err != nil {
 		logger.Warn("new team error", "error", err)
 		c.JSON(500, common.RespInternalError())
@@ -301,6 +302,7 @@ func AddNewTeam(c *gin.Context) {
 	c.JSON(200, common.RespSuccess(&models.Team{
 		Id:          id,
 		Name:        req.Name,
+		Brief:       req.Brief,
 		CreatedBy:   u.Username,
 		Created:     now,
 		Updated:     now,

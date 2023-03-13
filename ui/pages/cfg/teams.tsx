@@ -15,6 +15,7 @@ const TeamsPage = () => {
     const router = useRouter()
     const [teams, setTeams] = useState<Team[]>([])
     const [teamName, setTeamName] = useState<string>("")
+    const [teamDesc, setTeamDesc] = useState<string>("")
     useEffect(() => {
         load()
     }, [])
@@ -27,7 +28,7 @@ const TeamsPage = () => {
     const { isOpen, onOpen, onClose } = useDisclosure()
 
     const addTeam = async () => {
-        const res = await requestApi.post("/team/new", { name: teamName })
+        const res = await requestApi.post("/team/new", { name: teamName.trim(),brief: teamDesc.trim()})
         onClose()
         toast({
             title: "Team added",
@@ -79,9 +80,12 @@ const TeamsPage = () => {
                     <VStack alignItems="left" spacing="3">
                         <InputGroup>
                             <InputLeftAddon children='Team name' />
-                            <Input placeholder='enter a team name' value={teamName} onChange={e => { setTeamName(e.currentTarget.value.trim()) }} />
+                            <Input placeholder='enter a team name' value={teamName} onChange={e => { setTeamName(e.currentTarget.value) }} />
                         </InputGroup>
-
+                        <InputGroup>
+                            <InputLeftAddon children='Team description' />
+                            <Input placeholder='give a short description to this team' value={teamDesc} onChange={e => { setTeamDesc(e.currentTarget.value) }} />
+                        </InputGroup>
                     </VStack>
                 </ModalBody>
                 <ModalFooter>

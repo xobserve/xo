@@ -5,6 +5,7 @@ import moment from "moment"
 import { useRouter } from "next/router"
 import { useEffect, useRef, useState } from "react"
 import { FaAlignLeft, FaCog, FaUserFriends } from "react-icons/fa"
+import { MdOutlineDashboard } from "react-icons/md"
 import { Role } from "types/role"
 import { Route } from "types/route"
 import { Team, TeamMember } from "types/teams"
@@ -16,6 +17,7 @@ const TeamMembersPage = () => {
     const id = router.query.id
     const tabLinks: Route[] = [
         { title: "Members", url: `/cfg/team/${id}/members`, icon: <FaUserFriends /> },
+        { title: "Dashboards", url: `/cfg/team/${id}/dashboards`, icon: <MdOutlineDashboard /> },
         { title: "Side menu", url: `/cfg/team/${id}/sidemenu`, icon: <FaAlignLeft /> },
         { title: "Setting", url: `/cfg/team/${id}/setting`, icon: <FaCog /> },
     ]

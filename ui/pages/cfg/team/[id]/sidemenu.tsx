@@ -11,6 +11,7 @@ import React, { Component } from 'react';
 import SortableTree, { changeNodeAtPath } from '@nosferatu500/react-sortable-tree';
 import '@nosferatu500/react-sortable-tree/style.css';
 import * as Icons from 'react-icons/fa'
+import { MdOutlineDashboard } from "react-icons/md"
 
 const TeamSettingPage = () => {
     const router = useRouter()
@@ -33,9 +34,10 @@ const TeamSettingPage = () => {
 
     const tabLinks: Route[] = [
         { title: "Members", url: `/cfg/team/${id}/members`, icon: <FaUserFriends /> },
+        { title: "Dashboards", url: `/cfg/team/${id}/dashboards`, icon: <MdOutlineDashboard /> },
         { title: "Side menu", url: `/cfg/team/${id}/sidemenu`, icon: <FaAlignLeft /> },
         { title: "Setting", url: `/cfg/team/${id}/setting`, icon: <FaCog /> },
-    ]
+      ]
 
 
 

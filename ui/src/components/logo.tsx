@@ -4,7 +4,7 @@ import React from "react"
 const Logo = (props) => {
     return (
             <HStack cursor="pointer" spacing="1" >
-                <Image width="12" src="/logo.png"/>
+                <Image width="10" src="/logo.png"/>
                 {props.showText && <Text fontWeight="600" fontSize="xl">ustCn</Text>}
             </HStack>
     )

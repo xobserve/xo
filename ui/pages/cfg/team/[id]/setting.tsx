@@ -4,6 +4,7 @@ import { cloneDeep } from "lodash"
 import { useRouter } from "next/router"
 import { useEffect, useRef, useState } from "react"
 import { FaAlignLeft, FaCog, FaUserFriends } from "react-icons/fa"
+import { MdOutlineDashboard } from "react-icons/md"
 import { Route } from "types/route"
 import { Team } from "types/teams"
 import { requestApi } from "utils/axios/request"
@@ -13,9 +14,10 @@ const TeamSettingPage = () => {
     const toast = useToast()
     const id = router.query.id
     const tabLinks: Route[] = [
-        { title: "Members", url: `/cfg/team/${id}/members`, icon: <FaUserFriends /> },
-        { title: "Side menu", url: `/cfg/team/${id}/sidemenu`, icon: <FaAlignLeft /> },
-        { title: "Setting", url: `/cfg/team/${id}/setting`, icon: <FaCog /> },
+      { title: "Members", url: `/cfg/team/${id}/members`, icon: <FaUserFriends /> },
+      { title: "Dashboards", url: `/cfg/team/${id}/dashboards`, icon: <MdOutlineDashboard /> },
+      { title: "Side menu", url: `/cfg/team/${id}/sidemenu`, icon: <FaAlignLeft /> },
+      { title: "Setting", url: `/cfg/team/${id}/setting`, icon: <FaCog /> },
     ]
 
 
@@ -82,7 +84,7 @@ const TeamSettingPage = () => {
                     <Box textStyle="subTitle">Basic setting</Box>
                     <InputGroup>
                         <InputLeftAddon children='Team name' />
-                        <Input width="300px" placeholder="******" value={team.name} onChange={e => {team.name = e.currentTarget.value.trim(); setTeam(cloneDeep(team))}} />
+                        <Input width="300px" placeholder="******" value={team.name} onChange={e => {team.name = e.currentTarget.value; setTeam(cloneDeep(team))}} />
                     </InputGroup>
                     <Button width="fit-content" onClick={updateTeam}>Submit</Button>
                 </VStack>

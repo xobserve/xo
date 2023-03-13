@@ -179,12 +179,12 @@ const GlobalVariablesPage = () => {
                     <VStack alignItems="left" spacing="3">
                         <Box>
                             <Box textStyle="subTitle">Name</Box>
-                            <Input mt="2" width="400px" placeholder='Only alphabet and digit numbers are allowed' value={variable.name} onChange={e => { setVariable({ ...variable, name: e.currentTarget.value.trim() }) }} />
+                            <Input mt="2" width="400px" placeholder='Only alphabet and digit numbers are allowed' value={variable.name} onChange={e => { setVariable({ ...variable, name: e.currentTarget.value }) }} />
                         </Box>
 
                         <Box>
                             <Box textStyle="subTitle">Description</Box>
-                            <Input mt="2" width="400px" placeholder='give this variable a simple description' value={variable.brief} onChange={e => { setVariable({ ...variable, brief: e.currentTarget.value.trim() }) }} />
+                            <Input mt="2" width="400px" placeholder='give this variable a simple description' value={variable.brief} onChange={e => { setVariable({ ...variable, brief: e.currentTarget.value }) }} />
                         </Box>
 
                         <Box>
@@ -199,8 +199,8 @@ const GlobalVariablesPage = () => {
                         </Box>
 
 
-                        {variable.type == "1" && <Input width="400px" placeholder='Values separated by comma,e.g 1,10,20,a,b,c' value={variable.value} onChange={e => { setVariable({ ...variable, value: e.currentTarget.value.trim() }) }} />}
-                        {variable.type == "2" && <Input width="400px" placeholder='enter a valid http url, please refer our documents for more info' value={variable.externalUrl} onChange={e => { setVariable({ ...variable, externalUrl: e.currentTarget.value.trim() }) }} />}
+                        {variable.type == "1" && <Input width="400px" placeholder='Values separated by comma,e.g 1,10,20,a,b,c' value={variable.value} onChange={e => { setVariable({ ...variable, value: e.currentTarget.value }) }} />}
+                        {variable.type == "2" && <Input width="400px" placeholder='enter a valid http url, please refer our documents for more info' value={variable.externalUrl} onChange={e => { setVariable({ ...variable, externalUrl: e.currentTarget.value }) }} />}
 
                     </VStack>
                 </ModalBody>}
