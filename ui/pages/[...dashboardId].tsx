@@ -4,7 +4,7 @@ import PageContainer from "layouts/page-container"
 import { useRouter } from "next/router"
 import { useEffect, useState } from "react"
 import { FaChartBar, FaCog, FaRegSave } from "react-icons/fa"
-import { Dashboard, Panel } from "types/dashboard"
+import { Dashboard, DatasourceType, Panel, PanelType } from "types/dashboard"
 import { requestApi } from "utils/axios/request"
 import CustomColors from "src/theme/colors"
 import IconButton from "components/button/IconButton"
@@ -13,8 +13,6 @@ import ReserveUrls from "src/data/reserve-urls"
 import DashboardHeader from "components/dashboard/DashboardHeader"
 import DashboardGrid from "components/dashboard/grid/DashboardGrid"
 import { cloneDeep } from "lodash"
-import EditPanel from "components/dashboard/edit-panel/EditPanel"
-import { PanelType } from "utils/dashboard/panel"
 
 // All of the paths that is not defined in pages directory will redirect to this page,
 // generally these pages are defined in:
@@ -68,9 +66,22 @@ const DashboardPage = () => {
         const id = getNextPanelId()
         const newPanel:Panel = {
             id: id,
-            title:id.toString(),
+            title: `New panel ${id}`,
             type: PanelType.Text,
-            gridPos: { x: 0, y: 0, w: 12, h: 8 }
+            gridPos: { x: 0, y: 0, w: 12, h: 8 },
+            settings: {
+                text: {
+                    md: `#Welcome to AiAPM\n This is a new panel\n You can edit it by clicking the edit button on the top title\n ###Have fun!`
+                }
+            },
+            datasource: [{
+                type: DatasourceType.Prometheus,
+                selected: true,
+                queryOptions: {
+                    interval: '15s'   
+                }
+            }],
+            useDatasource: false,
         }
         
         dashboard.data.panels.unshift(newPanel);

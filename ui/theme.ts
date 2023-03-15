@@ -7,6 +7,8 @@ import { customClasses } from "src/theme/custom-classes";
 import layerStyles from "src/theme/layer-styles";
 import { overrideColors } from "src/theme/override-colors";
 import textStyles from "src/theme/text-styles";
+import markdownRender from "src/theme/markdown-render";
+
 
 
 
@@ -53,7 +55,8 @@ const customTheme = extendTheme(
                     ...customClasses(props),
                     p: {
                         wordBreak: "break-word",
-                    }
+                    },
+                    ...markdownRender(props),
                 }
             }
         }

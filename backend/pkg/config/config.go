@@ -25,6 +25,12 @@ type Config struct {
 		BaseUrl string `yaml:"base_url"`
 	}
 
+	Datasource struct {
+		Prometheus   string `yaml:"prometheus_addr"`
+		Jaeger       string `yaml:"jaeger_addr"`
+		ExternalHttp string `yaml:"external_http_addr"`
+	}
+
 	SMTP struct {
 		Addr         string `yaml:"addr"`
 		FromAddress  string `yaml:"from_address"`

@@ -8,8 +8,3 @@ export const updateGridPos = (panel: Panel,newPos: GridPos) => {
 }
 
 
-export enum PanelType {
-    Table = "table",
-    Graph = "graph",
-    Text = "text",
-}

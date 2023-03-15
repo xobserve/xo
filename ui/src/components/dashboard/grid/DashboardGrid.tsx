@@ -1,4 +1,4 @@
-import { Dashboard, Panel } from "types/dashboard"
+import { Dashboard, Panel, PanelType } from "types/dashboard"
 import ReactGridLayout, { ItemCallback } from 'react-grid-layout';
 import sizeMe from 'react-sizeme';
 import { GRID_CELL_HEIGHT, GRID_CELL_VMARGIN, GRID_COLUMN_COUNT } from "src/data/constants";
@@ -51,7 +51,7 @@ const DashboardGrid = ({ dashboard, onChange }: GridProps) => {
                 h: panel.gridPos.h,
             };
 
-            if (panel.type === 'row') {
+            if (panel.type === PanelType.Row) {
                 panelPos.w = GRID_COLUMN_COUNT;
                 panelPos.h = 1;
                 panelPos.isResizable = false;

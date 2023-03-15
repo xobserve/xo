@@ -18,10 +18,48 @@ export interface Panel {
     id: number 
     title: string
     desc?: string
-    type: string
+    type: PanelType
+
     gridPos: GridPos
     collapsed?: boolean
     transparent?: boolean
+
+    // for plugin settings
+    settings?: any 
+
+    // for querying data
+    useDatasource?: boolean
+    datasource?: PanelDatasource[]
+}
+
+export enum PanelType {
+    Table = "table",
+    Graph = "graph",
+    Text = "text",
+    Row = "row",
+}
+
+export enum DatasourceType {
+    Prometheus = "prometheus",
+    Jaeger = "jaeger",
+    ExternalHttp = "externalHttp",
+}
+
+export interface PanelDatasource {
+    type: DatasourceType 
+    selected: boolean
+    queryOptions: {
+        maxDataPoints?: number
+        interval: string    
+    }
+    queries?: PanelQuery[]
+}
+
+export interface PanelQuery {
+    id: string
+    metrics: string
+    legend: string 
+    visible: boolean
 }
 
 export interface GridPos {

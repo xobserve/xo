@@ -4,7 +4,7 @@ const PanelAccordion = ({title, children }) => {
     return (
         <Accordion defaultIndex={[0]} allowMultiple>
             <AccordionItem>
-                <AccordionButton fontSize="sm" pl="0" py="2" _hover={{background:null}}>
+                <AccordionButton fontSize="sm" pl="0" py="3" _hover={{background:null}}>
                     <AccordionIcon />
                     <Text ml="1">{title}</Text>
                 </AccordionButton>

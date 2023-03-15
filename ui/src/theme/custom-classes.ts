@@ -52,7 +52,7 @@ export function customClasses(props) {
         },
         ".tag-bg": {
             background: mode(
-                props.theme.colors.cyan["100"],
+                props.theme.colors.cyan["50"],
                 "rgba(157, 236, 249, 0.16)"
             )(props),
             color: mode(

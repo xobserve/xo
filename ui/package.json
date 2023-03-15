@@ -42,7 +42,9 @@
     "validator": "^13.5.2",
     "react-sizeme": "2.6.12",
     "react-grid-layout": "^0.18.3",
-    "react-virtualized-auto-sizer": "1.0.2"
+    "react-virtualized-auto-sizer": "1.0.2",
+    "markdown-to-jsx": "^7.1.9",
+    "highlight.js": "^9.16.2"
   },
   "devDependencies": {
     "@next/bundle-analyzer": "^10.0.4",
