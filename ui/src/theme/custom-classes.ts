@@ -26,6 +26,18 @@ export function customClasses(props) {
                 customColors.borderColor.dark
             )(props)}`
         },
+        ".bordered-left": {
+            borderLeft: `1px solid ${mode(
+                customColors.borderColor.light,
+                customColors.borderColor.dark
+            )(props)}`
+        },
+        ".bordered-right": {
+            borderRight: `1px solid ${mode(
+                customColors.borderColor.light,
+                customColors.borderColor.dark
+            )(props)}`
+        },
         ".highlight-bordered": {
             border: `1px solid ${mode(
                 props.theme.colors.brand["500"],

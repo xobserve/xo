@@ -95,6 +95,7 @@ func GetDashboard(c *gin.Context) {
 		return
 	}
 
+	dash.Editable = true
 	c.JSON(200, common.RespSuccess(dash))
 }
 

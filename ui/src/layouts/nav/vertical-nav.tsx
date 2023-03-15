@@ -163,7 +163,7 @@ const VerticalNav = dynamic(async () => (props) => {
 
               <HStack spacing="0">
                 <UserMenu />
-                <Collapse in={!miniMode} ><Text>个人设置</Text></Collapse>
+                <Collapse in={!miniMode} ><Text>{session ?  '个人设置' :'登录'}</Text></Collapse>
               </HStack>
 
             </VStack>

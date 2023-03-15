@@ -14,6 +14,8 @@ import DashboardHeader from "components/dashboard/DashboardHeader"
 import DashboardGrid from "components/dashboard/grid/DashboardGrid"
 import { cloneDeep } from "lodash"
 import EditPanel from "components/dashboard/edit-panel/EditPanel"
+import { PanelType } from "utils/dashboard/panel"
+
 // All of the paths that is not defined in pages directory will redirect to this page,
 // generally these pages are defined in:
 // 1. team's side menu, asscessed by a specific url path
@@ -26,7 +28,7 @@ const DashboardPage = () => {
     const [team, setTeam] = useState<Team>(null)
     // panel used for temporary purpose,such as adding a new panel, edit a panel etc
     const [panel, setPanel] = useState<Panel>(null)
-    
+
     useEffect(() => {
         if (dashboardId) {
             load()
@@ -56,21 +58,22 @@ const DashboardPage = () => {
 
     const onAddPanel = () => {
         // Return if the "Add panel" exists already
-        if (panel) {
-            return;
-        }
+        // if (panel) {
+        //     return;
+        // }
+
         if (!dashboard.data.panels) {
             dashboard.data.panels = []
         }
+        const id = getNextPanelId()
         const newPanel:Panel = {
-            id: getNextPanelId(),
-            type: "graph",
-            gridPos: { x: 0, y: 0, w: 12, h: 8 },
-            title: 'Panel Title',
+            id: id,
+            title:id.toString(),
+            type: PanelType.Text,
+            gridPos: { x: 0, y: 0, w: 12, h: 8 }
         }
- 
-
-        dashboard.data.panels.unshift(panel);
+        
+        dashboard.data.panels.unshift(newPanel);
 
         // panel in editing must be a clone of the original panel
         setPanel(cloneDeep(newPanel))
@@ -93,17 +96,27 @@ const DashboardPage = () => {
         setPanel(null)
     }
 
+    const onGridChange = (panel: Panel) => {
+        // for (let i = 0; i < dashboard.data.panels.length; i++) {
+        //     if (dashboard.data.panels[i].id === panel.id) {
+        //         dashboard.data.panels[i] = panel
+        //     }
+        // }
+
+        setDashboard(cloneDeep(dashboard))
+    }
+
+    console.log(dashboard?.data.panels)
     return (
         <>
         <PageContainer>
             {dashboard && <Box px="3" width="100%">
                 <DashboardHeader dashboard={dashboard} team={team} onAddPanel={onAddPanel}/>
                 <Box mt="50px" py="2">
-                    <DashboardGrid  dashboard={dashboard} />
+                    {dashboard.data.panels?.length > 0 && <DashboardGrid  dashboard={dashboard} onChange={onGridChange}/>}
                 </Box>        
             </Box>}
         </PageContainer>
-        <EditPanel panel={panel} onChange={onEditPanelChange} onDiscard={onEditPanelDiscard}/>
         </>
     )
 }

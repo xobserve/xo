@@ -15,7 +15,7 @@ import useSession from "hooks/use-session"
 import { useRouter } from "next/router"
 import storage from "utils/localStorage"
 
-import { FaRegSun, FaUserAlt, FaBookmark, FaSignOutAlt, FaEdit, FaStar, FaThLarge } from "react-icons/fa"
+import { FaRegSun, FaUserAlt, FaBookmark, FaSignOutAlt, FaEdit, FaStar, FaThLarge, FaSignInAlt } from "react-icons/fa"
 
 
 import Link from "next/link"
@@ -61,14 +61,16 @@ const UserMenu = ({fontSize="1.2rem"}) => {
                         <MenuItem onClick={() => logout()} icon={<FaSignOutAlt fontSize="1rem" />}>Log out</MenuItem>
                     </MenuList>
                 </Menu> :
-                <Button
-                    ml="2"
-                    fontSize=".8rem"
-                    variant="outline"
-                    onClick={() => login()}
-                >
-                    Login
-                </Button>
+                 <IconButton
+                 size="md"
+                 fontSize={fontSize}
+                 aria-label=""
+                 variant="ghost"
+                 color={isActive ? useColorModeValue("brand.500","brand.200") : "current"}
+                 _focus={{ border: null }}
+                 onClick={() => login()}
+                 icon={<FaSignInAlt />}
+                 />
             }
         </>
     )

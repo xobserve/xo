@@ -3,7 +3,7 @@ export interface Dashboard {
     title: string
     ownedBy: number 
     data: DashboardData
-
+    editable?: boolean
     createdBy?: string
     created?: string 
     updated?: string 
@@ -17,8 +17,11 @@ export interface DashboardData {
 export interface Panel {
     id: number 
     title: string
+    desc?: string
     type: string
     gridPos: GridPos
+    collapsed?: boolean
+    transparent?: boolean
 }
 
 export interface GridPos {

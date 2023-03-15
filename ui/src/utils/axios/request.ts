@@ -92,7 +92,7 @@ requestApi.interceptors.response.use(
     } else {
       toast({
         title: '登陆过期',
-        description: '请重新登陆',
+        description: '请重新登陆, 2秒后自动跳转',
         status: "error",
         duration: 4000,
         isClosable: true,
@@ -100,7 +100,7 @@ requestApi.interceptors.response.use(
       setTimeout(() => {
         storage.set("current-page", location.pathname)
         location.href = '/login'
-      }, 3000)
+      }, 2000)
     }
 
 
