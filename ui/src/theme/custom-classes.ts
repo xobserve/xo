@@ -13,6 +13,9 @@ export function customClasses(props) {
             borderRadius: "6px",
             color: 'black'
         },
+        ".label-bg": {
+            bg: mode('#f9fbfc','rgba(30,39,50,0.3)')(props)
+        },
         ".bordered": {
             border: `1px solid ${mode(
                 customColors.borderColor.light,
@@ -34,6 +37,12 @@ export function customClasses(props) {
         },
         ".bordered-right": {
             borderRight: `1px solid ${mode(
+                customColors.borderColor.light,
+                customColors.borderColor.dark
+            )(props)}`
+        },
+        ".bordered-top": {
+            borderTop: `1px solid ${mode(
                 customColors.borderColor.light,
                 customColors.borderColor.dark
             )(props)}`
@@ -60,6 +69,12 @@ export function customClasses(props) {
                 props.theme.colors.cyan["200"]
             )(props),
             borderRadius: "6px",
+        },
+        ".color-text": {
+            color: mode(
+                props.theme.colors.cyan["500"],
+                props.theme.colors.cyan["200"]
+            )(props)
         },
         ".chakra-form__label": {
             fontSize: ".85rem !important",

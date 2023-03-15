@@ -1,4 +1,5 @@
 import { Box, Button, Center, Flex, HStack, Image, Input, Modal, ModalBody, ModalContent, ModalHeader, ModalOverlay, Select, SimpleGrid, Switch, Text, Textarea, useDisclosure, VStack } from "@chakra-ui/react"
+import { ColorModeSwitcher } from "components/ColorModeSwitcher"
 import { cloneDeep, upperFirst } from "lodash"
 import { useEffect, useState } from "react"
 import { Dashboard,  Panel, PanelType } from "types/dashboard"
@@ -86,6 +87,7 @@ const EditPanel = ({ dashboard, panel, onApply, onDiscard }: EditPanelProps) => 
                         <HStack spacing={1}>
                             <Button variant="outline" onClick={() => { onDiscard(), onClose() }} >Discard</Button>
                             <Button onClick={onApplyChanges}>Apply</Button>
+                            <ColorModeSwitcher />
                         </HStack>
                     </Flex>
                 </ModalHeader>
@@ -97,8 +99,8 @@ const EditPanel = ({ dashboard, panel, onApply, onDiscard }: EditPanelProps) => 
                                 <PanelComponent panel={tempPanel} />
                             </Box>
                             {/* panel datasource section */}
-                            {tempPanel.useDatasource && <Box height="50%">
-                                <EditPanelQuery panel={tempPanel} onChange={() => setTempPanel(cloneDeep(tempPanel))}/>
+                            {tempPanel.useDatasource && <Box maxHeight="50%" mt="2" overflowY="scroll">
+                                <EditPanelQuery panel={tempPanel} onChange={(panel?) => setTempPanel(cloneDeep(panel??tempPanel))}/>
                             </Box>}
                         </Box>
                         {/* panel settings section */}

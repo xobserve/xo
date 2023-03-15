@@ -42,7 +42,7 @@ export enum PanelType {
 export enum DatasourceType {
     Prometheus = "prometheus",
     Jaeger = "jaeger",
-    ExternalHttp = "externalHttp",
+    ExternalHttp = "external-http",
 }
 
 export interface PanelDatasource {
@@ -56,7 +56,7 @@ export interface PanelDatasource {
 }
 
 export interface PanelQuery {
-    id: string
+    id: number
     metrics: string
     legend: string 
     visible: boolean
