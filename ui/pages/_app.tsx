@@ -8,11 +8,15 @@ import { createStandaloneToast } from '@chakra-ui/toast'
 import CommonStyles from "src/theme/common.styles"
 import ErrorBoundary from "components/error-boudary"
 import NoSSR from 'react-no-ssr';
+import dynamic from "next/dynamic"
 
 const { ToastContainer} = createStandaloneToast()
 
-const App = ({ Component, pageProps }) => {
-  
+export let canvasCtx;
+//@ts-ignore
+const App =  dynamic(async () => ({ Component, pageProps }) => {
+  canvasCtx = document.createElement('canvas').getContext('2d')!;
+
 
   return (
     <NoSSR>
@@ -40,6 +44,6 @@ const App = ({ Component, pageProps }) => {
       <ToastContainer />
     </NoSSR>
   )
-}
+}  , { ssr: false })
 
 export default App

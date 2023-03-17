@@ -4,8 +4,11 @@ import { Box, Center, HStack, Input, Menu, MenuButton, MenuDivider, MenuItem, Me
 import { FaEdit, FaTrashAlt } from "react-icons/fa";
 import { IoMdInformation } from "react-icons/io";
 import TextPanel from "../plugins/panel/text/Text";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { run_prometheus_query } from "../plugins/datasource/prometheus/query_runner";
+import { DataFrame } from "types/dataFrame";
+import GraphPanel from "../plugins/panel/graph/Graph";
+import { PANEL_BODY_PADDING, PANEL_HEADER_HEIGHT } from "src/data/constants";
 
 interface PanelGridProps {
     panel: Panel
@@ -23,7 +26,7 @@ const PanelGrid = (props: PanelGridProps) => {
             return (
                 <Box width={width}
                     height={height}>
-                    <PanelComponent {...props} />
+                    <PanelComponent width={width} height={height} {...props} />
                 </Box>
             );
         }}
@@ -36,20 +39,25 @@ interface PanelComponentProps {
     panel: Panel
     onEditPanel?: any
     onRemovePanel?: any
+    width: number
+    height: number
 }
 
-export const PanelComponent = ({ panel, onEditPanel, onRemovePanel }: PanelComponentProps) => {
+export const PanelComponent = ({ panel, onEditPanel, onRemovePanel,width,height }: PanelComponentProps) => {
 
-    const CustomPanelRender = () => {
+    const CustomPanelRender = (props) => {
+        //@needs-update-when-add-new-panel
         switch (panel?.type) {
             case PanelType.Text:
-                return <TextPanel panel={panel} />
-
+                return <TextPanel panel={panel} {...props}/>
+            case PanelType.Graph:
+                return <GraphPanel panel={panel} {...props} />
             default:
                 return <></>
         }
     }
 
+    const [panelData, setPanelData] = useState<DataFrame[]>([])
     // run the queries and render the panel
     useEffect(() => {
         let h;
@@ -60,25 +68,29 @@ export const PanelComponent = ({ panel, onEditPanel, onRemovePanel }: PanelCompo
         h = setInterval(() => {
             for (const ds of panel.datasource) {
                 if (ds.selected) {
+                    let data;
                     switch (ds.type) {
                         case DatasourceType.Prometheus:
-                            run_prometheus_query(ds.queries)
+                            data = run_prometheus_query(ds.queries)
                             break;
 
                         default:
                             break;
                     }
 
+                    setPanelData(data)
                 }
             }
         }, 10000)
 
         return () => clearInterval(h)
     }, [panel])
-
-
+    
+    const panelBodyHeight = height - PANEL_HEADER_HEIGHT
+    const panelInnerHeight = panelBodyHeight - PANEL_BODY_PADDING * 2 // 10px padding top and bottom of panel body
+    const panelInnerWidth = width - PANEL_BODY_PADDING * 2 // 10px padding left and right of panel body
     return <Box height="100%" className="bordered">
-        <HStack className="grid-drag-handle" height="25px" cursor="move" spacing="0">
+        <HStack className="grid-drag-handle" height={`${PANEL_HEADER_HEIGHT}px`} cursor="move" spacing="0">
             {panel.desc && <Box color={useColorModeValue("brand.500", "brand.200")} position="absolute">
                 <Tooltip label={panel.desc}>
                     <Box>
@@ -106,11 +118,11 @@ export const PanelComponent = ({ panel, onEditPanel, onRemovePanel }: PanelCompo
         </HStack>
         <Box
             // panel={panel}
-            maxHeight="calc(100% - 25px)"
+            maxHeight={`${panelBodyHeight}px`}
             overflowY="scroll"
-            p="2"
+            p={`${PANEL_BODY_PADDING}px`}
         >
-            <CustomPanelRender />
+            <CustomPanelRender data={panelData} height={panelInnerHeight} width={panelInnerWidth} />
         </Box>
     </Box>
 }

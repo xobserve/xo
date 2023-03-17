@@ -1,9 +1,11 @@
 import { Box, Button, Center, Flex, HStack, Image, Input, Modal, ModalBody, ModalContent, ModalHeader, ModalOverlay, Select, SimpleGrid, Switch, Text, Textarea, useDisclosure, VStack } from "@chakra-ui/react"
 import { ColorModeSwitcher } from "components/ColorModeSwitcher"
+import AutoSizer from 'react-virtualized-auto-sizer';
 import { cloneDeep, upperFirst } from "lodash"
 import { useEffect, useState } from "react"
 import { Dashboard,  Panel, PanelType } from "types/dashboard"
 import { PanelComponent } from "../grid/PanelGrid"
+import GraphPanelEditor from "../plugins/panel/graph/Editor"
 import TextPanelEditor from "../plugins/panel/text/Editor"
 import PanelAccordion from "./Accordion"
 import PanelEditItem from "./PanelEditItem"
@@ -49,10 +51,12 @@ const EditPanel = ({ dashboard, panel, onApply, onDiscard }: EditPanelProps) => 
             setTempPanel(panel)
         }
 
+        //@needs-update-when-add-new-panel
         switch (tempPanel?.type) {
             case PanelType.Text:
                 return <TextPanelEditor panel={tempPanel} onChange={onChange} />
-
+            case PanelType.Graph:
+                return <GraphPanelEditor panel={tempPanel} onChange={onChange} />
             default:
                 return <></>
         }
@@ -95,8 +99,21 @@ const EditPanel = ({ dashboard, panel, onApply, onDiscard }: EditPanelProps) => 
                     <HStack height="calc(100vh - 100px)" alignItems="top">
                         <Box width="65%" height="100%">
                             {/* panel rendering section */}
-                            <Box height={tempPanel.useDatasource ? "50%" : "100%"}>
-                                <PanelComponent panel={tempPanel} />
+                            <Box height={tempPanel.useDatasource ? "50%" : "100%"} id="edit-panel-render">
+                            <AutoSizer>
+                                {({ width, height }) => {
+                                    if (width === 0) {
+                                        return null;
+                                    }
+
+                                    return (
+                                        <Box width={width}
+                                            height={height}>
+                                            <PanelComponent panel={tempPanel} width={width} height={height}  />
+                                        </Box>
+                                    );
+                                }}
+                            </AutoSizer>
                             </Box>
                             {/* panel datasource section */}
                             {tempPanel.useDatasource && <Box maxHeight="50%" mt="2" overflowY="scroll">

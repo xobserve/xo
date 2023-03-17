@@ -1,3 +1,5 @@
+import { DataFrame } from "./dataFrame"
+
 export interface Dashboard {
     id: string 
     title: string
@@ -68,4 +70,12 @@ export interface GridPos {
     w: number;
     h: number;
     static?: boolean;
+}
+
+
+export interface PanelProps {
+    panel: Panel
+    data?: DataFrame[]
+    width?: number 
+    height?: number
 }

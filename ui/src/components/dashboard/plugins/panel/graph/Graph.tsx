@@ -4,11 +4,11 @@ import { DataFrame } from "types/dataFrame"
 
 
 
-const TextPanel = (props: PanelProps) => {
+const GraphPanel = (props: PanelProps) => {
     console.log(props)
     return (<>
         <MarkdownRender md={props.panel.settings.text?.md ?? ""} width="100%"/>
     </>)
 }
 
-export default TextPanel
+export default GraphPanel
