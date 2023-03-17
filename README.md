@@ -12,7 +12,7 @@
 
 
 <h1 align="center">
-  Obser is under developing now, online demo is comming soon.
+  Obser(/ˈɔbzə/) is under developing now, online demo is comming soon.
 </h1>
 
 
