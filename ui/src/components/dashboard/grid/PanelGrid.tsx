@@ -81,14 +81,14 @@ export const PanelComponent = ({ panel, onEditPanel, onRemovePanel,width,height 
                     setPanelData(data)
                 }
             }
-        }, 10000)
+        }, 1000000)
 
         return () => clearInterval(h)
     }, [panel])
     
     const panelBodyHeight = height - PANEL_HEADER_HEIGHT
     const panelInnerHeight = panelBodyHeight - PANEL_BODY_PADDING * 2 // 10px padding top and bottom of panel body
-    const panelInnerWidth = width - PANEL_BODY_PADDING * 2 // 10px padding left and right of panel body
+    const panelInnerWidth = width + 8 // 10px padding left and right of panel body
     return <Box height="100%" className="bordered">
         <HStack className="grid-drag-handle" height={`${PANEL_HEADER_HEIGHT}px`} cursor="move" spacing="0">
             {panel.desc && <Box color={useColorModeValue("brand.500", "brand.200")} position="absolute">
@@ -120,7 +120,7 @@ export const PanelComponent = ({ panel, onEditPanel, onRemovePanel,width,height 
             // panel={panel}
             maxHeight={`${panelBodyHeight}px`}
             overflowY="scroll"
-            p={`${PANEL_BODY_PADDING}px`}
+            marginLeft="-10px"
         >
             <CustomPanelRender data={panelData} height={panelInnerHeight} width={panelInnerWidth} />
         </Box>

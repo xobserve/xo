@@ -1,3 +1,5 @@
+import { Box } from '@chakra-ui/react';
+import { cloneDeep } from 'lodash';
 import React, { useEffect, useRef } from 'react';
 
 import uPlot from 'uplot';
@@ -77,7 +79,7 @@ export default function UplotReact({
         };
     }, [options, data, target, resetScales]);
 
-    return target ? null : <div ref={targetRef}></div>;
+    return target ? null : <Box ref={targetRef}></Box>;
 }
 
 

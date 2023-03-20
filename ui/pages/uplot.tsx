@@ -1,12 +1,12 @@
-import { ScaleOrientation } from 'components/uPlot/types';
 import UplotReact from 'components/uPlot/UplotReact';
 import React, {useMemo, useState} from 'react';
 import ReactDOM, {unstable_batchedUpdates} from 'react-dom';
-import * as colorManipulator from 'components/uPlot/config/colorManipulator';
+import * as colorManipulator from 'components/uPlot/colorManipulator';
 import uPlot from 'uplot';
 import 'uplot/dist/uPlot.min.css';
 import { canvasCtx } from './_app';
 import { isEmpty } from 'lodash';
+import { Box } from '@chakra-ui/react';
 
 const dummyPlugin = (): uPlot.Plugin => ({
     hooks: {
@@ -35,8 +35,8 @@ const HooksApp = () => {
 
     const [options, setOptions] = useState<uPlot.Options>(useMemo(() => ({
         title: 'Chart',
-        width: 1000,
-        height: 500,
+        width: 500,
+        height: 300,
         series: [{
             label: 'Date'
         }, {
@@ -80,9 +80,9 @@ const HooksApp = () => {
 
 const UplotPage = () => {
     return (
-        <>
+        <Box position="absolute" left="100px" top="100px">
             <HooksApp />
-        </>
+        </Box>
     )
 }
 
