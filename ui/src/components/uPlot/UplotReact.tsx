@@ -1,5 +1,5 @@
 import { Box } from '@chakra-ui/react';
-import { cloneDeep } from 'lodash';
+import { cloneDeep, isEqual } from 'lodash';
 import React, { useEffect, useRef } from 'react';
 
 import uPlot from 'uplot';
@@ -12,6 +12,7 @@ export default function UplotReact({
     onDelete = () => {},
     onCreate = () => {},
     resetScales = true,
+    children
 }: {
     options: uPlot.Options;
     data: uPlot.AlignedData;
@@ -20,6 +21,7 @@ export default function UplotReact({
     onDelete?: (chart: uPlot) => void;
     onCreate?: (chart: uPlot) => void;
     resetScales?: boolean;
+    children?:any
 }): JSX.Element | null {
     const chartRef = useRef<uPlot | null>(null);
     const targetRef = useRef<HTMLDivElement>(null);
@@ -46,6 +48,7 @@ export default function UplotReact({
     // componentDidUpdate
     const prevProps = useRef({ options, data, target }).current;
     useEffect(() => {
+        console.log("calculate whether uplot need to be re-rendering")
         if (prevProps.options !== options) {
             const optionsState = optionsUpdateState(prevProps.options, options);
             if (!chartRef.current || optionsState === 'create') {
@@ -79,7 +82,7 @@ export default function UplotReact({
         };
     }, [options, data, target, resetScales]);
 
-    return target ? null : <Box ref={targetRef}></Box>;
+    return target ? null : <Box ref={targetRef}>{children}</Box>;
 }
 
 

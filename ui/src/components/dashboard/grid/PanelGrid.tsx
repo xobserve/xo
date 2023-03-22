@@ -9,6 +9,7 @@ import { run_prometheus_query } from "../plugins/datasource/prometheus/query_run
 import { DataFrame } from "types/dataFrame";
 import GraphPanel from "../plugins/panel/graph/Graph";
 import { PANEL_BODY_PADDING, PANEL_HEADER_HEIGHT } from "src/data/constants";
+import { isEmpty } from "lodash";
 
 interface PanelGridProps {
     panel: Panel
@@ -22,6 +23,7 @@ const PanelGrid = (props: PanelGridProps) => {
             if (width === 0) {
                 return null;
             }
+
 
             return (
                 <Box width={width}
@@ -65,27 +67,36 @@ export const PanelComponent = ({ panel, onEditPanel, onRemovePanel,width,height 
             clearInterval(h)
         }
 
-        h = setInterval(() => {
-            for (const ds of panel.datasource) {
-                if (ds.selected) {
-                    let data;
-                    switch (ds.type) {
-                        case DatasourceType.Prometheus:
-                            data = run_prometheus_query(ds.queries)
-                            break;
+        // if there is no data in panel currently, we should make a immediate query
+        if (isEmpty(panelData)) {
+            queryData()
+        }
 
-                        default:
-                            break;
-                    }
-
-                    setPanelData(data)
-                }
-            }
-        }, 1000000)
+        // h = setInterval(() => {
+        //     queryData()
+        // }, 10000)
 
         return () => clearInterval(h)
     }, [panel])
-    
+
+    const queryData = () => {
+        for (const ds of panel.datasource) {
+            if (ds.selected) {
+                let data;
+                switch (ds.type) {
+                    case DatasourceType.Prometheus:
+                        data = run_prometheus_query(ds.queries)
+                        break;
+
+                    default:
+                        break;
+                }
+
+                setPanelData(data)
+            }
+        }
+    }
+
     const panelBodyHeight = height - PANEL_HEADER_HEIGHT
     const panelInnerHeight = panelBodyHeight - PANEL_BODY_PADDING * 2 // 10px padding top and bottom of panel body
     const panelInnerWidth = width + 8 // 10px padding left and right of panel body
@@ -120,7 +131,7 @@ export const PanelComponent = ({ panel, onEditPanel, onRemovePanel,width,height 
             // panel={panel}
             maxHeight={`${panelBodyHeight}px`}
             overflowY="scroll"
-            marginLeft="-10px"
+            marginLeft={panel.type == PanelType.Graph ? "-10px" : "0px"}
         >
             <CustomPanelRender data={panelData} height={panelInnerHeight} width={panelInnerWidth} />
         </Box>

@@ -7,6 +7,10 @@ import { DataFrame, FieldType } from "types/dataFrame"
 import { concat } from "lodash"
 
 export const run_prometheus_query = (queries: PanelQuery[]): DataFrame[] => {
+    if (!queries) {
+        return []
+    }
+    
     const res = mockData
     if (res.status !== "success") {
         console.log("Failed to fetch data from prometheus", res)

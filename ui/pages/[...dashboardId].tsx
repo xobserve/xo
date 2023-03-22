@@ -117,7 +117,6 @@ const DashboardPage = () => {
         setDashboard(cloneDeep(dashboard))
     }
 
-    console.log(dashboard?.data.panels)
     return (
         <>
         <PageContainer>

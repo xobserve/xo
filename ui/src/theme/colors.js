@@ -19,8 +19,13 @@ const  customColors = {
         dark: "rgba(30,39,50,0.3)"
     },
     textColor: {
-        light: 'var(--chakra-colors-gray-700)',
+        light: 'var(--chakra-colors-gray-800)',
         dark: 'var(--chakra-colors-whiteAlpha-900)'
+    },
+    // used in where var() is not supported
+    textColorRGB: {
+        light: `#1A202C`,
+        dark: `rgba(255,255,255,0.92)`,
     }
 }
 

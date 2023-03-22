@@ -7,6 +7,9 @@ export interface DataFrame {
 
     // The number of rows
     length: number;
+
+    // series color showing in graph
+    color?: string 
 }
 
 export enum FieldType {
