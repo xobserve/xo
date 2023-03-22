@@ -18,8 +18,9 @@ const GraphPanelEditor = ({ panel, onChange }: Props) => {
     defaults(tempPanel.settings.graph, initGraphSettings)
 
     const onPanelChange = () => {
-        setTempPanel(cloneDeep(tempPanel))
-        onChange(tempPanel)
+        const p = cloneDeep(tempPanel)
+        setTempPanel(p)
+        onChange(p)
     }
     return (<>
         <PanelAccordion title="Tooltip">
@@ -37,12 +38,12 @@ const GraphPanelEditor = ({ panel, onChange }: Props) => {
                     onPanelChange()
                 }} />
             </PanelEditItem>
-            <PanelEditItem title="Legend placement">
+            {tempPanel.settings.graph.legend.mode  != 'hidden' && <PanelEditItem title="Legend placement">
                 <RadionButtons options={[{ label: "Bottom", value: "bottom" }, { label: "Right", value: "right" }]} value={tempPanel.settings.graph.legend.placement} onChange={v => {
                     tempPanel.settings.graph.legend.placement = v
                     onPanelChange()
                 }} />
-            </PanelEditItem>
+            </PanelEditItem>}
         </PanelAccordion>
         <PanelAccordion title="Graph styles">
             <PanelEditItem title="Style">

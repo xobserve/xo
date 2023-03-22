@@ -34,7 +34,7 @@ const GraphPanel = (props: PanelProps) => {
     }
     return (
         <>
-            {config && <GraphLayout width={props.width} height={props.height} legend={<SeriesTable placement="bottom" props={props} filterType={seriesFilterType.Current} onSelect={onSelectSeries} />}>
+            {config && <GraphLayout width={props.width} height={props.height} legend={props.panel.settings.graph.legend.mode == "hidden" ? null : <SeriesTable placement={props.panel.settings.graph.legend.placement} props={props} filterType={seriesFilterType.Current} onSelect={onSelectSeries} />}>
                 {(vizWidth: number, vizHeight: number) => {
                     const options = useOptions(config)
                     if (uplot) {

@@ -51,10 +51,10 @@ const SeriesTable = ({ props, nearestSeries, filterIdx, filterType, onSelect }: 
 
     return (
         <Box fontSize="xs" minWidth="fit-content">
-            {filterType != seriesFilterType.Nearest && <Flex justifyContent="space-between">
+            {/* {filterType != seriesFilterType.Nearest && <Flex justifyContent="space-between">
                 <Box></Box>
                 <Text>current</Text>
-            </Flex>}
+            </Flex>} */}
             <VStack alignItems="left" spacing="1" mt="2px">
                 {values.map(v => {
                     if (filterType == seriesFilterType.Nearest && (props.panel.settings.graph.activeSeries && props.panel.settings.graph.activeSeries != v.name)) {
