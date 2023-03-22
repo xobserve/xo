@@ -13,14 +13,14 @@ interface Props {
 const GraphPanelEditor = ({panel,onChange}:Props) => {
     const [tempPanel, setTempPanel] = useState<Panel>(panel)
 
-    if (!tempPanel.settings.text) {
-        tempPanel.settings.text = {}
+    if (!tempPanel.pluginSettings.text) {
+        tempPanel.pluginSettings.text = {}
     }
     
     return (   <PanelAccordion title="Text setting">
         <PanelEditItem title="Content">
-            <Textarea value={tempPanel.settings.text.md} onChange={(e) => {
-                tempPanel.settings.text.md = e.currentTarget.value
+            <Textarea value={tempPanel.pluginSettings.text.md} onChange={(e) => {
+                tempPanel.pluginSettings.text.md = e.currentTarget.value
                 setTempPanel(cloneDeep(tempPanel))
             }}
              onBlur={() => onChange(tempPanel)} />

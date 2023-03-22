@@ -10,44 +10,55 @@ import { cloneDeep, isEmpty } from "lodash";
 
 import Tooltip from "./Tooltip";
 import SeriesTable, { seriesFilterType } from "components/Tooltip/SeriesTable";
-import { Box } from "@chakra-ui/react";
 import { GraphLayout } from "layouts/plugins/GraphLayout";
 
 
 
 
 const GraphPanel = (props: PanelProps) => {
+    const [config, setConfig] = useState(null)
+    useEffect(() => {
+        if (props) {
+            setConfig(props)
+        }
+    }, [props])
 
     const [uplot, setUplot] = useState<uPlot>(null)
 
-
     const transformed = transformDataToUplot(props.data)
 
+    const onSelectSeries = (s) => {
+        props.panel.settings.activeSeries = props.panel.settings.activeSeries == s ? null : s
+
+        setConfig(cloneDeep(props))
+    }
     return (
-        <GraphLayout width={props.width} height={props.height} legend={<SeriesTable placement="bottom" data={props.data} filterType={seriesFilterType.Current} />}>
-            {(vizWidth: number, vizHeight: number) => {
-                const options = useOptions(props, vizWidth, vizHeight)    
-                // if (uplot) {
-                //     if (props.width != vizWidth || props.height != vizHeight) {
-                //         uplot.setSize({width: vizWidth, height:vizHeight})   
-                //     }
-                  
-                // }
-               
-                return (options && <UplotReact
-                    options={options}
-                    data={transformed}
-                    onDelete={(chart: uPlot) => { }}
-                    onCreate={(chart) => { setUplot((chart)) }}
-                >
-                    <Tooltip props={props} options={options} />
-                </UplotReact>
-                )
-            }}
+        <>
+            {config && <GraphLayout width={props.width} height={props.height} legend={<SeriesTable placement="bottom" props={props} filterType={seriesFilterType.Current} onSelect={onSelectSeries} />}>
+                {(vizWidth: number, vizHeight: number) => {
+                    const options = useOptions(config)
+                    if (uplot) {
+                        if (props.width != vizWidth || props.height != vizHeight) {
+                            uplot.setSize({ width: vizWidth, height: vizHeight })
+                        }
+
+                    }
+
+                    return (options && <UplotReact
+                        options={options}
+                        data={transformed}
+                        onDelete={(chart: uPlot) => { }}
+                        onCreate={(chart) => { setUplot((chart)) }}
+                    >
+                        <Tooltip props={props} options={options} />
+                    </UplotReact>
+                    )
+                }}
 
 
 
-        </GraphLayout>)
+            </GraphLayout>}
+        </>)
 }
 
 export default GraphPanel

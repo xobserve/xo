@@ -72,8 +72,8 @@ const EditPanel = ({ dashboard, panel, onApply, onDiscard }: EditPanelProps) => 
         }
 
         // init settings for panel render plugin
-        if (!tempPanel.settings[type]) {
-            tempPanel.settings[type] = {}
+        if (!tempPanel.pluginSettings[type]) {
+            tempPanel.pluginSettings[type] = {}
         }
 
         setTempPanel(cloneDeep(tempPanel))

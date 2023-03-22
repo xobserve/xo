@@ -8,7 +8,7 @@ import { DataFrame } from "types/dataFrame"
 const TextPanel = (props: PanelProps) => {
     console.log(props)
     return (<Box px="2">
-        <MarkdownRender md={props.panel.settings.text?.md ?? ""} width="100%"/>
+        <MarkdownRender md={props.panel.pluginSettings.text?.md ?? ""} width="100%"/>
     </Box>)
 }
 

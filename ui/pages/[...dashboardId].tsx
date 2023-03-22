@@ -69,7 +69,8 @@ const DashboardPage = () => {
             title: `New panel ${id}`,
             type: PanelType.Text,
             gridPos: { x: 0, y: 0, w: 12, h: 8 },
-            settings: {
+            settings: {},
+            pluginSettings: {
                 text: {
                     md: `#Welcome to AiAPM\n This is a new panel\n You can edit it by clicking the edit button on the top title\n ###Have fun!`
                 }
@@ -117,6 +118,7 @@ const DashboardPage = () => {
         setDashboard(cloneDeep(dashboard))
     }
 
+    console.log(dashboard?.data.panels)
     return (
         <>
         <PageContainer>

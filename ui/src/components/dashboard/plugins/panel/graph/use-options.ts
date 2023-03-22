@@ -22,7 +22,7 @@ const dummyPlugin = (): uPlot.Plugin => ({
 
 
 // build uplot options based on given config
-export const useOptions = (config: PanelProps,w,h) => {
+export const useOptions = (config: PanelProps) => {
     const { colorMode } = useColorMode()
     const [options, setOptions] = useState<uPlot.Options>(null);
     const c =  useColorModeValue(customColors.textColorRGB.light, customColors.textColorRGB.dark)
@@ -41,20 +41,21 @@ export const useOptions = (config: PanelProps,w,h) => {
             // get line color of series 
             const color = colors[i % colors.length]
             series.push({
+                show: config.panel.settings.activeSeries ? (config.panel.settings.activeSeries == d.name ? true : false) : true,
                 label: d.name,
                 points: { show: false },
                 stroke: color,
                 width: 1,
                 fill: fill(color,0.2)
             })
-            //@ts-ignore
+
             d.color = color
         })
 
         // update options
         setOptions({
-            width: w,
-            height: h,
+            width: config.width,
+            height: config.height,
             series: series,
             legend: {
                 show: false,
@@ -102,7 +103,7 @@ export const useOptions = (config: PanelProps,w,h) => {
                 },
             ]
         })
-    }, [colorMode,w,h])
+    }, [colorMode,config])
 
     return options
 }

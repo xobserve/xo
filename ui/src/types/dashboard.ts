@@ -27,11 +27,16 @@ export interface Panel {
     transparent?: boolean
 
     // for plugin settings
-    settings?: any 
+    pluginSettings?: any
+    settings?: PanelSettings 
 
     // for querying data
     useDatasource?: boolean
     datasource?: PanelDatasource[]
+}
+
+export interface PanelSettings {
+    activeSeries?: string
 }
 
 export enum PanelType {
@@ -78,4 +83,5 @@ export interface PanelProps {
     data?: DataFrame[]
     width?: number 
     height?: number
+    onChange?: any
 }
