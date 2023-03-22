@@ -13,6 +13,7 @@ import ReserveUrls from "src/data/reserve-urls"
 import DashboardHeader from "components/dashboard/DashboardHeader"
 import DashboardGrid from "components/dashboard/grid/DashboardGrid"
 import { cloneDeep } from "lodash"
+import { initGraphSettings } from "components/dashboard/plugins/panel/graph/Editor"
 
 // All of the paths that is not defined in pages directory will redirect to this page,
 // generally these pages are defined in:
@@ -69,11 +70,10 @@ const DashboardPage = () => {
             title: `New panel ${id}`,
             type: PanelType.Text,
             gridPos: { x: 0, y: 0, w: 12, h: 8 },
-            settings: {},
-            pluginSettings: {
+            settings: {
                 text: {
                     md: `#Welcome to AiAPM\n This is a new panel\n You can edit it by clicking the edit button on the top title\n ###Have fun!`
-                }
+                },
             },
             datasource: [{
                 type: DatasourceType.Prometheus,

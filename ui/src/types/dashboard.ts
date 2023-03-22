@@ -27,8 +27,7 @@ export interface Panel {
     transparent?: boolean
 
     // for plugin settings
-    pluginSettings?: any
-    settings?: PanelSettings 
+    settings?: PanelSettings
 
     // for querying data
     useDatasource?: boolean
@@ -36,7 +35,28 @@ export interface Panel {
 }
 
 export interface PanelSettings {
+    text?: {
+        md?: string
+    }
+    graph?: GraphSettings
+}
+export interface GraphSettings {
     activeSeries?: string
+    tooltip?: {
+        mode: "single" | "all" | "hidden"
+        sort: "asc" | "desc"
+    }
+    legend?: {
+        mode:  "table" | "hidden"
+        placement: "bottom" | "right"
+    }
+    styles?: {
+        style: "lines" | "bars" | "points"
+        lineWidth: number
+        fillOpacity: number
+        showPoints: "auto" | "always" | "never"
+        pointSize: number
+    }
 }
 
 export enum PanelType {

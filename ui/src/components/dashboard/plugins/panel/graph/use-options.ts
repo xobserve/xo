@@ -41,7 +41,7 @@ export const useOptions = (config: PanelProps) => {
             // get line color of series 
             const color = colors[i % colors.length]
             series.push({
-                show: config.panel.settings.activeSeries ? (config.panel.settings.activeSeries == d.name ? true : false) : true,
+                show: config.panel.settings.graph.activeSeries ? (config.panel.settings.graph.activeSeries == d.name ? true : false) : true,
                 label: d.name,
                 points: { show: false },
                 stroke: color,

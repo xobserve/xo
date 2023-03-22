@@ -28,7 +28,7 @@ const GraphPanel = (props: PanelProps) => {
     const transformed = transformDataToUplot(props.data)
 
     const onSelectSeries = (s) => {
-        props.panel.settings.activeSeries = props.panel.settings.activeSeries == s ? null : s
+        props.panel.settings.graph.activeSeries =  props.panel.settings.graph.activeSeries  == s ? null : s
 
         setConfig(cloneDeep(props))
     }
@@ -50,7 +50,7 @@ const GraphPanel = (props: PanelProps) => {
                         onDelete={(chart: uPlot) => { }}
                         onCreate={(chart) => { setUplot((chart)) }}
                     >
-                        <Tooltip props={props} options={options} />
+                        {props.panel.settings.graph.tooltip.mode != 'hidden' && <Tooltip props={props} options={options} />}
                     </UplotReact>
                     )
                 }}
