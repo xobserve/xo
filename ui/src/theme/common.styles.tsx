@@ -20,6 +20,10 @@ const CommonStyles = () => (
           background-image: linear-gradient(to right,#33a2e5 30%,#52c41a 99%)
         }
       }
+
+      .chakra-slider__thumb {
+        color: black
+      }
     `}
   />
 )

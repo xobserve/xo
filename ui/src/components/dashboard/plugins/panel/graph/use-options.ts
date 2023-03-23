@@ -12,20 +12,19 @@ import { systemDateFormats } from "utils/datetime/formats";
 import { dateTimeFormat } from "utils/datetime/formatter";
 import { colors } from "utils/colors";
 import customColors from "src/theme/colors";
+import { formatUnit } from "components/unit";
+import { measureText } from "utils/measureText";
 
 
-const dummyPlugin = (): uPlot.Plugin => ({
-    hooks: {
-        init(u: uPlot, opts: uPlot.Options) { void u; void opts; }
-    }
-});
 
 
+const BarWidthFactor = 0.6
+const BardMaxWidth = 200
 // build uplot options based on given config
 export const useOptions = (config: PanelProps) => {
     const { colorMode } = useColorMode()
     const [options, setOptions] = useState<uPlot.Options>(null);
-    const c =  useColorModeValue(customColors.textColorRGB.light, customColors.textColorRGB.dark)
+    const c = useColorModeValue(customColors.textColorRGB.light, customColors.textColorRGB.dark)
     useEffect(() => {
         const axesColor = colorMode == ColorMode.Light ? "rgba(0, 10, 23, 0.09)" : "rgba(240, 250, 255, 0.09)"
 
@@ -40,13 +39,39 @@ export const useOptions = (config: PanelProps) => {
         config.data.forEach((d, i) => {
             // get line color of series 
             const color = colors[i % colors.length]
+            let pointsShow;
+            let showPoints = config.panel.settings.graph.styles?.showPoints
+            if (showPoints == "always") {
+                pointsShow = true
+            } else if (showPoints == "never") {
+                if (config.panel.settings.graph.styles?.style != "points") {
+                    pointsShow = false
+                } else {
+                    pointsShow = true
+                }
+
+            } else {
+                if (config.panel.settings.graph.styles?.style == "bars") {
+                    pointsShow = false
+                } else {
+                    pointsShow = true
+                }
+            }
             series.push({
                 show: config.panel.settings.graph.activeSeries ? (config.panel.settings.graph.activeSeries == d.name ? true : false) : true,
                 label: d.name,
-                points: { show: false },
+                points: {
+                    show: pointsShow,
+                    size: config.panel.settings.graph.styles?.pointSize
+                },
                 stroke: color,
-                width: 1,
-                fill: fill(color,0.2)
+                width: config.panel.settings.graph.styles?.style == "points" ? 0 : config.panel.settings.graph.styles?.lineWidth,
+                fill: config.panel.settings.graph.styles?.style == "points" ? null : (config.panel.settings.graph.styles?.gradientMode == "none" ? color : fill(color, (config.panel.settings.graph.styles?.fillOpacity ?? 21) / 100)),
+                spanGaps: false,
+                paths: config.panel.settings.graph.styles?.style == "bars" ? uPlot.paths.bars({
+                    size: [BarWidthFactor, BardMaxWidth],
+                    align: 0,
+                }) : null
             })
 
             d.color = color
@@ -76,34 +101,44 @@ export const useOptions = (config: PanelProps) => {
                     // distr: 3,
                     auto: true,
                     dir: 1,
-                    distr: 1,
+                    distr: config.panel.settings.graph.axis?.scale == "linear" ? 1 : 3,
                     ori: 1,
+                    log: config.panel.settings.graph.axis?.scaleBase,
                     // min: 1
                 }
             },
             axes: [
                 {
                     grid: {
-                        show: true,
+                        show: config.panel.settings.graph.axis?.showGrid,
                         width: 0.5,
                         stroke: axesColor
                     },
                     scale: 'x',
                     labelGap: 0,
                     values: formatTime,
-                    stroke:c,
+                    stroke: c,
                 },
                 {
                     grid: {
-                        show: true,
+                        show: config.panel.settings.graph.axis?.showGrid,
                         width: 0.5,
                         stroke: axesColor
                     },
-                    stroke: c
+                    ticks: {
+                        size: 4
+                    },
+                    scale: 'y',
+                    stroke: c,
+                    size: ((self, values, axisIdx) => {
+                        console.log(values,axisIdx)
+                        return calculateAxisSize(self, values, axisIdx);
+                    }),
+                    values: (u, vals) => vals.map(v => { return formatUnit(round(v, config.panel.settings.graph.std?.decimals ?? 2), config.panel.settings.graph.std?.units) ?? round(v, config.panel.settings.graph.std?.decimals ?? 2) })
                 },
             ]
         })
-    }, [colorMode,config])
+    }, [colorMode, config])
 
     return options
 }
@@ -133,72 +168,94 @@ const fill = (color: string, opacity: number) => {
 }
 
 
-    export enum GradientDirection {
-        Right = 0,
-        Up = 1,
-        Left = 2,
-        Down = 3,
-    }
-    function makeDirectionalGradient(direction: GradientDirection, bbox: uPlot.BBox, ctx: CanvasRenderingContext2D) {
-        let x0 = 0,
-            y0 = 0,
-            x1 = 0,
-            y1 = 0;
+export enum GradientDirection {
+    Right = 0,
+    Up = 1,
+    Left = 2,
+    Down = 3,
+}
+function makeDirectionalGradient(direction: GradientDirection, bbox: uPlot.BBox, ctx: CanvasRenderingContext2D) {
+    let x0 = 0,
+        y0 = 0,
+        x1 = 0,
+        y1 = 0;
 
-        if (direction === GradientDirection.Down) {
-            y0 = bbox.top;
-            y1 = bbox.top + bbox.height;
-        } else if (direction === GradientDirection.Left) {
-            x0 = bbox.left + bbox.width;
-            x1 = bbox.left;
-        } else if (direction === GradientDirection.Up) {
-            y0 = bbox.top + bbox.height;
-            y1 = bbox.top;
-        } else if (direction === GradientDirection.Right) {
-            x0 = bbox.left;
-            x1 = bbox.left + bbox.width;
-        }
-
-        return ctx.createLinearGradient(x0, y0, x1, y1);
+    if (direction === GradientDirection.Down) {
+        y0 = bbox.top;
+        y1 = bbox.top + bbox.height;
+    } else if (direction === GradientDirection.Left) {
+        x0 = bbox.left + bbox.width;
+        x1 = bbox.left;
+    } else if (direction === GradientDirection.Up) {
+        y0 = bbox.top + bbox.height;
+        y1 = bbox.top;
+    } else if (direction === GradientDirection.Right) {
+        x0 = bbox.left;
+        x1 = bbox.left + bbox.width;
     }
 
-    const timeUnitSize = {
-        second: 1000,
-        minute: 60 * 1000,
-        hour: 60 * 60 * 1000,
-        day: 24 * 60 * 60 * 1000,
-        month: 28 * 24 * 60 * 60 * 1000,
-        year: 365 * 24 * 60 * 60 * 1000,
-    };
+    return ctx.createLinearGradient(x0, y0, x1, y1);
+}
 
-    export function formatTime(
-        self: uPlot,
-        splits: number[],
-        axisIdx: number,
-        foundSpace: number,
-        foundIncr: number
-    ) {
-        const timeZone = (self.axes[axisIdx] as any).timeZone;
-        const scale = self.scales.x;
-        const range = (scale?.max ?? 0) - (scale?.min ?? 0);
-        const yearRoundedToDay = Math.round(timeUnitSize.year / timeUnitSize.day) * timeUnitSize.day;
-        const incrementRoundedToDay = Math.round(foundIncr / timeUnitSize.day) * timeUnitSize.day;
+const timeUnitSize = {
+    second: 1000,
+    minute: 60 * 1000,
+    hour: 60 * 60 * 1000,
+    day: 24 * 60 * 60 * 1000,
+    month: 28 * 24 * 60 * 60 * 1000,
+    year: 365 * 24 * 60 * 60 * 1000,
+};
 
-        let format = systemDateFormats.interval.year;
+export function formatTime(
+    self: uPlot,
+    splits: number[],
+    axisIdx: number,
+    foundSpace: number,
+    foundIncr: number
+) {
+    const timeZone = (self.axes[axisIdx] as any).timeZone;
+    const scale = self.scales.x;
+    const range = (scale?.max ?? 0) - (scale?.min ?? 0);
+    const yearRoundedToDay = Math.round(timeUnitSize.year / timeUnitSize.day) * timeUnitSize.day;
+    const incrementRoundedToDay = Math.round(foundIncr / timeUnitSize.day) * timeUnitSize.day;
 
-        if (foundIncr <= timeUnitSize.minute) {
-            format = systemDateFormats.interval.second;
-        } else if (range <= timeUnitSize.day) {
-            format = systemDateFormats.interval.minute;
-        } else if (foundIncr <= timeUnitSize.day) {
-            format = systemDateFormats.interval.hour;
-        } else if (range < timeUnitSize.year) {
-            format = systemDateFormats.interval.day;
-        } else if (incrementRoundedToDay === yearRoundedToDay) {
-            format = systemDateFormats.interval.year;
-        } else if (foundIncr <= timeUnitSize.year) {
-            format = systemDateFormats.interval.month;
-        }
+    let format = systemDateFormats.interval.year;
 
-        return splits.map((v) => dateTimeFormat(v * 1000, { format, timeZone }));
+    if (foundIncr <= timeUnitSize.minute) {
+        format = systemDateFormats.interval.second;
+    } else if (range <= timeUnitSize.day) {
+        format = systemDateFormats.interval.minute;
+    } else if (foundIncr <= timeUnitSize.day) {
+        format = systemDateFormats.interval.hour;
+    } else if (range < timeUnitSize.year) {
+        format = systemDateFormats.interval.day;
+    } else if (incrementRoundedToDay === yearRoundedToDay) {
+        format = systemDateFormats.interval.year;
+    } else if (foundIncr <= timeUnitSize.year) {
+        format = systemDateFormats.interval.month;
     }
+
+    return splits.map((v) => dateTimeFormat(v * 1000, { format, timeZone }));
+}
+
+
+export const UPLOT_AXIS_FONT_SIZE = 12;
+function calculateAxisSize(self: uPlot, values: string[], axisIdx: number) {
+    const axis = self.axes[axisIdx];
+
+    let axisSize = axis.ticks!.size!;
+    if (axis.side === 2) {
+        axisSize += axis!.gap! + UPLOT_AXIS_FONT_SIZE;
+    } else if (values?.length) {
+        let maxTextWidth = values.reduce(
+            (acc, value) => Math.max(acc, measureText(value, UPLOT_AXIS_FONT_SIZE).width),
+            0
+        );
+        // limit y tick label width to 40% of visualization
+        const textWidthWithLimit = Math.min(self.width * 0.4, maxTextWidth);
+        // Not sure why this += and not normal assignment
+        axisSize += axis!.gap! + axis!.labelGap! + textWidthWithLimit;
+    }
+
+    return Math.ceil(axisSize+15);
+}

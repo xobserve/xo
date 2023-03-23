@@ -11,12 +11,13 @@ import { cloneDeep, isEmpty } from "lodash";
 import Tooltip from "./Tooltip";
 import SeriesTable, { seriesFilterType } from "components/Tooltip/SeriesTable";
 import { GraphLayout } from "layouts/plugins/GraphLayout";
+import { Text } from "@chakra-ui/react";
 
 
 
 
 const GraphPanel = (props: PanelProps) => {
-    const [config, setConfig] = useState(null)
+    const [config, setConfig] = useState<PanelProps>(null)
     useEffect(() => {
         if (props) {
             setConfig(props)
@@ -34,6 +35,7 @@ const GraphPanel = (props: PanelProps) => {
     }
     return (
         <>
+            {!isEmpty(config?.panel.settings.graph.axis?.label) && <Text fontSize="sm" position="absolute" ml="3" mt="-1" className="color-text">{config.panel.settings.graph.axis.label}</Text>}
             {config && <GraphLayout width={props.width} height={props.height} legend={props.panel.settings.graph.legend.mode == "hidden" ? null : <SeriesTable placement={props.panel.settings.graph.legend.placement} props={props} filterType={seriesFilterType.Current} onSelect={onSelectSeries} />}>
                 {(vizWidth: number, vizHeight: number) => {
                     const options = useOptions(config)

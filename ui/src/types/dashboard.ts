@@ -56,7 +56,30 @@ export interface GraphSettings {
         fillOpacity: number
         showPoints: "auto" | "always" | "never"
         pointSize: number
+        gradientMode: "none" | "opacity" | "hue"
     }
+    axis?: {
+        label?: string
+        showGrid?: boolean
+        scale?: "linear" | "log"
+        scaleBase?: 2 | 10
+    },
+    std: {
+        unitsType: UnitsType,
+        units: {
+            operator: "x" | "/",
+            rhs: number,
+            unit: string
+        }[],
+        decimals: number
+    }
+}
+
+export type UnitsType = 'none' | 'time' | 'bytes' | 'percent' | 'custom';
+export interface Unit {
+    operator: "x" | "/",
+    rhs: number,
+    unit: string
 }
 
 export enum PanelType {

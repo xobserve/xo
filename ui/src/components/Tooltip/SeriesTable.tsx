@@ -1,6 +1,7 @@
 // Render series table in tooltip
 
 import { Box, Flex, HStack, Text, VStack } from "@chakra-ui/react"
+import { formatUnit } from "components/unit"
 import { last, reverse, round, sortBy } from "lodash"
 import { useEffect, useState } from "react"
 import { PanelProps } from "types/dashboard"
@@ -29,15 +30,15 @@ const SeriesTable = ({ props, nearestSeries, filterIdx, filterType, onSelect }: 
             case seriesFilterType.Nearest: // tooltip
                 if (props.panel.settings.graph.tooltip.mode != "single") {
                     for (const d of props.data) {
-                        res.push({ name: d.name, value: round(d.fields[1].values[filterIdx], 2), color: d.color })
+                        res.push({ name: d.name, value: d.fields[1].values[filterIdx], color: d.color })
                     }
                 } else {
-                    res.push({ name: nearestSeries.name, color: nearestSeries.color, value: round(nearestSeries.fields[1].values[filterIdx], 2) })
+                    res.push({ name: nearestSeries.name, color: nearestSeries.color, value: nearestSeries.fields[1].values[filterIdx] })
                 }
                 break
             case seriesFilterType.Current: // legend
                 for (const d of props.data) {
-                    res.push({ name: d.name, value: round(last(d.fields[1].values), 2), color: d.color })
+                    res.push({ name: d.name, value: last(d.fields[1].values), color: d.color })
                 }
                 break
             default:
@@ -45,6 +46,11 @@ const SeriesTable = ({ props, nearestSeries, filterIdx, filterType, onSelect }: 
 
 
         let res1 = reverse(sortBy(res, 'value'))
+
+        for (const r of  res1) {
+            r.value = formatUnit(round(r.value, props.panel.settings.graph.std.decimals),props.panel.settings.graph.std.units)
+        }
+        
         setValues(res1)
     }, [props.data, nearestSeries, filterIdx])
 

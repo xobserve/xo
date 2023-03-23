@@ -179,6 +179,10 @@ export function findMidPointYPosition(u: uPlot, idx: number) {
     let y;
     let sMaxIdx = 1;
     let sMinIdx = 1;
+
+    if (!u.data[1]) {
+        return 
+    }
     // assume min/max being values of 1st series
     let max = u.data[1][idx];
     let min = u.data[1][idx];

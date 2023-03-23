@@ -2,13 +2,13 @@ import { Button, HStack } from "@chakra-ui/react"
 
 interface Props {
     options: Option[]
-    value: string // selected value
+    value: string | boolean // selected value
     onChange: any
 }
 
 interface Option {
     label: string 
-    value: string
+    value: string | boolean
 }
 
 const RadionButtons = (props:Props) => {

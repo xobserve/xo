@@ -100,7 +100,7 @@ export const PanelComponent = ({ panel, onEditPanel, onRemovePanel,width,height 
     const panelBodyHeight = height - PANEL_HEADER_HEIGHT
     const panelInnerHeight = panelBodyHeight - PANEL_BODY_PADDING * 2 // 10px padding top and bottom of panel body
     const panelInnerWidth = width + 8 // 10px padding left and right of panel body
-    return <Box height="100%" className="bordered">
+    return <Box height="100%" >
         <HStack className="grid-drag-handle" height={`${PANEL_HEADER_HEIGHT}px`} cursor="move" spacing="0">
             {panel.desc && <Box color={useColorModeValue("brand.500", "brand.200")} position="absolute">
                 <Tooltip label={panel.desc}>
