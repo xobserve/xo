@@ -25,6 +25,10 @@ export const useOptions = (config: PanelProps) => {
     const { colorMode } = useColorMode()
     const [options, setOptions] = useState<uPlot.Options>(null);
     const c = useColorModeValue(customColors.textColorRGB.light, customColors.textColorRGB.dark)
+    const axisSpace = ((self, axisIdx, scaleMin, scaleMax, plotDim) => {
+        return calculateSpace(self, axisIdx, scaleMin, scaleMax, plotDim);
+    })
+
     useEffect(() => {
         const axesColor = colorMode == ColorMode.Light ? "rgba(0, 10, 23, 0.09)" : "rgba(240, 250, 255, 0.09)"
 
@@ -116,6 +120,7 @@ export const useOptions = (config: PanelProps) => {
                     },
                     scale: 'x',
                     labelGap: 0,
+                    space: axisSpace,
                     values: formatTime,
                     stroke: c,
                 },
@@ -130,8 +135,8 @@ export const useOptions = (config: PanelProps) => {
                     },
                     scale: 'y',
                     stroke: c,
+                    space: axisSpace,
                     size: ((self, values, axisIdx) => {
-                        console.log(values,axisIdx)
                         return calculateAxisSize(self, values, axisIdx);
                     }),
                     values: (u, vals) => vals.map(v => { return formatUnit(round(v, config.panel.settings.graph.std?.decimals ?? 2), config.panel.settings.graph.std?.units) ?? round(v, config.panel.settings.graph.std?.decimals ?? 2) })
@@ -257,5 +262,28 @@ function calculateAxisSize(self: uPlot, values: string[], axisIdx: number) {
         axisSize += axis!.gap! + axis!.labelGap! + textWidthWithLimit;
     }
 
-    return Math.ceil(axisSize+15);
+    return Math.ceil(axisSize + 15);
+}
+
+
+function calculateSpace(self: uPlot, axisIdx: number, scaleMin: number, scaleMax: number, plotDim: number): number {
+    const axis = self.axes[axisIdx];
+    const scale = self.scales[axis.scale!];
+
+    // for axis left & right
+    if (axis.side !== 2 || !scale) {
+        return 30;
+    }
+
+    const defaultSpacing = 40;
+
+    if (scale.time) {
+        const maxTicks = plotDim / defaultSpacing;
+        const increment = (scaleMax - scaleMin) / maxTicks;
+        const sample = formatTime(self, [scaleMin], axisIdx, defaultSpacing, increment);
+        const width = measureText(sample[0], UPLOT_AXIS_FONT_SIZE).width + 18;
+        return width;
+    }
+
+    return defaultSpacing;
 }
