@@ -22,6 +22,7 @@ import Decoration5 from "components/largescreen/decoration/Decoration5"
 import Decoration6 from "components/largescreen/decoration/Decoration6"
 import Decoration7 from "components/largescreen/decoration/Decoration7"
 import Decoration8 from "components/largescreen/decoration/Decoration8"
+import Decoration9 from "components/largescreen/decoration/Decoration9"
  
 
 
@@ -140,7 +141,7 @@ const DashboardWrapper = ({dashboardId}) => {
         <>
             <PageContainer fullscreen={fullscreen} bg={dashboard?.data.styles?.bg}>
                 {dashboard && <Box pl="6px" pr="6px" width="100%">
-                    <Decoration8 reverse style={{width: "200px",height: '50px',marginTop: '50px'}} />
+                    <Decoration9 reverse style={{marginTop: '50px'}}>66</Decoration9>
                     <DashboardHeader fullscreen={fullscreen} onFullscreenChange={onFullscreenChange} dashboard={dashboard} onTimeChange={t => {dispatch({type:  TimeChangedEvent,data: t});setTimeRange(t)}} timeRange={timeRange}  onChange={onDashbardChange} />
                     <Box mt={fullscreen ? 0 : (visibleVars?.length > 0 ? "67px" : "38px")} py="2">
                         {dashboard.data.panels?.length > 0 && <DashboardGrid dashboard={dashboard} onChange={onDashbardChange} />}
