@@ -1,5 +1,5 @@
-import { Button, HStack, Input, NumberInput, NumberInputField, NumberInputStepper, Select, VStack } from "@chakra-ui/react"
-import { cloneDeep } from "lodash"
+import { Button, HStack, Input, NumberInput, NumberInputField, NumberInputStepper, Select, useToast, VStack } from "@chakra-ui/react"
+import { cloneDeep, round } from "lodash"
 import { useEffect, useState } from "react"
 import { FaArrowUp, FaMinus, FaPlus } from "react-icons/fa"
 import { UnitsType,Unit } from "types/dashboard"
@@ -15,7 +15,7 @@ interface Props {
 export const UnitPicker = ({type, value, onChange }: Props) => {
     const [unitType, setUnitTYpe] = useState(type)
     const [units, setUnits] = useState(value)
-
+    const toast = useToast()
     const onAddUnit = () => {
         units.push({
             operator: units[0].operator ?? 'x',
@@ -32,7 +32,7 @@ export const UnitPicker = ({type, value, onChange }: Props) => {
 
     const onLiftUnit = (i) => {
         [units[i-1],units[i]] = [units[i],units[i-1]]
-
+         
         setUnits(cloneDeep(units))
     }
 
@@ -104,6 +104,19 @@ export const UnitPicker = ({type, value, onChange }: Props) => {
         }
     }
 
+    const onSubmit = () => {
+        // checking whether rhs of first unit is 1, because the fist unit has to be the base unit
+        // if (units.length > 0 && units[0].rhs != 1) {
+        //     toast({
+        //         description: "rhs of first unit must be set to 1, because the fist unit is base unit",
+        //         status: "warning",
+        //         duration: 5000,
+        //         isClosable: true,
+        //     });
+        //     return 
+        // }
+        onChange(units,unitType)
+    }
     return (
         <>
             <HStack>
@@ -142,11 +155,11 @@ export const UnitPicker = ({type, value, onChange }: Props) => {
 
                 })}
             </VStack>
-            <Button mt="2" size="sm" variant="outline" onClick={() => onChange(units,unitType)}>Submit</Button>
+            <Button mt="2" size="sm" variant="outline" onClick={onSubmit}>Submit</Button>
         </>)
 }
 
-export const formatUnit = (v: number, units: Unit[]) => {
+export const formatUnit = (v: number, units: Unit[],decimal: number) => {
     for (var i = units.length-1;i>=0;i--) {
         const unit = units[i]
         let res;
@@ -162,12 +175,8 @@ export const formatUnit = (v: number, units: Unit[]) => {
                 break;
         }
 
-        if (res >= 0.1) {
-            return res.toString() + unit.unit
-        }
-
-        if (i == 0) {
-            return v.toString()
+        if (res >= 0.1 || i == 0 ) {
+            return res.toFixed(decimal) + unit.unit
         }
     }
     

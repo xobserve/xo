@@ -160,7 +160,7 @@ const GraphPanelEditor = ({ panel, onChange }: Props) => {
                 } />
             </PanelEditItem>
             <PanelEditItem title="Decimals">
-            <NumberInput value={tempPanel.settings.graph.std.decimals ?? 2}  min={0} max={3} step={1} onChange={(_,v) => {
+            <NumberInput value={tempPanel.settings.graph.std.decimals ?? 2}  min={0} max={5} step={1} onChange={(_,v) => {
                  tempPanel.settings.graph.std.decimals = v
                  onPanelChange()
             }}>
@@ -203,6 +203,6 @@ export const initGraphSettings: GraphSettings = {
     std: {
         unitsType: 'none' ,
         units: [],
-        decimals: 2
+        decimals: 3
     }
 }

@@ -139,7 +139,7 @@ export const useOptions = (config: PanelProps) => {
                     size: ((self, values, axisIdx) => {
                         return calculateAxisSize(self, values, axisIdx);
                     }),
-                    values: (u, vals) => vals.map(v => { return formatUnit(round(v, config.panel.settings.graph.std?.decimals ?? 2), config.panel.settings.graph.std?.units) ?? round(v, config.panel.settings.graph.std?.decimals ?? 2) })
+                    values: (u, vals) => vals.map(v => { return formatUnit(v, config.panel.settings.graph.std?.units,config.panel.settings.graph.std?.decimals ?? 2) ?? round(v, config.panel.settings.graph.std?.decimals ?? 2) })
                 },
             ]
         })

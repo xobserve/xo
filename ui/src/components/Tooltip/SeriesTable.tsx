@@ -46,9 +46,11 @@ const SeriesTable = ({ props, nearestSeries, filterIdx, filterType, onSelect }: 
 
 
         let res1 = reverse(sortBy(res, 'value'))
-
+        
         for (const r of  res1) {
-            r.value = formatUnit(round(r.value, props.panel.settings.graph.std.decimals),props.panel.settings.graph.std.units)
+            r.value = props.panel.settings.graph.std.unitsType != "none" 
+                ? formatUnit(r.value,props.panel.settings.graph.std.units,props.panel.settings.graph.std.decimals??2)
+                : round(r.value, props.panel.settings.graph.std.decimals)
         }
         
         setValues(res1)
