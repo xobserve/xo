@@ -7,14 +7,14 @@ import { deepMerge } from '@jiaminghi/charts/lib/util/index'
 import { deepClone } from '@jiaminghi/c-render/lib/plugin/util'
 
 import useAutoResize from '../autoResize'
-import { DecorationProps1 } from '../types'
+import { DecorationProps } from '../types'
 import { Box } from '@chakra-ui/react'
 
 
 const defaultColor = ['rgba(255, 255, 255, 0.3)', 'rgba(255, 255, 255, 0.3)']
 
 
-const Decoration4 = forwardRef(({ reverse = false, dur = 3, className, style, color = [] }: DecorationProps1, ref) => {
+const Decoration4 = forwardRef(({ reverse = false, dur = 3, className, style, color = [] }: DecorationProps, ref) => {
     const { width, height, domRef } = useAutoResize(ref)
 
     const mergedColor = useMemo(() => deepMerge(deepClone(defaultColor, true), color || []), [color])

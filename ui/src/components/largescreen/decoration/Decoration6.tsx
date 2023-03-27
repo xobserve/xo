@@ -10,7 +10,7 @@ import { deepClone } from '@jiaminghi/c-render/lib/plugin/util'
 import useAutoResize from '../autoResize'
 
 import { randomExtend } from '../utils'
-import { DecorationProps1 } from '../types'
+import { DecorationProps } from '../types'
 import { Box } from '@chakra-ui/react'
 
 
@@ -63,7 +63,7 @@ function getData() {
   return { heights, minHeights, randoms }
 }
 
-const Decoration6 = forwardRef(({ className, style, color = [] }:DecorationProps1, ref) => {
+const Decoration6 = forwardRef(({ className, style, color = [] }:DecorationProps, ref) => {
   const { width, height, domRef } = useAutoResize(ref)
 
   function calcSVGData() {

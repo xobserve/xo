@@ -8,14 +8,14 @@ import { deepClone } from '@jiaminghi/c-render/lib/plugin/util'
 
 import useAutoResize from '../autoResize'
 import { Box } from '@chakra-ui/react'
-import { DecorationProps1 } from '../types'
+import { DecorationProps } from '../types'
 
 
 const defaultColor = ['#3faacb', '#fff']
 
 
 
-const Decoration2 = forwardRef(({ reverse = false, dur = 6, className, style, color = [] }:DecorationProps1, ref) => {
+const Decoration2 = forwardRef(({ reverse = false, dur = 6, className, style, color = [] }:DecorationProps, ref) => {
   const { width, height, domRef } = useAutoResize(ref)
 
   function calcSVGData() {
