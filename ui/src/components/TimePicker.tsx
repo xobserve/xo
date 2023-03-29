@@ -14,24 +14,52 @@ import {
 import { subMinutes } from 'date-fns'
 import { cloneDeep, includes, isDate, isEmpty, lowerCase } from 'lodash'
 import moment from 'moment'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
+import { unstable_batchedUpdates } from 'react-dom'
 import { FaCalendarAlt, FaTimes } from 'react-icons/fa'
 import { systemDateFormats } from 'types/time'
+import storage from 'utils/localStorage'
 
-interface TimeRange {
+export interface TimeRange {
     start: Date
     end: Date
     startRaw?: string
     endRaw?: string
 }
 
-const TimePicker = () => {
-    const now = new Date()
-    const initRange = { start: subMinutes(now, 15), end: now, startRaw: 'now-15m', endRaw: 'now' }
-    const [range, setRange] = useState<TimeRange>(initRange)
-    const [tempRange, setTempRange] = useState<TimeRange>(initRange)
+interface Props {
+    onClose?: any
+    onTimeChange: any
+}
+
+const TimePickerKey = "time-picker"
+const now = new Date()
+export const initTimeRange =  { start: subMinutes(now, 15), end: now, startRaw: 'now-15m', endRaw: 'now' }
+export const getInitTimeRange = () => {
+    const rawT = storage.get(TimePickerKey)
+    let time;
+    if (rawT) {
+        const t = JSON.parse(rawT)
+        if (t) {
+            time = t
+            time.start = dateTimeParse(time.startRaw).toDate()
+            time.end = dateTimeParse(time.endRaw).toDate()
+        }
+    }  else {
+       time = initTimeRange
+    }
+
+    return time
+}
+
+const TimePicker = ({onClose,onTimeChange} : Props) => {
+   
+    const [range, setRange] = useState<TimeRange>(getInitTimeRange())
+    const [tempRange, setTempRange] = useState<TimeRange>(getInitTimeRange())
     const [error, setError] = useState({ start: null, end: null })
     const [displayCalender, setDisplayCalender] = useState(false)
+
+
     const handleSelectDate = (dates) => {
         const r = {
             start: dates.start,
@@ -55,6 +83,8 @@ const TimePicker = () => {
         }
         setRange(r)
         setTempRange(r)
+            applyTimeRange(r)
+      
     }
 
     const onRangeChange = (from, to) => {
@@ -77,10 +107,8 @@ const TimePicker = () => {
         }
 
 
-        console.log(r)
         setTempRange(cloneDeep(tempRange))
 
-        console.log(tempRange)
 
         if (r && !isEmpty(r.from) && !isEmpty(r.to) && r.from && r.from._isValid && r.to && r.to._isValid) {
             setRange(tempRange)
@@ -96,13 +124,16 @@ const TimePicker = () => {
         setError(err)
     }
 
-    const applyTimeRange = () => {
-
+    const applyTimeRange = (r) => {
+        storage.set(TimePickerKey, JSON.stringify(r))
+        onTimeChange(r)
+        onClose()
     }
-
+    
     return (
-        <HStack alignItems="top" spacing="6">
-            {displayCalender &&
+        <>
+        {tempRange && <HStack alignItems="top" spacing="6">
+            {displayCalender  &&
                 <Box>
                     <Flex justifyContent="space-between" alignItems="center" fontSize="lg" mb="2">
                         <Text>Select a date range</Text>
@@ -146,7 +177,7 @@ const TimePicker = () => {
                     </HStack>
                     {error.end && <Text mt="1" fontSize="sm" color="red">{error.end}</Text>}
                 </Box>
-                <Button onClick={applyTimeRange}>Apply time range</Button>
+                <Button onClick={() => applyTimeRange(range)}>Apply time range</Button>
             </VStack>
             <Box p="2">
                 <Center><Text>Quick select</Text></Center>
@@ -158,7 +189,7 @@ const TimePicker = () => {
                     flex={1}
                 >
                     {
-                        quickOptions.map(o => <Button onClick={() => setQuickTime(o)} colorScheme="blue" variant={range.startRaw == o.raw && range.endRaw == "now" ? "solid" : "outline"}>
+                        quickOptions.map(o => <Button onClick={() => setQuickTime(o)} colorScheme="gray" variant={range.startRaw == o.raw && range.endRaw == "now" ? "solid" : "ghost"}  borderRadius="0">
                             {o.label}
                         </Button>)
                     }
@@ -168,7 +199,8 @@ const TimePicker = () => {
 
 
 
-        </HStack>
+        </HStack>}
+        </>
     )
 }
 

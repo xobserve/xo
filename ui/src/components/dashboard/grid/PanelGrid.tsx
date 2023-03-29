@@ -10,11 +10,13 @@ import { DataFrame } from "types/dataFrame";
 import GraphPanel from "../plugins/panel/graph/Graph";
 import { PANEL_BODY_PADDING, PANEL_HEADER_HEIGHT } from "src/data/constants";
 import { isEmpty } from "lodash";
+import { TimeRange } from "types/time";
 
 interface PanelGridProps {
     panel: Panel
     onEditPanel: any
     onRemovePanel: any
+    timeRange: TimeRange
 }
 
 const PanelGrid = (props: PanelGridProps) => {
@@ -43,10 +45,10 @@ interface PanelComponentProps {
     onRemovePanel?: any
     width: number
     height: number
+    timeRange: TimeRange
 }
 
-export const PanelComponent = ({ panel, onEditPanel, onRemovePanel,width,height }: PanelComponentProps) => {
-
+export const PanelComponent = ({ panel, onEditPanel, onRemovePanel,width,height,timeRange }: PanelComponentProps) => {
     const CustomPanelRender = (props) => {
         //@needs-update-when-add-new-panel
         switch (panel?.type) {
@@ -77,9 +79,10 @@ export const PanelComponent = ({ panel, onEditPanel, onRemovePanel,width,height 
         // }, 10000)
 
         return () => clearInterval(h)
-    }, [panel])
+    }, [panel,timeRange])
 
     const queryData = () => {
+        console.log("query data:",timeRange)
         for (const ds of panel.datasource) {
             if (ds.selected) {
                 let data;

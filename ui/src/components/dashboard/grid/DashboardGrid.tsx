@@ -8,15 +8,17 @@ import { Box } from "@chakra-ui/react";
 import PanelGrid from "./PanelGrid";
 import { useState } from "react";
 import EditPanel from "../edit-panel/EditPanel";
+import { TimeRange } from "types/time";
 
 
 
 interface GridProps {
     dashboard: Dashboard
     onChange: any
+    timeRange: TimeRange
 }
 
-const DashboardGrid = ({ dashboard, onChange }: GridProps) => {
+const DashboardGrid = ({ dashboard, onChange,timeRange }: GridProps) => {
 
     const SizedReactLayoutGrid = sizeMe({ monitorWidth: true })(GridWrapper);
 
@@ -126,12 +128,12 @@ const DashboardGrid = ({ dashboard, onChange }: GridProps) => {
                             borderBottom: "2px solid rgba(0, 0, 0, 0.4)"
                         }
                     }}>
-                        <PanelGrid panel={panel} onEditPanel={onEditPanel} onRemovePanel={onRemovePanel}/>
+                        <PanelGrid panel={panel} onEditPanel={onEditPanel} onRemovePanel={onRemovePanel} timeRange={timeRange}/>
                     </Box>)
                 })
             }
         </SizedReactLayoutGrid>
-        <EditPanel dashboard={dashboard} panel={panelInEdit} onApply={onEditPanelApply} onDiscard={onEditPanelDiscard}/>
+        <EditPanel dashboard={dashboard} panel={panelInEdit} onApply={onEditPanelApply} onDiscard={onEditPanelDiscard} timeRange={timeRange}/>
     </>)
 }
 

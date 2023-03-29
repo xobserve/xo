@@ -1,14 +1,9 @@
-export interface RawTimeRange {
-    from: string;
-    to: string;
-}
-
 export interface TimeRange {
-    from: any;
-    to: any;
-    raw: RawTimeRange;
+    start: Date
+    end: Date
+    startRaw?: string
+    endRaw?: string
 }
-
 
 export interface SystemDateFormatSettings {
     fullDate: string;

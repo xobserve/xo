@@ -3,17 +3,14 @@ import { PanelAdd } from "components/icons/PanelAdd"
 import PageContainer from "layouts/page-container"
 import { useRouter } from "next/router"
 import { useEffect, useState } from "react"
-import { FaChartBar, FaCog, FaRegSave } from "react-icons/fa"
 import { Dashboard, DatasourceType, Panel, PanelType } from "types/dashboard"
 import { requestApi } from "utils/axios/request"
-import CustomColors from "src/theme/colors"
-import IconButton from "components/button/IconButton"
 import { Team } from "types/teams"
-import ReserveUrls from "src/data/reserve-urls"
 import DashboardHeader from "components/dashboard/DashboardHeader"
 import DashboardGrid from "components/dashboard/grid/DashboardGrid"
 import { cloneDeep } from "lodash"
-import { initGraphSettings } from "components/dashboard/plugins/panel/graph/Editor"
+import { TimeRange } from "types/time"
+import { getInitTimeRange, initTimeRange } from "components/TimePicker"
 
 // All of the paths that is not defined in pages directory will redirect to this page,
 // generally these pages are defined in:
@@ -27,7 +24,7 @@ const DashboardPage = () => {
     const [team, setTeam] = useState<Team>(null)
     // panel used for temporary purpose,such as adding a new panel, edit a panel etc
     const [panel, setPanel] = useState<Panel>(null)
-
+    const [timeRange,setTimeRange] = useState<TimeRange>()
     useEffect(() => {
         if (dashboardId) {
             load()
@@ -118,14 +115,14 @@ const DashboardPage = () => {
         setDashboard(cloneDeep(dashboard))
     }
 
-    console.log(dashboard?.data.panels)
+    
     return (
         <>
         <PageContainer>
             {dashboard && <Box px="3" width="100%">
-                <DashboardHeader dashboard={dashboard} team={team} onAddPanel={onAddPanel}/>
+                <DashboardHeader dashboard={dashboard} team={team} onAddPanel={onAddPanel} onTimeChange={t => setTimeRange(t)}/>
                 <Box mt="50px" py="2">
-                    {dashboard.data.panels?.length > 0 && <DashboardGrid  dashboard={dashboard} onChange={onGridChange}/>}
+                    {dashboard.data.panels?.length > 0 && <DashboardGrid  dashboard={dashboard} onChange={onGridChange} timeRange={timeRange??getInitTimeRange()}/>}
                 </Box>        
             </Box>}
         </PageContainer>
