@@ -49,16 +49,18 @@ const EditPanel = ({ dashboard, panel, onApply, onDiscard,timeRange }: EditPanel
 
 
     const CustomPanelEditor = () => {
-        const onChange = (panel) => {
-            setTempPanel(panel)
+        const onSettingsChange = (panel:Panel) => {
+            // Rather than update the whole panel, we only update panel settings here,
+            // because the former one will cause the server making a new query to datasource
+            setTempPanel({settings: panel.settings, ...tempPanel})
         }
 
         //@needs-update-when-add-new-panel
         switch (tempPanel?.type) {
             case PanelType.Text:
-                return <TextPanelEditor panel={tempPanel} onChange={onChange} />
+                return <TextPanelEditor panel={tempPanel} onChange={onSettingsChange} />
             case PanelType.Graph:
-                return <GraphPanelEditor panel={tempPanel} onChange={onChange} />
+                return <GraphPanelEditor panel={tempPanel} onChange={onSettingsChange} />
             default:
                 return <></>
         }
@@ -119,7 +121,10 @@ const EditPanel = ({ dashboard, panel, onApply, onDiscard,timeRange }: EditPanel
                             </Box>
                             {/* panel datasource section */}
                             {tempPanel.useDatasource && <Box maxHeight="50%" mt="2" overflowY="scroll">
-                                <EditPanelQuery panel={tempPanel} onChange={(panel?) => setTempPanel(cloneDeep(panel??tempPanel))}/>
+                                <EditPanelQuery panel={tempPanel} onChange={(panel?) => {
+                                    const p = panel??tempPanel
+                                    setTempPanel({...p, datasource: cloneDeep(p.datasource)})
+                                }}/>
                             </Box>}
                         </Box>
                         {/* panel settings section */}

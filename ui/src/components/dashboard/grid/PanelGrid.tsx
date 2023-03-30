@@ -62,39 +62,55 @@ export const PanelComponent = ({ panel, onEditPanel, onRemovePanel,width,height,
     }
 
     const [panelData, setPanelData] = useState<DataFrame[]>([])
+    const [queryError, setQueryError] = useState()
+
     // run the queries and render the panel
     useEffect(() => {
+        console.log("panel changed! query data!")
         let h;
         if (h) {
             clearInterval(h)
         }
 
         // if there is no data in panel currently, we should make a immediate query
-        if (isEmpty(panelData)) {
+        // if (isEmpty(panelData)) {
             queryData()
-        }
+        // }
 
         // h = setInterval(() => {
         //     queryData()
         // }, 10000)
 
         return () => clearInterval(h)
-    }, [panel,timeRange])
+    }, [panel.datasource,timeRange])
 
-    const queryData = () => {
+    const queryData = async () => {
         console.log("query data:",timeRange)
         for (const ds of panel.datasource) {
             if (ds.selected) {
-                let data;
-                switch (ds.type) {
-                    case DatasourceType.Prometheus:
-                        data = run_prometheus_query(ds.queries)
-                        break;
+                let data = []
+                for (const q of ds.queries) {
+                    let res
+                    switch (ds.type) {
+                        case DatasourceType.Prometheus:
+                            res = await run_prometheus_query(q,timeRange)
+                            break;       
+                        default:
+                            break;
+                    }
 
-                    default:
-                        break;
-                }
+                    if (res.error) {
+                        setQueryError(res.error)
+                    } else {
+                        setQueryError(null)
+                    }
 
+                    if (!isEmpty(res.data)) {
+                        data.push(...res.data)
+                    }
+                } 
+               
+                console.log("query result: ", data)
                 setPanelData(data)
             }
         }
@@ -105,8 +121,8 @@ export const PanelComponent = ({ panel, onEditPanel, onRemovePanel,width,height,
     const panelInnerWidth = width + 8 // 10px padding left and right of panel body
     return <Box height="100%" >
         <HStack className="grid-drag-handle" height={`${PANEL_HEADER_HEIGHT}px`} cursor="move" spacing="0">
-            {panel.desc && <Box color={useColorModeValue("brand.500", "brand.200")} position="absolute">
-                <Tooltip label={panel.desc}>
+            {(queryError || panel.desc) && <Box color={useColorModeValue(queryError ? "red" :"brand.500", queryError ? "red" :"brand.200")} position="absolute">
+                <Tooltip label={queryError ?? panel.desc}>
                     <Box>
                         <IoMdInformation fontSize="20px" cursor="pointer" />
                     </Box>
@@ -135,6 +151,7 @@ export const PanelComponent = ({ panel, onEditPanel, onRemovePanel,width,height,
             maxHeight={`${panelBodyHeight}px`}
             overflowY="scroll"
             marginLeft={panel.type == PanelType.Graph ? "-10px" : "0px"}
+            h="100%"
         >
             <CustomPanelRender data={panelData} height={panelInnerHeight} width={panelInnerWidth} />
         </Box>

@@ -24,7 +24,7 @@ const DashboardPage = () => {
     const [team, setTeam] = useState<Team>(null)
     // panel used for temporary purpose,such as adding a new panel, edit a panel etc
     const [panel, setPanel] = useState<Panel>(null)
-    const [timeRange,setTimeRange] = useState<TimeRange>()
+    const [timeRange,setTimeRange] = useState<TimeRange>(getInitTimeRange())
     useEffect(() => {
         if (dashboardId) {
             load()
@@ -120,7 +120,7 @@ const DashboardPage = () => {
         <>
         <PageContainer>
             {dashboard && <Box px="3" width="100%">
-                <DashboardHeader dashboard={dashboard} team={team} onAddPanel={onAddPanel} onTimeChange={t => setTimeRange(t)}/>
+                <DashboardHeader dashboard={dashboard} team={team} onAddPanel={onAddPanel} onTimeChange={t => setTimeRange(t)} timeRange={timeRange}/>
                 <Box mt="50px" py="2">
                     {dashboard.data.panels?.length > 0 && <DashboardGrid  dashboard={dashboard} onChange={onGridChange} timeRange={timeRange??getInitTimeRange()}/>}
                 </Box>        

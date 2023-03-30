@@ -7,6 +7,7 @@ import { FaCog, FaRegClock, FaRegSave } from "react-icons/fa"
 import ReserveUrls from "src/data/reserve-urls"
 import { Dashboard } from "types/dashboard"
 import { Team } from "types/teams"
+import { TimeRange } from "types/time"
 import { requestApi } from "utils/axios/request"
 
 interface HeaderProps {
@@ -14,8 +15,9 @@ interface HeaderProps {
     team: Team
     onAddPanel: any
     onTimeChange: any
+    timeRange: TimeRange
 }
-const DashboardHeader = ({ dashboard, team, onAddPanel,onTimeChange }: HeaderProps) => {
+const DashboardHeader = ({ dashboard, team, onAddPanel,onTimeChange,timeRange }: HeaderProps) => {
     const toast = useToast()
     const router = useRouter()
 
@@ -44,7 +46,7 @@ const DashboardHeader = ({ dashboard, team, onAddPanel,onTimeChange }: HeaderPro
                     <IconButton onClick={onAddPanel}><PanelAdd size={28} fill={useColorModeValue("var(--chakra-colors-brand-500)", "var(--chakra-colors-brand-200)")} /></IconButton>
                     <IconButton onClick={onSave}><FaRegSave /></IconButton>
                     <IconButton><FaCog /></IconButton>
-                    <IconButton onClick={onOpen}><FaRegClock /></IconButton>
+                    <Tooltip label={`${timeRange?.start.toLocaleString()} - ${timeRange?.end.toLocaleString()}`}><Box><IconButton onClick={onOpen}><FaRegClock /></IconButton></Box></Tooltip>
                 </HStack>
 
             </HStack>

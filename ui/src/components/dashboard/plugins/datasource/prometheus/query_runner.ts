@@ -5,29 +5,40 @@ import { PanelQuery } from "types/dashboard"
 import mockData from "./mocks/data.json"
 import { DataFrame, FieldType } from "types/dataFrame"
 import { concat } from "lodash"
+import { TimeRange } from "types/time"
 
-export const run_prometheus_query = (queries: PanelQuery[]): DataFrame[] => {
-    if (!queries) {
-        return []
-    }
+export const run_prometheus_query = async (q: PanelQuery,range: TimeRange) => {
+    //@todo: 
+    // 1. rather than query directyly to prometheus, we should query to our own backend servie
+    // 2. using `axios` instead of `fetch`
+    const res0 = await fetch(`http://localhost:9090/api/v1/query_range?query=${q.metrics}&start=${range.start.getTime() / 1000}&end=${range.end.getTime() / 1000}&step=15`)
+
+    const res = await res0.json()
     
-    const res = mockData
     if (res.status !== "success") {
         console.log("Failed to fetch data from prometheus", res)
-        return []
+        return {
+            error: `${res.errorType}: ${res.error}`,
+            data: []
+        }
     }
 
-    const queryResults = []
-    for (const q of queries) {
-        if (res.data.result.length ==0 || res.data.result[0].values.length == 0) {
-            continue
+
+    if (res.data.result.length ==0 || res.data.result[0].values.length == 0) {
+        return {
+            error: null,
+            data:[]
         }
-        const data = toDataFrame(q, res.data)
-        queryResults.push(...data)
     }
-    
-    return queryResults
+
+
+    const data = toDataFrame(q, res.data)
+    return {
+        error: null,
+        data: data
+    }
 }
+
 
 
 // "data": {
