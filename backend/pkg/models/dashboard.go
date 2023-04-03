@@ -22,6 +22,8 @@ type Dashboard struct {
 	OwnedBy   int64 `json:"ownedBy,omitempty"` // team that ownes this dashboard
 
 	Data *simplejson.Json `json:"data,omitempty"`
+
+	Variables []*Variable `json:"variables,omitempty"`
 }
 
 func QueryDashboard(id string) (*Dashboard, error) {

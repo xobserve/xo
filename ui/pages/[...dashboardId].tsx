@@ -11,6 +11,8 @@ import DashboardGrid from "components/dashboard/grid/DashboardGrid"
 import { cloneDeep } from "lodash"
 import { TimeRange } from "types/time"
 import { getInitTimeRange, initTimeRange } from "components/TimePicker"
+import useVariables from "hooks/use-variables"
+import { Variable } from "types/variable"
 
 // All of the paths that is not defined in pages directory will redirect to this page,
 // generally these pages are defined in:
@@ -25,16 +27,26 @@ const DashboardPage = () => {
     // panel used for temporary purpose,such as adding a new panel, edit a panel etc
     const [panel, setPanel] = useState<Panel>(null)
     const [timeRange,setTimeRange] = useState<TimeRange>(getInitTimeRange())
+    const [variables, setVariables] = useState<Variable[]>(null)
     useEffect(() => {
         if (dashboardId) {
             load()
         }
     }, [dashboardId])
-
+    
 
     const load = async () => {
         const res = await requestApi.get(`/dashboard/byId/${dashboardId}`)
         setDashboard(res.data)
+
+        const res0 = await requestApi.get(`/variable/all`)
+        for (const v of res0.data) {
+            v.values = v.value.split(",")
+            if (v.values.length > 0) {
+                v.selected = v.values[0]
+            }
+        }
+        setVariables(res0.data)
 
         const res1 = await requestApi.get(`/team/${res.data.ownedBy}`)
         setTeam(res1.data)
@@ -77,7 +89,8 @@ const DashboardPage = () => {
                 selected: true,
                 queryOptions: {
                     interval: '15s'   
-                }
+                },
+                queries: []
             }],
             useDatasource: false,
         }
@@ -115,14 +128,15 @@ const DashboardPage = () => {
         setDashboard(cloneDeep(dashboard))
     }
 
-    
+
+    console.log(dashboard)
     return (
         <>
         <PageContainer>
             {dashboard && <Box px="3" width="100%">
                 <DashboardHeader dashboard={dashboard} team={team} onAddPanel={onAddPanel} onTimeChange={t => setTimeRange(t)} timeRange={timeRange}/>
                 <Box mt="50px" py="2">
-                    {dashboard.data.panels?.length > 0 && <DashboardGrid  dashboard={dashboard} onChange={onGridChange} timeRange={timeRange??getInitTimeRange()}/>}
+                    {dashboard.data.panels?.length > 0 && <DashboardGrid  dashboard={dashboard} onChange={onGridChange} timeRange={timeRange??getInitTimeRange()} variables={variables}/>}
                 </Box>        
             </Box>}
         </PageContainer>

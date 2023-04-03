@@ -125,7 +125,7 @@ const Tooltip = ({ props, options }: Props) => {
         <Portal key={props.panel.id}>
             {coords && <TooltipContainer position={{ x: coords.x, y: coords.y }} offset={{ x: 0, y: TOOLTIP_OFFSET }}>
                 <Box className="bordered" background={'var(--chakra-colors-chakra-body-bg)'} p="2" fontSize="xs">
-                        <Text fontWeight="600">{dateTimeFormat(focusXVal * 1000)} -  {props.panel.id}</Text>
+                        <Text fontWeight="600">{dateTimeFormat(focusXVal * 1000)}</Text>
                         <SeriesTable props={props} nearestSeries={focusSeries} filterIdx={focusIdx} filterType={seriesFilterType.Nearest}/>
                 </Box>
             </TooltipContainer>

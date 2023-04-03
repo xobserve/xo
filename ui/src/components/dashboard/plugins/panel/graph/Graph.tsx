@@ -14,6 +14,7 @@ import { GraphLayout } from "layouts/plugins/GraphLayout";
 import { Box, Center, Text } from "@chakra-ui/react";
 import { colors } from "utils/colors";
 import { parseLegendFormat } from "utils/format";
+import { replaceWithVariables } from "utils/variable";
 
 
 
@@ -29,20 +30,20 @@ const GraphPanel = (props: PanelProps) => {
                     for (const query of ds.queries) {
                         if (!isEmpty(query.legend)) {
                             const formats = parseLegendFormat(query.legend)
-                     
                             props.data.map(frame => {
                                 if (frame.id == query.id) {
+                                    frame.name = query.legend
                                     if (!isEmpty(formats)) {
                                         for (const format of formats) {
                                             const l = frame.fields[1].labels[format]
                                             if (l) {
-                                                frame.name = query.legend.replaceAll(`{{${format}}}`, l)
+                                                frame.name = frame.name.replaceAll(`{{${format}}}`, l)
                                             }
                                         }
-                                    } else {
-                                        frame.name = query.legend
-                                    }
-                                  
+                                    } 
+                                    
+                                    // replace ${xxx} format with corresponding variables
+                                    frame.name = replaceWithVariables(frame.name, props.variables)
                                 }
                             })
                         }

@@ -11,6 +11,7 @@ import PanelAccordion from "./Accordion"
 import PanelEditItem from "./PanelEditItem"
 import EditPanelQuery from "./Query"
 import { TimeRange } from "types/time";
+import { Variable } from "types/variable";
 
 interface EditPanelProps {
     dashboard: Dashboard
@@ -18,9 +19,10 @@ interface EditPanelProps {
     onApply: any
     onDiscard: any
     timeRange: TimeRange
+    variables: Variable[]
 }
 
-const EditPanel = ({ dashboard, panel, onApply, onDiscard,timeRange }: EditPanelProps) => {
+const EditPanel = ({ dashboard, panel, onApply, onDiscard,timeRange,variables }: EditPanelProps) => {
     const [tempPanel, setTempPanel] = useState<Panel>(null)
     const { isOpen, onOpen, onClose } = useDisclosure()
 
@@ -113,7 +115,7 @@ const EditPanel = ({ dashboard, panel, onApply, onDiscard,timeRange }: EditPanel
                                     return (
                                         <Box width={width}
                                             height={height}>
-                                            <PanelComponent panel={tempPanel} width={width} height={height} timeRange={timeRange}  />
+                                            <PanelComponent panel={tempPanel} width={width} height={height} timeRange={timeRange} variables={variables} />
                                         </Box>
                                     );
                                 }}

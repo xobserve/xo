@@ -11,12 +11,15 @@ import GraphPanel from "../plugins/panel/graph/Graph";
 import { PANEL_BODY_PADDING, PANEL_HEADER_HEIGHT } from "src/data/constants";
 import { isEmpty } from "lodash";
 import { TimeRange } from "types/time";
+import useVariables from "hooks/use-variables";
+import { Variable } from "types/variable";
 
 interface PanelGridProps {
     panel: Panel
-    onEditPanel: any
-    onRemovePanel: any
+    onEditPanel?: any
+    onRemovePanel?: any
     timeRange: TimeRange
+    variables: Variable[]
 }
 
 const PanelGrid = (props: PanelGridProps) => {
@@ -39,16 +42,12 @@ const PanelGrid = (props: PanelGridProps) => {
 
 export default PanelGrid
 
-interface PanelComponentProps {
-    panel: Panel
-    onEditPanel?: any
-    onRemovePanel?: any
+interface PanelComponentProps extends  PanelGridProps {
     width: number
     height: number
-    timeRange: TimeRange
 }
 
-export const PanelComponent = ({ panel, onEditPanel, onRemovePanel,width,height,timeRange }: PanelComponentProps) => {
+export const PanelComponent = ({ panel, onEditPanel, onRemovePanel,width,height,timeRange,variables }: PanelComponentProps) => {
     const CustomPanelRender = (props) => {
         //@needs-update-when-add-new-panel
         switch (panel?.type) {
@@ -63,7 +62,7 @@ export const PanelComponent = ({ panel, onEditPanel, onRemovePanel,width,height,
 
     const [panelData, setPanelData] = useState<DataFrame[]>([])
     const [queryError, setQueryError] = useState()
-
+    
     // run the queries and render the panel
     useEffect(() => {
         console.log("panel changed! query data!")
@@ -153,7 +152,7 @@ export const PanelComponent = ({ panel, onEditPanel, onRemovePanel,width,height,
             marginLeft={panel.type == PanelType.Graph ? "-10px" : "0px"}
             h="100%"
         >
-            <CustomPanelRender data={panelData} height={panelInnerHeight} width={panelInnerWidth} />
+            <CustomPanelRender data={panelData} height={panelInnerHeight} width={panelInnerWidth} variables={variables} />
         </Box>
     </Box>
 }

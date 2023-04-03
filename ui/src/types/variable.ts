@@ -6,4 +6,6 @@ export interface Variable {
     externalUrl?: string 
     brief?: string
     created?: string
+    values?: string[]
+    selected?: string
 }

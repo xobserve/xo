@@ -9,6 +9,7 @@ import PanelGrid from "./PanelGrid";
 import { useState } from "react";
 import EditPanel from "../edit-panel/EditPanel";
 import { TimeRange } from "types/time";
+import { Variable } from "types/variable";
 
 
 
@@ -16,9 +17,10 @@ interface GridProps {
     dashboard: Dashboard
     onChange: any
     timeRange: TimeRange
+    variables: Variable[]
 }
 
-const DashboardGrid = ({ dashboard, onChange,timeRange }: GridProps) => {
+const DashboardGrid = ({ dashboard, onChange,timeRange,variables }: GridProps) => {
 
     const SizedReactLayoutGrid = sizeMe({ monitorWidth: true })(GridWrapper);
 
@@ -128,12 +130,12 @@ const DashboardGrid = ({ dashboard, onChange,timeRange }: GridProps) => {
                             borderBottom: "2px solid rgba(0, 0, 0, 0.4)"
                         }
                     }}>
-                        <PanelGrid panel={panel} onEditPanel={onEditPanel} onRemovePanel={onRemovePanel} timeRange={timeRange}/>
+                        <PanelGrid panel={panel} onEditPanel={onEditPanel} onRemovePanel={onRemovePanel} timeRange={timeRange} variables={variables}/>
                     </Box>)
                 })
             }
         </SizedReactLayoutGrid>
-        <EditPanel dashboard={dashboard} panel={panelInEdit} onApply={onEditPanelApply} onDiscard={onEditPanelDiscard} timeRange={timeRange}/>
+        <EditPanel dashboard={dashboard} panel={panelInEdit} onApply={onEditPanelApply} onDiscard={onEditPanelDiscard} timeRange={timeRange} variables={variables}/>
     </>)
 }
 

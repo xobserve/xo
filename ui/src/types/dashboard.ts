@@ -1,4 +1,5 @@
 import { DataFrame } from "./dataFrame"
+import { Variable } from "./variable"
 
 export interface Dashboard {
     id: string 
@@ -8,7 +9,7 @@ export interface Dashboard {
     editable?: boolean
     createdBy?: string
     created?: string 
-    updated?: string 
+    updated?: string
 }
 
 export interface DashboardData {
@@ -127,4 +128,5 @@ export interface PanelProps {
     width?: number 
     height?: number
     onChange?: any
+    variables?: Variable[]
 }

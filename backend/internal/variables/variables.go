@@ -34,7 +34,7 @@ func AddNewVariable(c *gin.Context) {
 		return
 	}
 
-	if v.Type != "1" && v.Type != "2" && v.Type != "3" {
+	if v.Type != models.CustomValuesVariable && v.Type != models.GetByHttpVariable && v.Type != models.BackendHardcodedVariable {
 		logger.Warn("variable type invalid", "type", v.Type)
 		c.JSON(400, common.RespError(e.ParamInvalid))
 		return
@@ -55,13 +55,12 @@ func AddNewVariable(c *gin.Context) {
 	c.JSON(200, common.RespSuccess(nil))
 }
 
-func GetVariables(c *gin.Context) {
+func GetVariables() ([]*models.Variable, error) {
 	vars := []*models.Variable{}
 	rows, err := db.Conn.Query("SELECT id,name,type,value,external_url FROM variable")
 	if err != nil {
-		logger.Warn("query variables error", "error", err)
-		c.JSON(500, common.RespError(e.Internal))
-		return
+
+		return nil, err
 	}
 
 	for rows.Next() {
@@ -75,7 +74,7 @@ func GetVariables(c *gin.Context) {
 		vars = append(vars, v)
 	}
 
-	c.JSON(200, common.RespSuccess(vars))
+	return vars, nil
 }
 
 func UpdateVariable(c *gin.Context) {
@@ -93,7 +92,7 @@ func UpdateVariable(c *gin.Context) {
 		return
 	}
 
-	if v.Type != "1" && v.Type != "2" && v.Type != "3" {
+	if v.Type != models.CustomValuesVariable && v.Type != models.GetByHttpVariable && v.Type != models.BackendHardcodedVariable {
 		logger.Warn("variable type invalid", "type", v.Type)
 		c.JSON(400, common.RespError(e.ParamInvalid))
 		return

@@ -2,6 +2,12 @@ package models
 
 import "time"
 
+const (
+	CustomValuesVariable     = "1"
+	GetByHttpVariable        = "2"
+	BackendHardcodedVariable = "3"
+)
+
 type Variable struct {
 	Id          int64     `json:"id"`
 	Name        string    `json:"name"`
