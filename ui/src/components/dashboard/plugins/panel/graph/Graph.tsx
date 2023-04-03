@@ -12,6 +12,8 @@ import Tooltip from "./Tooltip";
 import SeriesTable, { seriesFilterType } from "components/Tooltip/SeriesTable";
 import { GraphLayout } from "layouts/plugins/GraphLayout";
 import { Box, Center, Text } from "@chakra-ui/react";
+import { colors } from "utils/colors";
+import { parseLegendFormat } from "utils/format";
 
 
 
@@ -21,6 +23,35 @@ const GraphPanel = (props: PanelProps) => {
     useEffect(() => {
         if (props) {
             setConfig(props)
+            // transform series name based on legend format 
+            for (const ds of props.panel.datasource) {
+                if (ds.selected) {
+                    for (const query of ds.queries) {
+                        if (!isEmpty(query.legend)) {
+                            const formats = parseLegendFormat(query.legend)
+                     
+                            props.data.map(frame => {
+                                if (frame.id == query.id) {
+                                    if (!isEmpty(formats)) {
+                                        for (const format of formats) {
+                                            const l = frame.fields[1].labels[format]
+                                            if (l) {
+                                                frame.name = query.legend.replaceAll(`{{${format}}}`, l)
+                                            }
+                                        }
+                                    } else {
+                                        frame.name = query.legend
+                                    }
+                                  
+                                }
+                            })
+                        }
+                    }
+                }
+            }
+
+            // set series line color
+            props.data.map((frame,i) =>  frame.color = colors[i % colors.length])
         }
     }, [props])
 

@@ -30,6 +30,7 @@ export const useOptions = (config: PanelProps) => {
     })
 
     useEffect(() => {
+        
         const axesColor = colorMode == ColorMode.Light ? "rgba(0, 10, 23, 0.09)" : "rgba(240, 250, 255, 0.09)"
 
         // build series
@@ -41,8 +42,6 @@ export const useOptions = (config: PanelProps) => {
         })
 
         config.data.forEach((d, i) => {
-            // get line color of series 
-            const color = colors[i % colors.length]
             let pointsShow;
             let showPoints = config.panel.settings.graph.styles?.showPoints
             if (showPoints == "always") {
@@ -68,17 +67,15 @@ export const useOptions = (config: PanelProps) => {
                     show: pointsShow,
                     size: config.panel.settings.graph.styles?.pointSize
                 },
-                stroke: color,
+                stroke: d.color,
                 width: config.panel.settings.graph.styles?.style == "points" ? 0 : config.panel.settings.graph.styles?.lineWidth,
-                fill: config.panel.settings.graph.styles?.style == "points" ? null : (config.panel.settings.graph.styles?.gradientMode == "none" ? color : fill(color, (config.panel.settings.graph.styles?.fillOpacity ?? 21) / 100)),
+                fill: config.panel.settings.graph.styles?.style == "points" ? null : (config.panel.settings.graph.styles?.gradientMode == "none" ? d.color : fill(d.color, (config.panel.settings.graph.styles?.fillOpacity ?? 21) / 100)),
                 spanGaps: false,
                 paths: config.panel.settings.graph.styles?.style == "bars" ? uPlot.paths.bars({
                     size: [BarWidthFactor, BardMaxWidth],
                     align: 0,
                 }) : null
             })
-
-            d.color = color
         })
 
         // update options
