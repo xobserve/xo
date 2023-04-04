@@ -1,0 +1,52 @@
+.dv-decoration-4 {
+    position: relative;
+    width: 100%;
+    height: 100%;
+}
+
+.dv-decoration-4 .container {
+    display: flex;
+    overflow: hidden;
+    position: absolute;
+    flex: 1;
+  }
+
+.dv-decoration-4 .normal {
+    animation: ani-height ease-in-out infinite;
+    left: 50%;
+    margin-left: -2px;
+  }
+
+.dv-decoration-4 .reverse {
+    animation: ani-width ease-in-out infinite;
+    top: 50%;
+    margin-top: -2px;
+  }
+
+  @keyframes ani-height {
+    0% {
+      height: 0%;
+    }
+
+    70% {
+      height: 100%;
+    }
+
+    100% {
+      height: 100%;
+    }
+  }
+
+  @keyframes ani-width {
+    0% {
+      width: 0%;
+    }
+
+    70% {
+      width: 100%;
+    }
+
+    100% {
+      width: 100%;
+    }
+  }
