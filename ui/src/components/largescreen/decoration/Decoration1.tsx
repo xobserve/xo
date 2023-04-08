@@ -62,7 +62,7 @@ const Decoration1 = forwardRef(({ className, style, color = [] }:DecorationProps
   ])
 
   return (
-    <Box className={classNames} ref={domRef}  width="100%" height="100%" sx={{
+    <Box className={classNames} ref={domRef} style={style}  width="100%" height="100%" sx={{
         svg: {
             "transform-origin": 'left top'
         }
