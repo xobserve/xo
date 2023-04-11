@@ -7,6 +7,7 @@ import { deepClone } from '@jiaminghi/c-render/lib/plugin/util'
 
 import useAutoResize from '../autoResize'
 import { Box } from '@chakra-ui/react'
+import { DecorationProps } from '../types'
 
 const defaultColor = ['#7acaec', 'transparent']
 
@@ -37,13 +38,9 @@ function getPoints() {
   return points.reduce((all, item) => [...all, ...item], [])
 }
 
-interface Decoration3Props {
-    className?: string
-    style?: React.CSSProperties
-    color?: string[]
-}
 
-const Decoration3 = forwardRef(({ className, style, color = [] }:Decoration3Props, ref) => {
+
+const Decoration3 = forwardRef(({ className, style, color = [] }:DecorationProps, ref) => {
   const { width, height, domRef } = useAutoResize(ref)
 
   function calcSVGData() {
