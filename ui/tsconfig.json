@@ -3,7 +3,11 @@
     "importHelpers": true,
     "removeComments": true,
     "target": "esnext",
-    "lib": ["dom", "dom.iterable", "esnext"],
+    "lib": [
+      "dom",
+      "dom.iterable",
+      "esnext"
+    ],
     "allowJs": true,
     "skipLibCheck": true,
     "strict": false,
@@ -11,29 +15,41 @@
     "noEmit": true,
     "esModuleInterop": true,
     "module": "esnext",
-    "moduleResolution": "node",
     "resolveJsonModule": true,
     "isolatedModules": true,
     "jsx": "preserve",
     "baseUrl": ".",
     "paths": {
-      "hooks/*": ["src/hooks/*"],
-      "components/*": ["src/components/*"],
-      "utils/*": ["src/utils/*"],
-      "types/*": ["src/types/*"],
-      "layouts/*": ["src/layouts/*"]
+      "hooks/*": [
+        "src/hooks/*"
+      ],
+      "components/*": [
+        "src/components/*"
+      ],
+      "utils/*": [
+        "src/utils/*"
+      ],
+      "types/*": [
+        "src/types/*"
+      ],
+      "layouts/*": [
+        "src/layouts/*"
+      ]
     },
-    "incremental": true
+    "incremental": true,
+    "moduleResolution": "node"
   },
   "ts-node": {
     "compilerOptions": {
-      "module": "CommonJS"
+      "module": "esnext"
     }
   },
   "include": [
     "next-env.d.ts",
-    "**/*.ts",
-    "**/*.tsx"
+    "pages/**/*",
+    "src/**/*"
   ],
-  "exclude": ["node_modules"]
+  "exclude": [
+    "node_modules"
+  ]
 }

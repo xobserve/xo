@@ -1,7 +1,7 @@
 
 
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import G6, { Graph } from '@antv/g6';
+import G6,{ Graph } from '@antv/g6';
 import { Box, Text, useColorMode } from '@chakra-ui/react';
 import { Panel, PanelData, PanelProps } from 'types/dashboard';
 import { initTooltip } from './plugins/tooltip';
@@ -16,6 +16,10 @@ import HiddenItems from './HiddenItem';
 import { filterData } from './filter/filterData';
 import { getDefaultEdgeLabel, getDefaultEdgeStyle, getDefaultNodeLabel, getDefaultNodeStyle } from './default-styles';
 
+
+ 
+// const tips = '...';
+// const G6  =  await (eval(`import('@antv/g6')`));
 
 
 

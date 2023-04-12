@@ -18,6 +18,7 @@
     "@emotion/css": "11.7.1",
     "@emotion/react": "^11.10.0",
     "@emotion/styled": "^11.9.3",
+    "@jiaminghi/charts": "^0.2.18",
     "@nosferatu500/react-sortable-tree": "^4.3.0",
     "@uselessdev/datepicker": "^2.7.0",
     "axios": "^0.19.2",
