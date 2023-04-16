@@ -52,6 +52,20 @@ const DashboardWrapper = ({dashboardId}) => {
         }
     }, [])
 
+    useEffect(() => {
+        if (dashboard) {
+            setTimeout(() => {
+                let bodyStyle = document.body.style
+                bodyStyle.background = dashboard?.data.styles.bg
+                bodyStyle.backgroundSize = "cover"
+                const d = document.getElementById("__next")
+                bodyStyle.minHeight = '100vh'
+                bodyStyle.height = `${d.offsetHeight + 180}px`
+               
+            },1)
+            // 
+        }
+    },[dashboard])
 
     const load = async () => {
         const res = await requestApi.get(`/dashboard/byId/${dashboardId}`)
@@ -111,7 +125,7 @@ const DashboardWrapper = ({dashboardId}) => {
 
     return (
         <>
-            <PageContainer fullscreen={fullscreen}>
+            <PageContainer fullscreen={fullscreen} bg={dashboard?.data.styles.bg}>
                 {dashboard && <Box pl="6px" pr="6px" width="100%">
                     <DashboardHeader fullscreen={fullscreen} onFullscreenChange={onFullscreenChange} dashboard={dashboard} onTimeChange={t => {dispatch({type:  TimeChangedEvent,data: t});setTimeRange(t)}} timeRange={timeRange}  onChange={onDashbardChange} />
                     <Box mt={fullscreen ? 0 : (visibleVars?.length > 0 ? "67px" : "38px")} py="2">

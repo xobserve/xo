@@ -43,6 +43,7 @@ import { SidemenuMinimodeKey } from "src/data/storage-keys"
 
 interface Props {
   fullscreen: boolean
+  bg: string
 }
 
 
@@ -89,7 +90,7 @@ const VerticalNav = dynamic(async () => (props: Props) => {
         bottom="0"
         pr={miniMode ? 0 : 2}
         borderRight={`1px solid ${borderColor}`}
-        bg={'var(--chakra-colors-chakra-body-bg)'}
+        bg={props.bg ? 'transparent' : 'var(--chakra-colors-chakra-body-bg)'}
         {...props}
       >
         <chakra.div height="100%">

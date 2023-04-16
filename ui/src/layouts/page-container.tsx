@@ -14,6 +14,7 @@ type PageContainerProps = PropsOf<typeof chakra.div> & {
   showWidgetes?: boolean
   showCopyright?: boolean
   fullscreen?: boolean
+  bg?: string
 }
 
 
@@ -22,7 +23,7 @@ function PageContainer(props: PageContainerProps) {
   return (
     <>
       <Flex width="100%">
-          <VerticalNav fullscreen={fullscreen}  />
+          <VerticalNav fullscreen={fullscreen} bg={props.bg} />
           {children}
       </Flex>
       {/* {showCopyright && <FooterCopyright />} */}

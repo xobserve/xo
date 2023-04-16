@@ -1,6 +1,6 @@
 
 
-import React, { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import G6, { Graph } from '@antv/g6';
 import { Box, Text, useColorMode } from '@chakra-ui/react';
 import { Panel, PanelData, PanelProps } from 'types/dashboard';

@@ -20,6 +20,9 @@ export interface DashboardData {
     editable?: boolean
     hidingVars?: string
     tags?: string[]
+    styles?: {
+        bg?: string
+    }
 }
 
 export interface Panel {

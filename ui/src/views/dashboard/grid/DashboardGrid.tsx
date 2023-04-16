@@ -163,7 +163,7 @@ const GridWrapper = ({
     isResizable,
     isDraggable,
 }: GridWrapperProps) => {
-    let lastGridWidth = 1200;
+    let lastGridWidth = 1000;
     let ignoreNextWidthChange = false;
 
     const width = size.width > 0 ? size.width : lastGridWidth;
@@ -185,6 +185,7 @@ const GridWrapper = ({
         //@ts-ignore
         <ReactGridLayout
             width={lastGridWidth}
+            autoSize={true}
             className={className}
             isDraggable={draggable}
             isResizable={isResizable}
