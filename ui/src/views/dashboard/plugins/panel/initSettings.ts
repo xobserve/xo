@@ -70,6 +70,10 @@ export const initPanelSettings:PanelSettings = {
                 light: '#E0D731',
                 dark: '#00B5D8'
             }
+        },
+
+        legend: {
+            enable: true
         }
     }
 }

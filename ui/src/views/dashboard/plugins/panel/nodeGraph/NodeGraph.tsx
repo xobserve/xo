@@ -76,6 +76,10 @@ const NodeGrapPanel = ({ data, panel, dashboardId,width,height }: PanelProps) =>
             setAttrsForData(panel.settings.nodeGraph,data[0],colorMode)
 
 
+            const plugins = [tooltip, contextMenu]
+            if (panel.settings.nodeGraph.legend.enable) {
+                plugins.push(legend as any)
+            } 
 
             const gh = new G6.Graph({
                 container: container.current,
@@ -84,7 +88,7 @@ const NodeGrapPanel = ({ data, panel, dashboardId,width,height }: PanelProps) =>
                 // fitView: true,
                 fitCenter: true,
                 fitViewPadding: 16,
-                plugins: [legend, tooltip, contextMenu],
+                plugins: plugins,
                 modes: {
                     default: ['drag-node', 'activate-relations', 'drag-canvas', 'click-select', {
                         type: 'lasso-select',

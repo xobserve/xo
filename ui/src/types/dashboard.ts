@@ -181,6 +181,10 @@ export interface NodeGraphSettings {
             dark: string
         }
     }
+
+    legend: {
+        enable: boolean
+    }
 }
 
 

@@ -1,4 +1,4 @@
-import { Alert, Box, Button, Divider, Flex, HStack, Image, Input, Modal, ModalBody, ModalContent, ModalOverlay, NumberInput, NumberInputField, Select, Slider, SliderFilledTrack, SliderThumb, SliderTrack, Text, Textarea, Tooltip, useDisclosure, useToast, VStack } from "@chakra-ui/react"
+import { Alert, Box, Button, Divider, Flex, HStack, Image, Input, Modal, ModalBody, ModalContent, ModalOverlay, NumberInput, NumberInputField, Select, Slider, SliderFilledTrack, SliderThumb, SliderTrack, Switch, Text, Textarea, Tooltip, useDisclosure, useToast, VStack } from "@chakra-ui/react"
 import { ColorPicker } from "components/color-picker"
 import RadionButtons from "components/RadioButtons"
 import { isEmpty } from "lodash"
@@ -125,7 +125,7 @@ const NodeGraphPanelEditor = (props: PanelEditorProps) => {
                 </HStack>
             </PanelEditItem>
         </PanelAccordion>
-
+        
 
         <PanelAccordion title="Interaction">
             <PanelEditItem title="tooltip trigger" info={
@@ -137,6 +137,16 @@ const NodeGraphPanelEditor = (props: PanelEditorProps) => {
             </PanelEditItem>
 
             <RightClickMenus {...props} />
+        </PanelAccordion>
+
+        <PanelAccordion title="legend">
+            <PanelEditItem title="display" info={
+                <Text>You need to click Apply Button(in top-right) to see the new trigger taken effect</Text>
+            }>
+                <Switch defaultChecked={panel.settings.nodeGraph.legend.enable} onChange={e => onChange(panel => {
+                    panel.settings.nodeGraph.legend.enable = e.currentTarget.checked
+                })} />
+            </PanelEditItem>
         </PanelAccordion>
     </>)
 }
