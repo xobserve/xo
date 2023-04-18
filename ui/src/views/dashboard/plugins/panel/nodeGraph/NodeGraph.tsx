@@ -1,6 +1,6 @@
 
 
-import React, { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import G6, { Graph } from '@antv/g6';
 import { Box, Text, useColorMode } from '@chakra-ui/react';
 import { Panel, PanelData, PanelProps } from 'types/dashboard';
@@ -20,7 +20,7 @@ import { getDefaultEdgeLabel, getDefaultEdgeStyle, getDefaultNodeLabel, getDefau
 
 
 let newestColorMode;
-const NodeGrapPanel = ({ data, panel, dashboardId }: PanelProps) => {
+const NodeGrapPanel = ({ data, panel, dashboardId,width,height }: PanelProps) => {
     const container = React.useRef(null);
     const [graph, setGraph] = useState<Graph>(null);
     const { colorMode } = useColorMode();
@@ -29,7 +29,15 @@ const NodeGrapPanel = ({ data, panel, dashboardId }: PanelProps) => {
 
     const [selected, setSelected] = useState(false)
     const contextMenu = useContextMenu(panel.settings.nodeGraph)
-
+    const legend = useMemo(() => initLegend(JSON.parse(panel.settings.nodeGraph.node.donutColors)),[])
+    
+    useEffect(() => {
+        if (graph) {
+            graph.changeSize(width,height)
+            graph.render()
+        }
+    },[width,height])
+    
     useEffect(() => {
         if (graph) {
             onColorModeChange(graph, data, colorMode, dashboardId, panel)
@@ -67,7 +75,7 @@ const NodeGrapPanel = ({ data, panel, dashboardId }: PanelProps) => {
 
             setAttrsForData(panel.settings.nodeGraph,data[0],colorMode)
 
-            const legend = initLegend(JSON.parse(panel.settings.nodeGraph.node.donutColors))
+
 
             const gh = new G6.Graph({
                 container: container.current,
@@ -194,18 +202,19 @@ const NodeGrapPanel = ({ data, panel, dashboardId }: PanelProps) => {
 
 
             const newData = filterData(data[0], dashboardId, panel.id)
-            console.log("here3333f:",newData.nodes)
             gh.data(newData);
             gh.render();
            
             setGraph(gh)
-            if (typeof window !== 'undefined') {
-                window.onresize = () => {
-                    if (!graph || gh.get('destroyed')) return;
-                    if (!container || !container.current.scrollWidth || !container.current.scrollHeight) return;
-                    gh.changeSize(container.current.scrollWidth, container.current.scrollHeight);
-                };
-            }
+            // if (typeof window !== 'undefined') {
+            //     window.onresize = () => {
+            //         if (!gh || gh.get('destroyed')) return;
+            //         if (!container || !container.current.scrollWidth || !container.current.scrollHeight) return;
+            //         gh.changeSize(container.current.clientWidth, container.current.clientHeight);
+            //         gh.render()
+            //         console.log("here333333e:",container,container.current.clientWidth,container.current.clientHeight)
+            //     };
+            // }
         }
     }, [panel.settings.nodeGraph]);
 
