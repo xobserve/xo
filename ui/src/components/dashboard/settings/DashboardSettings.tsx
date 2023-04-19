@@ -3,6 +3,7 @@ import IconButton from "components/button/IconButton"
 import { useState } from "react"
 import { FaCog } from "react-icons/fa"
 import { Dashboard } from "types/dashboard"
+import GeneralSettings from "./General"
 import VariablesSetting from "./Variables"
 
 interface Props {
@@ -20,17 +21,17 @@ const DashboardSettings = ({ dashboard,onChange }: Props) => {
                 <ModalCloseButton />
                 <ModalBody>
                     <Text textStyle="subTitle">{dashboard.title} / Settings</Text>
-                    <Tabs orientation="vertical" variant='soft-rounded' mt="4">
-                        <TabList>
+                    <Tabs orientation="vertical" variant='soft-rounded' mt="7">
+                        <TabList p="2">
                             <Tab>General</Tab>
                             <Tab>Variables</Tab>
                         </TabList>
 
-                        <TabPanels>
-                            <TabPanel>
-                                <p>one!</p>
+                        <TabPanels className="bordered" p="2"> 
+                            <TabPanel py="0">
+                                <GeneralSettings dashboard={dashboard} onChange={onChange} />
                             </TabPanel>
-                            <TabPanel>
+                            <TabPanel  py="0">
                                 <VariablesSetting dashboard={dashboard} onChange={onChange} />
                             </TabPanel>
                         </TabPanels>

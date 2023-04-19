@@ -112,7 +112,7 @@ const VariablesSetting = ({ dashboard, onChange }: Props) => {
 
     return <>
             <Flex justifyContent="space-between">
-                <Text textStyle="subTitle">Variables</Text>
+                <Text textStyle="subTitle"></Text>
                 <Button size="sm" onClick={onAddVariable}>New</Button>
             </Flex>
             <VariablesTable variables={dashboard.data.variables??[]} onEdit={onEditVariable} onRemove={onRemoveVariable}/>

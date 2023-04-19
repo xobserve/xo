@@ -95,8 +95,7 @@ const DashboardGrid = ({ dashboard, onChange,timeRange,variables }: GridProps) =
         onChange()
     }
     
-    let mooSync = uPlot.sync("moo")
-    console.log(mooSync)
+    let mooSync = dashboard.data.sharedTooltip ? uPlot.sync(dashboard.id) : null
     return (<>
         <SizedReactLayoutGrid
             className="layout"
