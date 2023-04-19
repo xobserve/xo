@@ -93,7 +93,7 @@ const DashboardGrid = ({ dashboard, onChange,timeRange,variables }: GridProps) =
         dashboard.data.panels.splice(index, 1);
         onChange()
     }
-
+    
     return (<>
         <SizedReactLayoutGrid
             className="layout"

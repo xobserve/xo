@@ -48,14 +48,14 @@ const EditPanel = ({ dashboard, panel, onApply, onDiscard,timeRange,variables }:
         onApply()
     }
 
+    const onSettingsChange = (panel:Panel) => {
+        // Rather than update the whole panel, we only update panel settings here,
+        // because the former one will cause the server making a new query to datasource
+        setTempPanel(cloneDeep(panel))
+    }
 
 
     const CustomPanelEditor = () => {
-        const onSettingsChange = (panel:Panel) => {
-            // Rather than update the whole panel, we only update panel settings here,
-            // because the former one will cause the server making a new query to datasource
-            setTempPanel({settings: panel.settings, ...tempPanel})
-        }
 
         //@needs-update-when-add-new-panel
         switch (tempPanel?.type) {
@@ -85,7 +85,6 @@ const EditPanel = ({ dashboard, panel, onApply, onDiscard,timeRange,variables }:
         setTempPanel(cloneDeep(tempPanel))
     }
 
-    
     return (<>
         <Modal isOpen={isOpen} onClose={() => { onDiscard(), onClose() }} size="full">
             <ModalOverlay />

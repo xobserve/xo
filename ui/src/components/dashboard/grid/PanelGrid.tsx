@@ -144,6 +144,7 @@ export const PanelComponent = ({dashboard, panel, onEditPanel, onRemovePanel,wid
     const panelInnerWidth = width + 8 // 10px padding left and right of panel body
 
     const title = replaceWithVariables(panel.title,variables)
+
     return <Box height="100%" >
         <HStack className="grid-drag-handle" height={`${PANEL_HEADER_HEIGHT}px`} cursor="move" spacing="0">
             {(queryError || panel.desc) && <Box color={useColorModeValue(queryError ? "red" :"brand.500", queryError ? "red" :"brand.200")} position="absolute">

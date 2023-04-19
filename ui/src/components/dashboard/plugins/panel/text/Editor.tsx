@@ -23,7 +23,10 @@ const TextPanelEditor = ({panel,onChange}:Props) => {
                 tempPanel.settings.text.md = e.currentTarget.value
                 setTempPanel(cloneDeep(tempPanel))
             }}
-             onBlur={() => onChange(tempPanel)} />
+             onBlur={() => {
+                onChange(tempPanel)
+                
+                }} />
         </PanelEditItem>
 </PanelAccordion>
 )
