@@ -29,6 +29,8 @@ export const useOptions = (config: PanelProps) => {
         return calculateSpace(self, axisIdx, scaleMin, scaleMax, plotDim);
     })
 
+    const matchSyncKeys = (own, ext) => own == ext;
+
     useEffect(() => {
         
         const axesColor = colorMode == ColorMode.Light ? "rgba(0, 10, 23, 0.09)" : "rgba(240, 250, 255, 0.09)"
@@ -77,7 +79,7 @@ export const useOptions = (config: PanelProps) => {
                 }) : null
             })
         })
-
+        
         // update options
         setOptions({
             width: config.width,
@@ -91,6 +93,17 @@ export const useOptions = (config: PanelProps) => {
                 // tooltipPlugin(config.panel.id),
                 // renderStatsPlugin()
             ],
+            cursor: {
+                lock: true,
+                // focus: {
+                //     prox: 16,
+                // },
+                sync: {
+                    key: config.sync?.key,
+                    scales: ['x', null as any],
+                    match: [() => true, () => true],
+                },
+            },
             tzDate: ts => uPlot.tzDate(new Date(ts * 1e3), 'Asia/Shanghai'),
             scales: {
                 x: {

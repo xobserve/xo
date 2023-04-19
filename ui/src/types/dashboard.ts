@@ -130,4 +130,5 @@ export interface PanelProps {
     height?: number
     onChange?: any
     variables?: Variable[]
+    sync?: any
 }

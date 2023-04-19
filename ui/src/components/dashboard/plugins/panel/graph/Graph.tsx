@@ -80,14 +80,13 @@ const GraphPanel = (props: PanelProps) => {
                         if (props.width != vizWidth || props.height != vizHeight) {
                             uplot.setSize({ width: vizWidth, height: vizHeight })
                         }
-
                     }
 
                     return (options && <UplotReact
                         options={options}
                         data={transformed}
                         onDelete={(chart: uPlot) => { }}
-                        onCreate={(chart) => { setUplot((chart)) }}
+                        onCreate={(chart) => { setUplot((chart));props.sync?.sub(chart) }}
                     >
                         {props.panel.settings.graph.tooltip.mode != 'hidden' && <Tooltip props={props} options={options} />}
                     </UplotReact>

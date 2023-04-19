@@ -22,6 +22,7 @@ interface PanelGridProps {
     onRemovePanel?: any
     timeRange: TimeRange
     variables: Variable[]
+    sync: any
 }
 
 const PanelGrid = (props: PanelGridProps) => {
@@ -51,7 +52,7 @@ interface PanelComponentProps extends  PanelGridProps {
 
 export const prevQueries = {}
 export const prevQueryData = {}
-export const PanelComponent = ({dashboard, panel, onEditPanel, onRemovePanel,width,height,timeRange,variables }: PanelComponentProps) => {
+export const PanelComponent = ({dashboard, panel, onEditPanel, onRemovePanel,width,height,timeRange,variables,sync }: PanelComponentProps) => {
     const CustomPanelRender = (props) => {
         //@needs-update-when-add-new-panel
         switch (panel?.type) {
@@ -104,7 +105,9 @@ export const PanelComponent = ({dashboard, panel, onEditPanel, onRemovePanel,wid
 
                     if (isEqual(prevQuery,currentQuery)) {
                         const d = prevQueryData[id]
-                        data.push(...d)
+                        if (d) {
+                            data.push(...d)
+                        }
                         continue
                     }
 
@@ -179,7 +182,7 @@ export const PanelComponent = ({dashboard, panel, onEditPanel, onRemovePanel,wid
             marginLeft={panel.type == PanelType.Graph ? "-10px" : "0px"}
             h="100%"
         >
-            <CustomPanelRender data={panelData} height={panelInnerHeight} width={panelInnerWidth} variables={variables} />
+            <CustomPanelRender data={panelData} height={panelInnerHeight} width={panelInnerWidth} variables={variables} sync={sync} />
         </Box>
     </Box>
 }

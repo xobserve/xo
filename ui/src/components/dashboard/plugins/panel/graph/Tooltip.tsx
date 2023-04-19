@@ -33,15 +33,15 @@ const Tooltip = ({ props, options }: Props) => {
             if (!isMounted()) {
                 return;
             }
-            console.log("enter plot")
+            console.log("enter plot:",props.panel.title)
         };
 
         const plotLeave = () => {
             if (!isMounted()) {
                 return
             }
+            console.log("leave plot",props.panel.title)
             setCoords(null)
-            console.log("leave plot")
         };
 
         if (options) {
@@ -52,6 +52,7 @@ const Tooltip = ({ props, options }: Props) => {
                     return
                 }
 
+                console.log("set cursor:",props.panel.title)
                 const { x, y } = positionTooltip(uplot, bbox)
 
                 if (x !== undefined && y !== undefined) {
@@ -85,8 +86,11 @@ const Tooltip = ({ props, options }: Props) => {
                         setFocusYVal(round(yval, 2))
                         setFocusIdx(idx)
                     })
+                } else {
+                    setCoords(null)
                 }
             }
+
 
             if (isEmpty(options.hooks.setCursor)) {
                 options.hooks.setCursor = []
@@ -94,12 +98,10 @@ const Tooltip = ({ props, options }: Props) => {
             options.hooks.setCursor?.push(setcusor)
 
 
-
             options.hooks.init = [(u) => {
                 if (!plotInstance) {
                     plotInstance = u
                 }
-
                 u.root.parentElement?.addEventListener('focus', plotEnter);
                 u.over.addEventListener('mouseenter', plotEnter);
 

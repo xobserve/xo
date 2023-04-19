@@ -10,6 +10,7 @@ import { useState } from "react";
 import EditPanel from "../edit-panel/EditPanel";
 import { TimeRange } from "types/time";
 import { Variable } from "types/variable";
+import uPlot from "uplot";
 
 
 
@@ -94,6 +95,8 @@ const DashboardGrid = ({ dashboard, onChange,timeRange,variables }: GridProps) =
         onChange()
     }
     
+    let mooSync = uPlot.sync("moo")
+    console.log(mooSync)
     return (<>
         <SizedReactLayoutGrid
             className="layout"
@@ -130,7 +133,7 @@ const DashboardGrid = ({ dashboard, onChange,timeRange,variables }: GridProps) =
                             borderBottom: "2px solid rgba(0, 0, 0, 0.4)"
                         }
                     }}>
-                        <PanelGrid dashboard={dashboard} panel={panel} onEditPanel={onEditPanel} onRemovePanel={onRemovePanel} timeRange={timeRange} variables={variables}/>
+                        <PanelGrid dashboard={dashboard} panel={panel} onEditPanel={onEditPanel} onRemovePanel={onRemovePanel} timeRange={timeRange} variables={variables} sync={mooSync}/>
                     </Box>)
                 })
             }
