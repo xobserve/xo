@@ -1,20 +1,22 @@
-import { DatasourceType, Panel, PanelType } from "types/dashboard"
+import { Dashboard, DatasourceType, Panel, PanelType } from "types/dashboard"
 import AutoSizer from 'react-virtualized-auto-sizer';
 import { Box, Center, HStack, Input, Menu, MenuButton, MenuDivider, MenuItem, MenuList, Text, Tooltip, useColorModeValue } from "@chakra-ui/react";
 import { FaEdit, FaTrashAlt } from "react-icons/fa";
 import { IoMdInformation } from "react-icons/io";
 import TextPanel from "../plugins/panel/text/Text";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { run_prometheus_query } from "../plugins/datasource/prometheus/query_runner";
 import { DataFrame } from "types/dataFrame";
 import GraphPanel from "../plugins/panel/graph/Graph";
 import { PANEL_BODY_PADDING, PANEL_HEADER_HEIGHT } from "src/data/constants";
-import { isEmpty } from "lodash";
+import { cloneDeep, isEmpty, isEqual } from "lodash";
 import { TimeRange } from "types/time";
 import useVariables from "hooks/use-variables";
 import { Variable } from "types/variable";
+import { replaceWithVariables } from "utils/variable";
 
 interface PanelGridProps {
+    dashboard: Dashboard
     panel: Panel
     onEditPanel?: any
     onRemovePanel?: any
@@ -47,7 +49,9 @@ interface PanelComponentProps extends  PanelGridProps {
     height: number
 }
 
-export const PanelComponent = ({ panel, onEditPanel, onRemovePanel,width,height,timeRange,variables }: PanelComponentProps) => {
+export const prevQueries = {}
+export const prevQueryData = {}
+export const PanelComponent = ({dashboard, panel, onEditPanel, onRemovePanel,width,height,timeRange,variables }: PanelComponentProps) => {
     const CustomPanelRender = (props) => {
         //@needs-update-when-add-new-panel
         switch (panel?.type) {
@@ -62,10 +66,10 @@ export const PanelComponent = ({ panel, onEditPanel, onRemovePanel,width,height,
 
     const [panelData, setPanelData] = useState<DataFrame[]>([])
     const [queryError, setQueryError] = useState()
-    
+
+
     // run the queries and render the panel
     useEffect(() => {
-        console.log("panel changed! query data!")
         let h;
         if (h) {
             clearInterval(h)
@@ -73,25 +77,45 @@ export const PanelComponent = ({ panel, onEditPanel, onRemovePanel,width,height,
 
         // if there is no data in panel currently, we should make a immediate query
         // if (isEmpty(panelData)) {
-            queryData()
+            queryData(dashboard.id + panel.id)
         // }
 
         // h = setInterval(() => {
         //     queryData()
         // }, 10000)
 
-        return () => clearInterval(h)
+        return () => { 
+            clearInterval(h)
+        }
     }, [panel.datasource,timeRange])
 
-    const queryData = async () => {
-        console.log("query data:",timeRange)
-        for (const ds of panel.datasource) {
+    const queryData = async (queryId) => {
+        for (var i=0;i< panel.datasource.length;i++) {
+            const ds = panel.datasource[i]
             if (ds.selected) {
                 let data = []
-                for (const q of ds.queries) {
+                for (const q0 of ds.queries) {
+                    const metrics = replaceWithVariables(q0.metrics, variables)
+                    const q = {...q0,metrics}
+
+                    const id = queryId+q.id
+                    const prevQuery = prevQueries[id]
+                    const currentQuery = [q,timeRange]
+
+                    if (isEqual(prevQuery,currentQuery)) {
+                        const d = prevQueryData[id]
+                        data.push(...d)
+                        continue
+                    }
+
+                    console.log("re-query data! metrics id:",q.id, " query id:", queryId)
+
+                    prevQueries[id] = currentQuery
                     let res
                     switch (ds.type) {
                         case DatasourceType.Prometheus:
+                           
+                         
                             res = await run_prometheus_query(q,timeRange)
                             break;       
                         default:
@@ -106,10 +130,10 @@ export const PanelComponent = ({ panel, onEditPanel, onRemovePanel,width,height,
 
                     if (!isEmpty(res.data)) {
                         data.push(...res.data)
+                        prevQueryData[id] = res.data
                     }
                 } 
                
-                console.log("query result: ", data)
                 setPanelData(data)
             }
         }
@@ -118,10 +142,12 @@ export const PanelComponent = ({ panel, onEditPanel, onRemovePanel,width,height,
     const panelBodyHeight = height - PANEL_HEADER_HEIGHT
     const panelInnerHeight = panelBodyHeight - PANEL_BODY_PADDING * 2 // 10px padding top and bottom of panel body
     const panelInnerWidth = width + 8 // 10px padding left and right of panel body
+
+    const title = replaceWithVariables(panel.title,variables)
     return <Box height="100%" >
         <HStack className="grid-drag-handle" height={`${PANEL_HEADER_HEIGHT}px`} cursor="move" spacing="0">
             {(queryError || panel.desc) && <Box color={useColorModeValue(queryError ? "red" :"brand.500", queryError ? "red" :"brand.200")} position="absolute">
-                <Tooltip label={queryError ?? panel.desc}>
+                <Tooltip label={queryError ?? replaceWithVariables(panel.desc,variables)}>
                     <Box>
                         <IoMdInformation fontSize="20px" cursor="pointer" />
                     </Box>
@@ -133,7 +159,7 @@ export const PanelComponent = ({ panel, onEditPanel, onRemovePanel,width,height,
                         transition='all 0.2s'
                         _focus={{ border: null }}
                     >
-                        <Text cursor="pointer" width="fit-content">{panel.title}</Text>
+                        <Text cursor="pointer" width="fit-content">{title}</Text>
                     </MenuButton>
                     <MenuList p="1">
                         <MenuItem icon={<FaEdit />} onClick={() => onEditPanel(panel)}>Edit</MenuItem>
@@ -141,7 +167,7 @@ export const PanelComponent = ({ panel, onEditPanel, onRemovePanel,width,height,
                         <MenuItem icon={<FaTrashAlt />} onClick={() => onRemovePanel(panel)}>Remove</MenuItem>
                     </MenuList>
                 </Menu> :
-                    <Text cursor="pointer" width="fit-content">{panel.title}</Text>
+                    <Text cursor="pointer" width="fit-content">{title}</Text>
                 }
             </Center>
         </HStack>

@@ -13,6 +13,7 @@ import { TimeRange } from "types/time"
 import { getInitTimeRange, initTimeRange } from "components/TimePicker"
 import { Variable } from "types/variable"
 import { setVariableSelected } from "components/variables/SelectVariables"
+import { prevQueries, prevQueryData } from "components/dashboard/grid/PanelGrid"
 
 // All of the paths that is not defined in pages directory will redirect to this page,
 // generally these pages are defined in:
@@ -29,13 +30,21 @@ const DashboardPage = () => {
     const [timeRange,setTimeRange] = useState<TimeRange>(getInitTimeRange())
     const [variables, setVariables] = useState<Variable[]>(null)
     const [gVariables,setGVariables] = useState<Variable[]>([])
+   
     useEffect(() => {
         if (dashboardId) {
             load()
         }
+
+        return () => {
+            for (const k in prevQueries) {
+                delete prevQueries[k]
+                delete prevQueryData[k]
+            }
+        }
     }, [dashboardId])
     
-
+    
     const load = async () => {
         const res = await requestApi.get(`/dashboard/byId/${dashboardId}`)
         setDashboard(res.data)
@@ -141,7 +150,7 @@ const DashboardPage = () => {
     useEffect(() => {
         setCombinedVariables()
     },[dashboard?.data?.variables,gVariables])
-    
+
     const onDashboardChange = () => {
         setDashboard(cloneDeep(dashboard))
     }

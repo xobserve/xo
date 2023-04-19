@@ -115,7 +115,7 @@ const EditPanel = ({ dashboard, panel, onApply, onDiscard,timeRange,variables }:
                                     return (
                                         <Box width={width}
                                             height={height}>
-                                            <PanelComponent panel={tempPanel} width={width} height={height} timeRange={timeRange} variables={variables} />
+                                            <PanelComponent dashboard={dashboard} panel={tempPanel} width={width} height={height} timeRange={timeRange} variables={variables} />
                                         </Box>
                                     );
                                 }}

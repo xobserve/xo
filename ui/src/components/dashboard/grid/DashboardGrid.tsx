@@ -130,7 +130,7 @@ const DashboardGrid = ({ dashboard, onChange,timeRange,variables }: GridProps) =
                             borderBottom: "2px solid rgba(0, 0, 0, 0.4)"
                         }
                     }}>
-                        <PanelGrid panel={panel} onEditPanel={onEditPanel} onRemovePanel={onRemovePanel} timeRange={timeRange} variables={variables}/>
+                        <PanelGrid dashboard={dashboard} panel={panel} onEditPanel={onEditPanel} onRemovePanel={onRemovePanel} timeRange={timeRange} variables={variables}/>
                     </Box>)
                 })
             }
