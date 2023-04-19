@@ -18,9 +18,7 @@ const variableTypes = {
 }
 
 const GlobalVariablesPage = () => {
-    const { session } = useSession()
     const toast = useToast()
-    const router = useRouter()
     const [variables, setVariables] = useState<Variable[]>([])
     const [variable, setVariable] = useState<Variable>()
     const [editMode, setEditMode] = useState<boolean>(false)
@@ -123,7 +121,7 @@ const GlobalVariablesPage = () => {
             </Flex>
             <VariablesTable variables={variables} onEdit={onEditVariable} onRemove={onRemoveVariable}/>
         </Page>
-        <EditVariable v={variable} isEdit={editMode} onClose={onClose} isOpen={isOpen} onSubmit={editMode ? editVariable : addVariable}/>
+        <EditVariable v={variable} isEdit={editMode} onClose={onClose} isOpen={isOpen} onSubmit={editMode ? editVariable : addVariable} isGlobal/>
     </>
 }
 
@@ -215,9 +213,10 @@ interface EditProps {
     onClose: any
     isEdit: boolean
     onSubmit: any
+    isGlobal?: boolean
 }
 
-export const EditVariable = ({v,isOpen,onClose,isEdit,onSubmit}:EditProps) => {
+export const EditVariable = ({v,isOpen,onClose,isEdit,onSubmit,isGlobal=false}:EditProps) => {
     const [variable,setVariable] = useState<Variable>()
     useEffect(() => {
         setVariable(v)
@@ -246,7 +245,7 @@ export const EditVariable = ({v,isOpen,onClose,isEdit,onSubmit}:EditProps) => {
                                 <Stack direction='row'>
                                     <Radio value='1'>{variableTypes['1']}</Radio>
                                     <Radio value='2'>{variableTypes['2']}</Radio>
-                                    <Radio value='3'>{variableTypes['3']}</Radio>
+                                    {isGlobal && <Radio value='3'>{variableTypes['3']}</Radio>}
                                 </Stack>
                             </RadioGroup>
                         </Box>
