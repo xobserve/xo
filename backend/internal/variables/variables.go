@@ -3,6 +3,7 @@ package variables
 import (
 	"time"
 
+	"github.com/ai-apm/aiapm/backend/internal/user"
 	"github.com/ai-apm/aiapm/backend/pkg/common"
 	"github.com/ai-apm/aiapm/backend/pkg/db"
 	"github.com/ai-apm/aiapm/backend/pkg/e"
@@ -37,6 +38,13 @@ func AddNewVariable(c *gin.Context) {
 	if v.Type != models.CustomValuesVariable && v.Type != models.GetByHttpVariable && v.Type != models.BackendHardcodedVariable {
 		logger.Warn("variable type invalid", "type", v.Type)
 		c.JSON(400, common.RespError(e.ParamInvalid))
+		return
+	}
+
+	u := user.CurrentUser(c)
+	// only admin can do this
+	if !u.Role.IsAdmin() {
+		c.JSON(403, common.RespError(e.NoPermission))
 		return
 	}
 
@@ -98,6 +106,13 @@ func UpdateVariable(c *gin.Context) {
 		return
 	}
 
+	u := user.CurrentUser(c)
+	// only admin can do this
+	if !u.Role.IsAdmin() {
+		c.JSON(403, common.RespError(e.NoPermission))
+		return
+	}
+
 	now := time.Now()
 	_, err = db.Conn.Exec("UPDATE variable SET name=?,type=?,value=?,external_url=?,updated=? WHERE id=?",
 		v.Name, v.Type, v.Value, v.ExternalUrl, now, v.Id)
@@ -110,6 +125,26 @@ func UpdateVariable(c *gin.Context) {
 		c.JSON(500, common.RespError(e.Internal))
 		return
 	}
+	c.JSON(200, common.RespSuccess(nil))
+}
+
+func DeleteVariable(c *gin.Context) {
+	id := c.Param("id")
+
+	u := user.CurrentUser(c)
+	// only admin can do this
+	if !u.Role.IsAdmin() {
+		c.JSON(403, common.RespError(e.NoPermission))
+		return
+	}
+
+	_, err := db.Conn.Exec("DELETE FROM variable WHERE id=?", id)
+	if err != nil {
+		logger.Warn("delete variable error", "error", err)
+		c.JSON(500, common.RespError(e.Internal))
+		return
+	}
+
 	c.JSON(200, common.RespSuccess(nil))
 }
 

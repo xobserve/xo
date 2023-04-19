@@ -8,12 +8,10 @@ import { requestApi } from "utils/axios/request"
 import { Team } from "types/teams"
 import DashboardHeader from "components/dashboard/DashboardHeader"
 import DashboardGrid from "components/dashboard/grid/DashboardGrid"
-import { cloneDeep } from "lodash"
+import { cloneDeep, concat } from "lodash"
 import { TimeRange } from "types/time"
 import { getInitTimeRange, initTimeRange } from "components/TimePicker"
-import useVariables from "hooks/use-variables"
 import { Variable } from "types/variable"
-import storage from "utils/localStorage"
 import { setVariableSelected } from "components/variables/SelectVariables"
 
 // All of the paths that is not defined in pages directory will redirect to this page,
@@ -30,6 +28,7 @@ const DashboardPage = () => {
     const [panel, setPanel] = useState<Panel>(null)
     const [timeRange,setTimeRange] = useState<TimeRange>(getInitTimeRange())
     const [variables, setVariables] = useState<Variable[]>(null)
+    const [gVariables,setGVariables] = useState<Variable[]>([])
     useEffect(() => {
         if (dashboardId) {
             load()
@@ -42,15 +41,21 @@ const DashboardPage = () => {
         setDashboard(res.data)
 
         const res0 = await requestApi.get(`/variable/all`)
-        for (const v of res0.data) {
+        setGVariables(res0.data)
+        setCombinedVariables(res0.data)
+        const res1 = await requestApi.get(`/team/${res.data.ownedBy}`)
+        setTeam(res1.data)
+    }
+
+    // combine variables which defined separately in dashboard and global
+    const setCombinedVariables = (gv?) => {
+        const combined = concat(dashboard?.data?.variables??[], gv??gVariables)
+        for (const v of combined) {
             v.values = v.value.split(",")
             // get the selected value for each variable from localStorage
         }
-        setVariableSelected(res0.data)
-        setVariables(res0.data)
-
-        const res1 = await requestApi.get(`/team/${res.data.ownedBy}`)
-        setTeam(res1.data)
+        setVariableSelected(combined)
+        setVariables(combined)
     }
 
     const getNextPanelId = () => {
@@ -133,11 +138,19 @@ const DashboardPage = () => {
         setVariables(cloneDeep(variables))
     }
 
+    useEffect(() => {
+        setCombinedVariables()
+    },[dashboard?.data?.variables,gVariables])
+    
+    const onDashboardChange = () => {
+        setDashboard(cloneDeep(dashboard))
+    }
+
     return (
         <>
         <PageContainer>
             {dashboard && <Box px="3" width="100%">
-                <DashboardHeader dashboard={dashboard} team={team} onAddPanel={onAddPanel} onTimeChange={t => setTimeRange(t)} timeRange={timeRange} variables={variables} onVariablesChange={onVariablesChange} />
+                <DashboardHeader dashboard={dashboard} team={team} onAddPanel={onAddPanel} onTimeChange={t => setTimeRange(t)} timeRange={timeRange} variables={variables} onVariablesChange={onVariablesChange} onChange={onDashboardChange} />
                 <Box mt={variables?.length > 0 ? "80px" : "50px"} py="2">
                     {dashboard.data.panels?.length > 0 && <DashboardGrid  dashboard={dashboard} onChange={onGridChange} timeRange={timeRange??getInitTimeRange()} variables={variables}/>}
                 </Box>        

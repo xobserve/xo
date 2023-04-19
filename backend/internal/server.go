@@ -80,6 +80,7 @@ func (s *Server) Start() error {
 		r.POST("/variable/new", IsLogin(), variables.AddNewVariable)
 		r.GET("/variable/all", IsLogin(), api.GetVariables)
 		r.POST("/variable/update", IsLogin(), variables.UpdateVariable)
+		r.DELETE("/variable/:id", IsLogin(), variables.DeleteVariable)
 
 		// dashboard apis
 		r.GET("/dashboard/byId/:id", IsLogin(), dashboard.GetDashboard)

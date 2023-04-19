@@ -5,6 +5,7 @@ import TimePicker from "components/TimePicker"
 import SelectVariables from "components/variables/SelectVariables"
 import { isEmpty } from "lodash"
 import { useRouter } from "next/router"
+import { useState } from "react"
 import { FaCog, FaRegClock, FaRegSave } from "react-icons/fa"
 import ReserveUrls from "src/data/reserve-urls"
 import { Dashboard } from "types/dashboard"
@@ -12,6 +13,7 @@ import { Team } from "types/teams"
 import { TimeRange } from "types/time"
 import { Variable } from "types/variable"
 import { requestApi } from "utils/axios/request"
+import DashboardSettings from "./settings/DashboardSettings"
 
 interface HeaderProps {
     dashboard: Dashboard
@@ -21,8 +23,9 @@ interface HeaderProps {
     timeRange: TimeRange
     variables: Variable[]
     onVariablesChange: any
+    onChange: any
 }
-const DashboardHeader = ({ dashboard, team, onAddPanel, onTimeChange, timeRange,variables,onVariablesChange }: HeaderProps) => {
+const DashboardHeader = ({ dashboard, team, onAddPanel, onTimeChange, timeRange,variables,onVariablesChange,onChange }: HeaderProps) => {
     const toast = useToast()
     const router = useRouter()
 
@@ -51,7 +54,7 @@ const DashboardHeader = ({ dashboard, team, onAddPanel, onTimeChange, timeRange,
                         <HStack spacing="1">
                             <IconButton onClick={onAddPanel}><PanelAdd size={28} fill={useColorModeValue("var(--chakra-colors-brand-500)", "var(--chakra-colors-brand-200)")} /></IconButton>
                             <IconButton onClick={onSave}><FaRegSave /></IconButton>
-                            <IconButton><FaCog /></IconButton>
+                            <DashboardSettings dashboard={dashboard} onChange={onChange} />
                             <Tooltip label={`${timeRange?.start.toLocaleString()} - ${timeRange?.end.toLocaleString()}`}><Box><IconButton onClick={onOpen}><FaRegClock /></IconButton></Box></Tooltip>
                         </HStack>
 
@@ -59,9 +62,10 @@ const DashboardHeader = ({ dashboard, team, onAddPanel, onTimeChange, timeRange,
                    
             </Flex>
             {!isEmpty(variables) && <Flex justifyContent="space-between" mt="1">
-                <Box></Box>
-                <SelectVariables variables={variables} onChange={onVariablesChange} />
+                <SelectVariables variables={variables.filter((v) => v.id.toString().startsWith("d-"))} onChange={onVariablesChange} />
+                <SelectVariables variables={variables.filter((v) => !v.id.toString().startsWith("d-"))} onChange={onVariablesChange} />
                 </Flex>}
+
             <Modal isOpen={isOpen} onClose={onClose}>
                 <ModalOverlay />
                 <ModalContent minW="fit-content">
@@ -71,6 +75,7 @@ const DashboardHeader = ({ dashboard, team, onAddPanel, onTimeChange, timeRange,
 
                 </ModalContent>
             </Modal>
+            
         </Box>
     )
 }

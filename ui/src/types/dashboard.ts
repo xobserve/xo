@@ -15,6 +15,7 @@ export interface Dashboard {
 export interface DashboardData {
     description?: string
     panels?: Panel[]
+    variables?: Variable[]
 }
 
 export interface Panel {

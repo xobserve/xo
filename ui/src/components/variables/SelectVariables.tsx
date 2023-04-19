@@ -9,7 +9,6 @@ interface Props {
 
 const vkey = "apm-variables"
 const SelectVariables = ({variables,onChange}: Props) => {
-    console.log(variables)
     const onVariableChange = (variable:Variable, value) => {
         variable.selected  = value
         const sv = storage.get(vkey)
@@ -24,7 +23,7 @@ const SelectVariables = ({variables,onChange}: Props) => {
 
         onChange()
     }
-
+    
     return (<HStack>
         {variables.map(v => {
             return <HStack>
