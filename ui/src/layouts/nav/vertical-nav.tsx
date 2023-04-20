@@ -78,7 +78,7 @@ const VerticalNav = dynamic(async () => (props: Props) => {
   }
 
   return (
-    <Box minWidth={miniMode ? "80px" : "170px"} display={props.fullscreen ? "none" : "block"}>
+    <Box minWidth={miniMode ? "58px" : "130px"} display={props.fullscreen ? "none" : "block"}>
       <chakra.header
         ref={ref}
         transition="box-shadow 0.2s"
@@ -111,7 +111,7 @@ const VerticalNav = dynamic(async () => (props: Props) => {
                     }
                   }
 
-                  return <HStack cursor="pointer" px="4" py="0.3rem" rounded="md" key={link.url} color={useColorModeValue("gray.500", "whiteAlpha.800")}>
+                  return <HStack cursor="pointer" px={miniMode ? 2 : 1} py="0.3rem" rounded="md" key={link.url} color={useColorModeValue("gray.500", "whiteAlpha.800")}>
                     <Popover trigger="hover" placement="right">
                       <PopoverTrigger>
                         <Box>
