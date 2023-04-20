@@ -54,7 +54,7 @@ const DashboardHeader = ({ dashboard, team, onAddPanel, onTimeChange, timeRange,
                         <HStack spacing="1">
                             <IconButton onClick={onAddPanel}><PanelAdd size={28} fill={useColorModeValue("var(--chakra-colors-brand-500)", "var(--chakra-colors-brand-200)")} /></IconButton>
                             <IconButton onClick={onSave}><FaRegSave /></IconButton>
-                            <DashboardSettings dashboard={dashboard} onChange={onChange} />
+                            {dashboard && <DashboardSettings dashboard={dashboard} onChange={onChange} />}
                             <Tooltip label={`${timeRange?.start.toLocaleString()} - ${timeRange?.end.toLocaleString()}`}><Box><IconButton onClick={onOpen}><FaRegClock /></IconButton></Box></Tooltip>
                         </HStack>
 

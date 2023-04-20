@@ -17,6 +17,7 @@ export interface DashboardData {
     panels?: Panel[]
     variables?: Variable[]
     sharedTooltip?: boolean
+    editable?: boolean
 }
 
 export interface Panel {

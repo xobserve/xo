@@ -18,9 +18,9 @@ const DashboardSettings = ({ dashboard,onChange }: Props) => {
         <Modal isOpen={isOpen} onClose={onClose} size="full">
             <ModalOverlay />
             <ModalContent>
-                <ModalCloseButton />
+                <ModalCloseButton mt="2"/>
                 <ModalBody>
-                    <Text textStyle="subTitle">{dashboard.title} / Settings</Text>
+                    <Text textStyle="subTitle" mt="2">{dashboard.title} / Settings</Text>
                     <Tabs orientation="vertical" variant='soft-rounded' mt="7">
                         <TabList p="2">
                             <Tab>General</Tab>

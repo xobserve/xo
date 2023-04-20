@@ -8,6 +8,10 @@ export default function textStyles() {
             fontSize: "1.2rem",
             fontWeight: "400",
         },
+        title: {
+            fontSize: "1.1rem",
+            fontWeight: "400",
+        },
         annotation: {
             fontSize: "0.9rem",
             opacity: 0.8
