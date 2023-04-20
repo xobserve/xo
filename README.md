@@ -12,7 +12,7 @@
 
 
 <h1 align="center">
-  Observe is under developing now, online demo is comming soon.
+  Starship is under developing now, online demo is comming soon.
 </h1>
 
 
