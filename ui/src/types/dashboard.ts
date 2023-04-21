@@ -18,6 +18,7 @@ export interface DashboardData {
     variables?: Variable[]
     sharedTooltip?: boolean
     editable?: boolean
+    hidingVars?: string
 }
 
 export interface Panel {

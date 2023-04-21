@@ -3,7 +3,7 @@ import IconButton from "components/button/IconButton"
 import { PanelAdd } from "components/icons/PanelAdd"
 import TimePicker from "components/TimePicker"
 import SelectVariables from "components/variables/SelectVariables"
-import { isEmpty } from "lodash"
+import { find, isEmpty } from "lodash"
 import { useRouter } from "next/router"
 import { useState } from "react"
 import { FaCog, FaRegClock, FaRegSave } from "react-icons/fa"
@@ -63,7 +63,7 @@ const DashboardHeader = ({ dashboard, team, onAddPanel, onTimeChange, timeRange,
             </Flex>
             {!isEmpty(variables) && <Flex justifyContent="space-between" mt="1">
                 <SelectVariables variables={variables.filter((v) => v.id.toString().startsWith("d-"))} onChange={onVariablesChange} />
-                <SelectVariables variables={variables.filter((v) => !v.id.toString().startsWith("d-"))} onChange={onVariablesChange} />
+                <SelectVariables variables={variables.filter((v) => !v.id.toString().startsWith("d-") && !find(dashboard.data.hidingVars.split(','),v1 => v1 == v.name))} onChange={onVariablesChange} />
                 </Flex>}
 
             <Modal isOpen={isOpen} onClose={onClose}>
