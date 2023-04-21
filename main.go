@@ -14,7 +14,7 @@
 
 package main
 
-import "github.com/ai-apm/aiapm/backend/cmd"
+import "github.com/MyStarship/starship/backend/cmd"
 
 func main() {
 	cmd.Execute()

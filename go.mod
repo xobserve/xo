@@ -1,4 +1,4 @@
-module github.com/ai-apm/aiapm
+module github.com/MyStarship/starship
 
 go 1.14
 

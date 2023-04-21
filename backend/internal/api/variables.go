@@ -1,9 +1,9 @@
 package api
 
 import (
-	"github.com/ai-apm/aiapm/backend/internal/variables"
-	"github.com/ai-apm/aiapm/backend/pkg/common"
-	"github.com/ai-apm/aiapm/backend/pkg/e"
+	"github.com/MyStarship/starship/backend/internal/variables"
+	"github.com/MyStarship/starship/backend/pkg/common"
+	"github.com/MyStarship/starship/backend/pkg/e"
 	"github.com/gin-gonic/gin"
 )
 

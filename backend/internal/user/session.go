@@ -4,14 +4,14 @@ import (
 	"database/sql"
 	"strconv"
 
-	"github.com/ai-apm/aiapm/backend/pkg/config"
+	"github.com/MyStarship/starship/backend/pkg/config"
 
-	"github.com/ai-apm/aiapm/backend/pkg/models"
+	"github.com/MyStarship/starship/backend/pkg/models"
 
 	// "fmt"
 	"time"
 
-	"github.com/ai-apm/aiapm/backend/pkg/db"
+	"github.com/MyStarship/starship/backend/pkg/db"
 	"github.com/gin-gonic/gin"
 )
 

@@ -3,12 +3,12 @@ package variables
 import (
 	"time"
 
-	"github.com/ai-apm/aiapm/backend/internal/user"
-	"github.com/ai-apm/aiapm/backend/pkg/common"
-	"github.com/ai-apm/aiapm/backend/pkg/db"
-	"github.com/ai-apm/aiapm/backend/pkg/e"
-	"github.com/ai-apm/aiapm/backend/pkg/log"
-	"github.com/ai-apm/aiapm/backend/pkg/models"
+	"github.com/MyStarship/starship/backend/internal/user"
+	"github.com/MyStarship/starship/backend/pkg/common"
+	"github.com/MyStarship/starship/backend/pkg/db"
+	"github.com/MyStarship/starship/backend/pkg/e"
+	"github.com/MyStarship/starship/backend/pkg/log"
+	"github.com/MyStarship/starship/backend/pkg/models"
 	"github.com/gin-gonic/gin"
 )
 

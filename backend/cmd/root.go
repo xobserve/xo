@@ -20,21 +20,21 @@ import (
 	"os/signal"
 	"syscall"
 
-	server "github.com/ai-apm/aiapm/backend/internal"
-	"github.com/ai-apm/aiapm/backend/pkg/config"
-	"github.com/ai-apm/aiapm/backend/pkg/log"
+	server "github.com/MyStarship/starship/backend/internal"
+	"github.com/MyStarship/starship/backend/pkg/config"
+	"github.com/MyStarship/starship/backend/pkg/log"
 	"github.com/spf13/cobra"
 )
 
 // rootCmd represents the base command when called without any subcommands
 var rootCmd = &cobra.Command{
-	Use:   "aiapm",
+	Use:   "starship",
 	Short: "",
 	Long:  ``,
 	// Uncomment the following line if your bare application
 	// has an action associated with it:
 	Run: func(cmd *cobra.Command, args []string) {
-		config.Init("aiapm.conf")
+		config.Init("config.yaml")
 		err := log.InitLogger(config.Data.Common.LogLevel)
 		if err != nil {
 			fmt.Println("init logger error", err)

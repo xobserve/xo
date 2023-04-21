@@ -3,13 +3,15 @@ package storage
 import (
 	"database/sql"
 	"encoding/json"
+	"fmt"
 	"time"
 
-	"github.com/ai-apm/aiapm/backend/pkg/db"
-	"github.com/ai-apm/aiapm/backend/pkg/e"
-	"github.com/ai-apm/aiapm/backend/pkg/log"
-	"github.com/ai-apm/aiapm/backend/pkg/models"
-	"github.com/ai-apm/aiapm/backend/pkg/utils"
+	"github.com/MyStarship/starship/backend/pkg/config"
+	"github.com/MyStarship/starship/backend/pkg/db"
+	"github.com/MyStarship/starship/backend/pkg/e"
+	"github.com/MyStarship/starship/backend/pkg/log"
+	"github.com/MyStarship/starship/backend/pkg/models"
+	"github.com/MyStarship/starship/backend/pkg/utils"
 	_ "github.com/go-sql-driver/mysql"
 )
 
@@ -31,7 +33,7 @@ func Init() error {
 }
 
 func connectDatabase() error {
-	d, err := sql.Open("mysql", "root:Sunface-Mysql-im.dev@/aiapm?parseTime=true")
+	d, err := sql.Open("mysql", fmt.Sprintf("root:Sunface-Mysql-im.dev@/%s?parseTime=true", config.Data.Common.AppName))
 	if err != nil {
 		log.RootLogger.Crit("connect to mysql error", "error:", err)
 		return err

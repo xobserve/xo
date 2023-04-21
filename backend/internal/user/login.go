@@ -1,17 +1,17 @@
 package user
 
 import (
-	"github.com/ai-apm/aiapm/backend/pkg/e"
-	"github.com/ai-apm/aiapm/backend/pkg/models"
-	"github.com/ai-apm/aiapm/backend/pkg/utils"
+	"github.com/MyStarship/starship/backend/pkg/e"
+	"github.com/MyStarship/starship/backend/pkg/models"
+	"github.com/MyStarship/starship/backend/pkg/utils"
 
 	// "fmt"
 	"net/http"
 	"strconv"
 	"time"
 
-	"github.com/ai-apm/aiapm/backend/pkg/common"
-	"github.com/ai-apm/aiapm/backend/pkg/db"
+	"github.com/MyStarship/starship/backend/pkg/common"
+	"github.com/MyStarship/starship/backend/pkg/db"
 	"github.com/gin-gonic/gin"
 )
 

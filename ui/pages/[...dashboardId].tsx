@@ -96,7 +96,7 @@ const DashboardPage = () => {
             gridPos: { x: 0, y: 0, w: 12, h: 8 },
             settings: {
                 text: {
-                    md: `#Welcome to AiAPM\n This is a new panel\n You can edit it by clicking the edit button on the top title\n ###Have fun!`
+                    md: `#Welcome to Starship\n This is a new panel\n You can edit it by clicking the edit button on the top title\n ###Have fun!`
                 },
             },
             datasource: [{

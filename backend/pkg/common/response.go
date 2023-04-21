@@ -1,6 +1,6 @@
 package common
 
-import "github.com/ai-apm/aiapm/backend/pkg/e"
+import "github.com/MyStarship/starship/backend/pkg/e"
 
 type Resp struct {
 	Status  string      `json:"status"`

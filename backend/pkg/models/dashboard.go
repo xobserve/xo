@@ -3,8 +3,8 @@ package models
 import (
 	"time"
 
-	"github.com/ai-apm/aiapm/backend/pkg/db"
-	"github.com/ai-apm/aiapm/backend/pkg/utils/simplejson"
+	"github.com/MyStarship/starship/backend/pkg/db"
+	"github.com/MyStarship/starship/backend/pkg/utils/simplejson"
 )
 
 // you mustn't change the id of home dashboarda, is's reversed

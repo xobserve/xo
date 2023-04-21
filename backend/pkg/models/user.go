@@ -4,7 +4,7 @@ import (
 	"database/sql"
 	"time"
 
-	"github.com/ai-apm/aiapm/backend/pkg/db"
+	"github.com/MyStarship/starship/backend/pkg/db"
 )
 
 // ! You should not modify the two constants below
