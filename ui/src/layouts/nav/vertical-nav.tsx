@@ -38,13 +38,14 @@ import { Route } from "types/route"
 import { dispatch } from "use-bus"
 import { MiniSidemenuEvent } from "src/data/bus-events"
 import storage from "utils/localStorage"
+import { SidemenuMinimodeKey } from "src/data/storage-keys"
 
 
 interface Props {
   fullscreen: boolean
 }
 
-const SidemenuMinimodeKey = "sidemenu-mini"
+
 const VerticalNav = dynamic(async () => (props: Props) => {
   const { session } = useSession()
   const ref = React.useRef<HTMLHeadingElement>()
@@ -154,7 +155,7 @@ const VerticalNav = dynamic(async () => (props: Props) => {
                 {!miniMode && <Text fontSize="0.9rem">选择侧菜单</Text>}
               </HStack>
 
-              <HStack spacing="1">
+              <HStack spacing="0">
                 <Link
                   href={siteConfig.repo.url}
                 >
@@ -171,12 +172,12 @@ const VerticalNav = dynamic(async () => (props: Props) => {
                 {!miniMode && <Text fontSize="0.9rem">Github地址</Text>}
               </HStack>
 
-              <HStack spacing="1">
+              <HStack spacing="0">
                 <ColorModeSwitcher fontSize="1.2rem" />
                 {!miniMode && <Text fontSize="0.9rem">深浅色主题</Text>}
               </HStack>
 
-              <HStack spacing="1">
+              <HStack spacing="0">
                 <UserMenu />
                 {!miniMode && <Text fontSize="0.9rem">{session ? '个人设置' : '登录'}</Text>}
               </HStack>
@@ -199,7 +200,7 @@ const NavItem = ({ asPath, path, miniMode, title, icon, url, fontSize = "1.2rem"
   return <Link href={url}>
     <HStack spacing="0" color={asPath.startsWith(path) ? useColorModeValue("brand.500", "brand.200") : "current"}>
       <Tooltip label={miniMode && (showTooltip && title)} placement="right">
-        <HStack spacing={1}>
+        <HStack spacing={0}>
           <IconButton
             size="md"
             fontSize={fontSize}

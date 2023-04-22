@@ -21,6 +21,7 @@ import AddPanel from "./AddPanel"
 import { variables } from "./Dashboard"
 import DashboardSave from "./DashboardSave"
 import DashboardSettings from "./settings/DashboardSettings"
+import { SidemenuMinimodeKey } from "src/data/storage-keys"
 
 interface HeaderProps {
     dashboard: Dashboard
@@ -36,7 +37,7 @@ const DashboardHeader = memo(({ dashboard, onTimeChange, timeRange, onChange,ful
     const [variablesChanged, setVariablesChanged] = useState(0)
     const [refresh, setRefresh] = useState(0)
     const [team, setTeam] = useState<Team>(null)
-    const [miniMode, setMiniMode] = useState(true)
+    const [miniMode, setMiniMode] = useState(storage.get(SidemenuMinimodeKey)??true)
     useEffect(() => {
         getTeam()
     }, [])
