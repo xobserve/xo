@@ -37,16 +37,19 @@ import { requestApi } from "utils/axios/request"
 import { Route } from "types/route"
 import { dispatch } from "use-bus"
 import { MiniSidemenuEvent } from "src/data/bus-events"
+import storage from "utils/localStorage"
 
 
 interface Props {
   fullscreen: boolean
 }
+
+const SidemenuMinimodeKey = "sidemenu-mini"
 const VerticalNav = dynamic(async () => (props: Props) => {
   const { session } = useSession()
   const ref = React.useRef<HTMLHeadingElement>()
 
-  const [miniMode, setMiniMode] = useState(true)
+  const [miniMode, setMiniMode] = useState(storage.get(SidemenuMinimodeKey)??true)
 
   const router = useRouter()
   const { asPath } = router
@@ -67,6 +70,12 @@ const VerticalNav = dynamic(async () => (props: Props) => {
     setSidemenu(res.data.data)
   }
 
+  const onMinimodeChange = () => {
+    setMiniMode(!miniMode); 
+    dispatch({ type: MiniSidemenuEvent, data: !miniMode })
+    storage.set(SidemenuMinimodeKey, !miniMode)
+  }
+
   return (
     <Box minWidth={miniMode ? "80px" : "170px"} display={props.fullscreen ? "none" : "block"}>
       <chakra.header
@@ -84,8 +93,8 @@ const VerticalNav = dynamic(async () => (props: Props) => {
       >
         <chakra.div height="100%">
           <Flex className="vertical-nav" h="100%" align="center" justify="space-between" direction="column" py="4">
-            <VStack align="center">
-              <Box onClick={() => { setMiniMode(!miniMode); dispatch({ type: MiniSidemenuEvent, data: !miniMode }) }}>
+            <VStack align="center" spacing={1}>
+              <Box onClick={onMinimodeChange}>
                 <Logo />
               </Box>
               {sidemenu.length > 0 && asPath && router && <VStack p="0" pt="2" spacing="0" fontSize="1rem" alignItems="left" >
@@ -131,7 +140,7 @@ const VerticalNav = dynamic(async () => (props: Props) => {
             </VStack>
 
             <VStack
-              spacing="3px"
+              spacing="1"
               color={useColorModeValue("gray.500", "gray.400")}
               alignItems="left"
             >
@@ -142,10 +151,10 @@ const VerticalNav = dynamic(async () => (props: Props) => {
               <Divider />
               <HStack spacing="0">
                 <UserSidemenus />
-                {!miniMode && <Text>选择侧菜单</Text>}
+                {!miniMode && <Text fontSize="0.9rem">选择侧菜单</Text>}
               </HStack>
 
-              <HStack spacing="0">
+              <HStack spacing="1">
                 <Link
                   href={siteConfig.repo.url}
                 >
@@ -159,17 +168,17 @@ const VerticalNav = dynamic(async () => (props: Props) => {
                     icon={<Icons.FaGithub />}
                   />
                 </Link>
-                {!miniMode && <Text>Github地址</Text>}
+                {!miniMode && <Text fontSize="0.9rem">Github地址</Text>}
               </HStack>
 
-              <HStack spacing="0">
+              <HStack spacing="1">
                 <ColorModeSwitcher fontSize="1.2rem" />
-                {!miniMode && <Text>深浅色主题</Text>}
+                {!miniMode && <Text fontSize="0.9rem">深浅色主题</Text>}
               </HStack>
 
-              <HStack spacing="0">
+              <HStack spacing="1">
                 <UserMenu />
-                {!miniMode && <Text>{session ? '个人设置' : '登录'}</Text>}
+                {!miniMode && <Text fontSize="0.9rem">{session ? '个人设置' : '登录'}</Text>}
               </HStack>
 
             </VStack>
@@ -189,8 +198,8 @@ const NavItem = ({ asPath, path, miniMode, title, icon, url, fontSize = "1.2rem"
   const Icon = Icons[icon]
   return <Link href={url}>
     <HStack spacing="0" color={asPath.startsWith(path) ? useColorModeValue("brand.500", "brand.200") : "current"}>
-      <Tooltip label={showTooltip && title} placement="right">
-        <HStack>
+      <Tooltip label={miniMode && (showTooltip && title)} placement="right">
+        <HStack spacing={1}>
           <IconButton
             size="md"
             fontSize={fontSize}
@@ -200,7 +209,7 @@ const NavItem = ({ asPath, path, miniMode, title, icon, url, fontSize = "1.2rem"
             _focus={{ border: null }}
             icon={<Icon />}
           />
-          {!miniMode && <Text>{title}</Text>}
+          {!miniMode && <Text fontSize="0.9rem" cursor="pointer">{title}</Text>}
         </HStack>
       </Tooltip>
     </HStack>
