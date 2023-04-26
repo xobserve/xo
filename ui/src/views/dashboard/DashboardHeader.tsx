@@ -9,7 +9,7 @@ import { useRouter } from "next/router"
 import { memo, useEffect, useRef, useState } from "react"
 import { FaRegClock, FaTv } from "react-icons/fa"
 import { MdSync } from "react-icons/md"
-import { VariableChangedEvent } from "src/data/bus-events"
+import { MiniSidemenuEvent, VariableChangedEvent } from "src/data/bus-events"
 import ReserveUrls from "src/data/reserve-urls"
 import { Dashboard } from "types/dashboard"
 import { Team } from "types/teams"
@@ -36,7 +36,7 @@ const DashboardHeader = memo(({ dashboard, onTimeChange, timeRange, onChange,ful
     const [variablesChanged, setVariablesChanged] = useState(0)
     const [refresh, setRefresh] = useState(0)
     const [team, setTeam] = useState<Team>(null)
-
+    const [miniMode, setMiniMode] = useState(true)
     useEffect(() => {
         getTeam()
     }, [])
@@ -82,9 +82,16 @@ const DashboardHeader = memo(({ dashboard, onTimeChange, timeRange, onChange,ful
         },
         [variablesChanged]
     )
+    
+    useBus(
+        (e) => { return e.type == MiniSidemenuEvent },
+        (e) => {
+            setMiniMode(e.data)
+        }
+    )
 
     return (
-        <Box display={fullscreen ? "none" : "block"} py="1" width="calc(100% - 90px)" position="fixed" bg={'var(--chakra-colors-chakra-body-bg)'}>
+        <Box display={fullscreen ? "none" : "block"} py="1" width={`calc(100% - ${miniMode ? 100 : 190}px)`} position="fixed" bg={'var(--chakra-colors-chakra-body-bg)'}>
             {team &&
                 <>
                     <Flex justifyContent="space-between" >

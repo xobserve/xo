@@ -35,12 +35,14 @@ import UserSidemenus from "components/team/UserSidemenus"
 import useSession from "hooks/use-session"
 import { requestApi } from "utils/axios/request"
 import { Route } from "types/route"
+import { dispatch } from "use-bus"
+import { MiniSidemenuEvent } from "src/data/bus-events"
 
 
 interface Props {
   fullscreen: boolean
 }
-const VerticalNav = dynamic(async () => (props:Props) => {
+const VerticalNav = dynamic(async () => (props: Props) => {
   const { session } = useSession()
   const ref = React.useRef<HTMLHeadingElement>()
 
@@ -75,7 +77,7 @@ const VerticalNav = dynamic(async () => (props:Props) => {
         zIndex="3"
         left="0"
         bottom="0"
-        pr={miniMode ? 0 : 2} 
+        pr={miniMode ? 0 : 2}
         borderRight={`1px solid ${borderColor}`}
         bg={'var(--chakra-colors-chakra-body-bg)'}
         {...props}
@@ -83,7 +85,7 @@ const VerticalNav = dynamic(async () => (props:Props) => {
         <chakra.div height="100%">
           <Flex className="vertical-nav" h="100%" align="center" justify="space-between" direction="column" py="4">
             <VStack align="center">
-              <Box onClick={() => {setMiniMode(!miniMode);}}>
+              <Box onClick={() => { setMiniMode(!miniMode); dispatch({ type: MiniSidemenuEvent, data: !miniMode }) }}>
                 <Logo />
               </Box>
               {sidemenu.length > 0 && asPath && router && <VStack p="0" pt="2" spacing="0" fontSize="1rem" alignItems="left" >
@@ -162,12 +164,12 @@ const VerticalNav = dynamic(async () => (props:Props) => {
 
               <HStack spacing="0">
                 <ColorModeSwitcher fontSize="1.2rem" />
-              {!miniMode && <Text>深浅色主题</Text>}
+                {!miniMode && <Text>深浅色主题</Text>}
               </HStack>
 
               <HStack spacing="0">
                 <UserMenu />
-                {!miniMode && <Text>{session ?  '个人设置' :'登录'}</Text>}
+                {!miniMode && <Text>{session ? '个人设置' : '登录'}</Text>}
               </HStack>
 
             </VStack>
@@ -198,7 +200,7 @@ const NavItem = ({ asPath, path, miniMode, title, icon, url, fontSize = "1.2rem"
             _focus={{ border: null }}
             icon={<Icon />}
           />
-          {!miniMode &&<Text>{title}</Text>}
+          {!miniMode && <Text>{title}</Text>}
         </HStack>
       </Tooltip>
     </HStack>
