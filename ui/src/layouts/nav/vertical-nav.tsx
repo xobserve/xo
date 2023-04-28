@@ -66,7 +66,7 @@ const VerticalNav = dynamic(async () => (props:Props) => {
   }
 
   return (
-    <Box width="80px" display={props.fullscreen ? "none" : "block"}>
+    <Box minWidth={miniMode ? "80px" : "170px"} display={props.fullscreen ? "none" : "block"}>
       <chakra.header
         ref={ref}
         transition="box-shadow 0.2s"
@@ -75,6 +75,7 @@ const VerticalNav = dynamic(async () => (props:Props) => {
         zIndex="3"
         left="0"
         bottom="0"
+        pr={miniMode ? 0 : 2} 
         borderRight={`1px solid ${borderColor}`}
         bg={'var(--chakra-colors-chakra-body-bg)'}
         {...props}
@@ -82,7 +83,7 @@ const VerticalNav = dynamic(async () => (props:Props) => {
         <chakra.div height="100%">
           <Flex className="vertical-nav" h="100%" align="center" justify="space-between" direction="column" py="4">
             <VStack align="center">
-              <Box onClick={() => setMiniMode(!miniMode)}>
+              <Box onClick={() => {setMiniMode(!miniMode);}}>
                 <Logo />
               </Box>
               {sidemenu.length > 0 && asPath && router && <VStack p="0" pt="2" spacing="0" fontSize="1rem" alignItems="left" >
@@ -102,7 +103,7 @@ const VerticalNav = dynamic(async () => (props:Props) => {
                     <Popover trigger="hover" placement="right">
                       <PopoverTrigger>
                         <Box>
-                          <NavItem asPath={asPath} url={link.children?.length > 0 ? link.children[0].url : link.url} path={link.url} icon={link.icon} title={link.title} miniMode={miniMode} fontSize="1.5rem" />
+                          <NavItem asPath={asPath} url={link.children?.length > 0 ? link.children[0].url : link.url} path={link.url} icon={link.icon} title={link.title} miniMode={miniMode} fontSize="1.3rem" />
                         </Box>
                       </PopoverTrigger>
                       <PopoverContent width="fit-content" minWidth="120px" border="null" pl="1">
@@ -139,7 +140,7 @@ const VerticalNav = dynamic(async () => (props:Props) => {
               <Divider />
               <HStack spacing="0">
                 <UserSidemenus />
-                <Collapse in={!miniMode} ><Text>选择侧菜单</Text></Collapse>
+                {!miniMode && <Text>选择侧菜单</Text>}
               </HStack>
 
               <HStack spacing="0">
@@ -156,17 +157,17 @@ const VerticalNav = dynamic(async () => (props:Props) => {
                     icon={<Icons.FaGithub />}
                   />
                 </Link>
-                <Collapse in={!miniMode} ><Text>Github地址</Text></Collapse>
+                {!miniMode && <Text>Github地址</Text>}
               </HStack>
 
               <HStack spacing="0">
                 <ColorModeSwitcher fontSize="1.2rem" />
-                <Collapse in={!miniMode} ><Text>深浅色主题</Text></Collapse>
+              {!miniMode && <Text>深浅色主题</Text>}
               </HStack>
 
               <HStack spacing="0">
                 <UserMenu />
-                <Collapse in={!miniMode} ><Text>{session ?  '个人设置' :'登录'}</Text></Collapse>
+                {!miniMode && <Text>{session ?  '个人设置' :'登录'}</Text>}
               </HStack>
 
             </VStack>
@@ -182,7 +183,7 @@ const VerticalNav = dynamic(async () => (props:Props) => {
 export default VerticalNav
 
 
-const NavItem = ({ asPath, path, miniMode, title, icon, url, fontSize = "1.3rem", showTooltip = false }) => {
+const NavItem = ({ asPath, path, miniMode, title, icon, url, fontSize = "1.2rem", showTooltip = false }) => {
   const Icon = Icons[icon]
   return <Link href={url}>
     <HStack spacing="0" color={asPath.startsWith(path) ? useColorModeValue("brand.500", "brand.200") : "current"}>
@@ -197,7 +198,7 @@ const NavItem = ({ asPath, path, miniMode, title, icon, url, fontSize = "1.3rem"
             _focus={{ border: null }}
             icon={<Icon />}
           />
-          <Collapse in={!miniMode} ><Text>{title}</Text></Collapse>
+          {!miniMode &&<Text>{title}</Text>}
         </HStack>
       </Tooltip>
     </HStack>

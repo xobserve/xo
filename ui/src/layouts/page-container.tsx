@@ -22,7 +22,7 @@ function PageContainer(props: PageContainerProps) {
   return (
     <>
       <Flex width="100%">
-          <VerticalNav fullscreen={fullscreen} />
+          <VerticalNav fullscreen={fullscreen}  />
           {children}
       </Flex>
       {/* {showCopyright && <FooterCopyright />} */}
