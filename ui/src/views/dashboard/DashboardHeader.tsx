@@ -7,7 +7,7 @@ import { find, isEmpty } from "lodash"
 import { useRouter } from "next/router"
 
 import { memo, useEffect, useRef, useState } from "react"
-import { FaRegClock } from "react-icons/fa"
+import { FaRegClock, FaTv } from "react-icons/fa"
 import { MdSync } from "react-icons/md"
 import { VariableChangedEvent } from "src/data/bus-events"
 import ReserveUrls from "src/data/reserve-urls"
@@ -28,8 +28,9 @@ interface HeaderProps {
     timeRange: TimeRange    
     onChange: any
     fullscreen: boolean
+    onFullscreenChange: any
 }
-const DashboardHeader = memo(({ dashboard, onTimeChange, timeRange, onChange,fullscreen }: HeaderProps) => {
+const DashboardHeader = memo(({ dashboard, onTimeChange, timeRange, onChange,fullscreen,onFullscreenChange }: HeaderProps) => {
     const toast = useToast()
     const router = useRouter()
     const [variablesChanged, setVariablesChanged] = useState(0)
@@ -93,7 +94,7 @@ const DashboardHeader = memo(({ dashboard, onTimeChange, timeRange, onChange,ful
                             <Box>{dashboard.title}</Box>
                         </HStack>
 
-                        <HStack>
+                        <HStack mr="2">
                             <HStack spacing="1">
                                 <AddPanel dashboard={dashboard} onChange={onChange} />
                                 <DashboardSave dashboard={dashboard} />
@@ -108,9 +109,8 @@ const DashboardHeader = memo(({ dashboard, onTimeChange, timeRange, onChange,ful
                                         <option value={30}>30s</option>
                                         <option value={60}>1m</option>
                                     </Select></Tooltip>
-
                                 </HStack>
-
+                                <Tooltip label="enter fullscreen mode"><Box onClick={onFullscreenChange}><FaTv /></Box></Tooltip>
 
                             </HStack>
 

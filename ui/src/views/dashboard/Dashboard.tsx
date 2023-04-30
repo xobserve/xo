@@ -90,8 +90,8 @@ const DashboardWrapper = ({dashboardId}) => {
     return (
         <>
             <PageContainer fullscreen={fullscreen}>
-                {dashboard && <Box px="6px" width="100%">
-                    <DashboardHeader fullscreen={fullscreen} dashboard={dashboard} onTimeChange={t => {dispatch({type:  TimeChangedEvent,data: t});setTimeRange(t)}} timeRange={timeRange}  onChange={onDashbardChange} />
+                {dashboard && <Box pl="6px" pr="14px" width="100%">
+                    <DashboardHeader fullscreen={fullscreen} onFullscreenChange={() => setFullscreen(!fullscreen)} dashboard={dashboard} onTimeChange={t => {dispatch({type:  TimeChangedEvent,data: t});setTimeRange(t)}} timeRange={timeRange}  onChange={onDashbardChange} />
                     <Box mt={fullscreen ? 0 : (visibleVars?.length > 0 ? "67px" : "38px")} py="2">
                         {dashboard.data.panels?.length > 0 && <DashboardGrid dashboard={dashboard} onChange={onDashbardChange} />}
                     </Box>
