@@ -37,7 +37,10 @@ import { requestApi } from "utils/axios/request"
 import { Route } from "types/route"
 
 
-const VerticalNav = dynamic(async () => (props) => {
+interface Props {
+  fullscreen: boolean
+}
+const VerticalNav = dynamic(async () => (props:Props) => {
   const { session } = useSession()
   const ref = React.useRef<HTMLHeadingElement>()
 
@@ -63,7 +66,7 @@ const VerticalNav = dynamic(async () => (props) => {
   }
 
   return (
-    <Box width="80px">
+    <Box width="80px" display={props.fullscreen ? "none" : "block"}>
       <chakra.header
         ref={ref}
         transition="box-shadow 0.2s"

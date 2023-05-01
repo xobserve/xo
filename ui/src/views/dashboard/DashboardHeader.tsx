@@ -27,8 +27,9 @@ interface HeaderProps {
     onTimeChange: any
     timeRange: TimeRange    
     onChange: any
+    fullscreen: boolean
 }
-const DashboardHeader = memo(({ dashboard, onTimeChange, timeRange, onChange }: HeaderProps) => {
+const DashboardHeader = memo(({ dashboard, onTimeChange, timeRange, onChange,fullscreen }: HeaderProps) => {
     const toast = useToast()
     const router = useRouter()
     const [variablesChanged, setVariablesChanged] = useState(0)
@@ -82,7 +83,7 @@ const DashboardHeader = memo(({ dashboard, onTimeChange, timeRange, onChange }: 
     )
 
     return (
-        <Box py="1" width="calc(100% - 90px)" position="fixed" bg={'var(--chakra-colors-chakra-body-bg)'}>
+        <Box display={fullscreen ? "none" : "block"} py="1" width="calc(100% - 90px)" position="fixed" bg={'var(--chakra-colors-chakra-body-bg)'}>
             {team &&
                 <>
                     <Flex justifyContent="space-between" >

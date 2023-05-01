@@ -29,7 +29,7 @@ const DashboardWrapper = ({dashboardId}) => {
     const [dashboard, setDashboard] = useImmer<Dashboard>(null)
     const [timeRange, setTimeRange] = useState<TimeRange>(getInitTimeRange())
     const [gVariables, setGVariables] = useState<Variable[]>([])
-    
+    const [fullscreen, setFullscreen] = useState(false)
     
     useEffect(() => {
         load()
@@ -87,13 +87,12 @@ const DashboardWrapper = ({dashboardId}) => {
         return !v.id.toString().startsWith("d-") && !find(dashboard?.data?.hidingVars?.split(','),v1 => v1 == v.name)
     })
 
-    console.log("here3333333:",visibleVars)
     return (
         <>
-            <PageContainer>
+            <PageContainer fullscreen={fullscreen}>
                 {dashboard && <Box px="6px" width="100%">
-                    <DashboardHeader dashboard={dashboard} onTimeChange={t => {dispatch({type:  TimeChangedEvent,data: t});setTimeRange(t)}} timeRange={timeRange}  onChange={onDashbardChange} />
-                    <Box mt={visibleVars?.length > 0 ? "67px" : "38px"} py="2">
+                    <DashboardHeader fullscreen={fullscreen} dashboard={dashboard} onTimeChange={t => {dispatch({type:  TimeChangedEvent,data: t});setTimeRange(t)}} timeRange={timeRange}  onChange={onDashbardChange} />
+                    <Box mt={fullscreen ? 0 : (visibleVars?.length > 0 ? "67px" : "38px")} py="2">
                         {dashboard.data.panels?.length > 0 && <DashboardGrid dashboard={dashboard} onChange={onDashbardChange} />}
                     </Box>
                 </Box>}
