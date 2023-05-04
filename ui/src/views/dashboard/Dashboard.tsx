@@ -5,7 +5,7 @@ import { Dashboard, Panel } from "types/dashboard"
 import { requestApi } from "utils/axios/request"
 import DashboardHeader from "src/views/dashboard/DashboardHeader"
 import DashboardGrid from "src/views/dashboard/grid/DashboardGrid"
-import { cloneDeep, concat, defaults, defaultsDeep } from "lodash"
+import { cloneDeep, concat, defaults, defaultsDeep, find } from "lodash"
 import { TimeRange } from "types/time"
 import { getInitTimeRange } from "components/TimePicker"
 import { Variable } from "types/variable"
@@ -82,12 +82,18 @@ const DashboardWrapper = ({dashboardId}) => {
         setDashboard(f)
     },[])
 
+
+    const visibleVars = variables.filter(v => {
+        return !v.id.toString().startsWith("d-") && !find(dashboard?.data?.hidingVars?.split(','),v1 => v1 == v.name)
+    })
+
+    console.log("here3333333:",visibleVars)
     return (
         <>
             <PageContainer>
                 {dashboard && <Box px="6px" width="100%">
                     <DashboardHeader dashboard={dashboard} onTimeChange={t => {dispatch({type:  TimeChangedEvent,data: t});setTimeRange(t)}} timeRange={timeRange}  onChange={onDashbardChange} />
-                    <Box mt={variables?.length > 0 ? "67px" : "50px"} py="2">
+                    <Box mt={visibleVars?.length > 0 ? "67px" : "38px"} py="2">
                         {dashboard.data.panels?.length > 0 && <DashboardGrid dashboard={dashboard} onChange={onDashbardChange} />}
                     </Box>
                 </Box>}
