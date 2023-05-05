@@ -94,7 +94,7 @@ const AddPanel = ({ dashboard, onChange }: Props) => {
     }
 
     return (<>
-        <IconButton onClick={addPanel}><PanelAdd size={28} fill={useColorModeValue("var(--chakra-colors-brand-500)", "var(--chakra-colors-brand-200)")} /></IconButton>
+        <IconButton onClick={addPanel} variant="ghost"><PanelAdd size={28} fill={useColorModeValue("var(--chakra-colors-brand-500)", "var(--chakra-colors-brand-200)")} /></IconButton>
         <Modal isOpen={isOpen} onClose={onClose} >
             <ModalOverlay />
             <ModalContent mt="20%">

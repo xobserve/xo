@@ -15,7 +15,7 @@ interface Props {
 const DashboardSettings = ({ dashboard,onChange }: Props) => {
     const { isOpen, onOpen, onClose } = useDisclosure()
     return (<>
-        <IconButton onClick={onOpen}><FaCog /></IconButton>
+        <IconButton onClick={onOpen} variant="ghost"><FaCog /></IconButton>
         <Modal isOpen={isOpen} onClose={onClose} size="full">
             <ModalOverlay />
             <ModalContent>

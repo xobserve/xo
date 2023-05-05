@@ -25,7 +25,7 @@ import DashboardSettings from "./settings/DashboardSettings"
 interface HeaderProps {
     dashboard: Dashboard
     onTimeChange: any
-    timeRange: TimeRange
+    timeRange: TimeRange    
     onChange: any
 }
 const DashboardHeader = memo(({ dashboard, onTimeChange, timeRange, onChange }: HeaderProps) => {
@@ -82,11 +82,11 @@ const DashboardHeader = memo(({ dashboard, onTimeChange, timeRange, onChange }: 
     )
 
     return (
-        <Box py="2" width="calc(100% - 90px)" position="fixed" bg={'var(--chakra-colors-chakra-body-bg)'}>
+        <Box py="1" width="calc(100% - 90px)" position="fixed" bg={'var(--chakra-colors-chakra-body-bg)'}>
             {team &&
                 <>
                     <Flex justifyContent="space-between" >
-                        <HStack textStyle="subTitle">
+                        <HStack textStyle="title">
                             <Tooltip label="the team which current dashboard belongs to"><Box cursor="pointer" onClick={() => router.push(`${ReserveUrls.Config}/team/${team.id}/members`)}>{team?.name}</Box></Tooltip>
                             <Box>/</Box>
                             <Box>{dashboard.title}</Box>
@@ -97,10 +97,10 @@ const DashboardHeader = memo(({ dashboard, onTimeChange, timeRange, onChange }: 
                                 <AddPanel dashboard={dashboard} onChange={onChange} />
                                 <DashboardSave dashboard={dashboard} />
                                 {dashboard && <DashboardSettings dashboard={dashboard} onChange={onChange} />}
-                                <Tooltip label={`${timeRange?.start.toLocaleString()} - ${timeRange?.end.toLocaleString()}`}><Box><IconButton onClick={onOpen}><FaRegClock /></IconButton></Box></Tooltip>
+                                <Tooltip label={`${timeRange?.start.toLocaleString()} - ${timeRange?.end.toLocaleString()}`}><Box><IconButton onClick={onOpen} variant="ghost"><FaRegClock /></IconButton></Box></Tooltip>
                                 <HStack spacing={0}>
-                                    <Tooltip label="refresh just once"><Box onClick={refreshOnce}><IconButton><MdSync /></IconButton></Box></Tooltip>
-                                    <Tooltip label="refresh with interval"><Select value={refresh} onChange={(e) => setRefresh(Number(e.target.value))}>
+                                    <Tooltip label="refresh just once"><Box onClick={refreshOnce}><IconButton variant="ghost"><MdSync /></IconButton></Box></Tooltip>
+                                    <Tooltip label="refresh with interval"><Select variant="unstyled" value={refresh} onChange={(e) => setRefresh(Number(e.target.value))}>
                                         <option value={0}>OFF</option>
                                         <option value={5}>5s</option>
                                         <option value={10}>10s</option>
@@ -116,7 +116,7 @@ const DashboardHeader = memo(({ dashboard, onTimeChange, timeRange, onChange }: 
                         </HStack>
 
                     </Flex>
-                    {!isEmpty(variables) && <Flex justifyContent="space-between" mt="1">
+                    {!isEmpty(variables) && <Flex justifyContent="space-between" mt="0">
                         <SelectVariables id={variablesChanged} variables={variables.filter((v) => v.id.toString().startsWith("d-"))} />
                         <SelectVariables id={variablesChanged} variables={variables.filter((v) => !v.id.toString().startsWith("d-") && !find(dashboard.data.hidingVars?.split(','), v1 => v1 == v.name))} />
                     </Flex>}

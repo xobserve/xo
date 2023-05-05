@@ -43,7 +43,7 @@ const DashboardSave = ({dashboard}:Props) => {
     }
 
     return (
-        <IconButton onClick={onSave}><FaRegSave /></IconButton>
+        <IconButton onClick={onSave} variant="ghost"><FaRegSave /></IconButton>
     )
 }
 

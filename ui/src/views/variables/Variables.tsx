@@ -16,7 +16,7 @@ const SelectVariables = ({id, variables}: Props) => {
         {variables.map(v => {
             return <HStack key={v.id}>
                 <Text fontSize="sm" minWidth="fit-content">{v.name}</Text>
-                <Select value={v.selected} size="sm" variant="flushed" onChange={e => setVariableValue(v, e.currentTarget.value)}>
+                <Select value={v.selected} size="sm" variant="unstyled" onChange={e => setVariableValue(v, e.currentTarget.value)}>
                     {
                         v.values.map(v => <option key={v} value={v}>{v}</option>)
                     }
