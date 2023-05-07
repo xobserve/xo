@@ -85,7 +85,7 @@ const DashboardWrapper = ({dashboardId}) => {
     return (
         <>
             <PageContainer>
-                {dashboard && <Box px="3" width="100%">
+                {dashboard && <Box px="6px" width="100%">
                     <DashboardHeader dashboard={dashboard} onTimeChange={t => {dispatch({type:  TimeChangedEvent,data: t});setTimeRange(t)}} timeRange={timeRange}  onChange={onDashbardChange} />
                     <Box mt={variables?.length > 0 ? "80px" : "50px"} py="2">
                         {dashboard.data.panels?.length > 0 && <DashboardGrid dashboard={dashboard} onChange={onDashbardChange} />}

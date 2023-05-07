@@ -82,7 +82,7 @@ const DashboardHeader = memo(({ dashboard, onTimeChange, timeRange, onChange }: 
     )
 
     return (
-        <Box py="2" width="calc(100% - 100px)" position="fixed" bg={'var(--chakra-colors-chakra-body-bg)'}>
+        <Box py="2" width="calc(100% - 90px)" position="fixed" bg={'var(--chakra-colors-chakra-body-bg)'}>
             {team &&
                 <>
                     <Flex justifyContent="space-between" >
