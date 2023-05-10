@@ -1,6 +1,6 @@
 import { Dashboard, DatasourceType, Panel, PanelType } from "types/dashboard"
 import AutoSizer from 'react-virtualized-auto-sizer';
-import { Box, Center, HStack, Input, Menu, MenuButton, MenuDivider, MenuItem, MenuList, Text, Tooltip, useColorModeValue, useToast } from "@chakra-ui/react";
+import { Box, Center, HStack, Input, Menu, MenuButton, MenuDivider, MenuItem, MenuList, Modal, ModalBody, ModalCloseButton, ModalContent, ModalHeader, ModalOverlay, Tab, TabList, TabPanel, TabPanels, Tabs, Text, Textarea, Tooltip, useColorModeValue, useDisclosure, useToast } from "@chakra-ui/react";
 import { FaBook, FaCopy, FaEdit, FaRegCopy, FaTrashAlt } from "react-icons/fa";
 import { IoMdInformation } from "react-icons/io";
 import TextPanel from "../plugins/panel/text/Text";
@@ -24,6 +24,7 @@ import { addParamToUrl } from "utils/url";
 import { run_testdata_query } from "../plugins/datasource/testdata/query_runner";
 import { run_jaeger_query } from "../plugins/datasource/jaeger/query_runner";
 import NodeGraphPanel from "../plugins/panel/nodeGraph/NodeGraph";
+import { Portal } from "components/portal/Portal";
 
 
 interface PanelGridProps {
@@ -35,7 +36,7 @@ interface PanelGridProps {
 }
 
 const PanelGrid = (props: PanelGridProps) => {
-    console.log("panel grid rendered:",props.panel.id)
+    console.log("panel grid rendered:", props.panel.id)
     return (<AutoSizer>
         {({ width, height }) => {
             if (width === 0) {
@@ -95,7 +96,7 @@ export const PanelComponent = ({ dashboard, panel, onRemovePanel, width, height,
         queryData(panel, dashboard.id + panel.id)
     }, [panel.datasource, timeRange, variables])
 
-    const queryData = async (panel,queryId) => {
+    const queryData = async (panel, queryId) => {
         for (var i = 0; i < panel.datasource.length; i++) {
             const ds = panel.datasource[i]
             if (ds.selected) {
@@ -130,11 +131,11 @@ export const PanelComponent = ({ dashboard, panel, onRemovePanel, width, height,
                     //@needs-update-when-add-new-datasource
                     switch (ds.type) {
                         case DatasourceType.Prometheus:
-                            res = await run_prometheus_query(panel,q, timeRange)
+                            res = await run_prometheus_query(panel, q, timeRange)
                             break;
                         case DatasourceType.TestData:
-                                res = await run_testdata_query(panel,q, timeRange)
-                                break;
+                            res = await run_testdata_query(panel, q, timeRange)
+                            break;
                         case DatasourceType.Jaeger:
                             res = await run_jaeger_query(panel, q, timeRange)
                             break;
@@ -155,7 +156,7 @@ export const PanelComponent = ({ dashboard, panel, onRemovePanel, width, height,
                         } else {
                             data.push(res.data)
                         }
-                      
+
                         prevQueryData[id] = res.data
                     }
                 }
@@ -163,7 +164,7 @@ export const PanelComponent = ({ dashboard, panel, onRemovePanel, width, height,
 
 
                 if (needUpdate) {
-                    console.log("query and set panel data:",panel.id)
+                    console.log("query and set panel data:", panel.id)
                     setPanelData(data)
                 } else {
                     if (panelData?.length != data.length) {
@@ -191,9 +192,9 @@ export const PanelComponent = ({ dashboard, panel, onRemovePanel, width, height,
     const panelInnerWidth = width + 8 // 10px padding left and right of panel body
 
 
-    console.log("panel component rendered, data: ", panelData,panel)
+    console.log("panel component rendered, data: ", panelData, panel)
     return <Box height="100%" >
-        <PanelHeader panel={panel} queryError={queryError} onCopyPanel={onCopyPanel} onRemovePanel={onRemovePanel} />
+        <PanelHeader panel={panel} data={panelData} queryError={queryError} onCopyPanel={onCopyPanel} onRemovePanel={onRemovePanel} />
         {panelData && <Box
             // panel={panel}
             maxHeight={`${isEmpty(panel.title) ? height : panelBodyHeight}px`}
@@ -228,39 +229,82 @@ const CustomPanelRender = memo((props: any) => {
     }
 })
 
-const PanelHeader = ({ queryError, panel, onCopyPanel, onRemovePanel }) => {
+const PanelHeader = ({ queryError, panel, onCopyPanel, onRemovePanel,data }) => {
     const router = useRouter()
 
     const title = replaceWithVariables(panel.title, variables)
+    const { isOpen, onOpen, onClose } = useDisclosure()
+    const [debug, setDebug] = useState(false)
 
     return (
-        <HStack className="grid-drag-handle hover-bg"  height={`${PANEL_HEADER_HEIGHT - (isEmpty(title) ? 15 : 0)}px`} cursor="move" spacing="0" position={isEmpty(title) ? "absolute" : "relative"} width="100%" zIndex={1000}>
-            {(queryError || panel.desc) && <Box color={useColorModeValue(queryError ? "red" : "brand.500", queryError ? "red" : "brand.200")} position="absolute">
-                <Tooltip label={queryError ?? replaceWithVariables(panel.desc, variables)}>
-                    <Box>
-                        <IoMdInformation fontSize="20px" cursor="pointer" />
-                    </Box>
-                </Tooltip>
-            </Box>}
-            <Center width="100%">
-                <Menu placement="bottom">
-                    <MenuButton
-                        transition='all 0.2s'
-                        _focus={{ border: null }}
-                        onClick={e => e.stopPropagation()}
-                    >
-                        <Center width="100%">{!isEmpty(title) ? <Box cursor="pointer" className="hover-bordered">{title}</Box> : <Box width="100px">&nbsp;</Box>}</Center>
-                    </MenuButton>
-                    <MenuList p="1">
-                        <MenuItem icon={<FaEdit />} onClick={() => addParamToUrl({ edit: panel.id })}>Edit</MenuItem>
-                        <MenuDivider my="1" />
-                        <MenuItem icon={<FaRegCopy />} onClick={() => onCopyPanel(panel)}>Copy</MenuItem>
-                        <MenuDivider my="1" />
-                        <MenuItem icon={<FaTrashAlt />} onClick={() => onRemovePanel(panel)}>Remove</MenuItem>
-                    </MenuList>
-                </Menu>
-            </Center>
-            <Box display="none"><FaBook className="grid-drag-handle" /></Box>
-        </HStack>
+        <>
+            <HStack className="grid-drag-handle hover-bg" height={`${PANEL_HEADER_HEIGHT - (isEmpty(title) ? 15 : 0)}px`} cursor="move" spacing="0" position={isEmpty(title) ? "absolute" : "relative"} width="100%" zIndex={1000}>
+                {(queryError || panel.desc) && <Box color={useColorModeValue(queryError ? "red" : "brand.500", queryError ? "red" : "brand.200")} position="absolute">
+                    <Tooltip label={queryError ?? replaceWithVariables(panel.desc, variables)}>
+                        <Box>
+                            <IoMdInformation fontSize="20px" cursor="pointer" />
+                        </Box>
+                    </Tooltip>
+                </Box>}
+                <Center width="100%">
+                    <Menu placement="bottom">
+                        <MenuButton
+                            transition='all 0.2s'
+                            _focus={{ border: null }}
+                            onClick={e => e.stopPropagation()}
+                        >
+                            <Center width="100%">{!isEmpty(title) ? <Box cursor="pointer" className="hover-bordered">{title}</Box> : <Box width="100px">&nbsp;</Box>}</Center>
+                        </MenuButton>
+                        <Portal>
+                            <MenuList p="1">
+                                <MenuItem icon={<FaEdit />} onClick={() => addParamToUrl({ edit: panel.id })}>Edit</MenuItem>
+                                <MenuDivider my="1" />
+                                <MenuItem icon={<FaRegCopy />} onClick={() => onCopyPanel(panel)}>Copy</MenuItem>
+                                <MenuDivider my="1" />
+                                <MenuItem icon={<FaTrashAlt />} onClick={() => onRemovePanel(panel)}>Remove</MenuItem>
+                                <MenuDivider my="1" />
+                                <MenuItem icon={<FaTrashAlt />} onClick={onOpen}>Debug Panel</MenuItem>
+
+                            </MenuList>
+                        </Portal>
+                    </Menu>
+                </Center>
+                <Box display="none"><FaBook className="grid-drag-handle" /></Box>
+            </HStack>
+            {isOpen && <DebugPanel panel={panel} isOpen={isOpen} onClose={onClose} data={data} />}
+        </>
+    )
+}
+
+const DebugPanel = ({ panel, isOpen, onClose,data }) => {
+    const [tabIndex, setTabIndex] = useState(0)
+
+
+    return (<Modal isOpen={isOpen} onClose={onClose}>
+        <ModalOverlay />
+        <ModalContent minWidth="600px">
+            <ModalCloseButton />
+            <ModalBody>
+            <Tabs onChange={(index) => setTabIndex(index)} >
+                    <TabList>
+                        <Tab>Panel JSON</Tab>
+                        <Tab>Panel Data</Tab>
+                    </TabList>
+                    <TabPanels p="1">
+                        <TabPanel>
+                            <Textarea  minH="500px">
+                                {JSON.stringify(panel,null,2)}
+                            </Textarea>
+                        </TabPanel>
+                        <TabPanel>
+                            <Textarea  minH="500px">
+                                {JSON.stringify(data,null,2)}
+                            </Textarea>
+                        </TabPanel>
+                    </TabPanels>
+                </Tabs>
+            </ModalBody>
+        </ModalContent>
+    </Modal>
     )
 }
