@@ -9,12 +9,19 @@ export function customClasses(props) {
             color: 'black'
         },
         ".hover-bg:hover": {
-            background: 'brand.50',
+            background:  mode('brand.50','rgba(30,39,50,0.5)')(props),
             borderRadius: "6px",
             color: 'black'
         },
         ".label-bg": {
             bg: mode('#f9fbfc','rgba(30,39,50,0.3)')(props)
+        },
+        ".hover-bordered:hover": {
+            border: `1px solid ${mode(
+                customColors.borderColor.light,
+                customColors.borderColor.dark
+            )(props)}`,
+            borderRadius: "6px",
         },
         ".bordered": {
             border: `1px solid ${mode(

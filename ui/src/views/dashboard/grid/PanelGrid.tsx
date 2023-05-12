@@ -234,7 +234,7 @@ const PanelHeader = ({ queryError, panel, onCopyPanel, onRemovePanel }) => {
     const title = replaceWithVariables(panel.title, variables)
 
     return (
-        <HStack className="grid-drag-handle" height={`${PANEL_HEADER_HEIGHT - (isEmpty(title) ? 15 : 0)}px`} cursor="move" spacing="0" position={isEmpty(title) ? "absolute" : "relative"} width="100%" zIndex={1000}>
+        <HStack className="grid-drag-handle hover-bg"  height={`${PANEL_HEADER_HEIGHT - (isEmpty(title) ? 15 : 0)}px`} cursor="move" spacing="0" position={isEmpty(title) ? "absolute" : "relative"} width="100%" zIndex={1000}>
             {(queryError || panel.desc) && <Box color={useColorModeValue(queryError ? "red" : "brand.500", queryError ? "red" : "brand.200")} position="absolute">
                 <Tooltip label={queryError ?? replaceWithVariables(panel.desc, variables)}>
                     <Box>
@@ -243,13 +243,13 @@ const PanelHeader = ({ queryError, panel, onCopyPanel, onRemovePanel }) => {
                 </Tooltip>
             </Box>}
             <Center width="100%">
-                {!router.query.edit ? <Menu placement="bottom">
+                <Menu placement="bottom">
                     <MenuButton
                         transition='all 0.2s'
                         _focus={{ border: null }}
                         onClick={e => e.stopPropagation()}
                     >
-                        <Center width="100%">{!isEmpty(title) ? <Box cursor="pointer">{title}</Box> : <Box width="100px">&nbsp;</Box>}</Center>
+                        <Center width="100%">{!isEmpty(title) ? <Box cursor="pointer" className="hover-bordered">{title}</Box> : <Box width="100px">&nbsp;</Box>}</Center>
                     </MenuButton>
                     <MenuList p="1">
                         <MenuItem icon={<FaEdit />} onClick={() => addParamToUrl({ edit: panel.id })}>Edit</MenuItem>
@@ -258,9 +258,7 @@ const PanelHeader = ({ queryError, panel, onCopyPanel, onRemovePanel }) => {
                         <MenuDivider my="1" />
                         <MenuItem icon={<FaTrashAlt />} onClick={() => onRemovePanel(panel)}>Remove</MenuItem>
                     </MenuList>
-                </Menu> :
-                    <Text cursor="pointer" width="fit-content">{title}</Text>
-                }
+                </Menu>
             </Center>
             <Box display="none"><FaBook className="grid-drag-handle" /></Box>
         </HStack>
