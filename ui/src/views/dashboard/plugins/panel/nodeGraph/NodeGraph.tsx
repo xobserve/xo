@@ -4,14 +4,14 @@ import React, { useCallback, useEffect, useLayoutEffect, useRef, useState } from
 import G6, { Graph } from '@antv/g6';
 import { Box, Text, useColorMode } from '@chakra-ui/react';
 import { Panel, PanelData, PanelProps } from 'types/dashboard';
-import { initTooltip } from './tooltip';
+import { initTooltip } from './plugins/tooltip';
 import {  getActiveEdgeLabelCfg } from './default-styles';
-import { initLegend } from './legend';
+import { initLegend } from './plugins/legend';
 import { setAttrsForData } from './transformData';
 import { NodeGraphToolbar } from './Toolbar';
 import Help from 'components/help';
 import { nodeGraphHelp } from './data/help';
-import useContextMenu from './useContextMenu';
+import useContextMenu from './plugins/useContextMenu';
 import HiddenItems from './HiddenItem';
 import { filterData } from './filter/filterData';
 import { getDefaultEdgeLabel, getDefaultEdgeStyle, getDefaultNodeLabel, getDefaultNodeStyle } from './default-styles';
