@@ -71,23 +71,10 @@ export const PanelComponent = ({dashboard, panel, onEditPanel, onRemovePanel,wid
 
     // run the queries and render the panel
     useEffect(() => {
-        let h;
-        if (h) {
-            clearInterval(h)
-        }
-
         // if there is no data in panel currently, we should make a immediate query
         // if (isEmpty(panelData)) {
             queryData(dashboard.id + panel.id)
         // }
-
-        // h = setInterval(() => {
-        //     queryData()
-        // }, 10000)
-
-        return () => { 
-            clearInterval(h)
-        }
     }, [panel.datasource,timeRange])
 
     const queryData = async (queryId) => {

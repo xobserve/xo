@@ -1,18 +1,21 @@
-import { Box, Flex, HStack, Modal, ModalBody, ModalContent, ModalOverlay, Popover, PopoverArrow, PopoverBody, PopoverContent, PopoverTrigger, Portal, Tooltip, useColorModeValue, useDisclosure, useToast } from "@chakra-ui/react"
+import { Box, Flex, HStack, Modal, ModalBody, ModalContent, ModalOverlay, Popover, PopoverArrow, PopoverBody, PopoverContent, PopoverTrigger, Portal, Select, Tooltip, useColorModeValue, useDisclosure, useToast } from "@chakra-ui/react"
 import IconButton from "components/button/IconButton"
 import { PanelAdd } from "components/icons/PanelAdd"
-import TimePicker from "components/TimePicker"
+import TimePicker, { getInitTimeRange, TimePickerKey } from "components/TimePicker"
 import SelectVariables from "components/variables/SelectVariables"
+import { subMinutes } from "date-fns"
 import { find, isEmpty } from "lodash"
 import { useRouter } from "next/router"
-import { useState } from "react"
-import { FaCog, FaRegClock, FaRegSave } from "react-icons/fa"
+import { useEffect, useState } from "react"
+import {  FaRegClock, FaRegSave } from "react-icons/fa"
+import { MdSync } from "react-icons/md"
 import ReserveUrls from "src/data/reserve-urls"
 import { Dashboard } from "types/dashboard"
 import { Team } from "types/teams"
 import { TimeRange } from "types/time"
 import { Variable } from "types/variable"
 import { requestApi } from "utils/axios/request"
+import storage from "utils/localStorage"
 import DashboardSettings from "./settings/DashboardSettings"
 
 interface HeaderProps {
@@ -28,9 +31,10 @@ interface HeaderProps {
 const DashboardHeader = ({ dashboard, team, onAddPanel, onTimeChange, timeRange,variables,onVariablesChange,onChange }: HeaderProps) => {
     const toast = useToast()
     const router = useRouter()
-
+    const [refresh,setRefresh] = useState(0)
+    let refreshH;
     const onSave = async () => {
-        const res = await requestApi.post("/dashboard/save", dashboard)
+        await requestApi.post("/dashboard/save", dashboard)
         toast({
             title: "Dashboard saved.",
             status: "success",
@@ -40,6 +44,28 @@ const DashboardHeader = ({ dashboard, team, onAddPanel, onTimeChange, timeRange,
     }
 
     const { isOpen, onOpen, onClose } = useDisclosure()
+    
+    useEffect(() => {
+        if (refresh > 0) {
+            refreshH = setInterval(() => {
+                const tr = getInitTimeRange()
+                if (tr.sub > 0) {
+                    const now = new Date()
+                    tr.start = subMinutes(now, 15)
+                    tr.end = now
+                    storage.set(TimePickerKey, JSON.stringify(tr))
+                    onTimeChange(tr)
+
+                }
+            }, 1000 * refresh)
+        } else {
+            clearInterval(refreshH)
+        }
+
+        return () => {
+            clearInterval(refreshH)
+        }
+    }, [refresh])
 
     return (
         <Box py="2" width="calc(100% - 100px)" position="fixed" bg={'var(--chakra-colors-chakra-body-bg)'}>
@@ -56,6 +82,19 @@ const DashboardHeader = ({ dashboard, team, onAddPanel, onTimeChange, timeRange,
                             <IconButton onClick={onSave}><FaRegSave /></IconButton>
                             {dashboard && <DashboardSettings dashboard={dashboard} onChange={onChange} />}
                             <Tooltip label={`${timeRange?.start.toLocaleString()} - ${timeRange?.end.toLocaleString()}`}><Box><IconButton onClick={onOpen}><FaRegClock /></IconButton></Box></Tooltip>
+                            <HStack spacing={0}>
+                                <Tooltip label="refresh dashboard"><Box><IconButton><MdSync /></IconButton></Box></Tooltip>
+                                <Select  value={refresh} onChange={(e) => setRefresh(Number(e.target.value))}>
+                                    <option value={0}>OFF</option>
+                                    <option value={5}>5s</option>
+                                    <option value={10}>10s</option>
+                                    <option value={30}>30s</option>
+                                    <option value={60}>1m</option>
+                                </Select>
+
+                            </HStack>
+                          
+
                         </HStack>
 
                     </HStack>
@@ -70,7 +109,7 @@ const DashboardHeader = ({ dashboard, team, onAddPanel, onTimeChange, timeRange,
                 <ModalOverlay />
                 <ModalContent minW="fit-content">
                     <ModalBody>
-                        <TimePicker onClose={onClose} onTimeChange={onTimeChange} />
+                        <TimePicker onClose={onClose} onTimeChange={onTimeChange}  />
                     </ModalBody>
 
                 </ModalContent>

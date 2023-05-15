@@ -15,7 +15,6 @@ import { subMinutes } from 'date-fns'
 import { cloneDeep, includes, isDate, isEmpty, lowerCase } from 'lodash'
 import moment from 'moment'
 import { useEffect, useState } from 'react'
-import { unstable_batchedUpdates } from 'react-dom'
 import { FaCalendarAlt, FaTimes } from 'react-icons/fa'
 import { systemDateFormats } from 'types/time'
 import storage from 'utils/localStorage'
@@ -25,16 +24,18 @@ export interface TimeRange {
     end: Date
     startRaw?: string
     endRaw?: string
+    sub: number
 }
 
 interface Props {
     onClose?: any
     onTimeChange: any
+
 }
 
-const TimePickerKey = "time-picker"
+export const TimePickerKey = "time-picker"
 const now = new Date()
-export const initTimeRange =  { start: subMinutes(now, 15), end: now, startRaw: 'now-15m', endRaw: 'now' }
+export const initTimeRange =  { start: subMinutes(now, 15), end: now, startRaw: 'now-15m', endRaw: 'now',sub: 15 }
 export const getInitTimeRange = () => {
     const rawT = storage.get(TimePickerKey)
     let time;
@@ -65,7 +66,8 @@ const TimePicker = ({onClose,onTimeChange} : Props) => {
             start: dates.start,
             end: dates.end,
             startRaw: dates.start.toLocaleString(),
-            endRaw: dates.end.toLocaleString()
+            endRaw: dates.end.toLocaleString(),
+            sub: 0
         }
         setRange(r)
         setTempRange(r)
@@ -80,6 +82,7 @@ const TimePicker = ({onClose,onTimeChange} : Props) => {
             end: now,
             startRaw: o.raw,
             endRaw: 'now',
+            sub: o.value
         }
         setRange(r)
         setTempRange(r)
@@ -106,7 +109,7 @@ const TimePicker = ({onClose,onTimeChange} : Props) => {
             tempRange.end = r.to?.toDate()
         }
 
-
+        tempRange.sub = 0
         setTempRange(cloneDeep(tempRange))
 
 
@@ -164,7 +167,7 @@ const TimePicker = ({onClose,onTimeChange} : Props) => {
                 <Box>
                     <Text size="sm">From</Text>
                     <HStack>
-                        <Input value={tempRange.startRaw} onChange={e => onRangeChange(e.currentTarget.value, tempRange.endRaw)} />
+                        <Input value={tempRange.startRaw} onChange={e => onRangeChange(e.currentTarget.value, tempRange.endRaw)} disabled={tempRange.startRaw.startsWith('now')} />
                         <FaCalendarAlt cursor="pointer" onClick={() => setDisplayCalender(!displayCalender)} />
                     </HStack>
                     {error.start && <Text mt="1" fontSize="sm" color="red">{error.start}</Text>}
@@ -172,7 +175,7 @@ const TimePicker = ({onClose,onTimeChange} : Props) => {
                 <Box>
                     <Text size="sm">To</Text>
                     <HStack>
-                        <Input value={tempRange.endRaw} onChange={e => onRangeChange(tempRange.startRaw, e.currentTarget.value)} />
+                        <Input value={tempRange.endRaw} onChange={e => onRangeChange(tempRange.startRaw, e.currentTarget.value)} disabled={tempRange.endRaw.startsWith('now')} />
                         <FaCalendarAlt cursor="pointer" onClick={() => setDisplayCalender(!displayCalender)} />
                     </HStack>
                     {error.end && <Text mt="1" fontSize="sm" color="red">{error.end}</Text>}

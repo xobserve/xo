@@ -30,7 +30,7 @@ const DashboardPage = () => {
     const [timeRange,setTimeRange] = useState<TimeRange>(getInitTimeRange())
     const [variables, setVariables] = useState<Variable[]>(null)
     const [gVariables,setGVariables] = useState<Variable[]>([])
-   
+
     useEffect(() => {
         if (dashboardId) {
             load()
@@ -161,7 +161,7 @@ const DashboardPage = () => {
             {dashboard && <Box px="3" width="100%">
                 <DashboardHeader dashboard={dashboard} team={team} onAddPanel={onAddPanel} onTimeChange={t => setTimeRange(t)} timeRange={timeRange} variables={variables} onVariablesChange={onVariablesChange} onChange={onDashboardChange} />
                 <Box mt={variables?.length > 0 ? "80px" : "50px"} py="2">
-                    {dashboard.data.panels?.length > 0 && <DashboardGrid  dashboard={dashboard} onChange={onGridChange} timeRange={timeRange??getInitTimeRange()} variables={variables}/>}
+                    {dashboard.data.panels?.length > 0 && <DashboardGrid  dashboard={dashboard} onChange={onGridChange} timeRange={timeRange??getInitTimeRange()} variables={variables} />}
                 </Box>        
             </Box>}
         </PageContainer>
