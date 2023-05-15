@@ -27,8 +27,9 @@ interface HeaderProps {
     variables: Variable[]
     onVariablesChange: any
     onChange: any
+    onDashboardSave: any
 }
-const DashboardHeader = ({ dashboard, team, onAddPanel, onTimeChange, timeRange,variables,onVariablesChange,onChange }: HeaderProps) => {
+const DashboardHeader = ({ dashboard, team, onAddPanel, onTimeChange, timeRange,variables,onVariablesChange,onChange,onDashboardSave }: HeaderProps) => {
     const toast = useToast()
     const router = useRouter()
     const [refresh,setRefresh] = useState(0)
@@ -41,6 +42,7 @@ const DashboardHeader = ({ dashboard, team, onAddPanel, onTimeChange, timeRange,
             duration: 3000,
             isClosable: true,
         })
+        onDashboardSave()
     }
 
     const { isOpen, onOpen, onClose } = useDisclosure()

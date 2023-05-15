@@ -19,9 +19,10 @@ interface GridProps {
     onChange: any
     timeRange: TimeRange
     variables: Variable[]
+    onDashbardChanged: any
 }
 
-const DashboardGrid = ({ dashboard, onChange,timeRange,variables }: GridProps) => {
+const DashboardGrid = ({ dashboard, onChange,timeRange,variables,onDashbardChanged }: GridProps) => {
 
     const SizedReactLayoutGrid = sizeMe({ monitorWidth: true })(GridWrapper);
 
@@ -35,6 +36,7 @@ const DashboardGrid = ({ dashboard, onChange,timeRange,variables }: GridProps) =
         }
 
         sortPanelsByGridPos(dashboard);
+        onDashbardChanged()
     };
 
     const buildLayout = (panels: Panel[]) => {
@@ -86,7 +88,7 @@ const DashboardGrid = ({ dashboard, onChange,timeRange,variables }: GridProps) =
 
     const onEditPanelApply = () => {
         setPanelInEdit(null)
-        // onChange()
+        onDashbardChanged()
     }
 
     const onRemovePanel = (panel: Panel) => {

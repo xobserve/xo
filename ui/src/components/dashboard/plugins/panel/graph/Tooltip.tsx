@@ -33,14 +33,12 @@ const Tooltip = ({ props, options }: Props) => {
             if (!isMounted()) {
                 return;
             }
-            console.log("enter plot:",props.panel.title)
         };
 
         const plotLeave = () => {
             if (!isMounted()) {
                 return
             }
-            console.log("leave plot",props.panel.title)
             setCoords(null)
         };
 
@@ -52,7 +50,6 @@ const Tooltip = ({ props, options }: Props) => {
                     return
                 }
 
-                console.log("set cursor:",props.panel.title)
                 const { x, y } = positionTooltip(uplot, bbox)
 
                 if (x !== undefined && y !== undefined) {

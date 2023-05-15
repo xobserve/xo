@@ -8,12 +8,15 @@ import { requestApi } from "utils/axios/request"
 import { Team } from "types/teams"
 import DashboardHeader from "components/dashboard/DashboardHeader"
 import DashboardGrid from "components/dashboard/grid/DashboardGrid"
-import { cloneDeep, concat } from "lodash"
+import { cloneDeep, concat, has, isEqual } from "lodash"
 import { TimeRange } from "types/time"
 import { getInitTimeRange, initTimeRange } from "components/TimePicker"
 import { Variable } from "types/variable"
 import { setVariableSelected } from "components/variables/SelectVariables"
 import { prevQueries, prevQueryData } from "components/dashboard/grid/PanelGrid"
+import { useLeavePageConfirm } from "hooks/useLeavePage"
+import SingletonRouter, { Router } from 'next/router';
+import { useBeforeUnload } from "react-use"
 
 // All of the paths that is not defined in pages directory will redirect to this page,
 // generally these pages are defined in:
@@ -23,13 +26,17 @@ const DashboardPage = () => {
     const router = useRouter()
     const dashboardId = router.query.dashboardId
 
+    const [savedDashboard, setSavedDashboard] = useState<Dashboard>(null)
     const [dashboard, setDashboard] = useState<Dashboard>(null)
     const [team, setTeam] = useState<Team>(null)
     // panel used for temporary purpose,such as adding a new panel, edit a panel etc
     const [panel, setPanel] = useState<Panel>(null)
-    const [timeRange,setTimeRange] = useState<TimeRange>(getInitTimeRange())
+    const [timeRange, setTimeRange] = useState<TimeRange>(getInitTimeRange())
     const [variables, setVariables] = useState<Variable[]>(null)
-    const [gVariables,setGVariables] = useState<Variable[]>([])
+    const [gVariables, setGVariables] = useState<Variable[]>([])
+    const [pageChanged, setPageChanged] = useState(false)
+    useLeavePageConfirm(pageChanged)
+
 
     useEffect(() => {
         if (dashboardId) {
@@ -43,12 +50,12 @@ const DashboardPage = () => {
             }
         }
     }, [dashboardId])
-    
-    
+
+
     const load = async () => {
         const res = await requestApi.get(`/dashboard/byId/${dashboardId}`)
         setDashboard(res.data)
-
+        setSavedDashboard(cloneDeep(res.data))
         const res0 = await requestApi.get(`/variable/all`)
         setGVariables(res0.data)
         setCombinedVariables(res0.data)
@@ -56,9 +63,10 @@ const DashboardPage = () => {
         setTeam(res1.data)
     }
 
+
     // combine variables which defined separately in dashboard and global
     const setCombinedVariables = (gv?) => {
-        const combined = concat(dashboard?.data?.variables??[], gv??gVariables)
+        const combined = concat(dashboard?.data?.variables ?? [], gv ?? gVariables)
         for (const v of combined) {
             v.values = v.value.split(",")
             // get the selected value for each variable from localStorage
@@ -69,15 +77,15 @@ const DashboardPage = () => {
 
     const getNextPanelId = () => {
         let max = 0;
-    
+
         for (const panel of dashboard.data.panels) {
-          if (panel.id > max) {
-            max = panel.id;
-          }
+            if (panel.id > max) {
+                max = panel.id;
+            }
         }
-    
+
         return max + 1;
-      }
+    }
 
     const onAddPanel = () => {
         // Return if the "Add panel" exists already
@@ -89,7 +97,7 @@ const DashboardPage = () => {
             dashboard.data.panels = []
         }
         const id = getNextPanelId()
-        const newPanel:Panel = {
+        const newPanel: Panel = {
             id: id,
             title: `New panel ${id}`,
             type: PanelType.Text,
@@ -103,13 +111,13 @@ const DashboardPage = () => {
                 type: DatasourceType.Prometheus,
                 selected: true,
                 queryOptions: {
-                    interval: '15s'   
+                    interval: '15s'
                 },
                 queries: []
             }],
             useDatasource: false,
         }
-        
+
         dashboard.data.panels.unshift(newPanel);
 
         // panel in editing must be a clone of the original panel
@@ -117,21 +125,11 @@ const DashboardPage = () => {
 
         // scroll to top after adding panel
         window.scrollTo(0, 0);
+
+        onDashboardChanged()
+
     };
 
-    const onEditPanelChange = () => {
-        for (let i = 0; i < dashboard.data.panels.length; i++) {
-            if (dashboard.data.panels[i].id === panel.id) {
-                dashboard.data.panels[i] = panel
-            }
-        }
-        // make the changes taking effect
-        setDashboard(cloneDeep(dashboard))
-    }
-
-    const onEditPanelDiscard = () => {
-        setPanel(null)
-    }
 
     const onGridChange = (panel: Panel) => {
         // for (let i = 0; i < dashboard.data.panels.length; i++) {
@@ -139,8 +137,8 @@ const DashboardPage = () => {
         //         dashboard.data.panels[i] = panel
         //     }
         // }
-
         setDashboard(cloneDeep(dashboard))
+        onDashboardChanged()
     }
 
     const onVariablesChange = () => {
@@ -149,22 +147,35 @@ const DashboardPage = () => {
 
     useEffect(() => {
         setCombinedVariables()
-    },[dashboard?.data?.variables,gVariables])
+    }, [dashboard?.data?.variables, gVariables])
 
     const onDashboardChange = () => {
         setDashboard(cloneDeep(dashboard))
+        onDashboardChanged()
+    }
+
+
+    const onDashboardChanged = () => {
+        // console.log("changed:", dashboard,savedDashboard)
+        setPageChanged(!isEqual(dashboard,savedDashboard))
+    }
+
+    const onDashboardSave = () => {
+        const d = cloneDeep(dashboard)
+        setSavedDashboard(d)
+        setPageChanged(false)
     }
 
     return (
         <>
-        <PageContainer>
-            {dashboard && <Box px="3" width="100%">
-                <DashboardHeader dashboard={dashboard} team={team} onAddPanel={onAddPanel} onTimeChange={t => setTimeRange(t)} timeRange={timeRange} variables={variables} onVariablesChange={onVariablesChange} onChange={onDashboardChange} />
-                <Box mt={variables?.length > 0 ? "80px" : "50px"} py="2">
-                    {dashboard.data.panels?.length > 0 && <DashboardGrid  dashboard={dashboard} onChange={onGridChange} timeRange={timeRange??getInitTimeRange()} variables={variables} />}
-                </Box>        
-            </Box>}
-        </PageContainer>
+            <PageContainer>
+                {dashboard && <Box px="3" width="100%">
+                    <DashboardHeader dashboard={dashboard} team={team} onAddPanel={onAddPanel} onTimeChange={t => setTimeRange(t)} timeRange={timeRange} variables={variables} onVariablesChange={onVariablesChange} onChange={onDashboardChange} onDashboardSave={ onDashboardSave} />
+                    <Box mt={variables?.length > 0 ? "80px" : "50px"} py="2">
+                        {dashboard.data.panels?.length > 0 && <DashboardGrid dashboard={dashboard} onChange={onGridChange} timeRange={timeRange ?? getInitTimeRange()} variables={variables} onDashbardChanged={onDashboardChanged} />}
+                    </Box>
+                </Box>}
+            </PageContainer>
         </>
     )
 }
