@@ -1,4 +1,4 @@
-import { Box } from "@chakra-ui/react"
+import { Box, Button, Modal, ModalBody, ModalContent, ModalOverlay, useDisclosure, VStack } from "@chakra-ui/react"
 import { PanelAdd } from "components/icons/PanelAdd"
 import PageContainer from "layouts/page-container"
 import { useRouter } from "next/router"
@@ -16,16 +16,19 @@ import { setVariableSelected } from "components/variables/SelectVariables"
 import { prevQueries, prevQueryData } from "components/dashboard/grid/PanelGrid"
 import { useLeavePageConfirm } from "hooks/useLeavePage"
 import { unstable_batchedUpdates } from "react-dom"
+import storage from "utils/localStorage"
+import { StorageCopiedPanelKey } from "src/data/constants"
 
 // All of the paths that is not defined in pages directory will redirect to this page,
 // generally these pages are defined in:
 // 1. team's side menu, asscessed by a specific url path
 // 2. dashboard page, accessed by a dashboard id
 const DashboardPage = () => {
+    const { isOpen, onOpen, onClose } = useDisclosure()
     const router = useRouter()
     const dashboardId = router.query.dashboardId
 
-   
+
     const [dashboard, setDashboard] = useState<Dashboard>(null)
     const [team, setTeam] = useState<Team>(null)
     // panel used for temporary purpose,such as adding a new panel, edit a panel etc
@@ -35,7 +38,7 @@ const DashboardPage = () => {
     const [gVariables, setGVariables] = useState<Variable[]>([])
     const [pageChanged, setPageChanged] = useState(false)
     const [savedDashboard, setSavedDashboard] = useState<Dashboard>(null)
-    
+
     useLeavePageConfirm(pageChanged)
 
 
@@ -87,9 +90,10 @@ const DashboardPage = () => {
 
         return max + 1;
     }
-    
+
+
     const onAddPanel = () => {
-        // Return if the "Add panel" exists already
+         // Return if the "Add panel" exists already
         // if (panel) {
         //     return;
         // }
@@ -128,10 +132,7 @@ const DashboardPage = () => {
         window.scrollTo(0, 0);
 
         onDashboardChanged()
-
-    };
-
-
+    }
     const onGridChange = (panel: Panel) => {
         // for (let i = 0; i < dashboard.data.panels.length; i++) {
         //     if (dashboard.data.panels[i].id === panel.id) {
@@ -158,7 +159,7 @@ const DashboardPage = () => {
 
     const onDashboardChanged = () => {
         // console.log("changed:", dashboard,savedDashboard)
-        setPageChanged(!isEqual(dashboard,savedDashboard))
+        setPageChanged(!isEqual(dashboard, savedDashboard))
     }
 
     const onDashboardSave = () => {
@@ -170,16 +171,30 @@ const DashboardPage = () => {
 
     }
 
+    const onPastePanel = () => {
+        const copiedPanel = storage.get(StorageCopiedPanelKey)
+        storage.remove(StorageCopiedPanelKey)
+        if (copiedPanel) {
+            const id = getNextPanelId()
+            copiedPanel.id = id
+            dashboard.data.panels.unshift(copiedPanel);
+            onDashboardChanged()
+            return 
+        }
+    }
+
+    console.log(dashboard)
     return (
         <>
             <PageContainer>
                 {dashboard && <Box px="3" width="100%">
-                    <DashboardHeader dashboard={dashboard} team={team} onAddPanel={onAddPanel} onTimeChange={t => setTimeRange(t)} timeRange={timeRange} variables={variables} onVariablesChange={onVariablesChange} onChange={onDashboardChange} onDashboardSave={ onDashboardSave} />
+                    <DashboardHeader dashboard={dashboard} team={team} onAddPanel={onAddPanel} onTimeChange={t => setTimeRange(t)} timeRange={timeRange} variables={variables} onVariablesChange={onVariablesChange} onChange={onDashboardChange} onDashboardSave={onDashboardSave} onPastePanel={onPastePanel}/>
                     <Box mt={variables?.length > 0 ? "80px" : "50px"} py="2">
                         {dashboard.data.panels?.length > 0 && <DashboardGrid dashboard={dashboard} onChange={onGridChange} timeRange={timeRange ?? getInitTimeRange()} variables={variables} onDashbardChanged={onDashboardChanged} />}
                     </Box>
                 </Box>}
             </PageContainer>
+           
         </>
     )
 }

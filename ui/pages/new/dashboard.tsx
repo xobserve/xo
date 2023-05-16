@@ -16,7 +16,9 @@ const TeamsPage = () => {
     const [dashboard, setDashboard] = useState<Dashboard>({
         id: "",
         title: newTitle,
-        data: {},
+        data: {
+            panels: []
+        },
         ownedBy: globalTeamId,
     })
     const [teams, setTeams] = useState<Team[]>([])

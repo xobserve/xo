@@ -1,4 +1,4 @@
-import { Box, Flex, HStack, Modal, ModalBody, ModalContent, ModalOverlay, Popover, PopoverArrow, PopoverBody, PopoverContent, PopoverTrigger, Portal, Select, Tooltip, useColorModeValue, useDisclosure, useToast } from "@chakra-ui/react"
+import { Box, Button, Flex, HStack, Modal, ModalBody, ModalContent, ModalOverlay, Popover, PopoverArrow, PopoverBody, PopoverContent, PopoverTrigger, Portal, Select, Tooltip, useColorModeValue, useDisclosure, useToast, VStack } from "@chakra-ui/react"
 import IconButton from "components/button/IconButton"
 import { PanelAdd } from "components/icons/PanelAdd"
 import TimePicker, { getInitTimeRange, TimePickerKey } from "components/TimePicker"
@@ -9,6 +9,7 @@ import { useRouter } from "next/router"
 import { useEffect, useState } from "react"
 import {  FaRegClock, FaRegSave } from "react-icons/fa"
 import { MdSync } from "react-icons/md"
+import { StorageCopiedPanelKey } from "src/data/constants"
 import ReserveUrls from "src/data/reserve-urls"
 import { Dashboard } from "types/dashboard"
 import { Team } from "types/teams"
@@ -28,8 +29,9 @@ interface HeaderProps {
     onVariablesChange: any
     onChange: any
     onDashboardSave: any
+    onPastePanel: any
 }
-const DashboardHeader = ({ dashboard, team, onAddPanel, onTimeChange, timeRange,variables,onVariablesChange,onChange,onDashboardSave }: HeaderProps) => {
+const DashboardHeader = ({ dashboard, team, onAddPanel, onTimeChange, timeRange,variables,onVariablesChange,onChange,onDashboardSave,onPastePanel }: HeaderProps) => {
     const toast = useToast()
     const router = useRouter()
     const [refresh,setRefresh] = useState(0)
@@ -46,7 +48,7 @@ const DashboardHeader = ({ dashboard, team, onAddPanel, onTimeChange, timeRange,
     }
 
     const { isOpen, onOpen, onClose } = useDisclosure()
-    
+    const { isOpen:isAddOpen, onOpen: onAddOpen, onClose:onAddClose } = useDisclosure()
     useEffect(() => {
         if (refresh > 0) {
             refreshH = setInterval(() => {
@@ -69,6 +71,18 @@ const DashboardHeader = ({ dashboard, team, onAddPanel, onTimeChange, timeRange,
         }
     }, [refresh])
 
+
+    const addPanel = () => {
+        const copiedPanel = storage.get(StorageCopiedPanelKey)
+        if (copiedPanel) {
+            onAddOpen()
+            return 
+        }
+       
+        onAddPanel()
+    };
+
+    
     return (
         <Box py="2" width="calc(100% - 100px)" position="fixed" bg={'var(--chakra-colors-chakra-body-bg)'}>
             <Flex justifyContent="space-between" >
@@ -80,7 +94,7 @@ const DashboardHeader = ({ dashboard, team, onAddPanel, onTimeChange, timeRange,
 
                     <HStack>
                         <HStack spacing="1">
-                            <IconButton onClick={onAddPanel}><PanelAdd size={28} fill={useColorModeValue("var(--chakra-colors-brand-500)", "var(--chakra-colors-brand-200)")} /></IconButton>
+                            <IconButton onClick={addPanel}><PanelAdd size={28} fill={useColorModeValue("var(--chakra-colors-brand-500)", "var(--chakra-colors-brand-200)")} /></IconButton>
                             <IconButton onClick={onSave}><FaRegSave /></IconButton>
                             {dashboard && <DashboardSettings dashboard={dashboard} onChange={onChange} />}
                             <Tooltip label={`${timeRange?.start.toLocaleString()} - ${timeRange?.end.toLocaleString()}`}><Box><IconButton onClick={onOpen}><FaRegClock /></IconButton></Box></Tooltip>
@@ -104,7 +118,7 @@ const DashboardHeader = ({ dashboard, team, onAddPanel, onTimeChange, timeRange,
             </Flex>
             {!isEmpty(variables) && <Flex justifyContent="space-between" mt="1">
                 <SelectVariables variables={variables.filter((v) => v.id.toString().startsWith("d-"))} onChange={onVariablesChange} />
-                <SelectVariables variables={variables.filter((v) => !v.id.toString().startsWith("d-") && !find(dashboard.data.hidingVars.split(','),v1 => v1 == v.name))} onChange={onVariablesChange} />
+                <SelectVariables variables={variables.filter((v) => !v.id.toString().startsWith("d-") && !find(dashboard.data.hidingVars?.split(','),v1 => v1 == v.name))} onChange={onVariablesChange} />
                 </Flex>}
 
             <Modal isOpen={isOpen} onClose={onClose}>
@@ -117,6 +131,18 @@ const DashboardHeader = ({ dashboard, team, onAddPanel, onTimeChange, timeRange,
                 </ModalContent>
             </Modal>
             
+            <Modal isOpen={isAddOpen} onClose={onAddClose} >
+                <ModalOverlay />
+                <ModalContent mt="20%">
+                    <ModalBody py="10">
+                        <VStack>
+                        <Button onClick={() => {onAddPanel();onAddClose()}}>Add new panel</Button>
+                        <Button onClick={() => {onPastePanel();onAddClose()}}>Paste panel from clipboard</Button>
+                        </VStack>
+                       
+                    </ModalBody>
+                </ModalContent>
+            </Modal>
         </Box>
     )
 }

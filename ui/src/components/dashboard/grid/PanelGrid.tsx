@@ -1,19 +1,20 @@
 import { Dashboard, DatasourceType, Panel, PanelType } from "types/dashboard"
 import AutoSizer from 'react-virtualized-auto-sizer';
-import { Box, Center, HStack, Input, Menu, MenuButton, MenuDivider, MenuItem, MenuList, Text, Tooltip, useColorModeValue } from "@chakra-ui/react";
-import { FaEdit, FaTrashAlt } from "react-icons/fa";
+import { Box, Center, HStack, Input, Menu, MenuButton, MenuDivider, MenuItem, MenuList, Text, Tooltip, useColorModeValue, useToast } from "@chakra-ui/react";
+import { FaCopy, FaEdit, FaRegCopy, FaTrashAlt } from "react-icons/fa";
 import { IoMdInformation } from "react-icons/io";
 import TextPanel from "../plugins/panel/text/Text";
 import { useEffect, useRef, useState } from "react";
 import { run_prometheus_query } from "../plugins/datasource/prometheus/query_runner";
 import { DataFrame } from "types/dataFrame";
 import GraphPanel from "../plugins/panel/graph/Graph";
-import { PANEL_BODY_PADDING, PANEL_HEADER_HEIGHT } from "src/data/constants";
+import { PANEL_BODY_PADDING, PANEL_HEADER_HEIGHT, StorageCopiedPanelKey } from "src/data/constants";
 import { cloneDeep, isEmpty, isEqual } from "lodash";
 import { TimeRange } from "types/time";
 import useVariables from "hooks/use-variables";
 import { Variable } from "types/variable";
 import { replaceWithVariables } from "utils/variable";
+import storage from "utils/localStorage";
 
 interface PanelGridProps {
     dashboard: Dashboard
@@ -53,6 +54,7 @@ interface PanelComponentProps extends  PanelGridProps {
 export const prevQueries = {}
 export const prevQueryData = {}
 export const PanelComponent = ({dashboard, panel, onEditPanel, onRemovePanel,width,height,timeRange,variables,sync }: PanelComponentProps) => {
+    const toast = useToast()
     const CustomPanelRender = (props) => {
         //@needs-update-when-add-new-panel
         switch (panel?.type) {
@@ -129,6 +131,18 @@ export const PanelComponent = ({dashboard, panel, onEditPanel, onRemovePanel,wid
         }
     }
 
+    const onCopyPanel = (panel) => {
+        toast({
+            title: "Copied",
+            description: "Panel copied, you can use it through **Add Panel** button",
+            status: "success",
+            duration: 3000,
+            isClosable: true,
+        })
+
+        storage.set(StorageCopiedPanelKey,panel)
+    }
+
     const panelBodyHeight = height - PANEL_HEADER_HEIGHT
     const panelInnerHeight = panelBodyHeight - PANEL_BODY_PADDING * 2 // 10px padding top and bottom of panel body
     const panelInnerWidth = width + 8 // 10px padding left and right of panel body
@@ -154,6 +168,8 @@ export const PanelComponent = ({dashboard, panel, onEditPanel, onRemovePanel,wid
                     </MenuButton>
                     <MenuList p="1">
                         <MenuItem icon={<FaEdit />} onClick={() => onEditPanel(panel)}>Edit</MenuItem>
+                        <MenuDivider my="1" />
+                        <MenuItem icon={<FaRegCopy />} onClick={() => onCopyPanel(panel)}>Copy</MenuItem>
                         <MenuDivider my="1" />
                         <MenuItem icon={<FaTrashAlt />} onClick={() => onRemovePanel(panel)}>Remove</MenuItem>
                     </MenuList>
