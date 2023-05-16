@@ -408,11 +408,11 @@ const RightClickMenus = ({ panel, onChange }: PanelEditorProps) => {
 }
 
 const MaxSize = ({ panel, onChange }: PanelEditorProps) => {
-    const [temp, setTemp] = useState<number>(panel.settings.nodeGraph.node.maxSize)
+    const [temp, setTemp] = useState(panel.settings.nodeGraph.node.maxSize.toString())
     return (
         <HStack>
-            <NumberInput value={temp} min={1} max={5} width="80px" size="sm" onChange={v => setTemp(Number(v))} onBlur={e => onChange(panel => {
-                panel.settings.nodeGraph.node.maxSize = temp
+            <NumberInput value={temp}  min={1} max={5} width="80px" size="sm" onChange={v => setTemp(v)} onBlur={e => onChange(panel => {
+                panel.settings.nodeGraph.node.maxSize = Number(temp)
             })}>
                 <NumberInputField />
             </NumberInput>

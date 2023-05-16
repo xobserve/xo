@@ -35,7 +35,13 @@ export const initPanelSettings:PanelSettings = {
     },
 
     table: {
-
+        showHeader: true,
+        globalSearch:false,
+        enablePagination:false,
+        pageSize: 10,
+        enableFilter: true,
+        enableSort: true,
+        onRowClick: ''
     },
 
     nodeGraph: {

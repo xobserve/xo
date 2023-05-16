@@ -148,13 +148,13 @@ export interface PanelProps {
 
 export type PanelData = DataFrame & NodeGraphData
 export interface TableSettings {
-    showHeader?: boolean
-    globalSearch?: boolean
-    enablePagination?: boolean
-    pageSize?: number
-    enableFilter?: boolean
-    enableSort?: boolean
-    onRowClick?: string
+    showHeader: boolean
+    globalSearch: boolean
+    enablePagination: boolean
+    pageSize: number
+    enableFilter: boolean
+    enableSort: boolean
+    onRowClick: string
 }
 
 export interface NodeGraphSettings {
