@@ -4,6 +4,7 @@ import { useState } from "react"
 import { FaCog } from "react-icons/fa"
 import { Dashboard } from "types/dashboard"
 import GeneralSettings from "./General"
+import MetaSettings from "./MetaSetting"
 import VariablesSetting from "./Variables"
 
 interface Props {
@@ -25,6 +26,7 @@ const DashboardSettings = ({ dashboard,onChange }: Props) => {
                         <TabList p="2">
                             <Tab>General</Tab>
                             <Tab>Variables</Tab>
+                            <Tab>Meta</Tab>
                         </TabList>
 
                         <TabPanels className="bordered" p="2"> 
@@ -33,6 +35,9 @@ const DashboardSettings = ({ dashboard,onChange }: Props) => {
                             </TabPanel>
                             <TabPanel  py="0">
                                 <VariablesSetting dashboard={dashboard} onChange={onChange} />
+                            </TabPanel>
+                            <TabPanel  py="0">
+                                <MetaSettings dashboard={dashboard} onChange={onChange} />
                             </TabPanel>
                         </TabPanels>
                     </Tabs>

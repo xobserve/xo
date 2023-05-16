@@ -15,8 +15,7 @@ import { Variable } from "types/variable"
 import { setVariableSelected } from "components/variables/SelectVariables"
 import { prevQueries, prevQueryData } from "components/dashboard/grid/PanelGrid"
 import { useLeavePageConfirm } from "hooks/useLeavePage"
-import SingletonRouter, { Router } from 'next/router';
-import { useBeforeUnload } from "react-use"
+import { unstable_batchedUpdates } from "react-dom"
 
 // All of the paths that is not defined in pages directory will redirect to this page,
 // generally these pages are defined in:
@@ -26,7 +25,7 @@ const DashboardPage = () => {
     const router = useRouter()
     const dashboardId = router.query.dashboardId
 
-    const [savedDashboard, setSavedDashboard] = useState<Dashboard>(null)
+   
     const [dashboard, setDashboard] = useState<Dashboard>(null)
     const [team, setTeam] = useState<Team>(null)
     // panel used for temporary purpose,such as adding a new panel, edit a panel etc
@@ -35,6 +34,8 @@ const DashboardPage = () => {
     const [variables, setVariables] = useState<Variable[]>(null)
     const [gVariables, setGVariables] = useState<Variable[]>([])
     const [pageChanged, setPageChanged] = useState(false)
+    const [savedDashboard, setSavedDashboard] = useState<Dashboard>(null)
+    
     useLeavePageConfirm(pageChanged)
 
 
@@ -86,7 +87,7 @@ const DashboardPage = () => {
 
         return max + 1;
     }
-
+    
     const onAddPanel = () => {
         // Return if the "Add panel" exists already
         // if (panel) {
@@ -162,8 +163,11 @@ const DashboardPage = () => {
 
     const onDashboardSave = () => {
         const d = cloneDeep(dashboard)
-        setSavedDashboard(d)
-        setPageChanged(false)
+        unstable_batchedUpdates(() => {
+            setSavedDashboard(d)
+            setPageChanged(false)
+        })
+
     }
 
     return (

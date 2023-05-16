@@ -69,4 +69,10 @@ export const newLinks = [
         baseUrl: '/new/dashboard',
         // icon: <FaUsersCog />
     },
+    {
+        title: 'Import Dashboard',
+        url: '/new/import',
+        baseUrl: '/new/import',
+        // icon: <FaUsersCog />
+    },
 ]
