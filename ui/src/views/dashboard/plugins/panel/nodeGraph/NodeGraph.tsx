@@ -109,7 +109,7 @@ const NodeGrapPanel = ({ data, panel, dashboardId }: PanelProps) => {
                             fill: colorMode == "light" ? panel.settings.nodeGraph.edge.color.light : panel.settings.nodeGraph.edge.color.dark,
                         },
                         // lineAppendWidth: 2,
-                        opacity: 0.5,
+                        opacity: panel.settings.nodeGraph.edge.opacity,
                         lineWidth: 1,
                         stroke: colorMode == "light" ? panel.settings.nodeGraph.edge.color.light : panel.settings.nodeGraph.edge.color.dark,
                     },
