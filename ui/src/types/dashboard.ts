@@ -160,6 +160,7 @@ export interface TableSettings {
 export interface NodeGraphSettings {
     node: {
         baseSize: number
+        maxSize: number
         icon: NodeGraphIcon[]
         shape: 'circle' | 'donut',
         donutColors: string // json string 

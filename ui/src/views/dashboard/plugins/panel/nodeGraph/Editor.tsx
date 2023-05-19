@@ -1,4 +1,4 @@
-import { Alert, Box, Button, Divider, Flex, HStack, Image, Input, Modal, ModalBody, ModalContent, ModalOverlay, Select, Slider, SliderFilledTrack, SliderThumb, SliderTrack, Text, Textarea, Tooltip, useDisclosure, useToast, VStack } from "@chakra-ui/react"
+import { Alert, Box, Button, Divider, Flex, HStack, Image, Input, Modal, ModalBody, ModalContent, ModalOverlay, NumberInput, NumberInputField, Select, Slider, SliderFilledTrack, SliderThumb, SliderTrack, Text, Textarea, Tooltip, useDisclosure, useToast, VStack } from "@chakra-ui/react"
 import { ColorPicker } from "components/color-picker"
 import RadionButtons from "components/RadioButtons"
 import { isEmpty } from "lodash"
@@ -31,6 +31,9 @@ const NodeGraphPanelEditor = (props: PanelEditorProps) => {
                     </SliderTrack>
                     <SliderThumb children={panel.settings.nodeGraph.node.baseSize} fontSize='sm' boxSize='25px' />
                 </Slider>
+            </PanelEditItem>
+            <PanelEditItem title="max size">
+                <MaxSize {...props} />
             </PanelEditItem>
 
             <IconSetting {...props} />
@@ -401,5 +404,19 @@ const RightClickMenus = ({ panel, onChange }: PanelEditorProps) => {
             </ModalContent>
         </Modal>
     </>
+    )
+}
+
+const MaxSize = ({ panel, onChange }: PanelEditorProps) => {
+    const [temp, setTemp] = useState<number>(panel.settings.nodeGraph.node.maxSize)
+    return (
+        <HStack>
+            <NumberInput value={temp} min={1} max={5} width="80px" size="sm" onChange={v => setTemp(Number(v))} onBlur={e => onChange(panel => {
+                panel.settings.nodeGraph.node.maxSize = temp
+            })}>
+                <NumberInputField />
+            </NumberInput>
+            <Text> * baseSize = {panel.settings.nodeGraph.node.baseSize * panel.settings.nodeGraph.node.maxSize}</Text>
+        </HStack>
     )
 }

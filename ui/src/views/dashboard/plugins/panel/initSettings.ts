@@ -41,6 +41,7 @@ export const initPanelSettings:PanelSettings = {
     nodeGraph: {
         node: {
             baseSize: 36,
+            maxSize: 1.5,
             icon: [],
             shape: "donut",
             donutColors: JSON.stringify({
