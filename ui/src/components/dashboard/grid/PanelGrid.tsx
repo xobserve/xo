@@ -153,7 +153,7 @@ export const PanelComponent = ({dashboard, panel, onEditPanel, onRemovePanel,wid
     const title = replaceWithVariables(panel.title,variables)
 
     return <Box height="100%" >
-        <HStack className="grid-drag-handle" height={`${PANEL_HEADER_HEIGHT}px`} cursor="move" spacing="0" position={isEmpty(title) ? "absolute" : "relative"} width="100%" zIndex={2000}>
+        <HStack className="grid-drag-handle" height={`${PANEL_HEADER_HEIGHT - (isEmpty(title) ? 20: 0)}px`} cursor="move" spacing="0" position={isEmpty(title) ? "absolute" : "relative"} width="100%" zIndex={1000}>
             {(queryError || panel.desc) && <Box color={useColorModeValue(queryError ? "red" :"brand.500", queryError ? "red" :"brand.200")} position="absolute">
                 <Tooltip label={queryError ?? replaceWithVariables(panel.desc,variables)}>
                     <Box>

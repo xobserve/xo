@@ -1,7 +1,7 @@
 import { Box, Select } from "@chakra-ui/react"
 import { NumberRangeColumnFilter } from "components/table/filters"
 import ReactTable from "components/table/Table"
-import React from "react"
+import React, { useEffect } from "react"
 import { Panel, PanelProps } from "types/dashboard"
 import { DataFrame } from "types/dataFrame"
 import makeData from './makeData'
@@ -10,48 +10,52 @@ import makeData from './makeData'
 
 const TablePanel = (props: PanelProps) => {
     console.log(props)
-    const columns = React.useMemo(
-        () => [
-            {
-                Header: 'First Name',
-                accessor: 'firstName',
-            },
-            {
-                Header: 'Last Name',
-                accessor: 'lastName',
-                // Use our custom `fuzzyText` filter on this column
-                filter: 'fuzzyText',
-            },
-            {
-                Header: 'Age',
-                accessor: 'age',
-                Filter: NumberRangeColumnFilter,
-                filter: 'between',
-            },
-            {
-                Header: 'Visits',
-                accessor: 'visits',
-                Filter: NumberRangeColumnFilter,
-                filter: 'between',
-            },
-            {
-                Header: 'Status',
-                accessor: 'status',
-            },
-            {
-                Header: 'Profile Progress',
-                accessor: 'progress',
-            },
-        ],
-        []
-    )
+    const [series, setSeries] = React.useState(null)
 
+    useEffect(() => {
+        if (props.data.length > 0) {
+            const series = props.data[0].name
+            setSeries(series)
+        }
+    },[props.data])
 
-    const data = React.useMemo(() => makeData(100), [])
+    const [columns,data] = React.useMemo(() => { 
+        const data = []
+        const columns = []
+        for (var i=0;i<props.data.length;i++) {
+            const row = props.data[i]
+            if (row.name == series) {
+                row.fields.forEach((field) => {
+                    columns.push({
+                        Header: field.name,
+                        accessor: field.name,
+                    })
+                  })
+                  
+               for (var j=0;j<row.fields[0].values.length;j++) {
+                  const d = {}
+                  let c;
+
+                 
+                  row.fields.forEach((field) => {
+                    d[field.name] = field.values[j]
+                  })
+
+                  data.push(d)
+                
+               }
+
+               return [columns,data]
+               
+            }
+        }
+  
+       return [[],[]]
+    }, [series])
 
     return (
         <Box h="100%">
-            <Box h="calc(100% - 32px)" overflowY="scroll">
+            <Box h= {series ? "calc(100% - 32px)" : "100%"} overflowY="scroll">
                 <ReactTable
                     columns={columns}
                     data={data}
@@ -64,11 +68,12 @@ const TablePanel = (props: PanelProps) => {
                 />
 
             </Box>
-            <Select size="sm">
+            {series && <Select size="sm" onChange={e => setSeries(e.currentTarget.value)}>
                 {props.data.map((dataFrame: DataFrame) => {
                     return <option key={dataFrame.name} value={dataFrame.name}>{dataFrame.name}</option>
                 })}
-            </Select></Box>
+            </Select>}
+        </Box>
 
     )
 }
