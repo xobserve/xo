@@ -109,7 +109,7 @@ const DashboardGrid = ({ dashboard, onChange,timeRange,variables,onDashbardChang
         >
             {
                 dashboard.data.panels.map((panel) => {
-                    return (<Box key={panel.id} id={`panel-${panel.id}`} className="bordered" sx={{
+                    return (<Box key={panel.id} id={`panel-${panel.id}`} className={panel.showBorder ? "bordered"  : ""} sx={{
                         ".react-resizable-handle": {
                             position: "absolute",
                             width: "20px",

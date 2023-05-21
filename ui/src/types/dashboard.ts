@@ -31,7 +31,7 @@ export interface Panel {
     gridPos: GridPos
     collapsed?: boolean
     transparent?: boolean
-
+    showBorder?: boolean
     // for plugin settings
     settings?: PanelSettings
 

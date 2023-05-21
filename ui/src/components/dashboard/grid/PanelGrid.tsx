@@ -153,7 +153,7 @@ export const PanelComponent = ({dashboard, panel, onEditPanel, onRemovePanel,wid
     const title = replaceWithVariables(panel.title,variables)
 
     return <Box height="100%" >
-        <HStack className="grid-drag-handle" height={`${PANEL_HEADER_HEIGHT}px`} cursor="move" spacing="0">
+        <HStack className="grid-drag-handle" height={`${PANEL_HEADER_HEIGHT}px`} cursor="move" spacing="0" position={isEmpty(title) ? "absolute" : "relative"} width="100%" zIndex={2000}>
             {(queryError || panel.desc) && <Box color={useColorModeValue(queryError ? "red" :"brand.500", queryError ? "red" :"brand.200")} position="absolute">
                 <Tooltip label={queryError ?? replaceWithVariables(panel.desc,variables)}>
                     <Box>
@@ -166,8 +166,9 @@ export const PanelComponent = ({dashboard, panel, onEditPanel, onRemovePanel,wid
                     <MenuButton
                         transition='all 0.2s'
                         _focus={{ border: null }}
+                        width="100%"
                     >
-                        <Text cursor="pointer" width="fit-content">{title}</Text>
+                        <Center width="100%">{!isEmpty(title)? <Box cursor="pointer">{ title}</Box> : <Box>&nbsp;</Box>}</Center>
                     </MenuButton>
                     <MenuList p="1">
                         <MenuItem icon={<FaEdit />} onClick={() => onEditPanel(panel)}>Edit</MenuItem>
@@ -183,7 +184,7 @@ export const PanelComponent = ({dashboard, panel, onEditPanel, onRemovePanel,wid
         </HStack>
         <Box
             // panel={panel}
-            maxHeight={`${panelBodyHeight}px`}
+            maxHeight={`${isEmpty(title) ? height :  panelBodyHeight}px`}
             overflowY="scroll"
             marginLeft={panel.type == PanelType.Graph ? "-10px" : "0px"}
             h="100%"

@@ -146,6 +146,9 @@ const EditPanel = ({ dashboard, panel, onApply, onDiscard,timeRange,variables }:
                                     <PanelEditItem title="Transparent" desc="Display panel without a background.">
                                         <Switch id='panel-transparent' defaultChecked={tempPanel.transparent} onChange={e => setTempPanel({ ...tempPanel, transparent: e.currentTarget.checked })} />
                                     </PanelEditItem>
+                                    <PanelEditItem title="Show border" desc="Display panel without border around.">
+                                        <Switch id='panel-border' defaultChecked={tempPanel.showBorder} onChange={e => setTempPanel({ ...tempPanel, showBorder: e.currentTarget.checked })} />
+                                    </PanelEditItem>
                                 </PanelAccordion>
 
                                 {/* panel visulization choosing */}

@@ -121,6 +121,7 @@ const DashboardPage = () => {
                 queries: []
             }],
             useDatasource: false,
+            showBorder: true
         }
 
         dashboard.data.panels.unshift(newPanel);
