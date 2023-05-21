@@ -93,7 +93,7 @@ const NodeGrapPanel = ({ data, panel, dashboardId }: PanelProps) => {
                     // linkDistance: 100,
                     preventOverlap: true,
                     nodeStrength: 5000,
-                    gravity: 80,
+                    gravity: 60,
                     preset: {
                         type: 'radial'
                     }

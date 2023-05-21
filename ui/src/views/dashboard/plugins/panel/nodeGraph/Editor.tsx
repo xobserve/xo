@@ -42,15 +42,7 @@ const NodeGraphPanelEditor = (props: PanelEditorProps) => {
             </PanelEditItem>
             {panel.settings.nodeGraph.node.shape == 'donut' && <DonutColorsSetting {...props} />}
 
-            <PanelEditItem title="tooltip trigger" info={
-                <Text>You need to click Apply Button(in top-right) to see the new trigger taken effect</Text>
-            }>
-                <RadionButtons options={[{ label: "Hover", value: "mouseenter" }, { label: "Click", value: "click" }]} value={panel.settings.nodeGraph.node.tooltipTrigger} onChange={v => onChange(panel => {
-                    panel.settings.nodeGraph.node.tooltipTrigger = v
-                })} />
-            </PanelEditItem>
 
-            <RightClickMenus {...props} />
         </PanelAccordion>
 
 
@@ -129,6 +121,19 @@ const NodeGraphPanelEditor = (props: PanelEditorProps) => {
                     <Box width="40px" height="30px" background={panel.settings.nodeGraph.edge.highlightColor.dark}></Box>
                 </HStack>
             </PanelEditItem>
+        </PanelAccordion>
+
+
+        <PanelAccordion title="Interaction">
+            <PanelEditItem title="tooltip trigger" info={
+                <Text>You need to click Apply Button(in top-right) to see the new trigger taken effect</Text>
+            }>
+                <RadionButtons options={[{ label: "Hover", value: "mouseenter" }, { label: "Click", value: "click" }]} value={panel.settings.nodeGraph.node.tooltipTrigger} onChange={v => onChange(panel => {
+                    panel.settings.nodeGraph.node.tooltipTrigger = v
+                })} />
+            </PanelEditItem>
+
+            <RightClickMenus {...props} />
         </PanelAccordion>
     </>)
 }
