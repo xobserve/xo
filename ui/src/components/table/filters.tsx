@@ -16,7 +16,8 @@ import matchSorter from 'match-sorter'
       })
       return [min, max]
     }, [id, preFilteredRows])
-  
+    
+    console.log( filterValue)
     return (
       <div
         style={{
@@ -24,29 +25,29 @@ import matchSorter from 'match-sorter'
         }}
       >
         <input
-          value={filterValue[0] || ''}
+          value={filterValue[0]}
           type="number"
           onChange={e => {
             const val = e.target.value
-            setFilter((old = []) => [val ? parseInt(val, 10) : undefined, old[1]])
+            setFilter((old = []) => [val ? parseFloat(val) : undefined, old[1]])
           }}
           placeholder={`Min (${min})`}
           style={{
-            width: '50px',
+            width: 'fit-content',
             marginRight: '0.5rem',
           }}
         />
         to
         <input
-          value={filterValue[1] || ''}
+          value={filterValue[1]}
           type="number"
           onChange={e => {
             const val = e.target.value
-            setFilter((old = []) => [old[0], val ? parseInt(val, 10) : undefined])
+            setFilter((old = []) => [old[0], val ? parseFloat(val) : undefined])
           }}
           placeholder={`Max (${max})`}
           style={{
-            width: '50px',
+            width: 'fit-content',
             marginLeft: '0.5rem',
           }}
         />

@@ -26,10 +26,20 @@ const TablePanel = (props: PanelProps) => {
             const row = props.data[i]
             if (row.name == series) {
                 row.fields.forEach((field) => {
-                    columns.push({
-                        Header: field.name,
-                        accessor: field.name,
-                    })
+                    if (field.type == "number" || field.type == "time") {
+                        columns.push({
+                            Header: field.name,
+                            accessor: field.name,
+                            Filter: NumberRangeColumnFilter,
+                            filter: 'between',
+                        })
+                    } else {
+                        columns.push({
+                            Header: field.name,
+                            accessor: field.name,
+                        })
+                    }
+                    
                   })
                   
                for (var j=0;j<row.fields[0].values.length;j++) {
