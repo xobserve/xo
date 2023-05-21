@@ -42,7 +42,7 @@
     "react-particles": "^2.9.3",
     "react-remove-scroll": "^2.5.5",
     "react-sizeme": "2.6.12",
-    "react-table": "^7.8.0",
+    "react-table": "latest",
     "react-use": "17.3.2",
     "react-virtualized-auto-sizer": "1.0.2",
     "scroll-into-view-if-needed": "^2.2.29",
@@ -52,7 +52,10 @@
     "tsparticles": "^2.9.3",
     "typescript": "^4.7.4",
     "uplot": "^1.6.24",
-    "validator": "^13.5.2"
+    "validator": "^13.5.2",
+    "react-window": "1.8.6",
+    "namor": "^1.1.2",
+    "match-sorter": "^4.0.0"
   },
   "devDependencies": {
     "@next/bundle-analyzer": "^10.0.4",
@@ -74,6 +77,8 @@
     "eslint-plugin-import": "^2.25.4",
     "eslint-plugin-prettier": "^4.0.0",
     "next-compose-plugins": "^2.2.1",
-    "prettier": "^2.7.1"
+    "prettier": "^2.7.1",
+    "@types/react-table": "latest",
+    "@types/react-window": "1.8.5"
   }
 }

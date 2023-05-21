@@ -183,7 +183,6 @@ const DashboardPage = () => {
         }
     }
 
-    console.log(dashboard)
     return (
         <>
             <PageContainer>

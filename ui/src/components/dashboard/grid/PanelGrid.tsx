@@ -15,6 +15,7 @@ import useVariables from "hooks/use-variables";
 import { Variable } from "types/variable";
 import { replaceWithVariables } from "utils/variable";
 import storage from "utils/localStorage";
+import TablePanel from "../plugins/panel/table/Table";
 
 interface PanelGridProps {
     dashboard: Dashboard
@@ -62,6 +63,8 @@ export const PanelComponent = ({dashboard, panel, onEditPanel, onRemovePanel,wid
                 return <TextPanel panel={panel} {...props}/>
             case PanelType.Graph:
                 return <GraphPanel panel={panel} {...props} />
+            case PanelType.Table:
+                return <TablePanel panel={panel} {...props} />
             default:
                 return <></>
         }

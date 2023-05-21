@@ -45,7 +45,9 @@ export interface PanelSettings {
         md?: string
     }
     graph?: GraphSettings
+    table?: TableSettings
 }
+
 export interface GraphSettings {
     activeSeries?: string
     tooltip?: {
@@ -135,4 +137,13 @@ export interface PanelProps {
     onChange?: any
     variables?: Variable[]
     sync?: any
+}
+
+export interface TableSettings {
+    showHeader?: boolean
+    globalSearch?: boolean
+    enablePagination?: boolean
+    pageSize?: number
+    enableFilter?: boolean
+    enableSort?: boolean
 }

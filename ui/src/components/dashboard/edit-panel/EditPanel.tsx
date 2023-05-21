@@ -12,6 +12,7 @@ import PanelEditItem from "./PanelEditItem"
 import EditPanelQuery from "./Query"
 import { TimeRange } from "types/time";
 import { Variable } from "types/variable";
+import TablePanelEditor from "../plugins/panel/table/Editor";
 
 interface EditPanelProps {
     dashboard: Dashboard
@@ -63,6 +64,8 @@ const EditPanel = ({ dashboard, panel, onApply, onDiscard,timeRange,variables }:
                 return <TextPanelEditor panel={tempPanel} onChange={onSettingsChange} />
             case PanelType.Graph:
                 return <GraphPanelEditor panel={tempPanel} onChange={onSettingsChange} />
+            case PanelType.Table:
+                return <TablePanelEditor panel={tempPanel} onChange={onSettingsChange} />
             default:
                 return <></>
         }
