@@ -17,7 +17,6 @@ import matchSorter from 'match-sorter'
       return [min, max]
     }, [id, preFilteredRows])
     
-    console.log( filterValue)
     return (
       <div
         style={{

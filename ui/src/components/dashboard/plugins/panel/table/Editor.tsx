@@ -1,4 +1,4 @@
-import { Input, NumberDecrementStepper, NumberIncrementStepper, NumberInput, NumberInputField, NumberInputStepper, Switch, Textarea } from "@chakra-ui/react"
+import { Alert, Input, NumberDecrementStepper, NumberIncrementStepper, NumberInput, NumberInputField, NumberInputStepper, Switch, Text, Textarea } from "@chakra-ui/react"
 import PanelAccordion from "components/dashboard/edit-panel/Accordion"
 import PanelEditItem from "components/dashboard/edit-panel/PanelEditItem"
 import { cloneDeep } from "lodash"
@@ -37,12 +37,12 @@ const TablePanelEditor = ({ panel, onChange }: Props) => {
             }} />
         </PanelEditItem>
         {tempPanel.settings.table.enablePagination && <PanelEditItem title="Page size" desc="set display count for each table page">
-            <NumberInput value={tempPanel.settings.table.pageSize??10} min={5} max={20} step={5} onChange={(v) => {
-                    tempPanel.settings.table.pageSize = Number(v)
-                    setTempPanel(cloneDeep(tempPanel))
-                    onChange(tempPanel)
-                }
-            }> 
+            <NumberInput value={tempPanel.settings.table.pageSize ?? 10} min={5} max={20} step={5} onChange={(v) => {
+                tempPanel.settings.table.pageSize = Number(v)
+                setTempPanel(cloneDeep(tempPanel))
+                onChange(tempPanel)
+            }
+            }>
                 <NumberInputField disabled />
                 <NumberInputStepper>
                     <NumberIncrementStepper />
@@ -65,6 +65,23 @@ const TablePanelEditor = ({ panel, onChange }: Props) => {
                 setTempPanel(cloneDeep(tempPanel))
                 onChange(tempPanel)
             }} />
+        </PanelEditItem>
+
+        <PanelEditItem title="On row click" desc="trigger your custom event when a row is clicked">
+            <Alert status='success'>
+                Here is a simple example:
+                
+            </Alert>
+            <Text>function onRowClick(row) &#123;</Text>
+            <Textarea value={tempPanel.settings.table.onRowClick} onChange={(e) => {
+                tempPanel.settings.table.onRowClick = e.currentTarget.value
+                setTempPanel(cloneDeep(tempPanel))
+            }}
+             onBlur={() => {
+                onChange(tempPanel)
+                
+                }} />
+             <Text>&#125; </Text>
         </PanelEditItem>
     </PanelAccordion>
     )

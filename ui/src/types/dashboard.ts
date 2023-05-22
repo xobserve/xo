@@ -146,4 +146,5 @@ export interface TableSettings {
     pageSize?: number
     enableFilter?: boolean
     enableSort?: boolean
+    onRowClick?: string
 }

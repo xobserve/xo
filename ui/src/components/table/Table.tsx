@@ -6,7 +6,7 @@ import { DefaultColumnFilter, fuzzyTextFilterFn, GlobalFilter } from './filters'
 
 
 // Our table component
-function ReactTable({ columns, data, enableGlobalSearch = false, enablePagination = false,pageSize=10,enableFilter=false,enableSort=false, showHeader=true }) {
+function ReactTable({ columns, data, enableGlobalSearch = false, enablePagination = false,pageSize=10,enableFilter=false,enableSort=false, showHeader=true,onRowClick=null }) {
     const filterTypes = React.useMemo(
         () => ({
             // Add a new fuzzyTextFilterFn filter type.
@@ -122,7 +122,16 @@ function ReactTable({ columns, data, enableGlobalSearch = false, enablePaginatio
                     {(enablePagination ? page : rows).map((row, i) => {
                         prepareRow(row)
                         return (
-                            <Tr {...row.getRowProps()} onClick={() => console.log(row)}>
+                            <Tr {...row.getRowProps()} onClick={() => {
+                                const d = []
+                                row.cells.forEach(cell => {
+                                    d.push({
+                                        name: cell.column.Header,
+                                        value: cell.value
+                                    })
+                                })
+                                onRowClick(d)
+                            }}>
                                 {row.cells.map(cell => {
                                     return <Td {...cell.getCellProps()}>{cell.render('Cell')}</Td>
                                 })}

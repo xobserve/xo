@@ -63,6 +63,8 @@ const TablePanel = (props: PanelProps) => {
        return [[],[]]
     }, [series])
 
+    const onRowClickFunc = new Function("row", props.panel.settings.table.onRowClick)
+
     return (
         <Box h="100%">
             <Box h= {series ? "calc(100% - 32px)" : "100%"} overflowY="scroll">
@@ -75,6 +77,7 @@ const TablePanel = (props: PanelProps) => {
                     enableFilter={props.panel.settings.table.enableFilter}
                     enableSort={props.panel.settings.table.enableSort}
                     showHeader={props.panel.settings.table.showHeader}
+                    onRowClick={onRowClickFunc}
                 />
 
             </Box>
