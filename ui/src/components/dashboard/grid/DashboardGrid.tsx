@@ -20,9 +20,10 @@ interface GridProps {
     timeRange: TimeRange
     variables: Variable[]
     onDashbardChanged: any
+    onVariablesChange: any
 }
 
-const DashboardGrid = ({ dashboard, onChange,timeRange,variables,onDashbardChanged }: GridProps) => {
+const DashboardGrid = ({ dashboard, onChange,timeRange,variables,onDashbardChanged, onVariablesChange}: GridProps) => {
 
     const SizedReactLayoutGrid = sizeMe({ monitorWidth: true })(GridWrapper);
 
@@ -134,7 +135,7 @@ const DashboardGrid = ({ dashboard, onChange,timeRange,variables,onDashbardChang
                             borderBottom: "2px solid rgba(0, 0, 0, 0.4)"
                         }
                     }}>
-                        <PanelGrid dashboard={dashboard} panel={panel} onEditPanel={onEditPanel} onRemovePanel={onRemovePanel} timeRange={timeRange} variables={variables} sync={mooSync}/>
+                        <PanelGrid dashboard={dashboard} panel={panel} onEditPanel={onEditPanel} onRemovePanel={onRemovePanel} timeRange={timeRange} variables={variables} sync={mooSync} onVariablesChange={onVariablesChange}/>
                     </Box>)
                 })
             }

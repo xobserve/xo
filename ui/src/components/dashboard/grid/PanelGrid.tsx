@@ -11,7 +11,6 @@ import GraphPanel from "../plugins/panel/graph/Graph";
 import { PANEL_BODY_PADDING, PANEL_HEADER_HEIGHT, StorageCopiedPanelKey } from "src/data/constants";
 import { cloneDeep, isEmpty, isEqual } from "lodash";
 import { TimeRange } from "types/time";
-import useVariables from "hooks/use-variables";
 import { Variable } from "types/variable";
 import { replaceWithVariables } from "utils/variable";
 import storage from "utils/localStorage";
@@ -25,6 +24,7 @@ interface PanelGridProps {
     timeRange: TimeRange
     variables: Variable[]
     sync: any
+    onVariablesChange?: any
 }
 
 const PanelGrid = (props: PanelGridProps) => {
@@ -54,7 +54,7 @@ interface PanelComponentProps extends  PanelGridProps {
 
 export const prevQueries = {}
 export const prevQueryData = {}
-export const PanelComponent = ({dashboard, panel, onEditPanel, onRemovePanel,width,height,timeRange,variables,sync }: PanelComponentProps) => {
+export const PanelComponent = ({dashboard, panel, onEditPanel, onRemovePanel,width,height,timeRange,variables,sync,onVariablesChange }: PanelComponentProps) => {
     const toast = useToast()
     const CustomPanelRender = (props) => {
         //@needs-update-when-add-new-panel
@@ -189,7 +189,7 @@ export const PanelComponent = ({dashboard, panel, onEditPanel, onRemovePanel,wid
             marginLeft={panel.type == PanelType.Graph ? "-10px" : "0px"}
             h="100%"
         >
-            <CustomPanelRender data={panelData} height={panelInnerHeight} width={panelInnerWidth} variables={variables} sync={sync} />
+            <CustomPanelRender data={panelData} height={panelInnerHeight} width={panelInnerWidth} variables={variables} sync={sync} onVariablesChange={onVariablesChange} />
         </Box>
     </Box>
 }

@@ -8,31 +8,16 @@ interface Props {
 }
 
 const vkey = "apm-variables"
-const SelectVariables = ({variables,onChange}: Props) => {
-    const onVariableChange = (variable:Variable, value) => {
-        variable.selected  = value
-        const sv = storage.get(vkey)
-        if (!sv) {
-            storage.set(vkey,{
-                [variable.id]: value
-            })
-        } else {
-            sv[variable.id] = value 
-            storage.set(vkey, sv)
-        }
-
-        onChange()
-    }
-    
+const SelectVariables = ({ variables, onChange }: Props) => {
     return (<HStack>
         {variables.map(v => {
             return <HStack>
                 <Text fontSize="sm" minWidth="fit-content">{v.name}</Text>
-            <Select value={v.selected} size="sm" onChange={e => onVariableChange(v, e.currentTarget.value)}>
-                {
-                    v.values.map(v => <option value={v}>{v}</option>)
-                }
-            </Select>
+                <Select value={v.selected} size="sm" onChange={e => setVariableValue(v, e.currentTarget.value, onChange)}>
+                    {
+                        v.values.map(v => <option value={v}>{v}</option>)
+                    }
+                </Select>
             </HStack>
         })}
     </HStack>)
@@ -54,4 +39,32 @@ export const setVariableSelected = (variables: Variable[]) => {
             v.selected = selected
         }
     }
+}
+
+
+export const setVariableValue = (variable: Variable, value, onChange) => {
+    let exist = false;
+    for (var i = 0; i < variable.values.length; i++) {
+        if (variable.values[i] == value) {
+            exist = true
+            break
+        }
+    }
+
+    if (!exist) {
+        return `value ${value} not exist in variable ${variable.name}`
+    }
+    
+    variable.selected = value
+    const sv = storage.get(vkey)
+    if (!sv) {
+        storage.set(vkey, {
+            [variable.id]: value
+        })
+    } else {
+        sv[variable.id] = value
+        storage.set(vkey, sv)
+    }
+
+    onChange()
 }

@@ -137,6 +137,7 @@ export interface PanelProps {
     onChange?: any
     variables?: Variable[]
     sync?: any
+    onVariablesChange?: any
 }
 
 export interface TableSettings {

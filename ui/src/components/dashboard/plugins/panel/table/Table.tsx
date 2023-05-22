@@ -1,15 +1,16 @@
-import { Box, Select } from "@chakra-ui/react"
+import { Box, Select, useToast } from "@chakra-ui/react"
 import { NumberRangeColumnFilter } from "components/table/filters"
 import ReactTable from "components/table/Table"
+import { setVariableValue } from "components/variables/SelectVariables"
+import { useRouter } from "next/router"
 import React, { useEffect } from "react"
-import { Panel, PanelProps } from "types/dashboard"
+import { Dashboard, Panel, PanelProps } from "types/dashboard"
 import { DataFrame } from "types/dataFrame"
-import makeData from './makeData'
-
-
+import { Variable } from "types/variable"
 
 const TablePanel = (props: PanelProps) => {
-    console.log(props)
+    const router = useRouter()
+    const toast = useToast()
     const [series, setSeries] = React.useState(null)
 
     useEffect(() => {
@@ -63,7 +64,7 @@ const TablePanel = (props: PanelProps) => {
        return [[],[]]
     }, [series])
 
-    const onRowClickFunc = new Function("row", props.panel.settings.table.onRowClick)
+    const onRowClickFunc = new Function("row,router,setVariable", props.panel.settings.table.onRowClick)
 
     return (
         <Box h="100%">
@@ -77,7 +78,7 @@ const TablePanel = (props: PanelProps) => {
                     enableFilter={props.panel.settings.table.enableFilter}
                     enableSort={props.panel.settings.table.enableSort}
                     showHeader={props.panel.settings.table.showHeader}
-                    onRowClick={onRowClickFunc}
+                    onRowClick={onRowClickFunc ? (row) => onRowClickFunc(row, router,(k,v) => setVariable(props.variables,k,v,props.onVariablesChange,toast)) : null}
                 />
 
             </Box>
@@ -93,4 +94,23 @@ const TablePanel = (props: PanelProps) => {
 
 export default TablePanel
 
+const setVariable = (variables: Variable[],name,value,onVariablesChange,toast) => {
+    let v;
+    for (var i=0;i<variables.length;i++) {
+        if (variables[i].name == name) {
+            v = variables[i]
+            break
+        }
+    }
 
+    const err = setVariableValue(v,value,onVariablesChange )
+    if (err) {
+        toast({
+            title: "On row click error",
+            description: err,
+            status: "warning",
+            duration: 9000,
+            isClosable: true,
+        })
+    }
+}

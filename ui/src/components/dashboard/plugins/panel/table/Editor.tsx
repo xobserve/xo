@@ -72,7 +72,7 @@ const TablePanelEditor = ({ panel, onChange }: Props) => {
                 Here is a simple example:
                 
             </Alert>
-            <Text>function onRowClick(row) &#123;</Text>
+            <Text>function onRowClick(row, router, setVariable) &#123;</Text>
             <Textarea value={tempPanel.settings.table.onRowClick} onChange={(e) => {
                 tempPanel.settings.table.onRowClick = e.currentTarget.value
                 setTempPanel(cloneDeep(tempPanel))
