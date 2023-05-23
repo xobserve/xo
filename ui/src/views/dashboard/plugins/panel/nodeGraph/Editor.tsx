@@ -16,7 +16,7 @@ import { initPanelSettings } from "../initSettings"
 const NodeGraphPanelEditor = (props: PanelEditorProps) => {
     const { panel, onChange } = props
     return (<>
-        <PanelAccordion title="Nodes">
+        <PanelAccordion title="Node">
             <PanelEditItem title="base size">
                 <Slider aria-label='slider-ex-1' value={panel.settings.nodeGraph.node.baseSize} min={20} max={100} step={2}
                     onChange={v => onChange((panel: Panel) => {
@@ -54,7 +54,7 @@ const NodeGraphPanelEditor = (props: PanelEditorProps) => {
         </PanelAccordion>
 
 
-        <PanelAccordion title="Edges">
+        <PanelAccordion title="Edge">
             <PanelEditItem title="shape">
                 <Select value={panel.settings.nodeGraph.edge.shape} onChange={e => onChange(panel => {
                     panel.settings.nodeGraph.edge.shape = e.currentTarget.value
@@ -350,7 +350,7 @@ const RightClickMenus = ({ panel, onChange }: PanelEditorProps) => {
             <VStack alignItems="left" pl="2">
                 {
                     panel.settings.nodeGraph.node.menu.map((item, i) => <Flex alignItems="center" justifyContent="space-between">
-                        <Text>{item.name}</Text>
+                        <Tooltip label={item.event}><Text>{item.name}</Text></Tooltip>
 
                         <HStack layerStyle="textFourth">
                             {i != 0 && <Icons.FaArrowUp cursor="pointer" onClick={() => moveUp(i)} />}
