@@ -57,8 +57,8 @@ export const setAttrsForData = (settings: NodeGraphSettings, data: NodeGraphData
         const p = Math.log2(t / base)
         if (p <= 1) {
             node.size = settings.node.baseSize
-        } else if (p >= 2) {
-            node.size = settings.node.baseSize * 2
+        } else if (p >= 1.5) {
+            node.size = settings.node.baseSize * 1.5
          
         } else {
             node.size = p * settings.node.baseSize
@@ -88,6 +88,4 @@ export const setAttrsForData = (settings: NodeGraphSettings, data: NodeGraphData
             edge.stateStyles[key] = defaultEdgeStyle[key]
         })
     })
-
-    console.log("here333333f:", data.nodes)
 }

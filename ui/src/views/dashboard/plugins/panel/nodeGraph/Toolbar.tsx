@@ -3,7 +3,6 @@ import { Box, HStack, Text, Tooltip } from "@chakra-ui/react"
 import { memo, useEffect, useState } from "react"
 import { FaEye, FaMinus, FaPlus, FaRegCircle, FaSearch } from "react-icons/fa"
 import Filter from "./filter/Filter"
-import LocateNode from "./locateNode"
 
 interface Props {
     graph: Graph

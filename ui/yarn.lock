@@ -109,10 +109,10 @@
     gl-vec2 "^1.3.0"
     lodash "^4.17.15"
 
-"@antv/g6-core@0.8.15":
-  version "0.8.15"
-  resolved "https://registry.yarnpkg.com/@antv/g6-core/-/g6-core-0.8.15.tgz#d36c485b4b0a4298a44ae5a5e6ac673472b87df4"
-  integrity sha512-fTBwNXMS9mbYEdqiQ6hjfueaDDao5DEN3OkB8o1fn3ShsetdMJsl8ONNjvMo1qZzvoCCKXIdUrPYIxEP3BQWFg==
+"@antv/g6-core@0.8.17":
+  version "0.8.17"
+  resolved "https://registry.yarnpkg.com/@antv/g6-core/-/g6-core-0.8.17.tgz#e816114cffe7053fc5963d0bbd1cc19fb61a3fc9"
+  integrity sha512-XKwZO1mQQTSQxM/1mV5t50ai0AqN4f7ofKubE454tE3lm2br6zDeZ3objq3w7gZWF4uVccsRJE2wiMW/UA1n0g==
   dependencies:
     "@antv/algorithm" "^0.1.8"
     "@antv/dom-util" "^2.0.1"
@@ -125,19 +125,19 @@
     ml-matrix "^6.5.0"
     tslib "^2.1.0"
 
-"@antv/g6-element@0.8.15":
-  version "0.8.15"
-  resolved "https://registry.yarnpkg.com/@antv/g6-element/-/g6-element-0.8.15.tgz#bd9102c740f6f7271a7d5e4c11a128b6f96f1410"
-  integrity sha512-eSCPxncGHc7N+Xq9pcSxccngXrmHUzQDP5wYG8HT6SL0DBYnJbVu2BefD0w4FtTjt//43M6Nw9K/q2oiiKZpPQ==
+"@antv/g6-element@0.8.17":
+  version "0.8.17"
+  resolved "https://registry.yarnpkg.com/@antv/g6-element/-/g6-element-0.8.17.tgz#3e88b77f7dc05ce91c4b3e090e2b207b99a3aad8"
+  integrity sha512-b9jmrr+xf+dSDOwNyvSA5i+nHvJZR7JLLJgWreZOSyHKICRR5yXt+GKYl5+k9qBaImBusbqML4W+Zr82OXCy5Q==
   dependencies:
     "@antv/g-base" "^0.5.1"
-    "@antv/g6-core" "0.8.15"
+    "@antv/g6-core" "0.8.17"
     "@antv/util" "~2.0.5"
 
-"@antv/g6-pc@0.8.15":
-  version "0.8.15"
-  resolved "https://registry.yarnpkg.com/@antv/g6-pc/-/g6-pc-0.8.15.tgz#7a8d99d26adf7b68bab8aaf76e2230d30dea9f9f"
-  integrity sha512-ncYQ9bPwAZkB49KN0lxAPgvhqARLCSN3fZlEMf+lvdCFUIwxX99GydAI14vhBqaZPlu5VivCjo06oOte48DW7Q==
+"@antv/g6-pc@0.8.18":
+  version "0.8.18"
+  resolved "https://registry.yarnpkg.com/@antv/g6-pc/-/g6-pc-0.8.18.tgz#bece57e05043da08e78bf2bb1d83262168731901"
+  integrity sha512-dUxjplQm1XgziaQ5GQLU+SLW+jArHF2rCVWHS1ewt1sKtJoIOzP0xPk1gMLE7DmRR+LpnWV2Ne4aQkQqPEDoMQ==
   dependencies:
     "@ant-design/colors" "^4.0.5"
     "@antv/algorithm" "^0.1.8"
@@ -147,9 +147,9 @@
     "@antv/g-canvas" "^0.5.2"
     "@antv/g-math" "^0.1.1"
     "@antv/g-svg" "^0.5.1"
-    "@antv/g6-core" "0.8.15"
-    "@antv/g6-element" "0.8.15"
-    "@antv/g6-plugin" "0.8.15"
+    "@antv/g6-core" "0.8.17"
+    "@antv/g6-element" "0.8.17"
+    "@antv/g6-plugin" "0.8.17"
     "@antv/hierarchy" "^0.6.10"
     "@antv/layout" "^0.3.0"
     "@antv/matrix-util" "^3.1.0-beta.3"
@@ -161,29 +161,29 @@
     insert-css "^2.0.0"
     ml-matrix "^6.5.0"
 
-"@antv/g6-plugin@0.8.15":
-  version "0.8.15"
-  resolved "https://registry.yarnpkg.com/@antv/g6-plugin/-/g6-plugin-0.8.15.tgz#6ce97974132de4af95f8a12f1f6ab513b75c5dad"
-  integrity sha512-+R8vDGslj4gAjNo6ko46NJH+yfg34zj1hcqDoQ1dHnQs4ljIvJTfNgAqwtQk8HvWvHCTlsX4cOMYJyN4eX8V+g==
+"@antv/g6-plugin@0.8.17":
+  version "0.8.17"
+  resolved "https://registry.yarnpkg.com/@antv/g6-plugin/-/g6-plugin-0.8.17.tgz#941aa0b58c2536f5cd02984fa632f7c9d6e8a7d4"
+  integrity sha512-nAqUTG08ss+Y17AgP0R6FzF7P9Y3xhX8dYv12UyyAop0bxch5jX0l6YvC5jCDf9WDjQaXMf/YdCUqFpB8rh9Pg==
   dependencies:
     "@antv/dom-util" "^2.0.2"
     "@antv/g-base" "^0.5.1"
     "@antv/g-canvas" "^0.5.2"
     "@antv/g-svg" "^0.5.2"
-    "@antv/g6-core" "0.8.15"
-    "@antv/g6-element" "0.8.15"
+    "@antv/g6-core" "0.8.17"
+    "@antv/g6-element" "0.8.17"
     "@antv/matrix-util" "^3.1.0-beta.3"
     "@antv/path-util" "^2.0.3"
     "@antv/scale" "^0.3.4"
     "@antv/util" "^2.0.9"
     insert-css "^2.0.0"
 
-"@antv/g6@^4.8.15":
-  version "4.8.15"
-  resolved "https://registry.yarnpkg.com/@antv/g6/-/g6-4.8.15.tgz#9b079af31f60785b51ec83f14a1c8d8849ae9481"
-  integrity sha512-jApz3z+blU7i6bqA6Zuq5sIs3OcutCbOx+/ah0uUdDSPc4jgh9suRjF+RJ/OlEFcKcRO8OQBbjB8/lZP+uwpxw==
+"@antv/g6@^4.8.17":
+  version "4.8.17"
+  resolved "https://registry.yarnpkg.com/@antv/g6/-/g6-4.8.17.tgz#2682ecbc5d27cc51d004f6d8ea77794f0c1d1e16"
+  integrity sha512-THpCDHjTyQWrFhM0xwahkpYUe+nHFtq33Ayrq0XA3nbnJw1AmJXnpPJE21rpkoluZhHKhFlXazl739Hb22e+5Q==
   dependencies:
-    "@antv/g6-pc" "0.8.15"
+    "@antv/g6-pc" "0.8.18"
 
 "@antv/graphlib@^1.0.0":
   version "1.2.0"
@@ -198,9 +198,9 @@
     "@antv/util" "^2.0.7"
 
 "@antv/layout@^0.3.0":
-  version "0.3.22"
-  resolved "https://registry.yarnpkg.com/@antv/layout/-/layout-0.3.22.tgz#e898aa50b1544ba41a5235e644bae53b60368a52"
-  integrity sha512-xBGLnqRgDg7JvemXbrQTKNcL3g8enziupp2KYljrHfl0BsCRYBLxHpGdvdQK+cFEwRk+8Bek8px98v+uGmOUww==
+  version "0.3.23"
+  resolved "https://registry.yarnpkg.com/@antv/layout/-/layout-0.3.23.tgz#00e5f47cf29841808afb233f0585565d793ef2b7"
+  integrity sha512-F/CyfQuc1WSgCVemX0jA3pE3XuDRbDJmMueY1cL8WgL6nhdzm3/jg5UPamwbBVnhLk+rzNUDYdEIyX+RJbpcMA==
   dependencies:
     "@antv/g-webgpu" "0.7.2"
     "@antv/graphlib" "^1.0.0"
@@ -1721,11 +1721,6 @@
   resolved "https://registry.yarnpkg.com/@tsconfig/node16/-/node16-1.0.3.tgz#472eaab5f15c1ffdd7f8628bd4c4f753995ec79e"
   integrity sha512-yOlFc+7UtL/89t2ZhjPvvB/DeAr3r+Dq58IgzsFkOAvVC6NMJXmCGjbptdXdR9qsX7pKcTL+s87FtYREi2dEEQ==
 
-"@types/cytoscape@^3.19.9":
-  version "3.19.9"
-  resolved "https://registry.yarnpkg.com/@types/cytoscape/-/cytoscape-3.19.9.tgz#d697971d4a33eacc6ae7a7a158035b5c60c064a2"
-  integrity sha512-oqCx0ZGiBO0UESbjgq052vjDAy2X53lZpMrWqiweMpvVwKw/2IiYDdzPFK6+f4tMfdv9YKEM9raO5bAZc3UYBg==
-
 "@types/d3-timer@^2.0.0":
   version "2.0.1"
   resolved "https://registry.yarnpkg.com/@types/d3-timer/-/d3-timer-2.0.1.tgz#ffb6620d290624f3726aa362c0c8a4b44c8d7200"
@@ -2473,13 +2468,6 @@ core-js@^2.4.0:
   resolved "https://registry.yarnpkg.com/core-js/-/core-js-2.6.12.tgz#d9333dfa7b065e347cc5682219d6f690859cc2ec"
   integrity sha512-Kb2wC0fvsWfQrgk8HU5lW6U/Lcs8+9aaYcy4ZFc6DDlo4nZ7n70dEgE5rtR0oG6ufKDUnrwfWL1mXR5ljDatrQ==
 
-cose-base@^1.0.0:
-  version "1.0.3"
-  resolved "https://registry.yarnpkg.com/cose-base/-/cose-base-1.0.3.tgz#650334b41b869578a543358b80cda7e0abe0a60a"
-  integrity sha512-s9whTXInMSgAp/NVXVNuVxVKzGH2qck3aQlVHxDCdAEPgtMKwc4Wq6/QKhgdEdgbLSi9rBTAcPoRa6JpiG4ksg==
-  dependencies:
-    layout-base "^1.0.0"
-
 cosmiconfig@^7.0.0:
   version "7.1.0"
   resolved "https://registry.yarnpkg.com/cosmiconfig/-/cosmiconfig-7.1.0.tgz#1443b9afa596b670082ea46cbd8f6a62b84635f6"
@@ -2541,26 +2529,6 @@ csstype@^3.0.8:
   version "3.1.2"
   resolved "https://registry.yarnpkg.com/csstype/-/csstype-3.1.2.tgz#1d4bf9d572f11c14031f0436e1c10bc1f571f50b"
   integrity sha512-I7K1Uu0MBPzaFKg4nI5Q7Vs2t+3gWWW648spaF+Rg7pI9ds18Ugn+lvg4SHczUdKlHI5LWBXyqfS8+DufyBsgQ==
-
-cytoscape-cose-bilkent@^4.1.0:
-  version "4.1.0"
-  resolved "https://registry.yarnpkg.com/cytoscape-cose-bilkent/-/cytoscape-cose-bilkent-4.1.0.tgz#762fa121df9930ffeb51a495d87917c570ac209b"
-  integrity sha512-wgQlVIUJF13Quxiv5e1gstZ08rnZj2XaLHGoFMYXz7SkNfCDOOteKBE6SYRfA9WxxI/iBc3ajfDoc6hb/MRAHQ==
-  dependencies:
-    cose-base "^1.0.0"
-
-cytoscape-dom-node@^1.1.1:
-  version "1.1.1"
-  resolved "https://registry.yarnpkg.com/cytoscape-dom-node/-/cytoscape-dom-node-1.1.1.tgz#4f0a39e07343a0e21b169b8ba7c6739d2cf40a03"
-  integrity sha512-T9UjcMRTL5PfFOsNuFUxiNXZAvAb77QTzyBbDAoNrG1gQSkklessLyUXyRX6psa8WLByE2vxnSsaDGiZMtL5GA==
-
-cytoscape@^3.25.0:
-  version "3.25.0"
-  resolved "https://registry.yarnpkg.com/cytoscape/-/cytoscape-3.25.0.tgz#5289e9d18be0293b073bfe93f83bb95b908b2dc1"
-  integrity sha512-7MW3Iz57mCUo6JQCho6CmPBCbTlJr7LzyEtIkutG255HLVd4XuBg2I9BkTZLI/e4HoaOB/BiAzXuQybQ95+r9Q==
-  dependencies:
-    heap "^0.2.6"
-    lodash "^4.17.21"
 
 "d3-color@1 - 3":
   version "3.1.0"
@@ -3628,11 +3596,6 @@ has@^1.0.3:
   dependencies:
     function-bind "^1.1.1"
 
-heap@^0.2.6:
-  version "0.2.7"
-  resolved "https://registry.yarnpkg.com/heap/-/heap-0.2.7.tgz#1e6adf711d3f27ce35a81fe3b7bd576c2260a8fc"
-  integrity sha512-2bsegYkkHO+h/9MGbn6KWcE45cHZgPANo5LXF7EvWdT0yT2EguSVO1nDgU5c8+ZOPwp2vMNa7YFsJhVcDR9Sdg==
-
 hey-listen@^1.0.8:
   version "1.0.8"
   resolved "https://registry.yarnpkg.com/hey-listen/-/hey-listen-1.0.8.tgz#8e59561ff724908de1aa924ed6ecc84a56a9aa68"
@@ -4088,11 +4051,6 @@ latest-version@^5.1.0:
   integrity sha512-weT+r0kTkRQdCdYCNtkMwWXQTMEswKrFBkm4ckQOMVhhqhIMI1UT2hMj+1iigIhgSZm5gTmrRXBNoGUgaTY1xA==
   dependencies:
     package-json "^6.3.0"
-
-layout-base@^1.0.0:
-  version "1.0.2"
-  resolved "https://registry.yarnpkg.com/layout-base/-/layout-base-1.0.2.tgz#1291e296883c322a9dd4c5dd82063721b53e26e2"
-  integrity sha512-8h2oVEZNktL4BH2JCOI90iD1yXwL6iNW7KcCKT2QZgQJR2vbqDsldCTPRU9NifTCqHZci57XvQQ15YTu+sTYPg==
 
 levn@^0.4.1:
   version "0.4.1"

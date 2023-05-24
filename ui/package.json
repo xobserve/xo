@@ -7,7 +7,7 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "@antv/g6": "^4.8.15",
+    "@antv/g6": "^4.8.17",
     "@chakra-ui/cli": "2.3.0",
     "@chakra-ui/icons": "2.0.17",
     "@chakra-ui/props-docs": "2.2.1",

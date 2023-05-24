@@ -71,11 +71,10 @@ const NodeGrapPanel = ({ data, panel, dashboardId }: PanelProps) => {
 
             const gh = new G6.Graph({
                 container: container.current,
-                width: container.current.scrollWidth,
-                height: container.current.scrollHeight,
+                // width: container.current.scrollWidth,
+                // height: container.current.scrollHeight,
                 // fitView: true,
                 fitCenter: true,
-                fitView: true,
                 fitViewPadding: 16,
                 plugins: [legend, tooltip, contextMenu],
                 modes: {
@@ -89,10 +88,15 @@ const NodeGrapPanel = ({ data, panel, dashboardId }: PanelProps) => {
                 },
                 layout: {
                     type: 'force2',
+                    gpuEnabled: true,
                     // focusNode: 'li',
-                    linkDistance: 300,
-                    // unitRadius: 200,
-                    preventNodeOverlap: true,
+                    // linkDistance: 100,
+                    preventOverlap: true,
+                    nodeStrength: 5000,
+                    gravity: 80,
+                    preset: {
+                        type: 'radial'
+                    }
                 },
                 defaultEdge: {
                     type: panel.settings.nodeGraph.edge.shape ?? 'quadratic',
@@ -121,7 +125,7 @@ const NodeGrapPanel = ({ data, panel, dashboardId }: PanelProps) => {
                         fill: 'transparent',
                         stroke: '#61DDAA'
                     },
-                    size: 40,
+                    size: panel.settings.nodeGraph.node.baseSize,
                     labelCfg: defaultNodeLabelCfg,
                     donutColorMap: JSON.parse(panel.settings.nodeGraph.node.donutColors),
                     stateStyles: {
@@ -190,6 +194,7 @@ const NodeGrapPanel = ({ data, panel, dashboardId }: PanelProps) => {
 
 
             const newData = filterData(data[0], dashboardId, panel.id)
+            console.log("here3333f:",newData.nodes)
             gh.data(newData);
             gh.render();
            
