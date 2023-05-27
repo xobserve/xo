@@ -62,7 +62,7 @@ const TablePanel = (props: PanelProps) => {
         }
   
        return [[],[]]
-    }, [series])
+    }, [props.data,series])
 
     const onRowClickFunc = new Function("row,router,setVariable", props.panel.settings.table.onRowClick)
 
@@ -78,7 +78,7 @@ const TablePanel = (props: PanelProps) => {
                     enableFilter={props.panel.settings.table.enableFilter}
                     enableSort={props.panel.settings.table.enableSort}
                     showHeader={props.panel.settings.table.showHeader}
-                    onRowClick={onRowClickFunc ? (row) => onRowClickFunc(row, router,(k,v) => setVariable(props.variables,k,v,props.onVariablesChange,toast)) : null}
+                    onRowClick={onRowClickFunc ? (row) => onRowClickFunc(row, router,(k,v) => setVariable(props.variables,k,v,toast)) : null}
                 />
 
             </Box>
@@ -94,7 +94,7 @@ const TablePanel = (props: PanelProps) => {
 
 export default TablePanel
 
-const setVariable = (variables: Variable[],name,value,onVariablesChange,toast) => {
+const setVariable = (variables: Variable[],name,value,toast) => {
     let v;
     for (var i=0;i<variables.length;i++) {
         if (variables[i].name == name) {
@@ -103,7 +103,7 @@ const setVariable = (variables: Variable[],name,value,onVariablesChange,toast) =
         }
     }
 
-    const err = setVariableValue(v,value,onVariablesChange )
+    const err = setVariableValue(v,value )
     if (err) {
         toast({
             title: "On row click error",

@@ -17,7 +17,8 @@ import storage from "utils/localStorage";
 import TablePanel from "../plugins/panel/table/Table";
 import useBus from 'use-bus'
 import { getInitTimeRange } from "components/TimePicker";
-import { TimeChangedEvent } from "src/data/bus-events";
+import { TimeChangedEvent, VariableChangedEvent } from "src/data/bus-events";
+import { variables } from "pages/[...dashboardId]";
 
 interface PanelGridProps {
     dashboard: Dashboard
@@ -57,7 +58,7 @@ interface PanelComponentProps extends PanelGridProps {
 
 export const prevQueries = {}
 export const prevQueryData = {}
-export const PanelComponent = ({ dashboard, panel, onEditPanel, onRemovePanel, width, height, variables, sync, onVariablesChange }: PanelComponentProps) => {
+export const PanelComponent = ({ dashboard, panel, onEditPanel, onRemovePanel, width, height, sync }: PanelComponentProps) => {
     const toast = useToast()
    
 
@@ -66,6 +67,15 @@ export const PanelComponent = ({ dashboard, panel, onEditPanel, onRemovePanel, w
         (e) => { return e.type == TimeChangedEvent },
         (e) => setTr(e.data)
     )
+    
+    const [variables1, setVariables] = useState<Variable[]>(variables)
+    useBus(
+        VariableChangedEvent,
+        () => {
+            console.log("panel grid recv variable change event:",variables);
+            setVariables(cloneDeep(variables))
+        }
+    ) 
 
     const [panelData, setPanelData] = useState<DataFrame[]>([])
     const [queryError, setQueryError] = useState()
@@ -74,12 +84,12 @@ export const PanelComponent = ({ dashboard, panel, onEditPanel, onRemovePanel, w
 
     // run the queries and render the panel
     useEffect(() => {
-        console.log("timerange or datasource changed!")
+        console.log("timerange or datasource changed!",panel.id)
         // if there is no data in panel currently, we should make a immediate query
         // if (isEmpty(panelData)) {
         queryData(dashboard.id + panel.id)
         // }
-    }, [panel.datasource, tr])
+    }, [panel.datasource, tr,variables1])
 
     const queryData = async (queryId) => {
         for (var i = 0; i < panel.datasource.length; i++) {
@@ -87,7 +97,7 @@ export const PanelComponent = ({ dashboard, panel, onEditPanel, onRemovePanel, w
             if (ds.selected) {
                 let data = []
                 for (const q0 of ds.queries) {
-                    const metrics = replaceWithVariables(q0.metrics, variables)
+                    const metrics = replaceWithVariables(q0.metrics, variables1)
                     const q = { ...q0, metrics }
 
                     const id = queryId + q.id
@@ -152,13 +162,13 @@ export const PanelComponent = ({ dashboard, panel, onEditPanel, onRemovePanel, w
     const panelInnerHeight = panelBodyHeight - PANEL_BODY_PADDING * 2 // 10px padding top and bottom of panel body
     const panelInnerWidth = width + 8 // 10px padding left and right of panel body
 
-    const title = replaceWithVariables(panel.title, variables)
+    const title = replaceWithVariables(panel.title, variables1)
 
     console.log("panel component rendered, data: ",panelData)
     return <Box height="100%" >
         <HStack className="grid-drag-handle" height={`${PANEL_HEADER_HEIGHT - (isEmpty(title) ? 20 : 0)}px`} cursor="move" spacing="0" position={isEmpty(title) ? "absolute" : "relative"} width="100%" zIndex={1000}>
             {(queryError || panel.desc) && <Box color={useColorModeValue(queryError ? "red" : "brand.500", queryError ? "red" : "brand.200")} position="absolute">
-                <Tooltip label={queryError ?? replaceWithVariables(panel.desc, variables)}>
+                <Tooltip label={queryError ?? replaceWithVariables(panel.desc, variables1)}>
                     <Box>
                         <IoMdInformation fontSize="20px" cursor="pointer" />
                     </Box>
@@ -196,7 +206,7 @@ export const PanelComponent = ({ dashboard, panel, onEditPanel, onRemovePanel, w
                 isEmpty(panelData) ?
                     <Box h="100%">
                         <Center height="100%">No data</Center></Box>
-                    : <CustomPanelRender panel={panel} data={panelData} height={panelInnerHeight} width={panelInnerWidth} variables={variables} sync={sync} onVariablesChange={onVariablesChange} />
+                    : <CustomPanelRender panel={panel} data={panelData} height={panelInnerHeight} width={panelInnerWidth} variables={variables1} sync={sync}  />
             }
         </Box>
     </Box>

@@ -19,12 +19,13 @@ import { unstable_batchedUpdates } from "react-dom"
 import storage from "utils/localStorage"
 import { StorageCopiedPanelKey } from "src/data/constants"
 import { dispatch } from 'use-bus'
-import { TimeChangedEvent } from "src/data/bus-events"
+import { TimeChangedEvent, VariableChangedEvent } from "src/data/bus-events"
 
 // All of the paths that is not defined in pages directory will redirect to this page,
 // generally these pages are defined in:
 // 1. team's side menu, asscessed by a specific url path
 // 2. dashboard page, accessed by a dashboard id
+export let variables: Variable[] = []
 const DashboardPage = () => {
     const { isOpen, onOpen, onClose } = useDisclosure()
     const router = useRouter()
@@ -36,7 +37,6 @@ const DashboardPage = () => {
     // panel used for temporary purpose,such as adding a new panel, edit a panel etc
     const [panel, setPanel] = useState<Panel>(null)
     const [timeRange, setTimeRange] = useState<TimeRange>(getInitTimeRange())
-    const [variables, setVariables] = useState<Variable[]>(null)
     const [gVariables, setGVariables] = useState<Variable[]>([])
     const [pageChanged, setPageChanged] = useState(false)
     const [savedDashboard, setSavedDashboard] = useState<Dashboard>(null)
@@ -78,7 +78,9 @@ const DashboardPage = () => {
             // get the selected value for each variable from localStorage
         }
         setVariableSelected(combined)
-        setVariables(combined)
+        variables = combined
+        setTimeout(() => dispatch(VariableChangedEvent), 100)
+      
     }
 
     const getNextPanelId = () => {
@@ -147,9 +149,9 @@ const DashboardPage = () => {
         onDashboardChanged()
     },[dashboard])
 
-    const onVariablesChange = useCallback(() => {
-        setVariables(cloneDeep(variables))
-    },[variables])
+    // const onVariablesChange = useCallback(() => {
+    //     setVariables(cloneDeep(variables))
+    // },[variables])
 
     useEffect(() => {
         setCombinedVariables()
@@ -162,7 +164,7 @@ const DashboardPage = () => {
 
 
     const onDashboardChanged = useCallback(() => {
-        // console.log("changed:", dashboard,savedDashboard)
+        console.log("changed:", JSON.stringify(dashboard),JSON.stringify(savedDashboard),!isEqual(dashboard, savedDashboard))
         setPageChanged(!isEqual(dashboard, savedDashboard))
     },[dashboard])
 
@@ -191,9 +193,9 @@ const DashboardPage = () => {
         <>
             <PageContainer>
                 {dashboard && <Box px="3" width="100%">
-                    <DashboardHeader dashboard={dashboard} team={team} onAddPanel={onAddPanel} onTimeChange={t => {dispatch({type:  TimeChangedEvent,data: t});setTimeRange(t)}} timeRange={timeRange} variables={variables} onVariablesChange={onVariablesChange} onChange={onDashboardChange} onDashboardSave={onDashboardSave} onPastePanel={onPastePanel}/>
+                    <DashboardHeader dashboard={dashboard} team={team} onAddPanel={onAddPanel} onTimeChange={t => {dispatch({type:  TimeChangedEvent,data: t});setTimeRange(t)}} timeRange={timeRange} onVariablesChange={null} onChange={onDashboardChange} onDashboardSave={onDashboardSave} onPastePanel={onPastePanel}/>
                     <Box mt={variables?.length > 0 ? "80px" : "50px"} py="2">
-                        {dashboard.data.panels?.length > 0 && <DashboardGrid dashboard={dashboard} onChange={onGridChange} variables={variables} onDashbardChanged={onDashboardChanged} onVariablesChange={onVariablesChange} />}
+                        {dashboard.data.panels?.length > 0 && <DashboardGrid dashboard={dashboard} onChange={onGridChange} variables={variables} onDashbardChanged={onDashboardChanged} onVariablesChange={null} />}
                     </Box>
                 </Box>}
             </PageContainer>

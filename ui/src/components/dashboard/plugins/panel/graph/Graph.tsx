@@ -60,7 +60,7 @@ const GraphPanel = memo((props: PanelProps) => {
 
     const [uplot, setUplot] = useState<uPlot>(null)
 
-    const transformed = useMemo(() => transformDataToUplot(props.data),[props.data])
+    const transformed = useMemo(() => transformDataToUplot(props.data),[props])
 
     const onSelectSeries = (s) => {
         props.panel.settings.graph.activeSeries =  props.panel.settings.graph.activeSeries  == s ? null : s

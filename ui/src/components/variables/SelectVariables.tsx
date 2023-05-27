@@ -1,19 +1,22 @@
 import { HStack, Select, Text } from "@chakra-ui/react"
+import { variables } from "pages/[...dashboardId]"
+import { VariableChangedEvent } from "src/data/bus-events"
 import { Variable } from "types/variable"
+import { dispatch } from "use-bus"
 import storage from "utils/localStorage"
 
 interface Props {
+    id: number
     variables: Variable[]
-    onChange: any
 }
 
 const vkey = "apm-variables"
-const SelectVariables = ({ variables, onChange }: Props) => {
+const SelectVariables = ({id, variables}: Props) => {
     return (<HStack>
         {variables.map(v => {
             return <HStack>
                 <Text fontSize="sm" minWidth="fit-content">{v.name}</Text>
-                <Select value={v.selected} size="sm" onChange={e => setVariableValue(v, e.currentTarget.value, onChange)}>
+                <Select value={v.selected} size="sm" onChange={e => setVariableValue(v, e.currentTarget.value)}>
                     {
                         v.values.map(v => <option value={v}>{v}</option>)
                     }
@@ -42,7 +45,7 @@ export const setVariableSelected = (variables: Variable[]) => {
 }
 
 
-export const setVariableValue = (variable: Variable, value, onChange) => {
+export const setVariableValue = (variable: Variable, value) => {
     let exist = false;
     for (var i = 0; i < variable.values.length; i++) {
         if (variable.values[i] == value) {
@@ -56,6 +59,12 @@ export const setVariableValue = (variable: Variable, value, onChange) => {
     }
     
     variable.selected = value
+    for (let i = 0;i<variables.length;i++) {
+        if (variables[i].id == variable.id) {
+            variables[i] = variable
+        }
+    }
+
     const sv = storage.get(vkey)
     if (!sv) {
         storage.set(vkey, {
@@ -66,5 +75,5 @@ export const setVariableValue = (variable: Variable, value, onChange) => {
         storage.set(vkey, sv)
     }
 
-    onChange()
+    dispatch(VariableChangedEvent)
 }

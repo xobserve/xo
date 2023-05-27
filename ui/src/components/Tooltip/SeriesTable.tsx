@@ -22,39 +22,38 @@ export enum seriesFilterType {
 }
 
 const SeriesTable = ({ props, nearestSeries, filterIdx, filterType, onSelect }: Props) => {
-    const [values, setValues] = useState([])
-    useEffect(() => {
-        const res = []
+    const res = []
 
-        switch (filterType) {
-            case seriesFilterType.Nearest: // tooltip
-                if (props.panel.settings.graph.tooltip.mode != "single") {
-                    for (const d of props.data) {
-                        res.push({ name: d.name, value: d.fields[1].values[filterIdx], color: d.color })
-                    }
-                } else {
-                    res.push({ name: nearestSeries.name, color: nearestSeries.color, value: nearestSeries.fields[1].values[filterIdx] })
-                }
-                break
-            case seriesFilterType.Current: // legend
+    switch (filterType) {
+        case seriesFilterType.Nearest: // tooltip
+            if (props.panel.settings.graph.tooltip.mode != "single") {
                 for (const d of props.data) {
-                    res.push({ name: d.name, value: last(d.fields[1].values), color: d.color })
+                    res.push({ name: d.name, value: d.fields[1].values[filterIdx], color: d.color })
                 }
-                break
-            default:
-        }
+            } else {
+                res.push({ name: nearestSeries.name, color: nearestSeries.color, value: nearestSeries.fields[1].values[filterIdx] })
+            }
+            break
+        case seriesFilterType.Current: // legend
+            for (const d of props.data) {
+                res.push({ name: d.name, value: last(d.fields[1].values), color: d.color })
+            }
+            break
+        default:
+    }
 
 
-        let res1 = reverse(sortBy(res, 'value'))
-        
-        for (const r of  res1) {
-            r.value = props.panel.settings.graph.std.unitsType != "none" 
-                ? formatUnit(r.value,props.panel.settings.graph.std.units,props.panel.settings.graph.std.decimals??2)
-                : round(r.value, props.panel.settings.graph.std.decimals)
-        }
-        
-        setValues(res1)
-    }, [props.data, nearestSeries, filterIdx])
+    let res1 = reverse(sortBy(res, 'value'))
+
+    for (const r of res1) {
+        r.value = props.panel.settings.graph.std.unitsType != "none"
+            ? formatUnit(r.value, props.panel.settings.graph.std.units, props.panel.settings.graph.std.decimals ?? 2)
+            : round(r.value, props.panel.settings.graph.std.decimals)
+    }
+
+    const values = res1
+
+
 
     return (
         <Box fontSize="xs" minWidth="fit-content">

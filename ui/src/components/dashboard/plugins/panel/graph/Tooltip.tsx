@@ -25,6 +25,7 @@ const Tooltip = ({ props, options }: Props) => {
     const [focusXVal, setFocusXVal] = useState(null)
     const [focusYVal, setFocusYVal] = useState(null)
     const isMounted = useMountedState();
+
     useLayoutEffect(() => {
         let bbox: DOMRect | undefined = undefined;
 
