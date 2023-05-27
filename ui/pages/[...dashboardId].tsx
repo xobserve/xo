@@ -72,7 +72,7 @@ const DashboardPage = () => {
 
     // combine variables which defined separately in dashboard and global
     const setCombinedVariables = (gv?) => {
-        const combined = concat(dashboard?.data?.variables ?? [], gv ?? gVariables)
+        const combined = concat(cloneDeep(dashboard?.data?.variables) ?? [], gv ?? gVariables)
         for (const v of combined) {
             v.values = v.value.split(",")
             // get the selected value for each variable from localStorage
