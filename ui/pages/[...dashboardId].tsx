@@ -2,7 +2,7 @@ import { Box, Button, Modal, ModalBody, ModalContent, ModalOverlay, useDisclosur
 import { PanelAdd } from "components/icons/PanelAdd"
 import PageContainer from "layouts/page-container"
 import { useRouter } from "next/router"
-import { useEffect, useState } from "react"
+import { useCallback, useEffect, useState } from "react"
 import { Dashboard, DatasourceType, Panel, PanelType } from "types/dashboard"
 import { requestApi } from "utils/axios/request"
 import { Team } from "types/teams"
@@ -18,6 +18,8 @@ import { useLeavePageConfirm } from "hooks/useLeavePage"
 import { unstable_batchedUpdates } from "react-dom"
 import storage from "utils/localStorage"
 import { StorageCopiedPanelKey } from "src/data/constants"
+import { dispatch } from 'use-bus'
+import { TimeChangedEvent } from "src/data/bus-events"
 
 // All of the paths that is not defined in pages directory will redirect to this page,
 // generally these pages are defined in:
@@ -40,7 +42,7 @@ const DashboardPage = () => {
     const [savedDashboard, setSavedDashboard] = useState<Dashboard>(null)
 
     useLeavePageConfirm(pageChanged)
-
+    
 
     useEffect(() => {
         if (dashboardId) {
@@ -132,9 +134,10 @@ const DashboardPage = () => {
         // scroll to top after adding panel
         window.scrollTo(0, 0);
 
+        setDashboard(cloneDeep(dashboard))
         onDashboardChanged()
     }
-    const onGridChange = (panel: Panel) => {
+    const onGridChange = useCallback((panel: Panel) => {
         // for (let i = 0; i < dashboard.data.panels.length; i++) {
         //     if (dashboard.data.panels[i].id === panel.id) {
         //         dashboard.data.panels[i] = panel
@@ -142,11 +145,11 @@ const DashboardPage = () => {
         // }
         setDashboard(cloneDeep(dashboard))
         onDashboardChanged()
-    }
+    },[dashboard])
 
-    const onVariablesChange = () => {
+    const onVariablesChange = useCallback(() => {
         setVariables(cloneDeep(variables))
-    }
+    },[variables])
 
     useEffect(() => {
         setCombinedVariables()
@@ -158,19 +161,19 @@ const DashboardPage = () => {
     }
 
 
-    const onDashboardChanged = () => {
+    const onDashboardChanged = useCallback(() => {
         // console.log("changed:", dashboard,savedDashboard)
         setPageChanged(!isEqual(dashboard, savedDashboard))
-    }
+    },[dashboard])
 
-    const onDashboardSave = () => {
+    const onDashboardSave = useCallback(() => {
         const d = cloneDeep(dashboard)
         unstable_batchedUpdates(() => {
             setSavedDashboard(d)
             setPageChanged(false)
         })
 
-    }
+    },[dashboard])
 
     const onPastePanel = () => {
         const copiedPanel = storage.get(StorageCopiedPanelKey)
@@ -188,9 +191,9 @@ const DashboardPage = () => {
         <>
             <PageContainer>
                 {dashboard && <Box px="3" width="100%">
-                    <DashboardHeader dashboard={dashboard} team={team} onAddPanel={onAddPanel} onTimeChange={t => setTimeRange(t)} timeRange={timeRange} variables={variables} onVariablesChange={onVariablesChange} onChange={onDashboardChange} onDashboardSave={onDashboardSave} onPastePanel={onPastePanel}/>
+                    <DashboardHeader dashboard={dashboard} team={team} onAddPanel={onAddPanel} onTimeChange={t => {dispatch({type:  TimeChangedEvent,data: t});setTimeRange(t)}} timeRange={timeRange} variables={variables} onVariablesChange={onVariablesChange} onChange={onDashboardChange} onDashboardSave={onDashboardSave} onPastePanel={onPastePanel}/>
                     <Box mt={variables?.length > 0 ? "80px" : "50px"} py="2">
-                        {dashboard.data.panels?.length > 0 && <DashboardGrid dashboard={dashboard} onChange={onGridChange} timeRange={timeRange ?? getInitTimeRange()} variables={variables} onDashbardChanged={onDashboardChanged} onVariablesChange={onVariablesChange} />}
+                        {dashboard.data.panels?.length > 0 && <DashboardGrid dashboard={dashboard} onChange={onGridChange} variables={variables} onDashbardChanged={onDashboardChanged} onVariablesChange={onVariablesChange} />}
                     </Box>
                 </Box>}
             </PageContainer>

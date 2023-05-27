@@ -5458,6 +5458,11 @@ url-parse-lax@^3.0.0:
   dependencies:
     prepend-http "^2.0.0"
 
+use-bus@^2.5.2:
+  version "2.5.2"
+  resolved "https://registry.yarnpkg.com/use-bus/-/use-bus-2.5.2.tgz#af2721dbd0e2126ea1fd53eacf074a836a3a2aee"
+  integrity sha512-BZXI74mU6JJuuh9YoBexGpj1yZwU9bRvnVPl/bEUhcgC3D+BbqVbEU1RHdFqIVIODkZE/VfQJgNPid3FkCxhFQ==
+
 use-callback-ref@^1.3.0:
   version "1.3.0"
   resolved "https://registry.yarnpkg.com/use-callback-ref/-/use-callback-ref-1.3.0.tgz#772199899b9c9a50526fedc4993fc7fa1f7e32d5"

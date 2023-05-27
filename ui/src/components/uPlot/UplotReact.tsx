@@ -5,7 +5,7 @@ import React, { useEffect, useRef } from 'react';
 import uPlot from 'uplot';
 
 
-export default function UplotReact({
+const UplotReact = ({
     options,
     data,
     target,
@@ -22,9 +22,10 @@ export default function UplotReact({
     onCreate?: (chart: uPlot) => void;
     resetScales?: boolean;
     children?:any
-}): JSX.Element | null {
+}): JSX.Element | null => {
     const chartRef = useRef<uPlot | null>(null);
     const targetRef = useRef<HTMLDivElement>(null);
+
 
     function destroy(chart: uPlot | null) {
         if (chart) {
@@ -48,8 +49,8 @@ export default function UplotReact({
     // componentDidUpdate
     const prevProps = useRef({ options, data, target }).current;
     useEffect(() => {
-        console.log("calculate whether uplot need to be re-rendering")
-        if (prevProps.options !== options) {
+        // console.log("calculate whether uplot need to be re-rendering")
+        if (!isEqual(prevProps.options,options)) {
             const optionsState = optionsUpdateState(prevProps.options, options);
             if (!chartRef.current || optionsState === 'create') {
                 destroy(chartRef.current);
@@ -64,6 +65,7 @@ export default function UplotReact({
             } else if (!dataMatch(prevProps.data, data)) {
                 if (resetScales) {
                     chartRef.current.setData(data, true);
+                    chartRef.current.redraw();
                 } else {
                     chartRef.current.setData(data, false);
                     chartRef.current.redraw();
@@ -85,7 +87,7 @@ export default function UplotReact({
     return target ? null : <Box ref={targetRef}>{children}</Box>;
 }
 
-
+export default UplotReact
 
 type OptionsUpdateState = 'keep' | 'update' | 'create';
 

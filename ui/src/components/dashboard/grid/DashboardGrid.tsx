@@ -6,7 +6,7 @@ import { updateGridPos } from "utils/dashboard/panel";
 import { sortPanelsByGridPos } from "utils/dashboard/dashboard";
 import { Box } from "@chakra-ui/react";
 import PanelGrid from "./PanelGrid";
-import { useState } from "react";
+import { memo, useState } from "react";
 import EditPanel from "../edit-panel/EditPanel";
 import { TimeRange } from "types/time";
 import { Variable } from "types/variable";
@@ -17,13 +17,14 @@ import uPlot from "uplot";
 interface GridProps {
     dashboard: Dashboard
     onChange: any
-    timeRange: TimeRange
     variables: Variable[]
     onDashbardChanged: any
     onVariablesChange: any
 }
 
-const DashboardGrid = ({ dashboard, onChange,timeRange,variables,onDashbardChanged, onVariablesChange}: GridProps) => {
+const DashboardGrid = memo((props: GridProps) => {
+    console.log("dashboard grid rendered")
+    const { dashboard, onChange,variables,onDashbardChanged, onVariablesChange} = props
 
     const SizedReactLayoutGrid = sizeMe({ monitorWidth: true })(GridWrapper);
 
@@ -135,14 +136,14 @@ const DashboardGrid = ({ dashboard, onChange,timeRange,variables,onDashbardChang
                             borderBottom: "2px solid rgba(0, 0, 0, 0.4)"
                         }
                     }}>
-                        <PanelGrid dashboard={dashboard} panel={panel} onEditPanel={onEditPanel} onRemovePanel={onRemovePanel} timeRange={timeRange} variables={variables} sync={mooSync} onVariablesChange={onVariablesChange}/>
+                        <PanelGrid dashboard={dashboard} panel={panel} onEditPanel={onEditPanel} onRemovePanel={onRemovePanel}  variables={variables} sync={mooSync} onVariablesChange={onVariablesChange}/>
                     </Box>)
                 })
             }
         </SizedReactLayoutGrid>
-        <EditPanel dashboard={dashboard} panel={panelInEdit} onApply={onEditPanelApply} onDiscard={onEditPanelDiscard} timeRange={timeRange} variables={variables}/>
+        <EditPanel dashboard={dashboard} panel={panelInEdit} onApply={onEditPanelApply} onDiscard={onEditPanelDiscard} variables={variables}/>
     </>)
-}
+})
 
 export default DashboardGrid
 

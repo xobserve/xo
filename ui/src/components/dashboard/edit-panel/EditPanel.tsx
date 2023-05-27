@@ -19,11 +19,10 @@ interface EditPanelProps {
     panel: Panel
     onApply: any
     onDiscard: any
-    timeRange: TimeRange
     variables: Variable[]
 }
 
-const EditPanel = ({ dashboard, panel, onApply, onDiscard,timeRange,variables }: EditPanelProps) => {
+const EditPanel = ({ dashboard, panel, onApply, onDiscard,variables }: EditPanelProps) => {
     const [tempPanel, setTempPanel] = useState<Panel>(null)
     const { isOpen, onOpen, onClose } = useDisclosure()
 
@@ -117,7 +116,7 @@ const EditPanel = ({ dashboard, panel, onApply, onDiscard,timeRange,variables }:
                                     return (
                                         <Box width={width}
                                             height={height}>
-                                            <PanelComponent dashboard={dashboard} panel={tempPanel} width={width} height={height} timeRange={timeRange} variables={variables} sync={null}/>
+                                            <PanelComponent dashboard={dashboard} panel={tempPanel} width={width} height={height} variables={variables} sync={null}/>
                                         </Box>
                                     );
                                 }}

@@ -6,7 +6,7 @@ import SelectVariables from "components/variables/SelectVariables"
 import { subMinutes } from "date-fns"
 import { find, isEmpty } from "lodash"
 import { useRouter } from "next/router"
-import { useEffect, useState } from "react"
+import { memo, useEffect, useState } from "react"
 import {  FaRegClock, FaRegSave } from "react-icons/fa"
 import { MdSync } from "react-icons/md"
 import { StorageCopiedPanelKey } from "src/data/constants"
@@ -31,7 +31,7 @@ interface HeaderProps {
     onDashboardSave: any
     onPastePanel: any
 }
-const DashboardHeader = ({ dashboard, team, onAddPanel, onTimeChange, timeRange,variables,onVariablesChange,onChange,onDashboardSave,onPastePanel }: HeaderProps) => {
+const DashboardHeader = memo(({ dashboard, team, onAddPanel, onTimeChange, timeRange,variables,onVariablesChange,onChange,onDashboardSave,onPastePanel }: HeaderProps) => {
     const toast = useToast()
     const router = useRouter()
     const [refresh,setRefresh] = useState(0)
@@ -53,9 +53,10 @@ const DashboardHeader = ({ dashboard, team, onAddPanel, onTimeChange, timeRange,
         if (refresh > 0) {
             refreshH = setInterval(() => {
                 const tr = getInitTimeRange()
+                console.log(tr)
                 if (tr.sub > 0) {
                     const now = new Date()
-                    tr.start = subMinutes(now, 15)
+                    tr.start = subMinutes(now, tr.sub)
                     tr.end = now
                     storage.set(TimePickerKey, JSON.stringify(tr))
                     onTimeChange(tr)
@@ -145,6 +146,6 @@ const DashboardHeader = ({ dashboard, team, onAddPanel, onTimeChange, timeRange,
             </Modal>
         </Box>
     )
-}
+})
 
 export default DashboardHeader

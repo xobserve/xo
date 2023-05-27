@@ -10,7 +10,6 @@ import { PanelProps } from "types/dashboard";
 import { DataFrame } from "types/dataFrame";
 import uPlot from "uplot";
 import { dateTimeFormat } from "utils/datetime/formatter";
-import { useOptions } from "./use-options";
 
 interface Props {
     props: PanelProps
