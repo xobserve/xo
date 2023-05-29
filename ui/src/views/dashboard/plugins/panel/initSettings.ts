@@ -49,6 +49,20 @@ export const initPanelSettings:PanelSettings = {
             }),
             tooltipTrigger: 'mouseenter',
             menu: []
+        },
+
+        edge: {
+            shape: 'quadratic',
+            arrow: 'default',
+            color: {
+                light: '#ddd', 
+                dark: "#8CA88C",
+            },
+            opacity: 0.6,
+            highlightColor: {
+                light: '#E0D731',
+                dark: '#00B5D8'
+            }
         }
     }
 }

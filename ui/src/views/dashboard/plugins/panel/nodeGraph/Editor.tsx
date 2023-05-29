@@ -1,4 +1,5 @@
-import { Alert, Box, Button, Divider, Flex, HStack, Image, Input, Modal, ModalBody, ModalContent, ModalOverlay, Slider, SliderFilledTrack, SliderThumb, SliderTrack, Text, Textarea, Tooltip, useDisclosure, useToast, VStack } from "@chakra-ui/react"
+import { Alert, Box, Button, Divider, Flex, HStack, Image, Input, Modal, ModalBody, ModalContent, ModalOverlay, Select, Slider, SliderFilledTrack, SliderThumb, SliderTrack, Text, Textarea, Tooltip, useDisclosure, useToast, VStack } from "@chakra-ui/react"
+import { ColorPicker } from "components/color-picker"
 import RadionButtons from "components/RadioButtons"
 import { isEmpty } from "lodash"
 import { useState } from "react"
@@ -9,6 +10,8 @@ import PanelEditItem from "src/views/dashboard/edit-panel/PanelEditItem"
 import { NodeGraphIcon, NodeGraphMenuItem, Panel, PanelEditorProps } from "types/dashboard"
 import { useImmer } from "use-immer"
 import { isJSON } from "utils/is"
+import { initPanelSettings } from "../initSettings"
+
 
 const NodeGraphPanelEditor = (props: PanelEditorProps) => {
     const { panel, onChange } = props
@@ -48,6 +51,84 @@ const NodeGraphPanelEditor = (props: PanelEditorProps) => {
             </PanelEditItem>
 
             <RightClickMenus {...props} />
+        </PanelAccordion>
+
+
+        <PanelAccordion title="Edges">
+            <PanelEditItem title="shape">
+                <Select value={panel.settings.nodeGraph.edge.shape} onChange={e => onChange(panel => {
+                    panel.settings.nodeGraph.edge.shape = e.currentTarget.value
+                })}>
+                    <option value="quadratic">quadratic</option>
+                    <option value="line">line</option>
+                    <option value="polyline">polyline</option>
+                </Select>
+            </PanelEditItem>
+
+            <PanelEditItem title="arrow">
+                <Select value={panel.settings.nodeGraph.edge.arrow} onChange={e => onChange(panel => {
+                    panel.settings.nodeGraph.edge.arrow = e.currentTarget.value
+                })}>
+                    <option value="default">default</option>
+                    <option value="triangle">triangle</option>
+                    <option value="circle">circle</option>
+                    <option value="vee">vee</option>
+                    <option value="diamond">diamond</option>
+                    <option value="triangleRect">triangleRect</option>
+                </Select>
+            </PanelEditItem>
+
+            <PanelEditItem title="color">
+                <HStack>
+                    <ColorPicker presetColors={[{ title: 'light-default', color: initPanelSettings.nodeGraph.edge.color.light }]} color={panel.settings.nodeGraph.edge.color.light} onChange={c => onChange((panel: Panel) => {
+                        panel.settings.nodeGraph.edge.color.light = c.hex
+                    })}>
+                        <Button size="sm" variant="outline">Pick light color</Button>
+                    </ColorPicker>
+                    <Box width="40px" height="30px" background={panel.settings.nodeGraph.edge.color.light}></Box>
+                </HStack>
+                <HStack>
+                    <ColorPicker presetColors={[{ title: 'dark-default', color: initPanelSettings.nodeGraph.edge.color.dark }]} color={panel.settings.nodeGraph.edge.color.dark} onChange={c => onChange((panel: Panel) => {
+                        panel.settings.nodeGraph.edge.color.dark = c.hex
+                    })}>
+                        <Button size="sm" variant="outline">Pick dark color</Button>
+                    </ColorPicker>
+                    <Box width="40px" height="30px" background={panel.settings.nodeGraph.edge.color.dark}></Box>
+                </HStack>
+            </PanelEditItem>
+            <PanelEditItem title="opacity" desc="color opacity of edge">
+                <Slider aria-label='slider-ex-1' value={panel.settings.nodeGraph.edge.opacity} min={0} max={1} step={0.1}
+                    onChange={v => onChange((panel: Panel) => {
+                        panel.settings.nodeGraph.edge.opacity = v
+                    })}
+
+                    onChangeEnd={v => onChange(panel => {
+                        panel.settings.nodeGraph.edge.opacity = v
+                    })}>
+                    <SliderTrack>
+                        <SliderFilledTrack />
+                    </SliderTrack>
+                    <SliderThumb children={panel.settings.nodeGraph.edge.opacity} fontSize='sm' boxSize='25px' />
+                </Slider>
+            </PanelEditItem>
+            <PanelEditItem title="highlight color" desc="when hover or selected">
+                <HStack>
+                    <ColorPicker presetColors={[{ title: 'light-default', color: initPanelSettings.nodeGraph.edge.highlightColor.light }]} color={panel.settings.nodeGraph.edge.highlightColor.light} onChange={c => onChange((panel: Panel) => {
+                        panel.settings.nodeGraph.edge.highlightColor.light = c.hex
+                    })}>
+                        <Button size="sm" variant="outline">Pick light color</Button>
+                    </ColorPicker>
+                    <Box width="40px" height="30px" background={panel.settings.nodeGraph.edge.highlightColor.light}></Box>
+                </HStack>
+                <HStack>
+                    <ColorPicker presetColors={[{ title: 'dark-default', color: initPanelSettings.nodeGraph.edge.highlightColor.dark }]} color={panel.settings.nodeGraph.edge.highlightColor.dark} onChange={c => onChange((panel: Panel) => {
+                        panel.settings.nodeGraph.edge.highlightColor.dark = c.hex
+                    })}>
+                        <Button size="sm" variant="outline">Pick dark color</Button>
+                    </ColorPicker>
+                    <Box width="40px" height="30px" background={panel.settings.nodeGraph.edge.highlightColor.dark}></Box>
+                </HStack>
+            </PanelEditItem>
         </PanelAccordion>
     </>)
 }
@@ -212,7 +293,7 @@ const RightClickMenus = ({ panel, onChange }: PanelEditorProps) => {
                     duration: 2000,
                     isClosable: true,
                 });
-                return 
+                return
             }
         }
 
@@ -222,18 +303,18 @@ const RightClickMenus = ({ panel, onChange }: PanelEditorProps) => {
             onChange((panel: Panel) => {
                 panel.settings.nodeGraph.node.menu.unshift(temp)
             })
-    
+
         } else {
             onChange((panel: Panel) => {
-                for (let i=0; i<panel.settings.nodeGraph.node.menu.length;i++) {
+                for (let i = 0; i < panel.settings.nodeGraph.node.menu.length; i++) {
                     if (panel.settings.nodeGraph.node.menu[i].id == temp.id) {
                         panel.settings.nodeGraph.node.menu[i] = temp
                     }
                 }
             })
-    
+
         }
-   
+
         setTemp(initMenuItem)
         onClose()
     }
@@ -244,43 +325,43 @@ const RightClickMenus = ({ panel, onChange }: PanelEditorProps) => {
         })
     }
 
-    const moveUp = (i) => { 
+    const moveUp = (i) => {
         onChange(panel => {
             const menu = panel.settings.nodeGraph.node.menu
-            const item = menu[i-1]
-            menu[i-1] = menu[i]
+            const item = menu[i - 1]
+            menu[i - 1] = menu[i]
             menu[i] = item
         })
     }
 
-    const moveDown = (i) => { 
+    const moveDown = (i) => {
         onChange(panel => {
             const menu = panel.settings.nodeGraph.node.menu
-            const item = menu[i+1]
-            menu[i+1] = menu[i]
+            const item = menu[i + 1]
+            menu[i + 1] = menu[i]
             menu[i] = item
         })
     }
 
     return (<>
-    <PanelEditItem title="right click menus" >
-        <Button size="xs" onClick={() => {onOpen();setTemp(initMenuItem)}}>Add menu item</Button>
-        <Divider my="2" />
-        <VStack alignItems="left" pl="2">
-            {
-                panel.settings.nodeGraph.node.menu.map((item,i) => <Flex alignItems="center" justifyContent="space-between">
-                    <Text>{item.name}</Text>
+        <PanelEditItem title="right click menus" >
+            <Button size="xs" onClick={() => { onOpen(); setTemp(initMenuItem) }}>Add menu item</Button>
+            <Divider my="2" />
+            <VStack alignItems="left" pl="2">
+                {
+                    panel.settings.nodeGraph.node.menu.map((item, i) => <Flex alignItems="center" justifyContent="space-between">
+                        <Text>{item.name}</Text>
 
-                    <HStack layerStyle="textFourth">
-                        {i != 0 && <Icons.FaArrowUp cursor="pointer" onClick={() => moveUp(i)} />}
-                        {i != panel.settings.nodeGraph.node.menu.length - 1 && <Icons.FaArrowDown cursor="pointer" onClick={() => moveDown(i)}/>} 
-                        <MdEdit onClick={() => {setTemp(item);onOpen()}} cursor="pointer" />
-                        <Icons.FaTimes onClick={() => removeItem(i)}  cursor="pointer"/>
-                    </HStack>
-                </Flex>)
-            }
-        </VStack>
-    </PanelEditItem>
+                        <HStack layerStyle="textFourth">
+                            {i != 0 && <Icons.FaArrowUp cursor="pointer" onClick={() => moveUp(i)} />}
+                            {i != panel.settings.nodeGraph.node.menu.length - 1 && <Icons.FaArrowDown cursor="pointer" onClick={() => moveDown(i)} />}
+                            <MdEdit onClick={() => { setTemp(item); onOpen() }} cursor="pointer" />
+                            <Icons.FaTimes onClick={() => removeItem(i)} cursor="pointer" />
+                        </HStack>
+                    </Flex>)
+                }
+            </VStack>
+        </PanelEditItem>
         <Modal isOpen={isOpen} onClose={onClose}>
             <ModalOverlay />
             <ModalContent minWidth="700px">

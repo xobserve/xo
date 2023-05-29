@@ -1,8 +1,9 @@
-import { cloneDeep } from "lodash";
+import G6 from "@antv/g6";
 import { NodeGraphSettings, Panel } from "types/dashboard";
 import { NodeGraphData } from "types/dataFrame";
+import { getDefaultEdgeStyle } from "./default-styles";
 
-export const setAttrsForData = (settings: NodeGraphSettings, data: NodeGraphData) => {
+export const setAttrsForData = (settings: NodeGraphSettings, data: NodeGraphData,colorMode) => {
     const donutColors = JSON.parse(settings.node.donutColors)
     // 计算 node size
     // 找出最小的那个作为基准 size
@@ -67,5 +68,24 @@ export const setAttrsForData = (settings: NodeGraphSettings, data: NodeGraphData
             node.icon.width = node.size / 2
             node.icon.height = node.size / 2
         }
+    })
+
+    data.edges.forEach(edge => {
+        edge.type = settings.edge.shape
+        if (edge.style) {
+            edge.style.endArrow = settings.edge.arrow == "default" ? true :{
+                path: G6.Arrow[settings.edge.arrow](),
+                fill: colorMode == "light" ? settings.edge.color.light : settings.edge.color.dark,
+            }
+
+            edge.style.stroke = colorMode == "light" ? settings.edge.color.light : settings.edge.color.dark
+            edge.style.opacity = settings.edge.opacity
+        }
+       
+        if (!edge.stateStyles) edge.stateStyles = {}
+        const defaultEdgeStyle = getDefaultEdgeStyle(settings,colorMode)
+        Object.keys(defaultEdgeStyle).forEach(key => {
+            edge.stateStyles[key] = defaultEdgeStyle[key]
+        })
     })
 }

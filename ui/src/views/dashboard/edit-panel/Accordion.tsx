@@ -9,7 +9,7 @@ const PanelAccordion = ({title, children }) => {
                     <Text ml="1">{title}</Text>
                 </AccordionButton>
                 <AccordionPanel pb={4} pt="0">
-                    <VStack alignItems="left">
+                    <VStack alignItems="left" spacing="2">
                     {children}
                     </VStack>
                 </AccordionPanel>

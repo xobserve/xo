@@ -7,8 +7,16 @@ import {
     Button,
     Center,
 } from "@chakra-ui/react";
+import { PresetColor } from "react-color/lib/components/sketch/Sketch";
 
-export const ColorPicker = (props) => {
+interface Props {
+    presetColors?: PresetColor[]
+    color: string
+    onChange: any
+    children: any
+}
+
+export const ColorPicker = (props:Props) => {
     return (
         <Popover>
             <PopoverTrigger>{props.children}</PopoverTrigger>
