@@ -12,7 +12,7 @@ export const setAttrsForData = (settings: NodeGraphSettings, data: NodeGraphData
         const attrs = {}
         Object.keys(donutColors).map(k => {
             const d = node.data[k]
-            if (d) {
+            if (d != undefined) {
                 attrs[k] = d
             }  
         })
@@ -88,4 +88,6 @@ export const setAttrsForData = (settings: NodeGraphSettings, data: NodeGraphData
             edge.stateStyles[key] = defaultEdgeStyle[key]
         })
     })
+
+    console.log("here333333f:", data.nodes)
 }
