@@ -62,6 +62,7 @@ const NodeGrapPanel = ({ data, panel, dashboardId }: PanelProps) => {
 
     useEffect(() => {
         if (!graph) {
+            console.time("init node graph, time used: ")
             const tooltip = initTooltip(panel.settings.nodeGraph)
 
             setAttrsForData(panel.settings.nodeGraph,data[0])
@@ -185,6 +186,7 @@ const NodeGrapPanel = ({ data, panel, dashboardId }: PanelProps) => {
             const newData = filterData(data[0], dashboardId, panel.id)
             gh.data(newData);
             gh.render();
+           
             setGraph(gh)
             if (typeof window !== 'undefined') {
                 window.onresize = () => {

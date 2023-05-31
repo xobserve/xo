@@ -90,7 +90,7 @@ export const NodeGraphToolbar = memo(({ graph,dashboardId,panelId,data,onFilterR
     }, [graph,fishEye])
 
 
-
+    
     const handleZoomOut = () => {
         if (!graph || graph.destroyed) return;
         const current = graph.getZoom();
@@ -121,6 +121,8 @@ export const NodeGraphToolbar = memo(({ graph,dashboardId,panelId,data,onFilterR
         if (!graph || graph.destroyed) return;
         graph.fitView(16);
     };
+
+    console.timeEnd("init node graph, time used: ")
     return (
         <> 
             <HStack spacing="3" className="nodegraph-toolbar" position="absolute" left="10px" top="7px" zIndex="1000" opacity="0.7" fontSize="0.8rem">
