@@ -91,6 +91,7 @@ const NodeGraphFilter = ({ graph, dashboardId, panelId, onFilterRulesChange }: P
         })
     }
     const addRule = () => {
+        console.log("here333333a:",tempRule)
         if (tempRule.operator != FilterOperator.Regex) {
             if (!isNumber(tempRule.value)) {
                 toast({
@@ -125,11 +126,11 @@ const NodeGraphFilter = ({ graph, dashboardId, panelId, onFilterRulesChange }: P
         }
 
         if (exist) {
-            setRules(draft => {
-                draft[pos] = tempRule
-            })
+            const newRules = cloneDeep(rules)
+            newRules[pos] = tempRule
+            setRules(newRules)
             setTempRule(null)
-            storage.set(FilteringStorageKey + dashboardId + '-' + panelId, rules)
+            storage.set(FilteringStorageKey + dashboardId + '-' + panelId, newRules)
         } else {
             const newRules = [...rules, tempRule]
             setRules(newRules)
