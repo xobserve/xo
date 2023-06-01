@@ -18,7 +18,8 @@ import TablePanel from "../plugins/panel/table/Table";
 import useBus from 'use-bus'
 import { getInitTimeRange } from "components/TimePicker";
 import { TimeChangedEvent, VariableChangedEvent } from "src/data/bus-events";
-import { variables } from "pages/[...dashboardId]";
+import { variables } from "../Dashboard";
+
 
 interface PanelGridProps {
     dashboard: Dashboard

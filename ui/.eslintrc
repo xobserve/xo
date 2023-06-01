@@ -21,7 +21,8 @@
           "allowComputed": true
         }
       ],
-      "import/no-unresolved": "off"
+      "import/no-unresolved": "off",
+      "react-hooks/exhaustive-deps": true
     },
     "parserOptions": {
       "project": "tsconfig.json"

@@ -6,7 +6,7 @@ import SelectVariables from "components/variables/SelectVariables"
 import { subMinutes } from "date-fns"
 import { find, isEmpty } from "lodash"
 import { useRouter } from "next/router"
-import { variables } from "pages/[...dashboardId]"
+
 import { memo, useEffect, useState } from "react"
 import { FaRegClock, FaRegSave } from "react-icons/fa"
 import { MdSync } from "react-icons/md"
@@ -20,11 +20,11 @@ import { Variable } from "types/variable"
 import useBus from "use-bus"
 import { requestApi } from "utils/axios/request"
 import storage from "utils/localStorage"
+import { variables } from "./Dashboard"
 import DashboardSettings from "./settings/DashboardSettings"
 
 interface HeaderProps {
     dashboard: Dashboard
-    team: Team
     onAddPanel: any
     onTimeChange: any
     timeRange: TimeRange
@@ -33,11 +33,22 @@ interface HeaderProps {
     onDashboardSave: any
     onPastePanel: any
 }
-const DashboardHeader = memo(({ dashboard, team, onAddPanel, onTimeChange, timeRange, onVariablesChange, onChange, onDashboardSave, onPastePanel }: HeaderProps) => {
+const DashboardHeader = memo(({ dashboard, onAddPanel, onTimeChange, timeRange, onVariablesChange, onChange, onDashboardSave, onPastePanel }: HeaderProps) => {
     const toast = useToast()
     const router = useRouter()
     const [variablesChanged, setVariablesChanged] = useState(0)
     const [refresh, setRefresh] = useState(0)
+    const [team, setTeam] = useState<Team>(null)
+
+    useEffect(() => {
+        getTeam()  
+    },[])
+
+    const getTeam = async () => {
+        const res1 = await requestApi.get(`/team/${dashboard.ownedBy}`)
+        setTeam(res1.data)
+    }
+
     let refreshH;
     const onSave = async () => {
         await requestApi.post("/dashboard/save", dashboard)
@@ -97,6 +108,8 @@ const DashboardHeader = memo(({ dashboard, team, onAddPanel, onTimeChange, timeR
 
     return (
         <Box py="2" width="calc(100% - 100px)" position="fixed" bg={'var(--chakra-colors-chakra-body-bg)'}>
+            {team && 
+            <>
             <Flex justifyContent="space-between" >
                 <HStack textStyle="subTitle">
                     <Tooltip label="the team which current dashboard belongs to"><Box cursor="pointer" onClick={() => router.push(`${ReserveUrls.Config}/team/${team.id}/members`)}>{team?.name}</Box></Tooltip>
@@ -132,7 +145,7 @@ const DashboardHeader = memo(({ dashboard, team, onAddPanel, onTimeChange, timeR
                 <SelectVariables id={variablesChanged}  variables={variables.filter((v) => v.id.toString().startsWith("d-"))} />
                 <SelectVariables  id={variablesChanged} variables={variables.filter((v) => !v.id.toString().startsWith("d-") && !find(dashboard.data.hidingVars?.split(','), v1 => v1 == v.name))} />
             </Flex>}
-
+            </>}
             <Modal isOpen={isOpen} onClose={onClose}>
                 <ModalOverlay />
                 <ModalContent minW="fit-content">
