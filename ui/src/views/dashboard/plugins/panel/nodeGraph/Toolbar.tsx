@@ -129,7 +129,7 @@ export const NodeGraphToolbar = memo(({ graph,dashboardId,panelId,data,onFilterR
                 <Tooltip label="Zoom out"><Box cursor="pointer" onClick={handleZoomOut}><FaPlus /></Box></Tooltip>
                 <Tooltip label="Fisheye magnifying,most useful when nodes squeezed together"><Box color="currentcolor" cursor="pointer" onClick={toggleFishEye}><FaRegCircle /></Box></Tooltip>
                 <Filter graph={graph} dashboardId={dashboardId} panelId={panelId}  onFilterRulesChange={onFilterRulesChange}/>
-                <LocateNode graph={graph}/>
+                {/* <LocateNode graph={graph}/> */}
             </HStack>
             <Box className="nodegraph-menutip bordered" opacity={menuTip.opacity} position="absolute" right="25px" width="fit-content" top="2px" borderRadius='8px' transition="all 0.2s linear" px="2" py="1" fontSize="0.9rem">{menuTip.text}</Box></>
     )

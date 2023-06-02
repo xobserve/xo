@@ -1,5 +1,5 @@
 
-export const nodeGraphData = (nodesCount) => {
+export const nodeGraphData = (nodesCount, rand) => {
     const nodes = [];
     for (let i = 0; i < nodesCount; i++) {
       const node = {
@@ -35,7 +35,7 @@ export const nodeGraphData = (nodesCount) => {
     for (let i = 0; i < nodesCount; i++) {
       for (let j = 0; j < nodesCount; j++) {
         if (i !== j) {
-          if (Math.random() > 0.8) {
+          if (Math.random() > rand) {
             const req = Math.round(Math.random() * 1000)
             const error = Math.round(Math.random() * 100)
             edges.push({

@@ -1,5 +1,5 @@
 import { Graph } from "@antv/g6"
-import { chakra, Box, Button, Divider, Drawer, DrawerBody, DrawerContent, DrawerHeader, DrawerOverlay, Flex, HStack, Input, Modal, ModalBody, ModalContent, ModalHeader, ModalOverlay, Select, Text, Tooltip, useDisclosure, Wrap, useToast, NumberInput, NumberInputField, Alert, VStack } from "@chakra-ui/react"
+import { chakra, Box, Button, Divider, Drawer, DrawerBody, DrawerContent, DrawerHeader, DrawerOverlay, Flex, HStack, Input, Modal, ModalBody, ModalContent, ModalHeader, ModalOverlay, Select, Text, Tooltip, useDisclosure, Wrap, useToast, NumberInput, NumberInputField, Alert, VStack, Switch } from "@chakra-ui/react"
 import { cloneDeep, isNumber } from "lodash"
 import { useEffect, useState } from "react"
 import { FaArrowDown, FaArrowUp, FaEdit, FaEye, FaEyeSlash, FaFilter, FaPlus, FaRegEdit, FaTimes } from "react-icons/fa"
@@ -27,23 +27,26 @@ export const enum FilterCombinition {
 }
 
 export const FilteringStorageKey = "node-filter-"
+export const FilteringRelationKey = "node-relation"
 
-const NodeGraphFilter = ({ graph, dashboardId, panelId,onFilterRulesChange }: Props) => {
+const NodeGraphFilter = ({ graph, dashboardId, panelId, onFilterRulesChange }: Props) => {
     const toast = useToast()
     const { isOpen, onOpen, onClose } = useDisclosure()
     const [tempRule, setTempRule] = useImmer(null)
     const [rules, setRules] = useImmer<any[]>(null)
     const [edgeOptions, setEdgeOptions] = useState([])
     const [nodeOptions, setNodeOptions] = useState([])
+    const [showRelation, setShowRelation] = useState(false)
+
     useEffect(() => {
         const nodes = graph.getNodes()
         const edges = graph.getEdges()
         if (nodes.length > 0) {
             const model = nodes[0].getModel()
             const option = []
-            option.push({name: 'label',type: typeof model.label})
+            option.push({ name: 'label', type: typeof model.label })
             Object.keys(model.data).forEach(key => {
-                option.push({name: key, type: typeof model.data[key]})
+                option.push({ name: key, type: typeof model.data[key] })
             })
             setNodeOptions(option)
         }
@@ -52,13 +55,16 @@ const NodeGraphFilter = ({ graph, dashboardId, panelId,onFilterRulesChange }: Pr
             const model = edges[0].getModel()
             const option = []
             Object.keys(model.data).forEach(key => {
-                option.push({name: key, type: typeof model.data[key]})
+                option.push({ name: key, type: typeof model.data[key] })
             })
             setEdgeOptions(option)
         }
 
         const rules = storage.get(FilteringStorageKey + dashboardId + '-' + panelId)
         setRules(rules ?? [])
+
+        const relation = storage.get(FilteringRelationKey + dashboardId + '-' + panelId)
+        setShowRelation(relation)
     }, [])
 
     const options = tempRule?.type === 'node' ? nodeOptions : edgeOptions
@@ -78,7 +84,7 @@ const NodeGraphFilter = ({ graph, dashboardId, panelId,onFilterRulesChange }: Pr
             id: new Date().getTime(),
             type: 'node',
             key: nodeOptions[0].name,
-            operator: nodeOptions[0].type == "string" ? FilterOperator.Regex  :FilterOperator.GreaterThan,
+            operator: nodeOptions[0].type == "string" ? FilterOperator.Regex : FilterOperator.GreaterThan,
             value: nodeOptions[0].type == "string" ? '' : 0,
             combination: FilterCombinition.And,
             disabled: false
@@ -106,10 +112,10 @@ const NodeGraphFilter = ({ graph, dashboardId, panelId,onFilterRulesChange }: Pr
                 return
             }
         }
-        
+
         let exist = false;
         let pos;
-        for (var i =0;i<rules.length;i++) {
+        for (var i = 0; i < rules.length; i++) {
             const rule = rules[i]
             if (rule.id == tempRule.id) {
                 exist = true
@@ -171,10 +177,10 @@ const NodeGraphFilter = ({ graph, dashboardId, panelId,onFilterRulesChange }: Pr
     }
 
     const onChangeType = v => {
-        setTempRule(draft => { 
+        setTempRule(draft => {
             draft.type = v
             draft.key = (v == "node" ? nodeOptions : edgeOptions)[0].name
-            draft.operator = (v == "node" ? nodeOptions : edgeOptions)[0].type == "string" ? FilterOperator.Regex  :FilterOperator.GreaterThan
+            draft.operator = (v == "node" ? nodeOptions : edgeOptions)[0].type == "string" ? FilterOperator.Regex : FilterOperator.GreaterThan
             draft.value = (v == "node" ? nodeOptions : edgeOptions)[0].type == "string" ? '' : 0
         })
     }
@@ -182,8 +188,14 @@ const NodeGraphFilter = ({ graph, dashboardId, panelId,onFilterRulesChange }: Pr
     const onChangeKey = v => {
         setTempRule(draft => {
             draft.key = v
-            draft.operator = (v == "node" ? nodeOptions : edgeOptions)[0].type == "string" ? FilterOperator.Regex  :FilterOperator.GreaterThan
+            draft.operator = (v == "node" ? nodeOptions : edgeOptions)[0].type == "string" ? FilterOperator.Regex : FilterOperator.GreaterThan
         })
+    }
+
+    const onShowRelationChange = e => {
+        setShowRelation(e.currentTarget.checked)
+        storage.set(FilteringRelationKey + dashboardId + '-' + panelId, e.currentTarget.checked)
+        onFilterRulesChange()
     }
 
     const placeholder = tempRule?.operator == FilterOperator.Regex ? 'enter a regex to match' : 'enter a number'
@@ -236,9 +248,9 @@ const NodeGraphFilter = ({ graph, dashboardId, panelId,onFilterRulesChange }: Pr
                                 setTempRule(draft => { draft.operator = v; draft.value = v1 })
                             }}>
                                 {getKeyType() == "number" ? <> <option value=">">&gt;</option>
-                                <option value="=">=</option>
-                                <option value="<">&lt;</option></> : <option value="regex">regex</option>}
-                                
+                                    <option value="=">=</option>
+                                    <option value="<">&lt;</option></> : <option value="regex">regex</option>}
+
                             </Select>
 
                             {
@@ -264,20 +276,29 @@ const NodeGraphFilter = ({ graph, dashboardId, panelId,onFilterRulesChange }: Pr
 
 
                         <VStack alignItems="left" mt="2" fontSize="0.9rem" spacing="1">
-                            {rules?.map((rule, i) => {return rule.id != tempRule?.id && <HStack>
-                                <Text>
-                                    {i > 0 && <chakra.span fontWeight="bold" color="brand.500">{rule.combination}</chakra.span>} Filter the <chakra.span fontWeight="bold">{rule.type}</chakra.span>s if its data attr <chakra.span fontWeight="bold">{rule.key} {rule.operator} {rule.value} </chakra.span>
-                                </Text>
-                                <HStack opacity="0.7">
-                                    {i > 0 && <Box onClick={() => moveRule(rule.id, -1)} cursor="pointer"><FaArrowUp /></Box>}
-                                    {i < rules.length - 1 && <Box onClick={() => moveRule(rule.id, 1)} cursor="pointer"><FaArrowDown /></Box>}
-                                    <Tooltip label={!rule.disabled ? "this rule is enabled, click to disable" : "this rule is disabled, click to enable"}><Box onClick={() => onDisableRule(i)} cursor="pointer"><FaEye color={rule.disabled ? "currentColor" : 'var(--chakra-colors-brand-500)'}/></Box></Tooltip>
-                                    <Box  onClick={() => setTempRule(rule)} cursor="pointer"><MdEdit /></Box>
-                                    <Tooltip label={"remove this rule"}><Box onClick={() => removeRule(rule.id)} cursor="pointer"><FaTimes /></Box></Tooltip>
+                            {rules?.map((rule, i) => {
+                                return rule.id != tempRule?.id && <HStack>
+                                    <Text>
+                                        {i > 0 && <chakra.span fontWeight="bold" color="brand.500">{rule.combination}</chakra.span>} Filter the <chakra.span fontWeight="bold">{rule.type}</chakra.span>s if its data attr <chakra.span fontWeight="bold">{rule.key} {rule.operator} {rule.value} </chakra.span>
+                                    </Text>
+                                    <HStack opacity="0.7">
+                                        {i > 0 && <Box onClick={() => moveRule(rule.id, -1)} cursor="pointer"><FaArrowUp /></Box>}
+                                        {i < rules.length - 1 && <Box onClick={() => moveRule(rule.id, 1)} cursor="pointer"><FaArrowDown /></Box>}
+                                        <Tooltip label={!rule.disabled ? "this rule is enabled, click to disable" : "this rule is disabled, click to enable"}><Box onClick={() => onDisableRule(i)} cursor="pointer"><FaEye color={rule.disabled ? "currentColor" : 'var(--chakra-colors-brand-500)'} /></Box></Tooltip>
+                                        <Box onClick={() => setTempRule(rule)} cursor="pointer"><MdEdit /></Box>
+                                        <Tooltip label={"remove this rule"}><Box onClick={() => removeRule(rule.id)} cursor="pointer"><FaTimes /></Box></Tooltip>
+                                    </HStack>
                                 </HStack>
-                            </HStack>})}
+                            })}
                         </VStack>
 
+                        {rules?.length > 0 && <>
+                            <Divider my="2" />
+                            <HStack>
+                                <Text fontSize="0.95rem">Show relation nodes of the results</Text>
+                                <Switch defaultChecked={showRelation} onChange={onShowRelationChange} />
+                            </HStack>
+                        </>}
 
                         <Alert status='success' position="absolute" bottom="0" left="0" fontSize="0.9rem">
                             <VStack alignItems="left" spacing="1">

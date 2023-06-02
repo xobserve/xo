@@ -2,17 +2,58 @@ import { Graph } from "@antv/g6"
 import { isEmpty } from "lodash"
 import { PanelData } from "types/dashboard"
 import storage from "utils/localStorage"
-import { FilterCombinition, FilteringStorageKey, FilterOperator } from "./Filter"
+import { FilterCombinition, FilteringRelationKey, FilteringStorageKey, FilterOperator } from "./Filter"
 
 
-export const filterData = (data,dashboardId, panelId,rs?) => {
-    const {nodes,edges} = data
-    const rules = rs??storage.get(FilteringStorageKey + dashboardId + '-' + panelId)
+export const filterData = (data, dashboardId, panelId, rs?) => {
+    const { nodes, edges } = data
+    const rules = rs ?? storage.get(FilteringStorageKey + dashboardId + '-' + panelId)
     if (isEmpty(rules)) {
-         return data
+        return data
     }
-    const ns = filterNodes(nodes,rules)
-    const es = filterEdges(edges,rules)
+    console.time("filter data in node graph, time used:")
+    const ns = filterNodes(nodes, rules)
+    const es = filterEdges(edges, rules)
+
+    if (ns.length != nodes.length) {
+        const relation = storage.get(FilteringRelationKey + dashboardId + '-' + panelId)
+        if (relation) {
+            const relationMap = new Map()
+            edges.forEach(edge => {
+                const oldS = relationMap[edge.source]
+                if (!oldS) {
+                    relationMap[edge.source] = [edge.target]
+                } else {
+                    oldS.push(edge.target)
+                }
+
+                const oldT = relationMap[edge.target]
+                if (!oldT) {
+                    relationMap[edge.target] = [edge.source]
+                } else {
+                    oldT.push(edge.source)
+                }
+            })
+            // find the relations of the results
+            const extraNodes = []
+            for (const node of ns) {
+                const relations = relationMap[node.id]
+                relations.forEach(id => {
+                    if (!extraNodes.includes(id)) {
+                        extraNodes.push(id)
+                    }
+                })
+            }
+
+            for (const id of extraNodes) {
+                const node = nodes.find(n => n.id == id)
+                ns.push(node)
+            }
+        }
+    }
+
+
+    console.timeEnd("filter data in node graph, time used:")
     return {
         nodes: ns,
         edges: es
@@ -62,7 +103,7 @@ const filterEdges = (edges, rules) => {
             }
         }
 
-       return passed
+        return passed
     })
 }
 
