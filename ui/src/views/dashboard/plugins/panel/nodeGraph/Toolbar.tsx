@@ -1,8 +1,9 @@
 import G6, { Graph } from "@antv/g6"
 import { Box, HStack, Text, Tooltip } from "@chakra-ui/react"
 import { memo, useEffect, useState } from "react"
-import { FaEye, FaMinus, FaPlus, FaSearch } from "react-icons/fa"
+import { FaEye, FaMinus, FaPlus, FaRegCircle, FaSearch } from "react-icons/fa"
 import Filter from "./filter/Filter"
+import LocateNode from "./locateNode"
 
 interface Props {
     graph: Graph
@@ -126,8 +127,9 @@ export const NodeGraphToolbar = memo(({ graph,dashboardId,panelId,data,onFilterR
                 <Tooltip label="Zoom in"><Box cursor="pointer" onClick={handleZoomIn}><FaMinus /></Box></Tooltip>
                 <Tooltip label="Fit to canvas"><Text cursor="pointer" fontWeight="600" onClick={handleFitViw}>FIT</Text></Tooltip>
                 <Tooltip label="Zoom out"><Box cursor="pointer" onClick={handleZoomOut}><FaPlus /></Box></Tooltip>
-                <Tooltip label="Fisheye magnifying,most useful when nodes squeezed together"><Box color="currentcolor" cursor="pointer" onClick={toggleFishEye}><FaSearch /></Box></Tooltip>
+                <Tooltip label="Fisheye magnifying,most useful when nodes squeezed together"><Box color="currentcolor" cursor="pointer" onClick={toggleFishEye}><FaRegCircle /></Box></Tooltip>
                 <Filter graph={graph} dashboardId={dashboardId} panelId={panelId}  onFilterRulesChange={onFilterRulesChange}/>
+                <LocateNode graph={graph}/>
             </HStack>
             <Box className="nodegraph-menutip bordered" opacity={menuTip.opacity} position="absolute" right="25px" width="fit-content" top="2px" borderRadius='8px' transition="all 0.2s linear" px="2" py="1" fontSize="0.9rem">{menuTip.text}</Box></>
     )
