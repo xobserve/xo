@@ -21,7 +21,6 @@ const VariablesSetting = ({ dashboard, onChange }: Props) => {
     const onAddVariable = () => {
         setEditMode(false)
         const id = dashboard.id + new Date().getTime()
-        console.log(id)
         setVariable({
             id: id as any,
             name: '',
@@ -44,7 +43,8 @@ const VariablesSetting = ({ dashboard, onChange }: Props) => {
         if (!dashboard.data.variables) {
             dashboard.data.variables = []
         }
-        dashboard.data.variables.unshift(v)
+        onChange(draft => { draft.data.variables.unshift(v)})
+       
         onClose()
         toast({
             title: "Variable added",
@@ -54,7 +54,6 @@ const VariablesSetting = ({ dashboard, onChange }: Props) => {
         })
 
         setVariable(null)
-        onChange()
     }
 
 
@@ -78,36 +77,27 @@ const VariablesSetting = ({ dashboard, onChange }: Props) => {
         }
 
         onClose()
-        toast({
-            title: "Variable updated",
-            status: "success",
-            duration: 3000,
-            isClosable: true,
-        })
         setVariable(null)
-        for (var i=0;i<dashboard.data.variables.length;i++) {
-            if (dashboard.data.variables[i].id == v.id) {
-                dashboard.data.variables[i] = v
+
+        onChange(dashboard => {
+            for (var i=0;i<dashboard.data.variables.length;i++) {
+                if (dashboard.data.variables[i].id == v.id) {
+                    dashboard.data.variables[i] = v
+                }
             }
-        }
-        onChange()
+        })  
     }
 
     const onRemoveVariable = async (v:Variable) => {
         onClose()
-        toast({
-            title: "Variable removed",
-            status: "success",
-            duration: 3000,
-            isClosable: true,
-        })
         setVariable(null)
-        for (var i=0;i<dashboard.data.variables.length;i++) {
-            if (dashboard.data.variables[i].id == v.id) {
-                dashboard.data.variables.splice(i, 1)
+        onChange(dashboard => {
+            for (var i=0;i<dashboard.data.variables.length;i++) {
+                if (dashboard.data.variables[i].id == v.id) {
+                    dashboard.data.variables.splice(i, 1)
+                }
             }
-        }
-        onChange()
+        })
     }
 
     return <>

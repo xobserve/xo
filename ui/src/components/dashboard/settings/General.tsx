@@ -35,8 +35,7 @@ const GeneralSettings = ({ dashboard, onChange }: Props) => {
             setTag('')
             return
         }
-        dashboard.data.tags.push(tag)
-        onChange()
+        onChange(draft => {draft.data.tags.push(tag)})
         setTag('')
     }
 
@@ -44,11 +43,11 @@ const GeneralSettings = ({ dashboard, onChange }: Props) => {
         <VStack alignItems="left" spacing={4}>
             <Box>
                 <Text textStyle="title">Title</Text>
-                <Input value={title} onChange={e => setTitle(e.currentTarget.value)} onBlur={() => { dashboard.title = title; onChange() }} mt="1" />
+                <Input value={title} onChange={e => setTitle(e.currentTarget.value)} onBlur={() => onChange(draft => {draft.title = title}) } mt="1" />
             </Box>
             <Box>
                 <Text textStyle="title">Description</Text>
-                <Input value={desc} onChange={e => setDesc(e.currentTarget.value)} onBlur={() => { dashboard.data.description = desc; onChange() }} mt="1" />
+                <Input value={desc} onChange={e => setDesc(e.currentTarget.value)} onBlur={() =>  onChange(draft => {draft.data.description = desc}) } mt="1" />
             </Box>
             {/* <Box>
                 <Text textStyle="title">Editable</Text>
@@ -58,12 +57,12 @@ const GeneralSettings = ({ dashboard, onChange }: Props) => {
             <Box>
                 <Text textStyle="title">Shared tooltip</Text>
                 <Text textStyle="annotation">Show tooltips at the same position across all panels</Text>
-                <Switch isChecked={dashboard.data.sharedTooltip} onChange={e => { dashboard.data.sharedTooltip = e.currentTarget.checked; onChange() }} mt="1" />
+                <Switch isChecked={dashboard.data.sharedTooltip} onChange={e =>  onChange(draft => {draft.data.sharedTooltip =  e.currentTarget.checked}) } mt="1" />
             </Box>
 
             <Box>
                 <Text textStyle="title">Hide global variables</Text>
-                <Input value={hidingVars} onChange={e => setHidingVars(e.currentTarget.value)} onBlur={() => { dashboard.data.hidingVars = hidingVars; onChange() }} mt="1" placeholder="enter global variables names, separated with ',' . e.g: app,env" />
+                <Input value={hidingVars} onChange={e => setHidingVars(e.currentTarget.value)} onBlur={() => onChange(draft => {draft.data.hidingVars = hidingVars})} mt="1" placeholder="enter global variables names, separated with ',' . e.g: app,env" />
             </Box>
             <Box>
                 <Text textStyle="title">Tags</Text>
@@ -73,8 +72,7 @@ const GeneralSettings = ({ dashboard, onChange }: Props) => {
                         dashboard.data.tags?.map(t => <Tag>
                             <TagLabel>{t}</TagLabel>
                             <TagCloseButton onClick={() => {
-                                dashboard.data.tags.splice(dashboard.data.tags.indexOf(t), 1)
-                                onChange()
+                                onChange(draft => {draft.data.tags.splice(draft.data.tags.indexOf(t), 1)})
                             }} />
                         </Tag>)
                     }

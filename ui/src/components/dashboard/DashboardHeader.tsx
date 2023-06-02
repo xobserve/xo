@@ -21,6 +21,7 @@ import useBus from "use-bus"
 import { requestApi } from "utils/axios/request"
 import storage from "utils/localStorage"
 import { variables } from "./Dashboard"
+import DashboardSave from "./DashboardSave"
 import DashboardSettings from "./settings/DashboardSettings"
 
 interface HeaderProps {
@@ -30,16 +31,15 @@ interface HeaderProps {
     timeRange: TimeRange
     onVariablesChange: any
     onChange: any
-    onDashboardSave: any
     onPastePanel: any
 }
-const DashboardHeader = memo(({ dashboard, onAddPanel, onTimeChange, timeRange, onVariablesChange, onChange, onDashboardSave, onPastePanel }: HeaderProps) => {
+const DashboardHeader = memo(({ dashboard, onAddPanel, onTimeChange, timeRange, onVariablesChange, onChange, onPastePanel }: HeaderProps) => {
     const toast = useToast()
     const router = useRouter()
     const [variablesChanged, setVariablesChanged] = useState(0)
     const [refresh, setRefresh] = useState(0)
     const [team, setTeam] = useState<Team>(null)
-
+    
     useEffect(() => {
         getTeam()  
     },[])
@@ -50,16 +50,6 @@ const DashboardHeader = memo(({ dashboard, onAddPanel, onTimeChange, timeRange, 
     }
 
     let refreshH;
-    const onSave = async () => {
-        await requestApi.post("/dashboard/save", dashboard)
-        toast({
-            title: "Dashboard saved.",
-            status: "success",
-            duration: 3000,
-            isClosable: true,
-        })
-        onDashboardSave()
-    }
 
     const { isOpen, onOpen, onClose } = useDisclosure()
     const { isOpen: isAddOpen, onOpen: onAddOpen, onClose: onAddClose } = useDisclosure()
@@ -120,7 +110,7 @@ const DashboardHeader = memo(({ dashboard, onAddPanel, onTimeChange, timeRange, 
                 <HStack>
                     <HStack spacing="1">
                         <IconButton onClick={addPanel}><PanelAdd size={28} fill={useColorModeValue("var(--chakra-colors-brand-500)", "var(--chakra-colors-brand-200)")} /></IconButton>
-                        <IconButton onClick={onSave}><FaRegSave /></IconButton>
+                        <DashboardSave dashboard={dashboard}/>
                         {dashboard && <DashboardSettings dashboard={dashboard} onChange={onChange} />}
                         <Tooltip label={`${timeRange?.start.toLocaleString()} - ${timeRange?.end.toLocaleString()}`}><Box><IconButton onClick={onOpen}><FaRegClock /></IconButton></Box></Tooltip>
                         <HStack spacing={0}>

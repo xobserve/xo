@@ -20,9 +20,10 @@ interface EditPanelProps {
     onApply: any
     onDiscard: any
     variables: Variable[]
+    onChange: any
 }
 
-const EditPanel = ({ dashboard, panel, onApply, onDiscard,variables }: EditPanelProps) => {
+const EditPanel = ({ dashboard, panel, onApply, onDiscard,variables,onChange }: EditPanelProps) => {
     const [tempPanel, setTempPanel] = useState<Panel>(null)
     const { isOpen, onOpen, onClose } = useDisclosure()
 
@@ -38,12 +39,14 @@ const EditPanel = ({ dashboard, panel, onApply, onDiscard,variables }: EditPanel
 
 
     const onApplyChanges = () => {
-        for (var i = 0; i < dashboard.data.panels.length; i++) {
-            if (dashboard.data.panels[i].id === tempPanel.id) {
-                dashboard.data.panels[i] = tempPanel
-                break
+        onChange(dashboard => {
+            for (var i = 0; i < dashboard.data.panels.length; i++) {
+                if (dashboard.data.panels[i].id === tempPanel.id) {
+                    dashboard.data.panels[i] = tempPanel
+                    break
+                }
             }
-        }
+        })
 
         onApply()
     }

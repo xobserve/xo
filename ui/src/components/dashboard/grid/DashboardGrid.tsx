@@ -3,7 +3,6 @@ import ReactGridLayout, { ItemCallback } from 'react-grid-layout';
 import sizeMe from 'react-sizeme';
 import { GRID_CELL_HEIGHT, GRID_CELL_VMARGIN, GRID_COLUMN_COUNT } from "src/data/constants";
 import { updateGridPos } from "utils/dashboard/panel";
-import { sortPanelsByGridPos } from "utils/dashboard/dashboard";
 import { Box } from "@chakra-ui/react";
 import PanelGrid from "./PanelGrid";
 import { memo, useState } from "react";
@@ -18,13 +17,12 @@ interface GridProps {
     dashboard: Dashboard
     onChange: any
     variables: Variable[]
-    onDashbardChanged: any
     onVariablesChange: any
 }
 
 const DashboardGrid = memo((props: GridProps) => {
     console.log("dashboard grid rendered")
-    const { dashboard, onChange,variables,onDashbardChanged, onVariablesChange} = props
+    const { dashboard, onChange,variables, onVariablesChange} = props
 
     const SizedReactLayoutGrid = sizeMe({ monitorWidth: true })(GridWrapper);
 
@@ -37,8 +35,15 @@ const DashboardGrid = memo((props: GridProps) => {
             }
         }
 
-        sortPanelsByGridPos(dashboard);
-        onDashbardChanged()
+        onChange(dashboard => {
+            dashboard.data.panels.sort((panelA, panelB) => {
+                if (panelA.gridPos.y === panelB.gridPos.y) {
+                    return panelA.gridPos.x - panelB.gridPos.x;
+                } else {
+                    return panelA.gridPos.y - panelB.gridPos.y;
+                }
+            })
+        })
     };
 
     const buildLayout = (panels: Panel[]) => {
@@ -90,13 +95,13 @@ const DashboardGrid = memo((props: GridProps) => {
 
     const onEditPanelApply = () => {
         setPanelInEdit(null)
-        onDashbardChanged()
     }
 
     const onRemovePanel = (panel: Panel) => {
         const index = dashboard.data.panels.indexOf(panel);
-        dashboard.data.panels.splice(index, 1);
-        onChange()
+        onChange(dashboard => {
+            dashboard.data.panels.splice(index, 1);
+        })
     }
     
     let mooSync = dashboard.data.sharedTooltip ? uPlot.sync(dashboard.id) : null
@@ -141,7 +146,7 @@ const DashboardGrid = memo((props: GridProps) => {
                 })
             }
         </SizedReactLayoutGrid>
-        <EditPanel dashboard={dashboard} panel={panelInEdit} onApply={onEditPanelApply} onDiscard={onEditPanelDiscard} variables={variables}/>
+        <EditPanel dashboard={dashboard} onChange={onChange} panel={panelInEdit} onApply={onEditPanelApply} onDiscard={onEditPanelDiscard} variables={variables}/>
     </>)
 })
 
