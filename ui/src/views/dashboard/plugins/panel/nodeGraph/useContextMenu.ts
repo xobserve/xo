@@ -30,10 +30,10 @@ const useContextMenu = (settings: NodeGraphSettings) => {
         const outDiv = document.createElement('div');
         outDiv.style.width = 'fit-content';
         outDiv.style.padding = '0px 4px 0px 10px';
-        outDiv.style.fontSize = '12px';
+        outDiv.style.fontSize = '14px';
         let li = ''
         settings.node.menu.forEach(item => {
-          li += `<li id=${item.id}>${item.name}</li>`
+          li += `<li id=${item.id} style="cursor:pointer;">${item.name}</li>`
         })
         outDiv.innerHTML = `
                 <strong><h3>${model.label} menu</h3></strong>
