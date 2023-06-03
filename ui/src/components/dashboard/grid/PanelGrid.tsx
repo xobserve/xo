@@ -129,7 +129,6 @@ export const PanelComponent = ({ dashboard, panel, onEditPanel, onRemovePanel, w
 
                     if (res.error) {
                         setQueryError(res.error)
-                        return
                     } else {
                         setQueryError(null)
                     }

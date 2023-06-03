@@ -23,6 +23,8 @@ import { TimeChangedEvent, VariableChangedEvent } from "src/data/bus-events"
 
 import { useImmer } from "use-immer"
 import { setAutoFreeze } from "immer";
+import { initGraphSettings } from "./plugins/panel/graph/Editor"
+import { initTextSettings } from "./plugins/panel/text/Text"
 
 setAutoFreeze(false)
 // All of the paths that is not defined in pages directory will redirect to this page,
@@ -72,86 +74,12 @@ const DashboardWrapper = ({dashboardId}) => {
       
     }
 
-    const getNextPanelId = () => {
-        let max = 0;
-
-        for (const panel of dashboard.data.panels) {
-            if (panel.id > max) {
-                max = panel.id;
-            }
-        }
-
-        return max + 1;
-    }
-
-
-    const onAddPanel = () => {
-         // Return if the "Add panel" exists already
-        // if (panel) {
-        //     return;
-        // }
-
-        if (!dashboard.data.panels) {
-            dashboard.data.panels = []
-        }
-        const id = getNextPanelId()
-        const newPanel: Panel = {
-            id: id,
-            title: `New panel ${id}`,
-            type: PanelType.Text,
-            gridPos: { x: 0, y: 0, w: 12, h: 8 },
-            settings: {
-                text: {
-                    md: `#Welcome to Starship\n This is a new panel\n You can edit it by clicking the edit button on the top title\n ###Have fun!`
-                },
-            },
-            datasource: [{
-                type: DatasourceType.Prometheus,
-                selected: true,
-                queryOptions: {
-                    interval: '15s'
-                },
-                queries: []
-            }],
-            useDatasource: false,
-            showBorder: true
-        }
-        
-      
-
-        // // panel in editing must be a clone of the original panel
-        // setPanel(cloneDeep(newPanel))
-
-        // scroll to top after adding panel
-        window.scrollTo(0, 0);
-
-        setDashboard(dashboard => {  dashboard.data.panels.unshift(newPanel)})
-    }
-    const onGridChange = useCallback((panel: Panel) => {
-        console.log("11111112:")
-        setDashboard(d => cloneDeep(d))
-        // onDashboardChanged()
-    },[])
 
 
     useEffect(() => {
         setCombinedVariables()
     }, [dashboard?.data?.variables, gVariables])
 
-
-
-    const onPastePanel = () => {
-        const copiedPanel = storage.get(StorageCopiedPanelKey)
-        storage.remove(StorageCopiedPanelKey)
-        if (copiedPanel) {
-            const id = getNextPanelId()
-            copiedPanel.id = id
-            setDashboard(dashboard => { dashboard.data.panels.unshift(copiedPanel)})
-            return 
-        }
-    }
-
-    console.log("1111111:",cloneDeep(dashboard))
 
     const onDashbardChange = useCallback( f => {
         setDashboard(f)
@@ -161,7 +89,7 @@ const DashboardWrapper = ({dashboardId}) => {
         <>
             <PageContainer>
                 {dashboard && <Box px="3" width="100%">
-                    <DashboardHeader dashboard={dashboard}  onAddPanel={onAddPanel} onTimeChange={t => {dispatch({type:  TimeChangedEvent,data: t});setTimeRange(t)}} timeRange={timeRange} onVariablesChange={null} onChange={onDashbardChange}  onPastePanel={onPastePanel}/>
+                    <DashboardHeader dashboard={dashboard} onTimeChange={t => {dispatch({type:  TimeChangedEvent,data: t});setTimeRange(t)}} timeRange={timeRange} onVariablesChange={null} onChange={onDashbardChange} />
                     <Box mt={variables?.length > 0 ? "80px" : "50px"} py="2">
                         {dashboard.data.panels?.length > 0 && <DashboardGrid dashboard={dashboard} onChange={onDashbardChange} variables={variables}  onVariablesChange={null} />}
                     </Box>

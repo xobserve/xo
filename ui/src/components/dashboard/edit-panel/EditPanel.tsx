@@ -2,7 +2,7 @@ import { Box, Button, Center, Flex, HStack, Image, Input, Modal, ModalBody, Moda
 import { ColorModeSwitcher } from "components/ColorModeSwitcher"
 import AutoSizer from 'react-virtualized-auto-sizer';
 import { cloneDeep, upperFirst } from "lodash"
-import { useEffect, useState } from "react"
+import { useCallback, useEffect, useMemo, useState } from "react"
 import { Dashboard,  Panel, PanelType } from "types/dashboard"
 import { PanelComponent } from "../grid/PanelGrid"
 import GraphPanelEditor from "../plugins/panel/graph/Editor"
@@ -13,6 +13,7 @@ import EditPanelQuery from "./Query"
 import { TimeRange } from "types/time";
 import { Variable } from "types/variable";
 import TablePanelEditor from "../plugins/panel/table/Editor";
+import { useImmer } from "use-immer";
 
 interface EditPanelProps {
     dashboard: Dashboard
@@ -24,7 +25,7 @@ interface EditPanelProps {
 }
 
 const EditPanel = ({ dashboard, panel, onApply, onDiscard,variables,onChange }: EditPanelProps) => {
-    const [tempPanel, setTempPanel] = useState<Panel>(null)
+    const [tempPanel, setTempPanel] = useImmer<Panel>(null)
     const { isOpen, onOpen, onClose } = useDisclosure()
 
     useEffect(() => {
@@ -51,43 +52,24 @@ const EditPanel = ({ dashboard, panel, onApply, onDiscard,variables,onChange }: 
         onApply()
     }
 
-    const onSettingsChange = (panel:Panel) => {
-        // Rather than update the whole panel, we only update panel settings here,
-        // because the former one will cause the server making a new query to datasource
-        setTempPanel(cloneDeep(panel))
-    }
 
-
-    const CustomPanelEditor = () => {
-
-        //@needs-update-when-add-new-panel
-        switch (tempPanel?.type) {
-            case PanelType.Text:
-                return <TextPanelEditor panel={tempPanel} onChange={onSettingsChange} />
-            case PanelType.Graph:
-                return <GraphPanelEditor panel={tempPanel} onChange={onSettingsChange} />
-            case PanelType.Table:
-                return <TablePanelEditor panel={tempPanel} onChange={onSettingsChange} />
-            default:
-                return <></>
-        }
-    }
 
     const onChangeVisualization = type => {
-        tempPanel.type = type
+        setTempPanel(tempPanel => {
+            tempPanel.type = type
 
-        tempPanel.useDatasource = true
-        // text panel doesn't need datasource
-        if (type == PanelType.Text) {
-            tempPanel.useDatasource = false
-        }
-
-        // init settings for panel render plugin
-        if (!tempPanel.settings[type]) {
-            tempPanel.settings[type] = {}
-        }
-
-        setTempPanel(cloneDeep(tempPanel))
+            tempPanel.useDatasource = true
+            // text panel doesn't need datasource
+            if (type == PanelType.Text) {
+                tempPanel.useDatasource = false
+            }
+    
+            // init settings for panel render plugin
+            if (!tempPanel.settings[type]) {
+                tempPanel.settings[type] = {}
+            }
+    
+        })
     }
 
     return (<>
@@ -127,10 +109,7 @@ const EditPanel = ({ dashboard, panel, onApply, onDiscard,variables,onChange }: 
                             </Box>
                             {/* panel datasource section */}
                             {tempPanel.useDatasource && <Box maxHeight="50%" mt="2" overflowY="scroll">
-                                <EditPanelQuery panel={tempPanel} onChange={(panel?) => {
-                                    const p = panel??tempPanel
-                                    setTempPanel({...p, datasource: cloneDeep(p.datasource)})
-                                }}/>
+                                <EditPanelQuery panel={tempPanel} onChange={setTempPanel}/>
                             </Box>}
                         </Box>
                         {/* panel settings section */}
@@ -140,16 +119,16 @@ const EditPanel = ({ dashboard, panel, onApply, onDiscard,variables,onChange }: 
                                 {/* panel basic setting */}
                                 <PanelAccordion title="Basic setting">
                                     <PanelEditItem title="Panel title">
-                                        <Input size="sm" value={tempPanel.title} onChange={e => setTempPanel({ ...tempPanel, title: e.currentTarget.value })} />
+                                        <Input size="sm" value={tempPanel.title} onChange={e => {const v = e.currentTarget.value; setTempPanel(tempPanel => {tempPanel.title = v})}} />
                                     </PanelEditItem>
                                     <PanelEditItem title="Description" desc="give a short description to your panel">
-                                        <Textarea size="sm" value={tempPanel.desc} onChange={e => setTempPanel({ ...tempPanel, desc: e.currentTarget.value })} />
+                                        <Textarea size="sm" value={tempPanel.desc} onChange={e => {const v = e.currentTarget.value; setTempPanel(tempPanel => {tempPanel.desc = v})}} />
                                     </PanelEditItem>
                                     <PanelEditItem title="Transparent" desc="Display panel without a background.">
-                                        <Switch id='panel-transparent' defaultChecked={tempPanel.transparent} onChange={e => setTempPanel({ ...tempPanel, transparent: e.currentTarget.checked })} />
+                                        <Switch id='panel-transparent' defaultChecked={tempPanel.transparent} onChange={e =>  setTempPanel( tempPanel => {tempPanel.transparent = e.currentTarget.checked})} />
                                     </PanelEditItem>
                                     <PanelEditItem title="Show border" desc="Display panel without border around.">
-                                        <Switch id='panel-border' defaultChecked={tempPanel.showBorder} onChange={e => setTempPanel({ ...tempPanel, showBorder: e.currentTarget.checked })} />
+                                        <Switch id='panel-border' defaultChecked={tempPanel.showBorder} onChange={e => setTempPanel( tempPanel => {tempPanel.showBorder = e.currentTarget.checked})} />
                                     </PanelEditItem>
                                 </PanelAccordion>
 
@@ -173,7 +152,7 @@ const EditPanel = ({ dashboard, panel, onApply, onDiscard,variables,onChange }: 
                                 </PanelAccordion>
 
                                 {/* panel rendering plugin setting */}
-                                <CustomPanelEditor />
+                                <CustomPanelEditor tempPanel={tempPanel} setTempPanel={setTempPanel} />
                             </Box>
 
                         </Box>
@@ -196,4 +175,20 @@ const VisulizationItem = ({ title, imageUrl, onClick = null, selected = false })
         </Box>
 
     )
+}
+
+
+
+const CustomPanelEditor = ({tempPanel,setTempPanel}) => {
+    //@needs-update-when-add-new-panel
+    switch (tempPanel?.type) {
+        case PanelType.Text:
+            return <TextPanelEditor panel={tempPanel} onChange={setTempPanel} />
+        case PanelType.Graph:
+            return <GraphPanelEditor panel={tempPanel} onChange={setTempPanel} />
+        case PanelType.Table:
+            return <TablePanelEditor panel={tempPanel} onChange={setTempPanel} />
+        default:
+            return <></>
+    }
 }

@@ -3,8 +3,6 @@ import PanelAccordion from "components/dashboard/edit-panel/Accordion"
 import PanelEditItem from "components/dashboard/edit-panel/PanelEditItem"
 import RadionButtons from "components/RadioButtons"
 import { UnitPicker } from "components/unit"
-import { cloneDeep, defaults } from "lodash"
-import { useEffect, useState } from "react"
 import { GraphSettings, Panel } from "types/dashboard"
 
 interface Props {
@@ -13,139 +11,122 @@ interface Props {
 }
 
 const GraphPanelEditor = ({ panel, onChange }: Props) => {
-    const [tempPanel, setTempPanel] = useState<Panel>(panel)
-
-    // assign default settings to panel
-    defaults(tempPanel.settings.graph, initGraphSettings)
-
-    const onPanelChange = (units?,type?) => {
-        if (units) {
-            tempPanel.settings.graph.std.units = units
-            tempPanel.settings.graph.std.unitsType = type
-        }
-        const p = cloneDeep(tempPanel)
-        setTempPanel(p)
-        onChange(p)
-    }
     return (<>
         <PanelAccordion title="Tooltip">
             <PanelEditItem title="Tooltip mode">
-                <RadionButtons options={[{ label: "Single", value: "single" }, { label: "All", value: "all" }, { label: "Hidden", value: "hidden" }]} value={tempPanel.settings.graph.tooltip.mode} onChange={v => {
-                    tempPanel.settings.graph.tooltip.mode = v
-                    onPanelChange()
-                }} />
+                <RadionButtons options={[{ label: "Single", value: "single" }, { label: "All", value: "all" }, { label: "Hidden", value: "hidden" }]} value={panel.settings.graph.tooltip.mode} onChange={v => onChange(panel => {
+                    panel.settings.graph.tooltip.mode = v
+                })} />
             </PanelEditItem>
         </PanelAccordion>
         <PanelAccordion title="Legend">
             <PanelEditItem title="Legend mode">
-                <RadionButtons options={[{ label: "Table", value: "table" }, { label: "Hidden", value: "hidden" }]} value={tempPanel.settings.graph.legend.mode} onChange={v => {
-                    tempPanel.settings.graph.legend.mode = v
-                    onPanelChange()
-                }} />
+                <RadionButtons options={[{ label: "Table", value: "table" }, { label: "Hidden", value: "hidden" }]} value={panel.settings.graph.legend.mode} onChange={v => onChange(panel => {
+                    panel.settings.graph.legend.mode = v
+                })} />
+
             </PanelEditItem>
-            {tempPanel.settings.graph.legend.mode != 'hidden' && <PanelEditItem title="Legend placement">
-                <RadionButtons options={[{ label: "Bottom", value: "bottom" }, { label: "Right", value: "right" }]} value={tempPanel.settings.graph.legend.placement} onChange={v => {
-                    tempPanel.settings.graph.legend.placement = v
-                    onPanelChange()
-                }} />
+            {panel.settings.graph.legend.mode != 'hidden' && <PanelEditItem title="Legend placement">
+                <RadionButtons options={[{ label: "Bottom", value: "bottom" }, { label: "Right", value: "right" }]} value={panel.settings.graph.legend.placement} onChange={v => onChange(panel => {
+                    panel.settings.graph.legend.placement = v
+                })} />
             </PanelEditItem>}
         </PanelAccordion>
         <PanelAccordion title="Graph styles">
             <PanelEditItem title="Style">
-                <RadionButtons options={[{ label: "Lines", value: "lines" }, { label: "Bars", value: "bars" }, { label: "points", value: "points" }]} value={tempPanel.settings.graph.styles.style} onChange={v => {
-                    tempPanel.settings.graph.styles.style = v
-                    onPanelChange()
-                }} />
+                <RadionButtons options={[{ label: "Lines", value: "lines" }, { label: "Bars", value: "bars" }, { label: "points", value: "points" }]} value={panel.settings.graph.styles.style} onChange={v => onChange(panel => {
+                    panel.settings.graph.styles.style = v
+                })} />
             </PanelEditItem>
 
-            {tempPanel.settings.graph.styles.style != "points" &&
+            {panel.settings.graph.styles.style != "points" &&
                 <>
                     <PanelEditItem title="Line width">
                         <HStack>
-                            <Slider aria-label='slider-ex-1' value={tempPanel.settings.graph.styles.lineWidth} min={0} max={10} step={1} onChange={v => {
-                                tempPanel.settings.graph.styles.lineWidth = v
-                                setTempPanel(cloneDeep(tempPanel))
-                            }} onChangeEnd={v => {
-                                tempPanel.settings.graph.styles.lineWidth = v
-                                onPanelChange()
-                            }}>
+                            <Slider aria-label='slider-ex-1' value={panel.settings.graph.styles.lineWidth} min={0} max={10} step={1} onChange={v => onChange(panel => {
+                                panel.settings.graph.styles.lineWidth = v
+                            })}
+
+                                onChangeEnd={v => onChange(panel => {
+                                    panel.settings.graph.styles.lineWidth = v
+                                })}>
                                 <SliderTrack>
                                     <SliderFilledTrack />
                                 </SliderTrack>
-                                <SliderThumb children={tempPanel.settings.graph.styles.lineWidth} fontSize='sm' boxSize='25px' />
+                                <SliderThumb children={panel.settings.graph.styles.lineWidth} fontSize='sm' boxSize='25px' />
                             </Slider>
                         </HStack>
                     </PanelEditItem>
                     <PanelEditItem title="Fill gradient mode">
-                        <RadionButtons options={[{ label: "None", value: "none" }, { label: "Opacity", value: "opacity" }]} value={tempPanel.settings.graph.styles.gradientMode} onChange={v => {
-                            tempPanel.settings.graph.styles.gradientMode = v
-                            onPanelChange()
-                        }} />
+                        <RadionButtons options={[{ label: "None", value: "none" }, { label: "Opacity", value: "opacity" }]} value={panel.settings.graph.styles.gradientMode} onChange={v => onChange(panel => {
+                            panel.settings.graph.styles.gradientMode = v
+                        })} />
                     </PanelEditItem>
                     <PanelEditItem title="Fill opacity">
                         <HStack>
-                            <Slider aria-label='slider-ex-1' value={tempPanel.settings.graph.styles.fillOpacity} min={0} max={100} step={1} onChange={v => {
-                                tempPanel.settings.graph.styles.fillOpacity = v
-                                setTempPanel(cloneDeep(tempPanel))
-                            }} onChangeEnd={v => {
-                                tempPanel.settings.graph.styles.fillOpacity = v
-                                onPanelChange()
-                            }}>
+                            <Slider aria-label='slider-ex-1' value={panel.settings.graph.styles.fillOpacity} min={0} max={100} step={1}
+                                onChange={v => onChange(panel => {
+                                    panel.settings.graph.styles.fillOpacity = v
+                                })}
+
+                                onChangeEnd={v => onChange(panel => {
+                                    panel.settings.graph.styles.fillOpacity = v
+                                })}>
+
+
                                 <SliderTrack>
                                     <SliderFilledTrack />
                                 </SliderTrack>
-                                <SliderThumb children={tempPanel.settings.graph.styles.fillOpacity} fontSize='sm' boxSize='25px' />
+                                <SliderThumb children={panel.settings.graph.styles.fillOpacity} fontSize='sm' boxSize='25px' />
                             </Slider>
                         </HStack>
                     </PanelEditItem>
                     <PanelEditItem title="Show points">
-                        <RadionButtons options={[{ label: "Auto", value: "auto" }, { label: "Always", value: "always" }, { label: "Never", value: "never" }]} value={tempPanel.settings.graph.styles.showPoints} onChange={v => {
-                            tempPanel.settings.graph.styles.showPoints = v
-                            onPanelChange()
-                        }} />
+                        <RadionButtons options={[{ label: "Auto", value: "auto" }, { label: "Always", value: "always" }, { label: "Never", value: "never" }]} value={panel.settings.graph.styles.showPoints} onChange={v => onChange(panel => {
+                            panel.settings.graph.styles.showPoints = v
+                        })} />
                     </PanelEditItem>
                 </>}
             <PanelEditItem title="Point size">
                 <HStack>
-                    <Slider aria-label='slider-ex-1' value={tempPanel.settings.graph.styles.pointSize} min={1} max={20} step={1} onChange={v => {
-                        tempPanel.settings.graph.styles.pointSize = v
-                        setTempPanel(cloneDeep(tempPanel))
-                    }} onChangeEnd={v => {
-                        tempPanel.settings.graph.styles.pointSize = v
-                        onPanelChange()
-                    }}>
+                    <Slider aria-label='slider-ex-1' value={panel.settings.graph.styles.pointSize} min={1} max={20} step={1}
+                        onChange={v => onChange(panel => {
+                            panel.settings.graph.styles.pointSize = v
+                        })}
+
+                        onChangeEnd={v => onChange(panel => {
+                            panel.settings.graph.styles.pointSize = v
+                        })}>
                         <SliderTrack>
                             <SliderFilledTrack />
                         </SliderTrack>
-                        <SliderThumb children={tempPanel.settings.graph.styles.pointSize} fontSize='sm' boxSize='25px' />
+                        <SliderThumb children={panel.settings.graph.styles.pointSize} fontSize='sm' boxSize='25px' />
                     </Slider>
                 </HStack>
             </PanelEditItem>
         </PanelAccordion>
         <PanelAccordion title="Axis">
             <PanelEditItem title="Label">
-                <Input value={tempPanel.settings.graph.axis.label} onChange={(e) => {
-                    tempPanel.settings.graph.axis.label = e.currentTarget.value
-                    setTempPanel(cloneDeep(tempPanel))
-                }}
-                    onBlur={() => onChange(tempPanel)} />
+                <Input value={panel.settings.graph.axis.label} onChange={(e) => {
+                    const v = e.currentTarget.value
+                    onChange(panel => {
+                        panel.settings.graph.axis.label = v
+                    })
+                }} />
             </PanelEditItem>
             <PanelEditItem title="Show grid">
-                <RadionButtons options={[{ label: "Show", value: true }, { label: "Hidden", value: false }]} value={tempPanel.settings.graph.axis.showGrid} onChange={v => {
-                    tempPanel.settings.graph.axis.showGrid = v
-                    onPanelChange()
-                }} />
+                <RadionButtons options={[{ label: "Show", value: true }, { label: "Hidden", value: false }]} value={panel.settings.graph.axis.showGrid} onChange={v => onChange(panel => {
+                    panel.settings.graph.axis.showGrid = v
+                })} />
             </PanelEditItem>
             <PanelEditItem title="Scale">
                 <HStack spacing="1">
-                    <RadionButtons options={[{ label: "Linear", value: "linear" }, { label: "Log", value: "log" }]} value={tempPanel.settings.graph.axis.scale} onChange={v => {
-                        tempPanel.settings.graph.axis.scale = v
-                        onPanelChange()
-                    }} />
-                    {tempPanel.settings.graph.axis.scale == "log" && <Select value={tempPanel.settings.graph.axis.scaleBase} onChange={e => {
-                        tempPanel.settings.graph.axis.scaleBase = Number(e.currentTarget.value) as 2 | 10
-                        onPanelChange()
-                    }} >
+                    <RadionButtons options={[{ label: "Linear", value: "linear" }, { label: "Log", value: "log" }]} value={panel.settings.graph.axis.scale} onChange={v => onChange(panel => {
+                        panel.settings.graph.axis.scale = v
+                    })} />
+                    {panel.settings.graph.axis.scale == "log" && <Select value={panel.settings.graph.axis.scaleBase} onChange={e => onChange(panel =>
+                        panel.settings.graph.axis.scaleBase = Number(e.currentTarget.value) as 2 | 10
+                    )} >
                         <option value={2}>Base 2</option>
                         <option value={10}>Base 10</option>
                     </Select>}
@@ -155,20 +136,24 @@ const GraphPanelEditor = ({ panel, onChange }: Props) => {
 
         <PanelAccordion title="Standard options">
             <PanelEditItem title="Unit">
-                <UnitPicker type={tempPanel.settings.graph.std.unitsType} value={tempPanel.settings.graph.std.units} onChange={
-                    (units,type) =>  onPanelChange(units,type)
+                <UnitPicker type={panel.settings.graph.std.unitsType} value={panel.settings.graph.std.units} onChange={
+                    (units, type) => onChange(panel => {
+                        panel.settings.graph.std.units = units
+                        panel.settings.graph.std.unitsType = type
+                    })
+
+                    // onPanelChange(units, type)
                 } />
             </PanelEditItem>
             <PanelEditItem title="Decimals">
-            <NumberInput value={tempPanel.settings.graph.std.decimals ?? 2}  min={0} max={5} step={1} onChange={(_,v) => {
-                 tempPanel.settings.graph.std.decimals = v
-                 onPanelChange()
-            }}>
-                <NumberInputField />
-                <NumberInputStepper>
-                    <NumberIncrementStepper />
-                    <NumberDecrementStepper />
-                </NumberInputStepper>
+                <NumberInput value={panel.settings.graph.std.decimals ?? 2} min={0} max={5} step={1} onChange={(_, v) => onChange(panel => {
+                    panel.settings.graph.std.decimals = v
+                })}>
+                    <NumberInputField />
+                    <NumberInputStepper>
+                        <NumberIncrementStepper />
+                        <NumberDecrementStepper />
+                    </NumberInputStepper>
                 </NumberInput>
             </PanelEditItem>
         </PanelAccordion>
@@ -201,7 +186,7 @@ export const initGraphSettings: GraphSettings = {
         scaleBase: 2
     },
     std: {
-        unitsType: 'none' ,
+        unitsType: 'none',
         units: [],
         decimals: 3
     }

@@ -14,3 +14,7 @@ const TextPanel = (props: PanelProps) => {
 }
 
 export default TextPanel
+
+export const initTextSettings = {
+    md: `#Welcome to Starship\n This is a new panel\n You can edit it by clicking the edit button on the top title\n ###Have fun!`
+}

@@ -10,94 +10,67 @@ interface Props {
 }
 
 const EditPanelQuery = ({ panel, onChange }: Props) => {
-    const selectedDatasource = () => {
-        for (const ds of panel.datasource) {
-            if (ds.selected) {
-                return ds
-            }
-        }
-    }
-
     const selectDatasource = type => {
-        let exist = false
-        for (const ds of panel.datasource) {
-            if (ds.type == type) {
-                ds.selected = true
-                exist = true
-            } else {
-                ds.selected = false
-            }
-        }
-
-        if (!exist) {
-            panel.datasource.push({
-                type: type,
-                selected: true,
-                queryOptions: {
-                    interval: '15s'
+        onChange(panel => {
+            let exist = false
+            for (const ds of panel.datasource) {
+                if (ds.type == type) {
+                    ds.selected = true
+                    exist = true
+                } else {
+                    ds.selected = false
                 }
-            })
-        }
-
-        onChange(panel)
+            }
+    
+            if (!exist) {
+                panel.datasource.push({
+                    type: type,
+                    selected: true,
+                    queryOptions: {
+                        interval: '15s'
+                    },
+                    queries: []
+                })
+            }
+        })
     }
     
     const onAddQuery = () => {
-        const ds = selectedDatasource()
-        if (!ds.queries) {
-            ds.queries = []
-        }
-
-        let id = 65; // from 'A' to 'Z'
-        for (const q of ds.queries) {
-            if (q.id >= id) {
-                id = q.id + 1
+        onChange(panel => {
+            const ds = selectedDatasource(panel)
+            if (!ds.queries) {
+                ds.queries = []
             }
-        }
-
-        
-        ds.queries.push({
-            id: id,
-            metrics: "",
-            legend: "" ,
-            visible: true
+    
+            let id = 65; // from 'A' to 'Z'
+            for (const q of ds.queries) {
+                if (q.id >= id) {
+                    id = q.id + 1
+                }
+            }
+    
+            
+            ds.queries.push({
+                id: id,
+                metrics: "",
+                legend: "" ,
+                visible: true
+            })
         })
-
-        onChange()
     }
 
     const removeQuery = id => {
-        const ds = selectedDatasource()
-        if (!ds.queries) {
-            ds.queries = []
-        }
-
-        ds.queries = ds.queries.filter(q => q.id != id)
-        onChange()
+        onChange(panel => {
+            const ds = selectedDatasource(panel)
+            if (!ds.queries) {
+                ds.queries = []
+            }
+    
+            ds.queries = ds.queries.filter(q => q.id != id)
+        })
     }
     
-    const CustomQueryEditor = (query) => {
-        const onQueryChange = (query) => {
-            const ds = selectedDatasource()
-            for (var i = 0; i < ds.queries.length; i++) {
-                if (ds.queries[i].id === query.id) {
-                    ds.queries[i] = query
-                    break
-                }
-            }
-
-            onChange(panel)
-        }
-
-        const ds = selectedDatasource()
-        switch (ds.type) {
-            case DatasourceType.Prometheus:
-                return <PrometheusQueryEditor query={query} onChange={onQueryChange} />
-
-            default:
-                return <></>
-        }
-    }
+    const selected = selectedDatasource(panel)
 
     return (<>
         <Box className="top-gradient-border bordered-left bordered-right" width="fit-content">
@@ -106,8 +79,8 @@ const EditPanelQuery = ({ panel, onChange }: Props) => {
         <Box className="bordered" p="2" borderRadius="0" height="auto">
             <Flex justifyContent="space-between">
                 <HStack>
-                    <Image width="32px" height="32px" src={`/plugins/datasource/${selectedDatasource().type}.svg`} />
-                    <Select width="fit-content" variant="unstyled" value={selectedDatasource().type} onChange={e => selectDatasource(e.currentTarget.value)}>
+                    <Image width="32px" height="32px" src={`/plugins/datasource/${selected.type}.svg`} />
+                    <Select width="fit-content" variant="unstyled" value={selected.type} onChange={e => selectDatasource(e.currentTarget.value)}>
                         {Object.keys(DatasourceType).map((key, index) => {
                             return <option key={index} value={DatasourceType[key]}>{key}</option>
                         })}
@@ -117,7 +90,7 @@ const EditPanelQuery = ({ panel, onChange }: Props) => {
             </Flex>
             
             <VStack alignItems="left" mt="3" spacing="2">
-                {selectedDatasource().queries?.map((query, index) => {
+                {selected.queries?.map((query, index) => {
                     return <Box key={index}>
                         <Flex justifyContent="space-between" className="label-bg" py="1" px="2" mb="1">
                             <Text className="color-text">{String.fromCharCode(query.id)}</Text>
@@ -126,7 +99,7 @@ const EditPanelQuery = ({ panel, onChange }: Props) => {
                             </HStack>
                         </Flex>
                         {
-                            <Box pl="4"><CustomQueryEditor {...query} /></Box>
+                            <Box pl="4"><CustomQueryEditor query={query} selected={selected} onChange={onChange}/></Box>
                         }
                     </Box>
                 })}
@@ -136,3 +109,34 @@ const EditPanelQuery = ({ panel, onChange }: Props) => {
 }
 
 export default EditPanelQuery
+
+
+const CustomQueryEditor = ({query,onChange,selected}) => {
+    const onQueryChange = (query) => {
+        onChange(panel => {
+            const ds = selectedDatasource(panel)
+            for (var i = 0; i < ds.queries.length; i++) {
+                if (ds.queries[i].id === query.id) {
+                    ds.queries[i] = query
+                    break
+                }
+            }
+        })
+    }
+
+    switch (selected.type) {
+        case DatasourceType.Prometheus:
+            return <PrometheusQueryEditor query={query} onChange={onQueryChange} />
+
+        default:
+            return <></>
+    }
+}
+
+const selectedDatasource = (p) => {
+    for (const ds of p.datasource) {
+        if (ds.selected) {
+            return ds
+        }
+    }
+}

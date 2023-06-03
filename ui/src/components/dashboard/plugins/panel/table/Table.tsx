@@ -64,6 +64,7 @@ const TablePanel = (props: PanelProps) => {
        return [[],[]]
     }, [props.data,series])
 
+    console.log("212222:",props.panel.settings.table.onRowClick)
     const onRowClickFunc = new Function("row,router,setVariable", props.panel.settings.table.onRowClick)
 
     return (
