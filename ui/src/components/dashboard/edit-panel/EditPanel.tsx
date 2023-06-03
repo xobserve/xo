@@ -4,7 +4,7 @@ import AutoSizer from 'react-virtualized-auto-sizer';
 import { cloneDeep, upperFirst } from "lodash"
 import { useCallback, useEffect, useMemo, useState } from "react"
 import { Dashboard,  Panel, PanelType } from "types/dashboard"
-import { PanelComponent } from "../grid/PanelGrid"
+import { PanelComponent, PanelEventWrapper } from "../grid/PanelGrid"
 import GraphPanelEditor from "../plugins/panel/graph/Editor"
 import TextPanelEditor from "../plugins/panel/text/Editor"
 import PanelAccordion from "./Accordion"
@@ -101,7 +101,7 @@ const EditPanel = ({ dashboard, panel, onApply, onDiscard,variables,onChange }: 
                                     return (
                                         <Box width={width}
                                             height={height}>
-                                            <PanelComponent dashboard={dashboard} panel={tempPanel} width={width} height={height} variables={variables} sync={null}/>
+                                            <PanelEventWrapper dashboard={dashboard} panel={tempPanel} width={width} height={height} variables={variables} sync={null}/>
                                         </Box>
                                     );
                                 }}

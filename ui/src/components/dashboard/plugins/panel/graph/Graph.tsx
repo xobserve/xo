@@ -15,7 +15,6 @@ import { Box, Center, Text } from "@chakra-ui/react";
 import { colors } from "utils/colors";
 import { parseLegendFormat } from "utils/format";
 import { replaceWithVariables } from "utils/variable";
-import { usePrevious } from "react-use";
 
 
 
@@ -70,7 +69,8 @@ const GraphPanel = memo((props: PanelProps) => {
 
     const onChartCreate = useCallback((chart) => { setUplot((chart));props.sync?.sub(chart) },[props])
 
-    console.log("panel plugin rendered",config)
+    // console.log("panel plugin rendered",config)
+    console.log("here1111112: ",config)
     return (
         <>
        <Box>

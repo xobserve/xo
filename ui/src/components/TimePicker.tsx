@@ -192,7 +192,7 @@ const TimePicker = ({onClose,onTimeChange} : Props) => {
                     flex={1}
                 >
                     {
-                        quickOptions.map(o => <Button onClick={() => setQuickTime(o)} colorScheme="gray" variant={range.startRaw == o.raw && range.endRaw == "now" ? "solid" : "ghost"}  borderRadius="0">
+                        quickOptions.map(o => <Button key={o.value} onClick={() => setQuickTime(o)} colorScheme="gray" variant={range.startRaw == o.raw && range.endRaw == "now" ? "solid" : "ghost"}  borderRadius="0">
                             {o.label}
                         </Button>)
                     }

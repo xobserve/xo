@@ -70,7 +70,7 @@ const DashboardWrapper = ({dashboardId}) => {
         }
         setVariableSelected(combined)
         variables = combined
-        setTimeout(() => dispatch(VariableChangedEvent), 100)
+        dispatch(VariableChangedEvent)
       
     }
 
@@ -89,9 +89,9 @@ const DashboardWrapper = ({dashboardId}) => {
         <>
             <PageContainer>
                 {dashboard && <Box px="3" width="100%">
-                    <DashboardHeader dashboard={dashboard} onTimeChange={t => {dispatch({type:  TimeChangedEvent,data: t});setTimeRange(t)}} timeRange={timeRange} onVariablesChange={null} onChange={onDashbardChange} />
+                    <DashboardHeader dashboard={dashboard} onTimeChange={t => {dispatch({type:  TimeChangedEvent,data: t});setTimeRange(t)}} timeRange={timeRange}  onChange={onDashbardChange} />
                     <Box mt={variables?.length > 0 ? "80px" : "50px"} py="2">
-                        {dashboard.data.panels?.length > 0 && <DashboardGrid dashboard={dashboard} onChange={onDashbardChange} variables={variables}  onVariablesChange={null} />}
+                        {dashboard.data.panels?.length > 0 && <DashboardGrid dashboard={dashboard} onChange={onDashbardChange} variables={variables} />}
                     </Box>
                 </Box>}
             </PageContainer>

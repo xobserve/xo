@@ -26,10 +26,9 @@ interface HeaderProps {
     dashboard: Dashboard
     onTimeChange: any
     timeRange: TimeRange
-    onVariablesChange: any
     onChange: any
 }
-const DashboardHeader = memo(({ dashboard, onTimeChange, timeRange, onVariablesChange, onChange }: HeaderProps) => {
+const DashboardHeader = memo(({ dashboard, onTimeChange, timeRange, onChange }: HeaderProps) => {
     const toast = useToast()
     const router = useRouter()
     const [variablesChanged, setVariablesChanged] = useState(0)

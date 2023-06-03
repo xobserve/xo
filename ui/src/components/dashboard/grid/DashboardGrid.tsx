@@ -17,17 +17,15 @@ interface GridProps {
     dashboard: Dashboard
     onChange: any
     variables: Variable[]
-    onVariablesChange: any
 }
 
 const DashboardGrid = memo((props: GridProps) => {
     console.log("dashboard grid rendered")
-    const { dashboard, onChange,variables, onVariablesChange} = props
+    const { dashboard, onChange,variables} = props
 
     const SizedReactLayoutGrid = sizeMe({ monitorWidth: true })(GridWrapper);
 
     const onLayoutChange = (newLayout: ReactGridLayout.Layout[]) => {
-        console.log("on layout change")
         for (const newPos of newLayout) {
             let p; 
             if (p = dashboard.data.panels.find(p => p.id.toString() === newPos.i)) {
@@ -141,7 +139,7 @@ const DashboardGrid = memo((props: GridProps) => {
                             borderBottom: "2px solid rgba(0, 0, 0, 0.4)"
                         }
                     }}>
-                        <PanelGrid dashboard={dashboard} panel={panel} onEditPanel={onEditPanel} onRemovePanel={onRemovePanel}  variables={variables} sync={mooSync} onVariablesChange={onVariablesChange}/>
+                        <PanelGrid dashboard={dashboard} panel={panel} onEditPanel={onEditPanel} onRemovePanel={onRemovePanel}  variables={variables} sync={mooSync} />
                     </Box>)
                 })
             }
