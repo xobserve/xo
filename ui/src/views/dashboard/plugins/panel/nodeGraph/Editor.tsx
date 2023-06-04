@@ -288,7 +288,7 @@ const RightClickMenus = ({ panel, onChange }: PanelEditorProps) => {
                     <HStack>
                         <Text fontWeight="600">Menu item name </Text>
                         <Input value={temp.name} onChange={e => {
-                            const v = e.currentTarget.value.trim()
+                            const v = e.currentTarget.value
                             setTemp(draft => {
                                 draft.name = v
                             })

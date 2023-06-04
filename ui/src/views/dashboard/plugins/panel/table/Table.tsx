@@ -2,7 +2,7 @@ import { Box, Select, useToast } from "@chakra-ui/react"
 import { variables } from "src/views/dashboard/Dashboard"
 import { NumberRangeColumnFilter } from "components/table/filters"
 import ReactTable from "components/table/Table"
-import { setVariableValue } from "src/views/variables/Variables"
+import { setVariable, setVariableValue } from "src/views/variables/Variables"
 import { useRouter } from "next/router"
 import React, { useEffect, useMemo } from "react"
 import { PanelProps } from "types/dashboard"
@@ -95,23 +95,4 @@ const TablePanel = (props: PanelProps) => {
 
 export default TablePanel
 
-const setVariable = (name,value,toast) => {
-    let v;
-    for (var i=0;i<variables.length;i++) {
-        if (variables[i].name == name) {
-            v = variables[i]
-            break
-        }
-    }
 
-    const err = setVariableValue(v,value )
-    if (err) {
-        toast({
-            title: "On row click error",
-            description: err,
-            status: "warning",
-            duration: 9000,
-            isClosable: true,
-        })
-    }
-}

@@ -28,7 +28,7 @@ const NodeGrapPanel = ({ data, panel, dashboardId }: PanelProps) => {
     const defaultEdgeLabelCfg = getDefaultEdgeLabel(colorMode)
 
     const [selected, setSelected] = useState(false)
-    const contextMenu = useContextMenu()
+    const contextMenu = useContextMenu(panel.settings.nodeGraph)
 
     useEffect(() => {
         if (graph) {

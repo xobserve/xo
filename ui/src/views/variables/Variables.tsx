@@ -77,3 +77,24 @@ export const setVariableValue = (variable: Variable, value) => {
 
     dispatch(VariableChangedEvent)
 }
+
+export const setVariable = (name,value,toast) => {
+    let v;
+    for (var i=0;i<variables.length;i++) {
+        if (variables[i].name == name) {
+            v = variables[i]
+            break
+        }
+    }
+
+    const err = setVariableValue(v,value )
+    if (err) {
+        toast({
+            title: "On row click error",
+            description: err,
+            status: "warning",
+            duration: 9000,
+            isClosable: true,
+        })
+    }
+}

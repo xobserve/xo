@@ -67,6 +67,5 @@ export const setAttrsForData = (settings: NodeGraphSettings, data: NodeGraphData
             node.icon.width = node.size / 2
             node.icon.height = node.size / 2
         }
-        console.log("here33333a:",node)
     })
 }

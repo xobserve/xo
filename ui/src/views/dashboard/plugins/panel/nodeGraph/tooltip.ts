@@ -15,7 +15,6 @@ export const initTooltip = (settings: NodeGraphSettings) => {
             outDiv.style.fontSize = '12px';
             let li = ''
             Object.keys(model.data).map(key=> {
-                console.log(`<li>${key}: ${model.data[key]}</li>`)
                 li  += `<li>${key}: ${model.data[key]}</li>`
             })
             outDiv.innerHTML = `

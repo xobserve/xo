@@ -25,7 +25,7 @@ export const getActiveEdgeLabelCfg = colorMode => {
     return cfg
 }
 
-const lightColor = '#61DDAA'
+const lightColor = 'rgb(0, 181, 216)'
 const darkColor = 'rgb(0, 181, 216)'
 export const getDefaultNodeStyle = (colorMode?) => {
     return {
