@@ -17,14 +17,13 @@ import { useRouter } from "next/router";
 interface GridProps {
     dashboard: Dashboard
     onChange: any
-    variables: Variable[]
 }
 
 const DashboardGrid = memo((props: GridProps) => {
     console.log("dashboard grid rendered")
 
 
-    const { dashboard, onChange,variables} = props
+    const { dashboard, onChange} = props
 
     const SizedReactLayoutGrid = sizeMe({ monitorWidth: true })(GridWrapper);
 
@@ -95,6 +94,7 @@ const DashboardGrid = memo((props: GridProps) => {
     
     let mooSync = dashboard.data.sharedTooltip ? uPlot.sync(dashboard.id) : null
     return (<>
+        {/* SizedReactLayoutGrid will force React to rebuild all the panels, so it's not performant here */}
         <SizedReactLayoutGrid
             className="layout"
             layout={buildLayout(dashboard.data.panels)}
@@ -130,12 +130,12 @@ const DashboardGrid = memo((props: GridProps) => {
                             borderBottom: "2px solid rgba(0, 0, 0, 0.4)"
                         }
                     }}>
-                        <PanelGrid dashboard={dashboard} panel={panel} onRemovePanel={onRemovePanel}  variables={variables} sync={mooSync} />
+                        <PanelGrid dashboard={dashboard} panel={panel} onRemovePanel={onRemovePanel}   sync={mooSync} />
                     </Box>)
                 })
             }
         </SizedReactLayoutGrid>
-        <EditPanel dashboard={dashboard} onChange={onChange} variables={variables}/>
+        <EditPanel dashboard={dashboard} onChange={onChange} />
     </>)
 })
 

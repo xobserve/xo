@@ -6,7 +6,7 @@ import { subMinutes } from "date-fns"
 import { find, isEmpty } from "lodash"
 import { useRouter } from "next/router"
 
-import { memo, useEffect, useState } from "react"
+import { memo, useEffect, useRef, useState } from "react"
 import { FaRegClock } from "react-icons/fa"
 import { MdSync } from "react-icons/md"
 import { VariableChangedEvent } from "src/data/bus-events"
@@ -44,15 +44,14 @@ const DashboardHeader = memo(({ dashboard, onTimeChange, timeRange, onChange }: 
         setTeam(res1.data)
     }
 
-    let refreshH;
+    const refreshH = useRef(null)
 
     const { isOpen, onOpen, onClose } = useDisclosure()
 
     useEffect(() => {
         if (refresh > 0) {
-            refreshH = setInterval(() => {
+            refreshH.current = setInterval(() => {
                 const tr = getInitTimeRange()
-                console.log(tr)
                 if (tr.sub > 0) {
                     const now = new Date()
                     tr.start = subMinutes(now, tr.sub)
@@ -63,11 +62,11 @@ const DashboardHeader = memo(({ dashboard, onTimeChange, timeRange, onChange }: 
                 }
             }, 1000 * refresh)
         } else {
-            clearInterval(refreshH)
+            clearInterval(refreshH.current)
         }
 
         return () => {
-            clearInterval(refreshH)
+            clearInterval(refreshH.current)
         }
     }, [refresh])
 

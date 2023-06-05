@@ -3,8 +3,11 @@
 import { Box, Flex, HStack, Text, VStack } from "@chakra-ui/react"
 import { formatUnit } from "components/unit"
 import { last, reverse, round, sortBy } from "lodash"
+import { useState } from "react"
+import { ActiveSeriesEvent } from "src/data/bus-events"
 import { PanelProps } from "types/dashboard"
 import { DataFrame } from "types/dataFrame"
+import useBus from "use-bus"
 
 interface Props {
     props: PanelProps
@@ -21,6 +24,14 @@ export enum seriesFilterType {
 }
 
 const SeriesTable = ({ props, nearestSeries, filterIdx, filterType, onSelect }: Props) => {
+    const [activeSeries, setActiveSeries] = useState(null)
+    useBus(
+        (e) => { return e.type == ActiveSeriesEvent && e.id == props.panel.id },
+        (e) => {
+            setActiveSeries(e.data)
+        }
+    )
+
     const res = []
 
     switch (filterType) {
@@ -61,12 +72,12 @@ const SeriesTable = ({ props, nearestSeries, filterIdx, filterType, onSelect }: 
                 <Text>current</Text>
             </Flex>} */}
             <VStack alignItems="left" spacing="1" mt="2px">
-                {values.map(v => {
-                    if (filterType == seriesFilterType.Nearest && (props.panel.settings.graph.activeSeries && props.panel.settings.graph.activeSeries != v.name)) {
+                {values.map((v,i) => {
+                    if (filterType == seriesFilterType.Nearest && (activeSeries && activeSeries != v.name)) {
                         // hiding inactive tooltips
                         return <></>
                     }
-                    return <Flex justifyContent="space-between" opacity={(props.panel.settings.graph.activeSeries && props.panel.settings.graph.activeSeries != v.name) ? '0.6' : (v.name == nearestSeries?.name ? 1 : 1)} fontWeight={v.name == nearestSeries?.name ? 'bold' : "inherit"} cursor="pointer" onClick={() => onSelect(v.name)}>
+                    return <Flex justifyContent="space-between" opacity={(activeSeries && activeSeries != v.name) ? '0.6' : (v.name == nearestSeries?.name ? 1 : 1)} fontWeight={v.name == nearestSeries?.name ? 'bold' : "inherit"} cursor="pointer" onClick={() => onSelect(v.name,i)}>
                         <HStack alignItems="center" overflow="scroll">
                             <Box width="10px" height="4px" background={v.color} mt="2px"></Box>
                             <Text>{v.name}</Text>

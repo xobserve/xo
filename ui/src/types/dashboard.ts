@@ -49,7 +49,6 @@ export interface PanelSettings {
 }
 
 export interface GraphSettings {
-    activeSeries?: string
     tooltip?: {
         mode: "single" | "all" | "hidden"
         sort: "asc" | "desc"
@@ -134,7 +133,6 @@ export interface PanelProps {
     data?: DataFrame[]
     width?: number 
     height?: number
-    onChange?: any
     sync?: any
 }
 

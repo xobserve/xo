@@ -19,11 +19,10 @@ import { useSearchParam } from "react-use";
 
 interface EditPanelProps {
     dashboard: Dashboard
-    variables: Variable[]
     onChange: any
 }
 
-const EditPanel = ({ dashboard, variables,onChange }: EditPanelProps) => {
+const EditPanel = ({ dashboard,onChange }: EditPanelProps) => {
     const edit = useSearchParam('edit')
 
     const [tempPanel, setTempPanel] = useImmer<Panel>(null)
@@ -114,7 +113,7 @@ const EditPanel = ({ dashboard, variables,onChange }: EditPanelProps) => {
                                     return (
                                         <Box width={width}
                                             height={height}>
-                                            <PanelEventWrapper dashboard={dashboard} panel={tempPanel} width={width} height={height} variables={variables} sync={null}/>
+                                            <PanelEventWrapper dashboard={dashboard} panel={tempPanel} width={width} height={height}  sync={null}/>
                                         </Box>
                                     );
                                 }}

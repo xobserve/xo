@@ -49,36 +49,43 @@ const UplotReact = ({
     // componentDidUpdate
     const prevProps = useRef({ options, data, target }).current;
     useEffect(() => {
-        // console.log("calculate whether uplot need to be re-rendering")
         if (JSON.stringify(prevProps.options) != JSON.stringify(options)) {
+            console.log("here0000")
             const optionsState = optionsUpdateState(prevProps.options, options);
             if (!chartRef.current || optionsState === 'create') {
+                console.log("here00001")
                 destroy(chartRef.current);
                 create();
-                return 
             } else if (optionsState === 'update') {
+                console.log("here0002")
                 chartRef.current.setSize({ width: options.width, height: options.height });
             }
-        }
-        if (prevProps.data !== data) {
-            if (!chartRef.current) {
-                create();
-            } else  {
-                if (resetScales) {
-                    chartRef.current.setData(data, false);
-                    chartRef.current.redraw();
-                    chartRef.current.setScale('x', {min: data[0][0], max: data[0][data[0].length-1]})
-                    return 
-                } else {
-                    chartRef.current.setData(data, false);
-                    chartRef.current.redraw();
+        } else {
+            if (prevProps.data !== data) {
+                console.log("here1111")
+                if (!chartRef.current) {
+                    create();
+                } else  {
+                    if (resetScales) {
+                        console.log("here1112")
+                        chartRef.current.setData(data, false);
+                        chartRef.current.redraw();
+                        chartRef.current.setScale('x', {min: data[0][0], max: data[0][data[0].length-1]})
+                    } else {
+                        console.log("here1113")
+                        chartRef.current.setData(data, false);
+                        chartRef.current.redraw();
+                    }
+                }
+            } else {
+                if (prevProps.target !== target) {
+                    destroy(chartRef.current);
+                    create();
                 }
             }
         }
-        if (prevProps.target !== target) {
-            destroy(chartRef.current);
-            create();
-        }
+        
+      
 
         prevProps.options = options;
         prevProps.data = data;

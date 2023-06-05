@@ -99,8 +99,8 @@ const AddPanel = ({ dashboard, onChange }: Props) => {
             <ModalOverlay />
             <ModalContent mt="20%">
                 <ModalBody py="10">
-                    <VStack>
-                        <Button onClick={() => { onAddPanel(); onClose() }}>Add new panel</Button>
+                    <VStack alignItems={"left"}>
+                        <Button onClick={() => { onAddPanel(); onClose() }} variant="outline">Add new panel</Button>
                         <Button onClick={() => { onPastePanel(); onClose() }}>Paste panel from clipboard</Button>
                     </VStack>
 

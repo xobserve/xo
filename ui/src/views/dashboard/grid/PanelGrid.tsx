@@ -27,13 +27,12 @@ interface PanelGridProps {
     dashboard: Dashboard
     panel: Panel
     onRemovePanel?: any
-    variables: Variable[]
     sync: any
     onVariablesChange?: any
 }
 
 const PanelGrid = (props: PanelGridProps) => {
-    console.log("panel grid rendered")
+    console.log("panel grid rendered:",props.panel.id)
     return (<AutoSizer>
         {({ width, height }) => {
             if (width === 0) {
@@ -61,14 +60,14 @@ export const PanelEventWrapper = (props) => {
             setTr(e.data)
         }
     )
-    
+
     const [variables1, setVariables] = useState<Variable[]>(variables)
     useBus(
         VariableChangedEvent,
         () => {
             setVariables([...variables])
         }
-    ) 
+    )
 
     return (
         <PanelComponent {...props} timeRange={tr} variables={variables1} />
@@ -83,14 +82,15 @@ interface PanelComponentProps extends PanelGridProps {
 
 export const prevQueries = {}
 export const prevQueryData = {}
-export const PanelComponent = ({ dashboard, panel, onRemovePanel, width, height, sync,timeRange,variables }: PanelComponentProps) => {
+export const PanelComponent = ({ dashboard, panel, onRemovePanel, width, height, sync, timeRange, variables }: PanelComponentProps) => {
     const toast = useToast()
     const [panelData, setPanelData] = useState<DataFrame[]>(null)
     const [queryError, setQueryError] = useState()
 
+    useEffect(() => console.log("panel created:", panel.id), [])
     useEffect(() => {
         queryData(dashboard.id + panel.id)
-    },[panel.datasource,timeRange,variables])
+    }, [panel.datasource, timeRange, variables])
 
     const queryData = async (queryId) => {
         for (var i = 0; i < panel.datasource.length; i++) {
@@ -142,10 +142,10 @@ export const PanelComponent = ({ dashboard, panel, onRemovePanel, width, height,
                     }
                 }
 
-               
-                
+
+
                 if (needUpdate) {
-                    console.log("query and set panel data")
+                    console.log("query and set panel data:",panel.id)
                     setPanelData(data)
                 }
             }
@@ -169,10 +169,9 @@ export const PanelComponent = ({ dashboard, panel, onRemovePanel, width, height,
     const panelInnerWidth = width + 8 // 10px padding left and right of panel body
 
 
-    const r = useRef(null)
-    console.log("panel component rendered, data: ",panelData)
+    console.log("panel component rendered, data: ", panelData,panel.id)
     return <Box height="100%" >
-        <PanelHeader panel={panel} queryError={queryError} onCopyPanel={onCopyPanel} onRemovePanel={onRemovePanel}/>
+        <PanelHeader panel={panel} queryError={queryError} onCopyPanel={onCopyPanel} onRemovePanel={onRemovePanel} />
         {panelData && <Box
             // panel={panel}
             maxHeight={`${isEmpty(panel.title) ? height : panelBodyHeight}px`}
@@ -184,14 +183,14 @@ export const PanelComponent = ({ dashboard, panel, onRemovePanel, width, height,
                 isEmpty(panelData) ?
                     <Box h="100%">
                         <Center height="100%">No data</Center></Box>
-                    : <CustomPanelRender panel={panel} data={panelData} height={panelInnerHeight} width={panelInnerWidth} sync={sync}  />
+                    : <CustomPanelRender panel={panel} data={panelData} height={panelInnerHeight} width={panelInnerWidth} sync={sync} />
             }
         </Box>}
     </Box>
 }
 
 
-const CustomPanelRender = memo((props:any) => {
+const CustomPanelRender = memo((props: any) => {
     //@needs-update-when-add-new-panel
     switch (props.panel?.type) {
         case PanelType.Text:
@@ -205,13 +204,13 @@ const CustomPanelRender = memo((props:any) => {
     }
 })
 
-const PanelHeader = ({queryError,panel,onCopyPanel,onRemovePanel}) => {
+const PanelHeader = ({ queryError, panel, onCopyPanel, onRemovePanel }) => {
     const router = useRouter()
 
     const title = replaceWithVariables(panel.title, variables)
-    
+
     return (
-        <HStack className="grid-drag-handle"  height={`${PANEL_HEADER_HEIGHT - (isEmpty(title) ? 15 : 0)}px`} cursor="move" spacing="0" position={isEmpty(title) ? "absolute" : "relative"} width="100%" zIndex={1000}>
+        <HStack className="grid-drag-handle" height={`${PANEL_HEADER_HEIGHT - (isEmpty(title) ? 15 : 0)}px`} cursor="move" spacing="0" position={isEmpty(title) ? "absolute" : "relative"} width="100%" zIndex={1000}>
             {(queryError || panel.desc) && <Box color={useColorModeValue(queryError ? "red" : "brand.500", queryError ? "red" : "brand.200")} position="absolute">
                 <Tooltip label={queryError ?? replaceWithVariables(panel.desc, variables)}>
                     <Box>
@@ -224,12 +223,12 @@ const PanelHeader = ({queryError,panel,onCopyPanel,onRemovePanel}) => {
                     <MenuButton
                         transition='all 0.2s'
                         _focus={{ border: null }}
-                        onClick={e => e.stopPropagation()} 
+                        onClick={e => e.stopPropagation()}
                     >
                         <Center width="100%">{!isEmpty(title) ? <Box cursor="pointer">{title}</Box> : <Box width="100px">&nbsp;</Box>}</Center>
                     </MenuButton>
                     <MenuList p="1">
-                        <MenuItem icon={<FaEdit />} onClick={() => addParamToUrl({edit: panel.id})}>Edit</MenuItem>
+                        <MenuItem icon={<FaEdit />} onClick={() => addParamToUrl({ edit: panel.id })}>Edit</MenuItem>
                         <MenuDivider my="1" />
                         <MenuItem icon={<FaRegCopy />} onClick={() => onCopyPanel(panel)}>Copy</MenuItem>
                         <MenuDivider my="1" />
@@ -239,7 +238,7 @@ const PanelHeader = ({queryError,panel,onCopyPanel,onRemovePanel}) => {
                     <Text cursor="pointer" width="fit-content">{title}</Text>
                 }
             </Center>
-            <Box display="none"><FaBook className="grid-drag-handle"/></Box>
+            <Box display="none"><FaBook className="grid-drag-handle" /></Box>
         </HStack>
     )
 }

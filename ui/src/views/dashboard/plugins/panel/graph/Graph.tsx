@@ -1,36 +1,40 @@
 import UplotReact from "components/uPlot/UplotReact"
-import { memo, useCallback, useEffect, useMemo, useState } from "react"
+import { memo, useCallback, useEffect, useMemo, useRef, useState } from "react"
 import { Panel, PanelProps } from "types/dashboard"
 import 'uplot/dist/uPlot.min.css';
-import uPlot from "uplot"
+import uPlot, { Series } from "uplot"
 
 import { parseOptions } from './options';
 import { DataFrame } from "types/dataFrame";
-import { cloneDeep, isEmpty } from "lodash";
+import { isEmpty } from "lodash";
 
 import Tooltip from "./Tooltip";
 import SeriesTable, { seriesFilterType } from "components/Tooltip/SeriesTable";
 import { GraphLayout } from "layouts/plugins/GraphLayout";
-import { Box, Center, Text, useColorMode } from "@chakra-ui/react";
+import { Box,  Text, useColorMode } from "@chakra-ui/react";
 import { colors } from "utils/colors";
 import { parseLegendFormat } from "utils/format";
 import { replaceWithVariables } from "utils/variable";
 import { variables } from "src/views/dashboard/Dashboard";
+import { dispatch } from "use-bus";
+import { ActiveSeriesEvent } from "src/data/bus-events";
 
 
 
 
 const GraphPanel = memo((props: PanelProps) => {
     const {colorMode} = useColorMode()
+    const activeSeries = useRef(null)
     const [options, data] = useMemo(() => {
         let o;
-        let d;
+        let activeExist = false
         // transform series name based on legend format 
         for (const ds of props.panel.datasource) {
             if (ds.selected) {
                 for (const query of ds.queries) {
                     if (!isEmpty(query.legend)) {
                         const formats = parseLegendFormat(query.legend)
+              
                         props.data.map(frame => {
                             if (frame.id == query.id) {
                                 frame.name = query.legend
@@ -51,30 +55,54 @@ const GraphPanel = memo((props: PanelProps) => {
                 }
             }
 
-            // set series line color
-            props.data.map((frame, i) => frame.color = colors[i % colors.length])
 
-            o = parseOptions(props, colorMode)
+
+            // set series line color
+            props.data.map((frame, i) => {
+                frame.color = colors[i % colors.length]
+                if (frame.name == activeSeries.current) {
+                    activeExist =true
+                }
+            })
+
+            if (!activeExist) {
+                activeSeries.current = null
+                dispatch({type:  ActiveSeriesEvent, id: props.panel.id, data: null})
+            } 
+            o = parseOptions(props, colorMode,activeSeries.current)
         }
 
-        d = transformDataToUplot(props.data)
-        return [o, d]
+        return [o, transformDataToUplot(props.data)]
     }, [props.panel,props.data, colorMode])
-
 
     const [uplot, setUplot] = useState<uPlot>(null)
 
-
-    const onSelectSeries = (s) => {
-        props.panel.settings.graph.activeSeries = props.panel.settings.graph.activeSeries == s ? null : s
-
-        // setConfig(cloneDeep(props))
+    const onSelectSeries = (s,i) => {
+        if (s == activeSeries.current) {
+            activeSeries.current = null
+            options.series.map((s1,j) => {
+                // s1.show = true
+                uplot.setSeries(j,{show: true})
+            })
+            dispatch({type:  ActiveSeriesEvent, id: props.panel.id, data: null})
+        } else {
+            activeSeries.current = s
+            options.series.map((s1,j) => {
+                if (s1.label==s) {
+                    // s1.show = true 
+                    uplot.setSeries(j,{show: true})
+                } else {
+                    // s1.show = false 
+                    uplot.setSeries(j,{show: false})
+                }
+            })
+            dispatch({type:  ActiveSeriesEvent, id: props.panel.id, data: s})
+        }  
     }
 
-    const onChartCreate = useCallback((chart) => { setUplot((chart)); props.sync?.sub(chart) }, [props])
+    const onChartCreate = useCallback((chart) => { setUplot((chart)); props.sync?.sub(chart) }, [props.sync])
 
-    // console.log("panel plugin rendered",config)
-    console.log("here1111112: ", options,data)
+
     return (
         <>
             <Box>
@@ -87,7 +115,6 @@ const GraphPanel = memo((props: PanelProps) => {
                             }
                         }
 
-                        // console.log(options)
                         return (options && <UplotReact
                             options={options}
                             data={data}

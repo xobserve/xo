@@ -1,16 +1,11 @@
-import { useColorMode, useColorModeValue } from "@chakra-ui/react";
 import { round, isEmpty } from "lodash";
-import { useEffect, useState } from "react"
 import { ColorMode } from "src/data/constants";
-import { renderStatsPlugin } from "./uplot-plugins/render-stats";
-import { seriesMediansPlugin } from "./uplot-plugins/series-median";
 import * as colorManipulator from 'components/uPlot/colorManipulator';
 import { canvasCtx } from 'pages/_app';
 import { PanelProps } from "types/dashboard";
 import uPlot from "uplot";
 import { systemDateFormats } from "utils/datetime/formats";
 import { dateTimeFormat } from "utils/datetime/formatter";
-import { colors } from "utils/colors";
 import customColors from "src/theme/colors";
 import { formatUnit } from "components/unit";
 import { measureText } from "utils/measureText";
@@ -21,7 +16,7 @@ import { measureText } from "utils/measureText";
 const BarWidthFactor = 0.6
 const BardMaxWidth = 200
 // build uplot options based on given config
-export const parseOptions = (config: PanelProps, colorMode) => {
+export const parseOptions = (config: PanelProps, colorMode,activeSeries) => {
     const matchSyncKeys = (own, ext) => own == ext;
     
     const axisSpace = ((self, axisIdx, scaleMin, scaleMax, plotDim) => {
@@ -59,7 +54,7 @@ export const parseOptions = (config: PanelProps, colorMode) => {
             }
         }
         series.push({
-            show: config.panel.settings.graph.activeSeries ? (config.panel.settings.graph.activeSeries == d.name ? true : false) : true,
+            show: activeSeries ? (activeSeries == d.name ? true : false) : true,
             label: d.name,
             points: {
                 show: pointsShow,
