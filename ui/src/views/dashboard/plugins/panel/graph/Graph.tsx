@@ -15,7 +15,7 @@ import { Box, Center, Text, useColorMode } from "@chakra-ui/react";
 import { colors } from "utils/colors";
 import { parseLegendFormat } from "utils/format";
 import { replaceWithVariables } from "utils/variable";
-import { variables } from "components/dashboard/Dashboard";
+import { variables } from "src/views/dashboard/Dashboard";
 
 
 

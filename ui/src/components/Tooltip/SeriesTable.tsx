@@ -3,7 +3,6 @@
 import { Box, Flex, HStack, Text, VStack } from "@chakra-ui/react"
 import { formatUnit } from "components/unit"
 import { last, reverse, round, sortBy } from "lodash"
-import { useEffect, useState } from "react"
 import { PanelProps } from "types/dashboard"
 import { DataFrame } from "types/dataFrame"
 

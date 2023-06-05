@@ -1,8 +1,8 @@
 import { Box, Select, useToast } from "@chakra-ui/react"
-import { variables } from "components/dashboard/Dashboard"
+import { variables } from "src/views/dashboard/Dashboard"
 import { NumberRangeColumnFilter } from "components/table/filters"
 import ReactTable from "components/table/Table"
-import { setVariableValue } from "components/variables/SelectVariables"
+import { setVariableValue } from "src/views/variables/Variables"
 import { useRouter } from "next/router"
 import React, { useEffect, useMemo } from "react"
 import { PanelProps } from "types/dashboard"
@@ -79,7 +79,7 @@ const TablePanel = (props: PanelProps) => {
                     enableFilter={props.panel.settings.table.enableFilter}
                     enableSort={props.panel.settings.table.enableSort}
                     showHeader={props.panel.settings.table.showHeader}
-                    onRowClick={onRowClickFunc ? (row) => onRowClickFunc(row, router,(k,v) => setVariable(variables,k,v,toast)) : null}
+                    onRowClick={onRowClickFunc ? (row) => onRowClickFunc(row, router,(k,v) => setVariable(k,v,toast)) : null}
                 />
 
             </Box>
@@ -95,7 +95,7 @@ const TablePanel = (props: PanelProps) => {
 
 export default TablePanel
 
-const setVariable = (variables: Variable[],name,value,toast) => {
+const setVariable = (name,value,toast) => {
     let v;
     for (var i=0;i<variables.length;i++) {
         if (variables[i].name == name) {

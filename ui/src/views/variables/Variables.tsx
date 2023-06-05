@@ -1,5 +1,5 @@
 import { HStack, Select, Text } from "@chakra-ui/react"
-import { variables } from "components/dashboard/Dashboard"
+import { variables } from "src/views/dashboard/Dashboard"
 import { VariableChangedEvent } from "src/data/bus-events"
 import { Variable } from "types/variable"
 import { dispatch } from "use-bus"

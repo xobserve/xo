@@ -1,6 +1,6 @@
 import { HStack, Input, NumberDecrementStepper, NumberIncrementStepper, NumberInput, NumberInputField, NumberInputStepper, Select, Slider, SliderFilledTrack, SliderThumb, SliderTrack, Textarea } from "@chakra-ui/react"
-import PanelAccordion from "components/dashboard/edit-panel/Accordion"
-import PanelEditItem from "components/dashboard/edit-panel/PanelEditItem"
+import PanelAccordion from "src/views/dashboard/edit-panel/Accordion"
+import PanelEditItem from "src/views/dashboard/edit-panel/PanelEditItem"
 import RadionButtons from "components/RadioButtons"
 import { UnitPicker } from "components/unit"
 import { GraphSettings, Panel } from "types/dashboard"

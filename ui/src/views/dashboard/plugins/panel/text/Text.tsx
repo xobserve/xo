@@ -1,5 +1,5 @@
 import { Box } from "@chakra-ui/react"
-import { variables } from "components/dashboard/Dashboard"
+import { variables } from "src/views/dashboard/Dashboard"
 import { MarkdownRender } from "components/markdown/MarkdownRender"
 import { Panel, PanelProps } from "types/dashboard"
 import { DataFrame } from "types/dataFrame"

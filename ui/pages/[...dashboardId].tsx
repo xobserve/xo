@@ -1,5 +1,5 @@
 
-import DashboardWrapper from "components/dashboard/Dashboard"
+import DashboardWrapper from "src/views/dashboard/Dashboard"
 import { useRouter } from "next/router"
 
 

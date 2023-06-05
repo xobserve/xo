@@ -1,6 +1,6 @@
 import { Alert, Input, NumberDecrementStepper, NumberIncrementStepper, NumberInput, NumberInputField, NumberInputStepper, Switch, Text, Textarea } from "@chakra-ui/react"
-import PanelAccordion from "components/dashboard/edit-panel/Accordion"
-import PanelEditItem from "components/dashboard/edit-panel/PanelEditItem"
+import PanelAccordion from "src/views/dashboard/edit-panel/Accordion"
+import PanelEditItem from "src/views/dashboard/edit-panel/PanelEditItem"
 import { cloneDeep } from "lodash"
 import { useState } from "react"
 import { Panel } from "types/dashboard"

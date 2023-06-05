@@ -1,7 +1,7 @@
 import { Dashboard, DatasourceType, Panel, PanelType } from "types/dashboard"
 import AutoSizer from 'react-virtualized-auto-sizer';
 import { Box, Center, HStack, Input, Menu, MenuButton, MenuDivider, MenuItem, MenuList, Text, Tooltip, useColorModeValue, useToast } from "@chakra-ui/react";
-import { FaCopy, FaEdit, FaRegCopy, FaTrashAlt } from "react-icons/fa";
+import { FaBook, FaCopy, FaEdit, FaRegCopy, FaTrashAlt } from "react-icons/fa";
 import { IoMdInformation } from "react-icons/io";
 import TextPanel from "../plugins/panel/text/Text";
 import { memo, useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
@@ -85,7 +85,6 @@ export const prevQueries = {}
 export const prevQueryData = {}
 export const PanelComponent = ({ dashboard, panel, onRemovePanel, width, height, sync,timeRange,variables }: PanelComponentProps) => {
     const toast = useToast()
-    const router = useRouter()
     const [panelData, setPanelData] = useState<DataFrame[]>(null)
     const [queryError, setQueryError] = useState()
 
@@ -169,42 +168,14 @@ export const PanelComponent = ({ dashboard, panel, onRemovePanel, width, height,
     const panelInnerHeight = panelBodyHeight - PANEL_BODY_PADDING * 2 // 10px padding top and bottom of panel body
     const panelInnerWidth = width + 8 // 10px padding left and right of panel body
 
-    const title = replaceWithVariables(panel.title, variables)
 
+    const r = useRef(null)
     console.log("panel component rendered, data: ",panelData)
     return <Box height="100%" >
-        <HStack className="grid-drag-handle" height={`${PANEL_HEADER_HEIGHT - (isEmpty(title) ? 20 : 0)}px`} cursor="move" spacing="0" position={isEmpty(title) ? "absolute" : "relative"} width="100%" zIndex={1000}>
-            {(queryError || panel.desc) && <Box color={useColorModeValue(queryError ? "red" : "brand.500", queryError ? "red" : "brand.200")} position="absolute">
-                <Tooltip label={queryError ?? replaceWithVariables(panel.desc, variables)}>
-                    <Box>
-                        <IoMdInformation fontSize="20px" cursor="pointer" />
-                    </Box>
-                </Tooltip>
-            </Box>}
-            <Center width="100%">
-                {!router.query.edit ? <Menu placement="bottom">
-                    <MenuButton
-                        transition='all 0.2s'
-                        _focus={{ border: null }}
-                        width="100%"
-                    >
-                        <Center width="100%">{!isEmpty(title) ? <Box cursor="pointer">{title}</Box> : <Box>&nbsp;</Box>}</Center>
-                    </MenuButton>
-                    <MenuList p="1">
-                        <MenuItem icon={<FaEdit />} onClick={() => addParamToUrl({edit: panel.id})}>Edit</MenuItem>
-                        <MenuDivider my="1" />
-                        <MenuItem icon={<FaRegCopy />} onClick={() => onCopyPanel(panel)}>Copy</MenuItem>
-                        <MenuDivider my="1" />
-                        <MenuItem icon={<FaTrashAlt />} onClick={() => onRemovePanel(panel)}>Remove</MenuItem>
-                    </MenuList>
-                </Menu> :
-                    <Text cursor="pointer" width="fit-content">{title}</Text>
-                }
-            </Center>
-        </HStack>
+        <PanelHeader panel={panel} queryError={queryError} onCopyPanel={onCopyPanel} onRemovePanel={onRemovePanel}/>
         {panelData && <Box
             // panel={panel}
-            maxHeight={`${isEmpty(title) ? height : panelBodyHeight}px`}
+            maxHeight={`${isEmpty(panel.title) ? height : panelBodyHeight}px`}
             overflowY="scroll"
             marginLeft={panel.type == PanelType.Graph ? "-10px" : "0px"}
             h="100%"
@@ -233,3 +204,42 @@ const CustomPanelRender = memo((props:any) => {
             return <></>
     }
 })
+
+const PanelHeader = ({queryError,panel,onCopyPanel,onRemovePanel}) => {
+    const router = useRouter()
+
+    const title = replaceWithVariables(panel.title, variables)
+    
+    return (
+        <HStack className="grid-drag-handle"  height={`${PANEL_HEADER_HEIGHT - (isEmpty(title) ? 15 : 0)}px`} cursor="move" spacing="0" position={isEmpty(title) ? "absolute" : "relative"} width="100%" zIndex={1000}>
+            {(queryError || panel.desc) && <Box color={useColorModeValue(queryError ? "red" : "brand.500", queryError ? "red" : "brand.200")} position="absolute">
+                <Tooltip label={queryError ?? replaceWithVariables(panel.desc, variables)}>
+                    <Box>
+                        <IoMdInformation fontSize="20px" cursor="pointer" />
+                    </Box>
+                </Tooltip>
+            </Box>}
+            <Center width="100%">
+                {!router.query.edit ? <Menu placement="bottom">
+                    <MenuButton
+                        transition='all 0.2s'
+                        _focus={{ border: null }}
+                        onClick={e => e.stopPropagation()} 
+                    >
+                        <Center width="100%">{!isEmpty(title) ? <Box cursor="pointer">{title}</Box> : <Box width="100px">&nbsp;</Box>}</Center>
+                    </MenuButton>
+                    <MenuList p="1">
+                        <MenuItem icon={<FaEdit />} onClick={() => addParamToUrl({edit: panel.id})}>Edit</MenuItem>
+                        <MenuDivider my="1" />
+                        <MenuItem icon={<FaRegCopy />} onClick={() => onCopyPanel(panel)}>Copy</MenuItem>
+                        <MenuDivider my="1" />
+                        <MenuItem icon={<FaTrashAlt />} onClick={() => onRemovePanel(panel)}>Remove</MenuItem>
+                    </MenuList>
+                </Menu> :
+                    <Text cursor="pointer" width="fit-content">{title}</Text>
+                }
+            </Center>
+            <Box display="none"><FaBook className="grid-drag-handle"/></Box>
+        </HStack>
+    )
+}
