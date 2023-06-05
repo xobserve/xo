@@ -3,6 +3,7 @@ import RadionButtons from "components/RadioButtons"
 import { isEmpty } from "lodash"
 import { useState } from "react"
 import * as Icons from 'react-icons/fa'
+import { MdEdit } from "react-icons/md"
 import PanelAccordion from "src/views/dashboard/edit-panel/Accordion"
 import PanelEditItem from "src/views/dashboard/edit-panel/PanelEditItem"
 import { NodeGraphIcon, NodeGraphMenuItem, Panel, PanelEditorProps } from "types/dashboard"
@@ -190,27 +191,95 @@ const DonutColorsSetting = ({ panel, onChange }: PanelEditorProps) => {
     )
 }
 
-const initMenuItem = {
-    name: '',
-    event: 'console.log(node)'
-}
+
 
 const RightClickMenus = ({ panel, onChange }: PanelEditorProps) => {
+    const initMenuItem = {
+        name: '',
+        event: 'console.log(node)'
+    }
+
     const toast = useToast()
     const { isOpen, onOpen, onClose } = useDisclosure()
     const [temp, setTemp] = useImmer<NodeGraphMenuItem>(initMenuItem)
 
     const onSubmit = () => {
-        onChange((panel: Panel) => {
-            panel.settings.nodeGraph.node.menu.unshift(temp)
-        })
+        for (const item of panel.settings.nodeGraph.node.menu) {
+            if (item.name == temp.name && item.id != temp.id) {
+                toast({
+                    description: "same name exist",
+                    status: "warning",
+                    duration: 2000,
+                    isClosable: true,
+                });
+                return 
+            }
+        }
 
+        if (!temp.id) {
+            // add new menu item
+            temp.id = new Date().getTime()
+            onChange((panel: Panel) => {
+                panel.settings.nodeGraph.node.menu.unshift(temp)
+            })
+    
+        } else {
+            onChange((panel: Panel) => {
+                for (let i=0; i<panel.settings.nodeGraph.node.menu.length;i++) {
+                    if (panel.settings.nodeGraph.node.menu[i].id == temp.id) {
+                        panel.settings.nodeGraph.node.menu[i] = temp
+                    }
+                }
+            })
+    
+        }
+   
         setTemp(initMenuItem)
+        onClose()
     }
 
-    return (<><PanelEditItem title="right click menus" >
-        <Button size="xs" onClick={onOpen}>Add menu item</Button>
+    const removeItem = i => {
+        onChange(panel => {
+            panel.settings.nodeGraph.node.menu.splice(i, 1)
+        })
+    }
 
+    const moveUp = (i) => { 
+        onChange(panel => {
+            const menu = panel.settings.nodeGraph.node.menu
+            const item = menu[i-1]
+            menu[i-1] = menu[i]
+            menu[i] = item
+        })
+    }
+
+    const moveDown = (i) => { 
+        onChange(panel => {
+            const menu = panel.settings.nodeGraph.node.menu
+            const item = menu[i+1]
+            menu[i+1] = menu[i]
+            menu[i] = item
+        })
+    }
+
+    return (<>
+    <PanelEditItem title="right click menus" >
+        <Button size="xs" onClick={() => {onOpen();setTemp(initMenuItem)}}>Add menu item</Button>
+        <Divider my="2" />
+        <VStack alignItems="left" pl="2">
+            {
+                panel.settings.nodeGraph.node.menu.map((item,i) => <Flex alignItems="center" justifyContent="space-between">
+                    <Text>{item.name}</Text>
+
+                    <HStack layerStyle="textFourth">
+                        {i != 0 && <Icons.FaArrowUp cursor="pointer" onClick={() => moveUp(i)} />}
+                        {i != panel.settings.nodeGraph.node.menu.length - 1 && <Icons.FaArrowDown cursor="pointer" onClick={() => moveDown(i)}/>} 
+                        <MdEdit onClick={() => {setTemp(item);onOpen()}} cursor="pointer" />
+                        <Icons.FaTimes onClick={() => removeItem(i)}  cursor="pointer"/>
+                    </HStack>
+                </Flex>)
+            }
+        </VStack>
     </PanelEditItem>
         <Modal isOpen={isOpen} onClose={onClose}>
             <ModalOverlay />
@@ -218,7 +287,7 @@ const RightClickMenus = ({ panel, onChange }: PanelEditorProps) => {
                 <ModalBody>
                     <HStack>
                         <Text fontWeight="600">Menu item name </Text>
-                        <Input onChange={e => {
+                        <Input value={temp.name} onChange={e => {
                             const v = e.currentTarget.value.trim()
                             setTemp(draft => {
                                 draft.name = v

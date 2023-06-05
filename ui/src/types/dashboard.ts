@@ -176,6 +176,7 @@ export interface NodeGraphIcon {
 }
 
 export interface NodeGraphMenuItem {
+    id?: number
     name: string 
     event: string
 }
