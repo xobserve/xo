@@ -1,6 +1,6 @@
 import { Box } from '@chakra-ui/react';
 import { cloneDeep, isEqual } from 'lodash';
-import React, { useEffect, useRef } from 'react';
+import React, { memo, useEffect, useRef } from 'react';
 
 import uPlot from 'uplot';
 
@@ -26,7 +26,7 @@ const UplotReact = ({
     const chartRef = useRef<uPlot | null>(null);
     const targetRef = useRef<HTMLDivElement>(null);
 
-
+    console.log("uplot react rendered")
     function destroy(chart: uPlot | null) {
         if (chart) {
             onDelete(chart);
@@ -50,11 +50,12 @@ const UplotReact = ({
     const prevProps = useRef({ options, data, target }).current;
     useEffect(() => {
         // console.log("calculate whether uplot need to be re-rendering")
-        if (!isEqual(prevProps.options,options)) {
+        if (JSON.stringify(prevProps.options) != JSON.stringify(options)) {
             const optionsState = optionsUpdateState(prevProps.options, options);
             if (!chartRef.current || optionsState === 'create') {
                 destroy(chartRef.current);
                 create();
+                return 
             } else if (optionsState === 'update') {
                 chartRef.current.setSize({ width: options.width, height: options.height });
             }
@@ -62,10 +63,12 @@ const UplotReact = ({
         if (prevProps.data !== data) {
             if (!chartRef.current) {
                 create();
-            } else if (!dataMatch(prevProps.data, data)) {
+            } else  {
                 if (resetScales) {
-                    chartRef.current.setData(data, true);
+                    chartRef.current.setData(data, false);
                     chartRef.current.redraw();
+                    chartRef.current.setScale('x', {min: data[0][0], max: data[0][data[0].length-1]})
+                    return 
                 } else {
                     chartRef.current.setData(data, false);
                     chartRef.current.redraw();
@@ -77,11 +80,9 @@ const UplotReact = ({
             create();
         }
 
-        return () => {
-            prevProps.options = options;
-            prevProps.data = data;
-            prevProps.target = target;
-        };
+        prevProps.options = options;
+        prevProps.data = data;
+        prevProps.target = target;
     }, [options, data, target, resetScales]);
 
     return target ? null : <Box ref={targetRef}>{children}</Box>;
@@ -107,6 +108,8 @@ export const optionsUpdateState = (_lhs: uPlot.Options, _rhs: uPlot.Options): Op
     if (lhsHeight !== rhsHeight || lhsWidth !== rhsWidth) {
         state = 'update';
     }
+
+    // @todo: 当调整图表大小时，会不停的重建图表
     if (Object.keys(lhs).length !== Object.keys(rhs).length) {
         return 'create';
     }

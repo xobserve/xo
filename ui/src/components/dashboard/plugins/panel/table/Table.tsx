@@ -1,10 +1,11 @@
 import { Box, Select, useToast } from "@chakra-ui/react"
+import { variables } from "components/dashboard/Dashboard"
 import { NumberRangeColumnFilter } from "components/table/filters"
 import ReactTable from "components/table/Table"
 import { setVariableValue } from "components/variables/SelectVariables"
 import { useRouter } from "next/router"
-import React, { useEffect } from "react"
-import { Dashboard, Panel, PanelProps } from "types/dashboard"
+import React, { useEffect, useMemo } from "react"
+import { PanelProps } from "types/dashboard"
 import { DataFrame } from "types/dataFrame"
 import { Variable } from "types/variable"
 
@@ -20,7 +21,7 @@ const TablePanel = (props: PanelProps) => {
         }
     },[props.data])
 
-    const [columns,data] = React.useMemo(() => { 
+    const [columns,data] = useMemo(() => { 
         const data = []
         const columns = []
         for (var i=0;i<props.data.length;i++) {
@@ -64,7 +65,6 @@ const TablePanel = (props: PanelProps) => {
        return [[],[]]
     }, [props.data,series])
 
-    console.log("212222:",props.panel.settings.table.onRowClick)
     const onRowClickFunc = new Function("row,router,setVariable", props.panel.settings.table.onRowClick)
 
     return (
@@ -79,7 +79,7 @@ const TablePanel = (props: PanelProps) => {
                     enableFilter={props.panel.settings.table.enableFilter}
                     enableSort={props.panel.settings.table.enableSort}
                     showHeader={props.panel.settings.table.showHeader}
-                    onRowClick={onRowClickFunc ? (row) => onRowClickFunc(row, router,(k,v) => setVariable(props.variables,k,v,toast)) : null}
+                    onRowClick={onRowClickFunc ? (row) => onRowClickFunc(row, router,(k,v) => setVariable(variables,k,v,toast)) : null}
                 />
 
             </Box>

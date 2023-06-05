@@ -5,11 +5,12 @@ import { GRID_CELL_HEIGHT, GRID_CELL_VMARGIN, GRID_COLUMN_COUNT } from "src/data
 import { updateGridPos } from "utils/dashboard/panel";
 import { Box } from "@chakra-ui/react";
 import PanelGrid from "./PanelGrid";
-import { memo, useState } from "react";
+import { memo, useEffect, useState } from "react";
 import EditPanel from "../edit-panel/EditPanel";
 import { TimeRange } from "types/time";
 import { Variable } from "types/variable";
 import uPlot from "uplot";
+import { useRouter } from "next/router";
 
 
 
@@ -21,9 +22,12 @@ interface GridProps {
 
 const DashboardGrid = memo((props: GridProps) => {
     console.log("dashboard grid rendered")
+
+
     const { dashboard, onChange,variables} = props
 
     const SizedReactLayoutGrid = sizeMe({ monitorWidth: true })(GridWrapper);
+
 
     const onLayoutChange = (newLayout: ReactGridLayout.Layout[]) => {
         for (const newPos of newLayout) {
@@ -82,19 +86,6 @@ const DashboardGrid = memo((props: GridProps) => {
         // updateGridPos(panel, newItem);
     }
 
-    const [panelInEdit, setPanelInEdit] = useState<Panel>(null);
-    const onEditPanel = (panel: Panel) => {
-        setPanelInEdit(panel)
-    }
-
-    const onEditPanelDiscard = () => {
-        setPanelInEdit(null)
-    }
-
-    const onEditPanelApply = () => {
-        setPanelInEdit(null)
-    }
-
     const onRemovePanel = (panel: Panel) => {
         const index = dashboard.data.panels.indexOf(panel);
         onChange(dashboard => {
@@ -139,12 +130,12 @@ const DashboardGrid = memo((props: GridProps) => {
                             borderBottom: "2px solid rgba(0, 0, 0, 0.4)"
                         }
                     }}>
-                        <PanelGrid dashboard={dashboard} panel={panel} onEditPanel={onEditPanel} onRemovePanel={onRemovePanel}  variables={variables} sync={mooSync} />
+                        <PanelGrid dashboard={dashboard} panel={panel} onRemovePanel={onRemovePanel}  variables={variables} sync={mooSync} />
                     </Box>)
                 })
             }
         </SizedReactLayoutGrid>
-        <EditPanel dashboard={dashboard} onChange={onChange} panel={panelInEdit} onApply={onEditPanelApply} onDiscard={onEditPanelDiscard} variables={variables}/>
+        <EditPanel dashboard={dashboard} onChange={onChange} variables={variables}/>
     </>)
 })
 

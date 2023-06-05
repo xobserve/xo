@@ -21,141 +21,134 @@ import { measureText } from "utils/measureText";
 const BarWidthFactor = 0.6
 const BardMaxWidth = 200
 // build uplot options based on given config
-export const useOptions = (config: PanelProps) => {
-    const { colorMode } = useColorMode()
-    const [options, setOptions] = useState<uPlot.Options>(null);
-    const c = useColorModeValue(customColors.textColorRGB.light, customColors.textColorRGB.dark)
+export const parseOptions = (config: PanelProps, colorMode) => {
+    const matchSyncKeys = (own, ext) => own == ext;
+    
     const axisSpace = ((self, axisIdx, scaleMin, scaleMax, plotDim) => {
         return calculateSpace(self, axisIdx, scaleMin, scaleMax, plotDim);
     })
 
-    const matchSyncKeys = (own, ext) => own == ext;
+    const textColor = colorMode == ColorMode.Light ? customColors.textColorRGB.light :  customColors.textColorRGB.dark
+    const axesColor = colorMode == ColorMode.Light ? "rgba(0, 10, 23, 0.09)" : "rgba(240, 250, 255, 0.09)"
+    
+    // build series
+    const series = []
+    // push time series option
+    series.push({
+        label: "Time",
 
-    useEffect(() => {
-        
-        const axesColor = colorMode == ColorMode.Light ? "rgba(0, 10, 23, 0.09)" : "rgba(240, 250, 255, 0.09)"
+    })
 
-        // build series
-        const series = []
-        // push time series option
-        series.push({
-            label: "Time",
-
-        })
-
-        config.data.forEach((d, i) => {
-            let pointsShow;
-            let showPoints = config.panel.settings.graph.styles?.showPoints
-            if (showPoints == "always") {
-                pointsShow = true
-            } else if (showPoints == "never") {
-                if (config.panel.settings.graph.styles?.style != "points") {
-                    pointsShow = false
-                } else {
-                    pointsShow = true
-                }
-
+    config.data.forEach((d, i) => {
+        let pointsShow;
+        let showPoints = config.panel.settings.graph.styles?.showPoints
+        if (showPoints == "always") {
+            pointsShow = true
+        } else if (showPoints == "never") {
+            if (config.panel.settings.graph.styles?.style != "points") {
+                pointsShow = false
             } else {
-                if (config.panel.settings.graph.styles?.style == "bars") {
-                    pointsShow = false
-                } else {
-                    pointsShow = true
-                }
+                pointsShow = true
             }
-            series.push({
-                show: config.panel.settings.graph.activeSeries ? (config.panel.settings.graph.activeSeries == d.name ? true : false) : true,
-                label: d.name,
-                points: {
-                    show: pointsShow,
-                    size: config.panel.settings.graph.styles?.pointSize
-                },
-                stroke: d.color,
-                width: config.panel.settings.graph.styles?.style == "points" ? 0 : config.panel.settings.graph.styles?.lineWidth,
-                fill: config.panel.settings.graph.styles?.style == "points" ? null : (config.panel.settings.graph.styles?.gradientMode == "none" ? d.color : fill(d.color, (config.panel.settings.graph.styles?.fillOpacity ?? 21) / 100)),
-                spanGaps: false,
-                paths: config.panel.settings.graph.styles?.style == "bars" ? uPlot.paths.bars({
-                    size: [BarWidthFactor, BardMaxWidth],
-                    align: 0,
-                }) : null
-            })
-        })
-        
-        // update options
-        setOptions({
-            width: config.width,
-            height: config.height,
-            series: series,
-            legend: {
-                show: false,
-            },
-            hooks: {},
-            plugins: [
-                // tooltipPlugin(config.panel.id),
-                // renderStatsPlugin()
-            ],
-            cursor: {
-                lock: true,
-                // focus: {
-                //     prox: 16,
-                // },
-                sync: {
-                    key: config.sync?.key,
-                    scales: ['x', null as any],
-                    match: [() => true, () => true],
-                },
-            },
-            tzDate: ts => uPlot.tzDate(new Date(ts * 1e3), 'Asia/Shanghai'),
-            scales: {
-                x: {
-                    time: true,
-                    auto: false,
-                    dir: 1,
-                },
-                y: {
-                    // distr: 3,
-                    auto: true,
-                    dir: 1,
-                    distr: config.panel.settings.graph.axis?.scale == "linear" ? 1 : 3,
-                    ori: 1,
-                    log: config.panel.settings.graph.axis?.scaleBase,
-                    // min: 1
-                }
-            },
-            axes: [
-                {
-                    grid: {
-                        show: config.panel.settings.graph.axis?.showGrid,
-                        width: 0.5,
-                        stroke: axesColor
-                    },
-                    scale: 'x',
-                    labelGap: 0,
-                    space: axisSpace,
-                    values: formatTime,
-                    stroke: c,
-                },
-                {
-                    grid: {
-                        show: config.panel.settings.graph.axis?.showGrid,
-                        width: 0.5,
-                        stroke: axesColor
-                    },
-                    ticks: {
-                        size: 4
-                    },
-                    scale: 'y',
-                    stroke: c,
-                    space: axisSpace,
-                    size: ((self, values, axisIdx) => {
-                        return calculateAxisSize(self, values, axisIdx);
-                    }),
-                    values: (u, vals) => vals.map(v => { return formatUnit(v, config.panel.settings.graph.std?.units,config.panel.settings.graph.std?.decimals ?? 2) ?? round(v, config.panel.settings.graph.std?.decimals ?? 2) })
-                },
-            ]
-        })
-    }, [colorMode, config])
 
-    return options
+        } else {
+            if (config.panel.settings.graph.styles?.style == "bars") {
+                pointsShow = false
+            } else {
+                pointsShow = true
+            }
+        }
+        series.push({
+            show: config.panel.settings.graph.activeSeries ? (config.panel.settings.graph.activeSeries == d.name ? true : false) : true,
+            label: d.name,
+            points: {
+                show: pointsShow,
+                size: config.panel.settings.graph.styles?.pointSize
+            },
+            stroke: d.color,
+            width: config.panel.settings.graph.styles?.style == "points" ? 0 : config.panel.settings.graph.styles?.lineWidth,
+            fill: config.panel.settings.graph.styles?.style == "points" ? null : (config.panel.settings.graph.styles?.gradientMode == "none" ? d.color : fill(d.color, (config.panel.settings.graph.styles?.fillOpacity ?? 21) / 100)),
+            spanGaps: false,
+            paths: config.panel.settings.graph.styles?.style == "bars" ? uPlot.paths.bars({
+                size: [BarWidthFactor, BardMaxWidth],
+                align: 0,
+            }) : null
+        })
+    })
+
+
+    return {
+        width: config.width,
+        height: config.height,
+        series: series,
+        legend: {
+            show: false,
+        },
+        hooks: {},
+        plugins: [
+            // tooltipPlugin(config.panel.id),
+            // renderStatsPlugin()
+        ],
+        cursor: {
+            lock: true,
+            // focus: {
+            //     prox: 16,
+            // },
+            sync: {
+                key: config.sync?.key,
+                scales: ['x', null as any],
+                match: [() => true, () => true],
+            },
+        },
+        tzDate: ts => uPlot.tzDate(new Date(ts * 1e3), 'Asia/Shanghai'),
+        scales: {
+            x: {
+                time: true,
+                auto: false,
+                dir: 1,
+            },
+            y: {
+                // distr: 3,
+                auto: true,
+                dir: 1,
+                distr: config.panel.settings.graph.axis?.scale == "linear" ? 1 : 3,
+                ori: 1,
+                log: config.panel.settings.graph.axis?.scaleBase,
+                // min: 1
+            }
+        },
+        axes: [
+            {
+                grid: {
+                    show: config.panel.settings.graph.axis?.showGrid,
+                    width: 0.5,
+                    stroke: axesColor
+                },
+                scale: 'x',
+                labelGap: 0,
+                space: axisSpace,
+                values: formatTime,
+                stroke: textColor,
+            },
+            {
+                grid: {
+                    show: config.panel.settings.graph.axis?.showGrid,
+                    width: 0.5,
+                    stroke: axesColor
+                },
+                ticks: {
+                    size: 4
+                },
+                scale: 'y',
+                stroke: textColor,
+                space: axisSpace,
+                size: ((self, values, axisIdx) => {
+                    return calculateAxisSize(self, values, axisIdx);
+                }),
+                values: (u, vals) => vals.map(v => { return formatUnit(v, config.panel.settings.graph.std?.units,config.panel.settings.graph.std?.decimals ?? 2) ?? round(v, config.panel.settings.graph.std?.decimals ?? 2) })
+            },
+        ]
+    }
 }
 
 

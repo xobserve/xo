@@ -4,39 +4,43 @@ import AutoSizer from 'react-virtualized-auto-sizer';
 import { cloneDeep, upperFirst } from "lodash"
 import { useCallback, useEffect, useMemo, useState } from "react"
 import { Dashboard,  Panel, PanelType } from "types/dashboard"
-import { PanelComponent, PanelEventWrapper } from "../grid/PanelGrid"
+import {  PanelEventWrapper } from "../grid/PanelGrid"
 import GraphPanelEditor from "../plugins/panel/graph/Editor"
 import TextPanelEditor from "../plugins/panel/text/Editor"
 import PanelAccordion from "./Accordion"
 import PanelEditItem from "./PanelEditItem"
 import EditPanelQuery from "./Query"
-import { TimeRange } from "types/time";
 import { Variable } from "types/variable";
 import TablePanelEditor from "../plugins/panel/table/Editor";
 import { useImmer } from "use-immer";
+import { useRouter } from "next/router";
+import { removeParamFromUrl } from "utils/url";
+import { useSearchParam } from "react-use";
 
 interface EditPanelProps {
     dashboard: Dashboard
-    panel: Panel
-    onApply: any
-    onDiscard: any
     variables: Variable[]
     onChange: any
 }
 
-const EditPanel = ({ dashboard, panel, onApply, onDiscard,variables,onChange }: EditPanelProps) => {
+const EditPanel = ({ dashboard, variables,onChange }: EditPanelProps) => {
+    const edit = useSearchParam('edit')
+
     const [tempPanel, setTempPanel] = useImmer<Panel>(null)
     const { isOpen, onOpen, onClose } = useDisclosure()
 
     useEffect(() => {
-        if (panel) {
-            onOpen()
-            setTempPanel(panel)
-        } else {
-            onClose()
-            setTempPanel(null)
+        if (edit) {
+            console.log("edit: ",edit)
+            const p = dashboard.data.panels.find(p => p.id.toString() === edit)
+            if (p) {
+                setTempPanel(p)
+                onOpen()
+            }
         }
-    }, [panel])
+    },[edit])
+
+
 
 
     const onApplyChanges = () => {
@@ -49,10 +53,14 @@ const EditPanel = ({ dashboard, panel, onApply, onDiscard,variables,onChange }: 
             }
         })
 
-        onApply()
+        onEditClose()
     }
 
 
+    const onDiscard = () => {
+        setTempPanel(null)
+        onEditClose()
+    }
 
     const onChangeVisualization = type => {
         setTempPanel(tempPanel => {
@@ -72,8 +80,13 @@ const EditPanel = ({ dashboard, panel, onApply, onDiscard,variables,onChange }: 
         })
     }
 
+    const onEditClose = () => {
+        removeParamFromUrl(['edit'])
+        onClose()
+    }
+
     return (<>
-        <Modal isOpen={isOpen} onClose={() => { onDiscard(), onClose() }} size="full">
+        <Modal isOpen={isOpen} onClose={onEditClose} size="full">
             <ModalOverlay />
             {dashboard && tempPanel && <ModalContent>
                 {/* editor header section */}

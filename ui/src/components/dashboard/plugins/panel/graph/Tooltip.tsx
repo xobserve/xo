@@ -3,7 +3,7 @@ import { Portal } from "components/portal/Portal";
 import SeriesTable, { seriesFilterType } from "components/Tooltip/SeriesTable";
 import { TooltipContainer } from "components/Tooltip/Tooltip";
 import { isEmpty, round } from "lodash";
-import { useLayoutEffect, useState } from "react";
+import { memo, useLayoutEffect, useState } from "react";
 import { unstable_batchedUpdates } from "react-dom";
 import { useMountedState } from "react-use";
 import { PanelProps } from "types/dashboard";
@@ -18,7 +18,7 @@ interface Props {
 
 const TOOLTIP_OFFSET = 10;
 let plotInstance;
-const Tooltip = ({ props, options }: Props) => {
+const Tooltip = memo(({ props, options }: Props) => {
     const [coords, setCoords] = useState(null);
     const [focusSeries, setFocusSeries] = useState<DataFrame>(null)
     const [focusIdx, setFocusIdx] = useState(null)
@@ -131,7 +131,7 @@ const Tooltip = ({ props, options }: Props) => {
             }
         </Portal>
     </>)
-}
+})
 
 export default Tooltip
 

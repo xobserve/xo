@@ -19,12 +19,13 @@ import useBus from 'use-bus'
 import { getInitTimeRange } from "components/TimePicker";
 import { TimeChangedEvent, VariableChangedEvent } from "src/data/bus-events";
 import { variables } from "../Dashboard";
+import { useRouter } from "next/router";
+import { addParamToUrl } from "utils/url";
 
 
 interface PanelGridProps {
     dashboard: Dashboard
     panel: Panel
-    onEditPanel?: any
     onRemovePanel?: any
     variables: Variable[]
     sync: any
@@ -38,7 +39,6 @@ const PanelGrid = (props: PanelGridProps) => {
             if (width === 0) {
                 return null;
             }
-
 
             return (
                 <Box width={width}
@@ -83,14 +83,13 @@ interface PanelComponentProps extends PanelGridProps {
 
 export const prevQueries = {}
 export const prevQueryData = {}
-export const PanelComponent = ({ dashboard, panel, onEditPanel, onRemovePanel, width, height, sync,timeRange,variables }: PanelComponentProps) => {
+export const PanelComponent = ({ dashboard, panel, onRemovePanel, width, height, sync,timeRange,variables }: PanelComponentProps) => {
     const toast = useToast()
-   
-    const [panelData, setPanelData] = useState<DataFrame[]>([])
+    const router = useRouter()
+    const [panelData, setPanelData] = useState<DataFrame[]>(null)
     const [queryError, setQueryError] = useState()
 
-    useLayoutEffect(() => {
-        console.log("query data")
+    useEffect(() => {
         queryData(dashboard.id + panel.id)
     },[panel.datasource,timeRange,variables])
 
@@ -99,6 +98,7 @@ export const PanelComponent = ({ dashboard, panel, onEditPanel, onRemovePanel, w
             const ds = panel.datasource[i]
             if (ds.selected) {
                 let data = []
+                let needUpdate = false
                 for (const q0 of ds.queries) {
                     const metrics = replaceWithVariables(q0.metrics, variables)
                     const q = { ...q0, metrics }
@@ -115,6 +115,7 @@ export const PanelComponent = ({ dashboard, panel, onEditPanel, onRemovePanel, w
                         continue
                     }
 
+                    needUpdate = true
                     // console.log("re-query data! metrics id:", q.id, " query id:", queryId)
 
                     prevQueries[id] = currentQuery
@@ -142,9 +143,12 @@ export const PanelComponent = ({ dashboard, panel, onEditPanel, onRemovePanel, w
                     }
                 }
 
-                console.log("query and set panel data")
+               
                 
-                setPanelData(data)
+                if (needUpdate) {
+                    console.log("query and set panel data")
+                    setPanelData(data)
+                }
             }
         }
     }
@@ -178,7 +182,7 @@ export const PanelComponent = ({ dashboard, panel, onEditPanel, onRemovePanel, w
                 </Tooltip>
             </Box>}
             <Center width="100%">
-                {onEditPanel ? <Menu placement="bottom">
+                {!router.query.edit ? <Menu placement="bottom">
                     <MenuButton
                         transition='all 0.2s'
                         _focus={{ border: null }}
@@ -187,7 +191,7 @@ export const PanelComponent = ({ dashboard, panel, onEditPanel, onRemovePanel, w
                         <Center width="100%">{!isEmpty(title) ? <Box cursor="pointer">{title}</Box> : <Box>&nbsp;</Box>}</Center>
                     </MenuButton>
                     <MenuList p="1">
-                        <MenuItem icon={<FaEdit />} onClick={() => onEditPanel(panel)}>Edit</MenuItem>
+                        <MenuItem icon={<FaEdit />} onClick={() => addParamToUrl({edit: panel.id})}>Edit</MenuItem>
                         <MenuDivider my="1" />
                         <MenuItem icon={<FaRegCopy />} onClick={() => onCopyPanel(panel)}>Copy</MenuItem>
                         <MenuDivider my="1" />
@@ -198,7 +202,7 @@ export const PanelComponent = ({ dashboard, panel, onEditPanel, onRemovePanel, w
                 }
             </Center>
         </HStack>
-        {<Box
+        {panelData && <Box
             // panel={panel}
             maxHeight={`${isEmpty(title) ? height : panelBodyHeight}px`}
             overflowY="scroll"
@@ -209,7 +213,7 @@ export const PanelComponent = ({ dashboard, panel, onEditPanel, onRemovePanel, w
                 isEmpty(panelData) ?
                     <Box h="100%">
                         <Center height="100%">No data</Center></Box>
-                    : <CustomPanelRender panel={panel} data={panelData} height={panelInnerHeight} width={panelInnerWidth} variables={variables} sync={sync}  />
+                    : <CustomPanelRender panel={panel} data={panelData} height={panelInnerHeight} width={panelInnerWidth} sync={sync}  />
             }
         </Box>}
     </Box>
