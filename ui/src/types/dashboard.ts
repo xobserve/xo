@@ -100,6 +100,7 @@ export enum DatasourceType {
     Prometheus = "prometheus",
     Jaeger = "jaeger",
     ExternalHttp = "external-http",
+    TestData = "testdata"
 }
 
 export interface PanelDatasource {

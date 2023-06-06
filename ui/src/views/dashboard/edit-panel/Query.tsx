@@ -2,7 +2,9 @@ import { Box, Button, Flex, HStack, Image, Select, Text, VStack } from "@chakra-
 import { upperFirst } from "lodash"
 import { FaPlus, FaTrashAlt } from "react-icons/fa"
 import { DatasourceType, Panel } from "types/dashboard"
+import JaegerQueryEditor from "../plugins/datasource/jaeger/Editor"
 import PrometheusQueryEditor from "../plugins/datasource/prometheus/Editor"
+import TestDataQueryEditor from "../plugins/datasource/testdata/Editor"
 
 interface Props {
     panel: Panel
@@ -127,7 +129,10 @@ const CustomQueryEditor = ({query,onChange,selected}) => {
     switch (selected.type) {
         case DatasourceType.Prometheus:
             return <PrometheusQueryEditor query={query} onChange={onQueryChange} />
-
+        case DatasourceType.TestData:
+            return <TestDataQueryEditor query={query} onChange={onQueryChange} />
+        case DatasourceType.Jaeger:
+            return <JaegerQueryEditor query={query} onChange={onQueryChange} />
         default:
             return <></>
     }
