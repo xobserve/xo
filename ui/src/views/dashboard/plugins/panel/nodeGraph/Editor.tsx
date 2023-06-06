@@ -5,7 +5,7 @@ import { useState } from "react"
 import * as Icons from 'react-icons/fa'
 import PanelAccordion from "src/views/dashboard/edit-panel/Accordion"
 import PanelEditItem from "src/views/dashboard/edit-panel/PanelEditItem"
-import { NodeGraphIcon, Panel, PanelEditorProps } from "types/dashboard"
+import { NodeGraphIcon, NodeGraphMenuItem, Panel, PanelEditorProps } from "types/dashboard"
 import { useImmer } from "use-immer"
 import { isJSON } from "utils/is"
 
@@ -45,6 +45,8 @@ const NodeGraphPanelEditor = (props: PanelEditorProps) => {
                     panel.settings.nodeGraph.node.tooltipTrigger = v
                 })} />
             </PanelEditItem>
+
+            <RightClickMenus {...props} />
         </PanelAccordion>
     </>)
 }
@@ -185,5 +187,64 @@ const DonutColorsSetting = ({ panel, onChange }: PanelEditorProps) => {
                 setTemp(v)
             }} onBlur={onSubmit} />
         </PanelEditItem>
+    )
+}
+
+const initMenuItem = {
+    name: '',
+    event: 'console.log(node)'
+}
+
+const RightClickMenus = ({ panel, onChange }: PanelEditorProps) => {
+    const toast = useToast()
+    const { isOpen, onOpen, onClose } = useDisclosure()
+    const [temp, setTemp] = useImmer<NodeGraphMenuItem>(initMenuItem)
+
+    const onSubmit = () => {
+        onChange((panel: Panel) => {
+            panel.settings.nodeGraph.node.menu.unshift(temp)
+        })
+
+        setTemp(initMenuItem)
+    }
+
+    return (<><PanelEditItem title="right click menus" >
+        <Button size="xs" onClick={onOpen}>Add menu item</Button>
+
+    </PanelEditItem>
+        <Modal isOpen={isOpen} onClose={onClose}>
+            <ModalOverlay />
+            <ModalContent minWidth="700px">
+                <ModalBody>
+                    <HStack>
+                        <Text fontWeight="600">Menu item name </Text>
+                        <Input onChange={e => {
+                            const v = e.currentTarget.value.trim()
+                            setTemp(draft => {
+                                draft.name = v
+                            })
+                        }} placeholder="e.g view service" size="sm" width="250px" />
+                    </HStack>
+
+                    <Text fontWeight="600" mt="4">Define click event</Text>
+                    <Text>function onMenuItemClick(node, router, setVariable) &#123;</Text>
+                    <Textarea value={temp.event} onChange={(e) => {
+                        const v = e.currentTarget.value
+                        setTemp(draft => {
+                            draft.event = v
+                        })
+                    }}
+                    />
+                    <Text>&#125; </Text>
+
+                    <Button my="4" size="sm" onClick={onSubmit}>Submit</Button>
+                    <Alert status='success' flexDir="column" alignItems="left">
+                        <Text>
+                        </Text>
+                    </Alert>
+                </ModalBody>
+            </ModalContent>
+        </Modal>
+    </>
     )
 }

@@ -47,7 +47,8 @@ export const initPanelSettings:PanelSettings = {
                 'success': '#61DDAA',
                 'error': '#F08BB4',
             }),
-            tooltipTrigger: 'mouseenter'
+            tooltipTrigger: 'mouseenter',
+            menu: []
         }
     }
 }
