@@ -6,7 +6,11 @@ import { FaHome } from 'react-icons/fa'
 import Header from 'src/layouts/header'
 import { t } from 'utils/i18n'
 
-const NotFoundPage = () => {
+interface Props {
+  message?: string
+}
+
+const NotFoundPage = ({message}:Props) => {
   return (
     <PageContainer1>
       {/* <Header /> */}
@@ -17,7 +21,7 @@ const NotFoundPage = () => {
         mt={['20', null, '40']}
         textAlign='center'
       >
-        <Heading>{t('notfound.heading')}</Heading>
+        <Heading>{message??t('notfound.heading')}</Heading>
         <Text fontSize={{ md: 'xl' }}>{t('notfound.message')}</Text>
           <Button
             as='a'

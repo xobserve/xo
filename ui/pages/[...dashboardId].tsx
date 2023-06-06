@@ -3,16 +3,16 @@ import DashboardWrapper from "src/views/dashboard/Dashboard"
 import { useRouter } from "next/router"
 import { useEffect, useState } from "react"
 import { requestApi } from "utils/axios/request"
-import NotFoundPage  from "./404"
+import NotFoundPage from "./404"
 
 const DashboardPage = () => {
     const router = useRouter()
-    console.log(router)
     const rawId = router.query.dashboardId
     const [dashboardId, setDashboardId] = useState<string>(null)
     const [error, setError] = useState(null)
     useEffect(() => {
         if (rawId) {
+            setDashboardId(null)
             let path = window.location.pathname;
             // if rawId  starts with 'd-', then it's a dashboard id
             // otherwise, it's just a pathname defined in team's sidemenu, we need to get the real dashboard id
@@ -22,23 +22,39 @@ const DashboardPage = () => {
                 load(path)
             }
         }
-    },[rawId])
+    }, [rawId])
 
     const load = async path => {
-          const res = await requestApi.get(`/team/sidemenu/current`)
-          console.log(res.data)
-          const menuitem = res.data.data.find(item => item.url == path)
-          if (!menuitem) {
-             setError('Dashboard not found')
-             setDashboardId(null)
-             return 
-          }
-          setDashboardId(menuitem.dashboardId)
+        const res = await requestApi.get(`/team/sidemenu/current`)
+        let menuitem;
+        for (const item of res.data.data) {
+            if (item.url == path) {
+                menuitem = item
+            } else {
+                if (item.children) {
+                    for (const child of item.children) {
+                        if (child.url == path) {
+                            menuitem = child
+                            break
+                        }
+                    }
+                }
+            }
+
+            if (menuitem) break
+        }
+
+        if (!menuitem) {
+            setError('Dashboard not found')
+            return
+        }
+
+        setDashboardId(menuitem.dashboardId)
     }
     return (
         <>
-            {dashboardId && <DashboardWrapper dashboardId={dashboardId}/>}    
-            {error && <NotFoundPage />}
+            {dashboardId && <DashboardWrapper dashboardId={dashboardId} />}
+            {error && <NotFoundPage message={error} />}
         </>
     )
 }

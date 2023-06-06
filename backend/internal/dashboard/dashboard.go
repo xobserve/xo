@@ -2,6 +2,7 @@ package dashboard
 
 import (
 	"database/sql"
+	"fmt"
 	"time"
 
 	"github.com/MyStarship/starship/backend/internal/user"
@@ -87,7 +88,7 @@ func GetDashboard(c *gin.Context) {
 	dash, err := models.QueryDashboard(id)
 	if err != nil {
 		if err == sql.ErrNoRows {
-			c.JSON(404, common.RespError("dashboard not found"))
+			c.JSON(404, common.RespError(fmt.Sprintf("dashboard id `%s` not found", id)))
 			return
 		}
 		logger.Warn("query dashboard error", "error", err)

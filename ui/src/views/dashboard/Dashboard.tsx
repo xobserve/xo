@@ -1,30 +1,22 @@
-import { Box, Button, Modal, ModalBody, ModalContent, ModalOverlay, useDisclosure, VStack } from "@chakra-ui/react"
-import { PanelAdd } from "components/icons/PanelAdd"
+import { Box } from "@chakra-ui/react"
 import PageContainer from "layouts/page-container"
-import { useRouter } from "next/router"
-import { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react"
-import { Dashboard, DatasourceType, Panel, PanelType } from "types/dashboard"
+import { useCallback, useEffect, useState } from "react"
+import { Dashboard } from "types/dashboard"
 import { requestApi } from "utils/axios/request"
-import { Team } from "types/teams"
 import DashboardHeader from "src/views/dashboard/DashboardHeader"
 import DashboardGrid from "src/views/dashboard/grid/DashboardGrid"
-import { cloneDeep, concat, has, isEqual } from "lodash"
+import { cloneDeep, concat } from "lodash"
 import { TimeRange } from "types/time"
-import { getInitTimeRange, initTimeRange } from "components/TimePicker"
+import { getInitTimeRange } from "components/TimePicker"
 import { Variable } from "types/variable"
 import { setVariableSelected } from "src/views/variables/Variables"
 import { prevQueries, prevQueryData } from "src/views/dashboard/grid/PanelGrid"
-import { useLeavePageConfirm } from "hooks/useLeavePage"
 import { unstable_batchedUpdates } from "react-dom"
-import storage from "utils/localStorage"
-import { StorageCopiedPanelKey } from "src/data/constants"
 import { dispatch } from 'use-bus'
 import { TimeChangedEvent, VariableChangedEvent } from "src/data/bus-events"
 
 import { useImmer } from "use-immer"
 import { setAutoFreeze } from "immer";
-import { initGraphSettings } from "./plugins/panel/graph/Editor"
-import { initTextSettings } from "./plugins/panel/text/Text"
 
 setAutoFreeze(false)
 // All of the paths that is not defined in pages directory will redirect to this page,
