@@ -4,7 +4,7 @@ import { useBeforeUnload } from "react-use";
 
 export const useLeavePageConfirm = (
   isConfirm = true,
-  message = "Are you sure want to leave this page?"
+  message = "Changes not saved, are you sure to leave this page?"
 ) => {
   useBeforeUnload(isConfirm, message);
 

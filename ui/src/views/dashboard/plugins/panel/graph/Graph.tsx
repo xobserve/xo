@@ -89,10 +89,8 @@ const GraphPanel = memo((props: PanelProps) => {
             activeSeries.current = s
             options.series.map((s1,j) => {
                 if (s1.label==s) {
-                    // s1.show = true 
                     uplot.setSeries(j,{show: true})
                 } else {
-                    // s1.show = false 
                     uplot.setSeries(j,{show: false})
                 }
             })

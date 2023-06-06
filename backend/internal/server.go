@@ -75,7 +75,7 @@ func (s *Server) Start() error {
 		r.POST("/team/sidemenu", IsLogin(), teams.UpdateSideMenu)
 		r.GET("/team/sidemenus/forUser", IsLogin(), teams.GetAvailableSidMenusForUser)
 		r.POST("/team/sidemenu/select/:teamId", IsLogin(), teams.SelectSideMenuForUser)
-
+		r.GET("/team/sidemenu/current", IsLogin(), teams.GetCurrentSidemenu)
 		// variable apis
 		r.POST("/variable/new", IsLogin(), variables.AddNewVariable)
 		r.GET("/variable/all", IsLogin(), api.GetVariables)
