@@ -6,12 +6,13 @@ import { Help } from "types/misc"
 interface Props {
     data: Help[]
     size?: 'sm' | 'md' | 'lg'
+    iconSize?: string
 }
 
-const Help = memo(({ data,size="sm" }: Props) => {
+const Help = memo(({ data,size="sm",iconSize="0.9rem" }: Props) => {
     const { isOpen, onOpen, onClose } = useDisclosure()
     return (<>
-        <Tooltip label="click to view the help doc"><Box opacity="0.7" position="absolute" right="10px" top="8px" zIndex="1000" cursor="pointer" onClick={onOpen}><FaQuestion /></Box></Tooltip>
+        <Tooltip label="click to view the help doc"><Box opacity="0.7" position="absolute" right="10px" top="8px" zIndex="1000" cursor="pointer" onClick={onOpen} fontSize={iconSize}><FaQuestion /></Box></Tooltip>
         <Modal isOpen={isOpen} onClose={onClose} >
             <ModalOverlay />
             <ModalContent minWidth="600px">

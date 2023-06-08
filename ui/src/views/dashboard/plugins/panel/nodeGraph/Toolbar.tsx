@@ -114,7 +114,7 @@ export const NodeGraphToolbar = memo(({ graph,setMenuTip }: Props) => {
         if (!graph || graph.destroyed) return;
         graph.fitView(16);
     };
-    return (<HStack spacing="3" className="nodegraph-toolbar" position="absolute" left="10px" top="7px" zIndex="1000" opacity="0.7">
+    return (<HStack spacing="3" className="nodegraph-toolbar" position="absolute" left="10px" top="7px" zIndex="1000" opacity="0.7" fontSize="0.8rem">
         <Tooltip label="Zoom in"><Box  cursor="pointer" onClick={handleZoomIn}><FaMinus /></Box></Tooltip>
         <Tooltip label="Fit to canvas"><Text  cursor="pointer" fontWeight="600" onClick={handleFitViw}>FIT</Text></Tooltip>
         <Tooltip label="Zoom out"><Box cursor="pointer" onClick={handleZoomOut}><FaPlus /></Box></Tooltip>

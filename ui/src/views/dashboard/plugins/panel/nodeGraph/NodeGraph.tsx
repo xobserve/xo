@@ -70,7 +70,6 @@ const NodeGrapPanel = ({ data }: PanelProps) => {
                 width: container.current.scrollWidth,
                 height: container.current.scrollHeight,
                 fitCenter: true,
-                linkCenter: true,
                 plugins: [legend, tooltip, contextMenu],
                 modes: {
                     default: ['drag-node', 'activate-relations', 'drag-canvas', 'lasso-select', 'click-select'],
@@ -84,7 +83,7 @@ const NodeGrapPanel = ({ data }: PanelProps) => {
                     preventNodeOverlap: true
                 },
                 defaultEdge: {
-                    type: 'quadratic',
+                    type: 'line',
                     style: {
                         endArrow: true,
                         lineAppendWidth: 2,
@@ -113,6 +112,7 @@ const NodeGrapPanel = ({ data }: PanelProps) => {
                 },
             });
 
+            console.log(data[0])
             gh.data(data[0]);
             gh.render();
             gh.on('node:mouseenter', (evt) => {
@@ -148,12 +148,14 @@ const NodeGrapPanel = ({ data }: PanelProps) => {
             });
 
             setGraph(gh)
-            if (typeof window !== 'undefined')
+            if (typeof window !== 'undefined') {
                 window.onresize = () => {
                     if (!graph || gh.get('destroyed')) return;
                     if (!container || !container.current.scrollWidth || !container.current.scrollHeight) return;
                     gh.changeSize(container.current.scrollWidth, container.current.scrollHeight);
                 };
+            }
+              
         }
     }, []);
 
@@ -168,7 +170,7 @@ const NodeGrapPanel = ({ data }: PanelProps) => {
         <NodeGraphToolbar graph={graph} setMenuTip={onMenuTipChange} />
         <Box width="100%" height="100%" ref={container} />
         <Box className="nodegraph-menutip bordered" opacity={menuTip.opacity} position="absolute" right="10px" width="fit-content" top="7px" borderRadius='8px' transition="all 0.2s linear" px="2" py="1" fontSize="0.9rem">{menuTip.text}</Box>
-        <Help data={nodeGraphHelp} />
+        <Help data={nodeGraphHelp} iconSize="0.8rem" />
     </>;
 }
 

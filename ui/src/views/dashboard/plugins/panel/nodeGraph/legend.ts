@@ -24,7 +24,7 @@ export const initLegend = () => {
         data: legendData,
         align: 'center',
         layout: 'horizontal', // vertical
-        position: 'bottom-left',
+        position: 'bottom',
       
         padding: [1, 10, 1, 10],
         containerStyle: {
