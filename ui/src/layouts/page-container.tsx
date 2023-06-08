@@ -17,7 +17,7 @@ type PageContainerProps = PropsOf<typeof chakra.div> & {
 
 
 function PageContainer(props: PageContainerProps) {
-  const { children, nav, title = "RustCn社区", showWidgetes = false, showCopyright = true, ...rest } = props
+  const { children, nav, title = "Datav", showWidgetes = false, showCopyright = true, ...rest } = props
 
   return (
     <>

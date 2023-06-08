@@ -14,11 +14,11 @@ const vkey = "apm-variables"
 const SelectVariables = ({id, variables}: Props) => {
     return (<HStack>
         {variables.map(v => {
-            return <HStack>
+            return <HStack key={v.id}>
                 <Text fontSize="sm" minWidth="fit-content">{v.name}</Text>
                 <Select value={v.selected} size="sm" variant="flushed" onChange={e => setVariableValue(v, e.currentTarget.value)}>
                     {
-                        v.values.map(v => <option value={v}>{v}</option>)
+                        v.values.map(v => <option key={v} value={v}>{v}</option>)
                     }
                 </Select>
             </HStack>
