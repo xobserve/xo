@@ -16,7 +16,7 @@ const TestDataQueryEditor = ({query,onChange}:Props) => {
     
     return (  
         <VStack alignItems="left" spacing="1">
-            <HStack>
+            {/* <HStack>
                 <Label>Metrics</Label>
                 <Input 
                     value={tempQuery.metrics} 
@@ -25,7 +25,7 @@ const TestDataQueryEditor = ({query,onChange}:Props) => {
                     }}
                     onBlur={() => onChange(tempQuery)}
                     width="100%"
-                    placeholder="Enter a PromQL query"
+                    placeholder="Enter any string you like"
                     size="sm"
                 />
             </HStack>
@@ -41,7 +41,7 @@ const TestDataQueryEditor = ({query,onChange}:Props) => {
                     placeholder="Legend format"
                     size="sm"
                 />
-           </HStack>
+           </HStack> */}
        </VStack>
 )
 }

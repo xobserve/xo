@@ -3,14 +3,10 @@ import PanelAccordion from "src/views/dashboard/edit-panel/Accordion"
 import PanelEditItem from "src/views/dashboard/edit-panel/PanelEditItem"
 import RadionButtons from "components/RadioButtons"
 import { UnitPicker } from "components/unit"
-import { GraphSettings, Panel } from "types/dashboard"
+import { GraphSettings, Panel, PanelEditorProps } from "types/dashboard"
 
-interface Props {
-    panel: Panel
-    onChange: any
-}
 
-const GraphPanelEditor = ({ panel, onChange }: Props) => {
+const GraphPanelEditor = ({ panel, onChange }: PanelEditorProps) => {
     return (<>
         <PanelAccordion title="Tooltip">
             <PanelEditItem title="Tooltip mode">

@@ -7,6 +7,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@antv/g6": "^4.8.15",
     "@chakra-ui/cli": "2.3.0",
     "@chakra-ui/icons": "2.0.17",
     "@chakra-ui/props-docs": "2.2.1",
@@ -18,8 +19,12 @@
     "@emotion/react": "^11.10.0",
     "@emotion/styled": "^11.9.3",
     "@nosferatu500/react-sortable-tree": "^4.3.0",
+    "@types/cytoscape": "^3.19.9",
     "@uselessdev/datepicker": "^2.7.0",
     "axios": "^0.19.2",
+    "cytoscape": "^3.25.0",
+    "cytoscape-cose-bilkent": "^4.1.0",
+    "cytoscape-dom-node": "^1.1.1",
     "date-fns": "^2.29.3",
     "formik": "^2.2.9",
     "framer-motion": "9.0.2",

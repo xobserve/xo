@@ -1,13 +1,11 @@
 // 1. Run the query to get the data from datasource
 // 2. Convert the data to the format which AiAPM expects
 
-import { PanelQuery } from "types/dashboard"
-import mockData from "./mocks/data.json"
+import { Panel, PanelQuery } from "types/dashboard"
 import { DataFrame, FieldType } from "types/dataFrame"
-import { concat } from "lodash"
 import { TimeRange } from "types/time"
 
-export const run_prometheus_query = async (q: PanelQuery,range: TimeRange) => {
+export const run_prometheus_query = async (panel: Panel,q: PanelQuery,range: TimeRange) => {
     //@todo: 
     // 1. rather than query directyly to prometheus, we should query to our own backend servie
     // 2. using `axios` instead of `fetch`
@@ -33,31 +31,14 @@ export const run_prometheus_query = async (q: PanelQuery,range: TimeRange) => {
     }
 
 
-    const data = toDataFrame(q, res.data)
+    const data = prometheusDataToDataFrame(q, res.data)
     return {
         error: null,
         data: data
     }
 }
 
-
-
-// "data": {
-//     "resultType": "matrix",
-//     "result": [
-//         {
-//             "metric": {
-//                 "cpu": "0",
-//                 "instance": "localhost:9100",
-//                 "job": "node",
-//                 "mode": "idle"
-//             },
-//             "values": [
-//                 [
-//                     1678865295,
-//                     "0.5592903959242473"
-//                 ],
-const toDataFrame = (query: PanelQuery, data: any): DataFrame[] => {
+export const prometheusDataToDataFrame = (query: PanelQuery, data: any): DataFrame[] => {
     let res: DataFrame[] = []
     if (data.resultType === "matrix") {
         for (const m of data.result) {

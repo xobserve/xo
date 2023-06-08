@@ -8,9 +8,6 @@ import {
   Grid,
   createStandaloneToast,
 } from "@chakra-ui/react"
-import { ColorModeSwitcher } from "components/ColorModeSwitcher"
-import Logo from "components/logo"
-import VerticalNav from "src/layouts/nav/vertical-nav"
 import { t } from "utils/i18n"
 import PageContainer from "layouts/page-container"
 

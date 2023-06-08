@@ -1,0 +1,44 @@
+import G6 from "@antv/g6";
+import { donutColors } from "./utils";
+
+export const initLegend = () => {
+    const legendData = {
+        nodes: [{
+            id: 'success',
+            label: 'Success',
+            order: 0,
+            style: {
+                fill: donutColors['success'],
+            }
+        }, {
+            id: 'rror',
+            label: 'Error',
+            order: 2,
+            style: {
+                fill: donutColors['error'],
+            }
+        }]
+    }
+
+    const legend = new G6.Legend({
+        data: legendData,
+        align: 'center',
+        layout: 'horizontal', // vertical
+        position: 'bottom-right',
+      
+        // vertiSep: 12,
+        // horiSep: 24,
+        // offsetY: -24,
+        padding: [1, 10, 1, 10],
+        containerStyle: {
+            fill: 'rgba(255,255,255,0.2)',
+            lineWidth: 0,
+        },
+        title: ' ',
+        titleConfig: {
+            offsetY: -8,
+        },
+    });
+
+    return legend
+}

@@ -1,9 +1,9 @@
 import { Button, useColorModeValue } from "@chakra-ui/react"
 
-const IconButton = ({children,fontSize="1.3rem",...rest}) => {
+const IconButton = ({children,fontSize="1.1rem",...rest}) => {
     return <Button 
             variant="outline" 
-            p="1" 
+            p="0" 
             borderColor="inherit" 
             color={useColorModeValue("var(--chakra-colors-gray-600)", "var(--chakra-colors-whiteAlpha-900)")} 
             fontSize={fontSize}

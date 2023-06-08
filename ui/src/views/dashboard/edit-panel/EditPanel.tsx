@@ -16,6 +16,7 @@ import { useImmer } from "use-immer";
 import { useRouter } from "next/router";
 import { removeParamFromUrl } from "utils/url";
 import { useSearchParam } from "react-use";
+import NodeGraphPanelEditor from "../plugins/panel/nodeGraph/Editor";
 
 interface EditPanelProps {
     dashboard: Dashboard
@@ -200,6 +201,8 @@ const CustomPanelEditor = ({tempPanel,setTempPanel}) => {
             return <GraphPanelEditor panel={tempPanel} onChange={setTempPanel} />
         case PanelType.Table:
             return <TablePanelEditor panel={tempPanel} onChange={setTempPanel} />
+        case PanelType.NodeGraph:
+            return <NodeGraphPanelEditor panel={tempPanel} onChange={setTempPanel} />
         default:
             return <></>
     }

@@ -5,7 +5,7 @@ export default function textStyles() {
             fontWeight: "500",
         },
         subTitle: {
-            fontSize: "1.2rem",
+            fontSize: "1.15rem",
             fontWeight: "400",
         },
         title: {

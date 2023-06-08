@@ -3,14 +3,10 @@ import PanelAccordion from "src/views/dashboard/edit-panel/Accordion"
 import PanelEditItem from "src/views/dashboard/edit-panel/PanelEditItem"
 import { cloneDeep } from "lodash"
 import { useState } from "react"
-import { Panel } from "types/dashboard"
+import { Panel, PanelEditorProps } from "types/dashboard"
 
-interface Props {
-    panel: Panel
-    onChange: any
-}
 
-const TextPanelEditor = ({panel,onChange}:Props) => {
+const TextPanelEditor = ({panel,onChange}:PanelEditorProps) => {
     const [tempPanel, setTempPanel] = useState<Panel>(panel)
 
     if (!tempPanel.settings.text) {

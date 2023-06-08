@@ -9,7 +9,7 @@ import { run_prometheus_query } from "../plugins/datasource/prometheus/query_run
 import { DataFrame } from "types/dataFrame";
 import GraphPanel from "../plugins/panel/graph/Graph";
 import { PANEL_BODY_PADDING, PANEL_HEADER_HEIGHT, StorageCopiedPanelKey } from "src/data/constants";
-import { cloneDeep, isEmpty, isEqual } from "lodash";
+import { cloneDeep, isArray, isEmpty, isEqual } from "lodash";
 import { TimeRange } from "types/time";
 import { Variable } from "types/variable";
 import { replaceWithVariables } from "utils/variable";
@@ -21,6 +21,9 @@ import { TimeChangedEvent, VariableChangedEvent } from "src/data/bus-events";
 import { variables } from "../Dashboard";
 import { useRouter } from "next/router";
 import { addParamToUrl } from "utils/url";
+import { run_testdata_query } from "../plugins/datasource/testdata/query_runner";
+import { run_jaeger_query } from "../plugins/datasource/jaeger/query_runner";
+import NodeGraphPanel from "../plugins/panel/nodeGraph/NodeGraph";
 
 
 interface PanelGridProps {
@@ -87,21 +90,23 @@ export const PanelComponent = ({ dashboard, panel, onRemovePanel, width, height,
     const [panelData, setPanelData] = useState<DataFrame[]>(null)
     const [queryError, setQueryError] = useState()
 
-    useEffect(() => console.log("panel created:", panel.id), [])
+    // useEffect(() => console.log("panel created:", panel.id), [])
     useEffect(() => {
         queryData(dashboard.id + panel.id)
     }, [panel.datasource, timeRange, variables])
 
     const queryData = async (queryId) => {
+        console.log(panel.datasource)
         for (var i = 0; i < panel.datasource.length; i++) {
             const ds = panel.datasource[i]
             if (ds.selected) {
                 let data = []
                 let needUpdate = false
                 for (const q0 of ds.queries) {
+                    console.log(q0)
                     const metrics = replaceWithVariables(q0.metrics, variables)
                     const q = { ...q0, metrics }
-
+                    console.log(q)
                     const id = queryId + q.id
                     const prevQuery = prevQueries[id]
                     const currentQuery = [q, timeRange]
@@ -109,7 +114,11 @@ export const PanelComponent = ({ dashboard, panel, onRemovePanel, width, height,
                     if (isEqual(prevQuery, currentQuery)) {
                         const d = prevQueryData[id]
                         if (d) {
-                            data.push(...d)
+                            if (isArray(d)) {
+                                data.push(...d)
+                            } else {
+                                data.push(d)
+                            }
                         }
                         continue
                     }
@@ -119,11 +128,16 @@ export const PanelComponent = ({ dashboard, panel, onRemovePanel, width, height,
 
                     prevQueries[id] = currentQuery
                     let res
+                    //@needs-update-when-add-new-datasource
                     switch (ds.type) {
                         case DatasourceType.Prometheus:
-
-
-                            res = await run_prometheus_query(q, timeRange)
+                            res = await run_prometheus_query(panel,q, timeRange)
+                            break;
+                        case DatasourceType.TestData:
+                                res = await run_testdata_query(panel,q, timeRange)
+                                break;
+                        case DatasourceType.Jaeger:
+                            res = await run_jaeger_query(panel, q, timeRange)
                             break;
                         default:
                             break;
@@ -137,7 +151,12 @@ export const PanelComponent = ({ dashboard, panel, onRemovePanel, width, height,
 
 
                     if (!isEmpty(res.data)) {
-                        data.push(...res.data)
+                        if (isArray(res.data)) {
+                            data.push(...res.data)
+                        } else {
+                            data.push(res.data)
+                        }
+                      
                         prevQueryData[id] = res.data
                     }
                 }
@@ -147,6 +166,10 @@ export const PanelComponent = ({ dashboard, panel, onRemovePanel, width, height,
                 if (needUpdate) {
                     console.log("query and set panel data:",panel.id)
                     setPanelData(data)
+                } else {
+                    if (panelData?.length != data.length) {
+                        setPanelData(data)
+                    }
                 }
             }
         }
@@ -199,6 +222,8 @@ const CustomPanelRender = memo((props: any) => {
             return <GraphPanel {...props} />
         case PanelType.Table:
             return <TablePanel {...props} />
+        case PanelType.NodeGraph:
+            return <NodeGraphPanel {...props} />
         default:
             return <></>
     }

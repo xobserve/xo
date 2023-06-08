@@ -126,6 +126,7 @@ const CustomQueryEditor = ({query,onChange,selected}) => {
         })
     }
 
+    //@needs-update-when-add-new-datasource
     switch (selected.type) {
         case DatasourceType.Prometheus:
             return <PrometheusQueryEditor query={query} onChange={onQueryChange} />

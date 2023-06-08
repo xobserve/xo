@@ -225,4 +225,7 @@ export interface DataFrameFieldIndex {
   }
 
 
-  
+export interface NodeGraphData {
+  nodes? : any[]
+  edges?: any[]
+}

@@ -1,16 +1,9 @@
 import { Alert, Input, NumberDecrementStepper, NumberIncrementStepper, NumberInput, NumberInputField, NumberInputStepper, Switch, Text, Textarea } from "@chakra-ui/react"
 import PanelAccordion from "src/views/dashboard/edit-panel/Accordion"
 import PanelEditItem from "src/views/dashboard/edit-panel/PanelEditItem"
-import { cloneDeep } from "lodash"
-import { useState } from "react"
-import { Panel } from "types/dashboard"
+import { Panel, PanelEditorProps } from "types/dashboard"
 
-interface Props {
-    panel: Panel
-    onChange: any
-}
-
-const TablePanelEditor = ({ panel, onChange }: Props) => {
+const TablePanelEditor = ({ panel, onChange }: PanelEditorProps) => {
     return (<PanelAccordion title="Table setting">
         <PanelEditItem title="Show header" desc="whether display table's header">
             <Switch isChecked={panel.settings.table.showHeader} onChange={(e) => onChange(draft => {

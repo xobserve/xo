@@ -1,4 +1,4 @@
-import { DataFrame } from "./dataFrame"
+import { DataFrame, NodeGraphData } from "./dataFrame"
 import { Variable } from "./variable"
 
 export interface Dashboard {
@@ -40,12 +40,18 @@ export interface Panel {
     datasource?: PanelDatasource[]
 }
 
+export interface PanelEditorProps {
+    panel: Panel
+    onChange: any
+}
+
 export interface PanelSettings {
     text?: {
         md?: string
     }
     graph?: GraphSettings
     table?: TableSettings
+    nodeGraph?: NodeGraphSettings
 }
 
 export interface GraphSettings {
@@ -94,6 +100,7 @@ export enum PanelType {
     Graph = "graph",
     Text = "text",
     Row = "row",
+    NodeGraph = "nodeGraph",
 }
 
 export enum DatasourceType {
@@ -118,6 +125,7 @@ export interface PanelQuery {
     metrics: string
     legend: string 
     visible: boolean
+    mockData?: any
 }
 
 export interface GridPos {
@@ -131,12 +139,13 @@ export interface GridPos {
 
 export interface PanelProps {
     panel: Panel
-    data?: DataFrame[]
+    data?: PanelData[]
     width?: number 
     height?: number
     sync?: any
 }
 
+export type PanelData = DataFrame & NodeGraphData
 export interface TableSettings {
     showHeader?: boolean
     globalSearch?: boolean
@@ -146,3 +155,8 @@ export interface TableSettings {
     enableSort?: boolean
     onRowClick?: string
 }
+
+export interface NodeGraphSettings {
+
+}
+
