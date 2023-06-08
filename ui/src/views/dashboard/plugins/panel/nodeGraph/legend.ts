@@ -24,11 +24,8 @@ export const initLegend = () => {
         data: legendData,
         align: 'center',
         layout: 'horizontal', // vertical
-        position: 'bottom-right',
+        position: 'bottom-left',
       
-        // vertiSep: 12,
-        // horiSep: 24,
-        // offsetY: -24,
         padding: [1, 10, 1, 10],
         containerStyle: {
             fill: 'rgba(255,255,255,0.2)',
