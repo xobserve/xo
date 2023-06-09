@@ -163,6 +163,7 @@ export interface NodeGraphSettings {
         icon: NodeGraphIcon[]
         shape: 'circle' | 'donut',
         donutColors: string // json string 
+        tooltipTrigger: 'mouseenter' | 'click'
     }
 }
 

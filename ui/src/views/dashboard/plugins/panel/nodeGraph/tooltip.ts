@@ -1,11 +1,12 @@
 import G6 from "@antv/g6";
+import { NodeGraphSettings } from "types/dashboard";
 
-export const initTooltip = () => {
+export const initTooltip = (settings: NodeGraphSettings) => {
     const tooltip = new G6.Tooltip({
         offsetX: 10,
         offsetY: 10,
         itemTypes: ['node'],
-        trigger: 'mouseenter',
+        trigger: settings.node.tooltipTrigger ?? 'mouseenter',
         getContent: (e) => {
             const model = e.item.getModel();
             const outDiv = document.createElement('div');

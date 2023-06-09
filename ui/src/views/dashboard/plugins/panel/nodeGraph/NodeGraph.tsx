@@ -62,7 +62,7 @@ const NodeGrapPanel = ({ data, panel, dashboardId }: PanelProps) => {
 
     useEffect(() => {
         if (!graph) {
-            const tooltip = initTooltip()
+            const tooltip = initTooltip(panel.settings.nodeGraph)
 
             setAttrsForData(panel.settings.nodeGraph,data[0])
 
@@ -194,7 +194,7 @@ const NodeGrapPanel = ({ data, panel, dashboardId }: PanelProps) => {
                 };
             }
         }
-    }, []);
+    }, [panel.settings.nodeGraph]);
 
     const onSelectChange = useCallback(v => setSelected(v), [])
 

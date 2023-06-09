@@ -28,13 +28,23 @@ const NodeGraphPanelEditor = (props: PanelEditorProps) => {
                     <SliderThumb children={panel.settings.nodeGraph.node.baseSize} fontSize='sm' boxSize='25px' />
                 </Slider>
             </PanelEditItem>
+
             <IconSetting {...props} />
+
             <PanelEditItem title="shape">
                 <RadionButtons options={[{ label: "Donut", value: "donut" }, { label: "Circle", value: "circle" }]} value={panel.settings.nodeGraph.node.shape} onChange={v => onChange(panel => {
                     panel.settings.nodeGraph.node.shape = v
                 })} />
             </PanelEditItem>
             {panel.settings.nodeGraph.node.shape == 'donut' && <DonutColorsSetting {...props} />}
+
+            <PanelEditItem title="tooltip trigger" info={
+                <Text>You need to click Apply Button(in top-right) to see the new trigger taken effect</Text>
+            }>
+                <RadionButtons options={[{ label: "Hover", value: "mouseenter" }, { label: "Click", value: "click" }]} value={panel.settings.nodeGraph.node.tooltipTrigger} onChange={v => onChange(panel => {
+                    panel.settings.nodeGraph.node.tooltipTrigger = v
+                })} />
+            </PanelEditItem>
         </PanelAccordion>
     </>)
 }
@@ -154,7 +164,7 @@ const DonutColorsSetting = ({ panel, onChange }: PanelEditorProps) => {
                 duration: 2000,
                 isClosable: true,
             });
-            return 
+            return
         }
         onChange(panel => {
             panel.settings.nodeGraph.node.donutColors = temp
@@ -167,13 +177,13 @@ const DonutColorsSetting = ({ panel, onChange }: PanelEditorProps) => {
             <Text>2. key is the node's attribute</Text>
             <Text>3. value is a color string</Text>
             <Alert status="success">
-            You can find node attributes by hovering on a node, e.g 'error: 45' , 'error' is attribute name, '45' is the value
-            </Alert>    
+                You can find node attributes by hovering on a node, e.g 'error: 45' , 'error' is attribute name, '45' is the value
+            </Alert>
         </VStack>}>
             <Textarea value={temp} onChange={e => {
                 const v = e.currentTarget.value.trim()
                 setTemp(v)
-            }} onBlur={onSubmit}/>
+            }} onBlur={onSubmit} />
         </PanelEditItem>
     )
 }

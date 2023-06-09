@@ -46,7 +46,8 @@ export const initPanelSettings:PanelSettings = {
             donutColors: JSON.stringify({
                 'success': '#61DDAA',
                 'error': '#F08BB4',
-            })
+            }),
+            tooltipTrigger: 'mouseenter'
         }
     }
 }
