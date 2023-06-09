@@ -2,27 +2,21 @@
 
 import React, { useCallback, useEffect,  useState } from 'react';
 import G6, { Graph } from '@antv/g6';
-import { Box, useColorMode } from '@chakra-ui/react';
+import { Box, Text, useColorMode } from '@chakra-ui/react';
 import { PanelProps } from 'types/dashboard';
 import { initTooltip } from './tooltip';
-import { initContextMenu } from './contextMenu';
 import { donutColors } from './utils';
 import { initLegend } from './legend';
 import { setAttrsForData } from './transformData';
 import { NodeGraphToolbar } from './Toolbar';
 import Help from 'components/help';
 import { nodeGraphHelp } from './data/help';
+import  useContextMenu  from './useContextMenu';
+import HiddenItems from './HiddenItem';
 
 
 
-const NodeGrapPanel = ({ data }: PanelProps) => {
-    // menu tip, 例如 “按下 ESC 退出鱼眼”
-    const [menuTip, setMenuTip] = useState({
-        text: '',
-        display: 'none',
-        opacity: 0,
-    });
-
+const NodeGrapPanel = ({ data,panel,dashboardId }: PanelProps) => {
     const container = React.useRef(null);
     const [graph, setGraph] = useState<Graph>(null);
     const { colorMode } = useColorMode();
@@ -32,6 +26,8 @@ const NodeGrapPanel = ({ data }: PanelProps) => {
             fill: colorMode == "light" ? '#000' : '#fff',
         }
     }
+    const [selected, setSelected] = useState(false)
+    const contextMenu = useContextMenu()
 
     useEffect(() => {
         if (graph) {
@@ -55,11 +51,10 @@ const NodeGrapPanel = ({ data }: PanelProps) => {
         }
     }, [data])
 
+
     useEffect(() => {
         if (!graph) {
             const tooltip = initTooltip()
-
-            const contextMenu = initContextMenu()
 
             setAttrsForData(data[0])
 
@@ -69,21 +64,27 @@ const NodeGrapPanel = ({ data }: PanelProps) => {
                 container: container.current,
                 width: container.current.scrollWidth,
                 height: container.current.scrollHeight,
+                // fitView: true,
                 fitCenter: true,
                 plugins: [legend, tooltip, contextMenu],
                 modes: {
-                    default: ['drag-node', 'activate-relations', 'drag-canvas', 'lasso-select', 'click-select'],
+                    default: ['drag-node', 'activate-relations', 'drag-canvas',  'click-select',{
+                        type: 'lasso-select',
+                        onSelect(nodes,edges) {
+                            setSelected(true)
+                        }
+                    }],
                     fisheyeMode: []
                 },
                 layout: {
-                    type: 'radial',
-                    focusNode: 'li',
-                    linkDistance: 150,
+                    type: 'force2',
+                    // focusNode: 'li',
+                    // linkDistance: 200,
                     unitRadius: 200,
-                    preventNodeOverlap: true
+                    preventNodeOverlap: true,
                 },
                 defaultEdge: {
-                    type: 'line',
+                    type: 'quadratic',
                     style: {
                         endArrow: true,
                         lineAppendWidth: 2,
@@ -112,40 +113,46 @@ const NodeGrapPanel = ({ data }: PanelProps) => {
                 },
             });
 
-            console.log(data[0])
-            gh.data(data[0]);
-            gh.render();
-            gh.on('node:mouseenter', (evt) => {
+            const g1 = gh
+            g1.on('node:mouseenter', (evt) => {
                 const { item } = evt;
-                gh.setItemState(item, 'active', true);
+                g1.setItemState(item, 'active', true);
             });
-
-            gh.on('node:mouseleave', (evt) => {
+    
+            g1.on('node:mouseleave', (evt) => {
                 const { item } = evt;
-                gh.setItemState(item, 'active', false);
+                g1.setItemState(item, 'active', false);
             });
-
-            gh.on('node:click', (evt) => {
+    
+            g1.on('node:click', (evt) => {
+                console.log('click 111')
                 const { item } = evt;
-                gh.setItemState(item, 'selected', true);
+                console.log(g1,item)
+                g1.setItemState(item, 'selected', true);
+                setSelected(true)
             })
-
-            gh.on('node:dblclick', (evt) => {
-                clearSelectedNodesState(gh)
-                clearSelectedEdgesState(gh)
-
+    
+            g1.on('node:dblclick', (evt) => {
+                clearSelectedNodesState(g1)
+                clearSelectedEdgesState(g1)
+    
                 const { item } = evt;
-                gh.setItemState(item, 'selected', true);
+                g1.setItemState(item, 'selected', true);
                 //@ts-ignore
                 item.getEdges().forEach(edge => {
-                    gh.setItemState(edge, 'selected', true);
+                    g1.setItemState(edge, 'selected', true);
                 })
                 // gh.setItemState(item, 'focus', true);
             });
-            gh.on('canvas:click', (evt) => {
-                clearSelectedNodesState(gh)
-                clearSelectedEdgesState(gh)
+    
+            g1.on('canvas:click', (evt) => {
+                clearSelectedNodesState(g1)
+                clearSelectedEdgesState(g1)
+                setSelected(false)
             });
+
+            gh.data(data[0]);
+            gh.render();
 
             setGraph(gh)
             if (typeof window !== 'undefined') {
@@ -154,23 +161,17 @@ const NodeGrapPanel = ({ data }: PanelProps) => {
                     if (!container || !container.current.scrollWidth || !container.current.scrollHeight) return;
                     gh.changeSize(container.current.scrollWidth, container.current.scrollHeight);
                 };
-            }
-              
+            }           
         }
     }, []);
 
-
-
-
-
-
-    const onMenuTipChange = useCallback(v => setMenuTip(v),[])
+    const onSelectChange = useCallback(v => setSelected(v),[])
 
     return <>
-        <NodeGraphToolbar graph={graph} setMenuTip={onMenuTipChange} />
+        <NodeGraphToolbar graph={graph}  />
         <Box width="100%" height="100%" ref={container} />
-        <Box className="nodegraph-menutip bordered" opacity={menuTip.opacity} position="absolute" right="10px" width="fit-content" top="7px" borderRadius='8px' transition="all 0.2s linear" px="2" py="1" fontSize="0.9rem">{menuTip.text}</Box>
         <Help data={nodeGraphHelp} iconSize="0.8rem" />
+        {graph && <Box><HiddenItems dashboardId={dashboardId} panelId={panel.id} selected={selected} graph={graph} onSelectChange={onSelectChange}/></Box>}
     </>;
 }
 

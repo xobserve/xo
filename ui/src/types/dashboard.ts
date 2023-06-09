@@ -140,6 +140,7 @@ export interface GridPos {
 export interface PanelProps {
     panel: Panel
     data?: PanelData[]
+    dashboardId?: string
     width?: number 
     height?: number
     sync?: any

@@ -206,7 +206,7 @@ export const PanelComponent = ({ dashboard, panel, onRemovePanel, width, height,
                 isEmpty(panelData) ?
                     <Box h="100%">
                         <Center height="100%">No data</Center></Box>
-                    : <CustomPanelRender panel={panel} data={panelData} height={panelInnerHeight} width={panelInnerWidth} sync={sync} />
+                    : <CustomPanelRender dashboardId={dashboard.id} panel={panel} data={panelData} height={panelInnerHeight} width={panelInnerWidth} sync={sync} />
             }
         </Box>}
     </Box>
