@@ -1,6 +1,6 @@
 
 
-import React, { useCallback, useEffect,  useState } from 'react';
+import React, { useCallback, useEffect,  useLayoutEffect,  useState } from 'react';
 import G6, { Graph } from '@antv/g6';
 import { Box, Text, useColorMode } from '@chakra-ui/react';
 import { PanelProps } from 'types/dashboard';
@@ -44,7 +44,7 @@ const NodeGrapPanel = ({ data,panel,dashboardId }: PanelProps) => {
         }
     }, [colorMode])
 
-    useEffect(() => {
+    useLayoutEffect(() => {
         if (graph) {
             setAttrsForData(data[0])
             graph.changeData(data[0])
@@ -182,7 +182,7 @@ const NodeGrapPanel = ({ data,panel,dashboardId }: PanelProps) => {
         {graph && <NodeGraphToolbar graph={graph}  />}
         <Box width="100%" height="100%" ref={container} />
         <Help data={nodeGraphHelp} iconSize="0.8rem" />
-        {graph && <Box><HiddenItems dashboardId={dashboardId} panelId={panel.id} selected={selected} graph={graph} onSelectChange={onSelectChange}/></Box>}
+        {graph && <Box><HiddenItems dashboardId={dashboardId} panelId={panel.id} selected={selected} graph={graph} onSelectChange={onSelectChange} data={data}/></Box>}
     </>;
 }
 
