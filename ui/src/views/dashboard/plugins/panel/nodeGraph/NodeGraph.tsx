@@ -79,7 +79,7 @@ const NodeGrapPanel = ({ data,panel,dashboardId }: PanelProps) => {
                 layout: {
                     type: 'force2',
                     // focusNode: 'li',
-                    linkDistance: 350,
+                    linkDistance: 300,
                     // unitRadius: 200,
                     preventNodeOverlap: true,
                 },
@@ -135,7 +135,6 @@ const NodeGrapPanel = ({ data,panel,dashboardId }: PanelProps) => {
             });
     
             g1.on('node:click', (evt) => {
-                console.log('click 111')
                 const { item } = evt;
                 console.log(g1,item)
                 g1.setItemState(item, 'selected', true);
@@ -177,7 +176,7 @@ const NodeGrapPanel = ({ data,panel,dashboardId }: PanelProps) => {
     const onSelectChange = useCallback(v => setSelected(v),[])
 
     return <>
-        {graph && <NodeGraphToolbar graph={graph}  />}
+        {graph && <NodeGraphToolbar graph={graph}  dashboardId={dashboardId} panelId={panel.id}/>}
         <Box width="100%" height="100%" ref={container} />
         <Help data={nodeGraphHelp} iconSize="0.8rem" />
         {graph && <Box><HiddenItems dashboardId={dashboardId} panelId={panel.id} selected={selected} graph={graph} onSelectChange={onSelectChange} data={data}/></Box>}

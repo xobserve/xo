@@ -6,10 +6,12 @@ import Filtering from "./Filtering"
 
 interface Props {
     graph: Graph
+    dashboardId: string
+    panelId: number
 }
 
 const defaultMenuTip = 'press Esc to exit fisheye mode'
-export const NodeGraphToolbar = memo(({ graph }: Props) => {
+export const NodeGraphToolbar = memo(({ graph,dashboardId,panelId }: Props) => {
     const [fishEye, setFishEye] = useState(null)
     // menu tip, 例如 “按下 ESC 退出鱼眼”
     const [menuTip, setMenuTip] = useState({
@@ -123,7 +125,7 @@ export const NodeGraphToolbar = memo(({ graph }: Props) => {
                 <Tooltip label="Fit to canvas"><Text cursor="pointer" fontWeight="600" onClick={handleFitViw}>FIT</Text></Tooltip>
                 <Tooltip label="Zoom out"><Box cursor="pointer" onClick={handleZoomOut}><FaPlus /></Box></Tooltip>
                 <Tooltip label="Fisheye magnifying,most useful when nodes squeezed together"><Box color="currentcolor" cursor="pointer" onClick={toggleFishEye}><FaSearch /></Box></Tooltip>
-                <Filtering graph={graph} />
+                <Filtering graph={graph} dashboardId={dashboardId} panelId={panelId} />
             </HStack>
             <Box className="nodegraph-menutip bordered" opacity={menuTip.opacity} position="absolute" right="25px" width="fit-content" top="2px" borderRadius='8px' transition="all 0.2s linear" px="2" py="1" fontSize="0.9rem">{menuTip.text}</Box></>
     )

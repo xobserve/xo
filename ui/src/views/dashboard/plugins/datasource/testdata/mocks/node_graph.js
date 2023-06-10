@@ -6,8 +6,8 @@ export const nodeGraphData = (nodesCount) => {
         id: `node-${i}`,
         label: `node-${i}`,
         data: {
-          success: Math.random() * 1000,
-          error: Math.random() * 100,
+          success: Math.round(Math.random() * 1000),
+          error: Math.round(Math.random() * 100),
         },
         icon: {
           show: false,
@@ -29,8 +29,8 @@ export const nodeGraphData = (nodesCount) => {
               target: `node-${j}`,
               label:  Math.round(Math.random() * 1000),
               data: {
-                req: Math.random() * 1000,
-                error: Math.random() * 100,
+                req: Math.round(Math.random() * 1000),
+                error: Math.round(Math.random() * 100),
               },
             })
           }

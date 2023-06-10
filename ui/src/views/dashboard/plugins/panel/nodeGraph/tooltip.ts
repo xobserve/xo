@@ -6,19 +6,25 @@ export const initTooltip = () => {
         offsetY: 10,
         itemTypes: ['node'],
         getContent: (e) => {
+            const model = e.item.getModel();
             const outDiv = document.createElement('div');
             outDiv.style.width = 'fit-content';
-            outDiv.style.padding = '0px 0px 20px 10px';
+            outDiv.style.padding = '0px 10px 0px 20px';
+            outDiv.style.fontSize = '14px';
+            let li = ''
+            Object.keys(model.data).map(key=> {
+                console.log(`<li>${key}: ${model.data[key]}</li>`)
+                li  += `<li>${key}: ${model.data[key]}</li>`
+            })
             outDiv.innerHTML = `
-                <h4>Custom Content</h4>
+                <strong><h3>${model.label}</h3></strong>
                 <ul>
-                <li>Type: ${e.item.getType()}</li>
-                </ul>
-                <ul>
-                <li>Label: ${e.item.getModel().label || e.item.getModel().id}</li>
+                ${
+                  li
+                }
                 </ul>`;
             return outDiv;
-        },
+        }
     });
 
     return tooltip
