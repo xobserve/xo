@@ -49,6 +49,8 @@ const NodeGrapPanel = ({ data,panel,dashboardId }: PanelProps) => {
             setAttrsForData(data[0])
             graph.changeData(data[0])
         }
+
+        
     }, [data])
 
 
@@ -79,8 +81,8 @@ const NodeGrapPanel = ({ data,panel,dashboardId }: PanelProps) => {
                 layout: {
                     type: 'force2',
                     // focusNode: 'li',
-                    // linkDistance: 200,
-                    unitRadius: 200,
+                    linkDistance: 350,
+                    // unitRadius: 200,
                     preventNodeOverlap: true,
                 },
                 defaultEdge: {
@@ -97,6 +99,11 @@ const NodeGrapPanel = ({ data,panel,dashboardId }: PanelProps) => {
                             lineWidth: 5
                         }
                     },
+                    stateStyles: {
+                        filterOut: {
+                            visibility: 'hidden',
+                        }
+                    }
                 },
                 defaultNode: {
                     type: 'donut',
@@ -110,6 +117,11 @@ const NodeGrapPanel = ({ data,panel,dashboardId }: PanelProps) => {
                         }
                     },
                     donutColorMap: donutColors,
+                    stateStyles: {
+                        filterOut: {
+                            visibility: 'hidden',
+                        }
+                    }
                 },
             });
 
@@ -153,7 +165,6 @@ const NodeGrapPanel = ({ data,panel,dashboardId }: PanelProps) => {
 
             gh.data(data[0]);
             gh.render();
-
             setGraph(gh)
             if (typeof window !== 'undefined') {
                 window.onresize = () => {
@@ -168,7 +179,7 @@ const NodeGrapPanel = ({ data,panel,dashboardId }: PanelProps) => {
     const onSelectChange = useCallback(v => setSelected(v),[])
 
     return <>
-        <NodeGraphToolbar graph={graph}  />
+        {graph && <NodeGraphToolbar graph={graph}  />}
         <Box width="100%" height="100%" ref={container} />
         <Help data={nodeGraphHelp} iconSize="0.8rem" />
         {graph && <Box><HiddenItems dashboardId={dashboardId} panelId={panel.id} selected={selected} graph={graph} onSelectChange={onSelectChange}/></Box>}

@@ -81,7 +81,7 @@ const HiddenItems = memo(({ selected, graph, panelId, dashboardId, onSelectChang
         }
     }
     return (<>
-        <VStack position="absolute" top="30px" right="8px" opacity="0.7" fontSize="0.9rem" className="bordered-top" pt="2" >
+        <VStack position="absolute" top="9px" left="140px" opacity="0.7" fontSize="1rem" className="bordered-left" pl="2" >
             {selected && <Tooltip label="隐藏所选择的目标">
                 <Box cursor="pointer" onClick={hideSelected} color="brand.500">
                     <FaEyeSlash />

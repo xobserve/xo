@@ -15,13 +15,7 @@ export const run_testdata_query = async (panel: Panel, q: PanelQuery,range: Time
             data = prometheusDataToDataFrame(q, graphData.data)
             break;
         case PanelType.NodeGraph:
-            data = cloneDeep(nodeGraphData)
-            data.nodes.forEach(n => n.donutAttrs = {
-                success: Math.random() * 1000,
-                error: Math.random() * 100,
-            })
-
-            data.edges.forEach(e => e.label = Math.round(Math.random() * 1000))
+            data = nodeGraphData(20)
             break;
         default:
             break
