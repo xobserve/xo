@@ -161,7 +161,15 @@ const DonutColorsSetting = ({ panel, onChange }: PanelEditorProps) => {
         })
     }
     return (
-        <PanelEditItem title="donut colors">
+        <PanelEditItem title="donut colors" info={<VStack alignItems='left' fontWeight="600">
+            <Text>Map the node attributes to specify colors to draw a Donut shape</Text>
+            <Text>1. json format</Text>
+            <Text>2. key is the node's attribute</Text>
+            <Text>3. value is a color string</Text>
+            <Alert status="success">
+            You can find node attributes by hovering on a node, e.g 'error: 45' , 'error' is attribute name, '45' is the value
+            </Alert>    
+        </VStack>}>
             <Textarea value={temp} onChange={e => {
                 const v = e.currentTarget.value.trim()
                 setTemp(v)
