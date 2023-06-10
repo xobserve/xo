@@ -38,15 +38,19 @@ const Filtering = ({ graph, dashboardId, panelId }: Props) => {
         if (nodes.length > 0) {
             const model = nodes[0].getModel()
             const option = []
-            option.push('label')
-            option.push(...Object.keys(model.data))
+            option.push({name: 'label',type: typeof model.label})
+            Object.keys(model.data).forEach(key => {
+                option.push({name: key, type: typeof model.data[key]})
+            })
             setNodeOptions(option)
         }
 
         if (edges.length > 0) {
             const model = edges[0].getModel()
             const option = []
-            option.push(...Object.keys(model.data))
+            Object.keys(model.data).forEach(key => {
+                option.push({name: key, type: typeof model.data[key]})
+            })
             setEdgeOptions(option)
         }
 
@@ -72,11 +76,12 @@ const Filtering = ({ graph, dashboardId, panelId }: Props) => {
                 let stepPassed = true
                 if (rule.type == 'node') {
                     if (rule.key == 'label') {
-                        if (!(model.label as string).includes(rule.value)) {
+                        if (((model.label as string).match(rule.value) == null)) {
                             stepPassed = false
                         }
                     } else {
                         const v = model.data[rule.key]
+                        console.log("here33333:",rule.key,v as string)
                         switch (rule.operator) {
                             case FilteringOperator.GreaterThan:
                                 stepPassed = v > rule.value
@@ -107,15 +112,15 @@ const Filtering = ({ graph, dashboardId, panelId }: Props) => {
                 showNodes.push(n)
             }
         })
-        console.log("here3333, hiden:", hiddenNodes)
         hiddenNodes.forEach(n => {
             graph.hideItem(n)
         })
         showNodes.forEach(n => {
             graph.showItem(n)
         })
-        console.log("here33333:,", rules)
     }, [rules])
+
+    const options = tempRule?.type === 'node' ? nodeOptions : edgeOptions
 
     const onAddNewRule = () => {
         if (rules.length >= 5) {
@@ -127,12 +132,13 @@ const Filtering = ({ graph, dashboardId, panelId }: Props) => {
             });
             return
         }
+
         setTempRule({
             id: new Date().getTime(),
             type: 'node',
-            key: options[0],
-            operator: FilteringOperator.GreaterThan,
-            value: '',
+            key: nodeOptions[0].name,
+            operator: nodeOptions[0].type == "string" ? FilteringOperator.Regex  :FilteringOperator.GreaterThan,
+            value: nodeOptions[0].type == "string" ? '' : 0,
             combination: FilterCombinition.And,
             disabled: false
         })
@@ -188,7 +194,27 @@ const Filtering = ({ graph, dashboardId, panelId }: Props) => {
         });
     }
 
-    const options = tempRule?.type === 'node' ? nodeOptions : edgeOptions
+    const getKeyType = () => {
+        const option = options.find(o => o.name == tempRule.key)
+        return option?.type
+    }
+
+    const onChangeType = v => {
+        setTempRule(draft => { 
+            draft.type = v
+            draft.key = (v == "node" ? nodeOptions : edgeOptions)[0].name
+            draft.operator = (v == "node" ? nodeOptions : edgeOptions)[0].type == "string" ? FilteringOperator.Regex  :FilteringOperator.GreaterThan
+            draft.value = (v == "node" ? nodeOptions : edgeOptions)[0].type == "string" ? '' : 0
+        })
+    }
+
+    const onChangeKey = v => {
+        setTempRule(draft => {
+            draft.key = v
+            draft.operator = (v == "node" ? nodeOptions : edgeOptions)[0].type == "string" ? FilteringOperator.Regex  :FilteringOperator.GreaterThan
+        })
+    }
+
     const placeholder = tempRule?.operator == FilteringOperator.Regex ? 'enter a regex to match' : 'enter a number'
     return (
         <>
@@ -219,7 +245,7 @@ const Filtering = ({ graph, dashboardId, panelId }: Props) => {
                             <Text>Filter</Text>
                             <Select value={tempRule.type} width="fit-content" size="xs" onChange={e => {
                                 const v = e.currentTarget.value
-                                setTempRule(draft => { draft.type = v })
+                                onChangeType(v)
                             }}>
                                 <option value="node">Nodes</option>
                                 <option value="edge">Edges</option>
@@ -227,10 +253,10 @@ const Filtering = ({ graph, dashboardId, panelId }: Props) => {
                             <Text> IF </Text>
                             <Select value={tempRule.key} width="fit-content" size="xs" onChange={e => {
                                 const v = e.currentTarget.value
-                                setTempRule(draft => { draft.key = v })
+                                onChangeKey(v)
                             }}>
                                 {
-                                    options.map(option => <option value={option}>{option}</option>)
+                                    options.map(option => <option value={option.name}>{option.name}</option>)
                                 }
                             </Select>
                             <Select value={tempRule.operator} width="fit-content" size="xs" onChange={e => {
@@ -238,10 +264,10 @@ const Filtering = ({ graph, dashboardId, panelId }: Props) => {
                                 const v1 = v == FilteringOperator.Regex ? '' : 0
                                 setTempRule(draft => { draft.operator = v; draft.value = v1 })
                             }}>
-                                <option value=">">&gt;</option>
+                                {getKeyType() == "number" ? <> <option value=">">&gt;</option>
                                 <option value="=">=</option>
-                                <option value="<">&lt;</option>
-                                <option value="regex">regex</option>
+                                <option value="<">&lt;</option></> : <option value="regex">regex</option>}
+                                
                             </Select>
 
                             {
