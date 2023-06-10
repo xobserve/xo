@@ -44,13 +44,11 @@ const NodeGrapPanel = ({ data,panel,dashboardId }: PanelProps) => {
         }
     }, [colorMode])
 
-    useLayoutEffect(() => {
+    useEffect(() => {
         if (graph) {
             setAttrsForData(data[0])
             graph.changeData(data[0])
         }
-
-        
     }, [data])
 
 

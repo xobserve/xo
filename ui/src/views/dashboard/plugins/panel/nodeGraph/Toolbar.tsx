@@ -44,7 +44,7 @@ export const NodeGraphToolbar = memo(({ graph }: Props) => {
                 r: 249,
                 minR: 100,
                 maxR: 500,
-                d: 2,
+                d: 3,
                 delegateStyle: {
                     fill: '#0f0',
                     lineWidth: 0,
@@ -123,7 +123,7 @@ export const NodeGraphToolbar = memo(({ graph }: Props) => {
                 <Tooltip label="Fit to canvas"><Text cursor="pointer" fontWeight="600" onClick={handleFitViw}>FIT</Text></Tooltip>
                 <Tooltip label="Zoom out"><Box cursor="pointer" onClick={handleZoomOut}><FaPlus /></Box></Tooltip>
                 <Tooltip label="Fisheye magnifying,most useful when nodes squeezed together"><Box color="currentcolor" cursor="pointer" onClick={toggleFishEye}><FaSearch /></Box></Tooltip>
-                <Tooltip label="Filtering which nodes you want to see"><Filtering graph={graph} /></Tooltip>
+                <Filtering graph={graph} />
             </HStack>
             <Box className="nodegraph-menutip bordered" opacity={menuTip.opacity} position="absolute" right="25px" width="fit-content" top="2px" borderRadius='8px' transition="all 0.2s linear" px="2" py="1" fontSize="0.9rem">{menuTip.text}</Box></>
     )

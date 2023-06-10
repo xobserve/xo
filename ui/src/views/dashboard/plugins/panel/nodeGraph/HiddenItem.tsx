@@ -15,39 +15,19 @@ interface Props {
 }
 
 
-const enum State {
-    HiddenSelf = 1,
-    HiddenOthers = 2
-}
-
-interface StateNode {
-    node: Node
-    state: State
-}
-
-const HiddenItems = memo(({ selected, graph, panelId, dashboardId, onSelectChange,data }: Props) => {
+const HiddenItems = memo(({ selected, graph, panelId, dashboardId, onSelectChange, data }: Props) => {
     // 0: no action taken 1: hide some nodes 2: only show some nodes
     const [hidden, setHidden] = useState(false)
     const [hiddenNodes, setHiddenNodes] = useImmer<Node[]>(null)
-    const [stateNodes, setStateNodes] = useState<StateNode[]>([])
-    useEffect(() => {
-        if (stateNodes) {
-            
-        }
-        //     if (hidden == 1) {
-        //         hideSelected(selectedNodes)
-        //     } else if (hidden == 2) {
-        //         onlyShowSelected(selectedNodes)
-        //     }
 
-        //     selectedNodes.forEach(node => {
-        //         graph.setItemState(node, 'selected', true)
-        //     })
-        // }
+    useEffect(() => {
+        if (graph) {
+            showHidden()
+        }
     },[data])
 
-    const hideSelected = (s?: Node[]) => {
-        const nodes = s??graph.findAllByState('node', 'selected')
+    const hideSelected = () => {
+        const nodes = graph.findAllByState('node', 'selected')
         nodes.forEach(node => {
             graph.hideItem(node)
             graph.setItemState(node, 'selected', false)
@@ -61,51 +41,32 @@ const HiddenItems = memo(({ selected, graph, panelId, dashboardId, onSelectChang
         onSelectChange(false)
         if (nodes.length > 0) {
             setHidden(true)
-            let newStates = [...stateNodes]
-            
-            // 在有只显示
-            nodes.forEach(node => {
-                for (let i=0; i< newStates.length;i++) {
-                    const n = newStates[i]
-                    if (n.node.getID() == node.getID()) {
-                        newStates.splice(i,1)
-                        return 
-                    }
-                }
-                newStates.push( {node,state: State.HiddenSelf})
-            })
-
-            console.log("sss333333:",newStates)
-            setStateNodes(newStates)
         }
     }
 
-    const onlyShowSelected = (s?) => {
+    const onlyShowSelected = (showRelation) => {
         const show = []
-        const nodes = s??graph.findAllByState('node', 'selected')
+        const nodes = graph.findAllByState('node', 'selected')
         nodes.forEach(node => {
-            //@ts-ignore
             show.push(node)
-            node.getNeighbors().forEach(n => {
-                show.push(n)
-            })
+            if (showRelation) {
+                //@ts-ignore
+                node.getNeighbors().forEach(n => {
+                    show.push(n)
+                })
+            }
         })
 
         graph.getNodes().forEach(node => {
             if (!show.includes(node)) {
                 graph.hideItem(node)
                 graph.setItemState(node, 'selected', false)
-            } else if (s) {
-                graph.showItem(node)
             }
         })
 
         onSelectChange(false)
         if (nodes.length > 0) {
             setHidden(true)
-            const newStates = []
-            nodes.forEach(node => newStates.push( {node,state: State.HiddenOthers}))
-            setStateNodes(newStates)
         }
     }
 
@@ -119,7 +80,6 @@ const HiddenItems = memo(({ selected, graph, panelId, dashboardId, onSelectChang
         })
 
         setHidden(false)
-        setStateNodes([])
     }
 
     const onShowOpen = () => {
@@ -153,7 +113,6 @@ const HiddenItems = memo(({ selected, graph, panelId, dashboardId, onSelectChang
         if (h.length == 0) {
             setHiddenNodes(null)
             setHidden(false)
-            setStateNodes([])
         } else {
             setHiddenNodes(h)
         }
@@ -161,24 +120,27 @@ const HiddenItems = memo(({ selected, graph, panelId, dashboardId, onSelectChang
     return (<>
         <VStack position="absolute" top="9px" left="140px" opacity="0.7" fontSize="1rem" className="bordered-left" pl="2" >
             {selected && <Popover trigger="hover" onOpen={onShowOpen}>
-                    <PopoverTrigger>
-                        <Box cursor="pointer" color="brand.500">
-                            <FaEyeSlash />
-                        </Box>
-                    </PopoverTrigger>
-                    <PopoverContent width="240px">
-                        <PopoverArrow />
-                        <PopoverBody >
-                            <VStack alignItems={"left"} spacing={1}>
-                            <Text cursor="pointer" className="hover-bg" p="1" onClick={() =>hideSelected()}>隐藏所选择的目标</Text>
-                            <Divider />
-                            <Text cursor="pointer" className="hover-bg" p="1" onClick={() => onlyShowSelected()}>只显示所选择的目标及相关联节点</Text>
-                            </VStack>
-                        </PopoverBody>
-                    </PopoverContent>
-                </Popover>}
+                <PopoverTrigger>
+                    <Box cursor="pointer" color="brand.500">
+                        <FaEyeSlash />
+                    </Box>
+                </PopoverTrigger>
+                <PopoverContent width="240px">
+                    <PopoverArrow />
+                    <PopoverBody >
+                        <VStack alignItems={"left"} spacing={1}>
+                            <Text cursor="pointer" className="hover-bg" p="1" onClick={() => onlyShowSelected(true)}>只显示选择的目标及关联节点</Text>
 
-            {!selected && hidden  && <Tooltip label="显示被隐藏的目标">
+                            <Divider />
+                            <Text cursor="pointer" className="hover-bg" p="1" onClick={() => onlyShowSelected(false)}>只显示选择的目标节点</Text>
+                            <Divider />
+                            <Text cursor="pointer" className="hover-bg" p="1" onClick={() => hideSelected()}>隐藏所选择的目标</Text>
+                        </VStack>
+                    </PopoverBody>
+                </PopoverContent>
+            </Popover>}
+
+            {!selected && hidden && <Tooltip label="显示被隐藏的目标">
                 <Popover trigger="hover" onOpen={onShowOpen}>
                     <PopoverTrigger>
                         <Box cursor="pointer" color="brand.500" >
