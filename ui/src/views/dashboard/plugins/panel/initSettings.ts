@@ -43,6 +43,10 @@ export const initPanelSettings:PanelSettings = {
             baseSize: 36,
             icon: [],
             shape: "donut",
+            donutColors: JSON.stringify({
+                'success': '#61DDAA',
+                'error': '#F08BB4',
+            })
         }
     }
 }

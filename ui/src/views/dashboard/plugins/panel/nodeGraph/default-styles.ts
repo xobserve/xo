@@ -1,13 +1,3 @@
-export const donutColors = {
-    'success': '#61DDAA',
-    'error': '#F08BB4',
-}
-
-// export const donutDarkColors = {
-//     'success': '#61DDAA',
-//     'error': '#F08BB4',
-// }
-
 export const getDefaultNodeLabel = (colorMode) =>{ 
     return {
         position: 'bottom',

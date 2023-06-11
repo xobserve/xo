@@ -161,7 +161,8 @@ export interface NodeGraphSettings {
     node?: {
         baseSize?: number
         icon: NodeGraphIcon[]
-        shape: 'circle' | 'donut'
+        shape: 'circle' | 'donut',
+        donutColors: string // json string 
     }
 }
 

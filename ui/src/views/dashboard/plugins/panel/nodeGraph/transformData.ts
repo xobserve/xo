@@ -1,9 +1,9 @@
 import { cloneDeep } from "lodash";
 import { NodeGraphSettings, Panel } from "types/dashboard";
 import { NodeGraphData } from "types/dataFrame";
-import { donutColors } from "./default-styles";
 
 export const setAttrsForData = (settings: NodeGraphSettings, data: NodeGraphData) => {
+    const donutColors = JSON.parse(settings.node.donutColors)
     // 计算 node size
     // 找出最小的那个作为基准 size
     let base;
@@ -31,6 +31,7 @@ export const setAttrsForData = (settings: NodeGraphSettings, data: NodeGraphData
         }
 
         node.type = settings.node.shape
+        node.donutColorMap = donutColors
         
         let t = 0;
         Object.keys(node.donutAttrs).forEach(key => {
@@ -66,7 +67,6 @@ export const setAttrsForData = (settings: NodeGraphSettings, data: NodeGraphData
             node.icon.width = node.size / 2
             node.icon.height = node.size / 2
         }
-
-        console.log("here333333:",node)
+        console.log("here33333a:",node)
     })
 }

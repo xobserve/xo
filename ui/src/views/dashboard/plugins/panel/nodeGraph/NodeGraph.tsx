@@ -5,7 +5,7 @@ import G6, { Graph } from '@antv/g6';
 import { Box, Text, useColorMode } from '@chakra-ui/react';
 import { PanelData, PanelProps } from 'types/dashboard';
 import { initTooltip } from './tooltip';
-import { donutColors, getActiveEdgeLabelCfg } from './default-styles';
+import {  getActiveEdgeLabelCfg } from './default-styles';
 import { initLegend } from './legend';
 import { setAttrsForData } from './transformData';
 import { NodeGraphToolbar } from './Toolbar';
@@ -66,7 +66,7 @@ const NodeGrapPanel = ({ data, panel, dashboardId }: PanelProps) => {
 
             setAttrsForData(panel.settings.nodeGraph,data[0])
 
-            const legend = initLegend()
+            const legend = initLegend(JSON.parse(panel.settings.nodeGraph.node.donutColors))
 
             const gh = new G6.Graph({
                 container: container.current,
@@ -116,7 +116,7 @@ const NodeGrapPanel = ({ data, panel, dashboardId }: PanelProps) => {
                     },
                     size: 40,
                     labelCfg: defaultNodeLabelCfg,
-                    donutColorMap: donutColors,
+                    donutColorMap: JSON.parse(panel.settings.nodeGraph.node.donutColors),
                     stateStyles: {
                     }
                 },

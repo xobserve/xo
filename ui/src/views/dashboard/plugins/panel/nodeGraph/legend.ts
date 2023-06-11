@@ -1,24 +1,22 @@
 import G6 from "@antv/g6";
-import { donutColors } from "./default-styles";
+import { upperFirst } from "lodash";
 
-export const initLegend = () => {
+export const initLegend = (donutColors) => {
     const legendData = {
-        nodes: [{
-            id: 'success',
-            label: 'Success',
-            order: 0,
-            style: {
-                fill: donutColors['success'],
-            }
-        }, {
-            id: 'rror',
-            label: 'Error',
-            order: 2,
-            style: {
-                fill: donutColors['error'],
-            }
-        }]
+        nodes: []
     }
+
+    Object.keys(donutColors).map((key,i) => {
+
+        legendData.nodes.push({
+            id: key,
+            label: upperFirst(key),
+            order: i,
+            style: {
+                fill: donutColors[key],
+            }
+        })
+    })
 
     const legend = new G6.Legend({
         data: legendData,

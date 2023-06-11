@@ -1,4 +1,4 @@
-import { Alert, Box, Button, Divider, Flex, HStack, Image, Input, Modal, ModalBody, ModalContent, ModalOverlay, Slider, SliderFilledTrack, SliderThumb, SliderTrack, Text, Tooltip, useDisclosure, useToast, VStack } from "@chakra-ui/react"
+import { Alert, Box, Button, Divider, Flex, HStack, Image, Input, Modal, ModalBody, ModalContent, ModalOverlay, Slider, SliderFilledTrack, SliderThumb, SliderTrack, Text, Textarea, Tooltip, useDisclosure, useToast, VStack } from "@chakra-ui/react"
 import RadionButtons from "components/RadioButtons"
 import { isEmpty } from "lodash"
 import { useState } from "react"
@@ -7,6 +7,7 @@ import PanelAccordion from "src/views/dashboard/edit-panel/Accordion"
 import PanelEditItem from "src/views/dashboard/edit-panel/PanelEditItem"
 import { NodeGraphIcon, Panel, PanelEditorProps } from "types/dashboard"
 import { useImmer } from "use-immer"
+import { isJSON } from "utils/is"
 
 const NodeGraphPanelEditor = (props: PanelEditorProps) => {
     const { panel, onChange } = props
@@ -27,12 +28,13 @@ const NodeGraphPanelEditor = (props: PanelEditorProps) => {
                     <SliderThumb children={panel.settings.nodeGraph.node.baseSize} fontSize='sm' boxSize='25px' />
                 </Slider>
             </PanelEditItem>
+            <IconSetting {...props} />
             <PanelEditItem title="shape">
-            <RadionButtons options={[{ label: "Donut", value: "donut" }, { label: "Circle", value: "circle" }]} value={panel.settings.nodeGraph.node.shape} onChange={v => onChange(panel => {
+                <RadionButtons options={[{ label: "Donut", value: "donut" }, { label: "Circle", value: "circle" }]} value={panel.settings.nodeGraph.node.shape} onChange={v => onChange(panel => {
                     panel.settings.nodeGraph.node.shape = v
                 })} />
             </PanelEditItem>
-            <IconSetting {...props} />
+            {panel.settings.nodeGraph.node.shape == 'donut' && <DonutColorsSetting {...props} />}
         </PanelAccordion>
     </>)
 }
@@ -52,7 +54,7 @@ const IconSetting = ({ panel, onChange }: PanelEditorProps) => {
                 duration: 2000,
                 isClosable: true,
             });
-            return 
+            return
         }
 
         for (const icon of panel.settings.nodeGraph.node.icon) {
@@ -63,18 +65,18 @@ const IconSetting = ({ panel, onChange }: PanelEditorProps) => {
                     duration: 2000,
                     isClosable: true,
                 });
-                return 
+                return
             }
         }
 
-        onChange(panel => {panel.settings.nodeGraph.node.icon.unshift(temp)})
+        onChange(panel => { panel.settings.nodeGraph.node.icon.unshift(temp) })
         setTemp(initIcon)
         onClose()
     }
 
     const removeIcon = i => {
         onChange(panel => {
-            panel.settings.nodeGraph.node.icon.splice(i,1)
+            panel.settings.nodeGraph.node.icon.splice(i, 1)
         })
     }
 
@@ -84,12 +86,12 @@ const IconSetting = ({ panel, onChange }: PanelEditorProps) => {
         <Divider mt="2" />
         <VStack alignItems="sleft" mt="1">
             {
-                panel.settings.nodeGraph.node.icon.map((icon,i) => <Flex justifyContent="space-between" alignItems="center">
-                <HStack>
-                    <Text>{icon.key} : {icon.value} -&gt;</Text>
-                    <Image src={icon.icon} width="30px" height="30px"/>
-                </HStack>
-                <Box layerStyle="textFourth" cursor="pointer" onClick={() => removeIcon(i)}><Icons.FaTimes /></Box>
+                panel.settings.nodeGraph.node.icon.map((icon, i) => <Flex justifyContent="space-between" alignItems="center">
+                    <HStack>
+                        <Text>{icon.key} : {icon.value} -&gt;</Text>
+                        <Image src={icon.icon} width="30px" height="30px" />
+                    </HStack>
+                    <Box layerStyle="textFourth" cursor="pointer" onClick={() => removeIcon(i)}><Icons.FaTimes /></Box>
                 </Flex>)
             }
         </VStack>
@@ -104,14 +106,16 @@ const IconSetting = ({ panel, onChange }: PanelEditorProps) => {
                         <Input onChange={e => {
                             const v = e.currentTarget.value.trim()
                             setTemp(draft => {
-                            draft.key = v
-                        })}} placeholder="attribute name, e.g: service_type" size="sm" width="250px" />
+                                draft.key = v
+                            })
+                        }} placeholder="attribute name, e.g: service_type" size="sm" width="250px" />
                         <Text fontWeight="600">=</Text>
                         <Input onChange={e => {
                             const v = e.currentTarget.value.trim()
                             setTemp(draft => {
-                            draft.value = v
-                        })}} placeholder="attribute value, e.g: java" size="sm" width="250px" />
+                                draft.value = v
+                            })
+                        }} placeholder="attribute value, e.g: java" size="sm" width="250px" />
                     </HStack>
                     <HStack>
                         <Text fontWeight="600">show icon </Text>
@@ -137,4 +141,31 @@ const IconSetting = ({ panel, onChange }: PanelEditorProps) => {
             </ModalContent>
         </Modal>
     </>)
+}
+
+const DonutColorsSetting = ({ panel, onChange }: PanelEditorProps) => {
+    const toast = useToast()
+    const [temp, setTemp] = useState<string>(panel.settings.nodeGraph.node.donutColors)
+    const onSubmit = () => {
+        if (!isJSON(temp)) {
+            toast({
+                description: "not valid json format",
+                status: "warning",
+                duration: 2000,
+                isClosable: true,
+            });
+            return 
+        }
+        onChange(panel => {
+            panel.settings.nodeGraph.node.donutColors = temp
+        })
+    }
+    return (
+        <PanelEditItem title="donut colors">
+            <Textarea value={temp} onChange={e => {
+                const v = e.currentTarget.value.trim()
+                setTemp(v)
+            }} onBlur={onSubmit}/>
+        </PanelEditItem>
+    )
 }
