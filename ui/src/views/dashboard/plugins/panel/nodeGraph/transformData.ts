@@ -32,15 +32,15 @@ export const setAttrsForData = (data: NodeGraphData) => {
 
         const p = Math.log2(t / base)
         if (p <= 1) {
-            node.size = 30
+            node.size = 40
             node.icon.width = 18
             node.icon.height = 18
         } else if (p >= 1.5) {
-            node.size = 50
+            node.size = 60
             node.icon.width = 26
             node.icon.height = 26
         } else {
-            node.size = p * 30
+            node.size = p * 40
             node.icon.width = p * 15
             node.icon.height = p * 15
         }

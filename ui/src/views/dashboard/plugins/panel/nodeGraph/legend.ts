@@ -1,5 +1,5 @@
 import G6 from "@antv/g6";
-import { donutColors } from "./utils";
+import { donutLightColors } from "./utils";
 
 export const initLegend = () => {
     const legendData = {
@@ -8,14 +8,14 @@ export const initLegend = () => {
             label: 'Success',
             order: 0,
             style: {
-                fill: donutColors['success'],
+                fill: donutLightColors['success'],
             }
         }, {
             id: 'rror',
             label: 'Error',
             order: 2,
             style: {
-                fill: donutColors['error'],
+                fill: donutLightColors['error'],
             }
         }]
     }
