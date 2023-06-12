@@ -1,9 +1,9 @@
 
 
-import React, { useCallback, useEffect,  useLayoutEffect,  useState } from 'react';
+import React, { useCallback, useEffect,  useLayoutEffect,  useRef,  useState } from 'react';
 import G6, { Graph } from '@antv/g6';
 import { Box, Text, useColorMode } from '@chakra-ui/react';
-import { PanelProps } from 'types/dashboard';
+import { PanelData, PanelProps } from 'types/dashboard';
 import { initTooltip } from './tooltip';
 import { donutColors } from './utils';
 import { initLegend } from './legend';
@@ -13,6 +13,8 @@ import Help from 'components/help';
 import { nodeGraphHelp } from './data/help';
 import  useContextMenu  from './useContextMenu';
 import HiddenItems from './HiddenItem';
+import { filterData } from './filter/filterData';
+
 
 
 
@@ -39,18 +41,20 @@ const NodeGrapPanel = ({ data,panel,dashboardId }: PanelProps) => {
                 }
             })
 
-            graph.changeData()
-            graph.render()
+            changeDataAndRender(graph,data,dashboardId,panel.id)
         }
     }, [colorMode])
 
     useEffect(() => {
         if (graph) {
             setAttrsForData(data[0])
-            graph.changeData(data[0])
+            changeDataAndRender(graph,data,dashboardId,panel.id)
         }
     }, [data])
 
+    const onFilterRulesChange = (rules?) => {
+        changeDataAndRender(graph,data,dashboardId,panel.id,rules)
+    }
 
     useEffect(() => {
         if (!graph) {
@@ -160,8 +164,8 @@ const NodeGrapPanel = ({ data,panel,dashboardId }: PanelProps) => {
                 setSelected(false)
             });
 
-            gh.data(data[0]);
-            gh.render();
+
+            changeDataAndRender(gh,data,dashboardId,panel.id)
             setGraph(gh)
             if (typeof window !== 'undefined') {
                 window.onresize = () => {
@@ -175,8 +179,9 @@ const NodeGrapPanel = ({ data,panel,dashboardId }: PanelProps) => {
 
     const onSelectChange = useCallback(v => setSelected(v),[])
 
+
     return <>
-        {graph && <NodeGraphToolbar graph={graph}  dashboardId={dashboardId} panelId={panel.id}/>}
+        {graph && <NodeGraphToolbar graph={graph}  dashboardId={dashboardId} panelId={panel.id} data={data[0]} onFilterRulesChange={onFilterRulesChange} />}
         <Box width="100%" height="100%" ref={container} />
         <Help data={nodeGraphHelp} iconSize="0.8rem" />
         {graph && <Box><HiddenItems dashboardId={dashboardId} panelId={panel.id} selected={selected} graph={graph} onSelectChange={onSelectChange} data={data}/></Box>}
@@ -197,6 +202,14 @@ const clearSelectedEdgesState = graph => {
     })
 }
 
+const changeDataAndRender = (graph, data,dashboardId,panelId, rules?) => {
+    const newData = filterData(data[0],dashboardId,panelId,rules)
+    graph.data(newData)
+    graph.render()
+    setTimeout(() => {
+        graph.fitView(16)
+    },0)
+}
 
 export default NodeGrapPanel
 

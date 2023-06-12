@@ -6,13 +6,13 @@ import { FaArrowDown, FaArrowUp, FaEdit, FaEye, FaEyeSlash, FaFilter, FaPlus, Fa
 import { MdEdit } from "react-icons/md"
 import { useImmer } from "use-immer"
 import storage from "utils/localStorage"
-import { filterEdges } from "./filterEdges"
-import { filterNodes } from "./filterNodes"
+
 
 interface Props {
     graph: Graph
     dashboardId: string
     panelId: number
+    onFilterRulesChange: any
 }
 
 export const enum FilterOperator {
@@ -26,9 +26,9 @@ export const enum FilterCombinition {
     Or = 'OR'
 }
 
-const FilteringStorageKey = "node-filter-"
+export const FilteringStorageKey = "node-filter-"
 
-const NodeGraphFilter = ({ graph, dashboardId, panelId }: Props) => {
+const NodeGraphFilter = ({ graph, dashboardId, panelId,onFilterRulesChange }: Props) => {
     const toast = useToast()
     const { isOpen, onOpen, onClose } = useDisclosure()
     const [tempRule, setTempRule] = useImmer(null)
@@ -60,15 +60,6 @@ const NodeGraphFilter = ({ graph, dashboardId, panelId }: Props) => {
         const rules = storage.get(FilteringStorageKey + dashboardId + '-' + panelId)
         setRules(rules ?? [])
     }, [])
-
-    useEffect(() => {
-        if (rules == null) {
-            return 
-        }
-       
-        filterNodes(graph,rules)
-        filterEdges(graph,rules)
-    }, [rules])
 
     const options = tempRule?.type === 'node' ? nodeOptions : edgeOptions
 
@@ -139,12 +130,15 @@ const NodeGraphFilter = ({ graph, dashboardId, panelId }: Props) => {
             setTempRule(null)
             storage.set(FilteringStorageKey + dashboardId + '-' + panelId, newRules)
         }
+
+        onFilterRulesChange()
     }
 
     const removeRule = id => {
         const newRules = rules.filter(r => r.id != id)
         setRules(newRules)
         storage.set(FilteringStorageKey + dashboardId + '-' + panelId, newRules)
+        onFilterRulesChange()
     }
 
     const moveRule = (id, direction) => {
@@ -161,8 +155,16 @@ const NodeGraphFilter = ({ graph, dashboardId, panelId }: Props) => {
             duration: 1500,
             isClosable: true,
         });
+        onFilterRulesChange()
     }
 
+    const onDisableRule = (i) => {
+        const rule = rules[i]
+        rule.disabled = !rule.disabled
+        const newRules = cloneDeep(rules)
+        setRules(newRules);
+        onFilterRulesChange(newRules)
+    }
     const getKeyType = () => {
         const option = options.find(o => o.name == tempRule.key)
         return option?.type
@@ -269,10 +271,7 @@ const NodeGraphFilter = ({ graph, dashboardId, panelId }: Props) => {
                                 <HStack opacity="0.7">
                                     {i > 0 && <Box onClick={() => moveRule(rule.id, -1)} cursor="pointer"><FaArrowUp /></Box>}
                                     {i < rules.length - 1 && <Box onClick={() => moveRule(rule.id, 1)} cursor="pointer"><FaArrowDown /></Box>}
-                                    <Tooltip label={!rule.disabled ? "this rule is enabled, click to disable" : "this rule is disabled, click to enable"}><Box onClick={() => setRules(draft => {
-                                        const rule = draft[i]
-                                        rule.disabled = !rule.disabled
-                                    })} cursor="pointer"><FaEye color={rule.disabled ? "currentColor" : 'var(--chakra-colors-brand-500)'}/></Box></Tooltip>
+                                    <Tooltip label={!rule.disabled ? "this rule is enabled, click to disable" : "this rule is disabled, click to enable"}><Box onClick={() => onDisableRule(i)} cursor="pointer"><FaEye color={rule.disabled ? "currentColor" : 'var(--chakra-colors-brand-500)'}/></Box></Tooltip>
                                     <Box  onClick={() => setTempRule(rule)} cursor="pointer"><MdEdit /></Box>
                                     <Tooltip label={"remove this rule"}><Box onClick={() => removeRule(rule.id)} cursor="pointer"><FaTimes /></Box></Tooltip>
                                 </HStack>

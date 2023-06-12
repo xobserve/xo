@@ -4,7 +4,7 @@ export const filterNodes = (graph, rules) => {
     const nodes = graph.getNodes()
     const hiddenNodes = []
     const showNodes = []
-    nodes.filter(n => {
+    nodes.forEach(n => {
         const model = n.getModel()
         let passed = true;
         let isFirst = true;
