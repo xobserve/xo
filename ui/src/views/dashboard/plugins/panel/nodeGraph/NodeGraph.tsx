@@ -86,6 +86,8 @@ const NodeGrapPanel = ({ data,panel,dashboardId }: PanelProps) => {
                 height: container.current.scrollHeight,
                 // fitView: true,
                 fitCenter: true,
+                fitView: true,
+                fitViewPadding: 16,
                 plugins: [legend, tooltip, contextMenu],
                 modes: {
                     default: ['drag-node', 'activate-relations', 'drag-canvas',  'click-select',{
