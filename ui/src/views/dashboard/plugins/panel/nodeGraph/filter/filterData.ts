@@ -1,4 +1,5 @@
 import { Graph } from "@antv/g6"
+import { isEmpty } from "lodash"
 import { PanelData } from "types/dashboard"
 import storage from "utils/localStorage"
 import { FilterCombinition, FilteringStorageKey, FilterOperator } from "./Filter"
@@ -7,7 +8,7 @@ import { FilterCombinition, FilteringStorageKey, FilterOperator } from "./Filter
 export const filterData = (data,dashboardId, panelId,rs?) => {
     const {nodes,edges} = data
     const rules = rs??storage.get(FilteringStorageKey + dashboardId + '-' + panelId)
-    if (!rules) {
+    if (isEmpty(rules)) {
          return data
     }
     const ns = filterNodes(nodes,rules)

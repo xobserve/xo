@@ -13,6 +13,8 @@ import Help from 'components/help';
 import { nodeGraphHelp } from './data/help';
 import  useContextMenu  from './useContextMenu';
 import HiddenItems from './HiddenItem';
+import storage from 'utils/localStorage';
+import { FilteringStorageKey } from './filter/Filter';
 import { filterData } from './filter/filterData';
 
 
@@ -41,19 +43,33 @@ const NodeGrapPanel = ({ data,panel,dashboardId }: PanelProps) => {
                 }
             })
 
-            changeDataAndRender(graph,data,dashboardId,panel.id)
+            const newData = filterData(data[0],dashboardId,panel.id)
+            graph.data(newData)
+            graph.render()
         }
     }, [colorMode])
 
     useEffect(() => {
         if (graph) {
             setAttrsForData(data[0])
-            changeDataAndRender(graph,data,dashboardId,panel.id)
+            const newData = filterData(data[0],dashboardId,panel.id)
+            if (newData != data[0]) {
+                graph.data(newData)
+                graph.render()
+            } else {
+                graph.changeData(newData)
+            }
         }
     }, [data])
 
     const onFilterRulesChange = (rules?) => {
-        changeDataAndRender(graph,data,dashboardId,panel.id,rules)
+        const newData = filterData(data[0],dashboardId,panel.id,rules)
+        if (newData != data[0]) {
+            graph.data(newData)
+            graph.render()
+        } else {
+            graph.changeData(newData)
+        }
     }
 
     useEffect(() => {
@@ -165,7 +181,9 @@ const NodeGrapPanel = ({ data,panel,dashboardId }: PanelProps) => {
             });
 
 
-            changeDataAndRender(gh,data,dashboardId,panel.id)
+            const newData = filterData(data[0],dashboardId,panel.id)
+            gh.data(newData);
+            gh.render();
             setGraph(gh)
             if (typeof window !== 'undefined') {
                 window.onresize = () => {
@@ -202,14 +220,6 @@ const clearSelectedEdgesState = graph => {
     })
 }
 
-const changeDataAndRender = (graph, data,dashboardId,panelId, rules?) => {
-    const newData = filterData(data[0],dashboardId,panelId,rules)
-    graph.data(newData)
-    graph.render()
-    setTimeout(() => {
-        graph.fitView(16)
-    },0)
-}
 
 export default NodeGrapPanel
 
