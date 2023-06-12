@@ -24,13 +24,15 @@ export const nodeGraphData = (nodesCount) => {
       for (let j = 0; j < nodesCount; j++) {
         if (i !== j) {
           if (Math.random() > 0.85) {
+            const req = Math.round(Math.random() * 1000)
+            const error = Math.round(Math.random() * 100)
             edges.push({
               source: `node-${i}`,
               target: `node-${j}`,
-              label:  Math.round(Math.random() * 1000),
+              label:  `${req}/${error}`,
               data: {
-                req: Math.round(Math.random() * 1000),
-                error: Math.round(Math.random() * 100),
+                req: req,
+                error: error,
               },
             })
           }
