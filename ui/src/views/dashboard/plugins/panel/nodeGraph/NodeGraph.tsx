@@ -26,7 +26,6 @@ const NodeGrapPanel = ({ data, panel, dashboardId }: PanelProps) => {
     const { colorMode } = useColorMode();
     const defaultNodeLabelCfg = getDefaultNodeLabel(colorMode)
     const defaultEdgeLabelCfg = getDefaultEdgeLabel(colorMode)
-    const activeEdgeLabelCfg = getActiveEdgeLabelCfg(colorMode)
 
     const [selected, setSelected] = useState(false)
     const contextMenu = useContextMenu()
