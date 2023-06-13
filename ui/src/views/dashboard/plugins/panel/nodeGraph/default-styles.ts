@@ -1,12 +1,12 @@
-export const donutLightColors = {
+export const donutColors = {
     'success': '#61DDAA',
     'error': '#F08BB4',
 }
 
-export const donutDarkColors = {
-    'success': '#73BF69',
-    'error': '#F2495C',
-}
+// export const donutDarkColors = {
+//     'success': '#61DDAA',
+//     'error': '#F08BB4',
+// }
 
 export const getDefaultNodeLabel = (colorMode) =>{ 
     return {
@@ -35,7 +35,7 @@ export const getActiveEdgeLabelCfg = colorMode => {
     return cfg
 }
 
-const lightColor = 'rgb(0, 181, 216)'
+const lightColor = '#61DDAA'
 const darkColor = 'rgb(0, 181, 216)'
 export const getDefaultNodeStyle = (colorMode?) => {
     return {
@@ -51,6 +51,9 @@ export const getDefaultNodeStyle = (colorMode?) => {
             lineWidth: 7,
             fill: 'transparent'
           },
+          inactive: {
+            fill: 'transparent',
+          }
       }
 }
 
@@ -71,7 +74,7 @@ export const getDefaultEdgeStyle = (colorMode?) => {
             stroke: '#222',
             shadowColor: '#ccc',
             lineWidth: 1,
-            opacity: 0
+            opacity: 0,
           }
       }
 }

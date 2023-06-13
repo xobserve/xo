@@ -56,7 +56,7 @@ export interface PanelSettings {
 
 export interface GraphSettings {
     tooltip?: {
-        mode: "single" | "all" | "hidden"
+        mode: 'single' | 'all' | 'hidden'
         sort: "asc" | "desc"
     }
     legend?: {
@@ -158,6 +158,16 @@ export interface TableSettings {
 }
 
 export interface NodeGraphSettings {
-
+    node?: {
+        baseSize?: number
+        icon: NodeGraphIcon[]
+        shape: 'circle' | 'donut'
+    }
 }
 
+
+export interface NodeGraphIcon {
+    key: string 
+    value: string 
+    icon: string
+}

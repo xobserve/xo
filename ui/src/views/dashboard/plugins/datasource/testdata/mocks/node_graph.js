@@ -2,20 +2,32 @@
 export const nodeGraphData = (nodesCount) => {
     const nodes = [];
     for (let i = 0; i < nodesCount; i++) {
-      nodes.push({
+      const node = {
         id: `node-${i}`,
         label: `node-${i}`,
         data: {
           success: Math.round(Math.random() * 1000),
           error: Math.round(Math.random() * 100),
-        },
-        icon: {
-          show: false,
-          width: 20,
-          height: 20,
+        }
+      }
+      if (i % 5 == 1) {
+        node.data.type = 'java'
+      } else if (i % 5 == 2) {
+        node.data.type = 'go'
+      } else if (i % 5 == 3) {
+        node.icon = {
+          show: true,
           //  img: 'https://gw.alipayobjects.com/zos/basement_prod/012bcf4f-423b-4922-8c24-32a89f8c41ce.svg',
         }
-      })
+      } else if (i % 5 == 4) {
+        node.data.type = 'rust'
+        node.icon = {
+          show: true,
+          //  img: 'https://gw.alipayobjects.com/zos/basement_prod/012bcf4f-423b-4922-8c24-32a89f8c41ce.svg',
+        }
+      }
+
+      nodes.push(node)
     }
 
     const edges = []

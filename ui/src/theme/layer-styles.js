@@ -6,6 +6,10 @@ export default function layerStyles(theme) {
         textThird: {
           opacity: "0.7",
         },
+        textFourth: {
+          opacity: 0.6,
+          fontSize: "0.8rem"
+        },
         colorButton: {
           // linear-gradient(270deg,#0076f5,#0098a3)
           bgGradient: "radial(yellow.400, pink.200)",

@@ -2,11 +2,9 @@ import { Button, Modal, ModalBody, ModalContent, ModalOverlay, useColorModeValue
 import IconButton from "components/button/IconButton";
 import { PanelAdd } from "components/icons/PanelAdd";
 import { StorageCopiedPanelKey } from "src/data/constants";
-import { Dashboard, DatasourceType, Panel, PanelType } from "types/dashboard";
+import { Dashboard, DatasourceType, GraphSettings, NodeGraphSettings, Panel, PanelType } from "types/dashboard";
 import storage from "utils/localStorage";
-import { initGraphSettings } from "./plugins/panel/graph/Editor";
-import { initNodeGraphSettings } from "./plugins/panel/nodeGraph/NodeGraph";
-import { initTextSettings } from "./plugins/panel/text/Text";
+import { initPanelSettings } from "./plugins/panel/initSettings";
 
 interface Props {
     dashboard: Dashboard
@@ -58,9 +56,9 @@ const AddPanel = ({ dashboard, onChange }: Props) => {
             gridPos: { x: 0, y: 0, w: 12, h: 8 },
             //@needs-update-when-add-new-panel
             settings: {
-                text: initTextSettings,
-                graph: initGraphSettings,
-                nodeGraph: initNodeGraphSettings
+                text: initPanelSettings.text,
+                graph: initPanelSettings.graph as GraphSettings,
+                nodeGraph: initPanelSettings.nodeGraph as NodeGraphSettings
             },
             datasource: [{
                 type: DatasourceType.Prometheus,

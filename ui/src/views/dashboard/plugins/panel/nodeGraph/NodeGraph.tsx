@@ -5,7 +5,7 @@ import G6, { Graph } from '@antv/g6';
 import { Box, Text, useColorMode } from '@chakra-ui/react';
 import { PanelData, PanelProps } from 'types/dashboard';
 import { initTooltip } from './tooltip';
-import { donutDarkColors, donutLightColors, getActiveEdgeLabelCfg } from './default-styles';
+import { donutColors, getActiveEdgeLabelCfg } from './default-styles';
 import { initLegend } from './legend';
 import { setAttrsForData } from './transformData';
 import { NodeGraphToolbar } from './Toolbar';
@@ -40,7 +40,7 @@ const NodeGrapPanel = ({ data, panel, dashboardId }: PanelProps) => {
 
     useEffect(() => {
         if (graph) {
-            setAttrsForData(data[0])
+            setAttrsForData(panel.settings.nodeGraph,data[0])
             const newData = filterData(data[0], dashboardId, panel.id)
             if (newData != data[0]) {
                 graph.data(newData)
@@ -49,7 +49,7 @@ const NodeGrapPanel = ({ data, panel, dashboardId }: PanelProps) => {
                 graph.changeData(newData)
             }
         }
-    }, [data])
+    }, [data,panel.settings])
 
     const onFilterRulesChange = (rules?) => {
         const newData = filterData(data[0], dashboardId, panel.id, rules)
@@ -65,7 +65,7 @@ const NodeGrapPanel = ({ data, panel, dashboardId }: PanelProps) => {
         if (!graph) {
             const tooltip = initTooltip()
 
-            setAttrsForData(data[0])
+            setAttrsForData(panel.settings.nodeGraph,data[0])
 
             const legend = initLegend()
 
@@ -90,7 +90,7 @@ const NodeGrapPanel = ({ data, panel, dashboardId }: PanelProps) => {
                 layout: {
                     type: 'force2',
                     // focusNode: 'li',
-                    linkDistance: 500,
+                    linkDistance: 300,
                     // unitRadius: 200,
                     preventNodeOverlap: true,
                 },
@@ -98,9 +98,10 @@ const NodeGrapPanel = ({ data, panel, dashboardId }: PanelProps) => {
                     type: 'quadratic',
                     style: {
                         endArrow: true,
-                        lineAppendWidth: 2,
+                        // lineAppendWidth: 2,
                         opacity: 1,
-                        stroke: colorMode == "light" ? '#ddd' : '#444'
+                        lineWidth: 1,
+                        stroke: colorMode == "light" ? '#eee' : '#444'
                     },
                     labelCfg: defaultEdgeLabelCfg,
                     stateStyles: {
@@ -108,13 +109,15 @@ const NodeGrapPanel = ({ data, panel, dashboardId }: PanelProps) => {
                     }
                 },
                 defaultNode: {
-                    type: 'donut',
+                    type: 'circle',
                     style: {
-                        lineWidth: 0,
+                        lineWidth: 1,
                         fill: 'transparent',
+                        stroke: '#61DDAA'
                     },
+                    size: 40,
                     labelCfg: defaultNodeLabelCfg,
-                    donutColorMap: colorMode == "light" ? donutLightColors : donutDarkColors,
+                    donutColorMap: donutColors,
                     stateStyles: {
                     }
                 },
@@ -242,13 +245,6 @@ const clearSelectedEdgesState = (graph: Graph, defaultEdgeLabelCfg) => {
 
 export default NodeGrapPanel
 
-export const initNodeGraphSettings = {
-
-}
-
-
-
-
 const onColorModeChange = (graph, data, colorMode, dashboardId, panelId) => {
     const defaultNodeLabelCfg = getDefaultNodeLabel(colorMode)
     const defaultEdgeLabelCfg = getDefaultEdgeLabel(colorMode)
@@ -260,9 +256,8 @@ const onColorModeChange = (graph, data, colorMode, dashboardId, panelId) => {
             node.labelCfg.style.fill = colorMode == "light" ? '#000' : '#fff'
         }
 
-        node.donutColorMap = colorMode == "light" ? donutLightColors : donutDarkColors
-
         const defaultNodeStyle = getDefaultNodeStyle(colorMode)
+        if (!node.stateStyles) node.stateStyles = {}
         Object.keys(defaultNodeStyle).forEach(key => {
             node.stateStyles[key] = defaultNodeStyle[key]
         })
@@ -277,6 +272,7 @@ const onColorModeChange = (graph, data, colorMode, dashboardId, panelId) => {
         }
         edge.style.stroke = colorMode == "light" ? '#ddd' : '#444'
         const defaultEdgeStyle = getDefaultEdgeStyle(colorMode)
+        if (!edge.stateStyles) edge.stateStyles = {}
         Object.keys(defaultEdgeStyle).forEach(key => {
             edge.stateStyles[key] = defaultEdgeStyle[key]
         })
@@ -285,3 +281,5 @@ const onColorModeChange = (graph, data, colorMode, dashboardId, panelId) => {
     graph.data(newData)
     graph.render()
 }
+
+

@@ -1,7 +1,7 @@
 import { Box, Button, Center, Flex, HStack, Image, Input, Modal, ModalBody, ModalContent, ModalHeader, ModalOverlay, Select, SimpleGrid, Switch, Text, Textarea, useDisclosure, VStack } from "@chakra-ui/react"
 import { ColorModeSwitcher } from "components/ColorModeSwitcher"
 import AutoSizer from 'react-virtualized-auto-sizer';
-import { cloneDeep, upperFirst } from "lodash"
+import { cloneDeep, defaults, upperFirst } from "lodash"
 import { useCallback, useEffect, useMemo, useState } from "react"
 import { Dashboard, Panel, PanelType } from "types/dashboard"
 import { PanelEventWrapper } from "../grid/PanelGrid"
@@ -78,7 +78,6 @@ const EditPanel = ({ dashboard, onChange }: EditPanelProps) => {
             if (!tempPanel.settings[type]) {
                 tempPanel.settings[type] = {}
             }
-
         })
     }
 

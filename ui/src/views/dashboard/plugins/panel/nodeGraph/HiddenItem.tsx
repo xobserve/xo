@@ -118,7 +118,7 @@ const HiddenItems = memo(({ selected, graph, panelId, dashboardId, onSelectChang
         }
     }
     return (<>
-        <VStack position="absolute" top="9px" left="140px" opacity="0.7" fontSize="1rem" className="bordered-left" pl="2" >
+        <VStack position="absolute" top="9px" left="140px" opacity="0.7" fontSize="1rem" className="bordered-left" pl="2" zIndex="2000">
             {selected && <Popover trigger="hover" onOpen={onShowOpen}>
                 <PopoverTrigger>
                     <Box cursor="pointer" color="brand.500">

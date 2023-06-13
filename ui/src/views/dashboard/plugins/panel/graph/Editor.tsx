@@ -158,32 +158,3 @@ const GraphPanelEditor = ({ panel, onChange }: PanelEditorProps) => {
 }
 
 export default GraphPanelEditor
-
-export const initGraphSettings: GraphSettings = {
-    tooltip: {
-        mode: 'all',
-        sort: 'desc'
-    },
-    legend: {
-        mode: "table",
-        placement: "bottom"
-    },
-    styles: {
-        style: "lines",
-        lineWidth: 2,
-        fillOpacity: 21,
-        showPoints: "never",
-        pointSize: 5,
-        gradientMode: "opacity"
-    },
-    axis: {
-        showGrid: true,
-        scale: "linear",
-        scaleBase: 2
-    },
-    std: {
-        unitsType: 'none',
-        units: [],
-        decimals: 3
-    }
-}

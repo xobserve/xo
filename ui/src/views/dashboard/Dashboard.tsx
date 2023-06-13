@@ -1,11 +1,11 @@
 import { Box } from "@chakra-ui/react"
 import PageContainer from "layouts/page-container"
 import { useCallback, useEffect, useState } from "react"
-import { Dashboard } from "types/dashboard"
+import { Dashboard, Panel } from "types/dashboard"
 import { requestApi } from "utils/axios/request"
 import DashboardHeader from "src/views/dashboard/DashboardHeader"
 import DashboardGrid from "src/views/dashboard/grid/DashboardGrid"
-import { cloneDeep, concat } from "lodash"
+import { cloneDeep, concat, defaults, defaultsDeep } from "lodash"
 import { TimeRange } from "types/time"
 import { getInitTimeRange } from "components/TimePicker"
 import { Variable } from "types/variable"
@@ -17,6 +17,7 @@ import { TimeChangedEvent, VariableChangedEvent } from "src/data/bus-events"
 
 import { useImmer } from "use-immer"
 import { setAutoFreeze } from "immer";
+import { initPanelSettings } from "./plugins/panel/initSettings"
 
 setAutoFreeze(false)
 // All of the paths that is not defined in pages directory will redirect to this page,
@@ -45,6 +46,11 @@ const DashboardWrapper = ({dashboardId}) => {
     const load = async () => {
         const res = await requestApi.get(`/dashboard/byId/${dashboardId}`)
         const res0 = await requestApi.get(`/variable/all`)
+        res.data.data.panels.forEach((panel:Panel) => {
+            // console.log("33333 before",cloneDeep(panel.settings[panel.type]))
+            panel.settings[panel.type] = defaultsDeep(panel.settings[panel.type], initPanelSettings[panel.type])
+            // console.log("33333 after",cloneDeep(panel.settings[panel.type]),initPanelSettings[panel.type])
+        })
         unstable_batchedUpdates(() => {
         setDashboard(cloneDeep(res.data))
         setGVariables(res0.data)
