@@ -5,7 +5,7 @@ import G6, { Graph } from '@antv/g6';
 import { Box, Text, useColorMode } from '@chakra-ui/react';
 import { PanelData, PanelProps } from 'types/dashboard';
 import { initTooltip } from './tooltip';
-import { donutDarkColors, donutLightColors } from './default-styles';
+import { donutDarkColors, donutLightColors, getActiveEdgeLabelCfg } from './default-styles';
 import { initLegend } from './legend';
 import { setAttrsForData } from './transformData';
 import { NodeGraphToolbar } from './Toolbar';
@@ -15,24 +15,27 @@ import useContextMenu from './useContextMenu';
 import HiddenItems from './HiddenItem';
 import { filterData } from './filter/filterData';
 import { getDefaultEdgeLabel, getDefaultEdgeStyle, getDefaultNodeLabel, getDefaultNodeStyle } from './default-styles';
-import { merge } from 'lodash';
 
 
 
 
+let newestColorMode;
 const NodeGrapPanel = ({ data, panel, dashboardId }: PanelProps) => {
     const container = React.useRef(null);
     const [graph, setGraph] = useState<Graph>(null);
     const { colorMode } = useColorMode();
     const defaultNodeLabelCfg = getDefaultNodeLabel(colorMode)
     const defaultEdgeLabelCfg = getDefaultEdgeLabel(colorMode)
+    const activeEdgeLabelCfg = getActiveEdgeLabelCfg(colorMode)
+
     const [selected, setSelected] = useState(false)
     const contextMenu = useContextMenu()
 
     useEffect(() => {
         if (graph) {
-            onColorModeChange(graph,data,colorMode,dashboardId,panel.id)
+            onColorModeChange(graph, data, colorMode, dashboardId, panel.id)
         }
+        newestColorMode = colorMode
     }, [colorMode])
 
     useEffect(() => {
@@ -101,7 +104,7 @@ const NodeGrapPanel = ({ data, panel, dashboardId }: PanelProps) => {
                     },
                     labelCfg: defaultEdgeLabelCfg,
                     stateStyles: {
-                      
+
                     }
                 },
                 defaultNode: {
@@ -123,36 +126,56 @@ const NodeGrapPanel = ({ data, panel, dashboardId }: PanelProps) => {
             g1.on('node:mouseenter', (evt) => {
                 const { item } = evt;
                 g1.setItemState(item, 'active', true);
+                //@ts-ignore
+                item.getEdges().forEach(edge => {
+                    g1.updateItem(edge, {
+                        // as we can't fetch the newest colorMode here, we use a global variable instead
+                        labelCfg: getActiveEdgeLabelCfg(newestColorMode)
+                    })
+                })
             });
 
             g1.on('node:mouseleave', (evt) => {
                 const { item } = evt;
                 g1.setItemState(item, 'active', false);
+
+                if (!item.hasState('selected')) {
+                    //@ts-ignore
+                    item.getEdges().forEach(edge => {
+                        g1.updateItem(edge, {
+                            labelCfg: defaultEdgeLabelCfg
+                        })
+                    })
+                }
+
             });
 
             g1.on('node:click', (evt) => {
                 const { item } = evt;
                 console.log(g1, item)
                 g1.setItemState(item, 'selected', true);
+
                 setSelected(true)
             })
 
             g1.on('node:dblclick', (evt) => {
-                clearSelectedNodesState(g1)
-                clearSelectedEdgesState(g1)
+                // clearSelectedNodesState(g1)
+                // clearSelectedEdgesState(g1,defaultEdgeLabelCfg)
 
                 const { item } = evt;
                 g1.setItemState(item, 'selected', true);
                 //@ts-ignore
                 item.getEdges().forEach(edge => {
+                    g1.updateItem(edge, {
+                        labelCfg: getActiveEdgeLabelCfg(newestColorMode)
+                    })
                     g1.setItemState(edge, 'selected', true);
                 })
-                // gh.setItemState(item, 'focus', true);
             });
 
             g1.on('canvas:click', (evt) => {
-                clearSelectedNodesState(g1)
-                clearSelectedEdgesState(g1)
+                clearSelectedEdgesState(g1, defaultEdgeLabelCfg)
+                // clearSelectedNodesState(g1,defaultEdgeLabelCfg)
                 setSelected(false)
             });
 
@@ -183,17 +206,37 @@ const NodeGrapPanel = ({ data, panel, dashboardId }: PanelProps) => {
     </>;
 }
 
-const clearSelectedNodesState = graph => {
+const clearSelectedNodesState = (graph: Graph, defaultEdgeLabelCfg?) => {
     const selectedNodes = graph.findAllByState('node', 'selected')
-    selectedNodes.forEach(node => {
-        graph.setItemState(node, 'selected', false)
+    const nodes = graph.getNodes()
+    nodes.forEach(node => {
+        if (node.hasState('selected')) {
+            if (defaultEdgeLabelCfg) {
+                setTimeout(() => {
+                    //@ts-ignore
+
+                    node.getEdges().forEach(edge => {
+                        graph.updateItem(edge, {
+                            labelCfg: defaultEdgeLabelCfg
+                        })
+                    })
+                }, 200)
+            }
+
+
+            graph.setItemState(node, 'selected', false)
+        }
     })
 }
 
-const clearSelectedEdgesState = graph => {
-    const selectedEdges = graph.findAllByState('edge', 'selected')
-    selectedEdges.forEach(edge => {
-        graph.clearItemStates(edge)
+const clearSelectedEdgesState = (graph: Graph, defaultEdgeLabelCfg) => {
+    // const selectedEdges = graph.findAllByState('edge', 'selected')
+    graph.getEdges().forEach(edge => {
+        // graph.clearItemStates(edge)
+        // console.log("here333333:",edge, defaultEdgeLabelCfg)
+        graph.updateItem(edge, {
+            labelCfg: defaultEdgeLabelCfg
+        })
     })
 }
 
@@ -207,7 +250,7 @@ export const initNodeGraphSettings = {
 
 
 
-const onColorModeChange = (graph, data, colorMode,dashboardId,panelId) => {
+const onColorModeChange = (graph, data, colorMode, dashboardId, panelId) => {
     const defaultNodeLabelCfg = getDefaultNodeLabel(colorMode)
     const defaultEdgeLabelCfg = getDefaultEdgeLabel(colorMode)
 
@@ -224,7 +267,7 @@ const onColorModeChange = (graph, data, colorMode,dashboardId,panelId) => {
         Object.keys(defaultNodeStyle).forEach(key => {
             node.stateStyles[key] = defaultNodeStyle[key]
         })
-        
+
     })
 
     data[0].edges.forEach((edge: any) => {
@@ -240,7 +283,6 @@ const onColorModeChange = (graph, data, colorMode,dashboardId,panelId) => {
         })
     })
     const newData = filterData(data[0], dashboardId, panelId)
-    console.log("here333332:",newData)
     graph.data(newData)
     graph.render()
 }

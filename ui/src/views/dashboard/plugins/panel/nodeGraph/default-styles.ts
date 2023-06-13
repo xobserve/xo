@@ -17,16 +17,22 @@ export const getDefaultNodeLabel = (colorMode) =>{
     }  
 } 
 
-export const getDefaultEdgeLabel = colorMode => {
+export const getDefaultEdgeLabel = (colorMode) => {
     return  {
         autoRotate: true,
         refY: -10,
         style: {
             fill:  colorMode == "light" ? '#000' : '#fff',
             lineWidth: 5,
-            opacity: 0
-        }
+            opacity: 0,
+        },
     }
+}
+
+export const getActiveEdgeLabelCfg = colorMode => {
+    const cfg = getDefaultEdgeLabel(colorMode)
+    cfg.style.opacity = 1
+    return cfg
 }
 
 const lightColor = 'rgb(0, 181, 216)'
