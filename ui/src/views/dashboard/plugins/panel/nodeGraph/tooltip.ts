@@ -5,6 +5,7 @@ export const initTooltip = () => {
         offsetX: 10,
         offsetY: 10,
         itemTypes: ['node'],
+        trigger: 'click',
         getContent: (e) => {
             const model = e.item.getModel();
             const outDiv = document.createElement('div');
