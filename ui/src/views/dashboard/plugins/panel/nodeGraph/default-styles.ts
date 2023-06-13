@@ -61,5 +61,11 @@ export const getDefaultEdgeStyle = (colorMode?) => {
             shadowColor:colorMode == "light" ? lightColor : darkColor,
             lineWidth: 1,
           },
+        inactive: {
+            stroke: '#222',
+            shadowColor: '#ccc',
+            lineWidth: 1,
+            opacity: 0
+          }
       }
 }
