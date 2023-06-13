@@ -3,8 +3,8 @@ import { ColorModeSwitcher } from "components/ColorModeSwitcher"
 import AutoSizer from 'react-virtualized-auto-sizer';
 import { cloneDeep, upperFirst } from "lodash"
 import { useCallback, useEffect, useMemo, useState } from "react"
-import { Dashboard,  Panel, PanelType } from "types/dashboard"
-import {  PanelEventWrapper } from "../grid/PanelGrid"
+import { Dashboard, Panel, PanelType } from "types/dashboard"
+import { PanelEventWrapper } from "../grid/PanelGrid"
 import GraphPanelEditor from "../plugins/panel/graph/Editor"
 import TextPanelEditor from "../plugins/panel/text/Editor"
 import PanelAccordion from "./Accordion"
@@ -17,28 +17,30 @@ import { useRouter } from "next/router";
 import { removeParamFromUrl } from "utils/url";
 import { useSearchParam } from "react-use";
 import NodeGraphPanelEditor from "../plugins/panel/nodeGraph/Editor";
+import { FaArrowDown, FaArrowUp, FaUser } from "react-icons/fa";
 
 interface EditPanelProps {
     dashboard: Dashboard
     onChange: any
 }
 
-const EditPanel = ({ dashboard,onChange }: EditPanelProps) => {
+const EditPanel = ({ dashboard, onChange }: EditPanelProps) => {
     const edit = useSearchParam('edit')
 
     const [tempPanel, setTempPanel] = useImmer<Panel>(null)
     const { isOpen, onOpen, onClose } = useDisclosure()
+    const [hideDatasource, setHideDatasource] = useState(false)
 
     useEffect(() => {
         if (edit) {
-            console.log("edit: ",edit)
+            console.log("edit: ", edit)
             const p = dashboard.data.panels.find(p => p.id.toString() === edit)
             if (p) {
                 setTempPanel(p)
                 onOpen()
             }
         }
-    },[edit])
+    }, [edit])
 
 
 
@@ -71,18 +73,38 @@ const EditPanel = ({ dashboard,onChange }: EditPanelProps) => {
             if (type == PanelType.Text) {
                 tempPanel.useDatasource = false
             }
-    
+
             // init settings for panel render plugin
             if (!tempPanel.settings[type]) {
                 tempPanel.settings[type] = {}
             }
-    
+
         })
     }
 
     const onEditClose = () => {
         removeParamFromUrl(['edit'])
         onClose()
+    }
+
+    const maxPanelHeight = () => {
+        if (tempPanel.useDatasource) {
+            if (hideDatasource) {
+                return '100%'
+            }
+            return '50%'
+        }
+        return '100%'
+    }
+
+    const maxDatasourceHeight = () => {
+        if (tempPanel.useDatasource) {
+            if (hideDatasource) {
+                return '0%'
+            }
+            return '50%'
+        }
+        return '0%'
     }
 
     return (<>
@@ -104,25 +126,26 @@ const EditPanel = ({ dashboard,onChange }: EditPanelProps) => {
                     <HStack height="calc(100vh - 100px)" alignItems="top">
                         <Box width="65%" height="100%">
                             {/* panel rendering section */}
-                            <Box height={tempPanel.useDatasource ? "50%" : "100%"} id="edit-panel-render">
-                            <AutoSizer>
-                                {({ width, height }) => {
-                                    if (width === 0) {
-                                        return null;
-                                    }
+                            <Box key={tempPanel.id.toString() + hideDatasource as string} height={maxPanelHeight()} id="edit-panel-render">
+                                <AutoSizer>
+                                    {({ width, height }) => {
+                                        if (width === 0) {
+                                            return null;
+                                        }
 
-                                    return (
-                                        <Box width={width}
-                                            height={height}>
-                                            <PanelEventWrapper dashboard={dashboard} panel={tempPanel} width={width} height={height}  sync={null}/>
-                                        </Box>
-                                    );
-                                }}
-                            </AutoSizer>
+                                        return (
+                                            <Box width={width}
+                                                height={height}>
+                                                <PanelEventWrapper key={tempPanel.id + tempPanel.type} dashboard={dashboard} panel={tempPanel} width={width} height={height} sync={null} />
+                                                <Box position="absolute" right="0" bottom={hideDatasource ? "0" : "-35px" } opacity="0.3" cursor="pointer" fontSize=".8rem" onClick={() => {setHideDatasource(!hideDatasource)}}>{hideDatasource ?<FaArrowUp /> :<FaArrowDown />}</Box>
+                                            </Box>
+                                        );
+                                    }}
+                                </AutoSizer>
                             </Box>
                             {/* panel datasource section */}
-                            {tempPanel.useDatasource && <Box maxHeight="50%" mt="2" overflowY="scroll">
-                                <EditPanelQuery panel={tempPanel} onChange={setTempPanel}/>
+                            {tempPanel.useDatasource && <Box maxHeight={maxDatasourceHeight()} mt="2" overflowY="scroll">
+                                <EditPanelQuery key={tempPanel.id + tempPanel.type} panel={tempPanel} onChange={setTempPanel} />
                             </Box>}
                         </Box>
                         {/* panel settings section */}
@@ -132,16 +155,16 @@ const EditPanel = ({ dashboard,onChange }: EditPanelProps) => {
                                 {/* panel basic setting */}
                                 <PanelAccordion title="Basic setting">
                                     <PanelEditItem title="Panel title">
-                                        <Input size="sm" value={tempPanel.title} onChange={e => {const v = e.currentTarget.value; setTempPanel(tempPanel => {tempPanel.title = v})}} />
+                                        <Input size="sm" value={tempPanel.title} onChange={e => { const v = e.currentTarget.value; setTempPanel(tempPanel => { tempPanel.title = v }) }} />
                                     </PanelEditItem>
                                     <PanelEditItem title="Description" desc="give a short description to your panel">
-                                        <Textarea size="sm" value={tempPanel.desc} onChange={e => {const v = e.currentTarget.value; setTempPanel(tempPanel => {tempPanel.desc = v})}} />
+                                        <Textarea size="sm" value={tempPanel.desc} onChange={e => { const v = e.currentTarget.value; setTempPanel(tempPanel => { tempPanel.desc = v }) }} />
                                     </PanelEditItem>
                                     <PanelEditItem title="Transparent" desc="Display panel without a background.">
-                                        <Switch id='panel-transparent' defaultChecked={tempPanel.transparent} onChange={e =>  setTempPanel( tempPanel => {tempPanel.transparent = e.currentTarget.checked})} />
+                                        <Switch id='panel-transparent' defaultChecked={tempPanel.transparent} onChange={e => setTempPanel(tempPanel => { tempPanel.transparent = e.currentTarget.checked })} />
                                     </PanelEditItem>
                                     <PanelEditItem title="Show border" desc="Display panel without border around.">
-                                        <Switch id='panel-border' defaultChecked={tempPanel.showBorder} onChange={e => setTempPanel( tempPanel => {tempPanel.showBorder = e.currentTarget.checked})} />
+                                        <Switch id='panel-border' defaultChecked={tempPanel.showBorder} onChange={e => setTempPanel(tempPanel => { tempPanel.showBorder = e.currentTarget.checked })} />
                                     </PanelEditItem>
                                 </PanelAccordion>
 
@@ -192,7 +215,7 @@ const VisulizationItem = ({ title, imageUrl, onClick = null, selected = false })
 
 
 
-const CustomPanelEditor = ({tempPanel,setTempPanel}) => {
+const CustomPanelEditor = ({ tempPanel, setTempPanel }) => {
     //@needs-update-when-add-new-panel
     switch (tempPanel?.type) {
         case PanelType.Text:

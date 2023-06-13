@@ -92,11 +92,10 @@ export const PanelComponent = ({ dashboard, panel, onRemovePanel, width, height,
 
     // useEffect(() => console.log("panel created:", panel.id), [])
     useEffect(() => {
-        queryData(dashboard.id + panel.id)
+        queryData(panel, dashboard.id + panel.id)
     }, [panel.datasource, timeRange, variables])
 
-    const queryData = async (queryId) => {
-        console.log(panel.datasource)
+    const queryData = async (panel,queryId) => {
         for (var i = 0; i < panel.datasource.length; i++) {
             const ds = panel.datasource[i]
             if (ds.selected) {
@@ -192,7 +191,7 @@ export const PanelComponent = ({ dashboard, panel, onRemovePanel, width, height,
     const panelInnerWidth = width + 8 // 10px padding left and right of panel body
 
 
-    console.log("panel component rendered, data: ", panelData,panel.id)
+    console.log("panel component rendered, data: ", panelData,panel)
     return <Box height="100%" >
         <PanelHeader panel={panel} queryError={queryError} onCopyPanel={onCopyPanel} onRemovePanel={onRemovePanel} />
         {panelData && <Box
@@ -203,7 +202,7 @@ export const PanelComponent = ({ dashboard, panel, onRemovePanel, width, height,
             h="100%"
         >
             {
-                isEmpty(panelData) ?
+                isEmpty(panelData) && panel.useDatasource ?
                     <Box h="100%">
                         <Center height="100%">No data</Center></Box>
                     : <CustomPanelRender dashboardId={dashboard.id} panel={panel} data={panelData} height={panelInnerHeight} width={panelInnerWidth} sync={sync} />

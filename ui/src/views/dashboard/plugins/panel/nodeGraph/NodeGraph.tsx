@@ -182,7 +182,6 @@ const NodeGrapPanel = ({ data, panel, dashboardId }: PanelProps) => {
 
             const newData = filterData(data[0], dashboardId, panel.id)
             gh.data(newData);
-            console.log("here3333:", newData)
             gh.render();
             setGraph(gh)
             if (typeof window !== 'undefined') {

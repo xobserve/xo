@@ -7,11 +7,14 @@ import { TimeRange } from "types/time"
 import { prometheusDataToDataFrame } from "../prometheus/query_runner"
 import graphData from './mocks/prometheus_graph.json'
 import { nodeGraphData } from "./mocks/node_graph"
-import { cloneDeep } from "lodash"
 export const run_testdata_query = async (panel: Panel, q: PanelQuery,range: TimeRange) => {
     let data ;
+  
     switch (panel.type) {
-        case PanelType.Graph,PanelType.Table:
+        case PanelType.Graph:
+            data = prometheusDataToDataFrame(q, graphData.data)
+            break;
+        case PanelType.Table:
             data = prometheusDataToDataFrame(q, graphData.data)
             break;
         case PanelType.NodeGraph:
