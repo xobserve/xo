@@ -23,7 +23,7 @@ export const nodeGraphData = (nodesCount) => {
     for (let i = 0; i < nodesCount; i++) {
       for (let j = 0; j < nodesCount; j++) {
         if (i !== j) {
-          if (Math.random() > 0.85) {
+          if (Math.random() > 0.8) {
             const req = Math.round(Math.random() * 1000)
             const error = Math.round(Math.random() * 100)
             edges.push({
