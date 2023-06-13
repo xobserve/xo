@@ -15,7 +15,7 @@ export const run_testdata_query = async (panel: Panel, q: PanelQuery,range: Time
             data = prometheusDataToDataFrame(q, graphData.data)
             break;
         case PanelType.NodeGraph:
-            data = nodeGraphData(15)
+            data = nodeGraphData(10)
             break;
         default:
             break

@@ -5,7 +5,7 @@ import G6, { Graph } from '@antv/g6';
 import { Box, Text, useColorMode } from '@chakra-ui/react';
 import { PanelData, PanelProps } from 'types/dashboard';
 import { initTooltip } from './tooltip';
-import { donutDarkColors, donutLightColors } from './utils';
+import { donutDarkColors, donutLightColors } from './default-styles';
 import { initLegend } from './legend';
 import { setAttrsForData } from './transformData';
 import { NodeGraphToolbar } from './Toolbar';
@@ -15,6 +15,7 @@ import useContextMenu from './useContextMenu';
 import HiddenItems from './HiddenItem';
 import { filterData } from './filter/filterData';
 import { getDefaultEdgeLabel, getDefaultEdgeStyle, getDefaultNodeLabel, getDefaultNodeStyle } from './default-styles';
+import { merge } from 'lodash';
 
 
 
@@ -30,27 +31,7 @@ const NodeGrapPanel = ({ data, panel, dashboardId }: PanelProps) => {
 
     useEffect(() => {
         if (graph) {
-            data[0].nodes.forEach((node: any) => {
-                if (!node.labelCfg) {
-                    node.labelCfg = defaultNodeLabelCfg
-                } else {
-                    node.labelCfg.style.fill = colorMode == "light" ? '#000' : '#fff'
-                }
-
-                node.donutColorMap = colorMode == "light" ? donutLightColors : donutDarkColors
-            })
-
-            data[0].edges.forEach((edge: any) => {
-                if (!edge.labelCfg) {
-                    edge.labelCfg = defaultEdgeLabelCfg
-                } else {
-                    edge.labelCfg.style.fill = colorMode == "light" ? '#000' : '#fff'
-                }
-                edge.style.stroke = colorMode == "light" ? '#ddd' : '#444'
-            })
-            const newData = filterData(data[0], dashboardId, panel.id)
-            graph.data(newData)
-            graph.render()
+            onColorModeChange(graph,data,colorMode,dashboardId,panel.id)
         }
     }, [colorMode])
 
@@ -120,9 +101,7 @@ const NodeGrapPanel = ({ data, panel, dashboardId }: PanelProps) => {
                     },
                     labelCfg: defaultEdgeLabelCfg,
                     stateStyles: {
-                        filterOut: {
-                            visibility: 'hidden',
-                        },
+                      
                     }
                 },
                 defaultNode: {
@@ -130,23 +109,10 @@ const NodeGrapPanel = ({ data, panel, dashboardId }: PanelProps) => {
                     style: {
                         lineWidth: 0,
                         fill: 'transparent',
-                        highlight: {
-                            fill: 'yellow',
-                            stroke: 'yellow'
-                        }
                     },
-                    labelCfg: {
-                        position: 'bottom',
-                        style: {
-                            fill: colorMode == "light" ? '#000' : '#fff',
-                        }
-                    },
+                    labelCfg: defaultNodeLabelCfg,
                     donutColorMap: colorMode == "light" ? donutLightColors : donutDarkColors,
                     stateStyles: {
-                        hover: {
-                            fill: 'yellow',
-                            stroke: 'yellow'
-                        }
                     }
                 },
                 nodeStateStyles: getDefaultNodeStyle(colorMode),
@@ -240,3 +206,41 @@ export const initNodeGraphSettings = {
 
 
 
+
+const onColorModeChange = (graph, data, colorMode,dashboardId,panelId) => {
+    const defaultNodeLabelCfg = getDefaultNodeLabel(colorMode)
+    const defaultEdgeLabelCfg = getDefaultEdgeLabel(colorMode)
+
+    data[0].nodes.forEach((node: any) => {
+        if (!node.labelCfg) {
+            node.labelCfg = defaultNodeLabelCfg
+        } else {
+            node.labelCfg.style.fill = colorMode == "light" ? '#000' : '#fff'
+        }
+
+        node.donutColorMap = colorMode == "light" ? donutLightColors : donutDarkColors
+
+        const defaultNodeStyle = getDefaultNodeStyle(colorMode)
+        Object.keys(defaultNodeStyle).forEach(key => {
+            node.stateStyles[key] = defaultNodeStyle[key]
+        })
+        
+    })
+
+    data[0].edges.forEach((edge: any) => {
+        if (!edge.labelCfg) {
+            edge.labelCfg = defaultEdgeLabelCfg
+        } else {
+            edge.labelCfg.style.fill = colorMode == "light" ? '#000' : '#fff'
+        }
+        edge.style.stroke = colorMode == "light" ? '#ddd' : '#444'
+        const defaultEdgeStyle = getDefaultEdgeStyle(colorMode)
+        Object.keys(defaultEdgeStyle).forEach(key => {
+            edge.stateStyles[key] = defaultEdgeStyle[key]
+        })
+    })
+    const newData = filterData(data[0], dashboardId, panelId)
+    console.log("here333332:",newData)
+    graph.data(newData)
+    graph.render()
+}

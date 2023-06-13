@@ -1,5 +1,5 @@
 import G6 from "@antv/g6";
-import { donutLightColors } from "./utils";
+import { donutLightColors } from "./default-styles";
 
 export const initLegend = () => {
     const legendData = {
