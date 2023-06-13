@@ -91,7 +91,6 @@ const NodeGraphFilter = ({ graph, dashboardId, panelId, onFilterRulesChange }: P
         })
     }
     const addRule = () => {
-        console.log("here333333a:",tempRule)
         if (tempRule.operator != FilterOperator.Regex) {
             if (!isNumber(tempRule.value)) {
                 toast({
