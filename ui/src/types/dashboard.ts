@@ -33,11 +33,14 @@ export interface Panel {
 
     gridPos: GridPos
     collapsed?: boolean
-    transparent?: boolean
-    showBorder?: boolean
     // for plugin settings
     settings?: PanelSettings
-
+    styles?: {
+        transparent?: boolean
+        showBorder?: boolean
+        border?: string
+        decoration?: string
+    }
     // for querying data
     useDatasource?: boolean
     datasource?: PanelDatasource[]

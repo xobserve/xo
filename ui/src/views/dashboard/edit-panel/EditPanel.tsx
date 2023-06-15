@@ -1,4 +1,4 @@
-import { Box, Button, Center, Flex, HStack, Image, Input, Modal, ModalBody, ModalContent, ModalHeader, ModalOverlay, SimpleGrid, Switch, Text, Textarea, useDisclosure } from "@chakra-ui/react"
+import { Box, Button, Center, Flex, HStack, Image, Input, Modal, ModalBody, ModalContent, ModalHeader, ModalOverlay, SimpleGrid, Switch, Tab, TabIndicator, TabList, TabPanel, TabPanels, Tabs, Text, Textarea, useDisclosure } from "@chakra-ui/react"
 import { ColorModeSwitcher } from "components/ColorModeSwitcher"
 import AutoSizer from 'react-virtualized-auto-sizer';
 import { upperFirst } from "lodash"
@@ -16,6 +16,8 @@ import { removeParamFromUrl } from "utils/url";
 import { useSearchParam } from "react-use";
 import NodeGraphPanelEditor from "../plugins/panel/nodeGraph/Editor";
 import { FaArrowDown, FaArrowUp } from "react-icons/fa";
+import PanelStyles from "./PanelStyles";
+import PanelSettings from "./PanelSettings";
 
 interface EditPanelProps {
     dashboard: Dashboard
@@ -31,7 +33,6 @@ const EditPanel = ({ dashboard, onChange }: EditPanelProps) => {
 
     useEffect(() => {
         if (edit) {
-            console.log("edit: ", edit)
             const p = dashboard.data.panels.find(p => p.id.toString() === edit)
             if (p) {
                 setTempPanel(p)
@@ -62,22 +63,6 @@ const EditPanel = ({ dashboard, onChange }: EditPanelProps) => {
         onEditClose()
     }
 
-    const onChangeVisualization = type => {
-        setTempPanel(tempPanel => {
-            tempPanel.type = type
-
-            tempPanel.useDatasource = true
-            // text panel doesn't need datasource
-            if (type == PanelType.Text) {
-                tempPanel.useDatasource = false
-            }
-
-            // init settings for panel render plugin
-            if (!tempPanel.settings[type]) {
-                tempPanel.settings[type] = {}
-            }
-        })
-    }
 
     const onEditClose = () => {
         removeParamFromUrl(['edit'])
@@ -124,23 +109,8 @@ const EditPanel = ({ dashboard, onChange }: EditPanelProps) => {
                         <Box width="65%" height="100%">
                             {/* panel rendering section */}
                             <Box key={tempPanel.id.toString() + hideDatasource as string} height={maxPanelHeight()} id="edit-panel-render">
-                                <PanelGrid key={tempPanel.id + tempPanel.type} dashboard={dashboard} panel={tempPanel} sync={null}/>
-                                <Box position="absolute" right="0" bottom={hideDatasource ? "0" : "-35px" } opacity="0.3" cursor="pointer" fontSize=".8rem" onClick={() => {setHideDatasource(!hideDatasource)}}>{hideDatasource ?<FaArrowUp /> :<FaArrowDown />}</Box>
-                                {/* <AutoSizer>
-                                    {({ width, height }) => {
-                                        if (width === 0) {
-                                            return null;
-                                        }
-
-                                        return (
-                                            <Box width={width}
-                                                height={height}>
-                                                <PanelEventWrapper  />
-                                                <Box position="absolute" right="0" bottom={hideDatasource ? "0" : "-35px" } opacity="0.3" cursor="pointer" fontSize=".8rem" onClick={() => {setHideDatasource(!hideDatasource)}}>{hideDatasource ?<FaArrowUp /> :<FaArrowDown />}</Box>
-                                            </Box>
-                                        );
-                                    }}
-                                </AutoSizer> */}
+                                <PanelGrid key={tempPanel.id + tempPanel.type} dashboard={dashboard} panel={tempPanel} sync={null} />
+                                <Box position="absolute" right="0" bottom={hideDatasource ? "0" : "-35px"} opacity="0.3" cursor="pointer" fontSize=".8rem" onClick={() => { setHideDatasource(!hideDatasource) }}>{hideDatasource ? <FaArrowUp /> : <FaArrowDown />}</Box>
                             </Box>
                             {/* panel datasource section */}
                             {tempPanel.useDatasource && <Box maxHeight={maxDatasourceHeight()} mt="2" overflowY="scroll">
@@ -150,44 +120,31 @@ const EditPanel = ({ dashboard, onChange }: EditPanelProps) => {
                         {/* panel settings section */}
                         <Box width="35%" maxHeight="100%" overflowY={"scroll"}>
                             <Box className="top-gradient-border bordered-left bordered-right" >
-                                <Text px="2" py="2">Panel</Text>
-                                {/* panel basic setting */}
-                                <PanelAccordion title="Basic setting">
-                                    <PanelEditItem title="Panel title">
-                                        <Input size="sm" value={tempPanel.title} onChange={e => { const v = e.currentTarget.value; setTempPanel(tempPanel => { tempPanel.title = v }) }} />
-                                    </PanelEditItem>
-                                    <PanelEditItem title="Description" desc="give a short description to your panel">
-                                        <Textarea size="sm" value={tempPanel.desc} onChange={e => { const v = e.currentTarget.value; setTempPanel(tempPanel => { tempPanel.desc = v }) }} />
-                                    </PanelEditItem>
-                                    <PanelEditItem title="Transparent" desc="Display panel without a background.">
-                                        <Switch id='panel-transparent' defaultChecked={tempPanel.transparent} onChange={e => setTempPanel(tempPanel => { tempPanel.transparent = e.currentTarget.checked })} />
-                                    </PanelEditItem>
-                                    <PanelEditItem title="Show border" desc="Display panel without border around.">
-                                        <Switch id='panel-border' defaultChecked={tempPanel.showBorder} onChange={e => setTempPanel(tempPanel => { tempPanel.showBorder = e.currentTarget.checked })} />
-                                    </PanelEditItem>
-                                </PanelAccordion>
+                                <Tabs position="relative" variant="unstyled">
+                                    <TabList pb="0">
+                                        <Tab>Panel</Tab>
+                                        <Tab>Styles</Tab>
+                                    </TabList>
+                                    <TabIndicator
+                                        mt="3px"
+                                        height="2px"
+                                        bg="brand.500"
+                                        borderRadius="1px"
+                                    />
+                                    <TabPanels>
+                                        <TabPanel px="0" pt="1">
+                                            {/* panel basic setting */}
+                                            <PanelSettings panel={tempPanel} onChange={setTempPanel}/>
 
-                                {/* panel visulization choosing */}
-                                <PanelAccordion title="Visualization">
-                                    <SimpleGrid columns={2} spacing="2">
-                                        {
-                                            Object.keys(PanelType).map((key) => {
-                                                if (PanelType[key] == PanelType.Row) {
-                                                    return <></>
-                                                }
-                                                return <VisulizationItem
-                                                    selected={tempPanel.type == PanelType[key]}
-                                                    title={upperFirst(PanelType[key])}
-                                                    imageUrl={`/plugins/panel/${PanelType[key].toLowerCase()}.svg`}
-                                                    onClick={() => onChangeVisualization(PanelType[key])}
-                                                />
-                                            })
-                                        }
-                                    </SimpleGrid>
-                                </PanelAccordion>
+                                            {/* panel rendering plugin setting */}
+                                            <CustomPanelEditor tempPanel={tempPanel} setTempPanel={setTempPanel} />
+                                        </TabPanel>
+                                        <TabPanel px="0" pt="1">
+                                            <PanelStyles panel={tempPanel} onChange={setTempPanel}/>
+                                        </TabPanel>
+                                    </TabPanels>
+                                </Tabs>
 
-                                {/* panel rendering plugin setting */}
-                                <CustomPanelEditor tempPanel={tempPanel} setTempPanel={setTempPanel} />
                             </Box>
 
                         </Box>
@@ -199,19 +156,6 @@ const EditPanel = ({ dashboard, onChange }: EditPanelProps) => {
 }
 
 export default EditPanel
-
-const VisulizationItem = ({ title, imageUrl, onClick = null, selected = false }) => {
-    return (
-        <Box className={`tag-bg ${selected ? "highlight-bordered" : ""}`} onClick={onClick} pb="2" cursor="pointer">
-            <Center >
-                <Text>{title}</Text>
-            </Center>
-            <Image src={imageUrl} height="100px" width="100%" />
-        </Box>
-
-    )
-}
-
 
 
 const CustomPanelEditor = ({ tempPanel, setTempPanel }) => {

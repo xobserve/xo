@@ -108,7 +108,7 @@ const DashboardGrid = memo((props: GridProps) => {
         >
             {
                 dashboard.data.panels.map((panel) => {
-                    return (<Box key={panel.id} id={`panel-${panel.id}`} className={panel.showBorder ? "bordered"  : ""} sx={{
+                    return (<Box key={panel.id} id={`panel-${panel.id}`} sx={{
                         ".react-resizable-handle": {
                             position: "absolute",
                             width: "20px",

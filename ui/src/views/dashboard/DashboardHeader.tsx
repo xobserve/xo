@@ -92,7 +92,7 @@ const DashboardHeader = memo(({ dashboard, onTimeChange, timeRange, onChange,ful
     )
 
     return (
-        <Box display={fullscreen ? "none" : "block"} py="1" width={`calc(100% - ${miniMode ? 76 : 148}px)`} position="fixed" bg={dashboard.data.styles?.bg ? 'transparent' : 'var(--chakra-colors-chakra-body-bg)'}>
+        <Box display={fullscreen ? "none" : "block"} py="1" width={`calc(100% - ${miniMode ? 76 : 148}px)`} position="fixed" bg={dashboard.data.styles?.bg ? 'transparent' : 'var(--chakra-colors-chakra-body-bg)'} zIndex={1}>
             {team &&
                 <>
                     <Flex justifyContent="space-between" >

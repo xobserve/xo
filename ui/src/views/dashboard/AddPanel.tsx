@@ -69,7 +69,9 @@ const AddPanel = ({ dashboard, onChange }: Props) => {
                 queries: []
             }],
             useDatasource: false,
-            showBorder: true
+            styles:{ 
+                border: 'normal'
+            }
         }
 
 
