@@ -5,7 +5,7 @@ import { GRID_CELL_HEIGHT, GRID_CELL_VMARGIN, GRID_COLUMN_COUNT } from "src/data
 import { updateGridPos } from "utils/dashboard/panel";
 import { Box } from "@chakra-ui/react";
 import PanelGrid from "./PanelGrid";
-import { memo } from "react";
+import { memo, useEffect } from "react";
 import EditPanel from "../edit-panel/EditPanel";
 import uPlot from "uplot";
 import BorderBox10 from "components/largescreen/border/Border10";
@@ -14,6 +14,7 @@ import BorderBox1 from "components/largescreen/border/Border1";
 import BorderBox8 from "components/largescreen/border/Border8";
 import BorderBox11 from "components/largescreen/border/Border11";
 import BorderBox9 from "components/largescreen/border/Border9";
+import { useSearchParam } from "react-use";
 
 
 
@@ -24,7 +25,7 @@ interface GridProps {
 
 const DashboardGrid = memo((props: GridProps) => {
     console.log("dashboard grid rendered")
-
+    const edit = useSearchParam('edit')
 
     const { dashboard, onChange} = props
 
@@ -96,9 +97,11 @@ const DashboardGrid = memo((props: GridProps) => {
     }
     
     let mooSync = dashboard.data.sharedTooltip ? uPlot.sync(dashboard.id) : null
+
+
     return (<>
         {/* SizedReactLayoutGrid will force React to rebuild all the panels, so it's not performant here */}
-        <SizedReactLayoutGrid
+        {!edit && <SizedReactLayoutGrid
             className="layout"
             layout={buildLayout(dashboard.data.panels)}
             isResizable={dashboard.editable}
@@ -137,7 +140,7 @@ const DashboardGrid = memo((props: GridProps) => {
                     </Box>)
                 })
             }
-        </SizedReactLayoutGrid>
+        </SizedReactLayoutGrid>}
         <EditPanel dashboard={dashboard} onChange={onChange} />
     </>)
 })

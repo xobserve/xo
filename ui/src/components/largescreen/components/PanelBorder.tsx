@@ -12,36 +12,36 @@ import BorderBox6 from "components/largescreen/border/Border6"
 import BorderBox7 from "components/largescreen/border/Border7"
 import BorderBox8 from "components/largescreen/border/Border8"
 import BorderBox9 from "components/largescreen/border/Border9"
-const PanelBorder = ({ border, children }) => {
+const PanelBorder = ({ border, children,width,height }) => {
     switch (border) {
         case "None":
             return <Box>{children}</Box>
         case "Border1":
-            return <BorderBox1>{children}</BorderBox1>
+            return <BorderBox1 style={{width,height}}>{children}</BorderBox1>
         case "Border2":
-            return <BorderBox2>{children}</BorderBox2>
+            return <BorderBox2 style={{width,height}}>{children}</BorderBox2>
         case "Border3":
-            return <BorderBox3>{children}</BorderBox3>
+            return <BorderBox3 style={{width,height}}>{children}</BorderBox3>
         case "Border4":
-            return <BorderBox4>{children}</BorderBox4>
+            return <BorderBox4 style={{width,height}}>{children}</BorderBox4>
         case "Border5":
-            return <BorderBox5>{children}</BorderBox5>
+            return <BorderBox5 style={{width,height}}>{children}</BorderBox5>
         case "Border6":
-            return <BorderBox6>{children}</BorderBox6>
+            return <BorderBox6 style={{width,height}}>{children}</BorderBox6>
         case "Border7":
-            return <BorderBox7>{children}</BorderBox7>
+            return <BorderBox7 style={{width,height}}>{children}</BorderBox7>
         case "Border8":
-            return <BorderBox8>{children}</BorderBox8>
+            return <BorderBox8 style={{width,height}}>{children}</BorderBox8>
         case "Border9":
-            return <BorderBox9>{children}</BorderBox9>
+            return <BorderBox9 style={{width,height}}>{children}</BorderBox9>
         case "Border10":
-            return <BorderBox10>{children}</BorderBox10>
+            return <BorderBox10 style={{width,height}}>{children}</BorderBox10>
         case "Border11":
-            return <BorderBox11>{children}</BorderBox11>
+            return <BorderBox11 style={{width,height}}>{children}</BorderBox11>
         case "Border12":
-            return <BorderBox12>{children}</BorderBox12>
+            return <BorderBox12 style={{width,height}}>{children}</BorderBox12>
         case "Border13":
-            return <BorderBox13>{children}</BorderBox13>
+            return <BorderBox13 style={{width,height}}>{children}</BorderBox13>
         default:
             return <Box className="bordered">{children}</Box>
     }

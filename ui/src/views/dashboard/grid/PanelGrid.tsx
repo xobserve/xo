@@ -4,7 +4,7 @@ import { Box, Center, HStack,  Menu, MenuButton, MenuDivider, MenuItem, MenuList
 import { FaBook, FaEdit, FaRegCopy, FaTrashAlt } from "react-icons/fa";
 import { IoMdInformation } from "react-icons/io";
 import TextPanel from "../plugins/panel/text/Text";
-import { memo, useEffect, useState } from "react";
+import { memo, useEffect, useRef, useState } from "react";
 import { run_prometheus_query } from "../plugins/datasource/prometheus/query_runner";
 import { DataFrame } from "types/dataFrame";
 import GraphPanel from "../plugins/panel/graph/Graph";
@@ -38,17 +38,29 @@ interface PanelGridProps {
 }
 
 const PanelGrid = (props: PanelGridProps) => {
+    const [canRender,setCanRender] = useState(false)
+    const h = useRef(null)
     console.log("panel grid rendered:", props.panel.id)
     return (<AutoSizer>
         {({ width, height }) => {
-            if (width === 0) {
-                return null;
+            // every time you refresh a page, width of the panel will first set to a value, then set to another smaller one
+            // so we make a verify here to make sure the panel is rendered with the correct width
+            if (h.current) {
+                clearTimeout(h.current)
             }
 
+            if (!canRender) {
+                h.current = setTimeout(() => {
+                    setCanRender(true)
+                },50)
+
+                return null
+            }
+            
             return (                
                 <Box width={width}
                     height={height}>
-                        <PanelBorder border={props.panel.styles?.border}>
+                        <PanelBorder width={width} height={height} border={props.panel.styles?.border}>
                             <PanelEventWrapper width={width} height={height} {...props} />
                         </PanelBorder>
                 </Box>
@@ -112,7 +124,6 @@ export const PanelComponent = ({ dashboard, panel, onRemovePanel, width, height,
                     console.log(q0)
                     const metrics = replaceWithVariables(q0.metrics, variables)
                     const q = { ...q0, metrics }
-                    console.log(q)
                     const id = queryId + q.id
                     const prevQuery = prevQueries[id]
                     const currentQuery = [q, timeRange]
