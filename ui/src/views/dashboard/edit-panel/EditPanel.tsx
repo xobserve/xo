@@ -139,7 +139,7 @@ const EditPanel = ({ dashboard, onChange }: EditPanelProps) => {
                                             {/* panel rendering plugin setting */}
                                             <CustomPanelEditor tempPanel={tempPanel} setTempPanel={setTempPanel} />
                                         </TabPanel>
-                                        <TabPanel px="0" pt="1">
+                                        <TabPanel px="0" pt="1" pb="0">
                                             <PanelStyles panel={tempPanel} onChange={setTempPanel}/>
                                         </TabPanel>
                                     </TabPanels>

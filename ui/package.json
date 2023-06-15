@@ -7,7 +7,7 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "@antv/g6": "^4.8.17",
+    "@antv/g6": "latest",
     "@chakra-ui/cli": "2.3.0",
     "@chakra-ui/icons": "2.0.17",
     "@chakra-ui/props-docs": "2.2.1",
@@ -34,10 +34,10 @@
     "memoize-one": "6.0.0",
     "moment": "^2.27.0",
     "namor": "^1.1.2",
-    "next": "^12.2.0",
+    "next": "13.0.6",
     "next-seo": "^5.4.0",
     "query-string": "^6.3.0",
-    "react": "^18.1.0",
+    "react": "^18.2.0",
     "react-color": "^2.19.3",
     "react-custom-scrollbars-2": "4.4.0",
     "react-dom": "^18.1.0",

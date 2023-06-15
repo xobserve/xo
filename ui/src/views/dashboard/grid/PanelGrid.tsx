@@ -210,7 +210,7 @@ export const PanelComponent = ({ dashboard, panel, onRemovePanel, width, height,
 
 
     console.log("panel component rendered, data: ", panelData, panel)
-    return <Box height="100%" className="hover-bordered" border={`1px solid transparent`}>
+    return <Box height="100%" className={panel.styles.border == "None" && "hover-bordered"} border={`1px solid transparent`}>
         <PanelHeader panel={panel} data={panelData} queryError={queryError} onCopyPanel={onCopyPanel} onRemovePanel={onRemovePanel} />
         {panelData && <Box
             // panel={panel}

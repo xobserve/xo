@@ -15,13 +15,10 @@ const defaultConfig = {
       API,
     },
   },
-  target: "serverless",
+  // target: "serverless",
   webpack: (config) => ({
     ...config,
     externals: [...config.externals],
-    experiments: {
-      topLevelAwait: true
-    },
   }),
   experimental: {
     optimizeFonts: true,
