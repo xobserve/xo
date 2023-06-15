@@ -15,7 +15,7 @@ import BorderBox9 from "components/largescreen/border/Border9"
 const PanelBorder = ({ border, children,width,height }) => {
     switch (border) {
         case "None":
-            return <Box>{children}</Box>
+            return <Box height={height} width={width}>{children}</Box>
         case "Border1":
             return <BorderBox1 style={{width,height}}>{children}</BorderBox1>
         case "Border2":
@@ -43,7 +43,7 @@ const PanelBorder = ({ border, children,width,height }) => {
         case "Border13":
             return <BorderBox13 style={{width,height}}>{children}</BorderBox13>
         default:
-            return <Box className="bordered">{children}</Box>
+            return <Box className="bordered" height={height} width={width}>{children}</Box>
     }
 }
 

@@ -103,7 +103,7 @@ const GraphPanel = memo((props: PanelProps) => {
 
     return (
         <>
-            <Box>
+            <Box h="100%" className="panel-graph">
                 {!isEmpty(props?.panel.settings.graph.axis?.label) && <Text fontSize="sm" position="absolute" ml="3" mt="-1" className="color-text">{props.panel.settings.graph.axis.label}</Text>}
                 {options && <GraphLayout width={props.width} height={props.height} legend={props.panel.settings.graph.legend.mode == "hidden" ? null : <SeriesTable placement={props.panel.settings.graph.legend.placement} props={props} filterType={seriesFilterType.Current} onSelect={onSelectSeries} />}>
                     {(vizWidth: number, vizHeight: number) => {

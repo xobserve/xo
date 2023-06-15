@@ -27,6 +27,12 @@ import NodeGraphPanel from "../plugins/panel/nodeGraph/NodeGraph";
 import { Portal } from "components/portal/Portal";
 import BorderBox10 from "components/largescreen/border/Border10";
 import PanelBorder from "../../../components/largescreen/components/PanelBorder";
+import Decoration1 from "components/largescreen/decoration/Decoration1";
+import Decoration3 from "components/largescreen/decoration/Decoration3";
+import Decoration2 from "components/largescreen/decoration/Decoration2";
+import Decoration6 from "components/largescreen/decoration/Decoration6";
+import Decoration7 from "components/largescreen/decoration/Decoration7";
+import Decoration11 from "components/largescreen/decoration/Decoration11";
 
 
 interface PanelGridProps {
@@ -57,9 +63,10 @@ const PanelGrid = (props: PanelGridProps) => {
                 return null
             }
             
+            console.log("here333333:",width,height)
             return (                
                 <Box width={width}
-                    height={height}>
+                    height={height} className="panel-grid">
                         <PanelBorder width={width} height={height} border={props.panel.styles?.border}>
                             <PanelEventWrapper width={width} height={height} {...props} />
                         </PanelBorder>
@@ -210,7 +217,7 @@ export const PanelComponent = ({ dashboard, panel, onRemovePanel, width, height,
 
 
     console.log("panel component rendered, data: ", panelData, panel)
-    return <Box height="100%" className={panel.styles.border == "None" && "hover-bordered"} border={`1px solid transparent`}>
+    return <Box height="100%" className={panel.styles.border == "None" ? "hover-bordered" : null} border={`1px solid transparent`}>
         <PanelHeader panel={panel} data={panelData} queryError={queryError} onCopyPanel={onCopyPanel} onRemovePanel={onRemovePanel} />
         {panelData && <Box
             // panel={panel}
@@ -270,7 +277,7 @@ const PanelHeader = ({ queryError, panel, onCopyPanel, onRemovePanel,data }) => 
                             _focus={{ border: null }}
                             onClick={e => e.stopPropagation()}
                         >
-                            <Center width="100%">{!isEmpty(title) ? <Box cursor="pointer" className="hover-bordered">{title}</Box> : <Box width="100px">&nbsp;</Box>}</Center>
+                            <Center width="100%">{!isEmpty(title) ? <Box cursor="pointer" className="hover-bordered" paddingBottom='20px' paddingLeft="200px">{title}</Box> : <Box width="100px">&nbsp;</Box>}</Center>
                         </MenuButton>
                         <Portal>
                             <MenuList p="1">
@@ -288,6 +295,7 @@ const PanelHeader = ({ queryError, panel, onCopyPanel, onRemovePanel,data }) => 
                 </Center>
                 <Box display="none"><FaBook className="grid-drag-handle" /></Box>
             </HStack>
+            {/* <Box display="flex" justifyContent="right"><Decoration6 style={{height: '20px',width:"100px",position:"absolute",top:"null",right:"150px",left:"null"}} /></Box> */}
             {isOpen && <DebugPanel panel={panel} isOpen={isOpen} onClose={onClose} data={data} />}
         </>
     )

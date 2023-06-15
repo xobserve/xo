@@ -8,6 +8,7 @@ export interface DecorationProps {
     children?: any
     scanDur?: number
     haloDur?: number
+    margin?: string
 }
 
 export interface BorderBoxProps {

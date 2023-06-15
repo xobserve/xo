@@ -12,7 +12,7 @@ import { Box } from '@chakra-ui/react'
 
 const defaultColor = ['#1dc1f5', '#1dc1f5']
 
-const Decoration7 = ({ children, className, style, color = [] }:DecorationProps) => {
+const Decoration7 = ({ children, className, style, color = [],margin }:DecorationProps) => {
   const mergedColor = useMemo(() => deepMerge(deepClone(defaultColor, true), color || []), [color])
 
   const classNames = useMemo(() => classnames('dv-decoration-7', className), [
@@ -21,7 +21,7 @@ const Decoration7 = ({ children, className, style, color = [] }:DecorationProps)
 
   return (
     <Box className={classNames} style={style} display="flex" width="100%" height="100%" justifyContent="center" alignItems="center">
-      <svg width='21px' height='20px'>
+      <svg width='21px' height='20px' style={{marginRight: margin}}>
         <polyline
           strokeWidth='4'
           fill='transparent'
@@ -35,8 +35,8 @@ const Decoration7 = ({ children, className, style, color = [] }:DecorationProps)
           points='2, 0 11, 10 2, 20'
         />
       </svg>
-      {children}
-      <svg width='21px' height='20px'>
+      {children??<Box>aa</Box>}
+      <svg width='21px' height='20px' style={{marginLeft: margin}}>
         <polyline
           strokeWidth='4'
           fill='transparent'
