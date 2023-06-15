@@ -3,6 +3,8 @@ import G6, { Graph } from '@antv/g6';
 import { Box, useColorMode } from '@chakra-ui/react';
 import { ColorModeSwitcher } from 'components/ColorModeSwitcher';
 
+
+// just for test purpose
 export default function () {
   const container = React.useRef(null);
   const graph = useRef<Graph>(null);

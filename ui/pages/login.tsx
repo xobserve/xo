@@ -12,6 +12,7 @@ import { useRouter } from 'next/router';
 import { Box, Button, Heading, HStack, Image, Input } from '@chakra-ui/react';
 import { saveToken } from 'utils/axios/getToken';
 
+// login page
 function Login() {
     const particlesInit = useCallback(async (engine: Engine) => {
         await loadFull(engine);

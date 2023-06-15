@@ -6,7 +6,7 @@ import { requestApi } from "utils/axios/request"
 import NotFoundPage from "./404"
 
 
-
+// page for dispaly dashboard
 const DashboardPage = () => {
     const router = useRouter()
     const rawId = router.query.dashboardId
