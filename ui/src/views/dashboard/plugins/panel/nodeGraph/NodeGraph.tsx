@@ -3,7 +3,7 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import G6,{ Graph } from '@antv/g6';
 import { Box, useColorMode } from '@chakra-ui/react';
-import { Panel, PanelProps } from 'types/dashboard';
+import { Panel, PanelData, PanelProps } from 'types/dashboard';
 import { initTooltip } from './plugins/tooltip';
 import {  getActiveEdgeLabelCfg } from './default-styles';
 import { initLegend } from './plugins/legend';
@@ -51,17 +51,21 @@ const NodeGrapPanel = ({ data, panel, dashboardId,width,height }: PanelProps) =>
 
     useEffect(() => {
         if (graph) {
-            setAttrsForData(panel.settings.nodeGraph,data[0],colorMode)
-            const newData = filterData(data[0], dashboardId, panel.id)
-            if (newData != data[0]) {
-                graph.data(newData)
-                graph.render()
-            } else {
-                graph.changeData(newData)
-            }
+            onDataAndSettingsChange(panel,data,colorMode,dashboardId,graph)
         }
-    }, [data,panel.settings])
+    }, [data])
 
+    useEffect(() => {
+        if (graph) {
+            onDataAndSettingsChange(panel,data,colorMode,dashboardId,graph)
+
+            graph.updateLayout({
+                nodeStrength: panel.settings.nodeGraph.layout.nodeStrength,
+                gravity: panel.settings.nodeGraph.layout.gravity,
+            })
+        }
+    }, [panel.settings])
+    
     const onFilterRulesChange = (rules?) => {
         const newData = filterData(data[0], dashboardId, panel.id, rules)
         if (newData != data[0]) {
@@ -108,8 +112,8 @@ const NodeGrapPanel = ({ data, panel, dashboardId,width,height }: PanelProps) =>
                     // focusNode: 'li',
                     // linkDistance: 100,
                     preventOverlap: true,
-                    nodeStrength: 5000,
-                    gravity: 60,
+                    nodeStrength: panel.settings.nodeGraph.layout.nodeStrength,
+                    gravity: panel.settings.nodeGraph.layout.gravity,
                     preset: {
                         type: 'radial'
                     }
@@ -313,3 +317,14 @@ const onColorModeChange = (graph, data, colorMode, dashboardId, panel:Panel) => 
 }
 
 
+
+const onDataAndSettingsChange = (panel:Panel,data:PanelData[],colorMode,dashboardId,graph) => {
+    setAttrsForData(panel.settings.nodeGraph,data[0],colorMode)
+    const newData = filterData(data[0], dashboardId, panel.id)
+    if (newData != data[0]) {
+        graph.data(newData)
+        graph.render()
+    } else {
+        graph.changeData(newData)
+    }
+}

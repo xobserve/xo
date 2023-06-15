@@ -74,6 +74,11 @@ export const initPanelSettings:PanelSettings = {
 
         legend: {
             enable: true
+        },
+
+        layout: {
+            nodeStrength: 5000,
+            gravity: 60,
         }
     }
 }

@@ -191,6 +191,11 @@ export interface NodeGraphSettings {
     legend: {
         enable: boolean
     }
+
+    layout: {
+        nodeStrength: number,
+        gravity: number
+    }
 }
 
 

@@ -43,9 +43,7 @@ const NodeGraphPanelEditor = (props: PanelEditorProps) => {
                     panel.settings.nodeGraph.node.shape = v
                 })} />
             </PanelEditItem>
-            {panel.settings.nodeGraph.node.shape == 'donut' && <DonutColorsSetting {...props} />}
-
-
+            {panel.settings.nodeGraph.node.shape == 'donut' && <DonutColorsSetting {...props} />}    
         </PanelAccordion>
 
 
@@ -147,6 +145,12 @@ const NodeGraphPanelEditor = (props: PanelEditorProps) => {
                     panel.settings.nodeGraph.legend.enable = e.currentTarget.checked
                 })} />
             </PanelEditItem>
+        </PanelAccordion>
+
+
+        <PanelAccordion title="layout">
+            <LayoutStrength {...props}/>
+            <LayoutGravity {...props}/>
         </PanelAccordion>
     </>)
 }
@@ -428,5 +432,31 @@ const MaxSize = ({ panel, onChange }: PanelEditorProps) => {
             </NumberInput>
             <Text> * baseSize = {panel.settings.nodeGraph.node.baseSize * panel.settings.nodeGraph.node.maxSize}</Text>
         </HStack>
+    )
+}
+
+const LayoutStrength = ({ panel, onChange }: PanelEditorProps) => {
+    const [temp, setTemp] = useState(panel.settings.nodeGraph.layout.nodeStrength.toString())
+    return (
+        <PanelEditItem title="node strength" desc=" The strength of node force. Positive value means repulsive force, negative value means attractive force">
+        <NumberInput value={temp}  min={100} max={10000} width="80px" size="sm" onChange={v => setTemp(v)} onBlur={e => onChange(panel => {
+            panel.settings.nodeGraph.layout.nodeStrength = Number(temp)
+        })}>
+            <NumberInputField />
+        </NumberInput>
+        </PanelEditItem>
+    )
+}
+
+const LayoutGravity = ({ panel, onChange }: PanelEditorProps) => {
+    const [temp, setTemp] = useState(panel.settings.nodeGraph.layout.gravity.toString())
+    return (
+        <PanelEditItem title="node gravity" desc="The gravity strength to the center for all the nodes. Larger the number, more compact the nodes">
+        <NumberInput value={temp}  min={0} max={200} width="80px" size="sm" onChange={v => setTemp(v)} onBlur={e => onChange(panel => {
+            panel.settings.nodeGraph.layout.gravity = Number(temp)
+        })}>
+            <NumberInputField />
+        </NumberInput>
+        </PanelEditItem>
     )
 }
