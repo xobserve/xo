@@ -4,7 +4,7 @@ import AutoSizer from 'react-virtualized-auto-sizer';
 import { upperFirst } from "lodash"
 import { useEffect, useState } from "react"
 import { Dashboard, Panel, PanelType } from "types/dashboard"
-import { PanelEventWrapper } from "../grid/PanelGrid"
+import PanelGrid, { PanelEventWrapper } from "../grid/PanelGrid"
 import GraphPanelEditor from "../plugins/panel/graph/Editor"
 import TextPanelEditor from "../plugins/panel/text/Editor"
 import PanelAccordion from "./Accordion"
@@ -124,7 +124,9 @@ const EditPanel = ({ dashboard, onChange }: EditPanelProps) => {
                         <Box width="65%" height="100%">
                             {/* panel rendering section */}
                             <Box key={tempPanel.id.toString() + hideDatasource as string} height={maxPanelHeight()} id="edit-panel-render">
-                                <AutoSizer>
+                                <PanelGrid key={tempPanel.id + tempPanel.type} dashboard={dashboard} panel={tempPanel} sync={null}/>
+                                <Box position="absolute" right="0" bottom={hideDatasource ? "0" : "-35px" } opacity="0.3" cursor="pointer" fontSize=".8rem" onClick={() => {setHideDatasource(!hideDatasource)}}>{hideDatasource ?<FaArrowUp /> :<FaArrowDown />}</Box>
+                                {/* <AutoSizer>
                                     {({ width, height }) => {
                                         if (width === 0) {
                                             return null;
@@ -133,12 +135,12 @@ const EditPanel = ({ dashboard, onChange }: EditPanelProps) => {
                                         return (
                                             <Box width={width}
                                                 height={height}>
-                                                <PanelEventWrapper key={tempPanel.id + tempPanel.type} dashboard={dashboard} panel={tempPanel} width={width} height={height} sync={null} />
+                                                <PanelEventWrapper  />
                                                 <Box position="absolute" right="0" bottom={hideDatasource ? "0" : "-35px" } opacity="0.3" cursor="pointer" fontSize=".8rem" onClick={() => {setHideDatasource(!hideDatasource)}}>{hideDatasource ?<FaArrowUp /> :<FaArrowDown />}</Box>
                                             </Box>
                                         );
                                     }}
-                                </AutoSizer>
+                                </AutoSizer> */}
                             </Box>
                             {/* panel datasource section */}
                             {tempPanel.useDatasource && <Box maxHeight={maxDatasourceHeight()} mt="2" overflowY="scroll">

@@ -8,6 +8,12 @@ import PanelGrid from "./PanelGrid";
 import { memo } from "react";
 import EditPanel from "../edit-panel/EditPanel";
 import uPlot from "uplot";
+import BorderBox10 from "components/largescreen/border/Border10";
+import BorderBox4 from "components/largescreen/border/Border4";
+import BorderBox1 from "components/largescreen/border/Border1";
+import BorderBox8 from "components/largescreen/border/Border8";
+import BorderBox11 from "components/largescreen/border/Border11";
+import BorderBox9 from "components/largescreen/border/Border9";
 
 
 
@@ -127,7 +133,7 @@ const DashboardGrid = memo((props: GridProps) => {
                             borderBottom: "2px solid rgba(0, 0, 0, 0.4)"
                         }
                     }}>
-                        <PanelGrid dashboard={dashboard} panel={panel} onRemovePanel={onRemovePanel}   sync={mooSync} />
+                       <PanelGrid dashboard={dashboard} panel={panel} onRemovePanel={onRemovePanel}   sync={mooSync} />
                     </Box>)
                 })
             }

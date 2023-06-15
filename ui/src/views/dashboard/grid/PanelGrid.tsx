@@ -25,6 +25,9 @@ import { run_testdata_query } from "../plugins/datasource/testdata/query_runner"
 import { run_jaeger_query } from "../plugins/datasource/jaeger/query_runner";
 import NodeGraphPanel from "../plugins/panel/nodeGraph/NodeGraph";
 import { Portal } from "components/portal/Portal";
+import BorderBox11 from "components/largescreen/border/Border11";
+import BorderBox9 from "components/largescreen/border/Border9";
+import BorderBox10 from "components/largescreen/border/Border10";
 
 
 interface PanelGridProps {
@@ -43,10 +46,10 @@ const PanelGrid = (props: PanelGridProps) => {
                 return null;
             }
 
-            return (
+            return (                
                 <Box width={width}
                     height={height}>
-                    <PanelEventWrapper width={width} height={height} {...props} />
+                    <BorderBox10><PanelEventWrapper width={width} height={height} {...props} /></BorderBox10>
                 </Box>
             );
         }}
