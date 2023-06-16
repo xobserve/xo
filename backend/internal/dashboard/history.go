@@ -2,10 +2,14 @@ package dashboard
 
 import (
 	"encoding/json"
+	"net/http"
 	"time"
 
+	"github.com/MyStarship/starship/backend/pkg/common"
 	"github.com/MyStarship/starship/backend/pkg/db"
+	"github.com/MyStarship/starship/backend/pkg/e"
 	"github.com/MyStarship/starship/backend/pkg/models"
+	"github.com/gin-gonic/gin"
 )
 
 var historyCh = make(chan *models.Dashboard, 100)
@@ -48,4 +52,31 @@ func InitHistory() {
 			time.Sleep(1 * time.Second)
 		}
 	}
+}
+
+func GetHistory(c *gin.Context) {
+	id := c.Param("id")
+	rows, err := db.Conn.Query("SELECT history FROM dashboard_history WHERE dashboard_id=?", id)
+	if err != nil {
+		logger.Warn("query dashboard history error", "error,err")
+		c.JSON(http.StatusInternalServerError, common.RespError(e.Internal))
+		return
+	}
+
+	dashboards := make([]*models.Dashboard, 0)
+	for rows.Next() {
+		var data []byte
+		rows.Scan(&data)
+
+		var dash *models.Dashboard
+		err := json.Unmarshal(data, &dash)
+		if err != nil {
+			logger.Warn("unmarshal dashboard history error", "error", err)
+			continue
+		}
+
+		dashboards = append(dashboards, dash)
+	}
+
+	c.JSON(http.StatusOK, common.RespSuccess(dashboards))
 }

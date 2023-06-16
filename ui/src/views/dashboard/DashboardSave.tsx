@@ -1,5 +1,4 @@
-import { Box, Tooltip, useToast } from "@chakra-ui/react"
-import IconButton from "components/button/IconButton"
+import { Box, Drawer, DrawerBody, DrawerCloseButton, DrawerContent, DrawerHeader, DrawerOverlay, IconButton, Menu, MenuButton, MenuItem, MenuList, Tooltip, useDisclosure, useToast, VStack } from "@chakra-ui/react"
 import { useLeavePageConfirm } from "hooks/useLeavePage"
 import { isEqual } from "lodash"
 import { useEffect, useState } from "react"
@@ -12,6 +11,7 @@ interface Props {
     dashboard: Dashboard
 }
 const DashboardSave = ({ dashboard }: Props) => {
+    const { isOpen, onOpen, onClose } = useDisclosure()
     const [saved, setSaved] = useState(null)
     const [pageChanged, setPageChanged] = useState(false)
 
@@ -55,13 +55,65 @@ const DashboardSave = ({ dashboard }: Props) => {
     }
 
     return (
-        <Tooltip label="save dashboard, you can also use CTRL + S to save">
+        <>
             <Box>
-                <IconButton onClick={onSave} variant="ghost"><FaRegSave /></IconButton>
+                <Menu>
+                    <MenuButton as={IconButton} variant="ghost" sx={{
+                        span: {
+                            display: "flex",
+                            justifyContent: "center",
+                        }
+                    }}>
+                        <FaRegSave />
+                    </MenuButton>
+                    <MenuList>
+                        <MenuItem onClick={onSave}>Save</MenuItem>
+                        <MenuItem onClick={onOpen}>View history</MenuItem>
+                    </MenuList>
+                </Menu>
             </Box>
-        </Tooltip>
+            <Drawer
+                key={dashboard.id}
+                isOpen={isOpen}
+                placement='right'
+                onClose={onClose}
+            >
+                <DrawerOverlay />
+                <DrawerContent>
+                    <DrawerCloseButton />
+                    <DrawerHeader>Dashboard revision history</DrawerHeader>
 
+                    <DrawerBody>
+                        <DashboardHistory dashboard={dashboard} />
+                    </DrawerBody>
+                </DrawerContent>
+            </Drawer>
+        </>
     )
 }
 
 export default DashboardSave
+
+interface HistoryProps {
+    dashboard: Dashboard
+}
+
+const DashboardHistory = ({dashboard}: HistoryProps) => {
+    const [history, setHistory] = useState([])
+    
+    useEffect(() => {
+        load()
+    },[])
+
+    const load = async () => {
+        const res = await requestApi.get(`/dashboard/history/${dashboard.id}`)
+        setHistory(res.data)
+    }
+
+    console.log("here3333333d",history)
+    return (
+        <VStack>
+
+        </VStack>
+    )
+}
