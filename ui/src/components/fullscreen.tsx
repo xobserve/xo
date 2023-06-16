@@ -1,6 +1,7 @@
 import { Box, Tooltip, useToast } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import { FaTv } from "react-icons/fa";
+import { useKey } from "react-use";
 import { FullscreenEvent } from "src/data/bus-events";
 import { FullscreenKey } from "src/data/storage-keys";
 import { dispatch } from "use-bus";
@@ -10,19 +11,7 @@ const Fullscreen = () => {
     const toast = useToast()
     const [fullscreen, setFullscreen] = useState(storage.get(FullscreenKey)??false)
 
-    const keydownListener = (e) => {
-        if (e.key == 'Escape') {
-            onFullscreenChange(true)
-        }
-    };
-
-    useEffect(() => {
-        window.addEventListener('keydown', keydownListener.bind(this));
-
-        return () => {
-            window.removeEventListener('keydown', keydownListener.bind(this));
-        }
-    }, [])
+    useKey("Escape", () => onFullscreenChange(true))
 
     useEffect(() => {
         if (fullscreen) {

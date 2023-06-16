@@ -65,7 +65,6 @@ const PanelGrid = (props: PanelGridProps) => {
                 return null
             }
             
-            console.log("here333333:",width,height)
             return (                
                 <Box width={width}
                     height={height} className="panel-grid">

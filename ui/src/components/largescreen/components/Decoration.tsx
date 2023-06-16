@@ -19,7 +19,6 @@ interface Props {
 }
 
 const Decoration = ({ decoration }: Props) => {
-    console.log("here33333,",decoration)
     return <Box display="flex" justifyContent={decoration.justifyContent}><Inner decoration={decoration} /></Box>
 }
 
