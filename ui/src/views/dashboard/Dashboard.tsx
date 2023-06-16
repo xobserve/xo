@@ -23,6 +23,7 @@ import Border from "components/largescreen/components/Border"
 import storage from "utils/localStorage"
 import { SidemenuMinimodeKey } from "src/data/storage-keys"
 import useMiniMode from "hooks/useMiniMode"
+import useFullscreen from "hooks/useFullscreen"
  
 
 
@@ -38,25 +39,14 @@ const DashboardWrapper = ({dashboardId}) => {
     const [dashboard, setDashboard] = useImmer<Dashboard>(null)
     const [timeRange, setTimeRange] = useState<TimeRange>(getInitTimeRange())
     const [gVariables, setGVariables] = useState<Variable[]>([])
-    const [fullscreen, setFullscreen] = useState(false)
-    
-    const keydownListener = (e) => {
-        if (e.key == 'Escape') {
-            setFullscreen(false)
-        }
-    };
-
+    const fullscreen = useFullscreen()
     useEffect(() => {
         load()
-
-        window.addEventListener('keydown', keydownListener.bind(this));
-
         return () => {
             for (const k in prevQueries) {
                 delete prevQueries[k]
                 delete prevQueryData[k]
             }
-            window.removeEventListener('keydown', keydownListener.bind(this));
         }
     }, [])
 
@@ -126,24 +116,14 @@ const DashboardWrapper = ({dashboardId}) => {
         return !v.id.toString().startsWith("d-") && !find(dashboard?.data?.hidingVars?.split(','),v1 => v1 == v.name)
     })
 
-    const onFullscreenChange = () => {
-        if (!fullscreen) {
-            toast({
-                description: "Press ESC to exit fullscreen mode",
-                status: "success",
-                duration: 5000,
-                isClosable: true,
-            });
-        }
-        setFullscreen(!fullscreen)
-    }
+
 
     const headerHeight = fullscreen ? '0px' : (visibleVars?.length > 0 ? "67px" : "38px")
     return (
         <>
-            <PageContainer fullscreen={fullscreen} bg={dashboard?.data.styles.bgEnabled ? dashboard?.data.styles?.bg: null}>
+            <PageContainer bg={dashboard?.data.styles.bgEnabled ? dashboard?.data.styles?.bg: null}>
                 {dashboard && <Box pl="6px" pr="6px" width="100%">
-                    <DashboardHeader fullscreen={fullscreen} onFullscreenChange={onFullscreenChange} dashboard={dashboard} onTimeChange={t => {dispatch({type:  TimeChangedEvent,data: t});setTimeRange(t)}} timeRange={timeRange}  onChange={onDashbardChange} />
+                    <DashboardHeader dashboard={dashboard} onTimeChange={t => {dispatch({type:  TimeChangedEvent,data: t});setTimeRange(t)}} timeRange={timeRange}  onChange={onDashbardChange} />
                     <Box id="dashboard-wrapper" mt={headerHeight} py="2" width="100%">
                         <DashboardBorder border={dashboard.data.styles.border} fullscreen={fullscreen} />
                         {dashboard.data.panels?.length > 0 &&<DashboardGrid dashboard={dashboard} onChange={onDashbardChange} />}

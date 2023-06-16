@@ -39,10 +39,10 @@ import { dispatch } from "use-bus"
 import { MiniSidemenuEvent } from "src/data/bus-events"
 import storage from "utils/localStorage"
 import { SidemenuMinimodeKey } from "src/data/storage-keys"
+import useFullscreen from "hooks/useFullscreen"
 
 
 interface Props {
-  fullscreen: boolean
   bg: string
 }
 
@@ -61,6 +61,7 @@ const VerticalNav = dynamic(async () => (props: Props) => {
   const borderColor = useColorModeValue(customColors.borderColor.light, customColors.borderColor.dark)
 
   const [sidemenu, setSidemenu] = useState<Route[]>(navLinks)
+  const fullscreen = useFullscreen()
   useEffect(() => {
     if (session) {
       loadSidemenu()
@@ -79,7 +80,7 @@ const VerticalNav = dynamic(async () => (props: Props) => {
   }
 
   return (
-    <Box minWidth={miniMode ? "58px" : "130px"} display={props.fullscreen ? "none" : "block"}>
+    <Box minWidth={miniMode ? "58px" : "130px"} display={fullscreen ? "none" : "block"}>
       <chakra.header
         ref={ref}
         transition="box-shadow 0.2s"

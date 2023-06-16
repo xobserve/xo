@@ -1,4 +1,4 @@
-import { Box, Flex, HStack, Modal, ModalBody, ModalContent, ModalOverlay, Select, Tooltip, useColorModeValue, useDisclosure, useToast, VStack } from "@chakra-ui/react"
+import { Box, Flex, HStack, Modal, ModalBody, ModalContent, ModalOverlay, Select, Tooltip, useDisclosure, useToast } from "@chakra-ui/react"
 import IconButton from "components/button/IconButton"
 import TimePicker, { getInitTimeRange, TimePickerKey } from "components/TimePicker"
 import SelectVariables from "src/views/variables/Variables"
@@ -22,21 +22,24 @@ import { variables } from "./Dashboard"
 import DashboardSave from "./DashboardSave"
 import DashboardSettings from "./settings/DashboardSettings"
 import useMiniMode from "hooks/useMiniMode"
+import Fullscreen from "components/fullscreen"
+import useFullscreen from "hooks/useFullscreen"
 
 interface HeaderProps {
     dashboard: Dashboard
     onTimeChange: any
     timeRange: TimeRange    
     onChange: any
-    fullscreen: boolean
-    onFullscreenChange: any
 }
-const DashboardHeader = memo(({ dashboard, onTimeChange, timeRange, onChange,fullscreen,onFullscreenChange }: HeaderProps) => {
+const DashboardHeader = memo(({ dashboard, onTimeChange, timeRange, onChange }: HeaderProps) => {
     const router = useRouter()
+    
     const [variablesChanged, setVariablesChanged] = useState(0)
     const [refresh, setRefresh] = useState(0)
     const [team, setTeam] = useState<Team>(null)
     const miniMode = useMiniMode()
+    const fullscreen = useFullscreen()
+
     useEffect(() => {
         getTeam()
     }, [])
@@ -83,6 +86,8 @@ const DashboardHeader = memo(({ dashboard, onTimeChange, timeRange, onChange,ful
         [variablesChanged]
     )
     
+
+
     return (
         <Box display={fullscreen ? "none" : "block"} py="1" width={`calc(100% - ${miniMode ? 76 : 148}px)`} position="fixed" bg={dashboard.data.styles?.bg ? 'transparent' : 'var(--chakra-colors-chakra-body-bg)'} zIndex={1}>
             {team &&
@@ -110,7 +115,7 @@ const DashboardHeader = memo(({ dashboard, onTimeChange, timeRange, onChange,ful
                                         <option value={60}>1m</option>
                                     </Select></Tooltip>
                                 </HStack>
-                                <Tooltip label="enter fullscreen mode"><Box onClick={onFullscreenChange}><FaTv /></Box></Tooltip>
+                                <Fullscreen />
 
                             </HStack>
 
