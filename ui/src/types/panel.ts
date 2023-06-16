@@ -11,7 +11,11 @@ export interface PanelStyles {
             height?: string
             margin?: string
         }
-
+        fontSize: string
+        paddingTop:string
+        paddingBottom:string 
+        paddingLeft:string
+        paddingRight: string
     }
 }
 

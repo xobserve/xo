@@ -33,6 +33,7 @@ import Decoration2 from "components/largescreen/decoration/Decoration2";
 import Decoration6 from "components/largescreen/decoration/Decoration6";
 import Decoration7 from "components/largescreen/decoration/Decoration7";
 import Decoration11 from "components/largescreen/decoration/Decoration11";
+import TitleDecoration from "components/largescreen/components/TitleDecoration";
 
 
 interface PanelGridProps {
@@ -283,7 +284,7 @@ const PanelHeader = ({ queryError, panel, onCopyPanel, onRemovePanel,data }:Pane
                             _focus={{ border: null }}
                             onClick={e => e.stopPropagation()}
                         >
-                            <Center width="100%">{!isEmpty(title) ? <Box cursor="pointer" className="hover-bordered" paddingBottom='0' marginLeft="0" width="100%"><Decoration7 style={{height: panel.styles.title.decoration.height, width: panel.styles.title.decoration.width}} margin={panel.styles.title.decoration.margin}>{title}</Decoration7></Box> : <Box width="100px">&nbsp;</Box>}</Center>
+                            <Center width="100%">{!isEmpty(title) ? <Box cursor="pointer" className="hover-bordered" paddingTop={panel.styles.title.paddingTop} paddingBottom={panel.styles.title.paddingBottom} paddingLeft={panel.styles.title.paddingLeft} paddingRight={panel.styles.title.paddingRight} width="100%" fontSize={panel.styles.title.fontSize}><TitleDecoration styles={panel.styles}>{title}</TitleDecoration></Box> : <Box width="100px">&nbsp;</Box>}</Center>
                         </MenuButton>
                         <Portal>
                             <MenuList p="1">
