@@ -24,6 +24,8 @@ import storage from "utils/localStorage"
 import { SidemenuMinimodeKey } from "src/data/storage-keys"
 import useMiniMode from "hooks/useMiniMode"
 import useFullscreen from "hooks/useFullscreen"
+import { initDashboard } from "src/data/dashboard"
+import Decoration from "components/largescreen/components/Decoration"
  
 
 
@@ -35,7 +37,6 @@ setAutoFreeze(false)
 // 2. dashboard page, accessed by a dashboard id
 export let variables: Variable[] = []
 const DashboardWrapper = ({dashboardId}) => {
-    const toast = useToast()
     const [dashboard, setDashboard] = useImmer<Dashboard>(null)
     const [timeRange, setTimeRange] = useState<TimeRange>(getInitTimeRange())
     const [gVariables, setGVariables] = useState<Variable[]>([])
@@ -80,6 +81,7 @@ const DashboardWrapper = ({dashboardId}) => {
             panel.styles = defaultsDeep(panel.styles, initPanelStyles)
             // console.log("33333 after",cloneDeep(panel.plugins[panel.type]),initPanelSettings[panel.type])
         })
+        res.data = defaultsDeep(res.data, initDashboard)
         unstable_batchedUpdates(() => {
         setDashboard(cloneDeep(res.data))
         setGVariables(res0.data)
@@ -123,6 +125,7 @@ const DashboardWrapper = ({dashboardId}) => {
         <>
             <PageContainer bg={dashboard?.data.styles.bgEnabled ? dashboard?.data.styles?.bg: null}>
                 {dashboard && <Box pl="6px" pr="6px" width="100%">
+                    <Decoration decoration={dashboard.data.styles.decoration}/>
                     <DashboardHeader dashboard={dashboard} onTimeChange={t => {dispatch({type:  TimeChangedEvent,data: t});setTimeRange(t)}} timeRange={timeRange}  onChange={onDashbardChange} />
                     <Box id="dashboard-wrapper" mt={headerHeight} py="2" width="100%">
                         <DashboardBorder border={dashboard.data.styles.border} fullscreen={fullscreen} />
@@ -147,7 +150,7 @@ const DashboardBorder = ({border,fullscreen}) => {
             const ele = document.getElementById("dashboard-grid")
             const h = ele?.offsetHeight + 10
             setHeight(h)
-        },300)
+        },500)
         return () =>{
             clearInterval(ref.current)
         }
@@ -156,7 +159,7 @@ const DashboardBorder = ({border,fullscreen}) => {
 
     return (
         <>
-        {height > 0 && <Box position="absolute" width={fullscreen ? "100%" : `calc(100% - ${miniMode? 60 : 150}px)`} height={height} id="dashboard-border"><Border width="100%" height="100%" border={border}><Box height="100%" width="100%"></Box></Border></Box>}
+        {height > 0 && <Box position="absolute" width={fullscreen ? "100%" : `calc(100% - ${miniMode? 70 : 150}px)`} height={height} id="dashboard-border"><Border width="100%" height="100%" border={border}><Box height="100%" width="100%"></Box></Border></Box>}
         </>
     )
 }

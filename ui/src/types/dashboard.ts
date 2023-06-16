@@ -1,6 +1,6 @@
 import { DataFrame, NodeGraphData } from "./dataFrame"
 import { GraphSettings, NodeGraphSettings, TableSettings } from "./panel/plugins"
-import { PanelStyles } from "./panel/styles"
+import { DecorationStyles, PanelStyles } from "./panel/styles"
 import { Variable } from "./variable"
 
 export interface Dashboard {
@@ -15,35 +15,36 @@ export interface Dashboard {
 }
 
 export interface DashboardData {
-    description?: string
-    panels?: Panel[]
-    variables?: Variable[]
-    sharedTooltip?: boolean
-    editable?: boolean
-    hidingVars?: string
-    tags?: string[]
-    styles?: {
-        bg?: string
-        bgEnabled?: boolean
-        border?: string
+    description: string
+    panels: Panel[]
+    variables: Variable[]
+    sharedTooltip: boolean
+    editable: boolean
+    hidingVars: string
+    tags: string[]
+    styles: {
+        bg: string
+        bgEnabled: boolean
+        border: string
+        decoration: DecorationStyles
     }
 }
 
 export interface Panel {
     id?: number
     title?: string
-    desc?: string
+    desc: string
     type: PanelType
 
     gridPos: GridPos
-    collapsed?: boolean
+    collapsed: boolean
     // for plugin settings
-    plugins?: PanelPlugins
+    plugins: PanelPlugins
 
-    styles?: PanelStyles
+    styles: PanelStyles
     // for querying data
-    useDatasource?: boolean
-    datasource?: PanelDatasource[]
+    useDatasource: boolean
+    datasource: PanelDatasource[]
 }
 
 export interface PanelEditorProps {

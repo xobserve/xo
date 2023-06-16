@@ -9,18 +9,11 @@ import { Dashboard } from "types/dashboard"
 import { globalTeamId, Team } from "types/teams"
 import { requestApi } from "utils/axios/request"
 
-const newTitle = "new dashboard"
+
 const TeamsPage = () => {
     const toast = useToast()
     const router = useRouter()
-    const [dashboard, setDashboard] = useState<Dashboard>({
-        id: "",
-        title: newTitle,
-        data: {
-            panels: []
-        },
-        ownedBy: globalTeamId,
-    })
+    const [dashboard, setDashboard] = useState<Dashboard>()
     const [teams, setTeams] = useState<Team[]>([])
 
     useEffect(() => {
