@@ -15,7 +15,7 @@ type Props = PropsOf<typeof chakra.div> & {
 
 const ChakraMarkdown = chakra(Markdown)
 
-export function MarkdownRender({ md, fontSize,fontWeight=500,enableToc = false, ...rest }: Props) {
+export function MarkdownRender({ md, fontSize,fontWeight="500",enableToc = false, ...rest }: Props) {
   const rootRef = useRef<HTMLDivElement>();
   const [renderMd, setRenderMd] = useState(md)
   useEffect(() => {
