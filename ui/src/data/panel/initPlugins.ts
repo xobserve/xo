@@ -31,7 +31,11 @@ export const initPanelPlugins: PanelPlugins = {
     },
 
     text:  {
-        md: `#Welcome to Starship\n This is a new panel\n You can edit it by clicking the edit button on the top title\n ###Have fun!`
+        md: `#Welcome to Starship\n This is a new panel\n You can edit it by clicking the edit button on the top title\n ###Have fun!`,
+        justifyContent: "left",
+        alignItems: "top",
+        fontSize: '1.2rem',
+        fontWeight: '500',
     },
 
     table: {

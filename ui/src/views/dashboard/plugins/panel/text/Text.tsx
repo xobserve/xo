@@ -7,9 +7,8 @@ import { replaceWithVariables } from "utils/variable"
 
 
 const TextPanel = (props: PanelProps) => {
-    console.log(props)
-    return (<Box px="2">
-        <MarkdownRender md={replaceWithVariables(props.panel.plugins.text?.md ?? "", variables)} width="100%"/>
+    return (<Box px="2" height="100%" id="text-panel" display="flex" alignItems={props.panel.plugins.text.alignItems} justifyContent={props.panel.plugins.text.justifyContent} >
+        <MarkdownRender fontSize={props.panel.plugins.text.fontSize} fontWeight={props.panel.plugins.text.fontWeight} md={replaceWithVariables(props.panel.plugins.text?.md ?? "", variables)} width="100%"/>
     </Box>)
 }
 

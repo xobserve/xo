@@ -55,7 +55,12 @@ export interface PanelEditorProps {
 export interface PanelPlugins {
     text?: {
         md?: string
+        justifyContent: "center" | "left" | "right"
+        alignItems: "center" | "top" | "bottom"
+        fontSize:  string,
+        fontWeight: string,
     }
+
     graph?: GraphSettings
     table?: TableSettings
     nodeGraph?: NodeGraphSettings

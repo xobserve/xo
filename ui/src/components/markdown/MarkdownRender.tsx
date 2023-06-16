@@ -8,13 +8,14 @@ import {  chakra, Flex, PropsOf } from '@chakra-ui/react';
 type Props = PropsOf<typeof chakra.div> & {
   md: string
   fontSize?: string
+  fontWeight?: string
   scroll?: boolean
   enableToc?: boolean
 }
 
 const ChakraMarkdown = chakra(Markdown)
 
-export function MarkdownRender({ md, fontSize,enableToc = false, ...rest }: Props) {
+export function MarkdownRender({ md, fontSize,fontWeight=500,enableToc = false, ...rest }: Props) {
   const rootRef = useRef<HTMLDivElement>();
   const [renderMd, setRenderMd] = useState(md)
   useEffect(() => {
@@ -30,7 +31,7 @@ export function MarkdownRender({ md, fontSize,enableToc = false, ...rest }: Prop
       <ChakraMarkdown
         children={renderMd}
         {...rest}
-        style={{ height: '100%', fontSize: fontSize ?? '1.05rem', lineHeight: '1.7' }}
+        style={{ height: '100%', fontSize: fontSize ?? '1.05rem', fontWeight: fontWeight, lineHeight: '1.7' }}
         className="markdown-render"
         options={{
           overrides: {
