@@ -26,7 +26,7 @@ const BorderBox12 = forwardRef(({ children, className, style, color = [], backgr
   const classNames = useMemo(() => classnames('dv-border-box-12', className), [
     className
   ])
-
+  
   return (
     <Box className={classNames} style={style} ref={domRef} sx={cssStyles}>
       <svg className='dv-border-svg-container' width={width} height={height}>

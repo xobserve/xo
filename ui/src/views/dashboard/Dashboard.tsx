@@ -1,6 +1,6 @@
 import { Box, useToast } from "@chakra-ui/react"
 import PageContainer from "layouts/page-container"
-import { useCallback, useEffect, useState } from "react"
+import { useCallback, useEffect, useRef, useState } from "react"
 import { Dashboard, Panel } from "types/dashboard"
 import { requestApi } from "utils/axios/request"
 import DashboardHeader from "src/views/dashboard/DashboardHeader"
@@ -12,13 +12,17 @@ import { Variable } from "types/variable"
 import { setVariableSelected } from "src/views/variables/Variables"
 import { prevQueries, prevQueryData } from "src/views/dashboard/grid/PanelGrid"
 import { unstable_batchedUpdates } from "react-dom"
-import { dispatch } from 'use-bus'
-import { TimeChangedEvent, VariableChangedEvent } from "src/data/bus-events"
+import useBus, { dispatch } from 'use-bus'
+import { MiniSidemenuEvent, TimeChangedEvent, VariableChangedEvent } from "src/data/bus-events"
 
 import { useImmer } from "use-immer"
 import { setAutoFreeze } from "immer";
 import { initPanelPlugins } from "src/data/panel/initPlugins"
 import { initPanelStyles } from "src/data/panel/initStyles"
+import Border from "components/largescreen/components/Border"
+import storage from "utils/localStorage"
+import { SidemenuMinimodeKey } from "src/data/storage-keys"
+import useMiniMode from "hooks/useMiniMode"
  
 
 
@@ -133,14 +137,17 @@ const DashboardWrapper = ({dashboardId}) => {
         }
         setFullscreen(!fullscreen)
     }
-    
+
+    const headerHeight = fullscreen ? '0px' : (visibleVars?.length > 0 ? "67px" : "38px")
     return (
         <>
             <PageContainer fullscreen={fullscreen} bg={dashboard?.data.styles.bgEnabled ? dashboard?.data.styles?.bg: null}>
                 {dashboard && <Box pl="6px" pr="6px" width="100%">
                     <DashboardHeader fullscreen={fullscreen} onFullscreenChange={onFullscreenChange} dashboard={dashboard} onTimeChange={t => {dispatch({type:  TimeChangedEvent,data: t});setTimeRange(t)}} timeRange={timeRange}  onChange={onDashbardChange} />
-                    <Box mt={fullscreen ? 0 : (visibleVars?.length > 0 ? "67px" : "38px")} py="2">
-                        {dashboard.data.panels?.length > 0 && <DashboardGrid dashboard={dashboard} onChange={onDashbardChange} />}
+                    <Box id="dashboard-wrapper" mt={headerHeight} py="2" width="100%">
+                        <DashboardBorder border={dashboard.data.styles.border} fullscreen={fullscreen} />
+                        {dashboard.data.panels?.length > 0 &&<DashboardGrid dashboard={dashboard} onChange={onDashbardChange} />}
+                      
                     </Box>
                 </Box>}
             </PageContainer>
@@ -150,6 +157,29 @@ const DashboardWrapper = ({dashboardId}) => {
 }
 
 export default DashboardWrapper
+
+const DashboardBorder = ({border,fullscreen}) => {
+    const [height, setHeight] = useState(0)
+    const miniMode = useMiniMode()
+    const ref = useRef(null)
+    useEffect(() => {
+        ref.current = setInterval(() => {
+            const ele = document.getElementById("dashboard-grid")
+            const h = ele?.offsetHeight + 10
+            setHeight(h)
+        },300)
+        return () =>{
+            clearInterval(ref.current)
+        }
+    },[])
+
+
+    return (
+        <>
+        {height > 0 && <Box position="absolute" width={fullscreen ? "100%" : `calc(100% - ${miniMode? 60 : 150}px)`} height={height} id="dashboard-border"><Border width="100%" height="100%" border={border}><Box height="100%" width="100%"></Box></Border></Box>}
+        </>
+    )
+}
 
 
 

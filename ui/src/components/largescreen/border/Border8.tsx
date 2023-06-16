@@ -27,6 +27,7 @@ const BorderBox8 = forwardRef((
   }: BorderBoxProps,
   ref
 ) => {
+    console.log("here33333:",ref)
   const { width, height, domRef } = useAutoResize(ref)
 
   const [{ path, gradient, mask }] = useState(() => {
@@ -53,8 +54,9 @@ const BorderBox8 = forwardRef((
     className
   ])
 
+  
   return (
-    <Box className={classNames} style={style} ref={domRef} sx={cssStyles}>
+    <Box key={new Date().getTime()} className={classNames} style={style} ref={domRef} sx={cssStyles}>
       <svg className='dv-border-svg-container' width={width} height={height}>
         <defs>
           <path id={path} d={pathD} fill='transparent' />

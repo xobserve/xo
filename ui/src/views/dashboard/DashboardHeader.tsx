@@ -9,7 +9,7 @@ import { useRouter } from "next/router"
 import { memo, useEffect, useRef, useState } from "react"
 import { FaRegClock, FaTv } from "react-icons/fa"
 import { MdSync } from "react-icons/md"
-import { MiniSidemenuEvent, VariableChangedEvent } from "src/data/bus-events"
+import {  VariableChangedEvent } from "src/data/bus-events"
 import ReserveUrls from "src/data/reserve-urls"
 import { Dashboard } from "types/dashboard"
 import { Team } from "types/teams"
@@ -21,7 +21,7 @@ import AddPanel from "./AddPanel"
 import { variables } from "./Dashboard"
 import DashboardSave from "./DashboardSave"
 import DashboardSettings from "./settings/DashboardSettings"
-import { SidemenuMinimodeKey } from "src/data/storage-keys"
+import useMiniMode from "hooks/useMiniMode"
 
 interface HeaderProps {
     dashboard: Dashboard
@@ -32,12 +32,11 @@ interface HeaderProps {
     onFullscreenChange: any
 }
 const DashboardHeader = memo(({ dashboard, onTimeChange, timeRange, onChange,fullscreen,onFullscreenChange }: HeaderProps) => {
-    const toast = useToast()
     const router = useRouter()
     const [variablesChanged, setVariablesChanged] = useState(0)
     const [refresh, setRefresh] = useState(0)
     const [team, setTeam] = useState<Team>(null)
-    const [miniMode, setMiniMode] = useState(storage.get(SidemenuMinimodeKey)??true)
+    const miniMode = useMiniMode()
     useEffect(() => {
         getTeam()
     }, [])
@@ -84,13 +83,6 @@ const DashboardHeader = memo(({ dashboard, onTimeChange, timeRange, onChange,ful
         [variablesChanged]
     )
     
-    useBus(
-        (e) => { return e.type == MiniSidemenuEvent },
-        (e) => {
-            setMiniMode(e.data)
-        }
-    )
-
     return (
         <Box display={fullscreen ? "none" : "block"} py="1" width={`calc(100% - ${miniMode ? 76 : 148}px)`} position="fixed" bg={dashboard.data.styles?.bg ? 'transparent' : 'var(--chakra-colors-chakra-body-bg)'} zIndex={1}>
             {team &&

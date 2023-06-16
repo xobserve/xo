@@ -25,6 +25,7 @@ export interface DashboardData {
     styles?: {
         bg?: string
         bgEnabled?: boolean
+        border?: string
     }
 }
 

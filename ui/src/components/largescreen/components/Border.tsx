@@ -12,9 +12,11 @@ import BorderBox6 from "components/largescreen/border/Border6"
 import BorderBox7 from "components/largescreen/border/Border7"
 import BorderBox8 from "components/largescreen/border/Border8"
 import BorderBox9 from "components/largescreen/border/Border9"
+import { useRef } from "react"
 import { PanelBorderType } from "types/panel/styles"
 
 const Border = ({ border, children,width,height }) => {
+    const ref = useRef()
     switch (border) {
         case PanelBorderType.None:
             return <Box height={height} width={width}>{children}</Box>
@@ -33,7 +35,7 @@ const Border = ({ border, children,width,height }) => {
         case PanelBorderType.Border7:
             return <BorderBox7 style={{width,height}}>{children}</BorderBox7>
         case PanelBorderType.Border8:
-            return <BorderBox8 style={{width,height}}>{children}</BorderBox8>
+            return <BorderBox8 style={{width,height}} ref={ref}>{children}</BorderBox8>
         case PanelBorderType.Border9:
             return <BorderBox9 style={{width,height}}>{children}</BorderBox9>
         case PanelBorderType.Border10:
@@ -51,3 +53,4 @@ const Border = ({ border, children,width,height }) => {
 
 
 export default Border
+

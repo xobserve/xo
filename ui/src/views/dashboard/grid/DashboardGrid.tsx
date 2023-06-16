@@ -8,6 +8,7 @@ import PanelGrid from "./PanelGrid";
 import { memo, useEffect } from "react";
 import EditPanel from "../edit-panel/EditPanel";
 import uPlot from "uplot";
+
 import { useSearchParam } from "react-use";
 
 
@@ -93,7 +94,7 @@ const DashboardGrid = memo((props: GridProps) => {
     let mooSync = dashboard.data.sharedTooltip ? uPlot.sync(dashboard.id) : null
 
 
-    return (<>
+    return (<Box height="fit-content" id="dashboard-grid">
         {/* SizedReactLayoutGrid will force React to rebuild all the panels, so it's not performant here */}
         {!edit && <SizedReactLayoutGrid
             className="layout"
@@ -136,7 +137,7 @@ const DashboardGrid = memo((props: GridProps) => {
             }
         </SizedReactLayoutGrid>}
         <EditPanel dashboard={dashboard} onChange={onChange} />
-    </>)
+    </Box>)
 })
 
 export default DashboardGrid
