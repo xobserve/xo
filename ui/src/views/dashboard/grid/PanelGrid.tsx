@@ -26,7 +26,7 @@ import { run_jaeger_query } from "../plugins/datasource/jaeger/query_runner";
 import NodeGraphPanel from "../plugins/panel/nodeGraph/NodeGraph";
 import { Portal } from "components/portal/Portal";
 import BorderBox10 from "components/largescreen/border/Border10";
-import PanelBorder from "../../../components/largescreen/components/PanelBorder";
+import PanelBorder from "../../../components/largescreen/components/Border";
 import Decoration1 from "components/largescreen/decoration/Decoration1";
 import Decoration3 from "components/largescreen/decoration/Decoration3";
 import Decoration2 from "components/largescreen/decoration/Decoration2";
@@ -34,7 +34,7 @@ import Decoration6 from "components/largescreen/decoration/Decoration6";
 import Decoration7 from "components/largescreen/decoration/Decoration7";
 import Decoration11 from "components/largescreen/decoration/Decoration11";
 import TitleDecoration from "components/largescreen/components/TitleDecoration";
-import PanelDecoration from "components/largescreen/components/PanelDecoration";
+import PanelDecoration from "components/largescreen/components/Decoration";
 
 
 interface PanelGridProps {
@@ -303,7 +303,7 @@ const PanelHeader = ({ queryError, panel, onCopyPanel, onRemovePanel,data }:Pane
                 </Center>
                 <Box display="none"><FaBook className="grid-drag-handle" /></Box>
             </HStack>
-            <PanelDecoration styles={panel.styles}/>
+            <PanelDecoration decoration={panel.styles.decoration}/>
             {isOpen && <DebugPanel panel={panel} isOpen={isOpen} onClose={onClose} data={data} />}
         </>
     )

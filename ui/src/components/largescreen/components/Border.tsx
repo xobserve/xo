@@ -13,7 +13,8 @@ import BorderBox7 from "components/largescreen/border/Border7"
 import BorderBox8 from "components/largescreen/border/Border8"
 import BorderBox9 from "components/largescreen/border/Border9"
 import { PanelBorderType } from "types/panel/styles"
-const PanelBorder = ({ border, children,width,height }) => {
+
+const Border = ({ border, children,width,height }) => {
     switch (border) {
         case PanelBorderType.None:
             return <Box height={height} width={width}>{children}</Box>
@@ -49,4 +50,4 @@ const PanelBorder = ({ border, children,width,height }) => {
 }
 
 
-export default PanelBorder
+export default Border

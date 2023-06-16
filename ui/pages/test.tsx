@@ -210,6 +210,7 @@ export default function () {
 
         const { item } = evt;
         graph.current.setItemState(item, 'selected', true);
+        //@ts-ignore
         item.getEdges().forEach(edge => {
           graph.current.setItemState(edge, 'selected', true);
         })

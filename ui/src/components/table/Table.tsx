@@ -1,3 +1,4 @@
+//@ts-nocheck
 import React, { useEffect } from 'react'
 import { useTable, useFilters, useGlobalFilter,  useSortBy, usePagination } from 'react-table'
 

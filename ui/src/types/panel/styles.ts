@@ -5,15 +5,7 @@
 // /></Box>
 export interface PanelStyles {
     border?: string
-    decoration: {
-        type: PanelDecorationType
-        width: string
-        height: string
-        top:string
-        left:string
-        justifyContent: "left" | "center" | "right"
-        reverse: boolean
-    }
+    decoration: DecorationStyles
     title: {
         decoration: {
             type: PanelTitleDecorationType
@@ -31,7 +23,15 @@ export interface PanelStyles {
     }
 }
 
-
+export interface DecorationStyles {
+    type: PanelDecorationType
+    width: string
+    height: string
+    top:string
+    left:string
+    justifyContent: "left" | "center" | "right"
+    reverse: boolean
+}
 export enum PanelDecorationType {
     None = 'None',
     Decoration1 = 'Decoration1',
