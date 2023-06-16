@@ -1,15 +1,25 @@
 
+
+// <Box display="flex" justifyContent="right">
+// <Decoration6 style={{height: '20px',width:"100%",position:"absolute",top:"null",right:"null",left:"null"}} 
+// /></Box>
 export interface PanelStyles {
-    transparent?: boolean
-    showBorder?: boolean
     border?: string
-    decoration?: string
-    title?: {
-        decoration?: {
-            type?: PanelTitleDecorationType
-            width?: string
-            height?: string
-            margin?: string
+    decoration: {
+        type: PanelDecorationType
+        width: string
+        height: string
+        top:string
+        left:string
+        justifyContent: "left" | "center" | "right"
+        reverse: boolean
+    }
+    title: {
+        decoration: {
+            type: PanelTitleDecorationType
+            width: string
+            height: string
+            margin: string
         }
         fontSize: string
         fontWeight: string
@@ -19,6 +29,21 @@ export interface PanelStyles {
         paddingLeft:string
         paddingRight: string
     }
+}
+
+
+export enum PanelDecorationType {
+    None = 'None',
+    Decoration1 = 'Decoration1',
+    Decoration2 = 'Decoration2',
+    Decoration3 = 'Decoration3',
+    Decoration4 = 'Decoration4',
+    Decoration5 = 'Decoration5',
+    Decoration6 = 'Decoration6',
+    Decoration8 = 'Decoration8',
+    Decoration9 = 'Decoration9',
+    Decoration10 = 'Decoration10',
+    Decoration12 = 'Decoration12',
 }
 
 export enum PanelTitleDecorationType {

@@ -3,7 +3,7 @@ import { ColorPicker } from "components/color-picker"
 import { useEffect, useLayoutEffect, useMemo, useState } from "react"
 import customColors from "src/theme/colors"
 import { Panel } from "types/dashboard"
-import { PanelBorderType, PanelTitleDecorationType } from "types/panel/styles"
+import { PanelBorderType, PanelDecorationType, PanelTitleDecorationType } from "types/panel/styles"
 import PanelAccordion from "./Accordion"
 import { EditorInputItem } from "../../../components/editor/EditorItem"
 import PanelEditItem from "./PanelEditItem"
@@ -95,6 +95,49 @@ const PanelStyles = ({ panel, onChange }: Props) => {
                 <PanelEditItem title="padding left">
                     <EditorInputItem type="input" value={panel.styles.title?.paddingLeft} onChange={v => onChange(panel => {
                         panel.styles.title.paddingLeft = v
+                    })} />
+                </PanelEditItem>
+            </PanelAccordion>
+
+            <PanelAccordion title="Panel decoration">
+                <PanelEditItem title="type">
+                    <Select size="sm" value={panel.styles?.decoration.type} onChange={e => {
+                        const v = e.currentTarget.value
+                        onChange(panel => {
+                            panel.styles.decoration.type = v
+                        })
+                    }}>
+                        {
+                            Object.keys(PanelDecorationType).map(key => <option value={PanelDecorationType[key]}>{key}</option>)
+                        }
+                    </Select>
+                </PanelEditItem>
+                <PanelEditItem title="reverse" desc="only a few decorations support reverse mode">
+                    <Switch defaultChecked={panel.styles.decoration.reverse} onChange={e => {
+                        const checked = e.currentTarget.checked
+                        onChange(panel => {
+                            panel.styles.decoration.reverse = checked
+                        })
+                    }}/>
+                </PanelEditItem>
+                <PanelEditItem title="width">
+                    <EditorInputItem type="input" value={panel.styles.decoration.width} onChange={v => onChange(panel => {
+                        panel.styles.decoration.width = v
+                    })} />
+                </PanelEditItem>
+                <PanelEditItem title="height">
+                    <EditorInputItem type="input" value={panel.styles.decoration.height} onChange={v => onChange(panel => {
+                        panel.styles.decoration.height = v
+                    })} />
+                </PanelEditItem>
+                <PanelEditItem title="top">
+                    <EditorInputItem type="input" value={panel.styles.decoration.top} onChange={v => onChange(panel => {
+                        panel.styles.decoration.top = v
+                    })} />
+                </PanelEditItem>
+                <PanelEditItem title="left">
+                    <EditorInputItem type="input" value={panel.styles.decoration.left} onChange={v => onChange(panel => {
+                        panel.styles.decoration.left = v
                     })} />
                 </PanelEditItem>
             </PanelAccordion>

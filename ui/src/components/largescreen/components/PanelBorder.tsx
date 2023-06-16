@@ -39,7 +39,7 @@ const PanelBorder = ({ border, children,width,height }) => {
             return <BorderBox10 style={{width,height}}>{children}</BorderBox10>
         case PanelBorderType.Border11:
             return <BorderBox11 style={{width,height}}>{children}</BorderBox11>
-        case PanelBorderType:
+        case PanelBorderType.Border12:
             return <BorderBox12 style={{width,height}}>{children}</BorderBox12>
         case PanelBorderType.Border13:
             return <BorderBox13 style={{width,height}}>{children}</BorderBox13>

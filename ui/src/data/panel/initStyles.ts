@@ -1,4 +1,4 @@
-import { PanelStyles, PanelTitleDecorationType } from "types/panel/styles";
+import { PanelDecorationType, PanelStyles, PanelTitleDecorationType } from "types/panel/styles";
 
 export const initPanelStyles: PanelStyles = {
     border: 'normal',
@@ -16,5 +16,14 @@ export const initPanelStyles: PanelStyles = {
         paddingBottom: "0px",
         paddingLeft: "0px",
         paddingRight: "0px",
+    },
+    decoration: {
+        type: PanelDecorationType.None,
+        width: '100%',
+        height: "20px",
+        top: '-30px',
+        left: '',
+        justifyContent: "center",
+        reverse: false
     }
 }

@@ -34,6 +34,7 @@ import Decoration6 from "components/largescreen/decoration/Decoration6";
 import Decoration7 from "components/largescreen/decoration/Decoration7";
 import Decoration11 from "components/largescreen/decoration/Decoration11";
 import TitleDecoration from "components/largescreen/components/TitleDecoration";
+import PanelDecoration from "components/largescreen/components/PanelDecoration";
 
 
 interface PanelGridProps {
@@ -302,7 +303,7 @@ const PanelHeader = ({ queryError, panel, onCopyPanel, onRemovePanel,data }:Pane
                 </Center>
                 <Box display="none"><FaBook className="grid-drag-handle" /></Box>
             </HStack>
-            <Box display="flex" justifyContent="right"><Decoration6 style={{height: '20px',width:"100%",position:"absolute",top:"null",right:"null",left:"null"}} /></Box>
+            <PanelDecoration styles={panel.styles}/>
             {isOpen && <DebugPanel panel={panel} isOpen={isOpen} onClose={onClose} data={data} />}
         </>
     )
