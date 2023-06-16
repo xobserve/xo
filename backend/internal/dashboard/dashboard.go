@@ -79,6 +79,8 @@ func SaveDashboard(c *gin.Context) {
 		}
 	}
 
+	historyCh <- dash
+
 	c.JSON(200, common.RespSuccess(dash.Id))
 }
 

@@ -1,6 +1,6 @@
-CREATE DATABASE starship;
+CREATE DATABASE datav;
 
-USE starship;
+USE datav;
 
 CREATE TABLE IF NOT EXISTS user (
     id INTEGER PRIMARY KEY AUTO_INCREMENT,
@@ -90,3 +90,12 @@ CREATE TABLE IF NOT EXISTS dashboard (
 CREATE INDEX  dashboard_owned_by ON dashboard (owned_by);
 
 CREATE INDEX  dashboard_created_by ON dashboard (created_by);
+
+CREATE TABLE IF NOT EXISTS dashboard_history (
+    dashboard_id VARCHAR(40),
+    version DATETIME,
+    history MEDIUMTEXT
+);
+
+
+CREATE UNIQUE INDEX  dashboard_id_version ON dashboard_history (dashboard_id,version);

@@ -47,6 +47,8 @@ func (s *Server) Start() error {
 		logger.Crit("初始化用户模块失败", "error", err)
 	}
 
+	go dashboard.InitHistory()
+
 	go func() {
 		router := gin.New()
 		router.Use(Cors())
