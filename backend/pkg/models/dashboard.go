@@ -30,7 +30,7 @@ func QueryDashboard(id string) (*Dashboard, error) {
 	dash := &Dashboard{}
 
 	var rawJSON []byte
-	err := db.Conn.QueryRow("SELECT title,data,owned_by FROM dashboard WHERE id = ?", id).Scan(&dash.Title, &rawJSON, &dash.OwnedBy)
+	err := db.Conn.QueryRow("SELECT title,data,owned_by,updated FROM dashboard WHERE id = ?", id).Scan(&dash.Title, &rawJSON, &dash.OwnedBy, &dash.Updated)
 	if err != nil {
 		return nil, err
 	}

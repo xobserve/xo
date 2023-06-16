@@ -5,7 +5,7 @@ import { GRID_CELL_HEIGHT, GRID_CELL_VMARGIN, GRID_COLUMN_COUNT } from "src/data
 import { updateGridPos } from "utils/dashboard/panel";
 import { Box } from "@chakra-ui/react";
 import PanelGrid from "./PanelGrid";
-import { memo, useEffect } from "react";
+import { memo, useEffect, useMemo } from "react";
 import EditPanel from "../edit-panel/EditPanel";
 import uPlot from "uplot";
 
@@ -24,7 +24,7 @@ const DashboardGrid = memo((props: GridProps) => {
 
     const { dashboard, onChange} = props
 
-    const SizedReactLayoutGrid = sizeMe({ monitorWidth: true })(GridWrapper);
+    const SizedReactLayoutGrid = useMemo(() => sizeMe({ monitorWidth: true })(GridWrapper), []) ;
 
 
     const onLayoutChange = (newLayout: ReactGridLayout.Layout[]) => {

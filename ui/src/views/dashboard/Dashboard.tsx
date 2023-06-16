@@ -5,7 +5,7 @@ import { Dashboard, Panel } from "types/dashboard"
 import { requestApi } from "utils/axios/request"
 import DashboardHeader from "src/views/dashboard/DashboardHeader"
 import DashboardGrid from "src/views/dashboard/grid/DashboardGrid"
-import { cloneDeep, concat, defaults, defaultsDeep, find } from "lodash"
+import { clone, cloneDeep, concat, defaults, defaultsDeep, find } from "lodash"
 import { TimeRange } from "types/time"
 import { getInitTimeRange } from "components/TimePicker"
 import { Variable } from "types/variable"
@@ -13,7 +13,7 @@ import { setVariableSelected } from "src/views/variables/Variables"
 import { prevQueries, prevQueryData } from "src/views/dashboard/grid/PanelGrid"
 import { unstable_batchedUpdates } from "react-dom"
 import useBus, { dispatch } from 'use-bus'
-import { MiniSidemenuEvent, TimeChangedEvent, VariableChangedEvent } from "src/data/bus-events"
+import { MiniSidemenuEvent, PreviewDashboardEvent, StopPreviewDashboardEvent, TimeChangedEvent, VariableChangedEvent } from "src/data/bus-events"
 
 import { useImmer } from "use-immer"
 import { setAutoFreeze } from "immer";
@@ -51,6 +51,15 @@ const DashboardWrapper = ({dashboardId}) => {
         }
     }, [])
 
+    useBus(
+        (e) => { return e.type == PreviewDashboardEvent },
+        (e) => {
+            console.log("here33333q111:")
+            const dash = initDashboard(e.data)
+            setDashboard(clone(dash))
+        }
+    )
+
     useEffect(() => {
         if (dashboard) {
             setTimeout(() => {
@@ -75,20 +84,25 @@ const DashboardWrapper = ({dashboardId}) => {
     const load = async () => {
         const res = await requestApi.get(`/dashboard/byId/${dashboardId}`)
         const res0 = await requestApi.get(`/variable/all`)
-        res.data.data.panels.forEach((panel:Panel) => {
+        const dash = initDashboard(res.data)
+        unstable_batchedUpdates(() => {
+            setDashboard(cloneDeep(dash))
+            setGVariables(res0.data)
+            setCombinedVariables(res0.data)
+        })
+    }
+
+    const initDashboard = (dash) => {
+        dash.data.panels.forEach((panel:Panel) => {
             // console.log("33333 before",cloneDeep(panel.plugins[panel.type]))
             panel.plugins[panel.type] = defaultsDeep(panel.plugins[panel.type], initPanelPlugins[panel.type])
             panel.styles = defaultsDeep(panel.styles, initPanelStyles)
             // console.log("33333 after",cloneDeep(panel.plugins[panel.type]),initPanelSettings[panel.type])
         })
-        res.data = defaultsDeep(res.data, initDashboard)
-        unstable_batchedUpdates(() => {
-        setDashboard(cloneDeep(res.data))
-        setGVariables(res0.data)
-        setCombinedVariables(res0.data)
-        })
-    }
 
+        const d1 = defaultsDeep(dash, initDashboard)
+        return d1
+    }
 
     // combine variables which defined separately in dashboard and global
     const setCombinedVariables = (gv?) => {

@@ -129,7 +129,6 @@ export const PanelComponent = ({ dashboard, panel, onRemovePanel, width, height,
                 let data = []
                 let needUpdate = false
                 for (const q0 of ds.queries) {
-                    console.log(q0)
                     const metrics = replaceWithVariables(q0.metrics, variables)
                     const q = { ...q0, metrics }
                     const id = queryId + q.id

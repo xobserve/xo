@@ -56,7 +56,7 @@ func InitHistory() {
 
 func GetHistory(c *gin.Context) {
 	id := c.Param("id")
-	rows, err := db.Conn.Query("SELECT history FROM dashboard_history WHERE dashboard_id=?", id)
+	rows, err := db.Conn.Query("SELECT history,version FROM dashboard_history WHERE dashboard_id=? ORDER BY version DESC", id)
 	if err != nil {
 		logger.Warn("query dashboard history error", "error,err")
 		c.JSON(http.StatusInternalServerError, common.RespError(e.Internal))
@@ -66,7 +66,8 @@ func GetHistory(c *gin.Context) {
 	dashboards := make([]*models.Dashboard, 0)
 	for rows.Next() {
 		var data []byte
-		rows.Scan(&data)
+		var t *time.Time
+		rows.Scan(&data, &t)
 
 		var dash *models.Dashboard
 		err := json.Unmarshal(data, &dash)
@@ -74,7 +75,7 @@ func GetHistory(c *gin.Context) {
 			logger.Warn("unmarshal dashboard history error", "error", err)
 			continue
 		}
-
+		dash.Updated = t
 		dashboards = append(dashboards, dash)
 	}
 
