@@ -59,7 +59,7 @@ const DashboardWrapper = ({dashboardId}) => {
     useEffect(() => {
         if (dashboard) {
             setTimeout(() => {
-                if (dashboard?.data.styles?.bg) {
+                if (dashboard.data.styles?.bgEnabled && dashboard?.data.styles?.bg) {
                     let bodyStyle = document.body.style
                     bodyStyle.background = dashboard?.data.styles?.bg
                     bodyStyle.backgroundSize = "cover"

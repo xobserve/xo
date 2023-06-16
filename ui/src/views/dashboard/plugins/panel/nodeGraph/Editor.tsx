@@ -7,9 +7,10 @@ import * as Icons from 'react-icons/fa'
 import { MdEdit } from "react-icons/md"
 import { initPanelPlugins } from "src/data/panel/initPlugins"
 import PanelAccordion from "src/views/dashboard/edit-panel/Accordion"
-import { EditorNumberItem, EditorSliderItem } from "src/views/dashboard/edit-panel/EditorItem"
+import { EditorNumberItem, EditorSliderItem } from "components/editor/EditorItem"
 import PanelEditItem from "src/views/dashboard/edit-panel/PanelEditItem"
-import { NodeGraphIcon, NodeGraphMenuItem, Panel, PanelEditorProps } from "types/dashboard"
+import {  Panel, PanelEditorProps } from "types/dashboard"
+import { NodeGraphIcon, NodeGraphMenuItem } from "types/panel/plugins"
 import { useImmer } from "use-immer"
 import { isJSON } from "utils/is"
 

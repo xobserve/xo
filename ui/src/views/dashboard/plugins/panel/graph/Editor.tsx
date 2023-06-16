@@ -4,7 +4,7 @@ import PanelEditItem from "src/views/dashboard/edit-panel/PanelEditItem"
 import RadionButtons from "components/RadioButtons"
 import { UnitPicker } from "components/unit"
 import { PanelEditorProps } from "types/dashboard"
-import { EditorInputItem, EditorNumberItem, EditorSliderItem } from "src/views/dashboard/edit-panel/EditorItem"
+import { EditorInputItem, EditorNumberItem, EditorSliderItem } from "components/editor/EditorItem"
 
 
 const GraphPanelEditor = ({ panel, onChange }: PanelEditorProps) => {

@@ -1,6 +1,6 @@
 import { Alert, NumberDecrementStepper, NumberIncrementStepper, NumberInput, NumberInputField, NumberInputStepper, Switch, Text, Textarea } from "@chakra-ui/react"
 import PanelAccordion from "src/views/dashboard/edit-panel/Accordion"
-import { EditorInputItem, EditorNumberItem } from "src/views/dashboard/edit-panel/EditorItem"
+import { EditorInputItem, EditorNumberItem } from "components/editor/EditorItem"
 import PanelEditItem from "src/views/dashboard/edit-panel/PanelEditItem"
 import {  PanelEditorProps } from "types/dashboard"
 

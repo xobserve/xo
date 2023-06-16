@@ -24,6 +24,7 @@ export interface DashboardData {
     tags?: string[]
     styles?: {
         bg?: string
+        bgEnabled?: boolean
     }
 }
 

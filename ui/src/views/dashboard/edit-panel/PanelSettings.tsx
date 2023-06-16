@@ -2,7 +2,7 @@ import { Box, Center, Image, Input, SimpleGrid, Switch, Text, Textarea } from "@
 import { upperFirst } from "lodash"
 import { Panel, PanelType } from "types/dashboard"
 import PanelAccordion from "./Accordion"
-import { EditorInputItem } from "./EditorItem"
+import { EditorInputItem } from "../../../components/editor/EditorItem"
 import PanelEditItem from "./PanelEditItem"
 
 interface Props {

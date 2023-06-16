@@ -5,7 +5,7 @@ import customColors from "src/theme/colors"
 import { Panel } from "types/dashboard"
 import { PanelBorderType, PanelTitleDecorationType } from "types/panel/styles"
 import PanelAccordion from "./Accordion"
-import { EditorInputItem } from "./EditorItem"
+import { EditorInputItem } from "../../../components/editor/EditorItem"
 import PanelEditItem from "./PanelEditItem"
 
 interface Props {
