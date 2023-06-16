@@ -12,6 +12,8 @@ export interface PanelStyles {
             margin?: string
         }
         fontSize: string
+        fontWeight: string
+        color: string
         paddingTop:string
         paddingBottom:string 
         paddingLeft:string

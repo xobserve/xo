@@ -9,7 +9,9 @@ export const initPanelStyles: PanelStyles = {
             height: '50px',
             margin: '10px'
         },
-        fontSize: '16px',
+        fontSize: '1rem',
+        fontWeight: '500',
+        color: 'inherit',
         paddingTop: '0px',
         paddingBottom: "0px",
         paddingLeft: "0px",

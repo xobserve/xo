@@ -284,7 +284,7 @@ const PanelHeader = ({ queryError, panel, onCopyPanel, onRemovePanel,data }:Pane
                             _focus={{ border: null }}
                             onClick={e => e.stopPropagation()}
                         >
-                            <Center width="100%">{!isEmpty(title) ? <Box cursor="pointer" className="hover-bordered" paddingTop={panel.styles.title.paddingTop} paddingBottom={panel.styles.title.paddingBottom} paddingLeft={panel.styles.title.paddingLeft} paddingRight={panel.styles.title.paddingRight} width="100%" fontSize={panel.styles.title.fontSize}><TitleDecoration styles={panel.styles}>{title}</TitleDecoration></Box> : <Box width="100px">&nbsp;</Box>}</Center>
+                            <Center width="100%">{!isEmpty(title) ? <Box cursor="pointer" className="hover-bordered" paddingTop={panel.styles.title.paddingTop} paddingBottom={panel.styles.title.paddingBottom} paddingLeft={panel.styles.title.paddingLeft} paddingRight={panel.styles.title.paddingRight} width="100%" fontSize={panel.styles.title.fontSize} fontWeight={panel.styles.title.fontWeight} color={panel.styles.title.color}><TitleDecoration styles={panel.styles}>{title}</TitleDecoration></Box> : <Box width="100px">&nbsp;</Box>}</Center>
                         </MenuButton>
                         <Portal>
                             <MenuList p="1">
