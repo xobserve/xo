@@ -1,10 +1,11 @@
-import { Button, Input, NumberInput, NumberInputField, Select, Switch, useColorMode, useColorModeValue } from "@chakra-ui/react"
+import { Button, Input, NumberInput, NumberInputField, Select, Switch, Textarea, useColorMode, useColorModeValue } from "@chakra-ui/react"
 import { ColorPicker } from "components/color-picker"
 import { useEffect, useLayoutEffect, useMemo, useState } from "react"
 import customColors from "src/theme/colors"
 import { Panel } from "types/dashboard"
 import { PanelBorderType, PanelTitleDecorationType } from "types/panel"
 import PanelAccordion from "./Accordion"
+import { EditorInputItem } from "./EditorItem"
 import PanelEditItem from "./PanelEditItem"
 
 interface Props {
@@ -104,41 +105,5 @@ const PanelStyles = ({ panel, onChange }: Props) => {
 export default PanelStyles
 
 
-interface NumberInputProps {
-    target: Object
-    attr: string
-    onChange: any
-    title: string
-    desc?: string
-    min: number
-    max: number
-}
 
-const NumberInputItem = ({ target, attr, onChange, title, desc, min, max }: NumberInputProps) => {
-    const [temp, setTemp] = useState(target[attr].toString())
-    return (
-        <PanelEditItem title={title} desc={desc}>
-            <NumberInput value={temp} min={min} max={max} size="sm" onChange={v => setTemp(v)} onBlur={e => onChange(panel => {
-                target[attr] = Number(temp)
-            })}>
-                <NumberInputField />
-            </NumberInput>
-        </PanelEditItem>
-    )
-}
 
-interface EditorInputProps {
-    type: string
-    value: string
-    onChange: any
-}
-
-const EditorInputItem = ({ value, onChange, type }: EditorInputProps) => {
-    const [temp, setTemp] = useState(value)
-    switch (type) {
-        case "input":
-            return (
-                <Input size="sm" value={temp} onChange={e => setTemp(e.currentTarget.value)} onBlur={() => onChange(temp)} />
-            )
-    }
-}

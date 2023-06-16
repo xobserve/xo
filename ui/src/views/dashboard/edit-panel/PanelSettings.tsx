@@ -2,6 +2,7 @@ import { Box, Center, Image, Input, SimpleGrid, Switch, Text, Textarea } from "@
 import { upperFirst } from "lodash"
 import { Panel, PanelType } from "types/dashboard"
 import PanelAccordion from "./Accordion"
+import { EditorInputItem } from "./EditorItem"
 import PanelEditItem from "./PanelEditItem"
 
 interface Props {
@@ -30,17 +31,17 @@ const PanelSettings = ({ panel, onChange }: Props) => {
 
     return (
         <>
-            <PanelAccordion title="Basic setting">
+            <PanelAccordion title="Basic setting" defaultOpen>
                 <PanelEditItem title="Panel title">
-                    <Input size="sm" value={panel.title} onChange={e => { const v = e.currentTarget.value; onChange(tempPanel => { tempPanel.title = v }) }} />
+                    <EditorInputItem value={panel.title} onChange={v => onChange(tempPanel => { tempPanel.title = v })}   />
                 </PanelEditItem>
                 <PanelEditItem title="Description" desc="give a short description to your panel">
-                    <Textarea size="sm" value={panel.desc} onChange={e => { const v = e.currentTarget.value; onChange(tempPanel => { tempPanel.desc = v }) }} />
+                    <EditorInputItem type="textarea" value={panel.desc} onChange={v => onChange(tempPanel => { tempPanel.desc = v })}   />
                 </PanelEditItem>
             </PanelAccordion>
 
             {/* panel visulization choosing */}
-            <PanelAccordion title="Visualization">
+            <PanelAccordion title="Visualization" defaultOpen>
                 <SimpleGrid columns={2} spacing="2">
                     {
                         Object.keys(PanelType).map((key) => {
