@@ -1,9 +1,10 @@
-import { HStack, Input, NumberDecrementStepper, NumberIncrementStepper, NumberInput, NumberInputField, NumberInputStepper, Select, Slider, SliderFilledTrack, SliderThumb, SliderTrack } from "@chakra-ui/react"
+import { HStack, Select } from "@chakra-ui/react"
 import PanelAccordion from "src/views/dashboard/edit-panel/Accordion"
 import PanelEditItem from "src/views/dashboard/edit-panel/PanelEditItem"
 import RadionButtons from "components/RadioButtons"
 import { UnitPicker } from "components/unit"
 import { PanelEditorProps } from "types/dashboard"
+import { EditorInputItem, EditorNumberItem, EditorSliderItem } from "src/views/dashboard/edit-panel/EditorItem"
 
 
 const GraphPanelEditor = ({ panel, onChange }: PanelEditorProps) => {
@@ -38,20 +39,9 @@ const GraphPanelEditor = ({ panel, onChange }: PanelEditorProps) => {
             {panel.settings.graph.styles.style != "points" &&
                 <>
                     <PanelEditItem title="Line width">
-                        <HStack>
-                            <Slider aria-label='slider-ex-1' value={panel.settings.graph.styles.lineWidth} min={0} max={10} step={1} onChange={v => onChange(panel => {
-                                panel.settings.graph.styles.lineWidth = v
-                            })}
-
-                                onChangeEnd={v => onChange(panel => {
-                                    panel.settings.graph.styles.lineWidth = v
-                                })}>
-                                <SliderTrack>
-                                    <SliderFilledTrack />
-                                </SliderTrack>
-                                <SliderThumb children={panel.settings.graph.styles.lineWidth} fontSize='sm' boxSize='25px' />
-                            </Slider>
-                        </HStack>
+                        <EditorSliderItem value={panel.settings.graph.styles.lineWidth} min={0} max={10} step={1} onChange={v => onChange(panel => {
+                            panel.settings.graph.styles.lineWidth = v
+                        })} />
                     </PanelEditItem>
                     <PanelEditItem title="Fill gradient mode">
                         <RadionButtons options={[{ label: "None", value: "none" }, { label: "Opacity", value: "opacity" }]} value={panel.settings.graph.styles.gradientMode} onChange={v => onChange(panel => {
@@ -59,23 +49,9 @@ const GraphPanelEditor = ({ panel, onChange }: PanelEditorProps) => {
                         })} />
                     </PanelEditItem>
                     <PanelEditItem title="Fill opacity">
-                        <HStack>
-                            <Slider aria-label='slider-ex-1' value={panel.settings.graph.styles.fillOpacity} min={0} max={100} step={1}
-                                onChange={v => onChange(panel => {
-                                    panel.settings.graph.styles.fillOpacity = v
-                                })}
-
-                                onChangeEnd={v => onChange(panel => {
-                                    panel.settings.graph.styles.fillOpacity = v
-                                })}>
-
-
-                                <SliderTrack>
-                                    <SliderFilledTrack />
-                                </SliderTrack>
-                                <SliderThumb children={panel.settings.graph.styles.fillOpacity} fontSize='sm' boxSize='25px' />
-                            </Slider>
-                        </HStack>
+                        <EditorSliderItem value={panel.settings.graph.styles.fillOpacity} min={0} max={100} step={1} onChange={v => onChange(panel => {
+                            panel.settings.graph.styles.fillOpacity = v
+                        })} />
                     </PanelEditItem>
                     <PanelEditItem title="Show points">
                         <RadionButtons options={[{ label: "Auto", value: "auto" }, { label: "Always", value: "always" }, { label: "Never", value: "never" }]} value={panel.settings.graph.styles.showPoints} onChange={v => onChange(panel => {
@@ -84,31 +60,18 @@ const GraphPanelEditor = ({ panel, onChange }: PanelEditorProps) => {
                     </PanelEditItem>
                 </>}
             <PanelEditItem title="Point size">
-                <HStack>
-                    <Slider aria-label='slider-ex-1' value={panel.settings.graph.styles.pointSize} min={1} max={20} step={1}
-                        onChange={v => onChange(panel => {
-                            panel.settings.graph.styles.pointSize = v
-                        })}
-
-                        onChangeEnd={v => onChange(panel => {
-                            panel.settings.graph.styles.pointSize = v
-                        })}>
-                        <SliderTrack>
-                            <SliderFilledTrack />
-                        </SliderTrack>
-                        <SliderThumb children={panel.settings.graph.styles.pointSize} fontSize='sm' boxSize='25px' />
-                    </Slider>
-                </HStack>
+                <EditorSliderItem value={panel.settings.graph.styles.pointSize} min={1} max={20} step={1} onChange={v => onChange(panel => {
+                    panel.settings.graph.styles.pointSize = v
+                })} />
             </PanelEditItem>
         </PanelAccordion>
         <PanelAccordion title="Axis">
             <PanelEditItem title="Label">
-                <Input value={panel.settings.graph.axis.label} onChange={(e) => {
-                    const v = e.currentTarget.value
+                <EditorInputItem value={panel.settings.graph.axis.label} onChange={v => 
                     onChange(panel => {
                         panel.settings.graph.axis.label = v
                     })
-                }} />
+                 } />
             </PanelEditItem>
             <PanelEditItem title="Show grid">
                 <RadionButtons options={[{ label: "Show", value: true }, { label: "Hidden", value: false }]} value={panel.settings.graph.axis.showGrid} onChange={v => onChange(panel => {
@@ -142,15 +105,7 @@ const GraphPanelEditor = ({ panel, onChange }: PanelEditorProps) => {
                 } />
             </PanelEditItem>
             <PanelEditItem title="Decimals">
-                <NumberInput value={panel.settings.graph.std.decimals ?? 2} min={0} max={5} step={1} onChange={(_, v) => onChange(panel => {
-                    panel.settings.graph.std.decimals = v
-                })}>
-                    <NumberInputField />
-                    <NumberInputStepper>
-                        <NumberIncrementStepper />
-                        <NumberDecrementStepper />
-                    </NumberInputStepper>
-                </NumberInput>
+                <EditorNumberItem value={panel.settings.graph.std.decimals ?? 2}  min={0} max={5} step={1}  onChange={v => onChange(panel => { panel.settings.graph.std.decimals = v})}/>
             </PanelEditItem>
         </PanelAccordion>
     </>

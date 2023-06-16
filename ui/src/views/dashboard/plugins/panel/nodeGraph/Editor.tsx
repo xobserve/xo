@@ -7,6 +7,7 @@ import * as Icons from 'react-icons/fa'
 import { MdEdit } from "react-icons/md"
 import { initPanelSettings } from "src/data/panel/initPlugins"
 import PanelAccordion from "src/views/dashboard/edit-panel/Accordion"
+import { EditorNumberItem, EditorSliderItem } from "src/views/dashboard/edit-panel/EditorItem"
 import PanelEditItem from "src/views/dashboard/edit-panel/PanelEditItem"
 import { NodeGraphIcon, NodeGraphMenuItem, Panel, PanelEditorProps } from "types/dashboard"
 import { useImmer } from "use-immer"
@@ -19,22 +20,14 @@ const NodeGraphPanelEditor = (props: PanelEditorProps) => {
     return (<>
         <PanelAccordion title="Node">
             <PanelEditItem title="base size">
-                <Slider aria-label='slider-ex-1' value={panel.settings.nodeGraph.node.baseSize} min={20} max={100} step={2}
-                    onChange={v => onChange((panel: Panel) => {
-                        panel.settings.nodeGraph.node.baseSize = v
-                    })}
-
-                    onChangeEnd={v => onChange(panel => {
-                        panel.settings.nodeGraph.node.baseSize = v
-                    })}>
-                    <SliderTrack>
-                        <SliderFilledTrack />
-                    </SliderTrack>
-                    <SliderThumb children={panel.settings.nodeGraph.node.baseSize} fontSize='sm' boxSize='25px' />
-                </Slider>
+                <EditorSliderItem value={panel.settings.nodeGraph.node.baseSize} min={20} max={100} step={2} onChange={v => onChange((panel: Panel) => {
+                    panel.settings.nodeGraph.node.baseSize = v
+                })} />
             </PanelEditItem>
             <PanelEditItem title="max size">
-                <MaxSize {...props} />
+                <EditorNumberItem value={panel.settings.nodeGraph.node.maxSize} min={1} max={5} onChange={v => onChange(panel => {
+                    panel.settings.nodeGraph.node.maxSize = v
+                })} />
             </PanelEditItem>
 
             <IconSetting {...props} />
@@ -44,7 +37,7 @@ const NodeGraphPanelEditor = (props: PanelEditorProps) => {
                     panel.settings.nodeGraph.node.shape = v
                 })} />
             </PanelEditItem>
-            {panel.settings.nodeGraph.node.shape == 'donut' && <DonutColorsSetting {...props} />}    
+            {panel.settings.nodeGraph.node.shape == 'donut' && <DonutColorsSetting {...props} />}
         </PanelAccordion>
 
 
@@ -91,19 +84,9 @@ const NodeGraphPanelEditor = (props: PanelEditorProps) => {
                 </HStack>
             </PanelEditItem>
             <PanelEditItem title="opacity" desc="color opacity of edge">
-                <Slider aria-label='slider-ex-1' value={panel.settings.nodeGraph.edge.opacity} min={0} max={1} step={0.1}
-                    onChange={v => onChange((panel: Panel) => {
-                        panel.settings.nodeGraph.edge.opacity = v
-                    })}
-
-                    onChangeEnd={v => onChange(panel => {
-                        panel.settings.nodeGraph.edge.opacity = v
-                    })}>
-                    <SliderTrack>
-                        <SliderFilledTrack />
-                    </SliderTrack>
-                    <SliderThumb children={panel.settings.nodeGraph.edge.opacity} fontSize='sm' boxSize='25px' />
-                </Slider>
+                <EditorSliderItem value={panel.settings.nodeGraph.edge.opacity} min={0} max={1} step={0.1} onChange={v => onChange((panel: Panel) => {
+                    panel.settings.nodeGraph.edge.opacity = v
+                })} />
             </PanelEditItem>
             <PanelEditItem title="highlight color" desc="when hover or selected">
                 <HStack>
@@ -124,7 +107,7 @@ const NodeGraphPanelEditor = (props: PanelEditorProps) => {
                 </HStack>
             </PanelEditItem>
         </PanelAccordion>
-        
+
 
         <PanelAccordion title="Interaction">
             <PanelEditItem title="tooltip trigger" info={
@@ -150,8 +133,17 @@ const NodeGraphPanelEditor = (props: PanelEditorProps) => {
 
 
         <PanelAccordion title="layout">
-            <LayoutStrength {...props}/>
-            <LayoutGravity {...props}/>
+            <PanelEditItem title="node strength" desc=" The strength of node force. Positive value means repulsive force, negative value means attractive force">
+                <EditorNumberItem value={panel.settings.nodeGraph.layout.nodeStrength} min={100} max={10000} onChange={v => onChange(panel => {
+                    panel.settings.nodeGraph.layout.nodeStrength = v
+                })} /> 
+            </PanelEditItem>
+            <PanelEditItem title="node gravity" desc="The gravity strength to the center for all the nodes. Larger the number, more compact the nodes">
+                <EditorNumberItem value={panel.settings.nodeGraph.layout.gravity} min={0} max={200} onChange={v => onChange(panel => {
+                    panel.settings.nodeGraph.layout.gravity = v
+                })} />
+            </PanelEditItem>
+
         </PanelAccordion>
     </>)
 }
@@ -426,7 +418,7 @@ const MaxSize = ({ panel, onChange }: PanelEditorProps) => {
     const [temp, setTemp] = useState(panel.settings.nodeGraph.node.maxSize.toString())
     return (
         <HStack>
-            <NumberInput value={temp}  min={1} max={5} width="80px" size="sm" onChange={v => setTemp(v)} onBlur={e => onChange(panel => {
+            <NumberInput value={temp} min={1} max={5} width="80px" size="sm" onChange={v => setTemp(v)} onBlur={e => onChange(panel => {
                 panel.settings.nodeGraph.node.maxSize = Number(temp)
             })}>
                 <NumberInputField />
@@ -440,11 +432,11 @@ const LayoutStrength = ({ panel, onChange }: PanelEditorProps) => {
     const [temp, setTemp] = useState(panel.settings.nodeGraph.layout.nodeStrength.toString())
     return (
         <PanelEditItem title="node strength" desc=" The strength of node force. Positive value means repulsive force, negative value means attractive force">
-        <NumberInput value={temp}  min={100} max={10000} width="80px" size="sm" onChange={v => setTemp(v)} onBlur={e => onChange(panel => {
-            panel.settings.nodeGraph.layout.nodeStrength = Number(temp)
-        })}>
-            <NumberInputField />
-        </NumberInput>
+            <NumberInput value={temp} min={100} max={10000} width="80px" size="sm" onChange={v => setTemp(v)} onBlur={e => onChange(panel => {
+                panel.settings.nodeGraph.layout.nodeStrength = Number(temp)
+            })}>
+                <NumberInputField />
+            </NumberInput>
         </PanelEditItem>
     )
 }
@@ -453,11 +445,11 @@ const LayoutGravity = ({ panel, onChange }: PanelEditorProps) => {
     const [temp, setTemp] = useState(panel.settings.nodeGraph.layout.gravity.toString())
     return (
         <PanelEditItem title="node gravity" desc="The gravity strength to the center for all the nodes. Larger the number, more compact the nodes">
-        <NumberInput value={temp}  min={0} max={200} width="80px" size="sm" onChange={v => setTemp(v)} onBlur={e => onChange(panel => {
-            panel.settings.nodeGraph.layout.gravity = Number(temp)
-        })}>
-            <NumberInputField />
-        </NumberInput>
+            <NumberInput value={temp} min={0} max={200} width="80px" size="sm" onChange={v => setTemp(v)} onBlur={e => onChange(panel => {
+                panel.settings.nodeGraph.layout.gravity = Number(temp)
+            })}>
+                <NumberInputField />
+            </NumberInput>
         </PanelEditItem>
     )
 }

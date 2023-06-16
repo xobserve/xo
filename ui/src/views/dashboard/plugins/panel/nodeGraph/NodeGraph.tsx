@@ -58,11 +58,12 @@ const NodeGrapPanel = ({ data, panel, dashboardId,width,height }: PanelProps) =>
     useEffect(() => {
         if (graph) {
             onDataAndSettingsChange(panel,data,colorMode,dashboardId,graph)
-
-            graph.updateLayout({
+            const layout = {
                 nodeStrength: panel.settings.nodeGraph.layout.nodeStrength,
-                gravity: panel.settings.nodeGraph.layout.gravity,
-            })
+                gravity: panel.settings.nodeGraph.layout.gravity
+            }
+            graph.updateLayout(layout)
+           
         }
     }, [panel.settings])
     

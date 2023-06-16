@@ -1,5 +1,6 @@
 import { Alert, NumberDecrementStepper, NumberIncrementStepper, NumberInput, NumberInputField, NumberInputStepper, Switch, Text, Textarea } from "@chakra-ui/react"
 import PanelAccordion from "src/views/dashboard/edit-panel/Accordion"
+import { EditorInputItem, EditorNumberItem } from "src/views/dashboard/edit-panel/EditorItem"
 import PanelEditItem from "src/views/dashboard/edit-panel/PanelEditItem"
 import {  PanelEditorProps } from "types/dashboard"
 
@@ -22,15 +23,9 @@ const TablePanelEditor = ({ panel, onChange }: PanelEditorProps) => {
             })} />
         </PanelEditItem>
         {panel.settings.table.enablePagination && <PanelEditItem title="Page size" desc="set display count for each table page">
-            <NumberInput value={panel.settings.table.pageSize ?? 10} min={5} max={20} step={5} onChange={(v) => onChange(panel => {
-                 panel.settings.table.pageSize = Number(v)
-            })}>
-                <NumberInputField disabled />
-                <NumberInputStepper>
-                    <NumberIncrementStepper />
-                    <NumberDecrementStepper />
-                </NumberInputStepper>
-            </NumberInput>
+            <EditorNumberItem  value={panel.settings.table.pageSize ?? 10} min={5} max={20} step={5} onChange={(v) => onChange(panel => {
+                 panel.settings.table.pageSize = v
+            })}/>
         </PanelEditItem>}
 
         <PanelEditItem title="Column sort" desc="click the column title to sort it by asc or desc">
@@ -51,12 +46,10 @@ const TablePanelEditor = ({ panel, onChange }: PanelEditorProps) => {
                 
             </Alert>
             <Text>function onRowClick(row, router, setVariable) &#123;</Text>
-            <Textarea value={panel.settings.table.onRowClick} onChange={(e) => {
-                const v = e.currentTarget.value
+            <EditorInputItem type="textarea" value={panel.settings.table.onRowClick} onChange={(v) => {
                 onChange(panel => {
                   panel.settings.table.onRowClick = v
-            })}}
-             />
+            })}} />
              <Text>&#125; </Text>
         </PanelEditItem>
     </PanelAccordion>

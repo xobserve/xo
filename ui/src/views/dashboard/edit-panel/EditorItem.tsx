@@ -2,7 +2,7 @@ import { Input, NumberDecrementStepper, NumberIncrementStepper, NumberInput, Num
 import { useState } from "react"
 
 interface EditorInputProps {
-    type?: string
+    type?: "textarea" | "input"
     value: string
     onChange: any
     size?: string
@@ -34,7 +34,7 @@ interface NumberInputProps {
 export const EditorNumberItem = ({ value, onChange, min=0,max=10,step, size = "sm" }: NumberInputProps) => {
     const [temp, setTemp] = useState(value.toString())
     return (
-            <NumberInput value={temp}  min={min} max={max}  size={size} step={step} onChange={v => setTemp(v)} onBlur={() => onChange(temp)}>
+            <NumberInput value={temp}  min={min} max={max}  size={size} step={step} onChange={v => setTemp(v)} onBlur={() => onChange(Number(temp))}>
                 <NumberInputField />
                 {step && <NumberInputStepper>
                     <NumberIncrementStepper />

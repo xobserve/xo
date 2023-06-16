@@ -7,22 +7,14 @@ import { Panel, PanelEditorProps } from "types/dashboard"
 
 
 const TextPanelEditor = ({panel,onChange}:PanelEditorProps) => {
-    const [tempPanel, setTempPanel] = useState<Panel>(panel)
-
-    if (!tempPanel.settings.text) {
-        tempPanel.settings.text = {}
-    }
-    
     return (   <PanelAccordion title="Text setting">
         <PanelEditItem title="Content">
-            <Textarea value={tempPanel.settings.text.md} onChange={(e) => {
-                tempPanel.settings.text.md = e.currentTarget.value
-                setTempPanel(cloneDeep(tempPanel))
-            }}
-             onBlur={() => {
-                onChange(tempPanel)
-                
-                }} />
+            <Textarea value={panel.settings.text.md} onChange={(e) => {
+                const v = e.currentTarget.value 
+                onChange(panel => {
+                    panel.settings.text.md = v
+                })
+            }} />
         </PanelEditItem>
 </PanelAccordion>
 )
