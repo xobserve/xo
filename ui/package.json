@@ -28,6 +28,7 @@
     "highlight.js": "^9.16.2",
     "immer": "^10.0.2",
     "json-bigint": "^1.0.0",
+    "keyboardjs": "^2.7.0",
     "lodash": "^4.17.15",
     "markdown-to-jsx": "^7.1.9",
     "match-sorter": "^4.0.0",
@@ -36,6 +37,7 @@
     "namor": "^1.1.2",
     "next": "13.0.6",
     "next-seo": "^5.4.0",
+    "ninja-keys": "^1.2.2",
     "query-string": "^6.3.0",
     "react": "^18.2.0",
     "react-color": "^2.19.3",
@@ -56,7 +58,6 @@
     "swr": "^0.3.11",
     "tinycolor2": "1.4.2",
     "tsparticles": "^2.9.3",
-    "typescript": "^4.7.4",
     "uplot": "^1.6.24",
     "use-bus": "^2.5.2",
     "use-immer": "^0.9.0",
@@ -84,6 +85,13 @@
     "eslint-plugin-import": "^2.25.4",
     "eslint-plugin-prettier": "^4.0.0",
     "next-compose-plugins": "^2.2.1",
-    "prettier": "^2.7.1"
+    "prettier": "^2.7.1",
+    "typescript": "5.1.3"
+  },
+  "resolutions": {
+    "d3-interpolate": "2.0.1"
+  },
+  "overrides": {
+    "d3-interpolate": "2.0.1"
   }
 }

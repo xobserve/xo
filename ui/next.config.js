@@ -23,6 +23,7 @@ const defaultConfig = {
   experimental: {
     optimizeFonts: true,
     modern: true,
+    esmExternals: 'loose'
   },
   redirects: require("./next-redirect"),
   assetPrefix: isProd ? '' : '',
