@@ -2,7 +2,7 @@ import G6 from "@antv/g6";
 import { useToast } from "@chakra-ui/react";
 import { useRouter } from "next/router";
 import { setVariable } from "src/views/variables/Variables";
-import { NodeGraphSettings } from "types/dashboard";
+import { NodeGraphSettings } from "types/panel/plugins";
 
 const useContextMenu = (settings: NodeGraphSettings) => {
   const toast = useToast()

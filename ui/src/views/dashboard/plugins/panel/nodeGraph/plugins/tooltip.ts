@@ -1,5 +1,5 @@
 import G6 from "@antv/g6";
-import { NodeGraphSettings } from "types/dashboard";
+import { NodeGraphSettings } from "types/panel/plugins";
 
 export const initTooltip = (settings: NodeGraphSettings) => {
     const tooltip = new G6.Tooltip({

@@ -1,4 +1,4 @@
-import { NodeGraphSettings } from "types/dashboard"
+import { NodeGraphSettings } from "types/panel/plugins"
 
 export const getDefaultNodeLabel = (colorMode) =>{ 
     return {
