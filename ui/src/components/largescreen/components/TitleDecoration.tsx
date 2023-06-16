@@ -1,4 +1,4 @@
-import { PanelStyles, PanelTitleDecorationType } from "types/panel"
+import { PanelStyles, PanelTitleDecorationType } from "types/panel/styles"
 import Decoration11 from "../decoration/Decoration11";
 import Decoration7 from "../decoration/Decoration7";
 

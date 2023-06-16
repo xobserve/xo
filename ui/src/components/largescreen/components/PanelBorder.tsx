@@ -12,7 +12,7 @@ import BorderBox6 from "components/largescreen/border/Border6"
 import BorderBox7 from "components/largescreen/border/Border7"
 import BorderBox8 from "components/largescreen/border/Border8"
 import BorderBox9 from "components/largescreen/border/Border9"
-import { PanelBorderType } from "types/panel"
+import { PanelBorderType } from "types/panel/styles"
 const PanelBorder = ({ border, children,width,height }) => {
     switch (border) {
         case PanelBorderType.None:

@@ -5,7 +5,7 @@ import { isEmpty } from "lodash"
 import { useState } from "react"
 import * as Icons from 'react-icons/fa'
 import { MdEdit } from "react-icons/md"
-import { initPanelSettings } from "src/data/panel/initPlugins"
+import { initPanelPlugins } from "src/data/panel/initPlugins"
 import PanelAccordion from "src/views/dashboard/edit-panel/Accordion"
 import { EditorNumberItem, EditorSliderItem } from "src/views/dashboard/edit-panel/EditorItem"
 import PanelEditItem from "src/views/dashboard/edit-panel/PanelEditItem"
@@ -20,31 +20,31 @@ const NodeGraphPanelEditor = (props: PanelEditorProps) => {
     return (<>
         <PanelAccordion title="Node">
             <PanelEditItem title="base size">
-                <EditorSliderItem value={panel.settings.nodeGraph.node.baseSize} min={20} max={100} step={2} onChange={v => onChange((panel: Panel) => {
-                    panel.settings.nodeGraph.node.baseSize = v
+                <EditorSliderItem value={panel.plugins.nodeGraph.node.baseSize} min={20} max={100} step={2} onChange={v => onChange((panel: Panel) => {
+                    panel.plugins.nodeGraph.node.baseSize = v
                 })} />
             </PanelEditItem>
             <PanelEditItem title="max size">
-                <EditorNumberItem value={panel.settings.nodeGraph.node.maxSize} min={1} max={5} onChange={v => onChange(panel => {
-                    panel.settings.nodeGraph.node.maxSize = v
+                <EditorNumberItem value={panel.plugins.nodeGraph.node.maxSize} min={1} max={5} onChange={v => onChange(panel => {
+                    panel.plugins.nodeGraph.node.maxSize = v
                 })} />
             </PanelEditItem>
 
             <IconSetting {...props} />
 
             <PanelEditItem title="shape">
-                <RadionButtons options={[{ label: "Donut", value: "donut" }, { label: "Circle", value: "circle" }]} value={panel.settings.nodeGraph.node.shape} onChange={v => onChange(panel => {
-                    panel.settings.nodeGraph.node.shape = v
+                <RadionButtons options={[{ label: "Donut", value: "donut" }, { label: "Circle", value: "circle" }]} value={panel.plugins.nodeGraph.node.shape} onChange={v => onChange(panel => {
+                    panel.plugins.nodeGraph.node.shape = v
                 })} />
             </PanelEditItem>
-            {panel.settings.nodeGraph.node.shape == 'donut' && <DonutColorsSetting {...props} />}
+            {panel.plugins.nodeGraph.node.shape == 'donut' && <DonutColorsSetting {...props} />}
         </PanelAccordion>
 
 
         <PanelAccordion title="Edge">
             <PanelEditItem title="shape">
-                <Select value={panel.settings.nodeGraph.edge.shape} onChange={e => onChange(panel => {
-                    panel.settings.nodeGraph.edge.shape = e.currentTarget.value
+                <Select value={panel.plugins.nodeGraph.edge.shape} onChange={e => onChange(panel => {
+                    panel.plugins.nodeGraph.edge.shape = e.currentTarget.value
                 })}>
                     <option value="quadratic">quadratic</option>
                     <option value="line">line</option>
@@ -53,8 +53,8 @@ const NodeGraphPanelEditor = (props: PanelEditorProps) => {
             </PanelEditItem>
 
             <PanelEditItem title="arrow">
-                <Select value={panel.settings.nodeGraph.edge.arrow} onChange={e => onChange(panel => {
-                    panel.settings.nodeGraph.edge.arrow = e.currentTarget.value
+                <Select value={panel.plugins.nodeGraph.edge.arrow} onChange={e => onChange(panel => {
+                    panel.plugins.nodeGraph.edge.arrow = e.currentTarget.value
                 })}>
                     <option value="default">default</option>
                     <option value="triangle">triangle</option>
@@ -67,43 +67,43 @@ const NodeGraphPanelEditor = (props: PanelEditorProps) => {
 
             <PanelEditItem title="color">
                 <HStack>
-                    <ColorPicker presetColors={[{ title: 'light-default', color: initPanelSettings.nodeGraph.edge.color.light }]} color={panel.settings.nodeGraph.edge.color.light} onChange={c => onChange((panel: Panel) => {
-                        panel.settings.nodeGraph.edge.color.light = c.hex
+                    <ColorPicker presetColors={[{ title: 'light-default', color: initPanelPlugins.nodeGraph.edge.color.light }]} color={panel.plugins.nodeGraph.edge.color.light} onChange={c => onChange((panel: Panel) => {
+                        panel.plugins.nodeGraph.edge.color.light = c.hex
                     })}>
                         <Button size="sm" variant="outline">Pick light color</Button>
                     </ColorPicker>
-                    <Box width="40px" height="30px" background={panel.settings.nodeGraph.edge.color.light}></Box>
+                    <Box width="40px" height="30px" background={panel.plugins.nodeGraph.edge.color.light}></Box>
                 </HStack>
                 <HStack>
-                    <ColorPicker presetColors={[{ title: 'dark-default', color: initPanelSettings.nodeGraph.edge.color.dark }]} color={panel.settings.nodeGraph.edge.color.dark} onChange={c => onChange((panel: Panel) => {
-                        panel.settings.nodeGraph.edge.color.dark = c.hex
+                    <ColorPicker presetColors={[{ title: 'dark-default', color: initPanelPlugins.nodeGraph.edge.color.dark }]} color={panel.plugins.nodeGraph.edge.color.dark} onChange={c => onChange((panel: Panel) => {
+                        panel.plugins.nodeGraph.edge.color.dark = c.hex
                     })}>
                         <Button size="sm" variant="outline">Pick dark color</Button>
                     </ColorPicker>
-                    <Box width="40px" height="30px" background={panel.settings.nodeGraph.edge.color.dark}></Box>
+                    <Box width="40px" height="30px" background={panel.plugins.nodeGraph.edge.color.dark}></Box>
                 </HStack>
             </PanelEditItem>
             <PanelEditItem title="opacity" desc="color opacity of edge">
-                <EditorSliderItem value={panel.settings.nodeGraph.edge.opacity} min={0} max={1} step={0.1} onChange={v => onChange((panel: Panel) => {
-                    panel.settings.nodeGraph.edge.opacity = v
+                <EditorSliderItem value={panel.plugins.nodeGraph.edge.opacity} min={0} max={1} step={0.1} onChange={v => onChange((panel: Panel) => {
+                    panel.plugins.nodeGraph.edge.opacity = v
                 })} />
             </PanelEditItem>
             <PanelEditItem title="highlight color" desc="when hover or selected">
                 <HStack>
-                    <ColorPicker presetColors={[{ title: 'light-default', color: initPanelSettings.nodeGraph.edge.highlightColor.light }]} color={panel.settings.nodeGraph.edge.highlightColor.light} onChange={c => onChange((panel: Panel) => {
-                        panel.settings.nodeGraph.edge.highlightColor.light = c.hex
+                    <ColorPicker presetColors={[{ title: 'light-default', color: initPanelPlugins.nodeGraph.edge.highlightColor.light }]} color={panel.plugins.nodeGraph.edge.highlightColor.light} onChange={c => onChange((panel: Panel) => {
+                        panel.plugins.nodeGraph.edge.highlightColor.light = c.hex
                     })}>
                         <Button size="sm" variant="outline">Pick light color</Button>
                     </ColorPicker>
-                    <Box width="40px" height="30px" background={panel.settings.nodeGraph.edge.highlightColor.light}></Box>
+                    <Box width="40px" height="30px" background={panel.plugins.nodeGraph.edge.highlightColor.light}></Box>
                 </HStack>
                 <HStack>
-                    <ColorPicker presetColors={[{ title: 'dark-default', color: initPanelSettings.nodeGraph.edge.highlightColor.dark }]} color={panel.settings.nodeGraph.edge.highlightColor.dark} onChange={c => onChange((panel: Panel) => {
-                        panel.settings.nodeGraph.edge.highlightColor.dark = c.hex
+                    <ColorPicker presetColors={[{ title: 'dark-default', color: initPanelPlugins.nodeGraph.edge.highlightColor.dark }]} color={panel.plugins.nodeGraph.edge.highlightColor.dark} onChange={c => onChange((panel: Panel) => {
+                        panel.plugins.nodeGraph.edge.highlightColor.dark = c.hex
                     })}>
                         <Button size="sm" variant="outline">Pick dark color</Button>
                     </ColorPicker>
-                    <Box width="40px" height="30px" background={panel.settings.nodeGraph.edge.highlightColor.dark}></Box>
+                    <Box width="40px" height="30px" background={panel.plugins.nodeGraph.edge.highlightColor.dark}></Box>
                 </HStack>
             </PanelEditItem>
         </PanelAccordion>
@@ -113,8 +113,8 @@ const NodeGraphPanelEditor = (props: PanelEditorProps) => {
             <PanelEditItem title="tooltip trigger" info={
                 <Text>You need to click Apply Button(in top-right) to see the new trigger taken effect</Text>
             }>
-                <RadionButtons options={[{ label: "Hover", value: "mouseenter" }, { label: "Click", value: "click" }]} value={panel.settings.nodeGraph.node.tooltipTrigger} onChange={v => onChange(panel => {
-                    panel.settings.nodeGraph.node.tooltipTrigger = v
+                <RadionButtons options={[{ label: "Hover", value: "mouseenter" }, { label: "Click", value: "click" }]} value={panel.plugins.nodeGraph.node.tooltipTrigger} onChange={v => onChange(panel => {
+                    panel.plugins.nodeGraph.node.tooltipTrigger = v
                 })} />
             </PanelEditItem>
 
@@ -125,8 +125,8 @@ const NodeGraphPanelEditor = (props: PanelEditorProps) => {
             <PanelEditItem title="display" info={
                 <Text>You need to click Apply Button(in top-right) to see the new trigger taken effect</Text>
             }>
-                <Switch defaultChecked={panel.settings.nodeGraph.legend.enable} onChange={e => onChange(panel => {
-                    panel.settings.nodeGraph.legend.enable = e.currentTarget.checked
+                <Switch defaultChecked={panel.plugins.nodeGraph.legend.enable} onChange={e => onChange(panel => {
+                    panel.plugins.nodeGraph.legend.enable = e.currentTarget.checked
                 })} />
             </PanelEditItem>
         </PanelAccordion>
@@ -134,13 +134,13 @@ const NodeGraphPanelEditor = (props: PanelEditorProps) => {
 
         <PanelAccordion title="layout">
             <PanelEditItem title="node strength" desc=" The strength of node force. Positive value means repulsive force, negative value means attractive force">
-                <EditorNumberItem value={panel.settings.nodeGraph.layout.nodeStrength} min={100} max={10000} onChange={v => onChange(panel => {
-                    panel.settings.nodeGraph.layout.nodeStrength = v
+                <EditorNumberItem value={panel.plugins.nodeGraph.layout.nodeStrength} min={100} max={10000} onChange={v => onChange(panel => {
+                    panel.plugins.nodeGraph.layout.nodeStrength = v
                 })} /> 
             </PanelEditItem>
             <PanelEditItem title="node gravity" desc="The gravity strength to the center for all the nodes. Larger the number, more compact the nodes">
-                <EditorNumberItem value={panel.settings.nodeGraph.layout.gravity} min={0} max={200} onChange={v => onChange(panel => {
-                    panel.settings.nodeGraph.layout.gravity = v
+                <EditorNumberItem value={panel.plugins.nodeGraph.layout.gravity} min={0} max={200} onChange={v => onChange(panel => {
+                    panel.plugins.nodeGraph.layout.gravity = v
                 })} />
             </PanelEditItem>
 
@@ -166,7 +166,7 @@ const IconSetting = ({ panel, onChange }: PanelEditorProps) => {
             return
         }
 
-        for (const icon of panel.settings.nodeGraph.node.icon) {
+        for (const icon of panel.plugins.nodeGraph.node.icon) {
             if (icon.key == temp.key && icon.value == temp.value) {
                 toast({
                     description: "the same key/value already exist",
@@ -178,14 +178,14 @@ const IconSetting = ({ panel, onChange }: PanelEditorProps) => {
             }
         }
 
-        onChange(panel => { panel.settings.nodeGraph.node.icon.unshift(temp) })
+        onChange(panel => { panel.plugins.nodeGraph.node.icon.unshift(temp) })
         setTemp(initIcon)
         onClose()
     }
 
     const removeIcon = i => {
         onChange(panel => {
-            panel.settings.nodeGraph.node.icon.splice(i, 1)
+            panel.plugins.nodeGraph.node.icon.splice(i, 1)
         })
     }
 
@@ -195,7 +195,7 @@ const IconSetting = ({ panel, onChange }: PanelEditorProps) => {
         <Divider mt="2" />
         <VStack alignItems="sleft" mt="1">
             {
-                panel.settings.nodeGraph.node.icon.map((icon, i) => <Flex justifyContent="space-between" alignItems="center">
+                panel.plugins.nodeGraph.node.icon.map((icon, i) => <Flex justifyContent="space-between" alignItems="center">
                     <HStack>
                         <Text>{icon.key} : {icon.value} -&gt;</Text>
                         <Image src={icon.icon} width="30px" height="30px" />
@@ -254,7 +254,7 @@ const IconSetting = ({ panel, onChange }: PanelEditorProps) => {
 
 const DonutColorsSetting = ({ panel, onChange }: PanelEditorProps) => {
     const toast = useToast()
-    const [temp, setTemp] = useState<string>(panel.settings.nodeGraph.node.donutColors)
+    const [temp, setTemp] = useState<string>(panel.plugins.nodeGraph.node.donutColors)
     const onSubmit = () => {
         if (!isJSON(temp)) {
             toast({
@@ -266,7 +266,7 @@ const DonutColorsSetting = ({ panel, onChange }: PanelEditorProps) => {
             return
         }
         onChange(panel => {
-            panel.settings.nodeGraph.node.donutColors = temp
+            panel.plugins.nodeGraph.node.donutColors = temp
         })
     }
     return (
@@ -300,7 +300,7 @@ const RightClickMenus = ({ panel, onChange }: PanelEditorProps) => {
     const [temp, setTemp] = useImmer<NodeGraphMenuItem>(initMenuItem)
 
     const onSubmit = () => {
-        for (const item of panel.settings.nodeGraph.node.menu) {
+        for (const item of panel.plugins.nodeGraph.node.menu) {
             if (item.name == temp.name && item.id != temp.id) {
                 toast({
                     description: "same name exist",
@@ -316,14 +316,14 @@ const RightClickMenus = ({ panel, onChange }: PanelEditorProps) => {
             // add new menu item
             temp.id = new Date().getTime()
             onChange((panel: Panel) => {
-                panel.settings.nodeGraph.node.menu.unshift(temp)
+                panel.plugins.nodeGraph.node.menu.unshift(temp)
             })
 
         } else {
             onChange((panel: Panel) => {
-                for (let i = 0; i < panel.settings.nodeGraph.node.menu.length; i++) {
-                    if (panel.settings.nodeGraph.node.menu[i].id == temp.id) {
-                        panel.settings.nodeGraph.node.menu[i] = temp
+                for (let i = 0; i < panel.plugins.nodeGraph.node.menu.length; i++) {
+                    if (panel.plugins.nodeGraph.node.menu[i].id == temp.id) {
+                        panel.plugins.nodeGraph.node.menu[i] = temp
                     }
                 }
             })
@@ -336,13 +336,13 @@ const RightClickMenus = ({ panel, onChange }: PanelEditorProps) => {
 
     const removeItem = i => {
         onChange(panel => {
-            panel.settings.nodeGraph.node.menu.splice(i, 1)
+            panel.plugins.nodeGraph.node.menu.splice(i, 1)
         })
     }
 
     const moveUp = (i) => {
         onChange(panel => {
-            const menu = panel.settings.nodeGraph.node.menu
+            const menu = panel.plugins.nodeGraph.node.menu
             const item = menu[i - 1]
             menu[i - 1] = menu[i]
             menu[i] = item
@@ -351,7 +351,7 @@ const RightClickMenus = ({ panel, onChange }: PanelEditorProps) => {
 
     const moveDown = (i) => {
         onChange(panel => {
-            const menu = panel.settings.nodeGraph.node.menu
+            const menu = panel.plugins.nodeGraph.node.menu
             const item = menu[i + 1]
             menu[i + 1] = menu[i]
             menu[i] = item
@@ -364,12 +364,12 @@ const RightClickMenus = ({ panel, onChange }: PanelEditorProps) => {
             <Divider my="2" />
             <VStack alignItems="left" pl="2">
                 {
-                    panel.settings.nodeGraph.node.menu.map((item, i) => <Flex alignItems="center" justifyContent="space-between">
+                    panel.plugins.nodeGraph.node.menu.map((item, i) => <Flex alignItems="center" justifyContent="space-between">
                         <Tooltip label={item.event}><Text>{item.name}</Text></Tooltip>
 
                         <HStack layerStyle="textFourth">
                             {i != 0 && <Icons.FaArrowUp cursor="pointer" onClick={() => moveUp(i)} />}
-                            {i != panel.settings.nodeGraph.node.menu.length - 1 && <Icons.FaArrowDown cursor="pointer" onClick={() => moveDown(i)} />}
+                            {i != panel.plugins.nodeGraph.node.menu.length - 1 && <Icons.FaArrowDown cursor="pointer" onClick={() => moveDown(i)} />}
                             <MdEdit onClick={() => { setTemp(item); onOpen() }} cursor="pointer" />
                             <Icons.FaTimes onClick={() => removeItem(i)} cursor="pointer" />
                         </HStack>
@@ -415,25 +415,25 @@ const RightClickMenus = ({ panel, onChange }: PanelEditorProps) => {
 }
 
 const MaxSize = ({ panel, onChange }: PanelEditorProps) => {
-    const [temp, setTemp] = useState(panel.settings.nodeGraph.node.maxSize.toString())
+    const [temp, setTemp] = useState(panel.plugins.nodeGraph.node.maxSize.toString())
     return (
         <HStack>
             <NumberInput value={temp} min={1} max={5} width="80px" size="sm" onChange={v => setTemp(v)} onBlur={e => onChange(panel => {
-                panel.settings.nodeGraph.node.maxSize = Number(temp)
+                panel.plugins.nodeGraph.node.maxSize = Number(temp)
             })}>
                 <NumberInputField />
             </NumberInput>
-            <Text> * baseSize = {panel.settings.nodeGraph.node.baseSize * panel.settings.nodeGraph.node.maxSize}</Text>
+            <Text> * baseSize = {panel.plugins.nodeGraph.node.baseSize * panel.plugins.nodeGraph.node.maxSize}</Text>
         </HStack>
     )
 }
 
 const LayoutStrength = ({ panel, onChange }: PanelEditorProps) => {
-    const [temp, setTemp] = useState(panel.settings.nodeGraph.layout.nodeStrength.toString())
+    const [temp, setTemp] = useState(panel.plugins.nodeGraph.layout.nodeStrength.toString())
     return (
         <PanelEditItem title="node strength" desc=" The strength of node force. Positive value means repulsive force, negative value means attractive force">
             <NumberInput value={temp} min={100} max={10000} width="80px" size="sm" onChange={v => setTemp(v)} onBlur={e => onChange(panel => {
-                panel.settings.nodeGraph.layout.nodeStrength = Number(temp)
+                panel.plugins.nodeGraph.layout.nodeStrength = Number(temp)
             })}>
                 <NumberInputField />
             </NumberInput>
@@ -442,11 +442,11 @@ const LayoutStrength = ({ panel, onChange }: PanelEditorProps) => {
 }
 
 const LayoutGravity = ({ panel, onChange }: PanelEditorProps) => {
-    const [temp, setTemp] = useState(panel.settings.nodeGraph.layout.gravity.toString())
+    const [temp, setTemp] = useState(panel.plugins.nodeGraph.layout.gravity.toString())
     return (
         <PanelEditItem title="node gravity" desc="The gravity strength to the center for all the nodes. Larger the number, more compact the nodes">
             <NumberInput value={temp} min={0} max={200} width="80px" size="sm" onChange={v => setTemp(v)} onBlur={e => onChange(panel => {
-                panel.settings.nodeGraph.layout.gravity = Number(temp)
+                panel.plugins.nodeGraph.layout.gravity = Number(temp)
             })}>
                 <NumberInputField />
             </NumberInput>

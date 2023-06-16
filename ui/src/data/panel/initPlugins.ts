@@ -1,6 +1,6 @@
-import { PanelSettings } from "types/dashboard";
+import { PanelPlugins } from "types/dashboard";
 
-export const initPanelSettings:PanelSettings = {
+export const initPanelPlugins: PanelPlugins = {
     graph: {
         tooltip: {
             mode: 'all',

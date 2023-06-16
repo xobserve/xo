@@ -63,7 +63,7 @@ const TablePanel = (props: PanelProps) => {
        return [[],[]]
     }, [props.data,series])
 
-    const onRowClickFunc = new Function("row,router,setVariable", props.panel.settings.table.onRowClick)
+    const onRowClickFunc = new Function("row,router,setVariable", props.panel.plugins.table.onRowClick)
 
     return (
         <Box h="100%">
@@ -71,12 +71,12 @@ const TablePanel = (props: PanelProps) => {
                 <ReactTable
                     columns={columns}
                     data={data}
-                    enableGlobalSearch={props.panel.settings.table.globalSearch}
-                    enablePagination={props.panel.settings.table.enablePagination}
-                    pageSize={props.panel.settings.table.pageSize}
-                    enableFilter={props.panel.settings.table.enableFilter}
-                    enableSort={props.panel.settings.table.enableSort}
-                    showHeader={props.panel.settings.table.showHeader}
+                    enableGlobalSearch={props.panel.plugins.table.globalSearch}
+                    enablePagination={props.panel.plugins.table.enablePagination}
+                    pageSize={props.panel.plugins.table.pageSize}
+                    enableFilter={props.panel.plugins.table.enableFilter}
+                    enableSort={props.panel.plugins.table.enableSort}
+                    showHeader={props.panel.plugins.table.showHeader}
                     onRowClick={onRowClickFunc ? (row) => onRowClickFunc(row, router,(k,v) => setVariable(k,v,toast)) : null}
                 />
 

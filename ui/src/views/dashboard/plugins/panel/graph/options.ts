@@ -36,18 +36,18 @@ export const parseOptions = (config: PanelProps, colorMode,activeSeries) => {
 
     config.data.forEach((d, i) => {
         let pointsShow;
-        let showPoints = config.panel.settings.graph.styles?.showPoints
+        let showPoints = config.panel.plugins.graph.styles?.showPoints
         if (showPoints == "always") {
             pointsShow = true
         } else if (showPoints == "never") {
-            if (config.panel.settings.graph.styles?.style != "points") {
+            if (config.panel.plugins.graph.styles?.style != "points") {
                 pointsShow = false
             } else {
                 pointsShow = true
             }
 
         } else {
-            if (config.panel.settings.graph.styles?.style == "bars") {
+            if (config.panel.plugins.graph.styles?.style == "bars") {
                 pointsShow = false
             } else {
                 pointsShow = true
@@ -58,13 +58,13 @@ export const parseOptions = (config: PanelProps, colorMode,activeSeries) => {
             label: d.name,
             points: {
                 show: pointsShow,
-                size: config.panel.settings.graph.styles?.pointSize
+                size: config.panel.plugins.graph.styles?.pointSize
             },
             stroke: d.color,
-            width: config.panel.settings.graph.styles?.style == "points" ? 0 : config.panel.settings.graph.styles?.lineWidth,
-            fill: config.panel.settings.graph.styles?.style == "points" ? null : (config.panel.settings.graph.styles?.gradientMode == "none" ? d.color : fill(d.color, (config.panel.settings.graph.styles?.fillOpacity ?? 21) / 100)),
+            width: config.panel.plugins.graph.styles?.style == "points" ? 0 : config.panel.plugins.graph.styles?.lineWidth,
+            fill: config.panel.plugins.graph.styles?.style == "points" ? null : (config.panel.plugins.graph.styles?.gradientMode == "none" ? d.color : fill(d.color, (config.panel.plugins.graph.styles?.fillOpacity ?? 21) / 100)),
             spanGaps: false,
-            paths: config.panel.settings.graph.styles?.style == "bars" ? uPlot.paths.bars({
+            paths: config.panel.plugins.graph.styles?.style == "bars" ? uPlot.paths.bars({
                 size: [BarWidthFactor, BardMaxWidth],
                 align: 0,
             }) : null
@@ -106,16 +106,16 @@ export const parseOptions = (config: PanelProps, colorMode,activeSeries) => {
                 // distr: 3,
                 auto: true,
                 dir: 1,
-                distr: config.panel.settings.graph.axis?.scale == "linear" ? 1 : 3,
+                distr: config.panel.plugins.graph.axis?.scale == "linear" ? 1 : 3,
                 ori: 1,
-                log: config.panel.settings.graph.axis?.scaleBase,
+                log: config.panel.plugins.graph.axis?.scaleBase,
                 // min: 1
             }
         },
         axes: [
             {
                 grid: {
-                    show: config.panel.settings.graph.axis?.showGrid,
+                    show: config.panel.plugins.graph.axis?.showGrid,
                     width: 0.5,
                     stroke: axesColor
                 },
@@ -127,7 +127,7 @@ export const parseOptions = (config: PanelProps, colorMode,activeSeries) => {
             },
             {
                 grid: {
-                    show: config.panel.settings.graph.axis?.showGrid,
+                    show: config.panel.plugins.graph.axis?.showGrid,
                     width: 0.5,
                     stroke: axesColor
                 },
@@ -140,7 +140,7 @@ export const parseOptions = (config: PanelProps, colorMode,activeSeries) => {
                 size: ((self, values, axisIdx) => {
                     return calculateAxisSize(self, values, axisIdx);
                 }),
-                values: (u, vals) => vals.map(v => { return formatUnit(v, config.panel.settings.graph.std?.units,config.panel.settings.graph.std?.decimals ?? 2) ?? round(v, config.panel.settings.graph.std?.decimals ?? 2) })
+                values: (u, vals) => vals.map(v => { return formatUnit(v, config.panel.plugins.graph.std?.units,config.panel.plugins.graph.std?.decimals ?? 2) ?? round(v, config.panel.plugins.graph.std?.decimals ?? 2) })
             },
         ]
     }

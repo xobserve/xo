@@ -1,14 +1,14 @@
-import { DatasourceType, PanelSettings, PanelType } from "types/dashboard";
-import { initPanelSettings } from "./initPlugins";
+import { DatasourceType, Panel, PanelType } from "types/dashboard";
+import { initPanelPlugins } from "./initPlugins";
 import { initPanelStyles } from "./initStyles";
 
 export const initPanel = (id?) =>  {
-    const p: any = {
+    const p: Panel = {
         type: PanelType.Text,
         gridPos: { x: 0, y: 0, w: 12, h: 8 },
-        settings:initPanelSettings,
+        plugins: initPanelPlugins,
         datasource: [{
-            type: DatasourceType.Prometheus,
+            type: DatasourceType.TestData,
             selected: true,
             queryOptions: {
                 interval: '15s'

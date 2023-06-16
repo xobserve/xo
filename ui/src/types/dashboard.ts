@@ -1,5 +1,5 @@
 import { DataFrame, NodeGraphData } from "./dataFrame"
-import { PanelStyles } from "./panel"
+import { PanelStyles } from "./panel/styles"
 import { Variable } from "./variable"
 
 export interface Dashboard {
@@ -35,7 +35,8 @@ export interface Panel {
     gridPos: GridPos
     collapsed?: boolean
     // for plugin settings
-    settings?: PanelSettings
+    plugins?: PanelPlugins
+
     styles?: PanelStyles
     // for querying data
     useDatasource?: boolean
@@ -47,7 +48,7 @@ export interface PanelEditorProps {
     onChange: any
 }
 
-export interface PanelSettings {
+export interface PanelPlugins {
     text?: {
         md?: string
     }

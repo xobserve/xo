@@ -21,10 +21,10 @@ const PanelSettings = ({ panel, onChange }: Props) => {
                 tempPanel.useDatasource = false
             }
 
-            // init settings for panel render plugin
-            if (!tempPanel.settings[type]) {
-                tempPanel.settings[type] = {}
-            }
+            // // init settings for panel render plugin
+            // if (!tempPanel.plugins[type]) {
+            //     tempPanel.plugins[type] = {}
+            // }
         })
     }
 

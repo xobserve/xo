@@ -3,7 +3,7 @@ import IconButton from "components/button/IconButton";
 import { PanelAdd } from "components/icons/PanelAdd";
 import { StorageCopiedPanelKey } from "src/data/constants";
 import { initPanel } from "src/data/panel/initPanel";
-import { Dashboard, DatasourceType, GraphSettings, NodeGraphSettings, Panel, PanelType } from "types/dashboard";
+import { Dashboard,  Panel } from "types/dashboard";
 import storage from "utils/localStorage";
 
 interface Props {

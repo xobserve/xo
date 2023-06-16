@@ -32,8 +32,8 @@ const NodeGrapPanel = ({ data, panel, dashboardId,width,height }: PanelProps) =>
     const defaultEdgeLabelCfg = getDefaultEdgeLabel(colorMode)
 
     const [selected, setSelected] = useState(false)
-    const contextMenu = useContextMenu(panel.settings.nodeGraph)
-    const legend = useMemo(() => initLegend(JSON.parse(panel.settings.nodeGraph.node.donutColors)),[])
+    const contextMenu = useContextMenu(panel.plugins.nodeGraph)
+    const legend = useMemo(() => initLegend(JSON.parse(panel.plugins.nodeGraph.node.donutColors)),[])
     
     useEffect(() => {
         if (graph) {
@@ -59,13 +59,13 @@ const NodeGrapPanel = ({ data, panel, dashboardId,width,height }: PanelProps) =>
         if (graph) {
             onDataAndSettingsChange(panel,data,colorMode,dashboardId,graph)
             const layout = {
-                nodeStrength: panel.settings.nodeGraph.layout.nodeStrength,
-                gravity: panel.settings.nodeGraph.layout.gravity
+                nodeStrength: panel.plugins.nodeGraph.layout.nodeStrength,
+                gravity: panel.plugins.nodeGraph.layout.gravity
             }
             graph.updateLayout(layout)
            
         }
-    }, [panel.settings])
+    }, [panel.plugins])
     
     const onFilterRulesChange = (rules?) => {
         const newData = filterData(data[0], dashboardId, panel.id, rules)
@@ -80,13 +80,13 @@ const NodeGrapPanel = ({ data, panel, dashboardId,width,height }: PanelProps) =>
     useEffect(() => {
         if (!graph) {
             console.time("init node graph, time used: ")
-            const tooltip = initTooltip(panel.settings.nodeGraph)
+            const tooltip = initTooltip(panel.plugins.nodeGraph)
 
-            setAttrsForData(panel.settings.nodeGraph,data[0],colorMode)
+            setAttrsForData(panel.plugins.nodeGraph,data[0],colorMode)
 
 
             const plugins = [tooltip, contextMenu]
-            if (panel.settings.nodeGraph.legend.enable) {
+            if (panel.plugins.nodeGraph.legend.enable) {
                 plugins.push(legend as any)
             } 
 
@@ -113,26 +113,26 @@ const NodeGrapPanel = ({ data, panel, dashboardId,width,height }: PanelProps) =>
                     // focusNode: 'li',
                     // linkDistance: 100,
                     preventOverlap: true,
-                    nodeStrength: panel.settings.nodeGraph.layout.nodeStrength,
-                    gravity: panel.settings.nodeGraph.layout.gravity,
+                    nodeStrength: panel.plugins.nodeGraph.layout.nodeStrength,
+                    gravity: panel.plugins.nodeGraph.layout.gravity,
                     preset: {
                         type: 'radial'
                     }
                 },
                 defaultEdge: {
-                    type: panel.settings.nodeGraph.edge.shape ?? 'quadratic',
+                    type: panel.plugins.nodeGraph.edge.shape ?? 'quadratic',
                  
                     style: {
                         radius: 10,
                         // offset: 30,
-                        endArrow: panel.settings.nodeGraph.edge.arrow == "default" ? true :{
-                            path: G6.Arrow[panel.settings.nodeGraph.edge.arrow](),
-                            fill: colorMode == "light" ? panel.settings.nodeGraph.edge.color.light : panel.settings.nodeGraph.edge.color.dark,
+                        endArrow: panel.plugins.nodeGraph.edge.arrow == "default" ? true :{
+                            path: G6.Arrow[panel.plugins.nodeGraph.edge.arrow](),
+                            fill: colorMode == "light" ? panel.plugins.nodeGraph.edge.color.light : panel.plugins.nodeGraph.edge.color.dark,
                         },
                         // lineAppendWidth: 2,
-                        opacity: panel.settings.nodeGraph.edge.opacity,
+                        opacity: panel.plugins.nodeGraph.edge.opacity,
                         lineWidth: 1,
-                        stroke: colorMode == "light" ? panel.settings.nodeGraph.edge.color.light : panel.settings.nodeGraph.edge.color.dark,
+                        stroke: colorMode == "light" ? panel.plugins.nodeGraph.edge.color.light : panel.plugins.nodeGraph.edge.color.dark,
                     },
                     labelCfg: defaultEdgeLabelCfg,
                     stateStyles: {
@@ -146,14 +146,14 @@ const NodeGrapPanel = ({ data, panel, dashboardId,width,height }: PanelProps) =>
                         fill: 'transparent',
                         stroke: '#61DDAA'
                     },
-                    size: panel.settings.nodeGraph.node.baseSize,
+                    size: panel.plugins.nodeGraph.node.baseSize,
                     labelCfg: defaultNodeLabelCfg,
-                    donutColorMap: JSON.parse(panel.settings.nodeGraph.node.donutColors),
+                    donutColorMap: JSON.parse(panel.plugins.nodeGraph.node.donutColors),
                     stateStyles: {
                     }
                 },
-                nodeStateStyles: getDefaultNodeStyle(panel.settings.nodeGraph, colorMode),
-                edgeStateStyles: getDefaultEdgeStyle(panel.settings.nodeGraph,colorMode),
+                nodeStateStyles: getDefaultNodeStyle(panel.plugins.nodeGraph, colorMode),
+                edgeStateStyles: getDefaultEdgeStyle(panel.plugins.nodeGraph,colorMode),
             });
 
             const g1 = gh
@@ -229,7 +229,7 @@ const NodeGrapPanel = ({ data, panel, dashboardId,width,height }: PanelProps) =>
             //     };
             // }
         }
-    }, [panel.settings.nodeGraph]);
+    }, [panel.plugins.nodeGraph]);
 
     const onSelectChange = useCallback(v => setSelected(v), [])
 
@@ -290,7 +290,7 @@ const onColorModeChange = (graph, data, colorMode, dashboardId, panel:Panel) => 
             node.labelCfg.style.fill = colorMode == "light" ? '#000' : '#fff'
         }
 
-        const defaultNodeStyle = getDefaultNodeStyle(panel.settings.nodeGraph,colorMode)
+        const defaultNodeStyle = getDefaultNodeStyle(panel.plugins.nodeGraph,colorMode)
         if (!node.stateStyles) node.stateStyles = {}
         Object.keys(defaultNodeStyle).forEach(key => {
             node.stateStyles[key] = defaultNodeStyle[key]
@@ -304,8 +304,8 @@ const onColorModeChange = (graph, data, colorMode, dashboardId, panel:Panel) => 
         } else {
             edge.labelCfg.style.fill = colorMode == "light" ? '#000' : '#fff'
         }
-        edge.style.stroke = colorMode == "light" ? panel.settings.nodeGraph.edge.color.light :panel.settings.nodeGraph.edge.color.dark
-        const defaultEdgeStyle = getDefaultEdgeStyle(panel.settings.nodeGraph,colorMode)
+        edge.style.stroke = colorMode == "light" ? panel.plugins.nodeGraph.edge.color.light :panel.plugins.nodeGraph.edge.color.dark
+        const defaultEdgeStyle = getDefaultEdgeStyle(panel.plugins.nodeGraph,colorMode)
         if (!edge.stateStyles) edge.stateStyles = {}
         Object.keys(defaultEdgeStyle).forEach(key => {
             edge.stateStyles[key] = defaultEdgeStyle[key]
@@ -320,7 +320,7 @@ const onColorModeChange = (graph, data, colorMode, dashboardId, panel:Panel) => 
 
 
 const onDataAndSettingsChange = (panel:Panel,data:PanelData[],colorMode,dashboardId,graph) => {
-    setAttrsForData(panel.settings.nodeGraph,data[0],colorMode)
+    setAttrsForData(panel.plugins.nodeGraph,data[0],colorMode)
     const newData = filterData(data[0], dashboardId, panel.id)
     if (newData != data[0]) {
         graph.data(newData)

@@ -36,7 +36,7 @@ const SeriesTable = ({ props, nearestSeries, filterIdx, filterType, onSelect }: 
 
     switch (filterType) {
         case seriesFilterType.Nearest: // tooltip
-            if (props.panel.settings.graph.tooltip.mode != "single") {
+            if (props.panel.plugins.graph.tooltip.mode != "single") {
                 for (const d of props.data) {
                     res.push({ name: d.name, value: d.fields[1].values[filterIdx], color: d.color })
                 }
@@ -56,9 +56,9 @@ const SeriesTable = ({ props, nearestSeries, filterIdx, filterType, onSelect }: 
     let res1 = reverse(sortBy(res, 'value'))
 
     for (const r of res1) {
-        r.value = props.panel.settings.graph.std.unitsType != "none"
-            ? formatUnit(r.value, props.panel.settings.graph.std.units, props.panel.settings.graph.std.decimals ?? 2)
-            : round(r.value, props.panel.settings.graph.std.decimals)
+        r.value = props.panel.plugins.graph.std.unitsType != "none"
+            ? formatUnit(r.value, props.panel.plugins.graph.std.units, props.panel.plugins.graph.std.decimals ?? 2)
+            : round(r.value, props.panel.plugins.graph.std.decimals)
     }
 
     const values = res1
