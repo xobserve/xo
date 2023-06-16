@@ -253,12 +253,18 @@ const CustomPanelRender = memo((props: any) => {
     }
 })
 
-const PanelHeader = ({ queryError, panel, onCopyPanel, onRemovePanel,data }) => {
-    const router = useRouter()
+interface PanelHeaderProps {
+    queryError: string
+    panel: Panel
+    onCopyPanel: (panel: Panel) => void
+    onRemovePanel: (panel: Panel) => void
+    data: DataFrame[]
+}
+
+const PanelHeader = ({ queryError, panel, onCopyPanel, onRemovePanel,data }:PanelHeaderProps) => {
 
     const title = replaceWithVariables(panel.title, variables)
     const { isOpen, onOpen, onClose } = useDisclosure()
-    const [debug, setDebug] = useState(false)
 
     return (
         <>
@@ -277,7 +283,7 @@ const PanelHeader = ({ queryError, panel, onCopyPanel, onRemovePanel,data }) => 
                             _focus={{ border: null }}
                             onClick={e => e.stopPropagation()}
                         >
-                            <Center width="100%">{!isEmpty(title) ? <Box cursor="pointer" className="hover-bordered" paddingBottom='20px' paddingLeft="200px">{title}</Box> : <Box width="100px">&nbsp;</Box>}</Center>
+                            <Center width="100%">{!isEmpty(title) ? <Box cursor="pointer" className="hover-bordered" paddingBottom='0' marginLeft="0" width="100%"><Decoration7 style={{height: panel.styles.title.decoration.height, width: panel.styles.title.decoration.width}} margin={panel.styles.title.decoration.margin}>{title}</Decoration7></Box> : <Box width="100px">&nbsp;</Box>}</Center>
                         </MenuButton>
                         <Portal>
                             <MenuList p="1">
@@ -295,7 +301,7 @@ const PanelHeader = ({ queryError, panel, onCopyPanel, onRemovePanel,data }) => 
                 </Center>
                 <Box display="none"><FaBook className="grid-drag-handle" /></Box>
             </HStack>
-            {/* <Box display="flex" justifyContent="right"><Decoration6 style={{height: '20px',width:"100px",position:"absolute",top:"null",right:"150px",left:"null"}} /></Box> */}
+            <Box display="flex" justifyContent="right"><Decoration6 style={{height: '20px',width:"100%",position:"absolute",top:"null",right:"null",left:"null"}} /></Box>
             {isOpen && <DebugPanel panel={panel} isOpen={isOpen} onClose={onClose} data={data} />}
         </>
     )

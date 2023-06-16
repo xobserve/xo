@@ -5,12 +5,13 @@ import { isEmpty } from "lodash"
 import { useState } from "react"
 import * as Icons from 'react-icons/fa'
 import { MdEdit } from "react-icons/md"
+import { initPanelSettings } from "src/data/panel/initPlugins"
 import PanelAccordion from "src/views/dashboard/edit-panel/Accordion"
 import PanelEditItem from "src/views/dashboard/edit-panel/PanelEditItem"
 import { NodeGraphIcon, NodeGraphMenuItem, Panel, PanelEditorProps } from "types/dashboard"
 import { useImmer } from "use-immer"
 import { isJSON } from "utils/is"
-import { initPanelSettings } from "../initSettings"
+
 
 
 const NodeGraphPanelEditor = (props: PanelEditorProps) => {

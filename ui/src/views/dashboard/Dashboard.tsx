@@ -17,7 +17,8 @@ import { TimeChangedEvent, VariableChangedEvent } from "src/data/bus-events"
 
 import { useImmer } from "use-immer"
 import { setAutoFreeze } from "immer";
-import { initPanelSettings } from "./plugins/panel/initSettings"
+import { initPanelSettings } from "src/data/panel/initPlugins"
+import { initPanelStyles } from "src/data/panel/initStyles"
  
 
 
@@ -82,6 +83,7 @@ const DashboardWrapper = ({dashboardId}) => {
         res.data.data.panels.forEach((panel:Panel) => {
             // console.log("33333 before",cloneDeep(panel.settings[panel.type]))
             panel.settings[panel.type] = defaultsDeep(panel.settings[panel.type], initPanelSettings[panel.type])
+            panel.styles = defaultsDeep(panel.styles, initPanelStyles)
             // console.log("33333 after",cloneDeep(panel.settings[panel.type]),initPanelSettings[panel.type])
         })
         unstable_batchedUpdates(() => {

@@ -2,9 +2,9 @@ import { Button, Modal, ModalBody, ModalContent, ModalOverlay, useColorModeValue
 import IconButton from "components/button/IconButton";
 import { PanelAdd } from "components/icons/PanelAdd";
 import { StorageCopiedPanelKey } from "src/data/constants";
+import { initPanel } from "src/data/panel/initPanel";
 import { Dashboard, DatasourceType, GraphSettings, NodeGraphSettings, Panel, PanelType } from "types/dashboard";
 import storage from "utils/localStorage";
-import { initPanelSettings } from "./plugins/panel/initSettings";
 
 interface Props {
     dashboard: Dashboard
@@ -49,30 +49,7 @@ const AddPanel = ({ dashboard, onChange }: Props) => {
             dashboard.data.panels = []
         }
         const id = getNextPanelId()
-        const newPanel: Panel = {
-            id: id,
-            title: `New panel ${id}`,
-            type: PanelType.Text,
-            gridPos: { x: 0, y: 0, w: 12, h: 8 },
-            //@needs-update-when-add-new-panel
-            settings: {
-                text: initPanelSettings.text,
-                graph: initPanelSettings.graph as GraphSettings,
-                nodeGraph: initPanelSettings.nodeGraph as NodeGraphSettings
-            },
-            datasource: [{
-                type: DatasourceType.Prometheus,
-                selected: true,
-                queryOptions: {
-                    interval: '15s'
-                },
-                queries: []
-            }],
-            useDatasource: false,
-            styles:{ 
-                border: 'normal'
-            }
-        }
+        const newPanel: Panel = initPanel(id)
 
 
 

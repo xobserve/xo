@@ -1,14 +1,15 @@
 import { DataFrame, NodeGraphData } from "./dataFrame"
+import { PanelStyles } from "./panel"
 import { Variable } from "./variable"
 
 export interface Dashboard {
-    id: string 
+    id: string
     title: string
-    ownedBy: number 
+    ownedBy: number
     data: DashboardData
     editable?: boolean
     createdBy?: string
-    created?: string 
+    created?: string
     updated?: string
 }
 
@@ -26,8 +27,8 @@ export interface DashboardData {
 }
 
 export interface Panel {
-    id: number 
-    title: string
+    id?: number
+    title?: string
     desc?: string
     type: PanelType
 
@@ -35,12 +36,7 @@ export interface Panel {
     collapsed?: boolean
     // for plugin settings
     settings?: PanelSettings
-    styles?: {
-        transparent?: boolean
-        showBorder?: boolean
-        border?: string
-        decoration?: string
-    }
+    styles?: PanelStyles
     // for querying data
     useDatasource?: boolean
     datasource?: PanelDatasource[]
@@ -66,7 +62,7 @@ export interface GraphSettings {
         sort: "asc" | "desc"
     }
     legend?: {
-        mode:  "table" | "hidden"
+        mode: "table" | "hidden"
         placement: "bottom" | "right"
     }
     styles?: {
@@ -117,11 +113,11 @@ export enum DatasourceType {
 }
 
 export interface PanelDatasource {
-    type: DatasourceType 
+    type: DatasourceType
     selected: boolean
     queryOptions: {
         maxDataPoints?: number
-        interval: string    
+        interval: string
     }
     queries?: PanelQuery[]
 }
@@ -129,7 +125,7 @@ export interface PanelDatasource {
 export interface PanelQuery {
     id: number
     metrics: string
-    legend: string 
+    legend: string
     visible: boolean
     mockData?: any
 }
@@ -147,7 +143,7 @@ export interface PanelProps {
     panel: Panel
     data?: PanelData[]
     dashboardId?: string
-    width?: number 
+    width?: number
     height?: number
     sync?: any
 }
@@ -178,12 +174,12 @@ export interface NodeGraphSettings {
         shape: string
         arrow: string
         color: {
-            light: string 
+            light: string
             dark: string
         }
         opacity: number
         highlightColor: {
-            light: string 
+            light: string
             dark: string
         }
     }
@@ -200,13 +196,13 @@ export interface NodeGraphSettings {
 
 
 export interface NodeGraphIcon {
-    key: string 
-    value: string 
+    key: string
+    value: string
     icon: string
 }
 
 export interface NodeGraphMenuItem {
     id?: number
-    name: string 
+    name: string
     event: string
 }
