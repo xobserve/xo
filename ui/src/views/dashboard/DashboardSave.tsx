@@ -8,7 +8,7 @@ import useKeyboardJs from 'react-use/lib/useKeyboardJs';
 import { requestApi } from "utils/axios/request"
 import moment from "moment"
 import { dispatch } from "use-bus"
-import { FullscreenEvent, PreviewDashboardEvent, StopPreviewDashboardEvent } from "src/data/bus-events"
+import { SetDashboardEvent } from "src/data/bus-events"
 import { FormItem } from "components/form/Form"
 
 interface Props {
@@ -196,15 +196,15 @@ const DashboardHistory = ({ dashboard, onPreview }: HistoryProps) => {
                             <HStack>
                                 {i == 0 && <Tooltip label="click here to continue use current dashboard, and stop previewing"><Tag cursor="pointer" onClick={() => {
                                     // sent two events to ensure the raw dashhboard has no changes, it's weird, but hard to fix
-                                    dispatch({ type: PreviewDashboardEvent, data: dash });
+                                    dispatch({ type: SetDashboardEvent, data: dash });
                                     setTimeout(() => {
-                                        dispatch({ type: PreviewDashboardEvent, data: dash });
+                                        dispatch({ type: SetDashboardEvent, data: dash });
                                     }, 5000)
 
                                     onPreview(false)
                                 }}>Current</Tag></Tooltip>}
                                 {i != 0 && <Button size="xs" variant={dashboard.updated == dash.updated ? "solid" : "outline"} onClick={() => {
-                                    dispatch({ type: PreviewDashboardEvent, data: dash });
+                                    dispatch({ type: SetDashboardEvent, data: dash });
                                     onPreview(true)
                                 }}>Preview</Button>}
                             </HStack>

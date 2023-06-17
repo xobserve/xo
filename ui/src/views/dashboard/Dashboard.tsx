@@ -13,7 +13,7 @@ import { setVariableSelected } from "src/views/variables/Variables"
 import { prevQueries, prevQueryData } from "src/views/dashboard/grid/PanelGrid"
 import { unstable_batchedUpdates } from "react-dom"
 import useBus, { dispatch } from 'use-bus'
-import {  PreviewDashboardEvent,  TimeChangedEvent, VariableChangedEvent } from "src/data/bus-events"
+import {    SetDashboardEvent,  TimeChangedEvent, VariableChangedEvent } from "src/data/bus-events"
 
 import { useImmer } from "use-immer"
 import { setAutoFreeze } from "immer";
@@ -38,6 +38,7 @@ const DashboardWrapper = ({dashboardId}) => {
     const [timeRange, setTimeRange] = useState<TimeRange>(getInitTimeRange())
     const [gVariables, setGVariables] = useState<Variable[]>([])
     const fullscreen = useFullscreen()
+
     useEffect(() => {
         load()
         return () => {
@@ -49,9 +50,8 @@ const DashboardWrapper = ({dashboardId}) => {
     }, [])
 
     useBus(
-        (e) => { return e.type == PreviewDashboardEvent },
+        (e) => { return e.type == SetDashboardEvent },
         (e) => {
-            console.log("here33333q111:")
             const dash = initDashboard(e.data)
             setDashboard(clone(dash))
         }
