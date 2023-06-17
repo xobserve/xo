@@ -1,9 +1,9 @@
 import G6 from "@antv/g6";
 import { NodeGraphSettings } from "types/panel/plugins";
-import { NodeGraphData } from "types/plugins/nodeGraph";
+import { NodeGraphPluginData } from "types/plugins/nodeGraph";
 import { getDefaultEdgeStyle } from "./default-styles";
 
-export const setAttrsForData = (settings: NodeGraphSettings, data: NodeGraphData,colorMode) => {
+export const setAttrsForData = (settings: NodeGraphSettings, data: NodeGraphPluginData,colorMode) => {
     const donutColors = JSON.parse(settings.node.donutColors)
     // 计算 node size
     // 找出最小的那个作为基准 size

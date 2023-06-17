@@ -15,16 +15,16 @@ import useContextMenu from './plugins/useContextMenu';
 import HiddenItems from './HiddenItem';
 import { filterData } from './filter/filterData';
 import { getDefaultEdgeLabel, getDefaultEdgeStyle, getDefaultNodeLabel, getDefaultNodeStyle } from './default-styles';
+import { NodeGraphPluginData } from 'types/plugins/nodeGraph';
 
 
  
-// const tips = '...';
-// const G6  =  await (eval(`import('@antv/g6')`));
-
-
+interface NodeGraphPanelProps extends PanelProps {
+    data: NodeGraphPluginData[]
+}
 
 let newestColorMode;
-const NodeGrapPanel = ({ data, panel, dashboardId,width,height }: PanelProps) => {
+const NodeGrapPanel = ({ data, panel, dashboardId,width,height }: NodeGraphPanelProps) => {
     const container = React.useRef(null);
     const [graph, setGraph] = useState<Graph>(null);
     const { colorMode } = useColorMode();

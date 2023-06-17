@@ -2,8 +2,7 @@
 // 2. Convert the data to the format which AiAPM expects
 
 import { isEmpty } from "lodash"
-import { Panel, PanelQuery, PanelType } from "types/dashboard"
-import { FieldType, GraphPluginData } from "types/plugins/graph"
+import { Panel, PanelQuery } from "types/dashboard"
 import { TimeRange } from "types/time"
 import { transformPrometheusData } from "./transformData"
 
@@ -14,6 +13,7 @@ export const run_prometheus_query = async (panel: Panel,q: PanelQuery,range: Tim
             data:[]
         }
     }
+    
     //@todo: 
     // 1. rather than query directyly to prometheus, we should query to our own backend servie
     // 2. using `axios` instead of `fetch`

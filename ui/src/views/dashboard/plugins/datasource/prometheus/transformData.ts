@@ -40,10 +40,7 @@ export const transformPrometheusData = (rawData: any, panel: Panel) => {
         
         case PanelType.Graph:
             return  prometheusDataToGraph(rawData)
-        default:
-            break;
     }
-
 
     return null
 }

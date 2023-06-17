@@ -1,9 +1,11 @@
 import { Box, Button, Flex, HStack, Image, Select, Text, VStack } from "@chakra-ui/react"
+import { useMemo } from "react"
 import { FaPlus, FaTrashAlt } from "react-icons/fa"
 import { DatasourceType, Panel, PanelQuery } from "types/dashboard"
 import JaegerQueryEditor from "../plugins/datasource/jaeger/Editor"
 import PrometheusQueryEditor from "../plugins/datasource/prometheus/Editor"
 import TestDataQueryEditor from "../plugins/datasource/testdata/Editor"
+import { supportDatasources } from "../plugins/panel/supportDatasources"
 
 interface Props {
     panel: Panel
@@ -60,6 +62,15 @@ const EditPanelQuery = ({ panel, onChange }: Props) => {
     
     const selected = panel.datasource
 
+    const datasources = useMemo(() => {
+        const supported = supportDatasources[panel.type]
+        if (supported != undefined) {
+            return supported
+        } 
+
+        return Object.keys(DatasourceType)
+    },[panel.type])
+    
     return (<>
         <Box className="top-gradient-border bordered-left bordered-right" width="fit-content">
             <Text px="2" py="2">Query</Text>
@@ -69,7 +80,7 @@ const EditPanelQuery = ({ panel, onChange }: Props) => {
                 <HStack>
                     <Image width="32px" height="32px" src={`/plugins/datasource/${selected.type}.svg`} />
                     <Select width="fit-content" variant="unstyled" value={selected.type} onChange={e => selectDatasource(e.currentTarget.value)}>
-                        {Object.keys(DatasourceType).map((key, index) => {
+                        {datasources.map((key, index) => {
                             return <option key={index} value={DatasourceType[key]}>{key}</option>
                         })}
                     </Select>
