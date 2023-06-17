@@ -1,6 +1,5 @@
-import { ThresholdsConfig } from "./threshold";
-
-export interface DataFrame {
+export type GraphPluginData = GraphSeries[]
+export interface GraphSeries {
     // id: number;
     name?: string;
     fields: Field[]; // All fields of equal length
@@ -34,16 +33,6 @@ export interface Field<T = any, V = Vector<T>> {
     values: any[]; // The raw field values
     labels?: {[key: string]: string};
 
-
-    /**
-     * Convert text to the field value
-     */
-    parse?: (value: any) => T;
-
-    /**
-   * Convert a value for display
-   */
-    display?: DisplayProcessor;
 
     state?: any
 }
@@ -118,46 +107,7 @@ export interface RangeMap extends BaseMap {
 }
 
 
-export interface FormattedValue {
-    text: string;
-    prefix?: string;
-    suffix?: string;
-  }
 
-export type DisplayProcessor = (value: any, decimals?: DecimalCount) => DisplayValue;
-
-export interface DisplayValue extends FormattedValue {
-  /**
-   *  Use isNaN to check if it is a real number
-   */
-  numeric: number;
-  /**
-   *  0-1 between min & max
-   */
-  percent?: number;
-  /**
-   *  Color based on mappings or threshold
-   */
-  color?: string;
-  /**
-   *  Icon based on mappings or threshold
-   */
-  icon?: string;
-  title?: string;
-
-  /**
-   * Used in limited scenarios like legend reducer calculations
-   */
-  description?: string;
-}
-
-/**
- * These represents the display value with the longest title and text.
- * Used to align widths and heights when displaying multiple DisplayValues
- */
-export interface DisplayValueAlignmentFactors extends FormattedValue {
-  title: string;
-}
 
 export type DecimalCount = number | null | undefined;
 
@@ -167,15 +117,3 @@ export interface DecimalInfo {
 }
 
 
-
-
-export interface DataFrameFieldIndex {
-    frameIndex: number;
-    fieldIndex: number;
-  }
-
-
-export interface NodeGraphData {
-  nodes? : any[]
-  edges?: any[]
-}

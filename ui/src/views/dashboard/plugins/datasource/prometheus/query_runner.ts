@@ -3,7 +3,7 @@
 
 import { isEmpty } from "lodash"
 import { Panel, PanelQuery, PanelType } from "types/dashboard"
-import { DataFrame, FieldType } from "types/dataFrame"
+import { FieldType, GraphPluginData } from "types/plugins/graph"
 import { TimeRange } from "types/time"
 import { transformPrometheusData } from "./transformData"
 
@@ -43,41 +43,4 @@ export const run_prometheus_query = async (panel: Panel,q: PanelQuery,range: Tim
         error: null,
         data: data
     }
-}
-
-export const prometheusDataToDataFrame = (data: any): DataFrame[] => {
-    let res: DataFrame[] = []
-    if (data.resultType === "matrix") {
-        for (const m of data.result) {
-            const length = m.values.length
-            const metric = JSON.stringify(m.metric).replace(/:/g, '=')
-            const timeValues = []
-            const valueValues = []
-
-            for (const v of m.values) {
-                timeValues.push(v[0])
-                valueValues.push(parseFloat(v[1]))
-            }
-            
-            res.push({
-                name: metric,
-                length: length,
-                fields: [
-                    {
-                        name: "Time",
-                        type: FieldType.Time,
-                        values: timeValues,
-                    },
-                    {
-                        name: "Value",
-                        type: FieldType.Number,
-                        values: valueValues,
-                        labels: m.metric
-                    }
-                ],
-            })
-        }
-        return res
-    }
-    return []
 }

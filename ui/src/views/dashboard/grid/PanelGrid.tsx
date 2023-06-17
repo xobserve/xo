@@ -6,7 +6,6 @@ import { IoMdInformation } from "react-icons/io";
 import TextPanel from "../plugins/panel/text/Text";
 import { memo, useEffect, useRef, useState } from "react";
 import { run_prometheus_query } from "../plugins/datasource/prometheus/query_runner";
-import { DataFrame } from "types/dataFrame";
 import GraphPanel from "../plugins/panel/graph/Graph";
 import { PANEL_BODY_PADDING, PANEL_HEADER_HEIGHT, StorageCopiedPanelKey } from "src/data/constants";
 import { isArray, isEmpty, isEqual } from "lodash";
@@ -106,7 +105,7 @@ export const prevQueries = {}
 export const prevQueryData = {}
 export const PanelComponent = ({ dashboard, panel, onRemovePanel, width, height, sync, timeRange, variables }: PanelComponentProps) => {
     const toast = useToast()
-    const [panelData, setPanelData] = useState<DataFrame[]>(null)
+    const [panelData, setPanelData] = useState<any[]>(null)
     const [queryError, setQueryError] = useState()
 
     // useEffect(() => console.log("panel created:", panel.id), [])
@@ -241,7 +240,7 @@ interface PanelHeaderProps {
     panel: Panel
     onCopyPanel: (panel: Panel) => void
     onRemovePanel: (panel: Panel) => void
-    data: DataFrame[]
+    data: any[]
 }
 
 const PanelHeader = ({ queryError, panel, onCopyPanel, onRemovePanel, data }: PanelHeaderProps) => {

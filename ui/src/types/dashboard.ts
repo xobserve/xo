@@ -1,6 +1,5 @@
-import { DataFrame, NodeGraphData } from "./dataFrame"
-import { GraphSettings, NodeGraphSettings, PanelPlugins, TableSettings } from "./panel/plugins"
-import { DecorationStyles, PanelStyles } from "./panel/styles"
+import { PanelPlugins } from "./panel/plugins"
+import { PanelStyles } from "./panel/styles"
 import { Variable } from "./variable"
 
 export interface Dashboard {

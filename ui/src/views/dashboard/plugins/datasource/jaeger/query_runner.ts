@@ -2,7 +2,6 @@
 // 2. Convert the data to the format which AiAPM expects
 
 import { Panel, PanelQuery } from "types/dashboard"
-import { DataFrame, FieldType } from "types/dataFrame"
 import { TimeRange } from "types/time"
 
 export const run_jaeger_query = async (panel: Panel, q: PanelQuery,range: TimeRange) => {
@@ -31,63 +30,9 @@ export const run_jaeger_query = async (panel: Panel, q: PanelQuery,range: TimeRa
     }
 
 
-    const data = toDataFrame(q, res.data)
+    const data =  []
     return {
         error: null,
         data: data
     }
-}
-
-
-
-// "data": {
-//     "resultType": "matrix",
-//     "result": [
-//         {
-//             "metric": {
-//                 "cpu": "0",
-//                 "instance": "localhost:9100",
-//                 "job": "node",
-//                 "mode": "idle"
-//             },
-//             "values": [
-//                 [
-//                     1678865295,
-//                     "0.5592903959242473"
-//                 ],
-const toDataFrame = (query: PanelQuery, data: any): DataFrame[] => {
-    let res: DataFrame[] = []
-    if (data.resultType === "matrix") {
-        for (const m of data.result) {
-            const length = m.values.length
-            const metric = JSON.stringify(m.metric).replace(/:/g, '=')
-            const timeValues = []
-            const valueValues = []
-
-            for (const v of m.values) {
-                timeValues.push(v[0])
-                valueValues.push(parseFloat(v[1]))
-            }
-            
-            res.push({
-                name: metric,
-                length: length,
-                fields: [
-                    {
-                        name: "Time",
-                        type: FieldType.Time,
-                        values: timeValues,
-                    },
-                    {
-                        name: "Value",
-                        type: FieldType.Number,
-                        values: valueValues,
-                        labels: m.metric
-                    }
-                ],
-            })
-        }
-        return res
-    }
-    return []
 }

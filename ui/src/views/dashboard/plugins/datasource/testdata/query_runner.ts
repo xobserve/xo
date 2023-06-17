@@ -3,16 +3,15 @@
 
 import { Panel, PanelQuery, PanelType } from "types/dashboard"
 import { TimeRange } from "types/time"
-import { prometheusDataToDataFrame } from "../prometheus/query_runner"
 import graphData from './mocks/prometheus_graph.json'
 import { nodeGraphData } from "./mocks/node_graph"
-import { transformPrometheusData } from "../prometheus/transformData"
+import { prometheusDataToGraph, transformPrometheusData } from "../prometheus/transformData"
 export const run_testdata_query = async (panel: Panel, q: PanelQuery, range: TimeRange) => {
     let data;
 
     switch (panel.type) {
         case PanelType.Graph:
-            data = prometheusDataToDataFrame(graphData.data)
+            data = prometheusDataToGraph(graphData.data)
             break;
         case PanelType.Table:
             data = transformPrometheusData(graphData.data, panel)

@@ -6,12 +6,12 @@ import { last, reverse, round, sortBy } from "lodash"
 import { useState } from "react"
 import { ActiveSeriesEvent } from "src/data/bus-events"
 import { PanelProps } from "types/dashboard"
-import { DataFrame } from "types/dataFrame"
+import { GraphSeries } from "types/plugins/graph"
 import useBus from "use-bus"
 
 interface Props {
     props: PanelProps
-    nearestSeries?: DataFrame
+    nearestSeries?: GraphSeries
     filterIdx?: number
     filterType: seriesFilterType // controls which value should be seen in series table
     placement?: "bottom" | "right"

@@ -1,6 +1,6 @@
 import G6 from "@antv/g6";
-import { NodeGraphData } from "types/dataFrame";
 import { NodeGraphSettings } from "types/panel/plugins";
+import { NodeGraphData } from "types/plugins/nodeGraph";
 import { getDefaultEdgeStyle } from "./default-styles";
 
 export const setAttrsForData = (settings: NodeGraphSettings, data: NodeGraphData,colorMode) => {

@@ -5,7 +5,6 @@ import 'uplot/dist/uPlot.min.css';
 import uPlot from "uplot"
 
 import { parseOptions } from './options';
-import { DataFrame } from "types/dataFrame";
 import { isEmpty } from "lodash";
 
 import Tooltip from "./Tooltip";
@@ -18,9 +17,14 @@ import { replaceWithVariables } from "utils/variable";
 import { variables } from "src/views/dashboard/Dashboard";
 import { dispatch } from "use-bus";
 import { ActiveSeriesEvent } from "src/data/bus-events";
+import { GraphPluginData } from "types/plugins/graph";
 
 
-const GraphPanel = memo((props: PanelProps) => {
+interface GraphPanelProps extends PanelProps {
+    data: GraphPluginData[]
+}
+
+const GraphPanel = memo((props: GraphPanelProps) => {
     const rawData = []
     props.data.forEach(d => {
         d.forEach(d1 => {
@@ -139,8 +143,7 @@ const GraphPanel = memo((props: PanelProps) => {
 export default GraphPanel
 
 
-// transform Dataframes to uplot data
-const transformDataToUplot = (data: DataFrame[]) => {
+const transformDataToUplot = (data: GraphPluginData) => {
     const transformed = []
 
     // push x-axes data first

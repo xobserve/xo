@@ -7,7 +7,7 @@ import { memo, useLayoutEffect, useState } from "react";
 import { unstable_batchedUpdates } from "react-dom";
 import { useMountedState } from "react-use";
 import { PanelProps } from "types/dashboard";
-import { DataFrame } from "types/dataFrame";
+import { GraphSeries } from "types/plugins/graph";
 import uPlot from "uplot";
 import { dateTimeFormat } from "utils/datetime/formatter";
 
@@ -20,7 +20,7 @@ const TOOLTIP_OFFSET = 10;
 let plotInstance;
 const Tooltip = memo(({ props, options }: Props) => {
     const [coords, setCoords] = useState(null);
-    const [focusSeries, setFocusSeries] = useState<DataFrame>(null)
+    const [focusSeries, setFocusSeries] = useState<GraphSeries>(null)
     const [focusIdx, setFocusIdx] = useState(null)
     const [focusXVal, setFocusXVal] = useState(null)
     const [focusYVal, setFocusYVal] = useState(null)

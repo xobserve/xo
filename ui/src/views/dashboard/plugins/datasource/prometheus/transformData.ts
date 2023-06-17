@@ -1,7 +1,7 @@
 import { isEmpty, round } from "lodash";
 import { Panel, PanelType } from "types/dashboard";
+import { FieldType, GraphPluginData } from "types/plugins/graph";
 import {  TablePluginData, TableSeries } from "types/plugins/table";
-import { prometheusDataToDataFrame } from "./query_runner";
 
 export const transformPrometheusData = (rawData: any, panel: Panel) => {
     if (isEmpty(rawData)) {
@@ -39,11 +39,50 @@ export const transformPrometheusData = (rawData: any, panel: Panel) => {
             return data
         
         case PanelType.Graph:
-            return  prometheusDataToDataFrame(rawData)
+            return  prometheusDataToGraph(rawData)
         default:
             break;
     }
 
 
     return null
+}
+
+
+
+export const prometheusDataToGraph= (data: any): GraphPluginData => {
+    let res: GraphPluginData = []
+    if (data.resultType === "matrix") {
+        for (const m of data.result) {
+            const length = m.values.length
+            const metric = JSON.stringify(m.metric).replace(/:/g, '=')
+            const timeValues = []
+            const valueValues = []
+
+            for (const v of m.values) {
+                timeValues.push(v[0])
+                valueValues.push(parseFloat(v[1]))
+            }
+            
+            res.push({
+                name: metric,
+                length: length,
+                fields: [
+                    {
+                        name: "Time",
+                        type: FieldType.Time,
+                        values: timeValues,
+                    },
+                    {
+                        name: "Value",
+                        type: FieldType.Number,
+                        values: valueValues,
+                        labels: m.metric
+                    }
+                ],
+            })
+        }
+        return res
+    }
+    return []
 }
