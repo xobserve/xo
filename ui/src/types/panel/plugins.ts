@@ -1,4 +1,28 @@
-export interface TableSettings {
+
+export interface PanelPlugins {
+    text?: TextPlugin
+
+    graph?: GraphSettings
+    table?: TableSettings
+    nodeGraph?: NodeGraphSettings
+}
+
+/*-------------------- Plugins ----------------------- */
+
+export interface CommonPluginSettings {
+    disableDatasource?: boolean
+}
+
+export interface TextPlugin extends CommonPluginSettings {
+    md?: string
+    justifyContent: "center" | "left" | "right"
+    alignItems: "center" | "top" | "bottom"
+    fontSize:  string,
+    fontWeight: string,
+}
+
+
+export interface TableSettings extends CommonPluginSettings {
     showHeader: boolean
     globalSearch: boolean
     enablePagination: boolean
@@ -8,7 +32,7 @@ export interface TableSettings {
     onRowClick: string
 }
 
-export interface NodeGraphSettings {
+export interface NodeGraphSettings extends CommonPluginSettings {
     node: {
         baseSize: number
         maxSize: number
@@ -43,21 +67,7 @@ export interface NodeGraphSettings {
     }
 }
 
-
-export interface NodeGraphIcon {
-    key: string
-    value: string
-    icon: string
-}
-
-export interface NodeGraphMenuItem {
-    id?: number
-    name: string
-    event: string
-}
-
-
-export interface GraphSettings {
+export interface GraphSettings extends CommonPluginSettings {
     tooltip?: {
         mode: 'single' | 'all' | 'hidden'
         sort: "asc" | "desc"
@@ -90,6 +100,27 @@ export interface GraphSettings {
         decimals: number
     }
 }
+
+
+
+
+
+
+/*-------------------- Misc ----------------------- */
+export interface NodeGraphIcon {
+    key: string
+    value: string
+    icon: string
+}
+
+export interface NodeGraphMenuItem {
+    id?: number
+    name: string
+    event: string
+}
+
+
+
 
 export type UnitsType = 'none' | 'time' | 'bytes' | 'percent' | 'custom';
 export interface Unit {

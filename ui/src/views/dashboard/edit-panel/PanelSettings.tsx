@@ -1,6 +1,6 @@
 import { Box, Center, Image, Input, SimpleGrid, Switch, Text, Textarea } from "@chakra-ui/react"
 import { upperFirst } from "lodash"
-import { Panel, PanelPlugins, PanelType } from "types/dashboard"
+import { Panel, PanelType } from "types/dashboard"
 import PanelAccordion from "./Accordion"
 import { EditorInputItem } from "../../../components/editor/EditorItem"
 import PanelEditItem from "./PanelEditItem"
@@ -22,13 +22,7 @@ const PanelSettings = ({ panel, onChange }: Props) => {
         pluginsCachedInEdit[panel.type] = panel.plugins[panel.type]
         onChange(tempPanel => {
             tempPanel.type = type
-
-            tempPanel.useDatasource = true
-            // text panel doesn't need datasource
-            if (type == PanelType.Text) {
-                tempPanel.useDatasource = false
-            }
-            
+                        
             tempPanel.plugins = {
                 [type]: pluginsCachedInEdit[type] ??  initPanelPlugins[type]
             }

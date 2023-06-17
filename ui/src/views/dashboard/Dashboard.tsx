@@ -141,8 +141,7 @@ const DashboardWrapper = ({dashboardId}) => {
                     <DashboardHeader dashboard={dashboard} onTimeChange={t => {dispatch({type:  TimeChangedEvent,data: t});setTimeRange(t)}} timeRange={timeRange}  onChange={onDashbardChange} />
                     <Box id="dashboard-wrapper" mt={headerHeight} py="2" width="100%">
                         <DashboardBorder border={dashboard.data.styles.border} fullscreen={fullscreen} />
-                        {dashboard.data.panels?.length > 0 &&<DashboardGrid dashboard={dashboard} onChange={onDashbardChange} />}
-                      
+                        {dashboard.data.panels?.length > 0 &&<DashboardGrid dashboard={dashboard} onChange={onDashbardChange} />}         
                     </Box>
                 </Box>}
             </PageContainer>

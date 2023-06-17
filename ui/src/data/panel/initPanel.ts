@@ -19,7 +19,6 @@ export const initPanel = (id?) =>  {
             },
             queries: []
         },
-        useDatasource: false,
         styles: initPanelStyles
     }
 

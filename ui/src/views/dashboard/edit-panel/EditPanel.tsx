@@ -66,7 +66,7 @@ const EditPanel = ({ dashboard, onChange }: EditPanelProps) => {
     }
 
     const maxPanelHeight = () => {
-        if (tempPanel.useDatasource) {
+        if (!tempPanel.plugins[tempPanel.type].disableDatasource) {
             if (hideDatasource) {
                 return '100%'
             }
@@ -76,7 +76,7 @@ const EditPanel = ({ dashboard, onChange }: EditPanelProps) => {
     }
 
     const maxDatasourceHeight = () => {
-        if (tempPanel.useDatasource) {
+        if (!tempPanel.plugins[tempPanel.type].disableDatasource) {
             if (hideDatasource) {
                 return '0%'
             }
@@ -109,7 +109,7 @@ const EditPanel = ({ dashboard, onChange }: EditPanelProps) => {
                                 <Box position="absolute" right="0" bottom={hideDatasource ? "0" : "-35px"} opacity="0.3" cursor="pointer" fontSize=".8rem" onClick={() => { setHideDatasource(!hideDatasource) }}>{hideDatasource ? <FaArrowUp /> : <FaArrowDown />}</Box>
                             </Box>
                             {/* panel datasource section */}
-                            {tempPanel.useDatasource && <Box maxHeight={maxDatasourceHeight()} mt="2" overflowY="scroll">
+                            {!tempPanel.plugins[tempPanel.type].disableDatasource && <Box maxHeight={maxDatasourceHeight()} mt="2" overflowY="scroll">
                                 <EditPanelQuery key={tempPanel.id + tempPanel.type} panel={tempPanel} onChange={setTempPanel} />
                             </Box>}
                         </Box>

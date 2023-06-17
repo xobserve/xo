@@ -1,5 +1,5 @@
 import { DataFrame, NodeGraphData } from "./dataFrame"
-import { GraphSettings, NodeGraphSettings, TableSettings } from "./panel/plugins"
+import { GraphSettings, NodeGraphSettings, PanelPlugins, TableSettings } from "./panel/plugins"
 import { DecorationStyles, PanelStyles } from "./panel/styles"
 import { Variable } from "./variable"
 
@@ -44,8 +44,7 @@ export interface Panel {
     plugins: PanelPlugins
 
     styles: PanelStyles
-    // for querying data
-    useDatasource: boolean
+
     datasource: PanelDatasource
 }
 
@@ -54,21 +53,9 @@ export interface PanelEditorProps {
     onChange: any
 }
 
-export interface PanelPlugins {
-    text?: TextPlugin
 
-    graph?: GraphSettings
-    table?: TableSettings
-    nodeGraph?: NodeGraphSettings
-}
 
-export interface TextPlugin {
-        md?: string
-        justifyContent: "center" | "left" | "right"
-        alignItems: "center" | "top" | "bottom"
-        fontSize:  string,
-        fontWeight: string,
-    }
+
 export enum PanelType {
     Table = "table",
     Graph = "graph",

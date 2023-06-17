@@ -1,6 +1,6 @@
 import { Dashboard, DatasourceType, Panel, PanelType } from "types/dashboard"
 import AutoSizer from 'react-virtualized-auto-sizer';
-import { Box, Center, HStack, Menu, MenuButton, MenuDivider, MenuItem, MenuList, Modal, ModalBody, ModalCloseButton, ModalContent, ModalHeader, ModalOverlay, Tab, TabList, TabPanel, TabPanels, Tabs, Textarea, Tooltip, useColorModeValue, useDisclosure, useToast } from "@chakra-ui/react";
+import { Box, Center, ControlBox, HStack, Menu, MenuButton, MenuDivider, MenuItem, MenuList, Modal, ModalBody, ModalCloseButton, ModalContent, ModalHeader, ModalOverlay, Tab, TabList, TabPanel, TabPanels, Tabs, Textarea, Tooltip, useColorModeValue, useDisclosure, useToast } from "@chakra-ui/react";
 import { FaBook, FaBug, FaEdit, FaRegCopy, FaTrashAlt } from "react-icons/fa";
 import { IoMdInformation } from "react-icons/io";
 import TextPanel from "../plugins/panel/text/Text";
@@ -116,12 +116,13 @@ export const PanelComponent = ({ dashboard, panel, onRemovePanel, width, height,
 
     const queryData = async (panel: Panel, queryId) => {
         const ds = panel.datasource
+        console.log("here333333:",ds)
         let data = []
         let needUpdate = false
         for (const q0 of ds.queries) {
             const metrics = replaceWithVariables(q0.metrics, variables)
             const q = { ...q0, metrics }
-            const id = queryId + q.id
+            const id = ds.type + queryId + q.id
             const prevQuery = prevQueries[id]
             const currentQuery = [q, timeRange]
 
@@ -215,7 +216,7 @@ export const PanelComponent = ({ dashboard, panel, onRemovePanel, width, height,
             h="100%"
         >
             {
-                isEmpty(panelData) && panel.useDatasource ?
+                isEmpty(panelData) && !panel.plugins[panel.type].disableDatasource ?
                     <Box h="100%">
                         <Center height="100%">No data</Center></Box>
                     : <CustomPanelRender dashboardId={dashboard.id} panel={panel} data={panelData} height={panelInnerHeight} width={panelInnerWidth} sync={sync} />

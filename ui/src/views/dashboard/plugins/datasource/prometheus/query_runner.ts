@@ -1,11 +1,18 @@
 // 1. Run the query to get the data from datasource
 // 2. Convert the data to the format which AiAPM expects
 
+import { isEmpty } from "lodash"
 import { Panel, PanelQuery } from "types/dashboard"
 import { DataFrame, FieldType } from "types/dataFrame"
 import { TimeRange } from "types/time"
 
 export const run_prometheus_query = async (panel: Panel,q: PanelQuery,range: TimeRange) => {
+    if (isEmpty(q.metrics)) {
+        return {
+            error: null,
+            data:[]
+        }
+    }
     //@todo: 
     // 1. rather than query directyly to prometheus, we should query to our own backend servie
     // 2. using `axios` instead of `fetch`

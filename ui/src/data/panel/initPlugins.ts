@@ -1,4 +1,4 @@
-import { PanelPlugins } from "types/dashboard";
+import { PanelPlugins } from "types/panel/plugins";
 
 export const initPanelPlugins: PanelPlugins = {
     graph: {
@@ -31,6 +31,7 @@ export const initPanelPlugins: PanelPlugins = {
     },
 
     text:  {
+        disableDatasource: true,
         md: `#Welcome to Starship\n This is a new panel\n You can edit it by clicking the edit button on the top title\n ###Have fun!`,
         justifyContent: "left",
         alignItems: "top",
