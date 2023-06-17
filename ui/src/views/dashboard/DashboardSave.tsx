@@ -1,8 +1,8 @@
-import { Alert, AlertDescription, AlertIcon, AlertTitle, Box, Button, Drawer, DrawerBody, DrawerCloseButton, DrawerContent, DrawerHeader, DrawerOverlay, Flex, HStack, IconButton, Input, Menu, MenuButton, MenuItem, MenuList, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, ModalOverlay, StackDivider, Tag, Text, Tooltip, useDisclosure, useToast, VStack } from "@chakra-ui/react"
+import { Alert, AlertDescription, AlertIcon, AlertTitle, Box, Button, Drawer, DrawerBody, DrawerContent, DrawerHeader, DrawerOverlay, Flex, HStack, IconButton, Input, Menu, MenuButton, MenuItem, MenuList, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, ModalOverlay, StackDivider, Tag, Text, Tooltip, useDisclosure, useToast, VStack } from "@chakra-ui/react"
 import { useLeavePageConfirm } from "hooks/useLeavePage"
-import { isEqual } from "lodash"
+
 import { useEffect, useState } from "react"
-import { FaInfo, FaRegSave } from "react-icons/fa"
+import { FaRegSave } from "react-icons/fa"
 import { Dashboard } from "types/dashboard"
 import useKeyboardJs from 'react-use/lib/useKeyboardJs';
 import { requestApi } from "utils/axios/request"
@@ -10,6 +10,7 @@ import moment from "moment"
 import { dispatch } from "use-bus"
 import { SetDashboardEvent } from "src/data/bus-events"
 import { FormItem } from "components/form/Form"
+import { getObjectDiff } from "utils/diff"
 
 interface Props {
     dashboard: Dashboard
@@ -41,6 +42,7 @@ const DashboardSave = ({ dashboard }: Props) => {
 
         const changed = JSON.stringify(dashboard) != JSON.stringify(saved)
         if (changed) {
+            console.log("here33333:",getObjectDiff(saved, dashboard))
             setSaved(dashboard)
             setPageChanged(true)
         } else {
