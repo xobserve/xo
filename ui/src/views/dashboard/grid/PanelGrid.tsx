@@ -1,6 +1,6 @@
 import { Dashboard, DatasourceType, Panel, PanelType } from "types/dashboard"
 import AutoSizer from 'react-virtualized-auto-sizer';
-import { Box, Center, HStack,  Menu, MenuButton, MenuDivider, MenuItem, MenuList, Modal, ModalBody, ModalCloseButton, ModalContent, ModalHeader, ModalOverlay, Tab, TabList, TabPanel, TabPanels, Tabs, Textarea, Tooltip, useColorModeValue, useDisclosure, useToast } from "@chakra-ui/react";
+import { Box, Center, HStack, Menu, MenuButton, MenuDivider, MenuItem, MenuList, Modal, ModalBody, ModalCloseButton, ModalContent, ModalHeader, ModalOverlay, Tab, TabList, TabPanel, TabPanels, Tabs, Textarea, Tooltip, useColorModeValue, useDisclosure, useToast } from "@chakra-ui/react";
 import { FaBook, FaBug, FaEdit, FaRegCopy, FaTrashAlt } from "react-icons/fa";
 import { IoMdInformation } from "react-icons/io";
 import TextPanel from "../plugins/panel/text/Text";
@@ -38,7 +38,7 @@ interface PanelGridProps {
 }
 
 const PanelGrid = (props: PanelGridProps) => {
-    const [canRender,setCanRender] = useState(false)
+    const [canRender, setCanRender] = useState(false)
     const h = useRef(null)
     console.log("panel grid rendered:", props.panel.id)
     return (<AutoSizer>
@@ -52,17 +52,17 @@ const PanelGrid = (props: PanelGridProps) => {
             if (!canRender) {
                 h.current = setTimeout(() => {
                     setCanRender(true)
-                },50)
+                }, 50)
 
                 return null
             }
-            
-            return (                
+
+            return (
                 <Box width={width}
                     height={height} className="panel-grid">
-                        <PanelBorder width={width} height={height} border={props.panel.styles?.border}>
-                            <PanelEventWrapper width={width} height={height} {...props} />
-                        </PanelBorder>
+                    <PanelBorder width={width} height={height} border={props.panel.styles?.border}>
+                        <PanelEventWrapper width={width} height={height} {...props} />
+                    </PanelBorder>
                 </Box>
             );
         }}
@@ -114,79 +114,75 @@ export const PanelComponent = ({ dashboard, panel, onRemovePanel, width, height,
         queryData(panel, dashboard.id + panel.id)
     }, [panel.datasource, timeRange, variables])
 
-    const queryData = async (panel, queryId) => {
-        for (var i = 0; i < panel.datasource.length; i++) {
-            const ds = panel.datasource[i]
-            if (ds.selected) {
-                let data = []
-                let needUpdate = false
-                for (const q0 of ds.queries) {
-                    const metrics = replaceWithVariables(q0.metrics, variables)
-                    const q = { ...q0, metrics }
-                    const id = queryId + q.id
-                    const prevQuery = prevQueries[id]
-                    const currentQuery = [q, timeRange]
+    const queryData = async (panel: Panel, queryId) => {
+        const ds = panel.datasource
+        let data = []
+        let needUpdate = false
+        for (const q0 of ds.queries) {
+            const metrics = replaceWithVariables(q0.metrics, variables)
+            const q = { ...q0, metrics }
+            const id = queryId + q.id
+            const prevQuery = prevQueries[id]
+            const currentQuery = [q, timeRange]
 
-                    if (isEqual(prevQuery, currentQuery)) {
-                        const d = prevQueryData[id]
-                        if (d) {
-                            if (isArray(d)) {
-                                data.push(...d)
-                            } else {
-                                data.push(d)
-                            }
-                        }
-                        continue
-                    }
-
-                    needUpdate = true
-                    // console.log("re-query data! metrics id:", q.id, " query id:", queryId)
-
-                    prevQueries[id] = currentQuery
-                    let res
-                    //@needs-update-when-add-new-datasource
-                    switch (ds.type) {
-                        case DatasourceType.Prometheus:
-                            res = await run_prometheus_query(panel, q, timeRange)
-                            break;
-                        case DatasourceType.TestData:
-                            res = await run_testdata_query(panel, q, timeRange)
-                            break;
-                        case DatasourceType.Jaeger:
-                            res = await run_jaeger_query(panel, q, timeRange)
-                            break;
-                        default:
-                            break;
-                    }
-
-                    if (res.error) {
-                        setQueryError(res.error)
+            if (isEqual(prevQuery, currentQuery)) {
+                const d = prevQueryData[id]
+                if (d) {
+                    if (isArray(d)) {
+                        data.push(...d)
                     } else {
-                        setQueryError(null)
-                    }
-
-
-                    if (!isEmpty(res.data)) {
-                        if (isArray(res.data)) {
-                            data.push(...res.data)
-                        } else {
-                            data.push(res.data)
-                        }
-
-                        prevQueryData[id] = res.data
+                        data.push(d)
                     }
                 }
+                continue
+            }
+
+            needUpdate = true
+            // console.log("re-query data! metrics id:", q.id, " query id:", queryId)
+
+            prevQueries[id] = currentQuery
+            let res
+            //@needs-update-when-add-new-datasource
+            switch (ds.type) {
+                case DatasourceType.Prometheus:
+                    res = await run_prometheus_query(panel, q, timeRange)
+                    break;
+                case DatasourceType.TestData:
+                    res = await run_testdata_query(panel, q, timeRange)
+                    break;
+                case DatasourceType.Jaeger:
+                    res = await run_jaeger_query(panel, q, timeRange)
+                    break;
+                default:
+                    break;
+            }
+
+            if (res.error) {
+                setQueryError(res.error)
+            } else {
+                setQueryError(null)
+            }
 
 
-
-                if (needUpdate) {
-                    console.log("query and set panel data:", panel.id)
-                    setPanelData(data)
+            if (!isEmpty(res.data)) {
+                if (isArray(res.data)) {
+                    data.push(...res.data)
                 } else {
-                    if (panelData?.length != data.length) {
-                        setPanelData(data)
-                    }
+                    data.push(res.data)
                 }
+
+                prevQueryData[id] = res.data
+            }
+        }
+
+
+
+        if (needUpdate) {
+            console.log("query and set panel data:", panel.id)
+            setPanelData(data)
+        } else {
+            if (panelData?.length != data.length) {
+                setPanelData(data)
             }
         }
     }
@@ -253,7 +249,7 @@ interface PanelHeaderProps {
     data: DataFrame[]
 }
 
-const PanelHeader = ({ queryError, panel, onCopyPanel, onRemovePanel,data }:PanelHeaderProps) => {
+const PanelHeader = ({ queryError, panel, onCopyPanel, onRemovePanel, data }: PanelHeaderProps) => {
 
     const title = replaceWithVariables(panel.title, variables)
     const { isOpen, onOpen, onClose } = useDisclosure()
@@ -286,7 +282,7 @@ const PanelHeader = ({ queryError, panel, onCopyPanel, onRemovePanel,data }:Pane
                                 <MenuItem icon={<FaBug />} onClick={onOpen}>Debug Panel</MenuItem>
                                 <MenuDivider my="1" />
                                 <MenuItem icon={<FaTrashAlt />} onClick={() => onRemovePanel(panel)}>Remove</MenuItem>
-                  
+
 
                             </MenuList>
                         </Portal>
@@ -294,13 +290,13 @@ const PanelHeader = ({ queryError, panel, onCopyPanel, onRemovePanel,data }:Pane
                 </Center>
                 <Box display="none"><FaBook className="grid-drag-handle" /></Box>
             </HStack>
-            <PanelDecoration decoration={panel.styles.decoration}/>
+            <PanelDecoration decoration={panel.styles.decoration} />
             {isOpen && <DebugPanel panel={panel} isOpen={isOpen} onClose={onClose} data={data} />}
         </>
     )
 }
 
-const DebugPanel = ({ panel, isOpen, onClose,data }) => {
+const DebugPanel = ({ panel, isOpen, onClose, data }) => {
     const [tabIndex, setTabIndex] = useState(0)
 
 
@@ -309,20 +305,20 @@ const DebugPanel = ({ panel, isOpen, onClose,data }) => {
         <ModalContent minWidth="600px">
             <ModalCloseButton />
             <ModalBody>
-            <Tabs onChange={(index) => setTabIndex(index)} >
+                <Tabs onChange={(index) => setTabIndex(index)} >
                     <TabList>
                         <Tab>Panel JSON</Tab>
                         <Tab>Panel Data</Tab>
                     </TabList>
                     <TabPanels p="1">
                         <TabPanel>
-                            <Textarea  minH="500px">
-                                {JSON.stringify(panel,null,2)}
+                            <Textarea minH="500px">
+                                {JSON.stringify(panel, null, 2)}
                             </Textarea>
                         </TabPanel>
                         <TabPanel>
-                            <Textarea  minH="500px">
-                                {JSON.stringify(data,null,2)}
+                            <Textarea minH="500px">
+                                {JSON.stringify(data, null, 2)}
                             </Textarea>
                         </TabPanel>
                     </TabPanels>

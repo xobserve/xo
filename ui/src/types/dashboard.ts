@@ -46,7 +46,7 @@ export interface Panel {
     styles: PanelStyles
     // for querying data
     useDatasource: boolean
-    datasource: PanelDatasource[]
+    datasource: PanelDatasource
 }
 
 export interface PanelEditorProps {
@@ -86,7 +86,6 @@ export enum DatasourceType {
 
 export interface PanelDatasource {
     type: DatasourceType
-    selected: boolean
     queryOptions: {
         maxDataPoints?: number
         interval: string

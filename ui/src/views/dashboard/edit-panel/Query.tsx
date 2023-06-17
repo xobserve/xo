@@ -1,6 +1,6 @@
 import { Box, Button, Flex, HStack, Image, Select, Text, VStack } from "@chakra-ui/react"
 import { FaPlus, FaTrashAlt } from "react-icons/fa"
-import { DatasourceType, Panel } from "types/dashboard"
+import { DatasourceType, Panel, PanelQuery } from "types/dashboard"
 import JaegerQueryEditor from "../plugins/datasource/jaeger/Editor"
 import PrometheusQueryEditor from "../plugins/datasource/prometheus/Editor"
 import TestDataQueryEditor from "../plugins/datasource/testdata/Editor"
@@ -12,33 +12,20 @@ interface Props {
 
 const EditPanelQuery = ({ panel, onChange }: Props) => {
     const selectDatasource = type => {
-        onChange(panel => {
-            let exist = false
-            for (const ds of panel.datasource) {
-                if (ds.type == type) {
-                    ds.selected = true
-                    exist = true
-                } else {
-                    ds.selected = false
-                }
-            }
-    
-            if (!exist) {
-                panel.datasource.push({
-                    type: type,
-                    selected: true,
-                    queryOptions: {
-                        interval: '15s'
-                    },
-                    queries: []
-                })
+        onChange((panel:Panel) => {
+            panel.datasource = {
+                type: type,
+                queryOptions: {
+                    interval: '15s'
+                },
+                queries: []
             }
         })
     }
     
     const onAddQuery = () => {
-        onChange(panel => {
-            const ds = selectedDatasource(panel)
+        onChange((panel:Panel) => {
+            const ds = panel.datasource
             if (!ds.queries) {
                 ds.queries = []
             }
@@ -61,8 +48,8 @@ const EditPanelQuery = ({ panel, onChange }: Props) => {
     }
 
     const removeQuery = id => {
-        onChange(panel => {
-            const ds = selectedDatasource(panel)
+        onChange((panel:Panel) => {
+            const ds = panel.datasource
             if (!ds.queries) {
                 ds.queries = []
             }
@@ -71,7 +58,7 @@ const EditPanelQuery = ({ panel, onChange }: Props) => {
         })
     }
     
-    const selected = selectedDatasource(panel)
+    const selected = panel.datasource
 
     return (<>
         <Box className="top-gradient-border bordered-left bordered-right" width="fit-content">
@@ -113,9 +100,9 @@ export default EditPanelQuery
 
 
 const CustomQueryEditor = ({query,onChange,selected}) => {
-    const onQueryChange = (query) => {
-        onChange(panel => {
-            const ds = selectedDatasource(panel)
+    const onQueryChange = (query:PanelQuery) => {
+        onChange((panel:Panel) => {
+            const ds = panel.datasource
             for (var i = 0; i < ds.queries.length; i++) {
                 if (ds.queries[i].id === query.id) {
                     ds.queries[i] = query
@@ -135,13 +122,5 @@ const CustomQueryEditor = ({query,onChange,selected}) => {
             return <JaegerQueryEditor query={query} onChange={onQueryChange} />
         default:
             return <></>
-    }
-}
-
-const selectedDatasource = (p) => {
-    for (const ds of p.datasource) {
-        if (ds.selected) {
-            return ds
-        }
     }
 }

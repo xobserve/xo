@@ -11,7 +11,7 @@ import { isEmpty } from "lodash";
 import Tooltip from "./Tooltip";
 import SeriesTable, { seriesFilterType } from "components/Tooltip/SeriesTable";
 import { GraphLayout } from "layouts/plugins/GraphLayout";
-import { Box,  Text, useColorMode } from "@chakra-ui/react";
+import { Box, Text, useColorMode } from "@chakra-ui/react";
 import { colors } from "utils/colors";
 import { parseLegendFormat } from "utils/format";
 import { replaceWithVariables } from "utils/variable";
@@ -23,37 +23,35 @@ import { ActiveSeriesEvent } from "src/data/bus-events";
 
 
 const GraphPanel = memo((props: PanelProps) => {
-    const {colorMode} = useColorMode()
+    const { colorMode } = useColorMode()
     const activeSeries = useRef(null)
     const [options, data] = useMemo(() => {
         let o;
         let activeExist = false
         // transform series name based on legend format 
-        for (const ds of props.panel.datasource) {
-            if (ds.selected) {
-                for (const query of ds.queries) {
-                    if (!isEmpty(query.legend)) {
-                        const formats = parseLegendFormat(query.legend)
-              
-                        props.data.map(frame => {
-                            if (frame.id == query.id) {
-                                frame.name = query.legend
-                                if (!isEmpty(formats)) {
-                                    for (const format of formats) {
-                                        const l = frame.fields[1].labels[format]
-                                        if (l) {
-                                            frame.name = frame.name.replaceAll(`{{${format}}}`, l)
-                                        }
-                                    }
-                                }
+        const ds = props.panel.datasource
+        for (const query of ds.queries) {
+            if (!isEmpty(query.legend)) {
+                const formats = parseLegendFormat(query.legend)
 
-                                // replace ${xxx} format with corresponding variables
-                                frame.name = replaceWithVariables(frame.name, variables)
+                props.data.map(frame => {
+                    if (frame.id == query.id) {
+                        frame.name = query.legend
+                        if (!isEmpty(formats)) {
+                            for (const format of formats) {
+                                const l = frame.fields[1].labels[format]
+                                if (l) {
+                                    frame.name = frame.name.replaceAll(`{{${format}}}`, l)
+                                }
                             }
-                        })
+                        }
+
+                        // replace ${xxx} format with corresponding variables
+                        frame.name = replaceWithVariables(frame.name, variables)
                     }
-                }
+                })
             }
+
 
 
 
@@ -61,41 +59,41 @@ const GraphPanel = memo((props: PanelProps) => {
             props.data.map((frame, i) => {
                 frame.color = colors[i % colors.length]
                 if (frame.name == activeSeries.current) {
-                    activeExist =true
+                    activeExist = true
                 }
             })
 
             if (!activeExist) {
                 activeSeries.current = null
-                dispatch({type:  ActiveSeriesEvent, id: props.panel.id, data: null})
-            } 
-            o = parseOptions(props, colorMode,activeSeries.current)
+                dispatch({ type: ActiveSeriesEvent, id: props.panel.id, data: null })
+            }
+            o = parseOptions(props, colorMode, activeSeries.current)
         }
 
         return [o, transformDataToUplot(props.data)]
-    }, [props.panel,props.data, colorMode])
+    }, [props.panel, props.data, colorMode])
 
     const [uplot, setUplot] = useState<uPlot>(null)
 
-    const onSelectSeries = (s,i) => {
+    const onSelectSeries = (s, i) => {
         if (s == activeSeries.current) {
             activeSeries.current = null
-            options.series.map((s1,j) => {
+            options.series.map((s1, j) => {
                 // s1.show = true
-                uplot.setSeries(j,{show: true})
+                uplot.setSeries(j, { show: true })
             })
-            dispatch({type:  ActiveSeriesEvent, id: props.panel.id, data: null})
+            dispatch({ type: ActiveSeriesEvent, id: props.panel.id, data: null })
         } else {
             activeSeries.current = s
-            options.series.map((s1,j) => {
-                if (s1.label==s) {
-                    uplot.setSeries(j,{show: true})
+            options.series.map((s1, j) => {
+                if (s1.label == s) {
+                    uplot.setSeries(j, { show: true })
                 } else {
-                    uplot.setSeries(j,{show: false})
+                    uplot.setSeries(j, { show: false })
                 }
             })
-            dispatch({type:  ActiveSeriesEvent, id: props.panel.id, data: s})
-        }  
+            dispatch({ type: ActiveSeriesEvent, id: props.panel.id, data: s })
+        }
     }
 
     const onChartCreate = useCallback((chart) => { setUplot((chart)); props.sync?.sub(chart) }, [props.sync])

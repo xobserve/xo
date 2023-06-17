@@ -12,14 +12,13 @@ export const initPanel = (id?) =>  {
         plugins:  {
             [type]:initPanelPlugins[type]
         },
-        datasource: [{
+        datasource: {
             type: DatasourceType.TestData,
-            selected: true,
             queryOptions: {
                 interval: '15s'
             },
             queries: []
-        }],
+        },
         useDatasource: false,
         styles: initPanelStyles
     }
