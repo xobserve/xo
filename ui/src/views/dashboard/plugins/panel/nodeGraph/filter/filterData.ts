@@ -37,7 +37,7 @@ export const filterData = (data, dashboardId, panelId, rs?) => {
             const extraNodes = []
             for (const node of ns) {
                 const relations = relationMap[node.id]
-                relations.forEach(id => {
+                relations?.forEach(id => {
                     if (!extraNodes.includes(id)) {
                         extraNodes.push(id)
                     }
