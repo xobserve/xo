@@ -1,7 +1,7 @@
 import { Dashboard, DatasourceType, Panel, PanelType } from "types/dashboard"
 import AutoSizer from 'react-virtualized-auto-sizer';
 import { Box, Center, HStack,  Menu, MenuButton, MenuDivider, MenuItem, MenuList, Modal, ModalBody, ModalCloseButton, ModalContent, ModalHeader, ModalOverlay, Tab, TabList, TabPanel, TabPanels, Tabs, Textarea, Tooltip, useColorModeValue, useDisclosure, useToast } from "@chakra-ui/react";
-import { FaBook, FaEdit, FaRegCopy, FaTrashAlt } from "react-icons/fa";
+import { FaBook, FaBug, FaEdit, FaRegCopy, FaTrashAlt } from "react-icons/fa";
 import { IoMdInformation } from "react-icons/io";
 import TextPanel from "../plugins/panel/text/Text";
 import { memo, useEffect, useRef, useState } from "react";
@@ -19,20 +19,12 @@ import useBus from 'use-bus'
 import { getInitTimeRange } from "components/TimePicker";
 import { TimeChangedEvent, VariableChangedEvent } from "src/data/bus-events";
 import { variables } from "../Dashboard";
-import { useRouter } from "next/router";
 import { addParamToUrl } from "utils/url";
 import { run_testdata_query } from "../plugins/datasource/testdata/query_runner";
 import { run_jaeger_query } from "../plugins/datasource/jaeger/query_runner";
 import NodeGraphPanel from "../plugins/panel/nodeGraph/NodeGraph";
 import { Portal } from "components/portal/Portal";
-import BorderBox10 from "components/largescreen/border/Border10";
 import PanelBorder from "../../../components/largescreen/components/Border";
-import Decoration1 from "components/largescreen/decoration/Decoration1";
-import Decoration3 from "components/largescreen/decoration/Decoration3";
-import Decoration2 from "components/largescreen/decoration/Decoration2";
-import Decoration6 from "components/largescreen/decoration/Decoration6";
-import Decoration7 from "components/largescreen/decoration/Decoration7";
-import Decoration11 from "components/largescreen/decoration/Decoration11";
 import TitleDecoration from "components/largescreen/components/TitleDecoration";
 import PanelDecoration from "components/largescreen/components/Decoration";
 
@@ -291,9 +283,10 @@ const PanelHeader = ({ queryError, panel, onCopyPanel, onRemovePanel,data }:Pane
                                 <MenuDivider my="1" />
                                 <MenuItem icon={<FaRegCopy />} onClick={() => onCopyPanel(panel)}>Copy</MenuItem>
                                 <MenuDivider my="1" />
-                                <MenuItem icon={<FaTrashAlt />} onClick={() => onRemovePanel(panel)}>Remove</MenuItem>
+                                <MenuItem icon={<FaBug />} onClick={onOpen}>Debug Panel</MenuItem>
                                 <MenuDivider my="1" />
-                                <MenuItem icon={<FaTrashAlt />} onClick={onOpen}>Debug Panel</MenuItem>
+                                <MenuItem icon={<FaTrashAlt />} onClick={() => onRemovePanel(panel)}>Remove</MenuItem>
+                  
 
                             </MenuList>
                         </Portal>

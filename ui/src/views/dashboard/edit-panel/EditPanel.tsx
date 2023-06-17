@@ -1,14 +1,10 @@
 import { Box, Button, Center, Flex, HStack, Image, Input, Modal, ModalBody, ModalContent, ModalHeader, ModalOverlay, SimpleGrid, Switch, Tab, TabIndicator, TabList, TabPanel, TabPanels, Tabs, Text, Textarea, useDisclosure } from "@chakra-ui/react"
 import { ColorModeSwitcher } from "components/ColorModeSwitcher"
-import AutoSizer from 'react-virtualized-auto-sizer';
-import { upperFirst } from "lodash"
 import { useEffect, useState } from "react"
 import { Dashboard, Panel, PanelType } from "types/dashboard"
-import PanelGrid, { PanelEventWrapper } from "../grid/PanelGrid"
+import PanelGrid from "../grid/PanelGrid"
 import GraphPanelEditor from "../plugins/panel/graph/Editor"
 import TextPanelEditor from "../plugins/panel/text/Editor"
-import PanelAccordion from "./Accordion"
-import PanelEditItem from "./PanelEditItem"
 import EditPanelQuery from "./Query"
 import TablePanelEditor from "../plugins/panel/table/Editor";
 import { useImmer } from "use-immer";

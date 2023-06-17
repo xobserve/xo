@@ -1,18 +1,22 @@
-import { isEqual } from "lodash";
+import { isArray, isEqual, isObject, transform } from "lodash";
 
-export const getObjectDiff = (obj1, obj2, compareRef = false) => {
-    return Object.keys(obj1).reduce((result, key) => {
-      if (!obj2.hasOwnProperty(key)) {
-        result.push(key);
-      } else if (isEqual(obj1[key], obj2[key])) {
-        const resultKeyIndex = result.indexOf(key);
-  
-        if (compareRef && obj1[key] !== obj2[key]) {
-          result[resultKeyIndex] = `${key} (ref)`;
-        } else {
-          result.splice(resultKeyIndex, 1);
-        }
+
+
+/**
+ * Find difference between two objects
+ * @param  {object} origObj - Source object to compare newObj against
+ * @param  {object} newObj  - New object with potential changes
+ * @return {object} differences
+ */
+export function diffObject(origObj, newObj) {
+  function changes(newObj, origObj) {
+    let arrayIndexCounter = 0
+    return transform(newObj, function (result, value, key) {
+      if (!isEqual(value, origObj[key])) {
+        let resultKey = isArray(origObj) ? arrayIndexCounter++ : key
+        result[resultKey] = (isObject(value) && isObject(origObj[key])) ? changes(value, origObj[key]) : value
       }
-      return result;
-    }, Object.keys(obj2));
+    })
   }
+  return changes(newObj, origObj)
+}

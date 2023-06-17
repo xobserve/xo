@@ -10,7 +10,7 @@ import moment from "moment"
 import { dispatch } from "use-bus"
 import { SetDashboardEvent } from "src/data/bus-events"
 import { FormItem } from "components/form/Form"
-import { getObjectDiff } from "utils/diff"
+
 
 interface Props {
     dashboard: Dashboard
@@ -42,7 +42,6 @@ const DashboardSave = ({ dashboard }: Props) => {
 
         const changed = JSON.stringify(dashboard) != JSON.stringify(saved)
         if (changed) {
-            console.log("here33333:",getObjectDiff(saved, dashboard))
             setSaved(dashboard)
             setPageChanged(true)
         } else {
@@ -75,6 +74,7 @@ const DashboardSave = ({ dashboard }: Props) => {
         if (inPreview) {
             location.reload()
         }
+        onSaveClose()
     }
 
     const onViewHistory = () => {
@@ -109,7 +109,7 @@ const DashboardSave = ({ dashboard }: Props) => {
     return (
         <>
             <Box>
-                <Menu>
+                <Menu placement="left">
                     <MenuButton as={IconButton} variant="ghost" sx={{
                         span: {
                             display: "flex",

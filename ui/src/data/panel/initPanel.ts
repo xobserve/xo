@@ -3,12 +3,15 @@ import { initPanelPlugins } from "./initPlugins";
 import { initPanelStyles } from "./initStyles";
 
 export const initPanel = (id?) =>  {
+    const type = PanelType.Text
     const p: Panel = {
         desc: "",
         collapsed: false,
-        type: PanelType.Text,
+        type: type,
         gridPos: { x: 0, y: 0, w: 12, h: 8 },
-        plugins: initPanelPlugins,
+        plugins:  {
+            [type]:initPanelPlugins[type]
+        },
         datasource: [{
             type: DatasourceType.TestData,
             selected: true,

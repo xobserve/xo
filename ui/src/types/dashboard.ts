@@ -39,6 +39,7 @@ export interface Panel {
 
     gridPos: GridPos
     collapsed: boolean
+
     // for plugin settings
     plugins: PanelPlugins
 
@@ -54,20 +55,20 @@ export interface PanelEditorProps {
 }
 
 export interface PanelPlugins {
-    text?: {
-        md?: string
-        justifyContent: "center" | "left" | "right"
-        alignItems: "center" | "top" | "bottom"
-        fontSize:  string,
-        fontWeight: string,
-    }
+    text?: TextPlugin
 
     graph?: GraphSettings
     table?: TableSettings
     nodeGraph?: NodeGraphSettings
 }
 
-
+export interface TextPlugin {
+        md?: string
+        justifyContent: "center" | "left" | "right"
+        alignItems: "center" | "top" | "bottom"
+        fontSize:  string,
+        fontWeight: string,
+    }
 export enum PanelType {
     Table = "table",
     Graph = "graph",

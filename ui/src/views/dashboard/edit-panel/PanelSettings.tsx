@@ -4,6 +4,7 @@ import { Panel, PanelType } from "types/dashboard"
 import PanelAccordion from "./Accordion"
 import { EditorInputItem } from "../../../components/editor/EditorItem"
 import PanelEditItem from "./PanelEditItem"
+import { initPanelPlugins } from "src/data/panel/initPlugins"
 
 interface Props {
     panel: Panel
@@ -21,10 +22,9 @@ const PanelSettings = ({ panel, onChange }: Props) => {
                 tempPanel.useDatasource = false
             }
 
-            // // init settings for panel render plugin
-            // if (!tempPanel.plugins[type]) {
-            //     tempPanel.plugins[type] = {}
-            // }
+            tempPanel.plugins = {
+                [type]: initPanelPlugins[type]
+            }
         })
     }
 
