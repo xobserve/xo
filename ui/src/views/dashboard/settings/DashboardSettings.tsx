@@ -25,11 +25,11 @@ const DashboardSettings = ({ dashboard,onChange }: Props) => {
                 <ModalBody>
                     <Text textStyle="subTitle" mt="2">{dashboard.title} / Settings</Text>
                     <Tabs orientation="vertical" variant='soft-rounded' mt="7">
-                        <TabList p="2">
+                        <TabList pr="2" width="200px" >
                             <Tab>General</Tab>
                             <Tab>Styles</Tab>
                             <Tab>Variables</Tab>
-                            <Tab>Meta</Tab>
+                            <Tab>Meta data</Tab>
                         </TabList>
 
                         <TabPanels className="bordered" p="2"> 

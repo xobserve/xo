@@ -27,7 +27,7 @@ export interface DashboardData {
         bg: string
         bgEnabled: boolean
         border: string
-        decoration: DecorationStyles
+        // decoration: DecorationStyles
     }
 }
 

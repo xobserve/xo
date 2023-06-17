@@ -23,6 +23,7 @@ import Border from "components/largescreen/components/Border"
 import useMiniMode from "hooks/useMiniMode"
 import useFullscreen from "hooks/useFullscreen"
 import Decoration from "components/largescreen/components/Decoration"
+import { initDashboard } from "src/data/dashboard"
  
 
 
@@ -52,7 +53,7 @@ const DashboardWrapper = ({dashboardId}) => {
     useBus(
         (e) => { return e.type == SetDashboardEvent },
         (e) => {
-            const dash = initDashboard(e.data)
+            const dash = initDash(e.data)
             setDashboard(clone(dash))
         }
     )
@@ -81,7 +82,7 @@ const DashboardWrapper = ({dashboardId}) => {
     const load = async () => {
         const res = await requestApi.get(`/dashboard/byId/${dashboardId}`)
         const res0 = await requestApi.get(`/variable/all`)
-        const dash = initDashboard(res.data)
+        const dash = initDash(res.data)
         unstable_batchedUpdates(() => {
             setDashboard(cloneDeep(dash))
             setGVariables(res0.data)
@@ -89,7 +90,7 @@ const DashboardWrapper = ({dashboardId}) => {
         })
     }
 
-    const initDashboard = (dash) => {
+    const initDash= (dash) => {
         dash.data.panels.forEach((panel:Panel) => {
             // console.log("33333 before",cloneDeep(panel.plugins[panel.type]))
             panel.plugins[panel.type] = defaultsDeep(panel.plugins[panel.type], initPanelPlugins[panel.type])
@@ -136,7 +137,7 @@ const DashboardWrapper = ({dashboardId}) => {
         <>
             <PageContainer bg={dashboard?.data.styles.bgEnabled ? dashboard?.data.styles?.bg: null}>
                 {dashboard && <Box pl="6px" pr="6px" width="100%">
-                    <Decoration decoration={dashboard.data.styles.decoration}/>
+                    {/* <Decoration decoration={dashboard.data.styles.decoration}/> */}
                     <DashboardHeader dashboard={dashboard} onTimeChange={t => {dispatch({type:  TimeChangedEvent,data: t});setTimeRange(t)}} timeRange={timeRange}  onChange={onDashbardChange} />
                     <Box id="dashboard-wrapper" mt={headerHeight} py="2" width="100%">
                         <DashboardBorder border={dashboard.data.styles.border} fullscreen={fullscreen} />

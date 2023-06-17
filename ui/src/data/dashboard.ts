@@ -17,15 +17,15 @@ export const initDashboard:Dashboard = {
             bg: "url(http://datav-react.jiaminghi.com/demo/manage-desk/static/media/bg.110420cf.png)",
             bgEnabled: false,
             border: PanelBorderType.None,
-            decoration: {
-                type: PanelDecorationType.None,
-                width: '100%',
-                height: "20px",
-                top: '-30px',
-                left: '',
-                justifyContent: "center",
-                reverse: false
-            },
+            // decoration: {
+            //     type: PanelDecorationType.None,
+            //     width: '100%',
+            //     height: "20px",
+            //     top: '-30px',
+            //     left: '',
+            //     justifyContent: "center",
+            //     reverse: false
+            // },
         }
     },
     ownedBy: globalTeamId,
