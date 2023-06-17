@@ -7,6 +7,8 @@ import { PanelBorderType, PanelDecorationType, PanelTitleDecorationType } from "
 import PanelAccordion from "./Accordion"
 import { EditorInputItem } from "../../../components/editor/EditorItem"
 import PanelEditItem from "./PanelEditItem"
+import DecorationSelect from "components/largescreen/components/DecorationSelect"
+import BorderSelect from "components/largescreen/components/BorderSelect"
 
 interface Props {
     panel: Panel
@@ -17,7 +19,12 @@ const PanelStyles = ({ panel, onChange }: Props) => {
     return (
         <>
             <PanelAccordion title="Panel border" defaultOpen>
-                <Select size="sm" value={panel.styles?.border} onChange={e => {
+                <BorderSelect value={panel.styles?.border} onChange={v => {
+                    onChange(panel => {
+                        panel.styles.border = v
+                    })
+                }}/>
+                {/* <Select size="sm" value={panel.styles?.border} onChange={e => {
                     const v = e.currentTarget.value
                     onChange(panel => {
                         panel.styles.border = v
@@ -26,7 +33,7 @@ const PanelStyles = ({ panel, onChange }: Props) => {
                     {
                         Object.keys(PanelBorderType).map(key => <option value={PanelBorderType[key]}>{key}</option>)
                     }
-                </Select>
+                </Select> */}
             </PanelAccordion>
             <PanelAccordion title="Title decoration">
                 <PanelEditItem title="type">
@@ -101,7 +108,12 @@ const PanelStyles = ({ panel, onChange }: Props) => {
 
             <PanelAccordion title="Panel decoration">
                 <PanelEditItem title="type">
-                    <Select size="sm" value={panel.styles?.decoration.type} onChange={e => {
+                    <DecorationSelect value={panel.styles?.decoration.type} onChange={v => {
+                        onChange(panel => {
+                            panel.styles.decoration.type = v
+                        })
+                    }}/>
+                    {/* <Select size="sm" value={panel.styles?.decoration.type} onChange={e => {
                         const v = e.currentTarget.value
                         onChange(panel => {
                             panel.styles.decoration.type = v
@@ -110,7 +122,7 @@ const PanelStyles = ({ panel, onChange }: Props) => {
                         {
                             Object.keys(PanelDecorationType).map(key => <option value={PanelDecorationType[key]}>{key}</option>)
                         }
-                    </Select>
+                    </Select> */}
                 </PanelEditItem>
                 <PanelEditItem title="reverse" desc="only a few decorations support reverse mode">
                     <Switch defaultChecked={panel.styles.decoration.reverse} onChange={e => {

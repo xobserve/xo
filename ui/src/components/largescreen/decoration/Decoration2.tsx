@@ -17,7 +17,7 @@ const defaultColor = ['#3faacb', '#fff']
 
 const Decoration2 = forwardRef(({ reverse = false, dur = 6, className, style, color = [] }:DecorationProps, ref) => {
   const { width, height, domRef } = useAutoResize(ref)
-
+ 
   function calcSVGData() {
     return reverse
       ? { w: 1, h: height, x: width / 2, y: 0 }

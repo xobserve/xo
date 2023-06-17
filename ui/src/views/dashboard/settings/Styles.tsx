@@ -6,6 +6,7 @@ import { Dashboard } from "types/dashboard"
 import { PanelBorderType, PanelDecorationType } from "types/panel/styles"
 import PanelAccordion from "../edit-panel/Accordion"
 import PanelEditItem from "../edit-panel/PanelEditItem"
+import BorderSelect from "components/largescreen/components/BorderSelect"
 
 interface Props {
     dashboard: Dashboard
@@ -20,17 +21,12 @@ const StyleSettings = ({ dashboard, onChange }: Props) => {
         <FormItem title="Enable background" desc="Whether using the background image set above">
             <Switch defaultChecked={dashboard.data.styles?.bgEnabled} onChange={(e) => onChange(draft => { draft.data.styles.bgEnabled = e.currentTarget.checked })} />
         </FormItem>
-        <FormItem title="Enable background" desc="Whether using the background image set above">
-            <Select size="sm" value={dashboard.data.styles?.border} onChange={e => {
-                const v = e.currentTarget.value
-                onChange(draft => { 
+        <FormItem title="Dashboard border" desc="Select a cool border for your dashboard">
+            <BorderSelect value={dashboard.data.styles?.border} onChange={v => {
+                onChange(draft => {
                     draft.data.styles.border = v
                 })
-            }}>
-                {
-                    Object.keys(PanelBorderType).map(key => key != PanelBorderType.Normal && <option value={PanelBorderType[key]}>{key}</option>)
-                }
-            </Select>
+            }} />
         </FormItem>
 
         {/* <PanelAccordion title="Decoration" defaultOpen>

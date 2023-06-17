@@ -42,7 +42,7 @@ function getPoints() {
 
 const Decoration1 = forwardRef(({ className, style, color = [] }:DecorationProps, ref) => {
   const { width, height, domRef } = useAutoResize(ref)
-
+ 
   function calcSVGData() {
     const points = getPoints()
 
@@ -62,7 +62,7 @@ const Decoration1 = forwardRef(({ className, style, color = [] }:DecorationProps
   ])
 
   return (
-    <Box className={classNames} ref={domRef} style={style}  width="100%" height="100%" sx={{
+    <Box id="aa1" className={classNames} ref={domRef} style={style}  width="100%" height="100%" sx={{
         svg: {
             "transform-origin": 'left top'
         }
