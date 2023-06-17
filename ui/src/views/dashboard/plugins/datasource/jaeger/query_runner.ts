@@ -70,7 +70,6 @@ const toDataFrame = (query: PanelQuery, data: any): DataFrame[] => {
             }
             
             res.push({
-                id: query.id,
                 name: metric,
                 length: length,
                 fields: [

@@ -24,6 +24,13 @@ export enum seriesFilterType {
 }
 
 const SeriesTable = ({ props, nearestSeries, filterIdx, filterType, onSelect }: Props) => {
+    const rawData = []
+    props.data.forEach(d => {
+        d.forEach(d1 => {
+            rawData.push(d1)
+        })
+    })
+
     const [activeSeries, setActiveSeries] = useState(null)
     useBus(
         (e) => { return e.type == ActiveSeriesEvent && e.id == props.panel.id },
@@ -37,7 +44,7 @@ const SeriesTable = ({ props, nearestSeries, filterIdx, filterType, onSelect }: 
     switch (filterType) {
         case seriesFilterType.Nearest: // tooltip
             if (props.panel.plugins.graph.tooltip.mode != "single") {
-                for (const d of props.data) {
+                for (const d of rawData) {
                     res.push({ name: d.name, value: d.fields[1].values[filterIdx], color: d.color })
                 }
             } else {
@@ -45,7 +52,7 @@ const SeriesTable = ({ props, nearestSeries, filterIdx, filterType, onSelect }: 
             }
             break
         case seriesFilterType.Current: // legend
-            for (const d of props.data) {
+            for (const d of rawData) {
                 res.push({ name: d.name, value: last(d.fields[1].values), color: d.color })
             }
             break

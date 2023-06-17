@@ -6,15 +6,16 @@ import { TimeRange } from "types/time"
 import { prometheusDataToDataFrame } from "../prometheus/query_runner"
 import graphData from './mocks/prometheus_graph.json'
 import { nodeGraphData } from "./mocks/node_graph"
-export const run_testdata_query = async (panel: Panel, q: PanelQuery,range: TimeRange) => {
-    let data ;
-  
+import { transformPrometheusData } from "../prometheus/transformData"
+export const run_testdata_query = async (panel: Panel, q: PanelQuery, range: TimeRange) => {
+    let data;
+
     switch (panel.type) {
         case PanelType.Graph:
-            data = prometheusDataToDataFrame(q, graphData.data)
+            data = prometheusDataToDataFrame(graphData.data)
             break;
         case PanelType.Table:
-            data = prometheusDataToDataFrame(q, graphData.data)
+            data = transformPrometheusData(graphData.data, panel)
             break;
         case PanelType.NodeGraph:
             data = nodeGraphData(10, 0.8)
@@ -23,9 +24,10 @@ export const run_testdata_query = async (panel: Panel, q: PanelQuery,range: Time
             break
     }
 
+    console.log("here333333:",data)
     return {
         error: null,
-        data: data??[]
+        data: data ?? []
     }
 }
 

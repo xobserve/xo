@@ -12,11 +12,13 @@ import { SetDashboardEvent } from "src/data/bus-events"
 import { FormItem } from "components/form/Form"
 import { diffObject } from "utils/diff"
 import ReactDiffViewer from 'react-diff-viewer';
+import { useSearchParam } from "react-use"
 
 interface Props {
     dashboard: Dashboard
 }
 const DashboardSave = ({ dashboard }: Props) => {
+    const edit = useSearchParam('edit')
     const { colorMode } = useColorMode()
     const { isOpen, onOpen, onClose } = useDisclosure()
     const { isOpen: isSaveOpen, onOpen: onSaveOpen, onClose: onSaveClose } = useDisclosure()
@@ -28,7 +30,7 @@ const DashboardSave = ({ dashboard }: Props) => {
     const [pressed] = useKeyboardJs("ctrl+s")
 
     useEffect(() => {
-        if (pressed && !isOpen) {
+        if (pressed && !isOpen && !edit) {
             onSaveOpen()
         }
 

@@ -10,7 +10,7 @@ import { isEmpty } from "lodash";
 
 import Tooltip from "./Tooltip";
 import SeriesTable, { seriesFilterType } from "components/Tooltip/SeriesTable";
-import { GraphLayout } from "layouts/plugins/GraphLayout";
+import { GraphLayout } from "src/views/dashboard/plugins/panel/graph/GraphLayout";
 import { Box, Text, useColorMode } from "@chakra-ui/react";
 import { colors } from "utils/colors";
 import { parseLegendFormat } from "utils/format";
@@ -20,9 +20,14 @@ import { dispatch } from "use-bus";
 import { ActiveSeriesEvent } from "src/data/bus-events";
 
 
-
-
 const GraphPanel = memo((props: PanelProps) => {
+    const rawData = []
+    props.data.forEach(d => {
+        d.forEach(d1 => {
+            rawData.push(d1)
+        })
+    })
+    
     const { colorMode } = useColorMode()
     const activeSeries = useRef(null)
     const [options, data] = useMemo(() => {
@@ -34,7 +39,7 @@ const GraphPanel = memo((props: PanelProps) => {
             if (!isEmpty(query.legend)) {
                 const formats = parseLegendFormat(query.legend)
 
-                props.data.map(frame => {
+                rawData.map(frame => {
                     if (frame.id == query.id) {
                         frame.name = query.legend
                         if (!isEmpty(formats)) {
@@ -56,7 +61,7 @@ const GraphPanel = memo((props: PanelProps) => {
 
 
             // set series line color
-            props.data.map((frame, i) => {
+            rawData.map((frame, i) => {
                 frame.color = colors[i % colors.length]
                 if (frame.name == activeSeries.current) {
                     activeExist = true
@@ -70,7 +75,7 @@ const GraphPanel = memo((props: PanelProps) => {
             o = parseOptions(props, colorMode, activeSeries.current)
         }
 
-        return [o, transformDataToUplot(props.data)]
+        return [o, transformDataToUplot(rawData)]
     }, [props.panel, props.data, colorMode])
 
     const [uplot, setUplot] = useState<uPlot>(null)
@@ -111,6 +116,7 @@ const GraphPanel = memo((props: PanelProps) => {
                             }
                         }
 
+                        console.log("here333333:",options,data)
                         return (options && <UplotReact
                             options={options}
                             data={data}

@@ -99,11 +99,11 @@ export interface GridPos {
 
 export interface PanelProps {
     panel: Panel
-    data?: PanelData[]
     dashboardId?: string
     width?: number
     height?: number
     sync?: any
+    data?: any
 }
 
-export type PanelData = DataFrame & NodeGraphData
+export type PanelData = any

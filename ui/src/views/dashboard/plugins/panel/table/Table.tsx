@@ -1,62 +1,77 @@
 import { Box, Select, useToast } from "@chakra-ui/react"
-import { NumberRangeColumnFilter } from "components/table/filters"
+import { DefaultColumnFilter, NumberRangeColumnFilter } from "components/table/filters"
 import ReactTable from "components/table/Table"
 import { setVariable } from "src/views/variables/Variables"
 import { useRouter } from "next/router"
 import React, { useEffect, useMemo } from "react"
 import { PanelProps } from "types/dashboard"
-import { DataFrame } from "types/dataFrame"
+import { TablePluginData } from "types/plugins/table"
+import { isNumber } from "lodash"
 
-const TablePanel = (props: PanelProps) => {
+interface TablePanelProps extends PanelProps {
+    data: TablePluginData[]
+}
+
+const TablePanel = (props: TablePanelProps) => {
+    // because panel may have multiple queries, each query return a TablePluginData
+    // so we need to flatten TablePluginData[] into TablePluginData
+    const data = useMemo(() => {
+        const res = []
+        props.data.forEach(d => {
+            d.forEach(d1 => {
+                res.push(d1)
+            })
+        })
+        return res
+    },[props.data])
+
+    
+
     const router = useRouter()
     const toast = useToast()
     const [series, setSeries] = React.useState(null)
 
     useEffect(() => {
         if (props.data.length > 0) {
-            const series = props.data[0].name
+            const series = props.data[0][0].name
             setSeries(series)
         }
     },[props.data])
+    
 
-    const [columns,data] = useMemo(() => { 
-        const data = []
-        const columns = []
-        for (var i=0;i<props.data.length;i++) {
-            const row = props.data[i]
-            if (row.name == series) {
-                row.fields.forEach((field) => {
-                    if (field.type == "number" || field.type == "time") {
-                        columns.push({
-                            Header: field.name,
-                            accessor: field.name,
-                            Filter: NumberRangeColumnFilter,
-                            filter: 'between',
-                        })
+
+    const [tableColumns,tableData] = useMemo(() => { 
+  
+        for (var i=0;i<props.data[0].length;i++) {
+            const s = props.data[0][i]
+            if (s.name == series) {
+                const columns = []
+                s.columns.forEach((column,i) => {
+                    if (column.canFilter) {
+                        if (!isNumber(s.rows[0][column.Header])) {
+                            columns.push({
+                                Header: column.Header,
+                                accessor: column.Header,
+                                Filter: NumberRangeColumnFilter,
+                                filter: 'between',
+                            })
+                        } else {
+                            columns.push({
+                                Header: column.Header,
+                                accessor: column.Header,
+                                Filter: DefaultColumnFilter,
+                            })
+                        }
+                      
                     } else {
                         columns.push({
-                            Header: field.name,
-                            accessor: field.name,
+                            Header: column.Header,
+                            accessor: column.Header,
                         })
                     }
-                    
-                  })
-                  
-               for (var j=0;j<row.fields[0].values.length;j++) {
-                  const d = {}
-                  let c;
+                })
 
-                 
-                  row.fields.forEach((field) => {
-                    d[field.name] = field.values[j]
-                  })
-
-                  data.push(d)
-                
-               }
-
-               return [columns,data]
-               
+                return [columns, s.rows]
             }
         }
   
@@ -69,8 +84,8 @@ const TablePanel = (props: PanelProps) => {
         <Box h="100%">
             <Box h= {series ? "calc(100% - 32px)" : "100%"} overflowY="scroll">
                 <ReactTable
-                    columns={columns}
-                    data={data}
+                    columns={tableColumns}
+                    data={tableData}
                     enableGlobalSearch={props.panel.plugins.table.globalSearch}
                     enablePagination={props.panel.plugins.table.enablePagination}
                     pageSize={props.panel.plugins.table.pageSize}
@@ -82,8 +97,8 @@ const TablePanel = (props: PanelProps) => {
 
             </Box>
             {series && <Select size="sm" onChange={e => setSeries(e.currentTarget.value)}>
-                {props.data.map((dataFrame: DataFrame) => {
-                    return <option key={dataFrame.name} value={dataFrame.name}>{dataFrame.name}</option>
+                {data.map(series => {
+                    return <option key={series.name} value={series.name}>{series.name}</option>
                 })}
             </Select>}
         </Box>

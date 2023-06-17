@@ -2,9 +2,10 @@
 // 2. Convert the data to the format which AiAPM expects
 
 import { isEmpty } from "lodash"
-import { Panel, PanelQuery } from "types/dashboard"
+import { Panel, PanelQuery, PanelType } from "types/dashboard"
 import { DataFrame, FieldType } from "types/dataFrame"
 import { TimeRange } from "types/time"
+import { transformPrometheusData } from "./transformData"
 
 export const run_prometheus_query = async (panel: Panel,q: PanelQuery,range: TimeRange) => {
     if (isEmpty(q.metrics)) {
@@ -37,15 +38,14 @@ export const run_prometheus_query = async (panel: Panel,q: PanelQuery,range: Tim
         }
     }
 
-
-    const data = prometheusDataToDataFrame(q, res.data)
+    let data = transformPrometheusData(res.data, panel);
     return {
         error: null,
         data: data
     }
 }
 
-export const prometheusDataToDataFrame = (query: PanelQuery, data: any): DataFrame[] => {
+export const prometheusDataToDataFrame = (data: any): DataFrame[] => {
     let res: DataFrame[] = []
     if (data.resultType === "matrix") {
         for (const m of data.result) {
@@ -60,7 +60,6 @@ export const prometheusDataToDataFrame = (query: PanelQuery, data: any): DataFra
             }
             
             res.push({
-                id: query.id,
                 name: metric,
                 length: length,
                 fields: [

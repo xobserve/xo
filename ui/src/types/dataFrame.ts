@@ -1,7 +1,7 @@
 import { ThresholdsConfig } from "./threshold";
 
 export interface DataFrame {
-    id: number;
+    // id: number;
     name?: string;
     fields: Field[]; // All fields of equal length
 
@@ -31,10 +31,6 @@ export interface Field<T = any, V = Vector<T>> {
      *  Field value type (string, number, etc)
      */
     type: FieldType;
-    /**
-     *  Meta info about how field and how to display it
-     */
-    config?: FieldConfig;
     values: any[]; // The raw field values
     labels?: {[key: string]: string};
 
@@ -89,52 +85,6 @@ export interface MutableVector<T = any> extends ReadWriteVector<T> {
     reverse: () => void;
 }
 
-
-/**
- * Every property is optional
- *
- * Plugins may extend this with additional properties. Something like series overrides
- */
-export interface FieldConfig<TOptions extends object = any> {
-    /**
-     * The display value for this field.  This supports template variables blank is auto
-     */
-    displayName?: string;
-  
-    /**
-     * This can be used by data sources that return and explicit naming structure for values and labels
-     * When this property is configured, this value is used rather than the default naming strategy.
-     */
-    displayNameFromDS?: string;
-  
-    /**
-     * True if data source field supports ad-hoc filters
-     */
-    filterable?: boolean;
-  
-    // Numeric Options
-    unit?: string;
-    decimals?: number | null; // Significant digits (for display)
-    min?: number | null;
-    max?: number | null;
-  
-    // Convert input values into a display string
-    mappings?: ValueMapping[];
-  
-    // Used when reducing field values
-    nullValueMode?: NullValueMode;
-  
-    // Alternative to empty string
-    noValue?: string;
-  
-    // Panel Specific Values
-    custom?: TOptions;
-
-      // Map numeric values to states
-    thresholds?: ThresholdsConfig;
-
-
-  }
 
   export enum NullValueMode {
     Null = 'null',

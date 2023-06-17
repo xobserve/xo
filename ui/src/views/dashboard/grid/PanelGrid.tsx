@@ -157,7 +157,7 @@ export const PanelComponent = ({ dashboard, panel, onRemovePanel, width, height,
                 default:
                     break;
             }
-
+            
             if (res.error) {
                 setQueryError(res.error)
             } else {
@@ -166,16 +166,10 @@ export const PanelComponent = ({ dashboard, panel, onRemovePanel, width, height,
 
 
             if (!isEmpty(res.data)) {
-                if (isArray(res.data)) {
-                    data.push(...res.data)
-                } else {
-                    data.push(res.data)
-                }
-
+                data.push(res.data)
                 prevQueryData[id] = res.data
             }
         }
-
 
 
         if (needUpdate) {

@@ -17,6 +17,13 @@ const BarWidthFactor = 0.6
 const BardMaxWidth = 200
 // build uplot options based on given config
 export const parseOptions = (config: PanelProps, colorMode,activeSeries) => {
+    const rawData = []
+    config.data.forEach(d => {
+        d.forEach(d1 => {
+            rawData.push(d1)
+        })
+    })
+
     const matchSyncKeys = (own, ext) => own == ext;
     
     const axisSpace = ((self, axisIdx, scaleMin, scaleMax, plotDim) => {
@@ -34,7 +41,7 @@ export const parseOptions = (config: PanelProps, colorMode,activeSeries) => {
 
     })
 
-    config.data.forEach((d, i) => {
+    rawData.forEach((d, i) => {
         let pointsShow;
         let showPoints = config.panel.plugins.graph.styles?.showPoints
         if (showPoints == "always") {
