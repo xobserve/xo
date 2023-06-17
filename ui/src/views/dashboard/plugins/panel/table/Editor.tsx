@@ -8,7 +8,7 @@ const TablePanelEditor = ({ panel, onChange }: PanelEditorProps) => {
     return (<PanelAccordion title="Table setting">
         <PanelEditItem title="Show header" desc="whether display table's header">
             <Switch isChecked={panel.plugins.table.showHeader} onChange={(e) => onChange(draft => {
-                 draft.settings.table.showHeader = e.target.checked
+                 draft.plugins.table.showHeader = e.target.checked
             })} />
         </PanelEditItem>
 

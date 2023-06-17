@@ -1,6 +1,6 @@
 import { Accordion, AccordionButton, AccordionIcon, AccordionItem, AccordionPanel, Text, VStack } from "@chakra-ui/react"
 
-const PanelAccordion = ({title, children ,defaultOpen=false}) => {
+const PanelAccordion = ({title, children ,defaultOpen=true}) => {
     return (
         <Accordion defaultIndex={defaultOpen ? [0] : []} allowMultiple>
             <AccordionItem>

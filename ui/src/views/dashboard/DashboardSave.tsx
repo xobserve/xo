@@ -10,6 +10,7 @@ import moment from "moment"
 import { dispatch } from "use-bus"
 import { SetDashboardEvent } from "src/data/bus-events"
 import { FormItem } from "components/form/Form"
+import { diffObject } from "utils/diff"
 
 
 interface Props {
@@ -42,6 +43,7 @@ const DashboardSave = ({ dashboard }: Props) => {
 
         const changed = JSON.stringify(dashboard) != JSON.stringify(saved)
         if (changed) {
+            // console.log("here33333:", diffObject(dashboard, saved))
             setSaved(dashboard)
             setPageChanged(true)
         } else {
