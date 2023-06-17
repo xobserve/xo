@@ -94,6 +94,7 @@ CREATE INDEX  dashboard_created_by ON dashboard (created_by);
 CREATE TABLE IF NOT EXISTS dashboard_history (
     dashboard_id VARCHAR(40),
     version DATETIME,
+    changes TEXT,
     history MEDIUMTEXT
 );
 

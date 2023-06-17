@@ -13,18 +13,15 @@ import { setVariableSelected } from "src/views/variables/Variables"
 import { prevQueries, prevQueryData } from "src/views/dashboard/grid/PanelGrid"
 import { unstable_batchedUpdates } from "react-dom"
 import useBus, { dispatch } from 'use-bus'
-import { MiniSidemenuEvent, PreviewDashboardEvent, StopPreviewDashboardEvent, TimeChangedEvent, VariableChangedEvent } from "src/data/bus-events"
+import {  PreviewDashboardEvent,  TimeChangedEvent, VariableChangedEvent } from "src/data/bus-events"
 
 import { useImmer } from "use-immer"
 import { setAutoFreeze } from "immer";
 import { initPanelPlugins } from "src/data/panel/initPlugins"
 import { initPanelStyles } from "src/data/panel/initStyles"
 import Border from "components/largescreen/components/Border"
-import storage from "utils/localStorage"
-import { SidemenuMinimodeKey } from "src/data/storage-keys"
 import useMiniMode from "hooks/useMiniMode"
 import useFullscreen from "hooks/useFullscreen"
-import { initDashboard } from "src/data/dashboard"
 import Decoration from "components/largescreen/components/Decoration"
  
 

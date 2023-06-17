@@ -12,6 +12,7 @@ export interface Dashboard {
     createdBy?: string
     created?: string
     updated?: string
+    updateChanges?: string
 }
 
 export interface DashboardData {

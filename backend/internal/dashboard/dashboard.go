@@ -19,14 +19,15 @@ var logger = log.RootLogger.New("logger", "dashboard")
 
 func SaveDashboard(c *gin.Context) {
 	u := user.CurrentUser(c)
-
-	dash := &models.Dashboard{}
-	err := c.Bind(&dash)
+	req := &models.DashboardHistory{}
+	err := c.Bind(&req)
 	if err != nil {
 		logger.Warn("invalid request in saving dashboard", "error", err)
 		c.JSON(400, common.RespError(e.ParamInvalid))
 		return
 	}
+
+	dash := req.Dashboard
 
 	if !u.Role.IsAdmin() {
 		isTeamAdmin, err := models.IsTeamAdmin(dash.OwnedBy, u.Id)
@@ -79,7 +80,7 @@ func SaveDashboard(c *gin.Context) {
 		}
 	}
 
-	historyCh <- dash
+	historyCh <- req
 
 	c.JSON(200, common.RespSuccess(dash.Id))
 }

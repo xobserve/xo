@@ -12,14 +12,15 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-var historyCh = make(chan *models.Dashboard, 100)
+var historyCh = make(chan *models.DashboardHistory, 100)
 
 const MaxHistoriesCount = 50
 const DeleteCount = 10
 
 func InitHistory() {
 	for {
-		var dash = <-historyCh
+		var history = <-historyCh
+		dash := history.Dashboard
 		// query how many histories does it has
 		count := 0
 		err := db.Conn.QueryRow("SELECT count(1) FROM dashboard_history WHERE dashboard_id=?", dash.Id).Scan(&count)
@@ -39,14 +40,14 @@ func InitHistory() {
 			}
 		}
 
-		history, err := json.Marshal(dash)
+		data, err := json.Marshal(dash)
 		if err != nil {
 			logger.Warn("marshal history error", "erorr", err)
 			time.Sleep(1 * time.Second)
 			continue
 		}
 
-		_, err = db.Conn.Exec("INSERT INTO dashboard_history (dashboard_id,version,history) VALUES (?,?,?)", dash.Id, time.Now(), history)
+		_, err = db.Conn.Exec("INSERT INTO dashboard_history (dashboard_id,version,changes,history) VALUES (?,?,?,?)", dash.Id, time.Now(), history.Changes, data)
 		if err != nil {
 			logger.Warn("marshal history error", "erorr", err)
 			time.Sleep(1 * time.Second)
@@ -56,18 +57,19 @@ func InitHistory() {
 
 func GetHistory(c *gin.Context) {
 	id := c.Param("id")
-	rows, err := db.Conn.Query("SELECT history,version FROM dashboard_history WHERE dashboard_id=? ORDER BY version DESC", id)
+	rows, err := db.Conn.Query("SELECT history,version,changes FROM dashboard_history WHERE dashboard_id=? ORDER BY version DESC", id)
 	if err != nil {
 		logger.Warn("query dashboard history error", "error,err")
 		c.JSON(http.StatusInternalServerError, common.RespError(e.Internal))
 		return
 	}
 
-	dashboards := make([]*models.Dashboard, 0)
+	histories := make([]*models.DashboardHistory, 0)
 	for rows.Next() {
 		var data []byte
 		var t *time.Time
-		rows.Scan(&data, &t)
+		var changes string
+		rows.Scan(&data, &t, &changes)
 
 		var dash *models.Dashboard
 		err := json.Unmarshal(data, &dash)
@@ -76,8 +78,14 @@ func GetHistory(c *gin.Context) {
 			continue
 		}
 		dash.Updated = t
-		dashboards = append(dashboards, dash)
+
+		history := &models.DashboardHistory{
+			Dashboard: dash,
+			Changes:   changes,
+		}
+
+		histories = append(histories, history)
 	}
 
-	c.JSON(http.StatusOK, common.RespSuccess(dashboards))
+	c.JSON(http.StatusOK, common.RespSuccess(histories))
 }
