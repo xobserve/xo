@@ -1,4 +1,4 @@
-import { Alert, AlertDescription, AlertIcon, AlertTitle, Box, Button, Drawer, DrawerBody, DrawerContent, DrawerHeader, DrawerOverlay, Flex, HStack, IconButton, Input, Menu, MenuButton, MenuItem, MenuList, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, ModalOverlay, StackDivider, Tag, Text, Tooltip, useDisclosure, useToast, VStack } from "@chakra-ui/react"
+import { Alert, AlertDescription, AlertIcon, AlertTitle, Box, Button, Center, Drawer, DrawerBody, DrawerContent, DrawerHeader, DrawerOverlay, Flex, HStack, IconButton, Input, Menu, MenuButton, MenuItem, MenuList, Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay, StackDivider, Tag, Text, Tooltip, useColorMode, useDisclosure, useToast, VStack } from "@chakra-ui/react"
 import { useLeavePageConfirm } from "hooks/useLeavePage"
 
 import { useEffect, useState } from "react"
@@ -11,14 +11,16 @@ import { dispatch } from "use-bus"
 import { SetDashboardEvent } from "src/data/bus-events"
 import { FormItem } from "components/form/Form"
 import { diffObject } from "utils/diff"
-
+import ReactDiffViewer from 'react-diff-viewer';
 
 interface Props {
     dashboard: Dashboard
 }
 const DashboardSave = ({ dashboard }: Props) => {
+    const { colorMode } = useColorMode()
     const { isOpen, onOpen, onClose } = useDisclosure()
     const { isOpen: isSaveOpen, onOpen: onSaveOpen, onClose: onSaveClose } = useDisclosure()
+    const { isOpen: isViewOpen, onOpen: onViewOpen, onClose: onViewClose } = useDisclosure()
     const [saved, setSaved] = useState(null)
     const [pageChanged, setPageChanged] = useState(false)
     const [inPreview, setInPreview] = useState(false)
@@ -43,8 +45,7 @@ const DashboardSave = ({ dashboard }: Props) => {
 
         const changed = JSON.stringify(dashboard) != JSON.stringify(saved)
         if (changed) {
-            // console.log("here33333:", diffObject(dashboard, saved))
-            setSaved(dashboard)
+            console.log("here33333:", diffObject(dashboard, saved))
             setPageChanged(true)
         } else {
             setPageChanged(false)
@@ -62,7 +63,7 @@ const DashboardSave = ({ dashboard }: Props) => {
                 duration: 3000,
                 isClosable: true,
             })
-            return 
+            return
         }
         await requestApi.post("/dashboard/save", { dashboard, changes: updateChanges })
         toast({
@@ -106,7 +107,7 @@ const DashboardSave = ({ dashboard }: Props) => {
                 isClosable: true,
             })
         }
-       
+
     }
     return (
         <>
@@ -142,7 +143,7 @@ const DashboardSave = ({ dashboard }: Props) => {
                 </DrawerContent>
             </Drawer>
 
-            <Modal isOpen={isSaveOpen} onClose={onSaveClose}>
+            <Modal isOpen={isSaveOpen} onClose={onSaveClose} >
                 <ModalOverlay />
                 <ModalContent>
                     <ModalHeader>Save dashboard: {dashboard.title}</ModalHeader>
@@ -153,14 +154,29 @@ const DashboardSave = ({ dashboard }: Props) => {
                             <AlertDescription fontWeight="bold" mt="1">You are previewing a history now, do you want to override current dashboard?</AlertDescription>
                         </Alert>}
                         <FormItem title="describe changes"><Input value={updateChanges} onChange={e => setUpdateChanges(e.currentTarget.value)} placeholder="a message of what has been changed" /></FormItem>
+                        {/* <ReactDiffViewer oldValue={JSON.stringify(saved,null,4)} newValue={JSON.stringify(dashboard,null,4)} splitView={true} useDarkTheme={colorMode!="light" } /> */}
                     </ModalBody>
 
-                    <ModalFooter>
-                        <Button mr={3} onClick={onSaveClose}>
-                            Close
-                        </Button>
-                        <Button variant='ghost' onClick={onSave} >Submit</Button>
+                    <ModalFooter width="100%" justifyContent="space-between">
+                            <Button variant="outline" onClick={onViewOpen}>View Changes</Button>
+                            <HStack spacing="0">
+                                <Button mr={3} onClick={onSaveClose}>
+                                    Close
+                                </Button>
+                                <Button variant='ghost' onClick={onSave} >Submit</Button>
+                            </HStack>
+
                     </ModalFooter>
+                </ModalContent>
+            </Modal>
+            <Modal isOpen={isViewOpen} onClose={onViewClose} size="full">
+                <ModalOverlay />
+                <ModalContent>
+                    <ModalCloseButton />
+                    <ModalBody>
+                        <Center mb="2"><Text textStyle="subTitle" fontWeight="bold">Only diff lines will be show, others will be folded</Text></Center>
+                        <ReactDiffViewer oldValue={JSON.stringify(saved,null,4)} newValue={JSON.stringify(dashboard,null,4)} splitView={true} useDarkTheme={colorMode!="light" } />
+                    </ModalBody>
                 </ModalContent>
             </Modal>
         </>
