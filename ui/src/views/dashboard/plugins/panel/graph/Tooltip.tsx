@@ -7,18 +7,19 @@ import { memo, useLayoutEffect, useState } from "react";
 import { unstable_batchedUpdates } from "react-dom";
 import { useMountedState } from "react-use";
 import { PanelProps } from "types/dashboard";
-import { GraphSeries } from "types/plugins/graph";
+import { GraphPluginData, GraphSeries } from "types/plugins/graph";
 import uPlot from "uplot";
 import { dateTimeFormat } from "utils/datetime/formatter";
 
 interface Props {
     props: PanelProps
     options: uPlot.Options
+    data: GraphPluginData
 }
 
 const TOOLTIP_OFFSET = 10;
 let plotInstance;
-const Tooltip = memo(({ props, options }: Props) => {
+const Tooltip = memo(({ props, options,data }: Props) => {
     const [coords, setCoords] = useState(null);
     const [focusSeries, setFocusSeries] = useState<GraphSeries>(null)
     const [focusIdx, setFocusIdx] = useState(null)
@@ -62,7 +63,7 @@ const Tooltip = memo(({ props, options }: Props) => {
                     const yval = uplot.posToVal(uplot.cursor.top, "y")
                     let gap;
                     let fs;
-                    for (const d of props.data) {
+                    for (const d of data) {
                         const newGap = Math.abs(d.fields[1].values[idx] - yval)
                         if (!gap) {
                             gap = newGap
@@ -125,7 +126,7 @@ const Tooltip = memo(({ props, options }: Props) => {
             {coords && <TooltipContainer position={{ x: coords.x, y: coords.y }} offset={{ x: 0, y: TOOLTIP_OFFSET }}>
                 <Box className="bordered" background={'var(--chakra-colors-chakra-body-bg)'} p="2" fontSize="xs">
                         <Text fontWeight="600">{dateTimeFormat(focusXVal * 1000)}</Text>
-                        <SeriesTable props={props} nearestSeries={focusSeries} filterIdx={focusIdx} filterType={seriesFilterType.Nearest}/>
+                        <SeriesTable props={props} data={data} nearestSeries={focusSeries} filterIdx={focusIdx} filterType={seriesFilterType.Nearest}/>
                 </Box>
             </TooltipContainer>
             }

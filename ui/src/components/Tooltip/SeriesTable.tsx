@@ -3,14 +3,15 @@
 import { Box, Flex, HStack, Text, VStack } from "@chakra-ui/react"
 import { formatUnit } from "components/unit"
 import { last, reverse, round, sortBy } from "lodash"
-import { useState } from "react"
+import { useMemo, useState } from "react"
 import { ActiveSeriesEvent } from "src/data/bus-events"
 import { PanelProps } from "types/dashboard"
-import { GraphSeries } from "types/plugins/graph"
+import { GraphPluginData, GraphSeries } from "types/plugins/graph"
 import useBus from "use-bus"
 
 interface Props {
     props: PanelProps
+    data: GraphPluginData
     nearestSeries?: GraphSeries
     filterIdx?: number
     filterType: seriesFilterType // controls which value should be seen in series table
@@ -23,14 +24,7 @@ export enum seriesFilterType {
     Current = "current",
 }
 
-const SeriesTable = ({ props, nearestSeries, filterIdx, filterType, onSelect }: Props) => {
-    const rawData = []
-    props.data.forEach(d => {
-        d.forEach(d1 => {
-            rawData.push(d1)
-        })
-    })
-
+const SeriesTable = ({ props, data, nearestSeries, filterIdx, filterType, onSelect }: Props) => {
     const [activeSeries, setActiveSeries] = useState(null)
     useBus(
         (e) => { return e.type == ActiveSeriesEvent && e.id == props.panel.id },
@@ -44,7 +38,7 @@ const SeriesTable = ({ props, nearestSeries, filterIdx, filterType, onSelect }: 
     switch (filterType) {
         case seriesFilterType.Nearest: // tooltip
             if (props.panel.plugins.graph.tooltip.mode != "single") {
-                for (const d of rawData) {
+                for (const d of data) {
                     res.push({ name: d.name, value: d.fields[1].values[filterIdx], color: d.color })
                 }
             } else {
@@ -52,7 +46,7 @@ const SeriesTable = ({ props, nearestSeries, filterIdx, filterType, onSelect }: 
             }
             break
         case seriesFilterType.Current: // legend
-            for (const d of rawData) {
+            for (const d of data) {
                 res.push({ name: d.name, value: last(d.fields[1].values), color: d.color })
             }
             break

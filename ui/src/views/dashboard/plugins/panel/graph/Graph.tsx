@@ -25,16 +25,20 @@ interface GraphPanelProps extends PanelProps {
 }
 
 const GraphPanel = memo((props: GraphPanelProps) => {
-    const rawData = []
-    props.data.forEach(d => {
-        d.forEach(d1 => {
-            rawData.push(d1)
+    const data = useMemo(() => {
+        const res = []
+        props.data.forEach(d => {
+            d.forEach(d1 => {
+                res.push(d1)
+            })
         })
-    })
-    
+        return res
+    }, [props.data])
+
+
     const { colorMode } = useColorMode()
     const activeSeries = useRef(null)
-    const [options, data] = useMemo(() => {
+    const [options, plotData] = useMemo(() => {
         let o;
         let activeExist = false
         // transform series name based on legend format 
@@ -43,7 +47,7 @@ const GraphPanel = memo((props: GraphPanelProps) => {
             if (!isEmpty(query.legend)) {
                 const formats = parseLegendFormat(query.legend)
 
-                rawData.map(frame => {
+                data.map(frame => {
                     if (frame.id == query.id) {
                         frame.name = query.legend
                         if (!isEmpty(formats)) {
@@ -65,7 +69,7 @@ const GraphPanel = memo((props: GraphPanelProps) => {
 
 
             // set series line color
-            rawData.map((frame, i) => {
+            data.map((frame, i) => {
                 frame.color = colors[i % colors.length]
                 if (frame.name == activeSeries.current) {
                     activeExist = true
@@ -76,10 +80,10 @@ const GraphPanel = memo((props: GraphPanelProps) => {
                 activeSeries.current = null
                 dispatch({ type: ActiveSeriesEvent, id: props.panel.id, data: null })
             }
-            o = parseOptions(props, colorMode, activeSeries.current)
+            o = parseOptions(props, data, colorMode, activeSeries.current)
         }
 
-        return [o, transformDataToUplot(rawData)]
+        return [o, transformDataToUplot(data)]
     }, [props.panel, props.data, colorMode])
 
     const [uplot, setUplot] = useState<uPlot>(null)
@@ -112,7 +116,7 @@ const GraphPanel = memo((props: GraphPanelProps) => {
         <>
             <Box h="100%" className="panel-graph">
                 {!isEmpty(props?.panel.plugins.graph.axis?.label) && <Text fontSize="sm" position="absolute" ml="3" mt="-1" className="color-text">{props.panel.plugins.graph.axis.label}</Text>}
-                {options && <GraphLayout width={props.width} height={props.height} legend={props.panel.plugins.graph.legend.mode == "hidden" ? null : <SeriesTable placement={props.panel.plugins.graph.legend.placement} props={props} filterType={seriesFilterType.Current} onSelect={onSelectSeries} />}>
+                {options && <GraphLayout width={props.width} height={props.height} legend={props.panel.plugins.graph.legend.mode == "hidden" ? null : <SeriesTable placement={props.panel.plugins.graph.legend.placement} props={props} data={data} filterType={seriesFilterType.Current} onSelect={onSelectSeries} />}>
                     {(vizWidth: number, vizHeight: number) => {
                         if (uplot) {
                             if (props.width != vizWidth || props.height != vizHeight) {
@@ -120,14 +124,13 @@ const GraphPanel = memo((props: GraphPanelProps) => {
                             }
                         }
 
-                        console.log("here333333:",options,data)
                         return (options && <UplotReact
                             options={options}
-                            data={data}
+                            data={plotData}
                             onDelete={(chart: uPlot) => { }}
                             onCreate={onChartCreate}
                         >
-                            {props.panel.plugins.graph.tooltip.mode != 'hidden' && <Tooltip props={props} options={options} />}
+                            {props.panel.plugins.graph.tooltip.mode != 'hidden' && <Tooltip props={props} options={options} data={data} />}
                         </UplotReact>
                         )
                     }}
