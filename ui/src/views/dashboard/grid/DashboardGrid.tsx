@@ -24,6 +24,7 @@ interface GridProps {
 let windowHeight = 1200;
 let windowWidth = 1920;
 
+let gridWidth = 0;
 const DashboardGrid = memo((props: GridProps) => {
     console.log("dashboard grid rendered:")
     const { dashboard, onChange } = props
@@ -102,7 +103,7 @@ const DashboardGrid = memo((props: GridProps) => {
     const onResizeStop = (layout, oldItem, newItem) => {
     };
 
-    return (<Box style={{ flex: '1 1 auto' }} id="dashboard-grid"  position="relative">
+    return (<Box style={{ flex: '1 1 auto' }} id="dashboard-grid" position="relative">
         <AutoSizer disableHeight>
             {({ width }) => {
                 if (width === 0) {
@@ -110,7 +111,25 @@ const DashboardGrid = memo((props: GridProps) => {
                 }
 
                 const draggable = width <= 769 ? false : dashboard.editable;
-                return <Box style={{ width: `${width}px`, height: '100%' }} className="grid-layout-wrapper" >
+
+                // This is to avoid layout re-flows, accessing window.innerHeight can trigger re-flow
+                // We assume here that if width change height might have changed as well
+                if (gridWidth !== width) {
+                    windowHeight = window.innerHeight ?? 1000;
+                    windowWidth = window.innerWidth;
+                    gridWidth = width;
+                }
+
+                return <Box style={{ width: `${width}px`, height: '100%' }} className="grid-layout-wrapper" sx={{
+                    '@media (max-width: 768px)': {
+                        '.dashboard-grid-item': {
+                          /* display: block !important; */
+                          /* transition-property: none !important; */
+                           'position': 'unset !important',
+                          'transform': 'translate(0px, 0px) !important',
+                        }
+                      }
+                }}>
                     <ReactGridLayout
                         width={width}
                         isDraggable={draggable}
@@ -127,8 +146,10 @@ const DashboardGrid = memo((props: GridProps) => {
                         onResize={onResize}
                         onResizeStop={onResizeStop}
                         onLayoutChange={onLayoutChange}
+                        compactType={null}
                     >
                         {
+
                             dashboard.data.panels.map((panel) => {
                                 return <GridItem
                                     key={panel.id}
@@ -139,7 +160,7 @@ const DashboardGrid = memo((props: GridProps) => {
                                     windowWidth={windowWidth}
                                 >
                                     {(width: number, height: number) => {
-                                        return (<Box key={panel.id} id={`panel-${panel.id}`} p="1">
+                                        return (<Box key={panel.id} id={`panel-${panel.id}`}>
                                             <PanelGrid dashboard={dashboard} panel={panel} width={width} height={height} onRemovePanel={onRemovePanel} sync={mooSync} />
                                         </Box>)
                                     }}
@@ -178,13 +199,7 @@ const GridItem = React.forwardRef<HTMLDivElement, GridItemProps>((props, ref) =>
     const { gridWidth, gridPos, isViewing, windowHeight, windowWidth, ...divProps } = props;
     const style: CSSProperties = props.style ?? {};
 
-    if (isViewing) {
-        // In fullscreen view mode a single panel take up full width & 85% height
-        width = gridWidth!;
-        height = windowHeight * 0.85;
-        style.height = height;
-        style.width = '100%';
-    } else if (windowWidth < theme.breakpoints.values.md) {
+    if (windowWidth < theme.breakpoints.values.md) {
         // Mobile layout is a bit different, every panel take up full width
         width = props.gridWidth!;
         height = translateGridHeightToScreenHeight(gridPos!.h);

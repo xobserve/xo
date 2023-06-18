@@ -136,7 +136,7 @@ const DashboardWrapper = ({dashboardId}) => {
                 {dashboard && <Box pl="6px" pr="6px" width="100%" display="flex" flexDirection="column" flexGrow="1" height="100%" >
                     {/* <Decoration decoration={dashboard.data.styles.decoration}/> */}
                     <DashboardHeader dashboard={dashboard} onTimeChange={t => {dispatch({type:  TimeChangedEvent,data: t});setTimeRange(t)}} timeRange={timeRange}  onChange={onDashbardChange} />
-                    <Box id="dashboard-wrapper" mt={headerHeight} py="2">
+                    <Box id="dashboard-wrapper" mt={headerHeight} py="2" position="relative">
                         <DashboardBorder border={dashboard.data.styles.border} fullscreen={fullscreen} />
                         {dashboard.data.panels?.length > 0 &&<DashboardGrid dashboard={dashboard} onChange={onDashbardChange} />}         
                     </Box>
@@ -156,7 +156,7 @@ const DashboardBorder = ({border,fullscreen}) => {
     useEffect(() => {
         ref.current = setInterval(() => {
             const ele = document.getElementById("dashboard-grid")
-            const h = ele?.offsetHeight + 10
+            const h = ele?.offsetHeight+12
             setHeight(h)
         },500)
         return () =>{
@@ -167,7 +167,7 @@ const DashboardBorder = ({border,fullscreen}) => {
 
     return (
         <>
-        {height > 0 && <Box position="absolute" width={fullscreen ? "100%" : `calc(100% - ${miniMode? 70 : 150}px)`} height={height} id="dashboard-border"><Border width="100%" height="100%" border={border}><Box height="100%" width="100%"></Box></Border></Box>}
+        {height > 0 && <Box key={height} position="absolute" width={'100%'} height={height} id="dashboard-border" top="5px"><Border width="100%" height="100%" border={border}><Box height="100%" width="100%"></Box></Border></Box>}
         </>
     )
 }
