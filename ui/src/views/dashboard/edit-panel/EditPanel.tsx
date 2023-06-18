@@ -40,7 +40,6 @@ const EditPanel = ({ dashboard, onChange }: EditPanelProps) => {
                 setTempPanel(p)
                 onOpen()
             } else {
-                console.log("here33333:",dashboard)
                 onDiscard()
             }
         }
@@ -49,8 +48,9 @@ const EditPanel = ({ dashboard, onChange }: EditPanelProps) => {
     useEffect(() => {
         if (!rawPanel) {
             setRawPanel(tempPanel)
+            return 
         }
-        
+            
         const changed = !isEqual(rawPanel, tempPanel)
         setPageChanged(changed)
     }, [tempPanel])
