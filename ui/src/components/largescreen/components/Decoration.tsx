@@ -2,6 +2,7 @@
 
 
 import { Box } from "@chakra-ui/react"
+import { memo } from "react"
 import { DecorationStyles, PanelDecorationType } from "types/panel/styles"
 import Decoration1 from "../decoration/Decoration1"
 import Decoration10 from "../decoration/Decoration10"
@@ -18,9 +19,9 @@ interface Props {
     decoration: DecorationStyles
 }
 
-const Decoration = ({ decoration }: Props) => {
+const Decoration = memo(({ decoration }: Props) => {
     return <Box display="flex" justifyContent={decoration.justifyContent}><Inner decoration={decoration} /></Box>
-}
+})
 
 const Inner = ({ decoration }: Props) => {
     const s = {

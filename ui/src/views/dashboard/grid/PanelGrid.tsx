@@ -4,7 +4,7 @@ import { Box, Center, ControlBox, HStack, Menu, MenuButton, MenuDivider, MenuIte
 import { FaBook, FaBug, FaEdit, FaRegCopy, FaTrashAlt } from "react-icons/fa";
 import { IoMdInformation } from "react-icons/io";
 import TextPanel from "../plugins/panel/text/Text";
-import { memo, useEffect, useRef, useState } from "react";
+import { memo, useCallback, useEffect, useRef, useState } from "react";
 import { run_prometheus_query } from "../plugins/datasource/prometheus/query_runner";
 import GraphPanel from "../plugins/panel/graph/Graph";
 import { PANEL_BODY_PADDING, PANEL_HEADER_HEIGHT, StorageCopiedPanelKey } from "src/data/constants";
@@ -40,7 +40,7 @@ interface PanelGridProps {
 }
 
 
-export const PanelGrid = (props: PanelGridProps) => {
+export const PanelGrid = memo((props: PanelGridProps) => {
     const [forceRenderCount, setForceRenderCount] = useState(0)
 
     const [tr, setTr] = useState<TimeRange>(getInitTimeRange())
@@ -73,7 +73,8 @@ export const PanelGrid = (props: PanelGridProps) => {
         <PanelComponent key={props.panel.id + forceRenderCount} {...props} timeRange={tr} variables={variables1} />
         </PanelBorder>
     )
-}
+})
+
 interface PanelComponentProps extends PanelGridProps {
     width: number
     height: number
@@ -156,7 +157,7 @@ export const PanelComponent = ({ dashboard, panel, onRemovePanel, width, height,
         }
     }
 
-    const onCopyPanel = (panel) => {
+    const onCopyPanel = useCallback((panel) => {
         toast({
             title: "Copied",
             description: "Panel copied, you can use it through **Add Panel** button",
@@ -166,7 +167,7 @@ export const PanelComponent = ({ dashboard, panel, onRemovePanel, width, height,
         })
 
         storage.set(StorageCopiedPanelKey, panel)
-    }
+    },[])
 
     const panelBodyHeight = height - PANEL_HEADER_HEIGHT
     const panelInnerHeight = panelBodyHeight - PANEL_BODY_PADDING * 2 // 10px padding top and bottom of panel body
@@ -218,7 +219,7 @@ interface PanelHeaderProps {
     data: any[]
 }
 
-const PanelHeader = ({ queryError, panel, onCopyPanel, onRemovePanel, data }: PanelHeaderProps) => {
+const PanelHeader = memo(({ queryError, panel, onCopyPanel, onRemovePanel, data }: PanelHeaderProps) => {
 
     const title = replaceWithVariables(panel.title, variables)
     const { isOpen, onOpen, onClose } = useDisclosure()
@@ -259,7 +260,7 @@ const PanelHeader = ({ queryError, panel, onCopyPanel, onRemovePanel, data }: Pa
             {isOpen && <DebugPanel panel={panel} isOpen={isOpen} onClose={onClose} data={data} />}
         </>
     )
-}
+})
 
 const DebugPanel = ({ panel, isOpen, onClose, data }) => {
     const [tabIndex, setTabIndex] = useState(0)

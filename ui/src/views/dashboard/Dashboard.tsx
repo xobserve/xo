@@ -137,7 +137,7 @@ const DashboardWrapper = ({dashboardId}) => {
                     {/* <Decoration decoration={dashboard.data.styles.decoration}/> */}
                     <DashboardHeader dashboard={dashboard} onTimeChange={t => {dispatch({type:  TimeChangedEvent,data: t});setTimeRange(t)}} timeRange={timeRange}  onChange={onDashbardChange} />
                     <Box id="dashboard-wrapper" mt={headerHeight} py="2" position="relative">
-                        <DashboardBorder border={dashboard.data.styles.border} fullscreen={fullscreen} />
+                        <DashboardBorder border={dashboard.data.styles.border}  />
                         {dashboard.data.panels?.length > 0 &&<DashboardGrid dashboard={dashboard} onChange={onDashbardChange} />}         
                     </Box>
                 </Box>}
@@ -149,9 +149,8 @@ const DashboardWrapper = ({dashboardId}) => {
 
 export default DashboardWrapper
 
-const DashboardBorder = ({border,fullscreen}) => {
+const DashboardBorder = ({border}) => {
     const [height, setHeight] = useState(0)
-    const miniMode = useMiniMode()
     const ref = useRef(null)
     useEffect(() => {
         ref.current = setInterval(() => {

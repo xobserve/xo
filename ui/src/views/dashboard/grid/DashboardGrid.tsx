@@ -6,7 +6,7 @@ const ReactGridLayout = WidthProvider(RGL);
 import { GRID_CELL_HEIGHT, GRID_CELL_VMARGIN, GRID_COLUMN_COUNT } from "src/data/constants";
 import { updateGridPos } from "utils/dashboard/panel";
 import { Box, Grid, useColorModeValue } from "@chakra-ui/react";
-import React, { CSSProperties, memo } from "react";
+import React, { CSSProperties, memo, useCallback } from "react";
 import EditPanel from "../edit-panel/EditPanel";
 import uPlot from "uplot";
 import AutoSizer from "react-virtualized-auto-sizer";
@@ -83,12 +83,12 @@ const DashboardGrid = memo((props: GridProps) => {
         })
     };
 
-    const onRemovePanel = (panel: Panel) => {
+    const onRemovePanel = useCallback((panel: Panel) => {
         const index = dashboard.data.panels.indexOf(panel);
         onChange(dashboard => {
             dashboard.data.panels.splice(index, 1);
         })
-    }
+    },[dashboard])
 
     let mooSync = dashboard.data.sharedTooltip ? uPlot.sync(dashboard.id) : null
 

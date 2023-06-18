@@ -1,69 +1,62 @@
 .react-grid-layout {
     position: relative;
     transition: height 200ms ease;
-  }
-  
-  .react-grid-item {
-    transition: all 200ms ease;
+}
+
+.react-grid-item {
+    transition: all 250ms ease;
     transition-property: left, top;
-  }
-  
-  .react-grid-item img {
+}
+
+.react-grid-item img {
     pointer-events: none;
     -webkit-user-select: none;
-            user-select: none;
-  }
-  
-  .react-grid-item.cssTransforms {
+    user-select: none;
+}
+
+.react-grid-item.cssTransforms {
     transition-property: transform;
-  }
-  
-  .react-grid-item.resizing {
+}
+
+.react-grid-item.resizing {
     z-index: 1;
     will-change: width, height;
-  }
-  
-  .react-grid-item.react-draggable-dragging {
+}
+
+.react-grid-item.react-draggable-dragging {
     transition: none;
     z-index: 3;
     will-change: transform;
-  }
-  
-  
-  @media (max-width: 768px) {
+}
+
+
+@media (max-width: 768px) {
     .react-grid-item {
-      display: block !important;
-      transition-property: none !important;
-      position: unset !important;
-      transform: translate(0px, 0px) !important;
-      margin-bottom: 10px;
+        display: block !important;
+        transition-property: none !important;
+        position: unset !important;
+        transform: translate(0px, 0px) !important;
+        margin-bottom: 10px;
     }
-  }
-  
-  html[data-theme="dark"] .react-grid-item.react-grid-placeholder {
+}
+
+html[data-theme="dark"] .react-grid-item.react-grid-placeholder {
     box-shadow: 0 0 4px #3274d9;
     background: #0a1f40;
     z-index: -1;
     opacity: unset;
-  }
-  
-  html[data-theme="light"] .react-grid-item.react-grid-placeholder {
+}
+
+html[data-theme="light"] .react-grid-item.react-grid-placeholder {
     box-shadow: 0 0 4px rgb(0, 181, 216);
     background: #fff;
     z-index: -1;
     opacity: unset;
-  }
+}
 
-  .react-grid-item.resizing.panel,
-  .react-grid-item.panel.dropdown-menu-open,
-  .react-grid-item.react-draggable-dragging.panel {
+.react-grid-item.resizing.panel,
+.react-grid-item.panel.dropdown-menu-open,
+.react-grid-item.react-draggable-dragging.panel {
     z-index: 1030;
-  }
-  
-  .react-grid-item.cssTransforms {
-    transition-property: none;
-  }
-  
-  .animated .react-grid-item.cssTransforms {
-    transition-property: transform;
-  }
+}
+
