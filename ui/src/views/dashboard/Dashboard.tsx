@@ -133,7 +133,7 @@ const DashboardWrapper = ({dashboardId}) => {
     return (
         <>
             <PageContainer bg={dashboard?.data.styles.bgEnabled ? dashboard?.data.styles?.bg: null}>
-                {dashboard && <Box pl="6px" pr="6px" width="100%" display="flex" flexDirection="column" flexGrow="1" height="100%" >
+                {dashboard && <Box pl="6px" pr="6px" width="100%" display="flex" flexDirection="column" flexGrow="1" height="100%"  minHeight="100vh">
                     {/* <Decoration decoration={dashboard.data.styles.decoration}/> */}
                     <DashboardHeader dashboard={dashboard} onTimeChange={t => {dispatch({type:  TimeChangedEvent,data: t});setTimeRange(t)}} timeRange={timeRange}  onChange={onDashbardChange} />
                     <Box id="dashboard-wrapper" mt={headerHeight} py="2" position="relative">

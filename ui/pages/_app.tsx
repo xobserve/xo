@@ -7,6 +7,8 @@ import { createStandaloneToast } from '@chakra-ui/toast'
 import CommonStyles from "src/theme/common.styles"
 import NoSSR from 'react-no-ssr';
 import dynamic from "next/dynamic"
+import "src/theme/css/react-grid.css"
+
 
 const { ToastContainer} = createStandaloneToast()
 

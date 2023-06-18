@@ -120,16 +120,7 @@ const DashboardGrid = memo((props: GridProps) => {
                     gridWidth = width;
                 }
 
-                return <Box style={{ width: `${width}px`, height: '100%' }} className="grid-layout-wrapper" sx={{
-                    '@media (max-width: 768px)': {
-                        '.dashboard-grid-item': {
-                          /* display: block !important; */
-                          /* transition-property: none !important; */
-                           'position': 'unset !important',
-                          'transform': 'translate(0px, 0px) !important',
-                        }
-                      }
-                }}>
+                return <Box style={{ width: `${width}px`, height: '100%' }} className="grid-layout-wrapper">
                     <ReactGridLayout
                         width={width}
                         isDraggable={draggable}
@@ -146,7 +137,7 @@ const DashboardGrid = memo((props: GridProps) => {
                         onResize={onResize}
                         onResizeStop={onResizeStop}
                         onLayoutChange={onLayoutChange}
-                        compactType={null}
+                        compactType="vertical"
                     >
                         {
 
@@ -213,7 +204,7 @@ const GridItem = React.forwardRef<HTMLDivElement, GridItemProps>((props, ref) =>
 
     // props.children[0] is our main children. RGL adds the drag handle at props.children[1]
     return (
-        <Box {...divProps} ref={ref} className="dashboard-grid-item" sx={{
+        <Box {...divProps} ref={ref} className="react-grid-item" sx={{
             ".react-resizable-handle": {
                 position: "absolute",
                 width: "20px",
@@ -234,8 +225,8 @@ const GridItem = React.forwardRef<HTMLDivElement, GridItemProps>((props, ref) =>
                 bottom: "3px",
                 width: "6px",
                 height: "6px",
-                borderRight: `2px solid ${useColorModeValue('rgba(0, 0, 0, 0.4)', 'rgba(255, 255, 255, 0.4)')}`,
-                borderBottom: `2px solid ${useColorModeValue('rgba(0, 0, 0, 0.4)', 'rgba(255, 255, 255, 0.4)')}`
+                borderRight: `2px solid ${useColorModeValue('rgba(0, 0, 0, 0.3)', 'rgba(255, 255, 255, 0.4)')}`,
+                borderBottom: `2px solid ${useColorModeValue('rgba(0, 0, 0, 0.3)', 'rgba(255, 255, 255, 0.4)')}`
             },
         }}>
             {/* Pass width and height to children as render props */}
