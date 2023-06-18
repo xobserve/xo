@@ -17,7 +17,14 @@ export const initPanel = (id?) =>  {
             queryOptions: {
                 interval: '15s'
             },
-            queries: []
+            queries: [
+                {
+                    id: 65,
+                    metrics: "",
+                    legend: "" ,
+                    visible: true
+                }
+            ]
         },
         styles: initPanelStyles
     }
