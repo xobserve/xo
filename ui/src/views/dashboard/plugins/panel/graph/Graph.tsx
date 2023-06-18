@@ -38,6 +38,7 @@ const GraphPanel = memo((props: GraphPanelProps) => {
 
     const { colorMode } = useColorMode()
     const activeSeries = useRef(null)
+
     const [options, plotData] = useMemo(() => {
         let o;
         let activeExist = false

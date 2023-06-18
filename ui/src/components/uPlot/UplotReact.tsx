@@ -49,16 +49,19 @@ const UplotReact = ({
     // componentDidUpdate
     const prevProps = useRef({ options, data, target }).current;
     useEffect(() => {
-        if (JSON.stringify(prevProps.options) != JSON.stringify(options)) {
-            // console.log("here0000")
+        // console.log("here33330000")
+        if (!isEqual(prevProps.options, options)) {
+            // console.log("here33330001")
             const optionsState = optionsUpdateState(prevProps.options, options);
             if (!chartRef.current || optionsState === 'create') {
                 // console.log("here00001")
                 destroy(chartRef.current);
                 create();
             } else if (optionsState === 'update') {
-                // console.log("here0002")
-                chartRef.current.setSize({ width: options.width, height: options.height });
+                // console.log("here3333330002")
+                destroy(chartRef.current);
+                create();
+                // chartRef.current.setSize({ width: options.width, height: options.height });
             }
         } else {
             if (prevProps.data !== data) {
