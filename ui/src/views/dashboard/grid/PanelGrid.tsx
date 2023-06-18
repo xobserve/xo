@@ -16,7 +16,7 @@ import storage from "utils/localStorage";
 import TablePanel from "../plugins/panel/table/Table";
 import useBus from 'use-bus'
 import { getInitTimeRange } from "components/TimePicker";
-import { TimeChangedEvent, VariableChangedEvent } from "src/data/bus-events";
+import { PanelForceRebuildEvent, TimeChangedEvent, VariableChangedEvent } from "src/data/bus-events";
 import { variables } from "../Dashboard";
 import { addParamToUrl } from "utils/url";
 import { run_testdata_query } from "../plugins/datasource/testdata/query_runner";
@@ -26,6 +26,7 @@ import { Portal } from "components/portal/Portal";
 import PanelBorder from "../../../components/largescreen/components/Border";
 import TitleDecoration from "components/largescreen/components/TitleDecoration";
 import PanelDecoration from "components/largescreen/components/Decoration";
+import { useDedupEvent } from "hooks/useDedupEvent";
 
 
 interface PanelGridProps {
@@ -39,6 +40,7 @@ interface PanelGridProps {
 const PanelGrid = (props: PanelGridProps) => {
     const [canRender, setCanRender] = useState(false)
     const h = useRef(null)
+
     console.log("panel grid rendered:", props.panel.id)
     return (<AutoSizer>
         {({ width, height }) => {
@@ -72,12 +74,15 @@ export default PanelGrid
 
 
 
-
 export const PanelEventWrapper = (props) => {
+    const [forceRenderCount, setForceRenderCount] = useState(0)
+
     const [tr, setTr] = useState<TimeRange>(getInitTimeRange())
+
     useBus(
         (e) => { return e.type == TimeChangedEvent },
         (e) => {
+            console.log("here33333, time changed!", props.panel.id)
             setTr(e.data)
         }
     )
@@ -86,12 +91,19 @@ export const PanelEventWrapper = (props) => {
     useBus(
         VariableChangedEvent,
         () => {
+            console.log("here33333, variable changed!", props.panel.id)
             setVariables([...variables])
         }
     )
+    
+    // provide a way to force rebuild a panel
+    useDedupEvent(PanelForceRebuildEvent + props.panel.id,() => {
+            console.log("here33333, panel is forced to rebuild!", props.panel.id)
+            setForceRenderCount(f => f+ 1)
+    })
 
     return (
-        <PanelComponent {...props} timeRange={tr} variables={variables1} />
+        <PanelComponent key={props.panel.id + forceRenderCount} {...props} timeRange={tr} variables={variables1} />
     )
 }
 interface PanelComponentProps extends PanelGridProps {
