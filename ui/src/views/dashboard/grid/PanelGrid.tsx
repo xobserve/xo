@@ -115,7 +115,6 @@ export const PanelComponent = ({ dashboard, panel, onRemovePanel, width, height,
 
     const queryData = async (panel: Panel, queryId) => {
         const ds = panel.datasource
-        console.log("here333333:",ds)
         let data = []
         let needUpdate = false
         for (const q0 of ds.queries) {
@@ -128,11 +127,7 @@ export const PanelComponent = ({ dashboard, panel, onRemovePanel, width, height,
             if (isEqual(prevQuery, currentQuery)) {
                 const d = prevQueryData[id]
                 if (d) {
-                    if (isArray(d)) {
-                        data.push(...d)
-                    } else {
-                        data.push(d)
-                    }
+                    data.push(d)
                 }
                 continue
             }
@@ -156,7 +151,7 @@ export const PanelComponent = ({ dashboard, panel, onRemovePanel, width, height,
                 default:
                     break;
             }
-            
+
             if (res.error) {
                 setQueryError(res.error)
             } else {
@@ -198,7 +193,7 @@ export const PanelComponent = ({ dashboard, panel, onRemovePanel, width, height,
     const panelInnerWidth = width + 8 // 10px padding left and right of panel body
 
 
-    console.log("panel component rendered, data: ", panelData, panel)
+    console.log("panel grid rendered, data: ", panelData, panel)
     return <Box height="100%" className={panel.styles.border == "None" ? "hover-bordered" : null} border={`1px solid transparent`}>
         <PanelHeader panel={panel} data={panelData} queryError={queryError} onCopyPanel={onCopyPanel} onRemovePanel={onRemovePanel} />
         {panelData && <Box

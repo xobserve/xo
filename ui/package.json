@@ -87,7 +87,7 @@
     "eslint-plugin-prettier": "^4.0.0",
     "next-compose-plugins": "^2.2.1",
     "prettier": "^2.7.1",
-    "typescript": "5.1.3"
+    "typescript": "^4.9.3"
   },
   "resolutions": {
     "d3-interpolate": "2.0.1"

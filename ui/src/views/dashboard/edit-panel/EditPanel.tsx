@@ -14,6 +14,8 @@ import NodeGraphPanelEditor from "../plugins/panel/nodeGraph/Editor";
 import { FaArrowDown, FaArrowUp } from "react-icons/fa";
 import PanelStyles from "./PanelStyles";
 import PanelSettings from "./PanelSettings";
+import { useLeavePageConfirm } from "hooks/useLeavePage"
+import { isEqual } from "lodash"
 
 interface EditPanelProps {
     dashboard: Dashboard
@@ -24,8 +26,12 @@ const EditPanel = ({ dashboard, onChange }: EditPanelProps) => {
     const edit = useSearchParam('edit')
 
     const [tempPanel, setTempPanel] = useImmer<Panel>(null)
+    const [rawPanel, setRawPanel] = useState<Panel>(null)
     const { isOpen, onOpen, onClose } = useDisclosure()
     const [hideDatasource, setHideDatasource] = useState(false)
+    const [pageChanged, setPageChanged] = useState(false)
+
+    useLeavePageConfirm(pageChanged)
 
     useEffect(() => {
         if (edit) {
@@ -37,6 +43,14 @@ const EditPanel = ({ dashboard, onChange }: EditPanelProps) => {
         }
     }, [edit])
 
+    useEffect(() => {
+        if (!rawPanel) {
+            setRawPanel(tempPanel)
+        }
+        
+        const changed = !isEqual(rawPanel, tempPanel)
+        setPageChanged(changed)
+    }, [tempPanel])
 
 
 
@@ -49,19 +63,21 @@ const EditPanel = ({ dashboard, onChange }: EditPanelProps) => {
                 }
             }
         })
-
+        setPageChanged(false)
         onEditClose()
     }
 
 
     const onDiscard = () => {
         setTempPanel(null)
+        setPageChanged(false)
         onEditClose()
     }
 
 
     const onEditClose = () => {
         removeParamFromUrl(['edit'])
+        setPageChanged(false)
         onClose()
     }
 

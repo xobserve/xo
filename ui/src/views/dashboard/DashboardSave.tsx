@@ -13,6 +13,7 @@ import { FormItem } from "components/form/Form"
 import { diffObject } from "utils/diff"
 import ReactDiffViewer from 'react-diff-viewer';
 import { useSearchParam } from "react-use"
+import { isEqual } from "lodash"
 
 interface Props {
     dashboard: Dashboard
@@ -45,9 +46,9 @@ const DashboardSave = ({ dashboard }: Props) => {
         }
 
 
-        const changed = JSON.stringify(dashboard) != JSON.stringify(saved)
+        const changed = !isEqual(dashboard, saved)
+        setPageChanged(changed)
         if (changed) {
-            console.log("here33333:", diffObject(dashboard, saved))
             setPageChanged(true)
         } else {
             setPageChanged(false)

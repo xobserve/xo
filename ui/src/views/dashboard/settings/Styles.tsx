@@ -1,17 +1,13 @@
 import { Box, HStack, Input, Select, Switch, Text, useToast, VStack } from "@chakra-ui/react"
 import { EditorInputItem } from "components/editor/EditorItem"
 import { Form, FormItem } from "components/form/Form"
-import { useEffect, useState } from "react"
 import { Dashboard } from "types/dashboard"
-import { PanelBorderType, PanelDecorationType } from "types/panel/styles"
-import PanelAccordion from "../edit-panel/Accordion"
-import PanelEditItem from "../edit-panel/PanelEditItem"
 import BorderSelect from "components/largescreen/components/BorderSelect"
 
 interface Props {
     dashboard: Dashboard
     onChange: any
-}
+} 
 
 const StyleSettings = ({ dashboard, onChange }: Props) => {
     return (<Form size="sm">
