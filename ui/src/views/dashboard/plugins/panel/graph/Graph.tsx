@@ -18,6 +18,8 @@ import { variables } from "src/views/dashboard/Dashboard";
 import { dispatch } from "use-bus";
 import { ActiveSeriesEvent } from "src/data/bus-events";
 import { GraphPluginData } from "types/plugins/graph";
+import * as colorManipulator from 'components/uPlot/colorManipulator';
+import { canvasCtx } from 'pages/_app';
 
 
 interface GraphPanelProps extends PanelProps {
@@ -164,4 +166,42 @@ const transformDataToUplot = (data: GraphPluginData) => {
     }
 
     return transformed
+}
+
+
+enum ScaleOrientation {
+    Horizontal = 0,
+    Vertical = 1,
+}
+
+
+
+
+export enum GradientDirection {
+    Right = 0,
+    Up = 1,
+    Left = 2,
+    Down = 3,
+}
+function makeDirectionalGradient(direction: GradientDirection, bbox: uPlot.BBox, ctx: CanvasRenderingContext2D) {
+    let x0 = 0,
+        y0 = 0,
+        x1 = 0,
+        y1 = 0;
+
+    if (direction === GradientDirection.Down) {
+        y0 = bbox.top;
+        y1 = bbox.top + bbox.height;
+    } else if (direction === GradientDirection.Left) {
+        x0 = bbox.left + bbox.width;
+        x1 = bbox.left;
+    } else if (direction === GradientDirection.Up) {
+        y0 = bbox.top + bbox.height;
+        y1 = bbox.top;
+    } else if (direction === GradientDirection.Right) {
+        x0 = bbox.left;
+        x1 = bbox.left + bbox.width;
+    }
+
+    return ctx.createLinearGradient(x0, y0, x1, y1);
 }

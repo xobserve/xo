@@ -1,4 +1,4 @@
-import { HStack, Select } from "@chakra-ui/react"
+import { HStack, Select, Text } from "@chakra-ui/react"
 import PanelAccordion from "src/views/dashboard/edit-panel/Accordion"
 import PanelEditItem from "src/views/dashboard/edit-panel/PanelEditItem"
 import RadionButtons from "components/RadioButtons"
@@ -48,7 +48,9 @@ const GraphPanelEditor = ({ panel, onChange }: PanelEditorProps) => {
                             panel.plugins.graph.styles.gradientMode = v
                         })} />
                     </PanelEditItem>
-                    <PanelEditItem title="Fill opacity">
+                    <PanelEditItem title="Fill opacity" info={
+                        <Text>You need to click Apply Button(in top-right) to see the new setting taken effect</Text>
+                    }>
                         <EditorSliderItem value={panel.plugins.graph.styles.fillOpacity} min={0} max={100} step={1} onChange={v => onChange(panel => {
                             panel.plugins.graph.styles.fillOpacity = v
                         })} />
@@ -67,11 +69,11 @@ const GraphPanelEditor = ({ panel, onChange }: PanelEditorProps) => {
         </PanelAccordion>
         <PanelAccordion title="Axis">
             <PanelEditItem title="Label">
-                <EditorInputItem value={panel.plugins.graph.axis.label} onChange={v => 
+                <EditorInputItem value={panel.plugins.graph.axis.label} onChange={v =>
                     onChange(panel => {
                         panel.plugins.graph.axis.label = v
                     })
-                 } />
+                } />
             </PanelEditItem>
             <PanelEditItem title="Show grid">
                 <RadionButtons options={[{ label: "Show", value: true }, { label: "Hidden", value: false }]} value={panel.plugins.graph.axis.showGrid} onChange={v => onChange(panel => {
@@ -105,7 +107,7 @@ const GraphPanelEditor = ({ panel, onChange }: PanelEditorProps) => {
                 } />
             </PanelEditItem>
             <PanelEditItem title="Decimals">
-                <EditorNumberItem value={panel.plugins.graph.std.decimals ?? 2}  min={0} max={5} step={1}  onChange={v => onChange(panel => { panel.plugins.graph.std.decimals = v})}/>
+                <EditorNumberItem value={panel.plugins.graph.std.decimals ?? 2} min={0} max={5} step={1} onChange={v => onChange(panel => { panel.plugins.graph.std.decimals = v })} />
             </PanelEditItem>
         </PanelAccordion>
     </>
