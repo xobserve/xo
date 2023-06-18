@@ -19,9 +19,7 @@ interface GridProps {
 }
 
 const DashboardGrid = memo((props: GridProps) => {
-    console.log("dashboard grid rendered")
-    const edit = useSearchParam('edit')
-
+    console.log("dashboard grid rendered:")
     const { dashboard, onChange} = props
 
     const SizedReactLayoutGrid = useMemo(() => sizeMe({ monitorWidth: true })(GridWrapper), []) ;
@@ -96,7 +94,7 @@ const DashboardGrid = memo((props: GridProps) => {
 
     return (<Box height="fit-content" id="dashboard-grid">
         {/* SizedReactLayoutGrid will force React to rebuild all the panels, so it's not performant here */}
-        {!edit && <SizedReactLayoutGrid
+        {<SizedReactLayoutGrid
             className="layout"
             layout={buildLayout(dashboard.data.panels)}
             isResizable={dashboard.editable}

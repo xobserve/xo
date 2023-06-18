@@ -39,6 +39,9 @@ const EditPanel = ({ dashboard, onChange }: EditPanelProps) => {
             if (p) {
                 setTempPanel(p)
                 onOpen()
+            } else {
+                console.log("here33333:",dashboard)
+                onDiscard()
             }
         }
     }, [edit])
