@@ -35,46 +35,12 @@ interface PanelGridProps {
     onRemovePanel?: any
     sync: any
     onVariablesChange?: any
+    width: number
+    height: number
 }
 
-const PanelGrid = (props: PanelGridProps) => {
-    const [canRender, setCanRender] = useState(false)
-    const h = useRef(null)
 
-    console.log("panel grid rendered:", props.panel.id)
-    return (<AutoSizer>
-        {({ width, height }) => {
-            // every time you refresh a page, width of the panel will first set to a value, then set to another smaller one
-            // so we make a verify here to make sure the panel is rendered with the correct width
-            if (h.current) {
-                clearTimeout(h.current)
-            }
-
-            if (!canRender) {
-                h.current = setTimeout(() => {
-                    setCanRender(true)
-                }, 50)
-
-                return null
-            }
-
-            return (
-                <Box width={width}
-                    height={height} className="panel-grid">
-                    <PanelBorder width={width} height={height} border={props.panel.styles?.border}>
-                        <PanelEventWrapper width={width} height={height} {...props} />
-                    </PanelBorder>
-                </Box>
-            );
-        }}
-    </AutoSizer>)
-}
-
-export default PanelGrid
-
-
-
-export const PanelEventWrapper = (props) => {
+export const PanelGrid = (props: PanelGridProps) => {
     const [forceRenderCount, setForceRenderCount] = useState(0)
 
     const [tr, setTr] = useState<TimeRange>(getInitTimeRange())
@@ -95,15 +61,17 @@ export const PanelEventWrapper = (props) => {
             setVariables([...variables])
         }
     )
-    
+
     // provide a way to force rebuild a panel
-    useDedupEvent(PanelForceRebuildEvent + props.panel.id,() => {
-            console.log("here33333, panel is forced to rebuild!", props.panel.id)
-            setForceRenderCount(f => f+ 1)
+    useDedupEvent(PanelForceRebuildEvent + props.panel.id, () => {
+        console.log("here33333, panel is forced to rebuild!", props.panel.id)
+        setForceRenderCount(f => f + 1)
     })
 
     return (
-        <PanelComponent key={props.panel.id + forceRenderCount} {...props} timeRange={tr} variables={variables1} />
+        // <PanelBorder width={props.width} height={props.height} border={props.panel.styles?.border}>
+            <PanelComponent key={props.panel.id + forceRenderCount} {...props} timeRange={tr} variables={variables1} />
+        // </PanelBorder>
     )
 }
 interface PanelComponentProps extends PanelGridProps {
@@ -205,8 +173,8 @@ export const PanelComponent = ({ dashboard, panel, onRemovePanel, width, height,
     const panelInnerWidth = width + 8 // 10px padding left and right of panel body
 
 
-    console.log("panel grid rendered, data: ", panelData, panel)
-    return <Box height="100%" className={panel.styles.border == "None" ? "hover-bordered" : null} border={`1px solid transparent`}>
+    console.log("panel grid rendered, data: ", panelData)
+    return <Box height={height} width={width} className={panel.styles.border == "None" ? "hover-bordered" : null} border={`1px solid transparent`}>
         <PanelHeader panel={panel} data={panelData} queryError={queryError} onCopyPanel={onCopyPanel} onRemovePanel={onRemovePanel} />
         {panelData && <Box
             // panel={panel}

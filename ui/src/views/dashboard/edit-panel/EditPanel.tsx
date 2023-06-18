@@ -2,7 +2,6 @@ import { Box, Button, Center, Flex, HStack, Image, Input, Modal, ModalBody, Moda
 import { ColorModeSwitcher } from "components/ColorModeSwitcher"
 import { useEffect, useState } from "react"
 import { Dashboard, Panel, PanelType } from "types/dashboard"
-import PanelGrid from "../grid/PanelGrid"
 import GraphPanelEditor from "../plugins/panel/graph/Editor"
 import TextPanelEditor from "../plugins/panel/text/Editor"
 import EditPanelQuery from "./Query"
@@ -18,6 +17,8 @@ import { useLeavePageConfirm } from "hooks/useLeavePage"
 import { isEqual } from "lodash"
 import { dispatch } from "use-bus"
 import { PanelForceRebuildEvent } from "src/data/bus-events"
+import AutoSizer from "react-virtualized-auto-sizer"
+import { PanelGrid } from "../grid/PanelGrid"
 
 interface EditPanelProps {
     dashboard: Dashboard
@@ -50,9 +51,9 @@ const EditPanel = ({ dashboard, onChange }: EditPanelProps) => {
     useEffect(() => {
         if (!rawPanel) {
             setRawPanel(tempPanel)
-            return 
+            return
         }
-            
+
         const changed = !isEqual(rawPanel, tempPanel)
         setPageChanged(changed)
     }, [tempPanel])
@@ -68,15 +69,15 @@ const EditPanel = ({ dashboard, onChange }: EditPanelProps) => {
                 }
             }
         })
-        
+
         if (pageChanged) {
             dispatch(PanelForceRebuildEvent + tempPanel.id)
         }
-      
+
         setPageChanged(false)
         onEditClose()
 
-       
+
     }
 
 
@@ -132,8 +133,15 @@ const EditPanel = ({ dashboard, onChange }: EditPanelProps) => {
                     <HStack height="calc(100vh - 100px)" alignItems="top">
                         <Box width="65%" height="100%">
                             {/* panel rendering section */}
-                            <Box key={tempPanel.id.toString() + hideDatasource as string} height={maxPanelHeight()} id="edit-panel-render">
-                                <PanelGrid key={tempPanel.id + tempPanel.type} dashboard={dashboard} panel={tempPanel} sync={null} />
+                            <Box key={tempPanel.id.toString() + hideDatasource as string} height={maxPanelHeight()} id="edit-panel-render" >
+                                <AutoSizer>
+                                    {({ width,height }) => {
+                                        if (width === 0) {
+                                            return null;
+                                        }
+                                        return <PanelGrid width={width} height={height} key={tempPanel.id + tempPanel.type} dashboard={dashboard} panel={tempPanel} sync={null} />
+                                    }}
+                                </AutoSizer>
                                 {!tempPanel.plugins[tempPanel.type].disableDatasource && <Box position="absolute" right="0" bottom={hideDatasource ? "0" : "-35px"} opacity="0.3" cursor="pointer" fontSize=".8rem" onClick={() => { setHideDatasource(!hideDatasource) }}>{hideDatasource ? <FaArrowUp /> : <FaArrowDown />}</Box>}
                             </Box>
                             {/* panel datasource section */}
@@ -158,13 +166,13 @@ const EditPanel = ({ dashboard, onChange }: EditPanelProps) => {
                                     <TabPanels>
                                         <TabPanel px="0" pt="1">
                                             {/* panel basic setting */}
-                                            <PanelSettings panel={tempPanel} onChange={setTempPanel}/>
+                                            <PanelSettings panel={tempPanel} onChange={setTempPanel} />
 
                                             {/* panel rendering plugin setting */}
                                             <CustomPanelEditor tempPanel={tempPanel} setTempPanel={setTempPanel} />
                                         </TabPanel>
                                         <TabPanel px="0" pt="1" pb="0">
-                                            <PanelStyles panel={tempPanel} onChange={setTempPanel}/>
+                                            <PanelStyles panel={tempPanel} onChange={setTempPanel} />
                                         </TabPanel>
                                     </TabPanels>
                                 </Tabs>
