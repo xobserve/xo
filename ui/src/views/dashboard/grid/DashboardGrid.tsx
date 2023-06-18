@@ -5,7 +5,7 @@ const ReactGridLayout = WidthProvider(RGL);
 
 import { GRID_CELL_HEIGHT, GRID_CELL_VMARGIN, GRID_COLUMN_COUNT } from "src/data/constants";
 import { updateGridPos } from "utils/dashboard/panel";
-import { Box, Grid } from "@chakra-ui/react";
+import { Box, Grid, useColorModeValue } from "@chakra-ui/react";
 import React, { CSSProperties, memo } from "react";
 import EditPanel from "../edit-panel/EditPanel";
 import uPlot from "uplot";
@@ -101,7 +101,7 @@ const DashboardGrid = memo((props: GridProps) => {
     const onResizeStop = (layout, oldItem, newItem) => {
     };
 
-    return (<Box style={{ flex: '1 1 auto' }} id="dashboard-grid"  position="relative" >
+    return (<Box style={{ flex: '1 1 auto' }} className="dashboard-grid"  position="relative">
         <AutoSizer disableHeight>
             {({ width }) => {
                 if (width === 0) {
@@ -109,7 +109,7 @@ const DashboardGrid = memo((props: GridProps) => {
                 }
 
                 const draggable = width <= 769 ? false : dashboard.editable;
-                return <Box style={{ width: `${width}px`, height: '100%' }} id="grid-layout-wrapper" sx={reactResieCss}>
+                return <Box style={{ width: `${width}px`, height: '100%' }} className="grid-layout-wrapper" >
                     <ReactGridLayout
                         width={width}
                         isDraggable={draggable}
@@ -138,7 +138,7 @@ const DashboardGrid = memo((props: GridProps) => {
                                     windowWidth={windowWidth}
                                 >
                                     {(width: number, height: number) => {
-                                        return (<Box key={panel.id} id={`panel-${panel.id}`} >
+                                        return (<Box key={panel.id} id={`panel-${panel.id}`}>
                                             <PanelGrid dashboard={dashboard} panel={panel} width={width} height={height} onRemovePanel={onRemovePanel} sync={mooSync} />
                                         </Box>)
                                     }}
@@ -197,10 +197,34 @@ const GridItem = React.forwardRef<HTMLDivElement, GridItemProps>((props, ref) =>
 
     // props.children[0] is our main children. RGL adds the drag handle at props.children[1]
     return (
-        <div {...divProps} ref={ref} className="dashboard-grid-item" >
+        <Box {...divProps} ref={ref} className="dashboard-grid-item" sx={{
+            ".react-resizable-handle": {
+                position: "absolute",
+                width: "20px",
+                height: "20px",
+                bottom: "0",
+                right: "0",
+                cursor: "se-resize",
+                visibility: "hidden",
+            },
+            ":hover .react-resizable-handle": {
+                visibility: "visible",
+            }
+            ,
+            ".react-resizable-handle::after": {
+                content: "''",
+                position: "absolute",
+                right: "3px",
+                bottom: "3px",
+                width: "6px",
+                height: "6px",
+                borderRight: `2px solid ${useColorModeValue('rgba(0, 0, 0, 0.4)', 'rgba(255, 255, 255, 0.4)')}`,
+                borderBottom: `2px solid ${useColorModeValue('rgba(0, 0, 0, 0.4)', 'rgba(255, 255, 255, 0.4)')}`
+            },
+        }}>
             {/* Pass width and height to children as render props */}
             {[props.children[0](width, height), props.children.slice(1)]}
-        </div>
+        </Box>
     );
 });
 
@@ -209,30 +233,4 @@ const GridItem = React.forwardRef<HTMLDivElement, GridItemProps>((props, ref) =>
 */
 function translateGridHeightToScreenHeight(gridHeight: number): number {
     return gridHeight * (GRID_CELL_HEIGHT + GRID_CELL_VMARGIN) - GRID_CELL_VMARGIN;
-}
-
-const reactResieCss = {
-    ".react-resizable-handle": {
-        position: "absolute",
-        width: "20px",
-        height: "20px",
-        bottom: "0",
-        right: "0",
-        cursor: "se-resize",
-        visibility: "hidden",
-    },
-    ":hover .react-resizable-handle": {
-        visibility: "visible",
-    }
-    ,
-    ".react-resizable-handle::after": {
-        content: "''",
-        position: "absolute",
-        right: "3px",
-        bottom: "3px",
-        width: "8px",
-        height: "8px",
-        borderRight: "2px solid rgba(0, 0, 0, 0.4)",
-        borderBottom: "2px solid rgba(0, 0, 0, 0.4)"
-    },
 }

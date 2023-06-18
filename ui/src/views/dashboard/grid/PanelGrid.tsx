@@ -70,7 +70,7 @@ export const PanelGrid = (props: PanelGridProps) => {
 
     return (
         // <PanelBorder width={props.width} height={props.height} border={props.panel.styles?.border}>
-            <PanelComponent key={props.panel.id + forceRenderCount} {...props} timeRange={tr} variables={variables1} />
+        <PanelComponent key={props.panel.id + forceRenderCount} {...props} timeRange={tr} variables={variables1} />
         // </PanelBorder>
     )
 }
@@ -242,19 +242,15 @@ const PanelHeader = ({ queryError, panel, onCopyPanel, onRemovePanel, data }: Pa
                         >
                             <Center width="100%">{!isEmpty(title) ? <Box cursor="pointer" className="hover-bordered" paddingTop={panel.styles.title.paddingTop} paddingBottom={panel.styles.title.paddingBottom} paddingLeft={panel.styles.title.paddingLeft} paddingRight={panel.styles.title.paddingRight} width="100%" fontSize={panel.styles.title.fontSize} fontWeight={panel.styles.title.fontWeight} color={panel.styles.title.color}><TitleDecoration styles={panel.styles}>{title}</TitleDecoration></Box> : <Box width="100px">&nbsp;</Box>}</Center>
                         </MenuButton>
-                        <Portal>
-                            <MenuList p="1">
-                                <MenuItem icon={<FaEdit />} onClick={() => addParamToUrl({ edit: panel.id })}>Edit</MenuItem>
-                                <MenuDivider my="1" />
-                                <MenuItem icon={<FaRegCopy />} onClick={() => onCopyPanel(panel)}>Copy</MenuItem>
-                                <MenuDivider my="1" />
-                                <MenuItem icon={<FaBug />} onClick={onOpen}>Debug Panel</MenuItem>
-                                <MenuDivider my="1" />
-                                <MenuItem icon={<FaTrashAlt />} onClick={() => onRemovePanel(panel)}>Remove</MenuItem>
-
-
-                            </MenuList>
-                        </Portal>
+                        <MenuList p="1">
+                            <MenuItem icon={<FaEdit />} onClick={() => addParamToUrl({ edit: panel.id })}>Edit</MenuItem>
+                            <MenuDivider my="1" />
+                            <MenuItem icon={<FaRegCopy />} onClick={() => onCopyPanel(panel)}>Copy</MenuItem>
+                            <MenuDivider my="1" />
+                            <MenuItem icon={<FaBug />} onClick={onOpen}>Debug Panel</MenuItem>
+                            <MenuDivider my="1" />
+                            <MenuItem icon={<FaTrashAlt />} onClick={() => onRemovePanel(panel)}>Remove</MenuItem>
+                        </MenuList>
                     </Menu>
                 </Center>
                 <Box display="none"><FaBook className="grid-drag-handle" /></Box>

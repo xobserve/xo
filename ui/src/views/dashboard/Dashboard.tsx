@@ -65,9 +65,6 @@ const DashboardWrapper = ({dashboardId}) => {
                     let bodyStyle = document.body.style
                     bodyStyle.background = dashboard?.data.styles?.bg
                     bodyStyle.backgroundSize = "cover"
-                    // const d = document.getElementById("__next")
-                    // bodyStyle.minHeight = '100vh'
-                    // bodyStyle.height = `${d.offsetHeight + 180}px`
                 }  
             },1)
             // 
