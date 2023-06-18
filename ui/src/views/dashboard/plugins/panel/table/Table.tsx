@@ -1,4 +1,4 @@
-import { Box, Select, useToast } from "@chakra-ui/react"
+import { Box, Select, useColorMode, useColorModeValue, useToast } from "@chakra-ui/react"
 import { DefaultColumnFilter, NumberRangeColumnFilter } from "components/table/filters"
 import ReactTable from "components/table/Table"
 import { setVariable } from "src/views/variables/Variables"
@@ -48,7 +48,7 @@ const TablePanel = (props: TablePanelProps) => {
                 const columns = []
                 s.columns.forEach((column,i) => {
                     if (column.canFilter) {
-                        if (!isNumber(s.rows[0][column.Header])) {
+                        if (isNumber(s.rows[0][column.Header])) {
                             columns.push({
                                 Header: column.Header,
                                 accessor: column.Header,
@@ -82,7 +82,7 @@ const TablePanel = (props: TablePanelProps) => {
 
     return (
         <Box h="100%">
-            <Box h= {series ? "calc(100% - 32px)" : "100%"} overflowY="scroll">
+            <Box maxH= {series ? "calc(100% - 32px)" : "100%"} overflowY="scroll" sx={cssStyles}>
                 <ReactTable
                     columns={tableColumns}
                     data={tableData}
@@ -96,7 +96,7 @@ const TablePanel = (props: TablePanelProps) => {
                 />
 
             </Box>
-            {series && <Select size="sm" onChange={e => setSeries(e.currentTarget.value)}>
+            {series && <Select mt="1" size="sm" onChange={e => setSeries(e.currentTarget.value)}>
                 {data.map(series => {
                     return <option key={series.name} value={series.name}>{series.name}</option>
                 })}
@@ -109,3 +109,15 @@ const TablePanel = (props: TablePanelProps) => {
 export default TablePanel
 
 
+const cssStyles = {
+    '.chakra-table thead tr th input':{
+        background: 'transparent',
+        outline: "none"
+    },
+    '.pagination': {
+        input: {
+            background: 'transparent',
+            outline: "none"
+        }
+    }
+}

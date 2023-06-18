@@ -2,7 +2,7 @@
 import React, { useEffect } from 'react'
 import { useTable, useFilters, useGlobalFilter,  useSortBy, usePagination } from 'react-table'
 
-import { Table, Tbody, Td, Th, Thead, Tr } from '@chakra-ui/react'
+import { HStack, Table, Tbody, Td, Th, Thead, Tr } from '@chakra-ui/react'
 import { DefaultColumnFilter, fuzzyTextFilterFn, GlobalFilter } from './filters'
 import { round } from 'lodash'
 
@@ -142,7 +142,7 @@ function ReactTable({ columns, data, enableGlobalSearch = false, enablePaginatio
                     })}
                 </Tbody>
             </Table>
-            {enablePagination && <div className="pagination">
+            {enablePagination && <HStack mt="2" className="pagination">
                 <button onClick={() => gotoPage(0)} disabled={!canPreviousPage}>
                     {'<<'}
                 </button>{' '}
@@ -158,11 +158,11 @@ function ReactTable({ columns, data, enableGlobalSearch = false, enablePaginatio
                 <span>
                     Page{' '}
                     <strong>
-                        {state.pageIndex + 1} of {pageOptions.length}
+                        {state.pageIndex + 1}  of {pageOptions.length}
                     </strong>{' '}
                 </span>
                 <span>
-                    | Go to page:{' '}
+                    | &nbsp; Go to page:{' '}
                     <input
                         type="number"
                         defaultValue={state.pageIndex + 1}
@@ -173,7 +173,7 @@ function ReactTable({ columns, data, enableGlobalSearch = false, enablePaginatio
                         style={{ width: '100px' }}
                     />
                 </span>{' '}
-            </div>}
+            </HStack>}
         </>
     )
 }
