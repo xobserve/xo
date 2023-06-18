@@ -10,7 +10,6 @@ import moment from "moment"
 import { dispatch } from "use-bus"
 import { SetDashboardEvent } from "src/data/bus-events"
 import { FormItem } from "components/form/Form"
-import { diffObject } from "utils/diff"
 import ReactDiffViewer from 'react-diff-viewer';
 import { useSearchParam } from "react-use"
 import { isEqual } from "lodash"
@@ -176,9 +175,9 @@ const DashboardSave = ({ dashboard }: Props) => {
                 <ModalOverlay />
                 <ModalContent>
                     <ModalCloseButton />
-                    <ModalBody>
+                    <ModalBody fontSize="0.8rem">
                         <Center mb="2"><Text textStyle="subTitle" fontWeight="bold">Only diff lines will be show, others will be folded</Text></Center>
-                        <ReactDiffViewer oldValue={JSON.stringify(saved,null,4)} newValue={JSON.stringify(dashboard,null,4)} splitView={true} useDarkTheme={colorMode!="light" } />
+                        <ReactDiffViewer  oldValue={JSON.stringify(saved,null,2)} newValue={JSON.stringify(dashboard,null,2)} splitView={true} useDarkTheme={colorMode!="light" } />
                     </ModalBody>
                 </ModalContent>
             </Modal>
