@@ -16,6 +16,8 @@ import PanelStyles from "./PanelStyles";
 import PanelSettings from "./PanelSettings";
 import { useLeavePageConfirm } from "hooks/useLeavePage"
 import { isEqual } from "lodash"
+import { dispatch } from "use-bus"
+import { PanelForceRebuildEvent } from "src/data/bus-events"
 
 interface EditPanelProps {
     dashboard: Dashboard
@@ -66,8 +68,15 @@ const EditPanel = ({ dashboard, onChange }: EditPanelProps) => {
                 }
             }
         })
+        
+        if (pageChanged) {
+            dispatch(PanelForceRebuildEvent + tempPanel.id)
+        }
+      
         setPageChanged(false)
         onEditClose()
+
+       
     }
 
 
