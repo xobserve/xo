@@ -1,7 +1,7 @@
-import { PanelDecorationType, PanelStyles, PanelTitleDecorationType } from "types/panel/styles";
+import { PanelBorderType, PanelDecorationType, PanelStyles, PanelTitleDecorationType } from "types/panel/styles";
 
 export const initPanelStyles: PanelStyles = {
-    border: 'normal',
+    border: PanelBorderType.Normal,
     title: {
         decoration: {
             type: PanelTitleDecorationType.None,
