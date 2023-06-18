@@ -136,7 +136,7 @@ const DashboardWrapper = ({dashboardId}) => {
                 {dashboard && <Box pl="6px" pr="6px" width="100%" display="flex" flexDirection="column" flexGrow="1" height="100%" >
                     {/* <Decoration decoration={dashboard.data.styles.decoration}/> */}
                     <DashboardHeader dashboard={dashboard} onTimeChange={t => {dispatch({type:  TimeChangedEvent,data: t});setTimeRange(t)}} timeRange={timeRange}  onChange={onDashbardChange} />
-                    <Box id="dashboard-wrapper" mt={headerHeight} py="2"  display="flex" flexDirection="column" overflow="hidden" position="relative" height="auto" minH="100%" maxH="100%">
+                    <Box id="dashboard-wrapper" mt={headerHeight} py="2">
                         <DashboardBorder border={dashboard.data.styles.border} fullscreen={fullscreen} />
                         {dashboard.data.panels?.length > 0 &&<DashboardGrid dashboard={dashboard} onChange={onDashbardChange} />}         
                     </Box>

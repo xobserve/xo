@@ -69,9 +69,9 @@ export const PanelGrid = (props: PanelGridProps) => {
     })
 
     return (
-        // <PanelBorder width={props.width} height={props.height} border={props.panel.styles?.border}>
+        <PanelBorder width={props.width} height={props.height} border={props.panel.styles?.border}>
         <PanelComponent key={props.panel.id + forceRenderCount} {...props} timeRange={tr} variables={variables1} />
-        // </PanelBorder>
+        </PanelBorder>
     )
 }
 interface PanelComponentProps extends PanelGridProps {
@@ -174,7 +174,7 @@ export const PanelComponent = ({ dashboard, panel, onRemovePanel, width, height,
 
 
     console.log("panel grid rendered, data: ", panelData)
-    return <Box height={height} width={width} className={panel.styles.border == "None" ? "hover-bordered" : null} border={`1px solid transparent`}>
+    return <Box height={height} width={width} className={panel.styles.border == "None" ? "hover-bordered" : null} border={`1px solid transparent`} position="relative">
         <PanelHeader panel={panel} data={panelData} queryError={queryError} onCopyPanel={onCopyPanel} onRemovePanel={onRemovePanel} />
         {panelData && <Box
             // panel={panel}

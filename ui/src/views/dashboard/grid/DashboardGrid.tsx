@@ -12,6 +12,7 @@ import uPlot from "uplot";
 import AutoSizer from "react-virtualized-auto-sizer";
 import useGranaTheme from 'hooks/use-grafanaTheme';
 import { PanelGrid } from "./PanelGrid";
+import Border from "components/largescreen/components/Border";
 
 
 
@@ -101,7 +102,7 @@ const DashboardGrid = memo((props: GridProps) => {
     const onResizeStop = (layout, oldItem, newItem) => {
     };
 
-    return (<Box style={{ flex: '1 1 auto' }} className="dashboard-grid"  position="relative">
+    return (<Box style={{ flex: '1 1 auto' }} id="dashboard-grid"  position="relative">
         <AutoSizer disableHeight>
             {({ width }) => {
                 if (width === 0) {
@@ -138,7 +139,7 @@ const DashboardGrid = memo((props: GridProps) => {
                                     windowWidth={windowWidth}
                                 >
                                     {(width: number, height: number) => {
-                                        return (<Box key={panel.id} id={`panel-${panel.id}`}>
+                                        return (<Box key={panel.id} id={`panel-${panel.id}`} p="1">
                                             <PanelGrid dashboard={dashboard} panel={panel} width={width} height={height} onRemovePanel={onRemovePanel} sync={mooSync} />
                                         </Box>)
                                     }}
