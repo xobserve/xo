@@ -93,7 +93,6 @@ export const TooltipContainer: React.FC<TooltipContainerProps> = ({
         position: 'fixed',
         left: 0,
         // disabling pointer-events is to prevent the tooltip from flickering when moving left to right
-        // see e.g. https://github.com/grafana/grafana/pull/33609
         pointerEvents: allowPointerEvents ? 'auto' : 'none',
         top: 0,
         transform: `translate(${placement.x}px, ${placement.y}px)`,

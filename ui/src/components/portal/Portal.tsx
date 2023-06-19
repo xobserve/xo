@@ -1,4 +1,4 @@
-import useGranaTheme from 'hooks/use-grafanaTheme';
+import useGranaTheme from 'hooks/useExtraTheme';
 import React, { PropsWithChildren, useLayoutEffect, useRef } from 'react';
 import ReactDOM from 'react-dom';
 

@@ -10,7 +10,7 @@ import React, { CSSProperties, memo, useCallback } from "react";
 import EditPanel from "../edit-panel/EditPanel";
 import uPlot from "uplot";
 import AutoSizer from "react-virtualized-auto-sizer";
-import useGranaTheme from 'hooks/use-grafanaTheme';
+import useGranaTheme from 'hooks/useExtraTheme';
 import { PanelGrid } from "./PanelGrid";
 import Border from "components/largescreen/components/Border";
 

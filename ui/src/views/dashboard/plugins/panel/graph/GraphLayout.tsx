@@ -1,7 +1,7 @@
 import { Box } from '@chakra-ui/react';
 import { css } from '@emotion/css';
 import CustomScrollbar from 'components/CustomScrollbar';
-import { useGrafanaStyles } from 'hooks/use-grafanaTheme';
+import { useExtraStyles } from 'hooks/useExtraTheme';
 import React, { FC, CSSProperties, ComponentType } from 'react';
 import { useMeasure } from 'react-use';
 
@@ -32,7 +32,7 @@ export interface VizLayoutComponentType extends FC<VizLayoutProps> {
  * @beta
  */
 export const GraphLayout: VizLayoutComponentType = ({ width, height, legend, children }) => {
-  const styles = useGrafanaStyles(getVizStyles);
+  const styles = useExtraStyles(getVizStyles);
   const containerStyle: CSSProperties = {
     display: 'flex',
     width: `${width}px`,

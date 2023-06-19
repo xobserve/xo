@@ -1,6 +1,6 @@
 import { css } from '@emotion/css';
 import classNames from 'classnames';
-import { useGrafanaStyles } from 'hooks/use-grafanaTheme';
+import { useExtraStyles } from 'hooks/useExtraTheme';
 import React, { FC, RefCallback, useCallback, useEffect, useRef } from 'react';
 import Scrollbars, { positionValues } from 'react-custom-scrollbars-2';
 
@@ -44,7 +44,7 @@ export const CustomScrollbar: FC<Props> = ({
   children,
 }) => {
   const ref = useRef<Scrollbars & { view: HTMLDivElement }>(null);
-  const styles = useGrafanaStyles(getStyles);
+  const styles = useExtraStyles(getStyles);
 
   useEffect(() => {
     if (ref.current && scrollRefCallback) {

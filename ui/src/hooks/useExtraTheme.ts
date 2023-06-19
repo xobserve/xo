@@ -3,7 +3,7 @@ import darkTheme from 'src/data/theme/dark.json'
 import { useColorMode } from '@chakra-ui/react'
 import memoizeOne from 'memoize-one';
 
-const useGranaTheme = () => {
+const useExtraTheme = () => {
     const {colorMode} = useColorMode()
 
     const theme = colorMode === "light" ? lightTheme : darkTheme
@@ -11,11 +11,11 @@ const useGranaTheme = () => {
     return theme
 }
 
-export default useGranaTheme
+export default useExtraTheme
 
 export const memoizedStyleCreators = new WeakMap();
-export const useGrafanaStyles = (getStyles) => {
-    const theme = useGranaTheme();
+export const useExtraStyles = (getStyles) => {
+    const theme = useExtraTheme();
 
   let memoizedStyleCreator = memoizedStyleCreators.get(getStyles) as typeof getStyles;
   if (!memoizedStyleCreator) {
