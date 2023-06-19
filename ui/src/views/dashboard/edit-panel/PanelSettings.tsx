@@ -7,7 +7,7 @@ import PanelEditItem from "./PanelEditItem"
 import { initPanelPlugins } from "src/data/panel/initPlugins"
 import { useEffect, useRef } from "react"
 import { supportDatasources } from "../plugins/panel/supportDatasources"
-import { initPanel } from "src/data/panel/initPanel"
+import { initDatasource, initPanel } from "src/data/panel/initPanel"
 
 
 interface Props {
@@ -32,7 +32,7 @@ const PanelSettings = ({ panel, onChange }: Props) => {
             // check the new plugin can use the old datasource
             const supported = supportDatasources[type]
             if (!supported.includes(tempPanel.datasource.type)) {
-                tempPanel.datasource = initPanel().datasource
+                tempPanel.datasource = initDatasource
             }
         })
     }

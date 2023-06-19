@@ -1,59 +1,79 @@
-import React from "react";
+import { Box, useColorMode } from "@chakra-ui/react"
+import { ColorModeSwitcher } from "components/ColorModeSwitcher";
+import * as echarts from 'echarts';
+import { ECharts } from "echarts"
+import { useEffect, useRef, useState } from "react"
+const TestPage = () => {
+   const [options, setOptions] = useState(null)
 
-import dynamic from "next/dynamic";
-import { Box, useColorMode } from "@chakra-ui/react";
-import { editor } from "monaco-editor";
-const MonacoEditor = dynamic(import("react-monaco-editor"), { ssr: false });
+   useEffect(() => {
+      setOptions({
+        title: {
+          text: 'ECharts 入门示例'
+        },
+        tooltip: {},
+        xAxis: {
+          data: ['衬衫', '羊毛衫', '雪纺衫', '裤子', '高跟鞋', '袜子']
+        },
+        yAxis: {},
+        series: [
+          {
+            name: '销量',
+            type: 'bar',
+            data: [5, 20, 36, 10, 10, 20]
+          }
+        ]
+      })
+   },[])
+
+
+  const { colorMode } = useColorMode()
+
+  console.log("options",options)
+  return (<>
+    {options && <Box height="400px" width="600px" key={colorMode}><EchartsPanel options={options} theme={colorMode} /></Box>}
+    <ColorModeSwitcher />
+  </>)
+}
+
+export default TestPage
+
 
 interface Props {
-    value: string 
-    onChange: (value: string) => void
-    onMount?: (editor: editor.IStandaloneCodeEditor) => void
-    
+  options: any
+  theme: string
 }
-function CodeEditor({value, onChange,onMount}) {
-  const [postBody, setPostBody] = React.useState("");
-  const {colorMode} = useColorMode()
-  return (<Box       width="800px"
-  height="600px">
-    <MonacoEditor
-      editorDidMount={(editor:editor.IStandaloneCodeEditor) => {
-        onMount && onMount(editor)
-        // @ts-ignore
-        window.MonacoEnvironment.getWorkerUrl = (
-          _moduleId: string,
-          label: string
-        ) => {
-          if (label === "json")
-            return "_next/static/json.worker.js";
-          if (label === "css")
-            return "_next/static/css.worker.js";
-          if (label === "html")
-            return "_next/static/html.worker.js";
-          if (
-            label === "typescript" ||
-            label === "javascript"
-          )
-            return "_next/static/ts.worker.js";
-          return "_next/static/editor.worker.js";
-        };
-      }}
-      language="typescript"
-      theme={colorMode === "dark" ? "vs-dark" : "vs-light"}
-      value={postBody}
-      options={{
-        minimap: {
-          enabled: false
-        },
-        lineNumbers: "on",
-        automaticLayout: true,
-        lineNumbersMinChars: 4,
-        lineDecorationsWidth: 0,
-        overviewRulerBorder: false,
-      }}
-      onChange={setPostBody}
-    />
-  </Box>)
-}
+const EchartsPanel = ({ options, theme }: Props) => {
+  const container = useRef(null)
+  const [chart, setChart] = useState<ECharts>(null)
 
-export default CodeEditor
+
+  useEffect(() => {
+    if (container.current) {
+      const c = echarts.init(container.current, theme)
+      setChart(c)
+      c.setOption(options)
+      console.log("create echart instance:",c)
+    }
+
+    return () => {
+      if (chart) {
+        console.log("destroy chart")
+        chart?.dispose()
+        chart?.clear()
+      }
+    }
+  }, [])
+
+  useEffect(() => {
+    if (chart) {
+      chart.clear()
+      chart.setOption(options)
+    }
+
+    console.log("set options :",chart,options)
+  }, [options])
+
+
+  return (<Box ref={container} height="100%" />)
+}

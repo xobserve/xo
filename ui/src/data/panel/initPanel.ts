@@ -12,20 +12,7 @@ export const initPanel = (id?) =>  {
         plugins:  {
             [type]:initPanelPlugins[type]
         },
-        datasource: {
-            type: DatasourceType.TestData,
-            queryOptions: {
-                interval: '15s'
-            },
-            queries: [
-                {
-                    id: 65,
-                    metrics: "",
-                    legend: "" ,
-                    visible: true
-                }
-            ]
-        },
+        datasource:initDatasource,
         styles: initPanelStyles
     }
 
@@ -38,3 +25,17 @@ export const initPanel = (id?) =>  {
 } 
 
 
+export const initDatasource = {
+    type: DatasourceType.TestData,
+    queryOptions: {
+        interval: '15s'
+    },
+    queries: [
+        {
+            id: 65,
+            metrics: "",
+            legend: "" ,
+            visible: true
+        }
+    ]
+}

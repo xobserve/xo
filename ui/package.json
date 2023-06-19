@@ -23,6 +23,7 @@
     "@uselessdev/datepicker": "^2.7.0",
     "axios": "^0.19.2",
     "date-fns": "^2.29.3",
+    "echarts": "^5.4.2",
     "formik": "^2.2.9",
     "framer-motion": "9.0.2",
     "highlight.js": "^9.16.2",
