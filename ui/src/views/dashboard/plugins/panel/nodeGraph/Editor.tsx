@@ -5,7 +5,7 @@ import { isEmpty } from "lodash"
 import { useState } from "react"
 import * as Icons from 'react-icons/fa'
 import { MdEdit } from "react-icons/md"
-import { initPanelPlugins } from "src/data/panel/initPlugins"
+import { initPanelPlugins, onClickCommonEvent } from "src/data/panel/initPlugins"
 import PanelAccordion from "src/views/dashboard/edit-panel/Accordion"
 import { EditorNumberItem, EditorSliderItem } from "components/editor/EditorItem"
 import PanelEditItem from "src/views/dashboard/edit-panel/PanelEditItem"
@@ -13,6 +13,8 @@ import {  Panel, PanelEditorProps } from "types/dashboard"
 import { NodeGraphIcon, NodeGraphMenuItem } from "types/panel/plugins"
 import { useImmer } from "use-immer"
 import { isJSON } from "utils/is"
+import CodeEditor from "components/CodeEditor/CodeEditor"
+
 
 
 
@@ -293,7 +295,7 @@ const DonutColorsSetting = ({ panel, onChange }: PanelEditorProps) => {
 const RightClickMenus = ({ panel, onChange }: PanelEditorProps) => {
     const initMenuItem = {
         name: '',
-        event: 'console.log(node)'
+        event: onClickCommonEvent
     }
 
     const toast = useToast()
@@ -360,7 +362,9 @@ const RightClickMenus = ({ panel, onChange }: PanelEditorProps) => {
     }
 
     return (<>
-        <PanelEditItem title="right click menus" >
+        <PanelEditItem title="right click menus" info={
+                <Text>You need to click Apply Button(in top-right) to see the new trigger taken effect</Text>
+            }>
             <Button size="xs" onClick={() => { onOpen(); setTemp(initMenuItem) }}>Add menu item</Button>
             <Divider my="2" />
             <VStack alignItems="left" pl="2">
@@ -380,7 +384,7 @@ const RightClickMenus = ({ panel, onChange }: PanelEditorProps) => {
         </PanelEditItem>
         <Modal isOpen={isOpen} onClose={onClose}>
             <ModalOverlay />
-            <ModalContent minWidth="700px">
+            <ModalContent minWidth="800px">
                 <ModalBody>
                     <HStack>
                         <Text fontWeight="600">Menu item name </Text>
@@ -393,16 +397,13 @@ const RightClickMenus = ({ panel, onChange }: PanelEditorProps) => {
                     </HStack>
 
                     <Text fontWeight="600" mt="4">Define click event</Text>
-                    <Text>function onMenuItemClick(node, router, setVariable) &#123;</Text>
-                    <Textarea value={temp.event} onChange={(e) => {
-                        const v = e.currentTarget.value
+                    <Box height="300px">
+                    <CodeEditor value={temp.event} onChange={v => {
                         setTemp(draft => {
                             draft.event = v
                         })
-                    }}
-                    />
-                    <Text>&#125; </Text>
-
+                    }} />
+                    </Box>
                     <Button my="4" size="sm" onClick={onSubmit}>Submit</Button>
                     <Alert status='success' flexDir="column" alignItems="left">
                         <Text>
@@ -412,45 +413,5 @@ const RightClickMenus = ({ panel, onChange }: PanelEditorProps) => {
             </ModalContent>
         </Modal>
     </>
-    )
-}
-
-const MaxSize = ({ panel, onChange }: PanelEditorProps) => {
-    const [temp, setTemp] = useState(panel.plugins.nodeGraph.node.maxSize.toString())
-    return (
-        <HStack>
-            <NumberInput value={temp} min={1} max={5} width="80px" size="sm" onChange={v => setTemp(v)} onBlur={e => onChange(panel => {
-                panel.plugins.nodeGraph.node.maxSize = Number(temp)
-            })}>
-                <NumberInputField />
-            </NumberInput>
-            <Text> * baseSize = {panel.plugins.nodeGraph.node.baseSize * panel.plugins.nodeGraph.node.maxSize}</Text>
-        </HStack>
-    )
-}
-
-const LayoutStrength = ({ panel, onChange }: PanelEditorProps) => {
-    const [temp, setTemp] = useState(panel.plugins.nodeGraph.layout.nodeStrength.toString())
-    return (
-        <PanelEditItem title="node strength" desc=" The strength of node force. Positive value means repulsive force, negative value means attractive force">
-            <NumberInput value={temp} min={100} max={10000} width="80px" size="sm" onChange={v => setTemp(v)} onBlur={e => onChange(panel => {
-                panel.plugins.nodeGraph.layout.nodeStrength = Number(temp)
-            })}>
-                <NumberInputField />
-            </NumberInput>
-        </PanelEditItem>
-    )
-}
-
-const LayoutGravity = ({ panel, onChange }: PanelEditorProps) => {
-    const [temp, setTemp] = useState(panel.plugins.nodeGraph.layout.gravity.toString())
-    return (
-        <PanelEditItem title="node gravity" desc="The gravity strength to the center for all the nodes. Larger the number, more compact the nodes">
-            <NumberInput value={temp} min={0} max={200} width="80px" size="sm" onChange={v => setTemp(v)} onBlur={e => onChange(panel => {
-                panel.plugins.nodeGraph.layout.gravity = Number(temp)
-            })}>
-                <NumberInputField />
-            </NumberInput>
-        </PanelEditItem>
     )
 }

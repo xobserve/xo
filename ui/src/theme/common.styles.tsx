@@ -5,11 +5,12 @@ const CommonStyles = () => (
     styles={(theme: any) => css` 
       .infinite-scroller {
         ::-webkit-scrollbar {
-          width: 5px;
-          height: 5px;
+          width: 1px;
+          height: 1px;
         }   
       }
-      
+
+    
       .top-gradient-border {
         ::before {
           display: block;

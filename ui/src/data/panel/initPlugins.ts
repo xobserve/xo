@@ -1,5 +1,6 @@
 import { PanelPlugins } from "types/panel/plugins";
 
+export const onClickCommonEvent= "// setVariable: (varName:string, varValue:string) => void \nfunction onClick(item, router, setVariable) {\n\tconsole.log(item)\n}"
 export const initPanelPlugins: PanelPlugins = {
     graph: {
         tooltip: {
@@ -46,7 +47,7 @@ export const initPanelPlugins: PanelPlugins = {
         pageSize: 10,
         enableFilter: true,
         enableSort: true,
-        onRowClick: ''
+        onRowClick: onClickCommonEvent
     },
 
     nodeGraph: {
@@ -87,3 +88,4 @@ export const initPanelPlugins: PanelPlugins = {
         }
     }
 }
+

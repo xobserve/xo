@@ -57,7 +57,6 @@ export const PanelGrid = memo((props: PanelGridProps) => {
     useBus(
         VariableChangedEvent,
         () => {
-            console.log("here33333, variable changed!", props.panel.id)
             setVariables([...variables])
         }
     )
@@ -67,7 +66,7 @@ export const PanelGrid = memo((props: PanelGridProps) => {
         console.log("here33333, panel is forced to rebuild!", props.panel.id)
         setForceRenderCount(f => f + 1)
     })
-
+    
     return (
         <PanelBorder width={props.width} height={props.height} border={props.panel.styles?.border}>
         <PanelComponent key={props.panel.id + forceRenderCount} {...props} timeRange={tr} variables={variables1} />
@@ -195,7 +194,7 @@ export const PanelComponent = ({ dashboard, panel, onRemovePanel, width, height,
 }
 
 
-const CustomPanelRender = memo((props: any) => {
+const CustomPanelRender = (props: any) => {
     //@needs-update-when-add-new-panel
     switch (props.panel?.type) {
         case PanelType.Text:
@@ -209,7 +208,7 @@ const CustomPanelRender = memo((props: any) => {
         default:
             return <></>
     }
-})
+}
 
 interface PanelHeaderProps {
     queryError: string

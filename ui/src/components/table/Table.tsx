@@ -124,7 +124,7 @@ function ReactTable({ columns, data, enableGlobalSearch = false, enablePaginatio
                     {(enablePagination ? page : rows).map((row, i) => {
                         prepareRow(row)
                         return (
-                            <Tr {...row.getRowProps()} onClick={() => {
+                            <Tr {...row.getRowProps()} onClick={onRowClick ? () => {
                                 const d = []
                                 row.cells.forEach(cell => {
                                     d.push({
@@ -132,8 +132,9 @@ function ReactTable({ columns, data, enableGlobalSearch = false, enablePaginatio
                                         value: cell.value
                                     })
                                 })
+                                
                                 onRowClick(d)
-                            }}>
+                            }: null}>
                                 {row.cells.map(cell => {
                                     return <Td {...cell.getCellProps()}>{cell.render('Cell')}</Td>
                                 })}

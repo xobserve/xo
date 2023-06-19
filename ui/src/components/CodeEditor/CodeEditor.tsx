@@ -7,12 +7,12 @@ const MonacoEditor = dynamic(import("react-monaco-editor"), { ssr: false });
 
 interface Props {
     value: string 
+    language?: string
     onChange: (value: string) => void
     onMount?: (editor: editor.IStandaloneCodeEditor) => void
     
 }
-function CodeEditor({value, onChange,onMount}:Props) {
-  const [postBody, setPostBody] = React.useState("");
+function CodeEditor({value, onChange,onMount,language="typescript"}:Props) {
   const {colorMode} = useColorMode()
   return ( <MonacoEditor
       editorDidMount={(editor:editor.IStandaloneCodeEditor) => {
@@ -36,9 +36,9 @@ function CodeEditor({value, onChange,onMount}:Props) {
           return "_next/static/editor.worker.js";
         };
       }}
-      language="typescript"
+      language={language}
       theme={colorMode === "dark" ? "vs-dark" : "vs-light"}
-      value={postBody}
+      value={value}
       options={{
         minimap: {
           enabled: false
@@ -48,8 +48,12 @@ function CodeEditor({value, onChange,onMount}:Props) {
         lineNumbersMinChars: 4,
         lineDecorationsWidth: 0,
         overviewRulerBorder: false,
+        scrollbar: {
+            verticalSliderSize: 5,
+            horizontalSliderSize: 5,
+        },
       }}
-      onChange={setPostBody}
+      onChange={onChange}
     />)
 }
 

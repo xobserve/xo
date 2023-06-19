@@ -114,6 +114,7 @@ const EditPanel = ({ dashboard, onChange }: EditPanelProps) => {
         return '0%'
     }
 
+    console.log("here3333444:",tempPanel)
     return (<>
         <Modal isOpen={isOpen} onClose={onEditClose} size="full">
             <ModalOverlay />

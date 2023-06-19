@@ -6,7 +6,8 @@ import { useRouter } from "next/router"
 import React, { useEffect, useMemo } from "react"
 import { PanelProps } from "types/dashboard"
 import { TablePluginData } from "types/plugins/table"
-import { isNumber } from "lodash"
+import { isFunction, isNumber } from "lodash"
+import { genDynamicFunction } from "utils/dynamicCode"
 
 interface TablePanelProps extends PanelProps {
     data: TablePluginData[]
@@ -23,9 +24,9 @@ const TablePanel = (props: TablePanelProps) => {
             })
         })
         return res
-    },[props.data])
+    }, [props.data])
 
-    
+
 
     const router = useRouter()
     const toast = useToast()
@@ -36,17 +37,17 @@ const TablePanel = (props: TablePanelProps) => {
             const series = props.data[0][0].name
             setSeries(series)
         }
-    },[props.data])
-    
+    }, [props.data])
 
 
-    const [tableColumns,tableData] = useMemo(() => { 
-  
-        for (var i=0;i<props.data[0].length;i++) {
+
+    const [tableColumns, tableData] = useMemo(() => {
+
+        for (var i = 0; i < props.data[0].length; i++) {
             const s = props.data[0][i]
             if (s.name == series) {
                 const columns = []
-                s.columns.forEach((column,i) => {
+                s.columns.forEach((column, i) => {
                     if (column.canFilter) {
                         if (isNumber(s.rows[0][column.Header])) {
                             columns.push({
@@ -62,7 +63,7 @@ const TablePanel = (props: TablePanelProps) => {
                                 Filter: DefaultColumnFilter,
                             })
                         }
-                      
+
                     } else {
                         columns.push({
                             Header: column.Header,
@@ -74,15 +75,15 @@ const TablePanel = (props: TablePanelProps) => {
                 return [columns, s.rows]
             }
         }
-  
-       return [[],[]]
-    }, [props.data,series])
 
-    const onRowClickFunc = new Function("row,router,setVariable", props.panel.plugins.table.onRowClick)
+        return [[], []]
+    }, [props.data, series])
+
+    const clickFunc = genDynamicFunction(props.panel.plugins.table.onRowClick);
 
     return (
         <Box h="100%">
-            <Box maxH= {series ? "calc(100% - 32px)" : "100%"} overflowY="scroll" sx={cssStyles}>
+            <Box maxH={series ? "calc(100% - 32px)" : "100%"} overflowY="scroll" sx={cssStyles}>
                 <ReactTable
                     columns={tableColumns}
                     data={tableData}
@@ -92,7 +93,19 @@ const TablePanel = (props: TablePanelProps) => {
                     enableFilter={props.panel.plugins.table.enableFilter}
                     enableSort={props.panel.plugins.table.enableSort}
                     showHeader={props.panel.plugins.table.showHeader}
-                    onRowClick={onRowClickFunc ? (row) => onRowClickFunc(row, router,(k,v) => setVariable(k,v,toast)) : null}
+                    onRowClick={clickFunc ? (row) => {
+                        if (!isFunction(clickFunc)) {
+                            toast({
+                                title: "Error",
+                                description: "The row click function you defined is not valid",
+                                status: "error",
+                                duration: 9000,
+                                isClosable: true,
+                            })
+                        } else {
+                            clickFunc(row, router, (k, v) => setVariable(k, v, toast))
+                        }
+                    } : null}
                 />
 
             </Box>
@@ -110,7 +123,7 @@ export default TablePanel
 
 
 const cssStyles = {
-    '.chakra-table thead tr th input':{
+    '.chakra-table thead tr th input': {
         background: 'transparent',
         outline: "none"
     },

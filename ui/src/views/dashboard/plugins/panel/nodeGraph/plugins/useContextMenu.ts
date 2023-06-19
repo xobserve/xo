@@ -1,8 +1,10 @@
 import G6 from "@antv/g6";
 import { useToast } from "@chakra-ui/react";
+import { isFunction } from "lodash";
 import { useRouter } from "next/router";
 import { setVariable } from "src/views/variables/Variables";
 import { NodeGraphSettings } from "types/panel/plugins";
+import { genDynamicFunction } from "utils/dynamicCode";
 
 const useContextMenu = (settings: NodeGraphSettings) => {
   const toast = useToast()
@@ -48,8 +50,18 @@ const useContextMenu = (settings: NodeGraphSettings) => {
     },
     handleMenuClick: (target, item) => {
       let menuItem = settings.node.menu.find(item => item.id.toString() === target.id)
-      const clickFunc = new Function("node,router,setVariable", menuItem.event)
-      clickFunc(item.getModel(), router, (k, v) => setVariable(k, v, toast))
+      const clickFunc = genDynamicFunction(menuItem.event); 
+      if (isFunction(clickFunc)) {
+        clickFunc(item.getModel(), router, (k, v) => setVariable(k, v, toast))
+      } else {
+        toast({
+          title: "Click node menu error",
+          description: "The click function you defined is not valid",
+          status: "error",
+          duration: 3000,
+          isClosable: true,
+        })
+      } 
     },
     // offsetX and offsetY include the padding of the parent container
     // 需要加上父级容器的 padding-left 16 与自身偏移量 10
