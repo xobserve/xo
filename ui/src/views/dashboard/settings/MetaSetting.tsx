@@ -1,4 +1,5 @@
-import { Alert, AlertDescription, AlertDialog, AlertDialogBody, AlertDialogContent, AlertDialogFooter, AlertDialogHeader, AlertDialogOverlay, AlertIcon, AlertTitle, Button, Textarea, useDisclosure, useToast } from "@chakra-ui/react"
+import { Alert, AlertDescription, AlertDialog, AlertDialogBody, AlertDialogContent, AlertDialogFooter, AlertDialogHeader, AlertDialogOverlay, AlertIcon, AlertTitle, Button, Text, Textarea, useDisclosure, useToast } from "@chakra-ui/react"
+import { DetailAlert, DetailAlertItem } from "components/DetailAlert"
 import { useRef, useState } from "react"
 import { Dashboard } from "types/dashboard"
 import { requestApi } from "utils/axios/request"
@@ -31,25 +32,16 @@ const MetaSettings = ({ dashboard }: Props) => {
     }
 
     return (<>
-        <Textarea value={meta} h="500px" onChange={e => setMeta(e.currentTarget.value)} />
-        <Alert
-            mt="4"
-            status='warning'
-            variant='subtle'
-            flexDirection='column'
-            alignItems='center'
-            justifyContent='center'
-            textAlign='center'
-            height='200px'
-        >
-            <AlertIcon boxSize='40px' mr={0} />
-            <AlertTitle mt={3} mb={1} fontSize='lg'>
-                Press Ctrl + S to Save your dashboard first!
-            </AlertTitle>
+        <Textarea value={meta} h="500px" onChange={e => setMeta(e.currentTarget.value)} mb="2" />
+        <DetailAlert status="warning" title="Press Ctrl + S to Save your dashboard first!">
+            <DetailAlertItem>
+                <Text>Before submitting the meta data above, please save your Dashboard first, if it has any changes.</Text>
+            </DetailAlertItem>
             <AlertDescription maxWidth='sm'>
-                Before submitting the meta data above, please save your Dashboard first, if it has any changes.
+                
             </AlertDescription>
-        </Alert>
+        </DetailAlert>
+
         <Button mt="2" isDisabled={meta == rawMeta.current} onClick={onOpen}>Submit</Button>
 
         <AlertDialog

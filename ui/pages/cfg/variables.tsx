@@ -1,12 +1,9 @@
-import { Button, Table, TableContainer, Tag, Tbody, Td, Th, Thead, Tr, Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay, useDisclosure, VStack, InputGroup, InputLeftAddon, Input, Flex, Box, useToast, Alert, AlertIcon, AlertTitle, AlertDescription, Divider, Text, RadioGroup, Stack, Radio } from "@chakra-ui/react"
-import useSession from "hooks/use-session"
+import { Button, Table, TableContainer, Tag, Tbody, Td, Th, Thead, Tr, Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay, useDisclosure, VStack, InputGroup, InputLeftAddon, Input, Flex, Box, useToast, Text, RadioGroup, Stack, Radio } from "@chakra-ui/react"
+import { DetailAlert, DetailAlertItem } from "components/DetailAlert"
 import Page from "layouts/page/Page"
-import { cloneDeep } from "lodash"
-import { useRouter } from "next/router"
 import { useEffect, useState } from "react"
 import { FaCog } from "react-icons/fa"
 import { cfgLinks } from "src/data/nav-links"
-import ReserveUrls from "src/data/reserve-urls"
 import { Team } from "types/teams"
 import { Variable } from "types/variable"
 import { requestApi } from "utils/axios/request"
@@ -174,34 +171,17 @@ export const VariablesTable = ({variables,onEdit,onRemove}:TableProps) => {
             </Table>
         </TableContainer> :
             <>
-                <Alert
-                    status='info'
-                    variant='subtle'
-                    flexDirection='column'
-                    alignItems='left'
-                    justifyContent='center'
-                    width="fit-content"
-                // maxWidth="500px"
-                // textAlign='center'
-                // height='200px'
-                >
-                    <AlertIcon boxSize='40px' mr={0} />
-                    <AlertTitle mt={4} mb={4} fontSize='lg'>
-                        There is no variables yet.
-                    </AlertTitle>
-                    <Divider />
-                    <AlertDescription mt="4">
-                        <Box textStyle="subTitle">What is variable?</Box>
+                <DetailAlert title="There is no variables yet." status="info">
+                    <DetailAlertItem title="What is variable?">
                         <Text mt="2">Variables enable more interactive and dynamic dashboards. Instead of hard-coding things like server or sensor names in your metric queries you can use variables in their place. Variables are shown as dropdown select boxes at the top of the dashboard. These dropdowns make it easy to change the data being displayed in your dashboard. </Text>
-                    </AlertDescription>
+                    </DetailAlertItem>
 
-                    <AlertDescription mt="4">
-                        <Box textStyle="subTitle">Global variable?</Box>
+                    <DetailAlertItem title="Global variable?">
                         <Text mt="2">Variables created here are called global varaibles, they can be used everywhere, most importantly, once you have selected a global variable in one place, all the other places using this variable can also be affected.</Text>
                         <Text mt="2">e.g Let's assuming that you have created three dashboards: A, B, C, and a global variable 'application' which has two values: 'aiapm' and 'api-gateway', once you selected `application` in 'A' and set its value to 'ai-apm', the other two 'B' and 'C' will also be affected by this change. When you enter 'B' page, you will see the 'application' variable's value has already changed to 'aiapm'. </Text>
                         <Text mt="2">This is really userful in apm scenarios, so don't be afraid to try it.</Text>
-                    </AlertDescription>
-                </Alert>
+                    </DetailAlertItem>
+                </DetailAlert>
             </>
         }
     </>)

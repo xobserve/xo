@@ -24,7 +24,7 @@ const DashboardSettings = ({ dashboard,onChange }: Props) => {
                 <ModalCloseButton mt="2"/>
                 <ModalBody>
                     <Text textStyle="subTitle" mt="2">{dashboard.title} / Settings</Text>
-                    <Tabs orientation="vertical" variant='soft-rounded' mt="7">
+                    <Tabs orientation="vertical"  mt="7">
                         <TabList pr="2" width="200px" >
                             <Tab>General</Tab>
                             <Tab>Styles</Tab>
