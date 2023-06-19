@@ -1,5 +1,6 @@
 import {  Modal, ModalBody, ModalCloseButton, ModalContent, ModalOverlay, Tab, TabList, TabPanel, TabPanels, Tabs, Text, useDisclosure } from "@chakra-ui/react"
 import IconButton from "components/button/IconButton"
+import { toNumber } from "lodash"
 import { useEffect } from "react"
 import { FaCog } from "react-icons/fa"
 import { useSearchParam } from "react-use"
@@ -17,10 +18,10 @@ interface Props {
 
 
 enum DashboardSettingType  {
-    General = "general",
-    Styles = "styles",
-    Variables = "variables",
-    MetaData = "metadata"
+    General = 0,
+    Styles = 1,
+    Variables = 2,
+    MetaData = 3
 }
 // color-scheme: dark;height: 100%;background-image: url(http://datav-react.jiaminghi.com/demo/manage-desk/static/media/bg.110420cf.png);background-size: auto;
 const DashboardSettings = ({ dashboard,onChange }: Props) => {
@@ -46,7 +47,7 @@ const DashboardSettings = ({ dashboard,onChange }: Props) => {
                 <ModalCloseButton mt="2"/>
                 <ModalBody>
                     <Text textStyle="subTitle" mt="2">{dashboard.title} / Settings</Text>
-                    <Tabs orientation="vertical"  mt="7">
+                    <Tabs orientation="vertical"  mt="7" defaultIndex={toNumber(settings)} onChange={index => addParamToUrl({ settings: index })}>
                         <TabList pr="2" width="200px" >
                             <Tab>General</Tab>
                             <Tab>Styles</Tab>
@@ -55,16 +56,16 @@ const DashboardSettings = ({ dashboard,onChange }: Props) => {
                         </TabList>
 
                         <TabPanels  p="2"> 
-                            <TabPanel py="0">
+                            <TabPanel py="0" tabIndex={DashboardSettingType.General}>
                                 <GeneralSettings dashboard={dashboard} onChange={onChange} />
                             </TabPanel>
-                            <TabPanel py="0">
+                            <TabPanel py="0" tabIndex={DashboardSettingType.Styles}>
                                 <StyleSettings dashboard={dashboard} onChange={onChange} />
                             </TabPanel>
-                            <TabPanel  py="0">
+                            <TabPanel  py="0" tabIndex={DashboardSettingType.Variables}>
                                 <VariablesSetting dashboard={dashboard} onChange={onChange} />
                             </TabPanel>
-                            <TabPanel  py="0">
+                            <TabPanel  py="0" tabIndex={DashboardSettingType.MetaData}>
                                 <MetaSettings dashboard={dashboard} onChange={onChange} />
                             </TabPanel>
                         </TabPanels>
