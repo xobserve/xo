@@ -1,0 +1,1 @@
+export type StyleSize = "sm" | "md" | "lg" 

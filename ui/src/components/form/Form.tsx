@@ -1,11 +1,14 @@
-import { Box, Flex, HStack, Text, VStack } from "@chakra-ui/react"
+import { Box, Flex, HStack, StackDivider, Text, VStack } from "@chakra-ui/react"
+import { StyleSize } from "types/styles"
 
 interface FormProps {
-    size?: "sm" | "md" | "lg"
     children: any
+    divided?: boolean
+    spacing?: number
+    divider?: boolean
 }
-export const Form = ({size="md", children}:FormProps) => {
-    return (<VStack alignItems="left" spacing={4} fontSize={size}>
+export const Form = ({children,divider=false,spacing=5}:FormProps) => {
+    return (<VStack alignItems="left" spacing={spacing} divider={divider? <StackDivider />: null}>
         {children}
     </VStack>)
 }
@@ -15,22 +18,23 @@ interface FormItemProps {
     title: string
     desc?: string
     horizontal?: boolean
+    width?: string
 }
 
-export const FormItem = ({children,title,desc,horizontal}:FormItemProps) => {
+export const FormItem = ({children,title,desc,horizontal,width="260px"}:FormItemProps) => {
     return <>{
         horizontal ?
             <Box>
                 <HStack>
                     <Text textStyle="title">{title}</Text>
-                    {children}
+                    <Box width={width}>{children}</Box>
                 </HStack>
                 {desc && <Text textStyle="annotation" mb="2">{desc}</Text>}
             </Box>  :  
             <Box>
-                <Text textStyle="title" mb={desc ? 0 : 1}>{title}</Text>
+                <Text textStyle="title" mb={desc ? 0 : 0}>{title}</Text>
                 {desc && <Text textStyle="annotation" mb="2">{desc}</Text>}
-                {children}
+                <Box width={width}>{children}</Box>
             </Box>
     }
     </>

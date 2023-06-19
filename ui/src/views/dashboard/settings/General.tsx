@@ -1,4 +1,5 @@
 import { Box, HStack, Input, Switch, Tag, TagCloseButton, TagLabel, Text, useToast, VStack } from "@chakra-ui/react"
+import { Form, FormItem } from "components/form/Form"
 import { useEffect, useState } from "react"
 import { Dashboard } from "types/dashboard"
 
@@ -39,33 +40,26 @@ const GeneralSettings = ({ dashboard, onChange }: Props) => {
     }
 
     return (<>
-        <VStack alignItems="left" spacing={4}>
-            <Box>
-                <Text textStyle="title">Title</Text>
-                <Input value={title} onChange={e => setTitle(e.currentTarget.value)} onBlur={() => onChange(draft => {draft.title = title}) } mt="1" />
-            </Box>
-            <Box>
-                <Text textStyle="title">Description</Text>
-                <Input value={desc} onChange={e => setDesc(e.currentTarget.value)} onBlur={() =>  onChange(draft => {draft.data.description = desc}) } mt="1" />
-            </Box>
+        <Form>
+            <FormItem title="Title">
+                <Input size="sm" value={title} onChange={e => setTitle(e.currentTarget.value)} onBlur={() => onChange(draft => {draft.title = title}) } mt="1" />
+            </FormItem>
+            <FormItem title="Description">
+                <Input size="sm" value={desc} onChange={e => setDesc(e.currentTarget.value)} onBlur={() =>  onChange(draft => {draft.data.description = desc}) } mt="1" />
+            </FormItem>
             {/* <Box>
                 <Text textStyle="title">Editable</Text>
                 <Text textStyle="annotation">Make this dashboard editable to anyone who has edit permissions. </Text>
                 <Switch isChecked={dashboard.data.editable} onChange={e => { dashboard.data.editable = e.currentTarget.checked; onChange() }} mt="1" />
             </Box> */}
-            <Box>
-                <Text textStyle="title">Shared tooltip</Text>
-                <Text textStyle="annotation">Show tooltips at the same position across all panels</Text>
+            <FormItem title="Shared tooltip" desc="Show tooltips at the same position across all panels">
                 <Switch isChecked={dashboard.data.sharedTooltip} onChange={e =>  onChange(draft => {draft.data.sharedTooltip =  e.currentTarget.checked}) } mt="1" />
-            </Box>
+            </FormItem>
 
-            <Box>
-                <Text textStyle="title">Hide global variables</Text>
-                <Input value={hidingVars} onChange={e => setHidingVars(e.currentTarget.value)} onBlur={() => onChange(draft => {draft.data.hidingVars = hidingVars})} mt="1" placeholder="enter global variables names, separated with ',' . e.g: app,env" />
-            </Box>
-            <Box>
-                <Text textStyle="title">Tags</Text>
-                <Text textStyle="annotation">Tag a dashboard and group it into a same collection for searching</Text>
+            <FormItem title="Hide global variables">
+                <Input size="sm" value={hidingVars} onChange={e => setHidingVars(e.currentTarget.value)} onBlur={() => onChange(draft => {draft.data.hidingVars = hidingVars})} mt="1" placeholder="enter global variables names, separated with ',' . e.g: app,env" />
+            </FormItem>
+            <FormItem title="Tags" desc="Tag a dashboard and group it into a same collection for searching">
                 <HStack>
                     {
                         dashboard.data.tags?.map(t => <Tag>
@@ -81,8 +75,8 @@ const GeneralSettings = ({ dashboard, onChange }: Props) => {
                         }
                     }} />
                 </HStack>
-            </Box>
-        </VStack>
+            </FormItem>
+        </Form>
     </>)
 }
 

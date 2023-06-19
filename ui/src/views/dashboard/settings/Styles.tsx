@@ -10,8 +10,8 @@ interface Props {
 } 
 
 const StyleSettings = ({ dashboard, onChange }: Props) => {
-    return (<Form size="sm">
-        <FormItem title="Background" desc="Background color or image of the dashboard">
+    return (<Form>
+        <FormItem title="Background" desc="Background color or image of the dashboard" width="100%">
             <EditorInputItem value={dashboard.data.styles?.bg} onChange={(v) => onChange(draft => { draft.data.styles.bg = v })} />
         </FormItem>
         <FormItem title="Enable background" desc="Whether using the background image set above">

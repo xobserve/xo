@@ -6,14 +6,14 @@ export default function textStyles() {
         },
         subTitle: {
             fontSize: "1.15rem",
-            fontWeight: "400",
+            fontWeight: "500",
         },
         title: {
-            fontSize: "1.1rem",
-            fontWeight: "400",
+            fontSize: "1rem",
+            fontWeight: "500",
         },
         annotation: {
-            fontSize: "0.9rem",
+            fontSize: "0.85rem",
             opacity: 0.8
         }
     }
