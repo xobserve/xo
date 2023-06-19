@@ -114,7 +114,6 @@ const EditPanel = ({ dashboard, onChange }: EditPanelProps) => {
         return '0%'
     }
 
-    console.log("here3333444:",tempPanel)
     return (<>
         <Modal isOpen={isOpen} onClose={onEditClose} size="full">
             <ModalOverlay />
@@ -134,7 +133,7 @@ const EditPanel = ({ dashboard, onChange }: EditPanelProps) => {
                     <HStack height="calc(100vh - 100px)" alignItems="top">
                         <Box width="65%" height="100%">
                             {/* panel rendering section */}
-                            <Box key={tempPanel.id.toString() + hideDatasource as string} height={maxPanelHeight()} id="edit-panel-render" >
+                            <Box key={tempPanel.id.toString() + hideDatasource as string} height={maxPanelHeight()} id="edit-panel-render" position="relative">
                                 <AutoSizer>
                                     {({ width,height }) => {
                                         if (width === 0) {
