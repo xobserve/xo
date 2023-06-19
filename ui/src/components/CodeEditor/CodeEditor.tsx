@@ -1,7 +1,7 @@
 import React from "react";
 
 import dynamic from "next/dynamic";
-import { Box, useColorMode } from "@chakra-ui/react";
+import { useColorMode } from "@chakra-ui/react";
 import { editor } from "monaco-editor";
 const MonacoEditor = dynamic(import("react-monaco-editor"), { ssr: false });
 
@@ -11,12 +11,10 @@ interface Props {
     onMount?: (editor: editor.IStandaloneCodeEditor) => void
     
 }
-function CodeEditor({value, onChange,onMount}) {
+function CodeEditor({value, onChange,onMount}:Props) {
   const [postBody, setPostBody] = React.useState("");
   const {colorMode} = useColorMode()
-  return (<Box       width="800px"
-  height="600px">
-    <MonacoEditor
+  return ( <MonacoEditor
       editorDidMount={(editor:editor.IStandaloneCodeEditor) => {
         onMount && onMount(editor)
         // @ts-ignore
@@ -52,8 +50,7 @@ function CodeEditor({value, onChange,onMount}) {
         overviewRulerBorder: false,
       }}
       onChange={setPostBody}
-    />
-  </Box>)
+    />)
 }
 
 export default CodeEditor

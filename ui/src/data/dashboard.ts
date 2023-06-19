@@ -1,4 +1,4 @@
-import { Dashboard } from "types/dashboard";
+import { Dashboard, DashboardLayout } from "types/dashboard";
 import { PanelBorderType, PanelDecorationType } from "types/panel/styles";
 import { globalTeamId } from "types/teams";
 
@@ -27,7 +27,7 @@ export const initDashboard:Dashboard = {
             //     reverse: false
             // },
         },
-        layout: "vertical"
+        layout: DashboardLayout.Vertical
     },
     ownedBy: globalTeamId,
 }
