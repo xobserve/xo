@@ -134,7 +134,7 @@ const DashboardGrid = memo((props: GridProps) => {
                         onResize={onResize}
                         onResizeStop={onResizeStop}
                         onLayoutChange={onLayoutChange}
-                        compactType="vertical"
+                        compactType={dashboard.data.layout as any}
                     >
                         {
                             dashboard.data.panels.map((panel) => {

@@ -26,7 +26,8 @@ export const initDashboard:Dashboard = {
             //     justifyContent: "center",
             //     reverse: false
             // },
-        }
+        },
+        layout: "vertical"
     },
     ownedBy: globalTeamId,
 }

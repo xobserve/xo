@@ -1,7 +1,7 @@
-import { Box, HStack, Input, Switch, Tag, TagCloseButton, TagLabel, Text, useToast, VStack } from "@chakra-ui/react"
+import { Box, HStack, Input, Select, Switch, Tag, TagCloseButton, TagLabel, Text, useToast, VStack } from "@chakra-ui/react"
 import { Form, FormItem } from "components/form/Form"
 import { useEffect, useState } from "react"
-import { Dashboard } from "types/dashboard"
+import { Dashboard, DashboardLayout } from "types/dashboard"
 
 interface Props {
     dashboard: Dashboard
@@ -75,6 +75,17 @@ const GeneralSettings = ({ dashboard, onChange }: Props) => {
                         }
                     }} />
                 </HStack>
+            </FormItem>
+
+            <FormItem title="Panels layout" desc="Auto place panels in horizontal or vertical direction, when set to random, you can place panels anywhere">
+                <Select value={dashboard.data.layout} onChange={e => {
+                    const v = e.currentTarget.value 
+                    onChange(draft => {draft.data.layout = v})
+                }}>
+                    {
+                        Object.keys(DashboardLayout).map(k => <option value={[DashboardLayout[k]]}>{k}</option>)
+                    }
+                </Select>
             </FormItem>
         </Form>
     </>)

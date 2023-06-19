@@ -28,6 +28,7 @@ export interface DashboardData {
         border: string
         // decoration: DecorationStyles
     }
+    layout: DashboardLayout
 }
 
 export interface Panel {
@@ -106,3 +107,9 @@ export interface PanelProps {
 }
 
 export type PanelData = any
+
+export enum DashboardLayout {
+    Vertical = "vertical",
+    Random = "null" ,
+    Horizontal =  "horizontal"
+}
