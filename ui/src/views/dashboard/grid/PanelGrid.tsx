@@ -27,6 +27,7 @@ import PanelBorder from "../../../components/largescreen/components/Border";
 import TitleDecoration from "components/largescreen/components/TitleDecoration";
 import PanelDecoration from "components/largescreen/components/Decoration";
 import { useDedupEvent } from "hooks/useDedupEvent";
+import EchartsPanel from "../plugins/panel/echarts/Echarts";
 
 
 interface PanelGridProps {
@@ -205,6 +206,8 @@ const CustomPanelRender = (props: any) => {
             return <TablePanel {...props} />
         case PanelType.NodeGraph:
             return <NodeGraphPanel {...props} />
+        case PanelType.Echarts:
+            return <EchartsPanel {...props} />
         default:
             return <></>
     }

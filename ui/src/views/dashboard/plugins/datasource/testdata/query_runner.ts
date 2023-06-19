@@ -10,6 +10,7 @@ export const run_testdata_query = async (panel: Panel, q: PanelQuery, range: Tim
     let data;
 
     switch (panel.type) {
+        //@needs-update-when-add-new-panel
         case PanelType.Graph:
             data = prometheusDataToGraph(graphData.data)
             break;
@@ -19,6 +20,24 @@ export const run_testdata_query = async (panel: Panel, q: PanelQuery, range: Tim
         case PanelType.NodeGraph:
             data = nodeGraphData(10, 0.8)
             break;
+        case PanelType.Echarts:
+            data =  {
+                title: {
+                    text: 'ECharts 入门示例'
+                },
+                tooltip: {},
+                xAxis: {
+                    data: ['衬衫', '羊毛衫', '雪纺衫', '裤子', '高跟鞋', '袜子']
+                },
+                yAxis: {},
+                series: [
+                    {
+                        name: '销量',
+                        type: 'bar',
+                        data: [5, 20, 36, 10, 10, 20]
+                    }
+                ]
+            }
         default:
             break
     }

@@ -385,7 +385,7 @@ const RightClickMenus = ({ panel, onChange }: PanelEditorProps) => {
         <Modal isOpen={isOpen} onClose={onClose}>
             <ModalOverlay />
             <ModalContent minWidth="800px">
-                <ModalBody>
+                <ModalBody p="0">
                     <HStack>
                         <Text fontWeight="600">Menu item name </Text>
                         <Input value={temp.name} onChange={e => {

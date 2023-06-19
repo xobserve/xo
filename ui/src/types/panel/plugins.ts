@@ -1,16 +1,23 @@
+import { PanelType } from "types/dashboard"
 
+//@needs-update-when-add-new-panel
 export interface PanelPlugins {
-    text?: TextPlugin
+    [PanelType.Text]?: TextPlugin
 
-    graph?: GraphSettings
-    table?: TableSettings
-    nodeGraph?: NodeGraphSettings
+    [PanelType.Graph]?: GraphSettings
+    [PanelType.Table]?: TableSettings
+    [PanelType.NodeGraph]?: NodeGraphSettings
+    [PanelType.Echarts]?: EchartsSettings
 }
 
 /*-------------------- Plugins ----------------------- */
 
 export interface CommonPluginSettings {
     disableDatasource?: boolean
+}
+
+export interface EchartsSettings extends CommonPluginSettings {
+    parseOptionsFunc: string
 }
 
 export interface TextPlugin extends CommonPluginSettings {

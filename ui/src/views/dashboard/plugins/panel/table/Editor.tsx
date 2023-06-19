@@ -72,8 +72,8 @@ const OnRowClickEditor = ({ panel, onChange }: PanelEditorProps) => {
         <Modal isOpen={isOpen} onClose={onClose}>
             <ModalOverlay />
             <ModalContent minWidth="800px" height="500px">
-                <ModalBody>
-                    <CodeEditor value={panel.plugins.table.onRowClick} onChange={v => setTemp(v)} />
+                <ModalBody p="0">
+                    <CodeEditor value={temp} onChange={v => setTemp(v)} />
                 </ModalBody>
                 <Button onClick={onSubmit}>Submit</Button>
             </ModalContent>

@@ -19,6 +19,7 @@ import { dispatch } from "use-bus"
 import { PanelForceRebuildEvent } from "src/data/bus-events"
 import AutoSizer from "react-virtualized-auto-sizer"
 import { PanelGrid } from "../grid/PanelGrid"
+import EchartsPanelEditor from "../plugins/panel/echarts/Editor"
 
 interface EditPanelProps {
     dashboard: Dashboard
@@ -201,6 +202,8 @@ const CustomPanelEditor = ({ tempPanel, setTempPanel }) => {
             return <TablePanelEditor panel={tempPanel} onChange={setTempPanel} />
         case PanelType.NodeGraph:
             return <NodeGraphPanelEditor panel={tempPanel} onChange={setTempPanel} />
+        case PanelType.Echarts:
+            return <EchartsPanelEditor panel={tempPanel} onChange={setTempPanel} />
         default:
             return <></>
     }

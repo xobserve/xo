@@ -62,6 +62,7 @@ export enum PanelType {
     Text = "text",
     Row = "row",
     NodeGraph = "nodeGraph",
+    Echarts = "echarts"
 }
 
 export enum DatasourceType {

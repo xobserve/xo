@@ -1,8 +1,11 @@
+import { PanelType } from "types/dashboard";
 import { PanelPlugins } from "types/panel/plugins";
 
 export const onClickCommonEvent= "// setVariable: (varName:string, varValue:string) => void \nfunction onClick(item, router, setVariable) {\n\tconsole.log(item)\n}"
+
+//@needs-update-when-add-new-panel
 export const initPanelPlugins: PanelPlugins = {
-    graph: {
+    [PanelType.Graph]: {
         tooltip: {
             mode: 'all',
             sort: 'desc'
@@ -31,7 +34,7 @@ export const initPanelPlugins: PanelPlugins = {
         }
     },
 
-    text:  {
+    [PanelType.Text]:  {
         disableDatasource: true,
         md: `#Welcome to Starship\n This is a new panel\n You can edit it by clicking the edit button on the top title\n ###Have fun!`,
         justifyContent: "left",
@@ -40,7 +43,7 @@ export const initPanelPlugins: PanelPlugins = {
         fontWeight: '500',
     },
 
-    table: {
+    [PanelType.Table]: {
         showHeader: true,
         globalSearch:false,
         enablePagination:false,
@@ -50,7 +53,7 @@ export const initPanelPlugins: PanelPlugins = {
         onRowClick: onClickCommonEvent
     },
 
-    nodeGraph: {
+    [PanelType.NodeGraph]: {
         node: {
             baseSize: 36,
             maxSize: 1.5,
@@ -86,6 +89,10 @@ export const initPanelPlugins: PanelPlugins = {
             nodeStrength: 5000,
             gravity: 60,
         }
+    },
+
+    [PanelType.Echarts]: {
+        parseOptionsFunc: "// parseOptions return echarts.Options, it is directly used in rendering a echarts chart.\nfunction parseOptions(data) {\n\tconsole.log(data)\n\t//I guess you are using testdata datasource,\n\t//data fetching from testdata is already an echarts option\n\t//so there is no need to parse it\n\tconst options = data\n\treturn data\n}"
     }
 }
 
