@@ -21,7 +21,7 @@ function PageContainer(props: PageContainerProps) {
   const { children, nav, title = "Datav", showWidgetes = false, showCopyright = true, ...rest } = props
   return (
     <>
-      <Flex width="100%" position="relative" className="main-view" flexDirection="row" height="100%" flex="1 1 0"> 
+      <Flex width="100%"> 
           <VerticalNav  bg={props.bg} />
           {children}
       </Flex>

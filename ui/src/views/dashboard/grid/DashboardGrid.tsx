@@ -12,7 +12,6 @@ import uPlot from "uplot";
 import AutoSizer from "react-virtualized-auto-sizer";
 import useGranaTheme from 'hooks/useExtraTheme';
 import { PanelGrid } from "./PanelGrid";
-import Border from "components/largescreen/components/Border";
 
 
 
@@ -93,15 +92,11 @@ const DashboardGrid = memo((props: GridProps) => {
     let mooSync = dashboard.data.sharedTooltip ? uPlot.sync(dashboard.id) : null
 
 
-    const onDragStop = (layout, oldItem, newItem) => {
-    };
+    const onDragStop = (layout, oldItem, newItem) => {};
 
-    const onResize = (layout, oldItem, newItem) => {
+    const onResize = (layout, oldItem, newItem) => {};
 
-    };
-
-    const onResizeStop = (layout, oldItem, newItem) => {
-    };
+    const onResizeStop = (layout, oldItem, newItem) => {};
 
     return (<Box style={{ flex: '1 1 auto' }} id="dashboard-grid" position="relative">
         <AutoSizer disableHeight>
@@ -120,6 +115,8 @@ const DashboardGrid = memo((props: GridProps) => {
                     gridWidth = width;
                 }
 
+      
+                // 621, 524
                 return <Box style={{ width: `${width}px`, height: '100%' }} className="grid-layout-wrapper">
                     <ReactGridLayout
                         width={width}
@@ -140,7 +137,6 @@ const DashboardGrid = memo((props: GridProps) => {
                         compactType="vertical"
                     >
                         {
-
                             dashboard.data.panels.map((panel) => {
                                 return <GridItem
                                     key={panel.id}

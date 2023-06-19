@@ -20,9 +20,7 @@ import { setAutoFreeze } from "immer";
 import { initPanelPlugins } from "src/data/panel/initPlugins"
 import { initPanelStyles } from "src/data/panel/initStyles"
 import Border from "components/largescreen/components/Border"
-import useMiniMode from "hooks/useMiniMode"
 import useFullscreen from "hooks/useFullscreen"
-import Decoration from "components/largescreen/components/Decoration"
 import { initDashboard } from "src/data/dashboard"
  
 
@@ -133,10 +131,10 @@ const DashboardWrapper = ({dashboardId}) => {
     return (
         <>
             <PageContainer bg={dashboard?.data.styles.bgEnabled ? dashboard?.data.styles?.bg: null}>
-                {dashboard && <Box pl="6px" pr="6px" width="100%" display="flex" flexDirection="column" flexGrow="1" height="100%"  minHeight="100vh">
+                {dashboard && <Box pl="6px" pr="6px" width="100%"  height="100%"  minHeight="100vh">
                     {/* <Decoration decoration={dashboard.data.styles.decoration}/> */}
                     <DashboardHeader dashboard={dashboard} onTimeChange={t => {dispatch({type:  TimeChangedEvent,data: t});setTimeRange(t)}} timeRange={timeRange}  onChange={onDashbardChange} />
-                    <Box id="dashboard-wrapper" mt={headerHeight} py="2" position="relative">
+                    <Box key={dashboard.id + fullscreen} id="dashboard-wrapper" mt={headerHeight} py="2" position="relative">
                         <DashboardBorder border={dashboard.data.styles.border}  />
                         {dashboard.data.panels?.length > 0 &&<DashboardGrid dashboard={dashboard} onChange={onDashbardChange} />}         
                     </Box>
