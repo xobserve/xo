@@ -6,7 +6,6 @@ import { EditorInputItem } from "../../../components/editor/EditorItem"
 import PanelEditItem from "./PanelEditItem"
 import { initPanelPlugins } from "src/data/panel/initPlugins"
 import { useEffect, useRef } from "react"
-import { supportDatasources } from "../plugins/panel/supportDatasources"
 import { initDatasource, initPanel } from "src/data/panel/initPanel"
 
 
@@ -29,11 +28,11 @@ const PanelSettings = ({ panel, onChange }: Props) => {
                 [type]: pluginsCachedInEdit[type] ??  initPanelPlugins[type]
             }
 
-            // check the new plugin can use the old datasource
-            const supported = supportDatasources[type]
-            if (!supported.includes(tempPanel.datasource.type)) {
-                tempPanel.datasource = initDatasource
-            }
+            // // check the new plugin can use the old datasource
+            // const supported = supportDatasources[type]
+            // if (!supported.includes(tempPanel.datasource.type)) {
+            //     tempPanel.datasource = initDatasource
+            // }
         })
     }
     

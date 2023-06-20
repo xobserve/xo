@@ -5,7 +5,6 @@ import { DatasourceType, Panel, PanelQuery } from "types/dashboard"
 import JaegerQueryEditor from "../plugins/datasource/jaeger/Editor"
 import PrometheusQueryEditor from "../plugins/datasource/prometheus/Editor"
 import TestDataQueryEditor from "../plugins/datasource/testdata/Editor"
-import { supportDatasources } from "../plugins/panel/supportDatasources"
 
 interface Props {
     panel: Panel
@@ -63,11 +62,6 @@ const EditPanelQuery = ({ panel, onChange }: Props) => {
     const selected = panel.datasource
 
     const datasources = useMemo(() => {
-        const supported = supportDatasources[panel.type]
-        if (supported != undefined) {
-            return supported
-        } 
-
         return Object.keys(DatasourceType)
     },[panel.type])
     
