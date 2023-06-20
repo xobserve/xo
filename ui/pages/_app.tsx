@@ -1,6 +1,6 @@
 import { ChakraProvider } from '@chakra-ui/react'
 import Head from 'next/head'
-import React from 'react'
+import React, { useEffect } from 'react'
 import FontFace from 'components/font-face'
 import theme from 'theme'
 import { createStandaloneToast } from '@chakra-ui/toast'
@@ -8,15 +8,20 @@ import CommonStyles from "src/theme/common.styles"
 import NoSSR from 'react-no-ssr';
 import dynamic from "next/dynamic"
 import "src/theme/css/react-grid.css"
+import "src/theme/css/echarts.css"
+import BaiduMap from 'components/BaiduMap'
+
 
 
 const { ToastContainer} = createStandaloneToast()
+
+
+
 
 export let canvasCtx;
 //@ts-ignore
 const App =  dynamic(async () => ({ Component, pageProps }) => {
   canvasCtx = document.createElement('canvas').getContext('2d')!;
-
 
   return (
     <NoSSR>
@@ -35,6 +40,7 @@ const App =  dynamic(async () => ({ Component, pageProps }) => {
             src='https://plausible.io/js/plausible.js'
           />
         )}
+        <script src="https://api.map.baidu.com/api?v=3.0&ak=KOmVjPVUAey1G2E8zNhPiuQ6QiEmAwZu"></script>
       </Head>
       <ChakraProvider theme={theme}>
         <Component {...pageProps} />
@@ -42,6 +48,7 @@ const App =  dynamic(async () => ({ Component, pageProps }) => {
       <FontFace />
       <CommonStyles />
       <ToastContainer />
+      <BaiduMap ak="" />
     </NoSSR>
   )
 }  , { ssr: false })

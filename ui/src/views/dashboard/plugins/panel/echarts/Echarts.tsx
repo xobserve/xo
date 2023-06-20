@@ -8,6 +8,8 @@ import { clone, isFunction } from "lodash";
 import { useSearchParam } from "react-use";
 import { dispatch } from "use-bus";
 import { PanelDataEvent } from "src/data/bus-events";
+import dynamic from "next/dynamic";
+dynamic(import("echarts/extension/bmap/bmap"), { ssr: false });
 
 
 
@@ -16,6 +18,7 @@ const EchartsPanel = ({ panel, data, width, height }: PanelProps) => {
     const toast = useToast()
     const [chart, setChart] = useState<ECharts>(null)
     const edit = useSearchParam("edit")
+
     useEffect(() => {
         if (edit==panel.id.toString()) {
             dispatch({ type: PanelDataEvent, data: data })
@@ -58,8 +61,10 @@ const EchartsPanel = ({ panel, data, width, height }: PanelProps) => {
         return [options,onEvents]
     }, [panel.plugins.echarts, data, chart])
 
+    // override  echarts background in panel edit mod
+    const darkBg = edit == panel.id.toString() ? 'transparent' : "#1A202C"
     return (<>
-        {options && <Box height="100%" key={colorMode}><EchartsComponent options={options} theme={colorMode} width={width} height={height} onChartCreated={c => setChart(c)} onChartEvents={onEvents} /></Box>}
+        {options && <Box height={height} key={colorMode} className="echarts-panel"><EchartsComponent options={options} theme={colorMode} width={width} height={height} onChartCreated={c => setChart(c)} onChartEvents={onEvents} darkBg={darkBg}/></Box>}
     </>)
 }
 
@@ -72,15 +77,18 @@ interface Props {
     height: number
     onChartCreated: (chart: ECharts) => void
     onChartEvents?: any
+    darkBg?: string
 }
 
-export const EchartsComponent = ({ options, theme, width, height, onChartCreated, onChartEvents }: Props) => {
+export const EchartsComponent = ({ options, theme, width, height, onChartCreated, onChartEvents,darkBg }: Props) => {
     const container = useRef(null)
     const [chart, setChart] = useState<ECharts>(null)
     
-    if (theme == "dark") {
-        options.backgroundColor = "transparent"
+    if (theme == "dark" && darkBg) {
+        console.log("here33344444:",darkBg)
+        options.backgroundColor = darkBg 
     }
+
     options.animation = false
 
     useEffect(() => {
@@ -107,7 +115,7 @@ export const EchartsComponent = ({ options, theme, width, height, onChartCreated
     }, [options])
 
     useEffect(() => {
-        if (onChartEvents) {
+        if (onChartEvents && chart) {
             onChartEvents(options, chart)
         }
     },[onChartEvents])
@@ -117,6 +125,6 @@ export const EchartsComponent = ({ options, theme, width, height, onChartCreated
             chart.resize({ width, height })
         }
     }, [width, height])
-    return (<Box ref={container} width={width} height={height} />)
+    return (<Box ref={container} width={width} height={height}  className="echart-container"/>)
 }
 

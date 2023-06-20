@@ -44,7 +44,7 @@ function CodeEditor({value, onChange,onMount,language="typescript",readonly=fals
         minimap: {
           enabled: false
         },
-        lineNumbers: "off",
+        lineNumbers: "on",
         automaticLayout: true,
         lineNumbersMinChars: 4,
         lineDecorationsWidth: 0,

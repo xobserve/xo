@@ -34,7 +34,6 @@ export default EchartsPanelEditor
 
 
 const SetOptions = ({ panel, onChange }: PanelEditorProps) => {
-    const toast = useToast()
     const { isOpen, onOpen, onClose } = useDisclosure()
     const [temp, setTemp] = useState(panel.plugins.echarts.setOptionsFunc)
     const [data, setData] = useState(null)
@@ -43,7 +42,7 @@ const SetOptions = ({ panel, onChange }: PanelEditorProps) => {
         onClose()
     }
 
-    const {colorMode} = useColorMode()
+    const { colorMode } = useColorMode()
 
     useBus(
         (e) => { return e.type == PanelDataEvent },
@@ -51,23 +50,21 @@ const SetOptions = ({ panel, onChange }: PanelEditorProps) => {
             setData(e.data)
         }
     )
-    
-        
+
+
     const setOptions = genDynamicFunction(temp);
     let options;
-    if (data) {
-        if (isFunction(setOptions)) {
-            try {
-                let o = setOptions(cloneDeep(data[0]),echarts)
-                o.animation = false
-                options = o
-            } catch (error) {
-           
-            }
- 
-        }
-    }
 
+    if (isFunction(setOptions)) {
+        try {
+            let o = setOptions(cloneDeep(data), echarts)
+            o.animation = false
+            options = o
+        } catch (error) {
+            console.log("call setOptions error", error)
+        }
+
+    }
 
     return (<>
         <PanelEditItem title="Set options function" desc="Data fetched from datasource will pass to this function, and the return options will directly pass to echarts">
@@ -76,8 +73,8 @@ const SetOptions = ({ panel, onChange }: PanelEditorProps) => {
         <Modal isOpen={isOpen} onClose={onClose} size="full">
             <ModalOverlay />
             <ModalContent>
-            
-                <ModalBody  pt="2" pb="0" px="0">
+
+                <ModalBody pt="2" pb="0" px="0">
                     <Flex alignItems="center" justifyContent="space-between" height="40px" pl="5">
                         <Text textStyle="subTitle"> Live Edit( fetch data from {panel.datasource.type} datasource)</Text>
                         <HStack>
@@ -86,29 +83,29 @@ const SetOptions = ({ panel, onChange }: PanelEditorProps) => {
                             <Button size="sm" onClick={onClose} variant="outline">Cancel</Button>
                         </HStack>
                     </Flex>
-                    <HStack alignItems="top"  height="calc(100vh - 50px)">
-                        <Box  width="45%"><CodeEditor value={temp} onChange={v => setTemp(v)} /></Box>
-                        <Box  width="55%">
+                    <HStack alignItems="top" height="calc(100vh - 50px)">
+                        <Box width="45%"><CodeEditor value={temp} onChange={v => setTemp(v)} /></Box>
+                        <Box width="55%">
                             <Box height="50%">
-                                <CodeEditor value={"//options return from setOptions func\n" + JSON.stringify(options, null, 2)} language="json" readonly/>
+                                <CodeEditor value={"//options return from setOptions func\n" + JSON.stringify(options, null, 2)} language="json" readonly />
                             </Box>
-                            <Box  key={colorMode} height="50%">
+                            <Box key={colorMode} height="50%">
                                 {options && <AutoSizer>
-                                {({ width,height}) => { 
-                                    return <EchartsComponent options={options} theme={colorMode} width={width} height={height} onChartCreated={() => null }/>
-                                }}
+                                    {({ width, height }) => {
+                                        return <EchartsComponent options={options} theme={colorMode} width={width} height={height} onChartCreated={() => null} />
+                                    }}
                                 </AutoSizer>}
                             </Box>
-                    </Box>
+                        </Box>
                     </HStack>
-                   
-                   
-                    
+
+
+
                 </ModalBody>
 
             </ModalContent>
         </Modal>
-    </> 
+    </>
     )
 }
 
@@ -141,6 +138,6 @@ const RegisterEvents = ({ panel, onChange }: PanelEditorProps) => {
 
             </ModalContent>
         </Modal>
-    </> 
+    </>
     )
 }
