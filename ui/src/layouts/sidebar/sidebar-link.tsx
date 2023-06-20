@@ -4,7 +4,7 @@ import { useRouter } from "next/router"
 import React from "react"
 
 const StyledLink = React.forwardRef(function StyledLink(
-  props: PropsOf<typeof chakra.a> & { isActive?: boolean },
+  props: PropsOf<typeof chakra.a> & { isActive?: boolean,icon: any },
   ref: React.Ref<any>,
 ) {
   const { isActive, icon,children, ...rest } = props
@@ -40,6 +40,7 @@ type SidebarLinkProps = PropsOf<typeof chakra.div> & {
   href?: string
   icon?: React.ReactElement
   query?: any
+  exactPath?: boolean
 }
 
 const SidebarLink = (props: SidebarLinkProps) => {

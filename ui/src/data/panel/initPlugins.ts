@@ -120,6 +120,10 @@ function registerEvents(options, chart) {
         console.log(params)
     })
 }`
+    },
+    [PanelType.Pie]: {
+    },
+    [PanelType.Gauge]: {
     }
 }
 

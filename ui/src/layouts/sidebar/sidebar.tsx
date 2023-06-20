@@ -13,7 +13,7 @@ export function SidebarContent(props) {
             <Stack as="ul">
                 {routes.map((route: Route) => {
                     if (route.disabled) { return null }
-                    return <SidebarLink as="li" key={route.path} href={route.path} icon={route.icon} {...rest}>
+                    return <SidebarLink as="li" key={route.url} href={route.url} icon={route.icon} {...rest}>
                         <span>{route.title}</span>
                     </SidebarLink>
                 })}

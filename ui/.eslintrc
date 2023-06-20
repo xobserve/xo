@@ -22,7 +22,7 @@
         }
       ],
       "import/no-unresolved": "off",
-      "react-hooks/exhaustive-deps": true
+      "react-hooks/exhaustive-deps": "off"
     },
     "parserOptions": {
       "project": "tsconfig.json"

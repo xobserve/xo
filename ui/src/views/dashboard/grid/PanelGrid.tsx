@@ -28,6 +28,8 @@ import TitleDecoration from "components/largescreen/components/TitleDecoration";
 import PanelDecoration from "components/largescreen/components/Decoration";
 import { useDedupEvent } from "hooks/useDedupEvent";
 import EchartsPanel from "../plugins/panel/echarts/Echarts";
+import PiePanel from "../plugins/panel/pie/Pie";
+import GaugePanel from "../plugins/panel/gauge/Gauge";
 
 
 interface PanelGridProps {
@@ -67,10 +69,10 @@ export const PanelGrid = memo((props: PanelGridProps) => {
         console.log("here33333, panel is forced to rebuild!", props.panel.id)
         setForceRenderCount(f => f + 1)
     })
-    
+
     return (
         <PanelBorder width={props.width} height={props.height} border={props.panel.styles?.border}>
-        <PanelComponent key={props.panel.id + forceRenderCount} {...props} timeRange={tr} variables={variables1} />
+            <PanelComponent key={props.panel.id + forceRenderCount} {...props} timeRange={tr} variables={variables1} />
         </PanelBorder>
     )
 })
@@ -88,7 +90,7 @@ export const PanelComponent = ({ dashboard, panel, onRemovePanel, width, height,
     const toast = useToast()
     const [panelData, setPanelData] = useState<any[]>(null)
     const [queryError, setQueryError] = useState()
-    
+
     // useEffect(() => console.log("panel created:", panel.id), [])
     useEffect(() => {
         queryData(panel, dashboard.id + panel.id)
@@ -170,7 +172,7 @@ export const PanelComponent = ({ dashboard, panel, onRemovePanel, width, height,
         })
 
         storage.set(StorageCopiedPanelKey, panel)
-    },[])
+    }, [])
 
     const panelBodyHeight = height - PANEL_HEADER_HEIGHT
     const panelInnerHeight = isEmpty(panel.title) ? height : panelBodyHeight// 10px padding top and bottom of panel body
@@ -186,7 +188,7 @@ export const PanelComponent = ({ dashboard, panel, onRemovePanel, width, height,
             overflowY="scroll"
             marginLeft={panel.type == PanelType.Graph ? "-10px" : "0px"}
         >
-           <CustomPanelRender dashboardId={dashboard.id} panel={panel} data={panelData} height={panelInnerHeight} width={panelInnerWidth} sync={sync} />
+            <CustomPanelRender dashboardId={dashboard.id} panel={panel} data={panelData} height={panelInnerHeight} width={panelInnerWidth} sync={sync} />
         </Box>}
     </Box>
 }
@@ -205,6 +207,10 @@ const CustomPanelRender = (props: any) => {
             return <NodeGraphPanel {...props} />
         case PanelType.Echarts:
             return <EchartsPanel {...props} />
+        case PanelType.Pie:
+            return <PiePanel {...props} />
+        case PanelType.Gauge:
+            return <GaugePanel {...props} />
         default:
             return <></>
     }

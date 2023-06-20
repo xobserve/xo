@@ -8,21 +8,31 @@ export interface PanelPlugins {
     [PanelType.Table]?: TableSettings
     [PanelType.NodeGraph]?: NodeGraphSettings
     [PanelType.Echarts]?: EchartsSettings
+    [PanelType.Pie]?: PieSettings
+    [PanelType.Gauge]?: GaugeSettings
 }
 
 /*-------------------- Plugins ----------------------- */
 
-export interface CommonPluginSettings {
+export interface DisableDatasource {
     disableDatasource?: boolean
 }
 
-export interface EchartsSettings extends CommonPluginSettings {
+export interface PieSettings {
+
+}
+
+export interface GaugeSettings {
+
+}
+
+export interface EchartsSettings {
     allowEmptyData: boolean
     setOptionsFunc: string
     registerEventsFunc: string
 }
 
-export interface TextPlugin extends CommonPluginSettings {
+export interface TextPlugin extends DisableDatasource {
     md?: string
     justifyContent: "center" | "left" | "right"
     alignItems: "center" | "top" | "bottom"
@@ -31,7 +41,7 @@ export interface TextPlugin extends CommonPluginSettings {
 }
 
 
-export interface TableSettings extends CommonPluginSettings {
+export interface TableSettings  {
     showHeader: boolean
     globalSearch: boolean
     enablePagination: boolean
@@ -41,7 +51,7 @@ export interface TableSettings extends CommonPluginSettings {
     onRowClick: string
 }
 
-export interface NodeGraphSettings extends CommonPluginSettings {
+export interface NodeGraphSettings  {
     node: {
         baseSize: number
         maxSize: number
@@ -76,7 +86,7 @@ export interface NodeGraphSettings extends CommonPluginSettings {
     }
 }
 
-export interface GraphSettings extends CommonPluginSettings {
+export interface GraphSettings {
     tooltip?: {
         mode: 'single' | 'all' | 'hidden'
         sort: "asc" | "desc"

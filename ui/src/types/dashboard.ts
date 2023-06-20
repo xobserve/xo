@@ -62,7 +62,9 @@ export enum PanelType {
     Text = "text",
     Row = "row",
     NodeGraph = "nodeGraph",
-    Echarts = "echarts"
+    Echarts = "echarts",
+    Pie = "pie",
+    Gauge = "gauge"
 }
 
 export enum DatasourceType {
@@ -113,4 +115,11 @@ export enum DashboardLayout {
     Vertical = "vertical",
     Random = "null" ,
     Horizontal =  "horizontal"
+}
+
+export type UnitsType = 'none' | 'time' | 'bytes' | 'percent' | 'custom';
+export interface Unit {
+    operator: "x" | "/",
+    rhs: number,
+    unit: string
 }

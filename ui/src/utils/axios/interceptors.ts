@@ -1,6 +1,5 @@
 import { KEYS } from './constants'
 import { createError, unWrapError } from './createError'
-import { getNowMon } from '../date'
 import { toQueryStr } from '../toQueryStr'
 import { getHost } from '../url'
 import { ApiConfig } from './config'

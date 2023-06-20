@@ -13,7 +13,7 @@ export function SubNavContent(props) {
             <HStack as="ul">
                 {routes.map((route: Route) => {
                     if (route.disabled) { return null }
-                    return <SidebarLink query={query} as="li" key={route.path} href={route.path} icon={route.icon} {...rest}>
+                    return <SidebarLink query={query} as="li" key={route.url} href={route.url} icon={route.icon} {...rest}>
                         <span>{route.title}</span>
                     </SidebarLink>
                 })}

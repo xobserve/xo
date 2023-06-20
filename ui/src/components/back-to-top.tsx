@@ -1,6 +1,6 @@
 import { Box } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
-import SvgButton from "./icons/SvgButton";
+import { FaArrowUp } from "react-icons/fa";
 
 const BackToTop = () => {
     const [scrollPosition, setScrollPosition] = useState(0);
@@ -24,15 +24,12 @@ const BackToTop = () => {
                 right={['16px', '50px']}
                 zIndex={1}
             >
-                <SvgButton
-                    aria-label="go to github"
+                <Box  aria-label="go to github"
                     layerStyle="textSecondary"
                     _focus={{ border: null }}
                     fontWeight="300"
-                    icon="top"
                     width="1.8rem"
-                    onClick={() => location.href = "#comments"}
-                />
+                    onClick={() => location.href = "#comments"}><FaArrowUp /></Box>
             </Box>
         </a>)}
     </>)

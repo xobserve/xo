@@ -9,7 +9,7 @@ import {
 import NextLink from 'next/link'
 import { FaArrowRight } from 'react-icons/fa'
 
-import showcaseData from 'src/data/configs/showcase.json'
+import showcaseData from './showcase.json'
 import { t } from 'utils/i18n'
 import { ShowcaseItem } from './showcase-item'
 
