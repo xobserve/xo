@@ -11,7 +11,7 @@ const MonacoWebpackPlugin = require("monaco-editor-webpack-plugin");
 const withTM = require("next-transpile-modules")([
   // `monaco-editor` isn't published to npm correctly: it includes both CSS
   // imports and non-Node friendly syntax, so it needs to be compiled.
-  "monaco-editor"
+  "monaco-editor","echarts","zrender"
 ]);
 
 const isProd = NODE_ENV === 'production'

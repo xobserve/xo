@@ -35,7 +35,7 @@ datasource:
 #################################### Panel Plugins ##############################
 panel:
   echarts: 
-    enable_baidu_map: false
+    enable_baidu_map: true
     baidu_map_ak: 'KOmVjPVUAey1G2E8zNhPiuQ6QiEmAwZu'
 
 #################################### SMTP ##############################

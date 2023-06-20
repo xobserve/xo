@@ -12,7 +12,7 @@ import "src/theme/css/echarts.css"
 import BaiduMap from 'components/BaiduMap'
 import { requestApi } from 'utils/axios/request'
 import {config, UIConfig} from 'src/data/configs/config'
-
+dynamic(import("echarts/extension/bmap/bmap"), { ssr: false });
 
 
 const { ToastContainer} = createStandaloneToast()
@@ -29,10 +29,13 @@ const App =  dynamic(async () => ({ Component, pageProps }) => {
   useEffect(() => {
     loadConfig()
   },[])
-
+  
   const loadConfig = async () => {
     const res = await requestApi.get("/config/ui")
-    setConfig(res.data)
+    setTimeout(() => {
+      setConfig(res.data)
+    },5000)
+   
   
     Object.assign(config, res.data)
   }
@@ -54,8 +57,6 @@ const App =  dynamic(async () => ({ Component, pageProps }) => {
             src='https://plausible.io/js/plausible.js'
           />
         )}
-        <script src="https://api.map.baidu.com/api?v=3.0&ak=KOmVjPVUAey1G2E8zNhPiuQ6QiEmAwZu"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/echarts/5.4.2/echarts.min.js" />
       </Head>
       {cfg && <ChakraProvider theme={theme}>
         <Component {...pageProps} />

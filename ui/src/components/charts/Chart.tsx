@@ -1,8 +1,7 @@
 import { useEffect, useRef, useState } from "react"
 import { useSearchParam } from "react-use"
-
+import * as echarts from 'echarts';
 import { Box } from "@chakra-ui/react";
-import { echartsJS } from "src/views/dashboard/plugins/panel/echarts/Echarts";
 
 
 interface Props {
@@ -32,7 +31,7 @@ export const ChartComponent = ({ options, theme, width, height, onChartCreated, 
 
     useEffect(() => {
         if (container.current) {
-            const c = echartsJS.init(container.current, theme)
+            const c = echarts.init(container.current, theme)
             setChart(c)
             c.setOption(options)
             onChartCreated(c)

@@ -9,8 +9,8 @@ import PanelEditItem from "src/views/dashboard/edit-panel/PanelEditItem"
 import { PanelEditorProps } from "types/dashboard"
 import useBus from "use-bus"
 import { genDynamicFunction } from "utils/dynamicCode"
-import { EchartsComponent, echartsJS } from "./Echarts"
-// import * as echarts from 'echarts';
+import { EchartsComponent } from "./Echarts"
+import * as echarts from 'echarts';
 import { ColorModeSwitcher } from "components/ColorModeSwitcher"
 
 const EchartsPanelEditor = ({ panel, onChange }: PanelEditorProps) => {
@@ -63,7 +63,7 @@ const SetOptions = ({ panel, onChange }: PanelEditorProps) => {
 
     if (isFunction(setOptions)) {
         try {
-            let o = setOptions(cloneDeep(data), echartsJS)
+            let o = setOptions(cloneDeep(data), echarts)
             o.animation = false
             options = o
         } catch (error) {
