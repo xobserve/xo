@@ -88,13 +88,14 @@ export const PanelComponent = ({ dashboard, panel, onRemovePanel, width, height,
     const toast = useToast()
     const [panelData, setPanelData] = useState<any[]>(null)
     const [queryError, setQueryError] = useState()
-
+    
     // useEffect(() => console.log("panel created:", panel.id), [])
     useEffect(() => {
         queryData(panel, dashboard.id + panel.id)
     }, [panel.datasource, timeRange, variables])
 
     const queryData = async (panel: Panel, queryId) => {
+        console.time("time used - query data for panel:")
         const ds = panel.datasource
         let data = []
         let needUpdate = false
@@ -155,6 +156,8 @@ export const PanelComponent = ({ dashboard, panel, onRemovePanel, width, height,
                 setPanelData(data)
             }
         }
+
+        console.timeEnd("time used - query data for panel:")
     }
 
     const onCopyPanel = useCallback((panel) => {

@@ -20,16 +20,16 @@ const EchartsPanel = ({ panel, data, width, height }: PanelProps) => {
     const edit = useSearchParam("edit")
 
     useEffect(() => {
-        if (edit==panel.id.toString()) {
+        if (edit == panel.id.toString()) {
             dispatch({ type: PanelDataEvent, data: data })
         }
-    },[data])
-    const [options,onEvents] = useMemo(() => {
+    }, [data])
+    const [options, onEvents] = useMemo(() => {
         let options = null;
         let onEvents = null;
         const setOptions = genDynamicFunction(panel.plugins.echarts.setOptionsFunc);
         if (isFunction(setOptions)) {
-            const o = setOptions(data, echarts)
+            const o = setOptions(cloneDeep(data), echarts)
             options = o
         } else {
             toast({
@@ -56,15 +56,15 @@ const EchartsPanel = ({ panel, data, width, height }: PanelProps) => {
             }
         }
 
-      
 
-        return [options,onEvents]
+
+        return [options, onEvents]
     }, [panel.plugins.echarts, data, chart])
 
     // override  echarts background in panel edit mod
     const darkBg = edit == panel.id.toString() ? 'transparent' : "#1A202C"
     return (<>
-        {options && <Box height={height} key={colorMode} className="echarts-panel"><EchartsComponent options={options} theme={colorMode} width={width} height={height} onChartCreated={c => setChart(c)} onChartEvents={onEvents} darkBg={darkBg}/></Box>}
+        {options && <Box height={height} key={colorMode} className="echarts-panel"><EchartsComponent options={options} theme={colorMode} width={width} height={height} onChartCreated={c => setChart(c)} onChartEvents={onEvents} darkBg={darkBg} /></Box>}
     </>)
 }
 
@@ -80,12 +80,13 @@ interface Props {
     darkBg?: string
 }
 
-export const EchartsComponent = ({ options, theme, width, height, onChartCreated, onChartEvents,darkBg }: Props) => {
+export const EchartsComponent = ({ options, theme, width, height, onChartCreated, onChartEvents, darkBg }: Props) => {
     const container = useRef(null)
+    const toast = useToast()
     const [chart, setChart] = useState<ECharts>(null)
-    
+
     if (theme == "dark" && darkBg) {
-        options.backgroundColor = darkBg 
+        options.backgroundColor = darkBg
     }
 
     options.animation = false
@@ -94,7 +95,7 @@ export const EchartsComponent = ({ options, theme, width, height, onChartCreated
         if (container.current) {
             const c = echarts.init(container.current, theme)
             setChart(c)
-            c.setOption(options)
+            tryCatchCall(() => c.setOption(options), toast)
             onChartCreated(c)
         }
 
@@ -105,11 +106,11 @@ export const EchartsComponent = ({ options, theme, width, height, onChartCreated
             }
         }
     }, [])
-    
+
     useEffect(() => {
         if (chart) {
             chart.clear()
-            chart.setOption(options)
+            tryCatchCall(() => chart.setOption(options), toast)
         }
     }, [options])
 
@@ -117,13 +118,30 @@ export const EchartsComponent = ({ options, theme, width, height, onChartCreated
         if (onChartEvents && chart) {
             onChartEvents(options, chart)
         }
-    },[onChartEvents])
+    }, [onChartEvents])
 
     useEffect(() => {
         if (chart) {
-            chart.resize({ width, height })
+            tryCatchCall(() => chart.resize({ width, height }), toast)
         }
     }, [width, height])
-    return (<Box ref={container} width={width} height={height}  className="echart-container"/>)
+    return (<Box ref={container} width={width} height={height} className="echart-container" />)
 }
 
+
+const tryCatchCall = (f, toast) => {
+    const id = "echarts-error"
+    try {
+        f()
+    } catch (error) {
+        if (!toast.isActive(id)) {
+            toast({
+                id: id,
+                title: `running echarts panel error: ${error.message}`,
+                status: "warning",
+                duration: 3000,
+                isClosable: true,
+            })
+        }
+    }
+}

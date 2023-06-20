@@ -10,7 +10,7 @@ import { isEmpty } from "lodash";
 import Tooltip from "./Tooltip";
 import SeriesTable, { seriesFilterType } from "components/Tooltip/SeriesTable";
 import { GraphLayout } from "src/views/dashboard/plugins/panel/graph/GraphLayout";
-import { Box, Text, useColorMode } from "@chakra-ui/react";
+import { Box, Center, Text, useColorMode } from "@chakra-ui/react";
 import { colors } from "utils/colors";
 import { parseLegendFormat } from "utils/format";
 import { replaceWithVariables } from "utils/variable";
@@ -18,8 +18,6 @@ import { variables } from "src/views/dashboard/Dashboard";
 import { dispatch } from "use-bus";
 import { ActiveSeriesEvent } from "src/data/bus-events";
 import { GraphPluginData } from "types/plugins/graph";
-import * as colorManipulator from 'components/uPlot/colorManipulator';
-import { canvasCtx } from 'pages/_app';
 
 
 interface GraphPanelProps extends PanelProps {
@@ -27,6 +25,10 @@ interface GraphPanelProps extends PanelProps {
 }
 
 const GraphPanel = memo((props: GraphPanelProps) => {
+    if (isEmpty(props.data)) {
+        return (<Center height="100%">No data</Center>)
+    }
+    
     const data = useMemo(() => {
         const res = []
         props.data.forEach(d => {
@@ -114,7 +116,7 @@ const GraphPanel = memo((props: GraphPanelProps) => {
 
     const onChartCreate = useCallback((chart) => { setUplot((chart)); props.sync?.sub(chart) }, [props.sync])
 
-
+    
     return (
         <>
             <Box h="100%" className="panel-graph">
