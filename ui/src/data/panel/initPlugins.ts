@@ -99,7 +99,10 @@ function setOptions(data) {
     // I guess you are using testdata datasource,
     // data fetching from testdata is already an echarts option
     // so there is no need to parse it
-    const options = data
+    const options = {...data[0]}
+    
+    //!!!ATTENTION!!!
+    //options returns here must be a new object to trigger react update!
     return options
 }`,
         registerEventsFunc: `// In registerEvents, you can custom events on your chart, e.g mouse click event, mouse over event etc.

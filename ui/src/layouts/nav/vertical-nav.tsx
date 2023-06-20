@@ -158,7 +158,7 @@ const VerticalNav = dynamic(async () => (props: Props) => {
               </HStack>
 
               <HStack spacing="0">
-                <Link
+                <Link 
                   href={config.repoUrl}
                 >
                   <IconButton

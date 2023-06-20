@@ -1,6 +1,6 @@
 import { Box, Button, Center, Flex, HStack, Modal, ModalBody, ModalCloseButton, ModalContent, ModalHeader, ModalOverlay, Text, Textarea, useColorMode, useDisclosure, useToast } from "@chakra-ui/react"
 import CodeEditor from "components/CodeEditor/CodeEditor"
-import { cloneDeep, isFunction } from "lodash"
+import { clone, cloneDeep, isFunction } from "lodash"
 import { useEffect, useState } from "react"
 import AutoSizer from "react-virtualized-auto-sizer"
 import { PanelDataEvent } from "src/data/bus-events"

@@ -4,7 +4,7 @@ import { useEffect, useMemo, useRef, useState } from "react"
 import { PanelProps } from "types/dashboard";
 import { Box, useColorMode, useToast } from "@chakra-ui/react";
 import { genDynamicFunction } from "utils/dynamicCode";
-import { clone, isFunction } from "lodash";
+import { clone, cloneDeep, isFunction } from "lodash";
 import { useSearchParam } from "react-use";
 import { dispatch } from "use-bus";
 import { PanelDataEvent } from "src/data/bus-events";
@@ -29,7 +29,7 @@ const EchartsPanel = ({ panel, data, width, height }: PanelProps) => {
         let onEvents = null;
         const setOptions = genDynamicFunction(panel.plugins.echarts.setOptionsFunc);
         if (isFunction(setOptions)) {
-            const o = setOptions(clone(data[0]), echarts)
+            const o = setOptions(data, echarts)
             options = o
         } else {
             toast({
@@ -85,7 +85,6 @@ export const EchartsComponent = ({ options, theme, width, height, onChartCreated
     const [chart, setChart] = useState<ECharts>(null)
     
     if (theme == "dark" && darkBg) {
-        console.log("here33344444:",darkBg)
         options.backgroundColor = darkBg 
     }
 

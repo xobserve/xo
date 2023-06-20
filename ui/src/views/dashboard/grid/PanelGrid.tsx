@@ -28,7 +28,6 @@ import TitleDecoration from "components/largescreen/components/TitleDecoration";
 import PanelDecoration from "components/largescreen/components/Decoration";
 import { useDedupEvent } from "hooks/useDedupEvent";
 import EchartsPanel from "../plugins/panel/echarts/Echarts";
-import { panelsAllowNoData } from "../plugins/panel/allowNoData";
 
 
 interface PanelGridProps {
@@ -176,7 +175,6 @@ export const PanelComponent = ({ dashboard, panel, onRemovePanel, width, height,
 
 
     console.log("panel grid rendered, data: ", panelData)
-    console.log("here33333:",panel.id, height,panelBodyHeight)
     return <Box height={height} width={width} className={panel.styles.border == "None" ? "hover-bordered" : null} border={`1px solid transparent`} position="relative">
         <PanelHeader panel={panel} data={panelData} queryError={queryError} onCopyPanel={onCopyPanel} onRemovePanel={onRemovePanel} />
         {panelData && <Box
@@ -185,11 +183,7 @@ export const PanelComponent = ({ dashboard, panel, onRemovePanel, width, height,
             overflowY="scroll"
             marginLeft={panel.type == PanelType.Graph ? "-10px" : "0px"}
         >
-            {
-                isEmpty(panelData) && !panel.plugins[panel.type].disableDatasource && !panelsAllowNoData.includes(panel.type) ?
-                    <Box h="100%"><Center height="100%">No data</Center></Box>
-                    : <CustomPanelRender dashboardId={dashboard.id} panel={panel} data={panelData} height={panelInnerHeight} width={panelInnerWidth} sync={sync} />
-            }
+           <CustomPanelRender dashboardId={dashboard.id} panel={panel} data={panelData} height={panelInnerHeight} width={panelInnerWidth} sync={sync} />
         </Box>}
     </Box>
 }
