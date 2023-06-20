@@ -1,7 +1,7 @@
 import * as echarts from 'echarts/core';
 
 // Import bar charts, all suffixed with Chart
-import { PieChart } from 'echarts/charts';
+import { GaugeChart } from 'echarts/charts';
 
 // Import the tooltip, title, rectangular coordinate system, dataset and transform components
 import {
@@ -21,7 +21,7 @@ import { CanvasRenderer } from 'echarts/renderers';
 import ChartComponent from './Chart';
 // Register the required components
 echarts.use([
-    PieChart,
+    GaugeChart,
     TitleComponent,
     TooltipComponent,
     GridComponent,
@@ -32,9 +32,8 @@ echarts.use([
     CanvasRenderer
   ]);
 
-
-const PieChartComponent = (props) => {
+const GaugeChartComponent = (props) => {
     return (<ChartComponent {...props}/>)
 }
 
-export default PieChartComponent
+export default GaugeChartComponent

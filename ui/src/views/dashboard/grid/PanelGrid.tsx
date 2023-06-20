@@ -21,8 +21,7 @@ import { variables } from "../Dashboard";
 import { addParamToUrl } from "utils/url";
 import { run_testdata_query } from "../plugins/datasource/testdata/query_runner";
 import { run_jaeger_query } from "../plugins/datasource/jaeger/query_runner";
-import NodeGraphPanel from "../plugins/panel/nodeGraph/NodeGraph";
-import { Portal } from "components/portal/Portal";
+// import NodeGraphPanel from "../plugins/panel/nodeGraph/NodeGraph";
 import PanelBorder from "../../../components/largescreen/components/Border";
 import TitleDecoration from "components/largescreen/components/TitleDecoration";
 import PanelDecoration from "components/largescreen/components/Decoration";
@@ -30,6 +29,7 @@ import { useDedupEvent } from "hooks/useDedupEvent";
 import EchartsPanel from "../plugins/panel/echarts/Echarts";
 import PiePanel from "../plugins/panel/pie/Pie";
 import GaugePanel from "../plugins/panel/gauge/Gauge";
+import loadable from '@loadable/component'
 
 
 interface PanelGridProps {
@@ -194,26 +194,37 @@ export const PanelComponent = ({ dashboard, panel, onRemovePanel, width, height,
 }
 
 
+
 const CustomPanelRender = (props: any) => {
+    let P;
     //@needs-update-when-add-new-panel
     switch (props.panel?.type) {
         case PanelType.Text:
-            return <TextPanel  {...props} />
+           P =  loadable(() => import('../plugins/panel/text/Text'))
+           break
         case PanelType.Graph:
-            return <GraphPanel {...props} />
+            P =  loadable(() => import('../plugins/panel/graph/Graph'))
+            break
         case PanelType.Table:
-            return <TablePanel {...props} />
+            P =  loadable(() => import('../plugins/panel/table/Table'))
+            break
         case PanelType.NodeGraph:
-            return <NodeGraphPanel {...props} />
+            P =  loadable(() => import('../plugins/panel/nodeGraph/NodeGraph'))
+            break
         case PanelType.Echarts:
-            return <EchartsPanel {...props} />
+            P =  loadable(() => import('../plugins/panel/echarts/Echarts'))
+            break
         case PanelType.Pie:
-            return <PiePanel {...props} />
+            P =  loadable(() => import('../plugins/panel/pie/Pie'))
+            break
         case PanelType.Gauge:
-            return <GaugePanel {...props} />
+            P =  loadable(() => import('../plugins/panel/gauge/Gauge'))
+            break
         default:
             return <></>
     }
+    
+    return <P {...props} />
 }
 
 interface PanelHeaderProps {

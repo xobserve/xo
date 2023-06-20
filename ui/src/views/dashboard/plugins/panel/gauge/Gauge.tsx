@@ -1,6 +1,7 @@
 import { Box, useColorMode } from "@chakra-ui/react";
+import GaugeChartComponent from "components/charts/GaugeChart";
 import PieChartComponent from "components/charts/PieChart";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { PanelProps } from "types/dashboard"
 import { PiePluginData } from "types/plugins/pie"
 
@@ -12,44 +13,86 @@ const GaugePanel = ({panel, data, height,width}:Props) => {
     const [chart, setChart] = useState(null)
     const {colorMode} = useColorMode()
     const options = {
-        legend: {
-          top: 'bottom'
-        },
-        toolbox: {
-          show: true,
-          feature: {
-            mark: { show: true },
-            dataView: { show: true, readOnly: false },
-            restore: { show: true },
-            saveAsImage: { show: true }
-          }
-        },
-        series: [
-          {
-            name: 'Nightingale Chart',
-            type: 'pie',
-            radius: [50, 250],
-            center: ['50%', '50%'],
-            roseType: 'area',
+      series: [
+        {
+          type: 'gauge',
+          axisLine: {
+            lineStyle: {
+              width: 30,
+              color: [
+                [0.3, '#67e0e3'],
+                [0.7, '#37a2da'],
+                [1, '#fd666d']
+              ]
+            }
+          },
+          pointer: {
             itemStyle: {
-              borderRadius: 8
-            },
-            data: [
-              { value: 40, name: 'rose 1' },
-              { value: 38, name: 'rose 2' },
-              { value: 32, name: 'rose 3' },
-              { value: 30, name: 'rose 4' },
-              { value: 28, name: 'rose 5' },
-              { value: 26, name: 'rose 6' },
-              { value: 22, name: 'rose 7' },
-              { value: 18, name: 'rose 8' }
+              color: 'inherit'
+            }
+          },
+          axisTick: {
+            distance: 0,
+            length: 0,
+            lineStyle: {
+              color: '#fff',
+              width: 0
+            }
+          },
+          splitLine: {
+            distance: -30,
+            length: 0,
+            lineStyle: {
+              color: '#fff',
+              width: 4
+            }
+          },
+          axisLabel: {
+            color: 'inherit',
+            distance: 50,
+            fontSize: 18,
+            show: false
+          },
+          detail: {
+            valueAnimation: true,
+            formatter: '{value}%',
+            color: 'inherit'
+          },
+          data: [
+            {
+              value: 70
+            }
+          ]
+        }
+      ]
+    };
+    
+    useEffect(() => {
+      let h;
+      if (chart) {
+        h = setInterval(function () {
+          chart.setOption({
+            series: [
+              {
+                data: [
+                  {
+                    value: +(Math.random() * 100).toFixed(2)
+                  }
+                ]
+              }
             ]
-          }
-        ]
-      };
+          });
+        }, 2000);
+      }
+
+      return () => {
+        clearInterval(h)
+      }
+    },[chart])
+   
 
       return (<>
-        {options && <Box height={height} key={colorMode} className="echarts-panel"><PieChartComponent options={options} theme={colorMode} width={width} height={height} onChartCreated={c => setChart(c)} onChartEvents={null} darkBg={null} /></Box>}
+        {options && <Box height={height} key={colorMode} className="echarts-panel"><GaugeChartComponent options={options} theme={colorMode} width={width} height={height} onChartCreated={c => setChart(c)} onChartEvents={null} /></Box>}
     </>)
 }
 

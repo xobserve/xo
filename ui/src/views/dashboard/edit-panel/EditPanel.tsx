@@ -9,7 +9,7 @@ import TablePanelEditor from "../plugins/panel/table/Editor";
 import { useImmer } from "use-immer";
 import { removeParamFromUrl } from "utils/url";
 import { useSearchParam } from "react-use";
-import NodeGraphPanelEditor from "../plugins/panel/nodeGraph/Editor";
+// import NodeGraphPanelEditor from "../plugins/panel/nodeGraph/Editor";
 import { FaArrowDown, FaArrowUp } from "react-icons/fa";
 import PanelStyles from "./PanelStyles";
 import PanelSettings from "./PanelSettings";
@@ -22,6 +22,7 @@ import { PanelGrid } from "../grid/PanelGrid"
 import EchartsPanelEditor from "../plugins/panel/echarts/Editor"
 import PiePanelEditor from "../plugins/panel/pie/Editor"
 import GaugePanelEditor from "../plugins/panel/gauge/Editor"
+import loadable from '@loadable/component'
 
 interface EditPanelProps {
     dashboard: Dashboard
@@ -194,23 +195,33 @@ export default EditPanel
 
 
 const CustomPanelEditor = ({ tempPanel, setTempPanel }) => {
+    let Editor;
     //@needs-update-when-add-new-panel
     switch (tempPanel?.type) {
         case PanelType.Text:
-            return <TextPanelEditor panel={tempPanel} onChange={setTempPanel} />
+            Editor = loadable(() => import('../plugins/panel/text/Editor'))
+            break
         case PanelType.Graph:
-            return <GraphPanelEditor panel={tempPanel} onChange={setTempPanel} />
+            Editor = loadable(() => import('../plugins/panel/graph/Editor'))
+            break
         case PanelType.Table:
-            return <TablePanelEditor panel={tempPanel} onChange={setTempPanel} />
+            Editor = loadable(() => import('../plugins/panel/table/Editor'))
+            break
         case PanelType.NodeGraph:
-            return <NodeGraphPanelEditor panel={tempPanel} onChange={setTempPanel} />
+             Editor = loadable(() => import('../plugins/panel/nodeGraph/Editor'))
+             break
         case PanelType.Echarts:
-            return <EchartsPanelEditor panel={tempPanel} onChange={setTempPanel} />
+            Editor = loadable(() => import('../plugins/panel/echarts/Editor'))
+            break
         case PanelType.Pie:
-                return <PiePanelEditor panel={tempPanel} onChange={setTempPanel} />
+            Editor = loadable(() => import('../plugins/panel/pie/Editor'))
+            break
         case PanelType.Gauge:
-            return <GaugePanelEditor panel={tempPanel} onChange={setTempPanel} />
+            Editor = loadable(() => import('../plugins/panel/gauge/Editor'))
+            break
         default:
             return <></>
     }
+
+   return <Editor panel={tempPanel} onChange={setTempPanel} />
 }
