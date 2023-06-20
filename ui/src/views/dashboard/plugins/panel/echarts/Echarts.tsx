@@ -1,5 +1,5 @@
-import { ECharts } from "echarts"
-import * as echarts from 'echarts';
+// import { ECharts } from "echarts"
+// import * as echarts from 'echarts';
 import { useEffect, useMemo, useRef, useState } from "react"
 import { PanelProps } from "types/dashboard";
 import { Box, Center, useColorMode, useToast } from "@chakra-ui/react";
@@ -9,9 +9,14 @@ import { useSearchParam } from "react-use";
 import { dispatch } from "use-bus";
 import { PanelDataEvent } from "src/data/bus-events";
 import dynamic from "next/dynamic";
-dynamic(import("echarts/extension/bmap/bmap"), { ssr: false });
+// dynamic(import("echarts/extension/bmap/bmap"), { ssr: false });
 
 
+// echarts is introduce by <script /> in _app.tsx
+// so it's a global variable 
+// to avoid type errors separated everywhere, we decalure a new echartsJS variable, then use it anywhere in the codebase
+//@ts-ignore
+export const echartsJS = echarts;
 
 const EchartsPanel = ({ panel, data, width, height }: PanelProps) => {
     if (!panel.plugins.echarts.allowEmptyData && isEmpty(data)) {
@@ -20,7 +25,7 @@ const EchartsPanel = ({ panel, data, width, height }: PanelProps) => {
 
     const { colorMode } = useColorMode()
     const toast = useToast()
-    const [chart, setChart] = useState<ECharts>(null)
+    const [chart, setChart] = useState(null)
     const edit = useSearchParam("edit")
 
     useEffect(() => {
@@ -33,7 +38,7 @@ const EchartsPanel = ({ panel, data, width, height }: PanelProps) => {
         let onEvents = null;
         const setOptions = genDynamicFunction(panel.plugins.echarts.setOptionsFunc);
         if (isFunction(setOptions)) {
-            const o = setOptions(cloneDeep(data), echarts)
+            const o = setOptions(cloneDeep(data), echartsJS)
             options = o
         } else {
             toast({
@@ -79,7 +84,7 @@ interface Props {
     theme: string
     width: number
     height: number
-    onChartCreated: (chart: ECharts) => void
+    onChartCreated: (chart) => void
     onChartEvents?: any
     darkBg?: string
 }
@@ -87,7 +92,7 @@ interface Props {
 export const EchartsComponent = ({ options, theme, width, height, onChartCreated, onChartEvents, darkBg }: Props) => {
     const container = useRef(null)
     const toast = useToast()
-    const [chart, setChart] = useState<ECharts>(null)
+    const [chart, setChart] = useState(null)
 
     if (theme == "dark" && darkBg) {
         options.backgroundColor = darkBg
@@ -97,7 +102,7 @@ export const EchartsComponent = ({ options, theme, width, height, onChartCreated
 
     useEffect(() => {
         if (container.current) {
-            const c = echarts.init(container.current, theme)
+            const c = echartsJS.init(container.current, theme)
             setChart(c)
             tryCatchCall(() => c.setOption(options), toast)
             onChartCreated(c)

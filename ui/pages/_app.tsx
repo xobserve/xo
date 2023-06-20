@@ -55,6 +55,7 @@ const App =  dynamic(async () => ({ Component, pageProps }) => {
           />
         )}
         <script src="https://api.map.baidu.com/api?v=3.0&ak=KOmVjPVUAey1G2E8zNhPiuQ6QiEmAwZu"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/echarts/5.4.2/echarts.min.js" />
       </Head>
       {cfg && <ChakraProvider theme={theme}>
         <Component {...pageProps} />
