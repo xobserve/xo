@@ -4,7 +4,7 @@
 }
 
 .react-grid-item {
-    transition: all 250ms ease;
+    /* transition: all 250ms ease; */
     transition-property: left, top;
 }
 

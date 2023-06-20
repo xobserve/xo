@@ -2,9 +2,9 @@ import { ECharts } from "echarts"
 import * as echarts from 'echarts';
 import { useEffect, useMemo, useRef, useState } from "react"
 import { PanelProps } from "types/dashboard";
-import { Box, useColorMode, useToast } from "@chakra-ui/react";
+import { Box, Center, useColorMode, useToast } from "@chakra-ui/react";
 import { genDynamicFunction } from "utils/dynamicCode";
-import { clone, cloneDeep, isFunction } from "lodash";
+import { clone, cloneDeep, isEmpty, isFunction } from "lodash";
 import { useSearchParam } from "react-use";
 import { dispatch } from "use-bus";
 import { PanelDataEvent } from "src/data/bus-events";
@@ -14,6 +14,10 @@ dynamic(import("echarts/extension/bmap/bmap"), { ssr: false });
 
 
 const EchartsPanel = ({ panel, data, width, height }: PanelProps) => {
+    if (!panel.plugins.echarts.allowEmptyData && isEmpty(data)) {
+        return (<Center height="100%">No data</Center>)
+    }
+
     const { colorMode } = useColorMode()
     const toast = useToast()
     const [chart, setChart] = useState<ECharts>(null)

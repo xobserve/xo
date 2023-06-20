@@ -92,6 +92,7 @@ export const initPanelPlugins: PanelPlugins = {
     },
 
     [PanelType.Echarts]: {
+        allowEmptyData: false,
         setOptionsFunc: `// setOptions return echarts.Options, it is directly passed to a echarts chart.
 // Find more options examples: https://echarts.apache.org/examples/en/index.html#chart-type-line
 function setOptions(data) {

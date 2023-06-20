@@ -17,6 +17,7 @@ export interface CommonPluginSettings {
 }
 
 export interface EchartsSettings extends CommonPluginSettings {
+    allowEmptyData: boolean
     setOptionsFunc: string
     registerEventsFunc: string
 }

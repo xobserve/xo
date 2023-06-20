@@ -1,4 +1,4 @@
-import { Box, Button, Center, Flex, HStack, Modal, ModalBody, ModalCloseButton, ModalContent, ModalHeader, ModalOverlay, Text, Textarea, useColorMode, useDisclosure, useToast } from "@chakra-ui/react"
+import { Box, Button, Center, Flex, HStack, Modal, ModalBody, ModalCloseButton, ModalContent, ModalHeader, ModalOverlay, Switch, Text, Textarea, useColorMode, useDisclosure, useToast } from "@chakra-ui/react"
 import CodeEditor from "components/CodeEditor/CodeEditor"
 import { clone, cloneDeep, isFunction } from "lodash"
 import { useEffect, useState } from "react"
@@ -15,6 +15,12 @@ import { ColorModeSwitcher } from "components/ColorModeSwitcher"
 
 const EchartsPanelEditor = ({ panel, onChange }: PanelEditorProps) => {
     return (<PanelAccordion title="Echarts setting">
+        <PanelEditItem title="Allow empty data pass in" desc="When we can't read any data from datasource, if this option is disabled, the chart will show 'No Data' and immediatlly returns, if enabled, the chart will show nothing and the empty data will pass to setOptions func. <If you generates data in setOptions function(e.g you are playing an example), you should make this enabled, otherwise leave it disabled>">
+            <Switch isChecked={panel.plugins.echarts.allowEmptyData} onChange={(e) => onChange(draft => {
+                draft.plugins.echarts.allowEmptyData = e.target.checked
+            })} />
+        </PanelEditItem>
+
         <SetOptions panel={panel} onChange={v => {
             onChange(panel => {
                 panel.plugins.echarts.setOptionsFunc = v
