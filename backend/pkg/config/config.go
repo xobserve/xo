@@ -14,6 +14,7 @@ type Config struct {
 		LogLevel string `yaml:"log_level"`
 		IsProd   bool   `yaml:"is_prod"`
 		AppName  string `yaml:"app_name"`
+		RepoUrl  string `yaml:"repo_url"`
 	}
 
 	User struct {
@@ -37,6 +38,13 @@ type Config struct {
 		FromName     string `yaml:"from_name"`
 		AuthUsername string `yaml:"auth_username"`
 		AuthPassword string `yaml:"auth_password"`
+	}
+
+	Panel struct {
+		Echarts struct {
+			EnableBaiduMap bool   `yaml:"enable_baidu_map"`
+			BaiduMapAK     string `yaml:"baidu_map_ak"`
+		}
 	}
 }
 

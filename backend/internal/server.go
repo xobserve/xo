@@ -55,6 +55,8 @@ func (s *Server) Start() error {
 
 		r := router.Group("/api")
 
+		// global config
+		r.GET("/config/ui", getUIConfig)
 		// user apis
 		r.POST("/login", user.Login)
 		r.POST("/logout", user.Logout)

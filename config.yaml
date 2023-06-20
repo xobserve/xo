@@ -4,6 +4,7 @@ common:
     log_level: debug
     is_prod: false
     app_name: "aiapm"
+    repo_url: "https://github.com/DataObserve/datav"
 
 #################################### Server ##############################
 server:
@@ -25,11 +26,17 @@ paths:
 
 
 
-#################################### Datasource ##############################
+#################################### Datasource Plugins ##############################
 datasource:
    prometheus_addr: http://localhost:9090
    jaeger_addr: 
    external_http_addr: 
+
+#################################### Panel Plugins ##############################
+panel:
+  echarts: 
+    enable_baidu_map: true
+    baidu_map_ak: 'KOmVjPVUAey1G2E8zNhPiuQ6QiEmAwZu'
 
 #################################### SMTP ##############################
 smtp:
@@ -38,3 +45,5 @@ smtp:
   from_name: ""
   auth_username: "" 
   auth_password: ""
+
+

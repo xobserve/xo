@@ -17,7 +17,6 @@ import NextLink from 'next/link'
 import { useEffect, useRef, useState } from 'react'
 import { FaMoon, FaSun, FaYoutube } from 'react-icons/fa'
 import Logo, { LogoIcon } from '../components/logo'
-import siteConfig from 'src/data/configs/site-config.json'
 
 function HeaderContent() {
   const mobileNav = useDisclosure()
@@ -53,22 +52,6 @@ function HeaderContent() {
           color='gray.400'
           maxW='1100px'
         >
-          <HStack spacing='5' display={{ base: 'none', md: 'flex' }}>
-            <Link
-              isExternal
-              aria-label='Go to Chakra UI YouTube channel'
-              href={siteConfig.youtube}
-            >
-              <Icon
-                as={FaYoutube}
-                display='block'
-                transition='color 0.2s'
-                w='5'
-                h='5'
-                _hover={{ color: 'gray.600' }}
-              />
-            </Link>
-          </HStack>
           <HStack spacing='5'>
             <IconButton
               size='md'

@@ -7,7 +7,6 @@ import {
   Box,
   VStack,
   Text,
-  Collapse,
   Popover,
   PopoverTrigger,
   PopoverContent,
@@ -16,7 +15,6 @@ import {
   Divider,
   Tooltip
 } from "@chakra-ui/react"
-import siteConfig from "src/data/configs/site-config.json"
 import React, { useEffect, useState } from "react"
 import * as Icons from "react-icons/fa"
 
@@ -40,6 +38,8 @@ import { MiniSidemenuEvent } from "src/data/bus-events"
 import storage from "utils/localStorage"
 import { SidemenuMinimodeKey } from "src/data/storage-keys"
 import useFullscreen from "hooks/useFullscreen"
+import { config } from "src/data/configs/config"
+
 
 
 interface Props {
@@ -159,7 +159,7 @@ const VerticalNav = dynamic(async () => (props: Props) => {
 
               <HStack spacing="0">
                 <Link
-                  href={siteConfig.repo.url}
+                  href={config.repoUrl}
                 >
                   <IconButton
                     size="md"

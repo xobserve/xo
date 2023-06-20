@@ -1,6 +1,6 @@
 import { ChakraProvider } from '@chakra-ui/react'
 import Head from 'next/head'
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import FontFace from 'components/font-face'
 import theme from 'theme'
 import { createStandaloneToast } from '@chakra-ui/toast'
@@ -10,6 +10,8 @@ import dynamic from "next/dynamic"
 import "src/theme/css/react-grid.css"
 import "src/theme/css/echarts.css"
 import BaiduMap from 'components/BaiduMap'
+import { requestApi } from 'utils/axios/request'
+import {config, UIConfig} from 'src/data/configs/config'
 
 
 
@@ -21,7 +23,19 @@ const { ToastContainer} = createStandaloneToast()
 export let canvasCtx;
 //@ts-ignore
 const App =  dynamic(async () => ({ Component, pageProps }) => {
+  const [cfg, setConfig] = useState<UIConfig>(null)
   canvasCtx = document.createElement('canvas').getContext('2d')!;
+
+  useEffect(() => {
+    loadConfig()
+  },[])
+
+  const loadConfig = async () => {
+    const res = await requestApi.get("/config/ui")
+    setConfig(res.data)
+  
+    Object.assign(config, res.data)
+  }
 
   return (
     <NoSSR>
@@ -42,13 +56,13 @@ const App =  dynamic(async () => ({ Component, pageProps }) => {
         )}
         <script src="https://api.map.baidu.com/api?v=3.0&ak=KOmVjPVUAey1G2E8zNhPiuQ6QiEmAwZu"></script>
       </Head>
-      <ChakraProvider theme={theme}>
+      {cfg && <ChakraProvider theme={theme}>
         <Component {...pageProps} />
-      </ChakraProvider>
+      </ChakraProvider>}
       <FontFace />
       <CommonStyles />
       <ToastContainer />
-      <BaiduMap ak="" />
+      {cfg && cfg.panel.echarts.enableBaiduMap && <BaiduMap ak={cfg.panel.echarts.baiduMapAK} />}
     </NoSSR>
   )
 }  , { ssr: false })

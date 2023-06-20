@@ -1,9 +1,11 @@
+//@ts-nocheck
 export function loadBMap(ak) {
     return new Promise(function (resolve, reject) {
         if (typeof BMap !== 'undefined') {
             resolve(BMap)
             return true
         }
+        
         window.onBMapCallback = function () {
             resolve(BMap)
         }
@@ -20,7 +22,7 @@ interface Props {
 }
 
 const BaiduMap = ({ak}:Props) => {
-    loadBMap("KOmVjPVUAey1G2E8zNhPiuQ6QiEmAwZu")
+    loadBMap(ak)
     return (<></>)
 }
 
