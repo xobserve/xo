@@ -17,7 +17,8 @@ export interface CommonPluginSettings {
 }
 
 export interface EchartsSettings extends CommonPluginSettings {
-    parseOptionsFunc: string
+    setOptionsFunc: string
+    registerEventsFunc: string
 }
 
 export interface TextPlugin extends CommonPluginSettings {

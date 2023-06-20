@@ -92,7 +92,32 @@ export const initPanelPlugins: PanelPlugins = {
     },
 
     [PanelType.Echarts]: {
-        parseOptionsFunc: "// parseOptions return echarts.Options, it is directly used in rendering a echarts chart.\nfunction parseOptions(data) {\n\tconsole.log(data)\n\t//I guess you are using testdata datasource,\n\t//data fetching from testdata is already an echarts option\n\t//so there is no need to parse it\n\tconst options = data\n\treturn data\n}"
+        setOptionsFunc: `// setOptions return echarts.Options, it is directly passed to a echarts chart.
+// Find more options examples: https://echarts.apache.org/examples/en/index.html#chart-type-line
+function setOptions(data) {
+    console.log(data)
+    // I guess you are using testdata datasource,
+    // data fetching from testdata is already an echarts option
+    // so there is no need to parse it
+    const options = data
+    return options
+}`,
+        registerEventsFunc: `// In registerEvents, you can custom events on your chart, e.g mouse click event, mouse over event etc.
+// chart: a instance of echarts, you can call echarts apis on it
+// options: result of setOptions function
+// Find more examples: https://echarts.apache.org/en/api.html#events
+function registerEvents(options, chart) {
+    // !!!!!!!ATTENTION! You must unbind event handler first! 
+    // Because each time the options changeds registerEvents function will be called once
+    // If we don't unbind event, next time you click the chart will trigger N  click event ( N = Number of times the options changes)
+    // Rather than unbind all 'click' events, you can also unbind an specific handler: https://echarts.apache.org/en/api.html#echartsInstance.off
+    chart.off('click') 
+    chart.on('click', function (params) {
+        console.log(params)
+    })
+}`
     }
 }
+
+
 

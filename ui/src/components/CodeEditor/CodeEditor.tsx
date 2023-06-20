@@ -8,11 +8,12 @@ const MonacoEditor = dynamic(import("react-monaco-editor"), { ssr: false });
 interface Props {
     value: string 
     language?: string
-    onChange: (value: string) => void
+    onChange?: (value: string) => void
     onMount?: (editor: editor.IStandaloneCodeEditor) => void
+    readonly?: boolean
     
 }
-function CodeEditor({value, onChange,onMount,language="typescript"}:Props) {
+function CodeEditor({value, onChange,onMount,language="typescript",readonly=false}:Props) {
   const {colorMode} = useColorMode()
   return ( <MonacoEditor
       editorDidMount={(editor:editor.IStandaloneCodeEditor) => {
@@ -43,7 +44,7 @@ function CodeEditor({value, onChange,onMount,language="typescript"}:Props) {
         minimap: {
           enabled: false
         },
-        lineNumbers: "on",
+        lineNumbers: "off",
         automaticLayout: true,
         lineNumbersMinChars: 4,
         lineDecorationsWidth: 0,
@@ -52,8 +53,10 @@ function CodeEditor({value, onChange,onMount,language="typescript"}:Props) {
             verticalSliderSize: 5,
             horizontalSliderSize: 5,
         },
+        readOnly: readonly
       }}
       onChange={onChange}
+      
     />)
 }
 

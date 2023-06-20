@@ -17,7 +17,7 @@ import { useLeavePageConfirm } from "hooks/useLeavePage"
 import { isEqual } from "lodash"
 import { dispatch } from "use-bus"
 import { PanelForceRebuildEvent } from "src/data/bus-events"
-import AutoSizer from "react-virtualized-auto-sizer"
+import AutoSizer from "react-virtualized-auto-sizer";
 import { PanelGrid } from "../grid/PanelGrid"
 import EchartsPanelEditor from "../plugins/panel/echarts/Editor"
 
