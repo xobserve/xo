@@ -4,7 +4,7 @@ import { useEffect, useMemo, useRef, useState } from "react"
 import { PanelProps } from "types/dashboard";
 import { Box, Center, useColorMode, useToast } from "@chakra-ui/react";
 import { genDynamicFunction } from "utils/dynamicCode";
-import { clone, cloneDeep, isEmpty, isFunction } from "lodash";
+import {  cloneDeep, isEmpty, isFunction } from "lodash";
 import { useSearchParam } from "react-use";
 import { dispatch } from "use-bus";
 import { PanelDataEvent } from "src/data/bus-events";

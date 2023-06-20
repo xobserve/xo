@@ -27,12 +27,6 @@ const PanelSettings = ({ panel, onChange }: Props) => {
             tempPanel.plugins = {
                 [type]: pluginsCachedInEdit[type] ??  initPanelPlugins[type]
             }
-
-            // // check the new plugin can use the old datasource
-            // const supported = supportDatasources[type]
-            // if (!supported.includes(tempPanel.datasource.type)) {
-            //     tempPanel.datasource = initDatasource
-            // }
         })
     }
     

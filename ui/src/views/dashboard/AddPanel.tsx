@@ -40,21 +40,12 @@ const AddPanel = ({ dashboard, onChange }: Props) => {
 
 
     const onAddPanel = () => {
-        // Return if the "Add panel" exists already
-        // if (panel) {
-        //     return;
-        // }
-
         if (!dashboard.data.panels) {
             dashboard.data.panels = []
         }
         const id = getNextPanelId()
         const newPanel: Panel = initPanel(id)
 
-
-
-        // // panel in editing must be a clone of the original panel
-        // setPanel(cloneDeep(newPanel))
 
         // scroll to top after adding panel
         window.scrollTo(0, 0);

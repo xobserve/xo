@@ -24,16 +24,6 @@ const PanelStyles = ({ panel, onChange }: Props) => {
                         panel.styles.border = v
                     })
                 }}/>
-                {/* <Select size="sm" value={panel.styles?.border} onChange={e => {
-                    const v = e.currentTarget.value
-                    onChange(panel => {
-                        panel.styles.border = v
-                    })
-                }}>
-                    {
-                        Object.keys(PanelBorderType).map(key => <option value={PanelBorderType[key]}>{key}</option>)
-                    }
-                </Select> */}
             </PanelAccordion>
             <PanelAccordion title="Title decoration">
                 <PanelEditItem title="type">
