@@ -1,4 +1,4 @@
-import { Box, Select, useColorMode, useColorModeValue, useToast } from "@chakra-ui/react"
+import { Box, Center, Select, useColorMode, useColorModeValue, useToast } from "@chakra-ui/react"
 import { DefaultColumnFilter, NumberRangeColumnFilter } from "components/table/filters"
 import ReactTable from "components/table/Table"
 import { setVariable } from "src/views/variables/Variables"
@@ -6,7 +6,7 @@ import { useRouter } from "next/router"
 import React, { useEffect, useMemo } from "react"
 import { PanelProps } from "types/dashboard"
 import { TablePluginData } from "types/plugins/table"
-import { isFunction, isNumber } from "lodash"
+import { isEmpty, isFunction, isNumber } from "lodash"
 import { genDynamicFunction } from "utils/dynamicCode"
 
 interface TablePanelProps extends PanelProps {
@@ -14,6 +14,10 @@ interface TablePanelProps extends PanelProps {
 }
 
 const TablePanel = (props: TablePanelProps) => {
+    if (isEmpty(props.data)) {
+        return (<Center height="100%">No data</Center>)
+    }
+
     // because panel may have multiple queries, each query return a TablePluginData
     // so we need to flatten TablePluginData[] into TablePluginData
     const data = useMemo(() => {
@@ -42,7 +46,6 @@ const TablePanel = (props: TablePanelProps) => {
 
 
     const [tableColumns, tableData] = useMemo(() => {
-
         for (var i = 0; i < props.data[0].length; i++) {
             const s = props.data[0][i]
             if (s.name == series) {

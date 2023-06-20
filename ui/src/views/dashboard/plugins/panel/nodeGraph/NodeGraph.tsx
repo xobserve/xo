@@ -2,7 +2,7 @@
 
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import G6,{ Graph } from '@antv/g6';
-import { Box, useColorMode } from '@chakra-ui/react';
+import { Box, Center, useColorMode } from '@chakra-ui/react';
 import { Panel, PanelData, PanelProps } from 'types/dashboard';
 import { initTooltip } from './plugins/tooltip';
 import {  getActiveEdgeLabelCfg } from './default-styles';
@@ -16,6 +16,7 @@ import HiddenItems from './HiddenItem';
 import { filterData } from './filter/filterData';
 import { getDefaultEdgeLabel, getDefaultEdgeStyle, getDefaultNodeLabel, getDefaultNodeStyle } from './default-styles';
 import { NodeGraphPluginData } from 'types/plugins/nodeGraph';
+import { isEmpty } from 'lodash';
 
 
  
@@ -25,6 +26,10 @@ interface NodeGraphPanelProps extends PanelProps {
 
 let newestColorMode;
 const NodeGrapPanel = ({ data, panel, dashboardId,width,height }: NodeGraphPanelProps) => {
+    if (isEmpty(data)) {
+        return (<Center height="100%">No data</Center>)
+    }
+
     const container = React.useRef(null);
     const [graph, setGraph] = useState<Graph>(null);
     const { colorMode } = useColorMode();
