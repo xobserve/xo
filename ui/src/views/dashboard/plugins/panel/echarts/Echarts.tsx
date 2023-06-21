@@ -58,7 +58,7 @@ const EchartsPanel = ({ panel, data, width, height }: PanelProps) => {
             }
         }
 
-
+        options.animation = panel.plugins.echarts.animation
 
         return [options, onEvents]
     }, [panel.plugins.echarts, data, chart])
@@ -91,7 +91,6 @@ export const EchartsComponent = ({ options, theme, width, height, onChartCreated
         options.backgroundColor = darkBg
     }
 
-    options.animation = false
 
     useEffect(() => {
         if (container.current) {

@@ -28,7 +28,7 @@ const NodeGraphPanelEditor = (props: PanelEditorProps) => {
                 })} />
             </PanelEditItem>
             <PanelEditItem title="max size">
-                <EditorNumberItem value={panel.plugins.nodeGraph.node.maxSize} min={1} max={5} onChange={v => onChange(panel => {
+                <EditorNumberItem value={panel.plugins.nodeGraph.node.maxSize} min={1} max={5} onChange={v => onChange((panel:Panel) => {
                     panel.plugins.nodeGraph.node.maxSize = v
                 })} />
             </PanelEditItem>
@@ -36,7 +36,7 @@ const NodeGraphPanelEditor = (props: PanelEditorProps) => {
             <IconSetting {...props} />
 
             <PanelEditItem title="shape">
-                <RadionButtons options={[{ label: "Donut", value: "donut" }, { label: "Circle", value: "circle" }]} value={panel.plugins.nodeGraph.node.shape} onChange={v => onChange(panel => {
+                <RadionButtons options={[{ label: "Donut", value: "donut" }, { label: "Circle", value: "circle" }]} value={panel.plugins.nodeGraph.node.shape} onChange={v => onChange((panel:Panel) => {
                     panel.plugins.nodeGraph.node.shape = v
                 })} />
             </PanelEditItem>
@@ -46,7 +46,7 @@ const NodeGraphPanelEditor = (props: PanelEditorProps) => {
 
         <PanelAccordion title="Edge">
             <PanelEditItem title="shape">
-                <Select value={panel.plugins.nodeGraph.edge.shape} onChange={e => onChange(panel => {
+                <Select value={panel.plugins.nodeGraph.edge.shape} onChange={e => onChange((panel:Panel) => {
                     panel.plugins.nodeGraph.edge.shape = e.currentTarget.value
                 })}>
                     <option value="quadratic">quadratic</option>
@@ -56,7 +56,7 @@ const NodeGraphPanelEditor = (props: PanelEditorProps) => {
             </PanelEditItem>
 
             <PanelEditItem title="arrow">
-                <Select value={panel.plugins.nodeGraph.edge.arrow} onChange={e => onChange(panel => {
+                <Select value={panel.plugins.nodeGraph.edge.arrow} onChange={e => onChange((panel:Panel) => {
                     panel.plugins.nodeGraph.edge.arrow = e.currentTarget.value
                 })}>
                     <option value="default">default</option>
@@ -116,7 +116,7 @@ const NodeGraphPanelEditor = (props: PanelEditorProps) => {
             <PanelEditItem title="tooltip trigger" info={
                 <Text>You need to click Apply Button(in top-right) to see the new trigger taken effect</Text>
             }>
-                <RadionButtons options={[{ label: "Hover", value: "mouseenter" }, { label: "Click", value: "click" }]} value={panel.plugins.nodeGraph.node.tooltipTrigger} onChange={v => onChange(panel => {
+                <RadionButtons options={[{ label: "Hover", value: "mouseenter" }, { label: "Click", value: "click" }]} value={panel.plugins.nodeGraph.node.tooltipTrigger} onChange={v => onChange((panel:Panel) => {
                     panel.plugins.nodeGraph.node.tooltipTrigger = v
                 })} />
             </PanelEditItem>
@@ -128,7 +128,7 @@ const NodeGraphPanelEditor = (props: PanelEditorProps) => {
             <PanelEditItem title="display" info={
                 <Text>You need to click Apply Button(in top-right) to see the new trigger taken effect</Text>
             }>
-                <Switch defaultChecked={panel.plugins.nodeGraph.legend.enable} onChange={e => onChange(panel => {
+                <Switch defaultChecked={panel.plugins.nodeGraph.legend.enable} onChange={e => onChange((panel:Panel) => {
                     panel.plugins.nodeGraph.legend.enable = e.currentTarget.checked
                 })} />
             </PanelEditItem>
@@ -137,12 +137,12 @@ const NodeGraphPanelEditor = (props: PanelEditorProps) => {
 
         <PanelAccordion title="layout">
             <PanelEditItem title="node strength" desc=" The strength of node force. Positive value means repulsive force, negative value means attractive force">
-                <EditorNumberItem value={panel.plugins.nodeGraph.layout.nodeStrength} min={100} max={10000} onChange={v => onChange(panel => {
+                <EditorNumberItem value={panel.plugins.nodeGraph.layout.nodeStrength} min={100} max={10000} onChange={v => onChange((panel:Panel) => {
                     panel.plugins.nodeGraph.layout.nodeStrength = v
                 })} /> 
             </PanelEditItem>
             <PanelEditItem title="node gravity" desc="The gravity strength to the center for all the nodes. Larger the number, more compact the nodes">
-                <EditorNumberItem value={panel.plugins.nodeGraph.layout.gravity} min={0} max={200} onChange={v => onChange(panel => {
+                <EditorNumberItem value={panel.plugins.nodeGraph.layout.gravity} min={0} max={200} onChange={v => onChange((panel:Panel) => {
                     panel.plugins.nodeGraph.layout.gravity = v
                 })} />
             </PanelEditItem>

@@ -95,6 +95,7 @@ export const initPanelPlugins: PanelPlugins = {
     },
 
     [PanelType.Echarts]: {
+        animation: true,
         allowEmptyData: false,
         setOptionsFunc: `// setOptions return echarts.Options, it is directly passed to a echarts chart.
 // Find more options examples: https://echarts.apache.org/examples/en/index.html#chart-type-line
@@ -127,11 +128,17 @@ function registerEvents(options, chart) {
     [PanelType.Pie]: {
     },
     [PanelType.Gauge]: {
+        animation: true,
         value: {
             ...initUnits,
             min: 0,
             max: 100,
             decimals: 0
+        },
+        scale: {
+            enable: true,
+            splitNumber: 3,
+            fontSize: 14
         }
     }
 }

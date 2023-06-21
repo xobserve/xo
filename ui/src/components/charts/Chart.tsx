@@ -27,8 +27,6 @@ export const ChartComponent = ({ options, theme, width, height, onChartCreated, 
         }
     }
     
-    options.animation = false
-
     useEffect(() => {
         if (container.current) {
             const c = echarts.init(container.current, theme)

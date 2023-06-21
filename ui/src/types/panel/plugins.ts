@@ -23,7 +23,13 @@ export interface PieSettings {
 }
 
 export interface GaugeSettings {
+    animation: boolean
     value: GaugeValueSettings
+    scale: {
+        enable: boolean
+        splitNumber: number
+        fontSize: number
+    }
 }
 
 export interface GaugeValueSettings extends ValueSetting  {
@@ -32,6 +38,7 @@ export interface GaugeValueSettings extends ValueSetting  {
 }
 
 export interface EchartsSettings {
+    animation: boolean
     allowEmptyData: boolean
     setOptionsFunc: string
     registerEventsFunc: string

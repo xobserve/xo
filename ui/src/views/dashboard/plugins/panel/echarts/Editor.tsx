@@ -6,7 +6,7 @@ import AutoSizer from "react-virtualized-auto-sizer"
 import { PanelDataEvent } from "src/data/bus-events"
 import PanelAccordion from "src/views/dashboard/edit-panel/Accordion"
 import PanelEditItem from "src/views/dashboard/edit-panel/PanelEditItem"
-import { PanelEditorProps } from "types/dashboard"
+import { Panel, PanelEditorProps } from "types/dashboard"
 import useBus from "use-bus"
 import { genDynamicFunction } from "utils/dynamicCode"
 import { EchartsComponent } from "./Echarts"
@@ -15,20 +15,26 @@ import { ColorModeSwitcher } from "components/ColorModeSwitcher"
 
 const EchartsPanelEditor = ({ panel, onChange }: PanelEditorProps) => {
     return (<PanelAccordion title="Echarts setting">
+        <PanelEditItem title="Animation" desc="display chart animation">
+            <Switch defaultChecked={panel.plugins.echarts.animation} onChange={e => onChange((panel:Panel) => {
+                panel.plugins.echarts.animation = e.currentTarget.checked
+            })} />
+        </PanelEditItem>
+
         <PanelEditItem title="Allow empty data pass in" desc="When we can't read any data from datasource, if this option is disabled, the chart will show 'No Data' and immediatlly returns, if enabled, the chart will show nothing and the empty data will pass to setOptions func. <If you generates data in setOptions function(e.g you are playing an example), you should make this enabled, otherwise leave it disabled>">
-            <Switch isChecked={panel.plugins.echarts.allowEmptyData} onChange={(e) => onChange(draft => {
-                draft.plugins.echarts.allowEmptyData = e.target.checked
+            <Switch isChecked={panel.plugins.echarts.allowEmptyData} onChange={(e) => onChange((panel:Panel) => {
+                panel.plugins.echarts.allowEmptyData = e.target.checked
             })} />
         </PanelEditItem>
 
         <SetOptions panel={panel} onChange={v => {
-            onChange(panel => {
+            onChange((panel:Panel) => {
                 panel.plugins.echarts.setOptionsFunc = v
             })
         }} />
 
         <RegisterEvents panel={panel} onChange={v => {
-            onChange(panel => {
+            onChange((panel:Panel) => {
                 panel.plugins.echarts.registerEventsFunc = v
             })
         }} />

@@ -51,7 +51,6 @@ export const run_testdata_query = async (panel: Panel, q: PanelQuery, range: Tim
             break
     }
 
-    console.log("here333333:",data)
     return {
         error: null,
         data: data ?? []
