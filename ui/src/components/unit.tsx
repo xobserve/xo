@@ -1,8 +1,8 @@
-import { Button, HStack, Input, NumberInput, NumberInputField, NumberInputStepper, Select, useToast, VStack } from "@chakra-ui/react"
-import { cloneDeep, round } from "lodash"
+import { Button, calc, HStack, Input, NumberInput, NumberInputField, NumberInputStepper, Select, useToast, VStack } from "@chakra-ui/react"
+import { cloneDeep, isEmpty, round } from "lodash"
 import { useEffect, useState } from "react"
 import { FaArrowUp, FaMinus, FaPlus } from "react-icons/fa"
-import { UnitsType,Unit } from "types/dashboard"
+import { UnitsType,Unit } from "types/panel/plugins"
 
 interface Props {
     type: UnitsType
@@ -84,15 +84,15 @@ export const UnitPicker = ({type, value, onChange }: Props) => {
                 },
                 {
                     operator: "/",
-                    rhs: 1000,
+                    rhs: 1024,
                     unit: "KB"
                 },{
                     operator: "/",
-                    rhs: 1000000,
+                    rhs: 1024,
                     unit: "MB"
                 },{
                     operator: "/",
-                    rhs: 1000000000,
+                    rhs: 1024,
                     unit: "GB"
                 }])
             
@@ -160,24 +160,45 @@ export const UnitPicker = ({type, value, onChange }: Props) => {
 }
 
 export const formatUnit = (v: number, units: Unit[],decimal: number) => {
-    for (var i = units.length-1;i>=0;i--) {
-        const unit = units[i]
-        let res;
-        switch (unit.operator) {
-            case "x":
-                res = v * unit.rhs
-                break;
-            case "/":
-                res = v / unit.rhs
-                break
-            default:
-                res = v
-                break;
-        }
+    if (isEmpty(units)) {
+        return v
+    }
 
-        if (res >= 0.1 || i == 0 ) {
+    let initValue = v
+    for (var i = 0; i < units.length;i++) {
+        const unit = units[i]
+        let res = calcValue(initValue, unit)
+
+
+        if (res < 1 && i != 0) {
+            return initValue.toFixed(decimal) + units[i-1].unit
+        }   
+        
+        if (res < 1 && i == 0) {
             return res.toFixed(decimal) + unit.unit
         }
+          
+        if (i == units.length - 1) {
+            return res.toFixed(decimal) + unit.unit
+        }
+        
+        initValue = res
     }
     
+}
+
+const calcValue = (v,unit:Unit)  => {
+    let res
+    switch (unit.operator) {
+        case "x":
+            res = v * unit.rhs
+            break;
+        case "/":
+            res = v / unit.rhs
+            break
+        default:
+            res = v
+            break;
+    }
+    return res
 }

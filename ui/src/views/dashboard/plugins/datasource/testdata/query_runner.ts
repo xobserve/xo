@@ -6,8 +6,10 @@ import { TimeRange } from "types/time"
 import graphData from './mocks/prometheus_graph.json'
 import { nodeGraphData } from "./mocks/node_graph"
 import { prometheusDataToGraph, transformPrometheusData } from "../prometheus/transformData"
+import { round } from "lodash"
+import {GaugePluginData} from 'types/plugins/gauge'
 export const run_testdata_query = async (panel: Panel, q: PanelQuery, range: TimeRange) => {
-    let data;
+    let data:any;
 
     switch (panel.type) {
         //@needs-update-when-add-new-panel
@@ -38,6 +40,13 @@ export const run_testdata_query = async (panel: Panel, q: PanelQuery, range: Tim
                     }
                 ]
             }
+            break
+        case PanelType.Gauge:
+            const d: GaugePluginData = {
+                value: Math.random() * 100,
+            }
+            data = d
+            break
         default:
             break
     }

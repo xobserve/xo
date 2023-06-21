@@ -1,8 +1,12 @@
 import { PanelType } from "types/dashboard";
-import { PanelPlugins } from "types/panel/plugins";
+import { PanelPlugins, Units, UnitsType } from "types/panel/plugins";
 
-export const onClickCommonEvent= "// setVariable: (varName:string, varValue:string) => void \nfunction onClick(item, router, setVariable) {\n\tconsole.log(item)\n}"
+export const onClickCommonEvent = "// setVariable: (varName:string, varValue:string) => void \nfunction onClick(item, router, setVariable) {\n\tconsole.log(item)\n}"
 
+const initUnits: Units = {
+    unitsType: 'none',
+    units: [],
+}
 //@needs-update-when-add-new-panel
 export const initPanelPlugins: PanelPlugins = {
     [PanelType.Graph]: {
@@ -28,13 +32,12 @@ export const initPanelPlugins: PanelPlugins = {
             scaleBase: 2
         },
         std: {
-            unitsType: 'none',
-            units: [],
+            ...initUnits,
             decimals: 3
         }
     },
 
-    [PanelType.Text]:  {
+    [PanelType.Text]: {
         disableDatasource: true,
         md: `#Welcome to Starship\n This is a new panel\n You can edit it by clicking the edit button on the top title\n ###Have fun!`,
         justifyContent: "left",
@@ -45,8 +48,8 @@ export const initPanelPlugins: PanelPlugins = {
 
     [PanelType.Table]: {
         showHeader: true,
-        globalSearch:false,
-        enablePagination:false,
+        globalSearch: false,
+        enablePagination: false,
         pageSize: 10,
         enableFilter: true,
         enableSort: true,
@@ -71,7 +74,7 @@ export const initPanelPlugins: PanelPlugins = {
             shape: 'quadratic',
             arrow: 'default',
             color: {
-                light: '#ddd', 
+                light: '#ddd',
                 dark: "#8CA88C",
             },
             opacity: 0.6,
@@ -124,6 +127,12 @@ function registerEvents(options, chart) {
     [PanelType.Pie]: {
     },
     [PanelType.Gauge]: {
+        value: {
+            ...initUnits,
+            min: 0,
+            max: 100,
+            decimals: 0
+        }
     }
 }
 

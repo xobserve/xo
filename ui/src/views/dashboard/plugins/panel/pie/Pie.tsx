@@ -1,5 +1,5 @@
 import { Box, useColorMode } from "@chakra-ui/react";
-import PieChartComponent from "components/charts/PieChart";
+import ChartComponent from "components/charts/Chart";
 import { useState } from "react";
 import { PanelProps } from "types/dashboard"
 import { PiePluginData } from "types/plugins/pie"
@@ -46,12 +46,9 @@ const PiePanel = ({panel, data, height,width}:Props) => {
       };
 
       return (<>
-        {options && <Box height={height} key={colorMode} className="echarts-panel"><PieChartComponent options={options} theme={colorMode} width={width} height={height} onChartCreated={c => setChart(c)} onChartEvents={null} darkBg={null} /></Box>}
+        {options && <Box height={height} key={colorMode} className="echarts-panel"><ChartComponent options={options} theme={colorMode} width={width} height={height} onChartCreated={c => setChart(c)} onChartEvents={null} /></Box>}
     </>)
 }
 
 export default PiePanel
 
-const PieChart = () => {
-    
-}

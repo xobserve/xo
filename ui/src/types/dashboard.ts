@@ -117,9 +117,4 @@ export enum DashboardLayout {
     Horizontal =  "horizontal"
 }
 
-export type UnitsType = 'none' | 'time' | 'bytes' | 'percent' | 'custom';
-export interface Unit {
-    operator: "x" | "/",
-    rhs: number,
-    unit: string
-}
+

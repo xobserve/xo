@@ -23,7 +23,12 @@ export interface PieSettings {
 }
 
 export interface GaugeSettings {
+    value: GaugeValueSettings
+}
 
+export interface GaugeValueSettings extends ValueSetting  {
+    min: number
+    max: number
 }
 
 export interface EchartsSettings {
@@ -36,12 +41,12 @@ export interface TextPlugin extends DisableDatasource {
     md?: string
     justifyContent: "center" | "left" | "right"
     alignItems: "center" | "top" | "bottom"
-    fontSize:  string,
+    fontSize: string,
     fontWeight: string,
 }
 
 
-export interface TableSettings  {
+export interface TableSettings {
     showHeader: boolean
     globalSearch: boolean
     enablePagination: boolean
@@ -51,7 +56,7 @@ export interface TableSettings  {
     onRowClick: string
 }
 
-export interface NodeGraphSettings  {
+export interface NodeGraphSettings {
     node: {
         baseSize: number
         maxSize: number
@@ -109,15 +114,7 @@ export interface GraphSettings {
         scale?: "linear" | "log"
         scaleBase?: 2 | 10
     },
-    std: {
-        unitsType: UnitsType,
-        units: {
-            operator: "x" | "/",
-            rhs: number,
-            unit: string
-        }[],
-        decimals: number
-    }
+    std: ValueSetting
 }
 
 
@@ -139,11 +136,22 @@ export interface NodeGraphMenuItem {
 }
 
 
-
+export interface ValueSetting extends Units {
+    decimals: number
+}
 
 export type UnitsType = 'none' | 'time' | 'bytes' | 'percent' | 'custom';
 export interface Unit {
     operator: "x" | "/",
     rhs: number,
     unit: string
+}
+
+export interface Units {
+    unitsType: UnitsType,
+    units: {
+        operator: "x" | "/",
+        rhs: number,
+        unit: string
+    }[],
 }

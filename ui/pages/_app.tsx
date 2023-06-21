@@ -32,11 +32,7 @@ const App =  dynamic(async () => ({ Component, pageProps }) => {
   
   const loadConfig = async () => {
     const res = await requestApi.get("/config/ui")
-    setTimeout(() => {
-      setConfig(res.data)
-    },5000)
-   
-  
+    setConfig(res.data)
     Object.assign(config, res.data)
   }
 
