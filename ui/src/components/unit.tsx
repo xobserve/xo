@@ -49,6 +49,13 @@ export const UnitPicker = ({type, value, onChange }: Props) => {
                     unit: "%"
                 }])
                 break
+            case "percent%": 
+                setUnits([{
+                    operator: "x",
+                    rhs: 1,
+                    unit: "%"
+                }])
+                break
             case "time":
                 setUnits([
                     {
@@ -122,7 +129,8 @@ export const UnitPicker = ({type, value, onChange }: Props) => {
             <HStack>
                 <Select value={unitType} onChange={e => onChangeUnitType(e.currentTarget.value)}>
                     <option value="none">None</option>
-                    <option value="percent">Percent: 0.1 -&gt; 10%</option>
+                    <option value="percent">Percent: 1 -&gt; 100%</option>
+                    <option value="percent%">Percent: 1 -&gt; 1%</option>
                     <option value="time">Time: ms/s/m/.../day</option>
                     <option value="bytes">Bytes: b/KB/MB/GB</option>
                     <option value="custom">Custom units</option>
