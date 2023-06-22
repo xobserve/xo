@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react"
+import { memo, useEffect, useRef, useState } from "react"
 import { useSearchParam } from "react-use"
 import * as echarts from 'echarts';
 import { Box } from "@chakra-ui/react";
@@ -14,11 +14,12 @@ interface Props {
 }
 
 
-export const ChartComponent = ({ options, theme, width, height, onChartCreated, onChartEvents }: Props) => {
+export const ChartComponent = memo(({ options, theme, width, height, onChartCreated, onChartEvents }: Props) => {
     const edit = useSearchParam('edit')
     const container = useRef(null)
     const [chart, setChart] = useState(null)
 
+    console.log('here33333ddd')
     if (theme == "dark") {
         if (edit) {
             options.backgroundColor = "transparent"
@@ -62,7 +63,7 @@ export const ChartComponent = ({ options, theme, width, height, onChartCreated, 
         }
     }, [width, height])
     return (<Box ref={container} width={width} height={height} className="echart-container" />)
-}
+})
 
 
 export default ChartComponent

@@ -1,3 +1,4 @@
 export interface GaugePluginData  {
-    value: number
+    value: number,
+    name?: string
 }

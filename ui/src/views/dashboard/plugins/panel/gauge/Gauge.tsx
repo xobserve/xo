@@ -1,9 +1,9 @@
 import { Box, useColorMode } from "@chakra-ui/react";
 import ChartComponent from "components/charts/Chart";
 import { formatUnit } from "components/unit";
-import { round } from "lodash";
+import { cloneDeep, round } from "lodash";
 
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { PanelProps } from "types/dashboard"
 import { GaugePluginData } from "types/plugins/gauge";
 
@@ -15,49 +15,76 @@ const GaugePanel = ({ panel, data, height, width }: Props) => {
   const [chart, setChart] = useState(null)
   const { colorMode } = useColorMode()
   const options = useMemo(() => {
+    console.log("here333333")
     return {
       animation: panel.plugins.gauge.animation,
+      grid: {
+        left: "0%",
+        right: "0%",
+        width: "100%",
+        padding: 0
+      },
       series: [
         {
           type: 'gauge',
+          radius: '100%',
+          title: {
+            show: panel.plugins.gauge.title.show,
+            fontSize: panel.plugins.gauge.title.fontSize,
+            offsetCenter: [panel.plugins.gauge.title.left, panel.plugins.gauge.title.top],
+            color: 'inherit'
+          },
+          detail: {
+            show: panel.plugins.gauge.value.show,
+            valueAnimation: true,
+            formatter: value => `${round(value, panel.plugins.gauge.value.decimals)}${panel.plugins.gauge.value.unit}`,
+            // borderColor: 'inherit',
+            // borderWidth: 1,
+            color: 'inherit',
+            fontSize: panel.plugins.gauge.value.fontSize,
+            offsetCenter: [panel.plugins.gauge.value.left, panel.plugins.gauge.value.top],
+            // color: '#fff',
+            // backgroundColor: 'inherit',
+            // width: 50,
+            // height: 14,
+            borderRadius: 3,
+          },
           axisLine: {
             lineStyle: {
-              width: 30,
-              color: [
-                [0.3, '#67e0e3'],
-                [0.7, '#37a2da'],
-                [1, '#fd666d']
-              ]
+              width: panel.plugins.gauge.axis.width,
+              color: panel.plugins.gauge.axis.split
+            }
+          },
+          axisTick: {
+            show: panel.plugins.gauge.axis.showTicks,
+            splitNumber: 5,
+            length: 6,
+            distance: 10
+          },
+          anchor: {
+            show: true,
+            showAbove: true,
+            size: 18,
+            itemStyle: {
+              color: '#FAC858'
             }
           },
           pointer: {
+            icon: 'path://M2.9,0.7L2.9,0.7c1.4,0,2.6,1.2,2.6,2.6v115c0,1.4-1.2,2.6-2.6,2.6l0,0c-1.4,0-2.6-1.2-2.6-2.6V3.3C0.3,1.9,1.4,0.7,2.9,0.7z',
+            width: 8,
+            length: '80%',
+            offsetCenter: [0, '8%'],
             itemStyle: {
               color: 'inherit'
             },
-            icon: "pin",
-            show: true,
-          },
-          axisTick: {
-            distance: 1100,
-            length: 1,
-            lineStyle: {
-              color: '#red',
-              width: 1
-            }
-          },
-   
-          detail: {
-            valueAnimation: true,
-            formatter: value => `${formatUnit(value, panel.plugins.gauge.value.units, panel.plugins.gauge.value.decimals)}`,
-            color: 'inherit'
           },
           data: data,
           min: panel.plugins.gauge.value.min,
           max: panel.plugins.gauge.value.max,
-          
+
           /*----scale-----*/
-          splitLine: (panel.plugins.gauge.scale.enable && panel.plugins.gauge.scale.splitNumber > 0) ?{
-            distance: 12,
+          splitLine: (panel.plugins.gauge.scale.enable && panel.plugins.gauge.scale.splitNumber > 0) ? {
+            // distance: 12,
             length: 10,
             lineStyle: {
               width: 1
@@ -65,43 +92,37 @@ const GaugePanel = ({ panel, data, height, width }: Props) => {
           } : null,
           axisLabel: {
             color: 'inherit',
-            distance: 10,
+            distance: 14,
             fontSize: panel.plugins.gauge.scale.fontSize,
-            show: panel.plugins.gauge.scale.enable && panel.plugins.gauge.scale.splitNumber > 0
+            show: panel.plugins.gauge.scale.enable && panel.plugins.gauge.scale.splitNumber > 0,
+            formatter: value => `${round(value, panel.plugins.gauge.value.decimals)}${panel.plugins.gauge.value.unit}`,
           },
-          splitNumber: panel.plugins.gauge.scale.splitNumber
-            /*------------*/
+          splitNumber: panel.plugins.gauge.scale.splitNumber,
+          /*------------*/
         }
       ]
     }
-  }, [panel.plugins.gauge, data])
+  }, [panel.plugins.gauge, colorMode])
 
   useEffect(() => {
-    let h;
     if (chart) {
-      h = setInterval(function () {
-        chart.setOption({
-          series: [
-            {
-              data: [
-                {
-                  value: +(Math.random() * 100).toFixed(2)
-                }
-              ]
-            }
-          ]
-        });
-      }, 2000);
+      chart.setOption({
+        series: [
+          {
+            data: data
+          }
+        ]
+      });
     }
+  }, [chart,data])
 
-    return () => {
-      clearInterval(h)
-    }
-  }, [chart])
 
+  const onChartCreated = useCallback((chart) => {
+    setChart(chart)
+  }, [])
 
   return (<>
-    {options && <Box height={height} key={colorMode} className="echarts-panel"><ChartComponent options={options} theme={colorMode} width={width} height={height} onChartCreated={c => setChart(c)} onChartEvents={null} /></Box>}
+    {options && <Box height={height} key={colorMode} className="echarts-panel"><ChartComponent options={options} theme={colorMode} width={width} height={height} onChartCreated={onChartCreated} onChartEvents={null} /></Box>}
   </>)
 }
 

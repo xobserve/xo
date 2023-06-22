@@ -1,3 +1,4 @@
+import { offset } from "@chakra-ui/utils"
 import { PanelType } from "types/dashboard"
 
 //@needs-update-when-add-new-panel
@@ -19,7 +20,28 @@ export interface DisableDatasource {
 }
 
 export interface PieSettings {
+    animation: boolean
+    showLabel: boolean
+    shape: {
+        type: 'normal' | 'rose'
+        borderRadius: number
+        radius: number
+        innerRadius: number
+    }
+    legend: {
+        show: boolean
+        orient: 'vertical' | 'horizontal'
+        placement: PieLegendPlacement
+    }
+}
 
+export enum PieLegendPlacement {
+    Top = "top",
+    Bottom = 'bottom',
+    TopLeft = 'top-left',
+    TopRight = 'top-right',
+    BottomLeft = 'bottom-left',
+    BottomRight = 'bottom-right'
 }
 
 export interface GaugeSettings {
@@ -30,11 +52,30 @@ export interface GaugeSettings {
         splitNumber: number
         fontSize: number
     }
+    axis: {
+        width: number
+        showTicks: boolean
+        split: GaugeAxisSplit[]
+    }
+    title: {
+        show: boolean
+        fontSize: number
+        left: string
+        top: string
+    }
 }
 
-export interface GaugeValueSettings extends ValueSetting  {
+export type GaugeAxisSplit = [number, string]
+
+export interface GaugeValueSettings {
+    show: boolean
     min: number
     max: number
+    fontSize: number
+    left: string
+    top: string
+    decimals: number
+    unit: string
 }
 
 export interface EchartsSettings {

@@ -43,10 +43,22 @@ export const run_testdata_query = async (panel: Panel, q: PanelQuery, range: Tim
             break
         case PanelType.Gauge:
             const d: GaugePluginData = {
+                name: 'Memory Usage',
                 value: Math.random() * 100,
             }
             data = d
             break
+        case PanelType.Pie:
+            data = [
+                { value: Math.random() * 50, name: 'rose 1' },
+                { value: Math.random() * 50, name: 'rose 2' },
+                { value: Math.random() * 50, name: 'rose 3' },
+                { value: Math.random() * 50, name: 'rose 4' },
+                { value: Math.random() * 50, name: 'rose 5' },
+                { value: Math.random() * 50, name: 'rose 6' },
+                { value: Math.random() * 50, name: 'rose 7' },
+              ]
+              break
         default:
             break
     }

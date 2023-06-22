@@ -195,36 +195,24 @@ export const PanelComponent = ({ dashboard, panel, onRemovePanel, width, height,
 
 
 
+//@needs-update-when-add-new-panel
+const loadablePanels = {
+    [PanelType.Text]: loadable(() => import('../plugins/panel/text/Text')),
+    [PanelType.Graph]: loadable(() => import('../plugins/panel/graph/Graph')),
+    [PanelType.Table]: loadable(() => import('../plugins/panel/table/Table')),
+    [PanelType.NodeGraph]: loadable(() => import('../plugins/panel/nodeGraph/NodeGraph')),
+    [PanelType.Echarts]: loadable(() => import('../plugins/panel/echarts/Echarts')),
+    [PanelType.Pie]: loadable(() => import('../plugins/panel/pie/Pie')),
+    [PanelType.Gauge]: loadable(() => import('../plugins/panel/gauge/Gauge')),
+}
+
 const CustomPanelRender = (props: any) => {
-    let P;
-    //@needs-update-when-add-new-panel
-    switch (props.panel?.type) {
-        case PanelType.Text:
-           P =  loadable(() => import('../plugins/panel/text/Text'))
-           break
-        case PanelType.Graph:
-            P =  loadable(() => import('../plugins/panel/graph/Graph'))
-            break
-        case PanelType.Table:
-            P =  loadable(() => import('../plugins/panel/table/Table'))
-            break
-        case PanelType.NodeGraph:
-            P =  loadable(() => import('../plugins/panel/nodeGraph/NodeGraph'))
-            break
-        case PanelType.Echarts:
-            P =  loadable(() => import('../plugins/panel/echarts/Echarts'))
-            break
-        case PanelType.Pie:
-            P =  loadable(() => import('../plugins/panel/pie/Pie'))
-            break
-        case PanelType.Gauge:
-            P =  loadable(() => import('../plugins/panel/gauge/Gauge'))
-            break
-        default:
-            return <></>
+    const P = loadablePanels[props.panel.type]
+    if (P) {
+        return <P {...props} />
     }
-    
-    return <P {...props} />
+
+    return <></>
 }
 
 interface PanelHeaderProps {

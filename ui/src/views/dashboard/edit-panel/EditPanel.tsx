@@ -193,35 +193,24 @@ const EditPanel = ({ dashboard, onChange }: EditPanelProps) => {
 
 export default EditPanel
 
+//@needs-update-when-add-new-panel
+const loadablePanels = {
+    [PanelType.Text]: loadable(() => import('../plugins/panel/text/Editor')),
+    [PanelType.Graph]: loadable(() => import('../plugins/panel/graph/Editor')),
+    [PanelType.Table]: loadable(() => import('../plugins/panel/table/Editor')),
+    [PanelType.NodeGraph]: loadable(() => import('../plugins/panel/nodeGraph/Editor')),
+    [PanelType.Echarts]: loadable(() => import('../plugins/panel/echarts/Editor')),
+    [PanelType.Pie]: loadable(() => import('../plugins/panel/pie/Editor')),
+    [PanelType.Gauge]: loadable(() => import('../plugins/panel/gauge/Editor')),
+}
+
+
 
 const CustomPanelEditor = ({ tempPanel, setTempPanel }) => {
-    let Editor;
-    //@needs-update-when-add-new-panel
-    switch (tempPanel?.type) {
-        case PanelType.Text:
-            Editor = loadable(() => import('../plugins/panel/text/Editor'))
-            break
-        case PanelType.Graph:
-            Editor = loadable(() => import('../plugins/panel/graph/Editor'))
-            break
-        case PanelType.Table:
-            Editor = loadable(() => import('../plugins/panel/table/Editor'))
-            break
-        case PanelType.NodeGraph:
-             Editor = loadable(() => import('../plugins/panel/nodeGraph/Editor'))
-             break
-        case PanelType.Echarts:
-            Editor = loadable(() => import('../plugins/panel/echarts/Editor'))
-            break
-        case PanelType.Pie:
-            Editor = loadable(() => import('../plugins/panel/pie/Editor'))
-            break
-        case PanelType.Gauge:
-            Editor = loadable(() => import('../plugins/panel/gauge/Editor'))
-            break
-        default:
-            return <></>
+    const Editor = loadablePanels[tempPanel.type]
+    if (Editor) {
+        return <Editor panel={tempPanel} onChange={setTempPanel} />
     }
 
-   return <Editor panel={tempPanel} onChange={setTempPanel} />
+    return null
 }

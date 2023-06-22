@@ -126,19 +126,51 @@ function registerEvents(options, chart) {
 }`
     },
     [PanelType.Pie]: {
+        animation: true,
+        shape: {
+            type: 'rose',
+            borderRadius: 8,
+            radius: 90,
+            innerRadius: 20 ,
+        },
+        showLabel: true,
+        legend: {
+            show: true,
+            orient: 'horizontal',
+            placement: 'bottom'
+        }
     },
     [PanelType.Gauge]: {
         animation: true,
         value: {
-            ...initUnits,
+            show: true,
             min: 0,
             max: 100,
-            decimals: 0
+            decimals: 1,
+            fontSize: 15,
+            left: '0%',
+            top: '75%',
+            unit: '%'
         },
         scale: {
             enable: true,
             splitNumber: 3,
             fontSize: 14
+        },
+        axis: {
+            width: 12,
+            showTicks: true,
+            split: [
+                [0.3, '#67e0e3'],
+                [0.7, '#37a2da'],
+                [1, '#fd666d']
+            ]
+        },
+        title: {
+            show: true,
+            fontSize: 14,
+            left: '0%',
+            top: '60%'
         }
     }
 }
