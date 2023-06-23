@@ -1,22 +1,29 @@
-import { Box, useColorMode } from "@chakra-ui/react";
+import { Box, useColorMode, useToast } from "@chakra-ui/react";
 import ChartComponent from "components/charts/Chart";
+import { isFunction } from "lodash";
 import { useMemo, useState } from "react";
 import { Panel, PanelProps } from "types/dashboard"
 import { PieLegendPlacement } from "types/panel/plugins";
 import { PiePluginData } from "types/plugins/pie"
+import { genDynamicFunction } from "utils/dynamicCode";
 
 interface Props extends PanelProps {
     data: PiePluginData[]
 }
 
 const PiePanel = ({ panel, data, height, width }: Props) => {
+    const toast = useToast()
     const [chart, setChart] = useState(null)
     const { colorMode } = useColorMode()
     
-    const options = useMemo(() =>  {
+    const [options,onEvents] = useMemo(() =>  {
         const d = data.length > 0 ? data[0] : []
         const lp = parseLegendPlacement(panel)
-        return {
+
+        const onEvents = genDynamicFunction(panel.plugins.pie.onClickEvent);
+
+
+        return [{
             animation: panel.plugins.pie.animation,
             legend: {
                 show: panel.plugins.pie.legend.show,
@@ -48,13 +55,13 @@ const PiePanel = ({ panel, data, height, width }: Props) => {
                     }
                 }
             ]
-        }
+        },onEvents]
     },[panel.plugins.pie, data, colorMode])
     
     
 
     return (<>
-        {options && <Box height={height} key={colorMode} className="echarts-panel"><ChartComponent options={options} theme={colorMode} width={width} height={height} onChartCreated={c => setChart(c)} onChartEvents={null} /></Box>}
+        {options && <Box height={height} key={colorMode} className="echarts-panel"><ChartComponent options={options} theme={colorMode} width={width} height={height} onChartCreated={c => setChart(c)} onChartEvents={onEvents} /></Box>}
     </>)
 }
 

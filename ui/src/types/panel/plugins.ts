@@ -22,6 +22,7 @@ export interface DisableDatasource {
 export interface PieSettings {
     animation: boolean
     showLabel: boolean
+    onClickEvent: string
     shape: {
         type: 'normal' | 'rose'
         borderRadius: number

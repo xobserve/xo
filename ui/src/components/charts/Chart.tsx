@@ -19,7 +19,6 @@ export const ChartComponent = memo(({ options, theme, width, height, onChartCrea
     const container = useRef(null)
     const [chart, setChart] = useState(null)
 
-    console.log('here33333ddd')
     if (theme == "dark") {
         if (edit) {
             options.backgroundColor = "transparent"
@@ -34,12 +33,14 @@ export const ChartComponent = memo(({ options, theme, width, height, onChartCrea
             setChart(c)
             c.setOption(options)
             onChartCreated(c)
+            registerEvents(c)
         }
 
         return () => {
             if (chart) {
                 chart?.dispose()
                 chart?.clear()
+                chart.off('click')
             }
         }
     }, [])
@@ -53,7 +54,7 @@ export const ChartComponent = memo(({ options, theme, width, height, onChartCrea
 
     useEffect(() => {
         if (onChartEvents && chart) {
-            onChartEvents(options, chart)
+            registerEvents()
         }
     }, [onChartEvents])
 
@@ -62,6 +63,12 @@ export const ChartComponent = memo(({ options, theme, width, height, onChartCrea
             chart.resize({ width, height })
         }
     }, [width, height])
+
+    const registerEvents = (c?) => {
+        const ct = c ?? chart
+        ct.off('click')
+        ct.on('click', onChartEvents)
+    }
     return (<Box ref={container} width={width} height={height} className="echart-container" />)
 })
 

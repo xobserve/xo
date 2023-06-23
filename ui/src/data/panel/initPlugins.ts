@@ -1,5 +1,5 @@
 import { PanelType } from "types/dashboard";
-import { PanelPlugins, Units, UnitsType } from "types/panel/plugins";
+import { PanelPlugins, PieLegendPlacement, Units, UnitsType } from "types/panel/plugins";
 
 export const onClickCommonEvent = "// setVariable: (varName:string, varValue:string) => void \nfunction onClick(item, router, setVariable) {\n\tconsole.log(item)\n}"
 
@@ -131,14 +131,17 @@ function registerEvents(options, chart) {
             type: 'rose',
             borderRadius: 8,
             radius: 90,
-            innerRadius: 20 ,
+            innerRadius: 20,
         },
         showLabel: true,
         legend: {
             show: true,
             orient: 'horizontal',
-            placement: 'bottom'
-        }
+            placement: PieLegendPlacement.Bottom
+        },
+        onClickEvent: `function onClickEvent(params) {
+    console.log(params)
+}`
     },
     [PanelType.Gauge]: {
         animation: true,
