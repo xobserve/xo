@@ -1,4 +1,8 @@
-export type GraphPluginData = GraphSeries[]
+export interface GraphPluginData {
+  series: GraphSeries[]
+  value: number
+}
+
 export interface GraphSeries {
     // id: number;
     name?: string;

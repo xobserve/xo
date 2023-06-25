@@ -65,7 +65,8 @@ export enum PanelType {
     NodeGraph = "nodeGraph",
     Echarts = "echarts",
     Pie = "pie",
-    Gauge = "gauge"
+    Gauge = "gauge",
+    Stat = "stat"
 }
 
 export enum DatasourceType {

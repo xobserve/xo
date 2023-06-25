@@ -8,7 +8,7 @@ import { parseOptions } from './options';
 import { isEmpty } from "lodash";
 
 import Tooltip from "./Tooltip";
-import SeriesTable, { seriesFilterType } from "components/Tooltip/SeriesTable";
+import SeriesTable, { seriesFilterType } from "src/views/dashboard/plugins/panel/graph/Tooltip/SeriesTable";
 import { GraphLayout } from "src/views/dashboard/plugins/panel/graph/GraphLayout";
 import { Box, Center, Text, useColorMode } from "@chakra-ui/react";
 import { colors } from "utils/colors";

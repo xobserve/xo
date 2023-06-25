@@ -11,12 +11,18 @@ export interface PanelPlugins {
     [PanelType.Echarts]?: EchartsSettings
     [PanelType.Pie]?: PieSettings
     [PanelType.Gauge]?: GaugeSettings
+    [PanelType.Stat]?: StatSettings
 }
 
 /*-------------------- Plugins ----------------------- */
 
 export interface DisableDatasource {
     disableDatasource?: boolean
+}
+
+
+export interface StatSettings extends GraphSettings {
+
 }
 
 export interface PieSettings {

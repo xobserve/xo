@@ -33,7 +33,7 @@ export const initPanelPlugins: PanelPlugins = {
         },
         std: {
             ...initUnits,
-            decimals: 3
+            decimals: 1
         }
     },
 
@@ -175,7 +175,35 @@ function registerEvents(options, chart) {
             left: '0%',
             top: '60%'
         }
-    }
+    },
+
+    [PanelType.Stat]: {
+        tooltip: {
+            mode: 'all',
+            sort: 'desc'
+        },
+        legend: {
+            mode: "table",
+            placement: "bottom"
+        },
+        styles: {
+            style: "lines",
+            lineWidth: 2,
+            fillOpacity: 21,
+            showPoints: "never",
+            pointSize: 5,
+            gradientMode: "opacity"
+        },
+        axis: {
+            showGrid: true,
+            scale: "linear",
+            scaleBase: 2
+        },
+        std: {
+            ...initUnits,
+            decimals: 1
+        }
+    },
 }
 
 

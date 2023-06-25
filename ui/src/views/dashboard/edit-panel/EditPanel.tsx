@@ -207,6 +207,7 @@ const loadablePanels = {
     [PanelType.Echarts]: loadable(() => import('../plugins/panel/echarts/Editor')),
     [PanelType.Pie]: loadable(() => import('../plugins/panel/pie/Editor')),
     [PanelType.Gauge]: loadable(() => import('../plugins/panel/gauge/Editor')),
+    [PanelType.Stat]: loadable(() => import('../plugins/panel/stat/Editor')),
 }
 
 

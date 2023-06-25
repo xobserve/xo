@@ -1,7 +1,8 @@
-import { isEmpty, round } from "lodash";
+import { isEmpty, last, round } from "lodash";
 import { Panel, PanelType } from "types/dashboard";
 import { FieldType, GraphPluginData } from "types/plugins/graph";
-import {  TablePluginData, TableSeries } from "types/plugins/table";
+import { StatPluginData } from "types/plugins/stat";
+import { TablePluginData, TableSeries } from "types/plugins/table";
 
 export const transformPrometheusData = (rawData: any, panel: Panel) => {
     if (isEmpty(rawData)) {
@@ -13,7 +14,7 @@ export const transformPrometheusData = (rawData: any, panel: Panel) => {
             const columns = [{
                 Header: "Time",
                 canFilter: true
-            },{
+            }, {
                 Header: "Value",
                 canFilter: true
             }]
@@ -29,17 +30,20 @@ export const transformPrometheusData = (rawData: any, panel: Panel) => {
                 for (const v of m.values) {
                     series.rows.push({
                         Time: v[0],
-                        Value: round(parseFloat(v[1]),5)
+                        Value: round(parseFloat(v[1]), 5)
                     })
                 }
 
                 data.push(series)
             }
-            
+
             return data
-        
+
         case PanelType.Graph:
-            return  prometheusDataToGraph(rawData)
+            return prometheusDataToGraph(rawData)
+
+        case PanelType.Stat:
+            return prometheusDataToStat(rawData)
     }
 
     return null
@@ -47,7 +51,7 @@ export const transformPrometheusData = (rawData: any, panel: Panel) => {
 
 
 
-export const prometheusDataToGraph= (data: any): GraphPluginData => {
+export const prometheusDataToGraph = (data: any): GraphPluginData => {
     let res: GraphPluginData = []
     if (data.resultType === "matrix") {
         for (const m of data.result) {
@@ -60,7 +64,7 @@ export const prometheusDataToGraph= (data: any): GraphPluginData => {
                 timeValues.push(v[0])
                 valueValues.push(parseFloat(v[1]))
             }
-            
+
             res.push({
                 name: metric,
                 length: length,
@@ -82,4 +86,17 @@ export const prometheusDataToGraph= (data: any): GraphPluginData => {
         return res
     }
     return []
+}
+
+export const prometheusDataToStat = (data: any): StatPluginData => {
+    const series: GraphPluginData = prometheusDataToGraph(data)
+    const d: StatPluginData = {
+        series: series,
+        value: 0
+    }
+    if (series.length > 0) {
+        d.value = last(series[0].fields[1].values)
+    }
+
+    return d
 }
