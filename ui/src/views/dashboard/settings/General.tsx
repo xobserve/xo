@@ -42,10 +42,10 @@ const GeneralSettings = ({ dashboard, onChange }: Props) => {
     return (<>
         <Form>
             <FormItem title="Title">
-                <Input size="sm" value={title} onChange={e => setTitle(e.currentTarget.value)} onBlur={() => onChange(draft => {draft.title = title}) } mt="1" />
+                <Input size="sm" value={title} onChange={e => setTitle(e.currentTarget.value)} onBlur={() => onChange((draft:Dashboard)  => {draft.title = title}) } mt="1" />
             </FormItem>
             <FormItem title="Description">
-                <Input size="sm" value={desc} onChange={e => setDesc(e.currentTarget.value)} onBlur={() =>  onChange(draft => {draft.data.description = desc}) } mt="1" />
+                <Input size="sm" value={desc} onChange={e => setDesc(e.currentTarget.value)} onBlur={() =>  onChange((draft:Dashboard)  => {draft.data.description = desc}) } mt="1" />
             </FormItem>
             {/* <Box>
                 <Text textStyle="title">Editable</Text>
@@ -53,11 +53,11 @@ const GeneralSettings = ({ dashboard, onChange }: Props) => {
                 <Switch isChecked={dashboard.data.editable} onChange={e => { dashboard.data.editable = e.currentTarget.checked; onChange() }} mt="1" />
             </Box> */}
             <FormItem title="Shared tooltip" desc="Show tooltips at the same position across all panels">
-                <Switch isChecked={dashboard.data.sharedTooltip} onChange={e =>  onChange(draft => {draft.data.sharedTooltip =  e.currentTarget.checked}) } mt="1" />
+                <Switch isChecked={dashboard.data.sharedTooltip} onChange={e =>  onChange((draft:Dashboard)  => {draft.data.sharedTooltip =  e.currentTarget.checked}) } mt="1" />
             </FormItem>
 
             <FormItem title="Hide global variables">
-                <Input size="sm" value={hidingVars} onChange={e => setHidingVars(e.currentTarget.value)} onBlur={() => onChange(draft => {draft.data.hidingVars = hidingVars})} mt="1" placeholder="enter global variables names, separated with ',' . e.g: app,env" />
+                <Input size="sm" value={hidingVars} onChange={e => setHidingVars(e.currentTarget.value)} onBlur={() => onChange((draft:Dashboard)  => {draft.data.hidingVars = hidingVars})} mt="1" placeholder="enter global variables names, separated with ',' . e.g: app,env" />
             </FormItem>
             <FormItem title="Tags" desc="Tag a dashboard and group it into a same collection for searching">
                 <HStack>
@@ -65,7 +65,7 @@ const GeneralSettings = ({ dashboard, onChange }: Props) => {
                         dashboard.data.tags?.map(t => <Tag>
                             <TagLabel>{t}</TagLabel>
                             <TagCloseButton onClick={() => {
-                                onChange(draft => {draft.data.tags.splice(draft.data.tags.indexOf(t), 1)})
+                                onChange((draft:Dashboard) => {draft.data.tags.splice(draft.data.tags.indexOf(t), 1)})
                             }} />
                         </Tag>)
                     }
@@ -80,12 +80,16 @@ const GeneralSettings = ({ dashboard, onChange }: Props) => {
             <FormItem title="Panels layout" desc="Auto place panels in horizontal or vertical direction, when set to random, you can place panels anywhere">
                 <Select value={dashboard.data.layout} onChange={e => {
                     const v = e.currentTarget.value 
-                    onChange(draft => {draft.data.layout = v})
+                    onChange((draft:Dashboard) => {draft.data.layout = v as DashboardLayout})
                 }}>
                     {
                         Object.keys(DashboardLayout).map(k => <option value={[DashboardLayout[k]]}>{k}</option>)
                     }
                 </Select>
+            </FormItem>
+
+            <FormItem title="Allow panels overlap" desc="panels can be placed overlap others">
+                <Switch isChecked={dashboard.data.allowPanelsOverlap} onChange={e =>  onChange((draft:Dashboard) => {draft.data.allowPanelsOverlap =  e.currentTarget.checked}) } mt="1" />
             </FormItem>
         </Form>
     </>)

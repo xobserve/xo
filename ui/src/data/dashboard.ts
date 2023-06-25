@@ -27,7 +27,8 @@ export const initDashboard:Dashboard = {
             //     reverse: false
             // },
         },
-        layout: DashboardLayout.Vertical
+        layout: DashboardLayout.Vertical,
+        allowPanelsOverlap: false,
     },
     ownedBy: globalTeamId,
 }

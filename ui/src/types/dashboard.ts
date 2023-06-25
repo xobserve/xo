@@ -29,6 +29,7 @@ export interface DashboardData {
         // decoration: DecorationStyles
     }
     layout: DashboardLayout
+    allowPanelsOverlap: boolean
 }
 
 export interface Panel {
