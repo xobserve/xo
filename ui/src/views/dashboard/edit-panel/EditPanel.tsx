@@ -53,6 +53,11 @@ const EditPanel = ({ dashboard, onChange }: EditPanelProps) => {
     }, [edit])
 
     useEffect(() => {
+        if (!tempPanel) {
+            // only discarding the current panel can get here
+            return 
+        }
+
         if (!rawPanel) {
             setRawPanel(tempPanel)
             return
