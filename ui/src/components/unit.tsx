@@ -2,7 +2,7 @@ import { Button, calc, HStack, Input, NumberInput, NumberInputField, NumberInput
 import { cloneDeep, isEmpty, round } from "lodash"
 import { useEffect, useState } from "react"
 import { FaArrowUp, FaMinus, FaPlus } from "react-icons/fa"
-import { UnitsType,Unit } from "types/panel/plugins"
+import { UnitsType, Unit } from "types/panel/plugins"
 
 interface Props {
     type: UnitsType
@@ -12,7 +12,7 @@ interface Props {
 
 
 
-export const UnitPicker = ({type, value, onChange }: Props) => {
+export const UnitPicker = ({ type, value, onChange }: Props) => {
     const [unitType, setUnitTYpe] = useState(type)
     const [units, setUnits] = useState(value)
     const toast = useToast()
@@ -26,13 +26,13 @@ export const UnitPicker = ({type, value, onChange }: Props) => {
     }
 
     const onRemoveUnit = (i) => {
-        units.splice(i,1)
+        units.splice(i, 1)
         setUnits(cloneDeep(units))
     }
 
     const onLiftUnit = (i) => {
-        [units[i-1],units[i]] = [units[i],units[i-1]]
-         
+        [units[i - 1], units[i]] = [units[i], units[i - 1]]
+
         setUnits(cloneDeep(units))
     }
 
@@ -42,14 +42,14 @@ export const UnitPicker = ({type, value, onChange }: Props) => {
             case "none":
                 setUnits([])
                 break;
-            case "percent": 
+            case "percent":
                 setUnits([{
                     operator: "x",
                     rhs: 100,
                     unit: "%"
                 }])
                 break
-            case "percent%": 
+            case "percent%":
                 setUnits([{
                     operator: "x",
                     rhs: 1,
@@ -67,42 +67,42 @@ export const UnitPicker = ({type, value, onChange }: Props) => {
                         operator: "/",
                         rhs: 1000,
                         unit: "s"
-                    },{
+                    }, {
                         operator: "/",
-                        rhs: 60,
+                        rhs: 60 * 1000,
                         unit: "m"
-                    },{
+                    }, {
                         operator: "/",
-                        rhs: 60,
+                        rhs: 60 * 60 * 1000,
                         unit: "h"
-                    },{
+                    }, {
                         operator: "/",
-                        rhs: 24,
+                        rhs: 24 * 60 * 60 * 1000,
                         unit: "d"
                     }
                 ])
                 break
             case "bytes":
                 setUnits([
-                {
-                    operator: "/",
-                    rhs: 1,
-                    unit: "B"
-                },
-                {
-                    operator: "/",
-                    rhs: 1024,
-                    unit: "KB"
-                },{
-                    operator: "/",
-                    rhs: 1024,
-                    unit: "MB"
-                },{
-                    operator: "/",
-                    rhs: 1024,
-                    unit: "GB"
-                }])
-            
+                    {
+                        operator: "/",
+                        rhs: 1,
+                        unit: "B"
+                    },
+                    {
+                        operator: "/",
+                        rhs: 1024,
+                        unit: "KB"
+                    }, {
+                        operator: "/",
+                        rhs: 1024 * 1024,
+                        unit: "MB"
+                    }, {
+                        operator: "/",
+                        rhs: 1024 * 1024 * 1024,
+                        unit: "GB"
+                    }])
+
             case "custom":
                 break
             default:
@@ -122,7 +122,7 @@ export const UnitPicker = ({type, value, onChange }: Props) => {
         //     });
         //     return 
         // }
-        onChange(units,unitType)
+        onChange(units, unitType)
     }
     return (
         <>
@@ -135,10 +135,10 @@ export const UnitPicker = ({type, value, onChange }: Props) => {
                     <option value="bytes">Bytes: b/KB/MB/GB</option>
                     <option value="custom">Custom units</option>
                 </Select>
-                {unitType == "custom" && <FaPlus cursor="pointer" onClick={onAddUnit}  opacity="0.8" fontSize="sm"/>}
+                {unitType == "custom" && <FaPlus cursor="pointer" onClick={onAddUnit} opacity="0.8" fontSize="sm" />}
             </HStack>
             <VStack alignItems="left" mt="2">
-                {units?.map((unit,i) => {
+                {units?.map((unit, i) => {
                     return <HStack>
 
                         <Button size="sm" onClick={() => {
@@ -146,7 +146,7 @@ export const UnitPicker = ({type, value, onChange }: Props) => {
                             setUnits(cloneDeep(units))
                         }}>{unit.operator}</Button>
 
-                        <NumberInput size="sm"  value={unit.rhs} onChange={(_, v) => {
+                        <NumberInput size="sm" value={unit.rhs} onChange={(_, v) => {
                             unit.rhs = v
                             setUnits(cloneDeep(units))
                         }}>
@@ -157,8 +157,8 @@ export const UnitPicker = ({type, value, onChange }: Props) => {
                             unit.unit = e.currentTarget.value
                             setUnits(cloneDeep(units))
                         }} />
-                        <FaMinus opacity="0.8" cursor="pointer" onClick={() => onRemoveUnit(i)} fontSize="0.9rem"/>
-                        {i != 0 && <FaArrowUp  opacity="0.8" cursor="pointer" onClick={() => onLiftUnit(i)} fontSize="0.9rem"/>}
+                        <FaMinus opacity="0.8" cursor="pointer" onClick={() => onRemoveUnit(i)} fontSize="0.9rem" />
+                        {i != 0 && <FaArrowUp opacity="0.8" cursor="pointer" onClick={() => onLiftUnit(i)} fontSize="0.9rem" />}
                     </HStack>
 
                 })}
@@ -167,35 +167,52 @@ export const UnitPicker = ({type, value, onChange }: Props) => {
         </>)
 }
 
-export const formatUnit = (v: number, units: Unit[],decimal: number) => {
+
+export const formatUnit = (v: number, units: Unit[], decimal: number) => {
     if (isEmpty(units)) {
         return v
     }
 
-    let initValue = v
-    for (var i = 0; i < units.length;i++) {
+    let index = 0;
+    let min;
+    // we need to find the min calc value that is greater than 1
+    for (var i = 0; i < units.length; i++) {
         const unit = units[i]
-        let res = calcValue(initValue, unit)
-
-
-        if (res < 1 && i != 0) {
-            return initValue.toFixed(decimal) + units[i-1].unit
-        }   
-        
-        if (res < 1 && i == 0) {
-            return res.toFixed(decimal) + unit.unit
+        const res = calcValue(v, unit)
+        if (res >= 1) {
+            if (!min) {
+                min = res
+                index = i
+                continue
+            }
+            if (res < min) {
+                min = res
+                index = i
+                continue
+            }
         }
-          
-        if (i == units.length - 1) {
-            return res.toFixed(decimal) + unit.unit
-        }
-        
-        initValue = res
     }
-    
+
+    if (min < 1 || !min) {
+        // no calc value is greater than 1, we need to find the max one
+        let max = 0;
+        for (var i = 0; i < units.length; i++) {
+            const unit = units[i]
+            const res = calcValue(v, unit)
+            if (res > max) {
+                max = res
+                index = i
+            }
+        }
+    }
+
+
+    const unit = units[index]
+    const res = calcValue(v, unit)
+    return res.toFixed(decimal) + unit.unit
 }
 
-const calcValue = (v,unit:Unit)  => {
+const calcValue = (v, unit: Unit) => {
     let res
     switch (unit.operator) {
         case "x":
