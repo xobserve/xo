@@ -51,7 +51,7 @@ const defaultConfig = withTM({
     if (!options.isServer) {
       config.plugins.push(
         new MonacoWebpackPlugin({
-          languages: ["javascript", "typescript"],
+          languages: ["javascript", "typescript","json"],
           filename: "static/[name].worker.js",
         })
       );

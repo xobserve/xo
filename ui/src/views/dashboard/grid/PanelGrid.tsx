@@ -30,6 +30,7 @@ import EchartsPanel from "../plugins/panel/echarts/Echarts";
 import PiePanel from "../plugins/panel/pie/Pie";
 import GaugePanel from "../plugins/panel/gauge/Gauge";
 import loadable from '@loadable/component'
+import CodeEditor from "components/CodeEditor/CodeEditor";
 
 
 interface PanelGridProps {
@@ -48,7 +49,7 @@ export const PanelGrid = memo((props: PanelGridProps) => {
     const [forceRenderCount, setForceRenderCount] = useState(0)
 
     const [tr, setTr] = useState<TimeRange>(getInitTimeRange())
-    
+
     useBus(
         (e) => { return e.type == TimeChangedEvent },
         (e) => {
@@ -64,7 +65,7 @@ export const PanelGrid = memo((props: PanelGridProps) => {
             setVariables([...variables])
         }
     )
-        
+
     // provide a way to force rebuild a panel
     if (!props.inEditMode) {
         useDedupEvent(PanelForceRebuildEvent + props.panel.id, () => {
@@ -78,7 +79,7 @@ export const PanelGrid = memo((props: PanelGridProps) => {
         })
     }
 
-    
+
     return (
         <PanelBorder width={props.width} height={props.height} border={props.panel.styles?.border}>
             <PanelComponent key={props.panel.id + forceRenderCount} {...props} timeRange={tr} variables={variables1} />
@@ -99,7 +100,7 @@ export const PanelComponent = ({ dashboard, panel, onRemovePanel, width, height,
     const toast = useToast()
     const [panelData, setPanelData] = useState<any[]>(null)
     const [queryError, setQueryError] = useState()
-    
+
     useEffect(() => {
         return () => {
             // delete data query cache when panel is unmounted
@@ -109,7 +110,7 @@ export const PanelComponent = ({ dashboard, panel, onRemovePanel, width, height,
             }
         }
     }, [])
-    
+
     useEffect(() => {
         queryData(panel, dashboard.id + panel.id)
     }, [panel.datasource, timeRange, variables])
@@ -291,7 +292,7 @@ const DebugPanel = ({ panel, isOpen, onClose, data }) => {
 
     return (<Modal isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
-        <ModalContent minWidth="600px">
+        <ModalContent minWidth="800px">
             <ModalCloseButton />
             <ModalBody>
                 <Tabs onChange={(index) => setTabIndex(index)} >
@@ -300,15 +301,11 @@ const DebugPanel = ({ panel, isOpen, onClose, data }) => {
                         <Tab>Panel Data</Tab>
                     </TabList>
                     <TabPanels p="1">
-                        <TabPanel>
-                            <Textarea minH="500px">
-                                {JSON.stringify(panel, null, 2)}
-                            </Textarea>
+                        <TabPanel h="600px">
+                            <CodeEditor value={JSON.stringify(panel, null, 2)} language="json" readonly />
                         </TabPanel>
-                        <TabPanel>
-                            <Textarea minH="500px">
-                                {JSON.stringify(data, null, 2)}
-                            </Textarea>
+                        <TabPanel h="600px">
+                            <CodeEditor value={JSON.stringify(data, null, 2)} language="json" readonly />
                         </TabPanel>
                     </TabPanels>
                 </Tabs>
