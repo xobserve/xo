@@ -12,7 +12,6 @@ interface Props extends PanelProps {
 }
 
 const PiePanel = ({ panel, data, height, width }: Props) => {
-    const toast = useToast()
     const [chart, setChart] = useState(null)
     const { colorMode } = useColorMode()
     

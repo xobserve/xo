@@ -1,4 +1,4 @@
-import useGranaTheme from 'hooks/useExtraTheme';
+import { useTheme } from '@chakra-ui/react';
 import React, { PropsWithChildren, useLayoutEffect, useRef } from 'react';
 import ReactDOM from 'react-dom';
 
@@ -11,7 +11,7 @@ interface Props {
 
 export function Portal(props: PropsWithChildren<Props>) {
   const { children, className, root: portalRoot = document.body, forwardedRef } = props;
-  const theme = useGranaTheme();
+  const theme = useTheme()
   const node = useRef<HTMLDivElement | null>(null);
   if (!node.current) {
     node.current = document.createElement('div');
@@ -19,7 +19,7 @@ export function Portal(props: PropsWithChildren<Props>) {
       node.current.className = className;
     }
     node.current.style.position = 'absolute';
-    node.current.style.zIndex = `${theme.zIndex.portal}`;
+    node.current.style.zIndex = theme.zIndices.popover.toString();
   }
 
   useLayoutEffect(() => {

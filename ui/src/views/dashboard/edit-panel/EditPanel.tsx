@@ -2,10 +2,7 @@ import { Box, Button, Center, Flex, HStack, Image, Input, Modal, ModalBody, Moda
 import { ColorModeSwitcher } from "components/ColorModeSwitcher"
 import { useEffect, useState } from "react"
 import { Dashboard, Panel, PanelType } from "types/dashboard"
-import GraphPanelEditor from "../plugins/panel/graph/Editor"
-import TextPanelEditor from "../plugins/panel/text/Editor"
 import EditPanelQuery from "./Query"
-import TablePanelEditor from "../plugins/panel/table/Editor";
 import { useImmer } from "use-immer";
 import { removeParamFromUrl } from "utils/url";
 import { useSearchParam } from "react-use";
@@ -19,9 +16,6 @@ import { dispatch } from "use-bus"
 import { PanelForceRebuildEvent } from "src/data/bus-events"
 import AutoSizer from "react-virtualized-auto-sizer";
 import { PanelGrid } from "../grid/PanelGrid"
-import EchartsPanelEditor from "../plugins/panel/echarts/Editor"
-import PiePanelEditor from "../plugins/panel/pie/Editor"
-import GaugePanelEditor from "../plugins/panel/gauge/Editor"
 import loadable from '@loadable/component'
 
 interface EditPanelProps {

@@ -85,10 +85,10 @@ export const TooltipContainer: React.FC<TooltipContainerProps> = ({
   }, [width, height, positionX, offsetX, positionY, offsetY, tooltipMeasurement]);
 
 
-
   return (
     <div
       ref={tooltipRef}
+      className='tooltip-container'
       style={{
         position: 'fixed',
         left: 0,
@@ -97,9 +97,9 @@ export const TooltipContainer: React.FC<TooltipContainerProps> = ({
         top: 0,
         transform: `translate(${placement.x}px, ${placement.y}px)`,
         transition: 'transform ease-out 0.1s',
-        zIndex: 1001,
+        // zIndex: "1500",
         // maxWidth: '800px'
-        overflow: "hidden"
+        overflow: "auto"
       }}
       {...otherProps}
     >
