@@ -169,7 +169,11 @@ export const UnitPicker = ({ type, value, onChange }: Props) => {
 
 export const formatUnit = (v: number, units: Unit[], decimal: number) => {
     if (isEmpty(units)) {
-        return v
+        return  v.toFixed(decimal)
+    }
+
+    if (v == 0) {
+        return v 
     }
 
     let index = 0;

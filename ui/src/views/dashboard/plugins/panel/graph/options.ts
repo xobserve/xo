@@ -21,6 +21,7 @@ export const parseOptions = (config: PanelProps,rawData: GraphPluginData, colorM
     const matchSyncKeys = (own, ext) => own == ext;
     
     const axisSpace = ((self, axisIdx, scaleMin, scaleMax, plotDim) => {
+        console.log("here333331:", calculateSpace(self, axisIdx, scaleMin, scaleMax, plotDim))
         return calculateSpace(self, axisIdx, scaleMin, scaleMax, plotDim);
     })
 
@@ -141,7 +142,7 @@ export const parseOptions = (config: PanelProps,rawData: GraphPluginData, colorM
                 size: ((self, values, axisIdx) => {
                     return calculateAxisSize(self, values, axisIdx);
                 }),
-                values: (u, vals) => vals.map(v => { return formatUnit(v, config.panel.plugins.graph.std?.units,config.panel.plugins.graph.std?.decimals ?? 2) ?? round(v, config.panel.plugins.graph.std?.decimals ?? 2) })
+                values: (u, vals) => vals.map(v => { return formatUnit(v, config.panel.plugins.graph.std.units,config.panel.plugins.graph.std.decimals) ?? round(v, config.panel.plugins.graph.std.decimals) })
             },
         ]
     }
@@ -260,7 +261,7 @@ function calculateAxisSize(self: uPlot, values: string[], axisIdx: number) {
         // Not sure why this += and not normal assignment
         axisSize += axis!.gap! + axis!.labelGap! + textWidthWithLimit;
     }
-
+    
     return Math.ceil(axisSize + 15);
 }
 
@@ -269,12 +270,13 @@ function calculateSpace(self: uPlot, axisIdx: number, scaleMin: number, scaleMax
     const axis = self.axes[axisIdx];
     const scale = self.scales[axis.scale!];
 
+    const defaultSpacing = 40;
     // for axis left & right
     if (axis.side !== 2 || !scale) {
-        return 30;
+        return defaultSpacing;
     }
 
-    const defaultSpacing = 40;
+
 
     if (scale.time) {
         const maxTicks = plotDim / defaultSpacing;
@@ -283,6 +285,6 @@ function calculateSpace(self: uPlot, axisIdx: number, scaleMin: number, scaleMax
         const width = measureText(sample[0], UPLOT_AXIS_FONT_SIZE).width + 18;
         return width;
     }
-
+    
     return defaultSpacing;
 }
