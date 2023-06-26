@@ -32,9 +32,9 @@ export const initPanelPlugins: PanelPlugins = {
             scale: "linear",
             scaleBase: 2
         },
-        std: {
+        value: {
             ...initUnits,
-            decimals: 1
+            decimal: 1
         }
     },
 
@@ -150,7 +150,7 @@ function registerEvents(options, chart) {
             show: true,
             min: 0,
             max: 100,
-            decimals: 1,
+            decimal: 1,
             fontSize: 15,
             left: '0%',
             top: '75%',
@@ -181,8 +181,10 @@ function registerEvents(options, chart) {
     [PanelType.Stat]: {
         showTooltip: true,
         showLegend: false,
-        ...initUnits,
-        decimal: 1,
+        value: {
+            ...initUnits,
+            decimal: 1,
+        },
         styles: {
             style: "lines", 
             fillOpacity: 80,

@@ -1,6 +1,6 @@
-import { GraphSeries } from "./graph"
+import { SeriesData } from "./graph"
 
 export interface StatPluginData {
-    series: GraphSeries[]
+    series: SeriesData[]
     value: number
 }

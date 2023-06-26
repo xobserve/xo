@@ -100,19 +100,19 @@ const GraphPanelEditor = ({ panel, onChange }: PanelEditorProps) => {
             </PanelEditItem>
         </PanelAccordion>
 
-        <PanelAccordion title="Standard options">
+        <PanelAccordion title="Value">
             <PanelEditItem title="Unit">
-                <UnitPicker type={panel.plugins.graph.std.unitsType} value={panel.plugins.graph.std.units} onChange={
+                <UnitPicker type={panel.plugins.graph.value.unitsType} value={panel.plugins.graph.value.units} onChange={
                     (units, type) => onChange((panel: Panel) => {
-                        panel.plugins.graph.std.units = units
-                        panel.plugins.graph.std.unitsType = type
+                        panel.plugins.graph.value.units = units
+                        panel.plugins.graph.value.unitsType = type
                     })
 
                     // onPanelChange(units, type)
                 } />
             </PanelEditItem>
-            <PanelEditItem title="Decimals">
-                <EditorNumberItem value={panel.plugins.graph.std.decimals ?? 2} min={0} max={5} step={1} onChange={v => onChange((panel: Panel) => { panel.plugins.graph.std.decimals = v })} />
+            <PanelEditItem title="Decimal">
+                <EditorNumberItem value={panel.plugins.graph.value.decimal} min={0} max={5} step={1} onChange={v => onChange((panel: Panel) => { panel.plugins.graph.value.decimal = v })} />
             </PanelEditItem>
         </PanelAccordion>
     </>

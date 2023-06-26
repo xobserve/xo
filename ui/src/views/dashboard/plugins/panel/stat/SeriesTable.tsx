@@ -35,9 +35,9 @@ const SeriesTable = ({ props, data }: Props) => {
     }
 
     for (const r of res) {
-        r.value = props.panel.plugins.stat.unitsType != "none"
-            ? formatUnit(r.value, props.panel.plugins.stat.units, props.panel.plugins.stat.decimal)
-            : round(r.value, props.panel.plugins.stat.decimal)
+        r.value = props.panel.plugins.stat.value.unitsType != "none"
+            ? formatUnit(r.value, props.panel.plugins.stat.value.units, props.panel.plugins.stat.value.decimal)
+            : round(r.value, props.panel.plugins.stat.value.decimal)
     }
 
     const values = res

@@ -66,7 +66,7 @@ const StatPanel = memo((props: StatPanelProps) => {
                         <Center height="100%">
                             <Flex width="100%" px={4} justifyContent={props.panel.plugins.stat.showLegend ? "space-between" : "center"} fontSize="50" color={props.panel.plugins.stat.styles.color} fontWeight="bold">
                                 {props.panel.plugins.stat.showLegend && <ChakraTooltip label={legend}><Text maxWidth="50%" noOfLines={1}>{legend}</Text></ChakraTooltip>}
-                                <Text >{formatUnit(value, props.panel.plugins.stat.units, props.panel.plugins.stat.decimal)}</Text>
+                                <Text >{formatUnit(value, props.panel.plugins.stat.value.units, props.panel.plugins.stat.value.decimal)}</Text>
                             </Flex>
                         </Center>}
                 </Box>}

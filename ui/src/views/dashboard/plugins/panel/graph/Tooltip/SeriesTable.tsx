@@ -6,13 +6,13 @@ import { last, reverse, round, sortBy } from "lodash"
 import { useMemo, useState } from "react"
 import { ActiveSeriesEvent } from "src/data/bus-events"
 import { PanelProps } from "types/dashboard"
-import { GraphPluginData, GraphSeries } from "types/plugins/graph"
+import { GraphPluginData, SeriesData } from "types/plugins/graph"
 import useBus from "use-bus"
 
 interface Props {
     props: PanelProps
     data: GraphPluginData
-    nearestSeries?: GraphSeries
+    nearestSeries?: SeriesData
     filterIdx?: number
     filterType: seriesFilterType // controls which value should be seen in series table
     placement?: "bottom" | "right"
@@ -57,9 +57,9 @@ const SeriesTable = ({ props, data, nearestSeries, filterIdx, filterType, onSele
     let res1 = reverse(sortBy(res, 'value'))
 
     for (const r of res1) {
-        r.value = props.panel.plugins.graph.std.unitsType != "none"
-            ? formatUnit(r.value, props.panel.plugins.graph.std.units, props.panel.plugins.graph.std.decimals ?? 2)
-            : round(r.value, props.panel.plugins.graph.std.decimals)
+        r.value = props.panel.plugins.graph.value.unitsType != "none"
+            ? formatUnit(r.value, props.panel.plugins.graph.value.units, props.panel.plugins.graph.value.decimal ?? 2)
+            : round(r.value, props.panel.plugins.graph.value.decimal)
     }
 
     const values = res1

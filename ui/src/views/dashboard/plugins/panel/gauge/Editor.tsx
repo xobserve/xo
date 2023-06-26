@@ -46,8 +46,8 @@ const GaugePanelEditor = (props: PanelEditorProps) => {
                         panel.plugins.gauge.value.unit = v
                     })} />
                 </PanelEditItem>
-                <PanelEditItem title="Decimals">
-                    <EditorNumberItem value={panel.plugins.gauge.value.decimals} min={0} max={5} step={1} onChange={v => onChange((panel: Panel) => { panel.plugins.gauge.value.decimals = v })} />
+                <PanelEditItem title="Decimal">
+                    <EditorNumberItem value={panel.plugins.gauge.value.decimal} min={0} max={5} step={1} onChange={v => onChange((panel: Panel) => { panel.plugins.gauge.value.decimal = v })} />
                 </PanelEditItem>
 
                 <PanelEditItem title="Left" desc="moving right, initial is center">

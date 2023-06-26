@@ -142,7 +142,7 @@ export const parseOptions = (config: PanelProps,rawData: GraphPluginData, colorM
                 size: ((self, values, axisIdx) => {
                     return calculateAxisSize(self, values, axisIdx);
                 }),
-                values: (u, vals) => vals.map(v => { return formatUnit(v, config.panel.plugins.graph.std.units,config.panel.plugins.graph.std.decimals) ?? round(v, config.panel.plugins.graph.std.decimals) })
+                values: (u, vals) => vals.map(v => { return formatUnit(v, config.panel.plugins.graph.value.units,config.panel.plugins.graph.value.decimal) ?? round(v, config.panel.plugins.graph.value.decimal) })
             },
         ]
     }

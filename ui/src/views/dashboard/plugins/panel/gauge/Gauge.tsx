@@ -37,7 +37,7 @@ const GaugePanel = ({ panel, data, height, width }: Props) => {
           detail: {
             show: panel.plugins.gauge.value.show,
             valueAnimation: true,
-            formatter: value => `${round(value, panel.plugins.gauge.value.decimals)}${panel.plugins.gauge.value.unit}`,
+            formatter: value => `${round(value, panel.plugins.gauge.value.decimal)}${panel.plugins.gauge.value.unit}`,
             // borderColor: 'inherit',
             // borderWidth: 1,
             color: 'inherit',
@@ -95,7 +95,7 @@ const GaugePanel = ({ panel, data, height, width }: Props) => {
             distance: 14,
             fontSize: panel.plugins.gauge.scale.fontSize,
             show: panel.plugins.gauge.scale.enable && panel.plugins.gauge.scale.splitNumber > 0,
-            formatter: value => `${round(value, panel.plugins.gauge.value.decimals)}${panel.plugins.gauge.value.unit}`,
+            formatter: value => `${round(value, panel.plugins.gauge.value.decimal)}${panel.plugins.gauge.value.unit}`,
           },
           splitNumber: panel.plugins.gauge.scale.splitNumber,
           /*------------*/

@@ -24,21 +24,22 @@ const GraphPanelEditor = ({ panel, onChange }: PanelEditorProps) => {
                     panel.plugins.stat.showLegend = e.currentTarget.checked
                 })} />
             </PanelEditItem>
+        </PanelAccordion>
+        <PanelAccordion title="Value">
             <PanelEditItem title="Unit">
-                <UnitPicker type={panel.plugins.stat.unitsType} value={panel.plugins.stat.units} onChange={
+                <UnitPicker type={panel.plugins.stat.value.unitsType} value={panel.plugins.stat.value.units} onChange={
                     (units, type) => onChange((panel: Panel) => {
-                        panel.plugins.stat.units = units
-                        panel.plugins.stat.unitsType = type
+                        panel.plugins.stat.value.units = units
+                        panel.plugins.stat.value.unitsType = type
                     })
 
                     // onPanelChange(units, type)
                 } />
             </PanelEditItem>
-            <PanelEditItem title="Decimals">
-                <EditorNumberItem value={panel.plugins.stat.decimal} min={0} max={5} step={1} onChange={v => onChange((panel: Panel) => { panel.plugins.stat.decimal = v })} />
+            <PanelEditItem title="Decimal">
+                <EditorNumberItem value={panel.plugins.stat.value.decimal} min={0} max={5} step={1} onChange={v => onChange((panel: Panel) => { panel.plugins.stat.value.decimal = v })} />
             </PanelEditItem>
         </PanelAccordion>
-
         <PanelAccordion title="Styles">
             <PanelEditItem title="Style">
                 <RadionButtons options={[{ label: "Lines", value: "lines" }, { label: "Bars", value: "bars" }]} value={panel.plugins.stat.styles.style} onChange={v => onChange((panel: Panel) => {

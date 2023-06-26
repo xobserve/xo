@@ -21,10 +21,9 @@ export interface DisableDatasource {
 }
 
 
-export interface StatSettings extends Units  {
+export interface StatSettings  {
     showTooltip: boolean
     showLegend: boolean
-    decimal: number
     styles: {
         style: "lines" | "bars" 
         fillOpacity: number
@@ -36,6 +35,7 @@ export interface StatSettings extends Units  {
         scale: "linear" | "log"
         scaleBase: 2 | 10
     }
+    value: ValueSetting
 }
 
 export interface PieSettings {
@@ -94,7 +94,7 @@ export interface GaugeValueSettings {
     fontSize: number
     left: string
     top: string
-    decimals: number
+    decimal: number
     unit: string
 }
 
@@ -182,7 +182,7 @@ export interface GraphSettings {
         scale?: "linear" | "log"
         scaleBase?: 2 | 10
     },
-    std: ValueSetting
+    value: ValueSetting
 }
 
 
@@ -205,7 +205,7 @@ export interface NodeGraphMenuItem {
 
 
 export interface ValueSetting extends Units {
-    decimals: number
+    decimal: number
 }
 
 export type UnitsType = 'none' | 'time' | 'bytes' | 'percent' | 'custom';
