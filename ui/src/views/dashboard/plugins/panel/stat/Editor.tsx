@@ -9,6 +9,7 @@ import { ColorPicker } from "components/color-picker"
 import { colors } from "utils/colors"
 import { dispatch } from "use-bus"
 import { EditPanelForceRebuildEvent, PanelForceRebuildEvent } from "src/data/bus-events"
+import ValueCalculation from "components/ValueCalculation"
 
 
 const GraphPanelEditor = ({ panel, onChange }: PanelEditorProps) => {
@@ -32,12 +33,16 @@ const GraphPanelEditor = ({ panel, onChange }: PanelEditorProps) => {
                         panel.plugins.stat.value.units = units
                         panel.plugins.stat.value.unitsType = type
                     })
-
-                    // onPanelChange(units, type)
                 } />
             </PanelEditItem>
             <PanelEditItem title="Decimal">
                 <EditorNumberItem value={panel.plugins.stat.value.decimal} min={0} max={5} step={1} onChange={v => onChange((panel: Panel) => { panel.plugins.stat.value.decimal = v })} />
+            </PanelEditItem>
+            <PanelEditItem title="Caculation" desc="calculate results from series data with this reducer function">
+                <ValueCalculation value={panel.plugins.stat.value.calc} onChange={v => {
+                    onChange((panel: Panel) => { panel.plugins.stat.value.calc = v })
+                    dispatch(EditPanelForceRebuildEvent + panel.id)
+                }}/>
             </PanelEditItem>
         </PanelAccordion>
         <PanelAccordion title="Styles">

@@ -19,7 +19,7 @@ export const run_testdata_query = async (panel: Panel, q: PanelQuery, range: Tim
             data = prometheusToSeriesData(graphData.data, q)
             break;
         case PanelType.Stat:
-            data = prometheusDataToStat(graphData.data,q)
+            data = prometheusDataToStat(graphData.data,q,panel.plugins.stat.value.calc)
             break;
         case PanelType.Table:
             data = prometheusToPanels(graphData.data, panel,q)

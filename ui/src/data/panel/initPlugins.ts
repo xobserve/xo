@@ -1,5 +1,6 @@
 import { PanelType } from "types/dashboard";
 import { PanelPlugins, PieLegendPlacement, Units, UnitsType } from "types/panel/plugins";
+import { ValueCalculationType } from "types/value";
 import { colors } from "utils/colors";
 
 export const onClickCommonEvent = "// setVariable: (varName:string, varValue:string) => void \nfunction onClick(item, router, setVariable) {\n\tconsole.log(item)\n}"
@@ -184,6 +185,7 @@ function registerEvents(options, chart) {
         value: {
             ...initUnits,
             decimal: 1,
+            calc: ValueCalculationType.Last
         },
         styles: {
             style: "lines", 

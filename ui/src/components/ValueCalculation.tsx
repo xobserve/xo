@@ -7,7 +7,10 @@ interface Props {
 }
 const ValueCalculation = ({value,onChange}:Props) => {
     return (<>
-        <Select value={value} onChange={onChange}>
+        <Select value={value} onChange={e => {
+            const v = e.currentTarget.value 
+            onChange(v)
+        }}>
             {
                 Object.keys(ValueCalculationType).map(k  => <option key={k} value={ValueCalculationType[k]}>{k}</option>)
             }

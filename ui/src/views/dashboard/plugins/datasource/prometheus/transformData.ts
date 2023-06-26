@@ -1,9 +1,10 @@
-import { isEmpty, last, round } from "lodash";
+import { first, isEmpty, last, round } from "lodash";
 import { variables } from "src/views/dashboard/Dashboard";
 import { Panel, PanelQuery, PanelType } from "types/dashboard";
 import { FieldType, GraphPluginData, SeriesData } from "types/plugins/graph";
 import { StatPluginData } from "types/plugins/stat";
 import { TablePluginData, TableSeries } from "types/plugins/table";
+import { ValueCalculationType } from "types/value";
 import { parseLegendFormat } from "utils/format";
 import { replaceWithVariables } from "utils/variable";
 
@@ -21,7 +22,7 @@ export const prometheusToPanels = (rawData: any, panel: Panel, query: PanelQuery
             return prometheusToSeriesData(rawData, query)
 
         case PanelType.Stat:
-            return prometheusDataToStat(rawData, query)
+            return prometheusDataToStat(rawData, query, panel.plugins.stat.value.calc)
     }
 
     return null
@@ -29,7 +30,7 @@ export const prometheusToPanels = (rawData: any, panel: Panel, query: PanelQuery
 
 export const prometheusToSeriesData = (data: any, query: PanelQuery): SeriesData[] => {
     const formats = parseLegendFormat(query.legend)
-    
+
     let res: GraphPluginData = []
     if (data.resultType === "matrix") {
         for (const m of data.result) {
@@ -89,44 +90,69 @@ export const prometheusToSeriesData = (data: any, query: PanelQuery): SeriesData
 
 
 
-export const prometheusDataToStat = (data: any, query: PanelQuery): StatPluginData => {
+export const prometheusDataToStat = (data: any, query: PanelQuery, calc: ValueCalculationType): StatPluginData => {
     const series: GraphPluginData = prometheusToSeriesData(data, query)
     const d: StatPluginData = {
         series: series,
         value: 0
     }
     if (series.length > 0) {
-        d.value = last(series[0].fields[1].values)
+        d.value = calcValueOnSeriesData(series[0], calc)
     }
 
     return d
 }
 
+export const calcValueOnSeriesData = (series: SeriesData, calc: ValueCalculationType) => {
+    const values = series.fields[1].values
+    if (!calc) {
+        return last(values)
+    }
 
-export const prometheusToTableData = (rawData: any, query: PanelQuery) => {
-    const columns = [{
-        Header: "Time",
-        canFilter: true
-    }, {
-        Header: "Value",
-        canFilter: true
-    }]
-    const data: TablePluginData = []
-
-    const d = rawData.result
-    for (const m of d) {
-        const series: TableSeries = {
-            columns: columns,
-            name: JSON.stringify(m.metric).replace(/:/g, '='),
-            rows: []
-        }
-        for (const v of m.values) {
-            series.rows.push({
-                Time: v[0],
-                Value: round(parseFloat(v[1]), 5)
-            })
-        }
-
-        data.push(series)
+    switch (calc) {
+        case ValueCalculationType.Average:
+            return values.reduce((a, b) => a + b, 0) / values.length
+        case ValueCalculationType.Min:
+            return Math.min(...values)
+        case ValueCalculationType.Max:
+            return Math.max(...values)
+        case ValueCalculationType.Sum:
+            return values.reduce((a, b) => a + b, 0)
+        case ValueCalculationType.Last:
+            return last(values)
+        case ValueCalculationType.First:
+            return first(values)
+        case ValueCalculationType.Count:
+            return values.length
+        default:
+            return last(values)
     }
 }
+
+    export const prometheusToTableData = (rawData: any, query: PanelQuery) => {
+        const columns = [{
+            Header: "Time",
+            canFilter: true
+        }, {
+            Header: "Value",
+            canFilter: true
+        }]
+        const data: TablePluginData = []
+
+        const d = rawData.result
+        for (const m of d) {
+            const series: TableSeries = {
+                columns: columns,
+                name: JSON.stringify(m.metric).replace(/:/g, '='),
+                rows: []
+            }
+            for (const v of m.values) {
+                series.rows.push({
+                    Time: v[0],
+                    Value: round(parseFloat(v[1]), 5)
+                })
+            }
+
+            data.push(series)
+        }
+    }

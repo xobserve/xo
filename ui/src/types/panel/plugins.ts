@@ -1,5 +1,6 @@
 import { offset } from "@chakra-ui/utils"
 import { PanelType } from "types/dashboard"
+import { ValueCalculationType } from "types/value"
 
 //@needs-update-when-add-new-panel
 export interface PanelPlugins {
@@ -206,6 +207,7 @@ export interface NodeGraphMenuItem {
 
 export interface ValueSetting extends Units {
     decimal: number
+    calc?: ValueCalculationType
 }
 
 export type UnitsType = 'none' | 'time' | 'bytes' | 'percent' | 'custom';

@@ -99,8 +99,17 @@ export const PanelComponent = ({ dashboard, panel, onRemovePanel, width, height,
     const toast = useToast()
     const [panelData, setPanelData] = useState<any[]>(null)
     const [queryError, setQueryError] = useState()
-
-    // useEffect(() => console.log("panel created:", panel.id), [])
+    
+    useEffect(() => {
+        return () => {
+            // delete data query cache when panel is unmounted
+            for (const q of panel.datasource.queries) {
+                const id = panel.datasource.type + dashboard.id + panel.id + q.id
+                delete prevQueries[id]
+            }
+        }
+    }, [])
+    
     useEffect(() => {
         queryData(panel, dashboard.id + panel.id)
     }, [panel.datasource, timeRange, variables])

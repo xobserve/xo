@@ -8,10 +8,11 @@ import { parseOptions } from './options';
 import { isEmpty } from "lodash";
 
 import Tooltip from "./Tooltip";
-import { Box, Center, Flex, Text, useColorMode,Tooltip as ChakraTooltip } from "@chakra-ui/react";
+import { Box, Center, Flex, Text, useColorMode, Tooltip as ChakraTooltip } from "@chakra-ui/react";
 import { GraphPluginData, SeriesData } from "types/plugins/graph";
 import { StatPluginData } from "types/plugins/stat";
 import { formatUnit } from "components/unit";
+import { ValueCalculationType } from "types/value";
 
 
 interface StatPanelProps extends PanelProps {
@@ -23,7 +24,7 @@ const StatPanel = memo((props: StatPanelProps) => {
         return (<Center height="100%">No data</Center>)
     }
 
-    const [data, value]:[SeriesData[],number] = useMemo(() => {
+    const [data, value]: [SeriesData[], number] = useMemo(() => {
         const res = []
         let value;
         if (props.data.length > 0) {
@@ -43,7 +44,7 @@ const StatPanel = memo((props: StatPanelProps) => {
         let o;
         let legend;
         // transform series name based on legend format 
-  
+
         if (data.length > 0) {
             legend = data[0].name
         }
@@ -66,7 +67,9 @@ const StatPanel = memo((props: StatPanelProps) => {
                         <Center height="100%">
                             <Flex width="100%" px={4} justifyContent={props.panel.plugins.stat.showLegend ? "space-between" : "center"} fontSize="50" color={props.panel.plugins.stat.styles.color} fontWeight="bold">
                                 {props.panel.plugins.stat.showLegend && <ChakraTooltip label={legend}><Text maxWidth="50%" noOfLines={1}>{legend}</Text></ChakraTooltip>}
-                                <Text >{formatUnit(value, props.panel.plugins.stat.value.units, props.panel.plugins.stat.value.decimal)}</Text>
+                                <Text >{props.panel.plugins.stat.value.calc == ValueCalculationType.Count ?
+                                    value
+                                    : formatUnit(value, props.panel.plugins.stat.value.units, props.panel.plugins.stat.value.decimal)}</Text>
                             </Flex>
                         </Center>}
                 </Box>}
