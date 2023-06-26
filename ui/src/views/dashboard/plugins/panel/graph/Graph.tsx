@@ -80,13 +80,14 @@ const GraphPanel = memo((props: GraphPanelProps) => {
                     activeExist = true
                 }
             })
-
-            if (!activeExist) {
-                activeSeries.current = null
-                dispatch({ type: ActiveSeriesEvent, id: props.panel.id, data: null })
-            }
-            o = parseOptions(props, data, colorMode, activeSeries.current)
         }
+
+        if (!activeExist) {
+            activeSeries.current = null
+            dispatch({ type: ActiveSeriesEvent, id: props.panel.id, data: null })
+        }
+        
+        o = parseOptions(props, data, colorMode, activeSeries.current)
 
         return [o, transformDataToUplot(data)]
     }, [props.panel, props.data, colorMode])

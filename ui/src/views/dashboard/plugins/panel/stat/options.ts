@@ -24,9 +24,9 @@ export const parseOptions = (config: PanelProps,rawData: GraphPluginData) => {
         series.push({
             show: true,
             label: d.name,
-            stroke: d.color,
+            stroke: config.panel.plugins.stat.styles.color,
             width: 1,
-            fill:  fill(d.color,0.9),
+            fill:  fill(config.panel.plugins.stat.styles.color,0.9),
             points: {
                 show: false,
             },

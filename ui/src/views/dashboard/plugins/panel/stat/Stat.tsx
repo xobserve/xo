@@ -69,17 +69,10 @@ const StatPanel = memo((props: StatPanelProps) => {
                     }
                 })
             }
-
-            // set series line color
-            data.map((frame, i) => {
-                frame.color = colors[i % colors.length]
-                vc = frame.color
-            })
-
-
-            o = parseOptions(props, data)
         }
 
+        o = parseOptions(props, data)
+        
         return [vc, o, transformDataToUplot(data)]
     }, [props.panel, props.data, colorMode])
 
