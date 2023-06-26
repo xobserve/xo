@@ -16,13 +16,13 @@ export const run_testdata_query = async (panel: Panel, q: PanelQuery, range: Tim
     switch (panel.type) {
         //@needs-update-when-add-new-panel
         case PanelType.Graph:
-            data = prometheusToSeriesData(graphData.data, q)
+            data = prometheusToSeriesData(graphData.data, q,range)
             break;
         case PanelType.Stat:
-            data = prometheusDataToStat(graphData.data,q,panel.plugins.stat.value.calc)
+            data = prometheusDataToStat(graphData.data,q,panel.plugins.stat.value.calc,range)
             break;
         case PanelType.Table:
-            data = prometheusToPanels(graphData.data, panel,q)
+            data = prometheusToPanels(graphData.data, panel,q,range)
             break;
         case PanelType.NodeGraph:
             data = nodeGraphData(10, 0.8)

@@ -176,6 +176,7 @@ export interface GraphSettings {
         showPoints: "auto" | "always" | "never"
         pointSize: number
         gradientMode: "none" | "opacity" | "hue"
+        connectNulls: boolean
     }
     axis?: {
         label?: string

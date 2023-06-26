@@ -1,4 +1,4 @@
-import { HStack, Select, Text } from "@chakra-ui/react"
+import { HStack, Select, Switch, Text } from "@chakra-ui/react"
 import PanelAccordion from "src/views/dashboard/edit-panel/Accordion"
 import PanelEditItem from "src/views/dashboard/edit-panel/PanelEditItem"
 import RadionButtons from "components/RadioButtons"
@@ -71,6 +71,12 @@ const GraphPanelEditor = ({ panel, onChange }: PanelEditorProps) => {
                     panel.plugins.graph.styles.pointSize = v
                 })} />
             </PanelEditItem>
+
+            <PanelEditItem title="Connect null values">
+                <Switch defaultChecked={panel.plugins.graph.styles.connectNulls} onChange={e => onChange((panel: Panel) => {
+                    panel.plugins.graph.styles.connectNulls = e.currentTarget.checked
+                })} />
+            </PanelEditItem>
         </PanelAccordion>
         <PanelAccordion title="Axis">
             <PanelEditItem title="Label">
@@ -86,18 +92,15 @@ const GraphPanelEditor = ({ panel, onChange }: PanelEditorProps) => {
                 })} />
             </PanelEditItem>
             <PanelEditItem title="Scale">
-                <HStack spacing="1">
                     <RadionButtons options={[{ label: "Linear", value: "linear" }, { label: "Log", value: "log" }]} value={panel.plugins.graph.axis.scale} onChange={v => onChange((panel: Panel) => {
                         panel.plugins.graph.axis.scale = v
                     })} />
-                    {panel.plugins.graph.axis.scale == "log" && <Select value={panel.plugins.graph.axis.scaleBase} onChange={e => onChange(panel =>
-                        panel.plugins.graph.axis.scaleBase = Number(e.currentTarget.value) as 2 | 10
-                    )} >
-                        <option value={2}>Base 2</option>
-                        <option value={10}>Base 10</option>
-                    </Select>}
-                </HStack>
             </PanelEditItem>
+            {panel.plugins.graph.axis.scale == "log" && <PanelEditItem title="Scale Base">
+                <RadionButtons options={[{ label: "Base 2", value: "2" }, { label: "Base 10", value: "10" }]} value={panel.plugins.graph.axis.scaleBase as any} onChange={v => onChange((panel: Panel) => {
+                    panel.plugins.graph.axis.scaleBase = v
+                })} />
+            </PanelEditItem>}
         </PanelAccordion>
 
         <PanelAccordion title="Value">

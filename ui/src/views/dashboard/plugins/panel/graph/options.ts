@@ -1,4 +1,4 @@
-import { round, isEmpty } from "lodash";
+import { round, isEmpty, isNumber } from "lodash";
 import { ColorMode } from "src/data/constants";
 import * as colorManipulator from 'components/uPlot/colorManipulator';
 import { canvasCtx } from 'pages/_app';
@@ -59,16 +59,18 @@ export const parseOptions = (config: PanelProps,rawData: GraphPluginData, colorM
             label: d.name,
             points: {
                 show: pointsShow,
-                size: config.panel.plugins.graph.styles?.pointSize
+                size: config.panel.plugins.graph.styles?.pointSize,
+                stroke: d.color,
+                fill: d.color,
             },
             stroke: d.color,
             width: config.panel.plugins.graph.styles?.style == "points" ? 0 : config.panel.plugins.graph.styles?.lineWidth,
-            fill: config.panel.plugins.graph.styles?.style == "points" ? null : (config.panel.plugins.graph.styles?.gradientMode == "none" ? d.color : fill(d.color, (config.panel.plugins.graph.styles?.fillOpacity ?? 21) / 100)),
-            spanGaps: false,
+            fill: config.panel.plugins.graph.styles?.style == "points" ? null : (config.panel.plugins.graph.styles?.gradientMode == "none" ? d.color : fill(d.color, config.panel.plugins.graph.styles?.fillOpacity / 100)),
+            spanGaps: config.panel.plugins.graph.styles.connectNulls,
             paths: config.panel.plugins.graph.styles?.style == "bars" ? uPlot.paths.bars({
                 size: [BarWidthFactor, BardMaxWidth],
                 align: 0,
-            }) : null
+            }) : null,
         })
     })
 
@@ -104,7 +106,6 @@ export const parseOptions = (config: PanelProps,rawData: GraphPluginData, colorM
                 dir: 1,
             },
             y: {
-                // distr: 3,
                 auto: true,
                 dir: 1,
                 distr: config.panel.plugins.graph.axis?.scale == "linear" ? 1 : 3,

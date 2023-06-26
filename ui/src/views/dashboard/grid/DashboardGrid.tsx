@@ -120,7 +120,7 @@ const DashboardGrid = memo((props: GridProps) => {
                     },200)
                 }
  
-                // const draggable = width <= 769 ? false : dashboard.editable;
+                const draggable = width <= 769 ? false : dashboard.editable;
 
                 // This is to avoid layout re-flows, accessing window.innerHeight can trigger re-flow
                 // We assume here that if width change height might have changed as well
@@ -130,11 +130,12 @@ const DashboardGrid = memo((props: GridProps) => {
                     gridWidth = width;
                 }
 
-                // we need a width key to force refreshing the grid layout
+                // we need a finalWidth key to force refreshing the grid layout
+                // it solves the issues when resizing browser window
                 return <>{finalWidth > 0 && <Box key={finalWidth}  width={width}  height="100%" className="grid-layout-wrapper">
                     <ReactGridLayout
                         width={width}
-                        isDraggable={true}
+                        isDraggable={draggable}
                         isResizable={dashboard.editable}
                         containerPadding={[0, 0]}
                         useCSSTransforms={false}
@@ -201,7 +202,7 @@ const GridItem = React.forwardRef<HTMLDivElement, GridItemProps>((props, ref) =>
     const { gridWidth, gridPos, isViewing, windowHeight, windowWidth, ...divProps } = props;
     const style: CSSProperties = props.style ?? {};
 
-    if (windowWidth < theme.breakpoints.values.md) {
+    if (windowWidth < 769) {
         // Mobile layout is a bit different, every panel take up full width
         width = props.gridWidth!;
         height = translateGridHeightToScreenHeight(gridPos!.h);

@@ -90,6 +90,7 @@ export interface PanelQuery {
     metrics: string
     legend: string
     visible: boolean
+    step?: number
     mockData?: any
 }
 

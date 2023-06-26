@@ -88,6 +88,7 @@ const GraphPanel = memo((props: GraphPanelProps) => {
     const onChartCreate = useCallback((chart) => { setUplot((chart)); props.sync?.sub(chart) }, [props.sync])
     
 
+    console.log("here3333 gaps:",options,transformDataToUplot(data) )
     return (
         <>
             <Box h="100%" className="panel-graph">

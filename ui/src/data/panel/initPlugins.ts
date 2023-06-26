@@ -24,9 +24,10 @@ export const initPanelPlugins: PanelPlugins = {
             style: "lines",
             lineWidth: 2,
             fillOpacity: 21,
-            showPoints: "never",
-            pointSize: 5,
-            gradientMode: "opacity"
+            showPoints: "auto",
+            pointSize: 3,
+            gradientMode: "opacity",
+            connectNulls: false
         },
         axis: {
             showGrid: true,

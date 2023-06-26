@@ -13,12 +13,13 @@ export const run_prometheus_query = async (panel: Panel,q: PanelQuery,range: Tim
             data:[]
         }
     }
-    
+
+    q.step = 15
     //@todo: 
     // 1. rather than query directyly to prometheus, we should query to our own backend servie
     // 2. using `axios` instead of `fetch`
     
-    const res0 = await fetch(`http://localhost:9090/api/v1/query_range?query=${q.metrics}&start=${range.start.getTime() / 1000}&end=${range.end.getTime() / 1000}&step=15`)
+    const res0 = await fetch(`http://localhost:9090/api/v1/query_range?query=${q.metrics}&start=${range.start.getTime() / 1000}&end=${range.end.getTime() / 1000}&step=${q.step}`)
      
     const res = await res0.json()
     
@@ -38,7 +39,7 @@ export const run_prometheus_query = async (panel: Panel,q: PanelQuery,range: Tim
         }
     }
 
-    let data = prometheusToPanels(res.data, panel, q);
+    let data = prometheusToPanels(res.data, panel, q, range);
     return {
         error: null,
         data: data
