@@ -8,7 +8,7 @@ import { memo, useCallback, useEffect, useRef, useState } from "react";
 import { run_prometheus_query } from "../plugins/datasource/prometheus/query_runner";
 import GraphPanel from "../plugins/panel/graph/Graph";
 import { PANEL_BODY_PADDING, PANEL_HEADER_HEIGHT, StorageCopiedPanelKey } from "src/data/constants";
-import { isArray, isEmpty, isEqual } from "lodash";
+import { cloneDeep, isArray, isEmpty, isEqual } from "lodash";
 import { TimeRange } from "types/time";
 import { Variable } from "types/variable";
 import { replaceWithVariables } from "utils/variable";
@@ -26,9 +26,6 @@ import PanelBorder from "../../../components/largescreen/components/Border";
 import TitleDecoration from "components/largescreen/components/TitleDecoration";
 import PanelDecoration from "components/largescreen/components/Decoration";
 import { useDedupEvent } from "hooks/useDedupEvent";
-import EchartsPanel from "../plugins/panel/echarts/Echarts";
-import PiePanel from "../plugins/panel/pie/Pie";
-import GaugePanel from "../plugins/panel/gauge/Gauge";
 import loadable from '@loadable/component'
 import CodeEditor from "components/CodeEditor/CodeEditor";
 
@@ -134,6 +131,8 @@ export const PanelComponent = ({ dashboard, panel, onRemovePanel, width, height,
                 }
                 continue
             }
+            
+        
 
             needUpdate = true
             // console.log("re-query data! metrics id:", q.id, " query id:", queryId)

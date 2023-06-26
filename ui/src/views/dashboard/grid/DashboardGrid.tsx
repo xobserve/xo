@@ -6,7 +6,7 @@ const ReactGridLayout = WidthProvider(RGL);
 import { GRID_CELL_HEIGHT, GRID_CELL_VMARGIN, GRID_COLUMN_COUNT } from "src/data/constants";
 import { updateGridPos } from "utils/dashboard/panel";
 import { Box, Grid, useColorModeValue } from "@chakra-ui/react";
-import React, { CSSProperties, memo, useCallback } from "react";
+import React, { CSSProperties, memo, useCallback, useRef } from "react";
 import EditPanel from "../edit-panel/EditPanel";
 import uPlot from "uplot";
 import AutoSizer from "react-virtualized-auto-sizer";
@@ -28,7 +28,7 @@ const DashboardGrid = memo((props: GridProps) => {
     console.log("dashboard grid rendered:")
     const { dashboard, onChange } = props
     const panelMap = {}
-
+    const [finalWidth, setFinalWidth] = React.useState(0);
 
     const buildLayout = () => {
         const layout: ReactGridLayout.Layout[] = [];
@@ -60,6 +60,7 @@ const DashboardGrid = memo((props: GridProps) => {
             layout.push(panelPos);
         }
 
+        
         return layout;
     }
 
@@ -98,6 +99,7 @@ const DashboardGrid = memo((props: GridProps) => {
 
     const onResizeStop = (layout, oldItem, newItem) => {};
 
+    const h = useRef(null)
     return (<Box style={{ flex: '1 1 auto' }} id="dashboard-grid" position="relative">
         <AutoSizer disableHeight>
             {({ width }) => {
@@ -105,7 +107,20 @@ const DashboardGrid = memo((props: GridProps) => {
                     return null;
                 }
 
-                const draggable = width <= 769 ? false : dashboard.editable;
+                if (finalWidth == 0) {
+                    setFinalWidth(width)
+                } else {
+                    if (h.current) {
+                        clearTimeout(h.current)
+                    }
+    
+                    h.current = setTimeout(() => {
+                        setFinalWidth(width)
+                        clearTimeout(h.current)
+                    },200)
+                }
+ 
+                // const draggable = width <= 769 ? false : dashboard.editable;
 
                 // This is to avoid layout re-flows, accessing window.innerHeight can trigger re-flow
                 // We assume here that if width change height might have changed as well
@@ -115,12 +130,11 @@ const DashboardGrid = memo((props: GridProps) => {
                     gridWidth = width;
                 }
 
-      
-                // 621, 524
-                return <Box style={{ width: `${width}px`, height: '100%' }} className="grid-layout-wrapper">
+                // we need a width key to force refreshing the grid layout
+                return <>{finalWidth > 0 && <Box key={finalWidth}  width={width}  height="100%" className="grid-layout-wrapper">
                     <ReactGridLayout
                         width={width}
-                        isDraggable={draggable}
+                        isDraggable={true}
                         isResizable={dashboard.editable}
                         containerPadding={[0, 0]}
                         useCSSTransforms={false}
@@ -157,7 +171,7 @@ const DashboardGrid = memo((props: GridProps) => {
                             })
                         }
                     </ReactGridLayout>
-                </Box>
+                </Box>}</>
             }}
         </AutoSizer>
         <EditPanel dashboard={dashboard} onChange={onChange} />
