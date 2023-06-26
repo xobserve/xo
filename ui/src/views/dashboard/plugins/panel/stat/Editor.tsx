@@ -7,6 +7,8 @@ import { Panel, PanelEditorProps } from "types/dashboard"
 import { EditorInputItem, EditorNumberItem, EditorSliderItem } from "components/editor/EditorItem"
 import { ColorPicker } from "components/color-picker"
 import { colors } from "utils/colors"
+import { dispatch } from "use-bus"
+import { EditPanelForceRebuildEvent, PanelForceRebuildEvent } from "src/data/bus-events"
 
 
 const GraphPanelEditor = ({ panel, onChange }: PanelEditorProps) => {
@@ -48,19 +50,30 @@ const GraphPanelEditor = ({ panel, onChange }: PanelEditorProps) => {
                     panel.plugins.stat.styles.gradientMode = v
                 })} />
             </PanelEditItem>
-            <PanelEditItem title="Fill opacity" info={
-                <Text>You need to click Apply Button(in top-right) to see the new setting taken effect</Text>
-            }>
-                <EditorSliderItem value={panel.plugins.stat.styles.fillOpacity} min={0} max={100} step={1} onChange={v => onChange((panel: Panel) => {
-                    panel.plugins.stat.styles.fillOpacity = v
-                })} />
+            <PanelEditItem title="Fill opacity">
+                <EditorSliderItem value={panel.plugins.stat.styles.fillOpacity} min={0} max={100} step={1} onChange={v => {
+                    onChange((panel: Panel) => {
+                        panel.plugins.stat.styles.fillOpacity = v
+                    })
+                    dispatch(EditPanelForceRebuildEvent + panel.id)
+                }
+                } />
             </PanelEditItem>
             <PanelEditItem title="Color">
                 <ColorPicker presetColors={colors} color={panel.plugins.stat.styles.color} onChange={v => onChange((panel: Panel) => {
                     panel.plugins.stat.styles.color = v.hex
                 })}>
-                    <Button size="sm" background={panel.plugins.stat.styles.color} _hover={{bg:panel.plugins.stat.styles.color }}>Pick color</Button>
+                    <Button size="sm" background={panel.plugins.stat.styles.color} _hover={{ bg: panel.plugins.stat.styles.color }}>Pick color</Button>
                 </ColorPicker>
+            </PanelEditItem>
+
+            <PanelEditItem title="Graph height" desc="the propotion of the graph part">
+                <EditorSliderItem value={panel.plugins.stat.styles.graphHeight} min={0} max={100} step={5} onChange={v => {
+                    onChange((panel: Panel) => {
+                        panel.plugins.stat.styles.graphHeight = v
+                    })
+                }
+                } />
             </PanelEditItem>
         </PanelAccordion>
         <PanelAccordion title="Axis">
@@ -69,14 +82,14 @@ const GraphPanelEditor = ({ panel, onChange }: PanelEditorProps) => {
                     <RadionButtons options={[{ label: "Linear", value: "linear" }, { label: "Log", value: "log" }]} value={panel.plugins.stat.axisY.scale} onChange={v => onChange((panel: Panel) => {
                         panel.plugins.stat.axisY.scale = v
                     })} />
-                    {panel.plugins.stat.axisY.scale == "log" && <Select value={panel.plugins.stat.axisY.scaleBase} onChange={e => onChange(panel =>
-                        panel.plugins.stat.axis.scaleBase = Number(e.currentTarget.value) as 2 | 10
-                    )} >
-                        <option value={2}>Base 2</option>
-                        <option value={10}>Base 10</option>
-                    </Select>}
                 </HStack>
             </PanelEditItem>
+
+            {panel.plugins.stat.axisY.scale == "log" && <PanelEditItem title="Scale base">
+                <RadionButtons options={[{ label: "Base 2", value: "2" }, { label: "Base 10", value: "10" }]} value={panel.plugins.stat.axisY.scaleBase as any} onChange={v => onChange((panel: Panel) => {
+                    panel.plugins.stat.axisY.scaleBase = v
+                })} />
+            </PanelEditItem>}
         </PanelAccordion>
     </>
     )

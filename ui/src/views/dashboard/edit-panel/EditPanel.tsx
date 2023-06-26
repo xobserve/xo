@@ -148,7 +148,7 @@ const EditPanel = ({ dashboard, onChange }: EditPanelProps) => {
                                         if (width === 0) {
                                             return null;
                                         }
-                                        return <PanelGrid width={width} height={height} key={tempPanel.id + tempPanel.type} dashboard={dashboard} panel={tempPanel} sync={null} />
+                                        return <PanelGrid width={width} height={height} key={tempPanel.id + tempPanel.type} dashboard={dashboard} panel={tempPanel} sync={null} inEditMode />
                                     }}
                                 </AutoSizer>
                                 {!tempPanel.plugins[tempPanel.type].disableDatasource && <Box position="absolute" right="0" bottom={hideDatasource ? "0" : "-35px"} opacity="0.3" cursor="pointer" fontSize=".8rem" onClick={() => { setHideDatasource(!hideDatasource) }}>{hideDatasource ? <FaArrowUp /> : <FaArrowDown />}</Box>}

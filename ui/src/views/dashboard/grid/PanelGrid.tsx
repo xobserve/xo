@@ -16,7 +16,7 @@ import storage from "utils/localStorage";
 import TablePanel from "../plugins/panel/table/Table";
 import useBus from 'use-bus'
 import { getInitTimeRange } from "components/TimePicker";
-import { PanelForceRebuildEvent, TimeChangedEvent, VariableChangedEvent } from "src/data/bus-events";
+import { EditPanelForceRebuildEvent, PanelForceRebuildEvent, TimeChangedEvent, VariableChangedEvent } from "src/data/bus-events";
 import { variables } from "../Dashboard";
 import { addParamToUrl } from "utils/url";
 import { run_testdata_query } from "../plugins/datasource/testdata/query_runner";
@@ -40,6 +40,7 @@ interface PanelGridProps {
     onVariablesChange?: any
     width: number
     height: number
+    inEditMode?: boolean
 }
 
 
@@ -47,7 +48,7 @@ export const PanelGrid = memo((props: PanelGridProps) => {
     const [forceRenderCount, setForceRenderCount] = useState(0)
 
     const [tr, setTr] = useState<TimeRange>(getInitTimeRange())
-
+    
     useBus(
         (e) => { return e.type == TimeChangedEvent },
         (e) => {
@@ -63,13 +64,21 @@ export const PanelGrid = memo((props: PanelGridProps) => {
             setVariables([...variables])
         }
     )
-
+        
     // provide a way to force rebuild a panel
-    useDedupEvent(PanelForceRebuildEvent + props.panel.id, () => {
-        console.log("here33333, panel is forced to rebuild!", props.panel.id)
-        setForceRenderCount(f => f + 1)
-    })
+    if (!props.inEditMode) {
+        useDedupEvent(PanelForceRebuildEvent + props.panel.id, () => {
+            console.log("here33333, panel is forced to rebuild!", props.panel.id)
+            setForceRenderCount(f => f + 1)
+        })
+    } else {
+        useDedupEvent(EditPanelForceRebuildEvent + props.panel.id, () => {
+            console.log("here33333edit, panel is forced to rebuild!", props.panel.id)
+            setForceRenderCount(f => f + 1)
+        })
+    }
 
+    
     return (
         <PanelBorder width={props.width} height={props.height} border={props.panel.styles?.border}>
             <PanelComponent key={props.panel.id + forceRenderCount} {...props} timeRange={tr} variables={variables1} />

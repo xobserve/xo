@@ -26,7 +26,7 @@ export const parseOptions = (config: PanelProps,rawData: GraphPluginData) => {
             label: d.name,
             stroke: config.panel.plugins.stat.styles.color,
             width: 1,
-            fill:  fill(config.panel.plugins.stat.styles.color,0.9),
+            fill: config.panel.plugins.stat.styles.gradientMode == "none" ? config.panel.plugins.stat.styles.color : fill(config.panel.plugins.stat.styles.color, config.panel.plugins.stat.styles.fillOpacity / 100),
             points: {
                 show: false,
             },
@@ -41,7 +41,7 @@ export const parseOptions = (config: PanelProps,rawData: GraphPluginData) => {
 
     return {
         width: config.width,
-        height: config.height * 0.6,
+        height: config.height * config.panel.plugins.stat.styles.graphHeight / 100,
         series: series,
         hooks: {},
         plugins: [],
@@ -62,9 +62,9 @@ export const parseOptions = (config: PanelProps,rawData: GraphPluginData) => {
                 // distr: 3,
                 auto: true,
                 dir: 1,
-                distr: 3,
+                distr: config.panel.plugins.stat.axisY.scale == "linear" ? 1 : 3,
                 ori: 1,
-                log: 2,
+                log: config.panel.plugins.stat.axisY.scaleBase,
                 // min: 1
             }
         },

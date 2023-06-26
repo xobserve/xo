@@ -43,9 +43,8 @@ const StatPanel = memo((props: StatPanelProps) => {
 
     const { colorMode } = useColorMode()
 
-    const [valueColor, options, plotData] = useMemo(() => {
+    const [options, plotData] = useMemo(() => {
         let o;
-        let vc;
         // transform series name based on legend format 
         const ds = props.panel.datasource
         for (const query of ds.queries) {
@@ -72,8 +71,8 @@ const StatPanel = memo((props: StatPanelProps) => {
         }
 
         o = parseOptions(props, data)
-        
-        return [vc, o, transformDataToUplot(data)]
+
+        return [o, transformDataToUplot(data)]
     }, [props.panel, props.data, colorMode])
 
     const [uplot, setUplot] = useState<uPlot>(null)
@@ -81,17 +80,17 @@ const StatPanel = memo((props: StatPanelProps) => {
     const onChartCreate = useCallback((chart) => { setUplot((chart)); props.sync?.sub(chart) }, [props.sync])
 
 
-    console.log("here333333:",data)
+    // console.log("here333333:",data)
     return (
         <>
             <Box h="100%" className="panel-graph">
 
-                <Box height="40%">
+                {props.panel.plugins.stat.styles.graphHeight < 100 && <Box height={`${100 - props.panel.plugins.stat.styles.graphHeight}%`}>
                     {!isEmpty(data) && 
                         <Center height="100%">
-                            <Text fontSize="50" color={valueColor} fontWeight="bold">{formatUnit(value, props.panel.plugins.stat.units, props.panel.plugins.stat.decimal)}</Text>
+                            <Text fontSize="50" color={props.panel.plugins.stat.styles.color} fontWeight="bold">{formatUnit(value, props.panel.plugins.stat.units, props.panel.plugins.stat.decimal)}</Text>
                         </Center>}
-                </Box>
+                </Box>}
                 <Box>
                     {options && <UplotReact
                         options={options}
