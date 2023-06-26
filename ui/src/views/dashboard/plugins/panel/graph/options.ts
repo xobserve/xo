@@ -58,11 +58,11 @@ export const parseOptions = (config: PanelProps,rawData: GraphPluginData, colorM
             show: activeSeries ? (activeSeries == d.name ? true : false) : true,
             label: d.name,
             points: {
-                show: config.panel.plugins.graph.styles.showPoints == "always" ? true : (config.panel.plugins.graph.styles.showPoints =="auto" ? null :false),
+                show: (config.panel.plugins.graph.styles.showPoints == "always" || config.panel.plugins.graph.styles?.style == "points") ? true : (config.panel.plugins.graph.styles.showPoints =="auto" ? null :false),
                 size: config.panel.plugins.graph.styles?.pointSize,
                 stroke: d.color,
                 fill: d.color,
-                filter: (u, seriesIdx, show, gaps) => {
+                filter: config.panel.plugins.graph.styles.connectNulls ? null : (u, seriesIdx, show, gaps) => {
                     let filtered = [];
             
                     let series = u.series[seriesIdx];
