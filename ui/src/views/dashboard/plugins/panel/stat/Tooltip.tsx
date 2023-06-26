@@ -1,6 +1,6 @@
 import { Box, Text } from "@chakra-ui/react";
 import { Portal } from "components/portal/Portal";
-import SeriesTable, { seriesFilterType } from "src/views/dashboard/plugins/panel/graph/Tooltip/SeriesTable";
+
 import { TooltipContainer } from "src/views/dashboard/plugins/panel/graph/Tooltip/Tooltip";
 import { isEmpty, round } from "lodash";
 import { memo, useLayoutEffect, useState } from "react";
@@ -10,6 +10,7 @@ import { PanelProps } from "types/dashboard";
 import { GraphPluginData, GraphSeries } from "types/plugins/graph";
 import uPlot from "uplot";
 import { dateTimeFormat } from "utils/datetime/formatter";
+import SeriesTable from "./SeriesTable";
 
 interface Props {
     props: PanelProps
@@ -126,7 +127,7 @@ const Tooltip = memo(({ props, options,data }: Props) => {
             {coords && <TooltipContainer position={{ x: coords.x, y: coords.y }} offset={{ x: 0, y: TOOLTIP_OFFSET }}>
                 <Box className="bordered" background={'var(--chakra-colors-chakra-body-bg)'} p="2" fontSize="xs">
                         <Text fontWeight="600">{dateTimeFormat(focusXVal * 1000)}</Text>
-                        {/* <SeriesTable props={props} data={data} nearestSeries={focusSeries} filterIdx={focusIdx} filterType={seriesFilterType.Nearest}/> */}
+                        <SeriesTable props={props} data={data} />
                 </Box>
             </TooltipContainer>
             }
