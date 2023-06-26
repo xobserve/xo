@@ -31,6 +31,7 @@ export interface StatSettings  {
         gradientMode: "none" | "opacity"
         color: string
         graphHeight: number
+        connectNulls: boolean
     }
     axisY: {
         scale: "linear" | "log"

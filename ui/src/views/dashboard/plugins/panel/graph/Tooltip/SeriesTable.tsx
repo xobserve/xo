@@ -71,7 +71,6 @@ const SeriesTable = ({ props, data, nearestSeries, filterIdx, filterType, onSele
     const values = res1
 
 
-    console.log("here333333", values)
 
     return (
         <Box fontSize="xs" minWidth="fit-content">

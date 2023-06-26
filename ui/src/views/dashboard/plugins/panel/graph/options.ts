@@ -18,8 +18,6 @@ const BarWidthFactor = 0.6
 const BardMaxWidth = 200
 // build uplot options based on given config
 export const parseOptions = (config: PanelProps,rawData: GraphPluginData, colorMode,activeSeries) => {
-    const matchSyncKeys = (own, ext) => own == ext;
-    
     const axisSpace = ((self, axisIdx, scaleMin, scaleMax, plotDim) => {
         return calculateSpace(self, axisIdx, scaleMin, scaleMax, plotDim);
     })
@@ -36,24 +34,6 @@ export const parseOptions = (config: PanelProps,rawData: GraphPluginData, colorM
     })
 
     rawData.forEach((d, i) => {
-        let pointsShow;
-        let showPoints = config.panel.plugins.graph.styles?.showPoints
-        if (showPoints == "always") {
-            pointsShow = true
-        } else if (showPoints == "never") {
-            if (config.panel.plugins.graph.styles?.style != "points") {
-                pointsShow = false
-            } else {
-                pointsShow = true
-            }
-
-        } else {
-            if (config.panel.plugins.graph.styles?.style == "bars") {
-                pointsShow = false
-            } else {
-                pointsShow = true
-            }
-        }
         series.push({
             show: activeSeries ? (activeSeries == d.name ? true : false) : true,
             label: d.name,
@@ -62,56 +42,7 @@ export const parseOptions = (config: PanelProps,rawData: GraphPluginData, colorM
                 size: config.panel.plugins.graph.styles?.pointSize,
                 stroke: d.color,
                 fill: d.color,
-                filter: config.panel.plugins.graph.styles.connectNulls ? null : (u, seriesIdx, show, gaps) => {
-                    let filtered = [];
-            
-                    let series = u.series[seriesIdx];
-            
-                    if (!show && gaps && gaps.length) {
-                      const [firstIdx, lastIdx] = series.idxs!;
-                      const xData = u.data[0];
-                      const yData = u.data[seriesIdx];
-                      const firstPos = Math.round(u.valToPos(xData[firstIdx], 'x', true));
-                      const lastPos = Math.round(u.valToPos(xData[lastIdx], 'x', true));
-            
-                      if (gaps[0][0] === firstPos) {
-                        filtered.push(firstIdx);
-                      }
-            
-                      // show single points between consecutive gaps that share end/start
-                      for (let i = 0; i < gaps.length; i++) {
-                        let thisGap = gaps[i];
-                        let nextGap = gaps[i + 1];
-            
-                        if (nextGap && thisGap[1] === nextGap[0]) {
-                          // approx when data density is > 1pt/px, since gap start/end pixels are rounded
-                          let approxIdx = u.posToIdx(thisGap[1], true);
-            
-                          if (yData[approxIdx] == null) {
-                            // scan left/right alternating to find closest index with non-null value
-                            for (let j = 1; j < 100; j++) {
-                              if (yData[approxIdx + j] != null) {
-                                approxIdx += j;
-                                break;
-                              }
-                              if (yData[approxIdx - j] != null) {
-                                approxIdx -= j;
-                                break;
-                              }
-                            }
-                          }
-            
-                          filtered.push(approxIdx);
-                        }
-                      }
-            
-                      if (gaps[gaps.length - 1][1] === lastPos) {
-                        filtered.push(lastIdx);
-                      }
-                    }
-            
-                    return filtered.length ? filtered : null;
-                  }
+                filter: config.panel.plugins.graph.styles.connectNulls ? null : pointsFilter,
             },
             stroke: d.color,
             width: config.panel.plugins.graph.styles?.style == "points" ? 0 : config.panel.plugins.graph.styles?.lineWidth,
@@ -338,3 +269,55 @@ function calculateSpace(self: uPlot, axisIdx: number, scaleMin: number, scaleMax
     
     return defaultSpacing;
 }
+
+
+export const pointsFilter = (u, seriesIdx, show, gaps) => {
+    let filtered = [];
+
+    let series = u.series[seriesIdx];
+
+    if (!show && gaps && gaps.length) {
+      const [firstIdx, lastIdx] = series.idxs!;
+      const xData = u.data[0];
+      const yData = u.data[seriesIdx];
+      const firstPos = Math.round(u.valToPos(xData[firstIdx], 'x', true));
+      const lastPos = Math.round(u.valToPos(xData[lastIdx], 'x', true));
+
+      if (gaps[0][0] === firstPos) {
+        filtered.push(firstIdx);
+      }
+
+      // show single points between consecutive gaps that share end/start
+      for (let i = 0; i < gaps.length; i++) {
+        let thisGap = gaps[i];
+        let nextGap = gaps[i + 1];
+
+        if (nextGap && thisGap[1] === nextGap[0]) {
+          // approx when data density is > 1pt/px, since gap start/end pixels are rounded
+          let approxIdx = u.posToIdx(thisGap[1], true);
+
+          if (yData[approxIdx] == null) {
+            // scan left/right alternating to find closest index with non-null value
+            for (let j = 1; j < 100; j++) {
+              if (yData[approxIdx + j] != null) {
+                approxIdx += j;
+                break;
+              }
+              if (yData[approxIdx - j] != null) {
+                approxIdx -= j;
+                break;
+              }
+            }
+          }
+
+          filtered.push(approxIdx);
+        }
+      }
+
+      if (gaps[gaps.length - 1][1] === lastPos) {
+        filtered.push(lastIdx);
+      }
+    }
+
+    return filtered.length ? filtered : null;
+  }

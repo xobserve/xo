@@ -27,7 +27,6 @@ const BorderBox8 = forwardRef((
   }: BorderBoxProps,
   ref
 ) => {
-    console.log("here33333:",ref)
   const { width, height, domRef } = useAutoResize(ref)
 
   const [{ path, gradient, mask }] = useState(() => {

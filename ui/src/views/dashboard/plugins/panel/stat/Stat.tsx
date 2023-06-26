@@ -23,7 +23,7 @@ const StatPanel = memo((props: StatPanelProps) => {
     if (isEmpty(props.data)) {
         return (<Center height="100%">No data</Center>)
     }
-
+    
     const [data, value]: [SeriesData[], number] = useMemo(() => {
         const res = []
         let value;

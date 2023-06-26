@@ -193,7 +193,8 @@ function registerEvents(options, chart) {
             fillOpacity: 80,
             gradientMode:"opacity",
             color: colors[0],
-            graphHeight: 60
+            graphHeight: 60,
+            connectNulls: false
         },
         axisY: {
             scale: "linear",

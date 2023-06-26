@@ -3,7 +3,8 @@ import * as colorManipulator from 'components/uPlot/colorManipulator';
 import { canvasCtx } from 'pages/_app';
 import { PanelProps } from "types/dashboard";
 import uPlot from "uplot";
-import { GraphPluginData } from "types/plugins/graph";
+import { SeriesData } from "types/plugins/graph";
+import { pointsFilter } from "../graph/options";
 
 
 
@@ -11,7 +12,7 @@ import { GraphPluginData } from "types/plugins/graph";
 const BarWidthFactor = 0.6
 const BardMaxWidth = 200
 // build uplot options based on given config
-export const parseOptions = (config: PanelProps,rawData: GraphPluginData) => {
+export const parseOptions = (config: PanelProps,rawData: SeriesData[]) => {
     // build series
     const series = []
     // push time series option
@@ -28,9 +29,13 @@ export const parseOptions = (config: PanelProps,rawData: GraphPluginData) => {
             width: 1,
             fill: config.panel.plugins.stat.styles.gradientMode == "none" ? config.panel.plugins.stat.styles.color : fill(config.panel.plugins.stat.styles.color, config.panel.plugins.stat.styles.fillOpacity / 100),
             points: {
-                show: false,
+                show: null,
+                size: 5,
+                stroke: config.panel.plugins.stat.styles.color,
+                fill: config.panel.plugins.stat.styles.color,
+                filter: config.panel.plugins.stat.styles.connectNulls ? null : pointsFilter,
             },
-            spanGaps: false,
+            spanGaps: config.panel.plugins.stat.styles.connectNulls,
             paths: config.panel.plugins.stat.styles?.style == "bars" ? uPlot.paths.bars({
                 size: [BarWidthFactor, BardMaxWidth],
                 align: 0,
@@ -48,6 +53,7 @@ export const parseOptions = (config: PanelProps,rawData: GraphPluginData) => {
         legend: {
             show: false
         },
+        padding: [0,12,0,1],
         cursor: {
             lock: true,
             // focus: {

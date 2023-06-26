@@ -81,6 +81,12 @@ const GraphPanelEditor = ({ panel, onChange }: PanelEditorProps) => {
                 }
                 } />
             </PanelEditItem>
+
+            <PanelEditItem title="Connect null values">
+                <Switch defaultChecked={panel.plugins.stat.styles.connectNulls} onChange={e => onChange((panel: Panel) => {
+                    panel.plugins.stat.styles.connectNulls = e.currentTarget.checked
+                })} />
+            </PanelEditItem>
         </PanelAccordion>
         <PanelAccordion title="Axis">
             <PanelEditItem title="Scale">
