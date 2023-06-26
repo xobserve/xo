@@ -7,7 +7,7 @@ import uPlot from "uplot"
 import { parseOptions } from './options';
 import { isEmpty } from "lodash";
 
-import Tooltip from "./Tooltip";
+import Tooltip from "../graph/Tooltip";
 import { Box, Center, Flex, Text, useColorMode, Tooltip as ChakraTooltip } from "@chakra-ui/react";
 import { GraphPluginData, SeriesData } from "types/plugins/graph";
 import { StatPluginData } from "types/plugins/stat";
@@ -51,7 +51,7 @@ const StatPanel = memo((props: StatPanelProps) => {
         o = parseOptions(props, data)
 
         return [o, legend]
-    }, [props.panel, props.data, colorMode])
+    }, [props.panel, props.data, colorMode, props.width, props.height])
 
     const [uplot, setUplot] = useState<uPlot>(null)
 
@@ -61,7 +61,6 @@ const StatPanel = memo((props: StatPanelProps) => {
     return (
         <>
             <Box h="100%" className="panel-graph">
-
                 {props.panel.plugins.stat.styles.graphHeight < 100 && <Box height={`${100 - props.panel.plugins.stat.styles.graphHeight}%`}>
                     {!isEmpty(data) &&
                         <Center height="100%">

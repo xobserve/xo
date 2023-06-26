@@ -185,7 +185,7 @@ function registerEvents(options, chart) {
         showLegend: false,
         value: {
             ...initUnits,
-            decimal: 1,
+            decimal: 2,
             calc: ValueCalculationType.Last
         },
         styles: {
@@ -196,7 +196,7 @@ function registerEvents(options, chart) {
             graphHeight: 60
         },
         axisY: {
-            scale: "log",
+            scale: "linear",
             scaleBase: 2 
         }
     },

@@ -5,7 +5,8 @@ import { formatUnit } from "components/unit"
 import { last, reverse, round, sortBy } from "lodash"
 import { useMemo, useState } from "react"
 import { ActiveSeriesEvent } from "src/data/bus-events"
-import { PanelProps } from "types/dashboard"
+import { PanelProps, PanelType } from "types/dashboard"
+import { ValueSetting } from "types/panel/plugins"
 import { GraphPluginData, SeriesData } from "types/plugins/graph"
 import useBus from "use-bus"
 
@@ -17,6 +18,7 @@ interface Props {
     filterType: seriesFilterType // controls which value should be seen in series table
     placement?: "bottom" | "right"
     onSelect?: any
+    panelType: PanelType
 }
 
 export enum seriesFilterType {
@@ -24,7 +26,9 @@ export enum seriesFilterType {
     Current = "current",
 }
 
-const SeriesTable = ({ props, data, nearestSeries, filterIdx, filterType, onSelect }: Props) => {
+const SeriesTable = ({ props, data, nearestSeries, filterIdx, filterType, onSelect, panelType }: Props) => {
+    const tooltipMode = panelType == PanelType.Graph ? props.panel.plugins.graph.tooltip.mode : "single"
+    const valueSettings:ValueSetting = props.panel.plugins[panelType].value
     const [activeSeries, setActiveSeries] = useState(null)
     useBus(
         (e) => { return e.type == ActiveSeriesEvent && e.id == props.panel.id },
@@ -37,7 +41,7 @@ const SeriesTable = ({ props, data, nearestSeries, filterIdx, filterType, onSele
 
     switch (filterType) {
         case seriesFilterType.Nearest: // tooltip
-            if (props.panel.plugins.graph.tooltip.mode != "single") {
+            if (tooltipMode != "single") {
                 for (const d of data) {
                     res.push({ name: d.name, value: d.fields[1].values[filterIdx], color: d.color })
                 }
@@ -57,21 +61,20 @@ const SeriesTable = ({ props, data, nearestSeries, filterIdx, filterType, onSele
     let res1 = reverse(sortBy(res, 'value'))
 
     for (const r of res1) {
-        r.value = props.panel.plugins.graph.value.unitsType != "none"
-            ? formatUnit(r.value, props.panel.plugins.graph.value.units, props.panel.plugins.graph.value.decimal ?? 2)
-            : round(r.value, props.panel.plugins.graph.value.decimal)
+        if (r.value) {
+            r.value = valueSettings.unitsType != "none"
+            ? formatUnit(r.value, valueSettings.units, valueSettings.decimal)
+            : round(r.value, valueSettings.decimal)
+        }   
     }
 
     const values = res1
 
 
+    console.log("here333333", values)
 
     return (
         <Box fontSize="xs" minWidth="fit-content">
-            {/* {filterType != seriesFilterType.Nearest && <Flex justifyContent="space-between">
-                <Box></Box>
-                <Text>current</Text>
-            </Flex>} */}
             <VStack alignItems="left" spacing="1" mt="2px">
                 {values.map((v,i) => {
                     if (filterType == seriesFilterType.Nearest && (activeSeries && activeSeries != v.name)) {

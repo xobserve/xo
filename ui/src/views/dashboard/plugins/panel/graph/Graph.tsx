@@ -93,7 +93,7 @@ const GraphPanel = memo((props: GraphPanelProps) => {
         <>
             <Box h="100%" className="panel-graph">
                 {!isEmpty(props?.panel.plugins.graph.axis?.label) && <Text fontSize="sm" position="absolute" ml="3" mt="-1" className="color-text">{props.panel.plugins.graph.axis.label}</Text>}
-                {options && <GraphLayout width={props.width} height={props.height} legend={props.panel.plugins.graph.legend.mode == "hidden" ? null : <SeriesTable placement={props.panel.plugins.graph.legend.placement} props={props} data={data} filterType={seriesFilterType.Current} onSelect={onSelectSeries} />}>
+                {options && <GraphLayout width={props.width} height={props.height} legend={props.panel.plugins.graph.legend.mode == "hidden" ? null : <SeriesTable placement={props.panel.plugins.graph.legend.placement} props={props} data={data} filterType={seriesFilterType.Current} onSelect={onSelectSeries} panelType={props.panel.type} />}>
                     {(vizWidth: number, vizHeight: number) => {
                         if (uplot) {
                             if (props.width != vizWidth || props.height != vizHeight) {

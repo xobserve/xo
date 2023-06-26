@@ -45,6 +45,9 @@ export const parseOptions = (config: PanelProps,rawData: GraphPluginData) => {
         series: series,
         hooks: {},
         plugins: [],
+        legend: {
+            show: false
+        },
         cursor: {
             lock: true,
             // focus: {
