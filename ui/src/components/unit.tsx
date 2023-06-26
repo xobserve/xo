@@ -1,6 +1,6 @@
-import { Button, calc, HStack, Input, NumberInput, NumberInputField, NumberInputStepper, Select, useToast, VStack } from "@chakra-ui/react"
-import { cloneDeep, isEmpty, round } from "lodash"
-import { useEffect, useState } from "react"
+import { Button, HStack, Input, NumberInput, NumberInputField, Select, VStack } from "@chakra-ui/react"
+import { cloneDeep, isEmpty } from "lodash"
+import { useState } from "react"
 import { FaArrowUp, FaMinus, FaPlus } from "react-icons/fa"
 import { UnitsType, Unit } from "types/panel/plugins"
 
@@ -15,7 +15,6 @@ interface Props {
 export const UnitPicker = ({ type, value, onChange }: Props) => {
     const [unitType, setUnitTYpe] = useState(type)
     const [units, setUnits] = useState(value)
-    const toast = useToast()
     const onAddUnit = () => {
         units.push({
             operator: units[0].operator ?? 'x',

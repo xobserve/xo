@@ -13,7 +13,7 @@ const GaugePanelEditor = (props: PanelEditorProps) => {
     const { panel, onChange } = props
     return (
         <>
-            <PanelAccordion title="basic setting">
+            <PanelAccordion title="Basic setting">
                 <PanelEditItem title="Animation" desc="display chart animation">
                     <Switch defaultChecked={panel.plugins.gauge.animation} onChange={e => onChange((panel: Panel) => {
                         panel.plugins.gauge.animation = e.currentTarget.checked

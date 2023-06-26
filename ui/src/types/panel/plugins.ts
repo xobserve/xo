@@ -21,8 +21,21 @@ export interface DisableDatasource {
 }
 
 
-export interface StatSettings extends GraphSettings {
-
+export interface StatSettings extends Units  {
+    showTooltip: boolean
+    showLegend: boolean
+    decimal: number
+    styles: {
+        style: "lines" | "bars" 
+        fillOpacity: number
+        gradientMode: "none" | "opacity"
+        color: string
+        graphHeight: number
+    }
+    axisY: {
+        scale: "linear" | "log"
+        scaleBase: 2 | 10
+    }
 }
 
 export interface PieSettings {

@@ -1,5 +1,6 @@
 import { PanelType } from "types/dashboard";
 import { PanelPlugins, PieLegendPlacement, Units, UnitsType } from "types/panel/plugins";
+import { colors } from "utils/colors";
 
 export const onClickCommonEvent = "// setVariable: (varName:string, varValue:string) => void \nfunction onClick(item, router, setVariable) {\n\tconsole.log(item)\n}"
 
@@ -178,30 +179,20 @@ function registerEvents(options, chart) {
     },
 
     [PanelType.Stat]: {
-        tooltip: {
-            mode: 'all',
-            sort: 'desc'
-        },
-        legend: {
-            mode: "table",
-            placement: "bottom"
-        },
+        showTooltip: true,
+        showLegend: false,
+        ...initUnits,
+        decimal: 1,
         styles: {
-            style: "lines",
-            lineWidth: 2,
-            fillOpacity: 21,
-            showPoints: "never",
-            pointSize: 5,
-            gradientMode: "opacity"
+            style: "lines", 
+            fillOpacity: 80,
+            gradientMode:"opacity",
+            color: colors[0],
+            graphHeight: 60
         },
-        axis: {
-            showGrid: true,
-            scale: "linear",
-            scaleBase: 2
-        },
-        std: {
-            ...initUnits,
-            decimals: 1
+        axisY: {
+            scale: "log",
+            scaleBase: 2 
         }
     },
 }

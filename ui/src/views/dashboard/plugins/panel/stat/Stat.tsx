@@ -96,7 +96,7 @@ const StatPanel = memo((props: StatPanelProps) => {
                 <Box height="40%">
                     {!isEmpty(data) && 
                         <Center height="100%">
-                            <Text fontSize="50" color={valueColor} fontWeight="bold">{formatUnit(value, props.panel.plugins.stat.std.units, props.panel.plugins.stat.std.decimals)}</Text>
+                            <Text fontSize="50" color={valueColor} fontWeight="bold">{formatUnit(value, props.panel.plugins.stat.units, props.panel.plugins.stat.decimal)}</Text>
                         </Center>}
                 </Box>
                 <Box>
@@ -106,7 +106,7 @@ const StatPanel = memo((props: StatPanelProps) => {
                         onDelete={(chart: uPlot) => { }}
                         onCreate={onChartCreate}
                     >
-                        {props.panel.plugins.stat.tooltip.mode != 'hidden' && <Tooltip props={props} options={options} data={data} />}
+                        {props.panel.plugins.stat.showTooltip && <Tooltip props={props} options={options} data={data} />}
                     </UplotReact>}
                 </Box>
             </Box>
