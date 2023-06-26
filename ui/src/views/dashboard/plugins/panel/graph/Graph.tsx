@@ -43,7 +43,7 @@ const GraphPanel = memo((props: GraphPanelProps) => {
     const { colorMode } = useColorMode()
     const activeSeries = useRef(null)
 
-    const [options, plotData] = useMemo(() => {
+    const options = useMemo(() => {
         let o;
         let activeExist = false
         // transform series name based on legend format 
@@ -86,10 +86,10 @@ const GraphPanel = memo((props: GraphPanelProps) => {
             activeSeries.current = null
             dispatch({ type: ActiveSeriesEvent, id: props.panel.id, data: null })
         }
-        
+
         o = parseOptions(props, data, colorMode, activeSeries.current)
 
-        return [o, transformDataToUplot(data)]
+        return o
     }, [props.panel, props.data, colorMode])
 
     const [uplot, setUplot] = useState<uPlot>(null)
@@ -132,7 +132,7 @@ const GraphPanel = memo((props: GraphPanelProps) => {
 
                         return (options && <UplotReact
                             options={options}
-                            data={plotData}
+                            data={ transformDataToUplot(data)}
                             onDelete={(chart: uPlot) => { }}
                             onCreate={onChartCreate}
                         >

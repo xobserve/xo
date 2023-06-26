@@ -4,7 +4,7 @@ import { FieldType, GraphPluginData } from "types/plugins/graph";
 import { StatPluginData } from "types/plugins/stat";
 import { TablePluginData, TableSeries } from "types/plugins/table";
 
-export const transformPrometheusData = (rawData: any, panel: Panel) => {
+export const transformPrometheusData = (rawData: any, panel: Panel, queryId: number) => {
     if (isEmpty(rawData)) {
         return null
     }
@@ -40,10 +40,10 @@ export const transformPrometheusData = (rawData: any, panel: Panel) => {
             return data
 
         case PanelType.Graph:
-            return prometheusDataToGraph(rawData)
+            return prometheusDataToGraph(rawData, queryId)
 
         case PanelType.Stat:
-            return prometheusDataToStat(rawData)
+            return prometheusDataToStat(rawData, queryId)
     }
 
     return null
@@ -51,7 +51,7 @@ export const transformPrometheusData = (rawData: any, panel: Panel) => {
 
 
 
-export const prometheusDataToGraph = (data: any): GraphPluginData => {
+export const prometheusDataToGraph = (data: any, queryId: number): GraphPluginData => {
     let res: GraphPluginData = []
     if (data.resultType === "matrix") {
         for (const m of data.result) {
@@ -66,6 +66,7 @@ export const prometheusDataToGraph = (data: any): GraphPluginData => {
             }
 
             res.push({
+                id: queryId,
                 name: metric,
                 length: length,
                 fields: [
@@ -88,8 +89,8 @@ export const prometheusDataToGraph = (data: any): GraphPluginData => {
     return []
 }
 
-export const prometheusDataToStat = (data: any): StatPluginData => {
-    const series: GraphPluginData = prometheusDataToGraph(data)
+export const prometheusDataToStat = (data: any, queryId: number): StatPluginData => {
+    const series: GraphPluginData = prometheusDataToGraph(data, queryId)
     const d: StatPluginData = {
         series: series,
         value: 0

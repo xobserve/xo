@@ -1,10 +1,6 @@
-export interface GraphPluginData {
-  series: GraphSeries[]
-  value: number
-}
-
+export type GraphPluginData = GraphSeries[]
 export interface GraphSeries {
-    // id: number;
+    id: number;
     name?: string;
     fields: Field[]; // All fields of equal length
 

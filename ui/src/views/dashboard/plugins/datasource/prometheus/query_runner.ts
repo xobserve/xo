@@ -38,7 +38,7 @@ export const run_prometheus_query = async (panel: Panel,q: PanelQuery,range: Tim
         }
     }
 
-    let data = transformPrometheusData(res.data, panel);
+    let data = transformPrometheusData(res.data, panel, q.id);
     return {
         error: null,
         data: data

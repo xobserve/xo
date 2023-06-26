@@ -9,7 +9,6 @@ import { isEmpty } from "lodash";
 
 import Tooltip from "./Tooltip";
 import { Box, Center, Text, useColorMode } from "@chakra-ui/react";
-import { colors } from "utils/colors";
 import { parseLegendFormat } from "utils/format";
 import { replaceWithVariables } from "utils/variable";
 import { variables } from "src/views/dashboard/Dashboard";
@@ -43,7 +42,7 @@ const StatPanel = memo((props: StatPanelProps) => {
 
     const { colorMode } = useColorMode()
 
-    const [options, plotData] = useMemo(() => {
+    const options = useMemo(() => {
         let o;
         // transform series name based on legend format 
         const ds = props.panel.datasource
@@ -72,7 +71,7 @@ const StatPanel = memo((props: StatPanelProps) => {
 
         o = parseOptions(props, data)
 
-        return [o, transformDataToUplot(data)]
+        return o
     }, [props.panel, props.data, colorMode])
 
     const [uplot, setUplot] = useState<uPlot>(null)
@@ -80,7 +79,6 @@ const StatPanel = memo((props: StatPanelProps) => {
     const onChartCreate = useCallback((chart) => { setUplot((chart)); props.sync?.sub(chart) }, [props.sync])
 
 
-    // console.log("here333333:",data)
     return (
         <>
             <Box h="100%" className="panel-graph">
@@ -94,7 +92,7 @@ const StatPanel = memo((props: StatPanelProps) => {
                 <Box>
                     {options && <UplotReact
                         options={options}
-                        data={plotData}
+                        data={transformDataToUplot(data)}
                         onDelete={(chart: uPlot) => { }}
                         onCreate={onChartCreate}
                     >
