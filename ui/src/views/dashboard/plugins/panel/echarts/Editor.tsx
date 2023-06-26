@@ -14,31 +14,39 @@ import * as echarts from 'echarts';
 import { ColorModeSwitcher } from "components/ColorModeSwitcher"
 
 const EchartsPanelEditor = ({ panel, onChange }: PanelEditorProps) => {
-    return (<PanelAccordion title="Echarts setting">
-        <PanelEditItem title="Animation" desc="display chart animation">
-            <Switch defaultChecked={panel.plugins.echarts.animation} onChange={e => onChange((panel:Panel) => {
-                panel.plugins.echarts.animation = e.currentTarget.checked
-            })} />
-        </PanelEditItem>
+    return (
+        <>
+            <PanelAccordion title="About Echarts">
+                <Text fontSize="sm">Apache ECharts is a free, powerful charting and visualization library offering easy ways to add intuitive, interactive, and highly customizable charts to your products. </Text>
+                <Text mt="2" fontSize="sm">Official site: https://echarts.apache.org/en/index.html</Text>
+            </PanelAccordion>
+            <PanelAccordion title="Echarts setting">
+                <PanelEditItem title="Animation" desc="display chart animation">
+                    <Switch defaultChecked={panel.plugins.echarts.animation} onChange={e => onChange((panel: Panel) => {
+                        panel.plugins.echarts.animation = e.currentTarget.checked
+                    })} />
+                </PanelEditItem>
 
-        <PanelEditItem title="Allow empty data pass in" desc="When we can't read any data from datasource, if this option is disabled, the chart will show 'No Data' and immediatlly returns, if enabled, the chart will show nothing and the empty data will pass to setOptions func. <If you generates data in setOptions function(e.g you are playing an example), you should make this enabled, otherwise leave it disabled>">
-            <Switch isChecked={panel.plugins.echarts.allowEmptyData} onChange={(e) => onChange((panel:Panel) => {
-                panel.plugins.echarts.allowEmptyData = e.target.checked
-            })} />
-        </PanelEditItem>
+                <PanelEditItem title="Allow empty data pass in" desc="When we can't read any data from datasource, if this option is disabled, the chart will show 'No Data' and immediatlly returns, if enabled, the chart will show nothing and the empty data will pass to setOptions func. <If you generates data in setOptions function(e.g you are playing an example), you should make this enabled, otherwise leave it disabled>">
+                    <Switch isChecked={panel.plugins.echarts.allowEmptyData} onChange={(e) => onChange((panel: Panel) => {
+                        panel.plugins.echarts.allowEmptyData = e.target.checked
+                    })} />
+                </PanelEditItem>
 
-        <SetOptions panel={panel} onChange={v => {
-            onChange((panel:Panel) => {
-                panel.plugins.echarts.setOptionsFunc = v
-            })
-        }} />
+                <SetOptions panel={panel} onChange={v => {
+                    onChange((panel: Panel) => {
+                        panel.plugins.echarts.setOptionsFunc = v
+                    })
+                }} />
 
-        <RegisterEvents panel={panel} onChange={v => {
-            onChange((panel:Panel) => {
-                panel.plugins.echarts.registerEventsFunc = v
-            })
-        }} />
-    </PanelAccordion>
+                <RegisterEvents panel={panel} onChange={v => {
+                    onChange((panel: Panel) => {
+                        panel.plugins.echarts.registerEventsFunc = v
+                    })
+                }} />
+            </PanelAccordion>
+        </>
+
     )
 }
 

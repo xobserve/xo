@@ -7,6 +7,9 @@ import graphData from './mocks/prometheus_graph.json'
 import { nodeGraphData } from "./mocks/node_graph"
 import { prometheusToSeriesData, prometheusDataToStat, prometheusToPanels } from "../prometheus/transformData"
 import {GaugePluginData} from 'types/plugins/gauge'
+import { echartsOptions } from "./mocks/echarts"
+
+
 export const run_testdata_query = async (panel: Panel, q: PanelQuery, range: TimeRange) => {
     let data:any;
 
@@ -25,23 +28,7 @@ export const run_testdata_query = async (panel: Panel, q: PanelQuery, range: Tim
             data = nodeGraphData(10, 0.8)
             break;
         case PanelType.Echarts:
-            data =  {
-                title: {
-                    text: `Sunface's collections`
-                },
-                tooltip: {},
-                xAxis: {
-                    data: ["My Books","My Shirts", "My Shoes"]
-                },
-                yAxis: {},
-                series: [
-                    {
-                        name: 'Sunface',
-                        type: 'bar',
-                        data: [34, 7, 3]
-                    }
-                ]
-            }
+            data = echartsOptions
             break
         case PanelType.Gauge:
             const d: GaugePluginData = {

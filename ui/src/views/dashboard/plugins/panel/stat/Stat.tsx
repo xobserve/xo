@@ -1,5 +1,5 @@
 import UplotReact from "components/uPlot/UplotReact"
-import { memo, useCallback, useMemo, useRef, useState } from "react"
+import { memo, useCallback, useMemo, useState } from "react"
 import { PanelProps } from "types/dashboard"
 import 'uplot/dist/uPlot.min.css';
 import uPlot from "uplot"
@@ -9,9 +9,6 @@ import { isEmpty } from "lodash";
 
 import Tooltip from "./Tooltip";
 import { Box, Center, Flex, Text, useColorMode,Tooltip as ChakraTooltip } from "@chakra-ui/react";
-import { parseLegendFormat } from "utils/format";
-import { replaceWithVariables } from "utils/variable";
-import { variables } from "src/views/dashboard/Dashboard";
 import { GraphPluginData, SeriesData } from "types/plugins/graph";
 import { StatPluginData } from "types/plugins/stat";
 import { formatUnit } from "components/unit";
