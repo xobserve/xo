@@ -21,7 +21,6 @@ export const parseOptions = (config: PanelProps,rawData: GraphPluginData, colorM
     const matchSyncKeys = (own, ext) => own == ext;
     
     const axisSpace = ((self, axisIdx, scaleMin, scaleMax, plotDim) => {
-        console.log("here333331:", calculateSpace(self, axisIdx, scaleMin, scaleMax, plotDim))
         return calculateSpace(self, axisIdx, scaleMin, scaleMax, plotDim);
     })
 

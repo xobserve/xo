@@ -15,7 +15,6 @@ const GaugePanel = ({ panel, data, height, width }: Props) => {
   const [chart, setChart] = useState(null)
   const { colorMode } = useColorMode()
   const options = useMemo(() => {
-    console.log("here333333")
     return {
       animation: panel.plugins.gauge.animation,
       grid: {

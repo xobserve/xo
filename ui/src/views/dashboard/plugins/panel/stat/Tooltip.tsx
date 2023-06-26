@@ -10,7 +10,7 @@ import { PanelProps } from "types/dashboard";
 import { GraphPluginData, SeriesData } from "types/plugins/graph";
 import uPlot from "uplot";
 import { dateTimeFormat } from "utils/datetime/formatter";
-import SeriesTable from "./SeriesTable";
+import SeriesTable, { seriesFilterType } from "./SeriesTable";
 
 interface Props {
     props: PanelProps
@@ -127,7 +127,7 @@ const Tooltip = memo(({ props, options,data }: Props) => {
             {coords && <TooltipContainer position={{ x: coords.x, y: coords.y }} offset={{ x: 0, y: TOOLTIP_OFFSET }}>
                 <Box className="bordered" background={'var(--chakra-colors-chakra-body-bg)'} p="2" fontSize="xs">
                         <Text fontWeight="600">{dateTimeFormat(focusXVal * 1000)}</Text>
-                        <SeriesTable props={props} data={data} />
+                        <SeriesTable props={props} data={data} nearestSeries={focusSeries} filterIdx={focusIdx} filterType={seriesFilterType.Nearest}/>
                 </Box>
             </TooltipContainer>
             }
