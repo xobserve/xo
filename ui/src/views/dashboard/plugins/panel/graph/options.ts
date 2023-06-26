@@ -58,10 +58,60 @@ export const parseOptions = (config: PanelProps,rawData: GraphPluginData, colorM
             show: activeSeries ? (activeSeries == d.name ? true : false) : true,
             label: d.name,
             points: {
-                show: pointsShow,
+                show: config.panel.plugins.graph.styles.showPoints == "always" ? true : (config.panel.plugins.graph.styles.showPoints =="auto" ? null :false),
                 size: config.panel.plugins.graph.styles?.pointSize,
                 stroke: d.color,
                 fill: d.color,
+                filter: (u, seriesIdx, show, gaps) => {
+                    let filtered = [];
+            
+                    let series = u.series[seriesIdx];
+            
+                    if (!show && gaps && gaps.length) {
+                      const [firstIdx, lastIdx] = series.idxs!;
+                      const xData = u.data[0];
+                      const yData = u.data[seriesIdx];
+                      const firstPos = Math.round(u.valToPos(xData[firstIdx], 'x', true));
+                      const lastPos = Math.round(u.valToPos(xData[lastIdx], 'x', true));
+            
+                      if (gaps[0][0] === firstPos) {
+                        filtered.push(firstIdx);
+                      }
+            
+                      // show single points between consecutive gaps that share end/start
+                      for (let i = 0; i < gaps.length; i++) {
+                        let thisGap = gaps[i];
+                        let nextGap = gaps[i + 1];
+            
+                        if (nextGap && thisGap[1] === nextGap[0]) {
+                          // approx when data density is > 1pt/px, since gap start/end pixels are rounded
+                          let approxIdx = u.posToIdx(thisGap[1], true);
+            
+                          if (yData[approxIdx] == null) {
+                            // scan left/right alternating to find closest index with non-null value
+                            for (let j = 1; j < 100; j++) {
+                              if (yData[approxIdx + j] != null) {
+                                approxIdx += j;
+                                break;
+                              }
+                              if (yData[approxIdx - j] != null) {
+                                approxIdx -= j;
+                                break;
+                              }
+                            }
+                          }
+            
+                          filtered.push(approxIdx);
+                        }
+                      }
+            
+                      if (gaps[gaps.length - 1][1] === lastPos) {
+                        filtered.push(lastIdx);
+                      }
+                    }
+            
+                    return filtered.length ? filtered : null;
+                  }
             },
             stroke: d.color,
             width: config.panel.plugins.graph.styles?.style == "points" ? 0 : config.panel.plugins.graph.styles?.lineWidth,
