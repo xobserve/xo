@@ -1,5 +1,5 @@
 import { Button, HStack, Input, NumberInput, NumberInputField, Select, VStack } from "@chakra-ui/react"
-import { cloneDeep, isEmpty } from "lodash"
+import { cloneDeep, isEmpty, round } from "lodash"
 import { useState } from "react"
 import { FaArrowUp, FaMinus, FaPlus } from "react-icons/fa"
 import { UnitsType, Unit } from "types/panel/plugins"
@@ -169,7 +169,7 @@ export const UnitPicker = ({ type, value, onChange }: Props) => {
 
 export const formatUnit = (v: number, units: Unit[], decimal: number) => {
     if (isEmpty(units)) {
-        return  v.toFixed(decimal)
+        return  round(v, decimal)
     }
 
     if (v == 0) {
@@ -212,7 +212,7 @@ export const formatUnit = (v: number, units: Unit[], decimal: number) => {
 
     const unit = units[index]
     const res = calcValue(v, unit)
-    return res.toFixed(decimal) + unit.unit
+    return round(res,decimal) + unit.unit
 }
 
 const calcValue = (v, unit: Unit) => {

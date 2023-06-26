@@ -60,7 +60,6 @@ const SeriesTable = ({ props, data, nearestSeries, filterIdx, filterType, onSele
 
 
 
-    console.log("here3333 filter:",filterIdx)
     return (
         <Box fontSize="xs" minWidth="fit-content">
             {/* {filterType != seriesFilterType.Nearest && <Flex justifyContent="space-between">
