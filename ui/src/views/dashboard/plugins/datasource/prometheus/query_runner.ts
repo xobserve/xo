@@ -4,7 +4,7 @@
 import { isEmpty } from "lodash"
 import { Panel, PanelQuery } from "types/dashboard"
 import { TimeRange } from "types/time"
-import { transformPrometheusData } from "./transformData"
+import { prometheusToPanels } from "./transformData"
 
 export const run_prometheus_query = async (panel: Panel,q: PanelQuery,range: TimeRange) => {
     if (isEmpty(q.metrics)) {
@@ -38,7 +38,7 @@ export const run_prometheus_query = async (panel: Panel,q: PanelQuery,range: Tim
         }
     }
 
-    let data = transformPrometheusData(res.data, panel, q.id);
+    let data = prometheusToPanels(res.data, panel, q);
     return {
         error: null,
         data: data

@@ -1,57 +1,35 @@
 import { isEmpty, last, round } from "lodash";
-import { Panel, PanelType } from "types/dashboard";
-import { FieldType, GraphPluginData } from "types/plugins/graph";
+import { variables } from "src/views/dashboard/Dashboard";
+import { Panel, PanelQuery, PanelType } from "types/dashboard";
+import { FieldType, GraphPluginData, SeriesData } from "types/plugins/graph";
 import { StatPluginData } from "types/plugins/stat";
 import { TablePluginData, TableSeries } from "types/plugins/table";
+import { parseLegendFormat } from "utils/format";
+import { replaceWithVariables } from "utils/variable";
 
-export const transformPrometheusData = (rawData: any, panel: Panel, queryId: number) => {
+
+export const prometheusToPanels = (rawData: any, panel: Panel, query: PanelQuery) => {
     if (isEmpty(rawData)) {
         return null
     }
 
     switch (panel.type) {
         case PanelType.Table:
-            const columns = [{
-                Header: "Time",
-                canFilter: true
-            }, {
-                Header: "Value",
-                canFilter: true
-            }]
-            const data: TablePluginData = []
-
-            const d = rawData.result
-            for (const m of d) {
-                const series: TableSeries = {
-                    columns: columns,
-                    name: JSON.stringify(m.metric).replace(/:/g, '='),
-                    rows: []
-                }
-                for (const v of m.values) {
-                    series.rows.push({
-                        Time: v[0],
-                        Value: round(parseFloat(v[1]), 5)
-                    })
-                }
-
-                data.push(series)
-            }
-
-            return data
+            return prometheusToTableData(rawData, query)
 
         case PanelType.Graph:
-            return prometheusDataToGraph(rawData, queryId)
+            return prometheusToSeriesData(rawData, query)
 
         case PanelType.Stat:
-            return prometheusDataToStat(rawData, queryId)
+            return prometheusDataToStat(rawData, query)
     }
 
     return null
 }
 
-
-
-export const prometheusDataToGraph = (data: any, queryId: number): GraphPluginData => {
+export const prometheusToSeriesData = (data: any, query: PanelQuery): SeriesData[] => {
+    const formats = parseLegendFormat(query.legend)
+    
     let res: GraphPluginData = []
     if (data.resultType === "matrix") {
         for (const m of data.result) {
@@ -65,8 +43,8 @@ export const prometheusDataToGraph = (data: any, queryId: number): GraphPluginDa
                 valueValues.push(parseFloat(v[1]))
             }
 
-            res.push({
-                id: queryId,
+            const series = {
+                id: query.id,
                 name: metric,
                 length: length,
                 fields: [
@@ -82,15 +60,37 @@ export const prometheusDataToGraph = (data: any, queryId: number): GraphPluginDa
                         labels: m.metric
                     }
                 ],
-            })
+            }
+
+            // replace legend format of promethues datasource with corresponding labels
+            if (!isEmpty(query.legend)) {
+                series.name = query.legend
+                if (!isEmpty(formats)) {
+                    for (const format of formats) {
+                        const l = series.fields[1].labels[format]
+                        if (l) {
+                            series.name = series.name.replaceAll(`{{${format}}}`, l)
+                        }
+                    }
+                }
+                // replace ${xxx} format with corresponding variables
+                series.name = replaceWithVariables(series.name, variables)
+            }
+
+            res.push(series)
         }
         return res
     }
     return []
 }
 
-export const prometheusDataToStat = (data: any, queryId: number): StatPluginData => {
-    const series: GraphPluginData = prometheusDataToGraph(data, queryId)
+
+
+
+
+
+export const prometheusDataToStat = (data: any, query: PanelQuery): StatPluginData => {
+    const series: GraphPluginData = prometheusToSeriesData(data, query)
     const d: StatPluginData = {
         series: series,
         value: 0
@@ -100,4 +100,33 @@ export const prometheusDataToStat = (data: any, queryId: number): StatPluginData
     }
 
     return d
+}
+
+
+export const prometheusToTableData = (rawData: any, query: PanelQuery) => {
+    const columns = [{
+        Header: "Time",
+        canFilter: true
+    }, {
+        Header: "Value",
+        canFilter: true
+    }]
+    const data: TablePluginData = []
+
+    const d = rawData.result
+    for (const m of d) {
+        const series: TableSeries = {
+            columns: columns,
+            name: JSON.stringify(m.metric).replace(/:/g, '='),
+            rows: []
+        }
+        for (const v of m.values) {
+            series.rows.push({
+                Time: v[0],
+                Value: round(parseFloat(v[1]), 5)
+            })
+        }
+
+        data.push(series)
+    }
 }

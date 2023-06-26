@@ -12,7 +12,7 @@ import { Box, Center, Flex, Text, useColorMode,Tooltip as ChakraTooltip } from "
 import { parseLegendFormat } from "utils/format";
 import { replaceWithVariables } from "utils/variable";
 import { variables } from "src/views/dashboard/Dashboard";
-import { GraphPluginData } from "types/plugins/graph";
+import { GraphPluginData, SeriesData } from "types/plugins/graph";
 import { StatPluginData } from "types/plugins/stat";
 import { formatUnit } from "components/unit";
 
@@ -26,7 +26,7 @@ const StatPanel = memo((props: StatPanelProps) => {
         return (<Center height="100%">No data</Center>)
     }
 
-    const [data, value] = useMemo(() => {
+    const [data, value]:[SeriesData[],number] = useMemo(() => {
         const res = []
         let value;
         if (props.data.length > 0) {
@@ -46,32 +46,10 @@ const StatPanel = memo((props: StatPanelProps) => {
         let o;
         let legend;
         // transform series name based on legend format 
-        const ds = props.panel.datasource
-        for (const query of ds.queries) {
-            // if (!isEmpty(query.legend)) {
-            const formats = parseLegendFormat(query.legend)
-
-            data.map(frame => {
-                if (frame.id == query.id) {
-                    if (!isEmpty(query.legend)) {
-                        frame.name = query.legend
-                        if (!isEmpty(formats)) {
-                            for (const format of formats) {
-                                const l = frame.fields[1].labels[format]
-                                if (l) {
-                                    frame.name = frame.name.replaceAll(`{{${format}}}`, l)
-                                }
-                            }
-                        }
-
-                        // replace ${xxx} format with corresponding variables
-                        frame.name = replaceWithVariables(frame.name, variables)
-                    }
-                    legend = frame.name
-                }
-            })
+  
+        if (data.length > 0) {
+            legend = data[0].name
         }
-
         o = parseOptions(props, data)
 
         return [o, legend]
@@ -82,7 +60,6 @@ const StatPanel = memo((props: StatPanelProps) => {
     const onChartCreate = useCallback((chart) => { setUplot((chart)); props.sync?.sub(chart) }, [props.sync])
 
 
-    console.log("here3333legend:", legend)
     return (
         <>
             <Box h="100%" className="panel-graph">

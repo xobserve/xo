@@ -6,7 +6,7 @@ import { last, reverse, round, sortBy } from "lodash"
 import { useMemo, useState } from "react"
 import { ActiveSeriesEvent } from "src/data/bus-events"
 import { PanelProps } from "types/dashboard"
-import { GraphPluginData, GraphSeries } from "types/plugins/graph"
+import { GraphPluginData } from "types/plugins/graph"
 import useBus from "use-bus"
 
 interface Props {

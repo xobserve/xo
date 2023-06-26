@@ -12,9 +12,6 @@ import SeriesTable, { seriesFilterType } from "src/views/dashboard/plugins/panel
 import { GraphLayout } from "src/views/dashboard/plugins/panel/graph/GraphLayout";
 import { Box, Center, Text, useColorMode } from "@chakra-ui/react";
 import { colors } from "utils/colors";
-import { parseLegendFormat } from "utils/format";
-import { replaceWithVariables } from "utils/variable";
-import { variables } from "src/views/dashboard/Dashboard";
 import { dispatch } from "use-bus";
 import { ActiveSeriesEvent } from "src/data/bus-events";
 import { GraphPluginData } from "types/plugins/graph";
@@ -28,7 +25,7 @@ const GraphPanel = memo((props: GraphPanelProps) => {
     if (isEmpty(props.data)) {
         return (<Center height="100%">No data</Center>)
     }
-    
+
     const data = useMemo(() => {
         const res = []
         props.data.forEach(d => {
@@ -46,41 +43,14 @@ const GraphPanel = memo((props: GraphPanelProps) => {
     const options = useMemo(() => {
         let o;
         let activeExist = false
-        // transform series name based on legend format 
-        const ds = props.panel.datasource
-        for (const query of ds.queries) {
-            if (!isEmpty(query.legend)) {
-                const formats = parseLegendFormat(query.legend)
 
-                data.map(frame => {
-                    if (frame.id == query.id) {
-                        frame.name = query.legend
-                        if (!isEmpty(formats)) {
-                            for (const format of formats) {
-                                const l = frame.fields[1].labels[format]
-                                if (l) {
-                                    frame.name = frame.name.replaceAll(`{{${format}}}`, l)
-                                }
-                            }
-                        }
-
-                        // replace ${xxx} format with corresponding variables
-                        frame.name = replaceWithVariables(frame.name, variables)
-                    }
-                })
+        data.map((frame, i) => {
+            frame.color = colors[i % colors.length]
+            if (frame.name == activeSeries.current) {
+                activeExist = true
             }
+        })
 
-
-
-
-            // set series line color
-            data.map((frame, i) => {
-                frame.color = colors[i % colors.length]
-                if (frame.name == activeSeries.current) {
-                    activeExist = true
-                }
-            })
-        }
 
         if (!activeExist) {
             activeSeries.current = null
@@ -117,7 +87,7 @@ const GraphPanel = memo((props: GraphPanelProps) => {
 
     const onChartCreate = useCallback((chart) => { setUplot((chart)); props.sync?.sub(chart) }, [props.sync])
 
-    
+
     return (
         <>
             <Box h="100%" className="panel-graph">
@@ -132,7 +102,7 @@ const GraphPanel = memo((props: GraphPanelProps) => {
 
                         return (options && <UplotReact
                             options={options}
-                            data={ transformDataToUplot(data)}
+                            data={transformDataToUplot(data)}
                             onDelete={(chart: uPlot) => { }}
                             onCreate={onChartCreate}
                         >

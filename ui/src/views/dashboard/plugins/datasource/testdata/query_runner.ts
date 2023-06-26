@@ -5,8 +5,7 @@ import { Panel, PanelQuery, PanelType } from "types/dashboard"
 import { TimeRange } from "types/time"
 import graphData from './mocks/prometheus_graph.json'
 import { nodeGraphData } from "./mocks/node_graph"
-import { prometheusDataToGraph, prometheusDataToStat, transformPrometheusData } from "../prometheus/transformData"
-import { round } from "lodash"
+import { prometheusToSeriesData, prometheusDataToStat, prometheusToPanels } from "../prometheus/transformData"
 import {GaugePluginData} from 'types/plugins/gauge'
 export const run_testdata_query = async (panel: Panel, q: PanelQuery, range: TimeRange) => {
     let data:any;
@@ -14,13 +13,13 @@ export const run_testdata_query = async (panel: Panel, q: PanelQuery, range: Tim
     switch (panel.type) {
         //@needs-update-when-add-new-panel
         case PanelType.Graph:
-            data = prometheusDataToGraph(graphData.data,q.id)
+            data = prometheusToSeriesData(graphData.data, q)
             break;
         case PanelType.Stat:
-            data = prometheusDataToStat(graphData.data,q.id)
+            data = prometheusDataToStat(graphData.data,q)
             break;
         case PanelType.Table:
-            data = transformPrometheusData(graphData.data, panel,q.id)
+            data = prometheusToPanels(graphData.data, panel,q)
             break;
         case PanelType.NodeGraph:
             data = nodeGraphData(10, 0.8)
