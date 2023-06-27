@@ -1,11 +1,11 @@
 import { Dashboard, DatasourceType, Panel, PanelQuery, PanelType } from "types/dashboard"
-import { Box, Center,  HStack, Menu, MenuButton, MenuDivider, MenuItem, MenuList, Modal, ModalBody, ModalCloseButton, ModalContent, ModalHeader, ModalOverlay, Tab, TabList, TabPanel, TabPanels, Tabs, Textarea, Tooltip, useColorModeValue, useDisclosure, useToast } from "@chakra-ui/react";
+import { Box, Center, HStack, Menu, MenuButton, MenuDivider, MenuItem, MenuList, Modal, ModalBody, ModalCloseButton, ModalContent, ModalHeader, ModalOverlay, Tab, TabList, TabPanel, TabPanels, Tabs, Textarea, Tooltip, useColorModeValue, useDisclosure, useToast } from "@chakra-ui/react";
 import { FaBook, FaBug, FaEdit, FaRegCopy, FaTrashAlt } from "react-icons/fa";
 import { IoMdInformation } from "react-icons/io";
 import { memo, useCallback, useEffect, useState } from "react";
 import { run_prometheus_query } from "../plugins/datasource/prometheus/query_runner";
 import { DatasourceMaxDataPoints, DatasourceMinInterval, PANEL_HEADER_HEIGHT, StorageCopiedPanelKey } from "src/data/constants";
-import {isEmpty, isEqual } from "lodash";
+import { isEmpty, isEqual } from "lodash";
 import { TimeRange } from "types/time";
 import { Variable } from "types/variable";
 import { replaceWithVariables } from "utils/variable";
@@ -13,7 +13,7 @@ import storage from "utils/localStorage";
 import useBus from 'use-bus'
 import { getInitTimeRange } from "components/TimePicker";
 import { EditPanelForceRebuildEvent, PanelForceRebuildEvent, TimeChangedEvent, VariableChangedEvent } from "src/data/bus-events";
-import { variables } from "../Dashboard";
+import { datasources, variables } from "../Dashboard";
 import { addParamToUrl } from "utils/url";
 import { run_testdata_query } from "../plugins/datasource/testdata/query_runner";
 import { run_jaeger_query } from "../plugins/datasource/jaeger/query_runner";
@@ -89,6 +89,7 @@ interface PanelComponentProps extends PanelGridProps {
 
 export const prevQueries = {}
 export const prevQueryData = {}
+
 export const PanelComponent = ({ dashboard, panel, onRemovePanel, width, height, sync, timeRange, variables }: PanelComponentProps) => {
     const toast = useToast()
     const [panelData, setPanelData] = useState<any[]>(null)
@@ -98,26 +99,32 @@ export const PanelComponent = ({ dashboard, panel, onRemovePanel, width, height,
         return () => {
             // delete data query cache when panel is unmounted
             for (const q of panel.datasource.queries) {
-                const id = panel.datasource.type + dashboard.id + panel.id + q.id
+                const id = formatQueryId(panel.datasource.id, dashboard.id, panel.id, q.id)
                 delete prevQueries[id]
             }
         }
-    }, [])
-
+    }, []) 
+ 
     useEffect(() => {
-        queryData(panel, dashboard.id + panel.id)
+        queryData(panel, dashboard.id)
     }, [panel.datasource, timeRange, variables])
 
-    const queryData = async (panel: Panel, queryId) => {
+    const queryData = async (panel: Panel, dashboardId: string) => {
         console.time("time used - query data for panel:")
         const ds = panel.datasource
-        let data = []
+        const datasource = datasources.find(d => d.id == ds.id)
+        if (!datasource) {   
+            return 
+        }
+
+
+        let data = [] 
         let needUpdate = false
-        const interval = calculateInterval(timeRange, ds.queryOptions.maxDataPoints??DatasourceMaxDataPoints,ds.queryOptions.minInterval??DatasourceMinInterval).intervalMs / 1000
+        const interval = calculateInterval(timeRange, ds.queryOptions.maxDataPoints ?? DatasourceMaxDataPoints, ds.queryOptions.minInterval ?? DatasourceMinInterval).intervalMs / 1000
         for (const q0 of ds.queries) {
             const metrics = replaceWithVariables(q0.metrics, variables)
-            const q: PanelQuery = { ...q0, metrics, interval}
-            const id = ds.type + queryId + q.id
+            const q: PanelQuery = { ...q0, metrics, interval }
+            const id = formatQueryId(ds.id, dashboardId, panel.id, q.id)
             const prevQuery = prevQueries[id]
             const currentQuery = [q, timeRange]
 
@@ -128,22 +135,23 @@ export const PanelComponent = ({ dashboard, panel, onRemovePanel, width, height,
                 }
                 continue
             }
-            
+
             needUpdate = true
             // console.log("re-query data! metrics id:", q.id, " query id:", queryId)
 
             prevQueries[id] = currentQuery
             let res
+
             //@needs-update-when-add-new-datasource
             switch (ds.type) {
                 case DatasourceType.Prometheus:
-                    res = await run_prometheus_query(panel, q, timeRange)
+                    res = await run_prometheus_query(panel, q, timeRange, datasource)
                     break;
                 case DatasourceType.TestData:
-                    res = await run_testdata_query(panel, q, timeRange)
+                    res = await run_testdata_query(panel, q, timeRange, datasource)
                     break;
                 case DatasourceType.Jaeger:
-                    res = await run_jaeger_query(panel, q, timeRange)
+                    res = await run_jaeger_query(panel, q, timeRange, datasource)
                     break;
                 default:
                     break;
@@ -161,7 +169,6 @@ export const PanelComponent = ({ dashboard, panel, onRemovePanel, width, height,
                 prevQueryData[id] = res.data
             }
         }
-
 
         if (needUpdate) {
             console.log("query and set panel data:", panel.id)
@@ -309,5 +316,8 @@ const DebugPanel = ({ panel, isOpen, onClose, data }) => {
     )
 }
 
+const formatQueryId = (datasourceId, dashboardId, panelId, queryId) => {
+    return `${datasourceId}-${dashboardId}-${panelId}-${queryId}`
+}
 
 

@@ -13,7 +13,7 @@ export const initPanel = (id?) =>  {
         plugins:  {
             [type]:initPanelPlugins[type]
         },
-        datasource: {...initDatasource, id: InitTestDataDatasourceId},
+        datasource: initDatasource,
         styles: initPanelStyles
     }
 
@@ -27,6 +27,7 @@ export const initPanel = (id?) =>  {
 
 
 export const initDatasource: PanelDatasource = {
+    id: InitTestDataDatasourceId,
     type: DatasourceType.TestData,
     queryOptions: {
         minInterval: DatasourceMinInterval,

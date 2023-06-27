@@ -10,6 +10,8 @@ import Label from "components/form/Label"
 import { EditorInputItem, EditorNumberItem } from "components/editor/EditorItem"
 import { calculateInterval } from "utils/datetime/range"
 import { getInitTimeRange } from "components/TimePicker"
+import { datasources } from "../Dashboard"
+import { Datasource } from "types/datasource"
 
 interface Props {
     panel: Panel
@@ -18,9 +20,12 @@ interface Props {
 
 const EditPanelQuery = (props: Props) => {
     const { panel, onChange } = props
-    const selectDatasource = type => {
+    const selectDatasource = (id) => {
+       
         onChange((panel: Panel) => {
-            panel.datasource = { ...initDatasource, type: type }
+            const type = datasources.find(ds => ds.id == id).type
+            console.log("here3333id:",id,type)
+            panel.datasource = { ...initDatasource, type: type,id: id }
         })
     }
 
@@ -68,9 +73,11 @@ const EditPanelQuery = (props: Props) => {
             <Flex justifyContent="space-between"  alignItems="start">
                 <HStack>
                     <Image width="30px" height="30px" src={`/plugins/datasource/${panel.datasource.type}.svg`} />
-                    <Select width="fit-content" variant="unstyled" value={panel.datasource.type} onChange={e => selectDatasource(e.currentTarget.value)}>
-                        { Object.keys(DatasourceType).map((key, index) => {
-                            return <option key={index} value={DatasourceType[key]}>{key}</option>
+                    <Select width="fit-content" variant="unstyled" value={panel.datasource.id} onChange={e => {
+                        selectDatasource(e.currentTarget.value)
+                    }}>
+                        { datasources.map((ds:Datasource)=> {
+                            return <option key={ds.id} value={ds.id}>{ds.name}</option>
                         })}
                     </Select>
                 </HStack>

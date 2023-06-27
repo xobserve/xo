@@ -5,8 +5,9 @@ import { isEmpty, round } from "lodash"
 import { Panel, PanelQuery } from "types/dashboard"
 import { TimeRange } from "types/time"
 import { prometheusToPanels } from "./transformData"
+import { Datasource } from "types/datasource"
 
-export const run_prometheus_query = async (panel: Panel, q: PanelQuery, range: TimeRange) => {
+export const run_prometheus_query = async (panel: Panel, q: PanelQuery, range: TimeRange,ds: Datasource) => {
     if (isEmpty(q.metrics)) {
         return {
             error: null,
@@ -21,7 +22,7 @@ export const run_prometheus_query = async (panel: Panel, q: PanelQuery, range: T
     // 1. rather than query directyly to prometheus, we should query to our own backend servie
     // 2. using `axios` instead of `fetch`
 
-    const res0 = await fetch(`http://localhost:9090/api/v1/query_range?query=${q.metrics}&start=${start}&end=${end}&step=${q.interval}`)
+    const res0 = await fetch(`${ds.url}/api/v1/query_range?query=${q.metrics}&start=${start}&end=${end}&step=${q.interval}`)
 
     const res = await res0.json()
 

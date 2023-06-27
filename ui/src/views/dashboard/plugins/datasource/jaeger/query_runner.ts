@@ -2,9 +2,10 @@
 // 2. Convert the data to the format which AiAPM expects
 
 import { Panel, PanelQuery } from "types/dashboard"
+import { Datasource } from "types/datasource"
 import { TimeRange } from "types/time"
 
-export const run_jaeger_query = async (panel: Panel, q: PanelQuery,range: TimeRange) => {
+export const run_jaeger_query = async (panel: Panel, q: PanelQuery,range: TimeRange,ds: Datasource) => {
     //@todo: 
     // 1. rather than query directyly to prometheus, we should query to our own backend servie
     // 2. using `axios` instead of `fetch`
