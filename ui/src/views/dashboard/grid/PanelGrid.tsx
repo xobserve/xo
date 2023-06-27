@@ -174,7 +174,7 @@ export const PanelComponent = ({ dashboard, panel, onRemovePanel, width, height,
             console.log("query and set panel data:", panel.id)
             setPanelData(data)
         } else {
-            if (panelData?.length != data.length) {
+            if (!isEqual(panelData,data)) {
                 setPanelData(data)
             }
         }
