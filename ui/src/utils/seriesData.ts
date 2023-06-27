@@ -1,4 +1,4 @@
-import { first, last } from "lodash"
+import { first, last, toNumber } from "lodash"
 import { SeriesData } from "types/seriesData"
 import { ValueCalculationType } from "types/value"
 
@@ -12,16 +12,15 @@ export const calcValueOnSeriesData = (series: SeriesData, calc: ValueCalculation
 }
 
 export const calcValueOnArray = (values: number[], calc: ValueCalculationType):number => {
-
     switch (calc) {
         case ValueCalculationType.Average:
-            return values.reduce((a, b) => a + b, 0) / values.length
+            return values.reduce((a, b) => toNumber(a) + toNumber(b) , 0) / values.length
         case ValueCalculationType.Min:
             return Math.min(...values)
         case ValueCalculationType.Max:
             return Math.max(...values)
         case ValueCalculationType.Sum:
-            return values.reduce((a, b) => a + b, 0)
+            return values.reduce((a, b) => toNumber(a)  + toNumber(b) , 0)
         case ValueCalculationType.Last:
             return last(values)
         case ValueCalculationType.First:

@@ -41,7 +41,6 @@ const GraphPanelEditor = ({ panel, onChange }: PanelEditorProps) => {
             <PanelEditItem title="Caculation" desc="calculate results from series data with this reducer function">
                 <ValueCalculation value={panel.plugins.stat.value.calc} onChange={v => {
                     onChange((panel: Panel) => { panel.plugins.stat.value.calc = v })
-                    dispatch(EditPanelForceRebuildEvent + panel.id)
                 }}/>
             </PanelEditItem>
         </PanelAccordion>

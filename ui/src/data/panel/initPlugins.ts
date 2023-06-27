@@ -152,11 +152,12 @@ function registerEvents(options, chart) {
             show: true,
             min: 0,
             max: 100,
-            decimal: 1,
             fontSize: 15,
             left: '0%',
             top: '75%',
-            unit: '%'
+            unit: '%',
+            calc: ValueCalculationType.Last,
+            decimal: 1,
         },
         scale: {
             enable: true,

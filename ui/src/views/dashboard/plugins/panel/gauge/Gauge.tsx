@@ -27,10 +27,11 @@ const GaugePanel = (props: Props) => {
     
     const value =  calcValueOnSeriesData(sd[0], props.panel.plugins.gauge.value.calc)
     const name = sd[0].name
-    return [{name, value}]
-}, [props.data])
 
-console.log("here3333:",data)
+    return [{name, value}]
+}, [props.data, props.panel.plugins.gauge.value.calc])
+
+
 
   const options = useMemo(() => {
     return {

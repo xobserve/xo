@@ -1,4 +1,5 @@
 import { Box, Button, Flex, HStack, Switch, VStack } from "@chakra-ui/react"
+import ValueCalculation from "components/ValueCalculation"
 import IconButton from "components/button/IconButton"
 import { ColorPicker } from "components/color-picker"
 import { EditorInputItem, EditorNumberItem } from "components/editor/EditorItem"
@@ -41,14 +42,7 @@ const GaugePanelEditor = (props: PanelEditorProps) => {
                         panel.plugins.gauge.value.max = v
                     })} />
                 </PanelEditItem>
-                <PanelEditItem title="Unit">
-                    <EditorInputItem value={panel.plugins.gauge.value.unit} onChange={(v) => onChange((panel: Panel) => {
-                        panel.plugins.gauge.value.unit = v
-                    })} />
-                </PanelEditItem>
-                <PanelEditItem title="Decimal">
-                    <EditorNumberItem value={panel.plugins.gauge.value.decimal} min={0} max={5} step={1} onChange={v => onChange((panel: Panel) => { panel.plugins.gauge.value.decimal = v })} />
-                </PanelEditItem>
+
 
                 <PanelEditItem title="Left" desc="moving right, initial is center">
                     <EditorInputItem value={panel.plugins.gauge.value.left} onChange={(v) => onChange((panel: Panel) => {
@@ -59,6 +53,21 @@ const GaugePanelEditor = (props: PanelEditorProps) => {
                     <EditorInputItem value={panel.plugins.gauge.value.top} onChange={(v) => onChange((panel: Panel) => {
                         panel.plugins.gauge.value.top = v
                     })} />
+                </PanelEditItem>
+
+                <PanelEditItem title="Unit">
+                    <EditorInputItem value={panel.plugins.gauge.value.unit} onChange={(v) => onChange((panel: Panel) => {
+                        panel.plugins.gauge.value.unit = v
+                    })} />
+                </PanelEditItem>
+
+                <PanelEditItem title="Decimal">
+                    <EditorNumberItem value={panel.plugins.gauge.value.decimal} min={0} max={5} step={1} onChange={v => onChange((panel: Panel) => { panel.plugins.gauge.value.decimal = v })} />
+                </PanelEditItem>
+                <PanelEditItem title="Caculation" desc="calculate results from series data with this reducer function">
+                    <ValueCalculation value={panel.plugins.gauge.value.calc} onChange={v => {
+                        onChange((panel: Panel) => { panel.plugins.gauge.value.calc = v })
+                    }} />
                 </PanelEditItem>
             </PanelAccordion>
 
