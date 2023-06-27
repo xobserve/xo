@@ -1,6 +1,7 @@
-import { DatasourceType, Panel, PanelType } from "types/dashboard";
+import { DatasourceType, Panel, PanelDatasource, PanelType } from "types/dashboard";
 import { initPanelPlugins } from "./initPlugins";
 import { initPanelStyles } from "./initStyles";
+import { DatasourceMaxDataPoints, DatasourceMinInterval } from "../constants";
 
 export const initPanel = (id?) =>  {
     const type = PanelType.Text
@@ -25,10 +26,11 @@ export const initPanel = (id?) =>  {
 } 
 
 
-export const initDatasource = {
+export const initDatasource: PanelDatasource = {
     type: DatasourceType.TestData,
     queryOptions: {
-        interval: '15s'
+        minInterval: DatasourceMinInterval,
+        maxDataPoints: DatasourceMaxDataPoints
     },
     queries: [
         {

@@ -5,6 +5,7 @@ import { DatasourceType, Panel, PanelQuery } from "types/dashboard"
 import JaegerQueryEditor from "../plugins/datasource/jaeger/Editor"
 import PrometheusQueryEditor from "../plugins/datasource/prometheus/Editor"
 import TestDataQueryEditor from "../plugins/datasource/testdata/Editor"
+import { initDatasource } from "src/data/panel/initPanel"
 
 interface Props {
     panel: Panel
@@ -14,13 +15,7 @@ interface Props {
 const EditPanelQuery = ({ panel, onChange }: Props) => {
     const selectDatasource = type => {
         onChange((panel:Panel) => {
-            panel.datasource = {
-                type: type,
-                queryOptions: {
-                    interval: '15s'
-                },
-                queries: []
-            }
+            panel.datasource = {...initDatasource, type: type}
         })
     }
     

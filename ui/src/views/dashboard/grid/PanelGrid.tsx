@@ -1,4 +1,4 @@
-import { Dashboard, DatasourceType, Panel, PanelType } from "types/dashboard"
+import { Dashboard, DatasourceType, Panel, PanelQuery, PanelType } from "types/dashboard"
 import AutoSizer from 'react-virtualized-auto-sizer';
 import { Box, Center, ControlBox, HStack, Menu, MenuButton, MenuDivider, MenuItem, MenuList, Modal, ModalBody, ModalCloseButton, ModalContent, ModalHeader, ModalOverlay, Tab, TabList, TabPanel, TabPanels, Tabs, Textarea, Tooltip, useColorModeValue, useDisclosure, useToast } from "@chakra-ui/react";
 import { FaBook, FaBug, FaEdit, FaRegCopy, FaTrashAlt } from "react-icons/fa";
@@ -7,7 +7,7 @@ import TextPanel from "../plugins/panel/text/Text";
 import { memo, useCallback, useEffect, useRef, useState } from "react";
 import { run_prometheus_query } from "../plugins/datasource/prometheus/query_runner";
 import GraphPanel from "../plugins/panel/graph/Graph";
-import { PANEL_BODY_PADDING, PANEL_HEADER_HEIGHT, StorageCopiedPanelKey } from "src/data/constants";
+import { DatasourceMaxDataPoints, DatasourceMinInterval, PANEL_BODY_PADDING, PANEL_HEADER_HEIGHT, StorageCopiedPanelKey } from "src/data/constants";
 import { cloneDeep, isArray, isEmpty, isEqual } from "lodash";
 import { TimeRange } from "types/time";
 import { Variable } from "types/variable";
@@ -28,6 +28,7 @@ import PanelDecoration from "components/largescreen/components/Decoration";
 import { useDedupEvent } from "hooks/useDedupEvent";
 import loadable from '@loadable/component'
 import CodeEditor from "components/CodeEditor/CodeEditor";
+import { calculateInterval } from "utils/datetime/range";
 
 
 interface PanelGridProps {
@@ -117,9 +118,11 @@ export const PanelComponent = ({ dashboard, panel, onRemovePanel, width, height,
         const ds = panel.datasource
         let data = []
         let needUpdate = false
+        console.log("here33333:",ds)
+        const step = calculateInterval(timeRange, ds.queryOptions.maxDataPoints??DatasourceMaxDataPoints,ds.queryOptions.minInterval??DatasourceMinInterval).intervalMs / 1000
         for (const q0 of ds.queries) {
             const metrics = replaceWithVariables(q0.metrics, variables)
-            const q = { ...q0, metrics }
+            const q: PanelQuery = { ...q0, metrics, step: step}
             const id = ds.type + queryId + q.id
             const prevQuery = prevQueries[id]
             const currentQuery = [q, timeRange]
@@ -133,7 +136,7 @@ export const PanelComponent = ({ dashboard, panel, onRemovePanel, width, height,
             }
             
         
-
+            console.log("here33333:",q)
             needUpdate = true
             // console.log("re-query data! metrics id:", q.id, " query id:", queryId)
 

@@ -16,7 +16,7 @@ export const run_prometheus_query = async (panel: Panel,q: PanelQuery,range: Tim
 
     const start = round(range.start.getTime() / 1000)
     const end = range.end.getTime() / 1000
-    q.step = 15
+
     //@todo: 
     // 1. rather than query directyly to prometheus, we should query to our own backend servie
     // 2. using `axios` instead of `fetch`

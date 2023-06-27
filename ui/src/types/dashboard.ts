@@ -80,7 +80,7 @@ export interface PanelDatasource {
     type: DatasourceType
     queryOptions: {
         maxDataPoints?: number
-        interval: string
+        minInterval: string
     }
     queries?: PanelQuery[]
 }

@@ -137,3 +137,9 @@ export const systemDateFormats = new SystemDateFormatsState();
 const missingIntlDateTimeFormatSupport = (): boolean => {
     return !('DateTimeFormat' in Intl) || !('formatToParts' in Intl.DateTimeFormat.prototype);
 };
+
+
+export interface IntervalValues {
+    interval: string; // 10s,5m
+    intervalMs: number;
+  }
