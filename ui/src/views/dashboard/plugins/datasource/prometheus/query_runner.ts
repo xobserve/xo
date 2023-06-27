@@ -1,7 +1,7 @@
 // 1. Run the query to get the data from datasource
 // 2. Convert the data to the format which AiAPM expects
 
-import { isEmpty } from "lodash"
+import { isEmpty, round } from "lodash"
 import { Panel, PanelQuery } from "types/dashboard"
 import { TimeRange } from "types/time"
 import { prometheusToPanels } from "./transformData"
@@ -14,12 +14,14 @@ export const run_prometheus_query = async (panel: Panel,q: PanelQuery,range: Tim
         }
     }
 
+    const start = round(range.start.getTime() / 1000)
+    const end = range.end.getTime() / 1000
     q.step = 15
     //@todo: 
     // 1. rather than query directyly to prometheus, we should query to our own backend servie
     // 2. using `axios` instead of `fetch`
     
-    const res0 = await fetch(`http://localhost:9090/api/v1/query_range?query=${q.metrics}&start=${range.start.getTime() / 1000}&end=${range.end.getTime() / 1000}&step=${q.step}`)
+    const res0 = await fetch(`http://localhost:9090/api/v1/query_range?query=${q.metrics}&start=${start}&end=${end}&step=${q.step}`)
      
     const res = await res0.json()
     

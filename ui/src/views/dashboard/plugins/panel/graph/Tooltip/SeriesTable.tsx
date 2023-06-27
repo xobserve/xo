@@ -2,7 +2,7 @@
 
 import { Box, Flex, HStack, Text, VStack } from "@chakra-ui/react"
 import { formatUnit } from "components/unit"
-import { last, reverse, round, sortBy } from "lodash"
+import { last, orderBy, reverse, round, sortBy } from "lodash"
 import { useMemo, useState } from "react"
 import { ActiveSeriesEvent } from "src/data/bus-events"
 import { PanelProps, PanelType } from "types/dashboard"
@@ -57,8 +57,7 @@ const SeriesTable = ({ props, data, nearestSeries, filterIdx, filterType, onSele
         default:
     }
 
-
-    let res1 = reverse(sortBy(res, 'value'))
+    let res1 = orderBy(res, i => i.value == null ? 0 : i.value, 'desc')
 
     for (const r of res1) {
         if (r.value) {

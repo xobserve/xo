@@ -25,7 +25,7 @@ export const initPanelPlugins: PanelPlugins = {
             lineWidth: 2,
             fillOpacity: 21,
             showPoints: "auto",
-            pointSize: 5,
+            pointSize: 6,
             gradientMode: "opacity",
             connectNulls: false
         },

@@ -42,7 +42,7 @@ export const parseOptions = (config: PanelProps,rawData: GraphPluginData, colorM
                 size: config.panel.plugins.graph.styles?.pointSize,
                 stroke: d.color,
                 fill: d.color,
-                filter: config.panel.plugins.graph.styles.connectNulls ? null : pointsFilter,
+                filter:  pointsFilter,
             },
             stroke: d.color,
             width: config.panel.plugins.graph.styles?.style == "points" ? 0 : config.panel.plugins.graph.styles?.lineWidth,

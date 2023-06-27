@@ -33,7 +33,7 @@ export const parseOptions = (config: PanelProps,rawData: SeriesData[]) => {
                 size: 5,
                 stroke: config.panel.plugins.stat.styles.color,
                 fill: config.panel.plugins.stat.styles.color,
-                filter: config.panel.plugins.stat.styles.connectNulls ? null : pointsFilter,
+                filter: pointsFilter,
             },
             spanGaps: config.panel.plugins.stat.styles.connectNulls,
             paths: config.panel.plugins.stat.styles?.style == "bars" ? uPlot.paths.bars({

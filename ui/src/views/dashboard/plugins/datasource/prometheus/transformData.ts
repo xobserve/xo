@@ -36,6 +36,7 @@ export const prometheusToSeriesData = (data: any, query: PanelQuery, range: Time
         query.step = 15
     }
 
+    console.log("here33333")
     let res: GraphPluginData = []
     if (data.resultType === "matrix") {
         for (const m of data.result) {
@@ -46,7 +47,7 @@ export const prometheusToSeriesData = (data: any, query: PanelQuery, range: Time
             const valueValues = []
 
             if (!isEmpty(m.values)) {
-                let start = range.start.getTime() / 1000
+                let start = round(range.start.getTime() / 1000)
                 if (m.values[0][0] <= start) {
                     start = round(m.values[0][0])
                 }
