@@ -98,6 +98,7 @@ export interface GaugeValueSettings {
     top: string
     decimal: number
     unit: string
+    calc: ValueCalculationType
 }
 
 export interface EchartsSettings {

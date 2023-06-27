@@ -19,9 +19,8 @@ export const prometheusToPanels = (rawData: any, panel: Panel, query: PanelQuery
             return prometheusToTableData(rawData, query)
 
         case PanelType.Graph:
-            return prometheusToSeriesData(rawData, query, range)
-        
         case PanelType.Stat:
+        case PanelType.Gauge:
             return prometheusToSeriesData(rawData, query, range)
     }
 

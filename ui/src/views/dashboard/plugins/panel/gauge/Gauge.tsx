@@ -6,14 +6,32 @@ import { cloneDeep, round } from "lodash";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { PanelProps } from "types/dashboard"
 import { GaugePluginData } from "types/plugins/gauge";
+import { SeriesData } from "types/seriesData";
+import { calcValueOnSeriesData } from "utils/seriesData";
 
 interface Props extends PanelProps {
-  data: GaugePluginData[]
+  data: SeriesData[][]
 }
 
-const GaugePanel = ({ panel, data, height, width }: Props) => {
+const GaugePanel = (props: Props) => {
+  const { panel, height, width } = props
   const [chart, setChart] = useState(null)
   const { colorMode } = useColorMode()
+
+  const data:GaugePluginData[] = useMemo(() => {
+    let sd:SeriesData[] = [];
+    if (props.data.length > 0) {
+        // Gauge only use the first series, Graph use all
+        sd.push(props.data[0][0])
+    }
+    
+    const value =  calcValueOnSeriesData(sd[0], props.panel.plugins.gauge.value.calc)
+    const name = sd[0].name
+    return [{name, value}]
+}, [props.data])
+
+console.log("here3333:",data)
+
   const options = useMemo(() => {
     return {
       animation: panel.plugins.gauge.animation,
