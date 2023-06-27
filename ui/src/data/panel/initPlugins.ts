@@ -131,16 +131,21 @@ function registerEvents(options, chart) {
     [PanelType.Pie]: {
         animation: true,
         shape: {
-            type: 'rose',
+            type: 'normal',
             borderRadius: 8,
             radius: 90,
-            innerRadius: 20,
+            innerRadius: 0,
         },
         showLabel: true,
         legend: {
-            show: true,
+            show: false,
             orient: 'horizontal',
             placement: PieLegendPlacement.Bottom
+        },
+        value: {
+            ...initUnits,
+            decimal: 2,
+            calc: ValueCalculationType.Last
         },
         onClickEvent: `function onClickEvent(params) {
     console.log(params)

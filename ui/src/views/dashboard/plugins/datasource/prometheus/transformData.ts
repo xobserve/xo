@@ -21,6 +21,7 @@ export const prometheusToPanels = (rawData: any, panel: Panel, query: PanelQuery
         case PanelType.Graph:
         case PanelType.Stat:
         case PanelType.Gauge:
+        case PanelType.Pie:
             return prometheusToSeriesData(rawData, query, range)
     }
 
@@ -33,7 +34,6 @@ export const prometheusToSeriesData = (data: any, query: PanelQuery, range: Time
     let res: SeriesData[] = []
     if (data.resultType === "matrix") {
         for (const m of data.result) {
-            const length = m.values.length
             const metric = JSON.stringify(m.metric).replace(/:/g, '=')
 
             const timeValues = []
@@ -72,10 +72,10 @@ export const prometheusToSeriesData = (data: any, query: PanelQuery, range: Time
             }
 
 
-            const series = {
+            const series:SeriesData = {
                 id: query.id,
                 name: metric,
-                length: length,
+                length:  m.values.length,
                 fields: [
                     {
                         name: "Time",

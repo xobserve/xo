@@ -1,7 +1,9 @@
 import { Box, Button, Modal, ModalBody, ModalCloseButton, ModalContent, ModalHeader, ModalOverlay, Select, Switch, useDisclosure } from "@chakra-ui/react"
 import CodeEditor from "components/CodeEditor/CodeEditor"
 import RadionButtons from "components/RadioButtons"
+import ValueCalculation from "components/ValueCalculation"
 import { EditorInputItem, EditorNumberItem } from "components/editor/EditorItem"
+import { UnitPicker } from "components/unit"
 import { useState } from "react"
 import PanelAccordion from "src/views/dashboard/edit-panel/Accordion"
 import PanelEditItem from "src/views/dashboard/edit-panel/PanelEditItem"
@@ -79,7 +81,24 @@ const PiePanelEditor = ({ panel, onChange }: PanelEditorProps) => {
 
         </PanelAccordion>
 
-
+        <PanelAccordion title="Value">
+            <PanelEditItem title="Unit">
+                <UnitPicker type={panel.plugins.pie.value.unitsType} value={panel.plugins.pie.value.units} onChange={
+                    (units, type) => onChange((panel: Panel) => {
+                        panel.plugins.pie.value.units = units
+                        panel.plugins.pie.value.unitsType = type
+                    })
+                } />
+            </PanelEditItem>
+            <PanelEditItem title="Decimal">
+                <EditorNumberItem value={panel.plugins.pie.value.decimal} min={0} max={5} step={1} onChange={v => onChange((panel: Panel) => { panel.plugins.pie.value.decimal = v })} />
+            </PanelEditItem>
+            <PanelEditItem title="Caculation" desc="calculate results from series data with this reducer function">
+                <ValueCalculation value={panel.plugins.pie.value.calc} onChange={v => {
+                    onChange((panel: Panel) => { panel.plugins.pie.value.calc = v })
+                }} />
+            </PanelEditItem>
+        </PanelAccordion>
 
     </>
     )

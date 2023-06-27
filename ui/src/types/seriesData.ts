@@ -4,7 +4,7 @@ export interface SeriesData {
     fields: Field[]; // All fields of equal length
 
     // The number of rows
-    length: number;
+    length?: number;
 
     // series color showing in graph
     color?: string 

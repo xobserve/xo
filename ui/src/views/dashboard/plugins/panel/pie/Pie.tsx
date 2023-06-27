@@ -1,25 +1,43 @@
 import { Box, useColorMode, useToast } from "@chakra-ui/react";
 import ChartComponent from "components/charts/Chart";
-import { isFunction } from "lodash";
+import { formatUnit } from "components/unit";
+import { isFunction, round } from "lodash";
 import { useMemo, useState } from "react";
 import { Panel, PanelProps } from "types/dashboard"
 import { PieLegendPlacement } from "types/panel/plugins";
 import { PiePluginData } from "types/plugins/pie"
+import { SeriesData } from "types/seriesData";
 import { genDynamicFunction } from "utils/dynamicCode";
+import { calcValueOnSeriesData } from "utils/seriesData";
 
 interface Props extends PanelProps {
-    data: PiePluginData[]
+    data: SeriesData[][]
 }
 
-const PiePanel = ({ panel, data, height, width }: Props) => {
+const PiePanel = (props: Props) => {
+    const { panel, height, width } = props
     const [chart, setChart] = useState(null)
     const { colorMode } = useColorMode()
     
     const [options,onEvents] = useMemo(() =>  {
-        const d = data.length > 0 ? data[0] : []
-        const lp = parseLegendPlacement(panel)
+        // const d = data.length > 0 ? data[0] : []
+
+        const data:PiePluginData = []
+
+        for (const s of props.data) {
+            for (const series of s) {
+                data.push({
+                    name: series.name,
+                    value:calcValueOnSeriesData(series, props.panel.plugins.pie.value.calc)
+                })
+            }
+        }
 
         const onEvents = genDynamicFunction(panel.plugins.pie.onClickEvent);
+
+
+
+        const lp = parseLegendPlacement(panel)
 
 
         return [{
@@ -30,7 +48,10 @@ const PiePanel = ({ panel, data, height, width }: Props) => {
                 ...lp
             },
             tooltip: {
-                trigger: 'item'
+                trigger: 'item',
+                formatter: item => {
+                    return `${formatUnit(item.value, panel.plugins.pie.value.units, panel.plugins.pie.value.decimal)}`
+                },
             },
             series: [
                 {
@@ -41,7 +62,7 @@ const PiePanel = ({ panel, data, height, width }: Props) => {
                     itemStyle: {
                         borderRadius: panel.plugins.pie.shape.borderRadius
                     },
-                    data: d,
+                    data: data,
                     emphasis: {
                         itemStyle: {
                             shadowBlur: 10,
@@ -50,12 +71,12 @@ const PiePanel = ({ panel, data, height, width }: Props) => {
                         }
                     },
                     label: {
-                        show: panel.plugins.pie.showLabel
+                        show: panel.plugins.pie.showLabel,
                     }
                 }
             ]
         },onEvents]
-    },[panel.plugins.pie, data, colorMode])
+    },[panel.plugins.pie,props.data, colorMode])
     
     
 

@@ -55,6 +55,7 @@ export interface PieSettings {
         orient: 'vertical' | 'horizontal'
         placement: PieLegendPlacement
     }
+    value: ValueSetting
 }
 
 export enum PieLegendPlacement {
