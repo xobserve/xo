@@ -1,14 +1,12 @@
-import { Button, Table, TableContainer, Tag, Tbody, Td, Th, Thead, Tr, Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay, useDisclosure, VStack, InputGroup, InputLeftAddon, Input, Flex, Box, useToast, HStack, Image, Text, StackDivider } from "@chakra-ui/react"
-import useSession from "hooks/use-session"
+import { Button,  Modal, ModalBody, ModalCloseButton, ModalContent, ModalHeader, ModalOverlay, useDisclosure, VStack, Flex, Box, useToast, HStack, Image, Text } from "@chakra-ui/react"
 import Page from "layouts/page/Page"
 import { useRouter } from "next/router"
-import { DatasourceEditor } from "pages/new/datasource"
 import { useEffect, useState } from "react"
 import { FaCog } from "react-icons/fa"
 import { cfgLinks } from "src/data/nav-links"
 import ReserveUrls from "src/data/reserve-urls"
+import DatasourceEditor from "src/views/datasource/Editor"
 import { Datasource } from "types/datasource"
-import { Team } from "types/teams"
 import { requestApi } from "utils/axios/request"
 
 const TeamsPage = () => {
@@ -27,7 +25,10 @@ const TeamsPage = () => {
 
     const { isOpen, onOpen, onClose } = useDisclosure()
 
-
+    const onChange = () => {
+        onClose()
+        load()
+    }
     return <>
         <Page title={`Configuration`} subTitle="Manage datasources" icon={<FaCog />} tabs={cfgLinks}>
             <Flex justifyContent="space-between">
@@ -61,7 +62,7 @@ const TeamsPage = () => {
                 <ModalHeader>Edit datasource - {datasource?.name}</ModalHeader>
                 <ModalCloseButton />
                 <ModalBody>
-                    {datasource && <DatasourceEditor ds={datasource} />}
+                    {datasource && <DatasourceEditor ds={datasource} onChange={onChange} />}
                 </ModalBody>
             </ModalContent>
         </Modal>

@@ -55,9 +55,7 @@ export const testPrometheusConnection = async (url: string) => {
     try {
         // http://localhost:9090/api/v1/labels?match[]=up
         const res0 = await fetch(`${url}/api/v1/labels?match[]=up`)
-        console.log("here33333 start")
         const res = await res0.json()
-        console.log("here33333 end:", res)
         if (res.status) {
             return true
         }

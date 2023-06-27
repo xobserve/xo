@@ -51,6 +51,10 @@ func SaveDatasource(c *gin.Context) {
 		// update
 		_, err = db.Conn.Exec("UPDATE datasource SET name=?,type=?,url=?,updated=? WHERE id=?", ds.Name, ds.Type, ds.URL, now, ds.Id)
 		if err != nil {
+			if e.IsErrUniqueConstraint(err) {
+				c.JSON(http.StatusBadRequest, common.RespError("name alread exist"))
+				return
+			}
 			logger.Warn("insert datasource error", "error", err)
 			c.JSON(http.StatusInternalServerError, common.RespInternalError())
 			return
