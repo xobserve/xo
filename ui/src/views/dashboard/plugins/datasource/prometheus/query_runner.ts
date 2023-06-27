@@ -44,6 +44,6 @@ export const run_prometheus_query = async (panel: Panel,q: PanelQuery,range: Tim
     let data = prometheusToPanels(res.data, panel, q, range);
     return {
         error: null,
-        data: data
+        data: data,
     }
 }

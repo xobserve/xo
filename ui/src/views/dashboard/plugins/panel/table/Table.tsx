@@ -41,9 +41,6 @@ const TablePanel = (props: TablePanelProps) => {
             })
         })
 
-        console.log("here3333 table:", data ,series)
-
-
         for (var i = 0; i < data.length; i++) {
             const s = data[i]
 
