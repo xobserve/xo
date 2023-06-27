@@ -36,3 +36,8 @@ export const run_jaeger_query = async (panel: Panel, q: PanelQuery,range: TimeRa
         data: data
     }
 }
+
+
+export const testJaegerConnection = async (url: string) => {
+    return false
+}

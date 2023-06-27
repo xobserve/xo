@@ -100,3 +100,17 @@ CREATE TABLE IF NOT EXISTS dashboard_history (
 
 
 CREATE UNIQUE INDEX  dashboard_id_version ON dashboard_history (dashboard_id,version);
+
+
+CREATE TABLE IF NOT EXISTS datasource (
+    id  INTEGER PRIMARY KEY AUTO_INCREMENT,
+    name VARCHAR(64),
+    type VARCHAR(32),
+    url VARCHAR(255),
+    data MEDIUMTEXT,
+    created DATETIME NOT NULL,
+    updated DATETIME NOT NULL
+);
+
+
+CREATE UNIQUE INDEX  datasource_name ON datasource (name);

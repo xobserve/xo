@@ -144,3 +144,5 @@ export const prometheusToTableData = (rawData: any, query: PanelQuery) => {
 
     return data
 }
+
+

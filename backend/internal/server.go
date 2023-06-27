@@ -7,6 +7,7 @@ import (
 	"github.com/MyStarship/starship/backend/internal/admin"
 	"github.com/MyStarship/starship/backend/internal/api"
 	"github.com/MyStarship/starship/backend/internal/dashboard"
+	"github.com/MyStarship/starship/backend/internal/datasource"
 	"github.com/MyStarship/starship/backend/internal/storage"
 	"github.com/MyStarship/starship/backend/internal/teams"
 	"github.com/MyStarship/starship/backend/internal/user"
@@ -99,6 +100,9 @@ func (s *Server) Start() error {
 		r.POST("/admin/user/new", IsLogin(), admin.AddNewUser)
 		r.POST("/admin/user/role", IsLogin(), admin.UpdateUserRole)
 		r.DELETE("/admin/user/:id", IsLogin(), admin.DeleteUser)
+
+		// datasource apis
+		r.POST("/datasource/save", IsLogin(), datasource.SaveDatasource)
 
 		r.Use(gzip.Gzip(gzip.DefaultCompression))
 
