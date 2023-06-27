@@ -34,7 +34,7 @@ const PrometheusQueryEditor = ({query,onChange}:Props) => {
     return (  
         <VStack alignItems="left" spacing="1">
             <HStack>
-                <Label  py="0"><Box onClick={loadMetrics} width="220px"><Select   placeholder="Metrics" variant="unstyled" size="sm" options={metricsList.map((m) => {return {label: m, value: m}})} onChange={(v) => {
+                <Label  py="0"><Box onClick={loadMetrics} width="220px"><Select menuPlacement="bottom" placeholder="Metrics" variant="unstyled" size="sm" options={metricsList.map((m) => {return {label: m, value: m}})} onChange={(v) => {
                     setTempQuery({...tempQuery, metrics: v.value})
                     onChange({...tempQuery, metrics:v.value})
                     }} 
