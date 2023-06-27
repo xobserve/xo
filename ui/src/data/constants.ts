@@ -14,5 +14,5 @@ export enum ColorMode {
 export const StorageCopiedPanelKey = "copiedPanel";
 
 
-export const DatasourceMaxDataPoints = 459
+export const DatasourceMaxDataPoints = 1000
 export const DatasourceMinInterval = '15s'

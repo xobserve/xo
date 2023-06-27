@@ -1,5 +1,5 @@
 import { HStack, Input,VStack } from "@chakra-ui/react"
-import Label from "components/label/Label"
+import Label from "components/form/Label"
 import { cloneDeep } from "lodash"
 import { useState } from "react"
 import { PanelQuery } from "types/dashboard"

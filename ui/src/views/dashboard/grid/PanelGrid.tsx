@@ -134,8 +134,6 @@ export const PanelComponent = ({ dashboard, panel, onRemovePanel, width, height,
                 continue
             }
             
-        
-            console.log("here33333:",q)
             needUpdate = true
             // console.log("re-query data! metrics id:", q.id, " query id:", queryId)
 

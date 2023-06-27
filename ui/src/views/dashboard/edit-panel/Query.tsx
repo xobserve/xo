@@ -1,97 +1,103 @@
 import { Box, Button, Flex, HStack, Image, Select, Text, VStack } from "@chakra-ui/react"
-import { useMemo } from "react"
-import { FaPlus, FaTrashAlt } from "react-icons/fa"
+import { useMemo, useState } from "react"
+import { FaAngleDown, FaAngleRight, FaArrowCircleDown, FaArrowRight, FaCog, FaPlus, FaTrashAlt } from "react-icons/fa"
 import { DatasourceType, Panel, PanelQuery } from "types/dashboard"
 import JaegerQueryEditor from "../plugins/datasource/jaeger/Editor"
 import PrometheusQueryEditor from "../plugins/datasource/prometheus/Editor"
 import TestDataQueryEditor from "../plugins/datasource/testdata/Editor"
 import { initDatasource } from "src/data/panel/initPanel"
+import Label from "components/form/Label"
+import { EditorInputItem, EditorNumberItem } from "components/editor/EditorItem"
+import { calculateInterval } from "utils/datetime/range"
+import { getInitTimeRange } from "components/TimePicker"
 
 interface Props {
     panel: Panel
     onChange: any
 }
 
-const EditPanelQuery = ({ panel, onChange }: Props) => {
+const EditPanelQuery = (props: Props) => {
+    const { panel, onChange } = props
     const selectDatasource = type => {
-        onChange((panel:Panel) => {
-            panel.datasource = {...initDatasource, type: type}
+        onChange((panel: Panel) => {
+            panel.datasource = { ...initDatasource, type: type }
         })
     }
-    
+
     const onAddQuery = () => {
-        onChange((panel:Panel) => {
+        onChange((panel: Panel) => {
             const ds = panel.datasource
             if (!ds.queries) {
                 ds.queries = []
             }
-    
+
             let id = 65; // from 'A' to 'Z'
             for (const q of ds.queries) {
                 if (q.id >= id) {
                     id = q.id + 1
                 }
             }
-    
-            
+
+
             ds.queries.push({
                 id: id,
                 metrics: "",
-                legend: "" ,
+                legend: "",
                 visible: true
             })
         })
     }
 
     const removeQuery = id => {
-        onChange((panel:Panel) => {
+        onChange((panel: Panel) => {
             const ds = panel.datasource
             if (!ds.queries) {
                 ds.queries = []
             }
-    
+
             ds.queries = ds.queries.filter(q => q.id != id)
         })
     }
-    
+
     const selected = panel.datasource
 
     const datasources = useMemo(() => {
         return Object.keys(DatasourceType)
-    },[panel.type])
-    
+    }, [panel.type])
+
     return (<>
         <Box className="top-gradient-border bordered-left bordered-right" width="fit-content">
             <Text px="2" py="2">Query</Text>
         </Box>
         <Box className="bordered" p="2" borderRadius="0" height="auto">
-            <Flex justifyContent="space-between">
+            <Flex justifyContent="space-between"  alignItems="start">
                 <HStack>
-                    <Image width="32px" height="32px" src={`/plugins/datasource/${selected.type}.svg`} />
+                    <Image width="30px" height="30px" src={`/plugins/datasource/${selected.type}.svg`} />
                     <Select width="fit-content" variant="unstyled" value={selected.type} onChange={e => selectDatasource(e.currentTarget.value)}>
                         {datasources.map((key, index) => {
                             return <option key={index} value={DatasourceType[key]}>{key}</option>
                         })}
                     </Select>
                 </HStack>
-                <Button leftIcon={<FaPlus />} size="sm" variant="outline" onClick={onAddQuery}> Query</Button>
+                <DatasourceQueryOption {...props} />
             </Flex>
-            
+
             <VStack alignItems="left" mt="3" spacing="2">
                 {selected.queries?.map((query, index) => {
                     return <Box key={index}>
                         <Flex justifyContent="space-between" className="label-bg" py="1" px="2" mb="1">
                             <Text className="color-text">{String.fromCharCode(query.id)}</Text>
                             <HStack layerStyle="textSecondary">
-                                <FaTrashAlt fontSize="12px" cursor="pointer" onClick={() => removeQuery(query.id)}/>
+                                <FaTrashAlt fontSize="12px" cursor="pointer" onClick={() => removeQuery(query.id)} />
                             </HStack>
                         </Flex>
                         {
-                            <Box pl="4"><CustomQueryEditor query={query} selected={selected} onChange={onChange}/></Box>
+                            <Box pl="4"><CustomQueryEditor query={query} selected={selected} onChange={onChange} /></Box>
                         }
                     </Box>
                 })}
             </VStack>
+            <Button leftIcon={<FaPlus />} size="sm" variant="outline" onClick={onAddQuery} mt="4"> Query</Button>
         </Box>
     </>)
 }
@@ -99,9 +105,45 @@ const EditPanelQuery = ({ panel, onChange }: Props) => {
 export default EditPanelQuery
 
 
-const CustomQueryEditor = ({query,onChange,selected}) => {
-    const onQueryChange = (query:PanelQuery) => {
-        onChange((panel:Panel) => {
+const DatasourceQueryOption = ({ panel, onChange }: Props) => {
+    const [expanded, setExpanded] = useState(false)
+    return (
+        <VStack alignItems="end" mt="3px">
+  
+                <HStack color="brand.500" fontSize=".9rem" spacing={1} cursor="pointer" onClick={() => setExpanded(!expanded)} width="fit-content">
+                    {expanded ? <FaAngleDown /> : <FaAngleRight />}
+                    <Text fontWeight="500">Query options</Text>
+                </HStack>
+            {
+                expanded && <VStack alignItems="center" mt="1" position="relative" >
+                    <HStack spacing={1}>
+                        <Label width="170px" desc="The maximum data points per series. Used directly by some data sources and used in calculation of auto interval. ">Max data points</Label>
+                        <Box width="100px"><EditorNumberItem min={100} max={2000} step={50} value={panel.datasource.queryOptions.maxDataPoints} onChange={v => {
+                        onChange((panel: Panel) => {
+                            panel.datasource.queryOptions.maxDataPoints = v
+                        })
+                    }} /></Box>
+                    </HStack>
+                    <HStack spacing={1}>
+                        <Label width="170px" desc="A lower limit for the interval. Recommended to be set to write frequency, e.g Prometheus defaults scraping data every 15 seconds, you can set this to '15s'">Min interval </Label>
+                        <Box width="100px"><EditorInputItem value={panel.datasource.queryOptions.minInterval} onChange={v => {
+                        onChange((panel: Panel) => {
+                            panel.datasource.queryOptions.minInterval = v
+                        })
+                    }} /></Box>
+                    </HStack>
+                    <HStack spacing={1}>
+                        <Label width="170px" desc="Final interval is caculated based on the current time range, max data points and the min interval, it's sent to datasource, e.g final interval will be directly passed as the step option that Prometheus requires">Final interval </Label>
+                        <Text width="100px" pl="2">{calculateInterval(getInitTimeRange(), panel.datasource.queryOptions.maxDataPoints,panel.datasource.queryOptions.minInterval ).interval}</Text>
+                    </HStack>
+                </VStack>
+            }
+        </VStack>
+    )
+}
+const CustomQueryEditor = ({ query, onChange, selected }) => {
+    const onQueryChange = (query: PanelQuery) => {
+        onChange((panel: Panel) => {
             const ds = panel.datasource
             for (var i = 0; i < ds.queries.length; i++) {
                 if (ds.queries[i].id === query.id) {
