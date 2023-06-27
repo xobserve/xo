@@ -30,17 +30,27 @@ const TablePanel = (props: TablePanelProps) => {
     const [tableColumns, tableData, seriesList] = useMemo(() => {
         const data:TableSeries[] = []
         const seriesList = []
+        let exist = false
         props.data.forEach(d => {
             d.forEach(s => {
+                if (s.name == series) {
+                    exist = true
+                }
                 seriesList.push(s.name)
                 data.push(s)
             })
         })
 
+        console.log("here3333 table:", data ,series)
+
+
         for (var i = 0; i < data.length; i++) {
             const s = data[i]
 
-            if (s.name == series) {
+            if (!exist || s.name == series) {
+                if (!exist) {
+                    setSeries(s.name)
+                }
                 const columns = []
                 s.columns.forEach((column, i) => {
                     if (column.canFilter) {
@@ -76,7 +86,6 @@ const TablePanel = (props: TablePanelProps) => {
 
     const clickFunc = genDynamicFunction(props.panel.plugins.table.onRowClick);
 
-    console.log("here3333 table:", seriesList,series)
 
     return (
         <Box h="100%">
