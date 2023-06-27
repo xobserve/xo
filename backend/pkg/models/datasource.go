@@ -13,8 +13,10 @@ type Datasource struct {
 }
 
 const (
-	Prometheus   = "prometheus"
-	Jaeger       = "jaeger"
-	ExternalHttp = "external-http"
-	TestData     = "testdata"
+	DatasourcePrometheus   = "prometheus"
+	DatasourceJaeger       = "jaeger"
+	DatasourceExternalHttp = "external-http"
+	DatasourceTestData     = "testdata"
 )
+
+const InitTestDataDatasourceId = 1

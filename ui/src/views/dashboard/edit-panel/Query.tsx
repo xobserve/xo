@@ -59,11 +59,6 @@ const EditPanelQuery = (props: Props) => {
         })
     }
 
-    const selected = panel.datasource
-
-    const datasources = useMemo(() => {
-        return Object.keys(DatasourceType)
-    }, [panel.type])
 
     return (<>
         <Box className="top-gradient-border bordered-left bordered-right" width="fit-content">
@@ -72,9 +67,9 @@ const EditPanelQuery = (props: Props) => {
         <Box className="bordered" p="2" borderRadius="0" height="auto">
             <Flex justifyContent="space-between"  alignItems="start">
                 <HStack>
-                    <Image width="30px" height="30px" src={`/plugins/datasource/${selected.type}.svg`} />
-                    <Select width="fit-content" variant="unstyled" value={selected.type} onChange={e => selectDatasource(e.currentTarget.value)}>
-                        {datasources.map((key, index) => {
+                    <Image width="30px" height="30px" src={`/plugins/datasource/${panel.datasource.type}.svg`} />
+                    <Select width="fit-content" variant="unstyled" value={panel.datasource.type} onChange={e => selectDatasource(e.currentTarget.value)}>
+                        { Object.keys(DatasourceType).map((key, index) => {
                             return <option key={index} value={DatasourceType[key]}>{key}</option>
                         })}
                     </Select>
@@ -83,7 +78,7 @@ const EditPanelQuery = (props: Props) => {
             </Flex>
 
             <VStack alignItems="left" mt="3" spacing="2">
-                {selected.queries?.map((query, index) => {
+                {panel.datasource.queries?.map((query, index) => {
                     return <Box key={index}>
                         <Flex justifyContent="space-between" className="label-bg" py="1" px="2" mb="1">
                             <Text className="color-text">{String.fromCharCode(query.id)}</Text>
@@ -92,7 +87,7 @@ const EditPanelQuery = (props: Props) => {
                             </HStack>
                         </Flex>
                         {
-                            <Box pl="4"><CustomQueryEditor query={query} selected={selected} onChange={onChange} /></Box>
+                            <Box pl="4"><CustomQueryEditor query={query} selected={panel.datasource} onChange={onChange} /></Box>
                         }
                     </Box>
                 })}

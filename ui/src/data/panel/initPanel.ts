@@ -1,7 +1,7 @@
 import { DatasourceType, Panel, PanelDatasource, PanelType } from "types/dashboard";
 import { initPanelPlugins } from "./initPlugins";
 import { initPanelStyles } from "./initStyles";
-import { DatasourceMaxDataPoints, DatasourceMinInterval } from "../constants";
+import { DatasourceMaxDataPoints, DatasourceMinInterval, InitTestDataDatasourceId } from "../constants";
 
 export const initPanel = (id?) =>  {
     const type = PanelType.Text
@@ -13,7 +13,7 @@ export const initPanel = (id?) =>  {
         plugins:  {
             [type]:initPanelPlugins[type]
         },
-        datasource:initDatasource,
+        datasource: {...initDatasource, id: InitTestDataDatasourceId},
         styles: initPanelStyles
     }
 

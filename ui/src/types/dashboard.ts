@@ -77,6 +77,7 @@ export enum DatasourceType {
 }
 
 export interface PanelDatasource {
+    id?: number
     type: DatasourceType
     queryOptions: {
         maxDataPoints?: number

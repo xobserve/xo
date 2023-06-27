@@ -1,9 +1,10 @@
-import { Button, Modal, ModalBody, ModalCloseButton, ModalContent, ModalHeader, ModalOverlay, useDisclosure, VStack, Flex, Box, useToast, HStack, Image, Text, AlertDialog, AlertDialogOverlay, AlertDialogContent, AlertDialogHeader, AlertDialogBody, AlertDialogFooter } from "@chakra-ui/react"
+import { Button, Modal, ModalBody, ModalCloseButton, ModalContent, ModalHeader, ModalOverlay, useDisclosure, VStack, Flex, Box, useToast, HStack, Image, Text, AlertDialog, AlertDialogOverlay, AlertDialogContent, AlertDialogHeader, AlertDialogBody, AlertDialogFooter, Tag } from "@chakra-ui/react"
 import Page from "layouts/page/Page"
 import { isEmpty } from "lodash"
 import { useRouter } from "next/router"
 import { useEffect, useRef, useState } from "react"
 import { FaCog } from "react-icons/fa"
+import { InitTestDataDatasourceId } from "src/data/constants"
 import { cfgLinks } from "src/data/nav-links"
 import ReserveUrls from "src/data/reserve-urls"
 import DatasourceEditor from "src/views/datasource/Editor"
@@ -72,7 +73,7 @@ const DatasourcesPage = () => {
                             <Image width="50px" height="50px" src={`/plugins/datasource/${ds.type}.svg`} />
                             <Box>
                                 <Text fontWeight="550">{ds.name}</Text>
-                                <Text textStyle="annotation" mt="1">{ds.type} {!isEmpty(ds.url) && `| ${ds.url}`}</Text>
+                                <Text textStyle="annotation" mt="1">{ds.type} |  {!isEmpty(ds.url) && ds.url} {ds.id == InitTestDataDatasourceId && <Tag size="sm" ml="1">default</Tag>}</Text>
                             </Box>
                         </HStack>
 

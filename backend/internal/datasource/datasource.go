@@ -90,6 +90,11 @@ func GetDatasources(c *gin.Context) {
 func DeleteDatasource(c *gin.Context) {
 	id := c.Param("id")
 
+	if id == "1" {
+		c.JSON(http.StatusBadRequest, common.RespError("can not delete default test data datasource"))
+		return
+	}
+
 	u := user.CurrentUser((c))
 	if !u.Role.IsAdmin() {
 		c.JSON(403, common.RespError(e.NoPermission))

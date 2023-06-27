@@ -131,5 +131,13 @@ func initTables() error {
 		return err
 	}
 
+	// insert Test Data dataousrce
+	_, err = db.Conn.Exec(`INSERT INTO datasource (id,name,type,url,created,updated) VALUES (?,?,?,?,?,?)`,
+		models.InitTestDataDatasourceId, "TestData", models.DatasourceTestData, "", now, now)
+	if err != nil && !e.IsErrUniqueConstraint(err) {
+		log.RootLogger.Crit("init testdata datasource  error", "error:", err)
+		return err
+	}
+
 	return nil
 }

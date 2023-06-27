@@ -22,6 +22,7 @@ import { initPanelStyles } from "src/data/panel/initStyles"
 import Border from "components/largescreen/components/Border"
 import useFullscreen from "hooks/useFullscreen"
 import { initDashboard } from "src/data/dashboard"
+import { Datasource } from "types/datasource"
  
 
 
@@ -32,6 +33,7 @@ setAutoFreeze(false)
 // 1. team's side menu, asscessed by a specific url path
 // 2. dashboard page, accessed by a dashboard id
 export let variables: Variable[] = []
+export let datasources: Datasource[] = []
 const DashboardWrapper = ({dashboardId}) => {
     const [dashboard, setDashboard] = useImmer<Dashboard>(null)
     const [timeRange, setTimeRange] = useState<TimeRange>(getInitTimeRange())
@@ -75,6 +77,9 @@ const DashboardWrapper = ({dashboardId}) => {
     },[dashboard])
 
     const load = async () => {
+        const res2 = await requestApi.get("/datasource/all")
+        datasources = res2.data
+
         const res = await requestApi.get(`/dashboard/byId/${dashboardId}`)
         const res0 = await requestApi.get(`/variable/all`)
         const dash = initDash(res.data)
@@ -84,7 +89,7 @@ const DashboardWrapper = ({dashboardId}) => {
             setCombinedVariables(res0.data)
         })
     }
-
+    
     const initDash= (dash) => {
         dash.data.panels.forEach((panel:Panel) => {
             // console.log("33333 before",cloneDeep(panel.plugins[panel.type]))

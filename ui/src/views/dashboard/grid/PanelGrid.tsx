@@ -1,19 +1,15 @@
 import { Dashboard, DatasourceType, Panel, PanelQuery, PanelType } from "types/dashboard"
-import AutoSizer from 'react-virtualized-auto-sizer';
-import { Box, Center, ControlBox, HStack, Menu, MenuButton, MenuDivider, MenuItem, MenuList, Modal, ModalBody, ModalCloseButton, ModalContent, ModalHeader, ModalOverlay, Tab, TabList, TabPanel, TabPanels, Tabs, Textarea, Tooltip, useColorModeValue, useDisclosure, useToast } from "@chakra-ui/react";
+import { Box, Center,  HStack, Menu, MenuButton, MenuDivider, MenuItem, MenuList, Modal, ModalBody, ModalCloseButton, ModalContent, ModalHeader, ModalOverlay, Tab, TabList, TabPanel, TabPanels, Tabs, Textarea, Tooltip, useColorModeValue, useDisclosure, useToast } from "@chakra-ui/react";
 import { FaBook, FaBug, FaEdit, FaRegCopy, FaTrashAlt } from "react-icons/fa";
 import { IoMdInformation } from "react-icons/io";
-import TextPanel from "../plugins/panel/text/Text";
-import { memo, useCallback, useEffect, useRef, useState } from "react";
+import { memo, useCallback, useEffect, useState } from "react";
 import { run_prometheus_query } from "../plugins/datasource/prometheus/query_runner";
-import GraphPanel from "../plugins/panel/graph/Graph";
-import { DatasourceMaxDataPoints, DatasourceMinInterval, PANEL_BODY_PADDING, PANEL_HEADER_HEIGHT, StorageCopiedPanelKey } from "src/data/constants";
-import { cloneDeep, isArray, isEmpty, isEqual } from "lodash";
+import { DatasourceMaxDataPoints, DatasourceMinInterval, PANEL_HEADER_HEIGHT, StorageCopiedPanelKey } from "src/data/constants";
+import {isEmpty, isEqual } from "lodash";
 import { TimeRange } from "types/time";
 import { Variable } from "types/variable";
 import { replaceWithVariables } from "utils/variable";
 import storage from "utils/localStorage";
-import TablePanel from "../plugins/panel/table/Table";
 import useBus from 'use-bus'
 import { getInitTimeRange } from "components/TimePicker";
 import { EditPanelForceRebuildEvent, PanelForceRebuildEvent, TimeChangedEvent, VariableChangedEvent } from "src/data/bus-events";
@@ -21,7 +17,6 @@ import { variables } from "../Dashboard";
 import { addParamToUrl } from "utils/url";
 import { run_testdata_query } from "../plugins/datasource/testdata/query_runner";
 import { run_jaeger_query } from "../plugins/datasource/jaeger/query_runner";
-// import NodeGraphPanel from "../plugins/panel/nodeGraph/NodeGraph";
 import PanelBorder from "../../../components/largescreen/components/Border";
 import TitleDecoration from "components/largescreen/components/TitleDecoration";
 import PanelDecoration from "components/largescreen/components/Decoration";
