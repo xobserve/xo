@@ -1,5 +1,7 @@
 import { Button, Table, TableContainer, Tag, Tbody, Td, Th, Thead, Tr, Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay, useDisclosure, VStack, InputGroup, InputLeftAddon, Input, Flex, Box, useToast, Text, RadioGroup, Stack, Radio } from "@chakra-ui/react"
 import { DetailAlert, DetailAlertItem } from "components/DetailAlert"
+import RadionButtons from "components/RadioButtons"
+import { Form, FormItem } from "components/form/Form"
 import Page from "layouts/page/Page"
 import { useEffect, useState } from "react"
 import { FaCog } from "react-icons/fa"
@@ -10,8 +12,8 @@ import { requestApi } from "utils/axios/request"
 
 const variableTypes = {
     "1": "Custom values",
-    "2": "Get by http request",
-    "3": "Backend hardcoded",
+    "2": "Http",
+    "3": "Prometheus",
 }
 
 const GlobalVariablesPage = () => {
@@ -202,39 +204,31 @@ export const EditVariable = ({v,isOpen,onClose,isEdit,onSubmit,isGlobal=false}:E
         setVariable(v)
     },[v])
     return (<>
-    <Modal isOpen={isOpen} onClose={onClose}>
+    <Modal isOpen={isOpen} onClose={onClose} size="full">
             <ModalOverlay />
             <ModalContent minW="600px">
-                <ModalHeader>{isEdit ? "Edit global variable" : "Add new global variable"} </ModalHeader>
+                <ModalHeader>{isEdit ? "Edit variable" : "Add new variable"} </ModalHeader>
                 <ModalCloseButton />
                 {variable && <ModalBody >
-                    <VStack alignItems="left" spacing="3">
-                        <Box>
-                            <Box textStyle="subTitle">Name</Box>
+                    <Form >
+                        <FormItem title="Name">
                             <Input mt="2" width="400px" placeholder='Only alphabet and digit numbers are allowed' value={variable.name} onChange={e => { setVariable({ ...variable, name: e.currentTarget.value }) }} />
-                        </Box>
+                        </FormItem>
+                
+                        <FormItem title="Description">
+                        <Input mt="2" width="400px" placeholder='give this variable a simple description' value={variable.brief} onChange={e => { setVariable({ ...variable, brief: e.currentTarget.value }) }} />
+                        </FormItem>
 
-                        <Box>
-                            <Box textStyle="subTitle">Description</Box>
-                            <Input mt="2" width="400px" placeholder='give this variable a simple description' value={variable.brief} onChange={e => { setVariable({ ...variable, brief: e.currentTarget.value }) }} />
-                        </Box>
-
-                        <Box>
-                            <Box textStyle="subTitle">Query Type</Box>
-                            <RadioGroup mt="2" onChange={v => setVariable({ ...variable, type: v })} value={variable.type}>
-                                <Stack direction='row'>
-                                    <Radio value='1'>{variableTypes['1']}</Radio>
-                                    <Radio value='2'>{variableTypes['2']}</Radio>
-                                    {isGlobal && <Radio value='3'>{variableTypes['3']}</Radio>}
-                                </Stack>
-                            </RadioGroup>
-                        </Box>
+                        <FormItem title="Query Type">
+                        <RadionButtons options={[{ label: variableTypes['1'] , value: "1" }, { label: variableTypes['2'], value: "2" }]} value={variable.type} onChange={v => setVariable({ ...variable, type: v })} />
+                        </FormItem>
+                     
 
 
                         {variable.type == "1" && <Input width="400px" placeholder='Values separated by comma,e.g 1,10,20,a,b,c' value={variable.value} onChange={e => { setVariable({ ...variable, value: e.currentTarget.value }) }} />}
                         {variable.type == "2" && <Input width="400px" placeholder='enter a valid http url, please refer our documents for more info' value={variable.externalUrl} onChange={e => { setVariable({ ...variable, externalUrl: e.currentTarget.value }) }} />}
 
-                    </VStack>
+                    </Form>
                 </ModalBody>}
                 <ModalFooter>
                     <Button mr={3} onClick={onClose}>
