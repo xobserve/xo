@@ -225,14 +225,14 @@ const loadablePanels = {
     [PanelType.Stat]: loadable(() => import('../plugins/panel/stat/Stat')),
 }
 
-const CustomPanelRender = (props: any) => {
+const CustomPanelRender = memo((props: any) => {
     const P = loadablePanels[props.panel.type]
     if (P) {
         return <P {...props} />
     }
 
     return <></>
-}
+})
 
 interface PanelHeaderProps {
     queryError: string

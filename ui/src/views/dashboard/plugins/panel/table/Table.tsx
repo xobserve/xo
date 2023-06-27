@@ -5,9 +5,10 @@ import { setVariable } from "src/views/variables/Variables"
 import { useRouter } from "next/router"
 import React, { useEffect, useMemo } from "react"
 import { PanelProps } from "types/dashboard"
-import { TablePluginData } from "types/plugins/table"
+import { TablePluginData, TableSeries } from "types/plugins/table"
 import { isEmpty, isFunction, isNumber } from "lodash"
 import { genDynamicFunction } from "utils/dynamicCode"
+import { SeriesData } from "types/seriesData"
 
 interface TablePanelProps extends PanelProps {
     data: TablePluginData[]
@@ -18,36 +19,27 @@ const TablePanel = (props: TablePanelProps) => {
         return (<Center height="100%">No data</Center>)
     }
 
-    // because panel may have multiple queries, each query return a TablePluginData
-    // so we need to flatten TablePluginData[] into TablePluginData
-    const data = useMemo(() => {
-        const res = []
-        props.data.forEach(d => {
-            d.forEach(d1 => {
-                res.push(d1)
-            })
-        })
-        return res
-    }, [props.data])
-
-
-
     const router = useRouter()
     const toast = useToast()
-    const [series, setSeries] = React.useState(null)
+    const [series, setSeries] = React.useState(props.data[0][0].name)
 
-    useEffect(() => {
-        if (props.data.length > 0) {
-            const series = props.data[0][0].name
-            setSeries(series)
-        }
-    }, [props.data])
+    // because panel may have multiple queries, each query return a TablePluginData
+    // so we need to flatten TablePluginData[] into TablePluginData
 
 
+    const [tableColumns, tableData, seriesList] = useMemo(() => {
+        const data:TableSeries[] = []
+        const seriesList = []
+        props.data.forEach(d => {
+            d.forEach(s => {
+                seriesList.push(s.name)
+                data.push(s)
+            })
+        })
 
-    const [tableColumns, tableData] = useMemo(() => {
-        for (var i = 0; i < props.data[0].length; i++) {
-            const s = props.data[0][i]
+        for (var i = 0; i < data.length; i++) {
+            const s = data[i]
+
             if (s.name == series) {
                 const columns = []
                 s.columns.forEach((column, i) => {
@@ -75,14 +67,16 @@ const TablePanel = (props: TablePanelProps) => {
                     }
                 })
 
-                return [columns, s.rows]
+                return [columns, s.rows,seriesList]
             }
         }
 
-        return [[], []]
-    }, [props.data, series])
+        return [[], [], seriesList]
+    }, [series, props.data])
 
     const clickFunc = genDynamicFunction(props.panel.plugins.table.onRowClick);
+
+    console.log("here3333 table:", seriesList,series)
 
     return (
         <Box h="100%">
@@ -113,8 +107,8 @@ const TablePanel = (props: TablePanelProps) => {
 
             </Box>
             {series && <Select mt="1" size="sm" onChange={e => setSeries(e.currentTarget.value)}>
-                {data.map(series => {
-                    return <option key={series.name} value={series.name}>{series.name}</option>
+                {seriesList.map(series => {
+                    return <option key={series} value={series}>{series}</option>
                 })}
             </Select>}
         </Box>

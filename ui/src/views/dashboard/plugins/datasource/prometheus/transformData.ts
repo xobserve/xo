@@ -22,6 +22,7 @@ export const prometheusToPanels = (rawData: any, panel: Panel, query: PanelQuery
         case PanelType.Stat:
         case PanelType.Gauge:
         case PanelType.Pie:
+        case PanelType.Echarts:
             return prometheusToSeriesData(rawData, query, range)
     }
 
@@ -140,4 +141,6 @@ export const prometheusToTableData = (rawData: any, query: PanelQuery) => {
 
         data.push(series)
     }
+
+    return data
 }
