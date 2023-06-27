@@ -108,7 +108,7 @@ export default EditPanelQuery
 const DatasourceQueryOption = ({ panel, onChange }: Props) => {
     const [expanded, setExpanded] = useState(false)
     return (
-        <VStack alignItems="end" mt="3px">
+        <VStack alignItems="end" mt="4px">
   
                 <HStack color="brand.500" fontSize=".9rem" spacing={1} cursor="pointer" onClick={() => setExpanded(!expanded)} width="fit-content">
                     {expanded ? <FaAngleDown /> : <FaAngleRight />}

@@ -7,14 +7,14 @@ import { memo, useLayoutEffect, useState } from "react";
 import { unstable_batchedUpdates } from "react-dom";
 import { useMountedState } from "react-use";
 import { PanelProps } from "types/dashboard";
-import { GraphPluginData, SeriesData } from "types/plugins/graph";
 import uPlot from "uplot";
 import { dateTimeFormat } from "utils/datetime/formatter";
+import { SeriesData } from "types/seriesData";
 
 interface Props {
     props: PanelProps
     options: uPlot.Options
-    data: GraphPluginData
+    data: SeriesData[]
 }
 
 const TOOLTIP_OFFSET = 10;

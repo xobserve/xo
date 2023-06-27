@@ -7,12 +7,13 @@ import { useMemo, useState } from "react"
 import { ActiveSeriesEvent } from "src/data/bus-events"
 import { PanelProps, PanelType } from "types/dashboard"
 import { ValueSetting } from "types/panel/plugins"
-import { GraphPluginData, SeriesData } from "types/plugins/graph"
+import { SeriesData } from "types/seriesData"
+
 import useBus from "use-bus"
 
 interface Props {
     props: PanelProps
-    data: GraphPluginData
+    data: SeriesData[]
     nearestSeries?: SeriesData
     filterIdx?: number
     filterType: seriesFilterType // controls which value should be seen in series table
@@ -68,7 +69,6 @@ const SeriesTable = ({ props, data, nearestSeries, filterIdx, filterType, onSele
     }
 
     const values = res1
-
 
 
     return (

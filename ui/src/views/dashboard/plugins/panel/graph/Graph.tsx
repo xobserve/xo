@@ -14,11 +14,11 @@ import { Box, Center, Text, useColorMode } from "@chakra-ui/react";
 import { colors } from "utils/colors";
 import { dispatch } from "use-bus";
 import { ActiveSeriesEvent } from "src/data/bus-events";
-import { GraphPluginData } from "types/plugins/graph";
+import { SeriesData } from "types/seriesData";
 
 
 interface GraphPanelProps extends PanelProps {
-    data: GraphPluginData[]
+    data: SeriesData[][]
 }
 
 const GraphPanel = memo((props: GraphPanelProps) => {
@@ -122,7 +122,7 @@ const GraphPanel = memo((props: GraphPanelProps) => {
 export default GraphPanel
 
 
-const transformDataToUplot = (data: GraphPluginData) => {
+const transformDataToUplot = (data: SeriesData[]) => {
     const transformed = []
 
     // push x-axes data first

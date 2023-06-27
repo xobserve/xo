@@ -9,7 +9,7 @@ import { dateTimeFormat } from "utils/datetime/formatter";
 import customColors from "src/theme/colors";
 import { formatUnit } from "components/unit";
 import { measureText } from "utils/measureText";
-import { GraphPluginData } from "types/plugins/graph";
+import { SeriesData } from "types/seriesData";
 
 
 
@@ -17,7 +17,7 @@ import { GraphPluginData } from "types/plugins/graph";
 const BarWidthFactor = 0.6
 const BardMaxWidth = 200
 // build uplot options based on given config
-export const parseOptions = (config: PanelProps,rawData: GraphPluginData, colorMode,activeSeries) => {
+export const parseOptions = (config: PanelProps,rawData: SeriesData[], colorMode,activeSeries) => {
     const axisSpace = ((self, axisIdx, scaleMin, scaleMax, plotDim) => {
         return calculateSpace(self, axisIdx, scaleMin, scaleMax, plotDim);
     })

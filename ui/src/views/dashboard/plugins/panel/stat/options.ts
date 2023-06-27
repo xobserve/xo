@@ -3,8 +3,8 @@ import * as colorManipulator from 'components/uPlot/colorManipulator';
 import { canvasCtx } from 'pages/_app';
 import { PanelProps } from "types/dashboard";
 import uPlot from "uplot";
-import { SeriesData } from "types/plugins/graph";
 import { pointsFilter } from "../graph/options";
+import { SeriesData } from "types/seriesData";
 
 
 

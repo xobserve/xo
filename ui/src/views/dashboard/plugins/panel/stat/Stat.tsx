@@ -5,18 +5,17 @@ import 'uplot/dist/uPlot.min.css';
 import uPlot from "uplot"
 
 import { parseOptions } from './options';
-import { isEmpty } from "lodash";
-
+import { isEmpty } from "lodash"
 import Tooltip from "../graph/Tooltip";
 import { Box, Center, Flex, Text, useColorMode, Tooltip as ChakraTooltip } from "@chakra-ui/react";
-import { GraphPluginData, SeriesData } from "types/plugins/graph";
-import { StatPluginData } from "types/plugins/stat";
 import { formatUnit } from "components/unit";
 import { ValueCalculationType } from "types/value";
+import { calcValueOnSeriesData } from "utils/seriesData";
+import { SeriesData } from "types/seriesData";
 
 
 interface StatPanelProps extends PanelProps {
-    data: StatPluginData[]
+    data: SeriesData[][]
 }
 
 const StatPanel = memo((props: StatPanelProps) => {
@@ -25,15 +24,13 @@ const StatPanel = memo((props: StatPanelProps) => {
     }
     
     const [data, value]: [SeriesData[], number] = useMemo(() => {
-        const res = []
-        let value;
+        let res:SeriesData[] = [];
         if (props.data.length > 0) {
-            if (props.data[0].series.length > 0) {
-                res.push(props.data[0].series[0])
-                value = props.data[0].value
-            }
+            // Stat only show the first series, Graph show all
+            res.push(props.data[0][0])
         }
-
+        
+        const value = calcValueOnSeriesData(res[0], props.panel.plugins.stat.value.calc)
         return [res, value]
     }, [props.data])
 
@@ -90,7 +87,7 @@ const StatPanel = memo((props: StatPanelProps) => {
 export default StatPanel
 
 
-const transformDataToUplot = (data: GraphPluginData) => {
+const transformDataToUplot = (data: SeriesData[]) => {
     const transformed = []
 
     // push x-axes data first
