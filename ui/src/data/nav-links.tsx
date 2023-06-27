@@ -1,4 +1,4 @@
-import {  FaBell, FaDatabase, FaHome,FaRegChartBar, FaTerminal, FaThLarge, FaUser, FaUserEdit, FaUsersCog } from 'react-icons/fa'
+import {  FaBell, FaConnectdevelop, FaDatabase, FaHome,FaRegChartBar, FaTerminal, FaThLarge, FaUser, FaUserEdit, FaUsersCog } from 'react-icons/fa'
 import { Route } from 'types/route'
 
 // 这里是默认的主菜单设置，但是会被服务器的配置所覆盖！
@@ -58,6 +58,12 @@ export const cfgLinks = [
         url: '/cfg/variables',
         baseUrl: '/cfg/variables',
         icon: <FaTerminal />
+    },
+    {
+        title: 'Datasources',
+        url: '/cfg/datasources',
+        baseUrl: '/cfg/datasources',
+        icon: <FaConnectdevelop />
     },
 ]
 

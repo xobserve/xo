@@ -59,3 +59,26 @@ func SaveDatasource(c *gin.Context) {
 
 	c.JSON(http.StatusOK, common.RespSuccess(ds.Id))
 }
+
+func GetDatasources(c *gin.Context) {
+	dss := make([]*models.Datasource, 0)
+	rows, err := db.Conn.Query("SELECT id,name,type,url, created FROM datasource")
+	if err != nil {
+		logger.Warn("get datasource error", "error", err)
+		c.JSON(http.StatusInternalServerError, common.RespInternalError())
+		return
+	}
+
+	for rows.Next() {
+		ds := &models.Datasource{}
+		err := rows.Scan(&ds.Id, &ds.Name, &ds.Type, &ds.URL, &ds.Created)
+		if err != nil {
+			logger.Warn("get datasource error", "error", err)
+			c.JSON(http.StatusInternalServerError, common.RespInternalError())
+			return
+		}
+		dss = append(dss, ds)
+	}
+
+	c.JSON(http.StatusOK, common.RespSuccess(dss))
+}
