@@ -1,8 +1,12 @@
-import { HStack, Input,VStack } from "@chakra-ui/react"
+import { Box, HStack, Input,VStack } from "@chakra-ui/react"
+import { getInitTimeRange } from "components/TimePicker"
 import Label from "components/form/Label"
 import { cloneDeep } from "lodash"
 import { useState } from "react"
 import { PanelQuery } from "types/dashboard"
+import {
+    Select,
+  } from "chakra-react-select";
 
 interface Props {
     query : PanelQuery
@@ -11,11 +15,30 @@ interface Props {
 
 const PrometheusQueryEditor = ({query,onChange}:Props) => {  
     const [tempQuery, setTempQuery] = useState<PanelQuery>(cloneDeep(query))
-    
+    const [metricsList, setMetricsList] = useState<string[]>([])
+    const loadMetrics = async () => {
+        if (metricsList.length > 0) {
+            return 
+        }
+
+        const timeRange = getInitTimeRange()
+        const start = timeRange.start.getTime() / 1000
+        const end = timeRange.end.getTime() / 1000
+        const res0 = await fetch(`http://localhost:9090/api/v1/label/__name__/values?start=${start}&end=${end}`)
+        const res = await res0.json()
+        if (res.status == "success") {
+            setMetricsList(res.data)
+        }
+    }
+
     return (  
         <VStack alignItems="left" spacing="1">
             <HStack>
-                <Label>Metrics</Label>
+                <Label  py="0"><Box onClick={loadMetrics} width="220px"><Select   placeholder="Metrics" variant="unstyled" size="sm" options={metricsList.map((m) => {return {label: m, value: m}})} onChange={(v) => {
+                    setTempQuery({...tempQuery, metrics: v.value})
+                    onChange({...tempQuery, metrics:v.value})
+                    }} 
+                    /></Box></Label>
                 <Input 
                     value={tempQuery.metrics} 
                     onChange={(e) => {
@@ -28,7 +51,7 @@ const PrometheusQueryEditor = ({query,onChange}:Props) => {
                 />
             </HStack>
            <HStack>
-                <Label>Legend</Label>
+                <Label width="150px">Legend</Label>
                 <Input 
                     value={tempQuery.legend} 
                     onChange={(e) => {

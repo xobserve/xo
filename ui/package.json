@@ -23,6 +23,7 @@
     "@nosferatu500/react-sortable-tree": "^4.3.0",
     "@uselessdev/datepicker": "^2.7.0",
     "axios": "^0.19.2",
+    "chakra-react-select": "^4.6.0",
     "date-fns": "^2.29.3",
     "echarts": "^5.4.2",
     "formik": "^2.2.9",
