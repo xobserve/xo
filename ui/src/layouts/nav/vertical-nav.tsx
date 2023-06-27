@@ -147,10 +147,10 @@ const VerticalNav = dynamic(async () => (props: Props) => {
               color={useColorModeValue("gray.500", "gray.400")}
               alignItems="left"
             >
-              <NavItem asPath={asPath} url={`${ReserveUrls.New}/dashboard`} path={ReserveUrls.New} icon="FaPlus" title="新建仪表盘" miniMode={miniMode} showTooltip />
+              <NavItem asPath={asPath} url={`${ReserveUrls.New}/dashboard`} path={ReserveUrls.New} icon="FaPlus" title="新建" miniMode={miniMode} showTooltip />
+              <NavItem asPath={asPath} url={`${ReserveUrls.Config}/datasources`} path={ReserveUrls.Config} icon="FaCog" title="配置管理" miniMode={miniMode} showTooltip />
               <NavItem asPath={asPath} url={`${ReserveUrls.Alerts}`} path={ReserveUrls.Alerts} icon="FaBell" title="告警平台" miniMode={miniMode} showTooltip />
               <NavItem asPath={asPath} url={`${ReserveUrls.Search}`} path={ReserveUrls.Search} icon="FaSearch" title="探索仪表盘" miniMode={miniMode} showTooltip />
-              <NavItem asPath={asPath} url={`${ReserveUrls.Config}/teams`} path={ReserveUrls.Config} icon="FaCog" title="配置管理" miniMode={miniMode} showTooltip />
               <Divider />
               <HStack spacing="0">
                 <UserSidemenus />

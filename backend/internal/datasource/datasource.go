@@ -86,3 +86,22 @@ func GetDatasources(c *gin.Context) {
 
 	c.JSON(http.StatusOK, common.RespSuccess(dss))
 }
+
+func DeleteDatasource(c *gin.Context) {
+	id := c.Param("id")
+
+	u := user.CurrentUser((c))
+	if !u.Role.IsAdmin() {
+		c.JSON(403, common.RespError(e.NoPermission))
+		return
+	}
+
+	_, err := db.Conn.Exec("DELETE FROM datasource WHERE id=?", id)
+	if err != nil {
+		logger.Warn("delete datasource error", "error", err)
+		c.JSON(http.StatusInternalServerError, common.RespInternalError())
+		return
+	}
+
+	c.JSON(http.StatusOK, common.RespSuccess(nil))
+}

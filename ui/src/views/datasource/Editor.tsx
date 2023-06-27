@@ -35,7 +35,7 @@ const DatasourceEditor = ({ds, onChange=null}) => {
     }
 
     const testDatasource = async () => {
-        if (!isURL(datasource.url, { require_tld: false })) {
+        if (datasource.type != DatasourceType.TestData &&  !isURL(datasource.url, { require_tld: false })) {
             toast({
                 title: "Invalid url",
                 status: "warning",
@@ -110,13 +110,13 @@ const DatasourceEditor = ({ds, onChange=null}) => {
                 <Image width="30px" height="30px" src={`/plugins/datasource/${datasource.type}.svg`} />
             </HStack>
         </InputGroup>
-        <InputGroup size="sm" mt="4">
+        {datasource.type != DatasourceType.TestData && <InputGroup size="sm" mt="4">
             <InputLeftAddon children='URL' />
             <Input value={datasource.url} placeholder="http://localhost:9090" onChange={e => {
                 const v = e.currentTarget.value
                 setDatasource((d: Datasource) => { d.url = v })
             }} />
-        </InputGroup>
+        </InputGroup>}
         <Button onClick={testDatasource} size="sm" mt="4">Test & Save</Button>
     </>)
 }

@@ -42,6 +42,18 @@ export const accountLinks = [
 
 export const cfgLinks = [
     {
+        title: 'Datasources',
+        url: '/cfg/datasources',
+        baseUrl: '/cfg/datasources',
+        icon: <FaConnectdevelop />
+    },
+    {
+        title: 'Variables',
+        url: '/cfg/variables',
+        baseUrl: '/cfg/variables',
+        icon: <FaTerminal />
+    },
+    {
         title: 'Teams',
         url: '/cfg/teams',
         baseUrl: '/cfg/teams',
@@ -52,19 +64,7 @@ export const cfgLinks = [
         url: '/cfg/users',
         baseUrl: '/cfg/users',
         icon: <FaUser />
-    },
-    {
-        title: 'Variables',
-        url: '/cfg/variables',
-        baseUrl: '/cfg/variables',
-        icon: <FaTerminal />
-    },
-    {
-        title: 'Datasources',
-        url: '/cfg/datasources',
-        baseUrl: '/cfg/datasources',
-        icon: <FaConnectdevelop />
-    },
+    }
 ]
 
 
