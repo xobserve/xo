@@ -118,11 +118,10 @@ export const PanelComponent = ({ dashboard, panel, onRemovePanel, width, height,
         const ds = panel.datasource
         let data = []
         let needUpdate = false
-        console.log("here33333:",ds)
-        const step = calculateInterval(timeRange, ds.queryOptions.maxDataPoints??DatasourceMaxDataPoints,ds.queryOptions.minInterval??DatasourceMinInterval).intervalMs / 1000
+        const interval = calculateInterval(timeRange, ds.queryOptions.maxDataPoints??DatasourceMaxDataPoints,ds.queryOptions.minInterval??DatasourceMinInterval).intervalMs / 1000
         for (const q0 of ds.queries) {
             const metrics = replaceWithVariables(q0.metrics, variables)
-            const q: PanelQuery = { ...q0, metrics, step: step}
+            const q: PanelQuery = { ...q0, metrics, interval}
             const id = ds.type + queryId + q.id
             const prevQuery = prevQueries[id]
             const currentQuery = [q, timeRange]

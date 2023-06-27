@@ -32,11 +32,6 @@ export const prometheusToPanels = (rawData: any, panel: Panel, query: PanelQuery
 export const prometheusToSeriesData = (data: any, query: PanelQuery, range: TimeRange): SeriesData[] => {
     const formats = parseLegendFormat(query.legend)
 
-    if (!query.step) {
-        query.step = 15
-    }
-
-    console.log("here33333")
     let res: GraphPluginData = []
     if (data.resultType === "matrix") {
         for (const m of data.result) {
@@ -66,7 +61,7 @@ export const prometheusToSeriesData = (data: any, query: PanelQuery, range: Time
 
                     const lastTs = last(timeValues)
 
-                    for (let i = lastTs + query.step; i <= v[0]; i += query.step) {
+                    for (let i = lastTs + query.interval; i <= v[0]; i += query.interval) {
                         if (i < v[0]) {
                             timeValues.push(i)
                             valueValues.push(null)

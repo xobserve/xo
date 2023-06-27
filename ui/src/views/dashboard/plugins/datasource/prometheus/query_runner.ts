@@ -21,7 +21,7 @@ export const run_prometheus_query = async (panel: Panel,q: PanelQuery,range: Tim
     // 1. rather than query directyly to prometheus, we should query to our own backend servie
     // 2. using `axios` instead of `fetch`
     
-    const res0 = await fetch(`http://localhost:9090/api/v1/query_range?query=${q.metrics}&start=${start}&end=${end}&step=${q.step}`)
+    const res0 = await fetch(`http://localhost:9090/api/v1/query_range?query=${q.metrics}&start=${start}&end=${end}&step=${q.interval}`)
      
     const res = await res0.json()
     
