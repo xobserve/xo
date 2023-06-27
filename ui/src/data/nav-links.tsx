@@ -75,4 +75,10 @@ export const newLinks = [
         baseUrl: '/new/import',
         // icon: <FaUsersCog />
     },
+    {
+        title: 'New Datasource',
+        url: '/new/datasource',
+        baseUrl: '/new/datasource',
+        // icon: <FaUsersCog />
+    },
 ]

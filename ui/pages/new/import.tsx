@@ -70,25 +70,25 @@ const ImportDashboard = () => {
     return <>
         <Page title={`New`} subTitle="Create some useful items" icon={<FaPlus />} tabs={newLinks}>
             <VStack alignItems="left" spacing={4}>
-                <InputGroup>
+                <InputGroup size="sm">
                     <InputLeftAddon children='Meta json' />
                     <Textarea rows={8} onBlur={e => onMetaChange(e.currentTarget.value)}></Textarea>
                 </InputGroup>
-                {dashboard && <InputGroup>
+                {dashboard && <InputGroup size="sm">
                     <InputLeftAddon children='Belongs to team' />
                     <Box sx={{
                         '.chakra-select': {
                             paddingLeft: '15px'
                         }
                     }}>
-                        <Select value={dashboard.ownedBy} variant="flushed" onChange={e => setDashboard({ ...dashboard, ownedBy: Number(e.currentTarget.value) })}>
+                        <Select size="sm" value={dashboard.ownedBy} variant="flushed" onChange={e => setDashboard({ ...dashboard, ownedBy: Number(e.currentTarget.value) })}>
                             {teams.map(team => <option key={team.id} value={team.id}>
                                 <Text>{team.name}</Text>
                             </option>)}
                         </Select>
                     </Box>
                 </InputGroup>}
-                <Button width="fit-content" onClick={importDashboard} >Import</Button>
+                <Button width="fit-content" onClick={importDashboard} size="sm">Import</Button>
             </VStack>
         </Page>
     </>

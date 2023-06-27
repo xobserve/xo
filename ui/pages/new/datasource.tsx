@@ -59,7 +59,7 @@ const TeamsPage = () => {
                             paddingLeft: '15px'
                         }
                         }}>
-                    <Select size="sm" value={dashboard.ownedBy} variant="flushed" onChange={e => setDashboard({...dashboard, ownedBy: Number(e.currentTarget.value)})}>
+                    <Select size="sm"  value={dashboard.ownedBy} variant="flushed" onChange={e => setDashboard({...dashboard, ownedBy: Number(e.currentTarget.value)})}>
                        {teams.map(team => <option key={team.id} value={team.id}>
                             <Text>{team.name}</Text>
                        </option>)}
