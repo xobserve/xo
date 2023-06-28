@@ -103,10 +103,10 @@ const DashboardWrapper = ({dashboardId}) => {
     }
 
     // combine variables which defined separately in dashboard and global
-    const setCombinedVariables = (gv?) => {
+    const setCombinedVariables = async (gv?) => {
         const combined = concat(cloneDeep(dashboard?.data?.variables) ?? [], gv ?? gVariables)
         for (const v of combined) {
-            v.values = v.value.split(",")
+            v.values = []
             // get the selected value for each variable from localStorage
         }
         setVariableSelected(combined)
@@ -126,13 +126,14 @@ const DashboardWrapper = ({dashboardId}) => {
     },[])
 
 
-    const visibleVars = variables.filter(v => {
-        return !v.id.toString().startsWith("d-") && !find(dashboard?.data?.hidingVars?.split(','),v1 => v1 == v.name)
-    })
+    // const visibleVars = variables.filter(v => {
+    //     return !v.id.toString().startsWith("d-") && !find(dashboard?.data?.hidingVars?.split(','),v1 => v1 == v.name)
+    // })
 
 
 
-    const headerHeight = fullscreen ? '0px' : (visibleVars?.length > 0 ? "67px" : "38px")
+    const headerHeight = fullscreen ? '0px' : "67px"
+    // (visibleVars?.length > 0 ? "67px" : "38px")
     return (
         <>
             <PageContainer bg={dashboard?.data.styles.bgEnabled ? dashboard?.data.styles?.bg: null}>

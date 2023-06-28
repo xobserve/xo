@@ -5,7 +5,7 @@ import { IoMdInformation } from "react-icons/io";
 import { memo, useCallback, useEffect, useState } from "react";
 import { run_prometheus_query } from "../plugins/datasource/prometheus/query_runner";
 import { DatasourceMaxDataPoints, DatasourceMinInterval, PANEL_HEADER_HEIGHT, StorageCopiedPanelKey } from "src/data/constants";
-import { isEmpty, isEqual } from "lodash";
+import { cloneDeep, isEmpty, isEqual } from "lodash";
 import { TimeRange } from "types/time";
 import { Variable } from "types/variable";
 import { replaceWithVariables } from "utils/variable";
@@ -244,7 +244,7 @@ interface PanelHeaderProps {
     data: any[]
 }
 
-const PanelHeader = memo(({ queryError, panel, onCopyPanel, onRemovePanel, data }: PanelHeaderProps) => {
+const PanelHeader = ({ queryError, panel, onCopyPanel, onRemovePanel, data }: PanelHeaderProps) => {
 
     const title = replaceWithVariables(panel.title, variables)
     const { isOpen, onOpen, onClose } = useDisclosure()
@@ -285,7 +285,7 @@ const PanelHeader = memo(({ queryError, panel, onCopyPanel, onRemovePanel, data 
             {isOpen && <DebugPanel panel={panel} isOpen={isOpen} onClose={onClose} data={data} />}
         </>
     )
-})
+}
 
 const DebugPanel = ({ panel, isOpen, onClose, data }) => {
     const [tabIndex, setTabIndex] = useState(0)

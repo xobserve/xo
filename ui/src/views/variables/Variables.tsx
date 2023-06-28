@@ -1,9 +1,14 @@
 import { HStack, Select, Text } from "@chakra-ui/react"
-import { variables } from "src/views/dashboard/Dashboard"
+import { datasources, variables } from "src/views/dashboard/Dashboard"
 import { VariableChangedEvent } from "src/data/bus-events"
-import { Variable } from "types/variable"
+import { Variable, VariableQueryType } from "types/variable"
 import { dispatch } from "use-bus"
 import storage from "utils/localStorage"
+import { useEffect, useState } from "react"
+import { DatasourceType } from "types/dashboard"
+import { isEmpty, set } from "lodash"
+import { queryPromethuesVariableValues } from "../dashboard/plugins/datasource/prometheus/query_runner"
+import { queryHttpVariableValues } from "../dashboard/plugins/datasource/http/query_runner"
 
 interface Props {
     id: number
@@ -11,23 +16,57 @@ interface Props {
 }
 
 const vkey = "apm-variables"
-const SelectVariables = ({id, variables}: Props) => {
+const SelectVariables = ({ id, variables }: Props) => {
     return (<HStack>
         {variables.map(v => {
-            return <HStack key={v.id}>
-                <Text fontSize="sm" minWidth="fit-content" mt="1px">{v.name}</Text>
-                <Select value={v.selected} size="sm" variant="unstyled" onChange={e => setVariableValue(v, e.currentTarget.value)}>
-                    {
-                        v.values.map(v => <option key={v} value={v}>{v}</option>)
-                    }
-                </Select>
-            </HStack>
+            return <SelectVariable v={v} />
         })}
     </HStack>)
 }
 
 export default SelectVariables
 
+const SelectVariable = ({ v }: { v: Variable }) => {
+    const [values, setValues] = useState<string[]>([])
+
+    useEffect(() => {
+        if (v) {
+            loadValues()
+        }
+    }, [v])
+
+    const loadValues = async () => {
+        let result = []
+        if (v.type == VariableQueryType.Custom) {
+            result = v.value.split(",")
+        } else {
+            const ds = datasources.find(d => d.id == v.datasource)
+            switch (ds?.type) {
+                case DatasourceType.Prometheus:
+                    result = await queryPromethuesVariableValues(v)
+                    break;
+                case DatasourceType.ExternalHttp:
+                    result = await queryHttpVariableValues(v)
+                    break;
+                default:
+                    break;
+            }
+        }
+
+
+        setValues(result)
+        v.values = result
+    }
+
+    return <HStack key={v.id}>
+        <Text fontSize="sm" minWidth="fit-content" mt="1px">{v.name}</Text>
+        {!isEmpty(values) &&<Select value={v.selected} size="sm" variant="unstyled" onChange={e => setVariableValue(v, e.currentTarget.value)}>
+            {
+                values.map(v => <option key={v} value={v}>{v}</option>)
+            }
+        </Select>}
+    </HStack>
+}
 export const setVariableSelected = (variables: Variable[]) => {
     let sv = storage.get(vkey)
     if (!sv) {
@@ -57,9 +96,9 @@ export const setVariableValue = (variable: Variable, value) => {
     if (!exist) {
         return `value ${value} not exist in variable ${variable.name}`
     }
-    
+
     variable.selected = value
-    for (let i = 0;i<variables.length;i++) {
+    for (let i = 0; i < variables.length; i++) {
         if (variables[i].id == variable.id) {
             variables[i] = variable
         }
@@ -78,16 +117,16 @@ export const setVariableValue = (variable: Variable, value) => {
     dispatch(VariableChangedEvent)
 }
 
-export const setVariable = (name,value,toast) => {
+export const setVariable = (name, value, toast) => {
     let v;
-    for (var i=0;i<variables.length;i++) {
+    for (var i = 0; i < variables.length; i++) {
         if (variables[i].name == name) {
             v = variables[i]
             break
         }
     }
 
-    const err = setVariableValue(v,value )
+    const err = setVariableValue(v, value)
     if (err) {
         toast({
             title: "On row click error",

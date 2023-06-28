@@ -24,7 +24,6 @@ const EditPanelQuery = (props: Props) => {
        
         onChange((panel: Panel) => {
             const type = datasources.find(ds => ds.id == id).type
-            console.log("here3333id:",id,type)
             panel.datasource = { ...initDatasource, type: type,id: id }
         })
     }
