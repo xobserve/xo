@@ -34,7 +34,6 @@ const PrometheusVariableEditor = ({ variable, onChange,onQueryResult }: Props) =
     }
 
     return (<>
-        <FormItem title="query">
             <InputGroup size="sm" mt="2">
                 <InputLeftAddon children='Query type' />
                 <Select value={data.type} onChange={e => {
@@ -83,7 +82,6 @@ const PrometheusVariableEditor = ({ variable, onChange,onQueryResult }: Props) =
                     </InputGroup>
                 </>
             }
-        </FormItem>
     </>)
 }
 

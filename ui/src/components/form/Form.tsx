@@ -32,7 +32,7 @@ export const FormItem = ({children,title,desc,horizontal,width="260px"}:FormItem
                 {desc && <Text textStyle="annotation" mb="2">{desc}</Text>}
             </Box>  :  
             <Box>
-                <Text textStyle="title" mb={desc ? 0 : 0}>{title}</Text>
+                <Text textStyle="title" mb={desc ? 1 : 1}>{title}</Text>
                 {desc && <Text textStyle="annotation" mb="2">{desc}</Text>}
                 <Box width={width}>{children}</Box>
             </Box>

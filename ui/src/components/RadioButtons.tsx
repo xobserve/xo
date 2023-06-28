@@ -4,6 +4,7 @@ interface Props {
     options: Option[]
     value: string | boolean // selected value
     onChange: any
+    size?: "sm" | "md" | "lg"
 }
 
 interface Option {
@@ -11,9 +12,9 @@ interface Option {
     value: string | boolean
 }
 
-const RadionButtons = (props:Props) => {
+const RadionButtons = ({options,value,onChange,size="md"}:Props) => {
     return (<HStack spacing="1">
-        {props.options.map(o => <Button onClick={() => props.onChange(o.value)} borderRadius="0" variant={props.value == o.value ? "solid" :"outline"} colorScheme="gray">{o.label}</Button>)}
+        {options.map(o => <Button size={size} onClick={() => onChange(o.value)} borderRadius="0" variant={value == o.value ? "solid" :"outline"} colorScheme="gray">{o.label}</Button>)}
     </HStack>)
 }
 

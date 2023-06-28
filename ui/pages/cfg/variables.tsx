@@ -199,7 +199,7 @@ export const EditVariable = ({ v, isOpen, onClose, isEdit, onSubmit, isGlobal = 
     }, [v])
     useEffect(() => {
         load()
-    },[])
+    }, [])
 
     const load = async () => {
         const res = await requestApi.get("/datasource/all")
@@ -212,7 +212,7 @@ export const EditVariable = ({ v, isOpen, onClose, isEdit, onSubmit, isGlobal = 
         if (variable.regex) {
             res = result.filter(r => regex.test(r))
         }
-        
+
         setVariableValues(res)
     }
 
@@ -222,49 +222,61 @@ export const EditVariable = ({ v, isOpen, onClose, isEdit, onSubmit, isGlobal = 
             <ModalContent minW="600px">
                 <ModalHeader>{isEdit ? "Edit variable" : "Add new variable"} </ModalHeader>
                 <ModalCloseButton />
-                {variable && <ModalBody >
+                {variable && <ModalBody sx={{
+                    '.chakra-input__left-addon': {
+                        width: "150px"
+                    }
+                }}>
                     <Form >
-                        <FormItem title="Name">
-                            <Input mt="2" width="400px" placeholder='Only alphabet and digit numbers are allowed' value={variable.name} onChange={e => { setVariable({ ...variable, name: e.currentTarget.value }) }} />
+                        <FormItem title="Basic">
+                            <InputGroup size="sm" mt="2" width="400px">
+                                <InputLeftAddon children='Name'/>
+                                <Input placeholder='Only alphabet and digit numbers are allowed' value={variable.name} onChange={e => { setVariable({ ...variable, name: e.currentTarget.value }) }} />
+                            </InputGroup>
+                            <InputGroup size="sm" mt="2" width="400px">
+                                <InputLeftAddon children='Description'/>
+                                <Input placeholder='give this variable a simple description' value={variable.desc} onChange={e => { setVariable({ ...variable, desc: e.currentTarget.value }) }} />
+                            </InputGroup>
                         </FormItem>
 
-                        <FormItem title="Description">
-                            <Input mt="2" width="400px" placeholder='give this variable a simple description' value={variable.desc} onChange={e => { setVariable({ ...variable, desc: e.currentTarget.value }) }} />
-                        </FormItem>
+                        <FormItem title="Query" width="400px">
+                            <InputGroup size="sm" mt="2" width="400px">
+                                <InputLeftAddon children='Query type' />
+                                <RadionButtons size="sm" options={Object.keys(VariableQueryType).map(k =>
+                                    ({ label: k, value: VariableQueryType[k] })
+                                )} value={variable.type} onChange={v => setVariable({ ...variable, type: v })} />
+                            </InputGroup>
 
-                        <FormItem title="Query Type" width="400px">
-                            <RadionButtons options={Object.keys(VariableQueryType).map(k =>
-                                ({ label: k, value: VariableQueryType[k] })
-                            )} value={variable.type} onChange={v => setVariable({ ...variable, type: v })} />
-                        </FormItem>
+                            {variable.type == VariableQueryType.Custom && <InputGroup size="sm" width="400px" mt="2">
+                                <InputLeftAddon children='Query values' width="150px"/>
+                                <Input width="400px" placeholder='Values separated by comma,e.g 1,10,20,a,b,c' value={variable.value} onChange={e => { setVariable({ ...variable, value: e.currentTarget.value }) }} onBlur={() => onQueryResult(variable.value.split(','))} />
+                            </InputGroup>}
 
-
-                        {variable.type == VariableQueryType.Custom &&
-                            <FormItem title="Query Options" width="400px">
-                                <Input width="400px" placeholder='Values separated by comma,e.g 1,10,20,a,b,c' value={variable.value} onChange={e => { setVariable({ ...variable, value: e.currentTarget.value }) }} onBlur={() => onQueryResult(variable.value.split(','))}/>
-                            </FormItem>}
-
-                        {variable.type == VariableQueryType.Datasource && <>
-                            <FormItem title="Select datasource" width="400px">
-                                <DatasourceSelect value={variable.datasource} onChange={id => setVariable(v => {v.datasource=id;v.value=""})} allowTypes={[DatasourceType.Prometheus,DatasourceType.ExternalHttp]} variant="outline" />
-                            </FormItem>
-                            {
-                                datasources?.find(ds => ds.id == variable.datasource)?.type == DatasourceType.Prometheus  && <PrometheusVariableEditor variable={variable} onChange={setVariable} onQueryResult={onQueryResult}/>
+                            {variable.type == VariableQueryType.Datasource && <>
+                                <InputGroup size="sm" width="400px" mt="2">
+                                    <InputLeftAddon children='Select datasource' />
+                                    <DatasourceSelect value={variable.datasource} onChange={id => setVariable(v => { v.datasource = id; v.value = "" })} allowTypes={[DatasourceType.Prometheus, DatasourceType.ExternalHttp]} variant="outline" />
+                                </InputGroup>
+                                {
+                                    datasources?.find(ds => ds.id == variable.datasource)?.type == DatasourceType.Prometheus && <PrometheusVariableEditor variable={variable} onChange={setVariable} onQueryResult={onQueryResult} />
+                                }
+                            </>
                             }
-                            {<FormItem title="Regex filter ( optional )" width="400px">
-                                <EditorInputItem value={variable.regex} placeholder="further filter the query result through a Regex pattern" onChange={v => {
-                                    setVariable({ ...variable, regex: v })
-                                }}/>
-                            </FormItem>}
-                        </>
-                        }
+                        </FormItem>
+
+                        <FormItem title="Regex filter ( optional )" width="400px">
+                            <EditorInputItem  value={variable.regex} placeholder="further filter the query result through a Regex pattern" onChange={v => {
+                                setVariable({ ...variable, regex: v })
+                            }} />
+                        </FormItem>
+
 
 
                         <FormItem title="Variable values" width="100%">
                             <Box pt="1">
                                 {variableValues?.slice(0, displayCount).map(v => <Tag size="sm" variant="outline" ml="1">{v}</Tag>)}
                             </Box>
-                            {variableValues.length > displayCount && <Button mt="2"  size="sm" colorScheme="gray" ml="1" onClick={() => setDisplayCount(displayCount + 30)}>Show more</Button>}
+                            {variableValues.length > displayCount && <Button mt="2" size="sm" colorScheme="gray" ml="1" onClick={() => setDisplayCount(displayCount + 30)}>Show more</Button>}
                         </FormItem>
                     </Form>
                 </ModalBody>}

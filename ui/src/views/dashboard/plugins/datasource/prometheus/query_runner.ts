@@ -123,7 +123,7 @@ export const queryPrometheusAllMetrics = async (dsId, useCurrentTimerange=true) 
     const start = timeRange.start.getTime() / 1000
     const end = timeRange.end.getTime() / 1000
 
-    const url = `${datasource.url}/api/v1/label/__name__/values?${useCurrentTimerange ? `&start=${start}&end=${end}` : ""}`
+    const url = `${datasource?.url}/api/v1/label/__name__/values?${useCurrentTimerange ? `&start=${start}&end=${end}` : ""}`
 
     const res0 = await fetch(url)
     const res = await res0.json()
