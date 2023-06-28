@@ -1,3 +1,4 @@
+import { Text } from "@chakra-ui/react"
 import { Variable } from "types/variable"
 
 interface Props {
@@ -7,6 +8,7 @@ interface Props {
 
 const PrometheusVariableEditor = ({variable, onChange}:Props) => {
     return (<>
+        <Text>aaaa</Text>
     </>)
 }
 

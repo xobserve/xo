@@ -187,7 +187,6 @@ interface EditProps {
     isGlobal?: boolean
 }
 
-// && <PrometheusVariableEditor variable={variable} onChange={setVariable}/>
 
 export const EditVariable = ({ v, isOpen, onClose, isEdit, onSubmit, isGlobal = false }: EditProps) => {
     const [variable, setVariable] = useImmer<Variable>(null)
@@ -197,11 +196,16 @@ export const EditVariable = ({ v, isOpen, onClose, isEdit, onSubmit, isGlobal = 
     }, [v])
     useEffect(() => {
         load()
-    })
+    },[])
 
     const load = async () => {
         const res = await requestApi.get("/datasource/all")
         setDatasources(res.data)
+    }
+
+    const f = () => {
+        console.log("here3333ededd",datasources, variable.datasource)
+        return datasources.find(ds => ds.id == variable.datasource)
     }
 
     return (<>
@@ -234,8 +238,11 @@ export const EditVariable = ({ v, isOpen, onClose, isEdit, onSubmit, isGlobal = 
 
                         {variable.type == VariableQueryType.Datasource && <>
                             <FormItem title="Select datasource" width="400px">
-                                <DatasourceSelect value={variable.datasource} onChange={v => setVariable(variable => {variable.datasource=v})} allowTypes={[DatasourceType.Prometheus,DatasourceType.ExternalHttp]} />
+                                <DatasourceSelect value={variable.datasource} onChange={id => setVariable(v => {v.datasource=id})} allowTypes={[DatasourceType.Prometheus,DatasourceType.ExternalHttp]} variant="outline" />
                             </FormItem>
+                            {
+                                f()?.type == DatasourceType.Prometheus  && <PrometheusVariableEditor variable={variable} onChange={setVariable}/>
+                            }
                         </>
                         }
                     </Form>
