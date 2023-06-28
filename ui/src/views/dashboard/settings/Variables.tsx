@@ -2,7 +2,7 @@ import { Button, Flex, Text, useDisclosure, useToast } from "@chakra-ui/react";
 import { EditVariable, VariablesTable } from "pages/cfg/variables";
 import {  useState } from "react";
 import { Dashboard } from "types/dashboard";
-import { Variable } from "types/variable";
+import { Variable, VariableQueryType } from "types/variable";
 
 interface Props {
     dashboard: Dashboard
@@ -23,7 +23,7 @@ const VariablesSetting = ({ dashboard, onChange }: Props) => {
         setVariable({
             id: id as any,
             name: '',
-            type: "1",
+            type: VariableQueryType.Custom
         })
         onOpen()
     }

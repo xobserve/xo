@@ -1,20 +1,21 @@
-import { Button, Table, TableContainer, Tag, Tbody, Td, Th, Thead, Tr, Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay, useDisclosure, VStack, InputGroup, InputLeftAddon, Input, Flex, Box, useToast, Text, RadioGroup, Stack, Radio } from "@chakra-ui/react"
+import { Button, Table, TableContainer, Tag, Tbody, Td, Th, Thead, Tr, Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay, useDisclosure, VStack, InputGroup, InputLeftAddon, Input, Flex, Box, useToast, Text, RadioGroup, Stack, Radio, Select } from "@chakra-ui/react"
 import { DetailAlert, DetailAlertItem } from "components/DetailAlert"
 import RadionButtons from "components/RadioButtons"
+import DatasourceSelect from "components/datasource/Select"
 import { Form, FormItem } from "components/form/Form"
 import Page from "layouts/page/Page"
 import { useEffect, useState } from "react"
 import { FaCog } from "react-icons/fa"
 import { cfgLinks } from "src/data/nav-links"
-import { Team } from "types/teams"
-import { Variable } from "types/variable"
+import PrometheusVariableEditor from "src/views/dashboard/plugins/datasource/prometheus/VariableEditor"
+import { DatasourceType } from "types/dashboard"
+import { Datasource } from "types/datasource"
+import { Variable, VariableQueryType } from "types/variable"
+import { useImmer } from "use-immer"
 import { requestApi } from "utils/axios/request"
 
-const variableTypes = {
-    "1": "Custom values",
-    "2": "Http",
-    "3": "Prometheus",
-}
+
+
 
 const GlobalVariablesPage = () => {
     const toast = useToast()
@@ -43,7 +44,7 @@ const GlobalVariablesPage = () => {
         onOpen()
     }
 
-    const addVariable = async (v:Variable) => {
+    const addVariable = async (v: Variable) => {
         if (!v.name) {
             toast({
                 title: "Variable name is required",
@@ -76,7 +77,7 @@ const GlobalVariablesPage = () => {
     }
 
 
-    const editVariable = async (v:Variable) => {
+    const editVariable = async (v: Variable) => {
         if (!v.name) {
             toast({
                 title: "Variable name is required",
@@ -99,7 +100,7 @@ const GlobalVariablesPage = () => {
         load()
     }
 
-    const onRemoveVariable = async (v:Variable) => {
+    const onRemoveVariable = async (v: Variable) => {
         await requestApi.delete(`/variable/${v.id}`,)
         onClose()
         toast({
@@ -118,9 +119,9 @@ const GlobalVariablesPage = () => {
                 <Box></Box>
                 <Button size="sm" onClick={onAddVariable}>Add global variable</Button>
             </Flex>
-            <VariablesTable variables={variables} onEdit={onEditVariable} onRemove={onRemoveVariable}/>
+            <VariablesTable variables={variables} onEdit={onEditVariable} onRemove={onRemoveVariable} />
         </Page>
-        <EditVariable v={variable} isEdit={editMode} onClose={onClose} isOpen={isOpen} onSubmit={editMode ? editVariable : addVariable} isGlobal/>
+        <EditVariable v={variable} isEdit={editMode} onClose={onClose} isOpen={isOpen} onSubmit={editMode ? editVariable : addVariable} isGlobal />
     </>
 }
 
@@ -130,22 +131,10 @@ export default GlobalVariablesPage
 interface TableProps {
     variables: Variable[]
     onEdit: any
-    onRemove:any
+    onRemove: any
 }
 
-export const VariablesTable = ({variables,onEdit,onRemove}:TableProps) => {
-    const getVariableValue = (variable: Variable) => {
-        if (variable.type === "1") {
-            return variable.value
-        }
-
-        if (variable.type == "2") {
-            return variable.externalUrl
-        }
-
-        return "refer to backend code"
-    }
-    
+export const VariablesTable = ({ variables, onEdit, onRemove }: TableProps) => {
     return (<>
         {variables.length > 0 ? <TableContainer>
             <Table variant="simple">
@@ -161,8 +150,8 @@ export const VariablesTable = ({variables,onEdit,onRemove}:TableProps) => {
                     {variables.map(variable => {
                         return <Tr key={variable.name}>
                             <Td>{variable.name}</Td>
-                            <Td>{variableTypes[variable.type]}</Td>
-                            <Td>{getVariableValue(variable)}</Td>
+                            <Td>{variable.type}</Td>
+                            <Td>{variable.value}</Td>
                             <Td>
                                 <Button variant="ghost" size="sm" px="0" onClick={() => onEdit(variable)}>Edit</Button>
                                 <Button variant="ghost" colorScheme="orange" size="sm" px="0" ml="1" onClick={() => onRemove(variable)}>Remove</Button>
@@ -191,20 +180,32 @@ export const VariablesTable = ({variables,onEdit,onRemove}:TableProps) => {
 
 interface EditProps {
     v: Variable
-    isOpen:any 
+    isOpen: any
     onClose: any
     isEdit: boolean
     onSubmit: any
     isGlobal?: boolean
 }
 
-export const EditVariable = ({v,isOpen,onClose,isEdit,onSubmit,isGlobal=false}:EditProps) => {
-    const [variable,setVariable] = useState<Variable>()
+// && <PrometheusVariableEditor variable={variable} onChange={setVariable}/>
+
+export const EditVariable = ({ v, isOpen, onClose, isEdit, onSubmit, isGlobal = false }: EditProps) => {
+    const [variable, setVariable] = useImmer<Variable>(null)
+    const [datasources, setDatasources] = useState<Datasource[]>(null)
     useEffect(() => {
         setVariable(v)
-    },[v])
+    }, [v])
+    useEffect(() => {
+        load()
+    })
+
+    const load = async () => {
+        const res = await requestApi.get("/datasource/all")
+        setDatasources(res.data)
+    }
+
     return (<>
-    <Modal isOpen={isOpen} onClose={onClose} size="full">
+        <Modal isOpen={isOpen} onClose={onClose} size="full">
             <ModalOverlay />
             <ModalContent minW="600px">
                 <ModalHeader>{isEdit ? "Edit variable" : "Add new variable"} </ModalHeader>
@@ -214,29 +215,38 @@ export const EditVariable = ({v,isOpen,onClose,isEdit,onSubmit,isGlobal=false}:E
                         <FormItem title="Name">
                             <Input mt="2" width="400px" placeholder='Only alphabet and digit numbers are allowed' value={variable.name} onChange={e => { setVariable({ ...variable, name: e.currentTarget.value }) }} />
                         </FormItem>
-                
+
                         <FormItem title="Description">
-                        <Input mt="2" width="400px" placeholder='give this variable a simple description' value={variable.brief} onChange={e => { setVariable({ ...variable, brief: e.currentTarget.value }) }} />
+                            <Input mt="2" width="400px" placeholder='give this variable a simple description' value={variable.brief} onChange={e => { setVariable({ ...variable, brief: e.currentTarget.value }) }} />
                         </FormItem>
 
-                        <FormItem title="Query Type">
-                        <RadionButtons options={[{ label: variableTypes['1'] , value: "1" }, { label: variableTypes['2'], value: "2" }]} value={variable.type} onChange={v => setVariable({ ...variable, type: v })} />
+                        <FormItem title="Query Type" width="400px">
+                            <RadionButtons options={Object.keys(VariableQueryType).map(k =>
+                                ({ label: k, value: VariableQueryType[k] })
+                            )} value={variable.type} onChange={v => setVariable({ ...variable, type: v })} />
                         </FormItem>
-                     
 
 
-                        {variable.type == "1" && <Input width="400px" placeholder='Values separated by comma,e.g 1,10,20,a,b,c' value={variable.value} onChange={e => { setVariable({ ...variable, value: e.currentTarget.value }) }} />}
-                        {variable.type == "2" && <Input width="400px" placeholder='enter a valid http url, please refer our documents for more info' value={variable.externalUrl} onChange={e => { setVariable({ ...variable, externalUrl: e.currentTarget.value }) }} />}
+                        {variable.type == VariableQueryType.Custom &&
+                            <FormItem title="Query Options" width="400px">
+                                <Input width="400px" placeholder='Values separated by comma,e.g 1,10,20,a,b,c' value={variable.value} onChange={e => { setVariable({ ...variable, value: e.currentTarget.value }) }} />
+                            </FormItem>}
 
+                        {variable.type == VariableQueryType.Datasource && <>
+                            <FormItem title="Select datasource" width="400px">
+                                <DatasourceSelect value={variable.datasource} onChange={v => setVariable(variable => {variable.datasource=v})} allowTypes={[DatasourceType.Prometheus,DatasourceType.ExternalHttp]} />
+                            </FormItem>
+                        </>
+                        }
                     </Form>
                 </ModalBody>}
                 <ModalFooter>
                     <Button mr={3} onClick={onClose}>
                         Close
                     </Button>
-                    <Button variant='ghost' onClick={()=>onSubmit(variable)}>Submit</Button>
+                    <Button variant='ghost' onClick={() => onSubmit(variable)}>Submit</Button>
                 </ModalFooter>
             </ModalContent>
         </Modal>
-        </>)
+    </>)
 }

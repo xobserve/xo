@@ -69,7 +69,7 @@ const EditPanelQuery = (props: Props) => {
         <Box className="top-gradient-border bordered-left bordered-right" width="fit-content">
             <Text px="2" py="2">Query</Text>
         </Box>
-        <Box className="bordered" p="2" borderRadius="0" height="auto">
+        <Box className="bordered" p="2" borderRadius="0" height="100%">
             <Flex justifyContent="space-between"  alignItems="start">
                 <HStack>
                     <Image width="30px" height="30px" src={`/plugins/datasource/${panel.datasource.type}.svg`} />
