@@ -250,7 +250,7 @@ export const EditVariable = ({ v, isOpen, onClose, isEdit, onSubmit, isGlobal = 
 
                         <FormItem title="Variable values" width="100%">
                             <Box pt="1">
-                                {variableValues.map(v => <Tag size="sm" variant="outline" ml="1">{v}</Tag>)}
+                                {variableValues?.map(v => <Tag size="sm" variant="outline" ml="1">{v}</Tag>)}
                             </Box>
                         </FormItem>
                     </Form>

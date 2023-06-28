@@ -94,9 +94,9 @@ export const queryPromethuesVariableValues = async (variable: Variable, useCurre
 
     let result = [];
     if (data.type == PromDsQueryTypes.LabelValues) {
-        if (data.metrics && data.label) {
+        if ( data.label) {
             // query label values : https://prometheus.io/docs/prometheus/latest/querying/api/#querying-label-values
-            const url = `${datasource.url}/api/v1/label/${data.label}/values?${useCurrentTimerange ? `&start=${start}&end=${end}` : ""}&match[]=${data.metrics}`
+            const url = `${datasource?.url}/api/v1/label/${data.label}/values?${useCurrentTimerange ? `&start=${start}&end=${end}` : ""}${data.metrics ? `&match[]=${data.metrics}` : ''}`
             const res0 = await fetch(url)
             const res = await res0.json()
             if (res.status == "success") {
@@ -104,9 +104,13 @@ export const queryPromethuesVariableValues = async (variable: Variable, useCurre
             }
         }
     } else if (data.type == PromDsQueryTypes.Metrics) {
-        const res: string[] = await queryPrometheusAllMetrics(variable.datasource, useCurrentTimerange)
-        const regex = new RegExp(data.metrics)
-        result = res.filter(r => regex.test(r))
+        if (!isEmpty(data.regex)) {
+            const res: string[] = await queryPrometheusAllMetrics(variable.datasource, useCurrentTimerange)
+            const regex = new RegExp(data.regex)
+            result = res.filter(r => regex.test(r))
+        }
+    } else if (data.type == PromDsQueryTypes.LabelNames) {
+        result =  await queryPrometheusLabels(variable.datasource)
     }
 
     return result
@@ -130,14 +134,14 @@ export const queryPrometheusAllMetrics = async (dsId, useCurrentTimerange=true) 
     return []
 }
 
-export const queryPrometheusLabels= async (dsId,metric, useCurrentTimerange = true) => {   
+export const queryPrometheusLabels= async (dsId,metric="", useCurrentTimerange = true) => {   
     const datasource = datasources.find(ds => ds.id == dsId)
 
     const timeRange = getInitTimeRange()
     const start = timeRange.start.getTime() / 1000
     const end = timeRange.end.getTime() / 1000
     
-    const url = `${datasource.url}/api/v1/labels?${useCurrentTimerange ? `&start=${start}&end=${end}`  : ""}${metric ? `&match[]=${metric}` : ''}`
+    const url = `${datasource?.url}/api/v1/labels?${useCurrentTimerange ? `&start=${start}&end=${end}`  : ""}${metric ? `&match[]=${metric}` : ''}`
     const res0 = await fetch(url)
     const res = await res0.json()
     if (res.status == "success") {

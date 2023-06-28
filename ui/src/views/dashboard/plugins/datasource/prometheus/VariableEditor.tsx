@@ -74,8 +74,8 @@ const PrometheusVariableEditor = ({ variable, onChange,onQueryResult }: Props) =
                 data.type == PromDsQueryTypes.Metrics && <>
                     <InputGroup size="sm" mt="2">
                         <InputLeftAddon children='Metric regex' />
-                        <EditorInputItem placeholder="e.g go_*" value={data.metrics} onChange={m => {
-                            data.metrics = m
+                        <EditorInputItem placeholder="e.g go_*" value={data.regex} onChange={m => {
+                            data.regex = m
                             onChange(variable => {
                                 variable.value = JSON.stringify(data)
                             })

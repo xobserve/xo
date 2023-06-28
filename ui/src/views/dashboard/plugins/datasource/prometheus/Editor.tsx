@@ -81,7 +81,7 @@ export const PromMetricSelect = ({ dsId, value, onChange, width = "220px", varia
 
     return (
         <Box onClick={loadMetrics} width={width}>
-            <Select value={{ value: value, label: value }} menuPlacement="bottom" placeholder="Metrics" variant={variant} size="sm" options={metricsList.map((m) => { return { label: m, value: m } })} onChange={v => onChange(v.value)}
+            <Select isClearable value={{ value: value, label: value }} menuPlacement="bottom" placeholder="Metrics" variant={variant} size="sm" options={metricsList.map((m) => { return { label: m, value: m } })} onChange={v => onChange(v?.value)}
             />
         </Box>
 
