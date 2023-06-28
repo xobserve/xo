@@ -73,7 +73,7 @@ const DatasourcesPage = () => {
                             <Image width="50px" height="50px" src={`/plugins/datasource/${ds.type}.svg`} />
                             <Box>
                                 <Text fontWeight="550">{ds.name}</Text>
-                                <Text textStyle="annotation" mt="1">{ds.type} |  {!isEmpty(ds.url) && ds.url} {ds.id == InitTestDataDatasourceId && <Tag size="sm" ml="1">default</Tag>}</Text>
+                                <Text textStyle="annotation" mt="1">{ds.type}  {!isEmpty(ds.url) && ` · ` + ds.url } {ds.id == InitTestDataDatasourceId && <Tag size="sm" ml="1"> default</Tag>}</Text>
                             </Box>
                         </HStack>
 
