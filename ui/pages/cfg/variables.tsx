@@ -191,6 +191,8 @@ interface EditProps {
 export const EditVariable = ({ v, isOpen, onClose, isEdit, onSubmit, isGlobal = false }: EditProps) => {
     const [variable, setVariable] = useImmer<Variable>(null)
     const [datasources, setDatasources] = useState<Datasource[]>(null)
+    const [variableValues, setVariableValues] = useState<string[]>([])
+
     useEffect(() => {
         setVariable(v)
     }, [v])
@@ -203,6 +205,9 @@ export const EditVariable = ({ v, isOpen, onClose, isEdit, onSubmit, isGlobal = 
         setDatasources(res.data)
     }
 
+    const onQueryResult = result => {
+        setVariableValues(result)
+    }
 
     return (<>
         <Modal isOpen={isOpen} onClose={onClose} size="full">
@@ -237,10 +242,17 @@ export const EditVariable = ({ v, isOpen, onClose, isEdit, onSubmit, isGlobal = 
                                 <DatasourceSelect value={variable.datasource} onChange={id => setVariable(v => {v.datasource=id;v.value=""})} allowTypes={[DatasourceType.Prometheus,DatasourceType.ExternalHttp]} variant="outline" />
                             </FormItem>
                             {
-                                datasources.find(ds => ds.id == variable.datasource)?.type == DatasourceType.Prometheus  && <PrometheusVariableEditor variable={variable} onChange={setVariable}/>
+                                datasources.find(ds => ds.id == variable.datasource)?.type == DatasourceType.Prometheus  && <PrometheusVariableEditor variable={variable} onChange={setVariable} onQueryResult={onQueryResult}/>
                             }
                         </>
                         }
+
+
+                        <FormItem title="Variable values" width="100%">
+                            <Box pt="1">
+                                {variableValues.map(v => <Tag size="sm" variant="outline" ml="1">{v}</Tag>)}
+                            </Box>
+                        </FormItem>
                     </Form>
                 </ModalBody>}
                 <ModalFooter>

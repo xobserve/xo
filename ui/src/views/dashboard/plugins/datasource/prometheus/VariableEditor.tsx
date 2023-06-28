@@ -1,37 +1,35 @@
-import { Input, InputGroup, InputLeftAddon, Select, Text } from "@chakra-ui/react"
+import { InputGroup, InputLeftAddon, Select } from "@chakra-ui/react"
 import { FormItem } from "components/form/Form"
-import { useEffect, useState } from "react"
+import { useEffect } from "react"
 import { Variable } from "types/variable"
-import { useImmer } from "use-immer"
 import { isJSON } from "utils/is"
 import { PromLabelSelect, PromMetricSelect } from "./Editor"
-import { getInitTimeRange } from "components/TimePicker"
-import { datasources } from "src/views/dashboard/Dashboard"
+import { queryPromethuesVariableValues } from "./query_runner"
 
 interface Props {
     variable: Variable
     onChange: any
-    onValuesChange: any
+    onQueryResult: any
 }
 
-enum PromDsQueryTypes {
+export enum PromDsQueryTypes {
     LabelValues = "Label values",
     LabelNames = "Label names",
     Metrics = "Metrics"
 }
 
-const PrometheusVariableEditor = ({ variable, onChange,onValuesChange }: Props) => {
+const PrometheusVariableEditor = ({ variable, onChange,onQueryResult }: Props) => {
     const data = isJSON(variable.value) ? JSON.parse(variable.value) : {
         type: PromDsQueryTypes.LabelValues
     }
 
     useEffect(() => {
-        loadVariables(data)
+        loadVariables(variable)
     }, [variable])
     
-    const loadVariables = async (data) => {
-        const result = await queryPromethuesVariables(data, variable.datasource )
-        // onValuesChange(result)
+    const loadVariables = async (v) => {
+        const result = await queryPromethuesVariableValues(v )
+        onQueryResult(result)
     }
 
     return (<>
@@ -76,26 +74,3 @@ const PrometheusVariableEditor = ({ variable, onChange,onValuesChange }: Props) 
 
 export default PrometheusVariableEditor
 
-const queryPromethuesVariables = async (data, dsId, useCurrentTimerange = true) => {
-    const timeRange = getInitTimeRange()
-    const start = timeRange.start.getTime() / 1000
-    const end = timeRange.end.getTime() / 1000
-
-    const datasource = datasources.find(ds => ds.id == dsId)
-
-
-    let result;
-    if (data.type == PromDsQueryTypes.LabelValues) {
-        if (data.metrics && data.label) {
-            // query label values : https://prometheus.io/docs/prometheus/latest/querying/api/#querying-label-values
-            const url = `${datasource.url}/api/v1/label/${data.label}/values?${useCurrentTimerange ? `&start=${start}&end=${end}` : ""}&match[]=${data.metrics}`
-            const res0 = await fetch(url)
-            const res = await res0.json()
-            if (res.status == "success") {
-                result = res.data
-            }
-        }
-    }
-
-    return result
-}
