@@ -100,7 +100,7 @@ export const setVariableValue = (variable: Variable, value) => {
     dispatch(VariableChangedEvent)
 }
 
-export const setVariable = (name, value, toast) => {
+export const setVariable = (name, value, toast?) => {
     let v;
     for (var i = 0; i < variables.length; i++) {
         if (variables[i].name == name) {
@@ -110,7 +110,7 @@ export const setVariable = (name, value, toast) => {
     }
 
     const err = setVariableValue(v, value)
-    if (err) {
+    if (err && toast) {
         toast({
             title: "On row click error",
             description: err,

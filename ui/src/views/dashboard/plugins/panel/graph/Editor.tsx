@@ -6,7 +6,7 @@ import { UnitPicker } from "components/unit"
 import { Panel, PanelEditorProps } from "types/dashboard"
 import { EditorInputItem, EditorNumberItem, EditorSliderItem } from "components/editor/EditorItem"
 import { dispatch } from "use-bus"
-import { EditPanelForceRebuildEvent, PanelForceRebuildEvent } from "src/data/bus-events"
+import {  PanelForceRebuildEvent } from "src/data/bus-events"
 
 
 const GraphPanelEditor = ({ panel, onChange }: PanelEditorProps) => {
@@ -55,7 +55,7 @@ const GraphPanelEditor = ({ panel, onChange }: PanelEditorProps) => {
                             onChange((panel: Panel) => {
                                 panel.plugins.graph.styles.fillOpacity = v
                             })
-                            dispatch(EditPanelForceRebuildEvent + panel.id)
+                            dispatch(PanelForceRebuildEvent + panel.id)
                         }
                         } />
                     </PanelEditItem>

@@ -12,6 +12,7 @@ import uPlot from "uplot";
 import AutoSizer from "react-virtualized-auto-sizer";
 import useGranaTheme from 'hooks/useExtraTheme';
 import { PanelGrid } from "./PanelGrid";
+import { useSearchParam } from "react-use";
 
 
 
@@ -26,6 +27,8 @@ let windowWidth = 1920;
 let gridWidth = 0;
 const DashboardGrid = memo((props: GridProps) => {
     console.log("dashboard grid rendered:")
+    const inEdit = useSearchParam('edit')
+
     const { dashboard, onChange } = props
     const panelMap = {}
     const [finalWidth, setFinalWidth] = React.useState(0);
@@ -164,7 +167,7 @@ const DashboardGrid = memo((props: GridProps) => {
                                 >
                                     {(width: number, height: number) => {
                                         return (<Box key={panel.id} id={`panel-${panel.id}`}>
-                                            <PanelGrid dashboard={dashboard} panel={panel} width={width} height={height} onRemovePanel={onRemovePanel} sync={mooSync} />
+                                             {!inEdit && <PanelGrid dashboard={dashboard} panel={panel} width={width} height={height} onRemovePanel={onRemovePanel} sync={mooSync} />}
                                         </Box>)
                                     }}
                                 </GridItem>

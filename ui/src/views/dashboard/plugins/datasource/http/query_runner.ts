@@ -6,6 +6,7 @@ import { TimeRange } from "types/time"
 import { genDynamicFunction } from "utils/dynamicCode"
 import { isEmpty, isFunction, round } from "lodash"
 import _ from 'lodash'
+import { setVariable } from "src/views/variables/Variables"
 
 export const run_http_query = async (panel: Panel, q: PanelQuery,range: TimeRange,ds: Datasource) => {
     //@todo: 
@@ -15,12 +16,10 @@ export const run_http_query = async (panel: Panel, q: PanelQuery,range: TimeRang
     const end = round(range.end.getTime() / 1000)
     let url = q.metrics
     const headers = {}
-    console.log("here3333:",q.data)
     if (!isEmpty(q.data.transformRequest)) {
         const transformRequest = genDynamicFunction(q.data.transformRequest);
         if (isFunction(transformRequest)) {
-             url = transformRequest(url, headers,start , end)
-             console.log("here33333:",url)
+             url = transformRequest(url, headers,start , end, setVariable)
         }  else {
             return {
                 error: 'transformRequest is not a valid function',
@@ -47,7 +46,6 @@ export const run_http_query = async (panel: Panel, q: PanelQuery,range: TimeRang
         }
     }
 
-    console.log("here3333 http:", result)
     
     return {
         error: null,

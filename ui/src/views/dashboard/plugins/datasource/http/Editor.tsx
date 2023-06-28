@@ -5,7 +5,6 @@ import { cloneDeep, isEmpty, set } from "lodash"
 import { useEffect, useState } from "react"
 import { PanelQuery } from "types/dashboard"
 import { Datasource, DatasourceEditorProps } from "types/datasource"
-import { useImmer } from "use-immer"
 
 
 const HttpQueryEditor = ({ datasource, query, onChange }: DatasourceEditorProps) => {

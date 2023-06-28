@@ -1,14 +1,14 @@
-import { Button, HStack, Select, Switch, Text } from "@chakra-ui/react"
+import { Button, HStack, Switch } from "@chakra-ui/react"
 import PanelAccordion from "src/views/dashboard/edit-panel/Accordion"
 import PanelEditItem from "src/views/dashboard/edit-panel/PanelEditItem"
 import RadionButtons from "components/RadioButtons"
 import { UnitPicker } from "components/unit"
 import { Panel, PanelEditorProps } from "types/dashboard"
-import { EditorInputItem, EditorNumberItem, EditorSliderItem } from "components/editor/EditorItem"
+import { EditorNumberItem, EditorSliderItem } from "components/editor/EditorItem"
 import { ColorPicker } from "components/color-picker"
 import { colors } from "utils/colors"
 import { dispatch } from "use-bus"
-import { EditPanelForceRebuildEvent, PanelForceRebuildEvent } from "src/data/bus-events"
+import { PanelForceRebuildEvent } from "src/data/bus-events"
 import ValueCalculation from "components/ValueCalculation"
 
 
@@ -60,7 +60,7 @@ const GraphPanelEditor = ({ panel, onChange }: PanelEditorProps) => {
                     onChange((panel: Panel) => {
                         panel.plugins.stat.styles.fillOpacity = v
                     })
-                    dispatch(EditPanelForceRebuildEvent + panel.id)
+                    dispatch(PanelForceRebuildEvent + panel.id)
                 }
                 } />
             </PanelEditItem>

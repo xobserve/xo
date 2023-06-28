@@ -5,14 +5,14 @@ import { IoMdInformation } from "react-icons/io";
 import { memo, useCallback, useEffect, useState } from "react";
 import { run_prometheus_query } from "../plugins/datasource/prometheus/query_runner";
 import { DatasourceMaxDataPoints, DatasourceMinInterval, PANEL_HEADER_HEIGHT, StorageCopiedPanelKey } from "src/data/constants";
-import { cloneDeep, isEmpty, isEqual } from "lodash";
+import { isEmpty, isEqual } from "lodash";
 import { TimeRange } from "types/time";
 import { Variable } from "types/variable";
 import { replaceWithVariables } from "utils/variable";
 import storage from "utils/localStorage";
 import useBus from 'use-bus'
 import { getInitTimeRange } from "components/TimePicker";
-import { EditPanelForceRebuildEvent, PanelForceRebuildEvent, TimeChangedEvent, VariableChangedEvent } from "src/data/bus-events";
+import {  PanelForceRebuildEvent, TimeChangedEvent, VariableChangedEvent } from "src/data/bus-events";
 import { datasources, variables } from "../Dashboard";
 import { addParamToUrl } from "utils/url";
 import { run_testdata_query } from "../plugins/datasource/testdata/query_runner";
@@ -35,7 +35,6 @@ interface PanelGridProps {
     onVariablesChange?: any
     width: number
     height: number
-    inEditMode?: boolean
 }
 
 
@@ -60,18 +59,11 @@ export const PanelGrid = memo((props: PanelGridProps) => {
         }
     )
 
-    // provide a way to force rebuild a panel
-    if (!props.inEditMode) {
-        useDedupEvent(PanelForceRebuildEvent + props.panel.id, () => {
-            console.log("here33333, panel is forced to rebuild!", props.panel.id)
-            setForceRenderCount(f => f + 1)
-        })
-    } else {
-        useDedupEvent(EditPanelForceRebuildEvent + props.panel.id, () => {
-            console.log("here33333edit, panel is forced to rebuild!", props.panel.id)
-            setForceRenderCount(f => f + 1)
-        })
-    }
+
+    useDedupEvent(PanelForceRebuildEvent + props.panel.id, () => {
+        console.log("here33333, panel is forced to rebuild!", props.panel.id)
+        setForceRenderCount(f => f + 1)
+    })
 
 
     return (
@@ -88,8 +80,8 @@ interface PanelComponentProps extends PanelGridProps {
     variables: Variable[]
 }
 
-export const prevQueries = {}
-export const prevQueryData = {}
+export const prevQueries = new Map()
+export const prevQueryData = new Map()
 
 export const PanelComponent = ({ dashboard, panel, onRemovePanel, width, height, sync, timeRange, variables }: PanelComponentProps) => {
     const toast = useToast()
@@ -104,8 +96,8 @@ export const PanelComponent = ({ dashboard, panel, onRemovePanel, width, height,
                 delete prevQueries[id]
             }
         }
-    }, []) 
- 
+    }, [])
+
     useEffect(() => {
         queryData(panel, dashboard.id)
     }, [panel.datasource, timeRange, variables])
@@ -114,19 +106,19 @@ export const PanelComponent = ({ dashboard, panel, onRemovePanel, width, height,
         console.time("time used - query data for panel:")
         const ds = panel.datasource
         const datasource = datasources.find(d => d.id == ds.id)
-        if (!datasource) {   
-            return 
+        if (!datasource) {
+            return
         }
 
 
-        let data = [] 
+        let data = []
         let needUpdate = false
         const interval = calculateInterval(timeRange, ds.queryOptions.maxDataPoints ?? DatasourceMaxDataPoints, ds.queryOptions.minInterval ?? DatasourceMinInterval).intervalMs / 1000
         for (const q0 of ds.queries) {
             const metrics = replaceWithVariables(q0.metrics, variables)
             const q: PanelQuery = { ...q0, metrics, interval }
             const id = formatQueryId(ds.id, dashboardId, panel.id, q.id)
-            const prevQuery = prevQueries[id]
+            const prevQuery = prevQueries.get(id)
             const currentQuery = [q, timeRange]
 
             if (isEqual(prevQuery, currentQuery)) {
@@ -140,7 +132,7 @@ export const PanelComponent = ({ dashboard, panel, onRemovePanel, width, height,
             needUpdate = true
             // console.log("re-query data! metrics id:", q.id, " query id:", queryId)
 
-            prevQueries[id] = currentQuery
+            prevQueries.set(id, currentQuery)
             let res
 
             //@needs-update-when-add-new-datasource
@@ -178,7 +170,7 @@ export const PanelComponent = ({ dashboard, panel, onRemovePanel, width, height,
             console.log("query and set panel data:", panel.id)
             setPanelData(data)
         } else {
-            if (!isEqual(panelData,data)) {
+            if (!isEqual(panelData, data)) {
                 setPanelData(data)
             }
         }
