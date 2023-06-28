@@ -192,7 +192,7 @@ export const EditVariable = ({ v, isOpen, onClose, isEdit, onSubmit, isGlobal = 
     const [variable, setVariable] = useImmer<Variable>(null)
     const [datasources, setDatasources] = useState<Datasource[]>(null)
     const [variableValues, setVariableValues] = useState<string[]>([])
-
+    const [displayCount, setDisplayCount] = useState(30)
     useEffect(() => {
         setVariable(v)
     }, [v])
@@ -242,7 +242,7 @@ export const EditVariable = ({ v, isOpen, onClose, isEdit, onSubmit, isGlobal = 
                                 <DatasourceSelect value={variable.datasource} onChange={id => setVariable(v => {v.datasource=id;v.value=""})} allowTypes={[DatasourceType.Prometheus,DatasourceType.ExternalHttp]} variant="outline" />
                             </FormItem>
                             {
-                                datasources.find(ds => ds.id == variable.datasource)?.type == DatasourceType.Prometheus  && <PrometheusVariableEditor variable={variable} onChange={setVariable} onQueryResult={onQueryResult}/>
+                                datasources?.find(ds => ds.id == variable.datasource)?.type == DatasourceType.Prometheus  && <PrometheusVariableEditor variable={variable} onChange={setVariable} onQueryResult={onQueryResult}/>
                             }
                         </>
                         }
@@ -250,8 +250,9 @@ export const EditVariable = ({ v, isOpen, onClose, isEdit, onSubmit, isGlobal = 
 
                         <FormItem title="Variable values" width="100%">
                             <Box pt="1">
-                                {variableValues?.map(v => <Tag size="sm" variant="outline" ml="1">{v}</Tag>)}
+                                {variableValues?.slice(0, displayCount).map(v => <Tag size="sm" variant="outline" ml="1">{v}</Tag>)}
                             </Box>
+                            {variableValues.length > displayCount && <Button mt="2"  size="sm" colorScheme="gray" ml="1" onClick={() => setDisplayCount(displayCount + 30)}>Show more</Button>}
                         </FormItem>
                     </Form>
                 </ModalBody>}
