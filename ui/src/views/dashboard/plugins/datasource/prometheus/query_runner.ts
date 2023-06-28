@@ -6,6 +6,7 @@ import { Panel, PanelQuery } from "types/dashboard"
 import { TimeRange } from "types/time"
 import { prometheusToPanels } from "./transformData"
 import { Datasource } from "types/datasource"
+import { isPromethesDatasourceValid } from "./DatasourceEditor"
 
 export const run_prometheus_query = async (panel: Panel, q: PanelQuery, range: TimeRange,ds: Datasource) => {
     if (isEmpty(q.metrics)) {
@@ -52,18 +53,25 @@ export const run_prometheus_query = async (panel: Panel, q: PanelQuery, range: T
 }
 
 
-export const testPrometheusConnection = async (url: string) => {
+export const checkAndTestPrometheus = async (ds:Datasource) => {
+    console.log("here3333 pr",ds)
+    // check datasource setting is valid
+    const res = isPromethesDatasourceValid(ds)
+    if (res != null) {
+        return res
+    }
+
+    // test connection status
     try {
         // http://localhost:9090/api/v1/labels?match[]=up
-        const res0 = await fetch(`${url}/api/v1/labels?match[]=up`)
+        const res0 = await fetch(`${ds.url}/api/v1/labels?match[]=up`)
         const res = await res0.json()
         if (res.status) {
             return true
         }
 
-        return false
+        return "test failed"
     } catch (error) {
         return error.message
     }
-
 }

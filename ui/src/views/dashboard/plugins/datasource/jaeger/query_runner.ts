@@ -4,6 +4,7 @@
 import { Panel, PanelQuery } from "types/dashboard"
 import { Datasource } from "types/datasource"
 import { TimeRange } from "types/time"
+import { isJaegerDatasourceValid } from "./DatasourceEditor"
 
 export const run_jaeger_query = async (panel: Panel, q: PanelQuery,range: TimeRange,ds: Datasource) => {
     //@todo: 
@@ -39,6 +40,24 @@ export const run_jaeger_query = async (panel: Panel, q: PanelQuery,range: TimeRa
 }
 
 
-export const testJaegerConnection = async (url: string) => {
-    return true
+export const checkAndTestJaeger = async (ds:Datasource) => {
+    // check datasource setting is valid
+    const res = isJaegerDatasourceValid(ds)
+    if (res != null) {
+        return res
+    }
+
+    // test connection status
+    try {
+        // http://localhost:9090/api/v1/labels?match[]=up
+        const res0 = await fetch(`${ds.url}/api/v1/labels?match[]=up`)
+        const res = await res0.json()
+        if (res.status) {
+            return true
+        }
+
+        return "test failed"
+    } catch (error) {
+        return error.message
+    }
 }

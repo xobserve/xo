@@ -1,14 +1,17 @@
 import {  Button, HStack, Image, Input, InputGroup, InputLeftAddon, Select, useToast } from "@chakra-ui/react"
 import { isEmpty } from "lodash"
 import { useRouter } from "next/router"
-import { testHttpConnection } from "src/views/dashboard/plugins/datasource/http/query_runner"
-import { testJaegerConnection } from "src/views/dashboard/plugins/datasource/jaeger/query_runner"
-import { testPrometheusConnection } from "src/views/dashboard/plugins/datasource/prometheus/query_runner"
+import { checkAndTestHttp } from "src/views/dashboard/plugins/datasource/http/query_runner"
+import { checkAndTestJaeger } from "src/views/dashboard/plugins/datasource/jaeger/query_runner"
+import { checkAndTestPrometheus } from "src/views/dashboard/plugins/datasource/prometheus/query_runner"
 import {  DatasourceType } from "types/dashboard"
 import { Datasource } from "types/datasource"
 import { useImmer } from "use-immer"
 import { requestApi } from "utils/axios/request"
-import isURL from "validator/lib/isURL"
+import HttpDatasourceEditor from "../dashboard/plugins/datasource/http/DatasourceEditor"
+import PrometheusDatasourceEditor from "../dashboard/plugins/datasource/prometheus/DatasourceEditor"
+import TestDataDatasourceEditor from "../dashboard/plugins/datasource/testdata/DatasourceEditor"
+import JaegerDatasourceEditor from "../dashboard/plugins/datasource/jaeger/DatasourceEditor"
 
 
 const DatasourceEditor = ({ds, onChange=null}) => {
@@ -35,16 +38,6 @@ const DatasourceEditor = ({ds, onChange=null}) => {
     }
 
     const testDatasource = async () => {
-        if (datasource.type != DatasourceType.TestData &&  !isURL(datasource.url, { require_tld: false })) {
-            toast({
-                title: "Invalid url",
-                status: "warning",
-                duration: 3000,
-                isClosable: true,
-            })
-            return
-        }
-
         if (isEmpty(datasource.name)) {
             toast({
                 title: "Invalid name",
@@ -54,17 +47,18 @@ const DatasourceEditor = ({ds, onChange=null}) => {
             })
             return
         }
+        
         //@needs-update-when-add-new-datasource
         let passed;
         switch (datasource.type) {
             case DatasourceType.Prometheus:
-                passed = await testPrometheusConnection(datasource.url)
+                passed = await checkAndTestPrometheus(datasource)
                 break
             case DatasourceType.ExternalHttp:
-                passed = await testHttpConnection(datasource.url)
+                passed = await checkAndTestHttp(datasource)
                 break
             case DatasourceType.Jaeger:
-                passed = await testJaegerConnection(datasource.url)
+                passed = await checkAndTestJaeger(datasource)
                 break
             case DatasourceType.TestData:
                 passed = true
@@ -110,13 +104,11 @@ const DatasourceEditor = ({ds, onChange=null}) => {
                 <Image width="30px" height="30px" src={`/plugins/datasource/${datasource.type}.svg`} />
             </HStack>
         </InputGroup>
-        {datasource.type != DatasourceType.TestData && <InputGroup size="sm" mt="4">
-            <InputLeftAddon children='URL' />
-            <Input value={datasource.url} placeholder="http://localhost:9090" onChange={e => {
-                const v = e.currentTarget.value
-                setDatasource((d: Datasource) => { d.url = v })
-            }} />
-        </InputGroup>}
+        {/* @needs-update-when-add-new-datasource */}
+        {datasource.type == DatasourceType.ExternalHttp && <HttpDatasourceEditor datasource={datasource} onChange={setDatasource}/>}
+        {datasource.type == DatasourceType.Prometheus && <PrometheusDatasourceEditor datasource={datasource} onChange={setDatasource}/>}
+        {datasource.type == DatasourceType.TestData && <TestDataDatasourceEditor datasource={datasource} onChange={setDatasource}/>}
+        {datasource.type == DatasourceType.Jaeger && <JaegerDatasourceEditor datasource={datasource} onChange={setDatasource}/>}
         <Button onClick={testDatasource} size="sm" mt="4">Test & Save</Button>
     </>)
 }
