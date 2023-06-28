@@ -1,10 +1,11 @@
-import { InputGroup, InputLeftAddon, Select } from "@chakra-ui/react"
+import { Input, InputGroup, InputLeftAddon, Select } from "@chakra-ui/react"
 import { FormItem } from "components/form/Form"
 import { useEffect } from "react"
 import { Variable } from "types/variable"
 import { isJSON } from "utils/is"
 import { PromLabelSelect, PromMetricSelect } from "./Editor"
 import { queryPromethuesVariableValues } from "./query_runner"
+import { EditorInputItem } from "components/editor/EditorItem"
 
 interface Props {
     variable: Variable
@@ -65,6 +66,20 @@ const PrometheusVariableEditor = ({ variable, onChange,onQueryResult }: Props) =
                                 variable.value = JSON.stringify(data)
                             })
                         }} />
+                    </InputGroup>
+                </>
+            }
+
+            {
+                data.type == PromDsQueryTypes.Metrics && <>
+                    <InputGroup size="sm" mt="2">
+                        <InputLeftAddon children='Metric regex' />
+                        <EditorInputItem placeholder="e.g go_*" value={data.metrics} onChange={m => {
+                            data.metrics = m
+                            onChange(variable => {
+                                variable.value = JSON.stringify(data)
+                            })
+                        }}/>
                     </InputGroup>
                 </>
             }

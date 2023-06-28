@@ -7,18 +7,19 @@ interface EditorInputProps {
     value: string
     onChange: any
     size?: string
+    placeholder?: string
 }
 
-export const EditorInputItem = ({ value, onChange, type="input", size = "sm" }: EditorInputProps) => {
+export const EditorInputItem = ({ value, onChange, type="input", size = "sm",placeholder }: EditorInputProps) => {
     const [temp, setTemp] = useState(value)
     switch (type) {
         case "input":
             return (
-                <Input size={size} value={temp} onChange={e => setTemp(e.currentTarget.value)} onBlur={() => onChange(temp)} />
+                <Input placeholder={placeholder} size={size} value={temp} onChange={e => setTemp(e.currentTarget.value)} onBlur={() => onChange(temp)} />
             )
         case "textarea":
             return (
-                <Textarea size={size} value={temp} onChange={e => setTemp(e.currentTarget.value)} onBlur={() => onChange(temp)} />
+                <Textarea placeholder={placeholder}  size={size} value={temp} onChange={e => setTemp(e.currentTarget.value)} onBlur={() => onChange(temp)} />
             )
     }
 }
