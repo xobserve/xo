@@ -6,10 +6,11 @@ export interface Variable {
     type: string
     datasource?: number
     value?: string
-    brief?: string
+    desc?: string
     created?: string
     values?: string[]
     selected?: string
+    regex?: string 
 }
 
 export enum VariableQueryType {

@@ -36,24 +36,7 @@ const SelectVariable = ({ v }: { v: Variable }) => {
     }, [v])
 
     const loadValues = async () => {
-        let result = []
-        if (v.type == VariableQueryType.Custom) {
-            result = v.value.split(",")
-        } else {
-            const ds = datasources.find(d => d.id == v.datasource)
-            switch (ds?.type) {
-                case DatasourceType.Prometheus:
-                    result = await queryPromethuesVariableValues(v)
-                    break;
-                case DatasourceType.ExternalHttp:
-                    result = await queryHttpVariableValues(v)
-                    break;
-                default:
-                    break;
-            }
-        }
-
-
+        const result = await queryVariableValues(v)
         setValues(result)
         v.values = result
     }
@@ -136,4 +119,30 @@ export const setVariable = (name, value, toast) => {
             isClosable: true,
         })
     }
+}
+
+export const queryVariableValues = async (v:Variable) => {
+    let result = []
+    if (v.type == VariableQueryType.Custom) {
+        result = v.value.split(",")
+    } else {
+        const ds = datasources.find(d => d.id == v.datasource)
+        switch (ds?.type) {
+            case DatasourceType.Prometheus:
+                result = await queryPromethuesVariableValues(v)
+                break;
+            case DatasourceType.ExternalHttp:
+                result = await queryHttpVariableValues(v)
+                break;
+            default:
+                break;
+        }
+    }
+
+    if (!isEmpty(v.regex)) {
+        const regex = new RegExp(v.regex)
+        result = result.filter(v => regex.test(v))
+    }
+   
+    return result
 }

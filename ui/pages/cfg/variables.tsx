@@ -2,6 +2,7 @@ import { Button, Table, TableContainer, Tag, Tbody, Td, Th, Thead, Tr, Modal, Mo
 import { DetailAlert, DetailAlertItem } from "components/DetailAlert"
 import RadionButtons from "components/RadioButtons"
 import DatasourceSelect from "components/datasource/Select"
+import { EditorInputItem } from "components/editor/EditorItem"
 import { Form, FormItem } from "components/form/Form"
 import Page from "layouts/page/Page"
 import { useEffect, useState } from "react"
@@ -206,7 +207,13 @@ export const EditVariable = ({ v, isOpen, onClose, isEdit, onSubmit, isGlobal = 
     }
 
     const onQueryResult = result => {
-        setVariableValues(result)
+        const regex = new RegExp(variable.regex)
+        let res = result
+        if (variable.regex) {
+            res = result.filter(r => regex.test(r))
+        }
+        
+        setVariableValues(res)
     }
 
     return (<>
@@ -222,7 +229,7 @@ export const EditVariable = ({ v, isOpen, onClose, isEdit, onSubmit, isGlobal = 
                         </FormItem>
 
                         <FormItem title="Description">
-                            <Input mt="2" width="400px" placeholder='give this variable a simple description' value={variable.brief} onChange={e => { setVariable({ ...variable, brief: e.currentTarget.value }) }} />
+                            <Input mt="2" width="400px" placeholder='give this variable a simple description' value={variable.desc} onChange={e => { setVariable({ ...variable, desc: e.currentTarget.value }) }} />
                         </FormItem>
 
                         <FormItem title="Query Type" width="400px">
@@ -234,7 +241,7 @@ export const EditVariable = ({ v, isOpen, onClose, isEdit, onSubmit, isGlobal = 
 
                         {variable.type == VariableQueryType.Custom &&
                             <FormItem title="Query Options" width="400px">
-                                <Input width="400px" placeholder='Values separated by comma,e.g 1,10,20,a,b,c' value={variable.value} onChange={e => { setVariable({ ...variable, value: e.currentTarget.value }) }} />
+                                <Input width="400px" placeholder='Values separated by comma,e.g 1,10,20,a,b,c' value={variable.value} onChange={e => { setVariable({ ...variable, value: e.currentTarget.value }) }} onBlur={() => onQueryResult(variable.value.split(','))}/>
                             </FormItem>}
 
                         {variable.type == VariableQueryType.Datasource && <>
@@ -244,6 +251,11 @@ export const EditVariable = ({ v, isOpen, onClose, isEdit, onSubmit, isGlobal = 
                             {
                                 datasources?.find(ds => ds.id == variable.datasource)?.type == DatasourceType.Prometheus  && <PrometheusVariableEditor variable={variable} onChange={setVariable} onQueryResult={onQueryResult}/>
                             }
+                            {<FormItem title="Regex filter ( optional )" width="400px">
+                                <EditorInputItem value={variable.regex} placeholder="further filter the query result through a Regex pattern" onChange={v => {
+                                    setVariable({ ...variable, regex: v })
+                                }}/>
+                            </FormItem>}
                         </>
                         }
 
