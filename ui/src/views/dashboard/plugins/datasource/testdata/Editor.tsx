@@ -2,13 +2,11 @@ import {  VStack } from "@chakra-ui/react"
 import { cloneDeep } from "lodash"
 import { useState } from "react"
 import {  PanelQuery } from "types/dashboard"
+import { DatasourceEditorProps } from "types/datasource"
 
-interface Props {
-    query : PanelQuery
-    onChange: any
-}
 
-const TestDataQueryEditor = ({query,onChange}:Props) => {  
+
+const TestDataQueryEditor = ({query,onChange}:DatasourceEditorProps) => {  
     const [tempQuery, setTempQuery] = useState<PanelQuery>(cloneDeep(query))
     
     return (  

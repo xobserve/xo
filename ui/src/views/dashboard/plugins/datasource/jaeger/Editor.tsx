@@ -3,13 +3,9 @@ import Label from "components/form/Label"
 import { cloneDeep } from "lodash"
 import { useState } from "react"
 import { PanelQuery } from "types/dashboard"
+import { DatasourceEditorProps } from "types/datasource"
 
-interface Props {
-    query : PanelQuery
-    onChange: any
-}
-
-const JaegerQueryEditor = ({query,onChange}:Props) => {  
+const JaegerQueryEditor = ({query,onChange}:DatasourceEditorProps) => {  
     const [tempQuery, setTempQuery] = useState<PanelQuery>(cloneDeep(query))
     
     return (  

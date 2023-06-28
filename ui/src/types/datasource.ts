@@ -1,4 +1,4 @@
-import { DatasourceType } from "./dashboard"
+import { DatasourceType, PanelDatasource, PanelQuery } from "./dashboard"
 
 export interface Datasource {
     id: number 
@@ -8,4 +8,10 @@ export interface Datasource {
     data?: {[key: string]: any}
     created?: string 
     updated?: string
+}
+
+export interface DatasourceEditorProps {
+    datasource: PanelDatasource
+    query: PanelQuery
+    onChange: any
 }

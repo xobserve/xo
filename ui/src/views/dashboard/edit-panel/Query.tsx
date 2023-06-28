@@ -159,11 +159,11 @@ const CustomQueryEditor = ({ query, onChange, selected }) => {
     //@needs-update-when-add-new-datasource
     switch (selected.type) {
         case DatasourceType.Prometheus:
-            return <PrometheusQueryEditor query={query} onChange={onQueryChange} />
+            return <PrometheusQueryEditor datasource={selected} query={query} onChange={onQueryChange} />
         case DatasourceType.TestData:
-            return <TestDataQueryEditor query={query} onChange={onQueryChange} />
+            return <TestDataQueryEditor datasource={selected} query={query} onChange={onQueryChange} />
         case DatasourceType.Jaeger:
-            return <JaegerQueryEditor query={query} onChange={onQueryChange} />
+            return <JaegerQueryEditor datasource={selected} query={query} onChange={onQueryChange} />
         default:
             return <></>
     }

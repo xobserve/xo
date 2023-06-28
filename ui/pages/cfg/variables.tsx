@@ -203,10 +203,6 @@ export const EditVariable = ({ v, isOpen, onClose, isEdit, onSubmit, isGlobal = 
         setDatasources(res.data)
     }
 
-    const f = () => {
-        console.log("here3333ededd",datasources, variable.datasource)
-        return datasources.find(ds => ds.id == variable.datasource)
-    }
 
     return (<>
         <Modal isOpen={isOpen} onClose={onClose} size="full">
@@ -238,10 +234,10 @@ export const EditVariable = ({ v, isOpen, onClose, isEdit, onSubmit, isGlobal = 
 
                         {variable.type == VariableQueryType.Datasource && <>
                             <FormItem title="Select datasource" width="400px">
-                                <DatasourceSelect value={variable.datasource} onChange={id => setVariable(v => {v.datasource=id})} allowTypes={[DatasourceType.Prometheus,DatasourceType.ExternalHttp]} variant="outline" />
+                                <DatasourceSelect value={variable.datasource} onChange={id => setVariable(v => {v.datasource=id;v.value=""})} allowTypes={[DatasourceType.Prometheus,DatasourceType.ExternalHttp]} variant="outline" />
                             </FormItem>
                             {
-                                f()?.type == DatasourceType.Prometheus  && <PrometheusVariableEditor variable={variable} onChange={setVariable}/>
+                                datasources.find(ds => ds.id == variable.datasource)?.type == DatasourceType.Prometheus  && <PrometheusVariableEditor variable={variable} onChange={setVariable}/>
                             }
                         </>
                         }
