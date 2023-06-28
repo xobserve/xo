@@ -92,7 +92,7 @@ export interface PanelQuery {
     legend: string
     visible: boolean
     interval?: number
-    mockData?: any
+    data?: {[key:string]:any}
 }
 
 export interface GridPos {

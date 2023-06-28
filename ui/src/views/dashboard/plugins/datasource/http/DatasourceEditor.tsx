@@ -1,6 +1,5 @@
 import { Input, InputGroup, InputLeftAddon } from "@chakra-ui/react"
 import { Datasource } from "types/datasource"
-import isURL from "validator/lib/isURL"
 
 interface Props {
     datasource: Datasource

@@ -1,6 +1,59 @@
 import { Datasource } from "types/datasource"
 import { isHttpDatasourceValid } from "./DatasourceEditor"
 import { Variable } from "types/variable"
+import { Panel, PanelQuery } from "types/dashboard"
+import { TimeRange } from "types/time"
+import { genDynamicFunction } from "utils/dynamicCode"
+import { isEmpty, isFunction, round } from "lodash"
+import _ from 'lodash'
+
+export const run_http_query = async (panel: Panel, q: PanelQuery,range: TimeRange,ds: Datasource) => {
+    //@todo: 
+    // 1. rather than query directyly to prometheus, we should query to our own backend servie
+    // 2. using `axios` instead of `fetch`
+    const start = round(range.start.getTime() / 1000)
+    const end = round(range.end.getTime() / 1000)
+    let url = q.metrics
+    const headers = {}
+    console.log("here3333:",q.data)
+    if (!isEmpty(q.data.transformRequest)) {
+        const transformRequest = genDynamicFunction(q.data.transformRequest);
+        if (isFunction(transformRequest)) {
+             url = transformRequest(url, headers,start , end)
+             console.log("here33333:",url)
+        }  else {
+            return {
+                error: 'transformRequest is not a valid function',
+                data: []
+            }
+        }
+    }
+    
+
+    const res0 = await fetch(url)
+     
+    const res = await res0.json()
+
+    let result = res
+    if (!isEmpty(q.data.transformResult)) {
+        const transformResult = genDynamicFunction(q.data.transformResult);
+        if (isFunction(transformResult)) {
+             result = transformResult(res, q, start, end)
+        }  else {
+            return {
+                error: 'transformResult is not a valid function',
+                data: []
+            }
+        }
+    }
+
+    console.log("here3333 http:", result)
+    
+    return {
+        error: null,
+        data: result
+    }
+}
 
 export const checkAndTestHttp = async (ds:Datasource) => {
     // check datasource setting is valid

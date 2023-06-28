@@ -24,6 +24,7 @@ import { useDedupEvent } from "hooks/useDedupEvent";
 import loadable from '@loadable/component'
 import CodeEditor from "components/CodeEditor/CodeEditor";
 import { calculateInterval } from "utils/datetime/range";
+import { run_http_query } from "../plugins/datasource/http/query_runner";
 
 
 interface PanelGridProps {
@@ -152,6 +153,9 @@ export const PanelComponent = ({ dashboard, panel, onRemovePanel, width, height,
                     break;
                 case DatasourceType.Jaeger:
                     res = await run_jaeger_query(panel, q, timeRange, datasource)
+                    break;
+                case DatasourceType.ExternalHttp:
+                    res = await run_http_query(panel, q, timeRange, datasource)
                     break;
                 default:
                     break;

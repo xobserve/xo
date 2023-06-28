@@ -9,7 +9,7 @@ export const initPanel = (id?) =>  {
         desc: "",
         collapsed: false,
         type: type,
-        gridPos: { x: 0, y: 0, w: 12, h: 8 },
+        gridPos: { x: 0, y: 0, w: 12, h: 12 },
         plugins:  {
             [type]:initPanelPlugins[type]
         },
@@ -38,7 +38,8 @@ export const initDatasource: PanelDatasource = {
             id: 65,
             metrics: "",
             legend: "" ,
-            visible: true
+            visible: true,
+            data: {}
         }
     ]
 }

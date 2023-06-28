@@ -12,6 +12,7 @@ import { calculateInterval } from "utils/datetime/range"
 import { getInitTimeRange } from "components/TimePicker"
 import { datasources } from "../Dashboard"
 import { Datasource } from "types/datasource"
+import HttpQueryEditor from "../plugins/datasource/http/Editor"
 
 interface Props {
     panel: Panel
@@ -47,7 +48,8 @@ const EditPanelQuery = (props: Props) => {
                 id: id,
                 metrics: "",
                 legend: "",
-                visible: true
+                visible: true,
+                data: {}
             })
         })
     }
@@ -163,6 +165,8 @@ const CustomQueryEditor = ({ query, onChange, selected }) => {
             return <TestDataQueryEditor datasource={selected} query={query} onChange={onQueryChange} />
         case DatasourceType.Jaeger:
             return <JaegerQueryEditor datasource={selected} query={query} onChange={onQueryChange} />
+        case DatasourceType.ExternalHttp:
+            return <HttpQueryEditor datasource={selected} query={query} onChange={onQueryChange} />
         default:
             return <></>
     }
