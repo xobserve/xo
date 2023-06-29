@@ -5,9 +5,11 @@ import DatasourceSelect from "components/datasource/Select"
 import { EditorInputItem } from "components/editor/EditorItem"
 import { Form, FormItem } from "components/form/Form"
 import Page from "layouts/page/Page"
-import { useEffect, useState } from "react"
+import { isArray, isEmpty } from "lodash"
+import { useCallback, useEffect, useState } from "react"
 import { FaCog } from "react-icons/fa"
 import { cfgLinks } from "src/data/nav-links"
+import HttpVariableEditor from "src/views/dashboard/plugins/datasource/http/VariableEditor"
 import PrometheusVariableEditor from "src/views/dashboard/plugins/datasource/prometheus/VariableEditor"
 import { DatasourceType } from "types/dashboard"
 import { Datasource } from "types/datasource"
@@ -122,7 +124,7 @@ const GlobalVariablesPage = () => {
             </Flex>
             <VariablesTable variables={variables} onEdit={onEditVariable} onRemove={onRemoveVariable} />
         </Page>
-        <EditVariable v={variable} isEdit={editMode} onClose={onClose} isOpen={isOpen} onSubmit={editMode ? editVariable : addVariable} isGlobal />
+        <EditVariable key={variable.id} v={variable} isEdit={editMode} onClose={onClose} isOpen={isOpen} onSubmit={editMode ? editVariable : addVariable} isGlobal />
     </>
 }
 
@@ -190,6 +192,7 @@ interface EditProps {
 
 
 export const EditVariable = ({ v, isOpen, onClose, isEdit, onSubmit, isGlobal = false }: EditProps) => {
+    console.log("44444:", v)
     const [variable, setVariable] = useImmer<Variable>(null)
     const [datasources, setDatasources] = useState<Datasource[]>(null)
     const [variableValues, setVariableValues] = useState<string[]>([])
@@ -212,8 +215,11 @@ export const EditVariable = ({ v, isOpen, onClose, isEdit, onSubmit, isGlobal = 
         if (variable.regex) {
             res = result?.filter(r => regex.test(r))
         }
-
-        setVariableValues(res??[])
+        
+        if (!isArray(res)) {
+            res = []
+        }
+        setVariableValues(res)
     }
 
     const currentDatasource =  datasources?.find(ds => ds.id == variable?.datasource)
@@ -257,13 +263,14 @@ export const EditVariable = ({ v, isOpen, onClose, isEdit, onSubmit, isGlobal = 
                             {variable.type == VariableQueryType.Datasource && <>
                                 <InputGroup size="sm" width="400px" mt="2">
                                     <InputLeftAddon children='Select datasource' />
-                                    <DatasourceSelect value={variable.datasource} onChange={id => setVariable(v => { v.datasource = id; v.value = "" })} allowTypes={[DatasourceType.Prometheus, DatasourceType.ExternalHttp]} variant="outline" />
+                                    <Box width="200px">
+                                    <DatasourceSelect value={variable.datasource} onChange={id => setVariable(v => { v.datasource = id; v.value = "" })} allowTypes={[DatasourceType.Prometheus, DatasourceType.ExternalHttp]} variant="outline" /></Box>
                                 </InputGroup>
                                 {
                                     currentDatasource?.type == DatasourceType.Prometheus && <PrometheusVariableEditor variable={variable} onChange={setVariable} onQueryResult={onQueryResult} />
                                 }
                                 {
-                                     currentDatasource?.type == DatasourceType.ExternalHttp && <PrometheusVariableEditor variable={variable} onChange={setVariable} onQueryResult={onQueryResult} />
+                                     currentDatasource?.type == DatasourceType.ExternalHttp && <HttpVariableEditor variable={variable} onChange={setVariable} onQueryResult={onQueryResult} />
                                 }
                             </>
                             }
@@ -279,7 +286,7 @@ export const EditVariable = ({ v, isOpen, onClose, isEdit, onSubmit, isGlobal = 
 
                         <FormItem title="Variable values" width="100%">
                             <Box pt="1">
-                                {variableValues?.slice(0, displayCount).map(v => <Tag size="sm" variant="outline" ml="1">{v}</Tag>)}
+                                {!isEmpty(variableValues) && variableValues.slice(0, displayCount).map(v => <Tag size="sm" variant="outline" ml="1">{v}</Tag>)}
                             </Box>
                             {variableValues.length > displayCount && <Button mt="2" size="sm" colorScheme="gray" ml="1" onClick={() => setDisplayCount(displayCount + 30)}>Show more</Button>}
                         </FormItem>

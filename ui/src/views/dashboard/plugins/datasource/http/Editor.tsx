@@ -66,14 +66,14 @@ export default HttpQueryEditor
 
 
 
-export const initTransformRequest =
+const initTransformRequest =
     `function transformRequest(url,headers,startTime, endTime) {
     console.log("here33333:", url, headers, startTime, endTime)
     let newUrl = url + \`&start=$\{startTime}&end=$\{endTime}\`
     return newUrl
 }`
 
-export const initTransformResult =
+const initTransformResult =
     `function transformResult(httpResult, query, startTime, endTime) {
 console.log("here33333 result:", httpResult)
 const data = httpResult.data

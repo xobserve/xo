@@ -23,8 +23,11 @@ const VariablesSetting = ({ dashboard, onChange }: Props) => {
         setVariable({
             id: id as any,
             name: '',
-            type: VariableQueryType.Custom
+            type: VariableQueryType.Custom,
+            value: "",
+            regex: ""
         })
+
         onOpen()
     }
 
@@ -43,7 +46,7 @@ const VariablesSetting = ({ dashboard, onChange }: Props) => {
             dashboard.data.variables = []
         }
         onChange(draft => { draft.data.variables.unshift(v)})
-       
+        
         onClose()
         toast({
             title: "Variable added",
@@ -105,7 +108,7 @@ const VariablesSetting = ({ dashboard, onChange }: Props) => {
                 <Button size="sm" onClick={onAddVariable}>New</Button>
             </Flex>
             <VariablesTable variables={dashboard.data.variables??[]} onEdit={onEditVariable} onRemove={onRemoveVariable}/>
-        <EditVariable v={variable} isEdit={editMode} onClose={onClose} isOpen={isOpen} onSubmit={editMode ? editVariable : addVariable}/>
+        {variable && <EditVariable key={variable.id} v={variable} isEdit={editMode} onClose={onClose} isOpen={isOpen} onSubmit={editMode ? editVariable : addVariable}/>}
     </>
 }
 

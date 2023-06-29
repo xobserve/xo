@@ -141,8 +141,8 @@ export const queryVariableValues = async (v:Variable) => {
 
     if (!isEmpty(v.regex)) {
         const regex = new RegExp(v.regex)
-        result = result.filter(v => regex.test(v))
+        result = result?.filter(v => regex.test(v))
     }
    
-    return result
+    return result??[]
 }

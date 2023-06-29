@@ -7,6 +7,9 @@ import { genDynamicFunction } from "utils/dynamicCode"
 import { isEmpty, isFunction, round } from "lodash"
 import _ from 'lodash'
 import { setVariable } from "src/views/variables/Variables"
+import { datasources } from "src/views/dashboard/Dashboard"
+import { getInitTimeRange } from "components/TimePicker"
+import { isJSON } from "utils/is"
 
 export const run_http_query = async (panel: Panel, q: PanelQuery,range: TimeRange,ds: Datasource) => {
     //@todo: 
@@ -65,30 +68,40 @@ export const checkAndTestHttp = async (ds:Datasource) => {
 
 
 export const queryHttpVariableValues = async (variable:Variable, useCurrentTimerange = true) => {
-    // const data = isJSON(variable.value) ? JSON.parse(variable.value) : null
-    // if (!data) {
-    //     return 
-    // }
+    const data = isJSON(variable.value) ? JSON.parse(variable.value) : null
+    if (!data) {
+        return []
+    }
+    const timeRange = getInitTimeRange()
+    const start = timeRange.start.getTime() / 1000
+    const end = timeRange.end.getTime() / 1000
+
+
+    const headers = {}
+    let url
+    if (!isEmpty(data.transformRequest)) {
+        const transformRequest = genDynamicFunction(data.transformRequest);
+        if (isFunction(transformRequest)) {
+             url = transformRequest(data.url, headers,start , end, setVariable)
+        }  else {
+            return  []
+        }
+    }
     
-    // const timeRange = getInitTimeRange()
-    // const start = timeRange.start.getTime() / 1000
-    // const end = timeRange.end.getTime() / 1000
 
-    // const datasource = datasources.find(ds => ds.id == variable.datasource)
+    const res0 = await fetch(url)
+     
+    const res = await res0.json()
 
-
-    let result;
-    // if (data.type == PromDsQueryTypes.LabelValues) {
-    //     if (data.metrics && data.label) {
-    //         // query label values : https://prometheus.io/docs/prometheus/latest/querying/api/#querying-label-values
-    //         const url = `${datasource.url}/api/v1/label/${data.label}/values?${useCurrentTimerange ? `&start=${start}&end=${end}` : ""}&match[]=${data.metrics}`
-    //         const res0 = await fetch(url)
-    //         const res = await res0.json()
-    //         if (res.status == "success") {
-    //             result = res.data
-    //         }
-    //     }
-    // }
-
+    let result = res
+    if (!isEmpty(data.transformResult)) {
+        const transformResult = genDynamicFunction(data.transformResult);
+        if (isFunction(transformResult)) {
+             result = transformResult(res)
+        }  else {
+            return []
+        }
+    }
+    
     return result
 }
