@@ -10,6 +10,7 @@ import { isEmpty, set } from "lodash"
 import { queryPromethuesVariableValues } from "../dashboard/plugins/datasource/prometheus/query_runner"
 import { queryHttpVariableValues } from "../dashboard/plugins/datasource/http/query_runner"
 import { datasources } from "src/views/App"
+import ChakraSelect from "components/select/ChakraSelect"
 
 interface Props {
     id: number
@@ -48,15 +49,21 @@ const SelectVariable = ({ v }: { v: Variable }) => {
         const result = await queryVariableValues(v)
         setValues(result)
         v.values = result
+        if (v.enableAll) {
+            v.values.unshift("__all__")
+        }
     }
 
     return <HStack key={v.id}>
         <Text fontSize="sm" minWidth="fit-content" mt="1px">{v.name}</Text>
-        {!isEmpty(values) &&<Select value={v.selected} size="sm" variant="unstyled" onChange={e => setVariableValue(v, e.currentTarget.value)}>
-            {
-                values.map(v => <option key={v} value={v}>{v}</option>)
-            }
-        </Select>}
+        {!isEmpty(values) &&
+        <ChakraSelect 
+            value={{value: v.selected, label: v.selected == "__all__" ? "ALL" : v.selected}} 
+            size="sm" 
+            variant="unstyled" 
+            onChange={value => setVariableValue(v, value)}
+            options={ values.map(v => {return {value:v, label:v == "__all__" ? "ALL" : v}})}
+        />}
     </HStack>
 }
 export const setVariableSelected = (variables: Variable[]) => {
