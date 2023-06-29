@@ -1,7 +1,6 @@
-import { DatasourceType } from "./dashboard"
 
 export interface Variable {
-    id: number
+    id?: number
     name: string 
     type: string
     datasource?: number

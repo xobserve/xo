@@ -1,4 +1,4 @@
-import { Input, InputGroup, InputLeftAddon, Select } from "@chakra-ui/react"
+import { Input, InputGroup, InputLeftAddon, Select, Switch } from "@chakra-ui/react"
 import { FormItem } from "components/form/Form"
 import { useEffect } from "react"
 import { Variable } from "types/variable"
@@ -21,16 +21,29 @@ const PrometheusVariableEditor = ({ variable, onChange,onQueryResult }: Datasour
         type: PromDsQueryTypes.LabelValues
     }
 
+    if (data.useCurrentTime == undefined) {
+        data.useCurrentTime = true
+    }
+     
     useEffect(() => {
         loadVariables(variable)
     }, [variable])
     
-    const loadVariables = async (v) => {
-        const result = await queryPromethuesVariableValues(v )
+    const loadVariables = async (v:Variable) => {
+        const result = await queryPromethuesVariableValues(v)
         onQueryResult(result)
     }
 
     return (<>
+            <InputGroup size="sm" mt="2" alignItems="center">
+                <InputLeftAddon children='Use current time' />
+                <Switch size="md" defaultChecked={data.useCurrentTime} onChange={e => {
+                    data.useCurrentTime = e.target.checked
+                    onChange(variable => {
+                        variable.value = JSON.stringify(data)
+                    })
+                }}/>
+            </InputGroup>
             <InputGroup size="sm" mt="2">
                 <InputLeftAddon children='Query type' />
                 <Select value={data.type} onChange={e => {

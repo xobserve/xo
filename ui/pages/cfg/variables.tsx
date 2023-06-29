@@ -193,7 +193,6 @@ interface EditProps {
 
 
 export const EditVariable = ({ v, isOpen, onClose, isEdit, onSubmit, isGlobal = false }: EditProps) => {
-    console.log("44444:", v)
     const [variable, setVariable] = useImmer<Variable>(null)
     const [datasources, setDatasources] = useState<Datasource[]>(null)
     const [variableValues, setVariableValues] = useState<string[]>([])

@@ -79,7 +79,7 @@ export const checkAndTestPrometheus = async (ds: Datasource) => {
     }
 }
 
-export const queryPromethuesVariableValues = async (variable: Variable, useCurrentTimerange = true) => {
+export const queryPromethuesVariableValues = async (variable: Variable) => {
     const data = isJSON(variable.value) ? JSON.parse(variable.value) : null
     if (!data) {
         return
@@ -96,7 +96,7 @@ export const queryPromethuesVariableValues = async (variable: Variable, useCurre
     if (data.type == PromDsQueryTypes.LabelValues) {
         if ( data.label) {
             // query label values : https://prometheus.io/docs/prometheus/latest/querying/api/#querying-label-values
-            const url = `${datasource?.url}/api/v1/label/${data.label}/values?${useCurrentTimerange ? `&start=${start}&end=${end}` : ""}${data.metrics ? `&match[]=${data.metrics}` : ''}`
+            const url = `${datasource?.url}/api/v1/label/${data.label}/values?${data.useCurrentTime ? `&start=${start}&end=${end}` : ""}${data.metrics ? `&match[]=${data.metrics}` : ''}`
             const res0 = await fetch(url)
             const res = await res0.json()
             if (res.status == "success") {
@@ -105,7 +105,7 @@ export const queryPromethuesVariableValues = async (variable: Variable, useCurre
         }
     } else if (data.type == PromDsQueryTypes.Metrics) {
         if (!isEmpty(data.regex)) {
-            const res: string[] = await queryPrometheusAllMetrics(variable.datasource, useCurrentTimerange)
+            const res: string[] = await queryPrometheusAllMetrics(variable.datasource, data.useCurrentTime)
             const regex = new RegExp(data.regex)
             result = res.filter(r => regex.test(r))
         }
