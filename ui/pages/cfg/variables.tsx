@@ -5,10 +5,11 @@ import DatasourceSelect from "components/datasource/Select"
 import { EditorInputItem } from "components/editor/EditorItem"
 import { Form, FormItem } from "components/form/Form"
 import Page from "layouts/page/Page"
-import { isArray, isEmpty } from "lodash"
+import { cloneDeep, isArray, isEmpty } from "lodash"
 import { useCallback, useEffect, useState } from "react"
 import { FaCog } from "react-icons/fa"
 import { cfgLinks } from "src/data/nav-links"
+import { datasources } from "src/views/dashboard/Dashboard"
 import HttpVariableEditor from "src/views/dashboard/plugins/datasource/http/VariableEditor"
 import PrometheusVariableEditor from "src/views/dashboard/plugins/datasource/prometheus/VariableEditor"
 import { DatasourceType } from "types/dashboard"
@@ -145,7 +146,7 @@ export const VariablesTable = ({ variables, onEdit, onRemove }: TableProps) => {
                     <Tr>
                         <Th>Variable name</Th>
                         <Th>Query type</Th>
-                        <Th>Values</Th>
+                        <Th>Datasource</Th>
                         <Th>Actions</Th>
                     </Tr>
                 </Thead>
@@ -154,7 +155,7 @@ export const VariablesTable = ({ variables, onEdit, onRemove }: TableProps) => {
                         return <Tr key={variable.name}>
                             <Td>{variable.name}</Td>
                             <Td>{variable.type}</Td>
-                            <Td>{variable.value}</Td>
+                            <Td>{datasources?.find(ds => ds.id ==  variable.datasource)?.name}</Td>
                             <Td>
                                 <Button variant="ghost" size="sm" px="0" onClick={() => onEdit(variable)}>Edit</Button>
                                 <Button variant="ghost" colorScheme="orange" size="sm" px="0" ml="1" onClick={() => onRemove(variable)}>Remove</Button>
@@ -200,6 +201,7 @@ export const EditVariable = ({ v, isOpen, onClose, isEdit, onSubmit, isGlobal = 
     useEffect(() => {
         setVariable(v)
     }, [v])
+
     useEffect(() => {
         load()
     }, [])
@@ -252,7 +254,7 @@ export const EditVariable = ({ v, isOpen, onClose, isEdit, onSubmit, isGlobal = 
                                 <InputLeftAddon children='Query type' />
                                 <RadionButtons size="sm" options={Object.keys(VariableQueryType).map(k =>
                                     ({ label: k, value: VariableQueryType[k] })
-                                )} value={variable.type} onChange={v => setVariable({ ...variable, type: v })} />
+                                )} value={variable.type} onChange={v => setVariable({ ...variable, type: v,value:'' })} />
                             </InputGroup>
 
                             {variable.type == VariableQueryType.Custom && <InputGroup size="sm" width="400px" mt="2">
