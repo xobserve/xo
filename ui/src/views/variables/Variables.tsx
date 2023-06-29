@@ -10,7 +10,6 @@ import { isEmpty, set } from "lodash"
 import { queryPromethuesVariableValues } from "../dashboard/plugins/datasource/prometheus/query_runner"
 import { queryHttpVariableValues } from "../dashboard/plugins/datasource/http/query_runner"
 import { datasources } from "src/views/App"
-import ChakraSelect from "components/select/ChakraSelect"
 import ChakraMultiSelect from "components/select/ChakraMultiSelect"
 
 interface Props {
