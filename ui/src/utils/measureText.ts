@@ -1,4 +1,4 @@
-import { canvasCtx } from "pages/_app";
+import { canvasCtx } from "src/views/App";
 
 const cache = new Map<string, TextMetrics>();
 const cacheLimit = 500;

@@ -7,7 +7,6 @@ import { genDynamicFunction } from "utils/dynamicCode"
 import { isEmpty, isFunction, round } from "lodash"
 import _ from 'lodash'
 import { setVariable } from "src/views/variables/Variables"
-import { datasources } from "src/views/dashboard/Dashboard"
 import { getInitTimeRange } from "components/TimePicker"
 import { isJSON } from "utils/is"
 

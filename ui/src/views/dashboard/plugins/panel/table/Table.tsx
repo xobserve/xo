@@ -18,7 +18,7 @@ const TablePanel = (props: TablePanelProps) => {
     if (isEmpty(props.data)) {
         return (<Center height="100%">No data</Center>)
     }
-
+    
     const router = useRouter()
     const toast = useToast()
     const [series, setSeries] = React.useState(props.data[0][0].name)
@@ -49,7 +49,7 @@ const TablePanel = (props: TablePanelProps) => {
                     setSeries(s.name)
                 }
                 const columns = []
-                s.columns.forEach((column, i) => {
+                s.columns?.forEach((column, i) => {
                     if (column.canFilter) {
                         if (isNumber(s.rows[0][column.Header])) {
                             columns.push({

@@ -13,7 +13,7 @@ import storage from "utils/localStorage";
 import useBus from 'use-bus'
 import { getInitTimeRange } from "components/TimePicker";
 import {  PanelForceRebuildEvent, TimeChangedEvent, VariableChangedEvent } from "src/data/bus-events";
-import { datasources, variables } from "../Dashboard";
+import { variables } from "../Dashboard";
 import { addParamToUrl } from "utils/url";
 import { run_testdata_query } from "../plugins/datasource/testdata/query_runner";
 import { run_jaeger_query } from "../plugins/datasource/jaeger/query_runner";
@@ -25,6 +25,7 @@ import loadable from '@loadable/component'
 import CodeEditor from "components/CodeEditor/CodeEditor";
 import { calculateInterval } from "utils/datetime/range";
 import { run_http_query } from "../plugins/datasource/http/query_runner";
+import { datasources } from "src/views/App";
 
 
 interface PanelGridProps {

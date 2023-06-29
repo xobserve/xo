@@ -10,8 +10,9 @@ import { isPromethesDatasourceValid } from "./DatasourceEditor"
 import { Variable } from "types/variable"
 import { isJSON } from "utils/is"
 import { getInitTimeRange } from "components/TimePicker"
-import { datasources } from "src/views/dashboard/Dashboard"
+
 import { PromDsQueryTypes } from "./VariableEditor"
+import { datasources } from "src/views/App"
 
 export const run_prometheus_query = async (panel: Panel, q: PanelQuery, range: TimeRange, ds: Datasource) => {
     if (isEmpty(q.metrics)) {

@@ -68,8 +68,9 @@ CREATE TABLE IF NOT EXISTS variable (
     id INTEGER PRIMARY KEY AUTO_INCREMENT,
     name VARCHAR(60) NOT NULL,
     type VARCHAR(10) NOT NULL,
-    value TEXT,
-    external_url VARCHAR(255) DEFAULT '',
+    value MEDIUMTEXT,
+    description VARCHAR(255) DEFAULT '',
+    datasource INTEGER,
     created DATETIME NOT NULL,
     updated DATETIME NOT NULL
 );

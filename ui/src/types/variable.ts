@@ -5,7 +5,7 @@ export interface Variable {
     type: string
     datasource?: number
     value?: string
-    desc?: string
+    description?: string
     created?: string
     values?: string[]
     selected?: string

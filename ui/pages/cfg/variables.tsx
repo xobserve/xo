@@ -6,10 +6,12 @@ import { EditorInputItem } from "components/editor/EditorItem"
 import { Form, FormItem } from "components/form/Form"
 import Page from "layouts/page/Page"
 import { cloneDeep, isArray, isEmpty } from "lodash"
+import { datasources } from "src/views/App"
 import { useCallback, useEffect, useState } from "react"
 import { FaCog } from "react-icons/fa"
 import { cfgLinks } from "src/data/nav-links"
-import { datasources } from "src/views/dashboard/Dashboard"
+import { initVariable } from "src/data/variable"
+
 import HttpVariableEditor from "src/views/dashboard/plugins/datasource/http/VariableEditor"
 import PrometheusVariableEditor from "src/views/dashboard/plugins/datasource/prometheus/VariableEditor"
 import { DatasourceType } from "types/dashboard"
@@ -42,8 +44,7 @@ const GlobalVariablesPage = () => {
         setEditMode(false)
         setVariable({
             id: 0,
-            name: '',
-            type: "1",
+            ...initVariable
         })
         onOpen()
     }
@@ -125,7 +126,7 @@ const GlobalVariablesPage = () => {
             </Flex>
             <VariablesTable variables={variables} onEdit={onEditVariable} onRemove={onRemoveVariable} />
         </Page>
-        <EditVariable key={variable.id} v={variable} isEdit={editMode} onClose={onClose} isOpen={isOpen} onSubmit={editMode ? editVariable : addVariable} isGlobal />
+        {variable && <EditVariable key={variable.id} v={variable} isEdit={editMode} onClose={onClose} isOpen={isOpen} onSubmit={editMode ? editVariable : addVariable} isGlobal />}
     </>
 }
 
@@ -244,7 +245,7 @@ export const EditVariable = ({ v, isOpen, onClose, isEdit, onSubmit, isGlobal = 
                             </InputGroup>
                             <InputGroup size="sm" mt="2" width="400px">
                                 <InputLeftAddon children='Description'/>
-                                <Input placeholder='give this variable a simple description' value={variable.desc} onChange={e => { setVariable({ ...variable, desc: e.currentTarget.value }) }} />
+                                <Input placeholder='give this variable a simple description' value={variable.description} onChange={e => { setVariable({ ...variable, description: e.currentTarget.value }) }} />
                             </InputGroup>
                         </FormItem>
 

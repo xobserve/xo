@@ -1,5 +1,5 @@
 import { HStack, Select, Text } from "@chakra-ui/react"
-import { datasources, variables } from "src/views/dashboard/Dashboard"
+import {  variables } from "src/views/dashboard/Dashboard"
 import { VariableChangedEvent } from "src/data/bus-events"
 import { Variable, VariableQueryType } from "types/variable"
 import { dispatch } from "use-bus"
@@ -9,6 +9,7 @@ import { DatasourceType } from "types/dashboard"
 import { isEmpty, set } from "lodash"
 import { queryPromethuesVariableValues } from "../dashboard/plugins/datasource/prometheus/query_runner"
 import { queryHttpVariableValues } from "../dashboard/plugins/datasource/http/query_runner"
+import { datasources } from "src/views/App"
 
 interface Props {
     id: number

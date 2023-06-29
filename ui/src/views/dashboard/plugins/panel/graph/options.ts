@@ -1,7 +1,7 @@
 import { round, isEmpty, isNumber } from "lodash";
 import { ColorMode } from "src/data/constants";
 import * as colorManipulator from 'components/uPlot/colorManipulator';
-import { canvasCtx } from 'pages/_app';
+import { canvasCtx } from 'src/views/App';
 import { PanelProps } from "types/dashboard";
 import uPlot from "uplot";
 import { systemDateFormats } from "utils/datetime/formats";

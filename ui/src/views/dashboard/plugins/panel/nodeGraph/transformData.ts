@@ -8,7 +8,7 @@ export const setAttrsForData = (settings: NodeGraphSettings, data: NodeGraphPlug
     // 计算 node size
     // 找出最小的那个作为基准 size
     let base;
-    data.nodes.forEach((node: any, i) => {
+    data.nodes?.forEach((node: any, i) => {
         const attrs = {}
         Object.keys(donutColors).map(k => {
             const d = node.data[k]
@@ -48,7 +48,7 @@ export const setAttrsForData = (settings: NodeGraphSettings, data: NodeGraphPlug
     })
 
     // 根据与基准的比例，来计算大小
-    data.nodes.forEach((node: any) => {
+    data.nodes?.forEach((node: any) => {
         let t = 0;
         Object.keys(node.donutAttrs).forEach(key => {
             t += node.donutAttrs[key];
@@ -70,7 +70,7 @@ export const setAttrsForData = (settings: NodeGraphSettings, data: NodeGraphPlug
         }
     })
 
-    data.edges.forEach(edge => {
+    data.edges?.forEach(edge => {
         edge.type = settings.edge.shape
         if (edge.style) {
             edge.style.endArrow = settings.edge.arrow == "default" ? true :{

@@ -35,12 +35,6 @@ func AddNewVariable(c *gin.Context) {
 		return
 	}
 
-	if v.Type != models.CustomValuesVariable && v.Type != models.GetByHttpVariable && v.Type != models.BackendHardcodedVariable {
-		logger.Warn("variable type invalid", "type", v.Type)
-		c.JSON(400, common.RespError(e.ParamInvalid))
-		return
-	}
-
 	u := user.CurrentUser(c)
 	// only admin can do this
 	if !u.Role.IsAdmin() {
@@ -49,8 +43,8 @@ func AddNewVariable(c *gin.Context) {
 	}
 
 	now := time.Now()
-	_, err = db.Conn.Exec("INSERT INTO variable(name,type,value,external_url,created,updated) VALUES(?,?,?,?,?,?)",
-		v.Name, v.Type, v.Value, v.ExternalUrl, now, now)
+	_, err = db.Conn.Exec("INSERT INTO variable(name,type,value,datasource,description,created,updated) VALUES(?,?,?,?,?,?,?)",
+		v.Name, v.Type, v.Value, v.Datasource, v.Desc, now, now)
 	if err != nil {
 		if e.IsErrUniqueConstraint(err) {
 			c.JSON(400, common.RespError("variable name already exists"))
@@ -65,7 +59,7 @@ func AddNewVariable(c *gin.Context) {
 
 func GetVariables() ([]*models.Variable, error) {
 	vars := []*models.Variable{}
-	rows, err := db.Conn.Query("SELECT id,name,type,value,external_url FROM variable")
+	rows, err := db.Conn.Query("SELECT id,name,type,value,datasource,description FROM variable")
 	if err != nil {
 
 		return nil, err
@@ -73,7 +67,7 @@ func GetVariables() ([]*models.Variable, error) {
 
 	for rows.Next() {
 		v := &models.Variable{}
-		err = rows.Scan(&v.Id, &v.Name, &v.Type, &v.Value, &v.ExternalUrl)
+		err = rows.Scan(&v.Id, &v.Name, &v.Type, &v.Value, &v.Datasource, &v.Desc)
 		if err != nil {
 			logger.Warn("scan variable error", "error", err)
 			continue
@@ -100,12 +94,6 @@ func UpdateVariable(c *gin.Context) {
 		return
 	}
 
-	if v.Type != models.CustomValuesVariable && v.Type != models.GetByHttpVariable && v.Type != models.BackendHardcodedVariable {
-		logger.Warn("variable type invalid", "type", v.Type)
-		c.JSON(400, common.RespError(e.ParamInvalid))
-		return
-	}
-
 	u := user.CurrentUser(c)
 	// only admin can do this
 	if !u.Role.IsAdmin() {
@@ -114,8 +102,8 @@ func UpdateVariable(c *gin.Context) {
 	}
 
 	now := time.Now()
-	_, err = db.Conn.Exec("UPDATE variable SET name=?,type=?,value=?,external_url=?,updated=? WHERE id=?",
-		v.Name, v.Type, v.Value, v.ExternalUrl, now, v.Id)
+	_, err = db.Conn.Exec("UPDATE variable SET name=?,type=?,value=?,datasource=?,description=?,updated=? WHERE id=?",
+		v.Name, v.Type, v.Value, v.Datasource, v.Desc, now, v.Id)
 	if err != nil {
 		if e.IsErrUniqueConstraint(err) {
 			c.JSON(400, common.RespError("variable name already exists"))

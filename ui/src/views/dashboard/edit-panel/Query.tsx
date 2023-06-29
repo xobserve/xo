@@ -10,9 +10,10 @@ import Label from "components/form/Label"
 import { EditorInputItem, EditorNumberItem } from "components/editor/EditorItem"
 import { calculateInterval } from "utils/datetime/range"
 import { getInitTimeRange } from "components/TimePicker"
-import { datasources } from "../Dashboard"
+
 import { Datasource } from "types/datasource"
 import HttpQueryEditor from "../plugins/datasource/http/Editor"
+import { datasources } from "src/views/App"
 
 interface Props {
     panel: Panel
