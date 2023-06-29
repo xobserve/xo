@@ -25,7 +25,7 @@ interface SelectProps {
     showArrow?: boolean
 }
 
-const PopoverSelect = ({ value, options, onChange, variant = "outline", customOption = null, placeholder = "select..", size = "sm", isClearable = false, isMulti = false, exclusive,placement="auto",showArrow = true }: SelectProps) => {
+const PopoverSelect = ({ value, options, onChange, variant = "outline", customOption = null, placeholder = "...", size = "sm", isClearable = false, isMulti = false, exclusive,placement="auto",showArrow = true }: SelectProps) => {
     const [isOpen, setIsOpen] = useState(false)
     const [query, setQuery] = useState('')
 

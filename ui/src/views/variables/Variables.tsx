@@ -56,7 +56,7 @@ const SelectVariable = ({ v }: { v: Variable }) => {
     }
     
 
-    const value = isEmpty(v.selected) ? [] : v.selected.split(',')
+    const value = isEmpty(v.selected) ? [] : v.selected.split(' + ')
     return <HStack key={v.id} spacing={2}>
         <Text fontSize="sm" minWidth="fit-content">{v.name}</Text>
         {!isEmpty(values) &&
@@ -65,7 +65,7 @@ const SelectVariable = ({ v }: { v: Variable }) => {
             size="sm" 
             variant="unstyled" 
             onChange={value => {
-                setVariableValue(v, value.join(','))
+                setVariableValue(v, value.length == 0 ? "" : value.join(' + '))
             }}
             options={ values.map(v => ({value:v, label:v == AllOptionName ? "ALL" : v}))}
             exclusive={AllOptionName}
