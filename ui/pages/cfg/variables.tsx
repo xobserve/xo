@@ -216,6 +216,8 @@ export const EditVariable = ({ v, isOpen, onClose, isEdit, onSubmit, isGlobal = 
         setVariableValues(res)
     }
 
+    const currentDatasource =  datasources?.find(ds => ds.id == variable?.datasource)
+
     return (<>
         <Modal isOpen={isOpen} onClose={onClose} size="full">
             <ModalOverlay />
@@ -258,7 +260,10 @@ export const EditVariable = ({ v, isOpen, onClose, isEdit, onSubmit, isGlobal = 
                                     <DatasourceSelect value={variable.datasource} onChange={id => setVariable(v => { v.datasource = id; v.value = "" })} allowTypes={[DatasourceType.Prometheus, DatasourceType.ExternalHttp]} variant="outline" />
                                 </InputGroup>
                                 {
-                                    datasources?.find(ds => ds.id == variable.datasource)?.type == DatasourceType.Prometheus && <PrometheusVariableEditor variable={variable} onChange={setVariable} onQueryResult={onQueryResult} />
+                                    currentDatasource?.type == DatasourceType.Prometheus && <PrometheusVariableEditor variable={variable} onChange={setVariable} onQueryResult={onQueryResult} />
+                                }
+                                {
+                                     currentDatasource?.type == DatasourceType.ExternalHttp && <PrometheusVariableEditor variable={variable} onChange={setVariable} onQueryResult={onQueryResult} />
                                 }
                             </>
                             }

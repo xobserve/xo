@@ -6,12 +6,9 @@ import { isJSON } from "utils/is"
 import { PromLabelSelect, PromMetricSelect } from "./Editor"
 import { queryPromethuesVariableValues } from "./query_runner"
 import { EditorInputItem } from "components/editor/EditorItem"
+import { DatasourceVariableEditorProps } from "types/datasource"
 
-interface Props {
-    variable: Variable
-    onChange: any
-    onQueryResult: any
-}
+
 
 export enum PromDsQueryTypes {
     LabelValues = "Label values",
@@ -19,7 +16,7 @@ export enum PromDsQueryTypes {
     Metrics = "Metrics"
 }
 
-const PrometheusVariableEditor = ({ variable, onChange,onQueryResult }: Props) => {
+const PrometheusVariableEditor = ({ variable, onChange,onQueryResult }: DatasourceVariableEditorProps) => {
     const data = isJSON(variable.value) ? JSON.parse(variable.value) : {
         type: PromDsQueryTypes.LabelValues
     }

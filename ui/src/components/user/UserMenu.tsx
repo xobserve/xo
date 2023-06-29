@@ -18,7 +18,7 @@ import { FaRegSun, FaUserAlt, FaSignOutAlt, FaStar, FaSignInAlt, FaFont } from "
 
 import Link from "next/link"
 import { isAdmin } from "types/role"
-import { lang } from "i18n"
+import { lang } from "src/i18n"
 import { LangKey } from "src/data/storage-keys"
 
 const UserMenu = ({fontSize="1.2rem"}) => {
@@ -37,7 +37,7 @@ const UserMenu = ({fontSize="1.2rem"}) => {
         storage.set(LangKey, newLang)
         window.location.reload()
     }
-    
+
     const isActive = window.location.pathname.startsWith('/account/')
     return (
         <>

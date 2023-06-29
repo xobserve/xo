@@ -1,4 +1,5 @@
 import { DatasourceType, PanelDatasource, PanelQuery } from "./dashboard"
+import { Variable } from "./variable"
 
 export interface Datasource {
     id: number 
@@ -14,4 +15,10 @@ export interface DatasourceEditorProps {
     datasource: PanelDatasource
     query: PanelQuery
     onChange: any
+}
+
+export interface DatasourceVariableEditorProps {
+    variable: Variable
+    onChange: any
+    onQueryResult: any
 }
