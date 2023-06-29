@@ -43,8 +43,8 @@ func AddNewVariable(c *gin.Context) {
 	}
 
 	now := time.Now()
-	_, err = db.Conn.Exec("INSERT INTO variable(name,type,value,datasource,description,created,updated) VALUES(?,?,?,?,?,?,?)",
-		v.Name, v.Type, v.Value, v.Datasource, v.Desc, now, now)
+	_, err = db.Conn.Exec("INSERT INTO variable(name,type,value,datasource,description,refresh,enableMulti,enableAll,created,updated) VALUES(?,?,?,?,?,?,?,?,?,?)",
+		v.Name, v.Type, v.Value, v.Datasource, v.Desc, v.Refresh, v.EnableMulti, v.EnableAll, now, now)
 	if err != nil {
 		if e.IsErrUniqueConstraint(err) {
 			c.JSON(400, common.RespError("variable name already exists"))
@@ -59,7 +59,7 @@ func AddNewVariable(c *gin.Context) {
 
 func GetVariables() ([]*models.Variable, error) {
 	vars := []*models.Variable{}
-	rows, err := db.Conn.Query("SELECT id,name,type,value,datasource,description FROM variable")
+	rows, err := db.Conn.Query("SELECT id,name,type,value,datasource,description,refresh,enableMulti,enableAll FROM variable")
 	if err != nil {
 
 		return nil, err
@@ -67,7 +67,7 @@ func GetVariables() ([]*models.Variable, error) {
 
 	for rows.Next() {
 		v := &models.Variable{}
-		err = rows.Scan(&v.Id, &v.Name, &v.Type, &v.Value, &v.Datasource, &v.Desc)
+		err = rows.Scan(&v.Id, &v.Name, &v.Type, &v.Value, &v.Datasource, &v.Desc, &v.Refresh, &v.EnableMulti, &v.EnableAll)
 		if err != nil {
 			logger.Warn("scan variable error", "error", err)
 			continue
@@ -102,8 +102,8 @@ func UpdateVariable(c *gin.Context) {
 	}
 
 	now := time.Now()
-	_, err = db.Conn.Exec("UPDATE variable SET name=?,type=?,value=?,datasource=?,description=?,updated=? WHERE id=?",
-		v.Name, v.Type, v.Value, v.Datasource, v.Desc, now, v.Id)
+	_, err = db.Conn.Exec("UPDATE variable SET name=?,type=?,value=?,datasource=?,description=?,refresh=?,enableMulti=?,enableAll=?,updated=? WHERE id=?",
+		v.Name, v.Type, v.Value, v.Datasource, v.Desc, v.Refresh, v.EnableMulti, v.EnableAll, now, v.Id)
 	if err != nil {
 		if e.IsErrUniqueConstraint(err) {
 			c.JSON(400, common.RespError("variable name already exists"))

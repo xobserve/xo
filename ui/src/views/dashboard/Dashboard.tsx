@@ -22,7 +22,6 @@ import { initPanelStyles } from "src/data/panel/initStyles"
 import Border from "components/largescreen/components/Border"
 import useFullscreen from "hooks/useFullscreen"
 import { initDashboard } from "src/data/dashboard"
-import { Datasource } from "types/datasource"
  
 
 

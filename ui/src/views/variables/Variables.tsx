@@ -1,8 +1,8 @@
 import { HStack, Select, Text } from "@chakra-ui/react"
 import {  variables } from "src/views/dashboard/Dashboard"
-import { VariableChangedEvent } from "src/data/bus-events"
-import { Variable, VariableQueryType } from "types/variable"
-import { dispatch } from "use-bus"
+import { TimeChangedEvent, VariableChangedEvent } from "src/data/bus-events"
+import { Variable, VariableQueryType, VariableRefresh } from "types/variable"
+import useBus, { dispatch } from "use-bus"
 import storage from "utils/localStorage"
 import { useEffect, useState } from "react"
 import { DatasourceType } from "types/dashboard"
@@ -30,6 +30,17 @@ export default SelectVariables
 const SelectVariable = ({ v }: { v: Variable }) => {
     const [values, setValues] = useState<string[]>([])
 
+    useBus(
+        (e) => { return e.type == TimeChangedEvent },
+        (e) => {
+            if (v.refresh == VariableRefresh.OnTimeRangeChange) {
+                console.log("here33333, time changed, load variable values!", v.name)
+                loadValues()
+            }
+        },
+        [v]
+    )
+    
     useEffect(() => {
         console.log( console.log("333333load variable values", v))
         loadValues()
@@ -39,7 +50,6 @@ const SelectVariable = ({ v }: { v: Variable }) => {
         const result = await queryVariableValues(v)
         setValues(result)
         v.values = result
-       
     }
 
     return <HStack key={v.id}>

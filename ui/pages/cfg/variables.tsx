@@ -16,7 +16,7 @@ import HttpVariableEditor from "src/views/dashboard/plugins/datasource/http/Vari
 import PrometheusVariableEditor from "src/views/dashboard/plugins/datasource/prometheus/VariableEditor"
 import { DatasourceType } from "types/dashboard"
 import { Datasource } from "types/datasource"
-import { Variable, VariableQueryType } from "types/variable"
+import { Variable, VariableQueryType, VariableRefresh } from "types/variable"
 import { useImmer } from "use-immer"
 import { requestApi } from "utils/axios/request"
 
@@ -247,6 +247,14 @@ export const EditVariable = ({ v, isOpen, onClose, isEdit, onSubmit, isGlobal = 
                                 <InputLeftAddon children='Description'/>
                                 <Input placeholder='give this variable a simple description' value={variable.description} onChange={e => { setVariable({ ...variable, description: e.currentTarget.value }) }} />
                             </InputGroup>
+                            <InputGroup size="sm" mt="2" width="400px">
+                                <InputLeftAddon children='Refresh'/> 
+                                {/* When to update the values of this variable */}
+                                <RadionButtons size="sm" options={Object.keys(VariableRefresh).map(k =>
+                                    ({ label: VariableRefresh[k], value: VariableRefresh[k] })
+                                )} value={variable.refresh} onChange={(v) => setVariable({ ...variable, refresh: v })} />
+                            </InputGroup>
+                          
                         </FormItem>
 
                         <FormItem title="Query" width="400px">
