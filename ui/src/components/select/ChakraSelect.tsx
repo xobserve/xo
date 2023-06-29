@@ -14,9 +14,10 @@ interface SelectProps {
     components?: any
     placeholder?: string
     size?: SizeProp
+    isClearable?: boolean
 }
 
-const ChakraSelect = ({ value, options, onChange, variant = "unstyled", components = null, placeholder = "", size = "sm" }: SelectProps) => {
+const ChakraSelect = ({ value, options, onChange, variant = "unstyled", components = null, placeholder = "", size = "sm",isClearable=false }: SelectProps) => {
     return <Select menuPortalTarget={document.body} styles={{
         menuPortal: (provided) => ({ ...provided, zIndex: 1401 })
     }}
@@ -25,6 +26,7 @@ const ChakraSelect = ({ value, options, onChange, variant = "unstyled", componen
             onChange(v.value)
         }}
         components={components}
+        isClearable={isClearable}
     />
 }
 

@@ -1,5 +1,5 @@
 import { Image } from "@chakra-ui/react"
-import { Select, chakraComponents } from "chakra-react-select"
+import {  chakraComponents } from "chakra-react-select"
 import { Variant } from "chakra-react-select/dist/types/types"
 import ChakraSelect from "components/select/ChakraSelect"
 import { useEffect, useState } from "react"
@@ -41,9 +41,7 @@ const DatasourceSelect = ({ value, onChange, allowTypes = [], variant = "unstyle
 
 
     return (<ChakraSelect value={{ value: value, label: datasources.find(ds => ds.id == value)?.name }} placeholder="select datasource" variant={variant} size="sm" options={options}
-        onChange={(v: any) => {
-            onChange(v.value)
-        }}
+        onChange={onChange}
         components={customComponents}
     />)
 }

@@ -1,16 +1,13 @@
 import { Box, HStack, Input, VStack } from "@chakra-ui/react"
-import { getInitTimeRange } from "components/TimePicker"
 import Label from "components/form/Label"
 import { cloneDeep } from "lodash"
 import { useEffect, useState } from "react"
-import { PanelDatasource, PanelQuery } from "types/dashboard"
-import {
-    Select,
-} from "chakra-react-select";
+import {  PanelQuery } from "types/dashboard"
+
 import { Variant } from "chakra-react-select/dist/types/types"
 import { Datasource, DatasourceEditorProps } from "types/datasource"
-import { datasources } from "src/views/dashboard/Dashboard"
 import { queryPrometheusAllMetrics, queryPrometheusLabels } from "./query_runner"
+import ChakraSelect from "components/select/ChakraSelect"
 
 
 
@@ -81,7 +78,7 @@ export const PromMetricSelect = ({ dsId, value, onChange, width = "220px", varia
 
     return (
         <Box onClick={loadMetrics} width={width}>
-            <Select isClearable value={{ value: value, label: value }} menuPlacement="bottom" placeholder="Metrics" variant={variant} size="sm" options={metricsList.map((m) => { return { label: m, value: m } })} onChange={v => onChange(v?.value)}
+            <ChakraSelect isClearable value={{ value: value, label: value }} placeholder="Metrics" variant={variant} size="sm" options={metricsList.map((m) => { return { label: m, value: m } })} onChange={v => onChange(v)}
             />
         </Box>
 
@@ -116,7 +113,7 @@ export const PromLabelSelect = ({ dsId, metric, value, onChange, width = "220px"
 
     return (
         <Box onClick={loadLabels} width={width}>
-            <Select value={{ value: value, label: value }} menuPlacement="bottom" placeholder="Metrics" variant={variant} size="sm" options={labels.map((m) => { return { label: m, value: m } })} onChange={v => onChange(v.value)}
+            <ChakraSelect value={{ value: value, label: value }}  placeholder="Metrics" variant={variant} size="sm" options={labels.map((m) => { return { label: m, value: m } })} onChange={v => onChange(v)}
             />
         </Box>
 

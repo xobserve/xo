@@ -210,10 +210,10 @@ export const EditVariable = ({ v, isOpen, onClose, isEdit, onSubmit, isGlobal = 
         const regex = new RegExp(variable.regex)
         let res = result
         if (variable.regex) {
-            res = result.filter(r => regex.test(r))
+            res = result?.filter(r => regex.test(r))
         }
 
-        setVariableValues(res)
+        setVariableValues(res??[])
     }
 
     const currentDatasource =  datasources?.find(ds => ds.id == variable?.datasource)
