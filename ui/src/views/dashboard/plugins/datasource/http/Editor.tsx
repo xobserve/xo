@@ -1,5 +1,5 @@
-import { Box, Button, HStack, Input, InputGroup, InputLeftAddon, Modal, ModalBody, ModalCloseButton, ModalContent, ModalHeader, ModalOverlay, VStack, useDisclosure } from "@chakra-ui/react"
-import CodeEditor from "components/CodeEditor/CodeEditor"
+import { HStack, Input, VStack } from "@chakra-ui/react"
+import { CodeEditorModal } from "components/CodeEditor/CodeEditorModal"
 import Label from "components/form/Label"
 import { cloneDeep, isEmpty, set } from "lodash"
 import { useEffect, useState } from "react"
@@ -13,76 +13,8 @@ const HttpQueryEditor = ({ datasource, query, onChange }: DatasourceEditorProps)
         if (isEmpty(tempQuery.data.transformResult)) {
             setTempQuery({
                 ...tempQuery, data: {
-                    ...tempQuery.data, transformResult: 
-                    `function transformResult(httpResult, query, startTime, endTime) {
-    console.log("here33333 result:", httpResult)
-    const data = httpResult.data
-    let res = []
-    if (data.resultType === "matrix") {
-        for (const m of data.result) {
-            const metric = JSON.stringify(m.metric).replace(/:/g, '=')
-
-            const timeValues = []
-            const valueValues = []
-
-            if (!_.isEmpty(m.values)) {
-                let start = startTime
-                if (m.values[0][0] <= start) {
-                    start = _.round(m.values[0][0])
+                    ...tempQuery.data, transformResult: initTransformResult
                 }
-
-                m.values.forEach((v, i) => {
-                    if (i == 0) {
-                        if (_.round(v[0]) == start) {
-                            timeValues.push(start)
-                            valueValues.push(v[1])
-                        } else if (_.round(v[0]) > start) {
-                            timeValues.push(start)
-                            valueValues.push(null)
-                        }
-                    }
-
-
-                    const lastTs = _.last(timeValues)
-
-                    for (let i = lastTs + query.interval; i <= v[0]; i += query.interval) {
-                        if (i < v[0]) {
-                            timeValues.push(i)
-                            valueValues.push(null)
-                        } else {
-                            timeValues.push(v[0])
-                            valueValues.push(v[1])
-                        }
-                    }
-                })
-            }
-
-
-            const series = {
-
-                name: metric,
-                length: m.values.length,
-                fields: [
-                    {
-                        name: "Time",
-                        type: "time",
-                        values: timeValues,
-                    },
-                    {
-                        name: "Value",
-                        type: "number",
-                        values: valueValues,
-                        labels: m.metric
-                    }
-                ],
-            }
-
-
-            res.push(series)
-        }
-    }
-    return res
-}`}
             })
             onChange(cloneDeep(tempQuery))
         }
@@ -90,12 +22,8 @@ const HttpQueryEditor = ({ datasource, query, onChange }: DatasourceEditorProps)
         if (isEmpty(tempQuery.data.transformRequest)) {
             setTempQuery({
                 ...tempQuery, data: {
-                    ...tempQuery.data, transformRequest: 
-`function transformRequest(url,headers,startTime, endTime) {
-    console.log("here33333:", url, headers, startTime, endTime)
-    let newUrl = url + \`&start=$\{startTime}&end=$\{endTime}\`
-    return newUrl
-}`     }
+                    ...tempQuery.data, transformRequest: initTransformRequest
+                }
             })
             onChange(cloneDeep(tempQuery))
         }
@@ -138,36 +66,81 @@ export default HttpQueryEditor
 
 
 
-const CodeEditorModal = ({ value, onChange }: { value: string; onChange: any }) => {
-    const { isOpen, onOpen, onClose } = useDisclosure()
-    const [temp, setTemp] = useState(null)
+export const initTransformRequest =
+    `function transformRequest(url,headers,startTime, endTime) {
+    console.log("here33333:", url, headers, startTime, endTime)
+    let newUrl = url + \`&start=$\{startTime}&end=$\{endTime}\`
+    return newUrl
+}`
 
-    useEffect(() => {
-        setTemp(value)
-    }, [value])
+export const initTransformResult =
+    `function transformResult(httpResult, query, startTime, endTime) {
+console.log("here33333 result:", httpResult)
+const data = httpResult.data
+let res = []
+if (data.resultType === "matrix") {
+for (const m of data.result) {
+const metric = JSON.stringify(m.metric).replace(/:/g, '=')
 
-    const onSubmit = () => {
-        onChange(temp)
-        onClose()
-    }
+const timeValues = []
+const valueValues = []
 
-    return (<>
-        <Button size="sm" onClick={onOpen} >Edit function</Button>
-        <Modal isOpen={isOpen} onClose={onClose} size="full">
-            <ModalOverlay />
-            <ModalContent>
-                <ModalHeader py="2">
-                    Edit registerEvents function
-                    <ModalCloseButton />
-                </ModalHeader>
-                <ModalBody pt="2" pb="0" px="0">
-                    <Box height="400px"><CodeEditor value={temp} onChange={v => setTemp(v)} /></Box>
-                    <Button onClick={onSubmit} width="100%">Submit</Button>
-                </ModalBody>
-
-            </ModalContent>
-        </Modal>
-    </>
-    )
+if (!_.isEmpty(m.values)) {
+let start = startTime
+if (m.values[0][0] <= start) {
+start = _.round(m.values[0][0])
 }
+
+m.values.forEach((v, i) => {
+if (i == 0) {
+    if (_.round(v[0]) == start) {
+        timeValues.push(start)
+        valueValues.push(v[1])
+    } else if (_.round(v[0]) > start) {
+        timeValues.push(start)
+        valueValues.push(null)
+    }
+}
+
+
+const lastTs = _.last(timeValues)
+
+for (let i = lastTs + query.interval; i <= v[0]; i += query.interval) {
+    if (i < v[0]) {
+        timeValues.push(i)
+        valueValues.push(null)
+    } else {
+        timeValues.push(v[0])
+        valueValues.push(v[1])
+    }
+}
+})
+}
+
+
+const series = {
+
+name: metric,
+length: m.values.length,
+fields: [
+{
+    name: "Time",
+    type: "time",
+    values: timeValues,
+},
+{
+    name: "Value",
+    type: "number",
+    values: valueValues,
+    labels: m.metric
+}
+],
+}
+
+
+res.push(series)
+}
+}
+return res
+}`
 
