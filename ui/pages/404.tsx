@@ -2,7 +2,7 @@ import { Button, Heading, Text, VStack } from '@chakra-ui/react'
 import PageContainer1 from 'layouts/page-container'
 import * as React from 'react'
 import { FaHome } from 'react-icons/fa'
-import { t } from 'utils/i18n'
+import { t } from 'i18n'
 
 interface Props {
   message?: string

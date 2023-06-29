@@ -48,7 +48,7 @@
     "next-env.d.ts",
     "pages/**/*",
     "src/**/*"
-  ],
+, "i18n/i18n.ts"  ],
   "exclude": [
     "node_modules"
   ]

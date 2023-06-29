@@ -13,11 +13,13 @@ import useSession from "hooks/use-session"
 import { useRouter } from "next/router"
 import storage from "utils/localStorage"
 
-import { FaRegSun, FaUserAlt, FaSignOutAlt, FaStar, FaSignInAlt } from "react-icons/fa"
+import { FaRegSun, FaUserAlt, FaSignOutAlt, FaStar, FaSignInAlt, FaFont } from "react-icons/fa"
 
 
 import Link from "next/link"
 import { isAdmin } from "types/role"
+import { lang } from "i18n"
+import { LangKey } from "src/data/storage-keys"
 
 const UserMenu = ({fontSize="1.2rem"}) => {
     const { session, logout } = useSession()
@@ -30,6 +32,12 @@ const UserMenu = ({fontSize="1.2rem"}) => {
         router.push('/login')
     }
 
+    const changeLang = () => {
+        const newLang = lang == "en" ? "zh" : "en"
+        storage.set(LangKey, newLang)
+        window.location.reload()
+    }
+    
     const isActive = window.location.pathname.startsWith('/account/')
     return (
         <>
@@ -53,9 +61,10 @@ const UserMenu = ({fontSize="1.2rem"}) => {
                         </MenuItem>
                         <MenuDivider />
                         {isAdmin(session.user.role) && <><Link href={`/admin`}><MenuItem icon={<FaStar fontSize="1rem" />} >Admin Panel</MenuItem></Link><MenuDivider /></>}
-
+                        <MenuItem onClick={() => changeLang()} icon={<FaFont fontSize="1rem" />}>Current Lang - {lang == "en" ? "English" : "Chinese"}</MenuItem>
                         <Link href={`/account/setting`}><MenuItem icon={<FaRegSun fontSize="1rem" />}>Account Setting</MenuItem></Link>
                         <MenuItem onClick={() => logout()} icon={<FaSignOutAlt fontSize="1rem" />}>Log out</MenuItem>
+                        
                     </MenuList>
                 </Menu> :
                  <IconButton

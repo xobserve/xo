@@ -10,7 +10,6 @@ import NextLink from 'next/link'
 import { FaArrowRight } from 'react-icons/fa'
 
 import showcaseData from './showcase.json'
-import { t } from 'utils/i18n'
 import { ShowcaseItem } from './showcase-item'
 
 const websites = showcaseData.slice(0, 8)
@@ -21,10 +20,10 @@ const ShowcaseSection = () => {
       <VStack w='full' spacing='7.5rem'>
         <Box maxW='760px' mx='auto' textAlign='center'>
           <chakra.h2 textStyle='heading' mb={4}>
-            {t('homepage.built-with-chakra-section.title')}
+            homepage.built-with-chakra-section.title
           </chakra.h2>
           <chakra.p opacity={0.7} fontSize='lg' mb={8}>
-            {t('homepage.built-with-chakra-section.description')}
+            homepage.built-with-chakra-section.description
           </chakra.p>
           <NextLink href='/showcase' passHref>
             <Button
@@ -36,7 +35,7 @@ const ShowcaseSection = () => {
               colorScheme='teal'
               rightIcon={<FaArrowRight fontSize='0.8em' />}
             >
-              {t('homepage.built-with-chakra-section.see-showcase')}
+              homepage.built-with-chakra-section.see-showcase
             </Button>
           </NextLink>
         </Box>
