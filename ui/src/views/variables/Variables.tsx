@@ -11,6 +11,7 @@ import { queryPromethuesVariableValues } from "../dashboard/plugins/datasource/p
 import { queryHttpVariableValues } from "../dashboard/plugins/datasource/http/query_runner"
 import { datasources } from "src/views/App"
 import ChakraSelect from "components/select/ChakraSelect"
+import ChakraMultiSelect from "components/select/ChakraMultiSelect"
 
 interface Props {
     id: number
@@ -28,6 +29,7 @@ const SelectVariables = ({ id, variables }: Props) => {
 
 export default SelectVariables
 
+const AllOptionName = '__all__'
 const SelectVariable = ({ v }: { v: Variable }) => {
     const [values, setValues] = useState<string[]>([])
 
@@ -53,16 +55,25 @@ const SelectVariable = ({ v }: { v: Variable }) => {
             v.values.unshift("__all__")
         }
     }
-
+    
+    const options = isEmpty(v.selected) ? [] : v.selected.split(',').map(v =>  ({value: v, label: v == AllOptionName ? "ALL" : v}))
+    console.log("here333311:", v.selected,options)
     return <HStack key={v.id}>
         <Text fontSize="sm" minWidth="fit-content" mt="1px">{v.name}</Text>
         {!isEmpty(values) &&
-        <ChakraSelect 
-            value={{value: v.selected, label: v.selected == "__all__" ? "ALL" : v.selected}} 
+        <ChakraMultiSelect 
+            value={options} 
             size="sm" 
             variant="unstyled" 
-            onChange={value => setVariableValue(v, value)}
-            options={ values.map(v => {return {value:v, label:v == "__all__" ? "ALL" : v}})}
+            onChange={value => {
+                console.log("here333331:",value)
+                let res = value
+                if (value.indexOf(AllOptionName) >= 0) {
+                    res = AllOptionName
+                }
+                setVariableValue(v, res)
+            }}
+            options={ values.map(v => ({value:v, label:v == AllOptionName ? "ALL" : v}))}
         />}
     </HStack>
 }
@@ -84,17 +95,17 @@ export const setVariableSelected = (variables: Variable[]) => {
 
 
 export const setVariableValue = (variable: Variable, value) => {
-    let exist = false;
-    for (var i = 0; i < variable.values.length; i++) {
-        if (variable.values[i] == value) {
-            exist = true
-            break
-        }
-    }
+    // let exist = false;
+    // for (var i = 0; i < variable.values.length; i++) {
+    //     if (variable.values[i] == value) {
+    //         exist = true
+    //         break
+    //     }
+    // }
 
-    if (!exist) {
-        return `value ${value} not exist in variable ${variable.name}`
-    }
+    // if (!exist) {
+    //     return `value ${value} not exist in variable ${variable.name}`
+    // }
 
     variable.selected = value
     for (let i = 0; i < variables.length; i++) {
@@ -125,16 +136,16 @@ export const setVariable = (name, value, toast?) => {
         }
     }
 
-    const err = setVariableValue(v, value)
-    if (err && toast) {
-        toast({
-            title: "On row click error",
-            description: err,
-            status: "warning",
-            duration: 9000,
-            isClosable: true,
-        })
-    }
+    setVariableValue(v, value)
+    // if (err && toast) {
+    //     toast({
+    //         title: "On row click error",
+    //         description: err,
+    //         status: "warning",
+    //         duration: 9000,
+    //         isClosable: true,
+    //     })
+    // }
 }
 
 export const queryVariableValues = async (v:Variable) => {

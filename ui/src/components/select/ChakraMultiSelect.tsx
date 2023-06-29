@@ -7,7 +7,7 @@ interface Value {
 }
 
 interface SelectProps {
-    value?: Value
+    value?: Value[]
     onChange: (value: string) => void
     options: Value[]
     variant?: Variant
@@ -17,17 +17,25 @@ interface SelectProps {
     isClearable?: boolean
 }
 
-const ChakraSelect = ({ value, options, onChange, variant = "unstyled", components = null, placeholder = "", size = "sm",isClearable=false }: SelectProps) => {
-    return <Select menuPortalTarget={document.body} styles={{
+const ChakraMultiSelect = ({ value, options, onChange, variant = "unstyled", components = null, placeholder = "", size = "sm",isClearable=false }: SelectProps) => {
+    console.log("here3333312:",value)
+    return <Select isMulti closeMenuOnSelect={false}  menuPortalTarget={document.body} styles={{
         menuPortal: (provided) => ({ ...provided, zIndex: 1401 })
     }}
 
         value={value} menuPlacement="bottom" placeholder={placeholder} variant={variant} size={size} options={options} onChange={(v: any) => {
-            onChange(v.value)
+            onChange(v.reduce((a,b) => {
+                if (a == '') {
+                    return b.value 
+                }
+
+                return a +','+ b.value
+            } , ''))
         }}
         components={components}
         isClearable={isClearable}
     />
 }
 
-export default ChakraSelect
+export default  ChakraMultiSelect
+
