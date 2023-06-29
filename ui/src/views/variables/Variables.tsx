@@ -1,4 +1,4 @@
-import { HStack, Select, Text } from "@chakra-ui/react"
+import { HStack, Select, StackDivider, Text } from "@chakra-ui/react"
 import {  variables } from "src/views/dashboard/Dashboard"
 import { TimeChangedEvent, VariableChangedEvent } from "src/data/bus-events"
 import { Variable, VariableQueryType, VariableRefresh } from "types/variable"
@@ -11,6 +11,7 @@ import { queryPromethuesVariableValues } from "../dashboard/plugins/datasource/p
 import { queryHttpVariableValues } from "../dashboard/plugins/datasource/http/query_runner"
 import { datasources } from "src/views/App"
 import ChakraMultiSelect from "components/select/ChakraMultiSelect"
+import PopoverSelect from "components/select/PopoverSelect"
 
 interface Props {
     id: number
@@ -19,7 +20,7 @@ interface Props {
 
 const vkey = "apm-variables"
 const SelectVariables = ({ id, variables }: Props) => {
-    return (<HStack>
+    return (<HStack spacing={4}>
         {variables.map(v => {
             return <SelectVariable v={v} />
         })}
@@ -54,25 +55,24 @@ const SelectVariable = ({ v }: { v: Variable }) => {
             v.values.unshift("__all__")
         }
     }
-    
-    const options = isEmpty(v.selected) ? [] : v.selected.split(',').map(v =>  ({value: v, label: v == AllOptionName ? "ALL" : v}))
-    console.log("here333311:", v.selected,options)
-    return <HStack key={v.id}>
-        <Text fontSize="sm" minWidth="fit-content" mt="1px">{v.name}</Text>
+
+
+    const value = isEmpty(v.selected) ? [] : v.selected.split(',')
+    console.log("here33333vvv", v, value)
+    return <HStack key={v.id} spacing={2}>
+        <Text fontSize="sm" minWidth="fit-content">{v.name}</Text>
         {!isEmpty(values) &&
-        <ChakraMultiSelect 
-            value={options} 
+        <PopoverSelect 
+            value={value} 
             size="sm" 
             variant="unstyled" 
             onChange={value => {
-                console.log("here333331:",value)
-                let res = value
-                if (value.indexOf(AllOptionName) >= 0) {
-                    res = AllOptionName
-                }
-                setVariableValue(v, res)
+                setVariableValue(v, value.join(','))
             }}
             options={ values.map(v => ({value:v, label:v == AllOptionName ? "ALL" : v}))}
+            exclusive="__all__"
+            isMulti={v.enableMulti}
+            showArrow={false}
         />}
     </HStack>
 }
@@ -150,7 +150,9 @@ export const setVariable = (name, value, toast?) => {
 export const queryVariableValues = async (v:Variable) => {
     let result = []
     if (v.type == VariableQueryType.Custom) {
-        result = v.value.split(",")
+        if (v.value.trim() != "") {
+            result = v.value.split(",")
+        }
     } else {
         const ds = datasources.find(d => d.id == v.datasource)
         switch (ds?.type) {

@@ -11,7 +11,7 @@ export function customClasses(props) {
         ".hover-bg:hover": {
             background:  mode('brand.50','rgba(30,39,50,0.5)')(props),
             borderRadius: "6px",
-            color: 'black'
+            color:  mode('black','white')(props)
         },
         ".label-bg": {
             bg: mode('#f9fbfc','rgba(30,39,50,0.3)')(props)

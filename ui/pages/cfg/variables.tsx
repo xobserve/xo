@@ -19,6 +19,7 @@ import { Datasource } from "types/datasource"
 import { Variable, VariableQueryType, VariableRefresh } from "types/variable"
 import { useImmer } from "use-immer"
 import { requestApi } from "utils/axios/request"
+import { queryVariableValues } from "src/views/variables/Variables"
 
 
 
@@ -204,6 +205,8 @@ export const EditVariable = ({ v, isOpen, onClose, isEdit, onSubmit, isGlobal = 
 
     useEffect(() => {
         load()
+        queryVariableValues(v).then(result =>   setVariableValues(result))
+      
     }, [])
 
     const load = async () => {
@@ -307,7 +310,7 @@ export const EditVariable = ({ v, isOpen, onClose, isEdit, onSubmit, isGlobal = 
                             <Box pt="1">
                                 {!isEmpty(variableValues) && variableValues.slice(0, displayCount).map(v => <Tag size="sm" variant="outline" ml="1">{v}</Tag>)}
                             </Box>
-                            {variableValues.length > displayCount && <Button mt="2" size="sm" colorScheme="gray" ml="1" onClick={() => setDisplayCount(displayCount + 30)}>Show more</Button>}
+                            {variableValues?.length > displayCount && <Button mt="2" size="sm" colorScheme="gray" ml="1" onClick={() => setDisplayCount(displayCount + 30)}>Show more</Button>}
                         </FormItem>
                     </Form>
                 </ModalBody>}
