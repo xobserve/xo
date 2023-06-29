@@ -71,6 +71,7 @@ const SelectVariable = ({ v }: { v: Variable }) => {
             exclusive={AllOptionName}
             isMulti={v.enableMulti}
             showArrow={false}
+            closeOnBlur={false}
         />}
     </HStack>
 }

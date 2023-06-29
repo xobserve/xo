@@ -1,4 +1,4 @@
-import { Box, Flex, HStack, Input, Placement, Popover, PopoverBody, PopoverContent, PopoverTrigger, Text, Tooltip, VStack } from "@chakra-ui/react"
+import { Box, Flex, HStack, Input, Placement, Popover, PopoverBody, PopoverContent, PopoverTrigger, Text, Tooltip, VStack, useDisclosure } from "@chakra-ui/react"
 import { Variant } from "chakra-react-select/dist/types/types"
 import { Portal } from "components/portal/Portal"
 import { remove } from "lodash"
@@ -23,10 +23,12 @@ interface SelectProps {
     exclusive?: string
     placement?: Placement
     showArrow?: boolean
+    closeOnBlur?: boolean
 }
 
-const PopoverSelect = ({ value, options, onChange, variant = "outline", customOption = null, placeholder = "...", size = "sm", isClearable = false, isMulti = false, exclusive,placement="auto",showArrow = true }: SelectProps) => {
-    const [isOpen, setIsOpen] = useState(false)
+const PopoverSelect = ({ value, options, onChange, variant = "outline", customOption = null, placeholder = "...", size = "sm", isClearable = false, isMulti = false, exclusive,placement="bottom",showArrow = true,closeOnBlur=true }: SelectProps) => {
+    const { isOpen, onToggle, onClose } = useDisclosure()
+
     const [query, setQuery] = useState('')
 
     const ref = useRef(null)
@@ -55,7 +57,7 @@ const PopoverSelect = ({ value, options, onChange, variant = "outline", customOp
             onChange(res)
         } else {
             onChange([option.value])
-            setIsOpen(false)
+            onToggle()
         }
     }
 
@@ -93,12 +95,13 @@ const PopoverSelect = ({ value, options, onChange, variant = "outline", customOp
         onChange([])
     }
     return (<>
-        <Popover    placement={placement} isOpen={isOpen} initialFocusRef={ref} onOpen={() => setIsOpen(true)} onClose={() => setIsOpen(false)}>
-            <PopoverTrigger>
-                {<Flex height="100%"  className={getBorderStyle()} py="1"  justifyContent="space-between" alignItems="center" cursor="pointer"><Tooltip label={value.length > 0 && value.join(' + ')}><Text width="fit-content" maxW="200px" noOfLines={1} layerStyle="textSecondary" opacity="0.7" fontSize={size == "sm" ? "0.9rem" : "1rem"}>{value.length > 0 ? value.join(' + ') : placeholder}</Text></Tooltip> {!isMulti && isClearable && value.length > 0 ? <FaTimes fontSize="0.8rem" onClick={clearSelected} /> :  showArrow && <Box pl="1"><FaChevronDown fontSize="0.6rem" /></Box>}</Flex>}
+        {<Flex height="100%"  className={getBorderStyle()} py="1"  justifyContent="space-between" alignItems="center" cursor="pointer" onClick={onToggle}><Tooltip placement="right" openDelay={500} label={value.length > 0 && value.join(' + ')}><Text width="fit-content" maxW="200px" noOfLines={1} layerStyle="textSecondary" opacity="0.7" fontSize={size == "sm" ? "0.9rem" : "1rem"}>{value.length > 0 ? value.join(' + ') : placeholder}</Text></Tooltip> {!isMulti && isClearable && value.length > 0 ? <FaTimes fontSize="0.8rem" onClick={clearSelected} /> :  showArrow && <Box pl="1"><FaChevronDown fontSize="0.6rem" /></Box>}</Flex>}
+        <Popover matchWidth closeOnBlur={closeOnBlur}    placement={placement} isOpen={isOpen} initialFocusRef={ref} onClose={onClose}>
+            <PopoverTrigger >
+                <Box position="absolute"></Box>
             </PopoverTrigger>
             <Portal>
-                <PopoverContent  borderRadius={2} marginTop="-10px">
+                <PopoverContent  borderRadius={2}>
                     {/* <PopoverArrow /> */}
                     <PopoverBody p="0">
                         <Box>
