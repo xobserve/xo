@@ -1,4 +1,4 @@
-import { HStack, Select, StackDivider, Text } from "@chakra-ui/react"
+import { HStack, Text } from "@chakra-ui/react"
 import {  variables } from "src/views/dashboard/Dashboard"
 import { TimeChangedEvent, VariableChangedEvent } from "src/data/bus-events"
 import { Variable, VariableQueryType, VariableRefresh } from "types/variable"
@@ -6,11 +6,10 @@ import useBus, { dispatch } from "use-bus"
 import storage from "utils/localStorage"
 import { useEffect, useState } from "react"
 import { DatasourceType } from "types/dashboard"
-import { isEmpty, set } from "lodash"
+import { isEmpty } from "lodash"
 import { queryPromethuesVariableValues } from "../dashboard/plugins/datasource/prometheus/query_runner"
 import { queryHttpVariableValues } from "../dashboard/plugins/datasource/http/query_runner"
 import { datasources } from "src/views/App"
-import ChakraMultiSelect from "components/select/ChakraMultiSelect"
 import PopoverSelect from "components/select/PopoverSelect"
 
 interface Props {
@@ -45,20 +44,19 @@ const SelectVariable = ({ v }: { v: Variable }) => {
     
     useEffect(() => {
         loadValues()
-    }, [])
-
+    }, [v])
+    
     const loadValues = async () => {
         const result = await queryVariableValues(v)
         setValues(result)
         v.values = result
         if (v.enableAll) {
-            v.values.unshift("__all__")
+            v.values.unshift(AllOptionName)
         }
     }
-
+    
 
     const value = isEmpty(v.selected) ? [] : v.selected.split(',')
-    console.log("here33333vvv", v, value)
     return <HStack key={v.id} spacing={2}>
         <Text fontSize="sm" minWidth="fit-content">{v.name}</Text>
         {!isEmpty(values) &&
@@ -70,7 +68,7 @@ const SelectVariable = ({ v }: { v: Variable }) => {
                 setVariableValue(v, value.join(','))
             }}
             options={ values.map(v => ({value:v, label:v == AllOptionName ? "ALL" : v}))}
-            exclusive="__all__"
+            exclusive={AllOptionName}
             isMulti={v.enableMulti}
             showArrow={false}
         />}
