@@ -30,16 +30,6 @@ const VariablesSetting = ({ dashboard, onChange }: Props) => {
     }
 
     const addVariable = async (v:Variable) => {
-        if (!v.name) {
-            toast({
-                title: "Variable name is required",
-                status: "error",
-                duration: 3000,
-                isClosable: true,
-            })
-            return
-        }
-
         if (!dashboard.data.variables) {
             dashboard.data.variables = []
         }
@@ -66,16 +56,6 @@ const VariablesSetting = ({ dashboard, onChange }: Props) => {
 
 
     const editVariable = async (v:Variable) => {
-        if (!v.name) {
-            toast({
-                title: "Variable name is required",
-                status: "error",
-                duration: 3000,
-                isClosable: true,
-            })
-            return
-        }
-
         onClose()
         setVariable(null)
 
@@ -100,13 +80,43 @@ const VariablesSetting = ({ dashboard, onChange }: Props) => {
         })
     }
 
+    const onSubmit = async (v:Variable) => {
+        if (!v.name) {
+            toast({
+                title: "Variable name is required!",
+                status: "error",
+                duration: 3000,
+                isClosable: true,
+            })
+            return
+        }
+
+        const sameName = dashboard.data.variables.find(v0 =>  (v0.name.trim() == v.name.trim()) && (v0.id != v.id))
+        if (sameName) {
+            toast({
+                title: "Variable name already exist!",
+                status: "error",
+                duration: 3000,
+                isClosable: true,
+            })
+            return 
+        }
+
+        if (editMode) {
+            editVariable(v)
+            return
+         }  
+
+         addVariable(v)
+    }
+
     return <>
             <Flex justifyContent="space-between">
                 <Text textStyle="subTitle"></Text>
                 <Button size="sm" onClick={onAddVariable}>New</Button>
             </Flex>
             <VariablesTable variables={dashboard.data.variables??[]} onEdit={onEditVariable} onRemove={onRemoveVariable}/>
-        {variable && <EditVariable key={variable.id} v={variable} isEdit={editMode} onClose={onClose} isOpen={isOpen} onSubmit={editMode ? editVariable : addVariable}/>}
+        {variable && <EditVariable key={variable.id} v={variable} isEdit={editMode} onClose={onClose} isOpen={isOpen} onSubmit={onSubmit}/>}
     </>
 }
 

@@ -223,7 +223,7 @@ export const EditVariable = ({ v, isOpen, onClose, isEdit, onSubmit, isGlobal = 
         }
         setVariableValues(res)
     }
-
+    
     const currentDatasource =  datasources?.find(ds => ds.id == variable?.datasource)
 
     return (<>
