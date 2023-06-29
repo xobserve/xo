@@ -34,7 +34,6 @@ const SelectVariable = ({ v }: { v: Variable }) => {
         (e) => { return e.type == TimeChangedEvent },
         (e) => {
             if (v.refresh == VariableRefresh.OnTimeRangeChange) {
-                console.log("here33333, time changed, load variable values!", v.name)
                 loadValues()
             }
         },
@@ -42,7 +41,6 @@ const SelectVariable = ({ v }: { v: Variable }) => {
     )
     
     useEffect(() => {
-        console.log( console.log("333333load variable values", v))
         loadValues()
     }, [])
 

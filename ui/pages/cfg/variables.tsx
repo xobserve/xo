@@ -1,4 +1,4 @@
-import { Button, Table, TableContainer, Tag, Tbody, Td, Th, Thead, Tr, Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay, useDisclosure, VStack, InputGroup, InputLeftAddon, Input, Flex, Box, useToast, Text, RadioGroup, Stack, Radio, Select } from "@chakra-ui/react"
+import { Button, Table, TableContainer, Tag, Tbody, Td, Th, Thead, Tr, Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay, useDisclosure, VStack, InputGroup, InputLeftAddon, Input, Flex, Box, useToast, Text, RadioGroup, Stack, Radio, Select, Switch } from "@chakra-ui/react"
 import { DetailAlert, DetailAlertItem } from "components/DetailAlert"
 import RadionButtons from "components/RadioButtons"
 import DatasourceSelect from "components/datasource/Select"
@@ -254,7 +254,16 @@ export const EditVariable = ({ v, isOpen, onClose, isEdit, onSubmit, isGlobal = 
                                     ({ label: VariableRefresh[k], value: VariableRefresh[k] })
                                 )} value={variable.refresh} onChange={(v) => setVariable({ ...variable, refresh: v })} />
                             </InputGroup>
-                          
+                            <InputGroup size="sm" mt="2" width="400px" alignItems="center">
+                                <InputLeftAddon children='Multi value'/> 
+                                {/* Enables multiple values to be selected at the same time */}
+                                <Switch defaultChecked={variable.enableMulti} onChange={(e) => setVariable({ ...variable, enableMulti: e.currentTarget.checked})}/>
+                            </InputGroup>
+                            <InputGroup size="sm" mt="2" width="400px" alignItems="center">
+                                <InputLeftAddon children='Include all'/> 
+                                {/* Enables multiple values to be selected at the same time */}
+                                <Switch defaultChecked={variable.enableAll} onChange={(e) => setVariable({ ...variable, enableAll: e.currentTarget.checked})}/>
+                            </InputGroup>
                         </FormItem>
 
                         <FormItem title="Query" width="400px">
