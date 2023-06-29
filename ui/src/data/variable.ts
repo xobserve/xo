@@ -1,8 +1,11 @@
-import { Variable, VariableQueryType } from "types/variable";
+import { Variable, VariableQueryType, VariableRefresh } from "types/variable";
 
 export const initVariable:Variable = {
     name: '',
     type: VariableQueryType.Custom,
     value: "",
-    regex: ""
+    regex: "",
+    refresh: VariableRefresh.OnDashboardLoad,
+    enableMulti: false,
+    enableAll: false
 }

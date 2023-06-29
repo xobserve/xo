@@ -31,15 +31,15 @@ const SelectVariable = ({ v }: { v: Variable }) => {
     const [values, setValues] = useState<string[]>([])
 
     useEffect(() => {
-        if (v) {
-            loadValues()
-        }
-    }, [v])
+        console.log( console.log("333333load variable values", v))
+        loadValues()
+    }, [])
 
     const loadValues = async () => {
         const result = await queryVariableValues(v)
         setValues(result)
         v.values = result
+       
     }
 
     return <HStack key={v.id}>

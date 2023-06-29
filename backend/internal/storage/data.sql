@@ -71,6 +71,10 @@ CREATE TABLE IF NOT EXISTS variable (
     value MEDIUMTEXT,
     description VARCHAR(255) DEFAULT '',
     datasource INTEGER,
+    refresh VARCHAR(32),
+    enableMulti BOOL NOT NULL DEFAULT false,
+    enableAll BOOL NOT NULL DEFAULT false,
+    sort TINYINT DEFAULT 0,
     created DATETIME NOT NULL,
     updated DATETIME NOT NULL
 );
