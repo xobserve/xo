@@ -1,4 +1,4 @@
-import { Button, Table, TableContainer, Tag, Tbody, Td, Th, Thead, Tr, Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay, useDisclosure, VStack, InputGroup, InputLeftAddon, Input, Flex, Box, useToast, Text, RadioGroup, Stack, Radio, Select, Switch } from "@chakra-ui/react"
+import { Button, Table, TableContainer, Tag, Tbody, Td, Th, Thead, Tr, Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay, useDisclosure, VStack, InputGroup, InputLeftAddon, Input, Flex, Box, useToast, Text, RadioGroup, Stack, Radio, Select, Switch, AlertDialog, AlertDialogOverlay, AlertDialogContent, AlertDialogHeader, AlertDialogBody, AlertDialogFooter } from "@chakra-ui/react"
 import { DetailAlert, DetailAlertItem } from "components/DetailAlert"
 import RadionButtons from "components/RadioButtons"
 import DatasourceSelect from "components/datasource/Select"
@@ -7,7 +7,7 @@ import { Form, FormItem } from "components/form/Form"
 import Page from "layouts/page/Page"
 import { cloneDeep, isArray, isEmpty } from "lodash"
 import { datasources } from "src/views/App"
-import { useCallback, useEffect, useState } from "react"
+import { useCallback, useEffect, useRef, useState } from "react"
 import { FaCog } from "react-icons/fa"
 import { cfgLinks } from "src/data/nav-links"
 import { initVariable } from "src/data/variable"
@@ -145,8 +145,11 @@ interface TableProps {
 }
 
 export const VariablesTable = ({ variables, onEdit, onRemove }: TableProps) => {
+    const { isOpen, onOpen, onClose } = useDisclosure()
+    const [selectedVariable, setSelectedVariable] = useState<Variable>(null)
+
     const toast = useToast()
-    const reloadValues = (id,name) => {
+    const reloadValues = (id, name) => {
         storage.remove(VariableManuallyChangedKey + id)
         dispatch(VariableForceReload + id)
         toast({
@@ -156,7 +159,12 @@ export const VariablesTable = ({ variables, onEdit, onRemove }: TableProps) => {
             isClosable: true,
         });
     }
+    const cancelRef = useRef()
 
+    const onRemoveClose = () => {
+        setSelectedVariable(null)
+        onClose()
+    }
     return (<>
         {variables.length > 0 ? <TableContainer>
             <Table variant="simple">
@@ -172,15 +180,15 @@ export const VariablesTable = ({ variables, onEdit, onRemove }: TableProps) => {
                 </Thead>
                 <Tbody>
                     {variables.map(variable => {
-                        return <Tr key={variable.name}>
+                        return <Tr key={variable.name} className={`${variable.id == selectedVariable?.id ? "highlight-bg" : '' }`}>
                             <Td>{variable.name}</Td>
                             <Td>{variable.type}</Td>
-                            <Td>{datasources?.find(ds => ds.id ==  variable.datasource)?.name}</Td>
-                            <Td>{variable.refresh} {variable.refresh == VariableRefresh.Manually &&<Button size="sm" variant="ghost" ml="1" onClick={() => reloadValues(variable.id,variable.name)}>reload values</Button>}</Td>
+                            <Td>{datasources?.find(ds => ds.id == variable.datasource)?.name}</Td>
+                            <Td>{variable.refresh} {variable.refresh == VariableRefresh.Manually && <Button size="sm" variant="ghost" ml="1" onClick={() => reloadValues(variable.id, variable.name)}>reload values</Button>}</Td>
                             <Td>{variable.regex}</Td>
                             <Td>
                                 <Button variant="ghost" size="sm" px="0" onClick={() => onEdit(variable)}>Edit</Button>
-                                <Button variant="ghost" colorScheme="orange" size="sm" px="0" ml="1" onClick={() => onRemove(variable)}>Remove</Button>
+                                <Button variant="ghost" colorScheme="orange" size="sm" px="0" ml="1" onClick={() => {setSelectedVariable(variable);onOpen()}}>Remove</Button>
                             </Td>
                         </Tr>
                     })}
@@ -201,6 +209,33 @@ export const VariablesTable = ({ variables, onEdit, onRemove }: TableProps) => {
                 </DetailAlert>
             </>
         }
+
+        <AlertDialog
+            isOpen={isOpen}
+            leastDestructiveRef={cancelRef}
+            onClose={onRemoveClose}
+        >
+            <AlertDialogOverlay>
+                {selectedVariable && <AlertDialogContent>
+                    <AlertDialogHeader fontSize='lg' fontWeight='bold'>
+                        Delete variable - {selectedVariable.name}
+                    </AlertDialogHeader>
+
+                    <AlertDialogBody>
+                        Are you sure? You can't undo this action afterwards.
+                    </AlertDialogBody>
+
+                    <AlertDialogFooter>
+                        <Button ref={cancelRef} onClick={onRemoveClose}>
+                            Cancel
+                        </Button>
+                        <Button colorScheme='red' onClick={() => {onRemove(selectedVariable);onRemoveClose()}} ml={3}>
+                            Delete
+                        </Button>
+                    </AlertDialogFooter>
+                </AlertDialogContent>}
+            </AlertDialogOverlay>
+        </AlertDialog>
     </>)
 }
 
@@ -225,8 +260,8 @@ export const EditVariable = ({ v, isOpen, onClose, isEdit, onSubmit, isGlobal = 
 
     useEffect(() => {
         load()
-        queryVariableValues(v).then(result =>   setVariableValues(result))
-      
+        queryVariableValues(v).then(result => setVariableValues(result))
+
     }, [])
 
     const load = async () => {
@@ -240,14 +275,14 @@ export const EditVariable = ({ v, isOpen, onClose, isEdit, onSubmit, isGlobal = 
         if (variable.regex) {
             res = result?.filter(r => regex.test(r))
         }
-        
+
         if (!isArray(res)) {
             res = []
         }
         setVariableValues(res)
     }
-    
-    const currentDatasource =  datasources?.find(ds => ds.id == variable?.datasource)
+
+    const currentDatasource = datasources?.find(ds => ds.id == variable?.datasource)
 
     return (<>
         <Modal isOpen={isOpen} onClose={onClose} size="full">
@@ -263,29 +298,29 @@ export const EditVariable = ({ v, isOpen, onClose, isEdit, onSubmit, isGlobal = 
                     <Form >
                         <FormItem title="Basic">
                             <InputGroup size="sm" mt="2" width="400px">
-                                <InputLeftAddon children='Name'/>
+                                <InputLeftAddon children='Name' />
                                 <Input placeholder='Only alphabet and digit numbers are allowed' value={variable.name} onChange={e => { setVariable({ ...variable, name: e.currentTarget.value }) }} />
                             </InputGroup>
                             <InputGroup size="sm" mt="2" width="400px">
-                                <InputLeftAddon children='Description'/>
+                                <InputLeftAddon children='Description' />
                                 <Input placeholder='give this variable a simple description' value={variable.description} onChange={e => { setVariable({ ...variable, description: e.currentTarget.value }) }} />
                             </InputGroup>
                             <InputGroup size="sm" mt="2" width="400px">
-                                <InputLeftAddon children='Refresh'/> 
+                                <InputLeftAddon children='Refresh' />
                                 {/* When to update the values of this variable */}
                                 <RadionButtons size="sm" options={Object.keys(VariableRefresh).map(k =>
                                     ({ label: VariableRefresh[k], value: VariableRefresh[k] })
                                 )} value={variable.refresh} onChange={(v) => setVariable({ ...variable, refresh: v })} />
                             </InputGroup>
                             <InputGroup size="sm" mt="2" width="400px" alignItems="center">
-                                <InputLeftAddon children='Multi value'/> 
+                                <InputLeftAddon children='Multi value' />
                                 {/* Enables multiple values to be selected at the same time */}
-                                <Switch defaultChecked={variable.enableMulti} onChange={(e) => setVariable({ ...variable, enableMulti: e.currentTarget.checked})}/>
+                                <Switch defaultChecked={variable.enableMulti} onChange={(e) => setVariable({ ...variable, enableMulti: e.currentTarget.checked })} />
                             </InputGroup>
                             <InputGroup size="sm" mt="2" width="400px" alignItems="center">
-                                <InputLeftAddon children='Include all'/> 
+                                <InputLeftAddon children='Include all' />
                                 {/* Enables multiple values to be selected at the same time */}
-                                <Switch defaultChecked={variable.enableAll} onChange={(e) => setVariable({ ...variable, enableAll: e.currentTarget.checked})}/>
+                                <Switch defaultChecked={variable.enableAll} onChange={(e) => setVariable({ ...variable, enableAll: e.currentTarget.checked })} />
                             </InputGroup>
                         </FormItem>
 
@@ -294,11 +329,11 @@ export const EditVariable = ({ v, isOpen, onClose, isEdit, onSubmit, isGlobal = 
                                 <InputLeftAddon children='Query type' />
                                 <RadionButtons size="sm" options={Object.keys(VariableQueryType).map(k =>
                                     ({ label: k, value: VariableQueryType[k] })
-                                )} value={variable.type} onChange={v => setVariable({ ...variable, type: v,value:'' })} />
+                                )} value={variable.type} onChange={v => setVariable({ ...variable, type: v, value: '' })} />
                             </InputGroup>
 
                             {variable.type == VariableQueryType.Custom && <InputGroup size="sm" width="400px" mt="2">
-                                <InputLeftAddon children='Query values' width="150px"/>
+                                <InputLeftAddon children='Query values' width="150px" />
                                 <Input width="400px" placeholder='Values separated by comma,e.g 1,10,20,a,b,c' value={variable.value} onChange={e => { setVariable({ ...variable, value: e.currentTarget.value }) }} onBlur={() => onQueryResult(variable.value.split(','))} />
                             </InputGroup>}
 
@@ -306,20 +341,20 @@ export const EditVariable = ({ v, isOpen, onClose, isEdit, onSubmit, isGlobal = 
                                 <InputGroup size="sm" width="400px" mt="2">
                                     <InputLeftAddon children='Select datasource' />
                                     <Box width="200px">
-                                    <DatasourceSelect value={variable.datasource} onChange={id => setVariable(v => { v.datasource = id; v.value = "" })} allowTypes={[DatasourceType.Prometheus, DatasourceType.ExternalHttp]} variant="outline" /></Box>
+                                        <DatasourceSelect value={variable.datasource} onChange={id => setVariable(v => { v.datasource = id; v.value = "" })} allowTypes={[DatasourceType.Prometheus, DatasourceType.ExternalHttp]} variant="outline" /></Box>
                                 </InputGroup>
                                 {
                                     currentDatasource?.type == DatasourceType.Prometheus && <PrometheusVariableEditor variable={variable} onChange={setVariable} onQueryResult={onQueryResult} />
                                 }
                                 {
-                                     currentDatasource?.type == DatasourceType.ExternalHttp && <HttpVariableEditor variable={variable} onChange={setVariable} onQueryResult={onQueryResult} />
+                                    currentDatasource?.type == DatasourceType.ExternalHttp && <HttpVariableEditor variable={variable} onChange={setVariable} onQueryResult={onQueryResult} />
                                 }
                             </>
                             }
                         </FormItem>
 
                         <FormItem title="Regex filter ( optional )" width="400px">
-                            <EditorInputItem  value={variable.regex} placeholder="further filter the query result through a Regex pattern" onChange={v => {
+                            <EditorInputItem value={variable.regex} placeholder="further filter the query result through a Regex pattern" onChange={v => {
                                 setVariable({ ...variable, regex: v })
                             }} />
                         </FormItem>
