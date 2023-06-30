@@ -97,6 +97,7 @@ const SelectVariable = ({ v }: { v: Variable }) => {
     
 
     const value = isEmpty(v.selected) ? [] : v.selected.split(VariableSplitChar)
+    console.log("here55555",v.id, !v.id.toString().startsWith('d-'))
     return <HStack key={v.id} spacing={2}>
         <Text fontSize="sm" minWidth="fit-content">{v.name}</Text>
         {!isEmpty(values) &&
@@ -111,6 +112,7 @@ const SelectVariable = ({ v }: { v: Variable }) => {
             exclusive={VarialbeAllOption}
             isMulti={v.enableMulti}
             showArrow={false}
+            matchWidth={v.id.toString().startsWith('d-')}
         />}
     </HStack>
 }

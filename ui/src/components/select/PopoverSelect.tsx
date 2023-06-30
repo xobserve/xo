@@ -24,9 +24,10 @@ interface SelectProps {
     placement?: Placement
     showArrow?: boolean
     closeOnBlur?: boolean
+    matchWidth?: boolean
 }
 
-const PopoverSelect = ({ value, options, onChange, variant = "outline", customOption = null, placeholder = "...", size = "sm", isClearable = false, isMulti = false, exclusive,placement="bottom",showArrow = true,closeOnBlur=true }: SelectProps) => {
+const PopoverSelect = ({ value, options, onChange, variant = "outline", customOption = null, placeholder = "...", size = "sm", isClearable = false, isMulti = false, exclusive,placement="bottom", showArrow = true,closeOnBlur=true ,matchWidth=true}: SelectProps) => {
     const { isOpen, onToggle, onClose } = useDisclosure()
 
     const [query, setQuery] = useState('')
@@ -96,7 +97,7 @@ const PopoverSelect = ({ value, options, onChange, variant = "outline", customOp
     }
     return (<>
         {<Flex height="100%"  className={getBorderStyle()} py="1"  justifyContent="space-between" alignItems="center" cursor="pointer" onClick={onToggle}><Tooltip placement="right" openDelay={500} label={value.length > 0 && value.join(' + ')}><Text width="fit-content" maxW="200px" noOfLines={1} layerStyle="textSecondary" opacity="0.7" fontSize={size == "sm" ? "0.9rem" : "1rem"}>{value.length > 0 ? value.join(' + ') : placeholder}</Text></Tooltip> {!isMulti && isClearable && value.length > 0 ? <FaTimes fontSize="0.8rem" onClick={clearSelected} /> :  showArrow && <Box pl="1"><FaChevronDown fontSize="0.6rem" /></Box>}</Flex>}
-        <Popover matchWidth closeOnBlur={closeOnBlur}    placement={placement} isOpen={isOpen} initialFocusRef={ref} onClose={onClose}>
+        <Popover matchWidth={matchWidth} closeOnBlur={closeOnBlur}    placement={placement} isOpen={isOpen} initialFocusRef={ref} onClose={onClose}>
             <PopoverTrigger >
                 <Box position="absolute"></Box>
             </PopoverTrigger>
