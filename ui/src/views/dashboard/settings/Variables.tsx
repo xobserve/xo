@@ -1,9 +1,11 @@
 import { Button, Flex, Text, useDisclosure, useToast } from "@chakra-ui/react";
 import { EditVariable, VariablesTable } from "pages/cfg/variables";
 import {  useState } from "react";
+import { VariableManuallyChangedKey } from "src/data/storage-keys";
 import { initVariable } from "src/data/variable";
 import { Dashboard } from "types/dashboard";
-import { Variable, VariableQueryType } from "types/variable";
+import { Variable, VariableQueryType, VariableRefresh } from "types/variable";
+import storage from "utils/localStorage";
 
 interface Props {
     dashboard: Dashboard
@@ -66,6 +68,10 @@ const VariablesSetting = ({ dashboard, onChange }: Props) => {
                 }
             }
         })  
+
+        if (v.refresh != VariableRefresh.Manually) {
+            storage.remove(VariableManuallyChangedKey + v.id)
+        }
     }
 
     const onRemoveVariable = async (v:Variable) => {

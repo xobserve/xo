@@ -6,12 +6,14 @@ import useBus, { dispatch } from "use-bus"
 import storage from "utils/localStorage"
 import { useEffect, useState } from "react"
 import { DatasourceType } from "types/dashboard"
-import { cloneDeep, isEmpty, isEqual } from "lodash"
+import { isEmpty, isEqual } from "lodash"
 import { queryPromethuesVariableValues } from "../dashboard/plugins/datasource/prometheus/query_runner"
 import { queryHttpVariableValues } from "../dashboard/plugins/datasource/http/query_runner"
 import { datasources } from "src/views/App"
 import PopoverSelect from "components/select/PopoverSelect"
 import { VarialbeAllOption, VariableSplitChar } from "src/data/variable"
+import { VariableManuallyChangedKey } from "src/data/storage-keys"
+
 
 interface Props {
     id: number
@@ -36,7 +38,7 @@ const SelectVariable = ({ v }: { v: Variable }) => {
         (e) => { return e.type == TimeChangedEvent },
         (e) => {
             if (v.refresh == VariableRefresh.OnTimeRangeChange) {
-                console.log("here33333 loade variable values( on time change )", v.name)
+                console.log("load variable values( on time change )", v.name)
                 loadValues()
             }
         },
@@ -44,21 +46,44 @@ const SelectVariable = ({ v }: { v: Variable }) => {
     )
     
     useEffect(() => {
-        console.log("here33333 loade variable values( useEffect )", v.name)
+        // console.log("load variable values( useEffect )", v.name)
         loadValues()
         
     }, [v.value])
     
     const loadValues = async () => {
-        const result = await queryVariableValues(v)
+        let result =[]
         if (v.enableAll) {
-            result.unshift(VarialbeAllOption)
+            result.push(VarialbeAllOption)
         }
+
+        let needQuery = true
+        if (v.refresh == VariableRefresh.Manually) {
+            // load from storage first
+            let vs = storage.get(VariableManuallyChangedKey+v.id)
+            if (vs) {
+                result = [...result, ...vs]
+                needQuery = false
+            } 
+        } 
+        
+        if (needQuery) {
+            console.log("load variable values( query )", v.name)
+            const res = await queryVariableValues(v)
+            result = [...result, ...res]
+            if (v.refresh == VariableRefresh.Manually) {
+                storage.set(VariableManuallyChangedKey+v.id, res)
+            }
+        }
+        
         if (!isEqual(result, v.values)) {
             dispatch(VariableChangedEvent)   
         }
+
         setValues(result)
         v.values = result
+
+
     }
     
 
