@@ -20,6 +20,10 @@ import { Variable, VariableQueryType, VariableRefresh } from "types/variable"
 import { useImmer } from "use-immer"
 import { requestApi } from "utils/axios/request"
 import { queryVariableValues } from "src/views/variables/Variables"
+import storage from "utils/localStorage"
+import { VariableManuallyChangedKey } from "src/data/storage-keys"
+import { dispatch } from "use-bus"
+import { VariableForceReload } from "src/data/bus-events"
 
 
 
@@ -141,6 +145,18 @@ interface TableProps {
 }
 
 export const VariablesTable = ({ variables, onEdit, onRemove }: TableProps) => {
+    const toast = useToast()
+    const reloadValues = (id,name) => {
+        storage.remove(VariableManuallyChangedKey + id)
+        dispatch(VariableForceReload + id)
+        toast({
+            description: `Values of ${name} has been updated!`,
+            status: "success",
+            duration: 3000,
+            isClosable: true,
+        });
+    }
+
     return (<>
         {variables.length > 0 ? <TableContainer>
             <Table variant="simple">
@@ -160,7 +176,7 @@ export const VariablesTable = ({ variables, onEdit, onRemove }: TableProps) => {
                             <Td>{variable.name}</Td>
                             <Td>{variable.type}</Td>
                             <Td>{datasources?.find(ds => ds.id ==  variable.datasource)?.name}</Td>
-                            <Td>{variable.refresh}</Td>
+                            <Td>{variable.refresh} {variable.refresh == VariableRefresh.Manually &&<Button size="sm" variant="ghost" ml="1" onClick={() => reloadValues(variable.id,variable.name)}>reload values</Button>}</Td>
                             <Td>{variable.regex}</Td>
                             <Td>
                                 <Button variant="ghost" size="sm" px="0" onClick={() => onEdit(variable)}>Edit</Button>

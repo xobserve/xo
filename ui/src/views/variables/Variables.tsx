@@ -1,6 +1,6 @@
 import { HStack, Text } from "@chakra-ui/react"
 import {  variables } from "src/views/dashboard/Dashboard"
-import { TimeChangedEvent, VariableChangedEvent } from "src/data/bus-events"
+import { TimeChangedEvent, VariableChangedEvent, VariableForceReload } from "src/data/bus-events"
 import { Variable, VariableQueryType, VariableRefresh } from "types/variable"
 import useBus, { dispatch } from "use-bus"
 import storage from "utils/localStorage"
@@ -45,6 +45,15 @@ const SelectVariable = ({ v }: { v: Variable }) => {
         [v]
     )
     
+    useBus(
+        VariableForceReload+v.id,
+        () => {
+            console.log("force variable to reload values", v.name);
+            loadValues()
+        },
+        []
+    )
+
     useEffect(() => {
         // console.log("load variable values( useEffect )", v.name)
         loadValues()

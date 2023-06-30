@@ -103,7 +103,7 @@ func (s *Server) Start() error {
 
 		// datasource apis
 		r.POST("/datasource/save", IsLogin(), datasource.SaveDatasource)
-		r.GET("/datasource/all", IsLogin(), datasource.GetDatasources)
+		r.GET("/datasource/all", datasource.GetDatasources)
 		r.DELETE("/datasource/:id", IsLogin(), datasource.DeleteDatasource)
 		r.Use(gzip.Gzip(gzip.DefaultCompression))
 
