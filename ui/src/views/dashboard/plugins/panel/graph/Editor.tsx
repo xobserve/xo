@@ -7,6 +7,8 @@ import { Panel, PanelEditorProps } from "types/dashboard"
 import { EditorInputItem, EditorNumberItem, EditorSliderItem } from "components/editor/EditorItem"
 import { dispatch } from "use-bus"
 import {  PanelForceRebuildEvent } from "src/data/bus-events"
+import PopoverSelect from "components/select/PopoverSelect"
+import { ValueCalculationType } from "types/value"
 
 
 const GraphPanelEditor = ({ panel, onChange }: PanelEditorProps) => {
@@ -25,11 +27,18 @@ const GraphPanelEditor = ({ panel, onChange }: PanelEditorProps) => {
                 })} />
 
             </PanelEditItem>
-            {panel.plugins.graph.legend.mode != 'hidden' && <PanelEditItem title="Legend placement">
+            {panel.plugins.graph.legend.mode != 'hidden' && <>
+            <PanelEditItem title="Legend placement">
                 <RadionButtons options={[{ label: "Bottom", value: "bottom" }, { label: "Right", value: "right" }]} value={panel.plugins.graph.legend.placement} onChange={v => onChange((panel: Panel) => {
                     panel.plugins.graph.legend.placement = v
                 })} />
-            </PanelEditItem>}
+            </PanelEditItem>
+            <PanelEditItem title="Values" desc="caculate values for legend to show">
+                <PopoverSelect value={panel.plugins.graph.legend.valueCalcs} isMulti options={Object.keys(ValueCalculationType).map(k => ({label: k,value: k}))}  onChange={v => onChange((panel: Panel) => {
+                    panel.plugins.graph.legend.valueCalcs = v as any
+                })} />
+            </PanelEditItem>
+            </>}
         </PanelAccordion>
         <PanelAccordion title="Graph styles">
             <PanelEditItem title="Style">

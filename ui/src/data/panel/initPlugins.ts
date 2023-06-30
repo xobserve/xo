@@ -18,7 +18,8 @@ export const initPanelPlugins: PanelPlugins = {
         },
         legend: {
             mode: "table",
-            placement: "bottom"
+            placement: "bottom",
+            valueCalcs: [ValueCalculationType.Last],
         },
         styles: {
             style: "lines",
