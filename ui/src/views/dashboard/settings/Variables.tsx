@@ -33,7 +33,7 @@ const VariablesSetting = ({ dashboard, onChange }: Props) => {
         if (!dashboard.data.variables) {
             dashboard.data.variables = []
         }
-        onChange(draft => { draft.data.variables.push(v)})
+        onChange(draft => { draft.data.variables.unshift(v)})
         
         onClose()
         toast({

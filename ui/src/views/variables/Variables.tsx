@@ -22,7 +22,7 @@ const vkey = "apm-variables"
 const SelectVariables = ({ variables }: Props) => {
     return (<HStack spacing={4}>
         {variables.map(v => {
-            return <SelectVariable v={v} />
+            return <SelectVariable key={v.id} v={v} />
         })}
     </HStack>)
 }
@@ -36,6 +36,7 @@ const SelectVariable = ({ v }: { v: Variable }) => {
         (e) => { return e.type == TimeChangedEvent },
         (e) => {
             if (v.refresh == VariableRefresh.OnTimeRangeChange) {
+                console.log("here33333 loade variable values( on time change )", v.name)
                 loadValues()
             }
         },
@@ -43,17 +44,17 @@ const SelectVariable = ({ v }: { v: Variable }) => {
     )
     
     useEffect(() => {
+        console.log("here33333 loade variable values( useEffect )", v.name)
         loadValues()
-    }, [v])
+        
+    }, [v.value])
     
     const loadValues = async () => {
         const result = await queryVariableValues(v)
         if (v.enableAll) {
             result.unshift(VarialbeAllOption)
         }
-        console.log("her33333 load variable values:",v.name)
         if (!isEqual(result, v.values)) {
-            console.log("here333333 changed",cloneDeep(result),cloneDeep(values))
             dispatch(VariableChangedEvent)   
         }
         setValues(result)
