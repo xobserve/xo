@@ -6,9 +6,9 @@ import { TimeRange } from "types/time"
 import { genDynamicFunction } from "utils/dynamicCode"
 import { isEmpty, isFunction, round } from "lodash"
 import _ from 'lodash'
-import { setVariable } from "src/views/variables/Variables"
 import { getInitTimeRange } from "components/TimePicker"
 import { isJSON } from "utils/is"
+import { replaceWithVariables } from "utils/variable"
 
 export const run_http_query = async (panel: Panel, q: PanelQuery,range: TimeRange,ds: Datasource) => {
     //@todo: 
@@ -21,7 +21,7 @@ export const run_http_query = async (panel: Panel, q: PanelQuery,range: TimeRang
     if (!isEmpty(q.data.transformRequest)) {
         const transformRequest = genDynamicFunction(q.data.transformRequest);
         if (isFunction(transformRequest)) {
-             url = transformRequest(url, headers,start , end, setVariable)
+             url = transformRequest(url, headers,start , end, replaceWithVariables)
         }  else {
             return {
                 error: 'transformRequest is not a valid function',
@@ -81,7 +81,7 @@ export const queryHttpVariableValues = async (variable:Variable, useCurrentTimer
     if (!isEmpty(data.transformRequest)) {
         const transformRequest = genDynamicFunction(data.transformRequest);
         if (isFunction(transformRequest)) {
-             url = transformRequest(data.url, headers,start , end, setVariable)
+             url = transformRequest(data.url, headers,start , end, replaceWithVariables)
         }  else {
             return  []
         }
@@ -103,4 +103,9 @@ export const queryHttpVariableValues = async (variable:Variable, useCurrentTimer
     }
     
     return result
+}
+
+
+export const replaceHttpQueryWithVariables = (query: PanelQuery) => {
+
 }

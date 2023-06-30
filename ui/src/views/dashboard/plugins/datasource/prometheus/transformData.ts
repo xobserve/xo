@@ -104,7 +104,7 @@ export const prometheusToSeriesData = (data: any, query: PanelQuery, range: Time
                     }
                 }
                 // replace ${xxx} format with corresponding variables
-                series.name = replaceWithVariables(series.name, variables)
+                series.name = replaceWithVariables(series.name)
             }
 
             res.push(series)

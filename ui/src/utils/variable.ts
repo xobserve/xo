@@ -3,12 +3,14 @@ import { parseVariableFormat } from "./format";
 import { DatasourceType, PanelQuery } from "types/dashboard";
 import { replacePrometheusQueryWithVariables } from "src/views/dashboard/plugins/datasource/prometheus/query_runner";
 import { replaceJaegerQueryWithVariables } from "src/views/dashboard/plugins/datasource/jaeger/query_runner";
+import { variables } from "src/views/dashboard/Dashboard";
+import { replaceHttpQueryWithVariables } from "src/views/dashboard/plugins/datasource/http/query_runner";
 
 // replace ${xxx} format with corresponding variable
-export const replaceWithVariables = (s: string, vars: Variable[]) => {
+export const replaceWithVariables = (s: string) => {
     const formats = parseVariableFormat(s);
     for (const f of formats) {
-        const v = vars.find(v => v.name ==f)
+        const v = variables.find(v => v.name ==f)
         if (v) {
             s = s.replace(`\${${f}}`, v.selected);
         }
@@ -18,7 +20,6 @@ export const replaceWithVariables = (s: string, vars: Variable[]) => {
 }
 
 
-// replace ${xxx} format with corresponding variable
 export const replaceQueryWithVariables = (q: PanelQuery, datasource: DatasourceType) => {
     //@needs-update-when-add-new-datasource
     switch (datasource) {
@@ -27,6 +28,9 @@ export const replaceQueryWithVariables = (q: PanelQuery, datasource: DatasourceT
             break;
         case DatasourceType.Jaeger:
             replaceJaegerQueryWithVariables(q)
+            break
+        case DatasourceType.ExternalHttp:
+            replaceHttpQueryWithVariables(q)
             break
         default:
             break;

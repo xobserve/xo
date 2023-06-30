@@ -77,7 +77,7 @@ export default HttpVariableEditor
 
 
 const initTransformRequest =
-`function transformRequest(url,headers,startTime, endTime) {
+`function transformRequest(url,headers,startTime, endTime,replaceWithVariables) {
     let newUrl = url + \`&start=$\{startTime}&end=$\{endTime}\`
     console.log("here333 transform request :", url, newUrl, headers, startTime, endTime)
     return newUrl

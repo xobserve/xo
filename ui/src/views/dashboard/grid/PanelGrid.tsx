@@ -244,14 +244,14 @@ interface PanelHeaderProps {
 
 const PanelHeader = ({ queryError, panel, onCopyPanel, onRemovePanel, data }: PanelHeaderProps) => {
 
-    const title = replaceWithVariables(panel.title, variables)
+    const title = replaceWithVariables(panel.title)
     const { isOpen, onOpen, onClose } = useDisclosure()
 
     return (
         <>
             <HStack className="grid-drag-handle hover-bg" height={`${PANEL_HEADER_HEIGHT - (isEmpty(title) ? 15 : 0)}px`} cursor="move" spacing="0" position={isEmpty(title) ? "absolute" : "relative"} width="100%" zIndex={1000}>
                 {(queryError || panel.desc) && <Box color={useColorModeValue(queryError ? "red" : "brand.500", queryError ? "red" : "brand.200")} position="absolute">
-                    <Tooltip label={queryError ?? replaceWithVariables(panel.desc, variables)}>
+                    <Tooltip label={queryError ?? replaceWithVariables(panel.desc)}>
                         <Box>
                             <IoMdInformation fontSize="20px" cursor="pointer" />
                         </Box>
