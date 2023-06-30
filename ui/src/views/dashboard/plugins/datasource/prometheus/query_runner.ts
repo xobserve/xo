@@ -1,7 +1,7 @@
 // 1. Run the query to get the data from datasource
 // 2. Convert the data to the format which AiAPM expects
 
-import { isEmpty, round } from "lodash"
+import { cloneDeep, isEmpty, round } from "lodash"
 import { Panel, PanelQuery } from "types/dashboard"
 import { TimeRange } from "types/time"
 import { prometheusToPanels } from "./transformData"
@@ -13,6 +13,9 @@ import { getInitTimeRange } from "components/TimePicker"
 
 import { PromDsQueryTypes } from "./VariableEditor"
 import { datasources } from "src/views/App"
+import { parseVariableFormat } from "utils/format"
+import { variables } from "src/views/dashboard/Dashboard"
+import {  VariableSplitChar, VarialbeAllOption } from "src/data/variable"
 
 export const run_prometheus_query = async (panel: Panel, q: PanelQuery, range: TimeRange, ds: Datasource) => {
     if (isEmpty(q.metrics)) {
@@ -150,4 +153,21 @@ export const queryPrometheusLabels= async (dsId,metric="", useCurrentTimerange =
     }
 
     return []
+}
+
+export const replacePrometheusQueryWithVariables = (query: PanelQuery) => {
+    const formats = parseVariableFormat(query.metrics);
+    for (const f of formats) {
+        const v = variables.find(v => v.name ==f)
+        if (v) {
+            let selected = []
+            if (v.selected == VarialbeAllOption) {
+                selected = v.values
+            } else {
+                selected = v.selected?.split(VariableSplitChar)??[]
+            }
+            
+            query.metrics = query.metrics.replace(`\${${f}}`, selected.join('|'));
+        }
+    }
 }

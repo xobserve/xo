@@ -6,11 +6,12 @@ import useBus, { dispatch } from "use-bus"
 import storage from "utils/localStorage"
 import { useEffect, useState } from "react"
 import { DatasourceType } from "types/dashboard"
-import { isEmpty } from "lodash"
+import { cloneDeep, isEmpty, isEqual } from "lodash"
 import { queryPromethuesVariableValues } from "../dashboard/plugins/datasource/prometheus/query_runner"
 import { queryHttpVariableValues } from "../dashboard/plugins/datasource/http/query_runner"
 import { datasources } from "src/views/App"
 import PopoverSelect from "components/select/PopoverSelect"
+import { VarialbeAllOption, VariableSplitChar } from "src/data/variable"
 
 interface Props {
     id: number
@@ -28,7 +29,6 @@ const SelectVariables = ({ id, variables }: Props) => {
 
 export default SelectVariables
 
-const AllOptionName = '__all__'
 const SelectVariable = ({ v }: { v: Variable }) => {
     const [values, setValues] = useState<string[]>([])
 
@@ -48,15 +48,20 @@ const SelectVariable = ({ v }: { v: Variable }) => {
     
     const loadValues = async () => {
         const result = await queryVariableValues(v)
+        if (v.enableAll) {
+            result.unshift(VarialbeAllOption)
+        }
+        console.log("her33333 load variable values:",v.name)
+        if (!isEqual(result, v.values)) {
+            console.log("here333333 changed",cloneDeep(result),cloneDeep(values))
+            dispatch(VariableChangedEvent)   
+        }
         setValues(result)
         v.values = result
-        if (v.enableAll) {
-            v.values.unshift(AllOptionName)
-        }
     }
     
 
-    const value = isEmpty(v.selected) ? [] : v.selected.split(' + ')
+    const value = isEmpty(v.selected) ? [] : v.selected.split(VariableSplitChar)
     return <HStack key={v.id} spacing={2}>
         <Text fontSize="sm" minWidth="fit-content">{v.name}</Text>
         {!isEmpty(values) &&
@@ -65,13 +70,12 @@ const SelectVariable = ({ v }: { v: Variable }) => {
             size="sm" 
             variant="unstyled" 
             onChange={value => {
-                setVariableValue(v, value.length == 0 ? "" : value.join(' + '))
+                setVariableValue(v, value.length == 0 ? "" : value.join(VariableSplitChar))
             }}
-            options={ values.map(v => ({value:v, label:v == AllOptionName ? "ALL" : v}))}
-            exclusive={AllOptionName}
+            options={ values.map(v => ({value:v, label:v == VarialbeAllOption ? "ALL" : v}))}
+            exclusive={VarialbeAllOption}
             isMulti={v.enableMulti}
             showArrow={false}
-            closeOnBlur={false}
         />}
     </HStack>
 }

@@ -9,3 +9,6 @@ export const initVariable:Variable = {
     enableMulti: false,
     enableAll: false
 }
+
+export const VariableSplitChar = ' + '
+export const VarialbeAllOption = '__all__'

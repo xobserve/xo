@@ -61,3 +61,8 @@ export const checkAndTestJaeger = async (ds:Datasource) => {
         return error.message
     }
 }
+
+
+export const replaceJaegerQueryWithVariables = (query: PanelQuery) => {
+
+}

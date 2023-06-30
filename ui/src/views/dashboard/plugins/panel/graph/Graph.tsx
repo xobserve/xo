@@ -87,7 +87,6 @@ const GraphPanel = memo((props: GraphPanelProps) => {
 
     const onChartCreate = useCallback((chart) => { setUplot((chart)); props.sync?.sub(chart) }, [props.sync])
     
-
     return (
         <>
             <Box h="100%" className="panel-graph">
