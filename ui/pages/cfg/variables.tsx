@@ -149,6 +149,8 @@ export const VariablesTable = ({ variables, onEdit, onRemove }: TableProps) => {
                         <Th>Variable name</Th>
                         <Th>Query type</Th>
                         <Th>Datasource</Th>
+                        <Th>Refresh</Th>
+                        <Th>Regex filter</Th>
                         <Th>Actions</Th>
                     </Tr>
                 </Thead>
@@ -158,6 +160,8 @@ export const VariablesTable = ({ variables, onEdit, onRemove }: TableProps) => {
                             <Td>{variable.name}</Td>
                             <Td>{variable.type}</Td>
                             <Td>{datasources?.find(ds => ds.id ==  variable.datasource)?.name}</Td>
+                            <Td>{variable.refresh}</Td>
+                            <Td>{variable.regex}</Td>
                             <Td>
                                 <Button variant="ghost" size="sm" px="0" onClick={() => onEdit(variable)}>Edit</Button>
                                 <Button variant="ghost" colorScheme="orange" size="sm" px="0" ml="1" onClick={() => onRemove(variable)}>Remove</Button>
