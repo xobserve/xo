@@ -17,10 +17,13 @@ import { SeriesData } from "types/seriesData";
 const BarWidthFactor = 0.6
 const BardMaxWidth = 200
 // build uplot options based on given config
+
+const axisSpace = ((self, axisIdx, scaleMin, scaleMax, plotDim) => {
+    return calculateSpace(self, axisIdx, scaleMin, scaleMax, plotDim);
+})
+
 export const parseOptions = (config: PanelProps,rawData: SeriesData[], colorMode,activeSeries) => {
-    const axisSpace = ((self, axisIdx, scaleMin, scaleMax, plotDim) => {
-        return calculateSpace(self, axisIdx, scaleMin, scaleMax, plotDim);
-    })
+
 
     const textColor = colorMode == ColorMode.Light ? customColors.textColorRGB.light :  customColors.textColorRGB.dark
     const axesColor = colorMode == ColorMode.Light ? "rgba(0, 10, 23, 0.09)" : "rgba(240, 250, 255, 0.09)"
@@ -248,10 +251,11 @@ function calculateAxisSize(self: uPlot, values: string[], axisIdx: number) {
 
 
 function calculateSpace(self: uPlot, axisIdx: number, scaleMin: number, scaleMax: number, plotDim: number): number {
+  
     const axis = self.axes[axisIdx];
     const scale = self.scales[axis.scale!];
 
-    const defaultSpacing = 40;
+    const defaultSpacing = axis.scale== 'x' ? 40 : 40;
     // for axis left & right
     if (axis.side !== 2 || !scale) {
         return defaultSpacing;

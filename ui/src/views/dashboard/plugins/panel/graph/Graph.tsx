@@ -94,6 +94,8 @@ const GraphPanel = memo((props: GraphPanelProps) => {
                             }
                         }
 
+                        options.width = vizWidth
+                        options.height = vizHeight
                         return (options && <UplotReact
                             options={options}
                             data={transformDataToUplot(data)}
