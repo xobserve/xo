@@ -31,9 +31,10 @@ interface NumberInputProps {
     max?: number
     step?: number
     size?:string
+    placeholder?: string
 }
 
-export const EditorNumberItem = ({ value, onChange, min,max,step=1, size = "sm" }: NumberInputProps) => {
+export const EditorNumberItem = ({ value, onChange, min,max,step=1, size = "sm",placeholder="" }: NumberInputProps) => {
     const [temp, setTemp] = useState(value.toString())
     const rangeProps = {}
     if (isEmpty(min)) rangeProps['min'] = min
@@ -41,7 +42,7 @@ export const EditorNumberItem = ({ value, onChange, min,max,step=1, size = "sm" 
 
     return (
             <NumberInput value={temp}  {...rangeProps} size={size} step={step} onChange={v => setTemp(v)} onBlur={() => onChange(Number(temp))}>
-                <NumberInputField />
+                <NumberInputField  placeholder={placeholder}/>
                 {step && <NumberInputStepper>
                     <NumberIncrementStepper />
                     <NumberDecrementStepper />

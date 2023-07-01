@@ -20,6 +20,8 @@ export const initPanelPlugins: PanelPlugins = {
             mode: "table",
             placement: "bottom",
             valueCalcs: [ValueCalculationType.Last],
+            width: 500,
+            nameWidth: 200
         },
         styles: {
             style: "lines",

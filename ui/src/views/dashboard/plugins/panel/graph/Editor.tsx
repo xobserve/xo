@@ -6,9 +6,10 @@ import { UnitPicker } from "components/unit"
 import { Panel, PanelEditorProps } from "types/dashboard"
 import { EditorInputItem, EditorNumberItem, EditorSliderItem } from "components/editor/EditorItem"
 import { dispatch } from "use-bus"
-import {  PanelForceRebuildEvent } from "src/data/bus-events"
+import { PanelForceRebuildEvent } from "src/data/bus-events"
 import PopoverSelect from "components/select/PopoverSelect"
 import { ValueCalculationType } from "types/value"
+import { isNumber } from "lodash"
 
 
 const GraphPanelEditor = ({ panel, onChange }: PanelEditorProps) => {
@@ -28,16 +29,24 @@ const GraphPanelEditor = ({ panel, onChange }: PanelEditorProps) => {
 
             </PanelEditItem>
             {panel.plugins.graph.legend.mode != 'hidden' && <>
-            <PanelEditItem title="Legend placement">
-                <RadionButtons options={[{ label: "Bottom", value: "bottom" }, { label: "Right", value: "right" }]} value={panel.plugins.graph.legend.placement} onChange={v => onChange((panel: Panel) => {
-                    panel.plugins.graph.legend.placement = v
-                })} />
-            </PanelEditItem>
-            <PanelEditItem title="Values" desc="caculate values for legend to show">
-                <PopoverSelect value={panel.plugins.graph.legend.valueCalcs} isMulti options={Object.keys(ValueCalculationType).map(k => ({label: k,value: k}))}  onChange={v => onChange((panel: Panel) => {
-                    panel.plugins.graph.legend.valueCalcs = v as any
-                })} />
-            </PanelEditItem>
+                <PanelEditItem title="Legend placement">
+                    <RadionButtons options={[{ label: "Bottom", value: "bottom" }, { label: "Right", value: "right" }]} value={panel.plugins.graph.legend.placement} onChange={v => onChange((panel: Panel) => {
+                        panel.plugins.graph.legend.placement = v
+                    })} />
+                </PanelEditItem>
+                {panel.plugins.graph.legend.placement == "right" && <PanelEditItem title="Width">
+                    <EditorNumberItem value={panel.plugins.graph.legend.width} min={100} step={50} onChange={v => onChange((panel: Panel) => { panel.plugins.graph.legend.width = (v <= 100 ? 100 : v) })} />
+                </PanelEditItem>}
+                {panel.plugins.graph.legend.placement == "right" && <PanelEditItem title="Name width" desc="width of legend name, support 'full' or any number">
+                    <EditorInputItem value={panel.plugins.graph.legend.nameWidth} onChange={v => onChange((panel: Panel) => {
+                        panel.plugins.graph.legend.nameWidth = v
+                    })} />
+                </PanelEditItem>}
+                <PanelEditItem title="Values" desc="caculate values for legend to show">
+                    <PopoverSelect value={panel.plugins.graph.legend.valueCalcs} isMulti options={Object.keys(ValueCalculationType).map(k => ({ label: k, value: k }))} onChange={v => onChange((panel: Panel) => {
+                        panel.plugins.graph.legend.valueCalcs = v as any
+                    })} />
+                </PanelEditItem>
             </>}
         </PanelAccordion>
         <PanelAccordion title="Graph styles">
@@ -101,9 +110,9 @@ const GraphPanelEditor = ({ panel, onChange }: PanelEditorProps) => {
                 })} />
             </PanelEditItem>
             <PanelEditItem title="Scale">
-                    <RadionButtons options={[{ label: "Linear", value: "linear" }, { label: "Log", value: "log" }]} value={panel.plugins.graph.axis.scale} onChange={v => onChange((panel: Panel) => {
-                        panel.plugins.graph.axis.scale = v
-                    })} />
+                <RadionButtons options={[{ label: "Linear", value: "linear" }, { label: "Log", value: "log" }]} value={panel.plugins.graph.axis.scale} onChange={v => onChange((panel: Panel) => {
+                    panel.plugins.graph.axis.scale = v
+                })} />
             </PanelEditItem>
             {panel.plugins.graph.axis.scale == "log" && <PanelEditItem title="Scale Base">
                 <RadionButtons options={[{ label: "Base 2", value: "2" }, { label: "Base 10", value: "10" }]} value={panel.plugins.graph.axis.scaleBase as any} onChange={v => onChange((panel: Panel) => {

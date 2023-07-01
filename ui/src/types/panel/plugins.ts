@@ -171,6 +171,9 @@ export interface GraphSettings {
     legend?: {
         mode: "table" | "hidden"
         placement: "bottom" | "right"
+        valueCalcs: ValueCalculationType[]
+        width: number
+        nameWidth: string
     }
     styles?: {
         style: "lines" | "bars" | "points"

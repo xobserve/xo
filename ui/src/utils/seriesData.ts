@@ -13,7 +13,7 @@ export const calcValueOnSeriesData = (series: SeriesData, calc: ValueCalculation
 
 export const calcValueOnArray = (values: number[], calc: ValueCalculationType):number => {
     switch (calc) {
-        case ValueCalculationType.Average:
+        case ValueCalculationType.Avg:
             return values.reduce((a, b) => toNumber(a) + toNumber(b) , 0) / values.length
         case ValueCalculationType.Min:
             return Math.min(...values)

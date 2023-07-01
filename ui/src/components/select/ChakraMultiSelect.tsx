@@ -18,7 +18,6 @@ interface SelectProps {
 }
 
 const ChakraMultiSelect = ({ value, options, onChange, variant = "unstyled", components = null, placeholder = "", size = "sm",isClearable=false }: SelectProps) => {
-    console.log("here3333312:",value)
     return <Select isMulti closeMenuOnSelect={false}  menuPortalTarget={document.body} styles={{
         menuPortal: (provided) => ({ ...provided, zIndex: 1401 })
     }}

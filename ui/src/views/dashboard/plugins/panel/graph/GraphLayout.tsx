@@ -54,6 +54,7 @@ export const GraphLayout: VizLayoutComponentType = ({ width, height, legend, chi
 
   const legendStyle: CSSProperties = {};
 
+
   switch (placement) {
     case 'bottom':
       containerStyle.flexDirection = 'column';
@@ -93,7 +94,7 @@ export const GraphLayout: VizLayoutComponentType = ({ width, height, legend, chi
       <div tabIndex={0} className={styles.viz}>
         {size && children(size.width, size.height)}
       </div>
-      <Box style={legendStyle} ref={legendRef} paddingLeft={placement == 'bottom' ? "20px" : 0} paddingRight={placement == 'bottom' ? "10px" : 0} minWidth="fit-content">
+      <Box className='graph-legend' style={legendStyle} ref={legendRef} paddingLeft={placement == 'bottom' ? "20px" : 0} paddingRight={placement == 'bottom' ? "10px" : 0} minWidth="fit-content">
         <CustomScrollbar hideHorizontalTrack>{legend}</CustomScrollbar>
       </Box>
     </div>
