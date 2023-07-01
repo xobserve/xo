@@ -8,12 +8,10 @@ import { parseOptions } from './options';
 import { isEmpty } from "lodash";
 
 import Tooltip from "./Tooltip";
-import SeriesTable, { seriesFilterType } from "src/views/dashboard/plugins/panel/graph/Tooltip/SeriesTable";
+import SeriesTable, { seriesTableMode } from "src/views/dashboard/plugins/panel/graph/Tooltip/SeriesTable";
 import { GraphLayout } from "src/views/dashboard/plugins/panel/graph/GraphLayout";
 import { Box, Center, Text, useColorMode } from "@chakra-ui/react";
 import { colors } from "utils/colors";
-import { dispatch } from "use-bus";
-import { ActiveSeriesEvent } from "src/data/bus-events";
 import { SeriesData } from "types/seriesData";
 
 
@@ -22,6 +20,7 @@ interface GraphPanelProps extends PanelProps {
 }
 
 const GraphPanel = memo((props: GraphPanelProps) => {
+    const [activeSeries, setActiveSeries] = useState(null)
     if (isEmpty(props.data)) {
         return (<Center height="100%">No data</Center>)
     }
@@ -38,7 +37,6 @@ const GraphPanel = memo((props: GraphPanelProps) => {
 
 
     const { colorMode } = useColorMode()
-    const activeSeries = useRef(null)
 
     const options = useMemo(() => {
         let o;
@@ -46,34 +44,32 @@ const GraphPanel = memo((props: GraphPanelProps) => {
 
         data.map((frame, i) => {
             frame.color = colors[i % colors.length]
-            if (frame.name == activeSeries.current) {
+            if (frame.name == activeSeries) {
                 activeExist = true
             }
         })
 
 
         if (!activeExist) {
-            activeSeries.current = null
-            dispatch({ type: ActiveSeriesEvent, id: props.panel.id, data: null })
+            setActiveSeries(null)
         }
 
-        o = parseOptions(props, data, colorMode, activeSeries.current)
+        o = parseOptions(props, data, colorMode, activeSeries)
 
         return o
     }, [props.panel, props.data, colorMode])
 
     const [uplot, setUplot] = useState<uPlot>(null)
 
-    const onSelectSeries = (s, i) => {
-        if (s == activeSeries.current) {
-            activeSeries.current = null
+    const onSelectSeries = useCallback((s, i) => {
+        if (s == activeSeries) {
+            setActiveSeries(null)
             options.series.map((s1, j) => {
                 // s1.show = true
                 uplot.setSeries(j, { show: true })
             })
-            dispatch({ type: ActiveSeriesEvent, id: props.panel.id, data: null })
         } else {
-            activeSeries.current = s
+            setActiveSeries(s)
             options.series.map((s1, j) => {
                 if (s1.label == s) {
                     uplot.setSeries(j, { show: true })
@@ -81,9 +77,8 @@ const GraphPanel = memo((props: GraphPanelProps) => {
                     uplot.setSeries(j, { show: false })
                 }
             })
-            dispatch({ type: ActiveSeriesEvent, id: props.panel.id, data: s })
         }
-    }
+    },[uplot,options.series,activeSeries])
 
     const onChartCreate = useCallback((chart) => { setUplot((chart)); props.sync?.sub(chart) }, [props.sync])
     
@@ -91,7 +86,7 @@ const GraphPanel = memo((props: GraphPanelProps) => {
         <>
             <Box h="100%" className="panel-graph">
                 {!isEmpty(props?.panel.plugins.graph.axis?.label) && <Text fontSize="sm" position="absolute" ml="3" mt="-1" className="color-text">{props.panel.plugins.graph.axis.label}</Text>}
-                {options && <GraphLayout width={props.width} height={props.height} legend={props.panel.plugins.graph.legend.mode == "hidden" ? null : <SeriesTable placement={props.panel.plugins.graph.legend.placement} width={props.panel.plugins.graph.legend.width} props={props} data={data} filterType={seriesFilterType.Current} onSelect={onSelectSeries} panelType={props.panel.type} />}>
+                {options && <GraphLayout width={props.width} height={props.height} legend={props.panel.plugins.graph.legend.mode == "hidden" ? null : <SeriesTable placement={props.panel.plugins.graph.legend.placement} width={props.panel.plugins.graph.legend.width} props={props} data={data} mode={seriesTableMode.Legend} onSelect={onSelectSeries} panelType={props.panel.type} activeSeries={activeSeries} />}>
                     {(vizWidth: number, vizHeight: number) => {
                         if (uplot) {
                             if (props.width != vizWidth || props.height != vizHeight) {
@@ -105,7 +100,7 @@ const GraphPanel = memo((props: GraphPanelProps) => {
                             onDelete={(chart: uPlot) => { }}
                             onCreate={onChartCreate}
                         >
-                            {props.panel.plugins.graph.tooltip.mode != 'hidden' && <Tooltip props={props} options={options} data={data} />}
+                            {props.panel.plugins.graph.tooltip.mode != 'hidden' && <Tooltip props={props} options={options} data={data} activeSeries={activeSeries}/>}
                         </UplotReact>
                         )
                     }}
