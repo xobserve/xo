@@ -20,7 +20,7 @@ interface Props {
     onSelect?: any
     panelType: PanelType
     width?: number
-    activeSeries? : string
+    activeSeries?: string
 }
 
 export enum seriesTableMode {
@@ -28,7 +28,7 @@ export enum seriesTableMode {
     Legend = "legend",
 }
 
-const SeriesTable = memo(({ props, data, nearestSeries, filterIdx, mode, onSelect, panelType, width,activeSeries }: Props) => {
+const SeriesTable = memo(({ props, data, nearestSeries, filterIdx, mode, onSelect, panelType, width, activeSeries }: Props) => {
     const tooltipMode = panelType == PanelType.Graph ? props.panel.plugins.graph.tooltip.mode : "single"
     const valueSettings: ValueSetting = props.panel.plugins[panelType].value
     const res = []
@@ -56,18 +56,6 @@ const SeriesTable = memo(({ props, data, nearestSeries, filterIdx, mode, onSelec
     }
 
     let res1 = orderBy(res, i => i.value == null ? 0 : i.value, 'desc')
-
-
-
-    for (const r of res1) {
-        for (const v of r.value) {
-            if (v[1]) {
-                v[1] = valueSettings.unitsType != "none"
-                ? formatUnit(v[1], valueSettings.units, valueSettings.decimal)
-                : round(v[1], valueSettings.decimal)
-            }
-        }
-    }
 
     const values = res1
 
@@ -107,7 +95,9 @@ const SeriesTable = memo(({ props, data, nearestSeries, filterIdx, mode, onSelec
 
                                         </HStack>
                                     </Td>
-                                    {v.value.map((v, i) => <Td fontSize="0.75rem" py="1" px="1">{v[1]}</Td>)}
+                                    {v.value.map((v, i) => <Td fontSize="0.75rem" py="1" px="1">{v[1] ? valueSettings.unitsType != "none"
+                                        ? formatUnit(v[1], valueSettings.units, valueSettings.decimal)
+                                        : round(v[1], valueSettings.decimal) : v[1]}</Td>)}
                                 </Tr>
                             )
                         })}

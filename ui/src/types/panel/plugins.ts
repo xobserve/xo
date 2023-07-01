@@ -174,6 +174,10 @@ export interface GraphSettings {
         valueCalcs: ValueCalculationType[]
         width: number
         nameWidth: string
+        order: {
+            by: ValueCalculationType
+            sort: "asc" | "desc"
+        }
     }
     styles?: {
         style: "lines" | "bars" | "points"
