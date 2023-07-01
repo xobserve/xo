@@ -22,7 +22,7 @@ const axisSpace = ((self, axisIdx, scaleMin, scaleMax, plotDim) => {
     return calculateSpace(self, axisIdx, scaleMin, scaleMax, plotDim);
 })
 
-export const parseOptions = (config: PanelProps,rawData: SeriesData[], colorMode,activeSeries) => {
+export const parseOptions = (config: PanelProps,rawData: SeriesData[], colorMode,inactiveSeries) => {
 
 
     const textColor = colorMode == ColorMode.Light ? customColors.textColorRGB.light :  customColors.textColorRGB.dark
@@ -38,7 +38,7 @@ export const parseOptions = (config: PanelProps,rawData: SeriesData[], colorMode
 
     rawData.forEach((d, i) => {
         series.push({
-            show: activeSeries ? (activeSeries == d.name ? true : false) : true,
+            show: inactiveSeries.includes(d.name) ? false : true,
             label: d.name,
             points: {
                 show: (config.panel.plugins.graph.styles.showPoints == "always" || config.panel.plugins.graph.styles?.style == "points") ? true : (config.panel.plugins.graph.styles.showPoints =="auto" ? null :false),

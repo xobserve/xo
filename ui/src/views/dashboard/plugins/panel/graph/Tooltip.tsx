@@ -15,12 +15,12 @@ interface Props {
     props: PanelProps
     options: uPlot.Options
     data: SeriesData[]
-    activeSeries: string
+    inactiveSeries: string[]
 }
 
 const TOOLTIP_OFFSET = 10;
 let plotInstance;
-const Tooltip = memo(({ props, options,data,activeSeries }: Props) => {
+const Tooltip = memo(({ props, options,data,inactiveSeries }: Props) => {
     const [coords, setCoords] = useState(null);
     const [focusSeries, setFocusSeries] = useState<SeriesData>(null)
     const [focusIdx, setFocusIdx] = useState(null)
@@ -127,7 +127,7 @@ const Tooltip = memo(({ props, options,data,activeSeries }: Props) => {
             {coords && <TooltipContainer position={{ x: coords.x, y: coords.y }} offset={{ x: 0, y: TOOLTIP_OFFSET }}>
                 <Box className="bordered" background={'var(--chakra-colors-chakra-body-bg)'} p="2" fontSize="xs">
                         <Text fontWeight="600">{dateTimeFormat(focusXVal * 1000)}</Text>
-                        <SeriesTable props={props} data={data} nearestSeries={focusSeries} filterIdx={focusIdx} mode={seriesTableMode.Tooltip} panelType={props.panel.type} activeSeries={activeSeries}/>
+                        <SeriesTable props={props} data={data} nearestSeries={focusSeries} filterIdx={focusIdx} mode={seriesTableMode.Tooltip} panelType={props.panel.type} inactiveSeries={inactiveSeries}/>
                 </Box>
             </TooltipContainer>
             }

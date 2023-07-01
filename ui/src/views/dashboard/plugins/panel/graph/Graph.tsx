@@ -20,7 +20,7 @@ interface GraphPanelProps extends PanelProps {
 }
 
 const GraphPanel = memo((props: GraphPanelProps) => {
-    const [activeSeries, setActiveSeries] = useState(null)
+    const [inactiveSeries, setInactiveSeries] = useState([])
     if (isEmpty(props.data)) {
         return (<Center height="100%">No data</Center>)
     }
@@ -44,41 +44,94 @@ const GraphPanel = memo((props: GraphPanelProps) => {
 
         data.map((frame, i) => {
             frame.color = colors[i % colors.length]
-            if (frame.name == activeSeries) {
-                activeExist = true
-            }
+            // if (frame.name == activeSeries) {
+            //     activeExist = true
+            // }
         })
 
 
-        if (!activeExist) {
-            setActiveSeries(null)
-        }
+        // if (!activeExist) {
+        //     setActiveSeries([])
+        // }
 
-        o = parseOptions(props, data, colorMode, activeSeries)
+        o = parseOptions(props, data, colorMode, inactiveSeries)
 
         return o
     }, [props.panel, props.data, colorMode])
 
     const [uplot, setUplot] = useState<uPlot>(null)
 
-    const onSelectSeries = useCallback((s, i) => {
-        if (s == activeSeries) {
-            setActiveSeries(null)
-            options.series.map((s1, j) => {
-                // s1.show = true
-                uplot.setSeries(j, { show: true })
-            })
-        } else {
-            setActiveSeries(s)
-            options.series.map((s1, j) => {
-                if (s1.label == s) {
-                    uplot.setSeries(j, { show: true })
+    const onSelectSeries = useCallback((s, i, pressShift) => {
+        if (!pressShift) { // 未按住 shift
+            if (inactiveSeries.length == 0) {
+                // 也没有隐藏的 series: 只显示 s, 隐藏其它
+                const inactive = []
+                options.series.map((s1, j) => {
+                    if (s1.label != s) {
+                        inactive.push(s1.label)
+                    }
+                })
+                setInactiveSeries(inactive)
+                options.series.map((s1, j) => {
+                    if (s1.label == s) {
+                        uplot.setSeries(j, { show: true })
+                    } else {
+                        uplot.setSeries(j, { show: false })
+                    }
+                })
+            } else {
+                // 已经有 series 被隐藏
+                if (inactiveSeries.includes(s)) {
+                    //  s 处于隐藏状态，点击它，显示它，并隐藏其它
+                    const inactive = []
+                    options.series.map((s1, j) => {
+                        if (s1.label != s) {
+                            inactive.push(s1.label)
+                        }
+                    })
+                    setInactiveSeries(inactive)
+                    options.series.map((s1, j) => {
+                        if (s1.label == s) {
+                            uplot.setSeries(j, { show: true })
+                        } else {
+                            uplot.setSeries(j, { show: false })
+                        }
+                    })
                 } else {
-                    uplot.setSeries(j, { show: false })
+                    // s 目前处于显示状态，再次点击它，显示所有
+                    setInactiveSeries([])
+                    options.series.map((s1, j) => {
+                        // s1.show = true
+                        uplot.setSeries(j, { show: true })
+                    })
+           
                 }
-            })
+            }
+        } else {
+            // 按住 shift
+            if (inactiveSeries.includes(s)) {
+                // s 处于隐藏状态，点击它，显示它
+                const inactive = inactiveSeries.filter(s1 => s1 != s)
+                setInactiveSeries(inactive)
+                options.series.map((s1, j) => {
+                    if (s1.label == s) {
+                        uplot.setSeries(j, { show: true })
+                    }
+                })
+            } else {
+                // s 处于显示状态，点击它，隐藏它
+                const inactive = [...inactiveSeries]
+                inactive.push(s)
+                setInactiveSeries(inactive)
+                options.series.map((s1, j) => {
+                    if (s1.label == s) {
+                        uplot.setSeries(j, { show: false })
+                    }
+                })
+            }
         }
-    },[uplot,options.series,activeSeries])
+        
+    },[uplot,options.series,inactiveSeries])
 
     const onChartCreate = useCallback((chart) => { setUplot((chart)); props.sync?.sub(chart) }, [props.sync])
     
@@ -86,7 +139,7 @@ const GraphPanel = memo((props: GraphPanelProps) => {
         <>
             <Box h="100%" className="panel-graph">
                 {!isEmpty(props?.panel.plugins.graph.axis?.label) && <Text fontSize="sm" position="absolute" ml="3" mt="-1" className="color-text">{props.panel.plugins.graph.axis.label}</Text>}
-                {options && <GraphLayout width={props.width} height={props.height} legend={props.panel.plugins.graph.legend.mode == "hidden" ? null : <SeriesTable placement={props.panel.plugins.graph.legend.placement} width={props.panel.plugins.graph.legend.width} props={props} data={data} mode={seriesTableMode.Legend} onSelect={onSelectSeries} panelType={props.panel.type} activeSeries={activeSeries} />}>
+                {options && <GraphLayout width={props.width} height={props.height} legend={props.panel.plugins.graph.legend.mode == "hidden" ? null : <SeriesTable placement={props.panel.plugins.graph.legend.placement} width={props.panel.plugins.graph.legend.width} props={props} data={data} mode={seriesTableMode.Legend} onSelect={onSelectSeries} panelType={props.panel.type} inactiveSeries={inactiveSeries} />}>
                     {(vizWidth: number, vizHeight: number) => {
                         if (uplot) {
                             if (props.width != vizWidth || props.height != vizHeight) {
@@ -102,7 +155,7 @@ const GraphPanel = memo((props: GraphPanelProps) => {
                             onDelete={(chart: uPlot) => { }}
                             onCreate={onChartCreate}
                         >
-                            {props.panel.plugins.graph.tooltip.mode != 'hidden' && <Tooltip props={props} options={options} data={data} activeSeries={activeSeries}/>}
+                            {props.panel.plugins.graph.tooltip.mode != 'hidden' && <Tooltip props={props} options={options} data={data} inactiveSeries={inactiveSeries}/>}
                         </UplotReact>
                         )
                     }}

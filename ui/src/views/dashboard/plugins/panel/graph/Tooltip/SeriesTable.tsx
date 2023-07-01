@@ -5,6 +5,7 @@ import { formatUnit } from "components/unit"
 import { cloneDeep, orderBy, round } from "lodash"
 import { memo } from "react"
 import { FaChevronDown, FaChevronUp } from "react-icons/fa"
+import { useKeyPress } from "react-use"
 import { UpdatePanelEvent } from "src/data/bus-events"
 import { PanelProps, PanelType } from "types/dashboard"
 import { ValueSetting } from "types/panel/plugins"
@@ -23,7 +24,7 @@ interface Props {
     onSelect?: any
     panelType: PanelType
     width?: number
-    activeSeries?: string
+    inactiveSeries?: string[]
 }
 
 export enum seriesTableMode {
@@ -31,7 +32,19 @@ export enum seriesTableMode {
     Legend = "legend",
 }
 
-const SeriesTable = memo(({ props, data, nearestSeries, filterIdx, mode, onSelect, panelType, width, activeSeries }: Props) => {
+const SeriesTable = memo(({ props, data, nearestSeries, filterIdx, mode, onSelect, panelType, width, inactiveSeries }: Props) => {
+    let pressShift = null
+    if (mode == seriesTableMode.Legend) {
+        pressShift = useKeyPress((event) =>{
+            if (event.key === 'Shift') {
+                event.stopPropagation()
+                event.preventDefault()
+                return true
+            }
+            return false
+        })
+    }
+
     const tooltipMode = panelType == PanelType.Graph ? props.panel.plugins.graph.tooltip.mode : "single"
     const valueSettings: ValueSetting = props.panel.plugins[panelType].value
     const res = []
@@ -101,14 +114,14 @@ const SeriesTable = memo(({ props, data, nearestSeries, filterIdx, mode, onSelec
                     </Thead>
                     <Tbody>
                         {values.map((v, i) => {
-                            if ((mode == seriesTableMode.Tooltip) && (activeSeries && activeSeries != v.name)) {
+                            if ((mode == seriesTableMode.Tooltip) && inactiveSeries.includes(v.name)) {
                                 // hiding inactive tooltips
                                 return <></>
                             }
                             return (
                                 <Tr verticalAlign="top">
-                                    <Td fontSize="0.75rem" py="1">
-                                        <HStack alignItems="center" opacity={(activeSeries && activeSeries != v.name) ? '0.6' : (v.name == nearestSeries?.name ? 1 : 1)} fontWeight={v.name == nearestSeries?.name ? 'bold' : "inherit"} cursor="pointer" onClick={() => onSelect(v.name, i)}>
+                                    <Td fontSize="0.75rem" py="1" cursor="pointer" onClick={mode == seriesTableMode.Legend ? () => onSelect(v.name, i, pressShift[0]): null}>
+                                        <HStack alignItems="center" opacity={(inactiveSeries.includes(v.name)) ? '0.6' : (v.name == nearestSeries?.name ? 1 : 1)} fontWeight={v.name == nearestSeries?.name ? 'bold' : "inherit"}  userSelect="none">
                                             <Box width="10px" height="4px" background={v.color} mt="2px"></Box>
                                             {
                                                 (props.panel.plugins.graph.legend.placement == "bottom" || mode == seriesTableMode.Tooltip) ?
@@ -132,3 +145,4 @@ const SeriesTable = memo(({ props, data, nearestSeries, filterIdx, mode, onSelec
 })
 
 export default SeriesTable
+
