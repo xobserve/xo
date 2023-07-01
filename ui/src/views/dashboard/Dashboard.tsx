@@ -5,7 +5,7 @@ import { Dashboard, Panel } from "types/dashboard"
 import { requestApi } from "utils/axios/request"
 import DashboardHeader from "src/views/dashboard/DashboardHeader"
 import DashboardGrid from "src/views/dashboard/grid/DashboardGrid"
-import { clone, cloneDeep, concat, defaults, defaultsDeep, find } from "lodash"
+import { clone, cloneDeep, concat, defaults, defaultsDeep, find, findIndex } from "lodash"
 import { TimeRange } from "types/time"
 import { getInitTimeRange } from "components/TimePicker"
 import { Variable } from "types/variable"
@@ -13,7 +13,7 @@ import { setVariableSelected } from "src/views/variables/Variables"
 import { prevQueries, prevQueryData } from "src/views/dashboard/grid/PanelGrid"
 import { unstable_batchedUpdates } from "react-dom"
 import useBus, { dispatch } from 'use-bus'
-import {    SetDashboardEvent,  TimeChangedEvent, VariableChangedEvent } from "src/data/bus-events"
+import {    SetDashboardEvent,  TimeChangedEvent, UpdatePanelEvent, VariableChangedEvent } from "src/data/bus-events"
 
 import { useImmer } from "use-immer"
 import { setAutoFreeze } from "immer";
@@ -53,6 +53,18 @@ const DashboardWrapper = ({dashboardId}) => {
         (e) => {
             const dash = initDash(e.data)
             setDashboard(clone(dash))
+        }
+    )
+
+    useBus(
+        (e) => { return e.type == UpdatePanelEvent },
+        (e) => {
+            setDashboard((dash:Dashboard) => {
+                const i = findIndex(dash.data.panels, p => p.id == e.data.id)
+                if (i >= 0) {
+                    dash.data.panels[i] = e.data
+                }
+            })
         }
     )
 

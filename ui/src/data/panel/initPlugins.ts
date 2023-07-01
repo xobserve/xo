@@ -21,7 +21,7 @@ export const initPanelPlugins: PanelPlugins = {
             placement: "bottom",
             valueCalcs: [ValueCalculationType.Last],
             width: 500,
-            nameWidth: '200',
+            nameWidth: '400',
             order: {
                 by: ValueCalculationType.Last,
                 sort: 'desc'

@@ -7,12 +7,12 @@ import { Dashboard } from "types/dashboard"
 import useKeyboardJs from 'react-use/lib/useKeyboardJs';
 import { requestApi } from "utils/axios/request"
 import moment from "moment"
-import { dispatch } from "use-bus"
+import useBus, { dispatch } from "use-bus"
 import { SetDashboardEvent } from "src/data/bus-events"
 import { FormItem } from "components/form/Form"
 import ReactDiffViewer from 'react-diff-viewer';
 import { useSearchParam } from "react-use"
-import { isEqual } from "lodash"
+import { cloneDeep, isEqual } from "lodash"
 
 interface Props {
     dashboard: Dashboard
@@ -40,7 +40,7 @@ const DashboardSave = ({ dashboard }: Props) => {
 
     useEffect(() => {
         if (!saved && dashboard) {
-            setSaved(dashboard)
+            setSaved(cloneDeep(dashboard))
             return
         }
 
@@ -53,8 +53,6 @@ const DashboardSave = ({ dashboard }: Props) => {
             setPageChanged(false)
         }
     }, [dashboard])
-
-
 
     const toast = useToast()
     const onSave = async () => {
@@ -74,7 +72,7 @@ const DashboardSave = ({ dashboard }: Props) => {
             duration: 2000,
             isClosable: true,
         })
-        setSaved(dashboard)
+        setSaved(cloneDeep(dashboard))
         setPageChanged(false)
         if (inPreview) {
             location.reload()

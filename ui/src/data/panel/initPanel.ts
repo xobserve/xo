@@ -9,7 +9,7 @@ export const initPanel = (id?) =>  {
         desc: "",
         collapsed: false,
         type: type,
-        gridPos: { x: 0, y: 0, w: 12, h: 12 },
+        gridPos: { x: 0, y: 0, w: 13, h: 20 },
         plugins:  {
             [type]:initPanelPlugins[type]
         },

@@ -2,11 +2,14 @@
 
 import { Box, Flex, HStack, Table, TableContainer, Tbody, Td, Text, Th, Thead, Tr, VStack } from "@chakra-ui/react"
 import { formatUnit } from "components/unit"
-import { orderBy, round } from "lodash"
+import { cloneDeep, orderBy, round } from "lodash"
 import { memo } from "react"
+import { FaChevronDown, FaChevronUp } from "react-icons/fa"
+import { UpdatePanelEvent } from "src/data/bus-events"
 import { PanelProps, PanelType } from "types/dashboard"
 import { ValueSetting } from "types/panel/plugins"
 import { SeriesData } from "types/seriesData"
+import { dispatch } from "use-bus"
 
 import { calcValueOnArray } from "utils/seriesData"
 
@@ -55,9 +58,24 @@ const SeriesTable = memo(({ props, data, nearestSeries, filterIdx, mode, onSelec
         default:
     }
 
-    let res1 = orderBy(res, i => i.value == null ? 0 : i.value, 'desc')
+    let values;
+    if (mode == seriesTableMode.Tooltip) {
+        values = orderBy(res, i => {
+            const v = i.value[0][1]
+            return v == null ? 0 : v
+        }, props.panel.plugins.graph.tooltip.sort)
+    } else {
+        values = orderBy(res, i => {
+            for (const v of i.value) {
+                if (v[0] == props.panel.plugins.graph.legend.order.by) {
+                    return v[1] == null ? 0 : v[1]
+                }
+            }
+        }, props.panel.plugins.graph.legend.order.sort)
+    }
 
-    const values = res1
+
+
 
 
     return (
@@ -72,7 +90,13 @@ const SeriesTable = memo(({ props, data, nearestSeries, filterIdx, mode, onSelec
                     <Thead>
                         <Tr>
                             <Th> </Th>
-                            {values[0].value.map(v => <Td fontSize="0.8remt" pt="0" pb="1" pr="1" pl="0" textAlign="center" fontWeight="500">{v[0]}</Td>)}
+                            {values[0].value.map(v => <Td fontSize="0.8remt" pt="0" pb="1" pr="1" pl="0" textAlign="center" fontWeight="500" onClick={() => {
+                                props.panel.plugins.graph.legend.order = { by: v[0], sort: props.panel.plugins.graph.legend.order.sort == "asc" ? "desc" : "asc" }
+                                dispatch({
+                                    type: UpdatePanelEvent,
+                                    data: cloneDeep(props.panel)
+                                })
+                            }}><HStack spacing={0} justifyContent="center"><Text>{v[0]}</Text><Text> {props.panel.plugins.graph.legend.order.by == v[0] && <Text fontSize="0.6rem" opacity="0.7">{props.panel.plugins.graph.legend.order.sort == "asc" ? <FaChevronUp /> :<FaChevronDown />}</Text>}</Text></HStack></Td>)}
                         </Tr>
                     </Thead>
                     <Tbody>
