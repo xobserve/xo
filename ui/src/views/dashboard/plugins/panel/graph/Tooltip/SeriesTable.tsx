@@ -96,7 +96,7 @@ const SeriesTable = memo(({ props, data, nearestSeries, filterIdx, mode, onSelec
                                     type: UpdatePanelEvent,
                                     data: cloneDeep(props.panel)
                                 })
-                            }}><HStack spacing={0} justifyContent="center"><Text>{v[0]}</Text><Text> {props.panel.plugins.graph.legend.order.by == v[0] && <Text fontSize="0.6rem" opacity="0.7">{props.panel.plugins.graph.legend.order.sort == "asc" ? <FaChevronUp /> :<FaChevronDown />}</Text>}</Text></HStack></Td>)}
+                            }}><HStack spacing={0} justifyContent="center" cursor="pointer"><Text>{v[0]}</Text><Text> {props.panel.plugins.graph.legend.order.by == v[0] && <Text fontSize="0.6rem" opacity="0.7" position="absolute" top="3.5px">{props.panel.plugins.graph.legend.order.sort == "asc" ? <FaChevronUp /> :<FaChevronDown />}</Text>}</Text></HStack></Td>)}
                         </Tr>
                     </Thead>
                     <Tbody>
@@ -119,7 +119,7 @@ const SeriesTable = memo(({ props, data, nearestSeries, filterIdx, mode, onSelec
 
                                         </HStack>
                                     </Td>
-                                    {v.value.map((v, i) => <Td fontSize="0.75rem" py="1" px="1">{v[1] ? valueSettings.unitsType != "none"
+                                    {v.value.map((v, i) => <Td textAlign="center" fontSize="0.75rem" py="1" px="1">{v[1] ? valueSettings.unitsType != "none"
                                         ? formatUnit(v[1], valueSettings.units, valueSettings.decimal)
                                         : round(v[1], valueSettings.decimal) : v[1]}</Td>)}
                                 </Tr>
