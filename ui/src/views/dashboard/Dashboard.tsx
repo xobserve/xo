@@ -99,7 +99,7 @@ const DashboardWrapper = ({dashboardId}) => {
     
     const initDash= (dash) => {
         dash.data.panels.forEach((panel:Panel) => {
-            // console.log("33333 before",cloneDeep(panel.plugins[panel.type]))
+            // console.log("33333 before",cloneDeep(panel.plugins))
             panel.plugins[panel.type] = defaultsDeep(panel.plugins[panel.type], initPanelPlugins[panel.type])
             panel.styles = defaultsDeep(panel.styles, initPanelStyles)
             // console.log("33333 after",cloneDeep(panel.plugins[panel.type]),initPanelSettings[panel.type])

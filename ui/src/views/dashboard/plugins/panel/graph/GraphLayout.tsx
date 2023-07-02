@@ -89,7 +89,6 @@ export const GraphLayout: VizLayoutComponentType = ({ width, height, legend, chi
     size.height = height;
   }
 
-  console.log("here33333:",styles.viz,legendStyle)
   return (
     <div style={containerStyle}>
       <div tabIndex={0} className={styles.viz}>

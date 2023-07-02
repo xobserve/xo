@@ -1,5 +1,5 @@
 import UplotReact from "components/uPlot/UplotReact"
-import { memo, useCallback, useMemo, useRef, useState } from "react"
+import { memo, useCallback, useEffect, useMemo, useRef, useState } from "react"
 import { PanelProps } from "types/dashboard"
 import 'uplot/dist/uPlot.min.css';
 import uPlot from "uplot"
@@ -13,6 +13,8 @@ import { GraphLayout } from "src/views/dashboard/plugins/panel/graph/GraphLayout
 import { Box, Center, Text, useColorMode } from "@chakra-ui/react";
 import { colors } from "utils/colors";
 import { SeriesData } from "types/seriesData";
+import storage from "utils/localStorage";
+import { PanelInactiveKey } from "src/data/storage-keys";
 
 
 interface GraphPanelProps extends PanelProps {
@@ -20,7 +22,8 @@ interface GraphPanelProps extends PanelProps {
 }
 
 const GraphPanel = memo((props: GraphPanelProps) => {
-    const [inactiveSeries, setInactiveSeries] = useState([])
+    const inactiveKey =  PanelInactiveKey + props.dashboardId + '-' +  props.panel.id
+    const [inactiveSeries, setInactiveSeries] = useState(storage.get(inactiveKey)??[])
     if (isEmpty(props.data)) {
         return (<Center height="100%">No data</Center>)
     }
@@ -58,6 +61,7 @@ const GraphPanel = memo((props: GraphPanelProps) => {
 
         return o
     }, [props.panel, props.data, colorMode])
+
 
     const [uplot, setUplot] = useState<uPlot>(null)
 
@@ -132,6 +136,14 @@ const GraphPanel = memo((props: GraphPanelProps) => {
         }
         
     },[uplot,options.series,inactiveSeries])
+    
+    useEffect(() => {
+        if (inactiveSeries.length >  0) {
+            storage.set(inactiveKey, inactiveSeries)
+        } else {
+            storage.remove(inactiveKey)
+        }
+    },[inactiveSeries])
 
     const onChartCreate = useCallback((chart) => { setUplot((chart)); props.sync?.sub(chart) }, [props.sync])
     
