@@ -1,4 +1,6 @@
-import { Button, Table, TableContainer, Tag, Tbody, Td, Th, Thead, Tr, Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay, useDisclosure, VStack, InputGroup, InputLeftAddon, Input, Flex, Box, useToast } from "@chakra-ui/react"
+import { Button, Table, TableContainer, Tag, Tbody, Td, Th, Thead, Tr, Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay, useDisclosure,  Input, Flex, Box, useToast } from "@chakra-ui/react"
+import { Form } from "components/form/Form"
+import FormItem from "components/form/Item"
 import useSession from "hooks/use-session"
 import Page from "layouts/page/Page"
 import { useRouter } from "next/router"
@@ -73,20 +75,18 @@ const TeamsPage = () => {
         <Modal isOpen={isOpen} onClose={onClose}>
             <ModalOverlay />
             <ModalContent>
-                <ModalHeader>Add new user</ModalHeader>
+                <ModalHeader>Add new team</ModalHeader>
                 <ModalCloseButton />
                 <ModalBody>
 
-                    <VStack alignItems="left" spacing="3">
-                        <InputGroup>
-                            <InputLeftAddon children='Team name' />
+                    <Form alignItems="left" spacing={2}>
+                        <FormItem title='Team name' labelWidth="130px">
                             <Input placeholder='enter a team name' value={teamName} onChange={e => { setTeamName(e.currentTarget.value) }} />
-                        </InputGroup>
-                        <InputGroup>
-                            <InputLeftAddon children='Team description' />
+                        </FormItem>
+                        <FormItem title='Team description'  labelWidth="130px">
                             <Input placeholder='give a short description to this team' value={teamDesc} onChange={e => { setTeamDesc(e.currentTarget.value) }} />
-                        </InputGroup>
-                    </VStack>
+                        </FormItem>
+                    </Form>
                 </ModalBody>
                 <ModalFooter>
                     <Button mr={3} onClick={onClose}>

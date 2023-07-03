@@ -1,4 +1,6 @@
-import { Button, Table, TableContainer, Tbody, Td, Th, Thead, Tr, useDisclosure, AlertDialog, AlertDialogBody, AlertDialogContent, AlertDialogFooter, AlertDialogHeader, AlertDialogOverlay, Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay, Text, RadioGroup, Stack, Radio, useToast, VStack, Box, InputGroup, InputLeftAddon, Input, Flex, Tag } from "@chakra-ui/react"
+import { Button, Table, TableContainer, Tbody, Td, Th, Thead, Tr, useDisclosure, AlertDialog, AlertDialogBody, AlertDialogContent, AlertDialogFooter, AlertDialogHeader, AlertDialogOverlay, Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay, Text, RadioGroup, Stack, Radio, useToast, VStack, Box, Input, Flex, Tag } from "@chakra-ui/react"
+import { Form, FormSection } from "components/form/Form"
+import FormItem from "components/form/Item"
 import useSession from "hooks/use-session"
 import Page from "layouts/page/Page"
 import { cloneDeep } from "lodash"
@@ -193,44 +195,37 @@ const UsersPage = () => {
                 <ModalHeader>Edit user - {userInEdit.username}</ModalHeader>
                 <ModalCloseButton />
                 <ModalBody>
-                    <VStack alignItems="left" spacing="6" pb="5">
-                        <VStack alignItems="left" spacing="3">
-                            <Box textStyle="subTitle">Basic information</Box>
-                            <InputGroup>
-                                <InputLeftAddon children='Email' />
+                    <Form  pb="5">
+                        <FormSection title="Basic information">
+                            <FormItem title='Email'>
                                 <Input type='email' placeholder='enter a valid email' value={userInEdit.email} onChange={e => { userInEdit.email = e.currentTarget.value.trim(); setUserInEdit(cloneDeep(userInEdit)) }} />
-                            </InputGroup>
-                            <InputGroup>
-                                <InputLeftAddon children='Nick name' />
+                            </FormItem>
+                            <FormItem title='Nick name'>
                                 <Input placeholder='enter a nick  name' value={userInEdit.name} onChange={e => { userInEdit.name = e.currentTarget.value; setUserInEdit(cloneDeep(userInEdit)) }} />
-                            </InputGroup>
+                            </FormItem>
 
                             <Button width="fit-content" onClick={updateUser}>Submit</Button>
-                        </VStack>
-                        <VStack alignItems="left" spacing="3">
-                            <Box textStyle="subTitle">Change password</Box>
-                            <InputGroup>
-                                <InputLeftAddon children='password' />
+                        </FormSection>
+                        <FormSection title="Change password">
+                            <FormItem  title='password'>
                                 <Input placeholder='enter a password' value={password} onChange={e => setPassword(e.currentTarget.value.trim())} />
-                            </InputGroup>
+                            </FormItem>
                             <Button width="fit-content" onClick={updatePassword}>Submit</Button>
-                        </VStack>
+                        </FormSection>
 
-                        <VStack alignItems="left" spacing="3">
-                            <Box textStyle="subTitle">Global role</Box>
+                        <FormSection title="Global role">
                             <RadioGroup mt="3" onChange={updateUserRole} value={userInEdit.role} isDisabled={userInEdit.id == SuperAdminId}>
                                 <Stack direction='row'>
                                     <Radio value={Role.Viewer}>{Role.Viewer}</Radio>
                                     <Radio value={Role.ADMIN}>{Role.ADMIN}</Radio>
                                 </Stack>
                             </RadioGroup>
-                        </VStack>
+                        </FormSection>
 
-                        <VStack alignItems="left" spacing="3">
-                            <Box textStyle="subTitle">Dangerous section</Box>
+                        <FormSection title="Dangerous section">
                             <Button width="fit-content" onClick={onDeleteUser} colorScheme="red">Delete user</Button>
-                        </VStack>
-                    </VStack>
+                        </FormSection>
+                    </Form>
 
                 </ModalBody>
             </ModalContent>}
@@ -242,32 +237,32 @@ const UsersPage = () => {
                 <ModalCloseButton />
                 <ModalBody>
                     <VStack alignItems="left" spacing="6" pb="5">
-                        <VStack alignItems="left" spacing="3">
-                            <InputGroup>
-                                <InputLeftAddon children='Username' />
+                        <Form sx={{
+                            '.form-item-label': {
+                                width: "80px"
+                            }
+                        }}>
+                            <FormItem title='Username'>
                                 <Input placeholder='enter a username, used in login' value={userInEdit.username} onChange={e => { userInEdit.username = e.currentTarget.value.trim(); setUserInEdit(cloneDeep(userInEdit)) }} />
-                            </InputGroup>
-                            <InputGroup>
-                                <InputLeftAddon children='Email' />
+                            </FormItem>
+                            <FormItem title='Email'>
                                 <Input type='email' placeholder='enter a valid email' value={userInEdit.email} onChange={e => { userInEdit.email = e.currentTarget.value.trim(); setUserInEdit(cloneDeep(userInEdit)) }} />
-                            </InputGroup>
+                            </FormItem>
 
-                            <InputGroup>
-                                <InputLeftAddon children='Password' />
+                            <FormItem title='Password' >
                                 <Input placeholder='enter a password' value={userInEdit.password} onChange={e => { userInEdit.password = e.currentTarget.value.trim(); setUserInEdit(cloneDeep(userInEdit)) }} />
-                            </InputGroup>
+                            </FormItem>
 
-                            <InputGroup>
-                                <InputLeftAddon children='Global role' />
+                            <FormItem title='Global role'>
                                 <RadioGroup mt="3" onChange={(v) => { userInEdit.role = v as Role; setUserInEdit(cloneDeep(userInEdit)) }} value={userInEdit.role}>
                                     <Stack direction='row'>
                                         <Radio value={Role.Viewer}>{Role.Viewer}</Radio>
                                         <Radio value={Role.ADMIN}>{Role.ADMIN}</Radio>
                                     </Stack>
                                 </RadioGroup>
-                            </InputGroup>
+                            </FormItem>
                             <Button width="fit-content" onClick={addUser}>Submit</Button>
-                        </VStack>
+                        </Form>
                     </VStack>
                 </ModalBody>
             </ModalContent>}

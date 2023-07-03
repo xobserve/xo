@@ -1,4 +1,6 @@
-import { Box, Button, Input, InputGroup, InputLeftAddon, Select, Text, useToast, VStack } from "@chakra-ui/react"
+import { Box, Button, Input,  Select, Text, useToast, VStack } from "@chakra-ui/react"
+import { Form, FormSection } from "components/form/Form"
+import FormItem from "components/form/Item"
 import Page from "layouts/page/Page"
 import { cloneDeep } from "lodash"
 import { useRouter } from "next/router"
@@ -11,7 +13,7 @@ import { globalTeamId, Team } from "types/teams"
 import { requestApi } from "utils/axios/request"
 
 
-const TeamsPage = () => {
+const NewDashboardPage = () => {
     const toast = useToast()
     const router = useRouter()
     const [dashboard, setDashboard] = useState<Dashboard>(initDashboard)
@@ -42,35 +44,37 @@ const TeamsPage = () => {
 
     return <>
         <Page title={`New`} subTitle="Create some useful items" icon={<FaPlus />} tabs={newLinks}>
-            <VStack alignItems="left" spacing={4}>
-                <Box mb="2" textStyle="subTitle">Dashboard info</Box>
-                <InputGroup size="sm">
-                    <InputLeftAddon children='Dashboard Title' />
-                    <Input value={dashboard.title} onChange={e => {dashboard.title=e.currentTarget.value; setDashboard(cloneDeep(dashboard))}} />
-                </InputGroup>
-                <InputGroup size="sm">
-                    <InputLeftAddon children='Description' />
-                    <Input placeholder='give your dashboard a short description' value={dashboard.data.description} onChange={e => setDashboard(cloneDeep(dashboard))} />
-                </InputGroup>
-                <InputGroup size="sm">
-                    <InputLeftAddon children='Belongs to team' />
-                    <Box sx={{
-                        '.chakra-select': {
-                            paddingLeft: '15px'
-                        }
+            <Form alignItems="left" spacing={4} sx={{
+                '.form-item-label': {
+                    width: '150px'
+                }
+            }}>
+                <FormSection title="Dashboard info">
+                    <FormItem title="Dashboard Title">
+                        <Input value={dashboard.title} onChange={e => { dashboard.title = e.currentTarget.value; setDashboard(cloneDeep(dashboard)) }} />
+                    </FormItem>
+                    <FormItem title="Description">
+                        <Input placeholder='give your dashboard a short description' value={dashboard.data.description} onChange={e => setDashboard(cloneDeep(dashboard))} />
+                    </FormItem>
+                    <FormItem title="Belongs to team">
+                        <Box sx={{
+                            '.chakra-select': {
+                                paddingLeft: '15px'
+                            }
                         }}>
-                    <Select size="sm" value={dashboard.ownedBy} variant="flushed" onChange={e => setDashboard({...dashboard, ownedBy: Number(e.currentTarget.value)})}>
-                       {teams.map(team => <option key={team.id} value={team.id}>
-                            <Text>{team.name}</Text>
-                       </option>)}
-                    </Select>
-                    </Box>
-                </InputGroup>
-                <Button width="fit-content" onClick={addDashboard} size="sm">Submit</Button>
-            </VStack>
+                            <Select value={dashboard.ownedBy} variant="flushed" onChange={e => setDashboard({ ...dashboard, ownedBy: Number(e.currentTarget.value) })}>
+                                {teams.map(team => <option key={team.id} value={team.id}>
+                                    <Text>{team.name}</Text>
+                                </option>)}
+                            </Select>
+                        </Box>
+                    </FormItem>
+                    <Button width="fit-content" onClick={addDashboard}>Submit</Button>
+                </FormSection>
+            </Form>
         </Page>
     </>
 }
 
 
-export default TeamsPage
+export default NewDashboardPage

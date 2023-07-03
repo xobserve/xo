@@ -1,4 +1,4 @@
-import { Input, InputGroup, InputLeftAddon, Select, Switch } from "@chakra-ui/react"
+import { Select, Switch } from "@chakra-ui/react"
 import { useEffect } from "react"
 import { Variable } from "types/variable"
 import { isJSON } from "utils/is"

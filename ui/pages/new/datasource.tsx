@@ -1,4 +1,4 @@
-import { Box} from "@chakra-ui/react"
+import { FormSection } from "components/form/Form"
 import Page from "layouts/page/Page"
 import { FaPlus } from "react-icons/fa"
 import { newLinks } from "src/data/nav-links"
@@ -17,10 +17,9 @@ const initDatasource: Datasource = {
 const DatasourcePage = () => {
     return <>
         <Page title={`New`} subTitle="Create some useful items" icon={<FaPlus />} tabs={newLinks}>
-            <Box alignItems="left" maxW="500px">
-                <Box mb="2" textStyle="subTitle">Datasource info</Box>
+            <FormSection maxW="500px" title="Datasource info">
                 <DatasourceEditor ds={initDatasource} />
-            </Box>
+            </FormSection>
         </Page>
     </>
 }

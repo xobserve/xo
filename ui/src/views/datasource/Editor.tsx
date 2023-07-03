@@ -1,4 +1,4 @@
-import {  Button, HStack, Image, Input, InputGroup, InputLeftAddon, Select, useToast } from "@chakra-ui/react"
+import {  Button, HStack, Image, Input, Select, useToast } from "@chakra-ui/react"
 import { isEmpty } from "lodash"
 import { useRouter } from "next/router"
 import { checkAndTestHttp } from "src/views/dashboard/plugins/datasource/http/query_runner"
@@ -12,6 +12,7 @@ import HttpDatasourceEditor from "../dashboard/plugins/datasource/http/Datasourc
 import PrometheusDatasourceEditor from "../dashboard/plugins/datasource/prometheus/DatasourceEditor"
 import TestDataDatasourceEditor from "../dashboard/plugins/datasource/testdata/DatasourceEditor"
 import JaegerDatasourceEditor from "../dashboard/plugins/datasource/jaeger/DatasourceEditor"
+import FormItem from "components/form/Item"
 
 
 const DatasourceEditor = ({ds, onChange=null}) => {
@@ -83,17 +84,15 @@ const DatasourceEditor = ({ds, onChange=null}) => {
     }
 
     return (<>
-        <InputGroup size="sm">
-            <InputLeftAddon children='Name' />
+        <FormItem title="Name">
             <Input value={datasource.name} placeholder="datasource name" onChange={e => {
                 const v = e.currentTarget.value
                 setDatasource((d: Datasource) => { d.name = v })
             }} />
-        </InputGroup>
-        <InputGroup size="sm" mt="4">
-            <InputLeftAddon children='Type' />
+        </FormItem>
+        <FormItem title="Type">
             <HStack>
-                <Select width="fit-content" size="sm" value={datasource.type} onChange={e => {
+                <Select width="fit-content" value={datasource.type} onChange={e => {
                     const v = e.currentTarget.value
                     setDatasource((d: Datasource) => { d.type = v as any })
                 }}>
@@ -103,7 +102,7 @@ const DatasourceEditor = ({ds, onChange=null}) => {
                 </Select>
                 <Image width="30px" height="30px" src={`/plugins/datasource/${datasource.type}.svg`} />
             </HStack>
-        </InputGroup>
+        </FormItem>
         {/* @needs-update-when-add-new-datasource */}
         {datasource.type == DatasourceType.ExternalHttp && <HttpDatasourceEditor datasource={datasource} onChange={setDatasource}/>}
         {datasource.type == DatasourceType.Prometheus && <PrometheusDatasourceEditor datasource={datasource} onChange={setDatasource}/>}

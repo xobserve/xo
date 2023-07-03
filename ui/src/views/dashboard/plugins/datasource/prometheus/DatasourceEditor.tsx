@@ -1,5 +1,5 @@
-import { Input, InputGroup, InputLeftAddon, useToast } from "@chakra-ui/react"
-import { useState } from "react"
+import { Input } from "@chakra-ui/react"
+import FormItem from "components/form/Item"
 import { Datasource } from "types/datasource"
 import isURL from "validator/lib/isURL"
 
@@ -10,13 +10,12 @@ interface Props {
 
 const PrometheusDatasourceEditor = ({ datasource, onChange }: Props) => {
     return (<>
-        <InputGroup size="sm" mt="4">
-            <InputLeftAddon children='URL' />
+        <FormItem title="URL">
             <Input value={datasource.url} placeholder="http://localhost:9090" onChange={e => {
                 const v = e.currentTarget.value
                 onChange((d: Datasource) => { d.url = v })
             }} />
-        </InputGroup>
+        </FormItem>
     </>)
 }
 

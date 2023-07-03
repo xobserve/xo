@@ -1,4 +1,5 @@
 import { Button, Modal, ModalBody, ModalCloseButton, ModalContent, ModalHeader, ModalOverlay, useDisclosure, VStack, Flex, Box, useToast, HStack, Image, Text, AlertDialog, AlertDialogOverlay, AlertDialogContent, AlertDialogHeader, AlertDialogBody, AlertDialogFooter, Tag } from "@chakra-ui/react"
+import { Form } from "components/form/Form"
 import Page from "layouts/page/Page"
 import { isEmpty } from "lodash"
 import { useRouter } from "next/router"
@@ -98,7 +99,11 @@ const DatasourcesPage = () => {
                 <ModalHeader>Edit datasource - {datasource?.name}</ModalHeader>
                 <ModalCloseButton />
                 <ModalBody>
+                    <Form spacing={2} sx={{'.form-item-label': {
+                        width: '50px'
+                    }}}>
                     {datasource && <DatasourceEditor ds={datasource} onChange={onChange} />}
+                    </Form>
                 </ModalBody>
             </ModalContent>
         </Modal>

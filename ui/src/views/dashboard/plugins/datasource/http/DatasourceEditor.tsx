@@ -1,4 +1,3 @@
-import { Input, InputGroup, InputLeftAddon } from "@chakra-ui/react"
 import { Datasource } from "types/datasource"
 
 interface Props {

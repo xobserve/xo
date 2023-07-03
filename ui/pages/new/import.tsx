@@ -1,4 +1,5 @@
-import { Box, Button, InputGroup, InputLeftAddon, Select, Text, Textarea, useToast, VStack } from "@chakra-ui/react"
+import { Box, Button,  Select, Text, Textarea, useToast, VStack } from "@chakra-ui/react"
+import FormItem from "components/form/Item"
 import Page from "layouts/page/Page"
 import { isEmpty } from "lodash"
 import { useRouter } from "next/router"
@@ -70,12 +71,10 @@ const ImportDashboard = () => {
     return <>
         <Page title={`New`} subTitle="Create some useful items" icon={<FaPlus />} tabs={newLinks}>
             <VStack alignItems="left" spacing={4}>
-                <InputGroup size="sm">
-                    <InputLeftAddon children='Meta json' />
+                <FormItem title='Meta json'>
                     <Textarea rows={8} onBlur={e => onMetaChange(e.currentTarget.value)}></Textarea>
-                </InputGroup>
-                {dashboard && <InputGroup size="sm">
-                    <InputLeftAddon children='Belongs to team' />
+                </FormItem>
+                {dashboard && <FormItem title='Belongs to team' >
                     <Box sx={{
                         '.chakra-select': {
                             paddingLeft: '15px'
@@ -87,7 +86,7 @@ const ImportDashboard = () => {
                             </option>)}
                         </Select>
                     </Box>
-                </InputGroup>}
+                </FormItem>}
                 <Button width="fit-content" onClick={importDashboard} size="sm">Import</Button>
             </VStack>
         </Page>

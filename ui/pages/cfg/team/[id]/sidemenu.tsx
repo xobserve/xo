@@ -1,13 +1,13 @@
-import { Box, Input, InputGroup, InputLeftAddon, useDisclosure, useToast, VStack, AlertDialog, AlertDialogBody, AlertDialogContent, AlertDialogFooter, AlertDialogHeader, AlertDialogOverlay, HStack, useColorModeValue, Alert, AlertIcon, Text, Flex, Button, Tooltip } from "@chakra-ui/react"
+import { Box, Input, useToast,  HStack, useColorModeValue, Alert, Text, Flex, Button, Tooltip } from "@chakra-ui/react"
 import Page from "layouts/page/Page"
 import { cloneDeep, isEmpty } from "lodash"
 import { useRouter } from "next/router"
-import { useEffect, useRef, useState } from "react"
+import { useEffect, useState } from "react"
 import { FaAlignLeft, FaCog, FaUserFriends } from "react-icons/fa"
 import { Route } from "types/route"
 import { MenuItem, SideMenu, Team } from "types/teams"
 import { requestApi } from "utils/axios/request"
-import React, { Component } from 'react';
+import React from 'react';
 import SortableTree, { changeNodeAtPath } from '@nosferatu500/react-sortable-tree';
 import '@nosferatu500/react-sortable-tree/style.css';
 import * as Icons from 'react-icons/fa'
