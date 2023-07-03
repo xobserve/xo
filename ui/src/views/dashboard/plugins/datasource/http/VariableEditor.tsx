@@ -6,6 +6,7 @@ import { DatasourceVariableEditorProps } from "types/datasource"
 import { isJSON } from "utils/is"
 import { useEffect } from "react"
 import { queryHttpVariableValues } from "./query_runner"
+import FormItem from "components/form/Item"
 
 const HttpVariableEditor = ({ variable, onChange, onQueryResult }: DatasourceVariableEditorProps) => {
     const toast = useToast()
@@ -34,8 +35,7 @@ const HttpVariableEditor = ({ variable, onChange, onQueryResult }: DatasourceVar
     }
 
     return (<>
-        <InputGroup size="sm" mt="2">
-            <InputLeftAddon children='URL' />
+        <FormItem title="URL">
             <Input
                 value={data.url}
                 onChange={(e) => {
@@ -46,9 +46,8 @@ const HttpVariableEditor = ({ variable, onChange, onQueryResult }: DatasourceVar
                     })
                 }}
             />
-        </InputGroup>
-        <InputGroup size="sm" mt="2">
-            <InputLeftAddon children='Request transform' />
+        </FormItem>
+        <FormItem title='Request transform'>
             {/* <Label width="200px" desc="If you want insert some imformation before request is sent to remote, e.g current time, just edit this function">Request transform</Label> */}
             <CodeEditorModal value={data.transformRequest} onChange={v => {
                 data.transformRequest = v
@@ -56,11 +55,10 @@ const HttpVariableEditor = ({ variable, onChange, onQueryResult }: DatasourceVar
                     variable.value = JSON.stringify(data)
                 })
             }} />
-        </InputGroup>
+        </FormItem>
 
 
-        <InputGroup size="sm" mt="2">
-            <InputLeftAddon children='Result transform' />
+        <FormItem title="Result transform">
             {/* <Label width="200px" desc="The http request result is probably not compatible with your visualization panels, here you can define a function to transform the result">Result transform</Label> */}
             <CodeEditorModal value={data.transformResult} onChange={v => {
                 data.transformResult = v
@@ -68,7 +66,7 @@ const HttpVariableEditor = ({ variable, onChange, onQueryResult }: DatasourceVar
                     variable.value = JSON.stringify(data)
                 })
             }} />
-        </InputGroup>
+        </FormItem>
     </>)
 }
 

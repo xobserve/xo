@@ -3,11 +3,11 @@ import { DetailAlert, DetailAlertItem } from "components/DetailAlert"
 import RadionButtons from "components/RadioButtons"
 import DatasourceSelect from "components/datasource/Select"
 import { EditorInputItem } from "components/editor/EditorItem"
-import { Form, FormItem } from "components/form/Form"
+import { Form, FormSection } from "components/form/Form"
 import Page from "layouts/page/Page"
-import { cloneDeep, isArray, isEmpty } from "lodash"
+import { isArray, isEmpty } from "lodash"
 import { datasources } from "src/views/App"
-import { useCallback, useEffect, useRef, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import { FaCog } from "react-icons/fa"
 import { cfgLinks } from "src/data/nav-links"
 import { initVariable } from "src/data/variable"
@@ -24,6 +24,7 @@ import storage from "utils/localStorage"
 import { VariableManuallyChangedKey } from "src/data/storage-keys"
 import { dispatch } from "use-bus"
 import { VariableForceReload } from "src/data/bus-events"
+import FormItem from "components/form/Item"
 
 
 
@@ -180,7 +181,7 @@ export const VariablesTable = ({ variables, onEdit, onRemove }: TableProps) => {
                 </Thead>
                 <Tbody>
                     {variables.map(variable => {
-                        return <Tr key={variable.name} className={`${variable.id == selectedVariable?.id ? "highlight-bg" : '' }`}>
+                        return <Tr key={variable.name} className={`${variable.id == selectedVariable?.id ? "highlight-bg" : ''}`}>
                             <Td>{variable.name}</Td>
                             <Td>{variable.type}</Td>
                             <Td>{datasources?.find(ds => ds.id == variable.datasource)?.name}</Td>
@@ -188,7 +189,7 @@ export const VariablesTable = ({ variables, onEdit, onRemove }: TableProps) => {
                             <Td>{variable.regex}</Td>
                             <Td>
                                 <Button variant="ghost" size="sm" px="0" onClick={() => onEdit(variable)}>Edit</Button>
-                                <Button variant="ghost" colorScheme="orange" size="sm" px="0" ml="1" onClick={() => {setSelectedVariable(variable);onOpen()}}>Remove</Button>
+                                <Button variant="ghost" colorScheme="orange" size="sm" px="0" ml="1" onClick={() => { setSelectedVariable(variable); onOpen() }}>Remove</Button>
                             </Td>
                         </Tr>
                     })}
@@ -229,7 +230,7 @@ export const VariablesTable = ({ variables, onEdit, onRemove }: TableProps) => {
                         <Button ref={cancelRef} onClick={onRemoveClose}>
                             Cancel
                         </Button>
-                        <Button colorScheme='red' onClick={() => {onRemove(selectedVariable);onRemoveClose()}} ml={3}>
+                        <Button colorScheme='red' onClick={() => { onRemove(selectedVariable); onRemoveClose() }} ml={3}>
                             Delete
                         </Button>
                     </AlertDialogFooter>
@@ -290,59 +291,51 @@ export const EditVariable = ({ v, isOpen, onClose, isEdit, onSubmit, isGlobal = 
             <ModalContent minW="600px">
                 <ModalHeader>{isEdit ? "Edit variable" : "Add new variable"} </ModalHeader>
                 <ModalCloseButton />
-                {variable && <ModalBody sx={{
-                    '.chakra-input__left-addon': {
+                {variable && <ModalBody>
+                    <Form maxWidth="600px" sx={{
+                    '.form-item-label': {
                         width: "150px"
                     }
                 }}>
-                    <Form >
-                        <FormItem title="Basic">
-                            <InputGroup size="sm" mt="2" width="400px">
-                                <InputLeftAddon children='Name' />
+                        <FormSection title="Basic">
+                            <FormItem title="Name">
                                 <Input placeholder='Only alphabet and digit numbers are allowed' value={variable.name} onChange={e => { setVariable({ ...variable, name: e.currentTarget.value }) }} />
-                            </InputGroup>
-                            <InputGroup size="sm" mt="2" width="400px">
-                                <InputLeftAddon children='Description' />
+                            </FormItem>
+                            <FormItem title="Description">
                                 <Input placeholder='give this variable a simple description' value={variable.description} onChange={e => { setVariable({ ...variable, description: e.currentTarget.value }) }} />
-                            </InputGroup>
-                            <InputGroup size="sm" mt="2" width="400px">
-                                <InputLeftAddon children='Refresh' />
-                                {/* When to update the values of this variable */}
+                            </FormItem>
+                            <FormItem title="Refresh">
                                 <RadionButtons size="sm" options={Object.keys(VariableRefresh).map(k =>
                                     ({ label: VariableRefresh[k], value: VariableRefresh[k] })
                                 )} value={variable.refresh} onChange={(v) => setVariable({ ...variable, refresh: v })} />
-                            </InputGroup>
-                            <InputGroup size="sm" mt="2" width="400px" alignItems="center">
-                                <InputLeftAddon children='Multi value' />
-                                {/* Enables multiple values to be selected at the same time */}
-                                <Switch defaultChecked={variable.enableMulti} onChange={(e) => setVariable({ ...variable, enableMulti: e.currentTarget.checked })} />
-                            </InputGroup>
-                            <InputGroup size="sm" mt="2" width="400px" alignItems="center">
-                                <InputLeftAddon children='Include all' />
-                                {/* Enables multiple values to be selected at the same time */}
-                                <Switch defaultChecked={variable.enableAll} onChange={(e) => setVariable({ ...variable, enableAll: e.currentTarget.checked })} />
-                            </InputGroup>
-                        </FormItem>
+                            </FormItem>
 
-                        <FormItem title="Query" width="400px">
-                            <InputGroup size="sm" mt="2" width="400px">
-                                <InputLeftAddon children='Query type' />
-                                <RadionButtons size="sm" options={Object.keys(VariableQueryType).map(k =>
+                            <FormItem title="Multi value">
+                                <Switch defaultChecked={variable.enableMulti} onChange={(e) => setVariable({ ...variable, enableMulti: e.currentTarget.checked })} />
+                            </FormItem>
+
+                            <FormItem title="Include all">
+                                <Switch defaultChecked={variable.enableAll} onChange={(e) => setVariable({ ...variable, enableAll: e.currentTarget.checked })} />
+                            </FormItem>
+
+                        </FormSection>
+
+                        <FormSection title="Query">
+                            <FormItem title="Query type">
+                            <RadionButtons size="sm" options={Object.keys(VariableQueryType).map(k =>
                                     ({ label: k, value: VariableQueryType[k] })
                                 )} value={variable.type} onChange={v => setVariable({ ...variable, type: v, value: '' })} />
-                            </InputGroup>
-
-                            {variable.type == VariableQueryType.Custom && <InputGroup size="sm" width="400px" mt="2">
-                                <InputLeftAddon children='Query values' width="150px" />
+                            </FormItem>
+                            
+                            {variable.type == VariableQueryType.Custom && <FormItem title="Query values">
                                 <Input width="400px" placeholder='Values separated by comma,e.g 1,10,20,a,b,c' value={variable.value} onChange={e => { setVariable({ ...variable, value: e.currentTarget.value }) }} onBlur={() => onQueryResult(variable.value.split(','))} />
-                            </InputGroup>}
+                            </FormItem>}
 
                             {variable.type == VariableQueryType.Datasource && <>
-                                <InputGroup size="sm" width="400px" mt="2">
-                                    <InputLeftAddon children='Select datasource' />
+                                <FormItem title="Select datasource">
                                     <Box width="200px">
                                         <DatasourceSelect value={variable.datasource} onChange={id => setVariable(v => { v.datasource = id; v.value = "" })} allowTypes={[DatasourceType.Prometheus, DatasourceType.ExternalHttp]} variant="outline" /></Box>
-                                </InputGroup>
+                                </FormItem>
                                 {
                                     currentDatasource?.type == DatasourceType.Prometheus && <PrometheusVariableEditor variable={variable} onChange={setVariable} onQueryResult={onQueryResult} />
                                 }
@@ -351,22 +344,22 @@ export const EditVariable = ({ v, isOpen, onClose, isEdit, onSubmit, isGlobal = 
                                 }
                             </>
                             }
-                        </FormItem>
+                        </FormSection>
 
-                        <FormItem title="Regex filter ( optional )" width="400px">
+                        <FormSection title="Regex filter ( optional )" >
                             <EditorInputItem value={variable.regex} placeholder="further filter the query result through a Regex pattern" onChange={v => {
                                 setVariable({ ...variable, regex: v })
                             }} />
-                        </FormItem>
+                        </FormSection>
 
 
 
-                        <FormItem title="Variable values" width="100%">
+                        <FormSection title="Variable values" >
                             <Box pt="1">
                                 {!isEmpty(variableValues) && variableValues.slice(0, displayCount).map(v => <Tag size="sm" variant="outline" ml="1">{v}</Tag>)}
                             </Box>
                             {variableValues?.length > displayCount && <Button mt="2" size="sm" colorScheme="gray" ml="1" onClick={() => setDisplayCount(displayCount + 30)}>Show more</Button>}
-                        </FormItem>
+                        </FormSection>
                     </Form>
                 </ModalBody>}
                 <ModalFooter>

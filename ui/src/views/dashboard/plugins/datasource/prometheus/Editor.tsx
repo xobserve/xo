@@ -18,7 +18,7 @@ const PrometheusQueryEditor = ({ datasource, query, onChange }: DatasourceEditor
 
     return (
         <Form spacing={1}>
-            <FormItem size="sm" title={<PromMetricSelect dsId={datasource.id} value={tempQuery.metrics} onChange={v => {
+            <FormItem  size="sm" title={<PromMetricSelect width="100%" dsId={datasource.id} value={tempQuery.metrics} onChange={v => {
                 setTempQuery({ ...tempQuery, metrics: v })
                 onChange({ ...tempQuery, metrics: v })
             }} />} >
@@ -33,7 +33,7 @@ const PrometheusQueryEditor = ({ datasource, query, onChange }: DatasourceEditor
                     size="sm"
                 />
             </FormItem>
-            <FormItem size="sm" labelWidth="150px" title="Legend">
+            <FormItem labelWidth="150px"  size="sm"  title="Legend">
                 <Input
                     value={tempQuery.legend}
                     onChange={(e) => {

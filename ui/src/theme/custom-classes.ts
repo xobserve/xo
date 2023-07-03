@@ -14,7 +14,7 @@ export function customClasses(props) {
             color:  mode('black','white')(props)
         },
         ".label-bg": {
-            bg: mode('#f9fbfc','rgba(30,39,50,0.3)')(props)
+            bg: mode('#f7f9fb','rgba(255,255,255,0.05)')(props)
         },
         ".hover-bordered:hover": {
             border: `1px solid ${mode(

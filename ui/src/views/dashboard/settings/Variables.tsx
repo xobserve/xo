@@ -4,7 +4,7 @@ import {  useState } from "react";
 import { VariableManuallyChangedKey } from "src/data/storage-keys";
 import { initVariable } from "src/data/variable";
 import { Dashboard } from "types/dashboard";
-import { Variable, VariableQueryType, VariableRefresh } from "types/variable";
+import { Variable,  VariableRefresh } from "types/variable";
 import storage from "utils/localStorage";
 
 interface Props {

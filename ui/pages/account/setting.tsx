@@ -1,4 +1,5 @@
 import { Box, Button, Heading, Input, InputGroup, InputLeftAddon, useToast, VStack } from "@chakra-ui/react";
+import FormItem from "components/form/Item";
 import useSession from "hooks/use-session";
 import Page from "layouts/page/Page"
 import { useEffect, useState } from "react";
@@ -99,31 +100,26 @@ const AccountSetting = () => {
             <Box alignItems="left" maxW="600px">
                 <VStack alignItems="left" spacing={4}>
                     <Box mb="2" textStyle="subTitle">Basic Information</Box>
-                    <InputGroup>
-                        <InputLeftAddon children='Nickname' />
+                    <FormItem title="Nickname" labelWidth="200px">
                         <Input placeholder='give yourself a nick name' value={name} onChange={e => setName(e.currentTarget.value)} />
-                    </InputGroup>
-                    <InputGroup>
-                        <InputLeftAddon children='Email' />
+                    </FormItem>
+                    <FormItem title='Email' labelWidth="200px">
                         <Input type='email' placeholder='enter a valid email' value={email} onChange={e => setEmail(e.currentTarget.value.trim())} />
-                    </InputGroup>
+                    </FormItem>
                     <Button width="fit-content" onClick={updateAccount}>Submit</Button>
                 </VStack>
 
                 <VStack alignItems="left" mt="8" spacing={3}>
                     <Box mb="2" textStyle="subTitle">Change Password</Box>
-                    <InputGroup>
-                        <InputLeftAddon children='Old password' />
+                    <FormItem title='Old password' labelWidth="200px">
                         <Input type="password" placeholder="******" value={oldpw} onChange={e => setOldpw(e.currentTarget.value.trim())} />
-                    </InputGroup>
-                    <InputGroup>
-                        <InputLeftAddon children='New password' />
+                    </FormItem>
+                    <FormItem title='New password' labelWidth="200px">
                         <Input type="password" placeholder="******" value={newpw} onChange={e => setNewpw(e.currentTarget.value.trim())} />
-                    </InputGroup>
-                    <InputGroup>
-                        <InputLeftAddon children='Confirm new password' />
+                    </FormItem>
+                    <FormItem title='Confirm new password' labelWidth="200px">
                         <Input type="password" placeholder="******" value={confirmpw} onChange={e => setConfirmpw(e.currentTarget.value.trim())} />
-                    </InputGroup>
+                    </FormItem>
                     <Button width="fit-content" onClick={updatePassword}>Submit</Button>
                 </VStack>
             </Box>

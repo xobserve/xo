@@ -6,6 +6,7 @@ import { PromLabelSelect, PromMetricSelect } from "./Editor"
 import { queryPromethuesVariableValues } from "./query_runner"
 import { EditorInputItem } from "components/editor/EditorItem"
 import { DatasourceVariableEditorProps } from "types/datasource"
+import FormItem from "components/form/Item"
 
 
 
@@ -34,17 +35,15 @@ const PrometheusVariableEditor = ({ variable, onChange,onQueryResult }: Datasour
     }
 
     return (<>
-            <InputGroup size="sm" mt="2" alignItems="center">
-                <InputLeftAddon children='Use current time' />
+            <FormItem title="Use current time">
                 <Switch size="md" defaultChecked={data.useCurrentTime} onChange={e => {
                     data.useCurrentTime = e.target.checked
                     onChange(variable => {
                         variable.value = JSON.stringify(data)
                     })
                 }}/>
-            </InputGroup>
-            <InputGroup size="sm" mt="2">
-                <InputLeftAddon children='Query type' />
+            </FormItem>
+            <FormItem title="Query type">
                 <Select value={data.type} onChange={e => {
                     const v = e.currentTarget.value
                     data.type = v
@@ -54,41 +53,38 @@ const PrometheusVariableEditor = ({ variable, onChange,onQueryResult }: Datasour
                 }}>
                     {Object.keys(PromDsQueryTypes).map(k => <option value={PromDsQueryTypes[k]}>{PromDsQueryTypes[k]}</option>)}
                 </Select>
-            </InputGroup>
+            </FormItem>
             {
                 data.type == PromDsQueryTypes.LabelValues && <>
-                    <InputGroup size="sm" mt="2">
-                        <InputLeftAddon children='Metric' />
+                    <FormItem title="Metric">
                         <PromMetricSelect dsId={variable.datasource} variant="outline" value={data.metrics} onChange={m => {
                             data.metrics = m
                             onChange(variable => {
                                 variable.value = JSON.stringify(data)
                             })
                         }} />
-                    </InputGroup>
-                    <InputGroup size="sm" mt="2">
-                        <InputLeftAddon children='Label' />
+                    </FormItem>
+                    <FormItem title="Label">
                         <PromLabelSelect metric={data.metrics} dsId={variable.datasource} variant="outline" value={data.label} onChange={m => {
                             data.label = m
                             onChange(variable => {
                                 variable.value = JSON.stringify(data)
                             })
                         }} />
-                    </InputGroup>
+                    </FormItem>
                 </>
             }
 
             {
                 data.type == PromDsQueryTypes.Metrics && <>
-                    <InputGroup size="sm" mt="2">
-                        <InputLeftAddon children='Metric regex' />
+                    <FormItem title="Metric regex">
                         <EditorInputItem placeholder="e.g go_*" value={data.regex} onChange={m => {
                             data.regex = m
                             onChange(variable => {
                                 variable.value = JSON.stringify(data)
                             })
                         }}/>
-                    </InputGroup>
+                    </FormItem>
                 </>
             }
     </>)

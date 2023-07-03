@@ -1,4 +1,4 @@
-import { Box, HStack, Input, Select, Switch, Text, useToast, VStack } from "@chakra-ui/react"
+import {  Switch } from "@chakra-ui/react"
 import { EditorInputItem } from "components/editor/EditorItem"
 import { Form } from "components/form/Form"
 import { Dashboard } from "types/dashboard"
@@ -11,7 +11,11 @@ interface Props {
 } 
 
 const StyleSettings = ({ dashboard, onChange }: Props) => {
-    return (<Form>
+    return (<Form sx={{
+        '.form-item-label': {
+            width: '200px'
+        }
+    }}>
         <FormItem title="Background" desc="Background color or image of the dashboard" labelWidth="100%">
             <EditorInputItem value={dashboard.data.styles?.bg} onChange={(v) => onChange(draft => { draft.data.styles.bg = v })} />
         </FormItem>

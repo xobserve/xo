@@ -43,7 +43,7 @@ const GeneralSettings = ({ dashboard, onChange }: Props) => {
     return (<>
         <Form spacing={2} sx={{
             '.form-item-label': {
-                width: '220px'
+                width: '200px'
             }
         }}>
             <FormItem title="Title" >
