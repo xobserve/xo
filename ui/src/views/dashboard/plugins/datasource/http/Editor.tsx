@@ -1,6 +1,6 @@
 import { HStack, Input, VStack } from "@chakra-ui/react"
 import { CodeEditorModal } from "components/CodeEditor/CodeEditorModal"
-import Label from "components/form/Label"
+import Label from "components/form/Item"
 import { cloneDeep, isEmpty, set } from "lodash"
 import { useEffect, useState } from "react"
 import { PanelQuery } from "types/dashboard"

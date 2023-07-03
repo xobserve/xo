@@ -6,7 +6,7 @@ import JaegerQueryEditor from "../plugins/datasource/jaeger/Editor"
 import PrometheusQueryEditor from "../plugins/datasource/prometheus/Editor"
 import TestDataQueryEditor from "../plugins/datasource/testdata/Editor"
 import { initDatasource } from "src/data/panel/initPanel"
-import Label from "components/form/Label"
+import Label from "components/form/Item"
 import { EditorInputItem, EditorNumberItem } from "components/editor/EditorItem"
 import { calculateInterval } from "utils/datetime/range"
 import { getInitTimeRange } from "components/TimePicker"
@@ -14,6 +14,8 @@ import { getInitTimeRange } from "components/TimePicker"
 import { Datasource } from "types/datasource"
 import HttpQueryEditor from "../plugins/datasource/http/Editor"
 import { datasources } from "src/views/App"
+import FormItem from "components/form/Item"
+import { Form, FormSection } from "components/form/Form"
 
 interface Props {
     panel: Panel
@@ -23,10 +25,10 @@ interface Props {
 const EditPanelQuery = (props: Props) => {
     const { panel, onChange } = props
     const selectDatasource = (id) => {
-       
+
         onChange((panel: Panel) => {
             const type = datasources.find(ds => ds.id == id).type
-            panel.datasource = { ...initDatasource, type: type,id: id }
+            panel.datasource = { ...initDatasource, type: type, id: id }
         })
     }
 
@@ -72,13 +74,13 @@ const EditPanelQuery = (props: Props) => {
             <Text px="2" py="2">Query</Text>
         </Box>
         <Box className="bordered" p="2" borderRadius="0" height="100%">
-            <Flex justifyContent="space-between"  alignItems="start">
+            <Flex justifyContent="space-between" alignItems="start">
                 <HStack>
                     <Image width="30px" height="30px" src={`/plugins/datasource/${panel.datasource.type}.svg`} />
                     <Select width="fit-content" variant="unstyled" value={panel.datasource.id} onChange={e => {
                         selectDatasource(e.currentTarget.value)
                     }}>
-                        { datasources.map((ds:Datasource)=> {
+                        {datasources.map((ds: Datasource) => {
                             return <option key={ds.id} value={ds.id}>{ds.name}</option>
                         })}
                     </Select>
@@ -113,34 +115,33 @@ const DatasourceQueryOption = ({ panel, onChange }: Props) => {
     const [expanded, setExpanded] = useState(false)
     return (
         <VStack alignItems="end" mt="4px">
-  
-                <HStack color="brand.500" fontSize=".9rem" spacing={1} cursor="pointer" onClick={() => setExpanded(!expanded)} width="fit-content">
-                    {expanded ? <FaAngleDown /> : <FaAngleRight />}
-                    <Text fontWeight="500">Query options</Text>
-                </HStack>
+
+            <HStack color="brand.500" fontSize=".9rem" spacing={1} cursor="pointer" onClick={() => setExpanded(!expanded)} width="fit-content">
+                {expanded ? <FaAngleDown /> : <FaAngleRight />}
+                <Text fontWeight="500">Query options</Text>
+            </HStack>
             {
-                expanded && <VStack alignItems="center" mt="1" position="relative" >
-                    <HStack spacing={1}>
-                        <Label width="170px" desc="The maximum data points per series. Used directly by some data sources and used in calculation of auto interval. ">Max data points</Label>
+                expanded && <FormSection mt="1" position="relative">
+                    <FormItem size="sm" labelWidth="170px" title="Max data points" desc="The maximum data points per series. Used directly by some data sources and used in calculation of auto interval. ">
                         <Box width="100px"><EditorNumberItem min={100} max={2000} step={50} value={panel.datasource.queryOptions.maxDataPoints} onChange={v => {
-                        onChange((panel: Panel) => {
-                            panel.datasource.queryOptions.maxDataPoints = v
-                        })
-                    }} /></Box>
-                    </HStack>
-                    <HStack spacing={1}>
-                        <Label width="170px" desc="A lower limit for the interval. Recommended to be set to write frequency, e.g Prometheus defaults scraping data every 15 seconds, you can set this to '15s'">Min interval </Label>
+                            onChange((panel: Panel) => {
+                                panel.datasource.queryOptions.maxDataPoints = v
+                            })
+                        }} /></Box>
+
+                    </FormItem>
+                    <FormItem title="Min interval" labelWidth="170px" size="sm" desc="A lower limit for the interval. Recommended to be set to write frequency, e.g Prometheus defaults scraping data every 15 seconds, you can set this to '15s'">
                         <Box width="100px"><EditorInputItem value={panel.datasource.queryOptions.minInterval} onChange={v => {
-                        onChange((panel: Panel) => {
-                            panel.datasource.queryOptions.minInterval = v
-                        })
-                    }} /></Box>
-                    </HStack>
-                    <HStack spacing={1}>
-                        <Label width="170px" desc="Final interval is caculated based on the current time range, max data points and the min interval, it's sent to datasource, e.g final interval will be directly passed as the step option that Prometheus requires">Final interval </Label>
-                        <Text width="100px" pl="2">{calculateInterval(getInitTimeRange(), panel.datasource.queryOptions.maxDataPoints,panel.datasource.queryOptions.minInterval ).interval}</Text>
-                    </HStack>
-                </VStack>
+                            onChange((panel: Panel) => {
+                                panel.datasource.queryOptions.minInterval = v
+                            })
+                        }} /></Box>
+                    </FormItem>
+
+                    <FormItem labelWidth="170px" size="sm" title="Final interval" desc="Final interval is caculated based on the current time range, max data points and the min interval, it's sent to datasource, e.g final interval will be directly passed as the step option that Prometheus requires">
+                        <Text width="100px" pl="2">{calculateInterval(getInitTimeRange(), panel.datasource.queryOptions.maxDataPoints, panel.datasource.queryOptions.minInterval).interval}</Text>
+                    </FormItem>
+                </FormSection>
             }
         </VStack>
     )

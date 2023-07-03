@@ -1,37 +1,27 @@
-import { Box, HStack, Text } from "@chakra-ui/react"
-import PopoverSelect from "components/select/PopoverSelect"
+import { Box, HStack, Input, InputGroup, InputLeftAddon, Text } from "@chakra-ui/react"
+import { ColorModeSwitcher } from "components/ColorModeSwitcher"
+import { Form, FormSection } from "components/form/Form"
+import FormItem from "components/form/Item"
 import { useState } from "react"
 
 const TestPage = () => {
-    const [value, setValue] = useState([])
 
-    
-    return (<Box width="200px" height="50px">
-    <PopoverSelect value={value} options={options} onChange={setValue} exclusive="all" size="lg" placeholder="enter variable value to search..." isMulti isClearable />
-    </Box>)
+
+  return (<Box width="400px" ml="10" mt="10">
+    <Form>
+      <FormSection title="Test">
+        <FormItem title="Jaeger" desc="bbbb"><Input /></FormItem>
+        <FormItem title="Prometheus" desc="bbbb"><Input /></FormItem>
+      </FormSection>
+
+      <FormSection title="Test">
+        <FormItem title="Jaeger" desc="bbbb"><Input /></FormItem>
+        <FormItem title="Prometheus" desc="bbbb"><Input /></FormItem>
+      </FormSection>
+    </Form>
+    <ColorModeSwitcher />
+  </Box>)
 }
 
 export default TestPage
 
-
-const options = [
-  {
-    label: "All",
-    value: "all"
-  },
-  {
-  label: "a",
-  value: "a"
-},{
-  label: "b",
-  value: "b"
-},{
-  label: "c",
-  value: "c"
-},{
-  label: "d",
-  value: "d"
-},{
-  label: "e",
-  value: "e"
-}]

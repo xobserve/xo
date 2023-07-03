@@ -24,9 +24,18 @@ interface GraphPanelProps extends PanelProps {
 const GraphPanel = memo((props: GraphPanelProps) => {
     const inactiveKey =  PanelInactiveKey + props.dashboardId + '-' +  props.panel.id
     const [inactiveSeries, setInactiveSeries] = useState(storage.get(inactiveKey)??[])
-    if (isEmpty(props.data)) {
-        return (<Center height="100%">No data</Center>)
-    }
+    const [uplot, setUplot] = useState<uPlot>(null)
+    const { colorMode } = useColorMode()
+    
+    useEffect(() => {
+        if (inactiveSeries.length >  0) {
+            storage.set(inactiveKey, inactiveSeries)
+        } else {
+            storage.remove(inactiveKey)
+        }
+    },[inactiveSeries])
+
+
 
     const data = useMemo(() => {
         const res = []
@@ -39,7 +48,7 @@ const GraphPanel = memo((props: GraphPanelProps) => {
     }, [props.data])
 
 
-    const { colorMode } = useColorMode()
+
 
     const options = useMemo(() => {
         let o;
@@ -63,7 +72,7 @@ const GraphPanel = memo((props: GraphPanelProps) => {
     }, [props.panel, props.data, colorMode])
 
 
-    const [uplot, setUplot] = useState<uPlot>(null)
+
 
     const onSelectSeries = useCallback((s, i, pressShift) => {
         if (!pressShift) { // 未按住 shift
@@ -136,19 +145,14 @@ const GraphPanel = memo((props: GraphPanelProps) => {
         }
         
     },[uplot,options.series,inactiveSeries])
-    
-    useEffect(() => {
-        if (inactiveSeries.length >  0) {
-            storage.set(inactiveKey, inactiveSeries)
-        } else {
-            storage.remove(inactiveKey)
-        }
-    },[inactiveSeries])
+
 
     const onChartCreate = useCallback((chart) => { setUplot((chart)); props.sync?.sub(chart) }, [props.sync])
     
     return (
-        <>
+        <>{
+            isEmpty(props.data) ? <Center height="100%">No data</Center>:
+
             <Box h="100%" className="panel-graph">
                 {!isEmpty(props?.panel.plugins.graph.axis?.label) && <Text fontSize="sm" position="absolute" ml="3" mt="-1" className="color-text">{props.panel.plugins.graph.axis.label}</Text>}
                 {options && <GraphLayout width={props.width} height={props.height} legend={props.panel.plugins.graph.legend.mode == "hidden" ? null : <SeriesTable placement={props.panel.plugins.graph.legend.placement} width={props.panel.plugins.graph.legend.width} props={props} data={data} mode={seriesTableMode.Legend} onSelect={onSelectSeries} panelType={props.panel.type} inactiveSeries={inactiveSeries} />}>
@@ -175,7 +179,7 @@ const GraphPanel = memo((props: GraphPanelProps) => {
 
 
                 </GraphLayout>}
-            </Box>
+            </Box>}
         </>
     )
 })

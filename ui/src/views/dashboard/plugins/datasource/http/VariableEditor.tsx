@@ -1,6 +1,6 @@
 import { HStack, Input, InputGroup, InputLeftAddon, useToast } from "@chakra-ui/react"
 import { CodeEditorModal } from "components/CodeEditor/CodeEditorModal"
-import Label from "components/form/Label"
+import Label from "components/form/Item"
 import { isEmpty } from "lodash"
 import { DatasourceVariableEditorProps } from "types/datasource"
 import { isJSON } from "utils/is"
