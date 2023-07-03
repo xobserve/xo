@@ -7,12 +7,12 @@ import { Dashboard } from "types/dashboard"
 import useKeyboardJs from 'react-use/lib/useKeyboardJs';
 import { requestApi } from "utils/axios/request"
 import moment from "moment"
-import useBus, { dispatch } from "use-bus"
+import { dispatch } from "use-bus"
 import { SetDashboardEvent } from "src/data/bus-events"
-import { FormItem } from "components/form/Form"
 import ReactDiffViewer from 'react-diff-viewer';
 import { useSearchParam } from "react-use"
 import { cloneDeep, isEqual } from "lodash"
+import FormItem from "components/form/Item"
 
 interface Props {
     dashboard: Dashboard

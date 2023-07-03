@@ -2,12 +2,14 @@ import { Box, HStack, Input, VStack } from "@chakra-ui/react"
 import Label from "components/form/Item"
 import { cloneDeep } from "lodash"
 import { useEffect, useState } from "react"
-import {  PanelQuery } from "types/dashboard"
+import { PanelQuery } from "types/dashboard"
 
 import { Variant } from "chakra-react-select/dist/types/types"
 import { Datasource, DatasourceEditorProps } from "types/datasource"
 import { queryPrometheusAllMetrics, queryPrometheusLabels } from "./query_runner"
 import ChakraSelect from "components/select/ChakraSelect"
+import FormItem from "components/form/Item"
+import { Form } from "components/form/Form"
 
 
 
@@ -15,12 +17,11 @@ const PrometheusQueryEditor = ({ datasource, query, onChange }: DatasourceEditor
     const [tempQuery, setTempQuery] = useState<PanelQuery>(cloneDeep(query))
 
     return (
-        <VStack alignItems="left" spacing="1">
-            <HStack>
-                <Label py="0"><PromMetricSelect dsId={datasource.id} value={tempQuery.metrics} onChange={v => {
-                    setTempQuery({ ...tempQuery, metrics: v })
-                    onChange({ ...tempQuery, metrics: v })
-                }} /></Label>
+        <Form spacing={1}>
+            <FormItem size="sm" title={<PromMetricSelect dsId={datasource.id} value={tempQuery.metrics} onChange={v => {
+                setTempQuery({ ...tempQuery, metrics: v })
+                onChange({ ...tempQuery, metrics: v })
+            }} />} >
                 <Input
                     value={tempQuery.metrics}
                     onChange={(e) => {
@@ -31,9 +32,8 @@ const PrometheusQueryEditor = ({ datasource, query, onChange }: DatasourceEditor
                     placeholder="Enter a PromQL query"
                     size="sm"
                 />
-            </HStack>
-            <HStack>
-                <Label width="150px">Legend</Label>
+            </FormItem>
+            <FormItem size="sm" labelWidth="150px" title="Legend">
                 <Input
                     value={tempQuery.legend}
                     onChange={(e) => {
@@ -44,8 +44,8 @@ const PrometheusQueryEditor = ({ datasource, query, onChange }: DatasourceEditor
                     placeholder="Legend format"
                     size="sm"
                 />
-            </HStack>
-        </VStack>
+            </FormItem>
+        </Form>
     )
 }
 
@@ -78,7 +78,7 @@ export const PromMetricSelect = ({ dsId, value, onChange, width = "220px", varia
 
     return (
         <Box onClick={loadMetrics} width={width}>
-            <ChakraSelect isClearable value={{ value: value, label: value }} placeholder="Metrics" variant={variant} size="sm" options={metricsList.map((m) => { return { label: m, value: m } })} onChange={v => onChange(v)}
+            <ChakraSelect isClearable value={ value ? { value: value, label: value } : null} placeholder="Select metrics.." variant={variant} size="sm" options={metricsList.map((m) => { return { label: m, value: m } })} onChange={v => onChange(v)}
             />
         </Box>
 
@@ -113,7 +113,7 @@ export const PromLabelSelect = ({ dsId, metric, value, onChange, width = "220px"
 
     return (
         <Box onClick={loadLabels} width={width}>
-            <ChakraSelect value={{ value: value, label: value }}  placeholder="Metrics" variant={variant} size="sm" options={labels.map((m) => { return { label: m, value: m } })} onChange={v => onChange(v)}
+            <ChakraSelect value={{ value: value, label: value }} placeholder="Metrics" variant={variant} size="sm" options={labels.map((m) => { return { label: m, value: m } })} onChange={v => onChange(v)}
             />
         </Box>
 

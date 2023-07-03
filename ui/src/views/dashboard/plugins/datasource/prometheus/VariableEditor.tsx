@@ -1,5 +1,4 @@
 import { Input, InputGroup, InputLeftAddon, Select, Switch } from "@chakra-ui/react"
-import { FormItem } from "components/form/Form"
 import { useEffect } from "react"
 import { Variable } from "types/variable"
 import { isJSON } from "utils/is"

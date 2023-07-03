@@ -76,7 +76,7 @@ const StatPanel = memo((props: StatPanelProps) => {
                         onDelete={(chart: uPlot) => { }}
                         onCreate={onChartCreate}
                     >
-                        {props.panel.plugins.stat.showTooltip && <Tooltip props={props} options={options} data={data} />}
+                        {props.panel.plugins.stat.showTooltip && <Tooltip props={props} options={options} data={data} inactiveSeries={[]} />}
                     </UplotReact>}
                 </Box>
             </Box>

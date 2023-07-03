@@ -4,9 +4,10 @@ import { StyleSize } from "types/styles"
 interface FormProps {
     children: any
     spacing?: number
+    sx?: any
 }
-export const Form = ({ children, spacing = 4 }: FormProps & StyleProps) => {
-    return (<VStack alignItems="left" spacing={spacing}>
+export const Form = ({ children, spacing = 4, ...rest }: FormProps & StyleProps) => {
+    return (<VStack alignItems="left" spacing={spacing} {...rest}>
         {children}
     </VStack>)
 }

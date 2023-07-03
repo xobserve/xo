@@ -1,6 +1,7 @@
 import { HStack, Input, VStack } from "@chakra-ui/react"
 import { CodeEditorModal } from "components/CodeEditor/CodeEditorModal"
-import Label from "components/form/Item"
+import { Form } from "components/form/Form"
+import FormItem from "components/form/Item"
 import { cloneDeep, isEmpty, set } from "lodash"
 import { useEffect, useState } from "react"
 import { PanelQuery } from "types/dashboard"
@@ -30,9 +31,8 @@ const HttpQueryEditor = ({ datasource, query, onChange }: DatasourceEditorProps)
     }, [])
 
     return (<>
-        <VStack alignItems="left" spacing="1">
-            <HStack>
-                <Label width="200px">URL</Label>
+        <Form spacing={1}>
+            <FormItem title="URL" labelWidth="200px">
                 <Input
                     value={tempQuery.metrics}
                     onChange={(e) => {
@@ -42,22 +42,23 @@ const HttpQueryEditor = ({ datasource, query, onChange }: DatasourceEditorProps)
                     placeholder="Remote http address"
                     size="sm"
                 />
-            </HStack>
-            <HStack>
-                <Label width="200px" desc="If you want insert some imformation before request is sent to remote, e.g current time, just edit this function">Request transform</Label>
+            </FormItem>
+
+            <FormItem title="Request transform" labelWidth="200px" desc="If you want insert some imformation before request is sent to remote, e.g current time, just edit this function">
                 <CodeEditorModal value={tempQuery.data.transformRequest} onChange={v => {
                     tempQuery.data.transformRequest = v
                     onChange(tempQuery)
                 }} />
-            </HStack>
-            <HStack>
-                <Label width="200px" desc="The http request result is probably not compatible with your visualization panels, here you can define a function to transform the result">Result transform</Label>
+            </FormItem>
+
+            <FormItem title="Result transform" labelWidth="200px" desc="The http request result is probably not compatible with your visualization panels, here you can define a function to transform the result">
                 <CodeEditorModal value={tempQuery.data.transformResult} onChange={v => {
                     tempQuery.data.transformResult = v
                     onChange(tempQuery)
                 }} />
-            </HStack>
-        </VStack>
+            </FormItem>
+
+        </Form>
     </>)
 }
 

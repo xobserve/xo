@@ -1,5 +1,6 @@
 import { Box, HStack, Input, Select, Switch, Tag, TagCloseButton, TagLabel, Text, useToast, VStack } from "@chakra-ui/react"
-import { Form, FormItem } from "components/form/Form"
+import { Form } from "components/form/Form"
+import FormItem from "components/form/Item"
 import { useEffect, useState } from "react"
 import { Dashboard, DashboardLayout } from "types/dashboard"
 
@@ -40,9 +41,13 @@ const GeneralSettings = ({ dashboard, onChange }: Props) => {
     }
 
     return (<>
-        <Form>
-            <FormItem title="Title">
-                <Input size="sm" value={title} onChange={e => setTitle(e.currentTarget.value)} onBlur={() => onChange((draft:Dashboard)  => {draft.title = title}) } mt="1" />
+        <Form spacing={2} sx={{
+            '.form-item-label': {
+                width: '220px'
+            }
+        }}>
+            <FormItem title="Title" >
+                <Input size="sm" value={title} onChange={e => setTitle(e.currentTarget.value)} onBlur={() => onChange((draft:Dashboard)  => {draft.title = title}) } />
             </FormItem>
             <FormItem title="Description">
                 <Input size="sm" value={desc} onChange={e => setDesc(e.currentTarget.value)} onBlur={() =>  onChange((draft:Dashboard)  => {draft.data.description = desc}) } mt="1" />
@@ -52,14 +57,14 @@ const GeneralSettings = ({ dashboard, onChange }: Props) => {
                 <Text textStyle="annotation">Make this dashboard editable to anyone who has edit permissions. </Text>
                 <Switch isChecked={dashboard.data.editable} onChange={e => { dashboard.data.editable = e.currentTarget.checked; onChange() }} mt="1" />
             </Box> */}
-            <FormItem title="Shared tooltip" desc="Show tooltips at the same position across all panels">
-                <Switch isChecked={dashboard.data.sharedTooltip} onChange={e =>  onChange((draft:Dashboard)  => {draft.data.sharedTooltip =  e.currentTarget.checked}) } mt="1" />
+            <FormItem title="Shared tooltip" desc="Show tooltips at the same position across all panels" >
+                <Switch isChecked={dashboard.data.sharedTooltip} onChange={e =>  onChange((draft:Dashboard)  => {draft.data.sharedTooltip =  e.currentTarget.checked}) }  />
             </FormItem>
 
             <FormItem title="Hide global variables">
                 <Input size="sm" value={hidingVars} onChange={e => setHidingVars(e.currentTarget.value)} onBlur={() => onChange((draft:Dashboard)  => {draft.data.hidingVars = hidingVars})} mt="1" placeholder="enter global variables names, separated with ',' . e.g: app,env" />
             </FormItem>
-            <FormItem title="Tags" desc="Tag a dashboard and group it into a same collection for searching">
+            <FormItem title="Tags" desc="Tag a dashboard and group it into a same collection for searching" >
                 <HStack>
                     {
                         dashboard.data.tags?.map(t => <Tag>
@@ -69,7 +74,7 @@ const GeneralSettings = ({ dashboard, onChange }: Props) => {
                             }} />
                         </Tag>)
                     }
-                    <Input width="200px" size="sm" value={tag} onChange={e => setTag(e.currentTarget.value)} mt="1" placeholder="new tag(press enter to add)" onKeyPress={e => {
+                    <Input width="220px" size="sm" value={tag} onChange={e => setTag(e.currentTarget.value)} mt="1" placeholder="new tag(press enter to add)" onKeyPress={e => {
                         if (e.key === 'Enter') {
                            addTag()
                         }
@@ -77,7 +82,7 @@ const GeneralSettings = ({ dashboard, onChange }: Props) => {
                 </HStack>
             </FormItem>
 
-            <FormItem title="Panels layout" desc="Auto place panels in horizontal or vertical direction, when set to random, you can place panels anywhere">
+            <FormItem title="Panels layout" desc="Auto place panels in horizontal or vertical direction, when set to random, you can place panels anywhere" >
                 <Select value={dashboard.data.layout} onChange={e => {
                     const v = e.currentTarget.value 
                     onChange((draft:Dashboard) => {draft.data.layout = v as DashboardLayout})
