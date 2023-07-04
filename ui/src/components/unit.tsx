@@ -168,7 +168,12 @@ export const UnitPicker = ({ type, value, onChange,size="md" }: Props) => {
 }
 
 
-export const formatUnit = (v: number, units: Unit[], decimal: number) => {
+export const formatUnit = (v0: number, units: Unit[], decimal: number) => {
+    let v = v0 
+    if (v0 < 0) {
+        v = -1 * v0
+    }
+
     if (isEmpty(units)) {
         return  round(v, decimal)
     }
@@ -213,7 +218,11 @@ export const formatUnit = (v: number, units: Unit[], decimal: number) => {
 
     const unit = units[index]
     const res = calcValue(v, unit)
-    return round(res,decimal) + unit.unit
+    if (v0 <0) {
+        return round(res,decimal) * -1 + unit.unit
+    } else {
+        return round(res,decimal) + unit.unit
+    }
 }
 
 const calcValue = (v, unit: Unit) => {

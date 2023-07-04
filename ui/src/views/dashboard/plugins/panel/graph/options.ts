@@ -71,7 +71,6 @@ export const parseOptions = (config: PanelProps,rawData: SeriesData[], colorMode
         }
         
         const unitsOverride = override?.overrides.find((o) => o.type == "Series.unit")?.value
-        console.log("here33333", d.name,unitsOverride, override)
         let scale = 'y'
         if (unitsOverride) {
             let unitExist = false

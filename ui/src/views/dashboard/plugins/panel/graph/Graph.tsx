@@ -1,11 +1,11 @@
 import UplotReact from "components/uPlot/UplotReact"
 import { memo, useCallback, useEffect, useMemo, useRef, useState } from "react"
-import { OverrideItem, PanelProps } from "types/dashboard"
+import { OverrideItem, Panel, PanelProps } from "types/dashboard"
 import 'uplot/dist/uPlot.min.css';
 import uPlot from "uplot"
 
 import { parseOptions } from './options';
-import { isEmpty } from "lodash";
+import { cloneDeep, isEmpty } from "lodash";
 
 import Tooltip from "./Tooltip";
 import SeriesTable, { seriesTableMode } from "src/views/dashboard/plugins/panel/graph/Tooltip/SeriesTable";
@@ -24,18 +24,18 @@ interface GraphPanelProps extends PanelProps {
 }
 
 const GraphPanel = memo((props: GraphPanelProps) => {
-    const inactiveKey =  PanelInactiveKey + props.dashboardId + '-' +  props.panel.id
-    const [inactiveSeries, setInactiveSeries] = useState(storage.get(inactiveKey)??[])
+    const inactiveKey = PanelInactiveKey + props.dashboardId + '-' + props.panel.id
+    const [inactiveSeries, setInactiveSeries] = useState(storage.get(inactiveKey) ?? [])
     const [uplot, setUplot] = useState<uPlot>(null)
     const { colorMode } = useColorMode()
-    
+
     useEffect(() => {
-        if (inactiveSeries.length >  0) {
+        if (inactiveSeries.length > 0) {
             storage.set(inactiveKey, inactiveSeries)
         } else {
             storage.remove(inactiveKey)
         }
-    },[inactiveSeries])
+    }, [inactiveSeries])
 
 
 
@@ -56,7 +56,7 @@ const GraphPanel = memo((props: GraphPanelProps) => {
         let o;
         data.map((frame, i) => {
             frame.rawName = frame.name
-            const override:OverrideItem = props.panel.overrides.find((o) => o.target == frame.name)
+            const override: OverrideItem = props.panel.overrides.find((o) => o.target == frame.name)
             const name = override?.overrides.find((o) => o.type == "Series.name")?.value
             if (name) {
                 frame.name = name
@@ -68,6 +68,16 @@ const GraphPanel = memo((props: GraphPanelProps) => {
             } else {
                 frame.color = colors[i % colors.length]
             }
+
+            // const negativeY = override?.overrides.find(o => o.type == 'Series.negativeY')
+            // if (negativeY) {
+            //     const vals = frame.fields[1].values
+            //     for (let i = 0; i < vals.length; i++) {
+            //         if (vals[i] != null) {
+            //             vals[i] *= -1;
+            //         }
+            //     }
+            // }
         })
 
         o = parseOptions(props, data, colorMode, inactiveSeries)
@@ -119,7 +129,7 @@ const GraphPanel = memo((props: GraphPanelProps) => {
                         // s1.show = true
                         uplot.setSeries(j, { show: true })
                     })
-           
+
                 }
             }
         } else {
@@ -145,43 +155,43 @@ const GraphPanel = memo((props: GraphPanelProps) => {
                 })
             }
         }
-        
-    },[uplot,options.series,inactiveSeries])
+
+    }, [uplot, options.series, inactiveSeries])
 
 
     const onChartCreate = useCallback((chart) => { setUplot((chart)); props.sync?.sub(chart) }, [props.sync])
 
     return (
         <>{
-            isEmpty(props.data) ? <Center height="100%">No data</Center>:
+            isEmpty(props.data) ? <Center height="100%">No data</Center> :
 
-            <Box h="100%" className="panel-graph">
-                {!isEmpty(props?.panel.plugins.graph.axis?.label) && <Text fontSize="sm" position="absolute" ml="3" mt="-1" className="color-text">{props.panel.plugins.graph.axis.label}</Text>}
-                {options && <GraphLayout width={props.width} height={props.height} legend={props.panel.plugins.graph.legend.mode == "hidden" ? null : <SeriesTable placement={props.panel.plugins.graph.legend.placement} width={props.panel.plugins.graph.legend.width} props={props} data={data} mode={seriesTableMode.Legend} onSelect={onSelectSeries} panelType={props.panel.type} inactiveSeries={inactiveSeries} />}>
-                    {(vizWidth: number, vizHeight: number) => {
-                        if (uplot) {
-                            if (props.width != vizWidth || props.height != vizHeight) {
-                                uplot.setSize({ width: vizWidth, height: vizHeight })
+                <Box h="100%" className="panel-graph">
+                    {!isEmpty(props?.panel.plugins.graph.axis?.label) && <Text fontSize="sm" position="absolute" ml="3" mt="-1" className="color-text">{props.panel.plugins.graph.axis.label}</Text>}
+                    {options && <GraphLayout width={props.width} height={props.height} legend={props.panel.plugins.graph.legend.mode == "hidden" ? null : <SeriesTable placement={props.panel.plugins.graph.legend.placement} width={props.panel.plugins.graph.legend.width} props={props} data={data} mode={seriesTableMode.Legend} onSelect={onSelectSeries} panelType={props.panel.type} inactiveSeries={inactiveSeries} />}>
+                        {(vizWidth: number, vizHeight: number) => {
+                            if (uplot) {
+                                if (props.width != vizWidth || props.height != vizHeight) {
+                                    uplot.setSize({ width: vizWidth, height: vizHeight })
+                                }
                             }
-                        }
 
-                        options.width = vizWidth
-                        options.height = vizHeight
-                        return (options && <UplotReact
-                            options={options}
-                            data={transformDataToUplot(data)}
-                            onDelete={(chart: uPlot) => { }}
-                            onCreate={onChartCreate}
-                        >
-                            {props.panel.plugins.graph.tooltip.mode != 'hidden' && <Tooltip props={props} options={options} data={data} inactiveSeries={inactiveSeries}/>}
-                        </UplotReact>
-                        )
-                    }}
-
+                            options.width = vizWidth
+                            options.height = vizHeight
+                            return (options && <UplotReact
+                                options={options}
+                                data={transformDataToUplot(data, props.panel)}
+                                onDelete={(chart: uPlot) => { }}
+                                onCreate={onChartCreate}
+                            >
+                                {props.panel.plugins.graph.tooltip.mode != 'hidden' && <Tooltip props={props} options={options} data={data} inactiveSeries={inactiveSeries} />}
+                            </UplotReact>
+                            )
+                        }}
 
 
-                </GraphLayout>}
-            </Box>}
+
+                    </GraphLayout>}
+                </Box>}
         </>
     )
 })
@@ -189,7 +199,7 @@ const GraphPanel = memo((props: GraphPanelProps) => {
 export default GraphPanel
 
 
-const transformDataToUplot = (data: SeriesData[]) => {
+const transformDataToUplot = (data: SeriesData[], panel: Panel) => {
     const transformed = []
 
     // push x-axes data first
@@ -202,7 +212,19 @@ const transformDataToUplot = (data: SeriesData[]) => {
 
     // push y-axes series data
     for (const d of data) {
-        transformed.push(d.fields[1].values)
+        const override: OverrideItem = panel.overrides.find((o) => o.target == d.rawName)
+        const negativeY = override?.overrides.find(o => o.type == 'Series.negativeY')
+        if (negativeY) {
+            const vals = cloneDeep(d.fields[1].values)
+            for (let i = 0; i < vals.length; i++) {
+                if (vals[i] != null) {
+                    vals[i] *= -1;
+                }
+            }
+            transformed.push(vals)
+        } else {
+            transformed.push(d.fields[1].values)
+        }
     }
 
     return transformed
