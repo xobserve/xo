@@ -37,6 +37,7 @@ export const parseOptions = (config: PanelProps,rawData: SeriesData[], colorMode
     })
 
     rawData.forEach((d, i) => {
+        const opacity = config.panel.plugins.graph.styles?.fillOpacity / 100
         series.push({
             show: inactiveSeries.includes(d.name) ? false : true,
             label: d.name,
@@ -49,7 +50,7 @@ export const parseOptions = (config: PanelProps,rawData: SeriesData[], colorMode
             },
             stroke: d.color,
             width: config.panel.plugins.graph.styles?.style == "points" ? 0 : config.panel.plugins.graph.styles?.lineWidth,
-            fill: config.panel.plugins.graph.styles?.style == "points" ? null : (config.panel.plugins.graph.styles?.gradientMode == "none" ? d.color : fill(d.color, config.panel.plugins.graph.styles?.fillOpacity / 100)),
+            fill: config.panel.plugins.graph.styles?.style == "points" ? null : (config.panel.plugins.graph.styles?.gradientMode == "none" ? colorManipulator.alpha(d.color ?? '', opacity) : fill(d.color, opacity)),
             spanGaps: config.panel.plugins.graph.styles.connectNulls,
             paths: config.panel.plugins.graph.styles?.style == "bars" ? uPlot.paths.bars({
                 size: [BarWidthFactor, BardMaxWidth],
