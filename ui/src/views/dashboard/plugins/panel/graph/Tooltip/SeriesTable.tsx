@@ -94,13 +94,19 @@ const SeriesTable = memo(({ props, data, nearestSeries, filterIdx, mode, onSelec
         const unitsOverride =  override?.overrides.find((o) => o.type == "Series.unit")
         let units = valueSettings.units
         let unitsType = valueSettings.unitsType
+        let decimal = valueSettings.decimal
         if (unitsOverride) {
             units = unitsOverride.value.units
             unitsType = unitsOverride.value.unitsType
         }
+        const decimalOverride = override?.overrides.find((o) => o.type == "Series.decimal")
+        if (decimalOverride) {
+            decimal = decimalOverride.value.decimal
+        }
 
         v.units = units 
         v.unitsType = unitsType
+        v.decimal = decimal
     }
 
 
@@ -146,8 +152,8 @@ const SeriesTable = memo(({ props, data, nearestSeries, filterIdx, mode, onSelec
                                         </HStack>
                                     </Td>
                                     {v.value.map((v0, i) => <Td textAlign="center" fontSize="0.75rem" py="1" px="1">{v0[1] ? (v.unitsType != "none"
-                                        ? formatUnit(v0[1], v.units, valueSettings.decimal)
-                                        : round(v0[1], valueSettings.decimal)) : v0[1]}</Td>)}
+                                        ? formatUnit(v0[1], v.units, v.decimal)
+                                        : round(v0[1], v.decimal)) : v0[1]}</Td>)}
                                 </Tr>
                             )
                         })}

@@ -82,6 +82,12 @@ export const parseOptions = (config: PanelProps,rawData: SeriesData[], colorMode
                 }
             }
 
+            let decimal = config.panel.plugins.graph.value.decimal
+            const decimalOverride = override?.overrides.find((o) => o.type == "Series.decimal")?.value
+            if (decimalOverride != undefined) {
+                decimal = decimalOverride
+            }
+
             if (!unitExist) {
                 yAxis.push({
                     grid: {
@@ -98,7 +104,7 @@ export const parseOptions = (config: PanelProps,rawData: SeriesData[], colorMode
                     size: ((self, values, axisIdx) => {
                         return calculateAxisSize(self, values, axisIdx);
                     }),
-                    values: (u, vals) => vals.map(v => { return formatUnit(v, unitsOverride?.units,config.panel.plugins.graph.value.decimal) ?? round(v, config.panel.plugins.graph.value.decimal) }),
+                    values: (u, vals) => vals.map(v => { return formatUnit(v, unitsOverride?.units, decimal) ?? round(v, decimal) }),
                     units: unitsOverride,
                     side: 1
                 })
@@ -385,3 +391,6 @@ export const pointsFilter = (u, seriesIdx, show, gaps) => {
 
     return filtered.length ? filtered : null;
   }
+
+
+  

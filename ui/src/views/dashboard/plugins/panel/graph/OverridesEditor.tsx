@@ -1,7 +1,7 @@
 import { Box, Button, HStack, Select, Tooltip } from "@chakra-ui/react";
 import RadionButtons from "components/RadioButtons";
 import { ColorPicker } from "components/color-picker";
-import { EditorInputItem, EditorSliderItem } from "components/editor/EditorItem";
+import { EditorInputItem, EditorNumberItem, EditorSliderItem } from "components/editor/EditorItem";
 import { UnitPicker } from "components/unit";
 import { OverrideRule, Panel } from "types/dashboard";
 import { colors } from "utils/colors";
@@ -33,6 +33,8 @@ const GraphOverridesEditor = ({ override, onChange }: Props) => {
             return <EditorSliderItem value={override.value} min={0} max={100} step={1} onChange={onChange} />
         case 'Series.negativeY':
             return <></>
+        case 'Series.decimal':
+            return <EditorNumberItem value={override.value} min={0} max={5} step={1} onChange={onChange} />
         default:
             return <></>
     }
@@ -41,4 +43,4 @@ const GraphOverridesEditor = ({ override, onChange }: Props) => {
 
 export default GraphOverridesEditor
 
-export const GraphOverridesRules =  ['Series.style', 'Series.name', 'Series.unit','Series.color', 'Series.fill', 'Series.negativeY' ]
+export const GraphOverridesRules =  ['Series.style', 'Series.name', 'Series.unit', 'Series.decimal', 'Series.color', 'Series.fill', 'Series.negativeY' ]
