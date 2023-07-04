@@ -1,6 +1,6 @@
 import UplotReact from "components/uPlot/UplotReact"
 import { memo, useCallback, useEffect, useMemo, useRef, useState } from "react"
-import { PanelProps } from "types/dashboard"
+import { OverrideItem, PanelProps } from "types/dashboard"
 import 'uplot/dist/uPlot.min.css';
 import uPlot from "uplot"
 
@@ -15,6 +15,8 @@ import { colors } from "utils/colors";
 import { SeriesData } from "types/seriesData";
 import storage from "utils/localStorage";
 import { PanelInactiveKey } from "src/data/storage-keys";
+import useBus from "use-bus";
+import { ActiveSeriesEvent } from "src/data/bus-events";
 
 
 interface GraphPanelProps extends PanelProps {
@@ -52,26 +54,26 @@ const GraphPanel = memo((props: GraphPanelProps) => {
 
     const options = useMemo(() => {
         let o;
-        let activeExist = false
-
         data.map((frame, i) => {
-            frame.color = colors[i % colors.length]
-            // if (frame.name == activeSeries) {
-            //     activeExist = true
-            // }
+            frame.rawName = frame.name
+            const override:OverrideItem = props.panel.overrides.find((o) => o.target == frame.name)
+            const name = override?.overrides.find((o) => o.type == "Series.name")?.value
+            if (name) {
+                frame.name = name
+            }
+
+            const color = override?.overrides.find((o) => o.type == "Series.color")?.value
+            if (color) {
+                frame.color = color
+            } else {
+                frame.color = colors[i % colors.length]
+            }
         })
-
-
-        // if (!activeExist) {
-        //     setActiveSeries([])
-        // }
 
         o = parseOptions(props, data, colorMode, inactiveSeries)
 
         return o
     }, [props.panel, props.data, colorMode])
-
-
 
 
     const onSelectSeries = useCallback((s, i, pressShift) => {
@@ -148,7 +150,7 @@ const GraphPanel = memo((props: GraphPanelProps) => {
 
 
     const onChartCreate = useCallback((chart) => { setUplot((chart)); props.sync?.sub(chart) }, [props.sync])
-    
+
     return (
         <>{
             isEmpty(props.data) ? <Center height="100%">No data</Center>:

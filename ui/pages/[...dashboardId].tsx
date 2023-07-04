@@ -29,22 +29,25 @@ const DashboardPage = () => {
     const load = async path => {
         const res = await requestApi.get(`/team/sidemenu/current`)
         let menuitem;
-        for (const item of res.data.data) {
-            if (item.url == path) {
-                menuitem = item
-            } else {
-                if (item.children) {
-                    for (const child of item.children) {
-                        if (child.url == path) {
-                            menuitem = child
-                            break
+        if (res.data) {
+            for (const item of res.data.data) {
+                if (item.url == path) {
+                    menuitem = item
+                } else {
+                    if (item.children) {
+                        for (const child of item.children) {
+                            if (child.url == path) {
+                                menuitem = child
+                                break
+                            }
                         }
                     }
                 }
+    
+                if (menuitem) break
             }
-
-            if (menuitem) break
         }
+        
 
         if (!menuitem) {
             setError('Dashboard not found')

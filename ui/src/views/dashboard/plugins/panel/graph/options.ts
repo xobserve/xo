@@ -1,8 +1,8 @@
-import { round, isEmpty, isNumber } from "lodash";
+import { round, isEmpty, isNumber, isEqual, over } from "lodash";
 import { ColorMode } from "src/data/constants";
 import * as colorManipulator from 'components/uPlot/colorManipulator';
 import { canvasCtx } from 'src/views/App';
-import { PanelProps } from "types/dashboard";
+import { OverrideItem, PanelProps } from "types/dashboard";
 import uPlot from "uplot";
 import { systemDateFormats } from "utils/datetime/formats";
 import { dateTimeFormat } from "utils/datetime/formatter";
@@ -36,11 +36,82 @@ export const parseOptions = (config: PanelProps,rawData: SeriesData[], colorMode
 
     })
 
+    const yAxis = [{
+        grid: {
+            show: config.panel.plugins.graph.axis?.showGrid,
+            width: 0.5,
+            stroke: axesColor
+        },
+        ticks: {
+            size: 4
+        },
+        scale: 'y',
+        stroke: textColor,
+        space: axisSpace,
+        size: ((self, values, axisIdx) => {
+            return calculateAxisSize(self, values, axisIdx);
+        }),
+        values: (u, vals) => vals.map(v => { return formatUnit(v, config.panel.plugins.graph.value.units,config.panel.plugins.graph.value.decimal) ?? round(v, config.panel.plugins.graph.value.decimal) }),
+        units: config.panel.plugins.graph.value.units,
+        side: 3
+    }]
+
     rawData.forEach((d, i) => {
-        const opacity = config.panel.plugins.graph.styles?.fillOpacity / 100
+        const override:OverrideItem = config.panel.overrides.find((o) => o.target == d.rawName)
+        let opacity = config.panel.plugins.graph.styles.fillOpacity / 100
+        const fillOverride =  override?.overrides.find((o) => o.type == "Series.fill")
+        if (fillOverride) {
+            opacity = fillOverride.value / 100
+        }
+
+        let style = config.panel.plugins.graph.styles.style
+        let styleOverride = override?.overrides.find((o) => o.type == "Series.style")?.value
+        if (styleOverride) {
+            style = styleOverride
+        }
+        
+        const unitsOverride = override?.overrides.find((o) => o.type == "Series.unit")?.value
+        console.log("here33333", d.name,unitsOverride, override)
+        let scale = 'y'
+        if (unitsOverride) {
+            let unitExist = false
+            for (const axis of yAxis) {
+                if (isEqual(unitsOverride, axis.units)) {
+                    unitExist = true
+                    scale = axis.scale
+                }
+            }
+
+            if (!unitExist) {
+                yAxis.push({
+                    grid: {
+                        show: config.panel.plugins.graph.axis?.showGrid,
+                        width: 0.5,
+                        stroke: axesColor
+                    },
+                    ticks: {
+                        size: 4
+                    },
+                    scale: d.rawName,
+                    stroke: textColor,
+                    space: axisSpace,
+                    size: ((self, values, axisIdx) => {
+                        return calculateAxisSize(self, values, axisIdx);
+                    }),
+                    values: (u, vals) => vals.map(v => { return formatUnit(v, unitsOverride.units,config.panel.plugins.graph.value.decimal) ?? round(v, config.panel.plugins.graph.value.decimal) }),
+                    units: unitsOverride,
+                    side: 1
+                })
+
+                scale = d.rawName
+            }
+
+
+        }
+ 
         series.push({
             show: inactiveSeries.includes(d.name) ? false : true,
-            label: d.name,
+            label:  d.name,
             points: {
                 show: (config.panel.plugins.graph.styles.showPoints == "always" || config.panel.plugins.graph.styles?.style == "points") ? true : (config.panel.plugins.graph.styles.showPoints =="auto" ? null :false),
                 size: config.panel.plugins.graph.styles?.pointSize,
@@ -52,13 +123,16 @@ export const parseOptions = (config: PanelProps,rawData: SeriesData[], colorMode
             width: config.panel.plugins.graph.styles?.style == "points" ? 0 : config.panel.plugins.graph.styles?.lineWidth,
             fill: config.panel.plugins.graph.styles?.style == "points" ? null : (config.panel.plugins.graph.styles?.gradientMode == "none" ? colorManipulator.alpha(d.color ?? '', opacity) : fill(d.color, opacity)),
             spanGaps: config.panel.plugins.graph.styles.connectNulls,
-            paths: config.panel.plugins.graph.styles?.style == "bars" ? uPlot.paths.bars({
+            paths: style == "bars" ? uPlot.paths.bars({
                 size: [BarWidthFactor, BardMaxWidth],
                 align: 0,
             }) : null,
+            scale:  scale,
         })
     })
 
+
+    // console.log("here33333:", series, ya)
 
     return {
         width: config.width,
@@ -112,23 +186,7 @@ export const parseOptions = (config: PanelProps,rawData: SeriesData[], colorMode
                 values: formatTime,
                 stroke: textColor,
             },
-            {
-                grid: {
-                    show: config.panel.plugins.graph.axis?.showGrid,
-                    width: 0.5,
-                    stroke: axesColor
-                },
-                ticks: {
-                    size: 4
-                },
-                scale: 'y',
-                stroke: textColor,
-                space: axisSpace,
-                size: ((self, values, axisIdx) => {
-                    return calculateAxisSize(self, values, axisIdx);
-                }),
-                values: (u, vals) => vals.map(v => { return formatUnit(v, config.panel.plugins.graph.value.units,config.panel.plugins.graph.value.decimal) ?? round(v, config.panel.plugins.graph.value.decimal) })
-            },
+            ...yAxis
         ]
     }
 }
@@ -255,6 +313,7 @@ function calculateSpace(self: uPlot, axisIdx: number, scaleMin: number, scaleMax
   
     const axis = self.axes[axisIdx];
     const scale = self.scales[axis.scale!];
+    
 
     const defaultSpacing = axis.scale== 'x' ? 40 : 40;
     // for axis left & right

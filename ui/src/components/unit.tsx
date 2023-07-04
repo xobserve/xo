@@ -8,11 +8,12 @@ interface Props {
     type: UnitsType
     value: Unit[]
     onChange: any
+    size?: "sm" | "md" | "lg"
 }
 
 
 
-export const UnitPicker = ({ type, value, onChange }: Props) => {
+export const UnitPicker = ({ type, value, onChange,size="md" }: Props) => {
     const [unitType, setUnitTYpe] = useState(type)
     const [units, setUnits] = useState(value)
     const onAddUnit = () => {
@@ -126,7 +127,7 @@ export const UnitPicker = ({ type, value, onChange }: Props) => {
     return (
         <>
             <HStack>
-                <Select value={unitType} onChange={e => onChangeUnitType(e.currentTarget.value)}>
+                <Select size={size} value={unitType} onChange={e => onChangeUnitType(e.currentTarget.value)}>
                     <option value="none">None</option>
                     <option value="percent">Percent: 1 -&gt; 100%</option>
                     <option value="percent%">Percent: 1 -&gt; 1%</option>

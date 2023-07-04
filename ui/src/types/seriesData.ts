@@ -1,6 +1,7 @@
 export interface SeriesData {
     id: number;
     name?: string;
+    rawName?: string
     fields: Field[]; // All fields of equal length
 
     // The number of rows

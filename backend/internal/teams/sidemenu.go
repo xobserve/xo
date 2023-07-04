@@ -195,9 +195,11 @@ func GetCurrentSidemenu(c *gin.Context) {
 
 	menu, err := QuerySideMenu(u.SideMenu, 0)
 	if err != nil {
-		logger.Warn("query sidemenu error", "error", err)
-		c.JSON(http.StatusInternalServerError, common.RespError(err.Error()))
-		return
+		if err != sql.ErrNoRows {
+			logger.Warn("query sidemenu error", "error", err)
+			c.JSON(http.StatusInternalServerError, common.RespError(err.Error()))
+			return
+		}
 	}
 
 	c.JSON(http.StatusOK, common.RespSuccess(menu))
