@@ -169,13 +169,14 @@ export const UnitPicker = ({ type, value, onChange,size="md" }: Props) => {
 
 
 export const formatUnit = (v0: number, units: Unit[], decimal: number) => {
+    console.log("here333333:",v0,units)
     let v = v0 
     if (v0 < 0) {
         v = -1 * v0
     }
 
     if (isEmpty(units)) {
-        return  round(v, decimal)
+        return  v0 < 0 ?  round(v, decimal) * -1 : round(v, decimal)
     }
 
     if (v == 0) {

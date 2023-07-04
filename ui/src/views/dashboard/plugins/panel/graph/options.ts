@@ -72,7 +72,8 @@ export const parseOptions = (config: PanelProps,rawData: SeriesData[], colorMode
         
         const unitsOverride = override?.overrides.find((o) => o.type == "Series.unit")?.value
         let scale = 'y'
-        if (unitsOverride) {
+        if (unitsOverride != undefined) {
+
             let unitExist = false
             for (const axis of yAxis) {
                 if (isEqual(unitsOverride, axis.units)) {
@@ -97,7 +98,7 @@ export const parseOptions = (config: PanelProps,rawData: SeriesData[], colorMode
                     size: ((self, values, axisIdx) => {
                         return calculateAxisSize(self, values, axisIdx);
                     }),
-                    values: (u, vals) => vals.map(v => { return formatUnit(v, unitsOverride.units,config.panel.plugins.graph.value.decimal) ?? round(v, config.panel.plugins.graph.value.decimal) }),
+                    values: (u, vals) => vals.map(v => { return formatUnit(v, unitsOverride?.units,config.panel.plugins.graph.value.decimal) ?? round(v, config.panel.plugins.graph.value.decimal) }),
                     units: unitsOverride,
                     side: 1
                 })
@@ -107,7 +108,7 @@ export const parseOptions = (config: PanelProps,rawData: SeriesData[], colorMode
 
 
         }
- 
+        
         series.push({
             show: inactiveSeries.includes(d.name) ? false : true,
             label:  d.name,

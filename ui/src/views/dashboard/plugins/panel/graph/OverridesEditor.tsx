@@ -20,13 +20,15 @@ const GraphOverridesEditor = ({ override, onChange }: Props) => {
             return <EditorInputItem value={override.value} onChange={onChange} size="sm" placeholder="change series name" />
         case 'Series.unit':
             return <UnitPicker size="sm" type={override.value.unitsType} value={override.value.units} onChange={
-                (units, type) => onChange({
+                (units, type) => {
+                    console.log("here33333:",units,type)
+                    onChange({
                     unitsType: type, 
                     units: units
-                })
+                })}
             } />
         case 'Series.color':
-            return <ColorPicker presetColors={colors} color={override.value} onChange={v => onChange(v.hex)} ><Button size="sm" width="fit-content" bg={override.value}>Pick color</Button></ColorPicker>
+            return <ColorPicker presetColors={colors} color={override.value} onChange={v => onChange(v.hex)} ><Button size="sm" width="fit-content" bg={override.value} _hover={{bg: override.value}}>Pick color</Button></ColorPicker>
         case 'Series.fill':
             return <EditorSliderItem value={override.value} min={0} max={100} step={1} onChange={onChange} />
         case 'Series.negativeY':
