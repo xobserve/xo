@@ -29,7 +29,9 @@ export const initDashboard:Dashboard = {
         },
         layout: DashboardLayout.Vertical,
         allowPanelsOverlap: false,
-        enableUnsavePrompt: true
+        enableUnsavePrompt: true,
+        enableAutoSave: false,
+        autoSaveInterval: 120
     },
     ownedBy: globalTeamId,
 }

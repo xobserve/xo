@@ -31,6 +31,8 @@ export interface DashboardData {
     layout: DashboardLayout
     allowPanelsOverlap: boolean
     enableUnsavePrompt: boolean
+    enableAutoSave: boolean
+    autoSaveInterval: number
 }
 
 export interface Panel {

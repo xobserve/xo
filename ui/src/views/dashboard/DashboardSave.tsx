@@ -1,7 +1,7 @@
 import { Alert, AlertDescription, AlertIcon, AlertTitle, Box, Button, Center, Drawer, DrawerBody, DrawerContent, DrawerHeader, DrawerOverlay, Flex, HStack, IconButton, Input, Menu, MenuButton, MenuItem, MenuList, Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay, StackDivider, Tag, Text, Tooltip, useColorMode, useDisclosure, useToast, VStack } from "@chakra-ui/react"
 import { useLeavePageConfirm } from "hooks/useLeavePage"
 
-import { useEffect, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import { FaRegSave } from "react-icons/fa"
 import { Dashboard } from "types/dashboard"
 import useKeyboardJs from 'react-use/lib/useKeyboardJs';
@@ -54,9 +54,45 @@ const DashboardSave = ({ dashboard }: Props) => {
         }
     }, [dashboard])
 
+    const autoSaveH = useRef(null)
+    useEffect(() => {
+        if (dashboard.data.enableAutoSave) {
+            if (edit) {
+                toast({
+                    title: "Auto save is not available in edit panel mode.",
+                    status: "warning",
+                    duration: 5000,
+                    isClosable: true,
+                })
+                return
+            }
+            autoSaveH.current = setInterval(() => {
+                onSave(true)
+            }, dashboard.data.autoSaveInterval * 1000)
+        }
+
+
+        return () => {
+            clearInterval(autoSaveH.current)
+            autoSaveH.current = null
+        }
+    }, [dashboard, inPreview, edit])
+
+
     const toast = useToast()
-    const onSave = async () => {
-        if (inPreview && updateChanges.trim() == "") {
+    const onSave = async (autoSave) => {
+        const changeMsg = autoSave ? "Auto save" : updateChanges
+        if (inPreview && autoSave) {
+            toast({
+                title: "Auto save is not available in history preview mode.",
+                status: "warning",
+                duration: 3000,
+                isClosable: true,
+            })
+            return
+        }
+
+        if (inPreview && changeMsg.trim() == "") {
             toast({
                 title: "A save message must be provided when saving in history preview mode.",
                 status: "warning",
@@ -65,9 +101,9 @@ const DashboardSave = ({ dashboard }: Props) => {
             })
             return
         }
-        await requestApi.post("/dashboard/save", { dashboard, changes: updateChanges })
+        await requestApi.post("/dashboard/save", { dashboard, changes: changeMsg })
         toast({
-            title: "Dashboard saved.",
+            title: `Dashboard ${autoSave? "auto " : ''}saved.`,
             status: "success",
             duration: 2000,
             isClosable: true,
@@ -158,13 +194,13 @@ const DashboardSave = ({ dashboard }: Props) => {
                     </ModalBody>
 
                     <ModalFooter width="100%" justifyContent="space-between">
-                            <Button variant="outline" onClick={onViewOpen}>View Changes</Button>
-                            <HStack spacing="0">
-                                <Button mr={3} onClick={onSaveClose}>
-                                    Close
-                                </Button>
-                                <Button variant='ghost' onClick={onSave} >Submit</Button>
-                            </HStack>
+                        <Button variant="outline" onClick={onViewOpen}>View Changes</Button>
+                        <HStack spacing="0">
+                            <Button mr={3} onClick={onSaveClose}>
+                                Close
+                            </Button>
+                            <Button variant='ghost' onClick={() => onSave(false)} >Submit</Button>
+                        </HStack>
 
                     </ModalFooter>
                 </ModalContent>
@@ -175,7 +211,7 @@ const DashboardSave = ({ dashboard }: Props) => {
                     <ModalCloseButton />
                     <ModalBody fontSize="0.8rem">
                         <Center mb="2"><Text textStyle="subTitle" fontWeight="bold">Only diff lines will be show, others will be folded</Text></Center>
-                        <ReactDiffViewer  oldValue={JSON.stringify(saved,null,2)} newValue={JSON.stringify(dashboard,null,2)} splitView={true} useDarkTheme={colorMode!="light" } />
+                        <ReactDiffViewer oldValue={JSON.stringify(saved, null, 2)} newValue={JSON.stringify(dashboard, null, 2)} splitView={true} useDarkTheme={colorMode != "light"} />
                     </ModalBody>
                 </ModalContent>
             </Modal>
