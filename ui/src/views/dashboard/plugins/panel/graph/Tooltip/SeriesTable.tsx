@@ -7,7 +7,7 @@ import { memo } from "react"
 import { FaChevronDown, FaChevronUp } from "react-icons/fa"
 import { useKeyPress } from "react-use"
 import { UpdatePanelEvent } from "src/data/bus-events"
-import { PanelProps, PanelType } from "types/dashboard"
+import { OverrideItem, PanelProps, PanelType } from "types/dashboard"
 import { ValueSetting } from "types/panel/plugins"
 import { SeriesData } from "types/seriesData"
 import { dispatch } from "use-bus"
@@ -54,10 +54,10 @@ const SeriesTable = memo(({ props, data, nearestSeries, filterIdx, mode, onSelec
         case seriesTableMode.Tooltip: // tooltip
             if (tooltipMode != "single") {
                 for (const d of data) {
-                    res.push({ name: d.name, value: [["", d.fields[1].values[filterIdx]]], color: d.color })
+                    res.push({ name: d.name, value: [["", d.fields[1].values[filterIdx]]], color: d.color,rawName: d.rawName })
                 }
             } else {
-                res.push({ name: nearestSeries.name, color: nearestSeries.color, value: [["", nearestSeries.fields[1].values[filterIdx]]] })
+                res.push({ name: nearestSeries.name, color: nearestSeries.color, value: [["", nearestSeries.fields[1].values[filterIdx]]], rawName: nearestSeries.rawName })
             }
             break
         case seriesTableMode.Legend: // legend
@@ -66,7 +66,7 @@ const SeriesTable = memo(({ props, data, nearestSeries, filterIdx, mode, onSelec
                 for (const calc of props.panel.plugins.graph.legend.valueCalcs) {
                     v.push([calc, calcValueOnArray(d.fields[1].values, calc)])
                 }
-                res.push({ name: d.name, value: v, color: d.color })
+                res.push({ name: d.name, value: v, color: d.color ,rawName: d.rawName})
             }
             break
         default:
@@ -89,7 +89,19 @@ const SeriesTable = memo(({ props, data, nearestSeries, filterIdx, mode, onSelec
     }
 
 
+    for (const v of values) {
+        const override:OverrideItem = props.panel.overrides.find((o) => o.target == v.rawName)
+        const unitsOverride =  override?.overrides.find((o) => o.type == "Series.unit")
+        let units = valueSettings.units
+        let unitsType = valueSettings.unitsType
+        if (unitsOverride) {
+            units = unitsOverride.value.units
+            unitsType = unitsOverride.value.unitsType
+        }
 
+        v.units = units 
+        v.unitsType = unitsType
+    }
 
 
     return (
@@ -133,9 +145,9 @@ const SeriesTable = memo(({ props, data, nearestSeries, filterIdx, mode, onSelec
 
                                         </HStack>
                                     </Td>
-                                    {v.value.map((v, i) => <Td textAlign="center" fontSize="0.75rem" py="1" px="1">{v[1] ? valueSettings.unitsType != "none"
-                                        ? formatUnit(v[1], valueSettings.units, valueSettings.decimal)
-                                        : round(v[1], valueSettings.decimal) : v[1]}</Td>)}
+                                    {v.value.map((v0, i) => <Td textAlign="center" fontSize="0.75rem" py="1" px="1">{v0[1] ? (v.unitsType != "none"
+                                        ? formatUnit(v0[1], v.units, valueSettings.decimal)
+                                        : round(v0[1], valueSettings.decimal)) : v0[1]}</Td>)}
                                 </Tr>
                             )
                         })}
@@ -146,4 +158,5 @@ const SeriesTable = memo(({ props, data, nearestSeries, filterIdx, mode, onSelec
 })
 
 export default SeriesTable
+
 
