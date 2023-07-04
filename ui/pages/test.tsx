@@ -1,10 +1,11 @@
-import { Box, Input } from "@chakra-ui/react"
+import { Box, HStack, Input, InputGroup, InputLeftAddon, Text } from "@chakra-ui/react"
 import { ColorModeSwitcher } from "components/ColorModeSwitcher"
 import { Form, FormSection } from "components/form/Form"
 import FormItem from "components/form/Item"
 import { useState } from "react"
 
 const TestPage = () => {
+  const [value, setValue] = useState([])
 
 
   return (<Box width="400px" ml="10" mt="10">

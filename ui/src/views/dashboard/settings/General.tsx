@@ -15,7 +15,7 @@ const GeneralSettings = ({ dashboard, onChange }: Props) => {
         if (!dashboard.data.tags) {
             dashboard.data.tags = []
         }
-    },[])
+    }, [])
     const [title, setTitle] = useState(dashboard.title)
     const [desc, setDesc] = useState(dashboard.data.description)
     const [hidingVars, setHidingVars] = useState(dashboard.data.hidingVars)
@@ -29,63 +29,64 @@ const GeneralSettings = ({ dashboard, onChange }: Props) => {
                 duration: 3000,
                 isClosable: true,
             })
-            return 
+            return
         }
 
         if (dashboard.data.tags?.includes(tag)) {
             setTag('')
             return
         }
-        onChange(draft => {draft.data.tags.push(tag)})
+        onChange(draft => { draft.data.tags.push(tag) })
         setTag('')
     }
 
     return (<>
-        <Form spacing={2} sx={{
+        <Form spacing={2} maxW="600px" sx={{
             '.form-item-label': {
-                width: '200px'
+                width: '180px'
             }
         }}>
             <FormItem title="Title" >
-                <Input size="sm" value={title} onChange={e => setTitle(e.currentTarget.value)} onBlur={() => onChange((draft:Dashboard)  => {draft.title = title}) } />
+                <Input value={title} onChange={e => setTitle(e.currentTarget.value)} onBlur={() => onChange((draft: Dashboard) => { draft.title = title })} />
             </FormItem>
             <FormItem title="Description">
-                <Input size="sm" value={desc} onChange={e => setDesc(e.currentTarget.value)} onBlur={() =>  onChange((draft:Dashboard)  => {draft.data.description = desc}) } mt="1" />
+                <Input value={desc} onChange={e => setDesc(e.currentTarget.value)} onBlur={() => onChange((draft: Dashboard) => { draft.data.description = desc })} />
             </FormItem>
             {/* <Box>
                 <Text textStyle="title">Editable</Text>
                 <Text textStyle="annotation">Make this dashboard editable to anyone who has edit permissions. </Text>
                 <Switch isChecked={dashboard.data.editable} onChange={e => { dashboard.data.editable = e.currentTarget.checked; onChange() }} mt="1" />
             </Box> */}
-            <FormItem title="Shared tooltip" desc="Show tooltips at the same position across all panels" >
-                <Switch isChecked={dashboard.data.sharedTooltip} onChange={e =>  onChange((draft:Dashboard)  => {draft.data.sharedTooltip =  e.currentTarget.checked}) }  />
+            <FormItem title="Shared tooltip" desc="Show tooltips at the same position across all panels" alignItems="center" >
+                <Switch isChecked={dashboard.data.sharedTooltip} onChange={e => onChange((draft: Dashboard) => { draft.data.sharedTooltip = e.currentTarget.checked })} />
             </FormItem>
 
             <FormItem title="Hide global variables">
-                <Input size="sm" value={hidingVars} onChange={e => setHidingVars(e.currentTarget.value)} onBlur={() => onChange((draft:Dashboard)  => {draft.data.hidingVars = hidingVars})} mt="1" placeholder="enter global variables names, separated with ',' . e.g: app,env" />
+                <Input value={hidingVars} onChange={e => setHidingVars(e.currentTarget.value)} onBlur={() => onChange((draft: Dashboard) => { draft.data.hidingVars = hidingVars })} placeholder="enter global variables names, separated with ',' . e.g: app,env" />
             </FormItem>
             <FormItem title="Tags" desc="Tag a dashboard and group it into a same collection for searching" >
-                <HStack>
-                    {
-                        dashboard.data.tags?.map(t => <Tag>
-                            <TagLabel>{t}</TagLabel>
-                            <TagCloseButton onClick={() => {
-                                onChange((draft:Dashboard) => {draft.data.tags.splice(draft.data.tags.indexOf(t), 1)})
-                            }} />
-                        </Tag>)
+                <Input value={tag} onChange={e => setTag(e.currentTarget.value)} placeholder="new tag(press enter to add)" onKeyPress={e => {
+                    if (e.key === 'Enter') {
+                        addTag()
                     }
-                    <Input width="220px" size="sm" value={tag} onChange={e => setTag(e.currentTarget.value)} mt="1" placeholder="new tag(press enter to add)" onKeyPress={e => {
-                        if (e.key === 'Enter') {
-                           addTag()
-                        }
-                    }} />
-                </HStack>
-            </FormItem>
+                }} />
 
+            </FormItem>
+            <HStack width="100%">
+                {
+                    dashboard.data.tags?.map(t => <Tag>
+                        <TagLabel>{t}</TagLabel>
+                        <TagCloseButton onClick={() => {
+                            onChange((draft: Dashboard) => { draft.data.tags.splice(draft.data.tags.indexOf(t), 1) })
+                        }} />
+                    </Tag>)
+                }
+
+            </HStack>
             <FormItem title="Panels layout" desc="Auto place panels in horizontal or vertical direction, when set to random, you can place panels anywhere" >
                 <Select value={dashboard.data.layout} onChange={e => {
-                    const v = e.currentTarget.value 
-                    onChange((draft:Dashboard) => {draft.data.layout = v as DashboardLayout})
+                    const v = e.currentTarget.value
+                    onChange((draft: Dashboard) => { draft.data.layout = v as DashboardLayout })
                 }}>
                     {
                         Object.keys(DashboardLayout).map(k => <option value={[DashboardLayout[k]]}>{k}</option>)
@@ -93,8 +94,8 @@ const GeneralSettings = ({ dashboard, onChange }: Props) => {
                 </Select>
             </FormItem>
 
-            <FormItem title="Allow panels overlap" desc="panels can be placed overlap others">
-                <Switch isChecked={dashboard.data.allowPanelsOverlap} onChange={e =>  onChange((draft:Dashboard) => {draft.data.allowPanelsOverlap =  e.currentTarget.checked}) } mt="1" />
+            <FormItem title="Allow panels overlap" desc="panels can be placed overlap others" alignItems="center">
+                <Switch isChecked={dashboard.data.allowPanelsOverlap} onChange={e => onChange((draft: Dashboard) => { draft.data.allowPanelsOverlap = e.currentTarget.checked })} mt="1" />
             </FormItem>
         </Form>
     </>)
