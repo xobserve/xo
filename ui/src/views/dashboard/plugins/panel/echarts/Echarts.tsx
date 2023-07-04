@@ -21,11 +21,6 @@ const EchartsPanel = ({ panel, data, width, height }: PanelProps) => {
     const [chart, setChart] = useState<ECharts>(null)
     const edit = useSearchParam("edit")
 
-    useEffect(() => {
-        if (edit == panel.id.toString()) {
-            dispatch({ type: PanelDataEvent, data: data })
-        }
-    }, [data])
     const [options, onEvents] = useMemo(() => {
         let options = null;
         let onEvents = null;

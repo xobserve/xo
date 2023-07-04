@@ -12,8 +12,8 @@ import PanelStyles from "./PanelStyles";
 import PanelSettings from "./PanelSettings";
 import { useLeavePageConfirm } from "hooks/useLeavePage"
 import { isEqual } from "lodash"
-import { dispatch } from "use-bus"
-import { PanelForceRebuildEvent } from "src/data/bus-events"
+import useBus, { dispatch } from "use-bus"
+import { PanelDataEvent, PanelForceRebuildEvent } from "src/data/bus-events"
 import AutoSizer from "react-virtualized-auto-sizer";
 import { PanelGrid } from "../grid/PanelGrid"
 import loadable from '@loadable/component'
@@ -33,6 +33,7 @@ const EditPanel = ({ dashboard, onChange }: EditPanelProps) => {
     const { isOpen, onOpen, onClose } = useDisclosure()
     const [hideDatasource, setHideDatasource] = useState(false)
     const [pageChanged, setPageChanged] = useState(false)
+    const [data, setData] = useState(null)
 
     useLeavePageConfirm(dashboard.data.enableUnsavePrompt ? pageChanged : false)
 
@@ -51,7 +52,7 @@ const EditPanel = ({ dashboard, onChange }: EditPanelProps) => {
     useEffect(() => {
         if (!tempPanel) {
             // only discarding the current panel can get here
-            return 
+            return
         }
 
         if (!rawPanel) {
@@ -62,6 +63,14 @@ const EditPanel = ({ dashboard, onChange }: EditPanelProps) => {
         const changed = !isEqual(rawPanel, tempPanel)
         setPageChanged(changed)
     }, [tempPanel])
+
+    useBus(
+        (e) => { return e.type == PanelDataEvent + edit },
+        (e) => {
+            setData(e.data)
+        },
+        [edit]
+    )
 
 
 
@@ -128,7 +137,7 @@ const EditPanel = ({ dashboard, onChange }: EditPanelProps) => {
                     <Flex justifyContent="space-between">
                         <Text>{dashboard.title} / Edit Panel</Text>
                         <HStack spacing={1}>
-                            <DatePicker showTime/>
+                            <DatePicker showTime />
                             <ColorModeSwitcher />
                             <Button variant="outline" onClick={() => { onDiscard(), onClose() }} >Discard</Button>
                             <Button onClick={onApplyChanges}>Apply</Button>
@@ -141,11 +150,11 @@ const EditPanel = ({ dashboard, onChange }: EditPanelProps) => {
                             {/* panel rendering section */}
                             <Box key={tempPanel.id.toString() + hideDatasource as string} height={maxPanelHeight()} id="edit-panel-render" position="relative">
                                 <AutoSizer>
-                                    {({ width,height }) => {
+                                    {({ width, height }) => {
                                         if (width === 0) {
                                             return null;
                                         }
-                                        return <PanelGrid width={width} height={height} key={tempPanel.id + tempPanel.type} dashboard={dashboard} panel={tempPanel} sync={null}  />
+                                        return <PanelGrid width={width} height={height} key={tempPanel.id + tempPanel.type} dashboard={dashboard} panel={tempPanel} sync={null} />
                                     }}
                                 </AutoSizer>
                                 {!tempPanel.plugins[tempPanel.type].disableDatasource && <Box position="absolute" right="0" bottom={hideDatasource ? "0" : "-35px"} opacity="0.3" cursor="pointer" fontSize=".8rem" onClick={() => { setHideDatasource(!hideDatasource) }}>{hideDatasource ? <FaArrowUp /> : <FaArrowDown />}</Box>}
@@ -176,13 +185,13 @@ const EditPanel = ({ dashboard, onChange }: EditPanelProps) => {
                                             <PanelSettings panel={tempPanel} onChange={setTempPanel} />
 
                                             {/* panel rendering plugin setting */}
-                                            <CustomPanelEditor tempPanel={tempPanel} setTempPanel={setTempPanel} />
+                                            <CustomPanelEditor tempPanel={tempPanel} setTempPanel={setTempPanel} data={data} />
                                         </TabPanel>
                                         <TabPanel px="0" pt="1" pb="0">
                                             <PanelStyles panel={tempPanel} onChange={setTempPanel} />
                                         </TabPanel>
                                         <TabPanel px="0" pt="1" pb="0">
-                                            <PanelOverrides panel={tempPanel} onChange={setTempPanel} />
+                                            <PanelOverrides panel={tempPanel} onChange={setTempPanel} data={data} />
                                         </TabPanel>
                                     </TabPanels>
                                 </Tabs>
@@ -213,10 +222,10 @@ const loadablePanels = {
 
 
 
-const CustomPanelEditor = ({ tempPanel, setTempPanel }) => {
+const CustomPanelEditor = ({ tempPanel, setTempPanel, data }) => {
     const Editor = loadablePanels[tempPanel.type]
     if (Editor) {
-        return <Editor panel={tempPanel} onChange={setTempPanel} />
+        return <Editor panel={tempPanel} onChange={setTempPanel} data={data} />
     }
 
     return null

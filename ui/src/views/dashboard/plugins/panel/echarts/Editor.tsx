@@ -13,7 +13,7 @@ import { EchartsComponent } from "./Echarts"
 import * as echarts from 'echarts';
 import { ColorModeSwitcher } from "components/ColorModeSwitcher"
 
-const EchartsPanelEditor = ({ panel, onChange }: PanelEditorProps) => {
+const EchartsPanelEditor = ({ panel, onChange,data }: PanelEditorProps) => {
     return (
         <>
             <PanelAccordion title="About Echarts">
@@ -37,7 +37,7 @@ const EchartsPanelEditor = ({ panel, onChange }: PanelEditorProps) => {
                     onChange((panel: Panel) => {
                         panel.plugins.echarts.setOptionsFunc = v
                     })
-                }} />
+                }} data={data}/>
 
                 <RegisterEvents panel={panel} onChange={v => {
                     onChange((panel: Panel) => {
@@ -53,23 +53,15 @@ const EchartsPanelEditor = ({ panel, onChange }: PanelEditorProps) => {
 export default EchartsPanelEditor
 
 
-const SetOptions = ({ panel, onChange }: PanelEditorProps) => {
+const SetOptions = ({ panel, onChange,data }: PanelEditorProps) => {
     const { isOpen, onOpen, onClose } = useDisclosure()
     const [temp, setTemp] = useState(panel.plugins.echarts.setOptionsFunc)
-    const [data, setData] = useState(null)
     const onSubmit = () => {
         onChange(temp)
         onClose()
     }
 
     const { colorMode } = useColorMode()
-
-    useBus(
-        (e) => { return e.type == PanelDataEvent },
-        (e) => {
-            setData(e.data)
-        }
-    )
 
 
     const setOptions = genDynamicFunction(temp);

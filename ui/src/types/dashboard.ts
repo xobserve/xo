@@ -50,11 +50,25 @@ export interface Panel {
     styles: PanelStyles
 
     datasource: PanelDatasource
+
+    overrides: OverrideItem[]
 }
+
+export interface OverrideItem {
+    target: string 
+    overrides: OverrideRule[]
+}
+
+export interface OverrideRule {
+    type: string 
+    value: any
+}
+
 
 export interface PanelEditorProps {
     panel: Panel
     onChange: any
+    data?: any
 }
 
 

@@ -10,9 +10,9 @@ import { TimeRange } from "types/time";
 import { Variable } from "types/variable";
 import { replaceQueryWithVariables, replaceWithVariables } from "utils/variable";
 import storage from "utils/localStorage";
-import useBus from 'use-bus'
+import useBus, { dispatch } from 'use-bus'
 import { getInitTimeRange } from "components/DatePicker/TimePicker";
-import {  PanelForceRebuildEvent, TimeChangedEvent, VariableChangedEvent } from "src/data/bus-events";
+import {  PanelDataEvent, PanelForceRebuildEvent, TimeChangedEvent, VariableChangedEvent } from "src/data/bus-events";
 import { variables } from "../Dashboard";
 import { addParamToUrl } from "utils/url";
 import { run_testdata_query } from "../plugins/datasource/testdata/query_runner";
@@ -26,6 +26,7 @@ import CodeEditor from "components/CodeEditor/CodeEditor";
 import { calculateInterval } from "utils/datetime/range";
 import { run_http_query } from "../plugins/datasource/http/query_runner";
 import { datasources } from "src/views/App";
+import { useSearchParam } from "react-use";
 
 
 interface PanelGridProps {
@@ -88,7 +89,7 @@ export const PanelComponent = ({ dashboard, panel, onRemovePanel, width, height,
     const toast = useToast()
     const [panelData, setPanelData] = useState<any[]>(null)
     const [queryError, setQueryError] = useState()
-
+    const edit = useSearchParam('edit')
     useEffect(() => {
         return () => {
             // delete data query cache when panel is unmounted
@@ -100,74 +101,14 @@ export const PanelComponent = ({ dashboard, panel, onRemovePanel, width, height,
     }, [])
 
     useEffect(() => {
-        queryData(panel, dashboard.id)
+       queryData()
     }, [panel.datasource, timeRange, variables])
 
-    const queryData = async (panel: Panel, dashboardId: string) => {
-        console.time("time used - query data for panel:")
-        const ds = panel.datasource
-        const datasource = datasources.find(d => d.id == ds.id)
-        if (!datasource) {
-            return
+    const queryData = async () => {
+        const [needUpdate, data,error] = await queryPanelData(panel, dashboard.id, timeRange)
+        if (error) {
+            setQueryError(error)
         }
-
-
-        let data = []
-        let needUpdate = false
-        const interval = calculateInterval(timeRange, ds.queryOptions.maxDataPoints ?? DatasourceMaxDataPoints, ds.queryOptions.minInterval ?? DatasourceMinInterval).intervalMs / 1000
-        for (const q0 of ds.queries) {
-            const q: PanelQuery = { ...q0, interval }
-            replaceQueryWithVariables(q, ds.type)
-
-            const id = formatQueryId(ds.id, dashboardId, panel.id, q.id)
-            const prevQuery = prevQueries.get(id)
-            const currentQuery = [q, timeRange]
-
-            if (isEqual(prevQuery, currentQuery)) {
-                const d = prevQueryData[id]
-                if (d) {
-                    data.push(d)
-                }
-                continue
-            }
-
-            needUpdate = true
-            // console.log("re-query data! metrics id:", q.id, " query id:", queryId)
-
-            prevQueries.set(id, currentQuery)
-            let res
-
-            //@needs-update-when-add-new-datasource
-            switch (ds.type) {
-                case DatasourceType.Prometheus:
-                    res = await run_prometheus_query(panel, q, timeRange, datasource)
-                    break;
-                case DatasourceType.TestData:
-                    res = await run_testdata_query(panel, q, timeRange, datasource)
-                    break;
-                case DatasourceType.Jaeger:
-                    res = await run_jaeger_query(panel, q, timeRange, datasource)
-                    break;
-                case DatasourceType.ExternalHttp:
-                    res = await run_http_query(panel, q, timeRange, datasource)
-                    break;
-                default:
-                    break;
-            }
-
-            if (res.error) {
-                setQueryError(res.error)
-            } else {
-                setQueryError(null)
-            }
-
-
-            if (!isEmpty(res.data)) {
-                data.push(res.data)
-                prevQueryData[id] = res.data
-            }
-        }
-
         if (needUpdate) {
             console.log("query and set panel data:", panel.id)
             setPanelData(data)
@@ -177,7 +118,9 @@ export const PanelComponent = ({ dashboard, panel, onRemovePanel, width, height,
             }
         }
 
-        console.timeEnd("time used - query data for panel:")
+        if (edit == panel.id.toString()) {
+            dispatch({ type: PanelDataEvent + panel.id, data: data })
+        }
     }
 
     const onCopyPanel = useCallback((panel) => {
@@ -319,3 +262,68 @@ const formatQueryId = (datasourceId, dashboardId, panelId, queryId) => {
 }
 
 
+export const queryPanelData = async (panel: Panel, dashboardId: string, timeRange) => {
+    console.time("time used - query data for panel:")
+    const ds = panel.datasource
+    const datasource = datasources.find(d => d.id == ds.id)
+    if (!datasource) {
+        return
+    }
+
+
+    let data = []
+    let needUpdate = false
+    let error
+    const interval = calculateInterval(timeRange, ds.queryOptions.maxDataPoints ?? DatasourceMaxDataPoints, ds.queryOptions.minInterval ?? DatasourceMinInterval).intervalMs / 1000
+    for (const q0 of ds.queries) {
+        const q: PanelQuery = { ...q0, interval }
+        replaceQueryWithVariables(q, ds.type)
+
+        const id = formatQueryId(ds.id, dashboardId, panel.id, q.id)
+        const prevQuery = prevQueries.get(id)
+        const currentQuery = [q, timeRange]
+
+        if (isEqual(prevQuery, currentQuery)) {
+            const d = prevQueryData[id]
+            if (d) {
+                data.push(d)
+            }
+            continue
+        }
+
+        needUpdate = true
+        // console.log("re-query data! metrics id:", q.id, " query id:", queryId)
+
+        prevQueries.set(id, currentQuery)
+        let res
+
+        //@needs-update-when-add-new-datasource
+        switch (ds.type) {
+            case DatasourceType.Prometheus:
+                res = await run_prometheus_query(panel, q, timeRange, datasource)
+                break;
+            case DatasourceType.TestData:
+                res = await run_testdata_query(panel, q, timeRange, datasource)
+                break;
+            case DatasourceType.Jaeger:
+                res = await run_jaeger_query(panel, q, timeRange, datasource)
+                break;
+            case DatasourceType.ExternalHttp:
+                res = await run_http_query(panel, q, timeRange, datasource)
+                break;
+            default:
+                break;
+        }
+
+        error = res.error
+
+        if (!isEmpty(res.data)) {
+            data.push(res.data)
+            prevQueryData[id] = res.data
+        }
+    }
+    
+    console.timeEnd("time used - query data for panel:")
+
+    return [needUpdate, data, error]
+}

@@ -16,13 +16,15 @@ interface FormItemProps {
     children: any
     title?: string
     spacing?: number
+    bordered?: boolean
+    titleSize?: string
 }
 
-export const FormSection = ({ children, title=null,spacing=2, ...rest }: FormItemProps & StyleProps) => {
+export const FormSection = ({ children, title=null,spacing=2, bordered=false,titleSize="1rem", ...rest }: FormItemProps & StyleProps) => {
     return <>
 
-        <VStack alignItems="left" spacing={spacing} {...rest}>
-            {title && <Text textStyle="title" mb={1}>{title}</Text>}
+        <VStack alignItems="left" spacing={spacing} className={`${bordered ? "bordered" : ""}`} {...rest}>
+            {title && <Text textStyle="title" mb={1} fontSize={titleSize}>{title}</Text>}
             {children}
         </VStack>
     </>

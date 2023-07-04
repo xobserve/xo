@@ -14,7 +14,8 @@ export const initPanel = (id?) =>  {
             [type]:initPanelPlugins[type]
         },
         datasource: initDatasource,
-        styles: initPanelStyles
+        styles: initPanelStyles,
+        overrides: []
     }
 
     if (id) {
