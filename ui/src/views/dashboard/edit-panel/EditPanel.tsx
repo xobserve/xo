@@ -17,6 +17,7 @@ import { PanelForceRebuildEvent } from "src/data/bus-events"
 import AutoSizer from "react-virtualized-auto-sizer";
 import { PanelGrid } from "../grid/PanelGrid"
 import loadable from '@loadable/component'
+import DatePicker from "components/DatePicker/DatePicker"
 
 interface EditPanelProps {
     dashboard: Dashboard
@@ -129,6 +130,7 @@ const EditPanel = ({ dashboard, onChange }: EditPanelProps) => {
                             <Button variant="outline" onClick={() => { onDiscard(), onClose() }} >Discard</Button>
                             <Button onClick={onApplyChanges}>Apply</Button>
                             <ColorModeSwitcher />
+                            <DatePicker showTime/>
                         </HStack>
                     </Flex>
                 </ModalHeader>

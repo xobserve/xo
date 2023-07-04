@@ -1,20 +1,19 @@
-import { Box, Flex, HStack, Modal, ModalBody, ModalContent, ModalOverlay, Select, Tooltip, useDisclosure, useToast } from "@chakra-ui/react"
+import { Box, Flex, HStack,  Select, Tooltip} from "@chakra-ui/react"
 import IconButton from "components/button/IconButton"
-import TimePicker, { getInitTimeRange, TimePickerKey } from "components/TimePicker"
+import { getInitTimeRange, TimePickerKey } from "components/DatePicker/TimePicker"
 import SelectVariables from "src/views/variables/Variables"
 import { subMinutes } from "date-fns"
 import { find, isEmpty } from "lodash"
 import { useRouter } from "next/router"
 
 import { memo, useEffect, useRef, useState } from "react"
-import { FaRegClock, FaTv } from "react-icons/fa"
 import { MdSync } from "react-icons/md"
-import {  VariableChangedEvent } from "src/data/bus-events"
+import {  TimeChangedEvent, VariableChangedEvent } from "src/data/bus-events"
 import ReserveUrls from "src/data/reserve-urls"
 import { Dashboard } from "types/dashboard"
 import { Team } from "types/teams"
 import { TimeRange } from "types/time"
-import useBus from "use-bus"
+import useBus, { dispatch } from "use-bus"
 import { requestApi } from "utils/axios/request"
 import storage from "utils/localStorage"
 import AddPanel from "./AddPanel"
@@ -24,14 +23,13 @@ import DashboardSettings from "./settings/DashboardSettings"
 import useMiniMode from "hooks/useMiniMode"
 import Fullscreen from "components/fullscreen"
 import useFullscreen from "hooks/useFullscreen"
+import DatePicker from "components/DatePicker/DatePicker"
 
 interface HeaderProps {
     dashboard: Dashboard
-    onTimeChange: any
-    timeRange: TimeRange    
     onChange: any
 }
-const DashboardHeader = memo(({ dashboard, onTimeChange, timeRange, onChange }: HeaderProps) => {
+const DashboardHeader = memo(({ dashboard, onChange }: HeaderProps) => {
     const router = useRouter()
     
     const [variablesChanged, setVariablesChanged] = useState(0)
@@ -50,8 +48,6 @@ const DashboardHeader = memo(({ dashboard, onTimeChange, timeRange, onChange }: 
     }
 
     const refreshH = useRef(null)
-
-    const { isOpen, onOpen, onClose } = useDisclosure()
 
     useEffect(() => {
         if (refresh > 0) {
@@ -74,7 +70,7 @@ const DashboardHeader = memo(({ dashboard, onTimeChange, timeRange, onChange }: 
             tr.start = subMinutes(now, tr.sub)
             tr.end = now
             storage.set(TimePickerKey, JSON.stringify(tr))
-            onTimeChange(tr)
+            dispatch({type:  TimeChangedEvent,data: tr})
         }
     }
     useBus(
@@ -104,7 +100,7 @@ const DashboardHeader = memo(({ dashboard, onTimeChange, timeRange, onChange }: 
                                 <AddPanel dashboard={dashboard} onChange={onChange} />
                                 <DashboardSave dashboard={dashboard} />
                                 {dashboard && <DashboardSettings dashboard={dashboard} onChange={onChange} />}
-                                <Tooltip label={`${timeRange?.start.toLocaleString()} - ${timeRange?.end.toLocaleString()}`}><Box><IconButton onClick={onOpen} variant="ghost"><FaRegClock /></IconButton></Box></Tooltip>
+                                <DatePicker />
                                 <HStack spacing={0}>
                                     <Tooltip label="refresh just once"><Box onClick={refreshOnce}><IconButton variant="ghost"><MdSync /></IconButton></Box></Tooltip>
                                     <Tooltip label="refresh with interval"><Select variant="unstyled" value={refresh} onChange={(e) => setRefresh(Number(e.target.value))}>
@@ -127,17 +123,6 @@ const DashboardHeader = memo(({ dashboard, onTimeChange, timeRange, onChange }: 
                         <SelectVariables id={variablesChanged} variables={variables.filter((v) => !v.id.toString().startsWith("d-") && !find(dashboard.data.hidingVars?.split(','), v1 => v1 == v.name))} />
                     </Flex>}
                 </>}
-            <Modal isOpen={isOpen} onClose={onClose}>
-                <ModalOverlay />
-                <ModalContent minW="fit-content">
-                    <ModalBody>
-                        <TimePicker onClose={onClose} onTimeChange={onTimeChange} />
-                    </ModalBody>
-
-                </ModalContent>
-            </Modal>
-
-
         </Box>
     )
 })

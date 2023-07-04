@@ -9,7 +9,7 @@ import { Datasource } from "types/datasource"
 import { isPromethesDatasourceValid } from "./DatasourceEditor"
 import { Variable } from "types/variable"
 import { isJSON } from "utils/is"
-import { getInitTimeRange } from "components/TimePicker"
+import { getInitTimeRange } from "components/DatePicker/TimePicker"
 
 import { PromDsQueryTypes } from "./VariableEditor"
 import { datasources } from "src/views/App"

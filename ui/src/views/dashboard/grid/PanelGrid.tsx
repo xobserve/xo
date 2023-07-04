@@ -11,7 +11,7 @@ import { Variable } from "types/variable";
 import { replaceQueryWithVariables, replaceWithVariables } from "utils/variable";
 import storage from "utils/localStorage";
 import useBus from 'use-bus'
-import { getInitTimeRange } from "components/TimePicker";
+import { getInitTimeRange } from "components/DatePicker/TimePicker";
 import {  PanelForceRebuildEvent, TimeChangedEvent, VariableChangedEvent } from "src/data/bus-events";
 import { variables } from "../Dashboard";
 import { addParamToUrl } from "utils/url";

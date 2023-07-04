@@ -6,8 +6,6 @@ import { requestApi } from "utils/axios/request"
 import DashboardHeader from "src/views/dashboard/DashboardHeader"
 import DashboardGrid from "src/views/dashboard/grid/DashboardGrid"
 import { clone, cloneDeep, concat, defaults, defaultsDeep, find, findIndex } from "lodash"
-import { TimeRange } from "types/time"
-import { getInitTimeRange } from "components/TimePicker"
 import { Variable } from "types/variable"
 import { setVariableSelected } from "src/views/variables/Variables"
 import { prevQueries, prevQueryData } from "src/views/dashboard/grid/PanelGrid"
@@ -34,7 +32,6 @@ setAutoFreeze(false)
 export let variables: Variable[] = []
 const DashboardWrapper = ({dashboardId}) => {
     const [dashboard, setDashboard] = useImmer<Dashboard>(null)
-    const [timeRange, setTimeRange] = useState<TimeRange>(getInitTimeRange())
     const [gVariables, setGVariables] = useState<Variable[]>([])
     const fullscreen = useFullscreen()
 
@@ -146,7 +143,7 @@ const DashboardWrapper = ({dashboardId}) => {
             <PageContainer bg={dashboard?.data.styles.bgEnabled ? dashboard?.data.styles?.bg: null}>
                 {dashboard && <Box pl="6px" pr="6px" width="100%"  height="100%"  minHeight="100vh">
                     {/* <Decoration decoration={dashboard.data.styles.decoration}/> */}
-                    <DashboardHeader dashboard={dashboard} onTimeChange={t => {dispatch({type:  TimeChangedEvent,data: t});setTimeRange(t)}} timeRange={timeRange}  onChange={onDashbardChange} />
+                    <DashboardHeader dashboard={dashboard} onChange={onDashbardChange} />
                     <Box key={dashboard.id + fullscreen} id="dashboard-wrapper" mt={headerHeight} py="2" position="relative">
                         <DashboardBorder border={dashboard.data.styles.border}  />
                         {dashboard.data.panels?.length > 0 &&<DashboardGrid dashboard={dashboard} onChange={onDashbardChange} />}         

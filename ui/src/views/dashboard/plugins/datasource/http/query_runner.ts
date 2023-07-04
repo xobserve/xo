@@ -6,7 +6,7 @@ import { TimeRange } from "types/time"
 import { genDynamicFunction } from "utils/dynamicCode"
 import { isEmpty, isFunction, round } from "lodash"
 import _ from 'lodash'
-import { getInitTimeRange } from "components/TimePicker"
+import { getInitTimeRange } from "components/DatePicker/TimePicker"
 import { isJSON } from "utils/is"
 import { replaceWithVariables } from "utils/variable"
 

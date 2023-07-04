@@ -9,7 +9,7 @@ import { initDatasource } from "src/data/panel/initPanel"
 import Label from "components/form/Item"
 import { EditorInputItem, EditorNumberItem } from "components/editor/EditorItem"
 import { calculateInterval } from "utils/datetime/range"
-import { getInitTimeRange } from "components/TimePicker"
+import { getInitTimeRange } from "components/DatePicker/TimePicker"
 
 import { Datasource } from "types/datasource"
 import HttpQueryEditor from "../plugins/datasource/http/Editor"
