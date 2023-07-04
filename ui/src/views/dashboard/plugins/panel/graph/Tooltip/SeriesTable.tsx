@@ -101,12 +101,13 @@ const SeriesTable = memo(({ props, data, nearestSeries, filterIdx, mode, onSelec
         }
         const decimalOverride = override?.overrides.find((o) => o.type == "Series.decimal")
         if (decimalOverride) {
-            decimal = decimalOverride.value.decimal
+            decimal = decimalOverride.value
         }
 
         v.units = units 
         v.unitsType = unitsType
         v.decimal = decimal
+        console.log("here333333:", mode, v.decimal)
     }
 
 
