@@ -30,6 +30,7 @@ export interface DashboardData {
     }
     layout: DashboardLayout
     allowPanelsOverlap: boolean
+    enableUnsavePrompt: boolean
 }
 
 export interface Panel {

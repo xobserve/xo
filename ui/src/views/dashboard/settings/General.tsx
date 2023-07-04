@@ -97,6 +97,10 @@ const GeneralSettings = ({ dashboard, onChange }: Props) => {
             <FormItem title="Allow panels overlap" desc="panels can be placed overlap others" alignItems="center">
                 <Switch isChecked={dashboard.data.allowPanelsOverlap} onChange={e => onChange((draft: Dashboard) => { draft.data.allowPanelsOverlap = e.currentTarget.checked })} mt="1" />
             </FormItem>
+
+            <FormItem title="Enable unsave promt" desc="When leaving current page, there will be a unsave prompt if enalbed" alignItems="center">
+                <Switch isChecked={dashboard.data.enableUnsavePrompt} onChange={e => onChange((draft: Dashboard) => { draft.data.enableUnsavePrompt = e.currentTarget.checked })} mt="1" />
+            </FormItem>
         </Form>
     </>)
 }

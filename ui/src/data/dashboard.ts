@@ -29,6 +29,7 @@ export const initDashboard:Dashboard = {
         },
         layout: DashboardLayout.Vertical,
         allowPanelsOverlap: false,
+        enableUnsavePrompt: true
     },
     ownedBy: globalTeamId,
 }

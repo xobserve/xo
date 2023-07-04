@@ -36,7 +36,7 @@ const DashboardSave = ({ dashboard }: Props) => {
 
     }, [pressed])
 
-    useLeavePageConfirm(pageChanged)
+    useLeavePageConfirm(dashboard.data.enableUnsavePrompt ? pageChanged : false)
 
     useEffect(() => {
         if (!saved && dashboard) {

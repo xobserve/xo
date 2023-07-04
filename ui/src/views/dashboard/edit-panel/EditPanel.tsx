@@ -32,7 +32,7 @@ const EditPanel = ({ dashboard, onChange }: EditPanelProps) => {
     const [hideDatasource, setHideDatasource] = useState(false)
     const [pageChanged, setPageChanged] = useState(false)
 
-    useLeavePageConfirm(pageChanged)
+    useLeavePageConfirm(dashboard.data.enableUnsavePrompt ? pageChanged : false)
 
     useEffect(() => {
         if (edit) {
