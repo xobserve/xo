@@ -10,28 +10,30 @@ import { TimeChangedEvent } from "src/data/bus-events"
 interface Props {
     showTime?: boolean
 }
-const DatePicker = ({showTime=false}:Props) => {
+const DatePicker = ({ showTime = false }: Props) => {
     const { isOpen, onOpen, onClose } = useDisclosure()
     const [value, setValue] = useState<TimeRange>(getInitTimeRange())
 
     const onTimeChange = (t: TimeRange) => {
         setValue(t)
         onClose()
-        dispatch({type:  TimeChangedEvent,data: t})
+        dispatch({ type: TimeChangedEvent, data: t })
     }
 
     return (
         <>
-            <Tooltip label={`${value?.start.toLocaleString()} - ${value?.end.toLocaleString()}`}>
-                <HStack spacing={0} onClick={onOpen} cursor="pointer">
-                    <IconButton variant="ghost">
-                        <FaRegClock />
-                    </IconButton>
-                    {
-                        showTime && <Text layerStyle="textSecondary" fontSize="1rem">{value.startRaw} to {value.endRaw}</Text>
-                    }
-                </HStack>
-            </Tooltip>
+            <Box>
+                <Tooltip label={`${value?.start.toLocaleString()} - ${value?.end.toLocaleString()}`}>
+                    <HStack spacing={0} onClick={onOpen} cursor="pointer">
+                        <IconButton variant="ghost">
+                            <FaRegClock />
+                        </IconButton>
+                        {
+                            showTime && <Text layerStyle="textSecondary" fontSize="1rem">{value.startRaw} to {value.endRaw}</Text>
+                        }
+                    </HStack>
+                </Tooltip>
+            </Box>
             <Modal isOpen={isOpen} onClose={onClose}>
                 <ModalOverlay />
                 <ModalContent minW="fit-content">

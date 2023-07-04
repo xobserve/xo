@@ -18,6 +18,7 @@ import AutoSizer from "react-virtualized-auto-sizer";
 import { PanelGrid } from "../grid/PanelGrid"
 import loadable from '@loadable/component'
 import DatePicker from "components/DatePicker/DatePicker"
+import PanelOverrides from "./PanelOverrides"
 
 interface EditPanelProps {
     dashboard: Dashboard
@@ -119,7 +120,7 @@ const EditPanel = ({ dashboard, onChange }: EditPanelProps) => {
     }
 
     return (<>
-        <Modal isOpen={isOpen} onClose={onEditClose} size="full">
+        <Modal isOpen={isOpen} onClose={onEditClose} autoFocus={false} size="full">
             <ModalOverlay />
             {dashboard && tempPanel && <ModalContent>
                 {/* editor header section */}
@@ -127,10 +128,10 @@ const EditPanel = ({ dashboard, onChange }: EditPanelProps) => {
                     <Flex justifyContent="space-between">
                         <Text>{dashboard.title} / Edit Panel</Text>
                         <HStack spacing={1}>
+                            <DatePicker showTime/>
+                            <ColorModeSwitcher />
                             <Button variant="outline" onClick={() => { onDiscard(), onClose() }} >Discard</Button>
                             <Button onClick={onApplyChanges}>Apply</Button>
-                            <ColorModeSwitcher />
-                            <DatePicker showTime/>
                         </HStack>
                     </Flex>
                 </ModalHeader>
@@ -161,6 +162,7 @@ const EditPanel = ({ dashboard, onChange }: EditPanelProps) => {
                                     <TabList pb="0">
                                         <Tab>Panel</Tab>
                                         <Tab>Styles</Tab>
+                                        <Tab>Overrides</Tab>
                                     </TabList>
                                     <TabIndicator
                                         mt="3px"
@@ -178,6 +180,9 @@ const EditPanel = ({ dashboard, onChange }: EditPanelProps) => {
                                         </TabPanel>
                                         <TabPanel px="0" pt="1" pb="0">
                                             <PanelStyles panel={tempPanel} onChange={setTempPanel} />
+                                        </TabPanel>
+                                        <TabPanel px="0" pt="1" pb="0">
+                                            <PanelOverrides panel={tempPanel} onChange={setTempPanel} />
                                         </TabPanel>
                                     </TabPanels>
                                 </Tabs>

@@ -1,23 +1,16 @@
 import { Box, Center, Image, Input, SimpleGrid, Switch, Text, Textarea } from "@chakra-ui/react"
 import { upperFirst } from "lodash"
-import { Panel, PanelType } from "types/dashboard"
+import { Panel, PanelEditorProps, PanelType } from "types/dashboard"
 import PanelAccordion from "./Accordion"
 import { EditorInputItem } from "../../../components/editor/EditorItem"
 import PanelEditItem from "./PanelEditItem"
 import { initPanelPlugins } from "src/data/panel/initPlugins"
-import { useEffect, useRef } from "react"
-import { initDatasource, initPanel } from "src/data/panel/initPanel"
-
-
-interface Props {
-    panel: Panel
-    onChange: any
-}
+import { useEffect } from "react"
 
 // in edit mode, we need to cache all the plugins we have edited, until we save the dashboard
 let pluginsCachedInEdit = {}
 
-const PanelSettings = ({ panel, onChange }: Props) => {
+const PanelSettings = ({ panel, onChange }: PanelEditorProps) => {
  
     const onChangeVisualization = type => {
         pluginsCachedInEdit[panel.type] = panel.plugins[panel.type]
