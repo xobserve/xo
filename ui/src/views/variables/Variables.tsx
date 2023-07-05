@@ -23,7 +23,7 @@ interface Props {
 
 const vkey = "apm-variables"
 const SelectVariables = ({ variables }: Props) => {
-    return (<HStack spacing={4}>
+    return (<HStack spacing={2}>
         {variables.map(v => {
             return <SelectVariable key={v.id} v={v} />
         })}

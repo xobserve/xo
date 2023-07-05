@@ -188,7 +188,10 @@ export const replacePrometheusQueryWithVariables = (query: PanelQuery) => {
                 selected = v.selected?.split(VariableSplitChar) ?? []
             }
 
-            query.metrics = query.metrics.replace(`\${${f}}`, selected.join('|'));
+            const joined = selected.join('|')
+            if (joined) {
+                query.metrics = query.metrics.replace(`\${${f}}`,joined );
+            }
         }
-    }
+    }   
 }

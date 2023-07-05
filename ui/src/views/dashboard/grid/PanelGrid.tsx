@@ -124,8 +124,10 @@ export const PanelComponent = ({ dashboard, panel, onRemovePanel, width, height,
             const prevQuery = prevQueries.get(id)
             const currentQuery = [q, timeRange]
 
+           
             if (isEqual(prevQuery, currentQuery)) {
                 const d = prevQueryData[id]
+                console.log("here33333:",prevQuery, currentQuery,d)
                 if (d) {
                     data.push(d)
                 }
@@ -135,7 +137,7 @@ export const PanelComponent = ({ dashboard, panel, onRemovePanel, width, height,
             needUpdate = true
             // console.log("re-query data! metrics id:", q.id, " query id:", queryId)
 
-            prevQueries.set(id, currentQuery)
+    
             let res
 
             //@needs-update-when-add-new-datasource
@@ -166,11 +168,12 @@ export const PanelComponent = ({ dashboard, panel, onRemovePanel, width, height,
             if (!isEmpty(res.data)) {
                 data.push(res.data)
                 prevQueryData[id] = res.data
-            }
+                prevQueries.set(id, currentQuery)
+            } 
         }
 
         if (needUpdate) {
-            console.log("query and set panel data:", panel.id)
+            console.log("33333query and set panel data:", panel.id)
             setPanelData(data)
         } else {
             if (!isEqual(panelData, data)) {
@@ -203,7 +206,7 @@ export const PanelComponent = ({ dashboard, panel, onRemovePanel, width, height,
     const panelInnerWidth = width + 8 // 10px padding left and right of panel body
 
 
-    console.log("panel grid rendered, data: ", panelData)
+    console.log("33333panel grid rendered, data: ", panelData)
     return <Box height={height} width={width} className={panel.styles.border == "None" ? "hover-bordered" : null} border={`1px solid transparent`} position="relative">
         <PanelHeader panel={panel} data={panelData} queryError={queryError} onCopyPanel={onCopyPanel} onRemovePanel={onRemovePanel} />
         {panelData && <Box
