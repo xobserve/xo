@@ -57,7 +57,6 @@ const GraphPanel = memo((props: GraphPanelProps) => {
         data.map((frame, i) => {
             const override: OverrideItem = props.panel.overrides.find((o) => o.target == frame.rawName)
             const name = override?.overrides.find((o) => o.type == "Series.name")?.value
-            console.log("here33333 name:",name)
             if (name) {
                 frame.name = name
             } else {

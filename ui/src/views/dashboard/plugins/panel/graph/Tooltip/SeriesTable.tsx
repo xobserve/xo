@@ -107,7 +107,6 @@ const SeriesTable = memo(({ props, data, nearestSeries, filterIdx, mode, onSelec
         v.units = units 
         v.unitsType = unitsType
         v.decimal = decimal
-        console.log("here333333:", mode, v.decimal)
     }
 
 

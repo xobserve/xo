@@ -21,7 +21,6 @@ const GraphOverridesEditor = ({ override, onChange }: Props) => {
         case 'Series.unit':
             return <UnitPicker size="sm" type={override.value.unitsType} value={override.value.units} onChange={
                 (units, type) => {
-                    console.log("here33333:",units,type)
                     onChange({
                     unitsType: type, 
                     units: units

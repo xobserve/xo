@@ -8,6 +8,7 @@ import (
 	"github.com/MyStarship/starship/backend/internal/api"
 	"github.com/MyStarship/starship/backend/internal/dashboard"
 	"github.com/MyStarship/starship/backend/internal/datasource"
+	"github.com/MyStarship/starship/backend/internal/proxy"
 	"github.com/MyStarship/starship/backend/internal/storage"
 	"github.com/MyStarship/starship/backend/internal/teams"
 	"github.com/MyStarship/starship/backend/internal/user"
@@ -106,8 +107,11 @@ func (s *Server) Start() error {
 		r.POST("/datasource/save", IsLogin(), datasource.SaveDatasource)
 		r.GET("/datasource/all", datasource.GetDatasources)
 		r.DELETE("/datasource/:id", IsLogin(), datasource.DeleteDatasource)
-		r.Any("/proxy/:id/*path", datasource.Proxy)
-		r.Any("/proxy/:id", datasource.Proxy)
+
+		// proxy apis
+		r.Any("/proxy/ds/:id/*path", proxy.ProxyDatasource)
+		r.Any("/proxy/ds/:id", proxy.ProxyDatasource)
+		r.GET("/proxy", proxy.Proxy)
 
 		r.Use(gzip.Gzip(gzip.DefaultCompression))
 

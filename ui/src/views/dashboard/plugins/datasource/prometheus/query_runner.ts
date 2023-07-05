@@ -16,6 +16,7 @@ import { datasources } from "src/views/App"
 import { parseVariableFormat } from "utils/format"
 import { variables } from "src/views/dashboard/Dashboard"
 import {  VariableSplitChar, VarialbeAllOption } from "src/data/variable"
+import { requestApi } from "utils/axios/request"
 
 export const run_prometheus_query = async (panel: Panel, q: PanelQuery, range: TimeRange, ds: Datasource) => {
     if (isEmpty(q.metrics)) {
@@ -32,10 +33,7 @@ export const run_prometheus_query = async (panel: Panel, q: PanelQuery, range: T
     // 1. rather than query directyly to prometheus, we should query to our own backend servie
     // 2. using `axios` instead of `fetch`
 
-    const res0 = await fetch(`${ds.url}/api/v1/query_range?query=${q.metrics}&start=${start}&end=${end}&step=${q.interval}`)
-
-    const res = await res0.json()
-
+    const res:any = await requestApi.get(`/proxy/${ds.id}/api/v1/query_range?query=${q.metrics}&start=${start}&end=${end}&step=${q.interval}`)
     if (res.status !== "success") {
         console.log("Failed to fetch data from prometheus", res)
         return {

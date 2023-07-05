@@ -169,7 +169,6 @@ export const UnitPicker = ({ type, value, onChange,size="md" }: Props) => {
 
 
 export const formatUnit = (v0: number, units: Unit[], decimal: number) => {
-    console.log("here333333:",v0,units)
     let v = v0 
     if (v0 < 0) {
         v = -1 * v0
