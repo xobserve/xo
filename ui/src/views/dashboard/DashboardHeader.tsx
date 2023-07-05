@@ -76,13 +76,12 @@ const DashboardHeader = memo(({ dashboard, onChange }: HeaderProps) => {
     useBus(
         VariableChangedEvent,
         () => {
-            console.log("dash header recv variable change event:", variables);
+            console.log("44444 dash header recv variable change event:", variables);
             setVariablesChanged(variablesChanged + 1)
         },
         [variablesChanged]
     )
     
-
 
     return (
         <Box display={fullscreen ? "none" : "block"} py="1" width={`calc(100% - ${miniMode ? 76 : 148}px)`} position="fixed" bg={dashboard.data.styles?.bg ? 'transparent' : 'var(--chakra-colors-chakra-body-bg)'} zIndex={1}>

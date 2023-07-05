@@ -241,7 +241,6 @@ const NodeGrapPanel = ({ data, panel, dashboardId,width,height }: NodeGraphPanel
 
             gh.render();
             
-            console.log("her3333222:",cloneDeep(gh))
             setGraph(gh)
             // if (typeof window !== 'undefined') {
             //     window.onresize = () => {

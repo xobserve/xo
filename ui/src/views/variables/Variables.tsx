@@ -63,9 +63,9 @@ const SelectVariable = ({ v }: { v: Variable }) => {
     
     const loadValues = async () => {
         let result =[]
-        if (v.enableAll) {
-            result.push(VarialbeAllOption)
-        }
+        // if (v.enableAll) {
+        //     result.push(VarialbeAllOption)
+        // }
 
         let needQuery = true
         if (v.refresh == VariableRefresh.Manually) {
@@ -98,6 +98,7 @@ const SelectVariable = ({ v }: { v: Variable }) => {
     
 
     const value = isEmpty(v.selected) ? [] : v.selected.split(VariableSplitChar)
+    
     return <HStack key={v.id} spacing={2}>
         <Text fontSize="sm" minWidth="fit-content">{v.name}</Text>
         {!isEmpty(values) &&
@@ -106,7 +107,8 @@ const SelectVariable = ({ v }: { v: Variable }) => {
             size="sm" 
             variant="unstyled" 
             onChange={value => {
-                setVariableValue(v, value.length == 0 ? "" : value.join(VariableSplitChar))
+                const vs = value.filter(v1 => values.includes(v1))
+                setVariableValue(v, vs.length == 0 ? "" : vs.join(VariableSplitChar))
             }}
             options={ values.map(v => ({value:v, label:v == VarialbeAllOption ? "ALL" : v}))}
             exclusive={VarialbeAllOption}
@@ -133,19 +135,7 @@ export const setVariableSelected = (variables: Variable[]) => {
 }
 
 
-export const setVariableValue = (variable: Variable, value) => {
-    // let exist = false;
-    // for (var i = 0; i < variable.values.length; i++) {
-    //     if (variable.values[i] == value) {
-    //         exist = true
-    //         break
-    //     }
-    // }
-
-    // if (!exist) {
-    //     return `value ${value} not exist in variable ${variable.name}`
-    // }
-
+export const setVariableValue = (variable: Variable, value) => {    
     variable.selected = value
     for (let i = 0; i < variables.length; i++) {
         if (variables[i].id == variable.id) {
@@ -164,6 +154,12 @@ export const setVariableValue = (variable: Variable, value) => {
     }
 
     dispatch(VariableChangedEvent)
+   
+    for (const v of variables) {
+        if (v.value.indexOf('${' + variable.name + '}') >= 0) {
+            dispatch(VariableForceReload+v.id)
+        }
+    }
 }
 
 export const setVariable = (name, value, toast?) => {
@@ -176,15 +172,6 @@ export const setVariable = (name, value, toast?) => {
     }
 
     setVariableValue(v, value)
-    // if (err && toast) {
-    //     toast({
-    //         title: "On row click error",
-    //         description: err,
-    //         status: "warning",
-    //         duration: 9000,
-    //         isClosable: true,
-    //     })
-    // }
 }
 
 export const queryVariableValues = async (v:Variable) => {

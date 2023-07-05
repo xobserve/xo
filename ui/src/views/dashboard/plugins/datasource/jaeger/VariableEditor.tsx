@@ -44,6 +44,14 @@ const JaegerVariableEditor = ({ variable, onChange, onQueryResult }: DatasourceV
                 } />
             </Box>
         </FormItem>
+        {data.type == JaegerDsQueryTypes.Operations && <FormItem title="Service">
+            <EditorInputItem value={data.service} onChange={v => {
+                data.service = v
+                onChange(variable => {
+                    variable.value = JSON.stringify(data)
+                })
+            }}  placeholder="enter a service, support variable"/>
+        </FormItem>}
 
     </>)
 }

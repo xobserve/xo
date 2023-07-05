@@ -1,5 +1,4 @@
 import { Box } from "@chakra-ui/react"
-import { variables } from "src/views/dashboard/Dashboard"
 import { MarkdownRender } from "components/markdown/MarkdownRender"
 import { PanelProps } from "types/dashboard"
 import { replaceWithVariables } from "utils/variable"

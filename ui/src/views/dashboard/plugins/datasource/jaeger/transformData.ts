@@ -58,7 +58,6 @@ export const jaegerToPanels = (rawData: any[], panel: Panel, query: PanelQuery, 
 //   })
 // }
 const jaegerToNodeGraphData = (rawData: any[], query: PanelQuery):NodeGraphPluginData => {
-    console.log("here33333:",rawData)
     const data = {
         nodes: [],
         edges: []
@@ -67,7 +66,6 @@ const jaegerToNodeGraphData = (rawData: any[], query: PanelQuery):NodeGraphPlugi
     
     rawData.forEach((item, i) => {
         if (query.data.showServices.length > 0) {
-            console.log("here3333444455:",query.data.showServices)
             if (!query.data.showServices.includes(item.parent) && !query.data.showServices.includes(item.child)) {
                 return
             }
@@ -103,6 +101,5 @@ const jaegerToNodeGraphData = (rawData: any[], query: PanelQuery):NodeGraphPlugi
         })
     })
 
-    console.log("here33333:",data)
     return data
 }

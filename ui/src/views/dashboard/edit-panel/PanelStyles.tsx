@@ -2,7 +2,7 @@ import { Button, Input, NumberInput, NumberInputField, Select, Switch, Textarea,
 import { ColorPicker } from "components/color-picker"
 import { useEffect, useLayoutEffect, useMemo, useState } from "react"
 import customColors from "src/theme/colors"
-import { Panel } from "types/dashboard"
+import { Panel, PanelEditorProps } from "types/dashboard"
 import { PanelBorderType, PanelDecorationType, PanelTitleDecorationType } from "types/panel/styles"
 import PanelAccordion from "./Accordion"
 import { EditorInputItem } from "../../../components/editor/EditorItem"
@@ -10,12 +10,8 @@ import PanelEditItem from "./PanelEditItem"
 import DecorationSelect from "components/largescreen/components/DecorationSelect"
 import BorderSelect from "components/largescreen/components/BorderSelect"
 
-interface Props {
-    panel: Panel
-    onChange: any
-}
 
-const PanelStyles = ({ panel, onChange }: Props) => {
+const PanelStyles = ({ panel, onChange }: PanelEditorProps) => {
     return (
         <>
             <PanelAccordion title="Panel border" defaultOpen>

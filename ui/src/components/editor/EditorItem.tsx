@@ -10,7 +10,7 @@ interface EditorInputProps {
     placeholder?: string
 }
 
-export const EditorInputItem = ({ value, onChange, type="input", size = "sm",placeholder }: EditorInputProps) => {
+export const EditorInputItem = ({ value, onChange, type="input", size = "md",placeholder }: EditorInputProps) => {
     const [temp, setTemp] = useState(value)
     switch (type) {
         case "input":

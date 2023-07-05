@@ -58,12 +58,13 @@ export const checkAndTestJaeger = async (ds:Datasource) => {
 
 export const replaceJaegerQueryWithVariables = (query: PanelQuery) => {
     const showServices0 = query.data?.showServices ? query.data?.showServices?.split(",") : []
- 
+    
     const ss = []
     showServices0.forEach((item, i) => {
         ss.push(...replaceWithVariablesHasMultiValues(item))
     })
     query.data.showServices = ss
+
 }
 
 export const queryServices = async (dsId) => {

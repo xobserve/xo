@@ -11,7 +11,7 @@ import { setVariableSelected } from "src/views/variables/Variables"
 import { prevQueries, prevQueryData } from "src/views/dashboard/grid/PanelGrid"
 import { unstable_batchedUpdates } from "react-dom"
 import useBus, { dispatch } from 'use-bus'
-import {    SetDashboardEvent,  TimeChangedEvent, UpdatePanelEvent, VariableChangedEvent } from "src/data/bus-events"
+import { SetDashboardEvent, TimeChangedEvent, UpdatePanelEvent, VariableChangedEvent } from "src/data/bus-events"
 
 import { useImmer } from "use-immer"
 import { setAutoFreeze } from "immer";
@@ -21,7 +21,7 @@ import Border from "components/largescreen/components/Border"
 import useFullscreen from "hooks/useFullscreen"
 import { initDashboard } from "src/data/dashboard"
 import { initPanel } from "src/data/panel/initPanel"
- 
+
 
 
 
@@ -31,13 +31,15 @@ setAutoFreeze(false)
 // 1. team's side menu, asscessed by a specific url path
 // 2. dashboard page, accessed by a dashboard id
 export let variables: Variable[] = []
-const DashboardWrapper = ({dashboardId}) => {
+const DashboardWrapper = ({ dashboardId }) => {
     const [dashboard, setDashboard] = useImmer<Dashboard>(null)
-    const [gVariables, setGVariables] = useState<Variable[]>([])
+    // const [gVariables, setGVariables] = useState<Variable[]>([])
     const fullscreen = useFullscreen()
 
     useEffect(() => {
-        load()
+        if (!dashboard) {
+            load()   
+        }
         return () => {
             for (const k in prevQueries) {
                 delete prevQueries[k]
@@ -57,7 +59,7 @@ const DashboardWrapper = ({dashboardId}) => {
     useBus(
         (e) => { return e.type == UpdatePanelEvent },
         (e) => {
-            setDashboard((dash:Dashboard) => {
+            setDashboard((dash: Dashboard) => {
                 const i = findIndex(dash.data.panels, p => p.id == e.data.id)
                 if (i >= 0) {
                     dash.data.panels[i] = e.data
@@ -73,8 +75,8 @@ const DashboardWrapper = ({dashboardId}) => {
                     let bodyStyle = document.body.style
                     bodyStyle.background = dashboard?.data.styles?.bg
                     bodyStyle.backgroundSize = "cover"
-                }  
-            },1)
+                }
+            }, 1)
             // 
         }
 
@@ -82,7 +84,7 @@ const DashboardWrapper = ({dashboardId}) => {
             let bodyStyle = document.body.style
             bodyStyle.background = null
         }
-    },[dashboard])
+    }, [dashboard])
 
     const load = async () => {
         const res = await requestApi.get(`/dashboard/byId/${dashboardId}`)
@@ -90,13 +92,12 @@ const DashboardWrapper = ({dashboardId}) => {
         const dash = initDash(res.data)
         unstable_batchedUpdates(() => {
             setDashboard(cloneDeep(dash))
-            setGVariables(res0.data)
-            setCombinedVariables(res0.data)
+            setCombinedVariables(res.data,res0.data)
         })
     }
-    
-    const initDash= (dash) => {
-        dash.data.panels.forEach((panel:Panel) => {
+
+    const initDash = (dash) => {
+        dash.data.panels.forEach((panel: Panel) => {
             // console.log("33333 before",cloneDeep(panel.plugins))
             panel = defaultsDeep(panel, initPanel())
             panel.plugins[panel.type] = defaultsDeep(panel.plugins[panel.type], initPanelPlugins[panel.type])
@@ -109,27 +110,27 @@ const DashboardWrapper = ({dashboardId}) => {
     }
 
     // combine variables which defined separately in dashboard and global
-    const setCombinedVariables = async (gv?) => {
-        const combined = concat(cloneDeep(dashboard?.data?.variables) ?? [], gv ?? gVariables)
+    const setCombinedVariables = async (dash, gvars) => {
+        const combined = concat(cloneDeep(dash.data.variables) ?? [], gvars)
         for (const v of combined) {
             v.values = []
             // get the selected value for each variable from localStorage
         }
         setVariableSelected(combined)
         variables = combined
+
         dispatch(VariableChangedEvent)
+
     }
 
 
 
-    useEffect(() => {
-        setCombinedVariables()
-    }, [dashboard?.data?.variables, gVariables])
 
 
-    const onDashbardChange = useCallback( f => {
+
+    const onDashbardChange = useCallback(f => {
         setDashboard(f)
-    },[])
+    }, [])
 
 
     // const visibleVars = variables.filter(v => {
@@ -142,41 +143,41 @@ const DashboardWrapper = ({dashboardId}) => {
     // (visibleVars?.length > 0 ? "67px" : "38px")
     return (
         <>
-            <PageContainer bg={dashboard?.data.styles.bgEnabled ? dashboard?.data.styles?.bg: null}>
-                {dashboard && <Box pl="6px" pr="6px" width="100%"  height="100%"  minHeight="100vh">
+            <PageContainer bg={dashboard?.data.styles.bgEnabled ? dashboard?.data.styles?.bg : null}>
+                {dashboard && <Box pl="6px" pr="6px" width="100%" height="100%" minHeight="100vh">
                     {/* <Decoration decoration={dashboard.data.styles.decoration}/> */}
                     <DashboardHeader dashboard={dashboard} onChange={onDashbardChange} />
                     <Box key={dashboard.id + fullscreen} id="dashboard-wrapper" mt={headerHeight} py="2" position="relative">
-                        <DashboardBorder border={dashboard.data.styles.border}  />
-                        {dashboard.data.panels?.length > 0 &&<DashboardGrid dashboard={dashboard} onChange={onDashbardChange} />}         
+                        <DashboardBorder border={dashboard.data.styles.border} />
+                        {dashboard.data.panels?.length > 0 && <DashboardGrid dashboard={dashboard} onChange={onDashbardChange} />}
                     </Box>
                 </Box>}
             </PageContainer>
-           
+
         </>
     )
 }
 
 export default DashboardWrapper
 
-const DashboardBorder = ({border}) => {
+const DashboardBorder = ({ border }) => {
     const [height, setHeight] = useState(0)
     const ref = useRef(null)
     useEffect(() => {
         ref.current = setInterval(() => {
             const ele = document.getElementById("dashboard-grid")
-            const h = ele?.offsetHeight+12
+            const h = ele?.offsetHeight + 12
             setHeight(h)
-        },500)
-        return () =>{
+        }, 500)
+        return () => {
             clearInterval(ref.current)
         }
-    },[])
+    }, [])
 
 
     return (
         <>
-        {height > 0 && <Box key={height} position="absolute" width={'100%'} height={height} id="dashboard-border" top="5px"><Border width="100%" height="100%" border={border}><Box height="100%" width="100%"></Box></Border></Box>}
+            {height > 0 && <Box key={height} position="absolute" width={'100%'} height={height} id="dashboard-border" top="5px"><Border width="100%" height="100%" border={border}><Box height="100%" width="100%"></Box></Border></Box>}
         </>
     )
 }
