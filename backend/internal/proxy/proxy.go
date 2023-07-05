@@ -7,7 +7,6 @@ import (
 	"bytes"
 	"io"
 	"net/http"
-	"net/url"
 
 	"github.com/MyStarship/starship/backend/pkg/common"
 	"github.com/MyStarship/starship/backend/pkg/log"
@@ -21,21 +20,13 @@ func Proxy(c *gin.Context) {
 
 	client := &http.Client{}
 
-	var params = url.Values{}
-
-	for k, v := range c.Request.URL.Query() {
-		params.Add(k, v[0])
-	}
-
-	var url1 = targetURL + "?" + params.Encode()
-
 	// read request json body and write to new request body
 	jsonData, _ := c.GetRawData()
 	reqBody := bytes.NewBuffer(jsonData)
 
-	outReq, err := http.NewRequest(c.Request.Method, url1, reqBody)
+	outReq, err := http.NewRequest(c.Request.Method, targetURL, reqBody)
 	if err != nil {
-		logger.Warn("build datasource proxy req error", "url", url1, "error", err.Error())
+		logger.Warn("build datasource proxy req error", "url", targetURL, "error", err.Error())
 		c.JSON(502, common.RespError(err.Error()))
 		return
 	}
@@ -53,7 +44,7 @@ func Proxy(c *gin.Context) {
 
 	res, err := client.Do(outReq)
 	if err != nil {
-		logger.Warn("request to datasource error", "url", url1, "error", err.Error())
+		logger.Warn("request to datasource error", "url", targetURL, "error", err.Error())
 		c.JSON(502, common.RespError(err.Error()))
 		return
 	}

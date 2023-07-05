@@ -69,8 +69,7 @@ export const checkAndTestPrometheus = async (ds: Datasource) => {
     // test connection status
     try {
         // http://localhost:9090/api/v1/labels?match[]=up
-        const res0 = await fetch(`${ds.url}/api/v1/labels?match[]=up`)
-        const res = await res0.json()
+        const res = await requestApi.get(`/proxy?proxy_url=${ds.url}/api/v1/labels?match[]=up`)
         if (res.status) {
             return true
         }
@@ -91,16 +90,12 @@ export const queryPromethuesVariableValues = async (variable: Variable) => {
     const start = timeRange.start.getTime() / 1000
     const end = timeRange.end.getTime() / 1000
 
-    const datasource = datasources.find(ds => ds.id == variable.datasource)
-
-
     let result = [];
     if (data.type == PromDsQueryTypes.LabelValues) {
         if ( data.label) {
             // query label values : https://prometheus.io/docs/prometheus/latest/querying/api/#querying-label-values
-            const url = `${datasource?.url}/api/v1/label/${data.label}/values?${data.useCurrentTime ? `&start=${start}&end=${end}` : ""}${data.metrics ? `&match[]=${data.metrics}` : ''}`
-            const res0 = await fetch(url)
-            const res = await res0.json()
+            const url = `/proxy/${variable.datasource}/api/v1/label/${data.label}/values?${data.useCurrentTime ? `&start=${start}&end=${end}` : ""}${data.metrics ? `&match[]=${data.metrics}` : ''}`
+            const res: any = await requestApi.get(url)
             if (res.status == "success") {
                 result = res.data
             }
@@ -119,16 +114,14 @@ export const queryPromethuesVariableValues = async (variable: Variable) => {
 }
 
 export const queryPrometheusAllMetrics = async (dsId, useCurrentTimerange=true) => {
-    const datasource = datasources.find(ds => ds.id == dsId)
 
     const timeRange = getInitTimeRange()
     const start = timeRange.start.getTime() / 1000
     const end = timeRange.end.getTime() / 1000
 
-    const url = `${datasource?.url}/api/v1/label/__name__/values?${useCurrentTimerange ? `&start=${start}&end=${end}` : ""}`
+    const url = `/proxy/${dsId}/api/v1/label/__name__/values?${useCurrentTimerange ? `&start=${start}&end=${end}` : ""}`
 
-    const res0 = await fetch(url)
-    const res = await res0.json()
+    const res: any= await requestApi.get(url)
     if (res.status == "success") {
         return res.data
     }
@@ -137,15 +130,12 @@ export const queryPrometheusAllMetrics = async (dsId, useCurrentTimerange=true) 
 }
 
 export const queryPrometheusLabels= async (dsId,metric="", useCurrentTimerange = true) => {   
-    const datasource = datasources.find(ds => ds.id == dsId)
-
     const timeRange = getInitTimeRange()
     const start = timeRange.start.getTime() / 1000
     const end = timeRange.end.getTime() / 1000
     
-    const url = `${datasource?.url}/api/v1/labels?${useCurrentTimerange ? `&start=${start}&end=${end}`  : ""}${metric ? `&match[]=${metric}` : ''}`
-    const res0 = await fetch(url)
-    const res = await res0.json()
+    const url = `/proxy/${dsId}/api/v1/labels?${useCurrentTimerange ? `&start=${start}&end=${end}`  : ""}${metric ? `&match[]=${metric}` : ''}`
+    const res:any = await requestApi.get(url)
     if (res.status == "success") {
         return res.data
     }

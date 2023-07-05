@@ -9,6 +9,7 @@ import _ from 'lodash'
 import { getInitTimeRange } from "components/DatePicker/TimePicker"
 import { isJSON } from "utils/is"
 import { replaceWithVariables } from "utils/variable"
+import { requestApi } from "utils/axios/request"
 
 export const run_http_query = async (panel: Panel, q: PanelQuery,range: TimeRange,ds: Datasource) => {
     //@todo: 
@@ -31,10 +32,7 @@ export const run_http_query = async (panel: Panel, q: PanelQuery,range: TimeRang
     }
     
 
-    const res0 = await fetch(url)
-     
-    const res = await res0.json()
-
+    const res = await requestApi.get(`/proxy?proxy_url=${url}`)
     let result = res
     if (!isEmpty(q.data.transformResult)) {
         const transformResult = genDynamicFunction(q.data.transformResult);
@@ -88,11 +86,9 @@ export const queryHttpVariableValues = async (variable:Variable, useCurrentTimer
     }
     
 
-    const res0 = await fetch(url)
-     
-    const res = await res0.json()
-
+    const res = await requestApi.get(`/proxy?proxy_url=${url}`)
     let result = res
+    
     if (!isEmpty(data.transformResult)) {
         const transformResult = genDynamicFunction(data.transformResult);
         if (isFunction(transformResult)) {

@@ -1,63 +1,36 @@
 // 1. Run the query to get the data from datasource
 // 2. Convert the data to the format which AiAPM expects
 
-import { Panel, PanelQuery } from "types/dashboard"
+import { Panel, PanelQuery, PanelType } from "types/dashboard"
 import { Datasource } from "types/datasource"
 import { TimeRange } from "types/time"
 import { isJaegerDatasourceValid } from "./DatasourceEditor"
-import { isJSON } from "utils/is"
+import { requestApi } from "utils/axios/request"
 
 export const run_jaeger_query = async (panel: Panel, q: PanelQuery,range: TimeRange,ds: Datasource) => {
-    //@todo: 
-    // 1. rather than query directyly to prometheus, we should query to our own backend servie
-    // 2. using `axios` instead of `fetch`
+    let res = []
+    switch (panel.type) {
+        case PanelType.NodeGraph:
+            res = await queryDependencies(ds.id, range)
+            break
     
-    const res0 = await fetch(`http://localhost:9090/api/v1/query_range?query=${q.metrics}&start=${range.start.getTime() / 1000}&end=${range.end.getTime() / 1000}&step=15`)
-     
-    const res = await res0.json()
-    
-    if (res.status !== "success") {
-        console.log("Failed to fetch data from prometheus", res)
-        return {
-            error: `${res.errorType}: ${res.error}`,
-            data: []
-        }
+        default:
+            break;
     }
     
-
-    if (res.data.result.length ==0 || res.data.result[0].values.length == 0) {
-        return {
-            error: null,
-            data:[]
-        }
-    }
-
-
-    const data =  []
+    const data =  res
     return {
         error: null,
         data: data
     }
 }
 
-export const queryDependencies = async (url: string, range: TimeRange) => {
+export const queryDependencies = async (dsId, range: TimeRange) => {
     const start= range.start.getTime()
     const end = range.end.getTime()
 
-    const res0 = await fetch(`${url}/api/dependencies?endTs=${end}&loopback=${end-start}`)
-    const res = await res0.json()
-
-    if (!isJSON(res)) {
-        return {
-            error: "Invalid response from Jaeger",
-            data: []
-        }
-    }
-
-    return {
-        error: null,
-        data: res.data
-    }
+    const res = await requestApi.get(`/proxy/${dsId}/api/dependencies?endTs=${end}&loopback=${end-start}`)
+    return res.data
 }
 
 export const checkAndTestJaeger = async (ds:Datasource) => {
@@ -69,18 +42,8 @@ export const checkAndTestJaeger = async (ds:Datasource) => {
 
     // test connection status
     try {
-        // http://localhost:9090/api/v1/labels?match[]=up
-        const now = new Date()
-        const timeRange = {
-            start: new Date(now.getTime() - 1000 * 60),
-            end: now
-        }
-        const res = await  queryDependencies(ds.url, timeRange)
-        if (!res.error) {
-            return true
-        }
-
-        return "test failed:" + res.error
+        await  requestApi.get(`/proxy?proxy_url=${ds.url}/api/services`)
+        return true
     } catch (error) {
         return error.message
     }

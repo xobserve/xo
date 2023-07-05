@@ -109,8 +109,8 @@ func (s *Server) Start() error {
 		r.DELETE("/datasource/:id", IsLogin(), datasource.DeleteDatasource)
 
 		// proxy apis
-		r.Any("/proxy/ds/:id/*path", proxy.ProxyDatasource)
-		r.Any("/proxy/ds/:id", proxy.ProxyDatasource)
+		r.Any("/proxy/:id/*path", proxy.ProxyDatasource)
+		r.Any("/proxy/:id", proxy.ProxyDatasource)
 		r.GET("/proxy", proxy.Proxy)
 
 		r.Use(gzip.Gzip(gzip.DefaultCompression))
