@@ -199,7 +199,7 @@ export const queryVariableValues = async (v:Variable) => {
                 result = await queryPromethuesVariableValues(v)
                 break;
             case DatasourceType.ExternalHttp:
-                result = await queryHttpVariableValues(v)
+                result = await queryHttpVariableValues(v) as any
                 break;
             default:
                 break;

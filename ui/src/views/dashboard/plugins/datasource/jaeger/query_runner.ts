@@ -30,7 +30,7 @@ export const queryDependencies = async (dsId, range: TimeRange) => {
     const start= range.start.getTime()
     const end = range.end.getTime()
 
-    const res = await requestApi.get(`/proxy/${dsId}/api/dependencies?endTs=${end}&loopback=${end-start}`)
+    const res = await requestApi.get(`/proxy/${dsId}/api/dependencies?endTs=${end}&lookback=${end-start}`)
     return res.data
 }
 

@@ -151,6 +151,7 @@ export interface NodeGraphSettings {
             light: string
             dark: string
         }
+        display: boolean
     }
 
     legend: {

@@ -14,6 +14,8 @@ import { NodeGraphIcon, NodeGraphMenuItem } from "types/panel/plugins"
 import { useImmer } from "use-immer"
 import { isJSON } from "utils/is"
 import CodeEditor from "components/CodeEditor/CodeEditor"
+import { dispatch } from "use-bus"
+import { PanelForceRebuildEvent } from "src/data/bus-events"
 
 
 
@@ -54,7 +56,17 @@ const NodeGraphPanelEditor = (props: PanelEditorProps) => {
                     <option value="polyline">polyline</option>
                 </Select>
             </PanelEditItem>
-
+            <PanelEditItem title="Dispaly label" info={
+                <Text>You need to click Apply Button(in top-right) to see the new trigger taken effect</Text>
+            }>
+                <Switch defaultChecked={panel.plugins.nodeGraph.edge.display} onChange={e => {
+                    const v = e.currentTarget.checked
+                    onChange((panel:Panel) => {
+                        panel.plugins.nodeGraph.edge.display = v
+                    })
+                    dispatch(PanelForceRebuildEvent + panel.id)
+                }}/>
+            </PanelEditItem>
             <PanelEditItem title="arrow">
                 <Select value={panel.plugins.nodeGraph.edge.arrow} onChange={e => onChange((panel:Panel) => {
                     panel.plugins.nodeGraph.edge.arrow = e.currentTarget.value

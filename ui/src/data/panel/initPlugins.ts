@@ -81,7 +81,7 @@ export const initPanelPlugins: PanelPlugins = {
         },
 
         edge: {
-            shape: 'quadratic',
+            shape: 'line', // quadratic
             arrow: 'default',
             color: {
                 light: '#ddd',
@@ -91,7 +91,8 @@ export const initPanelPlugins: PanelPlugins = {
             highlightColor: {
                 light: '#E0D731',
                 dark: '#00B5D8'
-            }
+            },
+            display: true
         },
 
         legend: {

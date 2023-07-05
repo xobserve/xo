@@ -16,7 +16,7 @@ import HiddenItems from './HiddenItem';
 import { filterData } from './filter/filterData';
 import { getDefaultEdgeLabel, getDefaultEdgeStyle, getDefaultNodeLabel, getDefaultNodeStyle } from './default-styles';
 import { NodeGraphPluginData } from 'types/plugins/nodeGraph';
-import { isEmpty } from 'lodash';
+import { cloneDeep, isEmpty } from 'lodash';
 
 
  
@@ -34,7 +34,7 @@ const NodeGrapPanel = ({ data, panel, dashboardId,width,height }: NodeGraphPanel
     const [graph, setGraph] = useState<Graph>(null);
     const { colorMode } = useColorMode();
     const defaultNodeLabelCfg = getDefaultNodeLabel(colorMode)
-    const defaultEdgeLabelCfg = getDefaultEdgeLabel(colorMode)
+    const defaultEdgeLabelCfg = getDefaultEdgeLabel(colorMode,panel.plugins.nodeGraph)
 
     const [selected, setSelected] = useState(false)
     const contextMenu = useContextMenu(panel.plugins.nodeGraph)
@@ -145,7 +145,7 @@ const NodeGrapPanel = ({ data, panel, dashboardId,width,height }: NodeGraphPanel
                     }
                 },
                 defaultNode: {
-                    type: 'circle',
+                    type: 'donut',
                     style: {
                         lineWidth: 1,
                         fill: 'transparent',
@@ -165,11 +165,21 @@ const NodeGrapPanel = ({ data, panel, dashboardId,width,height }: NodeGraphPanel
             g1.on('node:mouseenter', (evt) => {
                 const { item } = evt;
                 g1.setItemState(item, 'active', true);
+                gh.getEdges().forEach(edge => {
+                    gh.updateItem(edge, {
+                        labelCfg: {
+                            ...defaultEdgeLabelCfg,
+                            style: {
+                                opacity: 0
+                            }
+                        }
+                    })
+                })
                 //@ts-ignore
                 item.getEdges().forEach(edge => {
                     g1.updateItem(edge, {
                         // as we can't fetch the newest colorMode here, we use a global variable instead
-                        labelCfg: getActiveEdgeLabelCfg(newestColorMode)
+                        labelCfg: getActiveEdgeLabelCfg(newestColorMode,panel.plugins.nodeGraph)
                     })
                 })
             });
@@ -187,6 +197,13 @@ const NodeGrapPanel = ({ data, panel, dashboardId,width,height }: NodeGraphPanel
                     })
                 }
 
+                gh.getEdges().forEach(edge => {
+                    // graph.clearItemStates(edge)
+                    // console.log("here333333:",edge, defaultEdgeLabelCfg)
+                    gh.updateItem(edge, {
+                        labelCfg:  defaultEdgeLabelCfg
+                    })
+                })
             });
 
             g1.on('node:click', (evt) => {
@@ -206,7 +223,7 @@ const NodeGrapPanel = ({ data, panel, dashboardId,width,height }: NodeGraphPanel
                 //@ts-ignore
                 item.getEdges().forEach(edge => {
                     g1.updateItem(edge, {
-                        labelCfg: getActiveEdgeLabelCfg(newestColorMode)
+                        labelCfg: getActiveEdgeLabelCfg(newestColorMode,panel.plugins.nodeGraph)
                     })
                     g1.setItemState(edge, 'selected', true);
                 })
@@ -221,8 +238,10 @@ const NodeGrapPanel = ({ data, panel, dashboardId,width,height }: NodeGraphPanel
 
             const newData = filterData(data[0], dashboardId, panel.id)
             gh.data(newData);
+
             gh.render();
-           
+            
+            console.log("her3333222:",cloneDeep(gh))
             setGraph(gh)
             // if (typeof window !== 'undefined') {
             //     window.onresize = () => {
@@ -286,7 +305,7 @@ export default NodeGrapPanel
 
 const onColorModeChange = (graph, data, colorMode, dashboardId, panel:Panel) => {
     const defaultNodeLabelCfg = getDefaultNodeLabel(colorMode)
-    const defaultEdgeLabelCfg = getDefaultEdgeLabel(colorMode)
+    const defaultEdgeLabelCfg = getDefaultEdgeLabel(colorMode,panel.plugins.nodeGraph)
 
     data[0].nodes.forEach((node: any) => {
         if (!node.labelCfg) {

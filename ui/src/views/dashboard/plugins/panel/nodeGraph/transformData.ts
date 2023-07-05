@@ -10,11 +10,14 @@ export const setAttrsForData = (settings: NodeGraphSettings, data: NodeGraphPlug
     let base;
     data.nodes?.forEach((node: any, i) => {
         const attrs = {}
+        let nodeShape = settings.node.shape
         Object.keys(donutColors).map(k => {
             const d = node.data[k]
             if (d != undefined) {
                 attrs[k] = d
-            }  
+            }   else {
+                nodeShape = 'circle'
+            }
         })
         
         node.donutAttrs = attrs
@@ -31,7 +34,8 @@ export const setAttrsForData = (settings: NodeGraphSettings, data: NodeGraphPlug
             }
         }
 
-        node.type = settings.node.shape
+        
+        node.type = nodeShape
         node.donutColorMap = donutColors
         
         let t = 0;
