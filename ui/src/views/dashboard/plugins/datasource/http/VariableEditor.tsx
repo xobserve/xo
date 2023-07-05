@@ -32,7 +32,6 @@ const HttpVariableEditor = ({ variable, onChange, onQueryResult }: DatasourceVar
     
     const loadVariables = async (v) => {
         const result = await queryHttpVariableValues(variable)
-        console.log("here333334:",result)
         onQueryResult(result)
     }
 

@@ -80,7 +80,7 @@ export const queryOperations = async (dsId, service) => {
 export const queryJaegerVariableValues = async (variable: Variable) => {
     const result = {
         error:null,
-        data:null
+        data:[]
     }
     const data = isJSON(variable.value) ? JSON.parse(variable.value) : null
     if (!data) {
@@ -95,7 +95,7 @@ export const queryJaegerVariableValues = async (variable: Variable) => {
             const services  = replaceWithVariablesHasMultiValues(data.service)
             for (let i = 0; i < services.length; i++) {
                 const res = await queryOperations(variable.datasource, services[i])
-                result.data = result.data?.concat(res)
+                result.data = result.data.concat(res)
             }
         }
     } 
