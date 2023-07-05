@@ -6,6 +6,7 @@ import { Datasource } from "types/datasource"
 import { TimeRange } from "types/time"
 import { isJaegerDatasourceValid } from "./DatasourceEditor"
 import { requestApi } from "utils/axios/request"
+import { jaegerToPanels } from "./transformData"
 
 export const run_jaeger_query = async (panel: Panel, q: PanelQuery,range: TimeRange,ds: Datasource) => {
     let res = []
@@ -18,7 +19,7 @@ export const run_jaeger_query = async (panel: Panel, q: PanelQuery,range: TimeRa
             break;
     }
     
-    const data =  res
+    const data =  jaegerToPanels(res, panel,q, range)
     return {
         error: null,
         data: data
