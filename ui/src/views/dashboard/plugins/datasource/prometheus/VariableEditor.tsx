@@ -56,7 +56,7 @@ const PrometheusVariableEditor = ({ variable, onChange,onQueryResult }: Datasour
             </FormItem>
             {
                 data.type == PromDsQueryTypes.LabelValues && <>
-                    <FormItem title="Metric">
+                    <FormItem title="Metric" desc="support using variables">
                         <PromMetricSelect width="400px" dsId={variable.datasource} variant="outline" value={data.metrics} onChange={m => {
                             data.metrics = m
                             onChange(variable => {

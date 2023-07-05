@@ -17,6 +17,7 @@ import { parseVariableFormat } from "utils/format"
 import { variables } from "src/views/dashboard/Dashboard"
 import { VariableSplitChar, VarialbeAllOption } from "src/data/variable"
 import { requestApi } from "utils/axios/request"
+import { replaceWithVariablesHasMultiValues } from "utils/variable"
 
 export const run_prometheus_query = async (panel: Panel, q: PanelQuery, range: TimeRange, ds: Datasource) => {
     if (isEmpty(q.metrics)) {
@@ -83,7 +84,7 @@ export const checkAndTestPrometheus = async (ds: Datasource) => {
 export const queryPromethuesVariableValues = async (variable: Variable) => {
     let result = {
         error: null,
-        data: null
+        data: []
     }
 
     const data = isJSON(variable.value) ? JSON.parse(variable.value) : null
@@ -99,13 +100,17 @@ export const queryPromethuesVariableValues = async (variable: Variable) => {
     if (data.type == PromDsQueryTypes.LabelValues) {
         if (data.label) {
             // query label values : https://prometheus.io/docs/prometheus/latest/querying/api/#querying-label-values
-            const url = `/proxy/${variable.datasource}/api/v1/label/${data.label}/values?${data.useCurrentTime ? `&start=${start}&end=${end}` : ""}${data.metrics ? `&match[]=${data.metrics}` : ''}`
-            const res: any = await requestApi.get(url)
-            if (res.status == "success") {
-                result.data = res.data
-            } else {
-                result.error = res.error
+            const metrics = replaceWithVariablesHasMultiValues(data.metrics)
+            for (const m of metrics) {
+                const url = `/proxy/${variable.datasource}/api/v1/label/${data.label}/values?${data.useCurrentTime ? `&start=${start}&end=${end}` : ""}${m ? `&match[]=${m}` : ''}`
+                const res: any = await requestApi.get(url)
+                if (res.status == "success") {
+                    result.data = result.data.concat(res.data)
+                } else {
+                    result.error = res.error
+                }
             }
+    
         }
     } else if (data.type == PromDsQueryTypes.Metrics) {
         if (!isEmpty(data.regex)) {

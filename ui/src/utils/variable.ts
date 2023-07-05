@@ -41,6 +41,7 @@ export const replaceQueryWithVariables = (q: PanelQuery, datasource: DatasourceT
 }
 
 // replace ${xxx} format in s with every possible value of the variable
+// if s doesn't contain any variable, return [s]
 export const  replaceWithVariablesHasMultiValues =  (s: string): string[] => {
     let res = []
     const formats = parseVariableFormat(s);
@@ -56,6 +57,10 @@ export const  replaceWithVariablesHasMultiValues =  (s: string): string[] => {
             }
             res = selected.map(v => s.replace(`\${${f}}`, v))
         }
+    }
+
+    if (res.length == 0) {
+        res.push(s)
     }
 
     return res
