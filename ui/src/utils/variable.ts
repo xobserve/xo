@@ -5,6 +5,7 @@ import { replacePrometheusQueryWithVariables } from "src/views/dashboard/plugins
 import { replaceJaegerQueryWithVariables } from "src/views/dashboard/plugins/datasource/jaeger/query_runner";
 import { variables } from "src/views/dashboard/Dashboard";
 import { replaceHttpQueryWithVariables } from "src/views/dashboard/plugins/datasource/http/query_runner";
+import { VariableSplitChar, VarialbeAllOption } from "src/data/variable";
 
 // replace ${xxx} format with corresponding variable
 export const replaceWithVariables = (s: string) => {
@@ -35,4 +36,24 @@ export const replaceQueryWithVariables = (q: PanelQuery, datasource: DatasourceT
         default:
             break;
     }
+}
+
+// replace ${xxx} format in s with every possible value of the variable
+export const  replaceWithVariablesHasMultiValues =  (s: string): string[] => {
+    let res = []
+    const formats = parseVariableFormat(s);
+    for (const f of formats) {
+        const v = variables.find(v => v.name ==f)
+        if (v) {
+            let selected = []
+            if (v.selected == VarialbeAllOption) {
+                selected = v.values
+            } else {
+                selected = v.selected?.split(VariableSplitChar)??[]
+            }
+            res = selected.map(v => s.replace(`\${${f}}`, v))
+        }
+    }
+
+    return res
 }

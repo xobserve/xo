@@ -78,7 +78,7 @@ export const PromMetricSelect = ({ dsId, value, onChange, width = "220px", varia
 
     return (
         <Box onClick={loadMetrics} width={width}>
-            <ChakraSelect isClearable value={ value ? { value: value, label: value } : null} placeholder="Select metrics.." variant={variant} size="sm" options={metricsList.map((m) => { return { label: m, value: m } })} onChange={v => onChange(v)}
+            <ChakraSelect isClearable value={ value ? { value: value, label: value } : null} placeholder="Select metrics.." variant={variant} size="md" options={metricsList.map((m) => { return { label: m, value: m } })} onChange={v => onChange(v)}
             />
         </Box>
 
@@ -113,7 +113,7 @@ export const PromLabelSelect = ({ dsId, metric, value, onChange, width = "220px"
 
     return (
         <Box onClick={loadLabels} width={width}>
-            <ChakraSelect value={{ value: value, label: value }} placeholder="Metrics" variant={variant} size="sm" options={labels.map((m) => { return { label: m, value: m } })} onChange={v => onChange(v)}
+            <ChakraSelect value={{ value: value, label: value }} placeholder="Metrics" variant={variant} size="md" options={labels.map((m) => { return { label: m, value: m } })} onChange={v => onChange(v)}
             />
         </Box>
 

@@ -35,7 +35,7 @@ const PrometheusVariableEditor = ({ variable, onChange,onQueryResult }: Datasour
     }
 
     return (<>
-            <FormItem title="Use current time">
+            <FormItem title="Use current time" alignItems="center">
                 <Switch size="md" defaultChecked={data.useCurrentTime} onChange={e => {
                     data.useCurrentTime = e.target.checked
                     onChange(variable => {

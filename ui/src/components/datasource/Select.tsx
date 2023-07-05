@@ -12,9 +12,10 @@ interface Props {
     onChange: any
     allowTypes?: DatasourceType[]
     variant?: Variant
+    size?: "sm" | "md" | "lg"
 }
 
-const DatasourceSelect = ({ value, onChange, allowTypes = [], variant = "unstyled" }: Props) => {
+const DatasourceSelect = ({ value, onChange, allowTypes = [], variant = "unstyled",size="md" }: Props) => {
     const [datasources, setDatasources] = useState<Datasource[]>([])
 
     useEffect(() => {
@@ -40,7 +41,7 @@ const DatasourceSelect = ({ value, onChange, allowTypes = [], variant = "unstyle
     })
 
 
-    return (<ChakraSelect value={{ value: value, label: datasources.find(ds => ds.id == value)?.name }} placeholder="select datasource" variant={variant} size="sm" options={options}
+    return (<ChakraSelect value={{ value: value, label: datasources.find(ds => ds.id == value)?.name }} placeholder="select datasource" variant={variant} size={size} options={options}
         onChange={onChange}
         components={customComponents}
     />)

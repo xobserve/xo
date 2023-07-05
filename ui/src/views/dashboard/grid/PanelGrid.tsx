@@ -277,7 +277,7 @@ export const queryPanelData = async (panel: Panel, dashboardId: string, timeRang
     const interval = calculateInterval(timeRange, ds.queryOptions.maxDataPoints ?? DatasourceMaxDataPoints, ds.queryOptions.minInterval ?? DatasourceMinInterval).intervalMs / 1000
     for (const q0 of ds.queries) {
         const q: PanelQuery = { ...q0, interval }
-        replaceQueryWithVariables(q, ds.type)
+        // replaceQueryWithVariables(q, ds.type)
 
         const id = formatQueryId(ds.id, dashboardId, panel.id, q.id)
         const prevQuery = prevQueries.get(id)

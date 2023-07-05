@@ -25,6 +25,7 @@ import { VariableManuallyChangedKey } from "src/data/storage-keys"
 import { dispatch } from "use-bus"
 import { VariableForceReload } from "src/data/bus-events"
 import FormItem from "components/form/Item"
+import JaegerVariableEditor from "src/views/dashboard/plugins/datasource/jaeger/VariableEditor"
 
 
 
@@ -305,16 +306,16 @@ export const EditVariable = ({ v, isOpen, onClose, isEdit, onSubmit, isGlobal = 
                                 <Input placeholder='give this variable a simple description' value={variable.description} onChange={e => { setVariable({ ...variable, description: e.currentTarget.value }) }} />
                             </FormItem>
                             <FormItem title="Refresh">
-                                <RadionButtons size="sm" options={Object.keys(VariableRefresh).map(k =>
+                                <RadionButtons  options={Object.keys(VariableRefresh).map(k =>
                                     ({ label: VariableRefresh[k], value: VariableRefresh[k] })
                                 )} value={variable.refresh} onChange={(v) => setVariable({ ...variable, refresh: v })} />
                             </FormItem>
 
-                            <FormItem title="Multi value">
+                            <FormItem title="Multi value" alignItems="center">
                                 <Switch defaultChecked={variable.enableMulti} onChange={(e) => setVariable({ ...variable, enableMulti: e.currentTarget.checked })} />
                             </FormItem>
 
-                            <FormItem title="Include all">
+                            <FormItem title="Include all" alignItems="center">
                                 <Switch defaultChecked={variable.enableAll} onChange={(e) => setVariable({ ...variable, enableAll: e.currentTarget.checked })} />
                             </FormItem>
 
@@ -322,7 +323,7 @@ export const EditVariable = ({ v, isOpen, onClose, isEdit, onSubmit, isGlobal = 
 
                         <FormSection title="Query">
                             <FormItem title="Query type">
-                            <RadionButtons size="sm" options={Object.keys(VariableQueryType).map(k =>
+                            <RadionButtons options={Object.keys(VariableQueryType).map(k =>
                                     ({ label: k, value: VariableQueryType[k] })
                                 )} value={variable.type} onChange={v => setVariable({ ...variable, type: v, value: '' })} />
                             </FormItem>
@@ -334,13 +335,16 @@ export const EditVariable = ({ v, isOpen, onClose, isEdit, onSubmit, isGlobal = 
                             {variable.type == VariableQueryType.Datasource && <>
                                 <FormItem title="Select datasource">
                                     <Box width="200px">
-                                        <DatasourceSelect value={variable.datasource} onChange={id => setVariable(v => { v.datasource = id; v.value = "" })} allowTypes={[DatasourceType.Prometheus, DatasourceType.ExternalHttp]} variant="outline" /></Box>
+                                        <DatasourceSelect value={variable.datasource} onChange={id => setVariable(v => { v.datasource = id; v.value = "" })} allowTypes={[DatasourceType.Prometheus, DatasourceType.ExternalHttp, DatasourceType.Jaeger]} variant="outline" /></Box>
                                 </FormItem>
                                 {
                                     currentDatasource?.type == DatasourceType.Prometheus && <PrometheusVariableEditor variable={variable} onChange={setVariable} onQueryResult={onQueryResult} />
                                 }
                                 {
                                     currentDatasource?.type == DatasourceType.ExternalHttp && <HttpVariableEditor variable={variable} onChange={setVariable} onQueryResult={onQueryResult} />
+                                }
+                                 {
+                                    currentDatasource?.type == DatasourceType.Jaeger && <JaegerVariableEditor variable={variable} onChange={setVariable} onQueryResult={onQueryResult} />
                                 }
                             </>
                             }
