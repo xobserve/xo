@@ -110,3 +110,9 @@ func DeleteDatasource(c *gin.Context) {
 
 	c.JSON(http.StatusOK, common.RespSuccess(nil))
 }
+
+func GetDatasource(id int64) (*models.Datasource, error) {
+	ds := &models.Datasource{}
+	err := db.Conn.QueryRow("SELECT name,type,url, created FROM datasource WHERE id=?", id).Scan(&ds.Name, &ds.Type, &ds.URL, &ds.Created)
+	return ds, err
+}

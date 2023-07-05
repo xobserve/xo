@@ -58,6 +58,7 @@ func (s *Server) Start() error {
 
 		// global config
 		r.GET("/config/ui", getUIConfig)
+
 		// user apis
 		r.POST("/login", user.Login)
 		r.POST("/logout", user.Logout)
@@ -105,6 +106,9 @@ func (s *Server) Start() error {
 		r.POST("/datasource/save", IsLogin(), datasource.SaveDatasource)
 		r.GET("/datasource/all", datasource.GetDatasources)
 		r.DELETE("/datasource/:id", IsLogin(), datasource.DeleteDatasource)
+		r.Any("/proxy/:id/*path", datasource.Proxy)
+		r.Any("/proxy/:id", datasource.Proxy)
+
 		r.Use(gzip.Gzip(gzip.DefaultCompression))
 
 		s.srv = &http.Server{
