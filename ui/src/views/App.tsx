@@ -1,4 +1,4 @@
-import { ChakraProvider } from '@chakra-ui/react'
+import { ChakraProvider, useToast } from '@chakra-ui/react'
 import Head from 'next/head'
 import React, { useEffect, useState } from 'react'
 import FontFace from 'components/font-face'
@@ -22,11 +22,13 @@ const { ToastContainer } = createStandaloneToast()
 export let canvasCtx;
 export let datasources: Datasource[] = []
 export let gvariables: Variable[] = []
+export let gtoast
 //@ts-ignore
 const AppView = ({ Component, pageProps }) => {
   const [cfg, setConfig] = useState<UIConfig>(null)
   canvasCtx = document.createElement('canvas').getContext('2d')!;
-
+  const toast = useToast()
+  gtoast = toast
   useEffect(() => {
     loadConfig()
     loadVariables()
@@ -50,8 +52,8 @@ const AppView = ({ Component, pageProps }) => {
 
     for (const v of res.data) {
       if (v.selected == VarialbeAllOption) {
-        const values = await queryVariableValues(v)
-        v.values = values
+        const res1 = await queryVariableValues(v)
+        v.values = res1.data??[]
       }
       // get the selected value for each variable from localStorage
     }

@@ -1,4 +1,4 @@
-import { HStack, Text } from "@chakra-ui/react"
+import { HStack, Text, useToast } from "@chakra-ui/react"
 import {  variables } from "src/views/dashboard/Dashboard"
 import { TimeChangedEvent, VariableChangedEvent, VariableForceReload } from "src/data/bus-events"
 import { Variable, VariableQueryType, VariableRefresh } from "types/variable"
@@ -33,6 +33,7 @@ const SelectVariables = ({ variables }: Props) => {
 export default SelectVariables
 
 const SelectVariable = ({ v }: { v: Variable }) => {
+    const toast = useToast()
     const [values, setValues] = useState<string[]>([])
 
     useBus(
@@ -80,7 +81,12 @@ const SelectVariable = ({ v }: { v: Variable }) => {
         if (needQuery) {
             console.log("load variable values( query )", v.name)
             const res = await queryVariableValues(v)
-            result = [...result, ...res]
+            if (res.error) {
+                setValues([])
+                v.values = []
+                return 
+            }
+            result = [...result, ...res.data??[]]
             if (v.refresh == VariableRefresh.Manually) {
                 storage.set(VariableManuallyChangedKey+v.id, res)
             }
@@ -90,6 +96,7 @@ const SelectVariable = ({ v }: { v: Variable }) => {
             dispatch(VariableChangedEvent)   
         }
 
+       
         setValues(result)
         v.values = result
 
@@ -156,7 +163,7 @@ export const setVariableValue = (variable: Variable, value) => {
     dispatch(VariableChangedEvent)
    
     for (const v of variables) {
-        if (v.value.indexOf('${' + variable.name + '}') >= 0) {
+        if (v.id != variable.id &&  v.value.indexOf('${' + variable.name + '}') >= 0) {
             dispatch(VariableForceReload+v.id)
         }
     }
@@ -175,10 +182,13 @@ export const setVariable = (name, value, toast?) => {
 }
 
 export const queryVariableValues = async (v:Variable) => {
-    let result = []
+    let result = {
+        error: null,
+        data: null
+    }
     if (v.type == VariableQueryType.Custom) {
         if (v.value.trim() != "") {
-            result = v.value.split(",")
+            result.data = v.value.split(",")
         }
     } else {
         const ds = datasources.find(d => d.id == v.datasource)
@@ -192,15 +202,20 @@ export const queryVariableValues = async (v:Variable) => {
                 break;
             case DatasourceType.Jaeger:
                 result = await queryJaegerVariableValues(v)
+                break
             default:
                 break;
         }
     }
 
+    if (!result.error) {
+        return result
+    }
+
     if (!isEmpty(v.regex)) {
         const regex = new RegExp(v.regex)
-        result = result?.filter(v => regex.test(v))
+        result.data = result?.data?.filter(v => regex.test(v))
     }
    
-    return result??[]
+    return result
 }

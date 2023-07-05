@@ -1,4 +1,4 @@
-import { Button, Table, TableContainer, Tag, Tbody, Td, Th, Thead, Tr, Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay, useDisclosure,  Input, Flex, Box, useToast, Text, Switch, AlertDialog, AlertDialogOverlay, AlertDialogContent, AlertDialogHeader, AlertDialogBody, AlertDialogFooter } from "@chakra-ui/react"
+import { Button, Table, TableContainer, Tag, Tbody, Td, Th, Thead, Tr, Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay, useDisclosure, Input, Flex, Box, useToast, Text, Switch, AlertDialog, AlertDialogOverlay, AlertDialogContent, AlertDialogHeader, AlertDialogBody, AlertDialogFooter } from "@chakra-ui/react"
 import { DetailAlert, DetailAlertItem } from "components/DetailAlert"
 import RadionButtons from "components/RadioButtons"
 import DatasourceSelect from "components/datasource/Select"
@@ -252,6 +252,7 @@ interface EditProps {
 
 
 export const EditVariable = ({ v, isOpen, onClose, isEdit, onSubmit, isGlobal = false }: EditProps) => {
+    const toast = useToast()
     const [variable, setVariable] = useImmer<Variable>(null)
     const [datasources, setDatasources] = useState<Datasource[]>(null)
     const [variableValues, setVariableValues] = useState<string[]>([])
@@ -262,7 +263,7 @@ export const EditVariable = ({ v, isOpen, onClose, isEdit, onSubmit, isGlobal = 
 
     useEffect(() => {
         load()
-        queryVariableValues(v).then(result => setVariableValues(result))
+        queryVariableValues(v).then(result => setVariableValues(result.data ?? []))
 
     }, [])
 
@@ -272,108 +273,134 @@ export const EditVariable = ({ v, isOpen, onClose, isEdit, onSubmit, isGlobal = 
     }
 
     const onQueryResult = result => {
-        const regex = new RegExp(variable.regex)
-        let res = result
-        if (variable.regex) {
-            res = result?.filter(r => regex.test(r))
+        if (!result.error) {
+            try {
+                const regex = new RegExp(variable.regex)
+                let res = result.data
+                if (variable.regex) {
+                    res = result?.data?.filter(r => regex.test(r))
+                }
+
+                if (!res) {
+                    res = []
+                }
+                setVariableValues(res)
+                // if (result.data) {
+                //     toast({
+                //         title: "Variable values updated!",
+                //         status: "success",
+                //         duration: 2000,
+                //         isClosable: true,
+                //     });
+                // }
+            
+                return
+            } catch (error) {
+                result.error = error.message
+            }
+
         }
+        toast({
+            title: "Error",
+            description: result.error,
+            status: "error",
+            duration: 3000,
+            isClosable: true,
+        });
 
-        if (!isArray(res)) {
-            res = []
-        }
-        setVariableValues(res)
-    }
+        setVariableValues([])
+}
 
-    const currentDatasource = datasources?.find(ds => ds.id == variable?.datasource)
+const currentDatasource = datasources?.find(ds => ds.id == variable?.datasource)
 
-    return (<>
-        <Modal isOpen={isOpen} onClose={onClose} size="full">
-            <ModalOverlay />
-            <ModalContent minW="600px">
-                <ModalHeader>{isEdit ? "Edit variable" : "Add new variable"} </ModalHeader>
-                <ModalCloseButton />
-                {variable && <ModalBody>
-                    <Form maxWidth="600px" sx={{
+return (<>
+    <Modal isOpen={isOpen} onClose={onClose} size="full">
+        <ModalOverlay />
+        <ModalContent minW="600px">
+            <ModalHeader>{isEdit ? "Edit variable" : "Add new variable"} </ModalHeader>
+            <ModalCloseButton />
+            {variable && <ModalBody>
+                <Form maxWidth="600px" sx={{
                     '.form-item-label': {
                         width: "150px"
                     }
                 }}>
-                        <FormSection title="Basic">
-                            <FormItem title="Name">
-                                <Input placeholder='Only alphabet and digit numbers are allowed' value={variable.name} onChange={e => { setVariable({ ...variable, name: e.currentTarget.value }) }} />
-                            </FormItem>
-                            <FormItem title="Description">
-                                <Input placeholder='give this variable a simple description' value={variable.description} onChange={e => { setVariable({ ...variable, description: e.currentTarget.value }) }} />
-                            </FormItem>
-                            <FormItem title="Refresh">
-                                <RadionButtons  options={Object.keys(VariableRefresh).map(k =>
-                                    ({ label: VariableRefresh[k], value: VariableRefresh[k] })
-                                )} value={variable.refresh} onChange={(v) => setVariable({ ...variable, refresh: v })} />
-                            </FormItem>
+                    <FormSection title="Basic">
+                        <FormItem title="Name">
+                            <Input placeholder='Only alphabet and digit numbers are allowed' value={variable.name} onChange={e => { setVariable({ ...variable, name: e.currentTarget.value }) }} />
+                        </FormItem>
+                        <FormItem title="Description">
+                            <Input placeholder='give this variable a simple description' value={variable.description} onChange={e => { setVariable({ ...variable, description: e.currentTarget.value }) }} />
+                        </FormItem>
+                        <FormItem title="Refresh">
+                            <RadionButtons options={Object.keys(VariableRefresh).map(k =>
+                                ({ label: VariableRefresh[k], value: VariableRefresh[k] })
+                            )} value={variable.refresh} onChange={(v) => setVariable({ ...variable, refresh: v })} />
+                        </FormItem>
 
-                            <FormItem title="Multi value" alignItems="center">
-                                <Switch defaultChecked={variable.enableMulti} onChange={(e) => setVariable({ ...variable, enableMulti: e.currentTarget.checked })} />
-                            </FormItem>
+                        <FormItem title="Multi value" alignItems="center">
+                            <Switch defaultChecked={variable.enableMulti} onChange={(e) => setVariable({ ...variable, enableMulti: e.currentTarget.checked })} />
+                        </FormItem>
 
-                            {/* <FormItem title="Include all" alignItems="center">
+                        {/* <FormItem title="Include all" alignItems="center">
                                 <Switch defaultChecked={variable.enableAll} onChange={(e) => setVariable({ ...variable, enableAll: e.currentTarget.checked })} />
                             </FormItem> */}
 
-                        </FormSection>
+                    </FormSection>
 
-                        <FormSection title="Query">
-                            <FormItem title="Query type">
+                    <FormSection title="Query">
+                        <FormItem title="Query type">
                             <RadionButtons options={Object.keys(VariableQueryType).map(k =>
-                                    ({ label: k, value: VariableQueryType[k] })
-                                )} value={variable.type} onChange={v => setVariable({ ...variable, type: v, value: '' })} />
+                                ({ label: k, value: VariableQueryType[k] })
+                            )} value={variable.type} onChange={v => setVariable({ ...variable, type: v, value: '' })} />
+                        </FormItem>
+
+                        {variable.type == VariableQueryType.Custom && <FormItem title="Query values">
+                            <Input width="400px" placeholder='Values separated by comma,e.g 1,10,20,a,b,c' value={variable.value} onChange={e => { setVariable({ ...variable, value: e.currentTarget.value }) }} onBlur={() => onQueryResult({error:null,data: variable.value.split(',')})} />
+                        </FormItem>}
+
+                        {variable.type == VariableQueryType.Datasource && <>
+                            <FormItem title="Select datasource">
+                                <Box width="200px">
+                                    <DatasourceSelect value={variable.datasource} onChange={id => setVariable(v => { v.datasource = id; v.value = "" })} allowTypes={[DatasourceType.Prometheus, DatasourceType.ExternalHttp, DatasourceType.Jaeger]} variant="outline" /></Box>
                             </FormItem>
-                            
-                            {variable.type == VariableQueryType.Custom && <FormItem title="Query values">
-                                <Input width="400px" placeholder='Values separated by comma,e.g 1,10,20,a,b,c' value={variable.value} onChange={e => { setVariable({ ...variable, value: e.currentTarget.value }) }} onBlur={() => onQueryResult(variable.value.split(','))} />
-                            </FormItem>}
-
-                            {variable.type == VariableQueryType.Datasource && <>
-                                <FormItem title="Select datasource">
-                                    <Box width="200px">
-                                        <DatasourceSelect value={variable.datasource} onChange={id => setVariable(v => { v.datasource = id; v.value = "" })} allowTypes={[DatasourceType.Prometheus, DatasourceType.ExternalHttp, DatasourceType.Jaeger]} variant="outline" /></Box>
-                                </FormItem>
-                                {/* @needs-update-when-add-new-variable-datasource */}
-                                {
-                                    currentDatasource?.type == DatasourceType.Prometheus && <PrometheusVariableEditor variable={variable} onChange={setVariable} onQueryResult={onQueryResult} />
-                                }
-                                {
-                                    currentDatasource?.type == DatasourceType.ExternalHttp && <HttpVariableEditor variable={variable} onChange={setVariable} onQueryResult={onQueryResult} />
-                                }
-                                 {
-                                    currentDatasource?.type == DatasourceType.Jaeger && <JaegerVariableEditor variable={variable} onChange={setVariable} onQueryResult={onQueryResult} />
-                                }
-                            </>
+                            {/* @needs-update-when-add-new-variable-datasource */}
+                            {
+                                currentDatasource?.type == DatasourceType.Prometheus && <PrometheusVariableEditor variable={variable} onChange={setVariable} onQueryResult={onQueryResult} />
                             }
-                        </FormSection>
+                            {
+                                currentDatasource?.type == DatasourceType.ExternalHttp && <HttpVariableEditor variable={variable} onChange={setVariable} onQueryResult={onQueryResult} />
+                            }
+                            {
+                                currentDatasource?.type == DatasourceType.Jaeger && <JaegerVariableEditor variable={variable} onChange={setVariable} onQueryResult={onQueryResult} />
+                            }
+                        </>
+                        }
+                    </FormSection>
 
-                        <FormSection title="Regex filter ( optional )" >
-                            <EditorInputItem value={variable.regex} placeholder="further filter the query result through a Regex pattern" onChange={v => {
-                                setVariable({ ...variable, regex: v })
-                            }} />
-                        </FormSection>
+                    <FormSection title="Regex filter ( optional )" >
+                        <EditorInputItem value={variable.regex} placeholder="further filter the query result through a Regex pattern" onChange={v => {
+                            setVariable({ ...variable, regex: v })
+                        }} />
+                    </FormSection>
 
 
 
-                        <FormSection title="Variable values" >
-                            <Box pt="1">
-                                {!isEmpty(variableValues) && variableValues.slice(0, displayCount).map(v => <Tag size="sm" variant="outline" ml="1">{v}</Tag>)}
-                            </Box>
-                            {variableValues?.length > displayCount && <Button mt="2" size="sm" colorScheme="gray" ml="1" onClick={() => setDisplayCount(displayCount + 30)}>Show more</Button>}
-                        </FormSection>
-                    </Form>
-                </ModalBody>}
-                <ModalFooter>
-                    <Button mr={3} onClick={onClose}>
-                        Close
-                    </Button>
-                    <Button variant='ghost' onClick={() => onSubmit(variable)}>Submit</Button>
-                </ModalFooter>
-            </ModalContent>
-        </Modal>
-    </>)
+                    <FormSection title="Variable values" >
+                        <Box pt="1">
+                            {!isEmpty(variableValues) && variableValues.slice(0, displayCount).map(v => <Tag size="sm" variant="outline" ml="1">{v}</Tag>)}
+                        </Box>
+                        {variableValues?.length > displayCount && <Button mt="2" size="sm" colorScheme="gray" ml="1" onClick={() => setDisplayCount(displayCount + 30)}>Show more</Button>}
+                    </FormSection>
+                </Form>
+            </ModalBody>}
+            <ModalFooter>
+                <Button mr={3} onClick={onClose}>
+                    Close
+                </Button>
+                <Button variant='ghost' onClick={() => onSubmit(variable)}>Submit</Button>
+            </ModalFooter>
+        </ModalContent>
+    </Modal>
+</>)
 }

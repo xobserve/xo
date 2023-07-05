@@ -7,6 +7,7 @@ import { variables } from "src/views/dashboard/Dashboard";
 import { replaceHttpQueryWithVariables } from "src/views/dashboard/plugins/datasource/http/query_runner";
 import { VariableSplitChar, VarialbeAllOption } from "src/data/variable";
 import { gvariables } from "src/views/App";
+import { isEmpty } from "lodash";
 
 // replace ${xxx} format with corresponding variable
 export const replaceWithVariables = (s: string) => {
@@ -51,7 +52,7 @@ export const  replaceWithVariablesHasMultiValues =  (s: string): string[] => {
             if (v.selected == VarialbeAllOption) {
                 selected = v.values
             } else {
-                selected = v.selected?.split(VariableSplitChar)??[]
+                selected = isEmpty(v.selected) ? [] : v.selected.split(VariableSplitChar)
             }
             res = selected.map(v => s.replace(`\${${f}}`, v))
         }

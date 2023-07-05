@@ -1,4 +1,4 @@
-import { Select, Switch } from "@chakra-ui/react"
+import { Button, Select, Switch } from "@chakra-ui/react"
 import { useEffect } from "react"
 import { Variable } from "types/variable"
 import { isJSON } from "utils/is"
@@ -57,7 +57,7 @@ const PrometheusVariableEditor = ({ variable, onChange,onQueryResult }: Datasour
             {
                 data.type == PromDsQueryTypes.LabelValues && <>
                     <FormItem title="Metric">
-                        <PromMetricSelect dsId={variable.datasource} variant="outline" value={data.metrics} onChange={m => {
+                        <PromMetricSelect width="400px" dsId={variable.datasource} variant="outline" value={data.metrics} onChange={m => {
                             data.metrics = m
                             onChange(variable => {
                                 variable.value = JSON.stringify(data)

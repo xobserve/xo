@@ -65,9 +65,13 @@ export const checkAndTestHttp = async (ds:Datasource) => {
 
 
 export const queryHttpVariableValues = async (variable:Variable, useCurrentTimerange = true) => {
+    const result = {
+        error: null,
+        data: null
+    }
     const data = isJSON(variable.value) ? JSON.parse(variable.value) : null
     if (!data) {
-        return []
+        return result
     }
     const timeRange = getInitTimeRange()
     const start = timeRange.start.getTime() / 1000
@@ -85,18 +89,21 @@ export const queryHttpVariableValues = async (variable:Variable, useCurrentTimer
         }
     }
     
-
-    const res = await requestApi.get(`/proxy?proxy_url=${url}`)
-    let result = res
-    
-    if (!isEmpty(data.transformResult)) {
-        const transformResult = genDynamicFunction(data.transformResult);
-        if (isFunction(transformResult)) {
-             result = transformResult(res)
-        }  else {
-            return []
+    try {
+        const res = await requestApi.get(`/proxy?proxy_url=${url}`)
+        result.data = res
+        
+        if (!isEmpty(data.transformResult)) {
+            const transformResult = genDynamicFunction(data.transformResult);
+            if (isFunction(transformResult)) {
+                 result.data = transformResult(res)
+            }  else {
+                result.data = []
+            }
         }
+    } catch (error) {
     }
+
     
     return result
 }

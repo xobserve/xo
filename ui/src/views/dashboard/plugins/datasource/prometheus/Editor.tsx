@@ -1,5 +1,4 @@
-import { Box, HStack, Input, VStack } from "@chakra-ui/react"
-import Label from "components/form/Item"
+import { Box, HStack, Input, VStack, useToast } from "@chakra-ui/react"
 import { cloneDeep } from "lodash"
 import { useEffect, useState } from "react"
 import { PanelQuery } from "types/dashboard"
@@ -10,6 +9,7 @@ import { queryPrometheusAllMetrics, queryPrometheusLabels } from "./query_runner
 import ChakraSelect from "components/select/ChakraSelect"
 import FormItem from "components/form/Item"
 import { Form } from "components/form/Form"
+import InputSelect from "components/select/InputSelect"
 
 
 
@@ -62,6 +62,7 @@ interface MetricSelectProps {
 }
 
 export const PromMetricSelect = ({ dsId, value, onChange, width = "220px", variant = "unstyled", useCurrentTimerange = true }: MetricSelectProps) => {
+    const toast = useToast()
     const [metricsList, setMetricsList] = useState<string[]>([])
 
 
@@ -73,12 +74,22 @@ export const PromMetricSelect = ({ dsId, value, onChange, width = "220px", varia
         }
 
         const res = await queryPrometheusAllMetrics(dsId)
-        setMetricsList(res)
+        if (res.error) {
+            toast({
+                title: "Error",
+                description: res.error,
+                status: "error",
+                duration: 9000,
+                isClosable: true,
+            })
+            return
+        }
+        setMetricsList(res.data)
     }
 
     return (
         <Box onClick={loadMetrics} width={width}>
-            <ChakraSelect isClearable value={ value ? { value: value, label: value } : null} placeholder="Select metrics.." variant={variant} size="md" options={metricsList.map((m) => { return { label: m, value: m } })} onChange={v => onChange(v)}
+            <InputSelect  isClearable value={value} placeholder="Select metrics.." variant={variant} size="md" options={metricsList.map((m) => { return { label: m, value: m } })} onChange={v => onChange(v)}
             />
         </Box>
 
@@ -97,7 +108,7 @@ interface LabelSelectProps {
 
 export const PromLabelSelect = ({ dsId, metric, value, onChange, width = "220px", variant = "unstyled", useCurrentTimerange = true }: LabelSelectProps) => {
     const [labels, setLabels] = useState<string[]>([])
-
+    const toast = useToast()
     useEffect(() => {
         loadLabels(true)
     }, [metric])
@@ -108,7 +119,11 @@ export const PromLabelSelect = ({ dsId, metric, value, onChange, width = "220px"
         }
 
         const res = await queryPrometheusLabels(dsId, metric)
-        setLabels(res)
+        if (res.error) {
+            setLabels([])
+            return
+        }
+        setLabels(res.data)
     }
 
     return (

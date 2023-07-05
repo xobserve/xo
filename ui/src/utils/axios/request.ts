@@ -71,7 +71,7 @@ requestApi.interceptors.response.use(
     let message = "error msg missing"
     let status = 200
     if (error.response && error.response.data) {
-      message = error.response.data.message
+      message = error.response.data.message?? error.response.data.error
       status = error.response.status
     } else {
       message = error.text ?? error.message
@@ -106,7 +106,7 @@ requestApi.interceptors.response.use(
 
 
     // 这么写是为了保证请求调用方在await中等待的都是正确的返回数据，就不用对数据进行二次错误判断
-    throw (error.message)
+    throw (error.text??error.message)
     // return error.response
   }
 )

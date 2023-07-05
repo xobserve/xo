@@ -7,6 +7,7 @@ import { isJSON } from "utils/is"
 import { useEffect } from "react"
 import { queryHttpVariableValues } from "./query_runner"
 import FormItem from "components/form/Item"
+import { EditorInputItem } from "components/editor/EditorItem"
 
 const HttpVariableEditor = ({ variable, onChange, onQueryResult }: DatasourceVariableEditorProps) => {
     const toast = useToast()
@@ -31,15 +32,15 @@ const HttpVariableEditor = ({ variable, onChange, onQueryResult }: DatasourceVar
     
     const loadVariables = async (v) => {
         const result = await queryHttpVariableValues(variable)
+        console.log("here333334:",result)
         onQueryResult(result)
     }
 
     return (<>
         <FormItem title="URL">
-            <Input
+            <EditorInputItem
                 value={data.url}
-                onChange={(e) => {
-                    const v = e.currentTarget.value
+                onChange={(v) => {
                     data.url = v
                     onChange(variable => {
                         variable.value = JSON.stringify(data)

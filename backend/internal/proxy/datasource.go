@@ -65,5 +65,5 @@ func ProxyDatasource(c *gin.Context) {
 
 	buffer := bytes.NewBuffer(nil)
 	io.Copy(buffer, res.Body)
-	c.String(res.StatusCode, buffer.String())
+	c.String(200, buffer.String())
 }
