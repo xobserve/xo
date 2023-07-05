@@ -5,6 +5,7 @@ import { Panel, PanelQuery } from "types/dashboard"
 import { Datasource } from "types/datasource"
 import { TimeRange } from "types/time"
 import { isJaegerDatasourceValid } from "./DatasourceEditor"
+import { isJSON } from "utils/is"
 
 export const run_jaeger_query = async (panel: Panel, q: PanelQuery,range: TimeRange,ds: Datasource) => {
     //@todo: 
@@ -22,7 +23,7 @@ export const run_jaeger_query = async (panel: Panel, q: PanelQuery,range: TimeRa
             data: []
         }
     }
-
+    
 
     if (res.data.result.length ==0 || res.data.result[0].values.length == 0) {
         return {
@@ -39,6 +40,25 @@ export const run_jaeger_query = async (panel: Panel, q: PanelQuery,range: TimeRa
     }
 }
 
+export const queryDependencies = async (url: string, range: TimeRange) => {
+    const start= range.start.getTime()
+    const end = range.end.getTime()
+
+    const res0 = await fetch(`${url}/api/dependencies?endTs=${end}&loopback=${end-start}`)
+    const res = await res0.json()
+
+    if (!isJSON(res)) {
+        return {
+            error: "Invalid response from Jaeger",
+            data: []
+        }
+    }
+
+    return {
+        error: null,
+        data: res.data
+    }
+}
 
 export const checkAndTestJaeger = async (ds:Datasource) => {
     // check datasource setting is valid
@@ -50,13 +70,17 @@ export const checkAndTestJaeger = async (ds:Datasource) => {
     // test connection status
     try {
         // http://localhost:9090/api/v1/labels?match[]=up
-        const res0 = await fetch(`${ds.url}/api/v1/labels?match[]=up`)
-        const res = await res0.json()
-        if (res.status) {
+        const now = new Date()
+        const timeRange = {
+            start: new Date(now.getTime() - 1000 * 60),
+            end: now
+        }
+        const res = await  queryDependencies(ds.url, timeRange)
+        if (!res.error) {
             return true
         }
 
-        return "test failed"
+        return "test failed:" + res.error
     } catch (error) {
         return error.message
     }
