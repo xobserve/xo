@@ -13,6 +13,7 @@ import { datasources } from "src/views/App"
 import PopoverSelect from "components/select/PopoverSelect"
 import { VarialbeAllOption, VariableSplitChar } from "src/data/variable"
 import { VariableManuallyChangedKey } from "src/data/storage-keys"
+import { queryJaegerVariableValues } from "../dashboard/plugins/datasource/jaeger/query_runner"
 
 
 interface Props {
@@ -194,6 +195,7 @@ export const queryVariableValues = async (v:Variable) => {
         }
     } else {
         const ds = datasources.find(d => d.id == v.datasource)
+        //@needs-update-when-add-new-variable-datasource
         switch (ds?.type) {
             case DatasourceType.Prometheus:
                 result = await queryPromethuesVariableValues(v)
@@ -201,6 +203,8 @@ export const queryVariableValues = async (v:Variable) => {
             case DatasourceType.ExternalHttp:
                 result = await queryHttpVariableValues(v) as any
                 break;
+            case DatasourceType.Jaeger:
+                result = await queryJaegerVariableValues(v)
             default:
                 break;
         }

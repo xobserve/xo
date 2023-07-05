@@ -11,6 +11,7 @@ import { isJSON } from "utils/is"
 import { Variable } from "types/variable"
 import { JaegerDsQueryTypes } from "./VariableEditor"
 import { replaceWithVariablesHasMultiValues } from "utils/variable"
+import { cloneDeep } from "lodash"
 
 export const run_jaeger_query = async (panel: Panel, q: PanelQuery,range: TimeRange,ds: Datasource) => {
     let res = []
@@ -56,7 +57,13 @@ export const checkAndTestJaeger = async (ds:Datasource) => {
 
 
 export const replaceJaegerQueryWithVariables = (query: PanelQuery) => {
-
+    const showServices0 = query.data?.showServices ? query.data?.showServices?.split(",") : []
+ 
+    const ss = []
+    showServices0.forEach((item, i) => {
+        ss.push(...replaceWithVariablesHasMultiValues(item))
+    })
+    query.data.showServices = ss
 }
 
 export const queryServices = async (dsId) => {

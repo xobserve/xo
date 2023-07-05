@@ -22,12 +22,14 @@ export const replaceWithVariables = (s: string) => {
 
 
 export const replaceQueryWithVariables = (q: PanelQuery, datasource: DatasourceType) => {
+    console.log("here33333ddd11",q)
     //@needs-update-when-add-new-datasource
     switch (datasource) {
         case DatasourceType.Prometheus:
             replacePrometheusQueryWithVariables(q)
             break;
         case DatasourceType.Jaeger:
+            console.log("here33333ddd11",q)
             replaceJaegerQueryWithVariables(q)
             break
         case DatasourceType.ExternalHttp:

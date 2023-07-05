@@ -5,7 +5,7 @@ import { IoMdInformation } from "react-icons/io";
 import { memo, useCallback, useEffect, useState } from "react";
 import { run_prometheus_query } from "../plugins/datasource/prometheus/query_runner";
 import { DatasourceMaxDataPoints, DatasourceMinInterval, PANEL_HEADER_HEIGHT, StorageCopiedPanelKey } from "src/data/constants";
-import { isEmpty, isEqual } from "lodash";
+import { cloneDeep, isEmpty, isEqual } from "lodash";
 import { TimeRange } from "types/time";
 import { Variable } from "types/variable";
 import { replaceQueryWithVariables, replaceWithVariables } from "utils/variable";
@@ -276,8 +276,9 @@ export const queryPanelData = async (panel: Panel, dashboardId: string, timeRang
     let error
     const interval = calculateInterval(timeRange, ds.queryOptions.maxDataPoints ?? DatasourceMaxDataPoints, ds.queryOptions.minInterval ?? DatasourceMinInterval).intervalMs / 1000
     for (const q0 of ds.queries) {
-        const q: PanelQuery = { ...q0, interval }
-        // replaceQueryWithVariables(q, ds.type)
+        const q: PanelQuery = { ...cloneDeep(q0), interval }
+        console.log("here33333dd21",q)
+        replaceQueryWithVariables(q, ds.type)
 
         const id = formatQueryId(ds.id, dashboardId, panel.id, q.id)
         const prevQuery = prevQueries.get(id)

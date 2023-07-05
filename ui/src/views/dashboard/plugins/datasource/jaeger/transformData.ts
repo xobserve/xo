@@ -2,6 +2,7 @@ import { isEmpty } from "lodash"
 import { Panel, PanelQuery, PanelType } from "types/dashboard"
 import { NodeGraphPluginData } from "types/plugins/nodeGraph"
 import { TimeRange } from "types/time"
+import { replaceWithVariablesHasMultiValues } from "utils/variable"
 
 export const jaegerToPanels = (rawData: any[], panel: Panel, query: PanelQuery, range: TimeRange) => {
     if (rawData.length == 0) {
@@ -63,10 +64,11 @@ const jaegerToNodeGraphData = (rawData: any[], query: PanelQuery):NodeGraphPlugi
         edges: []
     }
 
-    const showServices = query.data?.showServices ? query.data?.showServices?.split(",") : []
+    
     rawData.forEach((item, i) => {
-        if (showServices.length > 0) {
-            if (!showServices.includes(item.parent) && !showServices.includes(item.child)) {
+        if (query.data.showServices.length > 0) {
+            console.log("here3333444455:",query.data.showServices)
+            if (!query.data.showServices.includes(item.parent) && !query.data.showServices.includes(item.child)) {
                 return
             }
         }
