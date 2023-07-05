@@ -98,7 +98,7 @@ const EditPanelQuery = (props: Props) => {
                             </HStack>
                         </Flex>
                         {
-                            <Box pl="4"><CustomQueryEditor query={query} selected={panel.datasource} onChange={onChange} /></Box>
+                            <Box pl="4"><CustomQueryEditor panel={panel} query={query} selected={panel.datasource} onChange={onChange} /></Box>
                         }
                     </Box>
                 })}
@@ -146,7 +146,7 @@ const DatasourceQueryOption = ({ panel, onChange }: Props) => {
         </VStack>
     )
 }
-const CustomQueryEditor = ({ query, onChange, selected }) => {
+const CustomQueryEditor = ({ panel,query, onChange, selected }) => {
     const onQueryChange = (query: PanelQuery) => {
         onChange((panel: Panel) => {
             const ds = panel.datasource
@@ -162,13 +162,13 @@ const CustomQueryEditor = ({ query, onChange, selected }) => {
     //@needs-update-when-add-new-datasource
     switch (selected.type) {
         case DatasourceType.Prometheus:
-            return <PrometheusQueryEditor datasource={selected} query={query} onChange={onQueryChange} />
+            return <PrometheusQueryEditor datasource={selected} query={query} onChange={onQueryChange} panel={panel} />
         case DatasourceType.TestData:
-            return <TestDataQueryEditor datasource={selected} query={query} onChange={onQueryChange} />
+            return <TestDataQueryEditor datasource={selected} query={query} onChange={onQueryChange} panel={panel}/>
         case DatasourceType.Jaeger:
-            return <JaegerQueryEditor datasource={selected} query={query} onChange={onQueryChange} />
+            return <JaegerQueryEditor datasource={selected} query={query} onChange={onQueryChange} panel={panel}/>
         case DatasourceType.ExternalHttp:
-            return <HttpQueryEditor datasource={selected} query={query} onChange={onQueryChange} />
+            return <HttpQueryEditor datasource={selected} query={query} onChange={onQueryChange} panel={panel} />
         default:
             return <></>
     }

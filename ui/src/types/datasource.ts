@@ -1,4 +1,4 @@
-import { DatasourceType, PanelDatasource, PanelQuery } from "./dashboard"
+import { DatasourceType, Panel, PanelDatasource, PanelQuery } from "./dashboard"
 import { Variable } from "./variable"
 
 export interface Datasource {
@@ -12,6 +12,7 @@ export interface Datasource {
 }
 
 export interface DatasourceEditorProps {
+    panel?: Panel
     datasource: PanelDatasource
     query: PanelQuery
     onChange: any

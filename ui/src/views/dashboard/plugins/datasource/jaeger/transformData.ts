@@ -63,7 +63,13 @@ const jaegerToNodeGraphData = (rawData: any[], query: PanelQuery):NodeGraphPlugi
         edges: []
     }
 
+    const showServices = query.data?.showServices ? query.data?.showServices?.split(",") : []
     rawData.forEach((item, i) => {
+        if (showServices.length > 0) {
+            if (!showServices.includes(item.parent) && !showServices.includes(item.child)) {
+                return
+            }
+        }
         data.nodes.find(n => n.id == item.parent) || data.nodes.push({
             id: item.parent,
             label: item.parent,

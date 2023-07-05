@@ -64,7 +64,6 @@ const NodeGraphPanelEditor = (props: PanelEditorProps) => {
                     onChange((panel:Panel) => {
                         panel.plugins.nodeGraph.edge.display = v
                     })
-                    dispatch(PanelForceRebuildEvent + panel.id)
                 }}/>
             </PanelEditItem>
             <PanelEditItem title="arrow">
