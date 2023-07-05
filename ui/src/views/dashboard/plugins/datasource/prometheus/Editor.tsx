@@ -18,7 +18,7 @@ const PrometheusQueryEditor = ({ datasource, query, onChange }: DatasourceEditor
 
     return (
         <Form spacing={1}>
-            <FormItem  size="sm" title={<PromMetricSelect width="100%" dsId={datasource.id} value={tempQuery.metrics} onChange={v => {
+            <FormItem  size="sm" title={<PromMetricSelect enableInput={false} width="100%" dsId={datasource.id} value={tempQuery.metrics} onChange={v => {
                 setTempQuery({ ...tempQuery, metrics: v })
                 onChange({ ...tempQuery, metrics: v })
             }} />} >
@@ -59,9 +59,10 @@ interface MetricSelectProps {
     width?: string
     variant?: Variant
     useCurrentTimerange?: boolean
+    enableInput?: boolean
 }
 
-export const PromMetricSelect = ({ dsId, value, onChange, width = "220px", variant = "unstyled", useCurrentTimerange = true }: MetricSelectProps) => {
+export const PromMetricSelect = ({ dsId, value, onChange, width = "220px", variant = "unstyled", useCurrentTimerange = true,enableInput=true }: MetricSelectProps) => {
     const toast = useToast()
     const [metricsList, setMetricsList] = useState<string[]>([])
 
@@ -89,7 +90,7 @@ export const PromMetricSelect = ({ dsId, value, onChange, width = "220px", varia
 
     return (
         <Box onClick={loadMetrics} width={width}>
-            <InputSelect  isClearable value={value} placeholder="Select metrics.." variant={variant} size="md" options={metricsList.map((m) => { return { label: m, value: m } })} onChange={v => onChange(v)}
+            <InputSelect  isClearable value={value} placeholder="Select metrics.." variant={variant} size="md" options={metricsList.map((m) => { return { label: m, value: m } })} onChange={v => onChange(v) }  enableInput={enableInput}
             />
         </Box>
 
