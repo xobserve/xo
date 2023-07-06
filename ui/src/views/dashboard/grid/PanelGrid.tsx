@@ -127,10 +127,11 @@ export const PanelComponent = ({ dashboard, panel, onRemovePanel, width, height,
            
             if (isEqual(prevQuery, currentQuery)) {
                 const d = prevQueryData[id]
-                console.log("here33333:",prevQuery, currentQuery,d)
+                console.log("here33333aa:",prevQuery, currentQuery,d)
                 if (d) {
                     data.push(d)
                 }
+                setQueryError(null)
                 continue
             }
 
@@ -158,11 +159,7 @@ export const PanelComponent = ({ dashboard, panel, onRemovePanel, width, height,
                     break;
             }
 
-            if (res.error) {
-                setQueryError(res.error)
-            } else {
-                setQueryError(null)
-            }
+            setQueryError(res.error)
 
 
             if (!isEmpty(res.data)) {
