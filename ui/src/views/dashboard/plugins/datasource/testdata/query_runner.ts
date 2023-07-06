@@ -9,7 +9,7 @@ import { prometheusToSeriesData, prometheusToPanels } from "../prometheus/transf
 import { GaugePluginData } from 'types/plugins/gauge'
 import { echartsOptions } from "./mocks/echarts"
 import { Datasource } from "types/datasource"
-
+import traceData from './mocks/trace.json'
 
 export const run_testdata_query = async (panel: Panel, q: PanelQuery, range: TimeRange,ds: Datasource) => {
     let data: any;
@@ -28,6 +28,9 @@ export const run_testdata_query = async (panel: Panel, q: PanelQuery, range: Tim
             break;
         case PanelType.Echarts:
             data = echartsOptions
+            break
+        case PanelType.Trace:
+            data = traceData
             break
         default:
             break

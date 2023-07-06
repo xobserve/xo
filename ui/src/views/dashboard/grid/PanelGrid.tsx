@@ -232,6 +232,7 @@ const loadablePanels = {
     [PanelType.Pie]: loadable(() => import('../plugins/panel/pie/Pie')),
     [PanelType.Gauge]: loadable(() => import('../plugins/panel/gauge/Gauge')),
     [PanelType.Stat]: loadable(() => import('../plugins/panel/stat/Stat')),
+    [PanelType.Trace]: loadable(() => import('../plugins/panel/trace/Trace')),
 }
 
 const CustomPanelRender = memo((props: any) => {

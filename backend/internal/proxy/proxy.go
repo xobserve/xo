@@ -51,5 +51,5 @@ func Proxy(c *gin.Context) {
 
 	buffer := bytes.NewBuffer(nil)
 	io.Copy(buffer, res.Body)
-	c.String(200, buffer.String())
+	c.String(res.StatusCode, buffer.String())
 }

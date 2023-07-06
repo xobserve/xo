@@ -215,6 +215,10 @@ function registerEvents(options, chart) {
             scaleBase: 2 
         }
     },
+
+    [PanelType.Trace]: {
+        
+    }
 }
 
 

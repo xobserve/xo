@@ -1,4 +1,4 @@
-import axios, { AxiosRequestConfig } from 'axios'
+import axios, { AxiosInstance, AxiosRequestConfig } from 'axios'
 
 import { getHost } from '../url'
 import { ApiConfig } from './config'
@@ -18,6 +18,7 @@ import type { OutgoingHttpHeaders } from 'http'
 
 import { createStandaloneToast } from "@chakra-ui/react"
 import storage from 'utils/localStorage'
+import { isEmpty } from 'lodash'
 
 const { toast } = createStandaloneToast()
 
@@ -46,7 +47,7 @@ const requestApiConfig: AxiosRequestConfig = {
   //   withCredentials: true,
 }
 
-const requestApi = axios.create(requestApiConfig)
+const requestApi: AxiosInstance = axios.create(requestApiConfig)
 
 // 自动携带token
 requestApi.interceptors.request.use(autoWithClientToken)
@@ -68,45 +69,84 @@ requestApi.interceptors.response.use(
     return response.data
   },
   error => {
-    let message = "error msg missing"
-    let status = 200
-    if (error.response && error.response.data) {
-      message = error.response.data.message?? error.response.data.error
-      status = error.response.status
-    } else {
-      message = error.text ?? error.message
-    }
+    // error.response { 
+    //    config :{url: '/datasource/all', method: 'get', headers: {…}, baseURL: 'http://localhost:10086/api', transformRequest: Array(1), …}
+    //    data: {status: 'success', data: Array(4), version: 'datav'}
+    //    status: 400
+    //    statusText: "Bad Request"
+    // }
+    const isSystemError = isEmpty(error.response)
+    if (!isSystemError) {
+      const message = JSON.stringify(error.response.data)
+      const status = error.response.status
 
-    if (status !== 406) {
+      // check if it's proxy request error
+      if (error.response.data.version != 'datav') {
+        // request route to other servers, not our datav api-server
+        // so it's proxy request error
+        // DONT'T throw error, just return error.response.data, we need to handle it in the caller
+        return error.response.data
+      }
+
+      // request to our api server
+      if (status == 406) {
+        // session expires
+        toast({
+          title: 'Session expires',
+          description: 'Login redirecting...',
+          status: "error",
+          duration: 3000,
+          isClosable: true,
+        })
+        setTimeout(() => {
+          storage.set("current-page", location.pathname)
+          location.href = '/login'
+        }, 2000)
+      } else {
+        // normal backend error
+        const id = message
+        if (!toast.isActive(id)) {
+          toast({
+            id: id,
+            // title: `请求错误`,
+            description: message,
+            status: "error",
+            duration: 3000,
+            isClosable: true,
+          })
+        }
+        throw (message)
+      }
+    } else {
+      // network error or proxy down error
+      // when in these cases, the error.response is null
+      // we need to check this error is network error or proxy down error
+
+      let title;
+      if (error.name == "Error") {
+        // network error
+        title = "Request to backend failed"
+
+      } else {
+        title = "Request to datasource server failed"
+      }
+
+    
+      const message = error.text ?? error.message
       const id = message
       if (!toast.isActive(id)) {
         toast({
           id: id,
-          // title: `请求错误`,
+          title: title,
           description: message,
           status: "error",
-          duration: 4000,
+          duration: 8000,
           isClosable: true,
         })
       }
-    } else {
-      toast({
-        title: '登陆过期',
-        description: '请重新登陆, 2秒后自动跳转',
-        status: "error",
-        duration: 4000,
-        isClosable: true,
-      })
-      setTimeout(() => {
-        storage.set("current-page", location.pathname)
-        location.href = '/login'
-      }, 2000)
+      throw (message)
     }
 
-
-
-    // 这么写是为了保证请求调用方在await中等待的都是正确的返回数据，就不用对数据进行二次错误判断
-    throw (error.text??error.message)
     // return error.response
   }
 )

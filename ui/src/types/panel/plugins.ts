@@ -13,6 +13,7 @@ export interface PanelPlugins {
     [PanelType.Pie]?: PieSettings
     [PanelType.Gauge]?: GaugeSettings
     [PanelType.Stat]?: StatSettings
+    [PanelType.Trace]?: TraceSettings
 }
 
 /*-------------------- Plugins ----------------------- */
@@ -21,6 +22,10 @@ export interface DisableDatasource {
     disableDatasource?: boolean
 }
 
+
+export interface TraceSettings {
+    
+}
 
 export interface StatSettings  {
     showTooltip: boolean

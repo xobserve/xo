@@ -83,7 +83,8 @@ export enum PanelType {
     Echarts = "echarts",
     Pie = "pie",
     Gauge = "gauge",
-    Stat = "stat"
+    Stat = "stat",
+    Trace = "trace"
 }
 
 export enum DatasourceType {
