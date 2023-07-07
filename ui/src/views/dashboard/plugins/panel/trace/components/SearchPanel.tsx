@@ -4,13 +4,15 @@ import InputSelect from "components/select/InputSelect"
 import { use, useEffect, useMemo, useState } from "react"
 import { DatasourceType, Panel } from "types/dashboard"
 import { queryJaegerOperations, queryJaegerServices } from "../../../datasource/jaeger/query_runner"
-import { isEmpty, set, sortBy, uniq } from "lodash"
+import { isEmpty, isEqual, set, sortBy, uniq } from "lodash"
 import { EditorInputItem, EditorNumberItem } from "components/editor/EditorItem"
 import { Button, Divider, HStack } from "@chakra-ui/react"
 import storage from "utils/localStorage"
 import { TraceSearchKey } from "../config/constants"
 import { TimeRange } from "types/time"
 import { replaceWithVariablesHasMultiValues } from "utils/variable"
+import useBus from "use-bus"
+import { VariableChangedEvent } from "src/data/bus-events"
 
 interface Props {
     panel: Panel
@@ -20,6 +22,9 @@ interface Props {
     timeRange: TimeRange
 }
 
+// cache services parsed by variables, when a variable changes, we can compare the new parsed result with cache
+// and decide whether need to re-query operations
+const traceServicesCache = new Map() 
 const TraceSearchPanel = ({ timeRange,dashboardId, panel, onSearch,onSearchIds }: Props) => {
     const [inited, setInited] = useState(false)
     const lastSearch = useMemo(() => storage.get(TraceSearchKey + dashboardId + panel.id)??{} ,[])
@@ -32,6 +37,12 @@ const TraceSearchPanel = ({ timeRange,dashboardId, panel, onSearch,onSearchIds }
     const [min, setMin] = useState<string>(lastSearch.min??'')
     const [limit, setLimit] = useState(lastSearch.limit??20)
     const [traceIds, setTraceIds] = useState<string>()
+
+    useEffect(() => {
+        return () => {
+            delete traceServicesCache[dashboardId + panel.id]
+        }
+    },[])
 
     useEffect(() => {
         if (inited) {
@@ -56,6 +67,18 @@ const TraceSearchPanel = ({ timeRange,dashboardId, panel, onSearch,onSearchIds }
             setOperations([])
         }
     }, [service])
+    
+    useBus(
+        VariableChangedEvent,
+        () => {
+            const services = replaceWithVariablesHasMultiValues(service)
+            const cachedServices = traceServicesCache[dashboardId+panel.id]
+            if (!isEqual(services, cachedServices)) {
+                loadOperations()
+            }
+        },
+        []
+    )
 
     const loadServices = async () => {
         switch (panel.datasource.type) {
@@ -83,10 +106,11 @@ const TraceSearchPanel = ({ timeRange,dashboardId, panel, onSearch,onSearchIds }
         }
     }
 
-    const loadOperations = async () => {
+    const loadOperations = async (s?) => {
         switch (panel.datasource.type) {
             case DatasourceType.Jaeger:
-                const services = replaceWithVariablesHasMultiValues(service)
+                const services = s ?? replaceWithVariablesHasMultiValues(service)
+                traceServicesCache[dashboardId + panel.id] = services
                 const res = await Promise.all(services.map(service => queryJaegerOperations(panel.datasource.id, service)))
                
                 const ss = sortBy(uniq(res.filter(r => r).flat()))
