@@ -1,0 +1,105 @@
+/*
+Copyright (c) 2017 Uber Technologies, Inc.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+*/
+
+.DiffNode {
+    background: #bbb;
+    border: 1px solid #777;
+    box-shadow: 0 0px 3px 1px rgba(0, 0, 0, 0.2);
+    cursor: pointer;
+    white-space: nowrap;
+  }
+  
+  .DiffNode.is-changed {
+    color: var(--tx-color-title);
+  }
+  
+  .DiffNode.is-more {
+    background: #78d539;
+    border-color: #2a8f04;
+  }
+  
+  .DiffNode.is-added {
+    background: #2a8f04;
+    border: none;
+    color: #fff;
+  }
+  
+  .DiffNode.is-less {
+    border-color: #cc1616;
+    background: #ffa39e;
+  }
+  
+  .DiffNode.is-removed {
+    background: #cc1616;
+    border: none;
+    color: #fff;
+  }
+  
+  .TraceDiffGraph--dag.is-small .DiffNode--body {
+    opacity: 0;
+  }
+  
+  .DiffNode--metricCell {
+    padding: 0.3rem 0.5rem;
+    background: rgba(255, 255, 255, 0.3);
+  }
+  
+  .DiffNode--metricCell.is-changed {
+    font-weight: 500;
+  }
+  
+  .DiffNode--metricCell.is-added,
+  .DiffNode--metricCell.is-removed {
+    background: rgba(0, 0, 0, 0.2);
+  }
+  
+  .DiffNode--metricSymbol {
+    margin: 0 0.1em;
+  }
+  
+  .DiffNode--labelCell {
+    padding: 0.3rem 0.5rem 0.3rem 0.75rem;
+    display: flex;
+    justify-content: space-between;
+  }
+  
+  .DiffNode--popover .DiffNode--copyIcon,
+  .DiffNode:not(:hover) .DiffNode--copyIcon {
+    color: transparent;
+    pointer-events: none;
+  }
+  
+  /* Tweak the popover aesthetics - unfortunate but necessary */
+  
+  .DiffNode--popover .ant-popover-inner-content {
+    padding: 0;
+    position: relative;
+  }
+  
+  .DiffNode--popover.is-same .ant-popover-arrow {
+    background: #777;
+  }
+  
+  .DiffNode--popover.is-more .ant-popover-arrow,
+  .DiffNode--popover.is-added .ant-popover-arrow {
+    background: #2a8f04;
+  }
+  
+  .DiffNode--popover.is-less .ant-popover-arrow,
+  .DiffNode--popover.is-removed .ant-popover-arrow {
+    background: #cc1616;
+  }
+  

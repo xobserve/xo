@@ -34,7 +34,7 @@ const TraceCompare = ({ traces }: Props) => {
                         </HStack>
                     </ModalHeader>
                     <ModalCloseButton left="49%" top="0" />
-                    <ModalBody>
+                    <ModalBody position="relative">
                         <TraceCompareGraph traceA={traces[0]} traceB={traces[1]} />
                     </ModalBody>
                 </ModalContent>}

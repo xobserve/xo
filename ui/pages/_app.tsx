@@ -3,6 +3,10 @@ import "src/theme/css/echarts.css"
 import dynamic from "next/dynamic";
 import AppView from "src/views/App";
 
+// local css
+import "src/views/dashboard/plugins/panel/trace/components/TraceCompare/renderNode.css"
+import "src/views/dashboard/plugins/panel/trace/components/common/EmphasizedNode.css"
+
 dynamic(import("echarts/extension/bmap/bmap"), { ssr: false });
 
 const App =  dynamic(async () => (props) => {  
