@@ -7,7 +7,9 @@ import {  useMemo, useState } from "react"
 import { TraceData } from "types/plugins/trace"
 import TraceSearchResult from "./components/SearchResult"
 import transformTraceData from "./utils/transform-trace-data"
-import { flatten, isEmpty } from "lodash";
+import { flatten, isEmpty, uniq, uniqBy } from "lodash";
+import { replaceWithVariables, replaceWithVariablesHasMultiValues } from "utils/variable";
+import { VarialbeAllOption } from "src/data/variable";
 
 
 const TracePanel = (props: PanelProps) => {
@@ -16,8 +18,21 @@ const TracePanel = (props: PanelProps) => {
         tags = convTagsLogfmt(tags);
         switch (props.panel.datasource.type) {
             case DatasourceType.Jaeger:
-                const res = await queryJaegerTraces(props.panel.datasource.id,props.timeRange, service, operation, tags, min, max, limit)
-                setRawTraces(res)
+                tags = replaceWithVariables(tags)
+                min = replaceWithVariables(min)
+                max = replaceWithVariables(max)
+                limit = replaceWithVariables(limit)
+                const services =  replaceWithVariablesHasMultiValues(service)
+                const operations = replaceWithVariablesHasMultiValues(operation, "all")
+                
+                const promises = []
+                for (const s of services) {
+                    for (const o of operations) {
+                        promises.push(queryJaegerTraces(props.panel.datasource.id,props.timeRange, s, o, tags, min, max, limit))
+                    }
+                }
+                const res = await Promise.all(promises)
+                setRawTraces(uniqBy(res.filter(r => r).flat(), t =>  t.traceID))
                 break;
         
             default:
@@ -29,9 +44,18 @@ const TracePanel = (props: PanelProps) => {
 
     const onSearchIds = (traceIds) => {
         const ids = traceIds.split(',')
-        Promise.all(ids.map(id => queryJaegerTrace(props.panel.datasource.id, id))).then(res => {
-            setRawTraces(flatten(res.filter(r => r )))
-        })
+        switch (props.panel.datasource.type) {
+            case DatasourceType.Jaeger:
+                Promise.all(ids.map(id => queryJaegerTrace(props.panel.datasource.id, id))).then(res => {
+                    setRawTraces(res.filter(r => r ).flat())
+                })
+                break;
+        
+            default:
+                setRawTraces([])
+                break;
+        }
+   
         
     }
 

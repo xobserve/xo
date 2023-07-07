@@ -42,7 +42,7 @@ export const replaceQueryWithVariables = (q: PanelQuery, datasource: DatasourceT
 
 // replace ${xxx} format in s with every possible value of the variable
 // if s doesn't contain any variable, return [s]
-export const  replaceWithVariablesHasMultiValues =  (s: string): string[] => {
+export const  replaceWithVariablesHasMultiValues =  (s: string, replaceAllWith?): string[] => {
     let res = []
     const formats = parseVariableFormat(s);
     for (const f of formats) {
@@ -51,7 +51,11 @@ export const  replaceWithVariablesHasMultiValues =  (s: string): string[] => {
           
             let selected = []
             if (v.selected == VarialbeAllOption) {
-                selected = v.values
+                if (replaceAllWith) {
+                    selected.push(replaceAllWith)
+                } else {
+                    selected = v.values
+                } 
             } else {
                 selected = isEmpty(v.selected) ? [] : v.selected.split(VariableSplitChar)
             }

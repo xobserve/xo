@@ -4,12 +4,13 @@ import InputSelect from "components/select/InputSelect"
 import { use, useEffect, useMemo, useState } from "react"
 import { DatasourceType, Panel } from "types/dashboard"
 import { queryJaegerOperations, queryJaegerServices } from "../../../datasource/jaeger/query_runner"
-import { isEmpty, set, sortBy } from "lodash"
+import { isEmpty, set, sortBy, uniq } from "lodash"
 import { EditorInputItem, EditorNumberItem } from "components/editor/EditorItem"
 import { Button, Divider, HStack } from "@chakra-ui/react"
 import storage from "utils/localStorage"
 import { TraceSearchKey } from "../config/constants"
 import { TimeRange } from "types/time"
+import { replaceWithVariablesHasMultiValues } from "utils/variable"
 
 interface Props {
     panel: Panel
@@ -85,8 +86,10 @@ const TraceSearchPanel = ({ timeRange,dashboardId, panel, onSearch,onSearchIds }
     const loadOperations = async () => {
         switch (panel.datasource.type) {
             case DatasourceType.Jaeger:
-                const res = await queryJaegerOperations(panel.datasource.id, service)
-                const ss = sortBy(res)
+                const services = replaceWithVariablesHasMultiValues(service)
+                const res = await Promise.all(services.map(service => queryJaegerOperations(panel.datasource.id, service)))
+               
+                const ss = sortBy(uniq(res.filter(r => r).flat()))
                 setOperations(['all'].concat(ss))
                 if (!operation) {
                     setOperation('all')
