@@ -28,7 +28,7 @@ const SearchResultPlot = ({ traces, timeRange }: Props) => {
                 console.log("here333333:", params)
             });
 
-            chart.on('brushEnd', function (params) {
+            chart.on('brushEnd', function () {
                 setTimeout(() => {
                     chart.dispatchAction({
                         type: 'brush',
@@ -191,8 +191,8 @@ const SearchResultPlot = ({ traces, timeRange }: Props) => {
                 }
             },
             series: [
-                {...series,name:"Success", data: errData, color: alpha('#dd4444',0.7)},
-                {...series,name:"Error", data:sucData, color: alpha('#80F1BE',0.7)}
+                {...series,name:"Error", data: errData, color: alpha('#dd4444',0.7)},
+                {...series,name:"Success", data:sucData, color: alpha('#80F1BE',0.7)}
             ]
         }
     }, [colorMode,traces])

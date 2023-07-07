@@ -8,14 +8,12 @@ import { useRouter } from "next/router"
 
 import { memo, useEffect, useRef, useState } from "react"
 import { MdSync } from "react-icons/md"
-import {  TimeChangedEvent, VariableChangedEvent } from "src/data/bus-events"
+import { TimeRefreshEvent, VariableChangedEvent } from "src/data/bus-events"
 import ReserveUrls from "src/data/reserve-urls"
 import { Dashboard } from "types/dashboard"
 import { Team } from "types/teams"
-import { TimeRange } from "types/time"
 import useBus, { dispatch } from "use-bus"
 import { requestApi } from "utils/axios/request"
-import storage from "utils/localStorage"
 import AddPanel from "./AddPanel"
 import { variables } from "./Dashboard"
 import DashboardSave from "./DashboardSave"
@@ -64,15 +62,9 @@ const DashboardHeader = memo(({ dashboard, onChange }: HeaderProps) => {
     }, [refresh])
 
     const refreshOnce = () => {
-        const tr = getInitTimeRange()
-        if (tr.sub > 0) {
-            const now = new Date()
-            tr.start = subMinutes(now, tr.sub)
-            tr.end = now
-            storage.set(TimePickerKey, JSON.stringify(tr))
-            dispatch({type:  TimeChangedEvent,data: tr})
-        }
+        dispatch(TimeRefreshEvent)
     }
+    
     useBus(
         VariableChangedEvent,
         () => {

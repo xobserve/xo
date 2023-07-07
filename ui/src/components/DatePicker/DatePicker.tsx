@@ -1,11 +1,13 @@
 import { Box, HStack, Modal, ModalBody, ModalContent, ModalOverlay, Text, Tooltip, useDisclosure } from "@chakra-ui/react"
-import TimePicker, { getInitTimeRange, initTimeRange } from "./TimePicker"
+import TimePicker, { TimePickerKey, getInitTimeRange, initTimeRange } from "./TimePicker"
 import { TimeRange } from "types/time"
 import { FaRegClock } from "react-icons/fa"
 import IconButton from "../button/IconButton"
 import { useState } from "react"
-import { dispatch } from "use-bus"
-import { TimeChangedEvent } from "src/data/bus-events"
+import useBus, { dispatch } from "use-bus"
+import { TimeChangedEvent, TimeRefreshEvent } from "src/data/bus-events"
+import { subMinutes } from "date-fns"
+import storage from "utils/localStorage"
 
 interface Props {
     showTime?: boolean
@@ -15,9 +17,30 @@ const DatePicker = ({ showTime = false }: Props) => {
     const [value, setValue] = useState<TimeRange>(getInitTimeRange())
 
     const onTimeChange = (t: TimeRange) => {
+        console.log("here time", t)
         setValue(t)
         onClose()
         dispatch({ type: TimeChangedEvent, data: t })
+    }
+
+    useBus(
+        TimeRefreshEvent, 
+        () => {
+            console.log("here3333 time aaa")
+            refresh()
+        },
+        []
+    )
+    const refresh = () => {
+        const tr = getInitTimeRange()
+        if (tr.sub > 0) {
+            const now = new Date()
+            tr.start = subMinutes(now, tr.sub)
+            tr.end = now
+            storage.set(TimePickerKey, JSON.stringify(tr))
+            dispatch({type:  TimeChangedEvent,data: tr})
+            setValue(tr)
+        }
     }
 
     return (

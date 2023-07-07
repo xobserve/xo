@@ -1,4 +1,5 @@
 export const TimeChangedEvent = 'time-changed';
+export const TimeRefreshEvent = 'time-refresh'
 export const VariableChangedEvent = 'variable-changed';
 export const VariableForceReload = 'variable-reload';
 export const ActiveSeriesEvent = 'active-series'

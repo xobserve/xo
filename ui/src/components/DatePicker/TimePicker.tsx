@@ -14,9 +14,10 @@ import {
 import { subMinutes } from 'date-fns'
 import { cloneDeep, includes, isDate, isEmpty } from 'lodash'
 import moment from 'moment'
-import {  useState } from 'react'
+import { useState } from 'react'
 import { FaCalendarAlt, FaTimes } from 'react-icons/fa'
 import { systemDateFormats } from 'types/time'
+import useBus from 'use-bus'
 import storage from 'utils/localStorage'
 
 export interface TimeRange {
@@ -34,8 +35,9 @@ interface Props {
 }
 
 export const TimePickerKey = "time-picker"
+
 const now = new Date()
-export const initTimeRange =  { start: subMinutes(now, 15), end: now, startRaw: 'now-15m', endRaw: 'now',sub: 15 }
+export const initTimeRange = { start: subMinutes(now, 15), end: now, startRaw: 'now-15m', endRaw: 'now', sub: 15 }
 export const getInitTimeRange = () => {
     const rawT = storage.get(TimePickerKey)
     let time;
@@ -46,19 +48,20 @@ export const getInitTimeRange = () => {
             time.start = dateTimeParse(time.startRaw).toDate()
             time.end = dateTimeParse(time.endRaw).toDate()
         }
-    }  else {
-       time = initTimeRange
+    } else {
+        time = initTimeRange
     }
 
     return time
 }
 
-const TimePicker = ({onClose,onTimeChange} : Props) => {
-   
+const TimePicker = ({ onClose, onTimeChange }: Props) => {
+
     const [range, setRange] = useState<TimeRange>(getInitTimeRange())
     const [tempRange, setTempRange] = useState<TimeRange>(getInitTimeRange())
     const [error, setError] = useState({ start: null, end: null })
     const [displayCalender, setDisplayCalender] = useState(false)
+
 
 
     const handleSelectDate = (dates) => {
@@ -77,6 +80,7 @@ const TimePicker = ({onClose,onTimeChange} : Props) => {
 
 
     const setQuickTime = (o) => {
+        const now = new Date()
         const r = {
             start: subMinutes(now, o.value),
             end: now,
@@ -86,8 +90,8 @@ const TimePicker = ({onClose,onTimeChange} : Props) => {
         }
         setRange(r)
         setTempRange(r)
-            applyTimeRange(r)
-      
+        applyTimeRange(r)
+
     }
 
     const onRangeChange = (from, to) => {
@@ -128,81 +132,82 @@ const TimePicker = ({onClose,onTimeChange} : Props) => {
     }
 
     const applyTimeRange = (r) => {
+        console.log("here time 2222:", r)
         storage.set(TimePickerKey, JSON.stringify(r))
         onTimeChange(r)
         onClose()
     }
-    
+
     return (
         <>
-        {tempRange && <HStack alignItems="top" spacing="6">
-            {displayCalender  &&
-                <Box>
-                    <Flex justifyContent="space-between" alignItems="center" fontSize="lg" mb="2">
-                        <Text>Select a date range</Text>
-                        <FaTimes cursor="pointer" onClick={() => setDisplayCalender(false)} />
-                    </Flex>
-                    <ChakraProvider theme={CalendarDefaultTheme}>
-                        <Calendar value={range} onSelectDate={handleSelectDate}>
-                            <Box position="relative">
-                                <CalendarControls>
-                                    <CalendarPrevButton />
-                                    <CalendarNextButton />
-                                </CalendarControls>
+            {tempRange && <HStack alignItems="top" spacing="6">
+                {displayCalender &&
+                    <Box>
+                        <Flex justifyContent="space-between" alignItems="center" fontSize="lg" mb="2">
+                            <Text>Select a date range</Text>
+                            <FaTimes cursor="pointer" onClick={() => setDisplayCalender(false)} />
+                        </Flex>
+                        <ChakraProvider theme={CalendarDefaultTheme}>
+                            <Calendar value={range} onSelectDate={handleSelectDate}>
+                                <Box position="relative">
+                                    <CalendarControls>
+                                        <CalendarPrevButton />
+                                        <CalendarNextButton />
+                                    </CalendarControls>
 
-                                <CalendarMonths>
-                                    <CalendarMonth>
-                                        <CalendarMonthName />
-                                        <CalendarWeek />
-                                        <CalendarDays />
-                                    </CalendarMonth>
-                                </CalendarMonths>
-                            </Box>
-                        </Calendar>
-                    </ChakraProvider>
-                </Box>
-            }
-            <VStack alignItems="left" spacing={4}>
-                <Text>Custom time range</Text>
-                <Box>
-                    <Text size="sm">From</Text>
-                    <HStack>
-                        <Input value={tempRange.startRaw} onChange={e => onRangeChange(e.currentTarget.value, tempRange.endRaw)} disabled={tempRange.startRaw.startsWith('now')} />
-                        <FaCalendarAlt cursor="pointer" onClick={() => setDisplayCalender(!displayCalender)} />
-                    </HStack>
-                    {error.start && <Text mt="1" fontSize="sm" color="red">{error.start}</Text>}
-                </Box>
-                <Box>
-                    <Text size="sm">To</Text>
-                    <HStack>
-                        <Input value={tempRange.endRaw} onChange={e => onRangeChange(tempRange.startRaw, e.currentTarget.value)} disabled={tempRange.endRaw.startsWith('now')} />
-                        <FaCalendarAlt cursor="pointer" onClick={() => setDisplayCalender(!displayCalender)} />
-                    </HStack>
-                    {error.end && <Text mt="1" fontSize="sm" color="red">{error.end}</Text>}
-                </Box>
-                <Button onClick={() => applyTimeRange(range)}>Apply time range</Button>
-            </VStack>
-            <Box p="2">
-                <Center><Text>Quick select</Text></Center>
-                <VStack
-                    spacing={4}
-                    p={4}
-                    alignItems="stretch"
-                    borderEndRadius="md"
-                    flex={1}
-                >
-                    {
-                        quickOptions.map(o => <Button key={o.value} onClick={() => setQuickTime(o)} colorScheme="gray" variant={range.startRaw == o.raw && range.endRaw == "now" ? "solid" : "ghost"}  borderRadius="0">
-                            {o.label}
-                        </Button>)
-                    }
-
+                                    <CalendarMonths>
+                                        <CalendarMonth>
+                                            <CalendarMonthName />
+                                            <CalendarWeek />
+                                            <CalendarDays />
+                                        </CalendarMonth>
+                                    </CalendarMonths>
+                                </Box>
+                            </Calendar>
+                        </ChakraProvider>
+                    </Box>
+                }
+                <VStack alignItems="left" spacing={4}>
+                    <Text>Custom time range</Text>
+                    <Box>
+                        <Text size="sm">From</Text>
+                        <HStack>
+                            <Input value={tempRange.startRaw} onChange={e => onRangeChange(e.currentTarget.value, tempRange.endRaw)} disabled={tempRange.startRaw.startsWith('now')} />
+                            <FaCalendarAlt cursor="pointer" onClick={() => setDisplayCalender(!displayCalender)} />
+                        </HStack>
+                        {error.start && <Text mt="1" fontSize="sm" color="red">{error.start}</Text>}
+                    </Box>
+                    <Box>
+                        <Text size="sm">To</Text>
+                        <HStack>
+                            <Input value={tempRange.endRaw} onChange={e => onRangeChange(tempRange.startRaw, e.currentTarget.value)} disabled={tempRange.endRaw.startsWith('now')} />
+                            <FaCalendarAlt cursor="pointer" onClick={() => setDisplayCalender(!displayCalender)} />
+                        </HStack>
+                        {error.end && <Text mt="1" fontSize="sm" color="red">{error.end}</Text>}
+                    </Box>
+                    <Button onClick={() => applyTimeRange(range)}>Apply time range</Button>
                 </VStack>
-            </Box>
+                <Box p="2">
+                    <Center><Text>Quick select</Text></Center>
+                    <VStack
+                        spacing={4}
+                        p={4}
+                        alignItems="stretch"
+                        borderEndRadius="md"
+                        flex={1}
+                    >
+                        {
+                            quickOptions.map(o => <Button key={o.value} onClick={() => setQuickTime(o)} colorScheme="gray" variant={range.startRaw == o.raw && range.endRaw == "now" ? "solid" : "ghost"} borderRadius="0">
+                                {o.label}
+                            </Button>)
+                        }
+
+                    </VStack>
+                </Box>
 
 
 
-        </HStack>}
+            </HStack>}
         </>
     )
 }
