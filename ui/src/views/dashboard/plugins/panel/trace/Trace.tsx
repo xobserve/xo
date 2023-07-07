@@ -1,14 +1,10 @@
 import { Box, Center, HStack } from "@chakra-ui/react"
-import { Form } from "components/form/Form"
-import FormItem from "components/form/Item"
-import InputSelect from "components/select/InputSelect"
-import { isEmpty } from "lodash"
 import { DatasourceType, PanelProps } from "types/dashboard"
 import TraceSearchPanel from "./components/SearchPanel"
 import logfmtParser from 'logfmt/lib/logfmt_parser';
 import { queryJaegerTraces } from "../../datasource/jaeger/query_runner"
-import { useEffect, useMemo, useState } from "react"
-import { Trace, TraceData } from "types/plugins/trace"
+import {  useMemo, useState } from "react"
+import { TraceData } from "types/plugins/trace"
 import TraceSearchResult from "./components/SearchResult"
 import transformTraceData from "./utils/transform-trace-data"
 

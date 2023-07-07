@@ -21,6 +21,7 @@ import { KeyValuePair, TraceSpan, SpanData, Trace, TraceData } from 'types/plugi
 
 import { getConfigValue } from '../config/get-config';
 import TreeNode from 'utils/treeNode';
+import { isErrorTag } from './trace';
 
 
 // exported for tests
@@ -165,6 +166,17 @@ export default function transformTraceData(data: TraceData & { spans: SpanData[]
   });
   const traceName = getTraceName(spans);
   const services = Object.keys(svcCounts).map(name => ({ name, numberOfSpans: svcCounts[name] }));
+
+  const erroredServices: Set<string> = new Set<string>();
+  const errors = spans.filter(sp => {
+      const hasError = sp.tags.some(isErrorTag);
+      if (hasError) {
+          erroredServices.add(sp.process.serviceName);
+      }
+      return hasError;
+  }).length;
+
+
   return {
     services,
     spans,
@@ -177,5 +189,7 @@ export default function transformTraceData(data: TraceData & { spans: SpanData[]
     duration: traceEndTime - traceStartTime,
     startTime: traceStartTime,
     endTime: traceEndTime,
+    errorsCount: errors,
+    errorServices: erroredServices
   };
 }

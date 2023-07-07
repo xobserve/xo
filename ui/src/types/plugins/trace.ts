@@ -62,5 +62,7 @@ export type KeyValuePair = {
     startTime: number;
     traceName: string;
     services: { name: string; numberOfSpans: number }[];
+    errorsCount?: number;
+    errorServices?: Set<string>
   };
   

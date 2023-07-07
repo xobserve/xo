@@ -11,90 +11,14 @@ import { isErrorTrace } from "../utils/trace";
 interface Props {
     traces: Trace[]
     timeRange: TimeRange
+    onSelect: (traceIds: string[]) => void
 }
 
-const SearchResultPlot = ({ traces, timeRange }: Props) => {
+const SearchResultPlot = ({ traces, timeRange, onSelect }: Props) => {
     const [chart, setChart] = useState(null)
     const { colorMode } = useColorMode()
 
-    useEffect(() => {
-        if (chart) {
-            chart.on('click', function (params) {
-                console.log("here33335555:", params)
-            });
-
-
-            chart.on('brushSelected', function (params) {
-                console.log("here333333:", params)
-            });
-
-            chart.on('brushEnd', function () {
-                setTimeout(() => {
-                    chart.dispatchAction({
-                        type: 'brush',
-                        areas: [
-                        ]
-                    });
-                }, 200);
-
-            });
-            chart.dispatchAction({
-                type: 'takeGlobalCursor',
-                key: 'brush',
-                   brushOption: {
-                    brushType: "rect"
-                }
-            });
-        }
-
-        return () => {
-            if (chart) {
-                chart.off("click")
-                chart.off("brushSelected")
-                chart.off("brushEnd")
-            }
-        }
-    }, [chart])
-    
-    useEffect(() => {
-        if (chart) {
-            chart.dispatchAction({
-                type: 'takeGlobalCursor',
-                key: 'brush',
-                   brushOption: {
-                    brushType: "rect"
-                }
-            });
-        }
-    },[colorMode, traces])
-    
-    const itemStyle = {
-        opacity: 0.8,
-        shadowBlur: 10,
-        shadowOffsetX: 0,
-        shadowOffsetY: 0,
-        shadowColor: 'rgba(0,0,0,0.3)'
-    };
-    
-    const series = {
-        type: 'scatter',
-        itemStyle: itemStyle,
-        symbolSize: function (data) {
-            let size = Math.sqrt(data[1])
-            if (size < 20) {
-                size = 20
-            } else if (size > 50) {
-                size = 50
-            }
-            
-            return size;
-          },
-          emphasis: {
-            focus: 'self'
-          },
-    }
-
-    const options = useMemo(() => {
+    const [minX, maxX, sucData, errData] = useMemo(() => {
         let minX;
         let maxX;
         const sucData = []
@@ -110,10 +34,107 @@ const SearchResultPlot = ({ traces, timeRange }: Props) => {
             }
 
             const duration = trace.duration / 1000
-            const item = [time,duration,trace.traceID,trace.traceName]
+            const item = [time, duration, trace.traceID, trace.traceName]
             isErrorTrace(trace) ? errData.push(item) : sucData.push(item)
         }
 
+        return [minX, maxX, sucData, errData]
+    }, [traces])
+
+
+    useEffect(() => {
+        if (chart) {
+            chart.on('click', function (params) {
+                onSelect([params.data[2]])
+            });
+
+
+            chart.on('brushSelected', function (params) {
+                const traces: string[] = []
+                const selected = params.batch[0].selected
+                for (const series of selected) {
+                    for (const i of series.dataIndex) {
+                        if (series.seriesName == "Success") {
+                            traces.push(sucData[i][2])
+                        } else {    
+                            traces.push(errData[i][2])
+                        }
+                    }      
+                }
+
+                if (traces.length > 0) {
+                    onSelect(traces)
+                }
+             
+            });
+
+            chart.on('brushEnd', function () {
+                setTimeout(() => {
+                    chart.dispatchAction({
+                        type: 'brush',
+                        areas: [
+                        ]
+                    });
+                }, 200);
+
+            });
+            chart.dispatchAction({
+                type: 'takeGlobalCursor',
+                key: 'brush',
+                brushOption: {
+                    brushType: "rect"
+                }
+            });
+        }
+
+        return () => {
+            if (chart) {
+                chart.off("click")
+                chart.off("brushSelected")
+                chart.off("brushEnd")
+            }
+        }
+    }, [chart,traces])
+
+    useEffect(() => {
+        if (chart) {
+            chart.dispatchAction({
+                type: 'takeGlobalCursor',
+                key: 'brush',
+                brushOption: {
+                    brushType: "rect"
+                }
+            });
+        }
+    }, [colorMode, traces])
+
+    const itemStyle = {
+        opacity: 0.8,
+        shadowBlur: 10,
+        shadowOffsetX: 0,
+        shadowOffsetY: 0,
+        shadowColor: 'rgba(0,0,0,0.3)'
+    };
+
+    const series = {
+        type: 'scatter',
+        itemStyle: itemStyle,
+        symbolSize: function (data) {
+            let size = Math.sqrt(data[1])
+            if (size < 20) {
+                size = 20
+            } else if (size > 50) {
+                size = 50
+            }
+
+            return size;
+        },
+        emphasis: {
+            focus: 'self'
+        },
+    }
+
+    const options = useMemo(() => {
         return {
             brush: {
                 throttleType: 'debounce',
@@ -138,15 +159,15 @@ const SearchResultPlot = ({ traces, timeRange }: Props) => {
                 axisPointer: {
                     type: 'cross',
                     label: {
-                      backgroundColor: '#6a7985'
+                        backgroundColor: '#6a7985'
                     },
-                  },
+                },
                 formatter: function (param) {
                     var value = param.value;
                     return '<div style="border-bottom: 1px solid rgba(255,255,255,.3); font-size: 18px;padding-bottom: 7px;margin-bottom: 7px">'
-                        + value[3] 
+                        + value[3]
                         + '</div>'
-                        +  '<div>Start time: <span style="font-size:16px;font-weight:500">' + moment(value[0]).format('yy-MM-DD HH:mm:ss') + '</span></div>'
+                        + '<div>Start time: <span style="font-size:16px;font-weight:500">' + moment(value[0]).format('yy-MM-DD HH:mm:ss') + '</span></div>'
                         + '<div style="margin-top:5px">Duration：<span style="font-size:16px;font-weight:500;">' + value[1] + 'ms</span></div>'
                 }
             },
@@ -160,7 +181,7 @@ const SearchResultPlot = ({ traces, timeRange }: Props) => {
                     show: false
                 },
                 axisLabel: {
-                    formatter: (function(value){
+                    formatter: (function (value) {
                         return moment(value).format('MM-DD HH:mm:ss');
                     }),
                 },
@@ -190,14 +211,14 @@ const SearchResultPlot = ({ traces, timeRange }: Props) => {
                 }
             },
             series: [
-                {...series,name:"Error", data: errData, color: alpha('#dd4444',0.7)},
-                {...series,name:"Success", data:sucData, color: alpha('#80F1BE',0.7)}
+                { ...series, name: "Error", data: errData, color: alpha('#dd4444', 0.7) },
+                { ...series, name: "Success", data: sucData, color: alpha('#80F1BE', 0.7) }
             ]
         }
-    }, [colorMode,traces])
+    }, [colorMode, traces])
 
     return (<>
-        {options && <Box  width="100%" key={colorMode} className="echarts-panel"><ChartComponent height={400} options={options} theme={colorMode} onChartCreated={c => setChart(c)} /></Box>}
+        {options && <Box width="100%" key={colorMode} className="echarts-panel"><ChartComponent height={350} options={options} theme={colorMode} onChartCreated={c => setChart(c)} /></Box>}
     </>)
 }
 

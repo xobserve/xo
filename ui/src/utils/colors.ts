@@ -95,3 +95,6 @@ function hslToHex(color: any) {
 }
 
 export let sortedColors = sortColorsByHue(colors);
+
+
+
