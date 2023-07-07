@@ -1,4 +1,4 @@
-import { Dashboard, DatasourceType, Panel, PanelQuery, PanelType } from "types/dashboard"
+import { Dashboard, DatasourceType, Panel, PanelProps, PanelQuery, PanelType } from "types/dashboard"
 import { Box, Center, HStack, Menu, MenuButton, MenuDivider, MenuItem, MenuList, Modal, ModalBody, ModalCloseButton, ModalContent, ModalHeader, ModalOverlay, Tab, TabList, TabPanel, TabPanels, Tabs, Text, Textarea, Tooltip, useColorModeValue, useDisclosure, useToast } from "@chakra-ui/react";
 import { FaBook, FaBug, FaEdit, FaRegCopy, FaTrashAlt } from "react-icons/fa";
 import { IoMdInformation } from "react-icons/io";
@@ -127,7 +127,6 @@ export const PanelComponent = ({ dashboard, panel, onRemovePanel, width, height,
            
             if (isEqual(prevQuery, currentQuery)) {
                 const d = prevQueryData[id]
-                console.log("here33333aa:",prevQuery, currentQuery,d)
                 if (d) {
                     data.push(d)
                 }
@@ -170,7 +169,7 @@ export const PanelComponent = ({ dashboard, panel, onRemovePanel, width, height,
         }
 
         if (needUpdate) {
-            console.log("33333query and set panel data:", panel.id)
+            console.log("query and set panel data:", panel.id)
             setPanelData(data)
         } else {
             if (!isEqual(panelData, data)) {
@@ -203,7 +202,7 @@ export const PanelComponent = ({ dashboard, panel, onRemovePanel, width, height,
     const panelInnerWidth = width + 8 // 10px padding left and right of panel body
 
 
-    console.log("33333panel grid rendered, data: ", panelData)
+    console.log("panel grid rendered, data: ", panelData)
     return <Box height={height} width={width} className={panel.styles.border == "None" ? "hover-bordered" : null} border={`1px solid transparent`} position="relative">
         <PanelHeader panel={panel} data={panelData} queryError={queryError} onCopyPanel={onCopyPanel} onRemovePanel={onRemovePanel} />
         {panelData && <Box
@@ -212,7 +211,7 @@ export const PanelComponent = ({ dashboard, panel, onRemovePanel, width, height,
             overflowY="scroll"
             marginLeft={panel.type == PanelType.Graph ? "-10px" : "0px"}
         >
-            <CustomPanelRender dashboardId={dashboard.id} panel={panel} data={panelData} height={panelInnerHeight} width={panelInnerWidth} sync={sync} />
+            <CustomPanelRender dashboardId={dashboard.id} panel={panel} data={panelData} height={panelInnerHeight} width={panelInnerWidth} sync={sync} timeRange={timeRange} />
         </Box>}
     </Box>
 }
@@ -232,7 +231,7 @@ const loadablePanels = {
     [PanelType.Trace]: loadable(() => import('../plugins/panel/trace/Trace')),
 }
 
-const CustomPanelRender = memo((props: any) => {
+const CustomPanelRender = memo((props: PanelProps) => {
     const P = loadablePanels[props.panel.type]
     if (P) {
         return <P {...props} />

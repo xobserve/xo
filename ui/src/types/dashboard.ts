@@ -1,5 +1,6 @@
 import { PanelPlugins } from "./panel/plugins"
 import { PanelStyles } from "./panel/styles"
+import { TimeRange } from "./time"
 import { Variable } from "./variable"
 
 export interface Dashboard {
@@ -129,6 +130,7 @@ export interface PanelProps {
     height?: number
     sync?: any
     data?: any
+    timeRange?: TimeRange
 }
 
 export type PanelData = any

@@ -17,6 +17,7 @@ interface FormItemProps {
     title?: string
     spacing?: number
     bordered?: boolean
+    size?
     titleSize?: string
 }
 

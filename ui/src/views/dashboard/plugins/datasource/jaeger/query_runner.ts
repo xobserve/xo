@@ -12,6 +12,7 @@ import { Variable } from "types/variable"
 import { JaegerDsQueryTypes } from "./VariableEditor"
 import { replaceWithVariablesHasMultiValues } from "utils/variable"
 import { cloneDeep } from "lodash"
+import { getInitTimeRange } from "components/DatePicker/TimePicker"
 
 export const run_jaeger_query = async (panel: Panel, q: PanelQuery,range: TimeRange,ds: Datasource) => {
     let res = []
@@ -67,12 +68,12 @@ export const replaceJaegerQueryWithVariables = (query: PanelQuery) => {
 
 }
 
-export const queryServices = async (dsId) => {
+export const queryJaegerServices = async (dsId) => {
     const res = await requestApi.get(`/proxy/${dsId}/api/services`)
     return res.data
 }
 
-export const queryOperations = async (dsId, service) => {
+export const queryJaegerOperations = async (dsId, service) => {
     const res = await requestApi.get(`/proxy/${dsId}/api/services/${service}/operations`)
     return res.data
 }
@@ -88,13 +89,13 @@ export const queryJaegerVariableValues = async (variable: Variable) => {
     }
 
     if (data.type == JaegerDsQueryTypes.Services) {
-            const res = await queryServices(variable.datasource)
+            const res = await queryJaegerServices(variable.datasource)
             result.data = res
     } else if (data.type == JaegerDsQueryTypes.Operations) {
         if (data.service) {
             const services  = replaceWithVariablesHasMultiValues(data.service)
             for (let i = 0; i < services.length; i++) {
-                const res = await queryOperations(variable.datasource, services[i])
+                const res = await queryJaegerOperations(variable.datasource, services[i])
                 result.data = result.data.concat(res)
             }
         }
@@ -103,3 +104,32 @@ export const queryJaegerVariableValues = async (variable: Variable) => {
     return result
 }
 
+
+export const queryJaegerTraces = async (dsId,timeRange:TimeRange, service,operation,tags,min,max,limit) => {
+    const start= timeRange.start.getTime() * 1000
+    const end = timeRange.end.getTime() * 1000
+
+    let url = `/proxy/${dsId}/api/traces?limit=${limit}&start=${start}&end=${end}&service=${service}`
+    if (operation != "all" && operation != '') {
+        url += `&operation=${operation}`
+    }
+
+    if (max == '') {
+        url += `&maxDuration`
+    } else {
+        url += `&maxDuration=${max}`
+    }
+
+    if (min == '') {
+        url += `&minDuration`
+    } else {
+        url += `&minDuration=${min}`
+    }
+
+    if (tags != '') {
+        url += `&tags=${tags}`
+    }
+
+    const res = await requestApi.get(url)
+    return res.data
+}

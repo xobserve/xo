@@ -7,7 +7,7 @@ import { Box } from "@chakra-ui/react";
 interface Props {
     options: any
     theme: string
-    width: number
+    width?: number
     height: number
     onChartCreated: (chart) => void
     onChartEvents?: any

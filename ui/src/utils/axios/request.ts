@@ -13,7 +13,7 @@ import {
   rewriteApiUrl,
 } from './interceptors'
 
-const JSONbigString = require('json-bigint')({ storeAsString: true })
+// const JSONbigString = require('json-bigint')({ storeAsString: true })
 import type { OutgoingHttpHeaders } from 'http'
 
 import { createStandaloneToast } from "@chakra-ui/react"
@@ -22,20 +22,12 @@ import { isEmpty } from 'lodash'
 
 const { toast } = createStandaloneToast()
 
-export let levelEnableTipsHandler = {
-  open: null,
-  setMsg: null,
-  setNeedLv: null
-};
-export let loginHandler = {
-  open: null
-}
-
-axios.defaults.transformResponse = [
-  text => {
-    return JSONbigString.parse(text)
-  },
-]
+// this will transform the startTime field(number) in span data of jaeger trace to a string
+// axios.defaults.transformResponse = [
+//   text => {
+//     return JSONbigString.parse(text)
+//   },
+// ]
 
 /**
  * 用于客户端请求(Ajax)使用的axios实例

@@ -34,7 +34,7 @@ interface NumberInputProps {
     placeholder?: string
 }
 
-export const EditorNumberItem = ({ value, onChange, min,max,step=1, size = "sm",placeholder="" }: NumberInputProps) => {
+export const EditorNumberItem = ({ value, onChange, min,max,step=null, size = "sm",placeholder="" }: NumberInputProps) => {
     const [temp, setTemp] = useState(value.toString())
     const rangeProps = {}
     if (isEmpty(min)) rangeProps['min'] = min
