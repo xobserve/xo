@@ -101,7 +101,6 @@ const PopoverSelect = ({ value, options, onChange, variant = "outline", customOp
             <PopoverTrigger >
                 <Box position="absolute"></Box>
             </PopoverTrigger>
-            <Portal>
                 <PopoverContent  borderRadius={2}>
                     {/* <PopoverArrow /> */}
                     <PopoverBody p="0">
@@ -125,7 +124,6 @@ const PopoverSelect = ({ value, options, onChange, variant = "outline", customOp
                         </VStack>
                     </PopoverBody>
                 </PopoverContent>
-            </Portal>
         </Popover>
     </>)
 }

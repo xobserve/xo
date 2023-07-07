@@ -73,7 +73,6 @@ const InputSelect = ({ value, options, onChange, variant = "outline", customOpti
             <PopoverTrigger >
                 <Box position="absolute"></Box>
             </PopoverTrigger>
-            <Portal>
                 <PopoverContent  borderRadius={2} width="500px">
                     {/* <PopoverArrow /> */}
                     <PopoverBody p="0">
@@ -98,7 +97,6 @@ const InputSelect = ({ value, options, onChange, variant = "outline", customOpti
                         </VStack>
                     </PopoverBody>
                 </PopoverContent>
-            </Portal>
         </Popover>
     </>)
 }
