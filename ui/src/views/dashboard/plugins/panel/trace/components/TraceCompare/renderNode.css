@@ -15,7 +15,6 @@ limitations under the License.
 */
 
 .DiffNode {
-    background: #bbb;
     border: 1px solid #777;
     box-shadow: 0 0px 3px 1px rgba(0, 0, 0, 0.2);
     cursor: pointer;
@@ -75,31 +74,7 @@ limitations under the License.
     display: flex;
     justify-content: space-between;
   }
-  
-  .DiffNode--popover .DiffNode--copyIcon,
-  .DiffNode:not(:hover) .DiffNode--copyIcon {
-    color: transparent;
-    pointer-events: none;
-  }
-  
+
   /* Tweak the popover aesthetics - unfortunate but necessary */
   
-  .DiffNode--popover .ant-popover-inner-content {
-    padding: 0;
-    position: relative;
-  }
-  
-  .DiffNode--popover.is-same .ant-popover-arrow {
-    background: #777;
-  }
-  
-  .DiffNode--popover.is-more .ant-popover-arrow,
-  .DiffNode--popover.is-added .ant-popover-arrow {
-    background: #2a8f04;
-  }
-  
-  .DiffNode--popover.is-less .ant-popover-arrow,
-  .DiffNode--popover.is-removed .ant-popover-arrow {
-    background: #cc1616;
-  }
-  
+ 

@@ -11,9 +11,10 @@ interface Props {
     onChange?: (value: string) => void
     onMount?: (editor: editor.IStandaloneCodeEditor) => void
     readonly?: boolean
+    fontSize?: number
     
 }
-function CodeEditor({value, onChange,onMount,language="typescript",readonly=false}:Props) {
+function CodeEditor({value, onChange,onMount,language="typescript",readonly=false,fontSize=12}:Props) {
   const {colorMode} = useColorMode()
   return ( <MonacoEditor
       editorDidMount={(editor:editor.IStandaloneCodeEditor) => {
@@ -53,7 +54,8 @@ function CodeEditor({value, onChange,onMount,language="typescript",readonly=fals
             verticalSliderSize: 5,
             horizontalSliderSize: 5,
         },
-        readOnly: readonly
+        readOnly: readonly,
+        fontSize: fontSize
       }}
       onChange={onChange}
       

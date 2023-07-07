@@ -7,15 +7,23 @@ import cx from 'classnames';
 import { TDiffCounts } from '../../model/trace-dag/types';
 import TDagPlexusVertex from '../../model/trace-dag/types/TDagPlexusVertex';
 
-import { FaCopy } from "react-icons/fa";
-import { Popover, PopoverArrow, PopoverBody, PopoverContent, PopoverTrigger } from "@chakra-ui/react";
+import { FaCopy, FaInfoCircle } from "react-icons/fa";
+import { chakra, Box, Divider, Flex, HStack, Popover, PopoverArrow, PopoverBody, PopoverContent, PopoverTrigger, StackDivider, Text, VStack, Tooltip, Button, Textarea } from "@chakra-ui/react";
 import CopyToClipboard from "components/CopyToClipboard";
+import { Trace } from "types/plugins/trace";
+import { Portal } from "components/portal/Portal";
+import { formatDuration } from "../../utils/date";
+import { isErrorTag } from "../../utils/trace";
+import CodeEditor from "components/CodeEditor/CodeEditor";
+import { cloneDeep } from "lodash";
 
 type Props = {
     a: number;
     b: number;
     operation: string;
     service: string;
+    dataA: any
+    dataB: any
 };
 
 const abs = Math.abs;
@@ -23,7 +31,7 @@ const max = Math.max;
 
 export class DiffNode extends React.PureComponent<Props> {
     render() {
-        const { a, b, operation, service } = this.props;
+        const { a, b, operation, service, dataA, dataB } = this.props;
         const isSame = a === b;
         const className = cx({
             'is-same': isSame,
@@ -35,7 +43,7 @@ export class DiffNode extends React.PureComponent<Props> {
         });
         const chgSign = a < b ? '+' : '-';
         const table = (
-            <table className={`DiffNode ${className}`}>
+            <table className={`DiffNode ${className}`} style={{ fontSize: "1.4rem" }}>
                 <tbody className="DiffNode--body">
                     <tr>
                         <td className={`DiffNode--metricCell ${className}`} rowSpan={isSame ? 2 : 1}>
@@ -44,8 +52,8 @@ export class DiffNode extends React.PureComponent<Props> {
                         </td>
                         <td className={`DiffNode--labelCell ${className}`}>
                             <strong>{service}</strong>
-                            <CopyToClipboard copyText={`${service} ${operation}`}
-                                tooltipTitle="Copy label" />
+                            {/* <CopyToClipboard copyText={`${service} ${operation}`}
+                                tooltipTitle="Copy label" /> */}
                         </td>
                     </tr>
                     <tr>
@@ -63,19 +71,21 @@ export class DiffNode extends React.PureComponent<Props> {
         );
 
         return (
-            <Popover trigger="hover" openDelay={200}>
+            <Popover trigger="hover" openDelay={200} placement="auto">
                 <PopoverTrigger>
                     {table}
                 </PopoverTrigger>
-                <PopoverContent width="520px"  sx={{
-                    table: {
-                        width: '500px',
-                        fontSize: '1.5rem'
-                    }
-                }}>
-                    <PopoverArrow />
-                    <PopoverBody>{table}</PopoverBody>
-                </PopoverContent>
+                <Portal>
+                    <PopoverContent minWidth="900px">
+                        <PopoverArrow />
+                        <PopoverBody>
+                            <HStack spacing={4} divider={<StackDivider />} alignItems="top" maxH="600px" overflowY="scroll">
+                                {dataA.length > 0 && <Box width="50%"><NodeCard service={service} operation={operation} data={dataA} data1={dataB} /></Box>}
+                                {dataB.length > 0 && <Box width="50%"><NodeCard service={service} operation={operation} data={dataB} data1={dataA} /></Box>}
+                            </HStack>
+                        </PopoverBody>
+                    </PopoverContent>
+                </Portal>
             </Popover>
 
         );
@@ -84,9 +94,10 @@ export class DiffNode extends React.PureComponent<Props> {
 
 export default function renderNode(vertex: TDagPlexusVertex<TDiffCounts>) {
     const { a, b, operation, service } = vertex.data;
+
     const lenA = a ? a.length : 0;
     const lenB = b ? b.length : 0;
-    return <DiffNode a={lenA} b={lenB} operation={operation} service={service} />;
+    return <DiffNode a={lenA} b={lenB} operation={operation} service={service} dataA={a} dataB={b} />;
 }
 
 export function getNodeEmphasisRenderer(keys: Set<string>) {
@@ -97,3 +108,50 @@ export function getNodeEmphasisRenderer(keys: Set<string>) {
         return <EmphasizedNode height={lv.height} width={lv.width} />;
     };
 }
+
+const NodeCard = ({ service, operation, data, data1 }) => {
+    const [activeSpan, setActiveSpan] = React.useState(null)
+    const [inView, setInView] = React.useState(null)
+    const viewSpan = (span) => {
+        const s = cloneDeep(span.span)
+        delete(s.references)
+        return JSON.stringify(s, null, 1)
+    }
+    
+    return (
+        <>
+
+            <Flex fontSize="1rem" justifyContent="space-between" alignItems="center">
+                <HStack>
+                    <Text>{service}:</Text>
+                    <Text>{operation}</Text>
+                </HStack>
+                <Text fontSize="0.8rem" opacity="0.7">{data[0].span.traceID.slice(0, 7)}</Text>
+            </Flex>
+            <Text fontSize="0.9rem" opacity="0.8" mt="1">Spans numbers: <chakra.span color="brand.500" fontWeight="600">{data.length}</chakra.span></Text>
+            <Divider mt="2" />
+            <VStack alignItems="left" mt="2" divider={<StackDivider />} fontSize="0.8rem" >
+                {
+                    data.map((span, i) => <Box>
+                        <Flex justifyContent="space-between" alignItems="center" onMouseEnter={() => setActiveSpan(span)} onMouseLeave={() => setActiveSpan(null)}>
+                            <Box>
+                                <HStack>
+                                    <Text>Span ID: {span.id} </Text>
+                                    {span.span.tags.some(isErrorTag) && <Tooltip label="There is a error in this span, click to see details"><Box><FaInfoCircle color="red" /></Box></Tooltip>}
+                                </HStack>
+                                <Text>Duration: <chakra.span color={span.span.duration > data1[i]?.span.duration ? "orange" : "inherit"} fontWeight="600">{formatDuration(span.span.duration)}</chakra.span></Text>
+                            </Box>
+
+                            {activeSpan?.id == span.id && <Button size="xs" variant="ghost" onClick={() => setInView(inView != span.id ? span.id : null)}>{inView != span.id ? "View detail" : "Hide detail"} </Button>}
+                        </Flex>
+                        {inView == span.id && <Box height="400px">
+                            <CodeEditor fontSize={8}  value={viewSpan(span)} readonly></CodeEditor>
+                        </Box>}
+                    </Box>)
+
+                }
+            </VStack>
+        </>
+    )
+}
+

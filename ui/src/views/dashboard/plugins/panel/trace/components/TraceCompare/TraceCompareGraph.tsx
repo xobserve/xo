@@ -13,7 +13,7 @@ interface Props {
 const { classNameIsSmall, scaleOpacity, scaleStrokeOpacity } = Digraph.propsFactories;
 const TraceCompareGraph = ({ traceA, traceB }: Props) => {
     const [layoutManager, setLayoutManager] = useState<LayoutManager>(null)
-    const [search, setSearch] = useState('redis')
+    const [search, setSearch] = useState('')
     const cacheAs1 = cacheAs.makeScope();
     useEffect(() => {
         const lm = new LayoutManager({ useDotEdges: true, splines: 'polyline' });
@@ -27,7 +27,7 @@ const TraceCompareGraph = ({ traceA, traceB }: Props) => {
     const { edges, vertices } = getEdgesAndVertices(traceA, traceB);
     const keys = getUiFindVertexKeys(search, vertices);
     return (<>
-            <Box position="absolute" top="0" bottom="0" left="0" right="0" bg={useColorModeValue("#eee", "inherit")}>
+            <Box position="absolute" top="0" bottom="0" left="0" right="0" bg={useColorModeValue("#f7f9fb", "inherit")}>
                 {layoutManager && <Digraph
                     // `key` is necessary to see updates to the graph when a or b changes
                     // TODO(joe): debug this issue in Digraph
@@ -52,7 +52,7 @@ const TraceCompareGraph = ({ traceA, traceB }: Props) => {
                             setOnContainer: cacheAs1('edges/container', [
                                 scaleOpacity,
                                 scaleStrokeOpacity,
-                                { stroke: '#444' },
+                                { stroke: '#bbb',fill:'#bbb' },
                             ]),
                         },
                         {
