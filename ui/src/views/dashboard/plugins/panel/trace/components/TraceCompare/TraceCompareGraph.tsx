@@ -27,7 +27,11 @@ const TraceCompareGraph = ({ traceA, traceB }: Props) => {
     const { edges, vertices } = getEdgesAndVertices(traceA, traceB);
     const keys = getUiFindVertexKeys(search, vertices);
     return (<>
-            <Box position="absolute" top="0" bottom="0" left="0" right="0" bg={useColorModeValue("#f7f9fb", "inherit")}>
+            <Box position="absolute" top="0" bottom="0" left="0" right="0" bg={useColorModeValue("#f7f9fb", "inherit")} sx={{
+                '.DiffNode.is-same': {
+                    background:  useColorModeValue("#f7f9fb", '#2D3748')
+                }
+            }}>
                 {layoutManager && <Digraph
                     // `key` is necessary to see updates to the graph when a or b changes
                     // TODO(joe): debug this issue in Digraph

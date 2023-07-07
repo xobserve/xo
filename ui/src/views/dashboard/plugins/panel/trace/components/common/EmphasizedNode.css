@@ -23,7 +23,7 @@ limitations under the License.
   }
   
   .EmphasizedNode.is-scaling {
-    stroke-width: 34;
+    stroke-width: 10;
   }
   
   .EmphasizedNode--contrast {
@@ -35,6 +35,6 @@ limitations under the License.
   }
   
   .EmphasizedNode--contrast.is-scaling {
-    stroke-width: 36;
+    stroke-width: 10;
   }
   

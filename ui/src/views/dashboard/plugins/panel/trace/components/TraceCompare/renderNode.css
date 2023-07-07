@@ -19,62 +19,62 @@ limitations under the License.
     box-shadow: 0 0px 3px 1px rgba(0, 0, 0, 0.2);
     cursor: pointer;
     white-space: nowrap;
-  }
-  
-  .DiffNode.is-changed {
+}
+
+.DiffNode.is-changed {
     color: var(--tx-color-title);
-  }
-  
-  .DiffNode.is-more {
+}
+
+.DiffNode.is-more {
     background: #78d539;
     border-color: #2a8f04;
-  }
-  
-  .DiffNode.is-added {
+}
+
+
+
+.DiffNode.is-added {
     background: #2a8f04;
     border: none;
     color: #fff;
-  }
-  
-  .DiffNode.is-less {
+}
+
+.DiffNode.is-less {
     border-color: #cc1616;
     background: #ffa39e;
-  }
-  
-  .DiffNode.is-removed {
+}
+
+.DiffNode.is-removed {
     background: #cc1616;
     border: none;
     color: #fff;
-  }
-  
-  .TraceDiffGraph--dag.is-small .DiffNode--body {
+}
+
+.TraceDiffGraph--dag.is-small .DiffNode--body {
     opacity: 0;
-  }
-  
-  .DiffNode--metricCell {
+}
+
+.DiffNode--metricCell {
     padding: 0.3rem 0.5rem;
     background: rgba(255, 255, 255, 0.3);
-  }
-  
-  .DiffNode--metricCell.is-changed {
+}
+
+.DiffNode--metricCell.is-changed {
     font-weight: 500;
-  }
-  
-  .DiffNode--metricCell.is-added,
-  .DiffNode--metricCell.is-removed {
+}
+
+.DiffNode--metricCell.is-added,
+.DiffNode--metricCell.is-removed {
     background: rgba(0, 0, 0, 0.2);
-  }
-  
-  .DiffNode--metricSymbol {
+}
+
+.DiffNode--metricSymbol {
     margin: 0 0.1em;
-  }
-  
-  .DiffNode--labelCell {
+}
+
+.DiffNode--labelCell {
     padding: 0.3rem 0.5rem 0.3rem 0.75rem;
     display: flex;
     justify-content: space-between;
-  }
+}
 
-  /* Tweak the popover aesthetics - unfortunate but necessary */
-  
- 
+/* Tweak the popover aesthetics - unfortunate but necessary */

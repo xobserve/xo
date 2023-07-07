@@ -44,28 +44,28 @@ const EmphasizedNode  = ({ height, width }: Props) => {
 export default EmphasizedNode;
 
 
-const cssStyles = {
-    '.EmphasizedNode': {
-        stroke: '#fff3d7'
-      },
+// const cssStyles = {
+//     '.EmphasizedNode': {
+//         stroke: '#fff3d7'
+//       },
       
-      '.EmphasizedNode.is-non-scaling' :{
-        'stroke-width': '10'
-      },
+//       '.EmphasizedNode.is-non-scaling' :{
+//         'stroke-width': '10'
+//       },
       
-      '.EmphasizedNode.is-scaling': {
-        'stroke-width': '34'
-      },
+//       '.EmphasizedNode.is-scaling': {
+//         'stroke-width': '34'
+//       },
       
-      '.EmphasizedNode--contrast': {
-        stroke: 'rgba(0, 0, 0, 0.07)'
-      },
+//       '.EmphasizedNode--contrast': {
+//         stroke: 'rgba(0, 0, 0, 0.07)'
+//       },
       
-      '.EmphasizedNode--contrast.is-non-scaling': {
-        'stroke-width': '12'
-      },
+//       '.EmphasizedNode--contrast.is-non-scaling': {
+//         'stroke-width': '12'
+//       },
       
-      '.EmphasizedNode--contrast.is-scaling': {
-        'stroke-width': '36'
-      }
-}
+//       '.EmphasizedNode--contrast.is-scaling': {
+//         'stroke-width': '36'
+//       }
+// }

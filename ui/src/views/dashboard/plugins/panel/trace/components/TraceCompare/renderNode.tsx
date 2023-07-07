@@ -80,8 +80,8 @@ export class DiffNode extends React.PureComponent<Props> {
                         <PopoverArrow />
                         <PopoverBody>
                             <HStack spacing={4} divider={<StackDivider />} alignItems="top" maxH="400px" overflowY="scroll">
-                                {dataA.length > 0 && <Box width="50%"><NodeCard service={service} operation={operation} data={dataA} data1={dataB} /></Box>}
-                                {dataB.length > 0 && <Box width="50%"><NodeCard service={service} operation={operation} data={dataB} data1={dataA} /></Box>}
+                                {dataA?.length > 0 && <Box width="50%"><NodeCard service={service} operation={operation} data={dataA} data1={dataB} /></Box>}
+                                {dataB?.length > 0 && <Box width="50%"><NodeCard service={service} operation={operation} data={dataB} data1={dataA} /></Box>}
                             </HStack>
                         </PopoverBody>
                     </PopoverContent>
@@ -139,7 +139,7 @@ const NodeCard = ({ service, operation, data, data1 }) => {
                                     <Text>Span ID: {span.id} </Text>
                                     {span.span.tags.some(isErrorTag) && <Tooltip label="There is a error in this span, click to see details"><Box><FaInfoCircle color="red" /></Box></Tooltip>}
                                 </HStack>
-                                <Text>Duration: <chakra.span color={span.span.duration > data1[i]?.span.duration ? "orange" : "inherit"} fontWeight="600">{formatDuration(span.span.duration)}</chakra.span></Text>
+                                <Text>Duration: <chakra.span color={span.span.duration > (data1 ? data1[i]?.span.duration: 0) ? "orange" : "inherit"} fontWeight="600">{formatDuration(span.span.duration)}</chakra.span></Text>
                             </Box>
 
                             {activeSpan?.id == span.id && <Button size="xs" variant="ghost" onClick={() => setInView(inView != span.id ? span.id : null)}>{inView != span.id ? "View detail" : "Hide detail"} </Button>}
