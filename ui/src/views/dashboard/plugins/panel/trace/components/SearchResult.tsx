@@ -6,7 +6,7 @@ import { Box, Button, Flex, HStack, Popover, PopoverArrow, PopoverBody, PopoverC
 import TraceCard from "./TraceCard"
 import { useEffect, useMemo, useState } from "react"
 import { clone, cloneDeep, remove } from "lodash"
-import TraceCompare from "./TraceCompare"
+import TraceCompare from "./TraceCompare/TraceCompare"
 import { FaTimes } from "react-icons/fa"
 
 interface Props {

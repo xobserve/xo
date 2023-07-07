@@ -7,6 +7,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@jaegertracing/plexus": "0.2.0",
     "@antv/g6": "latest",
     "@chakra-ui/cli": "2.3.0",
     "@chakra-ui/icons": "2.0.17",
@@ -33,6 +34,7 @@
     "json-bigint": "^1.0.0",
     "keyboardjs": "^2.7.0",
     "lodash": "^4.17.15",
+    "logfmt": "^1.2.0",
     "markdown-to-jsx": "^7.1.9",
     "match-sorter": "^4.0.0",
     "memoize-one": "6.0.0",
@@ -71,8 +73,7 @@
     "use-bus": "^2.5.2",
     "use-deep-compare-effect": "^1.8.1",
     "use-immer": "^0.9.0",
-    "validator": "^13.5.2",
-    "logfmt": "^1.2.0"
+    "validator": "^13.5.2"
   },
   "devDependencies": {
     "@next/bundle-analyzer": "^10.0.4",
