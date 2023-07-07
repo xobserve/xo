@@ -68,7 +68,7 @@ const DashboardHeader = memo(({ dashboard, onChange }: HeaderProps) => {
     useBus(
         VariableChangedEvent,
         () => {
-            console.log("44444 dash header recv variable change event:", variables);
+            console.log("dash header recv variable change event:", variables);
             setVariablesChanged(variablesChanged + 1)
         },
         [variablesChanged]

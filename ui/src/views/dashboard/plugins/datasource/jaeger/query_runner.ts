@@ -133,3 +133,8 @@ export const queryJaegerTraces = async (dsId,timeRange:TimeRange, service,operat
     const res = await requestApi.get(url)
     return res.data
 }
+
+export const queryJaegerTrace = async (dsId, traceId) => {
+    const res = await requestApi.get(`/proxy/${dsId}/api/traces/${traceId}`)
+    return res.data
+}

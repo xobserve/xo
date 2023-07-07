@@ -22,6 +22,7 @@ const TraceCard = ({ trace, maxDuration,checked=false, onChecked=null,simple=fal
     const onTraceClick = () => {
         console.log("here33333 on trace")
     }
+    
     return (<Box width="100%" className="bordered" borderRadius="0" cursor="pointer" onClick={onTraceClick}>
         <Box width="100%" position="relative" className="label-bg">
             <HStack spacing={0} py="5px">
@@ -82,3 +83,4 @@ const TraceCard = ({ trace, maxDuration,checked=false, onChecked=null,simple=fal
 }
 
 export default TraceCard
+

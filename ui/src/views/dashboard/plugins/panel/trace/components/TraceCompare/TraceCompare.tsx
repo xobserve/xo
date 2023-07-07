@@ -3,7 +3,6 @@ import { Trace } from "types/plugins/trace"
 import { formatDuration, formatRelativeDate } from "../../utils/date"
 import moment from "moment"
 import TraceCompareGraph from "./TraceCompareGraph"
-import { ColorModeSwitcher } from "components/ColorModeSwitcher"
 
 interface Props {
     traces: Trace[]
@@ -13,8 +12,6 @@ const TraceCompare = ({ traces }: Props) => {
     const compareTraces = () => {
         onOpen()
     }
-
-    console.log("here3333 compre:", traces)
 
     return (
         <>
@@ -28,7 +25,7 @@ const TraceCompare = ({ traces }: Props) => {
                             <Box width="47%" className="bordered" p="3">
                                 <TraceInfo trace={traces[0]} />
                             </Box>
-                            <Center width="6%"><Text fontSize="1.5rem" color="brand.500">VS</Text><ColorModeSwitcher /></Center>
+                            <Center width="6%"><Text fontSize="1.5rem" color="brand.500">VS</Text></Center>
                             <Box width="47%" className="bordered" p="3">
                                 <TraceInfo trace={traces[1]} />
                             </Box>

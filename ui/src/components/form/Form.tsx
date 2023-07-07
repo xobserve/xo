@@ -1,4 +1,5 @@
-import { Box, Flex, HStack, StackDivider, StyleProps, Text, VStack } from "@chakra-ui/react"
+import { Box, Flex, HStack, StackDivider, StyleProps, Text, Tooltip, VStack } from "@chakra-ui/react"
+import { IoMdInformationCircleOutline } from "react-icons/io"
 import { StyleSize } from "types/styles"
 
 interface FormProps {
@@ -19,13 +20,17 @@ interface FormItemProps {
     bordered?: boolean
     size?
     titleSize?: string
+    desc?: string
 }
 
-export const FormSection = ({ children, title=null,spacing=2, bordered=false,titleSize="1rem", ...rest }: FormItemProps & StyleProps) => {
+export const FormSection = ({ children, title = null, spacing = 2, bordered = false, titleSize = "1rem", desc = null, ...rest }: FormItemProps & StyleProps) => {
     return <>
 
         <VStack alignItems="left" spacing={spacing} className={`${bordered ? "bordered" : ""}`} {...rest}>
-            {title && <Text textStyle="title" mb={1} fontSize={titleSize}>{title}</Text>}
+            {title && <HStack  mb={1} spacing={1}>
+                <Text textStyle="title" fontSize={titleSize}>{title}</Text>
+                {desc && <Tooltip label={desc}><Box><IoMdInformationCircleOutline /></Box></Tooltip>}
+            </HStack>}
             {children}
         </VStack>
     </>

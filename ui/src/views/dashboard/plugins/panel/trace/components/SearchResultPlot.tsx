@@ -37,6 +37,19 @@ const SearchResultPlot = ({ traces, timeRange, onSelect }: Props) => {
             const item = [time, duration, trace.traceID, trace.traceName]
             isErrorTrace(trace) ? errData.push(item) : sucData.push(item)
         }
+        
+        const start = timeRange.start.getTime()
+        const end = timeRange.end.getTime()
+        if (minX > start) {
+            minX = start 
+        }
+
+        if (maxX < end) {
+            maxX = end
+        }
+
+        // min: timeRange.start,
+        // max: timeRange.end,
 
         return [minX, maxX, sucData, errData]
     }, [traces])
@@ -185,8 +198,8 @@ const SearchResultPlot = ({ traces, timeRange, onSelect }: Props) => {
                         return moment(value).format('MM-DD HH:mm:ss');
                     }),
                 },
-                min: timeRange.start,
-                max: timeRange.end,
+                min: minX,
+                max: maxX,
                 splitNumber: 5,
                 // minInterval: 100,
             },
