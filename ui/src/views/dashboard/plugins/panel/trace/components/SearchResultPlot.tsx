@@ -114,7 +114,6 @@ const SearchResultPlot = ({ traces, timeRange }: Props) => {
             isErrorTrace(trace) ? errData.push(item) : sucData.push(item)
         }
 
-        console.log("here4444:",sucData, errData)
         return {
             brush: {
                 throttleType: 'debounce',
@@ -128,8 +127,8 @@ const SearchResultPlot = ({ traces, timeRange }: Props) => {
                 }
             },
             grid: {
-                left: '10%',
-                right: '5%',
+                left: '50px',
+                right: '20px',
                 top: '18%',
                 bottom: '10%'
             },
@@ -198,7 +197,7 @@ const SearchResultPlot = ({ traces, timeRange }: Props) => {
     }, [colorMode,traces])
 
     return (<>
-        {options && <Box height="400px" width="100%" key={colorMode} className="echarts-panel"><ChartComponent height={500} options={options} theme={colorMode} onChartCreated={c => setChart(c)} /></Box>}
+        {options && <Box  width="100%" key={colorMode} className="echarts-panel"><ChartComponent height={400} options={options} theme={colorMode} onChartCreated={c => setChart(c)} /></Box>}
     </>)
 }
 

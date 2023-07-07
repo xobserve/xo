@@ -132,7 +132,6 @@ const TimePicker = ({ onClose, onTimeChange }: Props) => {
     }
 
     const applyTimeRange = (r) => {
-        console.log("here time 2222:", r)
         storage.set(TimePickerKey, JSON.stringify(r))
         onTimeChange(r)
         onClose()

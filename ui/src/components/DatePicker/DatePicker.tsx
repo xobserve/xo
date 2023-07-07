@@ -17,7 +17,6 @@ const DatePicker = ({ showTime = false }: Props) => {
     const [value, setValue] = useState<TimeRange>(getInitTimeRange())
 
     const onTimeChange = (t: TimeRange) => {
-        console.log("here time", t)
         setValue(t)
         onClose()
         dispatch({ type: TimeChangedEvent, data: t })
@@ -26,7 +25,6 @@ const DatePicker = ({ showTime = false }: Props) => {
     useBus(
         TimeRefreshEvent, 
         () => {
-            console.log("here3333 time aaa")
             refresh()
         },
         []

@@ -199,7 +199,6 @@ const NodeGrapPanel = ({ data, panel, dashboardId,width,height }: NodeGraphPanel
 
                 gh.getEdges().forEach(edge => {
                     // graph.clearItemStates(edge)
-                    // console.log("here333333:",edge, defaultEdgeLabelCfg)
                     gh.updateItem(edge, {
                         labelCfg:  defaultEdgeLabelCfg
                     })
@@ -248,7 +247,6 @@ const NodeGrapPanel = ({ data, panel, dashboardId,width,height }: NodeGraphPanel
             //         if (!container || !container.current.scrollWidth || !container.current.scrollHeight) return;
             //         gh.changeSize(container.current.clientWidth, container.current.clientHeight);
             //         gh.render()
-            //         console.log("here333333e:",container,container.current.clientWidth,container.current.clientHeight)
             //     };
             // }
         }
@@ -292,7 +290,6 @@ const clearSelectedEdgesState = (graph: Graph, defaultEdgeLabelCfg) => {
     // const selectedEdges = graph.findAllByState('edge', 'selected')
     graph.getEdges().forEach(edge => {
         // graph.clearItemStates(edge)
-        // console.log("here333333:",edge, defaultEdgeLabelCfg)
         graph.updateItem(edge, {
             labelCfg: defaultEdgeLabelCfg
         })

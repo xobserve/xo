@@ -21,13 +21,3 @@ export const useDedupEvent = (event:string, callback, expires=500) => {
         }
     )
 }
-
-
-// const [variables1, setVariables] = useState<Variable[]>(variables)
-// useBus(
-//     VariableChangedEvent,
-//     () => {
-//         console.log("here33333, variable changed!", props.panel.id)
-//         setVariables([...variables])
-//     }
-// )

@@ -9,16 +9,18 @@ import { EditorInputItem, EditorNumberItem } from "components/editor/EditorItem"
 import { Button, HStack } from "@chakra-ui/react"
 import storage from "utils/localStorage"
 import { TraceSearchKey } from "../config/constants"
+import { TimeRange } from "types/time"
 
 interface Props {
     panel: Panel
     onSearch: any
     dashboardId: string
+    timeRange: TimeRange
 }
 
-const TraceSearchPanel = ({ dashboardId, panel, onSearch }: Props) => {
+const TraceSearchPanel = ({ timeRange,dashboardId, panel, onSearch }: Props) => {
+    const [inited, setInited] = useState(false)
     const lastSearch = useMemo(() => storage.get(TraceSearchKey + dashboardId + panel.id)??{} ,[])
-    console.log("here33333",lastSearch)
     const [services, setServices] = useState([])
     const [service, setService] = useState<string>(lastSearch.service??null)
     const [operations, setOperations] = useState([])
@@ -27,6 +29,16 @@ const TraceSearchPanel = ({ dashboardId, panel, onSearch }: Props) => {
     const [max, setMax] = useState<string>(lastSearch.max??'')
     const [min, setMin] = useState<string>(lastSearch.min??'')
     const [limit, setLimit] = useState(lastSearch.limit??20)
+
+    useEffect(() => {
+        if (inited) {
+            if (service && operation) {
+                console.log("here3333333 on time range changed, search:")
+                onSearch(service, operation , tags, min, max, limit)
+            }
+           
+        }
+    },[timeRange])
 
     useEffect(() => {
         loadServices()
@@ -54,6 +66,11 @@ const TraceSearchPanel = ({ dashboardId, panel, onSearch }: Props) => {
                         onSearch(service, operation ?? 'all' , tags, min, max, limit)      
                     }
                 }
+
+                setTimeout(() => {
+                    setInited(true)
+                },500)
+          
                 break;
 
             default:

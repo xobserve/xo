@@ -138,7 +138,6 @@ export const parseOptions = (config: PanelProps,rawData: SeriesData[], colorMode
     })
 
 
-    // console.log("here33333:", series, ya)
 
     return {
         width: config.width,
