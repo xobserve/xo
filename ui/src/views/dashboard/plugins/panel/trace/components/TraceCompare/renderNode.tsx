@@ -76,10 +76,10 @@ export class DiffNode extends React.PureComponent<Props> {
                     {table}
                 </PopoverTrigger>
                 <Portal>
-                    <PopoverContent minWidth="900px">
+                    <PopoverContent minWidth="800px">
                         <PopoverArrow />
                         <PopoverBody>
-                            <HStack spacing={4} divider={<StackDivider />} alignItems="top" maxH="600px" overflowY="scroll">
+                            <HStack spacing={4} divider={<StackDivider />} alignItems="top" maxH="400px" overflowY="scroll">
                                 {dataA.length > 0 && <Box width="50%"><NodeCard service={service} operation={operation} data={dataA} data1={dataB} /></Box>}
                                 {dataB.length > 0 && <Box width="50%"><NodeCard service={service} operation={operation} data={dataB} data1={dataA} /></Box>}
                             </HStack>
@@ -144,7 +144,7 @@ const NodeCard = ({ service, operation, data, data1 }) => {
 
                             {activeSpan?.id == span.id && <Button size="xs" variant="ghost" onClick={() => setInView(inView != span.id ? span.id : null)}>{inView != span.id ? "View detail" : "Hide detail"} </Button>}
                         </Flex>
-                        {inView == span.id && <Box height="400px">
+                        {inView == span.id && <Box height="300px">
                             <CodeEditor fontSize={8}  value={viewSpan(span)} readonly></CodeEditor>
                         </Box>}
                     </Box>)
