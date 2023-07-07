@@ -1,26 +1,32 @@
 import { Form, FormSection } from "components/form/Form"
 import FormItem from "components/form/Item"
 import InputSelect from "components/select/InputSelect"
-import { use, useEffect, useState } from "react"
+import { use, useEffect, useMemo, useState } from "react"
 import { DatasourceType, Panel } from "types/dashboard"
 import { queryJaegerOperations, queryJaegerServices } from "../../../datasource/jaeger/query_runner"
 import { set, sortBy } from "lodash"
 import { EditorInputItem, EditorNumberItem } from "components/editor/EditorItem"
 import { Button, HStack } from "@chakra-ui/react"
+import storage from "utils/localStorage"
+import { TraceSearchKey } from "../config/constants"
 
 interface Props {
     panel: Panel
     onSearch: any
+    dashboardId: string
 }
-const TraceSearchPanel = ({ panel, onSearch }: Props) => {
+
+const TraceSearchPanel = ({ dashboardId, panel, onSearch }: Props) => {
+    const lastSearch = useMemo(() => storage.get(TraceSearchKey + dashboardId + panel.id)??{} ,[])
+    console.log("here33333",lastSearch)
     const [services, setServices] = useState([])
-    const [service, setService] = useState<string>(null)
+    const [service, setService] = useState<string>(lastSearch.service??null)
     const [operations, setOperations] = useState([])
-    const [operation, setOperation] = useState<string>(null)
-    const [tags, setTags] = useState<string>('')
-    const [max, setMax] = useState<string>('')
-    const [min, setMin] = useState<string>('')
-    const [limit, setLimit] = useState(20)
+    const [operation, setOperation] = useState<string>(lastSearch.operation??null)
+    const [tags, setTags] = useState<string>(lastSearch.tags??'')
+    const [max, setMax] = useState<string>(lastSearch.max??'')
+    const [min, setMin] = useState<string>(lastSearch.min??'')
+    const [limit, setLimit] = useState(lastSearch.limit??20)
 
     useEffect(() => {
         loadServices()
@@ -41,7 +47,12 @@ const TraceSearchPanel = ({ panel, onSearch }: Props) => {
                 const ss = sortBy(res)
                 setServices(ss)
                 if (ss.length > 0) {
-                    setService(ss[0])
+                    if (!service) {
+                        setService(ss[0])
+                        onSearch(ss[0],'all' , tags, min, max, limit)
+                    } else {
+                        onSearch(service, operation ?? 'all' , tags, min, max, limit)      
+                    }
                 }
                 break;
 
@@ -56,15 +67,22 @@ const TraceSearchPanel = ({ panel, onSearch }: Props) => {
                 const res = await queryJaegerOperations(panel.datasource.id, service)
                 const ss = sortBy(res)
                 setOperations(['all'].concat(ss))
-                setOperation('all')
-                onSearch(service, 'all', tags, min, max, limit)
+                if (!operation) {
+                    setOperation('all')
+                }
                 break;
 
             default:
                 break;
         }
     }
-
+    
+    const onClickSearch = () => {
+        onSearch(service,operation,tags,min,max,limit)
+        storage.set(TraceSearchKey + dashboardId + panel.id, {
+            service, operation,tags,min,max,limit
+        })
+    }
 
     return (<>
         <Form spacing={6}>
@@ -86,9 +104,9 @@ const TraceSearchPanel = ({ panel, onSearch }: Props) => {
                 </FormSection>
             </HStack>
             <FormSection title="Limit Results" titleSize="0.85rem" spacing={1}>
-                <EditorNumberItem value={limit} min={0} onChange={v => setTags(v)} size="md"/>
+                <EditorNumberItem value={limit} min={0} onChange={v => setLimit(v)} size="md"/>
             </FormSection>
-            <Button  width="150px" onClick={() => onSearch(service,operation,tags,min,max,limit)}>Find traces</Button>
+            <Button  width="150px" onClick={onClickSearch}>Find traces</Button>
         </Form>
     </>)
 }

@@ -36,7 +36,7 @@ const TracePanel = (props: PanelProps) => {
         {props.panel.datasource.type != DatasourceType.Jaeger ? <Center height="100%">No data</Center> :
             <HStack alignItems="top" px="2" py="1">
                 <Box width="300px" pt="2">
-                    <TraceSearchPanel panel={props.panel} onSearch={onSearch} />
+                    <TraceSearchPanel dashboardId={props.dashboardId} panel={props.panel} onSearch={onSearch} />
                 </Box>
                 <Box width="calc(100% - 300px)">
                 {traces  && <TraceSearchResult traces={traces}  panel={props.panel} timeRange={props.timeRange}/>}

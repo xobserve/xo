@@ -1,10 +1,12 @@
 import { Box, useColorMode } from "@chakra-ui/react";
 import ChartComponent from "components/charts/Chart";
+import { alpha } from "components/uPlot/colorManipulator";
 import { max, round } from "lodash";
 import moment from "moment";
 import { useEffect, useMemo, useState } from "react";
 import { Trace } from "types/plugins/trace"
 import { TimeRange } from "types/time";
+import { isErrorTrace } from "../utils/trace";
 
 interface Props {
     traces: Trace[]
@@ -36,7 +38,6 @@ const SearchResultPlot = ({ traces, timeRange }: Props) => {
                 }, 200);
 
             });
-
             chart.dispatchAction({
                 type: 'takeGlobalCursor',
                 key: 'brush',
@@ -45,8 +46,28 @@ const SearchResultPlot = ({ traces, timeRange }: Props) => {
                 }
             });
         }
+
+        return () => {
+            if (chart) {
+                chart.off("click")
+                chart.off("brushSelected")
+                chart.off("brushEnd")
+            }
+        }
     }, [chart])
-   
+    
+    useEffect(() => {
+        if (chart) {
+            chart.dispatchAction({
+                type: 'takeGlobalCursor',
+                key: 'brush',
+                   brushOption: {
+                    brushType: "rect"
+                }
+            });
+        }
+    },[colorMode, traces])
+    
     const itemStyle = {
         opacity: 0.8,
         shadowBlur: 10,
@@ -54,11 +75,30 @@ const SearchResultPlot = ({ traces, timeRange }: Props) => {
         shadowOffsetY: 0,
         shadowColor: 'rgba(0,0,0,0.3)'
     };
+    
+    const series = {
+        type: 'scatter',
+        itemStyle: itemStyle,
+        symbolSize: function (data) {
+            let size = Math.sqrt(data[1])
+            if (size < 20) {
+                size = 20
+            } else if (size > 50) {
+                size = 50
+            }
+            
+            return size;
+          },
+          emphasis: {
+            focus: 'self'
+          },
+    }
 
     const options = useMemo(() => {
         let minX;
         let maxX;
-        const d = []
+        const sucData = []
+        const errData = []
         for (const trace of traces) {
             const time = round(trace.startTime / 1000)
             if (time < minX || !minX) {
@@ -70,10 +110,11 @@ const SearchResultPlot = ({ traces, timeRange }: Props) => {
             }
 
             const duration = trace.duration / 1000
-            d.push([time,duration,trace.traceID,trace.traceName])
+            const item = [time,duration,trace.traceID,trace.traceName]
+            isErrorTrace(trace) ? errData.push(item) : sucData.push(item)
         }
 
-        console.log("here33333:",minX,maxX, d)
+        console.log("here4444:",sucData, errData)
         return {
             brush: {
                 throttleType: 'debounce',
@@ -139,6 +180,7 @@ const SearchResultPlot = ({ traces, timeRange }: Props) => {
                 splitLine: {
                     show: true
                 },
+                splitNumber: 3,
                 axisLabel: {
                     formatter: function (value, index) {
                         return value + 'ms';
@@ -149,26 +191,8 @@ const SearchResultPlot = ({ traces, timeRange }: Props) => {
                 }
             },
             series: [
-                {
-                    name: 'Error',
-                    type: 'scatter',
-                    itemStyle: itemStyle,
-                    data: d,
-                    symbolSize: function (data) {
-                        let size = Math.sqrt(data[1])
-                        if (size < 20) {
-                            size = 20
-                        } else if (size > 50) {
-                            size = 50
-                        }
-                        
-                        return size;
-                      },
-                      emphasis: {
-                        focus: 'self'
-                      },
-                      color: '#dd4444' // '#80F1BE'
-                }
+                {...series,name:"Success", data: errData, color: alpha('#dd4444',0.7)},
+                {...series,name:"Error", data:sucData, color: alpha('#80F1BE',0.7)}
             ]
         }
     }, [colorMode,traces])
