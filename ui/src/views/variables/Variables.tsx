@@ -93,6 +93,18 @@ const SelectVariable = ({ v }: { v: Variable }) => {
         }
         
         if (!isEqual(result, v.values)) {
+            if (v.selected != VarialbeAllOption) {
+                if (v.selected) {
+                    const selected = v.selected.split(VariableSplitChar)?.filter(s => result.includes(s))
+                    if (selected.length == 0) {
+                        v.selected = result[0]
+                    } else {
+                        v.selected = selected.join(VariableSplitChar)
+                    }    
+                } else {
+                    v.selected = result[0]
+                }
+            }
             dispatch(VariableChangedEvent)   
         }
 
@@ -100,6 +112,8 @@ const SelectVariable = ({ v }: { v: Variable }) => {
         setValues(result)
         v.values = result
 
+        
+        
 
     }
     
@@ -160,13 +174,18 @@ export const setVariableValue = (variable: Variable, value) => {
         storage.set(vkey, sv)
     }
 
-    dispatch(VariableChangedEvent)
-   
+    
+
+    let needReload = true
     for (const v of variables) {
         if (v.id != variable.id &&  v.value.indexOf('${' + variable.name + '}') >= 0) {
             dispatch(VariableForceReload+v.id)
+            needReload = false
         }
     }
+
+    // dispatch variable changed event until relational variables are reloaded
+    if (needReload) dispatch(VariableChangedEvent)
 }
 
 export const setVariable = (name, value, toast?) => {

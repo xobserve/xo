@@ -1,5 +1,4 @@
 import { Form, FormSection } from "components/form/Form"
-import FormItem from "components/form/Item"
 import InputSelect from "components/select/InputSelect"
 import { use, useEffect, useMemo, useState } from "react"
 import { DatasourceType, Panel } from "types/dashboard"
@@ -10,10 +9,9 @@ import { Button, Divider, HStack } from "@chakra-ui/react"
 import storage from "utils/localStorage"
 import { TraceSearchKey } from "../config/constants"
 import { TimeRange } from "types/time"
-import { replaceWithVariablesHasMultiValues } from "utils/variable"
+import { hasVariableFormat, replaceWithVariablesHasMultiValues } from "utils/variable"
 import useBus from "use-bus"
 import { VariableChangedEvent } from "src/data/bus-events"
-import { parseVariableFormat } from "utils/format"
 
 interface Props {
     panel: Panel
@@ -72,18 +70,17 @@ const TraceSearchPanel = ({ timeRange,dashboardId, panel, onSearch,onSearchIds }
     useBus(
         VariableChangedEvent,
         () => {
-            const formats = parseVariableFormat(operation)
-           
-            if (formats.length > 0) {
+            if (hasVariableFormat(operation)) {
                 return 
             }
+      
             const services = replaceWithVariablesHasMultiValues(service)
             const cachedServices = traceServicesCache[dashboardId+panel.id]
             if (!isEqual(services, cachedServices)) {
                 loadOperations()
             }
         },
-        []
+        [operation]
     )
 
     const loadServices = async () => {
@@ -121,9 +118,13 @@ const TraceSearchPanel = ({ timeRange,dashboardId, panel, onSearch,onSearchIds }
                
                 const ss = sortBy(uniq(res.filter(r => r).flat()))
                 setOperations(['all'].concat(ss))
-                if (!operation) {
-                    setOperation('all')
+                    
+                if (!hasVariableFormat(operation)) {
+                    if (!operation || !ss.includes(operation)) {
+                        setOperation('all')
+                    }
                 }
+             
                 break;
 
             default:

@@ -21,6 +21,7 @@ const TraceSearchResult = ({ panel, traces, timeRange }: Props) => {
 
     useEffect(() => {
         setSelectedTraces(clone(traces))
+        setComparison([])
     }, [traces])
 
     const maxDuration = useMemo(() => Math.max(...traces.map(trace => trace.duration)), [traces])

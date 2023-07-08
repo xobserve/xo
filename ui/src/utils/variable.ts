@@ -9,6 +9,10 @@ import { VariableSplitChar, VarialbeAllOption } from "src/data/variable";
 import { gvariables } from "src/views/App";
 import { isEmpty } from "lodash";
 
+export const hasVariableFormat = (s: string) => {
+    return parseVariableFormat(s).length > 0
+}
+
 // replace ${xxx} format with corresponding variable
 export const replaceWithVariables = (s: string) => {
     const formats = parseVariableFormat(s);
