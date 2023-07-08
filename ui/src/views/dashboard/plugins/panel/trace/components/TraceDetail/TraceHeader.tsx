@@ -4,12 +4,32 @@ import moment from "moment"
 import { FaChevronDown } from "react-icons/fa"
 import { Trace } from "types/plugins/trace"
 import { formatDuration } from "../../utils/date"
+import SpanGraph from "./SpanGraph"
+import { useState } from "react"
+import { IViewRange, ViewRangeTimeUpdate } from "../../types/types"
 
 interface Props {
     trace: Trace
 }
 
 const TraceDetailHeader = ({trace}: Props) => {
+    const [viewRange, setViewRange] = useState<IViewRange>({
+        time: {
+          current: [0, 1],
+        },
+      })
+
+    const updateNextViewRangeTime = (update: ViewRangeTimeUpdate) => {
+        const time = { ...viewRange.time, ...update };
+        setViewRange({ ...viewRange, time });
+      };
+    
+    const updateViewRangeTime = (start: number, end: number, trackSrc?: string) => {
+        const current: [number, number] = [start, end];
+        const time = { current };
+        setViewRange({ ...viewRange, time })
+      };
+      
     return (<Box>
         <Flex justifyContent="space-between" alignItems="center">
             <HStack>
@@ -51,6 +71,7 @@ const TraceDetailHeader = ({trace}: Props) => {
                 <Text>{trace.errorsCount}</Text>
             </HStack>
         </HStack>
+        <SpanGraph trace={trace} viewRange={viewRange} updateNextViewRangeTime={updateNextViewRangeTime} updateViewRangeTime={updateViewRangeTime} />
     </Box>)
 }
 

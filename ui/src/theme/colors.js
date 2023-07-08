@@ -26,6 +26,10 @@ const  customColors = {
     textColorRGB: {
         light: `#1A202C`,
         dark: `rgba(255,255,255,0.92)`,
+    },
+    bodyBg: {
+        light: '#fff',
+        dark: '#1A202C'
     }
 }
 

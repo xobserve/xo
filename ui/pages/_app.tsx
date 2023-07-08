@@ -6,6 +6,8 @@ import AppView from "src/views/App";
 // local css
 import "src/views/dashboard/plugins/panel/trace/components/TraceCompare/renderNode.css"
 import "src/views/dashboard/plugins/panel/trace/components/common/EmphasizedNode.css"
+import "src/views/dashboard/plugins/panel/trace/components/TraceDetail/SpanGraph/Scrubber.css"
+import "src/views/dashboard/plugins/panel/trace/components/TraceDetail/SpanGraph/ViewingLayer.css"
 
 dynamic(import("echarts/extension/bmap/bmap"), { ssr: false });
 
