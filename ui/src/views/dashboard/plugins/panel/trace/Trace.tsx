@@ -7,9 +7,8 @@ import {  useMemo, useState } from "react"
 import { TraceData } from "types/plugins/trace"
 import TraceSearchResult from "./components/SearchResult"
 import transformTraceData from "./utils/transform-trace-data"
-import { flatten, isEmpty, uniq, uniqBy } from "lodash";
+import { uniqBy } from "lodash";
 import { replaceWithVariables, replaceWithVariablesHasMultiValues } from "utils/variable";
-import { VarialbeAllOption } from "src/data/variable";
 
 
 const TracePanel = (props: PanelProps) => {
@@ -68,7 +67,7 @@ const TracePanel = (props: PanelProps) => {
                     <TraceSearchPanel timeRange={props.timeRange}  dashboardId={props.dashboardId} panel={props.panel} onSearch={onSearch} onSearchIds={onSearchIds}/>
                 </Box>
                 <Box width="calc(100% - 300px)">
-                {traces  && <TraceSearchResult traces={traces}  panel={props.panel} timeRange={props.timeRange}/>}
+                {traces  && <TraceSearchResult traces={traces}  panel={props.panel} timeRange={props.timeRange} />}
                 </Box>
             </HStack>}
     </>)

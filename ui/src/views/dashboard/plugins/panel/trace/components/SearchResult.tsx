@@ -14,6 +14,7 @@ interface Props {
     traces: Trace[]
     timeRange: TimeRange
 }
+
 const TraceSearchResult = ({ panel, traces, timeRange }: Props) => {
     const [selectedTraces, setSelectedTraces] = useState<Trace[]>([])
     const [sort, setSort] = useState(traceSortTypes[0].value)
@@ -93,7 +94,7 @@ const TraceSearchResult = ({ panel, traces, timeRange }: Props) => {
                 </HStack>
             </Flex>
             <VStack alignItems="left" maxH="500px" overflowY="scroll">
-                {sortedTraces.map(trace => <TraceCard key={trace.traceID} trace={trace} maxDuration={maxDuration} checked={comparison.includes(trace.traceID)} checkDisabled={comparison.length >= 2 && !comparison.includes(trace.traceID)} onChecked={onTraceChecked} />)}
+                {sortedTraces.map(trace => <TraceCard key={trace.traceID} trace={trace} maxDuration={maxDuration} checked={comparison.includes(trace.traceID)} checkDisabled={comparison.length >= 2 && !comparison.includes(trace.traceID)} onChecked={onTraceChecked} dsId={panel.datasource.id}/>)}
             </VStack>
         </Box>
     </Box>)

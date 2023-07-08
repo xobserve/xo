@@ -13,14 +13,17 @@ interface Props {
     onChecked?: (traceId: string) => void
     checkDisabled?: boolean
     simple?: boolean
+    dsId?: number
 }
 
-const TraceCard = ({ trace, maxDuration,checked=false, onChecked=null,simple=false,checkDisabled=false }: Props) => {
+const TraceCard = ({ trace, maxDuration,checked=false, onChecked=null,simple=false,checkDisabled=false,dsId=null}: Props) => {
     const mDate = moment(trace.startTime / 1000);
     const timeStr = mDate.format('h:mm:ss a')
 
     const onTraceClick = () => {
-        console.log("here33333 on trace")
+        if (dsId) {
+            window.open(`/datasource/${dsId}/trace/${trace.traceID}`)
+        }
     }
 
     return (<Box width="100%" className="bordered" borderRadius="0" cursor="pointer" onClick={onTraceClick}>
