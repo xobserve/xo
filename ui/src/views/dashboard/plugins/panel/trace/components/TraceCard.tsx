@@ -22,7 +22,7 @@ const TraceCard = ({ trace, maxDuration,checked=false, onChecked=null,simple=fal
     const onTraceClick = () => {
         console.log("here33333 on trace")
     }
-    
+
     return (<Box width="100%" className="bordered" borderRadius="0" cursor="pointer" onClick={onTraceClick}>
         <Box width="100%" position="relative" className="label-bg">
             <HStack spacing={0} py="5px">
@@ -71,12 +71,12 @@ const TraceCard = ({ trace, maxDuration,checked=false, onChecked=null,simple=fal
                 </Wrap>}
             </Box>
 
-            <Box fontSize="0.85rem">
+            <Box fontSize="0.8rem">
                 {!simple && <HStack spacing={1}>
                     <Text className="bordered-right" pr="1">{formatRelativeDate(trace.startTime / 1000)}</Text>
                     <Text>{timeStr}</Text>
                 </HStack>}
-                <Text>{mDate.fromNow()}</Text>
+                <Text mt="1">{mDate.fromNow()}</Text>
             </Box>
         </Flex>
     </Box>)
