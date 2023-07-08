@@ -13,6 +13,7 @@ import { TimeRange } from "types/time"
 import { replaceWithVariablesHasMultiValues } from "utils/variable"
 import useBus from "use-bus"
 import { VariableChangedEvent } from "src/data/bus-events"
+import { parseVariableFormat } from "utils/format"
 
 interface Props {
     panel: Panel
@@ -71,6 +72,11 @@ const TraceSearchPanel = ({ timeRange,dashboardId, panel, onSearch,onSearchIds }
     useBus(
         VariableChangedEvent,
         () => {
+            const formats = parseVariableFormat(operation)
+           
+            if (formats.length > 0) {
+                return 
+            }
             const services = replaceWithVariablesHasMultiValues(service)
             const cachedServices = traceServicesCache[dashboardId+panel.id]
             if (!isEqual(services, cachedServices)) {
