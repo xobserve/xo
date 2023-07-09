@@ -16,7 +16,7 @@ import * as React from 'react';
 
 import DraggableManager from './DraggableManager';
 import EUpdateTypes from './EUpdateTypes';
-import { TNil } from '../../types/misc';
+import { TNil } from 'types/misc';
 
 export type DraggableBounds = {
   clientXLeft: number;

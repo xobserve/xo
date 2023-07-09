@@ -3,3 +3,5 @@ export interface Help {
     headers: string[]
     contents: string[][]
 }
+
+export type TNil = null | undefined;

@@ -10,26 +10,13 @@ import CollapseIcon from "components/icons/Collapse"
 
 interface Props {
     trace: Trace
+    viewRange: IViewRange
+    updateNextViewRangeTime: (update: ViewRangeTimeUpdate) => void
+    updateViewRangeTime: any
 }
 
-const TraceDetailHeader = ({ trace }: Props) => {
+const TraceDetailHeader = ({ trace, viewRange, updateNextViewRangeTime, updateViewRangeTime}: Props) => {
     const [collapsed, setCollapsed] = useState(true)
-    const [viewRange, setViewRange] = useState<IViewRange>({
-        time: {
-            current: [0, 1],
-        },
-    })
-
-    const updateNextViewRangeTime = (update: ViewRangeTimeUpdate) => {
-        const time = { ...viewRange.time, ...update };
-        setViewRange({ ...viewRange, time });
-    };
-
-    const updateViewRangeTime = (start: number, end: number, trackSrc?: string) => {
-        const current: [number, number] = [start, end];
-        const time = { current };
-        setViewRange({ ...viewRange, time })
-    };
 
     return (<Box>
         <Flex justifyContent="space-between" alignItems="center">

@@ -8,6 +8,7 @@ import "src/views/dashboard/plugins/panel/trace/components/TraceCompare/renderNo
 import "src/views/dashboard/plugins/panel/trace/components/common/EmphasizedNode.css"
 import "src/views/dashboard/plugins/panel/trace/components/TraceDetail/SpanGraph/Scrubber.css"
 import "src/views/dashboard/plugins/panel/trace/components/TraceDetail/SpanGraph/ViewingLayer.css"
+import "src/views/dashboard/plugins/panel/trace/components/TraceDetail/TraceTimeline/TimelineHeader.css"
 
 dynamic(import("echarts/extension/bmap/bmap"), { ssr: false });
 

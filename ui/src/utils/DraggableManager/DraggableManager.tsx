@@ -17,7 +17,7 @@ import type React from 'react';
 
 import EUpdateTypes from './EUpdateTypes';
 import { DraggableBounds, DraggingUpdate } from './types';
-import { TNil } from '../../types/misc';
+import { TNil } from 'types/misc';
 
 const LEFT_MOUSE_BUTTON = 0;
 

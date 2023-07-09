@@ -23,7 +23,7 @@ import DraggableManager, {
   DraggableBounds,
   DraggingUpdate,
   EUpdateTypes,
-} from '../../../utils/DraggableManager';
+} from '../../../../../../../../utils/DraggableManager';
 
 import { Button } from '@chakra-ui/react';
 

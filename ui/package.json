@@ -75,7 +75,8 @@
     "validator": "^13.5.2",
     "d3-selection": "^3.0.0",
     "d3-zoom": "^3.0.0",
-    "viz.js": "1.8.1"
+    "viz.js": "1.8.1",
+    "tween-functions": "^1.2.0"
   },
   "devDependencies": {
     "@next/bundle-analyzer": "^10.0.4",
