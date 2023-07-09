@@ -12,7 +12,9 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+import { useColorModeValue } from '@chakra-ui/react';
 import React from 'react';
+import customColors from 'src/theme/colors';
 
 
 type GraphTicksProps = {
@@ -27,7 +29,7 @@ export default function GraphTicks(props: GraphTicksProps) {
   for (let i = 1; i < numTicks; i++) {
     const x = `${(i / numTicks) * 100}%`;
     ticks.push(<line className="GraphTick" x1={x} y1="0%" x2={x} y2="100%" key={i / numTicks} style={{
-      stroke: '#aaa',
+      stroke: useColorModeValue(customColors.borderColor.light, customColors.borderColor.dark),
       strokeWidth: '1px'
     }}/>);
   }

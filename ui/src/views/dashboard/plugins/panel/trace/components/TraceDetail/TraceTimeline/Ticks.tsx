@@ -18,7 +18,8 @@ import * as React from 'react';
 import { TNil } from '../../../types/misc';
 
 import { formatDuration } from '../../../utils/date';
-import { Box } from '@chakra-ui/react';
+import { Box, useColorModeValue } from '@chakra-ui/react';
+import customColors from 'src/theme/colors';
 
 type TicksProps = {
     endTime?: number | TNil;
@@ -52,7 +53,7 @@ export default function Ticks(props: TicksProps) {
                 position="absolute"
                 height="100%"
                 width="1px"
-                bg="#d8d8d8"
+                bg={useColorModeValue(customColors.borderColor.light, customColors.borderColor.dark)}
             >
                 {labels && (
                     <span className={`Ticks--tickLabel ${portion >= 1 ? 'isEndAnchor' : ''}`} style={{

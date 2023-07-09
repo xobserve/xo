@@ -5,6 +5,7 @@ import TraceDetailHeader from "./TraceHeader"
 import ScrollManager from './scroll/scrollManager';
 import { useState } from "react";
 import { IViewRange, ViewRangeTimeUpdate } from "../../types/types";
+import TraceTimeline from "./TraceTimeline/TraceTimeline";
 
 interface Props {
     trace: Trace
@@ -28,10 +29,12 @@ const TraceDetail = ({ trace, scrollManager }: Props) => {
         setViewRange({ ...viewRange, time })
     };
 
+    let spanFindMatches: Set<string> | null | undefined;
+    
     console.log("here33333", scrollManager)
     return (<Box maxHeight="100vh" overflowY="scroll">
         <TraceDetailHeader trace={trace} viewRange={viewRange} updateNextViewRangeTime={updateNextViewRangeTime} updateViewRangeTime={updateViewRangeTime} />
-        <TraceTimelineViewer
+        <TraceTimeline
           registerAccessors={scrollManager.setAccessors}
           scrollToFirstVisibleSpan={scrollManager.scrollToFirstVisibleSpan}
           findMatchesIDs={spanFindMatches}

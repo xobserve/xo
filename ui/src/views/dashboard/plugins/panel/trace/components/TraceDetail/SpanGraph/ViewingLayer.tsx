@@ -297,7 +297,7 @@ export default class ViewingLayer extends React.PureComponent<ViewingLayerProps,
         )}
         <svg
           height={height}
-          className="ViewingLayer--graph"
+          className="ViewingLayer--graph bordered-bottom"
           ref={this._setRoot}
           onMouseDown={this._draggerReframe.handleMouseDown}
           onMouseLeave={this._draggerReframe.handleMouseLeave}

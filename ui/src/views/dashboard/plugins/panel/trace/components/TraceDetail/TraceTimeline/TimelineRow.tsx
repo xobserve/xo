@@ -31,7 +31,7 @@ interface ITimelineRowCellProps extends React.HTMLAttributes<HTMLDivElement> {
 export default function TimelineRow(props: TTimelineRowProps) {
   const { children, className = '', ...rest } = props;
   return (
-    <div className={`flex-row ${className}`} style={{
+    <div className={`${className}`} style={{
             display: 'flex',
             flex: '0 1 auto',
             flexDirection: 'row'
@@ -50,7 +50,7 @@ function TimelineRowCell(props: ITimelineRowCellProps) {
   const widthPercent = `${width * 100}%`;
   const mergedStyle = { ...style, flexBasis: widthPercent, maxWidth: widthPercent };
   return (
-    <Box position="relative" className={`${className}`} style={mergedStyle} {...rest}>
+    <Box position="relative" className={`${className}`} style={mergedStyle} {...rest} fontSize="0.9rem">
       {children}
     </Box>
   );

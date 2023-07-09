@@ -34,7 +34,7 @@ limitations under the License.
   .VerticalResizer--dragger {
     border-left: 2px solid transparent;
     cursor: col-resize;
-    height: calc(100vh - var(--nav-height));
+    height: calc(100vh);
     margin-left: -1px;
     position: absolute;
     top: 0;

@@ -21,7 +21,6 @@ limitations under the License.
 }
 
 .ViewingLayer--graph {
-  border: 1px solid #999;
   /* need !important here to overcome something from semantic UI */
   overflow: visible !important;
   position: relative;

@@ -15,8 +15,6 @@ limitations under the License.
 */
 
 .TimelineHeaderRow {
-    background: #ececec;
-    border-bottom: 1px solid #ccc;
     height: 38px;
     line-height: 38px;
     position: fixed;
@@ -30,5 +28,6 @@ limitations under the License.
     margin: 0;
     text-overflow: ellipsis;
     white-space: nowrap;
+    font-size: 0.95rem
   }
   

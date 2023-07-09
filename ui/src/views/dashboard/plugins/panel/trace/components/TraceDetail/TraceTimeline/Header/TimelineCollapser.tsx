@@ -14,11 +14,9 @@
 
 import React from 'react';
 
-
-import './TimelineCollapser.css';
-import { HStack, Tooltip } from '@chakra-ui/react';
+import { Box, HStack, Tooltip } from '@chakra-ui/react';
 import { FaChevronDown, FaChevronRight } from 'react-icons/fa';
-import { AiOutlineDoubleRight, } from "react-icons/ai";
+import { AiOutlineDoubleRight, AiOutlineDown, AiOutlineRight, } from "react-icons/ai";
 
 type CollapserProps = {
   onCollapseAll: () => void;
@@ -27,25 +25,33 @@ type CollapserProps = {
   onExpandAll: () => void;
 };
 
-const TimelineCollapser = ({onExpandAll, onExpandOne, onCollapseAll, onCollapseOne}:CollapserProps) => {
-    return (
-      <HStack>
-        <Tooltip label='Expand +1' >
-          <FaChevronDown  onClick={onExpandOne}  />
-        </Tooltip>
-        <Tooltip label='Collapse +1' >
-          <FaChevronRight  onClick={onCollapseOne}  />
-        </Tooltip>
-        <Tooltip label='Expand All' >
-          <AiOutlineDoubleRight style={{
+const TimelineCollapser = ({ onExpandAll, onExpandOne, onCollapseAll, onCollapseOne }: CollapserProps) => {
+  return (
+    <HStack spacing='6px'>
+      <Tooltip label='Expand +1' >
+        <Box >
+          <AiOutlineDown  cursor="pointer" onClick={onExpandOne} />
+        </Box>
+      </Tooltip>
+      <Tooltip label='Collapse +1' >
+        <Box>
+          <AiOutlineRight cursor="pointer" onClick={onCollapseOne} />
+        </Box>
+      </Tooltip>
+      <Tooltip label='Expand All' >
+        <Box>
+          <AiOutlineDoubleRight  cursor="pointer" style={{
             transform: 'rotate(90deg)'
-          }} onClick={onExpandAll}  />
-        </Tooltip>
-        <Tooltip label='Collapse All' >
-          <AiOutlineDoubleRight   onClick={onCollapseAll} className="TimelineCollapser--btn" />
-        </Tooltip>
-      </HStack>
-    );
+          }} onClick={onExpandAll} />
+        </Box>
+      </Tooltip>
+      <Tooltip label='Collapse All' >
+        <Box>
+          <AiOutlineDoubleRight cursor="pointer" onClick={onCollapseAll} className="TimelineCollapser--btn" />
+        </Box>
+      </Tooltip>
+    </HStack>
+  );
 }
 
 export default TimelineCollapser;
