@@ -18,7 +18,6 @@ import cx from 'classnames';
 import { TNil } from 'types/misc'
 import DraggableManager, { DraggableBounds, DraggingUpdate } from 'utils/DraggableManager';
 
-import './VerticalResizer.css';
 import { Box } from '@chakra-ui/react';
 
 type VerticalResizerProps = {
@@ -117,7 +116,7 @@ export default class VerticalResizer extends React.PureComponent<VerticalResizer
             draggerStyle = gripStyle;
         }
         return (
-            <Box sx={{cssStyles}}>
+            <Box>
                 <div
                     className={`VerticalResizer ${isDraggingCls} ${rightSide ? 'is-flipped' : ''}`}
                     ref={this._setRootElm}
@@ -136,93 +135,3 @@ export default class VerticalResizer extends React.PureComponent<VerticalResizer
 }
 
 
-const cssStyles = {{
-    .VerticalResizer {
-    left: 0;
-    position: absolute;
-    right: 0;
-    top: 0;
-}
-      
-      .VerticalResizer.is - flipped {
-    transform: scaleX(-1);
-}
-      
-      .VerticalResizer--wrapper {
-    bottom: 0;
-    position: absolute;
-    top: 0;
-}
-      
-      .VerticalResizer--dragger {
-    border - left: 2px solid transparent;
-    cursor: col - resize;
-    height: calc(100vh - var(--nav - height));
-    margin - left: -1px;
-    position: absolute;
-    top: 0;
-    width: 1px;
-}
-      
-      .VerticalResizer--dragger:hover {
-    border - left: 2px solid rgba(0, 0, 0, 0.3);
-}
-      
-      .VerticalResizer.isDraggingLeft > .VerticalResizer--dragger,
-      .VerticalResizer.isDraggingRight > .VerticalResizer--dragger {
-    background: rgba(136, 0, 136, 0.05);
-    width: unset;
-}
-      
-      .VerticalResizer.isDraggingLeft > .VerticalResizer--dragger {
-    border - left: 2px solid #808;
-    border - right: 1px solid #999;
-}
-      
-      .VerticalResizer.isDraggingRight > .VerticalResizer--dragger {
-    border - left: 1px solid #999;
-    border - right: 2px solid #808;
-}
-      
-      .VerticalResizer--dragger::before {
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    left: -8px;
-    right: 0;
-    content: ' ';
-}
-      
-      .VerticalResizer.isDraggingLeft > .VerticalResizer--dragger:: before,
-      .VerticalResizer.isDraggingRight > .VerticalResizer--dragger::before {
-    left: -2000px;
-    right: -2000px;
-}
-      
-      .VerticalResizer--gripIcon {
-    position: absolute;
-    top: 0;
-    bottom: 0;
-}
-      
-      .VerticalResizer--gripIcon:: before,
-      .VerticalResizer--gripIcon::after {
-    border - right: 1px solid #ccc;
-    content: ' ';
-    height: 9px;
-    position: absolute;
-    right: 9px;
-    top: 25px;
-}
-      
-      .VerticalResizer--gripIcon::after {
-    right: 5px;
-}
-      
-      .VerticalResizer.isDraggingLeft > .VerticalResizer--gripIcon:: before,
-      .VerticalResizer.isDraggingRight > .VerticalResizer--gripIcon:: before,
-      .VerticalResizer.isDraggingLeft > .VerticalResizer--gripIcon:: after,
-      .VerticalResizer.isDraggingRight > .VerticalResizer--gripIcon::after {
-    border - right: 1px solid rgba(136, 0, 136, 0.5);
-}
-}}

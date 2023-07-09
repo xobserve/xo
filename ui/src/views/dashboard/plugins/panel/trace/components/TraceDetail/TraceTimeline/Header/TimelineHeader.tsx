@@ -1,7 +1,9 @@
-import { IViewRangeTime, TUpdateViewRangeTimeFunction, ViewRangeTimeUpdate } from "../../../types/types";
-import TimelineRow from "./TimelineRow";
+import { IViewRangeTime, TUpdateViewRangeTimeFunction, ViewRangeTimeUpdate } from "../../../../types/types";
+import TimelineRow from "../TimelineRow";
 import TimelineCollapser from "./TimelineCollapser";
-import Ticks from "./Ticks";
+import Ticks from "../Ticks";
+import VerticalResizer from "components/VerticalResizer/VerticalResizer";
+import TimelineViewingLayer from "./TimelineLayer";
 
 interface Props {
     duration: number;

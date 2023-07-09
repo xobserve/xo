@@ -3,7 +3,7 @@ import { TNil } from "../../../types/misc";
 import { IViewRange, TUpdateViewRangeTimeFunction, ViewRangeTimeUpdate } from "../../../types/types";
 import { useState } from "react";
 import { Box } from "@chakra-ui/react";
-import TimelineHeader from "./TimelineHeader";
+import TimelineHeader from "./Header/TimelineHeader";
 
 interface Props {
     registerAccessors: any
