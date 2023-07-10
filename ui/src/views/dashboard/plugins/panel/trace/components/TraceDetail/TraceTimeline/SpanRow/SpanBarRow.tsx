@@ -134,12 +134,16 @@ const SpanBarRow = (props: SpanBarRowProps) => {
     return (
         <Box sx={{
             '.span-row:hover .span-name-wrapper': {
-                backgroundColor: useColorModeValue('#f8f8f8', customColors.hoverBg.dark),
-                background: colorMode == "light" ? 'linear-gradient(90deg, #fafafa, #f8f8f8 50%, #eee)' : null
+                backgroundColor: useColorModeValue('#f8f8f8', 'gray.700'),
+                background: colorMode == "light" ? 'linear-gradient(90deg, #fafafa, #f8f8f8 50%, #eee)' : null,
+                //  `linear-gradient(90deg, ${customColors.hoverBg.dark}, ${customColors.hoverBg.dark} 50%, #222)`
             },
             '.span-row:hover .span-view': {
-                backgroundColor:  useColorModeValue('#f5f5f5', customColors.hoverBg.dark),
+                backgroundColor:  useColorModeValue('#f5f5f5', 'gray.700'),
                 outline: colorMode == "light" ? '1px solid #ddd' : null 
+            },
+            '.span-row.is-expanded .SpanBar--label,.span-row:hover .SpanBar--label, .span-name .endpoint-name': {
+              color: useColorModeValue('#000', '#aaa')
             }
         }}>
             <TimelineRow

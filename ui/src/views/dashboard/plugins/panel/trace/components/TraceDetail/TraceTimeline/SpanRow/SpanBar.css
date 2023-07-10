@@ -62,10 +62,7 @@ limitations under the License.
     right: 100%;
   }
   
-  .span-row.is-expanded .SpanBar--label,
-  .span-row:hover .SpanBar--label {
-    color: #000;
-  }
+
   
   .SpanBar--logMarker {
     background-color: rgba(0, 0, 0, 0.5);

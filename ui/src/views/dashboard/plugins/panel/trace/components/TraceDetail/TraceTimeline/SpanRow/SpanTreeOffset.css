@@ -32,11 +32,6 @@ limitations under the License.
     display: inline-flex;
   }
   
-  .SpanTreeOffset--indentGuide:before {
-    content: '';
-    padding-left: 1px;
-    background-color: lightgrey;
-  }
   
   .SpanTreeOffset--indentGuide.is-active {
     border-left-color: darkgrey;
