@@ -13,15 +13,16 @@ interface Props {
     viewRange: IViewRange
     updateNextViewRangeTime: (update: ViewRangeTimeUpdate) => void
     updateViewRangeTime: any
+    collapsed: boolean
+    onGraphCollapsed: any
 }
 
-const TraceDetailHeader = ({ trace, viewRange, updateNextViewRangeTime, updateViewRangeTime}: Props) => {
-    const [collapsed, setCollapsed] = useState(true)
+const TraceDetailHeader = ({ trace, viewRange, updateNextViewRangeTime, updateViewRangeTime,collapsed, onGraphCollapsed}: Props) => {
 
-    return (<Box>
+    return (<>
         <Flex justifyContent="space-between" alignItems="center">
             <HStack>
-                <CollapseIcon collapsed={collapsed} onClick={() => setCollapsed(!collapsed)}/>
+                <CollapseIcon collapsed={collapsed} onClick={onGraphCollapsed}/>
                 <Text>{trace.traceName}</Text>
                 <Text>{trace.traceID.slice(0, 7)}</Text>
             </HStack>
@@ -60,7 +61,7 @@ const TraceDetailHeader = ({ trace, viewRange, updateNextViewRangeTime, updateVi
             </HStack>
         </HStack>
         {!collapsed && <SpanGraph trace={trace} viewRange={viewRange} updateNextViewRangeTime={updateNextViewRangeTime} updateViewRangeTime={updateViewRangeTime} />}
-    </Box>)
+    </>)
 }
 
 export default TraceDetailHeader

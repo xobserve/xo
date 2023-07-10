@@ -15,28 +15,28 @@
 
 import { colors } from "./colors";
 
-// const COLORS_HEX = [
-//   '#17B8BE',
-//   '#F8DCA1',
-//   '#B7885E',
-//   '#FFCB99',
-//   '#F89570',
-//   '#829AE3',
-//   '#E79FD5',
-//   '#1E96BE',
-//   '#89DAC1',
-//   '#B3AD9E',
-//   '#12939A',
-//   '#DDB27C',
-//   '#88572C',
-//   '#FF9833',
-//   '#EF5D28',
-//   '#162A65',
-//   '#DA70BF',
-//   '#125C77',
-//   '#4DC19C',
-//   '#776E57',
-// ];
+const COLORS_HEX = [
+  '#17B8BE',
+  '#F8DCA1',
+  '#B7885E',
+  '#FFCB99',
+  '#F89570',
+  '#829AE3',
+  '#E79FD5',
+  '#1E96BE',
+  '#89DAC1',
+  '#B3AD9E',
+  '#12939A',
+  '#DDB27C',
+  '#88572C',
+  '#FF9833',
+  '#EF5D28',
+  '#162A65',
+  '#DA70BF',
+  '#125C77',
+  '#4DC19C',
+  '#776E57',
+];
 
 // TS needs the precise return type
 function strToRgb(s: string): [number, number, number] {
@@ -55,7 +55,7 @@ function strToRgb(s: string): [number, number, number] {
     cache: Map<string, number>;
     currentIdx: number;
   
-    constructor(colorsHex: string[] = colors) {
+    constructor(colorsHex: string[] = COLORS_HEX) {
       this.colorsHex = colorsHex;
       this.colorsRgb = colorsHex.map(strToRgb);
       this.cache = new Map();

@@ -2,9 +2,10 @@ import { Trace, TraceSpan } from "types/plugins/trace"
 import { TNil } from "../../../types/misc";
 import { IViewRange, TUpdateViewRangeTimeFunction, ViewRangeTimeUpdate } from "../../../types/types";
 import { useCallback, useState } from "react";
-import { Box } from "@chakra-ui/react";
+import { Box, useColorModeValue } from "@chakra-ui/react";
 import TimelineHeader from "./Header/TimelineHeader";
 import SpanRows from './SpanRows'
+import customColors from "src/theme/colors";
 
 interface Props {
     registerAccessors: any
@@ -87,7 +88,13 @@ const TraceTimeline = ({ trace, updateNextViewRangeTime, updateViewRangeTime, vi
     },[])
 
 
-    return (<Box>
+    return (<>
+        <Box sx={{
+            '.TimelineHeaderRow': {
+                background: useColorModeValue('#fff', customColors.bodyBg.dark)
+            }
+        }}>
+       
         <TimelineHeader
           duration={trace.duration}
           nameColumnWidth={spanNameWidth}
@@ -100,6 +107,7 @@ const TraceTimeline = ({ trace, updateNextViewRangeTime, updateViewRangeTime, vi
           updateNextViewRangeTime={updateNextViewRangeTime}
           updateViewRangeTime={updateViewRangeTime}
         />
+        </Box>
         <SpanRows 
             trace={trace} 
             registerAccessors={registerAccessors}  
@@ -111,7 +119,7 @@ const TraceTimeline = ({ trace, updateNextViewRangeTime, updateViewRangeTime, vi
             childrenHiddenIDs={childrenHiddenIDs}
             onChildrenToggle={onChildrenToggle}
             />
-    </Box>)
+    </>)
 }
 
 export default TraceTimeline
