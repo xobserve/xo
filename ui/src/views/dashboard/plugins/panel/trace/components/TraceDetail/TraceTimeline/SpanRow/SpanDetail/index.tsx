@@ -23,8 +23,8 @@ import DetailState from './DetailState';
 import { TNil } from 'types/misc';
 import { KeyValuePair, SpanLink, SpanLog, TraceSpan } from 'types/plugins/trace';
 
-import { formatDuration } from '../../../../utils/date';
-import { Divider } from '@chakra-ui/react';
+import { formatDuration } from '../../../../../utils/date';
+import { Box, Divider, Flex } from '@chakra-ui/react';
 import CopyToClipboard from 'components/CopyToClipboard';
 import LabeledList from 'components/LabelList';
 
@@ -80,14 +80,13 @@ export default function SpanDetail(props: SpanDetailProps) {
 
   return (
     <div>
-      <div className="ub-flex ub-items-center">
-        <h2 className="ub-flex-auto ub-m0">{operationName}</h2>
+      <Flex justifyContent="space-between" alignItems="center">
+        <h2>{operationName}</h2>
         <LabeledList
-          className="ub-tx-right-align"
           dividerClassName="SpanDetail--divider"
           items={overviewItems}
         />
-      </div>
+      </Flex>
       <Divider className="SpanDetail--divider ub-my1" />
       <div>
         <div>

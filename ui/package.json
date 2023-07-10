@@ -76,7 +76,8 @@
     "d3-selection": "^3.0.0",
     "d3-zoom": "^3.0.0",
     "viz.js": "1.8.1",
-    "tween-functions": "^1.2.0"
+    "tween-functions": "^1.2.0",
+    "recompose": "^0.30.0"
   },
   "devDependencies": {
     "@next/bundle-analyzer": "^10.0.4",
@@ -101,7 +102,8 @@
     "eslint-plugin-prettier": "^4.0.0",
     "next-compose-plugins": "^2.2.1",
     "prettier": "^2.7.1",
-    "typescript": "^4.9.3"
+    "typescript": "^4.9.3",
+    "@types/recompose": "^0.30.5"
   },
   "resolutions": {
     "d3-interpolate": "2.0.1"

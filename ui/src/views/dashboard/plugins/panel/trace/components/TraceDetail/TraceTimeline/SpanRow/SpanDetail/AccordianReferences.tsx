@@ -17,7 +17,7 @@ import cx from 'classnames';
 
 
 import { SpanReference } from 'types/plugins/trace';
-import ReferenceLink from '../../url/ReferenceLink';
+import ReferenceLink from '../../../url/ReferenceLink';
 import { AiOutlineArrowDown, AiOutlineArrowRight } from 'react-icons/ai';
 
 type AccordianReferencesProps = {

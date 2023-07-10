@@ -15,7 +15,7 @@
 import React from 'react';
 import { shallow } from 'enzyme';
 import AccordianReferences, { References } from './AccordianReferences';
-import ReferenceLink from '../../url/ReferenceLink';
+import ReferenceLink from '../../../url/ReferenceLink';
 
 const traceID = 'trace1';
 const references = [

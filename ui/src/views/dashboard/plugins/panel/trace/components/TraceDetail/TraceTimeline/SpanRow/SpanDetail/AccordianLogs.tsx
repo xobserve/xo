@@ -20,7 +20,7 @@ import AccordianKeyValues from './AccordianKeyValues';
 import { TNil } from 'types/misc';
 import { SpanLog, KeyValuePair, SpanLink } from 'types/plugins/trace';
 
-import { formatDuration } from '../../../../utils/date';
+import { formatDuration } from '../../../../../utils/date';
 import { AiOutlineArrowDown, AiOutlineArrowRight } from 'react-icons/ai';
 
 type AccordianLogsProps = {

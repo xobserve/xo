@@ -11,12 +11,16 @@ import "src/views/dashboard/plugins/panel/trace/components/TraceDetail/SpanGraph
 import "src/views/dashboard/plugins/panel/trace/components/TraceDetail/TraceTimeline/Header/TimelineHeader.css"
 import "src/views/dashboard/plugins/panel/trace/components/TraceDetail/TraceTimeline/Header/TimelineLayer.css"
 import "src/components/VerticalResizer/VerticalResizer.css"
-import "src/views/dashboard/plugins/panel/trace/components/TraceDetail/TraceTimeline/SpanDetail/index.css"
-import "src/views/dashboard/plugins/panel/trace/components/TraceDetail/TraceTimeline/SpanDetail/AccordianKeyValues.css"
-import "src/views/dashboard/plugins/panel/trace/components/TraceDetail/TraceTimeline/SpanDetail/AccordianLogs.css"
-import "src/views/dashboard/plugins/panel/trace/components/TraceDetail/TraceTimeline/SpanDetail/AccordianReferences.css"
-import "src/views/dashboard/plugins/panel/trace/components/TraceDetail/TraceTimeline/SpanDetail/KeyValuesTable.css"
-import "src/views/dashboard/plugins/panel/trace/components/TraceDetail/TraceTimeline/SpanDetail/TextList.css"
+import "src/views/dashboard/plugins/panel/trace/components/TraceDetail/TraceTimeline/SpanRow/SpanDetail/index.css"
+import "src/views/dashboard/plugins/panel/trace/components/TraceDetail/TraceTimeline/SpanRow/SpanDetail/AccordianKeyValues.css"
+import "src/views/dashboard/plugins/panel/trace/components/TraceDetail/TraceTimeline/SpanRow/SpanDetail/AccordianLogs.css"
+import "src/views/dashboard/plugins/panel/trace/components/TraceDetail/TraceTimeline/SpanRow/SpanDetail/AccordianReferences.css"
+import "src/views/dashboard/plugins/panel/trace/components/TraceDetail/TraceTimeline/SpanRow/SpanDetail/KeyValuesTable.css"
+import "src/views/dashboard/plugins/panel/trace/components/TraceDetail/TraceTimeline/SpanRow/SpanDetail/TextList.css"
+import "src/views/dashboard/plugins/panel/trace/components/TraceDetail/TraceTimeline/SpanRow/SpanBar.css"
+import "src/views/dashboard/plugins/panel/trace/components/TraceDetail/TraceTimeline/SpanRow/SpanBarRow.css"
+import "src/views/dashboard/plugins/panel/trace/components/TraceDetail/TraceTimeline/SpanRow/SpanDetailRow.css"
+import "src/views/dashboard/plugins/panel/trace/components/TraceDetail/TraceTimeline/SpanRow/SpanTreeOffset.css"
 
 dynamic(import("echarts/extension/bmap/bmap"), { ssr: false });
 
