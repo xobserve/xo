@@ -4,6 +4,7 @@ import TimelineCollapser from "./TimelineCollapser";
 import Ticks from "../Ticks";
 import VerticalResizer from "components/VerticalResizer/VerticalResizer";
 import TimelineViewingLayer from "./TimelineLayer";
+import { memo } from "react";
 
 interface Props {
     duration: number;
@@ -20,8 +21,9 @@ interface Props {
 
 const NUM_TICKS = 5;
 
-const TimelineHeader = ({ duration, nameColumnWidth, onCollapseAll, onCollapseOne, onColummWidthChange, onExpandAll, onExpandOne, updateNextViewRangeTime, updateViewRangeTime, viewRangeTime }: Props) => {
+const TimelineHeader = memo(({ duration, nameColumnWidth, onCollapseAll, onCollapseOne, onColummWidthChange, onExpandAll, onExpandOne, updateNextViewRangeTime, updateViewRangeTime, viewRangeTime }: Props) => {
     const [viewStart, viewEnd] = viewRangeTime.current;
+    console.log("here33333333ddd")
     return (<TimelineRow className="TimelineHeaderRow bordered-bottom">
         <TimelineRow.Cell className="ub-flex ub-px2" width={nameColumnWidth} style={{display: "flex",paddingLeft: '0.5rem',paddingRight: '1.5rem'}}>
             <h3 className="TimelineHeaderRow--title">Service &amp; Operation</h3>
@@ -43,6 +45,6 @@ const TimelineHeader = ({ duration, nameColumnWidth, onCollapseAll, onCollapseOn
         </TimelineRow.Cell>
         <VerticalResizer position={nameColumnWidth} onChange={onColummWidthChange} min={0.15} max={0.85} />
     </TimelineRow>)
-}
+})
 
 export default TimelineHeader

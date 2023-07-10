@@ -24,7 +24,7 @@ import Ticks from '../Ticks';
 import { TNil } from 'types/misc';
 import { TraceSpan } from 'types/plugins/trace';
 import { formatDuration, ViewedBoundsFunctionType } from '../utils';
-import { IoIosAlert } from 'react-icons/io';
+import { IoAlert } from 'react-icons/io5';
 import { AiOutlineArrowRight } from 'react-icons/ai';
 import { FaNetworkWired } from 'react-icons/fa';
 import { MdOutlineUploadFile } from 'react-icons/md';
@@ -119,7 +119,6 @@ const SpanBarRow = (props: SpanBarRowProps) => {
     const viewBounds = getViewedBounds(span.startTime, span.startTime + span.duration);
     const viewStart = viewBounds.start;
     const viewEnd = viewBounds.end;
-
     const labelDetail = `${serviceName}::${operationName}`;
     let longLabel;
     let hintSide;
@@ -176,7 +175,7 @@ const SpanBarRow = (props: SpanBarRowProps) => {
                                 className={`span-svc-name ${isParent && !isChildrenExpanded ? 'is-children-collapsed' : ''}`}
                             // style={{verticalAlign: "middle"}}
                             >
-                                {showErrorIcon && <IoIosAlert style={{ display: "inline-block" }} className="SpanBarRow--errorIcon" />}
+                                {showErrorIcon && <IoAlert style={{ display: "inline-block",marginBottom: '-2px' }} className="SpanBarRow--errorIcon" />}
                                 {serviceName}{' '}
                                 {rpc && (
                                     <span>

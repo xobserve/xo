@@ -1,7 +1,7 @@
 import { Trace } from "types/plugins/trace"
 import { TNil } from "../../../types/misc";
 import { IViewRange, TUpdateViewRangeTimeFunction, ViewRangeTimeUpdate } from "../../../types/types";
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import { Box } from "@chakra-ui/react";
 import TimelineHeader from "./Header/TimelineHeader";
 import SpanRows from './SpanRows'
@@ -18,6 +18,7 @@ interface Props {
 
 const TraceTimeline = ({ trace, updateNextViewRangeTime, updateViewRangeTime, viewRange,registerAccessors,scrollToFirstVisibleSpan,findMatchesIDs } : Props) => {
     const [spanNameWidth, setSpanNameWidth] = useState(0.2)
+    const [childrenHiddenIDs, setChildrenHiddenIDs] = useState<Set<string>>(new Set())
     const collapseAll = () => {
         
     }
@@ -28,6 +29,12 @@ const TraceTimeline = ({ trace, updateNextViewRangeTime, updateViewRangeTime, vi
     }
     const expandOne = () => {
     }
+
+    const onChildrenToggle = useCallback(ids => {
+        setChildrenHiddenIDs(ids)
+    },[])
+
+
     return (<Box>
         <TimelineHeader
           duration={trace.duration}
@@ -49,6 +56,8 @@ const TraceTimeline = ({ trace, updateNextViewRangeTime, updateViewRangeTime, vi
             currentViewRangeTime={viewRange.time.current} 
             spanNameWidth={spanNameWidth} 
             search=""
+            childrenHiddenIDs={childrenHiddenIDs}
+            onChildrenToggle={onChildrenToggle}
             />
     </Box>)
 }

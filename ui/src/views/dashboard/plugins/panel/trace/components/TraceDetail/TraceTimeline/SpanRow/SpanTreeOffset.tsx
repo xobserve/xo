@@ -20,7 +20,7 @@ import _get from 'lodash/get';
 import { TraceSpan } from 'types/plugins/trace';
 import spanAncestorIds from '../utils';
 import { BsChevronDown, BsChevronRight } from "react-icons/bs";
-import { chakra, useColorMode, useColorModeValue } from '@chakra-ui/react';
+import { chakra, useColorModeValue } from '@chakra-ui/react';
 
 type TProps = {
   childrenVisible?: boolean;

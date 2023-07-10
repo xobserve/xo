@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { memo, useState } from "react";
 import cx from 'classnames';
 import { TNil } from "types/misc";
 import { Accessors } from "../scroll/scrollManager";
@@ -23,6 +23,8 @@ interface Props {
     trace: Trace;
     spanNameWidth: number
     search: string
+    childrenHiddenIDs: Set<string>
+    onChildrenToggle: any
 };
 
 const memoizedGenerateRowStates = memoizeOne(generateRowStatesFromTrace);
@@ -31,14 +33,21 @@ const memoizedGetCssClasses = memoizeOne(getCssClasses, isEqual);
 
 
 type State = {
-    childrenHiddenIDs: Set<string>;
     detailStates: Map<string, DetailState>;
     hoverIndentGuideIds: Set<string>;
     shouldScrollToFirstUiFindMatch: boolean;
 };
 
+const  SpanRowsWrapper = memo((props: Props) => {
+    console.log("here333333:span rows renders")
+    return (
+        <SpanRows {...props}/>
+    )
+})
 
-export default class SpanRows extends React.Component<Props> {
+export default SpanRowsWrapper
+
+export  class SpanRows extends React.Component<Props> {
     listView: ListView | TNil;
     //@ts-ignore
     state: State;
@@ -48,7 +57,6 @@ export default class SpanRows extends React.Component<Props> {
             // setTrace,
             trace, search } = props;
         this.state = {
-            childrenHiddenIDs: new Set(),
             detailStates: new Map(),
             hoverIndentGuideIds: new Set(),
             shouldScrollToFirstUiFindMatch: false,
@@ -130,17 +138,14 @@ export default class SpanRows extends React.Component<Props> {
     }
 
     childrenToggle = (spanID) => {
-        const childrenHiddenIDs = new Set(this.state.childrenHiddenIDs);
+        const childrenHiddenIDs = new Set(this.props.childrenHiddenIDs);
         if (childrenHiddenIDs.has(spanID)) {
             childrenHiddenIDs.delete(spanID);
         } else {
             childrenHiddenIDs.add(spanID);
         }
 
-        this.setState({
-            ...this.state,
-            childrenHiddenIDs,
-        });
+        this.props.onChildrenToggle(childrenHiddenIDs)
     }
 
     detailToggle = (spanID) => {
@@ -200,7 +205,7 @@ export default class SpanRows extends React.Component<Props> {
     }
 
     getRowStates = (): RowState[] => {
-        return memoizedGenerateRowStates(this.props.trace, this.state.childrenHiddenIDs, this.state.detailStates);
+        return memoizedGenerateRowStates(this.props.trace, this.props.childrenHiddenIDs, this.state.detailStates);
     }
 
     getClippingCssClasses = (): string => {
@@ -254,7 +259,7 @@ export default class SpanRows extends React.Component<Props> {
 
     getSearchedSpanIDs = () => this.props.findMatchesIDs;
 
-    getCollapsedChildren = () => this.state.childrenHiddenIDs;
+    getCollapsedChildren = () => this.props.childrenHiddenIDs;
 
     mapRowIndexToSpanIndex = (index: number) => this.getRowStates()[index].spanIndex;
 
@@ -328,9 +333,9 @@ export default class SpanRows extends React.Component<Props> {
             findMatchesIDs,
             spanNameWidth,
             trace,
+            childrenHiddenIDs
         } = this.props;
         const {
-            childrenHiddenIDs,
             detailStates,
         } = this.state
         // to avert flow error
@@ -439,7 +444,6 @@ export default class SpanRows extends React.Component<Props> {
     }
 
     render() {
-        console.log("here333333:", this.props.spanNameWidth)
         return (
             <Box className="VirtualizedTraceView--spans" pt="38px" width="100%" sx={{
                 '.VirtualizedTraceView--rowsWrapper': {
