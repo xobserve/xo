@@ -31,7 +31,6 @@ const TraceDetail = ({ trace, scrollManager }: Props) => {
 
     let spanFindMatches: Set<string> | null | undefined;
     
-    console.log("here33333", scrollManager)
     return (<Box maxHeight="100vh" overflowY="scroll">
         <TraceDetailHeader trace={trace} viewRange={viewRange} updateNextViewRangeTime={updateNextViewRangeTime} updateViewRangeTime={updateViewRangeTime} />
         <TraceTimeline

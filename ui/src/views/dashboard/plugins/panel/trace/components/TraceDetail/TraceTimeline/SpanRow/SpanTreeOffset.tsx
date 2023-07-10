@@ -18,8 +18,8 @@ import _get from 'lodash/get';
 
 import { TraceSpan } from 'types/plugins/trace';
 import spanAncestorIds from '../utils';
-import { AiOutlineArrowDown, AiOutlineRight } from 'react-icons/ai';
-
+import { AiOutlineArrowDown, AiOutlineDown, AiOutlineRight } from 'react-icons/ai';
+import { BsChevronDown, BsChevronRight } from "react-icons/bs";
 
 type TProps = {
   childrenVisible?: boolean;
@@ -84,13 +84,13 @@ export default class SpanTreeOffset extends React.PureComponent<TProps> {
       this.props.addHoverIndentId(ancestorId);
     }
   };
-
+  
   render() {
     const { childrenVisible, onClick, showChildrenIcon, span } = this.props;
     const { hasChildren, spanID } = span;
     const wrapperProps = hasChildren ? { onClick, role: 'switch', 'aria-checked': childrenVisible } : null;
     const icon =
-      showChildrenIcon && hasChildren && (childrenVisible ? <AiOutlineArrowDown /> : <AiOutlineRight />);
+      showChildrenIcon && hasChildren && (childrenVisible ? <BsChevronDown /> : <BsChevronRight />);
     return (
       <span className={`SpanTreeOffset ${hasChildren ? 'is-parent' : ''}`} {...wrapperProps}>
         {this.ancestorIds.map(ancestorId => (

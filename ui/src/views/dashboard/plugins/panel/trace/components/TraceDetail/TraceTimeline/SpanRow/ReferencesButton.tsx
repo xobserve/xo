@@ -16,7 +16,6 @@ import React from 'react';
 
 import { SpanReference } from 'types/plugins/trace';
 
-import './ReferencesButton.css';
 import ReferenceLink from '../../url/ReferenceLink';
 import { FaDoorOpen } from 'react-icons/fa';
 import { Button, Menu, MenuButton, MenuItem, MenuList } from '@chakra-ui/react';

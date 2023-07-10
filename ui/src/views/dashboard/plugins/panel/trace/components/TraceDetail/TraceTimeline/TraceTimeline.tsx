@@ -41,7 +41,15 @@ const TraceTimeline = ({ trace, updateNextViewRangeTime, updateViewRangeTime, vi
           updateNextViewRangeTime={updateNextViewRangeTime}
           updateViewRangeTime={updateViewRangeTime}
         />
-        <SpanRows trace={trace} registerAccessors={registerAccessors}  scrollToFirstVisibleSpan={scrollToFirstVisibleSpan}  findMatchesIDs={findMatchesIDs}  currentViewRangeTime={viewRange.time.current} spanNameWidth={spanNameWidth}/>
+        <SpanRows 
+            trace={trace} 
+            registerAccessors={registerAccessors}  
+            scrollToFirstVisibleSpan={scrollToFirstVisibleSpan}  
+            findMatchesIDs={findMatchesIDs}  
+            currentViewRangeTime={viewRange.time.current} 
+            spanNameWidth={spanNameWidth} 
+            search=""
+            />
     </Box>)
 }
 

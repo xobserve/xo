@@ -45,9 +45,7 @@ export const getUiFindVertexKeys = memoizeOne(getUiFindVertexKeysFn);
 function getEdgesAndVerticesFn(aData: Trace, bData: Trace) {
   const aTraceDag = TraceDag.newFromTrace(aData);
   const bTraceDag = TraceDag.newFromTrace(bData);
-  console.log("here33333 compoare:",aTraceDag,bTraceDag)
   const diffDag = TraceDag.diff(aTraceDag, bTraceDag);
-  console.log("here33333 compoare1:",diffDag)
   return convPlexus<TDiffCounts>(diffDag.nodesMap);
 }
 
