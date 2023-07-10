@@ -23,46 +23,48 @@ import Ticks from '../Ticks';
 
 import { TNil } from 'types/misc';
 import { TraceSpan } from 'types/plugins/trace';
-import { formatDuration,ViewedBoundsFunctionType } from '../utils';
+import { formatDuration, ViewedBoundsFunctionType } from '../utils';
 import { IoIosAlert } from 'react-icons/io';
 import { AiOutlineArrowRight } from 'react-icons/ai';
 import { FaNetworkWired } from 'react-icons/fa';
 import { MdOutlineUploadFile } from 'react-icons/md';
+import { Box, useColorMode, useColorModeValue } from '@chakra-ui/react';
+import customColors from 'src/theme/colors';
 
 
 type SpanBarRowProps = {
-  className?: string;
-  color: string;
-  columnDivision: number;
-  isChildrenExpanded: boolean;
-  isDetailExpanded: boolean;
-  isMatchingFilter: boolean;
-  onDetailToggled: (spanID: string) => void;
-  onChildrenToggled: (spanID: string) => void;
-  numTicks: number;
-  rpc?:
+    className?: string;
+    color: string;
+    columnDivision: number;
+    isChildrenExpanded: boolean;
+    isDetailExpanded: boolean;
+    isMatchingFilter: boolean;
+    onDetailToggled: (spanID: string) => void;
+    onChildrenToggled: (spanID: string) => void;
+    numTicks: number;
+    rpc?:
     | {
         viewStart: number;
         viewEnd: number;
         color: string;
         operationName: string;
         serviceName: string;
-      }
+    }
     | TNil;
-  noInstrumentedServer?:
+    noInstrumentedServer?:
     | {
         color: string;
         serviceName: string;
-      }
+    }
     | TNil;
-  showErrorIcon: boolean;
-  getViewedBounds: ViewedBoundsFunctionType;
-  traceStartTime: number;
-  span: TraceSpan;
-  focusSpan: (spanID: string) => void;
-  hoverIndentIds: Set<string>;
-  addHoverIndentId: (spanID: string) => void;
-  removeHoverIndentId: (spanID: string) => void;
+    showErrorIcon: boolean;
+    getViewedBounds: ViewedBoundsFunctionType;
+    traceStartTime: number;
+    span: TraceSpan;
+    focusSpan: (spanID: string) => void;
+    hoverIndentIds: Set<string>;
+    addHoverIndentId: (spanID: string) => void;
+    removeHoverIndentId: (spanID: string) => void;
 };
 
 /**
@@ -73,45 +75,45 @@ type SpanBarRowProps = {
  * handlers to the onClick props. E.g. for now, the PureComponent is more
  * performance than the stateless function.
  */
-export default class SpanBarRow extends React.PureComponent<SpanBarRowProps> {
-  static defaultProps = {
-    className: '',
-    rpc: null,
-  };
-
-  _detailToggle = () => {
-    this.props.onDetailToggled(this.props.span.spanID);
-  };
-
-  _childrenToggle = () => {
-    this.props.onChildrenToggled(this.props.span.spanID);
-  };
-
-  render() {
+const SpanBarRow = (props: SpanBarRowProps) => {
+    const { colorMode } = useColorMode()
     const {
-      className,
-      color,
-      columnDivision,
-      isChildrenExpanded,
-      isDetailExpanded,
-      isMatchingFilter,
-      numTicks,
-      rpc,
-      noInstrumentedServer,
-      showErrorIcon,
-      getViewedBounds,
-      traceStartTime,
-      span,
-      focusSpan,
-      hoverIndentIds,
-      addHoverIndentId,
-      removeHoverIndentId
-    } = this.props;
+        className = "",
+        color,
+        columnDivision,
+        isChildrenExpanded,
+        isDetailExpanded,
+        isMatchingFilter,
+        numTicks,
+        rpc,
+        noInstrumentedServer,
+        showErrorIcon,
+        getViewedBounds,
+        traceStartTime,
+        span,
+        focusSpan,
+        hoverIndentIds,
+        addHoverIndentId,
+        removeHoverIndentId,
+        onDetailToggled,
+        onChildrenToggled
+    } = props;
+
+    const _detailToggle = () => {
+        onDetailToggled(span.spanID);
+    };
+
+    const _childrenToggle = () => {
+        onChildrenToggled(span.spanID);
+    };
+
+
+
     const {
-      duration,
-      hasChildren: isParent,
-      operationName,
-      process: { serviceName },
+        duration,
+        hasChildren: isParent,
+        operationName,
+        process: { serviceName },
     } = span;
     const label = formatDuration(duration);
     const viewBounds = getViewedBounds(span.startTime, span.startTime + span.duration);
@@ -122,109 +124,121 @@ export default class SpanBarRow extends React.PureComponent<SpanBarRowProps> {
     let longLabel;
     let hintSide;
     if (viewStart > 1 - viewEnd) {
-      longLabel = `${labelDetail} | ${label}`;
-      hintSide = 'left';
+        longLabel = `${labelDetail} | ${label}`;
+        hintSide = 'left';
     } else {
-      longLabel = `${label} | ${labelDetail}`;
-      hintSide = 'right';
+        longLabel = `${label} | ${labelDetail}`;
+        hintSide = 'right';
     }
 
     return (
-      <TimelineRow
-        className={`
+        <Box sx={{
+            '.span-row:hover .span-name-wrapper': {
+                backgroundColor: useColorModeValue('#f8f8f8', customColors.hoverBg.dark),
+                background: colorMode == "light" ? 'linear-gradient(90deg, #fafafa, #f8f8f8 50%, #eee)' : null
+            },
+            '.span-row:hover .span-view': {
+                backgroundColor:  useColorModeValue('#f5f5f5', customColors.hoverBg.dark),
+                outline: colorMode == "light" ? '1px solid #ddd' : null 
+            }
+        }}>
+            <TimelineRow
+                className={`
           span-row
           ${className || ''}
           ${isDetailExpanded ? 'is-expanded' : ''}
           ${isMatchingFilter ? 'is-matching-filter' : ''}
         `}
-      >
-        <TimelineRow.Cell className="span-name-column" width={columnDivision}>
-          <div className={`span-name-wrapper ${isMatchingFilter ? 'is-matching-filter' : ''}`}>
-            <SpanTreeOffset
-              childrenVisible={isChildrenExpanded}
-              span={span}
-              onClick={isParent ? this._childrenToggle : undefined}
-              hoverIndentIds={hoverIndentIds} 
-              addHoverIndentId={addHoverIndentId} 
-              removeHoverIndentId={removeHoverIndentId}
-            />
-            <a
-              className={`span-name ${isDetailExpanded ? 'is-detail-expanded' : ''}`}
-              aria-checked={isDetailExpanded}
-              onClick={this._detailToggle}
-              role="switch"
-              style={{ borderColor: color }}
-              tabIndex={0}
             >
-              <span
-                className={`span-svc-name ${isParent && !isChildrenExpanded ? 'is-children-collapsed' : ''}`}
-                // style={{verticalAlign: "middle"}}
-              >
-                {showErrorIcon && <IoIosAlert style={{display:"inline-block"}} className="SpanBarRow--errorIcon" />}
-                {serviceName}{' '}
-                {rpc && (
-                  <span>
-                    <AiOutlineArrowRight />{' '}
-                    <i className="SpanBarRow--rpcColorMarker" style={{ background: rpc.color }} />
-                    {rpc.serviceName}
-                  </span>
-                )}
-                {noInstrumentedServer && (
-                  <span>
-                    <AiOutlineArrowRight />{' '}
-                    <i
-                      className="SpanBarRow--rpcColorMarker"
-                      style={{ background: noInstrumentedServer.color }}
+                <TimelineRow.Cell className="span-name-column" width={columnDivision}>
+                    <Box className={`span-name-wrapper ${isMatchingFilter ? 'is-matching-filter' : ''}`} bg={useColorModeValue('#f8f8f8', customColors.bodyBg.dark)}>
+                        <SpanTreeOffset
+                            childrenVisible={isChildrenExpanded}
+                            span={span}
+                            onClick={isParent ? _childrenToggle : undefined}
+                            hoverIndentIds={hoverIndentIds}
+                            addHoverIndentId={addHoverIndentId}
+                            removeHoverIndentId={removeHoverIndentId}
+                        />
+                        <a
+                            className={`span-name ${isDetailExpanded ? 'is-detail-expanded' : ''}`}
+                            aria-checked={isDetailExpanded}
+                            onClick={_detailToggle}
+                            role="switch"
+                            style={{ borderColor: color }}
+                            tabIndex={0}
+                        >
+                            <span
+                                className={`span-svc-name ${isParent && !isChildrenExpanded ? 'is-children-collapsed' : ''}`}
+                            // style={{verticalAlign: "middle"}}
+                            >
+                                {showErrorIcon && <IoIosAlert style={{ display: "inline-block" }} className="SpanBarRow--errorIcon" />}
+                                {serviceName}{' '}
+                                {rpc && (
+                                    <span>
+                                        <AiOutlineArrowRight />{' '}
+                                        <i className="SpanBarRow--rpcColorMarker" style={{ background: rpc.color }} />
+                                        {rpc.serviceName}
+                                    </span>
+                                )}
+                                {noInstrumentedServer && (
+                                    <span>
+                                        <AiOutlineArrowRight />{' '}
+                                        <i
+                                            className="SpanBarRow--rpcColorMarker"
+                                            style={{ background: noInstrumentedServer.color }}
+                                        />
+                                        {noInstrumentedServer.serviceName}
+                                    </span>
+                                )}
+                            </span>
+                            <small className="endpoint-name">{rpc ? rpc.operationName : operationName}</small>
+                        </a>
+                        {span.references && span.references.length > 1 && (
+                            <ReferencesButton
+                                references={span.references}
+                                tooltipText="Contains multiple references"
+                                focusSpan={focusSpan}
+                            >
+                                <FaNetworkWired />
+                            </ReferencesButton>
+                        )}
+                        {span.subsidiarilyReferencedBy && span.subsidiarilyReferencedBy.length > 0 && (
+                            <ReferencesButton
+                                references={span.subsidiarilyReferencedBy}
+                                tooltipText={`This span is referenced by ${span.subsidiarilyReferencedBy.length === 1 ? 'another span' : 'multiple other spans'
+                                    }`}
+                                focusSpan={focusSpan}
+                            >
+                                <MdOutlineUploadFile />
+                            </ReferencesButton>
+                        )}
+                    </Box>
+                </TimelineRow.Cell>
+                <TimelineRow.Cell
+                    className="span-view"
+                    style={{ cursor: 'pointer' }}
+                    width={1 - columnDivision}
+                    onClick={_detailToggle}
+                >
+                    <Ticks numTicks={numTicks} />
+                    <SpanBar
+                        rpc={rpc}
+                        viewStart={viewStart}
+                        viewEnd={viewEnd}
+                        getViewedBounds={getViewedBounds}
+                        color={color}
+                        shortLabel={label}
+                        longLabel={longLabel}
+                        hintSide={hintSide}
+                        traceStartTime={traceStartTime}
+                        span={span}
                     />
-                    {noInstrumentedServer.serviceName}
-                  </span>
-                )}
-              </span>
-              <small className="endpoint-name">{rpc ? rpc.operationName : operationName}</small>
-            </a>
-            {span.references && span.references.length > 1 && (
-              <ReferencesButton
-                references={span.references}
-                tooltipText="Contains multiple references"
-                focusSpan={focusSpan}
-              >
-                <FaNetworkWired />
-              </ReferencesButton>
-            )}
-            {span.subsidiarilyReferencedBy && span.subsidiarilyReferencedBy.length > 0 && (
-              <ReferencesButton
-                references={span.subsidiarilyReferencedBy}
-                tooltipText={`This span is referenced by ${
-                  span.subsidiarilyReferencedBy.length === 1 ? 'another span' : 'multiple other spans'
-                }`}
-                focusSpan={focusSpan}
-              >
-                <MdOutlineUploadFile />
-              </ReferencesButton>
-            )}
-          </div>
-        </TimelineRow.Cell>
-        <TimelineRow.Cell
-          className="span-view"
-          style={{ cursor: 'pointer' }}
-          width={1 - columnDivision}
-          onClick={this._detailToggle}
-        >
-          <Ticks numTicks={numTicks} />
-          <SpanBar
-            rpc={rpc}
-            viewStart={viewStart}
-            viewEnd={viewEnd}
-            getViewedBounds={getViewedBounds}
-            color={color}
-            shortLabel={label}
-            longLabel={longLabel}
-            hintSide={hintSide}
-            traceStartTime={traceStartTime}
-            span={span}
-          />
-        </TimelineRow.Cell>
-      </TimelineRow>
+                </TimelineRow.Cell>
+            </TimelineRow>
+        </Box>
     );
-  }
 }
+
+
+export default SpanBarRow;
