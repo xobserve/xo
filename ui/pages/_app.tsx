@@ -11,6 +11,8 @@ import "src/views/dashboard/plugins/panel/trace/components/TraceDetail/SpanGraph
 import "src/views/dashboard/plugins/panel/trace/components/TraceDetail/TraceTimeline/Header/TimelineHeader.css"
 import "src/views/dashboard/plugins/panel/trace/components/TraceDetail/TraceTimeline/Header/TimelineLayer.css"
 import "src/components/VerticalResizer/VerticalResizer.css"
+import "src/views/dashboard/plugins/panel/trace/components/TraceDetail/TraceTimeline/SpanDetail/index.css"
+import "src/views/dashboard/plugins/panel/trace/components/TraceDetail/TraceTimeline/SpanDetail/AccordianKeyValues.css"
 
 dynamic(import("echarts/extension/bmap/bmap"), { ssr: false });
 
