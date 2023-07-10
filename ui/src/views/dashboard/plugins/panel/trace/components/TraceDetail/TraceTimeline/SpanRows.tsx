@@ -44,9 +44,9 @@ export default class SpanRows extends React.Component<Props> {
     state: State;
     constructor(props: Props) {
         super(props);
-        const { 
+        const {
             // setTrace,
-             trace, search } = props;
+            trace, search } = props;
         this.state = {
             childrenHiddenIDs: new Set(),
             detailStates: new Map(),
@@ -56,32 +56,27 @@ export default class SpanRows extends React.Component<Props> {
         //   setTrace(trace, uiFind);
     }
 
-    shouldComponentUpdate(nextProps: Props,nextStates: State) {
+    shouldComponentUpdate(nextProps: Props, nextStates: State) {
         for (const [key, value] of Object.entries(nextStates)) {
-            if (key == 'shouldScrollToFirstUiFindMatch') {
-                if (value) return true;
-                return false
-            } 
-
             if (value !== this.state[key]) {
+                if (key == 'shouldScrollToFirstUiFindMatch') {
+                    if (value) return true;
+                    return false
+                }
+            } else {
                 return true
             }
         }
+
 
         // If any prop updates, VirtualizedTraceViewImpl should update.
         const nextPropKeys = Object.keys(nextProps) as (keyof Props)[];
         for (let i = 0; i < nextPropKeys.length; i += 1) {
             if (nextProps[nextPropKeys[i]] !== this.props[nextPropKeys[i]]) {
-                // Unless the only change was props.shouldScrollToFirstUiFindMatch changing to false.
-                // if (nextPropKeys[i] === 'shouldScrollToFirstUiFindMatch') {
-                //     if (nextProps[nextPropKeys[i]]) return true;
-                // } else {
-                    return true;
-                // }
+                return true;
             }
         }
 
-        
         return false;
     }
 
@@ -117,9 +112,8 @@ export default class SpanRows extends React.Component<Props> {
     }
 
     addHoverIndentId = (spanID) => {
-        const newIds = new Set(this.state.hoverIndentGuideIds);
+        const newIds = new Set();
         newIds.add(spanID);
-        console.log("here33333 add:", spanID, newIds)
         this.setState({
             ...this.state,
             hoverIndentGuideIds: newIds,
@@ -127,10 +121,8 @@ export default class SpanRows extends React.Component<Props> {
     }
 
     removeHoverIndentId = (spanID) => {
-     
         const newIds = new Set(this.state.hoverIndentGuideIds);
         newIds.delete(spanID);
-        console.log("here33333 remove:", spanID, newIds)
         this.setState({
             ...this.state,
             hoverIndentGuideIds: newIds,
@@ -216,7 +208,7 @@ export default class SpanRows extends React.Component<Props> {
         return memoizedGetCssClasses(currentViewRangeTime);
     }
 
-    getViewedBounds = (): ViewedBoundsFunctionType  => {
+    getViewedBounds = (): ViewedBoundsFunctionType => {
         const { currentViewRangeTime, trace } = this.props;
         const [zoomStart, zoomEnd] = currentViewRangeTime;
 
@@ -430,11 +422,11 @@ export default class SpanRows extends React.Component<Props> {
                     detailState={detailState}
                     linksGetter={this.linksGetter}
                     logItemToggle={this.detailLogItemToggle}
-                    logsToggle={(id) => this.commonDetailToggle("logs",id)}
-                    processToggle={(id) => this.commonDetailToggle("process",id)}
-                    referencesToggle={(id) => this.commonDetailToggle("references",id)}
-                    warningsToggle={(id) => this.commonDetailToggle("warnings",id)}
-                    tagsToggle={(id) => this.commonDetailToggle("tags",id)}
+                    logsToggle={(id) => this.commonDetailToggle("logs", id)}
+                    processToggle={(id) => this.commonDetailToggle("process", id)}
+                    referencesToggle={(id) => this.commonDetailToggle("references", id)}
+                    warningsToggle={(id) => this.commonDetailToggle("warnings", id)}
+                    tagsToggle={(id) => this.commonDetailToggle("tags", id)}
                     span={span}
                     traceStartTime={trace.startTime}
                     focusSpan={this.focusSpan}
@@ -447,6 +439,7 @@ export default class SpanRows extends React.Component<Props> {
     }
 
     render() {
+        console.log("here333333:", this.props.spanNameWidth)
         return (
             <Box className="VirtualizedTraceView--spans" pt="38px" width="100%" sx={{
                 '.VirtualizedTraceView--rowsWrapper': {
