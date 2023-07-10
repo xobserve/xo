@@ -60,10 +60,10 @@ export default function AccordianLogs(props: AccordianLogsProps) {
         display: "inline-block !important",
         marginBottom: '-2px',
         marginRight: '5px'
-      }
+      },
     }}>
       <HeaderComponent className={cx('AccordianLogs--header', { 'is-open': isOpen })} {...headerProps}>
-        {arrow} <strong>Logs</strong> ({logs.length})
+        {arrow} <strong style={{marginLeft: '-2px'}}>Logs</strong> ({logs.length})
       </HeaderComponent>
       {isOpen && (
         <VStack alignItems="left" spacing={1} className="AccordianLogs--content bordered-top" >

@@ -24,7 +24,7 @@ import { TNil } from 'types/misc';
 import { KeyValuePair, SpanLink, SpanLog, TraceSpan } from 'types/plugins/trace';
 
 import { formatDuration } from '../../../../../utils/date';
-import { Box, Divider, Flex } from '@chakra-ui/react';
+import { Box, Divider, Flex, HStack, Text } from '@chakra-ui/react';
 import CopyToClipboard from 'components/CopyToClipboard';
 import LabeledList from 'components/LabelList';
 
@@ -72,7 +72,7 @@ export default function SpanDetail(props: SpanDetailProps) {
     },
     {
       key: 'start',
-      label: 'Start Time:',
+      label: 'Relative start time:',
       value: formatDuration(relativeStartTime),
     },
   ];
@@ -80,15 +80,18 @@ export default function SpanDetail(props: SpanDetailProps) {
 
   return (
     <div>
-      <Flex justifyContent="space-between" alignItems="center">
-        <h2>{operationName}</h2>
+      <Flex justifyContent="space-between" alignItems="center" pt="1" pb="3">
+        <HStack>
+          <Text textStyle="subTitle">{operationName}</Text>
+          <Text opacity="0.7" mb="-2px">{spanID}</Text>
+        </HStack>
         <LabeledList
           dividerClassName="SpanDetail--divider"
           items={overviewItems}
         />
       </Flex>
-      <Divider className="SpanDetail--divider ub-my1" />
-      <div>
+      <Divider className="SpanDetail--divider" />
+      <Box mt="3">
         <div>
           <AccordianKeyValues
             data={tags}
@@ -139,15 +142,15 @@ export default function SpanDetail(props: SpanDetailProps) {
               focusSpan={focusSpan}
             />
           )}
-        <small className="SpanDetail--debugInfo">
+        {/* <small className="SpanDetail--debugInfo">
           <span className="SpanDetail--debugLabel" data-label="SpanID:" /> {spanID}
           <CopyToClipboard
             copyText={deepLinkCopyText}
             placement="topRight"
             tooltipTitle="Copy deep link to this span"
           />
-        </small>
-      </div>
+        </small> */}
+      </Box>
     </div>
   );
 }

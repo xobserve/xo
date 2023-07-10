@@ -14,7 +14,7 @@
 
 import * as React from 'react';
 
-import { Divider } from '@chakra-ui/react';
+import { Divider, HStack } from '@chakra-ui/react';
 
 type LabeledListProps = {
   className?: string;
@@ -25,7 +25,7 @@ type LabeledListProps = {
 export default function LabeledList(props: LabeledListProps) {
   const { className, dividerClassName, items } = props;
   return (
-    <ul className={`LabeledList ${className || ''}`} style={{listStyle: 'none', margin:0, padding:0}}>
+    <HStack spacing={1} className={`LabeledList ${className || ''}`} style={{listStyle: 'none', margin:0, padding:0}}>
       {items.map(({ key, label, value }, i) => {
         const divider = i < items.length - 1 && (
           <li className="LabeledList--item" key={`${key}--divider`} style={{display: 'inline-block'}}>
@@ -33,13 +33,13 @@ export default function LabeledList(props: LabeledListProps) {
           </li>
         );
         return [
-          <li className="LabeledList--item" key={key}>
+          <li className="LabeledList--item" style={{display: "inline-block"}} key={key}>
             <span className="LabeledList--label" style={{marginRight: '0.25rem',opacity:0.8}}>{label}</span>
             <strong>{value}</strong>
           </li>,
           divider,
         ];
       })}
-    </ul>
+    </HStack>
   );
 }
