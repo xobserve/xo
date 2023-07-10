@@ -1,4 +1,4 @@
-import { Trace } from "types/plugins/trace"
+import { Trace, TraceSpan } from "types/plugins/trace"
 import { TNil } from "../../../types/misc";
 import { IViewRange, TUpdateViewRangeTimeFunction, ViewRangeTimeUpdate } from "../../../types/types";
 import { useCallback, useState } from "react";
@@ -19,15 +19,67 @@ interface Props {
 const TraceTimeline = ({ trace, updateNextViewRangeTime, updateViewRangeTime, viewRange,registerAccessors,scrollToFirstVisibleSpan,findMatchesIDs } : Props) => {
     const [spanNameWidth, setSpanNameWidth] = useState(0.2)
     const [childrenHiddenIDs, setChildrenHiddenIDs] = useState<Set<string>>(new Set())
-    const collapseAll = () => {
-        
-    }
-    const collapseOne = () => {
 
+    const collapseAll =  () => {
+        if (shouldDisableCollapse(trace.spans,childrenHiddenIDs)) {
+            return 
+          }
+          const ids = trace.spans.reduce((res, s) => {
+            if (s.hasChildren) {
+              res.add(s.spanID);
+            }
+            return res;
+          }, new Set<string>());
+          
+          setChildrenHiddenIDs(ids)
     }
+
+    const collapseOne = () => {
+        if (shouldDisableCollapse(trace.spans, childrenHiddenIDs)) {
+            return 
+          }
+          let nearestCollapsedAncestor: TraceSpan | undefined;
+          const ids = trace.spans.reduce((res, curSpan) => {
+            if (nearestCollapsedAncestor && curSpan.depth <= nearestCollapsedAncestor.depth) {
+              res.add(nearestCollapsedAncestor.spanID);
+              if (curSpan.hasChildren) {
+                nearestCollapsedAncestor = curSpan;
+              }
+            } else if (curSpan.hasChildren && !res.has(curSpan.spanID)) {
+              nearestCollapsedAncestor = curSpan;
+            }
+            return res;
+          }, new Set(childrenHiddenIDs));
+          // The last one
+          if (nearestCollapsedAncestor) {
+            ids.add(nearestCollapsedAncestor.spanID);
+          }
+
+          setChildrenHiddenIDs(ids)
+    }
+
     const expandAll = () => {
+        const childrenHiddenIDs = new Set<string>();
+        setChildrenHiddenIDs(childrenHiddenIDs)
     }
     const expandOne = () => {
+        if (childrenHiddenIDs.size === 0) {
+            return ;
+          }
+          let prevExpandedDepth = -1;
+          let expandNextHiddenSpan = true;
+          const ids = trace.spans.reduce((res, s) => {
+            if (s.depth <= prevExpandedDepth) {
+              expandNextHiddenSpan = true;
+            }
+            if (expandNextHiddenSpan && res.has(s.spanID)) {
+              res.delete(s.spanID);
+              expandNextHiddenSpan = false;
+              prevExpandedDepth = s.depth;
+            }
+            return res;
+          }, new Set(childrenHiddenIDs));
+          setChildrenHiddenIDs(ids)
     }
 
     const onChildrenToggle = useCallback(ids => {
@@ -63,3 +115,9 @@ const TraceTimeline = ({ trace, updateNextViewRangeTime, updateViewRangeTime, vi
 }
 
 export default TraceTimeline
+
+function shouldDisableCollapse(allSpans: TraceSpan[], hiddenSpansIds: Set<string>) {
+    const allParentSpans = allSpans.filter(s => s.hasChildren);
+    return allParentSpans.length === hiddenSpansIds.size;
+  }
+  

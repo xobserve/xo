@@ -179,7 +179,7 @@ const SpanBarRow = (props: SpanBarRowProps) => {
                                 {serviceName}{' '}
                                 {rpc && (
                                     <span>
-                                        <AiOutlineArrowRight />{' '}
+                                        <AiOutlineArrowRight style={{ display: "inline-block",marginBottom: '-2px' }} />{' '}
                                         <i className="SpanBarRow--rpcColorMarker" style={{ background: rpc.color }} />
                                         {rpc.serviceName}
                                     </span>
