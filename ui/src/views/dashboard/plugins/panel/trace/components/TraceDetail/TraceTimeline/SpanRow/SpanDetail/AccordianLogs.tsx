@@ -21,7 +21,7 @@ import { TNil } from 'types/misc';
 import { SpanLog, KeyValuePair, SpanLink } from 'types/plugins/trace';
 
 import { formatDuration } from '../../../../../utils/date';
-import { AiOutlineArrowDown, AiOutlineArrowRight } from 'react-icons/ai';
+import { AiOutlineArrowDown, AiOutlineArrowRight, AiOutlineDown, AiOutlineRight } from 'react-icons/ai';
 import { Box } from '@chakra-ui/react';
 
 type AccordianLogsProps = {
@@ -42,9 +42,9 @@ export default function AccordianLogs(props: AccordianLogsProps) {
   let headerProps: Object | null = null;
   if (interactive) {
     arrow = isOpen ? (
-      <AiOutlineArrowDown className="u-align-icon" />
+      <AiOutlineDown opacity="0.6" className="u-align-icon" />
     ) : (
-      <AiOutlineArrowRight className="u-align-icon" />
+      <AiOutlineRight  opacity="0.6" className="u-align-icon" />
     );
     HeaderComponent = 'a';
     headerProps = {

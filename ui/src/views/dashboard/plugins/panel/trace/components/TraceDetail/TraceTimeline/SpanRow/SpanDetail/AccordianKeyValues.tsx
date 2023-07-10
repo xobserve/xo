@@ -20,7 +20,7 @@ import KeyValuesTable from './KeyValuesTable';
 import { TNil } from 'types/misc';
 import { KeyValuePair, SpanLink } from 'types/plugins/trace';
 
-import { AiOutlineArrowDown, AiOutlineArrowRight } from 'react-icons/ai';
+import { AiOutlineArrowDown, AiOutlineArrowRight, AiOutlineDown, AiOutlineRight } from 'react-icons/ai';
 import { Box } from '@chakra-ui/react';
 
 type AccordianKeyValuesProps = {
@@ -66,7 +66,7 @@ export default function AccordianKeyValues(props: AccordianKeyValuesProps) {
   let arrow: React.ReactNode | null = null;
   let headerProps: Object | null = null;
   if (interactive) {
-    arrow = isOpen ? <AiOutlineArrowDown className={iconCls} /> : <AiOutlineArrowRight className={iconCls} />;
+    arrow = isOpen ? <AiOutlineDown className={iconCls} /> : <AiOutlineRight className={iconCls} />;
     headerProps = {
       'aria-checked': isOpen,
       onClick: isEmpty ? null : onToggle,
@@ -76,7 +76,7 @@ export default function AccordianKeyValues(props: AccordianKeyValuesProps) {
 
   return (
     <div className={cx(className, 'u-tx-ellipsis')}>
-      <Box
+      {!isEmpty && <Box
         className={cx('AccordianKeyValues--header', {
           'is-empty': isEmpty,
           'is-high-contrast': highContrast,
@@ -85,7 +85,8 @@ export default function AccordianKeyValues(props: AccordianKeyValuesProps) {
           svg: {
             display: "inline-block !important",
             marginBottom: '-2px',
-            marginRight: '5px'
+            marginRight: '5px',
+            opacity: 0.6
           }
         }}
         {...headerProps}
@@ -96,7 +97,7 @@ export default function AccordianKeyValues(props: AccordianKeyValuesProps) {
           {isOpen || ':'}
         </strong>
         {!isOpen && <KeyValuesSummary data={data} />}
-      </Box>
+      </Box>}
       {isOpen && <KeyValuesTable data={data} linksGetter={linksGetter} />}
     </div>
   );

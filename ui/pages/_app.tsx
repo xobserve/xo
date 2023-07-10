@@ -21,6 +21,7 @@ import "src/views/dashboard/plugins/panel/trace/components/TraceDetail/TraceTime
 import "src/views/dashboard/plugins/panel/trace/components/TraceDetail/TraceTimeline/SpanRow/SpanBarRow.css"
 import "src/views/dashboard/plugins/panel/trace/components/TraceDetail/TraceTimeline/SpanRow/SpanDetailRow.css"
 import "src/views/dashboard/plugins/panel/trace/components/TraceDetail/TraceTimeline/SpanRow/SpanTreeOffset.css"
+import "src/views/dashboard/plugins/panel/trace/components/TraceDetail/TraceTimeline/TimelineRow.css"
 
 dynamic(import("echarts/extension/bmap/bmap"), { ssr: false });
 

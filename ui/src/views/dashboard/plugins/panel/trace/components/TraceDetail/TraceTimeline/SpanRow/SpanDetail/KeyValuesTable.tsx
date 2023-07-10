@@ -83,7 +83,7 @@ function formatValue(key: string, value: any) {
     content = _jsonMarkup(parsed);
   }
 
-  return <div className="ub-inline-block">{content}</div>;
+  return <div style={{display: "inline-block"}} className="ub-inline-block">{content}</div>;
 }
 
 export const LinkValue = (props: { href: string; title?: string; children: React.ReactNode }) => (
@@ -121,7 +121,7 @@ export default function KeyValuesTable(props: KeyValuesTableProps) {
         background: useColorModeValue('#f5f5f5',customColors.hoverBg.dark)
       }
     }}>
-      <table className="u-width-100">
+      <table className="u-width-100" style={{width: '100%'}}>
         <tbody className="KeyValueTable--body">
           {data.map((row, i) => {
             const jsonTable = formatValue(row.key, row.value);
@@ -153,18 +153,8 @@ export default function KeyValuesTable(props: KeyValuesTableProps) {
               // `i` is necessary in the key because row.key can repeat
               // eslint-disable-next-line react/no-array-index-key
               <tr className="KeyValueTable--row" key={`${row.key}-${i}`}>
-                <td className="KeyValueTable--keyColumn">{row.key}</td>
-                <td>{valueMarkup}</td>
-                <td className="KeyValueTable--copyColumn">
-                  <CopyToClipboard
-                    copyText={row.value}
-                    tooltipTitle="Copy value"
-                  />
-                  <CopyToClipboard
-                    copyText={JSON.stringify(row, null, 2)}
-                    tooltipTitle="Copy JSON"
-                  />
-                </td>
+                <td className="KeyValueTable--keyColumn" style={{padding: '6px 8px', fontSize:'0.9rem'}}>{row.key}</td>
+                <td style={{padding: '6px 8px'}}>{valueMarkup}</td>
               </tr>
             );
           })}
