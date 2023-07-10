@@ -21,6 +21,7 @@ import { TNil } from 'types/misc';
 import { KeyValuePair, SpanLink } from 'types/plugins/trace';
 
 import { AiOutlineArrowDown, AiOutlineArrowRight } from 'react-icons/ai';
+import { Box } from '@chakra-ui/react';
 
 type AccordianKeyValuesProps = {
   className?: string | TNil;
@@ -75,11 +76,18 @@ export default function AccordianKeyValues(props: AccordianKeyValuesProps) {
 
   return (
     <div className={cx(className, 'u-tx-ellipsis')}>
-      <div
+      <Box
         className={cx('AccordianKeyValues--header', {
           'is-empty': isEmpty,
           'is-high-contrast': highContrast,
         })}
+        sx={{
+          svg: {
+            display: "inline-block !important",
+            marginBottom: '-2px',
+            marginRight: '5px'
+          }
+        }}
         {...headerProps}
       >
         {arrow}
@@ -88,7 +96,7 @@ export default function AccordianKeyValues(props: AccordianKeyValuesProps) {
           {isOpen || ':'}
         </strong>
         {!isOpen && <KeyValuesSummary data={data} />}
-      </div>
+      </Box>
       {isOpen && <KeyValuesTable data={data} linksGetter={linksGetter} />}
     </div>
   );

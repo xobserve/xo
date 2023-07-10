@@ -22,6 +22,8 @@ import { KeyValuePair, SpanLink } from 'types/plugins/trace';
 
 import CopyToClipboard from 'components/CopyToClipboard';
 import { FaLink } from 'react-icons/fa';
+import { Box, useColorModeValue } from '@chakra-ui/react';
+import customColors from 'src/theme/colors';
 
 const jsonObjectOrArrayStartRegex = /^(\[|\{)/;
 
@@ -114,7 +116,11 @@ type KeyValuesTableProps = {
 export default function KeyValuesTable(props: KeyValuesTableProps) {
   const { data, linksGetter } = props;
   return (
-    <div className="KeyValueTable u-simple-scrollbars">
+    <Box className="KeyValueTable u-simple-scrollbars bordered" sx={{
+      '.KeyValueTable--row:nth-child(2n) > td': {
+        background: useColorModeValue('#f5f5f5',customColors.hoverBg.dark)
+      }
+    }}>
       <table className="u-width-100">
         <tbody className="KeyValueTable--body">
           {data.map((row, i) => {
@@ -164,6 +170,6 @@ export default function KeyValuesTable(props: KeyValuesTableProps) {
           })}
         </tbody>
       </table>
-    </div>
+    </Box>
   );
 }

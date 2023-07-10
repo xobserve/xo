@@ -47,11 +47,5 @@ limitations under the License.
   .detail-row-expanded-accent:hover::after {
     opacity: 0.35;
   }
-  
-  .detail-info-wrapper {
-    background: #f5f5f5;
-    border: 1px solid #d3d3d3;
-    border-top: 3px solid;
-    padding: 0.75rem;
-  }
+
   

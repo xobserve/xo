@@ -15,8 +15,7 @@ limitations under the License.
 */
 
 .KeyValueTable {
-  background: #fff;
-  border: 1px solid #ddd;
+  /* background: #fff; */
   margin-bottom: 0.7em;
   max-height: 450px;
   overflow: auto;
@@ -30,9 +29,6 @@ limitations under the License.
   padding: 0.25rem 0.5rem;
 }
 
-.KeyValueTable--row:nth-child(2n) > td {
-  background: #f5f5f5;
-}
 
 .KeyValueTable--keyColumn {
   color: #888;

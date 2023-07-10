@@ -15,24 +15,25 @@ limitations under the License.
 */
 
 .AccordianLogs {
-  border: 1px solid #d8d8d8;
+  /* border: 1px solid #d8d8d8; */
   position: relative;
   margin-bottom: 0.25rem;
 }
 
 .AccordianLogs--header {
-  background: #e4e4e4;
+  /* background: #e4e4e4; */
   color: inherit;
   display: block;
-  padding: 0.25rem 0.5rem;
+  padding: 0.25rem 2px;
 }
 
 .AccordianLogs--header:hover {
-  background: #dadada;
+  /* background: #dadada; */
+   cursor: pointer
 }
 
 .AccordianLogs--content {
-  background: #f0f0f0;
+  /* background: #f0f0f0; */
   border-top: 1px solid #d8d8d8;
   padding: 0.5rem 0.5rem 0.25rem 0.5rem;
 }

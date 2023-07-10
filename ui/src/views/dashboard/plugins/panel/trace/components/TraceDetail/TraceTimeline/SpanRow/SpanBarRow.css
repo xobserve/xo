@@ -59,10 +59,7 @@ limitations under the License.
     background: linear-gradient(90deg, #fff5e1, #fff5e1 75%, #ffe6c9);
   }
   
-  .span-row.is-expanded .span-name-wrapper {
-    background: #f0f0f0;
-    box-shadow: 0 1px 0 #ddd;
-  }
+
   
   .span-row.is-expanded .span-name-wrapper.is-matching-filter {
     background: #fff3d7;
@@ -138,10 +135,6 @@ limitations under the License.
     outline: 1px solid #ddd;
   }
   
-  .span-row.is-expanded .span-view {
-    background: #f8f8f8;
-    outline: 1px solid #ddd;
-  }
   
   .span-row.is-expanded.is-matching-filter .span-view {
     background: #fff3d7;

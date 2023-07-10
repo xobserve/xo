@@ -36,7 +36,7 @@ const CopyToClipboard = ({ copyText, placement, tooltipTitle }: PropsType) => {
                 label={hasCopied ? 'Copied' : tooltipTitle}
                 closeDelay={300}
             >
-                <Box>
+                <Box display="inline-block">
                     <IconButton
                         onClick={handleClick}
                         variant="ghost"

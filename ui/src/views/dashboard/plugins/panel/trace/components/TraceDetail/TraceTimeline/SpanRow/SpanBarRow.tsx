@@ -143,7 +143,14 @@ const SpanBarRow = (props: SpanBarRowProps) => {
             },
             '.span-row.is-expanded .SpanBar--label,.span-row:hover .SpanBar--label, .span-name .endpoint-name': {
               color: useColorModeValue('#000', '#aaa')
-            }
+            },
+            '.span-row.is-expanded .span-name-wrapper': {
+                background: useColorModeValue('#f8f8f8', 'gray.700'),
+              },
+              
+              '.span-row.is-expanded .span-view': {
+                background: useColorModeValue('#f8f8f8', 'gray.700'),
+              }
         }}>
             <TimelineRow
                 className={`

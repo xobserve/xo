@@ -23,7 +23,7 @@ limitations under the License.
 }
 
 .AccordianKeyValues--header:hover {
-  background: #e8e8e8;
+  /* background: #e8e8e8; */
 }
 
 .AccordianKeyValues--header.is-empty {

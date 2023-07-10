@@ -22,6 +22,7 @@ import { SpanLog, KeyValuePair, SpanLink } from 'types/plugins/trace';
 
 import { formatDuration } from '../../../../../utils/date';
 import { AiOutlineArrowDown, AiOutlineArrowRight } from 'react-icons/ai';
+import { Box } from '@chakra-ui/react';
 
 type AccordianLogsProps = {
   interactive?: boolean;
@@ -54,7 +55,13 @@ export default function AccordianLogs(props: AccordianLogsProps) {
   }
 
   return (
-    <div className="AccordianLogs">
+    <Box className="AccordianLogs"   sx={{
+      '.AccordianLogs--header svg': {
+        display: "inline-block !important",
+        marginBottom: '-2px',
+        marginRight: '5px'
+      }
+    }}>
       <HeaderComponent className={cx('AccordianLogs--header', { 'is-open': isOpen })} {...headerProps}>
         {arrow} <strong>Logs</strong> ({logs.length})
       </HeaderComponent>
@@ -80,7 +87,7 @@ export default function AccordianLogs(props: AccordianLogsProps) {
           </small>
         </div>
       )}
-    </div>
+    </Box>
   );
 }
 
