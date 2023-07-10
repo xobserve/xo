@@ -14,12 +14,11 @@
 
 import * as React from 'react';
 import cx from 'classnames';
-import IoIosArrowDown from 'react-icons/lib/io/ios-arrow-down';
-import IoIosArrowRight from 'react-icons/lib/io/ios-arrow-right';
 import TextList from './TextList';
-import { TNil } from '../../../../types';
+import { TNil } from 'types/misc';
+import { AiOutlineArrowDown, AiOutlineArrowRight } from 'react-icons/ai';
+import { Box } from '@chakra-ui/react';
 
-import './AccordianText.css';
 
 type AccordianTextProps = {
   className?: string | TNil;
@@ -32,6 +31,7 @@ type AccordianTextProps = {
   onToggle?: null | (() => void);
 };
 
+
 export default function AccordianText(props: AccordianTextProps) {
   const { className, data, headerClassName, highContrast, interactive, isOpen, label, onToggle } = props;
   const isEmpty = !Array.isArray(data) || !data.length;
@@ -39,7 +39,7 @@ export default function AccordianText(props: AccordianTextProps) {
   let arrow: React.ReactNode | null = null;
   let headerProps: Object | null = null;
   if (interactive) {
-    arrow = isOpen ? <IoIosArrowDown className={iconCls} /> : <IoIosArrowRight className={iconCls} />;
+    arrow = isOpen ? <AiOutlineArrowDown className={iconCls} /> : <AiOutlineArrowRight className={iconCls} />;
     headerProps = {
       'aria-checked': isOpen,
       onClick: isEmpty ? null : onToggle,
@@ -48,16 +48,26 @@ export default function AccordianText(props: AccordianTextProps) {
   }
   return (
     <div className={className || ''}>
-      <div
+      <Box
         className={cx('AccordianText--header', headerClassName, {
           'is-empty': isEmpty,
           'is-high-contrast': highContrast,
           'is-open': isOpen,
         })}
+        style={{
+          cursor: 'pointer',
+          overflow: 'hidden',
+          padding: '0.25em 0.1em',
+          textOverflow: 'ellipsis',
+          whiteSpace: 'nowrap'
+        }}
+        _hover={{
+          background: '#e8e8e8'
+        }}
         {...headerProps}
       >
         {arrow} <strong>{label}</strong> ({data.length})
-      </div>
+      </Box>
       {isOpen && <TextList data={data} />}
     </div>
   );

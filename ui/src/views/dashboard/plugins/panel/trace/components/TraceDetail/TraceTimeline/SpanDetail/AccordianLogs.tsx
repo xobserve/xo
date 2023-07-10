@@ -15,24 +15,22 @@
 import * as React from 'react';
 import cx from 'classnames';
 import _sortBy from 'lodash/sortBy';
-import IoIosArrowDown from 'react-icons/lib/io/ios-arrow-down';
-import IoIosArrowRight from 'react-icons/lib/io/ios-arrow-right';
 
 import AccordianKeyValues from './AccordianKeyValues';
-import { formatDuration } from '../utils';
-import { TNil } from '../../../../types';
-import { Log, KeyValuePair, Link } from '../../../../types/trace';
+import { TNil } from 'types/misc';
+import { SpanLog, KeyValuePair, SpanLink } from 'types/plugins/trace';
 
-import './AccordianLogs.css';
+import { formatDuration } from '../../../../utils/date';
+import { AiOutlineArrowDown, AiOutlineArrowRight } from 'react-icons/ai';
 
 type AccordianLogsProps = {
   interactive?: boolean;
   isOpen: boolean;
-  linksGetter: ((pairs: KeyValuePair[], index: number) => Link[]) | TNil;
-  logs: Log[];
-  onItemToggle?: (log: Log) => void;
+  linksGetter: ((pairs: KeyValuePair[], index: number) => SpanLink[]) | TNil;
+  logs: SpanLog[];
+  onItemToggle?: (log: SpanLog) => void;
   onToggle?: () => void;
-  openedItems?: Set<Log>;
+  openedItems?: Set<SpanLog>;
   timestamp: number;
 };
 
@@ -43,9 +41,9 @@ export default function AccordianLogs(props: AccordianLogsProps) {
   let headerProps: Object | null = null;
   if (interactive) {
     arrow = isOpen ? (
-      <IoIosArrowDown className="u-align-icon" />
+      <AiOutlineArrowDown className="u-align-icon" />
     ) : (
-      <IoIosArrowRight className="u-align-icon" />
+      <AiOutlineArrowRight className="u-align-icon" />
     );
     HeaderComponent = 'a';
     headerProps = {

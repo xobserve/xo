@@ -13,6 +13,10 @@ import "src/views/dashboard/plugins/panel/trace/components/TraceDetail/TraceTime
 import "src/components/VerticalResizer/VerticalResizer.css"
 import "src/views/dashboard/plugins/panel/trace/components/TraceDetail/TraceTimeline/SpanDetail/index.css"
 import "src/views/dashboard/plugins/panel/trace/components/TraceDetail/TraceTimeline/SpanDetail/AccordianKeyValues.css"
+import "src/views/dashboard/plugins/panel/trace/components/TraceDetail/TraceTimeline/SpanDetail/AccordianLogs.css"
+import "src/views/dashboard/plugins/panel/trace/components/TraceDetail/TraceTimeline/SpanDetail/AccordianReferences.css"
+import "src/views/dashboard/plugins/panel/trace/components/TraceDetail/TraceTimeline/SpanDetail/KeyValuesTable.css"
+import "src/views/dashboard/plugins/panel/trace/components/TraceDetail/TraceTimeline/SpanDetail/TextList.css"
 
 dynamic(import("echarts/extension/bmap/bmap"), { ssr: false });
 

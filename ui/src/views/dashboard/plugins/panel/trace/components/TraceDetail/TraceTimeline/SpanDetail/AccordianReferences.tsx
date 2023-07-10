@@ -14,11 +14,11 @@
 
 import * as React from 'react';
 import cx from 'classnames';
-import IoIosArrowDown from 'react-icons/lib/io/ios-arrow-down';
-import IoIosArrowRight from 'react-icons/lib/io/ios-arrow-right';
-import './AccordianReferences.css';
-import { SpanReference } from '../../../../types/trace';
+
+
+import { SpanReference } from 'types/plugins/trace';
 import ReferenceLink from '../../url/ReferenceLink';
+import { AiOutlineArrowDown, AiOutlineArrowRight } from 'react-icons/ai';
 
 type AccordianReferencesProps = {
   data: SpanReference[];
@@ -86,7 +86,7 @@ export default class AccordianReferences extends React.PureComponent<AccordianRe
     let arrow: React.ReactNode | null = null;
     let headerProps: Object | null = null;
     if (interactive) {
-      arrow = isOpen ? <IoIosArrowDown className={iconCls} /> : <IoIosArrowRight className={iconCls} />;
+      arrow = isOpen ? <AiOutlineArrowDown className={iconCls} /> : <AiOutlineArrowRight className={iconCls} />;
       headerProps = {
         'aria-checked': isOpen,
         onClick: isEmpty ? null : onToggle,

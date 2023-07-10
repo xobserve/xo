@@ -13,15 +13,15 @@
 // limitations under the License.
 
 import * as React from 'react';
-import { Dropdown, Icon, Menu } from 'antd';
 import { jsonMarkup } from './jsonMarkup';
 
-import CopyIcon from '../../../common/CopyIcon';
 
-import { TNil } from '../../../../types';
-import { KeyValuePair, Link } from '../../../../types/trace';
 
-import './KeyValuesTable.css';
+import { TNil } from 'types/misc';
+import { KeyValuePair, SpanLink } from 'types/plugins/trace';
+
+import CopyToClipboard from 'components/CopyToClipboard';
+import { FaLink } from 'react-icons/fa';
 
 const jsonObjectOrArrayStartRegex = /^(\[|\{)/;
 
@@ -86,7 +86,7 @@ function formatValue(key: string, value: any) {
 
 export const LinkValue = (props: { href: string; title?: string; children: React.ReactNode }) => (
   <a href={props.href} title={props.title} target="_blank" rel="noopener noreferrer">
-    {props.children} <Icon className="KeyValueTable--linkIcon" type="export" />
+    {props.children} <FaLink className="KeyValueTable--linkIcon" />
   </a>
 );
 
@@ -94,21 +94,21 @@ LinkValue.defaultProps = {
   title: '',
 };
 
-const linkValueList = (links: Link[]) => (
-  <Menu>
-    {links.map(({ text, url }, index) => (
-      // `index` is necessary in the key because url can repeat
-      // eslint-disable-next-line react/no-array-index-key
-      <Menu.Item key={`${url}-${index}`}>
-        <LinkValue href={url}>{text}</LinkValue>
-      </Menu.Item>
-    ))}
-  </Menu>
-);
+// const linkValueList = (links: SpanLink[]) => (
+//   <Menu>
+//     {links.map(({ text, url }, index) => (
+//       // `index` is necessary in the key because url can repeat
+//       // eslint-disable-next-line react/no-array-index-key
+//       <Menu.Item key={`${url}-${index}`}>
+//         <LinkValue href={url}>{text}</LinkValue>
+//       </Menu.Item>
+//     ))}
+//   </Menu>
+// );
 
 type KeyValuesTableProps = {
   data: KeyValuePair[];
-  linksGetter: ((pairs: KeyValuePair[], index: number) => Link[]) | TNil;
+  linksGetter: ((pairs: KeyValuePair[], index: number) => SpanLink[]) | TNil;
 };
 
 export default function KeyValuesTable(props: KeyValuesTableProps) {
@@ -132,11 +132,12 @@ export default function KeyValuesTable(props: KeyValuesTableProps) {
             } else if (links && links.length > 1) {
               valueMarkup = (
                 <div>
-                  <Dropdown overlay={linkValueList(links)} placement="bottomRight" trigger={['click']}>
+                  links todo
+                  {/* <Dropdown overlay={linkValueList(links)} placement="bottomRight" trigger={['click']}>
                     <a>
                       {jsonTable} <Icon className="KeyValueTable--linkIcon" type="profile" />
                     </a>
-                  </Dropdown>
+                  </Dropdown> */}
                 </div>
               );
             } else {
@@ -149,14 +150,11 @@ export default function KeyValuesTable(props: KeyValuesTableProps) {
                 <td className="KeyValueTable--keyColumn">{row.key}</td>
                 <td>{valueMarkup}</td>
                 <td className="KeyValueTable--copyColumn">
-                  <CopyIcon
-                    className="KeyValueTable--copyIcon"
+                  <CopyToClipboard
                     copyText={row.value}
                     tooltipTitle="Copy value"
                   />
-                  <CopyIcon
-                    className="KeyValueTable--copyIcon"
-                    icon="snippets"
+                  <CopyToClipboard
                     copyText={JSON.stringify(row, null, 2)}
                     tooltipTitle="Copy JSON"
                   />
