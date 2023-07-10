@@ -4,6 +4,7 @@ import { IViewRange, TUpdateViewRangeTimeFunction, ViewRangeTimeUpdate } from ".
 import { useState } from "react";
 import { Box } from "@chakra-ui/react";
 import TimelineHeader from "./Header/TimelineHeader";
+import SpanRows from './SpanRows'
 
 interface Props {
     registerAccessors: any
@@ -15,7 +16,7 @@ interface Props {
     viewRange: IViewRange;
 }
 
-const TraceTimeline = ({ trace, updateNextViewRangeTime, updateViewRangeTime, viewRange } : Props) => {
+const TraceTimeline = ({ trace, updateNextViewRangeTime, updateViewRangeTime, viewRange,registerAccessors,scrollToFirstVisibleSpan,findMatchesIDs } : Props) => {
     const [spanNameWidth, setSpanNameWidth] = useState(0.2)
     const collapseAll = () => {
         
@@ -40,6 +41,7 @@ const TraceTimeline = ({ trace, updateNextViewRangeTime, updateViewRangeTime, vi
           updateNextViewRangeTime={updateNextViewRangeTime}
           updateViewRangeTime={updateViewRangeTime}
         />
+        <SpanRows trace={trace} registerAccessors={registerAccessors}  scrollToFirstVisibleSpan={scrollToFirstVisibleSpan}  findMatchesIDs={findMatchesIDs}  currentViewRangeTime={viewRange.time.current} spanNameWidth={spanNameWidth}/>
     </Box>)
 }
 

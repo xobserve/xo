@@ -15,30 +15,23 @@
 import React from 'react';
 import cx from 'classnames';
 import _get from 'lodash/get';
-import IoChevronRight from 'react-icons/lib/io/chevron-right';
-import IoIosArrowDown from 'react-icons/lib/io/ios-arrow-down';
-import { connect } from 'react-redux';
-import { bindActionCreators, Dispatch } from 'redux';
 
-import { actions } from './duck';
-import { ReduxState } from '../../../types';
-import { Span } from '../../../types/trace';
-import spanAncestorIds from '../../../utils/span-ancestor-ids';
+import { TraceSpan } from 'types/plugins/trace';
+import spanAncestorIds from '../utils';
+import { AiOutlineArrowDown, AiOutlineRight } from 'react-icons/ai';
 
-type TDispatchProps = {
-  addHoverIndentGuideId: (spanID: string) => void;
-  removeHoverIndentGuideId: (spanID: string) => void;
-};
 
-type TProps = TDispatchProps & {
+type TProps = {
   childrenVisible?: boolean;
-  hoverIndentGuideIds: Set<string>;
   onClick?: () => void;
-  span: Span;
+  span: TraceSpan;
   showChildrenIcon?: boolean;
+  hoverIndentIds: Set<string>;
+  addHoverIndentId: (spanID: string) => void;
+  removeHoverIndentId: (spanID: string) => void;
 };
 
-export class UnconnectedSpanTreeOffset extends React.PureComponent<TProps> {
+export default class SpanTreeOffset extends React.PureComponent<TProps> {
   ancestorIds: string[];
 
   static defaultProps = {
@@ -71,7 +64,7 @@ export class UnconnectedSpanTreeOffset extends React.PureComponent<TProps> {
       !(event.relatedTarget instanceof HTMLSpanElement) ||
       _get(event, 'relatedTarget.dataset.ancestorId') !== ancestorId
     ) {
-      this.props.removeHoverIndentGuideId(ancestorId);
+      this.props.removeHoverIndentId(ancestorId);
     }
   };
 
@@ -88,7 +81,7 @@ export class UnconnectedSpanTreeOffset extends React.PureComponent<TProps> {
       !(event.relatedTarget instanceof HTMLSpanElement) ||
       _get(event, 'relatedTarget.dataset.ancestorId') !== ancestorId
     ) {
-      this.props.addHoverIndentGuideId(ancestorId);
+      this.props.addHoverIndentId(ancestorId);
     }
   };
 
@@ -97,14 +90,14 @@ export class UnconnectedSpanTreeOffset extends React.PureComponent<TProps> {
     const { hasChildren, spanID } = span;
     const wrapperProps = hasChildren ? { onClick, role: 'switch', 'aria-checked': childrenVisible } : null;
     const icon =
-      showChildrenIcon && hasChildren && (childrenVisible ? <IoIosArrowDown /> : <IoChevronRight />);
+      showChildrenIcon && hasChildren && (childrenVisible ? <AiOutlineArrowDown /> : <AiOutlineRight />);
     return (
       <span className={`SpanTreeOffset ${hasChildren ? 'is-parent' : ''}`} {...wrapperProps}>
         {this.ancestorIds.map(ancestorId => (
           <span
             key={ancestorId}
             className={cx('SpanTreeOffset--indentGuide', {
-              'is-active': this.props.hoverIndentGuideIds.has(ancestorId),
+              'is-active': this.props.hoverIndentIds.has(ancestorId),
             })}
             data-ancestor-id={ancestorId}
             onMouseEnter={event => this.handleMouseEnter(event, ancestorId)}
@@ -125,14 +118,3 @@ export class UnconnectedSpanTreeOffset extends React.PureComponent<TProps> {
   }
 }
 
-export function mapStateToProps(state: ReduxState): { hoverIndentGuideIds: Set<string> } {
-  const { hoverIndentGuideIds } = state.traceTimeline;
-  return { hoverIndentGuideIds };
-}
-
-export function mapDispatchToProps(dispatch: Dispatch<ReduxState>): TDispatchProps {
-  const { addHoverIndentGuideId, removeHoverIndentGuideId } = bindActionCreators(actions, dispatch);
-  return { addHoverIndentGuideId, removeHoverIndentGuideId };
-}
-
-export default connect(mapStateToProps, mapDispatchToProps)(UnconnectedSpanTreeOffset);

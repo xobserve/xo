@@ -13,19 +13,21 @@
 // limitations under the License.
 
 import * as React from 'react';
-import IoAlert from 'react-icons/lib/io/alert';
-import IoArrowRightA from 'react-icons/lib/io/arrow-right-a';
-import IoNetwork from 'react-icons/lib/io/network';
-import MdFileUpload from 'react-icons/lib/md/file-upload';
+
 import ReferencesButton from './ReferencesButton';
-import TimelineRow from './TimelineRow';
-import { formatDuration, ViewedBoundsFunctionType } from './utils';
+import TimelineRow from '../TimelineRow';
+
 import SpanTreeOffset from './SpanTreeOffset';
 import SpanBar from './SpanBar';
-import Ticks from './Ticks';
+import Ticks from '../Ticks';
 
-import { TNil } from '../../../types';
-import { Span } from '../../../types/trace';
+import { TNil } from 'types/misc';
+import { TraceSpan } from 'types/plugins/trace';
+import { formatDuration,ViewedBoundsFunctionType } from '../utils';
+import { IoIosAlert } from 'react-icons/io';
+import { AiOutlineArrowRight } from 'react-icons/ai';
+import { FaNetworkWired } from 'react-icons/fa';
+import { MdOutlineUploadFile } from 'react-icons/md';
 
 
 type SpanBarRowProps = {
@@ -56,8 +58,11 @@ type SpanBarRowProps = {
   showErrorIcon: boolean;
   getViewedBounds: ViewedBoundsFunctionType;
   traceStartTime: number;
-  span: Span;
+  span: TraceSpan;
   focusSpan: (spanID: string) => void;
+  hoverIndentIds: Set<string>;
+  addHoverIndentId: (spanID: string) => void;
+  removeHoverIndentId: (spanID: string) => void;
 };
 
 /**
@@ -98,6 +103,9 @@ export default class SpanBarRow extends React.PureComponent<SpanBarRowProps> {
       traceStartTime,
       span,
       focusSpan,
+      hoverIndentIds,
+      addHoverIndentId,
+      removeHoverIndentId
     } = this.props;
     const {
       duration,
@@ -136,6 +144,9 @@ export default class SpanBarRow extends React.PureComponent<SpanBarRowProps> {
               childrenVisible={isChildrenExpanded}
               span={span}
               onClick={isParent ? this._childrenToggle : undefined}
+              hoverIndentIds={hoverIndentIds} 
+              addHoverIndentId={addHoverIndentId} 
+              removeHoverIndentId={removeHoverIndentId}
             />
             <a
               className={`span-name ${isDetailExpanded ? 'is-detail-expanded' : ''}`}
@@ -148,18 +159,18 @@ export default class SpanBarRow extends React.PureComponent<SpanBarRowProps> {
               <span
                 className={`span-svc-name ${isParent && !isChildrenExpanded ? 'is-children-collapsed' : ''}`}
               >
-                {showErrorIcon && <IoAlert className="SpanBarRow--errorIcon" />}
+                {showErrorIcon && <IoIosAlert className="SpanBarRow--errorIcon" />}
                 {serviceName}{' '}
                 {rpc && (
                   <span>
-                    <IoArrowRightA />{' '}
+                    <AiOutlineArrowRight />{' '}
                     <i className="SpanBarRow--rpcColorMarker" style={{ background: rpc.color }} />
                     {rpc.serviceName}
                   </span>
                 )}
                 {noInstrumentedServer && (
                   <span>
-                    <IoArrowRightA />{' '}
+                    <AiOutlineArrowRight />{' '}
                     <i
                       className="SpanBarRow--rpcColorMarker"
                       style={{ background: noInstrumentedServer.color }}
@@ -176,7 +187,7 @@ export default class SpanBarRow extends React.PureComponent<SpanBarRowProps> {
                 tooltipText="Contains multiple references"
                 focusSpan={focusSpan}
               >
-                <IoNetwork />
+                <FaNetworkWired />
               </ReferencesButton>
             )}
             {span.subsidiarilyReferencedBy && span.subsidiarilyReferencedBy.length > 0 && (
@@ -187,7 +198,7 @@ export default class SpanBarRow extends React.PureComponent<SpanBarRowProps> {
                 }`}
                 focusSpan={focusSpan}
               >
-                <MdFileUpload />
+                <MdOutlineUploadFile />
               </ReferencesButton>
             )}
           </div>

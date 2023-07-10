@@ -14,12 +14,12 @@
 
 import React from 'react';
 
-import SpanDetail from './SpanDetail';
+import SpanDetail from './SpanDetail/index';
 import DetailState from './SpanDetail/DetailState';
 import SpanTreeOffset from './SpanTreeOffset';
-import TimelineRow from './TimelineRow';
+import TimelineRow from '../TimelineRow';
 
-import { Log, Span, KeyValuePair, Link } from '../../../types/trace';
+import { SpanLog, TraceSpan, KeyValuePair, SpanLink } from 'types/plugins/trace';
 
 
 type SpanDetailRowProps = {
@@ -27,16 +27,19 @@ type SpanDetailRowProps = {
   columnDivision: number;
   detailState: DetailState;
   onDetailToggled: (spanID: string) => void;
-  linksGetter: (span: Span, links: KeyValuePair[], index: number) => Link[];
-  logItemToggle: (spanID: string, log: Log) => void;
+  linksGetter: (span: TraceSpan, links: KeyValuePair[], index: number) => SpanLink[];
+  logItemToggle: (spanID: string, log: SpanLog) => void;
   logsToggle: (spanID: string) => void;
   processToggle: (spanID: string) => void;
   referencesToggle: (spanID: string) => void;
   warningsToggle: (spanID: string) => void;
-  span: Span;
+  span: TraceSpan;
   tagsToggle: (spanID: string) => void;
   traceStartTime: number;
   focusSpan: (uiFind: string) => void;
+  hoverIndentIds: Set<string>;
+  addHoverIndentId: (spanID: string) => void;
+  removeHoverIndentId: (spanID: string) => void;
 };
 
 export default class SpanDetailRow extends React.PureComponent<SpanDetailRowProps> {
@@ -63,11 +66,14 @@ export default class SpanDetailRow extends React.PureComponent<SpanDetailRowProp
       tagsToggle,
       traceStartTime,
       focusSpan,
+      hoverIndentIds,
+      addHoverIndentId,
+      removeHoverIndentId
     } = this.props;
     return (
       <TimelineRow className="detail-row">
         <TimelineRow.Cell width={columnDivision}>
-          <SpanTreeOffset span={span} showChildrenIcon={false} />
+          <SpanTreeOffset span={span} showChildrenIcon={false} hoverIndentIds={hoverIndentIds} addHoverIndentId={addHoverIndentId} removeHoverIndentId={removeHoverIndentId} />
           <span>
             <span
               className="detail-row-expanded-accent"
