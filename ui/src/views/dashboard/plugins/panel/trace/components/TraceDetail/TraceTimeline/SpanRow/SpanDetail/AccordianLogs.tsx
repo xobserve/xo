@@ -22,7 +22,7 @@ import { SpanLog, KeyValuePair, SpanLink } from 'types/plugins/trace';
 
 import { formatDuration } from '../../../../../utils/date';
 import { AiOutlineArrowDown, AiOutlineArrowRight, AiOutlineDown, AiOutlineRight } from 'react-icons/ai';
-import { Box } from '@chakra-ui/react';
+import { Box, VStack } from '@chakra-ui/react';
 
 type AccordianLogsProps = {
   interactive?: boolean;
@@ -66,7 +66,7 @@ export default function AccordianLogs(props: AccordianLogsProps) {
         {arrow} <strong>Logs</strong> ({logs.length})
       </HeaderComponent>
       {isOpen && (
-        <div className="AccordianLogs--content">
+        <VStack alignItems="left" spacing={1} className="AccordianLogs--content bordered-top" >
           {_sortBy(logs, 'timestamp').map((log, i) => (
             <AccordianKeyValues
               // `i` is necessary in the key because timestamps can repeat
@@ -85,7 +85,7 @@ export default function AccordianLogs(props: AccordianLogsProps) {
           <small className="AccordianLogs--footer">
             Log timestamps are relative to the start time of the full trace.
           </small>
-        </div>
+        </VStack>
       )}
     </Box>
   );

@@ -20,7 +20,7 @@ limitations under the License.
   
   .json-markup {
     line-height: 17px;
-    font-size: 13px;
+    font-size: 14px;
     font-family: monospace;
     white-space: pre-wrap;
     word-break: break-all;
@@ -38,6 +38,6 @@ limitations under the License.
     color: gray;
   }
   .json-markup-number {
-    color: blue;
+    color: #09f;
   }
   

@@ -20,7 +20,7 @@ limitations under the License.
   }
   
   .SpanTreeOffset.is-parent:hover {
-    background-color: #e8e8e8;
+    /* background-color: #e8e8e8; */
     cursor: pointer;
   }
   
