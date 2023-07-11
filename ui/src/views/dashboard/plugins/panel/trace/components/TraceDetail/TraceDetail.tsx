@@ -18,7 +18,7 @@ interface Props {
     scrollManager: ScrollManager
 }
 const TraceDetail = ({ trace, scrollManager }: Props) => {
-    const [viewType, setViewType] = useState<ETraceViewType>(ETraceViewType.TraceTimelineViewer)
+    const [viewType, setViewType] = useState<ETraceViewType>(ETraceViewType.TraceGraph)
     const [viewRange, setViewRange] = useState<IViewRange>({
         time: {
             current: [0, 1],
@@ -94,7 +94,7 @@ const TraceDetail = ({ trace, scrollManager }: Props) => {
     }
     return (<Box overflowY="scroll" minH="100vh">
         <Box position="fixed" width="100%" bg={useColorModeValue('#fff', customColors.bodyBg.dark)} zIndex="1000">
-            <TraceDetailHeader trace={trace} viewRange={viewRange} updateNextViewRangeTime={updateNextViewRangeTime} updateViewRangeTime={updateViewRangeTime} onGraphCollapsed={() => setCollapsed(!collapsed)} collapsed={collapsed} search={search} onSearchChange={setSearch} searchCount={findCount} prevResult={prevResult} nextResult={nextResult} onViewTypeChange={setViewType} />
+            <TraceDetailHeader trace={trace} viewRange={viewRange} updateNextViewRangeTime={updateNextViewRangeTime} updateViewRangeTime={updateViewRangeTime} onGraphCollapsed={() => setCollapsed(!collapsed)} collapsed={collapsed} search={search} onSearchChange={setSearch} searchCount={findCount} prevResult={prevResult} nextResult={nextResult} onViewTypeChange={setViewType} viewType={viewType} />
         </Box>
         <Box mt={collapsed ? "67px" : "144px"} >
             {view}

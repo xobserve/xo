@@ -21,7 +21,8 @@ import TDagPlexusVertex from '../../../model/trace-dag/types/TDagPlexusVertex';
 
 import EmphasizedNode from '../../common/EmphasizedNode';
 import colorGenerator from 'utils/colorGenerator';
-import { Popover, PopoverArrow, PopoverBody, PopoverContent, PopoverTrigger } from '@chakra-ui/react';
+import { Box, HStack, Popover, PopoverArrow, PopoverBody, PopoverContent, PopoverTrigger, Portal, Text, useColorModeValue } from '@chakra-ui/react';
+import customColors from 'src/theme/colors';
 
 type Props = {
     count: number;
@@ -62,68 +63,80 @@ export function round2(percent: number) {
     return Math.round(percent * 100) / 100;
 }
 
-export default class OpNode extends React.PureComponent<Props> {
-    render() {
-        const { count, errors, time, percent, selfTime, percentSelfTime, operation, service, mode } = this.props;
+const OpNode = (props: Props) => {
+    const { count, errors, time, percent, selfTime, percentSelfTime, operation, service, mode } = props;
 
-        // Spans over 20 % time are full red - we have probably to reconsider better approach
-        let backgroundColor;
-        if (mode === MODE_TIME) {
-            const percentBoosted = Math.min(percent / 20, 1);
-            backgroundColor = [255, 0, 0, percentBoosted].join();
-        } else if (mode === MODE_SELFTIME) {
-            backgroundColor = [255, 0, 0, percentSelfTime / 100].join();
-        } else {
-            backgroundColor = colorGenerator.getRgbColorByKey(service).concat(0.8).join();
-        }
+    // Spans over 20 % time are full red - we have probably to reconsider better approach
+    let backgroundColor;
+    if (mode === MODE_TIME) {
+        const percentBoosted = Math.min(percent / 20, 1);
+        backgroundColor = [255, 0, 0, percentBoosted].join();
+    } else if (mode === MODE_SELFTIME) {
+        backgroundColor = [255, 0, 0, percentSelfTime / 100].join();
+    } else {
+        backgroundColor = colorGenerator.getRgbColorByKey(service).concat(0.6).join();
+    }
 
-        const table = (
-            <table className={`OpNode OpNode--mode-${mode}`} cellSpacing="0">
-                <tbody
-                    className="OpNode--body"
-                    style={{
-                        background: `rgba(${backgroundColor})`,
-                    }}
-                >
-                    <tr>
-                        <td className="OpNode--metricCell OpNode--count">
-                            {count} / {errors}
-                        </td>
-                        <td className="OpNode--labelCell OpNode--service">
-                            <strong>{service}</strong>
-                        </td>
-                        <td className="OpNode--metricCell OpNode--avg">{round2(time / 1000 / count)} ms</td>
-                    </tr>
-                    <tr>
-                        <td className="OpNode--metricCell OpNode--time">
-                            {time / 1000} ms ({round2(percent)} %)
-                        </td>
-                        <td className="OpNode--labelCell OpNode--op">{operation}</td>
-                        <td className="OpNode--metricCell OpNode--selfTime">
-                            {selfTime / 1000} ms ({round2(percentSelfTime)} %)
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-        );
-        const popoverContent = <div className="OpNode--popoverContent">{table}</div>;
+    
 
-        return (
-            <Popover trigger="hover">
-                <PopoverTrigger>
-                    {table}
-                </PopoverTrigger>
-                <PopoverContent>
+    return (
+        <Popover trigger="hover" placement='auto'>
+            <PopoverTrigger>
+                <Box><NodeTable {...props} backgroundColor={backgroundColor}/></Box>
+            </PopoverTrigger>
+            <Portal>
+                <PopoverContent  minW="fit-content">
                     <PopoverArrow />
                     <PopoverBody>
-                        {popoverContent}
+                        <Box className="OpNode--popoverContent"> <NodeTable {...props} backgroundColor={backgroundColor} simple={false}/></Box>
                     </PopoverBody>
                 </PopoverContent>
-            </Popover>
-        );
-    }
+            </Portal>
+        </Popover>
+    );
 }
 
+
+const NodeTable = (props) => {
+    const { count, errors, time, percent, selfTime, percentSelfTime, operation, service, mode,backgroundColor,simple=true } = props;
+    return  (
+        <table className={`OpNode OpNode--mode-${mode}`} cellSpacing="0" style={{ fontSize: simple ? "1.5rem" : "1rem", background: useColorModeValue(customColors.bodyBg.light,customColors.bodyBg.dark)}}>
+            <tbody
+                className="OpNode--body"
+                style={{
+                    background: `rgba(${backgroundColor})`,
+                }}
+            >
+                <tr>
+                    <td className="OpNode--metricCell OpNode--count">
+                       {simple ? `${count} / ${errors}` : <Box>
+                            <Text>Total spans: {count}</Text>
+                            <Text>Error spans: {errors}</Text>
+                        </Box>} 
+                    </td>
+                    <td className="OpNode--labelCell OpNode--service">
+                        <strong>{service}</strong>
+                    </td>
+                    <td className="OpNode--metricCell OpNode--avg">
+                    {simple? <></> : <Text>Average span duraiton:</Text>} 
+                      {round2(time / 1000 / count)} ms
+                    </td>
+                </tr>
+                <tr>
+                    <td className="OpNode--metricCell OpNode--time">
+                    {simple ? <></> : <Text>Total spans duration:</Text>}  
+                      {time / 1000} ms ({round2(percent)} %)
+                    </td>
+                    <td className="OpNode--labelCell OpNode--op">{operation}</td>
+                    <td className="OpNode--metricCell OpNode--selfTime">
+                    {simple? null: <Text>Self duration</Text>} 
+                       {selfTime / 1000} ms ({round2(percentSelfTime)} %)
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    );
+}
 export function getNodeRenderer(mode: string) {
     return function drawNode(vertex: TDagPlexusVertex<TSumSpan & TDenseSpanMembers>) {
         return <OpNode {...vertex.data} mode={mode} />;

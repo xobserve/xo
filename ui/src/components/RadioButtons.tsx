@@ -5,6 +5,8 @@ interface Props {
     value: string | boolean // selected value
     onChange: any
     size?: "sm" | "md" | "lg"
+    spacing?: number
+    fontSize?: string
 }
 
 interface Option {
@@ -12,9 +14,9 @@ interface Option {
     value: string | boolean
 }
 
-const RadionButtons = ({options,value,onChange,size="md"}:Props) => {
-    return (<HStack spacing="1">
-        {options.map(o => <Button size={size} onClick={() => onChange(o.value)} borderRadius="0" variant={value == o.value ? "solid" :"outline"} colorScheme="gray">{o.label}</Button>)}
+const RadionButtons = ({options,value,onChange,size="md",spacing=1,fontSize="1rem"}:Props) => {
+    return (<HStack spacing={spacing}>
+        {options.map(o => <Button fontSize={fontSize}  size={size} onClick={() => onChange(o.value)} borderRadius="0" variant={value == o.value ? "solid" :"outline"} colorScheme="gray">{o.label}</Button>)}
     </HStack>)
 }
 

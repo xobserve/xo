@@ -14,15 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-.TraceGraph--experimental {
-    background-color: #a00;
-    color: #fff;
-    position: absolute;
-    padding: 1px 15px;
-  }
-  
   .TraceGraph--graphWrapper {
-    background: #f0f0f0;
     bottom: 0;
     cursor: move;
     left: 0;
@@ -33,20 +25,14 @@ limitations under the License.
     transition: background 0.5s ease;
     display: flex;
   }
-  
-  .TraceGraph--graphWrapper.is-uiFind-mode {
-    background: #ddd;
-  }
-  
+
   .TraceGraph--sidebar-container {
-    background: #f4f4f4;
+    /* background: #f4f4f4; */
     display: flex;
     z-index: 1;
   }
   
   .TraceGraph--menu {
-    border-left: 1px solid #e4e4e4;
-    border-right: 1px solid #e4e4e4;
     cursor: pointer;
     padding: 0.8rem;
   }
@@ -68,49 +54,5 @@ limitations under the License.
   
   .TraceGraph--dag {
     stroke-width: 0.8;
-  }
-  
-  /* DAG minimap */
-  
-  .TraceGraph--miniMap {
-    align-items: flex-end;
-    bottom: 1rem;
-    display: flex;
-    left: 1rem;
-    position: absolute;
-    z-index: 1;
-  }
-  
-  .TraceGraph--miniMap > .plexus-MiniMap--item {
-    border: 1px solid #777;
-    background: #999;
-    box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.3);
-    margin-right: 1rem;
-    position: relative;
-  }
-  
-  .TraceGraph--miniMap > .plexus-MiniMap--map {
-    /* dynamic widht, height */
-    box-sizing: content-box;
-    cursor: not-allowed;
-  }
-  
-  .TraceGraph--miniMap .plexus-MiniMap--mapActive {
-    /* dynamic: width, height, transform */
-    background: #ccc;
-    position: absolute;
-  }
-  
-  .TraceGraph--miniMap > .plexus-MiniMap--button {
-    background: #ccc;
-    color: #888;
-    cursor: pointer;
-    font-size: 1.6em;
-    line-height: 0;
-    padding: 0.1rem;
-  }
-  
-  .TraceGraph--miniMap > .plexus-MiniMap--button:hover {
-    background: #ddd;
   }
   

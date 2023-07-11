@@ -16,7 +16,6 @@ limitations under the License.
 
 .OpNode {
     width: 100%;
-    background: #fff;
     cursor: pointer;
     white-space: nowrap;
     border-collapse: separate;
@@ -51,7 +50,7 @@ limitations under the License.
   }
   
   .OpNode--mode-time {
-    background: #eee;
+    /* background: #eee; */
   }
   
   .OpNode--metricCell {

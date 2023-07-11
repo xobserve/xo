@@ -9,6 +9,7 @@ import { ETraceViewType, IViewRange, ViewRangeTimeUpdate } from "../../types/typ
 import CollapseIcon from "components/icons/Collapse"
 import { AiOutlineArrowUp, AiOutlineDown, AiOutlineUp } from "react-icons/ai"
 import IconButton from "components/button/IconButton"
+import RadionButtons from "components/RadioButtons"
 
 interface Props {
     trace: Trace
@@ -36,22 +37,22 @@ const TraceDetailHeader = ({ trace, viewRange, updateNextViewRangeTime, updateVi
                 <Text>{trace.traceID.slice(0, 7)}</Text>
             </HStack>
             <HStack>
-                <HStack spacing={1}>
+                <HStack spacing={0}>
                     <HStack spacing={0} position="relative">
-                    <Input width="300px" placeholder="Search.." value={search} onChange={e => onSearchChange(e.currentTarget.value)}/>
+                    <Input width="240px" placeholder="Search.." value={search} onChange={e => onSearchChange(e.currentTarget.value)}/>
                     <Text textStyle="annotation" width="30px" position="absolute" right="0" mt="2px">{searchCount}</Text>
                     </HStack>
-                    <IconButton  onClick={prevResult} isDisabled={search == ''} fontSize="1rem"><AiOutlineUp /></IconButton>
-                    <IconButton  onClick={nextResult} isDisabled={search == ''} fontSize="1rem"><AiOutlineDown /></IconButton>
+                    {viewType == ETraceViewType.TraceTimelineViewer && <><IconButton   onClick={prevResult} isDisabled={search == ''} fontSize="1rem"><AiOutlineUp /></IconButton>
+                    <IconButton  onClick={nextResult} isDisabled={search == ''} fontSize="1rem"><AiOutlineDown /></IconButton></>}
                     {/* <Button size="sm" variant="outline" onClick={prevResult} isDisabled={search == ''}></Button> */}
                 </HStack>
-                <Select value={viewType} onChange={e => onViewTypeChange(e.currentTarget.value)}>
-                    <option value={ETraceViewType.TraceTimelineViewer}>Trace Timeline</option>
-                    <option value={ETraceViewType.TraceGraph}>Trace Graph</option>
-                    <option value={ETraceViewType.TraceSpansView}>Trace Spans View</option>
-                    <option value={ETraceViewType.TraceStatistics}>Trace Statistics</option>
-                    <option value={ETraceViewType.TraceFlamegraph}>Trace Flame Graph</option>
-                </Select>
+                <RadionButtons fontSize="0.8rem" spacing={0} value={viewType} onChange={v => onViewTypeChange(v)} options={[
+                    {label: "Timeline", value:ETraceViewType.TraceTimelineViewer },
+                    {label: "Graph", value:ETraceViewType.TraceGraph },
+                    {label: "Spans", value:ETraceViewType.TraceSpansView },
+                    {label: "Stats", value:ETraceViewType.TraceStatistics },
+                    {label: "Flame", value:ETraceViewType.TraceFlamegraph }
+                ]} />
                 <ColorModeSwitcher />
             </HStack>
         </Flex>
