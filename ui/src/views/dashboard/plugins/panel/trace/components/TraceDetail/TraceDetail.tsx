@@ -3,7 +3,7 @@ import { Trace } from "types/plugins/trace"
 import TraceDetailHeader from "./TraceHeader"
 
 import ScrollManager from './scroll/scrollManager';
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { ETraceViewType, IViewRange, ViewRangeTimeUpdate } from "../../types/types";
 import TraceTimeline from "./TraceTimeline/TraceTimeline";
 import customColors from "src/theme/colors";
@@ -25,6 +25,10 @@ const TraceDetail = ({ trace, scrollManager }: Props) => {
     })
     const [collapsed, setCollapsed] = useState(true)
     const [search, setSearch] = useState("")
+
+    useEffect(() => {
+        scrollManager.setTrace(trace);
+    },[])
     const updateNextViewRangeTime = (update: ViewRangeTimeUpdate) => {
         const time = { ...viewRange.time, ...update };
         setViewRange({ ...viewRange, time });
@@ -36,6 +40,12 @@ const TraceDetail = ({ trace, scrollManager }: Props) => {
         setViewRange({ ...viewRange, time })
     };
 
+    const prevResult = () => {
+        scrollManager.scrollToPrevVisibleSpan();
+    }
+    const nextResult = () => {
+        scrollManager.scrollToNextVisibleSpan();
+    }
     const _filterSpans = memoize(
         filterSpans,
         // Do not use the memo if the filter text or trace has changed.
@@ -56,11 +66,11 @@ const TraceDetail = ({ trace, scrollManager }: Props) => {
             findCount = spanFindMatches ? spanFindMatches.size : 0;
         }
     }
-
+    
     console.log("here33333:",findCount, spanFindMatches)
     return (<Box maxHeight="100vh" overflowY="scroll">
         <Box position="fixed" width="100%" bg={useColorModeValue('#fff', customColors.bodyBg.dark)} zIndex="1000">
-            <TraceDetailHeader trace={trace} viewRange={viewRange} updateNextViewRangeTime={updateNextViewRangeTime} updateViewRangeTime={updateViewRangeTime} onGraphCollapsed={() => setCollapsed(!collapsed)} collapsed={collapsed} search={search} onSearchChange={setSearch} searchCount={findCount} />
+            <TraceDetailHeader trace={trace} viewRange={viewRange} updateNextViewRangeTime={updateNextViewRangeTime} updateViewRangeTime={updateViewRangeTime} onGraphCollapsed={() => setCollapsed(!collapsed)} collapsed={collapsed} search={search} onSearchChange={setSearch} searchCount={findCount} prevResult={prevResult} nextResult={nextResult}/>
         </Box>
         <Box mt={collapsed ? "67px" : "144px"}>
             <TraceTimeline

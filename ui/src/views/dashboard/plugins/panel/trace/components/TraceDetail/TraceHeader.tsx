@@ -1,4 +1,4 @@
-import { Box, Flex, HStack, Input, Select, Text } from "@chakra-ui/react"
+import { Box, Button, Flex, HStack, Input, Select, Text } from "@chakra-ui/react"
 import { ColorModeSwitcher } from "components/ColorModeSwitcher"
 import moment from "moment"
 import { Trace } from "types/plugins/trace"
@@ -7,6 +7,7 @@ import SpanGraph from "./SpanGraph"
 import { useState } from "react"
 import { IViewRange, ViewRangeTimeUpdate } from "../../types/types"
 import CollapseIcon from "components/icons/Collapse"
+import { AiOutlineArrowUp, AiOutlineDown, AiOutlineUp } from "react-icons/ai"
 
 interface Props {
     trace: Trace
@@ -18,9 +19,11 @@ interface Props {
     search: string 
     onSearchChange: any
     searchCount: number
+    prevResult: any 
+    nextResult: any
 }
 
-const TraceDetailHeader = ({ trace, viewRange, updateNextViewRangeTime, updateViewRangeTime,collapsed, onGraphCollapsed, search, onSearchChange}: Props) => {
+const TraceDetailHeader = ({ trace, viewRange, updateNextViewRangeTime, updateViewRangeTime,collapsed, onGraphCollapsed, search, onSearchChange, prevResult, nextResult}: Props) => {
 
     return (<>
         <Flex justifyContent="space-between" alignItems="center">
@@ -30,7 +33,11 @@ const TraceDetailHeader = ({ trace, viewRange, updateNextViewRangeTime, updateVi
                 <Text>{trace.traceID.slice(0, 7)}</Text>
             </HStack>
             <HStack>
-                <Input placeholder="Search.." value={search} onChange={e => onSearchChange(e.currentTarget.value)}/>
+                <HStack spacing={1}>
+                    <Input placeholder="Search.." value={search} onChange={e => onSearchChange(e.currentTarget.value)}/>
+                    <Button size="sm" variant="outline" onClick={prevResult}><AiOutlineUp /></Button>
+                    <Button size="sm" variant="outline" onClick={nextResult}><AiOutlineDown /></Button>
+                </HStack>
                 <Select>
                     <option>Trace Timeline</option>
                 </Select>

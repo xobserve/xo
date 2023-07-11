@@ -16,7 +16,7 @@ const TraceDetailWrapper = ({id,dsId}) => {
         load()
 
         return () => {
-            if (scrollManager) {
+            if (scrollManager?.current) {
                 scrollManager.current.destroy();
                 scrollManager.current = new ScrollManager(undefined, {
                     scrollBy,
