@@ -350,7 +350,7 @@ function valueFirstDropdown(selectedTagKey: string, trace: Trace) {
       color,
       searchColor: '',
       parentElement: 'none',
-      colorToPercent: 'tranparent',
+      colorToPercent: 'transparent',
       traceID: '',
     };
     tableSpan = buildOneColumn(tableSpan);

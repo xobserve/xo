@@ -22,6 +22,7 @@ import { ITableSpan } from './types';
 import { TNil } from 'types/misc';
 import PopupSQL from './PopupSql';
 import AntdWrapper from 'components/AntdWrapper';
+import { Box } from '@chakra-ui/react';
 
 type Props = {
   trace: Trace;
@@ -100,7 +101,7 @@ const columnsArray: any[] = [
 
 const TraceStatsWrapper = (props: any) => {
   return (
-    <AntdWrapper><TraceStatistics {...props}/></AntdWrapper>
+    <AntdWrapper><TraceStatistics {...props} /></AntdWrapper>
   )
 }
 
@@ -109,7 +110,7 @@ export default TraceStatsWrapper;
 /**
  * Trace Tag Overview Component
  */
- class TraceStatistics extends Component<Props, State> {
+class TraceStatistics extends Component<Props, State> {
   constructor(props: any) {
     super(props);
 
@@ -281,8 +282,19 @@ export default TraceStatsWrapper;
         this.props.uiFind && record.searchColor !== 'transparent'
           ? record.searchColor
           : record.colorToPercent;
+      const r: any = { background: backgroundColor, borderColor: backgroundColor }
+      if (backgroundColor == 'rgb(248,248,248)') {
+        r.background = 'rgb(0,0,0,0.04)'
+        r.borderColor = 'rgb(0,0,0,0.04)'
+      } else {
+        if (backgroundColor != 'transparent') {
+          r.color = "black"
+        }
+      }
+
+      console.log("here333333:", backgroundColor)
       return {
-        style: { background: backgroundColor, borderColor: backgroundColor },
+        style: r,
       };
     };
 
@@ -337,7 +349,12 @@ export default TraceStatsWrapper;
     };
     const groupedAndSubgroupedSpanData: ITableSpan[] = groupAndSubgroupSpanData(this.state.tableValue);
     return (
-      <div>
+      <Box sx={{
+        '.ant-table-row-expand-icon': {
+          background: 'transparent',
+          borderColor: 'initial',
+        }
+      }}>
         <TraceStatisticsHeader
           trace={this.props.trace}
           tableValue={this.state.tableValue}
@@ -365,7 +382,7 @@ export default TraceStatsWrapper;
           defaultExpandAllRows
           sortDirections={['ascend', 'descend', 'ascend']}
         />
-      </div>
+      </Box>
     );
   }
 }

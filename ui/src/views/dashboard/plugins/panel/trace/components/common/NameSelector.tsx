@@ -115,7 +115,7 @@ export default class NameSelector extends React.PureComponent<TProps, TState> {
     return (
       <Popover
         overlayClassName="NameSelector--overlay u-rm-popover-content-padding"
-        onVisibleChange={this.onPopoverVisibleChanged}
+        onOpenChange={this.onPopoverVisibleChanged}
         placement="bottomLeft"
         content={
           <FilteredList
@@ -127,11 +127,11 @@ export default class NameSelector extends React.PureComponent<TProps, TState> {
           />
         }
         trigger="click"
-        visible={popoverVisible}
+        open={popoverVisible}
       >
         <h2 className={rootCls}>
           {useLabel && <span className="NameSelector--label" style={{opacity: 0.7, fontSize: '0.9rem'}}>{label}:</span>}
-          <BreakableText className="NameSelector--value" text={text} />
+          <BreakableText className="NameSelector--value" text={text} style={{fontSize: "0.9rem",fontWeight: 550}} />
           <AiOutlineDown style={{display: "inline-block"}} className="NameSelector--chevron" />
           {!required && value && (
             //@ts-ignore

@@ -23,6 +23,8 @@ import ListItem from './ListItem';
 
 import './index.css';
 import { FaSearch } from 'react-icons/fa';
+import { Box, Input, useColorModeValue } from '@chakra-ui/react';
+import customColors from 'src/theme/colors';
 
 const ITEM_HEIGHT = 35;
 const MAX_HEIGHT = 375;
@@ -193,12 +195,10 @@ export default class FilteredList extends React.PureComponent<TProps, TState> {
     };
     return (
       <div ref={this.wrapperRef}>
-        <div className="FilteredList--filterWrapper">
+        <Box>
           {filteredCheckbox}
-          <label className="FilteredList--inputWrapper">
-            <FaSearch className="FilteredList--filterIcon" />
-            <input
-              className="FilteredList--filterInput"
+          <label>
+            <Input
               placeholder="Filter..."
               onChange={this.onFilterChanged}
               onKeyDown={this.onKeyDown}
@@ -207,7 +207,7 @@ export default class FilteredList extends React.PureComponent<TProps, TState> {
               value={filterText}
             />
           </label>
-        </div>
+        </Box>
         <VList
           key={filterText}
           className="FilteredList--list u-simple-scrollbars"

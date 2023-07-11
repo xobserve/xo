@@ -20,6 +20,7 @@ type Props = {
   text: string;
   className?: string;
   wordRegexp?: RegExp;
+  style?: Object
 };
 
 // TODO typescript doesn't understand text or null as react nodes
@@ -27,7 +28,7 @@ type Props = {
 export default function BreakableText(
   props: Props
 ): any /* React.ReactNode /* React.ReactElement | React.ReactElement[] \*\/ */ {
-  const { className, text, wordRegexp = WORD_RX } = props;
+  const { className, text, wordRegexp = WORD_RX ,style} = props;
   if (!text) {
     return typeof text === 'string' ? text : null;
   }
@@ -37,7 +38,7 @@ export default function BreakableText(
   let match: RegExpExecArray | string[] | null = wordRegexp.exec(text) || [text];
   while (match) {
     spans.push(
-      <span key={`${text}-${spans.length}`} className={className} style={{display:"inline-block", whiteSpace: 'pre'}}>
+      <span key={`${text}-${spans.length}`} className={className} style={{display:"inline-block", whiteSpace: 'pre', ...style}}>
         {match[0]}
       </span>
     );
