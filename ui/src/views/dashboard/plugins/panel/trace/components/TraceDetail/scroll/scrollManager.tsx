@@ -117,6 +117,7 @@ export default class ScrollManager {
       y -= vh;
     }
     y += direction * 0.5 * vh;
+
     this._scroller.scrollTo(y);
   }
 
@@ -203,7 +204,6 @@ export default class ScrollManager {
       }
     }
     const nextRow = xrs.mapSpanIndexToRowIndex(nextSpanIndex);
-    console.log("here4444:",nextRow,direction)
     this._scrollPast(nextRow, direction);
   }
 

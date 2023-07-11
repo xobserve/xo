@@ -67,8 +67,7 @@ const TraceDetail = ({ trace, scrollManager }: Props) => {
         }
     }
     
-    console.log("here33333:",findCount, spanFindMatches)
-    return (<Box maxHeight="100vh" overflowY="scroll">
+    return (<Box overflowY="scroll">
         <Box position="fixed" width="100%" bg={useColorModeValue('#fff', customColors.bodyBg.dark)} zIndex="1000">
             <TraceDetailHeader trace={trace} viewRange={viewRange} updateNextViewRangeTime={updateNextViewRangeTime} updateViewRangeTime={updateViewRangeTime} onGraphCollapsed={() => setCollapsed(!collapsed)} collapsed={collapsed} search={search} onSearchChange={setSearch} searchCount={findCount} prevResult={prevResult} nextResult={nextResult}/>
         </Box>
