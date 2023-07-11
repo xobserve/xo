@@ -5,7 +5,10 @@ import AppView from "src/views/App";
 
 // local css
 import "src/views/dashboard/plugins/panel/trace/components/TraceCompare/renderNode.css"
+import "src/views/dashboard/plugins/panel/trace/components/common/NameSelector.css"
 import "src/views/dashboard/plugins/panel/trace/components/common/EmphasizedNode.css"
+import "src/views/dashboard/plugins/panel/trace/components/common/FilteredList/index.css"
+import "src/views/dashboard/plugins/panel/trace/components/common/FilteredList/ListItem.css"
 import "src/views/dashboard/plugins/panel/trace/components/TraceDetail/SpanGraph/Scrubber.css"
 import "src/views/dashboard/plugins/panel/trace/components/TraceDetail/SpanGraph/ViewingLayer.css"
 import "src/views/dashboard/plugins/panel/trace/components/TraceDetail/TraceTimeline/Header/TimelineHeader.css"
@@ -24,6 +27,11 @@ import "src/views/dashboard/plugins/panel/trace/components/TraceDetail/TraceTime
 import "src/views/dashboard/plugins/panel/trace/components/TraceDetail/TraceTimeline/TimelineRow.css"
 import "src/views/dashboard/plugins/panel/trace/components/TraceDetail/TraceGraph/TraceGraph.css"
 import "src/views/dashboard/plugins/panel/trace/components/TraceDetail/TraceGraph/OpNode.css"
+import "src/views/dashboard/plugins/panel/trace/components/TraceDetail/TraceStats/index.css"
+import "src/views/dashboard/plugins/panel/trace/components/TraceDetail/TraceStats/PopupSql.css"
+import "src/views/dashboard/plugins/panel/trace/components/TraceDetail/TraceStats/TraceStatsHeader.css"
+
+
 import '@pyroscope/flamegraph/dist/index.css';
 
 dynamic(import("echarts/extension/bmap/bmap"), { ssr: false });

@@ -64,6 +64,7 @@ const defaultConfig: Config = {
   tracking: {
     gaID: null,
     trackErrors: true,
+    customWebAnalytics: null,
   },
   linkPatterns: [],
   monitor: {

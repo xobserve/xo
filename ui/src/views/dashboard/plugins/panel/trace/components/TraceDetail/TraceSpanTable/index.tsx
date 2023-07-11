@@ -13,15 +13,15 @@
 // limitations under the License.
 
 import React, { Component } from 'react';
-import { Table, Select, ConfigProvider, theme } from 'antd';
+import { Table, Select } from 'antd';
 import moment from 'moment';
 import { ColumnProps } from 'antd/es/table';
 import { TNil } from 'types/misc';
 import { Trace, TraceSpan } from 'types/plugins/trace';
 import { timeConversion } from '../../../utils/date';
 import { getTargetEmptyOrBlank } from '../../../utils/get-target';
-import { Box, Button, Flex, HStack, Link, Text, useColorMode } from '@chakra-ui/react';
-import customColors from 'src/theme/colors';
+import { Box, Button, Flex, HStack, Link, Text } from '@chakra-ui/react';
+import AntdWrapper from 'components/AntdWrapper';
 
 const Option = Select.Option;
 
@@ -51,21 +51,9 @@ type State = {
 };
 
 const TraceSpanViewWraper = (props: Props) => {
-    const { colorMode } = useColorMode()
-    const { defaultAlgorithm, darkAlgorithm } = theme;
-    return (<ConfigProvider
-        theme={{
-            algorithm: colorMode == "light" ? defaultAlgorithm : darkAlgorithm,
-            token: {
-                colorBgContainer: colorMode == "light" ?customColors.bodyBg.light : customColors.bodyBg.dark,
-                colorPrimary:  colorMode == "light" ?customColors.primaryColor.light : customColors.primaryColor.dark,
-                colorBgElevated: colorMode == "light" ?customColors.popperBg.light : customColors.popperBg.dark ,
-                colorBgSpotlight: colorMode == "light" ?customColors.tooltipBg.light : customColors.tooltipBg.dark,
-            }
-        }}>
-       <TraceSpanView {...props} />
-    </ConfigProvider>)
+   return <AntdWrapper><TraceSpanView {...props} /></AntdWrapper>
 }
+
 export default TraceSpanViewWraper;
 
 class TraceSpanView extends Component<Props, State> {

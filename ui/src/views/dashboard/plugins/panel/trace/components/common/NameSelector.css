@@ -1,0 +1,82 @@
+/*
+Copyright (c) 2019 Uber Technologies, Inc.
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+http://www.apache.org/licenses/LICENSE-2.0
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+*/
+
+.NameSelector {
+    border-bottom: 1px solid transparent;
+    color: var(--tx-color-muted);
+    cursor: pointer;
+    font-size: 1.5em;
+    margin: 0 1.3em 0 0;
+    outline: 4px solid transparent;
+  }
+  
+  .NameSelector.is-invalid {
+    background: #fff2e888;
+    border-color: #ffbb96;
+    outline-color: #fff2e888;
+  }
+  
+  .NameSelector.is-invalid:hover {
+    background: #fff2e8;
+    border-color: #ff9c6e;
+    outline-color: #fff2e8;
+  }
+  
+  .NameSelector:hover {
+    background: #f4f4f4;
+    border-color: #ccc;
+    color: var(--tx-color-body);
+    outline-color: #f4f4f4;
+  }
+  
+  .NameSelector.is-active {
+    background: #ddd;
+    border-color: #bbb;
+    color: var(--tx-color-body);
+    outline-color: #ddd;
+  }
+  
+  .NameSelector--label {
+    font-weight: 400;
+    padding-right: 0.5em;
+  }
+  
+  .NameSelector--value {
+    color: var(--tx-color-title);
+  }
+  
+  .NameSelector--chevron {
+    font-size: 0.6em;
+    margin-left: 0.8em;
+    position: relative;
+  }
+  
+  .NameSelector--chevron:not(:last-child) {
+    margin-right: 0.8em;
+  }
+  
+  .NameSelector--clearIcon:not(:hover) {
+    color: var(--tx-color-muted);
+  }
+  
+  .NameSelector--overlay .ant-popover-arrow {
+    border: 1px solid #999;
+    z-index: -1;
+    background: #bbb;
+  }
+  
+  .NameSelector--overlay .ant-popover-inner {
+    border: 1px solid #ccc;
+    overflow: hidden;
+  }
+  

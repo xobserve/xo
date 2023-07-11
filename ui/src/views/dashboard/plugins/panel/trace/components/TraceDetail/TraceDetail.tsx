@@ -15,13 +15,14 @@ import TraceGraph from "./TraceGraph/TraceGraph";
 import TraceJSON from "./TraceJSON";
 import TraceFlamegraph from "./TraceFlameGraph";
 import TraceSpanView from "./TraceSpanTable";
+import TraceStatistics from "./TraceStats";
 
 interface Props {
     trace: Trace
     scrollManager: ScrollManager
 }
 const TraceDetail = ({ trace, scrollManager }: Props) => {
-    const [viewType, setViewType] = useState<ETraceViewType>(ETraceViewType.TraceSpansView)
+    const [viewType, setViewType] = useState<ETraceViewType>(ETraceViewType.TraceStatistics)
     const [viewRange, setViewRange] = useState<IViewRange>({
         time: {
             current: [0, 1],
@@ -100,6 +101,9 @@ const TraceDetail = ({ trace, scrollManager }: Props) => {
             break
         case ETraceViewType.TraceSpansView:
             view = <TraceSpanView trace={trace} uiFindVertexKeys={spanFindMatches} uiFind={search}/>
+            break
+        case ETraceViewType.TraceStatistics:
+            view = <TraceStatistics trace={trace} uiFindVertexKeys={spanFindMatches} uiFind={search}/>
             break
         default: 
             view = <></>
