@@ -11,6 +11,7 @@ import { getUiFindVertexKeys } from "../TraceCompare/utils";
 import { get, memoize } from "lodash";
 import filterSpans from "../../utils/filter-spans";
 import calculateTraceDagEV from "./TraceGraph/calculateTraceDageEV";
+import TraceGraph from "./TraceGraph/TraceGraph";
 
 interface Props {
     trace: Trace
@@ -28,7 +29,7 @@ const TraceDetail = ({ trace, scrollManager }: Props) => {
 
     useEffect(() => {
         scrollManager.setTrace(trace);
-    },[])
+    }, [])
     const updateNextViewRangeTime = (update: ViewRangeTimeUpdate) => {
         const time = { ...viewRange.time, ...update };
         setViewRange({ ...viewRange, time });
@@ -66,13 +67,11 @@ const TraceDetail = ({ trace, scrollManager }: Props) => {
             findCount = spanFindMatches ? spanFindMatches.size : 0;
         }
     }
-    
-    return (<Box overflowY="scroll">
-        <Box position="fixed" width="100%" bg={useColorModeValue('#fff', customColors.bodyBg.dark)} zIndex="1000">
-            <TraceDetailHeader trace={trace} viewRange={viewRange} updateNextViewRangeTime={updateNextViewRangeTime} updateViewRangeTime={updateViewRangeTime} onGraphCollapsed={() => setCollapsed(!collapsed)} collapsed={collapsed} search={search} onSearchChange={setSearch} searchCount={findCount} prevResult={prevResult} nextResult={nextResult}/>
-        </Box>
-        <Box mt={collapsed ? "67px" : "144px"}>
-            <TraceTimeline
+
+    let view
+    switch (viewType) {
+        case ETraceViewType.TraceTimelineViewer:
+            view = <TraceTimeline
                 registerAccessors={scrollManager.setAccessors}
                 scrollToFirstVisibleSpan={scrollManager.scrollToFirstVisibleSpan}
                 findMatchesIDs={spanFindMatches}
@@ -81,6 +80,25 @@ const TraceDetail = ({ trace, scrollManager }: Props) => {
                 updateViewRangeTime={updateViewRangeTime}
                 viewRange={viewRange}
             />
+            break;
+        case ETraceViewType.TraceGraph:
+            view = 
+                <TraceGraph
+                  ev={traceDagEV}
+                  search={search}
+                  uiFindVertexKeys={spanFindMatches}
+                />
+            break
+        default:
+            break;
+    }
+    return (<Box overflowY="scroll" minH="100vh">
+        <Box position="fixed" width="100%" bg={useColorModeValue('#fff', customColors.bodyBg.dark)} zIndex="1000">
+            <TraceDetailHeader trace={trace} viewRange={viewRange} updateNextViewRangeTime={updateNextViewRangeTime} updateViewRangeTime={updateViewRangeTime} onGraphCollapsed={() => setCollapsed(!collapsed)} collapsed={collapsed} search={search} onSearchChange={setSearch} searchCount={findCount} prevResult={prevResult} nextResult={nextResult} onViewTypeChange={setViewType} />
+        </Box>
+        <Box mt={collapsed ? "67px" : "144px"} >
+            {view}
+
         </Box>
     </Box>)
 }

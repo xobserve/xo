@@ -5,9 +5,10 @@ import { Trace } from "types/plugins/trace"
 import { formatDuration } from "../../utils/date"
 import SpanGraph from "./SpanGraph"
 import { useState } from "react"
-import { IViewRange, ViewRangeTimeUpdate } from "../../types/types"
+import { ETraceViewType, IViewRange, ViewRangeTimeUpdate } from "../../types/types"
 import CollapseIcon from "components/icons/Collapse"
 import { AiOutlineArrowUp, AiOutlineDown, AiOutlineUp } from "react-icons/ai"
+import IconButton from "components/button/IconButton"
 
 interface Props {
     trace: Trace
@@ -21,9 +22,11 @@ interface Props {
     searchCount: number
     prevResult: any 
     nextResult: any
+    viewType: string
+    onViewTypeChange: any
 }
 
-const TraceDetailHeader = ({ trace, viewRange, updateNextViewRangeTime, updateViewRangeTime,collapsed, onGraphCollapsed, search, onSearchChange, prevResult, nextResult}: Props) => {
+const TraceDetailHeader = ({ trace, viewRange, updateNextViewRangeTime, updateViewRangeTime,collapsed, onGraphCollapsed, search, onSearchChange,searchCount, prevResult, nextResult,viewType, onViewTypeChange}: Props) => {
 
     return (<>
         <Flex justifyContent="space-between" alignItems="center">
@@ -34,12 +37,20 @@ const TraceDetailHeader = ({ trace, viewRange, updateNextViewRangeTime, updateVi
             </HStack>
             <HStack>
                 <HStack spacing={1}>
-                    <Input placeholder="Search.." value={search} onChange={e => onSearchChange(e.currentTarget.value)}/>
-                    <Button size="sm" variant="outline" onClick={prevResult}><AiOutlineUp /></Button>
-                    <Button size="sm" variant="outline" onClick={nextResult}><AiOutlineDown /></Button>
+                    <HStack spacing={0} position="relative">
+                    <Input width="300px" placeholder="Search.." value={search} onChange={e => onSearchChange(e.currentTarget.value)}/>
+                    <Text textStyle="annotation" width="30px" position="absolute" right="0" mt="2px">{searchCount}</Text>
+                    </HStack>
+                    <IconButton  onClick={prevResult} isDisabled={search == ''} fontSize="1rem"><AiOutlineUp /></IconButton>
+                    <IconButton  onClick={nextResult} isDisabled={search == ''} fontSize="1rem"><AiOutlineDown /></IconButton>
+                    {/* <Button size="sm" variant="outline" onClick={prevResult} isDisabled={search == ''}></Button> */}
                 </HStack>
-                <Select>
-                    <option>Trace Timeline</option>
+                <Select value={viewType} onChange={e => onViewTypeChange(e.currentTarget.value)}>
+                    <option value={ETraceViewType.TraceTimelineViewer}>Trace Timeline</option>
+                    <option value={ETraceViewType.TraceGraph}>Trace Graph</option>
+                    <option value={ETraceViewType.TraceSpansView}>Trace Spans View</option>
+                    <option value={ETraceViewType.TraceStatistics}>Trace Statistics</option>
+                    <option value={ETraceViewType.TraceFlamegraph}>Trace Flame Graph</option>
                 </Select>
                 <ColorModeSwitcher />
             </HStack>
