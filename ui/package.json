@@ -80,7 +80,8 @@
     "recompose": "^0.30.0",
     "lru-memoize": "^1.1.0",
     "drange": "^2.0.0",
-    "@pyroscope/flamegraph": "0.21.4"
+    "@pyroscope/flamegraph": "0.21.4",
+    "antd": "3.26.20"
   },
   "devDependencies": {
     "@next/bundle-analyzer": "^10.0.4",
