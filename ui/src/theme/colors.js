@@ -1,5 +1,6 @@
 import { extendTheme } from "@chakra-ui/react"
 const theme = extendTheme()
+
 const  customColors = {
     borderColor: {
         light: theme.colors.gray['200'], 
@@ -30,7 +31,20 @@ const  customColors = {
     bodyBg: {
         light: '#fff',
         dark: '#1A202C'
-    }
+    },
+    primaryColor: {
+        light: theme.colors.cyan['600'], 
+        dark: theme.colors.cyan['600']
+    },
+    popperBg: {
+        light: '#fff',
+        dark: theme.colors.gray['700']
+    },
+    tooltipBg: {
+        light: theme.colors.gray['600'],
+        dark: theme.colors.gray['700']
+    },
+    
 }
 
 export default customColors

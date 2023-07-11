@@ -14,8 +14,10 @@
 
 import sitePrefix from './site-prefix';
 
-
-const origin = window.location.origin;
+let origin; 
+if (typeof window !== 'undefined') {
+  origin = window.location.origin;
+}
 
 /**
  * Generate the URL prefix from `sitePrefix` and use it for all subsequent calls

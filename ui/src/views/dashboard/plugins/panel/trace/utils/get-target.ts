@@ -1,4 +1,4 @@
-// Copyright (c) 2018 Uber Technologies, Inc.
+// Copyright (c) 2023 The Jaeger Authors
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -12,16 +12,12 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-// Per the resolution of https://github.com/jaegertracing/jaeger-ui/issues/42,
-// package.json#homepage is set to "." and the document MUST have a <base>
-// element to define a usable base URL.
+import { getConfigValue } from '../config/get-config';
 
+export function getTargetEmptyOrBlank() {
+  return getConfigValue('forbidNewPage') ? '' : '_blank';
+}
 
-let sitePrefix
-if (typeof window !== 'undefined') {
-    sitePrefix = `${window.location.origin}/`;
-  }
-
-
-
-export default sitePrefix;
+export function getTargetBlankOrTop() {
+  return getConfigValue('forbidNewPage') ? '_top' : '_blank';
+}

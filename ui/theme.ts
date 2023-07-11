@@ -54,6 +54,7 @@ const customTheme = extendTheme(
                     ...customClasses(props),
                     p: {
                         wordBreak: "break-word",
+                        marginBottom: '0 !important'
                     },
                     ...markdownRender(props),
 
