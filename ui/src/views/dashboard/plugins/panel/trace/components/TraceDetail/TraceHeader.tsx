@@ -50,10 +50,10 @@ const TraceDetailHeader = ({ trace, viewRange, updateNextViewRangeTime, updateVi
                     </HStack>)}
                 <RadionButtons theme="brand" fontSize="0.7rem" spacing={0} value={viewType} onChange={v => onViewTypeChange(v)} options={[
                     { label: "Timeline", value: ETraceViewType.TraceTimelineViewer },
+                    { label: "Flame", value: ETraceViewType.TraceFlamegraph },
                     { label: "Graph", value: ETraceViewType.TraceGraph },
                     { label: "Spans", value: ETraceViewType.TraceSpansView },
                     { label: "Stats", value: ETraceViewType.TraceStatistics },
-                    { label: "Flame", value: ETraceViewType.TraceFlamegraph },
                     { label: "JSON", value: ETraceViewType.TraceJSON },
                 ]} />
                 <ColorModeSwitcher />
