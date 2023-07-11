@@ -1837,6 +1837,11 @@
   dependencies:
     "@babel/runtime" "^7.0.0"
 
+"@pyroscope/flamegraph@0.21.4":
+  version "0.21.4"
+  resolved "https://registry.yarnpkg.com/@pyroscope/flamegraph/-/flamegraph-0.21.4.tgz#4b185854ee50767d5279baa16b58a29f9fcb3de1"
+  integrity sha512-/wkTHhBNapnnuLWQ40PyHa1pz8jVMmiLYO12Ak7qq1JhgVEccE39XrQMTkcFlM4FdpqM4/1w6U7fm4xebUAzZw==
+
 "@react-dnd/asap@^4.0.0":
   version "4.0.1"
   resolved "https://registry.yarnpkg.com/@react-dnd/asap/-/asap-4.0.1.tgz#5291850a6b58ce6f2da25352a64f1b0674871aab"

@@ -6,7 +6,7 @@ import { Trace } from "types/plugins/trace";
 
 const TraceJSON = ({ trace }: { trace: Trace }) => {
     const [hideLogs, setHideLogs] = useState(false)
-    const [hideRefs, setHideRefs] = useState(false)
+    const [hideRefs, setHideRefs] = useState(true)
 
     const onHideLogs = () => {
         setHideLogs(!hideLogs)
@@ -28,14 +28,13 @@ const TraceJSON = ({ trace }: { trace: Trace }) => {
         })
     }
 
-    const v = JSON.stringify(filterTrace, null, 2)
     return <Box height="calc(100vh - 123px)">
         <HStack py="2">
             <Button size="sm" variant={hideLogs ? "solid" : "outline"} onClick={onHideLogs}>Hide span logs</Button>
             <Button size="sm" variant={hideRefs ? "solid" : "outline"} onClick={onHideRefs}>Hide span references</Button>
         </HStack>
         <Box height="100%">
-            <CodeEditor value={v} onChange={v => null} language="json" readonly />
+            <CodeEditor value={JSON.stringify(filterTrace, null, 2)} onChange={v => null} language="json" readonly />
         </Box>
     </Box>
 }

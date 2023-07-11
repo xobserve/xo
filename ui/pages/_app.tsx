@@ -24,6 +24,8 @@ import "src/views/dashboard/plugins/panel/trace/components/TraceDetail/TraceTime
 import "src/views/dashboard/plugins/panel/trace/components/TraceDetail/TraceTimeline/TimelineRow.css"
 import "src/views/dashboard/plugins/panel/trace/components/TraceDetail/TraceGraph/TraceGraph.css"
 import "src/views/dashboard/plugins/panel/trace/components/TraceDetail/TraceGraph/OpNode.css"
+import '@pyroscope/flamegraph/dist/index.css';
+
 dynamic(import("echarts/extension/bmap/bmap"), { ssr: false });
 
 const App =  dynamic(async () => (props) => {  

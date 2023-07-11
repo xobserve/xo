@@ -13,13 +13,14 @@ import filterSpans from "../../utils/filter-spans";
 import calculateTraceDagEV from "./TraceGraph/calculateTraceDageEV";
 import TraceGraph from "./TraceGraph/TraceGraph";
 import TraceJSON from "./TraceJSON";
+import TraceFlamegraph from "./TraceFlameGraph";
 
 interface Props {
     trace: Trace
     scrollManager: ScrollManager
 }
 const TraceDetail = ({ trace, scrollManager }: Props) => {
-    const [viewType, setViewType] = useState<ETraceViewType>(ETraceViewType.TraceGraph)
+    const [viewType, setViewType] = useState<ETraceViewType>(ETraceViewType.TraceJSON)
     const [viewRange, setViewRange] = useState<IViewRange>({
         time: {
             current: [0, 1],
@@ -93,6 +94,9 @@ const TraceDetail = ({ trace, scrollManager }: Props) => {
         case ETraceViewType.TraceJSON:
             view = <TraceJSON trace={trace} />
             break;
+        case ETraceViewType.TraceFlamegraph:
+            view = <TraceFlamegraph trace={trace}/>
+            break
         default: 
             view = <></>
             break
