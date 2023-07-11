@@ -34,10 +34,10 @@ const TraceDetailHeader = ({ trace, viewRange, updateNextViewRangeTime, updateVi
             <HStack>
                 <CollapseIcon collapsed={collapsed} onClick={onGraphCollapsed}/>
                 <Text>{trace.traceName}</Text>
-                <Text>{trace.traceID.slice(0, 7)}</Text>
+                <Text textStyle="annotation">{trace.traceID.slice(0, 7)}</Text>
             </HStack>
-            <HStack>
-                <HStack spacing={0}>
+            <HStack spacing={1}>
+                {viewType == ETraceViewType.TraceJSON ? <Text fontSize="0.95rem" layerStyle="gradientText" mr="20px">Click code area and Press Command+F to search </Text> : <HStack spacing={0}>
                     <HStack spacing={0} position="relative">
                     <Input width="240px" placeholder="Search.." value={search} onChange={e => onSearchChange(e.currentTarget.value)}/>
                     <Text textStyle="annotation" width="30px" position="absolute" right="0" mt="2px">{searchCount}</Text>
@@ -45,13 +45,14 @@ const TraceDetailHeader = ({ trace, viewRange, updateNextViewRangeTime, updateVi
                     {viewType == ETraceViewType.TraceTimelineViewer && <><IconButton   onClick={prevResult} isDisabled={search == ''} fontSize="1rem"><AiOutlineUp /></IconButton>
                     <IconButton  onClick={nextResult} isDisabled={search == ''} fontSize="1rem"><AiOutlineDown /></IconButton></>}
                     {/* <Button size="sm" variant="outline" onClick={prevResult} isDisabled={search == ''}></Button> */}
-                </HStack>
-                <RadionButtons fontSize="0.8rem" spacing={0} value={viewType} onChange={v => onViewTypeChange(v)} options={[
+                </HStack>}
+                <RadionButtons fontSize="0.7rem" spacing={0} value={viewType} onChange={v => onViewTypeChange(v)} options={[
                     {label: "Timeline", value:ETraceViewType.TraceTimelineViewer },
                     {label: "Graph", value:ETraceViewType.TraceGraph },
                     {label: "Spans", value:ETraceViewType.TraceSpansView },
                     {label: "Stats", value:ETraceViewType.TraceStatistics },
-                    {label: "Flame", value:ETraceViewType.TraceFlamegraph }
+                    {label: "Flame", value:ETraceViewType.TraceFlamegraph },
+                    {label: "JSON", value:ETraceViewType.TraceJSON },
                 ]} />
                 <ColorModeSwitcher />
             </HStack>

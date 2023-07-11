@@ -12,6 +12,7 @@ import { get, memoize } from "lodash";
 import filterSpans from "../../utils/filter-spans";
 import calculateTraceDagEV from "./TraceGraph/calculateTraceDageEV";
 import TraceGraph from "./TraceGraph/TraceGraph";
+import TraceJSON from "./TraceJSON";
 
 interface Props {
     trace: Trace
@@ -89,8 +90,12 @@ const TraceDetail = ({ trace, scrollManager }: Props) => {
                   uiFindVertexKeys={spanFindMatches}
                 />
             break
-        default:
+        case ETraceViewType.TraceJSON:
+            view = <TraceJSON trace={trace} />
             break;
+        default: 
+            view = <></>
+            break
     }
     return (<Box overflowY="scroll" minH="100vh">
         <Box position="fixed" width="100%" bg={useColorModeValue('#fff', customColors.bodyBg.dark)} zIndex="1000">
