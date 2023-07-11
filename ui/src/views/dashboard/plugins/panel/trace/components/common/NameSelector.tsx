@@ -130,12 +130,12 @@ export default class NameSelector extends React.PureComponent<TProps, TState> {
         visible={popoverVisible}
       >
         <h2 className={rootCls}>
-          {useLabel && <span className="NameSelector--label">{label}:</span>}
+          {useLabel && <span className="NameSelector--label" style={{opacity: 0.7, fontSize: '0.9rem'}}>{label}:</span>}
           <BreakableText className="NameSelector--value" text={text} />
-          <AiOutlineDown className="NameSelector--chevron" />
+          <AiOutlineDown style={{display: "inline-block"}} className="NameSelector--chevron" />
           {!required && value && (
             //@ts-ignore
-            <FaTimes onClick={this.clearValue} />
+            <FaTimes style={{display: 'inline-block',marginBottom: '-2px',opacity:0.7,fontSize:'0.9rem'}} onClick={this.clearValue} />
           )}
         </h2>
       </Popover>

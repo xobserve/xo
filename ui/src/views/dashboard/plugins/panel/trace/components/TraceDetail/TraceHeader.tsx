@@ -48,7 +48,7 @@ const TraceDetailHeader = ({ trace, viewRange, updateNextViewRangeTime, updateVi
                             <IconButton onClick={nextResult} isDisabled={search == ''} fontSize="1rem"><AiOutlineDown /></IconButton></>}
                         {/* <Button size="sm" variant="outline" onClick={prevResult} isDisabled={search == ''}></Button> */}
                     </HStack>)}
-                <RadionButtons fontSize="0.7rem" spacing={0} value={viewType} onChange={v => onViewTypeChange(v)} options={[
+                <RadionButtons theme="brand" fontSize="0.7rem" spacing={0} value={viewType} onChange={v => onViewTypeChange(v)} options={[
                     { label: "Timeline", value: ETraceViewType.TraceTimelineViewer },
                     { label: "Graph", value: ETraceViewType.TraceGraph },
                     { label: "Spans", value: ETraceViewType.TraceSpansView },

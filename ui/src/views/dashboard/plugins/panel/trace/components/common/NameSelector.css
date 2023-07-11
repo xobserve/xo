@@ -33,17 +33,11 @@ limitations under the License.
   }
   
   .NameSelector:hover {
-    background: #f4f4f4;
     border-color: #ccc;
-    color: var(--tx-color-body);
-    outline-color: #f4f4f4;
   }
   
   .NameSelector.is-active {
-    background: #ddd;
     border-color: #bbb;
-    color: var(--tx-color-body);
-    outline-color: #ddd;
   }
   
   .NameSelector--label {
@@ -73,6 +67,7 @@ limitations under the License.
     border: 1px solid #999;
     z-index: -1;
     background: #bbb;
+    display: none;
   }
   
   .NameSelector--overlay .ant-popover-inner {
