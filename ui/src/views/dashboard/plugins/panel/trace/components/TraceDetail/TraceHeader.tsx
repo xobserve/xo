@@ -15,9 +15,12 @@ interface Props {
     updateViewRangeTime: any
     collapsed: boolean
     onGraphCollapsed: any
+    search: string 
+    onSearchChange: any
+    searchCount: number
 }
 
-const TraceDetailHeader = ({ trace, viewRange, updateNextViewRangeTime, updateViewRangeTime,collapsed, onGraphCollapsed}: Props) => {
+const TraceDetailHeader = ({ trace, viewRange, updateNextViewRangeTime, updateViewRangeTime,collapsed, onGraphCollapsed, search, onSearchChange}: Props) => {
 
     return (<>
         <Flex justifyContent="space-between" alignItems="center">
@@ -27,7 +30,7 @@ const TraceDetailHeader = ({ trace, viewRange, updateNextViewRangeTime, updateVi
                 <Text>{trace.traceID.slice(0, 7)}</Text>
             </HStack>
             <HStack>
-                <Input placeholder="Search.." />
+                <Input placeholder="Search.." value={search} onChange={e => onSearchChange(e.currentTarget.value)}/>
                 <Select>
                     <option>Trace Timeline</option>
                 </Select>

@@ -3,7 +3,7 @@ import { DatasourceType, PanelProps } from "types/dashboard"
 import TraceSearchPanel from "./components/SearchPanel"
 import logfmtParser from 'logfmt/lib/logfmt_parser';
 import { queryJaegerTrace, queryJaegerTraces } from "../../datasource/jaeger/query_runner"
-import {  useMemo, useState } from "react"
+import { useMemo, useState } from "react"
 import { TraceData } from "types/plugins/trace"
 import TraceSearchResult from "./components/SearchResult"
 import transformTraceData from "./utils/transform-trace-data"
@@ -21,19 +21,19 @@ const TracePanel = (props: PanelProps) => {
                 min = replaceWithVariables(min)
                 max = replaceWithVariables(max)
                 limit = replaceWithVariables(limit)
-                const services =  replaceWithVariablesHasMultiValues(service)
+                const services = replaceWithVariablesHasMultiValues(service)
                 const operations = replaceWithVariablesHasMultiValues(operation, "all")
-                
+
                 const promises = []
                 for (const s of services) {
                     for (const o of operations) {
-                        promises.push(queryJaegerTraces(props.panel.datasource.id,props.timeRange, s, o, tags, min, max, limit))
+                        promises.push(queryJaegerTraces(props.panel.datasource.id, props.timeRange, s, o, tags, min, max, limit))
                     }
                 }
                 const res = await Promise.all(promises)
-                setRawTraces(uniqBy(res.filter(r => r).flat(), t =>  t.traceID))
+                setRawTraces(uniqBy(res.filter(r => r).flat(), t => t.traceID))
                 break;
-        
+
             default:
                 setRawTraces([])
                 break;
@@ -46,28 +46,28 @@ const TracePanel = (props: PanelProps) => {
         switch (props.panel.datasource.type) {
             case DatasourceType.Jaeger:
                 Promise.all(ids.map(id => queryJaegerTrace(props.panel.datasource.id, id))).then(res => {
-                    setRawTraces(res.filter(r => r ).flat())
+                    setRawTraces(res.filter(r => r).flat())
                 })
                 break;
-        
+
             default:
                 setRawTraces([])
                 break;
         }
-   
-        
+
+
     }
 
-    const traces = useMemo(() => rawTraces?.map(transformTraceData), [rawTraces]) 
-    
+    const traces = useMemo(() => rawTraces?.map(transformTraceData), [rawTraces])
+
     return (<>
         {props.panel.datasource.type != DatasourceType.Jaeger ? <Center height="100%">No data</Center> :
             <HStack alignItems="top" px="2" py="1">
                 <Box width="400px" pt="2" pl="1">
-                    <TraceSearchPanel timeRange={props.timeRange}  dashboardId={props.dashboardId} panel={props.panel} onSearch={onSearch} onSearchIds={onSearchIds}/>
+                    <TraceSearchPanel timeRange={props.timeRange} dashboardId={props.dashboardId} panel={props.panel} onSearch={onSearch} onSearchIds={onSearchIds} />
                 </Box>
                 <Box width="calc(100% - 300px)">
-                {traces  && <TraceSearchResult traces={traces}  panel={props.panel} timeRange={props.timeRange} />}
+                    {traces && <TraceSearchResult traces={traces} panel={props.panel} timeRange={props.timeRange} />}
                 </Box>
             </HStack>}
     </>)

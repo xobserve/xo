@@ -14,9 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-.span-row.is-matching-filter {
-    background-color: #fffce4;
-  }
+
   
   .span-name-column {
     position: relative;
@@ -43,10 +41,7 @@ limitations under the License.
     overflow: hidden;
     display: flex;
   }
-  
-  .span-name-wrapper.is-matching-filter {
-    background-color: #fffce4;
-  }
+
   
   .span-name-wrapper:hover {
     border-right: 1px solid #bbb;
@@ -54,17 +49,39 @@ limitations under the License.
     min-width: calc(100% + 1px);
     overflow: visible;
   }
-  
+
+  .span-row.is-matching-filter {
+    background-color: #fffce4;
+  }
+    
+  .span-name-wrapper.is-matching-filter {
+    background-color: #fffce4;
+    color: #000
+  }
+
   .span-row.is-matching-filter:hover .span-name-wrapper {
     background: linear-gradient(90deg, #fff5e1, #fff5e1 75%, #ffe6c9);
   }
   
-
-  
   .span-row.is-expanded .span-name-wrapper.is-matching-filter {
-    background: #fff3d7;
+    background: #fff3d7 !important;
   }
   
+  .span-row.is-matching-filter:hover .span-view {
+    background-color: #fff3d7 !important;
+    /* outline: 1px solid #ddd; */
+  }
+  
+  
+  .span-row.is-expanded.is-matching-filter .span-view {
+    background: #fff3d7 !important;
+    /* outline: 1px solid #ddd; */
+  }
+    
+  .span-row.is-expanded.is-matching-filter:hover .span-view {
+    background: #ffeccf;
+  }
+
   .span-name {
     cursor: pointer;
     flex: 1 1 auto;
@@ -130,24 +147,11 @@ limitations under the License.
   }
   
   
-  .span-row.is-matching-filter:hover .span-view {
-    background-color: #fff3d7;
-    outline: 1px solid #ddd;
-  }
-  
-  
-  .span-row.is-expanded.is-matching-filter .span-view {
-    background: #fff3d7;
-    outline: 1px solid #ddd;
-  }
-  
+ 
   .span-row.is-expanded:hover .span-view {
     background: #eee;
   }
-  
-  .span-row.is-expanded.is-matching-filter:hover .span-view {
-    background: #ffeccf;
-  }
+
   
   .span-row.clipping-right .span-view::before {
     content: ' ';

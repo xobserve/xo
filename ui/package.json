@@ -78,7 +78,8 @@
     "viz.js": "1.8.1",
     "tween-functions": "^1.2.0",
     "recompose": "^0.30.0",
-    "lru-memoize": "^1.1.0"
+    "lru-memoize": "^1.1.0",
+    "drange": "^2.0.0"
   },
   "devDependencies": {
     "@next/bundle-analyzer": "^10.0.4",

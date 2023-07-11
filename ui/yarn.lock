@@ -3196,6 +3196,11 @@ dot-prop@^5.2.0:
   dependencies:
     is-obj "^2.0.0"
 
+drange@^2.0.0:
+  version "2.0.1"
+  resolved "https://registry.yarnpkg.com/drange/-/drange-2.0.1.tgz#a1d831c5216359cd0993730b77d140ef3a3734e9"
+  integrity sha512-s/Gs2VG0zdUXxWz4cK3vcwniF914RKWLNYY6YAVTTLo2HjqsynfUzUcSvNFEdktQXKDbJMKF9wmg67Rv32VhEQ==
+
 duplexer3@^0.1.4:
   version "0.1.5"
   resolved "https://registry.yarnpkg.com/duplexer3/-/duplexer3-0.1.5.tgz#0b5e4d7bad5de8901ea4440624c8e1d20099217e"

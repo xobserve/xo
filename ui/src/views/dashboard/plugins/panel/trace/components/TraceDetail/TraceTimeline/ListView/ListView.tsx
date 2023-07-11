@@ -436,7 +436,7 @@ export default class ListView extends React.Component<TListViewProps> {
       const { y: top, height } = this._yPositions.getRowPosition(i, heightGetter);
       const style = {
         height,
-        top,
+        top: top - i,
         position: 'absolute',
       };
       const itemKey = getKeyFromIndex(i);
@@ -454,7 +454,7 @@ export default class ListView extends React.Component<TListViewProps> {
     }
     const scrollerStyle = {
       position: 'relative' as 'relative',
-      height: this._yPositions.getEstimatedHeight(),
+      height: this._yPositions.getEstimatedHeight() - (end-start),
     };
     return (
       <div {...wrapperProps}>
