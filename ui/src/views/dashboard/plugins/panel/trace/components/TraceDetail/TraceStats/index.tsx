@@ -21,7 +21,6 @@ import TraceStatisticsHeader from './TraceStatsHeader';
 import { ITableSpan } from './types';
 import { TNil } from 'types/misc';
 import PopupSQL from './PopupSql';
-import AntdWrapper from 'components/AntdWrapper';
 import { Box } from '@chakra-ui/react';
 
 type Props = {
@@ -99,18 +98,11 @@ const columnsArray: any[] = [
   },
 ];
 
-const TraceStatsWrapper = (props: any) => {
-  return (
-    <AntdWrapper><TraceStatistics {...props} /></AntdWrapper>
-  )
-}
-
-export default TraceStatsWrapper;
 
 /**
  * Trace Tag Overview Component
  */
-class TraceStatistics extends Component<Props, State> {
+export default class TraceStatistics extends Component<Props, State> {
   constructor(props: any) {
     super(props);
 

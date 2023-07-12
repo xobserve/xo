@@ -64,18 +64,6 @@ limitations under the License.
   
 
   
-  .SpanBar--logMarker {
-    background-color: rgba(0, 0, 0, 0.5);
-    cursor: pointer;
-    height: 60%;
-    min-width: 1px;
-    position: absolute;
-    top: 20%;
-  }
-  
-  .SpanBar--logMarker:hover {
-    background-color: #000;
-  }
   
   .SpanBar--logMarker::before,
   .SpanBar--logMarker::after {

@@ -22,8 +22,8 @@ import { ViewedBoundsFunctionType } from '../utils';
 import { TNil } from 'types/misc';
 import { TraceSpan } from 'types/plugins/trace';
 import AccordianLogs from './SpanDetail/AccordianLogs';
-import { Popover, PopoverArrow, PopoverBody, PopoverContent, PopoverTrigger } from '@chakra-ui/react';
-
+import { Popover } from 'antd';
+import { Box, useColorModeValue } from '@chakra-ui/react';
 
 type TCommonProps = {
     color: string;
@@ -102,21 +102,31 @@ function SpanBar(props: TInnerProps) {
             </div>
             <div>
                 {Object.keys(logGroups).map(positionKey => (
-                    <Popover key={positionKey}>
-                        <PopoverTrigger>
-                            <div className="SpanBar--logMarker" style={{ left: positionKey }} />
-                        </PopoverTrigger>
-                        <PopoverContent>
-                            <PopoverArrow />
-                            <PopoverBody>
-                                <AccordianLogs
-                                    interactive={false}
-                                    isOpen
-                                    logs={logGroups[positionKey]}
-                                    timestamp={traceStartTime}
-                                />
-                            </PopoverBody>
-                        </PopoverContent>
+                    <Popover
+                        key={positionKey}
+                        arrow={{
+                            pointAtCenter: true
+                        }}
+                        overlayClassName="SpanBar--logHint"
+                        placement="topLeft"
+                        content={
+                            <AccordianLogs
+                                interactive={false}
+                                isOpen
+                                logs={logGroups[positionKey]}
+                                timestamp={traceStartTime}
+                            />
+                        }
+                    >
+                        <Box  width="20px" display="inline-block" position="absolute" height="60%" top="20%" left={positionKey} textAlign="center">
+                            <Box className="SpanBar--logMarker"
+                                display="inline-block"
+                                _hover={{ bg: 'orange' }}
+                                bg={useColorModeValue('rgba(0, 0, 0, 0.3)', 'rgba(255, 255, 255, 0.7)')}
+                                cursor='pointer'
+                                height='100%'
+                                width='1.5px' />
+                        </Box>
                     </Popover>
                 ))}
             </div>

@@ -21,7 +21,6 @@ import { Trace, TraceSpan } from 'types/plugins/trace';
 import { timeConversion } from '../../../utils/date';
 import { getTargetEmptyOrBlank } from '../../../utils/get-target';
 import { Box, Button, Flex, HStack, Link, Text } from '@chakra-ui/react';
-import AntdWrapper from 'components/AntdWrapper';
 
 const Option = Select.Option;
 
@@ -50,13 +49,11 @@ type State = {
     filteredData: TraceSpan[];
 };
 
-const TraceSpanViewWraper = (props: Props) => {
-   return <AntdWrapper><TraceSpanView {...props} /></AntdWrapper>
-}
 
-export default TraceSpanViewWraper;
 
-class TraceSpanView extends Component<Props, State> {
+
+
+export default class TraceSpanView extends Component<Props, State> {
     constructor(props: Props, state: State) {
         super(props, state);
         const serviceNamesList = new Set<string>();

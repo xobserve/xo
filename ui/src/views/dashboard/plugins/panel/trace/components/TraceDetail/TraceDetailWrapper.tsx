@@ -7,6 +7,7 @@ import TraceDetail from "./TraceDetail"
 import transformTraceData from "../../utils/transform-trace-data"
 import ScrollManager from "./scroll/scrollManager"
 import { cancel as cancelScroll, scrollBy, scrollTo } from './scroll/scrollPage';
+import AntdWrapper from "components/AntdWrapper"
 
 const TraceDetailWrapper = ({id,dsId}) => {
     const [trace, setTrace] = useState<Trace>(null)
@@ -47,9 +48,9 @@ const TraceDetailWrapper = ({id,dsId}) => {
         setScrollManager(sm)
     }
 
-    return (<>
+    return (<AntdWrapper>
         {trace && scrollManager && <TraceDetail trace={trace} scrollManager={scrollManager}/>}
-    </>)
+    </AntdWrapper>)
 }
 
 export default TraceDetailWrapper
