@@ -57,10 +57,10 @@ export interface IViewRange {
 }
 
 export enum ETraceViewType {
-  TraceTimelineViewer = 'TraceTimelineViewer',
-  TraceGraph = 'TraceGraph',
-  TraceStatistics = 'TraceStatistics',
-  TraceSpansView = 'TraceSpansView',
-  TraceFlamegraph = 'TraceFlamegraph',
-  TraceJSON = "TraceJSON",
+  TraceTimelineViewer = 'TimelineViewer',
+  TraceGraph = 'NodeGraph',
+  TraceStatistics = 'Statistics',
+  TraceSpansView = 'SpansView',
+  TraceFlamegraph = 'FlameGraph',
+  TraceJSON = "JSON",
 }

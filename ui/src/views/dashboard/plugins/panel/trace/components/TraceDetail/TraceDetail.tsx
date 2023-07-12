@@ -17,25 +17,34 @@ import TraceFlamegraph from "./TraceFlameGraph";
 import TraceSpanView from "./TraceSpanTable";
 import TraceStatistics from "./TraceStats";
 import { useSearchParam } from "react-use";
+import { addParamToUrl } from "utils/url";
 
 interface Props {
     trace: Trace
     scrollManager: ScrollManager
 }
 const TraceDetail = ({ trace, scrollManager }: Props) => {
-    const [viewType, setViewType] = useState<ETraceViewType>(ETraceViewType.TraceTimelineViewer)
+    const search = useSearchParam('search')
+    const view = useSearchParam("view")
+    const [viewType, setViewType] = useState<ETraceViewType>(view as any ?? ETraceViewType.TraceTimelineViewer)
     const [viewRange, setViewRange] = useState<IViewRange>({
         time: {
             current: [0, 1],
         },
     })
     const [collapsed, setCollapsed] = useState(true)
-    
-    const search = useSearchParam('search')
+
 
     useEffect(() => {
         scrollManager.setTrace(trace);
     }, [])
+
+    const onViewTypeChange = (type: ETraceViewType) => {
+        addParamToUrl({
+            view: type
+        })
+        setViewType(type)
+    }
     const updateNextViewRangeTime = (update: ViewRangeTimeUpdate) => {
         const time = { ...viewRange.time, ...update };
         setViewRange({ ...viewRange, time });
@@ -77,10 +86,10 @@ const TraceDetail = ({ trace, scrollManager }: Props) => {
         return sfm
     },[search])
 
-    let view
+    let viewComponent
     switch (viewType) {
         case ETraceViewType.TraceTimelineViewer:
-            view = <TraceTimeline
+            viewComponent = <TraceTimeline
                 registerAccessors={scrollManager.setAccessors}
                 scrollToFirstVisibleSpan={scrollManager.scrollToFirstVisibleSpan}
                 findMatchesIDs={spanFindMatches}
@@ -92,7 +101,7 @@ const TraceDetail = ({ trace, scrollManager }: Props) => {
             />
             break;
         case ETraceViewType.TraceGraph:
-            view = 
+            viewComponent = 
                 <TraceGraph
                   ev={traceDagEV}
                   search={search}
@@ -100,27 +109,27 @@ const TraceDetail = ({ trace, scrollManager }: Props) => {
                 />
             break
         case ETraceViewType.TraceJSON:
-            view = <TraceJSON trace={trace} />
+            viewComponent = <TraceJSON trace={trace} />
             break;
         case ETraceViewType.TraceFlamegraph:
-            view = <TraceFlamegraph trace={trace}/>
+            viewComponent = <TraceFlamegraph trace={trace}/>
             break
         case ETraceViewType.TraceSpansView:
-            view = <TraceSpanView trace={trace} uiFindVertexKeys={spanFindMatches} uiFind={search}/>
+            viewComponent = <TraceSpanView trace={trace} uiFindVertexKeys={spanFindMatches} uiFind={search}/>
             break
         case ETraceViewType.TraceStatistics:
-            view = <TraceStatistics trace={trace} uiFindVertexKeys={spanFindMatches} uiFind={search}/>
+            viewComponent = <TraceStatistics trace={trace} uiFindVertexKeys={spanFindMatches} uiFind={search}/>
             break
         default: 
-            view = <></>
+        viewComponent = <></>
             break
     }
     return (<Box position="absolute"  minH="100vh" width="100%">
         <Box position="fixed" width="100%" bg={useColorModeValue('#fff', customColors.bodyBg.dark)} zIndex="1000">
-            <TraceDetailHeader trace={trace} viewRange={viewRange} updateNextViewRangeTime={updateNextViewRangeTime} updateViewRangeTime={updateViewRangeTime} onGraphCollapsed={() => setCollapsed(!collapsed)} collapsed={collapsed}  searchCount={findCount} prevResult={prevResult} nextResult={nextResult} onViewTypeChange={setViewType} viewType={viewType} search={search} />
+            <TraceDetailHeader trace={trace} viewRange={viewRange} updateNextViewRangeTime={updateNextViewRangeTime} updateViewRangeTime={updateViewRangeTime} onGraphCollapsed={() => setCollapsed(!collapsed)} collapsed={collapsed}  searchCount={findCount} prevResult={prevResult} nextResult={nextResult} onViewTypeChange={onViewTypeChange} viewType={viewType} search={search} />
         </Box>
         <Box mt={collapsed ? "67px" : "144px"} >
-            {view}
+            {viewComponent}
 
         </Box>
     </Box>)

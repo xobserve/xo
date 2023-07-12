@@ -21,6 +21,7 @@ import { getColumnValues, getColumnValuesSecondDropdown } from './tableValues';
 
 import generateColor from './generateColor';
 import NameSelector from '../../common/NameSelector';
+import { Box } from '@chakra-ui/react';
 
 type Props = {
   trace: Trace;
@@ -210,7 +211,7 @@ export default class TraceStatisticsHeader extends Component<Props, State> {
     );
 
     return (
-      <div className="TraceStatisticsHeader">
+      <Box className="TraceStatisticsHeader" py="3">
         <NameSelector
           label="Group By"
           placeholder={false}
@@ -241,7 +242,7 @@ export default class TraceStatisticsHeader extends Component<Props, State> {
         <div className="checkbox--TraceStatisticsHeader">
           <Checkbox onChange={this.checkboxButton} />
         </div>
-      </div>
+      </Box>
     );
   }
 }
