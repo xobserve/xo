@@ -1,3 +1,4 @@
+import React from 'react'
 import {  FaBell, FaConnectdevelop, FaDatabase, FaHome,FaRegChartBar, FaTerminal, FaThLarge, FaUser, FaUserEdit, FaUsersCog } from 'react-icons/fa'
 import { Route } from 'types/route'
 

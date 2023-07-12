@@ -1,6 +1,5 @@
-import getConfig from 'next/config'
 import { isDev  } from './utils'
-const { publicRuntimeConfig } = getConfig()
+
 
 type APIS = {
   target: string
@@ -21,7 +20,7 @@ const apis = ({
     target: 'xxx.xxx.xxx',
     allowOrigin: '*',
   },
-} as Record<string, APIS>)[publicRuntimeConfig.env.NODE_ENV]
+} as Record<string, APIS>)[process.env.NODE_ENV]
 
 export const ApiConfig = {
   /**

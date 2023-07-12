@@ -1,4 +1,6 @@
 //@ts-nocheck
+import React from "react"
+
 export function loadBMap(ak) {
     return new Promise(function (resolve, reject) {
         if (typeof BMap !== 'undefined') {

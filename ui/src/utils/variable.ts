@@ -6,7 +6,7 @@ import { replaceJaegerQueryWithVariables } from "src/views/dashboard/plugins/dat
 import { variables } from "src/views/dashboard/Dashboard";
 import { replaceHttpQueryWithVariables } from "src/views/dashboard/plugins/datasource/http/query_runner";
 import { VariableSplitChar, VarialbeAllOption } from "src/data/variable";
-import { gvariables } from "src/views/App";
+import { gvariables } from "src/App";
 import { isEmpty } from "lodash";
 
 export const hasVariableFormat = (s: string) => {

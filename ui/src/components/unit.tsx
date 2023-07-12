@@ -3,6 +3,7 @@ import { cloneDeep, isEmpty, round } from "lodash"
 import { useState } from "react"
 import { FaArrowUp, FaMinus, FaPlus } from "react-icons/fa"
 import { UnitsType, Unit } from "types/panel/plugins"
+import React from "react"
 
 interface Props {
     type: UnitsType

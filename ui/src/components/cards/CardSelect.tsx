@@ -1,4 +1,6 @@
+import React from "react"
 import { Box, Card, CardBody, CardHeader, Stack, StackDivider } from "@chakra-ui/react"
+
 
 
 interface Props {

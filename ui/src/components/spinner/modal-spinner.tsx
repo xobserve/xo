@@ -1,3 +1,4 @@
+import React from "react"
 import { Modal, ModalContent, ModalOverlay, Text } from "@chakra-ui/react"
 
 interface Props {

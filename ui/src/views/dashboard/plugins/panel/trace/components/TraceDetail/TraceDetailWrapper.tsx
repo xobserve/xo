@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react"
 import { Trace } from "types/plugins/trace"
 import { queryJaegerTrace } from "../../../../datasource/jaeger/query_runner"
-import { datasources } from "src/views/App"
+import { datasources } from "src/App"
 import { DatasourceType } from "types/dashboard"
 import TraceDetail from "./TraceDetail"
 import transformTraceData from "../../utils/transform-trace-data"

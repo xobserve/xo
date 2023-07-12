@@ -1,6 +1,6 @@
-import { Box, Flex, HStack, StackDivider, StyleProps, Text, Tooltip, VStack } from "@chakra-ui/react"
+import { Box, HStack,  StyleProps, Text, Tooltip, VStack } from "@chakra-ui/react"
+import React from "react"
 import { IoMdInformationCircleOutline } from "react-icons/io"
-import { StyleSize } from "types/styles"
 
 interface FormProps {
     children: any

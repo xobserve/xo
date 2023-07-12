@@ -10,26 +10,24 @@ import {
     chakra
 } from "@chakra-ui/react"
 import useSession from "hooks/use-session"
-import { useRouter } from "next/router"
 import storage from "utils/localStorage"
 
 import { FaRegSun, FaUserAlt, FaSignOutAlt, FaStar, FaSignInAlt, FaFont } from "react-icons/fa"
 
 
-import Link from "next/link"
 import { isAdmin } from "types/role"
 import { lang } from "src/i18n"
 import { LangKey } from "src/data/storage-keys"
+import { Link, useLocation, useNavigate } from "react-router-dom"
 
 const UserMenu = ({fontSize="1.2rem"}) => {
     const { session, logout } = useSession()
-    const router = useRouter()
 
-
-
+    const navigate = useNavigate()
+    const location = useLocation()
     const login = () => {
-        storage.set("current-page", router.asPath)
-        router.push('/login')
+        storage.set("current-page", location.pathname)
+        navigate('/login')
     }
 
     const changeLang = () => {
@@ -60,9 +58,9 @@ const UserMenu = ({fontSize="1.2rem"}) => {
                             <chakra.span ml="2" layerStyle="textSecondary">{session.user.username}</chakra.span>
                         </MenuItem>
                         <MenuDivider />
-                        {isAdmin(session.user.role) && <><Link href={`/admin`}><MenuItem icon={<FaStar fontSize="1rem" />} >Admin Panel</MenuItem></Link><MenuDivider /></>}
+                        {isAdmin(session.user.role) && <><Link to={`/admin`}><MenuItem icon={<FaStar fontSize="1rem" />} >Admin Panel</MenuItem></Link><MenuDivider /></>}
                         <MenuItem onClick={() => changeLang()} icon={<FaFont fontSize="1rem" />}>Current Lang - {lang == "en" ? "English" : "Chinese"}</MenuItem>
-                        <Link href={`/account/setting`}><MenuItem icon={<FaRegSun fontSize="1rem" />}>Account Setting</MenuItem></Link>
+                        <Link to={`/account/setting`}><MenuItem icon={<FaRegSun fontSize="1rem" />}>Account Setting</MenuItem></Link>
                         <MenuItem onClick={() => logout()} icon={<FaSignOutAlt fontSize="1rem" />}>Log out</MenuItem>
                         
                     </MenuList>

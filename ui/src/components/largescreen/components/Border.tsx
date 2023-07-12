@@ -14,6 +14,7 @@ import BorderBox8 from "components/largescreen/border/Border8"
 import BorderBox9 from "components/largescreen/border/Border9"
 import { useRef } from "react"
 import { PanelBorderType } from "types/panel/styles"
+import React from "react"
 
 const Border = ({ border, children,width,height }) => {
     const ref = useRef()

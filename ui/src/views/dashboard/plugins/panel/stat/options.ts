@@ -1,6 +1,6 @@
 import { isEmpty } from "lodash";
 import * as colorManipulator from 'components/uPlot/colorManipulator';
-import { canvasCtx } from 'src/views/App';
+import { canvasCtx } from 'src/App';
 import { PanelProps } from "types/dashboard";
 import uPlot from "uplot";
 import { pointsFilter } from "../graph/options";

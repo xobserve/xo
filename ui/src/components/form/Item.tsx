@@ -1,5 +1,6 @@
 import { Box, Flex, HStack, StyleProps, Text, Tooltip } from "@chakra-ui/react"
 import { IoMdInformationCircleOutline } from "react-icons/io"
+import React from "react"
 
 interface Props {
     title: any

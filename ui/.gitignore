@@ -7,6 +7,10 @@
 # public/
 
 node_modules/
+dist
+dist-ssr
+
+
 npm-debug.log
 npm-debug.log*
 *.log
@@ -81,8 +85,6 @@ typings/
 .env
 .env.*
 
-# Mac files
-.DS_Store
 
 # Yarn
 yarn-error.log
@@ -96,3 +98,16 @@ report.*
 
 # Contentlayer
 .contentlayer
+
+
+
+# Editor directories and files
+.vscode/*
+!.vscode/extensions.json
+.idea
+.DS_Store
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?

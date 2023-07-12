@@ -1,3 +1,4 @@
+import React from "react"
 import { useState, useCallback, useEffect, useRef, useImperativeHandle } from 'react'
 import { debounce, observerDomResize } from './utils'
 

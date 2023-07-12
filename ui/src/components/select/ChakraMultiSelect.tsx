@@ -1,3 +1,4 @@
+import React from "react"
 import { Select } from "chakra-react-select"
 import { SizeProp, Variant } from "chakra-react-select/dist/types/types"
 

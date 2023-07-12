@@ -3,6 +3,7 @@ import PageContainer from "layouts/page-container"
 import Link from "next/link"
 import customColors from "src/theme/colors"
 import { Route } from "types/route"
+import React from "react"
 
 interface Props {
     title: string

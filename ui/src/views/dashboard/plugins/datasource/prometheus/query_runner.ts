@@ -12,7 +12,7 @@ import { isJSON } from "utils/is"
 import { getInitTimeRange } from "components/DatePicker/TimePicker"
 
 import { PromDsQueryTypes } from "./VariableEditor"
-import { datasources, gtoast } from "src/views/App"
+import { datasources, gtoast } from "src/App"
 import { parseVariableFormat } from "utils/format"
 import { variables } from "src/views/dashboard/Dashboard"
 import { VariableSplitChar, VarialbeAllOption } from "src/data/variable"

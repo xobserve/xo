@@ -1,9 +1,8 @@
 import React from "react";
 
-import dynamic from "next/dynamic";
 import { useColorMode } from "@chakra-ui/react";
 import { editor } from "monaco-editor";
-const MonacoEditor = dynamic(import("react-monaco-editor"), { ssr: false });
+import MonacoEditor from "react-monaco-editor"
 
 interface Props {
     value: string 

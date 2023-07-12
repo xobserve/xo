@@ -3,11 +3,11 @@ import {
     withDefaultColorScheme,
     theme as baseTheme,
 } from "@chakra-ui/react";
-import { customClasses } from "src/theme/custom-classes";
-import layerStyles from "src/theme/layer-styles";
-import { overrideColors } from "src/theme/override-colors";
-import textStyles from "src/theme/text-styles";
-import markdownRender from "src/theme/markdown-render";
+import { customClasses } from "./src/theme/custom-classes";
+import layerStyles from "./src/theme/layer-styles";
+import { overrideColors } from "./src/theme/override-colors";
+import textStyles from "./src/theme/text-styles";
+import markdownRender from "./src/theme/markdown-render";
 
 
 

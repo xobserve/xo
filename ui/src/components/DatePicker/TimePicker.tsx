@@ -14,7 +14,7 @@ import {
 import { subMinutes } from 'date-fns'
 import { cloneDeep, includes, isDate, isEmpty } from 'lodash'
 import moment from 'moment'
-import { useState } from 'react'
+import React, { useState } from 'react'
 import { FaCalendarAlt, FaTimes } from 'react-icons/fa'
 import { systemDateFormats, TimeRange } from 'types/time'
 import storage from 'utils/localStorage'

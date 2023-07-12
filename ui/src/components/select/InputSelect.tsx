@@ -1,3 +1,4 @@
+import React from "react"
 import { Box, Flex, HStack, Input, Placement, Popover, PopoverBody, PopoverContent, PopoverTrigger, Text, Tooltip, VStack, useDisclosure } from "@chakra-ui/react"
 import { Variant } from "chakra-react-select/dist/types/types"
 import { Portal } from "components/portal/Portal"

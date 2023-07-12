@@ -17,6 +17,7 @@
     "module": "esnext",
     "resolveJsonModule": true,
     "isolatedModules": true,
+    "allowSyntheticDefaultImports": true,
     "jsx": "preserve",
     "baseUrl": ".",
     "paths": {
@@ -34,6 +35,9 @@
       ],
       "layouts/*": [
         "src/layouts/*"
+      ],
+      "theme/*": [
+        "src/theme/*"
       ]
     },
     "incremental": true,
@@ -45,11 +49,8 @@
     }
   },
   "include": [
-    "next-env.d.ts",
+    "src/pages/**/*.ts",
     "pages/**/*",
     "src/**/*"
-, "src/i18n/i18n.ts"  ],
-  "exclude": [
-    "node_modules"
-  ]
+, "src/i18n/i18n.ts"  ]
 }

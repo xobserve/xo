@@ -1,6 +1,6 @@
 import { Input, NumberDecrementStepper, NumberIncrementStepper, NumberInput, NumberInputField, NumberInputStepper, Slider, SliderFilledTrack, SliderThumb, SliderTrack, Textarea } from "@chakra-ui/react"
 import { isEmpty } from "lodash"
-import { useState } from "react"
+import React, { useState } from "react"
 
 interface EditorInputProps {
     type?: "textarea" | "input"

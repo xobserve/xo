@@ -6,7 +6,7 @@
 import { Heading, IconButton, Popover, PopoverBody, PopoverContent, PopoverTrigger,  Text, useToast } from "@chakra-ui/react"
 import CardSelect, { CardSelectItem } from "components/cards/CardSelect"
 import useSession from "hooks/use-session"
-import { useEffect, useState } from "react"
+import React, { useEffect, useState } from "react"
 import { FaAlignLeft } from "react-icons/fa"
 import { SideMenu } from "types/teams"
 import { requestApi } from "utils/axios/request"

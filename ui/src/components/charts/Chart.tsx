@@ -1,3 +1,4 @@
+import React from "react"
 import { memo, useEffect, useRef, useState } from "react"
 import { useSearchParam } from "react-use"
 import * as echarts from 'echarts';

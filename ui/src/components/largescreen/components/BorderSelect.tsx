@@ -1,9 +1,8 @@
-import { Box, Button, Center, HStack, Modal, ModalBody, ModalCloseButton, ModalContent, ModalHeader, ModalOverlay, Popover, PopoverArrow, PopoverBody, PopoverContent, PopoverTrigger, SimpleGrid, Text, VStack, useDisclosure } from "@chakra-ui/react"
+import {  Button, Center, HStack, Modal, ModalBody, ModalCloseButton, ModalContent, ModalHeader, ModalOverlay, Popover, PopoverArrow, PopoverBody, PopoverContent, PopoverTrigger, SimpleGrid, Text, VStack, useDisclosure } from "@chakra-ui/react"
 
-import { PanelBorderType, PanelDecorationType, PanelTitleDecorationType } from "types/panel/styles"
-import Decoration from "./Decoration"
+import { PanelBorderType } from "types/panel/styles"
 import Border from "./Border"
-
+import React from "react"
 interface Props {
     value: string
     onChange: any

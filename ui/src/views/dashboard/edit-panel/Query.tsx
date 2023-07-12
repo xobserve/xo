@@ -13,7 +13,7 @@ import { getInitTimeRange } from "components/DatePicker/TimePicker"
 
 import { Datasource } from "types/datasource"
 import HttpQueryEditor from "../plugins/datasource/http/Editor"
-import { datasources } from "src/views/App"
+import { datasources } from "src/App"
 import FormItem from "components/form/Item"
 import { Form, FormSection } from "components/form/Form"
 

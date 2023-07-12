@@ -1,5 +1,6 @@
 import { Box } from "@chakra-ui/react"
 import { FaChevronRight } from "react-icons/fa"
+import React from "react"
 
 const CollapseIcon = ({ collapsed, onClick }) => {
     return (

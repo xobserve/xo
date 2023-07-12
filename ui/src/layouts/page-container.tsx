@@ -1,6 +1,6 @@
 import {Box, chakra, Flex,  PropsOf} from "@chakra-ui/react"
 
-import * as React from "react"
+import React from "react"
 import BackToTop from "components/back-to-top"
 import VerticalNav from "./nav/vertical-nav"
 

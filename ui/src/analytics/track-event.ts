@@ -1,7 +1,7 @@
 export function trackPageview(url: string) {
     const _window = window as typeof window & { gtag: any }
     try {
-      _window.gtag("config", process.env.GA_TRACKING_ID, {
+      _window.gtag("config", import.meta.env.GA_TRACKING_ID, {
         page_location: url,
         page_title: document.title,
       })

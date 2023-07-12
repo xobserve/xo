@@ -1,3 +1,4 @@
+import React from 'react'
 import { useColorMode } from "@chakra-ui/react";
 import { ConfigProvider, theme } from "antd";
 import customColors from "src/theme/colors";

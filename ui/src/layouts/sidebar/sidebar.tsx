@@ -1,7 +1,7 @@
 import { Box, Heading, Stack, VStack } from "@chakra-ui/react"
 import Card from "components/card"
 import { useRouter } from "next/router"
-import * as React from "react"
+import React from "react"
 import { Route } from "src/types/route"
 import SidebarLink from "./sidebar-link"
 

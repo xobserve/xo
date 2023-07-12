@@ -1,3 +1,4 @@
+import React from "react"
 import { Button, HStack, Modal, ModalBody, ModalContent, ModalHeader, ModalOverlay, Popover, PopoverArrow, PopoverBody, PopoverContent, PopoverTrigger, Text, VStack, useDisclosure } from "@chakra-ui/react"
 
 import { PanelDecorationType, PanelTitleDecorationType } from "types/panel/styles"

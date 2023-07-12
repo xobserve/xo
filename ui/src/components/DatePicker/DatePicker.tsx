@@ -3,7 +3,7 @@ import TimePicker, { TimePickerKey, getInitTimeRange, initTimeRange } from "./Ti
 import { TimeRange } from "types/time"
 import { FaRegClock } from "react-icons/fa"
 import IconButton from "../button/IconButton"
-import { useState } from "react"
+import React, { useState } from "react"
 import useBus, { dispatch } from "use-bus"
 import { TimeChangedEvent, TimeRefreshEvent } from "src/data/bus-events"
 import { subMinutes } from "date-fns"

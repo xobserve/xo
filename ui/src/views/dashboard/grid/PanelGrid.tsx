@@ -25,7 +25,7 @@ import loadable from '@loadable/component'
 import CodeEditor from "components/CodeEditor/CodeEditor";
 import { calculateInterval } from "utils/datetime/range";
 import { run_http_query } from "../plugins/datasource/http/query_runner";
-import { datasources } from "src/views/App";
+import { datasources } from "src/App";
 import { useSearchParam } from "react-use";
 
 

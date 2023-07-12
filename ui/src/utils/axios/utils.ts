@@ -1,8 +1,7 @@
-import getConfig from 'next/config'
 
 import { ApiConfig } from './config'
 
-const { publicRuntimeConfig } = getConfig()
+
 
 export const rewriteUrl = (
   url: string,
@@ -12,9 +11,9 @@ export const rewriteUrl = (
 }
 
 
-export const isDev = () => publicRuntimeConfig?.env?.NODE_ENV === 'development'
-export const isTest = () => publicRuntimeConfig?.env?.NODE_ENV === 'testing'
-export const isProd = () => publicRuntimeConfig?.env?.NODE_ENV === 'production'
+export const isDev = () => process.env?.NODE_ENV === 'development'
+export const isTest = () => process.env?.NODE_ENV === 'testing'
+export const isProd = () => process.env?.NODE_ENV === 'production'
 
 const META_KEY = '__$$metadata'
 export const getMetadata = (resOrReq: any, key: string) => {

@@ -18,17 +18,15 @@ import {
 import React, { useEffect, useState } from "react"
 import * as Icons from "react-icons/fa"
 
-import { useRouter } from "next/router"
-
 
 import Logo from "components/logo"
 import { navLinks } from "src/data/nav-links"
 import { ColorModeSwitcher } from "components/ColorModeSwitcher"
 import customColors from "src/theme/colors"
-import dynamic from "next/dynamic"
+
 import UserMenu from "components/user/UserMenu"
 import ReserveUrls from "src/data/reserve-urls"
-import Link from "next/link"
+
 import UserSidemenus from "components/team/UserSidemenus"
 import useSession from "hooks/use-session"
 import { requestApi } from "utils/axios/request"
@@ -39,6 +37,7 @@ import storage from "utils/localStorage"
 import { SidemenuMinimodeKey } from "src/data/storage-keys"
 import useFullscreen from "hooks/useFullscreen"
 import { config } from "src/data/configs/config"
+import { Link, useLocation } from "react-router-dom"
 
 
 
@@ -47,14 +46,13 @@ interface Props {
 }
 
 
-const VerticalNav = dynamic(async () => (props: Props) => {
+const VerticalNav = (props: Props) => {
   const { session } = useSession()
   const ref = React.useRef<HTMLHeadingElement>()
 
   const [miniMode, setMiniMode] = useState(storage.get(SidemenuMinimodeKey)??true)
 
-  const router = useRouter()
-  const { asPath } = router
+  const { pathname: asPath } = useLocation()
 
 
 
@@ -100,7 +98,7 @@ const VerticalNav = dynamic(async () => (props: Props) => {
               <Box onClick={onMinimodeChange}>
                 <Logo />
               </Box>
-              {sidemenu.length > 0 && asPath && router && <VStack p="0" pt="2" spacing="0" fontSize="1rem" alignItems="left" >
+              {sidemenu.length > 0 && asPath && <VStack p="0" pt="2" spacing="0" fontSize="1rem" alignItems="left" >
                 {sidemenu.map(link => {
                   let arialCurrent = undefined
                   if (link.url == "/") {
@@ -122,12 +120,12 @@ const VerticalNav = dynamic(async () => (props: Props) => {
                       </PopoverTrigger>
                       <PopoverContent width="fit-content" minWidth="120px" border="null" pl="1">
                         <PopoverHeader borderBottomWidth={link.children?.length > 0 ? '1px' : '0px'}>
-                          <Link href={link.children?.length > 0 ? link.children[0].url : link.url}>{link.title}</Link>
+                          <Link to={link.children?.length > 0 ? link.children[0].url : link.url}>{link.title}</Link>
                         </PopoverHeader>
                         {link.children?.length > 0 && <PopoverBody pt="3">
                           <VStack alignItems="left" spacing="3">
                             {link.children.map(subLink =>
-                              <Link href={subLink.url}>
+                              <Link to={subLink.url}>
                                 <Text color={asPath == subLink.url ? useColorModeValue("brand.500", "brand.200") : useColorModeValue("gray.500", "whiteAlpha.800")}>{subLink.title}</Text>
                               </Link>
                             )}
@@ -159,7 +157,7 @@ const VerticalNav = dynamic(async () => (props: Props) => {
 
               <HStack spacing="0">
                 <Link 
-                  href={config.repoUrl}
+                  to={config.repoUrl}
                 >
                   <IconButton
                     size="md"
@@ -191,7 +189,6 @@ const VerticalNav = dynamic(async () => (props: Props) => {
     </Box>
   )
 }
-  , { ssr: false })
 
 
 export default VerticalNav
@@ -199,7 +196,7 @@ export default VerticalNav
 
 const NavItem = ({ asPath, path, miniMode, title, icon, url, fontSize = "1.2rem", showTooltip = false }) => {
   const Icon = Icons[icon]
-  return <Link href={url}>
+  return <Link to={url}>
     <HStack spacing="0" color={asPath.startsWith(path) ? useColorModeValue("brand.500", "brand.200") : "current"}>
       <Tooltip label={miniMode && (showTooltip && title)} placement="right">
         <HStack spacing={0}>

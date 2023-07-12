@@ -1,5 +1,6 @@
 import { Select } from "@chakra-ui/react"
 import { ValueCalculationType } from "types/value"
+import React from "react"
 
 interface Props {
     value: ValueCalculationType

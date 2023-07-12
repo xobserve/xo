@@ -1,3 +1,4 @@
+import React from 'react'
 import { Box } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import { FaArrowUp } from "react-icons/fa";

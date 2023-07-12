@@ -1,4 +1,5 @@
 import { Button, HStack } from "@chakra-ui/react"
+import React from "react"
 
 interface Props {
     options: Option[]

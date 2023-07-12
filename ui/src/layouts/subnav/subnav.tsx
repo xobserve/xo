@@ -2,7 +2,7 @@ import { Box, Divider, Heading, HStack, Stack, VStack } from "@chakra-ui/react"
 import Card from "components/card"
 import SidebarLink from "src/layouts/sidebar/sidebar-link"
 import { useRouter } from "next/router"
-import * as React from "react"
+import React from "react"
 import { Route } from "src/types/route"
 
 

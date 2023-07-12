@@ -17,6 +17,7 @@ import NextLink from 'next/link'
 import { useEffect, useRef, useState } from 'react'
 import { FaMoon, FaSun, FaYoutube } from 'react-icons/fa'
 import Logo, { LogoIcon } from '../components/logo'
+import React from "react"
 
 function HeaderContent() {
   const mobileNav = useDisclosure()

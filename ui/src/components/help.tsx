@@ -2,6 +2,7 @@ import { Box, Center, Modal, ModalBody, ModalContent, ModalOverlay, Table, Tbody
 import { memo } from "react"
 import { FaQuestion } from "react-icons/fa"
 import { Help } from "types/misc"
+import React from "react"
 
 interface Props {
     data: Help[]

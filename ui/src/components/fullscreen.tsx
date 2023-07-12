@@ -6,6 +6,7 @@ import { FullscreenEvent } from "src/data/bus-events";
 import { FullscreenKey } from "src/data/storage-keys";
 import { dispatch } from "use-bus";
 import storage from "utils/localStorage";
+import React from "react"
 
 const Fullscreen = () => {
     const toast = useToast()

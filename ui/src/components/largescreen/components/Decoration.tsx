@@ -1,6 +1,6 @@
 {/* <Box display="flex" justifyContent="right"><Decoration6 style={{height: '20px',width:"10%",position:"absolute",top:"",left:""}} /></Box> */ }
 
-
+import React from "react"
 import { Box } from "@chakra-ui/react"
 import { memo } from "react"
 import { DecorationStyles, PanelDecorationType } from "types/panel/styles"
