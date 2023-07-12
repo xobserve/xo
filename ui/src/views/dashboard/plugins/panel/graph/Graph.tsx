@@ -1,5 +1,5 @@
 import UplotReact from "components/uPlot/UplotReact"
-import { memo, useCallback, useEffect, useMemo, useRef, useState } from "react"
+import { memo, useCallback, useEffect, useMemo, useState } from "react"
 import { OverrideItem, Panel, PanelProps } from "types/dashboard"
 import 'uplot/dist/uPlot.min.css';
 import uPlot from "uplot"
@@ -15,8 +15,8 @@ import { colors } from "utils/colors";
 import { SeriesData } from "types/seriesData";
 import storage from "utils/localStorage";
 import { PanelInactiveKey } from "src/data/storage-keys";
-import useBus from "use-bus";
-import { ActiveSeriesEvent } from "src/data/bus-events";
+import { ZoomPlugin } from "./uplot-plugins/ZoomPlugin";
+import { TimeRange } from "types/time";
 
 
 interface GraphPanelProps extends PanelProps {
@@ -162,6 +162,9 @@ const GraphPanel = memo((props: GraphPanelProps) => {
 
     const onChartCreate = useCallback((chart) => { setUplot((chart)); props.sync?.sub(chart) }, [props.sync])
 
+    const onZoom = (tr) => {
+        console.log("here333333:",tr)
+    }
     return (
         <>{
             isEmpty(props.data) ? <Center height="100%">No data</Center> :
@@ -185,6 +188,7 @@ const GraphPanel = memo((props: GraphPanelProps) => {
                                 onCreate={onChartCreate}
                             >
                                 {props.panel.plugins.graph.tooltip.mode != 'hidden' && <Tooltip props={props} options={options} data={data} inactiveSeries={inactiveSeries} />}
+                                <ZoomPlugin options={options} onZoom={onZoom}/>
                             </UplotReact>
                             )
                         }}

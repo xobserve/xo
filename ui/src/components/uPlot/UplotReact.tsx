@@ -1,6 +1,5 @@
 import { Box } from '@chakra-ui/react';
-import { cloneDeep, isEqual } from 'lodash';
-import React, { memo, useEffect, useRef } from 'react';
+import React, { useEffect, useRef } from 'react';
 
 import uPlot from 'uplot';
 
