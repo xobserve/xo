@@ -58,7 +58,7 @@ const UserSidemenus = () => {
 
                     <PopoverBody>
                         <CardSelect title="Select a team sidemenu you want to use">
-                            {sidemenus.map(sidemenu => <>
+                            {sidemenus.map(sidemenu => 
                                 <CardSelectItem key={sidemenu.teamId} selected={session?.user.sidemenu == sidemenu.teamId} onClick={() => selectSidemenu(sidemenu.teamId)}>
                                     <Heading size='xs' textTransform='uppercase'>
                                         {sidemenu.teamName}
@@ -67,7 +67,7 @@ const UserSidemenus = () => {
                                         {sidemenu.brief}
                                     </Text>
                                 </CardSelectItem>
-                            </>)}
+                            )}
                         </CardSelect>
                     </PopoverBody>
                 </PopoverContent>

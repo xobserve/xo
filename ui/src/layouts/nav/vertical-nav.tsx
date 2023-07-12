@@ -125,7 +125,7 @@ const VerticalNav = (props: Props) => {
                         {link.children?.length > 0 && <PopoverBody pt="3">
                           <VStack alignItems="left" spacing="3">
                             {link.children.map(subLink =>
-                              <Link to={subLink.url}>
+                              <Link to={subLink.url} key={subLink.url}>
                                 <Text color={asPath == subLink.url ? useColorModeValue("brand.500", "brand.200") : useColorModeValue("gray.500", "whiteAlpha.800")}>{subLink.title}</Text>
                               </Link>
                             )}

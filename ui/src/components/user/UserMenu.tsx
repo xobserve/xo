@@ -20,7 +20,7 @@ import { lang } from "src/i18n"
 import { LangKey } from "src/data/storage-keys"
 import { Link, useLocation, useNavigate } from "react-router-dom"
 
-const UserMenu = ({fontSize="1.2rem"}) => {
+const UserMenu = ({ fontSize = "1.2rem" }) => {
     const { session, logout } = useSession()
 
     const navigate = useNavigate()
@@ -41,17 +41,14 @@ const UserMenu = ({fontSize="1.2rem"}) => {
         <>
             {session ?
                 <Menu placement="right">
-                    <MenuButton>
-                     <IconButton
-                        size="md"
+                    <MenuButton as={IconButton} size="md"
                         fontSize={fontSize}
                         aria-label=""
                         variant="ghost"
-                        color={isActive ? useColorModeValue("brand.500","brand.200") : "current"}
+                        color={isActive ? useColorModeValue("brand.500", "brand.200") : "current"}
                         _focus={{ border: null }}
-                        icon={<FaUserAlt />}
-                        />
-                        </MenuButton>
+                        icon={<FaUserAlt />}>
+                    </MenuButton>
                     <MenuList>
                         <MenuItem icon={<FaUserAlt fontSize="1rem" />} >
                             <span>{session.user.name}</span>
@@ -62,19 +59,19 @@ const UserMenu = ({fontSize="1.2rem"}) => {
                         <MenuItem onClick={() => changeLang()} icon={<FaFont fontSize="1rem" />}>Current Lang - {lang == "en" ? "English" : "Chinese"}</MenuItem>
                         <Link to={`/account/setting`}><MenuItem icon={<FaRegSun fontSize="1rem" />}>Account Setting</MenuItem></Link>
                         <MenuItem onClick={() => logout()} icon={<FaSignOutAlt fontSize="1rem" />}>Log out</MenuItem>
-                        
+
                     </MenuList>
                 </Menu> :
-                 <IconButton
-                 size="md"
-                 fontSize={fontSize}
-                 aria-label=""
-                 variant="ghost"
-                 color={isActive ? useColorModeValue("brand.500","brand.200") : "current"}
-                 _focus={{ border: null }}
-                 onClick={() => login()}
-                 icon={<FaSignInAlt />}
-                 />
+                <IconButton
+                    size="md"
+                    fontSize={fontSize}
+                    aria-label=""
+                    variant="ghost"
+                    color={isActive ? useColorModeValue("brand.500", "brand.200") : "current"}
+                    _focus={{ border: null }}
+                    onClick={() => login()}
+                    icon={<FaSignInAlt />}
+                />
             }
         </>
     )
