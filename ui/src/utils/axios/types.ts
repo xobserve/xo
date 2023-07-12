@@ -2,6 +2,7 @@ import type {
     AxiosInterceptorManager,
     AxiosRequestConfig,
     AxiosResponse,
+    InternalAxiosRequestConfig,
   } from 'axios'
   
   export interface APIResponse<T = any> {
@@ -23,11 +24,11 @@ import type {
     'OnRejected'
   >
   export type ReqOnFulfilledInterceptor = AxiosInterceptor<
-    AxiosRequestConfig,
+    InternalAxiosRequestConfig,
     'OnFulfilled'
   >
   export type ReqOnRejectedInterceptor = AxiosInterceptor<
-    AxiosRequestConfig,
+  InternalAxiosRequestConfig,
     'OnRejected'
   >
   

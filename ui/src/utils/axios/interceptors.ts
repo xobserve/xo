@@ -98,7 +98,7 @@ export const calcRequestTimeEnd: ResOnFulfilledInterceptor = res => {
  * 转发时如果需要，代理验证host
  */
 export const changeOrigin: ReqOnFulfilledInterceptor = req => {
-  const headers = req.headers ?? {}
+  const headers = req.headers ?? {} as any
   headers.host = getHost(req.baseURL)
   req.headers = headers
   return req
