@@ -91,7 +91,7 @@ const DashboardHeader = memo(({ dashboard, onChange }: HeaderProps) => {
                                 <AddPanel dashboard={dashboard} onChange={onChange} />
                                 <DashboardSave dashboard={dashboard} />
                                 {dashboard && <DashboardSettings dashboard={dashboard} onChange={onChange} />}
-                                <DatePicker />
+                                <DatePicker showTime/>
                                 <HStack spacing={0}>
                                     <Tooltip label="refresh just once"><Box onClick={refreshOnce}><IconButton variant="ghost"><MdSync /></IconButton></Box></Tooltip>
                                     <Tooltip label="refresh with interval"><Select variant="unstyled" value={refresh} onChange={(e) => setRefresh(Number(e.target.value))}>
