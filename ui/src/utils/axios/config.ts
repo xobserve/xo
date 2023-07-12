@@ -1,6 +1,6 @@
 import getConfig from 'next/config'
-// import { isDev  } from './utils'
-// const { publicRuntimeConfig } = getConfig()
+import { isDev  } from './utils'
+const { publicRuntimeConfig } = getConfig()
 
 type APIS = {
   target: string
@@ -21,13 +21,13 @@ const apis = ({
     target: 'xxx.xxx.xxx',
     allowOrigin: '*',
   },
-} as Record<string, APIS>)['development']
+} as Record<string, APIS>)[publicRuntimeConfig.env.NODE_ENV]
 
 export const ApiConfig = {
   /**
    * 启用调试
    */
-  log: true,
+  log: isDev,
   /**
    * 跨域
    */
