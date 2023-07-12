@@ -1,4 +1,4 @@
-import { extend, isEmpty } from 'lodash'
+import { cloneDeep, extend, isEmpty } from 'lodash'
 import { Router } from 'next/router'
 import queryString from 'query-string'
 
@@ -19,8 +19,9 @@ export const addParamToUrl = (param: any) => {
     const currentQuery = getUrlParams()
     extend(currentQuery, param)
 
+
     for (const k of Object.keys(currentQuery)) {
-        if (isEmpty(currentQuery[k])){
+        if (!currentQuery[k]){
             delete currentQuery[k]
         } 
     }

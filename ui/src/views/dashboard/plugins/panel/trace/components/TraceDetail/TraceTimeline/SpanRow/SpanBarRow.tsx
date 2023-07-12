@@ -131,7 +131,7 @@ const SpanBarRow = (props: SpanBarRowProps) => {
     }
 
     const matchLightBg = "#fffce9"
-    const matchDarkBg = 'rgb(22, 45, 50)'
+    const matchDarkBg = 'rgb(22, 43, 50)'
     return (
         <Box sx={{
             '.span-row:hover .span-name-wrapper': {
