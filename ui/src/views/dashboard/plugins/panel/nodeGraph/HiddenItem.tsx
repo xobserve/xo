@@ -4,6 +4,7 @@ import { memo, useEffect, useState } from "react"
 import { FaEye, FaEyeSlash } from "react-icons/fa"
 import { PanelData } from "types/dashboard"
 import { useImmer } from "use-immer"
+import React from "react";
 
 interface Props {
     selected: boolean

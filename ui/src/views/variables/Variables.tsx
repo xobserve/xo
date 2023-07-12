@@ -14,7 +14,7 @@ import PopoverSelect from "components/select/PopoverSelect"
 import { VarialbeAllOption, VariableSplitChar } from "src/data/variable"
 import { VariableManuallyChangedKey } from "src/data/storage-keys"
 import { queryJaegerVariableValues } from "../dashboard/plugins/datasource/jaeger/query_runner"
-
+import React from "react";
 
 interface Props {
     id: number

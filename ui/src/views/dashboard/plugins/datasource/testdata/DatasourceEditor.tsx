@@ -1,4 +1,5 @@
 import { Datasource } from "types/datasource"
+import React from "react";
 
 interface Props {
     datasource: Datasource

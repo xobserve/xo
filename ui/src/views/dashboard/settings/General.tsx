@@ -4,6 +4,7 @@ import { Form, FormSection } from "components/form/Form"
 import FormItem from "components/form/Item"
 import { useEffect, useState } from "react"
 import { Dashboard, DashboardLayout } from "types/dashboard"
+import React from "react";
 
 interface Props {
     dashboard: Dashboard

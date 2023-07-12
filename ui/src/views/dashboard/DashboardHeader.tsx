@@ -5,7 +5,7 @@ import SelectVariables from "src/views/variables/Variables"
 import { subMinutes } from "date-fns"
 import { find, isEmpty } from "lodash"
 import { useRouter } from "next/router"
-
+import React from "react";
 import { memo, useEffect, useRef, useState } from "react"
 import { MdSync } from "react-icons/md"
 import { TimeRefreshEvent, VariableChangedEvent } from "src/data/bus-events"

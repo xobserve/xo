@@ -16,6 +16,7 @@ import HttpQueryEditor from "../plugins/datasource/http/Editor"
 import { datasources } from "src/App"
 import FormItem from "components/form/Item"
 import { Form, FormSection } from "components/form/Form"
+import React from "react";
 
 interface Props {
     panel: Panel

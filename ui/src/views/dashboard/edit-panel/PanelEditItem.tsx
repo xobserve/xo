@@ -1,5 +1,6 @@
 import { Box, HStack, Popover, PopoverArrow, PopoverBody, PopoverContent, PopoverTrigger, Text } from "@chakra-ui/react"
 import { FaInfoCircle } from "react-icons/fa"
+import React from "react";
 
 interface Props {
     title: string

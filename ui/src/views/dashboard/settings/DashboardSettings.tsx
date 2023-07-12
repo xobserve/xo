@@ -10,6 +10,7 @@ import GeneralSettings from "./General"
 import MetaSettings from "./MetaSetting"
 import StyleSettings from "./Styles"
 import VariablesSetting from "./Variables"
+import React from "react";
 
 interface Props {
     dashboard: Dashboard

@@ -1,6 +1,6 @@
 import { Alert, AlertDescription, AlertIcon, AlertTitle, Box, Button, Center, Drawer, DrawerBody, DrawerContent, DrawerHeader, DrawerOverlay, Flex, HStack, IconButton, Input, Menu, MenuButton, MenuItem, MenuList, Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay, StackDivider, Tag, Text, Tooltip, useColorMode, useDisclosure, useToast, VStack } from "@chakra-ui/react"
 import { useLeavePageConfirm } from "hooks/useLeavePage"
-
+import React from "react";
 import { useEffect, useRef, useState } from "react"
 import { FaRegSave } from "react-icons/fa"
 import { Dashboard } from "types/dashboard"

@@ -19,6 +19,7 @@ import { PanelGrid } from "../grid/PanelGrid"
 import loadable from '@loadable/component'
 import DatePicker from "components/DatePicker/DatePicker"
 import PanelOverrides from "./PanelOverrides"
+import React from "react";
 
 interface EditPanelProps {
     dashboard: Dashboard

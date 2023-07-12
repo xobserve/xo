@@ -5,6 +5,7 @@ import PanelEditItem from "src/views/dashboard/edit-panel/PanelEditItem"
 import { Panel, PanelEditorProps } from "types/dashboard"
 import CodeEditor from "components/CodeEditor/CodeEditor"
 import { useState } from "react"
+import React from "react";
 
 const TablePanelEditor = ({ panel, onChange }: PanelEditorProps) => {
     return (<PanelAccordion title="Table setting">

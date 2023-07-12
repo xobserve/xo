@@ -3,6 +3,7 @@ import { Box, HStack, Text, Tooltip } from "@chakra-ui/react"
 import { memo, useEffect, useState } from "react"
 import { FaMinus, FaPlus, FaRegCircle } from "react-icons/fa"
 import Filter from "./filter/Filter"
+import React from "react";
 
 interface Props {
     graph: Graph

@@ -9,7 +9,7 @@ import { EditorInputItem } from "../../../components/editor/EditorItem"
 import PanelEditItem from "./PanelEditItem"
 import DecorationSelect from "components/largescreen/components/DecorationSelect"
 import BorderSelect from "components/largescreen/components/BorderSelect"
-
+import React from "react";
 
 const PanelStyles = ({ panel, onChange }: PanelEditorProps) => {
     return (

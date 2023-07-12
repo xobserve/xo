@@ -12,6 +12,7 @@ import { genDynamicFunction } from "utils/dynamicCode"
 import { EchartsComponent } from "./Echarts"
 import * as echarts from 'echarts';
 import { ColorModeSwitcher } from "components/ColorModeSwitcher"
+import React from "react";
 
 const EchartsPanelEditor = ({ panel, onChange,data }: PanelEditorProps) => {
     return (

@@ -10,7 +10,7 @@ import transformTraceData from "./utils/transform-trace-data"
 import { uniqBy } from "lodash";
 import { replaceWithVariables, replaceWithVariablesHasMultiValues } from "utils/variable";
 import { getInitTimeRange } from "components/DatePicker/TimePicker";
-
+import React from "react";
 
 const TracePanel = (props: PanelProps) => {
     const [rawTraces, setRawTraces] = useState<TraceData[]>(null)

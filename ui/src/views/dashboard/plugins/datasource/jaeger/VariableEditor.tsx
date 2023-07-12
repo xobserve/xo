@@ -7,7 +7,7 @@ import { DatasourceVariableEditorProps } from "types/datasource"
 import FormItem from "components/form/Item"
 import { queryJaegerVariableValues } from "./query_runner"
 import ChakraSelect from "components/select/ChakraSelect"
-
+import React from "react";
 
 
 export enum JaegerDsQueryTypes {

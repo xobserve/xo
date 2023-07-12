@@ -16,7 +16,7 @@ import { isJSON } from "utils/is"
 import CodeEditor from "components/CodeEditor/CodeEditor"
 import { dispatch } from "use-bus"
 import { PanelForceRebuildEvent } from "src/data/bus-events"
-
+import React from "react";
 
 
 

@@ -1,14 +1,12 @@
 import { Box, Button, Flex, HStack, Switch, VStack } from "@chakra-ui/react"
 import ValueCalculation from "components/ValueCalculation"
-import IconButton from "components/button/IconButton"
 import { ColorPicker } from "components/color-picker"
 import { EditorInputItem, EditorNumberItem } from "components/editor/EditorItem"
-import { UnitPicker } from "components/unit"
-import { cloneDeep } from "lodash"
 import { FaArrowDown, FaArrowUp, FaTimes } from "react-icons/fa"
 import PanelAccordion from "src/views/dashboard/edit-panel/Accordion"
 import PanelEditItem from "src/views/dashboard/edit-panel/PanelEditItem"
 import { Panel, PanelEditorProps } from "types/dashboard"
+import React from "react";
 
 const GaugePanelEditor = (props: PanelEditorProps) => {
     const { panel, onChange } = props

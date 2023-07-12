@@ -3,6 +3,7 @@ import { Trace } from "types/plugins/trace"
 import { formatDuration, formatRelativeDate } from "../../utils/date"
 import moment from "moment"
 import TraceCompareGraph from "./TraceCompareGraph"
+import React from "react";
 
 interface Props {
     traces: Trace[]

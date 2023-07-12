@@ -7,7 +7,7 @@ import { queryPromethuesVariableValues } from "./query_runner"
 import { EditorInputItem } from "components/editor/EditorItem"
 import { DatasourceVariableEditorProps } from "types/datasource"
 import FormItem from "components/form/Item"
-
+import React from "react";
 
 
 export enum PromDsQueryTypes {

@@ -4,8 +4,7 @@ import TimelineCollapser from "./TimelineCollapser";
 import Ticks from "../Ticks";
 import VerticalResizer from "components/VerticalResizer/VerticalResizer";
 import TimelineViewingLayer from "./TimelineLayer";
-import { useColorModeValue } from "@chakra-ui/react";
-import customColors from "src/theme/colors";
+import React from "react";
 
 interface Props {
     duration: number;

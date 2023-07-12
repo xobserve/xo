@@ -6,6 +6,7 @@ import { EditorInputItem } from "../../../components/editor/EditorItem"
 import PanelEditItem from "./PanelEditItem"
 import { initPanelPlugins } from "src/data/panel/initPlugins"
 import { useEffect } from "react"
+import React from "react";
 
 // in edit mode, we need to cache all the plugins we have edited, until we save the dashboard
 let pluginsCachedInEdit = {}

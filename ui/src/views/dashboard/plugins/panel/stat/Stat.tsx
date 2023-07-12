@@ -3,7 +3,7 @@ import { memo, useCallback, useMemo, useState } from "react"
 import { PanelProps } from "types/dashboard"
 import 'uplot/dist/uPlot.min.css';
 import uPlot from "uplot"
-
+import React from "react";
 import { parseOptions } from './options';
 import { isEmpty } from "lodash"
 import Tooltip from "../graph/Tooltip";

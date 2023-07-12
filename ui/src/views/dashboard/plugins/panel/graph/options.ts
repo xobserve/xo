@@ -10,7 +10,7 @@ import customColors from "src/theme/colors";
 import { formatUnit } from "components/unit";
 import { measureText } from "utils/measureText";
 import { SeriesData } from "types/seriesData";
-
+import React from "react";
 
 
 

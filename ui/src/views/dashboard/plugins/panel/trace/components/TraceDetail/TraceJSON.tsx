@@ -3,6 +3,7 @@ import CodeEditor from "components/CodeEditor/CodeEditor";
 import { cloneDeep } from "lodash";
 import { useState } from "react";
 import { Trace } from "types/plugins/trace";
+import React from "react";
 
 const TraceJSON = ({ trace }: { trace: Trace }) => {
     const [hideLogs, setHideLogs] = useState(false)

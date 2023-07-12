@@ -8,6 +8,7 @@ import { useEffect, useMemo, useState } from "react"
 import { clone, cloneDeep, remove } from "lodash"
 import TraceCompare from "./TraceCompare/TraceCompare"
 import { FaTimes } from "react-icons/fa"
+import React from "react";
 
 interface Props {
     panel: Panel

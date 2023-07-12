@@ -12,6 +12,7 @@ import { TimeRange } from "types/time"
 import { hasVariableFormat, replaceWithVariablesHasMultiValues } from "utils/variable"
 import useBus from "use-bus"
 import { VariableChangedEvent } from "src/data/bus-events"
+import React from "react";
 
 interface Props {
     panel: Panel

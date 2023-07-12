@@ -1,13 +1,13 @@
 import { Box, useColorMode } from "@chakra-ui/react";
 import ChartComponent from "components/charts/Chart";
-import { formatUnit } from "components/unit";
-import { cloneDeep, round } from "lodash";
+import { round } from "lodash";
 
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { PanelProps } from "types/dashboard"
 import { GaugePluginData } from "types/plugins/gauge";
 import { SeriesData } from "types/seriesData";
 import { calcValueOnSeriesData } from "utils/seriesData";
+import React from "react";
 
 interface Props extends PanelProps {
   data: SeriesData[][]

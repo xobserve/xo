@@ -27,6 +27,7 @@ import { calculateInterval } from "utils/datetime/range";
 import { run_http_query } from "../plugins/datasource/http/query_runner";
 import { datasources } from "src/App";
 import { useSearchParam } from "react-use";
+import React from "react";
 
 
 interface PanelGridProps {

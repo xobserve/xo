@@ -6,6 +6,7 @@ import { Box, useColorModeValue } from "@chakra-ui/react";
 import TimelineHeader from "./Header/TimelineHeader";
 import SpanRows from './SpanRows'
 import customColors from "src/theme/colors";
+import React from "react";
 
 interface Props {
     registerAccessors: any

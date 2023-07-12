@@ -18,6 +18,7 @@ import TraceSpanView from "./TraceSpanTable";
 import TraceStatistics from "./TraceStats";
 import { useSearchParam } from "react-use";
 import { addParamToUrl } from "utils/url";
+import React from "react";
 
 interface Props {
     trace: Trace

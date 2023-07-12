@@ -4,6 +4,7 @@ import { Form } from "components/form/Form"
 import { Dashboard } from "types/dashboard"
 import BorderSelect from "components/largescreen/components/BorderSelect"
 import FormItem from "components/form/Item"
+import React from "react";
 
 interface Props {
     dashboard: Dashboard

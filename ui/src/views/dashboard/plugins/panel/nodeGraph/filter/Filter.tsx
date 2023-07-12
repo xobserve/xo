@@ -6,7 +6,7 @@ import { FaArrowDown, FaArrowUp, FaEye, FaFilter, FaPlus, FaTimes } from "react-
 import { MdEdit } from "react-icons/md"
 import { useImmer } from "use-immer"
 import storage from "utils/localStorage"
-
+import React from "react";
 
 interface Props {
     graph: Graph

@@ -17,7 +17,7 @@ import storage from "utils/localStorage";
 import { PanelInactiveKey } from "src/data/storage-keys";
 import { ZoomPlugin } from "./uplot-plugins/ZoomPlugin";
 import { setDateTime } from "components/DatePicker/DatePicker";
-
+import React from "react";
 
 interface GraphPanelProps extends PanelProps {
     data: SeriesData[][]

@@ -1,4 +1,4 @@
-import { HStack, Select, Switch, Text } from "@chakra-ui/react"
+import { Switch } from "@chakra-ui/react"
 import PanelAccordion from "src/views/dashboard/edit-panel/Accordion"
 import PanelEditItem from "src/views/dashboard/edit-panel/PanelEditItem"
 import RadionButtons from "components/RadioButtons"
@@ -9,8 +9,7 @@ import { dispatch } from "use-bus"
 import { PanelForceRebuildEvent } from "src/data/bus-events"
 import PopoverSelect from "components/select/PopoverSelect"
 import { ValueCalculationType } from "types/value"
-import { isNumber } from "lodash"
-
+import React from "react";
 
 const GraphPanelEditor = ({ panel, onChange }: PanelEditorProps) => {
     return (<>

@@ -1,4 +1,5 @@
 import { Accordion, AccordionButton, AccordionIcon, AccordionItem, AccordionPanel, Text, VStack } from "@chakra-ui/react"
+import React from "react";
 
 const PanelAccordion = ({title, children ,defaultOpen=true}) => {
     return (

@@ -1,5 +1,5 @@
 // Render series table in tooltip
-
+import React from "react";
 import { Box, Flex, HStack, Table, TableContainer, Tbody, Td, Text, Th, Thead, Tr, VStack } from "@chakra-ui/react"
 import { formatUnit } from "components/unit"
 import { cloneDeep, orderBy, round } from "lodash"

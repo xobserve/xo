@@ -5,6 +5,7 @@ import { sortBy } from "lodash"
 import colorGenerator from "utils/colorGenerator"
 import { FaInfoCircle } from "react-icons/fa"
 import moment from "moment"
+import React from "react";
 
 interface Props {
     trace: Trace

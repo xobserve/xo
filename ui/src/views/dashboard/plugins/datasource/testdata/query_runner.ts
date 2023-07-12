@@ -5,8 +5,7 @@ import { Panel, PanelQuery, PanelType } from "types/dashboard"
 import { TimeRange } from "types/time"
 import graphData from './mocks/prometheus_graph.json'
 import { nodeGraphData } from "./mocks/node_graph"
-import { prometheusToSeriesData, prometheusToPanels } from "../prometheus/transformData"
-import { GaugePluginData } from 'types/plugins/gauge'
+import { prometheusToPanels } from "../prometheus/transformData"
 import { echartsOptions } from "./mocks/echarts"
 import { Datasource } from "types/datasource"
 import traceData from './mocks/trace.json'

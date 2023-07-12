@@ -113,6 +113,7 @@ export const CustomScrollbar: FC<Props> = ({
   }, [setScrollTop]);
 
   return (
+    // @ts-ignore
     <Scrollbars
       ref={ref}
       className={classNames(styles.customScrollbar, className)}

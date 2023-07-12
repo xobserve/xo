@@ -6,7 +6,7 @@ import { cloneDeep, isEmpty, set } from "lodash"
 import { useEffect, useState } from "react"
 import { PanelQuery } from "types/dashboard"
 import { Datasource, DatasourceEditorProps } from "types/datasource"
-
+import React from "react";
 
 const HttpQueryEditor = ({ datasource, query, onChange }: DatasourceEditorProps) => {
     const [tempQuery, setTempQuery] = useState<PanelQuery>(cloneDeep(query))

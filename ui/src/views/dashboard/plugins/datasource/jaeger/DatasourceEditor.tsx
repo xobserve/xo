@@ -2,6 +2,7 @@ import { Input } from "@chakra-ui/react"
 import FormItem from "components/form/Item"
 import { Datasource } from "types/datasource"
 import isURL from "validator/lib/isURL"
+import React from "react";
 
 interface Props {
     datasource: Datasource

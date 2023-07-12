@@ -12,7 +12,7 @@ import { prevQueries, prevQueryData } from "src/views/dashboard/grid/PanelGrid"
 import { unstable_batchedUpdates } from "react-dom"
 import useBus, { dispatch } from 'use-bus'
 import { SetDashboardEvent, TimeChangedEvent, UpdatePanelEvent, VariableChangedEvent } from "src/data/bus-events"
-
+import React from "react";
 import { useImmer } from "use-immer"
 import { setAutoFreeze } from "immer";
 import { initPanelPlugins } from "src/data/panel/initPlugins"

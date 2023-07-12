@@ -7,6 +7,7 @@ import TraceDetail from "./TraceDetail"
 import transformTraceData from "../../utils/transform-trace-data"
 import ScrollManager from "./scroll/scrollManager"
 import { cancel as cancelScroll, scrollBy, scrollTo } from './scroll/scrollPage';
+import React from "react";
 
 const TraceDetailWrapper = ({id,dsId}) => {
     const [trace, setTrace] = useState<Trace>(null)

@@ -10,7 +10,7 @@ import { colors } from "utils/colors"
 import { dispatch } from "use-bus"
 import { PanelForceRebuildEvent } from "src/data/bus-events"
 import ValueCalculation from "components/ValueCalculation"
-
+import React from "react";
 
 const GraphPanelEditor = ({ panel, onChange }: PanelEditorProps) => {
     return (<>

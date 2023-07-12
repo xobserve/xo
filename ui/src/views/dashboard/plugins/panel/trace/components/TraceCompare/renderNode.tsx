@@ -9,8 +9,6 @@ import TDagPlexusVertex from '../../model/trace-dag/types/TDagPlexusVertex';
 
 import { FaCopy, FaInfoCircle } from "react-icons/fa";
 import { chakra, Box, Divider, Flex, HStack, Popover, PopoverArrow, PopoverBody, PopoverContent, PopoverTrigger, StackDivider, Text, VStack, Tooltip, Button, Textarea } from "@chakra-ui/react";
-import CopyToClipboard from "components/CopyToClipboard";
-import { Trace } from "types/plugins/trace";
 import { Portal } from "components/portal/Portal";
 import { formatDuration } from "../../utils/date";
 import { isErrorTag } from "../../utils/trace";

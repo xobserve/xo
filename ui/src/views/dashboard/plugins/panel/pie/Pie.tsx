@@ -9,6 +9,7 @@ import { PiePluginData } from "types/plugins/pie"
 import { SeriesData } from "types/seriesData";
 import { genDynamicFunction } from "utils/dynamicCode";
 import { calcValueOnSeriesData } from "utils/seriesData";
+import React from "react";
 
 interface Props extends PanelProps {
     data: SeriesData[][]

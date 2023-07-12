@@ -3,7 +3,7 @@ import { cloneDeep } from "lodash"
 import { useState } from "react"
 import {  PanelQuery } from "types/dashboard"
 import { DatasourceEditorProps } from "types/datasource"
-
+import React from "react";
 
 
 const TestDataQueryEditor = ({query,onChange}:DatasourceEditorProps) => {  

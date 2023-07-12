@@ -9,6 +9,7 @@ import PanelAccordion from "src/views/dashboard/edit-panel/Accordion"
 import PanelEditItem from "src/views/dashboard/edit-panel/PanelEditItem"
 import { Panel, PanelEditorProps } from "types/dashboard"
 import { PieLegendPlacement } from "types/panel/plugins"
+import React from "react";
 
 const PiePanelEditor = ({ panel, onChange }: PanelEditorProps) => {
     return (<>

@@ -4,7 +4,7 @@ import RadionButtons from "components/RadioButtons"
 import PanelAccordion from "src/views/dashboard/edit-panel/Accordion"
 import PanelEditItem from "src/views/dashboard/edit-panel/PanelEditItem"
 import {  Panel, PanelEditorProps } from "types/dashboard"
-
+import React from "react";
 
 const TextPanelEditor = ({panel,onChange}:PanelEditorProps) => {
     return (   <PanelAccordion title="Text setting">

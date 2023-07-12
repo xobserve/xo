@@ -5,6 +5,7 @@ import { useState } from "react"
 import { PanelQuery, PanelType } from "types/dashboard"
 import { DatasourceEditorProps } from "types/datasource"
 import { useImmer } from "use-immer"
+import React from "react";
 
 const JaegerQueryEditor = ({ panel, query, onChange }: DatasourceEditorProps) => {
     const [tempQuery, setTempQuery] = useImmer<PanelQuery>(cloneDeep(query))

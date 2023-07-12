@@ -6,6 +6,7 @@ import { initVariable } from "src/data/variable";
 import { Dashboard } from "types/dashboard";
 import { Variable,  VariableRefresh } from "types/variable";
 import storage from "utils/localStorage";
+import React from "react";
 
 interface Props {
     dashboard: Dashboard

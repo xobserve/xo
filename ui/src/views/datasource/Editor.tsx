@@ -13,7 +13,7 @@ import PrometheusDatasourceEditor from "../dashboard/plugins/datasource/promethe
 import TestDataDatasourceEditor from "../dashboard/plugins/datasource/testdata/DatasourceEditor"
 import JaegerDatasourceEditor from "../dashboard/plugins/datasource/jaeger/DatasourceEditor"
 import FormItem from "components/form/Item"
-
+import React from "react";
 
 const DatasourceEditor = ({ds, onChange=null}) => {
     const toast = useToast()

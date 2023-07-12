@@ -5,6 +5,7 @@ import { EditorInputItem, EditorNumberItem, EditorSliderItem } from "components/
 import { UnitPicker } from "components/unit";
 import { OverrideRule, Panel } from "types/dashboard";
 import { colors } from "utils/colors";
+import React from "react";
 
 interface Props {
     override: OverrideRule

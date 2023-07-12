@@ -5,6 +5,7 @@ import { StorageCopiedPanelKey } from "src/data/constants";
 import { initPanel } from "src/data/panel/initPanel";
 import { Dashboard,  Panel } from "types/dashboard";
 import storage from "utils/localStorage";
+import React from "react";
 
 interface Props {
     dashboard: Dashboard

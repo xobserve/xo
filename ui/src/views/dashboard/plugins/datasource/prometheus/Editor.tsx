@@ -2,7 +2,7 @@ import { Box, HStack, Input, VStack, useToast } from "@chakra-ui/react"
 import { cloneDeep } from "lodash"
 import { useEffect, useState } from "react"
 import { PanelQuery } from "types/dashboard"
-
+import React from "react";
 import { Variant } from "chakra-react-select/dist/types/types"
 import { Datasource, DatasourceEditorProps } from "types/datasource"
 import { queryPrometheusAllMetrics, queryPrometheusLabels } from "./query_runner"

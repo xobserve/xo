@@ -2,7 +2,7 @@ import { Box } from "@chakra-ui/react"
 import { MarkdownRender } from "components/markdown/MarkdownRender"
 import { PanelProps } from "types/dashboard"
 import { replaceWithVariables } from "utils/variable"
-
+import React from "react";
 
 
 const TextPanel = (props: PanelProps) => {

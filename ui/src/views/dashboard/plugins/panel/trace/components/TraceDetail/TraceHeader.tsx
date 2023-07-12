@@ -11,6 +11,8 @@ import {  AiOutlineDown, AiOutlineUp } from "react-icons/ai"
 import IconButton from "components/button/IconButton"
 import RadionButtons from "components/RadioButtons"
 import {addParamToUrl} from 'utils/url'
+import React from "react";
+
 interface Props {
     trace: Trace
     viewRange: IViewRange

@@ -6,9 +6,7 @@ import { Box, Center, useColorMode, useToast } from "@chakra-ui/react";
 import { genDynamicFunction } from "utils/dynamicCode";
 import {  cloneDeep, isEmpty, isFunction } from "lodash";
 import { useSearchParam } from "react-use";
-import { dispatch } from "use-bus";
-import { PanelDataEvent } from "src/data/bus-events";
-
+import React from "react";
 
 
 const EchartsPanel = ({ panel, data, width, height }: PanelProps) => {

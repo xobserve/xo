@@ -8,7 +8,6 @@ import { PanelProps } from "types/dashboard"
 import { TablePluginData, TableSeries } from "types/plugins/table"
 import { isEmpty, isFunction, isNumber } from "lodash"
 import { genDynamicFunction } from "utils/dynamicCode"
-import { SeriesData } from "types/seriesData"
 
 interface TablePanelProps extends PanelProps {
     data: TablePluginData[]

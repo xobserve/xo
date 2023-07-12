@@ -6,6 +6,7 @@ import { useMemo, useState } from "react";
 import { FaEye, FaTimes } from "react-icons/fa";
 import { Panel, PanelEditorProps, PanelType } from "types/dashboard";
 import GraphOverridesEditor, { GraphOverridesRules } from "../plugins/panel/graph/OverridesEditor";
+import React from "react";
 
 
 const PanelOverrides = ({ panel, onChange, data }: PanelEditorProps) => {

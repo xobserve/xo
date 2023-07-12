@@ -8,6 +8,7 @@ import { useEffect } from "react"
 import { queryHttpVariableValues } from "./query_runner"
 import FormItem from "components/form/Item"
 import { EditorInputItem } from "components/editor/EditorItem"
+import React from "react";
 
 const HttpVariableEditor = ({ variable, onChange, onQueryResult }: DatasourceVariableEditorProps) => {
     const toast = useToast()

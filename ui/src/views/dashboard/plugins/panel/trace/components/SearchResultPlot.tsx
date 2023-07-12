@@ -7,6 +7,7 @@ import { useEffect, useMemo, useState } from "react";
 import { Trace } from "types/plugins/trace"
 import { TimeRange } from "types/time";
 import { isErrorTrace } from "../utils/trace";
+import React from "react";
 
 interface Props {
     traces: Trace[]

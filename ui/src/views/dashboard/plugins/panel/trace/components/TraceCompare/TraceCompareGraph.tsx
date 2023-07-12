@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { getEdgesAndVertices, getUiFindVertexKeys } from "./utils";
 import { Box, Input, useColorModeValue } from "@chakra-ui/react";
 import renderNode, { getNodeEmphasisRenderer } from "./renderNode";
-
+import React from "react";
 
 interface Props {
     traceA: Trace
