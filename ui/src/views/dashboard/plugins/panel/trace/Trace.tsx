@@ -9,12 +9,17 @@ import TraceSearchResult from "./components/SearchResult"
 import transformTraceData from "./utils/transform-trace-data"
 import { uniqBy } from "lodash";
 import { replaceWithVariables, replaceWithVariablesHasMultiValues } from "utils/variable";
+import { getInitTimeRange } from "components/DatePicker/TimePicker";
 
 
 const TracePanel = (props: PanelProps) => {
     const [rawTraces, setRawTraces] = useState<TraceData[]>(null)
-    const onSearch = async (service, operation, tags, min, max, limit) => {
+    const onSearch = async (service, operation, tags, min, max, limit,useLatestTime) => {
         tags = convTagsLogfmt(tags);
+        let tr = getInitTimeRange()
+        if (!useLatestTime) {
+            tr = props.timeRange
+        }
         switch (props.panel.datasource.type) {
             case DatasourceType.Jaeger:
                 tags = replaceWithVariables(tags)
@@ -23,11 +28,11 @@ const TracePanel = (props: PanelProps) => {
                 limit = replaceWithVariables(limit)
                 const services = replaceWithVariablesHasMultiValues(service)
                 const operations = replaceWithVariablesHasMultiValues(operation, "all")
-
+                
                 const promises = []
                 for (const s of services) {
                     for (const o of operations) {
-                        promises.push(queryJaegerTraces(props.panel.datasource.id, props.timeRange, s, o, tags, min, max, limit))
+                        promises.push(queryJaegerTraces(props.panel.datasource.id, tr, s, o, tags, min, max, limit))
                     }
                 }
                 const res = await Promise.all(promises)

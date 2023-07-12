@@ -5,7 +5,7 @@ import { DatasourceType, Panel } from "types/dashboard"
 import { queryJaegerOperations, queryJaegerServices } from "../../../datasource/jaeger/query_runner"
 import { isEmpty, isEqual, set, sortBy, uniq } from "lodash"
 import { EditorInputItem, EditorNumberItem } from "components/editor/EditorItem"
-import { Button, Divider, HStack } from "@chakra-ui/react"
+import { Button, Checkbox, Divider, HStack, Text } from "@chakra-ui/react"
 import storage from "utils/localStorage"
 import { TraceSearchKey } from "../config/constants"
 import { TimeRange } from "types/time"
@@ -36,7 +36,7 @@ const TraceSearchPanel = ({ timeRange,dashboardId, panel, onSearch,onSearchIds }
     const [min, setMin] = useState<string>(lastSearch.min??'')
     const [limit, setLimit] = useState(lastSearch.limit??20)
     const [traceIds, setTraceIds] = useState<string>()
-
+    const [useLatestTime, setUseLatestTime] = useState(true)
     useEffect(() => {
         return () => {
             delete traceServicesCache[dashboardId + panel.id]
@@ -136,7 +136,7 @@ const TraceSearchPanel = ({ timeRange,dashboardId, panel, onSearch,onSearchIds }
         if (!isEmpty(traceIds)) {
             onSearchIds(traceIds)
         } else {
-            onSearch(service,operation,tags,min,max,limit)
+            onSearch(service,operation,tags,min,max,limit,useLatestTime)
             storage.set(TraceSearchKey + dashboardId + panel.id, {
                 service, operation,tags,min,max,limit
             })
@@ -169,11 +169,14 @@ const TraceSearchPanel = ({ timeRange,dashboardId, panel, onSearch,onSearchIds }
             <FormSection title="Trace ids" titleSize="0.85rem" spacing={1} desc="Searching by trace ids has the highest priority, so if you want to search with options, leave this empty">  
                 <EditorInputItem placeholder="search with trace ids, separated with comma" value={traceIds} onChange={v => setTraceIds(v)} size="md"/>
             </FormSection>
-            <Button  width="150px" onClick={onClickSearch}>Find traces</Button>
+            <HStack>
+                <Button  width="150px" onClick={onClickSearch}>Find traces</Button>
+                <Checkbox isChecked={useLatestTime} onChange={e => setUseLatestTime(e.currentTarget.checked)} />
+                <Text textStyle="annotation">Use latest time</Text>
+            </HStack>
+           
         </Form>
     </>)
 }
 
 export default TraceSearchPanel
-
-// 92f589bd928f122ca0e80ff91cd08089,8f83fe4c235126f718da79cb50755469
