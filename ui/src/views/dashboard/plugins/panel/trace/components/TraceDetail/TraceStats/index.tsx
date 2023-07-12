@@ -226,8 +226,9 @@ export default class TraceStatistics extends Component<Props, State> {
       });
     }
     if (uiFind) {
+      const search = uiFind.toLowerCase()
       for (let i = 0; i < allTableSpansChange.length; i++) {
-        if (allTableSpansChange[i].name.indexOf(uiFind!) !== -1) {
+        if (allTableSpansChange[i].name.toLowerCase().indexOf(search!) !== -1) {
           allTableSpansChange[i].searchColor = yellowSearchCollor;
 
           for (let j = 0; j < allTableSpansChange.length; j++) {
