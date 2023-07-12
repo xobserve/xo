@@ -3,6 +3,7 @@ export interface TimeRange {
     end: Date
     startRaw?: string
     endRaw?: string
+    sub: number
 }
 
 export interface SystemDateFormatSettings {

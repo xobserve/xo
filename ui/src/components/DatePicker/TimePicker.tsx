@@ -16,17 +16,9 @@ import { cloneDeep, includes, isDate, isEmpty } from 'lodash'
 import moment from 'moment'
 import { useState } from 'react'
 import { FaCalendarAlt, FaTimes } from 'react-icons/fa'
-import { systemDateFormats } from 'types/time'
-import useBus from 'use-bus'
+import { systemDateFormats, TimeRange } from 'types/time'
 import storage from 'utils/localStorage'
 
-export interface TimeRange {
-    start: Date
-    end: Date
-    startRaw?: string
-    endRaw?: string
-    sub: number
-}
 
 interface Props {
     onClose?: any

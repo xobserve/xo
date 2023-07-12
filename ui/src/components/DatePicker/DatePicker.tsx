@@ -23,20 +23,22 @@ const DatePicker = ({ showTime = false }: Props) => {
     }
 
     useBus(
-        TimeRefreshEvent, 
+        TimeRefreshEvent,
         () => {
             refresh()
         },
         []
     )
     const refresh = () => {
-        const tr = getInitTimeRange()
+        const tr: TimeRange = getInitTimeRange()
         if (tr.sub > 0) {
             const now = new Date()
             tr.start = subMinutes(now, tr.sub)
             tr.end = now
             storage.set(TimePickerKey, JSON.stringify(tr))
-            dispatch({type:  TimeChangedEvent,data: tr})
+            dispatch({ type: TimeChangedEvent, data: tr })
+            setValue(tr)
+        } else {
             setValue(tr)
         }
     }
@@ -44,13 +46,13 @@ const DatePicker = ({ showTime = false }: Props) => {
     return (
         <>
             <Box>
-                <Tooltip label={`${value?.start.toLocaleString()} - ${value?.end.toLocaleString()}\n\n${value.startRaw} to ${value.endRaw}`}>
+                <Tooltip label={`${value?.start.toLocaleString()} - ${value?.end.toLocaleString()}`}>
                     <HStack spacing={0} onClick={onOpen} cursor="pointer">
                         <IconButton variant="ghost">
                             <FaRegClock />
                         </IconButton>
                         {
-                            showTime && <Text layerStyle="textSecondary" fontSize="1rem">{value.startRaw} to {value.endRaw}</Text>
+                            showTime && <Text layerStyle="textSecondary" fontSize="0.9rem" fontWeight="500">{value.startRaw} to {value.endRaw}</Text>
                         }
                     </HStack>
                 </Tooltip>
@@ -69,3 +71,21 @@ const DatePicker = ({ showTime = false }: Props) => {
 }
 
 export default DatePicker
+
+
+
+export const setDateTime= (from: number, to: number) => {
+    const start = new Date(from * 1000)
+    const end = new Date(to * 1000)
+    const tr = {
+        start: start,
+        end: end,
+        startRaw: start.toLocaleString(),
+        endRaw: end.toLocaleString(),
+        sub: 0
+    }
+
+    storage.set(TimePickerKey, JSON.stringify(tr))
+    dispatch({ type: TimeChangedEvent, data: tr })
+    dispatch({ type: TimeRefreshEvent })
+}

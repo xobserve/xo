@@ -16,7 +16,7 @@ import { SeriesData } from "types/seriesData";
 import storage from "utils/localStorage";
 import { PanelInactiveKey } from "src/data/storage-keys";
 import { ZoomPlugin } from "./uplot-plugins/ZoomPlugin";
-import { TimeRange } from "types/time";
+import { setDateTime } from "components/DatePicker/DatePicker";
 
 
 interface GraphPanelProps extends PanelProps {
@@ -163,7 +163,7 @@ const GraphPanel = memo((props: GraphPanelProps) => {
     const onChartCreate = useCallback((chart) => { setUplot((chart)); props.sync?.sub(chart) }, [props.sync])
 
     const onZoom = (tr) => {
-        console.log("here333333:",tr)
+        setDateTime(tr.from, tr.to)
     }
     return (
         <>{
