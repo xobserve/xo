@@ -16,7 +16,6 @@ import { FlamegraphRenderer, convertJaegerTraceToProfile } from '@pyroscope/flam
 import { Trace } from 'types/plugins/trace';
 import { Box, useColorMode } from '@chakra-ui/react';
 import { cloneDeep } from 'lodash';
-import customColors from 'src/theme/colors';
 
 interface Props {
     trace: Trace

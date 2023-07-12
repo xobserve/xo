@@ -1,4 +1,4 @@
-import { extend } from 'lodash'
+import { extend, isEmpty } from 'lodash'
 import { Router } from 'next/router'
 import queryString from 'query-string'
 
@@ -18,6 +18,13 @@ export const clearApiVersion = (api: string) => api && api.replace(/\/v\d$/, '')
 export const addParamToUrl = (param: any) => {
     const currentQuery = getUrlParams()
     extend(currentQuery, param)
+
+    for (const k of Object.keys(currentQuery)) {
+        if (isEmpty(currentQuery[k])){
+            delete currentQuery[k]
+        } 
+    }
+
     const params = queryString.stringify(currentQuery)
     updateUrl(params)
 }

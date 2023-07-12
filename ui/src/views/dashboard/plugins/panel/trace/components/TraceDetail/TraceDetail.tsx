@@ -16,20 +16,22 @@ import TraceJSON from "./TraceJSON";
 import TraceFlamegraph from "./TraceFlameGraph";
 import TraceSpanView from "./TraceSpanTable";
 import TraceStatistics from "./TraceStats";
+import { useSearchParam } from "react-use";
 
 interface Props {
     trace: Trace
     scrollManager: ScrollManager
 }
 const TraceDetail = ({ trace, scrollManager }: Props) => {
-    const [viewType, setViewType] = useState<ETraceViewType>(ETraceViewType.TraceStatistics)
+    const [viewType, setViewType] = useState<ETraceViewType>(ETraceViewType.TraceTimelineViewer)
     const [viewRange, setViewRange] = useState<IViewRange>({
         time: {
             current: [0, 1],
         },
     })
     const [collapsed, setCollapsed] = useState(true)
-    const [search, setSearch] = useState("")
+    
+    const search = useSearchParam('search')
 
     useEffect(() => {
         scrollManager.setTrace(trace);
@@ -111,7 +113,7 @@ const TraceDetail = ({ trace, scrollManager }: Props) => {
     }
     return (<Box overflowY="scroll" minH="100vh">
         <Box position="fixed" width="100%" bg={useColorModeValue('#fff', customColors.bodyBg.dark)} zIndex="1000">
-            <TraceDetailHeader trace={trace} viewRange={viewRange} updateNextViewRangeTime={updateNextViewRangeTime} updateViewRangeTime={updateViewRangeTime} onGraphCollapsed={() => setCollapsed(!collapsed)} collapsed={collapsed} search={search} onSearchChange={setSearch} searchCount={findCount} prevResult={prevResult} nextResult={nextResult} onViewTypeChange={setViewType} viewType={viewType} />
+            <TraceDetailHeader trace={trace} viewRange={viewRange} updateNextViewRangeTime={updateNextViewRangeTime} updateViewRangeTime={updateViewRangeTime} onGraphCollapsed={() => setCollapsed(!collapsed)} collapsed={collapsed}  searchCount={findCount} prevResult={prevResult} nextResult={nextResult} onViewTypeChange={setViewType} viewType={viewType} />
         </Box>
         <Box mt={collapsed ? "67px" : "144px"} >
             {view}

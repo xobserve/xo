@@ -1,4 +1,4 @@
-import { Box, Button, Flex, HStack, Input, Select, Text } from "@chakra-ui/react"
+import { Flex, HStack, Input,Text } from "@chakra-ui/react"
 import { ColorModeSwitcher } from "components/ColorModeSwitcher"
 import moment from "moment"
 import { Trace } from "types/plugins/trace"
@@ -7,10 +7,10 @@ import SpanGraph from "./SpanGraph"
 import { useState } from "react"
 import { ETraceViewType, IViewRange, ViewRangeTimeUpdate } from "../../types/types"
 import CollapseIcon from "components/icons/Collapse"
-import { AiOutlineArrowUp, AiOutlineDown, AiOutlineUp } from "react-icons/ai"
+import {  AiOutlineDown, AiOutlineUp } from "react-icons/ai"
 import IconButton from "components/button/IconButton"
 import RadionButtons from "components/RadioButtons"
-
+import {addParamToUrl} from 'utils/url'
 interface Props {
     trace: Trace
     viewRange: IViewRange
@@ -18,8 +18,6 @@ interface Props {
     updateViewRangeTime: any
     collapsed: boolean
     onGraphCollapsed: any
-    search: string
-    onSearchChange: any
     searchCount: number
     prevResult: any
     nextResult: any
@@ -27,8 +25,12 @@ interface Props {
     onViewTypeChange: any
 }
 
-const TraceDetailHeader = ({ trace, viewRange, updateNextViewRangeTime, updateViewRangeTime, collapsed, onGraphCollapsed, search, onSearchChange, searchCount, prevResult, nextResult, viewType, onViewTypeChange }: Props) => {
-
+const TraceDetailHeader = ({ trace, viewRange, updateNextViewRangeTime, updateViewRangeTime, collapsed, onGraphCollapsed, searchCount, prevResult, nextResult, viewType, onViewTypeChange }: Props) => {
+    const [search, setSearch] = useState('')
+    const onSearchChange = (v) => {
+        setSearch(v)
+        addParamToUrl({search: v})
+    }
     return (<>
         <Flex justifyContent="space-between" alignItems="center">
             <HStack>
@@ -48,7 +50,7 @@ const TraceDetailHeader = ({ trace, viewRange, updateNextViewRangeTime, updateVi
                             <IconButton onClick={nextResult} isDisabled={search == ''} fontSize="1rem"><AiOutlineDown /></IconButton></>}
                         {/* <Button size="sm" variant="outline" onClick={prevResult} isDisabled={search == ''}></Button> */}
                     </HStack>)}
-                <RadionButtons theme="brand" fontSize="0.7rem" spacing={0} value={viewType} onChange={v => onViewTypeChange(v)} options={[
+                <RadionButtons theme="brand" fontSize="0.85rem" spacing={0} value={viewType} onChange={v => onViewTypeChange(v)} options={[
                     { label: "Timeline", value: ETraceViewType.TraceTimelineViewer },
                     { label: "Flame", value: ETraceViewType.TraceFlamegraph },
                     { label: "Graph", value: ETraceViewType.TraceGraph },
