@@ -1,6 +1,5 @@
 import {  Button, HStack, Image, Input, Select, useToast } from "@chakra-ui/react"
 import { isEmpty } from "lodash"
-import { useRouter } from "next/router"
 import { checkAndTestHttp } from "src/views/dashboard/plugins/datasource/http/query_runner"
 import { checkAndTestJaeger } from "src/views/dashboard/plugins/datasource/jaeger/query_runner"
 import { checkAndTestPrometheus } from "src/views/dashboard/plugins/datasource/prometheus/query_runner"
@@ -14,10 +13,11 @@ import TestDataDatasourceEditor from "../dashboard/plugins/datasource/testdata/D
 import JaegerDatasourceEditor from "../dashboard/plugins/datasource/jaeger/DatasourceEditor"
 import FormItem from "components/form/Item"
 import React from "react";
+import { useNavigate } from "react-router-dom"
 
 const DatasourceEditor = ({ds, onChange=null}) => {
     const toast = useToast()
-    const router = useRouter()
+    const navigate = useNavigate()
     const [datasource, setDatasource] = useImmer<Datasource>(ds)
 
     const saveDatasource = async () => {
@@ -31,7 +31,7 @@ const DatasourceEditor = ({ds, onChange=null}) => {
 
         if (ds.id == 0) {
             setTimeout(() => {
-                router.push(`/cfg/datasources?id=${res.data}`)
+                navigate(`/cfg/datasources?id=${res.data}`)
             }, 1000)
         } else {
             onChange()

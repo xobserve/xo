@@ -3,7 +3,6 @@ import { Button, Modal, ModalBody, ModalCloseButton, ModalContent, ModalHeader, 
 import { Form } from "components/form/Form"
 import Page from "layouts/page/Page"
 import { isEmpty } from "lodash"
-import { useRouter } from "next/router"
 import { useEffect, useRef, useState } from "react"
 import { FaCog } from "react-icons/fa"
 import { InitTestDataDatasourceId } from "src/data/constants"
@@ -12,10 +11,11 @@ import ReserveUrls from "src/data/reserve-urls"
 import DatasourceEditor from "src/views/datasource/Editor"
 import { Datasource } from "types/datasource"
 import { requestApi } from "utils/axios/request"
+import { useNavigate } from "react-router-dom"
 
 const DatasourcesPage = () => {
     const toast = useToast()
-    const router = useRouter()
+    const navigate = useNavigate()
     const [datasources, setDatasources] = useState<Datasource[]>([])
     const [datasource, setDatasource] = useState<Datasource>(null)
     useEffect(() => {
@@ -65,7 +65,7 @@ const DatasourcesPage = () => {
         <Page title={`Configuration`} subTitle="Manage datasources" icon={<FaCog />} tabs={cfgLinks}>
             <Flex justifyContent="space-between">
                 <Box></Box>
-                <Button size="sm" onClick={() => router.push(ReserveUrls.New + '/datasource')}>Add new datasource</Button>
+                <Button size="sm" onClick={() => navigate(ReserveUrls.New + '/datasource')}>Add new datasource</Button>
             </Flex>
 
             <VStack alignItems="left" spacing={3} mt="3">

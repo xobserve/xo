@@ -2,7 +2,6 @@ import React from "react"
 import { Box, Input, useToast,  HStack, useColorModeValue, Alert, Text, Flex, Button, Tooltip } from "@chakra-ui/react"
 import Page from "layouts/page/Page"
 import { cloneDeep, isEmpty } from "lodash"
-import { useRouter } from "next/router"
 import { useEffect, useState } from "react"
 import { FaAlignLeft, FaCog, FaUserFriends } from "react-icons/fa"
 import { Route } from "types/route"
@@ -12,11 +11,12 @@ import SortableTree, { changeNodeAtPath } from '@nosferatu500/react-sortable-tre
 import '@nosferatu500/react-sortable-tree/style.css';
 import * as Icons from 'react-icons/fa'
 import { MdOutlineDashboard } from "react-icons/md"
+import { useParams } from "react-router-dom"
 
-const TeamSettingPage = () => {
-    const router = useRouter()
+const TeamSidemenuPage = () => {
+    const paramas = useParams()
     const toast = useToast()
-    const id = router.query.id
+    const id = paramas.id
 
 
     const [team, setTeam] = useState<Team>(null)
@@ -174,7 +174,7 @@ const TeamSettingPage = () => {
         })
 
         setTimeout(() => {
-            router.reload()
+            window.location.reload()
         }, 1000)
     }
 
@@ -326,4 +326,4 @@ const TeamSettingPage = () => {
     </>
 }
 
-export default TeamSettingPage
+export default TeamSidemenuPage

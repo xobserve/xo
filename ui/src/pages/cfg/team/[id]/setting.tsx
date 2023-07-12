@@ -4,18 +4,19 @@ import { Form, FormSection } from "components/form/Form"
 import FormItem from "components/form/Item"
 import Page from "layouts/page/Page"
 import { cloneDeep } from "lodash"
-import { useRouter } from "next/router"
 import { useEffect, useRef, useState } from "react"
 import { FaAlignLeft, FaCog, FaUserFriends } from "react-icons/fa"
 import { MdOutlineDashboard } from "react-icons/md"
 import { Route } from "types/route"
 import { Team } from "types/teams"
 import { requestApi } from "utils/axios/request"
+import { useNavigate, useParams } from "react-router-dom"
 
 const TeamSettingPage = () => {
-  const router = useRouter()
+  const params = useParams()
+  const navigate = useNavigate()
   const toast = useToast()
-  const id = router.query.id
+  const id = params.id
   const tabLinks: Route[] = [
     { title: "Members", url: `/cfg/team/${id}/members`, icon: <FaUserFriends /> },
     { title: "Dashboards", url: `/cfg/team/${id}/dashboards`, icon: <MdOutlineDashboard /> },
@@ -62,7 +63,7 @@ const TeamSettingPage = () => {
     })
 
     setTimeout(() => {
-      router.push(`/cfg/teams`)
+      navigate(`/cfg/teams`)
     }, 1000)
   }
 
@@ -76,7 +77,7 @@ const TeamSettingPage = () => {
     })
 
     setTimeout(() => {
-      router.push(`/cfg/teams`)
+      navigate(`/cfg/teams`)
     }, 1000)
   }
 

@@ -4,19 +4,19 @@ import { Form, FormSection } from "components/form/Form"
 import FormItem from "components/form/Item"
 import Page from "layouts/page/Page"
 import { cloneDeep } from "lodash"
-import { useRouter } from "next/router"
 import { useEffect, useState } from "react"
 import { FaPlus } from "react-icons/fa"
 import { initDashboard } from "src/data/dashboard"
 import { newLinks } from "src/data/nav-links"
 import { Dashboard } from "types/dashboard"
-import { globalTeamId, Team } from "types/teams"
+import { Team } from "types/teams"
 import { requestApi } from "utils/axios/request"
+import { useNavigate } from "react-router-dom"
 
 
 const NewDashboardPage = () => {
     const toast = useToast()
-    const router = useRouter()
+    const navigate = useNavigate()
     const [dashboard, setDashboard] = useState<Dashboard>(initDashboard)
     const [teams, setTeams] = useState<Team[]>([])
 
@@ -39,7 +39,7 @@ const NewDashboardPage = () => {
         })
 
         setTimeout(() => {
-            router.push(`/${res.data}`)
+            navigate(`/${res.data}`)
         }, 1000)
     }
 

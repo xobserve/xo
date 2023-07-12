@@ -3,7 +3,6 @@ import { Box, Button,  Select, Text, Textarea, useToast, VStack } from "@chakra-
 import FormItem from "components/form/Item"
 import Page from "layouts/page/Page"
 import { isEmpty } from "lodash"
-import { useRouter } from "next/router"
 import { useEffect, useState } from "react"
 import { FaPlus } from "react-icons/fa"
 import { newLinks } from "src/data/nav-links"
@@ -11,10 +10,11 @@ import { Dashboard } from "types/dashboard"
 import { globalTeamId, Team } from "types/teams"
 import { requestApi } from "utils/axios/request"
 import { isJSON } from "utils/is"
+import { useNavigate } from "react-router-dom"
 
-const ImportDashboard = () => {
+const ImportDashboardPage = () => {
     const toast = useToast()
-    const router = useRouter()
+    const navigate = useNavigate()
     const [dashboard, setDashboard] = useState<Dashboard>(null)
     const [teams, setTeams] = useState<Team[]>([])
 
@@ -37,7 +37,7 @@ const ImportDashboard = () => {
         })
 
         setTimeout(() => {
-            router.push(`/${res.data}`)
+            navigate(`/${res.data}`)
         }, 1000)
     }
 
@@ -95,4 +95,4 @@ const ImportDashboard = () => {
 }
 
 
-export default ImportDashboard
+export default ImportDashboardPage

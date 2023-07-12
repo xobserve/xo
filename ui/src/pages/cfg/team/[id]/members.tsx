@@ -2,19 +2,19 @@ import { AlertDialog, AlertDialogBody, AlertDialogContent, AlertDialogFooter, Al
 import Page from "layouts/page/Page"
 import { cloneDeep } from "lodash"
 import moment from "moment"
-import { useRouter } from "next/router"
 import React, { useEffect, useRef, useState } from "react"
 import { FaAlignLeft, FaCog, FaUserFriends } from "react-icons/fa"
 import { MdOutlineDashboard } from "react-icons/md"
+import { useParams } from "react-router-dom"
 import { Role } from "types/role"
 import { Route } from "types/route"
 import { Team, TeamMember } from "types/teams"
 import { requestApi } from "utils/axios/request"
 
 const TeamMembersPage = () => {
-    const router = useRouter()
+    const params = useParams()
     const toast = useToast()
-    const id = router.query.id
+    const id = params.id
     const tabLinks: Route[] = [
         { title: "Members", url: `/cfg/team/${id}/members`, icon: <FaUserFriends /> },
         { title: "Dashboards", url: `/cfg/team/${id}/dashboards`, icon: <MdOutlineDashboard /> },

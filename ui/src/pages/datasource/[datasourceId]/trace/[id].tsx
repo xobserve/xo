@@ -1,12 +1,12 @@
 import React from "react"
-import { useRouter } from "next/router"
+import { useParams } from "react-router-dom"
 import TraceDetailWrapper from "src/views/dashboard/plugins/panel/trace/components/TraceDetail/TraceDetailWrapper"
 
 
 
 const TracePage = () => {
-    const router = useRouter()
-    return (router.query.id && router.query.datasourceId && <TraceDetailWrapper id={router.query.id} dsId={router.query.datasourceId}/>)
+    const params = useParams()
+    return (params.id && params.datasourceId && <TraceDetailWrapper id={params.id} dsId={params.datasourceId}/>)
 }
 
 export default TracePage

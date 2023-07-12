@@ -4,18 +4,18 @@ import { Form } from "components/form/Form"
 import FormItem from "components/form/Item"
 import useSession from "hooks/use-session"
 import Page from "layouts/page/Page"
-import { useRouter } from "next/router"
 import { useEffect, useState } from "react"
 import { FaCog } from "react-icons/fa"
 import { cfgLinks } from "src/data/nav-links"
 import ReserveUrls from "src/data/reserve-urls"
 import { Team } from "types/teams"
 import { requestApi } from "utils/axios/request"
+import { useNavigate } from "react-router-dom"
 
 const TeamsPage = () => {
     const { session } = useSession()
     const toast = useToast()
-    const router = useRouter()
+    const navigate = useNavigate()
     const [teams, setTeams] = useState<Team[]>([])
     const [teamName, setTeamName] = useState<string>("")
     const [teamDesc, setTeamDesc] = useState<string>("")
@@ -66,7 +66,7 @@ const TeamsPage = () => {
                                 <Td>{team.name}</Td>
                                 <Td>{team.memberCount}</Td>
                                 <Td>{team.createdBy} {session?.user?.id == team.createdById && <Tag>You</Tag>}</Td>
-                                <Td><Button variant="ghost" size="sm" px="0" onClick={() => router.push(`${ReserveUrls.Config}/team/${team.id}/members`)}>Manage</Button></Td>
+                                <Td><Button variant="ghost" size="sm" px="0" onClick={() => navigate(`${ReserveUrls.Config}/team/${team.id}/members`)}>Manage</Button></Td>
                             </Tr>
                         })}
                     </Tbody>

@@ -1,8 +1,9 @@
 import { ChakraProvider, useToast } from '@chakra-ui/react'
 import {
   createBrowserRouter,
-  RouterProvider,
+  createRoutesFromElements,
   Route,
+  RouterProvider,
 } from "react-router-dom";
 import React, { useEffect, useState } from 'react'
 import theme from 'theme'
@@ -17,7 +18,9 @@ import { queryVariableValues, setVariableSelected } from './views/variables/Vari
 import { VarialbeAllOption } from 'src/data/variable'
 import AntdWrapper from 'components/AntdWrapper'
 
-import { pageRoutes } from './data/routes';
+import routes from './routes';
+import TeamDashboardsPage from './pages/cfg/team/[id]/dashboards';
+import TeamMembersPage from './pages/cfg/team/[id]/members';
 
 const { ToastContainer } = createStandaloneToast()
 
@@ -65,13 +68,14 @@ const AppView = () => {
     gvariables = res.data
   }
 
-  const router = createBrowserRouter(pageRoutes);
+  const router = createBrowserRouter(routes);
 
   return (
     <>
       {cfg && <ChakraProvider theme={theme}>
         <AntdWrapper>
-          <RouterProvider router={router} />
+          <RouterProvider router={router} /> 
+        
         </AntdWrapper>
       </ChakraProvider>}
 

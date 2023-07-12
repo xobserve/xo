@@ -15,7 +15,7 @@ const initDatasource: Datasource = {
     type: DatasourceType.Prometheus
 }
 
-const DatasourcePage = () => {
+const NewDatasourcePage = () => {
     return <>
         <Page title={`New`} subTitle="Create some useful items" icon={<FaPlus />} tabs={newLinks}>
             <FormSection maxW="500px" title="Datasource info">
@@ -26,4 +26,4 @@ const DatasourcePage = () => {
 }
 
 
-export default DatasourcePage
+export default NewDatasourcePage
