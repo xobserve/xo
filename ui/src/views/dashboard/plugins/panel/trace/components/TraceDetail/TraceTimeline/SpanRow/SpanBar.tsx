@@ -118,11 +118,11 @@ function SpanBar(props: TInnerProps) {
                             />
                         }
                     >
-                        <Box  width="20px" display="inline-block" position="absolute" height="60%" top="20%" left={positionKey} textAlign="center">
+                        <Box  width="20px" display="inline-block" position="absolute" height="60%" top="20%" left={`calc(${positionKey} - 11px)`} textAlign="center">
                             <Box className="SpanBar--logMarker"
                                 display="inline-block"
                                 _hover={{ bg: 'orange' }}
-                                bg={useColorModeValue('rgba(0, 0, 0, 0.3)', 'rgba(255, 255, 255, 0.7)')}
+                                bg={useColorModeValue('rgba(0, 0, 0, 0.25)', 'brand.400')}
                                 cursor='pointer'
                                 height='100%'
                                 width='1.5px' />
