@@ -266,5 +266,6 @@ const SpansTable = ({ columns, data }) => {
                 showQuickJumper: true,
             }}
             rowKey="spanID"
+            showSorterTooltip={false}
         />)
 }

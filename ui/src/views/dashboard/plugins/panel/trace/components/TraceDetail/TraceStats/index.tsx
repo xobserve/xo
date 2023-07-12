@@ -372,6 +372,7 @@ export default class TraceStatistics extends Component<Props, State> {
           key={groupedAndSubgroupedSpanData.length}
           defaultExpandAllRows
           sortDirections={['ascend', 'descend', 'ascend']}
+          showSorterTooltip={false}
         />
       </Box>
     );

@@ -42,7 +42,7 @@ const TraceDetailHeader = ({ trace, viewRange, updateNextViewRangeTime, updateVi
             <HStack spacing={1}>
                 {viewType == ETraceViewType.TraceJSON ?
                     <Text fontSize="0.95rem" layerStyle="gradientText" mr="20px">Click code area and Press Command+F to search </Text>
-                    : (viewType != ETraceViewType.TraceFlamegraph && <HStack spacing={0}>
+                    : ((viewType != ETraceViewType.TraceFlamegraph && viewType != ETraceViewType.TraceSpansView)&& <HStack spacing={0}>
                         <HStack spacing={0} position="relative">
                             <Input width="240px" placeholder="Search.." value={search1} onChange={e => onSearchChange(e.currentTarget.value)} />
                             <Text textStyle="annotation" width="30px" position="absolute" right="0" mt="2px">{searchCount}</Text>
