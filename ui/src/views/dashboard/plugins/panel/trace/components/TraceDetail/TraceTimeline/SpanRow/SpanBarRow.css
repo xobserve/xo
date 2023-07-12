@@ -50,37 +50,7 @@ limitations under the License.
     overflow: visible;
   }
 
-  .span-row.is-matching-filter {
-    background-color: #fffce4;
-  }
-    
-  .span-name-wrapper.is-matching-filter {
-    background-color: #fffce4;
-    color: #000
-  }
-
-  .span-row.is-matching-filter:hover .span-name-wrapper {
-    background: linear-gradient(90deg, #fff5e1, #fff5e1 75%, #ffe6c9);
-  }
   
-  .span-row.is-expanded .span-name-wrapper.is-matching-filter {
-    background: #fff3d7 !important;
-  }
-  
-  .span-row.is-matching-filter:hover .span-view {
-    background-color: #fff3d7 !important;
-    /* outline: 1px solid #ddd; */
-  }
-  
-  
-  .span-row.is-expanded.is-matching-filter .span-view {
-    background: #fff3d7 !important;
-    /* outline: 1px solid #ddd; */
-  }
-    
-  .span-row.is-expanded.is-matching-filter:hover .span-view {
-    background: #ffeccf;
-  }
 
   .span-name {
     cursor: pointer;

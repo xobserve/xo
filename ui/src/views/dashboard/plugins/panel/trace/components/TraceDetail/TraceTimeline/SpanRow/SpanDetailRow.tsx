@@ -90,7 +90,7 @@ const SpanDetailRow = (props: SpanDetailRowProps) => {
             <TimelineRow.Cell width={1 - columnDivision}>
                 <Box sx={{
                     '.detail-info-wrapper': {
-                        background: useColorModeValue('#fff','gray.700'),
+                        background: useColorModeValue('#fff',customColors.bodyBg.dark),
                         border: colorMode == "light" ? '1px solid #d3d3d3' : null,
                         borderTop: '3px solid',
                         padding: '0.75rem'

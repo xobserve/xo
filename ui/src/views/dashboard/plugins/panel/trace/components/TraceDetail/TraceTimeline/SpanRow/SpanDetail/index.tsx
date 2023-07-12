@@ -80,7 +80,7 @@ export default function SpanDetail(props: SpanDetailProps) {
 
   return (
     <div>
-      <Flex justifyContent="space-between" alignItems="center" pt="1" pb="3">
+      <Flex justifyContent="space-between" alignItems="center" pt="0" pb="2">
         <HStack>
           <Text textStyle="subTitle">{operationName}</Text>
           <Text opacity="0.7" mb="-2px">{spanID}</Text>

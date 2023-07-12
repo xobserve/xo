@@ -130,6 +130,8 @@ const SpanBarRow = (props: SpanBarRowProps) => {
         hintSide = 'right';
     }
 
+    const matchLightBg = "#fffce9"
+    const matchDarkBg = 'rgb(22, 45, 50)'
     return (
         <Box sx={{
             '.span-row:hover .span-name-wrapper': {
@@ -138,19 +140,44 @@ const SpanBarRow = (props: SpanBarRowProps) => {
                 //  `linear-gradient(90deg, ${customColors.hoverBg.dark}, ${customColors.hoverBg.dark} 50%, #222)`
             },
             '.span-row:hover .span-view': {
-                backgroundColor:  useColorModeValue('#f5f5f5', 'gray.700'),
-                outline: colorMode == "light" ? '1px solid #ddd' : null 
+                backgroundColor: useColorModeValue('#f5f5f5', 'gray.700'),
+                outline: colorMode == "light" ? '1px solid #ddd' : null
             },
             '.span-row.is-expanded .SpanBar--label,.span-row:hover .SpanBar--label, .span-name .endpoint-name': {
-              color: useColorModeValue('#000', '#aaa')
+                color: useColorModeValue('#000', '#aaa')
             },
             '.span-row.is-expanded .span-name-wrapper': {
                 background: useColorModeValue('#f8f8f8', 'gray.700'),
-              },
-              
-              '.span-row.is-expanded .span-view': {
+            },
+
+            '.span-row.is-expanded .span-view': {
                 background: useColorModeValue('#f8f8f8', 'gray.700'),
-              }
+            },
+
+
+            ' .span-row.is-matching-filter': {
+                /* background-color: #fffce4; */
+            },
+            '.span-name-wrapper.is-matching-filter': {
+                backgroundColor: useColorModeValue(matchLightBg, matchDarkBg),
+                color: useColorModeValue('#000', '#fff')
+            },
+            '.span-row.is-expanded .span-name-wrapper.is-matching-filter': {
+                background: useColorModeValue(matchLightBg, matchDarkBg),
+            },
+            '.span-row.is-expanded.is-matching-filter .span-view': {
+                background:useColorModeValue(matchLightBg, matchDarkBg),
+            },
+            '.span-row.is-matching-filter:hover .span-name-wrapper': {
+                background: useColorModeValue(matchLightBg, matchDarkBg),
+            },
+            '.span-row.is-matching-filter:hover .span-view': {
+                backgroundColor:useColorModeValue(matchLightBg, matchDarkBg),
+            },
+            '.span-row.is-expanded.is-matching-filter:hover .span-view': {
+                // background: '#ffeccf'
+            }
+
         }}>
             <TimelineRow
                 className={`
@@ -182,11 +209,11 @@ const SpanBarRow = (props: SpanBarRowProps) => {
                                 className={`span-svc-name ${isParent && !isChildrenExpanded ? 'is-children-collapsed' : ''}`}
                             // style={{verticalAlign: "middle"}}
                             >
-                                {showErrorIcon && <IoAlert style={{ display: "inline-block",marginBottom: '-2px' }} className="SpanBarRow--errorIcon" />}
+                                {showErrorIcon && <IoAlert style={{ display: "inline-block", marginBottom: '-2px' }} className="SpanBarRow--errorIcon" />}
                                 {serviceName}{' '}
                                 {rpc && (
                                     <span>
-                                        <AiOutlineArrowRight style={{ display: "inline-block",marginBottom: '-2px' }} />{' '}
+                                        <AiOutlineArrowRight style={{ display: "inline-block", marginBottom: '-2px' }} />{' '}
                                         <i className="SpanBarRow--rpcColorMarker" style={{ background: rpc.color }} />
                                         {rpc.serviceName}
                                     </span>
