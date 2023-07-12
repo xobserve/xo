@@ -292,7 +292,6 @@ class TraceStatistics extends Component<Props, State> {
         }
       }
 
-      console.log("here333333:", backgroundColor)
       return {
         style: r,
       };

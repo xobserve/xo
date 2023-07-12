@@ -5,8 +5,8 @@ import { Accessors } from "../scroll/scrollManager";
 import { KeyValuePair, Trace, TraceSpan } from "types/plugins/trace";
 import DetailState from "./SpanRow/SpanDetail/DetailState";
 import memoizeOne from 'memoize-one';
-import { ViewedBoundsFunctionType, createViewedBoundsFunc, findServerChildSpan, isErrorSpan, isKindClient, spanContainsErredSpan } from "./utils";
-import { isEqual } from "lodash";
+import spanAncestorIds, { ViewedBoundsFunctionType, createViewedBoundsFunc, findServerChildSpan, isErrorSpan, isKindClient, spanContainsErredSpan } from "./utils";
+import { isEmpty, isEqual } from "lodash";
 import { Box } from "@chakra-ui/react";
 import ListView from "./ListView/ListView";
 import getLinks from "../../../model/link-patterns";
@@ -14,6 +14,7 @@ import colorGenerator from "utils/colorGenerator";
 import SpanBarRow from "./SpanRow/SpanBarRow";
 import { PEER_SERVICE } from "../../../config/constants";
 import SpanDetailRow from "./SpanRow/SpanDetailRow";
+import filterSpans from "../../../utils/filter-spans";
 
 interface Props {
     currentViewRangeTime: [number, number];
@@ -38,16 +39,16 @@ type State = {
     shouldScrollToFirstUiFindMatch: boolean;
 };
 
-const  SpanRowsWrapper = memo((props: Props) => {
+const SpanRowsWrapper = memo((props: Props) => {
     console.log("here333333:span rows renders")
     return (
-        <SpanRows {...props}/>
+        <SpanRows {...props} />
     )
 })
 
 export default SpanRowsWrapper
 
-export  class SpanRows extends React.Component<Props> {
+export class SpanRows extends React.Component<Props> {
     listView: ListView | TNil;
     //@ts-ignore
     state: State;
@@ -56,13 +57,25 @@ export  class SpanRows extends React.Component<Props> {
         const {
             // setTrace,
             trace, search } = props;
-        this.state = {
-            detailStates: new Map(),
-            hoverIndentGuideIds: new Set(),
-            shouldScrollToFirstUiFindMatch: false,
+
+        if (!isEmpty(search)) {
+            const {
+                childrenHiddenIDs,
+                detailStates,
+                shouldScrollToFirstUiFindMatch,
+            } = calculateFocusedFindRowStates(search, trace.spans)
+            this.state = { hoverIndentGuideIds: new Set(), detailStates, shouldScrollToFirstUiFindMatch }
+            props.onChildrenToggle(childrenHiddenIDs)
+        } else {
+            this.state = {
+                detailStates: new Map(),
+                hoverIndentGuideIds: new Set(),
+                shouldScrollToFirstUiFindMatch: false,
+            }
         }
-        //   setTrace(trace, uiFind);
     }
+
+
 
     shouldComponentUpdate(nextProps: Props, nextStates: State) {
         for (const [key, value] of Object.entries(nextStates)) {
@@ -89,18 +102,12 @@ export  class SpanRows extends React.Component<Props> {
     }
 
     componentDidUpdate(prevProps: Readonly<Props>) {
-        const { registerAccessors, trace } = prevProps;
+        console.log("here3333 update")
+        const { registerAccessors } = prevProps;
         const {
             scrollToFirstVisibleSpan,
             registerAccessors: nextRegisterAccessors,
-            // setTrace,
-            trace: nextTrace,
-            search,
         } = this.props;
-
-        if (trace !== nextTrace) {
-            // setTrace(nextTrace, search);
-        }
 
         if (this.listView && registerAccessors !== nextRegisterAccessors) {
             nextRegisterAccessors(this.getAccessors());
@@ -540,4 +547,33 @@ function getCssClasses(currentViewRange: [number, number]) {
         'clipping-left': zoomStart > 0,
         'clipping-right': zoomEnd < 1,
     });
+}
+
+
+const calculateFocusedFindRowStates = (uiFind: string, spans: TraceSpan[], allowHide: boolean = true) => {
+    const spansMap = new Map();
+    const childrenHiddenIDs: Set<string> = new Set();
+    const detailStates: Map<string, DetailState> = new Map();
+    let shouldScrollToFirstUiFindMatch: boolean = false;
+
+    spans.forEach(span => {
+        spansMap.set(span.spanID, span);
+        if (allowHide) {
+            childrenHiddenIDs.add(span.spanID);
+        }
+    });
+    const matchedSpanIds = filterSpans(uiFind, spans);
+    if (matchedSpanIds && matchedSpanIds.size) {
+        matchedSpanIds.forEach(spanID => {
+            const span = spansMap.get(spanID);
+            detailStates.set(spanID, new DetailState());
+            spanAncestorIds(span).forEach(ancestorID => childrenHiddenIDs.delete(ancestorID));
+        });
+        shouldScrollToFirstUiFindMatch = true;
+    }
+    return {
+        childrenHiddenIDs,
+        detailStates,
+        shouldScrollToFirstUiFindMatch,
+    };
 }

@@ -23,10 +23,11 @@ interface Props {
     nextResult: any
     viewType: string
     onViewTypeChange: any
+    search: string
 }
 
-const TraceDetailHeader = ({ trace, viewRange, updateNextViewRangeTime, updateViewRangeTime, collapsed, onGraphCollapsed, searchCount, prevResult, nextResult, viewType, onViewTypeChange }: Props) => {
-    const [search, setSearch] = useState('')
+const TraceDetailHeader = ({ trace, viewRange, updateNextViewRangeTime, updateViewRangeTime, collapsed, onGraphCollapsed, searchCount, prevResult, nextResult, viewType, onViewTypeChange,search }: Props) => {
+    const [search1, setSearch] = useState(search)
     const onSearchChange = (v) => {
         setSearch(v)
         addParamToUrl({search: v})
@@ -43,7 +44,7 @@ const TraceDetailHeader = ({ trace, viewRange, updateNextViewRangeTime, updateVi
                     <Text fontSize="0.95rem" layerStyle="gradientText" mr="20px">Click code area and Press Command+F to search </Text>
                     : (viewType != ETraceViewType.TraceFlamegraph && <HStack spacing={0}>
                         <HStack spacing={0} position="relative">
-                            <Input width="240px" placeholder="Search.." value={search} onChange={e => onSearchChange(e.currentTarget.value)} />
+                            <Input width="240px" placeholder="Search.." value={search1} onChange={e => onSearchChange(e.currentTarget.value)} />
                             <Text textStyle="annotation" width="30px" position="absolute" right="0" mt="2px">{searchCount}</Text>
                         </HStack>
                         {viewType == ETraceViewType.TraceTimelineViewer && <><IconButton onClick={prevResult} isDisabled={search == ''} fontSize="1rem"><AiOutlineUp /></IconButton>

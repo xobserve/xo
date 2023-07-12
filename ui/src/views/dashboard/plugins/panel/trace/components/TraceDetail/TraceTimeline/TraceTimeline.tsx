@@ -15,9 +15,10 @@ interface Props {
     updateNextViewRangeTime: (update: ViewRangeTimeUpdate) => void;
     updateViewRangeTime: TUpdateViewRangeTimeFunction;
     viewRange: IViewRange;
+    search: string
 }
 
-const TraceTimeline = ({ trace, updateNextViewRangeTime, updateViewRangeTime, viewRange,registerAccessors,scrollToFirstVisibleSpan,findMatchesIDs } : Props) => {
+const TraceTimeline = ({ trace, updateNextViewRangeTime, updateViewRangeTime, viewRange,registerAccessors,scrollToFirstVisibleSpan,findMatchesIDs,search } : Props) => {
     const [spanNameWidth, setSpanNameWidth] = useState(0.2)
     const [childrenHiddenIDs, setChildrenHiddenIDs] = useState<Set<string>>(new Set())
 
@@ -115,7 +116,7 @@ const TraceTimeline = ({ trace, updateNextViewRangeTime, updateViewRangeTime, vi
             findMatchesIDs={findMatchesIDs}  
             currentViewRangeTime={viewRange.time.current} 
             spanNameWidth={spanNameWidth} 
-            search=""
+            search={search}
             childrenHiddenIDs={childrenHiddenIDs}
             onChildrenToggle={onChildrenToggle}
             />

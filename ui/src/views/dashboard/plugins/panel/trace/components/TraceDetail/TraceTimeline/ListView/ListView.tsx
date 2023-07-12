@@ -435,7 +435,7 @@ export default class ListView extends React.Component<TListViewProps> {
     for (let i = start; i <= end; i++) {
       const { y: top, height } = this._yPositions.getRowPosition(i, heightGetter);
       const style = {
-        height,
+        height: height,
         top: top - i,
         position: 'absolute',
       };

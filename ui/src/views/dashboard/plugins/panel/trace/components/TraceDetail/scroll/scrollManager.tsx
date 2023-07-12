@@ -164,7 +164,6 @@ export default class ScrollManager {
     const boundary = direction < 0 ? -1 : spans.length;
     let nextSpanIndex: number | undefined;
 
-    console.log("here44444 scroll",fullViewSpanIndex,boundary)
     for (let i = fullViewSpanIndex + direction; i !== boundary; i += direction) {
       const span = spans[i];
       const { duration: spanDuration, spanID, startTime: spanStartTime } = span;
