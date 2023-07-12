@@ -267,5 +267,6 @@ const SpansTable = ({ columns, data }) => {
             }}
             rowKey="spanID"
             showSorterTooltip={false}
+            size="small"
         />)
 }
