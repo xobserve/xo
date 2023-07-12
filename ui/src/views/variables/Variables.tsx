@@ -1,4 +1,4 @@
-import { HStack, Text, useToast } from "@chakra-ui/react"
+import { HStack, Text, Tooltip, useToast } from "@chakra-ui/react"
 import {  variables } from "src/views/dashboard/Dashboard"
 import { TimeChangedEvent, VariableChangedEvent, VariableForceReload } from "src/data/bus-events"
 import { Variable, VariableQueryType, VariableRefresh } from "types/variable"
@@ -121,7 +121,7 @@ const SelectVariable = ({ v }: { v: Variable }) => {
     const value = isEmpty(v.selected) ? [] : v.selected.split(VariableSplitChar)
     
     return <HStack key={v.id} spacing={2}>
-        <Text fontSize="sm" minWidth="fit-content">{v.name}</Text>
+        <Tooltip openDelay={300} label={`${v.name} is ` + (v.id.toString().startsWith("d-") ? "dashboard scoped variable" : "global scoped variable")}><Text fontSize="sm" minWidth="fit-content">{v.name}</Text></Tooltip>
         {!isEmpty(values) &&
         <PopoverSelect 
             value={value} 
