@@ -86,6 +86,7 @@ const SelectVariable = ({ v }: { v: Variable }) => {
                 v.values = []
                 return 
             }
+            res.data.sort()
             result = [...result, ...res.data??[]]
             if (v.refresh == VariableRefresh.Manually) {
                 storage.set(VariableManuallyChangedKey+v.id, res)
