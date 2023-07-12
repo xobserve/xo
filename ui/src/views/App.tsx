@@ -13,6 +13,7 @@ import { Datasource } from 'types/datasource'
 import { Variable } from 'types/variable'
 import { queryVariableValues, setVariableSelected } from './variables/Variables'
 import { VarialbeAllOption } from 'src/data/variable'
+import AntdWrapper from 'components/AntdWrapper'
 
 const { ToastContainer } = createStandaloneToast()
 
@@ -79,8 +80,11 @@ const AppView = ({ Component, pageProps }) => {
         )}
       </Head>
       {cfg && <ChakraProvider theme={theme}>
+      <AntdWrapper>
         <Component {...pageProps} />
+        </AntdWrapper>
       </ChakraProvider>}
+
       <FontFace />
       <CommonStyles />
       <ToastContainer />
