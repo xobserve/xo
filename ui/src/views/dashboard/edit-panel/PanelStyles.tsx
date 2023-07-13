@@ -1,5 +1,5 @@
 import { Button, Input, NumberInput, NumberInputField, Select, Switch, Textarea, useColorMode, useColorModeValue } from "@chakra-ui/react"
-import { ColorPicker } from "components/color-picker"
+import { ColorPicker } from "components/ColorPicker"
 import { useEffect, useLayoutEffect, useMemo, useState } from "react"
 import customColors from "src/theme/colors"
 import { Panel, PanelEditorProps } from "types/dashboard"

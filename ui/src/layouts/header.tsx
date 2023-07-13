@@ -12,8 +12,8 @@ import {
 } from '@chakra-ui/react'
 import { useScroll } from 'framer-motion'
 import { useEffect, useRef, useState } from 'react'
-import { FaMoon, FaSun, FaYoutube } from 'react-icons/fa'
-import Logo, { LogoIcon } from '../components/logo'
+import { FaMoon, FaSun } from 'react-icons/fa'
+import Logo, { LogoIcon } from 'components/Logo'
 import React from "react"
 import { Link } from 'react-router-dom'
 

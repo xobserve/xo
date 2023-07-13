@@ -1,6 +1,6 @@
 import { Box, Button, Flex, HStack, Switch, VStack } from "@chakra-ui/react"
 import ValueCalculation from "components/ValueCalculation"
-import { ColorPicker } from "components/color-picker"
+import { ColorPicker } from "components/ColorPicker"
 import { EditorInputItem, EditorNumberItem } from "components/editor/EditorItem"
 import { FaArrowDown, FaArrowUp, FaTimes } from "react-icons/fa"
 import PanelAccordion from "src/views/dashboard/edit-panel/Accordion"

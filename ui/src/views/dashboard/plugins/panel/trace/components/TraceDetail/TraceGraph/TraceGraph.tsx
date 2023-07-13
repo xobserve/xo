@@ -33,7 +33,7 @@ import { TNil } from 'types/misc';
 import { Box, Button, Flex, Tooltip, useColorModeValue } from '@chakra-ui/react';
 import IconButton from 'components/button/IconButton';
 import { FaQuestion, FaTimes } from 'react-icons/fa';
-import Card from 'components/card';
+import Card from 'components/Card';
 
 
 type Props = {

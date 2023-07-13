@@ -1,5 +1,5 @@
 import { Alert, Box, Button, Divider, Flex, HStack, Image, Input, Modal, ModalBody, ModalContent, ModalOverlay, NumberInput, NumberInputField, Select, Slider, SliderFilledTrack, SliderThumb, SliderTrack, Switch, Text, Textarea, Tooltip, useDisclosure, useToast, VStack } from "@chakra-ui/react"
-import { ColorPicker } from "components/color-picker"
+import { ColorPicker } from "components/ColorPicker"
 import RadionButtons from "components/RadioButtons"
 import { isEmpty } from "lodash"
 import { useState } from "react"

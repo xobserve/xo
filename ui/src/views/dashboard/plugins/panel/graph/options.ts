@@ -7,10 +7,10 @@ import uPlot from "uplot";
 import { systemDateFormats } from "utils/datetime/formats";
 import { dateTimeFormat } from "utils/datetime/formatter";
 import customColors from "src/theme/colors";
-import { formatUnit } from "components/unit";
+import { formatUnit } from "components/Unit";
 import { measureText } from "utils/measureText";
 import { SeriesData } from "types/seriesData";
-import React from "react";
+
 
 
 

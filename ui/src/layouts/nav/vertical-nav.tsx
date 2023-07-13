@@ -19,7 +19,7 @@ import React, { useEffect, useState } from "react"
 import * as Icons from "react-icons/fa"
 
 
-import Logo from "components/logo"
+import Logo from "components/Logo"
 import { navLinks } from "src/data/nav-links"
 import { ColorModeSwitcher } from "components/ColorModeSwitcher"
 import customColors from "src/theme/colors"

@@ -1,5 +1,5 @@
 import { Box, Heading, Stack, VStack } from "@chakra-ui/react"
-import Card from "components/card"
+import Card from "components/Card"
 import React from "react"
 import { useLocation } from "react-router-dom"
 import { Route } from "src/types/route"

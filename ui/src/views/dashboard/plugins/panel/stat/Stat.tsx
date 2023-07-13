@@ -8,7 +8,7 @@ import { parseOptions } from './options';
 import { isEmpty } from "lodash"
 import Tooltip from "../graph/Tooltip";
 import { Box, Center, Flex, Text, useColorMode, Tooltip as ChakraTooltip } from "@chakra-ui/react";
-import { formatUnit } from "components/unit";
+import { formatUnit } from "components/Unit";
 import { ValueCalculationType } from "types/value";
 import { calcValueOnSeriesData } from "utils/seriesData";
 import { SeriesData } from "types/seriesData";

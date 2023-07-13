@@ -1,8 +1,8 @@
 import { Box, Button, HStack, Select, Tooltip } from "@chakra-ui/react";
 import RadionButtons from "components/RadioButtons";
-import { ColorPicker } from "components/color-picker";
+import { ColorPicker } from "components/ColorPicker";
 import { EditorInputItem, EditorNumberItem, EditorSliderItem } from "components/editor/EditorItem";
-import { UnitPicker } from "components/unit";
+import { UnitPicker } from "components/Unit";
 import { OverrideRule, Panel } from "types/dashboard";
 import { colors } from "utils/colors";
 import React from "react";

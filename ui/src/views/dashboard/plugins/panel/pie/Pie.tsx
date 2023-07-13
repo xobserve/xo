@@ -1,6 +1,6 @@
 import { Box, useColorMode, useToast } from "@chakra-ui/react";
 import ChartComponent from "components/charts/Chart";
-import { formatUnit } from "components/unit";
+import { formatUnit } from "components/Unit";
 import { isFunction, round } from "lodash";
 import { useMemo, useState } from "react";
 import { Panel, PanelProps } from "types/dashboard"
