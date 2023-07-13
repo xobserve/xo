@@ -10,6 +10,9 @@ import textStyles from "./src/theme/text-styles";
 import markdownRender from "./src/theme/markdown-render";
 
 
+import "./src/theme/css/react-grid.css"
+import "./src/theme/css/echarts.css"
+
 
 const customTheme = extendTheme(
     {

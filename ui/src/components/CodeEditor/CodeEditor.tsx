@@ -3,6 +3,7 @@ import React from "react";
 import { useColorMode } from "@chakra-ui/react";
 import { editor } from "monaco-editor";
 import MonacoEditor from "react-monaco-editor"
+import './useMonacoWorker.js'
 
 interface Props {
     value: string 

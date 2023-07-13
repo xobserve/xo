@@ -5,7 +5,6 @@ import AccountSetting from "./pages/account/setting";
 import NewDashboardPage from "./pages/new/dashboard";
 import NewDatasourcePage from "./pages/new/datasource";
 import ImportDashboardPage from "./pages/new/import";
-import TracePage from "./pages/datasource/[datasourceId]/trace/[id]";
 import DatasourcesPage from "./pages/cfg/datasources";
 import TeamsPage from "./pages/cfg/teams";
 import GlobalVariablesPage from "./pages/cfg/variables";
@@ -15,12 +14,16 @@ import TeamMembersPage from "./pages/cfg/team/[id]/members";
 import TeamSettingPage from "./pages/cfg/team/[id]/setting";
 import TeamSidemenuPage from "./pages/cfg/team/[id]/sidemenu";
 import TestPage from "./pages/test";
-import DashboardPage from "./pages/[...dashboardId]";
+import loadable from '@loadable/component';
+
+
+const DashboardPage = loadable(() => import('./pages/dashboard/index'));
+const TracePage = loadable(() => import('./pages/dashboard/trace'));
 
 const cfgRoutes = [
   {
     path: "/cfg/datasources",
-    element: <DatasourcesPage />,
+    element:  <DatasourcesPage />,
   },
   {
     path: "/cfg/teams",
@@ -91,10 +94,9 @@ const routes = [
   },
   {
     path: "/:dashboardId",
-    element: <DashboardPage />
+    element: <DashboardPage />,
   },
-
-    {
+  {
     path: "*",
     element: <NotFoundPage />,
   },
