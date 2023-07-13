@@ -50,7 +50,7 @@ const DashboardPage = () => {
         
 
         if (!menuitem) {
-            setError('Dashboard not found')
+            setError('Dashboard not found in current team, maybe you have chosen a wrong team?!')
             return
         }
 

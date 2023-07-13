@@ -35,6 +35,14 @@ const AppView = () => {
     loadVariables()
   }, [])
 
+  useEffect(() => {
+    if (cfg) {
+      const firstPageLoading= document.getElementById('first-page-loading');
+      if (firstPageLoading) {
+        firstPageLoading.style.display = "none"
+      }
+    }
+  },[cfg])
   const loadConfig = async () => {
     const res0 = await requestApi.get("/datasource/all")
     datasources = res0.data
@@ -61,6 +69,7 @@ const AppView = () => {
     gvariables = res.data
   }
 
+  console.log("here333333:",routes)
   const router = createBrowserRouter(routes);
   return (
     <>

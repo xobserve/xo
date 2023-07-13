@@ -1,13 +1,47 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
+
+<head>
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/vite.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Datav | Observability platform</title>
-  </head>
-  <body>
+    <style>
+        .svgLoader {
+            animation: spin 2s linear infinite;
+            margin: auto;
+        }
+
+        #first-page-loading {
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            z-index: -1;
+            background-color: #1A202C
+        }
+
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div id="first-page-loading">
+        <div><img class="svgLoader" src="/logo.png"/></div>
+        <div style="font-size: 1.2rem;color: #fff">Loading JS/CSS and initial data, please wait..</div>
+    </div>
     <div id="root"></div>
     <script type="module" src="/src/index.tsx"></script>
-  </body>
+</body>
+
 </html>
