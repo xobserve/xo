@@ -24,7 +24,8 @@ export let canvasCtx;
 export let datasources: Datasource[] = []
 export let gvariables: Variable[] = []
 export let gtoast
-//@ts-ignore
+
+
 const AppView = () => {
   const [cfg, setConfig] = useState<UIConfig>(null)
   canvasCtx = document.createElement('canvas').getContext('2d')!;
@@ -69,7 +70,6 @@ const AppView = () => {
     gvariables = res.data
   }
 
-  console.log("here333333:",routes)
   const router = createBrowserRouter(routes);
   return (
     <>

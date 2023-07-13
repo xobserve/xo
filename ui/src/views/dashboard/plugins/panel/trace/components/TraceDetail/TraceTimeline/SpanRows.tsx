@@ -102,7 +102,6 @@ export class SpanRows extends React.Component<Props> {
     }
 
     componentDidUpdate(prevProps: Readonly<Props>) {
-        console.log("here3333 update")
         const { registerAccessors } = prevProps;
         const {
             scrollToFirstVisibleSpan,

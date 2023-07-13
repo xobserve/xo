@@ -27,7 +27,6 @@ enum DashboardSettingType  {
 // color-scheme: dark;height: 100%;background-image: url(http://datav-react.jiaminghi.com/demo/manage-desk/static/media/bg.110420cf.png);background-size: auto;
 const DashboardSettings = ({ dashboard,onChange }: Props) => {
     const settings = useSearchParam('settings')
-    console.log("here33333:", settings)
     useEffect(() => {
         if (settings) {
             onOpen()

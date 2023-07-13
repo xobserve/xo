@@ -1163,10 +1163,10 @@
   dependencies:
     "@chakra-ui/utils" "2.0.15"
 
-"@chakra-ui/react@2.7.0":
-  version "2.7.0"
-  resolved "https://registry.yarnpkg.com/@chakra-ui/react/-/react-2.7.0.tgz#0fdeb5d5ec0faf97e143cba94498b055a093f671"
-  integrity sha512-+FcUFQMsPfhWuM9Iu7uqufwwhmHN2IX6FWsBixYGOalO86dpgETsILMZP9PuWfgj7GpWiy2Dum6HXekh0Tk2Mg==
+"@chakra-ui/react@2.7.1":
+  version "2.7.1"
+  resolved "https://registry.yarnpkg.com/@chakra-ui/react/-/react-2.7.1.tgz#1419a4856b7dd74a558ced97f148a97d4953109e"
+  integrity sha512-uIYIAg+gnUoRbgdCfSEVvQnrEz0oWWXATGGSQpxmuJovNVyZKnX/Xug7NkWQfBUJPYRSG+VB69ZmsAFpyLSMtA==
   dependencies:
     "@chakra-ui/accordion" "2.2.0"
     "@chakra-ui/alert" "2.1.0"
@@ -1202,6 +1202,7 @@
     "@chakra-ui/react-env" "3.0.0"
     "@chakra-ui/select" "2.0.19"
     "@chakra-ui/skeleton" "2.0.24"
+    "@chakra-ui/skip-nav" "2.0.15"
     "@chakra-ui/slider" "2.0.25"
     "@chakra-ui/spinner" "2.0.13"
     "@chakra-ui/stat" "2.0.18"
@@ -2078,6 +2079,16 @@
     "@motionone/types" "^10.15.1"
     hey-listen "^1.0.8"
     tslib "^2.3.1"
+
+"@nanostores/i18n@^0.10.0":
+  version "0.10.0"
+  resolved "https://registry.yarnpkg.com/@nanostores/i18n/-/i18n-0.10.0.tgz#f3540615bc4e443e83d0d33607b94b251518ed9e"
+  integrity sha512-NxAjM7RLW7TKWa5TSba1gX0KG8CB13G56v30ZZS787KUbaIoVOjC2R2+mRWvg2vMNz8CTd+RlQB3XeuI2cJLEQ==
+
+"@nanostores/persistent@^0.9.0":
+  version "0.9.0"
+  resolved "https://registry.yarnpkg.com/@nanostores/persistent/-/persistent-0.9.0.tgz#6b5f2267ce25dc7c047ad6df4e093070ecaebc88"
+  integrity sha512-9OvMOWs0NRiFXmZQXYsb7vGKTt+3XM0/gHl/gGdRTGvYBSaUwJrcmrOx8oc2jmj3QEGoT7JoeUStTGZUy0fSsw==
 
 "@nicolo-ribaudo/semver-v6@^6.3.3":
   version "6.3.3"
@@ -5297,6 +5308,11 @@ nanoid@^3.3.6:
   version "3.3.6"
   resolved "https://registry.yarnpkg.com/nanoid/-/nanoid-3.3.6.tgz#443380c856d6e9f9824267d960b4236ad583ea4c"
   integrity sha512-BGcqMMJuToF7i1rt+2PWSNVnWIkGCU78jBG3RxO/bZlnZPK2Cmi2QaffxGO/2RvWi9sL+FAiRiXMgsyxQ1DIDA==
+
+nanostores@^0.9.3:
+  version "0.9.3"
+  resolved "https://registry.yarnpkg.com/nanostores/-/nanostores-0.9.3.tgz#a095de5cb695e027b84657d5e31cabd6c5bb269c"
+  integrity sha512-KobZjcVyNndNrb5DAjfs0WG0lRcZu5Q1BOrfTOxokFLi25zFrWPjg+joXC6kuDqNfSt9fQwppyjUBkRPtsL+8w==
 
 natural-compare-lite@^1.4.0:
   version "1.4.0"

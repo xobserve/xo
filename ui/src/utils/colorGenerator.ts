@@ -13,9 +13,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { colors } from "./colors";
-
-const COLORS_HEX = [
+export const COLORS_HEX = [
   '#17B8BE',
   '#F8DCA1',
   '#B7885E',
