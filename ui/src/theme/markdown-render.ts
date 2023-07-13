@@ -1,5 +1,4 @@
 import { mode } from "@chakra-ui/theme-tools"
-import customColors from "./colors"
 
 export default function markdownRender(props) {
     return  {

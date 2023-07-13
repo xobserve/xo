@@ -33,7 +33,6 @@ const SelectVariables = ({ variables }: Props) => {
 export default SelectVariables
 
 const SelectVariable = ({ v }: { v: Variable }) => {
-    const toast = useToast()
     const [values, setValues] = useState<string[]>([])
 
     useBus(

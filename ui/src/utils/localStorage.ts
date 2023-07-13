@@ -1,4 +1,4 @@
-let adminKey = 'im.dev.'
+let adminKey = 'datav.'
 const storage = {
     set(key: string, value: any) {
         if (typeof window !== "undefined") {
