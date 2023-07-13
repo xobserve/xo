@@ -2,7 +2,6 @@ import { defineConfig, loadEnv } from 'vite';
 import react from '@vitejs/plugin-react';
 import viteTsconfigPaths from 'vite-tsconfig-paths';
 import svgrPlugin from 'vite-plugin-svgr';
-
 // https://vitejs.dev/config/
 
 export default ({ mode }) => {
@@ -11,9 +10,13 @@ export default ({ mode }) => {
         define: {
             "process.env": env,
         },
-        plugins: [react({
-            jsxRuntime: 'classic' // Add this line
-        }), viteTsconfigPaths(), svgrPlugin()],
+        plugins: [
+            react({
+                jsxRuntime: 'classic' // Add this line
+            }),
+            viteTsconfigPaths(),
+            svgrPlugin()
+        ],
         base: './',
         build: {
             outDir: 'build',

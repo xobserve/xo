@@ -1,6 +1,6 @@
 import { Form, FormSection } from "components/form/Form"
 import InputSelect from "components/select/InputSelect"
-import { use, useEffect, useMemo, useState } from "react"
+import { useEffect, useMemo, useState } from "react"
 import { DatasourceType, Panel } from "types/dashboard"
 import { queryJaegerOperations, queryJaegerServices } from "../../../datasource/jaeger/query_runner"
 import { isEmpty, isEqual, set, sortBy, uniq } from "lodash"

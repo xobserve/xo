@@ -41,3 +41,31 @@ function CodeEditor({value, onChange,onMount,language="typescript",readonly=fals
 }
 
 export default CodeEditor
+
+
+
+// function CodeEditor({ value, onChange, onMount, language = "typescript", readonly = false, fontSize = 12 }: Props) {
+//   const { colorMode } = useColorMode() 
+//   useEffect(() => {
+//     monaco.editor.create(document.getElementById('monaco-container'), {
+//       value: value,
+//       language: language,
+//       readOnly: readonly,
+//       lineNumbers: "on",
+//       lineNumbersMinChars: 4,
+//       lineDecorationsWidth: 0,
+//       scrollbar: {
+//         verticalSliderSize: 5,
+//         horizontalSliderSize: 5,
+//       },
+//       automaticLayout: true,
+//       minimap: {
+//         enabled: false
+//       },
+//       fontSize: fontSize,
+//       theme: colorMode === "dark" ? "vs-dark" : "vs-light",
+
+//     });
+//   }, [colorMode])
+//   return (<div id="monaco-container"></div>)
+// }

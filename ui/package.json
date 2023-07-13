@@ -47,7 +47,6 @@
     "memoize-one": "6.0.0",
     "moment": "^2.27.0",
     "monaco-editor": "^0.39.0",
-    "monaco-editor-webpack-plugin": "^7.0.1",
     "namor": "^1.1.2",
     "ninja-keys": "^1.2.2",
     "query-string": "^6.3.0",
