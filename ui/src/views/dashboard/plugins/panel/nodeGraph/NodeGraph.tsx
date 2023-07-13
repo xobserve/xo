@@ -9,7 +9,7 @@ import {  getActiveEdgeLabelCfg } from './default-styles';
 import { initLegend } from './plugins/legend';
 import { setAttrsForData } from './transformData';
 import { NodeGraphToolbar } from './Toolbar';
-import Help from 'components/help';
+import Help from 'components/Help';
 import { nodeGraphHelp } from './data/help';
 import useContextMenu from './plugins/useContextMenu';
 import HiddenItems from './HiddenItem';

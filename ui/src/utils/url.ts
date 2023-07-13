@@ -1,5 +1,6 @@
-import { cloneDeep, extend, isEmpty } from 'lodash'
+import {  extend } from 'lodash'
 import queryString from 'query-string'
+import { isEmpty } from './validate'
 
 
 
@@ -20,7 +21,7 @@ export const addParamToUrl = (param: any) => {
 
 
     for (const k of Object.keys(currentQuery)) {
-        if (!currentQuery[k]){
+        if (isEmpty(currentQuery[k])){
             delete currentQuery[k]
         } 
     }
