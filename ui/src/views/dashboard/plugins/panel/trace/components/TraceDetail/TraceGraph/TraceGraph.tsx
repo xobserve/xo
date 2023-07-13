@@ -16,7 +16,7 @@ import React, { useEffect, useState } from 'react';
 import cx from 'classnames';
 import { Digraph, LayoutManager } from '../../plexus';
 import cacheAs from '../..//plexus/lib/cacheAs';
-
+import './TraceGraph.css';
 import {
     getNodeRenderer,
     getNodeFindEmphasisRenderer,

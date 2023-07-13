@@ -13,7 +13,7 @@
 // limitations under the License.
 
 import React from 'react';
-
+import './SpanDetailRow.css';
 import SpanDetail from './SpanDetail/index';
 import DetailState from './SpanDetail/DetailState';
 import SpanTreeOffset from './SpanTreeOffset';

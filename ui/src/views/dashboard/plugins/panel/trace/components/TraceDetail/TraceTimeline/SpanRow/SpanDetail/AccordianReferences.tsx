@@ -14,7 +14,7 @@
 
 import * as React from 'react';
 import cx from 'classnames';
-
+import './AccordianReferences.css'
 
 import { SpanReference } from 'types/plugins/trace';
 import ReferenceLink from '../../../url/ReferenceLink';

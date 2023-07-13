@@ -13,7 +13,7 @@
 // limitations under the License.
 
 import React from 'react';
-
+import './index.css'
 import AccordianKeyValues from './AccordianKeyValues';
 import AccordianLogs from './AccordianLogs';
 import AccordianReferences from './AccordianReferences';
@@ -25,7 +25,6 @@ import { KeyValuePair, SpanLink, SpanLog, TraceSpan } from 'types/plugins/trace'
 
 import { formatDuration } from '../../../../../utils/date';
 import { Box, Divider, Flex, HStack, Text } from '@chakra-ui/react';
-import CopyToClipboard from 'components/CopyToClipboard';
 import LabeledList from 'components/LabelList';
 
 type SpanDetailProps = {

@@ -22,9 +22,7 @@ import { Key as EKey } from 'ts-key-enum';
 import ListItem from './ListItem';
 
 import './index.css';
-import { FaSearch } from 'react-icons/fa';
-import { Box, Input, useColorModeValue } from '@chakra-ui/react';
-import customColors from 'src/theme/colors';
+import { Box, Input } from '@chakra-ui/react';
 
 const ITEM_HEIGHT = 35;
 const MAX_HEIGHT = 375;

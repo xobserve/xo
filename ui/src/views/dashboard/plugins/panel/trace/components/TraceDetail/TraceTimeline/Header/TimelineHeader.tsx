@@ -5,6 +5,7 @@ import Ticks from "../Ticks";
 import VerticalResizer from "components/VerticalResizer/VerticalResizer";
 import TimelineViewingLayer from "./TimelineLayer";
 import React from "react";
+import './TimelineHeader.css'
 
 interface Props {
     duration: number;

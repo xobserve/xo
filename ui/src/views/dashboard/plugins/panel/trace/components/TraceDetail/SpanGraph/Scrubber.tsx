@@ -14,7 +14,7 @@
 
 import React from 'react';
 import cx from 'classnames';
-
+import './Scrubber.css'
 
 type ScrubberProps = {
   isDragging: boolean;

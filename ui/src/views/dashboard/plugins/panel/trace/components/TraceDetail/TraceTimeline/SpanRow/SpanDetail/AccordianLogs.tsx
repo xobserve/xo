@@ -15,7 +15,7 @@
 import * as React from 'react';
 import cx from 'classnames';
 import _sortBy from 'lodash/sortBy';
-
+import './AccordianLogs.css';
 import AccordianKeyValues from './AccordianKeyValues';
 import { TNil } from 'types/misc';
 import { SpanLog, KeyValuePair, SpanLink } from 'types/plugins/trace';

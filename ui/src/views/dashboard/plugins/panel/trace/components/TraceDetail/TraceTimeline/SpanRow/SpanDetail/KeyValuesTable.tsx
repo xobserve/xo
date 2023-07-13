@@ -14,7 +14,7 @@
 
 import * as React from 'react';
 import { jsonMarkup } from './jsonMarkup';
-
+import './KeyValuesTable.css';
 
 
 import { TNil } from 'types/misc';

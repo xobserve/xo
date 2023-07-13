@@ -14,7 +14,7 @@
 
 import cx from 'classnames';
 import * as React from 'react';
-
+import './ViewingLayer.css';
 import GraphTicks from './GraphTicks';
 import Scrubber from './Scrubber';
 import { TUpdateViewRangeTimeFunction, IViewRange, ViewRangeTimeUpdate } from '../../../types/types';

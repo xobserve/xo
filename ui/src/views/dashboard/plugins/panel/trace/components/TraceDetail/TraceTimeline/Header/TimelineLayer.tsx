@@ -14,7 +14,7 @@
 
 import * as React from 'react';
 import cx from 'classnames';
-
+import './TimelineLayer.css'
 import { TUpdateViewRangeTimeFunction, IViewRangeTime, ViewRangeTimeUpdate } from '../../../../types/types';
 import { TNil } from 'types/misc'
 import DraggableManager, { DraggableBounds, DraggingUpdate } from 'utils/DraggableManager';

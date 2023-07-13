@@ -13,7 +13,7 @@
 // limitations under the License.
 
 import * as React from 'react';
-
+import './TextList.css'
 
 type TextListProps = {
   data: string[];

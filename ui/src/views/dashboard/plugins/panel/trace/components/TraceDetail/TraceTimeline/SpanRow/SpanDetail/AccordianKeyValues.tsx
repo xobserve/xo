@@ -14,7 +14,7 @@
 
 import * as React from 'react';
 import cx from 'classnames';
-
+import './AccordianKeyValues.css'
 import * as markers from './AccordianKeyValues.markers';
 import KeyValuesTable from './KeyValuesTable';
 import { TNil } from 'types/misc';

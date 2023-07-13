@@ -1,6 +1,6 @@
 import EmphasizedNode from "../common/EmphasizedNode";
 import { TLayoutVertex } from "../plexus/lib/types";
-
+import './renderNode.css'
 import * as React from 'react';
 import cx from 'classnames';
 

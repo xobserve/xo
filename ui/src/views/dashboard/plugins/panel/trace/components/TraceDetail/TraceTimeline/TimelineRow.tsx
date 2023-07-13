@@ -14,7 +14,7 @@
 
 import { Box } from '@chakra-ui/react';
 import * as React from 'react';
-
+import './TimelineRow.css';
 
 type TTimelineRowProps = {
   children: React.ReactNode;

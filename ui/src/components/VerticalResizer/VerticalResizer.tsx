@@ -19,6 +19,7 @@ import { TNil } from 'types/misc'
 import DraggableManager, { DraggableBounds, DraggingUpdate } from 'utils/DraggableManager';
 
 import { Box } from '@chakra-ui/react';
+import './VerticalResizer.css';
 
 type VerticalResizerProps = {
     max: number;

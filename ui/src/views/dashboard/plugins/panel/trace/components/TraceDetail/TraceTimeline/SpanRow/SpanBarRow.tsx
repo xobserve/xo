@@ -13,7 +13,7 @@
 // limitations under the License.
 
 import * as React from 'react';
-
+import './SpanBarRow.css';
 import ReferencesButton from './ReferencesButton';
 import TimelineRow from '../TimelineRow';
 

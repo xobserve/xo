@@ -15,13 +15,13 @@
 import React, { useMemo } from 'react';
 import cx from 'classnames';
 import _get from 'lodash/get';
-
+import './SpanTreeOffset.css';
 
 import { TraceSpan } from 'types/plugins/trace';
 import spanAncestorIds from '../utils';
 import { BsChevronDown, BsChevronRight } from "react-icons/bs";
 import { chakra, useColorModeValue } from '@chakra-ui/react';
-import customColors from 'src/theme/colors';
+
 
 type TProps = {
   childrenVisible?: boolean;

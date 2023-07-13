@@ -13,7 +13,7 @@
 // limitations under the License.
 
 import React from 'react';
-
+import './SpanBar.css'
 import _groupBy from 'lodash/groupBy';
 import { onlyUpdateForKeys, compose, withState, withProps } from 'recompose';
 
