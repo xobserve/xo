@@ -3,9 +3,7 @@ import {
   Flex,
   HStack,
   HTMLChakraProps,
-  Icon,
   IconButton,
-  Link,
   chakra,
   useColorMode,
   useColorModeValue,
@@ -13,11 +11,11 @@ import {
   useUpdateEffect,
 } from '@chakra-ui/react'
 import { useScroll } from 'framer-motion'
-import NextLink from 'next/link'
 import { useEffect, useRef, useState } from 'react'
 import { FaMoon, FaSun, FaYoutube } from 'react-icons/fa'
 import Logo, { LogoIcon } from '../components/logo'
 import React from "react"
+import { Link } from 'react-router-dom'
 
 function HeaderContent() {
   const mobileNav = useDisclosure()
@@ -36,14 +34,14 @@ function HeaderContent() {
     <>
       <Flex w='100%' h='100%' px='6' align='center' justify='space-between'>
         <Flex align='center'>
-          <NextLink href='/' passHref>
+          <Link to='/'>
             <chakra.a display='block' aria-label='Chakra UI, Back to homepage'>
               <Logo display={{ base: 'none', md: 'block' }} />
               <Box minW='3rem' display={{ base: 'block', md: 'none' }}>
                 <LogoIcon />
               </Box>
             </chakra.a>
-          </NextLink>
+          </Link>
         </Flex>
 
         <Flex

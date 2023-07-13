@@ -16,27 +16,6 @@ interface Props {
 function CodeEditor({value, onChange,onMount,language="typescript",readonly=false,fontSize=12}:Props) {
   const {colorMode} = useColorMode()
   return ( <MonacoEditor
-      // editorDidMount={(editor:editor.IStandaloneCodeEditor) => {
-      //   onMount && onMount(editor)
-      //   // @ts-ignore
-      //   window.MonacoEnvironment.getWorkerUrl = (
-      //     _moduleId: string,
-      //     label: string
-      //   ) => {
-      //     if (label === "json")
-      //       return "_next/static/json.worker.js";
-      //     if (label === "css")
-      //       return "_next/static/css.worker.js";
-      //     if (label === "html")
-      //       return "_next/static/html.worker.js";
-      //     if (
-      //       label === "typescript" ||
-      //       label === "javascript"
-      //     )
-      //       return "_next/static/ts.worker.js";
-      //     return "_next/static/editor.worker.js";
-      //   };
-      // }}
       language={language}
       theme={colorMode === "dark" ? "vs-dark" : "vs-light"}
       value={value}

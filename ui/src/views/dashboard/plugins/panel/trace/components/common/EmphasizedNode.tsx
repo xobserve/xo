@@ -13,6 +13,7 @@
 // limitations under the License.
 
 import * as React from 'react';
+import './EmphasizedNode.css';
 
 type Props = {
   height: number;

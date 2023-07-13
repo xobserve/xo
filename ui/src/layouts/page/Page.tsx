@@ -1,9 +1,9 @@
 import { Box, Heading, HStack, Text, useColorModeValue } from "@chakra-ui/react"
 import PageContainer from "layouts/page-container"
-import Link from "next/link"
 import customColors from "src/theme/colors"
 import { Route } from "types/route"
 import React from "react"
+import { Link } from "react-router-dom"
 
 interface Props {
     title: string
@@ -33,7 +33,7 @@ const Page = (props: Props) => {
             </HStack>
             <HStack px="12" spacing="8" borderBottom={border} >
                 {tabs?.map((tab, index) => {
-                    return <Link href={tab.url} key={index} > 
+                    return <Link to={tab.url} key={index} > 
                     <HStack spacing="2" borderLeft={tab.url == activeTab.url ? border: null} borderRight={tab.url == activeTab.url ? border: null} cursor="pointer">
                         <Box className={ tab.url == activeTab.url ? "top-gradient-border" : null} >
                             <HStack py="2" px="4" >

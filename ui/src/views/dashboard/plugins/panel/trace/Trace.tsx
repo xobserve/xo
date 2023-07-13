@@ -12,6 +12,9 @@ import { replaceWithVariables, replaceWithVariablesHasMultiValues } from "utils/
 import { getInitTimeRange } from "components/DatePicker/TimePicker";
 import React from "react";
 
+
+
+
 const TracePanel = (props: PanelProps) => {
     const [rawTraces, setRawTraces] = useState<TraceData[]>(null)
     const onSearch = async (service, operation, tags, min, max, limit,useLatestTime) => {

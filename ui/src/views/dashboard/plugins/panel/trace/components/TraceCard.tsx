@@ -23,7 +23,7 @@ const TraceCard = ({ trace, maxDuration,checked=false, onChecked=null,simple=fal
 
     const onTraceClick = () => {
         if (dsId) {
-            window.open(`/datasource/${dsId}/trace/${trace.traceID}`)
+            window.open(`/trace/${trace.traceID}/${dsId}/`)
         }
     }
 

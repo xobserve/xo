@@ -69,7 +69,7 @@ const AppView = () => {
   }
 
   const router = createBrowserRouter(routes);
-
+  console.log("here33333:", routes)
   return (
     <>
       {cfg && <ChakraProvider theme={theme}>

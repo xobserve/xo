@@ -4,7 +4,6 @@ import { getInitTimeRange, TimePickerKey } from "components/DatePicker/TimePicke
 import SelectVariables from "src/views/variables/Variables"
 import { subMinutes } from "date-fns"
 import { find, isEmpty } from "lodash"
-import { useRouter } from "next/router"
 import React from "react";
 import { memo, useEffect, useRef, useState } from "react"
 import { MdSync } from "react-icons/md"
@@ -22,14 +21,14 @@ import useMiniMode from "hooks/useMiniMode"
 import Fullscreen from "components/fullscreen"
 import useFullscreen from "hooks/useFullscreen"
 import DatePicker from "components/DatePicker/DatePicker"
+import { useNavigate } from "react-router-dom"
 
 interface HeaderProps {
     dashboard: Dashboard
     onChange: any
 }
-const DashboardHeader = memo(({ dashboard, onChange }: HeaderProps) => {
-    const router = useRouter()
-    
+const DashboardHeader = memo(({ dashboard, onChange }: HeaderProps) => { 
+    const navigate = useNavigate()   
     const [variablesChanged, setVariablesChanged] = useState(0)
     const [refresh, setRefresh] = useState(0)
     const [team, setTeam] = useState<Team>(null)
@@ -81,7 +80,7 @@ const DashboardHeader = memo(({ dashboard, onChange }: HeaderProps) => {
                 <>
                     <Flex justifyContent="space-between" >
                         <HStack textStyle="title">
-                            <Tooltip label="the team which current dashboard belongs to"><Box cursor="pointer" onClick={() => router.push(`${ReserveUrls.Config}/team/${team.id}/members`)}>{team?.name}</Box></Tooltip>
+                            <Tooltip label="the team which current dashboard belongs to"><Box cursor="pointer" onClick={() => navigate(`${ReserveUrls.Config}/team/${team.id}/members`)}>{team?.name}</Box></Tooltip>
                             <Box>/</Box>
                             <Box>{dashboard.title}</Box>
                         </HStack>

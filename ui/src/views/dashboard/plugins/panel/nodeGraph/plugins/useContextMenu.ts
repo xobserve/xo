@@ -1,14 +1,14 @@
 import G6 from "@antv/g6";
 import { useToast } from "@chakra-ui/react";
 import { isFunction } from "lodash";
-import { useRouter } from "next/router";
+import { useNavigate } from "react-router-dom";
 import { setVariable } from "src/views/variables/Variables";
 import { NodeGraphSettings } from "types/panel/plugins";
 import { genDynamicFunction } from "utils/dynamicCode";
 
 const useContextMenu = (settings: NodeGraphSettings) => {
   const toast = useToast()
-  const router = useRouter()
+  const navigate = useNavigate()
   const contextMenu = new G6.Menu({
     getContent(evt) {
       let header;
@@ -52,7 +52,7 @@ const useContextMenu = (settings: NodeGraphSettings) => {
       let menuItem = settings.node.menu.find(item => item.id.toString() === target.id)
       const clickFunc = genDynamicFunction(menuItem.event); 
       if (isFunction(clickFunc)) {
-        clickFunc(item.getModel(), router, (k, v) => setVariable(k, v, toast))
+        clickFunc(item.getModel(), navigate, (k, v) => setVariable(k, v, toast))
       } else {
         toast({
           title: "Click node menu error",

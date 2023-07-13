@@ -2,12 +2,12 @@ import { Box, Center, Select, useColorMode, useColorModeValue, useToast } from "
 import { DefaultColumnFilter, NumberRangeColumnFilter } from "components/table/filters"
 import ReactTable from "components/table/Table"
 import { setVariable } from "src/views/variables/Variables"
-import { useRouter } from "next/router"
 import React, { useEffect, useMemo } from "react"
 import { PanelProps } from "types/dashboard"
 import { TablePluginData, TableSeries } from "types/plugins/table"
 import { isEmpty, isFunction, isNumber } from "lodash"
 import { genDynamicFunction } from "utils/dynamicCode"
+import { useNavigate } from "react-router-dom"
 
 interface TablePanelProps extends PanelProps {
     data: TablePluginData[]
@@ -17,8 +17,7 @@ const TablePanel = (props: TablePanelProps) => {
     if (isEmpty(props.data)) {
         return (<Center height="100%">No data</Center>)
     }
-    
-    const router = useRouter()
+    const navigate = useNavigate()
     const toast = useToast()
     const [series, setSeries] = React.useState(props.data[0][0].name)
 
@@ -105,7 +104,7 @@ const TablePanel = (props: TablePanelProps) => {
                                 isClosable: true,
                             })
                         } else {
-                            clickFunc(row, router, (k, v) => setVariable(k, v, toast))
+                            clickFunc(row, navigate, (k, v) => setVariable(k, v, toast))
                         }
                     } : null}
                 />

@@ -1,7 +1,7 @@
 import { Box, Heading, Stack, VStack } from "@chakra-ui/react"
 import Card from "components/card"
-import { useRouter } from "next/router"
 import React from "react"
+import { useLocation } from "react-router-dom"
 import { Route } from "src/types/route"
 import SidebarLink from "./sidebar-link"
 
@@ -23,7 +23,7 @@ export function SidebarContent(props) {
 }
 
 const Sidebar = ({ routes, title, ...props }) => {
-    const { pathname } = useRouter()
+    const { pathname } = useLocation()
     const ref = React.useRef<HTMLDivElement>(null)
 
     return (

@@ -1,24 +1,20 @@
 import { useEffect } from "react";
-import Router from "next/router";
+import { unstable_usePrompt, useLocation } from "react-router-dom";
 import { useBeforeUnload } from "react-use";
-
+unstable_usePrompt
 export const useLeavePageConfirm = (
-  isConfirm = true,
-  message = "Changes not saved, are you sure to leave this page?"
+    isConfirm = true,
+    message = "Changes not saved, are you sure to leave this page?"
 ) => {
-  useBeforeUnload(isConfirm, message);
+    // SPA pages switch
+    unstable_usePrompt({ when: isConfirm, message })
 
-  useEffect(() => {
-    const handler = () => {
-      if (isConfirm && !window.confirm(message)) {
-        throw "Route Canceled";
-      }
-    };
-
-    Router.events.on("routeChangeStart", handler);
-
-    return () => {
-      Router.events.off("routeChangeStart", handler);
-    };
-  }, [isConfirm, message]);
+    // browser pages action
+    useBeforeUnload(isConfirm, message);
+    const location = useLocation()
+    useEffect(() => {
+        if (isConfirm && !window.confirm(message)) {
+            return
+        };
+    }, [message, location]);
 };

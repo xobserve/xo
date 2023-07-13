@@ -1,7 +1,6 @@
 import { chakra, PropsOf, useColorModeValue } from "@chakra-ui/react"
-import NextLink from "next/link"
-import { useRouter } from "next/router"
 import React from "react"
+import {Link, useLocation } from "react-router-dom"
 
 const StyledLink = React.forwardRef(function StyledLink(
   props: PropsOf<typeof chakra.a> & { isActive?: boolean,icon: any },
@@ -46,7 +45,7 @@ type SidebarLinkProps = PropsOf<typeof chakra.div> & {
 const SidebarLink = (props: SidebarLinkProps) => {
   const { href, icon, children,query, exactPath=false, ...rest } = props
 
-  const { asPath } = useRouter()
+  const { pathname: asPath } = useLocation()
   let isActive;
   
   if (exactPath) {
@@ -64,9 +63,9 @@ const SidebarLink = (props: SidebarLinkProps) => {
       lineHeight="1.5rem"
       {...rest}
     >
-      <NextLink href={{pathname: href,query: query}}  passHref>
+      <Link  to={href + "?" + query}>
         <StyledLink isActive={isActive} icon={icon}>{children}</StyledLink>
-      </NextLink>
+      </Link>
     </chakra.div>
   )
 }

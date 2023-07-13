@@ -1,6 +1,6 @@
 import React from "react"
-import { useRouter } from "next/router"
 import { useEffect, useState } from "react"
+import { useParams } from "react-router-dom"
 import DashboardWrapper from "src/views/dashboard/Dashboard"
 import { requestApi } from "utils/axios/request"
 import NotFoundPage from "../404"
@@ -8,8 +8,8 @@ import NotFoundPage from "../404"
 
 // page for dispaly dashboard
 const DashboardPage = () => {
-    const router = useRouter()
-    const rawId = router.query.dashboardId
+    const params = useParams()
+    const rawId = params.dashboardId
     const [dashboardId, setDashboardId] = useState<string>(null)
     const [error, setError] = useState(null)
     useEffect(() => {

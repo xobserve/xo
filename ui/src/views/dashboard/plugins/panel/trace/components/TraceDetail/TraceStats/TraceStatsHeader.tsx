@@ -18,7 +18,7 @@ import { Trace } from 'types/plugins/trace';
 import { ITableSpan } from './types';
 import { generateDropdownValue, generateSecondDropdownValue } from './generateDropdownValue';
 import { getColumnValues, getColumnValuesSecondDropdown } from './tableValues';
-
+import './TraceStatsHeader.css';
 import generateColor from './generateColor';
 import NameSelector from '../../common/NameSelector';
 import { Box } from '@chakra-ui/react';

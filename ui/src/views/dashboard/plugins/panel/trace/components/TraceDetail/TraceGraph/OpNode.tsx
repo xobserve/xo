@@ -14,7 +14,7 @@
 
 import * as React from 'react';
 import { TLayoutVertex } from '../../plexus/lib/types';
-
+import './OpNode.css';
 import { TSumSpan } from './types';
 import { TDenseSpanMembers } from '../../../model/trace-dag/types';
 import TDagPlexusVertex from '../../../model/trace-dag/types/TDagPlexusVertex';

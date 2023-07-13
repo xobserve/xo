@@ -14,6 +14,8 @@ import TeamDashboardsPage from "./pages/cfg/team/[id]/dashboards";
 import TeamMembersPage from "./pages/cfg/team/[id]/members";
 import TeamSettingPage from "./pages/cfg/team/[id]/setting";
 import TeamSidemenuPage from "./pages/cfg/team/[id]/sidemenu";
+import TestPage from "./pages/test";
+import DashboardPage from "./pages/[...dashboardId]";
 
 const cfgRoutes = [
   {
@@ -65,28 +67,37 @@ const newRoutes = [
   },
 ]
 const routes = [
+  {
+    path: "/",
+    element: <div>Home</div>,
+  },
+  {
+    path: "/login",
+    element: <Login />,
+  },
+  {
+    path: "/account/setting",
+    element: <AccountSetting />,
+  },
+  {
+    path: "/test",
+    element: <TestPage />
+  },
+  ...newRoutes,
+  ...cfgRoutes,
+  {
+    path: "/trace/:id/:datasourceId",
+    element: <TracePage />,
+  },
+  {
+    path: "/:dashboardId",
+    element: <DashboardPage />
+  },
+
     {
-      path: "/",
-      element: <div>Home</div>,
-    },
-    {
-      path: "/login",
-      element: <Login />,
-    },
-    {
-      path: "/account/setting",
-      element: <AccountSetting />,
-    },
-    {
-      path: "/datasource/:datasourceId/trace/:id",
-      element: <TracePage />,
-    },
-    ...newRoutes,
-    ...cfgRoutes,
-    {
-      path: "*",
-      element: <NotFoundPage />,
-    },
+    path: "*",
+    element: <NotFoundPage />,
+  },
 
 ]
 

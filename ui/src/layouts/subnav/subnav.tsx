@@ -1,9 +1,8 @@
 import { Box, Divider, Heading, HStack, Stack, VStack } from "@chakra-ui/react"
-import Card from "components/card"
 import SidebarLink from "src/layouts/sidebar/sidebar-link"
-import { useRouter } from "next/router"
 import React from "react"
 import { Route } from "src/types/route"
+import { useLocation } from "react-router-dom"
 
 
 export function SubNavContent(props) {
@@ -23,7 +22,7 @@ export function SubNavContent(props) {
 }
 
 const SubNav = ({ routes,showBorder=true, ...props }) => {
-    const { pathname } = useRouter()
+    const {pathname} = useLocation()
     const ref = React.useRef<HTMLDivElement>(null)
 
     return (
