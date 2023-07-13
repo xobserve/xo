@@ -1,14 +1,19 @@
 import { Box, Button, Heading, Input, useToast, VStack } from "@chakra-ui/react";
+import { useStore } from "@nanostores/react";
 import FormItem from "components/form/Item";
 import useSession from "hooks/use-session";
 import Page from "layouts/page/Page"
 import React, { useEffect, useState } from "react";
 import { FaUserAlt } from "react-icons/fa";
 import { accountLinks } from "src/data/nav-links";
+import { accountSettingMsg, commonMsg } from "src/i18n/locales/en";
 import { requestApi } from "utils/axios/request";
 import isEmail from "validator/lib/isEmail";
 
 const AccountSetting = () => {
+    const t =  useStore(commonMsg)
+    const t1 = useStore(accountSettingMsg)
+
     const toast = useToast()
     const { session } = useSession();
     const [oldpw, setOldpw] = useState('')
@@ -96,31 +101,31 @@ const AccountSetting = () => {
     }
 
     return (
-        <Page title={`Account setting - ${session?.user.username}`} subTitle="Settings for user" icon={<FaUserAlt />} tabs={accountLinks}>
+        <Page title={`${t1.navTitle} - ${session?.user.username}`} subTitle={t1.subTitle} icon={<FaUserAlt />} tabs={accountLinks}>
             <Box alignItems="left" maxW="600px">
                 <VStack alignItems="left" spacing={4}>
-                    <Box mb="2" textStyle="subTitle">Basic Information</Box>
-                    <FormItem title="Nickname" labelWidth="200px">
+                    <Box mb="2" textStyle="subTitle">{t1.basic}</Box>
+                    <FormItem title={t.nickname} labelWidth="200px">
                         <Input placeholder='give yourself a nick name' value={name} onChange={e => setName(e.currentTarget.value)} />
                     </FormItem>
-                    <FormItem title='Email' labelWidth="200px">
+                    <FormItem title={t.email} labelWidth="200px">
                         <Input type='email' placeholder='enter a valid email' value={email} onChange={e => setEmail(e.currentTarget.value.trim())} />
                     </FormItem>
-                    <Button width="fit-content" onClick={updateAccount}>Submit</Button>
+                    <Button width="fit-content" onClick={updateAccount}>{t.submit}</Button>
                 </VStack>
 
                 <VStack alignItems="left" mt="8" spacing={3}>
-                    <Box mb="2" textStyle="subTitle">Change Password</Box>
-                    <FormItem title='Old password' labelWidth="200px">
+                    <Box mb="2" textStyle="subTitle">{t1.changePassword}</Box>
+                    <FormItem title={t1.oldPassword} labelWidth="200px">
                         <Input type="password" placeholder="******" value={oldpw} onChange={e => setOldpw(e.currentTarget.value.trim())} />
                     </FormItem>
-                    <FormItem title='New password' labelWidth="200px">
+                    <FormItem title={t1.newPassword} labelWidth="200px">
                         <Input type="password" placeholder="******" value={newpw} onChange={e => setNewpw(e.currentTarget.value.trim())} />
                     </FormItem>
-                    <FormItem title='Confirm new password' labelWidth="200px">
+                    <FormItem title={t1.confirmPassword} labelWidth="200px">
                         <Input type="password" placeholder="******" value={confirmpw} onChange={e => setConfirmpw(e.currentTarget.value.trim())} />
                     </FormItem>
-                    <Button width="fit-content" onClick={updatePassword}>Submit</Button>
+                    <Button width="fit-content" onClick={updatePassword}>{t.submit}</Button>
                 </VStack>
             </Box>
         </Page>

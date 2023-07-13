@@ -43,25 +43,25 @@ export const accountLinks = [
 
 export const cfgLinks = [
     {
-        title: 'Datasources',
+        title: 'datasource',
         url: '/cfg/datasources',
         baseUrl: '/cfg/datasources',
         icon: <FaConnectdevelop />
     },
     {
-        title: 'Variables',
+        title: 'variable',
         url: '/cfg/variables',
         baseUrl: '/cfg/variables',
         icon: <FaTerminal />
     },
     {
-        title: 'Teams',
+        title: 'team',
         url: '/cfg/teams',
         baseUrl: '/cfg/teams',
         icon: <FaUsersCog />
     },
     {
-        title: 'Users',
+        title: 'user',
         url: '/cfg/users',
         baseUrl: '/cfg/users',
         icon: <FaUser />

@@ -12,8 +12,12 @@ import DatasourceEditor from "src/views/datasource/Editor"
 import { Datasource } from "types/datasource"
 import { requestApi } from "utils/axios/request"
 import { useNavigate } from "react-router-dom"
+import { useStore } from "@nanostores/react"
+import { cfgDatasourceMsg, commonMsg } from "src/i18n/locales/en"
 
 const DatasourcesPage = () => {
+    const t = useStore(commonMsg)
+    const t1 = useStore(cfgDatasourceMsg)
     const toast = useToast()
     const navigate = useNavigate()
     const [datasources, setDatasources] = useState<Datasource[]>([])
@@ -49,8 +53,7 @@ const DatasourcesPage = () => {
     const deleteDatasource = async () => {
         await requestApi.delete(`/datasource/${datasource.id}`)
         toast({
-            title: "Datasource deleted.",
-            description: `Datasource ${datasource.name} has been deleted.`,
+            description: t1.deleteToast({name: datasource.name}),
             status: "success",
             duration: 3000,
             isClosable: true,
@@ -62,10 +65,10 @@ const DatasourcesPage = () => {
     }
 
     return <>
-        <Page title={`Configuration`} subTitle="Manage datasources" icon={<FaCog />} tabs={cfgLinks}>
+        <Page title={t.configuration} subTitle={t1.manageDs} icon={<FaCog />} tabs={cfgLinks}>
             <Flex justifyContent="space-between">
                 <Box></Box>
-                <Button size="sm" onClick={() => navigate(ReserveUrls.New + '/datasource')}>Add new datasource</Button>
+                <Button size="sm" onClick={() => navigate(ReserveUrls.New + '/datasource')}>{t1.newDs}</Button>
             </Flex>
 
             <VStack alignItems="left" spacing={3} mt="3">
@@ -83,11 +86,11 @@ const DatasourcesPage = () => {
                             <Button size="sm" variant="ghost" onClick={() => {
                                 setDatasource(ds)
                                 onOpen()
-                            }}>Edit</Button>
+                            }}>{t.edit}</Button>
                             <Button size="sm" variant="ghost" colorScheme="orange" onClick={() => {
                                 onAlertOpen()
                                 setDatasource(ds)
-                            }}>Delete</Button>
+                            }}>{t.delete}</Button>
                         </HStack>
                     </Flex>)
                 }
@@ -97,7 +100,7 @@ const DatasourcesPage = () => {
         <Modal isOpen={isOpen} onClose={onEditClose}>
             <ModalOverlay />
             <ModalContent>
-                <ModalHeader>Edit datasource - {datasource?.name}</ModalHeader>
+                <ModalHeader>{t1.editDs}- {datasource?.name}</ModalHeader>
                 <ModalCloseButton />
                 <ModalBody>
                     <Form spacing={2} sx={{'.form-item-label': {
@@ -117,19 +120,19 @@ const DatasourcesPage = () => {
             <AlertDialogOverlay>
                 <AlertDialogContent>
                     <AlertDialogHeader fontSize='lg' fontWeight='bold'>
-                        Delete Datasource {datasource?.name}
+                        {t1.deleteDs} {datasource?.name}
                     </AlertDialogHeader>
 
                     <AlertDialogBody>
-                        Are you sure? You can't undo this action afterwards.
+                        {t.deleteAlert}
                     </AlertDialogBody>
 
                     <AlertDialogFooter>
                         <Button ref={cancelRef} onClick={closeAlert}>
-                            Cancel
+                            {t.cancel}
                         </Button>
                         <Button colorScheme='red' onClick={deleteDatasource} ml={3}>
-                            Delete
+                            {t.delete}
                         </Button>
                     </AlertDialogFooter>
                 </AlertDialogContent>

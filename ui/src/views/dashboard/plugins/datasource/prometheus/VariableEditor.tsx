@@ -8,6 +8,8 @@ import { EditorInputItem } from "components/editor/EditorItem"
 import { DatasourceVariableEditorProps } from "types/datasource"
 import FormItem from "components/form/Item"
 import React from "react";
+import { useStore } from "@nanostores/react"
+import { cfgVariablemsg } from "src/i18n/locales/en"
 
 
 export enum PromDsQueryTypes {
@@ -17,6 +19,7 @@ export enum PromDsQueryTypes {
 }
 
 const PrometheusVariableEditor = ({ variable, onChange,onQueryResult }: DatasourceVariableEditorProps) => {
+    const t1 = useStore(cfgVariablemsg)
     const data = isJSON(variable.value) ? JSON.parse(variable.value) : {
         type: PromDsQueryTypes.LabelValues
     }
@@ -35,7 +38,7 @@ const PrometheusVariableEditor = ({ variable, onChange,onQueryResult }: Datasour
     }
 
     return (<>
-            <FormItem title="Use current time" alignItems="center">
+            <FormItem title={t1.useCurrentTime} alignItems="center">
                 <Switch size="md" defaultChecked={data.useCurrentTime} onChange={e => {
                     data.useCurrentTime = e.target.checked
                     onChange(variable => {
@@ -43,7 +46,7 @@ const PrometheusVariableEditor = ({ variable, onChange,onQueryResult }: Datasour
                     })
                 }}/>
             </FormItem>
-            <FormItem title="Query type">
+            <FormItem title={t1.queryType}>
                 <Select value={data.type} onChange={e => {
                     const v = e.currentTarget.value
                     data.type = v
@@ -56,7 +59,7 @@ const PrometheusVariableEditor = ({ variable, onChange,onQueryResult }: Datasour
             </FormItem>
             {
                 data.type == PromDsQueryTypes.LabelValues && <>
-                    <FormItem title="Metric" desc="support using variables">
+                    <FormItem title="Metric" desc={t1.metricTips}>
                         <PromMetricSelect width="400px" dsId={variable.datasource} variant="outline" value={data.metrics} onChange={m => {
                             data.metrics = m
                             onChange(variable => {

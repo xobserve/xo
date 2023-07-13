@@ -2090,6 +2090,11 @@
   resolved "https://registry.yarnpkg.com/@nanostores/persistent/-/persistent-0.9.0.tgz#6b5f2267ce25dc7c047ad6df4e093070ecaebc88"
   integrity sha512-9OvMOWs0NRiFXmZQXYsb7vGKTt+3XM0/gHl/gGdRTGvYBSaUwJrcmrOx8oc2jmj3QEGoT7JoeUStTGZUy0fSsw==
 
+"@nanostores/react@^0.7.1":
+  version "0.7.1"
+  resolved "https://registry.yarnpkg.com/@nanostores/react/-/react-0.7.1.tgz#e0446f5cacc9fa53448c454f5d00ddb0f906a37a"
+  integrity sha512-EXQg9N4MdI4eJQz/AZLIx3hxQ6BuBmV4Q55bCd5YCSgEOAW7tGTsIZxpRXxvxLXzflNvHTBvfrDNY38TlSVBkQ==
+
 "@nicolo-ribaudo/semver-v6@^6.3.3":
   version "6.3.3"
   resolved "https://registry.yarnpkg.com/@nicolo-ribaudo/semver-v6/-/semver-v6-6.3.3.tgz#ea6d23ade78a325f7a52750aab1526b02b628c29"

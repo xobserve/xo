@@ -17,7 +17,7 @@ export interface Variable {
 
 export enum VariableQueryType {
     Custom = "custom",
-    Datasource = "Datasoure"
+    Datasource = "datasource"
 }
 
 export enum VariableRefresh {

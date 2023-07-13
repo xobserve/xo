@@ -14,8 +14,11 @@ import JaegerDatasourceEditor from "../dashboard/plugins/datasource/jaeger/Datas
 import FormItem from "components/form/Item"
 import React from "react";
 import { useNavigate } from "react-router-dom"
+import { useStore } from "@nanostores/react"
+import { commonMsg } from "src/i18n/locales/en"
 
 const DatasourceEditor = ({ds, onChange=null}) => {
+    const t = useStore(commonMsg) 
     const toast = useToast()
     const navigate = useNavigate()
     const [datasource, setDatasource] = useImmer<Datasource>(ds)
@@ -84,13 +87,13 @@ const DatasourceEditor = ({ds, onChange=null}) => {
     }
 
     return (<>
-        <FormItem title="Name">
+        <FormItem title={t.name}>
             <Input value={datasource.name} placeholder="datasource name" onChange={e => {
                 const v = e.currentTarget.value
                 setDatasource((d: Datasource) => { d.name = v })
             }} />
         </FormItem>
-        <FormItem title="Type">
+        <FormItem title={t.type}>
             <HStack>
                 <Select width="fit-content" value={datasource.type} onChange={e => {
                     const v = e.currentTarget.value
@@ -108,7 +111,7 @@ const DatasourceEditor = ({ds, onChange=null}) => {
         {datasource.type == DatasourceType.Prometheus && <PrometheusDatasourceEditor datasource={datasource} onChange={setDatasource}/>}
         {datasource.type == DatasourceType.TestData && <TestDataDatasourceEditor datasource={datasource} onChange={setDatasource}/>}
         {datasource.type == DatasourceType.Jaeger && <JaegerDatasourceEditor datasource={datasource} onChange={setDatasource}/>}
-        <Button onClick={testDatasource} size="sm" mt="4">Test & Save</Button>
+        <Button onClick={testDatasource} size="sm" mt="4">{t.test} & {t.save}</Button>
     </>)
 }
 

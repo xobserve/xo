@@ -27,11 +27,16 @@ import { dispatch } from "use-bus"
 import { VariableForceReload } from "src/data/bus-events"
 import FormItem from "components/form/Item"
 import JaegerVariableEditor from "src/views/dashboard/plugins/datasource/jaeger/VariableEditor"
+import { useStore } from "@nanostores/react"
+import { cfgVariablemsg, commonMsg } from "src/i18n/locales/en"
 
 
 
 
 const GlobalVariablesPage = () => {
+    const t = useStore(commonMsg)
+    const t1 = useStore(cfgVariablemsg)
+
     const toast = useToast()
     const [variables, setVariables] = useState<Variable[]>([])
     const [variable, setVariable] = useState<Variable>()
@@ -60,7 +65,7 @@ const GlobalVariablesPage = () => {
     const addVariable = async (v: Variable) => {
         if (!v.name) {
             toast({
-                title: "Variable name is required",
+                title: t.isReqiiured({name: t1.varName }),
                 status: "error",
                 duration: 3000,
                 isClosable: true,
@@ -71,7 +76,7 @@ const GlobalVariablesPage = () => {
         await requestApi.post("/variable/new", v)
         onClose()
         toast({
-            title: "Variable added",
+            title: t.isAdded({name: t.variable}),
             status: "success",
             duration: 3000,
             isClosable: true,
@@ -93,7 +98,7 @@ const GlobalVariablesPage = () => {
     const editVariable = async (v: Variable) => {
         if (!v.name) {
             toast({
-                title: "Variable name is required",
+                title: t.isReqiiured({name: t1.varName }),
                 status: "error",
                 duration: 3000,
                 isClosable: true,
@@ -104,7 +109,7 @@ const GlobalVariablesPage = () => {
         await requestApi.post("/variable/update", v)
         onClose()
         toast({
-            title: "Variable updated",
+            title: t.isUpdated({name: t.variable}),
             status: "success",
             duration: 3000,
             isClosable: true,
@@ -117,7 +122,7 @@ const GlobalVariablesPage = () => {
         await requestApi.delete(`/variable/${v.id}`,)
         onClose()
         toast({
-            title: "Variable removed",
+            title:  t.isDeleted({name: t.variable}),
             status: "success",
             duration: 3000,
             isClosable: true,
@@ -127,10 +132,10 @@ const GlobalVariablesPage = () => {
     }
 
     return <>
-        <Page title={`Configuration`} subTitle="Manage global variables" icon={<FaCog />} tabs={cfgLinks}>
+        <Page title={t.configuration} subTitle={t1.subTitle} icon={<FaCog />} tabs={cfgLinks}>
             <Flex justifyContent="space-between">
                 <Box></Box>
-                <Button size="sm" onClick={onAddVariable}>Add global variable</Button>
+                <Button size="sm" onClick={onAddVariable}>{t1.newVar}</Button>
             </Flex>
             <VariablesTable variables={variables} onEdit={onEditVariable} onRemove={onRemoveVariable} />
         </Page>
@@ -148,6 +153,9 @@ interface TableProps {
 }
 
 export const VariablesTable = ({ variables, onEdit, onRemove }: TableProps) => {
+    const t = useStore(commonMsg)
+    const t1 = useStore(cfgVariablemsg)
+
     const { isOpen, onOpen, onClose } = useDisclosure()
     const [selectedVariable, setSelectedVariable] = useState<Variable>(null)
 
@@ -156,7 +164,7 @@ export const VariablesTable = ({ variables, onEdit, onRemove }: TableProps) => {
         storage.remove(VariableManuallyChangedKey + id)
         dispatch(VariableForceReload + id)
         toast({
-            description: `Values of ${name} has been updated!`,
+            description: t1.valueUpdated({name}),
             status: "success",
             duration: 3000,
             isClosable: true,
@@ -173,25 +181,25 @@ export const VariablesTable = ({ variables, onEdit, onRemove }: TableProps) => {
             <Table variant="simple">
                 <Thead>
                     <Tr>
-                        <Th>Variable name</Th>
-                        <Th>Query type</Th>
-                        <Th>Datasource</Th>
-                        <Th>Refresh</Th>
-                        <Th>Regex filter</Th>
-                        <Th>Actions</Th>
+                        <Th>{t1.varName}</Th>
+                        <Th>{t1.queryType}</Th>
+                        <Th>{t.datasource}</Th>
+                        <Th>{t1.refresh}</Th>
+                        <Th>{t1.regexFilter}</Th>
+                        <Th>{t.action}</Th>
                     </Tr>
                 </Thead>
                 <Tbody>
                     {variables.map(variable => {
                         return <Tr key={variable.name} className={`${variable.id == selectedVariable?.id ? "highlight-bg" : ''}`}>
                             <Td>{variable.name}</Td>
-                            <Td>{variable.type}</Td>
+                            <Td>{t[variable.type]}</Td>
                             <Td>{datasources?.find(ds => ds.id == variable.datasource)?.name}</Td>
-                            <Td>{variable.refresh} {variable.refresh == VariableRefresh.Manually && <Button size="sm" variant="ghost" ml="1" onClick={() => reloadValues(variable.id, variable.name)}>reload values</Button>}</Td>
+                            <Td>{t1[variable.refresh]} {variable.refresh == VariableRefresh.Manually && <Button size="sm" variant="ghost" ml="1" onClick={() => reloadValues(variable.id, variable.name)}>{t1.reload}</Button>}</Td>
                             <Td>{variable.regex}</Td>
                             <Td>
-                                <Button variant="ghost" size="sm" px="0" onClick={() => onEdit(variable)}>Edit</Button>
-                                <Button variant="ghost" colorScheme="orange" size="sm" px="0" ml="1" onClick={() => { setSelectedVariable(variable); onOpen() }}>Remove</Button>
+                                <Button variant="ghost" size="sm" px="0" onClick={() => onEdit(variable)}>{t.edit}</Button>
+                                <Button variant="ghost" colorScheme="orange" size="sm" px="0" ml="1" onClick={() => { setSelectedVariable(variable); onOpen() }}>{t.delete}</Button>
                             </Td>
                         </Tr>
                     })}
@@ -221,19 +229,19 @@ export const VariablesTable = ({ variables, onEdit, onRemove }: TableProps) => {
             <AlertDialogOverlay>
                 {selectedVariable && <AlertDialogContent>
                     <AlertDialogHeader fontSize='lg' fontWeight='bold'>
-                        Delete variable - {selectedVariable.name}
+                        {t1.deleteVar} - {selectedVariable.name}
                     </AlertDialogHeader>
 
                     <AlertDialogBody>
-                        Are you sure? You can't undo this action afterwards.
+                        {t.deleteAlert}
                     </AlertDialogBody>
 
                     <AlertDialogFooter>
                         <Button ref={cancelRef} onClick={onRemoveClose}>
-                            Cancel
+                            {t.cancel}
                         </Button>
                         <Button colorScheme='red' onClick={() => { onRemove(selectedVariable); onRemoveClose() }} ml={3}>
-                            Delete
+                            {t.delete}
                         </Button>
                     </AlertDialogFooter>
                 </AlertDialogContent>}
@@ -253,6 +261,8 @@ interface EditProps {
 
 
 export const EditVariable = ({ v, isOpen, onClose, isEdit, onSubmit, isGlobal = false }: EditProps) => {
+    const t = useStore(commonMsg)
+    const t1 = useStore(cfgVariablemsg)
     const toast = useToast()
     const [variable, setVariable] = useImmer<Variable>(null)
     const [datasources, setDatasources] = useState<Datasource[]>(null)
@@ -318,7 +328,7 @@ return (<>
     <Modal isOpen={isOpen} onClose={onClose} size="full">
         <ModalOverlay />
         <ModalContent minW="600px">
-            <ModalHeader>{isEdit ? "Edit variable" : "Add new variable"} </ModalHeader>
+            <ModalHeader>{isEdit ? t1.editVar: t1.newVar} </ModalHeader>
             <ModalCloseButton />
             {variable && <ModalBody>
                 <Form maxWidth="600px" sx={{
@@ -326,20 +336,20 @@ return (<>
                         width: "150px"
                     }
                 }}>
-                    <FormSection title="Basic">
-                        <FormItem title="Name">
-                            <Input placeholder='Only alphabet and digit numbers are allowed' value={variable.name} onChange={e => { setVariable({ ...variable, name: e.currentTarget.value }) }} />
+                    <FormSection title={t.basicSetting}>
+                        <FormItem title={t.name}>
+                            <Input placeholder={t1.nameTips} value={variable.name} onChange={e => { setVariable({ ...variable, name: e.currentTarget.value }) }} />
                         </FormItem>
-                        <FormItem title="Description">
-                            <Input placeholder='give this variable a simple description' value={variable.description} onChange={e => { setVariable({ ...variable, description: e.currentTarget.value }) }} />
+                        <FormItem title={t.description}>
+                            <Input placeholder={t1.descTips} value={variable.description} onChange={e => { setVariable({ ...variable, description: e.currentTarget.value }) }} />
                         </FormItem>
-                        <FormItem title="Refresh">
+                        <FormItem title={t1.refresh}>
                             <RadionButtons options={Object.keys(VariableRefresh).map(k =>
-                                ({ label: VariableRefresh[k], value: VariableRefresh[k] })
+                                ({ label: t1[k], value: k })
                             )} value={variable.refresh} onChange={(v) => setVariable({ ...variable, refresh: v })} />
                         </FormItem>
 
-                        <FormItem title="Multi value" alignItems="center">
+                        <FormItem title={t1.multiValue} alignItems="center">
                             <Switch defaultChecked={variable.enableMulti} onChange={(e) => setVariable({ ...variable, enableMulti: e.currentTarget.checked })} />
                         </FormItem>
 
@@ -349,19 +359,19 @@ return (<>
 
                     </FormSection>
 
-                    <FormSection title="Query">
-                        <FormItem title="Query type">
+                    <FormSection title={t.query}>
+                        <FormItem title={t1.queryType}>
                             <RadionButtons options={Object.keys(VariableQueryType).map(k =>
-                                ({ label: k, value: VariableQueryType[k] })
+                                ({ label: t[VariableQueryType[k]] , value: VariableQueryType[k] })
                             )} value={variable.type} onChange={v => setVariable({ ...variable, type: v, value: '' })} />
                         </FormItem>
 
-                        {variable.type == VariableQueryType.Custom && <FormItem title="Query values">
-                            <Input width="400px" placeholder='Values separated by comma,e.g 1,10,20,a,b,c' value={variable.value} onChange={e => { setVariable({ ...variable, value: e.currentTarget.value }) }} onBlur={() => onQueryResult({error:null,data: variable.value.split(',')})} />
+                        {variable.type == VariableQueryType.Custom && <FormItem title={t1.queryValue}>
+                            <Input width="400px" placeholder={t1.valueTips} value={variable.value} onChange={e => { setVariable({ ...variable, value: e.currentTarget.value }) }} onBlur={() => onQueryResult({error:null,data: variable.value.split(',')})} />
                         </FormItem>}
 
                         {variable.type == VariableQueryType.Datasource && <>
-                            <FormItem title="Select datasource">
+                            <FormItem title={t1.selectDs}>
                                 <Box width="200px">
                                     <DatasourceSelect value={variable.datasource} onChange={id => setVariable(v => { v.datasource = id; v.value = "" })} allowTypes={[DatasourceType.Prometheus, DatasourceType.ExternalHttp, DatasourceType.Jaeger]} variant="outline" /></Box>
                             </FormItem>
@@ -379,19 +389,19 @@ return (<>
                         }
                     </FormSection>
 
-                    <FormSection title="Regex filter ( optional )" >
-                        <EditorInputItem value={variable.regex} placeholder="further filter the query result through a Regex pattern" onChange={v => {
+                    <FormSection title={`${t1.regexFilter} ( ${t.optional} )`} >
+                        <EditorInputItem value={variable.regex} placeholder={t1.fitlerTips} onChange={v => {
                             setVariable({ ...variable, regex: v })
                         }} />
                     </FormSection>
 
 
 
-                    <FormSection title="Variable values" >
+                    <FormSection title={t1.varValues} >
                         <Box pt="1">
                             {!isEmpty(variableValues) && variableValues.slice(0, displayCount).map(v => <Tag size="sm" variant="outline" ml="1">{v}</Tag>)}
                         </Box>
-                        {variableValues?.length > displayCount && <Button mt="2" size="sm" colorScheme="gray" ml="1" onClick={() => setDisplayCount(displayCount + 30)}>Show more</Button>}
+                        {variableValues?.length > displayCount && <Button mt="2" size="sm" colorScheme="gray" ml="1" onClick={() => setDisplayCount(displayCount + 30)}>{t.showMore}</Button>}
                     </FormSection>
                 </Form>
             </ModalBody>}

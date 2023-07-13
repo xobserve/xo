@@ -16,9 +16,8 @@ import { FaRegSun, FaUserAlt, FaSignOutAlt, FaStar, FaSignInAlt, FaFont } from "
 
 
 import { isAdmin } from "types/role"
-import { lang } from "src/i18n"
-import { LangKey } from "src/data/storage-keys"
 import { Link, useLocation, useNavigate } from "react-router-dom"
+import { localeSetting,locale } from "src/i18n/i18n"
 
 const UserMenu = ({ fontSize = "1.2rem" }) => {
     const { session, logout } = useSession()
@@ -31,9 +30,8 @@ const UserMenu = ({ fontSize = "1.2rem" }) => {
     }
 
     const changeLang = () => {
-        const newLang = lang == "en" ? "zh" : "en"
-        storage.set(LangKey, newLang)
-        window.location.reload()
+        const newLang = locale.get() == "en" ? "zh" : "en"
+        localeSetting.set(newLang)
     }
 
     const isActive = window.location.pathname.startsWith('/account/')
@@ -56,7 +54,7 @@ const UserMenu = ({ fontSize = "1.2rem" }) => {
                         </MenuItem>
                         <MenuDivider />
                         {isAdmin(session.user.role) && <><Link to={`/admin`}><MenuItem icon={<FaStar fontSize="1rem" />} >Admin Panel</MenuItem></Link><MenuDivider /></>}
-                        <MenuItem onClick={() => changeLang()} icon={<FaFont fontSize="1rem" />}>Current Lang - {lang == "en" ? "English" : "Chinese"}</MenuItem>
+                        <MenuItem onClick={() => changeLang()} icon={<FaFont fontSize="1rem" />}>Current Lang - {locale.get() == "en" ? "English" : "Chinese"}</MenuItem>
                         <Link to={`/account/setting`}><MenuItem icon={<FaRegSun fontSize="1rem" />}>Account Setting</MenuItem></Link>
                         <MenuItem onClick={() => logout()} icon={<FaSignOutAlt fontSize="1rem" />}>Log out</MenuItem>
 

@@ -11,9 +11,12 @@ import storage from 'utils/localStorage';
 import { Box, Button, Heading, HStack, Image, Input } from '@chakra-ui/react';
 import { saveToken } from 'utils/axios/getToken';
 import { useNavigate } from 'react-router-dom';
+import { useStore } from '@nanostores/react';
+import { commonMsg } from 'src/i18n/locales/en';
 
 // login page
 function Login() {
+    const t = useStore(commonMsg)
     const particlesInit = useCallback(async (engine: Engine) => {
         await loadFull(engine);
     }, []);
@@ -122,17 +125,17 @@ function Login() {
                 <HStack width="900px" borderRadius="6px" boxShadow="-4px 5px 10px rgba(0, 0, 0, .4)" marginTop="-30px">
                     <Box className="login-left" width="50%" display="flex" justifyContent="center" alignItems="center" flexDir="column">
                         <Image src="/logo.png" alt="" height="160px" width="160px" marginLeft="-10px" />
-                        <Box fontSize="26px" color="white" fontWeight="bold">Starship</Box>
+                        <Box fontSize="26px" color="white" fontWeight="bold">Datav</Box>
                     </Box>
                     <Box textAlign="center" width="50%" backgroundColor={"hsla(0, 0%, 100%, .3)"} p="12">
-                        <Heading size="lg" color={"white"}>Welcome Login</Heading>
+                        <Heading size="lg" color={"white"}>Welcome</Heading>
                         <Input value={username} onChange={e => setUsername(e.currentTarget.value)} placeholder='username' mt="10" />
                         <Input value={password} type="password" onChange={e => setPassword(e.currentTarget.value)} placeholder='password' mt="6" onKeyPress={e=> {
         if (e.key === 'Enter') {
            onFinish()
         }
      }} />
-                        <Button colorScheme="twitter" mt="10" width="100%" _hover={{ background: null }} onClick={onFinish}>Log in</Button>
+                        <Button colorScheme="twitter" mt="10" width="100%" _hover={{ background: null }} onClick={onFinish}>{t.login}</Button>
                     </Box>
                 </HStack>
             </Box>

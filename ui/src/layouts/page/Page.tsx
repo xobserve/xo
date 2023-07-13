@@ -4,6 +4,8 @@ import customColors from "src/theme/colors"
 import { Route } from "types/route"
 import React from "react"
 import { Link } from "react-router-dom"
+import { useStore } from "@nanostores/react"
+import { commonMsg } from "src/i18n/locales/en"
 
 interface Props {
     title: string
@@ -14,6 +16,7 @@ interface Props {
 }
 
 const Page = (props: Props) => {
+    const t = useStore(commonMsg)  
     const { title, subTitle, icon, children, tabs } = props
 
     const borderColor = useColorModeValue(customColors.borderColor.light, customColors.borderColor.dark)
@@ -38,7 +41,7 @@ const Page = (props: Props) => {
                         <Box className={ tab.url == activeTab.url ? "top-gradient-border" : null} >
                             <HStack py="2" px="4" >
                                 {tab.icon}
-                                <Text>{tab.title}</Text>
+                                <Text>{t[tab.title]}</Text>
                             </HStack>
                         </Box>
                     </HStack>

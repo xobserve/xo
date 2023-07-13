@@ -2,13 +2,18 @@ import React from 'react'
 import { Button, Heading, Text, VStack } from '@chakra-ui/react'
 import PageContainer1 from 'layouts/page-container'
 import { FaHome } from 'react-icons/fa'
-import { t } from 'src/i18n'
+import { useStore } from '@nanostores/react'
+import { notFoundMsg } from 'src/i18n/locales/en'
+
+
 
 interface Props {
   message?: string
 }
 
+
 const NotFoundPage = ({message}:Props) => {
+  const t = useStore(notFoundMsg)
   return (
     <PageContainer1>
       {/* <Header /> */}
@@ -19,8 +24,8 @@ const NotFoundPage = ({message}:Props) => {
         mt={['20', null, '40']}
         textAlign='center'
       >
-        <Heading>{message??t('notfound.heading')}</Heading>
-        <Text fontSize={{ md: 'xl' }}>{t('notfound.message')}</Text>
+        <Heading>{message??t.heading}</Heading>
+        <Text fontSize={{ md: 'xl' }}>{t.message}</Text>
           <Button
             as='a'
             href='/'
@@ -28,7 +33,7 @@ const NotFoundPage = ({message}:Props) => {
             leftIcon={<FaHome />}
             size='lg'
           >
-            {t('notfound.back-to-home')}
+            {t['back-to-home']}
           </Button>
       </VStack>
     </PageContainer1>
