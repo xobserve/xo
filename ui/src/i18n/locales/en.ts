@@ -48,6 +48,10 @@ export const commonMsg = i18n("common", {
   "SuperAdmin": "Super Admin",
   "password": "Password",
   "dangeSection": "Dangerous section",
+  "dashboard": "Dashboard",
+  "panel": "Panel",
+  "members": "Members",
+  "sidemenu": "Side Menu",
   "inputTips": params("Enter {name}.."),
   "isReqiiured": params("{name} is required"),
   "isInvalid": params("{name} is invalid"),
@@ -58,7 +62,7 @@ export const commonMsg = i18n("common", {
   "manageItem": params("Manage {name}"),
   "deleteItem": params("Delete {name}"),
   "editItem": params("Edit {name}"),
-  "itemName": params("{name} Name")
+  "itemName": params("{name} Name"),
 })
 
 
@@ -98,10 +102,6 @@ export const cfgVariablemsg = i18n("cfgVariable", {
   "useCurrentTime": "Use current time",
   "selectMetrics": "Select metrics",
   "metricTips": "support using variables"
-})
-
-export const cfgTeam = i18n("cfgTeam", {
-  "members": "Members",
 })
 
 export const cfgUsers = i18n("cfgUsers", {

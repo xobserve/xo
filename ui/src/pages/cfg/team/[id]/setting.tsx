@@ -5,24 +5,19 @@ import FormItem from "components/form/Item"
 import Page from "layouts/page/Page"
 import { cloneDeep } from "lodash"
 import { useEffect, useRef, useState } from "react"
-import { FaAlignLeft, FaCog, FaUserFriends } from "react-icons/fa"
-import { MdOutlineDashboard } from "react-icons/md"
+import { FaUserFriends } from "react-icons/fa"
 import { Route } from "types/route"
 import { Team } from "types/teams"
 import { requestApi } from "utils/axios/request"
 import { useNavigate, useParams } from "react-router-dom"
+import { getTeamSubLinks } from "./utils"
 
 const TeamSettingPage = () => {
   const params = useParams()
   const navigate = useNavigate()
   const toast = useToast()
   const id = params.id
-  const tabLinks: Route[] = [
-    { title: "Members", url: `/cfg/team/${id}/members`, icon: <FaUserFriends /> },
-    { title: "Dashboards", url: `/cfg/team/${id}/dashboards`, icon: <MdOutlineDashboard /> },
-    { title: "Side menu", url: `/cfg/team/${id}/sidemenu`, icon: <FaAlignLeft /> },
-    { title: "Setting", url: `/cfg/team/${id}/setting`, icon: <FaCog /> },
-  ]
+  const tabLinks: Route[] = getTeamSubLinks(id)
 
 
   const [team, setTeam] = useState<Team>(null)

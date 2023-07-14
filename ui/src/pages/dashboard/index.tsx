@@ -3,7 +3,7 @@ import { useEffect, useState } from "react"
 import { useParams } from "react-router-dom"
 import DashboardWrapper from "src/views/dashboard/Dashboard"
 import { requestApi } from "utils/axios/request"
-import NotFoundPage from "../404"
+import NotFoundPage from "../NotFound"
 
 
 // page for dispaly dashboard

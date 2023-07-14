@@ -39,6 +39,10 @@
     "SuperAdmin": "超级管理员",
     "password": "密码",
     "dangeSection": "危险操作",
+    "dashboard": "仪表盘",
+    "panel": "图表",
+    "members": "成员",
+    "sidemenu": "左侧菜单",
     "isReqiiured": "{name}是必填项",
     "isInvalid": "{name}无效",
     "isAdded": "{name}添加成功!",
@@ -91,10 +95,6 @@
     "useCurrentTime": "使用当前已选时间",
     "selectMetrics": "选择 metrics",
     "metricTips": "支持变量"
-  },
-
-  "cfgTeam": {
-    "members": "成员数"
   },
   "cfgUsers": {
     "pwAlert": "新密码至少6个字符长度",

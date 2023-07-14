@@ -11,12 +11,11 @@ import ReserveUrls from "src/data/reserve-urls"
 import { Team } from "types/teams"
 import { requestApi } from "utils/axios/request"
 import { useNavigate } from "react-router-dom"
-import { cfgTeam, commonMsg } from "src/i18n/locales/en"
+import { commonMsg } from "src/i18n/locales/en"
 import { useStore } from "@nanostores/react"
 
 const TeamsPage = () => {
     const t = useStore(commonMsg)
-    const t1 = useStore(cfgTeam)
     const { session } = useSession()
     const toast = useToast()
     const navigate = useNavigate()
@@ -59,7 +58,7 @@ const TeamsPage = () => {
                     <Thead>
                         <Tr>
                             <Th>{t.itemName({name: t.team})}</Th>
-                            <Th>{t1.members}</Th>
+                            <Th>{t.members}</Th>
                             <Th>{t.createdBy}</Th>
                             <Th>{t.action}</Th>
                         </Tr>

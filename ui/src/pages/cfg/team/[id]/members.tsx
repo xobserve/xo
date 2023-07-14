@@ -10,17 +10,14 @@ import { Role } from "types/role"
 import { Route } from "types/route"
 import { Team, TeamMember } from "types/teams"
 import { requestApi } from "utils/axios/request"
+import { getTeamSubLinks } from "./utils"
+
 
 const TeamMembersPage = () => {
     const params = useParams()
     const toast = useToast()
     const id = params.id
-    const tabLinks: Route[] = [
-        { title: "Members", url: `/cfg/team/${id}/members`, icon: <FaUserFriends /> },
-        { title: "Dashboards", url: `/cfg/team/${id}/dashboards`, icon: <MdOutlineDashboard /> },
-        { title: "Side menu", url: `/cfg/team/${id}/sidemenu`, icon: <FaAlignLeft /> },
-        { title: "Setting", url: `/cfg/team/${id}/setting`, icon: <FaCog /> },
-    ]
+    const tabLinks: Route[] = getTeamSubLinks(id)
 
     const [team, setTeam] = useState<Team>(null)
     const [members, setMembers] = useState<TeamMember[]>([])

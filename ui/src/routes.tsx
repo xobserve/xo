@@ -1,24 +1,24 @@
 import React from "react";
-import Login from "src/pages/login";
-import NotFoundPage from "src/pages/404";
-import AccountSetting from "./pages/account/setting";
-import NewDashboardPage from "./pages/new/dashboard";
-import NewDatasourcePage from "./pages/new/datasource";
-import ImportDashboardPage from "./pages/new/import";
-import DatasourcesPage from "./pages/cfg/datasources";
-import TeamsPage from "./pages/cfg/teams";
-import GlobalVariablesPage from "./pages/cfg/variables";
-import UsersPage from "./pages/cfg/users";
-import TeamDashboardsPage from "./pages/cfg/team/[id]/dashboards";
-import TeamMembersPage from "./pages/cfg/team/[id]/members";
-import TeamSettingPage from "./pages/cfg/team/[id]/setting";
-import TeamSidemenuPage from "./pages/cfg/team/[id]/sidemenu";
+import Login from "src/pages/Login";
+import NotFoundPage from "src/pages/NotFound";
+import AccountSetting from "./pages/account/Setting";
+import NewDashboardPage from "./pages/new/Dashboard";
+import NewDatasourcePage from "./pages/new/Datasource";
+import ImportDashboardPage from "./pages/new/Import";
+import DatasourcesPage from "./pages/cfg/Datasources";
+import TeamsPage from "./pages/cfg/Teams";
+import GlobalVariablesPage from "./pages/cfg/Variables";
+import UsersPage from "./pages/cfg/Users";
+import TeamDashboardsPage from "./pages/cfg/team/[id]/Dashboards";
+import TeamMembersPage from "./pages/cfg/team/[id]/Members";
+import TeamSettingPage from "./pages/cfg/team/[id]/Setting";
+import TeamSidemenuPage from "./pages/cfg/team/[id]/Sidemenu";
 import TestPage from "./pages/test";
 import loadable from '@loadable/component';
 
 
 const DashboardPage = loadable(() => import('./pages/dashboard/index'));
-const TracePage = loadable(() => import('./pages/dashboard/trace'));
+const TracePage = loadable(() => import('./pages/dashboard/Trace'));
 
 const cfgRoutes = [
   {
