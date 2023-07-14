@@ -112,3 +112,9 @@ export const cfgUsers = i18n("cfgUsers", {
   "changePw": "Change Password",
   "userNameInput": "enter a username, used in login",
 })
+
+
+export const cfgTeamDash = i18n("cfgTeamDash", {
+  "title": "Manage Your Team",
+  "subTitle": "Current team",
+})

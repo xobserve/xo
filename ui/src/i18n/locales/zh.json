@@ -103,5 +103,9 @@
     "globalRole": "全局角色",
     "changePw": "修改密码",
     "userNameInput": "输入用户名，用于登录"
+  },
+  "cfgTeamDash": {
+    "title": "管理你的团队",
+    "subTitle": "当前团队"
   }
 }

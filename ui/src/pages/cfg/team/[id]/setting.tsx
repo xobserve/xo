@@ -2,37 +2,32 @@ import React from "react"
 import { Box, Button, Input, useDisclosure, useToast, VStack, AlertDialog, AlertDialogBody, AlertDialogContent, AlertDialogFooter, AlertDialogHeader, AlertDialogOverlay, HStack, FormLabel } from "@chakra-ui/react"
 import { Form, FormSection } from "components/form/Form"
 import FormItem from "components/form/Item"
-import Page from "layouts/page/Page"
 import { cloneDeep } from "lodash"
-import { useEffect, useRef, useState } from "react"
-import { FaUserFriends } from "react-icons/fa"
-import { Route } from "types/route"
+import { useRef, useState } from "react"
 import { Team } from "types/teams"
 import { requestApi } from "utils/axios/request"
-import { useNavigate, useParams } from "react-router-dom"
-import { getTeamSubLinks } from "./utils"
+import { useNavigate } from "react-router-dom"
+import TeamLayout from "./components/Layout"
 
 const TeamSettingPage = () => {
-  const params = useParams()
+  return <>
+    <TeamLayout>
+      {/* @ts-ignore */}
+      <TeamSettings />
+    </TeamLayout>
+
+  </>
+}
+
+export default TeamSettingPage
+
+const TeamSettings = (props: { team: Team }) => {
+  const [team, setTeam] = useState<Team>(props.team)
   const navigate = useNavigate()
   const toast = useToast()
-  const id = params.id
-  const tabLinks: Route[] = getTeamSubLinks(id)
 
 
-  const [team, setTeam] = useState<Team>(null)
 
-
-  useEffect(() => {
-    if (id) {
-      load()
-    }
-  }, [id])
-
-  const load = async () => {
-    const res = await requestApi.get(`/team/${id}`)
-    setTeam(res.data)
-  }
 
   const { isOpen, onOpen, onClose } = useDisclosure()
   const { isOpen: isLeaveOpen, onOpen: onLeaveOpen, onClose: onLeaveClose } = useDisclosure()
@@ -77,8 +72,8 @@ const TeamSettingPage = () => {
   }
 
   return <>
-    {id && <Page title={`Manage your team`} subTitle={`Current team - ${team?.name}`} icon={<FaUserFriends />} tabs={tabLinks}>
-      {team && <Form width="500px">
+    <Box>
+      <Form width="500px">
         <FormSection title="Basic setting">
           <FormItem title='Team name'>
             <Input placeholder="******" value={team.name} onChange={e => { team.name = e.currentTarget.value; setTeam(cloneDeep(team)) }} />
@@ -92,8 +87,8 @@ const TeamSettingPage = () => {
             {/* <Button width="fit-content" onClick={onLeaveOpen} colorScheme="orange">Leave team</Button> */}
           </HStack>
         </FormSection>
-      </Form>}
-    </Page>}
+      </Form>
+    </Box>
 
     <AlertDialog
       isOpen={isOpen}
@@ -150,5 +145,3 @@ const TeamSettingPage = () => {
     </AlertDialog>
   </>
 }
-
-export default TeamSettingPage

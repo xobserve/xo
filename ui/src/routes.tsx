@@ -13,7 +13,7 @@ import TeamDashboardsPage from "./pages/cfg/team/[id]/Dashboards";
 import TeamMembersPage from "./pages/cfg/team/[id]/Members";
 import TeamSettingPage from "./pages/cfg/team/[id]/Setting";
 import TeamSidemenuPage from "./pages/cfg/team/[id]/Sidemenu";
-import TestPage from "./pages/test";
+import TestPage from "./pages/Test";
 import loadable from '@loadable/component';
 
 

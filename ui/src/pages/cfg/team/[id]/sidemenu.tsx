@@ -12,39 +12,35 @@ import '@nosferatu500/react-sortable-tree/style.css';
 import * as Icons from 'react-icons/fa'
 import { useParams } from "react-router-dom"
 import { getTeamSubLinks } from "./utils"
+import TeamLayout from "./components/Layout"
+
 
 const TeamSidemenuPage = () => {
-    const paramas = useParams()
+    return <>
+      <TeamLayout>
+        {/* @ts-ignore */}
+        <TeamSidemenu />
+      </TeamLayout>
+  
+    </>
+  }
+
+  
+const TeamSidemenu = ({team}:{team:Team}) => {
     const toast = useToast()
-    const id = paramas.id
-
-
-    const [team, setTeam] = useState<Team>(null)
     const [sidemenu, setSideMenu] = useState<SideMenu>()
 
 
     const getNodeKey = ({ treeIndex }) => treeIndex
 
     useEffect(() => {
-        if (id) {
-            load()
             loadSidemenu()
-        }
-    }, [id])
-
-    const tabLinks: Route[] = getTeamSubLinks(id)
+    }, [])
 
 
-
-
-    const load = async () => {
-        const res = await requestApi.get(`/team/${id}`)
-        setTeam(res.data)
-
-    }
 
     const loadSidemenu = async () => {
-        const res = await requestApi.get(`/team/sidemenu/${id}`)
+        const res = await requestApi.get(`/team/sidemenu/${team.id}`)
         setSideMenu(res.data)
     }
 
@@ -206,7 +202,7 @@ const TeamSidemenuPage = () => {
         setSideMenu(cloneDeep(sidemenu))
     }
     return <>
-        {id && sidemenu && team && <Page title={`Manage your team`} subTitle={`Current team - ${team?.name}`} icon={<FaUserFriends />} tabs={tabLinks}>
+        {sidemenu && <Box>
             <Alert status='info' maxWidth="700px" flexDirection="column" alignItems="left">
                 <Text>Customize the top section of your team's side menu, you can add, edit, delete and reorder the menu items.</Text>
 
@@ -317,7 +313,7 @@ const TeamSidemenuPage = () => {
                     })}
                 />
             </Box>
-        </Page>}
+        </Box>}
     </>
 }
 

@@ -1,25 +1,33 @@
 import { AlertDialog, AlertDialogBody, AlertDialogContent, AlertDialogFooter, AlertDialogHeader, AlertDialogOverlay, Box, Button, Flex, Input, Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay, Radio, RadioGroup, Stack, Table, TableContainer, Tbody, Td, Text, Th, Thead, Tr, useDisclosure, useToast, VStack } from "@chakra-ui/react"
-import Page from "layouts/page/Page"
+import { useStore } from "@nanostores/react"
 import { cloneDeep } from "lodash"
 import moment from "moment"
 import React, { useEffect, useRef, useState } from "react"
-import { FaAlignLeft, FaCog, FaUserFriends } from "react-icons/fa"
-import { MdOutlineDashboard } from "react-icons/md"
 import { useParams } from "react-router-dom"
+import { cfgTeamDash, commonMsg } from "src/i18n/locales/en"
 import { Role } from "types/role"
-import { Route } from "types/route"
 import { Team, TeamMember } from "types/teams"
 import { requestApi } from "utils/axios/request"
-import { getTeamSubLinks } from "./utils"
-
+import TeamLayout from "./components/Layout"
 
 const TeamMembersPage = () => {
+    return <>
+        <TeamLayout>
+            {/* @ts-ignore */}
+            <TeamMembers />
+        </TeamLayout>
+
+    </>
+}
+
+export default TeamMembersPage
+
+const TeamMembers = ({team}: {team: Team}) => {
+    const t = useStore(commonMsg)
+    const t1 = useStore(cfgTeamDash)
     const params = useParams()
     const toast = useToast()
-    const id = params.id
-    const tabLinks: Route[] = getTeamSubLinks(id)
 
-    const [team, setTeam] = useState<Team>(null)
     const [members, setMembers] = useState<TeamMember[]>([])
     const [memberInEdit, setMemberInEdit] = useState<TeamMember>(null)
 
@@ -30,15 +38,11 @@ const TeamMembersPage = () => {
     const cancelRef = useRef()
 
     useEffect(() => {
-        if (id) {
             load()
-        }
-    }, [id])
+    }, [])
 
     const load = async () => {
-        const res = await requestApi.get(`/team/${id}`)
-        setTeam(res.data)
-        const res1 = await requestApi.get(`/team/${id}/members`)
+        const res1 = await requestApi.get(`/team/${team.id}/members`)
         setMembers(res1.data)
     }
 
@@ -97,7 +101,7 @@ const TeamMembersPage = () => {
     }
 
     return <>
-        {id && <Page title={`Manage your team`} subTitle={`Current team - ${team?.name}`} icon={<FaUserFriends />} tabs={tabLinks}>
+        <Box>
             <Flex justifyContent="space-between">
                 <Box></Box>
                 <Button size="sm" onClick={onAddMemberOpen}>Add team member</Button>
@@ -127,7 +131,7 @@ const TeamMembersPage = () => {
                     </Tbody>
                 </Table>
             </TableContainer>
-        </Page>}
+        </Box>
 
         <Modal isOpen={isOpen} onClose={onClose}>
             <ModalOverlay />
@@ -209,5 +213,3 @@ const TeamMembersPage = () => {
         </AlertDialog>
     </>
 }
-
-export default TeamMembersPage
