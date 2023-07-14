@@ -11,8 +11,12 @@ import { globalTeamId, Team } from "types/teams"
 import { requestApi } from "utils/axios/request"
 import { isJSON } from "utils/is"
 import { useNavigate } from "react-router-dom"
+import { commonMsg, newMsg } from "src/i18n/locales/en"
+import { useStore } from "@nanostores/react"
 
 const ImportDashboardPage = () => {
+    const t = useStore(commonMsg)
+    const t1 = useStore(newMsg)
     const toast = useToast()
     const navigate = useNavigate()
     const [dashboard, setDashboard] = useState<Dashboard>(null)
@@ -30,7 +34,7 @@ const ImportDashboardPage = () => {
     const importDashboard = async () => {
         const res = await requestApi.post("/dashboard/save", dashboard)
         toast({
-            title: "Dashboard imported, redirecting...",
+            title: t1.importToast,
             status: "success",
             duration: 3000,
             isClosable: true,
@@ -44,7 +48,7 @@ const ImportDashboardPage = () => {
     const onMetaChange = (meta) => {
         if (!isJSON(meta)) {
             toast({
-                title: "Meta json is not valid",
+                title: t1.jsonInvalid,
                 status: "error",
                 duration: 3000,
                 isClosable: true,
@@ -55,7 +59,7 @@ const ImportDashboardPage = () => {
         const dash:Dashboard = JSON.parse(meta)
         if (isEmpty(dash.id) || isEmpty(dash.data)) {
             toast({
-                title: "Meta json is not valid",
+                title: t1.jsonInvalid,
                 status: "error",
                 duration: 3000,
                 isClosable: true,
@@ -70,12 +74,12 @@ const ImportDashboardPage = () => {
     }
 
     return <>
-        <Page title={`New`} subTitle="Create some useful items" icon={<FaPlus />} tabs={newLinks}>
+        <Page title={t.new} subTitle={t1.subTitle} icon={<FaPlus />} tabs={newLinks}>
             <VStack alignItems="left" spacing={4}>
                 <FormItem title='Meta json'>
                     <Textarea rows={8} onBlur={e => onMetaChange(e.currentTarget.value)}></Textarea>
                 </FormItem>
-                {dashboard && <FormItem title='Belongs to team' >
+                {dashboard && <FormItem title={t1.belongTeam}>
                     <Box sx={{
                         '.chakra-select': {
                             paddingLeft: '15px'
@@ -88,7 +92,7 @@ const ImportDashboardPage = () => {
                         </Select>
                     </Box>
                 </FormItem>}
-                <Button width="fit-content" onClick={importDashboard} size="sm">Import</Button>
+                <Button width="fit-content" onClick={importDashboard} size="sm">{t.submit}</Button>
             </VStack>
         </Page>
     </>

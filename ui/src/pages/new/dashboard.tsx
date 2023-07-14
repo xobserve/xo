@@ -36,7 +36,7 @@ const NewDashboardPage = () => {
     const addDashboard = async () => {
         const res = await requestApi.post("/dashboard/save", dashboard)
         toast({
-            title: "Dashboard added, redirecting...",
+            title: t1.dashToast ,
             status: "success",
             duration: 3000,
             isClosable: true,

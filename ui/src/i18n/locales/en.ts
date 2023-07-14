@@ -157,4 +157,7 @@ export const newMsg = i18n("new", {
   "dashInfo": "Dashboard info",
   "dashTitle": "Dashboard Title",
   "belongTeam": "Belong to team",
+  "dashToast": "Dashboard added, redirecting...",
+  "importToast": "Dashboard imported, redirecting...",
+  "jsonInvalid": "Meta json is not valid"
 })
