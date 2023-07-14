@@ -155,9 +155,12 @@ export const cfgTeam = i18n("cfgTeam", {
 export const newMsg = i18n("new", {
   "subTitle": "Create some useful items",
   "dashInfo": "Dashboard info",
+  "dsInfo": "Datasource info",
   "dashTitle": "Dashboard Title",
   "belongTeam": "Belong to team",
   "dashToast": "Dashboard added, redirecting...",
   "importToast": "Dashboard imported, redirecting...",
-  "jsonInvalid": "Meta json is not valid"
+  "jsonInvalid": "Meta json is not valid",
+  "dsToast": "Datasource added, redirecting...",
+  "testDsFailed":  "Test failed",
 })

@@ -15,10 +15,11 @@ import FormItem from "components/form/Item"
 import React from "react";
 import { useNavigate } from "react-router-dom"
 import { useStore } from "@nanostores/react"
-import { commonMsg } from "src/i18n/locales/en"
+import { commonMsg, newMsg } from "src/i18n/locales/en"
 
 const DatasourceEditor = ({ds, onChange=null}) => {
     const t = useStore(commonMsg) 
+    const t1 = useStore(newMsg)
     const toast = useToast()
     const navigate = useNavigate()
     const [datasource, setDatasource] = useImmer<Datasource>(ds)
@@ -26,7 +27,7 @@ const DatasourceEditor = ({ds, onChange=null}) => {
     const saveDatasource = async () => {
         const res = await requestApi.post("/datasource/save", datasource)
         toast({
-            title: ds.id == 0 ? "Datasource added, redirecting..." : "Datasource updated",
+            title: ds.id == 0 ? t1.dsToast : t.isUpdated({name: t.datasource}),
             status: "success",
             duration: 3000,
             isClosable: true,
@@ -44,7 +45,7 @@ const DatasourceEditor = ({ds, onChange=null}) => {
     const testDatasource = async () => {
         if (isEmpty(datasource.name)) {
             toast({
-                title: "Invalid name",
+                title: t.isInvalid({name: t.name}),
                 status: "warning",
                 duration: 3000,
                 isClosable: true,
@@ -78,7 +79,7 @@ const DatasourceEditor = ({ds, onChange=null}) => {
         }
 
         toast({
-            title: "Test failed",
+            title: t1.testDsFailed,
             description: passed,
             status: "warning",
             duration: 3000,
@@ -88,7 +89,7 @@ const DatasourceEditor = ({ds, onChange=null}) => {
 
     return (<>
         <FormItem title={t.name}>
-            <Input value={datasource.name} placeholder="datasource name" onChange={e => {
+            <Input value={datasource.name} placeholder={t.itemName({name: t.datasource})} onChange={e => {
                 const v = e.currentTarget.value
                 setDatasource((d: Datasource) => { d.name = v })
             }} />

@@ -21,7 +21,7 @@ const NewDatasourcePage = () => {
     const t1 = useStore(newMsg)
     return <>
         <Page title={t.new} subTitle={t1.subTitle} icon={<FaPlus />} tabs={newLinks}>
-            <FormSection maxW="500px" title="Datasource info">
+            <FormSection maxW="500px" title={t1.dsInfo}>
                 <DatasourceEditor ds={initDatasource} />
             </FormSection>
         </Page>

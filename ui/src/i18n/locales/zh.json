@@ -48,7 +48,7 @@
     "role": "角色",
     "joined": "加入时间",
     "isReqiiured": "{name}是必填项",
-    "isInvalid": "{name}无效",
+    "isInvalid": "{name}不正确",
     "isAdded": "{name}添加成功!",
     "isUpdated": "{name}更新成功!",
     "isDeleted": "{name}删除成功!",
@@ -142,10 +142,13 @@
   "new": {
     "subTitle": "创建一些有用的东西",
     "dashInfo": "仪表盘信息",
+    "dsInfo": "数据源信息",
     "dashTitle": "仪表盘标题",
     "belongTeam": "归属于团队",
     "dashToast": "添加仪表板成功，重定向页面中...",
     "importToast": "仪表盘导入成功，重定向页面中...",
-    "jsonInvalid": "JSON 格式不正确"
+    "jsonInvalid": "JSON 格式不正确",
+    "dsToast": "添加数据源成功，重定向页面中...",
+    "testDsFailed":  "测试失败"
   }
 }
