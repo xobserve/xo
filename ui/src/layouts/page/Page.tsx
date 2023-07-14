@@ -5,7 +5,7 @@ import { Route } from "types/route"
 import React from "react"
 import { Link } from "react-router-dom"
 import { useStore } from "@nanostores/react"
-import { commonMsg } from "src/i18n/locales/en"
+import { commonMsg, navigateMsg } from "src/i18n/locales/en"
 
 interface Props {
     title: string
@@ -17,6 +17,7 @@ interface Props {
 
 const Page = (props: Props) => {
     const t = useStore(commonMsg)  
+    const t1 = useStore(navigateMsg)
     const { title, subTitle, icon, children, tabs } = props
 
     const borderColor = useColorModeValue(customColors.borderColor.light, customColors.borderColor.dark)
@@ -41,7 +42,7 @@ const Page = (props: Props) => {
                         <Box className={ tab.url == activeTab.url ? "top-gradient-border" : null} >
                             <HStack py="2" px="4" >
                                 {tab.icon}
-                                <Text>{t[tab.title]}</Text>
+                                <Text>{t[tab.title] ?? t1[tab.title]}</Text>
                             </HStack>
                         </Box>
                     </HStack>

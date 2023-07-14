@@ -69,6 +69,12 @@ export const commonMsg = i18n("common", {
   "itemName": params("{name} Name"),
 })
 
+export const navigateMsg = i18n("navigate", {
+  "NewDashboard": "New Dashboard",
+  "NewDatasource": "New Datasource",
+  "ImportDashboard": "Import Dashboard",
+})
+
 
 export const accountSettingMsg = i18n("accountSetting", {
   "changePassword": "Change Password",
@@ -143,4 +149,12 @@ export const cfgTeam = i18n("cfgTeam", {
    "sidemenuErrChildTitle": "child title or dashboard id is required",
    "sidemenuErrChildUrl": params("{name} is not a valid url"),
    "sidemenuReload": "Side menu updated, reloading..."
+})
+
+
+export const newMsg = i18n("new", {
+  "subTitle": "Create some useful items",
+  "dashInfo": "Dashboard info",
+  "dashTitle": "Dashboard Title",
+  "belongTeam": "Belong to team",
 })

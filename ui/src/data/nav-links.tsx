@@ -71,19 +71,19 @@ export const cfgLinks = [
 
 export const newLinks = [
     {
-        title: 'New Dashboard',
+        title: 'NewDashboard',
         url: '/new/dashboard',
         baseUrl: '/new/dashboard',
         // icon: <FaUsersCog />
     },
     {
-        title: 'Import Dashboard',
+        title: 'ImportDashboard',
         url: '/new/import',
         baseUrl: '/new/import',
         // icon: <FaUsersCog />
     },
     {
-        title: 'New Datasource',
+        title: 'NewDatasource',
         url: '/new/datasource',
         baseUrl: '/new/datasource',
         // icon: <FaUsersCog />

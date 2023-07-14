@@ -58,6 +58,11 @@
     "editItem": "编辑{name}",
     "itemName": "{name}名称"
   },
+  "navigate": {
+    "NewDashboard": "新建仪表盘",
+    "NewDatasource": "新建数据源",
+    "ImportDashboard": "导入仪表盘"
+  },
   "notfound": {
     "title": "404: Not found",
     "description": "Page not found",
@@ -133,5 +138,12 @@
     "sidemenuErrChildTitle": "子菜单项的名称和仪表盘 ID 不能为空",
     "sidemenuErrChildUrl": "{name} 的 URL 格式不正确",
     "sidemenuReload": "左侧菜单已更新，重新加载页面中..."
+  },
+  "new": {
+    "subTitle": "创建一些有用的东西",
+    "dashInfo": "仪表盘信息",
+    "dashTitle": "仪表盘标题",
+    "belongTeam": "归属于团队"
   }
 }
+

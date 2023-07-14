@@ -12,9 +12,13 @@ import { Dashboard } from "types/dashboard"
 import { Team } from "types/teams"
 import { requestApi } from "utils/axios/request"
 import { useNavigate } from "react-router-dom"
+import { commonMsg, newMsg } from "src/i18n/locales/en"
+import { useStore } from "@nanostores/react"
 
 
 const NewDashboardPage = () => {
+    const t = useStore(commonMsg)
+    const t1 = useStore(newMsg)
     const toast = useToast()
     const navigate = useNavigate()
     const [dashboard, setDashboard] = useState<Dashboard>(initDashboard)
@@ -44,20 +48,20 @@ const NewDashboardPage = () => {
     }
 
     return <>
-        <Page title={`New`} subTitle="Create some useful items" icon={<FaPlus />} tabs={newLinks}>
+        <Page title={t.new} subTitle={t1.subTitle} icon={<FaPlus />} tabs={newLinks}>
             <Form alignItems="left" spacing={4} sx={{
                 '.form-item-label': {
                     width: '150px'
                 }
             }}>
-                <FormSection title="Dashboard info">
-                    <FormItem title="Dashboard Title">
+                <FormSection title={t1.dashInfo}>
+                    <FormItem title={t1.dashTitle}>
                         <Input value={dashboard.title} onChange={e => { dashboard.title = e.currentTarget.value; setDashboard(cloneDeep(dashboard)) }} />
                     </FormItem>
-                    <FormItem title="Description">
-                        <Input placeholder='give your dashboard a short description' value={dashboard.data.description} onChange={e => setDashboard(cloneDeep(dashboard))} />
+                    <FormItem title={t.description}>
+                        <Input placeholder={t.inputTips({name: t.description})} value={dashboard.data.description} onChange={e => setDashboard(cloneDeep(dashboard))} />
                     </FormItem>
-                    <FormItem title="Belongs to team">
+                    <FormItem title={t1.belongTeam}>
                         <Box sx={{
                             '.chakra-select': {
                                 paddingLeft: '15px'
@@ -70,7 +74,7 @@ const NewDashboardPage = () => {
                             </Select>
                         </Box>
                     </FormItem>
-                    <Button width="fit-content" onClick={addDashboard}>Submit</Button>
+                    <Button width="fit-content" onClick={addDashboard}>{t.submit}</Button>
                 </FormSection>
             </Form>
         </Page>
