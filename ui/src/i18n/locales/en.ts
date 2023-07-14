@@ -164,3 +164,9 @@ export const newMsg = i18n("new", {
   "dsToast": "Datasource added, redirecting...",
   "testDsFailed":  "Test failed",
 })
+
+
+
+export const dashboardMsg = i18n("dashboard", {
+  "notFound": "Dashboard not found, maybe 1. invalid dashboard id(url) 2. you have chosen a wrong team",
+})

@@ -150,5 +150,8 @@
     "jsonInvalid": "JSON 格式不正确",
     "dsToast": "添加数据源成功，重定向页面中...",
     "testDsFailed":  "测试失败"
+  },
+  "dashboard": {
+    "notFound": "仪表盘不存在，有可能 1. 错误的仪表盘 id (url) 2. 你选择了错误的团队左侧菜单"
   }
 }

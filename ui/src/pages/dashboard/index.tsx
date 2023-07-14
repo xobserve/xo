@@ -1,6 +1,8 @@
+import { useStore } from "@nanostores/react"
 import React from "react"
 import { useEffect, useState } from "react"
 import { useParams } from "react-router-dom"
+import { dashboardMsg } from "src/i18n/locales/en"
 import DashboardWrapper from "src/views/dashboard/Dashboard"
 import { requestApi } from "utils/axios/request"
 import NotFoundPage from "../NotFound"
@@ -8,6 +10,7 @@ import NotFoundPage from "../NotFound"
 
 // page for dispaly dashboard
 const DashboardPage = () => {
+    const t1 = useStore(dashboardMsg)
     const params = useParams()
     const rawId = params.dashboardId
     const [dashboardId, setDashboardId] = useState<string>(null)
@@ -50,7 +53,7 @@ const DashboardPage = () => {
         
 
         if (!menuitem) {
-            setError('Dashboard not found in current team, maybe you have chosen a wrong team?!')
+            setError(t1.notFound)
             return
         }
 
