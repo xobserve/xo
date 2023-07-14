@@ -6,6 +6,8 @@ import { Team } from "types/teams"
 import { requestApi } from "utils/axios/request"
 import { FaAlignLeft, FaCog, FaUserFriends } from "react-icons/fa"
 import { MdOutlineDashboard } from "react-icons/md"
+import { useStore } from "@nanostores/react"
+import { cfgTeam } from "src/i18n/locales/en"
 
 const getTeamSubLinks = (id) => {
     return [
@@ -20,6 +22,7 @@ interface Props {
     children: any
 }
 const TeamLayout = ({children}: Props) => {
+    const t1 = useStore(cfgTeam)
     const params = useParams()
     const id = params.id
     const tabLinks: Route[] = getTeamSubLinks(id)
@@ -38,7 +41,7 @@ const TeamLayout = ({children}: Props) => {
     }
     
     return <>
-        {team && <Page title={`Manage your team`} subTitle={`Current team - ${team?.name}`} icon={<FaUserFriends />} tabs={tabLinks}>
+        {team && <Page title={t1.title} subTitle={`${t1.subTitle} - ${team?.name}`} icon={<FaUserFriends />} tabs={tabLinks}>
             {React.cloneElement(children, { team })}
         </Page>}
 

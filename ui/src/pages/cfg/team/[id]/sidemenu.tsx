@@ -9,6 +9,8 @@ import * as Icons from 'react-icons/fa'
 import TeamLayout from "./components/Layout"
 
 import '@nosferatu500/react-sortable-tree/style.css';
+import { useStore } from "@nanostores/react"
+import { cfgTeam, commonMsg } from "src/i18n/locales/en"
 
 const TeamSidemenuPage = () => {
     return <>
@@ -22,6 +24,8 @@ const TeamSidemenuPage = () => {
 
   
 const TeamSidemenu = ({team}:{team:Team}) => {
+    const t = useStore(commonMsg)
+    const t1 = useStore(cfgTeam)
     const toast = useToast()
     const [sidemenu, setSideMenu] = useState<SideMenu>()
 
@@ -44,7 +48,7 @@ const TeamSidemenu = ({team}:{team:Team}) => {
             const item = sidemenu.data[i]
             if (!item.title) {
                 toast({
-                    title: `title is required`,
+                    title: t1.sidemenuErrTitle,
                     status: "warning",
                     duration: 3000,
                     isClosable: true,
@@ -54,7 +58,7 @@ const TeamSidemenu = ({team}:{team:Team}) => {
 
             if (isEmpty(item.children)  && !item.dashboardId) {
                 toast({
-                    title: `dashboard id is required`,
+                    title: t1.sidemenuErrDashId,
                     status: "warning",
                     duration: 3000,
                     isClosable: true,
@@ -64,7 +68,7 @@ const TeamSidemenu = ({team}:{team:Team}) => {
 
             if (!item.icon) {
                 toast({
-                    title: `Menu item of level 1 must have an icon`,
+                    title: t1.sidemenuErrLevel1Icon,
                     status: "warning",
                     duration: 3000,
                     isClosable: true,
@@ -75,7 +79,7 @@ const TeamSidemenu = ({team}:{team:Team}) => {
             const icon = Icons[item.icon]
             if (!icon) {
                 toast({
-                    title: `icon ${item.icon} is not exist`,
+                    title:t1.sidemenuErrIcon({name: item.icon}),
                     status: "warning",
                     duration: 3000,
                     isClosable: true,
@@ -85,7 +89,7 @@ const TeamSidemenu = ({team}:{team:Team}) => {
 
             if (!item.url.startsWith('/') || item.url === '/' || item.url.endsWith('/')) {
                 toast({
-                    title: `"${item.url}" is not a valid url`,
+                    title: t1.sidemenuErrUrl({name: item.url}),
                     status: "warning",
                     duration: 3000,
                     isClosable: true,
@@ -96,7 +100,7 @@ const TeamSidemenu = ({team}:{team:Team}) => {
             const parts = item.url.split('/').length
             if (parts != 2) {
                 toast({
-                    title: `level 1 url must be /x, /x/y is invalid`,
+                    title: t1.sidemenuErrLevel1Url,
                     status: "warning",
                     duration: 3000,
                     isClosable: true,
@@ -110,7 +114,7 @@ const TeamSidemenu = ({team}:{team:Team}) => {
                     
                     if (!childItem.url.startsWith(item.url)) {
                         toast({
-                            title: `level 2 url must use level1 url as prefix`,
+                            title: t1.sidemenuErrLevel2Url,
                             status: "warning",
                             duration: 3000,
                             isClosable: true,
@@ -119,7 +123,7 @@ const TeamSidemenu = ({team}:{team:Team}) => {
                     }
                     if (!childItem.title || !childItem.dashboardId) {
                         toast({
-                            title: `title or dashboard id is required`,
+                            title: t1.sidemenuErrChildTitle,
                             status: "warning",
                             duration: 3000,
                             isClosable: true,
@@ -129,7 +133,7 @@ const TeamSidemenu = ({team}:{team:Team}) => {
 
                     if (!childItem.url.startsWith('/') || childItem.url === '/' || childItem.url.endsWith('/')) {
                         toast({
-                            title: `"${childItem.url}" is not a valid url`,
+                            title: t1.sidemenuErrChildUrl({name: childItem.url}),
                             status: "warning",
                             duration: 3000,
                             isClosable: true,
@@ -140,7 +144,7 @@ const TeamSidemenu = ({team}:{team:Team}) => {
                     const parts = childItem.url.split('/').length
                     if (parts != 3) {
                         toast({
-                            title: `level 2 url must be /x/y, /x or /x/y/z is invalid`,
+                            title: t1.sidemenuErrLevel2Url1,
                             status: "warning",
                             duration: 3000,
                             isClosable: true,
@@ -153,7 +157,7 @@ const TeamSidemenu = ({team}:{team:Team}) => {
 
         await requestApi.post(`/team/sidemenu`, { ...sidemenu })
         toast({
-            title: "Side menu updated, reloading...",
+            title:  t1.sidemenuReload,
             status: "success",
             duration: 3000,
             isClosable: true,
@@ -199,21 +203,21 @@ const TeamSidemenu = ({team}:{team:Team}) => {
     return <>
         {sidemenu && <Box>
             <Alert status='info' maxWidth="700px" flexDirection="column" alignItems="left">
-                <Text>Customize the top section of your team's side menu, you can add, edit, delete and reorder the menu items.</Text>
+                <Text>{t1.sidemenuTip1}</Text>
 
-                <Text mt="4">Menu item format: &nbsp; <b>title | url | icon | dashboard id</b> <br /></Text>
+                <Text mt="4">{t1.sidemenuTip2}: &nbsp; <b>title | url | icon | dashboard id</b> <br /></Text>
 
-                <Text mt="4">url format:</Text>
-                <Text mt="2">&nbsp;&nbsp;level 1: /x, /y, /z</Text>
-                <Text mt="2">&nbsp;&nbsp;level 2: if level 1 is /x, level 2 must be /x/a or /x/b, obviously /y/a is invalid</Text>
+                <Text mt="4">{t1.sidemenuTip3}:</Text>
+                <Text mt="2">&nbsp;&nbsp;{t1.level} 1: /x, /y, /z</Text>
+                <Text mt="2">&nbsp;&nbsp;{t1.level} 2: {t1.sidemenuTip4}</Text>
 
-                <Text mt="4">You can find icons in https://react-icons.github.io/react-icons/icons?name=fa</Text>
+                <Text mt="4">{t1.sidemenuTip5}: https://react-icons.github.io/react-icons/icons?name=fa</Text>
             </Alert>
             <Flex justifyContent="space-between" my="4" maxWidth="700px">
-                <Box textStyle="subTitle">Modify sidemenu</Box>
+                <Box textStyle="subTitle">{t1.modifySidemenu}</Box>
                 <HStack>
-                    <Button onClick={addMenuItem} variant="outline" leftIcon={<Icons.FaPlus />}>Add menu item</Button>
-                    <Button onClick={updateSidemenu}>Submit</Button>
+                    <Button onClick={addMenuItem} variant="outline" leftIcon={<Icons.FaPlus />}>{t1.addMenuItem}</Button>
+                    <Button onClick={updateSidemenu}>{t.submit}</Button>
                 </HStack>
                 
             </Flex>
@@ -299,7 +303,7 @@ const TeamSidemenu = ({team}:{team:Team}) => {
                                         }}
                                         placeholder="dashboard id"
                                     />}
-                                    <Tooltip label="remove sidemenu item">
+                                    <Tooltip label={t1.removeMenuItem}>
                                         <Box onClick={() => removeMenuItem(node)}><Icons.FaTimes /></Box>
                                     </Tooltip>
                                 </HStack>

@@ -117,9 +117,30 @@ export const cfgUsers = i18n("cfgUsers", {
 })
 
 
-export const cfgTeam = i18n("cfgTeamDash", {
+export const cfgTeam = i18n("cfgTeam", {
   "title": "Manage Your Team",
   "subTitle": "Current team",
   "roleInTeam": "Role in team",
-  "leaveTeam": "Leave Team"
+  "leaveTeam": "Leave Team",
+
+  "sidemenuTip1": "Customize the top section of your team's side menu, you can add, edit, delete and reorder the menu items.",
+  "sidemenuTip2": "Menu item format",
+  "sidemenuTip3": "Url format",
+  "level": "Level", 
+  "sidemenuTip4": "if level 1 is /x, level 2 must be /x/a or /x/b, obviously /y/a is invalid",
+  "sidemenuTip5": "You can find icons in",
+  "modifySidemenu": "Modify Side Menu",
+  "addMenuItem": "Add Menu Item",
+  "removeMenuItem": "Remove Menu Item",
+  "sidemenuErrTitle": "title is required",
+  "sidemenuErrDashId":  "dashboard id is required",
+  "sidemenuErrLevel1Icon": "Menu item of level 1 must have an icon",
+  "sidemenuErrIcon": params("icon {name} is not exist"),
+  "sidemenuErrUrl": params("{name} is not a valid url"),
+  "sidemenuErrLevel1Url": "level 1 url must be /x, /x/y is invalid",
+   "sidemenuErrLevel2Url":"level 2 url must use level1 url as prefix",
+   'sidemenuErrLevel2Url1': "level 2 url must be /x/y, /x or /x/y/z is invalid",
+   "sidemenuErrChildTitle": "child title or dashboard id is required",
+   "sidemenuErrChildUrl": params("{name} is not a valid url"),
+   "sidemenuReload": "Side menu updated, reloading..."
 })

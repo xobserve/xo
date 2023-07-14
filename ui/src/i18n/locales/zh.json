@@ -111,6 +111,27 @@
     "title": "管理你的团队",
     "subTitle": "当前团队",
     "roleInTeam": "团队中的角色",
-    "leaveTeam": "离开团队"
+    "leaveTeam": "离开团队",
+
+    "sidemenuTip1": "定制团队左侧菜单的上半区域, 你可以添加、编辑、删除和排序菜单项",
+    "sidemenuTip2": "菜单项格式",
+    "sidemenuTip3": "Url 格式",
+    "level": "层级",
+    "sidemenuTip4": "如果层级 1 是 /x, 那层级 2 必须以 /x 开头:  /x/a 或 /x/b, 显然 /y/a 是不正确的",
+    "sidemenuTip5": "在以下网站可以找到想要的图标",
+    "modifySidemenu": "修改左侧菜单",
+    "addMenuItem": "新增菜单项",
+    "removeMenuItem": "删除菜单项",
+    "sidemenuErrTitle": "名称不能为空",
+    "sidemenuErrDashId": "仪表盘 ID 不能为空",
+    "sidemenuErrLevel1Icon": "层级 1 的菜单项的图标不能为空",
+    "sidemenuErrIcon": "图标名 {name} 不存在",
+    "sidemenuErrUrl": "{name} URL 格式不正确 ",
+    "sidemenuErrLevel1Url": "层级 1 的 URL 格式必须为 /x, 例如 /x/y 是不正确的",
+    "sidemenuErrLevel2Url": "层级 2 的 URL 必须以层级 1 的 URL 作为前缀",
+    "sidemenuErrLevel2Url1": "层级 2 的URL 只能是 /x/y, /x 或 /x/y/z 都是不正确的",
+    "sidemenuErrChildTitle": "子菜单项的名称和仪表盘 ID 不能为空",
+    "sidemenuErrChildUrl": "{name} 的 URL 格式不正确",
+    "sidemenuReload": "左侧菜单已更新，重新加载页面中..."
   }
 }
