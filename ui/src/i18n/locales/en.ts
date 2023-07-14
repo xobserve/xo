@@ -50,8 +50,12 @@ export const commonMsg = i18n("common", {
   "dangeSection": "Dangerous section",
   "dashboard": "Dashboard",
   "panel": "Panel",
-  "members": "Members",
+  "members": "Member",
   "sidemenu": "Side Menu",
+  "created": "Created",
+  "updated": "Updated",
+  "role": "Role",
+  "joined": "Joined",
   "inputTips": params("Enter {name}.."),
   "isReqiiured": params("{name} is required"),
   "isInvalid": params("{name} is invalid"),
@@ -107,7 +111,6 @@ export const cfgVariablemsg = i18n("cfgVariable", {
 export const cfgUsers = i18n("cfgUsers", {
   "pwAlert": "new password must be at least 6 characters long",
   "userRole": "User Role",
-  "joined": "Joined",
   "globalRole": "Global Role",
   "changePw": "Change Password",
   "userNameInput": "enter a username, used in login",
@@ -117,4 +120,5 @@ export const cfgUsers = i18n("cfgUsers", {
 export const cfgTeamDash = i18n("cfgTeamDash", {
   "title": "Manage Your Team",
   "subTitle": "Current team",
+  "roleInTeam": "Role in team",
 })

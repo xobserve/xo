@@ -1,19 +1,14 @@
 import React from "react"
 import { Box, Input, useToast,  HStack, useColorModeValue, Alert, Text, Flex, Button, Tooltip } from "@chakra-ui/react"
-import Page from "layouts/page/Page"
 import { cloneDeep, isEmpty } from "lodash"
 import { useEffect, useState } from "react"
-import { FaAlignLeft, FaCog, FaUserFriends } from "react-icons/fa"
-import { Route } from "types/route"
 import { MenuItem, SideMenu, Team } from "types/teams"
 import { requestApi } from "utils/axios/request"
 import SortableTree, { changeNodeAtPath } from '@nosferatu500/react-sortable-tree';
-import '@nosferatu500/react-sortable-tree/style.css';
 import * as Icons from 'react-icons/fa'
-import { useParams } from "react-router-dom"
-import { getTeamSubLinks } from "./utils"
 import TeamLayout from "./components/Layout"
 
+import '@nosferatu500/react-sortable-tree/style.css';
 
 const TeamSidemenuPage = () => {
     return <>

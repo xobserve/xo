@@ -43,6 +43,10 @@
     "panel": "图表",
     "members": "成员",
     "sidemenu": "左侧菜单",
+    "created": "创建时间",
+    "updated": "更新时间",
+    "role": "角色",
+    "joined": "加入时间",
     "isReqiiured": "{name}是必填项",
     "isInvalid": "{name}无效",
     "isAdded": "{name}添加成功!",
@@ -99,13 +103,13 @@
   "cfgUsers": {
     "pwAlert": "新密码至少6个字符长度",
     "userRole": "用户角色",
-    "joined": "加入时间",
     "globalRole": "全局角色",
     "changePw": "修改密码",
     "userNameInput": "输入用户名，用于登录"
   },
   "cfgTeamDash": {
     "title": "管理你的团队",
-    "subTitle": "当前团队"
+    "subTitle": "当前团队",
+    "roleInTeam": "团队中的角色"
   }
 }

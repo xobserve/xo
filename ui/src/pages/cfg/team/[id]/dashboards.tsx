@@ -1,8 +1,8 @@
-import { Box, Button, useToast, Table, TableContainer, Tbody, Td, Text, Th, Thead, Tr, Flex } from "@chakra-ui/react"
+import { Box, Button, Table, TableContainer, Tbody, Td, Text, Th, Thead, Tr, Flex } from "@chakra-ui/react"
 import { useStore } from "@nanostores/react"
 import moment from "moment"
-import React, { useEffect, useRef, useState } from "react"
-import { useNavigate, useParams } from "react-router-dom"
+import React, { useEffect, useState } from "react"
+import { useNavigate } from "react-router-dom"
 import ReserveUrls from "src/data/reserve-urls"
 import { commonMsg } from "src/i18n/locales/en"
 import { Dashboard } from "types/dashboard"
@@ -48,17 +48,17 @@ const TeamDashboards = ({team}: {team:Team}) => {
         <Box>
             <Flex justifyContent="space-between">
                 <Box></Box>
-                <Button size="sm" onClick={() => navigate(`${ReserveUrls.New}/dashboard`)}>Add new dashboard</Button>
+                <Button size="sm" onClick={() => navigate(`${ReserveUrls.New}/dashboard`)}>{t.newItem({name: t.dashboard})}</Button>
             </Flex>
             <TableContainer>
                 <Table variant="simple">
                     <Thead>
                         <Tr>
-                            <Th>Title</Th>
+                            <Th>{t.name}</Th>
                             <Th>Id</Th>
-                            <Th>Created</Th>
-                            <Th>Updated</Th>
-                            <Th>Actions</Th>
+                            <Th>{t.created}</Th>
+                            <Th>{t.updated}</Th>
+                            <Th>{t.action}</Th>
                         </Tr>
                     </Thead>
                     <Tbody>
@@ -69,7 +69,7 @@ const TeamDashboards = ({team}: {team:Team}) => {
                                 <Td>{moment(dash.created).fromNow()}</Td>
                                 <Td>{moment(dash.updated).fromNow()}</Td>
                                 <Td>
-                                    <Button variant="ghost" size="sm" px="0" onClick={() => navigate(`/${dash.id}`)}>View</Button>
+                                    <Button variant="ghost" size="sm" px="0" onClick={() => navigate(`/${dash.id}`)}>{t.manage}</Button>
                                 </Td>
                             </Tr>
                         })}

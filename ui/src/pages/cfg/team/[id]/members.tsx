@@ -25,7 +25,6 @@ export default TeamMembersPage
 const TeamMembers = ({team}: {team: Team}) => {
     const t = useStore(commonMsg)
     const t1 = useStore(cfgTeamDash)
-    const params = useParams()
     const toast = useToast()
 
     const [members, setMembers] = useState<TeamMember[]>([])
@@ -59,7 +58,7 @@ const TeamMembers = ({team}: {team: Team}) => {
     const updateTeamMember = async () => {
         await requestApi.post(`/team/member`, memberInEdit)
         toast({
-            title: "Member updated",
+            title: t.isUpdated({ name: t.members }),
             status: "success",
             duration: 3000,
             isClosable: true,
@@ -71,7 +70,7 @@ const TeamMembers = ({team}: {team: Team}) => {
     const deleteTeamMember = async () => {
         await requestApi.delete(`/team/member/${memberInEdit.teamId}/${memberInEdit.id}`)
         toast({
-            title: "Member deleted",
+            title: t.isDeleted({name: t.members}),
             status: "success",
             duration: 3000,
             isClosable: true,
@@ -89,7 +88,7 @@ const TeamMembers = ({team}: {team: Team}) => {
     const addMember = async () => {
         await requestApi.post(`/team/add/member`, { teamId: team.id, members: [memberInEdit.username], role: memberInEdit.role })
         toast({
-            title: "Member added",
+            title: t.isAdded({ name: t.members }),
             status: "success",
             duration: 3000,
             isClosable: true,
@@ -104,16 +103,16 @@ const TeamMembers = ({team}: {team: Team}) => {
         <Box>
             <Flex justifyContent="space-between">
                 <Box></Box>
-                <Button size="sm" onClick={onAddMemberOpen}>Add team member</Button>
+                <Button size="sm" onClick={onAddMemberOpen}>{t.newItem({name: t.members})}</Button>
             </Flex>
             <TableContainer>
                 <Table variant="simple">
                     <Thead>
                         <Tr>
-                            <Th>Username</Th>
-                            <Th>Role</Th>
-                            <Th>Joined</Th>
-                            <Th>Actions</Th>
+                            <Th>{t.userName}</Th>
+                            <Th>{t.role}</Th>
+                            <Th>{t.joined}</Th>
+                            <Th>{t.action}</Th>
                         </Tr>
                     </Thead>
                     <Tbody>
@@ -123,8 +122,8 @@ const TeamMembers = ({team}: {team: Team}) => {
                                 <Td>{member.role}</Td>
                                 <Td>{moment(member.created).fromNow()}</Td>
                                 <Td>
-                                    <Button variant="ghost" size="sm" px="0" onClick={() => editTeamMember(member)}>Edit</Button>
-                                    <Button variant="ghost" size="sm" colorScheme="orange" onClick={() => onDeleteMember(member)}>Delete</Button>
+                                    <Button variant="ghost" size="sm" px="0" onClick={() => editTeamMember(member)}>{t.edit}</Button>
+                                    <Button variant="ghost" size="sm" colorScheme="orange" onClick={() => onDeleteMember(member)}>{t.delete}</Button>
                                 </Td>
                             </Tr>
                         })}
@@ -160,27 +159,27 @@ const TeamMembers = ({team}: {team: Team}) => {
         <Modal isOpen={isAddOpen} onClose={onAddClose}>
             <ModalOverlay />
             {memberInEdit && <ModalContent>
-                <ModalHeader>Invide a team member</ModalHeader>
+                <ModalHeader>{t.newItem({name: t.members})}</ModalHeader>
                 <ModalCloseButton />
                 <ModalBody>
-                    <Text>Username</Text>
+                    <Text>{t.userName}</Text>
                     <Input mt="3" width="300px" value={memberInEdit.username} onChange={e => { memberInEdit.username = e.currentTarget.value.trim(); setMemberInEdit({ ...memberInEdit }) }} />
 
 
-                    <Text mt="3">Role in team</Text>
+                    <Text mt="3">{t1.roleInTeam} </Text>
                     <RadioGroup mt="3" onChange={(v) => { memberInEdit.role = v as Role; setMemberInEdit(cloneDeep(memberInEdit)) }} value={memberInEdit.role}>
                         <Stack direction='row'>
-                            <Radio value={Role.Viewer}>{Role.Viewer}</Radio>
-                            <Radio value={Role.ADMIN}>{Role.ADMIN}</Radio>
+                            <Radio value={Role.Viewer}>{t[Role.Viewer]}</Radio>
+                            <Radio value={Role.ADMIN}>{t[Role.ADMIN]}</Radio>
                         </Stack>
                     </RadioGroup>
                 </ModalBody>
 
                 <ModalFooter>
                     <Button mr={3} onClick={onAddClose}>
-                        Close
+                        {t.cancel}
                     </Button>
-                    <Button variant='ghost' onClick={addMember}>Submit</Button>
+                    <Button variant='ghost' onClick={addMember}>{t.submit}</Button>
                 </ModalFooter>
             </ModalContent>}
         </Modal>

@@ -171,7 +171,7 @@ const UsersPage = () => {
                             <Th>{t.userName}</Th>
                             <Th>{t.nickname}</Th>
                             <Th>{t.email}</Th>
-                            <Th>{t1.joined}</Th>
+                            <Th>{t.joined}</Th>
                             <Th>{t1.globalRole}</Th>
                             <Th>{t.action}</Th>
                         </Tr>
