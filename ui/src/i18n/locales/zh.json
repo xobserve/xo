@@ -107,9 +107,10 @@
     "changePw": "修改密码",
     "userNameInput": "输入用户名，用于登录"
   },
-  "cfgTeamDash": {
+  "cfgTeam": {
     "title": "管理你的团队",
     "subTitle": "当前团队",
-    "roleInTeam": "团队中的角色"
+    "roleInTeam": "团队中的角色",
+    "leaveTeam": "离开团队"
   }
 }

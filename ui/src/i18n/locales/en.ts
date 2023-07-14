@@ -117,8 +117,9 @@ export const cfgUsers = i18n("cfgUsers", {
 })
 
 
-export const cfgTeamDash = i18n("cfgTeamDash", {
+export const cfgTeam = i18n("cfgTeamDash", {
   "title": "Manage Your Team",
   "subTitle": "Current team",
   "roleInTeam": "Role in team",
+  "leaveTeam": "Leave Team"
 })

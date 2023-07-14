@@ -8,6 +8,8 @@ import { Team } from "types/teams"
 import { requestApi } from "utils/axios/request"
 import { useNavigate } from "react-router-dom"
 import TeamLayout from "./components/Layout"
+import { useStore } from "@nanostores/react"
+import { cfgTeam, commonMsg } from "src/i18n/locales/en"
 
 const TeamSettingPage = () => {
   return <>
@@ -22,6 +24,8 @@ const TeamSettingPage = () => {
 export default TeamSettingPage
 
 const TeamSettings = (props: { team: Team }) => {
+  const t = useStore(commonMsg)
+  const t1 = useStore(cfgTeam)
   const [team, setTeam] = useState<Team>(props.team)
   const navigate = useNavigate()
   const toast = useToast()
@@ -36,7 +40,7 @@ const TeamSettings = (props: { team: Team }) => {
   const updateTeam = async () => {
     await requestApi.post(`/team/update`, team)
     toast({
-      title: "Member updated",
+      title: t.isUpdated({name: t.members}),
       status: "success",
       duration: 3000,
       isClosable: true,
@@ -46,7 +50,7 @@ const TeamSettings = (props: { team: Team }) => {
   const deleteTeam = async () => {
     await requestApi.delete(`/team/${team.id}`)
     toast({
-      title: "Team deleted!",
+      title: t.isDeleted({name: t.team}),
       status: "success",
       duration: 3000,
       isClosable: true,
@@ -60,7 +64,7 @@ const TeamSettings = (props: { team: Team }) => {
   const leaveTeam = async () => {
     await requestApi.delete(`/team/leave/${team.id}`)
     toast({
-      title: "Team leaved!",
+      title: t1.leaveTeam,
       status: "success",
       duration: 3000,
       isClosable: true,
@@ -74,16 +78,16 @@ const TeamSettings = (props: { team: Team }) => {
   return <>
     <Box>
       <Form width="500px">
-        <FormSection title="Basic setting">
-          <FormItem title='Team name'>
+        <FormSection title={t.basicSetting}>
+          <FormItem title={t.itemName({name: t.team})}>
             <Input placeholder="******" value={team.name} onChange={e => { team.name = e.currentTarget.value; setTeam(cloneDeep(team)) }} />
           </FormItem>
-          <Button width="fit-content" onClick={updateTeam}>Submit</Button>
+          <Button width="fit-content" onClick={updateTeam}>{t.submit}</Button>
         </FormSection>
 
-        <FormSection title="Dangerous section">
+        <FormSection title={t.dangeSection}>
           <HStack>
-            <Button width="fit-content" onClick={onOpen} colorScheme="red">Delete team</Button>
+            <Button width="fit-content" onClick={onOpen} colorScheme="red">{t.deleteItem({name: t.team})}</Button>
             {/* <Button width="fit-content" onClick={onLeaveOpen} colorScheme="orange">Leave team</Button> */}
           </HStack>
         </FormSection>
@@ -98,19 +102,19 @@ const TeamSettings = (props: { team: Team }) => {
       <AlertDialogOverlay>
         {team && <AlertDialogContent>
           <AlertDialogHeader fontSize='lg' fontWeight='bold'>
-            Delete Team - {team.name}
+            {t.deleteItem({name: t.team})} - {team.name}
           </AlertDialogHeader>
 
           <AlertDialogBody>
-            Are you sure? You can't undo this action afterwards.
+           {t.deleteAlert}
           </AlertDialogBody>
 
           <AlertDialogFooter>
             <Button ref={cancelRef} onClick={onClose}>
-              Cancel
+              {t.cancel}
             </Button>
             <Button colorScheme='orange' onClick={deleteTeam} ml={3}>
-              Delete
+              {t.delete}
             </Button>
           </AlertDialogFooter>
         </AlertDialogContent>}
@@ -125,19 +129,19 @@ const TeamSettings = (props: { team: Team }) => {
       <AlertDialogOverlay>
         {team && <AlertDialogContent>
           <AlertDialogHeader fontSize='lg' fontWeight='bold'>
-            Leave Team - {team.name}
+           {t1.leaveTeam} - {team.name}
           </AlertDialogHeader>
 
           <AlertDialogBody>
-            Are you sure? You can't undo this action afterwards.
+           {t.deleteAlert}
           </AlertDialogBody>
 
           <AlertDialogFooter>
             <Button ref={cancelRef} onClick={onLeaveClose}>
-              Cancel
+              {t.cancel}
             </Button>
             <Button colorScheme='orange' onClick={leaveTeam} ml={3}>
-              Leave
+              {t1.leaveTeam}
             </Button>
           </AlertDialogFooter>
         </AlertDialogContent>}

@@ -3,8 +3,7 @@ import { useStore } from "@nanostores/react"
 import { cloneDeep } from "lodash"
 import moment from "moment"
 import React, { useEffect, useRef, useState } from "react"
-import { useParams } from "react-router-dom"
-import { cfgTeamDash, commonMsg } from "src/i18n/locales/en"
+import { cfgTeam, commonMsg } from "src/i18n/locales/en"
 import { Role } from "types/role"
 import { Team, TeamMember } from "types/teams"
 import { requestApi } from "utils/axios/request"
@@ -24,7 +23,7 @@ export default TeamMembersPage
 
 const TeamMembers = ({team}: {team: Team}) => {
     const t = useStore(commonMsg)
-    const t1 = useStore(cfgTeamDash)
+    const t1 = useStore(cfgTeam)
     const toast = useToast()
 
     const [members, setMembers] = useState<TeamMember[]>([])
