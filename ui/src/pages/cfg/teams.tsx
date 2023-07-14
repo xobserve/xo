@@ -11,8 +11,12 @@ import ReserveUrls from "src/data/reserve-urls"
 import { Team } from "types/teams"
 import { requestApi } from "utils/axios/request"
 import { useNavigate } from "react-router-dom"
+import { cfgTeam, commonMsg } from "src/i18n/locales/en"
+import { useStore } from "@nanostores/react"
 
 const TeamsPage = () => {
+    const t = useStore(commonMsg)
+    const t1 = useStore(cfgTeam)
     const { session } = useSession()
     const toast = useToast()
     const navigate = useNavigate()
@@ -34,7 +38,7 @@ const TeamsPage = () => {
         const res = await requestApi.post("/team/new", { name: teamName.trim(),brief: teamDesc.trim()})
         onClose()
         toast({
-            title: "Team added",
+            title: t.isAdded({name: t.team}),
             status: "success",
             duration: 3000,
             isClosable: true,
@@ -45,19 +49,19 @@ const TeamsPage = () => {
     }
 
     return <>
-        <Page title={`Configuration`} subTitle="Manage teams" icon={<FaCog />} tabs={cfgLinks}>
+        <Page title={t.configuration} subTitle={t.manageItem({name: t.team})} icon={<FaCog />} tabs={cfgLinks}>
             <Flex justifyContent="space-between">
                 <Box></Box>
-                <Button size="sm" onClick={onOpen}>Add new team</Button>
+                <Button size="sm" onClick={onOpen}>{t.newItem({name: t.team})}</Button>
             </Flex>
             <TableContainer>
                 <Table variant="simple">
                     <Thead>
                         <Tr>
-                            <Th>Team name</Th>
-                            <Th>Members</Th>
-                            <Th>Created by</Th>
-                            <Th>Actions</Th>
+                            <Th>{t1.teamName}</Th>
+                            <Th>{t1.members}</Th>
+                            <Th>{t.createdBy}</Th>
+                            <Th>{t.action}</Th>
                         </Tr>
                     </Thead>
                     <Tbody>
@@ -66,7 +70,7 @@ const TeamsPage = () => {
                                 <Td>{team.name}</Td>
                                 <Td>{team.memberCount}</Td>
                                 <Td>{team.createdBy} {session?.user?.id == team.createdById && <Tag>You</Tag>}</Td>
-                                <Td><Button variant="ghost" size="sm" px="0" onClick={() => navigate(`${ReserveUrls.Config}/team/${team.id}/members`)}>Manage</Button></Td>
+                                <Td><Button variant="ghost" size="sm" px="0" onClick={() => navigate(`${ReserveUrls.Config}/team/${team.id}/members`)}>{t.manage}</Button></Td>
                             </Tr>
                         })}
                     </Tbody>
@@ -76,16 +80,16 @@ const TeamsPage = () => {
         <Modal isOpen={isOpen} onClose={onClose}>
             <ModalOverlay />
             <ModalContent>
-                <ModalHeader>Add new team</ModalHeader>
+                <ModalHeader>{t.newItem({name: t.team})}</ModalHeader>
                 <ModalCloseButton />
                 <ModalBody>
 
                     <Form alignItems="left" spacing={2}>
-                        <FormItem title='Team name' labelWidth="130px">
-                            <Input placeholder='enter a team name' value={teamName} onChange={e => { setTeamName(e.currentTarget.value) }} />
+                        <FormItem title={t1.teamName} labelWidth="130px">
+                            <Input placeholder={t.inputNameTips} value={teamName} onChange={e => { setTeamName(e.currentTarget.value) }} />
                         </FormItem>
-                        <FormItem title='Team description'  labelWidth="130px">
-                            <Input placeholder='give a short description to this team' value={teamDesc} onChange={e => { setTeamDesc(e.currentTarget.value) }} />
+                        <FormItem title={t.description}  labelWidth="130px">
+                            <Input placeholder={t.inputDescTips} value={teamDesc} onChange={e => { setTeamDesc(e.currentTarget.value) }} />
                         </FormItem>
                     </Form>
                 </ModalBody>

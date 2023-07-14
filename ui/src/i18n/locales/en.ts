@@ -41,11 +41,16 @@ export const commonMsg = i18n("common", {
   "basicSetting": "Basic Setting",
   "showMore": "Show More",
   "custom": "Custom",
+  "createdBy": "Created By",
+  "inputNameTips": "Enter a name..",
+  "inputDescTips": "Give a short description..",
   "isReqiiured": params("{name} is required"),
   "isInvalid": params("{name} is invalid"),
   "isAdded": params("{name} added!"),
   "isUpdated": params("{name} updated!"),
-  "isDeleted": params("{name} deleted!"),  
+  "isDeleted": params("{name} deleted!"),
+  "newItem": params("New {name}"),
+  "manageItem": params("Manage {name}"),
 })
 
 
@@ -94,4 +99,10 @@ export const cfgVariablemsg = i18n("cfgVariable", {
   "useCurrentTime": "Use current time",
   "selectMetrics": "Select metrics",
   "metricTips": "support using variables"
+})
+
+export const cfgTeam = i18n("cfgTeam", {
+  "teamName": "Team Name",
+  "members": "Members",
+  
 })
