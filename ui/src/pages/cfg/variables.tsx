@@ -65,7 +65,7 @@ const GlobalVariablesPage = () => {
     const addVariable = async (v: Variable) => {
         if (!v.name) {
             toast({
-                title: t.isReqiiured({name: t1.varName }),
+                title: t.isReqiiured({name: t.itemName({name: t.variable}) }),
                 status: "error",
                 duration: 3000,
                 isClosable: true,
@@ -98,7 +98,7 @@ const GlobalVariablesPage = () => {
     const editVariable = async (v: Variable) => {
         if (!v.name) {
             toast({
-                title: t.isReqiiured({name: t1.varName }),
+                title: t.isReqiiured({name: t.itemName({name: t.variable}) }),
                 status: "error",
                 duration: 3000,
                 isClosable: true,
@@ -135,7 +135,7 @@ const GlobalVariablesPage = () => {
         <Page title={t.configuration} subTitle={t1.subTitle} icon={<FaCog />} tabs={cfgLinks}>
             <Flex justifyContent="space-between">
                 <Box></Box>
-                <Button size="sm" onClick={onAddVariable}>{t1.newVar}</Button>
+                <Button size="sm" onClick={onAddVariable}>{t.newItem({name: t.variable})}</Button>
             </Flex>
             <VariablesTable variables={variables} onEdit={onEditVariable} onRemove={onRemoveVariable} />
         </Page>
@@ -181,7 +181,7 @@ export const VariablesTable = ({ variables, onEdit, onRemove }: TableProps) => {
             <Table variant="simple">
                 <Thead>
                     <Tr>
-                        <Th>{t1.varName}</Th>
+                        <Th>{t.itemName({name: t.variable})}</Th>
                         <Th>{t1.queryType}</Th>
                         <Th>{t.datasource}</Th>
                         <Th>{t1.refresh}</Th>
@@ -229,7 +229,7 @@ export const VariablesTable = ({ variables, onEdit, onRemove }: TableProps) => {
             <AlertDialogOverlay>
                 {selectedVariable && <AlertDialogContent>
                     <AlertDialogHeader fontSize='lg' fontWeight='bold'>
-                        {t1.deleteVar} - {selectedVariable.name}
+                        {t.deleteItem({name: t.variable})} - {selectedVariable.name}
                     </AlertDialogHeader>
 
                     <AlertDialogBody>
@@ -328,7 +328,7 @@ return (<>
     <Modal isOpen={isOpen} onClose={onClose} size="full">
         <ModalOverlay />
         <ModalContent minW="600px">
-            <ModalHeader>{isEdit ? t1.editVar: t1.newVar} </ModalHeader>
+            <ModalHeader>{isEdit ? t.editItem({name: t.variable}): t.newItem({name: t.variable})} </ModalHeader>
             <ModalCloseButton />
             {variable && <ModalBody>
                 <Form maxWidth="600px" sx={{
@@ -407,9 +407,9 @@ return (<>
             </ModalBody>}
             <ModalFooter>
                 <Button mr={3} onClick={onClose}>
-                    Close
+                    {t.cancel}
                 </Button>
-                <Button variant='ghost' onClick={() => onSubmit(variable)}>Submit</Button>
+                <Button variant='ghost' onClick={() => onSubmit(variable)}>{t.submit}</Button>
             </ModalFooter>
         </ModalContent>
     </Modal>

@@ -65,10 +65,10 @@ const DatasourcesPage = () => {
     }
 
     return <>
-        <Page title={t.configuration} subTitle={t1.manageDs} icon={<FaCog />} tabs={cfgLinks}>
+        <Page title={t.configuration} subTitle={t.manageItem({name: t.datasource})} icon={<FaCog />} tabs={cfgLinks}>
             <Flex justifyContent="space-between">
                 <Box></Box>
-                <Button size="sm" onClick={() => navigate(ReserveUrls.New + '/datasource')}>{t1.newDs}</Button>
+                <Button size="sm" onClick={() => navigate(ReserveUrls.New + '/datasource')}>{t.newItem({name: t.datasource})}</Button>
             </Flex>
 
             <VStack alignItems="left" spacing={3} mt="3">
@@ -100,7 +100,7 @@ const DatasourcesPage = () => {
         <Modal isOpen={isOpen} onClose={onEditClose}>
             <ModalOverlay />
             <ModalContent>
-                <ModalHeader>{t1.editDs}- {datasource?.name}</ModalHeader>
+                <ModalHeader>{t.editItem({name: t.datasource})}- {datasource?.name}</ModalHeader>
                 <ModalCloseButton />
                 <ModalBody>
                     <Form spacing={2} sx={{'.form-item-label': {
@@ -120,7 +120,7 @@ const DatasourcesPage = () => {
             <AlertDialogOverlay>
                 <AlertDialogContent>
                     <AlertDialogHeader fontSize='lg' fontWeight='bold'>
-                        {t1.deleteDs} {datasource?.name}
+                        {t.deleteItem({name: t.datasource})} {datasource?.name}
                     </AlertDialogHeader>
 
                     <AlertDialogBody>

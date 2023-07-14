@@ -104,7 +104,7 @@ const AccountSetting = () => {
         <Page title={`${t1.navTitle} - ${session?.user.username}`} subTitle={t1.subTitle} icon={<FaUserAlt />} tabs={accountLinks}>
             <Box alignItems="left" maxW="600px">
                 <VStack alignItems="left" spacing={4}>
-                    <Box mb="2" textStyle="subTitle">{t1.basic}</Box>
+                    <Box mb="2" textStyle="subTitle">{t.basicSetting}</Box>
                     <FormItem title={t.nickname} labelWidth="200px">
                         <Input placeholder='give yourself a nick name' value={name} onChange={e => setName(e.currentTarget.value)} />
                     </FormItem>

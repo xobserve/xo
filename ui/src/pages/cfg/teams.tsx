@@ -58,7 +58,7 @@ const TeamsPage = () => {
                 <Table variant="simple">
                     <Thead>
                         <Tr>
-                            <Th>{t1.teamName}</Th>
+                            <Th>{t.itemName({name: t.team})}</Th>
                             <Th>{t1.members}</Th>
                             <Th>{t.createdBy}</Th>
                             <Th>{t.action}</Th>
@@ -85,7 +85,7 @@ const TeamsPage = () => {
                 <ModalBody>
 
                     <Form alignItems="left" spacing={2}>
-                        <FormItem title={t1.teamName} labelWidth="130px">
+                        <FormItem title={t.itemName({name: t.team})} labelWidth="130px">
                             <Input placeholder={t.inputTips({name: t.name})} value={teamName} onChange={e => { setTeamName(e.currentTarget.value) }} />
                         </FormItem>
                         <FormItem title={t.description}  labelWidth="130px">

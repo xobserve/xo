@@ -58,11 +58,11 @@ export const commonMsg = i18n("common", {
   "manageItem": params("Manage {name}"),
   "deleteItem": params("Delete {name}"),
   "editItem": params("Edit {name}"),
+  "itemName": params("{name} Name")
 })
 
 
 export const accountSettingMsg = i18n("accountSetting", {
-  "basic": "Basic Information",
   "changePassword": "Change Password",
   "oldPassword": "Old Password",
   "newPassword": "New Password",
@@ -72,25 +72,17 @@ export const accountSettingMsg = i18n("accountSetting", {
 })
 
 export const cfgDatasourceMsg = i18n("cfgDatasource", {
-  "editDs": "Edit Datasource",
-  "deleteDs": "Delete Datasource",
-  "manageDs": "Manage Datasource",
-  "newDs": "New Datasource",
   "deleteToast": params(`Datasource {name} has been deleted.`),
 })
 
 
 export const cfgVariablemsg = i18n("cfgVariable", {
   "subTitle": "Manage global variables",
-  "varName": "Variable  Name",
   "queryType": "Query Type",
   "refresh": "Refresh",
   "regexFilter": "Regex Filter",
-  "newVar": "New Variable",
-  "deleteVar": "Delete Variable",
   "valueUpdated": params(`Values of {name} has been updated`),
   "reload": "Reload values",
-  "editVar": "Edit Variable",
   "multiValue": "Multi Value",
   "allValue": "All Value",
   "queryValue": "Query values",
@@ -109,9 +101,7 @@ export const cfgVariablemsg = i18n("cfgVariable", {
 })
 
 export const cfgTeam = i18n("cfgTeam", {
-  "teamName": "Team Name",
   "members": "Members",
-  
 })
 
 export const cfgUsers = i18n("cfgUsers", {

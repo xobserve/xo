@@ -47,7 +47,8 @@
     "newItem": "新建{name}",
     "manageItem": "管理{name}",
     "deleteItem": "删除{name}",
-    "editItem": "编辑{name}"
+    "editItem": "编辑{name}",
+    "itemName": "{name}名称"
   },
   "notfound": {
     "title": "404: Not found",
@@ -57,7 +58,6 @@
     "back-to-home": "返回首页"
   },
   "accountSetting": {
-    "basic": "基本信息",
     "changePassword": "修改密码",
     "oldPassword": "旧密码",
     "newPassword": "新密码",
@@ -66,10 +66,6 @@
     "subTitle": "设置当前用户信息"
   },
   "cfgDatasource": {
-    "editDs": "编辑数据源",
-    "deleteDs": "删除数据源",
-    "manageDs": "管理数据源",
-    "newDs": "新建数据源",
     "deleteToast": "已删除数据源: {name}"
   },
   "cfgVariable": {
@@ -78,11 +74,8 @@
     "queryType": "查询类型",
     "refresh": "何时刷新值",
     "regexFilter": "正则过滤",
-    "newVar": "新建全局变量",
-    "deleteVar": "删除变量",
     "valueUpdated": "{name}的值成功更新",
     "reload": "重新加载值",
-    "editVar": "编辑变量",
     "multiValue": "支持多选",
     "allValue": "支持全选",
     "queryValue": "查询值",
@@ -101,7 +94,6 @@
   },
 
   "cfgTeam": {
-    "teamName": "团队名称",
     "members": "成员数"
   },
   "cfgUsers": {
