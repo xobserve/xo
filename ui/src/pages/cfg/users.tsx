@@ -13,8 +13,13 @@ import { Role, SuperAdminId } from "types/role"
 import { User } from "types/user"
 import { requestApi } from "utils/axios/request"
 import isEmail from "validator/lib/isEmail"
-
+import { useStore } from "@nanostores/react"
+import { cfgUsers, commonMsg } from "src/i18n/locales/en"
+import {format} from 'src/i18n/i18n'
 const UsersPage = () => {
+    const t = useStore(commonMsg)
+    const t1 = useStore(cfgUsers)
+    const {time} = useStore(format)
     const {session} = useSession()
     const toast = useToast()
     const [users, setUsers] = useState<User[]>([])
@@ -48,7 +53,7 @@ const UsersPage = () => {
     const updateUser = async () => {
         if (!userInEdit.email || !isEmail(userInEdit.email)) {
             toast({
-                description: "email format is incorrect",
+                description: t.isInvalid({name: t.email}),
                 status: "warning",
                 duration: 2000,
                 isClosable: true,
@@ -58,7 +63,7 @@ const UsersPage = () => {
 
         if (!userInEdit.name) {
             toast({
-                description: "name cannot be empty",
+                description: t.isInvalid({name: t.name}),
                 status: "warning",
                 duration: 2000,
                 isClosable: true,
@@ -68,7 +73,7 @@ const UsersPage = () => {
 
         await requestApi.post(`/admin/user`, userInEdit)
         toast({
-            title: "User updated",
+            title: t.isUpdated({name: t.user}),
             status: "success",
             duration: 3000,
             isClosable: true,
@@ -78,7 +83,7 @@ const UsersPage = () => {
     const updatePassword = async () => {
         if (password.length < 5) {
             toast({
-                description: "new password must be at least 6 characters long",
+                description: t1.pwAlert,
                 status: "warning",
                 duration: 2000,
                 isClosable: true,
@@ -87,7 +92,7 @@ const UsersPage = () => {
         }
         await requestApi.post(`/admin/user/password`, {id: userInEdit.id, password })
         toast({
-            title: "User updated",
+            title: t.isUpdated({name: t.user}),
             status: "success",
             duration: 3000,
             isClosable: true,
@@ -97,7 +102,7 @@ const UsersPage = () => {
     const deleteUser = async () => {
         await requestApi.delete(`/admin/user/${userInEdit.id}`)
         toast({
-            title: "User deleted!",
+            title: t.isDeleted({name: t.user}),
             status: "success",
             duration: 3000,
             isClosable: true,
@@ -112,7 +117,7 @@ const UsersPage = () => {
     const addUser = async () => {
         if (!userInEdit.email || !isEmail(userInEdit.email)) {
             toast({
-                description: "email format is incorrect",
+                description:  t.isInvalid({name: t.email}),
                 status: "warning",
                 duration: 2000,
                 isClosable: true,
@@ -123,7 +128,7 @@ const UsersPage = () => {
 
         const res = await requestApi.post(`/admin/user/new`, userInEdit)
         toast({
-            title: "User added!",
+            title: t.isAdded({name: t.user}),
             status: "success",
             duration: 3000,
             isClosable: true,
@@ -145,7 +150,7 @@ const UsersPage = () => {
 
         await requestApi.post(`/admin/user/role`, { id: userInEdit.id, role: v })
         toast({
-            title: "User role updated!",
+            title: t.isUpdated({name: t1.userRole}),
             status: "success",
             duration: 3000,
             isClosable: true,
@@ -153,22 +158,22 @@ const UsersPage = () => {
     }
 
     return <>
-        <Page title={`Configuration`} subTitle="Manage users" icon={<FaCog />} tabs={cfgLinks}>
+        <Page title={t.configuration} subTitle={t.manageItem({name: t.user})} icon={<FaCog />} tabs={cfgLinks}>
             <Flex justifyContent="space-between">
                 <Box></Box>
-                <Button size="sm" onClick={onAddUser}>Add new user</Button>
+                <Button size="sm" onClick={onAddUser}>{t.newItem({name: t.user})}</Button>
             </Flex>
            
             <TableContainer mt="2">
                 <Table variant="simple">
                     <Thead>
                         <Tr>
-                            <Th>Username</Th>
-                            <Th>Name</Th>
-                            <Th>Email</Th>
-                            <Th>Joined</Th>
-                            <Th>Global role</Th>
-                            <Th>Actions</Th>
+                            <Th>{t.userName}</Th>
+                            <Th>{t.nickname}</Th>
+                            <Th>{t.email}</Th>
+                            <Th>{t1.joined}</Th>
+                            <Th>{t1.globalRole}</Th>
+                            <Th>{t.action}</Th>
                         </Tr>
                     </Thead>
                     <Tbody>
@@ -178,9 +183,9 @@ const UsersPage = () => {
                                 <Td>{user.name}</Td>
                                 <Td>{user.email}</Td>
                                 <Td>{moment(user.created).fromNow()}</Td>
-                                <Td>{user.role}</Td>
+                                <Td>{t[user.role]}</Td>
                                 <Td>
-                                    <Button variant="ghost" size="sm" px="0" onClick={() => editUser(user)}>Edit</Button>
+                                    <Button variant="ghost" size="sm" px="0" onClick={() => editUser(user)}>{t.edit}</Button>
                                 </Td>
                             </Tr>
                         })}
@@ -191,38 +196,38 @@ const UsersPage = () => {
         <Modal isOpen={isOpen} onClose={() => { setUserInEdit(null); onClose() }}>
             <ModalOverlay />
             {userInEdit && <ModalContent>
-                <ModalHeader>Edit user - {userInEdit.username}</ModalHeader>
+                <ModalHeader>{t.editItem({name: t.user})} - {userInEdit.username}</ModalHeader>
                 <ModalCloseButton />
                 <ModalBody>
                     <Form  pb="5">
-                        <FormSection title="Basic information">
-                            <FormItem title='Email'>
-                                <Input type='email' placeholder='enter a valid email' value={userInEdit.email} onChange={e => { userInEdit.email = e.currentTarget.value.trim(); setUserInEdit(cloneDeep(userInEdit)) }} />
+                        <FormSection title={t.basicSetting}>
+                            <FormItem title={t.email}>
+                                <Input type='email' placeholder={t.inputTips({name: t.email})} value={userInEdit.email} onChange={e => { userInEdit.email = e.currentTarget.value.trim(); setUserInEdit(cloneDeep(userInEdit)) }} />
                             </FormItem>
-                            <FormItem title='Nick name'>
-                                <Input placeholder='enter a nick  name' value={userInEdit.name} onChange={e => { userInEdit.name = e.currentTarget.value; setUserInEdit(cloneDeep(userInEdit)) }} />
+                            <FormItem title={t.nickname}>
+                                <Input placeholder={t.inputTips({name: t.nickname})} value={userInEdit.name} onChange={e => { userInEdit.name = e.currentTarget.value; setUserInEdit(cloneDeep(userInEdit)) }} />
                             </FormItem>
 
-                            <Button width="fit-content" onClick={updateUser}>Submit</Button>
+                            <Button width="fit-content" onClick={updateUser}>{t.submit}</Button>
                         </FormSection>
-                        <FormSection title="Change password">
-                            <FormItem  title='password'>
-                                <Input placeholder='enter a password' value={password} onChange={e => setPassword(e.currentTarget.value.trim())} />
+                        <FormSection title={t1.changePw}>
+                            <FormItem  title={t.password}>
+                                <Input placeholder={t.inputTips({name: t.password})} value={password} onChange={e => setPassword(e.currentTarget.value.trim())} />
                             </FormItem>
-                            <Button width="fit-content" onClick={updatePassword}>Submit</Button>
+                            <Button width="fit-content" onClick={updatePassword}>{t.submit}</Button>
                         </FormSection>
 
-                        <FormSection title="Global role">
-                            <RadioGroup mt="3" onChange={updateUserRole} value={userInEdit.role} isDisabled={userInEdit.id == SuperAdminId}>
+                        <FormSection title={t1.globalRole}>
+                            <RadioGroup mt="1" onChange={updateUserRole} value={userInEdit.role} isDisabled={userInEdit.id == SuperAdminId}>
                                 <Stack direction='row'>
-                                    <Radio value={Role.Viewer}>{Role.Viewer}</Radio>
-                                    <Radio value={Role.ADMIN}>{Role.ADMIN}</Radio>
+                                    <Radio value={Role.Viewer}>{t[Role.Viewer]}</Radio>
+                                    <Radio value={Role.ADMIN}>{t[Role.ADMIN]}</Radio>
                                 </Stack>
                             </RadioGroup>
                         </FormSection>
 
-                        <FormSection title="Dangerous section">
-                            <Button width="fit-content" onClick={onDeleteUser} colorScheme="red">Delete user</Button>
+                        <FormSection title={t.dangeSection}>
+                            <Button width="fit-content" onClick={onDeleteUser} colorScheme="red">{t.deleteItem({name: t.user})}</Button>
                         </FormSection>
                     </Form>
 
@@ -232,7 +237,7 @@ const UsersPage = () => {
         <Modal isOpen={isAddOpen} onClose={() => {setUserInEdit(null);onAddClose()}}>
             <ModalOverlay />
             {userInEdit && <ModalContent>
-                <ModalHeader>Add new user</ModalHeader>
+                <ModalHeader>{t.newItem({name: t.user})}</ModalHeader>
                 <ModalCloseButton />
                 <ModalBody>
                     <VStack alignItems="left" spacing="6" pb="5">
@@ -241,26 +246,26 @@ const UsersPage = () => {
                                 width: "80px"
                             }
                         }}>
-                            <FormItem title='Username'>
-                                <Input placeholder='enter a username, used in login' value={userInEdit.username} onChange={e => { userInEdit.username = e.currentTarget.value.trim(); setUserInEdit(cloneDeep(userInEdit)) }} />
+                            <FormItem title={t.userName}>
+                                <Input placeholder={t1.userNameInput} value={userInEdit.username} onChange={e => { userInEdit.username = e.currentTarget.value.trim(); setUserInEdit(cloneDeep(userInEdit)) }} />
                             </FormItem>
-                            <FormItem title='Email'>
-                                <Input type='email' placeholder='enter a valid email' value={userInEdit.email} onChange={e => { userInEdit.email = e.currentTarget.value.trim(); setUserInEdit(cloneDeep(userInEdit)) }} />
-                            </FormItem>
-
-                            <FormItem title='Password' >
-                                <Input placeholder='enter a password' value={userInEdit.password} onChange={e => { userInEdit.password = e.currentTarget.value.trim(); setUserInEdit(cloneDeep(userInEdit)) }} />
+                            <FormItem title={t.email}>
+                                <Input type='email' placeholder={t.inputTips({name: t.email})} value={userInEdit.email} onChange={e => { userInEdit.email = e.currentTarget.value.trim(); setUserInEdit(cloneDeep(userInEdit)) }} />
                             </FormItem>
 
-                            <FormItem title='Global role'>
+                            <FormItem title={t.password} >
+                                <Input placeholder={t.inputTips({name: t.password})} value={userInEdit.password} onChange={e => { userInEdit.password = e.currentTarget.value.trim(); setUserInEdit(cloneDeep(userInEdit)) }} />
+                            </FormItem>
+
+                            <FormItem title={t1.globalRole}>
                                 <RadioGroup mt="3" onChange={(v) => { userInEdit.role = v as Role; setUserInEdit(cloneDeep(userInEdit)) }} value={userInEdit.role}>
                                     <Stack direction='row'>
-                                        <Radio value={Role.Viewer}>{Role.Viewer}</Radio>
-                                        <Radio value={Role.ADMIN}>{Role.ADMIN}</Radio>
+                                        <Radio value={Role.Viewer}>{t[Role.Viewer]}</Radio>
+                                        <Radio value={Role.ADMIN}>{t[Role.ADMIN]}</Radio>
                                     </Stack>
                                 </RadioGroup>
                             </FormItem>
-                            <Button width="fit-content" onClick={addUser}>Submit</Button>
+                            <Button width="fit-content" onClick={addUser}>{t.submit}</Button>
                         </Form>
                     </VStack>
                 </ModalBody>
@@ -274,19 +279,19 @@ const UsersPage = () => {
             <AlertDialogOverlay>
                 <AlertDialogContent>
                     <AlertDialogHeader fontSize='lg' fontWeight='bold'>
-                        Delete User - {userInEdit?.username}
+                        {t.deleteItem({name: t.user})} - {userInEdit?.username}
                     </AlertDialogHeader>
 
                     <AlertDialogBody>
-                        Are you sure? You can't undo this action afterwards.
+                        {t.deleteAlert}
                     </AlertDialogBody>
 
                     <AlertDialogFooter>
                         <Button ref={cancelRef} onClick={onAlertClose}>
-                            Cancel
+                            {t.cancel}
                         </Button>
                         <Button colorScheme='red' onClick={deleteUser} ml={3}>
-                            Delete
+                            {t.delete}
                         </Button>
                     </AlertDialogFooter>
                 </AlertDialogContent>

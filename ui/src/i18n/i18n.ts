@@ -1,10 +1,11 @@
 import { persistentAtom } from '@nanostores/persistent'
 
 import { browser, createI18n, formatter, localeFrom } from '@nanostores/i18n'
+import { storageKey } from 'utils/localStorage'
 
-export let localeSetting = persistentAtom('locale')
+export const localeSetting = persistentAtom(storageKey + 'locale')
 
-export let locale = localeFrom(
+export const locale = localeFrom(
   localeSetting,
   browser({ 
     available: ['en', 'zh'],
@@ -12,7 +13,7 @@ export let locale = localeFrom(
   })
 )
 
-export let i18n = createI18n(locale, {
+export const i18n = createI18n(locale, {
   async get(code) {
     if (code === 'zh') {
       return (await import('./locales/zh.json')).default
@@ -20,4 +21,4 @@ export let i18n = createI18n(locale, {
   }
 })
 
-export let format = formatter(locale)
+export const format = formatter(locale)

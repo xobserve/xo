@@ -86,10 +86,10 @@ const TeamsPage = () => {
 
                     <Form alignItems="left" spacing={2}>
                         <FormItem title={t1.teamName} labelWidth="130px">
-                            <Input placeholder={t.inputNameTips} value={teamName} onChange={e => { setTeamName(e.currentTarget.value) }} />
+                            <Input placeholder={t.inputTips({name: t.name})} value={teamName} onChange={e => { setTeamName(e.currentTarget.value) }} />
                         </FormItem>
                         <FormItem title={t.description}  labelWidth="130px">
-                            <Input placeholder={t.inputDescTips} value={teamDesc} onChange={e => { setTeamDesc(e.currentTarget.value) }} />
+                            <Input placeholder={t.inputTips({name: t.description})} value={teamDesc} onChange={e => { setTeamDesc(e.currentTarget.value) }} />
                         </FormItem>
                     </Form>
                 </ModalBody>

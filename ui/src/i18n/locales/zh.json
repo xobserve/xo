@@ -25,6 +25,7 @@
     "manage": "管理",
     "team": "团队",
     "user": "用户",
+    "userName": "用户名",
     "action": "操作",
     "optional": "可选",
     "query": "查询",
@@ -32,15 +33,21 @@
     "showMore": "查看更多",
     "custom": "自定义",
     "createdBy": "创建者",
-    "inputNameTips": "输入名称..",
-    "inputDescTips": "简单描述下目标..",
+    "inputTips": "输入{name}..",
+    "Viewer": "使用者",
+    "Admin": "管理员",
+    "SuperAdmin": "超级管理员",
+    "password": "密码",
+    "dangeSection": "危险操作",
     "isReqiiured": "{name}是必填项",
     "isInvalid": "{name}无效",
     "isAdded": "{name}添加成功!",
     "isUpdated": "{name}更新成功!",
     "isDeleted": "{name}删除成功!",
     "newItem": "新建{name}",
-    "manageItem": "管理{name}"
+    "manageItem": "管理{name}",
+    "deleteItem": "删除{name}",
+    "editItem": "编辑{name}"
   },
   "notfound": {
     "title": "404: Not found",
@@ -92,10 +99,17 @@
     "selectMetrics": "选择 metrics",
     "metricTips": "支持变量"
   },
-  
+
   "cfgTeam": {
     "teamName": "团队名称",
     "members": "成员数"
-    
+  },
+  "cfgUsers": {
+    "pwAlert": "新密码至少6个字符长度",
+    "userRole": "用户角色",
+    "joined": "加入时间",
+    "globalRole": "全局角色",
+    "changePw": "修改密码",
+    "userNameInput": "输入用户名，用于登录"
   }
 }

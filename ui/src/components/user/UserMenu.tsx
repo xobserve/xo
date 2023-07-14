@@ -32,6 +32,7 @@ const UserMenu = ({ fontSize = "1.2rem" }) => {
     const changeLang = () => {
         const newLang = locale.get() == "en" ? "zh" : "en"
         localeSetting.set(newLang)
+        // window.location.reload()
     }
 
     const isActive = window.location.pathname.startsWith('/account/')

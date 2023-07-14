@@ -15,7 +15,6 @@ import { Variable } from 'types/variable'
 import { queryVariableValues, setVariableSelected } from './views/variables/Variables'
 import { VarialbeAllOption } from 'src/data/variable'
 import AntdWrapper from 'components/AntdWrapper'
-
 import routes from './routes';
 
 const { ToastContainer } = createStandaloneToast()

@@ -35,6 +35,7 @@ export const commonMsg = i18n("common", {
   "manage": "Manage",
   "team": "Team",
   "user": "User",
+  "userName": "Username",
   "action": "Action",
   "optional": "optional",
   "query": "Query",
@@ -42,8 +43,12 @@ export const commonMsg = i18n("common", {
   "showMore": "Show More",
   "custom": "Custom",
   "createdBy": "Created By",
-  "inputNameTips": "Enter a name..",
-  "inputDescTips": "Give a short description..",
+  "Viewer": "Viewer",
+  "Admin": "Admin",
+  "SuperAdmin": "Super Admin",
+  "password": "Password",
+  "dangeSection": "Dangerous section",
+  "inputTips": params("Enter {name}.."),
   "isReqiiured": params("{name} is required"),
   "isInvalid": params("{name} is invalid"),
   "isAdded": params("{name} added!"),
@@ -51,6 +56,8 @@ export const commonMsg = i18n("common", {
   "isDeleted": params("{name} deleted!"),
   "newItem": params("New {name}"),
   "manageItem": params("Manage {name}"),
+  "deleteItem": params("Delete {name}"),
+  "editItem": params("Edit {name}"),
 })
 
 
@@ -105,4 +112,13 @@ export const cfgTeam = i18n("cfgTeam", {
   "teamName": "Team Name",
   "members": "Members",
   
+})
+
+export const cfgUsers = i18n("cfgUsers", {
+  "pwAlert": "new password must be at least 6 characters long",
+  "userRole": "User Role",
+  "joined": "Joined",
+  "globalRole": "Global Role",
+  "changePw": "Change Password",
+  "userNameInput": "enter a username, used in login",
 })
