@@ -56,6 +56,7 @@ export const commonMsg = i18n("common", {
   "updated": "Updated",
   "role": "Role",
   "joined": "Joined",
+  "auto": "Auto",
   "inputTips": params("Enter {name}.."),
   "isReqiiured": params("{name} is required"),
   "isInvalid": params("{name} is invalid"),
@@ -169,4 +170,27 @@ export const newMsg = i18n("new", {
 
 export const dashboardMsg = i18n("dashboard", {
   "notFound": "Dashboard not found, maybe 1. invalid dashboard id(url) 2. you have chosen a wrong team",
+})
+
+export const dashboardSaveMsg = i18n("dashboardSave", {
+  "autoSaveNotAvail": "Auto save is not available in edit panel mode.",
+  "autoSaveNotAvail1": "Auto save is not available in history preview mode",
+  "saveMsgRequired": "A save message must be provided when saving in history preview mode",
+  "savedMsg": params("Dashboard {name} saved"),
+   "saveDueToChanges": "Current dashboard has changes, please save it before viewing history.",
+   "onPreviewMsg1": "Changed to history preview mode",
+  "onPreviewMsg2": "Changed to current dashboard",
+  "onPreviewMsg3": "If you want to use preview version, please save it by click save button.",
+  "viewHistory": "View History",
+  "saveHistoryHeader": "Dashboard revision history",
+  "saveDash": "Save Dashboard",
+  "dangerous": "Dangerous",
+  "saveOverrideTips": "You are previewing a history now, do you want to override current dashboard?",
+  "describeSaveChanges": "describe changes",
+  "saveMsgTips": "a message shows what has been changed",
+  "viewChanges": "View Changes",
+  "showDiffLine": "Only diff lines will be show, others will be folded",
+  "useCurrentDash": "click here to continue use current dashboard, and stop previewing",
+  "current": "Currrent",
+  "preview": "Preview"
 })

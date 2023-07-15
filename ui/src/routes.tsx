@@ -93,7 +93,7 @@ const routes = [
     element: <TracePage />,
   },
   {
-    path: "/:dashboardId/*",
+    path: "/:dashboardId/*", 
     element: <DashboardPage />,
   },
   {

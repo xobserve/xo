@@ -13,11 +13,16 @@ import ReactDiffViewer from 'react-diff-viewer';
 import { useSearchParam } from "react-use"
 import { cloneDeep, isEqual } from "lodash"
 import FormItem from "components/form/Item"
+import { useStore } from "@nanostores/react";
+import { commonMsg, dashboardSaveMsg } from "src/i18n/locales/en";
 
 interface Props {
     dashboard: Dashboard
 }
 const DashboardSave = ({ dashboard }: Props) => {
+    const t = useStore(commonMsg)
+    const t1 = useStore(dashboardSaveMsg)
+
     const edit = useSearchParam('edit')
     const { colorMode } = useColorMode()
     const { isOpen, onOpen, onClose } = useDisclosure()
@@ -59,7 +64,7 @@ const DashboardSave = ({ dashboard }: Props) => {
         if (dashboard.data.enableAutoSave) {
             if (edit) {
                 toast({
-                    title: "Auto save is not available in edit panel mode.",
+                    title: t1.autoSaveNotAvail,
                     status: "warning",
                     duration: 5000,
                     isClosable: true,
@@ -84,7 +89,7 @@ const DashboardSave = ({ dashboard }: Props) => {
         const changeMsg = autoSave ? "Auto save" : updateChanges
         if (inPreview && autoSave) {
             toast({
-                title: "Auto save is not available in history preview mode.",
+                title: t1.autoSaveNotAvail1,
                 status: "warning",
                 duration: 3000,
                 isClosable: true,
@@ -94,7 +99,7 @@ const DashboardSave = ({ dashboard }: Props) => {
 
         if (inPreview && changeMsg.trim() == "") {
             toast({
-                title: "A save message must be provided when saving in history preview mode.",
+                title: t1.saveMsgRequired,
                 status: "warning",
                 duration: 3000,
                 isClosable: true,
@@ -103,7 +108,7 @@ const DashboardSave = ({ dashboard }: Props) => {
         }
         await requestApi.post("/dashboard/save", { dashboard, changes: changeMsg })
         toast({
-            title: `Dashboard ${autoSave? "auto " : ''}saved.`,
+            title: t1.savedMsg({name: autoSave? t.auto : ""}),
             status: "success",
             duration: 2000,
             isClosable: true,
@@ -119,7 +124,7 @@ const DashboardSave = ({ dashboard }: Props) => {
     const onViewHistory = () => {
         if (!inPreview && pageChanged) {
             toast({
-                title: "Current dashboard has changes, please save it before viewing history.",
+                title: t1.saveDueToChanges,
                 status: "warning",
                 duration: 3000,
                 isClosable: true,
@@ -130,14 +135,14 @@ const DashboardSave = ({ dashboard }: Props) => {
     }
     const onPreview = (isPreview) => {
         setInPreview(isPreview)
-        const msg = isPreview ? "Changed to history preview mode" : "Changed to current dashboard"
+        const msg = isPreview ? t1.onPreviewMsg1 : t1.onPreviewMsg2
         const id = isPreview ? "inPreview" : "notInPreview"
         const duration = isPreview ? 10000 : 2000
         if (!toast.isActive(id)) {
             toast({
                 id: id,
                 title: msg,
-                description: isPreview && "If you want to use preview version, please save it by click save button.",
+                description: isPreview && t1.onPreviewMsg3,
                 status: isPreview ? "info" : "success",
                 duration: duration,
                 isClosable: true,
@@ -158,8 +163,8 @@ const DashboardSave = ({ dashboard }: Props) => {
                         <FaRegSave />
                     </MenuButton>
                     <MenuList>
-                        <MenuItem onClick={onSaveOpen}>Save</MenuItem>
-                        <MenuItem onClick={onViewHistory}>View history</MenuItem>
+                        <MenuItem onClick={onSaveOpen}>{t.save}</MenuItem>
+                        <MenuItem onClick={onViewHistory}>{t1.viewHistory}</MenuItem>
                     </MenuList>
                 </Menu>
             </Box>
@@ -171,7 +176,7 @@ const DashboardSave = ({ dashboard }: Props) => {
             >
                 <DrawerOverlay />
                 <DrawerContent>
-                    <DrawerHeader>Dashboard revision history</DrawerHeader>
+                    <DrawerHeader>{t1.saveHistoryHeader}</DrawerHeader>
 
                     <DrawerBody>
                         <DashboardHistory dashboard={dashboard} onPreview={onPreview} />
@@ -182,24 +187,24 @@ const DashboardSave = ({ dashboard }: Props) => {
             <Modal isOpen={isSaveOpen} onClose={onSaveClose} >
                 <ModalOverlay />
                 <ModalContent>
-                    <ModalHeader>Save dashboard: {dashboard.title}</ModalHeader>
+                    <ModalHeader>{t1.saveDash}: {dashboard.title}</ModalHeader>
                     <ModalBody>
                         {inPreview && <Alert status='error' flexDirection="column">
                             <AlertIcon />
-                            <AlertTitle>Dangerous</AlertTitle>
-                            <AlertDescription fontWeight="bold" mt="1">You are previewing a history now, do you want to override current dashboard?</AlertDescription>
+                            <AlertTitle>{t1.dangerous}</AlertTitle>
+                            <AlertDescription fontWeight="bold" mt="1">{t1.saveOverrideTips}</AlertDescription>
                         </Alert>}
-                        <FormItem title="describe changes"><Input value={updateChanges} onChange={e => setUpdateChanges(e.currentTarget.value)} placeholder="a message of what has been changed" /></FormItem>
+                        <FormItem title={t1.describeSaveChanges}><Input value={updateChanges} onChange={e => setUpdateChanges(e.currentTarget.value)} placeholder={t1.saveMsgTips} /></FormItem>
                         {/* <ReactDiffViewer oldValue={JSON.stringify(saved,null,4)} newValue={JSON.stringify(dashboard,null,4)} splitView={true} useDarkTheme={colorMode!="light" } /> */}
                     </ModalBody>
 
                     <ModalFooter width="100%" justifyContent="space-between">
-                        <Button variant="outline" onClick={onViewOpen}>View Changes</Button>
+                        <Button variant="outline" onClick={onViewOpen}>{t1.viewChanges}</Button>
                         <HStack spacing="0">
                             <Button mr={3} onClick={onSaveClose}>
-                                Close
+                                {t.cancel}
                             </Button>
-                            <Button variant='ghost' onClick={() => onSave(false)} >Submit</Button>
+                            <Button variant='ghost' onClick={() => onSave(false)} >{t.submit}</Button>
                         </HStack>
 
                     </ModalFooter>
@@ -210,7 +215,7 @@ const DashboardSave = ({ dashboard }: Props) => {
                 <ModalContent>
                     <ModalCloseButton />
                     <ModalBody fontSize="0.8rem">
-                        <Center mb="2"><Text textStyle="subTitle" fontWeight="bold">Only diff lines will be show, others will be folded</Text></Center>
+                        <Center mb="2"><Text textStyle="subTitle" fontWeight="bold">{t1.showDiffLine}</Text></Center>
                         <ReactDiffViewer oldValue={JSON.stringify(saved, null, 2)} newValue={JSON.stringify(dashboard, null, 2)} splitView={true} useDarkTheme={colorMode != "light"} />
                     </ModalBody>
                 </ModalContent>
@@ -227,6 +232,8 @@ interface HistoryProps {
 }
 
 const DashboardHistory = ({ dashboard, onPreview }: HistoryProps) => {
+    const t1 = useStore(dashboardSaveMsg)
+
     const [history, setHistory] = useState([])
 
     useEffect(() => {
@@ -250,7 +257,7 @@ const DashboardHistory = ({ dashboard, onPreview }: HistoryProps) => {
                                 <Text fontSize="0.9rem">{moment(dash.updated).format("MM-DD HH:mm:ss")}</Text>
                             </HStack>
                             <HStack>
-                                {i == 0 && <Tooltip label="click here to continue use current dashboard, and stop previewing"><Tag cursor="pointer" onClick={() => {
+                                {i == 0 && <Tooltip label={t1.useCurrentDash}><Tag cursor="pointer" onClick={() => {
                                     // sent two events to ensure the raw dashhboard has no changes, it's weird, but hard to fix
                                     dispatch({ type: SetDashboardEvent, data: dash });
                                     setTimeout(() => {
@@ -258,11 +265,11 @@ const DashboardHistory = ({ dashboard, onPreview }: HistoryProps) => {
                                     }, 5000)
 
                                     onPreview(false)
-                                }}>Current</Tag></Tooltip>}
+                                }}>{t1.current}</Tag></Tooltip>}
                                 {i != 0 && <Button size="xs" variant={dashboard.updated == dash.updated ? "solid" : "outline"} onClick={() => {
                                     dispatch({ type: SetDashboardEvent, data: dash });
                                     onPreview(true)
-                                }}>Preview</Button>}
+                                }}>{t1.preview}</Button>}
                             </HStack>
                         </Flex>
                         <Text layerStyle="textFourth" fontSize="0.9rem">{h.changes}</Text>

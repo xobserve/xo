@@ -47,6 +47,7 @@
     "updated": "更新时间",
     "role": "角色",
     "joined": "加入时间",
+    "auto": "自动",
     "isReqiiured": "{name}是必填项",
     "isInvalid": "{name}不正确",
     "isAdded": "{name}添加成功!",
@@ -153,5 +154,27 @@
   },
   "dashboard": {
     "notFound": "仪表盘不存在，有可能 1. 错误的仪表盘 id (url) 2. 你选择了错误的团队左侧菜单"
+  },
+  "dashboardSave": {
+    "autoSaveNotAvail": "在编辑图表模式下，自动保存不可用",
+    "autoSaveNotAvail1": "在历史预览模式下，自动保存不可用",
+    "saveMsgRequired": "在历史预览模式下，必须提供一条保存修改信息",
+    "savedMsg": "仪表盘已{name}保存",
+     "saveDueToChanges": "当前的仪表盘已改变, 请先保存后再预览历史",
+     "onPreviewMsg1": "已切换到历史预览模式",
+    "onPreviewMsg2": "已切换到当前最新的仪表盘",
+    "onPreviewMsg3": "如果想使用该历史预览版本，请点击保存按钮进行保存",
+    "viewHistory": "查看保存历史",
+    "saveHistoryHeader": "仪表盘修改历史",
+    "saveDash": "保存仪表盘",
+    "dangerous": "危险",
+    "saveOverrideTips": "当前是历史预览模式，确定要使用该版本覆盖当前的仪表盘吗?",
+    "describeSaveChanges": "修改内容",
+    "saveMsgTips": "简单说明修改了什么内容",
+    "viewChanges": "查看修改内容",
+    "showDiffLine": "只显示发生变化的行，其它将被隐藏",
+    "useCurrentDash": "点击这里继续使用当前版本的仪表盘, 并且停止预览模式",
+    "current": "当前版本",
+    "preview": "预览"
   }
 }
