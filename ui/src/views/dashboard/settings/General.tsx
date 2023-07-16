@@ -5,6 +5,8 @@ import FormItem from "components/form/Item"
 import { useEffect, useState } from "react"
 import { Dashboard, DashboardLayout } from "types/dashboard"
 import React from "react";
+import { useStore } from "@nanostores/react"
+import { commonMsg, dashboardSettingMsg } from "src/i18n/locales/en"
 
 interface Props {
     dashboard: Dashboard
@@ -12,6 +14,9 @@ interface Props {
 }
 
 const GeneralSettings = ({ dashboard, onChange }: Props) => {
+    const t = useStore(commonMsg)
+    const t1 = useStore(dashboardSettingMsg)
+
     const toast = useToast()
     useEffect(() => {
         if (!dashboard.data.tags) {
@@ -26,7 +31,7 @@ const GeneralSettings = ({ dashboard, onChange }: Props) => {
     const addTag = () => {
         if (dashboard.data.tags?.length >= 5) {
             toast({
-                title: "You can only add up to 5 tags.",
+                title: t1.tagsExceedLimit,
                 status: "error",
                 duration: 3000,
                 isClosable: true,
@@ -48,27 +53,27 @@ const GeneralSettings = ({ dashboard, onChange }: Props) => {
                 width: '180px'
             }
         }}>
-            <FormSection title="Basic">
-                <FormItem title="Title" >
+            <FormSection title={t.basicSetting}>
+                <FormItem title={t.title} >
                     <Input value={title} onChange={e => setTitle(e.currentTarget.value)} onBlur={() => onChange((draft: Dashboard) => { draft.title = title })} />
                 </FormItem>
-                <FormItem title="Description">
-                    <Input value={desc} onChange={e => setDesc(e.currentTarget.value)} onBlur={() => onChange((draft: Dashboard) => { draft.data.description = desc })} />
+                <FormItem title={t.description}>
+                    <Input value={desc} onChange={e => setDesc(e.currentTarget.value)} onBlur={() => onChange((draft: Dashboard) => { draft.data.description = desc })} placeholder={t.inputTips({name: t.description})} />
                 </FormItem>
                 {/* <Box>
                 <Text textStyle="title">Editable</Text>
                 <Text textStyle="annotation">Make this dashboard editable to anyone who has edit permissions. </Text>
                 <Switch isChecked={dashboard.data.editable} onChange={e => { dashboard.data.editable = e.currentTarget.checked; onChange() }} mt="1" />
             </Box> */}
-                <FormItem title="Shared tooltip" desc="Show tooltips at the same position across all panels" alignItems="center" >
+                <FormItem title={t1.tootip} desc={t1.tootipTips} alignItems="center" >
                     <Switch isChecked={dashboard.data.sharedTooltip} onChange={e => onChange((draft: Dashboard) => { draft.data.sharedTooltip = e.currentTarget.checked })} />
                 </FormItem>
 
-                <FormItem title="Hide global variables">
-                    <Input value={hidingVars} onChange={e => setHidingVars(e.currentTarget.value)} onBlur={() => onChange((draft: Dashboard) => { draft.data.hidingVars = hidingVars })} placeholder="enter global variables names, separated with ',' . e.g: app,env" />
+                <FormItem title={t1.hideVars}>
+                    <Input value={hidingVars} onChange={e => setHidingVars(e.currentTarget.value)} onBlur={() => onChange((draft: Dashboard) => { draft.data.hidingVars = hidingVars })} placeholder={t1.hideVarsTips} />
                 </FormItem>
-                <FormItem title="Tags" desc="Tag a dashboard and group it into a same collection for searching" >
-                    <Input value={tag} onChange={e => setTag(e.currentTarget.value)} placeholder="new tag(press enter to add)" onKeyDown={e => {
+                <FormItem title={t.tags} desc={t1.tagTips} >
+                    <Input value={tag} onChange={e => setTag(e.currentTarget.value)} placeholder={t1.tagInputTips} onKeyDown={e => {
                         if (e.key === 'Enter') {
                             addTag()
                         }
@@ -86,31 +91,31 @@ const GeneralSettings = ({ dashboard, onChange }: Props) => {
                     }
 
                 </HStack>}
-                <FormItem title="Panels layout" desc="Auto place panels in horizontal or vertical direction, when set to random, you can place panels anywhere" >
+                <FormItem title={t1.panelLayout} desc={t1.panelLayoutTips} >
                     <Select value={dashboard.data.layout} onChange={e => {
                         const v = e.currentTarget.value
                         onChange((draft: Dashboard) => { draft.data.layout = v as DashboardLayout })
                     }}>
                         {
-                            Object.keys(DashboardLayout).map(k => <option value={[DashboardLayout[k]]}>{k}</option>)
+                            Object.keys(DashboardLayout).map(k => <option value={[DashboardLayout[k]]}>{t1[k]}</option>)
                         }
                     </Select>
                 </FormItem>
 
-                <FormItem title="Allow panels overlap" desc="panels can be placed overlap others" alignItems="center">
+                <FormItem title={t1.panelOverlap} desc={t1.panelOverlapTips} alignItems="center">
                     <Switch isChecked={dashboard.data.allowPanelsOverlap} onChange={e => onChange((draft: Dashboard) => { draft.data.allowPanelsOverlap = e.currentTarget.checked })} />
                 </FormItem>
             </FormSection>
-            <FormSection title="Save dashboard">
-                <FormItem title="Enable unsave promt" desc="When leaving current page, there will be a unsave prompt if enalbed" alignItems="center">
+            <FormSection title={t1.saveDash}>
+                <FormItem title={t1.savePromt} desc={t1.savePromtTips} alignItems="center">
                     <Switch isChecked={dashboard.data.enableUnsavePrompt} onChange={e => onChange((draft: Dashboard) => { draft.data.enableUnsavePrompt = e.currentTarget.checked })} />
                 </FormItem>
 
-                <FormItem title="Enable auto save" desc="When enabled, dashboard will be auto saved every interval, you can find old versions in save history list" alignItems="center">
+                <FormItem title={t1.autoSave} desc={t1.autoSaveTips} alignItems="center">
                     <Switch isChecked={dashboard.data.enableAutoSave} onChange={e => onChange((draft: Dashboard) => { draft.data.enableAutoSave = e.currentTarget.checked })} />
                 </FormItem>
 
-                {dashboard.data.enableAutoSave && <FormItem title="Save interval (seconds)"  >
+                {dashboard.data.enableAutoSave && <FormItem title={t1.autoSaveInterval} >
                     <EditorNumberItem size="md" min={30} max={3600} step={30} value={dashboard.data.autoSaveInterval} onChange={v => onChange((draft: Dashboard) => { draft.data.autoSaveInterval = v })}/>
                 </FormItem>}
             </FormSection>

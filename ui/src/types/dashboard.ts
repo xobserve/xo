@@ -137,7 +137,7 @@ export type PanelData = any
 
 export enum DashboardLayout {
     Vertical = "vertical",
-    Random = "null" ,
+    Custom = "null" ,
     Horizontal =  "horizontal"
 }
 

@@ -48,6 +48,9 @@
     "role": "角色",
     "joined": "加入时间",
     "auto": "自动",
+    "general": "通用",
+    "styles": "样式",
+    "tags": "标签",
     "isReqiiured": "{name}是必填项",
     "isInvalid": "{name}不正确",
     "isAdded": "{name}添加成功!",
@@ -150,7 +153,7 @@
     "importToast": "仪表盘导入成功，重定向页面中...",
     "jsonInvalid": "JSON 格式不正确",
     "dsToast": "添加数据源成功，重定向页面中...",
-    "testDsFailed":  "测试失败"
+    "testDsFailed": "测试失败"
   },
   "dashboard": {
     "notFound": "仪表盘不存在，有可能 1. 错误的仪表盘 id (url) 2. 你选择了错误的团队左侧菜单"
@@ -160,8 +163,8 @@
     "autoSaveNotAvail1": "在历史预览模式下，自动保存不可用",
     "saveMsgRequired": "在历史预览模式下，必须提供一条保存修改信息",
     "savedMsg": "仪表盘已{name}保存",
-     "saveDueToChanges": "当前的仪表盘已改变, 请先保存后再预览历史",
-     "onPreviewMsg1": "已切换到历史预览模式",
+    "saveDueToChanges": "当前的仪表盘已改变, 请先保存后再预览历史",
+    "onPreviewMsg1": "已切换到历史预览模式",
     "onPreviewMsg2": "已切换到当前最新的仪表盘",
     "onPreviewMsg3": "如果想使用该历史预览版本，请点击保存按钮进行保存",
     "viewHistory": "查看保存历史",
@@ -176,5 +179,28 @@
     "useCurrentDash": "点击这里继续使用当前版本的仪表盘, 并且停止预览模式",
     "current": "当前版本",
     "preview": "预览"
+  },
+  "dashboardSetting": {
+    "metaData": "元数据",
+    "tootip": "共享 Tooltip",
+    "tootipTips": "在所有图表的同一个时间点显示 tooltip",
+    "hideVars": "隐藏全局变量",
+    "hideVarsTips": "输入全局变量的名称，使用逗号分隔，例如: app,env ",
+    "tagTips": "仪表盘可以按照标签进行分组和查询",
+    "tagInputTips": "新建标签(按下 enter 键可以添加)",
+    "tagsExceedLimit": "最多只能添加 5 个标签",
+    "panelLayout": "图表排列",
+    "panelLayoutTips": "按照竖直或水平方向来自动排列图表，如果设置为自定义，你可以随意放置图表",
+    "Vertical": "竖直自动",
+    "Custom": "自行排列",
+    "Horizontal": "水平自动",
+    "panelOverlap": "重叠放置",
+    "panelOverlapTips": "允许图表在放置时与其它图标重叠",
+    "saveDash": "保存仪表盘",
+    "savePromt": "未保存提示",
+    "savePromtTips": "当有未保存的内容时，一旦离开页面就会收到一条未保存提示",
+    "autoSave": "自动保存",
+    "autoSaveTips": "仪表盘每隔一段时间将自动保存一次，你可以在保存历史中找到这些保存记录",
+    "autoSaveInterval": "自动保存间隔( 秒 )"
   }
 }

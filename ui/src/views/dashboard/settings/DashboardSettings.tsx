@@ -11,6 +11,8 @@ import MetaSettings from "./MetaSetting"
 import StyleSettings from "./Styles"
 import VariablesSetting from "./Variables"
 import React from "react";
+import { useStore } from "@nanostores/react"
+import { commonMsg, dashboardSettingMsg } from "src/i18n/locales/en"
 
 interface Props {
     dashboard: Dashboard
@@ -26,6 +28,9 @@ enum DashboardSettingType  {
 }
 // color-scheme: dark;height: 100%;background-image: url(http://datav-react.jiaminghi.com/demo/manage-desk/static/media/bg.110420cf.png);background-size: auto;
 const DashboardSettings = ({ dashboard,onChange }: Props) => {
+    const t = useStore(commonMsg)
+    const t1 = useStore(dashboardSettingMsg)
+
     const settings = useSearchParam('settings')
     useEffect(() => {
         if (settings) {
@@ -50,10 +55,10 @@ const DashboardSettings = ({ dashboard,onChange }: Props) => {
                     <Text textStyle="subTitle" mt="2">{dashboard.title} / Settings</Text>
                     <Tabs orientation="vertical"  mt="7" defaultIndex={toNumber(settings)} onChange={index => addParamToUrl({ settings: index })}>
                         <TabList pr="2" width="200px" >
-                            <Tab>General</Tab>
-                            <Tab>Styles</Tab>
-                            <Tab>Variables</Tab>
-                            <Tab>Meta data</Tab>
+                            <Tab>{t.general}</Tab>
+                            <Tab>{t.styles}</Tab>
+                            <Tab>{t.variable}</Tab>
+                            <Tab>{t1.metaData}</Tab>
                         </TabList>
 
                         <TabPanels  p="2"> 

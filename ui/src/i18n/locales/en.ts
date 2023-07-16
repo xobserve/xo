@@ -57,6 +57,9 @@ export const commonMsg = i18n("common", {
   "role": "Role",
   "joined": "Joined",
   "auto": "Auto",
+  "general": "General",
+  "styles": "Styles",
+  "tags": "Tags",
   "inputTips": params("Enter {name}.."),
   "isReqiiured": params("{name} is required"),
   "isInvalid": params("{name} is invalid"),
@@ -193,4 +196,25 @@ export const dashboardSaveMsg = i18n("dashboardSave", {
   "useCurrentDash": "click here to continue use current dashboard, and stop previewing",
   "current": "Currrent",
   "preview": "Preview"
+})
+
+export const dashboardSettingMsg = i18n("dashboardSetting", {
+  "metaData": "Meta data",
+  "tootip": "Shared tooltip",
+  "tootipTips": "Show tooltips at the same timeline position across all panels",
+  "hideVars": "Hide global variables",
+  "hideVarsTips": "enter global variables names, separated with ',' . e.g: app,env",
+  "tagTips": "Tag a dashboard and group it into a same collection for searching",
+  "tagInputTips": "new tag(press enter to add)",
+  "tagsExceedLimit": "You can only add up to 5 tags.",
+  "panelLayout": "Panels layout",
+  "panelLayoutTips": "Auto place panels in horizontal or vertical direction, when set to random, you can place panels anywhere",
+  "panelOverlap": "Allow panels overlap",
+  "panelOverlapTips": "Allow panels to be placed overlap each other",
+  "saveDash": "Save dashboard",
+  "savePromt": "Enable unsave promt",
+  "savePromtTips": "When you have unsaved changes, a promt will be shown when you try to leave the page",
+  "autoSave": "Enable auto save",
+  "autoSaveTips": "Dashboard will be auto saved at intervals, you can find old versions in save history list",
+  "autoSaveInterval": "Auto save interval(seconds)",
 })
