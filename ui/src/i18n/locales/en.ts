@@ -84,6 +84,8 @@ export const commonMsg = i18n("common", {
   "display": "Display",
   "calc":"Calculation",
   "calcTips": "calculate results from series data with this reducer function",
+  "value": "Value",
+  "pickColor": "Pick color",
   "inputTips": params("Enter {name}.."),
   "isReqiiured": params("{name} is required"),
   "isInvalid": params("{name} is invalid"),
@@ -440,4 +442,11 @@ export const gaugePanelMsg = i18n("gaugePanel", {
   "split": "Split",
   "splitTips": "split axis into several part, each has a unique color, range is [0, 1]: 0 stands for start, 1 for ends, values must in ASC order",
   "splitNum": "Split number",
+})
+
+export const statsPanelMsg = i18n("statsPanel", {
+  "showTooltip": "Show tooltip",
+  "showLegend": "Show legend",
+  "graphHeight": "Graph height",
+  "graphHeightTips": "the propotion of the graph part",
 })

@@ -11,23 +11,28 @@ import { dispatch } from "use-bus"
 import { PanelForceRebuildEvent } from "src/data/bus-events"
 import ValueCalculation from "components/ValueCalculation"
 import React from "react";
+import { useStore } from "@nanostores/react"
+import { commonMsg, graphPanelMsg, statsPanelMsg } from "src/i18n/locales/en"
 
 const GraphPanelEditor = ({ panel, onChange }: PanelEditorProps) => {
+    const t = useStore(commonMsg)
+    const t1 = useStore(graphPanelMsg)
+    const t2 = useStore(statsPanelMsg)
     return (<>
-        <PanelAccordion title="Basic setting">
-            <PanelEditItem title="Show tooltip">
+        <PanelAccordion title={t.basicSetting}>
+            <PanelEditItem title={t2.showTooltip}>
                 <Switch defaultChecked={panel.plugins.stat.showTooltip} onChange={e => onChange((panel: Panel) => {
                     panel.plugins.stat.showTooltip = e.currentTarget.checked
                 })} />
             </PanelEditItem>
-            <PanelEditItem title="Show legend">
+            <PanelEditItem title={t2.showLegend}>
                 <Switch defaultChecked={panel.plugins.stat.showLegend} onChange={e => onChange((panel: Panel) => {
                     panel.plugins.stat.showLegend = e.currentTarget.checked
                 })} />
             </PanelEditItem>
         </PanelAccordion>
-        <PanelAccordion title="Value">
-            <PanelEditItem title="Unit">
+        <PanelAccordion title={t.value}>
+            <PanelEditItem title={t.unit}>
                 <UnitPicker type={panel.plugins.stat.value.unitsType} value={panel.plugins.stat.value.units} onChange={
                     (units, type) => onChange((panel: Panel) => {
                         panel.plugins.stat.value.units = units
@@ -35,27 +40,27 @@ const GraphPanelEditor = ({ panel, onChange }: PanelEditorProps) => {
                     })
                 } />
             </PanelEditItem>
-            <PanelEditItem title="Decimal">
+            <PanelEditItem title={t.decimal}>
                 <EditorNumberItem value={panel.plugins.stat.value.decimal} min={0} max={5} step={1} onChange={v => onChange((panel: Panel) => { panel.plugins.stat.value.decimal = v })} />
             </PanelEditItem>
-            <PanelEditItem title="Caculation" desc="calculate results from series data with this reducer function">
+            <PanelEditItem title={t.calc} desc={t.calcTips}>
                 <ValueCalculation value={panel.plugins.stat.value.calc} onChange={v => {
                     onChange((panel: Panel) => { panel.plugins.stat.value.calc = v })
                 }}/>
             </PanelEditItem>
         </PanelAccordion>
-        <PanelAccordion title="Styles">
-            <PanelEditItem title="Style">
+        <PanelAccordion title={t.styles}>
+            <PanelEditItem title={t.type}>
                 <RadionButtons options={[{ label: "Lines", value: "lines" }, { label: "Bars", value: "bars" }]} value={panel.plugins.stat.styles.style} onChange={v => onChange((panel: Panel) => {
                     panel.plugins.stat.styles.style = v
                 })} />
             </PanelEditItem>
-            <PanelEditItem title="Fill gradient mode">
+            <PanelEditItem title={t1.gradient}>
                 <RadionButtons options={[{ label: "None", value: "none" }, { label: "Opacity", value: "opacity" }]} value={panel.plugins.stat.styles.gradientMode} onChange={v => onChange((panel: Panel) => {
                     panel.plugins.stat.styles.gradientMode = v
                 })} />
             </PanelEditItem>
-            <PanelEditItem title="Fill opacity">
+            <PanelEditItem title={t1.opacity}>
                 <EditorSliderItem value={panel.plugins.stat.styles.fillOpacity} min={0} max={100} step={1} onChange={v => {
                     onChange((panel: Panel) => {
                         panel.plugins.stat.styles.fillOpacity = v
@@ -64,15 +69,15 @@ const GraphPanelEditor = ({ panel, onChange }: PanelEditorProps) => {
                 }
                 } />
             </PanelEditItem>
-            <PanelEditItem title="Color">
+            <PanelEditItem title={t.color}>
                 <ColorPicker presetColors={colors} color={panel.plugins.stat.styles.color} onChange={v => onChange((panel: Panel) => {
                     panel.plugins.stat.styles.color = v.hex
                 })}>
-                    <Button size="sm" background={panel.plugins.stat.styles.color} _hover={{ bg: panel.plugins.stat.styles.color }}>Pick color</Button>
+                    <Button size="sm" background={panel.plugins.stat.styles.color} _hover={{ bg: panel.plugins.stat.styles.color }}>{t.pickColor}</Button>
                 </ColorPicker>
             </PanelEditItem>
 
-            <PanelEditItem title="Graph height" desc="the propotion of the graph part">
+            <PanelEditItem title={t2.graphHeight} desc={t2.graphHeightTips}>
                 <EditorSliderItem value={panel.plugins.stat.styles.graphHeight} min={0} max={100} step={5} onChange={v => {
                     onChange((panel: Panel) => {
                         panel.plugins.stat.styles.graphHeight = v
@@ -81,14 +86,14 @@ const GraphPanelEditor = ({ panel, onChange }: PanelEditorProps) => {
                 } />
             </PanelEditItem>
 
-            <PanelEditItem title="Connect null values">
+            <PanelEditItem title={t1.connectNull}>
                 <Switch defaultChecked={panel.plugins.stat.styles.connectNulls} onChange={e => onChange((panel: Panel) => {
                     panel.plugins.stat.styles.connectNulls = e.currentTarget.checked
                 })} />
             </PanelEditItem>
         </PanelAccordion>
-        <PanelAccordion title="Axis">
-            <PanelEditItem title="Scale">
+        <PanelAccordion title={t.axis}>
+            <PanelEditItem title={t.scale}>
                 <HStack spacing="1">
                     <RadionButtons options={[{ label: "Linear", value: "linear" }, { label: "Log", value: "log" }]} value={panel.plugins.stat.axisY.scale} onChange={v => onChange((panel: Panel) => {
                         panel.plugins.stat.axisY.scale = v

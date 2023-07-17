@@ -75,6 +75,8 @@
     "display": "显示",
     "calc": "计算",
     "calcTips": "设定该如何计算以获取显示的值",
+    "value": "值",
+    "pickColor": "选取颜色",
     "isReqiiured": "{name}是必填项",
     "isInvalid": "{name}不正确",
     "isAdded": "{name}添加成功!",
@@ -413,5 +415,12 @@
     "split": "分割",
     "splitTips":  "将坐标轴分割为几个部分，每个部分可以定义相应的颜色，范围要落在 [Min, Max] 之间",
     "splitNum": "刻度数"
+  },
+
+  "statsPanel": {
+    "showTooltip": "显示 Tooltip",
+    "showLegend": "显示 Legend",
+    "graphHeight": "图形高度",
+    "graphHeightTips": "图形的部分占总体高度的比例"
   }
 }
