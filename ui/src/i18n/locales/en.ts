@@ -294,3 +294,10 @@ export const panelMsg = i18n("panel", {
   "addRule": "Add override rule",
   "addOverride": "Add override",
 })
+
+
+export const prometheusDsMsg = i18n("prometheusDs", {
+  "enterPromQL": "Enter a PromQL query",
+  "legendFormat": "support variable",
+  "selecMetrics": "Select metrics...",
+})

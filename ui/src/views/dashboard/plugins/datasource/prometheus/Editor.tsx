@@ -10,10 +10,13 @@ import ChakraSelect from "components/select/ChakraSelect"
 import FormItem from "components/form/Item"
 import { Form } from "components/form/Form"
 import InputSelect from "components/select/InputSelect"
+import { prometheusDsMsg } from "src/i18n/locales/en";
+import { useStore } from "@nanostores/react";
 
 
 
 const PrometheusQueryEditor = ({ datasource, query, onChange }: DatasourceEditorProps) => {
+    const t1 = useStore(prometheusDsMsg)
     const [tempQuery, setTempQuery] = useState<PanelQuery>(cloneDeep(query))
 
     return (
@@ -29,7 +32,7 @@ const PrometheusQueryEditor = ({ datasource, query, onChange }: DatasourceEditor
                     }}
                     onBlur={() => onChange(tempQuery)}
                     width="100%"
-                    placeholder="Enter a PromQL query"
+                    placeholder={t1.enterPromQL}
                     size="sm"
                 />
             </FormItem>
@@ -41,7 +44,7 @@ const PrometheusQueryEditor = ({ datasource, query, onChange }: DatasourceEditor
                     }}
                     onBlur={() => onChange(tempQuery)}
                     width="150px"
-                    placeholder="Legend format"
+                    placeholder={t1.legendFormat}
                     size="sm"
                 />
             </FormItem>
@@ -63,6 +66,7 @@ interface MetricSelectProps {
 }
 
 export const PromMetricSelect = ({ dsId, value, onChange, width = "200px", variant = "unstyled", useCurrentTimerange = true,enableInput=true }: MetricSelectProps) => {
+    const t1 = useStore(prometheusDsMsg)
     const toast = useToast()
     const [metricsList, setMetricsList] = useState<string[]>([])
 
@@ -90,7 +94,7 @@ export const PromMetricSelect = ({ dsId, value, onChange, width = "200px", varia
 
     return (
         <Box onClick={loadMetrics}>
-            <InputSelect width={width}  isClearable value={value} placeholder="Select metrics.." variant={variant} size="md" options={metricsList.map((m) => { return { label: m, value: m } })} onChange={v => onChange(v) }  enableInput={enableInput}
+            <InputSelect width={width}  isClearable value={value} placeholder={t1.selecMetrics} variant={variant} size="md" options={metricsList.map((m) => { return { label: m, value: m } })} onChange={v => onChange(v) }  enableInput={enableInput}
             />
         </Box>
 

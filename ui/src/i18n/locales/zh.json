@@ -275,5 +275,10 @@
     "targetName": "目标名称",
     "addRule": "新建覆盖规则",
     "addOverride": "新建覆盖"
+  },
+  "prometheusDs": {
+    "enterPromQL": "输入 PromQL 查询语句",
+    "legendFormat": "支持变量",
+    "selecMetrics": "选择 metrics..."
   }
 }
