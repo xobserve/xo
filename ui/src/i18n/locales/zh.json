@@ -77,6 +77,11 @@
     "calcTips": "设定该如何计算以获取显示的值",
     "value": "值",
     "pickColor": "选取颜色",
+    "sort": "排序",
+    "success": "成功",
+    "error": "错误",
+    "compore": "比较",
+    "duration": "耗时",
     "isReqiiured": "{name}是必填项",
     "isInvalid": "{name}不正确",
     "isAdded": "{name}添加成功!",
@@ -422,5 +427,26 @@
     "showLegend": "显示 Legend",
     "graphHeight": "图形高度",
     "graphHeightTips": "图形的部分占总体高度的比例"
-  }
+  },
+
+  "tracePanel": {
+    "maxDuration": "最大耗时( Duration )",
+    "minDuration": "最小耗时( Duration )",
+    "limitResults": "限制查询数",
+    "findTraces": "查询 Traces",
+    "useLatestTime": "使用最新时间",
+    "tracesTotal": "全部 Traces",
+    "tracesSelected": "已选 Traces",
+    "clearSelection": "清除已选",
+    "recent": "最近时间",
+    "mostErrors": "最多错误",
+    "longest": "最长耗时",
+     "shortest": "最短耗时",
+     "mostSpans": "最多 Spans",
+     "leastSpans": "最少 Spans",
+    "traceIdsTips": "通过 Trace ids 来搜索具有最高的优先级，因此如果你想通过选项来搜索，请将该处置空",
+    "traceIdsInputTips": "输入 Trace ids，以逗号分隔",
+    "selectForCompre": "已选择比较对象",
+    "startTime": "开始时间"
+ }
 }

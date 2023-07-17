@@ -8,6 +8,8 @@ import { Trace } from "types/plugins/trace"
 import { TimeRange } from "types/time";
 import { isErrorTrace } from "../utils/trace";
 import React from "react";
+import { useStore } from "@nanostores/react";
+import { commonMsg, tracePanelMsg } from "src/i18n/locales/en";
 
 interface Props {
     traces: Trace[]
@@ -16,6 +18,8 @@ interface Props {
 }
 
 const SearchResultPlot = ({ traces, timeRange, onSelect }: Props) => {
+    const t1 = useStore(tracePanelMsg)
+    const t = useStore(commonMsg)
     const [chart, setChart] = useState(null)
     const { colorMode } = useColorMode()
 
@@ -181,8 +185,8 @@ const SearchResultPlot = ({ traces, timeRange, onSelect }: Props) => {
                     return '<div style="border-bottom: 1px solid rgba(255,255,255,.3); font-size: 18px;padding-bottom: 7px;margin-bottom: 7px">'
                         + value[3]
                         + '</div>'
-                        + '<div>Start time: <span style="font-size:16px;font-weight:500">' + moment(value[0]).format('yy-MM-DD HH:mm:ss') + '</span></div>'
-                        + '<div style="margin-top:5px">Duration：<span style="font-size:16px;font-weight:500;">' + value[1] + 'ms</span></div>'
+                        + `<div>${t1.startTime}: <span style="font-size:16px;font-weight:500">` + moment(value[0]).format('yy-MM-DD HH:mm:ss') + '</span></div>'
+                        + `<div style="margin-top:5px">${t.duration}: <span style="font-size:16px;font-weight:500;">` + value[1] + 'ms</span></div>'
                 }
             },
             xAxis: {

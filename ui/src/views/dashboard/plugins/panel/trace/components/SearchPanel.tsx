@@ -13,6 +13,8 @@ import { hasVariableFormat, replaceWithVariablesHasMultiValues } from "utils/var
 import useBus from "use-bus"
 import { VariableChangedEvent } from "src/data/bus-events"
 import React from "react";
+import { useStore } from "@nanostores/react"
+import { tracePanelMsg } from "src/i18n/locales/en"
 
 interface Props {
     panel: Panel
@@ -26,6 +28,7 @@ interface Props {
 // and decide whether need to re-query operations
 const traceServicesCache = new Map() 
 const TraceSearchPanel = ({ timeRange,dashboardId, panel, onSearch,onSearchIds }: Props) => {
+    const t1 = useStore(tracePanelMsg)
     const [inited, setInited] = useState(false)
     const lastSearch = useMemo(() => storage.get(TraceSearchKey + dashboardId + panel.id)??{} ,[])
     const [services, setServices] = useState([])
@@ -156,24 +159,24 @@ const TraceSearchPanel = ({ timeRange,dashboardId, panel, onSearch,onSearchIds }
                 <EditorInputItem value={tags} placeholder={`e.g {"error":"true", "http.status.code":"200"}`} onChange={v => setTags(v)} />
             </FormSection>
             <HStack>
-                <FormSection title="Max duration" titleSize="0.85rem" spacing={1}>
+                <FormSection title={t1.maxDuration} titleSize="0.85rem" spacing={1}>
                     <EditorInputItem value={max} placeholder="e.g 1.2s,100ms" onChange={v => setMax(v)} />
                 </FormSection>
-                <FormSection title="Min duration" titleSize="0.85rem" spacing={1}>
+                <FormSection title={t1.minDuration} titleSize="0.85rem" spacing={1}>
                     <EditorInputItem value={min} placeholder="e.g 1.2s,100ms" onChange={v => setMin(v)} />
                 </FormSection>
             </HStack>
-            <FormSection title="Limit Results" titleSize="0.85rem" spacing={1}>
+            <FormSection title={t1.limitResults} titleSize="0.85rem" spacing={1}>
                 <EditorNumberItem value={limit} min={0} onChange={v => setLimit(v)} size="md"/>
             </FormSection>
             <Divider pt="2"/>
-            <FormSection title="Trace ids" titleSize="0.85rem" spacing={1} desc="Searching by trace ids has the highest priority, so if you want to search with options, leave this empty">  
-                <EditorInputItem placeholder="search with trace ids, separated with comma" value={traceIds} onChange={v => setTraceIds(v)} size="md"/>
+            <FormSection title="Trace ids" titleSize="0.85rem" spacing={1} desc={t1.traceIdsTips}>  
+                <EditorInputItem placeholder={t1.traceIdsInputTips} value={traceIds} onChange={v => setTraceIds(v)} size="md"/>
             </FormSection>
             <HStack>
-                <Button  width="150px" onClick={onClickSearch}>Find traces</Button>
+                <Button  width="150px" onClick={onClickSearch}>{t1.findTraces}</Button>
                 <Checkbox isChecked={useLatestTime} onChange={e => setUseLatestTime(e.currentTarget.checked)} />
-                <Text textStyle="annotation">Use latest time</Text>
+                <Text textStyle="annotation">{t1.useLatestTime}</Text>
             </HStack>
            
         </Form>

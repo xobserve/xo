@@ -9,6 +9,8 @@ import { clone, cloneDeep, remove } from "lodash"
 import TraceCompare from "./TraceCompare/TraceCompare"
 import { FaTimes } from "react-icons/fa"
 import React from "react";
+import { useStore } from "@nanostores/react"
+import { tracePanelMsg } from "src/i18n/locales/en"
 
 interface Props {
     panel: Panel
@@ -17,6 +19,7 @@ interface Props {
 }
 
 const TraceSearchResult = ({ panel, traces, timeRange }: Props) => {
+    const t1 = useStore(tracePanelMsg)
     const [selectedTraces, setSelectedTraces] = useState<Trace[]>([])
     const [sort, setSort] = useState(traceSortTypes[0].value)
     const [comparison, setComparison] = useState<string[]>([])
@@ -78,19 +81,19 @@ const TraceSearchResult = ({ panel, traces, timeRange }: Props) => {
         <Box pl="2" pr="20px">
             <Flex alignItems="center" justifyContent="space-between" mb="1">
                 <HStack height="40px" textStyle="title">
-                    {selectedTraces.length != traces.length ? <Text>{selectedTraces.length} Traces Selected</Text> : <Text>{selectedTraces.length} Traces Total</Text>}
-                    {selectedTraces.length != traces.length && <Button size="sm" variant="outline" onClick={() => setSelectedTraces(clone(traces))}>Clear selection</Button>}
+                    {selectedTraces.length != traces.length ? <Text>{selectedTraces.length} {t1.tracesSelected}</Text> : <Text>{selectedTraces.length} {t1.tracesTotal}</Text>}
+                    {selectedTraces.length != traces.length && <Button size="sm" variant="outline" onClick={() => setSelectedTraces(clone(traces))}>{t1.clearSelection}</Button>}
                 </HStack>
                 {
                     comparison.length > 0 && <HStack textStyle="title">
-                        <Text><ComparisonTraces removeFromCompare={removeFromCompare} comparedTraces={comparedTraces} maxDuration={maxDuration}/>  selected for comparison</Text>
+                        <Text><ComparisonTraces removeFromCompare={removeFromCompare} comparedTraces={comparedTraces} maxDuration={maxDuration}/> {t1.selectForCompre}</Text>
                         <TraceCompare traces={comparedTraces}/>
                     </HStack>
                 }
                 <HStack alignItems="center">
-                    <Text minWidth="fit-content">Sort</Text>
+                    <Text minWidth="fit-content">排序</Text>
                     <Select size="sm" value={sort} onChange={e => setSort(e.currentTarget.value)}>
-                        {traceSortTypes.map(sortType => <option key={sortType.value} value={sortType.value}>{sortType.label}</option>)}
+                        {traceSortTypes.map(sortType => <option key={sortType.value} value={sortType.value}>{t1[sortType.value]}</option>)}
                     </Select>
                 </HStack>
             </Flex>

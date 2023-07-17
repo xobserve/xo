@@ -4,11 +4,14 @@ import { formatDuration, formatRelativeDate } from "../../utils/date"
 import moment from "moment"
 import TraceCompareGraph from "./TraceCompareGraph"
 import React from "react";
+import { useStore } from "@nanostores/react"
+import { commonMsg } from "src/i18n/locales/en"
 
 interface Props {
     traces: Trace[]
 }
 const TraceCompare = ({ traces }: Props) => {
+    const t = useStore(commonMsg)
     const { isOpen, onOpen, onClose } = useDisclosure()
     const compareTraces = () => {
         onOpen()
@@ -16,7 +19,7 @@ const TraceCompare = ({ traces }: Props) => {
 
     return (
         <>
-            <Button size="sm" variant="outline" onClick={compareTraces} isDisabled={traces.length <= 1}>Compare</Button>
+            <Button size="sm" variant="outline" onClick={compareTraces} isDisabled={traces.length <= 1}>{t.compore}</Button>
 
             <Modal isOpen={isOpen} onClose={onClose} size="full">
                 <ModalOverlay />
