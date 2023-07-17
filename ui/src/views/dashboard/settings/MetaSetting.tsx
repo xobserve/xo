@@ -1,8 +1,10 @@
 import { Alert, AlertDescription, AlertDialog, AlertDialogBody, AlertDialogContent, AlertDialogFooter, AlertDialogHeader, AlertDialogOverlay, AlertIcon, AlertTitle, Box, Button, Text, Textarea, useDisclosure, useToast } from "@chakra-ui/react"
+import { useStore } from "@nanostores/react";
 import CodeEditor from "components/CodeEditor/CodeEditor"
 import { DetailAlert, DetailAlertItem } from "components/DetailAlert"
 import React from "react";
 import { useRef, useState } from "react"
+import { commonMsg, dashboardSettingMsg } from "src/i18n/locales/en";
 import { Dashboard } from "types/dashboard"
 import { requestApi } from "utils/axios/request"
 
@@ -12,6 +14,9 @@ interface Props {
 }
 
 const MetaSettings = ({ dashboard }: Props) => {
+    const t = useStore(commonMsg)
+    const t1= useStore(dashboardSettingMsg)
+
     const toast = useToast()
     const { isOpen, onOpen, onClose } = useDisclosure()
     const cancelRef = useRef()
@@ -38,16 +43,16 @@ const MetaSettings = ({ dashboard }: Props) => {
             <CodeEditor value={meta} onChange={v => setMeta(v)} language="json" />
         </Box>
 
-        <DetailAlert status="warning" title="Press Ctrl + S to Save your dashboard first!">
+        <DetailAlert status="warning" title={t1.saveWarnTitle}>
             <DetailAlertItem>
-                <Text>Before submitting the meta data above, please save your Dashboard first, if it has any changes.</Text>
+                <Text>{t1.saveWarnContent}</Text>
             </DetailAlertItem>
             <AlertDescription maxWidth='sm'>
                 
             </AlertDescription>
         </DetailAlert>
 
-        <Button mt="2" isDisabled={meta == rawMeta.current} onClick={onOpen}>Submit</Button>
+        <Button mt="2" isDisabled={meta == rawMeta.current} onClick={onOpen}>{t.submit}</Button>
 
         <AlertDialog
             isOpen={isOpen}
@@ -57,19 +62,19 @@ const MetaSettings = ({ dashboard }: Props) => {
             <AlertDialogOverlay>
                 <AlertDialogContent>
                     <AlertDialogHeader fontSize='lg' fontWeight='bold'>
-                        Submit dashboard meta data
+                       {t1.saveAlertTitle}
                     </AlertDialogHeader>
 
                     <AlertDialogBody>
-                        Are you sure to submit? If submit success, page will be reloaded.
+                        {t1.saveAlertContent}
                     </AlertDialogBody>
 
                     <AlertDialogFooter>
                         <Button ref={cancelRef} onClick={onClose}>
-                            Cancel
+                            {t.cancel}
                         </Button>
                         <Button colorScheme='red' onClick={onSubmit} ml={3}>
-                            Submit
+                            {t.submit}
                         </Button>
                     </AlertDialogFooter>
                 </AlertDialogContent>

@@ -202,6 +202,20 @@
     "savePromtTips": "当有未保存的内容时，一旦离开页面就会收到一条未保存提示",
     "autoSave": "自动保存",
     "autoSaveTips": "仪表盘每隔一段时间将自动保存一次，你可以在保存历史中找到这些保存记录",
-    "autoSaveInterval": "自动保存间隔( 秒 )"
+    "autoSaveInterval": "自动保存间隔( 秒 )",
+
+    "background": "背景",
+    "backgroundTips": "设置仪表盘的背景颜色或图片",
+    "enableBg": "启用背景样式",
+    "enableBgTips": "是否启用上面设置的背景样式",
+    "dashBorder":  "仪表盘边框",
+    "dashBorderTips": "为你的仪表盘选择一个酷炫的边框样式",
+
+    "dashSaved": "仪表盘已保存",
+    "saveChanges": "编辑仪表盘元数据",
+    "saveWarnTitle": "请先按下 Ctrl + S 保存仪表盘，以防修改的内容丢失!",
+    "saveWarnContent": "修改元数据可以直接覆盖你正在修改的内容，因此为了防止数据丢失，最好先行保存",
+    "saveAlertTitle": "提交仪表盘元数据",
+    "saveAlertContent": "确定要提交吗？修改成功后，页面将重新载入"
   }
 }

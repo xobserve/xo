@@ -226,4 +226,10 @@ export const dashboardSettingMsg = i18n("dashboardSetting", {
   "dashBorder":  "Dashboard border",
   "dashBorderTips": "Select a cool border for your dashboard",
 
+  "dashSaved": "Dashboard saved",
+  "saveChanges": "modify dashboard meta data",
+  "saveWarnTitle": "Press Ctrl + S to Save your dashboard first!",
+  "saveWarnContent": "Before submitting the meta data above, please save your Dashboard first, if it has any changes",
+  "saveAlertTitle": "Submit dashboard meta data",
+  "saveAlertContent": " Are you sure to submit? If submit success, page will be reloaded."
 })
