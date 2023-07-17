@@ -66,6 +66,7 @@ export const commonMsg = i18n("common", {
   "isAdded": params("{name} added!"),
   "isUpdated": params("{name} updated!"),
   "isDeleted": params("{name} deleted!"),
+  "isExist": params("{name} already exists"),
   "newItem": params("New {name}"),
   "manageItem": params("Manage {name}"),
   "deleteItem": params("Delete {name}"),
@@ -224,5 +225,5 @@ export const dashboardSettingMsg = i18n("dashboardSetting", {
   "enableBgTips": "Whether using the background image set above",
   "dashBorder":  "Dashboard border",
   "dashBorderTips": "Select a cool border for your dashboard",
-  
+
 })

@@ -56,6 +56,7 @@
     "isAdded": "{name}添加成功!",
     "isUpdated": "{name}更新成功!",
     "isDeleted": "{name}删除成功!",
+    "isExist": "{name}已存在!",
     "newItem": "新建{name}",
     "manageItem": "管理{name}",
     "deleteItem": "删除{name}",
