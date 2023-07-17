@@ -400,3 +400,15 @@ export const echartsPanelMsg = i18n("echartsPanel", {
   "regEventsTips": "custom your chart events, e.g mouseclick, mouseover etc",
   "editRegFunc":"Edit registerEvents function",
 })
+
+export const textPanelMsg = i18n("textPanel", {
+  "textSettings": "Text settings",
+  "content": "Content",
+  "horizontalPos": "Horizontal position",
+  "verticalPos": "Vertical position",
+  "left": "Left",
+  "center": "Center",
+  "right": "Right",
+  "top":  "Top",
+  "bottom": "Bottom",
+})

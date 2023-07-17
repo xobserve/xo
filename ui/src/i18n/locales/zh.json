@@ -340,7 +340,7 @@
     "opacityTips": "边的不透明度",
     "highlightColor": "高亮颜色",
     "highlightColorTips": "当鼠标悬浮或点击一个节点/边时，它们所呈现出的颜色",
-    "pickLightColor":  "选择白天颜色",
+    "pickLightColor": "选择白天颜色",
     "pickDarkColor": "选择夜晚颜色",
     "interaction": "交互",
     "tooltipTrigger": "Tooltip 触发方式",
@@ -374,6 +374,17 @@
     "liveEdit": "实时编辑( 从 {name} 数据源加载数据 )",
     "regEvents": "注册事件函数",
     "regEventsTips": "定制你的图表事件，例如：鼠标点击，鼠标悬浮等",
-    "editRegFunc":"编辑 registerEvents 函数"
+    "editRegFunc": "编辑 registerEvents 函数"
+  },
+  "textPanel": {
+    "textSettings": "Text 设置",
+    "content": "内容",
+    "horizontalPos": "文字水平位置",
+    "verticalPos": "文字竖直位置",
+    "left": "左",
+    "center": "中",
+    "right": "右",
+    "top": "顶部",
+    "bottom": "底部"
   }
 }
