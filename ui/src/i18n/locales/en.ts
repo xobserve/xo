@@ -301,3 +301,11 @@ export const prometheusDsMsg = i18n("prometheusDs", {
   "legendFormat": "support variable",
   "selecMetrics": "Select metrics...",
 })
+
+export const httpDsMsg = i18n("httpDs", {
+  "remoteHttp": "Remote http address",
+  "reqTransform": "Request transform",
+  "reqTransformTips": "If you want insert some imformation before request is sent to remote, e.g current time, just edit this function",
+  "respTransform": "Response transform",
+  "respTransformTips": "The http request result is probably not compatible with your visualization panels, here you can define a function to transform the result"
+})

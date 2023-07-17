@@ -7,8 +7,11 @@ import { useEffect, useState } from "react"
 import { PanelQuery } from "types/dashboard"
 import { Datasource, DatasourceEditorProps } from "types/datasource"
 import React from "react";
+import { useStore } from "@nanostores/react"
+import { httpDsMsg } from "src/i18n/locales/en"
 
 const HttpQueryEditor = ({ datasource, query, onChange }: DatasourceEditorProps) => {
+    const t1 = useStore(httpDsMsg)
     const [tempQuery, setTempQuery] = useState<PanelQuery>(cloneDeep(query))
     useEffect(() => {
         if (isEmpty(tempQuery.data.transformResult)) {
@@ -39,19 +42,19 @@ const HttpQueryEditor = ({ datasource, query, onChange }: DatasourceEditorProps)
                         setTempQuery({ ...tempQuery, metrics: e.currentTarget.value })
                     }}
                     onBlur={() => onChange(tempQuery)}
-                    placeholder="Remote http address"
+                    placeholder={t1.remoteHttp}
                     size="sm"
                 />
             </FormItem>
 
-            <FormItem title="Request transform" labelWidth="200px" desc="If you want insert some imformation before request is sent to remote, e.g current time, just edit this function">
+            <FormItem title={t1.reqTransform} labelWidth="200px" desc={t1.reqTransformTips}>
                 <CodeEditorModal value={tempQuery.data.transformRequest} onChange={v => {
                     tempQuery.data.transformRequest = v
                     onChange(tempQuery)
                 }} />
             </FormItem>
 
-            <FormItem title="Result transform" labelWidth="200px" desc="The http request result is probably not compatible with your visualization panels, here you can define a function to transform the result">
+            <FormItem title={t1.respTransform} labelWidth="200px" desc={t1.respTransformTips}>
                 <CodeEditorModal value={tempQuery.data.transformResult} onChange={v => {
                     tempQuery.data.transformResult = v
                     onChange(tempQuery)

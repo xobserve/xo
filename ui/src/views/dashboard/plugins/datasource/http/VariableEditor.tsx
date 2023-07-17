@@ -9,9 +9,11 @@ import { queryHttpVariableValues } from "./query_runner"
 import FormItem from "components/form/Item"
 import { EditorInputItem } from "components/editor/EditorItem"
 import React from "react";
+import { useStore } from "@nanostores/react"
+import { httpDsMsg } from "src/i18n/locales/en"
 
 const HttpVariableEditor = ({ variable, onChange, onQueryResult }: DatasourceVariableEditorProps) => {
-    const toast = useToast()
+    const t1 = useStore(httpDsMsg)
     const data = isJSON(variable.value) ? JSON.parse(variable.value) : {}
 
     let update;
@@ -48,7 +50,7 @@ const HttpVariableEditor = ({ variable, onChange, onQueryResult }: DatasourceVar
                 }}
             />
         </FormItem>
-        <FormItem title='Request transform'>
+        <FormItem title={t1.reqTransform}>
             {/* <Label width="200px" desc="If you want insert some imformation before request is sent to remote, e.g current time, just edit this function">Request transform</Label> */}
             <CodeEditorModal value={data.transformRequest} onChange={v => {
                 data.transformRequest = v
@@ -59,7 +61,7 @@ const HttpVariableEditor = ({ variable, onChange, onQueryResult }: DatasourceVar
         </FormItem>
 
 
-        <FormItem title="Result transform">
+        <FormItem title={t1.respTransform}>
             {/* <Label width="200px" desc="The http request result is probably not compatible with your visualization panels, here you can define a function to transform the result">Result transform</Label> */}
             <CodeEditorModal value={data.transformResult} onChange={v => {
                 data.transformResult = v
