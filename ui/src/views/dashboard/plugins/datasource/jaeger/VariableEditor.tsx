@@ -8,6 +8,8 @@ import FormItem from "components/form/Item"
 import { queryJaegerVariableValues } from "./query_runner"
 import ChakraSelect from "components/select/ChakraSelect"
 import React from "react";
+import { useStore } from "@nanostores/react"
+import { jaegerDsMsg } from "src/i18n/locales/en"
 
 
 export enum JaegerDsQueryTypes {
@@ -16,6 +18,7 @@ export enum JaegerDsQueryTypes {
 }
 
 const JaegerVariableEditor = ({ variable, onChange, onQueryResult }: DatasourceVariableEditorProps) => {
+    const t1 = useStore(jaegerDsMsg)
     const data = isJSON(variable.value) ? JSON.parse(variable.value) : {}
 
     if (data.useCurrentTime == undefined) {
@@ -32,7 +35,7 @@ const JaegerVariableEditor = ({ variable, onChange, onQueryResult }: DatasourceV
     }
 
     return (<>
-        <FormItem title="Query type">
+        <FormItem title={t1.queryType}>
             <Box width="200px">
                 <ChakraSelect variant="outline" size="md" placeholder="select type.." value={{ label: data.type, value: data.type }} onChange={v => {
                     data.type = v
@@ -50,7 +53,7 @@ const JaegerVariableEditor = ({ variable, onChange, onQueryResult }: DatasourceV
                 onChange(variable => {
                     variable.value = JSON.stringify(data)
                 })
-            }}  placeholder="enter a service, support variable"/>
+            }}  placeholder={t1.serviceTips}/>
         </FormItem>}
 
     </>)

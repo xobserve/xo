@@ -11,8 +11,6 @@ import { isJSON } from "utils/is"
 import { Variable } from "types/variable"
 import { JaegerDsQueryTypes } from "./VariableEditor"
 import { replaceWithVariablesHasMultiValues } from "utils/variable"
-import { cloneDeep } from "lodash"
-import { getInitTimeRange } from "components/DatePicker/TimePicker"
 
 export const run_jaeger_query = async (panel: Panel, q: PanelQuery,range: TimeRange,ds: Datasource) => {
     let res = []

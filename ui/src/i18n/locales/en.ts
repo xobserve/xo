@@ -309,3 +309,10 @@ export const httpDsMsg = i18n("httpDs", {
   "respTransform": "Response transform",
   "respTransformTips": "The http request result is probably not compatible with your visualization panels, here you can define a function to transform the result"
 })
+
+export const jaegerDsMsg = i18n("jaegerDs", {
+  "showServices": "Show services",
+  "showServicesTips": "Show services and their relations, you can enter multiple services, sperated with comma, leave empty if you want to show all",
+  "queryType": "Query type",
+  "serviceTips": "enter a service, support variable"
+})
