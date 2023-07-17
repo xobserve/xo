@@ -4,6 +4,8 @@ import { useState } from "react"
 import { FaArrowUp, FaMinus, FaPlus } from "react-icons/fa"
 import { UnitsType, Unit } from "types/panel/plugins"
 import React from "react"
+import { commonMsg } from "src/i18n/locales/en"
+import { useStore } from "@nanostores/react"
 
 interface Props {
     type: UnitsType
@@ -15,6 +17,7 @@ interface Props {
 
 
 export const UnitPicker = ({ type, value, onChange,size="md" }: Props) => {
+    const t = useStore(commonMsg)
     const [unitType, setUnitTYpe] = useState(type)
     const [units, setUnits] = useState(value)
     const onAddUnit = () => {
@@ -164,7 +167,7 @@ export const UnitPicker = ({ type, value, onChange,size="md" }: Props) => {
 
                 })}
             </VStack>
-            <Button mt="2" size="sm" variant="outline" onClick={onSubmit}>Submit</Button>
+            <Button mt="2" size="sm" variant="outline" onClick={onSubmit}>{t.submit}</Button>
         </>)
 }
 

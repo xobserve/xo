@@ -63,6 +63,11 @@
     "opacity": "不透明度",
     "enable": "启用",
     "applyToSeeEffect": "点击右上角的应用按钮后，才能看到修改效果",
+    "vertical": "竖直",
+    "horizontal": "水平",
+    "onClickEvent": "图表点击事件",
+    "editFunc": "编辑函数",
+    "onClickEventTips": "当点击图表时，该事件将被触发",
     "isReqiiured": "{name}是必填项",
     "isInvalid": "{name}不正确",
     "isAdded": "{name}添加成功!",
@@ -370,7 +375,6 @@
     "allowEmptyDataTips": "当你不使用数据源提供的数据，而是在 setOptions 函数中模拟生成数据时，你需要开启此选项；否则请关闭它",
     "setOption": "设置 echarts 的 options",
     "setOptionTips": "从数据源中获取的数据将直接传给该函数，此函数处理完成后返回的 options 也将直接传给 echart 实例进行渲染",
-    "editFunc": "编辑函数",
     "liveEdit": "实时编辑( 从 {name} 数据源加载数据 )",
     "regEvents": "注册事件函数",
     "regEventsTips": "定制你的图表事件，例如：鼠标点击，鼠标悬浮等",
@@ -386,5 +390,16 @@
     "right": "右",
     "top": "顶部",
     "bottom": "底部"
+  },
+  "piePanel": {
+    "showLabel": "显示标签",
+    "shape": "形状",
+    "borderRadius": "边线弧度",
+    "pieRadius": "Pie 半径",
+    "innerRadius": "内圈半径",
+    "orient": "排列方向",
+    "placement": "放置位置",
+    "calc": "计算",
+    "calcTips": "设定该如何计算以获取显示的值"
   }
 }

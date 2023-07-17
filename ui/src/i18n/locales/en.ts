@@ -15,7 +15,7 @@ export const commonMsg = i18n("common", {
   "description": "Description",
   "basic": "Basic",
   "variable": "Variable",
-  "settings": "Settings",
+  "settings": "Settings", 
   "new": "New",
   "login": "Log in",
   "logout": "Log out",
@@ -72,6 +72,11 @@ export const commonMsg = i18n("common", {
   "opacity": "Opacity",
   "applyToSeeEffect": "You need to click Apply Button(in top-right) to see the new trigger taken effect",
   "enable": "Enable",
+  "vertical": "Vertical",
+  "horizontal": "Horizontal",
+  "onClickEvent": "On click event",
+  "onClickEventTips": "When click on the chart, this event will be executed",
+  "editFunc": "Edit Function",
   "inputTips": params("Enter {name}.."),
   "isReqiiured": params("{name} is required"),
   "isInvalid": params("{name} is invalid"),
@@ -394,7 +399,6 @@ export const echartsPanelMsg = i18n("echartsPanel", {
   "allowEmptyDataTips": "When we can't read any data from datasource, if this option is disabled, the chart will show 'No Data' and immediatlly returns, if enabled, the chart will show nothing and the empty data will pass to setOptions func. <If you generates data in setOptions function(e.g you are playing an example), you should make this enabled, otherwise leave it disabled>",
   "setOption": "Set echarts options",
   "setOptionTips": "Data fetched from datasource will pass to this function, and the return options will directly pass to echarts",
-  "editFunc": "Edit function",
   "liveEdit": params("Live Edit( fetch data from {name} datasource)"),
   "regEvents": "Register events function",
   "regEventsTips": "custom your chart events, e.g mouseclick, mouseover etc",
@@ -411,4 +415,16 @@ export const textPanelMsg = i18n("textPanel", {
   "right": "Right",
   "top":  "Top",
   "bottom": "Bottom",
+})
+
+export const piePanelMsg = i18n("piePanel", {
+    "showLabel": "Show label",
+    "shape": "Shape",
+    "borderRadius": "Border radius",
+    "pieRadius": "Pie radius",
+    "innerRadius": "Inner radius",
+    "orient": "Orient",
+    "placement": "Placement",
+    "calc":"Calculation",
+    "calcTips": "calculate results from series data with this reducer function"
 })

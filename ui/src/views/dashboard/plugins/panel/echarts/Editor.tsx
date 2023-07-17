@@ -86,7 +86,7 @@ const SetOptions = ({ panel, onChange,data }: PanelEditorProps) => {
 
     return (<>
         <PanelEditItem title={t1.setOption} desc={t1.setOptionTips}>
-            <Button size="sm" onClick={onOpen}>{t1.editFunc}</Button>
+            <Button size="sm" onClick={onOpen}>{t.editFunc}</Button>
         </PanelEditItem>
         <Modal isOpen={isOpen} onClose={onClose} size="full">
             <ModalOverlay />
@@ -143,7 +143,7 @@ const RegisterEvents = ({ panel, onChange }: PanelEditorProps) => {
 
     return (<>
         <PanelEditItem title={t1.regEvents} desc={t1.regEventsTips}>
-            <Button size="sm" onClick={onOpen}>{t1.editFunc}</Button>
+            <Button size="sm" onClick={onOpen}>{t.editFunc}</Button>
         </PanelEditItem>
         <Modal isOpen={isOpen} onClose={onClose} size="full">
             <ModalOverlay />

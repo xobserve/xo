@@ -10,17 +10,22 @@ import PanelEditItem from "src/views/dashboard/edit-panel/PanelEditItem"
 import { Panel, PanelEditorProps } from "types/dashboard"
 import { PieLegendPlacement } from "types/panel/plugins"
 import React from "react";
+import { useStore } from "@nanostores/react"
+import { commonMsg, echartsPanelMsg, piePanelMsg } from "src/i18n/locales/en"
 
 const PiePanelEditor = ({ panel, onChange }: PanelEditorProps) => {
+    const t = useStore(commonMsg)
+    const t1 = useStore(piePanelMsg)
+    const t2 = useStore(echartsPanelMsg)
     return (<>
-        <PanelAccordion title="Basic setting">
-            <PanelEditItem title="Animation" desc="display chart animation">
+        <PanelAccordion title={t.basicSetting}>
+            <PanelEditItem title={t2.animation} desc={t2.animationTips}>
                 <Switch defaultChecked={panel.plugins.pie.animation} onChange={e => onChange((panel: Panel) => {
                     panel.plugins.pie.animation = e.currentTarget.checked
                 })} />
             </PanelEditItem>
 
-            <PanelEditItem title="Show label">
+            <PanelEditItem title={t1.showLabel}>
                 <Switch defaultChecked={panel.plugins.pie.showLabel} onChange={e => onChange((panel: Panel) => {
                     panel.plugins.pie.showLabel = e.currentTarget.checked
                 })} />
@@ -33,23 +38,23 @@ const PiePanelEditor = ({ panel, onChange }: PanelEditorProps) => {
             }} />
         </PanelAccordion>
 
-        <PanelAccordion title="Shape">
-            <PanelEditItem title="Type">
+        <PanelAccordion title={t1.shape}>
+            <PanelEditItem title={t.type}>
                 <RadionButtons options={[{ label: "Normal", value: "normal" }, { label: "Rose", value: "rose" }]} value={panel.plugins.pie.shape.type} onChange={v => onChange((panel: Panel) => {
                     panel.plugins.pie.shape.type = v
                 })} />
             </PanelEditItem>
-            <PanelEditItem title="Border radius">
+            <PanelEditItem title={t1.borderRadius}>
                 <EditorNumberItem value={panel.plugins.pie.shape.borderRadius} min={0} max={20} step={1} onChange={(v) => onChange((panel: Panel) => {
                     panel.plugins.pie.shape.borderRadius = v
                 })} />
             </PanelEditItem>
-            <PanelEditItem title="Pie radius">
+            <PanelEditItem title={t1.pieRadius}>
                 <EditorNumberItem value={panel.plugins.pie.shape.radius} min={0} max={100} step={5} onChange={(v) => onChange((panel: Panel) => {
                     panel.plugins.pie.shape.radius = v
                 })} />
             </PanelEditItem>
-            <PanelEditItem title="Inner radius">
+            <PanelEditItem title={t1.innerRadius}>
                 <EditorNumberItem value={panel.plugins.pie.shape.innerRadius} min={0} max={100} step={5} onChange={(v) => onChange((panel: Panel) => {
                     panel.plugins.pie.shape.innerRadius = v
                 })} />
@@ -57,17 +62,17 @@ const PiePanelEditor = ({ panel, onChange }: PanelEditorProps) => {
         </PanelAccordion>
 
         <PanelAccordion title="Legend">
-            <PanelEditItem title="Show">
+            <PanelEditItem title={t.enable}>
                 <Switch defaultChecked={panel.plugins.pie.legend.show} onChange={e => onChange((panel: Panel) => {
                     panel.plugins.pie.legend.show = e.currentTarget.checked
                 })} />
             </PanelEditItem>
-            <PanelEditItem title="Orient">
-                <RadionButtons options={[{ label: "Vertical", value: "vertical" }, { label: "Horizontal", value: "horizontal" }]} value={panel.plugins.pie.legend.orient} onChange={v => onChange((panel: Panel) => {
+            <PanelEditItem title={t1.orient}>
+                <RadionButtons options={[{ label: t.vertical, value: "vertical" }, { label: t.horizontal, value: "horizontal" }]} value={panel.plugins.pie.legend.orient} onChange={v => onChange((panel: Panel) => {
                     panel.plugins.pie.legend.orient = v
                 })} />
             </PanelEditItem>
-            <PanelEditItem title="Placement">
+            <PanelEditItem title={t1.placement}>
                 <Select value={panel.plugins.pie.legend.placement} onChange={e => {
                     const v = e.currentTarget.value
                     onChange((panel: Panel) => {
@@ -83,7 +88,7 @@ const PiePanelEditor = ({ panel, onChange }: PanelEditorProps) => {
         </PanelAccordion>
 
         <PanelAccordion title="Value">
-            <PanelEditItem title="Unit">
+            <PanelEditItem title={t.unit}>
                 <UnitPicker type={panel.plugins.pie.value.unitsType} value={panel.plugins.pie.value.units} onChange={
                     (units, type) => onChange((panel: Panel) => {
                         panel.plugins.pie.value.units = units
@@ -91,10 +96,10 @@ const PiePanelEditor = ({ panel, onChange }: PanelEditorProps) => {
                     })
                 } />
             </PanelEditItem>
-            <PanelEditItem title="Decimal">
+            <PanelEditItem title={t.decimal}>
                 <EditorNumberItem value={panel.plugins.pie.value.decimal} min={0} max={5} step={1} onChange={v => onChange((panel: Panel) => { panel.plugins.pie.value.decimal = v })} />
             </PanelEditItem>
-            <PanelEditItem title="Caculation" desc="calculate results from series data with this reducer function">
+            <PanelEditItem title={t1.calc} desc={t1.calcTips}>
                 <ValueCalculation value={panel.plugins.pie.value.calc} onChange={v => {
                     onChange((panel: Panel) => { panel.plugins.pie.value.calc = v })
                 }} />
@@ -109,6 +114,7 @@ export default PiePanelEditor
 
 
 const OnClickEvent = ({ panel, onChange }: PanelEditorProps) => {
+    const t = useStore(commonMsg)
     const { isOpen, onOpen, onClose } = useDisclosure()
     const [temp, setTemp] = useState(panel.plugins.pie.onClickEvent)
 
@@ -118,19 +124,19 @@ const OnClickEvent = ({ panel, onChange }: PanelEditorProps) => {
     }
 
     return (<>
-        <PanelEditItem title="On click event" desc="When click on the Pie chart, this event will be executed">
-            <Button size="sm" onClick={onOpen}>Edit function</Button>
+        <PanelEditItem title={t.onClickEvent} desc={t.onClickEventTips}>
+            <Button size="sm" onClick={onOpen}>{t.editFunc}</Button>
         </PanelEditItem>
         <Modal isOpen={isOpen} onClose={onClose} size="full">
             <ModalOverlay />
             <ModalContent>
                 <ModalHeader py="2">
-                    Edit onClick function
+                    {t.editFunc}
                     <ModalCloseButton />
                 </ModalHeader>
                 <ModalBody pt="2" pb="0" px="0">
                     <Box height="400px"><CodeEditor value={temp} onChange={v => setTemp(v)} /></Box>
-                    <Button onClick={onSubmit} width="100%">Submit</Button>
+                    <Button onClick={onSubmit} width="100%">{t.submit}</Button>
                 </ModalBody>
 
             </ModalContent>
