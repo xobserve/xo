@@ -17,6 +17,7 @@ import { useStore } from "@nanostores/react"
 import { commonMsg, echartsPanelMsg } from "src/i18n/locales/en"
 
 const EchartsPanelEditor = ({ panel, onChange,data }: PanelEditorProps) => {
+    const t = useStore(commonMsg)
     const t1 = useStore(echartsPanelMsg)
     return (
         <>
@@ -25,7 +26,7 @@ const EchartsPanelEditor = ({ panel, onChange,data }: PanelEditorProps) => {
                 <Text mt="2" fontSize="sm">{t1.officialSite}: https://echarts.apache.org/en/index.html</Text>
             </PanelAccordion>
             <PanelAccordion title={t1.settings}>
-                <PanelEditItem title={t1.animation} desc={t1.animationTips}>
+                <PanelEditItem title={t.animation} desc={t.animationTips}>
                     <Switch defaultChecked={panel.plugins.echarts.animation} onChange={e => onChange((panel: Panel) => {
                         panel.plugins.echarts.animation = e.currentTarget.checked
                     })} />

@@ -68,6 +68,8 @@ export const commonMsg = i18n("common", {
   "decimal": "Decimal",
   "axis": "Axis",
   "scale": "Scale",
+  "min": "Min",
+  "max": "Max",
   "color": "Color",
   "opacity": "Opacity",
   "applyToSeeEffect": "You need to click Apply Button(in top-right) to see the new trigger taken effect",
@@ -77,6 +79,11 @@ export const commonMsg = i18n("common", {
   "onClickEvent": "On click event",
   "onClickEventTips": "When click on the chart, this event will be executed",
   "editFunc": "Edit Function",
+  "animation": "Animation",
+  "animationTips": "Display chart animation",
+  "display": "Display",
+  "calc":"Calculation",
+  "calcTips": "calculate results from series data with this reducer function",
   "inputTips": params("Enter {name}.."),
   "isReqiiured": params("{name} is required"),
   "isInvalid": params("{name} is invalid"),
@@ -393,8 +400,6 @@ export const echartsPanelMsg = i18n("echartsPanel", {
   "aboutContent1": "Apache ECharts is a free, powerful charting and visualization library offering easy ways to add intuitive, interactive, and highly customizable charts to your products",
   "officialSite": "Official site",
   "settings": "Echarts settings",
-  "animation": "Animation",
-  "animationTips": "Display chart animation",
   "allowEmptyData": "Allow empty data pass in",
   "allowEmptyDataTips": "When we can't read any data from datasource, if this option is disabled, the chart will show 'No Data' and immediatlly returns, if enabled, the chart will show nothing and the empty data will pass to setOptions func. <If you generates data in setOptions function(e.g you are playing an example), you should make this enabled, otherwise leave it disabled>",
   "setOption": "Set echarts options",
@@ -424,7 +429,15 @@ export const piePanelMsg = i18n("piePanel", {
     "pieRadius": "Pie radius",
     "innerRadius": "Inner radius",
     "orient": "Orient",
-    "placement": "Placement",
-    "calc":"Calculation",
-    "calcTips": "calculate results from series data with this reducer function"
+    "placement": "Placement"
+})
+
+export const gaugePanelMsg = i18n("gaugePanel", {
+  "valueSettings": "Value settings",
+  "leftTips": "moving right, initial is center",
+  "topTips": "moving down, initial is center",
+  "showTicks": "Show ticks",
+  "split": "Split",
+  "splitTips": "split axis into several part, each has a unique color, range is [0, 1]: 0 stands for start, 1 for ends, values must in ASC order",
+  "splitNum": "Split number",
 })

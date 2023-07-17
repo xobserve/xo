@@ -7,20 +7,24 @@ import PanelAccordion from "src/views/dashboard/edit-panel/Accordion"
 import PanelEditItem from "src/views/dashboard/edit-panel/PanelEditItem"
 import { Panel, PanelEditorProps } from "types/dashboard"
 import React from "react";
+import { useStore } from "@nanostores/react"
+import { commonMsg, gaugePanelMsg } from "src/i18n/locales/en"
 
 const GaugePanelEditor = (props: PanelEditorProps) => {
+    const t = useStore(commonMsg)
+    const t1 = useStore(gaugePanelMsg)
     const { panel, onChange } = props
     return (
         <>
-            <PanelAccordion title="Basic setting">
-                <PanelEditItem title="Animation" desc="display chart animation">
+            <PanelAccordion title={t.basicSetting}>
+                <PanelEditItem title={t.animation} desc={t.animationTips}>
                     <Switch defaultChecked={panel.plugins.gauge.animation} onChange={e => onChange((panel: Panel) => {
                         panel.plugins.gauge.animation = e.currentTarget.checked
                     })} />
                 </PanelEditItem>
             </PanelAccordion>
-            <PanelAccordion title="Value setting">
-                <PanelEditItem title="Show" desc="display data.name field">
+            <PanelAccordion title={t1.valueSettings}>
+                <PanelEditItem title={t.display}>
                     <Switch defaultChecked={panel.plugins.gauge.value.show} onChange={e => onChange((panel: Panel) => {
                         panel.plugins.gauge.value.show = e.currentTarget.checked
                     })} />
@@ -30,7 +34,59 @@ const GaugePanelEditor = (props: PanelEditorProps) => {
                         panel.plugins.gauge.value.fontSize = v
                     })} />
                 </PanelEditItem>
-                <PanelEditItem title="Min" desc="the minmum your value can be">
+
+
+                <PanelEditItem title="Left" desc={t1.leftTips}>
+                    <EditorInputItem value={panel.plugins.gauge.value.left} onChange={(v) => onChange((panel: Panel) => {
+                        panel.plugins.gauge.value.left = v
+                    })} />
+                </PanelEditItem>
+                <PanelEditItem title="Top" desc={t1.topTips}>
+                    <EditorInputItem value={panel.plugins.gauge.value.top} onChange={(v) => onChange((panel: Panel) => {
+                        panel.plugins.gauge.value.top = v
+                    })} />
+                </PanelEditItem>
+
+                <PanelEditItem title={t.unit}>
+                    <EditorInputItem value={panel.plugins.gauge.value.unit} onChange={(v) => onChange((panel: Panel) => {
+                        panel.plugins.gauge.value.unit = v
+                    })} />
+                </PanelEditItem>
+
+                <PanelEditItem title={t.decimal}>
+                    <EditorNumberItem value={panel.plugins.gauge.value.decimal} min={0} max={5} step={1} onChange={v => onChange((panel: Panel) => { panel.plugins.gauge.value.decimal = v })} />
+                </PanelEditItem>
+                <PanelEditItem title={t.calc} desc={t.calcTips}>
+                    <ValueCalculation value={panel.plugins.gauge.value.calc} onChange={v => {
+                        onChange((panel: Panel) => { panel.plugins.gauge.value.calc = v })
+                    }} />
+                </PanelEditItem>
+            </PanelAccordion>
+
+            <PanelAccordion title={t.title}>
+                <PanelEditItem title={t.display}>
+                    <Switch defaultChecked={panel.plugins.gauge.title.show} onChange={e => onChange((panel: Panel) => {
+                        panel.plugins.gauge.title.show = e.currentTarget.checked
+                    })} />
+                </PanelEditItem>
+                <PanelEditItem title="Font size">
+                    <EditorNumberItem value={panel.plugins.gauge.title.fontSize} onChange={(v) => onChange((panel: Panel) => {
+                        panel.plugins.gauge.title.fontSize = v
+                    })} />
+                </PanelEditItem>
+                <PanelEditItem title="Left" desc={t1.leftTips}>
+                    <EditorInputItem value={panel.plugins.gauge.title.left} onChange={(v) => onChange((panel: Panel) => {
+                        panel.plugins.gauge.title.left = v
+                    })} />
+                </PanelEditItem>
+                <PanelEditItem title="Top" desc={t1.topTips}>
+                    <EditorInputItem value={panel.plugins.gauge.title.top} onChange={(v) => onChange((panel: Panel) => {
+                        panel.plugins.gauge.title.top = v
+                    })} />
+                </PanelEditItem>
+            </PanelAccordion>
+            <PanelAccordion title={t.axis}>
+                <PanelEditItem title="Min">
                     <EditorNumberItem value={panel.plugins.gauge.value.min} onChange={(v) => onChange((panel: Panel) => {
                         panel.plugins.gauge.value.min = v
                     })} />
@@ -41,81 +97,30 @@ const GaugePanelEditor = (props: PanelEditorProps) => {
                     })} />
                 </PanelEditItem>
 
-
-                <PanelEditItem title="Left" desc="moving right, initial is center">
-                    <EditorInputItem value={panel.plugins.gauge.value.left} onChange={(v) => onChange((panel: Panel) => {
-                        panel.plugins.gauge.value.left = v
-                    })} />
-                </PanelEditItem>
-                <PanelEditItem title="Top" desc="moving down, initial is center">
-                    <EditorInputItem value={panel.plugins.gauge.value.top} onChange={(v) => onChange((panel: Panel) => {
-                        panel.plugins.gauge.value.top = v
-                    })} />
-                </PanelEditItem>
-
-                <PanelEditItem title="Unit">
-                    <EditorInputItem value={panel.plugins.gauge.value.unit} onChange={(v) => onChange((panel: Panel) => {
-                        panel.plugins.gauge.value.unit = v
-                    })} />
-                </PanelEditItem>
-
-                <PanelEditItem title="Decimal">
-                    <EditorNumberItem value={panel.plugins.gauge.value.decimal} min={0} max={5} step={1} onChange={v => onChange((panel: Panel) => { panel.plugins.gauge.value.decimal = v })} />
-                </PanelEditItem>
-                <PanelEditItem title="Caculation" desc="calculate results from series data with this reducer function">
-                    <ValueCalculation value={panel.plugins.gauge.value.calc} onChange={v => {
-                        onChange((panel: Panel) => { panel.plugins.gauge.value.calc = v })
-                    }} />
-                </PanelEditItem>
-            </PanelAccordion>
-
-            <PanelAccordion title="Title">
-                <PanelEditItem title="Show" desc="display data.name field">
-                    <Switch defaultChecked={panel.plugins.gauge.title.show} onChange={e => onChange((panel: Panel) => {
-                        panel.plugins.gauge.title.show = e.currentTarget.checked
-                    })} />
-                </PanelEditItem>
-                <PanelEditItem title="Font size">
-                    <EditorNumberItem value={panel.plugins.gauge.title.fontSize} onChange={(v) => onChange((panel: Panel) => {
-                        panel.plugins.gauge.title.fontSize = v
-                    })} />
-                </PanelEditItem>
-                <PanelEditItem title="Left" desc="moving right, initial is center">
-                    <EditorInputItem value={panel.plugins.gauge.title.left} onChange={(v) => onChange((panel: Panel) => {
-                        panel.plugins.gauge.title.left = v
-                    })} />
-                </PanelEditItem>
-                <PanelEditItem title="Top" desc="moving down, initial is center">
-                    <EditorInputItem value={panel.plugins.gauge.title.top} onChange={(v) => onChange((panel: Panel) => {
-                        panel.plugins.gauge.title.top = v
-                    })} />
-                </PanelEditItem>
-            </PanelAccordion>
-            <PanelAccordion title="Axis">
                 <PanelEditItem title="Width">
                     <EditorNumberItem value={panel.plugins.gauge.axis.width} onChange={(v) => onChange((panel: Panel) => {
                         panel.plugins.gauge.axis.width = v
                     })} />
                 </PanelEditItem>
-                <PanelEditItem title="Show ticks" >
+                <PanelEditItem title={t1.showTicks} >
                     <Switch defaultChecked={panel.plugins.gauge.axis.showTicks} onChange={e => onChange((panel: Panel) => {
                         panel.plugins.gauge.axis.showTicks = e.currentTarget.checked
                     })} />
                 </PanelEditItem>
-                <PanelEditItem title="Split" desc="split axis into several part, each has a unique color, range is [0, 1]: 0 stands for start, 1 for ends, values must in ASC order" >
+                <PanelEditItem title={t1.split} desc={t1.splitTips} >
                     <AxisSplit {...props} />
                 </PanelEditItem>
             </PanelAccordion>
 
-            <PanelAccordion title="Scale">
-                <PanelEditItem title="Dispaly scale line">
+            <PanelAccordion title={t.scale}>
+                <PanelEditItem title={t.display}>
                     <Switch defaultChecked={panel.plugins.gauge.scale.enable} onChange={e => {
                         onChange((panel: Panel) => {
                             panel.plugins.gauge.scale.enable = e.currentTarget.checked
                         })
                     }} />
                 </PanelEditItem>
-                <PanelEditItem title="Split numbers">
+                <PanelEditItem title={t1.splitNum}>
                     <EditorNumberItem value={panel.plugins.gauge.scale.splitNumber} min={0} max={10} step={1} onChange={v => onChange((panel: Panel) => { panel.plugins.gauge.scale.splitNumber = v })} />
                 </PanelEditItem>
                 <PanelEditItem title="Font size">

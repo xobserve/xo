@@ -11,15 +11,14 @@ import { Panel, PanelEditorProps } from "types/dashboard"
 import { PieLegendPlacement } from "types/panel/plugins"
 import React from "react";
 import { useStore } from "@nanostores/react"
-import { commonMsg, echartsPanelMsg, piePanelMsg } from "src/i18n/locales/en"
+import { commonMsg, piePanelMsg } from "src/i18n/locales/en"
 
 const PiePanelEditor = ({ panel, onChange }: PanelEditorProps) => {
     const t = useStore(commonMsg)
     const t1 = useStore(piePanelMsg)
-    const t2 = useStore(echartsPanelMsg)
     return (<>
         <PanelAccordion title={t.basicSetting}>
-            <PanelEditItem title={t2.animation} desc={t2.animationTips}>
+            <PanelEditItem title={t.animation} desc={t.animationTips}>
                 <Switch defaultChecked={panel.plugins.pie.animation} onChange={e => onChange((panel: Panel) => {
                     panel.plugins.pie.animation = e.currentTarget.checked
                 })} />
@@ -99,7 +98,7 @@ const PiePanelEditor = ({ panel, onChange }: PanelEditorProps) => {
             <PanelEditItem title={t.decimal}>
                 <EditorNumberItem value={panel.plugins.pie.value.decimal} min={0} max={5} step={1} onChange={v => onChange((panel: Panel) => { panel.plugins.pie.value.decimal = v })} />
             </PanelEditItem>
-            <PanelEditItem title={t1.calc} desc={t1.calcTips}>
+            <PanelEditItem title={t.calc} desc={t.calcTips}>
                 <ValueCalculation value={panel.plugins.pie.value.calc} onChange={v => {
                     onChange((panel: Panel) => { panel.plugins.pie.value.calc = v })
                 }} />
