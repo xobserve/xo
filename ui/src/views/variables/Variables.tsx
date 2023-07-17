@@ -15,6 +15,8 @@ import { VarialbeAllOption, VariableSplitChar } from "src/data/variable"
 import { VariableManuallyChangedKey } from "src/data/storage-keys"
 import { queryJaegerVariableValues } from "../dashboard/plugins/datasource/jaeger/query_runner"
 import React from "react";
+import { useStore } from "@nanostores/react"
+import { variableMsg } from "src/i18n/locales/en"
 
 interface Props {
     id: number
@@ -33,6 +35,7 @@ const SelectVariables = ({ variables }: Props) => {
 export default SelectVariables
 
 const SelectVariable = ({ v }: { v: Variable }) => {
+    const t1 = useStore(variableMsg)
     const [values, setValues] = useState<string[]>([])
 
     useBus(
@@ -121,7 +124,7 @@ const SelectVariable = ({ v }: { v: Variable }) => {
     const value = isEmpty(v.selected) ? [] : v.selected.split(VariableSplitChar)
     
     return <HStack key={v.id} spacing={2}>
-        <Tooltip openDelay={300} label={`${v.name} is ` + (v.id.toString().startsWith("d-") ? "dashboard scoped variable" : "global scoped variable")}><Text fontSize="sm" minWidth="fit-content">{v.name}</Text></Tooltip>
+        <Tooltip openDelay={300} label={ (v.id.toString().startsWith("d-") ? t1.dashScoped : t1.globalScoped)}><Text fontSize="sm" minWidth="fit-content">{v.name}</Text></Tooltip>
         {!isEmpty(values) &&
         <PopoverSelect 
             value={value} 

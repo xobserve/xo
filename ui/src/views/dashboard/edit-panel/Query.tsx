@@ -17,6 +17,8 @@ import { datasources } from "src/App"
 import FormItem from "components/form/Item"
 import { Form, FormSection } from "components/form/Form"
 import React from "react";
+import { commonMsg, panelMsg } from "src/i18n/locales/en"
+import { useStore } from "@nanostores/react"
 
 interface Props {
     panel: Panel
@@ -24,6 +26,8 @@ interface Props {
 }
 
 const EditPanelQuery = (props: Props) => {
+    const t = useStore(commonMsg)
+    const t1 = useStore(panelMsg)
     const { panel, onChange } = props
     const selectDatasource = (id) => {
 
@@ -72,7 +76,7 @@ const EditPanelQuery = (props: Props) => {
 
     return (<>
         <Box className="top-gradient-border bordered-left bordered-right" width="fit-content">
-            <Text px="2" py="2">Query</Text>
+            <Text px="2" py="2">{t.query}</Text>
         </Box>
         <Box className="bordered" p="2" borderRadius="0" height="100%">
             <Flex justifyContent="space-between" alignItems="start">
@@ -104,7 +108,7 @@ const EditPanelQuery = (props: Props) => {
                     </Box>
                 })}
             </VStack>
-            <Button leftIcon={<FaPlus />} size="sm" variant="outline" onClick={onAddQuery} mt="4"> Query</Button>
+            <Button leftIcon={<FaPlus />} size="sm" variant="outline" onClick={onAddQuery} mt="4">{t.query}</Button>
         </Box>
     </>)
 }
@@ -113,17 +117,18 @@ export default EditPanelQuery
 
 
 const DatasourceQueryOption = ({ panel, onChange }: Props) => {
+    const t1 = useStore(panelMsg)
     const [expanded, setExpanded] = useState(false)
     return (
         <VStack alignItems="end" mt="4px">
 
             <HStack color="brand.500" fontSize=".9rem" spacing={1} cursor="pointer" onClick={() => setExpanded(!expanded)} width="fit-content">
                 {expanded ? <FaAngleDown /> : <FaAngleRight />}
-                <Text fontWeight="500">Query options</Text>
+                <Text fontWeight="500">{t1.queryOption}</Text>
             </HStack>
             {
                 expanded && <FormSection mt="1" position="relative">
-                    <FormItem size="sm" labelWidth="170px" title="Max data points" desc="The maximum data points per series. Used directly by some data sources and used in calculation of auto interval. ">
+                    <FormItem size="sm" labelWidth="170px" title={t1.maxDataPoints} desc={t1.maxDataPointsTips}>
                         <Box width="100px"><EditorNumberItem min={100} max={2000} step={50} value={panel.datasource.queryOptions.maxDataPoints} onChange={v => {
                             onChange((panel: Panel) => {
                                 panel.datasource.queryOptions.maxDataPoints = v
@@ -131,15 +136,15 @@ const DatasourceQueryOption = ({ panel, onChange }: Props) => {
                         }} /></Box>
 
                     </FormItem>
-                    <FormItem title="Min interval" labelWidth="170px" size="sm" desc="A lower limit for the interval. Recommended to be set to write frequency, e.g Prometheus defaults scraping data every 15 seconds, you can set this to '15s'">
-                        <Box width="100px"><EditorInputItem value={panel.datasource.queryOptions.minInterval} onChange={v => {
+                    <FormItem title={t1.minInterval} labelWidth="170px" size="sm" desc={t1.minIntervalTips}>
+                        <Box width="100px"><EditorInputItem size="sm" value={panel.datasource.queryOptions.minInterval} onChange={v => {
                             onChange((panel: Panel) => {
                                 panel.datasource.queryOptions.minInterval = v
                             })
                         }} /></Box>
                     </FormItem>
 
-                    <FormItem labelWidth="170px" size="sm" title="Final interval" desc="Final interval is caculated based on the current time range, max data points and the min interval, it's sent to datasource, e.g final interval will be directly passed as the step option that Prometheus requires">
+                    <FormItem labelWidth="170px" size="sm" title={t1.finalInterval} desc={t1.finalIntervalTips} alignItems="center">
                         <Text width="100px" pl="2">{calculateInterval(getInitTimeRange(), panel.datasource.queryOptions.maxDataPoints, panel.datasource.queryOptions.minInterval).interval}</Text>
                     </FormItem>
                 </FormSection>

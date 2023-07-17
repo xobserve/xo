@@ -28,6 +28,8 @@ import { run_http_query } from "../plugins/datasource/http/query_runner";
 import { datasources } from "src/App";
 import { useSearchParam } from "react-use";
 import React from "react";
+import { useStore } from "@nanostores/react";
+import { commonMsg, panelMsg } from "src/i18n/locales/en";
 
 
 interface PanelGridProps {
@@ -250,7 +252,8 @@ interface PanelHeaderProps {
 }
 
 const PanelHeader = ({ queryError, panel, onCopyPanel, onRemovePanel, data }: PanelHeaderProps) => {
-
+    const t = useStore(commonMsg)
+    const t1 = useStore(panelMsg)
     const title = replaceWithVariables(panel.title)
     const { isOpen, onOpen, onClose } = useDisclosure()
 
@@ -274,13 +277,13 @@ const PanelHeader = ({ queryError, panel, onCopyPanel, onRemovePanel, data }: Pa
                             <Center width="100%">{!isEmpty(title) ? <Box cursor="pointer" className="hover-bordered" paddingTop={panel.styles.title.paddingTop} paddingBottom={panel.styles.title.paddingBottom} paddingLeft={panel.styles.title.paddingLeft} paddingRight={panel.styles.title.paddingRight} width="100%" fontSize={panel.styles.title.fontSize} fontWeight={panel.styles.title.fontWeight} color={panel.styles.title.color}><TitleDecoration styles={panel.styles}><Text noOfLines={1}>{title}</Text></TitleDecoration></Box> : <Box width="100px">&nbsp;</Box>}</Center>
                         </MenuButton>
                         <MenuList p="1">
-                            <MenuItem icon={<FaEdit />} onClick={() => addParamToUrl({ edit: panel.id })}>Edit</MenuItem>
+                            <MenuItem icon={<FaEdit />} onClick={() => addParamToUrl({ edit: panel.id })}>{t.edit}</MenuItem>
                             <MenuDivider my="1" />
-                            <MenuItem icon={<FaRegCopy />} onClick={() => onCopyPanel(panel)}>Copy</MenuItem>
+                            <MenuItem icon={<FaRegCopy />} onClick={() => onCopyPanel(panel)}>{t.copy}</MenuItem>
                             <MenuDivider my="1" />
-                            <MenuItem icon={<FaBug />} onClick={onOpen}>Debug Panel</MenuItem>
+                            <MenuItem icon={<FaBug />} onClick={onOpen}>{t1.debugPanel}</MenuItem>
                             <MenuDivider my="1" />
-                            <MenuItem icon={<FaTrashAlt />} onClick={() => onRemovePanel(panel)}>Remove</MenuItem>
+                            <MenuItem icon={<FaTrashAlt />} onClick={() => onRemovePanel(panel)}>{t.remove}</MenuItem>
                         </MenuList>
                     </Menu>
                 </Center>

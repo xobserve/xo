@@ -7,12 +7,15 @@ import PanelEditItem from "./PanelEditItem"
 import { initPanelPlugins } from "src/data/panel/initPlugins"
 import { useEffect } from "react"
 import React from "react";
+import { useStore } from "@nanostores/react"
+import { commonMsg, panelMsg } from "src/i18n/locales/en"
 
 // in edit mode, we need to cache all the plugins we have edited, until we save the dashboard
 let pluginsCachedInEdit = {}
 let overridesCacheInEdit = {}
 const PanelSettings = ({ panel, onChange }: PanelEditorProps) => {
- 
+    const t = useStore(commonMsg)
+    const t1 = useStore(panelMsg)
     const onChangeVisualization = type => {
         pluginsCachedInEdit[panel.type] = panel.plugins[panel.type]
         overridesCacheInEdit[panel.type] = panel.overrides
@@ -36,17 +39,17 @@ const PanelSettings = ({ panel, onChange }: PanelEditorProps) => {
 
     return (
         <>
-            <PanelAccordion title="Basic setting" defaultOpen>
-                <PanelEditItem title="Panel title">
+            <PanelAccordion title={t.basicSetting} defaultOpen>
+                <PanelEditItem title={t1.panelTitle}>
                     <EditorInputItem value={panel.title} onChange={v => onChange(tempPanel => { tempPanel.title = v })}   />
                 </PanelEditItem>
-                <PanelEditItem title="Description" desc="give a short description to your panel">
+                <PanelEditItem title={t.description} desc={t1.panelDesc}>
                     <EditorInputItem type="textarea" value={panel.desc} onChange={v => onChange(tempPanel => { tempPanel.desc = v })}   />
                 </PanelEditItem>
             </PanelAccordion>
 
             {/* panel visulization choosing */}
-            <PanelAccordion title="Visualization" defaultOpen>
+            <PanelAccordion title={t1.visuization} defaultOpen>
                 <SimpleGrid columns={2} spacing="2">
                     {
                         Object.keys(PanelType).map((key) => {

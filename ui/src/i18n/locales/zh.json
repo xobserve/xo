@@ -51,6 +51,8 @@
     "general": "通用",
     "styles": "样式",
     "tags": "标签",
+    "copy": "复制",
+    "remove": "移除",
     "isReqiiured": "{name}是必填项",
     "isInvalid": "{name}不正确",
     "isAdded": "{name}添加成功!",
@@ -165,7 +167,9 @@
     "refreshOnce": "立即刷新仪表盘",
     "refreshInterval": "定期刷新",
     "fullscreenTips": "进入全屏模式",
-    "exitFullscreenTips": "按下 ESC 退出全屏模式"
+    "exitFullscreenTips": "按下 ESC 退出全屏模式",
+    "addPanel": "新建图表",
+    "pastePanel": "粘贴已拷贝的图表"
   },
   "dashboardSave": {
     "autoSaveNotAvail": "在编辑图表模式下，自动保存不可用",
@@ -216,7 +220,7 @@
     "backgroundTips": "设置仪表盘的背景颜色或图片",
     "enableBg": "启用背景样式",
     "enableBgTips": "是否启用上面设置的背景样式",
-    "dashBorder":  "仪表盘边框",
+    "dashBorder": "仪表盘边框",
     "dashBorderTips": "为你的仪表盘选择一个酷炫的边框样式",
 
     "dashSaved": "仪表盘已保存",
@@ -239,5 +243,37 @@
     "lastMinutes": "过去 {name} 分钟",
     "lastHours": "过去 {name} 小时",
     "lastDays": "过去 {name} 天"
+  },
+  "variable": {
+    "dashScoped": "仪表盘变量",
+    "globalScoped": "全局变量"
+  },
+  "panel": {
+    "debugPanel": "Debug 图表",
+    "discard": "丢弃",
+    "apply": "应用",
+    "editPanel": "编辑图表",
+    "overrides": "覆盖",
+    "queryOption": "查询选项",
+    "maxDataPoints": "最大数据点数",
+    "maxDataPointsTips": "每条曲线能渲染的最大数据点数，一般用于计算点与点之间的时间间隔",
+    "minInterval": "最小间隔",
+    "minIntervalTips":  "点与点之间的最小时间间隔，推荐设置为写入频率，例如 Prometheus 默认 15 秒采集一次，你可以设置为 15 秒",
+    "finalInterval": "最终间隔",
+    "finalIntervalTips": "最终间隔是根据当前的时间范围、最大点数和最小间隔综合计算出的，它将被发送到数据源并用于最终渲染的图表点间隔，例如 Prometheus 需要的 step 参数就是使用该值",
+
+    "panelTitle": "图表标题",
+    "panelDesc": "给图表一个简单描述",
+    "visuization": "图表类型",
+
+    "panelBorder": "图表边框",
+    "titleDecoration": "标题装饰",
+    "panelDecoration": "图表装饰",
+    "reverseTips": "只有部分装饰支持 reverse 模式",
+    "titleStyles": "标题样式",
+
+    "targetName": "目标名称",
+    "addRule": "新建覆盖规则",
+    "addOverride": "新建覆盖"
   }
 }

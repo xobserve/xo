@@ -60,6 +60,8 @@ export const commonMsg = i18n("common", {
   "general": "General",
   "styles": "Styles",
   "tags": "Tags",
+  "copy": "Copy",
+  "remove": "Remove",
   "inputTips": params("Enter {name}.."),
   "isReqiiured": params("{name} is required"),
   "isInvalid": params("{name} is invalid"),
@@ -182,6 +184,8 @@ export const dashboardMsg = i18n("dashboard", {
   "refreshInterval": "refresh with interval",
   "fullscreenTips": "enter fullscreen mode",
   "exitFullscreenTips": "Press ESC to exit fullscreen mode",
+  "addPanel": "Add new panel",
+  "pastePanel": "Paste panel from clipboard"
 })
 
 export const dashboardSaveMsg = i18n("dashboardSave", {
@@ -254,4 +258,39 @@ export const timePickerMsg = i18n("timePicker", {
   "lastMinutes": params("Last {name} minutes"),
   "lastHours": params("Last {name} hours"),
   "lastDays": params("Last {name} days"),
+})
+
+
+export const variableMsg = i18n("variable", {
+  "dashScoped": "dashboard scoped variable",
+  "globalScoped": "global scoped variable",
+})
+
+export const panelMsg = i18n("panel", {
+  "debugPanel": "Debug Panel",
+  "discard": "Discard",
+  "apply": "Apply",
+  "editPanel": "Edit Panel",
+  "overrides": "Overrides",
+  "queryOption": "Query Option",
+  "maxDataPoints": "Max data points",
+  "maxDataPointsTips": "The maximum data points per series. Used directly by some data sources and used in calculation of auto interval.",
+  "minInterval": "Min interval",
+  "minIntervalTips": "A lower limit for the interval. Recommended to be set to write frequency, e.g Prometheus defaults scraping data every 15 seconds, you can set this to '15s'",
+  "finalInterval": "Final interval",
+  "finalIntervalTips": "Final interval is caculated based on the current time range, max data points and the min interval, it's sent to datasource, e.g final interval will be directly passed as the step option that Prometheus requires",
+
+  "panelTitle": "Panel Title",
+  "panelDesc": "give a short description to this panel",
+  "visuization": "Visuization",
+
+  "panelBorder": "Panel border",
+  "titleDecoration": "Title decoration",
+  "panelDecoration": "Panel decoration",
+  "reverseTips": "only a few decorations support reverse mode",
+  "titleStyles": "Title styles",
+  
+  "targetName": "Target name",
+  "addRule": "Add override rule",
+  "addOverride": "Add override",
 })

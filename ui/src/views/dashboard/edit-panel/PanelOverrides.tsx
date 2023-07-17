@@ -7,9 +7,14 @@ import { FaEye, FaTimes } from "react-icons/fa";
 import { Panel, PanelEditorProps, PanelType } from "types/dashboard";
 import GraphOverridesEditor, { GraphOverridesRules } from "../plugins/panel/graph/OverridesEditor";
 import React from "react";
+import { useStore } from "@nanostores/react";
+import { commonMsg, panelMsg } from "src/i18n/locales/en";
 
 
 const PanelOverrides = ({ panel, onChange, data }: PanelEditorProps) => {
+    const t = useStore(commonMsg)
+    const t1 = useStore(panelMsg)
+
     const overrides = panel.overrides
     const names = useMemo(() => flatten(data)?.map((s: any) => s.name), [data])
 
@@ -59,9 +64,9 @@ const PanelOverrides = ({ panel, onChange, data }: PanelEditorProps) => {
 
     return (<Form p="2">
         {
-            overrides.map((o, i) => <FormSection title={"Override " + (i + 1)} p="1" titleSize="0.9rem" position="relative" bordered>
+            overrides.map((o, i) => <FormSection title={t1.overrides + (i + 1)} p="1" titleSize="0.9rem" position="relative" bordered>
                 <Box position="absolute" right="2" top="9px" cursor="pointer" onClick={() => removeOverride(i)}><FaTimes fontSize="0.8rem" /></Box>
-                <FormItem title="target name" alignItems="center">
+                <FormItem title={t1.targetName} alignItems="center">
                     <Tooltip label={o.target}>
                         <Select value={o.target} onChange={e => {
                             const v = e.currentTarget.value
@@ -102,10 +107,10 @@ const PanelOverrides = ({ panel, onChange, data }: PanelEditorProps) => {
                 )}
                 </VStack>
 
-                <Button size="sm" variant="ghost" onClick={() => onAddRule(i)}>Add override rule</Button>
+                <Button size="sm" variant="ghost" onClick={() => onAddRule(i)}>{t1.addRule}</Button>
             </FormSection>)
         }
-        <Button width="100%" variant="outline" onClick={onAddOverride}>Add override</Button>
+        <Button width="100%" variant="outline" onClick={onAddOverride}>{t1.addOverride}</Button>
     </Form>)
 }
 

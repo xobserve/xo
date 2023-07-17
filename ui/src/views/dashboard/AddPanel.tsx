@@ -6,6 +6,8 @@ import { initPanel } from "src/data/panel/initPanel";
 import { Dashboard,  Panel } from "types/dashboard";
 import storage from "utils/localStorage";
 import React from "react";
+import { useStore } from "@nanostores/react";
+import { dashboardMsg } from "src/i18n/locales/en";
 
 interface Props {
     dashboard: Dashboard
@@ -13,6 +15,7 @@ interface Props {
 }
 
 const AddPanel = ({ dashboard, onChange }: Props) => {
+    const t1 = useStore(dashboardMsg )
     const { isOpen, onOpen, onClose } = useDisclosure()
 
     const addPanel = () => {
@@ -71,10 +74,9 @@ const AddPanel = ({ dashboard, onChange }: Props) => {
             <ModalContent mt="20%">
                 <ModalBody py="10">
                     <VStack alignItems={"left"}>
-                        <Button onClick={() => { onAddPanel(); onClose() }} variant="outline">Add new panel</Button>
-                        <Button onClick={() => { onPastePanel(); onClose() }}>Paste panel from clipboard</Button>
+                        <Button onClick={() => { onAddPanel(); onClose() }} variant="outline">{t1.addPanel}</Button>
+                        <Button onClick={() => { onPastePanel(); onClose() }}>{t1.pastePanel}</Button>
                     </VStack>
-
                 </ModalBody>
             </ModalContent>
         </Modal>

@@ -20,6 +20,8 @@ import loadable from '@loadable/component'
 import DatePicker from "components/DatePicker/DatePicker"
 import PanelOverrides from "./PanelOverrides"
 import React from "react";
+import { useStore } from "@nanostores/react"
+import { commonMsg, panelMsg } from "src/i18n/locales/en"
 
 interface EditPanelProps {
     dashboard: Dashboard
@@ -27,6 +29,8 @@ interface EditPanelProps {
 }
 
 const EditPanel = ({ dashboard, onChange }: EditPanelProps) => {
+    const t = useStore(commonMsg)
+    const t1 = useStore(panelMsg)
     const edit = useSearchParam('edit')
 
     const [tempPanel, setTempPanel] = useImmer<Panel>(null)
@@ -136,12 +140,12 @@ const EditPanel = ({ dashboard, onChange }: EditPanelProps) => {
                 {/* editor header section */}
                 <ModalHeader>
                     <Flex justifyContent="space-between">
-                        <Text>{dashboard.title} / Edit Panel</Text>
+                        <Text>{dashboard.title} / {t1.editPanel}</Text>
                         <HStack spacing={1}>
                             <DatePicker showTime />
                             <ColorModeSwitcher />
-                            <Button variant="outline" onClick={() => { onDiscard(), onClose() }} >Discard</Button>
-                            <Button onClick={onApplyChanges}>Apply</Button>
+                            <Button variant="outline" onClick={() => { onDiscard(), onClose() }} >{t1.discard}</Button>
+                            <Button onClick={onApplyChanges}>{t1.apply}</Button>
                         </HStack>
                     </Flex>
                 </ModalHeader>
@@ -170,9 +174,9 @@ const EditPanel = ({ dashboard, onChange }: EditPanelProps) => {
                             <Box className="top-gradient-border bordered-left bordered-right" >
                                 <Tabs position="relative" variant="unstyled">
                                     <TabList pb="0">
-                                        <Tab>Panel</Tab>
-                                        <Tab>Styles</Tab>
-                                        <Tab>Overrides</Tab>
+                                        <Tab>{t.panel}</Tab>
+                                        <Tab>{t.styles}</Tab>
+                                        <Tab>{t1.overrides}</Tab>
                                     </TabList>
                                     <TabIndicator
                                         mt="3px"

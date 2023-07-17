@@ -1,27 +1,29 @@
-import { Button, Input, NumberInput, NumberInputField, Select, Switch, Textarea, useColorMode, useColorModeValue } from "@chakra-ui/react"
+import { Button, Select, Switch, useColorModeValue } from "@chakra-ui/react"
 import { ColorPicker } from "components/ColorPicker"
-import { useEffect, useLayoutEffect, useMemo, useState } from "react"
 import customColors from "src/theme/colors"
 import { Panel, PanelEditorProps } from "types/dashboard"
-import { PanelBorderType, PanelDecorationType, PanelTitleDecorationType } from "types/panel/styles"
+import { PanelTitleDecorationType } from "types/panel/styles"
 import PanelAccordion from "./Accordion"
 import { EditorInputItem } from "../../../components/editor/EditorItem"
 import PanelEditItem from "./PanelEditItem"
 import DecorationSelect from "components/largescreen/components/DecorationSelect"
 import BorderSelect from "components/largescreen/components/BorderSelect"
 import React from "react";
+import { useStore } from "@nanostores/react"
+import { panelMsg } from "src/i18n/locales/en"
 
 const PanelStyles = ({ panel, onChange }: PanelEditorProps) => {
+    const t1 = useStore(panelMsg)
     return (
         <>
-            <PanelAccordion title="Panel border" defaultOpen>
+            <PanelAccordion title={t1.panelBorder} defaultOpen>
                 <BorderSelect value={panel.styles?.border} onChange={v => {
                     onChange(panel => {
                         panel.styles.border = v
                     })
                 }}/>
             </PanelAccordion>
-            <PanelAccordion title="Title decoration">
+            <PanelAccordion title={t1.titleDecoration}>
                 <PanelEditItem title="type">
                     <Select size="sm" value={panel.styles?.title?.decoration.type} onChange={e => {
                         const v = e.currentTarget.value
@@ -52,7 +54,7 @@ const PanelStyles = ({ panel, onChange }: PanelEditorProps) => {
                 {/* <NumberInputItem target={panel.styles.title?.decoration} attr="width" onChange={onChange} title="width" min={0} max={100} /> */}
             </PanelAccordion>
 
-            <PanelAccordion title="Title styles">
+            <PanelAccordion title={t1.titleStyles}>
                 <PanelEditItem title="font size">
                     <EditorInputItem type="input" value={panel.styles.title?.fontSize} onChange={v => onChange(panel => {
                         panel.styles.title.fontSize = v
@@ -92,7 +94,7 @@ const PanelStyles = ({ panel, onChange }: PanelEditorProps) => {
                 </PanelEditItem>
             </PanelAccordion>
 
-            <PanelAccordion title="Panel decoration">
+            <PanelAccordion title={t1.panelDecoration}>
                 <PanelEditItem title="type">
                     <DecorationSelect value={panel.styles?.decoration.type} onChange={v => {
                         onChange(panel => {
@@ -110,7 +112,7 @@ const PanelStyles = ({ panel, onChange }: PanelEditorProps) => {
                         }
                     </Select> */}
                 </PanelEditItem>
-                <PanelEditItem title="reverse" desc="only a few decorations support reverse mode">
+                <PanelEditItem title="reverse" desc={t1.reverseTips}>
                     <Switch defaultChecked={panel.styles.decoration.reverse} onChange={e => {
                         const checked = e.currentTarget.checked
                         onChange(panel => {
