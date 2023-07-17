@@ -7,7 +7,8 @@ import {
     MenuItem,
     MenuDivider,
     useColorModeValue,
-    chakra
+    chakra,
+    useToast
 } from "@chakra-ui/react"
 import useSession from "hooks/use-session"
 import storage from "utils/localStorage"
@@ -22,6 +23,7 @@ import { localeSetting,locale } from "src/i18n/i18n"
 const UserMenu = ({ fontSize = "1.2rem" }) => {
     const { session, logout } = useSession()
 
+    const toast = useToast()
     const navigate = useNavigate()
     const location = useLocation()
     const login = () => {
@@ -32,6 +34,14 @@ const UserMenu = ({ fontSize = "1.2rem" }) => {
     const changeLang = () => {
         const newLang = locale.get() == "en" ? "zh" : "en"
         localeSetting.set(newLang)
+
+        toast({
+            title: newLang == "en" ? "Language changed to English" : "语言已切换为中文",
+            status: "success",
+            duration: 2000,
+            isClosable: true,
+        })
+
         // window.location.reload()
     }
 

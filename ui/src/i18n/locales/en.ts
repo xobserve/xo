@@ -74,6 +74,9 @@ export const commonMsg = i18n("common", {
   "itemName": params("{name} Name"),
 })
 
+export const miscMsg = i18n("misc", {
+})
+
 export const navigateMsg = i18n("navigate", {
   "NewDashboard": "New Dashboard",
   "NewDatasource": "New Datasource",
@@ -174,6 +177,11 @@ export const newMsg = i18n("new", {
 
 export const dashboardMsg = i18n("dashboard", {
   "notFound": "Dashboard not found, maybe 1. invalid dashboard id(url) 2. you have chosen a wrong team",
+  "headerTeamTips": "the team which current dashboard belongs to",
+  "refreshOnce": "refresh just once",
+  "refreshInterval": "refresh with interval",
+  "fullscreenTips": "enter fullscreen mode",
+  "exitFullscreenTips": "Press ESC to exit fullscreen mode",
 })
 
 export const dashboardSaveMsg = i18n("dashboardSave", {
@@ -232,4 +240,18 @@ export const dashboardSettingMsg = i18n("dashboardSetting", {
   "saveWarnContent": "Before submitting the meta data above, please save your Dashboard first, if it has any changes",
   "saveAlertTitle": "Submit dashboard meta data",
   "saveAlertContent": " Are you sure to submit? If submit success, page will be reloaded."
+})
+
+export const timePickerMsg = i18n("timePicker", {
+  "fromInvalid": "format of from is invalid'",
+  "toInvalid": "format of to is invalid",
+  "selectTime": "Select a date range",
+  "customTime": "Custom time range",
+  "from": "From",
+  "to": "To",
+  "apply": "Apply time range",
+  "quickSelect": "Quick select",
+  "lastMinutes": params("Last {name} minutes"),
+  "lastHours": params("Last {name} hours"),
+  "lastDays": params("Last {name} days"),
 })

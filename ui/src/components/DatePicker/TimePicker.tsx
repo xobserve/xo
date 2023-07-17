@@ -1,4 +1,5 @@
 import { Box, Button, Center, ChakraProvider, Flex, HStack, Input, Text, VStack } from '@chakra-ui/react'
+import { useStore } from '@nanostores/react'
 import {
     Calendar,
     CalendarDefaultTheme,
@@ -14,8 +15,9 @@ import {
 import { subMinutes } from 'date-fns'
 import { cloneDeep, includes, isDate, isEmpty } from 'lodash'
 import moment from 'moment'
-import React, { useState } from 'react'
+import React, { useMemo, useState } from 'react'
 import { FaCalendarAlt, FaTimes } from 'react-icons/fa'
+import { timePickerMsg } from 'src/i18n/locales/en'
 import { systemDateFormats, TimeRange } from 'types/time'
 import storage from 'utils/localStorage'
 
@@ -48,7 +50,7 @@ export const getInitTimeRange = () => {
 }
 
 const TimePicker = ({ onClose, onTimeChange }: Props) => {
-
+    const t1 = useStore(timePickerMsg)
     const [range, setRange] = useState<TimeRange>(getInitTimeRange())
     const [tempRange, setTempRange] = useState<TimeRange>(getInitTimeRange())
     const [error, setError] = useState({ start: null, end: null })
@@ -90,10 +92,10 @@ const TimePicker = ({ onClose, onTimeChange }: Props) => {
         const err = { start: null, end: null }
         const r = convertRawToRange(from, to)
         if (!r.from) {
-            err.start = 'format of from is invalid'
+            err.start = t1.fromInvalid
         }
         if (!r.to) {
-            err.end = 'format of to is invalid'
+            err.end = t1.toInvalid
         }
         tempRange.startRaw = from
         tempRange.endRaw = to
@@ -113,10 +115,10 @@ const TimePicker = ({ onClose, onTimeChange }: Props) => {
             setRange(tempRange)
         } else {
             if (isEmpty(r.from) || !r.from._isValid) {
-                err.start = 'format of from is invalid'
+                err.start = t1.fromInvalid
             }
             if (isEmpty(r.to) || !r.to._isValid) {
-                err.end = 'format of to is invalid'
+                err.end = t1.toInvalid
             }
         }
 
@@ -129,13 +131,57 @@ const TimePicker = ({ onClose, onTimeChange }: Props) => {
         onClose()
     }
 
+    const quickOptions = useMemo(() => [{
+        label: t1.lastMinutes({name: "5"}),
+        value: 5,
+        raw: 'now-5m'
+    },
+    {
+        label:t1.lastMinutes({name: "15"}),
+        value: 15,
+        raw: 'now-15m'
+    }, {
+        label:t1.lastMinutes({name: "30"}),
+        value: 30,
+        raw: 'now-30m'
+    }, {
+        label:t1.lastHours({name: "1"}),
+        value: 60,
+        raw: 'now-1h'
+    }, {
+        label: t1.lastHours({name: "3"}),
+        value: 3 * 60,
+        raw: 'now-3h'
+    
+    }, {
+        label:t1.lastHours({name: "12"}),
+        value: 12 * 60,
+        raw: 'now-12h'
+    }, {
+        label:t1.lastDays({name: "1"}),
+        value: 24 * 60,
+        raw: 'now-1d'
+    }, {
+        label: t1.lastDays({name: "2"}),
+        value: 2 * 24 * 60,
+        raw: 'now-2d'
+    }, {
+        label: t1.lastDays({name: "7"}),
+        value: 7 * 24 * 60,
+        raw: 'now-7d'
+    }, {
+        label: t1.lastDays({name: "30"}),
+        value: 30 * 24 * 60,
+        raw: 'now-30d'
+    }],[t1])
+
     return (
         <>
             {tempRange && <HStack alignItems="top" spacing="6">
                 {displayCalender &&
                     <Box>
                         <Flex justifyContent="space-between" alignItems="center" fontSize="lg" mb="2">
-                            <Text>Select a date range</Text>
+                            <Text>{t1.selectTime}</Text>
                             <FaTimes cursor="pointer" onClick={() => setDisplayCalender(false)} />
                         </Flex>
                         <ChakraProvider theme={CalendarDefaultTheme}>
@@ -159,9 +205,9 @@ const TimePicker = ({ onClose, onTimeChange }: Props) => {
                     </Box>
                 }
                 <VStack alignItems="left" spacing={4}>
-                    <Text>Custom time range</Text>
+                    <Text>{t1.customTime}</Text>
                     <Box>
-                        <Text size="sm">From</Text>
+                        <Text size="sm">{t1.from}</Text>
                         <HStack>
                             <Input value={tempRange.startRaw} onChange={e => onRangeChange(e.currentTarget.value, tempRange.endRaw)} disabled={tempRange.startRaw.startsWith('now')} />
                             <FaCalendarAlt cursor="pointer" onClick={() => setDisplayCalender(!displayCalender)} />
@@ -169,17 +215,17 @@ const TimePicker = ({ onClose, onTimeChange }: Props) => {
                         {error.start && <Text mt="1" fontSize="sm" color="red">{error.start}</Text>}
                     </Box>
                     <Box>
-                        <Text size="sm">To</Text>
+                        <Text size="sm">{t1.to}</Text>
                         <HStack>
                             <Input value={tempRange.endRaw} onChange={e => onRangeChange(tempRange.startRaw, e.currentTarget.value)} disabled={tempRange.endRaw.startsWith('now')} />
                             <FaCalendarAlt cursor="pointer" onClick={() => setDisplayCalender(!displayCalender)} />
                         </HStack>
                         {error.end && <Text mt="1" fontSize="sm" color="red">{error.end}</Text>}
                     </Box>
-                    <Button onClick={() => applyTimeRange(range)}>Apply time range</Button>
+                    <Button onClick={() => applyTimeRange(range)}>{t1.apply}</Button>
                 </VStack>
                 <Box p="2">
-                    <Center><Text>Quick select</Text></Center>
+                    <Center><Text>{t1.quickSelect}</Text></Center>
                     <VStack
                         spacing={4}
                         p={4}
@@ -206,49 +252,7 @@ const TimePicker = ({ onClose, onTimeChange }: Props) => {
 export default TimePicker
 
 
-const quickOptions = [{
-    label: "Last 5 minutes",
-    value: 5,
-    raw: 'now-5m'
-},
-{
-    label: "Last 15 minutes",
-    value: 15,
-    raw: 'now-15m'
-}, {
-    label: "Last 30 minutes",
-    value: 30,
-    raw: 'now-30m'
-}, {
-    label: "Last 1 hour",
-    value: 60,
-    raw: 'now-1h'
-}, {
-    label: "Last 3 hours",
-    value: 3 * 60,
-    raw: 'now-3h'
 
-}, {
-    label: "Last 12 hours",
-    value: 12 * 60,
-    raw: 'now-12h'
-}, {
-    label: "Last 1 day",
-    value: 24 * 60,
-    raw: 'now-1d'
-}, {
-    label: "Last 2 days",
-    value: 2 * 24 * 60,
-    raw: 'now-2d'
-}, {
-    label: "Last 7 days",
-    value: 7 * 24 * 60,
-    raw: 'now-7d'
-}, {
-    label: "Last 30 days",
-    value: 30 * 24 * 60,
-    raw: 'now-30d'
-}]
 
 
 export const convertRawToRange = (from0, to0) => {

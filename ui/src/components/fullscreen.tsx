@@ -7,8 +7,11 @@ import { FullscreenKey } from "src/data/storage-keys";
 import { dispatch } from "use-bus";
 import storage from "utils/localStorage";
 import React from "react"
+import { useStore } from "@nanostores/react";
+import { dashboardMsg } from "src/i18n/locales/en";
 
 const Fullscreen = () => {
+    const t1 = useStore(dashboardMsg)
     const toast = useToast()
     const [fullscreen, setFullscreen] = useState(storage.get(FullscreenKey)??false)
 
@@ -17,7 +20,7 @@ const Fullscreen = () => {
     useEffect(() => {
         if (fullscreen) {
             toast({
-                description: "Press ESC to exit fullscreen mode",
+                description: t1.exitFullscreenTips,
                 status: "success",
                 duration: 3000,
                 isClosable: true,
@@ -40,7 +43,7 @@ const Fullscreen = () => {
     }
 
     return (
-        <Tooltip label="enter fullscreen mode"><Box onClick={() =>onFullscreenChange(false)} cursor="pointer"><FaTv /></Box></Tooltip>
+        <Tooltip label={t1.fullscreenTips}><Box onClick={() =>onFullscreenChange(false)} cursor="pointer"><FaTv /></Box></Tooltip>
     )
 }
 

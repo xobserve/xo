@@ -20,12 +20,15 @@ import Fullscreen from "components/Fullscreen"
 import useFullscreen from "hooks/useFullscreen"
 import DatePicker from "components/DatePicker/DatePicker"
 import { useNavigate } from "react-router-dom"
+import { useStore } from "@nanostores/react";
+import { dashboardMsg } from "src/i18n/locales/en";
 
 interface HeaderProps {
     dashboard: Dashboard
     onChange: any
 }
 const DashboardHeader = memo(({ dashboard, onChange }: HeaderProps) => { 
+    const t1 = useStore(dashboardMsg)
     const navigate = useNavigate()   
     const [variablesChanged, setVariablesChanged] = useState(0)
     const [refresh, setRefresh] = useState(0)
@@ -78,7 +81,7 @@ const DashboardHeader = memo(({ dashboard, onChange }: HeaderProps) => {
                 <>
                     <Flex justifyContent="space-between" >
                         <HStack textStyle="title">
-                            <Tooltip label="the team which current dashboard belongs to"><Box cursor="pointer" onClick={() => navigate(`${ReserveUrls.Config}/team/${team.id}/members`)}>{team?.name}</Box></Tooltip>
+                            <Tooltip label={t1.headerTeamTips}><Box cursor="pointer" onClick={() => navigate(`${ReserveUrls.Config}/team/${team.id}/members`)}>{team?.name}</Box></Tooltip>
                             <Box>/</Box>
                             <Box>{dashboard.title}</Box>
                         </HStack>
@@ -90,8 +93,8 @@ const DashboardHeader = memo(({ dashboard, onChange }: HeaderProps) => {
                                 {dashboard && <DashboardSettings dashboard={dashboard} onChange={onChange} />}
                                 <DatePicker showTime/>
                                 <HStack spacing={0}>
-                                    <Tooltip label="refresh just once"><Box onClick={refreshOnce}><IconButton variant="ghost"><MdSync /></IconButton></Box></Tooltip>
-                                    <Tooltip label="refresh with interval"><Select variant="unstyled" value={refresh} onChange={(e) => setRefresh(Number(e.target.value))}>
+                                    <Tooltip label={t1.refreshOnce}><Box onClick={refreshOnce}><IconButton variant="ghost"><MdSync /></IconButton></Box></Tooltip>
+                                    <Tooltip label={t1.refreshInterval}><Select variant="unstyled" value={refresh} onChange={(e) => setRefresh(Number(e.target.value))}>
                                         <option value={0}>OFF</option>
                                         <option value={5}>5s</option>
                                         <option value={10}>10s</option>

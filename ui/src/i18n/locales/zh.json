@@ -63,6 +63,9 @@
     "editItem": "编辑{name}",
     "itemName": "{name}名称"
   },
+  "misc": {
+    "langChanged": "当前语言 - 简体中文"
+  },
   "navigate": {
     "NewDashboard": "新建仪表盘",
     "NewDatasource": "新建数据源",
@@ -157,7 +160,12 @@
     "testDsFailed": "测试失败"
   },
   "dashboard": {
-    "notFound": "仪表盘不存在，有可能 1. 错误的仪表盘 id (url) 2. 你选择了错误的团队左侧菜单"
+    "notFound": "仪表盘不存在，有可能 1. 错误的仪表盘 id (url) 2. 你选择了错误的团队左侧菜单",
+    "headerTeamTips": "当前仪表盘归属的团队",
+    "refreshOnce": "立即刷新仪表盘",
+    "refreshInterval": "定期刷新",
+    "fullscreenTips": "进入全屏模式",
+    "exitFullscreenTips": "按下 ESC 退出全屏模式"
   },
   "dashboardSave": {
     "autoSaveNotAvail": "在编辑图表模式下，自动保存不可用",
@@ -217,5 +225,19 @@
     "saveWarnContent": "修改元数据可以直接覆盖你正在修改的内容，因此为了防止数据丢失，最好先行保存",
     "saveAlertTitle": "提交仪表盘元数据",
     "saveAlertContent": "确定要提交吗？修改成功后，页面将重新载入"
+  },
+
+  "timePicker": {
+    "fromInvalid": "起始时间格式不正确",
+    "toInvalid": "终止时间格式不正确",
+    "selectTime": "选择时间范围",
+    "customTime": "自定义时间",
+    "from": "起始",
+    "to": "终止",
+    "apply": "应用时间范围",
+    "quickSelect": "快速选择",
+    "lastMinutes": "过去 {name} 分钟",
+    "lastHours": "过去 {name} 小时",
+    "lastDays": "过去 {name} 天"
   }
 }
