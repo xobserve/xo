@@ -2,7 +2,7 @@ import {Box, chakra, Flex,  PropsOf} from "@chakra-ui/react"
 
 import React from "react"
 import BackToTop from "components/BackToTop"
-import VerticalNav from "./nav/vertical-nav"
+import Sidebar from "./sidebar/Sidebar"
 
 
 
@@ -20,7 +20,7 @@ function PageContainer(props: PageContainerProps) {
   return (
     <>
       <Flex width="100%"> 
-          <VerticalNav  bg={props.bg} />
+          <Sidebar  bg={props.bg} />
           {children}
       </Flex>
       {/* {showCopyright && <FooterCopyright />} */}
