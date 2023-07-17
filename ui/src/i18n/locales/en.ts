@@ -382,3 +382,21 @@ export const nodeGraphPanelMsg = i18n("nodeGraphPanel", {
   "quadratic": "Quadratic",
   "polyline": "Polyline",
 })
+
+export const echartsPanelMsg = i18n("echartsPanel", {
+  "about": "About Echarts",
+  "aboutContent1": "Apache ECharts is a free, powerful charting and visualization library offering easy ways to add intuitive, interactive, and highly customizable charts to your products",
+  "officialSite": "Official site",
+  "settings": "Echarts settings",
+  "animation": "Animation",
+  "animationTips": "Display chart animation",
+  "allowEmptyData": "Allow empty data pass in",
+  "allowEmptyDataTips": "When we can't read any data from datasource, if this option is disabled, the chart will show 'No Data' and immediatlly returns, if enabled, the chart will show nothing and the empty data will pass to setOptions func. <If you generates data in setOptions function(e.g you are playing an example), you should make this enabled, otherwise leave it disabled>",
+  "setOption": "Set echarts options",
+  "setOptionTips": "Data fetched from datasource will pass to this function, and the return options will directly pass to echarts",
+  "editFunc": "Edit function",
+  "liveEdit": params("Live Edit( fetch data from {name} datasource)"),
+  "regEvents": "Register events function",
+  "regEventsTips": "custom your chart events, e.g mouseclick, mouseover etc",
+  "editRegFunc":"Edit registerEvents function",
+})

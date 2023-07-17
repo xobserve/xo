@@ -358,5 +358,22 @@
     "line": "直线",
     "quadratic": "曲线",
     "polyline": "折线"
+  },
+  "echartsPanel": {
+    "about": "关于 Echarts",
+    "aboutContent1": "Apache ECharts 是一个免费强大的图表可视化工具，可以创建美观、易交互、可扩展性强的各种图表",
+    "officialSite": "官方网址",
+    "settings": "Echarts 设置",
+    "animation": "动画",
+    "animationTips": "播放图表自带的动画",
+    "allowEmptyData": "允许传入空数据",
+    "allowEmptyDataTips": "当你不使用数据源提供的数据，而是在 setOptions 函数中模拟生成数据时，你需要开启此选项；否则请关闭它",
+    "setOption": "设置 echarts 的 options",
+    "setOptionTips": "从数据源中获取的数据将直接传给该函数，此函数处理完成后返回的 options 也将直接传给 echart 实例进行渲染",
+    "editFunc": "编辑函数",
+    "liveEdit": "实时编辑( 从 {name} 数据源加载数据 )",
+    "regEvents": "注册事件函数",
+    "regEventsTips": "定制你的图表事件，例如：鼠标点击，鼠标悬浮等",
+    "editRegFunc":"编辑 registerEvents 函数"
   }
 }

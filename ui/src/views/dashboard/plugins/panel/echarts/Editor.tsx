@@ -13,22 +13,25 @@ import { EchartsComponent } from "./Echarts"
 import * as echarts from 'echarts';
 import { ColorModeSwitcher } from "components/ColorModeSwitcher"
 import React from "react";
+import { useStore } from "@nanostores/react"
+import { commonMsg, echartsPanelMsg } from "src/i18n/locales/en"
 
 const EchartsPanelEditor = ({ panel, onChange,data }: PanelEditorProps) => {
+    const t1 = useStore(echartsPanelMsg)
     return (
         <>
-            <PanelAccordion title="About Echarts">
-                <Text fontSize="sm">Apache ECharts is a free, powerful charting and visualization library offering easy ways to add intuitive, interactive, and highly customizable charts to your products. </Text>
-                <Text mt="2" fontSize="sm">Official site: https://echarts.apache.org/en/index.html</Text>
+            <PanelAccordion title={t1.about}>
+                <Text fontSize="sm">{t1.aboutContent1} </Text>
+                <Text mt="2" fontSize="sm">{t1.officialSite}: https://echarts.apache.org/en/index.html</Text>
             </PanelAccordion>
-            <PanelAccordion title="Echarts setting">
-                <PanelEditItem title="Animation" desc="display chart animation">
+            <PanelAccordion title={t1.settings}>
+                <PanelEditItem title={t1.animation} desc={t1.animationTips}>
                     <Switch defaultChecked={panel.plugins.echarts.animation} onChange={e => onChange((panel: Panel) => {
                         panel.plugins.echarts.animation = e.currentTarget.checked
                     })} />
                 </PanelEditItem>
 
-                <PanelEditItem title="Allow empty data pass in" desc="When we can't read any data from datasource, if this option is disabled, the chart will show 'No Data' and immediatlly returns, if enabled, the chart will show nothing and the empty data will pass to setOptions func. <If you generates data in setOptions function(e.g you are playing an example), you should make this enabled, otherwise leave it disabled>">
+                <PanelEditItem title={t1.allowEmptyData} desc={t1.allowEmptyDataTips}>
                     <Switch isChecked={panel.plugins.echarts.allowEmptyData} onChange={(e) => onChange((panel: Panel) => {
                         panel.plugins.echarts.allowEmptyData = e.target.checked
                     })} />
@@ -55,6 +58,8 @@ export default EchartsPanelEditor
 
 
 const SetOptions = ({ panel, onChange,data }: PanelEditorProps) => {
+    const t = useStore(commonMsg)
+    const t1 = useStore(echartsPanelMsg)
     const { isOpen, onOpen, onClose } = useDisclosure()
     const [temp, setTemp] = useState(panel.plugins.echarts.setOptionsFunc)
     const onSubmit = () => {
@@ -80,8 +85,8 @@ const SetOptions = ({ panel, onChange,data }: PanelEditorProps) => {
     }
 
     return (<>
-        <PanelEditItem title="Set options function" desc="Data fetched from datasource will pass to this function, and the return options will directly pass to echarts">
-            <Button size="sm" onClick={onOpen}>Edit function</Button>
+        <PanelEditItem title={t1.setOption} desc={t1.setOptionTips}>
+            <Button size="sm" onClick={onOpen}>{t1.editFunc}</Button>
         </PanelEditItem>
         <Modal isOpen={isOpen} onClose={onClose} size="full">
             <ModalOverlay />
@@ -89,11 +94,11 @@ const SetOptions = ({ panel, onChange,data }: PanelEditorProps) => {
 
                 <ModalBody pt="2" pb="0" px="0">
                     <Flex alignItems="center" justifyContent="space-between" height="40px" pl="5">
-                        <Text textStyle="subTitle"> Live Edit( fetch data from {panel.datasource.type} datasource)</Text>
+                        <Text textStyle="subTitle"> {t1.liveEdit({name:panel.datasource.type })} </Text>
                         <HStack>
                             <ColorModeSwitcher />
-                            <Button size="sm" onClick={onSubmit} >Submit</Button>
-                            <Button size="sm" onClick={onClose} variant="outline">Cancel</Button>
+                            <Button size="sm" onClick={onSubmit} >{t.submit}</Button>
+                            <Button size="sm" onClick={onClose} variant="outline">{t.cancel}</Button>
                         </HStack>
                     </Flex>
                     <HStack alignItems="top" height="calc(100vh - 50px)">
@@ -125,6 +130,9 @@ const SetOptions = ({ panel, onChange,data }: PanelEditorProps) => {
 
 
 const RegisterEvents = ({ panel, onChange }: PanelEditorProps) => {
+    const t = useStore(commonMsg)
+    const t1 = useStore(echartsPanelMsg)
+
     const { isOpen, onOpen, onClose } = useDisclosure()
     const [temp, setTemp] = useState(panel.plugins.echarts.registerEventsFunc)
 
@@ -134,19 +142,19 @@ const RegisterEvents = ({ panel, onChange }: PanelEditorProps) => {
     }
 
     return (<>
-        <PanelEditItem title="Register events function" desc="custom your chart events, e.g mouseclick, mouseover etc">
-            <Button size="sm" onClick={onOpen}>Edit function</Button>
+        <PanelEditItem title={t1.regEvents} desc={t1.regEventsTips}>
+            <Button size="sm" onClick={onOpen}>{t1.editFunc}</Button>
         </PanelEditItem>
         <Modal isOpen={isOpen} onClose={onClose} size="full">
             <ModalOverlay />
             <ModalContent>
                 <ModalHeader py="2">
-                    Edit registerEvents function
+                    {t1.editRegFunc}
                     <ModalCloseButton />
                 </ModalHeader>
                 <ModalBody pt="2" pb="0" px="0">
                     <Box height="400px"><CodeEditor value={temp} onChange={v => setTemp(v)} /></Box>
-                    <Button onClick={onSubmit} width="100%">Submit</Button>
+                    <Button onClick={onSubmit} width="100%">{t.submit}</Button>
                 </ModalBody>
 
             </ModalContent>

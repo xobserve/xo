@@ -49,7 +49,7 @@ export const initPanelPlugins: PanelPlugins = {
 
     [PanelType.Text]: {
         disableDatasource: true,
-        md: `#Welcome to Starship\n This is a new panel\n You can edit it by clicking the edit button on the top title\n ###Have fun!`,
+        md: `#Welcome to Datav\n This is a new panel\n You can edit it by clicking the edit button on the top title\n ###Have fun!`,
         justifyContent: "left",
         alignItems: "top",
         fontSize: '1.2rem',
