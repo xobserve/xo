@@ -5,6 +5,8 @@ import { Dashboard } from "types/dashboard"
 import BorderSelect from "components/largescreen/components/BorderSelect"
 import FormItem from "components/form/Item"
 import React from "react";
+import { useStore } from "@nanostores/react"
+import { dashboardSettingMsg } from "src/i18n/locales/en"
 
 interface Props {
     dashboard: Dashboard
@@ -12,18 +14,19 @@ interface Props {
 } 
 
 const StyleSettings = ({ dashboard, onChange }: Props) => {
+    const t1 = useStore(dashboardSettingMsg)
     return (<Form sx={{
         '.form-item-label': {
             width: '200px'
         }
     }}>
-        <FormItem title="Background" desc="Background color or image of the dashboard" labelWidth="100%">
+        <FormItem title={t1.background} desc={t1.backgroundTips} labelWidth="100%">
             <EditorInputItem value={dashboard.data.styles?.bg} onChange={(v) => onChange(draft => { draft.data.styles.bg = v })} />
         </FormItem>
-        <FormItem title="Enable background" desc="Whether using the background image set above">
+        <FormItem title={t1.enableBg} desc={t1.enableBgTips}>
             <Switch defaultChecked={dashboard.data.styles?.bgEnabled} onChange={(e) => onChange(draft => { draft.data.styles.bgEnabled = e.currentTarget.checked })} />
         </FormItem>
-        <FormItem title="Dashboard border" desc="Select a cool border for your dashboard">
+        <FormItem title={t1.dashBorder} desc={t1.dashBorderTips}>
             <BorderSelect value={dashboard.data.styles?.border} onChange={v => {
                 onChange(draft => {
                     draft.data.styles.border = v

@@ -217,4 +217,12 @@ export const dashboardSettingMsg = i18n("dashboardSetting", {
   "autoSave": "Enable auto save",
   "autoSaveTips": "Dashboard will be auto saved at intervals, you can find old versions in save history list",
   "autoSaveInterval": "Auto save interval(seconds)",
+
+  "background": "Background",
+  "backgroundTips": "Set dashboard background color or image",
+  "enableBg": "Enable background",
+  "enableBgTips": "Whether using the background image set above",
+  "dashBorder":  "Dashboard border",
+  "dashBorderTips": "Select a cool border for your dashboard",
+  
 })
