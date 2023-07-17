@@ -19,8 +19,12 @@ import { FaRegSun, FaUserAlt, FaSignOutAlt, FaStar, FaSignInAlt, FaFont } from "
 import { isAdmin } from "types/role"
 import { Link, useLocation, useNavigate } from "react-router-dom"
 import { localeSetting,locale } from "src/i18n/i18n"
+import { useStore } from "@nanostores/react"
+import { commonMsg, sidebarMsg } from "src/i18n/locales/en"
 
 const UserMenu = ({ fontSize = "1.2rem" }) => {
+    const t = useStore(commonMsg)
+    const t1 = useStore(sidebarMsg)
     const { session, logout } = useSession()
 
     const toast = useToast()
@@ -64,10 +68,10 @@ const UserMenu = ({ fontSize = "1.2rem" }) => {
                             <chakra.span ml="2" layerStyle="textSecondary">{session.user.username}</chakra.span>
                         </MenuItem>
                         <MenuDivider />
-                        {isAdmin(session.user.role) && <><Link to={`/admin`}><MenuItem icon={<FaStar fontSize="1rem" />} >Admin Panel</MenuItem></Link><MenuDivider /></>}
-                        <MenuItem onClick={() => changeLang()} icon={<FaFont fontSize="1rem" />}>Current Lang - {locale.get() == "en" ? "English" : "Chinese"}</MenuItem>
-                        <Link to={`/account/setting`}><MenuItem icon={<FaRegSun fontSize="1rem" />}>Account Setting</MenuItem></Link>
-                        <MenuItem onClick={() => logout()} icon={<FaSignOutAlt fontSize="1rem" />}>Log out</MenuItem>
+                        {isAdmin(session.user.role) && <><Link to={`/admin`}><MenuItem icon={<FaStar fontSize="1rem" />} >{t1.adminPanel}</MenuItem></Link><MenuDivider /></>}
+                        <MenuItem onClick={() => changeLang()} icon={<FaFont fontSize="1rem" />}>{t1.currentLang} - {locale.get() == "en" ? "English" : "简体中文"}</MenuItem>
+                        <Link to={`/account/setting`}><MenuItem icon={<FaRegSun fontSize="1rem" />}>{t1.accountSetting}</MenuItem></Link>
+                        <MenuItem onClick={() => logout()} icon={<FaSignOutAlt fontSize="1rem" />}>{t.logout}</MenuItem>
 
                     </MenuList>
                 </Menu> :

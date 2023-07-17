@@ -82,6 +82,7 @@
     "error": "错误",
     "compore": "比较",
     "duration": "耗时",
+    "alert": "告警",
     "isReqiiured": "{name}是必填项",
     "isInvalid": "{name}不正确",
     "isAdded": "{name}添加成功!",
@@ -96,6 +97,14 @@
   },
   "misc": {
     "langChanged": "当前语言 - 简体中文"
+  },
+  "sidebar": {
+    "search": "探索仪表盘",
+    "selectSidemenu": "选择侧菜单",
+    "themeChange": "深浅色主题",
+    "accountSetting": "个人设置",
+    "adminPanel": "管理员面板",
+    "currentLang": "当前语言"
   },
   "navigate": {
     "NewDashboard": "新建仪表盘",

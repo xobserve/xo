@@ -91,6 +91,7 @@ export const commonMsg = i18n("common", {
   "error": "Error",
   "compore": "Compare",
   "duration": "Duration",
+  "alert": "Alert",
   "inputTips": params("Enter {name}.."),
   "isReqiiured": params("{name} is required"),
   "isInvalid": params("{name} is invalid"),
@@ -107,6 +108,16 @@ export const commonMsg = i18n("common", {
 
 export const miscMsg = i18n("misc", {
 })
+
+export const sidebarMsg = i18n("sidebar", {
+    "search": "Search Dashboards",
+    "selectSidemenu": "Select Sidemenu",
+    "themeChange": "Change Theme",
+    "accountSetting": "Account Setting",
+    "adminPanel": "Admin Panel",
+    "currentLang": "Current Lang",
+})
+
 
 export const navigateMsg = i18n("navigate", {
   "NewDashboard": "New Dashboard",

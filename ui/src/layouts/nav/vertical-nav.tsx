@@ -38,6 +38,8 @@ import { SidemenuMinimodeKey } from "src/data/storage-keys"
 import useFullscreen from "hooks/useFullscreen"
 import { config } from "src/data/configs/config"
 import { Link, useLocation } from "react-router-dom"
+import { useStore } from "@nanostores/react"
+import { commonMsg, sidebarMsg } from "src/i18n/locales/en"
 
 
 
@@ -47,6 +49,8 @@ interface Props {
 
 
 const VerticalNav = (props: Props) => {
+  const t = useStore(commonMsg)
+  const t1 = useStore(sidebarMsg)
   const { session } = useSession()
   const ref = React.useRef<HTMLHeadingElement>()
 
@@ -145,14 +149,14 @@ const VerticalNav = (props: Props) => {
               color={useColorModeValue("gray.500", "gray.400")}
               alignItems="left"
             >
-              <NavItem asPath={asPath} url={`${ReserveUrls.New}/dashboard`} path={ReserveUrls.New} icon="FaPlus" title="新建" miniMode={miniMode} showTooltip />
-              <NavItem asPath={asPath} url={`${ReserveUrls.Config}/datasources`} path={ReserveUrls.Config} icon="FaCog" title="配置管理" miniMode={miniMode} showTooltip />
-              <NavItem asPath={asPath} url={`${ReserveUrls.Alerts}`} path={ReserveUrls.Alerts} icon="FaBell" title="告警平台" miniMode={miniMode} showTooltip />
-              <NavItem asPath={asPath} url={`${ReserveUrls.Search}`} path={ReserveUrls.Search} icon="FaSearch" title="探索仪表盘" miniMode={miniMode} showTooltip />
+              <NavItem asPath={asPath} url={`${ReserveUrls.New}/dashboard`} path={ReserveUrls.New} icon="FaPlus" title={t.new} miniMode={miniMode} showTooltip />
+              <NavItem asPath={asPath} url={`${ReserveUrls.Config}/datasources`} path={ReserveUrls.Config} icon="FaCog" title={t.configuration} miniMode={miniMode} showTooltip />
+              <NavItem asPath={asPath} url={`${ReserveUrls.Alerts}`} path={ReserveUrls.Alerts} icon="FaBell" title={t.alert} miniMode={miniMode} showTooltip />
+              <NavItem asPath={asPath} url={`${ReserveUrls.Search}`} path={ReserveUrls.Search} icon="FaSearch" title={t1.search} miniMode={miniMode} showTooltip />
               <Divider />
               <HStack spacing="0">
                 <UserSidemenus />
-                {!miniMode && <Text fontSize="0.9rem">选择侧菜单</Text>}
+                {!miniMode && <Text fontSize="0.9rem">{t1.selectSidemenu}</Text>}
               </HStack>
 
               <HStack spacing="0">
@@ -169,17 +173,17 @@ const VerticalNav = (props: Props) => {
                     icon={<Icons.FaGithub />}
                   />
                 </Link>
-                {!miniMode && <Text fontSize="0.9rem">Github地址</Text>}
+                {!miniMode && <Text fontSize="0.9rem">Github</Text>}
               </HStack>
 
               <HStack spacing="0">
                 <ColorModeSwitcher fontSize="1.2rem" />
-                {!miniMode && <Text fontSize="0.9rem">深浅色主题</Text>}
+                {!miniMode && <Text fontSize="0.9rem">{t1.themeChange}</Text>}
               </HStack>
 
               <HStack spacing="0">
                 <UserMenu />
-                {!miniMode && <Text fontSize="0.9rem">{session ? '个人设置' : '登录'}</Text>}
+                {!miniMode && <Text fontSize="0.9rem">{session ? t1.accountSetting : t.login}</Text>}
               </HStack>
 
             </VStack>
