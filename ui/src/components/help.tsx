@@ -10,7 +10,7 @@ interface Props {
     iconSize?: string
 }
 
-const Help = memo(({ data,size="sm",iconSize="0.9rem" }: Props) => {
+const HelpComponent = memo(({ data,size="sm",iconSize="0.9rem" }: Props) => {
     const { isOpen, onOpen, onClose } = useDisclosure()
     return (<>
         <Tooltip label="click to view the help doc"><Box opacity="0.7" position="absolute" right="10px" top="8px" zIndex="1000" cursor="pointer" onClick={onOpen} fontSize={iconSize}><FaQuestion /></Box></Tooltip>
@@ -45,4 +45,4 @@ const Help = memo(({ data,size="sm",iconSize="0.9rem" }: Props) => {
     </>)
 })
 
-export default Help
+export default HelpComponent
