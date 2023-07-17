@@ -10,46 +10,50 @@ import { PanelForceRebuildEvent } from "src/data/bus-events"
 import PopoverSelect from "components/select/PopoverSelect"
 import { ValueCalculationType } from "types/value"
 import React from "react";
+import { commonMsg, graphPanelMsg } from "src/i18n/locales/en"
+import { useStore } from "@nanostores/react"
 
 const GraphPanelEditor = ({ panel, onChange }: PanelEditorProps) => {
+    const t = useStore(commonMsg)
+    const t1 = useStore(graphPanelMsg)
     return (<>
         <PanelAccordion title="Tooltip">
-            <PanelEditItem title="Tooltip mode">
+            <PanelEditItem title={t.mode}>
                 <RadionButtons options={[{ label: "Single", value: "single" }, { label: "All", value: "all" }, { label: "Hidden", value: "hidden" }]} value={panel.plugins.graph.tooltip.mode} onChange={v => onChange((panel: Panel) => {
                     panel.plugins.graph.tooltip.mode = v
                 })} />
             </PanelEditItem>
         </PanelAccordion>
         <PanelAccordion title="Legend">
-            <PanelEditItem title="Legend mode">
+            <PanelEditItem title={t.mode}>
                 <RadionButtons options={[{ label: "Table", value: "table" }, { label: "Hidden", value: "hidden" }]} value={panel.plugins.graph.legend.mode} onChange={v => onChange((panel: Panel) => {
                     panel.plugins.graph.legend.mode = v
                 })} />
 
             </PanelEditItem>
             {panel.plugins.graph.legend.mode != 'hidden' && <>
-                <PanelEditItem title="Legend placement">
+                <PanelEditItem title={t1.placement}>
                     <RadionButtons options={[{ label: "Bottom", value: "bottom" }, { label: "Right", value: "right" }]} value={panel.plugins.graph.legend.placement} onChange={v => onChange((panel: Panel) => {
                         panel.plugins.graph.legend.placement = v
                     })} />
                 </PanelEditItem>
-                {panel.plugins.graph.legend.placement == "right" && <PanelEditItem title="Width">
+                {panel.plugins.graph.legend.placement == "right" && <PanelEditItem title={t1.width}>
                     <EditorNumberItem value={panel.plugins.graph.legend.width} min={100} step={50} onChange={v => onChange((panel: Panel) => { panel.plugins.graph.legend.width = (v <= 100 ? 100 : v) })} />
                 </PanelEditItem>}
-                {panel.plugins.graph.legend.placement == "right" && <PanelEditItem title="Name width" desc="width of legend name, support 'full' or any number">
+                {panel.plugins.graph.legend.placement == "right" && <PanelEditItem title={t1.nameWidth} desc={t1.nameWidthTips}>
                     <EditorInputItem value={panel.plugins.graph.legend.nameWidth} onChange={v => onChange((panel: Panel) => {
                         panel.plugins.graph.legend.nameWidth = v
                     })} />
                 </PanelEditItem>}
-                <PanelEditItem title="Values" desc="caculate values for legend to show">
+                <PanelEditItem title={t1.values} desc={t1.valuesTips}>
                     <PopoverSelect value={panel.plugins.graph.legend.valueCalcs} isMulti options={Object.keys(ValueCalculationType).map(k => ({ label: k, value: k }))} onChange={v => onChange((panel: Panel) => {
                         panel.plugins.graph.legend.valueCalcs = v as any
                     })} />
                 </PanelEditItem>
             </>}
         </PanelAccordion>
-        <PanelAccordion title="Graph styles">
-            <PanelEditItem title="Style">
+        <PanelAccordion title={t1.graphStyles}>
+            <PanelEditItem title={t.type}>
                 <RadionButtons options={[{ label: "Lines", value: "lines" }, { label: "Bars", value: "bars" }, { label: "points", value: "points" }]} value={panel.plugins.graph.styles.style} onChange={v => onChange((panel: Panel) => {
                     panel.plugins.graph.styles.style = v
                 })} />
@@ -57,17 +61,17 @@ const GraphPanelEditor = ({ panel, onChange }: PanelEditorProps) => {
 
             {panel.plugins.graph.styles.style != "points" &&
                 <>
-                    <PanelEditItem title="Line width">
+                    <PanelEditItem title={t1.lineWidth}>
                         <EditorSliderItem value={panel.plugins.graph.styles.lineWidth} min={0} max={10} step={1} onChange={v => onChange((panel: Panel) => {
                             panel.plugins.graph.styles.lineWidth = v
                         })} />
                     </PanelEditItem>
-                    <PanelEditItem title="Fill gradient mode">
+                    <PanelEditItem title={t1.gradient}>
                         <RadionButtons options={[{ label: "None", value: "none" }, { label: "Opacity", value: "opacity" }]} value={panel.plugins.graph.styles.gradientMode} onChange={v => onChange((panel: Panel) => {
                             panel.plugins.graph.styles.gradientMode = v
                         })} />
                     </PanelEditItem>
-                    <PanelEditItem title="Fill opacity">
+                    <PanelEditItem title={t1.opacity}>
                         <EditorSliderItem value={panel.plugins.graph.styles.fillOpacity} min={0} max={100} step={1} onChange={v => {
                             onChange((panel: Panel) => {
                                 panel.plugins.graph.styles.fillOpacity = v
@@ -77,38 +81,38 @@ const GraphPanelEditor = ({ panel, onChange }: PanelEditorProps) => {
                         } />
                     </PanelEditItem>
 
-                    <PanelEditItem title="Show points">
+                    <PanelEditItem title={t1.showPoints}>
                         <RadionButtons options={[{ label: "Auto", value: "auto" }, { label: "Always", value: "always" }, { label: "Never", value: "never" }]} value={panel.plugins.graph.styles.showPoints} onChange={v => onChange((panel: Panel) => {
                             panel.plugins.graph.styles.showPoints = v
                         })} />
                     </PanelEditItem>
                 </>}
-            <PanelEditItem title="Point size">
+            <PanelEditItem title={t1.pointSize}>
                 <EditorSliderItem value={panel.plugins.graph.styles.pointSize} min={1} max={20} step={1} onChange={v => onChange((panel: Panel) => {
                     panel.plugins.graph.styles.pointSize = v
                 })} />
             </PanelEditItem>
 
-            <PanelEditItem title="Connect null values">
+            <PanelEditItem title={t1.connectNull}>
                 <Switch defaultChecked={panel.plugins.graph.styles.connectNulls} onChange={e => onChange((panel: Panel) => {
                     panel.plugins.graph.styles.connectNulls = e.currentTarget.checked
                 })} />
             </PanelEditItem>
         </PanelAccordion>
-        <PanelAccordion title="Axis">
-            <PanelEditItem title="Label">
+        <PanelAccordion title={t.axis}>
+            <PanelEditItem title={t.label}>
                 <EditorInputItem value={panel.plugins.graph.axis.label} onChange={v =>
                     onChange((panel: Panel) => {
                         panel.plugins.graph.axis.label = v
                     })
                 } />
             </PanelEditItem>
-            <PanelEditItem title="Show grid">
+            <PanelEditItem title={t1.showGrid}>
                 <RadionButtons options={[{ label: "Show", value: true }, { label: "Hidden", value: false }]} value={panel.plugins.graph.axis.showGrid} onChange={v => onChange((panel: Panel) => {
                     panel.plugins.graph.axis.showGrid = v
                 })} />
             </PanelEditItem>
-            <PanelEditItem title="Scale">
+            <PanelEditItem title={t.scale}>
                 <RadionButtons options={[{ label: "Linear", value: "linear" }, { label: "Log", value: "log" }]} value={panel.plugins.graph.axis.scale} onChange={v => onChange((panel: Panel) => {
                     panel.plugins.graph.axis.scale = v
                 })} />
@@ -121,7 +125,7 @@ const GraphPanelEditor = ({ panel, onChange }: PanelEditorProps) => {
         </PanelAccordion>
 
         <PanelAccordion title="Value">
-            <PanelEditItem title="Unit">
+            <PanelEditItem title={t.unit}>
                 <UnitPicker type={panel.plugins.graph.value.unitsType} value={panel.plugins.graph.value.units} onChange={
                     (units, type) => onChange((panel: Panel) => {
                         panel.plugins.graph.value.units = units
@@ -131,7 +135,7 @@ const GraphPanelEditor = ({ panel, onChange }: PanelEditorProps) => {
                     // onPanelChange(units, type)
                 } />
             </PanelEditItem>
-            <PanelEditItem title="Decimal">
+            <PanelEditItem title={t.decimal}>
                 <EditorNumberItem value={panel.plugins.graph.value.decimal} min={0} max={5} step={1} onChange={v => onChange((panel: Panel) => { panel.plugins.graph.value.decimal = v })} />
             </PanelEditItem>
         </PanelAccordion>

@@ -62,6 +62,12 @@ export const commonMsg = i18n("common", {
   "tags": "Tags",
   "copy": "Copy",
   "remove": "Remove",
+  "mode": "Mode",
+  "label": "Label",
+  "unit": "Unit",
+  "decimal": "Decimal",
+  "axis": "Axis",
+  "scale": "Scale",
   "inputTips": params("Enter {name}.."),
   "isReqiiured": params("{name} is required"),
   "isInvalid": params("{name} is invalid"),
@@ -315,4 +321,23 @@ export const jaegerDsMsg = i18n("jaegerDs", {
   "showServicesTips": "Show services and their relations, you can enter multiple services, sperated with comma, leave empty if you want to show all",
   "queryType": "Query type",
   "serviceTips": "enter a service, support variable"
+})
+
+export const graphPanelMsg = i18n("graphPanel", {
+  "placement": "Placement",
+  "width": "Css width",
+  "nameWidth": "Name width",
+  "nameWidthTips": "width of legend name, support 'full' or any number",
+  "values": "Values",
+  "valuesTips": "caculate values for legend&tooltip to show",
+  "graphStyles": "Graph styles",
+  "lineWidth": "Line width",
+  "gradient": "Fill gradient mode",
+  "opacity": "Fill opacity",
+  "showPoints": "Show points",
+  "pointSize": "Point size",
+  "connectNull": "Connect null values",
+
+  "showGrid": "Show grid",
+
 })

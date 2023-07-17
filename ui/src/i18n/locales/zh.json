@@ -53,6 +53,12 @@
     "tags": "标签",
     "copy": "复制",
     "remove": "移除",
+    "mode": "模式",
+    "label": "标签",
+    "unit": "单位",
+    "decimal": "小数点",
+    "axis": "坐标轴",
+    "scale": "坐标刻度",
     "isReqiiured": "{name}是必填项",
     "isInvalid": "{name}不正确",
     "isAdded": "{name}添加成功!",
@@ -258,7 +264,7 @@
     "maxDataPoints": "最大数据点数",
     "maxDataPointsTips": "每条曲线能渲染的最大数据点数，一般用于计算点与点之间的时间间隔",
     "minInterval": "最小间隔",
-    "minIntervalTips":  "点与点之间的最小时间间隔，推荐设置为写入频率，例如 Prometheus 默认 15 秒采集一次，你可以设置为 15 秒",
+    "minIntervalTips": "点与点之间的最小时间间隔，推荐设置为写入频率，例如 Prometheus 默认 15 秒采集一次，你可以设置为 15 秒",
     "finalInterval": "最终间隔",
     "finalIntervalTips": "最终间隔是根据当前的时间范围、最大点数和最小间隔综合计算出的，它将被发送到数据源并用于最终渲染的图表点间隔，例如 Prometheus 需要的 step 参数就是使用该值",
 
@@ -293,5 +299,22 @@
     "showServicesTips": "显示 services 以及与它们关联的节点，你可以输入多个 services 并用逗号分隔，还可以使用变量，如果想显示所有，留空即可",
     "queryType": "查询类型",
     "serviceTips": "输入 service, 支持变量"
+  },
+
+  "graphPanel": {
+    "placement": "放置位置",
+    "width": "宽度( css width )",
+    "nameWidth": "名称宽度",
+    "nameWidthTips": "legend 名称的 css 宽度，支持使用 'full' 或任意数字作为值",
+    "values": "获取值",
+    "valuesTips": "设定该如何计算以获取 legend 和 tooltip 显示的值",
+    "graphStyles": "图表样式",
+    "lineWidth": "线条宽度",
+    "gradient": "渐变填充",
+    "opacity": "填充不透明度",
+    "showPoints": "显示点",
+    "pointSize": "点大小",
+    "connectNull": "连接空值",
+    "showGrid": "显示网格线"
   }
 }
