@@ -136,10 +136,18 @@ export interface TextPlugin extends DisableDatasource {
 
 export interface TableSettings {
     showHeader: boolean
+    cellSize: "small" | "middle" | "large"
+    tableWidth: number
+    stickyHeader: boolean
+    column: {
+        align: "auto" | "left" | "center" | "right"
+        enableSort: boolean
+        enableFilter: boolean
+    }
+
     globalSearch: boolean
     enablePagination: boolean
-    enableFilter: boolean
-    enableSort: boolean
+   
     onRowClick: string
 }
 

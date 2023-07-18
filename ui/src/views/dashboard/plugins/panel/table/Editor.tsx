@@ -10,7 +10,7 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-import { Alert, Box, Button, Modal, ModalBody, ModalContent, ModalOverlay, NumberDecrementStepper, NumberIncrementStepper, NumberInput, NumberInputField, NumberInputStepper, Switch, Text, Textarea, useDisclosure } from "@chakra-ui/react"
+import { Alert, Box, Button, HStack, Modal, ModalBody, ModalContent, ModalOverlay, NumberDecrementStepper, NumberIncrementStepper, NumberInput, NumberInputField, NumberInputStepper, Switch, Text, Textarea, useDisclosure } from "@chakra-ui/react"
 import PanelAccordion from "src/views/dashboard/edit-panel/Accordion"
 import { EditorInputItem, EditorNumberItem } from "components/editor/EditorItem"
 import PanelEditItem from "src/views/dashboard/edit-panel/PanelEditItem"
@@ -18,44 +18,86 @@ import { Panel, PanelEditorProps } from "types/dashboard"
 import CodeEditor from "components/CodeEditor/CodeEditor"
 import { useState } from "react"
 import React from "react";
+import RadionButtons from "components/RadioButtons"
+import { dispatch } from "use-bus"
+import { PanelForceRebuildEvent } from "src/data/bus-events"
 
 const TablePanelEditor = ({ panel, onChange }: PanelEditorProps) => {
-    return (<PanelAccordion title="Table setting">
-        <PanelEditItem title="Show header" desc="whether display table's header">
-            <Switch isChecked={panel.plugins.table.showHeader} onChange={(e) => onChange((panel:Panel) => {
-                panel.plugins.table.showHeader = e.target.checked
-            })} />
-        </PanelEditItem>
+    return (<>
+        <PanelAccordion title="Table setting">
+            <PanelEditItem title="Show header" desc="whether display table's header">
+                <Switch isChecked={panel.plugins.table.showHeader} onChange={(e) => onChange((panel: Panel) => {
+                    panel.plugins.table.showHeader = e.target.checked
+                })} />
+            </PanelEditItem>
 
-        <PanelEditItem title="Global search" desc="Enable search for this table, you can search everything">
-            <Switch isChecked={panel.plugins.table.globalSearch} onChange={(e) => onChange((panel:Panel) => {
-                panel.plugins.table.globalSearch = e.target.checked
-            })} />
-        </PanelEditItem>
-        <PanelEditItem title="Pagination">
-            <Switch isChecked={panel.plugins.table.enablePagination} onChange={(e) => onChange((panel:Panel) => {
-                panel.plugins.table.enablePagination = e.target.checked
-            })} />
-        </PanelEditItem>
+            <PanelEditItem title="Sticky header" desc="fix header to top, useful for viewing many rows in one page">
+                <Switch isChecked={panel.plugins.table.stickyHeader} onChange={(e) => onChange((panel: Panel) => {
+                    panel.plugins.table.stickyHeader = e.target.checked
+                    dispatch(PanelForceRebuildEvent + panel.id)
+                })} />
+            </PanelEditItem>
 
-        <PanelEditItem title="Column sort" desc="click the column title to sort it by asc or desc">
-            <Switch isChecked={panel.plugins.table.enableSort} onChange={(e) => onChange((panel:Panel) => {
-                panel.plugins.table.enableSort = e.target.checked
-            })} />
-        </PanelEditItem>
+            <PanelEditItem title="Cell size">
+                <RadionButtons options={[{ label: "Small", value: "small" }, { label: "Medium", value: "middle" }, { label: "Large", value: "large" }]} value={panel.plugins.table.cellSize} onChange={v => onChange((panel: Panel) => {
+                    panel.plugins.table.cellSize = v
+                })} />
+            </PanelEditItem>
 
-        <PanelEditItem title="Column filter" desc="filter the column values in table">
-            <Switch isChecked={panel.plugins.table.enableFilter} onChange={(e) => onChange((panel:Panel) => {
-                panel.plugins.table.enableFilter = e.target.checked
-            })} />
-        </PanelEditItem>
+            <PanelEditItem title="Table width">
+                <HStack><EditorNumberItem value={panel.plugins.table.tableWidth} min={100} step={20} onChange={
+                    (v) => onChange((panel: Panel) => {
+                        panel.plugins.table.tableWidth = v
+                    })
+                } /> <Text textStyle="annotation">%</Text></HStack>
+            </PanelEditItem>
+            <PanelEditItem title="Cell size">
+                <RadionButtons options={[{ label: "Small", value: "small" }, { label: "Medium", value: "middle" }, { label: "Large", value: "large" }]} value={panel.plugins.table.cellSize} onChange={v => onChange((panel: Panel) => {
+                    panel.plugins.table.cellSize = v
+                })} />
+            </PanelEditItem>
+            <PanelEditItem title="Pagination">
+                <Switch isChecked={panel.plugins.table.enablePagination} onChange={(e) => onChange((panel: Panel) => {
+                    panel.plugins.table.enablePagination = e.target.checked
+                })} />
+            </PanelEditItem>
+        </PanelAccordion>
+        <PanelAccordion title="Column">
+            <PanelEditItem title="Column alignment">
+                <RadionButtons options={[{ label: "Auto", value: "auto" }, { label: "Left", value: "left" }, { label: "Center", value: "center" },{ label: "Right", value: "right" }]} value={panel.plugins.table.column.align} onChange={v => onChange((panel: Panel) => {
+                    panel.plugins.table.column.align = v
+                })} />
+            </PanelEditItem>
 
-        <OnRowClickEditor panel={panel} onChange={v => {
-            onChange((panel:Panel) => {
-                panel.plugins.table.onRowClick = v
-            })
-        }} />
-    </PanelAccordion>
+            <PanelEditItem title="Column sort" desc="click the column title to sort it by asc or desc">
+                <Switch isChecked={panel.plugins.table.column.enableSort} onChange={(e) => onChange((panel: Panel) => {
+                    panel.plugins.table.column.enableSort = e.target.checked
+                })} />
+            </PanelEditItem>
+
+
+            <PanelEditItem title="Column filter" desc="filter the column values in table">
+                <Switch isChecked={panel.plugins.table.column.enableFilter} onChange={(e) => onChange((panel: Panel) => {
+                    panel.plugins.table.column.enableFilter = e.target.checked
+                })} />
+            </PanelEditItem>
+            {/* <PanelEditItem title="Global search" desc="Enable search for this table, you can search everything">
+                <Switch isChecked={panel.plugins.table.globalSearch} onChange={(e) => onChange((panel: Panel) => {
+                    panel.plugins.table.globalSearch = e.target.checked
+                })} />
+            </PanelEditItem>
+
+
+
+
+
+            <OnRowClickEditor panel={panel} onChange={v => {
+                onChange((panel: Panel) => {
+                    panel.plugins.table.onRowClick = v
+                })
+            }} /> */}
+        </PanelAccordion>
+    </>
     )
 }
 

@@ -14,12 +14,16 @@
 // A query result may contains multiple series and each series corrosponds to a table
 // e.g a query to prometheus usually returns a matrix result, which contains multiple series
 
-import type { ColumnsType } from 'antd/es/table';
+import type { ColumnType } from 'antd/es/table';
 
 export interface TableSeries {
     name: string // series name,
-    columns:  ColumnsType<TableRow>// table columns
+    columns: TableColumn[]// table columns
     rows: TableRow[] // table data, each item in data list is a table row: key is the column name, value is the corresponding row value
+}
+
+export interface TableColumn extends ColumnType<TableRow> {
+    dataIndex: string
 }
 
 export interface TableRow {

@@ -70,10 +70,17 @@ export const initPanelPlugins: PanelPlugins = {
 
     [PanelType.Table]: {
         showHeader: true,
+        cellSize: "middle",
+        stickyHeader: false,
+        tableWidth: 100,
+        column: {
+            align: "auto",
+            enableSort: false,
+            enableFilter: false
+        },
         globalSearch: false,
         enablePagination: false,
-        enableFilter: true,
-        enableSort: true,
+
         onRowClick: onClickCommonEvent
     },
 

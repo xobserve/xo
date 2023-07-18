@@ -131,11 +131,13 @@ export const prometheusToSeriesData = (data: any, query: PanelQuery, range: Time
 export const prometheusToTableData = (rawData: any, query: PanelQuery) => {
     const columns = [{
         title: "Time",
-        dataIndex: "time"
+        dataIndex: "time",
+        key: "time"
     },
      {
         title: "Value",
-        dataIndex: "value"
+        dataIndex: "value",
+        key: "value"
     }]
     const data: TablePluginData = []
 
@@ -148,7 +150,7 @@ export const prometheusToTableData = (rawData: any, query: PanelQuery) => {
         }
         for (const v of m.values) {
             series.rows.push({
-                time: v[0],
+                time: v[0].toString(),
                 value: round(parseFloat(v[1]), 5)
             })
         }

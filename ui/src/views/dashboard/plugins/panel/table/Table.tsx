@@ -20,7 +20,7 @@ import { TablePluginData, TableSeries } from "types/plugins/table"
 import { isEmpty, isFunction, isNumber } from "lodash"
 import { genDynamicFunction } from "utils/dynamicCode"
 import { useNavigate } from "react-router-dom"
-import ComplexTable from "./components/ComplexTable"
+import ComplexTable from "./components/ComplexTable/ComplexTable"
 
 interface TablePanelProps extends PanelProps {
     data: TablePluginData[]
@@ -30,8 +30,7 @@ const TablePanel = (props: TablePanelProps) => {
     if (isEmpty(props.data)) {
         return (<Center height="100%">No data</Center>)
     }
-    const navigate = useNavigate()
-    const toast = useToast()
+
     const [series, setSeries] = React.useState(props.data[0][0].name)
 
     // because panel may have multiple queries, each query return a TablePluginData
