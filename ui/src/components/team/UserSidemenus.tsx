@@ -3,15 +3,18 @@
 // 1. teams which the user is a member of 
 // 2. teams whose sidemenu has been set to public
 
-import { Heading, IconButton, Popover, PopoverBody, PopoverContent, PopoverTrigger,  Text, useToast } from "@chakra-ui/react"
+import { Heading, HStack, IconButton, Popover, PopoverBody, PopoverContent, PopoverTrigger,  Text, useToast } from "@chakra-ui/react"
+import { useStore } from "@nanostores/react"
 import CardSelect, { CardSelectItem } from "components/cards/CardSelect"
 import useSession from "hooks/use-session"
 import React, { useEffect, useState } from "react"
 import { FaAlignLeft } from "react-icons/fa"
+import { sidebarMsg } from "src/i18n/locales/en"
 import { SideMenu } from "types/teams"
 import { requestApi } from "utils/axios/request"
 
-const UserSidemenus = () => {
+const UserSidemenus = ({miniMode}) => {
+    const t1 = useStore(sidebarMsg)
     const toast = useToast()
     const {session} = useSession()
     const [sidemenus, setSidemenus] = useState<SideMenu[]>([])
@@ -44,7 +47,8 @@ const UserSidemenus = () => {
         <>
             <Popover trigger="hover" placement="right">
                 <PopoverTrigger>
-                    <IconButton
+                    <HStack spacing={3} cursor="pointer">
+                    {miniMode ? <IconButton
                         size="md"
                         fontSize="1.3rem"
                         aria-label=""
@@ -52,7 +56,10 @@ const UserSidemenus = () => {
                         color="current"
                         _focus={{ border: null }}
                         icon={<FaAlignLeft />}
-                    />
+                    /> : <FaAlignLeft fontSize="1rem"/>}
+                    {!miniMode && <Text fontSize="1rem">{t1.selectSidemenu}</Text>}
+                    </HStack>
+               
                 </PopoverTrigger>
                 <PopoverContent width="fit-content" minWidth="120px" border="null" pl="1">
 
