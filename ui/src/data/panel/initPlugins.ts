@@ -72,7 +72,6 @@ export const initPanelPlugins: PanelPlugins = {
         showHeader: true,
         globalSearch: false,
         enablePagination: false,
-        pageSize: 10,
         enableFilter: true,
         enableSort: true,
         onRowClick: onClickCommonEvent

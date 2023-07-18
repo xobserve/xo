@@ -10,7 +10,7 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-import { Box, Center, Select, useColorMode, useColorModeValue, useToast } from "@chakra-ui/react"
+import { Box, Center, Flex, Select, useColorMode, useColorModeValue, useToast } from "@chakra-ui/react"
 import { DefaultColumnFilter, NumberRangeColumnFilter } from "components/table/filters"
 import ReactTable from "components/table/Table"
 import { setVariable } from "src/views/variables/Variables"
@@ -20,6 +20,7 @@ import { TablePluginData, TableSeries } from "types/plugins/table"
 import { isEmpty, isFunction, isNumber } from "lodash"
 import { genDynamicFunction } from "utils/dynamicCode"
 import { useNavigate } from "react-router-dom"
+import ComplexTable from "./components/ComplexTable"
 
 interface TablePanelProps extends PanelProps {
     data: TablePluginData[]
@@ -58,46 +59,21 @@ const TablePanel = (props: TablePanelProps) => {
                 if (!exist) {
                     setSeries(s.name)
                 }
-                const columns = []
-                s.columns?.forEach((column, i) => {
-                    if (column.canFilter) {
-                        if (isNumber(s.rows[0][column.Header])) {
-                            columns.push({
-                                Header: column.Header,
-                                accessor: column.Header,
-                                Filter: NumberRangeColumnFilter,
-                                filter: 'between',
-                            })
-                        } else {
-                            columns.push({
-                                Header: column.Header,
-                                accessor: column.Header,
-                                Filter: DefaultColumnFilter,
-                            })
-                        }
-
-                    } else {
-                        columns.push({
-                            Header: column.Header,
-                            accessor: column.Header,
-                        })
-                    }
-                })
-
-                return [columns, s.rows,seriesList]
+                return [s.columns, s.rows,seriesList]
             }
         }
 
         return [[], [], seriesList]
     }, [series, props.data])
 
-    const clickFunc = genDynamicFunction(props.panel.plugins.table.onRowClick);
+    // const clickFunc = genDynamicFunction(props.panel.plugins.table.onRowClick);
 
 
     return (
-        <Box h="100%">
+        <Flex h="100%" justify="space-between" direction="column">
             <Box maxH={series ? "calc(100% - 32px)" : "100%"} overflowY="scroll" sx={cssStyles}>
-                <ReactTable
+                <ComplexTable panelId={props.panel.id} dashboardId={props.dashboardId} columns={tableColumns} data={tableData} options={props.panel.plugins.table} />
+                {/* <ReactTable
                     columns={tableColumns}
                     data={tableData}
                     enableGlobalSearch={props.panel.plugins.table.globalSearch}
@@ -119,7 +95,7 @@ const TablePanel = (props: TablePanelProps) => {
                             clickFunc(row, navigate, (k, v) => setVariable(k, v, toast))
                         }
                     } : null}
-                />
+                /> */}
 
             </Box>
             {series && <Select mt="1" size="sm" onChange={e => setSeries(e.currentTarget.value)}>
@@ -127,7 +103,7 @@ const TablePanel = (props: TablePanelProps) => {
                     return <option key={series} value={series}>{series}</option>
                 })}
             </Select>}
-        </Box>
+        </Flex>
 
     )
 }

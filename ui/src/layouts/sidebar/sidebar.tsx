@@ -109,7 +109,7 @@ const Sidebar = (props: Props) => {
         {...props}
       >
         <chakra.div height="100%">
-          <Flex className="vertical-nav" h="100%" align="center" justify="space-between" direction="column" py={miniMode ? 4 : 3} pl={miniMode ? 0 : 1}>
+          <Flex className="vertical-nav" h="100%" align="center" justify="space-between" direction="column" py={miniMode ? 3 : 3} pl={miniMode ? 0 : 1}>
             <VStack align={miniMode ? "center" : "left"} spacing={2}>
               <Box onClick={onMinimodeChange} position={miniMode? "static" : "absolute"} right={miniMode ? null : 1} top={miniMode ? null : "23px"}>
                 <Logo width={miniMode ? 10 : 4} />
@@ -146,7 +146,7 @@ const Sidebar = (props: Props) => {
                         link.children?.length > 0 && <VStack  mt="2" alignItems="left" spacing="2" pl="2">
                           {link.children.map(subLink =>
                             <Link to={subLink.url} key={subLink.url}> 
-                              <Text maxW="110px" wordBreak="break-all" fontSize="0.9rem" noOfLines={1} color={asPath == subLink.url ? useColorModeValue("brand.500", "brand.200") : useColorModeValue("gray.500", "whiteAlpha.800")}>{subLink.title}</Text>
+                              <Text maxW="110px" wordBreak="break-all" fontSize="0.95rem" noOfLines={1} color={asPath == subLink.url ? useColorModeValue("brand.500", "brand.200") : useColorModeValue("gray.500", "whiteAlpha.800")}>{subLink.title}</Text>
                             </Link>
                           )}
                         </VStack>
@@ -159,7 +159,7 @@ const Sidebar = (props: Props) => {
             </VStack>
 
             <VStack
-              spacing={miniMode ? 0 : 3}
+              spacing={miniMode ? 1 : 3}
               color={useColorModeValue("gray.500", "gray.400")}
               alignItems="left"
             >

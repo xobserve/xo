@@ -37,11 +37,6 @@ const TablePanelEditor = ({ panel, onChange }: PanelEditorProps) => {
                 panel.plugins.table.enablePagination = e.target.checked
             })} />
         </PanelEditItem>
-        {panel.plugins.table.enablePagination && <PanelEditItem title="Page size" desc="set display count for each table page">
-            <EditorNumberItem value={panel.plugins.table.pageSize ?? 10} min={5} max={20} step={5} onChange={(v) => onChange((panel:Panel) => {
-                panel.plugins.table.pageSize = v
-            })} />
-        </PanelEditItem>}
 
         <PanelEditItem title="Column sort" desc="click the column title to sort it by asc or desc">
             <Switch isChecked={panel.plugins.table.enableSort} onChange={(e) => onChange((panel:Panel) => {

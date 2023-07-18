@@ -138,7 +138,6 @@ export interface TableSettings {
     showHeader: boolean
     globalSearch: boolean
     enablePagination: boolean
-    pageSize: number
     enableFilter: boolean
     enableSort: boolean
     onRowClick: string
