@@ -62,7 +62,7 @@ const PanelSettings = ({ panel, onChange }: PanelEditorProps) => {
 
             {/* panel visulization choosing */}
             <PanelAccordion title={t1.visuization} defaultOpen>
-                <SimpleGrid columns={2} spacing="2">
+                <SimpleGrid columns={3} spacing="2">
                     {
                         Object.keys(PanelType).map((key) => {
                             if (PanelType[key] == PanelType.Row) {
@@ -91,7 +91,7 @@ const VisulizationItem = ({ title, imageUrl, onClick = null, selected = false })
             <Center >
                 <Text>{title}</Text>
             </Center>
-            <Image src={imageUrl} height="100px" width="100%" />
+            <Image src={imageUrl} height="70px" width="100%" />
         </Box>
 
     )
