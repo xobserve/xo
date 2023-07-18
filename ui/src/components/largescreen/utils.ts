@@ -1,3 +1,15 @@
+// Copyright 2023 Datav.io Team
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+// http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
 import { toInteger } from "lodash"
 
 export function randomExtend(minNum, maxNum) {
@@ -7,14 +19,7 @@ export function randomExtend(minNum, maxNum) {
       return toInteger(Math.random() * (maxNum - minNum + 1) + minNum)
     }
   }
-  
-  /**
-   * @description                       将函数转成防抖动函数
-   * @param  {Function}                 需要转成防抖动函数的函数
-   * @param  {number}                   延迟时间（毫秒数）
-   * @param  {boolean}                  是否执行第一次
-   * @return {undefined}                无返回值
-   */
+
   export function debounce(fn, delay = 600, runFirstFn = true) {
     let timer = null
   
