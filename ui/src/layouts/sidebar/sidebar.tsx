@@ -96,9 +96,9 @@ const Sidebar = (props: Props) => {
         {...props}
       >
         <chakra.div height="100%">
-          <Flex className="vertical-nav" h="100%" align="center" justify="space-between" direction="column" py={miniMode ? 4 : 2} pl={miniMode ? 0 : 1}>
+          <Flex className="vertical-nav" h="100%" align="center" justify="space-between" direction="column" py={miniMode ? 4 : 3} pl={miniMode ? 0 : 1}>
             <VStack align={miniMode ? "center" : "left"} spacing={2}>
-              <Box onClick={onMinimodeChange} position={miniMode? "static" : "absolute"} right={miniMode ? null : 1} top={miniMode ? null : "19px"}>
+              <Box onClick={onMinimodeChange} position={miniMode? "static" : "absolute"} right={miniMode ? null : 1} top={miniMode ? null : "23px"}>
                 <Logo width={miniMode ? 10 : 4} />
               </Box>
               {sidemenu.length > 0 && asPath && <VStack p="0" pt="2" spacing={miniMode ? 0 : "14px"} fontSize="1rem" alignItems="left" color={useColorModeValue("gray.500", "whiteAlpha.800")}>
@@ -111,7 +111,7 @@ const Sidebar = (props: Props) => {
                           <NavItem asPath={asPath} url={link.children?.length > 0 ? link.children[0].url : link.url} path={link.url} icon={link.icon} title={link.title} miniMode={miniMode} fontSize="1.2rem" />
                         </Box>
                       </PopoverTrigger>
-                      <PopoverContent width="fit-content" minWidth="120px" border="null" pl="1">
+                      <PopoverContent width="fit-content" minWidth="120px" pl="1">
                         <PopoverHeader borderBottomWidth={link.children?.length > 0 ? '1px' : '0px'}>
                           <Link to={link.children?.length > 0 ? link.children[0].url : link.url}>{link.title}</Link>
                         </PopoverHeader>
@@ -119,7 +119,7 @@ const Sidebar = (props: Props) => {
                           <VStack alignItems="left" spacing="3">
                             {link.children.map(subLink =>
                               <Link to={subLink.url} key={subLink.url}>
-                                <Text color={asPath == subLink.url ? useColorModeValue("brand.500", "brand.200") : useColorModeValue("gray.500", "whiteAlpha.800")}>{subLink.title}</Text>
+                                <Text  color={asPath == subLink.url ? useColorModeValue("brand.500", "brand.200") : useColorModeValue("gray.500", "whiteAlpha.800")}>{subLink.title}</Text>
                               </Link>
                             )}
                           </VStack>
@@ -128,7 +128,7 @@ const Sidebar = (props: Props) => {
                     </Popover>
                   </HStack> :
                     <Box>
-                      <NavItem asPath={asPath} url={link.children?.length > 0 ? link.children[0].url : link.url} path={link.url} icon={link.icon} title={link.title} miniMode={false} showIcon={true}  spacing={miniMode ? 2 : 1}/>
+                      <NavItem asPath={asPath} url={link.children?.length > 0 ? link.children[0].url : link.url} path={link.url} icon={link.icon} title={link.title} miniMode={false} showIcon={true}  spacing={miniMode ? 2 : 1} fontWeight={450}/>
                       {
                         link.children?.length > 0 && <VStack  mt="2" alignItems="left" spacing="2" pl="2">
                           {link.children.map(subLink =>
@@ -193,7 +193,7 @@ const Sidebar = (props: Props) => {
 export default Sidebar
 
 
-const NavItem = ({ asPath, path, miniMode, title, icon, url, fontSize = miniMode ? "1.2rem" : "1rem", showTooltip = false, showIcon = true,spacing=2 }) => {
+const NavItem = ({ asPath, path, miniMode, title, icon, url, fontSize = miniMode ? "1.2rem" : "1rem", showTooltip = false, showIcon = true,spacing=2,fontWeight=400 }) => {
   const Icon = Icons[icon]
   return <Link to={url}>
     <HStack spacing="0" color={asPath.startsWith(path) ? useColorModeValue("brand.500", "brand.200") : "current"}>
@@ -210,7 +210,7 @@ const NavItem = ({ asPath, path, miniMode, title, icon, url, fontSize = miniMode
               icon={<Icon />}
             />}
           </>}
-          {!miniMode && <Text fontSize="0.95rem" cursor="pointer">{title}</Text>}
+          {!miniMode && <Text fontSize="0.95rem" cursor="pointer" fontWeight={fontWeight} >{title}</Text>}
         </HStack>
       </Tooltip>
     </HStack>
