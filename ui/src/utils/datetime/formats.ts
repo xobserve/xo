@@ -23,7 +23,7 @@ export interface SystemDateFormatSettings {
     useBrowserLocale: boolean;
   }
   
-  const DEFAULT_SYSTEM_DATE_FORMAT = 'YYYY-MM-DD HH:mm:ss';
+  export const DEFAULT_SYSTEM_DATE_FORMAT = 'YYYY-MM-DD HH:mm:ss';
   
   export class SystemDateFormatsState {
     fullDate = DEFAULT_SYSTEM_DATE_FORMAT;

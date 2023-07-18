@@ -44,7 +44,10 @@ const  customColors = {
         light: theme.colors.gray['600'],
         dark: theme.colors.gray['700']
     },
-    
+    modalBg: {
+        light: "#fff",
+        dark: "#2D3748"
+    }
 }
 
 export default customColors
