@@ -96,25 +96,15 @@ const Sidebar = (props: Props) => {
         {...props}
       >
         <chakra.div height="100%">
-          <Flex className="vertical-nav" h="100%" align="center" justify="space-between" direction="column" py="4">
-            <VStack align="center" spacing={1}>
-              <Box onClick={onMinimodeChange}>
-                <Logo />
+          <Flex className="vertical-nav" h="100%" align="center" justify="space-between" direction="column" py={miniMode ? 4 : 2} pl={miniMode ? 0 : 1}>
+            <VStack align={miniMode ? "center" : "left"} spacing={2}>
+              <Box onClick={onMinimodeChange} position={miniMode? "static" : "absolute"} right={miniMode ? null : 1} top={miniMode ? null : "19px"}>
+                <Logo width={miniMode ? 10 : 4} />
               </Box>
-              {sidemenu.length > 0 && asPath && <VStack p="0" pt="2" spacing={miniMode ? 0 : 1} fontSize="1rem" alignItems="left" >
+              {sidemenu.length > 0 && asPath && <VStack p="0" pt="2" spacing={miniMode ? 0 : "14px"} fontSize="1rem" alignItems="left" color={useColorModeValue("gray.500", "whiteAlpha.800")}>
                 {sidemenu.map(link => {
-                  let arialCurrent = undefined
-                  if (link.url == "/") {
-                    if (link.url == asPath) {
-                      arialCurrent = "page"
-                    }
-                  } else {
-                    if (`${asPath + '/'}`.startsWith(`${link.url + '/'}`)) {
-                      arialCurrent = "page"
-                    }
-                  }
 
-                  return <HStack cursor="pointer" px={miniMode ? 2 : 1} py="0.3rem" rounded="md" key={link.url} color={useColorModeValue("gray.500", "whiteAlpha.800")}>
+                  return miniMode ? <HStack cursor="pointer" px={miniMode ? 2 : 1} py="0.3rem" rounded="md" key={link.url} >
                     <Popover trigger="hover" placement="right">
                       <PopoverTrigger>
                         <Box>
@@ -136,7 +126,19 @@ const Sidebar = (props: Props) => {
                         </PopoverBody>}
                       </PopoverContent>
                     </Popover>
-                  </HStack>
+                  </HStack> :
+                    <Box>
+                      <NavItem asPath={asPath} url={link.children?.length > 0 ? link.children[0].url : link.url} path={link.url} icon={link.icon} title={link.title} miniMode={false} showIcon={true}  spacing={miniMode ? 2 : 1}/>
+                      {
+                        link.children?.length > 0 && <VStack  mt="2" alignItems="left" spacing="2" pl="2">
+                          {link.children.map(subLink =>
+                            <Link to={subLink.url} key={subLink.url}> 
+                              <Text maxW="110px" wordBreak="break-all" fontSize="0.9rem" noOfLines={1} color={asPath == subLink.url ? useColorModeValue("brand.500", "brand.200") : useColorModeValue("gray.500", "whiteAlpha.800")}>{subLink.title}</Text>
+                            </Link>
+                          )}
+                        </VStack>
+                      }
+                    </Box>
                 }
 
                 )}
@@ -144,23 +146,22 @@ const Sidebar = (props: Props) => {
             </VStack>
 
             <VStack
-              spacing={miniMode ? 0 : "3"}
+              spacing={miniMode ? 0 : 3}
               color={useColorModeValue("gray.500", "gray.400")}
               alignItems="left"
-              pl="1"
             >
               <NavItem asPath={asPath} url={`${ReserveUrls.New}/dashboard`} path={ReserveUrls.New} icon="FaPlus" title={t.new} miniMode={miniMode} showTooltip />
               <NavItem asPath={asPath} url={`${ReserveUrls.Config}/datasources`} path={ReserveUrls.Config} icon="FaCog" title={t.configuration} miniMode={miniMode} showTooltip />
               <NavItem asPath={asPath} url={`${ReserveUrls.Alerts}`} path={ReserveUrls.Alerts} icon="FaBell" title={t.alert} miniMode={miniMode} showTooltip />
               <NavItem asPath={asPath} url={`${ReserveUrls.Search}`} path={ReserveUrls.Search} icon="FaSearch" title={t1.search} miniMode={miniMode} showTooltip />
               <Divider />
-          
+
 
               <Link
                 to={config.repoUrl}
               >
                 <HStack spacing="2">
-                  {miniMode ?  <IconButton
+                  {miniMode ? <IconButton
                     size="md"
                     fontSize="1.2rem"
                     aria-label=""
@@ -168,17 +169,17 @@ const Sidebar = (props: Props) => {
                     color="current"
                     _focus={{ border: null }}
                     icon={<Icons.FaGithub />}
-                  /> : <Icons.FaGithub fontSize="1.1rem"/> }
-                 
+                  /> : <Icons.FaGithub fontSize="1.1rem" />}
+
 
                   {!miniMode && <Text fontSize="0.95rem">Github</Text>}
                 </HStack>
               </Link>
 
-                <ColorModeSwitcher fontSize="1.2rem" miniMode={miniMode} />
+              <ColorModeSwitcher fontSize="1.2rem" miniMode={miniMode} />
 
-                <UserMenu miniMode={miniMode} />
-        
+              <UserMenu miniMode={miniMode} />
+
 
             </VStack>
           </Flex>
@@ -192,13 +193,13 @@ const Sidebar = (props: Props) => {
 export default Sidebar
 
 
-const NavItem = ({ asPath, path, miniMode, title, icon, url, fontSize = "1.2rem", showTooltip = false }) => {
+const NavItem = ({ asPath, path, miniMode, title, icon, url, fontSize = miniMode ? "1.2rem" : "1rem", showTooltip = false, showIcon = true,spacing=2 }) => {
   const Icon = Icons[icon]
   return <Link to={url}>
     <HStack spacing="0" color={asPath.startsWith(path) ? useColorModeValue("brand.500", "brand.200") : "current"}>
       <Tooltip label={miniMode && (showTooltip && title)} placement="right">
-        <HStack spacing={2}>
-          {!miniMode ? <Icon fontSize={fontSize} /> :
+        <HStack spacing={spacing}>
+          {showIcon && <> {!miniMode ? <Icon fontSize={fontSize} /> :
             <IconButton
               size="md"
               fontSize={fontSize}
@@ -208,6 +209,7 @@ const NavItem = ({ asPath, path, miniMode, title, icon, url, fontSize = "1.2rem"
               _focus={{ border: null }}
               icon={<Icon />}
             />}
+          </>}
           {!miniMode && <Text fontSize="0.95rem" cursor="pointer">{title}</Text>}
         </HStack>
       </Tooltip>

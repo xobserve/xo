@@ -1,11 +1,11 @@
 import { Box, HStack, HTMLChakraProps, Image, Text, useColorModeValue } from "@chakra-ui/react"
 import React from "react"
 
-const Logo = (props) => {
+const Logo = ({showText = false, width = 10}) => {
     return (
-            <HStack cursor="pointer" spacing="1" >
-                <Image width="10" src="/logo.png"/>
-                {props.showText && <Text fontWeight="600" fontSize="xl">ustCn</Text>}
+            <HStack cursor="pointer" spacing="1">
+                <Image width={width} src="/logo.png" animation="spin 50s linear infinite"/>
+                {showText && <Text fontWeight="600" fontSize="xl">Datav</Text>}
             </HStack>
     )
 }
