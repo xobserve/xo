@@ -22,6 +22,7 @@ import { commonMsg } from "src/i18n/locales/en";
 import { Checkbox } from "@chakra-ui/react";
 import { isEmpty } from "utils/validate";
 import { CodeEditorModal } from "components/CodeEditor/CodeEditorModal";
+import ThresholdEditor from "components/Threshold/ThresholdEditor";
 
 
 interface Props {
@@ -62,6 +63,8 @@ const TableOverridesEditor = ({ override, onChange }: Props) => {
             return <Checkbox size="lg" isChecked={isEmpty(override.value) ? true : override.value} onChange={e => onChange(e.currentTarget.checked)} />
         case TableRules.ColumnTransform:
             return <CodeEditorModal value={isEmpty(override.value) ? transformFunc : override.value} onChange={onChange}/>
+        case TableRules.ColumnThreshold:
+            return <ThresholdEditor value={override.value} onChange={onChange}/>
         default:
             return <></>
     }
@@ -82,6 +85,7 @@ export enum TableRules {
     ColumnEllipsis = 'Column.textEllipsis',
     ColumnDisplay = "Column.display",
     ColumnTransform = "Column.textTransform",
+    ColumnThreshold = "Column.threshold",
 } 
 
 const transformFunc = `

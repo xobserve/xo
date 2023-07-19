@@ -11,34 +11,29 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 export interface Threshold {
-    value: number;
-    color: string;
-    /**
-     *  Warning, Error, LowLow, Low, OK, High, HighHigh etc
-     */
-    state?: string;
-  }
-  
+  value: number;
+  color: string;
+}
+
+/**
+ *  Display mode
+ */
+export enum ThresholdsMode {
+  Absolute = 'absolute',
   /**
-   *  Display mode
+   *  between 0 and 1 (based on min/max)
    */
-  export enum ThresholdsMode {
-    Absolute = 'absolute',
-    /**
-     *  between 0 and 1 (based on min/max)
-     */
-    Percentage = 'percentage',
-  }
-  
+  Percentage = 'percentage',
+}
+
+/**
+ *  Config that is passed to the ThresholdsEditor
+ */
+export interface ThresholdsConfig {
+  mode: ThresholdsMode;
+
   /**
-   *  Config that is passed to the ThresholdsEditor
+   *  Must be sorted by 'value' 
    */
-  export interface ThresholdsConfig {
-    mode: ThresholdsMode;
-  
-    /**
-     *  Must be sorted by 'value', first value is always -Infinity
-     */
-    steps: Threshold[];
-  }
-  
+  thresholds: Threshold[];
+}

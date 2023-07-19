@@ -14,7 +14,7 @@ export default function textStyles() {
         },
         annotation: {
             fontSize: "0.85rem",
-            opacity: 0.8
+            opacity: 0.7
         }
     }
 }
