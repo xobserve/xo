@@ -30,7 +30,11 @@ const TablePanelEditor = ({ panel, onChange }: PanelEditorProps) => {
                     panel.plugins.table.showHeader = e.target.checked
                 })} />
             </PanelEditItem>
-
+            <PanelEditItem title="Show border">
+                <Switch isChecked={panel.plugins.table.bordered} onChange={(e) => onChange((panel: Panel) => {
+                    panel.plugins.table.bordered = e.target.checked
+                })} />
+            </PanelEditItem>
             <PanelEditItem title="Sticky header" desc="fix header to top, useful for viewing many rows in one page">
                 <Switch isChecked={panel.plugins.table.stickyHeader} onChange={(e) => onChange((panel: Panel) => {
                     panel.plugins.table.stickyHeader = e.target.checked

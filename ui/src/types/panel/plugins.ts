@@ -136,6 +136,7 @@ export interface TextPlugin extends DisableDatasource {
 
 export interface TableSettings {
     showHeader: boolean
+    bordered: boolean
     cellSize: "small" | "middle" | "large"
     tableWidth: number
     stickyHeader: boolean

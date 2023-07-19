@@ -70,11 +70,12 @@ export const initPanelPlugins: PanelPlugins = {
 
     [PanelType.Table]: {
         showHeader: true,
+        bordered: false,
         cellSize: "middle",
         stickyHeader: false,
         tableWidth: 100,
         column: {
-            align: "auto",
+            align: "left",
             enableSort: false,
             enableFilter: false
         },

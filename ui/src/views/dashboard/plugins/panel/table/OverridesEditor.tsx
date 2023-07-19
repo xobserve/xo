@@ -89,8 +89,12 @@ export enum TableRules {
 } 
 
 const transformFunc = `
-function transform(text, moment)  {
+function transform(text, lodash, moment)  {
+    // for demonstration purpose: how to use 'lodash'
+    const t0 = lodash.cloneDeep(text)
+    // for demonstration purpose: how to use 'moment'
     const t = moment(text * 1000).format("YY-MM-DD HH:mm::ss")
+
     return text
 }
 `

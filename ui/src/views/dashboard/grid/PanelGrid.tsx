@@ -43,7 +43,8 @@ import React from "react";
 import { useStore } from "@nanostores/react";
 import { commonMsg, panelMsg } from "src/i18n/locales/en";
 import { genDynamicFunction } from "utils/dynamicCode";
-
+import lodash from 'lodash'
+import moment from "moment";
 
 interface PanelGridProps {
     dashboard: Dashboard
@@ -222,7 +223,7 @@ export const PanelComponent = ({ dashboard, panel, onRemovePanel, width, height,
         if (panel.enableTransform && panelData) {
             const transform = genDynamicFunction(panel.transform);
             if (isFunction(transform)) {
-                const tData =  transform(panelData)
+                const tData =  transform(panelData,lodash,moment)
                 console.log("panel grid rendered, transform data: ", tData)
                 return tData
             } else {

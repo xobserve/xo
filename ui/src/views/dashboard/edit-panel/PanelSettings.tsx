@@ -59,7 +59,7 @@ const PanelSettings = ({ panel, onChange }: PanelEditorProps) => {
                     <EditorInputItem type="textarea" value={panel.desc} onChange={v => onChange((tempPanel:Panel) => { tempPanel.desc = v })}   />
                 </PanelEditItem>
                 <PanelEditItem title={t.transform} desc={t1.enableTransform}>
-                    <Checkbox isChecked={panel.enableTransform} onChange={e => onChange((tempPanel:Panel) => { tempPanel.enableTransform = e.currentTarget.checked })}  />
+                    <Switch isChecked={panel.enableTransform} onChange={e => onChange((tempPanel:Panel) => { tempPanel.enableTransform = e.currentTarget.checked })}  />
                 </PanelEditItem>
             </PanelAccordion>
 

@@ -27,6 +27,7 @@ import { genDynamicFunction } from 'utils/dynamicCode';
 import moment from 'moment';
 import { ThresholdsConfig, ThresholdsMode } from 'types/threshold';
 import { getThreshold } from 'components/Threshold/utils';
+import lodash from 'lodash'
 
 interface Props {
   panel: Panel
@@ -135,7 +136,7 @@ const ComplexTable = memo((props: Props) => {
         }
 
         if (isFunc) {
-          row[column.dataIndex] = transformFunc(row[column.dataIndex], moment)
+          row[column.dataIndex] = transformFunc(row[column.dataIndex], lodash, moment)
         }
       } 
     }
@@ -165,6 +166,7 @@ const ComplexTable = memo((props: Props) => {
       sticky={options.stickyHeader}
       showSorterTooltip={false}
       scroll={{ x: options.tableWidth + '%' }}
+      bordered={options.bordered}
     />
   </>)
 })

@@ -61,7 +61,7 @@ const TablePanel = (props: TablePanelProps) => {
         }
 
         return [[], [], seriesList]
-    }, [series, props.data, props.panel.overrides])
+    }, [series, props.data, props.panel.overrides,panel.enableTransform])
 
     // const clickFunc = genDynamicFunction(props.panel.plugins.table.onRowClick);
 
