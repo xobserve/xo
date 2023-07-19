@@ -30,6 +30,7 @@ import { PanelInactiveKey } from "src/data/storage-keys";
 import { ZoomPlugin } from "./uplot-plugins/ZoomPlugin";
 import { setDateTime } from "components/DatePicker/DatePicker";
 import React from "react";
+import { GraphRules } from "./OverridesEditor";
 
 interface GraphPanelProps extends PanelProps {
     data: SeriesData[][]
@@ -68,21 +69,21 @@ const GraphPanel = memo((props: GraphPanelProps) => {
         let o;
         data.map((frame, i) => {
             const override: OverrideItem = props.panel.overrides.find((o) => o.target == frame.rawName)
-            const name = override?.overrides.find((o) => o.type == "Series.name")?.value
+            const name = override?.overrides.find((o) => o.type == GraphRules.SeriesName)?.value
             if (name) {
                 frame.name = name
             } else {
                 frame.name = frame.rawName
             }
 
-            const color = override?.overrides.find((o) => o.type == "Series.color")?.value
+            const color = override?.overrides.find((o) => o.type == GraphRules.SeriesColor)?.value
             if (color) {
                 frame.color = color
             } else {
                 frame.color = colors[i % colors.length]
             }
 
-            // const negativeY = override?.overrides.find(o => o.type == 'Series.negativeY')
+            // const negativeY = override?.overrides.find(o => o.type ==  GraphRules.SeriesNegativeY)
             // if (negativeY) {
             //     const vals = frame.fields[1].values
             //     for (let i = 0; i < vals.length; i++) {
@@ -230,7 +231,7 @@ const transformDataToUplot = (data: SeriesData[], panel: Panel) => {
     // push y-axes series data
     for (const d of data) {
         const override: OverrideItem = panel.overrides.find((o) => o.target == d.rawName)
-        const negativeY = override?.overrides.find(o => o.type == 'Series.negativeY')
+        const negativeY = override?.overrides.find(o => o.type == GraphRules.SeriesNegativeY)
         if (negativeY) {
             const vals = cloneDeep(d.fields[1].values)
             for (let i = 0; i < vals.length; i++) {

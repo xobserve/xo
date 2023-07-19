@@ -27,7 +27,7 @@ interface Props {
 
 const TableOverridesEditor = ({ override, onChange }: Props) => {
     switch (override.type) {
-        case "Column.title": 
+        case TableRules.ColumnTitle: 
             return <EditorInputItem value={override.value} onChange={onChange} size="sm" placeholder="change column title display" />
         case 'Series.style':
             return <RadionButtons size="sm" options={[{ label: "Lines", value: "lines" }, { label: "Bars", value: "bars" }, { label: "points", value: "points" }]} value={override.value} onChange={onChange} />

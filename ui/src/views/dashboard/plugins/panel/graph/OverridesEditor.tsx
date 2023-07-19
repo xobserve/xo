@@ -27,11 +27,11 @@ interface Props {
 
 const GraphOverridesEditor = ({ override, onChange }: Props) => {
     switch (override.type) {
-        case 'Series.style':
+        case GraphRules.SeriesStyle:
             return <RadionButtons size="sm" options={[{ label: "Lines", value: "lines" }, { label: "Bars", value: "bars" }, { label: "points", value: "points" }]} value={override.value} onChange={onChange} />
-        case 'Series.name':
+        case GraphRules.SeriesName:
             return <EditorInputItem value={override.value} onChange={onChange} size="sm" placeholder="change series name" />
-        case 'Series.unit':
+        case GraphRules.SeriesUnit:
             return <UnitPicker size="sm" type={override.value.unitsType} value={override.value.units} onChange={
                 (units, type) => {
                     onChange({
@@ -39,13 +39,13 @@ const GraphOverridesEditor = ({ override, onChange }: Props) => {
                     units: units
                 })}
             } />
-        case 'Series.color':
+        case GraphRules.SeriesColor:
             return <ColorPicker presetColors={colors} color={override.value} onChange={v => onChange(v.hex)} ><Button size="sm" width="fit-content" bg={override.value} _hover={{bg: override.value}}>Pick color</Button></ColorPicker>
-        case 'Series.fill':
+        case GraphRules.SeriesFill:
             return <EditorSliderItem value={override.value} min={0} max={100} step={1} onChange={onChange} />
-        case 'Series.negativeY':
+        case GraphRules.SeriesNegativeY:
             return <></>
-        case 'Series.decimal':
+        case GraphRules.SeriesDecimal:
             return <EditorNumberItem value={override.value} min={0} max={5} step={1} onChange={onChange} />
         default:
             return <></>
