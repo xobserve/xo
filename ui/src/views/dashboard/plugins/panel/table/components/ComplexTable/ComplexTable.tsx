@@ -21,6 +21,7 @@ import { Text } from '@chakra-ui/react';
 import { findOverride, findOverrideRule, findRuleInOverride } from 'utils/dashboard/panel';
 import { Panel } from 'types/dashboard';
 import { TableRules } from '../../OverridesEditor';
+import { formatUnit } from 'components/Unit';
 
 interface Props {
   panel: Panel
@@ -72,6 +73,8 @@ const ComplexTable = memo((props: Props) => {
     column.render = (text, record, index) => {
       const color = findRuleInOverride(override, TableRules.ColumnColor)
       const bg = findRuleInOverride(override, TableRules.ColumnBg)
+      const unit = findRuleInOverride(override, TableRules.ColumnUnit)
+      if (unit) text = formatUnit(text, unit.units, 3)
       return <Text color={color ?? "inherit"} padding={cellPadding} bg={bg}>{text}</Text>
     }
 

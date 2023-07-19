@@ -110,7 +110,7 @@ const PanelOverrides = ({ panel, onChange, data }: PanelEditorProps) => {
                         <Select value={o.target} onChange={e => {
                             const v = e.currentTarget.value
                             onChange((panel: Panel) => {
-                                const o = overrides[i]
+                                const o = panel.overrides[i]
                                 o.target = v
                             })
                         }}>
