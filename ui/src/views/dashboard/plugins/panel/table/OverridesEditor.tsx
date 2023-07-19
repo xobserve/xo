@@ -45,6 +45,8 @@ const TableOverridesEditor = ({ override, onChange }: Props) => {
                     })
                 }
             } />
+        case TableRules.ColumnDecimal:
+                return <EditorNumberItem value={override.value} min={0} max={5} step={1} onChange={onChange} />
         case 'Series.style':
             return <RadionButtons size="sm" options={[{ label: "Lines", value: "lines" }, { label: "Bars", value: "bars" }, { label: "points", value: "points" }]} value={override.value} onChange={onChange} />
         case 'Series.name':
@@ -79,4 +81,5 @@ export enum TableRules {
     ColumnColor = 'Column.color',
     ColumnBg = 'Column.background',
     ColumnUnit = 'Column.unit',
+    ColumnDecimal = 'Column.decimal'
 } 

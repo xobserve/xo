@@ -15,13 +15,14 @@ import { Table } from 'antd';
 import { TableColumn, TableRow } from 'types/plugins/table';
 import { TableSettings } from 'types/panel/plugins';
 import storage from 'utils/localStorage';
-import { cloneDeep } from 'lodash';
+import { cloneDeep, isNumber, round } from 'lodash';
 import { setTableFilter } from './TableFilter';
 import { Text } from '@chakra-ui/react';
 import { findOverride, findOverrideRule, findRuleInOverride } from 'utils/dashboard/panel';
 import { Panel } from 'types/dashboard';
 import { TableRules } from '../../OverridesEditor';
 import { formatUnit } from 'components/Unit';
+import { DefaultDecimal } from 'src/data/constants';
 
 interface Props {
   panel: Panel
@@ -74,7 +75,15 @@ const ComplexTable = memo((props: Props) => {
       const color = findRuleInOverride(override, TableRules.ColumnColor)
       const bg = findRuleInOverride(override, TableRules.ColumnBg)
       const unit = findRuleInOverride(override, TableRules.ColumnUnit)
-      if (unit) text = formatUnit(text, unit.units, 3)
+      const decimal = findRuleInOverride(override, TableRules.ColumnDecimal) ?? DefaultDecimal
+      if (isNumber(text) ) {
+        if (unit) { 
+          text = formatUnit(text, unit.units, decimal)
+        } else {
+          text = round(text, decimal)
+        }
+      }
+
       return <Text color={color ?? "inherit"} padding={cellPadding} bg={bg}>{text}</Text>
     }
 

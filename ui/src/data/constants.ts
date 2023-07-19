@@ -18,3 +18,5 @@ export const DatasourceMaxDataPoints = 1000
 export const DatasourceMinInterval = '15s'
 
 export const InitTestDataDatasourceId = 1
+
+export const DefaultDecimal = 3
