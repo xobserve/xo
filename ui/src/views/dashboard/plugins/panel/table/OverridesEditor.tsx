@@ -10,7 +10,7 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-import { Box, Button, HStack, Select, Tooltip } from "@chakra-ui/react";
+import { Box, Button, Checkbox, HStack, Select, Text, Tooltip } from "@chakra-ui/react";
 import RadionButtons from "components/RadioButtons";
 import { ColorPicker } from "components/ColorPicker";
 import { EditorInputItem, EditorNumberItem, EditorSliderItem } from "components/editor/EditorItem";
@@ -47,6 +47,10 @@ const TableOverridesEditor = ({ override, onChange }: Props) => {
             } />
         case TableRules.ColumnDecimal:
                 return <EditorNumberItem value={override.value} min={0} max={5} step={1} onChange={onChange} />
+        case TableRules.ColumnWidth:
+            return  <EditorInputItem value={override.value} onChange={onChange} size="sm" placeholder="css width, e.g 100px, 20%, auto" />
+        case TableRules.ColumnFixed:
+            return <RadionButtons size="sm" options={[{ label: "Left", value: "left" }, { label: "Right", value: "right" }]} value={override.value} onChange={onChange} />
         case 'Series.style':
             return <RadionButtons size="sm" options={[{ label: "Lines", value: "lines" }, { label: "Bars", value: "bars" }, { label: "points", value: "points" }]} value={override.value} onChange={onChange} />
         case 'Series.name':
@@ -81,5 +85,7 @@ export enum TableRules {
     ColumnColor = 'Column.color',
     ColumnBg = 'Column.background',
     ColumnUnit = 'Column.unit',
-    ColumnDecimal = 'Column.decimal'
+    ColumnDecimal = 'Column.decimal',
+    ColumnWidth = 'Column.width',
+    ColumnFixed = 'Column.fixed',
 } 

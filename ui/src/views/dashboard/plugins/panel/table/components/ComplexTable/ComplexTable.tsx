@@ -44,8 +44,8 @@ const ComplexTable = memo((props: Props) => {
 
   const cellPadding = options.cellSize == "small" ? "8px 8px" : (options.cellSize == "large" ? "16px 16px" : "12px 8px")
   const columns = cloneDeep(props.columns)
-  columns[0].fixed = "left"
-  columns[0].width = "200px"
+
+
 
   for (const column of columns) {
     if (options.column.align != "auto") {
@@ -71,6 +71,11 @@ const ComplexTable = memo((props: Props) => {
     }
     
     const override = findOverride(panel, column.dataIndex)
+    const width = findRuleInOverride(override, TableRules.ColumnWidth)
+    if (width) column.width = width
+    const fixed = findRuleInOverride(override, TableRules.ColumnFixed)
+    if (fixed) column.fixed = fixed
+
     column.render = (text, record, index) => {
       const color = findRuleInOverride(override, TableRules.ColumnColor)
       const bg = findRuleInOverride(override, TableRules.ColumnBg)
