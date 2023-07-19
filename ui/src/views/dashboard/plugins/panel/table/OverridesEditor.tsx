@@ -20,6 +20,7 @@ import React from "react";
 import { useStore } from "@nanostores/react";
 import { commonMsg } from "src/i18n/locales/en";
 import { Checkbox } from "@chakra-ui/react";
+import { isEmpty } from "utils/validate";
 
 
 interface Props {
@@ -56,27 +57,8 @@ const TableOverridesEditor = ({ override, onChange }: Props) => {
             return <RadionButtons size="sm" options={[{ label: "Number min/max", value: "number" }, { label: "String match", value: "string" }]} value={override.value} onChange={onChange} />
         case TableRules.ColumnEllipsis:
             return <Checkbox size="lg" isChecked={override.value} onChange={e => onChange(e.currentTarget.checked)} />
-        case 'Series.style':
-            return <RadionButtons size="sm" options={[{ label: "Lines", value: "lines" }, { label: "Bars", value: "bars" }, { label: "points", value: "points" }]} value={override.value} onChange={onChange} />
-        case 'Series.name':
-            return <EditorInputItem value={override.value} onChange={onChange} size="sm" placeholder="change series name" />
-        case 'Series.unit':
-            return <UnitPicker size="sm" type={override.value.unitsType} value={override.value.units} onChange={
-                (units, type) => {
-                    onChange({
-                        unitsType: type,
-                        units: units
-                    })
-                }
-            } />
-        // case 'Series.color':
-        //     return <ColorPicker presetColors={colors} color={override.value} onChange={v => onChange(v.hex)} ><Button size="sm" width="fit-content">Pick color</Button></ColorPicker>
-        case 'Series.fill':
-            return <EditorSliderItem value={override.value} min={0} max={100} step={1} onChange={onChange} />
-        case 'Series.negativeY':
-            return <></>
-        case 'Series.decimal':
-            return <EditorNumberItem value={override.value} min={0} max={5} step={1} onChange={onChange} />
+        case TableRules.ColumnDisplay:
+            return <Checkbox size="lg" isChecked={isEmpty(override.value) ? true : override.value} onChange={e => onChange(e.currentTarget.checked)} />
         default:
             return <></>
     }
@@ -95,4 +77,5 @@ export enum TableRules {
     ColumnFixed = 'Column.fixed',
     ColumnFilter = 'Column.filter',
     ColumnEllipsis = 'Column.textEllipsis',
+    ColumnDisplay = "Column.display"
 } 
