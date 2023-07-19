@@ -11,11 +11,11 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 import React from "react"
-import { Box, Flex, HStack, Input, Placement, Popover, PopoverBody, PopoverContent, PopoverTrigger, Text, Tooltip, VStack, useDisclosure } from "@chakra-ui/react"
+import { Box, Flex, HStack, Input, Placement, Popover, PopoverBody, PopoverContent, PopoverTrigger, Text, Tooltip, VStack, useDisclosure, Portal } from "@chakra-ui/react"
 import { Variant } from "chakra-react-select/dist/types/types"
 import { remove } from "lodash"
 import { MouseEvent, useMemo, useRef, useState } from "react"
-import {  FaCheck, FaChevronDown, FaMinus, FaPlus, FaTimes } from "react-icons/fa"
+import { FaCheck, FaChevronDown, FaMinus, FaPlus, FaTimes } from "react-icons/fa"
 
 interface Value {
     value: string,
@@ -39,7 +39,7 @@ interface SelectProps {
     matchWidth?: boolean
 }
 
-const PopoverSelect = ({ value, options, onChange, variant = "outline", customOption = null, placeholder = "...", size = "sm", isClearable = false, isMulti = false, exclusive,placement="bottom", showArrow = true,closeOnBlur=true ,matchWidth=true}: SelectProps) => {
+const PopoverSelect = ({ value, options, onChange, variant = "outline", customOption = null, placeholder = "...", size = "sm", isClearable = false, isMulti = false, exclusive, placement = "bottom", showArrow = true, closeOnBlur = true, matchWidth = true }: SelectProps) => {
     const { isOpen, onToggle, onClose } = useDisclosure()
 
     const [query, setQuery] = useState('')
@@ -108,16 +108,17 @@ const PopoverSelect = ({ value, options, onChange, variant = "outline", customOp
         onChange([])
     }
     return (<>
-        {<Flex height="100%" px="1" className={getBorderStyle()} py="1"  justifyContent="space-between" alignItems="center" cursor="pointer" onClick={onToggle}><Tooltip placement="right" openDelay={500} label={value.length > 0 && value.join(' + ')}><Text width="fit-content" maxW="250px" wordBreak="break-all" noOfLines={1} layerStyle="textSecondary" opacity="0.7" fontSize={size == "sm" ? "0.9rem" : "1rem"}>{value.length > 0 ? value.join(' + ') : placeholder}</Text></Tooltip> {!isMulti && isClearable && value.length > 0 ? <FaTimes fontSize="0.8rem" onClick={clearSelected} /> :  showArrow && <Box pl="1"><FaChevronDown fontSize="0.6rem" /></Box>}</Flex>}
-        <Popover matchWidth={matchWidth} closeOnBlur={closeOnBlur}    placement={placement} isOpen={isOpen} initialFocusRef={ref} onClose={onClose}>
+        {<Flex height="100%" px="1" className={getBorderStyle()} py="1" justifyContent="space-between" alignItems="center" cursor="pointer" onClick={onToggle}><Tooltip placement="right" openDelay={500} label={value.length > 0 && value.join(' + ')}><Text width="fit-content" maxW="250px" wordBreak="break-all" noOfLines={1} layerStyle="textSecondary" opacity="0.7" fontSize={size == "sm" ? "0.9rem" : "1rem"}>{value.length > 0 ? value.join(' + ') : placeholder}</Text></Tooltip> {!isMulti && isClearable && value.length > 0 ? <FaTimes fontSize="0.8rem" onClick={clearSelected} /> : showArrow && <Box pl="1"><FaChevronDown fontSize="0.6rem" /></Box>}</Flex>}
+        <Popover matchWidth={matchWidth} closeOnBlur={closeOnBlur} placement={placement} isOpen={isOpen} initialFocusRef={ref} onClose={onClose}>
             <PopoverTrigger >
                 <Box position="absolute"></Box>
             </PopoverTrigger>
-                <PopoverContent  borderRadius={2}>
+            <Portal>
+                <PopoverContent borderRadius={2}>
                     {/* <PopoverArrow /> */}
                     <PopoverBody p="0">
                         <Box>
-                            <Input px="2" py="2" value={query} onChange={e => { setQuery(e.currentTarget.value) }} ref={ref} size={size} variant="unstyled" className="bordered-bottom"  placeholder="enter to search" />
+                            <Input px="2" py="2" value={query} onChange={e => { setQuery(e.currentTarget.value) }} ref={ref} size={size} variant="unstyled" className="bordered-bottom" placeholder="enter to search" />
                         </Box>
 
 
@@ -136,6 +137,7 @@ const PopoverSelect = ({ value, options, onChange, variant = "outline", customOp
                         </VStack>
                     </PopoverBody>
                 </PopoverContent>
+            </Portal>
         </Popover>
     </>)
 }

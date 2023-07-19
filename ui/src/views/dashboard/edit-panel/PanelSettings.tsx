@@ -10,7 +10,7 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-import { Box, Center, Image, Input, SimpleGrid, Switch, Text, Textarea } from "@chakra-ui/react"
+import { Box, Center, Checkbox, Image, Input, SimpleGrid, Switch, Text, Textarea } from "@chakra-ui/react"
 import { upperFirst } from "lodash"
 import { Panel, PanelEditorProps, PanelType } from "types/dashboard"
 import PanelAccordion from "./Accordion"
@@ -53,10 +53,13 @@ const PanelSettings = ({ panel, onChange }: PanelEditorProps) => {
         <>
             <PanelAccordion title={t.basicSetting} defaultOpen>
                 <PanelEditItem title={t1.panelTitle}>
-                    <EditorInputItem value={panel.title} onChange={v => onChange(tempPanel => { tempPanel.title = v })}   />
+                    <EditorInputItem value={panel.title} onChange={v => onChange((tempPanel:Panel) => { tempPanel.title = v })}   />
                 </PanelEditItem>
                 <PanelEditItem title={t.description} desc={t1.panelDesc}>
-                    <EditorInputItem type="textarea" value={panel.desc} onChange={v => onChange(tempPanel => { tempPanel.desc = v })}   />
+                    <EditorInputItem type="textarea" value={panel.desc} onChange={v => onChange((tempPanel:Panel) => { tempPanel.desc = v })}   />
+                </PanelEditItem>
+                <PanelEditItem title={t.transform} desc={t1.enableTransform}>
+                    <Checkbox isChecked={panel.enableTransform} onChange={e => onChange((tempPanel:Panel) => { tempPanel.enableTransform = e.currentTarget.checked })}  />
                 </PanelEditItem>
             </PanelAccordion>
 

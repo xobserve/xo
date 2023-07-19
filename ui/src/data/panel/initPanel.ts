@@ -15,33 +15,34 @@ import { initPanelPlugins } from "./initPlugins";
 import { initPanelStyles } from "./initStyles";
 import { DatasourceMaxDataPoints, DatasourceMinInterval, InitTestDataDatasourceId } from "../constants";
 
-export const initPanel = (id?) =>  {
+export const initPanel = (id?) => {
     const type = PanelType.Text
     const p: Panel = {
         desc: "",
         collapsed: false,
         type: type,
         gridPos: { x: 0, y: 0, w: 13, h: 20 },
-        plugins:  {
-            [type]:initPanelPlugins[type]
+        plugins: {
+            [type]: initPanelPlugins[type]
         },
         datasource: initDatasource,
         styles: initPanelStyles,
         overrides: [],
-        transform: 
-`function transform(data) {
-    console.log(data)
+        transform:
+            `function transform(data) {
+    console.log("panel data to be transformed:",data)
     return data
-}`
+}`,
+        enableTransform: true,
     }
 
     if (id) {
         p.id = id,
-        p.title = `New panel ${id}`
+            p.title = `New panel ${id}`
     }
 
     return p
-} 
+}
 
 
 export const initDatasource: PanelDatasource = {
@@ -55,7 +56,7 @@ export const initDatasource: PanelDatasource = {
         {
             id: 65,
             metrics: "",
-            legend: "" ,
+            legend: "",
             visible: true,
             data: {}
         }

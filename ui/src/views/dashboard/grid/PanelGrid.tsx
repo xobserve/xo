@@ -14,10 +14,10 @@ import { Dashboard, DatasourceType, Panel, PanelProps, PanelQuery, PanelType } f
 import { Box, Center, HStack, Menu, MenuButton, MenuDivider, MenuItem, MenuList, Modal, ModalBody, ModalCloseButton, ModalContent, ModalHeader, ModalOverlay, Tab, TabList, TabPanel, TabPanels, Tabs, Text, Textarea, Tooltip, useColorModeValue, useDisclosure, useToast } from "@chakra-ui/react";
 import { FaBook, FaBug, FaEdit, FaRegCopy, FaTrashAlt } from "react-icons/fa";
 import { IoMdInformation } from "react-icons/io";
-import { memo, useCallback, useEffect, useState } from "react";
+import { memo, useCallback, useEffect, useMemo, useState } from "react";
 import { run_prometheus_query } from "../plugins/datasource/prometheus/query_runner";
 import { DatasourceMaxDataPoints, DatasourceMinInterval, PANEL_HEADER_HEIGHT, StorageCopiedPanelKey } from "src/data/constants";
-import { cloneDeep, isEmpty, isEqual } from "lodash";
+import { cloneDeep, isEmpty, isEqual, isFunction } from "lodash";
 import { TimeRange } from "types/time";
 import { Variable } from "types/variable";
 import { replaceQueryWithVariables, replaceWithVariables } from "utils/variable";
@@ -42,6 +42,7 @@ import { useSearchParam } from "react-use";
 import React from "react";
 import { useStore } from "@nanostores/react";
 import { commonMsg, panelMsg } from "src/i18n/locales/en";
+import { genDynamicFunction } from "utils/dynamicCode";
 
 
 interface PanelGridProps {
@@ -139,7 +140,7 @@ export const PanelComponent = ({ dashboard, panel, onRemovePanel, width, height,
             const prevQuery = prevQueries.get(id)
             const currentQuery = [q, timeRange]
 
-           
+
             if (isEqual(prevQuery, currentQuery)) {
                 const d = prevQueryData[id]
                 if (d) {
@@ -152,7 +153,7 @@ export const PanelComponent = ({ dashboard, panel, onRemovePanel, width, height,
             needUpdate = true
             // console.log("re-query data! metrics id:", q.id, " query id:", queryId)
 
-    
+
             let res
 
             //@needs-update-when-add-new-datasource
@@ -180,7 +181,7 @@ export const PanelComponent = ({ dashboard, panel, onRemovePanel, width, height,
                 data.push(res.data)
                 prevQueryData[id] = res.data
                 prevQueries.set(id, currentQuery)
-            } 
+            }
         }
 
         if (needUpdate) {
@@ -216,17 +217,31 @@ export const PanelComponent = ({ dashboard, panel, onRemovePanel, width, height,
     const panelInnerHeight = isEmpty(panel.title) ? height : panelBodyHeight// 10px padding top and bottom of panel body
     const panelInnerWidth = width + 8 // 10px padding left and right of panel body
 
+    console.log("panel grid rendered, panel data: ", panelData)
+    const data = useMemo(() => {
+        if (panel.enableTransform && panelData) {
+            const transform = genDynamicFunction(panel.transform);
+            if (isFunction(transform)) {
+                const tData =  transform(panelData)
+                console.log("panel grid rendered, transform data: ", tData)
+                return tData
+            } else {
+                return panelData
+            }
+        }
+        return panelData
+    }, [panel.transform, panel.enableTransform, panelData])
 
-    console.log("panel grid rendered, data: ", panelData)
+
     return <Box height={height} width={width} className={panel.styles.border == "None" ? "hover-bordered" : null} border={`1px solid transparent`} position="relative">
-        <PanelHeader panel={panel} data={panelData} queryError={queryError} onCopyPanel={onCopyPanel} onRemovePanel={onRemovePanel} />
-        {panelData && <Box
+        <PanelHeader panel={panel} data={data} queryError={queryError} onCopyPanel={onCopyPanel} onRemovePanel={onRemovePanel} />
+        {data && <Box
             // panel={panel}
             height={panelInnerHeight}
             overflowY="scroll"
             marginLeft={panel.type == PanelType.Graph ? "-10px" : "0px"}
         >
-            <CustomPanelRender dashboardId={dashboard.id} panel={panel} data={panelData} height={panelInnerHeight} width={panelInnerWidth} sync={sync} timeRange={timeRange} />
+            <CustomPanelRender dashboardId={dashboard.id} panel={panel} data={data} height={panelInnerHeight} width={panelInnerWidth} sync={sync} timeRange={timeRange} />
         </Box>}
     </Box>
 }

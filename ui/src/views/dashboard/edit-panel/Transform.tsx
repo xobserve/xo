@@ -10,8 +10,9 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-import { Box, Text } from "@chakra-ui/react"
+import { Box, Checkbox, HStack, Text } from "@chakra-ui/react"
 import { useStore } from "@nanostores/react"
+import { Divider } from "antd"
 import { CodeEditorModal } from "components/CodeEditor/CodeEditorModal"
 import { DetailAlert, DetailAlertItem } from "components/DetailAlert"
 import React from "react"
@@ -27,7 +28,7 @@ const EditPanelTransform = ({ panel, onChange }: Props) => {
     const t = useStore(commonMsg)
     const t1 = useStore(panelMsg)
 
-    return (<>
+    return (<Box>
         <Box my="2">
             <DetailAlert title={t.transform} status="info" width="100%">
                 <DetailAlertItem>
@@ -40,8 +41,7 @@ const EditPanelTransform = ({ panel, onChange }: Props) => {
                 panel.transform = v
             })
         }} />
-
-    </>)
+    </Box>)
 }
 
 export default EditPanelTransform

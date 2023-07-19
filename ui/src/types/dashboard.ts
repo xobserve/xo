@@ -67,6 +67,7 @@ export interface Panel {
     overrides: OverrideItem[]
 
     transform: string
+    enableTransform: boolean
 }
 
 export interface OverrideItem {
