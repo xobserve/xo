@@ -15,7 +15,7 @@ import { Table } from 'antd';
 import { TableColumn, TableRow } from 'types/plugins/table';
 import { TableSettings } from 'types/panel/plugins';
 import storage from 'utils/localStorage';
-import { cloneDeep, isNumber, round } from 'lodash';
+import { cloneDeep, isFunction, isNumber, round } from 'lodash';
 import { setTableFilter } from './TableFilter';
 import { Box, Text, Tooltip } from '@chakra-ui/react';
 import { findOverride, findOverrideRule, findRuleInOverride } from 'utils/dashboard/panel';
@@ -23,6 +23,8 @@ import { Panel } from 'types/dashboard';
 import { TableRules } from '../../OverridesEditor';
 import { formatUnit } from 'components/Unit';
 import { DefaultDecimal } from 'src/data/constants';
+import { genDynamicFunction } from 'utils/dynamicCode';
+import moment from 'moment';
 
 interface Props {
   panel: Panel
@@ -43,10 +45,9 @@ const ComplexTable = memo((props: Props) => {
   };
 
   const cellPadding = options.cellSize == "small" ? "8px 8px" : (options.cellSize == "large" ? "16px 16px" : "12px 8px")
+  
   const columns = []
-
-
-
+  const newData = []
   for (const c of props.columns) {
     const column = cloneDeep(c)
     const override = findOverride(panel, column.dataIndex)
@@ -89,9 +90,17 @@ const ComplexTable = memo((props: Props) => {
 
     const unit = findRuleInOverride(override, TableRules.ColumnUnit)
     const decimal = findRuleInOverride(override, TableRules.ColumnDecimal) ?? DefaultDecimal
+    const transform = findRuleInOverride(override, TableRules.ColumnTransform)
+    let transformFunc;
+    if (transform) {
+      transformFunc = genDynamicFunction(transform)
+    }
+    const isFunc = isFunction(transformFunc)
 
-    if (unit || decimal) {
-      for (const row of data) {
+    // modify data
+    if (unit || decimal || isFunc) {
+      for (const r of data) {
+        const row = cloneDeep(r)
         const v = row[column.dataIndex]
         if (isNumber(v) ) {
           if (unit) { 
@@ -100,7 +109,12 @@ const ComplexTable = memo((props: Props) => {
             row[column.dataIndex] = round(v, decimal)
           }
         }
-      }
+
+        if (isFunc) {
+          row[column.dataIndex] = transformFunc(row[column.dataIndex], moment)
+        }
+        newData.push(row)
+      } 
     }
 
     column.render = (text, record, index) => {
@@ -120,7 +134,7 @@ const ComplexTable = memo((props: Props) => {
   return (<>
     <Table
       columns={columns}
-      dataSource={data}
+      dataSource={newData.length == 0 ? data: newData}
       size={options.cellSize}
       showHeader={options.showHeader}
       pagination={options.enablePagination ? { position:["bottomCenter"],showTotal: (total) => `Total ${total}`, total: data.length, showSizeChanger: true, defaultPageSize: storage.get(pageKey) ?? 10, pageSizeOptions: [5, 10, 20, 50, 100], onShowSizeChange: onShowSizeChange } : false}

@@ -21,6 +21,7 @@ import { useStore } from "@nanostores/react";
 import { commonMsg } from "src/i18n/locales/en";
 import { Checkbox } from "@chakra-ui/react";
 import { isEmpty } from "utils/validate";
+import { CodeEditorModal } from "components/CodeEditor/CodeEditorModal";
 
 
 interface Props {
@@ -59,6 +60,8 @@ const TableOverridesEditor = ({ override, onChange }: Props) => {
             return <Checkbox size="lg" isChecked={override.value} onChange={e => onChange(e.currentTarget.checked)} />
         case TableRules.ColumnDisplay:
             return <Checkbox size="lg" isChecked={isEmpty(override.value) ? true : override.value} onChange={e => onChange(e.currentTarget.checked)} />
+        case TableRules.ColumnTransform:
+            return <CodeEditorModal value={isEmpty(override.value) ? transformFunc : override.value} onChange={onChange}/>
         default:
             return <></>
     }
@@ -77,5 +80,13 @@ export enum TableRules {
     ColumnFixed = 'Column.fixed',
     ColumnFilter = 'Column.filter',
     ColumnEllipsis = 'Column.textEllipsis',
-    ColumnDisplay = "Column.display"
+    ColumnDisplay = "Column.display",
+    ColumnTransform = "Column.textTransform",
 } 
+
+const transformFunc = `
+function transform(text, moment)  {
+    const t = moment(text * 1000).format("YY-MM-DD HH:mm::ss")
+    return text
+}
+`
