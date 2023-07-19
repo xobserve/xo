@@ -29,21 +29,29 @@ const PanelOverrides = ({ panel, onChange, data }: PanelEditorProps) => {
     const t1 = useStore(panelMsg)
 
     const overrides = panel.overrides
-    const names = useMemo(() => {
+    const names: {label:string;value:string}[] = useMemo(() => {
         switch (panel.type) {
             case PanelType.Table:
                 const res = []
                 const d: TableSeries[] = flatten(data)
                 if (d.length > 0) {
                     for (const c of d[0].columns) {
-                        res.push(c.title)
+                        res.push({
+                            label: c.title,
+                            value: c.dataIndex
+                        })
                     }
                 }
                 return res
              
         
             default:
-                return  flatten(data)?.map((s: any) => s.name)
+                return  flatten(data)?.map((s: any) =>{
+                    return {
+                        label: s.name,
+                        value: s.name
+                    }
+                } )
         }
        
     }, [data])
@@ -63,7 +71,7 @@ const PanelOverrides = ({ panel, onChange, data }: PanelEditorProps) => {
 
     const onAddOverride = () => {
         const o = {
-            target: names[0],
+            target: names[0].value,
             overrides: []
         }
         onChange((panel: Panel) => {
@@ -107,7 +115,7 @@ const PanelOverrides = ({ panel, onChange, data }: PanelEditorProps) => {
                             })
                         }}>
                             {
-                                names.map((name, i) => <option key={name} value={name}>{name}</option>)
+                                names.map((name, i) => <option key={name.value} value={name.value}>{name.label}</option>)
                             }
                         </Select>
                     </Tooltip>

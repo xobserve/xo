@@ -17,9 +17,13 @@ import { TableSettings } from 'types/panel/plugins';
 import storage from 'utils/localStorage';
 import { cloneDeep } from 'lodash';
 import { setTableFilter } from './TableFilter';
+import { Text } from '@chakra-ui/react';
+import { findOverrideRule } from 'utils/dashboard/panel';
+import { Panel } from 'types/dashboard';
+import { TableRules } from '../../OverridesEditor';
 
 interface Props {
-  panelId: number
+  panel: Panel
   dashboardId: string
   columns: TableColumn[]
   data: TableRow[]
@@ -28,10 +32,10 @@ interface Props {
 
 const storagePageKey = "tablePage"
 const ComplexTable = memo((props: Props) => {
-  const { data, dashboardId, panelId, options } = props
+  const { data, dashboardId, panel, options } = props
 
 
-  const pageKey = storagePageKey + dashboardId + panelId
+  const pageKey = storagePageKey + dashboardId + panel.id
   const onShowSizeChange = (_current, pageSize) => {
     storage.set(pageKey, pageSize)
   };
@@ -62,6 +66,16 @@ const ComplexTable = memo((props: Props) => {
     if (options.column.enableFilter) {
       setTableFilter(column, data)
     }
+    
+
+    column.render = (text, record, index) => {
+      const color = findOverrideRule(panel,column.dataIndex, TableRules.ColumnColor)
+  
+      return <Text color={color ?? "inherit"}>{text}</Text>
+    }
+
+    const title = findOverrideRule(panel, column.dataIndex,TableRules.ColumnTitle )
+    if (title) column.title = title
   }
 
   return (<>

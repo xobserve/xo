@@ -56,14 +56,7 @@ const TablePanel = (props: TablePanelProps) => {
                 if (!exist) {
                     setSeries(s.name)
                 }
-
-                const columns = cloneDeep(s.columns)
-                for (const c of columns) {
-                    const override = findOverrideRule(panel, c.title,TableRules.ColumnTitle )
-                    if (override) c.title = override
-                }
-
-                return [columns, s.rows,seriesList]
+                return [s.columns, s.rows,seriesList]
             }
         }
 
@@ -76,7 +69,7 @@ const TablePanel = (props: TablePanelProps) => {
     return (
         <Flex h="100%" justify="space-between" direction="column">
             <Box maxH={series ? "calc(100% - 32px)" : "100%"} overflowY="scroll" sx={cssStyles}>
-                <ComplexTable panelId={props.panel.id} dashboardId={props.dashboardId} columns={tableColumns} data={tableData} options={props.panel.plugins.table} />
+                <ComplexTable panel={props.panel} dashboardId={props.dashboardId} columns={tableColumns} data={tableData} options={props.panel.plugins.table} />
                 {/* <ReactTable
                     columns={tableColumns}
                     data={tableData}

@@ -19,6 +19,8 @@ import {
     Center,
     Button,
     Box,
+    HStack,
+    Text,
 } from "@chakra-ui/react";
 import { PresetColor } from "react-color/lib/components/sketch/Sketch";
 import { useStore } from "@nanostores/react";
@@ -29,21 +31,27 @@ interface Props {
     color: string
     onChange: any
     buttonText?: string
+    showColorBlock?: boolean
+    showColorText?: boolean
 }
 
-export const ColorPicker = (props:Props) => {
+export const ColorPicker = ({ presetColors, color, onChange, buttonText = null, showColorBlock = true, showColorText = true }: Props) => {
     const t = useStore(commonMsg)
     return (
         <Popover>
-            <PopoverTrigger><Button size="sm" width="fit-content">{props.buttonText ?? t.pickColor}</Button></PopoverTrigger>
+            <PopoverTrigger><HStack>
+                <Button size="sm" width="fit-content" variant="ghost">{buttonText ?? t.pickColor}</Button>
+                <Box width="20px" height="20px" bg={color} borderRadius="50%"></Box>
+                <Text textStyle="annotation">{color}</Text>
+            </HStack></PopoverTrigger>
             <PopoverContent width={300}>
                 <Center>
                     <SketchPicker
                         // disableAlpha={true}
-                        presetColors={props.presetColors}
+                        presetColors={presetColors}
                         width="100%"
-                        color={props.color}
-                        onChange={props.onChange}
+                        color={color}
+                        onChange={onChange}
                     />
                 </Center>
             </PopoverContent>
