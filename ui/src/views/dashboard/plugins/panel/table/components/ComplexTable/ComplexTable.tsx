@@ -18,7 +18,7 @@ import storage from 'utils/localStorage';
 import { cloneDeep } from 'lodash';
 import { setTableFilter } from './TableFilter';
 import { Text } from '@chakra-ui/react';
-import { findOverrideRule } from 'utils/dashboard/panel';
+import { findOverride, findOverrideRule, findRuleInOverride } from 'utils/dashboard/panel';
 import { Panel } from 'types/dashboard';
 import { TableRules } from '../../OverridesEditor';
 
@@ -40,10 +40,11 @@ const ComplexTable = memo((props: Props) => {
     storage.set(pageKey, pageSize)
   };
 
-
+  const cellPadding = options.cellSize == "small" ? "8px 8px" : (options.cellSize == "large" ? "16px 16px" : "12px 8px")
   const columns = cloneDeep(props.columns)
   columns[0].fixed = "left"
   columns[0].width = "200px"
+
   for (const column of columns) {
     if (options.column.align != "auto") {
       column.align = options.column.align
@@ -67,11 +68,11 @@ const ComplexTable = memo((props: Props) => {
       setTableFilter(column, data)
     }
     
-
+    const override = findOverride(panel, column.dataIndex)
     column.render = (text, record, index) => {
-      const color = findOverrideRule(panel,column.dataIndex, TableRules.ColumnColor)
-  
-      return <Text color={color ?? "inherit"}>{text}</Text>
+      const color = findRuleInOverride(override, TableRules.ColumnColor)
+      const bg = findRuleInOverride(override, TableRules.ColumnBg)
+      return <Text color={color ?? "inherit"} padding={cellPadding} bg={bg}>{text}</Text>
     }
 
     const title = findOverrideRule(panel, column.dataIndex,TableRules.ColumnTitle )

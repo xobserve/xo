@@ -34,7 +34,8 @@ const TableOverridesEditor = ({ override, onChange }: Props) => {
             return <EditorInputItem value={override.value} onChange={onChange} size="sm" placeholder="change column title display" />
         case TableRules.ColumnColor:
             return <ColorPicker presetColors={colors} color={override.value} onChange={v => onChange(v.hex)} />
-
+        case TableRules.ColumnBg:
+            return <ColorPicker presetColors={colors} color={override.value} onChange={v => onChange(v.hex)} />
         case 'Series.style':
             return <RadionButtons size="sm" options={[{ label: "Lines", value: "lines" }, { label: "Bars", value: "bars" }, { label: "points", value: "points" }]} value={override.value} onChange={onChange} />
         case 'Series.name':
@@ -66,5 +67,6 @@ export default TableOverridesEditor
 
 export enum TableRules {
     ColumnTitle = 'Column.title',
-    ColumnColor = 'Column.color'
+    ColumnColor = 'Column.color',
+    ColumnBg = 'Column.background'
 } 

@@ -109,6 +109,12 @@ export default TablePanel
 
 
 const cssStyles = {
+    'td.ant-table-cell': {
+        padding: '0 0 !important'
+    },
+    'th.ant-table-cell': {
+        background: "inherit !important"
+    },
     '.chakra-table thead tr th input': {
         background: 'transparent',
         outline: "none"
