@@ -493,3 +493,12 @@ export const tracePanelMsg = i18n("tracePanel", {
     "selectForCompre": "selected for comparison",
     "startTime": "Start time",
 })
+
+
+export const componentsMsg = i18n("components", {
+  "addThreshold": "Add Threshold",
+  "absolute": "Absolute",
+  "percentage": "Percentage",
+  "thresholdMode": "Threshold mode",
+  "thresholdModeTips": "Absolute: the threshold is a absolute value, Percentage: the threshold is a percentage of the max value",
+})

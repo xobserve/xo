@@ -12,12 +12,14 @@
 // limitations under the License.
 
 import { Box, HStack, Input, Text, VStack,Button } from "@chakra-ui/react"
+import { useStore } from "@nanostores/react"
 import { ColorPicker } from "components/ColorPicker"
 import { EditorNumberItem } from "components/editor/EditorItem"
 import RadionButtons from "components/RadioButtons"
 import { cloneDeep } from "lodash"
 import React, { useEffect, useState } from "react"
 import { FaPlus, FaTimes } from "react-icons/fa"
+import { componentsMsg } from "src/i18n/locales/en"
 import { ThresholdsConfig, ThresholdsMode } from "types/threshold"
 import { colors } from "utils/colors"
 import { isEmpty } from "utils/validate"
@@ -29,6 +31,7 @@ interface Props {
 
 
 const ThresholdEditor = (props: Props) => {
+    const t1 = useStore(componentsMsg)
     const [value, setValue] = useState(props.value)
     useEffect(() => {
         if (isEmpty(value)) {
@@ -82,9 +85,8 @@ const ThresholdEditor = (props: Props) => {
         props.onChange(v1)
     }
 
-    console.log("here444444:", value)
     return (<Box>
-        <Button onClick={addThreshod} width="100%" size="sm" colorScheme="gray">+ Add threshold</Button>
+        <Button onClick={addThreshod} width="100%" size="sm" colorScheme="gray">+ {t1.addThreshold}</Button>
         <VStack alignItems="left" mt="2" key={value?.thresholds?.length}>
             {value?.thresholds?.map((threshold, i) => <HStack key={threshold.color} spacing={1}>
                 <ColorPicker presetColors={colors} color={threshold.color} onChange={v =>  {
@@ -102,9 +104,9 @@ const ThresholdEditor = (props: Props) => {
             </HStack>)}
         </VStack>
         <Box mt="2">
-            <Text fontSize="0.8rem">Thresholds mode</Text>
-            <Text fontSize="0.8rem" textStyle="annotation"> Percentage means thresholds relative to min & max</Text>
-            <RadionButtons size="sm" value={value.mode} options={[{label: "Absolute", value: ThresholdsMode.Absolute},{label: "Percentage", value:ThresholdsMode.Percentage}]} onChange={v => {
+            <Text fontSize="0.8rem">{t1.thresholdMode}</Text>
+            <Text fontSize="0.8rem" textStyle="annotation"> {t1.thresholdModeTips} </Text>
+            <RadionButtons size="sm" value={value.mode} options={[{label: t1[ThresholdsMode.Absolute], value: ThresholdsMode.Absolute},{label: t1[ThresholdsMode.Percentage], value:ThresholdsMode.Percentage}]} onChange={v => {
                 value.mode = v
                 changeValue(value)
             }}/>

@@ -28,7 +28,7 @@ interface Option {
     value: string | boolean
 }
 
-const RadionButtons = ({ options, value, onChange, size = "md", spacing = 1, fontSize = "1rem", theme = "default" }: Props) => {
+const RadionButtons = ({ options, value, onChange, size = "md", spacing = 1, fontSize = "0.9rem", theme = "default" }: Props) => {
     return (<HStack spacing={spacing}>
         {options.map(o => <Button fontSize={fontSize} size={size} onClick={() => onChange(o.value)} borderRadius="0" variant={value == o.value ? "solid" : (theme == "default" ? "outline" : "ghost")} colorScheme={theme == "default" ? "gray" : "brand"}>{o.label}</Button>)}
     </HStack>)
