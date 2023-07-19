@@ -31,6 +31,7 @@ import { ZoomPlugin } from "./uplot-plugins/ZoomPlugin";
 import { setDateTime } from "components/DatePicker/DatePicker";
 import React from "react";
 import { GraphRules } from "./OverridesEditor";
+import { findOverride, findOverrideRule, findRuleInOverride } from "utils/dashboard/panel";
 
 interface GraphPanelProps extends PanelProps {
     data: SeriesData[][]
@@ -68,15 +69,15 @@ const GraphPanel = memo((props: GraphPanelProps) => {
     const options = useMemo(() => {
         let o;
         data.map((frame, i) => {
-            const override: OverrideItem = props.panel.overrides.find((o) => o.target == frame.rawName)
-            const name = override?.overrides.find((o) => o.type == GraphRules.SeriesName)?.value
+            const override: OverrideItem = findOverride(props.panel, frame.rawName)  
+            const name = findRuleInOverride(override,GraphRules.SeriesName )
             if (name) {
                 frame.name = name
             } else {
                 frame.name = frame.rawName
             }
 
-            const color = override?.overrides.find((o) => o.type == GraphRules.SeriesColor)?.value
+            const color = findRuleInOverride(override, GraphRules.SeriesColor)
             if (color) {
                 frame.color = color
             } else {
@@ -230,8 +231,7 @@ const transformDataToUplot = (data: SeriesData[], panel: Panel) => {
 
     // push y-axes series data
     for (const d of data) {
-        const override: OverrideItem = panel.overrides.find((o) => o.target == d.rawName)
-        const negativeY = override?.overrides.find(o => o.type == GraphRules.SeriesNegativeY)
+        const negativeY = findOverrideRule(panel, d.rawName, GraphRules.SeriesNegativeY) 
         if (negativeY) {
             const vals = cloneDeep(d.fields[1].values)
             for (let i = 0; i < vals.length; i++) {

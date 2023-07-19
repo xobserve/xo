@@ -23,6 +23,7 @@ import { formatUnit } from "components/Unit";
 import { measureText } from "utils/measureText";
 import { SeriesData } from "types/seriesData";
 import { GraphRules } from "./OverridesEditor";
+import { findOverride, findRuleInOverride } from "utils/dashboard/panel";
 
 
 
@@ -70,20 +71,20 @@ export const parseOptions = (config: PanelProps,rawData: SeriesData[], colorMode
     }]
 
     rawData.forEach((d, i) => {
-        const override:OverrideItem = config.panel.overrides.find((o) => o.target == d.rawName)
+        const override:OverrideItem = findOverride(config.panel, d.rawName) 
         let opacity = config.panel.plugins.graph.styles.fillOpacity / 100
-        const fillOverride =  override?.overrides.find((o) => o.type == GraphRules.SeriesFill)
+        const fillOverride = findRuleInOverride(override, GraphRules.SeriesFill)
         if (fillOverride) {
             opacity = fillOverride.value / 100
         }
 
         let style = config.panel.plugins.graph.styles.style
-        let styleOverride = override?.overrides.find((o) => o.type == GraphRules.SeriesStyle)?.value
+        let styleOverride = findRuleInOverride(override,GraphRules.SeriesStyle) 
         if (styleOverride) {
             style = styleOverride
         }
         
-        const unitsOverride = override?.overrides.find((o) => o.type == GraphRules.SeriesUnit)?.value
+        const unitsOverride = findRuleInOverride(override,GraphRules.SeriesUnit)
         let scale = 'y'
         if (unitsOverride != undefined) {
 
@@ -96,7 +97,7 @@ export const parseOptions = (config: PanelProps,rawData: SeriesData[], colorMode
             }
 
             let decimal = config.panel.plugins.graph.value.decimal
-            const decimalOverride = override?.overrides.find((o) => o.type == GraphRules.SeriesDecimal)?.value
+            const decimalOverride = findRuleInOverride(override,GraphRules.SeriesDecimal)
             if (decimalOverride != undefined) {
                 decimal = decimalOverride
             }

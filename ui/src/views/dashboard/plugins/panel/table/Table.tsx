@@ -10,23 +10,21 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-import { Box, Center, Flex, Select, useColorMode, useColorModeValue, useToast } from "@chakra-ui/react"
-import { DefaultColumnFilter, NumberRangeColumnFilter } from "components/table/filters"
-import ReactTable from "components/table/Table"
-import { setVariable } from "src/views/variables/Variables"
-import React, { useEffect, useMemo } from "react"
-import { PanelProps } from "types/dashboard"
+import { Box, Center, Flex, Select } from "@chakra-ui/react"
+import React, {  useMemo } from "react"
+import { OverrideItem, PanelProps } from "types/dashboard"
 import { TablePluginData, TableSeries } from "types/plugins/table"
-import { isEmpty, isFunction, isNumber } from "lodash"
-import { genDynamicFunction } from "utils/dynamicCode"
-import { useNavigate } from "react-router-dom"
+import { cloneDeep, isEmpty } from "lodash"
 import ComplexTable from "./components/ComplexTable/ComplexTable"
+import { TableRules } from "./OverridesEditor"
+import { findOverrideRule } from "utils/dashboard/panel"
 
 interface TablePanelProps extends PanelProps {
     data: TablePluginData[]
 }
 
 const TablePanel = (props: TablePanelProps) => {
+    const {panel} = props
     if (isEmpty(props.data)) {
         return (<Center height="100%">No data</Center>)
     }
@@ -58,12 +56,19 @@ const TablePanel = (props: TablePanelProps) => {
                 if (!exist) {
                     setSeries(s.name)
                 }
-                return [s.columns, s.rows,seriesList]
+
+                const columns = cloneDeep(s.columns)
+                for (const c of columns) {
+                    const override = findOverrideRule(panel, c.title,TableRules.ColumnTitle )
+                    if (override) c.title = override
+                }
+
+                return [columns, s.rows,seriesList]
             }
         }
 
         return [[], [], seriesList]
-    }, [series, props.data])
+    }, [series, props.data, props.panel.overrides])
 
     // const clickFunc = genDynamicFunction(props.panel.plugins.table.onRowClick);
 

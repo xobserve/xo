@@ -10,7 +10,7 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-import { GridPos, Panel } from "types/dashboard";
+import { GridPos, OverrideItem, Panel } from "types/dashboard";
 
 export const updateGridPos = (panel: Panel,newPos: GridPos) => {
     panel.gridPos.x = newPos.x;
@@ -20,4 +20,16 @@ export const updateGridPos = (panel: Panel,newPos: GridPos) => {
 }
 
 
+export const findOverrideRule = (panel: Panel, overideTarget,  ruleType) => {
+    const override: OverrideItem = findOverride(panel,overideTarget)
+    return findRuleInOverride(override, ruleType)
+}
+
+export const findOverride = (panel:Panel, overideTarget) => {
+    return panel.overrides.find((o) => o.target == overideTarget)
+}
+
+export const findRuleInOverride = (override: OverrideItem, ruleType) => {
+    return override?.overrides.find((o) => o.type == ruleType)?.value
+}
 
