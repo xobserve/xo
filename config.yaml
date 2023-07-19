@@ -11,6 +11,14 @@ server:
     addr: ":10086"
     base_url: "/api"
 
+#################################### Database ##############################
+database:
+    account: root
+    account_secret: Sunface-Mysql-im.dev
+    host: localhost
+    port: 6379
+    database: aiapm
+
 #################################### User/Session ##############################
 user: 
     # a session is created when user login to im.dev, this session will be expired after X seconds
