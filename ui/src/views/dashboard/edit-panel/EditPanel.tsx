@@ -35,6 +35,7 @@ import PanelOverrides from "./PanelOverrides"
 import React from "react";
 import { useStore } from "@nanostores/react"
 import { commonMsg, panelMsg } from "src/i18n/locales/en"
+import EditPanelTransform from "./Transform"
 
 interface EditPanelProps {
     dashboard: Dashboard
@@ -179,7 +180,30 @@ const EditPanel = ({ dashboard, onChange }: EditPanelProps) => {
                             </Box>
                             {/* panel datasource section */}
                             {!tempPanel.plugins[tempPanel.type].disableDatasource && <Box maxHeight={maxDatasourceHeight()} mt="2" overflowY="scroll">
-                                <EditPanelQuery key={tempPanel.id + tempPanel.type} panel={tempPanel} onChange={setTempPanel} />
+                            <Box>
+                                <Tabs position="relative" variant="unstyled">
+                                    <TabList pb="0">
+                                        <Tab>{t.query}</Tab>
+                                        <Tab>{t.transform}</Tab>
+                                    </TabList>
+                                    <TabIndicator
+                                        mt="3px"
+                                        height="2px"
+                                        bg="brand.500"
+                                        borderRadius="1px"
+                                    />
+                                    <TabPanels>
+                                        <TabPanel px="0" pt="1">
+                                            <EditPanelQuery key={tempPanel.id + tempPanel.type} panel={tempPanel} onChange={setTempPanel} />
+                                        </TabPanel>
+                                        <TabPanel px="0" pt="1" pb="0">
+                                            <EditPanelTransform panel={tempPanel} onChange={setTempPanel} />
+                                        </TabPanel>
+                                    </TabPanels>
+                                </Tabs>
+
+                            </Box>
+                                
                             </Box>}
                         </Box>
                         {/* panel settings section */}

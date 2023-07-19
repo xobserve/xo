@@ -87,9 +87,6 @@ const EditPanelQuery = (props: Props) => {
 
 
     return (<>
-        <Box className="top-gradient-border bordered-left bordered-right" width="fit-content">
-            <Text px="2" py="2">{t.query}</Text>
-        </Box>
         <Box className="bordered" p="2" borderRadius="0" height="100%">
             <Flex justifyContent="space-between" alignItems="start">
                 <HStack>

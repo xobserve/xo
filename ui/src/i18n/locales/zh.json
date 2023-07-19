@@ -83,6 +83,7 @@
     "compore": "比较",
     "duration": "耗时",
     "alert": "告警",
+    "transform": "变换",
     "isReqiiured": "{name}是必填项",
     "isInvalid": "{name}不正确",
     "isAdded": "{name}添加成功!",
@@ -312,7 +313,9 @@
 
     "targetName": "目标名称",
     "addRule": "新建覆盖规则",
-    "addOverride": "新建覆盖"
+    "addOverride": "新建覆盖",
+
+    "transformTips": "通过自定义的变换函数对查询到的结果进行进一步的处理，推荐在 Table 图表中使用"
   },
   "prometheusDs": {
     "enterPromQL": "输入 PromQL 查询语句",

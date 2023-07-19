@@ -148,6 +148,7 @@ export const prometheusToTableData = (rawData: any, query: PanelQuery) => {
         const series: TableSeries = {
             columns: columns,
             name: JSON.stringify(m.metric).replace(/:/g, '='),
+            rawName: m.metric,
             rows: []
         }
         for (const v of m.values) {

@@ -10,16 +10,17 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-import { Alert, AlertDescription, AlertIcon, AlertStatus, AlertTitle, Box, Divider, Text } from "@chakra-ui/react"
+import { Alert, AlertDescription, AlertIcon, AlertStatus, AlertTitle, Box, Divider, Flex, HStack, Text } from "@chakra-ui/react"
 import React from "react"
 
 interface Props {
     status: AlertStatus
     title: string
     children: any
+    width?: string
 }
 
-export const DetailAlert = ({ status, title, children }: Props) => {
+export const DetailAlert = ({ status, title, children,width="fit-content" }: Props) => {
     return (
         <Alert
             status={status}
@@ -27,15 +28,19 @@ export const DetailAlert = ({ status, title, children }: Props) => {
             flexDirection='column'
             alignItems='left'
             justifyContent='center'
-            width="fit-content"
+            width={width}
         >
-            <AlertIcon boxSize='40px' mr={0} />
-            <AlertTitle mt={4} mb={4} fontSize='lg'>
-                {title}
-            </AlertTitle>
+            <HStack alignItems="center" pt="1" pb="3">
+                <AlertIcon boxSize='20px' mr={0} />
+                <AlertTitle fontSize='lg'>
+                    {title}
+                </AlertTitle>
+
+            </HStack>
+
             <Divider />
-            <Box mt="3" pb="1">
-            {children}
+            <Box mt="2" pb="1">
+                {children}
             </Box>
 
         </Alert>
@@ -51,6 +56,6 @@ interface Detail {
 export const DetailAlertItem = ({ title, children }: Detail) => {
     return (<AlertDescription mt="4">
         {title && <Box textStyle="subTitle">{title}</Box>}
-            {children}
+        {children}
     </AlertDescription>)
 }

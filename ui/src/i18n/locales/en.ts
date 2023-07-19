@@ -92,6 +92,7 @@ export const commonMsg = i18n("common", {
   "compore": "Compare",
   "duration": "Duration",
   "alert": "Alert",
+  "transform": "Transform",
   "inputTips": params("Enter {name}.."),
   "isReqiiured": params("{name} is required"),
   "isInvalid": params("{name} is invalid"),
@@ -333,6 +334,10 @@ export const panelMsg = i18n("panel", {
   "targetName": "Target name",
   "addRule": "Add override rule",
   "addOverride": "Add override",
+
+  "transformTips": `Transformations allow you to join, calculate, re-order, hide, and rename your query results before they are visualized.
+  Many transforms are not suitable if you're using the Graph visualization, as it currently only supports time series data.
+  It can help to switch to the Table visualization to understand what a transformation is doing.`
 })
 
 

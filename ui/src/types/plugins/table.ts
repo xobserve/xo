@@ -18,6 +18,7 @@ import type { ColumnType } from 'antd/es/table';
 
 export interface TableSeries {
     name: string // series name,
+    rawName: Object
     columns: TableColumn[]// table columns
     rows: TableRow[] // table data, each item in data list is a table row: key is the column name, value is the corresponding row value
 }

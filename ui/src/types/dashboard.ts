@@ -65,6 +65,8 @@ export interface Panel {
     datasource: PanelDatasource
 
     overrides: OverrideItem[]
+
+    transform: string
 }
 
 export interface OverrideItem {

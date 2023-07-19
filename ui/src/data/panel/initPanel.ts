@@ -27,7 +27,12 @@ export const initPanel = (id?) =>  {
         },
         datasource: initDatasource,
         styles: initPanelStyles,
-        overrides: []
+        overrides: [],
+        transform: 
+`function transform(data) {
+    console.log(data)
+    return data
+}`
     }
 
     if (id) {
