@@ -16,10 +16,12 @@ import { Button, Input } from "antd"
 import React, { useEffect, useState } from "react"
 import { TableColumn } from "types/plugins/table"
 
-export const setTableFilter = (column: TableColumn, data) => {
+export const setTableFilter = (column: TableColumn, data, filter?) => {
   if (data.length > 0) {
     const value = data[0][column.dataIndex]
-    if (typeof value == "number") {
+    filter = filter ?? (typeof value == "number" ? "number" : "string")
+
+    if (filter == "number") {
       column.onFilter = (value, record) => {
         let min = null
         let max = null

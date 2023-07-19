@@ -10,7 +10,6 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-import { Box, Button, Checkbox, HStack, Select, Text, Tooltip } from "@chakra-ui/react";
 import RadionButtons from "components/RadioButtons";
 import { ColorPicker } from "components/ColorPicker";
 import { EditorInputItem, EditorNumberItem, EditorSliderItem } from "components/editor/EditorItem";
@@ -20,6 +19,8 @@ import { colors } from "utils/colors";
 import React from "react";
 import { useStore } from "@nanostores/react";
 import { commonMsg } from "src/i18n/locales/en";
+import { Checkbox } from "@chakra-ui/react";
+
 
 interface Props {
     override: OverrideRule
@@ -51,6 +52,10 @@ const TableOverridesEditor = ({ override, onChange }: Props) => {
             return  <EditorInputItem value={override.value} onChange={onChange} size="sm" placeholder="css width, e.g 100px, 20%, auto" />
         case TableRules.ColumnFixed:
             return <RadionButtons size="sm" options={[{ label: "Left", value: "left" }, { label: "Right", value: "right" }]} value={override.value} onChange={onChange} />
+        case TableRules.ColumnFilter:
+            return <RadionButtons size="sm" options={[{ label: "Number min/max", value: "number" }, { label: "String match", value: "string" }]} value={override.value} onChange={onChange} />
+        case TableRules.ColumnEllipsis:
+            return <Checkbox size="lg" isChecked={override.value} onChange={e => onChange(e.currentTarget.checked)} />
         case 'Series.style':
             return <RadionButtons size="sm" options={[{ label: "Lines", value: "lines" }, { label: "Bars", value: "bars" }, { label: "points", value: "points" }]} value={override.value} onChange={onChange} />
         case 'Series.name':
@@ -88,4 +93,6 @@ export enum TableRules {
     ColumnDecimal = 'Column.decimal',
     ColumnWidth = 'Column.width',
     ColumnFixed = 'Column.fixed',
+    ColumnFilter = 'Column.filter',
+    ColumnEllipsis = 'Column.textEllipsis',
 } 

@@ -17,7 +17,7 @@ import { TableSettings } from 'types/panel/plugins';
 import storage from 'utils/localStorage';
 import { cloneDeep, isNumber, round } from 'lodash';
 import { setTableFilter } from './TableFilter';
-import { Text } from '@chakra-ui/react';
+import { Box, Text, Tooltip } from '@chakra-ui/react';
 import { findOverride, findOverrideRule, findRuleInOverride } from 'utils/dashboard/panel';
 import { Panel } from 'types/dashboard';
 import { TableRules } from '../../OverridesEditor';
@@ -61,35 +61,48 @@ const ComplexTable = memo((props: Props) => {
       }
     }
 
-    if (options.column.enableSort) {
-      column.sorter = (a, b) => a >= b ? 1 : -1
-      column.sortDirections = ['descend', 'ascend']
-    }
-
-    if (options.column.enableFilter) {
-      setTableFilter(column, data)
-    }
-    
     const override = findOverride(panel, column.dataIndex)
     const width = findRuleInOverride(override, TableRules.ColumnWidth)
     if (width) column.width = width
     const fixed = findRuleInOverride(override, TableRules.ColumnFixed)
     if (fixed) column.fixed = fixed
 
+    if (options.column.enableSort) {
+      column.sorter = (a, b) => a >= b ? 1 : -1
+      column.sortDirections = ['descend', 'ascend']
+    }
+    
+    const filter = findRuleInOverride(override, TableRules.ColumnFilter)
+    if (!filter) {
+      if (options.column.enableFilter) {
+        setTableFilter(column, data)
+      }
+    } else {
+      setTableFilter(column, data, filter)
+    }
+
+    const unit = findRuleInOverride(override, TableRules.ColumnUnit)
+    const decimal = findRuleInOverride(override, TableRules.ColumnDecimal) ?? DefaultDecimal
+
+    if (unit || decimal) {
+      for (const row of data) {
+        const v = row[column.dataIndex]
+        if (isNumber(v) ) {
+          if (unit) { 
+            row[column.dataIndex] = formatUnit(v, unit.units, decimal)
+          } else {
+            row[column.dataIndex] = round(v, decimal)
+          }
+        }
+      }
+    }
+
     column.render = (text, record, index) => {
       const color = findRuleInOverride(override, TableRules.ColumnColor)
       const bg = findRuleInOverride(override, TableRules.ColumnBg)
-      const unit = findRuleInOverride(override, TableRules.ColumnUnit)
-      const decimal = findRuleInOverride(override, TableRules.ColumnDecimal) ?? DefaultDecimal
-      if (isNumber(text) ) {
-        if (unit) { 
-          text = formatUnit(text, unit.units, decimal)
-        } else {
-          text = round(text, decimal)
-        }
-      }
+      const ellipsis = findRuleInOverride(override, TableRules.ColumnEllipsis)
 
-      return <Text color={color ?? "inherit"} padding={cellPadding} bg={bg}>{text}</Text>
+      return <Box  padding={cellPadding} bg={bg}><Tooltip label={ellipsis ? text : null} openDelay={300}><Text color={color ?? "inherit"} wordBreak="break-all" noOfLines={ellipsis ? 1: null}>{text}</Text></Tooltip></Box>
     }
 
     const title = findOverrideRule(panel, column.dataIndex,TableRules.ColumnTitle )
