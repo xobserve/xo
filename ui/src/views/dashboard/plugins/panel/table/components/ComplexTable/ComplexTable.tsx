@@ -25,6 +25,8 @@ import { formatUnit } from 'components/Unit';
 import { DefaultDecimal } from 'src/data/constants';
 import { genDynamicFunction } from 'utils/dynamicCode';
 import moment from 'moment';
+import { ThresholdsConfig, ThresholdsMode } from 'types/threshold';
+import { getThreshold } from 'components/Threshold/utils';
 
 interface Props {
   panel: Panel
@@ -45,9 +47,8 @@ const ComplexTable = memo((props: Props) => {
   };
 
   const cellPadding = options.cellSize == "small" ? "8px 8px" : (options.cellSize == "large" ? "16px 16px" : "12px 8px")
-  
+
   const columns = []
-  const newData = []
   for (const c of props.columns) {
     const column = cloneDeep(c)
     const override = findOverride(panel, column.dataIndex)
@@ -97,11 +98,34 @@ const ComplexTable = memo((props: Props) => {
     }
     const isFunc = isFunction(transformFunc)
 
+    const thresholds:ThresholdsConfig = findRuleInOverride(override, TableRules.ColumnThreshold)
+    let max;
+    if (thresholds?.mode == ThresholdsMode.Percentage) {
+      max = Math.max(...data.map(row => row[column.dataIndex] as number))
+    }
+
+    const bg = findRuleInOverride(override, TableRules.ColumnBg)
     // modify data
-    if (unit || decimal || isFunc) {
-      for (const r of data) {
-        const row = cloneDeep(r)
+    if (unit || decimal || isFunc || thresholds) {
+      for (const row of data) {
+        // raw value
         const v = row[column.dataIndex]
+        if (bg) {
+          row['__bg__'] = {
+            ...row['__bg__'],
+            [column.dataIndex]: bg
+          }
+        }
+        if (thresholds && isNumber(v)) {
+          const t = getThreshold(v as number, thresholds,max)
+          if (t) {
+            row['__bg__'] = {
+              ...row['__bg__'],
+              [column.dataIndex]: t.color
+            }
+          }
+        }
+
         if (isNumber(v) ) {
           if (unit) { 
             row[column.dataIndex] = formatUnit(v, unit.units, decimal)
@@ -113,15 +137,15 @@ const ComplexTable = memo((props: Props) => {
         if (isFunc) {
           row[column.dataIndex] = transformFunc(row[column.dataIndex], moment)
         }
-        newData.push(row)
       } 
     }
 
+  
     column.render = (text, record, index) => {
-      const color = findRuleInOverride(override, TableRules.ColumnColor)
-      const bg = findRuleInOverride(override, TableRules.ColumnBg)
+      let color = findRuleInOverride(override, TableRules.ColumnColor)
       const ellipsis = findRuleInOverride(override, TableRules.ColumnEllipsis)
 
+      const bg = record['__bg__']?.[column.dataIndex]
       return <Box  padding={cellPadding} bg={bg}><Tooltip label={ellipsis ? text : null} openDelay={300}><Text color={color ?? "inherit"} wordBreak="break-all" noOfLines={ellipsis ? 1: null}>{text}</Text></Tooltip></Box>
     }
 
@@ -134,7 +158,7 @@ const ComplexTable = memo((props: Props) => {
   return (<>
     <Table
       columns={columns}
-      dataSource={newData.length == 0 ? data: newData}
+      dataSource={data}
       size={options.cellSize}
       showHeader={options.showHeader}
       pagination={options.enablePagination ? { position:["bottomCenter"],showTotal: (total) => `Total ${total}`, total: data.length, showSizeChanger: true, defaultPageSize: storage.get(pageKey) ?? 10, pageSizeOptions: [5, 10, 20, 50, 100], onShowSizeChange: onShowSizeChange } : false}

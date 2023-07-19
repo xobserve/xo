@@ -31,20 +31,18 @@ interface Props {
     color: string
     onChange: any
     buttonText?: string
-    showColorBlock?: boolean
-    showColorText?: boolean
     circlePicker?: boolean
     circleRadius?: string
 }
 
-export const ColorPicker = ({ presetColors, color, onChange, buttonText = null, showColorBlock = true, showColorText = true, circlePicker = false,circleRadius="16px" }: Props) => {
+export const ColorPicker = ({ presetColors, color, onChange, buttonText = null, circlePicker = false,circleRadius="16px" }: Props) => {
     const t = useStore(commonMsg)
     return (
         <Popover>
             <PopoverTrigger><HStack>
-                {circlePicker ? <Box width="20px" height="20px" bg={color} borderRadius="50%"></Box> : <>
+                {circlePicker ? <Box width="20px" height="20px" bg={color} borderRadius="50%" className="bordered"></Box> : <>
                 <Button size="sm" width="fit-content" variant="ghost">{buttonText ?? t.pickColor}</Button>
-                <Box width={circleRadius} height={circleRadius} bg={color} borderRadius="50%"></Box>
+                <Box width={circleRadius} height={circleRadius} bg={color} borderRadius="50%" ></Box>
                 <Text textStyle="annotation">{color}</Text>
                 </>}
                 

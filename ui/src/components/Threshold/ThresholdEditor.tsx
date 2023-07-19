@@ -16,7 +16,7 @@ import { useStore } from "@nanostores/react"
 import { ColorPicker } from "components/ColorPicker"
 import { EditorNumberItem } from "components/editor/EditorItem"
 import RadionButtons from "components/RadioButtons"
-import { cloneDeep } from "lodash"
+import { cloneDeep, concat } from "lodash"
 import React, { useEffect, useState } from "react"
 import { FaPlus, FaTimes } from "react-icons/fa"
 import { componentsMsg } from "src/i18n/locales/en"
@@ -87,9 +87,10 @@ const ThresholdEditor = (props: Props) => {
 
     return (<Box>
         <Button onClick={addThreshod} width="100%" size="sm" colorScheme="gray">+ {t1.addThreshold}</Button>
+        <Text fontSize="0.8rem" textStyle="annotation" mt="2">{t1.thresholdTips}</Text>
         <VStack alignItems="left" mt="2" key={value?.thresholds?.length}>
             {value?.thresholds?.map((threshold, i) => <HStack key={threshold.color} spacing={1}>
-                <ColorPicker presetColors={colors} color={threshold.color} onChange={v =>  {
+                <ColorPicker presetColors={concat(['transparent'],colors) } color={threshold.color} onChange={v =>  {
                      value.thresholds[i].color = v.hex
                     changeValue(value)
                 }

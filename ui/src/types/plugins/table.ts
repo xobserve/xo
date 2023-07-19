@@ -28,6 +28,7 @@ export interface TableColumn extends ColumnType<TableRow> {
 }
 
 export interface TableRow {
+    __bg__?: any
     [columnName:string]: number | string
 }
 

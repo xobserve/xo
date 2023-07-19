@@ -501,4 +501,5 @@ export const componentsMsg = i18n("components", {
   "percentage": "Percentage",
   "thresholdMode": "Threshold mode",
   "thresholdModeTips": "Absolute: the threshold is a absolute value, Percentage: the threshold is a percentage of the max value",
+  "thresholdTips": "If the <raw> value in table cell is greater than the threshold, the color will be changed, ",
 })

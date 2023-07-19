@@ -45,7 +45,7 @@ const TablePanel = (props: TablePanelProps) => {
                     exist = true
                 }
                 seriesList.push(s.name)
-                data.push(s)
+                data.push(cloneDeep(s))
             })
         })
 
@@ -109,6 +109,9 @@ export default TablePanel
 
 
 const cssStyles = {
+    '.ant-table-wrapper': {
+        maxWidth: 'calc(100% - 1px) !important'
+    },
     'td.ant-table-cell': {
         padding: '0 0 !important'
     },
@@ -124,5 +127,8 @@ const cssStyles = {
             background: 'transparent',
             outline: "none"
         }
+    },
+    '.ant-table-wrapper .ant-table-tbody >tr >td': {
+      borderBottomWidth: '0.5px'
     }
 }
