@@ -14,27 +14,46 @@ import { Box, Button, HStack, Select, StackDivider, Tooltip, VStack } from "@cha
 import { Form, FormSection } from "components/form/Form";
 import FormItem from "components/form/Item";
 import { flatten } from "lodash";
-import { useMemo, useState } from "react";
-import { FaEye, FaTimes } from "react-icons/fa";
+import { useMemo } from "react";
+import { FaTimes } from "react-icons/fa";
 import { Panel, PanelEditorProps, PanelType } from "types/dashboard";
-import GraphOverridesEditor, { GraphOverridesRules } from "../plugins/panel/graph/OverridesEditor";
+import GraphOverridesEditor, { GraphRules } from "../plugins/panel/graph/OverridesEditor";
 import React from "react";
 import { useStore } from "@nanostores/react";
-import { commonMsg, panelMsg } from "src/i18n/locales/en";
+import { panelMsg } from "src/i18n/locales/en";
+import { TableSeries } from "types/plugins/table";
+import TableOverridesEditor, { TableRules } from "../plugins/panel/table/OverridesEditor";
 
 
 const PanelOverrides = ({ panel, onChange, data }: PanelEditorProps) => {
-    const t = useStore(commonMsg)
     const t1 = useStore(panelMsg)
 
     const overrides = panel.overrides
-    const names = useMemo(() => flatten(data)?.map((s: any) => s.name), [data])
+    const names = useMemo(() => {
+        switch (panel.type) {
+            case PanelType.Table:
+                const res = []
+                const d: TableSeries[] = flatten(data)
+                if (d.length > 0) {
+                    for (const c of d[0].columns) {
+                        res.push(c.title)
+                    }
+                }
+                return res
+             
+        
+            default:
+                return  flatten(data)?.map((s: any) => s.name)
+        }
+       
+    }, [data])
 
     const getAllRules = ():string[] => {
         switch (panel.type) {
             case PanelType.Graph:
-                return GraphOverridesRules
-        
+                return Object.keys(GraphRules).map(k => GraphRules[k])
+            case PanelType.Table:
+                return  Object.keys(TableRules).map(k => TableRules[k])
             default:
                 return []
         }
@@ -109,6 +128,13 @@ const PanelOverrides = ({ panel, onChange, data }: PanelEditorProps) => {
                     </FormItem>
                     {
                         panel.type == PanelType.Graph && <GraphOverridesEditor override={rule} onChange={(v) => {
+                            onChange((panel: Panel) => {
+                                panel.overrides[i].overrides[j].value = v
+                            })
+                        }}/>
+                    }
+                    {
+                        panel.type == PanelType.Table && <TableOverridesEditor override={rule} onChange={(v) => {
                             onChange((panel: Panel) => {
                                 panel.overrides[i].overrides[j].value = v
                             })

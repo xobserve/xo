@@ -25,8 +25,10 @@ interface Props {
 }
 
 
-const GraphOverridesEditor = ({ override, onChange }: Props) => {
+const TableOverridesEditor = ({ override, onChange }: Props) => {
     switch (override.type) {
+        case "Column.title": 
+            return <EditorInputItem value={override.value} onChange={onChange} size="sm" placeholder="change column title display" />
         case 'Series.style':
             return <RadionButtons size="sm" options={[{ label: "Lines", value: "lines" }, { label: "Bars", value: "bars" }, { label: "points", value: "points" }]} value={override.value} onChange={onChange} />
         case 'Series.name':
@@ -40,7 +42,7 @@ const GraphOverridesEditor = ({ override, onChange }: Props) => {
                 })}
             } />
         case 'Series.color':
-            return <ColorPicker presetColors={colors} color={override.value} onChange={v => onChange(v.hex)} ><Button size="sm" width="fit-content" bg={override.value} _hover={{bg: override.value}}>Pick color</Button></ColorPicker>
+            return <ColorPicker presetColors={colors} color={override.value} onChange={v => onChange(v.hex)} ><Button size="sm" width="fit-content">Pick color</Button></ColorPicker>
         case 'Series.fill':
             return <EditorSliderItem value={override.value} min={0} max={100} step={1} onChange={onChange} />
         case 'Series.negativeY':
@@ -53,16 +55,8 @@ const GraphOverridesEditor = ({ override, onChange }: Props) => {
     
 }
 
-export default GraphOverridesEditor
+export default TableOverridesEditor
 
-
-export enum GraphRules {
-    SeriesStyle =  'Series.style',
-    SeriesName = 'Series.name',
-    SeriesUnit = 'Series.unit',
-    SeriesDecimal = 'Series.decimal',
-    SeriesColor = 'Series.color',
-    SeriesFill = 'Series.fill',
-    SeriesNegativeY = 'Series.negativeY'
- } 
- 
+export enum TableRules {
+   ColumnTitle =  'Column.title'
+} 
