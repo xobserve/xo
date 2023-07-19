@@ -84,9 +84,7 @@ const GraphPanelEditor = ({ panel, onChange }: PanelEditorProps) => {
             <PanelEditItem title={t.color}>
                 <ColorPicker presetColors={colors} color={panel.plugins.stat.styles.color} onChange={v => onChange((panel: Panel) => {
                     panel.plugins.stat.styles.color = v.hex
-                })}>
-                    <Button size="sm" background={panel.plugins.stat.styles.color} _hover={{ bg: panel.plugins.stat.styles.color }}>{t.pickColor}</Button>
-                </ColorPicker>
+                })} />
             </PanelEditItem>
 
             <PanelEditItem title={t2.graphHeight} desc={t2.graphHeightTips}>

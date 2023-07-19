@@ -97,17 +97,13 @@ const NodeGraphPanelEditor = (props: PanelEditorProps) => {
                 <HStack>
                     <ColorPicker presetColors={[{ title: 'light-default', color: initPanelPlugins.nodeGraph.edge.color.light }]} color={panel.plugins.nodeGraph.edge.color.light} onChange={c => onChange((panel: Panel) => {
                         panel.plugins.nodeGraph.edge.color.light = c.hex
-                    })}>
-                        <Button size="sm" variant="outline">{t1.pickLightColor}</Button>
-                    </ColorPicker>
+                    })} buttonText={t1.pickLightColor} />
                     <Box width="40px" height="30px" background={panel.plugins.nodeGraph.edge.color.light}></Box>
                 </HStack>
                 <HStack>
                     <ColorPicker presetColors={[{ title: 'dark-default', color: initPanelPlugins.nodeGraph.edge.color.dark }]} color={panel.plugins.nodeGraph.edge.color.dark} onChange={c => onChange((panel: Panel) => {
                         panel.plugins.nodeGraph.edge.color.dark = c.hex
-                    })}>
-                        <Button size="sm" variant="outline">{t1.pickDarkColor}</Button>
-                    </ColorPicker>
+                    })} buttonText={t1.pickDarkColor} />
                     <Box width="40px" height="30px" background={panel.plugins.nodeGraph.edge.color.dark}></Box>
                 </HStack>
             </PanelEditItem>
@@ -120,17 +116,13 @@ const NodeGraphPanelEditor = (props: PanelEditorProps) => {
                 <HStack>
                     <ColorPicker presetColors={[{ title: 'light-default', color: initPanelPlugins.nodeGraph.edge.highlightColor.light }]} color={panel.plugins.nodeGraph.edge.highlightColor.light} onChange={c => onChange((panel: Panel) => {
                         panel.plugins.nodeGraph.edge.highlightColor.light = c.hex
-                    })}>
-                        <Button size="sm" variant="outline">{t1.pickLightColor}</Button>
-                    </ColorPicker>
+                    })} buttonText={t1.pickLightColor} />
                     <Box width="40px" height="30px" background={panel.plugins.nodeGraph.edge.highlightColor.light}></Box>
                 </HStack>
                 <HStack>
                     <ColorPicker presetColors={[{ title: 'dark-default', color: initPanelPlugins.nodeGraph.edge.highlightColor.dark }]} color={panel.plugins.nodeGraph.edge.highlightColor.dark} onChange={c => onChange((panel: Panel) => {
                         panel.plugins.nodeGraph.edge.highlightColor.dark = c.hex
-                    })}>
-                        <Button size="sm" variant="outline">{t1.pickDarkColor}</Button>
-                    </ColorPicker>
+                    })} buttonText={t1.pickDarkColor} />
                     <Box width="40px" height="30px" background={panel.plugins.nodeGraph.edge.highlightColor.dark}></Box>
                 </HStack>
             </PanelEditItem>

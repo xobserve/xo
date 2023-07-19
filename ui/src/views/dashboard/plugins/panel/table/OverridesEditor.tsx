@@ -18,6 +18,8 @@ import { UnitPicker } from "components/Unit";
 import { OverrideRule, Panel } from "types/dashboard";
 import { colors } from "utils/colors";
 import React from "react";
+import { useStore } from "@nanostores/react";
+import { commonMsg } from "src/i18n/locales/en";
 
 interface Props {
     override: OverrideRule
@@ -26,9 +28,13 @@ interface Props {
 
 
 const TableOverridesEditor = ({ override, onChange }: Props) => {
+    const t = useStore(commonMsg)
     switch (override.type) {
-        case TableRules.ColumnTitle: 
+        case TableRules.ColumnTitle:
             return <EditorInputItem value={override.value} onChange={onChange} size="sm" placeholder="change column title display" />
+        case TableRules.ColumnColor:
+            return <ColorPicker presetColors={colors} color={override.value} onChange={v => onChange(v.hex)} />
+
         case 'Series.style':
             return <RadionButtons size="sm" options={[{ label: "Lines", value: "lines" }, { label: "Bars", value: "bars" }, { label: "points", value: "points" }]} value={override.value} onChange={onChange} />
         case 'Series.name':
@@ -37,12 +43,13 @@ const TableOverridesEditor = ({ override, onChange }: Props) => {
             return <UnitPicker size="sm" type={override.value.unitsType} value={override.value.units} onChange={
                 (units, type) => {
                     onChange({
-                    unitsType: type, 
-                    units: units
-                })}
+                        unitsType: type,
+                        units: units
+                    })
+                }
             } />
-        case 'Series.color':
-            return <ColorPicker presetColors={colors} color={override.value} onChange={v => onChange(v.hex)} ><Button size="sm" width="fit-content">Pick color</Button></ColorPicker>
+        // case 'Series.color':
+        //     return <ColorPicker presetColors={colors} color={override.value} onChange={v => onChange(v.hex)} ><Button size="sm" width="fit-content">Pick color</Button></ColorPicker>
         case 'Series.fill':
             return <EditorSliderItem value={override.value} min={0} max={100} step={1} onChange={onChange} />
         case 'Series.negativeY':
@@ -52,11 +59,12 @@ const TableOverridesEditor = ({ override, onChange }: Props) => {
         default:
             return <></>
     }
-    
+
 }
 
 export default TableOverridesEditor
 
 export enum TableRules {
-   ColumnTitle =  'Column.title'
+    ColumnTitle = 'Column.title',
+    ColumnColor = 'Column.color'
 } 

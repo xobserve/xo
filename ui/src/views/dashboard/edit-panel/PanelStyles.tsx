@@ -80,9 +80,7 @@ const PanelStyles = ({ panel, onChange }: PanelEditorProps) => {
                 <PanelEditItem title="color">
                     <ColorPicker  presetColors={[{ title: 'default', color: useColorModeValue(customColors.textColor.light,'#fff') }]} color={panel.styles.title.color} onChange={c => onChange((panel: Panel) => {
                         panel.styles.title.color = c.hex
-                    })}>
-                        <Button size="sm" variant="outline">Pick color</Button>
-                    </ColorPicker>
+                    })} />
                 </PanelEditItem>
                 <PanelEditItem title="padding top">
                     <EditorInputItem type="input" value={panel.styles.title?.paddingTop} onChange={v => onChange(panel => {

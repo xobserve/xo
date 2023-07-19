@@ -17,20 +17,25 @@ import {
     PopoverTrigger,
     PopoverContent,
     Center,
+    Button,
+    Box,
 } from "@chakra-ui/react";
 import { PresetColor } from "react-color/lib/components/sketch/Sketch";
+import { useStore } from "@nanostores/react";
+import { commonMsg } from "src/i18n/locales/en";
 
 interface Props {
     presetColors?: PresetColor[]
     color: string
     onChange: any
-    children: any
+    buttonText?: string
 }
 
 export const ColorPicker = (props:Props) => {
+    const t = useStore(commonMsg)
     return (
         <Popover>
-            <PopoverTrigger>{props.children}</PopoverTrigger>
+            <PopoverTrigger><Button size="sm" width="fit-content">{props.buttonText ?? t.pickColor}</Button></PopoverTrigger>
             <PopoverContent width={300}>
                 <Center>
                     <SketchPicker
