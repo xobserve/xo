@@ -30,6 +30,8 @@ interface Props {
     borderRadius?: string
     showUnfilled?: boolean
     fillOpacity?: number
+    width?: number
+    height?: number
 }
 
 interface BarGaugeValue { 
@@ -40,7 +42,14 @@ interface BarGaugeValue {
     text: string
 }
 
-const BarGauge = ({ data,textWidth, threshods=null, orientation="horizontal", mode="basic", titleSize=20,textSize=16,borderRadius="4px",showUnfilled=true,fillOpacity=0.6 }: Props) => {
+const lcdCellWidth = 12
+const lcdCellSpacing = 2
+const BarGauge = ({ data,textWidth,width,height, threshods=null, orientation="horizontal", mode="lcd", titleSize=20,textSize=16,borderRadius="4px",showUnfilled=true,fillOpacity=0.6 }: Props) => {
+    console.log("here333333: bar",width,height)
+    const lcdSize = orientation == "horizontal" ? width : height
+    const lcdCellCount = Math.floor(lcdSize / lcdCellWidth!);
+    const lcdCellSize = Math.floor((lcdSize - lcdCellSpacing * lcdCellCount) / lcdCellCount);
+
     return (<>
     {
         data.map((v, i) => {
@@ -52,7 +61,18 @@ const BarGauge = ({ data,textWidth, threshods=null, orientation="horizontal", mo
                 {v.title && <Box height={`${titleHeight}px`}><Text fontSize={`${titleSize}px`} fontWeight={500}>{v.title}</Text></Box>}
                 <Flex justifyContent="space-between" alignItems="center" width="100%"  height={v.title ? `calc(100% - ${titleHeight}px)` : '100%'} borderRadius={borderRadius}>
                     <Box width={`calc(100% - ${textWidth}px - 20px)`} position="relative" height="100%"  bg={showUnfilled ? useColorModeValue("rgb(244, 245, 245)", "rgba(255,255,255,0.1)")  : null}>
-                        <Box bg={color == "transparent" ? color : alpha(color,fillOpacity)} width={`${v.value * 100 / v.max}%` } height="100%" borderRadius={borderRadius} borderRight={`2px solid ${color}`}></Box>
+                        {mode == "lcd" ?
+                         <HStack spacing={`${lcdCellSpacing}px`} height="100%">
+                            {
+                                Array.from({ length: lcdCellCount }, (_, i) => {
+                                    const threshold = getThreshold(((i+1) / lcdCellCount) * v.max, threshods, v.max)
+                                    const cellColor = i < Math.floor(v.value * lcdCellCount / v.max) ? `radial-gradient(${alpha(threshold.color,0.95)} 10%, ${alpha(threshold.color,0.55)} )` : alpha(threshold.color,0.25) ;
+                                    return <Box key={i} width={`${lcdCellSize}px`} height="100%" bg={cellColor} borderRadius="2px"></Box>
+                                })
+                            }
+                        </HStack> 
+                        : 
+                        <Box bg={color == "transparent" ? color : alpha(color,fillOpacity)} width={`${v.value * 100 / v.max}%` } height="100%" borderRadius={borderRadius} borderRight={`2px solid ${color}`}></Box>}
                     </Box>
                     <Text width={textWidth} maxW="40%" fontSize={`${textSize}px`} color={color}>{v.text}</Text>
                 </Flex>

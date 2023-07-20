@@ -34,7 +34,7 @@ import { setDateTime } from 'components/DatePicker/DatePicker';
 import { isEmpty } from 'utils/validate';
 import BarGauge from 'components/BarGauge';
 import { measureText } from 'utils/measureText';
-import { colors } from 'utils/colors';
+import AutoSizer from "react-virtualized-auto-sizer";
 
 interface Props {
   panel: Panel
@@ -47,6 +47,8 @@ const storagePageKey = "tablePage"
 const ComplexTable = memo((props: Props) => {
   const toast = useToast()
   const navigate = useNavigate()
+
+
   const { dashboardId, panel } = props
   const data = cloneDeep(props.data)
   const options = props.panel.plugins.table
@@ -173,11 +175,20 @@ const ComplexTable = memo((props: Props) => {
     column.render = (text, record, index) => {
       const bg = record['__bg__']?.[column.dataIndex]
       if (columnType == "gauge") {
-        return <Box position="absolute" top="6px" left="6px" right="6px" bottom="6px"><BarGauge data={[{
-          value: record['__value__']?.[column.dataIndex],
-          max: max,
-          text: text,
-        }]} textWidth={textWidth} threshods={thresholds} showUnfilled={true} fillOpacity={opacity ?? 0.6}/></Box>
+        return  <AutoSizer>
+        {({ width,height }) => {
+            if (width === 0) {
+                return null;
+            }
+
+            return <Box position="absolute" top="6px" left="6px" right="6px" bottom="6px"><BarGauge width={width} height={height} data={[{
+              value: record['__value__']?.[column.dataIndex],
+              max: max,
+              text: text,
+            }]} textWidth={textWidth} threshods={thresholds} showUnfilled={true} fillOpacity={opacity ?? 0.6}/></Box>
+        }}
+    </AutoSizer>
+       
       } else {
         return <Box padding={cellPadding} bg={bg}><Tooltip label={ellipsis ? text : null} openDelay={300}><Text color={color ?? "inherit"} wordBreak="break-all" noOfLines={ellipsis ? 1 : null}>{text}</Text></Tooltip></Box>
       }
@@ -220,6 +231,7 @@ const ComplexTable = memo((props: Props) => {
   }
 
   const onRowClick = genDynamicFunction(props.panel.plugins.table.onRowClick);
+
   return (<>
     <Table
       columns={columns}
