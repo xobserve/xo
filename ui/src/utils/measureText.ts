@@ -27,8 +27,8 @@ export function getCanvasContext() {
 /**
  * @beta
  */
-export function measureText(text: string, fontSize: number): TextMetrics {
-  const fontStyle = `${fontSize}px 'Roboto'`;
+export function measureText(text: string, fontSize=16, fontWeight = 400): TextMetrics {
+  const fontStyle = `${fontWeight} ${fontSize}px 'Inter'`;
   const cacheKey = text + fontStyle;
   const fromCache = cache.get(cacheKey);
 
@@ -36,11 +36,13 @@ export function measureText(text: string, fontSize: number): TextMetrics {
     return fromCache;
   }
 
+  const context = getCanvasContext();
+
   if (ctxFontStyle !== fontStyle) {
-    canvasCtx.font = ctxFontStyle = fontStyle;
+    context.font = ctxFontStyle = fontStyle;
   }
 
-  const metrics = canvasCtx.measureText(text);
+  const metrics = context.measureText(text);
 
   if (cache.size === cacheLimit) {
     cache.clear();
