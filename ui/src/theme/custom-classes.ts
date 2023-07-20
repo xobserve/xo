@@ -98,6 +98,9 @@ export function customClasses(props) {
             // borderWidth: "0 !important",
             bg: mode(customColors.cardOpaqueBg.light+ '!important',customColors.cardOpaqueBg.dark+ '!important')(props)
         },
-        
+        '.action-icon': {
+            fontSize: "0.8rem",
+            opacity: 0.6
+        }
     }
 }

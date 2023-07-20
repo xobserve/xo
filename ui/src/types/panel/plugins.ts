@@ -150,6 +150,7 @@ export interface TableSettings {
     enablePagination: boolean
    
     onRowClick: string
+    rowActions: {name: string; action:string}[]
 }
 
 export interface NodeGraphSettings {

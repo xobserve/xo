@@ -10,7 +10,7 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-import { Alert, Box, Button, HStack, Modal, ModalBody, ModalContent, ModalOverlay, NumberDecrementStepper, NumberIncrementStepper, NumberInput, NumberInputField, NumberInputStepper, Switch, Text, Textarea, useDisclosure } from "@chakra-ui/react"
+import { Alert, Box, Button, HStack, Modal, ModalBody, ModalContent, ModalOverlay, NumberDecrementStepper, NumberIncrementStepper, NumberInput, NumberInputField, NumberInputStepper, Switch, Text, Textarea, useDisclosure, VStack } from "@chakra-ui/react"
 import PanelAccordion from "src/views/dashboard/edit-panel/Accordion"
 import { EditorInputItem, EditorNumberItem } from "components/editor/EditorItem"
 import PanelEditItem from "src/views/dashboard/edit-panel/PanelEditItem"
@@ -21,6 +21,9 @@ import React from "react";
 import RadionButtons from "components/RadioButtons"
 import { dispatch } from "use-bus"
 import { PanelForceRebuildEvent } from "src/data/bus-events"
+import { onClickCommonEvent } from "src/data/panel/initPlugins"
+import { CodeEditorModal } from "components/CodeEditor/CodeEditorModal"
+import { FaTimes } from "react-icons/fa"
 
 const TablePanelEditor = ({ panel, onChange }: PanelEditorProps) => {
     return (<>
@@ -86,9 +89,18 @@ const TablePanelEditor = ({ panel, onChange }: PanelEditorProps) => {
                 })} />
             </PanelEditItem>
 
+        </PanelAccordion>
+
+        <PanelAccordion title="Interfaction">
             <OnRowClickEditor panel={panel} onChange={v => {
                 onChange((panel: Panel) => {
                     panel.plugins.table.onRowClick = v
+                })
+            }} />
+
+            <RowActionsEditor panel={panel} onChange={v => {
+                onChange((panel: Panel) => {
+                    panel.plugins.table.rowActions = v
                 })
             }} />
         </PanelAccordion>
@@ -125,4 +137,33 @@ const OnRowClickEditor = ({ panel, onChange }: PanelEditorProps) => {
         </Modal>
     </>
     )
+}
+
+const RowActionsEditor = ({ panel, onChange }: PanelEditorProps) => {
+    const addAction = () => {
+        onChange([{ name: "New action", action: onClickCommonEvent }, ...panel.plugins.table.rowActions])
+    }
+
+    const removeAction = (index: number) => {
+        onChange(panel.plugins.table.rowActions.filter((_, i) => i !== index))
+    }
+
+    return (<PanelEditItem title="Row actions" desc="Custom row actions, display actions as Buttons in the last column of row">
+        <Button size="sm" colorScheme="gray" width="100%" onClick={addAction}>Add Action</Button>
+        <VStack alignItems="left" mt="2" key={panel.plugins.table.rowActions.length}>
+        {
+            panel.plugins.table.rowActions.map((action, index) => <HStack key={index}>
+                <Box width ="200px"><EditorInputItem size="sm" placeholder="Action name" value={action.name} onChange={v => {
+                    action.name = v
+                    onChange(panel.plugins.table.rowActions) 
+                }} /></Box>
+                <CodeEditorModal value={action.action} onChange={v => {
+                    action.action = v
+                    onChange(panel.plugins.table.rowActions) 
+                }}/>
+                <FaTimes className="action-icon" cursor="pointer" onClick={() => removeAction(index)}/>
+            </HStack>)
+        }
+        </VStack>
+    </PanelEditItem>)
 }

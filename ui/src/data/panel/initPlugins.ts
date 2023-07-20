@@ -19,9 +19,8 @@ export const onClickCommonEvent = `
 // setVariable: (varName:string, varValue:string) => void 
 // navigate: react-router-dom -> useNavigate() -> navigate 
 // setDateTime: (from: Timestamp, to: TimeStamp) => void
-function onRowClick(row, navigate, setVariable, setDateTime) 
-{
-    console.log(item)
+function onRowClick(row, navigate, setVariable, setDateTime) {
+    console.log(row)
 }
 `
 
@@ -90,7 +89,8 @@ export const initPanelPlugins: PanelPlugins = {
         globalSearch: false,
         enablePagination: false,
 
-        onRowClick: onClickCommonEvent
+        onRowClick: onClickCommonEvent,
+        rowActions: []
     },
 
     [PanelType.NodeGraph]: {
