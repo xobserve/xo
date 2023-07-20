@@ -172,7 +172,7 @@ const ComplexTable = memo((props: Props) => {
         <HStack spacing={1}>
           {props.panel.plugins.table.rowActions.map((action, index) => {
             const onClick = genDynamicFunction(action.action);
-            return <Button colorScheme={options.actionButtonColor} variant={options.actionButtonStyle} size={options.actionButtonSize} onClick={(e) => {
+            return <Button colorScheme={action.color} variant={action.style} size={options.actionButtonSize} onClick={(e) => {
               e.stopPropagation()
               if (!isFunction(onRowClick)) {
                 toast({

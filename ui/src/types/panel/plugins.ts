@@ -150,12 +150,10 @@ export interface TableSettings {
     enablePagination: boolean
    
     onRowClick: string
-    rowActions: {name: string; action:string}[]
+    rowActions: {name: string; action:string; style: string; color: string}[]
     actionColumnName: string
     actionClumnWidth: string
     actionButtonSize: "xs" | "sm" | "md"
-    actionButtonStyle: "solid" |"outline" | "ghost"
-    actionButtonColor: string
 }
 
 export interface NodeGraphSettings {

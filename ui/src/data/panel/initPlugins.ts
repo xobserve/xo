@@ -93,9 +93,7 @@ export const initPanelPlugins: PanelPlugins = {
         rowActions: [],
         actionColumnName: null,
         actionClumnWidth: null,
-        actionButtonSize: "sm",
-        actionButtonStyle: "solid",
-        actionButtonColor: "brand"
+        actionButtonSize: "sm"
     },
 
     [PanelType.NodeGraph]: {

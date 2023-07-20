@@ -10,7 +10,7 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-import { Alert, Box, Button, HStack, Modal, ModalBody, ModalContent, ModalOverlay, NumberDecrementStepper, NumberIncrementStepper, NumberInput, NumberInputField, NumberInputStepper, Switch, Text, Textarea, useDisclosure, useTheme, VStack } from "@chakra-ui/react"
+import { Alert, Box, Button, HStack, Modal, ModalBody, ModalContent, ModalOverlay, NumberDecrementStepper, NumberIncrementStepper, NumberInput, NumberInputField, NumberInputStepper, Select, Switch, Text, Textarea, useDisclosure, useTheme, VStack } from "@chakra-ui/react"
 import PanelAccordion from "src/views/dashboard/edit-panel/Accordion"
 import { EditorInputItem, EditorNumberItem } from "components/editor/EditorItem"
 import PanelEditItem from "src/views/dashboard/edit-panel/PanelEditItem"
@@ -27,11 +27,6 @@ import { FaTimes } from "react-icons/fa"
 import { getColorThemeValues } from "utils/theme"
 
 const TablePanelEditor = ({ panel, onChange }: PanelEditorProps) => {
-    const theme = useTheme()
-    const colors = useMemo(() => {
-        return getColorThemeValues(theme).map(c => ({ label: c, value: c }))
-    }, [theme])
-
     return (<>
         <PanelAccordion title="Table setting">
             <PanelEditItem title="Show header" desc="whether display table's header">
@@ -129,16 +124,6 @@ const TablePanelEditor = ({ panel, onChange }: PanelEditorProps) => {
                         panel.plugins.table.actionButtonSize = v
                     })} />
                 </PanelEditItem>
-                <PanelEditItem title="Action button style">
-                    <RadionButtons options={[{ label: "Solid", value: "solid" }, { label: "Outline", value: "outline" }, { label: "Ghost", value: "ghost" }]} value={panel.plugins.table.actionButtonStyle} onChange={v => onChange((panel: Panel) => {
-                        panel.plugins.table.actionButtonStyle = v
-                    })} />
-                </PanelEditItem>
-                <PanelEditItem title="Action button color">
-                    <RadionButtons options={colors} value={panel.plugins.table.actionButtonColor} onChange={v => onChange((panel: Panel) => {
-                        panel.plugins.table.actionButtonColor = v
-                    })} />
-                </PanelEditItem>
             </>}
         </PanelAccordion>
     </>
@@ -177,8 +162,13 @@ const OnRowClickEditor = ({ panel, onChange }: PanelEditorProps) => {
 }
 
 const RowActionsEditor = ({ panel, onChange }: PanelEditorProps) => {
+    const theme = useTheme()
+    const colors = useMemo(() => {
+        return getColorThemeValues(theme).map(c => <option key={c} value={c}>{c}</option>)
+    }, [theme])
+
     const addAction = () => {
-        onChange([{ name: "New action", action: onClickCommonEvent }, ...panel.plugins.table.rowActions])
+        onChange([{ name: "New action", action: onClickCommonEvent, style: "solid", color: "brand" }, ...panel.plugins.table.rowActions])
     }
 
     const removeAction = (index: number) => {
@@ -190,7 +180,7 @@ const RowActionsEditor = ({ panel, onChange }: PanelEditorProps) => {
         <VStack alignItems="left" mt="2" key={panel.plugins.table.rowActions.length}>
             {
                 panel.plugins.table.rowActions.map((action, index) => <HStack key={index}>
-                    <Box width="200px"><EditorInputItem size="sm" placeholder="Action name" value={action.name} onChange={v => {
+                    <Box width="140px"><EditorInputItem size="sm" placeholder="Action name" value={action.name} onChange={v => {
                         action.name = v
                         onChange([...panel.plugins.table.rowActions])
                     }} /></Box>
@@ -198,6 +188,20 @@ const RowActionsEditor = ({ panel, onChange }: PanelEditorProps) => {
                         action.action = v
                         onChange([...panel.plugins.table.rowActions])
                     }} />
+                    <Select width="80px" size="sm" variant="unstyled" value={action.style} onChange={e => {
+                        action.style = e.target.value
+                        onChange([...panel.plugins.table.rowActions])
+                    }}>
+                        <option value="solid">Solid</option>
+                        <option value="outline">Outline</option>
+                        <option value="ghost">Ghost</option>
+                    </Select>
+                    <Select width="140px" size="sm" variant="unstyled" value={action.color} onChange={e => {
+                        action.color = e.target.value
+                        onChange([...panel.plugins.table.rowActions])
+                    }}>
+                        {colors}
+                    </Select>
                     <FaTimes className="action-icon" cursor="pointer" onClick={() => removeAction(index)} />
                 </HStack>)
             }
