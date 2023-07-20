@@ -11,9 +11,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { border, Box, Flex, HStack, Text, useColorModeValue } from "@chakra-ui/react"
+import {  Box, Flex, HStack, Text, useColorModeValue } from "@chakra-ui/react"
 import React from "react"
-import { Units } from "types/panel/plugins"
 import { ThresholdsConfig } from "types/threshold"
 import { measureText } from "utils/measureText"
 import { getThreshold } from "./Threshold/utils"

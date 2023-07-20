@@ -162,8 +162,8 @@ const ComplexTable = memo((props: Props) => {
         if (isFunc) {
           row[column.dataIndex] = transformFunc(row[column.dataIndex], lodash, moment)
         }
-
-        if (columnType == "gauge") {
+        
+        if (columnType?.type == "gauge") {
             const width = measureText(row[column.dataIndex].toString()).width
             if (width > textWidth) {
               textWidth = width
@@ -177,7 +177,7 @@ const ComplexTable = memo((props: Props) => {
     const opacity = findRuleInOverride(override, TableRules.ColumnOpacity)
     column.render = (text, record, index) => {
       const bg = record['__bg__']?.[column.dataIndex]
-      if (columnType == "gauge") {
+      if (columnType?.type == "gauge") {
         return  <AutoSizer>
         {({ width,height }) => {
             if (width === 0) {
@@ -189,7 +189,7 @@ const ComplexTable = memo((props: Props) => {
               max: max,
               min: min,
               text: text,
-            }]} textWidth={textWidth} threshods={thresholds} showUnfilled={true} fillOpacity={opacity ?? 0.6}/></Box>
+            }]} textWidth={textWidth} threshods={thresholds} showUnfilled={true} fillOpacity={opacity ?? 0.6} mode={columnType.mode}/></Box>
         }}
     </AutoSizer>
        
