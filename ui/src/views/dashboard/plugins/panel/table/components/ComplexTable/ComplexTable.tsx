@@ -114,11 +114,11 @@ const ComplexTable = memo((props: Props) => {
     const columnType = findRuleInOverride(override, TableRules.ColumnType)
     let max;
     if (columnType || thresholds?.mode == ThresholdsMode.Percentage) {
-      console.log("here334433333",cloneDeep(data))
       max = Math.max(...data.map(row => row[column.dataIndex] as number))
     }
 
     const bg = findRuleInOverride(override, TableRules.ColumnBg)
+    let textWidth = 0;
     // modify data
     if (unit || decimal || isFunc || thresholds || columnType) {
       for (const row of data) {
@@ -157,22 +157,27 @@ const ComplexTable = memo((props: Props) => {
         if (isFunc) {
           row[column.dataIndex] = transformFunc(row[column.dataIndex], lodash, moment)
         }
+
+        if (columnType == "gauge") {
+            const width = measureText(row[column.dataIndex].toString()).width
+            if (width > textWidth) {
+              textWidth = width
+            }
+        }
       }
     }
 
     let color = findRuleInOverride(override, TableRules.ColumnColor)
     const ellipsis = findRuleInOverride(override, TableRules.ColumnEllipsis)
-
+    const opacity = findRuleInOverride(override, TableRules.ColumnOpacity)
     column.render = (text, record, index) => {
       const bg = record['__bg__']?.[column.dataIndex]
       if (columnType == "gauge") {
-        const textWidth = measureText(text)  
         return <Box position="absolute" top="6px" left="6px" right="6px" bottom="6px"><BarGauge data={[{
           value: record['__value__']?.[column.dataIndex],
           max: max,
           text: text,
-          width: textWidth.width
-        }]} threshods={thresholds} showUnfilled={false}/></Box>
+        }]} textWidth={textWidth} threshods={thresholds} showUnfilled={true} fillOpacity={opacity ?? 0.6}/></Box>
       } else {
         return <Box padding={cellPadding} bg={bg}><Tooltip label={ellipsis ? text : null} openDelay={300}><Text color={color ?? "inherit"} wordBreak="break-all" noOfLines={ellipsis ? 1 : null}>{text}</Text></Tooltip></Box>
       }

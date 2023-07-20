@@ -89,6 +89,9 @@ const cssStyles = {
     'th.ant-table-cell': {
         background: "inherit !important"
     },
+    '.ant-table-cell.ant-table-column-sort': {
+        background: "inherit !important"
+    },
     '.chakra-table thead tr th input': {
         background: 'transparent',
         outline: "none"
