@@ -18,7 +18,9 @@ import (
 
 	"bytes"
 	"io"
+	"net"
 	"net/http"
+	"time"
 
 	"github.com/MyStarship/starship/backend/pkg/common"
 	"github.com/MyStarship/starship/backend/pkg/log"
@@ -30,8 +32,14 @@ var logger = log.RootLogger.New("logger", "datasource")
 func Proxy(c *gin.Context) {
 	targetURL := c.Query("proxy_url")
 
-	client := &http.Client{}
-
+	client := &http.Client{
+		Transport: &http.Transport{
+			DialContext: (&net.Dialer{
+				Timeout:   time.Duration(time.Minute * 1),
+				KeepAlive: time.Duration(time.Minute * 2),
+			}).DialContext,
+		},
+	}
 	// read request json body and write to new request body
 	jsonData, _ := c.GetRawData()
 	reqBody := bytes.NewBuffer(jsonData)

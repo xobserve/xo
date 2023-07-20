@@ -15,9 +15,11 @@ package proxy
 import (
 	"bytes"
 	"io"
+	"net"
 	"net/http"
 	"net/url"
 	"strconv"
+	"time"
 
 	"github.com/MyStarship/starship/backend/internal/datasource"
 	"github.com/MyStarship/starship/backend/pkg/common"
@@ -36,7 +38,14 @@ func ProxyDatasource(c *gin.Context) {
 
 	targetURL := c.Param("path")
 
-	client := &http.Client{}
+	client := &http.Client{
+		Transport: &http.Transport{
+			DialContext: (&net.Dialer{
+				Timeout:   time.Duration(time.Minute * 1),
+				KeepAlive: time.Duration(time.Minute * 2),
+			}).DialContext,
+		},
+	}
 
 	var params = url.Values{}
 
