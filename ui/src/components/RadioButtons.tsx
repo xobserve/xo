@@ -10,7 +10,7 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-import { Button, HStack } from "@chakra-ui/react"
+import { Button, HStack, Wrap } from "@chakra-ui/react"
 import React from "react"
 
 interface Props {
@@ -29,9 +29,9 @@ interface Option {
 }
 
 const RadionButtons = ({ options, value, onChange, size = "md", spacing = 1, fontSize = "0.9rem", theme = "default" }: Props) => {
-    return (<HStack spacing={spacing}>
+    return (<Wrap spacing={spacing}>
         {options.map(o => <Button fontSize={fontSize} size={size} onClick={() => onChange(o.value)} borderRadius="0" variant={value == o.value ? "solid" : (theme == "default" ? "outline" : "ghost")} colorScheme={theme == "default" ? "gray" : "brand"}>{o.label}</Button>)}
-    </HStack>)
+    </Wrap>)
 }
 
 export default RadionButtons

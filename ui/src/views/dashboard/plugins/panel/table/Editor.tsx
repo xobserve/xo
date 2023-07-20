@@ -10,13 +10,13 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-import { Alert, Box, Button, HStack, Modal, ModalBody, ModalContent, ModalOverlay, NumberDecrementStepper, NumberIncrementStepper, NumberInput, NumberInputField, NumberInputStepper, Switch, Text, Textarea, useDisclosure, VStack } from "@chakra-ui/react"
+import { Alert, Box, Button, HStack, Modal, ModalBody, ModalContent, ModalOverlay, NumberDecrementStepper, NumberIncrementStepper, NumberInput, NumberInputField, NumberInputStepper, Switch, Text, Textarea, useDisclosure, useTheme, VStack } from "@chakra-ui/react"
 import PanelAccordion from "src/views/dashboard/edit-panel/Accordion"
 import { EditorInputItem, EditorNumberItem } from "components/editor/EditorItem"
 import PanelEditItem from "src/views/dashboard/edit-panel/PanelEditItem"
 import { Panel, PanelEditorProps } from "types/dashboard"
 import CodeEditor from "components/CodeEditor/CodeEditor"
-import { useState } from "react"
+import { useMemo, useState } from "react"
 import React from "react";
 import RadionButtons from "components/RadioButtons"
 import { dispatch } from "use-bus"
@@ -24,8 +24,14 @@ import { PanelForceRebuildEvent } from "src/data/bus-events"
 import { onClickCommonEvent } from "src/data/panel/initPlugins"
 import { CodeEditorModal } from "components/CodeEditor/CodeEditorModal"
 import { FaTimes } from "react-icons/fa"
+import { getColorThemeValues } from "utils/theme"
 
 const TablePanelEditor = ({ panel, onChange }: PanelEditorProps) => {
+    const theme = useTheme()
+    const colors = useMemo(() => {
+        return getColorThemeValues(theme).map(c => ({ label: c, value: c }))
+    }, [theme])
+
     return (<>
         <PanelAccordion title="Table setting">
             <PanelEditItem title="Show header" desc="whether display table's header">
@@ -71,7 +77,7 @@ const TablePanelEditor = ({ panel, onChange }: PanelEditorProps) => {
         </PanelAccordion>
         <PanelAccordion title="Column">
             <PanelEditItem title="Column alignment">
-                <RadionButtons options={[{ label: "Auto", value: "auto" }, { label: "Left", value: "left" }, { label: "Center", value: "center" },{ label: "Right", value: "right" }]} value={panel.plugins.table.column.align} onChange={v => onChange((panel: Panel) => {
+                <RadionButtons options={[{ label: "Auto", value: "auto" }, { label: "Left", value: "left" }, { label: "Center", value: "center" }, { label: "Right", value: "right" }]} value={panel.plugins.table.column.align} onChange={v => onChange((panel: Panel) => {
                     panel.plugins.table.column.align = v
                 })} />
             </PanelEditItem>
@@ -103,6 +109,37 @@ const TablePanelEditor = ({ panel, onChange }: PanelEditorProps) => {
                     panel.plugins.table.rowActions = v
                 })
             }} />
+            {panel.plugins.table.rowActions.length > 0 && <>
+                <PanelEditItem title="Action column name">
+                    <EditorInputItem value={panel.plugins.table.actionColumnName} placeholder="default to Action when leave empty" onChange={
+                        (v) => onChange((panel: Panel) => {
+                            panel.plugins.table.actionColumnName = v
+                        })
+                    } />
+                </PanelEditItem>
+                <PanelEditItem title="Action column width">
+                    <EditorInputItem value={panel.plugins.table.actionClumnWidth} placeholder="css width, e.g 100px, 20%" onChange={
+                        (v) => onChange((panel: Panel) => {
+                            panel.plugins.table.actionClumnWidth = v
+                        })
+                    } />
+                </PanelEditItem>
+                <PanelEditItem title="Action button size">
+                    <RadionButtons options={[{ label: "xs", value: "xs" }, { label: "sm", value: "sm" }, { label: "md", value: "md" }]} value={panel.plugins.table.actionButtonSize} onChange={v => onChange((panel: Panel) => {
+                        panel.plugins.table.actionButtonSize = v
+                    })} />
+                </PanelEditItem>
+                <PanelEditItem title="Action button style">
+                    <RadionButtons options={[{ label: "Solid", value: "solid" }, { label: "Outline", value: "outline" }, { label: "Ghost", value: "ghost" }]} value={panel.plugins.table.actionButtonStyle} onChange={v => onChange((panel: Panel) => {
+                        panel.plugins.table.actionButtonStyle = v
+                    })} />
+                </PanelEditItem>
+                <PanelEditItem title="Action button color">
+                    <RadionButtons options={colors} value={panel.plugins.table.actionButtonColor} onChange={v => onChange((panel: Panel) => {
+                        panel.plugins.table.actionButtonColor = v
+                    })} />
+                </PanelEditItem>
+            </>}
         </PanelAccordion>
     </>
     )
@@ -151,19 +188,19 @@ const RowActionsEditor = ({ panel, onChange }: PanelEditorProps) => {
     return (<PanelEditItem title="Row actions" desc="Custom row actions, display actions as Buttons in the last column of row">
         <Button size="sm" colorScheme="gray" width="100%" onClick={addAction}>Add Action</Button>
         <VStack alignItems="left" mt="2" key={panel.plugins.table.rowActions.length}>
-        {
-            panel.plugins.table.rowActions.map((action, index) => <HStack key={index}>
-                <Box width ="200px"><EditorInputItem size="sm" placeholder="Action name" value={action.name} onChange={v => {
-                    action.name = v
-                    onChange(panel.plugins.table.rowActions) 
-                }} /></Box>
-                <CodeEditorModal value={action.action} onChange={v => {
-                    action.action = v
-                    onChange(panel.plugins.table.rowActions) 
-                }}/>
-                <FaTimes className="action-icon" cursor="pointer" onClick={() => removeAction(index)}/>
-            </HStack>)
-        }
+            {
+                panel.plugins.table.rowActions.map((action, index) => <HStack key={index}>
+                    <Box width="200px"><EditorInputItem size="sm" placeholder="Action name" value={action.name} onChange={v => {
+                        action.name = v
+                        onChange([...panel.plugins.table.rowActions])
+                    }} /></Box>
+                    <CodeEditorModal value={action.action} onChange={v => {
+                        action.action = v
+                        onChange([...panel.plugins.table.rowActions])
+                    }} />
+                    <FaTimes className="action-icon" cursor="pointer" onClick={() => removeAction(index)} />
+                </HStack>)
+            }
         </VStack>
     </PanelEditItem>)
 }

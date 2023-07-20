@@ -12,12 +12,10 @@
 // limitations under the License.
 import { Box, Center, Flex, Select } from "@chakra-ui/react"
 import React, {  useMemo } from "react"
-import { OverrideItem, PanelProps } from "types/dashboard"
+import { PanelProps } from "types/dashboard"
 import { TablePluginData, TableSeries } from "types/plugins/table"
 import { cloneDeep, isEmpty } from "lodash"
 import ComplexTable from "./components/ComplexTable/ComplexTable"
-import { TableRules } from "./OverridesEditor"
-import { findOverrideRule } from "utils/dashboard/panel"
 
 interface TablePanelProps extends PanelProps {
     data: TablePluginData[]
@@ -66,31 +64,7 @@ const TablePanel = (props: TablePanelProps) => {
     return (
         <Flex h="100%" justify="space-between" direction="column">
             <Box maxH={series ? "calc(100% - 32px)" : "100%"} overflowY="scroll" sx={cssStyles}>
-                <ComplexTable panel={props.panel} dashboardId={props.dashboardId} columns={tableColumns} data={tableData} options={props.panel.plugins.table} />
-                {/* <ReactTable
-                    columns={tableColumns}
-                    data={tableData}
-                    enableGlobalSearch={props.panel.plugins.table.globalSearch}
-                    enablePagination={props.panel.plugins.table.enablePagination}
-                    pageSize={props.panel.plugins.table.pageSize}
-                    enableFilter={props.panel.plugins.table.enableFilter}
-                    enableSort={props.panel.plugins.table.enableSort}
-                    showHeader={props.panel.plugins.table.showHeader}
-                    onRowClick={clickFunc ? (row) => {
-                        if (!isFunction(clickFunc)) {
-                            toast({
-                                title: "Error",
-                                description: "The row click function you defined is not valid",
-                                status: "error",
-                                duration: 9000,
-                                isClosable: true,
-                            })
-                        } else {
-                            clickFunc(row, navigate, (k, v) => setVariable(k, v, toast))
-                        }
-                    } : null}
-                /> */}
-
+                <ComplexTable panel={props.panel} dashboardId={props.dashboardId} columns={tableColumns} data={tableData} />
             </Box>
             {series && <Select mt="1" size="sm" onChange={e => setSeries(e.currentTarget.value)}>
                 {seriesList.map(series => {

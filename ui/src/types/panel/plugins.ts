@@ -151,6 +151,11 @@ export interface TableSettings {
    
     onRowClick: string
     rowActions: {name: string; action:string}[]
+    actionColumnName: string
+    actionClumnWidth: string
+    actionButtonSize: "xs" | "sm" | "md"
+    actionButtonStyle: "solid" |"outline" | "ghost"
+    actionButtonColor: string
 }
 
 export interface NodeGraphSettings {

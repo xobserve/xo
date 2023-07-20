@@ -90,7 +90,12 @@ export const initPanelPlugins: PanelPlugins = {
         enablePagination: false,
 
         onRowClick: onClickCommonEvent,
-        rowActions: []
+        rowActions: [],
+        actionColumnName: null,
+        actionClumnWidth: null,
+        actionButtonSize: "sm",
+        actionButtonStyle: "solid",
+        actionButtonColor: "brand"
     },
 
     [PanelType.NodeGraph]: {
