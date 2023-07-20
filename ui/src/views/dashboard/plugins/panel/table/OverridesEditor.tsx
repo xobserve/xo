@@ -19,7 +19,7 @@ import { colors } from "utils/colors";
 import React from "react";
 import { useStore } from "@nanostores/react";
 import { commonMsg } from "src/i18n/locales/en";
-import { Checkbox } from "@chakra-ui/react";
+import { Box, Checkbox } from "@chakra-ui/react";
 import { isEmpty } from "utils/validate";
 import { CodeEditorModal } from "components/CodeEditor/CodeEditorModal";
 import ThresholdEditor from "components/Threshold/ThresholdEditor";
@@ -57,6 +57,10 @@ const TableOverridesEditor = ({ override, onChange }: Props) => {
             return <RadionButtons size="sm" options={[{ label: "Left", value: "left" }, { label: "Right", value: "right" }]} value={override.value} onChange={onChange} />
         case TableRules.ColumnFilter:
             return <RadionButtons size="sm" options={[{ label: "Number min/max", value: "number" }, { label: "String match", value: "string" }]} value={override.value} onChange={onChange} />
+        case TableRules.ColumnSort:
+            return <Box>
+                <RadionButtons size="sm" options={[{ label: "Descend", value: "descend" }, { label: "Ascend", value: "ascend" }]} value={override.value} onChange={onChange} />
+            </Box>
         case TableRules.ColumnEllipsis:
             return <Checkbox size="lg" isChecked={override.value} onChange={e => onChange(e.currentTarget.checked)} />
         case TableRules.ColumnDisplay:
@@ -81,6 +85,7 @@ export enum TableRules {
     ColumnDecimal = 'Column.decimal',
     ColumnWidth = 'Column.width',
     ColumnFixed = 'Column.fixed',
+    ColumnSort = 'Column.sort',
     ColumnFilter = 'Column.filter',
     ColumnEllipsis = 'Column.textEllipsis',
     ColumnDisplay = "Column.display",

@@ -76,9 +76,11 @@ const ComplexTable = memo((props: Props) => {
     const fixed = findRuleInOverride(override, TableRules.ColumnFixed)
     if (fixed) column.fixed = fixed
 
-    if (options.column.enableSort) {
+    const sort = findRuleInOverride(override, TableRules.ColumnSort)
+    if (options.column.enableSort || sort) {
       column.sorter = (a, b) => a >= b ? 1 : -1
       column.sortDirections = ['descend', 'ascend']
+      if (sort) column.defaultSortOrder = sort
     }
     
     const filter = findRuleInOverride(override, TableRules.ColumnFilter)
