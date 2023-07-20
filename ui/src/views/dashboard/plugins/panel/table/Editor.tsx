@@ -85,21 +85,12 @@ const TablePanelEditor = ({ panel, onChange }: PanelEditorProps) => {
                     panel.plugins.table.column.enableFilter = e.target.checked
                 })} />
             </PanelEditItem>
-            {/* <PanelEditItem title="Global search" desc="Enable search for this table, you can search everything">
-                <Switch isChecked={panel.plugins.table.globalSearch} onChange={(e) => onChange((panel: Panel) => {
-                    panel.plugins.table.globalSearch = e.target.checked
-                })} />
-            </PanelEditItem>
-
-
-
-
 
             <OnRowClickEditor panel={panel} onChange={v => {
                 onChange((panel: Panel) => {
                     panel.plugins.table.onRowClick = v
                 })
-            }} /> */}
+            }} />
         </PanelAccordion>
     </>
     )

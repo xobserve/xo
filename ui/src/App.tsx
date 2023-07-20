@@ -15,6 +15,7 @@ import { ChakraProvider, useToast } from '@chakra-ui/react'
 import {
   createBrowserRouter,
   RouterProvider,
+  useNavigate,
 } from "react-router-dom";
 import React, { useEffect, useState } from 'react'
 import theme from 'theme'
@@ -35,14 +36,15 @@ const { ToastContainer } = createStandaloneToast()
 export let canvasCtx;
 export let datasources: Datasource[] = []
 export let gvariables: Variable[] = []
-export let gtoast
 
+export let gtoast
 
 const AppView = () => {
   const [cfg, setConfig] = useState<UIConfig>(null)
   canvasCtx = document.createElement('canvas').getContext('2d')!;
   const toast = useToast()
   gtoast = toast
+
   useEffect(() => {
     loadConfig()
     loadVariables()

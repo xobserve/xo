@@ -15,7 +15,15 @@ import { PanelPlugins, PieLegendPlacement, Units, UnitsType } from "types/panel/
 import { ValueCalculationType } from "types/value";
 import { colors } from "utils/colors";
 
-export const onClickCommonEvent = "// setVariable: (varName:string, varValue:string) => void \nfunction onClick(item, router, setVariable) {\n\tconsole.log(item)\n}"
+export const onClickCommonEvent = `
+// setVariable: (varName:string, varValue:string) => void 
+// navigate: react-router-dom -> useNavigate() -> navigate 
+// setDateTime: (from: Timestamp, to: TimeStamp) => void
+function onRowClick(row, navigate, setVariable, setDateTime) 
+{
+    console.log(item)
+}
+`
 
 const initUnits: Units = {
     unitsType: 'none',

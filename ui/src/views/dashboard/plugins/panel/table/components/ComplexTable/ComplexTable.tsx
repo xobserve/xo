@@ -17,7 +17,7 @@ import { TableSettings } from 'types/panel/plugins';
 import storage from 'utils/localStorage';
 import { cloneDeep, isFunction, isNumber, round } from 'lodash';
 import { setTableFilter } from './TableFilter';
-import { Box, Text, Tooltip } from '@chakra-ui/react';
+import { Box, Text, Tooltip, useToast } from '@chakra-ui/react';
 import { findOverride, findOverrideRule, findRuleInOverride } from 'utils/dashboard/panel';
 import { Panel } from 'types/dashboard';
 import { TableRules } from '../../OverridesEditor';
@@ -28,6 +28,9 @@ import moment from 'moment';
 import { ThresholdsConfig, ThresholdsMode } from 'types/threshold';
 import { getThreshold } from 'components/Threshold/utils';
 import lodash from 'lodash'
+import { setVariable } from 'src/views/variables/Variables';
+import { useNavigate } from 'react-router-dom';
+import { setDateTime } from 'components/DatePicker/DatePicker';
 
 interface Props {
   panel: Panel
@@ -39,6 +42,8 @@ interface Props {
 
 const storagePageKey = "tablePage"
 const ComplexTable = memo((props: Props) => {
+  const toast = useToast()
+  const navigate = useNavigate()
   const { data, dashboardId, panel, options } = props
 
 
@@ -136,7 +141,7 @@ const ComplexTable = memo((props: Props) => {
             row[column.dataIndex] = round(v, decimal)
           }
         }
-
+ 
         if (isFunc) {
           row[column.dataIndex] = transformFunc(row[column.dataIndex], lodash, moment)
         }
@@ -158,6 +163,7 @@ const ComplexTable = memo((props: Props) => {
     columns.push(column)
   }
 
+  const onRowClick = genDynamicFunction(props.panel.plugins.table.onRowClick);
   return (<>
     <Table
       columns={columns}
@@ -169,6 +175,24 @@ const ComplexTable = memo((props: Props) => {
       showSorterTooltip={false}
       scroll={{ x: options.tableWidth + '%' }}
       bordered={options.bordered}
+      onRow= {record => {
+        return { 
+          onClick: _ => {
+            if (!isFunction(onRowClick)) {
+              toast({
+                  title: "Error",
+                  description: "The row click function you defined is not valid",
+                  status: "error",
+                  duration: 9000,
+                  isClosable: true,
+              })
+          } else {
+              onRowClick(record, navigate, (k, v) => setVariable(k, v, toast), setDateTime)
+          }
+          }
+        } 
+      }
+    }
     />
   </>)
 })

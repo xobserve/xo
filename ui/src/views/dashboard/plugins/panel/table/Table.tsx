@@ -63,9 +63,6 @@ const TablePanel = (props: TablePanelProps) => {
         return [[], [], seriesList]
     }, [series, props.data, props.panel.overrides,panel.enableTransform])
 
-    // const clickFunc = genDynamicFunction(props.panel.plugins.table.onRowClick);
-
-
     return (
         <Flex h="100%" justify="space-between" direction="column">
             <Box maxH={series ? "calc(100% - 32px)" : "100%"} overflowY="scroll" sx={cssStyles}>
