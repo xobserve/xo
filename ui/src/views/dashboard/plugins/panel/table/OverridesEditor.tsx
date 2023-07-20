@@ -40,6 +40,8 @@ const TableOverridesEditor = ({ override, onChange }: Props) => {
             return <ColorPicker presetColors={colors} color={override.value} onChange={v => onChange(v.hex)} />
         case TableRules.ColumnBg:
             return <ColorPicker presetColors={colors} color={override.value} onChange={v => onChange(v.hex)} />
+        case TableRules.ColumnType:
+            return <RadionButtons size="sm" options={[{ label: "Normal", value: "normal" }, { label: "Gauge", value: "gauge" }]} value={override.value} onChange={onChange} />
         case TableRules.ColumnUnit:
             return <UnitPicker size="sm" type={override.value.unitsType} value={override.value.units} onChange={
                 (units, type) => {
@@ -81,6 +83,7 @@ export enum TableRules {
     ColumnTitle = 'Column.title',
     ColumnColor = 'Column.color',
     ColumnBg = 'Column.background',
+    ColumnType = "Column.cellType",
     ColumnUnit = 'Column.unit',
     ColumnDecimal = 'Column.decimal',
     ColumnWidth = 'Column.width',

@@ -32,6 +32,9 @@ import { setVariable } from 'src/views/variables/Variables';
 import { useNavigate } from 'react-router-dom';
 import { setDateTime } from 'components/DatePicker/DatePicker';
 import { isEmpty } from 'utils/validate';
+import BarGauge from 'components/BarGauge';
+import { measureText } from 'utils/measureText';
+import { colors } from 'utils/colors';
 
 interface Props {
   panel: Panel
@@ -44,7 +47,8 @@ const storagePageKey = "tablePage"
 const ComplexTable = memo((props: Props) => {
   const toast = useToast()
   const navigate = useNavigate()
-  const { data, dashboardId, panel } = props
+  const { dashboardId, panel } = props
+  const data = cloneDeep(props.data)
   const options = props.panel.plugins.table
 
   const pageKey = storagePageKey + dashboardId + panel.id
@@ -107,17 +111,25 @@ const ComplexTable = memo((props: Props) => {
     const isFunc = isFunction(transformFunc)
 
     const thresholds: ThresholdsConfig = findRuleInOverride(override, TableRules.ColumnThreshold)
+    const columnType = findRuleInOverride(override, TableRules.ColumnType)
     let max;
-    if (thresholds?.mode == ThresholdsMode.Percentage) {
+    if (columnType || thresholds?.mode == ThresholdsMode.Percentage) {
+      console.log("here334433333",cloneDeep(data))
       max = Math.max(...data.map(row => row[column.dataIndex] as number))
     }
 
     const bg = findRuleInOverride(override, TableRules.ColumnBg)
     // modify data
-    if (unit || decimal || isFunc || thresholds) {
+    if (unit || decimal || isFunc || thresholds || columnType) {
       for (const row of data) {
         // raw value
         const v = row[column.dataIndex]
+        // save raw value
+        row['__value__'] = {
+          ...row['__value__'],
+          [column.dataIndex]: v
+        }
+        
         if (bg) {
           row['__bg__'] = {
             ...row['__bg__'],
@@ -148,13 +160,23 @@ const ComplexTable = memo((props: Props) => {
       }
     }
 
+    let color = findRuleInOverride(override, TableRules.ColumnColor)
+    const ellipsis = findRuleInOverride(override, TableRules.ColumnEllipsis)
 
     column.render = (text, record, index) => {
-      let color = findRuleInOverride(override, TableRules.ColumnColor)
-      const ellipsis = findRuleInOverride(override, TableRules.ColumnEllipsis)
-
       const bg = record['__bg__']?.[column.dataIndex]
-      return <Box padding={cellPadding} bg={bg}><Tooltip label={ellipsis ? text : null} openDelay={300}><Text color={color ?? "inherit"} wordBreak="break-all" noOfLines={ellipsis ? 1 : null}>{text}</Text></Tooltip></Box>
+      if (columnType == "gauge") {
+        const textWidth = measureText(text)  
+        return <Box position="absolute" top="6px" left="6px" right="6px" bottom="6px"><BarGauge data={[{
+          value: record['__value__']?.[column.dataIndex],
+          max: max,
+          text: text,
+          width: textWidth.width
+        }]} threshods={thresholds} showUnfilled={false}/></Box>
+      } else {
+        return <Box padding={cellPadding} bg={bg}><Tooltip label={ellipsis ? text : null} openDelay={300}><Text color={color ?? "inherit"} wordBreak="break-all" noOfLines={ellipsis ? 1 : null}>{text}</Text></Tooltip></Box>
+      }
+      
     }
 
     const title = findOverrideRule(panel, column.dataIndex, TableRules.ColumnTitle)

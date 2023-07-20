@@ -90,7 +90,7 @@ const ThresholdEditor = (props: Props) => {
         <Text fontSize="0.8rem" textStyle="annotation" mt="2">{t1.thresholdTips}</Text>
         <VStack alignItems="left" mt="2" key={value?.thresholds?.length}>
             {value?.thresholds?.map((threshold, i) => <HStack key={threshold.color} spacing={1}>
-                <ColorPicker presetColors={concat(['transparent'],colors) } color={threshold.color} onChange={v =>  {
+                <ColorPicker presetColors={concat(['inherit'],colors) } color={threshold.color} onChange={v =>  {
                      value.thresholds[i].color = v.hex
                     changeValue(value)
                 }

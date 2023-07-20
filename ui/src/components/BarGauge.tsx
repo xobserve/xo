@@ -11,7 +11,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { Box, Flex, HStack, Text } from "@chakra-ui/react"
+import { border, Box, Flex, HStack, Text } from "@chakra-ui/react"
 import React from "react"
 import { Units } from "types/panel/plugins"
 import { ThresholdsConfig } from "types/threshold"
@@ -23,21 +23,23 @@ interface Props {
     data: BarGaugeValue[]
     titleSize?: number
     textSize?: number
-    threshods: ThresholdsConfig
+    threshods?: ThresholdsConfig
     mode?: "basic"| "lcd"
     orientation? : "horizontal" | "vertical"
+    borderRadius?: string
+    showUnfilled?: boolean
 }
 
 interface BarGaugeValue { 
     title?: string
     value: number
     max: number
-    color: string
+    color?: string
     text: string
     width: number
 }
 
-const BarGauge = ({ data, threshods, orientation="horizontal", mode="basic", titleSize=20,textSize=16 }: Props) => {
+const BarGauge = ({ data, threshods=null, orientation="horizontal", mode="basic", titleSize=20,textSize=16,borderRadius="4px",showUnfilled=true }: Props) => {
     const textWidth = Math.max(...data.map(v => v.width))
     return (<>
     {
@@ -46,11 +48,11 @@ const BarGauge = ({ data, threshods, orientation="horizontal", mode="basic", tit
             const titleHeight =  metrics.fontBoundingBoxAscent + metrics.fontBoundingBoxDescent; 
             const threshold = getThreshold(v.value, threshods, v.max)
             const color = threshold?.color ?? v.color
-            return <Box key={v.text}  pt="5px" height={`${100 / data.length}%`}>
+            return <Box key={v.text}  height={`${100 / data.length}%`}>
                 {v.title && <Box height={`${titleHeight}px`}><Text fontSize={`${titleSize}px`} fontWeight={500}>{v.title}</Text></Box>}
-                <Flex justifyContent="space-between" alignItems="center" width="100%" className="label-bg" height={`calc(100% - ${titleHeight}px)`} borderRadius="4px">
+                <Flex justifyContent="space-between" alignItems="center" width="100%" className={showUnfilled ? "label-bg" : null} height={v.title ? `calc(100% - ${titleHeight}px)` : '100%'} borderRadius={borderRadius}>
                     <Box width={`calc(100% - ${textWidth}px - 20px)`} position="relative" height="100%"  >
-                        <Box bg={alpha(color,0.4)} width={`${v.value * 100 / v.max}%` } height="100%" borderRadius="4px" borderRight={`2px solid ${color}`}></Box>
+                        <Box bg={color == "transparent" ? color : alpha(color,0.4)} width={`${v.value * 100 / v.max}%` } height="100%" borderRadius={borderRadius} borderRight={`2px solid ${color}`}></Box>
                     </Box>
                     <Text width={textWidth} maxW="40%" fontSize={`${textSize}px`} color={color}>{v.text}</Text>
                 </Flex>

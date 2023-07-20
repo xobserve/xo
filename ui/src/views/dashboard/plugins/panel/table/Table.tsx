@@ -43,7 +43,7 @@ const TablePanel = (props: TablePanelProps) => {
                     exist = true
                 }
                 seriesList.push(s.name)
-                data.push(cloneDeep(s))
+                data.push(s)
             })
         })
 
