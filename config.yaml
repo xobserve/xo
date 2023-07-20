@@ -16,7 +16,7 @@ database:
     account: root
     account_secret: Sunface-Mysql-im.dev
     host: localhost
-    port: 6379
+    port: 3306
     database: aiapm
 
 #################################### User/Session ##############################

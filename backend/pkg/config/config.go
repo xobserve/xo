@@ -30,7 +30,7 @@ type Config struct {
 	}
 	Database struct {
 		Account       string
-		AccountSecret string `json:"account_secret"`
+		AccountSecret string `yaml:"account_secret"`
 		Host          string
 		Port          int
 		Database      string
