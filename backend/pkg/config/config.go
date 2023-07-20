@@ -28,7 +28,13 @@ type Config struct {
 		AppName  string `yaml:"app_name"`
 		RepoUrl  string `yaml:"repo_url"`
 	}
-
+	Database struct {
+		Account       string
+		AccountSecret string `json:"account_secret"`
+		Host          string
+		Port          int
+		Database      string
+	}
 	User struct {
 		SessionExpire int64 `yaml:"session_expire"`
 	}

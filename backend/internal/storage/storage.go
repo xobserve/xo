@@ -45,7 +45,7 @@ func Init() error {
 }
 
 func connectDatabase() error {
-	d, err := sql.Open("mysql", fmt.Sprintf("root:Sunface-Mysql-im.dev@/%s?parseTime=true", config.Data.Common.AppName))
+	d, err := sql.Open("mysql", fmt.Sprintf("%s:%s@%s:%d/%s?parseTime=true", config.Data.Database.Account, config.Data.Database.AccountSecret, config.Data.Database.Host, config.Data.Database.Port, config.Data.Common.AppName))
 	if err != nil {
 		log.RootLogger.Crit("connect to mysql error", "error:", err)
 		return err
