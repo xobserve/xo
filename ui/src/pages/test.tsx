@@ -50,13 +50,16 @@ const TestPage = () => {
     }
 
     const textSize = 40
+    let textWidth= 0 
     for (const v of data) {
         const m = measureText(v.text, textSize)
-        v.width = m.width
+        if (m.width > textWidth) {
+            textWidth = m.width
+        }
     }
     return (<Box>
         <Box width="400px" height="300px" mt="4" ml="4">
-            <BarGauge data={data} textSize={textSize} threshods={thresholds}/>
+            <BarGauge data={data} textSize={textSize} threshods={thresholds} textWidth={textWidth} width={400} height={300} />
         </Box>
         <ColorModeSwitcher miniMode />
     </Box>)

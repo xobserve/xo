@@ -115,8 +115,11 @@ const ComplexTable = memo((props: Props) => {
     const thresholds: ThresholdsConfig = findRuleInOverride(override, TableRules.ColumnThreshold)
     const columnType = findRuleInOverride(override, TableRules.ColumnType)
     let max;
+    let min
     if (columnType || thresholds?.mode == ThresholdsMode.Percentage) {
-      max = Math.max(...data.map(row => row[column.dataIndex] as number))
+      const values = data.map(row => row[column.dataIndex] as number)
+      max = Math.max(...values)
+      min = Math.min(...values)
     }
 
     const bg = findRuleInOverride(override, TableRules.ColumnBg)
@@ -184,6 +187,7 @@ const ComplexTable = memo((props: Props) => {
             return <Box position="absolute" top="6px" left="6px" right="6px" bottom="6px"><BarGauge width={width} height={height} data={[{
               value: record['__value__']?.[column.dataIndex],
               max: max,
+              min: min,
               text: text,
             }]} textWidth={textWidth} threshods={thresholds} showUnfilled={true} fillOpacity={opacity ?? 0.6}/></Box>
         }}
