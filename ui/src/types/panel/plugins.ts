@@ -50,6 +50,7 @@ export interface BarGaugeSettings {
     max: number
     maxminFrom: "series" | "all"
     showMax: boolean 
+    showMin: boolean
     thresholds: ThresholdsConfig
 }
 export interface TraceSettings {
@@ -278,9 +279,5 @@ export interface Unit {
 
 export interface Units {
     unitsType: UnitsType,
-    units: {
-        operator: "x" | "/",
-        rhs: number,
-        unit: string
-    }[],
+    units: Unit[],
 }

@@ -58,6 +58,8 @@ const BarGaugePanel = (props: Props) => {
         showUnfilled={options.style.showUnfilled}
         titleSize={options.style.titleSize}
         textSize={options.style.valueSize}
+        showMax={options.showMax}
+        showMin={options.showMin}
     />)
 }
 
@@ -71,6 +73,7 @@ const transformData = (data: SeriesData[], panel: Panel): [BarGaugeValue[], numb
     let textWidth = 0;
     for (const s of data) {
         const override = findOverride(panel, s.name)
+        const unitsOverride = findRuleInOverride(override, "units")
         for (const field of s.fields) {
             if (field.type === "number") {
                 const max = Math.max(...field.values)
@@ -88,7 +91,8 @@ const transformData = (data: SeriesData[], panel: Panel): [BarGaugeValue[], numb
                     min: min,
                     max: max,
                     value,
-                    text: text.toString()
+                    text: text.toString(),
+                    units: unitsOverride?.units || options.value.units
                 })
             }
         }

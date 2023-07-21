@@ -75,6 +75,11 @@ const BarGaugeEditor = ({ panel, onChange }: PanelEditorProps) => {
                     panel.plugins.barGauge.maxminFrom = v
                 })} />
             </PanelEditItem>
+            <PanelEditItem title="Show min" desc="Display min beside value">
+                <Switch isChecked={panel.plugins.barGauge.showMin} onChange={e => onChange((panel: Panel) => {
+                    panel.plugins.barGauge.showMin = e.currentTarget.checked
+                })} />
+            </PanelEditItem>
             <PanelEditItem title="Show max" desc="Display max beside value">
                 <Switch isChecked={panel.plugins.barGauge.showMax} onChange={e => onChange((panel: Panel) => {
                     panel.plugins.barGauge.showMax = e.currentTarget.checked

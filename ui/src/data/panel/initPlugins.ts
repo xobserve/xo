@@ -279,6 +279,7 @@ function registerEvents(options, chart) {
         max: null,
         maxminFrom: "all",
         showMax: false,
+        showMin: false,
         thresholds: initThresholds()
     }
 }

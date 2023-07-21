@@ -12,7 +12,9 @@
 // limitations under the License.
 
 import { Box, Flex, HStack, Text, useColorModeValue, VStack } from "@chakra-ui/react"
+import { formatUnit } from "components/Unit"
 import React from "react"
+import { Unit } from "types/panel/plugins"
 import { ThresholdsConfig } from "types/threshold"
 import { measureText } from "utils/measureText"
 import { getThreshold } from "../Threshold/utils"
@@ -31,23 +33,27 @@ interface Props {
     fillOpacity?: number
     width?: number
     height?: number
+    showMax?: boolean
+    showMin?: boolean
 }
 
 export interface BarGaugeValue {
     title?: string // for display
-    rawTitle? : string  // for index
+    rawTitle?: string  // for index
     value: number
     min?: number
     max: number
     color?: string
     text: string
     thresholds?: ThresholdsConfig
+    units?: Unit[]
+    decimal?: number
 }
 
 const lcdCellWidth = 12
 const lcdCellSpacing = 2
 const BarGauge = (props: Props) => {
-    const { data, width, height, threshods = null, orientation = "horizontal", mode = "basic", titleSize = 18, textSize = 16, borderRadius = "4px", showUnfilled = true, fillOpacity = 0.6 } = props
+    const { data, width, height, threshods = null, orientation = "horizontal", mode = "basic", titleSize = 18, textSize = 16, borderRadius = "4px", showUnfilled = true, fillOpacity = 0.6, showMax = false, showMin = false } = props
     const Stack = orientation == "horizontal" ? VStack : HStack
     const textWidth = props.textWidth ?? 0
     return (<Box position="relative" width="100%" height="100%">
@@ -82,9 +88,13 @@ const BarGauge = (props: Props) => {
                                                     }
                                                 </HStack>
                                                 :
-                                                <Box bg={color == "transparent" ? color : alpha(color, fillOpacity)} width={`${Math.min((v.value - v.min) * 100 / (v.max - v.min),100)}%`} height="100%" borderRadius={borderRadius} borderRight={`2px solid ${color}`}></Box>}
+                                                <Box bg={color == "transparent" ? color : alpha(color, fillOpacity)} width={`${Math.min((v.value - v.min) * 100 / (v.max - v.min), 100)}%`} height="100%" borderRadius={borderRadius} borderRight={`2px solid ${color}`}></Box>}
                                         </Box>
-                                        <Text width={textWidth} maxW="40%" fontSize={`${textSize}px`} color={color}>{v.text}</Text>
+                                        <Box width={textWidth} maxW="40%" >
+                                            {showMin && <Text fontSize="0.6rem" opacity="0.5">{`${formatUnit(v.min,v.units,v.decimal)}`}</Text>}
+                                            <Text fontSize={`${textSize}px`} color={color}>{v.text}</Text>
+                                            {showMax && <Text fontSize="0.6rem" opacity="0.5">{`${formatUnit(v.max,v.units,v.decimal)}`}</Text>}
+                                        </Box>
                                     </Flex>
                                 </>
                             }
@@ -94,7 +104,7 @@ const BarGauge = (props: Props) => {
                             <Text fontSize={`${textSize}px`} color={color} mb="1">{v.text}</Text>
                             <Box height={`calc(100% - ${titleHeight}px - 30px)`} width="100%" bg={showUnfilled ? useColorModeValue("rgb(244, 245, 245)", "rgba(255,255,255,0.1)") : null} position="relative">
                                 {mode == "lcd" ?
-                                    <VStack  width="100%" alignItems="left">
+                                    <VStack width="100%" alignItems="left">
                                         {
                                             Array.from({ length: lcdCellCount }, (_, i) => {
                                                 const threshold = getThreshold(v.min + ((i + 1) / lcdCellCount) * (v.max - v.min), threshods, v.max)
