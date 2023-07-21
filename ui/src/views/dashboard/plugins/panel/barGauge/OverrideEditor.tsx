@@ -12,19 +12,16 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 import RadionButtons from "components/RadioButtons";
-import { ColorPicker } from "components/ColorPicker";
 import { EditorInputItem, EditorNumberItem, EditorSliderItem } from "components/editor/EditorItem";
 import { UnitPicker } from "components/Unit";
 import { OverrideRule, Panel } from "types/dashboard";
-import { colors } from "utils/colors";
 import React, { useEffect } from "react";
 import { useStore } from "@nanostores/react";
 import { commonMsg } from "src/i18n/locales/en";
-import { Box, Checkbox, HStack, Text } from "@chakra-ui/react";
+import { Checkbox, HStack, Text } from "@chakra-ui/react";
 import { isEmpty } from "utils/validate";
-import { CodeEditorModal } from "components/CodeEditor/CodeEditorModal";
 import ThresholdEditor from "components/Threshold/ThresholdEditor";
-import { cloneDeep, over } from "lodash";
+import { cloneDeep } from "lodash";
 
 
 interface Props {
@@ -59,7 +56,7 @@ const BarGaugeOverridesEditor = ({ override, onChange }: Props) => {
                 }
             } />
         case BarGaugeRules.SeriesThresholds:
-            return <ThresholdEditor value={override.value} onChange={onChange}/>
+            return <ThresholdEditor value={override.value} onChange={onChange} />
         default:
             return <></>
     }
@@ -76,26 +73,24 @@ export enum BarGaugeRules {
     SeriesUnits = "Series.units",
     SeriesDecimal = "Series.decimal",
     SeriesFromMinMax = "Series.fromMinMax",
-} 
+}
 
-const OverrideNameEditor = ({value, onChange}) => {
-    useEffect(() => {
-        if (isEmpty(value)) {
-            onChange({})
-        }
-    }, [])
+const OverrideNameEditor = ({ value, onChange }) => {
+    if (isEmpty(value)) {
+        value = {}
+    }
 
     return <>
-    <EditorInputItem value={value.name} onChange={v => {
-        value.name = v 
-        onChange(cloneDeep(value))
-    }} size="sm" placeholder="change series name" />
-    <HStack>
-        <Text fontSize="sm" color="gray.500" mt={1}>Override filed name</Text>
-        <Checkbox isChecked={value.overrideField} onChange={e =>{
-            value.overrideField = e.currentTarget.checked
+        <EditorInputItem value={value.name} onChange={v => {
+            value.name = v
             onChange(cloneDeep(value))
-        }} />
-    </HStack>
+        }} size="sm" placeholder="change series name" />
+        <HStack>
+            <Text fontSize="sm" color="gray.500" mt={1}>Override filed name</Text>
+            <Checkbox isChecked={value.overrideField} onChange={e => {
+                value.overrideField = e.currentTarget.checked
+                onChange(cloneDeep(value))
+            }} />
+        </HStack>
     </>
 }

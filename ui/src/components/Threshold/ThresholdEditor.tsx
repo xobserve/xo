@@ -33,22 +33,19 @@ interface Props {
 const ThresholdEditor = (props: Props) => {
     const t1 = useStore(componentsMsg)
     const [value, setValue] = useState(props.value)
-    useEffect(() => {
-        if (isEmpty(value)) {
-            const v = {
-                mode: ThresholdsMode.Absolute,
-                thresholds: []
-            }
-            // add base threshold
-            const color = colors[0]
-            v.thresholds.push({
-                color,
-                value: null
-            })
-            setValue(v)
-            props.onChange(v)
+    if (isEmpty(value)) {
+        const v = {
+            mode: ThresholdsMode.Absolute,
+            thresholds: []
         }
-    }, [])
+        // add base threshold
+        const color = colors[0]
+        v.thresholds.push({
+            color,
+            value: null
+        })
+        setValue(v)
+    }
 
     const addThreshod = () => {
         const color = colors[value.thresholds.length % colors.length]

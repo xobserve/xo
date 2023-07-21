@@ -42,9 +42,9 @@ const TableOverridesEditor = ({ override, onChange }: Props) => {
         case TableRules.ColumnBg:
             return <ColorPicker presetColors={colors} color={override.value} onChange={v => onChange(v.hex)} />
         case TableRules.ColumnType:
-            return <ClumnTypeEditor value={override.value} onChange={onChange}/>
+            return <ClumnTypeEditor value={override.value} onChange={onChange} />
         case TableRules.ColumnOpacity:
-                return <EditorSliderItem value={override.value} min={0} max={1} step={0.1} onChange={onChange} />
+            return <EditorSliderItem value={override.value} min={0} max={1} step={0.1} onChange={onChange} />
         case TableRules.ColumnUnit:
             return <UnitPicker size="sm" type={override.value.unitsType} value={override.value.units} onChange={
                 (units, type) => {
@@ -55,9 +55,9 @@ const TableOverridesEditor = ({ override, onChange }: Props) => {
                 }
             } />
         case TableRules.ColumnDecimal:
-                return <EditorNumberItem value={override.value} min={0} max={5} step={1} onChange={onChange} />
+            return <EditorNumberItem value={override.value} min={0} max={5} step={1} onChange={onChange} />
         case TableRules.ColumnWidth:
-            return  <EditorInputItem value={override.value} onChange={onChange} size="sm" placeholder="css width, e.g 100px, 20%, auto" />
+            return <EditorInputItem value={override.value} onChange={onChange} size="sm" placeholder="css width, e.g 100px, 20%, auto" />
         case TableRules.ColumnFixed:
             return <RadionButtons size="sm" options={[{ label: "Left", value: "left" }, { label: "Right", value: "right" }]} value={override.value} onChange={onChange} />
         case TableRules.ColumnFilter:
@@ -71,9 +71,9 @@ const TableOverridesEditor = ({ override, onChange }: Props) => {
         case TableRules.ColumnDisplay:
             return <Checkbox size="lg" isChecked={isEmpty(override.value) ? true : override.value} onChange={e => onChange(e.currentTarget.checked)} />
         case TableRules.ColumnTransform:
-            return <CodeEditorModal value={isEmpty(override.value) ? transformFunc : override.value} onChange={onChange}/>
+            return <CodeEditorModal value={isEmpty(override.value) ? transformFunc : override.value} onChange={onChange} />
         case TableRules.ColumnThreshold:
-            return <ThresholdEditor value={override.value} onChange={onChange}/>
+            return <ThresholdEditor value={override.value} onChange={onChange} />
         default:
             return <></>
     }
@@ -87,7 +87,7 @@ export enum TableRules {
     ColumnColor = 'Column.color',
     ColumnBg = 'Column.background',
     ColumnType = "Column.cellType",
-    ColumnOpacity= "Column.fillOpacity(background and Gauge)",
+    ColumnOpacity = "Column.fillOpacity(background and Gauge)",
     ColumnUnit = 'Column.unit',
     ColumnDecimal = 'Column.decimal',
     ColumnWidth = 'Column.width',
@@ -98,7 +98,7 @@ export enum TableRules {
     ColumnDisplay = "Column.display",
     ColumnTransform = "Column.textTransform",
     ColumnThreshold = "Column.threshold",
-} 
+}
 
 const transformFunc = `
 function transform(text, lodash, moment)  {
@@ -112,11 +112,9 @@ function transform(text, lodash, moment)  {
 `
 
 const ClumnTypeEditor = ({ value, onChange }) => {
-    useEffect(() => {
-        if (isEmpty(value)) {
-            onChange({})
-        }
-    }, [])
+    if (isEmpty(value)) {
+        value = {}
+    }
 
     return (
         <>
@@ -126,12 +124,12 @@ const ClumnTypeEditor = ({ value, onChange }) => {
             }} />
             {value.type == "gauge" && <>
                 <Text>
-                Gauge display mode
-            </Text>
-            <RadionButtons size="sm" options={[{ label: "Basic", value: "basic" }, { label: "Retro LCD", value: "lcd" }]} value={value.mode} onChange={v => {
-                value.mode = v
-                onChange(cloneDeep(value))
-            }} />
+                    Gauge display mode
+                </Text>
+                <RadionButtons size="sm" options={[{ label: "Basic", value: "basic" }, { label: "Retro LCD", value: "lcd" }]} value={value.mode} onChange={v => {
+                    value.mode = v
+                    onChange(cloneDeep(value))
+                }} />
             </>}
         </>
     )
