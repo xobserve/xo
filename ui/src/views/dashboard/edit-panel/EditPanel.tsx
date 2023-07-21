@@ -180,8 +180,8 @@ const EditPanel = ({ dashboard, onChange }: EditPanelProps) => {
                             </Box>
                             {/* panel datasource section */}
                             {!tempPanel.plugins[tempPanel.type].disableDatasource && <Box maxHeight={maxDatasourceHeight()} mt="2" overflowY="scroll">
-                            <Box>
-                                <Tabs position="relative" variant="unstyled">
+                            <Box> 
+                                <Tabs variant="unstyled">
                                     <TabList pb="0">
                                         <Tab>{t.query}</Tab>
                                         <Tab>{t.transform}</Tab>
