@@ -28,7 +28,7 @@ export const NO_DATA_COLOR = 'rgba(150, 150, 150, 1)';
 export const PENDING_COLOR = 'rgba(247, 149, 32, 1)';
 export const REGION_FILL_ALPHA = 0.09;
 
-export const lightPalletes= [
+export const lightPalettes= [
   {
     "name": "green",
     "shades": [
@@ -212,7 +212,7 @@ export const lightPalletes= [
 }
 ]
 
-export const darkPalletes = [{
+export const darkPalettes = [{
   "name": "green", 
   "shades": [
       {
@@ -405,7 +405,7 @@ export const initColors = (colorMode) => {
     colors.splice(0, colors.length)
     for (var i=0;i<=4;i++) {
       const seq = sequences[i]
-      for (const palette of darkPalletes) {
+      for (const palette of darkPalettes) {
         colors.push(palette.shades[seq].color)
       }
     }
@@ -413,7 +413,7 @@ export const initColors = (colorMode) => {
     colors.splice(0, colors.length)
     for (var i=0;i<=4;i++) {
       const seq = sequences[i]
-      for (const palette of lightPalletes) {
+      for (const palette of lightPalettes) {
         colors.push(palette.shades[seq].color)
       }
     }

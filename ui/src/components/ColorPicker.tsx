@@ -31,7 +31,7 @@ import {
 } from "@chakra-ui/react";
 import { useStore } from "@nanostores/react";
 import { commonMsg } from "src/i18n/locales/en";
-import { darkPalletes, lightPalletes } from "utils/colors";
+import { darkPalettes, lightPalettes } from "utils/colors";
 import { upperFirst } from "lodash";
 import customColors from "theme/colors";
 import { SketchPicker } from "react-color";
@@ -62,17 +62,17 @@ export const ColorPicker = ({ color, onChange, buttonText = null, circlePicker =
             <PopoverContent width={270}>
                 <Tabs isFitted>
                     <TabList mb='1em'>
-                        <Tab>Pallete</Tab>
+                        <Tab>Palette</Tab>
                         <Tab>Custom</Tab>
                     </TabList>
                     <TabPanels>
                         <TabPanel pt="1">
                             <VStack alignItems="left" spacing={3}>
                             {
-                                (colorMode == "light" ? lightPalletes : darkPalletes).map(pallete => <Flex justifyContent="space-between" alignItems="center">
-                                    <Text fontSize="0.9rem">{upperFirst(pallete.name)}</Text>
+                                (colorMode == "light" ? lightPalettes : darkPalettes).map(palette => <Flex justifyContent="space-between" alignItems="center">
+                                    <Text fontSize="0.9rem">{upperFirst(palette.name)}</Text>
                                     <HStack spacing={3}>
-                                        {pallete.shades.map((color,i) => <Box cursor="pointer" borderRadius="50%" width={i==2 ? "30px" : "20px"} height={i==2 ? "30px" : "20px"} display="block" bg={color.color} onClick={() => onChange(color.color)}/>)}
+                                        {palette.shades.map((color,i) => <Box cursor="pointer" borderRadius="50%" width={i==2 ? "30px" : "20px"} height={i==2 ? "30px" : "20px"} display="block" bg={color.color} onClick={() => onChange(color.color)}/>)}
                                     </HStack>
                                 </Flex>)
                             }

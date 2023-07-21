@@ -29,7 +29,7 @@ import { queryVariableValues, setVariableSelected } from './views/variables/Vari
 import { VarialbeAllOption } from 'src/data/variable'
 import AntdWrapper from 'components/AntdWrapper'
 import routes from './routes';
-import { colors, darkPalletes, lightPalletes } from 'utils/colors';
+import { initColors } from 'utils/colors';
 
 const { ToastContainer } = createStandaloneToast()
 
@@ -41,25 +41,8 @@ export let gtoast
 
 const AppView = () => {
   const {colorMode} = useColorMode()
-  const sequences = [2,3,4,1,0]
-
-  if (colorMode === "dark") {
-    colors.splice(0, colors.length)
-    for (var i=0;i<=4;i++) {
-      const seq = sequences[i]
-      for (const palette of darkPalletes) {
-        colors.push(palette.shades[seq].color)
-      }
-    }
-  } else {
-    colors.splice(0, colors.length)
-    for (var i=0;i<=4;i++) {
-      const seq = sequences[i]
-      for (const palette of lightPalletes) {
-        colors.push(palette.shades[seq].color)
-      }
-    }
-  }
+  
+  initColors(colorMode)
 
 
   const [cfg, setConfig] = useState<UIConfig>(null)
