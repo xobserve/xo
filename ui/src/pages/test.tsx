@@ -1,5 +1,5 @@
 import { Box } from "@chakra-ui/react"
-import BarGauge from "components/BarGauge"
+import BarGauge from "components/BarGauge/BarGauge"
 import { ColorModeSwitcher } from "components/ColorModeSwitcher"
 import React from "react"
 import { ThresholdsConfig, ThresholdsMode } from "types/threshold"

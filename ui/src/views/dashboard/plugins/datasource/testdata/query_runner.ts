@@ -33,6 +33,7 @@ export const run_testdata_query = async (panel: Panel, q: PanelQuery, range: Tim
         case PanelType.Gauge:
         case PanelType.Pie:
         case PanelType.Table:
+        case PanelType.BarGauge:
             data = prometheusToPanels(graphData.data, panel, q, range)
             break;
         case PanelType.NodeGraph:

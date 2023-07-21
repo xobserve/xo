@@ -32,7 +32,7 @@ import { setVariable } from 'src/views/variables/Variables';
 import { useNavigate } from 'react-router-dom';
 import { setDateTime } from 'components/DatePicker/DatePicker';
 import { isEmpty } from 'utils/validate';
-import BarGauge from 'components/BarGauge';
+import BarGauge from 'components/BarGauge/BarGauge';
 import { measureText } from 'utils/measureText';
 import AutoSizer from "react-virtualized-auto-sizer";
 
@@ -189,6 +189,7 @@ const ComplexTable = memo((props: Props) => {
               max: max,
               min: min,
               text: text,
+              color: color,
             }]} textWidth={textWidth} threshods={thresholds} showUnfilled={true} fillOpacity={opacity ?? 0.6} mode={columnType.mode}/></Box>
         }}
     </AutoSizer>

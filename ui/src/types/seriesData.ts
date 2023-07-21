@@ -13,7 +13,6 @@
 export interface SeriesData {
     id: number;
     name?: string;
-    rawName: string
     fields: Field[]; // All fields of equal length
 
     // The number of rows
@@ -21,6 +20,8 @@ export interface SeriesData {
 
     // series color showing in graph
     color?: string 
+
+    rawName?: string // used for name override
 }
 
 export enum FieldType {

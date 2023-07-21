@@ -100,7 +100,8 @@ export enum PanelType {
     Pie = "pie",
     Gauge = "gauge",
     Stat = "stat",
-    Trace = "trace"
+    Trace = "trace",
+    BarGauge = "barGauge"
 }
 
 export enum DatasourceType {

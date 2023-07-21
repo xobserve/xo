@@ -260,6 +260,7 @@ const loadablePanels = {
     [PanelType.Gauge]: loadable(() => import('../plugins/panel/gauge/Gauge')),
     [PanelType.Stat]: loadable(() => import('../plugins/panel/stat/Stat')),
     [PanelType.Trace]: loadable(() => import('../plugins/panel/trace/Trace')),
+    [PanelType.BarGauge]: loadable(() => import('../plugins/panel/barGauge/BarGauge')),
 }
 
 const CustomPanelRender = memo((props: PanelProps) => {

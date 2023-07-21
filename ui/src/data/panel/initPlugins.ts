@@ -12,6 +12,7 @@
 // limitations under the License.
 import { PanelType } from "types/dashboard";
 import { PanelPlugins, PieLegendPlacement, Units, UnitsType } from "types/panel/plugins";
+import { ThresholdsConfig, ThresholdsMode } from "types/threshold";
 import { ValueCalculationType } from "types/value";
 import { colors } from "utils/colors";
 
@@ -28,6 +29,17 @@ const initUnits: Units = {
     unitsType: 'none',
     units: [],
 }
+
+const initThresholds = ():ThresholdsConfig => {
+    return {
+        mode: ThresholdsMode.Absolute,
+        thresholds: [{
+            value: null,
+            color: colors[0]
+        }]
+    }
+}
+
 //@needs-update-when-add-new-panel
 export const initPanelPlugins: PanelPlugins = {
     [PanelType.Graph]: {
@@ -233,23 +245,41 @@ function registerEvents(options, chart) {
             calc: ValueCalculationType.Last
         },
         styles: {
-            style: "lines", 
+            style: "lines",
             fillOpacity: 80,
-            gradientMode:"opacity",
+            gradientMode: "opacity",
             color: colors[0],
             graphHeight: 60,
             connectNulls: false
         },
         axisY: {
             scale: "linear",
-            scaleBase: 2 
+            scaleBase: 2
         }
     },
 
     [PanelType.Trace]: {
-        
+
+    },
+
+    [PanelType.BarGauge]: {
+        value: {
+            ...initUnits,
+            decimal: 1,
+            calc: ValueCalculationType.Last
+        },
+        orientation: "horizontal",
+        mode: "basic",
+        style: {
+            showUnfilled: true,
+            titleSize: 18,
+            valueSize: 16
+        },
+        min: null,
+        max: null,
+        maxminFrom: "all",
+        showMax: false,
+        thresholds: initThresholds()
     }
 }
-
-
 

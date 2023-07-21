@@ -84,6 +84,7 @@
     "duration": "耗时",
     "alert": "告警",
     "transform": "变换",
+    "valueSettings": "值设置",
     "isReqiiured": "{name}是必填项",
     "isInvalid": "{name}不正确",
     "isAdded": "{name}添加成功!",
@@ -426,7 +427,6 @@
     "placement": "放置位置"
   },
   "gaugePanel": {
-    "valueSettings": "值设置",
     "leftTips": "值的位置向右移动，初始点是中心",
     "topTips": "值的位置向下移动，初始点是中心",
     "showTicks": "显示刻度",

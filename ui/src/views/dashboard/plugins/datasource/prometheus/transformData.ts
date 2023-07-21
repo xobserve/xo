@@ -37,6 +37,7 @@ export const prometheusToPanels = (rawData: any, panel: Panel, query: PanelQuery
         case PanelType.Gauge:
         case PanelType.Pie:
         case PanelType.Echarts:
+        case PanelType.BarGauge:
             return prometheusToSeriesData(rawData, query, range)
     }
 
@@ -64,7 +65,7 @@ export const prometheusToSeriesData = (data: any, query: PanelQuery, range: Time
                     if (i == 0) {
                         if (round(v[0]) == start) {
                             timeValues.push(start)
-                            valueValues.push(v[1])
+                            valueValues.push(parseFloat(v[1]))
                         } else if (round(v[0]) > start) {
                             timeValues.push(start)
                             valueValues.push(null)
@@ -80,7 +81,7 @@ export const prometheusToSeriesData = (data: any, query: PanelQuery, range: Time
                             valueValues.push(null)
                         } else {
                             timeValues.push(v[0])
-                            valueValues.push(v[1])
+                            valueValues.push(parseFloat(v[1]))
                         }
                     }
                 })
@@ -90,7 +91,6 @@ export const prometheusToSeriesData = (data: any, query: PanelQuery, range: Time
             const series:SeriesData = {
                 id: query.id,
                 name: metric,
-                rawName: metric,
                 length:  m.values.length,
                 fields: [
                     {

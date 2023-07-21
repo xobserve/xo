@@ -11,6 +11,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 import { PanelType } from "types/dashboard"
+import { ThresholdsConfig } from "types/threshold"
 import { ValueCalculationType } from "types/value"
 
 //@needs-update-when-add-new-panel
@@ -25,6 +26,7 @@ export interface PanelPlugins {
     [PanelType.Gauge]?: GaugeSettings
     [PanelType.Stat]?: StatSettings
     [PanelType.Trace]?: TraceSettings
+    [PanelType.BarGauge]? : BarGaugeSettings
 }
 
 /*-------------------- Plugins ----------------------- */
@@ -34,6 +36,22 @@ export interface DisableDatasource {
 }
 
 
+export interface BarGaugeSettings {
+    value: ValueSetting
+    orientation: "horizontal" | "vertical"
+    mode: "basic" | "lcd"
+    
+    style: {
+        titleSize: number 
+        valueSize: number 
+        showUnfilled: boolean
+    }
+    min: number
+    max: number
+    maxminFrom: "series" | "all"
+    showMax: boolean 
+    thresholds: ThresholdsConfig
+}
 export interface TraceSettings {
     
 }

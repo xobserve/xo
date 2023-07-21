@@ -3,6 +3,7 @@
 // MIT License Copyright (c) 2014 Call-Em-All
 
 import tinycolor from 'tinycolor2';
+import { isEmpty } from 'utils/validate';
 
 /**
  * Returns a number whose value is limited to the given range.
@@ -267,10 +268,11 @@ export function emphasize(color: string, coefficient = 0.15) {
  * @beta
  */
 export function alpha(color: string, value: number) {
-  if (color === '') {
-    return '#000000';
-  }
 
+  
+  if (isEmpty(color) || ( !color.startsWith('#') && color.indexOf('rgb') < 0 && color.indexOf('hsl') < 0)) {
+     color = '#000'
+  }
   value = clamp(value);
 
   // hex 3, hex 4 (w/alpha), hex 6, hex 8 (w/alpha)

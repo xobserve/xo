@@ -36,7 +36,7 @@ const GaugePanelEditor = (props: PanelEditorProps) => {
                     })} />
                 </PanelEditItem>
             </PanelAccordion>
-            <PanelAccordion title={t1.valueSettings}>
+            <PanelAccordion title={t.valueSettings}>
                 <PanelEditItem title={t.display}>
                     <Switch defaultChecked={panel.plugins.gauge.value.show} onChange={e => onChange((panel: Panel) => {
                         panel.plugins.gauge.value.show = e.currentTarget.checked

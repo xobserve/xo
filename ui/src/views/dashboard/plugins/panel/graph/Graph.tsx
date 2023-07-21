@@ -57,6 +57,7 @@ const GraphPanel = memo((props: GraphPanelProps) => {
         const res = []
         props.data.forEach(d => {
             d.forEach(d1 => {
+                d1.rawName = d1.name
                 res.push(d1)
             })
         })

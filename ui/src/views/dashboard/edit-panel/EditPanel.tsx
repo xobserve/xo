@@ -261,9 +261,8 @@ const loadablePanels = {
     [PanelType.Gauge]: loadable(() => import('../plugins/panel/gauge/Editor')),
     [PanelType.Stat]: loadable(() => import('../plugins/panel/stat/Editor')),
     [PanelType.Trace]: loadable(() => import('../plugins/panel/trace/Editor')),
+    [PanelType.BarGauge]: loadable(() => import('../plugins/panel/barGauge/Editor')),
 }
-
-
 
 const CustomPanelEditor = ({ tempPanel, setTempPanel, data }) => {
     const Editor = loadablePanels[tempPanel.type]

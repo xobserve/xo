@@ -93,6 +93,7 @@ export const commonMsg = i18n("common", {
   "duration": "Duration",
   "alert": "Alert",
   "transform": "Transform",
+  "valueSettings": "Value settings",
   "inputTips": params("Enter {name}.."),
   "isReqiiured": params("{name} is required"),
   "isInvalid": params("{name} is invalid"),
@@ -457,7 +458,6 @@ export const piePanelMsg = i18n("piePanel", {
 })
 
 export const gaugePanelMsg = i18n("gaugePanel", {
-  "valueSettings": "Value settings",
   "leftTips": "moving right, initial is center",
   "topTips": "moving down, initial is center",
   "showTicks": "Show ticks",
