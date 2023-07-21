@@ -13,6 +13,10 @@ export function customClasses(props) {
             borderRadius: "6px",
             color:  mode('black','white')(props)
         },
+        ".hover-text:hover": {
+            color:  mode('brand.500','brand.500')(props),
+            opacity: 1
+        },
         ".label-bg": {
             bg: mode('#f7f9fb','rgba(255,255,255,0.05)')(props)
         },

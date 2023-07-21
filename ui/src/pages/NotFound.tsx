@@ -12,7 +12,7 @@
 // limitations under the License.
 import React from 'react'
 import { Button, Heading, Text, VStack } from '@chakra-ui/react'
-import PageContainer1 from 'layouts/page-container'
+import PageContainer1 from 'layouts/PageContainer'
 import { FaHome } from 'react-icons/fa'
 import { useStore } from '@nanostores/react'
 import { notFoundMsg } from 'src/i18n/locales/en'

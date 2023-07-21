@@ -10,7 +10,7 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-import { Box, Flex, HStack,  Select, Tooltip} from "@chakra-ui/react"
+import { Box, Flex, HStack, Select, Tooltip } from "@chakra-ui/react"
 import IconButton from "components/button/IconButton"
 import SelectVariables from "src/views/variables/Variables"
 import { find, isEmpty } from "lodash"
@@ -38,10 +38,11 @@ import { dashboardMsg } from "src/i18n/locales/en";
 interface HeaderProps {
     dashboard: Dashboard
     onChange: any
+    sideWidth?: number
 }
-const DashboardHeader = memo(({ dashboard, onChange }: HeaderProps) => { 
+const DashboardHeader = memo(({ dashboard, onChange, sideWidth }: HeaderProps) => {
     const t1 = useStore(dashboardMsg)
-    const navigate = useNavigate()   
+    const navigate = useNavigate()
     const [variablesChanged, setVariablesChanged] = useState(0)
     const [refresh, setRefresh] = useState(0)
     const [team, setTeam] = useState<Team>(null)
@@ -76,7 +77,7 @@ const DashboardHeader = memo(({ dashboard, onChange }: HeaderProps) => {
     const refreshOnce = () => {
         dispatch(TimeRefreshEvent)
     }
-    
+
     useBus(
         VariableChangedEvent,
         () => {
@@ -85,10 +86,22 @@ const DashboardHeader = memo(({ dashboard, onChange }: HeaderProps) => {
         },
         [variablesChanged]
     )
-    
+
 
     return (
-        <Box display={fullscreen ? "none" : "block"} py="1" width={`calc(100% - ${miniMode ? 76 : 148}px)`} position="fixed" bg={dashboard.data.styles?.bg ? 'transparent' : 'var(--chakra-colors-chakra-body-bg)'} zIndex={1}>
+        <Box
+            id="dashboard-header"
+            display={fullscreen ? "none" : "block"}
+            py="1"
+            width={sideWidth ? `calc(100% - ${sideWidth})` : "100%"}
+            position={sideWidth ? "fixed" : "static"}
+            top="0"
+            right="12px"
+            left={sideWidth + 12 + 'px'}
+            bg={(dashboard.data.styles.bgEnabled &&  dashboard.data.styles?.bg) ? 'transparent' : 'var(--chakra-colors-chakra-body-bg)'}
+            zIndex={1}
+            transition="all 0.2s"
+        >
             {team &&
                 <>
                     <Flex justifyContent="space-between" >
@@ -103,7 +116,7 @@ const DashboardHeader = memo(({ dashboard, onChange }: HeaderProps) => {
                                 <AddPanel dashboard={dashboard} onChange={onChange} />
                                 <DashboardSave dashboard={dashboard} />
                                 {dashboard && <DashboardSettings dashboard={dashboard} onChange={onChange} />}
-                                <DatePicker showTime/>
+                                <DatePicker showTime />
                                 <HStack spacing={0}>
                                     <Tooltip label={t1.refreshOnce}><Box onClick={refreshOnce}><IconButton variant="ghost"><MdSync /></IconButton></Box></Tooltip>
                                     <Tooltip label={t1.refreshInterval}><Select variant="unstyled" value={refresh} onChange={(e) => setRefresh(Number(e.target.value))}>

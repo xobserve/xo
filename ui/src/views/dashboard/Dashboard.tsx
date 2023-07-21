@@ -11,7 +11,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 import { Box, useToast } from "@chakra-ui/react"
-import PageContainer from "layouts/page-container"
+import PageContainer from "layouts/PageContainer"
 import { useCallback, useEffect, useRef, useState } from "react"
 import { Dashboard, Panel } from "types/dashboard"
 import { requestApi } from "utils/axios/request"
@@ -50,7 +50,7 @@ const DashboardWrapper = ({ dashboardId }) => {
 
     useEffect(() => {
         if (!dashboard) {
-            load()   
+            load()
         }
         return () => {
             for (const k in prevQueries) {
@@ -104,7 +104,7 @@ const DashboardWrapper = ({ dashboardId }) => {
         const dash = initDash(res.data)
         unstable_batchedUpdates(() => {
             setDashboard(cloneDeep(dash))
-            setCombinedVariables(res.data,res0.data)
+            setCombinedVariables(res.data, res0.data)
         })
     }
 
@@ -151,19 +151,12 @@ const DashboardWrapper = ({ dashboardId }) => {
 
 
 
-    const headerHeight = fullscreen ? '0px' : "67px"
+
     // (visibleVars?.length > 0 ? "67px" : "38px")
     return (
         <>
             <PageContainer bg={dashboard?.data.styles.bgEnabled ? dashboard?.data.styles?.bg : null}>
-                {dashboard && <Box pl="6px" pr="6px" width="100%" height="100%" minHeight="100vh">
-                    {/* <Decoration decoration={dashboard.data.styles.decoration}/> */}
-                    <DashboardHeader dashboard={dashboard} onChange={onDashbardChange} />
-                    <Box key={dashboard.id + fullscreen} id="dashboard-wrapper" mt={headerHeight} py="2" position="relative">
-                        <DashboardBorder border={dashboard.data.styles.border} />
-                        {dashboard.data.panels?.length > 0 && <DashboardGrid dashboard={dashboard} onChange={onDashbardChange} />}
-                    </Box>
-                </Box>}
+                {dashboard ? <DashboardContainer dashboard={dashboard} onDashbardChange={onDashbardChange} fullscreen={fullscreen}/> :<></>}
             </PageContainer>
 
         </>
@@ -171,6 +164,25 @@ const DashboardWrapper = ({ dashboardId }) => {
 }
 
 export default DashboardWrapper
+
+const DashboardContainer = ({ dashboard, onDashbardChange, fullscreen,sideWidth=null }) => {
+    const headerHeight = fullscreen ? '0px' : "70px"
+    return (
+        <Box px="3" width="100%" height="100%" minHeight="100vh" position="relative">
+            {/* <Decoration decoration={dashboard.data.styles.decoration}/> */}
+            <DashboardHeader dashboard={dashboard} onChange={onDashbardChange} sideWidth={sideWidth} />
+            <Box 
+                // key={dashboard.id + fullscreen} 
+                id="dashboard-wrapper" 
+                mt={headerHeight} 
+                py="2" 
+                position="relative"
+            >
+                <DashboardBorder border={dashboard.data.styles.border} />
+                {dashboard.data.panels?.length > 0 && <DashboardGrid dashboard={dashboard} onChange={onDashbardChange} />}
+            </Box>
+        </Box>)
+}
 
 const DashboardBorder = ({ border }) => {
     const [height, setHeight] = useState(0)

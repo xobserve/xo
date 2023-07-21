@@ -58,7 +58,8 @@ const BarGauge = (props: Props) => {
     const {colorMode} = useColorMode()
     const { data, width, height, orientation = "horizontal", mode = "basic", titleSize = 18, textSize = 16, borderRadius = "4px", showUnfilled = true, fillOpacity = 0.6, showMax = false, showMin = false } = props
     const Stack = orientation == "horizontal" ? VStack : HStack
-    const textWidth = props.textWidth ?? 0
+    // add a margin left for text width
+    const textWidth = props.textWidth ? props.textWidth + 5 : 0
     return (<Box position="relative" width="100%" height="100%">
         <Stack alignItems={orientation == "horizontal" ? "left" : "top"} position="absolute" top="0" left="0" right="0" bottom="0">
             {

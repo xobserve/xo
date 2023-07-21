@@ -12,7 +12,7 @@
 // limitations under the License.
 
 import { Box, Heading, HStack, Text, useColorModeValue } from "@chakra-ui/react"
-import PageContainer from "layouts/page-container"
+import PageContainer from "layouts/PageContainer"
 import customColors from "src/theme/colors"
 import { Route } from "types/route"
 import React from "react"

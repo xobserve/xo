@@ -178,6 +178,7 @@ func Cors() gin.HandlerFunc {
 
 // 判断用户是否登录
 func IsLogin() gin.HandlerFunc {
+	time.Sleep(200 * time.Millisecond)
 	return func(c *gin.Context) {
 		logined := user.IsLogin(c)
 		if !logined {

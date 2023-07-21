@@ -1,68 +1,20 @@
-import { Box } from "@chakra-ui/react"
-import BarGauge from "components/BarGauge/BarGauge"
-import { ColorModeSwitcher } from "components/ColorModeSwitcher"
-import React from "react"
-import { ThresholdsConfig, ThresholdsMode } from "types/threshold"
-import { colors } from "utils/colors"
+import { Box, Flex, HStack, Text, IconButton, useColorModeValue } from "@chakra-ui/react"
+import Logo from "components/Logo"
+import React, { useState } from "react"
+import { FaAppStore, FaGithub, FaMinus, FaPlus, FaSave, FaServer, FaTimes, FaUser } from "react-icons/fa"
 import { measureText } from "utils/measureText"
+import * as Icons from "react-icons/fa"
+import { max } from "lodash"
+import { ColorModeSwitcher } from "components/ColorModeSwitcher"
+import PageContainer from "layouts/PageContainer"
+
+const miniWidth = "60px"
+const navSize = 16
+const maxNavSize = 250
 
 const TestPage = () => {
-    const data = [
-        {
-            title: "aa",
-            value: 400,
-            max: 1000,
-            color: colors[0],
-            text: '400ms'
-        },
-        {
-            title: "bb",
-            value: 1000,
-            max: 1000,
-            color: colors[0],
-            text: '1000ms'
-        },
-        {
-            title: "cc",
-            value: 700,
-            max: 1000,
-            color: colors[0],
-            text: '700ms'
-        },
-    ]
-
-    const thresholds: ThresholdsConfig = {
-        mode: ThresholdsMode.Percentage,
-        thresholds: [
-            {
-                value: 80,
-                color: colors[4]
-            },
-            {
-                value: 70, 
-                color: colors[3]
-            },
-            {
-                value: null,
-                color: colors[0]
-            }
-        ]
-    }
-
-    const textSize = 20
-    let textWidth= 0 
-    for (const v of data) {
-        const m = measureText(v.text, textSize)
-        if (m.width > textWidth) {
-            textWidth = m.width
-        }
-    }
-    return (<Box>
-        <Box width="400px" height="500px" mt="4" ml="4">
-            <BarGauge orientation="vertical" mode="basic" data={data} textSize={textSize} threshods={thresholds} textWidth={textWidth} width={400} height={500}  />
-        </Box>
-        <ColorModeSwitcher miniMode />
-    </Box>)
+    return (<PageContainer>
+        <Box> aaa</Box>
+    </PageContainer>)
 }
-
 export default TestPage
