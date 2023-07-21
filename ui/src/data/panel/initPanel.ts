@@ -23,7 +23,7 @@ export const initPanel = (id?) => {
         type: type,
         gridPos: { x: 0, y: 0, w: 13, h: 20 },
         plugins: {
-            [type]: initPanelPlugins[type]
+            [type]: initPanelPlugins()[type]
         },
         datasource: initDatasource,
         styles: initPanelStyles,
