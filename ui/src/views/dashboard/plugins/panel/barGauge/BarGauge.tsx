@@ -24,10 +24,12 @@ import { BarGaugePluginData } from "types/plugins/barGauge";
 import { ValueCalculationType } from "types/value";
 import { BarGaugeSettings } from "types/panel/plugins";
 import BarGauge, { BarGaugeValue } from "components/BarGauge/BarGauge";
-import { findOverride } from "utils/dashboard/panel";
+import { findOverride, findRuleInOverride } from "utils/dashboard/panel";
 import { formatUnit } from "components/Unit";
 import { getThreshold } from "components/Threshold/utils";
 import { measureText } from "utils/measureText";
+import { BarGaugeRules } from "./OverrideEditor";
+import { isEmpty } from "utils/validate";
 
 interface Props extends PanelProps {
     data: SeriesData[][]
@@ -41,20 +43,31 @@ const BarGaugePanel = (props: Props) => {
         return sd
     }, [props.data])
 
-    const [data,textWidth] = transformData(rawData, panel)
+    const [data, textWidth] = transformData(rawData, panel)
     console.log("here33333 barguage data:", data, textWidth)
 
     const options = props.panel.plugins.barGauge
-    return (<BarGauge mode={options.mode} width={width} height={height} data={data} textWidth={textWidth} orientation={options.orientation} showUnfilled={options.style.showUnfilled}/>)
+    return (<BarGauge
+        threshods={options.thresholds}
+        mode={options.mode}
+        width={width}
+        height={height}
+        data={data}
+        textWidth={textWidth}
+        orientation={options.orientation}
+        showUnfilled={options.style.showUnfilled}
+        titleSize={options.style.titleSize}
+        textSize={options.style.valueSize}
+    />)
 }
 
 export default BarGaugePanel
 
-const transformData = (data: SeriesData[],panel: Panel): [BarGaugeValue[],number] => {
+const transformData = (data: SeriesData[], panel: Panel): [BarGaugeValue[], number] => {
     const options = panel.plugins.barGauge
-    const result:BarGaugeValue[] = []
-    let gmax
-    let gmin
+    const result: BarGaugeValue[] = []
+    let gmax = options.max
+    let gmin = options.min
     let textWidth = 0;
     for (const s of data) {
         const override = findOverride(panel, s.name)
@@ -64,31 +77,52 @@ const transformData = (data: SeriesData[],panel: Panel): [BarGaugeValue[],number
                 const min = Math.min(...field.values)
                 if (!gmax || max > gmax) gmax = max
                 if (!gmin || min < gmin) gmin = min
-                const value = calcValueOnArray(field.values,  options.value.calc)
-                const text =  formatUnit(value, options.value.units, options.value.decimal)
+                const value = calcValueOnArray(field.values, options.value.calc)
+                const text = formatUnit(value, options.value.units, options.value.decimal)
                 const width = measureText(text.toString(), options.style.valueSize).width
                 if (width > textWidth) textWidth = width
                 const title = s.name + "-" + field.name
                 result.push({
+                    rawTitle: s.name,
                     title,
-                    min: options.maxminFrom == "series" ? min : null,
-                    max: options.maxminFrom == "series" ? max : null,
+                    min: min,
+                    max: max,
                     value,
                     text: text.toString()
                 })
             }
         }
     }
-    
+
     for (const r of result) {
+        const override = findOverride(panel, r.rawTitle)
         if (options.maxminFrom == "all") {
-            if (r.max === null)  r.max = gmax
-            if (r.min === null)  r.min = gmin
+            r.max = gmax
+            r.min = gmin
         }
 
-        const threshold = getThreshold(r.value, options.thresholds, r.max)
-        r.color = threshold.color
+        if (!isEmpty(options.min)) {
+            r.min = options.min
+        }
+        if (!isEmpty(options.max)) {
+            r.max = options.max
+        }
+
+        const overrideMin = findRuleInOverride(override, BarGaugeRules.SeriesMin)
+        const overrideMax = findRuleInOverride(override, BarGaugeRules.SeriesMax)
+        if (!isEmpty(overrideMin)) {
+            r.min = overrideMin.value
+        }
+        if (!isEmpty(overrideMax)) {
+            r.max = overrideMax.value
+        }
+
+
+        const overredThresholds = findRuleInOverride(override, BarGaugeRules.SeriesThresholds)
+        r.thresholds = overredThresholds
+
+
     }
 
-    return [result,textWidth]
+    return [result, textWidth]
 }

@@ -52,7 +52,7 @@ const ThresholdEditor = (props: Props) => {
 
     const addThreshod = () => {
         const color = colors[value.thresholds.length % colors.length]
-        const v = value.thresholds.length > 1 ? value.thresholds[0].value + 10 : 10
+        const v = value.thresholds.length > 1 ? value.thresholds[0].value : 0
         value.thresholds.unshift({
             value: v,
             color: color
@@ -89,7 +89,7 @@ const ThresholdEditor = (props: Props) => {
         <Button onClick={addThreshod} width="100%" size="sm" colorScheme="gray">+ {t1.addThreshold}</Button>
         <Text fontSize="0.8rem" textStyle="annotation" mt="2">{t1.thresholdTips}</Text>
         <VStack alignItems="left" mt="2" key={value?.thresholds?.length}>
-            {value?.thresholds?.map((threshold, i) => <HStack key={threshold.color} spacing={1}>
+            {value?.thresholds?.map((threshold, i) => <HStack key={i} spacing={1}>
                 <ColorPicker presetColors={concat(['inherit'],colors) } color={threshold.color} onChange={v =>  {
                      value.thresholds[i].color = v.hex
                     changeValue(value)

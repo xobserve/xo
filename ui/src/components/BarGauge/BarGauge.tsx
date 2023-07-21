@@ -34,18 +34,20 @@ interface Props {
 }
 
 export interface BarGaugeValue {
-    title?: string
+    title?: string // for display
+    rawTitle? : string  // for index
     value: number
     min?: number
     max: number
     color?: string
     text: string
+    thresholds?: ThresholdsConfig
 }
 
 const lcdCellWidth = 12
 const lcdCellSpacing = 2
 const BarGauge = (props: Props) => {
-    const { data, width, height, threshods = null, orientation = "horizontal", mode = "basic", titleSize = 20, textSize = 16, borderRadius = "4px", showUnfilled = true, fillOpacity = 0.6 } = props
+    const { data, width, height, threshods = null, orientation = "horizontal", mode = "basic", titleSize = 18, textSize = 16, borderRadius = "4px", showUnfilled = true, fillOpacity = 0.6 } = props
     const Stack = orientation == "horizontal" ? VStack : HStack
     const textWidth = props.textWidth ?? 0
     return (<Box position="relative" width="100%" height="100%">
@@ -66,7 +68,7 @@ const BarGauge = (props: Props) => {
                     if (orientation == "horizontal") {
                         return <Box key={i} height={`${100 / data.length}%`} width="100%">
                             {
-                                <> {v.title && <Box height={`${titleHeight}px`}><Text fontSize={`${titleSize}px`} fontWeight={500}>{v.title}</Text></Box>}
+                                <> {v.title && <Box height={`${titleHeight}px`}><Text fontSize={`${titleSize}px`} fontWeight={500} noOfLines={1}>{v.title}</Text></Box>}
                                     <Flex justifyContent="space-between" alignItems="center" width="100%" height={v.title ? `calc(100% - ${titleHeight}px)` : '100%'} borderRadius={borderRadius}>
                                         <Box width={`calc(100% - ${textWidth}px - 20px)`} position="relative" height="100%" bg={showUnfilled ? useColorModeValue("rgb(244, 245, 245)", "rgba(255,255,255,0.1)") : null}>
                                             {mode == "lcd" ?
@@ -89,7 +91,7 @@ const BarGauge = (props: Props) => {
                         </Box>
                     } else {
                         return <Box width={`${width / data.length}px`} height="100%" textAlign="center">
-                            <Text fontSize={`${textSize}px`} color={color} >{v.text}</Text>
+                            <Text fontSize={`${textSize}px`} color={color} mb="1">{v.text}</Text>
                             <Box height={`calc(100% - ${titleHeight}px - 30px)`} width="100%" bg={showUnfilled ? useColorModeValue("rgb(244, 245, 245)", "rgba(255,255,255,0.1)") : null} position="relative">
                                 {mode == "lcd" ?
                                     <VStack  width="100%" alignItems="left">

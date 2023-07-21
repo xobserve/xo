@@ -272,8 +272,8 @@ function registerEvents(options, chart) {
         mode: "basic",
         style: {
             showUnfilled: true,
-            titleSize: 18,
-            valueSize: 16
+            titleSize: 16,
+            valueSize: 14
         },
         min: null,
         max: null,
