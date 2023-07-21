@@ -70,6 +70,7 @@ const BarGauge = (props: Props) => {
                     const lcdSize = orientation == "horizontal" ? width - textWidth - 20 : height - titleHeight - 20 - ((showMin || showMax) ? minMaxHeight : 0)
                     const lcdCellCount = Math.floor(lcdSize / lcdCellWidth!);
                     const lcdCellSize = Math.floor((lcdSize - lcdCellSpacing * lcdCellCount) / lcdCellCount);
+                    const gap = lcdSize - (lcdCellCount *(lcdCellSize + lcdCellSpacing)) + 1
                     const thresholds = v.thresholds ?? props.threshods
                     const threshold = getThreshold(v.value, thresholds, v.max)
                     const color = threshold?.color ?? v.color
@@ -104,9 +105,9 @@ const BarGauge = (props: Props) => {
                     } else {
                         return <Box width={`${width / data.length}px`} height={height} textAlign="center">
                             <Text lineHeight={`${titleHeight}px`} fontSize={`${textSize}px`} color={color} noOfLines={1}>{v.text}</Text>
-                            <Box height={`calc(100% - ${titleHeight + ((showMin || showMax) ? minMaxHeight : 0)}px - 30px)`} width="100%" bg={showUnfilled ? useColorModeValue("rgb(244, 245, 245)", "rgba(255,255,255,0.1)") : null} position="relative">
+                            <Box height={lcdSize - gap} width="100%" bg={showUnfilled ? useColorModeValue("rgb(244, 245, 245)", "rgba(255,255,255,0.1)") : null} position="relative">
                                 {mode == "lcd" ?
-                                    <VStack width="100%" alignItems="left">
+                                    <VStack width="100%" height={lcdSize} alignItems="left">
                                         {
                                             Array.from({ length: lcdCellCount }, (_, i) => {
                                                 const threshold = getThreshold(v.min + ((i + 1) / lcdCellCount) * (v.max - v.min), thresholds, v.max)
