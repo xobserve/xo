@@ -24,6 +24,7 @@ import { panelMsg } from "src/i18n/locales/en";
 import { TableSeries } from "types/plugins/table";
 import TableOverridesEditor, { TableRules } from "../plugins/panel/table/OverridesEditor";
 import BarGaugeOverridesEditor, { BarGaugeRules } from "../plugins/panel/barGauge/OverrideEditor";
+import { getPanelOverridesRules } from "utils/dashboard/panel";
 
 
 const PanelOverrides = ({ panel, onChange, data }: PanelEditorProps) => {
@@ -57,21 +58,8 @@ const PanelOverrides = ({ panel, onChange, data }: PanelEditorProps) => {
        
     }, [data])
 
-    const getAllRules = ():string[] => {
-        //@needs-update-when-add-new-panel-overrides
-        switch (panel.type) {
-            case PanelType.Graph:
-                return Object.keys(GraphRules).map(k => GraphRules[k])
-            case PanelType.Table:
-                return  Object.keys(TableRules).map(k => TableRules[k])
-            case PanelType.BarGauge:
-                return  Object.keys(BarGaugeRules).map(k => BarGaugeRules[k])
-            default:
-                return []
-        }
-    }
 
-    const allRules = getAllRules()
+    const allRules = getPanelOverridesRules(panel.type)
 
     const onAddOverride = () => {
         const o = {
@@ -169,7 +157,7 @@ const PanelOverrides = ({ panel, onChange, data }: PanelEditorProps) => {
                 <Button size="sm" variant="ghost" onClick={() => onAddRule(i)}>{t1.addRule}</Button>
             </FormSection>)
         }
-        <Button width="100%" variant="outline" onClick={onAddOverride}>{t1.addOverride}</Button>
+        {allRules.length >0 &&<Button width="100%" variant="outline" onClick={onAddOverride}>{t1.addOverride}</Button>}
     </Form>)
 }
 

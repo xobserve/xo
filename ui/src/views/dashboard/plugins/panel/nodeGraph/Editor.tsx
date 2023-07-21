@@ -129,7 +129,7 @@ const NodeGraphPanelEditor = (props: PanelEditorProps) => {
         </PanelAccordion>
 
 
-        <PanelAccordion title={t1.interaction}>
+        <PanelAccordion title={t.interaction}>
             <PanelEditItem title={t1.tooltipTrigger} info={
                 <Text>{t.applyToSeeEffect}</Text>
             }>

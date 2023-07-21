@@ -18,7 +18,7 @@ import { OverrideRule, Panel } from "types/dashboard";
 import { colors } from "utils/colors";
 import React, { useEffect } from "react";
 import { useStore } from "@nanostores/react";
-import { commonMsg } from "src/i18n/locales/en";
+import { commonMsg, tablePanelMsg } from "src/i18n/locales/en";
 import { Box, Checkbox, Text } from "@chakra-ui/react";
 import { isEmpty } from "utils/validate";
 import { CodeEditorModal } from "components/CodeEditor/CodeEditorModal";
@@ -34,9 +34,10 @@ interface Props {
 
 const TableOverridesEditor = ({ override, onChange }: Props) => {
     const t = useStore(commonMsg)
+    const t1 = useStore(tablePanelMsg)
     switch (override.type) {
         case TableRules.ColumnTitle:
-            return <EditorInputItem value={override.value} onChange={onChange} size="sm" placeholder="change column title display" />
+            return <EditorInputItem value={override.value} onChange={onChange} size="sm" placeholder={t1.seriesName} />
         case TableRules.ColumnColor:
             return <ColorPicker presetColors={colors} color={override.value} onChange={v => onChange(v.hex)} />
         case TableRules.ColumnBg:
@@ -59,12 +60,12 @@ const TableOverridesEditor = ({ override, onChange }: Props) => {
         case TableRules.ColumnWidth:
             return <EditorInputItem value={override.value} onChange={onChange} size="sm" placeholder="css width, e.g 100px, 20%, auto" />
         case TableRules.ColumnFixed:
-            return <RadionButtons size="sm" options={[{ label: "Left", value: "left" }, { label: "Right", value: "right" }]} value={override.value} onChange={onChange} />
+            return <RadionButtons size="sm" options={[{ label: t.left, value: "left" }, { label: t.right, value: "right" }]} value={override.value} onChange={onChange} />
         case TableRules.ColumnFilter:
-            return <RadionButtons size="sm" options={[{ label: "Number min/max", value: "number" }, { label: "String match", value: "string" }]} value={override.value} onChange={onChange} />
+            return <RadionButtons size="sm" options={[{ label: t1.seriesFilter1, value: "number" }, { label: t1.seriesFilter2, value: "string" }]} value={override.value} onChange={onChange} />
         case TableRules.ColumnSort:
             return <Box>
-                <RadionButtons size="sm" options={[{ label: "Descend", value: "descend" }, { label: "Ascend", value: "ascend" }]} value={override.value} onChange={onChange} />
+                <RadionButtons size="sm" options={[{ label: t.descend, value: "descend" }, { label: t.ascend, value: "ascend" }]} value={override.value} onChange={onChange} />
             </Box>
         case TableRules.ColumnEllipsis:
             return <Checkbox size="lg" isChecked={override.value} onChange={e => onChange(e.currentTarget.checked)} />

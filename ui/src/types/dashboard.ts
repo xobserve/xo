@@ -93,15 +93,15 @@ export interface PanelEditorProps {
 export enum PanelType {
     Table = "table",
     Graph = "graph",
-    Text = "text",
-    Row = "row",
+    BarGauge = "barGauge",
+    Trace = "trace",
     NodeGraph = "nodeGraph",
+    Stat = "stat",
+    Text = "text",
     Echarts = "echarts",
     Pie = "pie",
     Gauge = "gauge",
-    Stat = "stat",
-    Trace = "trace",
-    BarGauge = "barGauge"
+    Row = "row",
 }
 
 export enum DatasourceType {

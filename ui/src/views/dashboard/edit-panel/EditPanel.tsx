@@ -36,6 +36,7 @@ import React from "react";
 import { useStore } from "@nanostores/react"
 import { commonMsg, panelMsg } from "src/i18n/locales/en"
 import EditPanelTransform from "./Transform"
+import { getPanelOverridesRules } from "utils/dashboard/panel"
 
 interface EditPanelProps {
     dashboard: Dashboard
@@ -147,6 +148,7 @@ const EditPanel = ({ dashboard, onChange }: EditPanelProps) => {
         return '0%'
     }
 
+    const panelOverridesRules = getPanelOverridesRules(tempPanel?.type)
     return (<>
         <Modal isOpen={isOpen} onClose={onEditClose} autoFocus={false} size="full">
             <ModalOverlay />
@@ -213,7 +215,7 @@ const EditPanel = ({ dashboard, onChange }: EditPanelProps) => {
                                     <TabList pb="0">
                                         <Tab>{t.panel}</Tab>
                                         <Tab>{t.styles}</Tab>
-                                        <Tab>{t1.overrides}</Tab>
+                                        {panelOverridesRules.length > 0 && <Tab>{t1.overrides}</Tab>}
                                     </TabList>
                                     <TabIndicator
                                         mt="3px"
