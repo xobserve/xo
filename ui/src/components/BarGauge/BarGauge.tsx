@@ -102,15 +102,18 @@ const BarGauge = (props: Props) => {
                         </Box>
                     } else {
                         return <Box width={`${width / data.length}px`} height="100%" textAlign="center">
-                            <Text fontSize={`${textSize}px`} color={color} mb="1">{v.text}</Text>
-                            {(showMin || showMax) && <Text fontSize="0.6rem" opacity="0.4">{showMin && `${formatUnit(v.min,v.units,v.decimal)}`}  {showMax && `${formatUnit(v.max,v.units,v.decimal)}`}</Text>}
-                            <Box height={`calc(100% - ${titleHeight + ((showMin || showMax) ? 18 : 0) }px - 30px)`} width="100%" bg={showUnfilled ? useColorModeValue("rgb(244, 245, 245)", "rgba(255,255,255,0.1)") : null} position="relative">
+                            <Flex justifyContent="space-between" alignItems="center">
+                            { showMin ? <Text fontSize="0.6rem" opacity="0.4">{`${formatUnit(v.min,v.units,v.decimal)}`} </Text> : <Box></Box>}
+                                <Text fontSize={`${textSize}px`} color={color} >{v.text}</Text>
+                                {showMax ? <Text fontSize="0.6rem" opacity="0.4"> {showMax && `${formatUnit(v.max,v.units,v.decimal)}`}</Text> : <Box></Box>}
+                            </Flex>
+                            <Box height={`calc(100% - ${titleHeight}px - 30px)`} width="100%" bg={showUnfilled ? useColorModeValue("rgb(244, 245, 245)", "rgba(255,255,255,0.1)") : null} position="relative">
                                 {mode == "lcd" ?
                                     <VStack width="100%" alignItems="left">
                                         {
                                             Array.from({ length: lcdCellCount }, (_, i) => {
                                                 const threshold = getThreshold(v.min + ((i + 1) / lcdCellCount) * (v.max - v.min), thresholds, v.max)
-                                                const cellColor = i < Math.floor((v.value - v.min) * lcdCellCount / (v.max - v.min)) ? `radial-gradient(${alpha(threshold.color, 0.95)} 10%, ${alpha(threshold.color, 0.55)} )` : alpha(threshold.color, 0.25);
+                                                const cellColor = i < Math.floor((v.value - v.min) * lcdCellCount / (v.max - v.min)) ? `radial-gradient(${alpha(threshold.color, 0.95)} 10%, ${alpha(threshold.color, 0.55)} )` : alpha(threshold.color, 0.2);
                                                 return <Box position="absolute" bottom={`${(i) * (lcdCellSize + lcdCellSpacing)}px`} key={i} height={`${lcdCellSize}px`} width="100%" bg={cellColor} borderRadius="2px"></Box>
                                             })
                                         }
