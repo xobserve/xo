@@ -57,8 +57,8 @@ export default GraphOverridesEditor
 
 
 export enum GraphRules {
-    SeriesStyle =  'Series.style',
     SeriesName = 'Series.name',
+    SeriesStyle =  'Series.style',
     SeriesUnit = 'Series.unit',
     SeriesDecimal = 'Series.decimal',
     SeriesColor = 'Series.color',

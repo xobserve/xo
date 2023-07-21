@@ -84,7 +84,19 @@ const transformData = (data: SeriesData[], panel: Panel): [BarGaugeValue[], numb
                 const text = formatUnit(value, options.value.units, options.value.decimal)
                 const width = measureText(text.toString(), options.style.valueSize).width
                 if (width > textWidth) textWidth = width
-                const title = s.name + "-" + field.name
+                const nameOverride = findRuleInOverride(override, BarGaugeRules.SeriesName)
+                console.log("here33333:",nameOverride) 
+                let title; 
+                if (nameOverride?.name) {
+                    if (nameOverride.overrideField) {
+                        title = nameOverride.name
+                    } else {
+                        title =  nameOverride.name + "-" + field.name
+                    }
+                } else {
+                    title =  s.name + "-" + field.name
+                } 
+                
                 result.push({
                     rawTitle: s.name,
                     title,

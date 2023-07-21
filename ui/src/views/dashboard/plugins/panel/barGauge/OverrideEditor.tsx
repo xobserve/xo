@@ -20,11 +20,11 @@ import { colors } from "utils/colors";
 import React, { useEffect } from "react";
 import { useStore } from "@nanostores/react";
 import { commonMsg } from "src/i18n/locales/en";
-import { Box, Checkbox, Text } from "@chakra-ui/react";
+import { Box, Checkbox, HStack, Text } from "@chakra-ui/react";
 import { isEmpty } from "utils/validate";
 import { CodeEditorModal } from "components/CodeEditor/CodeEditorModal";
 import ThresholdEditor from "components/Threshold/ThresholdEditor";
-import { cloneDeep } from "lodash";
+import { cloneDeep, over } from "lodash";
 
 
 interface Props {
@@ -36,45 +36,30 @@ interface Props {
 const BarGaugeOverridesEditor = ({ override, onChange }: Props) => {
     const t = useStore(commonMsg)
     switch (override.type) {
-        // case TableRules.ColumnTitle:
-        //     return <EditorInputItem value={override.value} onChange={onChange} size="sm" placeholder="change column title display" />
-        // case TableRules.ColumnColor:
-        //     return <ColorPicker presetColors={colors} color={override.value} onChange={v => onChange(v.hex)} />
-        // case TableRules.ColumnBg:
-        //     return <ColorPicker presetColors={colors} color={override.value} onChange={v => onChange(v.hex)} />
-        // case TableRules.ColumnType:
-        //     return <ClumnTypeEditor value={override.value} onChange={onChange}/>
-        // case TableRules.ColumnOpacity:
-        //         return <EditorSliderItem value={override.value} min={0} max={1} step={0.1} onChange={onChange} />
-        // case TableRules.ColumnUnit:
-        //     return <UnitPicker size="sm" type={override.value.unitsType} value={override.value.units} onChange={
-        //         (units, type) => {
-        //             onChange({
-        //                 unitsType: type,
-        //                 units: units
-        //             })
-        //         }
-        //     } />
-        // case TableRules.ColumnDecimal:
-        //         return <EditorNumberItem value={override.value} min={0} max={5} step={1} onChange={onChange} />
-        // case TableRules.ColumnWidth:
-        //     return  <EditorInputItem value={override.value} onChange={onChange} size="sm" placeholder="css width, e.g 100px, 20%, auto" />
-        // case TableRules.ColumnFixed:
-        //     return <RadionButtons size="sm" options={[{ label: "Left", value: "left" }, { label: "Right", value: "right" }]} value={override.value} onChange={onChange} />
-        // case TableRules.ColumnFilter:
-        //     return <RadionButtons size="sm" options={[{ label: "Number min/max", value: "number" }, { label: "String match", value: "string" }]} value={override.value} onChange={onChange} />
-        // case TableRules.ColumnSort:
-        //     return <Box>
-        //         <RadionButtons size="sm" options={[{ label: "Descend", value: "descend" }, { label: "Ascend", value: "ascend" }]} value={override.value} onChange={onChange} />
-        //     </Box>
-        // case TableRules.ColumnEllipsis:
-        //     return <Checkbox size="lg" isChecked={override.value} onChange={e => onChange(e.currentTarget.checked)} />
-        // case TableRules.ColumnDisplay:
-        //     return <Checkbox size="lg" isChecked={isEmpty(override.value) ? true : override.value} onChange={e => onChange(e.currentTarget.checked)} />
-        // case TableRules.ColumnTransform:
-        //     return <CodeEditorModal value={isEmpty(override.value) ? transformFunc : override.value} onChange={onChange}/>
-        // case TableRules.ColumnThreshold:
-        //     return <ThresholdEditor value={override.value} onChange={onChange}/>
+        case BarGaugeRules.SeriesName:
+            return <OverrideNameEditor value={override.value} onChange={onChange} />
+        case BarGaugeRules.SeriesFromMinMax:
+            return <RadionButtons
+                options={[{ label: "All Series", value: "all" }, { label: "Current Series", value: "series" }]}
+                value={override.value}
+                onChange={onChange} />
+        case BarGaugeRules.SeriesMin:
+            return <EditorNumberItem value={override.value} onChange={onChange} />
+        case BarGaugeRules.SeriesMax:
+            return <EditorNumberItem value={override.value} onChange={onChange} />
+        case BarGaugeRules.SeriesDecimal:
+            return <EditorNumberItem min={0} max={5} step={1} value={override.value} onChange={onChange} />
+        case BarGaugeRules.SeriesUnits:
+            return <UnitPicker size="sm" type={override.value.unitsType} value={override.value.units} onChange={
+                (units, type) => {
+                    onChange({
+                        unitsType: type,
+                        units: units
+                    })
+                }
+            } />
+        case BarGaugeRules.SeriesThresholds:
+            return <ThresholdEditor value={override.value} onChange={onChange}/>
         default:
             return <></>
     }
@@ -84,11 +69,33 @@ const BarGaugeOverridesEditor = ({ override, onChange }: Props) => {
 export default BarGaugeOverridesEditor
 
 export enum BarGaugeRules {
+    SeriesName = "Series.displayName",
     SeriesMin = "Series.min",
     SeriesMax = "Series.max",
     SeriesThresholds = "Series.thresholds",
-    SeriesUnits = "Series.units",  
+    SeriesUnits = "Series.units",
     SeriesDecimal = "Series.decimal",
-    SeriesName = "Series.displayName",
     SeriesFromMinMax = "Series.fromMinMax",
 } 
+
+const OverrideNameEditor = ({value, onChange}) => {
+    useEffect(() => {
+        if (isEmpty(value)) {
+            onChange({})
+        }
+    }, [])
+
+    return <>
+    <EditorInputItem value={value.name} onChange={v => {
+        value.name = v 
+        onChange(cloneDeep(value))
+    }} size="sm" placeholder="change series name" />
+    <HStack>
+        <Text fontSize="sm" color="gray.500" mt={1}>Override filed name</Text>
+        <Checkbox isChecked={value.overrideField} onChange={e =>{
+            value.overrideField = e.currentTarget.checked
+            onChange(cloneDeep(value))
+        }} />
+    </HStack>
+    </>
+}

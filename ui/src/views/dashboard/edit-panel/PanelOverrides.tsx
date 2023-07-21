@@ -23,6 +23,7 @@ import { useStore } from "@nanostores/react";
 import { panelMsg } from "src/i18n/locales/en";
 import { TableSeries } from "types/plugins/table";
 import TableOverridesEditor, { TableRules } from "../plugins/panel/table/OverridesEditor";
+import BarGaugeOverridesEditor, { BarGaugeRules } from "../plugins/panel/barGauge/OverrideEditor";
 
 
 const PanelOverrides = ({ panel, onChange, data }: PanelEditorProps) => {
@@ -57,11 +58,14 @@ const PanelOverrides = ({ panel, onChange, data }: PanelEditorProps) => {
     }, [data])
 
     const getAllRules = ():string[] => {
+        //@needs-update-when-add-new-panel-overrides
         switch (panel.type) {
             case PanelType.Graph:
                 return Object.keys(GraphRules).map(k => GraphRules[k])
             case PanelType.Table:
                 return  Object.keys(TableRules).map(k => TableRules[k])
+            case PanelType.BarGauge:
+                return  Object.keys(BarGaugeRules).map(k => BarGaugeRules[k])
             default:
                 return []
         }
@@ -103,7 +107,8 @@ const PanelOverrides = ({ panel, onChange, data }: PanelEditorProps) => {
 
     return (<Form p="2">
         {
-            overrides.map((o, i) => <FormSection title={t1.overrides + (i + 1)} p="1" titleSize="0.9rem" position="relative" bordered>
+            overrides.map((o, i) => 
+            <FormSection key={o.target + i} title={t1.overrides + (i + 1)} p="1" titleSize="0.9rem" position="relative" bordered>
                 <Box position="absolute" right="2" top="9px" cursor="pointer" onClick={() => removeOverride(i)}><FaTimes fontSize="0.8rem" /></Box>
                 <FormItem title={t1.targetName} alignItems="center">
                     <Tooltip label={o.target}>
@@ -122,7 +127,7 @@ const PanelOverrides = ({ panel, onChange, data }: PanelEditorProps) => {
                 </FormItem>
                 
                 <VStack alignItems="left" pl="6" divider={<StackDivider />} spacing={3}>
-                {o.overrides.length > 0 && o.overrides.map((rule,j) => <FormSection title={`Rule ${j+1}`} width="fit-content" titleSize="0.9rem" position="relative">
+                {o.overrides.length > 0 && o.overrides.map((rule,j) => <FormSection key={rule.type + j} title={`Rule ${j+1}`} width="fit-content" titleSize="0.9rem" position="relative">
 
                     <FormItem title="type" size="sm">
                         <Select size="sm" value={rule.type} onChange={e => {
@@ -134,6 +139,7 @@ const PanelOverrides = ({ panel, onChange, data }: PanelEditorProps) => {
                             {allRules.map(r => <option key={r} value={r}>{r}</option>)}
                         </Select>
                     </FormItem>
+                    {/* @needs-update-when-add-new-panel-overrides */}
                     {
                         panel.type == PanelType.Graph && <GraphOverridesEditor override={rule} onChange={(v) => {
                             onChange((panel: Panel) => {
@@ -143,6 +149,13 @@ const PanelOverrides = ({ panel, onChange, data }: PanelEditorProps) => {
                     }
                     {
                         panel.type == PanelType.Table && <TableOverridesEditor override={rule} onChange={(v) => {
+                            onChange((panel: Panel) => {
+                                panel.overrides[i].overrides[j].value = v
+                            })
+                        }}/>
+                    }
+                     {
+                        panel.type == PanelType.BarGauge && <BarGaugeOverridesEditor override={rule} onChange={(v) => {
                             onChange((panel: Panel) => {
                                 panel.overrides[i].overrides[j].value = v
                             })
