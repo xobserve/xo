@@ -10,23 +10,15 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-import { Box, useColorMode } from "@chakra-ui/react";
-import ChartComponent from "components/charts/Chart";
-import { round } from "lodash";
 
-import { useCallback, useEffect, useMemo, useState } from "react";
-import { OverrideItem, Panel, PanelProps } from "types/dashboard"
-import { GaugePluginData } from "types/plugins/gauge";
+import { useMemo } from "react";
+import {  Panel, PanelProps } from "types/dashboard"
 import { SeriesData } from "types/seriesData";
-import { calcValueOnArray, calcValueOnSeriesData } from "utils/seriesData";
+import { calcValueOnArray } from "utils/seriesData";
 import React from "react";
-import { BarGaugePluginData } from "types/plugins/barGauge";
-import { ValueCalculationType } from "types/value";
-import { BarGaugeSettings } from "types/panel/plugins";
 import BarGauge, { BarGaugeValue } from "components/BarGauge/BarGauge";
 import { findOverride, findRuleInOverride } from "utils/dashboard/panel";
 import { formatUnit } from "components/Unit";
-import { getThreshold } from "components/Threshold/utils";
 import { measureText } from "utils/measureText";
 import { BarGaugeRules } from "./OverrideEditor";
 import { isEmpty } from "utils/validate";
@@ -44,8 +36,8 @@ const BarGaugePanel = (props: Props) => {
     }, [props.data])
 
     const [data, textWidth] = transformData(rawData, panel)
-    console.log("here33333 barguage data:", data, textWidth)
 
+    console.log("here33333 bargauge data", data, textWidth)
     const options = props.panel.plugins.barGauge
     return (<BarGauge
         threshods={options.thresholds}
@@ -85,7 +77,6 @@ const transformData = (data: SeriesData[], panel: Panel): [BarGaugeValue[], numb
                 const width = measureText(text.toString(), options.style.valueSize).width
                 if (width > textWidth) textWidth = width
                 const nameOverride = findRuleInOverride(override, BarGaugeRules.SeriesName)
-                console.log("here33333:",nameOverride) 
                 let title; 
                 if (nameOverride?.name) {
                     if (nameOverride.overrideField) {
