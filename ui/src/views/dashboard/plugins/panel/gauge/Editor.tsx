@@ -185,7 +185,7 @@ const AxisSplit = ({ panel, onChange }: PanelEditorProps) => {
                         panel.plugins.gauge.axis.split[i][0] = v
                     })} /></Box>
                     <ColorPicker color={s[1]} onChange={v => onChange((panel: Panel) => {
-                        panel.plugins.gauge.axis.split[i][1] = v.hex
+                        panel.plugins.gauge.axis.split[i][1] = v
                     })} /> 
                 </HStack>
                 <HStack>

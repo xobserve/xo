@@ -82,8 +82,8 @@ const GraphPanelEditor = ({ panel, onChange }: PanelEditorProps) => {
                 } />
             </PanelEditItem>
             <PanelEditItem title={t.color}>
-                <ColorPicker presetColors={colors} color={panel.plugins.stat.styles.color} onChange={v => onChange((panel: Panel) => {
-                    panel.plugins.stat.styles.color = v.hex
+                <ColorPicker  color={panel.plugins.stat.styles.color} onChange={v => onChange((panel: Panel) => {
+                    panel.plugins.stat.styles.color = v
                 })} />
             </PanelEditItem>
 

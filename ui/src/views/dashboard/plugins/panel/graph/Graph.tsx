@@ -69,6 +69,7 @@ const GraphPanel = memo((props: GraphPanelProps) => {
 
     const options = useMemo(() => {
         let o;
+        console.log("here333333:",colors)
         data.map((frame, i) => {
             const override: OverrideItem = findOverride(props.panel, frame.rawName)  
             const name = findRuleInOverride(override,GraphRules.SeriesName )

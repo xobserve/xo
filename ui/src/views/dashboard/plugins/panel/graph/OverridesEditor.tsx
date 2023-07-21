@@ -40,7 +40,7 @@ const GraphOverridesEditor = ({ override, onChange }: Props) => {
                 })}
             } />
         case GraphRules.SeriesColor:
-            return <ColorPicker presetColors={colors} color={override.value} onChange={v => onChange(v.hex)} />
+            return <ColorPicker  color={override.value} onChange={onChange} />
         case GraphRules.SeriesFill:
             return <EditorSliderItem value={override.value} min={0} max={100} step={1} onChange={onChange} />
         case GraphRules.SeriesNegativeY:

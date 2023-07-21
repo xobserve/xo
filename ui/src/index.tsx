@@ -15,9 +15,14 @@ import React from 'react'
 import ReactDOM from 'react-dom/client'
 import App from './App'
 import 'src/i18n/i18n'
+import { ChakraProvider } from '@chakra-ui/react'
+import theme from 'theme'
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
-    <App />
+    <ChakraProvider theme={theme}>
+            <App />
+    </ChakraProvider>
+
 )
 
 

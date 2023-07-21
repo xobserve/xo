@@ -39,9 +39,9 @@ const TableOverridesEditor = ({ override, onChange }: Props) => {
         case TableRules.ColumnTitle:
             return <EditorInputItem value={override.value} onChange={onChange} size="sm" placeholder={t1.seriesName} />
         case TableRules.ColumnColor:
-            return <ColorPicker presetColors={colors} color={override.value} onChange={v => onChange(v.hex)} />
+            return <ColorPicker color={override.value} onChange={onChange} />
         case TableRules.ColumnBg:
-            return <ColorPicker presetColors={colors} color={override.value} onChange={v => onChange(v.hex)} />
+            return <ColorPicker  color={override.value} onChange={onChange} />
         case TableRules.ColumnType:
             return <ClumnTypeEditor value={override.value} onChange={onChange} />
         case TableRules.ColumnOpacity:

@@ -11,14 +11,13 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { ChakraProvider, useToast } from '@chakra-ui/react'
+import { ChakraProvider, useColorMode, useToast } from '@chakra-ui/react'
 import {
   createBrowserRouter,
   RouterProvider,
   useNavigate,
 } from "react-router-dom";
 import React, { useEffect, useState } from 'react'
-import theme from 'theme'
 import { createStandaloneToast } from '@chakra-ui/toast'
 import CommonStyles from "src/theme/common.styles"
 import BaiduMap from 'components/BaiduMap'
@@ -30,6 +29,7 @@ import { queryVariableValues, setVariableSelected } from './views/variables/Vari
 import { VarialbeAllOption } from 'src/data/variable'
 import AntdWrapper from 'components/AntdWrapper'
 import routes from './routes';
+import { colors, darkPalletes, lightPalletes } from 'utils/colors';
 
 const { ToastContainer } = createStandaloneToast()
 
@@ -40,6 +40,28 @@ export let gvariables: Variable[] = []
 export let gtoast
 
 const AppView = () => {
+  const {colorMode} = useColorMode()
+  const sequences = [2,3,4,1,0]
+
+  if (colorMode === "dark") {
+    colors.splice(0, colors.length)
+    for (var i=0;i<=4;i++) {
+      const seq = sequences[i]
+      for (const palette of darkPalletes) {
+        colors.push(palette.shades[seq].color)
+      }
+    }
+  } else {
+    colors.splice(0, colors.length)
+    for (var i=0;i<=4;i++) {
+      const seq = sequences[i]
+      for (const palette of lightPalletes) {
+        colors.push(palette.shades[seq].color)
+      }
+    }
+  }
+
+
   const [cfg, setConfig] = useState<UIConfig>(null)
   canvasCtx = document.createElement('canvas').getContext('2d')!;
   const toast = useToast()
@@ -85,14 +107,16 @@ const AppView = () => {
   }
 
   const router = createBrowserRouter(routes);
+
+
   return (
     <>
-      {cfg && <ChakraProvider theme={theme}>
+      {cfg && <>
         <AntdWrapper>
           <RouterProvider router={router} /> 
         
         </AntdWrapper>
-      </ChakraProvider>}
+      </>}
 
       <CommonStyles />
       <ToastContainer />

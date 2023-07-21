@@ -11,23 +11,32 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 import React from "react";
-import { SketchPicker } from "react-color";
 import {
     Popover,
     PopoverTrigger,
     PopoverContent,
-    Center,
     Button,
     Box,
     HStack,
     Text,
+    Tabs,
+    TabList,
+    Tab,
+    TabPanels,
+    TabPanel,
+    useColorModeValue,
+    Flex,
+    VStack,
+    useColorMode,
 } from "@chakra-ui/react";
-import { PresetColor } from "react-color/lib/components/sketch/Sketch";
 import { useStore } from "@nanostores/react";
 import { commonMsg } from "src/i18n/locales/en";
+import { darkPalletes, lightPalletes } from "utils/colors";
+import { upperFirst } from "lodash";
+import customColors from "theme/colors";
+import { SketchPicker } from "react-color";
 
 interface Props {
-    presetColors?: PresetColor[]
     color: string
     onChange: any
     buttonText?: string
@@ -35,28 +44,61 @@ interface Props {
     circleRadius?: string
 }
 
-export const ColorPicker = ({ presetColors, color, onChange, buttonText = null, circlePicker = false,circleRadius="16px" }: Props) => {
+export const ColorPicker = ({ color, onChange, buttonText = null, circlePicker = false, circleRadius = "16px" }: Props) => {
+    const {colorMode} = useColorMode()
     const t = useStore(commonMsg)
     return (
         <Popover>
-            <PopoverTrigger><HStack>
-                {circlePicker ? <Box width="20px" height="20px" bg={color} borderRadius="50%" className="bordered"></Box> : <>
-                <Button size="sm" width="fit-content" variant="ghost">{buttonText ?? t.pickColor}</Button>
-                <Box width={circleRadius} height={circleRadius} bg={color} borderRadius="50%" ></Box>
-                <Text textStyle="annotation">{color}</Text>
+            <PopoverTrigger><HStack width="fit-content">
+                {circlePicker ?
+                 <Box width="20px" height="20px" bg={color} borderRadius="50%" className="bordered"></Box> 
+                : <>
+                    <Button size="sm" width="fit-content" variant="ghost" >{buttonText ?? t.pickColor}</Button>
+                    <Box width={circleRadius} height={circleRadius} bg={color} borderRadius="50%" className="bordered"></Box>
+                    <Text textStyle="annotation">{color}</Text>
                 </>}
-                
+
             </HStack></PopoverTrigger>
-            <PopoverContent width={300}>
-                <Center>
-                    <SketchPicker
-                        // disableAlpha={true}
-                        presetColors={presetColors}
-                        width="100%"
-                        color={color}
-                        onChange={onChange}
-                    />
-                </Center>
+            <PopoverContent width={270}>
+                <Tabs isFitted>
+                    <TabList mb='1em'>
+                        <Tab>Pallete</Tab>
+                        <Tab>Custom</Tab>
+                    </TabList>
+                    <TabPanels>
+                        <TabPanel pt="1">
+                            <VStack alignItems="left" spacing={3}>
+                            {
+                                (colorMode == "light" ? lightPalletes : darkPalletes).map(pallete => <Flex justifyContent="space-between" alignItems="center">
+                                    <Text fontSize="0.9rem">{upperFirst(pallete.name)}</Text>
+                                    <HStack spacing={3}>
+                                        {pallete.shades.map((color,i) => <Box cursor="pointer" borderRadius="50%" width={i==2 ? "30px" : "20px"} height={i==2 ? "30px" : "20px"} display="block" bg={color.color} onClick={() => onChange(color.color)}/>)}
+                                    </HStack>
+                                </Flex>)
+                            }
+                            </VStack>
+
+                            <HStack mt="3" spacing={4}>
+                                <HStack>
+                                    <Text fontSize="0.8rem">Transparent</Text>
+                                    <Box cursor="pointer" width="20px" height="20px" bg='transparent' borderRadius="50%" className="bordered" onClick={() => onChange('transparent')}/>
+                                </HStack>
+                                <HStack>
+                                    <Text fontSize="0.8rem">Text Color</Text>
+                                    <Box cursor="pointer" width="20px" height="20px" bg={useColorModeValue(customColors.textColor.light, customColors.textColor.dark)} borderRadius="50%" className="bordered" onClick={() => onChange('inherit')} />
+                                </HStack>
+                            </HStack>
+                        </TabPanel>
+                        <TabPanel>
+                        <SketchPicker
+                        disableAlpha={false}
+                            width="100%"
+                            color={color}
+                            onChange={v => onChange(v.hex)}
+                        />
+                        </TabPanel>
+                    </TabPanels>
+                </Tabs>
             </PopoverContent>
         </Popover>
     );

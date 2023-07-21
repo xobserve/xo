@@ -268,7 +268,9 @@ export function emphasize(color: string, coefficient = 0.15) {
  * @beta
  */
 export function alpha(color: string, value: number) {
-
+  if (color == "inherit" || color == "transparent" || color =="initial") {
+      return color
+  }
   
   if (isEmpty(color) || ( !color.startsWith('#') && color.indexOf('rgb') < 0 && color.indexOf('hsl') < 0)) {
      color = '#000'

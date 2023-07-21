@@ -38,11 +38,13 @@ const PanelOverrides = ({ panel, onChange, data }: PanelEditorProps) => {
                 const d: TableSeries[] = flatten(data)
                 if (d.length > 0) { 
                     console.log("here33333 columns", d, d[0], d[0].columns)
-                    for (const c of d[0].columns) {
-                        res.push({
-                            label: c.title,
-                            value: c.dataIndex
-                        })
+                    if (d[0].columns) {
+                        for (const c of d[0].columns) {
+                            res.push({
+                                label: c.title,
+                                value: c.dataIndex
+                            })
+                        }
                     }
                 }
                 return res
