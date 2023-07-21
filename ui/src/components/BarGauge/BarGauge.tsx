@@ -120,8 +120,8 @@ const BarGauge = (props: Props) => {
                                     <Box position="absolute" bottom="0" bg={color == "transparent" ? color : alpha(color, fillOpacity)} height={`${(v.value - v.min) * 100 / (v.max - v.min)}%`} width="100%" borderRadius={borderRadius} borderTop={`2px solid ${color}`}></Box>}
                             </Box>
                             <Flex justifyContent="space-between" alignItems="center">
-                                {showMin ? <Text fontSize="0.6rem" opacity="0.4" noOfLines={1}>{`${formatUnit(v.min, v.units, v.decimal)}`} </Text> : <Box></Box>}
-                                {showMax ? <Text fontSize="0.6rem" opacity="0.4" noOfLines={1}> {showMax && `${formatUnit(v.max, v.units, v.decimal)}`}</Text> : <Box></Box>}
+                                {showMin ? <Text fontSize="0.6rem" opacity="0.4">{`${formatUnit(v.min, v.units, v.decimal)}`} </Text> : <Box></Box>}
+                                {showMax ? <Text fontSize="0.6rem" opacity="0.4"> {`${formatUnit(v.max, v.units, v.decimal)}`}</Text> : <Box></Box>}
                             </Flex>
                             {v.title && <Box height={`${titleHeight}px`}><Text fontSize={`${titleSize}px`} fontWeight={500}>{v.title}</Text></Box>}
                         </Box>

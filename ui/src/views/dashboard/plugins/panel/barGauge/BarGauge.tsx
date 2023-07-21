@@ -65,7 +65,12 @@ const transformData = (data: SeriesData[], panel: Panel): [BarGaugeValue[], numb
     let textWidth = 0;
     for (const s of data) {
         const override = findOverride(panel, s.name)
-        const unitsOverride = findRuleInOverride(override, "units")
+        const unitsOverride = findRuleInOverride(override, BarGaugeRules.SeriesUnits)
+        const nameOverride = findRuleInOverride(override, BarGaugeRules.SeriesName)
+        const decimalOverride = findRuleInOverride(override, BarGaugeRules.SeriesDecimal)
+        const decimal = decimalOverride?? options.value.decimal
+        const units = unitsOverride?.units || options.value.units
+        
         for (const field of s.fields) {
             if (field.type === "number") {
                 const max = Math.max(...field.values)
@@ -73,10 +78,9 @@ const transformData = (data: SeriesData[], panel: Panel): [BarGaugeValue[], numb
                 if (!gmax || max > gmax) gmax = max
                 if (!gmin || min < gmin) gmin = min
                 const value = calcValueOnArray(field.values, options.value.calc)
-                const text = formatUnit(value, options.value.units, options.value.decimal)
+                const text = formatUnit(value, units, decimal)
                 const width = measureText(text.toString(), options.style.valueSize).width
                 if (width > textWidth) textWidth = width
-                const nameOverride = findRuleInOverride(override, BarGaugeRules.SeriesName)
                 let title; 
                 if (nameOverride?.name) {
                     if (nameOverride.overrideField) {
@@ -95,7 +99,8 @@ const transformData = (data: SeriesData[], panel: Panel): [BarGaugeValue[], numb
                     max: max,
                     value,
                     text: text.toString(),
-                    units: unitsOverride?.units || options.value.units
+                    units: units,
+                    decimal: decimal
                 })
             }
         }
@@ -103,6 +108,8 @@ const transformData = (data: SeriesData[], panel: Panel): [BarGaugeValue[], numb
 
     for (const r of result) {
         const override = findOverride(panel, r.rawTitle)
+        const rawMin = r.min 
+        const rawMax = r.max
         if (options.maxminFrom == "all") {
             r.max = gmax
             r.min = gmin
@@ -115,13 +122,26 @@ const transformData = (data: SeriesData[], panel: Panel): [BarGaugeValue[], numb
             r.max = options.max
         }
 
+        const fromMinMaxOverride = findRuleInOverride(override, BarGaugeRules.SeriesFromMinMax)
+        if (!isEmpty(fromMinMaxOverride)) {
+            if (fromMinMaxOverride == "all") {
+                r.max = gmax
+                r.min = gmin
+            } else {
+                r.max = rawMax
+                r.min = rawMin
+            }
+        }
+
+
         const overrideMin = findRuleInOverride(override, BarGaugeRules.SeriesMin)
         const overrideMax = findRuleInOverride(override, BarGaugeRules.SeriesMax)
+      
         if (!isEmpty(overrideMin)) {
-            r.min = overrideMin.value
+            r.min = overrideMin
         }
         if (!isEmpty(overrideMax)) {
-            r.max = overrideMax.value
+            r.max = overrideMax
         }
 
 
