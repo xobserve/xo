@@ -91,9 +91,9 @@ const BarGauge = (props: Props) => {
                                                 <Box bg={color == "transparent" ? color : alpha(color, fillOpacity)} width={`${Math.min((v.value - v.min) * 100 / (v.max - v.min), 100)}%`} height="100%" borderRadius={borderRadius} borderRight={`2px solid ${color}`}></Box>}
                                         </Box>
                                         <Box width={textWidth} maxW="40%" >
-                                            {showMin && <Text fontSize="0.6rem" opacity="0.5">{`${formatUnit(v.min,v.units,v.decimal)}`}</Text>}
+                                            {showMin && <Text fontSize="0.6rem" opacity="0.4">{`${formatUnit(v.min,v.units,v.decimal)}`}</Text>}
                                             <Text fontSize={`${textSize}px`} color={color}>{v.text}</Text>
-                                            {showMax && <Text fontSize="0.6rem" opacity="0.5">{`${formatUnit(v.max,v.units,v.decimal)}`}</Text>}
+                                            {showMax && <Text fontSize="0.6rem" opacity="0.4">{`${formatUnit(v.max,v.units,v.decimal)}`}</Text>}
                                         </Box>
                                     </Flex>
                                 </>
@@ -102,7 +102,8 @@ const BarGauge = (props: Props) => {
                     } else {
                         return <Box width={`${width / data.length}px`} height="100%" textAlign="center">
                             <Text fontSize={`${textSize}px`} color={color} mb="1">{v.text}</Text>
-                            <Box height={`calc(100% - ${titleHeight}px - 30px)`} width="100%" bg={showUnfilled ? useColorModeValue("rgb(244, 245, 245)", "rgba(255,255,255,0.1)") : null} position="relative">
+                            {(showMin || showMax) && <Text fontSize="0.6rem" opacity="0.4">{showMin && `${formatUnit(v.min,v.units,v.decimal)}`}  {showMax && `${formatUnit(v.max,v.units,v.decimal)}`}</Text>}
+                            <Box height={`calc(100% - ${titleHeight + ((showMin || showMax) ? 18 : 0) }px - 30px)`} width="100%" bg={showUnfilled ? useColorModeValue("rgb(244, 245, 245)", "rgba(255,255,255,0.1)") : null} position="relative">
                                 {mode == "lcd" ?
                                     <VStack width="100%" alignItems="left">
                                         {

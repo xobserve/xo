@@ -87,5 +87,8 @@ export enum BarGaugeRules {
     SeriesMin = "Series.min",
     SeriesMax = "Series.max",
     SeriesThresholds = "Series.thresholds",
-    SeriesUnits = "Series.units",   
+    SeriesUnits = "Series.units",  
+    SeriesDecimal = "Series.decimal",
+    SeriesName = "Series.displayName",
+    SeriesFromMinMax = "Series.fromMinMax",
 } 
