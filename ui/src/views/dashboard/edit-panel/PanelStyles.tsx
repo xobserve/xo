@@ -10,9 +10,8 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-import { Button, Select, Switch, useColorModeValue } from "@chakra-ui/react"
+import { Select, Switch } from "@chakra-ui/react"
 import { ColorPicker } from "components/ColorPicker"
-import customColors from "src/theme/colors"
 import { Panel, PanelEditorProps } from "types/dashboard"
 import { PanelTitleDecorationType } from "types/panel/styles"
 import PanelAccordion from "./Accordion"

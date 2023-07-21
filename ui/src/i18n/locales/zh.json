@@ -97,6 +97,7 @@
     "interaction": "交互",
     "descend": "降序",
     "ascend": "升序",
+    "palette": "调色板",
     "isAdded": "{name}添加成功!",
     "isUpdated": "{name}更新成功!",
     "isDeleted": "{name}删除成功!",

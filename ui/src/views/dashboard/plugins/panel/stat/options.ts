@@ -17,6 +17,7 @@ import { PanelProps } from "types/dashboard";
 import uPlot from "uplot";
 import { pointsFilter } from "../graph/options";
 import { SeriesData } from "types/seriesData";
+import { paletteColorNameToHex } from "utils/colors";
 
 
 
@@ -24,7 +25,7 @@ import { SeriesData } from "types/seriesData";
 const BarWidthFactor = 0.6
 const BardMaxWidth = 200
 // build uplot options based on given config
-export const parseOptions = (config: PanelProps,rawData: SeriesData[]) => {
+export const parseOptions = (config: PanelProps,rawData: SeriesData[],colorMode: "light" | "dark") => {
     // build series
     const series = []
     // push time series option
@@ -33,18 +34,19 @@ export const parseOptions = (config: PanelProps,rawData: SeriesData[]) => {
 
     })
 
+    const color = paletteColorNameToHex(config.panel.plugins.stat.styles.color,colorMode)
     rawData.forEach((d, i) => {
         series.push({
             show: true,
             label: d.name,
-            stroke: config.panel.plugins.stat.styles.color,
+            stroke: color,
             width: 1,
-            fill: config.panel.plugins.stat.styles.gradientMode == "none" ? config.panel.plugins.stat.styles.color : fill(config.panel.plugins.stat.styles.color, config.panel.plugins.stat.styles.fillOpacity / 100),
+            fill: config.panel.plugins.stat.styles.gradientMode == "none" ? color : fill(color, config.panel.plugins.stat.styles.fillOpacity / 100),
             points: {
                 show: null,
                 size: 5,
-                stroke: config.panel.plugins.stat.styles.color,
-                fill: config.panel.plugins.stat.styles.color,
+                stroke: color,
+                fill: color,
                 filter: pointsFilter,
             },
             spanGaps: config.panel.plugins.stat.styles.connectNulls,

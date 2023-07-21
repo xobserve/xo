@@ -104,6 +104,7 @@ export const commonMsg = i18n("common", {
   "interaction": "Interaction",
   "descend": "Descend",
   "ascend": "Ascend",
+  "palette": "Palette",
   "inputTips": params("Enter {name}.."),
   "isReqiiured": params("{name} is required"),
   "isInvalid": params("{name} is invalid"),

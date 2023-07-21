@@ -17,6 +17,7 @@ import flattenDeep from 'lodash/flattenDeep';
 import chunk from 'lodash/chunk';
 import zip from 'lodash/zip';
 import tinycolor from 'tinycolor2';
+import { isEmpty } from 'lodash';
 
 
 export const PALETTE_ROWS = 4;
@@ -439,6 +440,25 @@ function hexToHsl(color: string) {
 
 function hslToHex(color: any) {
   return tinycolor(color).toHexString();
+}
+
+
+export const paletteColorNameToHex = (name:string,colorMode:"light" | "dark" = "light")  => {
+  if (isEmpty(name)) {
+    return name
+  }
+
+  if (name[0] != '$') {
+    return name 
+  }
+
+  const v = name.slice(1).split('-')
+  const paletteName = v[v.length -1]
+
+  const palettes = colorMode == "light" ? lightPalettes : darkPalettes
+  const palette = palettes.find(p => p.name == paletteName)
+  const value = palette.shades.find(s => s.name == name)
+  return value?.color
 }
 
 export let sortedColors = sortColorsByHue(colors);

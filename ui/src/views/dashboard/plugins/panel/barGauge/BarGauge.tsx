@@ -37,7 +37,6 @@ const BarGaugePanel = (props: Props) => {
 
     const [data, textWidth] = transformData(rawData, panel)
 
-    console.log("here33333 bargauge data", data, textWidth)
     const options = props.panel.plugins.barGauge
     return (<BarGauge
         threshods={options.thresholds}

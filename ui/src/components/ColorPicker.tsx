@@ -31,7 +31,7 @@ import {
 } from "@chakra-ui/react";
 import { useStore } from "@nanostores/react";
 import { commonMsg } from "src/i18n/locales/en";
-import { darkPalettes, lightPalettes } from "utils/colors";
+import { darkPalettes, lightPalettes, paletteColorNameToHex } from "utils/colors";
 import { upperFirst } from "lodash";
 import customColors from "theme/colors";
 import { SketchPicker } from "react-color";
@@ -47,6 +47,7 @@ interface Props {
 export const ColorPicker = ({ color, onChange, buttonText = null, circlePicker = false, circleRadius = "16px" }: Props) => {
     const {colorMode} = useColorMode()
     const t = useStore(commonMsg)
+    color = paletteColorNameToHex(color, colorMode)
     return (
         <Popover>
             <PopoverTrigger><HStack width="fit-content">
@@ -62,8 +63,8 @@ export const ColorPicker = ({ color, onChange, buttonText = null, circlePicker =
             <PopoverContent width={270}>
                 <Tabs isFitted>
                     <TabList mb='1em'>
-                        <Tab>Palette</Tab>
-                        <Tab>Custom</Tab>
+                        <Tab>{t.palette}</Tab>
+                        <Tab>{t.custom}</Tab>
                     </TabList>
                     <TabPanels>
                         <TabPanel pt="1">
@@ -72,7 +73,7 @@ export const ColorPicker = ({ color, onChange, buttonText = null, circlePicker =
                                 (colorMode == "light" ? lightPalettes : darkPalettes).map(palette => <Flex justifyContent="space-between" alignItems="center">
                                     <Text fontSize="0.9rem">{upperFirst(palette.name)}</Text>
                                     <HStack spacing={3}>
-                                        {palette.shades.map((color,i) => <Box cursor="pointer" borderRadius="50%" width={i==2 ? "30px" : "20px"} height={i==2 ? "30px" : "20px"} display="block" bg={color.color} onClick={() => onChange(color.color)}/>)}
+                                        {palette.shades.map((color,i) => <Box cursor="pointer" borderRadius="50%" width={i==2 ? "30px" : "20px"} height={i==2 ? "30px" : "20px"} display="block" bg={color.color} onClick={() => onChange(color.name)}/>)}
                                     </HStack>
                                 </Flex>)
                             }
@@ -84,7 +85,7 @@ export const ColorPicker = ({ color, onChange, buttonText = null, circlePicker =
                                     <Box cursor="pointer" width="20px" height="20px" bg='transparent' borderRadius="50%" className="bordered" onClick={() => onChange('transparent')}/>
                                 </HStack>
                                 <HStack>
-                                    <Text fontSize="0.8rem">Text Color</Text>
+                                    <Text fontSize="0.8rem">Inherit</Text>
                                     <Box cursor="pointer" width="20px" height="20px" bg={useColorModeValue(customColors.textColor.light, customColors.textColor.dark)} borderRadius="50%" className="bordered" onClick={() => onChange('inherit')} />
                                 </HStack>
                             </HStack>

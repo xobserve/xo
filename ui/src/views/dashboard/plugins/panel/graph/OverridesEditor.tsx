@@ -15,8 +15,7 @@ import RadionButtons from "components/RadioButtons";
 import { ColorPicker } from "components/ColorPicker";
 import { EditorInputItem, EditorNumberItem, EditorSliderItem } from "components/editor/EditorItem";
 import { UnitPicker } from "components/Unit";
-import { OverrideRule, Panel } from "types/dashboard";
-import { colors } from "utils/colors";
+import { OverrideRule } from "types/dashboard";
 import React from "react";
 
 interface Props {

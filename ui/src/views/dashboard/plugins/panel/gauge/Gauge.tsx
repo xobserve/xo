@@ -12,7 +12,7 @@
 // limitations under the License.
 import { Box, useColorMode } from "@chakra-ui/react";
 import ChartComponent from "components/charts/Chart";
-import { round } from "lodash";
+import { cloneDeep, round } from "lodash";
 
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { PanelProps } from "types/dashboard"
@@ -20,6 +20,7 @@ import { GaugePluginData } from "types/plugins/gauge";
 import { SeriesData } from "types/seriesData";
 import { calcValueOnSeriesData } from "utils/seriesData";
 import React from "react";
+import { paletteColorNameToHex } from "utils/colors";
 
 interface Props extends PanelProps {
   data: SeriesData[][]
@@ -46,6 +47,10 @@ const GaugePanel = (props: Props) => {
 
 
   const options = useMemo(() => {
+    const split = cloneDeep(panel.plugins.gauge.axis.split)
+    for (const s of split) {
+      s[1] = paletteColorNameToHex(s[1], colorMode)
+    }
     return {
       animation: panel.plugins.gauge.animation,
       grid: {
@@ -82,7 +87,7 @@ const GaugePanel = (props: Props) => {
           axisLine: {
             lineStyle: {
               width: panel.plugins.gauge.axis.width,
-              color: panel.plugins.gauge.axis.split
+              color: split
             }
           },
           axisTick: {

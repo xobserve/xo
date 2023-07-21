@@ -11,11 +11,12 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { Box, Flex, HStack, Text, useColorModeValue, VStack } from "@chakra-ui/react"
+import { Box, Flex, HStack, Text, useColorMode, useColorModeValue, VStack } from "@chakra-ui/react"
 import { formatUnit } from "components/Unit"
 import React from "react"
 import { Unit } from "types/panel/plugins"
 import { ThresholdsConfig } from "types/threshold"
+import { paletteColorNameToHex } from "utils/colors"
 import { measureText } from "utils/measureText"
 import { getThreshold } from "../Threshold/utils"
 import { alpha } from "../uPlot/colorManipulator"
@@ -54,6 +55,7 @@ const lcdCellWidth = 12
 const lcdCellSpacing = 2
 const minMaxHeight = 15
 const BarGauge = (props: Props) => {
+    const {colorMode} = useColorMode()
     const { data, width, height, orientation = "horizontal", mode = "basic", titleSize = 18, textSize = 16, borderRadius = "4px", showUnfilled = true, fillOpacity = 0.6, showMax = false, showMin = false } = props
     const Stack = orientation == "horizontal" ? VStack : HStack
     const textWidth = props.textWidth ?? 0
@@ -73,7 +75,8 @@ const BarGauge = (props: Props) => {
                     const gap = lcdSize - (lcdCellCount *(lcdCellSize + lcdCellSpacing)) + 1
                     const thresholds = v.thresholds ?? props.threshods
                     const threshold = getThreshold(v.value, thresholds, v.max)
-                    const color = threshold?.color ?? v.color
+                    let color = threshold?.color ?? v.color
+                    color = paletteColorNameToHex(color, colorMode)
                     if (orientation == "horizontal") {
                         return <Box key={i} height={`${100 / data.length}%`} width="100%">
                             {
@@ -85,7 +88,9 @@ const BarGauge = (props: Props) => {
                                                     {
                                                         Array.from({ length: lcdCellCount }, (_, i) => {
                                                             const threshold = getThreshold(v.min + ((i + 1) / lcdCellCount) * (v.max - v.min), thresholds, v.max)
-                                                            const cellColor = i < Math.floor((v.value - v.min) * lcdCellCount / (v.max - v.min)) ? `radial-gradient(${alpha(threshold?.color ?? v.color, 0.95)} 10%, ${alpha(threshold?.color ?? v.color, 0.55)} )` : alpha(threshold?.color ?? v.color, 0.25);
+                                                            let color = threshold?.color ?? v.color
+                                                            color = paletteColorNameToHex(color, colorMode)
+                                                            const cellColor = i < Math.floor((v.value - v.min) * lcdCellCount / (v.max - v.min)) ? `radial-gradient(${alpha(color, 0.95)} 10%, ${alpha(color, 0.55)} )` : alpha(color, 0.25);
                                                             return <Box key={i} width={`${lcdCellSize}px`} height="100%" bg={cellColor} borderRadius="2px"></Box>
                                                         })
                                                     }
@@ -111,7 +116,8 @@ const BarGauge = (props: Props) => {
                                         {
                                             Array.from({ length: lcdCellCount }, (_, i) => {
                                                 const threshold = getThreshold(v.min + ((i + 1) / lcdCellCount) * (v.max - v.min), thresholds, v.max)
-                                                const cellColor = i < Math.floor((v.value - v.min) * lcdCellCount / (v.max - v.min)) ? `radial-gradient(${alpha(threshold.color, 0.95)} 10%, ${alpha(threshold.color, 0.55)} )` : alpha(threshold.color, 0.2);
+                                                let color = paletteColorNameToHex(threshold.color, colorMode)
+                                                const cellColor = i < Math.floor((v.value - v.min) * lcdCellCount / (v.max - v.min)) ? `radial-gradient(${alpha(color, 0.95)} 10%, ${alpha(color, 0.55)} )` : alpha(color, 0.2);
                                                 return <Box position="absolute" bottom={`${(i) * (lcdCellSize + lcdCellSpacing)}px`} key={i} height={`${lcdCellSize}px`} width="100%" bg={cellColor} borderRadius="2px"></Box>
                                             })
                                         }

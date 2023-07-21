@@ -57,7 +57,7 @@ const StatPanel = memo((props: StatPanelProps) => {
         if (data.length > 0) {
             legend = data[0].name
         }
-        o = parseOptions(props, data)
+        o = parseOptions(props, data,colorMode)
 
         return [o, legend]
     }, [props.panel, props.data, colorMode, props.width, props.height])
@@ -66,7 +66,7 @@ const StatPanel = memo((props: StatPanelProps) => {
 
     const onChartCreate = useCallback((chart) => { setUplot((chart)); props.sync?.sub(chart) }, [props.sync])
 
-
+    
     return (
         <>
             <Box h="100%" className="panel-graph">

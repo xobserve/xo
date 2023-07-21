@@ -17,7 +17,7 @@ import { TableSettings } from 'types/panel/plugins';
 import storage from 'utils/localStorage';
 import { cloneDeep, isFunction, isNumber, round } from 'lodash';
 import { setTableFilter } from './TableFilter';
-import { Box, Button, HStack, Text, Tooltip, useToast } from '@chakra-ui/react';
+import { Box, Button, HStack, Text, Tooltip, useColorMode, useToast } from '@chakra-ui/react';
 import { findOverride, findOverrideRule, findRuleInOverride } from 'utils/dashboard/panel';
 import { Panel } from 'types/dashboard';
 import { TableRules } from '../../OverridesEditor';
@@ -35,6 +35,7 @@ import { isEmpty } from 'utils/validate';
 import BarGauge from 'components/BarGauge/BarGauge';
 import { measureText } from 'utils/measureText';
 import AutoSizer from "react-virtualized-auto-sizer";
+import { paletteColorNameToHex } from 'utils/colors';
 
 interface Props {
   panel: Panel
@@ -47,7 +48,7 @@ const storagePageKey = "tablePage"
 const ComplexTable = memo((props: Props) => {
   const toast = useToast()
   const navigate = useNavigate()
-
+  const {colorMode} = useColorMode()
 
   const { dashboardId, panel } = props
   const data = cloneDeep(props.data)
@@ -122,7 +123,8 @@ const ComplexTable = memo((props: Props) => {
       min = Math.min(...values)
     }
 
-    const bg = findRuleInOverride(override, TableRules.ColumnBg)
+    let bg = findRuleInOverride(override, TableRules.ColumnBg)
+    bg = paletteColorNameToHex(bg,colorMode)
     let textWidth = 0;
     // modify data
     if (unit || decimal || isFunc || thresholds || columnType) {
@@ -144,9 +146,10 @@ const ComplexTable = memo((props: Props) => {
         if (thresholds && isNumber(v)) {
           const t = getThreshold(v as number, thresholds, max)
           if (t) {
+            const c = paletteColorNameToHex(t.color, colorMode)
             row['__bg__'] = {
               ...row['__bg__'],
-              [column.dataIndex]: t.color
+              [column.dataIndex]: c
             }
           }
         }
@@ -173,6 +176,7 @@ const ComplexTable = memo((props: Props) => {
     }
 
     let color = findRuleInOverride(override, TableRules.ColumnColor)
+    color = paletteColorNameToHex(color,colorMode)
     const ellipsis = findRuleInOverride(override, TableRules.ColumnEllipsis)
     const opacity = findRuleInOverride(override, TableRules.ColumnOpacity)
     column.render = (text, record, index) => {
