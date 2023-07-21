@@ -505,5 +505,22 @@
     "seriesName": "修改列标题",
     "seriesFilter1": "数字 min/max 匹配",
     "seriesFilter2": "字符串匹配"
+  },
+  "barGaugePanel": {
+    "orientation": "方向",
+    "displayMode": "显示模式",
+    "minTips": "留空则根据结果序列中的所有数据来计算",
+    "calcMinFrom": "从何处计算 min/max",
+    "allSeries": "所有数据序列",
+    "currentSeries": "当前的数据序列",
+    "showMin": "显示最小值",
+    "showMinTips": "在值的旁边显示最小值",
+    "showMax": "显示最大值",
+    "showMaxTips": "在值的旁边显示最大值",
+    "showUnfilled": "高亮未填充的区域",
+    "showUnfilledTips": "开启后，未填充的区域将被渲染为灰色",
+    "titleSize": "标题字体大小",
+    "valueSize": "值字体大小",
+    "layoutDir" : "排列方向"
   }
 }

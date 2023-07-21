@@ -540,3 +540,21 @@ export const tablePanelMsg = i18n("tablePanel", {
     "seriesFilter1": "Number min/max",
     "seriesFilter2": "String match",
 })
+
+export const barGaugePanelMsg = i18n("barGaugePanel", {
+  "orientation": "Orientation",
+  "displayMode": "Display mode",
+  "minTips": "Leave empty to calculate based on all values",
+  "calcMinFrom": "Calc max/min from",
+  "allSeries": "All series",
+  "currentSeries": "Current series",
+  "showMin": "Show min",
+  "showMinTips": "Display min beside value",
+  "showMax": "Show max",
+  "showMaxTips": "Display max beside value",
+  "showUnfilled": "Show unfilled area",
+  "showUnfilledTips": "When enabled renders the unfilled region as gray",
+  "titleSize": "Title font size",
+  "valueSize": "Value font size",
+  "layoutDir" : "Layout direction",
+})

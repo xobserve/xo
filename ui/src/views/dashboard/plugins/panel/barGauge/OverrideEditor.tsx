@@ -17,7 +17,7 @@ import { UnitPicker } from "components/Unit";
 import { OverrideRule, Panel } from "types/dashboard";
 import React, { useEffect } from "react";
 import { useStore } from "@nanostores/react";
-import { commonMsg } from "src/i18n/locales/en";
+import { barGaugePanelMsg, commonMsg, tablePanelMsg } from "src/i18n/locales/en";
 import { Checkbox, HStack, Text } from "@chakra-ui/react";
 import { isEmpty } from "utils/validate";
 import ThresholdEditor from "components/Threshold/ThresholdEditor";
@@ -31,13 +31,13 @@ interface Props {
 
 
 const BarGaugeOverridesEditor = ({ override, onChange }: Props) => {
-    const t = useStore(commonMsg)
+    const t1 = useStore(barGaugePanelMsg)
     switch (override.type) {
         case BarGaugeRules.SeriesName:
             return <OverrideNameEditor value={override.value} onChange={onChange} />
         case BarGaugeRules.SeriesFromMinMax:
             return <RadionButtons
-                options={[{ label: "All Series", value: "all" }, { label: "Current Series", value: "series" }]}
+                options={[{ label: t1.allSeries, value: "all" }, { label: t1.currentSeries, value: "series" }]}
                 value={override.value}
                 onChange={onChange} />
         case BarGaugeRules.SeriesMin:

@@ -17,7 +17,7 @@ import React from "react"
 import PanelAccordion from "src/views/dashboard/edit-panel/Accordion"
 import PanelEditItem from "src/views/dashboard/edit-panel/PanelEditItem"
 import { useStore } from "@nanostores/react"
-import { commonMsg } from "src/i18n/locales/en"
+import { barGaugePanelMsg, commonMsg } from "src/i18n/locales/en"
 import { EditorNumberItem } from "components/editor/EditorItem"
 import ValueCalculation from "components/ValueCalculation"
 import { UnitPicker } from "components/Unit"
@@ -27,17 +27,17 @@ import ThresholdEditor from "components/Threshold/ThresholdEditor"
 
 const BarGaugeEditor = ({ panel, onChange }: PanelEditorProps) => {
     const t = useStore(commonMsg)
-
+    const t1 = useStore(barGaugePanelMsg)
 
     return (<>
         <PanelAccordion title={t.basicSetting}>
-            <PanelEditItem title="Orientation" desc="Layout direction">
-                <RadionButtons options={[{ label: "Horizontal", value: "horizontal" }, { label: "Vertical", value: "vertical" }]} value={panel.plugins.barGauge.orientation} onChange={v => onChange((panel: Panel) => {
+            <PanelEditItem title={t1.orientation} desc={t1.layoutDir}>
+                <RadionButtons options={[{ label: t.horizontal, value: "horizontal" }, { label: t.vertical, value: "vertical" }]} value={panel.plugins.barGauge.orientation} onChange={v => onChange((panel: Panel) => {
                     panel.plugins.barGauge.orientation = v
                 })} />
             </PanelEditItem>
-            <PanelEditItem title="Display mode">
-                <RadionButtons options={[{ label: "Basic", value: "basic" }, { label: "Retro LCD", value: "lcd" }]} value={panel.plugins.barGauge.mode} onChange={v => onChange((panel: Panel) => {
+            <PanelEditItem title={t1.displayMode}>
+                <RadionButtons options={[{ label: t.basic, value: "basic" }, { label: "Retro LCD", value: "lcd" }]} value={panel.plugins.barGauge.mode} onChange={v => onChange((panel: Panel) => {
                     panel.plugins.barGauge.mode = v
                 })} />
             </PanelEditItem>
@@ -60,45 +60,45 @@ const BarGaugeEditor = ({ panel, onChange }: PanelEditorProps) => {
                     onChange((panel: Panel) => { panel.plugins.barGauge.value.calc = v })
                 }} />
             </PanelEditItem>
-            <PanelEditItem title="Min" desc="Leave empty to calculate based on all values">
+            <PanelEditItem title={t.min} desc={t1.minTips}>
                 <EditorNumberItem   value={panel.plugins.barGauge.min} onChange={(v) => onChange((panel: Panel) => {
                     panel.plugins.barGauge.min = v
                 })} />
             </PanelEditItem>
-            <PanelEditItem title="Max" desc="Leave empty to calculate based on all values">
+            <PanelEditItem title={t.max} desc={t1.minTips}>
                 <EditorNumberItem value={panel.plugins.barGauge.max} onChange={(v) => onChange((panel: Panel) => {
                     panel.plugins.barGauge.max = v
                 })} />
             </PanelEditItem>
-            <PanelEditItem title="Calc max/min from">
-                <RadionButtons options={[{ label: "All Series", value: "all" }, { label: "Current Series", value: "series" }]} value={panel.plugins.barGauge.maxminFrom} onChange={v => onChange((panel: Panel) => {
+            <PanelEditItem title={t1.calcMinFrom}>
+                <RadionButtons options={[{ label: t1.allSeries, value: "all" }, { label: t1.currentSeries, value: "series" }]} value={panel.plugins.barGauge.maxminFrom} onChange={v => onChange((panel: Panel) => {
                     panel.plugins.barGauge.maxminFrom = v
                 })} />
             </PanelEditItem>
-            <PanelEditItem title="Show min" desc="Display min beside value">
+            <PanelEditItem title={t1.showMin} desc={t1.showMinTips}>
                 <Switch isChecked={panel.plugins.barGauge.showMin} onChange={e => onChange((panel: Panel) => {
                     panel.plugins.barGauge.showMin = e.currentTarget.checked
                 })} />
             </PanelEditItem>
-            <PanelEditItem title="Show max" desc="Display max beside value">
+            <PanelEditItem title={t1.showMax} desc={t1.showMinTips}>
                 <Switch isChecked={panel.plugins.barGauge.showMax} onChange={e => onChange((panel: Panel) => {
                     panel.plugins.barGauge.showMax = e.currentTarget.checked
                 })} />
             </PanelEditItem>
         </PanelAccordion>
 
-        <PanelAccordion title="Styles">
-            <PanelEditItem title="Show unfilled area" desc="When enabled renders the unfilled region as gray">
+        <PanelAccordion title={t.styles}>
+            <PanelEditItem title={t1.showUnfilled} desc={t1.showUnfilledTips}>
                 <Switch isChecked={panel.plugins.barGauge.style.showUnfilled} onChange={e => onChange((panel: Panel) => {
                     panel.plugins.barGauge.style.showUnfilled = e.currentTarget.checked
                 })} />
             </PanelEditItem>
-            <PanelEditItem title="Title font size">
+            <PanelEditItem title={t1.titleSize}>
                 <EditorNumberItem value={panel.plugins.barGauge.style.titleSize} onChange={(v) => onChange((panel: Panel) => {
                     panel.plugins.barGauge.style.titleSize = v
                 })} />
             </PanelEditItem>
-            <PanelEditItem title="Value font size">
+            <PanelEditItem title={t1.valueSize}>
                 <EditorNumberItem value={panel.plugins.barGauge.style.valueSize} onChange={(v) => onChange((panel: Panel) => {
                     panel.plugins.barGauge.style.valueSize = v
                 })} />
