@@ -35,10 +35,10 @@ const StyleSettings = ({ dashboard, onChange }: Props) => {
         <FormItem title={t1.background} desc={t1.backgroundTips} labelWidth="100%">
             <EditorInputItem value={dashboard.data.styles?.bg} onChange={(v) => onChange(draft => { draft.data.styles.bg = v })} />
         </FormItem>
-        <FormItem title={t1.enableBg} desc={t1.enableBgTips}>
+        <FormItem title={t1.enableBg} desc={t1.enableBgTips} alignItems="center">
             <Switch defaultChecked={dashboard.data.styles?.bgEnabled} onChange={(e) => onChange(draft => { draft.data.styles.bgEnabled = e.currentTarget.checked })} />
         </FormItem>
-        <FormItem title={t1.dashBorder} desc={t1.dashBorderTips}>
+        <FormItem title={t1.dashBorder} desc={t1.dashBorderTips} alignItems="center">
             <BorderSelect value={dashboard.data.styles?.border} onChange={v => {
                 onChange(draft => {
                     draft.data.styles.border = v
