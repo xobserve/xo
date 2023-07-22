@@ -244,9 +244,17 @@ export interface GraphSettings {
     },
     value: ValueSetting
     thresholds: ThresholdsConfig
+    thresholdsDisplay: ThresholdDisplay
 }
 
 
+export enum ThresholdDisplay {
+    Line = "Line",
+    DashedLine = "Dashed Line",
+    Area = "Area",
+    AreaLine = "Area Line",
+    AreaDashedLine = "Area Dashed Line"
+}
 
 
 

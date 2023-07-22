@@ -209,7 +209,7 @@ const GraphPanel = memo((props: GraphPanelProps) => {
                             >
                                 {props.panel.plugins.graph.tooltip.mode != 'hidden' && <Tooltip props={props} options={options} data={data} inactiveSeries={inactiveSeries} />}
                                 <ZoomPlugin options={options} onZoom={onZoom}/>
-                                <ThresholdsPlugin options={options} thresholdsConfig={props.panel.plugins.graph.thresholds} />
+                                <ThresholdsPlugin options={options} thresholdsConfig={props.panel.plugins.graph.thresholds} display={props.panel.plugins.graph.thresholdsDisplay}/>
                             </UplotReact>
                             )
                         }}

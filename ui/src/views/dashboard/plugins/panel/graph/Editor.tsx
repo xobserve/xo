@@ -10,7 +10,7 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-import { Switch } from "@chakra-ui/react"
+import { Select, Switch } from "@chakra-ui/react"
 import PanelAccordion from "src/views/dashboard/edit-panel/Accordion"
 import PanelEditItem from "src/views/dashboard/edit-panel/PanelEditItem"
 import RadionButtons from "components/RadioButtons"
@@ -25,10 +25,12 @@ import React from "react";
 import { commonMsg, graphPanelMsg } from "src/i18n/locales/en"
 import { useStore } from "@nanostores/react"
 import ThresholdEditor from "components/Threshold/ThresholdEditor"
+import { ThresholdDisplay } from "types/panel/plugins"
 
 const GraphPanelEditor = ({ panel, onChange }: PanelEditorProps) => {
     const t = useStore(commonMsg)
     const t1 = useStore(graphPanelMsg)
+
     return (<>
         <PanelAccordion title="Tooltip">
             <PanelEditItem title={t.mode}>
@@ -158,6 +160,22 @@ const GraphPanelEditor = ({ panel, onChange }: PanelEditorProps) => {
                     panel.plugins.graph.thresholds = v
                     dispatch(PanelForceRebuildEvent + panel.id)
                 })} />
+            
+            <PanelEditItem title={t1.thresholdsDisplay}>
+                <Select value={panel.plugins.graph.thresholdsDisplay} onChange={e => {
+                    const v = e.currentTarget.value
+                    onChange((panel: Panel) => {
+                        panel.plugins.graph.thresholdsDisplay = v as ThresholdDisplay
+                        dispatch(PanelForceRebuildEvent + panel.id)
+                    })
+                }}>
+                   {
+                    Object.keys(ThresholdDisplay).map(k => 
+                        <option value={ThresholdDisplay[k]}>{ThresholdDisplay[k]}</option>
+                    )
+                   }
+                </Select>
+            </PanelEditItem>
         </PanelAccordion>
     </>
     )

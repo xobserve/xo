@@ -365,7 +365,8 @@
     "showPoints": "显示点",
     "pointSize": "点大小",
     "connectNull": "连接空值",
-    "showGrid": "显示网格线"
+    "showGrid": "显示网格线",
+    "thresholdsDisplay": "Thresholds 显示类型"
   },
   "nodeGraphPanel": {
     "node": "节点( Node )",

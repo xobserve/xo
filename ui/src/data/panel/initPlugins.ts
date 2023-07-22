@@ -11,7 +11,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 import { PanelType } from "types/dashboard";
-import { PanelPlugins, PieLegendPlacement, Units, UnitsType } from "types/panel/plugins";
+import { PanelPlugins, PieLegendPlacement, ThresholdDisplay, Units, UnitsType } from "types/panel/plugins";
 import { ThresholdsConfig, ThresholdsMode } from "types/threshold";
 import { ValueCalculationType } from "types/value";
 import { colors, primaryPalette } from "utils/colors";
@@ -77,7 +77,8 @@ export const initPanelPlugins = (): PanelPlugins => {
                 ...initUnits,
                 decimal: 1
             },
-            thresholds: initThresholds()
+            thresholds: initThresholds(),
+            thresholdsDisplay: ThresholdDisplay.Area
         },
 
         [PanelType.Text]: {

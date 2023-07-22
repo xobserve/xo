@@ -15,6 +15,7 @@ import { alpha } from 'components/uPlot/colorManipulator';
 import { cloneDeep, reverse } from 'lodash';
 import { useEffect, useLayoutEffect, useState } from 'react';
 import tinycolor from 'tinycolor2';
+import { ThresholdDisplay } from 'types/panel/plugins';
 import { Threshold, ThresholdsConfig, ThresholdsMode } from 'types/threshold';
 import uPlot from 'uplot';
 import { paletteColorNameToHex } from 'utils/colors';
@@ -24,12 +25,13 @@ import { getGradientRange, scaleGradient } from '../gradientFill';
 interface Props {
     thresholdsConfig: ThresholdsConfig
     options: uPlot.Options;
+    display: ThresholdDisplay
 }
 
-export const ThresholdsPlugin = ({ thresholdsConfig, options }: Props) => {
+export const ThresholdsPlugin = ({ thresholdsConfig, options, display }: Props) => {
     const {colorMode} = useColorMode()
     const scaleKey = 'y'
-    
+    const dashSegments = display === ThresholdDisplay.DashedLine || display === ThresholdDisplay.AreaDashedLine ? [10, 10] : undefined;
     function addAreas(u: uPlot, yScaleKey: string, steps: Threshold[]) {
         let ctx = u.ctx;
     
@@ -41,7 +43,6 @@ export const ThresholdsPlugin = ({ thresholdsConfig, options }: Props) => {
             if (color.getAlpha() === 1) {
                 color.setAlpha(0.15);
               }
-            // console.log("here33333 rid", step)
             
             return [step.value, color.toString()];
           }),
@@ -53,6 +54,56 @@ export const ThresholdsPlugin = ({ thresholdsConfig, options }: Props) => {
         ctx.fillRect(u.bbox.left, u.bbox.top, u.bbox.width, u.bbox.height);
       }
 
+      function addLines(u: uPlot, yScaleKey: string, steps: Threshold[]) {
+        let ctx = u.ctx;
+    
+        // Thresholds below a transparent threshold is treated like "less than", and line drawn previous threshold
+        let transparentIndex = 0;
+    
+        for (let idx = 0; idx < steps.length; idx++) {
+          const step = steps[idx];
+          if (step.color === 'transparent') {
+            transparentIndex = idx;
+            break;
+          }
+        }
+    
+        ctx.lineWidth = 2;
+    
+        if (dashSegments) {
+          ctx.setLineDash(dashSegments);
+        }
+    
+        // Ignore the base -Infinity threshold by always starting on index 1
+        for (let idx = 1; idx < steps.length; idx++) {
+          const step = steps[idx];
+          let color: tinycolor.Instance;
+    
+          // if we are below a transparent index treat this a less then threshold, use previous thresholds color
+          if (transparentIndex >= idx && idx > 0) {
+            color = tinycolor(paletteColorNameToHex(steps[idx - 1].color,colorMode));
+          } else {
+            color = tinycolor(paletteColorNameToHex(step.color,colorMode));
+          }
+    
+          // Unless alpha specififed set to default value
+          if (color.getAlpha() === 1) {
+            color.setAlpha(0.7);
+          }
+    
+          let x0 = Math.round(u.bbox.left);
+          let y0 = Math.round(u.valToPos(step.value, yScaleKey, true));
+          let x1 = Math.round(u.bbox.left + u.bbox.width);
+          let y1 = Math.round(u.valToPos(step.value, yScaleKey, true));
+    
+          ctx.beginPath();
+          ctx.moveTo(x0, y0);
+          ctx.lineTo(x1, y1);
+    
+          ctx.strokeStyle = color.toString();
+          ctx.stroke();
+        }
+      }
       
     useLayoutEffect(() => {
         options.hooks.drawClear = [(u: uPlot) => {
@@ -82,8 +133,21 @@ export const ThresholdsPlugin = ({ thresholdsConfig, options }: Props) => {
             for (const t1 of thresholds) {
                 t.unshift(t1)
             }
-            addAreas(u, scaleKey,  t);
-
+            switch (display) {
+                case ThresholdDisplay.Area:
+                    addAreas(u, scaleKey,  t)
+                    break;
+                case ThresholdDisplay.Line:
+                case ThresholdDisplay.DashedLine:
+                    addLines(u,scaleKey,t)
+                    break 
+                case ThresholdDisplay.AreaLine:
+                case ThresholdDisplay.AreaDashedLine:
+                    addAreas(u, scaleKey,  t)
+                    addLines(u,scaleKey,t)
+                    break
+            }
+        
             ctx.restore();
         }]
     }, [options, thresholdsConfig]);

@@ -392,6 +392,7 @@ export const graphPanelMsg = i18n("graphPanel", {
   "pointSize": "Point size",
   "connectNull": "Connect null values",
   "showGrid": "Show grid",
+  "thresholdsDisplay": "Thresholds display",
 })
 
 export const nodeGraphPanelMsg = i18n("nodeGraphPanel", {
