@@ -11,7 +11,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 import { Box, HStack, Modal, ModalBody, ModalContent, ModalOverlay, Text, Tooltip, useDisclosure } from "@chakra-ui/react"
-import TimePicker, { TimePickerKey, getInitTimeRange, initTimeRange } from "./TimePicker"
+import TimePicker, { TimePickerKey, getNewestTimeRange } from "./TimePicker"
 import { TimeRange } from "types/time"
 import { FaRegClock } from "react-icons/fa"
 import IconButton from "../button/IconButton"
@@ -24,9 +24,11 @@ import storage from "utils/localStorage"
 interface Props {
     showTime?: boolean
 }
+
+
 const DatePicker = ({ showTime = false }: Props) => {
     const { isOpen, onOpen, onClose } = useDisclosure()
-    const [value, setValue] = useState<TimeRange>(getInitTimeRange())
+    const [value, setValue] = useState<TimeRange>(getNewestTimeRange())
 
     const onTimeChange = (t: TimeRange) => {
         setValue(t)
@@ -42,17 +44,8 @@ const DatePicker = ({ showTime = false }: Props) => {
         []
     )
     const refresh = () => {
-        const tr: TimeRange = getInitTimeRange()
-        if (tr.sub > 0) {
-            const now = new Date()
-            tr.start = subMinutes(now, tr.sub)
-            tr.end = now
-            storage.set(TimePickerKey, JSON.stringify(tr))
-            dispatch({ type: TimeChangedEvent, data: tr })
-            setValue(tr)
-        } else {
-            setValue(tr)
-        }
+        const tr: TimeRange = updateTimeToNewest()
+        setValue(tr)
     }
 
     return (
@@ -100,4 +93,17 @@ export const setDateTime= (from: number, to: number) => {
     storage.set(TimePickerKey, JSON.stringify(tr))
     dispatch({ type: TimeChangedEvent, data: tr })
     dispatch({ type: TimeRefreshEvent })
+}
+
+export const updateTimeToNewest = () => {
+    const tr: TimeRange = getNewestTimeRange()
+    if (tr.sub > 0) {
+        const now = new Date()
+        tr.start = subMinutes(now, tr.sub)
+        tr.end = now
+        storage.set(TimePickerKey, JSON.stringify(tr))
+        dispatch({ type: TimeChangedEvent, data: tr })
+    } 
+
+    return tr
 }

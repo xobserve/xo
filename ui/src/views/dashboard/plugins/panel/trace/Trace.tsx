@@ -22,7 +22,7 @@ import TraceSearchResult from "./components/SearchResult"
 import transformTraceData from "./utils/transform-trace-data"
 import { uniqBy } from "lodash";
 import { replaceWithVariables, replaceWithVariablesHasMultiValues } from "utils/variable";
-import { getInitTimeRange } from "components/DatePicker/TimePicker";
+import { getNewestTimeRange } from "components/DatePicker/TimePicker";
 import React from "react";
 
 
@@ -32,7 +32,7 @@ const TracePanel = (props: PanelProps) => {
     const [rawTraces, setRawTraces] = useState<TraceData[]>(null)
     const onSearch = async (service, operation, tags, min, max, limit,useLatestTime) => {
         tags = convTagsLogfmt(tags);
-        let tr = getInitTimeRange()
+        let tr = getNewestTimeRange()
         if (!useLatestTime) {
             tr = props.timeRange
         }

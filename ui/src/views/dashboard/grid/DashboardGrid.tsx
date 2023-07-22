@@ -15,16 +15,17 @@ import RGL, { WidthProvider } from "react-grid-layout";
 
 const ReactGridLayout = WidthProvider(RGL);
 
-import { GRID_CELL_HEIGHT, GRID_CELL_VMARGIN, GRID_COLUMN_COUNT } from "src/data/constants";
+import { DashboardHeaderHeight, GRID_CELL_HEIGHT, GRID_CELL_VMARGIN, GRID_COLUMN_COUNT } from "src/data/constants";
 import { updateGridPos } from "utils/dashboard/panel";
-import { Box, Grid, useColorModeValue } from "@chakra-ui/react";
-import React, { CSSProperties, memo, useCallback, useRef } from "react";
+import { Box, Grid, Text, useColorModeValue } from "@chakra-ui/react";
+import React, { CSSProperties, memo, useCallback, useMemo, useRef } from "react";
 import EditPanel from "../edit-panel/EditPanel";
 import uPlot from "uplot";
 import AutoSizer from "react-virtualized-auto-sizer";
 import useGranaTheme from 'hooks/useExtraTheme';
 import { PanelGrid } from "./PanelGrid";
-import { useSearchParam } from "react-use";
+import { useKey, useSearchParam } from "react-use";
+import { addParamToUrl } from "utils/url";
 
 
 
@@ -40,10 +41,22 @@ let gridWidth = 0;
 const DashboardGrid = memo((props: GridProps) => {
     console.log("dashboard grid rendered:")
     const inEdit = useSearchParam('edit')
+    const viewPanel = useSearchParam("viewPanel")
 
     const { dashboard, onChange } = props
     const panelMap = {}
     const [finalWidth, setFinalWidth] = React.useState(0);
+
+    useKey(
+        "Escape",
+        () => {
+            if (viewPanel) {
+                addParamToUrl({ viewPanel: null })
+            }
+        },
+        {},
+        [viewPanel]
+    )
 
     const buildLayout = () => {
         const layout: ReactGridLayout.Layout[] = [];
@@ -115,6 +128,18 @@ const DashboardGrid = memo((props: GridProps) => {
     const onResizeStop = (layout, oldItem, newItem) => { };
 
     const h = useRef(null)
+
+    const viewPanelHeight = useMemo(() => {
+        let height = 0
+        if (viewPanel) {
+            const ele = document.getElementById("sidemenu")
+            height = ele?.offsetHeight - DashboardHeaderHeight - 15 ?? 600
+        }
+
+        return height
+    }, [viewPanel])
+
+
     return (<Box style={{ flex: '1 1 auto' }} id="dashboard-grid" position="relative">
         <AutoSizer disableHeight>
             {({ width }) => {
@@ -156,45 +181,52 @@ const DashboardGrid = memo((props: GridProps) => {
                         height="100%"
                         className="grid-layout-wrapper"
                     >
-                        <ReactGridLayout
-                            width={width}
-                            isDraggable={draggable}
-                            isResizable={dashboard.editable}
-                            containerPadding={[0, 0]}
-                            useCSSTransforms={false}
-                            margin={[GRID_CELL_VMARGIN, GRID_CELL_VMARGIN]}
-                            cols={GRID_COLUMN_COUNT}
-                            rowHeight={GRID_CELL_HEIGHT}
-                            draggableHandle=".grid-drag-handle"
-                            draggableCancel=".grid-drag-cancel"
-                            layout={buildLayout()}
-                            onDragStop={onDragStop}
-                            onResize={onResize}
-                            onResizeStop={onResizeStop}
-                            onLayoutChange={onLayoutChange}
-                            compactType={dashboard.data.layout as any}
-                            allowOverlap={dashboard.data.allowPanelsOverlap}
-                        >
-                            {
-                                dashboard.data.panels.map((panel) => {
-                                    return <GridItem
-                                        key={panel.id}
-                                        data-panelid={panel.id}
-                                        gridPos={panel.gridPos}
-                                        gridWidth={width}
-                                        windowHeight={windowHeight}
-                                        windowWidth={windowWidth}
-                                    >
-                                        {(width: number, height: number) => {
-                                            return (<Box key={panel.id} id={`panel-${panel.id}`}>
-                                                {!inEdit && <PanelGrid dashboard={dashboard} panel={panel} width={width} height={height} onRemovePanel={onRemovePanel} sync={mooSync} />}
-                                            </Box>)
-                                        }}
-                                    </GridItem>
+                        {!viewPanel
+                            ?
+                            <ReactGridLayout
+                                width={width}
+                                isDraggable={draggable}
+                                isResizable={dashboard.editable}
+                                containerPadding={[0, 0]}
+                                useCSSTransforms={false}
+                                margin={[GRID_CELL_VMARGIN, GRID_CELL_VMARGIN]}
+                                cols={GRID_COLUMN_COUNT}
+                                rowHeight={GRID_CELL_HEIGHT}
+                                draggableHandle=".grid-drag-handle"
+                                draggableCancel=".grid-drag-cancel"
+                                layout={buildLayout()}
+                                onDragStop={onDragStop}
+                                onResize={onResize}
+                                onResizeStop={onResizeStop}
+                                onLayoutChange={onLayoutChange}
+                                compactType={dashboard.data.layout as any}
+                                allowOverlap={dashboard.data.allowPanelsOverlap}
+                            >
+                                {
+                                    dashboard.data.panels.map((panel) => {
+                                        return <GridItem
+                                            key={panel.id}
+                                            data-panelid={panel.id}
+                                            gridPos={panel.gridPos}
+                                            gridWidth={width}
+                                            windowHeight={windowHeight}
+                                            windowWidth={windowWidth}
+                                        >
+                                            {(width: number, height: number) => {
+                                                return (<Box key={panel.id} id={`panel-${panel.id}`}>
+                                                    {!inEdit && <PanelGrid dashboard={dashboard} panel={panel} width={width} height={height} onRemovePanel={onRemovePanel} sync={mooSync} />}
+                                                </Box>)
+                                            }}
+                                        </GridItem>
 
-                                })
-                            }
-                        </ReactGridLayout>
+                                    })
+                                }
+                            </ReactGridLayout>
+                            :
+                            <>
+                                {!inEdit && <PanelGrid dashboard={dashboard} panel={dashboard.data.panels.find(p => p.id.toString() == viewPanel)} width={width} height={viewPanelHeight} onRemovePanel={onRemovePanel} sync={mooSync} />}
+                            </>
+                        }
                     </Box>}</>
             }}
         </AutoSizer>
@@ -203,6 +235,7 @@ const DashboardGrid = memo((props: GridProps) => {
 })
 
 export default DashboardGrid
+
 
 
 interface GridItemProps extends Record<string, any> {
@@ -270,6 +303,52 @@ const GridItem = React.forwardRef<HTMLDivElement, GridItemProps>((props, ref) =>
     );
 });
 
+/**
+ * A hacky way to intercept the react-layout-grid item dimensions and pass them to DashboardPanel
+ */
+const PanelView = React.forwardRef<HTMLDivElement, GridItemProps>((props, ref) => {
+    const theme = useGranaTheme()
+    let width = 100;
+    let height = 100;
+
+    const { gridWidth, gridPos, isViewing, windowHeight, windowWidth, ...divProps } = props;
+    const style: CSSProperties = props.style ?? {};
+
+    width = parseFloat(props.style.width);
+    height = parseFloat(props.style.height);
+
+    // props.children[0] is our main children. RGL adds the drag handle at props.children[1]
+    return (
+        <Box {...divProps} ref={ref} className="react-grid-item" sx={{
+            ".react-resizable-handle": {
+                position: "absolute",
+                width: "20px",
+                height: "20px",
+                bottom: "0",
+                right: "0",
+                cursor: "se-resize",
+                visibility: "hidden",
+            },
+            ":hover .react-resizable-handle": {
+                visibility: "visible",
+            }
+            ,
+            ".react-resizable-handle::after": {
+                content: "''",
+                position: "absolute",
+                right: "3px",
+                bottom: "3px",
+                width: "6px",
+                height: "6px",
+                borderRight: `2px solid ${useColorModeValue('rgba(0, 0, 0, 0.3)', 'rgba(255, 255, 255, 0.4)')}`,
+                borderBottom: `2px solid ${useColorModeValue('rgba(0, 0, 0, 0.3)', 'rgba(255, 255, 255, 0.4)')}`
+            },
+        }}>
+            {/* Pass width and height to children as render props */}
+            {[props.children[0](width, height), props.children.slice(1)]}
+        </Box>
+    );
+});
 /**
 * This translates grid height dimensions to real pixels
 */

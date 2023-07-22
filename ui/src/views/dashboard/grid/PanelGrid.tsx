@@ -12,7 +12,7 @@
 // limitations under the License.
 import { Dashboard, DatasourceType, Panel, PanelProps, PanelQuery, PanelType } from "types/dashboard"
 import { Box, Center, HStack, Menu, MenuButton, MenuDivider, MenuItem, MenuList, Modal, ModalBody, ModalCloseButton, ModalContent, ModalHeader, ModalOverlay, Tab, TabList, TabPanel, TabPanels, Tabs, Text, Textarea, Tooltip, useColorMode, useColorModeValue, useDisclosure, useToast } from "@chakra-ui/react";
-import { FaBook, FaBug, FaEdit, FaRegCopy, FaTrashAlt } from "react-icons/fa";
+import { FaBook, FaBug, FaEdit, FaRegCopy, FaRegEye, FaTrashAlt } from "react-icons/fa";
 import { IoMdInformation } from "react-icons/io";
 import { memo, useCallback, useEffect, useMemo, useState } from "react";
 import { run_prometheus_query } from "../plugins/datasource/prometheus/query_runner";
@@ -23,7 +23,7 @@ import { Variable } from "types/variable";
 import { replaceQueryWithVariables, replaceWithVariables } from "utils/variable";
 import storage from "utils/localStorage";
 import useBus, { dispatch } from 'use-bus'
-import { getInitTimeRange } from "components/DatePicker/TimePicker";
+import { getCurrentTimeRange } from "components/DatePicker/TimePicker";
 import { PanelDataEvent, PanelForceRebuildEvent, TimeChangedEvent, VariableChangedEvent } from "src/data/bus-events";
 import { variables } from "../Dashboard";
 import { addParamToUrl } from "utils/url";
@@ -61,7 +61,7 @@ interface PanelGridProps {
 export const PanelGrid = memo((props: PanelGridProps) => {
     const [forceRenderCount, setForceRenderCount] = useState(0)
 
-    const [tr, setTr] = useState<TimeRange>(getInitTimeRange())
+    const [tr, setTr] = useState<TimeRange>(getCurrentTimeRange())
 
     useBus(
         (e) => { return e.type == TimeChangedEvent },
@@ -149,6 +149,7 @@ export const PanelComponent = ({ dashboard, panel, onRemovePanel, width, height,
                     data.push(d)
                 }
                 setQueryError(null)
+                console.log("here3333 query data from cache!", panel.id)
                 continue
             }
 
@@ -282,6 +283,7 @@ interface PanelHeaderProps {
 }
 
 const PanelHeader = ({ queryError, panel, onCopyPanel, onRemovePanel, data }: PanelHeaderProps) => {
+    const viewPanel = useSearchParam("viewPanel")
     const t = useStore(commonMsg)
     const t1 = useStore(panelMsg)
     const title = replaceWithVariables(panel.title)
@@ -312,6 +314,8 @@ const PanelHeader = ({ queryError, panel, onCopyPanel, onRemovePanel, data }: Pa
                             <MenuItem icon={<FaRegCopy />} onClick={() => onCopyPanel(panel)}>{t.copy}</MenuItem>
                             <MenuDivider my="1" />
                             <MenuItem icon={<FaBug />} onClick={onOpen}>{t1.debugPanel}</MenuItem>
+                            <MenuDivider my="1" />
+                            <MenuItem icon={<FaRegEye />} onClick={() => addParamToUrl({viewPanel: viewPanel ? null : panel.id})}>{viewPanel ? t1.exitlView :t1.viewPanel}</MenuItem>
                             <MenuDivider my="1" />
                             <MenuItem icon={<FaTrashAlt />} onClick={() => onRemovePanel(panel)}>{t.remove}</MenuItem>
                         </MenuList>

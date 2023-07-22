@@ -15,7 +15,7 @@ import {
   Divider,
 } from "@chakra-ui/react"
 import Logo from "components/Logo"
-import React, { memo, useEffect, useState } from "react"
+import React, { memo, useEffect, useMemo, useState } from "react"
 import { measureText } from "utils/measureText"
 import * as Icons from "react-icons/fa"
 import { concat, max } from "lodash"
@@ -47,7 +47,6 @@ const PageContainer = (props) => {
   const { session } = useSession()
   const [sidemenu, setSidemenu] = useState<Route[]>(null)
   useEffect(() => {
-    console.log("here33333:",session)
     if (session) {
       loadSidemenu()
     }
@@ -63,7 +62,7 @@ const PageContainer = (props) => {
 }
 
 export default PageContainer
-const Container = memo(({ children, sidemenu }: Props) => {
+const Container = ({ children, sidemenu }: Props) => {
   const { pathname: asPath } = useLocation()
   const t = useStore(commonMsg)
   const t1 = useStore(sidebarMsg)
@@ -82,33 +81,39 @@ const Container = memo(({ children, sidemenu }: Props) => {
     { title: "Github", icon: "FaGithub", url: config.repoUrl },
   ]
 
-  const childMarginLeft = 24
-  let navWidth = 0
   const paddingLeft = 8
   const paddingRight = 4
-  if (!miniMode) {
-    concat(sidemenu, bottomNavs).forEach(nav => {
-      // text width + margin + icon width + padding
-      const width = measureText(nav.title, navSize).width + 10 + 16 + paddingLeft + paddingRight
-      if (width > navWidth) {
-        navWidth = width
-      }
-      if (nav.children) {
-        nav.children.forEach(child => {
-          // text width   + child margin left + padding 
-          const width = measureText(child.title, navSize).width + childMarginLeft + + paddingLeft + paddingRight + 6
-          if (width > navWidth) {
-            navWidth = width
-          }
-        }
-        )
-      }
-    })
-  }
+  const childMarginLeft = 24
+  const navWidth = useMemo(() => {
+    let navWidth = 0
 
-  if (navWidth > maxNavSize) {
-    navWidth = maxNavSize
-  }
+    if (!miniMode) {
+      concat(sidemenu, bottomNavs).forEach(nav => {
+        // text width + margin + icon width + padding
+        const width = measureText(nav.title, navSize).width + 10 + 16 + paddingLeft + paddingRight
+        if (width > navWidth) {
+          navWidth = width
+        }
+        if (nav.children) {
+          nav.children.forEach(child => {
+            // text width   + child margin left + padding 
+            const width = measureText(child.title, navSize).width + childMarginLeft + + paddingLeft + paddingRight + 6
+            if (width > navWidth) {
+              navWidth = width
+            }
+          }
+          )
+        }
+      })
+    }
+  
+    if (navWidth > maxNavSize) {
+      navWidth = maxNavSize
+    }
+
+    return navWidth
+  },[sidemenu])
+ 
   const sideWidth = fullscreen ? 0 : (miniMode ? miniWidth : navWidth)
   const textColor = useColorModeValue("gray.500", "whiteAlpha.800")
 
@@ -190,7 +195,7 @@ const Container = memo(({ children, sidemenu }: Props) => {
           {React.cloneElement(children, { sideWidth })}
       </Box>
     </HStack>)
-})
+}
 
 
 

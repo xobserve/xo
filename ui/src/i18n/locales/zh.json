@@ -300,6 +300,8 @@
     "globalScoped": "全局变量"
   },
   "panel": {
+    "viewPanel": "查看图表",
+    "exitlView": "退出查看",
     "debugPanel": "Debug 图表",
     "discard": "丢弃",
     "apply": "应用",

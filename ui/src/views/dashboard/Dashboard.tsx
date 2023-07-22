@@ -33,6 +33,8 @@ import Border from "components/largescreen/components/Border"
 import useFullscreen from "hooks/useFullscreen"
 import { initDashboard } from "src/data/dashboard"
 import { initPanel } from "src/data/panel/initPanel"
+import { DashboardHeaderHeight } from "src/data/constants"
+import { updateTimeToNewest } from "components/DatePicker/DatePicker"
 
 
 
@@ -49,6 +51,7 @@ const DashboardWrapper = ({ dashboardId, sideWidth }) => {
     const fullscreen = useFullscreen()
 
     useEffect(() => {
+        updateTimeToNewest()
         if (!dashboard) {
             load()
         }
@@ -152,7 +155,7 @@ const DashboardWrapper = ({ dashboardId, sideWidth }) => {
 
 
 
-    const headerHeight = fullscreen ? 0 : 70
+    const headerHeight = fullscreen ? 0 : DashboardHeaderHeight
     return (<>
         {dashboard && <Box px="3" width="100%" minHeight="100vh" position="relative">
             {/* <Decoration decoration={dashboard.data.styles.decoration}/> */}
