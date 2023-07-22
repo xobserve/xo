@@ -24,6 +24,7 @@ import { formatUnit } from "components/Unit";
 import { ValueCalculationType } from "types/value";
 import { calcValueOnSeriesData } from "utils/seriesData";
 import { SeriesData } from "types/seriesData";
+import { paletteColorNameToHex } from "utils/colors";
 
 
 interface StatPanelProps extends PanelProps {
@@ -73,9 +74,9 @@ const StatPanel = memo((props: StatPanelProps) => {
                 {props.panel.plugins.stat.styles.graphHeight < 100 && <Box height={`${100 - props.panel.plugins.stat.styles.graphHeight}%`}>
                     {!isEmpty(data) &&
                         <Center height="100%">
-                            <Flex width="100%" px={4} justifyContent={props.panel.plugins.stat.showLegend ? "space-between" : "center"} fontSize="50" color={props.panel.plugins.stat.styles.color} fontWeight="bold">
-                                {props.panel.plugins.stat.showLegend && <ChakraTooltip label={legend}><Text maxWidth="50%" noOfLines={1}>{legend}</Text></ChakraTooltip>}
-                                <Text >{props.panel.plugins.stat.value.calc == ValueCalculationType.Count ?
+                            <Flex width="100%" px={4} justifyContent={props.panel.plugins.stat.showLegend ? "space-between" : "center"}  >
+                                {props.panel.plugins.stat.showLegend && <ChakraTooltip label={legend}><Text maxWidth="50%" fontSize={16}>{legend}</Text></ChakraTooltip>}
+                                <Text fontSize="50" color={paletteColorNameToHex(props.panel.plugins.stat.styles.color, colorMode)} fontWeight="bold">{props.panel.plugins.stat.value.calc == ValueCalculationType.Count ?
                                     value
                                     : formatUnit(value, props.panel.plugins.stat.value.units, props.panel.plugins.stat.value.decimal)}</Text>
                             </Flex>
