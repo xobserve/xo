@@ -155,7 +155,7 @@ const DashboardWrapper = ({ dashboardId }) => {
     // (visibleVars?.length > 0 ? "67px" : "38px")
     return (
         <>
-            <PageContainer bg={dashboard?.data.styles.bgEnabled ? dashboard?.data.styles?.bg : null}>
+            <PageContainer>
                 {dashboard ? <DashboardContainer dashboard={dashboard} onDashbardChange={onDashbardChange} fullscreen={fullscreen}/> :<></>}
             </PageContainer>
 
@@ -168,14 +168,14 @@ export default DashboardWrapper
 const DashboardContainer = ({ dashboard, onDashbardChange, fullscreen,sideWidth=null }) => {
     const headerHeight = fullscreen ? '0px' : "70px"
     return (
-        <Box px="3" width="100%" height="100%" minHeight="100vh" position="relative">
+        <Box px="3" width="100%" minHeight="100vh" position="relative">
             {/* <Decoration decoration={dashboard.data.styles.decoration}/> */}
             <DashboardHeader dashboard={dashboard} onChange={onDashbardChange} sideWidth={sideWidth} />
             <Box 
                 // key={dashboard.id + fullscreen} 
                 id="dashboard-wrapper" 
-                mt={headerHeight} 
-                py="2" 
+                pt={headerHeight}
+                pb="2" 
                 position="relative"
             >
                 <DashboardBorder border={dashboard.data.styles.border} />

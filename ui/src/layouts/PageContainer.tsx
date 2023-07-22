@@ -40,7 +40,6 @@ const maxNavSize = 250
 interface Props {
   children: any
   sidemenu: Route[]
-  bg?: string
 }
 
 const PageContainerWrapper = (props) => {
@@ -80,7 +79,7 @@ const PageContainer = ({ children, bg, sidemenu }: Props) => {
     { title: "Github", icon: "FaGithub", url: config.repoUrl },
   ]
 
-  const childMarginLeft = 10
+  const childMarginLeft = 24
   let navWidth = 0
   const paddingLeft = 8
   const paddingRight = 4

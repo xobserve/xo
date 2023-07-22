@@ -82,29 +82,14 @@ const newRoutes = [
     element: <ImportDashboardPage />,
   },
 ]
-const routes = [
-  {
-    path: "/",
-    element: <div>Home</div>,
-  },
-  {
-    path: "/login",
-    element: <Login />,
-  },
+
+export const containerRoutes = [
   {
     path: "/account/setting",
     element: <AccountSetting />,
   },
-  {
-    path: "/test",
-    element: <TestPage />
-  },
   ...newRoutes,
   ...cfgRoutes,
-  {
-    path: "/trace/:id/:datasourceId",
-    element: <TracePage />,
-  },
   {
     path: "/:dashboardId/*", 
     element: <DashboardPage />,
@@ -116,6 +101,17 @@ const routes = [
 
 ]
 
-
-export default routes
-
+export const noContainerRoutes = [
+  {
+    path: "/trace/:id/:datasourceId",
+    element: <TracePage />,
+  },
+  {
+    path: "/test",
+    element: <TestPage />
+  },
+  {
+    path: "/login",
+    element: <Login />,
+  },
+]

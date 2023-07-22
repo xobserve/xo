@@ -11,11 +11,11 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { ChakraProvider, useColorMode, useToast } from '@chakra-ui/react'
+import { useColorMode, useToast } from '@chakra-ui/react'
 import {
   createBrowserRouter,
   RouterProvider,
-  useNavigate,
+
 } from "react-router-dom";
 import React, { useEffect, useState } from 'react'
 import { createStandaloneToast } from '@chakra-ui/toast'
@@ -28,7 +28,7 @@ import { Variable } from 'types/variable'
 import { queryVariableValues, setVariableSelected } from './views/variables/Variables'
 import { VarialbeAllOption } from 'src/data/variable'
 import AntdWrapper from 'components/AntdWrapper'
-import routes from './routes';
+import {noContainerRoutes, containerRoutes} from './routes';
 import { initColors } from 'utils/colors';
 
 const { ToastContainer } = createStandaloneToast()
@@ -89,15 +89,15 @@ const AppView = () => {
     gvariables = res.data
   }
 
-  const router = createBrowserRouter(routes);
-
+  const pageContainerrouter = createBrowserRouter(containerRoutes);
+  const noContainerRouter = createBrowserRouter(noContainerRoutes);
 
   return (
     <>
       {cfg && <>
         <AntdWrapper>
-          <RouterProvider router={router} /> 
-        
+          {/* <RouterProvider router={noContainerRouter} /> */}
+          <RouterProvider router={pageContainerrouter} /> 
         </AntdWrapper>
       </>}
 
