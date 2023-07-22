@@ -46,7 +46,6 @@ const DashboardHeader = memo(({ dashboard, onChange, sideWidth }: HeaderProps) =
     const [variablesChanged, setVariablesChanged] = useState(0)
     const [refresh, setRefresh] = useState(0)
     const [team, setTeam] = useState<Team>(null)
-    const miniMode = useMiniMode()
     const fullscreen = useFullscreen()
 
     useEffect(() => {

@@ -11,7 +11,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 import { Box, useToast } from "@chakra-ui/react"
-import PageContainer from "layouts/PageContainer"
 import { useCallback, useEffect, useRef, useState } from "react"
 import { Dashboard, Panel } from "types/dashboard"
 import { requestApi } from "utils/axios/request"

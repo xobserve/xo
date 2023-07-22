@@ -21,7 +21,7 @@ import React, { useState } from "react"
 import { FaTimes } from "react-icons/fa"
 import { componentsMsg } from "src/i18n/locales/en"
 import { ThresholdsConfig, ThresholdsMode } from "types/threshold"
-import { colors } from "utils/colors"
+import { colors, palettes } from "utils/colors"
 import { isEmpty } from "utils/validate"
 
 interface Props {
@@ -39,7 +39,7 @@ const ThresholdEditor = (props: Props) => {
             thresholds: []
         }
         // add base threshold
-        const color = colors[0]
+        const color = palettes[0]
         v.thresholds.push({
             color,
             value: null
@@ -48,7 +48,7 @@ const ThresholdEditor = (props: Props) => {
     }
 
     const addThreshod = () => {
-        const color = colors[value.thresholds.length % colors.length]
+        const color = palettes[value.thresholds.length % palettes.length]
         const v = value.thresholds.length > 1 ? value.thresholds[0].value : 0
         value.thresholds.unshift({
             value: v,

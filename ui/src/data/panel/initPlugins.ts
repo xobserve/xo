@@ -14,7 +14,7 @@ import { PanelType } from "types/dashboard";
 import { PanelPlugins, PieLegendPlacement, ThresholdDisplay, Units, UnitsType } from "types/panel/plugins";
 import { ThresholdsConfig, ThresholdsMode } from "types/threshold";
 import { ValueCalculationType } from "types/value";
-import { colors, primaryPalette } from "utils/colors";
+import { palettes } from "utils/colors";
 
 export const onClickCommonEvent = `
 // setVariable: (varName:string, varValue:string) => void 
@@ -35,7 +35,7 @@ const initThresholds = (): ThresholdsConfig => {
         mode: ThresholdsMode.Absolute,
         thresholds: [{
             value: null,
-            color: primaryPalette
+            color: palettes[0]
         }]
     }
 }

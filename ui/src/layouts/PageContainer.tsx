@@ -94,7 +94,7 @@ const Container = ({ children, sidemenu }: Props) => {
   ]
 
   const paddingLeft = 8
-  const paddingRight = 4
+  const paddingRight = 8
   const childMarginLeft = 24
   const navWidth = useMemo(() => {
     let navWidth = 0

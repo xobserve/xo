@@ -22,7 +22,7 @@ import { Panel, PanelEditorProps } from "types/dashboard"
 import React from "react";
 import { useStore } from "@nanostores/react"
 import { commonMsg, gaugePanelMsg } from "src/i18n/locales/en"
-import { colors } from "utils/colors"
+import { colors, palettes } from "utils/colors"
 
 const GaugePanelEditor = (props: PanelEditorProps) => {
     const t = useStore(commonMsg)
@@ -151,7 +151,7 @@ export default GaugePanelEditor
 const AxisSplit = ({ panel, onChange }: PanelEditorProps) => {
     const addSplit = () => {
         onChange((panel: Panel) => {
-            panel.plugins.gauge.axis.split.push([1, colors[panel.plugins.gauge.axis.split.length]])
+            panel.plugins.gauge.axis.split.push([1, palettes[panel.plugins.gauge.axis.split.length]])
         })
     }
 

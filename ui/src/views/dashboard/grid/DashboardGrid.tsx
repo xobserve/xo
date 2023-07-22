@@ -304,52 +304,6 @@ const GridItem = React.forwardRef<HTMLDivElement, GridItemProps>((props, ref) =>
 });
 
 /**
- * A hacky way to intercept the react-layout-grid item dimensions and pass them to DashboardPanel
- */
-const PanelView = React.forwardRef<HTMLDivElement, GridItemProps>((props, ref) => {
-    const theme = useGranaTheme()
-    let width = 100;
-    let height = 100;
-
-    const { gridWidth, gridPos, isViewing, windowHeight, windowWidth, ...divProps } = props;
-    const style: CSSProperties = props.style ?? {};
-
-    width = parseFloat(props.style.width);
-    height = parseFloat(props.style.height);
-
-    // props.children[0] is our main children. RGL adds the drag handle at props.children[1]
-    return (
-        <Box {...divProps} ref={ref} className="react-grid-item" sx={{
-            ".react-resizable-handle": {
-                position: "absolute",
-                width: "20px",
-                height: "20px",
-                bottom: "0",
-                right: "0",
-                cursor: "se-resize",
-                visibility: "hidden",
-            },
-            ":hover .react-resizable-handle": {
-                visibility: "visible",
-            }
-            ,
-            ".react-resizable-handle::after": {
-                content: "''",
-                position: "absolute",
-                right: "3px",
-                bottom: "3px",
-                width: "6px",
-                height: "6px",
-                borderRight: `2px solid ${useColorModeValue('rgba(0, 0, 0, 0.3)', 'rgba(255, 255, 255, 0.4)')}`,
-                borderBottom: `2px solid ${useColorModeValue('rgba(0, 0, 0, 0.3)', 'rgba(255, 255, 255, 0.4)')}`
-            },
-        }}>
-            {/* Pass width and height to children as render props */}
-            {[props.children[0](width, height), props.children.slice(1)]}
-        </Box>
-    );
-});
-/**
 * This translates grid height dimensions to real pixels
 */
 function translateGridHeightToScreenHeight(gridHeight: number): number {
