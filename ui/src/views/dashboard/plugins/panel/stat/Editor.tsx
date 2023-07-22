@@ -24,6 +24,7 @@ import ValueCalculation from "components/ValueCalculation"
 import React from "react";
 import { useStore } from "@nanostores/react"
 import { commonMsg, graphPanelMsg, statsPanelMsg } from "src/i18n/locales/en"
+import ThresholdEditor from "components/Threshold/ThresholdEditor"
 
 const GraphPanelEditor = ({ panel, onChange }: PanelEditorProps) => {
     const t = useStore(commonMsg)
@@ -80,11 +81,6 @@ const GraphPanelEditor = ({ panel, onChange }: PanelEditorProps) => {
                 }
                 } />
             </PanelEditItem>
-            <PanelEditItem title={t.color}>
-                <ColorPicker  color={panel.plugins.stat.styles.color} onChange={v => onChange((panel: Panel) => {
-                    panel.plugins.stat.styles.color = v
-                })} />
-            </PanelEditItem>
 
             <PanelEditItem title={t2.graphHeight} desc={t2.graphHeightTips}>
                 <EditorSliderItem value={panel.plugins.stat.styles.graphHeight} min={0} max={100} step={5} onChange={v => {
@@ -115,6 +111,12 @@ const GraphPanelEditor = ({ panel, onChange }: PanelEditorProps) => {
                     panel.plugins.stat.axisY.scaleBase = v
                 })} />
             </PanelEditItem>}
+        </PanelAccordion>
+
+        <PanelAccordion title="Thresholds">
+            <ThresholdEditor value={panel.plugins.stat.thresholds} onChange={(v) => onChange((panel: Panel) => {
+                    panel.plugins.stat.thresholds = v
+                })} />
         </PanelAccordion>
     </>
     )

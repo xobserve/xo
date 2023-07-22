@@ -25,6 +25,8 @@ import { ValueCalculationType } from "types/value";
 import { calcValueOnSeriesData } from "utils/seriesData";
 import { SeriesData } from "types/seriesData";
 import { paletteColorNameToHex } from "utils/colors";
+import { ThresholdsMode } from "types/threshold";
+import { getThreshold } from "components/Threshold/utils";
 
 
 interface StatPanelProps extends PanelProps {
@@ -36,21 +38,28 @@ const StatPanel = memo((props: StatPanelProps) => {
         return (<Center height="100%">No data</Center>)
     }
     
-    const [data, value]: [SeriesData[], number] = useMemo(() => {
+    const data: SeriesData[] = useMemo(() => {
         let res:SeriesData[] = [];
         if (props.data.length > 0) {
             // Stat only show the first series, Graph show all
             res.push(props.data[0][0])
         }
         
-        const value = calcValueOnSeriesData(res[0], props.panel.plugins.stat.value.calc)
-        return [res, value]
+        return res
     }, [props.data])
 
 
     const { colorMode } = useColorMode()
 
-    const [options, legend] = useMemo(() => {
+    const [value, options, legend, color] = useMemo(() => {
+        const value = calcValueOnSeriesData(data[0], props.panel.plugins.stat.value.calc)
+        let max = 0; 
+        if (props.panel.plugins.stat.thresholds.mode == ThresholdsMode.Percentage) {
+            max = calcValueOnSeriesData(data[0], ValueCalculationType.Max)
+        }
+        const threshold = getThreshold(value, props.panel.plugins.stat.thresholds,max)
+        const color = paletteColorNameToHex(threshold.color,colorMode)
+
         let o;
         let legend;
         // transform series name based on legend format 
@@ -58,9 +67,9 @@ const StatPanel = memo((props: StatPanelProps) => {
         if (data.length > 0) {
             legend = data[0].name
         }
-        o = parseOptions(props, data,colorMode)
+        o = parseOptions(props,color,data)
 
-        return [o, legend]
+        return [value, o, legend, color]
     }, [props.panel, props.data, colorMode, props.width, props.height])
 
     const [uplot, setUplot] = useState<uPlot>(null)
@@ -76,7 +85,7 @@ const StatPanel = memo((props: StatPanelProps) => {
                         <Center height="100%">
                             <Flex width="100%" px={4} justifyContent={props.panel.plugins.stat.showLegend ? "space-between" : "center"}  >
                                 {props.panel.plugins.stat.showLegend && <ChakraTooltip label={legend}><Text maxWidth="50%" fontSize={16}>{legend}</Text></ChakraTooltip>}
-                                <Text fontSize="50" color={paletteColorNameToHex(props.panel.plugins.stat.styles.color, colorMode)} fontWeight="bold">{props.panel.plugins.stat.value.calc == ValueCalculationType.Count ?
+                                <Text fontSize="50" color={color} fontWeight="bold">{props.panel.plugins.stat.value.calc == ValueCalculationType.Count ?
                                     value
                                     : formatUnit(value, props.panel.plugins.stat.value.units, props.panel.plugins.stat.value.decimal)}</Text>
                             </Flex>

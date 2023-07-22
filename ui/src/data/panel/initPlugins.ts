@@ -14,7 +14,7 @@ import { PanelType } from "types/dashboard";
 import { PanelPlugins, PieLegendPlacement, Units, UnitsType } from "types/panel/plugins";
 import { ThresholdsConfig, ThresholdsMode } from "types/threshold";
 import { ValueCalculationType } from "types/value";
-import { colors } from "utils/colors";
+import { colors, primaryPalette } from "utils/colors";
 
 export const onClickCommonEvent = `
 // setVariable: (varName:string, varValue:string) => void 
@@ -35,7 +35,7 @@ const initThresholds = (): ThresholdsConfig => {
         mode: ThresholdsMode.Absolute,
         thresholds: [{
             value: null,
-            color: colors[0]
+            color: primaryPalette
         }]
     }
 }
@@ -249,14 +249,14 @@ function registerEvents(options, chart) {
                 style: "lines",
                 fillOpacity: 80,
                 gradientMode: "opacity",
-                color: colors[0],
                 graphHeight: 60,
                 connectNulls: false
             },
             axisY: {
                 scale: "linear",
                 scaleBase: 2
-            }
+            },
+            thresholds: initThresholds()
         },
 
         [PanelType.Trace]: {

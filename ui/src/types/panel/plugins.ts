@@ -64,7 +64,6 @@ export interface StatSettings  {
         style: "lines" | "bars" 
         fillOpacity: number
         gradientMode: "none" | "opacity"
-        color: string
         graphHeight: number
         connectNulls: boolean
     }
@@ -73,6 +72,7 @@ export interface StatSettings  {
         scaleBase: 2 | 10
     }
     value: ValueSetting
+    thresholds: ThresholdsConfig
 }
 
 export interface PieSettings {

@@ -16,9 +16,9 @@ import { useStore } from "@nanostores/react"
 import { ColorPicker } from "components/ColorPicker"
 import { EditorNumberItem } from "components/editor/EditorItem"
 import RadionButtons from "components/RadioButtons"
-import { cloneDeep, concat } from "lodash"
-import React, { useEffect, useState } from "react"
-import { FaPlus, FaTimes } from "react-icons/fa"
+import { cloneDeep } from "lodash"
+import React, { useState } from "react"
+import { FaTimes } from "react-icons/fa"
 import { componentsMsg } from "src/i18n/locales/en"
 import { ThresholdsConfig, ThresholdsMode } from "types/threshold"
 import { colors } from "utils/colors"
@@ -96,7 +96,7 @@ const ThresholdEditor = (props: Props) => {
                 <EditorNumberItem value={threshold.value} onChange={v => {
                     value.thresholds[i].value = v
                     changeValue(value)
-                }} /></>}
+                }} notNull/></>}
 
                 {threshold.value !== null && <FaTimes opacity={0.6} fontSize="0.8rem" onClick={() => removeThreshold(i)} />}
             </HStack>)}

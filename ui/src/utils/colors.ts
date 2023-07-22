@@ -29,6 +29,7 @@ export const NO_DATA_COLOR = 'rgba(150, 150, 150, 1)';
 export const PENDING_COLOR = 'rgba(247, 149, 32, 1)';
 export const REGION_FILL_ALPHA = 0.09;
 
+export const primaryPalette = "$green"
 export const lightPalettes= [
   {
     "name": "green",
@@ -45,7 +46,7 @@ export const lightPalettes= [
         },
         {
             "color": "#56A64B",
-            "name": "$green",
+            "name": primaryPalette,
             "aliases": [],
             "primary": true
         },
@@ -228,7 +229,7 @@ export const darkPalettes = [{
       },
       {
           "color": "#73BF69",
-          "name": "$green",
+          "name": primaryPalette,
           "aliases": [],
           "primary": true
       },
