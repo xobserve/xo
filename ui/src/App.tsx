@@ -28,7 +28,7 @@ import { Variable } from 'types/variable'
 import { queryVariableValues, setVariableSelected } from './views/variables/Variables'
 import { VarialbeAllOption } from 'src/data/variable'
 import AntdWrapper from 'components/AntdWrapper'
-import {noContainerRoutes, containerRoutes} from './routes';
+import {routes} from './routes';
 import { initColors } from 'utils/colors';
 
 const { ToastContainer } = createStandaloneToast()
@@ -89,15 +89,14 @@ const AppView = () => {
     gvariables = res.data
   }
 
-  const pageContainerrouter = createBrowserRouter(containerRoutes);
-  const noContainerRouter = createBrowserRouter(noContainerRoutes);
+  const router = createBrowserRouter(routes);
 
   return (
     <>
       {cfg && <>
         <AntdWrapper>
-          {/* <RouterProvider router={noContainerRouter} /> */}
-          <RouterProvider router={pageContainerrouter} /> 
+          <RouterProvider router={router} /> 
+          {/* <RouterProvider router={noContainerRoutes} /> */}
         </AntdWrapper>
       </>}
 

@@ -13,8 +13,8 @@ const navSize = 16
 const maxNavSize = 250
 
 const TestPage = () => {
-    return (<PageContainer>
+    return (
         <Box> aaa</Box>
-    </PageContainer>)
+   )
 }
 export default TestPage

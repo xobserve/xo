@@ -43,7 +43,7 @@ setAutoFreeze(false)
 // 1. team's side menu, asscessed by a specific url path
 // 2. dashboard page, accessed by a dashboard id
 export let variables: Variable[] = []
-const DashboardWrapper = ({ dashboardId }) => {
+const DashboardWrapper = ({ dashboardId, sideWidth }) => {
     const [dashboard, setDashboard] = useImmer<Dashboard>(null)
     // const [gVariables, setGVariables] = useState<Variable[]>([])
     const fullscreen = useFullscreen()
@@ -152,37 +152,26 @@ const DashboardWrapper = ({ dashboardId }) => {
 
 
 
-    // (visibleVars?.length > 0 ? "67px" : "38px")
-    return (
-        <>
-            <PageContainer>
-                {dashboard ? <DashboardContainer dashboard={dashboard} onDashbardChange={onDashbardChange} fullscreen={fullscreen}/> :<></>}
-            </PageContainer>
-
-        </>
-    )
-}
-
-export default DashboardWrapper
-
-const DashboardContainer = ({ dashboard, onDashbardChange, fullscreen,sideWidth=null }) => {
-    const headerHeight = fullscreen ? '0px' : "70px"
-    return (
-        <Box px="3" width="100%" minHeight="100vh" position="relative">
+    const headerHeight = fullscreen ? 0 : 70
+    return (<>
+        {dashboard && <Box px="3" width="100%" minHeight="100vh" position="relative">
             {/* <Decoration decoration={dashboard.data.styles.decoration}/> */}
             <DashboardHeader dashboard={dashboard} onChange={onDashbardChange} sideWidth={sideWidth} />
-            <Box 
+            <Box
                 // key={dashboard.id + fullscreen} 
-                id="dashboard-wrapper" 
-                pt={headerHeight}
-                pb="2" 
+                id="dashboard-wrapper"
+                pt={headerHeight + 7 + 'px'}
+                pb="2"
                 position="relative"
             >
                 <DashboardBorder border={dashboard.data.styles.border} />
                 {dashboard.data.panels?.length > 0 && <DashboardGrid dashboard={dashboard} onChange={onDashbardChange} />}
             </Box>
-        </Box>)
+        </Box>}
+    </>)
 }
+
+export default DashboardWrapper
 
 const DashboardBorder = ({ border }) => {
     const [height, setHeight] = useState(0)

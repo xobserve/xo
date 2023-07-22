@@ -15,7 +15,7 @@ import {
   Divider,
 } from "@chakra-ui/react"
 import Logo from "components/Logo"
-import React, { useEffect, useState } from "react"
+import React, { memo, useEffect, useState } from "react"
 import { measureText } from "utils/measureText"
 import * as Icons from "react-icons/fa"
 import { concat, max } from "lodash"
@@ -35,20 +35,23 @@ import { config } from "src/data/configs/config"
 
 const miniWidth = 60
 const navSize = 15
-const maxNavSize = 250
+const maxNavSize = 220
 
 interface Props {
   children: any
   sidemenu: Route[]
 }
 
-const PageContainerWrapper = (props) => {
+const PageContainer = (props) => {
+
   const { session } = useSession()
   const [sidemenu, setSidemenu] = useState<Route[]>(null)
   useEffect(() => {
+    console.log("here33333:",session)
     if (session) {
       loadSidemenu()
     }
+
   }, [session])
 
   const loadSidemenu = async () => {
@@ -56,11 +59,11 @@ const PageContainerWrapper = (props) => {
     setSidemenu(res.data.data)
   }
 
-  return (sidemenu &&  <PageContainer {...props} sidemenu={sidemenu} />)
+  return (sidemenu &&  <Container {...props} sidemenu={sidemenu} />)
 }
 
-export default PageContainerWrapper
-const PageContainer = ({ children, bg, sidemenu }: Props) => {
+export default PageContainer
+const Container = memo(({ children, sidemenu }: Props) => {
   const { pathname: asPath } = useLocation()
   const t = useStore(commonMsg)
   const t1 = useStore(sidebarMsg)
@@ -184,10 +187,10 @@ const PageContainer = ({ children, bg, sidemenu }: Props) => {
         </Flex>
       </Flex>
       <Box id="main-container" transition="all 0.2s" width={`calc(100% - ${sideWidth}px)`} ml={sideWidth + 'px'}>
-        {React.cloneElement(children, { sideWidth })}
+          {React.cloneElement(children, { sideWidth })}
       </Box>
     </HStack>)
-}
+})
 
 
 
