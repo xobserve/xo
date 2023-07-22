@@ -76,7 +76,8 @@ export const initPanelPlugins = (): PanelPlugins => {
             value: {
                 ...initUnits,
                 decimal: 1
-            }
+            },
+            thresholds: initThresholds()
         },
 
         [PanelType.Text]: {

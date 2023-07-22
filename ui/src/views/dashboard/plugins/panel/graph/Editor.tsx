@@ -24,6 +24,7 @@ import { ValueCalculationType } from "types/value"
 import React from "react";
 import { commonMsg, graphPanelMsg } from "src/i18n/locales/en"
 import { useStore } from "@nanostores/react"
+import ThresholdEditor from "components/Threshold/ThresholdEditor"
 
 const GraphPanelEditor = ({ panel, onChange }: PanelEditorProps) => {
     const t = useStore(commonMsg)
@@ -150,6 +151,13 @@ const GraphPanelEditor = ({ panel, onChange }: PanelEditorProps) => {
             <PanelEditItem title={t.decimal}>
                 <EditorNumberItem value={panel.plugins.graph.value.decimal} min={0} max={5} step={1} onChange={v => onChange((panel: Panel) => { panel.plugins.graph.value.decimal = v })} />
             </PanelEditItem>
+        </PanelAccordion>
+
+        <PanelAccordion title="Thresholds">
+            <ThresholdEditor value={panel.plugins.graph.thresholds} onChange={(v) => onChange((panel: Panel) => {
+                    panel.plugins.graph.thresholds = v
+                    dispatch(PanelForceRebuildEvent + panel.id)
+                })} />
         </PanelAccordion>
     </>
     )

@@ -85,8 +85,8 @@ const ThresholdEditor = (props: Props) => {
     return (<Box>
         <Button onClick={addThreshod} width="100%" size="sm" colorScheme="gray">+ {t1.addThreshold}</Button>
         <Text fontSize="0.8rem" textStyle="annotation" mt="2">{t1.thresholdTips}</Text>
-        <VStack alignItems="left" mt="2" key={value?.thresholds?.length}>
-            {value?.thresholds?.map((threshold, i) => <HStack key={i} spacing={1}>
+        <VStack alignItems="left" mt="2">
+            {value?.thresholds?.map((threshold, i) => <HStack key={threshold.color + threshold.value + i} spacing={1}>
                 <ColorPicker  color={threshold.color} onChange={v =>  {
                      value.thresholds[i].color = v
                     changeValue(value)

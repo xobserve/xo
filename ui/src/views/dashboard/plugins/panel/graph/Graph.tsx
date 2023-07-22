@@ -32,6 +32,7 @@ import { setDateTime } from "components/DatePicker/DatePicker";
 import React from "react";
 import { GraphRules } from "./OverridesEditor";
 import { findOverride, findOverrideRule, findRuleInOverride } from "utils/dashboard/panel";
+import { ThresholdsPlugin } from "./uplot-plugins/ThresholdsPlugin";
 
 interface GraphPanelProps extends PanelProps {
     data: SeriesData[][]
@@ -182,6 +183,8 @@ const GraphPanel = memo((props: GraphPanelProps) => {
     const onZoom = (tr) => {
         setDateTime(tr.from, tr.to)
     }
+
+
     return (
         <>{
             isEmpty(props.data) ? <Center height="100%">No data</Center> :
@@ -206,6 +209,7 @@ const GraphPanel = memo((props: GraphPanelProps) => {
                             >
                                 {props.panel.plugins.graph.tooltip.mode != 'hidden' && <Tooltip props={props} options={options} data={data} inactiveSeries={inactiveSeries} />}
                                 <ZoomPlugin options={options} onZoom={onZoom}/>
+                                <ThresholdsPlugin options={options} thresholdsConfig={props.panel.plugins.graph.thresholds} />
                             </UplotReact>
                             )
                         }}

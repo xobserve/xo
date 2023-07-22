@@ -243,6 +243,7 @@ export interface GraphSettings {
         scaleBase?: 2 | 10
     },
     value: ValueSetting
+    thresholds: ThresholdsConfig
 }
 
 
