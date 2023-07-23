@@ -49,7 +49,6 @@ export const ThresholdsPlugin = ({ thresholdsConfig, options, display }: Props) 
           true
         );
           
-        // console.log("here33333 grid", cloneDeep(grd))
         ctx.fillStyle = grd;
         ctx.fillRect(u.bbox.left, u.bbox.top, u.bbox.width, u.bbox.height);
       }

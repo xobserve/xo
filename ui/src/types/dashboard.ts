@@ -94,13 +94,13 @@ export enum PanelType {
     Table = "table",
     Graph = "graph",
     BarGauge = "barGauge",
-    Trace = "trace",
+    Gauge = "gauge",
     NodeGraph = "nodeGraph",
     Stat = "stat",
+    Trace = "trace",
     Text = "text",
     Echarts = "echarts",
     Pie = "pie",
-    Gauge = "gauge",
     Row = "row",
 }
 

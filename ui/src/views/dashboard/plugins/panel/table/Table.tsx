@@ -11,41 +11,43 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 import { Box, Center, Flex, Select } from "@chakra-ui/react"
-import React, {  useMemo } from "react"
+import React, { useMemo } from "react"
 import { PanelProps } from "types/dashboard"
 import { TablePluginData, TableSeries } from "types/plugins/table"
 import { cloneDeep, isEmpty } from "lodash"
 import ComplexTable from "./components/ComplexTable/ComplexTable"
+import { SeriesData } from "types/seriesData"
+import { co } from "components/largescreen/utils"
 
 interface TablePanelProps extends PanelProps {
-    data: TablePluginData[]
+    data: SeriesData[][]
 }
 
 const TablePanel = (props: TablePanelProps) => {
-    const {panel} = props
+    const { panel } = props
     if (isEmpty(props.data)) {
         return (<Center height="100%">No data</Center>)
     }
 
-    const [series, setSeries] = React.useState(props.data[0][0].name)
+    const tdata: TableSeries[] = seriesDataToTableData(props.data)
+    const [series, setSeries] = React.useState(tdata[0].name)
 
     // because panel may have multiple queries, each query return a TablePluginData
     // so we need to flatten TablePluginData[] into TablePluginData
 
 
     const [tableColumns, tableData, seriesList] = useMemo(() => {
-        const data:TableSeries[] = []
+        const data: TableSeries[] = []
         const seriesList = []
         let exist = false
-        props.data.forEach(d => {
-            d.forEach(s => {
-                if (s.name == series) {
-                    exist = true
-                }
-                seriesList.push(s.name)
-                data.push(s)
-            })
+        tdata.forEach(s => {
+            if (s.name == series) {
+                exist = true
+            }
+            seriesList.push(s.name)
+            data.push(s)
         })
+
 
         for (var i = 0; i < data.length; i++) {
             const s = data[i]
@@ -54,24 +56,31 @@ const TablePanel = (props: TablePanelProps) => {
                 if (!exist) {
                     setSeries(s.name)
                 }
-                return [s.columns, s.rows,seriesList]
+                return [s.columns, s.rows, seriesList]
             }
         }
 
         return [[], [], seriesList]
-    }, [series, props.data, props.panel.overrides,panel.enableTransform])
+    }, [series, tdata, props.panel.overrides, panel.enableTransform])
 
     return (
-        <Flex h="100%" justify="space-between" direction="column">
-            <Box maxH={series ? "calc(100% - 32px)" : "100%"} overflowY="scroll" sx={cssStyles}>
-                <ComplexTable panel={props.panel} dashboardId={props.dashboardId} columns={tableColumns} data={tableData} />
-            </Box>
-            {series && <Select mt="1" size="sm" onChange={e => setSeries(e.currentTarget.value)}>
-                {seriesList.map(series => {
-                    return <option key={series} value={series}>{series}</option>
-                })}
-            </Select>}
-        </Flex>
+        <>
+            {isEmpty(tableData)
+                ?
+                <Center height="100%">No data</Center>
+                :
+                <Flex h="100%" justify="space-between" direction="column">
+                    <Box maxH={series ? "calc(100% - 32px)" : "100%"} overflowY="scroll" sx={cssStyles}>
+                        <ComplexTable panel={props.panel} dashboardId={props.dashboardId} columns={tableColumns} data={tableData} />
+                    </Box>
+                    {series && <Select mt="1" size="sm" onChange={e => setSeries(e.currentTarget.value)}>
+                        {seriesList.map(series => {
+                            return <option key={series} value={series}>{series}</option>
+                        })}
+                    </Select>}
+                </Flex>}
+        </>
+
 
     )
 }
@@ -103,6 +112,52 @@ const cssStyles = {
         }
     },
     '.ant-table-wrapper .ant-table-tbody >tr >td': {
-      borderBottomWidth: '0.5px'
+        borderBottomWidth: '0.5px'
     }
+}
+
+
+export const seriesDataToTableData = (rawData: SeriesData[][]) => {
+    const data: TableSeries[] = []
+    const columns = []
+    if (rawData.length == 0 || rawData[0].length == 0) {
+        return data
+    }
+
+    for (const f of rawData[0][0].fields) {
+        columns.push({
+            title: f.name,
+            dataIndex: f.name,
+            key: f.name
+        })
+    }
+
+    if (columns.length == 0) {
+        return data
+    }
+
+    for (const d of rawData) {
+        for (const s of d) {
+            const rows = []
+
+            for (let i = 0; i < s.fields[0].values.length; i++) {
+                const row = {}
+                for (const f of s.fields) {
+                    row[f.name] = f.values[i]
+                }
+                rows.push(row)
+            }
+
+            const series: TableSeries = {
+                columns: columns,
+                name: s.name,
+                rawName: s.name,
+                rows: rows
+            }
+
+            data.push(series)
+        }
+    }
+
+    return data
 }

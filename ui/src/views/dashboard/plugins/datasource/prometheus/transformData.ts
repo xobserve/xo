@@ -30,8 +30,6 @@ export const prometheusToPanels = (rawData: any, panel: Panel, query: PanelQuery
 
     switch (panel.type) {
         case PanelType.Table:
-            return prometheusToTableData(rawData, query)
-
         case PanelType.Graph:
         case PanelType.Stat:
         case PanelType.Gauge:
@@ -128,40 +126,4 @@ export const prometheusToSeriesData = (data: any, query: PanelQuery, range: Time
     }
     return []
 }
-
-
-export const prometheusToTableData = (rawData: any, query: PanelQuery) => {
-    const columns = [{
-        title: "Time",
-        dataIndex: "time",
-        key: "time"
-    },
-     {
-        title: "Value",
-        dataIndex: "value",
-        key: "value"
-    }]
-    const data: TablePluginData = []
-
-    const d = rawData.result
-    for (const m of d) {
-        const series: TableSeries = {
-            columns: columns,
-            name: JSON.stringify(m.metric).replace(/:/g, '='),
-            rawName: m.metric,
-            rows: []
-        }
-        for (const v of m.values) {
-            series.rows.push({
-                time: v[0] ,
-                value: round(parseFloat(v[1]), 5)
-            })
-        }
-
-        data.push(series)
-    }
-
-    return data
-}
-
 

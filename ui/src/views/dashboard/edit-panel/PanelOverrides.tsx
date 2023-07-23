@@ -25,6 +25,7 @@ import { TableSeries } from "types/plugins/table";
 import TableOverridesEditor, { TableRules } from "../plugins/panel/table/OverridesEditor";
 import BarGaugeOverridesEditor, { BarGaugeRules } from "../plugins/panel/barGauge/OverrideEditor";
 import { getPanelOverridesRules } from "utils/dashboard/panel";
+import { SeriesData } from "types/seriesData";
 
 
 const PanelOverrides = ({ panel, onChange, data }: PanelEditorProps) => {
@@ -35,16 +36,14 @@ const PanelOverrides = ({ panel, onChange, data }: PanelEditorProps) => {
         switch (panel.type) {
             case PanelType.Table:
                 const res = []
-                const d: TableSeries[] = flatten(data)
-                if (d.length > 0) { 
-                    console.log("here33333 columns", d, d[0], d[0].columns)
-                    if (d[0].columns) {
-                        for (const c of d[0].columns) {
-                            res.push({
-                                label: c.title,
-                                value: c.dataIndex
-                            })
-                        }
+                const d: SeriesData[]= flatten(data)
+                if (d.length > 0) {
+                   
+                    for (const f of d[0].fields) {
+                        res.push({
+                            label: f.name,
+                            value: f.name
+                        })
                     }
                 }
                 return res

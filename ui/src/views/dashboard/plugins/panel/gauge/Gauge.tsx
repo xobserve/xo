@@ -36,7 +36,6 @@ const GaugePanel = (props: Props) => {
   const [chart, setChart] = useState(null)
   const { colorMode } = useColorMode()
 
-
   const data: GaugePluginData[] = useMemo(() => {
     let sd: SeriesData[] = [];
     if (props.data.length > 0) {

@@ -16,13 +16,13 @@ import { Dashboard, Panel } from "types/dashboard"
 import { requestApi } from "utils/axios/request"
 import DashboardHeader from "src/views/dashboard/DashboardHeader"
 import DashboardGrid from "src/views/dashboard/grid/DashboardGrid"
-import { clone, cloneDeep, concat, defaults, defaultsDeep, find, findIndex } from "lodash"
+import { clone, cloneDeep, concat, defaultsDeep, findIndex } from "lodash"
 import { Variable } from "types/variable"
 import { setVariableSelected } from "src/views/variables/Variables"
 import { prevQueries, prevQueryData } from "src/views/dashboard/grid/PanelGrid"
 import { unstable_batchedUpdates } from "react-dom"
 import useBus, { dispatch } from 'use-bus'
-import { SetDashboardEvent, TimeChangedEvent, UpdatePanelEvent, VariableChangedEvent } from "src/data/bus-events"
+import { SetDashboardEvent, UpdatePanelEvent, VariableChangedEvent } from "src/data/bus-events"
 import React from "react";
 import { useImmer } from "use-immer"
 import { setAutoFreeze } from "immer";
