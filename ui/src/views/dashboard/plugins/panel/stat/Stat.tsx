@@ -41,12 +41,21 @@ const StatPanel = memo((props: StatPanelProps) => {
     const data: SeriesData[] = useMemo(() => {
         let res:SeriesData[] = [];
         if (props.data.length > 0) {
-            // Stat only show the first series, Graph show all
-            res.push(props.data[0][0])
+            for (const d of props.data) {
+                for (const s of d) {
+                  if (s.name == props.panel.plugins.stat.diisplaySeries) {
+                    res.push(s)
+                  }
+                }
+              }
+        
+              if (res.length == 0) {
+                res.push(props.data[0][0])
+              }
         }
         
         return res
-    }, [props.data])
+    }, [props.data, props.panel.plugins.stat.diisplaySeries])
 
 
     const { colorMode } = useColorMode()

@@ -243,6 +243,7 @@ function registerEvents(options, chart) {
 
         [PanelType.Stat]: {
             showTooltip: true,
+            diisplaySeries: null,
             showLegend: false,
             value: {
                 ...initUnits,

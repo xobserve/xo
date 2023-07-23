@@ -59,6 +59,7 @@ export interface TraceSettings {
 
 export interface StatSettings  {
     showTooltip: boolean
+    diisplaySeries: string
     showLegend: boolean
     styles: {
         style: "lines" | "bars" 
