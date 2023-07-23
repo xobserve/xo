@@ -14,7 +14,7 @@
 // 1. Run the query to get the data from datasource
 // 2. Convert the data to the format which AiAPM expects
 
-import { cloneDeep, isEmpty, round } from "lodash"
+import { isEmpty, round } from "lodash"
 import { Panel, PanelQuery } from "types/dashboard"
 import { TimeRange } from "types/time"
 import { prometheusToPanels } from "./transformData"
@@ -25,7 +25,6 @@ import { isJSON } from "utils/is"
 import { getNewestTimeRange } from "components/DatePicker/TimePicker"
 
 import { PromDsQueryTypes } from "./VariableEditor"
-import { datasources, gtoast } from "src/App"
 import { parseVariableFormat } from "utils/format"
 import { variables } from "src/views/dashboard/Dashboard"
 import { VariableSplitChar, VarialbeAllOption } from "src/data/variable"

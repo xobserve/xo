@@ -97,10 +97,10 @@ export enum PanelType {
     Gauge = "gauge",
     NodeGraph = "nodeGraph",
     Stat = "stat",
+    Pie = "pie",
     Trace = "trace",
     Text = "text",
     Echarts = "echarts",
-    Pie = "pie",
     Row = "row",
 }
 
