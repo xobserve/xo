@@ -35,7 +35,6 @@ const TablePanel = (props: TablePanelProps) => {
     // because panel may have multiple queries, each query return a TablePluginData
     // so we need to flatten TablePluginData[] into TablePluginData
 
-
     const [tableColumns, tableData, seriesList] = useMemo(() => {
         const data: TableSeries[] = []
         const seriesList = []
@@ -70,10 +69,10 @@ const TablePanel = (props: TablePanelProps) => {
                 <Center height="100%">No data</Center>
                 :
                 <Flex h="100%" justify="space-between" direction="column">
-                    <Box maxH={series ? "calc(100% - 32px)" : "100%"} overflowY="scroll" sx={cssStyles}>
+                    <Box maxH={series && seriesList.length > 1  ? "calc(100% - 32px)" : "100%"} overflowY="scroll" sx={cssStyles}>
                         <ComplexTable panel={props.panel} dashboardId={props.dashboardId} columns={tableColumns} data={tableData} />
                     </Box>
-                    {series && <Select mt="1" size="sm" onChange={e => setSeries(e.currentTarget.value)}>
+                    {series && seriesList.length > 1 && <Select value={series} mt="1" size="sm" onChange={e => setSeries(e.currentTarget.value)}>
                         {seriesList.map(series => {
                             return <option key={series} value={series}>{series}</option>
                         })}

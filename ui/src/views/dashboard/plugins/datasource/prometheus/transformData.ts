@@ -28,18 +28,7 @@ export const prometheusToPanels = (rawData: any, panel: Panel, query: PanelQuery
         return null
     }
 
-    switch (panel.type) {
-        case PanelType.Table:
-        case PanelType.Graph:
-        case PanelType.Stat:
-        case PanelType.Gauge:
-        case PanelType.Pie:
-        case PanelType.Echarts:
-        case PanelType.BarGauge:
-            return prometheusToSeriesData(rawData, query, range)
-    }
-
-    return null
+    return prometheusToSeriesData(rawData, query, range)
 }
 
 export const prometheusToSeriesData = (data: any, query: PanelQuery, range: TimeRange): SeriesData[] => {
