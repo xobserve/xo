@@ -21,6 +21,7 @@ import { SeriesData } from "types/seriesData";
 import { calcValueOnSeriesData } from "utils/seriesData";
 import React from "react";
 import { paletteColorNameToHex } from "utils/colors";
+import { ValueCalculationType } from "types/value";
 
 interface Props extends PanelProps {
   data: SeriesData[][]
@@ -40,17 +41,20 @@ const GaugePanel = (props: Props) => {
     
     const value =  calcValueOnSeriesData(sd[0], props.panel.plugins.gauge.value.calc)
     const name = sd[0].name
-
-    return [{name, value}]
-}, [props.data, props.panel.plugins.gauge.value.calc])
+    const min = panel.plugins.gauge.value.min ?? calcValueOnSeriesData(sd[0], ValueCalculationType.Min)
+    const max = panel.plugins.gauge.value.max ?? calcValueOnSeriesData(sd[0], ValueCalculationType.Max)
+    return [{name, value,min,max}]
+}, [props.data, props.panel.plugins.gauge.value])
 
 
 
   const options = useMemo(() => {
     const split = cloneDeep(panel.plugins.gauge.axis.split)
     for (const s of split) {
-      s[1] = paletteColorNameToHex(s[1], colorMode)
+      s[1] =  paletteColorNameToHex(s[1], colorMode)
     }
+
+    console.log("here333333:",split)
     return {
       animation: panel.plugins.gauge.animation,
       grid: {
@@ -114,8 +118,8 @@ const GaugePanel = (props: Props) => {
             },
           },
           data: data,
-          min: panel.plugins.gauge.value.min,
-          max: panel.plugins.gauge.value.max,
+          min: data[0].min,
+          max: data[0].max,
 
           /*----scale-----*/
           splitLine: (panel.plugins.gauge.scale.enable && panel.plugins.gauge.scale.splitNumber > 0) ? {
