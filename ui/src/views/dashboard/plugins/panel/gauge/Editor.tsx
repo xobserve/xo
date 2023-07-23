@@ -23,6 +23,7 @@ import React from "react";
 import { useStore } from "@nanostores/react"
 import { commonMsg, gaugePanelMsg } from "src/i18n/locales/en"
 import { colors, palettes } from "utils/colors"
+import ThresholdEditor from "components/Threshold/ThresholdEditor"
 
 const GaugePanelEditor = (props: PanelEditorProps) => {
     const t = useStore(commonMsg)
@@ -121,9 +122,6 @@ const GaugePanelEditor = (props: PanelEditorProps) => {
                         panel.plugins.gauge.axis.showTicks = e.currentTarget.checked
                     })} />
                 </PanelEditItem>
-                <PanelEditItem title={t1.split} desc={t1.splitTips} >
-                    <AxisSplit {...props} />
-                </PanelEditItem>
             </PanelAccordion>
 
             <PanelAccordion title={t.scale}>
@@ -141,6 +139,12 @@ const GaugePanelEditor = (props: PanelEditorProps) => {
                     <EditorNumberItem value={panel.plugins.gauge.scale.fontSize} min={12} max={20} step={1} onChange={v => onChange((panel: Panel) => { panel.plugins.gauge.scale.fontSize = v })} />
                 </PanelEditItem>
             </PanelAccordion>
+
+            <PanelAccordion title="Thresholds">
+                <ThresholdEditor value={panel.plugins.gauge.thresholds} onChange={(v) => onChange((panel: Panel) => {
+                    panel.plugins.gauge.thresholds = v
+                })} />
+            </PanelAccordion>
         </>
     )
 }
@@ -148,58 +152,58 @@ const GaugePanelEditor = (props: PanelEditorProps) => {
 export default GaugePanelEditor
 
 
-const AxisSplit = ({ panel, onChange }: PanelEditorProps) => {
-    const addSplit = () => {
-        onChange((panel: Panel) => {
-            panel.plugins.gauge.axis.split.push([1, palettes[panel.plugins.gauge.axis.split.length]])
-        })
-    }
+// const AxisSplit = ({ panel, onChange }: PanelEditorProps) => {
+//     const addSplit = () => {
+//         onChange((panel: Panel) => {
+//             panel.plugins.gauge.axis.split.push([1, palettes[panel.plugins.gauge.axis.split.length]])
+//         })
+//     }
 
-    const moveUp = i => {
-        onChange((panel: Panel) => {
-            const split = panel.plugins.gauge.axis.split
-            const temp = split[i]
-            split[i] = split[i - 1]
-            split[i - 1] = temp
+//     const moveUp = i => {
+//         onChange((panel: Panel) => {
+//             const split = panel.plugins.gauge.axis.split
+//             const temp = split[i]
+//             split[i] = split[i - 1]
+//             split[i - 1] = temp
 
-            panel.plugins.gauge.axis.split = split
-        })
-    }
+//             panel.plugins.gauge.axis.split = split
+//         })
+//     }
 
-    const moveDown = i => {
-        onChange((panel: Panel) => {
-            const split = panel.plugins.gauge.axis.split
-            const temp = split[i]
-            split[i] = split[i + 1]
-            split[i + 1] = temp
+//     const moveDown = i => {
+//         onChange((panel: Panel) => {
+//             const split = panel.plugins.gauge.axis.split
+//             const temp = split[i]
+//             split[i] = split[i + 1]
+//             split[i + 1] = temp
 
-            panel.plugins.gauge.axis.split = split
-        })
-    }
+//             panel.plugins.gauge.axis.split = split
+//         })
+//     }
 
 
-    return (<Box><VStack alignItems="left">
-        {panel.plugins.gauge.axis.split.map((s, i) => {
-            return <Flex justifyContent="space-between" alignItems="center" key={s[0]}>
-                <HStack>
-                    <Box width="150px"><EditorNumberItem value={s[0]} min={0} max={1} step={0.1} onChange={v => onChange((panel: Panel) => {
-                        panel.plugins.gauge.axis.split[i][0] = v
-                    })} /></Box>
-                    <ColorPicker color={s[1]} onChange={v => onChange((panel: Panel) => {
-                        panel.plugins.gauge.axis.split[i][1] = v
-                    })} /> 
-                </HStack>
-                <HStack>
-                    {i != 0 && <FaArrowUp onClick={() => moveUp(i)} />}
-                    {i != panel.plugins.gauge.axis.split.length - 1 && <FaArrowDown onClick={() => moveDown(i)} />}
-                    <Box cursor="pointer" onClick={() => onChange((panel: Panel) => {
-                        panel.plugins.gauge.axis.split.splice(i, 1)
-                    })}><FaTimes /></Box>
-                </HStack>
-            </Flex>
-        })}
-    </VStack>
-        <Button mt="2" size="sm" variant="outline" onClick={addSplit}>New split</Button>
-    </Box>
-    )
-}
+//     return (<Box><VStack alignItems="left">
+//         {panel.plugins.gauge.axis.split.map((s, i) => {
+//             return <Flex justifyContent="space-between" alignItems="center" key={s[0]}>
+//                 <HStack>
+//                     <Box width="150px"><EditorNumberItem value={s[0]} min={0} max={1} step={0.1} onChange={v => onChange((panel: Panel) => {
+//                         panel.plugins.gauge.axis.split[i][0] = v
+//                     })} /></Box>
+//                     <ColorPicker color={s[1]} onChange={v => onChange((panel: Panel) => {
+//                         panel.plugins.gauge.axis.split[i][1] = v
+//                     })} /> 
+//                 </HStack>
+//                 <HStack>
+//                     {i != 0 && <FaArrowUp onClick={() => moveUp(i)} />}
+//                     {i != panel.plugins.gauge.axis.split.length - 1 && <FaArrowDown onClick={() => moveDown(i)} />}
+//                     <Box cursor="pointer" onClick={() => onChange((panel: Panel) => {
+//                         panel.plugins.gauge.axis.split.splice(i, 1)
+//                     })}><FaTimes /></Box>
+//                 </HStack>
+//             </Flex>
+//         })}
+//     </VStack>
+//         <Button mt="2" size="sm" variant="outline" onClick={addSplit}>New split</Button>
+//     </Box>
+//     )
+// }

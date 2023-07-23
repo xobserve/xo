@@ -113,7 +113,6 @@ export interface GaugeSettings {
     axis: {
         width: number
         showTicks: boolean
-        split: GaugeAxisSplit[]
     }
     title: {
         show: boolean
@@ -121,6 +120,7 @@ export interface GaugeSettings {
         left: string
         top: string
     }
+    thresholds: ThresholdsConfig
 }
 
 export type GaugeAxisSplit = [number, string]

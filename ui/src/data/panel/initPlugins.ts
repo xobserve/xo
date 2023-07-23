@@ -225,18 +225,14 @@ function registerEvents(options, chart) {
             axis: {
                 width: 12,
                 showTicks: true,
-                split: [
-                    [0.3, '#67e0e3'],
-                    [0.7, '#37a2da'],
-                    [1, '#fd666d']
-                ]
             },
             title: {
                 show: true,
                 fontSize: 14,
                 left: '0%',
                 top: '60%'
-            }
+            },
+            thresholds: initThresholds()
         },
 
         [PanelType.Stat]: {

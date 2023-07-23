@@ -20,8 +20,11 @@ import { GaugePluginData } from "types/plugins/gauge";
 import { SeriesData } from "types/seriesData";
 import { calcValueOnSeriesData } from "utils/seriesData";
 import React from "react";
-import { paletteColorNameToHex } from "utils/colors";
+import { colors, paletteColorNameToHex } from "utils/colors";
 import { ValueCalculationType } from "types/value";
+import { isEmpty } from "utils/validate";
+import { ThresholdsMode } from "types/threshold";
+import { co } from "components/largescreen/utils";
 
 interface Props extends PanelProps {
   data: SeriesData[][]
@@ -32,29 +35,40 @@ const GaugePanel = (props: Props) => {
   const [chart, setChart] = useState(null)
   const { colorMode } = useColorMode()
 
-  const data:GaugePluginData[] = useMemo(() => {
-    let sd:SeriesData[] = [];
+  const data: GaugePluginData[] = useMemo(() => {
+    let sd: SeriesData[] = [];
     if (props.data.length > 0) {
-        // Gauge only use the first series, Graph use all
-        sd.push(props.data[0][0])
+      // Gauge only use the first series, Graph use all
+      sd.push(props.data[0][0])
     }
-    
-    const value =  calcValueOnSeriesData(sd[0], props.panel.plugins.gauge.value.calc)
+
+    const value = calcValueOnSeriesData(sd[0], props.panel.plugins.gauge.value.calc)
     const name = sd[0].name
     const min = panel.plugins.gauge.value.min ?? calcValueOnSeriesData(sd[0], ValueCalculationType.Min)
     const max = panel.plugins.gauge.value.max ?? calcValueOnSeriesData(sd[0], ValueCalculationType.Max)
-    return [{name, value,min,max}]
-}, [props.data, props.panel.plugins.gauge.value])
+    return [{ name, value, min, max }]
+  }, [props.data, props.panel.plugins.gauge.value])
 
 
 
   const options = useMemo(() => {
-    const split = cloneDeep(panel.plugins.gauge.axis.split)
-    for (const s of split) {
-      s[1] =  paletteColorNameToHex(s[1], colorMode)
-    }
+    const thresholds = panel.plugins.gauge.thresholds
+    let split = []
+    if (isEmpty(thresholds)) {
+      split = [[1, colors[0]]]
+    } else  {
+      for (let i = thresholds.thresholds.length - 1; i >= 0; i--) {
+        const t = thresholds.thresholds[i]
+        if (i == 0) {
+          split.push([1, paletteColorNameToHex(t.color, colorMode)])
+          continue
+        } else {
+          const next = thresholds.thresholds[i - 1]
+          split.push([thresholds.mode == ThresholdsMode.Percentage ? next.value / 100 : (next.value - data[0].min) / (data[0].max-data[0].min), paletteColorNameToHex(t.color, colorMode)])
+        }
+      }
+    } 
 
-    console.log("here333333:",split)
     return {
       animation: panel.plugins.gauge.animation,
       grid: {
@@ -153,7 +167,7 @@ const GaugePanel = (props: Props) => {
         ]
       });
     }
-  }, [chart,data])
+  }, [chart, data])
 
 
   const onChartCreated = useCallback((chart) => {
