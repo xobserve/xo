@@ -56,3 +56,6 @@ export const run_testdata_query = async (panel: Panel, q: PanelQuery, range: Tim
 }
 
 
+export const queryTraceInTestData = (traceId) => {
+    return traceData.data.find(trace => trace.traceID== traceId)
+}
