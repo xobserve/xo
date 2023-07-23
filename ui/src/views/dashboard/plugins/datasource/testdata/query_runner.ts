@@ -43,7 +43,7 @@ export const run_testdata_query = async (panel: Panel, q: PanelQuery, range: Tim
             data = echartsOptions
             break
         case PanelType.Trace:
-            data = traceData
+            data =  traceData.data
             break
         default:
             break
