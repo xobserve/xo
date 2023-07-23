@@ -232,6 +232,10 @@ function registerEvents(options, chart) {
                 left: '0%',
                 top: '60%'
             },
+            pointer: {
+                length: '80%',
+                width: 8,
+            },
             thresholds: initThresholds()
         },
 

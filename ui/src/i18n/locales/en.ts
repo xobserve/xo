@@ -477,6 +477,7 @@ export const gaugePanelMsg = i18n("gaugePanel", {
   "split": "Split",
   "splitTips": "split axis into several part, each has a unique color, range is [0, 1]: 0 stands for start, 1 for ends, values must in ASC order",
   "splitNum": "Split number",
+  "pointer": "pointer",
 })
 
 export const statsPanelMsg = i18n("statsPanel", {

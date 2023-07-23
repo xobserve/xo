@@ -445,7 +445,8 @@
     "showTicks": "显示刻度",
     "split": "分割",
     "splitTips": "将坐标轴分割为几个部分，每个部分可以定义相应的颜色，范围要落在 [Min, Max] 之间",
-    "splitNum": "刻度数"
+    "splitNum": "刻度数",
+    "pointer": "指针"
   },
 
   "statsPanel": {

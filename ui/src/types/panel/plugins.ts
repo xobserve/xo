@@ -120,6 +120,10 @@ export interface GaugeSettings {
         left: string
         top: string
     }
+    pointer: {
+        length: string 
+        width: number
+    }
     thresholds: ThresholdsConfig
 }
 

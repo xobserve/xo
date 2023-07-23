@@ -124,8 +124,8 @@ const GaugePanel = (props: Props) => {
           },
           pointer: {
             icon: 'path://M2.9,0.7L2.9,0.7c1.4,0,2.6,1.2,2.6,2.6v115c0,1.4-1.2,2.6-2.6,2.6l0,0c-1.4,0-2.6-1.2-2.6-2.6V3.3C0.3,1.9,1.4,0.7,2.9,0.7z',
-            width: 8,
-            length: '80%',
+            width: panel.plugins.gauge.pointer.width,
+            length: panel.plugins.gauge.pointer.length,
             offsetCenter: [0, '8%'],
             itemStyle: {
               color: 'inherit'
