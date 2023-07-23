@@ -106,6 +106,8 @@ export const commonMsg = i18n("common", {
   "descend": "Descend",
   "ascend": "Ascend",
   "palette": "Palette",
+  "series": "Series",
+  "seriesTips": "A series of data can draw a plot line",
   "inputTips": params("Enter {name}.."),
   "isReqiiured": params("{name} is required"),
   "isInvalid": params("{name} is invalid"),

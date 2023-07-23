@@ -97,7 +97,7 @@ func (s *Server) Start() error {
 		r.GET("/team/sidemenu/current", IsLogin(), teams.GetCurrentSidemenu)
 		// variable apis
 		r.POST("/variable/new", IsLogin(), variables.AddNewVariable)
-		r.GET("/variable/all", IsLogin(), api.GetVariables)
+		r.GET("/variable/all", api.GetVariables)
 		r.POST("/variable/update", IsLogin(), variables.UpdateVariable)
 		r.DELETE("/variable/:id", IsLogin(), variables.DeleteVariable)
 

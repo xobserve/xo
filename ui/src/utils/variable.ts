@@ -26,13 +26,22 @@ export const hasVariableFormat = (s: string) => {
 }
 
 // replace ${xxx} format with corresponding variable
-export const replaceWithVariables = (s: string) => {
+// extraVars: datav preserved variables, such as __curentValue__
+export const replaceWithVariables = (s: string, extraVars?: {
+    [varName:string]: string | number, 
+}) => {
     const formats = parseVariableFormat(s);
     for (const f of formats) {
-        const v = variables.find(v => v.name ==f)
-        if (v) {
-            s = s.replace(`\${${f}}`, v.selected);
+        const extrav = extraVars[f]
+        if (extrav) {
+            s = s.replace(`\${${f}}`, extrav.toString());
+        } else {
+            const v = variables.find(v => v.name ==f)
+            if (v) {
+                s = s.replace(`\${${f}}`, v.selected);
+            }
         }
+       
     }
 
     return s

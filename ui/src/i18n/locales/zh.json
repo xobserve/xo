@@ -99,6 +99,8 @@
     "descend": "降序",
     "ascend": "升序",
     "palette": "调色板",
+    "series": "数据序列 series",
+    "seriesTips": "一个数据序列 series 可以绘制一条曲线",
     "isAdded": "{name}添加成功!",
     "isUpdated": "{name}更新成功!",
     "isDeleted": "{name}删除成功!",

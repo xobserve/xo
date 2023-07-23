@@ -206,6 +206,7 @@ function registerEvents(options, chart) {
         },
         [PanelType.Gauge]: {
             animation: true,
+            diisplaySeries: null,
             value: {
                 show: true,
                 min: 0,
@@ -228,6 +229,7 @@ function registerEvents(options, chart) {
             },
             title: {
                 show: true,
+                display: null,
                 fontSize: 14,
                 left: '0%',
                 top: '60%'

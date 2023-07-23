@@ -104,6 +104,7 @@ export enum PieLegendPlacement {
 
 export interface GaugeSettings {
     animation: boolean
+    diisplaySeries: string
     value: GaugeValueSettings
     scale: {
         enable: boolean

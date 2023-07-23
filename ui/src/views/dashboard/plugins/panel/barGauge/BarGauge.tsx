@@ -22,6 +22,7 @@ import { formatUnit } from "components/Unit";
 import { measureText } from "utils/measureText";
 import { BarGaugeRules } from "./OverrideEditor";
 import { isEmpty } from "utils/validate";
+import { Center } from "@chakra-ui/react";
 
 interface Props extends PanelProps {
     data: SeriesData[][]
@@ -29,6 +30,10 @@ interface Props extends PanelProps {
 
 const BarGaugePanel = (props: Props) => {
     const { panel, height, width } = props
+
+    if (isEmpty(props.data)) {
+        return (<Center height="100%">No data</Center>)
+      }
 
     const rawData: SeriesData[] = useMemo(() => {
         let sd: SeriesData[] = props.data.flat()

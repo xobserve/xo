@@ -17,7 +17,7 @@ import { isEmpty } from "lodash"
 import { useState } from "react"
 import * as Icons from 'react-icons/fa'
 import { MdEdit } from "react-icons/md"
-import { initPanelPlugins, onClickCommonEvent } from "src/data/panel/initPlugins"
+import { onClickCommonEvent } from "src/data/panel/initPlugins"
 import PanelAccordion from "src/views/dashboard/edit-panel/Accordion"
 import { EditorNumberItem, EditorSliderItem } from "components/editor/EditorItem"
 import PanelEditItem from "src/views/dashboard/edit-panel/PanelEditItem"

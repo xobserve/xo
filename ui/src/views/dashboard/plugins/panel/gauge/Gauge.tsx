@@ -10,7 +10,7 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-import { Box, useColorMode } from "@chakra-ui/react";
+import { Box, Center, useColorMode } from "@chakra-ui/react";
 import ChartComponent from "components/charts/Chart";
 import { cloneDeep, round } from "lodash";
 
@@ -24,8 +24,8 @@ import { colors, paletteColorNameToHex } from "utils/colors";
 import { ValueCalculationType } from "types/value";
 import { isEmpty } from "utils/validate";
 import { ThresholdsMode } from "types/threshold";
-import { co } from "components/largescreen/utils";
 import { replaceWithVariables } from "utils/variable";
+import { VariableCurrentValue } from "src/data/variable";
 
 interface Props extends PanelProps {
   data: SeriesData[][]
@@ -36,19 +36,33 @@ const GaugePanel = (props: Props) => {
   const [chart, setChart] = useState(null)
   const { colorMode } = useColorMode()
 
+
   const data: GaugePluginData[] = useMemo(() => {
     let sd: SeriesData[] = [];
     if (props.data.length > 0) {
       // Gauge only use the first series, Graph use all
-      sd.push(props.data[0][0])
+      for (const d of props.data) {
+        for (const s of d) {
+          if (s.name == panel.plugins.gauge.diisplaySeries) {
+            sd.push(s)
+          }
+        }
+      }
+
+      if (sd.length == 0) {
+        sd.push(props.data[0][0])
+      }
     }
 
+    if (sd.length == 0) {
+      return []
+    }
     const value = calcValueOnSeriesData(sd[0], props.panel.plugins.gauge.value.calc)
-    const name = isEmpty(props.panel.plugins.gauge.title.display) ?  sd[0].name : replaceWithVariables(props.panel.plugins.gauge.title.display)
+    const name = isEmpty(props.panel.plugins.gauge.title.display) ? sd[0].name : replaceWithVariables(props.panel.plugins.gauge.title.display, { [VariableCurrentValue]: sd[0].name })
     const min = panel.plugins.gauge.value.min ?? calcValueOnSeriesData(sd[0], ValueCalculationType.Min)
     const max = panel.plugins.gauge.value.max ?? calcValueOnSeriesData(sd[0], ValueCalculationType.Max)
     return [{ name, value, min, max }]
-  }, [props.data, props.panel.plugins.gauge.value, props.panel.plugins.gauge.title.display])
+  }, [props.data, props.panel.plugins.gauge.value, props.panel.plugins.gauge.title.display, props.panel.plugins.gauge.diisplaySeries])
 
 
 
@@ -57,7 +71,7 @@ const GaugePanel = (props: Props) => {
     let split = []
     if (isEmpty(thresholds)) {
       split = [[1, colors[0]]]
-    } else  {
+    } else {
       for (let i = thresholds.thresholds.length - 1; i >= 0; i--) {
         const t = thresholds.thresholds[i]
         if (i == 0) {
@@ -65,10 +79,10 @@ const GaugePanel = (props: Props) => {
           continue
         } else {
           const next = thresholds.thresholds[i - 1]
-          split.push([thresholds.mode == ThresholdsMode.Percentage ? next.value / 100 : (next.value - data[0].min) / (data[0].max-data[0].min), paletteColorNameToHex(t.color, colorMode)])
+          split.push([thresholds.mode == ThresholdsMode.Percentage ? next.value / 100 : (next.value - data[0].min) / (data[0].max - data[0].min), paletteColorNameToHex(t.color, colorMode)])
         }
       }
-    } 
+    }
 
     return {
       animation: panel.plugins.gauge.animation,
@@ -176,7 +190,7 @@ const GaugePanel = (props: Props) => {
   }, [])
 
   return (<>
-    {options && <Box height={height} key={colorMode} className="echarts-panel"><ChartComponent options={options} theme={colorMode} width={width} height={height} onChartCreated={onChartCreated} onChartEvents={null} /></Box>}
+    {isEmpty(props.data) ? <Center height="100%">No data</Center> :options && <Box height={height} key={colorMode} className="echarts-panel"><ChartComponent options={options} theme={colorMode} width={width} height={height} onChartCreated={onChartCreated} onChartEvents={null} /></Box> }
   </>)
 }
 
