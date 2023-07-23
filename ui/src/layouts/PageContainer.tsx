@@ -47,7 +47,7 @@ import { config } from "src/data/configs/config"
 
 const miniWidth = 60
 const navSize = 15
-const maxNavSize = 220
+const maxNavSize = 200
 
 interface Props {
   children: any
