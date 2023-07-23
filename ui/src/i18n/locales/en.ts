@@ -82,6 +82,7 @@ export const commonMsg = i18n("common", {
   "animation": "Animation",
   "animationTips": "Display chart animation",
   "display": "Display",
+  "show": "Show",
   "calc":"Calculation",
   "calcTips": "calculate results from series data with this reducer function",
   "value": "Value",

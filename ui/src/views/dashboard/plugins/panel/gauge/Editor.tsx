@@ -76,9 +76,14 @@ const GaugePanelEditor = (props: PanelEditorProps) => {
             </PanelAccordion>
 
             <PanelAccordion title={t.title}>
-                <PanelEditItem title={t.display}>
+                <PanelEditItem title={t.show}>
                     <Switch defaultChecked={panel.plugins.gauge.title.show} onChange={e => onChange((panel: Panel) => {
                         panel.plugins.gauge.title.show = e.currentTarget.checked
+                    })} />
+                </PanelEditItem>
+                <PanelEditItem title={t.display}>
+                    <EditorInputItem value={panel.plugins.gauge.title.display} onChange={(v) => onChange((panel: Panel) => {
+                        panel.plugins.gauge.title.display = v
                     })} />
                 </PanelEditItem>
                 <PanelEditItem title="Font size">

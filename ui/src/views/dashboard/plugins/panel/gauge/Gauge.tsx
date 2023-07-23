@@ -25,6 +25,7 @@ import { ValueCalculationType } from "types/value";
 import { isEmpty } from "utils/validate";
 import { ThresholdsMode } from "types/threshold";
 import { co } from "components/largescreen/utils";
+import { replaceWithVariables } from "utils/variable";
 
 interface Props extends PanelProps {
   data: SeriesData[][]
@@ -43,11 +44,11 @@ const GaugePanel = (props: Props) => {
     }
 
     const value = calcValueOnSeriesData(sd[0], props.panel.plugins.gauge.value.calc)
-    const name = sd[0].name
+    const name = isEmpty(props.panel.plugins.gauge.title.display) ?  sd[0].name : replaceWithVariables(props.panel.plugins.gauge.title.display)
     const min = panel.plugins.gauge.value.min ?? calcValueOnSeriesData(sd[0], ValueCalculationType.Min)
     const max = panel.plugins.gauge.value.max ?? calcValueOnSeriesData(sd[0], ValueCalculationType.Max)
     return [{ name, value, min, max }]
-  }, [props.data, props.panel.plugins.gauge.value])
+  }, [props.data, props.panel.plugins.gauge.value, props.panel.plugins.gauge.title.display])
 
 
 

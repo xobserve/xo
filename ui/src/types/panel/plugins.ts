@@ -116,6 +116,7 @@ export interface GaugeSettings {
     }
     title: {
         show: boolean
+        display: string
         fontSize: number
         left: string
         top: string
