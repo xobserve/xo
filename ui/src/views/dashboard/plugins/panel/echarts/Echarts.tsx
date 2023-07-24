@@ -40,7 +40,7 @@ const EchartsPanel = (props: PanelProps) => {
         let onEvents = null;
         const setOptions = genDynamicFunction(panel.plugins.echarts.setOptionsFunc);
         if (isFunction(setOptions)) {
-            const o = setOptions(cloneDeep(data),colors, echarts, loadash, moment)
+            const o = setOptions(cloneDeep(data),panel.plugins.echarts.enableThresholds && panel.plugins.echarts.thresholds, colors, echarts, loadash, moment)
             options = o
         } else {
             toast({

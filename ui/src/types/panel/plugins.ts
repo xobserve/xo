@@ -151,6 +151,8 @@ export interface EchartsSettings {
     allowEmptyData: boolean
     setOptionsFunc: string
     registerEventsFunc: string
+    thresholds: ThresholdsConfig
+    enableThresholds: boolean
 }
 
 export interface TextPlugin extends DisableDatasource {

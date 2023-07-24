@@ -10,10 +10,9 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-import { Box, useColorMode, useToast } from "@chakra-ui/react";
+import { Box, useColorMode } from "@chakra-ui/react";
 import ChartComponent from "components/charts/Chart";
 import { formatUnit } from "components/Unit";
-import { isFunction, round } from "lodash";
 import { useMemo, useState } from "react";
 import { Panel, PanelProps } from "types/dashboard"
 import { PieLegendPlacement } from "types/panel/plugins";
@@ -22,7 +21,7 @@ import { SeriesData } from "types/seriesData";
 import { genDynamicFunction } from "utils/dynamicCode";
 import { calcValueOnSeriesData } from "utils/seriesData";
 import React from "react";
-import { colors, paletteColorNameToHex } from "utils/colors";
+import { paletteColorNameToHex } from "utils/colors";
 import { ValueCalculationType } from "types/value";
 import { getThreshold } from "components/Threshold/utils";
 import { ThresholdsMode } from "types/threshold";
@@ -91,7 +90,7 @@ const PiePanel = (props: Props) => {
                     itemStyle: {
                         borderRadius: panel.plugins.pie.shape.borderRadius,
                         opacity: 0.8,
-                        borderWidth: 0.5,
+                        borderWidth: colorMode == "light" ? 1 : 0.5,
                         borderColor: color.length > 0 ? true : null 
                     },
                     data: data,

@@ -155,6 +155,8 @@ export const initPanelPlugins = (): PanelPlugins => {
             animation: true,
             allowEmptyData: false,
             setOptionsFunc: setEchartsOptions,
+            thresholds: initThresholds(),
+            enableThresholds: true,
             registerEventsFunc: `// In registerEvents, you can custom events on your chart, e.g mouse click event, mouse over event etc.
 // chart: a instance of echarts, you can call echarts apis on it
 // options: result of setOptions function
@@ -288,12 +290,13 @@ export const setEchartsOptions = `
 // setOptions return echarts.Options, it is directly passed to a echarts chart.
 // Find more options examples: https://echarts.apache.org/examples/en/index.html#chart-type-line
 // data: SeriesData[] which is the standard data format in Datav
+// thresholds: ThresholdsConfig[] | null
 // colors: color palettes using in Datav
 // echarts: imported echarts.js module 
 // loadash: imported loadash.js module
 // moment: imported momen.jst module
 
-function setOptions(data, colors, echarts, loadash, moment) {
+function setOptions(data, thresholds, colors, echarts, loadash, moment) {
     const colorList = [
         ['rgb(128, 255, 165)', 'rgb(1, 191, 236)'],
         ['rgb(0, 221, 255)', 'rgb(77, 119, 255)'],

@@ -30,8 +30,9 @@ import { commonMsg, echartsPanelMsg } from "src/i18n/locales/en"
 import { colors } from "utils/colors"
 import moment from "moment"
 import loadash from 'lodash'
+import ThresholdEditor from "components/Threshold/ThresholdEditor"
 
-const EchartsPanelEditor = ({ panel, onChange,data }: PanelEditorProps) => {
+const EchartsPanelEditor = ({ panel, onChange, data }: PanelEditorProps) => {
     const t = useStore(commonMsg)
     const t1 = useStore(echartsPanelMsg)
     return (
@@ -57,7 +58,7 @@ const EchartsPanelEditor = ({ panel, onChange,data }: PanelEditorProps) => {
                     onChange((panel: Panel) => {
                         panel.plugins.echarts.setOptionsFunc = v
                     })
-                }} data={data}/>
+                }} data={data} />
 
                 <RegisterEvents panel={panel} onChange={v => {
                     onChange((panel: Panel) => {
@@ -65,15 +66,25 @@ const EchartsPanelEditor = ({ panel, onChange,data }: PanelEditorProps) => {
                     })
                 }} />
             </PanelAccordion>
-        </>
+            <PanelAccordion title="Thresholds">
+                <ThresholdEditor value={panel.plugins.echarts.thresholds} onChange={(v) => onChange((panel: Panel) => {
+                    panel.plugins.echarts.thresholds = v
+                })} />
 
+                <PanelEditItem title={t.enable}>
+                    <Switch defaultChecked={panel.plugins.echarts.enableThresholds} onChange={e => onChange((panel: Panel) => {
+                        panel.plugins.echarts.enableThresholds = e.currentTarget.checked
+                    })} />
+                </PanelEditItem>
+            </PanelAccordion>
+        </>
     )
 }
 
 export default EchartsPanelEditor
 
 
-const SetOptions = ({ panel, onChange,data }: PanelEditorProps) => {
+const SetOptions = ({ panel, onChange, data }: PanelEditorProps) => {
     const t = useStore(commonMsg)
     const t1 = useStore(echartsPanelMsg)
     const { isOpen, onOpen, onClose } = useDisclosure()
@@ -91,7 +102,7 @@ const SetOptions = ({ panel, onChange,data }: PanelEditorProps) => {
 
     if (isFunction(setOptions)) {
         try {
-            let o = setOptions(cloneDeep(data.flat()),colors, echarts, loadash, moment)
+            let o = setOptions(cloneDeep(data.flat()), colors, echarts, loadash, moment)
             o.animation = false
             options = o
         } catch (error) {
@@ -110,9 +121,9 @@ const SetOptions = ({ panel, onChange,data }: PanelEditorProps) => {
 
                 <ModalBody pt="2" pb="0" px="0">
                     <Flex alignItems="center" justifyContent="space-between" height="40px" pl="5">
-                        <Text textStyle="subTitle"> {t1.liveEdit({name:panel.datasource.type })} </Text>
+                        <Text textStyle="subTitle"> {t1.liveEdit({ name: panel.datasource.type })} </Text>
                         <HStack>
-                            <ColorModeSwitcher miniMode/>
+                            <ColorModeSwitcher miniMode />
                             <Button size="sm" onClick={onSubmit} >{t.submit}</Button>
                             <Button size="sm" onClick={onClose} variant="outline">{t.cancel}</Button>
                         </HStack>
