@@ -22,6 +22,7 @@ import { SeriesData } from "types/seriesData";
 import { genDynamicFunction } from "utils/dynamicCode";
 import { calcValueOnSeriesData } from "utils/seriesData";
 import React from "react";
+import { colors } from "utils/colors";
 
 interface Props extends PanelProps {
     data: SeriesData[][]
@@ -41,7 +42,7 @@ const PiePanel = (props: Props) => {
             for (const series of s) {
                 data.push({
                     name: series.name,
-                    value:calcValueOnSeriesData(series, props.panel.plugins.pie.value.calc)
+                    value:calcValueOnSeriesData(series, props.panel.plugins.pie.value.calc),
                 })
             }
         }
@@ -54,6 +55,7 @@ const PiePanel = (props: Props) => {
 
 
         return [{
+            // color: colors,
             animation: panel.plugins.pie.animation,
             legend: {
                 show: panel.plugins.pie.legend.show,
@@ -85,7 +87,7 @@ const PiePanel = (props: Props) => {
                     },
                     label: {
                         show: panel.plugins.pie.showLabel,
-                    }
+                    },
                 }
             ]
         },onEvents]

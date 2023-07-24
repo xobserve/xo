@@ -10,7 +10,7 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-import { Box, Center, Flex, Select } from "@chakra-ui/react"
+import { Box, Center, Flex, Select, useColorMode, useColorModeValue } from "@chakra-ui/react"
 import React, { useMemo } from "react"
 import { PanelProps } from "types/dashboard"
 import { TablePluginData, TableSeries } from "types/plugins/table"
@@ -18,12 +18,14 @@ import { cloneDeep, isEmpty } from "lodash"
 import ComplexTable from "./components/ComplexTable/ComplexTable"
 import { SeriesData } from "types/seriesData"
 import { co } from "components/largescreen/utils"
+import customColors from "theme/colors"
 
 interface TablePanelProps extends PanelProps {
     data: SeriesData[][]
 }
 
 const TablePanel = (props: TablePanelProps) => {
+    const {colorMode} = useColorMode()
     const { panel } = props
     if (isEmpty(props.data)) {
         return (<Center height="100%">No data</Center>)
@@ -69,7 +71,7 @@ const TablePanel = (props: TablePanelProps) => {
                 <Center height="100%">No data</Center>
                 :
                 <Flex h="100%" justify="space-between" direction="column">
-                    <Box maxH={series && seriesList.length > 1  ? "calc(100% - 32px)" : "100%"} overflowY="scroll" sx={cssStyles}>
+                    <Box maxH={series && seriesList.length > 1  ? "calc(100% - 32px)" : "100%"} overflowY="scroll" sx={cssStyles(colorMode, props.panel.plugins.table.column.colorTitle)}>
                         <ComplexTable panel={props.panel} dashboardId={props.dashboardId} columns={tableColumns} data={tableData} />
                     </Box>
                     {series && seriesList.length > 1 && <Select value={series} mt="1" size="sm" onChange={e => setSeries(e.currentTarget.value)}>
@@ -87,7 +89,8 @@ const TablePanel = (props: TablePanelProps) => {
 export default TablePanel
 
 
-const cssStyles = {
+const cssStyles = (colorMode: "light" | "dark", colorTitle) =>{
+    return {
     '.ant-table-wrapper': {
         maxWidth: 'calc(100% - 1px) !important'
     },
@@ -95,7 +98,8 @@ const cssStyles = {
         padding: '0 0 !important'
     },
     'th.ant-table-cell': {
-        background: "inherit !important"
+        background: "inherit !important",
+        color:colorTitle ? `${colorMode == "light" ? customColors.primaryColor.light : customColors.primaryColor.dark} !important` : 'inherit !important'
     },
     '.ant-table-cell.ant-table-column-sort': {
         background: "inherit !important"
@@ -112,8 +116,11 @@ const cssStyles = {
     },
     '.ant-table-wrapper .ant-table-tbody >tr >td': {
         borderBottomWidth: '0.5px'
+    },
+    'th.ant-table-cell:before': {
+        width: '0 !important'
     }
-}
+}}
 
 
 export const seriesDataToTableData = (rawData: SeriesData[][]) => {

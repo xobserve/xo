@@ -167,6 +167,7 @@ export interface TableSettings {
     tableWidth: number
     stickyHeader: boolean
     column: {
+        colorTitle: boolean
         align: "auto" | "left" | "center" | "right"
         enableSort: boolean
         enableFilter: boolean

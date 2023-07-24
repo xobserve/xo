@@ -30,12 +30,12 @@ const initUnits: Units = {
     units: [],
 }
 
-const initThresholds = (): ThresholdsConfig => {
+const initThresholds = (colorIndex?): ThresholdsConfig => {
     return {
         mode: ThresholdsMode.Absolute,
         thresholds: [{
             value: null,
-            color: palettes[0]
+            color: palettes[colorIndex??0]
         }]
     }
 }
@@ -62,7 +62,7 @@ export const initPanelPlugins = (): PanelPlugins => {
             styles: {
                 style: "lines",
                 lineWidth: 0,
-                fillOpacity: 60,
+                fillOpacity: 80,
                 showPoints: "auto",
                 pointSize: 6,
                 gradientMode: "opacity",
@@ -97,6 +97,7 @@ export const initPanelPlugins = (): PanelPlugins => {
             stickyHeader: false,
             tableWidth: 100,
             column: {
+                colorTitle: true,
                 align: "left",
                 enableSort: false,
                 enableFilter: false
@@ -174,12 +175,12 @@ function registerEvents(options, chart) {
             shape: {
                 type: 'normal',
                 borderRadius: 8,
-                radius: 90,
+                radius: 80,
                 innerRadius: 0,
             },
-            showLabel: true,
+            showLabel: false,
             legend: {
-                show: false,
+                show: true,
                 orient: 'horizontal',
                 placement: PieLegendPlacement.Bottom
             },
@@ -212,11 +213,11 @@ function registerEvents(options, chart) {
                 fontSize: 14
             },
             axis: {
-                width: 12,
+                width: 25,
                 showTicks: true,
             },
             title: {
-                show: true,
+                show: false,
                 display: null,
                 fontSize: 14,
                 left: '0%',
@@ -226,7 +227,7 @@ function registerEvents(options, chart) {
                 length: '80%',
                 width: 8,
             },
-            thresholds: initThresholds()
+            thresholds: initThresholds(24)
         },
 
         [PanelType.Stat]: {
@@ -262,7 +263,7 @@ function registerEvents(options, chart) {
                 decimal: 1,
                 calc: ValueCalculationType.Last
             },
-            orientation: "horizontal",
+            orientation: "vertical",
             mode: "basic",
             style: {
                 showUnfilled: true,
@@ -272,9 +273,9 @@ function registerEvents(options, chart) {
             min: null,
             max: null,
             maxminFrom: "all",
-            showMax: false,
-            showMin: false,
-            thresholds: initThresholds()
+            showMax: true,
+            showMin: true,
+            thresholds: initThresholds(24)
         }
     }
 }

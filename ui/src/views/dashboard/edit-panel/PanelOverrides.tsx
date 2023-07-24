@@ -13,7 +13,7 @@
 import { Box, Button, HStack, Select, StackDivider, Tooltip, VStack } from "@chakra-ui/react";
 import { Form, FormSection } from "components/form/Form";
 import FormItem from "components/form/Item";
-import { flatten } from "lodash";
+import { flatten, isArray } from "lodash";
 import { useMemo } from "react";
 import { FaTimes } from "react-icons/fa";
 import { Panel, PanelEditorProps, PanelType } from "types/dashboard";
@@ -38,13 +38,14 @@ const PanelOverrides = ({ panel, onChange, data }: PanelEditorProps) => {
                 const res = []
                 const d: SeriesData[]= flatten(data)
                 if (d.length > 0) {
-                   
+                   if (isArray(d[0].fields)) {
                     for (const f of d[0].fields) {
                         res.push({
                             label: f.name,
                             value: f.name
                         })
                     }
+                   }
                 }
                 return res
              

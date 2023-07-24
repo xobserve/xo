@@ -70,6 +70,12 @@ const TablePanelEditor = ({ panel, onChange }: PanelEditorProps) => {
             </PanelEditItem>
         </PanelAccordion>
         <PanelAccordion title={t1.column}>
+            <PanelEditItem title={t1.colorTitle}>
+                <Switch isChecked={panel.plugins.table.column.colorTitle} onChange={(e) => onChange((panel: Panel) => {
+                    panel.plugins.table.column.colorTitle = e.target.checked
+                })} />
+            </PanelEditItem>
+
             <PanelEditItem title={t1.columnAlignment}>
                 <RadionButtons options={[{ label: t.auto, value: "auto" }, { label: t.left, value: "left" }, { label: t.center, value: "center" }, { label: t.right, value: "right" }]} value={panel.plugins.table.column.align} onChange={v => onChange((panel: Panel) => {
                     panel.plugins.table.column.align = v
