@@ -20,11 +20,11 @@ import (
 	"strconv"
 	"time"
 
-	"github.com/MyStarship/starship/backend/internal/user"
-	"github.com/MyStarship/starship/backend/pkg/common"
-	"github.com/MyStarship/starship/backend/pkg/db"
-	"github.com/MyStarship/starship/backend/pkg/e"
-	"github.com/MyStarship/starship/backend/pkg/models"
+	"github.com/DataObserve/datav/backend/internal/user"
+	"github.com/DataObserve/datav/backend/pkg/common"
+	"github.com/DataObserve/datav/backend/pkg/db"
+	"github.com/DataObserve/datav/backend/pkg/e"
+	"github.com/DataObserve/datav/backend/pkg/models"
 	"github.com/gin-gonic/gin"
 )
 

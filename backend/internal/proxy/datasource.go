@@ -19,8 +19,8 @@ import (
 	"net/url"
 	"strconv"
 
-	"github.com/MyStarship/starship/backend/internal/datasource"
-	"github.com/MyStarship/starship/backend/pkg/common"
+	"github.com/DataObserve/datav/backend/internal/datasource"
+	"github.com/DataObserve/datav/backend/pkg/common"
 	"github.com/gin-gonic/gin"
 )
 

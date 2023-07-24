@@ -19,9 +19,9 @@ import (
 	"os/signal"
 	"syscall"
 
-	server "github.com/MyStarship/starship/backend/internal"
-	"github.com/MyStarship/starship/backend/pkg/config"
-	"github.com/MyStarship/starship/backend/pkg/log"
+	server "github.com/DataObserve/datav/backend/internal"
+	"github.com/DataObserve/datav/backend/pkg/config"
+	"github.com/DataObserve/datav/backend/pkg/log"
 	"github.com/spf13/cobra"
 )
 

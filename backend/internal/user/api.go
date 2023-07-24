@@ -15,10 +15,10 @@ package user
 import (
 	"net/http"
 
-	"github.com/MyStarship/starship/backend/pkg/common"
-	"github.com/MyStarship/starship/backend/pkg/e"
-	"github.com/MyStarship/starship/backend/pkg/models"
-	"github.com/MyStarship/starship/backend/pkg/utils"
+	"github.com/DataObserve/datav/backend/pkg/common"
+	"github.com/DataObserve/datav/backend/pkg/e"
+	"github.com/DataObserve/datav/backend/pkg/models"
+	"github.com/DataObserve/datav/backend/pkg/utils"
 	"github.com/gin-gonic/gin"
 )
 

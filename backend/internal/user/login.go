@@ -13,17 +13,17 @@
 package user
 
 import (
-	"github.com/MyStarship/starship/backend/pkg/e"
-	"github.com/MyStarship/starship/backend/pkg/models"
-	"github.com/MyStarship/starship/backend/pkg/utils"
+	"github.com/DataObserve/datav/backend/pkg/e"
+	"github.com/DataObserve/datav/backend/pkg/models"
+	"github.com/DataObserve/datav/backend/pkg/utils"
 
 	// "fmt"
 	"net/http"
 	"strconv"
 	"time"
 
-	"github.com/MyStarship/starship/backend/pkg/common"
-	"github.com/MyStarship/starship/backend/pkg/db"
+	"github.com/DataObserve/datav/backend/pkg/common"
+	"github.com/DataObserve/datav/backend/pkg/db"
 	"github.com/gin-gonic/gin"
 )
 

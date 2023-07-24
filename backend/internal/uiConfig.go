@@ -15,8 +15,8 @@ package internal
 import (
 	"net/http"
 
-	"github.com/MyStarship/starship/backend/pkg/common"
-	"github.com/MyStarship/starship/backend/pkg/config"
+	"github.com/DataObserve/datav/backend/pkg/common"
+	"github.com/DataObserve/datav/backend/pkg/config"
 	"github.com/gin-gonic/gin"
 )
 
