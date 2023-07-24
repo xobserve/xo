@@ -94,37 +94,6 @@ export const lightPalettes= [
   ]
 },
 {
-  "name": "blue",
-  "shades": [
-      {
-          "color": "#8AB8FF",
-          "name": "$super-light-blue",
-          "aliases": []
-      },
-      {
-          "color": "#5794F2",
-          "name": "$light-blue",
-          "aliases": []
-      },
-      {
-          "color": "#3274D9",
-          "name": "$blue",
-          "aliases": [],
-          "primary": true
-      },
-      {
-          "color": "#1F60C4",
-          "name": "$semi-dark-blue",
-          "aliases": []
-      },
-      {
-          "color": "#1250B0",
-          "name": "$dark-blue",
-          "aliases": []
-      }
-  ]
-},
-{
   "name": "orange",
   "shades": [
       {
@@ -178,6 +147,37 @@ export const lightPalettes= [
         {
             "color": "#AD0317",
             "name": "$dark-red"
+        }
+    ]
+},
+{
+    "name": "blue",
+    "shades": [
+        {
+            "color": "#8AB8FF",
+            "name": "$super-light-blue",
+            "aliases": []
+        },
+        {
+            "color": "#5794F2",
+            "name": "$light-blue",
+            "aliases": []
+        },
+        {
+            "color": "#3274D9",
+            "name": "$blue",
+            "aliases": [],
+            "primary": true
+        },
+        {
+            "color": "#1F60C4",
+            "name": "$semi-dark-blue",
+            "aliases": []
+        },
+        {
+            "color": "#1250B0",
+            "name": "$dark-blue",
+            "aliases": []
         }
     ]
 },
@@ -277,38 +277,6 @@ export const darkPalettes = [{
       }
   ]
 },
-
-{
-  "name": "blue",
-  "shades": [
-      {
-          "color": "#C0D8FF",
-          "name": "$super-light-blue",
-          "aliases": []
-      },
-      {
-          "color": "#8AB8FF",
-          "name": "$light-blue",
-          "aliases": []
-      },
-      {
-          "color": "#5794F2",
-          "name": "$blue",
-          "aliases": [],
-          "primary": true
-      },
-      {
-          "color": "#3274D9",
-          "name": "$semi-dark-blue",
-          "aliases": []
-      },
-      {
-          "color": "#1F60C4",
-          "name": "$dark-blue",
-          "aliases": []
-      }
-  ]
-},
 {
   "name": "orange",
   "shades": [
@@ -366,7 +334,37 @@ export const darkPalettes = [{
       }
   ]
 },
-
+{
+    "name": "blue",
+    "shades": [
+        {
+            "color": "#C0D8FF",
+            "name": "$super-light-blue",
+            "aliases": []
+        },
+        {
+            "color": "#8AB8FF",
+            "name": "$light-blue",
+            "aliases": []
+        },
+        {
+            "color": "#5794F2",
+            "name": "$blue",
+            "aliases": [],
+            "primary": true
+        },
+        {
+            "color": "#3274D9",
+            "name": "$semi-dark-blue",
+            "aliases": []
+        },
+        {
+            "color": "#1F60C4",
+            "name": "$dark-blue",
+            "aliases": []
+        }
+    ]
+  },
 {
   "name": "purple",
   "shades": [

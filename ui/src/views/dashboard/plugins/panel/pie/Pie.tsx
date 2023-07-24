@@ -40,7 +40,7 @@ const PiePanel = (props: Props) => {
         // const d = data.length > 0 ? data[0] : []
 
         const data: PiePluginData = []
-        const colors = []
+        const color = []
         for (const s of props.data) {
             for (const series of s) {
                 const v = calcValueOnSeriesData(series, props.panel.plugins.pie.value.calc)
@@ -56,7 +56,7 @@ const PiePanel = (props: Props) => {
                     }
                     const threshold = getThreshold(v, panel.plugins.pie.thresholds, max)
                     if (threshold) {
-                        colors.push(paletteColorNameToHex(threshold.color))
+                        color.push(paletteColorNameToHex(threshold.color))
                     }
                 }
             }
@@ -70,7 +70,6 @@ const PiePanel = (props: Props) => {
 
 
         return [{
-            // color: colors,
             animation: panel.plugins.pie.animation,
             legend: {
                 show: panel.plugins.pie.legend.show,
@@ -90,7 +89,10 @@ const PiePanel = (props: Props) => {
                     center: ['50%', '50%'],
                     roseType: panel.plugins.pie.shape.type == "rose" ? "area" : null,
                     itemStyle: {
-                        borderRadius: panel.plugins.pie.shape.borderRadius
+                        borderRadius: panel.plugins.pie.shape.borderRadius,
+                        opacity: 0.8,
+                        borderWidth: 0.5,
+                        borderColor: color.length > 0 ? true : null 
                     },
                     data: data,
                     emphasis: {
@@ -103,7 +105,7 @@ const PiePanel = (props: Props) => {
                     label: {
                         show: panel.plugins.pie.showLabel,
                     },
-                    color: colors
+                    color: color,
                 }
             ]
         }, onEvents]
