@@ -25,6 +25,7 @@ export const setAttrsForData = (settings: NodeGraphSettings, data: NodeGraphPlug
         const attrs = {}
         let nodeShape = settings.node.shape
         Object.keys(donutColors).map(k => {
+            donutColors[k] = paletteColorNameToHex(donutColors[k])
             const d = node.data[k]
             if (d != undefined) {
                 attrs[k] = d
@@ -82,8 +83,8 @@ export const setAttrsForData = (settings: NodeGraphSettings, data: NodeGraphPlug
         }
 
         if (node.icon) {
-            node.icon.width = node.size / 2
-            node.icon.height = node.size / 2
+            node.icon.width = node.size / 2.5
+            node.icon.height = node.size / 2.5
         }
     })
 

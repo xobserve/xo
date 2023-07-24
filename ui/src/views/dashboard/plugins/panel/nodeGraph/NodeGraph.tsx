@@ -28,8 +28,11 @@ import { filterData } from './filter/filterData';
 import { getDefaultEdgeLabel, getDefaultEdgeStyle, getDefaultNodeLabel, getDefaultNodeStyle } from './default-styles';
 import { NodeGraphPluginData } from 'types/plugins/nodeGraph';
 import { cloneDeep, isEmpty } from 'lodash';
-import { paletteColorNameToHex } from 'utils/colors';
+import { colors, paletteColorNameToHex } from 'utils/colors';
 import './CustomNode'
+import { registerCustomNode } from './CustomNode';
+import { dispatch } from 'use-bus';
+import { PanelForceRebuildEvent } from 'src/data/bus-events';
 
 
 interface NodeGraphPanelProps extends PanelProps {
@@ -51,7 +54,7 @@ const NodeGrapPanel = ({ data, panel, dashboardId, width, height }: NodeGraphPan
     const [selected, setSelected] = useState(false)
     const contextMenu = useContextMenu(panel.plugins.nodeGraph)
     const legend = useMemo(() => initLegend(JSON.parse(panel.plugins.nodeGraph.node.donutColors)), [])
-
+    
     useEffect(() => {
         if (graph) {
             graph.changeSize(width, height)
@@ -64,6 +67,10 @@ const NodeGrapPanel = ({ data, panel, dashboardId, width, height }: NodeGraphPan
             onColorModeChange(graph, data, colorMode, dashboardId, panel)
         }
         newestColorMode = colorMode
+        registerCustomNode(colorMode)
+        if (graph) {
+            dispatch(PanelForceRebuildEvent + panel.id)
+        }
     }, [colorMode])
 
     useEffect(() => {
@@ -159,9 +166,7 @@ const NodeGrapPanel = ({ data, panel, dashboardId, width, height }: NodeGraphPan
                 defaultNode: {
                     type: 'custom',
                     style: {
-                        lineWidth: 1,
                         fill: 'transparent',
-                        stroke: '#61DDAA'
                     },
                     size: panel.plugins.nodeGraph.node.baseSize,
                     labelCfg: defaultNodeLabelCfg,

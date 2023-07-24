@@ -406,7 +406,8 @@
     "donut": "甜甜圈",
     "line": "直线",
     "quadratic": "曲线",
-    "polyline": "折线"
+    "polyline": "折线",
+    "edgeColor": "边颜色"
   },
   "echartsPanel": {
     "about": "关于 Echarts",

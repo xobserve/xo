@@ -14,7 +14,7 @@ import { PanelType } from "types/dashboard";
 import { PanelPlugins, PieLegendPlacement, ThresholdDisplay, Units, UnitsType } from "types/panel/plugins";
 import { ThresholdsConfig, ThresholdsMode } from "types/threshold";
 import { ValueCalculationType } from "types/value";
-import { palettes } from "utils/colors";
+import { colors, palettes } from "utils/colors";
 
 export const onClickCommonEvent = `
 // setVariable: (varName:string, varValue:string) => void 
@@ -114,13 +114,13 @@ export const initPanelPlugins = (): PanelPlugins => {
 
         [PanelType.NodeGraph]: {
             node: {
-                baseSize: 36,
+                baseSize: 70,
                 maxSize: 1.5,
                 icon: [],
-                shape: "circle",
+                shape: "donut",
                 donutColors: JSON.stringify({
-                    'success': '#61DDAA',
-                    'error': '#F08BB4',
+                    'success': palettes[0],
+                    'error': palettes[3],
                 }),
                 tooltipTrigger: 'mouseenter',
                 menu: []
@@ -135,7 +135,7 @@ export const initPanelPlugins = (): PanelPlugins => {
                 },
                 opacity: 0.6,
                 highlightColor: {
-                    light: '#E0D731',
+                    light: '#C8F2C2',
                     dark: '#00B5D8'
                 },
                 display: true

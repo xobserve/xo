@@ -30,6 +30,7 @@ export const getDefaultEdgeLabel = (colorMode, settings: NodeGraphSettings) => {
             fill: colorMode == "light" ? '#000' : '#fff',
             lineWidth: 5,
             opacity: settings.edge.display ? 1 : 0,
+            fontSize: 9
         },
     }
 }
@@ -48,13 +49,13 @@ export const getDefaultNodeStyle = (settings: NodeGraphSettings, colorMode?) => 
         selected: {
             stroke: colorMode == "light" ? light : dark,
             shadowColor: colorMode == "light" ? light: dark,
-            lineWidth: 7,
+            lineWidth: colorMode == "light" ? 4 : 2,
             fill: 'transparent'
         },
         active: {
             stroke: colorMode == "light" ? light : dark,
             shadowColor: colorMode == "light" ? light: dark,
-            lineWidth: 7,
+            lineWidth: colorMode == "light" ? 4 : 2,
             fill: 'transparent'
         },
         inactive: {

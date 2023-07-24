@@ -434,6 +434,7 @@ export const nodeGraphPanelMsg = i18n("nodeGraphPanel", {
   "line": "Line",
   "quadratic": "Quadratic",
   "polyline": "Polyline",
+  "edgeColor": "Edge color"
 })
 
 export const echartsPanelMsg = i18n("echartsPanel", {

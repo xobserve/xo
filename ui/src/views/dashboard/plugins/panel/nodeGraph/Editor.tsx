@@ -29,6 +29,8 @@ import CodeEditor from "components/CodeEditor/CodeEditor"
 import React from "react";
 import { useStore } from "@nanostores/react"
 import { commonMsg, nodeGraphPanelMsg } from "src/i18n/locales/en"
+import { dispatch } from "use-bus"
+import { PanelForceRebuildEvent } from "src/data/bus-events"
 
 
 
@@ -51,11 +53,11 @@ const NodeGraphPanelEditor = (props: PanelEditorProps) => {
 
             <IconSetting {...props} />
 
-            <PanelEditItem title={t1.shape}>
-                <RadionButtons options={[{ label: t1.circle, value: "circle" },{ label: t.custom, value: "donut" }]} value={panel.plugins.nodeGraph.node.shape} onChange={v => onChange((panel:Panel) => {
+            {/* <PanelEditItem title={t1.shape}>
+                <RadionButtons options={[{ label: t1.circle, value: "circle" },{ label: t1.donut, value: "donut" }]} value={panel.plugins.nodeGraph.node.shape} onChange={v => onChange((panel:Panel) => {
                     panel.plugins.nodeGraph.node.shape = v
                 })} />
-            </PanelEditItem>
+            </PanelEditItem> */}
             {panel.plugins.nodeGraph.node.shape == 'donut' && <DonutColorsSetting {...props} />}
         </PanelAccordion>
 
@@ -70,13 +72,12 @@ const NodeGraphPanelEditor = (props: PanelEditorProps) => {
                     <option value="polyline">{t1.polyline}</option>
                 </Select>
             </PanelEditItem>
-            <PanelEditItem title={t1.displayLabel} info={
-                <Text>{t.applyToSeeEffect}</Text>
-            }>
+            <PanelEditItem title={t1.displayLabel}>
                 <Switch defaultChecked={panel.plugins.nodeGraph.edge.display} onChange={e => {
                     const v = e.currentTarget.checked
                     onChange((panel:Panel) => {
                         panel.plugins.nodeGraph.edge.display = v
+                        dispatch(PanelForceRebuildEvent + panel.id)
                     })
                 }}/>
             </PanelEditItem>
@@ -93,7 +94,7 @@ const NodeGraphPanelEditor = (props: PanelEditorProps) => {
                 </Select>
             </PanelEditItem>
 
-            <PanelEditItem title={t.color}>
+            <PanelEditItem title={t1.edgeColor}>
                 <HStack>
                     <ColorPicker  color={panel.plugins.nodeGraph.edge.color.light} onChange={c => onChange((panel: Panel) => {
                         panel.plugins.nodeGraph.edge.color.light = c
@@ -112,7 +113,7 @@ const NodeGraphPanelEditor = (props: PanelEditorProps) => {
                     panel.plugins.nodeGraph.edge.opacity = v
                 })} />
             </PanelEditItem>
-            <PanelEditItem title={t1.highlightColor} desc={t1.highlightColorTips}>
+            {/* <PanelEditItem title={t1.highlightColor} desc={t1.highlightColorTips}>
                 <HStack>
                     <ColorPicker color={panel.plugins.nodeGraph.edge.highlightColor.light} onChange={c => onChange((panel: Panel) => {
                         panel.plugins.nodeGraph.edge.highlightColor.light = c
@@ -125,7 +126,7 @@ const NodeGraphPanelEditor = (props: PanelEditorProps) => {
                     })} buttonText={t1.pickDarkColor} />
                     <Box width="40px" height="30px" background={panel.plugins.nodeGraph.edge.highlightColor.dark}></Box>
                 </HStack>
-            </PanelEditItem>
+            </PanelEditItem> */}
         </PanelAccordion>
 
 

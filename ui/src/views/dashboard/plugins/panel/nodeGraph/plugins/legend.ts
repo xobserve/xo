@@ -12,6 +12,7 @@
 // limitations under the License.
 import G6 from "@antv/g6";
 import { upperFirst } from "lodash";
+import { paletteColorNameToHex } from "utils/colors";
 
 export const initLegend = (donutColors) => {
     const legendData = {
@@ -25,7 +26,7 @@ export const initLegend = (donutColors) => {
             label: upperFirst(key),
             order: i,
             style: {
-                fill: donutColors[key],
+                fill: paletteColorNameToHex(donutColors[key]),
             }
         })
     })
