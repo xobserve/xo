@@ -14,7 +14,10 @@
 
 package main
 
-import "github.com/DataObserve/datav/backend/cmd"
+import (
+	"github.com/DataObserve/datav/backend/cmd"
+	_ "go.uber.org/automaxprocs"
+)
 
 func main() {
 	cmd.Execute()
