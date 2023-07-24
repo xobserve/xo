@@ -34,8 +34,8 @@ const EchartsPanel = (props: PanelProps) => {
     const toast = useToast()
     const [chart, setChart] = useState<ECharts>(null)
     const edit = useSearchParam("edit")
-    const data = props.data.flat()
     const [options, onEvents] = useMemo(() => {
+        const data = props.data.flat()
         let options = null;
         let onEvents = null;
         const setOptions = genDynamicFunction(panel.plugins.echarts.setOptionsFunc);
@@ -70,10 +70,9 @@ const EchartsPanel = (props: PanelProps) => {
         options.animation = panel.plugins.echarts.animation
 
         return [options, onEvents]
-    }, [panel.plugins.echarts, data, chart])
+    }, [panel.plugins.echarts, props.data, chart])
 
 
-    console.log("here33333:",options)
     // override  echarts background in panel edit mod
     const darkBg = edit == panel.id.toString() ? 'transparent' : "#1A202C"
     return (<>
