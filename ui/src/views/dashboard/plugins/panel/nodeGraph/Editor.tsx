@@ -52,7 +52,7 @@ const NodeGraphPanelEditor = (props: PanelEditorProps) => {
             <IconSetting {...props} />
 
             <PanelEditItem title={t1.shape}>
-                <RadionButtons options={[{ label: t1.donut, value: "donut" }, { label: t1.circle, value: "circle" }]} value={panel.plugins.nodeGraph.node.shape} onChange={v => onChange((panel:Panel) => {
+                <RadionButtons options={[{ label: t1.circle, value: "circle" },{ label: t.custom, value: "donut" }]} value={panel.plugins.nodeGraph.node.shape} onChange={v => onChange((panel:Panel) => {
                     panel.plugins.nodeGraph.node.shape = v
                 })} />
             </PanelEditItem>

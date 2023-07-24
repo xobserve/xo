@@ -117,7 +117,7 @@ export const initPanelPlugins = (): PanelPlugins => {
                 baseSize: 36,
                 maxSize: 1.5,
                 icon: [],
-                shape: "donut",
+                shape: "circle",
                 donutColors: JSON.stringify({
                     'success': '#61DDAA',
                     'error': '#F08BB4',

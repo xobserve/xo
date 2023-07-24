@@ -29,7 +29,7 @@ import { getDefaultEdgeLabel, getDefaultEdgeStyle, getDefaultNodeLabel, getDefau
 import { NodeGraphPluginData } from 'types/plugins/nodeGraph';
 import { cloneDeep, isEmpty } from 'lodash';
 import { paletteColorNameToHex } from 'utils/colors';
-
+import './CustomNode'
 
 
 interface NodeGraphPanelProps extends PanelProps {
@@ -157,7 +157,7 @@ const NodeGrapPanel = ({ data, panel, dashboardId, width, height }: NodeGraphPan
                     }
                 },
                 defaultNode: {
-                    type: 'donut',
+                    type: 'custom',
                     style: {
                         lineWidth: 1,
                         fill: 'transparent',
@@ -219,7 +219,6 @@ const NodeGrapPanel = ({ data, panel, dashboardId, width, height }: NodeGraphPan
 
             g1.on('node:click', (evt) => {
                 const { item } = evt;
-                console.log(g1, item)
                 g1.setItemState(item, 'selected', true);
 
                 setSelected(true)
@@ -361,3 +360,5 @@ const onDataAndSettingsChange = (panel: Panel, data: PanelData[], colorMode, das
         graph.changeData(newData)
     }
 }
+
+
