@@ -22,7 +22,10 @@ import { SeriesData } from "types/seriesData";
 import { genDynamicFunction } from "utils/dynamicCode";
 import { calcValueOnSeriesData } from "utils/seriesData";
 import React from "react";
-import { colors } from "utils/colors";
+import { colors, paletteColorNameToHex } from "utils/colors";
+import { ValueCalculationType } from "types/value";
+import { getThreshold } from "components/Threshold/utils";
+import { ThresholdsMode } from "types/threshold";
 
 interface Props extends PanelProps {
     data: SeriesData[][]
@@ -32,18 +35,30 @@ const PiePanel = (props: Props) => {
     const { panel, height, width } = props
     const [chart, setChart] = useState(null)
     const { colorMode } = useColorMode()
-    
-    const [options,onEvents] = useMemo(() =>  {
+
+    const [options, onEvents] = useMemo(() => {
         // const d = data.length > 0 ? data[0] : []
 
-        const data:PiePluginData = []
-
+        const data: PiePluginData = []
+        const colors = []
         for (const s of props.data) {
             for (const series of s) {
+                const v = calcValueOnSeriesData(series, props.panel.plugins.pie.value.calc)
                 data.push({
                     name: series.name,
-                    value:calcValueOnSeriesData(series, props.panel.plugins.pie.value.calc),
+                    value: v,
                 })
+
+                if (panel.plugins.pie.enableThresholds) {
+                    let max = 0
+                    if (panel.plugins.pie.thresholds.mode == ThresholdsMode.Percentage) {
+                        max = calcValueOnSeriesData(series, ValueCalculationType.Max)
+                    }
+                    const threshold = getThreshold(v, panel.plugins.pie.thresholds, max)
+                    if (threshold) {
+                        colors.push(paletteColorNameToHex(threshold.color))
+                    }
+                }
             }
         }
 
@@ -88,12 +103,13 @@ const PiePanel = (props: Props) => {
                     label: {
                         show: panel.plugins.pie.showLabel,
                     },
+                    color: colors
                 }
             ]
-        },onEvents]
-    },[panel.plugins.pie,props.data, colorMode])
-    
-    
+        }, onEvents]
+    }, [panel.plugins.pie, props.data, colorMode])
+
+
 
     return (<>
         {options && <Box height={height} key={colorMode} className="echarts-panel"><ChartComponent options={options} theme={colorMode} width={width} height={height} onChartCreated={c => setChart(c)} onChartEvents={onEvents} /></Box>}

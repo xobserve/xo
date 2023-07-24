@@ -189,6 +189,8 @@ function registerEvents(options, chart) {
                 decimal: 2,
                 calc: ValueCalculationType.Last
             },
+            thresholds: initThresholds(24),
+            enableThresholds: false,
             onClickEvent: `function onClickEvent(params) {
     console.log(params)
 }`

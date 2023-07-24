@@ -92,6 +92,8 @@ export interface PieSettings {
         placement: PieLegendPlacement
     }
     value: ValueSetting
+    thresholds: ThresholdsConfig
+    enableThresholds: boolean
 }
 
 export enum PieLegendPlacement {

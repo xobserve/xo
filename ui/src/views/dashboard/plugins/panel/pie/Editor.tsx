@@ -24,6 +24,7 @@ import { PieLegendPlacement } from "types/panel/plugins"
 import React from "react";
 import { useStore } from "@nanostores/react"
 import { commonMsg, piePanelMsg } from "src/i18n/locales/en"
+import ThresholdEditor from "components/Threshold/ThresholdEditor"
 
 const PiePanelEditor = ({ panel, onChange }: PanelEditorProps) => {
     const t = useStore(commonMsg)
@@ -117,6 +118,17 @@ const PiePanelEditor = ({ panel, onChange }: PanelEditorProps) => {
             </PanelEditItem>
         </PanelAccordion>
 
+        <PanelAccordion title="Thresholds">
+            <ThresholdEditor value={panel.plugins.pie.thresholds} onChange={(v) => onChange((panel: Panel) => {
+                    panel.plugins.pie.thresholds = v
+                })} />
+            
+            <PanelEditItem title={t.enable}>
+                <Switch defaultChecked={panel.plugins.pie.enableThresholds} onChange={e => onChange((panel: Panel) => {
+                    panel.plugins.pie.enableThresholds = e.currentTarget.checked
+                })} />
+            </PanelEditItem>
+        </PanelAccordion>
     </>
     )
 }
