@@ -193,7 +193,7 @@ export interface NodeGraphSettings {
         maxSize: number
         icon: NodeGraphIcon[]
         shape: 'circle' | 'donut',
-        donutColors: string // json string 
+        donutColors: {attr:string;color:string}[]
         tooltipTrigger: 'mouseenter' | 'click'
         menu: NodeGraphMenuItem[]
     }

@@ -10,29 +10,14 @@ export const nodeGraphData = (nodesCount, rand) => {
         data: {
           success: success,
           error: error
-        }
-      }
-      if (i % 5 == 1) {
-        node.data.type = 'java'
-      } else if (i % 5 == 2) {
-        node.data.type = 'go'
-      } else if (i % 5 == 3) {
-      } else if (i % 5 == 4) {
-        node.data.type = 'rust'
-        node.icon = {
+        },
+        icon: {
           show: true,
-          img: 'https://gw.alipayobjects.com/zos/bmw-prod/5d015065-8505-4e7a-baec-976f81e3c41d.svg',
-        }
-      }
-
-      if (!node.icon?.img) {
-        node.icon = {
-          show: true,
-          text: `${success}\n${error}`
+          img : i % 5 === 4 ?  'https://gw.alipayobjects.com/zos/bmw-prod/5d015065-8505-4e7a-baec-976f81e3c41d.svg' : null,
+          text:  i % 5 !== 4 ? `${success}\n${error}` : null
         }
       }
       nodes.push(node)
-      console.log("here33333",nodes)
     }
 
     const edges = []

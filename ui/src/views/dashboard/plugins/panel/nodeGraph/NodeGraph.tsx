@@ -53,8 +53,10 @@ const NodeGrapPanel = ({ data, panel, dashboardId, width, height }: NodeGraphPan
 
     const [selected, setSelected] = useState(false)
     const contextMenu = useContextMenu(panel.plugins.nodeGraph)
-    const legend = useMemo(() => initLegend(JSON.parse(panel.plugins.nodeGraph.node.donutColors)), [])
-    
+    const donutColors = {}
+    panel.plugins.nodeGraph.node.donutColors.forEach(item => { donutColors[item.attr] = item.color })
+    const legend = useMemo(() => initLegend(donutColors), [])
+
     useEffect(() => {
         if (graph) {
             graph.changeSize(width, height)
@@ -166,11 +168,13 @@ const NodeGrapPanel = ({ data, panel, dashboardId, width, height }: NodeGraphPan
                 defaultNode: {
                     type: 'custom',
                     style: {
+                        lineWidth: 2,
                         fill: 'transparent',
+                        stroke: colors[0]
                     },
                     size: panel.plugins.nodeGraph.node.baseSize,
                     labelCfg: defaultNodeLabelCfg,
-                    donutColorMap: JSON.parse(panel.plugins.nodeGraph.node.donutColors),
+                    donutColorMap: donutColors,
                     stateStyles: {
                     }
                 },

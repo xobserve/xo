@@ -17,7 +17,9 @@ import { paletteColorNameToHex } from "utils/colors";
 import { getDefaultEdgeStyle } from "./default-styles";
 
 export const setAttrsForData = (settings: NodeGraphSettings, data: NodeGraphPluginData,colorMode) => {
-    const donutColors = JSON.parse(settings.node.donutColors)
+    const donutColors = {}
+    settings.node.donutColors.forEach(item => { donutColors[item.attr] = item.color })
+    
     // 计算 node size
     // 找出最小的那个作为基准 size
     let base;
@@ -29,8 +31,8 @@ export const setAttrsForData = (settings: NodeGraphSettings, data: NodeGraphPlug
             const d = node.data[k]
             if (d != undefined) {
                 attrs[k] = d
-            }   else {
-                nodeShape = 'circle'
+            } else {
+                attrs[k] = null
             }
         })
         
@@ -54,7 +56,7 @@ export const setAttrsForData = (settings: NodeGraphSettings, data: NodeGraphPlug
         
         let t = 0;
         Object.keys(node.donutAttrs).forEach(key => {
-            t += node.donutAttrs[key];
+            t += node.donutAttrs[key]??0;
         })
         if (i == 0) {
             base = t
@@ -69,7 +71,7 @@ export const setAttrsForData = (settings: NodeGraphSettings, data: NodeGraphPlug
     data.nodes?.forEach((node: any) => {
         let t = 0;
         Object.keys(node.donutAttrs).forEach(key => {
-            t += node.donutAttrs[key];
+            t += node.donutAttrs[key]??0;
         })
 
         const p = Math.log2(t / base)

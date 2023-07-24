@@ -13,15 +13,15 @@
 import { Alert, Box, Button, Divider, Flex, HStack, Image, Input, Modal, ModalBody, ModalContent, ModalOverlay, NumberInput, NumberInputField, Select, Slider, SliderFilledTrack, SliderThumb, SliderTrack, Switch, Text, Textarea, Tooltip, useDisclosure, useToast, VStack } from "@chakra-ui/react"
 import { ColorPicker } from "components/ColorPicker"
 import RadionButtons from "components/RadioButtons"
-import { isEmpty } from "lodash"
+import { cloneDeep, isArray, isEmpty } from "lodash"
 import { useState } from "react"
 import * as Icons from 'react-icons/fa'
 import { MdEdit } from "react-icons/md"
 import { onClickCommonEvent } from "src/data/panel/initPlugins"
 import PanelAccordion from "src/views/dashboard/edit-panel/Accordion"
-import { EditorNumberItem, EditorSliderItem } from "components/editor/EditorItem"
+import { EditorInputItem, EditorNumberItem, EditorSliderItem } from "components/editor/EditorItem"
 import PanelEditItem from "src/views/dashboard/edit-panel/PanelEditItem"
-import {  Panel, PanelEditorProps } from "types/dashboard"
+import { Panel, PanelEditorProps } from "types/dashboard"
 import { NodeGraphIcon, NodeGraphMenuItem } from "types/panel/plugins"
 import { useImmer } from "use-immer"
 import { isJSON } from "utils/is"
@@ -46,7 +46,7 @@ const NodeGraphPanelEditor = (props: PanelEditorProps) => {
                 })} />
             </PanelEditItem>
             <PanelEditItem title={t1.maxSize}>
-                <EditorNumberItem value={panel.plugins.nodeGraph.node.maxSize} min={1} max={5} onChange={v => onChange((panel:Panel) => {
+                <EditorNumberItem value={panel.plugins.nodeGraph.node.maxSize} min={1} max={5} onChange={v => onChange((panel: Panel) => {
                     panel.plugins.nodeGraph.node.maxSize = v
                 })} />
             </PanelEditItem>
@@ -58,13 +58,13 @@ const NodeGraphPanelEditor = (props: PanelEditorProps) => {
                     panel.plugins.nodeGraph.node.shape = v
                 })} />
             </PanelEditItem> */}
-            {panel.plugins.nodeGraph.node.shape == 'donut' && <DonutColorsSetting {...props} />}
+            {panel.plugins.nodeGraph.node.shape == 'donut' && <DonutColorsEditor {...props} />}
         </PanelAccordion>
 
 
         <PanelAccordion title={t1.edge}>
             <PanelEditItem title={t1.shape}>
-                <Select value={panel.plugins.nodeGraph.edge.shape} onChange={e => onChange((panel:Panel) => {
+                <Select value={panel.plugins.nodeGraph.edge.shape} onChange={e => onChange((panel: Panel) => {
                     panel.plugins.nodeGraph.edge.shape = e.currentTarget.value
                 })}>
                     <option value="quadratic">{t1.quadratic}</option>
@@ -75,14 +75,14 @@ const NodeGraphPanelEditor = (props: PanelEditorProps) => {
             <PanelEditItem title={t1.displayLabel}>
                 <Switch defaultChecked={panel.plugins.nodeGraph.edge.display} onChange={e => {
                     const v = e.currentTarget.checked
-                    onChange((panel:Panel) => {
+                    onChange((panel: Panel) => {
                         panel.plugins.nodeGraph.edge.display = v
                         dispatch(PanelForceRebuildEvent + panel.id)
                     })
-                }}/>
+                }} />
             </PanelEditItem>
             <PanelEditItem title={t1.arrow}>
-                <Select value={panel.plugins.nodeGraph.edge.arrow} onChange={e => onChange((panel:Panel) => {
+                <Select value={panel.plugins.nodeGraph.edge.arrow} onChange={e => onChange((panel: Panel) => {
                     panel.plugins.nodeGraph.edge.arrow = e.currentTarget.value
                 })}>
                     <option value="default">default</option>
@@ -96,16 +96,14 @@ const NodeGraphPanelEditor = (props: PanelEditorProps) => {
 
             <PanelEditItem title={t1.edgeColor}>
                 <HStack>
-                    <ColorPicker  color={panel.plugins.nodeGraph.edge.color.light} onChange={c => onChange((panel: Panel) => {
+                    <ColorPicker color={panel.plugins.nodeGraph.edge.color.light} onChange={c => onChange((panel: Panel) => {
                         panel.plugins.nodeGraph.edge.color.light = c
                     })} buttonText={t1.pickLightColor} />
-                    <Box width="40px" height="30px" background={panel.plugins.nodeGraph.edge.color.light}></Box>
                 </HStack>
                 <HStack>
                     <ColorPicker color={panel.plugins.nodeGraph.edge.color.dark} onChange={c => onChange((panel: Panel) => {
                         panel.plugins.nodeGraph.edge.color.dark = c
                     })} buttonText={t1.pickDarkColor} />
-                    <Box width="40px" height="30px" background={panel.plugins.nodeGraph.edge.color.dark}></Box>
                 </HStack>
             </PanelEditItem>
             <PanelEditItem title={t.opacity} desc={t1.opacityTips}>
@@ -134,7 +132,7 @@ const NodeGraphPanelEditor = (props: PanelEditorProps) => {
             <PanelEditItem title={t1.tooltipTrigger} info={
                 <Text>{t.applyToSeeEffect}</Text>
             }>
-                <RadionButtons options={[{ label: "Hover", value: "mouseenter" }, { label: "Click", value: "click" }]} value={panel.plugins.nodeGraph.node.tooltipTrigger} onChange={v => onChange((panel:Panel) => {
+                <RadionButtons options={[{ label: "Hover", value: "mouseenter" }, { label: "Click", value: "click" }]} value={panel.plugins.nodeGraph.node.tooltipTrigger} onChange={v => onChange((panel: Panel) => {
                     panel.plugins.nodeGraph.node.tooltipTrigger = v
                 })} />
             </PanelEditItem>
@@ -146,7 +144,7 @@ const NodeGraphPanelEditor = (props: PanelEditorProps) => {
             <PanelEditItem title={t.enable} info={
                 <Text>{t.applyToSeeEffect}</Text>
             }>
-                <Switch defaultChecked={panel.plugins.nodeGraph.legend.enable} onChange={e => onChange((panel:Panel) => {
+                <Switch defaultChecked={panel.plugins.nodeGraph.legend.enable} onChange={e => onChange((panel: Panel) => {
                     panel.plugins.nodeGraph.legend.enable = e.currentTarget.checked
                 })} />
             </PanelEditItem>
@@ -155,12 +153,12 @@ const NodeGraphPanelEditor = (props: PanelEditorProps) => {
 
         <PanelAccordion title={t1.layout}>
             <PanelEditItem title={t1.nodeStrength} desc={t1.nodeStrengthTips}>
-                <EditorNumberItem value={panel.plugins.nodeGraph.layout.nodeStrength} min={100} max={10000} onChange={v => onChange((panel:Panel) => {
+                <EditorNumberItem value={panel.plugins.nodeGraph.layout.nodeStrength} min={100} max={10000} onChange={v => onChange((panel: Panel) => {
                     panel.plugins.nodeGraph.layout.nodeStrength = v
-                })} /> 
+                })} />
             </PanelEditItem>
             <PanelEditItem title={t1.nodeGravity} desc={t1.nodeGravityTips}>
-                <EditorNumberItem value={panel.plugins.nodeGraph.layout.gravity} min={0} max={200} onChange={v => onChange((panel:Panel) => {
+                <EditorNumberItem value={panel.plugins.nodeGraph.layout.gravity} min={0} max={200} onChange={v => onChange((panel: Panel) => {
                     panel.plugins.nodeGraph.layout.gravity = v
                 })} />
             </PanelEditItem>
@@ -274,45 +272,6 @@ const IconSetting = ({ panel, onChange }: PanelEditorProps) => {
     </>)
 }
 
-const DonutColorsSetting = ({ panel, onChange }: PanelEditorProps) => {
-    const t1 = useStore(nodeGraphPanelMsg)
-
-    const toast = useToast()
-    const [temp, setTemp] = useState<string>(panel.plugins.nodeGraph.node.donutColors)
-    const onSubmit = () => {
-        if (!isJSON(temp)) {
-            toast({
-                description: "not valid json format",
-                status: "warning",
-                duration: 2000,
-                isClosable: true,
-            });
-            return
-        }
-        onChange(panel => {
-            panel.plugins.nodeGraph.node.donutColors = temp
-        })
-    }
-    return (
-        <PanelEditItem title={t1.donutColors} info={<VStack alignItems='left' fontWeight="600">
-            <Text>{t1.donutTips1}</Text>
-            <Text>1. {t1.donutTips2}</Text>
-            <Text>2. {t1.donutTips3}</Text>
-            <Text>3. {t1.donutTips4}</Text>
-            <Alert status="success">
-                {t1.donutTips5}
-            </Alert>
-        </VStack>}>
-            <Textarea value={temp} onChange={e => {
-                const v = e.currentTarget.value.trim()
-                setTemp(v)
-            }} onBlur={onSubmit} />
-        </PanelEditItem>
-    )
-}
-
-
-
 const RightClickMenus = ({ panel, onChange }: PanelEditorProps) => {
     const t = useStore(commonMsg)
     const t1 = useStore(nodeGraphPanelMsg)
@@ -387,8 +346,8 @@ const RightClickMenus = ({ panel, onChange }: PanelEditorProps) => {
 
     return (<>
         <PanelEditItem title={t1.rightClick} info={
-                <Text>{t.applyToSeeEffect}</Text>
-            }>
+            <Text>{t.applyToSeeEffect}</Text>
+        }>
             <Button size="xs" onClick={() => { onOpen(); setTemp(initMenuItem) }}>{t1.addMenuItem}</Button>
             <Divider my="2" />
             <VStack alignItems="left" pl="2">
@@ -422,11 +381,11 @@ const RightClickMenus = ({ panel, onChange }: PanelEditorProps) => {
 
                     <Text fontWeight="600" mt="4">{t1.defineClickEvent}</Text>
                     <Box height="300px">
-                    <CodeEditor value={temp.event} onChange={v => {
-                        setTemp(draft => {
-                            draft.event = v
-                        })
-                    }} />
+                        <CodeEditor value={temp.event} onChange={v => {
+                            setTemp(draft => {
+                                draft.event = v
+                            })
+                        }} />
                     </Box>
                     <Button my="4" size="sm" onClick={onSubmit}>{t.submit}</Button>
                     <Alert status='success' flexDir="column" alignItems="left">
@@ -437,5 +396,58 @@ const RightClickMenus = ({ panel, onChange }: PanelEditorProps) => {
             </ModalContent>
         </Modal>
     </>
+    )
+}
+
+
+const DonutColorsEditor = (props: PanelEditorProps) => {
+    const { panel, onChange } = props
+    const t = useStore(commonMsg)
+    const t1 = useStore(nodeGraphPanelMsg)
+    const [value, setValue] = useState<{ attr: string; color: string }[]>(panel.plugins.nodeGraph.node.donutColors)
+    const changeValue = () => {
+        const v = cloneDeep(value)
+        setValue(v)
+        onChange(panel => { panel.plugins.nodeGraph.node.donutColors = v })
+    }
+
+    const addItem = () => {
+
+    }
+
+    const removeItem = (i) => {
+        value.splice(i, 1)
+        changeValue()
+    }
+    
+    return (
+        <PanelEditItem title={t1.donutColors} info={<VStack alignItems='left' fontWeight="600">
+            <Text>{t1.donutTips1}</Text>
+            <Text>1. {t1.donutTips2}</Text>
+            <Text>2. {t1.donutTips3}</Text>
+            <Text>3. {t1.donutTips4}</Text>
+            <Alert status="success">
+                {t1.donutTips5}
+            </Alert>
+        </VStack>}>
+            <Box>
+                <Button onClick={addItem} width="100%" size="sm" colorScheme="gray">+ {t.new}</Button>
+                <VStack alignItems="left" mt="2">
+                    {value.map((item, i) => <HStack key={item.attr + i} spacing={1}>
+                        <ColorPicker color={item.color} onChange={v => {
+                            item.color = v
+                            changeValue()
+                        }} circlePicker />
+                        <EditorInputItem value={item.attr} onChange={v => {
+                            item.attr = v
+                            changeValue()
+                        }} />
+
+
+                        <Icons.FaTimes opacity={0.6} fontSize="0.8rem" onClick={() => removeItem(i)} />
+                    </HStack>)}
+                </VStack>
+            </Box>
+        </PanelEditItem>
     )
 }

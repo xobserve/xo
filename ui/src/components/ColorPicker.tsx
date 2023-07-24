@@ -96,6 +96,7 @@ export const ColorPicker = ({ color, onChange, buttonText = null, circlePicker =
                             width="100%"
                             color={color}
                             onChange={v => onChange(v.hex)}
+                            presetColors={[]}
                         />
                         </TabPanel>
                     </TabPanels>

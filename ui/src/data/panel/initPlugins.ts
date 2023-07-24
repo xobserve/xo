@@ -114,14 +114,14 @@ export const initPanelPlugins = (): PanelPlugins => {
 
         [PanelType.NodeGraph]: {
             node: {
-                baseSize: 70,
+                baseSize: 67,
                 maxSize: 1.5,
                 icon: [],
                 shape: "donut",
-                donutColors: JSON.stringify({
-                    'success': palettes[0],
-                    'error': palettes[3],
-                }),
+                donutColors: [
+                    {attr: 'success',color: palettes[0]},
+                    {attr: 'error', color: palettes[3]}
+                ],
                 tooltipTrigger: 'mouseenter',
                 menu: []
             },

@@ -94,7 +94,7 @@ export const registerCustomNode = (colorMode) => {
               attrs: {
                 x: 0,
                 y: 0,
-                fontSize: 13,
+                fontSize: 12,
                 fill: colorMode == "light" ? customColors.textColorRGB.light : customColors.textColorRGB.dark,
                 strokerWidth: 1,
                 textBaseline: 'middle',
