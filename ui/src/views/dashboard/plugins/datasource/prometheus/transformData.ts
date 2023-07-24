@@ -33,7 +33,7 @@ export const prometheusToSeriesData = (data: any, query: PanelQuery, range: Time
     let res: SeriesData[] = []
     if (data.resultType === "matrix") {
         for (const m of data.result) {
-            const metric = JSON.stringify(m.metric).replace(/:/g, '=')
+            const metric = JSON.stringify(m.metric).replace(/":"/g, '"="')
 
             const timeValues = []
             const valueValues = []

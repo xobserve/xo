@@ -33,6 +33,7 @@ import React from "react";
 import { GraphRules } from "./OverridesEditor";
 import { findOverride, findOverrideRule, findRuleInOverride } from "utils/dashboard/panel";
 import { ThresholdsPlugin } from "./uplot-plugins/ThresholdsPlugin";
+import { ThresholdDisplay } from "types/panel/plugins";
 
 interface GraphPanelProps extends PanelProps {
     data: SeriesData[][]
@@ -207,7 +208,7 @@ const GraphPanel = memo((props: GraphPanelProps) => {
                             >
                                 {props.panel.plugins.graph.tooltip.mode != 'hidden' && <Tooltip props={props} options={options} data={data} inactiveSeries={inactiveSeries} />}
                                 <ZoomPlugin options={options} onZoom={onZoom}/>
-                                <ThresholdsPlugin options={options} thresholdsConfig={props.panel.plugins.graph.thresholds} display={props.panel.plugins.graph.thresholdsDisplay}/>
+                                {props.panel.plugins.graph.thresholdsDisplay != ThresholdDisplay.None && <ThresholdsPlugin options={options} thresholdsConfig={props.panel.plugins.graph.thresholds} display={props.panel.plugins.graph.thresholdsDisplay}/>}
                             </UplotReact>
                             )
                         }}

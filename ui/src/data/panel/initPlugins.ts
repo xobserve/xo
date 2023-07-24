@@ -61,8 +61,8 @@ export const initPanelPlugins = (): PanelPlugins => {
             },
             styles: {
                 style: "lines",
-                lineWidth: 2,
-                fillOpacity: 21,
+                lineWidth: 0,
+                fillOpacity: 60,
                 showPoints: "auto",
                 pointSize: 6,
                 gradientMode: "opacity",
@@ -78,7 +78,7 @@ export const initPanelPlugins = (): PanelPlugins => {
                 decimal: 1
             },
             thresholds: initThresholds(),
-            thresholdsDisplay: ThresholdDisplay.Area
+            thresholdsDisplay: ThresholdDisplay.None
         },
 
         [PanelType.Text]: {

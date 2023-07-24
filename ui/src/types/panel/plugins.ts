@@ -256,6 +256,7 @@ export interface GraphSettings {
 
 
 export enum ThresholdDisplay {
+    None = "None",
     Line = "Line",
     DashedLine = "Dashed Line",
     Area = "Area",
