@@ -1,10 +1,8 @@
 import * as echarts from 'echarts'
+import moment from 'moment';
 
 export const echartsOptions = {
     color: ['#80FFA5', '#00DDFF', '#37A2FF', '#FF0087', '#FFBF00'],
-    title: {
-      text: 'Gradient Stacked Area Chart'
-    },
     tooltip: {
       trigger: 'axis',
       axisPointer: {
@@ -17,11 +15,6 @@ export const echartsOptions = {
     legend: {
       data: ['Line 1', 'Line 2', 'Line 3', 'Line 4', 'Line 5']
     },
-    toolbox: {
-      feature: {
-        saveAsImage: {}
-      }
-    },
     grid: {
       left: '3%',
       right: '4%',
@@ -30,9 +23,14 @@ export const echartsOptions = {
     },
     xAxis: [
       {
-        type: 'category',
+        type: 'time',
         boundaryGap: false,
-        data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
+        axisLabel: {
+          formatter: (function (value) {
+              return moment(value).format('MM-DD HH:mm:ss');
+          }),
+      },
+      splitNumber: 5,
       }
     ],
     yAxis: [
@@ -66,7 +64,7 @@ export const echartsOptions = {
         emphasis: {
           focus: 'series'
         },
-        data: [140, 232, 101, 264, 90, 340, 250]
+        data: [[1678865295000,140], [1678865310000,232], [1678865325000,264]]
       },
       {
         name: 'Line 2',
@@ -93,7 +91,7 @@ export const echartsOptions = {
         emphasis: {
           focus: 'series'
         },
-        data: [120, 282, 111, 234, 220, 340, 310]
+        data: [[1678865295000,120], [1678865310000,282], [1678865325000,111]]
       },
       {
         name: 'Line 3',
@@ -120,7 +118,7 @@ export const echartsOptions = {
         emphasis: {
           focus: 'series'
         },
-        data: [320, 132, 201, 334, 190, 130, 220]
+        data: [[1678865295000,320], [1678865310000,132], [1678865325000,201]]
       },
       {
         name: 'Line 4',
@@ -147,7 +145,7 @@ export const echartsOptions = {
         emphasis: {
           focus: 'series'
         },
-        data: [220, 402, 231, 134, 190, 230, 120]
+        data:  [[1678865295000,220], [1678865310000,402], [1678865325000,131]]
       },
       {
         name: 'Line 5',
@@ -178,7 +176,7 @@ export const echartsOptions = {
         emphasis: {
           focus: 'series'
         },
-        data: [220, 302, 181, 234, 210, 290, 150]
+        data: [[1678865295000,220], [1678865310000,302], [1678865325000,181]]
       }
     ]
   }

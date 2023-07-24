@@ -153,19 +153,7 @@ export const initPanelPlugins = (): PanelPlugins => {
         [PanelType.Echarts]: {
             animation: true,
             allowEmptyData: false,
-            setOptionsFunc: `// setOptions return echarts.Options, it is directly passed to a echarts chart.
-// Find more options examples: https://echarts.apache.org/examples/en/index.html#chart-type-line
-function setOptions(data) {
-    console.log(data)
-    // I guess you are using testdata datasource,
-    // data fetching from testdata is already an echarts option
-    // so there is no need to parse it
-    const options = {...data[0]}
-    
-    //!!!ATTENTION!!!
-    //options returns here must be a new object to trigger react update!
-    return options
-}`,
+            setOptionsFunc: setEchartsOptions,
             registerEventsFunc: `// In registerEvents, you can custom events on your chart, e.g mouse click event, mouse over event etc.
 // chart: a instance of echarts, you can call echarts apis on it
 // options: result of setOptions function
@@ -291,3 +279,112 @@ function registerEvents(options, chart) {
     }
 }
 
+
+
+export const setEchartsOptions = `
+// setOptions return echarts.Options, it is directly passed to a echarts chart.
+// Find more options examples: https://echarts.apache.org/examples/en/index.html#chart-type-line
+// data: SeriesData[] which is the standard data format in Datav
+// colors: color palettes using in Datav
+// echarts: imported echarts.js module 
+// loadash: imported loadash.js module
+// moment: imported momen.jst module
+
+function setOptions(data, colors, echarts, loadash, moment) {
+    const colorList = [
+        ['rgb(128, 255, 165)', 'rgb(1, 191, 236)'],
+        ['rgb(0, 221, 255)', 'rgb(77, 119, 255)'],
+        ['rgb(55, 162, 255)', 'rgb(1, 191, 236)'],
+        ['rgb(255, 0, 135)', 'rgb(135, 0, 157)'],
+        ['rgb(255, 191, 0)', 'rgb(224, 62, 76)'],
+    ]
+    const legend = []
+    const seriesList = []
+    if (!echarts) {
+        return null
+    }
+
+    for (let i = 0; i < data.length; i++) {
+        const s = data[i]
+        legend.push(s.name)
+        seriesList.push({
+            name: s.name,
+            type: 'line',
+            stack: 'Total',
+            smooth: true,
+            lineStyle: {
+                width: 0
+            },
+            showSymbol: false,
+            areaStyle: {
+                opacity: 0.8,
+                color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+                    {
+                        offset: 0,
+                        color: colorList[i] ? colorList[i][0] : colors[i % colors.length]
+                    },
+                    {
+                        offset: 1,
+                        color: colorList[i] ? colorList[i][1] : colors[i + 1 % colors.length]
+                    }
+                ])
+            },
+            emphasis: {
+                focus: 'series'
+            },
+            data: loadash.zip(...s.fields.map(f => {
+                if (f.type == "time") {
+                    return f.values.map(v => v * 1000)
+                } else {
+                    return f.values
+                }
+            }))
+        })
+    }
+
+    //!!!ATTENTION!!!
+    // We need to create a new options Object to return,
+    // because only a new object can trigger react update!
+    return {
+        color: colorList.map(item => item[0]),
+        tooltip: {
+            trigger: 'axis',
+            axisPointer: {
+                type: 'cross',
+                label: {
+                    backgroundColor: '#6a7985',
+                }
+            },
+        },
+        legend: {
+            data: legend
+        },
+        grid: {
+            left: '3%',
+            right: '4%',
+            bottom: '3%',
+            containLabel: true
+        },
+        xAxis: [
+            {
+                type: 'time',
+                boundaryGap: false,
+                axisLabel: {
+                    formatter: (function (value) {
+                        return moment(value).format('MM-DD HH:mm:ss');
+                    }),
+                },
+                splitNumber: 5,
+            }
+        ],
+        yAxis: [
+            {
+                type: 'value',
+                name: 'Stack',
+                nameLocation: 'end',
+            }
+        ],
+        series: seriesList
+    }
+}
+`

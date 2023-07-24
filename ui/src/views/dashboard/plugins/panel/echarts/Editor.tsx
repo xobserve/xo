@@ -27,6 +27,9 @@ import { ColorModeSwitcher } from "components/ColorModeSwitcher"
 import React from "react";
 import { useStore } from "@nanostores/react"
 import { commonMsg, echartsPanelMsg } from "src/i18n/locales/en"
+import { colors } from "utils/colors"
+import moment from "moment"
+import loadash from 'lodash'
 
 const EchartsPanelEditor = ({ panel, onChange,data }: PanelEditorProps) => {
     const t = useStore(commonMsg)
@@ -88,7 +91,7 @@ const SetOptions = ({ panel, onChange,data }: PanelEditorProps) => {
 
     if (isFunction(setOptions)) {
         try {
-            let o = setOptions(cloneDeep(data), echarts)
+            let o = setOptions(cloneDeep(data.flat()),colors, echarts, loadash, moment)
             o.animation = false
             options = o
         } catch (error) {
