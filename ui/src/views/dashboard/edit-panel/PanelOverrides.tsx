@@ -13,7 +13,7 @@
 import { Box, Button, HStack, Select, StackDivider, Tooltip, VStack } from "@chakra-ui/react";
 import { Form, FormSection } from "components/form/Form";
 import FormItem from "components/form/Item";
-import { flatten } from "lodash";
+import { flatten, isArray } from "lodash";
 import { useMemo } from "react";
 import { FaTimes } from "react-icons/fa";
 import { Panel, PanelEditorProps, PanelType } from "types/dashboard";
@@ -23,6 +23,9 @@ import { useStore } from "@nanostores/react";
 import { panelMsg } from "src/i18n/locales/en";
 import { TableSeries } from "types/plugins/table";
 import TableOverridesEditor, { TableRules } from "../plugins/panel/table/OverridesEditor";
+import BarGaugeOverridesEditor, { BarGaugeRules } from "../plugins/panel/barGauge/OverrideEditor";
+import { getPanelOverridesRules } from "utils/dashboard/panel";
+import { SeriesData } from "types/seriesData";
 
 
 const PanelOverrides = ({ panel, onChange, data }: PanelEditorProps) => {
@@ -33,14 +36,16 @@ const PanelOverrides = ({ panel, onChange, data }: PanelEditorProps) => {
         switch (panel.type) {
             case PanelType.Table:
                 const res = []
-                const d: TableSeries[] = flatten(data)
+                const d: SeriesData[]= flatten(data)
                 if (d.length > 0) {
-                    for (const c of d[0].columns) {
+                   if (isArray(d[0].fields)) {
+                    for (const f of d[0].fields) {
                         res.push({
-                            label: c.title,
-                            value: c.dataIndex
+                            label: f.name,
+                            value: f.name
                         })
                     }
+                   }
                 }
                 return res
              
@@ -56,18 +61,8 @@ const PanelOverrides = ({ panel, onChange, data }: PanelEditorProps) => {
        
     }, [data])
 
-    const getAllRules = ():string[] => {
-        switch (panel.type) {
-            case PanelType.Graph:
-                return Object.keys(GraphRules).map(k => GraphRules[k])
-            case PanelType.Table:
-                return  Object.keys(TableRules).map(k => TableRules[k])
-            default:
-                return []
-        }
-    }
 
-    const allRules = getAllRules()
+    const allRules = getPanelOverridesRules(panel.type)
 
     const onAddOverride = () => {
         const o = {
@@ -103,7 +98,8 @@ const PanelOverrides = ({ panel, onChange, data }: PanelEditorProps) => {
 
     return (<Form p="2">
         {
-            overrides.map((o, i) => <FormSection title={t1.overrides + (i + 1)} p="1" titleSize="0.9rem" position="relative" bordered>
+            overrides.map((o, i) => 
+            <FormSection key={o.target + i} title={t1.overrides + (i + 1)} p="1" titleSize="0.9rem" position="relative" bordered>
                 <Box position="absolute" right="2" top="9px" cursor="pointer" onClick={() => removeOverride(i)}><FaTimes fontSize="0.8rem" /></Box>
                 <FormItem title={t1.targetName} alignItems="center">
                     <Tooltip label={o.target}>
@@ -122,7 +118,7 @@ const PanelOverrides = ({ panel, onChange, data }: PanelEditorProps) => {
                 </FormItem>
                 
                 <VStack alignItems="left" pl="6" divider={<StackDivider />} spacing={3}>
-                {o.overrides.length > 0 && o.overrides.map((rule,j) => <FormSection title={`Rule ${j+1}`} width="fit-content" titleSize="0.9rem" position="relative">
+                {o.overrides.length > 0 && o.overrides.map((rule,j) => <FormSection key={rule.type + j} title={`Rule ${j+1}`} width="fit-content" titleSize="0.9rem" position="relative">
 
                     <FormItem title="type" size="sm">
                         <Select size="sm" value={rule.type} onChange={e => {
@@ -134,6 +130,7 @@ const PanelOverrides = ({ panel, onChange, data }: PanelEditorProps) => {
                             {allRules.map(r => <option key={r} value={r}>{r}</option>)}
                         </Select>
                     </FormItem>
+                    {/* @needs-update-when-add-new-panel-overrides */}
                     {
                         panel.type == PanelType.Graph && <GraphOverridesEditor override={rule} onChange={(v) => {
                             onChange((panel: Panel) => {
@@ -148,6 +145,13 @@ const PanelOverrides = ({ panel, onChange, data }: PanelEditorProps) => {
                             })
                         }}/>
                     }
+                     {
+                        panel.type == PanelType.BarGauge && <BarGaugeOverridesEditor override={rule} onChange={(v) => {
+                            onChange((panel: Panel) => {
+                                panel.overrides[i].overrides[j].value = v
+                            })
+                        }}/>
+                    }
                     <Box position="absolute" right="1" top="5px" cursor="pointer" onClick={() => removeRule(i,j)}><FaTimes fontSize="0.8rem" /></Box>
                 </FormSection>
                 )}
@@ -156,7 +160,7 @@ const PanelOverrides = ({ panel, onChange, data }: PanelEditorProps) => {
                 <Button size="sm" variant="ghost" onClick={() => onAddRule(i)}>{t1.addRule}</Button>
             </FormSection>)
         }
-        <Button width="100%" variant="outline" onClick={onAddOverride}>{t1.addOverride}</Button>
+        {allRules.length >0 &&<Button width="100%" variant="outline" onClick={onAddOverride}>{t1.addOverride}</Button>}
     </Form>)
 }
 

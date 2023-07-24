@@ -22,7 +22,7 @@ import NotFoundPage from "../NotFound"
 
 
 // page for dispaly dashboard
-const DashboardPage = () => {
+const DashboardPage = ({sideWidth}) => {
     const t1 = useStore(dashboardMsg)
     const params = useParams()
     const rawId = params.dashboardId
@@ -74,7 +74,7 @@ const DashboardPage = () => {
     }
     return (
         <>
-            {dashboardId && <DashboardWrapper dashboardId={dashboardId} />}
+            {dashboardId && <DashboardWrapper sideWidth={sideWidth} dashboardId={dashboardId} />}
             {error && <NotFoundPage message={error} />}
         </>
     )

@@ -10,7 +10,7 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-import { Button, HStack, Switch } from "@chakra-ui/react"
+import { Button, HStack, Select, Switch } from "@chakra-ui/react"
 import PanelAccordion from "src/views/dashboard/edit-panel/Accordion"
 import PanelEditItem from "src/views/dashboard/edit-panel/PanelEditItem"
 import RadionButtons from "components/RadioButtons"
@@ -18,18 +18,38 @@ import { UnitPicker } from "components/Unit"
 import { Panel, PanelEditorProps } from "types/dashboard"
 import { EditorNumberItem, EditorSliderItem } from "components/editor/EditorItem"
 import { ColorPicker } from "components/ColorPicker"
-import { colors } from "utils/colors"
 import { dispatch } from "use-bus"
 import { PanelForceRebuildEvent } from "src/data/bus-events"
 import ValueCalculation from "components/ValueCalculation"
 import React from "react";
 import { useStore } from "@nanostores/react"
 import { commonMsg, graphPanelMsg, statsPanelMsg } from "src/i18n/locales/en"
+import ThresholdEditor from "components/Threshold/ThresholdEditor"
+import { SeriesData } from "types/seriesData"
+import { isEmpty } from "utils/validate"
 
-const GraphPanelEditor = ({ panel, onChange }: PanelEditorProps) => {
+const GraphPanelEditor = ({ panel, onChange, data }: PanelEditorProps) => {
     const t = useStore(commonMsg)
     const t1 = useStore(graphPanelMsg)
     const t2 = useStore(statsPanelMsg)
+
+    const seriesNames = (data.flat() as SeriesData[]).map(s => s.name)
+    if (isEmpty(panel.plugins.stat.diisplaySeries )) {
+        if (seriesNames?.length >= 1) {
+            onChange((panel: Panel) => {
+                panel.plugins.stat.diisplaySeries = seriesNames[0]
+            })
+        }
+    } else {
+        if (!seriesNames.includes(panel.plugins.stat.diisplaySeries)) {
+            if (seriesNames?.length >= 1) {
+                onChange((panel: Panel) => {
+                    panel.plugins.stat.diisplaySeries = seriesNames[0]
+                })
+            }
+        }
+    }
+    
     return (<>
         <PanelAccordion title={t.basicSetting}>
             <PanelEditItem title={t2.showTooltip}>
@@ -37,6 +57,16 @@ const GraphPanelEditor = ({ panel, onChange }: PanelEditorProps) => {
                     panel.plugins.stat.showTooltip = e.currentTarget.checked
                 })} />
             </PanelEditItem>
+            <PanelEditItem title={t.series} desc={t.seriesTips}>
+                    <Select value={panel.plugins.stat.diisplaySeries} onChange={e => {
+                        const v = e.currentTarget.value 
+                        onChange((panel: Panel) => {
+                            panel.plugins.stat.diisplaySeries = v
+                        })
+                    }}>
+                        {seriesNames.map(name => <option value={name}>{name}</option>)}
+                    </Select>
+                </PanelEditItem>
             <PanelEditItem title={t2.showLegend}>
                 <Switch defaultChecked={panel.plugins.stat.showLegend} onChange={e => onChange((panel: Panel) => {
                     panel.plugins.stat.showLegend = e.currentTarget.checked
@@ -81,11 +111,6 @@ const GraphPanelEditor = ({ panel, onChange }: PanelEditorProps) => {
                 }
                 } />
             </PanelEditItem>
-            <PanelEditItem title={t.color}>
-                <ColorPicker presetColors={colors} color={panel.plugins.stat.styles.color} onChange={v => onChange((panel: Panel) => {
-                    panel.plugins.stat.styles.color = v.hex
-                })} />
-            </PanelEditItem>
 
             <PanelEditItem title={t2.graphHeight} desc={t2.graphHeightTips}>
                 <EditorSliderItem value={panel.plugins.stat.styles.graphHeight} min={0} max={100} step={5} onChange={v => {
@@ -116,6 +141,12 @@ const GraphPanelEditor = ({ panel, onChange }: PanelEditorProps) => {
                     panel.plugins.stat.axisY.scaleBase = v
                 })} />
             </PanelEditItem>}
+        </PanelAccordion>
+
+        <PanelAccordion title="Thresholds">
+            <ThresholdEditor value={panel.plugins.stat.thresholds} onChange={(v) => onChange((panel: Panel) => {
+                    panel.plugins.stat.thresholds = v
+                })} />
         </PanelAccordion>
     </>
     )

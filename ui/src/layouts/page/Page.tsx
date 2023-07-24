@@ -12,7 +12,7 @@
 // limitations under the License.
 
 import { Box, Heading, HStack, Text, useColorModeValue } from "@chakra-ui/react"
-import PageContainer from "layouts/page-container"
+import PageContainer from "layouts/PageContainer"
 import customColors from "src/theme/colors"
 import { Route } from "types/route"
 import React from "react"
@@ -37,7 +37,7 @@ const Page = (props: Props) => {
     const border = `1px solid ${borderColor}`
 
     const activeTab = tabs?.find(tab => tab.url === window.location.pathname)
-    return (<PageContainer>
+    return (<>
         <Box width="100%">
             <HStack spacing="4" px="12" pt="10" pb="10">
                 <Box fontSize="40px">{icon}</Box>
@@ -67,7 +67,7 @@ const Page = (props: Props) => {
                 {children}
             </Box>
         </Box>
-    </PageContainer>)
+        </>)
 }
 
 export default Page

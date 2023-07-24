@@ -15,8 +15,8 @@ package models
 import (
 	"time"
 
-	"github.com/MyStarship/starship/backend/pkg/db"
-	"github.com/MyStarship/starship/backend/pkg/utils/simplejson"
+	"github.com/DataObserve/datav/backend/pkg/db"
+	"github.com/DataObserve/datav/backend/pkg/utils/simplejson"
 )
 
 // you mustn't change the id of home dashboarda, is's reversed

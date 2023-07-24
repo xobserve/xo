@@ -12,7 +12,6 @@
 // limitations under the License.
 import React from 'react'
 import { Button, Heading, Text, VStack } from '@chakra-ui/react'
-import PageContainer1 from 'layouts/page-container'
 import { FaHome } from 'react-icons/fa'
 import { useStore } from '@nanostores/react'
 import { notFoundMsg } from 'src/i18n/locales/en'
@@ -27,7 +26,7 @@ interface Props {
 const NotFoundPage = ({message}:Props) => {
   const t = useStore(notFoundMsg)
   return (
-    <PageContainer1>
+    <>
       {/* <Header /> */}
       <VStack
         justify='center'
@@ -48,7 +47,7 @@ const NotFoundPage = ({message}:Props) => {
             {t['back-to-home']}
           </Button>
       </VStack>
-    </PageContainer1>
+    </>
   )
 }
 

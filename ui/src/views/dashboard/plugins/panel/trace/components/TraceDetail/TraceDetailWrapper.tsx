@@ -21,6 +21,7 @@ import transformTraceData from "../../utils/transform-trace-data"
 import ScrollManager from "./scroll/scrollManager"
 import { cancel as cancelScroll, scrollBy, scrollTo } from './scroll/scrollPage';
 import React from "react";
+import { queryTraceInTestData } from "src/views/dashboard/plugins/datasource/testdata/query_runner"
 
 const TraceDetailWrapper = ({id,dsId}) => {
     const [trace, setTrace] = useState<Trace>(null)
@@ -49,6 +50,13 @@ const TraceDetailWrapper = ({id,dsId}) => {
                 if (res.length > 0) {
                     data = transformTraceData(res[0])
                 }
+                break
+            case DatasourceType.TestData:
+                const r = queryTraceInTestData(id)
+                if (r) {
+                    data = transformTraceData(r as any)
+                }
+                break
             default:
                 break;
         }

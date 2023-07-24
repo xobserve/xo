@@ -17,6 +17,7 @@ import flattenDeep from 'lodash/flattenDeep';
 import chunk from 'lodash/chunk';
 import zip from 'lodash/zip';
 import tinycolor from 'tinycolor2';
+import { isEmpty } from 'lodash';
 
 
 export const PALETTE_ROWS = 4;
@@ -27,64 +28,406 @@ export const ALERTING_COLOR = 'rgba(237, 46, 24, 1)';
 export const NO_DATA_COLOR = 'rgba(150, 150, 150, 1)';
 export const PENDING_COLOR = 'rgba(247, 149, 32, 1)';
 export const REGION_FILL_ALPHA = 0.09;
-export const colors = [
-  '#7EB26D', // 0: pale green
-  '#EAB839', // 1: mustard
-  '#6ED0E0', // 2: light blue
-  '#EF843C', // 3: orange
-  '#E24D42', // 4: red
-  '#1F78C1', // 5: ocean
-  '#BA43A9', // 6: purple
-  '#705DA0', // 7: violet
-  '#508642', // 8: dark green
-  '#CCA300', // 9: dark sand
-  '#447EBC',
-  '#C15C17',
-  '#890F02',
-  '#0A437C',
-  '#6D1F62',
-  '#584477',
-  '#B7DBAB',
-  '#F4D598',
-  '#70DBED',
-  '#F9BA8F',
-  '#F29191',
-  '#82B5D8',
-  '#E5A8E2',
-  '#AEA2E0',
-  '#629E51',
-  '#E5AC0E',
-  '#64B0C8',
-  '#E0752D',
-  '#BF1B00',
-  '#0A50A1',
-  '#962D82',
-  '#614D93',
-  '#9AC48A',
-  '#F2C96D',
-  '#65C5DB',
-  '#F9934E',
-  '#EA6460',
-  '#5195CE',
-  '#D683CE',
-  '#806EB7',
-  '#3F6833',
-  '#967302',
-  '#2F575E',
-  '#99440A',
-  '#58140C',
-  '#052B51',
-  '#511749',
-  '#3F2B5B',
-  '#E0F9D7',
-  '#FCEACA',
-  '#CFFAFF',
-  '#F9E2D2',
-  '#FCE2DE',
-  '#BADFF4',
-  '#F9D9F9',
-  '#DEDAF7',
-];
+
+export const primaryPalette = "$green"
+export const lightPalettes= [
+  {
+    "name": "green",
+    "shades": [
+        {
+            "color": "#96D98D",
+            "name": "$super-light-green",
+            "aliases": []
+        },
+        {
+            "color": "#73BF69",
+            "name": "$light-green",
+            "aliases": []
+        },
+        {
+            "color": "#56A64B",
+            "name": primaryPalette,
+            "aliases": [],
+            "primary": true
+        },
+        {
+            "color": "#37872D",
+            "name": "$semi-dark-green",
+            "aliases": []
+        },
+        {
+            "color": "#19730E",
+            "name": "$dark-green",
+            "aliases": []
+        }
+    ]
+},
+{
+  "name": "yellow",
+  "shades": [
+      {
+          "color": "#FFEE52",
+          "name": "$super-light-yellow",
+          "aliases": []
+      },
+      {
+          "color": "#FADE2A",
+          "name": "$light-yellow",
+          "aliases": []
+      },
+      {
+          "color": "#F2CC0C",
+          "name": "$yellow",
+          "aliases": [],
+          "primary": true
+      },
+      {
+          "color": "#E0B400",
+          "name": "$semi-dark-yellow",
+          "aliases": []
+      },
+      {
+          "color": "#CC9D00",
+          "name": "$dark-yellow",
+          "aliases": []
+      }
+  ]
+},
+{
+  "name": "orange",
+  "shades": [
+      {
+          "color": "#FFB357",
+          "name": "$super-light-orange",
+          "aliases": []
+      },
+      {
+          "color": "#FF9830",
+          "name": "$light-orange",
+          "aliases": []
+      },
+      {
+          "color": "#FF780A",
+          "name": "$orange",
+          "aliases": [],
+          "primary": true
+      },
+      {
+          "color": "#FA6400",
+          "name": "$semi-dark-orange",
+          "aliases": []
+      },
+      {
+          "color": "#E55400",
+          "name": "$dark-orange",
+          "aliases": []
+      }
+  ]
+},
+  {
+    "name": "red",
+    "shades": [
+        {
+            "color": "#FF7383",
+            "name": "$super-light-red"
+        },
+        {
+            "color": "#F2495C",
+            "name": "$light-red"
+        },
+        {
+            "color": "#E02F44",
+            "name": "$red",
+            "primary": true
+        },
+        {
+            "color": "#C4162A",
+            "name": "$semi-dark-red"
+        },
+        {
+            "color": "#AD0317",
+            "name": "$dark-red"
+        }
+    ]
+},
+{
+    "name": "blue",
+    "shades": [
+        {
+            "color": "#8AB8FF",
+            "name": "$super-light-blue",
+            "aliases": []
+        },
+        {
+            "color": "#5794F2",
+            "name": "$light-blue",
+            "aliases": []
+        },
+        {
+            "color": "#3274D9",
+            "name": "$blue",
+            "aliases": [],
+            "primary": true
+        },
+        {
+            "color": "#1F60C4",
+            "name": "$semi-dark-blue",
+            "aliases": []
+        },
+        {
+            "color": "#1250B0",
+            "name": "$dark-blue",
+            "aliases": []
+        }
+    ]
+},
+{
+    "name": "purple",
+    "shades": [
+        {
+            "color": "#CA95E5",
+            "name": "$super-light-purple",
+            "aliases": []
+        },
+        {
+            "color": "#B877D9",
+            "name": "$light-purple",
+            "aliases": []
+        },
+        {
+            "color": "#A352CC",
+            "name": "$purple",
+            "aliases": [],
+            "primary": true
+        },
+        {
+            "color": "#8F3BB8",
+            "name": "$semi-dark-purple",
+            "aliases": []
+        },
+        {
+            "color": "#7C2EA3",
+            "name": "$dark-purple",
+            "aliases": []
+        }
+    ]
+}
+]
+
+export const darkPalettes = [{
+  "name": "green", 
+  "shades": [
+      {
+          "color": "#C8F2C2",
+          "name": "$super-light-green",
+          "aliases": []
+      },
+      {
+          "color": "#96D98D",
+          "name": "$light-green",
+          "aliases": []
+      },
+      {
+          "color": "#73BF69",
+          "name": primaryPalette,
+          "aliases": [],
+          "primary": true
+      },
+      {
+          "color": "#56A64B",
+          "name": "$semi-dark-green",
+          "aliases": []
+      },
+      {
+          "color": "#37872D",
+          "name": "$dark-green",
+          "aliases": []
+      }
+  ]
+},
+
+{
+  "name": "yellow", 
+  "shades": [
+      {
+          "color": "#FFF899",
+          "name": "$super-light-yellow",
+          "aliases": []
+      },
+      {
+          "color": "#FFEE52",
+          "name": "$light-yellow",
+          "aliases": []
+      },
+      {
+          "color": "#FADE2A",
+          "name": "$yellow",
+          "aliases": [],
+          "primary": true
+      },
+      {
+          "color": "#F2CC0C",
+          "name": "$semi-dark-yellow",
+          "aliases": []
+      },
+      {
+          "color": "#E0B400",
+          "name": "$dark-yellow",
+          "aliases": []
+      }
+  ]
+},
+{
+  "name": "orange",
+  "shades": [
+      {
+          "color": "#FFCB7D",
+          "name": "$super-light-orange",
+          "aliases": []
+      },
+      {
+          "color": "#FFB357",
+          "name": "$light-orange",
+          "aliases": []
+      },
+      {
+          "color": "#FF9830",
+          "name": "$orange",
+          "aliases": [],
+          "primary": true
+      },
+      {
+          "color": "#FF780A",
+          "name": "$semi-dark-orange",
+          "aliases": []
+      },
+      {
+          "color": "#FA6400",
+          "name": "$dark-orange",
+          "aliases": []
+      }
+  ]
+},
+{
+  "name": "red",
+  "shades": [
+      {
+          "color": "#FFA6B0",
+          "name": "$super-light-red"
+      },
+      {
+          "color": "#FF7383",
+          "name": "$light-red"
+      },
+      {
+          "color": "#F2495C",
+          "name": "$red",
+          "primary": true
+      },
+      {
+          "color": "#E02F44",
+          "name": "$semi-dark-red"
+      },
+      {
+          "color": "#C4162A",
+          "name": "$dark-red"
+      }
+  ]
+},
+{
+    "name": "blue",
+    "shades": [
+        {
+            "color": "#C0D8FF",
+            "name": "$super-light-blue",
+            "aliases": []
+        },
+        {
+            "color": "#8AB8FF",
+            "name": "$light-blue",
+            "aliases": []
+        },
+        {
+            "color": "#5794F2",
+            "name": "$blue",
+            "aliases": [],
+            "primary": true
+        },
+        {
+            "color": "#3274D9",
+            "name": "$semi-dark-blue",
+            "aliases": []
+        },
+        {
+            "color": "#1F60C4",
+            "name": "$dark-blue",
+            "aliases": []
+        }
+    ]
+  },
+{
+  "name": "purple",
+  "shades": [
+      {
+          "color": "#DEB6F2",
+          "name": "$super-light-purple",
+          "aliases": []
+      },
+      {
+          "color": "#CA95E5",
+          "name": "$light-purple",
+          "aliases": []
+      },
+      {
+          "color": "#B877D9",
+          "name": "$purple",
+          "aliases": [],
+          "primary": true
+      },
+      {
+          "color": "#A352CC",
+          "name": "$semi-dark-purple",
+          "aliases": []
+      },
+      {
+          "color": "#8F3BB8",
+          "name": "$dark-purple",
+          "aliases": []
+      }
+  ]
+}]
+
+
+export const colors = [];
+export const palettes = []
+const sequences = [2,3,4,1,0]
+for (var i=0;i<=4;i++) {
+  const seq = sequences[i]
+  for (const palette of darkPalettes) {
+    palettes.push(palette.shades[seq].name)
+  }
+}
+
+
+export const initColors = (colorMode) => {
+  if (colorMode === "dark") {
+    colors.splice(0, colors.length)
+    for (var i=0;i<=4;i++) {
+      const seq = sequences[i]
+      for (const palette of darkPalettes) {
+        colors.push(palette.shades[seq].color)
+      }
+    }
+  } else {
+    colors.splice(0, colors.length)
+    for (var i=0;i<=4;i++) {
+      const seq = sequences[i]
+      for (const palette of lightPalettes) {
+        colors.push(palette.shades[seq].color)
+      }
+    }
+  }
+}
 
 function sortColorsByHue(hexColors: string[]) {
   const hslColors = map(hexColors, hexToHsl);
@@ -105,6 +448,25 @@ function hexToHsl(color: string) {
 
 function hslToHex(color: any) {
   return tinycolor(color).toHexString();
+}
+
+
+export const paletteColorNameToHex = (name:string,colorMode:"light" | "dark" = "light")  => {
+  if (isEmpty(name)) {
+    return name
+  }
+
+  if (name[0] != '$') {
+    return name 
+  }
+
+  const v = name.slice(1).split('-')
+  const paletteName = v[v.length -1]
+
+  const palettes = colorMode == "light" ? lightPalettes : darkPalettes
+  const palette = palettes.find(p => p.name == paletteName)
+  const value = palette.shades.find(s => s.name == name)
+  return value?.color
 }
 
 export let sortedColors = sortColorsByHue(colors);

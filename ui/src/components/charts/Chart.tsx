@@ -28,7 +28,11 @@ interface Props {
 }
 
 
-export const ChartComponent = memo(({ options, theme, width, height, onChartCreated, onChartEvents }: Props) => {
+export const ChartComponent = memo((props: Props) => {
+    const { options, theme, onChartCreated, onChartEvents } = props
+    // echarts is weirdly widther than the container, so we need to subtract 15
+    const width = props.width - 11
+    const height = props.height - 3
     const edit = useSearchParam('edit')
     const container = useRef(null)
     const [chart, setChart] = useState(null)

@@ -1,7 +1,10 @@
-import { ThresholdsConfig } from "types/threshold";
+import { Threshold, ThresholdsConfig } from "types/threshold";
 
-export const getThreshold = (value:number, thresholds: ThresholdsConfig, max?:number) => {
+export const getThreshold = (value:number, thresholds: ThresholdsConfig, max?:number): Threshold => {
     let t;
+    if (!thresholds) {
+        return t
+    }
     if (thresholds.mode == 'absolute') {
         t = thresholds.thresholds.find(s => s.value <= value)
     } else {

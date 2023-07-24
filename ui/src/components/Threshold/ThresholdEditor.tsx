@@ -16,12 +16,12 @@ import { useStore } from "@nanostores/react"
 import { ColorPicker } from "components/ColorPicker"
 import { EditorNumberItem } from "components/editor/EditorItem"
 import RadionButtons from "components/RadioButtons"
-import { cloneDeep, concat } from "lodash"
-import React, { useEffect, useState } from "react"
-import { FaPlus, FaTimes } from "react-icons/fa"
+import { cloneDeep } from "lodash"
+import React, { useState } from "react"
+import { FaTimes } from "react-icons/fa"
 import { componentsMsg } from "src/i18n/locales/en"
 import { ThresholdsConfig, ThresholdsMode } from "types/threshold"
-import { colors } from "utils/colors"
+import { colors, palettes } from "utils/colors"
 import { isEmpty } from "utils/validate"
 
 interface Props {
@@ -33,26 +33,23 @@ interface Props {
 const ThresholdEditor = (props: Props) => {
     const t1 = useStore(componentsMsg)
     const [value, setValue] = useState(props.value)
-    useEffect(() => {
-        if (isEmpty(value)) {
-            const v = {
-                mode: ThresholdsMode.Absolute,
-                thresholds: []
-            }
-            // add base threshold
-            const color = colors[0]
-            v.thresholds.push({
-                color,
-                value: null
-            })
-            setValue(v)
-            props.onChange(v)
+    if (isEmpty(value)) {
+        const v = {
+            mode: ThresholdsMode.Absolute,
+            thresholds: []
         }
-    }, [])
+        // add base threshold
+        const color = palettes[0]
+        v.thresholds.push({
+            color,
+            value: null
+        })
+        setValue(v)
+    }
 
     const addThreshod = () => {
-        const color = colors[value.thresholds.length % colors.length]
-        const v = value.thresholds.length > 1 ? value.thresholds[0].value + 10 : 10
+        const color = palettes[value.thresholds.length % palettes.length]
+        const v = value.thresholds.length > 1 ? value.thresholds[0].value : 0
         value.thresholds.unshift({
             value: v,
             color: color
@@ -88,10 +85,10 @@ const ThresholdEditor = (props: Props) => {
     return (<Box>
         <Button onClick={addThreshod} width="100%" size="sm" colorScheme="gray">+ {t1.addThreshold}</Button>
         <Text fontSize="0.8rem" textStyle="annotation" mt="2">{t1.thresholdTips}</Text>
-        <VStack alignItems="left" mt="2" key={value?.thresholds?.length}>
-            {value?.thresholds?.map((threshold, i) => <HStack key={threshold.color} spacing={1}>
-                <ColorPicker presetColors={concat(['transparent'],colors) } color={threshold.color} onChange={v =>  {
-                     value.thresholds[i].color = v.hex
+        <VStack alignItems="left" mt="2">
+            {value?.thresholds?.map((threshold, i) => <HStack key={threshold.color + threshold.value + i} spacing={1}>
+                <ColorPicker  color={threshold.color} onChange={v =>  {
+                     value.thresholds[i].color = v
                     changeValue(value)
                 }
                 } circlePicker />
@@ -99,7 +96,7 @@ const ThresholdEditor = (props: Props) => {
                 <EditorNumberItem value={threshold.value} onChange={v => {
                     value.thresholds[i].value = v
                     changeValue(value)
-                }} /></>}
+                }} notNull/></>}
 
                 {threshold.value !== null && <FaTimes opacity={0.6} fontSize="0.8rem" onClick={() => removeThreshold(i)} />}
             </HStack>)}

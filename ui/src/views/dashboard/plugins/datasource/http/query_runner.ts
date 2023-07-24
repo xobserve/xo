@@ -18,7 +18,7 @@ import { TimeRange } from "types/time"
 import { genDynamicFunction } from "utils/dynamicCode"
 import { isEmpty, isFunction, round } from "lodash"
 import _ from 'lodash'
-import { getInitTimeRange } from "components/DatePicker/TimePicker"
+import { getNewestTimeRange } from "components/DatePicker/TimePicker"
 import { isJSON } from "utils/is"
 import { replaceWithVariables } from "utils/variable"
 import { requestApi } from "utils/axios/request"
@@ -85,7 +85,7 @@ export const queryHttpVariableValues = async (variable:Variable, useCurrentTimer
     if (!data) {
         return result
     }
-    const timeRange = getInitTimeRange()
+    const timeRange = getNewestTimeRange()
     const start = timeRange.start.getTime() / 1000
     const end = timeRange.end.getTime() / 1000
 

@@ -13,9 +13,9 @@
 package api
 
 import (
-	"github.com/MyStarship/starship/backend/internal/variables"
-	"github.com/MyStarship/starship/backend/pkg/common"
-	"github.com/MyStarship/starship/backend/pkg/e"
+	"github.com/DataObserve/datav/backend/internal/variables"
+	"github.com/DataObserve/datav/backend/pkg/common"
+	"github.com/DataObserve/datav/backend/pkg/e"
 	"github.com/gin-gonic/gin"
 )
 

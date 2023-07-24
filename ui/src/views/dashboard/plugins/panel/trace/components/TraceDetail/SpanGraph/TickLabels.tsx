@@ -15,7 +15,7 @@
 import React from 'react';
 
 
-import { formatDuration } from '../../../utils/date';
+import { formatDuration } from 'utils/date';
 
 type TickLabelsProps = {
   numTicks: number;

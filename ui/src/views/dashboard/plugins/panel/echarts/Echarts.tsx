@@ -17,13 +17,16 @@ import { useEffect, useMemo, useRef, useState } from "react"
 import { PanelProps } from "types/dashboard";
 import { Box, Center, useColorMode, useToast } from "@chakra-ui/react";
 import { genDynamicFunction } from "utils/dynamicCode";
-import {  cloneDeep, isEmpty, isFunction } from "lodash";
+import { cloneDeep, isEmpty, isFunction, zip } from "lodash";
 import { useSearchParam } from "react-use";
 import React from "react";
+import moment from "moment";
+import { colors } from "utils/colors";
+import loadash from "lodash"
 
-
-const EchartsPanel = ({ panel, data, width, height }: PanelProps) => {
-    if (!panel.plugins.echarts.allowEmptyData && isEmpty(data)) {
+const EchartsPanel = (props: PanelProps) => {
+    const { panel, width, height } = props
+    if (!panel.plugins.echarts.allowEmptyData && isEmpty(props.data)) {
         return (<Center height="100%">No data</Center>)
     }
 
@@ -31,13 +34,13 @@ const EchartsPanel = ({ panel, data, width, height }: PanelProps) => {
     const toast = useToast()
     const [chart, setChart] = useState<ECharts>(null)
     const edit = useSearchParam("edit")
-
     const [options, onEvents] = useMemo(() => {
+        const data = props.data.flat()
         let options = null;
         let onEvents = null;
         const setOptions = genDynamicFunction(panel.plugins.echarts.setOptionsFunc);
         if (isFunction(setOptions)) {
-            const o = setOptions(cloneDeep(data), echarts)
+            const o = setOptions(cloneDeep(data),panel.plugins.echarts.enableThresholds && panel.plugins.echarts.thresholds, colors, echarts, loadash, moment)
             options = o
         } else {
             toast({
@@ -67,12 +70,13 @@ const EchartsPanel = ({ panel, data, width, height }: PanelProps) => {
         options.animation = panel.plugins.echarts.animation
 
         return [options, onEvents]
-    }, [panel.plugins.echarts, data, chart])
+    }, [panel.plugins.echarts, props.data, chart])
+
 
     // override  echarts background in panel edit mod
     const darkBg = edit == panel.id.toString() ? 'transparent' : "#1A202C"
     return (<>
-        {options && <Box height={height} key={colorMode} className="echarts-panel"><EchartsComponent options={options} theme={colorMode} width={width} height={height} onChartCreated={c => setChart(c)} onChartEvents={onEvents} darkBg={darkBg} /></Box>}
+        {options && <Box height={height} key={colorMode} className="echarts-panel"><EchartsComponent options={options} theme={colorMode} width={width - 11} height={height} onChartCreated={c => setChart(c)} onChartEvents={onEvents} darkBg={darkBg} /></Box>}
     </>)
 }
 
@@ -152,3 +156,5 @@ const tryCatchCall = (f, toast) => {
         }
     }
 }
+
+

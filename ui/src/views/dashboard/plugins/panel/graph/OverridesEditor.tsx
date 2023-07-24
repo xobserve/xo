@@ -15,8 +15,7 @@ import RadionButtons from "components/RadioButtons";
 import { ColorPicker } from "components/ColorPicker";
 import { EditorInputItem, EditorNumberItem, EditorSliderItem } from "components/editor/EditorItem";
 import { UnitPicker } from "components/Unit";
-import { OverrideRule, Panel } from "types/dashboard";
-import { colors } from "utils/colors";
+import { OverrideRule } from "types/dashboard";
 import React from "react";
 
 interface Props {
@@ -40,7 +39,7 @@ const GraphOverridesEditor = ({ override, onChange }: Props) => {
                 })}
             } />
         case GraphRules.SeriesColor:
-            return <ColorPicker presetColors={colors} color={override.value} onChange={v => onChange(v.hex)} />
+            return <ColorPicker  color={override.value} onChange={onChange} />
         case GraphRules.SeriesFill:
             return <EditorSliderItem value={override.value} min={0} max={100} step={1} onChange={onChange} />
         case GraphRules.SeriesNegativeY:
@@ -57,8 +56,8 @@ export default GraphOverridesEditor
 
 
 export enum GraphRules {
-    SeriesStyle =  'Series.style',
     SeriesName = 'Series.name',
+    SeriesStyle =  'Series.style',
     SeriesUnit = 'Series.unit',
     SeriesDecimal = 'Series.decimal',
     SeriesColor = 'Series.color',

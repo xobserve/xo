@@ -27,6 +27,7 @@ import { cloneDeep, isEqual } from "lodash"
 import FormItem from "components/form/Item"
 import { useStore } from "@nanostores/react";
 import { commonMsg, dashboardSaveMsg } from "src/i18n/locales/en";
+import { dateTimeFormat } from "utils/datetime/formatter";
 
 interface Props {
     dashboard: Dashboard
@@ -258,6 +259,7 @@ const DashboardHistory = ({ dashboard, onPreview }: HistoryProps) => {
     }
 
 
+
     return (
         <VStack alignItems="left" divider={<StackDivider />}>
             {
@@ -266,7 +268,7 @@ const DashboardHistory = ({ dashboard, onPreview }: HistoryProps) => {
                     return <Box>
                         <Flex alignItems="center" justifyContent="space-between">
                             <HStack>
-                                <Text fontSize="0.9rem">{moment(dash.updated).format("MM-DD HH:mm:ss")}</Text>
+                                <Text fontSize="0.9rem">{dateTimeFormat(dash.updated)}</Text>
                             </HStack>
                             <HStack>
                                 {i == 0 && <Tooltip label={t1.useCurrentDash}><Tag cursor="pointer" onClick={() => {

@@ -44,7 +44,8 @@ export const TimePickerKey = "time-picker"
 
 const now = new Date()
 export const initTimeRange = { start: subMinutes(now, 15), end: now, startRaw: 'now-15m', endRaw: 'now', sub: 15 }
-export const getInitTimeRange = () => {
+// get newest time range from raw time
+export const getNewestTimeRange = () => {
     const rawT = storage.get(TimePickerKey)
     let time;
     if (rawT) {
@@ -61,10 +62,29 @@ export const getInitTimeRange = () => {
     return time
 }
 
+// get current time range from local storage, this time range will change when select a new time or refresh page
+export const getCurrentTimeRange = () => {
+    const rawT = storage.get(TimePickerKey)
+    let time;
+    if (rawT) {
+        const t = JSON.parse(rawT)
+        if (t) {
+            time = t
+            time.start = new Date(time.start)
+            time.end = new Date(time.end)
+        }
+
+    } else {
+        time = initTimeRange
+    }
+    
+    return time
+}
+
 const TimePicker = ({ onClose, onTimeChange }: Props) => {
     const t1 = useStore(timePickerMsg)
-    const [range, setRange] = useState<TimeRange>(getInitTimeRange())
-    const [tempRange, setTempRange] = useState<TimeRange>(getInitTimeRange())
+    const [range, setRange] = useState<TimeRange>(getNewestTimeRange())
+    const [tempRange, setTempRange] = useState<TimeRange>(getNewestTimeRange())
     const [error, setError] = useState({ start: null, end: null })
     const [displayCalender, setDisplayCalender] = useState(false)
 

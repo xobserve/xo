@@ -16,7 +16,7 @@ import moment, { unitOfTime } from 'moment';
 import _dropWhile from 'lodash/dropWhile';
 import _round from 'lodash/round';
 
-import { toFloatPrecision } from './number';
+import { toFloatPrecision } from '../views/dashboard/plugins/panel/trace/utils/number';
 
 const TODAY = 'Today';
 const YESTERDAY = 'Yesterday';

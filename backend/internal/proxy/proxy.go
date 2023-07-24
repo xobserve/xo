@@ -22,8 +22,8 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/MyStarship/starship/backend/pkg/common"
-	"github.com/MyStarship/starship/backend/pkg/log"
+	"github.com/DataObserve/datav/backend/pkg/common"
+	"github.com/DataObserve/datav/backend/pkg/log"
 	"github.com/gin-gonic/gin"
 )
 

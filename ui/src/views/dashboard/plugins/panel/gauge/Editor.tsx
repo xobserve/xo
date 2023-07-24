@@ -11,22 +11,39 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { Box, Button, Flex, HStack, Switch, VStack } from "@chakra-ui/react"
+import {  Select, Switch } from "@chakra-ui/react"
 import ValueCalculation from "components/ValueCalculation"
-import { ColorPicker } from "components/ColorPicker"
 import { EditorInputItem, EditorNumberItem } from "components/editor/EditorItem"
-import { FaArrowDown, FaArrowUp, FaTimes } from "react-icons/fa"
 import PanelAccordion from "src/views/dashboard/edit-panel/Accordion"
 import PanelEditItem from "src/views/dashboard/edit-panel/PanelEditItem"
 import { Panel, PanelEditorProps } from "types/dashboard"
 import React from "react";
 import { useStore } from "@nanostores/react"
 import { commonMsg, gaugePanelMsg } from "src/i18n/locales/en"
-
+import ThresholdEditor from "components/Threshold/ThresholdEditor"
+import { SeriesData } from "types/seriesData"
+import { isEmpty } from "utils/validate"
 const GaugePanelEditor = (props: PanelEditorProps) => {
     const t = useStore(commonMsg)
     const t1 = useStore(gaugePanelMsg)
-    const { panel, onChange } = props
+    const { panel, onChange,data } = props
+    const seriesNames = (data.flat() as SeriesData[]).map(s => s.name)
+    if (isEmpty(panel.plugins.gauge.diisplaySeries )) {
+        if (seriesNames?.length >= 1) {
+            onChange((panel: Panel) => {
+                panel.plugins.gauge.diisplaySeries = seriesNames[0]
+            })
+        }
+    } else {
+        if (!seriesNames.includes(panel.plugins.gauge.diisplaySeries)) {
+            if (seriesNames?.length >= 1) {
+                onChange((panel: Panel) => {
+                    panel.plugins.gauge.diisplaySeries = seriesNames[0]
+                })
+            }
+        }
+    }
+
     return (
         <>
             <PanelAccordion title={t.basicSetting}>
@@ -35,9 +52,19 @@ const GaugePanelEditor = (props: PanelEditorProps) => {
                         panel.plugins.gauge.animation = e.currentTarget.checked
                     })} />
                 </PanelEditItem>
+                <PanelEditItem title={t.series} desc={t.seriesTips}>
+                    <Select value={panel.plugins.gauge.diisplaySeries} onChange={e => {
+                        const v = e.currentTarget.value 
+                        onChange((panel: Panel) => {
+                            panel.plugins.gauge.diisplaySeries = v
+                        })
+                    }}>
+                        {seriesNames.map(name => <option value={name}>{name}</option>)}
+                    </Select>
+                </PanelEditItem>
             </PanelAccordion>
-            <PanelAccordion title={t1.valueSettings}>
-                <PanelEditItem title={t.display}>
+            <PanelAccordion title={t.valueSettings}>
+                <PanelEditItem title={t.show}>
                     <Switch defaultChecked={panel.plugins.gauge.value.show} onChange={e => onChange((panel: Panel) => {
                         panel.plugins.gauge.value.show = e.currentTarget.checked
                     })} />
@@ -45,7 +72,7 @@ const GaugePanelEditor = (props: PanelEditorProps) => {
                 <PanelEditItem title="Font size">
                     <EditorNumberItem value={panel.plugins.gauge.value.fontSize} onChange={(v) => onChange((panel: Panel) => {
                         panel.plugins.gauge.value.fontSize = v
-                    })} />
+                    })} step={1}/>
                 </PanelEditItem>
 
 
@@ -77,9 +104,14 @@ const GaugePanelEditor = (props: PanelEditorProps) => {
             </PanelAccordion>
 
             <PanelAccordion title={t.title}>
-                <PanelEditItem title={t.display}>
+                <PanelEditItem title={t.show}>
                     <Switch defaultChecked={panel.plugins.gauge.title.show} onChange={e => onChange((panel: Panel) => {
                         panel.plugins.gauge.title.show = e.currentTarget.checked
+                    })} />
+                </PanelEditItem>
+                <PanelEditItem title={t.display}>
+                    <EditorInputItem value={panel.plugins.gauge.title.display} onChange={(v) => onChange((panel: Panel) => {
+                        panel.plugins.gauge.title.display = v
                     })} />
                 </PanelEditItem>
                 <PanelEditItem title="Font size">
@@ -98,6 +130,18 @@ const GaugePanelEditor = (props: PanelEditorProps) => {
                     })} />
                 </PanelEditItem>
             </PanelAccordion>
+            <PanelAccordion title={t1.pointer}>
+                <PanelEditItem title="Width">
+                    <EditorNumberItem value={panel.plugins.gauge.pointer.width} step={1} onChange={(v) => onChange((panel: Panel) => {
+                            panel.plugins.gauge.pointer.width = v
+                    })} />
+                </PanelEditItem>
+                <PanelEditItem title="Length">
+                    <EditorInputItem value={panel.plugins.gauge.pointer.length} onChange={(v) => onChange((panel: Panel) => {
+                            panel.plugins.gauge.pointer.length = v
+                    })} />
+                </PanelEditItem>
+            </PanelAccordion>
             <PanelAccordion title={t.axis}>
                 <PanelEditItem title="Min">
                     <EditorNumberItem value={panel.plugins.gauge.value.min} onChange={(v) => onChange((panel: Panel) => {
@@ -113,15 +157,12 @@ const GaugePanelEditor = (props: PanelEditorProps) => {
                 <PanelEditItem title="Width">
                     <EditorNumberItem value={panel.plugins.gauge.axis.width} onChange={(v) => onChange((panel: Panel) => {
                         panel.plugins.gauge.axis.width = v
-                    })} />
+                    })} step={1}/>
                 </PanelEditItem>
                 <PanelEditItem title={t1.showTicks} >
                     <Switch defaultChecked={panel.plugins.gauge.axis.showTicks} onChange={e => onChange((panel: Panel) => {
                         panel.plugins.gauge.axis.showTicks = e.currentTarget.checked
                     })} />
-                </PanelEditItem>
-                <PanelEditItem title={t1.split} desc={t1.splitTips} >
-                    <AxisSplit {...props} />
                 </PanelEditItem>
             </PanelAccordion>
 
@@ -140,65 +181,14 @@ const GaugePanelEditor = (props: PanelEditorProps) => {
                     <EditorNumberItem value={panel.plugins.gauge.scale.fontSize} min={12} max={20} step={1} onChange={v => onChange((panel: Panel) => { panel.plugins.gauge.scale.fontSize = v })} />
                 </PanelEditItem>
             </PanelAccordion>
+
+            <PanelAccordion title="Thresholds">
+                <ThresholdEditor value={panel.plugins.gauge.thresholds} onChange={(v) => onChange((panel: Panel) => {
+                    panel.plugins.gauge.thresholds = v
+                })} />
+            </PanelAccordion>
         </>
     )
 }
 
 export default GaugePanelEditor
-
-
-const AxisSplit = ({ panel, onChange }: PanelEditorProps) => {
-    const addSplit = () => {
-        onChange((panel: Panel) => {
-            panel.plugins.gauge.axis.split.push([1, "#000"])
-        })
-    }
-
-    const moveUp = i => {
-        onChange((panel: Panel) => {
-            const split = panel.plugins.gauge.axis.split
-            const temp = split[i]
-            split[i] = split[i - 1]
-            split[i - 1] = temp
-
-            panel.plugins.gauge.axis.split = split
-        })
-    }
-
-    const moveDown = i => {
-        onChange((panel: Panel) => {
-            const split = panel.plugins.gauge.axis.split
-            const temp = split[i]
-            split[i] = split[i + 1]
-            split[i + 1] = temp
-
-            panel.plugins.gauge.axis.split = split
-        })
-    }
-
-
-    return (<Box><VStack alignItems="left">
-        {panel.plugins.gauge.axis.split.map((s, i) => {
-            return <Flex justifyContent="space-between" alignItems="center" key={s[0]}>
-                <HStack>
-                    <Box width="150px"><EditorNumberItem value={s[0]} min={0} max={1} step={0.1} onChange={v => onChange((panel: Panel) => {
-                        panel.plugins.gauge.axis.split[i][0] = v
-                    })} /></Box>
-                    <ColorPicker color={s[1]} onChange={v => onChange((panel: Panel) => {
-                        panel.plugins.gauge.axis.split[i][1] = v.hex
-                    })} /> 
-                </HStack>
-                <HStack>
-                    {i != 0 && <FaArrowUp onClick={() => moveUp(i)} />}
-                    {i != panel.plugins.gauge.axis.split.length - 1 && <FaArrowDown onClick={() => moveDown(i)} />}
-                    <Box cursor="pointer" onClick={() => onChange((panel: Panel) => {
-                        panel.plugins.gauge.axis.split.splice(i, 1)
-                    })}><FaTimes /></Box>
-                </HStack>
-            </Flex>
-        })}
-    </VStack>
-        <Button mt="2" size="sm" variant="outline" onClick={addSplit}>New split</Button>
-    </Box>
-    )
-}

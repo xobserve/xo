@@ -14,10 +14,7 @@
 
 package main
 
-import (
-	"github.com/MyStarship/starship/backend/cmd"
-	_ "go.uber.org/automaxprocs"
-)
+import "github.com/DataObserve/datav/backend/cmd"
 
 func main() {
 	cmd.Execute()

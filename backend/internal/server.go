@@ -16,19 +16,19 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/MyStarship/starship/backend/internal/admin"
-	"github.com/MyStarship/starship/backend/internal/api"
-	"github.com/MyStarship/starship/backend/internal/dashboard"
-	"github.com/MyStarship/starship/backend/internal/datasource"
-	"github.com/MyStarship/starship/backend/internal/proxy"
-	"github.com/MyStarship/starship/backend/internal/storage"
-	"github.com/MyStarship/starship/backend/internal/teams"
-	"github.com/MyStarship/starship/backend/internal/user"
-	"github.com/MyStarship/starship/backend/internal/variables"
-	"github.com/MyStarship/starship/backend/pkg/common"
-	"github.com/MyStarship/starship/backend/pkg/config"
-	"github.com/MyStarship/starship/backend/pkg/e"
-	"github.com/MyStarship/starship/backend/pkg/log"
+	"github.com/DataObserve/datav/backend/internal/admin"
+	"github.com/DataObserve/datav/backend/internal/api"
+	"github.com/DataObserve/datav/backend/internal/dashboard"
+	"github.com/DataObserve/datav/backend/internal/datasource"
+	"github.com/DataObserve/datav/backend/internal/proxy"
+	"github.com/DataObserve/datav/backend/internal/storage"
+	"github.com/DataObserve/datav/backend/internal/teams"
+	"github.com/DataObserve/datav/backend/internal/user"
+	"github.com/DataObserve/datav/backend/internal/variables"
+	"github.com/DataObserve/datav/backend/pkg/common"
+	"github.com/DataObserve/datav/backend/pkg/config"
+	"github.com/DataObserve/datav/backend/pkg/e"
+	"github.com/DataObserve/datav/backend/pkg/log"
 	"github.com/gin-contrib/gzip"
 	"github.com/gin-gonic/gin"
 )
@@ -97,7 +97,7 @@ func (s *Server) Start() error {
 		r.GET("/team/sidemenu/current", IsLogin(), teams.GetCurrentSidemenu)
 		// variable apis
 		r.POST("/variable/new", IsLogin(), variables.AddNewVariable)
-		r.GET("/variable/all", IsLogin(), api.GetVariables)
+		r.GET("/variable/all", api.GetVariables)
 		r.POST("/variable/update", IsLogin(), variables.UpdateVariable)
 		r.DELETE("/variable/:id", IsLogin(), variables.DeleteVariable)
 
@@ -178,6 +178,7 @@ func Cors() gin.HandlerFunc {
 
 // 判断用户是否登录
 func IsLogin() gin.HandlerFunc {
+	time.Sleep(200 * time.Millisecond)
 	return func(c *gin.Context) {
 		logined := user.IsLogin(c)
 		if !logined {

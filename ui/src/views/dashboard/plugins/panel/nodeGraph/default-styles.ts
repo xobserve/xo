@@ -11,6 +11,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 import { NodeGraphSettings } from "types/panel/plugins"
+import { paletteColorNameToHex } from "utils/colors"
 
 export const getDefaultNodeLabel = (colorMode) => {
     return {
@@ -41,16 +42,18 @@ export const getActiveEdgeLabelCfg = (colorMode, settings: NodeGraphSettings) =>
 
 
 export const getDefaultNodeStyle = (settings: NodeGraphSettings, colorMode?) => {
+    const light = paletteColorNameToHex(settings.edge.highlightColor.light,colorMode)
+    const dark = paletteColorNameToHex(settings.edge.highlightColor.dark,colorMode)
     return {
         selected: {
-            stroke: colorMode == "light" ? settings.edge.highlightColor.light : settings.edge.highlightColor.dark,
-            shadowColor: colorMode == "light" ? settings.edge.highlightColor.light : settings.edge.highlightColor.dark,
+            stroke: colorMode == "light" ? light : dark,
+            shadowColor: colorMode == "light" ? light: dark,
             lineWidth: 7,
             fill: 'transparent'
         },
         active: {
-            stroke: colorMode == "light" ? settings.edge.highlightColor.light : settings.edge.highlightColor.dark,
-            shadowColor: colorMode == "light" ? settings.edge.highlightColor.light : settings.edge.highlightColor.dark,
+            stroke: colorMode == "light" ? light : dark,
+            shadowColor: colorMode == "light" ? light: dark,
             lineWidth: 7,
             fill: 'transparent'
         },
@@ -62,15 +65,17 @@ export const getDefaultNodeStyle = (settings: NodeGraphSettings, colorMode?) => 
 
 
 export const getDefaultEdgeStyle = (settings: NodeGraphSettings, colorMode?) => {
+    const light = paletteColorNameToHex(settings.edge.highlightColor.light,colorMode)
+    const dark = paletteColorNameToHex(settings.edge.highlightColor.dark,colorMode)
     return {
         selected: {
-            stroke: colorMode == "light" ? settings.edge.highlightColor.light : settings.edge.highlightColor.dark,
-            shadowColor: colorMode == "light" ? settings.edge.highlightColor.light : settings.edge.highlightColor.dark,
+            stroke: colorMode == "light" ? light : dark,
+            shadowColor: colorMode == "light" ? light : dark,
             lineWidth: 1,
         },
         active: {
-            stroke: colorMode == "light" ? settings.edge.highlightColor.light : settings.edge.highlightColor.dark,
-            shadowColor: colorMode == "light" ? settings.edge.highlightColor.light : settings.edge.highlightColor.dark,
+            stroke: colorMode == "light" ? light : dark,
+            shadowColor: colorMode == "light" ? light : dark,
             lineWidth: 1,
         },
         inactive: {

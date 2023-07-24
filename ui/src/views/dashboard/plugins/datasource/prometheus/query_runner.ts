@@ -14,7 +14,7 @@
 // 1. Run the query to get the data from datasource
 // 2. Convert the data to the format which AiAPM expects
 
-import { cloneDeep, isEmpty, round } from "lodash"
+import { isEmpty, round } from "lodash"
 import { Panel, PanelQuery } from "types/dashboard"
 import { TimeRange } from "types/time"
 import { prometheusToPanels } from "./transformData"
@@ -22,10 +22,9 @@ import { Datasource } from "types/datasource"
 import { isPromethesDatasourceValid } from "./DatasourceEditor"
 import { Variable } from "types/variable"
 import { isJSON } from "utils/is"
-import { getInitTimeRange } from "components/DatePicker/TimePicker"
+import { getNewestTimeRange } from "components/DatePicker/TimePicker"
 
 import { PromDsQueryTypes } from "./VariableEditor"
-import { datasources, gtoast } from "src/App"
 import { parseVariableFormat } from "utils/format"
 import { variables } from "src/views/dashboard/Dashboard"
 import { VariableSplitChar, VarialbeAllOption } from "src/data/variable"
@@ -105,7 +104,7 @@ export const queryPromethuesVariableValues = async (variable: Variable) => {
         return result
     }
 
-    const timeRange = getInitTimeRange()
+    const timeRange = getNewestTimeRange()
     const start = timeRange.start.getTime() / 1000
     const end = timeRange.end.getTime() / 1000
 
@@ -149,7 +148,7 @@ export const queryPromethuesVariableValues = async (variable: Variable) => {
 
 export const queryPrometheusAllMetrics = async (dsId, useCurrentTimerange = true) => {
 
-    const timeRange = getInitTimeRange()
+    const timeRange = getNewestTimeRange()
     const start = timeRange.start.getTime() / 1000
     const end = timeRange.end.getTime() / 1000
 
@@ -170,7 +169,7 @@ export const queryPrometheusAllMetrics = async (dsId, useCurrentTimerange = true
 }
 
 export const queryPrometheusLabels = async (dsId, metric = "", useCurrentTimerange = true) => {
-    const timeRange = getInitTimeRange()
+    const timeRange = getNewestTimeRange()
     const start = timeRange.start.getTime() / 1000
     const end = timeRange.end.getTime() / 1000
 

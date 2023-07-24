@@ -21,7 +21,7 @@ import { initDatasource } from "src/data/panel/initPanel"
 import Label from "components/form/Item"
 import { EditorInputItem, EditorNumberItem } from "components/editor/EditorItem"
 import { calculateInterval } from "utils/datetime/range"
-import { getInitTimeRange } from "components/DatePicker/TimePicker"
+import { getCurrentTimeRange } from "components/DatePicker/TimePicker"
 
 import { Datasource } from "types/datasource"
 import HttpQueryEditor from "../plugins/datasource/http/Editor"
@@ -154,7 +154,7 @@ const DatasourceQueryOption = ({ panel, onChange }: Props) => {
                     </FormItem>
 
                     <FormItem labelWidth="170px" size="sm" title={t1.finalInterval} desc={t1.finalIntervalTips} alignItems="center">
-                        <Text width="100px" pl="2">{calculateInterval(getInitTimeRange(), panel.datasource.queryOptions.maxDataPoints, panel.datasource.queryOptions.minInterval).interval}</Text>
+                        <Text width="100px" pl="2">{calculateInterval(getCurrentTimeRange(), panel.datasource.queryOptions.maxDataPoints, panel.datasource.queryOptions.minInterval).interval}</Text>
                     </FormItem>
                 </FormSection>
             }

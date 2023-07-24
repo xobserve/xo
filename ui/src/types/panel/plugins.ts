@@ -11,6 +11,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 import { PanelType } from "types/dashboard"
+import { ThresholdsConfig } from "types/threshold"
 import { ValueCalculationType } from "types/value"
 
 //@needs-update-when-add-new-panel
@@ -25,6 +26,7 @@ export interface PanelPlugins {
     [PanelType.Gauge]?: GaugeSettings
     [PanelType.Stat]?: StatSettings
     [PanelType.Trace]?: TraceSettings
+    [PanelType.BarGauge]? : BarGaugeSettings
 }
 
 /*-------------------- Plugins ----------------------- */
@@ -34,18 +36,35 @@ export interface DisableDatasource {
 }
 
 
+export interface BarGaugeSettings {
+    value: ValueSetting
+    orientation: "horizontal" | "vertical"
+    mode: "basic" | "lcd"
+    
+    style: {
+        titleSize: number 
+        valueSize: number 
+        showUnfilled: boolean
+    }
+    min: number
+    max: number
+    maxminFrom: "series" | "all"
+    showMax: boolean 
+    showMin: boolean
+    thresholds: ThresholdsConfig
+}
 export interface TraceSettings {
     
 }
 
 export interface StatSettings  {
     showTooltip: boolean
+    diisplaySeries: string
     showLegend: boolean
     styles: {
         style: "lines" | "bars" 
         fillOpacity: number
         gradientMode: "none" | "opacity"
-        color: string
         graphHeight: number
         connectNulls: boolean
     }
@@ -54,6 +73,7 @@ export interface StatSettings  {
         scaleBase: 2 | 10
     }
     value: ValueSetting
+    thresholds: ThresholdsConfig
 }
 
 export interface PieSettings {
@@ -72,6 +92,8 @@ export interface PieSettings {
         placement: PieLegendPlacement
     }
     value: ValueSetting
+    thresholds: ThresholdsConfig
+    enableThresholds: boolean
 }
 
 export enum PieLegendPlacement {
@@ -85,6 +107,7 @@ export enum PieLegendPlacement {
 
 export interface GaugeSettings {
     animation: boolean
+    diisplaySeries: string
     value: GaugeValueSettings
     scale: {
         enable: boolean
@@ -94,14 +117,19 @@ export interface GaugeSettings {
     axis: {
         width: number
         showTicks: boolean
-        split: GaugeAxisSplit[]
     }
     title: {
         show: boolean
+        display: string
         fontSize: number
         left: string
         top: string
     }
+    pointer: {
+        length: string 
+        width: number
+    }
+    thresholds: ThresholdsConfig
 }
 
 export type GaugeAxisSplit = [number, string]
@@ -123,6 +151,8 @@ export interface EchartsSettings {
     allowEmptyData: boolean
     setOptionsFunc: string
     registerEventsFunc: string
+    thresholds: ThresholdsConfig
+    enableThresholds: boolean
 }
 
 export interface TextPlugin extends DisableDatasource {
@@ -141,6 +171,7 @@ export interface TableSettings {
     tableWidth: number
     stickyHeader: boolean
     column: {
+        colorTitle: boolean
         align: "auto" | "left" | "center" | "right"
         enableSort: boolean
         enableFilter: boolean
@@ -150,6 +181,10 @@ export interface TableSettings {
     enablePagination: boolean
    
     onRowClick: string
+    rowActions: {name: string; action:string; style: string; color: string}[]
+    actionColumnName: string
+    actionClumnWidth: string
+    actionButtonSize: "xs" | "sm" | "md"
 }
 
 export interface NodeGraphSettings {
@@ -220,9 +255,19 @@ export interface GraphSettings {
         scaleBase?: 2 | 10
     },
     value: ValueSetting
+    thresholds: ThresholdsConfig
+    thresholdsDisplay: ThresholdDisplay
 }
 
 
+export enum ThresholdDisplay {
+    None = "None",
+    Line = "Line",
+    DashedLine = "Dashed Line",
+    Area = "Area",
+    AreaLine = "Area Line",
+    AreaDashedLine = "Area Dashed Line"
+}
 
 
 
@@ -256,9 +301,5 @@ export interface Unit {
 
 export interface Units {
     unitsType: UnitsType,
-    units: {
-        operator: "x" | "/",
-        rhs: number,
-        unit: string
-    }[],
+    units: Unit[],
 }

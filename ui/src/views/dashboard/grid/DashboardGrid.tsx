@@ -15,16 +15,17 @@ import RGL, { WidthProvider } from "react-grid-layout";
 
 const ReactGridLayout = WidthProvider(RGL);
 
-import { GRID_CELL_HEIGHT, GRID_CELL_VMARGIN, GRID_COLUMN_COUNT } from "src/data/constants";
+import { DashboardHeaderHeight, GRID_CELL_HEIGHT, GRID_CELL_VMARGIN, GRID_COLUMN_COUNT } from "src/data/constants";
 import { updateGridPos } from "utils/dashboard/panel";
-import { Box, Grid, useColorModeValue } from "@chakra-ui/react";
-import React, { CSSProperties, memo, useCallback, useRef } from "react";
+import { Box, Grid, Text, useColorModeValue } from "@chakra-ui/react";
+import React, { CSSProperties, memo, useCallback, useMemo, useRef } from "react";
 import EditPanel from "../edit-panel/EditPanel";
 import uPlot from "uplot";
 import AutoSizer from "react-virtualized-auto-sizer";
 import useGranaTheme from 'hooks/useExtraTheme';
 import { PanelGrid } from "./PanelGrid";
-import { useSearchParam } from "react-use";
+import { useKey, useSearchParam } from "react-use";
+import { addParamToUrl } from "utils/url";
 
 
 
@@ -40,10 +41,22 @@ let gridWidth = 0;
 const DashboardGrid = memo((props: GridProps) => {
     console.log("dashboard grid rendered:")
     const inEdit = useSearchParam('edit')
+    const viewPanel = useSearchParam("viewPanel")
 
     const { dashboard, onChange } = props
     const panelMap = {}
     const [finalWidth, setFinalWidth] = React.useState(0);
+
+    useKey(
+        "Escape",
+        () => {
+            if (viewPanel) {
+                addParamToUrl({ viewPanel: null })
+            }
+        },
+        {},
+        [viewPanel]
+    )
 
     const buildLayout = () => {
         const layout: ReactGridLayout.Layout[] = [];
@@ -75,7 +88,7 @@ const DashboardGrid = memo((props: GridProps) => {
             layout.push(panelPos);
         }
 
-        
+
         return layout;
     }
 
@@ -103,18 +116,30 @@ const DashboardGrid = memo((props: GridProps) => {
         onChange(dashboard => {
             dashboard.data.panels.splice(index, 1);
         })
-    },[dashboard])
+    }, [dashboard])
 
     let mooSync = dashboard.data.sharedTooltip ? uPlot.sync(dashboard.id) : null
 
 
-    const onDragStop = (layout, oldItem, newItem) => {};
+    const onDragStop = (layout, oldItem, newItem) => { };
 
-    const onResize = (layout, oldItem, newItem) => {};
+    const onResize = (layout, oldItem, newItem) => { };
 
-    const onResizeStop = (layout, oldItem, newItem) => {};
+    const onResizeStop = (layout, oldItem, newItem) => { };
 
     const h = useRef(null)
+
+    const viewPanelHeight = useMemo(() => {
+        let height = 0
+        if (viewPanel) {
+            const ele = document.getElementById("sidemenu")
+            height = ele?.offsetHeight - DashboardHeaderHeight - 15 ?? 600
+        }
+
+        return height
+    }, [viewPanel])
+
+
     return (<Box style={{ flex: '1 1 auto' }} id="dashboard-grid" position="relative">
         <AutoSizer disableHeight>
             {({ width }) => {
@@ -122,19 +147,19 @@ const DashboardGrid = memo((props: GridProps) => {
                     return null;
                 }
 
-                if (finalWidth == 0) {
-                    setFinalWidth(width)
-                } else {
-                    if (h.current) {
-                        clearTimeout(h.current)
-                    }
-    
-                    h.current = setTimeout(() => {
-                        setFinalWidth(width)
-                        clearTimeout(h.current)
-                    },200)
-                }
- 
+                // if (finalWidth == 0) {
+                //     setFinalWidth(width)
+                // } else {
+                //     if (h.current) {
+                //         clearTimeout(h.current)
+                //     }
+
+                //     h.current = setTimeout(() => {
+                //         setFinalWidth(width)
+                //         clearTimeout(h.current)
+                //     },200)
+                // }
+
                 const draggable = width <= 769 ? false : dashboard.editable;
 
                 // This is to avoid layout re-flows, accessing window.innerHeight can trigger re-flow
@@ -147,47 +172,62 @@ const DashboardGrid = memo((props: GridProps) => {
 
                 // we need a finalWidth key to force refreshing the grid layout
                 // it solves the issues when resizing browser window
-                return <>{finalWidth > 0 && <Box key={finalWidth}  width={width}  height="100%" className="grid-layout-wrapper">
-                    <ReactGridLayout
+                return <>{
+                    // finalWidth > 0
+                    // &&
+                    <Box
+                        // key={finalWidth}  
                         width={width}
-                        isDraggable={draggable}
-                        isResizable={dashboard.editable}
-                        containerPadding={[0, 0]}
-                        useCSSTransforms={false}
-                        margin={[GRID_CELL_VMARGIN, GRID_CELL_VMARGIN]}
-                        cols={GRID_COLUMN_COUNT}
-                        rowHeight={GRID_CELL_HEIGHT}
-                        draggableHandle=".grid-drag-handle"
-                        draggableCancel=".grid-drag-cancel"
-                        layout={buildLayout()}
-                        onDragStop={onDragStop}
-                        onResize={onResize}
-                        onResizeStop={onResizeStop}
-                        onLayoutChange={onLayoutChange}
-                        compactType={dashboard.data.layout as any}
-                        allowOverlap={dashboard.data.allowPanelsOverlap}
+                        height="100%"
+                        className="grid-layout-wrapper"
                     >
-                        {
-                            dashboard.data.panels.map((panel) => {
-                                return <GridItem
-                                    key={panel.id}
-                                    data-panelid={panel.id}
-                                    gridPos={panel.gridPos}
-                                    gridWidth={width}
-                                    windowHeight={windowHeight}
-                                    windowWidth={windowWidth}
-                                >
-                                    {(width: number, height: number) => {
-                                        return (<Box key={panel.id} id={`panel-${panel.id}`}>
-                                             {!inEdit && <PanelGrid dashboard={dashboard} panel={panel} width={width} height={height} onRemovePanel={onRemovePanel} sync={mooSync} />}
-                                        </Box>)
-                                    }}
-                                </GridItem>
+                        {!viewPanel
+                            ?
+                            <ReactGridLayout
+                                width={width}
+                                isDraggable={draggable}
+                                isResizable={dashboard.editable}
+                                containerPadding={[0, 0]}
+                                useCSSTransforms={false}
+                                margin={[GRID_CELL_VMARGIN, GRID_CELL_VMARGIN]}
+                                cols={GRID_COLUMN_COUNT}
+                                rowHeight={GRID_CELL_HEIGHT}
+                                draggableHandle=".grid-drag-handle"
+                                draggableCancel=".grid-drag-cancel"
+                                layout={buildLayout()}
+                                onDragStop={onDragStop}
+                                onResize={onResize}
+                                onResizeStop={onResizeStop}
+                                onLayoutChange={onLayoutChange}
+                                compactType={dashboard.data.layout as any}
+                                allowOverlap={dashboard.data.allowPanelsOverlap}
+                            >
+                                {
+                                    dashboard.data.panels.map((panel) => {
+                                        return <GridItem
+                                            key={panel.id}
+                                            data-panelid={panel.id}
+                                            gridPos={panel.gridPos}
+                                            gridWidth={width}
+                                            windowHeight={windowHeight}
+                                            windowWidth={windowWidth}
+                                        >
+                                            {(width: number, height: number) => {
+                                                return (<Box key={panel.id} id={`panel-${panel.id}`}>
+                                                    {!inEdit && <PanelGrid dashboard={dashboard} panel={panel} width={width} height={height} onRemovePanel={onRemovePanel} sync={mooSync} />}
+                                                </Box>)
+                                            }}
+                                        </GridItem>
 
-                            })
+                                    })
+                                }
+                            </ReactGridLayout>
+                            :
+                            <>
+                                {!inEdit && <PanelGrid dashboard={dashboard} panel={dashboard.data.panels.find(p => p.id.toString() == viewPanel)} width={width} height={viewPanelHeight} onRemovePanel={onRemovePanel} sync={mooSync} />}
+                            </>
                         }
-                    </ReactGridLayout>
-                </Box>}</>
+                    </Box>}</>
             }}
         </AutoSizer>
         <EditPanel dashboard={dashboard} onChange={onChange} />
@@ -195,6 +235,7 @@ const DashboardGrid = memo((props: GridProps) => {
 })
 
 export default DashboardGrid
+
 
 
 interface GridItemProps extends Record<string, any> {

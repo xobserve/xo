@@ -16,13 +16,13 @@ import { DatasourceType, PanelProps } from "types/dashboard"
 import TraceSearchPanel from "./components/SearchPanel"
 import logfmtParser from 'logfmt/lib/logfmt_parser';
 import { queryJaegerTrace, queryJaegerTraces } from "../../datasource/jaeger/query_runner"
-import { useMemo, useState } from "react"
+import { useEffect, useMemo, useState } from "react"
 import { TraceData } from "types/plugins/trace"
 import TraceSearchResult from "./components/SearchResult"
 import transformTraceData from "./utils/transform-trace-data"
-import { uniqBy } from "lodash";
+import { cloneDeep, uniqBy } from "lodash";
 import { replaceWithVariables, replaceWithVariablesHasMultiValues } from "utils/variable";
-import { getInitTimeRange } from "components/DatePicker/TimePicker";
+import { getNewestTimeRange } from "components/DatePicker/TimePicker";
 import React from "react";
 
 
@@ -30,9 +30,15 @@ import React from "react";
 
 const TracePanel = (props: PanelProps) => {
     const [rawTraces, setRawTraces] = useState<TraceData[]>(null)
-    const onSearch = async (service, operation, tags, min, max, limit,useLatestTime) => {
+    useEffect(() => {
+        if (props.panel.datasource.type == DatasourceType.TestData) {
+            onSearch(null, null, null, null, null, null, true)
+        }
+    }, [props.panel.datasource.type, props.data]
+    )
+    const onSearch = async (service, operation, tags, min, max, limit, useLatestTime) => {
         tags = convTagsLogfmt(tags);
-        let tr = getInitTimeRange()
+        let tr = getNewestTimeRange()
         if (!useLatestTime) {
             tr = props.timeRange
         }
@@ -44,7 +50,7 @@ const TracePanel = (props: PanelProps) => {
                 limit = replaceWithVariables(limit)
                 const services = replaceWithVariablesHasMultiValues(service)
                 const operations = replaceWithVariablesHasMultiValues(operation, "all")
-                
+
                 const promises = []
                 for (const s of services) {
                     for (const o of operations) {
@@ -54,7 +60,9 @@ const TracePanel = (props: PanelProps) => {
                 const res = await Promise.all(promises)
                 setRawTraces(uniqBy(res.filter(r => r).flat(), t => t.traceID))
                 break;
-
+            case DatasourceType.TestData:
+                setRawTraces(uniqBy(cloneDeep(props.data).flat().filter(r => r).flat(), t => t.traceID))
+                break
             default:
                 setRawTraces([])
                 break;
@@ -70,7 +78,6 @@ const TracePanel = (props: PanelProps) => {
                     setRawTraces(res.filter(r => r).flat())
                 })
                 break;
-
             default:
                 setRawTraces([])
                 break;
@@ -82,7 +89,7 @@ const TracePanel = (props: PanelProps) => {
     const traces = useMemo(() => rawTraces?.map(transformTraceData), [rawTraces])
 
     return (<>
-        {props.panel.datasource.type != DatasourceType.Jaeger ? <Center height="100%">No data</Center> :
+        {(props.panel.datasource.type != DatasourceType.Jaeger && props.panel.datasource.type != DatasourceType.TestData) ? <Center height="100%">No data</Center> :
             <HStack alignItems="top" px="2" py="1">
                 <Box width="400px" pt="2" pl="1">
                     <TraceSearchPanel timeRange={props.timeRange} dashboardId={props.dashboardId} panel={props.panel} onSearch={onSearch} onSearchIds={onSearchIds} />

@@ -36,6 +36,7 @@ import React from "react";
 import { useStore } from "@nanostores/react"
 import { commonMsg, panelMsg } from "src/i18n/locales/en"
 import EditPanelTransform from "./Transform"
+import { getPanelOverridesRules } from "utils/dashboard/panel"
 
 interface EditPanelProps {
     dashboard: Dashboard
@@ -147,6 +148,7 @@ const EditPanel = ({ dashboard, onChange }: EditPanelProps) => {
         return '0%'
     }
 
+    const panelOverridesRules = getPanelOverridesRules(tempPanel?.type)
     return (<>
         <Modal isOpen={isOpen} onClose={onEditClose} autoFocus={false} size="full">
             <ModalOverlay />
@@ -180,8 +182,8 @@ const EditPanel = ({ dashboard, onChange }: EditPanelProps) => {
                             </Box>
                             {/* panel datasource section */}
                             {!tempPanel.plugins[tempPanel.type].disableDatasource && <Box maxHeight={maxDatasourceHeight()} mt="2" overflowY="scroll">
-                            <Box>
-                                <Tabs position="relative" variant="unstyled">
+                            <Box> 
+                                <Tabs variant="unstyled">
                                     <TabList pb="0">
                                         <Tab>{t.query}</Tab>
                                         <Tab>{t.transform}</Tab>
@@ -213,7 +215,7 @@ const EditPanel = ({ dashboard, onChange }: EditPanelProps) => {
                                     <TabList pb="0">
                                         <Tab>{t.panel}</Tab>
                                         <Tab>{t.styles}</Tab>
-                                        <Tab>{t1.overrides}</Tab>
+                                        {panelOverridesRules.length > 0 && <Tab>{t1.overrides}</Tab>}
                                     </TabList>
                                     <TabIndicator
                                         mt="3px"
@@ -261,9 +263,8 @@ const loadablePanels = {
     [PanelType.Gauge]: loadable(() => import('../plugins/panel/gauge/Editor')),
     [PanelType.Stat]: loadable(() => import('../plugins/panel/stat/Editor')),
     [PanelType.Trace]: loadable(() => import('../plugins/panel/trace/Editor')),
+    [PanelType.BarGauge]: loadable(() => import('../plugins/panel/barGauge/Editor')),
 }
-
-
 
 const CustomPanelEditor = ({ tempPanel, setTempPanel, data }) => {
     const Editor = loadablePanels[tempPanel.type]

@@ -11,19 +11,18 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 import { Box, useToast } from "@chakra-ui/react"
-import PageContainer from "layouts/page-container"
 import { useCallback, useEffect, useRef, useState } from "react"
 import { Dashboard, Panel } from "types/dashboard"
 import { requestApi } from "utils/axios/request"
 import DashboardHeader from "src/views/dashboard/DashboardHeader"
 import DashboardGrid from "src/views/dashboard/grid/DashboardGrid"
-import { clone, cloneDeep, concat, defaults, defaultsDeep, find, findIndex } from "lodash"
+import { clone, cloneDeep, concat, defaultsDeep, findIndex } from "lodash"
 import { Variable } from "types/variable"
 import { setVariableSelected } from "src/views/variables/Variables"
 import { prevQueries, prevQueryData } from "src/views/dashboard/grid/PanelGrid"
 import { unstable_batchedUpdates } from "react-dom"
 import useBus, { dispatch } from 'use-bus'
-import { SetDashboardEvent, TimeChangedEvent, UpdatePanelEvent, VariableChangedEvent } from "src/data/bus-events"
+import { SetDashboardEvent, UpdatePanelEvent, VariableChangedEvent } from "src/data/bus-events"
 import React from "react";
 import { useImmer } from "use-immer"
 import { setAutoFreeze } from "immer";
@@ -33,6 +32,8 @@ import Border from "components/largescreen/components/Border"
 import useFullscreen from "hooks/useFullscreen"
 import { initDashboard } from "src/data/dashboard"
 import { initPanel } from "src/data/panel/initPanel"
+import { DashboardHeaderHeight } from "src/data/constants"
+import { updateTimeToNewest } from "components/DatePicker/DatePicker"
 
 
 
@@ -43,14 +44,15 @@ setAutoFreeze(false)
 // 1. team's side menu, asscessed by a specific url path
 // 2. dashboard page, accessed by a dashboard id
 export let variables: Variable[] = []
-const DashboardWrapper = ({ dashboardId }) => {
+const DashboardWrapper = ({ dashboardId, sideWidth }) => {
     const [dashboard, setDashboard] = useImmer<Dashboard>(null)
     // const [gVariables, setGVariables] = useState<Variable[]>([])
     const fullscreen = useFullscreen()
 
     useEffect(() => {
+        updateTimeToNewest()
         if (!dashboard) {
-            load()   
+            load()
         }
         return () => {
             for (const k in prevQueries) {
@@ -104,7 +106,7 @@ const DashboardWrapper = ({ dashboardId }) => {
         const dash = initDash(res.data)
         unstable_batchedUpdates(() => {
             setDashboard(cloneDeep(dash))
-            setCombinedVariables(res.data,res0.data)
+            setCombinedVariables(res.data, res0.data)
         })
     }
 
@@ -112,7 +114,7 @@ const DashboardWrapper = ({ dashboardId }) => {
         dash.data.panels.forEach((panel: Panel) => {
             // console.log("33333 before",cloneDeep(panel.plugins))
             panel = defaultsDeep(panel, initPanel())
-            panel.plugins[panel.type] = defaultsDeep(panel.plugins[panel.type], initPanelPlugins[panel.type])
+            panel.plugins[panel.type] = defaultsDeep(panel.plugins[panel.type], initPanelPlugins()[panel.type])
             panel.styles = defaultsDeep(panel.styles, initPanelStyles)
             // console.log("33333 after",cloneDeep(panel.plugins[panel.type]),cloneDeep(panel.overrides))
         })
@@ -151,23 +153,24 @@ const DashboardWrapper = ({ dashboardId }) => {
 
 
 
-    const headerHeight = fullscreen ? '0px' : "67px"
-    // (visibleVars?.length > 0 ? "67px" : "38px")
-    return (
-        <>
-            <PageContainer bg={dashboard?.data.styles.bgEnabled ? dashboard?.data.styles?.bg : null}>
-                {dashboard && <Box pl="6px" pr="6px" width="100%" height="100%" minHeight="100vh">
-                    {/* <Decoration decoration={dashboard.data.styles.decoration}/> */}
-                    <DashboardHeader dashboard={dashboard} onChange={onDashbardChange} />
-                    <Box key={dashboard.id + fullscreen} id="dashboard-wrapper" mt={headerHeight} py="2" position="relative">
-                        <DashboardBorder border={dashboard.data.styles.border} />
-                        {dashboard.data.panels?.length > 0 && <DashboardGrid dashboard={dashboard} onChange={onDashbardChange} />}
-                    </Box>
-                </Box>}
-            </PageContainer>
 
-        </>
-    )
+    const headerHeight = fullscreen ? 0 : DashboardHeaderHeight
+    return (<>
+        {dashboard && <Box px="3" width="100%" minHeight="100vh" position="relative">
+            {/* <Decoration decoration={dashboard.data.styles.decoration}/> */}
+            <DashboardHeader dashboard={dashboard} onChange={onDashbardChange} sideWidth={sideWidth} />
+            <Box
+                // key={dashboard.id + fullscreen} 
+                id="dashboard-wrapper"
+                pt={headerHeight + 7 + 'px'}
+                pb="2"
+                position="relative"
+            >
+                <DashboardBorder border={dashboard.data.styles.border} />
+                {dashboard.data.panels?.length > 0 && <DashboardGrid dashboard={dashboard} onChange={onDashbardChange} />}
+            </Box>
+        </Box>}
+    </>)
 }
 
 export default DashboardWrapper

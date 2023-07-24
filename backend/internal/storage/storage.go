@@ -18,12 +18,12 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/MyStarship/starship/backend/pkg/config"
-	"github.com/MyStarship/starship/backend/pkg/db"
-	"github.com/MyStarship/starship/backend/pkg/e"
-	"github.com/MyStarship/starship/backend/pkg/log"
-	"github.com/MyStarship/starship/backend/pkg/models"
-	"github.com/MyStarship/starship/backend/pkg/utils"
+	"github.com/DataObserve/datav/backend/pkg/config"
+	"github.com/DataObserve/datav/backend/pkg/db"
+	"github.com/DataObserve/datav/backend/pkg/e"
+	"github.com/DataObserve/datav/backend/pkg/log"
+	"github.com/DataObserve/datav/backend/pkg/models"
+	"github.com/DataObserve/datav/backend/pkg/utils"
 	_ "github.com/go-sql-driver/mysql"
 )
 

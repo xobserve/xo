@@ -10,8 +10,8 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-import { Input, NumberDecrementStepper, NumberIncrementStepper, NumberInput, NumberInputField, NumberInputStepper, Slider, SliderFilledTrack, SliderThumb, SliderTrack, Textarea } from "@chakra-ui/react"
-import { isEmpty } from "lodash"
+import { Input, Slider, SliderFilledTrack, SliderThumb, SliderTrack, Textarea } from "@chakra-ui/react"
+import { InputNumber } from "antd"
 import React, { useState } from "react"
 
 interface EditorInputProps {
@@ -22,7 +22,7 @@ interface EditorInputProps {
     placeholder?: string
 }
 
-export const EditorInputItem = ({ value, onChange, type="input", size = "md",placeholder }: EditorInputProps) => {
+export const EditorInputItem = ({ value, onChange, type = "input", size = "md", placeholder }: EditorInputProps) => {
     const [temp, setTemp] = useState(value)
     switch (type) {
         case "input":
@@ -31,7 +31,7 @@ export const EditorInputItem = ({ value, onChange, type="input", size = "md",pla
             )
         case "textarea":
             return (
-                <Textarea placeholder={placeholder}  size={size} value={temp} onChange={e => setTemp(e.currentTarget.value)} onBlur={() => onChange(temp)} />
+                <Textarea placeholder={placeholder} size={size} value={temp} onChange={e => setTemp(e.currentTarget.value)} onBlur={() => onChange(temp)} />
             )
     }
 }
@@ -42,29 +42,22 @@ interface NumberInputProps {
     min?: number
     max?: number
     step?: number
-    size?:string
+    size?: string
     placeholder?: string
+    notNull?: boolean // when set to true, value can not be null
 }
 
-export const EditorNumberItem = ({ value, onChange, min,max,step=null, size = "sm",placeholder="" }: NumberInputProps) => {
-    const [temp, setTemp] = useState(value.toString())
-    const rangeProps = {}
-    if (isEmpty(min)) rangeProps['min'] = min
-    if (isEmpty(max)) rangeProps['max'] = max
-
+// Value can be null or number 
+// But if min is set, value can not be null
+export const EditorNumberItem = ({ value, onChange, min = null, max = null, step = null, size = "md", placeholder = null, notNull=false }: NumberInputProps) => {
+    const [temp, setTemp] = useState(value)
     return (
-            <NumberInput value={temp}  {...rangeProps} size={size} step={step} onChange={v => setTemp(v)} onBlur={() => onChange(Number(temp))}>
-                <NumberInputField  placeholder={placeholder}/>
-                {step && <NumberInputStepper>
-                    <NumberIncrementStepper />
-                    <NumberDecrementStepper />
-                </NumberInputStepper>}
-            </NumberInput>
+        <InputNumber  placeholder={placeholder} size={size == "sm" ? "small" : "middle"} min={min} max={max} step={step} controls={step !== null} value={temp} onChange={v => setTemp(v === null ? (notNull ? 0 :( min !== null ? min : null)) : v)} onBlur={() => onChange(temp)} />
     )
 }
 
 
-export const EditorSliderItem = ({ value, onChange, min=0,max=10,step=1, size = "sm" }: NumberInputProps) => {
+export const EditorSliderItem = ({ value, onChange, min = 0, max = 10, step = 1, size = "sm" }: NumberInputProps) => {
     const [temp, setTemp] = useState(value)
     return (
         <Slider size={size} value={temp} min={min} max={max} step={step} onChange={v => setTemp(v)}

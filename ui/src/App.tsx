@@ -11,13 +11,13 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { ChakraProvider, useToast } from '@chakra-ui/react'
+import { useColorMode, useToast } from '@chakra-ui/react'
 import {
   createBrowserRouter,
   RouterProvider,
+
 } from "react-router-dom";
 import React, { useEffect, useState } from 'react'
-import theme from 'theme'
 import { createStandaloneToast } from '@chakra-ui/toast'
 import CommonStyles from "src/theme/common.styles"
 import BaiduMap from 'components/BaiduMap'
@@ -28,34 +28,47 @@ import { Variable } from 'types/variable'
 import { queryVariableValues, setVariableSelected } from './views/variables/Variables'
 import { VarialbeAllOption } from 'src/data/variable'
 import AntdWrapper from 'components/AntdWrapper'
-import routes from './routes';
+import { routes } from './routes';
+import { initColors } from 'utils/colors';
 
 const { ToastContainer } = createStandaloneToast()
 
 export let canvasCtx;
 export let datasources: Datasource[] = []
 export let gvariables: Variable[] = []
+
 export let gtoast
 
-
 const AppView = () => {
+  const { colorMode } = useColorMode()
+
+  initColors(colorMode)
+
+
   const [cfg, setConfig] = useState<UIConfig>(null)
   canvasCtx = document.createElement('canvas').getContext('2d')!;
   const toast = useToast()
   gtoast = toast
+
   useEffect(() => {
     loadConfig()
     loadVariables()
+    // we add background color in index.html to make loading screen shows the same color as the app pages
+    // but we need to remove it after the App is loaded, otherwise the bg color in index.html will override the bg color in App ,
+    // especilally when we changed the color mode, but the bg color will never change
+    let bodyStyle = document.body.style
+    bodyStyle.background = null
   }, [])
 
   useEffect(() => {
     if (cfg) {
-      const firstPageLoading= document.getElementById('first-page-loading');
+      const firstPageLoading = document.getElementById('first-page-loading');
       if (firstPageLoading) {
         firstPageLoading.style.display = "none"
       }
     }
-  },[cfg])
+  }, [cfg])
+
   const loadConfig = async () => {
     const res0 = await requestApi.get("/datasource/all")
     datasources = res0.data
@@ -83,14 +96,15 @@ const AppView = () => {
   }
 
   const router = createBrowserRouter(routes);
+
   return (
     <>
-      {cfg && <ChakraProvider theme={theme}>
+      {cfg && <>
         <AntdWrapper>
-          <RouterProvider router={router} /> 
-        
+          <RouterProvider router={router} />
+          {/* <RouterProvider router={noContainerRoutes} /> */}
         </AntdWrapper>
-      </ChakraProvider>}
+      </>}
 
       <CommonStyles />
       <ToastContainer />

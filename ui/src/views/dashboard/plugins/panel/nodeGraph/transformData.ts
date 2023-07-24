@@ -13,6 +13,7 @@
 import G6 from "@antv/g6";
 import { NodeGraphSettings } from "types/panel/plugins";
 import { NodeGraphPluginData } from "types/plugins/nodeGraph";
+import { paletteColorNameToHex } from "utils/colors";
 import { getDefaultEdgeStyle } from "./default-styles";
 
 export const setAttrsForData = (settings: NodeGraphSettings, data: NodeGraphPluginData,colorMode) => {
@@ -91,10 +92,10 @@ export const setAttrsForData = (settings: NodeGraphSettings, data: NodeGraphPlug
         if (edge.style) {
             edge.style.endArrow = settings.edge.arrow == "default" ? true :{
                 path: G6.Arrow[settings.edge.arrow](),
-                fill: colorMode == "light" ? settings.edge.color.light : settings.edge.color.dark,
+                fill: colorMode == "light" ? paletteColorNameToHex(settings.edge.color.light, colorMode) : paletteColorNameToHex(settings.edge.color.dark, colorMode),
             }
 
-            edge.style.stroke = colorMode == "light" ? settings.edge.color.light : settings.edge.color.dark
+            edge.style.stroke = colorMode == "light" ? paletteColorNameToHex(settings.edge.color.light, colorMode) : paletteColorNameToHex(settings.edge.color.dark, colorMode)
             edge.style.opacity = settings.edge.opacity
         }
        

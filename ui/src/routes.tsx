@@ -28,94 +28,92 @@ import TeamSettingPage from "./pages/cfg/team/[id]/Setting";
 import TeamSidemenuPage from "./pages/cfg/team/[id]/Sidemenu";
 import TestPage from "./pages/Test";
 import loadable from '@loadable/component';
+import PageContainer from "layouts/PageContainer";
 
 
 const DashboardPage = loadable(() => import('./pages/dashboard/index'));
 const TracePage = loadable(() => import('./pages/dashboard/Trace'));
 
+const pageContainer = ele => {
+  return <PageContainer>{ele}</PageContainer>
+}
+
 const cfgRoutes = [
   {
     path: "/cfg/datasources",
-    element:  <DatasourcesPage />,
+    element: pageContainer(<DatasourcesPage />),
   },
   {
     path: "/cfg/teams",
-    element: <TeamsPage />,
+    element: pageContainer(<TeamsPage />),
   },
   {
     path: "/cfg/variables",
-    element: <GlobalVariablesPage />,
+    element: pageContainer(<GlobalVariablesPage />),
   },
   {
     path: "/cfg/users",
-    element: <UsersPage />,
+    element: pageContainer(<UsersPage />),
   },
   {
     path: "/cfg/team/:id/dashboards",
-    element: <TeamDashboardsPage />,
+    element: pageContainer(<TeamDashboardsPage />),
   },
   {
     path: "/cfg/team/:id/members",
-    element: <TeamMembersPage />,
+    element: pageContainer(<TeamMembersPage />),
   },
   {
     path: "/cfg/team/:id/setting",
-    element: <TeamSettingPage />,
+    element: pageContainer(<TeamSettingPage />),
   },
   {
     path: "/cfg/team/:id/sidemenu",
-    element: <TeamSidemenuPage />,
+    element: pageContainer(<TeamSidemenuPage />),
   },
 ]
 
 const newRoutes = [
   {
     path: "/new/dashboard",
-    element: <NewDashboardPage />,
+    element: pageContainer(<NewDashboardPage />),
   },
   {
     path: "/new/datasource",
-    element: <NewDatasourcePage />,
+    element: pageContainer(<NewDatasourcePage />),
   },
   {
     path: "/new/import",
-    element: <ImportDashboardPage />,
+    element: pageContainer(<ImportDashboardPage />),
   },
 ]
-const routes = [
-  {
-    path: "/",
-    element: <div>Home</div>,
-  },
-  {
-    path: "/login",
-    element: <Login />,
-  },
+
+export const routes = [
   {
     path: "/account/setting",
-    element: <AccountSetting />,
-  },
-  {
-    path: "/test",
-    element: <TestPage />
+    element: pageContainer(<AccountSetting />),
   },
   ...newRoutes,
   ...cfgRoutes,
+  {
+    path: "/:dashboardId/*", 
+    element: pageContainer(<DashboardPage />),
+  },
+  {
+    path: "*",
+    element: pageContainer(<NotFoundPage />),
+  },
   {
     path: "/trace/:id/:datasourceId",
     element: <TracePage />,
   },
   {
-    path: "/:dashboardId/*", 
-    element: <DashboardPage />,
+    path: "/test",
+    element: <TestPage />
   },
   {
-    path: "*",
-    element: <NotFoundPage />,
+    path: "/login",
+    element: <Login />,
   },
-
 ]
-
-
-export default routes
 

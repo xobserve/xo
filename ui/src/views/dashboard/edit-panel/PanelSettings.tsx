@@ -35,7 +35,7 @@ const PanelSettings = ({ panel, onChange }: PanelEditorProps) => {
             tempPanel.type = type
                         
             tempPanel.plugins = {
-                [type]: pluginsCachedInEdit[type] ??  initPanelPlugins[type]
+                [type]: pluginsCachedInEdit[type] ??  initPanelPlugins()[type]
             }
 
             tempPanel.overrides = overridesCacheInEdit[type] ?? []

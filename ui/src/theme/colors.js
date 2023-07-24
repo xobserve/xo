@@ -32,6 +32,7 @@ const  customColors = {
         light: '#fff',
         dark: '#1A202C'
     },
+    // primary text color
     primaryColor: {
         light: theme.colors.cyan['600'], 
         dark: theme.colors.cyan['600']

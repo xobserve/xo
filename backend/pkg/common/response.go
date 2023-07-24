@@ -12,7 +12,7 @@
 // limitations under the License.
 package common
 
-import "github.com/MyStarship/starship/backend/pkg/e"
+import "github.com/DataObserve/datav/backend/pkg/e"
 
 type Resp struct {
 	Status  string      `json:"status"`

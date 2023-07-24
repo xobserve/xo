@@ -1,6 +1,6 @@
 import { Box, Checkbox, Flex, HStack, Tag, TagLabel, TagLeftIcon, Text, Wrap, WrapItem, useColorModeValue } from "@chakra-ui/react"
 import { Trace } from "types/plugins/trace"
-import { formatDuration, formatRelativeDate } from "../utils/date"
+import { formatDuration, formatRelativeDate } from "utils/date"
 import { sortBy } from "lodash"
 import colorGenerator from "utils/colorGenerator"
 import { FaInfoCircle } from "react-icons/fa"
@@ -77,6 +77,7 @@ const TraceCard = ({ trace, maxDuration,checked=false, onChecked=null,simple=fal
 
             <Box fontSize="0.8rem">
                 {!simple && <HStack spacing={1}>
+                    {/* @datetime-examples */}
                     <Text className="bordered-right" pr="1">{formatRelativeDate(trace.startTime / 1000)}</Text>
                     <Text>{timeStr}</Text>
                 </HStack>}

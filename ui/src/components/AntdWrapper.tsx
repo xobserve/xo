@@ -12,28 +12,38 @@
 // limitations under the License.
 
 import React from 'react'
-import { useColorMode } from "@chakra-ui/react";
+import { Box, useColorMode, useColorModeValue } from "@chakra-ui/react";
 import { ConfigProvider, theme } from "antd";
 import customColors from "src/theme/colors";
 import { useSearchParam } from 'react-use';
 
-const AntdWrapper = ({children}) => {
+const AntdWrapper = ({ children }) => {
     const edit = useSearchParam("edit")
     const { colorMode } = useColorMode()
     const { defaultAlgorithm, darkAlgorithm } = theme;
-    return (<ConfigProvider
-        theme={{
-            algorithm: colorMode == "light" ? defaultAlgorithm : darkAlgorithm,
-            token: {
-                colorBgContainer:  colorMode == "light" ?customColors.bodyBg.light : ( edit ? customColors.modalBg.dark :customColors.bodyBg.dark),
-                colorPrimary:  colorMode == "light" ?customColors.primaryColor.light : customColors.primaryColor.dark,
-                colorBgElevated: colorMode == "light" ?customColors.popperBg.light : customColors.popperBg.dark ,
-                colorBgSpotlight: colorMode == "light" ?customColors.tooltipBg.light : customColors.tooltipBg.dark,
-                colorBorderSecondary: colorMode == "light" ? customColors.borderColor.light : customColors.borderColor.dark
-            },
-        }}>
-       {children}
-    </ConfigProvider>)
+    return (<Box sx={{
+        // set right border of antd Table header to null
+        'th.ant-table-cell:before': {
+            width: '0 !important'
+        },
+        'th.ant-table-cell': {
+            color: `${useColorModeValue(customColors.primaryColor.light,customColors.primaryColor.dark )} !important`
+        }
+    }}>
+        <ConfigProvider
+            theme={{
+                algorithm: colorMode == "light" ? defaultAlgorithm : darkAlgorithm,
+                token: {
+                    colorBgContainer: colorMode == "light" ? customColors.bodyBg.light : (edit ? customColors.modalBg.dark : customColors.bodyBg.dark),
+                    colorPrimary: colorMode == "light" ? customColors.primaryColor.light : customColors.primaryColor.dark,
+                    colorBgElevated: colorMode == "light" ? customColors.popperBg.light : customColors.popperBg.dark,
+                    colorBgSpotlight: colorMode == "light" ? customColors.tooltipBg.light : customColors.tooltipBg.dark,
+                    colorBorderSecondary: colorMode == "light" ? customColors.borderColor.light : customColors.borderColor.dark
+                },
+            }}>
+            {children}
+        </ConfigProvider>
+    </Box>)
 }
 
 export default AntdWrapper

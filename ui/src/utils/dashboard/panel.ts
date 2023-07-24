@@ -10,7 +10,10 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-import { GridPos, OverrideItem, Panel } from "types/dashboard";
+import { BarGaugeRules } from "src/views/dashboard/plugins/panel/barGauge/OverrideEditor";
+import { GraphRules } from "src/views/dashboard/plugins/panel/graph/OverridesEditor";
+import { TableRules } from "src/views/dashboard/plugins/panel/table/OverridesEditor";
+import { GridPos, OverrideItem, Panel, PanelType } from "types/dashboard";
 
 export const updateGridPos = (panel: Panel,newPos: GridPos) => {
     panel.gridPos.x = newPos.x;
@@ -33,3 +36,17 @@ export const findRuleInOverride = (override: OverrideItem, ruleType) => {
     return override?.overrides.find((o) => o.type == ruleType)?.value
 }
 
+
+export const getPanelOverridesRules = (panelType):string[] => {
+    //@needs-update-when-add-new-panel-overrides
+    switch (panelType) {
+        case PanelType.Graph:
+            return Object.keys(GraphRules).map(k => GraphRules[k])
+        case PanelType.Table:
+            return  Object.keys(TableRules).map(k => TableRules[k])
+        case PanelType.BarGauge:
+            return  Object.keys(BarGaugeRules).map(k => BarGaugeRules[k])
+        default:
+            return []
+    }
+}

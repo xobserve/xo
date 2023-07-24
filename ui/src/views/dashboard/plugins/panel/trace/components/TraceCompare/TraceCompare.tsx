@@ -13,7 +13,7 @@
 
 import { Box, Button, Center, Divider, Flex, HStack, Modal, ModalBody, ModalCloseButton, ModalContent, ModalHeader, ModalOverlay, Text, useDisclosure } from "@chakra-ui/react"
 import { Trace } from "types/plugins/trace"
-import { formatDuration, formatRelativeDate } from "../../utils/date"
+import { formatDuration, formatRelativeDate } from "utils/date"
 import moment from "moment"
 import TraceCompareGraph from "./TraceCompareGraph"
 import React from "react";

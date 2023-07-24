@@ -23,7 +23,7 @@ import Tooltip from "./Tooltip";
 import SeriesTable, { seriesTableMode } from "src/views/dashboard/plugins/panel/graph/Tooltip/SeriesTable";
 import { GraphLayout } from "src/views/dashboard/plugins/panel/graph/GraphLayout";
 import { Box, Center, Text, useColorMode } from "@chakra-ui/react";
-import { colors } from "utils/colors";
+import { colors, paletteColorNameToHex, palettes } from "utils/colors";
 import { SeriesData } from "types/seriesData";
 import storage from "utils/localStorage";
 import { PanelInactiveKey } from "src/data/storage-keys";
@@ -32,6 +32,8 @@ import { setDateTime } from "components/DatePicker/DatePicker";
 import React from "react";
 import { GraphRules } from "./OverridesEditor";
 import { findOverride, findOverrideRule, findRuleInOverride } from "utils/dashboard/panel";
+import { ThresholdsPlugin } from "./uplot-plugins/ThresholdsPlugin";
+import { ThresholdDisplay } from "types/panel/plugins";
 
 interface GraphPanelProps extends PanelProps {
     data: SeriesData[][]
@@ -57,6 +59,7 @@ const GraphPanel = memo((props: GraphPanelProps) => {
         const res = []
         props.data.forEach(d => {
             d.forEach(d1 => {
+                d1.rawName = d1.name
                 res.push(d1)
             })
         })
@@ -77,13 +80,13 @@ const GraphPanel = memo((props: GraphPanelProps) => {
                 frame.name = frame.rawName
             }
 
-            const color = findRuleInOverride(override, GraphRules.SeriesColor)
-            if (color) {
-                frame.color = color
-            } else {
-                frame.color = colors[i % colors.length]
+            
+            let color = findRuleInOverride(override, GraphRules.SeriesColor)
+            if (!color) {
+                color = palettes[i % palettes.length]
             }
-
+            frame.color = paletteColorNameToHex(color, colorMode)
+    
             // const negativeY = override?.overrides.find(o => o.type ==  GraphRules.SeriesNegativeY)
             // if (negativeY) {
             //     const vals = frame.fields[1].values
@@ -179,6 +182,8 @@ const GraphPanel = memo((props: GraphPanelProps) => {
     const onZoom = (tr) => {
         setDateTime(tr.from, tr.to)
     }
+
+
     return (
         <>{
             isEmpty(props.data) ? <Center height="100%">No data</Center> :
@@ -203,6 +208,7 @@ const GraphPanel = memo((props: GraphPanelProps) => {
                             >
                                 {props.panel.plugins.graph.tooltip.mode != 'hidden' && <Tooltip props={props} options={options} data={data} inactiveSeries={inactiveSeries} />}
                                 <ZoomPlugin options={options} onZoom={onZoom}/>
+                                {props.panel.plugins.graph.thresholdsDisplay != ThresholdDisplay.None && <ThresholdsPlugin options={options} thresholdsConfig={props.panel.plugins.graph.thresholds} display={props.panel.plugins.graph.thresholdsDisplay}/>}
                             </UplotReact>
                             )
                         }}

@@ -10,10 +10,9 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-import { Box, useColorMode, useToast } from "@chakra-ui/react";
+import { Box, useColorMode } from "@chakra-ui/react";
 import ChartComponent from "components/charts/Chart";
 import { formatUnit } from "components/Unit";
-import { isFunction, round } from "lodash";
 import { useMemo, useState } from "react";
 import { Panel, PanelProps } from "types/dashboard"
 import { PieLegendPlacement } from "types/panel/plugins";
@@ -22,6 +21,10 @@ import { SeriesData } from "types/seriesData";
 import { genDynamicFunction } from "utils/dynamicCode";
 import { calcValueOnSeriesData } from "utils/seriesData";
 import React from "react";
+import { paletteColorNameToHex } from "utils/colors";
+import { ValueCalculationType } from "types/value";
+import { getThreshold } from "components/Threshold/utils";
+import { ThresholdsMode } from "types/threshold";
 
 interface Props extends PanelProps {
     data: SeriesData[][]
@@ -31,18 +34,30 @@ const PiePanel = (props: Props) => {
     const { panel, height, width } = props
     const [chart, setChart] = useState(null)
     const { colorMode } = useColorMode()
-    
-    const [options,onEvents] = useMemo(() =>  {
+
+    const [options, onEvents] = useMemo(() => {
         // const d = data.length > 0 ? data[0] : []
 
-        const data:PiePluginData = []
-
+        const data: PiePluginData = []
+        const color = []
         for (const s of props.data) {
             for (const series of s) {
+                const v = calcValueOnSeriesData(series, props.panel.plugins.pie.value.calc)
                 data.push({
                     name: series.name,
-                    value:calcValueOnSeriesData(series, props.panel.plugins.pie.value.calc)
+                    value: v,
                 })
+
+                if (panel.plugins.pie.enableThresholds) {
+                    let max = 0
+                    if (panel.plugins.pie.thresholds.mode == ThresholdsMode.Percentage) {
+                        max = calcValueOnSeriesData(series, ValueCalculationType.Max)
+                    }
+                    const threshold = getThreshold(v, panel.plugins.pie.thresholds, max)
+                    if (threshold) {
+                        color.push(paletteColorNameToHex(threshold.color))
+                    }
+                }
             }
         }
 
@@ -73,7 +88,10 @@ const PiePanel = (props: Props) => {
                     center: ['50%', '50%'],
                     roseType: panel.plugins.pie.shape.type == "rose" ? "area" : null,
                     itemStyle: {
-                        borderRadius: panel.plugins.pie.shape.borderRadius
+                        borderRadius: panel.plugins.pie.shape.borderRadius,
+                        opacity: 0.8,
+                        borderWidth: colorMode == "light" ? 1 : 0.5,
+                        borderColor: color.length > 0 ? true : null 
                     },
                     data: data,
                     emphasis: {
@@ -85,13 +103,14 @@ const PiePanel = (props: Props) => {
                     },
                     label: {
                         show: panel.plugins.pie.showLabel,
-                    }
+                    },
+                    color: color,
                 }
             ]
-        },onEvents]
-    },[panel.plugins.pie,props.data, colorMode])
-    
-    
+        }, onEvents]
+    }, [panel.plugins.pie, props.data, colorMode])
+
+
 
     return (<>
         {options && <Box height={height} key={colorMode} className="echarts-panel"><ChartComponent options={options} theme={colorMode} width={width} height={height} onChartCreated={c => setChart(c)} onChartEvents={onEvents} /></Box>}

@@ -13,4 +13,6 @@
 export interface GaugePluginData  {
     value: number,
     name?: string
+    min: number,
+    max: number
 }

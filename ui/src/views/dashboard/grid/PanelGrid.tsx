@@ -11,8 +11,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 import { Dashboard, DatasourceType, Panel, PanelProps, PanelQuery, PanelType } from "types/dashboard"
-import { Box, Center, HStack, Menu, MenuButton, MenuDivider, MenuItem, MenuList, Modal, ModalBody, ModalCloseButton, ModalContent, ModalHeader, ModalOverlay, Tab, TabList, TabPanel, TabPanels, Tabs, Text, Textarea, Tooltip, useColorModeValue, useDisclosure, useToast } from "@chakra-ui/react";
-import { FaBook, FaBug, FaEdit, FaRegCopy, FaTrashAlt } from "react-icons/fa";
+import { Box, Center, HStack, Menu, MenuButton, MenuDivider, MenuItem, MenuList, Modal, ModalBody, ModalCloseButton, ModalContent, ModalHeader, ModalOverlay, Tab, TabList, TabPanel, TabPanels, Tabs, Text, Textarea, Tooltip, useColorMode, useColorModeValue, useDisclosure, useToast } from "@chakra-ui/react";
+import { FaBook, FaBug, FaEdit, FaRegCopy, FaRegEye, FaTrashAlt } from "react-icons/fa";
 import { IoMdInformation } from "react-icons/io";
 import { memo, useCallback, useEffect, useMemo, useState } from "react";
 import { run_prometheus_query } from "../plugins/datasource/prometheus/query_runner";
@@ -23,7 +23,7 @@ import { Variable } from "types/variable";
 import { replaceQueryWithVariables, replaceWithVariables } from "utils/variable";
 import storage from "utils/localStorage";
 import useBus, { dispatch } from 'use-bus'
-import { getInitTimeRange } from "components/DatePicker/TimePicker";
+import { getCurrentTimeRange } from "components/DatePicker/TimePicker";
 import { PanelDataEvent, PanelForceRebuildEvent, TimeChangedEvent, VariableChangedEvent } from "src/data/bus-events";
 import { variables } from "../Dashboard";
 import { addParamToUrl } from "utils/url";
@@ -45,6 +45,7 @@ import { commonMsg, panelMsg } from "src/i18n/locales/en";
 import { genDynamicFunction } from "utils/dynamicCode";
 import lodash from 'lodash'
 import moment from "moment";
+import { paletteColorNameToHex } from "utils/colors";
 
 interface PanelGridProps {
     dashboard: Dashboard
@@ -60,7 +61,7 @@ interface PanelGridProps {
 export const PanelGrid = memo((props: PanelGridProps) => {
     const [forceRenderCount, setForceRenderCount] = useState(0)
 
-    const [tr, setTr] = useState<TimeRange>(getInitTimeRange())
+    const [tr, setTr] = useState<TimeRange>(getCurrentTimeRange())
 
     useBus(
         (e) => { return e.type == TimeChangedEvent },
@@ -111,7 +112,7 @@ export const PanelComponent = ({ dashboard, panel, onRemovePanel, width, height,
         return () => {
             // delete data query cache when panel is unmounted
             for (const q of panel.datasource.queries) {
-                const id = formatQueryId(panel.datasource.id, dashboard.id, panel.id, q.id)
+                const id = formatQueryId(panel.datasource.id, dashboard.id, panel.id, q.id, panel.type)
                 delete prevQueries[id]
             }
         }
@@ -137,7 +138,7 @@ export const PanelComponent = ({ dashboard, panel, onRemovePanel, width, height,
         for (const q0 of ds.queries) {
             const q: PanelQuery = { ...cloneDeep(q0), interval }
             replaceQueryWithVariables(q, ds.type)
-            const id = formatQueryId(ds.id, dashboardId, panel.id, q.id)
+            const id = formatQueryId(ds.id, dashboardId, panel.id, q.id, panel.type)
             const prevQuery = prevQueries.get(id)
             const currentQuery = [q, timeRange]
 
@@ -148,6 +149,7 @@ export const PanelComponent = ({ dashboard, panel, onRemovePanel, width, height,
                     data.push(d)
                 }
                 setQueryError(null)
+                console.log("here3333 query data from cache!", panel.id)
                 continue
             }
 
@@ -223,7 +225,7 @@ export const PanelComponent = ({ dashboard, panel, onRemovePanel, width, height,
         if (panel.enableTransform && panelData) {
             const transform = genDynamicFunction(panel.transform);
             if (isFunction(transform)) {
-                const tData =  transform(panelData,lodash,moment)
+                const tData = transform(panelData, lodash, moment)
                 console.log("panel grid rendered, transform data: ", tData)
                 return tData
             } else {
@@ -260,6 +262,7 @@ const loadablePanels = {
     [PanelType.Gauge]: loadable(() => import('../plugins/panel/gauge/Gauge')),
     [PanelType.Stat]: loadable(() => import('../plugins/panel/stat/Stat')),
     [PanelType.Trace]: loadable(() => import('../plugins/panel/trace/Trace')),
+    [PanelType.BarGauge]: loadable(() => import('../plugins/panel/barGauge/BarGauge')),
 }
 
 const CustomPanelRender = memo((props: PanelProps) => {
@@ -280,11 +283,12 @@ interface PanelHeaderProps {
 }
 
 const PanelHeader = ({ queryError, panel, onCopyPanel, onRemovePanel, data }: PanelHeaderProps) => {
+    const viewPanel = useSearchParam("viewPanel")
     const t = useStore(commonMsg)
     const t1 = useStore(panelMsg)
     const title = replaceWithVariables(panel.title)
     const { isOpen, onOpen, onClose } = useDisclosure()
-
+    const { colorMode } = useColorMode()
     return (
         <>
             <HStack className="grid-drag-handle hover-bg" height={`${PANEL_HEADER_HEIGHT - (isEmpty(title) ? 15 : 0)}px`} cursor="move" spacing="0" position={isEmpty(title) ? "absolute" : "relative"} width="100%" zIndex={1000}>
@@ -302,7 +306,7 @@ const PanelHeader = ({ queryError, panel, onCopyPanel, onRemovePanel, data }: Pa
                             _focus={{ border: null }}
                             onClick={e => e.stopPropagation()}
                         >
-                            <Center width="100%">{!isEmpty(title) ? <Box cursor="pointer" className="hover-bordered" paddingTop={panel.styles.title.paddingTop} paddingBottom={panel.styles.title.paddingBottom} paddingLeft={panel.styles.title.paddingLeft} paddingRight={panel.styles.title.paddingRight} width="100%" fontSize={panel.styles.title.fontSize} fontWeight={panel.styles.title.fontWeight} color={panel.styles.title.color}><TitleDecoration styles={panel.styles}><Text noOfLines={1}>{title}</Text></TitleDecoration></Box> : <Box width="100px">&nbsp;</Box>}</Center>
+                            <Center width="100%">{!isEmpty(title) ? <Box cursor="pointer" className="hover-bordered" paddingTop={panel.styles.title.paddingTop} paddingBottom={panel.styles.title.paddingBottom} paddingLeft={panel.styles.title.paddingLeft} paddingRight={panel.styles.title.paddingRight} width="100%" fontSize={panel.styles.title.fontSize} fontWeight={panel.styles.title.fontWeight} color={paletteColorNameToHex(panel.styles.title.color, colorMode)}><TitleDecoration styles={panel.styles}><Text noOfLines={1}>{title}</Text></TitleDecoration></Box> : <Box width="100px">&nbsp;</Box>}</Center>
                         </MenuButton>
                         <MenuList p="1">
                             <MenuItem icon={<FaEdit />} onClick={() => addParamToUrl({ edit: panel.id })}>{t.edit}</MenuItem>
@@ -310,6 +314,8 @@ const PanelHeader = ({ queryError, panel, onCopyPanel, onRemovePanel, data }: Pa
                             <MenuItem icon={<FaRegCopy />} onClick={() => onCopyPanel(panel)}>{t.copy}</MenuItem>
                             <MenuDivider my="1" />
                             <MenuItem icon={<FaBug />} onClick={onOpen}>{t1.debugPanel}</MenuItem>
+                            <MenuDivider my="1" />
+                            <MenuItem icon={<FaRegEye />} onClick={() => addParamToUrl({ viewPanel: viewPanel ? null : panel.id })}>{viewPanel ? t1.exitlView : t1.viewPanel}</MenuItem>
                             <MenuDivider my="1" />
                             <MenuItem icon={<FaTrashAlt />} onClick={() => onRemovePanel(panel)}>{t.remove}</MenuItem>
                         </MenuList>
@@ -352,6 +358,20 @@ const DebugPanel = ({ panel, isOpen, onClose, data }) => {
     )
 }
 
-const formatQueryId = (datasourceId, dashboardId, panelId, queryId) => {
-    return `${datasourceId}-${dashboardId}-${panelId}-${queryId}`
+const formatQueryId = (datasourceId, dashboardId, panelId, queryId, panelType) => {
+    // because some panels has their own data parser in datasource query runner
+    // so we need to use panel type to make the cache working correctly
+    let tp;
+    switch (panelType) {
+        case PanelType.NodeGraph:
+            tp = PanelType.NodeGraph
+            break;
+        case PanelType.Trace:
+            tp = PanelType.Trace
+            break
+        default:
+            tp = "seriesData"
+            break;
+    }
+    return `${datasourceId}-${dashboardId}-${panelId}-${queryId}-${tp}`
 }

@@ -16,12 +16,11 @@
 
 import { Panel, PanelQuery, PanelType } from "types/dashboard"
 import { TimeRange } from "types/time"
-import graphData from './mocks/prometheus_graph.json'
 import { nodeGraphData } from "./mocks/node_graph"
 import { prometheusToPanels } from "../prometheus/transformData"
-import { echartsOptions } from "./mocks/echarts"
 import { Datasource } from "types/datasource"
 import traceData from './mocks/trace.json'
+import { genPrometheusData } from "./mocks/prometheus"
 
 export const run_testdata_query = async (panel: Panel, q: PanelQuery, range: TimeRange,ds: Datasource) => {
     let data: any;
@@ -33,16 +32,15 @@ export const run_testdata_query = async (panel: Panel, q: PanelQuery, range: Tim
         case PanelType.Gauge:
         case PanelType.Pie:
         case PanelType.Table:
-            data = prometheusToPanels(graphData.data, panel, q, range)
+        case PanelType.BarGauge:
+        case PanelType.Echarts:
+            data = prometheusToPanels(genPrometheusData(range,panel.datasource), panel, q, range)
             break;
         case PanelType.NodeGraph:
             data = nodeGraphData(10, 0.8)
             break;
-        case PanelType.Echarts:
-            data = echartsOptions
-            break
         case PanelType.Trace:
-            data = traceData
+            data =  traceData.data
             break
         default:
             break
@@ -55,3 +53,6 @@ export const run_testdata_query = async (panel: Panel, q: PanelQuery, range: Tim
 }
 
 
+export const queryTraceInTestData = (traceId) => {
+    return traceData.data.find(trace => trace.traceID== traceId)
+}

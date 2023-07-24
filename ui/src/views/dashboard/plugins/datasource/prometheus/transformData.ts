@@ -11,14 +11,10 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 import { first, isEmpty, last, round } from "lodash";
-import moment from "moment";
-import { variables } from "src/views/dashboard/Dashboard";
 import { Panel, PanelQuery, PanelType } from "types/dashboard";
 
-import { TablePluginData, TableSeries } from "types/plugins/table";
 import { FieldType, SeriesData } from "types/seriesData";
 import { TimeRange } from "types/time";
-import { DEFAULT_SYSTEM_DATE_FORMAT } from "utils/datetime/formats";
 import { parseLegendFormat } from "utils/format";
 import { replaceWithVariables } from "utils/variable";
 
@@ -28,19 +24,7 @@ export const prometheusToPanels = (rawData: any, panel: Panel, query: PanelQuery
         return null
     }
 
-    switch (panel.type) {
-        case PanelType.Table:
-            return prometheusToTableData(rawData, query)
-
-        case PanelType.Graph:
-        case PanelType.Stat:
-        case PanelType.Gauge:
-        case PanelType.Pie:
-        case PanelType.Echarts:
-            return prometheusToSeriesData(rawData, query, range)
-    }
-
-    return null
+    return prometheusToSeriesData(rawData, query, range)
 }
 
 export const prometheusToSeriesData = (data: any, query: PanelQuery, range: TimeRange): SeriesData[] => {
@@ -49,7 +33,7 @@ export const prometheusToSeriesData = (data: any, query: PanelQuery, range: Time
     let res: SeriesData[] = []
     if (data.resultType === "matrix") {
         for (const m of data.result) {
-            const metric = JSON.stringify(m.metric).replace(/:/g, '=')
+            const metric = JSON.stringify(m.metric).replace(/":"/g, '"="')
 
             const timeValues = []
             const valueValues = []
@@ -64,7 +48,7 @@ export const prometheusToSeriesData = (data: any, query: PanelQuery, range: Time
                     if (i == 0) {
                         if (round(v[0]) == start) {
                             timeValues.push(start)
-                            valueValues.push(v[1])
+                            valueValues.push(parseFloat(v[1]))
                         } else if (round(v[0]) > start) {
                             timeValues.push(start)
                             valueValues.push(null)
@@ -80,7 +64,7 @@ export const prometheusToSeriesData = (data: any, query: PanelQuery, range: Time
                             valueValues.push(null)
                         } else {
                             timeValues.push(v[0])
-                            valueValues.push(v[1])
+                            valueValues.push(parseFloat(v[1]))
                         }
                     }
                 })
@@ -90,7 +74,6 @@ export const prometheusToSeriesData = (data: any, query: PanelQuery, range: Time
             const series:SeriesData = {
                 id: query.id,
                 name: metric,
-                rawName: metric,
                 length:  m.values.length,
                 fields: [
                     {
@@ -128,40 +111,4 @@ export const prometheusToSeriesData = (data: any, query: PanelQuery, range: Time
     }
     return []
 }
-
-
-export const prometheusToTableData = (rawData: any, query: PanelQuery) => {
-    const columns = [{
-        title: "Time",
-        dataIndex: "time",
-        key: "time"
-    },
-     {
-        title: "Value",
-        dataIndex: "value",
-        key: "value"
-    }]
-    const data: TablePluginData = []
-
-    const d = rawData.result
-    for (const m of d) {
-        const series: TableSeries = {
-            columns: columns,
-            name: JSON.stringify(m.metric).replace(/:/g, '='),
-            rawName: m.metric,
-            rows: []
-        }
-        for (const v of m.values) {
-            series.rows.push({
-                time: v[0] ,
-                value: round(parseFloat(v[1]), 5)
-            })
-        }
-
-        data.push(series)
-    }
-
-    return data
-}
-
 

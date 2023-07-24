@@ -82,6 +82,7 @@ export const commonMsg = i18n("common", {
   "animation": "Animation",
   "animationTips": "Display chart animation",
   "display": "Display",
+  "show": "Show",
   "calc":"Calculation",
   "calcTips": "calculate results from series data with this reducer function",
   "value": "Value",
@@ -93,6 +94,20 @@ export const commonMsg = i18n("common", {
   "duration": "Duration",
   "alert": "Alert",
   "transform": "Transform",
+  "valueSettings": "Value settings",
+  "small": "Small",
+  "medium": "Medium",
+  "large": "Large",
+  "left": "Left",
+  "center": "Center",
+  "right": "Right",
+  "pagination": "Pagination",
+  "interaction": "Interaction",
+  "descend": "Descend",
+  "ascend": "Ascend",
+  "palette": "Palette",
+  "series": "Series",
+  "seriesTips": "A series of data can draw a plot line",
   "inputTips": params("Enter {name}.."),
   "isReqiiured": params("{name} is required"),
   "isInvalid": params("{name} is invalid"),
@@ -308,6 +323,8 @@ export const variableMsg = i18n("variable", {
 })
 
 export const panelMsg = i18n("panel", {
+  "viewPanel": "View Panel",
+  "exitlView": "Exit View",
   "debugPanel": "Debug Panel",
   "discard": "Discard",
   "apply": "Apply",
@@ -378,6 +395,7 @@ export const graphPanelMsg = i18n("graphPanel", {
   "pointSize": "Point size",
   "connectNull": "Connect null values",
   "showGrid": "Show grid",
+  "thresholdsDisplay": "Thresholds display",
 })
 
 export const nodeGraphPanelMsg = i18n("nodeGraphPanel", {
@@ -401,7 +419,6 @@ export const nodeGraphPanelMsg = i18n("nodeGraphPanel", {
   "highlightColorTips": "color of node or edge when mouse hover or click on it",
   "pickLightColor":  "Pick light color",
   "pickDarkColor": "Pick dark color",
-  "interaction": "Interaction",
   "tooltipTrigger": "Tooltip trigger",
   "layout": "Layout",
   "nodeStrength": "Node strength",
@@ -457,13 +474,13 @@ export const piePanelMsg = i18n("piePanel", {
 })
 
 export const gaugePanelMsg = i18n("gaugePanel", {
-  "valueSettings": "Value settings",
   "leftTips": "moving right, initial is center",
   "topTips": "moving down, initial is center",
   "showTicks": "Show ticks",
   "split": "Split",
   "splitTips": "split axis into several part, each has a unique color, range is [0, 1]: 0 stands for start, 1 for ends, values must in ASC order",
   "splitNum": "Split number",
+  "pointer": "pointer",
 })
 
 export const statsPanelMsg = i18n("statsPanel", {
@@ -502,4 +519,51 @@ export const componentsMsg = i18n("components", {
   "thresholdMode": "Threshold mode",
   "thresholdModeTips": "Absolute: the threshold is a absolute value, Percentage: the threshold is a percentage of the max value",
   "thresholdTips": "If the <raw> value in table cell is greater than the threshold, the color will be changed, ",
+})
+
+export const tablePanelMsg = i18n("tablePanel", {
+   "tableSetting": "Table Setting",
+   "showHeader": "Show header",
+    "showHeaderTips": "whether display table's header",
+    "showBorder": "Show border",
+    "stickyHeader": "Sticky header",
+    "stickyHeaderTips": "fix header to top, useful for viewing many rows in one page",
+    "cellSize": "Cell size",
+    "tableWidth": "Table width",
+    "column": "Column",
+    "columnAlignment": "Column alignment",
+    "columnSort": "Column sort",
+    "columnSortTips": "click the column title to sort it by asc or desc",
+    "columnFilter": "Column filter",
+    "columnFilterTips": "filter the column values in table",
+    "onRowClick": "On row click",
+    "onRowClickTips": "when click on a row, this event will be executed",
+    "rowActions": "Row actions",
+    "rowActionsTips": "add some actions to each row, e.g edit, delete",
+    "addAction": "Add action",
+    "actionColumnName": "Action column name",
+    "actionColumnWidth": "Action column width",
+    "actionButtonSize": "Action button size",
+    "seriesName": "change column display name",
+    "seriesFilter1": "Number min/max",
+    "seriesFilter2": "String match",
+    "colorTitle": "Color title"
+})
+
+export const barGaugePanelMsg = i18n("barGaugePanel", {
+  "orientation": "Orientation",
+  "displayMode": "Display mode",
+  "minTips": "Leave empty to calculate based on all values",
+  "calcMinFrom": "Calc max/min from",
+  "allSeries": "All series",
+  "currentSeries": "Current series",
+  "showMin": "Show min",
+  "showMinTips": "Display min beside value",
+  "showMax": "Show max",
+  "showMaxTips": "Display max beside value",
+  "showUnfilled": "Show unfilled area",
+  "showUnfilledTips": "When enabled renders the unfilled region as gray",
+  "titleSize": "Title font size",
+  "valueSize": "Value font size",
+  "layoutDir" : "Layout direction",
 })
