@@ -124,7 +124,7 @@ const Container = ({ children, sidemenu }: Props) => {
     }
 
     return navWidth
-  },[sidemenu])
+  },[sidemenu,miniMode])
  
   const sideWidth = fullscreen ? 0 : (miniMode ? miniWidth : navWidth)
   const textColor = useColorModeValue("gray.500", "whiteAlpha.800")

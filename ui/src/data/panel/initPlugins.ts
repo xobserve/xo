@@ -231,7 +231,7 @@ function registerEvents(options, chart) {
                 length: '80%',
                 width: 8,
             },
-            thresholds: initThresholds(24)
+            thresholds: initThresholds(18)
         },
 
         [PanelType.Stat]: {

@@ -205,7 +205,7 @@ const SearchResultPlot = ({ traces, timeRange, onSelect }: Props) => {
                 },
                 min: minX,
                 max: maxX,
-                splitNumber: 5,
+                splitNumber: 3,
                 // minInterval: 100,
             },
             yAxis: {

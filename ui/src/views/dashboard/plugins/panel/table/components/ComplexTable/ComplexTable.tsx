@@ -13,7 +13,6 @@
 import React, { memo } from 'react';
 import { Table } from 'antd';
 import { TableColumn, TableRow } from 'types/plugins/table';
-import { TableSettings } from 'types/panel/plugins';
 import storage from 'utils/localStorage';
 import { cloneDeep, isFunction, isNumber, round } from 'lodash';
 import { setTableFilter } from './TableFilter';
