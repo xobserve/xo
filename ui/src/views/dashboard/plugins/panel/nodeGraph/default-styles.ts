@@ -49,13 +49,13 @@ export const getDefaultNodeStyle = (settings: NodeGraphSettings, colorMode?) => 
         selected: {
             stroke: colorMode == "light" ? light : dark,
             shadowColor: colorMode == "light" ? light: dark,
-            lineWidth: colorMode == "light" ? 4 : 2,
+            lineWidth: colorMode == "light" ? 7 : 3,
             fill: 'transparent'
         },
         active: {
             stroke: colorMode == "light" ? light : dark,
             shadowColor: colorMode == "light" ? light: dark,
-            lineWidth: colorMode == "light" ? 4 : 2,
+            lineWidth: colorMode == "light" ? 7 : 3,
             fill: 'transparent'
         },
         inactive: {

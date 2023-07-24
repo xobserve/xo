@@ -196,6 +196,10 @@ export interface NodeGraphSettings {
         donutColors: {attr:string;color:string}[]
         tooltipTrigger: 'mouseenter' | 'click'
         menu: NodeGraphMenuItem[]
+        enableHighlight: boolean
+        highlightNodes: string
+        highlightNodesByFunc: string 
+        highlightColor: string
     }
 
     edge: {

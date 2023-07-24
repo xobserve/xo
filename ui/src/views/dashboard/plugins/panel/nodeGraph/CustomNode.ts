@@ -22,12 +22,13 @@ import {
   Util
 } from '@antv/g6-core';
 import { deepMix, isNumber, isArray } from '@antv/util';
+import { isEmpty } from 'lodash';
 import customColors from 'theme/colors';
 
 const { defaultSubjectColors } = Util;
 
 
-export const registerCustomNode = (colorMode) => {
+export const registerCustomNode = (colorMode, enableHighlight, highlightNodes, highlightColor, highlightNodeNames) => {
   // 饼图节点
   registerNode(
     'donut',
@@ -90,12 +91,32 @@ export const registerCustomNode = (colorMode) => {
         const { width, height, show, text } = icon;
         if (show) {
           if (text) {
+            let matched = false
+            if (enableHighlight) {
+              const label = cfg.label
+              const finded = highlightNodeNames.find(name => name == label)
+              if (finded) {
+                matched = true
+              } else {
+                const highlightMatches = highlightNodes.split(',')
+                for (const match of highlightMatches) {
+                  if (!isEmpty(match)) {
+                    const regex = new RegExp(match.trim())
+                    if (regex.test(label.toString())) {
+                      matched = true
+                      break
+                    }
+                  }
+                }
+              }
+            }
+            
             group.addShape('text', {
               attrs: {
                 x: 0,
                 y: 0,
-                fontSize: 12,
-                fill: colorMode == "light" ? customColors.textColorRGB.light : customColors.textColorRGB.dark,
+                fontSize: matched ? 14 : 12,
+                fill: matched ? highlightColor : (colorMode == "light" ? customColors.textColorRGB.light : customColors.textColorRGB.dark),
                 strokerWidth: 1,
                 textBaseline: 'middle',
                 textAlign: 'center',

@@ -16,7 +16,7 @@ import { FaInfoCircle } from "react-icons/fa"
 import React from "react";
 
 interface Props {
-    title: string
+    title?: string
     desc?: string
     info?: any
     children: any
@@ -25,7 +25,7 @@ interface Props {
 const PanelEditItem = (props: Props) => {
     return (<Box>
         <HStack>
-            <Text fontSize="sm" layerStyle="textSecondary" fontWeight="550">{props.title}</Text>
+            {props.title && <Text fontSize="sm" layerStyle="textSecondary" fontWeight="550">{props.title}</Text>}
             {props.info && <Popover trigger="hover">
                 <PopoverTrigger>
                     <Box cursor="pointer" layerStyle="textFourth"><FaInfoCircle /></Box>

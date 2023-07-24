@@ -13,7 +13,7 @@
 
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import G6, { Graph } from '@antv/g6';
-import { Box, Center, useColorMode } from '@chakra-ui/react';
+import { Box, Center, useColorMode, useToast } from '@chakra-ui/react';
 import { Panel, PanelData, PanelProps } from 'types/dashboard';
 import { initTooltip } from './plugins/tooltip';
 import { getActiveEdgeLabelCfg } from './default-styles';
@@ -27,13 +27,16 @@ import HiddenItems from './HiddenItem';
 import { filterData } from './filter/filterData';
 import { getDefaultEdgeLabel, getDefaultEdgeStyle, getDefaultNodeLabel, getDefaultNodeStyle } from './default-styles';
 import { NodeGraphPluginData } from 'types/plugins/nodeGraph';
-import { cloneDeep, isEmpty } from 'lodash';
+import { cloneDeep, isEmpty, isFunction } from 'lodash';
 import { colors, paletteColorNameToHex } from 'utils/colors';
-import './CustomNode'
-import { registerCustomNode } from './CustomNode';
+import './customNode' 
+import { registerCustomNode } from './customNode';
 import { dispatch } from 'use-bus';
 import { PanelForceRebuildEvent } from 'src/data/bus-events';
-
+import { genDynamicFunction } from 'utils/dynamicCode';
+import lodash from 'lodash'
+import { useStore } from '@nanostores/react';
+import { nodeGraphPanelMsg } from 'src/i18n/locales/en';
 
 interface NodeGraphPanelProps extends PanelProps {
     data: NodeGraphPluginData[]
@@ -44,7 +47,8 @@ const NodeGrapPanel = ({ data, panel, dashboardId, width, height }: NodeGraphPan
     if (isEmpty(data)) {
         return (<Center height="100%">No data</Center>)
     }
-
+    const t1 = useStore(nodeGraphPanelMsg)
+    const toast = useToast()
     const container = React.useRef(null);
     const [graph, setGraph] = useState<Graph>(null);
     const { colorMode } = useColorMode();
@@ -56,7 +60,23 @@ const NodeGrapPanel = ({ data, panel, dashboardId, width, height }: NodeGraphPan
     const donutColors = {}
     panel.plugins.nodeGraph.node.donutColors.forEach(item => { donutColors[item.attr] = item.color })
     const legend = useMemo(() => initLegend(donutColors), [])
-
+    const highlightNodeNames = useMemo(() => {
+        let names = []
+        if (panel.plugins.nodeGraph.node.enableHighlight) {
+            const filterHighlight = genDynamicFunction(panel.plugins.nodeGraph.node.highlightNodesByFunc);
+            if (isFunction(filterHighlight)) {
+                 names = filterHighlight(data[0], lodash)
+            }  else {
+                toast({
+                    description: t1.invalidHighlight,
+                    status: "warning",
+                    duration: 3000,
+                    isClosable: true,
+                });
+            }
+        }
+        return names
+    },[panel.plugins.nodeGraph.node.highlightNodesByFunc,panel.plugins.nodeGraph.node.enableHighlight])
     useEffect(() => {
         if (graph) {
             graph.changeSize(width, height)
@@ -69,11 +89,11 @@ const NodeGrapPanel = ({ data, panel, dashboardId, width, height }: NodeGraphPan
             onColorModeChange(graph, data, colorMode, dashboardId, panel)
         }
         newestColorMode = colorMode
-        registerCustomNode(colorMode)
+        registerCustomNode(colorMode, panel.plugins.nodeGraph.node.enableHighlight, panel.plugins.nodeGraph.node.highlightNodes, paletteColorNameToHex(panel.plugins.nodeGraph.node.highlightColor),highlightNodeNames)
         if (graph) {
             dispatch(PanelForceRebuildEvent + panel.id)
         }
-    }, [colorMode])
+    }, [colorMode, panel.plugins.nodeGraph.node.enableHighlight, panel.plugins.nodeGraph.node.highlightNodes, panel.plugins.nodeGraph.node.highlightColor,highlightNodeNames])
 
     useEffect(() => {
         if (graph) {

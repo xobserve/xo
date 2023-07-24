@@ -33,6 +33,7 @@ import { dispatch } from "use-bus"
 import { PanelForceRebuildEvent } from "src/data/bus-events"
 import { Node } from "types/plugins/nodeGraph"
 import { palettes } from "utils/colors"
+import { CodeEditorModal } from "components/CodeEditor/CodeEditorModal"
 
 
 
@@ -61,6 +62,29 @@ const NodeGraphPanelEditor = (props: PanelEditorProps) => {
                 })} />
             </PanelEditItem> */}
             {panel.plugins.nodeGraph.node.shape == 'donut' && <DonutColorsEditor {...props} />}
+            <PanelEditItem title={t1.enableHighlight}>
+                <Switch defaultChecked={panel.plugins.nodeGraph.node.enableHighlight} onChange={e => {
+                    const v = e.currentTarget.checked
+                    onChange((panel: Panel) => {
+                        panel.plugins.nodeGraph.node.enableHighlight = v
+                    })
+                }} />
+            </PanelEditItem>
+            {panel.plugins.nodeGraph.node.enableHighlight && <PanelEditItem title={t1.highlightNodes} desc={t1.highlightNodesTips}>
+                <EditorInputItem value={panel.plugins.nodeGraph.node.highlightNodes} onChange={v => onChange((panel: Panel) => {
+                    panel.plugins.nodeGraph.node.highlightNodes = v
+                })} placeholder={t1.highlightNodesInputTips} />
+            </PanelEditItem>}
+            {panel.plugins.nodeGraph.node.enableHighlight && <PanelEditItem  desc={t1.highlightNodesFuncTips}>
+                <CodeEditorModal value={panel.plugins.nodeGraph.node.highlightNodesByFunc} onChange={v => onChange((panel: Panel) => {
+                    panel.plugins.nodeGraph.node.highlightNodesByFunc = v
+                })} />
+            </PanelEditItem>}
+            {panel.plugins.nodeGraph.node.enableHighlight && panel.plugins.nodeGraph.node.highlightNodes && <PanelEditItem title={t.highlightColor}>
+                <ColorPicker color={panel.plugins.nodeGraph.node.highlightColor} onChange={c => onChange((panel: Panel) => {
+                    panel.plugins.nodeGraph.node.highlightColor = c
+                })} buttonText={t1.pickLightColor} />
+            </PanelEditItem>}
         </PanelAccordion>
 
 
@@ -143,11 +167,10 @@ const NodeGraphPanelEditor = (props: PanelEditorProps) => {
         </PanelAccordion>
 
         <PanelAccordion title="legend">
-            <PanelEditItem title={t.enable} info={
-                <Text>{t.applyToSeeEffect}</Text>
-            }>
+            <PanelEditItem title={t.enable}>
                 <Switch defaultChecked={panel.plugins.nodeGraph.legend.enable} onChange={e => onChange((panel: Panel) => {
                     panel.plugins.nodeGraph.legend.enable = e.currentTarget.checked
+                    dispatch(PanelForceRebuildEvent + panel.id)
                 })} />
             </PanelEditItem>
         </PanelAccordion>
@@ -409,7 +432,7 @@ const DonutColorsEditor = (props: PanelEditorProps) => {
     const t1 = useStore(nodeGraphPanelMsg)
     const [value, setValue] = useState<{ attr: string; color: string }[]>(panel.plugins.nodeGraph.node.donutColors)
     const attrNames = useMemo(() => {
-        let nodes: Node[] ; 
+        let nodes: Node[];
         if (data.length > 0) {
             nodes = data[0].nodes
         }
@@ -418,7 +441,7 @@ const DonutColorsEditor = (props: PanelEditorProps) => {
             attrNames = Object.keys(nodes[0].data)
         }
         return attrNames
-    },[data])
+    }, [data])
 
 
     const changeValue = () => {
@@ -428,16 +451,16 @@ const DonutColorsEditor = (props: PanelEditorProps) => {
     }
 
     const addItem = () => {
-        let attr; 
+        let attr;
         for (const name of attrNames) {
             if (!value.find(v => v.attr == name)) {
-                attr = name 
+                attr = name
                 break
             }
         }
 
         if (attr) {
-            value.unshift({attr, color: palettes[value.length % palettes.length]})
+            value.unshift({ attr, color: palettes[value.length % palettes.length] })
             changeValue()
         } else {
             toast({
@@ -474,7 +497,7 @@ const DonutColorsEditor = (props: PanelEditorProps) => {
                         }} circlePicker />
                         <Select value={item.attr} onChange={e => {
                             if (value.find(v => v.attr == e.currentTarget.value)) {
-                                return 
+                                return
                             }
                             item.attr = e.currentTarget.value
                             changeValue()

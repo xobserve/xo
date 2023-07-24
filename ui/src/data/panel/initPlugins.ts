@@ -123,7 +123,19 @@ export const initPanelPlugins = (): PanelPlugins => {
                     {attr: 'error', color: palettes[3]}
                 ],
                 tooltipTrigger: 'mouseenter',
-                menu: []
+                menu: [],
+                enableHighlight: false,
+                highlightNodes: '',
+                highlightNodesByFunc: 
+`// data: {nodes, edges}
+// return nodes name list, e.g ['node-1', 'node-2']
+function highlightNodes(data, lodash) {
+    console.log("here3333", data)
+    const matchingNodeNames = []
+    return matchingNodeNames
+}
+`,
+                highlightColor: palettes[27]
             },
 
             edge: {
