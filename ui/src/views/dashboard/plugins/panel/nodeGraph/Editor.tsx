@@ -75,7 +75,7 @@ const NodeGraphPanelEditor = (props: PanelEditorProps) => {
                     panel.plugins.nodeGraph.node.highlightNodes = v
                 })} placeholder={t1.highlightNodesInputTips} />
             </PanelEditItem>}
-            {panel.plugins.nodeGraph.node.enableHighlight && <PanelEditItem  desc={t1.highlightNodesFuncTips}>
+            {panel.plugins.nodeGraph.node.enableHighlight && <PanelEditItem desc={t1.highlightNodesFuncTips}>
                 <CodeEditorModal value={panel.plugins.nodeGraph.node.highlightNodesByFunc} onChange={v => onChange((panel: Panel) => {
                     panel.plugins.nodeGraph.node.highlightNodesByFunc = v
                 })} />
@@ -155,11 +155,10 @@ const NodeGraphPanelEditor = (props: PanelEditorProps) => {
 
 
         <PanelAccordion title={t.interaction}>
-            <PanelEditItem title={t1.tooltipTrigger} info={
-                <Text>{t.applyToSeeEffect}</Text>
-            }>
+            <PanelEditItem title={t1.tooltipTrigger}>
                 <RadionButtons options={[{ label: "Hover", value: "mouseenter" }, { label: "Click", value: "click" }]} value={panel.plugins.nodeGraph.node.tooltipTrigger} onChange={v => onChange((panel: Panel) => {
                     panel.plugins.nodeGraph.node.tooltipTrigger = v
+                    dispatch(PanelForceRebuildEvent + panel.id)
                 })} />
             </PanelEditItem>
 
@@ -329,7 +328,6 @@ const RightClickMenus = ({ panel, onChange }: PanelEditorProps) => {
             onChange((panel: Panel) => {
                 panel.plugins.nodeGraph.node.menu.unshift(temp)
             })
-
         } else {
             onChange((panel: Panel) => {
                 for (let i = 0; i < panel.plugins.nodeGraph.node.menu.length; i++) {
@@ -342,6 +340,7 @@ const RightClickMenus = ({ panel, onChange }: PanelEditorProps) => {
         }
 
         setTemp(initMenuItem)
+        dispatch(PanelForceRebuildEvent + panel.id)
         onClose()
     }
 
