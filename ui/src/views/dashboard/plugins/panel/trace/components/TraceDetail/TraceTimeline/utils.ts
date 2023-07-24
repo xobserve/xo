@@ -123,7 +123,7 @@ export function findServerChildSpan(spans: TraceSpan[]) {
 export const isKindClient = (span: TraceSpan): Boolean =>
   span.tags.some(({ key, value }) => key === 'span.kind' && value === 'client');
 
-export { formatDuration } from '../../../utils/date';
+export { formatDuration } from 'utils/date';
 
 
 

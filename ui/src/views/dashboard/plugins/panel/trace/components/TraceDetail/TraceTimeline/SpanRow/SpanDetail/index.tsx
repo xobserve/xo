@@ -23,7 +23,7 @@ import DetailState from './DetailState';
 import { TNil } from 'types/misc';
 import { KeyValuePair, SpanLink, SpanLog, TraceSpan } from 'types/plugins/trace';
 
-import { formatDuration } from '../../../../../utils/date';
+import { formatDuration } from 'utils/date';
 import { Box, Divider, Flex, HStack, Text } from '@chakra-ui/react';
 import LabeledList from 'components/LabelList';
 

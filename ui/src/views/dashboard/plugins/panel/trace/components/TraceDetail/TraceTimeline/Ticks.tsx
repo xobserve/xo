@@ -17,7 +17,7 @@ import * as React from 'react';
 
 import { TNil } from '../../../types/misc';
 
-import { formatDuration } from '../../../utils/date';
+import { formatDuration } from 'utils/date';
 import { Box, useColorModeValue } from '@chakra-ui/react';
 import customColors from 'src/theme/colors';
 

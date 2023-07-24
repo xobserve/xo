@@ -20,7 +20,7 @@ import AccordianKeyValues from './AccordianKeyValues';
 import { TNil } from 'types/misc';
 import { SpanLog, KeyValuePair, SpanLink } from 'types/plugins/trace';
 
-import { formatDuration } from '../../../../../utils/date';
+import { formatDuration } from 'utils/date';
 import { AiOutlineDown, AiOutlineRight } from 'react-icons/ai';
 import { Box, VStack } from '@chakra-ui/react';
 

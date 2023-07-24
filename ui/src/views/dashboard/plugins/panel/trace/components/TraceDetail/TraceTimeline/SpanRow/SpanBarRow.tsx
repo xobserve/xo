@@ -23,14 +23,14 @@ import Ticks from '../Ticks';
 
 import { TNil } from 'types/misc';
 import { TraceSpan } from 'types/plugins/trace';
-import { formatDuration, ViewedBoundsFunctionType } from '../utils';
+import { ViewedBoundsFunctionType } from '../utils';
 import { IoAlert } from 'react-icons/io5';
 import { AiOutlineArrowRight } from 'react-icons/ai';
 import { FaNetworkWired } from 'react-icons/fa';
 import { MdOutlineUploadFile } from 'react-icons/md';
 import { Box, useColorMode, useColorModeValue } from '@chakra-ui/react';
 import customColors from 'src/theme/colors';
-
+import {formatDuration} from 'utils/date'
 
 type SpanBarRowProps = {
     className?: string;

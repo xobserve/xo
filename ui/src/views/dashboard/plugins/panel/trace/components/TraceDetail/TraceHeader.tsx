@@ -15,7 +15,7 @@ import { Flex, HStack, Input,Text } from "@chakra-ui/react"
 import { ColorModeSwitcher } from "components/ColorModeSwitcher"
 import moment from "moment"
 import { Trace } from "types/plugins/trace"
-import { formatDuration } from "../../utils/date"
+import { formatDuration } from "utils/date"
 import SpanGraph from "./SpanGraph"
 import { useState } from "react"
 import { ETraceViewType, IViewRange, ViewRangeTimeUpdate } from "../../types/types"
@@ -25,6 +25,7 @@ import IconButton from "components/button/IconButton"
 import RadionButtons from "components/RadioButtons"
 import {addParamToUrl} from 'utils/url'
 import React from "react";
+import { dateTimeFormat } from "utils/datetime/formatter"
 
 interface Props {
     trace: Trace
@@ -80,7 +81,7 @@ const TraceDetailHeader = ({ trace, viewRange, updateNextViewRangeTime, updateVi
         <HStack className="label-bg" px="2" py="1" fontSize="0.9rem" spacing={4}>
             <HStack>
                 <Text opacity="0.8">Start time</Text>
-                <Text>{moment(trace.startTime / 1000).format('yy-MM-DD hh:mm:ss.SSS')}</Text>
+                <Text>{dateTimeFormat(trace.startTime / 1000)}</Text>
             </HStack>
             <HStack>
                 <Text opacity="0.8">Duration</Text>

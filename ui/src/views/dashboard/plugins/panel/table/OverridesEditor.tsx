@@ -105,7 +105,7 @@ function transform(text, lodash, moment)  {
     // for demonstration purpose: how to use 'lodash'
     const t0 = lodash.cloneDeep(text)
     // for demonstration purpose: how to use 'moment'
-    const t = moment(text * 1000).format("YY-MM-DD HH:mm::ss")
+    const t = moment(text * 1000).format("YY-MM-DD HH:mm::ss a")
 
     return text
 }

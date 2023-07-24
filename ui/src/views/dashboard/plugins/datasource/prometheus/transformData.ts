@@ -11,14 +11,10 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 import { first, isEmpty, last, round } from "lodash";
-import moment from "moment";
-import { variables } from "src/views/dashboard/Dashboard";
 import { Panel, PanelQuery, PanelType } from "types/dashboard";
 
-import { TablePluginData, TableSeries } from "types/plugins/table";
 import { FieldType, SeriesData } from "types/seriesData";
 import { TimeRange } from "types/time";
-import { DEFAULT_SYSTEM_DATE_FORMAT } from "utils/datetime/formats";
 import { parseLegendFormat } from "utils/format";
 import { replaceWithVariables } from "utils/variable";
 
