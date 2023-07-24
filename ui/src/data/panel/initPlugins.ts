@@ -147,7 +147,7 @@ export const initPanelPlugins = (): PanelPlugins => {
 
             layout: {
                 nodeStrength: 5000,
-                gravity: 60,
+                gravity: 40,
             }
         },
 

@@ -407,7 +407,9 @@
     "line": "直线",
     "quadratic": "曲线",
     "polyline": "折线",
-    "edgeColor": "边颜色"
+    "edgeColor": "边颜色",
+    "noAttrsToSet" : "所有的属性都已设置"
+    
   },
   "echartsPanel": {
     "about": "关于 Echarts",

@@ -14,7 +14,7 @@ import { Alert, Box, Button, Divider, Flex, HStack, Image, Input, Modal, ModalBo
 import { ColorPicker } from "components/ColorPicker"
 import RadionButtons from "components/RadioButtons"
 import { cloneDeep, isArray, isEmpty } from "lodash"
-import { useState } from "react"
+import { useMemo, useState } from "react"
 import * as Icons from 'react-icons/fa'
 import { MdEdit } from "react-icons/md"
 import { onClickCommonEvent } from "src/data/panel/initPlugins"
@@ -31,6 +31,8 @@ import { useStore } from "@nanostores/react"
 import { commonMsg, nodeGraphPanelMsg } from "src/i18n/locales/en"
 import { dispatch } from "use-bus"
 import { PanelForceRebuildEvent } from "src/data/bus-events"
+import { Node } from "types/plugins/nodeGraph"
+import { palettes } from "utils/colors"
 
 
 
@@ -401,10 +403,24 @@ const RightClickMenus = ({ panel, onChange }: PanelEditorProps) => {
 
 
 const DonutColorsEditor = (props: PanelEditorProps) => {
-    const { panel, onChange } = props
+    const { panel, onChange, data } = props
+    const toast = useToast()
     const t = useStore(commonMsg)
     const t1 = useStore(nodeGraphPanelMsg)
     const [value, setValue] = useState<{ attr: string; color: string }[]>(panel.plugins.nodeGraph.node.donutColors)
+    const attrNames = useMemo(() => {
+        let nodes: Node[] ; 
+        if (data.length > 0) {
+            nodes = data[0].nodes
+        }
+        let attrNames = []
+        if (nodes.length > 0) {
+            attrNames = Object.keys(nodes[0].data)
+        }
+        return attrNames
+    },[data])
+
+
     const changeValue = () => {
         const v = cloneDeep(value)
         setValue(v)
@@ -412,14 +428,32 @@ const DonutColorsEditor = (props: PanelEditorProps) => {
     }
 
     const addItem = () => {
+        let attr; 
+        for (const name of attrNames) {
+            if (!value.find(v => v.attr == name)) {
+                attr = name 
+                break
+            }
+        }
 
+        if (attr) {
+            value.unshift({attr, color: palettes[value.length % palettes.length]})
+            changeValue()
+        } else {
+            toast({
+                description: "No attrs to set",
+                status: "info",
+                duration: 2000,
+                isClosable: true,
+            });
+        }
     }
 
     const removeItem = (i) => {
         value.splice(i, 1)
         changeValue()
     }
-    
+
     return (
         <PanelEditItem title={t1.donutColors} info={<VStack alignItems='left' fontWeight="600">
             <Text>{t1.donutTips1}</Text>
@@ -431,17 +465,24 @@ const DonutColorsEditor = (props: PanelEditorProps) => {
             </Alert>
         </VStack>}>
             <Box>
-                <Button onClick={addItem} width="100%" size="sm" colorScheme="gray">+ {t.new}</Button>
+                {value.length < attrNames.length && <Button onClick={addItem} width="100%" size="sm" colorScheme="gray">+ {t.new}</Button>}
                 <VStack alignItems="left" mt="2">
-                    {value.map((item, i) => <HStack key={item.attr + i} spacing={1}>
+                    {value.map((item, i) => <HStack key={item.attr + i + item.color} spacing={1}>
                         <ColorPicker color={item.color} onChange={v => {
                             item.color = v
                             changeValue()
                         }} circlePicker />
-                        <EditorInputItem value={item.attr} onChange={v => {
-                            item.attr = v
+                        <Select value={item.attr} onChange={e => {
+                            if (value.find(v => v.attr == e.currentTarget.value)) {
+                                return 
+                            }
+                            item.attr = e.currentTarget.value
                             changeValue()
-                        }} />
+                        }}>
+                            {
+                                attrNames.map(name => <option value={name}>{name}</option>)
+                            }
+                        </Select>
 
 
                         <Icons.FaTimes opacity={0.6} fontSize="0.8rem" onClick={() => removeItem(i)} />
