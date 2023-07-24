@@ -159,7 +159,7 @@ const EditPanel = ({ dashboard, onChange }: EditPanelProps) => {
                         <Text>{dashboard.title} / {t1.editPanel}</Text>
                         <HStack spacing={1}>
                             <DatePicker showTime />
-                            <ColorModeSwitcher miniMode/>
+                            <ColorModeSwitcher miniMode />
                             <Button variant="outline" onClick={() => { onDiscard(), onClose() }} >{t1.discard}</Button>
                             <Button onClick={onApplyChanges}>{t1.apply}</Button>
                         </HStack>
@@ -167,9 +167,9 @@ const EditPanel = ({ dashboard, onChange }: EditPanelProps) => {
                 </ModalHeader>
                 <ModalBody>
                     <HStack height="calc(100vh - 100px)" alignItems="top">
-                        <Box width="65%" height="100%">
+                        <Box width="65%" height={`calc(100%)`}>
                             {/* panel rendering section */}
-                            <Box key={tempPanel.id.toString() + hideDatasource as string} height={maxPanelHeight()} id="edit-panel-render" position="relative">
+                            <Box height={maxPanelHeight()} id="edit-panel-render" position="relative" >
                                 <AutoSizer>
                                     {({ width, height }) => {
                                         if (width === 0) {
@@ -178,35 +178,37 @@ const EditPanel = ({ dashboard, onChange }: EditPanelProps) => {
                                         return <PanelGrid width={width} height={height} key={tempPanel.id + tempPanel.type} dashboard={dashboard} panel={tempPanel} sync={null} />
                                     }}
                                 </AutoSizer>
-                                {!tempPanel.plugins[tempPanel.type].disableDatasource && <Box position="absolute" right="0" bottom={hideDatasource ? "0" : "-35px"} opacity="0.3" cursor="pointer" fontSize=".8rem" onClick={() => { setHideDatasource(!hideDatasource) }}>{hideDatasource ? <FaArrowUp /> : <FaArrowDown />}</Box>}
+                                {!tempPanel.plugins[tempPanel.type].disableDatasource && <Box zIndex={1} position="absolute" right="0" bottom={hideDatasource ? "0" : "-35px"} opacity="0.3" cursor="pointer" fontSize=".8rem" onClick={() => { setHideDatasource(!hideDatasource) }}>{hideDatasource ? <FaArrowUp /> : <FaArrowDown />}</Box>}
                             </Box>
                             {/* panel datasource section */}
-                            {!tempPanel.plugins[tempPanel.type].disableDatasource && <Box maxHeight={maxDatasourceHeight()} mt="2" overflowY="scroll">
-                            <Box> 
-                                <Tabs variant="unstyled">
-                                    <TabList pb="0">
-                                        <Tab>{t.query}</Tab>
-                                        <Tab>{t.transform}</Tab>
-                                    </TabList>
-                                    <TabIndicator
-                                        mt="3px"
-                                        height="2px"
-                                        bg="brand.500"
-                                        borderRadius="1px"
-                                    />
-                                    <TabPanels>
-                                        <TabPanel px="0" pt="1">
-                                            <EditPanelQuery key={tempPanel.id + tempPanel.type} panel={tempPanel} onChange={setTempPanel} />
-                                        </TabPanel>
-                                        <TabPanel px="0" pt="1" pb="0">
-                                            <EditPanelTransform panel={tempPanel} onChange={setTempPanel} />
-                                        </TabPanel>
-                                    </TabPanels>
-                                </Tabs>
+                            {!tempPanel.plugins[tempPanel.type].disableDatasource &&
+                                <Box maxHeight={maxDatasourceHeight()} mt="2" overflowY="scroll">
+                                    <Box position="relative" zIndex={0}>
+                                        <Tabs variant="unstyled">
+                                            <TabList pb="0">
+                                                <Tab>{t.query}</Tab>
+                                                <Tab>{t.transform}</Tab>
+                                            </TabList>
+                                            <TabIndicator
+                                                mt="3px"
+                                                height="2px"
+                                                bg="brand.500"
+                                                borderRadius="1px"
+                                                position="absolute"
+                                            />
+                                            <TabPanels>
+                                                <TabPanel px="0" pt="1">
+                                                    <EditPanelQuery key={tempPanel.id + tempPanel.type} panel={tempPanel} onChange={setTempPanel} />
+                                                </TabPanel>
+                                                <TabPanel px="0" pt="1" pb="0">
+                                                    <EditPanelTransform panel={tempPanel} onChange={setTempPanel} />
+                                                </TabPanel>
+                                            </TabPanels>
+                                        </Tabs>
 
-                            </Box>
-                                
-                            </Box>}
+                                    </Box>
+
+                                </Box>}
                         </Box>
                         {/* panel settings section */}
                         <Box width="35%" maxHeight="100%" overflowY={"scroll"}>
