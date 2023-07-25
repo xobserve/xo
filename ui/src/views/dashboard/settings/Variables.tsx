@@ -21,6 +21,8 @@ import storage from "utils/localStorage";
 import React from "react";
 import { useStore } from "@nanostores/react";
 import { commonMsg } from "src/i18n/locales/en";
+import { variables } from "../Dashboard";
+import { cloneDeep } from "lodash";
 
 interface Props {
     dashboard: Dashboard
@@ -61,6 +63,7 @@ const VariablesSetting = ({ dashboard, onChange }: Props) => {
             isClosable: true,
         })
 
+        variables.push(cloneDeep(v))
         setVariable(null)
     }
 
@@ -88,6 +91,11 @@ const VariablesSetting = ({ dashboard, onChange }: Props) => {
         if (v.refresh != VariableRefresh.Manually) {
             storage.remove(VariableManuallyChangedKey + v.id)
         }
+
+        const i = variables.findIndex(v1 => v1.id == v.id)
+        if (i >= 0) {
+            variables[i] = cloneDeep(v)
+        }
     }
 
     const onRemoveVariable = async (v:Variable) => {
@@ -100,6 +108,9 @@ const VariablesSetting = ({ dashboard, onChange }: Props) => {
                 }
             }
         })
+
+        const i = variables.findIndex(v1 => v1.id == v.id)
+        variables.splice(i, 1)
     }
 
     const onSubmit = async (v:Variable) => {

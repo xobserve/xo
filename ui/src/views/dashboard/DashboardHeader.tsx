@@ -13,7 +13,7 @@
 import { Box, Flex, HStack, Select, Tooltip } from "@chakra-ui/react"
 import IconButton from "components/button/IconButton"
 import SelectVariables from "src/views/variables/Variables"
-import { find, isEmpty } from "lodash"
+import { cloneDeep, find, isEmpty } from "lodash"
 import React from "react";
 import { memo, useEffect, useRef, useState } from "react"
 import { MdSync } from "react-icons/md"
@@ -85,7 +85,6 @@ const DashboardHeader = memo(({ dashboard, onChange, sideWidth }: HeaderProps) =
         },
         [variablesChanged]
     )
-
 
     return (
         <Box

@@ -91,7 +91,7 @@ const DashboardWrapper = ({ dashboardId, sideWidth }) => {
                     bodyStyle.backgroundSize = "cover"
                 }
             }, 1)
-            // 
+            
         }
 
         return () => {
@@ -150,8 +150,6 @@ const DashboardWrapper = ({ dashboardId, sideWidth }) => {
     // const visibleVars = variables.filter(v => {
     //     return !v.id.toString().startsWith("d-") && !find(dashboard?.data?.hidingVars?.split(','),v1 => v1 == v.name)
     // })
-
-
 
 
     const headerHeight = fullscreen ? 0 : DashboardHeaderHeight

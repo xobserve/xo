@@ -10,14 +10,13 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-import { Box, Center, Flex, Select, useColorMode, useColorModeValue } from "@chakra-ui/react"
+import { Box, Center, Flex, Select, useColorMode } from "@chakra-ui/react"
 import React, { useMemo } from "react"
 import { PanelProps } from "types/dashboard"
-import { TablePluginData, TableSeries } from "types/plugins/table"
-import { cloneDeep, isEmpty } from "lodash"
+import { TableSeries } from "types/plugins/table"
+import { isEmpty } from "lodash"
 import ComplexTable from "./components/ComplexTable/ComplexTable"
 import { SeriesData } from "types/seriesData"
-import { co } from "components/largescreen/utils"
 import customColors from "theme/colors"
 
 interface TablePanelProps extends PanelProps {

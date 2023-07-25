@@ -36,7 +36,6 @@ const DatePicker = ({ showTime = false }: Props) => {
     const from = useSearchParam("from")
     const to = useSearchParam("to")
     useEffect(() => {
-        console.log("here3333:", from, to)
         if (from && to) {
             // from and to can only be two types:
             // 1. from and to are all timestamp strings, e.g from: 1690284107553 to: 1690300803000

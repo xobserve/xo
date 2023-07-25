@@ -123,15 +123,15 @@ const SelectVariable = ({ v }: { v: Variable }) => {
             dispatch(VariableChangedEvent)   
         }
 
-       
+        console.log("here333333",result,v.name)
         setValues(result)
         v.values = result
 
-        
-        
+    
 
     }
     
+
 
     const value = isEmpty(v.selected) ? [] : v.selected.split(VariableSplitChar)
     
