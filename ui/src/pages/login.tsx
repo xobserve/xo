@@ -50,7 +50,7 @@ function Login() {
             const oldPage = storage.get('current-page')
             if (oldPage) {
                 storage.remove('current-page')
-                navigate(oldPage + "?test=a")
+                navigate(oldPage)
             } else {
                 navigate('/')
             }

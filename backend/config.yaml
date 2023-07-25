@@ -13,7 +13,7 @@ server:
 
 #################################### Database ##############################
 database:
-    connect_to: sqlite
+    connect_to: mysql
     account: root
     account_secret: Sunface-Mysql-im.dev
     host: localhost

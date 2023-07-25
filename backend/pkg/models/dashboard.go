@@ -20,7 +20,7 @@ import (
 )
 
 // you mustn't change the id of home dashboarda, is's reversed
-const HomeDashboardId = "home"
+const HomeDashboardId = "d-home"
 
 type Dashboard struct {
 	Id       string `json:"id"`

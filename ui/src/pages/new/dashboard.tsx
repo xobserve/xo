@@ -47,7 +47,7 @@ const NewDashboardPage = () => {
     }
 
     const addDashboard = async () => {
-        const res = await requestApi.post("/dashboard/save", dashboard)
+        const res = await requestApi.post("/dashboard/save", {dashboard, changes: "Newly created"})
         toast({
             title: t1.dashToast ,
             status: "success",

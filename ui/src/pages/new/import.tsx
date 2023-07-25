@@ -45,7 +45,7 @@ const ImportDashboardPage = () => {
     }
 
     const importDashboard = async () => {
-        const res = await requestApi.post("/dashboard/save", dashboard)
+        const res = await requestApi.post("/dashboard/save", {dashboard,changes: "Imported from json"})
         toast({
             title: t1.importToast,
             status: "success",

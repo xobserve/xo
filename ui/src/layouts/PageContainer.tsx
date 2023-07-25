@@ -121,8 +121,8 @@ const Container = ({ children, sidemenu }: Props) => {
         }
       })
 
-      if (navWidth < 130) {
-        navWidth = 130
+      if (navWidth < 180) {
+        navWidth = 180
       }
     }
   
