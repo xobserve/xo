@@ -253,6 +253,7 @@ export interface GraphSettings {
         connectNulls: boolean
         barRadius: number
         barGap: 10
+        enableStack: boolean
     }
     axis?: {
         label?: string

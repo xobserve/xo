@@ -34,6 +34,7 @@ import { GraphRules } from "./OverridesEditor";
 import { findOverride, findOverrideRule, findRuleInOverride } from "utils/dashboard/panel";
 import { ThresholdsPlugin } from "./uplot-plugins/ThresholdsPlugin";
 import { ThresholdDisplay } from "types/panel/plugins";
+import { getStackedOpts } from "./uplot-plugins/stack";
 
 interface GraphPanelProps extends PanelProps {
     data: SeriesData[][]
@@ -200,9 +201,18 @@ const GraphPanel = memo((props: GraphPanelProps) => {
 
                             options.width = vizWidth
                             options.height = vizHeight
+                            
+                            let plotOpts = options 
+                            let plotData = transformDataToUplot(data, props.panel)
+                            if (props.panel.plugins.graph.styles.enableStack) {
+                                const r =  getStackedOpts(plotOpts, plotData , null);
+                                plotData = r.data
+                                plotOpts = r.opts
+                            }
+                          
                             return (options && <UplotReact
-                                options={options}
-                                data={transformDataToUplot(data, props.panel)}
+                                options={plotOpts}
+                                data={plotData}
                                 onDelete={(chart: uPlot) => { }}
                                 onCreate={onChartCreate}
                             >

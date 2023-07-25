@@ -129,6 +129,11 @@ const GraphPanelEditor = ({ panel, onChange }: PanelEditorProps) => {
                     panel.plugins.graph.styles.connectNulls = e.currentTarget.checked
                 })} />
             </PanelEditItem>
+            <PanelEditItem title="Stack">
+            <Switch defaultChecked={panel.plugins.graph.styles.enableStack} onChange={e => onChange((panel: Panel) => {
+                    panel.plugins.graph.styles.enableStack = e.currentTarget.checked
+                })} />
+            </PanelEditItem>
         </PanelAccordion>
         <PanelAccordion title={t.axis}>
             <PanelEditItem title={t.label}>

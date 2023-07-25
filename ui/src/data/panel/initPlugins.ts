@@ -68,7 +68,8 @@ export const initPanelPlugins = (): PanelPlugins => {
                 gradientMode: "opacity",
                 connectNulls: false,
                 barRadius: 0,
-                barGap: 10
+                barGap: 10,
+                enableStack: false
             },
             axis: {
                 showGrid: true,
