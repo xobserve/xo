@@ -29,6 +29,7 @@ type Config struct {
 		RepoUrl  string `yaml:"repo_url"`
 	}
 	Database struct {
+		ConnectTo     string `yaml:"connect_to"`
 		Account       string
 		AccountSecret string `yaml:"account_secret"`
 		Host          string
@@ -63,6 +64,11 @@ type Config struct {
 			EnableBaiduMap bool   `yaml:"enable_baidu_map"`
 			BaiduMapAK     string `yaml:"baidu_map_ak"`
 		}
+	}
+
+	Paths struct {
+		SqliteData string `yaml:"sqlite_data"`
+		Logs       string
 	}
 }
 

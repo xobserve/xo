@@ -13,6 +13,7 @@ server:
 
 #################################### Database ##############################
 database:
+    connect_to: sqlite
     account: root
     account_secret: Sunface-Mysql-im.dev
     host: localhost
@@ -55,3 +56,9 @@ smtp:
   auth_password: ""
 
 
+#################################### Paths ##############################
+# Path to where datav can store temp files, sessions, and the sqlite3 db (if that is used)
+paths:
+    # sqlite3 db files
+    sqlite_data: ""
+    logs: ""
