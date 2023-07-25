@@ -11,7 +11,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { useColorMode, useToast } from '@chakra-ui/react'
+import { useColorMode } from '@chakra-ui/react'
 import {
   createBrowserRouter,
   RouterProvider,
