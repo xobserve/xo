@@ -181,7 +181,7 @@ const GraphPanel = memo((props: GraphPanelProps) => {
     const onChartCreate = useCallback((chart) => { setUplot((chart)); props.sync?.sub(chart) }, [props.sync])
 
     const onZoom = (tr) => {
-        setDateTime(tr.from, tr.to)
+        setDateTime(tr.from * 1000, tr.to * 1000)
     }
 
 

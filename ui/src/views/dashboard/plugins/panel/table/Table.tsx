@@ -92,7 +92,10 @@ export default TablePanel
 const cssStyles = (colorMode: "light" | "dark", colorTitle) =>{
     return {
     '.ant-table-wrapper': {
-        maxWidth: 'calc(100% - 1px) !important'
+        maxWidth: 'calc(100% - 1px) !important',
+    },
+    '.ant-table': {
+        background: 'transparent !important'
     },
     'td.ant-table-cell': {
         padding: '0 0 !important'

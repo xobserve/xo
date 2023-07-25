@@ -36,7 +36,6 @@ var logger = log.RootLogger.New("logger", "storage")
 var adminSalt, adminPW string
 
 func Init() error {
-
 	err := connectDatabase()
 	if err != nil {
 		return err

@@ -94,8 +94,8 @@ const TimePicker = ({ onClose, onTimeChange }: Props) => {
         const r = {
             start: dates.start,
             end: dates.end,
-            startRaw: dates.start.toLocaleString(),
-            endRaw: dates.end.toLocaleString(),
+            startRaw: dates.start.getTime(),
+            endRaw: dates.end.getTime(),
             sub: 0
         }
         setRange(r)
@@ -157,7 +157,7 @@ const TimePicker = ({ onClose, onTimeChange }: Props) => {
         setError(err)
     }
 
-    const applyTimeRange = (r) => {
+    const applyTimeRange = (r:TimeRange) => {
         storage.set(TimePickerKey, JSON.stringify(r))
         onTimeChange(r)
         onClose()
@@ -241,7 +241,7 @@ const TimePicker = ({ onClose, onTimeChange }: Props) => {
                     <Box>
                         <Text size="sm">{t1.from}</Text>
                         <HStack>
-                            <Input value={tempRange.startRaw} onChange={e => onRangeChange(e.currentTarget.value, tempRange.endRaw)} disabled={tempRange.startRaw.startsWith('now')} />
+                            <Input value={tempRange.startRaw} onChange={e => onRangeChange(e.currentTarget.value, tempRange.endRaw)} disabled={tempRange.startRaw.toString().startsWith('now')} />
                             <FaCalendarAlt cursor="pointer" onClick={() => setDisplayCalender(!displayCalender)} />
                         </HStack>
                         {error.start && <Text mt="1" fontSize="sm" color="red">{error.start}</Text>}
@@ -249,7 +249,7 @@ const TimePicker = ({ onClose, onTimeChange }: Props) => {
                     <Box>
                         <Text size="sm">{t1.to}</Text>
                         <HStack>
-                            <Input value={tempRange.endRaw} onChange={e => onRangeChange(tempRange.startRaw, e.currentTarget.value)} disabled={tempRange.endRaw.startsWith('now')} />
+                            <Input value={tempRange.endRaw} onChange={e => onRangeChange(tempRange.startRaw, e.currentTarget.value)} disabled={tempRange.endRaw.toString().startsWith('now')} />
                             <FaCalendarAlt cursor="pointer" onClick={() => setDisplayCalender(!displayCalender)} />
                         </HStack>
                         {error.end && <Text mt="1" fontSize="sm" color="red">{error.end}</Text>}
@@ -357,12 +357,7 @@ const parseOthers = (value, options?) => {
     const date = value;
 
 
-    // switch (lowerCase(timeZone)) {
-    //     case 'utc':
-    //         return moment.utc(date) as DateTime;
-    //     default:
     return moment(date);
-    // }
 };
 
 
