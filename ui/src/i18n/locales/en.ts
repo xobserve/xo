@@ -397,6 +397,8 @@ export const graphPanelMsg = i18n("graphPanel", {
   "connectNull": "Connect null values",
   "showGrid": "Show grid",
   "thresholdsDisplay": "Thresholds display",
+  "barRadius": "Bar corner radius",
+  "barGap": "Fixed-size gap between bars in CSS pixels "
 })
 
 export const nodeGraphPanelMsg = i18n("nodeGraphPanel", {

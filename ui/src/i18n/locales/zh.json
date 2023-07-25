@@ -370,7 +370,9 @@
     "pointSize": "点大小",
     "connectNull": "连接空值",
     "showGrid": "显示网格线",
-    "thresholdsDisplay": "Thresholds 显示类型"
+    "thresholdsDisplay": "Thresholds 显示类型",
+    "barRadius": "柱状图的边角弧度",
+    "barGap": "柱状图之间的间距，单位是 CSS 像素"
   },
   "nodeGraphPanel": {
     "node": "节点( Node )",

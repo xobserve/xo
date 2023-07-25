@@ -73,7 +73,22 @@ const GraphPanelEditor = ({ panel, onChange }: PanelEditorProps) => {
                     panel.plugins.graph.styles.style = v
                 })} />
             </PanelEditItem>
-
+            {
+                 panel.plugins.graph.styles.style == "bars" && <>
+                     <PanelEditItem title={t1.barRadius}>
+                        <EditorNumberItem value={panel.plugins.graph.styles.barRadius} min={0} max={0.5} step={0.1} onChange={v => onChange((panel: Panel) => {
+                            panel.plugins.graph.styles.barRadius = v
+                            dispatch(PanelForceRebuildEvent + panel.id)
+                        })} />
+                    </PanelEditItem>
+                    <PanelEditItem title={t1.barGap}>
+                        <EditorNumberItem value={panel.plugins.graph.styles.barGap} min={0} max={100} step={5} onChange={v => onChange((panel: Panel) => {
+                            panel.plugins.graph.styles.barGap = v
+                            dispatch(PanelForceRebuildEvent + panel.id)
+                        })} />
+                    </PanelEditItem>
+                 </>
+            }
             {panel.plugins.graph.styles.style != "points" &&
                 <>
                     <PanelEditItem title={t1.lineWidth}>
@@ -102,6 +117,7 @@ const GraphPanelEditor = ({ panel, onChange }: PanelEditorProps) => {
                         })} />
                     </PanelEditItem>
                 </>}
+       
             <PanelEditItem title={t1.pointSize}>
                 <EditorSliderItem value={panel.plugins.graph.styles.pointSize} min={1} max={20} step={1} onChange={v => onChange((panel: Panel) => {
                     panel.plugins.graph.styles.pointSize = v

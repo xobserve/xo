@@ -251,6 +251,8 @@ export interface GraphSettings {
         pointSize: number
         gradientMode: "none" | "opacity" | "hue"
         connectNulls: boolean
+        barRadius: number
+        barGap: 10
     }
     axis?: {
         label?: string

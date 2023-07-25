@@ -23,7 +23,7 @@ const PanelAccordion = ({title, children ,defaultOpen=true}) => {
                     <Text ml="1">{title}</Text>
                 </AccordionButton>
                 <AccordionPanel pb={4} pt="0">
-                    <VStack alignItems="left" spacing={3}>
+                    <VStack alignItems="left" spacing={4}>
                     {children}
                     </VStack>
                 </AccordionPanel>

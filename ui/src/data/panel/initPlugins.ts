@@ -66,7 +66,9 @@ export const initPanelPlugins = (): PanelPlugins => {
                 showPoints: "auto",
                 pointSize: 6,
                 gradientMode: "opacity",
-                connectNulls: false
+                connectNulls: false,
+                barRadius: 0,
+                barGap: 10
             },
             axis: {
                 showGrid: true,

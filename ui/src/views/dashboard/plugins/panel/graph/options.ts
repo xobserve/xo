@@ -144,8 +144,10 @@ export const parseOptions = (config: PanelProps,rawData: SeriesData[], colorMode
             fill: config.panel.plugins.graph.styles?.style == "points" ? null : (config.panel.plugins.graph.styles?.gradientMode == "none" ? colorManipulator.alpha(d.color ?? '', opacity) : fill(d.color, opacity)),
             spanGaps: config.panel.plugins.graph.styles.connectNulls,
             paths: style == "bars" ? uPlot.paths.bars({
-                size: [BarWidthFactor, BardMaxWidth],
-                align: 0,
+                size: [1, BardMaxWidth],
+                align: -1,
+                radius: config.panel.plugins.graph.styles.barRadius,
+                gap: config.panel.plugins.graph.styles.barGap
             }) : null,
             scale:  scale,
         })
