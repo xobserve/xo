@@ -12,7 +12,7 @@
 // limitations under the License.
 
 import React from "react"
-import { Box, Button, Input,  Select, Text, useToast, VStack } from "@chakra-ui/react"
+import { Box, Button, Input, Select, Text, useToast, VStack } from "@chakra-ui/react"
 import { Form, FormSection } from "components/form/Form"
 import FormItem from "components/form/Item"
 import Page from "layouts/page/Page"
@@ -47,9 +47,9 @@ const NewDashboardPage = () => {
     }
 
     const addDashboard = async () => {
-        const res = await requestApi.post("/dashboard/save", {dashboard, changes: "Newly created"})
+        const res = await requestApi.post("/dashboard/save", { dashboard, changes: "Newly created" })
         toast({
-            title: t1.dashToast ,
+            title: t1.dashToast,
             status: "success",
             duration: 3000,
             isClosable: true,
@@ -72,7 +72,10 @@ const NewDashboardPage = () => {
                         <Input value={dashboard.title} onChange={e => { dashboard.title = e.currentTarget.value; setDashboard(cloneDeep(dashboard)) }} />
                     </FormItem>
                     <FormItem title={t.description}>
-                        <Input placeholder={t.inputTips({name: t.description})} value={dashboard.data.description} onChange={e => setDashboard(cloneDeep(dashboard))} />
+                        <Input placeholder={t.inputTips({ name: t.description })} value={dashboard.data.description} onChange={e => {
+                            dashboard.data.description = e.currentTarget.value
+                            setDashboard(cloneDeep(dashboard))
+                        }} />
                     </FormItem>
                     <FormItem title={t1.belongTeam}>
                         <Box sx={{
