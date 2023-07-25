@@ -17,7 +17,7 @@ import { IoMdInformation } from "react-icons/io";
 import { memo, useCallback, useEffect, useMemo, useState } from "react";
 import { run_prometheus_query } from "../plugins/datasource/prometheus/query_runner";
 import { DatasourceMaxDataPoints, DatasourceMinInterval, PANEL_HEADER_HEIGHT, StorageCopiedPanelKey } from "src/data/constants";
-import { cloneDeep, isEmpty, isEqual, isFunction } from "lodash";
+import { cloneDeep, isEqual, isFunction } from "lodash";
 import { TimeRange } from "types/time";
 import { Variable } from "types/variable";
 import { replaceQueryWithVariables, replaceWithVariables } from "utils/variable";
@@ -46,7 +46,7 @@ import { genDynamicFunction } from "utils/dynamicCode";
 import lodash from 'lodash'
 import moment from "moment";
 import { paletteColorNameToHex } from "utils/colors";
-
+import { isEmpty } from "utils/validate";
 interface PanelGridProps {
     dashboard: Dashboard
     panel: Panel
@@ -134,7 +134,7 @@ export const PanelComponent = ({ dashboard, panel, onRemovePanel, width, height,
 
         let data = []
         let needUpdate = false
-        const interval = calculateInterval(timeRange, ds.queryOptions.maxDataPoints ?? DatasourceMaxDataPoints, ds.queryOptions.minInterval ?? DatasourceMinInterval).intervalMs / 1000
+        const interval = calculateInterval(timeRange, ds.queryOptions.maxDataPoints ?? DatasourceMaxDataPoints, isEmpty(ds.queryOptions.minInterval)  ? DatasourceMinInterval:ds.queryOptions.minInterval).intervalMs / 1000
         for (const q0 of ds.queries) {
             const q: PanelQuery = { ...cloneDeep(q0), interval }
             replaceQueryWithVariables(q, ds.type)

@@ -31,6 +31,8 @@ import { Form, FormSection } from "components/form/Form"
 import React from "react";
 import { commonMsg, panelMsg } from "src/i18n/locales/en"
 import { useStore } from "@nanostores/react"
+import { isEmpty } from "utils/validate"
+import { DatasourceMinInterval } from "src/data/constants"
 
 interface Props {
     panel: Panel
@@ -150,11 +152,11 @@ const DatasourceQueryOption = ({ panel, onChange }: Props) => {
                             onChange((panel: Panel) => {
                                 panel.datasource.queryOptions.minInterval = v
                             })
-                        }} /></Box>
+                        }} placeholder="15s"/></Box>
                     </FormItem>
 
                     <FormItem labelWidth="170px" size="sm" title={t1.finalInterval} desc={t1.finalIntervalTips} alignItems="center">
-                        <Text width="100px" pl="2">{calculateInterval(getCurrentTimeRange(), panel.datasource.queryOptions.maxDataPoints, panel.datasource.queryOptions.minInterval).interval}</Text>
+                        <Text width="100px" pl="2">{calculateInterval(getCurrentTimeRange(), panel.datasource.queryOptions.maxDataPoints, isEmpty(panel.datasource.queryOptions.minInterval) ? DatasourceMinInterval : panel.datasource.queryOptions.minInterval).interval}</Text>
                     </FormItem>
                 </FormSection>
             }

@@ -73,7 +73,8 @@ export function getStackedOpts(opts, data, interp) {
 				u.delBand(null);
 				stacked.bands.forEach(b => u.addBand(b));
 				u.setData(stacked.data);
-			}
+			},
+			...(opts.hooks.setSeries??[])
 		]
 	
 	return {opts, data: stacked.data};
