@@ -10,7 +10,7 @@ export const initVariable:Variable = {
     enableAll: false
 }
 
-export const VariableSplitChar = ' + '
+export const VariableSplitChar = '+'
 export const VarialbeAllOption = '__all__'
 
 export const VariableCurrentValue = '__currentValue__'

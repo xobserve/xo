@@ -32,7 +32,7 @@ export const replaceWithVariables = (s: string, extraVars?: {
 }) => {
     const formats = parseVariableFormat(s);
     for (const f of formats) {
-        const extrav = extraVars[f]
+        const extrav = extraVars && extraVars[f]
         if (extrav) {
             s = s.replace(`\${${f}}`, extrav.toString());
         } else {

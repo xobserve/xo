@@ -34,6 +34,9 @@ import DatePicker from "components/DatePicker/DatePicker"
 import { useNavigate } from "react-router-dom"
 import { useStore } from "@nanostores/react";
 import { dashboardMsg } from "src/i18n/locales/en";
+import { FaShareAlt } from "react-icons/fa";
+import { BsShare } from "react-icons/bs";
+import DashboardShare from "./DashboardShare";
 
 interface HeaderProps {
     dashboard: Dashboard
@@ -107,6 +110,7 @@ const DashboardHeader = memo(({ dashboard, onChange, sideWidth }: HeaderProps) =
                             <Tooltip label={t1.headerTeamTips}><Box cursor="pointer" onClick={() => navigate(`${ReserveUrls.Config}/team/${team.id}/members`)}>{team?.name}</Box></Tooltip>
                             <Box>/</Box>
                             <Box>{dashboard.title}</Box>
+                            <DashboardShare dashboard={dashboard} fontSize="0.9rem" opacity="0.8" cursor="pointer" className="hover-text" />
                         </HStack>
 
                         <HStack mr="2">

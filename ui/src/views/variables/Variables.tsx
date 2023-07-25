@@ -29,6 +29,8 @@ import { queryJaegerVariableValues } from "../dashboard/plugins/datasource/jaege
 import React from "react";
 import { useStore } from "@nanostores/react"
 import { variableMsg } from "src/i18n/locales/en"
+import { addParamToUrl, getUrlParams } from "utils/url"
+import { useSearchParam } from "react-use"
 
 interface Props {
     id: number
@@ -155,13 +157,22 @@ const SelectVariable = ({ v }: { v: Variable }) => {
     </HStack>
 }
 export const setVariableSelected = (variables: Variable[]) => {
+    const params = getUrlParams()
+    const selectedInUrl = {}
+    for (const k of Object.keys(params)) {
+        if (k.startsWith('var-')) {
+            const r = k.slice(4)
+            selectedInUrl[r] = params[k]
+        }
+    }
+    
     let sv = storage.get(vkey)
     if (!sv) {
         sv = {}
     }
 
     for (const v of variables) {
-        const selected = sv[v.id]
+        const selected = selectedInUrl[v.name]??sv[v.id]
         if (!selected) {
             v.selected = v.values[0]
         } else {
@@ -201,6 +212,12 @@ export const setVariableValue = (variable: Variable, value) => {
 
     // dispatch variable changed event until relational variables are reloaded
     if (needReload) dispatch(VariableChangedEvent)
+
+    // sync to url
+    console.log("here33333:",value)
+    addParamToUrl({
+        ['var-'+ variable.name] : value
+    })
 }
 
 export const setVariable = (name, value, toast?) => {
