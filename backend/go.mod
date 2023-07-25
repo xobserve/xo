@@ -15,6 +15,7 @@ require (
 	github.com/inconshreveable/log15 v0.0.0-20201112154412-8562bdadbbac
 	github.com/json-iterator/go v1.1.12 // indirect
 	github.com/lithammer/shortuuid/v3 v3.0.5
+	github.com/mattn/go-sqlite3 v1.14.17 // indirect
 	github.com/spf13/cobra v1.1.1
 	github.com/teris-io/shortid v0.0.0-20220617161101-71ec9f2aa569
 	go.uber.org/automaxprocs v1.5.3
