@@ -26,6 +26,7 @@ import useGranaTheme from 'hooks/useExtraTheme';
 import { PanelGrid } from "./PanelGrid";
 import { useKey, useSearchParam } from "react-use";
 import { addParamToUrl } from "utils/url";
+import { LazyLoader } from "./LazyLoader";
 
 
 
@@ -213,8 +214,9 @@ const DashboardGrid = memo((props: GridProps) => {
                                             windowWidth={windowWidth}
                                         >
                                             {(width: number, height: number) => {
+                                                const Wrapper = dashboard.data.lazyLoading ? LazyLoader : Box
                                                 return (<Box key={panel.id} id={`panel-${panel.id}`}>
-                                                    {!inEdit && <PanelGrid dashboard={dashboard} panel={panel} width={width} height={height} onRemovePanel={onRemovePanel} sync={mooSync} />}
+                                                    {!inEdit && <Wrapper  width={width} height={height}  ><PanelGrid dashboard={dashboard} panel={panel} width={width} height={height} onRemovePanel={onRemovePanel} sync={mooSync} /></Wrapper> }
                                                 </Box>)
                                             }}
                                         </GridItem>

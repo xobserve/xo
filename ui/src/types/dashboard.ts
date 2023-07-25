@@ -46,6 +46,7 @@ export interface DashboardData {
     enableUnsavePrompt: boolean
     enableAutoSave: boolean
     autoSaveInterval: number
+    lazyLoading: boolean
 }
 
 export interface Panel {

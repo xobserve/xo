@@ -119,6 +119,11 @@ const GeneralSettings = ({ dashboard, onChange }: Props) => {
                     <Switch isChecked={dashboard.data.allowPanelsOverlap} onChange={e => onChange((draft: Dashboard) => { draft.data.allowPanelsOverlap = e.currentTarget.checked })} />
                 </FormItem>
             </FormSection>
+            <FormSection title={t1.loadData}>
+                <FormItem title={t1.lazyRender} desc={t1.lazyRenderTips} alignItems="center">
+                    <Switch isChecked={dashboard.data.lazyLoading} onChange={e => onChange((draft: Dashboard) => { draft.data.lazyLoading = e.currentTarget.checked })} />
+                </FormItem>
+            </FormSection>
             <FormSection title={t1.saveDash}>
                 <FormItem title={t1.savePromt} desc={t1.savePromtTips} alignItems="center">
                     <Switch isChecked={dashboard.data.enableUnsavePrompt} onChange={e => onChange((draft: Dashboard) => { draft.data.enableUnsavePrompt = e.currentTarget.checked })} />

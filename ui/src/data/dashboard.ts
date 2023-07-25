@@ -31,7 +31,8 @@ export const initDashboard:Dashboard = {
         allowPanelsOverlap: false,
         enableUnsavePrompt: true,
         enableAutoSave: false,
-        autoSaveInterval: 120
+        autoSaveInterval: 120,
+        lazyLoading: true
     },
     ownedBy: globalTeamId,
 }

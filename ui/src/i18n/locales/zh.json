@@ -283,7 +283,10 @@
     "saveWarnTitle": "请先按下 Ctrl + S 保存仪表盘，以防修改的内容丢失!",
     "saveWarnContent": "修改元数据可以直接覆盖你正在修改的内容，因此为了防止数据丢失，最好先行保存",
     "saveAlertTitle": "提交仪表盘元数据",
-    "saveAlertContent": "确定要提交吗？修改成功后，页面将重新载入"
+    "saveAlertContent": "确定要提交吗？修改成功后，页面将重新载入",
+    "loadData": "数据加载",
+    "lazyRender": "图表延迟渲染",
+    "lazyRenderTips": "只有当滚动到图表所在的位置时，才开始渲染图表并加载数据"
   },
 
   "timePicker": {

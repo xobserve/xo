@@ -300,7 +300,10 @@ export const dashboardSettingMsg = i18n("dashboardSetting", {
   "saveWarnTitle": "Press Ctrl + S to Save your dashboard first!",
   "saveWarnContent": "Before submitting the meta data above, please save your Dashboard first, if it has any changes",
   "saveAlertTitle": "Submit dashboard meta data",
-  "saveAlertContent": " Are you sure to submit? If submit success, page will be reloaded."
+  "saveAlertContent": " Are you sure to submit? If submit success, page will be reloaded.",
+  "loadData": "Load data",
+  "lazyRender": "Lazy render panels",
+  "lazyRenderTips": "A panle will be renderting only when our screen has scrolled to this panel"
 })
 
 export const timePickerMsg = i18n("timePicker", {
