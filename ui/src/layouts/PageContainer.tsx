@@ -46,7 +46,7 @@ import UserMenu from "components/user/UserMenu"
 import { config } from "src/data/configs/config"
 import { isEmpty } from "utils/validate"
 
-const miniWidth = 60
+const miniWidth = 70
 const navSize = 15
 const maxNavSize = 200
 
@@ -93,11 +93,15 @@ const Container = ({ children, sidemenu }: Props) => {
   }
 
   const bottomNavs = [
-    { title: "Github", icon: "FaGithub", url: config.repoUrl },
+    { title: t.new, icon: "FaPlus", url:`${ReserveUrls.New}/dashboard`,isActive:asPath.startsWith(ReserveUrls.New) },
+    { title: t.configuration, icon: "FaCog", url:`${ReserveUrls.Config}/datasources`,isActive:asPath.startsWith(ReserveUrls.Config) },
+    { title: t.alert, icon: "FaBell", url:`${ReserveUrls.Alerts}`,isActive:asPath.startsWith(ReserveUrls.Alerts) },
+    { title: t1.search, icon: "FaSearch", url:`${ReserveUrls.Search}`,isActive:asPath.startsWith(ReserveUrls.Search) },
+
   ]
 
-  const paddingLeft = 8
-  const paddingRight = 8
+  const paddingLeft = 16
+  const paddingRight = 16
   const childMarginLeft = 24
   const navWidth = useMemo(() => {
     let navWidth = 0
@@ -120,10 +124,6 @@ const Container = ({ children, sidemenu }: Props) => {
           )
         }
       })
-
-      if (navWidth < 180) {
-        navWidth = 180
-      }
     }
   
     if (navWidth > maxNavSize) {
@@ -157,7 +157,7 @@ const Container = ({ children, sidemenu }: Props) => {
           {(miniMode || isEmpty(sidemenu)) ?
             <Box cursor="pointer" onClick={onMinimodeChange} mt="2"><Logo /></Box>
             :
-            <Box cursor="pointer" onClick={onMinimodeChange} opacity="0.2" position="absolute" right="1px" top="12px" className="hover-text" p="1"><Icons.FaChevronLeft /></Box>
+            <Box cursor="pointer" onClick={onMinimodeChange} opacity="0.2" position="absolute" right="1px" top="14px" className="hover-text" p="1" fontSize="0.7rem"><Icons.FaChevronLeft /></Box>
           }
           {sidemenu.map((link, index) => {
             return <Box mt={miniMode ? 2 : 3}>
@@ -195,16 +195,13 @@ const Container = ({ children, sidemenu }: Props) => {
         </Flex>
         <Flex id="sidemenu-bottom" flexDir="column" pb="2" alignItems={miniMode ? "center" : "left"} color={textColor}>
           <VStack alignItems="left" spacing={miniMode ? 1 : 3}>
-            <NavItem isActive={asPath.startsWith(ReserveUrls.New)} url={`${ReserveUrls.New}/dashboard`} icon="FaPlus" text={t.new} miniMode={miniMode} />
-            <NavItem isActive={asPath.startsWith(ReserveUrls.Config)} url={`${ReserveUrls.Config}/datasources`} icon="FaCog" text={t.configuration} miniMode={miniMode} />
-            <NavItem isActive={asPath.startsWith(ReserveUrls.Alerts)} url={`${ReserveUrls.Alerts}`} icon="FaBell" text={t.alert} miniMode={miniMode} />
-            <NavItem isActive={asPath.startsWith(ReserveUrls.Search)} url={`${ReserveUrls.Search}`} icon="FaSearch" text={t1.search} miniMode={miniMode} />
+          {bottomNavs.map((nav, index) => {
+              return <Box><NavItem key={index} isActive={nav.isActive} text={nav.title} icon={nav.icon} miniMode={miniMode} url={nav.url} /></Box>
+            })}
 
             <Divider />
             <Box color={textColor}><ColorModeSwitcher miniMode={miniMode} /></Box>
-            {bottomNavs.map((nav, index) => {
-              return <Box><NavItem key={index} text={nav.title} icon={nav.icon} miniMode={miniMode} url={nav.url} /></Box>
-            })}
+            <Box><NavItem  text="Github" icon="FaGithub" miniMode={miniMode} url={config.repoUrl} /></Box>
             <UserMenu miniMode={miniMode} />
           </VStack>
 
