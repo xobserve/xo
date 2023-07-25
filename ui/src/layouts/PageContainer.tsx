@@ -44,6 +44,7 @@ import { SidemenuMinimodeKey } from "src/data/storage-keys"
 import ReserveUrls from "src/data/reserve-urls"
 import UserMenu from "components/user/UserMenu"
 import { config } from "src/data/configs/config"
+import { isEmpty } from "utils/validate"
 
 const miniWidth = 60
 const navSize = 15
@@ -61,6 +62,8 @@ const PageContainer = (props) => {
   useEffect(() => {
     if (session) {
       loadSidemenu()
+    } else {
+      setSidemenu([])
     }
 
   }, [session])
@@ -80,7 +83,7 @@ const Container = ({ children, sidemenu }: Props) => {
   const t1 = useStore(sidebarMsg)
 
 
-  const [miniMode, setMiniMode] = useState(storage.get(SidemenuMinimodeKey) ?? true)
+  const [miniMode, setMiniMode] = useState(isEmpty(sidemenu) ? true :(storage.get(SidemenuMinimodeKey) ?? true))
   const fullscreen = useFullscreen()
 
 
@@ -117,6 +120,10 @@ const Container = ({ children, sidemenu }: Props) => {
           )
         }
       })
+
+      if (navWidth < 130) {
+        navWidth = 130
+      }
     }
   
     if (navWidth > maxNavSize) {
@@ -146,8 +153,8 @@ const Container = ({ children, sidemenu }: Props) => {
         height="100vh"
         className="bordered-right"
       >
-        <Flex id="sidemenu-top" flexDir="column" alignItems={miniMode ? "center" : "left"}>
-          {miniMode ?
+        <Flex id="sidemenu-top" flexDir="column" alignItems={(miniMode || isEmpty(sidemenu)) ? "center" : "left"}>
+          {(miniMode || isEmpty(sidemenu)) ?
             <Box cursor="pointer" onClick={onMinimodeChange} mt="2"><Logo /></Box>
             :
             <Box cursor="pointer" onClick={onMinimodeChange} opacity="0.2" position="absolute" right="1px" top="12px" className="hover-text" p="1"><Icons.FaChevronLeft /></Box>

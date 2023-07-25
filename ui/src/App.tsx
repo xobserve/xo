@@ -37,8 +37,7 @@ export let canvasCtx;
 export let datasources: Datasource[] = []
 export let gvariables: Variable[] = []
 
-export let gtoast
-
+export let appInitialized = false
 const AppView = () => {
   const { colorMode } = useColorMode()
 
@@ -47,8 +46,6 @@ const AppView = () => {
 
   const [cfg, setConfig] = useState<UIConfig>(null)
   canvasCtx = document.createElement('canvas').getContext('2d')!;
-  const toast = useToast()
-  gtoast = toast
 
   useEffect(() => {
     loadConfig()

@@ -90,7 +90,7 @@ func (s *Server) Start() error {
 		r.POST("/team/new", IsLogin(), admin.AddNewTeam)
 		r.DELETE("/team/:id", IsLogin(), teams.DeleteTeam)
 		r.DELETE("/team/leave/:id", IsLogin(), teams.LeaveTeam)
-		r.GET("/team/sidemenu/:id", IsLogin(), teams.GetSideMenu)
+		r.GET("/team/sidemenu/:id", teams.GetSideMenu)
 		r.POST("/team/sidemenu", IsLogin(), teams.UpdateSideMenu)
 		r.GET("/team/sidemenus/forUser", IsLogin(), teams.GetAvailableSidMenusForUser)
 		r.POST("/team/sidemenu/select/:teamId", IsLogin(), teams.SelectSideMenuForUser)

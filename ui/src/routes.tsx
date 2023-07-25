@@ -29,6 +29,7 @@ import TeamSidemenuPage from "./pages/cfg/team/[id]/Sidemenu";
 import TestPage from "./pages/Test";
 import loadable from '@loadable/component';
 import PageContainer from "layouts/PageContainer";
+import { Navigate } from "react-router-dom";
 
 
 const DashboardPage = loadable(() => import('./pages/dashboard/index'));
@@ -89,6 +90,12 @@ const newRoutes = [
 ]
 
 export const routes = [
+  {
+    path: "/",
+    Component: () => {
+      return <div><Navigate replace to="/home"/></div>
+    }
+  },
   {
     path: "/account/setting",
     element: pageContainer(<AccountSetting />),

@@ -23,6 +23,7 @@ const useSession = () => {
       '/user/session', 
       () =>
         requestApi.get(`/user/session`).then(res => {
+          console.log("here333333:",res)
           return res.data
         }),
       {dedupingInterval: 60000}
