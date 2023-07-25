@@ -1,5 +1,9 @@
 package storageData
 
+import (
+	_ "github.com/mattn/go-sqlite3"
+)
+
 const SqliteSQL = `
 CREATE TABLE IF NOT EXISTS user (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
