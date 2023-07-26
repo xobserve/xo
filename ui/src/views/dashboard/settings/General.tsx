@@ -11,7 +11,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { Box, HStack, Input, Select, Switch, Tag, TagCloseButton, TagLabel, Text, useToast, VStack } from "@chakra-ui/react"
+import {  HStack, Input, Select, Switch,  useToast } from "@chakra-ui/react"
 import { EditorNumberItem } from "components/editor/EditorItem"
 import { Form, FormSection } from "components/form/Form"
 import FormItem from "components/form/Item"
@@ -20,6 +20,7 @@ import { Dashboard, DashboardLayout } from "types/dashboard"
 import React from "react";
 import { useStore } from "@nanostores/react"
 import { commonMsg, dashboardSettingMsg } from "src/i18n/locales/en"
+import ColorTag from "../../../components/ColorTag"
 
 interface Props {
     dashboard: Dashboard
@@ -90,12 +91,9 @@ const GeneralSettings = ({ dashboard, onChange }: Props) => {
                 </FormItem>
                 {dashboard.tags.length > 0 && <HStack width="100%">
                     {
-                        dashboard.tags.map(t => <Tag>
-                            <TagLabel>{t}</TagLabel>
-                            <TagCloseButton onClick={() => {
-                                onChange((draft: Dashboard) => { draft.tags.splice(draft.tags.indexOf(t), 1) })
-                            }} />
-                        </Tag>)
+                        dashboard.tags.map(t => <ColorTag name={t} onRemove={name => {
+                            onChange((draft: Dashboard) => { draft.tags.splice(draft.tags.indexOf(name), 1) })
+                        }} />)
                     }
 
                 </HStack>}

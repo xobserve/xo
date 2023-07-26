@@ -11,13 +11,15 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { Box, Flex, HStack, IconButton, Input, Modal, ModalBody, ModalCloseButton, ModalContent, ModalHeader, ModalOverlay, Text, useColorModeValue, useDisclosure } from "@chakra-ui/react"
-import { set } from "lodash"
-import React, { memo, useEffect, useState } from "react"
+import { Box, Checkbox, Flex, HStack, IconButton, Input, Modal, ModalBody, ModalCloseButton, ModalContent, ModalHeader, ModalOverlay, Text, Tooltip, useColorModeValue, useDisclosure } from "@chakra-ui/react"
+import { cloneDeep, set } from "lodash"
+import React, { memo, useEffect, useLayoutEffect, useMemo, useState } from "react"
 import { FaSearch, FaTimes } from "react-icons/fa"
 import { useSearchParam } from "react-use"
+import { Dashboard } from "types/dashboard"
 import { requestApi } from "utils/axios/request"
 import { addParamToUrl } from "utils/url"
+import { RxLetterCaseCapitalize } from "react-icons/rx";
 
 interface Props {
     title: string
@@ -28,23 +30,24 @@ interface Props {
 }
 const Search = memo((props: Props) => {
     const { title, miniMode, fontSize = 15, fontWeight = 400, sideWidth = 0 } = props
-    const [query, setQuery] = useState(null)
-    const [rawDashboards, setRawDashboards] = useState(null)
-    const [dashboards, setDashboards] = useState(null)
+    const [query, setQuery] = useState<string>(null)
+    const [caseSensitive, setCaseSensitive] = useState<boolean>(false)
+    const [rawDashboards, setRawDashboards] = useState<Dashboard[]>(null)
 
     const { isOpen, onOpen, onClose } = useDisclosure()
 
     const onSearchOpen = async () => {
         const res = await requestApi.get(`/dashboard/simpleList`)
         setRawDashboards(res.data)
-        setDashboards(res.data)
         onOpen()
     }
 
+
+
     const urlQuery = useSearchParam('search')
-    if ( urlQuery && query === null) {
-        setQuery(urlQuery)
+    if (urlQuery && query === null) {
         onSearchOpen()
+        setQuery(urlQuery)
     }
 
     const onQueryChange = (v) => {
@@ -54,8 +57,25 @@ const Search = memo((props: Props) => {
         setQuery(v)
     }
 
+    const dashboards = useMemo(() => {
+        const result = []
+        if (!rawDashboards) {
+            return result
+        }
+        const target = rawDashboards
+        for (const dash of target) {
+            const id = caseSensitive ? dash.id.toString() : dash.id.toString().toLowerCase()
+            const title = caseSensitive ? dash.title : dash.title.toLowerCase()
+            const q = caseSensitive ? query : query.toLowerCase()
+            if (id.includes(q) || title.includes(q)) {
+                result.push(dash)
+            }
+        }
 
-    console.log("here33333:", query)
+        return result
+    }, [query, rawDashboards, caseSensitive])
+
+    console.log("here33333 result dashboard:", query, dashboards)
     return (
         <>
             <HStack color={isOpen ? useColorModeValue("brand.500", "brand.200") : 'inherit'} className="hover-text" cursor="pointer">
@@ -72,12 +92,27 @@ const Search = memo((props: Props) => {
                     <ModalHeader justifyContent="space-between">
                         <Flex justifyContent="space-between" alignItems="center">
                             <Text>Search dashboard</Text>
-                            <FaTimes opacity="0.6" cursor="pointer" onClick={onClose}/>
+                            <FaTimes opacity="0.6" cursor="pointer" onClick={onClose} />
                         </Flex>
                     </ModalHeader>
                     <ModalBody>
                         <Flex justifyContent="space-between" alignItems="center">
-                            <Input value={query} onChange={e => onQueryChange(e.currentTarget.value)}  maxWidth="400px" placeholder="enter dashboard name or id to search.."/>
+                            <HStack>
+                                <Input value={query} onChange={e => onQueryChange(e.currentTarget.value)} maxWidth="400px" placeholder="enter dashboard name or id to search.." />
+                                <Tooltip label={caseSensitive ? "Case sensitive" : "Case insensitive"}>
+                                    <Box
+                                        cursor="pointer"
+                                        onClick={() => setCaseSensitive(!caseSensitive)}
+                                        color={caseSensitive ? "brand.500" : "inherit"}
+                                        fontWeight="600"
+                                        className={caseSensitive ? "highlight-bordered" : null}
+                                        p="1"
+                                        fontSize="1.1rem"
+                                    >
+                                        <RxLetterCaseCapitalize />
+                                    </Box>
+                                </Tooltip>
+                            </HStack>
                             <HStack>
 
                             </HStack>
