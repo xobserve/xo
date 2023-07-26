@@ -12,7 +12,7 @@
 
 
 <h1 align="center">
-  Starship is under developing now, online demo is comming soon.
+  The new version of Datav and online demo is coming soon.. 
 </h1>
 
 
