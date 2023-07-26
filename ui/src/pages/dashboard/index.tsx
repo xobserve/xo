@@ -72,9 +72,10 @@ const DashboardPage = ({sideWidth}) => {
 
         setDashboardId(menuitem.dashboardId)
     }
+
     return (
         <>
-            {dashboardId && <DashboardWrapper sideWidth={sideWidth} dashboardId={dashboardId} />}
+            {dashboardId && <DashboardWrapper key={dashboardId} sideWidth={sideWidth} dashboardId={dashboardId} />}
             {error && <NotFoundPage message={error} />}
         </>
     )
