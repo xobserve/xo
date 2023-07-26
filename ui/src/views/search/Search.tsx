@@ -207,7 +207,8 @@ const Search = memo((props: Props) => {
                 <Box sx={{
                     '.chakra-modal__content-container': {
                         marginLeft: sideWidth + 'px',
-                        width: `calc(100% - ${sideWidth}px)`
+                        width: `calc(100% - ${sideWidth}px)`,
+                        transition: 'all 0.3s'
                     }
                 }}>
                     <ModalContent maxH="100vh">

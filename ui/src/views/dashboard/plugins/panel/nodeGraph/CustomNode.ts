@@ -141,7 +141,7 @@ export const registerCustomNode = (colorMode, enableHighlight, highlightNodes, h
         }
 
         const donutR = keyShape.attr('r');
-        const innerR = donutR - 2; // 甜甜圈的内环半径
+        const innerR = donutR - 1.5; // 甜甜圈的内环半径
         const arcR = (donutR + innerR) / 2; // 内环半径与外环半径的平均值
 
         const { donutAttrs = {}, donutColorMap = {} } = cfg as any;
