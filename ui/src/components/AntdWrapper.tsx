@@ -39,7 +39,8 @@ const AntdWrapper = ({ children }) => {
                     colorBgElevated: colorMode == "light" ? customColors.popperBg.light : customColors.popperBg.dark,
                     colorBgSpotlight: colorMode == "light" ? customColors.tooltipBg.light : customColors.tooltipBg.dark,
                     colorBorderSecondary: colorMode == "light" ? customColors.borderColor.light : customColors.borderColor.dark,
-                    zIndexPopupBase: 1500
+                    zIndexPopupBase: 1500,
+                    colorBorder: "var(--chakra-colors-chakra-border-color)"
                 },
             }}>
             {children}

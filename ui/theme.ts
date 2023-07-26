@@ -64,9 +64,9 @@ const customTheme = extendTheme(
                     },
                     ...markdownRender(props),
                     // update antd border colors
-                    '*, *::before, ::after': {
-                        borderColor: "var(--chakra-colors-chakra-border-color) !important"
-                    }
+                    // '*, *::before, ::after': {
+                    //     borderColor: "var(--chakra-colors-chakra-border-color) !important"
+                    // }
                 }
             }
         }

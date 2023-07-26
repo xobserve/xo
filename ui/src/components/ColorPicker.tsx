@@ -44,10 +44,11 @@ interface Props {
     circleRadius?: string
 }
 
-export const ColorPicker = ({ color, onChange, buttonText = null, circlePicker = false, circleRadius = "16px" }: Props) => {
+export const ColorPicker = (props: Props) => {
+    const { onChange, buttonText = null, circlePicker = false, circleRadius = "16px" } = props
     const {colorMode} = useColorMode()
     const t = useStore(commonMsg)
-    color = paletteColorNameToHex(color, colorMode)
+    const color = paletteColorNameToHex(props.color, colorMode)
     return (
         <Popover>
             <PopoverTrigger><HStack width="fit-content">
@@ -73,7 +74,7 @@ export const ColorPicker = ({ color, onChange, buttonText = null, circlePicker =
                                 (colorMode == "light" ? lightPalettes : darkPalettes).map(palette => <Flex justifyContent="space-between" alignItems="center">
                                     <Text fontSize="0.9rem">{upperFirst(palette.name)}</Text>
                                     <HStack spacing={3}>
-                                        {palette.shades.map((color,i) => <Box cursor="pointer" borderRadius="50%" width={i==2 ? "30px" : "20px"} height={i==2 ? "30px" : "20px"} display="block" bg={color.color} onClick={() => onChange(color.name)}/>)}
+                                        {palette.shades.map((c,i) => <Box p="1px" borderRadius={4} border={props.color == c.name ? `1.5px solid ${c.color}` : null}><Box cursor="pointer"  borderRadius="50%" width={i==2 ? "30px" : "20px"} height={i==2 ? "30px" : "20px"} display="block" bg={c.color} onClick={() => onChange(c.name)}/></Box>)}
                                     </HStack>
                                 </Flex>)
                             }
