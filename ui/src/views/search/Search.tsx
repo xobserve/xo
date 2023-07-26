@@ -140,8 +140,8 @@ const Search = memo((props: Props) => {
 
     return (
         <Box>
-            <HStack color={isOpen ? useColorModeValue("brand.500", "brand.200") : 'inherit'} className="hover-text" cursor="pointer">
-                <Box onClick={onSearchOpen}>
+            <HStack color={isOpen ? useColorModeValue("brand.500", "brand.200") : 'inherit'} className="hover-text" cursor="pointer" onClick={onSearchOpen}>
+                <Box>
                     {miniMode ?
                         <IconButton fontSize={"1.2rem"} aria-label="" variant="ghost" color="current" _focus={{ border: null }} icon={<FaSearch />} />
                         : <FaSearch />
