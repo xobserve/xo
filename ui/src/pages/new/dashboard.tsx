@@ -27,6 +27,7 @@ import { requestApi } from "utils/axios/request"
 import { useNavigate } from "react-router-dom"
 import { commonMsg, newMsg } from "src/i18n/locales/en"
 import { useStore } from "@nanostores/react"
+import { useSearchParam } from "react-use"
 
 
 const NewDashboardPage = () => {
@@ -34,7 +35,8 @@ const NewDashboardPage = () => {
     const t1 = useStore(newMsg)
     const toast = useToast()
     const navigate = useNavigate()
-    const [dashboard, setDashboard] = useState<Dashboard>(initDashboard)
+    const team = useSearchParam('team') 
+    const [dashboard, setDashboard] = useState<Dashboard>(initDashboard(Number(team)))
     const [teams, setTeams] = useState<Team[]>([])
 
     useEffect(() => {

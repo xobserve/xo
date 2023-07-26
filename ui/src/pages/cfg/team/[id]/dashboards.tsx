@@ -61,7 +61,7 @@ const TeamDashboards = ({team}: {team:Team}) => {
         <Box>
             <Flex justifyContent="space-between">
                 <Box></Box>
-                <Button size="sm" onClick={() => navigate(`${ReserveUrls.New}/dashboard`)}>{t.newItem({name: t.dashboard})}</Button>
+                <Button size="sm" onClick={() => navigate(`${ReserveUrls.New}/dashboard?team=${team.id}`)}>{t.newItem({name: t.dashboard})}</Button>
             </Flex>
             <TableContainer>
                 <Table variant="simple">

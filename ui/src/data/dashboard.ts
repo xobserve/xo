@@ -1,8 +1,10 @@
+import { isNaN } from "lodash";
 import { Dashboard, DashboardLayout } from "types/dashboard";
 import { PanelBorderType, PanelDecorationType } from "types/panel/styles";
 import { globalTeamId } from "types/teams";
+import { isEmpty } from "utils/validate";
 
-export const initDashboard = (): Dashboard => {
+export const initDashboard = (team?): Dashboard => {
     return {
         id: "",
         title: "New dashboard",
@@ -35,7 +37,7 @@ export const initDashboard = (): Dashboard => {
             autoSaveInterval: 120,
             lazyLoading: true
         },
-        ownedBy: globalTeamId,
+        ownedBy: (team == 0 || isNaN(team)) ? globalTeamId :  team ,
     }
 }
 
