@@ -22,9 +22,9 @@ interface Props {
     teams: Team[]
     value: number[]
     onChange: any
+    teamCount: Object
 }
-
-const TeamsFilter = ({ value, teams, onChange }: Props) => {
+const TeamsFilter = ({ value, teams, onChange,teamCount }: Props) => {
     return (
         <>
             <Select
@@ -38,7 +38,7 @@ const TeamsFilter = ({ value, teams, onChange }: Props) => {
                 options= {
                     teams.map(t => {
                         return {
-                            label: t.name,
+                            label: t.name+` (${teamCount[t.id]??0})`,
                             value: t.id
                         }
                     })

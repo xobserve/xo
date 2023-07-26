@@ -21,9 +21,10 @@ interface Props {
     tags: string[]
     value: string[]
     onChange: any
+    tagCount: Object
 }
 
-const TagsFilter = ({ value, tags, onChange }: Props) => {
+const TagsFilter = ({ value, tags, onChange,tagCount }: Props) => {
     const tagRender = (props: CustomTagProps) => {
         const { value, onClose } = props;
         return (
@@ -49,8 +50,8 @@ const TagsFilter = ({ value, tags, onChange }: Props) => {
             >
                 {
                     tags.map(tag => {
-                        return <Option value={tag} label={tag}>
-                            <ColorTag name={tag} />
+                        return <Option value={tag} label={tag+ ` (${tagCount[tag]??0})`}>
+                            <ColorTag name={tag} label={tag+ ` (${tagCount[tag]??0})`} />
                         </Option>
                     })
                 }

@@ -94,10 +94,10 @@ const Search = memo((props: Props) => {
         return result
     }, [rawDashboards])
 
-    const dashboards = useMemo(() => {
+    const [dashboards,tagCount,teamCount] = useMemo(() => {
         let result:Dashboard[] = []
         if (!rawDashboards) {
-            return result
+            return [result,null,null]
         }
 
         for (const dash of rawDashboards) {
@@ -125,12 +125,22 @@ const Search = memo((props: Props) => {
             return selectedTeams.some(t => t == dash.ownedBy)
         })
 
-        return result
+        const tagCount = new Map()
+        const teamCount = new Map()
+
+        for (const dash of result) {
+            teamCount[dash.ownedBy] = (teamCount[dash.ownedBy]?? 0) + 1
+            for (const t of (dash.tags??[])) {
+                tagCount[t] = (tagCount[t]??0) + 1
+            }
+        }
+
+        return [result,tagCount,teamCount]
     }, [query, rawDashboards, caseSensitive, selectedTags, selectedTeams])
 
 
     
-    console.log("here33333 result dashboard:", query, dashboards, selectedTags, selectedTeams)
+    console.log("here33333 result dashboard:", tagCount,teamCount)
     return (
         <Box>
             <HStack color={isOpen ? useColorModeValue("brand.500", "brand.200") : 'inherit'} className="hover-text" cursor="pointer">
@@ -175,8 +185,8 @@ const Search = memo((props: Props) => {
                                 </Tooltip>
                             </HStack>
                             <HStack>
-                                <TagsFilter value={selectedTags} tags={tags} onChange={setSelectedTags} />
-                                <TeamsFilter value={selectedTeams} teams={teams} onChange={setSelectedTeams} />
+                                <TagsFilter value={selectedTags} tags={tags} onChange={setSelectedTags} tagCount={tagCount} />
+                                <TeamsFilter value={selectedTeams} teams={teams} onChange={setSelectedTeams} teamCount={teamCount} />
                             </HStack>
                         </Flex>
                         {dashboards?.length > 0 && <SearchResults teams={teams} dashboards={dashboards} onItemClick={onClose} query={query} />}

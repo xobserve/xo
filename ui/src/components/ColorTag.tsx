@@ -18,16 +18,17 @@ import colorGenerator from "utils/colorGenerator"
 
 interface Props {
     name: string
+    label?: string
     onRemove?: any
     style?: Object
 }
-const ColorTag = ({ name, onRemove,style }: Props) => {
+const ColorTag = ({ name, onRemove,style,label }: Props) => {
     return (
         <Tag style={style} bg={colorGenerator.getColorByKey(name)} color="#444" onMouseDown={(e) => {
             e.preventDefault();
             e.stopPropagation();
         }} borderRadius={2}>
-            <TagLabel>{name}</TagLabel>
+            <TagLabel>{label??name}</TagLabel>
             {onRemove && <TagCloseButton onClick={onRemove} />}
         </Tag>
     )
