@@ -26,7 +26,7 @@ interface Props {
 
 const SearchResults = memo(({teams, dashboards, query, onItemClick }: Props) => {
     return (
-        <VStack alignItems="left">
+        <VStack alignItems="left" maxH="calc(100vh - 130px)"  overflowY="scroll">
             {
                 dashboards.map(dash => <DashboardCard dashboard={dash} owner={teams.find(team => team.id == dash.ownedBy)} onClick={onItemClick} query={query}/> )
             }

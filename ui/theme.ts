@@ -63,7 +63,10 @@ const customTheme = extendTheme(
                         borderColor:  mode("brand.500 !important","brand.200 !important")(props)
                     },
                     ...markdownRender(props),
-
+                    // update antd border colors
+                    '*, *::before, ::after': {
+                        borderColor: "var(--chakra-colors-chakra-border-color) !important"
+                    }
                 }
             }
         }

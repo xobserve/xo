@@ -138,9 +138,6 @@ const Search = memo((props: Props) => {
         return [result,tagCount,teamCount]
     }, [query, rawDashboards, caseSensitive, selectedTags, selectedTeams])
 
-
-    
-    console.log("here33333 result dashboard:", tagCount,teamCount)
     return (
         <Box>
             <HStack color={isOpen ? useColorModeValue("brand.500", "brand.200") : 'inherit'} className="hover-text" cursor="pointer">
@@ -159,14 +156,14 @@ const Search = memo((props: Props) => {
                         width: `calc(100% - ${sideWidth}px)`
                     }
                 }}>
-                <ModalContent>
+                <ModalContent maxH="100vh">
                     <ModalHeader justifyContent="space-between">
                         <Flex justifyContent="space-between" alignItems="center">
                             <Text>Search dashboard</Text>
                             <FaTimes opacity="0.6" cursor="pointer" onClick={onClose} />
                         </Flex>
                     </ModalHeader>
-                    <ModalBody>
+                    <ModalBody >
                         <Flex justifyContent="space-between" alignItems="center" mb="2">
                             <HStack>
                                 <Input value={query} onChange={e => onQueryChange(e.currentTarget.value)} w="320px" placeholder="enter dashboard name or id to search.." />
