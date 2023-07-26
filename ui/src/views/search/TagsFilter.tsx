@@ -49,7 +49,7 @@ const TagsFilter = ({ value, tags, onChange,tagCount }: Props) => {
                 onChange={onChange}
             >
                 {
-                    tags.map(tag => {
+                    tags.sort().map(tag => {
                         return <Option value={tag} label={tag+ ` (${tagCount[tag]??0})`}>
                             <ColorTag name={tag} label={tag+ ` (${tagCount[tag]??0})`} />
                         </Option>

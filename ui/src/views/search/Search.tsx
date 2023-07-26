@@ -21,14 +21,12 @@ import { addParamToUrl } from "utils/url"
 import { RxLetterCaseCapitalize } from "react-icons/rx";
 import SearchResults from "./SearchResults"
 import { Select } from "antd"
-import ColorTag from "components/ColorTag"
 import TagsFilter from "./TagsFilter"
 import { isEmpty } from "utils/validate"
 import { Team } from "types/teams"
 import TeamsFilter from "./TeamsFilter"
 import { AiFillStar, AiOutlineStar } from "react-icons/ai"
-import { cloneDeep } from "lodash"
-const { Option } = Select;
+import { sortBy } from "lodash"
 
 interface Props {
     title: string
@@ -62,7 +60,8 @@ const Search = memo((props: Props) => {
         const r1 = requestApi.get(`/dashboard/simpleList`)
         const r2 = requestApi.get(`/dashboard/starred`)
         const res = await Promise.all([r1,r2])
-        setRawDashboards(res[0].data)
+       
+        setRawDashboards( sortBy(res[0].data, dash => dash.title))
         const starred = new Set<string>()
         for (const id of res[1].data) {
             starred.add(id)

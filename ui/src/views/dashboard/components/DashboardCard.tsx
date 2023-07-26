@@ -70,7 +70,7 @@ const DashboardCard = ({ dashboard, owner, query, onClick, starred }: Props) => 
             </Box>
             <HStack>
                 {
-                    dashboard.tags?.map((tag, index) => {
+                    dashboard.tags?.sort().map((tag, index) => {
                         return <ColorTag name={tag} />
                     })
                 }
