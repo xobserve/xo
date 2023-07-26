@@ -27,17 +27,14 @@ import AddPanel from "./AddPanel"
 import { variables } from "./Dashboard"
 import DashboardSave from "./DashboardSave"
 import DashboardSettings from "./settings/DashboardSettings"
-import useMiniMode from "hooks/useMiniMode"
 import Fullscreen from "components/Fullscreen"
 import useFullscreen from "hooks/useFullscreen"
 import DatePicker from "components/DatePicker/DatePicker"
 import { useNavigate } from "react-router-dom"
 import { useStore } from "@nanostores/react";
 import { dashboardMsg } from "src/i18n/locales/en";
-import { FaShareAlt } from "react-icons/fa";
-import { BsShare } from "react-icons/bs";
 import DashboardShare from "./DashboardShare";
-import DashboardStar from "./DashboardStar";
+import DashboardStar from "./components/DashboardStar";
 
 interface HeaderProps {
     dashboard: Dashboard

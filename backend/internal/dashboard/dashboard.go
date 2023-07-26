@@ -297,3 +297,29 @@ func GetStarred(c *gin.Context) {
 
 	c.JSON(http.StatusOK, common.RespSuccess(starred))
 }
+
+func GetAllStarred(c *gin.Context) {
+	u := user.CurrentUser(c)
+
+	rows, err := db.Conn.Query("SELECT dashboard_id FROM star_dashboard WHERE user_id=?", u.Id)
+	if err != nil {
+		logger.Warn("get all starred dashboard error", "error", err)
+		c.JSON(500, common.RespError(e.Internal))
+		return
+	}
+
+	starredList := make([]string, 0)
+	for rows.Next() {
+		var id string
+		err = rows.Scan(&id)
+		if err != nil {
+			logger.Warn("get all starred scan error", "error", err)
+			c.JSON(500, common.RespError(e.Internal))
+			return
+		}
+
+		starredList = append(starredList, id)
+	}
+
+	c.JSON(http.StatusOK, common.RespSuccess(starredList))
+}

@@ -19,6 +19,8 @@ import { useNavigate } from "react-router-dom"
 import { Dashboard } from "types/dashboard"
 import { Team } from "types/teams"
 import { getDashboardLink } from "utils/dashboard/dashboard"
+import DashboardStar from "./DashboardStar"
+import { Divider } from "antd"
 
 
 interface Props {
@@ -26,9 +28,10 @@ interface Props {
     owner: Team
     query: string
     onClick?: any
+    starred: boolean
 }
 
-const DashboardCard = ({ dashboard, owner,query,onClick }: Props) => {
+const DashboardCard = ({ dashboard, owner, query, onClick, starred }: Props) => {
     const [active, setActive] = useState(false)
     const navigate = useNavigate()
 
@@ -49,15 +52,21 @@ const DashboardCard = ({ dashboard, owner,query,onClick }: Props) => {
         >
             <Box>
                 <Flex alignItems="center">
-                    <Text><Highlight query={query??""} styles={{bg: 'cyan.100'}} >{dashboard.title}</Highlight></Text>
+                    <Text><Highlight query={query ?? ""} styles={{ bg: 'cyan.100' }} >{dashboard.title}</Highlight></Text>
                     {location.pathname == '/' + dashboard.id && <Tag ml="1">current</Tag>}
                     {(query || active) &&
                         <Flex alignItems="center" ml="2">
-                            <Text textStyle="annotation" mb="-2px"><Highlight query={query??""} styles={{bg: 'cyan.100' }}>{dashboard.id}</Highlight></Text>
+                            <Text textStyle="annotation" mb="-2px"><Highlight query={query ?? ""} styles={{ bg: 'cyan.100' }}>{dashboard.id}</Highlight></Text>
                             <Box ml="1" mb="-3px"><CopyToClipboard copyText={dashboard.id} tooltipTitle="copy dashboard id" fontSize="0.8rem" /></Box>
                         </Flex>}
                 </Flex>
-                <Text minWidth="fit-content" mt="2" textStyle="annotation">{owner?.name}</Text>
+                <HStack alignItems="center" mt="2" spacing={1}>
+                    <Text minWidth="fit-content" textStyle="annotation">{owner?.name}</Text>
+                    {starred && <>
+                        <Divider type="vertical" />
+                        <DashboardStar dashboardId={dashboard.id} colorScheme="gray" enableClick={false} starred />
+                    </>}
+                </HStack>
             </Box>
             <HStack>
                 {

@@ -22,13 +22,14 @@ interface Props {
     dashboards: Dashboard[]
     query: string
     onItemClick?: any
+    starredIds: Set<string>
 }
 
-const SearchResults = memo(({teams, dashboards, query, onItemClick }: Props) => {
+const SearchResults = memo(({teams, dashboards, query, onItemClick,starredIds }: Props) => {
     return (
         <VStack alignItems="left" maxH="calc(100vh - 130px)"  overflowY="scroll">
             {
-                dashboards.map(dash => <DashboardCard dashboard={dash} owner={teams.find(team => team.id == dash.ownedBy)} onClick={onItemClick} query={query}/> )
+                dashboards.map(dash => <DashboardCard dashboard={dash} owner={teams.find(team => team.id == dash.ownedBy)} onClick={onItemClick} query={query} starred={starredIds.has(dash.id)}/> )
             }
         </VStack>
     )

@@ -26,6 +26,8 @@ import TagsFilter from "./TagsFilter"
 import { isEmpty } from "utils/validate"
 import { Team } from "types/teams"
 import TeamsFilter from "./TeamsFilter"
+import { AiFillStar, AiOutlineStar } from "react-icons/ai"
+import { cloneDeep } from "lodash"
 const { Option } = Select;
 
 interface Props {
@@ -44,6 +46,8 @@ const Search = memo((props: Props) => {
     const [selectedTags, setSelectedTags] = useState<string[]>([])
     const [teams, setTeams] = useState<Team[]>([])
     const [selectedTeams, setSelectedTeams] = useState<number[]>([])
+    const [filterStarred, setFilterStarred] = useState<boolean>(false)
+    const [starredDashIds, setStarredDashIds] = useState<Set<string>>(new Set())
     const load = async () => {
         const res = await requestApi.get("/teams/all")
         console.log("here3333 load teams")
@@ -51,15 +55,22 @@ const Search = memo((props: Props) => {
     }
 
     if (teams.length == 0) {
-        load()  
+        load()
     }
 
     const onSearchOpen = async () => {
-        const res = await requestApi.get(`/dashboard/simpleList`)
-        setRawDashboards(res.data)
+        const r1 = requestApi.get(`/dashboard/simpleList`)
+        const r2 = requestApi.get(`/dashboard/starred`)
+        const res = await Promise.all([r1,r2])
+        setRawDashboards(res[0].data)
+        const starred = new Set<string>()
+        for (const id of res[1].data) {
+            starred.add(id)
+        }
+        setStarredDashIds(starred)
         onOpen()
     }
-
+    
 
 
     const urlQuery = useSearchParam('search')
@@ -94,19 +105,23 @@ const Search = memo((props: Props) => {
         return result
     }, [rawDashboards])
 
-    const [dashboards,tagCount,teamCount] = useMemo(() => {
-        let result:Dashboard[] = []
+    const [dashboards, tagCount, teamCount] = useMemo(() => {
+        let result: Dashboard[] = []
         if (!rawDashboards) {
-            return [result,null,null]
+            return [result, null, null]
         }
 
         for (const dash of rawDashboards) {
+            if (filterStarred && !starredDashIds.has(dash.id)) {
+                continue
+            }
+
             const id = caseSensitive ? dash.id.toString() : dash.id.toString().toLowerCase()
             const title = caseSensitive ? dash.title : dash.title.toLowerCase()
             const q = caseSensitive ? query : query?.toLowerCase()
             if (isEmpty(q) || (id.includes(q) || title.includes(q))) {
                 if (selectedTags.length > 0) {
-                    let matched = true 
+                    let matched = true
                     if (selectedTags.some(tag => !dash.tags?.includes(tag))) {
                         matched = false
                     }
@@ -120,23 +135,23 @@ const Search = memo((props: Props) => {
         result = result.filter(dash => {
             if (selectedTeams.length == 0) {
                 return true
-            } 
+            }
 
             return selectedTeams.some(t => t == dash.ownedBy)
         })
-
+        
         const tagCount = new Map()
         const teamCount = new Map()
 
         for (const dash of result) {
-            teamCount[dash.ownedBy] = (teamCount[dash.ownedBy]?? 0) + 1
-            for (const t of (dash.tags??[])) {
-                tagCount[t] = (tagCount[t]??0) + 1
+            teamCount[dash.ownedBy] = (teamCount[dash.ownedBy] ?? 0) + 1
+            for (const t of (dash.tags ?? [])) {
+                tagCount[t] = (tagCount[t] ?? 0) + 1
             }
         }
 
-        return [result,tagCount,teamCount]
-    }, [query, rawDashboards, caseSensitive, selectedTags, selectedTeams])
+        return [result, tagCount, teamCount]
+    }, [query, rawDashboards, caseSensitive, selectedTags, selectedTeams,filterStarred, starredDashIds])
 
     return (
         <Box>
@@ -151,44 +166,48 @@ const Search = memo((props: Props) => {
             </HStack>
             <Modal isOpen={isOpen} onClose={onClose} size="full">
                 <Box sx={{
-                    '.chakra-modal__content-container' : {
+                    '.chakra-modal__content-container': {
                         marginLeft: sideWidth + 'px',
                         width: `calc(100% - ${sideWidth}px)`
                     }
                 }}>
-                <ModalContent maxH="100vh">
-                    <ModalHeader justifyContent="space-between">
-                        <Flex justifyContent="space-between" alignItems="center">
-                            <Text>Search dashboard</Text>
-                            <FaTimes opacity="0.6" cursor="pointer" onClick={onClose} />
-                        </Flex>
-                    </ModalHeader>
-                    <ModalBody >
-                        <Flex justifyContent="space-between" alignItems="center" mb="2">
-                            <HStack>
-                                <Input value={query} onChange={e => onQueryChange(e.currentTarget.value)} w="320px" placeholder="enter dashboard name or id to search.." />
-                                <Tooltip label={caseSensitive ? "Case sensitive" : "Case insensitive"}>
-                                    <Box
-                                        cursor="pointer"
-                                        onClick={() => setCaseSensitive(!caseSensitive)}
-                                        color={caseSensitive ? "brand.500" : "inherit"}
-                                        fontWeight="600"
-                                        className={caseSensitive ? "highlight-bordered" : null}
-                                        p="1"
-                                        fontSize="1.1rem"
-                                    >
-                                        <RxLetterCaseCapitalize />
+                    <ModalContent maxH="100vh">
+                        <ModalHeader justifyContent="space-between">
+                            <Flex justifyContent="space-between" alignItems="center">
+                                <Text>Search dashboard</Text>
+                                <FaTimes opacity="0.6" cursor="pointer" onClick={onClose} />
+                            </Flex>
+                        </ModalHeader>
+                        <ModalBody >
+                            <Flex justifyContent="space-between" alignItems="center" mb="2">
+                                <HStack>
+                                    <Input value={query} onChange={e => onQueryChange(e.currentTarget.value)} w="320px" placeholder="enter dashboard name or id to search.." />
+                                    <Tooltip label={caseSensitive ? "Case sensitive" : "Case insensitive"}>
+                                        <Box
+                                            cursor="pointer"
+                                            onClick={() => setCaseSensitive(!caseSensitive)}
+                                            color={caseSensitive ? "brand.500" : "inherit"}
+                                            fontWeight="600"
+                                            className={caseSensitive ? "highlight-bordered" : null}
+                                            p="1"
+                                            fontSize="1.1rem"
+                                        >
+                                            <RxLetterCaseCapitalize />
+                                        </Box>
+                                    </Tooltip>
+                                </HStack>
+                                <HStack>
+                                    <Box cursor="pointer" onClick={() => setFilterStarred(!filterStarred)} fontSize="1.3rem" color={useColorModeValue("orange.300", "orange.200")}>
+                                        {filterStarred ? <AiFillStar /> : <AiOutlineStar />}
                                     </Box>
-                                </Tooltip>
-                            </HStack>
-                            <HStack>
-                                <TagsFilter value={selectedTags} tags={tags} onChange={setSelectedTags} tagCount={tagCount} />
-                                <TeamsFilter value={selectedTeams} teams={teams} onChange={setSelectedTeams} teamCount={teamCount} />
-                            </HStack>
-                        </Flex>
-                        {dashboards?.length > 0 && <SearchResults teams={teams} dashboards={dashboards} onItemClick={onClose} query={query} />}
-                    </ModalBody>
-                </ModalContent>
+
+                                    <TagsFilter value={selectedTags} tags={tags} onChange={setSelectedTags} tagCount={tagCount} />
+                                    <TeamsFilter value={selectedTeams} teams={teams} onChange={setSelectedTeams} teamCount={teamCount} />
+                                </HStack>
+                            </Flex>
+                            {dashboards?.length > 0 && <SearchResults teams={teams} dashboards={dashboards} onItemClick={onClose} query={query} starredIds={starredDashIds} />}
+                        </ModalBody>
+                    </ModalContent>
                 </Box>
             </Modal>
         </Box>

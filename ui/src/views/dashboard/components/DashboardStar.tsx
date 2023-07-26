@@ -21,10 +21,12 @@ interface Props {
     dashboardId: string 
     starred?: boolean
     fontSize?: string
+    colorScheme?: "gray" | "orange"
+    enableClick?: boolean
 }
 
 const DashboardStar = (props: Props) => {
-    const {dashboardId,fontSize="1rem"} = props
+    const {dashboardId,fontSize="1rem", colorScheme="orange", enableClick=true} = props
     const [starred, setStarred] = useState(props.starred)
 
 
@@ -46,8 +48,8 @@ const DashboardStar = (props: Props) => {
        
         setStarred(!starred)
     }
-    return (<Box cursor="pointer" onClick={onStar} fontSize={fontSize} color={useColorModeValue("orange.300","orange.200")}>
-        {starred ? <AiFillStar /> : <AiOutlineStar  color="red.100" />}
+    return (<Box cursor="pointer" onClick={enableClick ? onStar : null} fontSize={fontSize} color={colorScheme == "orange" ? useColorModeValue("orange.300","orange.200" ): 'inherit'}>
+        {starred ? <AiFillStar /> : <AiOutlineStar />}
         </Box>)
 }
 
