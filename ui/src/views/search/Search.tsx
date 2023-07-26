@@ -132,7 +132,7 @@ const Search = memo((props: Props) => {
     
     console.log("here33333 result dashboard:", query, dashboards, selectedTags, selectedTeams)
     return (
-        <>
+        <Box>
             <HStack color={isOpen ? useColorModeValue("brand.500", "brand.200") : 'inherit'} className="hover-text" cursor="pointer">
                 <Box onClick={onSearchOpen}>
                     {miniMode ?
@@ -143,7 +143,13 @@ const Search = memo((props: Props) => {
                 {!miniMode && <Text fontSize={`${fontSize}px`} fontWeight={fontWeight} >{title}</Text>}
             </HStack>
             <Modal isOpen={isOpen} onClose={onClose} size="full">
-                <ModalContent ml={`${sideWidth}px`}>
+                <Box sx={{
+                    '.chakra-modal__content-container' : {
+                        marginLeft: sideWidth + 'px',
+                        width: `calc(100% - ${sideWidth}px)`
+                    }
+                }}>
+                <ModalContent>
                     <ModalHeader justifyContent="space-between">
                         <Flex justifyContent="space-between" alignItems="center">
                             <Text>Search dashboard</Text>
@@ -176,8 +182,9 @@ const Search = memo((props: Props) => {
                         {dashboards?.length > 0 && <SearchResults teams={teams} dashboards={dashboards} onItemClick={onClose} query={query} />}
                     </ModalBody>
                 </ModalContent>
+                </Box>
             </Modal>
-        </>
+        </Box>
     )
 })
 
