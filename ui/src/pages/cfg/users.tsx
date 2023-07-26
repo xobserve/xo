@@ -54,8 +54,8 @@ const UsersPage = () => {
         setUsers(res.data)
     }
 
-    const editUser = (m) => {
-        setUserInEdit(m)
+    const editUser = (m: User) => {
+        setUserInEdit(cloneDeep(m))
         onOpen()
     }
 
