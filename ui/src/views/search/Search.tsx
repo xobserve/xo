@@ -11,15 +11,15 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { Box, Checkbox, Flex, HStack, IconButton, Input, Modal, ModalBody, ModalCloseButton, ModalContent, ModalHeader, ModalOverlay, Text, Tooltip, useColorModeValue, useDisclosure } from "@chakra-ui/react"
-import { cloneDeep, set } from "lodash"
-import React, { memo, useEffect, useLayoutEffect, useMemo, useState } from "react"
+import { Box, Flex, HStack, IconButton, Input, Modal, ModalBody, ModalContent, ModalHeader, Text, Tooltip, useColorModeValue, useDisclosure } from "@chakra-ui/react"
+import React, { memo,  useMemo, useState } from "react"
 import { FaSearch, FaTimes } from "react-icons/fa"
 import { useSearchParam } from "react-use"
 import { Dashboard } from "types/dashboard"
 import { requestApi } from "utils/axios/request"
 import { addParamToUrl } from "utils/url"
 import { RxLetterCaseCapitalize } from "react-icons/rx";
+import SearchResults from "./SearchResults"
 
 interface Props {
     title: string
@@ -66,7 +66,7 @@ const Search = memo((props: Props) => {
         for (const dash of target) {
             const id = caseSensitive ? dash.id.toString() : dash.id.toString().toLowerCase()
             const title = caseSensitive ? dash.title : dash.title.toLowerCase()
-            const q = caseSensitive ? query : query.toLowerCase()
+            const q = caseSensitive ? query : query?.toLowerCase()
             if (id.includes(q) || title.includes(q)) {
                 result.push(dash)
             }
@@ -96,7 +96,7 @@ const Search = memo((props: Props) => {
                         </Flex>
                     </ModalHeader>
                     <ModalBody>
-                        <Flex justifyContent="space-between" alignItems="center">
+                        <Flex justifyContent="space-between" alignItems="center" mb="2">
                             <HStack>
                                 <Input value={query} onChange={e => onQueryChange(e.currentTarget.value)} maxWidth="400px" placeholder="enter dashboard name or id to search.." />
                                 <Tooltip label={caseSensitive ? "Case sensitive" : "Case insensitive"}>
@@ -117,6 +117,7 @@ const Search = memo((props: Props) => {
 
                             </HStack>
                         </Flex>
+                        {dashboards?.length > 0 && <SearchResults dashboards={dashboards} onItemClick={onClose}/>}
                     </ModalBody>
                 </ModalContent>
             </Modal>

@@ -5,21 +5,22 @@ import React from 'react';
 import copy from 'copy-to-clipboard';
 
 import { Box,  Tooltip } from '@chakra-ui/react';
-import IconButton from './button/IconButton';
-import { FaCopy } from 'react-icons/fa';
+import { FaRegCopy } from 'react-icons/fa';
 
 type PropsType = {
     copyText: string;
     placement?: any;
     tooltipTitle: string;
+    fontSize?: string
 };
 
-const CopyToClipboard = ({ copyText, placement, tooltipTitle }: PropsType) => {
+const CopyToClipboard = ({ copyText, placement, tooltipTitle,fontSize="1rem" }: PropsType) => {
     const [hasCopied, setHasCopied] = React.useState(false);
 
 
 
-    const handleClick = () => {
+    const handleClick = (e) => {
+        e.stopPropagation();
         setHasCopied(true);
         copy(copyText);
     };
@@ -35,13 +36,10 @@ const CopyToClipboard = ({ copyText, placement, tooltipTitle }: PropsType) => {
                 onClose={handleTooltipVisibilityChange as any}
                 label={hasCopied ? 'Copied' : tooltipTitle}
                 closeDelay={300}
+                openDelay={300}
             >
-                <Box display="inline-block">
-                    <IconButton
-                        onClick={handleClick}
-                        variant="ghost"
-                        color="inherit"
-                    ><FaCopy /></IconButton>
+                <Box display="inline-block" onClick={handleClick} cursor="pointer" fontSize={fontSize}>
+                    <FaRegCopy />
                 </Box>
             </Tooltip>
         );
