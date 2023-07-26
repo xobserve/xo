@@ -14,6 +14,7 @@ package dashboard
 
 import (
 	"database/sql"
+	"encoding/json"
 	"fmt"
 	"time"
 
@@ -70,9 +71,15 @@ func SaveDashboard(c *gin.Context) {
 		return
 	}
 
+	tags, err := json.Marshal(dash.Tags)
+	if err != nil {
+		logger.Warn("encode tags error", "error", err)
+		c.JSON(400, common.RespError(e.ParamInvalid))
+		return
+	}
 	if !isUpdate {
-		_, err := db.Conn.Exec(`INSERT INTO dashboard (id,title, owned_by, created_by, data,created,updated) VALUES (?,?,?,?,?,?,?)`,
-			dash.Id, dash.Title, dash.OwnedBy, dash.CreatedBy, jsonData, dash.Created, dash.Updated)
+		_, err := db.Conn.Exec(`INSERT INTO dashboard (id,title, owned_by, created_by,tags, data,created,updated) VALUES (?,?,?,?,?,?,?,?)`,
+			dash.Id, dash.Title, dash.OwnedBy, dash.CreatedBy, tags, jsonData, dash.Created, dash.Updated)
 		if err != nil {
 			if e.IsErrUniqueConstraint(err) {
 				c.JSON(409, common.RespError("dashboard id already exists"))
@@ -83,8 +90,8 @@ func SaveDashboard(c *gin.Context) {
 			return
 		}
 	} else {
-		_, err = db.Conn.Exec(`UPDATE dashboard SET title=?,data=?,updated=? WHERE id=?`,
-			dash.Title, jsonData, dash.Updated, dash.Id)
+		_, err = db.Conn.Exec(`UPDATE dashboard SET title=?,tags=?,data=?,updated=? WHERE id=?`,
+			dash.Title, tags, jsonData, dash.Updated, dash.Id)
 		if err != nil {
 			logger.Error("update dashboard error", "error", err)
 			c.JSON(500, common.RespInternalError())
@@ -215,4 +222,8 @@ func GetTeamDashboards(c *gin.Context) {
 
 	}
 	c.JSON(200, common.RespSuccess(dashboards))
+}
+
+func GetSimpleList(c *gin.Context) {
+
 }

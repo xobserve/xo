@@ -106,7 +106,7 @@ func (s *Server) Start() error {
 		r.POST("/dashboard/save", IsLogin(), dashboard.SaveDashboard)
 		r.GET("/dashboard/team/:id", IsLogin(), dashboard.GetTeamDashboards)
 		r.GET("/dashboard/history/:id", IsLogin(), dashboard.GetHistory)
-
+		r.GET("/dashboard/simpleList", dashboard.GetSimpleList)
 		// admin apis
 		r.GET("/admin/users", IsLogin(), admin.GetUsers)
 		r.POST("/admin/user", IsLogin(), admin.UpdateUser)

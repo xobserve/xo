@@ -13,6 +13,8 @@
 package models
 
 import (
+	"encoding/json"
+	"fmt"
 	"time"
 
 	"github.com/DataObserve/datav/backend/pkg/db"
@@ -33,6 +35,7 @@ type Dashboard struct {
 	CreatedBy int64 `json:"createdBy,omitempty"`
 	OwnedBy   int64 `json:"ownedBy,omitempty"` // team that ownes this dashboard
 
+	Tags []string         `json:"tags,omitempty"`
 	Data *simplejson.Json `json:"data,omitempty"`
 
 	Variables []*Variable `json:"variables,omitempty"`
@@ -42,7 +45,8 @@ func QueryDashboard(id string) (*Dashboard, error) {
 	dash := &Dashboard{}
 
 	var rawJSON []byte
-	err := db.Conn.QueryRow("SELECT title,data,owned_by,updated FROM dashboard WHERE id = ?", id).Scan(&dash.Title, &rawJSON, &dash.OwnedBy, &dash.Updated)
+	var rawTags []byte
+	err := db.Conn.QueryRow("SELECT title,tags,data,owned_by,updated FROM dashboard WHERE id = ?", id).Scan(&dash.Title, &rawTags, &rawJSON, &dash.OwnedBy, &dash.Updated)
 	if err != nil {
 		return nil, err
 	}
@@ -53,6 +57,14 @@ func QueryDashboard(id string) (*Dashboard, error) {
 		return nil, err
 	}
 	dash.Data = data
+
+	tags := make([]string, 0)
+	err = json.Unmarshal(rawTags, &tags)
+	if err != nil {
+		fmt.Println(tags, rawTags, err)
+		return nil, err
+	}
+	dash.Tags = tags
 
 	dash.Id = id
 

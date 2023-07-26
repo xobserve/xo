@@ -20,6 +20,7 @@ export interface Dashboard {
     title: string
     ownedBy: number
     data: DashboardData
+    tags?: string[]
     editable?: boolean
     createdBy?: string
     created?: string
@@ -34,7 +35,6 @@ export interface DashboardData {
     sharedTooltip: boolean
     editable: boolean
     hidingVars: string
-    tags: string[]
     styles: {
         bg: string
         bgEnabled: boolean

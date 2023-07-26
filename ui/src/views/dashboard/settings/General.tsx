@@ -15,7 +15,7 @@ import { Box, HStack, Input, Select, Switch, Tag, TagCloseButton, TagLabel, Text
 import { EditorNumberItem } from "components/editor/EditorItem"
 import { Form, FormSection } from "components/form/Form"
 import FormItem from "components/form/Item"
-import { useEffect, useState } from "react"
+import { useState } from "react"
 import { Dashboard, DashboardLayout } from "types/dashboard"
 import React from "react";
 import { useStore } from "@nanostores/react"
@@ -31,18 +31,13 @@ const GeneralSettings = ({ dashboard, onChange }: Props) => {
     const t1 = useStore(dashboardSettingMsg)
 
     const toast = useToast()
-    useEffect(() => {
-        if (!dashboard.data.tags) {
-            dashboard.data.tags = []
-        }
-    }, [])
     const [title, setTitle] = useState(dashboard.title)
     const [desc, setDesc] = useState(dashboard.data.description)
     const [hidingVars, setHidingVars] = useState(dashboard.data.hidingVars)
     const [tag, setTag] = useState('')
 
     const addTag = () => {
-        if (dashboard.data.tags?.length >= 5) {
+        if (dashboard.tags?.length >= 5) {
             toast({
                 title: t1.tagsExceedLimit,
                 status: "error",
@@ -52,11 +47,11 @@ const GeneralSettings = ({ dashboard, onChange }: Props) => {
             return
         }
 
-        if (dashboard.data.tags?.includes(tag)) {
+        if (dashboard.tags?.includes(tag)) {
             setTag('')
             return
         }
-        onChange(draft => { draft.data.tags.push(tag) })
+        onChange((draft:Dashboard) => { draft.tags.push(tag) })
         setTag('')
     }
 
@@ -93,12 +88,12 @@ const GeneralSettings = ({ dashboard, onChange }: Props) => {
                     }} />
 
                 </FormItem>
-                {dashboard.data.tags.length > 0 && <HStack width="100%">
+                {dashboard.tags.length > 0 && <HStack width="100%">
                     {
-                        dashboard.data.tags.map(t => <Tag>
+                        dashboard.tags.map(t => <Tag>
                             <TagLabel>{t}</TagLabel>
                             <TagCloseButton onClick={() => {
-                                onChange((draft: Dashboard) => { draft.data.tags.splice(draft.data.tags.indexOf(t), 1) })
+                                onChange((draft: Dashboard) => { draft.tags.splice(draft.tags.indexOf(t), 1) })
                             }} />
                         </Tag>)
                     }

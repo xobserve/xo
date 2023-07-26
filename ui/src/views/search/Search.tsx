@@ -12,9 +12,12 @@
 // limitations under the License.
 
 import { Box, Flex, HStack, IconButton, Input, Modal, ModalBody, ModalCloseButton, ModalContent, ModalHeader, ModalOverlay, Text, useColorModeValue, useDisclosure } from "@chakra-ui/react"
-import React, { useEffect, useState } from "react"
+import { set } from "lodash"
+import React, { memo, useEffect, useState } from "react"
 import { FaSearch, FaTimes } from "react-icons/fa"
 import { useSearchParam } from "react-use"
+import { requestApi } from "utils/axios/request"
+import { addParamToUrl } from "utils/url"
 
 interface Props {
     title: string
@@ -23,23 +26,40 @@ interface Props {
     fontWeight?: number
     sideWidth?: number
 }
-const Search = (props: Props) => {
+const Search = memo((props: Props) => {
+    const { title, miniMode, fontSize = 15, fontWeight = 400, sideWidth = 0 } = props
     const [query, setQuery] = useState(null)
+    const [rawDashboards, setRawDashboards] = useState(null)
+    const [dashboards, setDashboards] = useState(null)
+
+    const { isOpen, onOpen, onClose } = useDisclosure()
+
+    const onSearchOpen = async () => {
+        const res = await requestApi.get(`/dashboard/simpleList`)
+        setRawDashboards(res.data)
+        setDashboards(res.data)
+        onOpen()
+    }
 
     const urlQuery = useSearchParam('search')
-    useEffect(() => {
-        if (urlQuery != null) {
-            onOpen()
-            setQuery(urlQuery)
-        }
-    },[urlQuery])
+    if ( urlQuery && query === null) {
+        setQuery(urlQuery)
+        onSearchOpen()
+    }
 
-    const { title, miniMode, fontSize = 15, fontWeight = 400, sideWidth = 0 } = props
-    const { isOpen, onOpen, onClose } = useDisclosure()
+    const onQueryChange = (v) => {
+        addParamToUrl({
+            search: v
+        })
+        setQuery(v)
+    }
+
+
+    console.log("here33333:", query)
     return (
         <>
             <HStack color={isOpen ? useColorModeValue("brand.500", "brand.200") : 'inherit'} className="hover-text" cursor="pointer">
-                <Box onClick={onOpen}>
+                <Box onClick={onSearchOpen}>
                     {miniMode ?
                         <IconButton fontSize={"1.2rem"} aria-label="" variant="ghost" color="current" _focus={{ border: null }} icon={<FaSearch />} />
                         : <FaSearch />
@@ -57,7 +77,7 @@ const Search = (props: Props) => {
                     </ModalHeader>
                     <ModalBody>
                         <Flex justifyContent="space-between" alignItems="center">
-                            <Input maxWidth="400px" placeholder="enter dashboard name or id to search.."/>
+                            <Input value={query} onChange={e => onQueryChange(e.currentTarget.value)}  maxWidth="400px" placeholder="enter dashboard name or id to search.."/>
                             <HStack>
 
                             </HStack>
@@ -67,6 +87,6 @@ const Search = (props: Props) => {
             </Modal>
         </>
     )
-}
+})
 
 export default Search

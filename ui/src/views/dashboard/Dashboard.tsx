@@ -119,7 +119,7 @@ const DashboardWrapper = ({ dashboardId, sideWidth }) => {
             // console.log("33333 after",cloneDeep(panel.plugins[panel.type]),cloneDeep(panel.overrides))
         })
 
-        const d1 = defaultsDeep(dash, initDashboard)
+        const d1 = defaultsDeep(dash, initDashboard())
         return d1
     }
 

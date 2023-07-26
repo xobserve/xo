@@ -6,6 +6,7 @@ var HomeDashboard = `
     "title": "Home Dashboard",
     "editable": true,
     "ownedBy": 1,
+    "tags": ["home","demo"],
     "data": {
         "allowPanelsOverlap": false,
         "autoSaveInterval": 120,
@@ -94,7 +95,6 @@ var HomeDashboard = `
             "bgEnabled": false,
             "border": "None"
         },
-        "tags": [],
         "variables": []
     }
 }`

@@ -92,6 +92,7 @@ CREATE TABLE IF NOT EXISTS dashboard (
     title VARCHAR(255) NOT NULL,
     owned_by INTEGER NOT NULL DEFAULT '1',
     created_by INTEGER NOT NULL,
+    tags TEXT,
     data MEDIUMTEXT NOT NULL,
     created DATETIME NOT NULL,
     updated DATETIME NOT NULL
