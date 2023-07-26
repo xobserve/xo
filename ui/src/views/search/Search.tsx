@@ -66,7 +66,7 @@ const Search = memo((props: Props) => {
         for (const dash of target) {
             const id = caseSensitive ? dash.id.toString() : dash.id.toString().toLowerCase()
             const title = caseSensitive ? dash.title : dash.title.toLowerCase()
-            const q = caseSensitive ? query : query.toLowerCase()
+            const q = caseSensitive ? query : query?.toLowerCase()
             if (id.includes(q) || title.includes(q)) {
                 result.push(dash)
             }
