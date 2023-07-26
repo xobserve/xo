@@ -75,16 +75,16 @@ const Search = memo((props: Props) => {
 
 
 
-    const urlQuery = useSearchParam('search')
-    if (urlQuery && query === null) {
-        onSearchOpen()
-        setQuery(urlQuery)
-    }
+    // const urlQuery = useSearchParam('search')
+    // if (urlQuery && query === null) {
+    //     onSearchOpen()
+    //     setQuery(urlQuery)
+    // }
 
     const onQueryChange = (v) => {
-        addParamToUrl({
-            search: v
-        })
+        // addParamToUrl({
+        //     search: v
+        // })
         setQuery(v)
     }
 
