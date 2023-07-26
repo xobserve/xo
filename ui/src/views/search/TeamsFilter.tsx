@@ -15,48 +15,37 @@ import { Select } from "antd";
 import ColorTag from "components/ColorTag";
 import type { CustomTagProps } from 'rc-select/lib/BaseSelect';
 import React from "react";
+import { Team } from "types/teams";
 const { Option } = Select;
 
 interface Props {
-    tags: string[]
-    value: string[]
+    teams: Team[]
+    value: number[]
     onChange: any
 }
 
-const TagsFilter = ({ value, tags, onChange }: Props) => {
-    const tagRender = (props: CustomTagProps) => {
-        const { value, onClose } = props;
-        return (
-            <ColorTag
-                name={value}
-                onRemove={onClose}
-                style={{ marginRight: 3 }}
-            />
-        );
-    };
-
+const TeamsFilter = ({ value, teams, onChange }: Props) => {
     return (
         <>
             <Select
-                placeholder="filter by tags, result = tag1 & tag2"
+                placeholder="filter by teams, result = t1 || t2"
                 size="large"
                 allowClear
                 mode="multiple"
                 style={{ width: 'fit-content', minWidth: "300px" }}
                 defaultValue={value}
-                tagRender={tagRender}
                 onChange={onChange}
-            >
-                {
-                    tags.map(tag => {
-                        return <Option value={tag} label={tag}>
-                            <ColorTag name={tag} />
-                        </Option>
+                options= {
+                    teams.map(t => {
+                        return {
+                            label: t.name,
+                            value: t.id
+                        }
                     })
                 }
-            </Select>
+            />
         </>
     )
 }
 
-export default TagsFilter
+export default TeamsFilter

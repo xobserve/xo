@@ -25,6 +25,7 @@ import ColorTag from "components/ColorTag"
 import TagsFilter from "./TagsFilter"
 import { isEmpty } from "utils/validate"
 import { Team } from "types/teams"
+import TeamsFilter from "./TeamsFilter"
 const { Option } = Select;
 
 interface Props {
@@ -94,7 +95,7 @@ const Search = memo((props: Props) => {
     }, [rawDashboards])
 
     const dashboards = useMemo(() => {
-        const result = []
+        let result:Dashboard[] = []
         if (!rawDashboards) {
             return result
         }
@@ -116,12 +117,20 @@ const Search = memo((props: Props) => {
             }
         }
 
+        result = result.filter(dash => {
+            if (selectedTeams.length == 0) {
+                return true
+            } 
+
+            return selectedTeams.some(t => t == dash.ownedBy)
+        })
+
         return result
-    }, [query, rawDashboards, caseSensitive, selectedTags])
+    }, [query, rawDashboards, caseSensitive, selectedTags, selectedTeams])
 
 
-
-    console.log("here33333 result dashboard:", query, dashboards, selectedTags)
+    
+    console.log("here33333 result dashboard:", query, dashboards, selectedTags, selectedTeams)
     return (
         <>
             <HStack color={isOpen ? useColorModeValue("brand.500", "brand.200") : 'inherit'} className="hover-text" cursor="pointer">
