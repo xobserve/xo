@@ -91,8 +91,8 @@ const GeneralSettings = ({ dashboard, onChange }: Props) => {
                 </FormItem>
                 {dashboard.tags.length > 0 && <HStack width="100%">
                     {
-                        dashboard.tags.map(t => <ColorTag name={t} onRemove={name => {
-                            onChange((draft: Dashboard) => { draft.tags.splice(draft.tags.indexOf(name), 1) })
+                        dashboard.tags.map(t => <ColorTag name={t} onRemove={_ => {
+                            onChange((draft: Dashboard) => { draft.tags.splice(draft.tags.indexOf(t), 1) })
                         }} />)
                     }
 

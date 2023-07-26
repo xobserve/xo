@@ -12,7 +12,7 @@
 // limitations under the License.
 
 import { Box, Flex, HStack, IconButton, Input, Modal, ModalBody, ModalContent, ModalHeader, Text, Tooltip, useColorModeValue, useDisclosure } from "@chakra-ui/react"
-import React, { memo,  useMemo, useState } from "react"
+import React, { memo, useMemo, useState } from "react"
 import { FaSearch, FaTimes } from "react-icons/fa"
 import { useSearchParam } from "react-use"
 import { Dashboard } from "types/dashboard"
@@ -20,6 +20,12 @@ import { requestApi } from "utils/axios/request"
 import { addParamToUrl } from "utils/url"
 import { RxLetterCaseCapitalize } from "react-icons/rx";
 import SearchResults from "./SearchResults"
+import { Select } from "antd"
+import ColorTag from "components/ColorTag"
+import TagsFilter from "./TagsFilter"
+import { isEmpty } from "utils/validate"
+import { Team } from "types/teams"
+const { Option } = Select;
 
 interface Props {
     title: string
@@ -33,8 +39,19 @@ const Search = memo((props: Props) => {
     const [query, setQuery] = useState<string>(null)
     const [caseSensitive, setCaseSensitive] = useState<boolean>(false)
     const [rawDashboards, setRawDashboards] = useState<Dashboard[]>(null)
-
     const { isOpen, onOpen, onClose } = useDisclosure()
+    const [selectedTags, setSelectedTags] = useState<string[]>([])
+    const [teams, setTeams] = useState<Team[]>([])
+    const [selectedTeams, setSelectedTeams] = useState<number[]>([])
+    const load = async () => {
+        const res = await requestApi.get("/teams/all")
+        console.log("here3333 load teams")
+        setTeams(res.data)
+    }
+
+    if (teams.length == 0) {
+        load()  
+    }
 
     const onSearchOpen = async () => {
         const res = await requestApi.get(`/dashboard/simpleList`)
@@ -57,25 +74,54 @@ const Search = memo((props: Props) => {
         setQuery(v)
     }
 
+
+    const tags = useMemo(() => {
+        const result = []
+        if (!rawDashboards) {
+            return result
+        }
+        const tags = new Set()
+        for (const dash of rawDashboards) {
+            for (const tag of (dash.tags ?? [])) {
+                tags.add(tag)
+            }
+        }
+
+        for (const tag of tags) {
+            result.push(tag)
+        }
+        return result
+    }, [rawDashboards])
+
     const dashboards = useMemo(() => {
         const result = []
         if (!rawDashboards) {
             return result
         }
-        const target = rawDashboards
-        for (const dash of target) {
+
+        for (const dash of rawDashboards) {
             const id = caseSensitive ? dash.id.toString() : dash.id.toString().toLowerCase()
             const title = caseSensitive ? dash.title : dash.title.toLowerCase()
             const q = caseSensitive ? query : query?.toLowerCase()
-            if (id.includes(q) || title.includes(q)) {
-                result.push(dash)
+            if (isEmpty(q) || (id.includes(q) || title.includes(q))) {
+                if (selectedTags.length > 0) {
+                    let matched = true 
+                    if (selectedTags.some(tag => !dash.tags?.includes(tag))) {
+                        matched = false
+                    }
+                    if (matched) result.push(dash)
+                } else {
+                    result.push(dash)
+                }
             }
         }
 
         return result
-    }, [query, rawDashboards, caseSensitive])
+    }, [query, rawDashboards, caseSensitive, selectedTags])
 
-    console.log("here33333 result dashboard:", query, dashboards)
+
+
+    console.log("here33333 result dashboard:", query, dashboards, selectedTags)
     return (
         <>
             <HStack color={isOpen ? useColorModeValue("brand.500", "brand.200") : 'inherit'} className="hover-text" cursor="pointer">
@@ -98,7 +144,7 @@ const Search = memo((props: Props) => {
                     <ModalBody>
                         <Flex justifyContent="space-between" alignItems="center" mb="2">
                             <HStack>
-                                <Input value={query} onChange={e => onQueryChange(e.currentTarget.value)} maxWidth="400px" placeholder="enter dashboard name or id to search.." />
+                                <Input value={query} onChange={e => onQueryChange(e.currentTarget.value)} w="320px" placeholder="enter dashboard name or id to search.." />
                                 <Tooltip label={caseSensitive ? "Case sensitive" : "Case insensitive"}>
                                     <Box
                                         cursor="pointer"
@@ -114,10 +160,11 @@ const Search = memo((props: Props) => {
                                 </Tooltip>
                             </HStack>
                             <HStack>
-
+                                <TagsFilter value={selectedTags} tags={tags} onChange={setSelectedTags} />
+                                <TeamsFilter value={selectedTeams} teams={teams} onChange={setSelectedTeams} />
                             </HStack>
                         </Flex>
-                        {dashboards?.length > 0 && <SearchResults dashboards={dashboards} onItemClick={onClose}/>}
+                        {dashboards?.length > 0 && <SearchResults teams={teams} dashboards={dashboards} onItemClick={onClose} />}
                     </ModalBody>
                 </ModalContent>
             </Modal>
@@ -126,3 +173,4 @@ const Search = memo((props: Props) => {
 })
 
 export default Search
+

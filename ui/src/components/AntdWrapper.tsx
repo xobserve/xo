@@ -34,11 +34,12 @@ const AntdWrapper = ({ children }) => {
             theme={{
                 algorithm: colorMode == "light" ? defaultAlgorithm : darkAlgorithm,
                 token: {
-                    colorBgContainer: colorMode == "light" ? customColors.bodyBg.light : (edit ? customColors.modalBg.dark : customColors.bodyBg.dark),
+                    colorBgContainer: colorMode == "light" ? customColors.bodyBg.light : (edit ? customColors.modalBg.dark : 'transparent'),
                     colorPrimary: colorMode == "light" ? customColors.primaryColor.light : customColors.primaryColor.dark,
                     colorBgElevated: colorMode == "light" ? customColors.popperBg.light : customColors.popperBg.dark,
                     colorBgSpotlight: colorMode == "light" ? customColors.tooltipBg.light : customColors.tooltipBg.dark,
-                    colorBorderSecondary: colorMode == "light" ? customColors.borderColor.light : customColors.borderColor.dark
+                    colorBorderSecondary: colorMode == "light" ? customColors.borderColor.light : customColors.borderColor.dark,
+                    zIndexPopupBase: 1500
                 },
             }}>
             {children}

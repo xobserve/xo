@@ -30,7 +30,7 @@ interface Props {
 const DashboardCard = ({ dashboard, owner,onClick }: Props) => {
     const [active, setActive] = useState(false)
     const navigate = useNavigate()
-    console.log("here33333",location.pathname)
+
     return (
         <Flex
             justifyContent="space-between"
