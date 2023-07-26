@@ -13,7 +13,7 @@
 
 import { Box, Flex, HStack, IconButton, Input, Modal, ModalBody, ModalContent, ModalHeader, Text, Tooltip, VStack, useColorModeValue, useDisclosure } from "@chakra-ui/react"
 import React, { memo, useMemo, useState } from "react"
-import { FaAlignJustify, FaSearch, FaSitemap, FaTimes } from "react-icons/fa"
+import { FaAlignJustify, FaBuffer, FaSearch, FaSitemap, FaTimes } from "react-icons/fa"
 import { useSearchParam } from "react-use"
 import { Dashboard } from "types/dashboard"
 import { requestApi } from "utils/axios/request"
@@ -60,6 +60,10 @@ const Search = memo((props: Props) => {
     }
 
     const onSearchOpen = async () => {
+        if (isOpen) {
+            onClose()
+            return 
+        }
         const r1 = requestApi.get(`/dashboard/simpleList`)
         const r2 = requestApi.get(`/dashboard/starred`)
         const res = await Promise.all([r1, r2])
@@ -234,7 +238,7 @@ const Search = memo((props: Props) => {
                                 <HStack spacing={4} fontSize="1.1rem">
                                     <Tooltip label="Teams view"><Box cursor="pointer" className={layout == "teams" ? "color-text" : null} onClick={() => setLayout("teams")}><FaSitemap /></Box></Tooltip>
                                     <Tooltip label="List view"><Box cursor="pointer" className={layout == "list" ? "color-text" : null} onClick={() => setLayout("list")}><FaAlignJustify /></Box></Tooltip>
-                                    <Tooltip label="Tags view"><Box cursor="pointer" className={layout == "tags" ? "color-text" : null} onClick={() => setLayout("tags")}><FaAlignJustify /></Box></Tooltip>
+                                    <Tooltip label="Tags view"><Box cursor="pointer" className={layout == "tags" ? "color-text" : null} onClick={() => setLayout("tags")}><FaBuffer /></Box></Tooltip>
                                 </HStack>
                                 <HStack>
                                     <Box cursor="pointer" onClick={() => setFilterStarred(!filterStarred)} fontSize="1.3rem" color={useColorModeValue("orange.300", "orange.200")}>
