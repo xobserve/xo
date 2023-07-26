@@ -132,7 +132,7 @@ const DatePicker = ({ showTime = false }: Props) => {
             <Box>
                 <Tooltip label={`${value?.start.toLocaleString()} - ${value?.end.toLocaleString()}`}>
                     <HStack spacing={0} onClick={onOpen} cursor="pointer">
-                        <IconButton variant="ghost">
+                        <IconButton variant="ghost" _hover={{bg: null}}>
                             <FaRegClock />
                         </IconButton>
                         {
