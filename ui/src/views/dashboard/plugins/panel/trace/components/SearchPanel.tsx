@@ -17,6 +17,7 @@ import { useStore } from "@nanostores/react"
 import { tracePanelMsg } from "src/i18n/locales/en"
 import { shareUrlParams } from "src/views/dashboard/DashboardShare"
 import { isEmpty } from "utils/validate"
+import { useSearchParams } from "react-router-dom"
 interface Props {
     panel: Panel
     onSearch: any
@@ -29,18 +30,20 @@ interface Props {
 // and decide whether need to re-query operations
 const traceServicesCache = new Map()
 const TraceSearchPanel = ({ timeRange, dashboardId, panel, onSearch, onSearchIds }: Props) => {
+    const [searchParams] = useSearchParams()
+
     const t1 = useStore(tracePanelMsg)
     const [inited, setInited] = useState(false)
     const lastSearch = useMemo(() => storage.get(TraceSearchKey + dashboardId + panel.id) ?? {}, [])
     const [services, setServices] = useState([])
-    const [service, setService] = useState<string>(lastSearch.service ?? null)
+    const [service, setService] = useState<string>(searchParams.get('service')?? (lastSearch.service ?? null))
     const [operations, setOperations] = useState([])
-    const [operation, setOperation] = useState<string>(lastSearch.operation ?? null)
-    const [tags, setTags] = useState<string>(lastSearch.tags ?? '')
-    const [max, setMax] = useState<string>(lastSearch.max ?? '')
-    const [min, setMin] = useState<string>(lastSearch.min ?? '')
-    const [limit, setLimit] = useState(lastSearch.limit ?? 20)
-    const [traceIds, setTraceIds] = useState<string>(null)
+    const [operation, setOperation] = useState<string>(searchParams.get('operation') ?? (lastSearch.operation ?? null))
+    const [tags, setTags] = useState<string>(searchParams.get('tags') ?? (lastSearch.tags ?? ''))
+    const [max, setMax] = useState<string>(searchParams.get('max')??(lastSearch.max ?? ''))
+    const [min, setMin] = useState<string>(searchParams.get('min')??(lastSearch.min ?? ''))
+    const [limit, setLimit] = useState(searchParams.get('limit') ?? (lastSearch.limit ?? 20))
+    const [traceIds, setTraceIds] = useState<string>(searchParams.get('traceIds') ?? null)
     const [useLatestTime, setUseLatestTime] = useState(true)
     useEffect(() => {
         return () => {
@@ -92,7 +95,7 @@ const TraceSearchPanel = ({ timeRange, dashboardId, panel, onSearch, onSearchIds
         ShareUrlEvent,
         () => {
             if (!isEmpty(traceIds)) {
-                shareUrlParams['limit'] = traceIds
+                shareUrlParams['traceIds'] = traceIds
             }  else {
                 if (!isEmpty(service)) shareUrlParams['service'] = service
                 if (!isEmpty(operation)) shareUrlParams['operation'] = operation
