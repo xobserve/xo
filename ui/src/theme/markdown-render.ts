@@ -67,7 +67,8 @@ export default function markdownRender(props) {
             'p code': {
                 bg: mode('rgba(175, 184, 193, 0.2)', 'rgba(110, 118, 129, 0.3)')(props),
                 borderRadius: '6px',
-                padding: '3px 6px'
+                padding: '3px 6px',
+                wordBreak: "break-all"
             },
             '.at-user-link': {
                 textDecoration: 'none !important',

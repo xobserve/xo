@@ -20,6 +20,13 @@ export function customClasses(props) {
         ".label-bg": {
             bg: mode('#f7f9fb','rgba(255,255,255,0.05)')(props)
         },
+        '.code-bg': {
+            bg: mode('rgba(0,0,0,0.8)','rgba(0,0,0,0.2)')(props),
+            color : '#eee',
+            borderWidth: '1px',
+            borderColor:  mode('whatsapp.500','whatsapp.100')(props),
+            letterSpacing: '1.5px'
+        },
         ".hover-bordered:hover": {
             border: `1px solid ${mode(
                 customColors.borderColor.light,

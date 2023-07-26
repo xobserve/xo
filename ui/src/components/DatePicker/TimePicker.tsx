@@ -63,7 +63,7 @@ export const getNewestTimeRange = () => {
 }
 
 // get current time range from local storage, this time range will change when select a new time or refresh page
-export const getCurrentTimeRange = () => {
+export const getCurrentTimeRange = ():TimeRange => {
     const rawT = storage.get(TimePickerKey)
     let time;
     if (rawT) {

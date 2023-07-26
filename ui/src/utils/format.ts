@@ -11,6 +11,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+import { uniq } from "lodash";
+
 // parse all the {{xxx}} to [xxx]
 export const parseLegendFormat = (s) => {
     const reg = /{{(.*?)}}/g;
@@ -19,7 +21,7 @@ export const parseLegendFormat = (s) => {
     while ((match = reg.exec(s))) {
         result.push(match[1]);
     }
-    return result;
+    return uniq(result);
 }
 
 // parse all the ${xxx} to [xxx]
@@ -30,5 +32,5 @@ export const parseVariableFormat = (s) => {
     while ((match = reg.exec(s))) {
         result.push(match[1]);
     }
-    return result;
+    return  uniq(result);
 }

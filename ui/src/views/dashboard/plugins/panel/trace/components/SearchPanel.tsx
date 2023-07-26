@@ -3,7 +3,7 @@ import InputSelect from "components/select/InputSelect"
 import { useEffect, useMemo, useState } from "react"
 import { DatasourceType, Panel } from "types/dashboard"
 import { queryJaegerOperations, queryJaegerServices } from "../../../datasource/jaeger/query_runner"
-import { isEmpty, isEqual, set, sortBy, uniq } from "lodash"
+import {  isEqual, set, sortBy, uniq } from "lodash"
 import { EditorInputItem, EditorNumberItem } from "components/editor/EditorItem"
 import { Button, Checkbox, Divider, HStack, Text } from "@chakra-ui/react"
 import storage from "utils/localStorage"
@@ -11,11 +11,12 @@ import { TraceSearchKey } from "../config/constants"
 import { TimeRange } from "types/time"
 import { hasVariableFormat, replaceWithVariablesHasMultiValues } from "utils/variable"
 import useBus from "use-bus"
-import { VariableChangedEvent } from "src/data/bus-events"
+import { ShareUrlEvent, VariableChangedEvent } from "src/data/bus-events"
 import React from "react";
 import { useStore } from "@nanostores/react"
 import { tracePanelMsg } from "src/i18n/locales/en"
-
+import { shareUrlParams } from "src/views/dashboard/DashboardShare"
+import { isEmpty } from "utils/validate"
 interface Props {
     panel: Panel
     onSearch: any
@@ -26,26 +27,26 @@ interface Props {
 
 // cache services parsed by variables, when a variable changes, we can compare the new parsed result with cache
 // and decide whether need to re-query operations
-const traceServicesCache = new Map() 
-const TraceSearchPanel = ({ timeRange,dashboardId, panel, onSearch,onSearchIds }: Props) => {
+const traceServicesCache = new Map()
+const TraceSearchPanel = ({ timeRange, dashboardId, panel, onSearch, onSearchIds }: Props) => {
     const t1 = useStore(tracePanelMsg)
     const [inited, setInited] = useState(false)
-    const lastSearch = useMemo(() => storage.get(TraceSearchKey + dashboardId + panel.id)??{} ,[])
+    const lastSearch = useMemo(() => storage.get(TraceSearchKey + dashboardId + panel.id) ?? {}, [])
     const [services, setServices] = useState([])
-    const [service, setService] = useState<string>(lastSearch.service??null)
+    const [service, setService] = useState<string>(lastSearch.service ?? null)
     const [operations, setOperations] = useState([])
-    const [operation, setOperation] = useState<string>(lastSearch.operation??null)
-    const [tags, setTags] = useState<string>(lastSearch.tags??'')
-    const [max, setMax] = useState<string>(lastSearch.max??'')
-    const [min, setMin] = useState<string>(lastSearch.min??'')
-    const [limit, setLimit] = useState(lastSearch.limit??20)
-    const [traceIds, setTraceIds] = useState<string>()
+    const [operation, setOperation] = useState<string>(lastSearch.operation ?? null)
+    const [tags, setTags] = useState<string>(lastSearch.tags ?? '')
+    const [max, setMax] = useState<string>(lastSearch.max ?? '')
+    const [min, setMin] = useState<string>(lastSearch.min ?? '')
+    const [limit, setLimit] = useState(lastSearch.limit ?? 20)
+    const [traceIds, setTraceIds] = useState<string>(null)
     const [useLatestTime, setUseLatestTime] = useState(true)
     useEffect(() => {
         return () => {
             delete traceServicesCache[dashboardId + panel.id]
         }
-    },[])
+    }, [])
 
     useEffect(() => {
         if (inited) {
@@ -53,11 +54,11 @@ const TraceSearchPanel = ({ timeRange,dashboardId, panel, onSearch,onSearchIds }
                 onSearchIds(traceIds)
             } else {
                 if (service && operation) {
-                    onSearch(service, operation , tags, min, max, limit)
+                    onSearch(service, operation, tags, min, max, limit)
                 }
-            }    
+            }
         }
-    },[timeRange])
+    }, [timeRange])
 
     useEffect(() => {
         loadServices()
@@ -70,22 +71,40 @@ const TraceSearchPanel = ({ timeRange,dashboardId, panel, onSearch,onSearchIds }
             setOperations([])
         }
     }, [service])
-    
+
     useBus(
         VariableChangedEvent,
         () => {
             if (hasVariableFormat(operation)) {
-                return 
+                return
             }
-      
+
             const services = replaceWithVariablesHasMultiValues(service)
-            const cachedServices = traceServicesCache[dashboardId+panel.id]
+            const cachedServices = traceServicesCache[dashboardId + panel.id]
             if (!isEqual(services, cachedServices)) {
                 loadOperations()
             }
         },
         [operation]
     )
+
+    useBus(
+        ShareUrlEvent,
+        () => {
+            if (!isEmpty(traceIds)) {
+                shareUrlParams['limit'] = traceIds
+            }  else {
+                if (!isEmpty(service)) shareUrlParams['service'] = service
+                if (!isEmpty(operation)) shareUrlParams['operation'] = operation
+                if (!isEmpty(tags)) shareUrlParams['tags'] = tags
+                if (!isEmpty(max)) shareUrlParams['max'] = max
+                if (!isEmpty(min)) shareUrlParams['min'] = min
+                if (!isEmpty(limit)) shareUrlParams['limit'] = limit
+            }
+        },
+        [service, operation, tags, max, min, limit, traceIds]
+    )
+
 
     const loadServices = async () => {
         switch (panel.datasource.type) {
@@ -96,16 +115,16 @@ const TraceSearchPanel = ({ timeRange,dashboardId, panel, onSearch,onSearchIds }
                 if (ss.length > 0) {
                     if (!service) {
                         setService(ss[0])
-                        onSearch(ss[0],'all' , tags, min, max, limit)
+                        onSearch(ss[0], 'all', tags, min, max, limit)
                     } else {
-                        onSearch(service, operation ?? 'all' , tags, min, max, limit)      
+                        onSearch(service, operation ?? 'all', tags, min, max, limit)
                     }
                 }
 
                 setTimeout(() => {
                     setInited(true)
-                },500)
-          
+                }, 500)
+
                 break;
 
             default:
@@ -119,30 +138,30 @@ const TraceSearchPanel = ({ timeRange,dashboardId, panel, onSearch,onSearchIds }
                 const services = s ?? replaceWithVariablesHasMultiValues(service)
                 traceServicesCache[dashboardId + panel.id] = services
                 const res = await Promise.all(services.map(service => queryJaegerOperations(panel.datasource.id, service)))
-               
+
                 const ss = sortBy(uniq(res.filter(r => r).flat()))
                 setOperations(['all'].concat(ss))
-                    
+
                 if (!hasVariableFormat(operation)) {
                     if (!operation || !ss.includes(operation)) {
                         setOperation('all')
                     }
                 }
-             
+
                 break;
 
             default:
                 break;
         }
     }
-    
+
     const onClickSearch = () => {
         if (!isEmpty(traceIds)) {
             onSearchIds(traceIds)
         } else {
-            onSearch(service,operation,tags,min,max,limit,useLatestTime)
+            onSearch(service, operation, tags, min, max, limit, useLatestTime)
             storage.set(TraceSearchKey + dashboardId + panel.id, {
-                service, operation,tags,min,max,limit
+                service, operation, tags, min, max, limit
             })
         }
     }
@@ -167,18 +186,18 @@ const TraceSearchPanel = ({ timeRange,dashboardId, panel, onSearch,onSearchIds }
                 </FormSection>
             </HStack>
             <FormSection title={t1.limitResults} titleSize="0.85rem" spacing={1}>
-                <EditorNumberItem value={limit} min={0} onChange={v => setLimit(v)} size="md"/>
+                <EditorNumberItem value={limit} min={0} onChange={v => setLimit(v)} size="md" />
             </FormSection>
-            <Divider pt="2"/>
-            <FormSection title="Trace ids" titleSize="0.85rem" spacing={1} desc={t1.traceIdsTips}>  
-                <EditorInputItem placeholder={t1.traceIdsInputTips} value={traceIds} onChange={v => setTraceIds(v)} size="md"/>
+            <Divider pt="2" />
+            <FormSection title="Trace ids" titleSize="0.85rem" spacing={1} desc={t1.traceIdsTips}>
+                <EditorInputItem placeholder={t1.traceIdsInputTips} value={traceIds} onChange={v => setTraceIds(v)} size="md" />
             </FormSection>
             <HStack>
-                <Button  width="150px" onClick={onClickSearch}>{t1.findTraces}</Button>
+                <Button width="150px" onClick={onClickSearch}>{t1.findTraces}</Button>
                 <Checkbox isChecked={useLatestTime} onChange={e => setUseLatestTime(e.currentTarget.checked)} />
                 <Text textStyle="annotation">{t1.useLatestTime}</Text>
             </HStack>
-           
+
         </Form>
     </>)
 }

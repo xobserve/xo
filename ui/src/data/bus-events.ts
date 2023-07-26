@@ -10,3 +10,4 @@ export const SetDashboardEvent = "set-dashboard"
 export const PanelForceRebuildEvent = "panel-force-rebuild"
 export const PanelDataEvent = "panel-data"
 export const UpdatePanelEvent = "update-panel"
+export const ShareUrlEvent = 'share-url'

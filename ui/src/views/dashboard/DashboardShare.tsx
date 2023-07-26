@@ -11,27 +11,70 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { Box, Modal, ModalBody, ModalCloseButton, ModalContent, ModalHeader, ModalOverlay, StyleProps, useDisclosure } from "@chakra-ui/react"
-import React from "react"
+import { Box, Button, Modal, ModalBody, ModalContent, ModalHeader, ModalOverlay, StyleProps, useClipboard, useDisclosure } from "@chakra-ui/react"
+import React, { useState } from "react"
 import { BsShare } from "react-icons/bs"
 import { Dashboard } from "types/dashboard"
+import { parseVariableFormat } from "utils/format"
+import { variables } from "./Dashboard"
+import { getCurrentTimeRange } from "components/DatePicker/TimePicker"
+import queryString from 'query-string';
+import { FaCopy, FaRegCopy } from "react-icons/fa"
+import { useStore } from "@nanostores/react"
+import { commonMsg } from "src/i18n/locales/en"
+import { dispatch } from "use-bus"
+import { ShareUrlEvent } from "src/data/bus-events"
 
 interface Props extends StyleProps {
     dashboard: Dashboard
     className: string
 }
 
+export const shareUrlParams = {}
 const DashboardShare = ({ dashboard, ...rest }: Props) => {
+    const t = useStore(commonMsg)
+
     const { isOpen, onOpen, onClose } = useDisclosure()
+    const [shareUrl, setShareUrl] = useState(null)
+    const { onCopy, setValue, hasCopied } = useClipboard("", 5000);
+
+    const onShare = () => {
+        let url = window.origin + location.pathname + '?'
+        const dashData = JSON.stringify(dashboard.data)
+        const usingVariables = parseVariableFormat(dashData)
+        for (const k of Object.keys(shareUrlParams)) {
+            delete shareUrlParams[k]
+        }
+    
+        const timeRange = getCurrentTimeRange()
+        shareUrlParams['from'] = timeRange.start.getTime()
+        shareUrlParams['to'] = timeRange.end.getTime()
+    
+        for (const v of variables) {
+            if (usingVariables.includes(v.name)) {
+                shareUrlParams['var-'+ v.name] =  v.selected
+            }
+        }
+        dispatch(ShareUrlEvent)
+        setTimeout(() => {
+            url += queryString.stringify(shareUrlParams,{sort: false})
+            setShareUrl(url)
+            setValue(url)
+            onOpen()
+        }, 150)
+    }
+
+
     return (<>
-        <Box onClick={onOpen} {...rest}><BsShare /></Box>
+        <Box onClick={onShare} {...rest}><BsShare /></Box>
         
-        <Modal isOpen={isOpen} onClose={onClose}>
+        <Modal isOpen={isOpen} onClose={onClose} autoFocus={false}>
             <ModalOverlay />
-            <ModalContent>
-                <ModalHeader>Share</ModalHeader>
-                <ModalCloseButton />
+            <ModalContent minWidth="500px">
+                <ModalHeader>{t.share}</ModalHeader>
                 <ModalBody>
+                    <Box fontSize="1.1rem" wordBreak="break-all" p="2" className="code-bg" borderRadius={4} width="fit-content">{shareUrl}</Box>
+                    <Button mt="4" leftIcon={<FaRegCopy />} onClick={onCopy} variant={hasCopied ? "solid" : "outline"}>{hasCopied ? t.copied : t.copy}</Button>
                 </ModalBody>
             </ModalContent>
         </Modal>

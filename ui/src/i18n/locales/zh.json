@@ -52,6 +52,8 @@
     "styles": "样式",
     "tags": "标签",
     "copy": "复制",
+    "copied": "已复制",
+    "share": "分享",
     "remove": "移除",
     "mode": "模式",
     "label": "标签",
@@ -418,8 +420,7 @@
     "quadratic": "曲线",
     "polyline": "折线",
     "edgeColor": "边颜色",
-    "noAttrsToSet" : "所有的属性都已设置"
-    
+    "noAttrsToSet": "所有的属性都已设置"
   },
   "echartsPanel": {
     "about": "关于 Echarts",
@@ -543,6 +544,6 @@
     "showUnfilledTips": "开启后，未填充的区域将被渲染为灰色",
     "titleSize": "标题字体大小",
     "valueSize": "值字体大小",
-    "layoutDir" : "排列方向"
+    "layoutDir": "排列方向"
   }
 }
