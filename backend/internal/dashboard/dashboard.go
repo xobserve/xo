@@ -258,3 +258,42 @@ func GetSimpleList(c *gin.Context) {
 
 	c.JSON(http.StatusOK, common.RespSuccess(dashboards))
 }
+
+func Star(c *gin.Context) {
+	id := c.Param("id")
+	u := user.CurrentUser(c)
+	_, err := db.Conn.Exec("INSERT INTO star_dashboard (user_id, dashboard_id, created) VALUES (?,?,?)", u.Id, id, time.Now())
+	if err != nil {
+		logger.Warn("star dashboard", "error", err)
+		c.JSON(500, common.RespError(e.Internal))
+		return
+	}
+
+	c.JSON(http.StatusOK, common.RespSuccess(nil))
+}
+
+func UnStar(c *gin.Context) {
+	id := c.Param("id")
+	u := user.CurrentUser(c)
+	_, err := db.Conn.Exec("DELETE FROM star_dashboard WHERE user_id=? and dashboard_id=?", u.Id, id)
+	if err != nil {
+		logger.Warn("unstar dashboard", "error", err)
+		c.JSON(500, common.RespError(e.Internal))
+		return
+	}
+
+	c.JSON(http.StatusOK, common.RespSuccess(nil))
+}
+
+func GetStarred(c *gin.Context) {
+	id := c.Param("id")
+	u := user.CurrentUser(c)
+	starred, err := models.QuertyDashboardStared(u.Id, id)
+	if err != nil {
+		logger.Warn("unstar dashboard", "error", err)
+		c.JSON(500, common.RespError(e.Internal))
+		return
+	}
+
+	c.JSON(http.StatusOK, common.RespSuccess(starred))
+}

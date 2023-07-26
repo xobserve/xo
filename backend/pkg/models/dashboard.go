@@ -67,8 +67,17 @@ func QueryDashboard(id string) (*Dashboard, error) {
 	dash.Tags = tags
 
 	dash.Id = id
-
 	return dash, nil
+}
+
+func QuertyDashboardStared(uid int64, dashId string) (bool, error) {
+	var count int
+	err := db.Conn.QueryRow("SELECT count(1) FROM star_dashboard WHERE user_id=? and dashboard_id=?", uid, dashId).Scan(&count)
+	if err != nil {
+		return false, err
+	}
+
+	return count > 0, nil
 }
 
 func QueryDashboardsByTeamId(teamId int64) ([]*Dashboard, error) {

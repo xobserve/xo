@@ -120,3 +120,10 @@ CREATE TABLE IF NOT EXISTS datasource (
 
 
 CREATE UNIQUE INDEX  datasource_name ON datasource (name);
+
+CREATE TABLE IF NOT EXISTS star_dashboard (
+    user_id  INTEGER NOT NULL,
+    dashboard_id VARCHAR(40) NOT NULL,
+    created DATETIME NOT NULL
+);
+CREATE UNIQUE INDEX  star_dashboard_id ON star_dashboard (user_id,dashboard_id);
