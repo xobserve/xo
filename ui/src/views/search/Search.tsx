@@ -173,7 +173,7 @@ const Search = memo((props: Props) => {
                                 <TeamsFilter value={selectedTeams} teams={teams} onChange={setSelectedTeams} />
                             </HStack>
                         </Flex>
-                        {dashboards?.length > 0 && <SearchResults teams={teams} dashboards={dashboards} onItemClick={onClose} />}
+                        {dashboards?.length > 0 && <SearchResults teams={teams} dashboards={dashboards} onItemClick={onClose} query={query} />}
                     </ModalBody>
                 </ModalContent>
             </Modal>

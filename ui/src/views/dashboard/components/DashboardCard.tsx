@@ -11,7 +11,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { Box, Flex, HStack, Tag, Text } from "@chakra-ui/react"
+import { Box, Flex, HStack, Highlight, Tag, Text } from "@chakra-ui/react"
 import ColorTag from "components/ColorTag"
 import CopyToClipboard from "components/CopyToClipboard"
 import React, { useState } from "react"
@@ -24,10 +24,11 @@ import { getDashboardLink } from "utils/dashboard/dashboard"
 interface Props {
     dashboard: Dashboard
     owner: Team
+    query: string
     onClick?: any
 }
 
-const DashboardCard = ({ dashboard, owner,onClick }: Props) => {
+const DashboardCard = ({ dashboard, owner,query,onClick }: Props) => {
     const [active, setActive] = useState(false)
     const navigate = useNavigate()
 
@@ -47,15 +48,15 @@ const DashboardCard = ({ dashboard, owner,onClick }: Props) => {
             }}
         >
             <Box>
-                <HStack>
-                    <Text minWidth="fit-content" fontWeight={500}>{dashboard.title}</Text>
-                    {location.pathname == '/' + dashboard.id && <Tag>current</Tag>}
-                    {active &&
-                        <>
-                            <Text minWidth="fit-content" textStyle="annotation" mt="2px">{dashboard.id}</Text>
-                            <CopyToClipboard copyText={dashboard.id} tooltipTitle="copy dashboard id" fontSize="0.8rem" />
-                        </>}
-                </HStack>
+                <Flex alignItems="center">
+                    <Text><Highlight query={query??""} styles={{bg: 'cyan.100'}} >{dashboard.title}</Highlight></Text>
+                    {location.pathname == '/' + dashboard.id && <Tag ml="1">current</Tag>}
+                    {(query || active) &&
+                        <Flex alignItems="center" ml="2">
+                            <Text textStyle="annotation" mt="2px"><Highlight query={query??""} styles={{bg: 'cyan.100' }}>{dashboard.id}</Highlight></Text>
+                            <Box ml="1"><CopyToClipboard copyText={dashboard.id} tooltipTitle="copy dashboard id" fontSize="0.8rem" /></Box>
+                        </Flex>}
+                </Flex>
                 <Text minWidth="fit-content" mt="2" textStyle="annotation">{owner?.name}</Text>
             </Box>
             <HStack>

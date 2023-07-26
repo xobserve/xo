@@ -20,14 +20,15 @@ import { Team } from "types/teams";
 interface Props {
     teams: Team[]
     dashboards: Dashboard[]
+    query: string
     onItemClick?: any
 }
 
-const SearchResults = memo(({teams, dashboards,onItemClick }: Props) => {
+const SearchResults = memo(({teams, dashboards, query, onItemClick }: Props) => {
     return (
         <VStack alignItems="left">
             {
-                dashboards.map(dash => <DashboardCard dashboard={dash} owner={teams.find(team => team.id == dash.ownedBy)} onClick={onItemClick}/>)
+                dashboards.map(dash => <DashboardCard dashboard={dash} owner={teams.find(team => team.id == dash.ownedBy)} onClick={onItemClick} query={query}/> )
             }
         </VStack>
     )
