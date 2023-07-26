@@ -11,22 +11,23 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { Box, Flex, HStack, IconButton, Input, Modal, ModalBody, ModalContent, ModalHeader, Text, Tooltip, useColorModeValue, useDisclosure } from "@chakra-ui/react"
+import { Box, Flex, HStack, IconButton, Input, Modal, ModalBody, ModalContent, ModalHeader, Text, Tooltip, VStack, useColorModeValue, useDisclosure } from "@chakra-ui/react"
 import React, { memo, useMemo, useState } from "react"
-import { FaSearch, FaTimes } from "react-icons/fa"
+import { FaAlignJustify, FaSearch, FaSitemap, FaTimes } from "react-icons/fa"
 import { useSearchParam } from "react-use"
 import { Dashboard } from "types/dashboard"
 import { requestApi } from "utils/axios/request"
 import { addParamToUrl } from "utils/url"
 import { RxLetterCaseCapitalize } from "react-icons/rx";
-import SearchResults from "./SearchResults"
-import { Select } from "antd"
 import TagsFilter from "./TagsFilter"
 import { isEmpty } from "utils/validate"
 import { Team } from "types/teams"
 import TeamsFilter from "./TeamsFilter"
 import { AiFillStar, AiOutlineStar } from "react-icons/ai"
 import { sortBy } from "lodash"
+import ListView from "./ListView"
+import TeamsView from "./TeamsView"
+import TagsView from "./TagsView"
 
 interface Props {
     title: string
@@ -46,6 +47,8 @@ const Search = memo((props: Props) => {
     const [selectedTeams, setSelectedTeams] = useState<number[]>([])
     const [filterStarred, setFilterStarred] = useState<boolean>(false)
     const [starredDashIds, setStarredDashIds] = useState<Set<string>>(new Set())
+    const [layout, setLayout] = useState<"teams" | "list" | "tags">("teams")
+
     const load = async () => {
         const res = await requestApi.get("/teams/all")
         console.log("here3333 load teams")
@@ -59,9 +62,9 @@ const Search = memo((props: Props) => {
     const onSearchOpen = async () => {
         const r1 = requestApi.get(`/dashboard/simpleList`)
         const r2 = requestApi.get(`/dashboard/starred`)
-        const res = await Promise.all([r1,r2])
-       
-        setRawDashboards( sortBy(res[0].data, dash => dash.title))
+        const res = await Promise.all([r1, r2])
+
+        setRawDashboards(sortBy(res[0].data, dash => dash.title))
         const starred = new Set<string>()
         for (const id of res[1].data) {
             starred.add(id)
@@ -69,7 +72,7 @@ const Search = memo((props: Props) => {
         setStarredDashIds(starred)
         onOpen()
     }
-    
+
 
 
     const urlQuery = useSearchParam('search')
@@ -104,7 +107,7 @@ const Search = memo((props: Props) => {
         return result
     }, [rawDashboards])
 
-    const [dashboards, tagCount, teamCount] = useMemo(() => {
+    const [dashboards1, tagCount, teamCount] = useMemo(() => {
         let result: Dashboard[] = []
         if (!rawDashboards) {
             return [result, null, null]
@@ -138,7 +141,7 @@ const Search = memo((props: Props) => {
 
             return selectedTeams.some(t => t == dash.ownedBy)
         })
-        
+
         const tagCount = new Map()
         const teamCount = new Map()
 
@@ -150,7 +153,40 @@ const Search = memo((props: Props) => {
         }
 
         return [result, tagCount, teamCount]
-    }, [query, rawDashboards, caseSensitive, selectedTags, selectedTeams,filterStarred, starredDashIds])
+    }, [query, rawDashboards, caseSensitive, selectedTags, selectedTeams, filterStarred, starredDashIds])
+
+    const dashboards: Dashboard[] | Map<string, Dashboard[]> = useMemo(() => {
+        if (layout == "list") {
+            return dashboards1
+        }
+
+        if (layout == "teams") {
+            const result = new Map<string, Dashboard[]>()
+            for (const dash of dashboards1) {
+                const teamId = dash.ownedBy.toString()
+                if (!result.has(teamId)) {
+                    result.set(teamId, [])
+                }
+    
+                result.get(teamId).push(dash)
+            }
+    
+            return result
+        }
+
+        const result = new Map<string, Dashboard[]>()
+        for (const dash of dashboards1) {
+            for (const tag of dash.tags ?? []) {
+                if (!result.has(tag)) {
+                    result.set(tag, [])
+                }
+    
+                result.get(tag).push(dash)
+            }
+        }
+        return result
+
+    }, [dashboards1, layout])
 
     return (
         <Box>
@@ -195,6 +231,11 @@ const Search = memo((props: Props) => {
                                         </Box>
                                     </Tooltip>
                                 </HStack>
+                                <HStack spacing={4} fontSize="1.1rem">
+                                    <Tooltip label="Teams view"><Box cursor="pointer" className={layout == "teams" ? "color-text" : null} onClick={() => setLayout("teams")}><FaSitemap /></Box></Tooltip>
+                                    <Tooltip label="List view"><Box cursor="pointer" className={layout == "list" ? "color-text" : null} onClick={() => setLayout("list")}><FaAlignJustify /></Box></Tooltip>
+                                    <Tooltip label="Tags view"><Box cursor="pointer" className={layout == "tags" ? "color-text" : null} onClick={() => setLayout("tags")}><FaAlignJustify /></Box></Tooltip>
+                                </HStack>
                                 <HStack>
                                     <Box cursor="pointer" onClick={() => setFilterStarred(!filterStarred)} fontSize="1.3rem" color={useColorModeValue("orange.300", "orange.200")}>
                                         {filterStarred ? <AiFillStar /> : <AiOutlineStar />}
@@ -204,7 +245,17 @@ const Search = memo((props: Props) => {
                                     <TeamsFilter value={selectedTeams} teams={teams} onChange={setSelectedTeams} teamCount={teamCount} />
                                 </HStack>
                             </Flex>
-                            {dashboards?.length > 0 && <SearchResults teams={teams} dashboards={dashboards} onItemClick={onClose} query={query} starredIds={starredDashIds} />}
+                            <VStack alignItems="left" maxH="calc(100vh - 130px)" overflowY="scroll" spacing={3} pt="3">
+                                {
+                                    layout == "list" && <ListView teams={teams} dashboards={dashboards as Dashboard[]} onItemClick={onClose} query={query} starredIds={starredDashIds} />
+                                }
+                                {
+                                    layout == "teams" && <TeamsView teams={teams} dashboards={dashboards as Map<string, Dashboard[]>} onItemClick={onClose} query={query} starredIds={starredDashIds} />
+                                }
+                                {
+                                    layout == "tags" && <TagsView teams={teams} dashboards={dashboards as Map<string, Dashboard[]>} onItemClick={onClose} query={query} starredIds={starredDashIds} />
+                                }    
+                            </VStack>
                         </ModalBody>
                     </ModalContent>
                 </Box>

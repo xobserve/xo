@@ -11,7 +11,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { VStack } from "@chakra-ui/react";
+import { Box, Text, VStack } from "@chakra-ui/react";
 import React, { memo, useState } from "react";
 import { Dashboard } from "types/dashboard";
 import DashboardCard from "../dashboard/components/DashboardCard";
@@ -19,20 +19,26 @@ import { Team } from "types/teams";
 
 interface Props {
     teams: Team[]
-    dashboards: Dashboard[]
+    dashboards: Map<string, Dashboard[]>
     query: string
     onItemClick?: any
     starredIds: Set<string>
 }
 
-const SearchResults = memo(({teams, dashboards, query, onItemClick,starredIds }: Props) => {
+const TeamsView = memo(({teams, dashboards, query, onItemClick,starredIds }: Props) => {
+    const keys = Array.from(dashboards.keys()).sort()
     return (
-        <VStack alignItems="left" maxH="calc(100vh - 130px)"  overflowY="scroll">
+        <>
             {
-                dashboards.map(dash => <DashboardCard dashboard={dash} owner={teams.find(team => team.id == dash.ownedBy)} onClick={onItemClick} query={query} starred={starredIds.has(dash.id)}/> )
+                keys.map(teamId => <Box>
+                    <Text className="color-text" mb="2">{teams.find(t => t.id.toString() == teamId)?.name}</Text>
+                    <VStack alignItems="left">
+                        {dashboards.get(teamId).map(dash => <DashboardCard dashboard={dash} owner={teams.find(team => team.id == dash.ownedBy)} onClick={onItemClick} query={query} starred={starredIds.has(dash.id)}/> )}
+                    </VStack>
+                </Box>)
             }
-        </VStack>
+        </>
     )
 })
 
-export default SearchResults;
+export default TeamsView;
