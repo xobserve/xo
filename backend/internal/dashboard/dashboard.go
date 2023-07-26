@@ -16,6 +16,7 @@ import (
 	"database/sql"
 	"encoding/json"
 	"fmt"
+	"net/http"
 	"time"
 
 	"github.com/DataObserve/datav/backend/internal/user"
@@ -225,5 +226,35 @@ func GetTeamDashboards(c *gin.Context) {
 }
 
 func GetSimpleList(c *gin.Context) {
+	dashboards := make([]*models.Dashboard, 0)
 
+	rows, err := db.Conn.Query("SELECT id,title, owned_by, tags FROM dashboard ORDER BY created")
+	if err != nil {
+		logger.Warn("query simple dashboards error", "error", err)
+		c.JSON(500, common.RespError(e.Internal))
+		return
+	}
+
+	for rows.Next() {
+		dash := &models.Dashboard{}
+		var rawTags []byte
+		err = rows.Scan(&dash.Id, &dash.Title, &dash.OwnedBy, &rawTags)
+		if err != nil {
+			logger.Warn("get simple dashboards scan error", "error", err)
+			c.JSON(500, common.RespError(e.Internal))
+			return
+		}
+		var tags []string
+		err = json.Unmarshal(rawTags, &tags)
+		if err != nil {
+			logger.Warn("get simple dashboards decode tags error", "error", err)
+			c.JSON(500, common.RespError(e.Internal))
+			return
+		}
+		dash.Tags = tags
+
+		dashboards = append(dashboards, dash)
+	}
+
+	c.JSON(http.StatusOK, common.RespSuccess(dashboards))
 }
