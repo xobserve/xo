@@ -53,8 +53,8 @@ const DashboardCard = ({ dashboard, owner,query,onClick }: Props) => {
                     {location.pathname == '/' + dashboard.id && <Tag ml="1">current</Tag>}
                     {(query || active) &&
                         <Flex alignItems="center" ml="2">
-                            <Text textStyle="annotation" mt="2px"><Highlight query={query??""} styles={{bg: 'cyan.100' }}>{dashboard.id}</Highlight></Text>
-                            <Box ml="1"><CopyToClipboard copyText={dashboard.id} tooltipTitle="copy dashboard id" fontSize="0.8rem" /></Box>
+                            <Text textStyle="annotation" mb="-2px"><Highlight query={query??""} styles={{bg: 'cyan.100' }}>{dashboard.id}</Highlight></Text>
+                            <Box ml="1" mb="-3px"><CopyToClipboard copyText={dashboard.id} tooltipTitle="copy dashboard id" fontSize="0.8rem" /></Box>
                         </Flex>}
                 </Flex>
                 <Text minWidth="fit-content" mt="2" textStyle="annotation">{owner?.name}</Text>
