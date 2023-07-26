@@ -45,6 +45,7 @@ import ReserveUrls from "src/data/reserve-urls"
 import UserMenu from "components/user/UserMenu"
 import { config } from "src/data/configs/config"
 import { isEmpty } from "utils/validate"
+import Search from "src/views/search/Search"
 
 const miniWidth = 70
 const navSize = 15
@@ -73,7 +74,7 @@ const PageContainer = (props) => {
     setSidemenu(res.data.data)
   }
 
-  return (sidemenu &&  <Container {...props} sidemenu={sidemenu} />)
+  return (sidemenu && <Container {...props} sidemenu={sidemenu} />)
 }
 
 export default PageContainer
@@ -83,7 +84,7 @@ const Container = ({ children, sidemenu }: Props) => {
   const t1 = useStore(sidebarMsg)
 
 
-  const [miniMode, setMiniMode] = useState(isEmpty(sidemenu) ? true :(storage.get(SidemenuMinimodeKey) ?? true))
+  const [miniMode, setMiniMode] = useState(isEmpty(sidemenu) ? true : (storage.get(SidemenuMinimodeKey) ?? true))
   const fullscreen = useFullscreen()
 
 
@@ -93,10 +94,10 @@ const Container = ({ children, sidemenu }: Props) => {
   }
 
   const bottomNavs = [
-    { title: t.new, icon: "FaPlus", url:`${ReserveUrls.New}/dashboard`,isActive:asPath.startsWith(ReserveUrls.New) },
-    { title: t.configuration, icon: "FaCog", url:`${ReserveUrls.Config}/datasources`,isActive:asPath.startsWith(ReserveUrls.Config) },
-    { title: t.alert, icon: "FaBell", url:`${ReserveUrls.Alerts}`,isActive:asPath.startsWith(ReserveUrls.Alerts) },
-    { title: t1.search, icon: "FaSearch", url:`${ReserveUrls.Search}`,isActive:asPath.startsWith(ReserveUrls.Search) },
+    { title: t.new, icon: "FaPlus", url: `${ReserveUrls.New}/dashboard`, isActive: asPath.startsWith(ReserveUrls.New) },
+    { title: t.configuration, icon: "FaCog", url: `${ReserveUrls.Config}/datasources`, isActive: asPath.startsWith(ReserveUrls.Config) },
+    { title: t.alert, icon: "FaBell", url: `${ReserveUrls.Alerts}`, isActive: asPath.startsWith(ReserveUrls.Alerts) },
+    { title: t1.search, icon: "FaSearch", url: `${ReserveUrls.Search}`, isActive: asPath.startsWith(ReserveUrls.Search) },
 
   ]
 
@@ -125,14 +126,14 @@ const Container = ({ children, sidemenu }: Props) => {
         }
       })
     }
-  
+
     if (navWidth > maxNavSize) {
       navWidth = maxNavSize
     }
 
     return navWidth
-  },[sidemenu,miniMode])
- 
+  }, [sidemenu, miniMode])
+
   const sideWidth = fullscreen ? 0 : (miniMode ? miniWidth : navWidth)
   const textColor = useColorModeValue("gray.500", "whiteAlpha.800")
 
@@ -195,20 +196,24 @@ const Container = ({ children, sidemenu }: Props) => {
         </Flex>
         <Flex id="sidemenu-bottom" flexDir="column" pb="2" alignItems={miniMode ? "center" : "left"} color={textColor}>
           <VStack alignItems="left" spacing={miniMode ? 1 : 3}>
-          {bottomNavs.map((nav, index) => {
-              return <Box><NavItem key={index} isActive={nav.isActive} text={nav.title} icon={nav.icon} miniMode={miniMode} url={nav.url} /></Box>
+            {bottomNavs.map((nav, index) => {
+              if (nav.url == ReserveUrls.Search) {
+                return <Search title={nav.title} miniMode={miniMode} sideWidth={sideWidth}/>
+              } else {
+                return <Box><NavItem key={index} isActive={nav.isActive} text={nav.title} icon={nav.icon} miniMode={miniMode} url={nav.url} /></Box>
+              }
             })}
 
             <Divider />
             <Box color={textColor}><ColorModeSwitcher miniMode={miniMode} /></Box>
-            <Box><NavItem  text="Github" icon="FaGithub" miniMode={miniMode} url={config.repoUrl} /></Box>
+            <Box><NavItem text="Github" icon="FaGithub" miniMode={miniMode} url={config.repoUrl} /></Box>
             <UserMenu miniMode={miniMode} />
           </VStack>
 
         </Flex>
       </Flex>
       <Box id="main-container" transition="all 0.2s" width={`calc(100% - ${sideWidth}px)`} ml={sideWidth + 'px'}>
-          {React.cloneElement(children, { sideWidth })}
+        {React.cloneElement(children, { sideWidth })}
       </Box>
     </HStack>)
 }

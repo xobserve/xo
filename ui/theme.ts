@@ -8,7 +8,7 @@ import layerStyles from "./src/theme/layer-styles";
 import { overrideColors } from "./src/theme/override-colors";
 import textStyles from "./src/theme/text-styles";
 import markdownRender from "./src/theme/markdown-render";
-
+import { mode } from "@chakra-ui/theme-tools";
 
 import "./src/theme/css/react-grid.css"
 import "./src/theme/css/echarts.css"
@@ -57,6 +57,10 @@ const customTheme = extendTheme(
                     ...customClasses(props),
                     p: {
                         wordBreak: "break-word",
+                    },
+                    '*:focus-visible': {
+                        boxShadow: 'none !important',
+                        borderColor:  mode("brand.500 !important","brand.200 !important")(props)
                     },
                     ...markdownRender(props),
 
