@@ -46,6 +46,8 @@ import UserMenu from "components/user/UserMenu"
 import { config } from "src/data/configs/config"
 import { isEmpty } from "utils/validate"
 import Search from "src/views/search/Search"
+import { Session } from "types/user"
+import PopoverTooltip from "components/PopoverTooltip"
 
 const miniWidth = 70
 const navSize = 15
@@ -54,6 +56,7 @@ const maxNavSize = 200
 interface Props {
   children: any
   sidemenu: Route[]
+  session: Session
 }
 
 const PageContainer = (props) => {
@@ -74,11 +77,11 @@ const PageContainer = (props) => {
     setSidemenu(res.data.data)
   }
 
-  return (sidemenu && <Container {...props} sidemenu={sidemenu} />)
+  return (sidemenu && <Container {...props} sidemenu={sidemenu} session={session} />)
 }
 
 export default PageContainer
-const Container = ({ children, sidemenu }: Props) => {
+const Container = ({ children, sidemenu, session }: Props) => {
   const { pathname: asPath } = useLocation()
   const t = useStore(commonMsg)
   const t1 = useStore(sidebarMsg)
@@ -99,7 +102,7 @@ const Container = ({ children, sidemenu }: Props) => {
     { title: t1.search, icon: "FaSearch", url: `${ReserveUrls.Search}`, isActive: asPath.startsWith(ReserveUrls.Search) },
 
   ]
-  
+
   const paddingLeft = 16
   const paddingRight = 16
   const childMarginLeft = 24
@@ -131,7 +134,7 @@ const Container = ({ children, sidemenu }: Props) => {
     }
 
     return navWidth
-  }, [sidemenu, miniMode,bottomNavs])
+  }, [sidemenu, miniMode, bottomNavs])
 
   const sideWidth = fullscreen ? 0 : (miniMode ? miniWidth : navWidth)
   const textColor = useColorModeValue("gray.500", "whiteAlpha.800")
@@ -161,29 +164,10 @@ const Container = ({ children, sidemenu }: Props) => {
           }
           {sidemenu.map((link, index) => {
             return <Box mt={miniMode ? 2 : 3}>
-              <Popover trigger={miniMode ? "hover" : "click"} placement="right-start">
-                <PopoverTrigger>
-                  <Box>
-                    <NavItem isActive={miniMode ? asPath.startsWith(link.url) : asPath == link.url} key={index} text={link.title} icon={link.icon} miniMode={miniMode} fontWeight={500} url={link.children?.length > 0 ? link.children[0].url : link.url} />
-                  </Box>
-                </PopoverTrigger>
-                <Portal>
-                  <PopoverContent width="fit-content" minWidth="120px" pl="1">
-                    <PopoverHeader borderBottomWidth={link.children?.length > 0 ? '1px' : '0px'}>
-                      <Link to={link.children?.length > 0 ? link.children[0].url : link.url}>{link.title}</Link>
-                    </PopoverHeader>
-                    {link.children?.length > 0 && <PopoverBody pt="3">
-                      <VStack alignItems="left" spacing="3">
-                        {link.children.map(subLink =>
-                          <Link to={subLink.url} key={subLink.url}>
-                            <Text color={asPath == subLink.url ? useColorModeValue("brand.500", "brand.200") : textColor}>{subLink.title}</Text>
-                          </Link>
-                        )}
-                      </VStack>
-                    </PopoverBody>}
-                  </PopoverContent>
-                </Portal>
-              </Popover>
+              <Box>
+                <NavItem isActive={miniMode ? asPath.startsWith(link.url) : asPath == link.url} key={index} text={link.title} icon={link.icon} miniMode={miniMode} fontWeight={500} url={link.children?.length > 0 ? link.children[0].url : link.url} />
+              </Box>
+
 
               {
                 !miniMode && link.children && link.children.map((child, index) => {
@@ -192,12 +176,17 @@ const Container = ({ children, sidemenu }: Props) => {
               }
             </Box>
           })}
+
+          {session && <>
+            <Divider mt="3" />
+            <Box mt="3"><NavItem text="新建菜单项" url={`/cfg/team/${session.user.sidemenu}/sidemnu`} miniMode={miniMode} icon="FaPlus" /></Box>
+          </>}
         </Flex>
         <Flex id="sidemenu-bottom" flexDir="column" pb="2" alignItems={miniMode ? "center" : "left"} color={textColor}>
           <VStack alignItems="left" spacing={miniMode ? 1 : 3}>
             {bottomNavs.map((nav, index) => {
               if (nav.url == ReserveUrls.Search) {
-                return <Search title={nav.title} miniMode={miniMode} sideWidth={sideWidth}/>
+                return <Search title={nav.title} miniMode={miniMode} sideWidth={sideWidth} />
               } else {
                 return <Box><NavItem key={index} isActive={nav.isActive} text={nav.title} icon={nav.icon} miniMode={miniMode} url={nav.url} /></Box>
               }
@@ -219,17 +208,36 @@ const Container = ({ children, sidemenu }: Props) => {
 
 
 
-const NavItem = ({ text, icon = null, miniMode, fontWeight = 400, fontSize = navSize, url, isActive = false }) => {
+const NavItem = ({ text, icon = null, miniMode, fontWeight = 400, fontSize = navSize, url, isActive = false, children = null }) => {
   const Icon = Icons[icon]
-  return (<Link to={url}>
-    <HStack color={isActive ? useColorModeValue("brand.500", "brand.200") : useColorModeValue("gray.500", "whiteAlpha.800")} className="hover-text" cursor="pointer">
-      {icon && <Box>
-        {miniMode ?
-          <IconButton fontSize={"1.2rem"} aria-label="" variant="ghost" color="current" _focus={{ border: null }} icon={<Icon />} />
-          : <Icon />
-        }
+  const textColor = useColorModeValue("gray.500", "whiteAlpha.800")
+  const { pathname: asPath } = useLocation()
+  return (
+    <PopoverTooltip
+      offset={[0, 14]}
+      triggerComponent={<Box>
+        <Link to={url}>
+          <HStack color={isActive ? useColorModeValue("brand.500", "brand.200") : useColorModeValue("gray.500", "whiteAlpha.800")} className="hover-text" cursor="pointer">
+            {icon && <Box>
+              {miniMode ?
+                <IconButton fontSize={"1.2rem"} aria-label="" variant="ghost" color="current" _focus={{ border: null }} icon={<Icon />} />
+                : <Icon />
+              }
+            </Box>}
+            {!miniMode && <Text fontSize={`${fontSize}px`} fontWeight={fontWeight} >{text}</Text>}
+          </HStack>
+        </Link>
       </Box>}
-      {!miniMode && <Text fontSize={`${fontSize}px`} fontWeight={fontWeight} >{text}</Text>}
-    </HStack>
-  </Link>)
+      showHeaderBorder={children?.length > 0}
+      headerComponent={<Link to={children?.length > 0 ? children[0].url : url}>{text}</Link>}
+      bodyComponent={children?.length > 0 && <VStack alignItems="left" spacing="3">
+        {children?.length > 0 && children.map(subLink =>
+          <Link to={subLink.url} key={subLink.url}>
+            <Text color={asPath == subLink.url ? useColorModeValue("brand.500", "brand.200") : textColor}>{subLink.title}</Text>
+          </Link>
+        )}
+      </VStack>}
+    />
+  )
 }
+

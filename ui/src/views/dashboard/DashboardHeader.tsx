@@ -48,7 +48,7 @@ const DashboardHeader = memo(({ dashboard, onChange, sideWidth }: HeaderProps) =
     const [refresh, setRefresh] = useState(0)
     const [team, setTeam] = useState<Team>(null)
     const fullscreen = useFullscreen()
-    
+
     useEffect(() => {
         getTeam()
     }, [])
@@ -97,7 +97,7 @@ const DashboardHeader = memo(({ dashboard, onChange, sideWidth }: HeaderProps) =
             top="0"
             right="12px"
             left={sideWidth + 12 + 'px'}
-            bg={(dashboard.data.styles.bgEnabled &&  dashboard.data.styles?.bg) ? 'transparent' : 'var(--chakra-colors-chakra-body-bg)'}
+            bg={(dashboard.data.styles.bgEnabled && dashboard.data.styles?.bg) ? 'transparent' : 'var(--chakra-colors-chakra-body-bg)'}
             zIndex={1}
             transition="all 0.2s"
         >
@@ -108,27 +108,30 @@ const DashboardHeader = memo(({ dashboard, onChange, sideWidth }: HeaderProps) =
                             <Tooltip label={t1.headerTeamTips}><Box cursor="pointer" onClick={() => navigate(`${ReserveUrls.Config}/team/${team.id}/members`)}>{team?.name}</Box></Tooltip>
                             <Box>/</Box>
                             <Box>{dashboard.title}</Box>
-                            <DashboardStar dashboardId={dashboard.id} fontSize="1.2rem"/>
+                            <DashboardStar dashboardId={dashboard.id} fontSize="1.2rem" />
                             <DashboardShare dashboard={dashboard} fontSize="0.9rem" opacity="0.8" cursor="pointer" className="hover-text" />
                         </HStack>
 
                         <HStack mr="2">
-                            <HStack spacing="1">
+                            <HStack spacing="0">
                                 <AddPanel dashboard={dashboard} onChange={onChange} />
                                 <DashboardSave dashboard={dashboard} />
                                 {dashboard && <DashboardSettings dashboard={dashboard} onChange={onChange} />}
                                 <DatePicker showTime />
                                 <HStack spacing={0}>
                                     <Tooltip label={t1.refreshOnce}><Box onClick={refreshOnce}><IconButton variant="ghost"><MdSync /></IconButton></Box></Tooltip>
-                                    <Tooltip label={t1.refreshInterval}><Select variant="unstyled" value={refresh} onChange={(e) => setRefresh(Number(e.target.value))}>
-                                        <option value={0}>OFF</option>
-                                        <option value={5}>5s</option>
-                                        <option value={10}>10s</option>
-                                        <option value={30}>30s</option>
-                                        <option value={60}>1m</option>
-                                    </Select></Tooltip>
+                                    <Tooltip label={t1.refreshInterval}>
+                                        <Select variant="unstyled" value={refresh} onChange={(e) => setRefresh(Number(e.target.value))}>
+                                            <option value={0}>OFF</option>
+                                            <option value={5}>5s</option>
+                                            <option value={10}>10s</option>
+                                            <option value={30}>30s</option>
+                                            <option value={60}>1m</option>
+                                        </Select>
+                                    </Tooltip>
+                                    <Fullscreen />
                                 </HStack>
-                                <Fullscreen />
+
 
                             </HStack>
 
