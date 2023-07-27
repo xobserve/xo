@@ -285,6 +285,7 @@ const TeamSidemenu = ({team}:{team:Team}) => {
                                             })
                                             setSideMenu({ ...sidemenu, data: newTreeData as any })
                                         }}
+                                        placeholder="e.g /test"
                                     />
                                     <Input
                                         width="120px"
@@ -302,7 +303,7 @@ const TeamSidemenu = ({team}:{team:Team}) => {
                                         placeholder="icon name"
                                     />
                                     {!node.children?.length  && <Input
-                                        width="140px"
+                                        width="200px"
                                         value={node.dashboardId}
                                         onChange={(event) => {
                                             const dashboardId = event.target.value
@@ -314,7 +315,7 @@ const TeamSidemenu = ({team}:{team:Team}) => {
                                             })
                                             setSideMenu({ ...sidemenu, data: newTreeData as any })
                                         }}
-                                        placeholder="dashboard id"
+                                        placeholder="dash id, e.g d-home"
                                     />}
                                     <Tooltip label={t1.removeMenuItem}>
                                         <Box onClick={() => removeMenuItem(node)}><Icons.FaTimes /></Box>
