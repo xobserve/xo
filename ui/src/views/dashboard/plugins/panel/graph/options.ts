@@ -133,7 +133,7 @@ export const parseOptions = (config: PanelProps,rawData: SeriesData[], colorMode
             show: inactiveSeries.includes(d.name) ? false : true,
             label:  d.name,
             points: {
-                show: (config.panel.plugins.graph.styles.showPoints == "always" || config.panel.plugins.graph.styles?.style == "points") ? true : (config.panel.plugins.graph.styles.showPoints =="auto" ? null :false),
+                show: style=="points" ? true : ((config.panel.plugins.graph.styles.showPoints == "always" || config.panel.plugins.graph.styles?.style == "points") ? true : (config.panel.plugins.graph.styles.showPoints =="auto" ? null :false)),
                 size: config.panel.plugins.graph.styles?.pointSize,
                 stroke: d.color,
                 fill: d.color,
