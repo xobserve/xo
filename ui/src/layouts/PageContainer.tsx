@@ -84,7 +84,7 @@ const Container = ({ children, sidemenu }: Props) => {
   const t1 = useStore(sidebarMsg)
 
 
-  const [miniMode, setMiniMode] = useState(isEmpty(sidemenu) ? true : (storage.get(SidemenuMinimodeKey) ?? true))
+  const [miniMode, setMiniMode] = useState(storage.get(SidemenuMinimodeKey) ?? true)
   const fullscreen = useFullscreen()
 
 
