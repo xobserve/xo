@@ -259,11 +259,13 @@ function registerEvents(options, chart) {
                 calc: ValueCalculationType.Last
             },
             styles: {
+                layout: "auto",
                 style: "lines",
                 fillOpacity: 80,
                 gradientMode: "opacity",
                 graphHeight: 60,
-                connectNulls: false
+                connectNulls: false,
+                hideGraphHeight: 70
             },
             axisY: {
                 scale: "linear",

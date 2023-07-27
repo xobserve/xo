@@ -67,6 +67,7 @@
     "opacity": "不透明度",
     "enable": "启用",
     "applyToSeeEffect": "点击右上角的应用按钮后，才能看到修改效果",
+    "layout": "排列",
     "vertical": "竖直",
     "horizontal": "水平",
     "onClickEvent": "图表点击事件",
@@ -471,7 +472,9 @@
     "showTooltip": "显示 Tooltip",
     "showLegend": "显示 Legend",
     "graphHeight": "图形高度",
-    "graphHeightTips": "图形的部分占总体高度的比例"
+    "graphHeightTips": "图形的部分占总体高度的比例",
+    "hideGraphHeight": "隐藏图形",
+    "hideGraphHeightTips": "当图形区域的高度低于下面的 CSS 像素值时，它将被隐藏"
   },
 
   "tracePanel": {

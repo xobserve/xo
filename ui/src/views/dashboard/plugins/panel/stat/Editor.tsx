@@ -27,13 +27,14 @@ import { commonMsg, graphPanelMsg, statsPanelMsg } from "src/i18n/locales/en"
 import ThresholdEditor from "components/Threshold/ThresholdEditor"
 import { SeriesData } from "types/seriesData"
 import { isEmpty } from "utils/validate"
+import { VarialbeAllOption } from "src/data/variable"
 
 const GraphPanelEditor = ({ panel, onChange, data }: PanelEditorProps) => {
     const t = useStore(commonMsg)
     const t1 = useStore(graphPanelMsg)
     const t2 = useStore(statsPanelMsg)
 
-    const seriesNames = (data.flat() as SeriesData[]).map(s => s.name)
+    const seriesNames = [VarialbeAllOption].concat((data.flat() as SeriesData[]).map(s => s.name))
     if (isEmpty(panel.plugins.stat.diisplaySeries )) {
         if (seriesNames?.length >= 1) {
             onChange((panel: Panel) => {
@@ -63,8 +64,8 @@ const GraphPanelEditor = ({ panel, onChange, data }: PanelEditorProps) => {
                         onChange((panel: Panel) => {
                             panel.plugins.stat.diisplaySeries = v
                         })
-                    }}>
-                        {seriesNames.map(name => <option value={name}>{name}</option>)}
+                    }}> 
+                        {seriesNames.map(name => <option value={name}>{name == VarialbeAllOption ? "All" : name }</option>)}
                     </Select>
                 </PanelEditItem>
             <PanelEditItem title={t2.showLegend}>
@@ -92,6 +93,11 @@ const GraphPanelEditor = ({ panel, onChange, data }: PanelEditorProps) => {
             </PanelEditItem>
         </PanelAccordion>
         <PanelAccordion title={t.styles}>
+            <PanelEditItem title={t.layout}>
+                <RadionButtons options={[{ label: "Auto", value: "auto" }, { label: "Horizontal", value: "horizontal" },{ label: "Vertical", value: "vertical" }]} value={panel.plugins.stat.styles.layout} onChange={v => onChange((panel: Panel) => {
+                    panel.plugins.stat.styles.layout = v
+                })} />
+            </PanelEditItem>
             <PanelEditItem title={t.type}>
                 <RadionButtons options={[{ label: "Lines", value: "lines" }, { label: "Bars", value: "bars" }]} value={panel.plugins.stat.styles.style} onChange={v => onChange((panel: Panel) => {
                     panel.plugins.stat.styles.style = v
@@ -119,6 +125,10 @@ const GraphPanelEditor = ({ panel, onChange, data }: PanelEditorProps) => {
                     })
                 }
                 } />
+            </PanelEditItem>
+
+            <PanelEditItem title={t2.hideGraphHeight} desc={t2.hideGraphHeightTips}>
+                <EditorNumberItem value={panel.plugins.stat.styles.hideGraphHeight} min={0} step={1} onChange={v => onChange((panel: Panel) => { panel.plugins.stat.styles.hideGraphHeight = v })} />
             </PanelEditItem>
 
             <PanelEditItem title={t1.connectNull}>

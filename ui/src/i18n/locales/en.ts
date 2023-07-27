@@ -76,6 +76,7 @@ export const commonMsg = i18n("common", {
   "opacity": "Opacity",
   "applyToSeeEffect": "You need to click Apply Button(in top-right) to see the new trigger taken effect",
   "enable": "Enable",
+  "layout": "Layout",
   "vertical": "Vertical",
   "horizontal": "Horizontal",
   "onClickEvent": "On click event",
@@ -504,6 +505,8 @@ export const statsPanelMsg = i18n("statsPanel", {
   "showLegend": "Show legend",
   "graphHeight": "Graph height",
   "graphHeightTips": "the propotion of the graph part",
+  "hideGraphHeight": "Hide graph",
+  "hideGraphHeightTips": "when graph height goes below this height in CSS pixels, it will be hidden",
 })
 
 export const tracePanelMsg = i18n("tracePanel", {
