@@ -83,7 +83,6 @@ const Container = ({ children, sidemenu }: Props) => {
   const t = useStore(commonMsg)
   const t1 = useStore(sidebarMsg)
 
-
   const [miniMode, setMiniMode] = useState(storage.get(SidemenuMinimodeKey) ?? true)
   const fullscreen = useFullscreen()
 
@@ -100,7 +99,7 @@ const Container = ({ children, sidemenu }: Props) => {
     { title: t1.search, icon: "FaSearch", url: `${ReserveUrls.Search}`, isActive: asPath.startsWith(ReserveUrls.Search) },
 
   ]
-
+  
   const paddingLeft = 16
   const paddingRight = 16
   const childMarginLeft = 24
@@ -132,7 +131,7 @@ const Container = ({ children, sidemenu }: Props) => {
     }
 
     return navWidth
-  }, [sidemenu, miniMode])
+  }, [sidemenu, miniMode,bottomNavs])
 
   const sideWidth = fullscreen ? 0 : (miniMode ? miniWidth : navWidth)
   const textColor = useColorModeValue("gray.500", "whiteAlpha.800")
