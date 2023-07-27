@@ -50,12 +50,12 @@ import { Session } from "types/user"
 import PopoverTooltip from "components/PopoverTooltip"
 
 const miniWidth = 70
-const navSize = 15
+const navSize = 16
 const maxNavSize = 200
 
 interface Props {
   children: any
-  sidemenu: Route[]
+  sidemenu: any[]
   session: Session
 }
 
@@ -139,6 +139,7 @@ const Container = ({ children, sidemenu, session }: Props) => {
   const sideWidth = fullscreen ? 0 : (miniMode ? miniWidth : navWidth)
   const textColor = useColorModeValue("gray.500", "whiteAlpha.800")
 
+  console.log("here33333:",sidemenu)
   return (
     <HStack id="page-container" width="100%" alignItems="top">
       <Flex
@@ -167,17 +168,15 @@ const Container = ({ children, sidemenu, session }: Props) => {
               <Box>
                 <NavItem isActive={miniMode ? asPath.startsWith(link.url) : asPath == link.url} key={index} text={link.title} icon={link.icon} miniMode={miniMode} fontWeight={500} url={link.children?.length > 0 ? link.children[0].url : link.url} children={link.children}/>
               </Box>
-
-
               {
                 !miniMode && link.children && link.children.map((child, index) => {
-                  return <Box mt="6px" ml={childMarginLeft + 'px'}><NavItem isActive={asPath == child.url} key={index} text={child.title} miniMode={miniMode} fontSize={navSize - 0.5} url={child.url} /></Box>
+                  return <Box mt="5px" ml={childMarginLeft + 'px'}><NavItem isActive={asPath == child.url} key={index} text={child.title} miniMode={miniMode} fontSize={navSize} url={child.url} /></Box>
                 })
               }
             </Box>
           })}
-
-          {session && <>
+        
+          {session && !sidemenu.some(nav => nav.dashboardId != 'd-home') &&  <>
             <Divider mt="3" />
             <Box mt="3"><NavItem text="新建菜单项" url={`/cfg/team/${session.user.sidemenu}/sidemenu`} miniMode={miniMode} icon="FaPlus" /></Box>
           </>}
