@@ -23,12 +23,12 @@ interface Props {
     offset?: [number, number]
     showHeaderBorder?: boolean
     headerComponent: React.ReactNode
-    bodyComponent: React.ReactNode
+    bodyComponent?: React.ReactNode
     contentMinWidth?: string
     placement?: PlacementWithLogical
 }
 const PopoverTooltip = (props: Props) => {
-    const { trigger="hover", triggerComponent, offset = null, showHeaderBorder = false, headerComponent, bodyComponent, contentMinWidth = "120px", placement = "right-start" } = props
+    const { trigger="hover", triggerComponent, offset = null, showHeaderBorder = false, headerComponent, bodyComponent=null, contentMinWidth = "120px", placement = "right-start" } = props
     return (<>
         <Popover trigger={trigger} placement={placement} offset={offset}>
             <PopoverTrigger>

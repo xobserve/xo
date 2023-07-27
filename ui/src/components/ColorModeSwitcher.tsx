@@ -22,6 +22,7 @@ import {
 import { FaMoon, FaSun } from "react-icons/fa"
 import { useStore } from "@nanostores/react"
 import { sidebarMsg } from "src/i18n/locales/en"
+import PopoverTooltip from "./PopoverTooltip"
 
 type ColorModeSwitcherProps = Omit<IconButtonProps, "aria-label">
 
@@ -29,21 +30,28 @@ export const ColorModeSwitcher: React.FC<ColorModeSwitcherProps & { miniMode: bo
   const t1 = useStore(sidebarMsg)
   const { toggleColorMode } = useColorMode()
   const text = useColorModeValue("dark", "light")
-  const {colorMode} = useColorMode()
+  const { colorMode } = useColorMode()
 
+  const textComponent = <Text fontSize="0.95rem">{t1.themeChange}</Text>
   return (
-    <HStack cursor="pointer" onClick={toggleColorMode} className="hover-text">
-      {miniMode ? <IconButton
-        size="md"
-        fontSize="lg"
-        variant="ghost"
-        color="current"
-        onClick={toggleColorMode}
-        icon={colorMode == 'light' ? <FaMoon /> : <FaSun />}
-        aria-label={`Switch to ${text} mode`}
-        {...props}
-      /> : (colorMode == 'light' ? <FaMoon /> : <FaSun />)}
-      {!miniMode && <Text fontSize="0.95rem">{t1.themeChange}</Text>}
-    </HStack>
+    <PopoverTooltip
+      trigger={miniMode ? "hover" : null}
+      offset={[0, 14]}
+      triggerComponent={<HStack cursor="pointer" onClick={toggleColorMode} className="hover-text">
+        {miniMode ? <IconButton
+          size="md"
+          fontSize="lg"
+          variant="ghost"
+          color="current"
+          onClick={toggleColorMode}
+          icon={colorMode == 'light' ? <FaMoon /> : <FaSun />}
+          aria-label={`Switch to ${text} mode`}
+          {...props}
+        /> : (colorMode == 'light' ? <FaMoon /> : <FaSun />)}
+        {!miniMode && textComponent}
+      </HStack>}
+      headerComponent={textComponent}
+    />
+
   )
 }

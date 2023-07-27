@@ -165,7 +165,7 @@ const Container = ({ children, sidemenu, session }: Props) => {
           {sidemenu.map((link, index) => {
             return <Box mt={miniMode ? 2 : 3}>
               <Box>
-                <NavItem isActive={miniMode ? asPath.startsWith(link.url) : asPath == link.url} key={index} text={link.title} icon={link.icon} miniMode={miniMode} fontWeight={500} url={link.children?.length > 0 ? link.children[0].url : link.url} />
+                <NavItem isActive={miniMode ? asPath.startsWith(link.url) : asPath == link.url} key={index} text={link.title} icon={link.icon} miniMode={miniMode} fontWeight={500} url={link.children?.length > 0 ? link.children[0].url : link.url} children={link.children}/>
               </Box>
 
 
@@ -179,7 +179,7 @@ const Container = ({ children, sidemenu, session }: Props) => {
 
           {session && <>
             <Divider mt="3" />
-            <Box mt="3"><NavItem text="新建菜单项" url={`/cfg/team/${session.user.sidemenu}/sidemnu`} miniMode={miniMode} icon="FaPlus" /></Box>
+            <Box mt="3"><NavItem text="新建菜单项" url={`/cfg/team/${session.user.sidemenu}/sidemenu`} miniMode={miniMode} icon="FaPlus" /></Box>
           </>}
         </Flex>
         <Flex id="sidemenu-bottom" flexDir="column" pb="2" alignItems={miniMode ? "center" : "left"} color={textColor}>
@@ -214,6 +214,7 @@ const NavItem = ({ text, icon = null, miniMode, fontWeight = 400, fontSize = nav
   const { pathname: asPath } = useLocation()
   return (
     <PopoverTooltip
+      trigger={miniMode ? "hover" : null}
       offset={[0, 14]}
       triggerComponent={<Box>
         <Link to={url}>
@@ -230,7 +231,7 @@ const NavItem = ({ text, icon = null, miniMode, fontWeight = 400, fontSize = nav
       </Box>}
       showHeaderBorder={children?.length > 0}
       headerComponent={<Link to={children?.length > 0 ? children[0].url : url}>{text}</Link>}
-      bodyComponent={children?.length > 0 && <VStack alignItems="left" spacing="3">
+      bodyComponent={children?.length > 0 && <VStack alignItems="left" spacing="3" py="2">
         {children?.length > 0 && children.map(subLink =>
           <Link to={subLink.url} key={subLink.url}>
             <Text color={asPath == subLink.url ? useColorModeValue("brand.500", "brand.200") : textColor}>{subLink.title}</Text>

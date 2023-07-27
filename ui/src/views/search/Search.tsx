@@ -28,6 +28,7 @@ import { sortBy } from "lodash"
 import ListView from "./ListView"
 import TeamsView from "./TeamsView"
 import TagsView from "./TagsView"
+import PopoverTooltip from "components/PopoverTooltip"
 
 interface Props {
     title: string
@@ -194,15 +195,24 @@ const Search = memo((props: Props) => {
 
     return (
         <Box>
-            <HStack color={isOpen ? useColorModeValue("brand.500", "brand.200") : 'inherit'} className="hover-text" cursor="pointer" onClick={onSearchOpen}>
-                <Box>
-                    {miniMode ?
-                        <IconButton fontSize={"1.2rem"} aria-label="" variant="ghost" color="current" _focus={{ border: null }} icon={<FaSearch />} />
-                        : <FaSearch />
-                    }
-                </Box>
-                {!miniMode && <Text fontSize={`${fontSize}px`} fontWeight={fontWeight} >{title}</Text>}
-            </HStack>
+            <PopoverTooltip
+                trigger={miniMode ? "hover" : null}
+                offset={[0, 14]}
+                triggerComponent={
+                    <HStack color={isOpen ? useColorModeValue("brand.500", "brand.200") : 'inherit'} className="hover-text" cursor="pointer" onClick={onSearchOpen}>
+                    <Box>
+                        {miniMode ?
+                            <IconButton fontSize={"1.2rem"} aria-label="" variant="ghost" color="current" _focus={{ border: null }} icon={<FaSearch />} />
+                            : <FaSearch />
+                        }
+                    </Box>
+                    {!miniMode && <Text fontSize={`${fontSize}px`} fontWeight={fontWeight} >{title}</Text>}
+                </HStack>
+                }
+                headerComponent={
+                    <Text fontSize={`${fontSize}px`} fontWeight={fontWeight} >{title}</Text>
+                }
+            />
             <Modal isOpen={isOpen} onClose={onClose} size="full">
                 <Box sx={{
                     '.chakra-modal__content-container': {

@@ -67,6 +67,9 @@ const customTheme = extendTheme(
                     // '*, *::before, ::after': {
                     //     borderColor: "var(--chakra-colors-chakra-border-color) !important"
                     // }
+                    '.chakra-portal .chakra-popover__popper': {
+                        zIndex: 2000
+                    }
                 }
             }
         }
