@@ -123,7 +123,8 @@
     "themeChange": "深浅色主题",
     "accountSetting": "个人设置",
     "adminPanel": "管理员面板",
-    "currentLang": "当前语言"
+    "currentLang": "当前语言",
+    "newItem": "新建菜单项"
   },
   "navigate": {
     "NewDashboard": "新建仪表盘",

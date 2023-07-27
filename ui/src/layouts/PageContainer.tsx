@@ -17,13 +17,7 @@ import {
   Text,
   IconButton,
   useColorModeValue,
-  Popover,
-  PopoverTrigger,
-  PopoverContent,
-  PopoverHeader,
-  PopoverBody,
   VStack,
-  Portal,
   Divider,
 } from "@chakra-ui/react"
 import Logo from "components/Logo"
@@ -178,7 +172,7 @@ const Container = ({ children, sidemenu, session }: Props) => {
         
           {session && !sidemenu.some(nav => nav.dashboardId != 'd-home') &&  <>
             <Divider mt={miniMode ? 2 : 3} />
-            <Box mt={miniMode ? 2 : 3}><NavItem text="新建菜单项" url={`/cfg/team/${session.user.sidemenu}/sidemenu`} miniMode={miniMode} icon="FaPlus" /></Box>
+            <Box mt={miniMode ? 2 : 3}><NavItem fontSize={navSize-1} text={t1.newItem} url={`/cfg/team/${session.user.sidemenu}/sidemenu`} miniMode={miniMode} icon="FaPlus" /></Box>
           </>}
         </Flex>
         <Flex id="sidemenu-bottom" flexDir="column" pb="2" alignItems={miniMode ? "center" : "left"} color={textColor}>

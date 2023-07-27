@@ -135,6 +135,7 @@ export const sidebarMsg = i18n("sidebar", {
     "accountSetting": "Account Setting",
     "adminPanel": "Admin Panel",
     "currentLang": "Current Lang",
+    "newItem": "Add new item",
 })
 
 
