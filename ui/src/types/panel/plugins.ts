@@ -11,6 +11,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 import { PanelType } from "types/dashboard"
+import { LayoutOrientation } from "types/layout"
 import { ThresholdsConfig } from "types/threshold"
 import { ValueCalculationType } from "types/value"
 
@@ -62,7 +63,7 @@ export interface StatSettings  {
     diisplaySeries: string
     showLegend: boolean
     styles: {
-        layout: "auto" | "horizontal" | "vertical"
+        layout: LayoutOrientation
         style: "lines" | "bars" 
         fillOpacity: number
         gradientMode: "none" | "opacity"

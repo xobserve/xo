@@ -235,8 +235,7 @@ export const PanelComponent = ({ dashboard, panel, onRemovePanel, width, height,
         return panelData
     }, [panel.transform, panel.enableTransform, panelData])
 
-    console.log("here33333 width",width, panelInnerWidth)
-    return <Box height={height} width={width} className={panel.styles.border == "None" ? "hover-bordered" : null} border={`1px solid transparent`} position="relative">
+    return <Box height={height} width={width} className={panel.styles.border == "None" ? "hover-bordered" : null}  position="relative">
         <PanelHeader panel={panel} data={data} queryError={queryError} onCopyPanel={onCopyPanel} onRemovePanel={onRemovePanel} />
         {data && <Box
             // panel={panel}

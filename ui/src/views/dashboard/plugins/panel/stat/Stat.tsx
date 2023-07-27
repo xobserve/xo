@@ -11,24 +11,17 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 import UplotReact from "components/uPlot/UplotReact"
-import { memo, useCallback, useMemo, useState } from "react"
+import { memo, useMemo } from "react"
 import { PanelProps } from "types/dashboard"
 import 'uplot/dist/uPlot.min.css';
-import uPlot from "uplot"
 import React from "react";
-import { parseOptions } from './options';
 import { isEmpty, round } from "lodash"
-import Tooltip from "../graph/Tooltip";
-import { Box, Center, Flex, Text, useColorMode, Tooltip as ChakraTooltip } from "@chakra-ui/react";
-import { formatUnit } from "components/Unit";
-import { ValueCalculationType } from "types/value";
-import { calcValueOnSeriesData } from "utils/seriesData";
+import { Box, Center, Flex } from "@chakra-ui/react";
 import { SeriesData } from "types/seriesData";
-import { paletteColorNameToHex } from "utils/colors";
-import { ThresholdsMode } from "types/threshold";
-import { getThreshold } from "components/Threshold/utils";
+
 import { VarialbeAllOption } from "src/data/variable";
 import StatGraph from "./StatGraph";
+import AutoGrid  from "components/grid/AutoGrid";
 
 
 interface StatPanelProps extends PanelProps {
@@ -64,34 +57,44 @@ const StatPanel = memo((props: StatPanelProps) => {
         return res
     }, [props.data, props.panel.plugins.stat.diisplaySeries])
 
+    const options = props.panel.plugins.stat
     return (
         <>
             {
-                props.panel.plugins.stat.styles.layout == "horizontal" && <Box>
+                options.styles.layout == "horizontal" && <Box>
                     {
                         data.map((seriesData,i) => {
-                            return <Box width="100%"  bg="orange" className="bordered-bottom" height={round(props.height / data.length)+ 'px' }><StatGraph data={seriesData} panel={props.panel} width={props.width} height={round(props.height / data.length)} /></Box>
+                            const h = props.height / data.length
+                            return <Box width={props.width}  bg="orange" className="bordered-bottom" height={h + 'px' }><StatGraph data={seriesData} panel={props.panel} width={props.width} height={h} /></Box>
                         })  
                     }
                 </Box>
             }
             {
-                props.panel.plugins.stat.styles.layout == "vertical" && <Flex>
+                options.styles.layout == "vertical" && <Flex>
                     {
                         data.map(seriesData => {
-                            const width = round((props.width - 3) / data.length)
+                            const width = (props.width - 3) / data.length
                             return <Box className="bordered-right" bg="orange" height={props.height}  width={width}><StatGraph data={seriesData} panel={props.panel} width={width} height={props.height} /></Box>
                         })
                     }
                 </Flex>
             }
             {
-                props.panel.plugins.stat.styles.layout == "auto" && <Box>
-                    {/* {
-                        data.map(seriesData => {
-                            return <Box width="100%" height={props.height / 3}><StatGraph data={seriesData} panel={props.panel} width={props.width} height={props.height / 3} /></Box>
-                        })
-                    } */}
+                options.styles.layout == "auto" && <Box>
+                    <AutoGrid 
+                        width={props.width}
+                        height={props.height}
+                        orientation={options.styles.layout}
+                        itemSpacing={3}
+                        autoGrid={true}
+                        values={data ?? []}
+                        renderValue={({width, height, value})=> {
+                            return (<>
+                            <Box className="bordered-right" bg="orange" height={height}  width={width}><StatGraph data={value} panel={props.panel} width={width} height={height} /></Box>
+                            </>)
+                        }}
+                    />
                 </Box>
             }
         </>

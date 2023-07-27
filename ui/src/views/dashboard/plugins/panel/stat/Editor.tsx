@@ -28,6 +28,7 @@ import ThresholdEditor from "components/Threshold/ThresholdEditor"
 import { SeriesData } from "types/seriesData"
 import { isEmpty } from "utils/validate"
 import { VarialbeAllOption } from "src/data/variable"
+import { LayoutOrientation } from "types/layout"
 
 const GraphPanelEditor = ({ panel, onChange, data }: PanelEditorProps) => {
     const t = useStore(commonMsg)
@@ -94,7 +95,7 @@ const GraphPanelEditor = ({ panel, onChange, data }: PanelEditorProps) => {
         </PanelAccordion>
         <PanelAccordion title={t.styles}>
             <PanelEditItem title={t.layout}>
-                <RadionButtons options={[{ label: "Auto", value: "auto" }, { label: "Horizontal", value: "horizontal" },{ label: "Vertical", value: "vertical" }]} value={panel.plugins.stat.styles.layout} onChange={v => onChange((panel: Panel) => {
+                <RadionButtons options={Object.keys(LayoutOrientation).map(k => ({ label: LayoutOrientation[k], value: LayoutOrientation[k] }))} value={panel.plugins.stat.styles.layout} onChange={v => onChange((panel: Panel) => {
                     panel.plugins.stat.styles.layout = v
                 })} />
             </PanelEditItem>

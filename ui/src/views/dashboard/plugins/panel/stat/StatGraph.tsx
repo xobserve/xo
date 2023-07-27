@@ -61,6 +61,7 @@ const StatGraph = memo((props: Props) => {
 
 
     const graphHeight = statOptions.styles.graphHeight
+
     return (
         <>
             <Box h="100%" className="stat-graph" width={width}>
@@ -82,7 +83,7 @@ const StatGraph = memo((props: Props) => {
                     }
 
                     {
-                        statOptions.styles.layout == "vertical" && <>
+                        (statOptions.styles.layout == "vertical" || statOptions.styles.layout == "auto") && <>
                             {graphHeight < 100 && <Box height={height > statOptions.styles.hideGraphHeight ? `${100 - graphHeight}%` : '100%'} className="stat-graph-text">
                                 <Box width="100%" pl="2" pt={height > statOptions.styles.hideGraphHeight ? 2 : 0}>
                                     {statOptions.showLegend && <LegentText legend={legend} height={height} width={width} layout={statOptions.styles.layout} />}
@@ -112,9 +113,15 @@ const LegentText = ({ legend, width, height, layout }) => {
         const maxFontSize = 25
         if (fontSize < minFonSize) fontSize = minFonSize
         if (fontSize > maxFontSize) fontSize = maxFontSize
-    } else {
+    } else if (layout == "vertical") {
         fontSize = width / 7
         const minFonSize = 17
+        const maxFontSize = 25
+        if (fontSize < minFonSize) fontSize = minFonSize
+        if (fontSize > maxFontSize) fontSize = maxFontSize
+    } else {
+        fontSize = width / 9
+        const minFonSize = 16
         const maxFontSize = 25
         if (fontSize < minFonSize) fontSize = minFonSize
         if (fontSize > maxFontSize) fontSize = maxFontSize
@@ -135,9 +142,15 @@ const ValueText = ({ value, color, options, width, height, layout }) => {
         const maxFontSize = 40
         if (fontSize < minFonSize) fontSize = minFonSize
         if (fontSize > maxFontSize) fontSize = maxFontSize
-    } else {
+    } else if (layout == "vertical") {
         fontSize = width / 4.5
         const minFonSize = 19
+        const maxFontSize = 40
+        if (fontSize < minFonSize) fontSize = minFonSize
+        if (fontSize > maxFontSize) fontSize = maxFontSize
+    } else {
+        fontSize = width / 7
+        const minFonSize = 18
         const maxFontSize = 40
         if (fontSize < minFonSize) fontSize = minFonSize
         if (fontSize > maxFontSize) fontSize = maxFontSize
