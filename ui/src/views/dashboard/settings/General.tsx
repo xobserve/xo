@@ -11,7 +11,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import {  HStack, Input, Select, Switch,  useToast } from "@chakra-ui/react"
+import { AlertDialog, AlertDialogBody, AlertDialogContent, AlertDialogFooter, AlertDialogHeader, AlertDialogOverlay, Button, Divider, HStack, Input, Select, Switch, useDisclosure, useToast } from "@chakra-ui/react"
 import { EditorNumberItem } from "components/editor/EditorItem"
 import { Form, FormSection } from "components/form/Form"
 import FormItem from "components/form/Item"
@@ -21,6 +21,9 @@ import React from "react";
 import { useStore } from "@nanostores/react"
 import { commonMsg, dashboardSettingMsg } from "src/i18n/locales/en"
 import ColorTag from "../../../components/ColorTag"
+import { requestApi } from "utils/axios/request"
+import useSession from "hooks/use-session"
+import { useNavigate } from "react-router"
 
 interface Props {
     dashboard: Dashboard
@@ -28,8 +31,13 @@ interface Props {
 }
 
 const GeneralSettings = ({ dashboard, onChange }: Props) => {
+    const {session} = useSession()
+    const navigate = useNavigate()
     const t = useStore(commonMsg)
     const t1 = useStore(dashboardSettingMsg)
+
+    const { isOpen, onOpen, onClose } = useDisclosure()
+    const cancelRef = React.useRef()
 
     const toast = useToast()
     const [title, setTitle] = useState(dashboard.title)
@@ -52,8 +60,22 @@ const GeneralSettings = ({ dashboard, onChange }: Props) => {
             setTag('')
             return
         }
-        onChange((draft:Dashboard) => { draft.tags.push(tag) })
+        onChange((draft: Dashboard) => { draft.tags.push(tag) })
         setTag('')
+    }
+
+    const onDelete = async () => {
+        await requestApi.delete(`/dashboard/${dashboard.id}`)
+        toast({
+            title: t.isDeleted({ name: t.dashboard }),
+            status: "success",
+            duration: 3000,
+            isClosable: true,
+        })
+
+        setTimeout(() => {
+            navigate(`/cfg/team/${session.user.sidemenu}/dashboards`)
+        },500)
     }
 
     return (<>
@@ -67,7 +89,7 @@ const GeneralSettings = ({ dashboard, onChange }: Props) => {
                     <Input value={title} onChange={e => setTitle(e.currentTarget.value)} onBlur={() => onChange((draft: Dashboard) => { draft.title = title })} />
                 </FormItem>
                 <FormItem title={t.description}>
-                    <Input value={desc} onChange={e => setDesc(e.currentTarget.value)} onBlur={() => onChange((draft: Dashboard) => { draft.data.description = desc })} placeholder={t.inputTips({name: t.description})} />
+                    <Input value={desc} onChange={e => setDesc(e.currentTarget.value)} onBlur={() => onChange((draft: Dashboard) => { draft.data.description = desc })} placeholder={t.inputTips({ name: t.description })} />
                 </FormItem>
                 {/* <Box>
                 <Text textStyle="title">Editable</Text>
@@ -127,11 +149,43 @@ const GeneralSettings = ({ dashboard, onChange }: Props) => {
                 </FormItem>
 
                 {dashboard.data.enableAutoSave && <FormItem title={t1.autoSaveInterval} >
-                    <EditorNumberItem size="md" min={30} max={3600} step={30} value={dashboard.data.autoSaveInterval} onChange={v => onChange((draft: Dashboard) => { draft.data.autoSaveInterval = v })}/>
+                    <EditorNumberItem size="md" min={30} max={3600} step={30} value={dashboard.data.autoSaveInterval} onChange={v => onChange((draft: Dashboard) => { draft.data.autoSaveInterval = v })} />
                 </FormItem>}
             </FormSection>
-
+            <FormSection title={t.dangeSection}>
+                <Divider borderColor="red.500" mt="2" />
+                <Button mt="3" colorScheme='red' onClick={onOpen} width="fit-content">
+                    {t.deleteItem({ name: t.dashboard })}
+                </Button>
+            </FormSection>
         </Form>
+
+        <AlertDialog
+        isOpen={isOpen}
+        leastDestructiveRef={cancelRef}
+        onClose={onClose}
+      >
+        <AlertDialogOverlay>
+          <AlertDialogContent>
+            <AlertDialogHeader fontSize='lg' fontWeight='bold'>
+              {t.deleteItem({ name: t.dashboard })}
+            </AlertDialogHeader>
+
+            <AlertDialogBody>
+              {t.deleteAlert}
+            </AlertDialogBody>
+
+            <AlertDialogFooter>
+              <Button ref={cancelRef} onClick={onClose}>
+                {t.cancel}
+              </Button>
+              <Button colorScheme='red' onClick={onDelete} ml={3}>
+                {t.delete}
+              </Button>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialogOverlay>
+      </AlertDialog>
     </>)
 }
 
