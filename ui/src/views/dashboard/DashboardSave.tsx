@@ -18,9 +18,8 @@ import { FaRegSave } from "react-icons/fa"
 import { Dashboard } from "types/dashboard"
 import useKeyboardJs from 'react-use/lib/useKeyboardJs';
 import { requestApi } from "utils/axios/request"
-import moment from "moment"
 import { dispatch } from "use-bus"
-import { SetDashboardEvent } from "src/data/bus-events"
+import {  DashboardSavedEvent, SetDashboardEvent } from "src/data/bus-events"
 import ReactDiffViewer from 'react-diff-viewer';
 import { useSearchParam } from "react-use"
 import { cloneDeep, isEqual } from "lodash"
@@ -48,7 +47,7 @@ const DashboardSave = ({ dashboard }: Props) => {
     const [pressed] = useKeyboardJs("ctrl+s")
 
     useEffect(() => {
-        if (pressed && !isOpen && !edit) {
+        if (pressed && !isOpen) {
             onSaveOpen()
         }
 
@@ -132,6 +131,8 @@ const DashboardSave = ({ dashboard }: Props) => {
             location.reload()
         }
         onSaveClose()
+
+        dispatch(DashboardSavedEvent)
     }
 
     const onViewHistory = () => {

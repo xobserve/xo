@@ -11,3 +11,4 @@ export const PanelForceRebuildEvent = "panel-force-rebuild"
 export const PanelDataEvent = "panel-data"
 export const UpdatePanelEvent = "update-panel"
 export const ShareUrlEvent = 'share-url'
+export const DashboardSavedEvent = "dashboard-saved"

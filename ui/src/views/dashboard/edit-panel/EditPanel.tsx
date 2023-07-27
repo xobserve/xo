@@ -26,7 +26,7 @@ import PanelSettings from "./PanelSettings";
 import { useLeavePageConfirm } from "hooks/useLeavePage"
 import { isEqual } from "lodash"
 import useBus, { dispatch } from "use-bus"
-import { PanelDataEvent, PanelForceRebuildEvent } from "src/data/bus-events"
+import { DashboardSavedEvent, PanelDataEvent, PanelForceRebuildEvent } from "src/data/bus-events"
 import AutoSizer from "react-virtualized-auto-sizer";
 import { PanelGrid } from "../grid/PanelGrid"
 import loadable from '@loadable/component'
@@ -57,6 +57,16 @@ const EditPanel = ({ dashboard, onChange }: EditPanelProps) => {
 
     useLeavePageConfirm(dashboard.data.enableUnsavePrompt ? pageChanged : false)
 
+
+    useBus(
+        DashboardSavedEvent,
+        () => {
+            setPageChanged(false)
+        },
+        []
+    )
+
+    
     useEffect(() => {
         if (edit) {
             const p = dashboard.data.panels.find(p => p.id.toString() === edit)
