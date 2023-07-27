@@ -20,14 +20,15 @@ interface EditorInputProps {
     onChange: any
     size?: string
     placeholder?: string
+    disabled?: boolean
 }
 
-export const EditorInputItem = ({ value, onChange, type = "input", size = "md", placeholder }: EditorInputProps) => {
+export const EditorInputItem = ({ value, onChange, type = "input", size = "md", placeholder,disabled=false }: EditorInputProps) => {
     const [temp, setTemp] = useState(value)
     switch (type) {
         case "input":
             return (
-                <Input placeholder={placeholder} size={size} value={temp} onChange={e => setTemp(e.currentTarget.value)} onBlur={() => onChange(temp)} />
+                <Input placeholder={placeholder} size={size} value={temp} onChange={e => setTemp(e.currentTarget.value)} onBlur={() => onChange(temp)} disabled={disabled} />
             )
         case "textarea":
             return (

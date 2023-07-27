@@ -125,7 +125,6 @@ const SelectVariable = ({ v }: { v: Variable }) => {
             dispatch(VariableChangedEvent)   
         }
 
-        console.log("here333333",result,v.name)
         setValues(result)
         v.values = result
 
@@ -214,7 +213,6 @@ export const setVariableValue = (variable: Variable, value) => {
     if (needReload) dispatch(VariableChangedEvent)
 
     // sync to url
-    console.log("here33333:",value)
     addParamToUrl({
         ['var-'+ variable.name] : value
     })

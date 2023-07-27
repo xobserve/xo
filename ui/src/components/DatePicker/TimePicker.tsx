@@ -24,6 +24,7 @@ import {
     CalendarWeek,
     CalendarDays,
 } from '@uselessdev/datepicker'
+import { EditorInputItem } from 'components/editor/EditorItem'
 import { subMinutes } from 'date-fns'
 import { cloneDeep, includes, isDate, isEmpty } from 'lodash'
 import moment from 'moment'
@@ -31,6 +32,7 @@ import React, { useMemo, useState } from 'react'
 import { FaCalendarAlt, FaTimes } from 'react-icons/fa'
 import { timePickerMsg } from 'src/i18n/locales/en'
 import { systemDateFormats, TimeRange } from 'types/time'
+import { dateTimeFormat } from 'utils/datetime/formatter'
 import storage from 'utils/localStorage'
 
 
@@ -63,7 +65,7 @@ export const getNewestTimeRange = () => {
 }
 
 // get current time range from local storage, this time range will change when select a new time or refresh page
-export const getCurrentTimeRange = ():TimeRange => {
+export const getCurrentTimeRange = (): TimeRange => {
     const rawT = storage.get(TimePickerKey)
     let time;
     if (rawT) {
@@ -77,7 +79,7 @@ export const getCurrentTimeRange = ():TimeRange => {
     } else {
         time = initTimeRange
     }
-    
+
     return time
 }
 
@@ -139,7 +141,12 @@ const TimePicker = ({ onClose, onTimeChange }: Props) => {
             tempRange.end = r.to?.toDate()
         }
 
-        tempRange.sub = 0
+        if (from.startsWith('now') && to.startsWith('now')) {
+            tempRange.sub =  r.to.diff(r.from) / 60000
+        }   else { 
+            tempRange.sub = 0
+        }
+       
         setTempRange(cloneDeep(tempRange))
 
 
@@ -157,55 +164,55 @@ const TimePicker = ({ onClose, onTimeChange }: Props) => {
         setError(err)
     }
 
-    const applyTimeRange = (r:TimeRange) => {
+    const applyTimeRange = (r: TimeRange) => {
         storage.set(TimePickerKey, JSON.stringify(r))
         onTimeChange(r)
         onClose()
     }
 
     const quickOptions = useMemo(() => [{
-        label: t1.lastMinutes({name: "5"}),
+        label: t1.lastMinutes({ name: "5" }),
         value: 5,
         raw: 'now-5m'
     },
     {
-        label:t1.lastMinutes({name: "15"}),
+        label: t1.lastMinutes({ name: "15" }),
         value: 15,
         raw: 'now-15m'
     }, {
-        label:t1.lastMinutes({name: "30"}),
+        label: t1.lastMinutes({ name: "30" }),
         value: 30,
         raw: 'now-30m'
     }, {
-        label:t1.lastHours({name: "1"}),
+        label: t1.lastHours({ name: "1" }),
         value: 60,
         raw: 'now-1h'
     }, {
-        label: t1.lastHours({name: "3"}),
+        label: t1.lastHours({ name: "3" }),
         value: 3 * 60,
         raw: 'now-3h'
-    
+
     }, {
-        label:t1.lastHours({name: "12"}),
+        label: t1.lastHours({ name: "12" }),
         value: 12 * 60,
         raw: 'now-12h'
     }, {
-        label:t1.lastDays({name: "1"}),
+        label: t1.lastDays({ name: "1" }),
         value: 24 * 60,
         raw: 'now-1d'
     }, {
-        label: t1.lastDays({name: "2"}),
+        label: t1.lastDays({ name: "2" }),
         value: 2 * 24 * 60,
         raw: 'now-2d'
     }, {
-        label: t1.lastDays({name: "7"}),
+        label: t1.lastDays({ name: "7" }),
         value: 7 * 24 * 60,
         raw: 'now-7d'
     }, {
-        label: t1.lastDays({name: "30"}),
+        label: t1.lastDays({ name: "30" }),
         value: 30 * 24 * 60,
         raw: 'now-30d'
-    }],[t1])
+    }], [t1])
 
     return (
         <>
@@ -241,7 +248,12 @@ const TimePicker = ({ onClose, onTimeChange }: Props) => {
                     <Box>
                         <Text size="sm">{t1.from}</Text>
                         <HStack>
-                            <Input value={tempRange.startRaw} onChange={e => onRangeChange(e.currentTarget.value, tempRange.endRaw)} disabled={tempRange.startRaw.toString().startsWith('now')} />
+                            <EditorInputItem
+                                key={tempRange.startRaw}
+                                value={tempRange.startRaw.toString().startsWith('now-') ? tempRange.startRaw : dateTimeFormat(tempRange.start)}
+                                onChange={v => onRangeChange(v, tempRange.endRaw)}
+                                // disabled={tempRange.startRaw.toString().startsWith('now')}
+                            />
                             <FaCalendarAlt cursor="pointer" onClick={() => setDisplayCalender(!displayCalender)} />
                         </HStack>
                         {error.start && <Text mt="1" fontSize="sm" color="red">{error.start}</Text>}
@@ -249,12 +261,17 @@ const TimePicker = ({ onClose, onTimeChange }: Props) => {
                     <Box>
                         <Text size="sm">{t1.to}</Text>
                         <HStack>
-                            <Input value={tempRange.endRaw} onChange={e => onRangeChange(tempRange.startRaw, e.currentTarget.value)} disabled={tempRange.endRaw.toString().startsWith('now')} />
+                            <EditorInputItem
+                                key={tempRange.endRaw}
+                                value={tempRange.endRaw.toString().startsWith('now') ? tempRange.endRaw : dateTimeFormat(tempRange.end)}
+                                onChange={v => onRangeChange(tempRange.startRaw, v)}
+                                // disabled={tempRange.endRaw.toString().startsWith('now')}
+                            />
                             <FaCalendarAlt cursor="pointer" onClick={() => setDisplayCalender(!displayCalender)} />
                         </HStack>
                         {error.end && <Text mt="1" fontSize="sm" color="red">{error.end}</Text>}
                     </Box>
-                    <Button onClick={() => applyTimeRange(range)}>{t1.apply}</Button>
+                    <Button onClick={() => applyTimeRange(tempRange)}>{t1.apply}</Button>
                 </VStack>
                 <Box p="2">
                     <Center><Text>{t1.quickSelect}</Text></Center>

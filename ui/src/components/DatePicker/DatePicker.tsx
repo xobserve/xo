@@ -23,6 +23,7 @@ import storage from "utils/localStorage"
 import { addParamToUrl } from "utils/url"
 import { Moment } from "moment"
 import { useSearchParam } from "react-use"
+import { dateTimeFormat } from "utils/datetime/formatter"
 
 interface Props {
     showTime?: boolean
@@ -130,18 +131,18 @@ const DatePicker = ({ showTime = false }: Props) => {
     return (
         <>
             <Box>
-                <Tooltip label={`${value?.start.toLocaleString()} - ${value?.end.toLocaleString()}`}>
+                <Tooltip label={`${value && dateTimeFormat(value.start)} - ${value && dateTimeFormat(value.end)}`}>
                     <HStack spacing={0} onClick={onOpen} cursor="pointer">
                         <IconButton variant="ghost" _hover={{bg: null}}>
                             <FaRegClock />
                         </IconButton>
                         {
-                            showTime && <Text layerStyle="textSecondary" fontSize="0.9rem" fontWeight="500">{value.startRaw} to {value.endRaw}</Text>
+                            showTime && <Text layerStyle="textSecondary" fontSize="0.9rem" fontWeight="500">{value.startRaw.toString().startsWith('now')? value.startRaw : dateTimeFormat(value.start) } to {value.endRaw.toString().startsWith('now')? value.endRaw : dateTimeFormat(value.end)}</Text>
                         }
                     </HStack>
                 </Tooltip>
             </Box>
-            <Modal isOpen={isOpen} onClose={onClose}>
+            <Modal isOpen={isOpen} onClose={onClose} initialFocusRef={null}>
                 <ModalOverlay />
                 <ModalContent minW="fit-content">
                     <ModalBody>

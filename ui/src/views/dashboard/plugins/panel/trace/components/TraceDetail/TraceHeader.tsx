@@ -75,7 +75,7 @@ const TraceDetailHeader = ({ trace, viewRange, updateNextViewRangeTime, updateVi
                     { label: "Statistics", value: ETraceViewType.TraceStatistics },
                     { label: "JSON", value: ETraceViewType.TraceJSON },
                 ]} />
-                <ColorModeSwitcher miniMode/>
+                <ColorModeSwitcher miniMode disableTrigger/>
             </HStack>
         </Flex>
         <HStack className="label-bg" px="2" py="1" fontSize="0.9rem" spacing={4}>

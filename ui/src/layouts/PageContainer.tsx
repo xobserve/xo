@@ -133,7 +133,6 @@ const Container = ({ children, sidemenu, session }: Props) => {
   const sideWidth = fullscreen ? 0 : (miniMode ? miniWidth : navWidth)
   const textColor = useColorModeValue("gray.500", "whiteAlpha.800")
 
-  console.log("here33333:",sidemenu)
   return (
     <HStack id="page-container" width="100%" alignItems="top">
       <Flex

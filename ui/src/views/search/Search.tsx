@@ -52,10 +52,9 @@ const Search = memo((props: Props) => {
 
     const load = async () => {
         const res = await requestApi.get("/teams/all")
-        console.log("here3333 load teams")
         setTeams(res.data)
     }
-
+    
     if (teams.length == 0) {
         load()
     }
