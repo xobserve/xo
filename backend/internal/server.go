@@ -111,7 +111,7 @@ func (s *Server) Start() error {
 		r.POST("/dashboard/unstar/:id", IsLogin(), dashboard.UnStar)
 		r.GET("/dashboard/starred", IsLogin(), dashboard.GetAllStarred)
 		r.GET("/dashboard/starred/:id", IsLogin(), dashboard.GetStarred)
-
+		r.DELETE("/dashboard/:id", IsLogin(), dashboard.Delete)
 		// admin apis
 		r.GET("/admin/users", IsLogin(), admin.GetUsers)
 		r.POST("/admin/user", IsLogin(), admin.UpdateUser)

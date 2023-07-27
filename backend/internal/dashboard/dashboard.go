@@ -323,3 +323,49 @@ func GetAllStarred(c *gin.Context) {
 
 	c.JSON(http.StatusOK, common.RespSuccess(starredList))
 }
+
+func Delete(c *gin.Context) {
+	id := c.Param("id")
+	u := user.CurrentUser(c)
+
+	if id == models.HomeDashboardId {
+		c.JSON(http.StatusForbidden, common.RespError("d-home is a special Dashboard, you cant delete it"))
+		return
+	}
+
+	ownedBy, err := models.QueryDashboardBelongsTo(id)
+	if err != nil {
+		logger.Warn("query dash belongs to error", "error", err)
+		c.JSON(500, common.RespError(e.Internal))
+		return
+	}
+
+	if !u.Role.IsAdmin() {
+		isTeamAdmin, err := models.IsTeamAdmin(ownedBy, u.Id)
+		if err != nil {
+			logger.Error("check team admin error", "error", err)
+			c.JSON(500, common.RespInternalError())
+			return
+		}
+		if !isTeamAdmin {
+			c.JSON(403, common.RespError(e.NoPermission))
+			return
+		}
+	}
+
+	_, err = db.Conn.Exec("DELETE FROM dashboard WHERE id=?", id)
+	if err != nil {
+		logger.Warn("delete dashboard erorr", "error", err)
+		c.JSON(500, common.RespError(e.Internal))
+		return
+	}
+
+	_, err = db.Conn.Exec("DELETE FROM star_dashboard WHERE dashboard_id=?", id)
+	if err != nil {
+		logger.Warn("delete dashboard star erorr", "error", err)
+		c.JSON(500, common.RespError(e.Internal))
+		return
+	}
+
+	c.JSON(200, common.RespSuccess(nil))
+}
