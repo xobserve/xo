@@ -79,11 +79,12 @@ const UserMenu = ({ fontSize = "1.2rem", miniMode }) => {
                                 variant="ghost"
                                 color={isActive ? useColorModeValue("brand.500", "brand.200") : "current"}
                                 _focus={{ border: null }}
+                                className="hover-text"
                                 icon={<FaUserAlt />}>
                             </MenuButton>
                             :
-                            <MenuButton>
-                                <HStack>
+                            <MenuButton className="hover-text">
+                                <HStack >
                                     <FaUserAlt />
                                     <Text fontSize="0.95rem">{t1.accountSetting}</Text>
                                 </HStack>
