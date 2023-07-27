@@ -218,7 +218,7 @@ export const PanelComponent = ({ dashboard, panel, onRemovePanel, width, height,
 
     const panelBodyHeight = height - PANEL_HEADER_HEIGHT
     const panelInnerHeight = isEmpty(panel.title) ? height : panelBodyHeight// 10px padding top and bottom of panel body
-    const panelInnerWidth = width + 8 // 10px padding left and right of panel body
+    const panelInnerWidth = width // 10px padding left and right of panel body
 
     console.log("panel grid rendered, panel data: ", panelData)
     const data = useMemo(() => {
@@ -235,7 +235,7 @@ export const PanelComponent = ({ dashboard, panel, onRemovePanel, width, height,
         return panelData
     }, [panel.transform, panel.enableTransform, panelData])
 
-
+    console.log("here33333 width",width, panelInnerWidth)
     return <Box height={height} width={width} className={panel.styles.border == "None" ? "hover-bordered" : null} border={`1px solid transparent`} position="relative">
         <PanelHeader panel={panel} data={data} queryError={queryError} onCopyPanel={onCopyPanel} onRemovePanel={onRemovePanel} />
         {data && <Box

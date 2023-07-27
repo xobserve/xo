@@ -11,10 +11,9 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 import UplotReact from "components/uPlot/UplotReact"
-import { memo, useCallback, useMemo, useState } from "react"
+import { memo, useMemo } from "react"
 import { Panel } from "types/dashboard"
 import 'uplot/dist/uPlot.min.css';
-import uPlot from "uplot"
 import React from "react";
 import { parseOptions } from './options';
 import { isEmpty } from "lodash"
@@ -64,23 +63,38 @@ const StatGraph = memo((props: Props) => {
     const graphHeight = statOptions.styles.graphHeight
     return (
         <>
-            <Box h="100%" className="stat-graph" bg="orange" mt="1" width="100%">
-                {
-                    statOptions.styles.layout == "horizontal" && <>
-                        {graphHeight < 100 && <Box height={height > statOptions.styles.hideGraphHeight ? `${100 - graphHeight}%` : '100%'} className="stat-graph-text">
-                            <Center height="100%" pt={height > statOptions.styles.hideGraphHeight ? 2 : 0}>
-                                <Flex width="100%" px={4} alignItems="center" justifyContent={statOptions.showLegend ? "space-between" : "center"} >
-                                    {statOptions.showLegend && <LegentText legend={legend} height={height} />}
-                                    <ValueText value={value} color={color} options={statOptions} height={height} />
-                                </Flex>
-                            </Center>
-                        </Box>}
-                        {height > statOptions.styles.hideGraphHeight && <Box height={graphHeight + '%'} className="stat-graph-container">
-                            <GraphPlot options={options} data={data} props={props} />
-                        </Box>}
-                    </>
-                }
+            <Box h="100%" className="stat-graph" width={width}>
+                <Box h="100%" >
+                    {
+                        statOptions.styles.layout == "horizontal" && <>
+                            {graphHeight < 100 && <Box height={height > statOptions.styles.hideGraphHeight ? `${100 - graphHeight}%` : '100%'} className="stat-graph-text">
+                                <Center height="100%" pt={height > statOptions.styles.hideGraphHeight ? 2 : 0}>
+                                    <Flex width="100%" px={4} alignItems="center" justifyContent={statOptions.showLegend ? "space-between" : "center"} >
+                                        {statOptions.showLegend && <LegentText legend={legend} height={height} width={width} layout={statOptions.styles.layout} />}
+                                        <ValueText value={value} color={color} options={statOptions} width={width} height={height} layout={statOptions.styles.layout}/>
+                                    </Flex>
+                                </Center>
+                            </Box>}
+                            {height > statOptions.styles.hideGraphHeight && <Box height={graphHeight + '%'} className="stat-graph-container">
+                                <GraphPlot options={options} data={data} props={props} />
+                            </Box>}
+                        </>
+                    }
 
+                    {
+                        statOptions.styles.layout == "vertical" && <>
+                            {graphHeight < 100 && <Box height={height > statOptions.styles.hideGraphHeight ? `${100 - graphHeight}%` : '100%'} className="stat-graph-text">
+                                <Box width="100%" pl="2" pt={height > statOptions.styles.hideGraphHeight ? 2 : 0}>
+                                    {statOptions.showLegend && <LegentText legend={legend} height={height} width={width} layout={statOptions.styles.layout} />}
+                                    <ValueText value={value} color={color} options={statOptions} width={width} height={height} layout={statOptions.styles.layout}/>
+                                </Box>
+                            </Box>}
+                            {height > statOptions.styles.hideGraphHeight && <Box height={graphHeight + '%'} className="stat-graph-container">
+                                <GraphPlot options={options} data={data} props={props} />
+                            </Box>}
+                        </>
+                    }
+                </Box>
 
             </Box>
         </>
@@ -89,32 +103,53 @@ const StatGraph = memo((props: Props) => {
 
 export default StatGraph
 
-const LegentText = ({ legend, height }) => {
+const LegentText = ({ legend, width, height, layout }) => {
     let fontSize = 16
-    if (height < 100) {
-        fontSize = 14
+
+    if (layout == "horizontal") {
+        fontSize = height / 5
+        const minFonSize = 18
+        const maxFontSize = 25
+        if (fontSize < minFonSize) fontSize = minFonSize
+        if (fontSize > maxFontSize) fontSize = maxFontSize
+    } else {
+        fontSize = width / 7
+        const minFonSize = 17
+        const maxFontSize = 25
+        if (fontSize < minFonSize) fontSize = minFonSize
+        if (fontSize > maxFontSize) fontSize = maxFontSize
     }
+
     return (
         <>
-            <ChakraTooltip label={legend}><Text maxWidth="50%" fontSize={fontSize + 'px'}>{legend}</Text></ChakraTooltip>
+            <ChakraTooltip label={legend}><Text maxWidth={layout == "horizontal" ? "50%" : "100%"} fontSize={fontSize + 'px'} wordBreak="break-all" color="white" fontWeight={600}>{legend}</Text></ChakraTooltip>
         </>
     )
 }
 
-const ValueText = ({ value, color, options, height }) => {
-    const minFonSize = 16
-    const maxFontSize = 40
-    let fontSize = height / 2.7
-    if (fontSize < minFonSize) fontSize = minFonSize
-    if (fontSize > maxFontSize) fontSize = maxFontSize
+const ValueText = ({ value, color, options, width, height, layout }) => {
+    let fontSize = 16
+    if (layout == "horizontal") {
+        fontSize = height / 3.5
+        const minFonSize = 19
+        const maxFontSize = 40
+        if (fontSize < minFonSize) fontSize = minFonSize
+        if (fontSize > maxFontSize) fontSize = maxFontSize
+    } else {
+        fontSize = width / 4.5
+        const minFonSize = 19
+        const maxFontSize = 40
+        if (fontSize < minFonSize) fontSize = minFonSize
+        if (fontSize > maxFontSize) fontSize = maxFontSize
+    }
 
 
-    console.log("here33333 height:", height)
     return (<>
         <Text
             fontSize={fontSize + 'px'}
-            color={color}
+            color={'white'}
             fontWeight="bold"
+            lineHeight={1.2}
         >{options.value.calc == ValueCalculationType.Count ?
             value
             : formatUnit(value, options.value.units, options.value.decimal)}</Text>

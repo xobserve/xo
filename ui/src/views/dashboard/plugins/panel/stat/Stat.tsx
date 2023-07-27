@@ -17,7 +17,7 @@ import 'uplot/dist/uPlot.min.css';
 import uPlot from "uplot"
 import React from "react";
 import { parseOptions } from './options';
-import { isEmpty } from "lodash"
+import { isEmpty, round } from "lodash"
 import Tooltip from "../graph/Tooltip";
 import { Box, Center, Flex, Text, useColorMode, Tooltip as ChakraTooltip } from "@chakra-ui/react";
 import { formatUnit } from "components/Unit";
@@ -69,20 +69,21 @@ const StatPanel = memo((props: StatPanelProps) => {
             {
                 props.panel.plugins.stat.styles.layout == "horizontal" && <Box>
                     {
-                        data.map(seriesData => {
-                            return <Box width="100%" height={(props.height / 3) - 5 + 'px' }><StatGraph data={seriesData} panel={props.panel} width={props.width} height={props.height / data.length} /></Box>
+                        data.map((seriesData,i) => {
+                            return <Box width="100%"  bg="orange" className="bordered-bottom" height={round(props.height / data.length)+ 'px' }><StatGraph data={seriesData} panel={props.panel} width={props.width} height={round(props.height / data.length)} /></Box>
                         })  
                     }
                 </Box>
             }
             {
-                props.panel.plugins.stat.styles.layout == "vertical" && <Box>
-                    {/* {
+                props.panel.plugins.stat.styles.layout == "vertical" && <Flex>
+                    {
                         data.map(seriesData => {
-                            return <Box width="100%" height={props.height / 3}><StatGraph data={seriesData} panel={props.panel} width={props.width} height={props.height / 3} /></Box>
+                            const width = round((props.width - 3) / data.length)
+                            return <Box className="bordered-right" bg="orange" height={props.height}  width={width}><StatGraph data={seriesData} panel={props.panel} width={width} height={props.height} /></Box>
                         })
-                    } */}
-                </Box>
+                    }
+                </Flex>
             }
             {
                 props.panel.plugins.stat.styles.layout == "auto" && <Box>
