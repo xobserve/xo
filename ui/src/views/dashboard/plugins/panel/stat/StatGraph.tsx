@@ -23,9 +23,11 @@ import { formatUnit } from "components/Unit";
 import { ValueCalculationType } from "types/value";
 import { calcValueOnSeriesData } from "utils/seriesData";
 import { SeriesData } from "types/seriesData";
-import { paletteColorNameToHex } from "utils/colors";
+import { getTextColorForAlphaBackground, paletteColorNameToHex } from "utils/colors";
 import { ThresholdsMode } from "types/threshold";
 import { getThreshold } from "components/Threshold/utils";
+import { LayoutOrientation } from "types/layout";
+import tinycolor from "tinycolor2";
 
 
 interface Props {
@@ -40,7 +42,7 @@ const StatGraph = memo((props: Props) => {
     const { colorMode } = useColorMode()
 
     const statOptions = panel.plugins.stat
-    const [value, options, legend, color] = useMemo(() => {
+    const [value, options, legend, color, valueColor, legendColor,bgColor] = useMemo(() => {
         const value = calcValueOnSeriesData(data, statOptions.value.calc)
         let max = 0;
         if (statOptions.thresholds.mode == ThresholdsMode.Percentage) {
@@ -56,23 +58,60 @@ const StatGraph = memo((props: Props) => {
         legend = data.name
         o = parseOptions(props, color, data)
 
-        return [value, o, legend, color]
+        let valueColor;
+        let legendColor
+        switch (statOptions.styles.colorMode) {
+            case "value":
+                valueColor = color;
+                legendColor = 'inherit'
+                break;
+            case "bg-solid":
+            case "bg-gradient":
+                const c = getTextColorForAlphaBackground(color, colorMode == "dark");
+                valueColor = c
+                legendColor = c
+                break;
+            case "none":
+                valueColor = 'inherit';
+                legendColor = 'inherit'
+                break;
+        }
+
+        let bgColor 
+        
+        const themeFactor =  colorMode == "dark" ? 1 : -0.7;
+        switch (statOptions.styles.colorMode) {
+          case "bg-gradient":
+            const bgColor2 = tinycolor(color)
+              .darken(15 * themeFactor)
+              .spin(8)
+              .toRgbString();
+            const bgColor3 = tinycolor(color)
+              .darken(5 * themeFactor)
+              .spin(-8)
+              .toRgbString();
+            bgColor =  `linear-gradient(120deg, ${bgColor2}, ${bgColor3})`;
+            break;
+            case "bg-solid":
+                bgColor = tinycolor(color).toString();
+                break;
+        }
+        return [value, o, legend, color, valueColor, legendColor,bgColor]
     }, [panel, data, colorMode, width, height])
 
 
     const graphHeight = statOptions.styles.graphHeight
-
     return (
         <>
-            <Box h="100%" className="stat-graph" width={width}>
+            <Box h="100%" className={`stat-graph ${statOptions.styles.layout == LayoutOrientation.Horizontal ? "bordered-bottom" : 'bordered-right'}`} width={width} bg={bgColor}>
                 <Box h="100%" >
                     {
                         statOptions.styles.layout == "horizontal" && <>
                             {graphHeight < 100 && <Box height={height > statOptions.styles.hideGraphHeight ? `${100 - graphHeight}%` : '100%'} className="stat-graph-text">
                                 <Center height="100%" pt={height > statOptions.styles.hideGraphHeight ? 2 : 0}>
                                     <Flex width="100%" px={4} alignItems="center" justifyContent={statOptions.showLegend ? "space-between" : "center"} >
-                                        {statOptions.showLegend && <LegentText legend={legend} height={height} width={width} layout={statOptions.styles.layout} />}
-                                        <ValueText value={value} color={color} options={statOptions} width={width} height={height} layout={statOptions.styles.layout}/>
+                                        {statOptions.showLegend && <LegentText legend={legend} height={height} width={width} options={statOptions} color={legendColor} />}
+                                        <ValueText value={value} options={statOptions} width={width} height={height} layout={statOptions.styles.layout} color={valueColor} />
                                     </Flex>
                                 </Center>
                             </Box>}
@@ -86,8 +125,8 @@ const StatGraph = memo((props: Props) => {
                         (statOptions.styles.layout == "vertical" || statOptions.styles.layout == "auto") && <>
                             {graphHeight < 100 && <Box height={height > statOptions.styles.hideGraphHeight ? `${100 - graphHeight}%` : '100%'} className="stat-graph-text">
                                 <Box width="100%" pl="2" pt={height > statOptions.styles.hideGraphHeight ? 2 : 0}>
-                                    {statOptions.showLegend && <LegentText legend={legend} height={height} width={width} layout={statOptions.styles.layout} />}
-                                    <ValueText value={value} color={color} options={statOptions} width={width} height={height} layout={statOptions.styles.layout}/>
+                                    {statOptions.showLegend && <LegentText legend={legend} height={height} width={width} options={statOptions} color={legendColor} />}
+                                    <ValueText value={value} options={statOptions} width={width} height={height} layout={statOptions.styles.layout} color={valueColor} />
                                 </Box>
                             </Box>}
                             {height > statOptions.styles.hideGraphHeight && <Box height={graphHeight + '%'} className="stat-graph-container">
@@ -104,16 +143,16 @@ const StatGraph = memo((props: Props) => {
 
 export default StatGraph
 
-const LegentText = ({ legend, width, height, layout }) => {
+const LegentText = ({ legend, width, height, options, color }) => {
     let fontSize = 16
 
-    if (layout == "horizontal") {
+    if (options.styles.layout == "horizontal") {
         fontSize = height / 5
         const minFonSize = 18
         const maxFontSize = 25
         if (fontSize < minFonSize) fontSize = minFonSize
         if (fontSize > maxFontSize) fontSize = maxFontSize
-    } else if (layout == "vertical") {
+    } else if (options.styles.layout == "vertical") {
         fontSize = width / 7
         const minFonSize = 17
         const maxFontSize = 25
@@ -129,12 +168,20 @@ const LegentText = ({ legend, width, height, layout }) => {
 
     return (
         <>
-            <ChakraTooltip label={legend}><Text maxWidth={layout == "horizontal" ? "50%" : "100%"} fontSize={fontSize + 'px'} wordBreak="break-all" color="white" fontWeight={600}>{legend}</Text></ChakraTooltip>
+            <ChakraTooltip label={legend}>
+                <Text
+                    maxWidth={options.styles.layout == "horizontal" ? "50%" : "100%"}
+                    fontSize={fontSize + 'px'}
+                    wordBreak="break-all"
+                    color={color}
+                    fontWeight={options.styles.colorMode == "value" ? 500 : 600}>{legend}
+                </Text>
+            </ChakraTooltip>
         </>
     )
 }
 
-const ValueText = ({ value, color, options, width, height, layout }) => {
+const ValueText = ({ value, options, width, height, layout, color }) => {
     let fontSize = 16
     if (layout == "horizontal") {
         fontSize = height / 3.5
@@ -160,7 +207,7 @@ const ValueText = ({ value, color, options, width, height, layout }) => {
     return (<>
         <Text
             fontSize={fontSize + 'px'}
-            color={'white'}
+            color={color}
             fontWeight="bold"
             lineHeight={1.2}
         >{options.value.calc == ValueCalculationType.Count ?
@@ -200,3 +247,5 @@ const transformDataToUplot = (data: SeriesData[]) => {
 
     return transformed
 }
+
+

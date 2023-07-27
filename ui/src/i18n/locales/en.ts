@@ -112,6 +112,7 @@ export const commonMsg = i18n("common", {
   "series": "Series",
   "seriesTips": "A series of data can draw a plot line",
   "highlightColor": "Highlight color",
+  "clorMode": "Color mode",
   "inputTips": params("Enter {name}.."),
   "isReqiiured": params("{name} is required"),
   "isInvalid": params("{name} is invalid"),

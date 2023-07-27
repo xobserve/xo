@@ -63,10 +63,10 @@ export interface StatSettings  {
     diisplaySeries: string
     showLegend: boolean
     styles: {
+        colorMode: "none" |  "value" | "bg-gradient" | "bg-solid"
         layout: LayoutOrientation
         style: "lines" | "bars" 
         fillOpacity: number
-        gradientMode: "none" | "opacity"
         graphHeight: number
         connectNulls: boolean
         hideGraphHeight: number

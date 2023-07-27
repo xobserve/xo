@@ -61,27 +61,27 @@ const StatPanel = memo((props: StatPanelProps) => {
     return (
         <>
             {
-                options.styles.layout == "horizontal" && <Box>
+                options.styles.layout == "horizontal" && <>
                     {
                         data.map((seriesData,i) => {
                             const h = props.height / data.length
-                            return <Box width={props.width}  bg="orange" className="bordered-bottom" height={h + 'px' }><StatGraph data={seriesData} panel={props.panel} width={props.width} height={h} /></Box>
+                            return <Box width={props.width}  height={h + 'px' }><StatGraph data={seriesData} panel={props.panel} width={props.width} height={h} /></Box>
                         })  
                     }
-                </Box>
+                </>
             }
             {
                 options.styles.layout == "vertical" && <Flex>
                     {
                         data.map(seriesData => {
                             const width = (props.width - 3) / data.length
-                            return <Box className="bordered-right" bg="orange" height={props.height}  width={width}><StatGraph data={seriesData} panel={props.panel} width={width} height={props.height} /></Box>
+                            return <Box height={props.height}  width={width}><StatGraph data={seriesData} panel={props.panel} width={width} height={props.height} /></Box>
                         })
                     }
                 </Flex>
             }
             {
-                options.styles.layout == "auto" && <Box>
+                options.styles.layout == "auto" && <>
                     <AutoGrid 
                         width={props.width}
                         height={props.height}
@@ -91,11 +91,11 @@ const StatPanel = memo((props: StatPanelProps) => {
                         values={data ?? []}
                         renderValue={({width, height, value})=> {
                             return (<>
-                            <Box className="bordered-right" bg="orange" height={height}  width={width}><StatGraph data={value} panel={props.panel} width={width} height={height} /></Box>
+                            <Box height={height}  width={width}><StatGraph data={value} panel={props.panel} width={width} height={height} /></Box>
                             </>)
                         }}
                     />
-                </Box>
+                </>
             }
         </>
     )

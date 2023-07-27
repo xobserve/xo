@@ -99,14 +99,14 @@ const GraphPanelEditor = ({ panel, onChange, data }: PanelEditorProps) => {
                     panel.plugins.stat.styles.layout = v
                 })} />
             </PanelEditItem>
+            <PanelEditItem title={t.clorMode}>
+                <RadionButtons options={[{ label: "Value", value: "value" }, { label: "Background", value: "bg-solid" },{ label: "Background gradient", value: "bg-gradient" }]} value={panel.plugins.stat.styles.colorMode} onChange={v => onChange((panel: Panel) => {
+                    panel.plugins.stat.styles.colorMode = v
+                })} />
+            </PanelEditItem>
             <PanelEditItem title={t.type}>
                 <RadionButtons options={[{ label: "Lines", value: "lines" }, { label: "Bars", value: "bars" }]} value={panel.plugins.stat.styles.style} onChange={v => onChange((panel: Panel) => {
                     panel.plugins.stat.styles.style = v
-                })} />
-            </PanelEditItem>
-            <PanelEditItem title={t1.gradient}>
-                <RadionButtons options={[{ label: "None", value: "none" }, { label: "Opacity", value: "opacity" }]} value={panel.plugins.stat.styles.gradientMode} onChange={v => onChange((panel: Panel) => {
-                    panel.plugins.stat.styles.gradientMode = v
                 })} />
             </PanelEditItem>
             <PanelEditItem title={t1.opacity}>

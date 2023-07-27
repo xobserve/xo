@@ -17,6 +17,7 @@ import { PanelProps } from "types/dashboard";
 import uPlot from "uplot";
 import { pointsFilter } from "../graph/options";
 import { SeriesData } from "types/seriesData";
+import tinycolor from "tinycolor2";
 
 
 
@@ -33,12 +34,30 @@ export const parseOptions = (config: PanelProps, color: string, rawData: SeriesD
 
     })
 
+    const options = config.panel.plugins.stat
+    let fillColor: string;
+    let lineColor: string;
+
+    switch (options.styles.colorMode) {
+      case "bg-solid":
+      case "bg-gradient":
+        fillColor = 'rgba(255,255,255,0.4)';
+        lineColor = tinycolor(color).brighten(40).toRgbString();
+        break;
+      case "none":
+      case "value":
+      default:
+        lineColor = color;
+        fillColor =  tinycolor(color).setAlpha(options.styles.fillOpacity/100).toRgbString();
+        break;
+    }
+      
     series.push({
         show: true,
         label: rawData.name,
-        stroke: color,
+        stroke: lineColor,
         width: 1,
-        fill: config.panel.plugins.stat.styles.gradientMode == "none" ? color : fill(color, config.panel.plugins.stat.styles.fillOpacity / 100),
+        fill:  fillColor,
         points: {
             show: null,
             size: 5,
@@ -159,3 +178,5 @@ function makeDirectionalGradient(direction: GradientDirection, bbox: uPlot.BBox,
 
     return ctx.createLinearGradient(x0, y0, x1, y1);
 }
+
+

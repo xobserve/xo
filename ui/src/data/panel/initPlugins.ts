@@ -11,6 +11,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 import { PanelType } from "types/dashboard";
+import { LayoutOrientation } from "types/layout";
 import { PanelPlugins, PieLegendPlacement, ThresholdDisplay, Units, UnitsType } from "types/panel/plugins";
 import { ThresholdsConfig, ThresholdsMode } from "types/threshold";
 import { ValueCalculationType } from "types/value";
@@ -259,10 +260,10 @@ function registerEvents(options, chart) {
                 calc: ValueCalculationType.Last
             },
             styles: {
-                layout: "auto",
+                colorMode: "value",
+                layout: LayoutOrientation.Auto,
                 style: "lines",
                 fillOpacity: 80,
-                gradientMode: "opacity",
                 graphHeight: 60,
                 connectNulls: false,
                 hideGraphHeight: 70

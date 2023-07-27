@@ -473,3 +473,16 @@ export let sortedColors = sortColorsByHue(colors);
 
 
 
+
+export function getTextColorForAlphaBackground(color: string, themeIsDark: boolean) {
+    const tcolor = tinycolor(color);
+    const b = tcolor.getBrightness();
+    const a = tcolor.getAlpha();
+  
+    if (a < 0.3) {
+      return themeIsDark ? 'rgb(247, 248, 250)' : 'rgb(32, 34, 38)';
+    }
+  
+    return b > 180 ? 'rgb(32, 34, 38)' : 'rgb(247, 248, 250)';
+  }
+  

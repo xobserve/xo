@@ -105,6 +105,7 @@
     "series": "数据序列 series",
     "seriesTips": "一个数据序列 series 可以绘制一条曲线",
     "highlightColor": "高亮颜色",
+    "clorMode": "颜色模式",
     "isAdded": "{name}添加成功!",
     "isUpdated": "{name}更新成功!",
     "isDeleted": "{name}删除成功!",
