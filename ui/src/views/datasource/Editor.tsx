@@ -47,7 +47,7 @@ const DatasourceEditor = ({ds, onChange=null}) => {
 
         if (ds.id == 0) {
             setTimeout(() => {
-                navigate(`/cfg/datasources?id=${res.data}`)
+                location.href = (`/cfg/datasources?id=${res.data}`)
             }, 1000)
         } else {
             onChange()
