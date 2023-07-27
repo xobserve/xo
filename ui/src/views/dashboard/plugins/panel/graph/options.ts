@@ -162,6 +162,7 @@ export const parseOptions = (config: PanelProps,rawData: SeriesData[], colorMode
             show: false,
         },
         hooks: {},
+        // padding: [0, 10, 0, 1],
         plugins: [
             // tooltipPlugin(config.panel.id),
             // renderStatsPlugin()

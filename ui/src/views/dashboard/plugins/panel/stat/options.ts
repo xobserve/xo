@@ -82,7 +82,7 @@ export const parseOptions = (config: PanelProps, color: string, rawData: SeriesD
         legend: {
             show: false
         },
-        padding: [0, 12, 0, 1],
+        padding: [0, 1, 0, 1],
         cursor: {
             lock: true,
             // focus: {

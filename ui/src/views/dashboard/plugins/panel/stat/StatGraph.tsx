@@ -23,7 +23,7 @@ import { formatUnit } from "components/Unit";
 import { ValueCalculationType } from "types/value";
 import { calcValueOnSeriesData } from "utils/seriesData";
 import { SeriesData } from "types/seriesData";
-import { getTextColorForAlphaBackground, paletteColorNameToHex } from "utils/colors";
+import { getGradientBackgroundColor, getTextColorForAlphaBackground, paletteColorNameToHex } from "utils/colors";
 import { ThresholdsMode } from "types/threshold";
 import { getThreshold } from "components/Threshold/utils";
 import { LayoutOrientation } from "types/layout";
@@ -79,18 +79,9 @@ const StatGraph = memo((props: Props) => {
 
         let bgColor 
         
-        const themeFactor =  colorMode == "dark" ? 1 : -0.7;
         switch (statOptions.styles.colorMode) {
           case "bg-gradient":
-            const bgColor2 = tinycolor(color)
-              .darken(15 * themeFactor)
-              .spin(8)
-              .toRgbString();
-            const bgColor3 = tinycolor(color)
-              .darken(5 * themeFactor)
-              .spin(-8)
-              .toRgbString();
-            bgColor =  `linear-gradient(120deg, ${bgColor2}, ${bgColor3})`;
+            bgColor =  getGradientBackgroundColor(color, colorMode == "dark")
             break;
             case "bg-solid":
                 bgColor = tinycolor(color).toString();

@@ -473,7 +473,7 @@ export let sortedColors = sortColorsByHue(colors);
 
 
 
-
+// get text color base on the background color
 export function getTextColorForAlphaBackground(color: string, themeIsDark: boolean) {
     const tcolor = tinycolor(color);
     const b = tcolor.getBrightness();
@@ -486,3 +486,20 @@ export function getTextColorForAlphaBackground(color: string, themeIsDark: boole
     return b > 180 ? 'rgb(32, 34, 38)' : 'rgb(247, 248, 250)';
   }
   
+
+
+
+// get gradient background color
+export function getGradientBackgroundColor(color: string, themeIsDark: boolean) {
+    const themeFactor =  themeIsDark ? 1 : -0.7;
+            const bgColor2 = tinycolor(color)
+              .darken(15 * themeFactor)
+              .spin(8)
+              .toRgbString();
+            const bgColor3 = tinycolor(color)
+              .darken(5 * themeFactor)
+              .spin(-8)
+              .toRgbString();
+        
+    return `linear-gradient(120deg, ${bgColor2}, ${bgColor3})`
+}

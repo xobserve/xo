@@ -138,7 +138,7 @@ const GraphPanelEditor = ({ panel, onChange, data }: PanelEditorProps) => {
                 })} />
             </PanelEditItem>
         </PanelAccordion>
-        <PanelAccordion title={t.axis}>
+        {/* <PanelAccordion title={t.axis}>
             <PanelEditItem title={t.scale}>
                 <HStack spacing="1">
                     <RadionButtons options={[{ label: "Linear", value: "linear" }, { label: "Log", value: "log" }]} value={panel.plugins.stat.axisY.scale} onChange={v => onChange((panel: Panel) => {
@@ -152,7 +152,7 @@ const GraphPanelEditor = ({ panel, onChange, data }: PanelEditorProps) => {
                     panel.plugins.stat.axisY.scaleBase = v
                 })} />
             </PanelEditItem>}
-        </PanelAccordion>
+        </PanelAccordion> */}
 
         <PanelAccordion title="Thresholds">
             <ThresholdEditor value={panel.plugins.stat.thresholds} onChange={(v) => onChange((panel: Panel) => {
