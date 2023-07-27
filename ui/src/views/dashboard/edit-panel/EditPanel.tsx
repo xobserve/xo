@@ -169,7 +169,7 @@ const EditPanel = ({ dashboard, onChange }: EditPanelProps) => {
                         <Text>{dashboard.title} / {t1.editPanel}</Text>
                         <HStack spacing={1}>
                             <DatePicker showTime />
-                            <ColorModeSwitcher miniMode />
+                            <ColorModeSwitcher miniMode disableTrigger />
                             <Button variant="outline" onClick={() => { onDiscard(), onClose() }} >{t1.discard}</Button>
                             <Button onClick={onApplyChanges}>{t1.apply}</Button>
                         </HStack>

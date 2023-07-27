@@ -26,7 +26,7 @@ import PopoverTooltip from "./PopoverTooltip"
 
 type ColorModeSwitcherProps = Omit<IconButtonProps, "aria-label">
 
-export const ColorModeSwitcher: React.FC<ColorModeSwitcherProps & { miniMode: boolean }> = ({ miniMode, ...props }) => {
+export const ColorModeSwitcher: React.FC<ColorModeSwitcherProps & { miniMode: boolean, disableTrigger?: boolean }> = ({ miniMode,disableTrigger=false, ...props }) => {
   const t1 = useStore(sidebarMsg)
   const { toggleColorMode } = useColorMode()
   const text = useColorModeValue("dark", "light")
@@ -35,7 +35,7 @@ export const ColorModeSwitcher: React.FC<ColorModeSwitcherProps & { miniMode: bo
   const textComponent = <Text fontSize="0.95rem">{t1.themeChange}</Text>
   return (
     <PopoverTooltip
-      trigger={miniMode ? "hover" : null}
+      trigger={disableTrigger ? null : (miniMode ? "hover" : null)}
       offset={[0, 14]}
       triggerComponent={<HStack cursor="pointer" onClick={toggleColorMode} className="hover-text">
         {miniMode ? <IconButton
