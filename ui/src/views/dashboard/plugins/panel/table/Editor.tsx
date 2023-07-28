@@ -16,7 +16,7 @@ import { EditorInputItem, EditorNumberItem } from "components/editor/EditorItem"
 import PanelEditItem from "src/views/dashboard/edit-panel/PanelEditItem"
 import { Panel, PanelEditorProps } from "types/dashboard"
 import CodeEditor from "components/CodeEditor/CodeEditor"
-import { useMemo, useState } from "react"
+import { memo, useMemo, useState } from "react"
 import React from "react";
 import RadionButtons from "components/RadioButtons"
 import { dispatch } from "use-bus"
@@ -28,7 +28,7 @@ import { getColorThemeValues } from "utils/theme"
 import { useStore } from "@nanostores/react"
 import { commonMsg, tablePanelMsg } from "src/i18n/locales/en"
 
-const TablePanelEditor = ({ panel, onChange }: PanelEditorProps) => {
+const TablePanelEditor = memo(({ panel, onChange }: PanelEditorProps) => {
     const t = useStore(commonMsg)
     const t1 = useStore(tablePanelMsg)
     return (<>
@@ -133,7 +133,7 @@ const TablePanelEditor = ({ panel, onChange }: PanelEditorProps) => {
         </PanelAccordion>
     </>
     )
-}
+})
 
 export default TablePanelEditor
 

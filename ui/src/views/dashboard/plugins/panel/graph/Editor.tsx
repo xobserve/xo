@@ -21,13 +21,13 @@ import { dispatch } from "use-bus"
 import { PanelForceRebuildEvent } from "src/data/bus-events"
 import PopoverSelect from "components/select/PopoverSelect"
 import { ValueCalculationType } from "types/value"
-import React from "react";
+import React, { memo } from "react";
 import { commonMsg, graphPanelMsg } from "src/i18n/locales/en"
 import { useStore } from "@nanostores/react"
 import ThresholdEditor from "components/Threshold/ThresholdEditor"
 import { ThresholdDisplay, Units } from "types/panel/plugins"
 
-const GraphPanelEditor = ({ panel, onChange }: PanelEditorProps) => {
+const GraphPanelEditor = memo(({ panel, onChange }: PanelEditorProps) => {
     const t = useStore(commonMsg)
     const t1 = useStore(graphPanelMsg)
 
@@ -200,6 +200,6 @@ const GraphPanelEditor = ({ panel, onChange }: PanelEditorProps) => {
         </PanelAccordion>
     </>
     )
-}
+})
 
 export default GraphPanelEditor

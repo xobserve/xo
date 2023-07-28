@@ -17,13 +17,13 @@ import { EditorInputItem, EditorNumberItem } from "components/editor/EditorItem"
 import PanelAccordion from "src/views/dashboard/edit-panel/Accordion"
 import PanelEditItem from "src/views/dashboard/edit-panel/PanelEditItem"
 import { Panel, PanelEditorProps } from "types/dashboard"
-import React from "react";
+import React, { memo } from "react";
 import { useStore } from "@nanostores/react"
 import { commonMsg, gaugePanelMsg } from "src/i18n/locales/en"
 import ThresholdEditor from "components/Threshold/ThresholdEditor"
 import { SeriesData } from "types/seriesData"
 import { isEmpty } from "utils/validate"
-const GaugePanelEditor = (props: PanelEditorProps) => {
+const GaugePanelEditor = memo((props: PanelEditorProps) => {
     const t = useStore(commonMsg)
     const t1 = useStore(gaugePanelMsg)
     const { panel, onChange,data } = props
@@ -189,6 +189,6 @@ const GaugePanelEditor = (props: PanelEditorProps) => {
             </PanelAccordion>
         </>
     )
-}
+})
 
 export default GaugePanelEditor

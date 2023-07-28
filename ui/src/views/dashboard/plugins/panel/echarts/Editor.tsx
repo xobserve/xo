@@ -13,13 +13,11 @@
 import { Box, Button, Center, Flex, HStack, Modal, ModalBody, ModalCloseButton, ModalContent, ModalHeader, ModalOverlay, Switch, Text, Textarea, useColorMode, useDisclosure, useToast } from "@chakra-ui/react"
 import CodeEditor from "components/CodeEditor/CodeEditor"
 import { cloneDeep, isFunction } from "lodash"
-import { useState } from "react"
+import { memo, useState } from "react"
 import AutoSizer from "react-virtualized-auto-sizer"
-import { PanelDataEvent } from "src/data/bus-events"
 import PanelAccordion from "src/views/dashboard/edit-panel/Accordion"
 import PanelEditItem from "src/views/dashboard/edit-panel/PanelEditItem"
 import { Panel, PanelEditorProps } from "types/dashboard"
-import useBus from "use-bus"
 import { genDynamicFunction } from "utils/dynamicCode"
 import { EchartsComponent } from "./Echarts"
 import * as echarts from 'echarts';
@@ -32,7 +30,7 @@ import moment from "moment"
 import loadash from 'lodash'
 import ThresholdEditor from "components/Threshold/ThresholdEditor"
 
-const EchartsPanelEditor = ({ panel, onChange, data }: PanelEditorProps) => {
+const EchartsPanelEditor = memo(({ panel, onChange, data }: PanelEditorProps) => {
     const t = useStore(commonMsg)
     const t1 = useStore(echartsPanelMsg)
     return (
@@ -79,7 +77,7 @@ const EchartsPanelEditor = ({ panel, onChange, data }: PanelEditorProps) => {
             </PanelAccordion>
         </>
     )
-}
+})
 
 export default EchartsPanelEditor
 

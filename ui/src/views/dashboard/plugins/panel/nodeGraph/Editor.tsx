@@ -14,7 +14,7 @@ import { Alert, Box, Button, Divider, Flex, HStack, Image, Input, Modal, ModalBo
 import { ColorPicker } from "components/ColorPicker"
 import RadionButtons from "components/RadioButtons"
 import { cloneDeep, isArray, isEmpty } from "lodash"
-import { useMemo, useState } from "react"
+import { memo, useMemo, useState } from "react"
 import * as Icons from 'react-icons/fa'
 import { MdEdit } from "react-icons/md"
 import { onClickCommonEvent } from "src/data/panel/initPlugins"
@@ -37,7 +37,7 @@ import { CodeEditorModal } from "components/CodeEditor/CodeEditorModal"
 
 
 
-const NodeGraphPanelEditor = (props: PanelEditorProps) => {
+const NodeGraphPanelEditor = memo((props: PanelEditorProps) => {
     const t = useStore(commonMsg)
     const t1 = useStore(nodeGraphPanelMsg)
     const { panel, onChange } = props
@@ -189,7 +189,7 @@ const NodeGraphPanelEditor = (props: PanelEditorProps) => {
 
         </PanelAccordion>
     </>)
-}
+})
 
 export default NodeGraphPanelEditor
 

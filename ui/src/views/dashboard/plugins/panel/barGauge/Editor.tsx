@@ -13,7 +13,7 @@
 
 import { Panel, PanelEditorProps } from "types/dashboard"
 
-import React from "react"
+import React, { memo } from "react"
 import PanelAccordion from "src/views/dashboard/edit-panel/Accordion"
 import PanelEditItem from "src/views/dashboard/edit-panel/PanelEditItem"
 import { useStore } from "@nanostores/react"
@@ -26,7 +26,7 @@ import { Switch } from "@chakra-ui/react"
 import ThresholdEditor from "components/Threshold/ThresholdEditor"
 import { Units } from "types/panel/plugins"
 
-const BarGaugeEditor = ({ panel, onChange }: PanelEditorProps) => {
+const BarGaugeEditor = memo(({ panel, onChange }: PanelEditorProps) => {
     const t = useStore(commonMsg)
     const t1 = useStore(barGaugePanelMsg)
 
@@ -113,6 +113,6 @@ const BarGaugeEditor = ({ panel, onChange }: PanelEditorProps) => {
         </PanelAccordion>
     </>)
 
-}
+})
 
 export default BarGaugeEditor

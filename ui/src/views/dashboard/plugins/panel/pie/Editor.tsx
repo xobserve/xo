@@ -16,7 +16,7 @@ import RadionButtons from "components/RadioButtons"
 import ValueCalculation from "components/ValueCalculation"
 import { EditorInputItem, EditorNumberItem } from "components/editor/EditorItem"
 import { UnitPicker } from "components/Unit"
-import { useState } from "react"
+import { memo, useState } from "react"
 import PanelAccordion from "src/views/dashboard/edit-panel/Accordion"
 import PanelEditItem from "src/views/dashboard/edit-panel/PanelEditItem"
 import { Panel, PanelEditorProps } from "types/dashboard"
@@ -26,7 +26,7 @@ import { useStore } from "@nanostores/react"
 import { commonMsg, piePanelMsg } from "src/i18n/locales/en"
 import ThresholdEditor from "components/Threshold/ThresholdEditor"
 
-const PiePanelEditor = ({ panel, onChange }: PanelEditorProps) => {
+const PiePanelEditor = memo(({ panel, onChange }: PanelEditorProps) => {
     const t = useStore(commonMsg)
     const t1 = useStore(piePanelMsg)
     return (<>
@@ -131,7 +131,7 @@ const PiePanelEditor = ({ panel, onChange }: PanelEditorProps) => {
         </PanelAccordion>
     </>
     )
-}
+})
 
 export default PiePanelEditor
 

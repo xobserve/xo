@@ -21,7 +21,7 @@ import { ColorPicker } from "components/ColorPicker"
 import { dispatch } from "use-bus"
 import { PanelForceRebuildEvent } from "src/data/bus-events"
 import ValueCalculation from "components/ValueCalculation"
-import React from "react";
+import React, { memo } from "react";
 import { useStore } from "@nanostores/react"
 import { commonMsg, graphPanelMsg, statsPanelMsg } from "src/i18n/locales/en"
 import ThresholdEditor from "components/Threshold/ThresholdEditor"
@@ -31,7 +31,7 @@ import { VarialbeAllOption } from "src/data/variable"
 import { LayoutOrientation } from "types/layout"
 import { Units } from "types/panel/plugins"
 
-const GraphPanelEditor = ({ panel, onChange, data }: PanelEditorProps) => {
+const GraphPanelEditor = memo(({ panel, onChange, data }: PanelEditorProps) => {
     const t = useStore(commonMsg)
     const t1 = useStore(graphPanelMsg)
     const t2 = useStore(statsPanelMsg)
@@ -181,6 +181,6 @@ const GraphPanelEditor = ({ panel, onChange, data }: PanelEditorProps) => {
         </PanelAccordion>
     </>
     )
-}
+})
 
 export default GraphPanelEditor
