@@ -18,8 +18,8 @@ import { FaRegSave } from "react-icons/fa"
 import { Dashboard } from "types/dashboard"
 import useKeyboardJs from 'react-use/lib/useKeyboardJs';
 import { requestApi } from "utils/axios/request"
-import { dispatch } from "use-bus"
-import {  DashboardSavedEvent, SetDashboardEvent } from "src/data/bus-events"
+import useBus, { dispatch } from "use-bus"
+import { DashboardSavedEvent, OnDashboardSaveEvent, SaveDashboardEvent, SetDashboardEvent } from "src/data/bus-events"
 import ReactDiffViewer from 'react-diff-viewer';
 import { useSearchParam } from "react-use"
 import { cloneDeep, isEqual } from "lodash"
@@ -27,6 +27,7 @@ import FormItem from "components/form/Item"
 import { useStore } from "@nanostores/react";
 import { commonMsg, dashboardSaveMsg } from "src/i18n/locales/en";
 import { dateTimeFormat } from "utils/datetime/formatter";
+import { asyncSleep } from "utils/async";
 
 interface Props {
     dashboard: Dashboard
@@ -45,6 +46,15 @@ const DashboardSave = ({ dashboard }: Props) => {
     const [inPreview, setInPreview] = useState(false)
     const [updateChanges, setUpdateChanges] = useState("")
     const [pressed] = useKeyboardJs("ctrl+s")
+    
+    useBus(
+        SaveDashboardEvent,
+        () => {
+           onSave(false)
+        },
+        [dashboard]
+    )
+ 
 
     useEffect(() => {
         if (pressed && !isOpen) {
@@ -118,9 +128,10 @@ const DashboardSave = ({ dashboard }: Props) => {
             })
             return
         }
+
         await requestApi.post("/dashboard/save", { dashboard, changes: changeMsg })
         toast({
-            title: t1.savedMsg({name: autoSave? t.auto : ""}),
+            title: t1.savedMsg({ name: autoSave ? t.auto : "" }),
             status: "success",
             duration: 2000,
             isClosable: true,
@@ -213,12 +224,18 @@ const DashboardSave = ({ dashboard }: Props) => {
                     </ModalBody>
 
                     <ModalFooter width="100%" justifyContent="space-between">
-                        <Button variant="outline" onClick={onViewOpen}>{t1.viewChanges}</Button>
+                        {!edit && <Button variant="outline" onClick={onViewOpen}>{t1.viewChanges}</Button>}
                         <HStack spacing="0">
                             <Button mr={3} onClick={onSaveClose}>
                                 {t.cancel}
                             </Button>
-                            <Button variant='ghost' onClick={() => onSave(false)} >{t.submit}</Button>
+                            <Button variant='ghost' onClick={() => {
+                                if (edit) {
+                                    dispatch(OnDashboardSaveEvent)
+                                } else {
+                                    onSave(false)
+                                }
+                            }} >{t.submit}</Button>
                         </HStack>
 
                     </ModalFooter>

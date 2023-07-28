@@ -12,3 +12,5 @@ export const PanelDataEvent = "panel-data"
 export const UpdatePanelEvent = "update-panel"
 export const ShareUrlEvent = 'share-url'
 export const DashboardSavedEvent = "dashboard-saved"
+export const OnDashboardSaveEvent = "on-dashboard-save"
+export const SaveDashboardEvent = "save-dashboard"

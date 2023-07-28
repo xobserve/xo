@@ -21,14 +21,15 @@ interface EditorInputProps {
     size?: string
     placeholder?: string
     disabled?: boolean
+    bordered?: boolean
 }
 
-export const EditorInputItem = ({ value, onChange, type = "input", size = "md", placeholder,disabled=false }: EditorInputProps) => {
+export const EditorInputItem = ({ value, onChange, type = "input", size = "md", placeholder,disabled=false,bordered=true }: EditorInputProps) => {
     const [temp, setTemp] = useState(value)
     switch (type) {
         case "input":
             return (
-                <Input placeholder={placeholder} size={size == "sm" ? "small" : "middle"}  value={temp} onChange={e => setTemp(e.currentTarget.value)} onBlur={() => onChange(temp)} disabled={disabled} />
+                <Input width="100%" placeholder={placeholder} size={size == "sm" ? "small" : "middle"} bordered={bordered}  value={temp} onChange={e => setTemp(e.currentTarget.value)} onBlur={() => onChange(temp)} disabled={disabled} />
             )
         case "textarea":
             return (

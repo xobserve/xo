@@ -13,11 +13,13 @@
 
 import { Button } from "@chakra-ui/button"
 import { useDisclosure } from "@chakra-ui/hooks"
-import { HStack, StackDivider, Text, VStack } from "@chakra-ui/layout"
+import { Input } from "@chakra-ui/input"
+import { Box, HStack, StackDivider, Text, VStack } from "@chakra-ui/layout"
 import { Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay } from "@chakra-ui/modal"
 
 import { useStore } from "@nanostores/react"
 import { Select } from "antd"
+import { EditorInputItem, EditorNumberItem } from "components/editor/EditorItem"
 import { cloneDeep } from "lodash"
 import React, { memo, useState } from "react"
 import { FaPlus } from "react-icons/fa"
@@ -41,19 +43,21 @@ const ValueMapping = memo((props: Props) => {
     const [value, setValue] = useState<ValueMappingItem[]>(props.value)
 
     const onAdd = () => {
-        setValue([...value, {
+        value.push({
             type: 'value',
             value: '',
             text: '',
             color: null
-        }])
+        })
+        setValue(cloneDeep(value))
     }
 
     const onSubmit = () => {
         onChange(value)
         onClose()
     }
-    console.log("here333333:", value)
+
+
     return (<>
         <Button size="sm" colorScheme="gray" onClick={onOpen}>{t.editItem({ name: t.valueMapping })}</Button>
         <Modal isOpen={isOpen} onClose={onClose}>
@@ -65,29 +69,61 @@ const ValueMapping = memo((props: Props) => {
                     <VStack alignItems="left" divider={<StackDivider />} spacing={3}>
                         {
                             value.map((v, i) => {
-                                return <HStack key={i + v.type + v.value}>
-                                    <Select
-                                        style={{ width: '150px' }}
-                                        placeholder="mapping type"
-                                        value={v.type}
-                                        onChange={v => {
-                                            value[i].type = v
-                                            setValue(cloneDeep(value))
-                                        }}
-                                        popupMatchSelectWidth={false}
-                                        optionLabelProp="label"
-                                        bordered={false}
-                                    >
-                                        {
-                                            typeOptions.map((t, i) => {
-                                                return <Option value={t.value} label={t.label}>
-                                                    <Text fontWeight={550}>{t.label}</Text>
-                                                    <Text textStyle="annotation" fontSize="0.9rem">{t.desc}</Text>
-                                              </Option>
-                                            })
-                                        }
-                                    </Select>
-                                </HStack>
+                                const typeOption = typeOptions.find(t => t.value === v.type)
+                                return (
+                                    <HStack key={i + v.type + v.value} divider={<StackDivider />} >
+                                        <Select
+                                            style={{ minWidth: '150px' }}
+                                            placeholder="mapping type"
+                                            value={v.type}
+                                            onChange={v1 => {
+                                                value[i].type = v1
+                                                if (v.type == "range") {
+                                                    value[i].value = {
+                                                        from: null,
+                                                        to: null
+                                                    }
+                                                } else {
+                                                    value[i].value = ''
+                                                }
+                                                setValue(cloneDeep(value))
+                                            }}
+                                            popupMatchSelectWidth={false}
+                                            optionLabelProp="label"
+                                            bordered={false}
+                                        >
+                                            {
+                                                typeOptions.map((t, i) => {
+                                                    return <Option value={t.value} label={t.label}>
+                                                        <Text fontWeight={550}>{t.label}</Text>
+                                                        <Text textStyle="annotation" fontSize="0.9rem">{t.desc}</Text>
+                                                    </Option>
+                                                })
+                                            }
+                                        </Select>
+                                        <HStack width="300px">
+                                            {
+                                                v.type == "range"
+                                                    ?
+                                                    <HStack>
+                                                        <Text textStyle="annotation" fontWeight="500">From</Text><EditorNumberItem placeholder={typeOption?.placeholder} value={v.value.from} onChange={v => {
+                                                            value[i].value.from = v
+                                                            setValue(cloneDeep(value))
+                                                        }} />
+                                                        <Text textStyle="annotation" fontWeight="500">To</Text><EditorNumberItem placeholder={typeOption?.placeholder1} value={v.value.to} onChange={v => {
+                                                            value[i].value.to = v
+                                                            setValue(cloneDeep(value))
+                                                        }} />
+                                                    </HStack>
+                                                    :
+                                                    <EditorInputItem bordered={false} value={v.value} placeholder={typeOption?.placeholder} onChange={v1 => {
+                                                        value[i].value = v1
+                                                        setValue(cloneDeep(value))
+                                                    }}  disabled={v.type == "null"}/>
+                                            }
+                                        </HStack>
+
+                                    </HStack>)
                             })
 
                         }
@@ -116,14 +152,14 @@ const typeOptions = [
         label: 'Value',
         value: 'value',
         desc: 'Exactly match with several text values',
-        placeholder: 'a,b,c means you can match with a or b or c'
+        placeholder: 'value to match, a,b,c -> match a or b or c'
     },
     {
         label: 'Range',
         value: "range",
         desc: 'Match a range of numbers',
-        placeholder: 'from, e.g 1',
-        placehoer1: 'to, e.g 10',
+        placeholder: 'e.g 1',
+        placeholder1: 'e.g 10',
     },
     {
         label: 'Regex',
@@ -135,5 +171,6 @@ const typeOptions = [
         label: 'Null',
         value: 'null',
         desc: "Match null, undefined, empty string or NaN",
+        placeholder: "Match null, undefined, empty string or NaN"
     }
 ]

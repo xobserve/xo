@@ -24,9 +24,9 @@ import { FaArrowDown, FaArrowUp } from "react-icons/fa";
 import PanelStyles from "./PanelStyles";
 import PanelSettings from "./PanelSettings";
 import { useLeavePageConfirm } from "hooks/useLeavePage"
-import { isEqual } from "lodash"
+import { cloneDeep, isEqual } from "lodash"
 import useBus, { dispatch } from "use-bus"
-import { DashboardSavedEvent, PanelDataEvent, PanelForceRebuildEvent } from "src/data/bus-events"
+import { DashboardSavedEvent, OnDashboardSaveEvent, PanelDataEvent, PanelForceRebuildEvent, SaveDashboardEvent } from "src/data/bus-events"
 import AutoSizer from "react-virtualized-auto-sizer";
 import { PanelGrid } from "../grid/PanelGrid"
 import loadable from '@loadable/component'
@@ -67,7 +67,24 @@ const EditPanel = ({ dashboard, onChange }: EditPanelProps) => {
         },
         []
     )
-
+ 
+    useBus(
+        OnDashboardSaveEvent,
+        () => {
+            if (edit) {
+                onChange(dashboard => {
+                    for (var i = 0; i < dashboard.data.panels.length; i++) {
+                        if (dashboard.data.panels[i].id === tempPanel.id) {
+                            dashboard.data.panels[i] = tempPanel
+                            break
+                        }
+                    }
+                })
+                setTimeout(() => dispatch(SaveDashboardEvent), 300)
+            }
+        },
+        [tempPanel]
+    )
 
     useEffect(() => {
         if (edit) {
@@ -88,11 +105,12 @@ const EditPanel = ({ dashboard, onChange }: EditPanelProps) => {
         }
 
         if (!rawPanel) {
-            setRawPanel(tempPanel)
+            setRawPanel(cloneDeep(tempPanel))
             return
         }
-
+        
         const changed = !isEqual(rawPanel, tempPanel)
+
         setPageChanged(changed)
     }, [tempPanel])
 
