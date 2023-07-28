@@ -23,7 +23,7 @@ import { ColorPicker } from "components/ColorPicker"
 import { EditorInputItem, EditorNumberItem } from "components/editor/EditorItem"
 import { cloneDeep } from "lodash"
 import React, { memo, useState } from "react"
-import { FaPlus, FaRegCopy, FaTimes } from "react-icons/fa"
+import { FaChevronDown, FaChevronUp, FaPlus, FaRegCopy, FaTimes } from "react-icons/fa"
 import { ValueMappingMsg, commonMsg } from "src/i18n/locales/en"
 import { ValueMappingItem } from "types/dashboard"
 const { Option } = Select
@@ -76,11 +76,21 @@ const ValueMapping = memo((props: Props) => {
         setValue(cloneDeep(value))
     }
 
+    const moveUp = (i) => {
+        [value[i - 1], value[i]] = [value[i], value[i - 1]]
+        setValue(cloneDeep(value))
+    }
+
+    const moveDown = (i) => {
+        [value[i + 1], value[i]] = [value[i], value[i + 1]]
+        setValue(cloneDeep(value))
+    }
+    
     return (<>
         <Button size="sm" colorScheme="gray" onClick={onOpen}>{t.editItem({ name: t.valueMapping })}</Button>
         <Modal isOpen={isOpen} onClose={onClose}>
             <ModalOverlay />
-            <ModalContent minWidth="900px">
+            <ModalContent minWidth="950px">
                 <ModalHeader>{t.valueMapping}</ModalHeader>
                 <ModalCloseButton />
                 <ModalBody>
@@ -150,9 +160,11 @@ const ValueMapping = memo((props: Props) => {
                                             value[i].color = c
                                             setValue(cloneDeep(value))
                                         }} />
-                                        <HStack pl="2" textStyle="annotation" spacing={4}>
+                                        <HStack pl="2" textStyle="annotation" spacing={3}>
                                             <FaRegCopy cursor="pointer" className="hover-text" onClick={() => onClone(i)}/>
                                             <FaTimes cursor="pointer" className="hover-text" onClick={() => onRemove(i)}/>
+                                            {i != 0 && <FaChevronUp cursor="pointer" className="hover-text" onClick={() => moveUp(i)}/>}
+                                            {i != value.length - 1 && <FaChevronDown cursor="pointer" className="hover-text" onClick={() => moveDown(i)}/>}
                                         </HStack>
                                     </HStack>)
                             })
