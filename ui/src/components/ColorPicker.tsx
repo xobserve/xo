@@ -57,7 +57,7 @@ export const ColorPicker = (props: Props) => {
                 : <>
                     <Button size="sm" width="fit-content" variant="ghost" >{buttonText ?? t.pickColor}</Button>
                     <Box width={circleRadius} height={circleRadius} bg={color} borderRadius="50%" className="bordered"></Box>
-                    <Text textStyle="annotation">{color}</Text>
+                    {/* <Text textStyle="annotation">{color}</Text> */}
                 </>}
 
             </HStack></PopoverTrigger>

@@ -19,10 +19,11 @@ import { Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHea
 
 import { useStore } from "@nanostores/react"
 import { Select } from "antd"
+import { ColorPicker } from "components/ColorPicker"
 import { EditorInputItem, EditorNumberItem } from "components/editor/EditorItem"
 import { cloneDeep } from "lodash"
 import React, { memo, useState } from "react"
-import { FaPlus } from "react-icons/fa"
+import { FaPlus, FaRegCopy, FaTimes } from "react-icons/fa"
 import { ValueMappingMsg, commonMsg } from "src/i18n/locales/en"
 import { ValueMappingItem } from "types/dashboard"
 const { Option } = Select
@@ -43,7 +44,7 @@ const ValueMapping = memo((props: Props) => {
     const [value, setValue] = useState<ValueMappingItem[]>(props.value)
 
     const onAdd = () => {
-        value.push({
+        value.unshift({
             type: 'value',
             value: '',
             text: '',
@@ -57,23 +58,40 @@ const ValueMapping = memo((props: Props) => {
         onClose()
     }
 
+    const onClone = (i) => {
+        const newValue = []
+        for (let j = 0; j < value.length; j++) {
+            if (i == j) {
+                newValue.push(value[j])
+                newValue.push(cloneDeep(value[j]))
+            } else {
+                newValue.push(value[j])
+            }
+        }
+        setValue(newValue)
+    }
+
+    const onRemove = (i) => {
+        value.splice(i, 1)
+        setValue(cloneDeep(value))
+    }
 
     return (<>
         <Button size="sm" colorScheme="gray" onClick={onOpen}>{t.editItem({ name: t.valueMapping })}</Button>
         <Modal isOpen={isOpen} onClose={onClose}>
             <ModalOverlay />
-            <ModalContent minWidth="700px">
+            <ModalContent minWidth="900px">
                 <ModalHeader>{t.valueMapping}</ModalHeader>
                 <ModalCloseButton />
                 <ModalBody>
-                    <VStack alignItems="left" divider={<StackDivider />} spacing={3}>
+                    <VStack alignItems="left" divider={<StackDivider />} spacing={3} maxH="600px" overflowY="scroll" >
                         {
                             value.map((v, i) => {
                                 const typeOption = typeOptions.find(t => t.value === v.type)
                                 return (
-                                    <HStack key={i + v.type + v.value} divider={<StackDivider />} >
+                                    <HStack  key={i + v.type + v.value} divider={<StackDivider />} spacing={3}>
                                         <Select
-                                            style={{ minWidth: '150px' }}
+                                            style={{ minWidth: '120px' }}
                                             placeholder="mapping type"
                                             value={v.type}
                                             onChange={v1 => {
@@ -122,7 +140,20 @@ const ValueMapping = memo((props: Props) => {
                                                     }}  disabled={v.type == "null"}/>
                                             }
                                         </HStack>
-
+                                        <Box width="150px">
+                                            <EditorInputItem bordered={false} value={v.text} placeholder="text" onChange={v => {
+                                                value[i].text = v
+                                                setValue(cloneDeep(value))
+                                            }} />
+                                        </Box>
+                                        <ColorPicker color={v.color??""} onChange={c => {
+                                            value[i].color = c
+                                            setValue(cloneDeep(value))
+                                        }} />
+                                        <HStack pl="2" textStyle="annotation" spacing={4}>
+                                            <FaRegCopy cursor="pointer" className="hover-text" onClick={() => onClone(i)}/>
+                                            <FaTimes cursor="pointer" className="hover-text" onClick={() => onRemove(i)}/>
+                                        </HStack>
                                     </HStack>)
                             })
 
