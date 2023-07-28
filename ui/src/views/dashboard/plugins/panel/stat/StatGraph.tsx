@@ -12,7 +12,7 @@
 // limitations under the License.
 import UplotReact from "components/uPlot/UplotReact"
 import { memo, useMemo } from "react"
-import { Panel } from "types/dashboard"
+import { OverrideItem, Panel } from "types/dashboard"
 import 'uplot/dist/uPlot.min.css';
 import React from "react";
 import { parseOptions } from './options';
@@ -28,6 +28,8 @@ import { ThresholdsMode } from "types/threshold";
 import { getThreshold } from "components/Threshold/utils";
 import { LayoutOrientation } from "types/layout";
 import tinycolor from "tinycolor2";
+import { findOverride, findRuleInOverride } from "utils/dashboard/panel";
+import { StatRules } from "./OverridesEditor";
 
 
 interface Props {
@@ -43,7 +45,9 @@ const StatGraph = memo((props: Props) => {
 
     const statOptions = panel.plugins.stat
     const [value, options, legend, color, valueColor, legendColor,bgColor] = useMemo(() => {
-        const value = calcValueOnSeriesData(data, statOptions.value.calc)
+        const override:OverrideItem = findOverride(props.panel, data.name) 
+        const calcOverride = findRuleInOverride(override, StatRules.SeriesValueCalc)
+        const value = calcValueOnSeriesData(data, calcOverride ?? statOptions.value.calc)
         let max = 0;
         if (statOptions.thresholds.mode == ThresholdsMode.Percentage) {
             max = calcValueOnSeriesData(data, ValueCalculationType.Max)

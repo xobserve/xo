@@ -10,12 +10,11 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-import UplotReact from "components/uPlot/UplotReact"
 import { memo, useMemo } from "react"
 import { PanelProps } from "types/dashboard"
 import 'uplot/dist/uPlot.min.css';
 import React from "react";
-import { isEmpty, round } from "lodash"
+import { cloneDeep, isEmpty } from "lodash"
 import { Box, Center, Flex } from "@chakra-ui/react";
 import { SeriesData } from "types/seriesData";
 
@@ -38,25 +37,19 @@ const StatPanel = memo((props: StatPanelProps) => {
         const displaySeries = props.panel.plugins.stat.diisplaySeries
         if (props.data.length > 0) {
             for (const d of props.data) {
-                for (const s of d) {
-                    if (s.name == displaySeries) {
+                for (const s0 of d) {
+                    const s = cloneDeep(s0)
+                    const selected = displaySeries == VarialbeAllOption || s.name == displaySeries
+                    if (selected) {
                         res.push(s)
-                    } else {
-                        if (displaySeries == VarialbeAllOption) {
-                            res.push(s)
-                        }
                     }
                 }
-            }
-
-            if (res.length == 0) {
-                res.push(props.data[0][0])
             }
         }
 
         return res
     }, [props.data, props.panel.plugins.stat.diisplaySeries])
-
+    
     const options = props.panel.plugins.stat
     return (
         <>

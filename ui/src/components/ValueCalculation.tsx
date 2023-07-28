@@ -10,9 +10,9 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-import { Select } from "@chakra-ui/react"
 import { ValueCalculationType } from "types/value"
 import React from "react"
+import { Select } from "antd"
 
 interface Props {
     value: ValueCalculationType
@@ -20,10 +20,7 @@ interface Props {
 }
 const ValueCalculation = ({value,onChange}:Props) => {
     return (<>
-        <Select value={value} onChange={e => {
-            const v = e.currentTarget.value 
-            onChange(v)
-        }}>
+        <Select value={value} onChange={onChange}>
             {
                 Object.keys(ValueCalculationType).map(k  => <option key={k} value={ValueCalculationType[k]}>{k}</option>)
             }
