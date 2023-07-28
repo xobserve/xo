@@ -159,7 +159,7 @@ const SeriesTable = memo(({ props, data, nearestSeries, filterIdx, mode, onSelec
                                             <Box width="10px" height="4px" background={v.color} mt="2px"></Box>
                                             {
                                                 (props.panel.plugins.graph?.legend.placement == "bottom" || mode == seriesTableMode.Tooltip) ?
-                                                    <Text maxW={"auto"} noOfLines={3} wordBreak="break-all" whiteSpace={"break-spaces"}>{v.name}</Text>
+                                                    <Text noOfLines={3} minWidth="fit-content" wordBreak="break-all" whiteSpace={"break-spaces"}>{v.name}</Text>
                                                     :
                                                     <Text w={props.panel.plugins.graph?.legend.nameWidth === "full" ? "100%" : props.panel.plugins.graph?.legend.nameWidth + 'px'} noOfLines={3} wordBreak="break-all" whiteSpace={props.panel.plugins.graph?.legend.nameWidth === "full" ? "nowrap" : "break-spaces"}>{v.name}</Text>
                                             }
