@@ -46,14 +46,7 @@ const TableOverridesEditor = ({ override, onChange }: Props) => {
         case TableRules.ColumnOpacity:
             return <EditorSliderItem value={override.value} min={0} max={1} step={0.1} onChange={onChange} />
         case TableRules.ColumnUnit:
-            return <UnitPicker size="sm" type={override.value.unitsType} value={override.value.units} onChange={
-                (units, type) => {
-                    onChange({
-                        unitsType: type,
-                        units: units
-                    })
-                }
-            } />
+            return <UnitPicker size="sm" value={override.value}  onChange={onChange} />
         case TableRules.ColumnDecimal:
             return <EditorNumberItem value={override.value} min={0} max={5} step={1} onChange={onChange} />
         case TableRules.ColumnWidth:

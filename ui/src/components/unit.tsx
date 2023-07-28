@@ -14,26 +14,29 @@ import { Button, HStack, Input, NumberInput, NumberInputField, Select, VStack } 
 import { cloneDeep, isEmpty, round } from "lodash"
 import { useState } from "react"
 import { FaArrowUp, FaMinus, FaPlus } from "react-icons/fa"
-import { UnitsType, Unit } from "types/panel/plugins"
+import {  Unit, Units } from "types/panel/plugins"
 import React from "react"
 import { commonMsg } from "src/i18n/locales/en"
 import { useStore } from "@nanostores/react"
+import { getInitUnits } from "src/data/panel/initPlugins"
 
 interface Props {
-    type: UnitsType
-    value: Unit[]
+    value: Units
     onChange: any
     size?: "sm" | "md" | "lg"
 }
 
 
 
-export const UnitPicker = ({ type, value, onChange,size="md" }: Props) => {
+export const UnitPicker = ({ value, onChange,size="md" }: Props) => {
     const t = useStore(commonMsg)
-    const [unitType, setUnitTYpe] = useState(type)
     const [units, setUnits] = useState(value)
+    if (value == null) {
+        onChange(getInitUnits())
+    }
+    
     const onAddUnit = () => {
-        units.push({
+        value.units.push({
             operator: units[0].operator ?? 'x',
             rhs: 1,
             unit: ''
@@ -42,7 +45,7 @@ export const UnitPicker = ({ type, value, onChange,size="md" }: Props) => {
     }
 
     const onRemoveUnit = (i) => {
-        units.splice(i, 1)
+        value.units.splice(i, 1)
         setUnits(cloneDeep(units))
     }
 
@@ -53,76 +56,93 @@ export const UnitPicker = ({ type, value, onChange,size="md" }: Props) => {
     }
 
     const onChangeUnitType = t => {
-        setUnitTYpe(t)
         switch (t) {
             case "none":
-                setUnits([])
+                setUnits({
+                    unitsType: t,
+                    units: []
+                })
                 break;
             case "percent":
-                setUnits([{
-                    operator: "x",
-                    rhs: 100,
-                    unit: "%"
-                }])
+                setUnits({
+                    unitsType: t,
+                    units: [{
+                        operator: "x",
+                        rhs: 100,
+                        unit: "%"
+                    }]
+                })
                 break
             case "percent%":
-                setUnits([{
-                    operator: "x",
-                    rhs: 1,
-                    unit: "%"
-                }])
+                setUnits({
+                    unitsType: t,
+                    units: [{
+                        operator: "x",
+                        rhs: 1,
+                        unit: "%"
+                    }]
+                })
                 break
             case "time":
-                setUnits([
-                    {
-                        operator: "/",
-                        rhs: 1,
-                        unit: "ms"
-                    },
-                    {
-                        operator: "/",
-                        rhs: 1000,
-                        unit: "s"
-                    }, {
-                        operator: "/",
-                        rhs: 60 * 1000,
-                        unit: "m"
-                    }, {
-                        operator: "/",
-                        rhs: 60 * 60 * 1000,
-                        unit: "h"
-                    }, {
-                        operator: "/",
-                        rhs: 24 * 60 * 60 * 1000,
-                        unit: "d"
-                    }
-                ])
+                setUnits({
+                    unitsType: t,
+                    units:[
+                        {
+                            operator: "/",
+                            rhs: 1,
+                            unit: "ms"
+                        },
+                        {
+                            operator: "/",
+                            rhs: 1000,
+                            unit: "s"
+                        }, {
+                            operator: "/",
+                            rhs: 60 * 1000,
+                            unit: "m"
+                        }, {
+                            operator: "/",
+                            rhs: 60 * 60 * 1000,
+                            unit: "h"
+                        }, {
+                            operator: "/",
+                            rhs: 24 * 60 * 60 * 1000,
+                            unit: "d"
+                        }
+                    ]
+                })
                 break
             case "bytes":
-                setUnits([
-                    {
-                        operator: "/",
-                        rhs: 1,
-                        unit: "B"
-                    },
-                    {
-                        operator: "/",
-                        rhs: 1024,
-                        unit: "KB"
-                    }, {
-                        operator: "/",
-                        rhs: 1024 * 1024,
-                        unit: "MB"
-                    }, {
-                        operator: "/",
-                        rhs: 1024 * 1024 * 1024,
-                        unit: "GB"
-                    }])
+                setUnits({
+                    unitsType: t,
+                    units:[
+                        {
+                            operator: "/",
+                            rhs: 1,
+                            unit: "B"
+                        },
+                        {
+                            operator: "/",
+                            rhs: 1024,
+                            unit: "KB"
+                        }, {
+                            operator: "/",
+                            rhs: 1024 * 1024,
+                            unit: "MB"
+                        }, {
+                            operator: "/",
+                            rhs: 1024 * 1024 * 1024,
+                            unit: "GB"
+                        }]
+                })
 
             case "custom":
                 break
             default:
-                setUnits([])
+                setUnits({
+                    unitsType: t,
+                    units: []
+                })
                 break;
         }
     }
@@ -138,12 +158,12 @@ export const UnitPicker = ({ type, value, onChange,size="md" }: Props) => {
         //     });
         //     return 
         // }
-        onChange(units, unitType)
+        onChange(value)
     }
     return (
         <>
             <HStack>
-                <Select size={size} value={unitType} onChange={e => onChangeUnitType(e.currentTarget.value)}>
+                <Select size={size} value={value.unitsType} onChange={e => onChangeUnitType(e.currentTarget.value)}>
                     <option value="none">None</option>
                     <option value="percent">Percent: 1 -&gt; 100%</option>
                     <option value="percent%">Percent: 1 -&gt; 1%</option>
@@ -151,10 +171,10 @@ export const UnitPicker = ({ type, value, onChange,size="md" }: Props) => {
                     <option value="bytes">Bytes: b/KB/MB/GB</option>
                     <option value="custom">Custom units</option>
                 </Select>
-                {unitType == "custom" && <FaPlus cursor="pointer" onClick={onAddUnit} opacity="0.8" fontSize="sm" />}
+                {value.unitsType == "custom" && <FaPlus cursor="pointer" onClick={onAddUnit} opacity="0.8" fontSize="sm" />}
             </HStack>
             <VStack alignItems="left" mt="2">
-                {units?.map((unit, i) => {
+                {value.units?.map((unit, i) => {
                     return <HStack>
 
                         <Button size="sm" onClick={() => {

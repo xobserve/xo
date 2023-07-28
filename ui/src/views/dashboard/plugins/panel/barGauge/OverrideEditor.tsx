@@ -47,14 +47,7 @@ const BarGaugeOverridesEditor = ({ override, onChange }: Props) => {
         case BarGaugeRules.SeriesDecimal:
             return <EditorNumberItem min={0} max={5} step={1} value={override.value} onChange={onChange} />
         case BarGaugeRules.SeriesUnits:
-            return <UnitPicker size="sm" type={override.value.unitsType} value={override.value.units} onChange={
-                (units, type) => {
-                    onChange({
-                        unitsType: type,
-                        units: units
-                    })
-                }
-            } />
+            return <UnitPicker size="sm" value={override.value} onChange={onChange} />
         case BarGaugeRules.SeriesThresholds:
             return <ThresholdEditor value={override.value} onChange={onChange} />
         default:

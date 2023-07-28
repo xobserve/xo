@@ -36,14 +36,7 @@ const StatOverridesEditor = ({ override, onChange }: Props) => {
         case StatRules.SeriesFill:
             return <EditorSliderItem value={override.value} min={0} max={100} step={1} onChange={onChange} />
         case StatRules.SeriesUnit:
-            return <UnitPicker size="sm" type={override.value.unitsType} value={override.value.units} onChange={
-                (units, type) => {
-                    onChange({
-                        unitsType: type,
-                        units: units
-                    })
-                }
-            } />
+            return <UnitPicker size="sm" value={override.value}  onChange={onChange} />
         case StatRules.SeriesDecimal:
             return <EditorNumberItem value={override.value} min={0} max={5} step={1} onChange={onChange} />
         case StatRules.SeriesValueCalc:

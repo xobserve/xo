@@ -82,10 +82,10 @@ const GraphPanelEditor = ({ panel, onChange, data }: PanelEditorProps) => {
         </PanelAccordion>
         <PanelAccordion title={t.value}>
             <PanelEditItem title={t.unit}>
-                <UnitPicker type={panel.plugins.stat.value.unitsType} value={panel.plugins.stat.value.units} onChange={
-                    (units, type) => onChange((panel: Panel) => {
-                        panel.plugins.stat.value.units = units
-                        panel.plugins.stat.value.unitsType = type
+                <UnitPicker value={panel.plugins.stat.value} onChange={
+                    v => onChange((panel: Panel) => {
+                        panel.plugins.stat.value.units = v.units
+                        panel.plugins.stat.value.unitsType = v.type
                     })
                 } />
             </PanelEditItem>

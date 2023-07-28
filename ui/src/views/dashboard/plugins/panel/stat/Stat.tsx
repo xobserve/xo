@@ -48,7 +48,7 @@ const StatPanel = memo((props: StatPanelProps) => {
         }
 
         return res
-    }, [props.data, props.panel.plugins.stat.diisplaySeries, props.panel.overrides])
+    }, [props.data, props.panel.plugins.stat, props.panel.overrides,])
     
     const options = props.panel.plugins.stat
     return (

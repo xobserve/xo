@@ -44,10 +44,10 @@ const BarGaugeEditor = ({ panel, onChange }: PanelEditorProps) => {
         </PanelAccordion>
         <PanelAccordion title={t.valueSettings}>
             <PanelEditItem title={t.unit}>
-                <UnitPicker type={panel.plugins.barGauge.value.unitsType} value={panel.plugins.barGauge.value.units} onChange={
-                    (units, type) => onChange((panel: Panel) => {
-                        panel.plugins.barGauge.value.units = units
-                        panel.plugins.barGauge.value.unitsType = type
+                <UnitPicker value={panel.plugins.barGauge.value} onChange={
+                    v => onChange((panel: Panel) => {
+                        panel.plugins.barGauge.value.units = v.units
+                        panel.plugins.barGauge.value.unitsType = v.type
                     })
                 } />
             </PanelEditItem>

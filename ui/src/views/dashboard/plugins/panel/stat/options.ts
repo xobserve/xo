@@ -41,7 +41,8 @@ export const parseOptions = (config: PanelProps, color: string, rawData: SeriesD
     let lineColor: string;
 
     const cm = findRuleInOverride(override, StatRules.SeriesColorMode) ?? options.styles.colorMode
-    const graphType = findRuleInOverride(override, StatRules.SeriesType) ?? config.panel.plugins.stat.styles?.style
+    const graphType = findRuleInOverride(override, StatRules.SeriesType) ?? options.styles?.style
+    const fillOpacity = findRuleInOverride(override, StatRules.SeriesFill) ?? options.styles.fillOpacity
     switch (cm) {
       case "bg-solid":
       case "bg-gradient":
@@ -52,7 +53,7 @@ export const parseOptions = (config: PanelProps, color: string, rawData: SeriesD
       case "value":
       default:
         lineColor = color;
-        fillColor =  tinycolor(color).setAlpha(options.styles.fillOpacity/100).toRgbString();
+        fillColor =  tinycolor(color).setAlpha(fillOpacity/100).toRgbString();
         break;
     }
       

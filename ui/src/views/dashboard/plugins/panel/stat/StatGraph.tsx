@@ -45,7 +45,7 @@ const StatGraph = memo((props: Props) => {
 
     const statOptions = panel.plugins.stat
     const [value, options, legend, color, valueColor, legendColor,bgColor] = useMemo(() => {
-        const override:OverrideItem = findOverride(props.panel, data.name) 
+        const override:OverrideItem = findOverride(panel, data.name) 
         const nameOverride = findRuleInOverride(override, StatRules.SeriesName)
         data.name = nameOverride ?? data.name
         const calcOverride = findRuleInOverride(override, StatRules.SeriesValueCalc)
@@ -64,7 +64,7 @@ const StatGraph = memo((props: Props) => {
         legend = data.name
         o = parseOptions(props, color, data, override)
 
-        const cm = findRuleInOverride(override, StatRules.SeriesColorMode) ?? statOptions.styles.colorMode
+        const cm =  findRuleInOverride(override, StatRules.SeriesColorMode) ?? statOptions.styles.colorMode
         console.log("here33333: cm",cm)
         let valueColor;
         let legendColor
@@ -96,7 +96,7 @@ const StatGraph = memo((props: Props) => {
                 break;
         }
         return [value, o, legend, color, valueColor, legendColor,bgColor]
-    }, [panel, data, colorMode, width, height])
+    }, [panel, data, colorMode, width, height,panel.overrides])
 
 
     const graphHeight = statOptions.showGraph ? statOptions.styles.graphHeight : 0

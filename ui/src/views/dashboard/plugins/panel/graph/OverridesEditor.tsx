@@ -31,13 +31,7 @@ const GraphOverridesEditor = ({ override, onChange }: Props) => {
         case GraphRules.SeriesName:
             return <EditorInputItem value={override.value} onChange={onChange} size="sm" placeholder="change series name" />
         case GraphRules.SeriesUnit:
-            return <UnitPicker size="sm" type={override.value.unitsType} value={override.value.units} onChange={
-                (units, type) => {
-                    onChange({
-                    unitsType: type, 
-                    units: units
-                })}
-            } />
+            return <UnitPicker size="sm" value={override.value.units} onChange={onChange} />
         case GraphRules.SeriesColor:
             return <ColorPicker  color={override.value} onChange={onChange} />
         case GraphRules.SeriesFill:

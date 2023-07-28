@@ -101,10 +101,10 @@ const PiePanelEditor = ({ panel, onChange }: PanelEditorProps) => {
 
         <PanelAccordion title="Value">
             <PanelEditItem title={t.unit}>
-                <UnitPicker type={panel.plugins.pie.value.unitsType} value={panel.plugins.pie.value.units} onChange={
-                    (units, type) => onChange((panel: Panel) => {
-                        panel.plugins.pie.value.units = units
-                        panel.plugins.pie.value.unitsType = type
+                <UnitPicker value={panel.plugins.pie.value} onChange={
+                    v => onChange((panel: Panel) => {
+                        panel.plugins.pie.value.units = v.units
+                        panel.plugins.pie.value.unitsType = v.type
                     })
                 } />
             </PanelEditItem>

@@ -26,10 +26,12 @@ function onRowClick(row, navigate, setVariable, setDateTime) {
 }
 `
 
-const initUnits: Units = {
-    unitsType: 'none',
-    units: [],
-}
+export const getInitUnits = (): Units => {
+    return {
+        unitsType: 'none',
+        units: [],
+    }
+} 
 
 const initThresholds = (colorIndex?): ThresholdsConfig => {
     return {
@@ -78,7 +80,7 @@ export const initPanelPlugins = (): PanelPlugins => {
                 scaleBase: 2
             },
             value: {
-                ...initUnits,
+                ...getInitUnits(),
                 decimal: 1
             },
             thresholds: initThresholds(),
@@ -203,7 +205,7 @@ function registerEvents(options, chart) {
                 placement: PieLegendPlacement.Bottom
             },
             value: {
-                ...initUnits,
+                ...getInitUnits(),
                 decimal: 2,
                 calc: ValueCalculationType.Last
             },
@@ -256,7 +258,7 @@ function registerEvents(options, chart) {
             diisplaySeries: null,
             showLegend: false,
             value: {
-                ...initUnits,
+                ...getInitUnits(),
                 decimal: 2,
                 calc: ValueCalculationType.Last
             },
@@ -287,7 +289,7 @@ function registerEvents(options, chart) {
 
         [PanelType.BarGauge]: {
             value: {
-                ...initUnits,
+                ...getInitUnits(),
                 decimal: 1,
                 calc: ValueCalculationType.Last
             },
