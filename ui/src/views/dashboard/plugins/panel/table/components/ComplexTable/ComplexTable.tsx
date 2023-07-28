@@ -128,9 +128,13 @@ const ComplexTable = memo((props: Props) => {
     let bg = findRuleInOverride(override, TableRules.ColumnBg)
     bg = paletteColorNameToHex(bg,colorMode)
     let textWidth = 0;
+   
+    const colorOverride = findRuleInOverride(override, TableRules.ColumnColor)
     // modify data
     if (unit || decimal || isFunc || thresholds || columnType || panel.valueMapping.length > 0) {
       for (const row of data) {
+        let color = 'inherit'
+        if (colorOverride) color = colorOverride
         // raw value
         const v = row[column.dataIndex]
         // save raw value
@@ -158,10 +162,13 @@ const ComplexTable = memo((props: Props) => {
 
         let isMapped = false
         if (panel.valueMapping?.length > 0) {
-          const r = mapValueToText(v, panel.valueMapping)
+          const [r,c1] = mapValueToText(v, panel.valueMapping)
           if (r) {
             row[column.dataIndex] = replaceWithVariables(r, {[VariableCurrentValue]:v})
             isMapped = true
+          }
+          if (!isEmpty(c1)) {
+            color = c1
           }
         }
         
@@ -184,15 +191,22 @@ const ComplexTable = memo((props: Props) => {
               textWidth = width
             }
         }
+        color = paletteColorNameToHex(color,colorMode)
+        if (color) {
+          row['__color__'] = {
+            ...row['__color__'] as any,
+            [column.dataIndex]: color
+          }
+        }
       }
     }
 
-    let color = findRuleInOverride(override, TableRules.ColumnColor)
-    color = paletteColorNameToHex(color,colorMode)
+
     const ellipsis = findRuleInOverride(override, TableRules.ColumnEllipsis)
     const opacity = findRuleInOverride(override, TableRules.ColumnOpacity)
     column.render = (text, record, index) => {
       const bg = record['__bg__']?.[column.dataIndex]
+      const color = record['__color__']?.[column.dataIndex]
       if (columnType?.type == "gauge") {
         return  <AutoSizer>
         {({ width,height }) => {

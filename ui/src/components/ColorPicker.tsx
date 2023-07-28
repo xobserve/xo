@@ -45,6 +45,11 @@ interface Props {
 }
 
 export const ColorPicker = (props: Props) => {
+    if (!props.color) {
+        props.onChange('inherit')
+        return 
+    }
+
     const { onChange, buttonText = null, circlePicker = false, circleRadius = "16px" } = props
     const {colorMode} = useColorMode()
     const t = useStore(commonMsg)
@@ -83,11 +88,11 @@ export const ColorPicker = (props: Props) => {
                             <HStack mt="3" spacing={4}>
                                 <HStack>
                                     <Text fontSize="0.8rem">Transparent</Text>
-                                    <Box cursor="pointer" width="20px" height="20px" bg='transparent' borderRadius="50%" className="bordered" onClick={() => onChange('transparent')}/>
+                                    <Box p="1px" borderRadius={4} className={props.color === 'transparent' ? 'bordered' : null} ><Box cursor="pointer" width="20px" height="20px" bg='transparent' borderRadius="50%" className="bordered" onClick={() => onChange('transparent')}/></Box>
                                 </HStack>
                                 <HStack>
                                     <Text fontSize="0.8rem">Inherit</Text>
-                                    <Box cursor="pointer" width="20px" height="20px" bg={useColorModeValue(customColors.textColor.light, customColors.textColor.dark)} borderRadius="50%" className="bordered" onClick={() => onChange('inherit')} />
+                                    <Box p="1px" borderRadius={4} className={props.color === 'inherit' ? 'bordered' : null}><Box cursor="pointer" width="20px" height="20px" bg={useColorModeValue(customColors.textColor.light, customColors.textColor.dark)} borderRadius="50%" className="bordered" onClick={() => onChange('inherit')} /></Box>
                                 </HStack>
                             </HStack>
                         </TabPanel>
