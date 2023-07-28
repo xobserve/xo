@@ -73,12 +73,14 @@ export interface Panel {
 }
 
 export interface ValueMappingItem {
-    type: string
+    type: ValueMappingType
     value: any
     text: string
     color: string
 }
 
+export type ValueMappingType = "value" | "range" | "null" | "regex"
+ 
 export interface OverrideItem {
     target: string 
     overrides: OverrideRule[]

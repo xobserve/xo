@@ -114,6 +114,7 @@ export const commonMsg = i18n("common", {
   "highlightColor": "Highlight color",
   "clorMode": "Color mode",
   "textSize": "Text size",
+  "valueMapping": "Value mapping",
   "inputTips": params("Enter {name}.."),
   "isReqiiured": params("{name} is required"),
   "isInvalid": params("{name} is invalid"),
@@ -589,4 +590,8 @@ export const barGaugePanelMsg = i18n("barGaugePanel", {
   "titleSize": "Title font size",
   "valueSize": "Value font size",
   "layoutDir" : "Layout direction",
+})
+
+export const ValueMappingMsg = i18n("valueMapping", {
+  
 })

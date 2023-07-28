@@ -38,6 +38,7 @@ import { commonMsg, panelMsg } from "src/i18n/locales/en"
 import EditPanelTransform from "./Transform"
 import { getPanelOverridesRules } from "utils/dashboard/panel"
 import ValueMapping from "components/ValueMapping/ValueMapping"
+import PanelAccordion from "./Accordion"
 
 interface EditPanelProps {
     dashboard: Dashboard
@@ -164,10 +165,10 @@ const EditPanel = ({ dashboard, onChange }: EditPanelProps) => {
         setTempPanel((tempPanel: Panel) => {
             tempPanel.valueMapping = v
         })
-    },[])
-    const onTempPanelChange = useCallback((panel:Panel) => {
+    }, [])
+    const onTempPanelChange = useCallback((panel: Panel) => {
         setTempPanel(panel)
-    },[])
+    }, [])
 
     return (<>
         <Modal isOpen={isOpen} onClose={onEditClose} autoFocus={false} size="full">
@@ -254,7 +255,9 @@ const EditPanel = ({ dashboard, onChange }: EditPanelProps) => {
                                                 {/* panel rendering plugin setting */}
                                                 <CustomPanelEditor tempPanel={tempPanel} setTempPanel={onTempPanelChange} data={data} />
 
-                                                <ValueMapping value={tempPanel.valueMapping} onChange={onValueMappingChange} />
+                                                <PanelAccordion title={t.valueMapping} defaultOpen>
+                                                    <ValueMapping value={tempPanel.valueMapping} onChange={onValueMappingChange} />
+                                                </PanelAccordion>
 
                                             </TabPanel>
                                             <TabPanel px="0" pt="1" pb="0">
@@ -298,7 +301,7 @@ interface CustomPanelEditorProps {
     data: any
 }
 
-const CustomPanelEditor = memo(({ tempPanel, setTempPanel, data }:CustomPanelEditorProps) => {
+const CustomPanelEditor = memo(({ tempPanel, setTempPanel, data }: CustomPanelEditorProps) => {
     const Editor = loadablePanels[tempPanel.type]
     if (Editor) {
         return <Editor panel={tempPanel} onChange={setTempPanel} data={data} />

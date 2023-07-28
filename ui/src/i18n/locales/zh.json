@@ -107,6 +107,7 @@
     "highlightColor": "高亮颜色",
     "clorMode": "颜色模式",
     "textSize": "文本大小",
+    "valueMapping": "值映射",
     "isAdded": "{name}添加成功!",
     "isUpdated": "{name}更新成功!",
     "isDeleted": "{name}删除成功!",
@@ -553,5 +554,8 @@
     "titleSize": "标题字体大小",
     "valueSize": "值字体大小",
     "layoutDir": "排列方向"
+  },
+
+  "valueMapping": {
   }
 }
