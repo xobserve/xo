@@ -46,6 +46,8 @@ const StatGraph = memo((props: Props) => {
     const statOptions = panel.plugins.stat
     const [value, options, legend, color, valueColor, legendColor,bgColor] = useMemo(() => {
         const override:OverrideItem = findOverride(props.panel, data.name) 
+        const nameOverride = findRuleInOverride(override, StatRules.SeriesName)
+        data.name = nameOverride ?? data.name
         const calcOverride = findRuleInOverride(override, StatRules.SeriesValueCalc)
         const value = calcValueOnSeriesData(data, calcOverride ?? statOptions.value.calc)
         let max = 0;

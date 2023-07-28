@@ -17,10 +17,11 @@ import { Select } from "antd"
 interface Props {
     value: ValueCalculationType
     onChange: any
+    size?: 'large' | 'middle' | 'small'
 }
-const ValueCalculation = ({value,onChange}:Props) => {
+const ValueCalculation = ({value,onChange,size="middle"}:Props) => {
     return (<>
-        <Select value={value} onChange={onChange}>
+        <Select value={value} onChange={onChange} size={size}>
             {
                 Object.keys(ValueCalculationType).map(k  => <option key={k} value={ValueCalculationType[k]}>{k}</option>)
             }

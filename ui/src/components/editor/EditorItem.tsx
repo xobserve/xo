@@ -10,8 +10,8 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-import { Input, Slider, SliderFilledTrack, SliderThumb, SliderTrack, Textarea } from "@chakra-ui/react"
-import { InputNumber } from "antd"
+import { Slider, SliderFilledTrack, SliderThumb, SliderTrack, Textarea } from "@chakra-ui/react"
+import { Input, InputNumber } from "antd"
 import React, { useState } from "react"
 
 interface EditorInputProps {
@@ -28,7 +28,7 @@ export const EditorInputItem = ({ value, onChange, type = "input", size = "md", 
     switch (type) {
         case "input":
             return (
-                <Input placeholder={placeholder} size={size} value={temp} onChange={e => setTemp(e.currentTarget.value)} onBlur={() => onChange(temp)} disabled={disabled} />
+                <Input placeholder={placeholder} size={size == "sm" ? "small" : "middle"}  value={temp} onChange={e => setTemp(e.currentTarget.value)} onBlur={() => onChange(temp)} disabled={disabled} />
             )
         case "textarea":
             return (

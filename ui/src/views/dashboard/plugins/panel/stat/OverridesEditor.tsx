@@ -28,7 +28,7 @@ interface Props {
 const StatOverridesEditor = ({ override, onChange }: Props) => {
     switch (override.type) {
         case StatRules.SeriesName:
-            return <EditorInputItem value={override.value} onChange={onChange} size="sm" placeholder="change series name" />
+            return <EditorInputItem value={override.value} onChange={onChange} placeholder="change series name" />
         case StatRules.SeriesColorMode:
             return <RadionButtons size="sm" options={[{ label: "Value", value: "value" }, { label: "Background", value: "bg-solid" }, { label: "Background gradient", value: "bg-gradient" }]} value={override.value} onChange={onChange} />
         case StatRules.SeriesType:
