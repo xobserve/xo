@@ -14,7 +14,7 @@ import { memo, useMemo } from "react"
 import { PanelProps } from "types/dashboard"
 import 'uplot/dist/uPlot.min.css';
 import React from "react";
-import { cloneDeep, isEmpty } from "lodash"
+import { isEmpty } from "lodash"
 import { Box, Center, Flex } from "@chakra-ui/react";
 import { SeriesData } from "types/seriesData";
 
@@ -37,9 +37,8 @@ const StatPanel = memo((props: StatPanelProps) => {
         const displaySeries = props.panel.plugins.stat.diisplaySeries
         if (props.data.length > 0) {
             for (const d of props.data) {
-                for (const s0 of d) {
-                    s0.rawName = s0.name
-                    const s = cloneDeep(s0)
+                for (const s of d) {
+                    s.rawName = s.name
                     const selected = displaySeries == VarialbeAllOption || s.name == displaySeries
                     if (selected) {
                         res.push(s)
@@ -49,7 +48,7 @@ const StatPanel = memo((props: StatPanelProps) => {
         }
 
         return res
-    }, [props.data, props.panel.plugins.stat, props.panel.overrides,])
+    }, [props.data, props.panel.plugins.stat.diisplaySeries])
     
     const options = props.panel.plugins.stat
     return (

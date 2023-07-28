@@ -433,7 +433,6 @@ const DonutColorsEditor = (props: PanelEditorProps) => {
     const t = useStore(commonMsg)
     const t1 = useStore(nodeGraphPanelMsg)
     const [value, setValue] = useState<{ attr: string; color: string }[]>(panel.plugins.nodeGraph.node.donutColors)
-    console.log("here333333:", data)
     const attrNames = useMemo(() => {
         let nodes: Node[];
         if (data.length > 0) {

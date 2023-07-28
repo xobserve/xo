@@ -45,6 +45,7 @@ const ThresholdEditor = (props: Props) => {
             value: null
         })
         setValue(v)
+        return 
     }
 
     const addThreshod = () => {

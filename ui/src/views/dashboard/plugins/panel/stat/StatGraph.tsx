@@ -45,9 +45,9 @@ const StatGraph = memo((props: Props) => {
 
     const statOptions = panel.plugins.stat
     const [valueText, options, legend, color, valueColor, legendColor,bgColor] = useMemo(() => {
-        const override:OverrideItem = findOverride(panel, data.name) 
+        const override:OverrideItem = findOverride(panel, data.rawName) 
         const nameOverride = findRuleInOverride(override, StatRules.SeriesName)
-        data.name = nameOverride ?? data.name
+        data.name = nameOverride ?? data.rawName
         const calcOverride = findRuleInOverride(override, StatRules.SeriesValueCalc)
         const value = calcValueOnSeriesData(data, calcOverride ?? statOptions.value.calc)
         const valueText = formatUnit(value, findRuleInOverride(override, StatRules.SeriesUnit)?.units?? statOptions.value.units,findRuleInOverride(override, StatRules.SeriesDecimal) ??  statOptions.value.decimal)
@@ -55,7 +55,9 @@ const StatGraph = memo((props: Props) => {
         if (statOptions.thresholds.mode == ThresholdsMode.Percentage) {
             max = calcValueOnSeriesData(data, ValueCalculationType.Max)
         }
-        const threshold = getThreshold(value, statOptions.thresholds, max)
+
+        const threshold = getThreshold(value, findRuleInOverride(override, StatRules.SeriesThresholds) ?? statOptions.thresholds, max)
+        console.log("here3333:" ,threshold,findRuleInOverride(override, StatRules.SeriesThresholds) )
         const color = paletteColorNameToHex(threshold.color, colorMode)
 
         let o;

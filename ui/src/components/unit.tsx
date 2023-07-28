@@ -56,7 +56,6 @@ export const UnitPicker = ({ value, onChange,size="md" }: Props) => {
     }
 
     const onChangeUnitType = t => {
-        console.log("here33333 t", t)
         switch (t) {
             case "none":
                 setUnits({
@@ -206,7 +205,6 @@ export const UnitPicker = ({ value, onChange,size="md" }: Props) => {
 
 
 export const formatUnit = (v0: number, units: Unit[], decimal: number) => {
-    console.log("here33333:", units)
     let v = v0 
     if (v0 < 0) {
         v = -1 * v0
