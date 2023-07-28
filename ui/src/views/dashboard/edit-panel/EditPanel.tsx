@@ -227,7 +227,7 @@ const EditPanel = ({ dashboard, onChange }: EditPanelProps) => {
                                     <TabList pb="0">
                                         <Tab>{t.panel}</Tab>
                                         <Tab>{t.styles}</Tab>
-                                        {panelOverridesRules.length > 0 && <Tab>{t1.overrides}</Tab>}
+                                        {panelOverridesRules.length > 0 && <Tab>{t1.overrides}  {tempPanel.overrides.length > 0 && <Text textStyle="annotation">&nbsp; ({tempPanel.overrides.length}/{tempPanel.overrides.reduce((t,v) => t + v.overrides.length,0)})</Text>}</Tab>}
                                     </TabList>
                                     <TabIndicator
                                         mt="3px"
