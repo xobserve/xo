@@ -62,11 +62,13 @@ const StatGraph = memo((props: Props) => {
         // transform series name based on legend format 
 
         legend = data.name
-        o = parseOptions(props, color, data)
+        o = parseOptions(props, color, data, override)
 
+        const cm = findRuleInOverride(override, StatRules.SeriesColorMode) ?? statOptions.styles.colorMode
+        console.log("here33333: cm",cm)
         let valueColor;
         let legendColor
-        switch (statOptions.styles.colorMode) {
+        switch (cm) {
             case "value":
                 valueColor = color;
                 legendColor = 'inherit'
@@ -85,7 +87,7 @@ const StatGraph = memo((props: Props) => {
 
         let bgColor 
         
-        switch (statOptions.styles.colorMode) {
+        switch (cm) {
           case "bg-gradient":
             bgColor =  getGradientBackgroundColor(color, colorMode == "dark")
             break;

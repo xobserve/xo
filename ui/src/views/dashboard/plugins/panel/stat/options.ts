@@ -13,11 +13,13 @@
 import { isEmpty } from "lodash";
 import * as colorManipulator from 'components/uPlot/colorManipulator';
 import { canvasCtx } from 'src/App';
-import { PanelProps } from "types/dashboard";
+import { OverrideItem, PanelProps } from "types/dashboard";
 import uPlot from "uplot";
 import { pointsFilter } from "../graph/options";
 import { SeriesData } from "types/seriesData";
 import tinycolor from "tinycolor2";
+import { findRuleInOverride } from "utils/dashboard/panel";
+import { StatRules } from "./OverridesEditor";
 
 
 
@@ -25,7 +27,7 @@ import tinycolor from "tinycolor2";
 const BarWidthFactor = 0.6
 const BardMaxWidth = 200
 // build uplot options based on given config
-export const parseOptions = (config: PanelProps, color: string, rawData: SeriesData) => {
+export const parseOptions = (config: PanelProps, color: string, rawData: SeriesData,override : OverrideItem) => {
     // build series
     const series = []
     // push time series option
@@ -38,7 +40,8 @@ export const parseOptions = (config: PanelProps, color: string, rawData: SeriesD
     let fillColor: string;
     let lineColor: string;
 
-    switch (options.styles.colorMode) {
+    const cm = findRuleInOverride(override, StatRules.SeriesColorMode) ?? options.styles.colorMode
+    switch (cm) {
       case "bg-solid":
       case "bg-gradient":
         fillColor = 'rgba(255,255,255,0.4)';

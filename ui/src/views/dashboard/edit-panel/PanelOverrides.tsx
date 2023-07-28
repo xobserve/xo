@@ -75,10 +75,11 @@ const PanelOverrides = ({ panel, onChange, data }: PanelEditorProps) => {
     }
 
     const onAddRule = (i) => {
-        onChange((panel: Panel) => {
-            panel.overrides[i].overrides.push({
-                type: allRules[0],
-                value: ""
+        onChange((tempPanel: Panel) => {
+           const r =  allRules.find(r0=> !panel.overrides[i].overrides.some(o => o.type == r0))
+           tempPanel.overrides[i].overrides.push({
+                type: r,
+                value: null
             })
         })
     }
@@ -127,7 +128,9 @@ const PanelOverrides = ({ panel, onChange, data }: PanelEditorProps) => {
                                 panel.overrides[i].overrides[j].type = v
                             })
                         }}>
-                            {allRules.map(r => <option key={r} value={r}>{r}</option>)}
+                            {allRules.map(r => {
+                                return  <option key={r} value={r}>{r}</option>
+                            })}
                         </Select>
                     </FormItem>
                     {/* @needs-update-when-add-new-panel-overrides */}
