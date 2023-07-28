@@ -11,7 +11,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 import { Button, HStack, Input, NumberInput, NumberInputField, Select, VStack } from "@chakra-ui/react"
-import { cloneDeep, isEmpty, round } from "lodash"
+import { cloneDeep, isEmpty, isNumber, round } from "lodash"
 import { useState } from "react"
 import { FaArrowUp, FaMinus, FaPlus } from "react-icons/fa"
 import {  Unit, Units } from "types/panel/plugins"
@@ -204,7 +204,16 @@ export const UnitPicker = ({ value, onChange,size="md" }: Props) => {
 }
 
 
-export const formatUnit = (v0: number, units: Unit[], decimal: number) => {
+// v0: string or number
+export const formatUnit = (v0: any, units: Unit[], decimal: number) => {
+    if (!isNumber(v0)) {
+        if (units.length == 0) {
+            return v0 
+        } else {
+            return v0 + units[0].unit
+        }
+    }
+
     let v = v0 
     if (v0 < 0) {
         v = -1 * v0

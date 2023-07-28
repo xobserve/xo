@@ -4,6 +4,9 @@ import { isEmpty } from "./validate";
 export const mapValueToText = (value: number | string, mapping: ValueMappingItem[]) => {
     let text;
     for (const m of mapping) {
+        if (isEmpty(m.text)) {
+            continue
+        }
         if (m.type == "value" && m.value == value) {
             text = m.text
             break

@@ -182,8 +182,8 @@ const typeOptions = [
     {
         label: 'Value',
         value: 'value',
-        desc: 'Exactly match with several text values',
-        placeholder: 'value to match, a,b,c -> match a or b or c'
+        desc: 'Natch a given text',
+        placeholder: 'Exactly match'
     },
     {
         label: 'Range',

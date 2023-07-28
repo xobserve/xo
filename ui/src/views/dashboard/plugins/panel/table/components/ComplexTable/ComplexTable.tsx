@@ -35,6 +35,9 @@ import BarGauge from 'components/BarGauge/BarGauge';
 import { measureText } from 'utils/measureText';
 import AutoSizer from "react-virtualized-auto-sizer";
 import { paletteColorNameToHex } from 'utils/colors';
+import { mapValueToText } from 'utils/valueMapping';
+import { replaceWithVariables } from 'utils/variable';
+import { VariableCurrentValue } from 'src/data/variable';
 
 interface Props {
   panel: Panel
@@ -126,7 +129,7 @@ const ComplexTable = memo((props: Props) => {
     bg = paletteColorNameToHex(bg,colorMode)
     let textWidth = 0;
     // modify data
-    if (unit || decimal || isFunc || thresholds || columnType) {
+    if (unit || decimal || isFunc || thresholds || columnType || panel.valueMapping.length > 0) {
       for (const row of data) {
         // raw value
         const v = row[column.dataIndex]
@@ -153,13 +156,23 @@ const ComplexTable = memo((props: Props) => {
           }
         }
 
-        if (isNumber(v)) {
+        let isMapped = false
+        if (panel.valueMapping?.length > 0) {
+          const r = mapValueToText(v, panel.valueMapping)
+          if (r) {
+            row[column.dataIndex] = replaceWithVariables(r, {[VariableCurrentValue]:v})
+            isMapped = true
+          }
+        }
+        
+        if (!isMapped) {
           if (unit) {
             row[column.dataIndex] = formatUnit(v, unit.units, decimal)
-          } else {
+          } else if (isNumber(v)) {
             row[column.dataIndex] = round(v, decimal)
           }
         }
+
 
         if (isFunc) {
           row[column.dataIndex] = transformFunc(row[column.dataIndex], lodash, moment)
