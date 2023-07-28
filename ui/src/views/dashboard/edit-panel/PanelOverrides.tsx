@@ -21,11 +21,11 @@ import GraphOverridesEditor, { GraphRules } from "../plugins/panel/graph/Overrid
 import React from "react";
 import { useStore } from "@nanostores/react";
 import { panelMsg } from "src/i18n/locales/en";
-import { TableSeries } from "types/plugins/table";
-import TableOverridesEditor, { TableRules } from "../plugins/panel/table/OverridesEditor";
+import TableOverridesEditor from "../plugins/panel/table/OverridesEditor";
 import BarGaugeOverridesEditor, { BarGaugeRules } from "../plugins/panel/barGauge/OverrideEditor";
 import { getPanelOverridesRules } from "utils/dashboard/panel";
 import { SeriesData } from "types/seriesData";
+import StatOverridesEditor from "../plugins/panel/stat/OverridesEditor";
 
 
 const PanelOverrides = ({ panel, onChange, data }: PanelEditorProps) => {
@@ -147,6 +147,13 @@ const PanelOverrides = ({ panel, onChange, data }: PanelEditorProps) => {
                     }
                      {
                         panel.type == PanelType.BarGauge && <BarGaugeOverridesEditor override={rule} onChange={(v) => {
+                            onChange((panel: Panel) => {
+                                panel.overrides[i].overrides[j].value = v
+                            })
+                        }}/>
+                    }
+                      {
+                        panel.type == PanelType.Stat && <StatOverridesEditor override={rule} onChange={(v) => {
                             onChange((panel: Panel) => {
                                 panel.overrides[i].overrides[j].value = v
                             })

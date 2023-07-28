@@ -97,7 +97,7 @@ export enum TableRules {
     ColumnEllipsis = 'Column.textEllipsis',
     ColumnDisplay = "Column.display",
     ColumnTransform = "Column.textTransform",
-    ColumnThreshold = "Column.threshold",
+    ColumnThreshold = "Column.thresholds",
 }
 
 const transformFunc = `

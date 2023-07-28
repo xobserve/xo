@@ -12,6 +12,7 @@
 // limitations under the License.
 import { BarGaugeRules } from "src/views/dashboard/plugins/panel/barGauge/OverrideEditor";
 import { GraphRules } from "src/views/dashboard/plugins/panel/graph/OverridesEditor";
+import { StatRules } from "src/views/dashboard/plugins/panel/stat/OverridesEditor";
 import { TableRules } from "src/views/dashboard/plugins/panel/table/OverridesEditor";
 import { GridPos, OverrideItem, Panel, PanelType } from "types/dashboard";
 
@@ -46,6 +47,8 @@ export const getPanelOverridesRules = (panelType):string[] => {
             return  Object.keys(TableRules).map(k => TableRules[k])
         case PanelType.BarGauge:
             return  Object.keys(BarGaugeRules).map(k => BarGaugeRules[k])
+        case PanelType.Stat:
+            return  Object.keys(StatRules).map(k => StatRules[k])
         default:
             return []
     }
