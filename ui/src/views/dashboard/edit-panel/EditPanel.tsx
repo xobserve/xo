@@ -188,6 +188,14 @@ const EditPanel = ({ dashboard, onChange }: EditPanelProps) => {
         setTempPanel(panel)
     }, [])
 
+    let enableValueMapping = false
+    switch (tempPanel?.type) {
+        case PanelType.Table:
+            enableValueMapping = true
+            break
+        default:
+            break;
+    }
     return (<>
         <Modal isOpen={isOpen} onClose={onEditClose} autoFocus={false} size="full">
             <ModalOverlay />
@@ -273,9 +281,9 @@ const EditPanel = ({ dashboard, onChange }: EditPanelProps) => {
                                                 {/* panel rendering plugin setting */}
                                                 <CustomPanelEditor tempPanel={tempPanel} setTempPanel={onTempPanelChange} data={data} />
 
-                                                <PanelAccordion title={t.valueMapping} defaultOpen>
+                                                {enableValueMapping && <PanelAccordion title={t.valueMapping} defaultOpen>
                                                     <ValueMapping value={tempPanel.valueMapping} onChange={onValueMappingChange} />
-                                                </PanelAccordion>
+                                                </PanelAccordion>}
 
                                             </TabPanel>
                                             <TabPanel px="0" pt="1" pb="0">
