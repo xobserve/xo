@@ -120,7 +120,7 @@ const GraphPanelEditor = ({ panel, onChange, data }: PanelEditorProps) => {
                     panel.plugins.stat.styles.style = v
                 })} />
             </PanelEditItem>
-            <PanelEditItem title={t1.opacity}>
+            {panel.plugins.stat.styles.colorMode == "value" &&<PanelEditItem title={t1.opacity}>
                 <EditorSliderItem value={panel.plugins.stat.styles.fillOpacity} min={0} max={100} step={1} onChange={v => {
                     onChange((panel: Panel) => {
                         panel.plugins.stat.styles.fillOpacity = v
@@ -128,7 +128,7 @@ const GraphPanelEditor = ({ panel, onChange, data }: PanelEditorProps) => {
                     dispatch(PanelForceRebuildEvent + panel.id)
                 }
                 } />
-            </PanelEditItem>
+            </PanelEditItem>}
 
             <PanelEditItem title={t2.graphHeight} desc={t2.graphHeightTips}>
                 <EditorSliderItem value={panel.plugins.stat.styles.graphHeight} min={0} max={100} step={5} onChange={v => {

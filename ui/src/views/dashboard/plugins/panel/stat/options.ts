@@ -41,6 +41,7 @@ export const parseOptions = (config: PanelProps, color: string, rawData: SeriesD
     let lineColor: string;
 
     const cm = findRuleInOverride(override, StatRules.SeriesColorMode) ?? options.styles.colorMode
+    const graphType = findRuleInOverride(override, StatRules.SeriesType) ?? config.panel.plugins.stat.styles?.style
     switch (cm) {
       case "bg-solid":
       case "bg-gradient":
@@ -69,7 +70,7 @@ export const parseOptions = (config: PanelProps, color: string, rawData: SeriesD
             filter: pointsFilter,
         },
         spanGaps: config.panel.plugins.stat.styles.connectNulls,
-        paths: config.panel.plugins.stat.styles?.style == "bars" ? uPlot.paths.bars({
+        paths: graphType == "bars" ? uPlot.paths.bars({
             size: [BarWidthFactor, BardMaxWidth],
             align: 0,
         }) : null
