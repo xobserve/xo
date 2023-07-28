@@ -504,10 +504,12 @@ export const gaugePanelMsg = i18n("gaugePanel", {
 export const statsPanelMsg = i18n("statsPanel", {
   "showTooltip": "Show tooltip",
   "showLegend": "Show legend",
+  "showGraph": "Show graph",
   "graphHeight": "Graph height",
   "graphHeightTips": "the propotion of the graph part",
   "hideGraphHeight": "Hide graph",
   "hideGraphHeightTips": "when graph height goes below this height in CSS pixels, it will be hidden",
+  "textAlign": "Text align"
 })
 
 export const tracePanelMsg = i18n("tracePanel", {

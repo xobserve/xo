@@ -252,6 +252,7 @@ function registerEvents(options, chart) {
 
         [PanelType.Stat]: {
             showTooltip: true,
+            showGraph: true,
             diisplaySeries: null,
             showLegend: false,
             value: {
@@ -266,7 +267,8 @@ function registerEvents(options, chart) {
                 fillOpacity: 80,
                 graphHeight: 60,
                 connectNulls: false,
-                hideGraphHeight: 70
+                hideGraphHeight: 70,
+                textAlign: "center"
             },
             axisY: {
                 scale: "linear",

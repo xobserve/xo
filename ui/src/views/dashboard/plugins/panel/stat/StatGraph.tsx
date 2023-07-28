@@ -91,7 +91,9 @@ const StatGraph = memo((props: Props) => {
     }, [panel, data, colorMode, width, height])
 
 
-    const graphHeight = statOptions.styles.graphHeight
+    const graphHeight = statOptions.showGraph ? statOptions.styles.graphHeight : 0
+    const TextContainer = graphHeight == 0 ? Center : Box
+    const textAlign =  statOptions.styles.textAlign
     return (
         <>
             <Box h="100%" className={`stat-graph ${statOptions.styles.layout == LayoutOrientation.Horizontal ? "bordered-bottom" : 'bordered-right'}`} width={width} bg={bgColor}>
@@ -106,7 +108,7 @@ const StatGraph = memo((props: Props) => {
                                     </Flex>
                                 </Center>
                             </Box>}
-                            {height > statOptions.styles.hideGraphHeight && <Box height={graphHeight + '%'} className="stat-graph-container">
+                            {statOptions.showGraph && height > statOptions.styles.hideGraphHeight && <Box height={graphHeight + '%'} className="stat-graph-container">
                                 <GraphPlot options={options} data={data} props={props} />
                             </Box>}
                         </>
@@ -114,13 +116,13 @@ const StatGraph = memo((props: Props) => {
 
                     {
                         (statOptions.styles.layout == "vertical" || statOptions.styles.layout == "auto") && <>
-                            {graphHeight < 100 && <Box height={height > statOptions.styles.hideGraphHeight ? `${100 - graphHeight}%` : '100%'} className="stat-graph-text">
-                                <Box width="100%" pl="2" pt={height > statOptions.styles.hideGraphHeight ? 2 : 0}>
+                            {graphHeight < 100 && <TextContainer height={height > statOptions.styles.hideGraphHeight ? `${100 - graphHeight}%` : '100%'} className="stat-graph-text">
+                                <Box width="100%" pl="2" pt={height > statOptions.styles.hideGraphHeight ? 2 : 0} textAlign={textAlign}>
                                     {statOptions.showLegend && <LegentText legend={legend} height={height} width={width} options={statOptions} color={legendColor} />}
                                     <ValueText value={value} options={statOptions} width={width} height={height} layout={statOptions.styles.layout} color={valueColor} />
                                 </Box>
-                            </Box>}
-                            {height > statOptions.styles.hideGraphHeight && <Box height={graphHeight + '%'} className="stat-graph-container">
+                            </TextContainer>}
+                            {statOptions.showGraph && height > statOptions.styles.hideGraphHeight && <Box height={graphHeight + '%'} className="stat-graph-container">
                                 <GraphPlot options={options} data={data} props={props} />
                             </Box>}
                         </>

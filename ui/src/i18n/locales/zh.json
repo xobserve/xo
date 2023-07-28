@@ -472,10 +472,12 @@
   "statsPanel": {
     "showTooltip": "显示 Tooltip",
     "showLegend": "显示 Legend",
+    "showGraph": "显示图形",
     "graphHeight": "图形高度",
     "graphHeightTips": "图形的部分占总体高度的比例",
     "hideGraphHeight": "隐藏图形",
-    "hideGraphHeightTips": "当图形区域的高度低于下面的 CSS 像素值时，它将被隐藏"
+    "hideGraphHeightTips": "当图形区域的高度低于下面的 CSS 像素值时，它将被隐藏",
+    "textAlign": "文本排列"
   },
 
   "tracePanel": {

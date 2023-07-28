@@ -36,7 +36,7 @@ const GraphPanelEditor = ({ panel, onChange, data }: PanelEditorProps) => {
     const t2 = useStore(statsPanelMsg)
 
     const seriesNames = [VarialbeAllOption].concat((data.flat() as SeriesData[]).map(s => s.name))
-    if (isEmpty(panel.plugins.stat.diisplaySeries )) {
+    if (isEmpty(panel.plugins.stat.diisplaySeries)) {
         if (seriesNames?.length >= 1) {
             onChange((panel: Panel) => {
                 panel.plugins.stat.diisplaySeries = seriesNames[0]
@@ -51,7 +51,7 @@ const GraphPanelEditor = ({ panel, onChange, data }: PanelEditorProps) => {
             }
         }
     }
-    
+
     return (<>
         <PanelAccordion title={t.basicSetting}>
             <PanelEditItem title={t2.showTooltip}>
@@ -60,18 +60,23 @@ const GraphPanelEditor = ({ panel, onChange, data }: PanelEditorProps) => {
                 })} />
             </PanelEditItem>
             <PanelEditItem title={t.series} desc={t.seriesTips}>
-                    <Select value={panel.plugins.stat.diisplaySeries} onChange={e => {
-                        const v = e.currentTarget.value 
-                        onChange((panel: Panel) => {
-                            panel.plugins.stat.diisplaySeries = v
-                        })
-                    }}> 
-                        {seriesNames.map(name => <option value={name}>{name == VarialbeAllOption ? "All" : name }</option>)}
-                    </Select>
-                </PanelEditItem>
+                <Select value={panel.plugins.stat.diisplaySeries} onChange={e => {
+                    const v = e.currentTarget.value
+                    onChange((panel: Panel) => {
+                        panel.plugins.stat.diisplaySeries = v
+                    })
+                }}>
+                    {seriesNames.map(name => <option value={name}>{name == VarialbeAllOption ? "All" : name}</option>)}
+                </Select>
+            </PanelEditItem>
             <PanelEditItem title={t2.showLegend}>
                 <Switch defaultChecked={panel.plugins.stat.showLegend} onChange={e => onChange((panel: Panel) => {
                     panel.plugins.stat.showLegend = e.currentTarget.checked
+                })} />
+            </PanelEditItem>
+            <PanelEditItem title={t2.showGraph}>
+                <Switch defaultChecked={panel.plugins.stat.showGraph} onChange={e => onChange((panel: Panel) => {
+                    panel.plugins.stat.showGraph = e.currentTarget.checked
                 })} />
             </PanelEditItem>
         </PanelAccordion>
@@ -90,7 +95,7 @@ const GraphPanelEditor = ({ panel, onChange, data }: PanelEditorProps) => {
             <PanelEditItem title={t.calc} desc={t.calcTips}>
                 <ValueCalculation value={panel.plugins.stat.value.calc} onChange={v => {
                     onChange((panel: Panel) => { panel.plugins.stat.value.calc = v })
-                }}/>
+                }} />
             </PanelEditItem>
         </PanelAccordion>
         <PanelAccordion title={t.styles}>
@@ -100,10 +105,16 @@ const GraphPanelEditor = ({ panel, onChange, data }: PanelEditorProps) => {
                 })} />
             </PanelEditItem>
             <PanelEditItem title={t.clorMode}>
-                <RadionButtons options={[{ label: "Value", value: "value" }, { label: "Background", value: "bg-solid" },{ label: "Background gradient", value: "bg-gradient" }]} value={panel.plugins.stat.styles.colorMode} onChange={v => onChange((panel: Panel) => {
+                <RadionButtons options={[{ label: "Value", value: "value" }, { label: "Background", value: "bg-solid" }, { label: "Background gradient", value: "bg-gradient" }]} value={panel.plugins.stat.styles.colorMode} onChange={v => onChange((panel: Panel) => {
                     panel.plugins.stat.styles.colorMode = v
                 })} />
             </PanelEditItem>
+            {panel.plugins.stat.styles.layout != LayoutOrientation.Horizontal &&
+                <PanelEditItem title={t2.textAlign}>
+                    <RadionButtons options={[{ label: t.left, value: "left" }, { label: t.center, value: "center" }]} value={panel.plugins.stat.styles.textAlign} onChange={v => onChange((panel: Panel) => {
+                        panel.plugins.stat.styles.textAlign = v
+                    })} />
+                </PanelEditItem>}
             <PanelEditItem title={t.type}>
                 <RadionButtons options={[{ label: "Lines", value: "lines" }, { label: "Bars", value: "bars" }]} value={panel.plugins.stat.styles.style} onChange={v => onChange((panel: Panel) => {
                     panel.plugins.stat.styles.style = v
@@ -156,8 +167,8 @@ const GraphPanelEditor = ({ panel, onChange, data }: PanelEditorProps) => {
 
         <PanelAccordion title="Thresholds">
             <ThresholdEditor value={panel.plugins.stat.thresholds} onChange={(v) => onChange((panel: Panel) => {
-                    panel.plugins.stat.thresholds = v
-                })} />
+                panel.plugins.stat.thresholds = v
+            })} />
         </PanelAccordion>
     </>
     )

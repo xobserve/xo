@@ -60,6 +60,7 @@ export interface TraceSettings {
 
 export interface StatSettings  {
     showTooltip: boolean
+    showGraph: boolean
     diisplaySeries: string
     showLegend: boolean
     styles: {
@@ -70,6 +71,7 @@ export interface StatSettings  {
         graphHeight: number
         connectNulls: boolean
         hideGraphHeight: number
+        textAlign: "left" | "center"
     }
     axisY: {
         scale: "linear" | "log"
