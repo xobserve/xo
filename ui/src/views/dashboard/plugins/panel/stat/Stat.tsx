@@ -38,8 +38,11 @@ const StatPanel = memo((props: StatPanelProps) => {
         if (props.data.length > 0) {
             for (const d of props.data) {
                 for (const s of d) {
-                    s.rawName = s.name
-                    const selected = displaySeries == VarialbeAllOption || s.name == displaySeries
+                    if (!s.rawName) {
+                        s.rawName = s.name
+                    }
+                  
+                    const selected = displaySeries == VarialbeAllOption || s.rawName == displaySeries
                     if (selected) {
                         res.push(s)
                     }

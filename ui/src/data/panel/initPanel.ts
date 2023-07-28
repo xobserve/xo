@@ -28,6 +28,7 @@ export const initPanel = (id?) => {
         datasource: initDatasource,
         styles: initPanelStyles,
         overrides: [],
+        valueMapping: null,
         transform:
 `function transform(rawData,lodash, moment) {
     // for demonstration purpose: how to use 'moment'

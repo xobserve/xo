@@ -17,7 +17,7 @@ import PanelAccordion from "./Accordion"
 import { EditorInputItem } from "../../../components/editor/EditorItem"
 import PanelEditItem from "./PanelEditItem"
 import { initPanelPlugins } from "src/data/panel/initPlugins"
-import { useEffect } from "react"
+import { memo, useEffect } from "react"
 import React from "react";
 import { useStore } from "@nanostores/react"
 import { commonMsg, panelMsg } from "src/i18n/locales/en"
@@ -25,7 +25,7 @@ import { commonMsg, panelMsg } from "src/i18n/locales/en"
 // in edit mode, we need to cache all the plugins we have edited, until we save the dashboard
 let pluginsCachedInEdit = {}
 let overridesCacheInEdit = {}
-const PanelSettings = ({ panel, onChange }: PanelEditorProps) => {
+const PanelSettings = memo(({ panel, onChange }: PanelEditorProps) => {
     const t = useStore(commonMsg)
     const t1 = useStore(panelMsg)
     const onChangeVisualization = type => {
@@ -83,7 +83,7 @@ const PanelSettings = ({ panel, onChange }: PanelEditorProps) => {
             </PanelAccordion>
         </>
     )
-}
+})
 
 export default PanelSettings
 

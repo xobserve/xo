@@ -16,11 +16,11 @@ import RadionButtons from "components/RadioButtons"
 import PanelAccordion from "src/views/dashboard/edit-panel/Accordion"
 import PanelEditItem from "src/views/dashboard/edit-panel/PanelEditItem"
 import {  Panel, PanelEditorProps } from "types/dashboard"
-import React from "react";
+import React, { memo } from "react";
 import { useStore } from "@nanostores/react"
 import { textPanelMsg } from "src/i18n/locales/en"
 
-const TextPanelEditor = ({panel,onChange}:PanelEditorProps) => {
+const TextPanelEditor = memo(({panel,onChange}:PanelEditorProps) => {
     const t1 = useStore(textPanelMsg)
     return (   <PanelAccordion title={t1.textSettings}>
         <PanelEditItem title={t1.content}>
@@ -59,6 +59,6 @@ const TextPanelEditor = ({panel,onChange}:PanelEditorProps) => {
         </PanelEditItem>
 </PanelAccordion>
 )
-}
+})
 
 export default TextPanelEditor

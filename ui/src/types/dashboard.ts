@@ -67,8 +67,16 @@ export interface Panel {
 
     overrides: OverrideItem[]
 
+    valueMapping: ValueMappingItem[]
     transform: string
     enableTransform: boolean
+}
+
+export interface ValueMappingItem {
+    type: string
+    value: any
+    text: string
+    color: string
 }
 
 export interface OverrideItem {

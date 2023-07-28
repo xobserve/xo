@@ -57,7 +57,6 @@ const StatGraph = memo((props: Props) => {
         }
 
         const threshold = getThreshold(value, findRuleInOverride(override, StatRules.SeriesThresholds) ?? statOptions.thresholds, max)
-        console.log("here3333:" ,threshold,findRuleInOverride(override, StatRules.SeriesThresholds) )
         const color = paletteColorNameToHex(threshold.color, colorMode)
 
         let o;
