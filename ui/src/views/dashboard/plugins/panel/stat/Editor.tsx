@@ -149,6 +149,14 @@ const GraphPanelEditor = ({ panel, onChange, data }: PanelEditorProps) => {
                 })} />
             </PanelEditItem>
         </PanelAccordion>
+        <PanelAccordion title={t.textSize}>
+            <PanelEditItem title="Value">
+                <EditorNumberItem value={panel.plugins.stat.textSize.value}   max={50} step={1} onChange={v => onChange((panel: Panel) => { panel.plugins.stat.textSize.value = v })} />
+            </PanelEditItem>
+            <PanelEditItem title="Legend">
+                <EditorNumberItem value={panel.plugins.stat.textSize.legend}  max={50} step={1} onChange={v => onChange((panel: Panel) => { panel.plugins.stat.textSize.legend = v })} />
+            </PanelEditItem>
+        </PanelAccordion>
         {/* <PanelAccordion title={t.axis}>
             <PanelEditItem title={t.scale}>
                 <HStack spacing="1">

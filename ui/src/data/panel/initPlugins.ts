@@ -270,6 +270,10 @@ function registerEvents(options, chart) {
                 hideGraphHeight: 70,
                 textAlign: "center"
             },
+            textSize: {
+                value: null,
+                legend: null
+            },
             axisY: {
                 scale: "linear",
                 scaleBase: 2

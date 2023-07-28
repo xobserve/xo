@@ -27,7 +27,7 @@ export interface PanelPlugins {
     [PanelType.Gauge]?: GaugeSettings
     [PanelType.Stat]?: StatSettings
     [PanelType.Trace]?: TraceSettings
-    [PanelType.BarGauge]? : BarGaugeSettings
+    [PanelType.BarGauge]?: BarGaugeSettings
 }
 
 /*-------------------- Plugins ----------------------- */
@@ -41,37 +41,41 @@ export interface BarGaugeSettings {
     value: ValueSetting
     orientation: "horizontal" | "vertical"
     mode: "basic" | "lcd"
-    
+
     style: {
-        titleSize: number 
-        valueSize: number 
+        titleSize: number
+        valueSize: number
         showUnfilled: boolean
     }
     min: number
     max: number
     maxminFrom: "series" | "all"
-    showMax: boolean 
+    showMax: boolean
     showMin: boolean
     thresholds: ThresholdsConfig
 }
 export interface TraceSettings {
-    
+
 }
 
-export interface StatSettings  {
+export interface StatSettings {
     showTooltip: boolean
     showGraph: boolean
     diisplaySeries: string
     showLegend: boolean
     styles: {
-        colorMode: "none" |  "value" | "bg-gradient" | "bg-solid"
+        colorMode: "none" | "value" | "bg-gradient" | "bg-solid"
         layout: LayoutOrientation
-        style: "lines" | "bars" 
+        style: "lines" | "bars"
         fillOpacity: number
         graphHeight: number
         connectNulls: boolean
         hideGraphHeight: number
         textAlign: "left" | "center"
+    }
+    textSize: {
+        value: number
+        legend: number
     }
     axisY: {
         scale: "linear" | "log"
@@ -131,7 +135,7 @@ export interface GaugeSettings {
         top: string
     }
     pointer: {
-        length: string 
+        length: string
         width: number
     }
     thresholds: ThresholdsConfig
@@ -184,9 +188,9 @@ export interface TableSettings {
 
     globalSearch: boolean
     enablePagination: boolean
-   
+
     onRowClick: string
-    rowActions: {name: string; action:string; style: string; color: string}[]
+    rowActions: { name: string; action: string; style: string; color: string }[]
     actionColumnName: string
     actionClumnWidth: string
     actionButtonSize: "xs" | "sm" | "md"
@@ -198,12 +202,12 @@ export interface NodeGraphSettings {
         maxSize: number
         icon: NodeGraphIcon[]
         shape: 'circle' | 'donut',
-        donutColors: {attr:string;color:string}[]
+        donutColors: { attr: string; color: string }[]
         tooltipTrigger: 'mouseenter' | 'click'
         menu: NodeGraphMenuItem[]
         enableHighlight: boolean
         highlightNodes: string
-        highlightNodesByFunc: string 
+        highlightNodesByFunc: string
         highlightColor: string
     }
 
