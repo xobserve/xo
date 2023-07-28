@@ -30,13 +30,13 @@ interface Props {
 
 export const UnitPicker = ({ value, onChange,size="md" }: Props) => {
     const t = useStore(commonMsg)
-    const [units, setUnits] = useState(value)
+    const [units, setUnits] = useState<Units>(value)
     if (value == null) {
         onChange(getInitUnits())
     }
-    
+
     const onAddUnit = () => {
-        value.units.push({
+        units.units.push({
             operator: units[0].operator ?? 'x',
             rhs: 1,
             unit: ''
@@ -45,7 +45,7 @@ export const UnitPicker = ({ value, onChange,size="md" }: Props) => {
     }
 
     const onRemoveUnit = (i) => {
-        value.units.splice(i, 1)
+        units.units.splice(i, 1)
         setUnits(cloneDeep(units))
     }
 
@@ -56,6 +56,7 @@ export const UnitPicker = ({ value, onChange,size="md" }: Props) => {
     }
 
     const onChangeUnitType = t => {
+        console.log("here33333 t", t)
         switch (t) {
             case "none":
                 setUnits({
@@ -158,12 +159,12 @@ export const UnitPicker = ({ value, onChange,size="md" }: Props) => {
         //     });
         //     return 
         // }
-        onChange(value)
+        onChange(units)
     }
     return (
         <>
             <HStack>
-                <Select size={size} value={value.unitsType} onChange={e => onChangeUnitType(e.currentTarget.value)}>
+                <Select size={size} value={units.unitsType} onChange={e => onChangeUnitType(e.currentTarget.value)}>
                     <option value="none">None</option>
                     <option value="percent">Percent: 1 -&gt; 100%</option>
                     <option value="percent%">Percent: 1 -&gt; 1%</option>
@@ -171,10 +172,10 @@ export const UnitPicker = ({ value, onChange,size="md" }: Props) => {
                     <option value="bytes">Bytes: b/KB/MB/GB</option>
                     <option value="custom">Custom units</option>
                 </Select>
-                {value.unitsType == "custom" && <FaPlus cursor="pointer" onClick={onAddUnit} opacity="0.8" fontSize="sm" />}
+                {units.unitsType == "custom" && <FaPlus cursor="pointer" onClick={onAddUnit} opacity="0.8" fontSize="sm" />}
             </HStack>
             <VStack alignItems="left" mt="2">
-                {value.units?.map((unit, i) => {
+                {units.units?.map((unit, i) => {
                     return <HStack>
 
                         <Button size="sm" onClick={() => {
@@ -205,6 +206,7 @@ export const UnitPicker = ({ value, onChange,size="md" }: Props) => {
 
 
 export const formatUnit = (v0: number, units: Unit[], decimal: number) => {
+    console.log("here33333:", units)
     let v = v0 
     if (v0 < 0) {
         v = -1 * v0

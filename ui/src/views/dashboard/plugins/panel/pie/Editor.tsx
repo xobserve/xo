@@ -20,7 +20,7 @@ import { useState } from "react"
 import PanelAccordion from "src/views/dashboard/edit-panel/Accordion"
 import PanelEditItem from "src/views/dashboard/edit-panel/PanelEditItem"
 import { Panel, PanelEditorProps } from "types/dashboard"
-import { PieLegendPlacement } from "types/panel/plugins"
+import { PieLegendPlacement, Units } from "types/panel/plugins"
 import React from "react";
 import { useStore } from "@nanostores/react"
 import { commonMsg, piePanelMsg } from "src/i18n/locales/en"
@@ -102,9 +102,9 @@ const PiePanelEditor = ({ panel, onChange }: PanelEditorProps) => {
         <PanelAccordion title="Value">
             <PanelEditItem title={t.unit}>
                 <UnitPicker value={panel.plugins.pie.value} onChange={
-                    v => onChange((panel: Panel) => {
+                    (v:Units) => onChange((panel: Panel) => {
                         panel.plugins.pie.value.units = v.units
-                        panel.plugins.pie.value.unitsType = v.type
+                        panel.plugins.pie.value.unitsType = v.unitsType
                     })
                 } />
             </PanelEditItem>

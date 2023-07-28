@@ -24,6 +24,7 @@ import { UnitPicker } from "components/Unit"
 import RadionButtons from "components/RadioButtons"
 import { Switch } from "@chakra-ui/react"
 import ThresholdEditor from "components/Threshold/ThresholdEditor"
+import { Units } from "types/panel/plugins"
 
 const BarGaugeEditor = ({ panel, onChange }: PanelEditorProps) => {
     const t = useStore(commonMsg)
@@ -45,9 +46,9 @@ const BarGaugeEditor = ({ panel, onChange }: PanelEditorProps) => {
         <PanelAccordion title={t.valueSettings}>
             <PanelEditItem title={t.unit}>
                 <UnitPicker value={panel.plugins.barGauge.value} onChange={
-                    v => onChange((panel: Panel) => {
+                    (v:Units) => onChange((panel: Panel) => {
                         panel.plugins.barGauge.value.units = v.units
-                        panel.plugins.barGauge.value.unitsType = v.type
+                        panel.plugins.barGauge.value.unitsType = v.unitsType
                     })
                 } />
             </PanelEditItem>

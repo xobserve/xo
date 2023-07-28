@@ -28,6 +28,7 @@ import { dispatch } from "use-bus"
 import { calcValueOnArray } from "utils/seriesData"
 import { findOverride, findRuleInOverride } from "utils/dashboard/panel";
 import { GraphRules } from "../OverridesEditor";
+import { StatRules } from "../../stat/OverridesEditor";
 
 interface Props {
     props: PanelProps
@@ -106,7 +107,7 @@ const SeriesTable = memo(({ props, data, nearestSeries, filterIdx, mode, onSelec
 
     for (const v of values) {
         const override:OverrideItem = findOverride(props.panel, v.rawName)
-        const unitsOverride = findRuleInOverride(override, GraphRules.SeriesUnit) 
+        const unitsOverride = findRuleInOverride(override, panelType == PanelType.Graph ? GraphRules.SeriesUnit : StatRules.SeriesUnit) 
         let units = valueSettings.units
         let unitsType = valueSettings.unitsType
         let decimal = valueSettings.decimal
@@ -114,7 +115,7 @@ const SeriesTable = memo(({ props, data, nearestSeries, filterIdx, mode, onSelec
             units = unitsOverride.units
             unitsType = unitsOverride.unitsType
         }
-        const decimalOverride = findRuleInOverride(override, GraphRules.SeriesDecimal)
+        const decimalOverride = findRuleInOverride(override, panelType == PanelType.Graph ? GraphRules.SeriesDecimal: StatRules.SeriesDecimal)
         if (decimalOverride) {
             decimal = decimalOverride
         }

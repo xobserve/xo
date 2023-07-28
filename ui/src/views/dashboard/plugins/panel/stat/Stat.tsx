@@ -38,6 +38,7 @@ const StatPanel = memo((props: StatPanelProps) => {
         if (props.data.length > 0) {
             for (const d of props.data) {
                 for (const s0 of d) {
+                    s0.rawName = s0.name
                     const s = cloneDeep(s0)
                     const selected = displaySeries == VarialbeAllOption || s.name == displaySeries
                     if (selected) {

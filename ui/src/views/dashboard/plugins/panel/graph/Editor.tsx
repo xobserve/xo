@@ -25,7 +25,7 @@ import React from "react";
 import { commonMsg, graphPanelMsg } from "src/i18n/locales/en"
 import { useStore } from "@nanostores/react"
 import ThresholdEditor from "components/Threshold/ThresholdEditor"
-import { ThresholdDisplay } from "types/panel/plugins"
+import { ThresholdDisplay, Units } from "types/panel/plugins"
 
 const GraphPanelEditor = ({ panel, onChange }: PanelEditorProps) => {
     const t = useStore(commonMsg)
@@ -163,9 +163,9 @@ const GraphPanelEditor = ({ panel, onChange }: PanelEditorProps) => {
         <PanelAccordion title="Value">
             <PanelEditItem title={t.unit}>
                 <UnitPicker value={panel.plugins.graph.value} onChange={
-                    v => onChange((panel: Panel) => {
+                    (v:Units) => onChange((panel: Panel) => {
                         panel.plugins.graph.value.units = v.units
-                        panel.plugins.graph.value.unitsType = v.type
+                        panel.plugins.graph.value.unitsType = v.unitsType
                     })
 
                     // onPanelChange(units, type)

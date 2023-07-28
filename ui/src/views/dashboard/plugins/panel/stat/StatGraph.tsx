@@ -44,12 +44,13 @@ const StatGraph = memo((props: Props) => {
     const { colorMode } = useColorMode()
 
     const statOptions = panel.plugins.stat
-    const [value, options, legend, color, valueColor, legendColor,bgColor] = useMemo(() => {
+    const [valueText, options, legend, color, valueColor, legendColor,bgColor] = useMemo(() => {
         const override:OverrideItem = findOverride(panel, data.name) 
         const nameOverride = findRuleInOverride(override, StatRules.SeriesName)
         data.name = nameOverride ?? data.name
         const calcOverride = findRuleInOverride(override, StatRules.SeriesValueCalc)
         const value = calcValueOnSeriesData(data, calcOverride ?? statOptions.value.calc)
+        const valueText = formatUnit(value, findRuleInOverride(override, StatRules.SeriesUnit)?.units?? statOptions.value.units,findRuleInOverride(override, StatRules.SeriesDecimal) ??  statOptions.value.decimal)
         let max = 0;
         if (statOptions.thresholds.mode == ThresholdsMode.Percentage) {
             max = calcValueOnSeriesData(data, ValueCalculationType.Max)
@@ -65,7 +66,6 @@ const StatGraph = memo((props: Props) => {
         o = parseOptions(props, color, data, override)
 
         const cm =  findRuleInOverride(override, StatRules.SeriesColorMode) ?? statOptions.styles.colorMode
-        console.log("here33333: cm",cm)
         let valueColor;
         let legendColor
         switch (cm) {
@@ -95,8 +95,8 @@ const StatGraph = memo((props: Props) => {
                 bgColor = tinycolor(color).toString();
                 break;
         }
-        return [value, o, legend, color, valueColor, legendColor,bgColor]
-    }, [panel, data, colorMode, width, height,panel.overrides])
+        return [valueText, o, legend, color, valueColor, legendColor,bgColor]
+    }, [panel, data, colorMode, width, height])
 
 
     const graphHeight = statOptions.showGraph ? statOptions.styles.graphHeight : 0
@@ -112,7 +112,7 @@ const StatGraph = memo((props: Props) => {
                                 <Center height="100%" pt={height > statOptions.styles.hideGraphHeight ? 2 : 0}>
                                     <Flex width="100%" px={4} alignItems="center" justifyContent={statOptions.showLegend ? "space-between" : "center"} >
                                         {statOptions.showLegend && <LegentText legend={legend} height={height} width={width} options={statOptions} color={legendColor} />}
-                                        <ValueText value={value} options={statOptions} width={width} height={height} layout={statOptions.styles.layout} color={valueColor} />
+                                        <ValueText value={valueText} options={statOptions} width={width} height={height} layout={statOptions.styles.layout} color={valueColor} />
                                     </Flex>
                                 </Center>
                             </Box>}
@@ -127,7 +127,7 @@ const StatGraph = memo((props: Props) => {
                             {graphHeight < 100 && <TextContainer height={height > statOptions.styles.hideGraphHeight ? `${100 - graphHeight}%` : '100%'} className="stat-graph-text">
                                 <Box width="100%" pl="2" pt={height > statOptions.styles.hideGraphHeight ? 2 : 0} textAlign={textAlign}>
                                     {statOptions.showLegend && <LegentText legend={legend} height={height} width={width} options={statOptions} color={legendColor} />}
-                                    <ValueText value={value} options={statOptions} width={width} height={height} layout={statOptions.styles.layout} color={valueColor} />
+                                    <ValueText value={valueText} options={statOptions} width={width} height={height} layout={statOptions.styles.layout} color={valueColor} />
                                 </Box>
                             </TextContainer>}
                             {statOptions.showGraph && height > statOptions.styles.hideGraphHeight && <Box height={graphHeight + '%'} className="stat-graph-container">
@@ -204,16 +204,13 @@ const ValueText = ({ value, options, width, height, layout, color }) => {
         if (fontSize > maxFontSize) fontSize = maxFontSize
     }
 
-
     return (<>
         <Text
             fontSize={options.textSize.value?? fontSize  + 'px'}
             color={color}
             fontWeight="bold"
             lineHeight={1.2}
-        >{options.value.calc == ValueCalculationType.Count ?
-            value
-            : formatUnit(value, options.value.units, options.value.decimal)}</Text>
+        >{value}</Text>
     </>)
 }
 

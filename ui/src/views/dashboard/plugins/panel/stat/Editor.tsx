@@ -29,6 +29,7 @@ import { SeriesData } from "types/seriesData"
 import { isEmpty } from "utils/validate"
 import { VarialbeAllOption } from "src/data/variable"
 import { LayoutOrientation } from "types/layout"
+import { Units } from "types/panel/plugins"
 
 const GraphPanelEditor = ({ panel, onChange, data }: PanelEditorProps) => {
     const t = useStore(commonMsg)
@@ -83,9 +84,9 @@ const GraphPanelEditor = ({ panel, onChange, data }: PanelEditorProps) => {
         <PanelAccordion title={t.value}>
             <PanelEditItem title={t.unit}>
                 <UnitPicker value={panel.plugins.stat.value} onChange={
-                    v => onChange((panel: Panel) => {
+                    (v:Units) => onChange((panel: Panel) => {
                         panel.plugins.stat.value.units = v.units
-                        panel.plugins.stat.value.unitsType = v.type
+                        panel.plugins.stat.value.unitsType = v.unitsType
                     })
                 } />
             </PanelEditItem>
