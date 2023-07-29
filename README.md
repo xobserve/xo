@@ -1,7 +1,7 @@
 <p align="center">
   <img src="https://datav.io/img/logo/logo-xs.png" alt="datav-logo" width="240" />
 
-  <p align="center">A modern apm solution for enterprise, an open-source alternative to DataDog, New Relic, etc.</p>
+  <!-- <p align="center">A modern apm solution for enterprise, an open-source alternative to DataDog, New Relic, etc.</p>-->
   </p>
 
 <p align="center">
@@ -11,9 +11,9 @@
 </p>
 
 
-<h1 align="center">
+<!--<h1 align="center">
   The new version of Datav and online demo is coming soon.. 
-</h1>
+</h1>-->
 
 
 
