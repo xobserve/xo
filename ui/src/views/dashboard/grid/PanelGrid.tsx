@@ -262,6 +262,7 @@ const loadablePanels = {
     [PanelType.Stat]: loadable(() => import('../plugins/panel/stat/Stat')),
     [PanelType.Trace]: loadable(() => import('../plugins/panel/trace/Trace')),
     [PanelType.BarGauge]: loadable(() => import('../plugins/panel/barGauge/BarGauge')),
+    [PanelType.GeoMap]: loadable(() => import('../plugins/panel/geomap/GeoMap')),
 }
 
 const CustomPanelRender = memo((props: PanelProps) => {

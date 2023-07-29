@@ -20,7 +20,7 @@ export const mapValueToText = (value: number | string, mapping: ValueMappingItem
             text = m.text
             color = m.color
             break
-        } else if (m.type == "regex" && value.toString().match(m.value)) {
+        } else if (m.type == "regex" && value?.toString().match(m.value)) {
             text = m.text
             color = m.color
             break

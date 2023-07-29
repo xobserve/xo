@@ -21,6 +21,8 @@ import { prometheusToPanels } from "../prometheus/transformData"
 import { Datasource } from "types/datasource"
 import traceData from './mocks/trace.json'
 import { genPrometheusData } from "./mocks/prometheus"
+import geoData from './mocks/geomap.json'
+import { Field, SeriesData } from "types/seriesData"
 
 export const run_testdata_query = async (panel: Panel, q: PanelQuery, range: TimeRange,ds: Datasource) => {
     let data: any;
@@ -42,6 +44,9 @@ export const run_testdata_query = async (panel: Panel, q: PanelQuery, range: Tim
         case PanelType.Trace:
             data =  traceData.data
             break
+        case PanelType.GeoMap:
+            data = transformSchemaDataToSeriesData(geoData)
+            break
         default:
             break
     }
@@ -55,4 +60,34 @@ export const run_testdata_query = async (panel: Panel, q: PanelQuery, range: Tim
 
 export const queryTraceInTestData = (traceId) => {
     return traceData.data.find(trace => trace.traceID== traceId)
+}
+
+export const transformSchemaDataToSeriesData = (schemaData) => {
+     const seriesList: SeriesData[] = []
+     for (const sd of schemaData) {
+        const fields = sd.schema.fields
+        const values = sd.data.values
+        const seriesFields:Field[] = []
+        let seriesName
+        fields.forEach((field,i) => {
+            seriesFields.push({
+                name: field.name,
+                type: field.type,
+                values: values[i]
+            })
+            if (field.config.displayNameFromDS) {
+                seriesName = field.config.displayNameFromDS
+            }
+        })
+        
+        const series:SeriesData = {
+            id: sd.schema.refId,
+            name: seriesName,
+            rawName: seriesName,
+            fields: seriesFields
+        }
+        seriesList.push(series)
+     }
+
+     return seriesList
 }

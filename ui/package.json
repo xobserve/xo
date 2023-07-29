@@ -59,6 +59,7 @@
     "namor": "^1.1.2",
     "nanostores": "^0.9.3",
     "ninja-keys": "^1.2.2",
+    "ol": "^7.4.0",
     "query-string": "^6.3.0",
     "react": "^18.2.0",
     "react-color": "^2.19.3",

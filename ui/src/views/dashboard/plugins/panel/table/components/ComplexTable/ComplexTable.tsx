@@ -167,9 +167,9 @@ const ComplexTable = memo((props: Props) => {
           if (r) {
             row[column.dataIndex] = replaceWithVariables(r, {[VariableCurrentValue]:v})
             isMapped = true
-          }
-          if (!isEmpty(c1)) {
-            color = c1
+            if (!isEmpty(c1)) {
+              color = c1
+            }
           }
         }
         
@@ -178,10 +178,11 @@ const ComplexTable = memo((props: Props) => {
           if (r) {
             row[column.dataIndex] = replaceWithVariables(r, {[VariableCurrentValue]:v})
             isMapped = true
+            if (!isEmpty(c1)) {
+              color = c1
+            }
           }
-          if (!isEmpty(c1)) {
-            color = c1
-          }
+
         }
 
         if (!isMapped) {

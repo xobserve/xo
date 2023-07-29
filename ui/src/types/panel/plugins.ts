@@ -28,6 +28,7 @@ export interface PanelPlugins {
     [PanelType.Stat]?: StatSettings
     [PanelType.Trace]?: TraceSettings
     [PanelType.BarGauge]?: BarGaugeSettings
+    [PanelType.GeoMap]?: GeoMapSettings
 }
 
 /*-------------------- Plugins ----------------------- */
@@ -36,6 +37,9 @@ export interface DisableDatasource {
     disableDatasource?: boolean
 }
 
+export interface GeoMapSettings {
+    
+}
 
 export interface BarGaugeSettings {
     value: ValueSetting

@@ -73,13 +73,13 @@ export interface Panel {
 }
 
 export interface ValueMappingItem {
-    type: ValueMappingType
+    type:  "value" | "range" | "null" | "regex"
     value: any
     text: string
     color: string
 }
 
-export type ValueMappingType = "value" | "range" | "null" | "regex"
+
  
 export interface OverrideItem {
     target: string 
@@ -112,6 +112,7 @@ export enum PanelType {
     Trace = "trace",
     Text = "text",
     Echarts = "echarts",
+    GeoMap = "geomap",
     Row = "row",
 }
 

@@ -306,6 +306,8 @@ function registerEvents(options, chart) {
             showMax: true,
             showMin: true,
             thresholds: initThresholds(24)
+        },
+        [PanelType.GeoMap]: {
         }
     }
 }
