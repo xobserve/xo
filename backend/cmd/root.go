@@ -25,6 +25,8 @@ import (
 	"github.com/spf13/cobra"
 )
 
+var cfgFile string
+
 // rootCmd represents the base command when called without any subcommands
 var rootCmd = &cobra.Command{
 	Use:   "starship",
@@ -33,7 +35,12 @@ var rootCmd = &cobra.Command{
 	// Uncomment the following line if your bare application
 	// has an action associated with it:
 	Run: func(cmd *cobra.Command, args []string) {
-		config.Init("config.yaml")
+		fmt.Println("here333333", args)
+		var cfg = "config.yaml"
+		if cfgFile != "" {
+			cfg = cfgFile
+		}
+		config.Init(cfg)
 		err := log.InitLogger(config.Data.Common.LogLevel)
 		if err != nil {
 			fmt.Println("init logger error", err)
@@ -54,6 +61,10 @@ var rootCmd = &cobra.Command{
 		log.RootLogger.Info("server received signal", "signal", sig)
 		server.Close()
 	},
+}
+
+func init() {
+	rootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file")
 }
 
 // Execute adds all child commands to the root command and sets flags appropriately.

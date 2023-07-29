@@ -2,3 +2,5 @@ backend
 datav
 datav.db
 commit.sh
+testConfig.yaml
+start.sh
