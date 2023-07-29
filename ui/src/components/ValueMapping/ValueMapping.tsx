@@ -13,7 +13,7 @@
 
 import { Button } from "@chakra-ui/button"
 import { useDisclosure } from "@chakra-ui/hooks"
-import { Box, HStack, StackDivider, Text, VStack } from "@chakra-ui/layout"
+import { Box, Flex, HStack, StackDivider, Text, VStack } from "@chakra-ui/layout"
 import { Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay } from "@chakra-ui/modal"
 
 import { useStore } from "@nanostores/react"
@@ -25,6 +25,7 @@ import React, { memo, useState } from "react"
 import { FaChevronDown, FaChevronUp, FaPlus, FaRegCopy, FaTimes } from "react-icons/fa"
 import { ValueMappingMsg, commonMsg } from "src/i18n/locales/en"
 import { ValueMappingItem } from "types/dashboard"
+import { paletteColorNameToHex } from "utils/colors"
 const { Option } = Select
 interface Props {
     value: ValueMappingItem[]
@@ -86,6 +87,21 @@ const ValueMapping = memo((props: Props) => {
     }
 
     return (<>
+        <VStack alignItems="left">
+            {
+                value.map((v, i) => {
+                    const v1 = v.type == "range" ? `${v.value.from} ~ ${v.value.to}` : v.value
+                    return <HStack fontSize="0.8rem" fontWeight="500" opacity="0.7"> 
+                        <Text width="30%" noOfLines={1}>{v1}</Text>
+                        <Text width="10%" textAlign="center">-</Text>
+                        <Text width="40%" noOfLines={1} wordBreak="break-all" textAlign="center">{v.text}</Text>
+                        <Flex width="10%" justifyContent="end"  >
+                            <Box width="15px" height="15px" bg={paletteColorNameToHex(v.color)} borderRadius="50%" className="bordered"></Box>
+                        </Flex>
+                    </HStack>
+                })
+            }
+        </VStack>
         <Button size="sm" colorScheme="gray" onClick={onOpen}>{t.editItem({ name: t.valueMapping })}</Button>
         <Modal isOpen={isOpen} onClose={onClose}>
             <ModalOverlay />
@@ -98,7 +114,7 @@ const ValueMapping = memo((props: Props) => {
                             value.map((v, i) => {
                                 const typeOption = typeOptions.find(t => t.value === v.type)
                                 return (
-                                    <HStack  key={i + v.type + v.value} divider={<StackDivider />} spacing={3}>
+                                    <HStack key={i + v.type + v.value} divider={<StackDivider />} spacing={3}>
                                         <Select
                                             style={{ minWidth: '120px' }}
                                             placeholder="mapping type"
@@ -110,6 +126,8 @@ const ValueMapping = memo((props: Props) => {
                                                         from: null,
                                                         to: null
                                                     }
+                                                } else if (v.type == "null") {
+                                                    value[i].value = "null"
                                                 } else {
                                                     value[i].value = ''
                                                 }
@@ -146,7 +164,7 @@ const ValueMapping = memo((props: Props) => {
                                                     <EditorInputItem bordered={false} value={v.value} placeholder={typeOption?.placeholder} onChange={v1 => {
                                                         value[i].value = v1
                                                         setValue(cloneDeep(value))
-                                                    }}  disabled={v.type == "null"}/>
+                                                    }} disabled={v.type == "null"} />
                                             }
                                         </HStack>
                                         <Box width="150px">
@@ -155,15 +173,15 @@ const ValueMapping = memo((props: Props) => {
                                                 setValue(cloneDeep(value))
                                             }} />
                                         </Box>
-                                        <ColorPicker color={v.color??""} onChange={c => {
+                                        <ColorPicker color={v.color ?? ""} onChange={c => {
                                             value[i].color = c
                                             setValue(cloneDeep(value))
                                         }} />
                                         <HStack pl="2" textStyle="annotation" spacing={3}>
-                                            <FaRegCopy cursor="pointer" className="hover-text" onClick={() => onClone(i)}/>
-                                            <FaTimes cursor="pointer" className="hover-text" onClick={() => onRemove(i)}/>
-                                            {i != 0 && <FaChevronUp cursor="pointer" className="hover-text" onClick={() => moveUp(i)}/>}
-                                            {i != value.length - 1 && <FaChevronDown cursor="pointer" className="hover-text" onClick={() => moveDown(i)}/>}
+                                            <FaRegCopy cursor="pointer" className="hover-text" onClick={() => onClone(i)} />
+                                            <FaTimes cursor="pointer" className="hover-text" onClick={() => onRemove(i)} />
+                                            {i != 0 && <FaChevronUp cursor="pointer" className="hover-text" onClick={() => moveUp(i)} />}
+                                            {i != value.length - 1 && <FaChevronDown cursor="pointer" className="hover-text" onClick={() => moveDown(i)} />}
                                         </HStack>
                                     </HStack>)
                             })
