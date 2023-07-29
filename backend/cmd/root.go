@@ -44,7 +44,7 @@ var rootCmd = &cobra.Command{
 		server := server.New()
 		err = server.Start()
 		if err != nil {
-			log.RootLogger.Crit("init server error", "error", err)
+			// log.RootLogger.Crit("init server error", "error", err)
 			return
 		}
 		// 等待服务器停止信号
