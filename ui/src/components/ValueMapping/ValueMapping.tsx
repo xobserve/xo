@@ -13,7 +13,6 @@
 
 import { Button } from "@chakra-ui/button"
 import { useDisclosure } from "@chakra-ui/hooks"
-import { Input } from "@chakra-ui/input"
 import { Box, HStack, StackDivider, Text, VStack } from "@chakra-ui/layout"
 import { Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay } from "@chakra-ui/modal"
 
@@ -85,7 +84,7 @@ const ValueMapping = memo((props: Props) => {
         [value[i + 1], value[i]] = [value[i], value[i + 1]]
         setValue(cloneDeep(value))
     }
-    
+
     return (<>
         <Button size="sm" colorScheme="gray" onClick={onOpen}>{t.editItem({ name: t.valueMapping })}</Button>
         <Modal isOpen={isOpen} onClose={onClose}>

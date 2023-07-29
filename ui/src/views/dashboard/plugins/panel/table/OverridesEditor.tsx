@@ -23,6 +23,7 @@ import { isEmpty } from "utils/validate";
 import { CodeEditorModal } from "components/CodeEditor/CodeEditorModal";
 import ThresholdEditor from "components/Threshold/ThresholdEditor";
 import { cloneDeep } from "lodash";
+import ValueMapping from "components/ValueMapping/ValueMapping";
 
 
 interface Props {
@@ -67,6 +68,9 @@ const TableOverridesEditor = ({ override, onChange }: Props) => {
             return <CodeEditorModal value={isEmpty(override.value) ? transformFunc : override.value} onChange={onChange} />
         case TableRules.ColumnThreshold:
             return <ThresholdEditor value={override.value} onChange={onChange} />
+        case TableRules.ColumnValueMapping:
+            return  <ValueMapping value={override.value} onChange={onChange} />
+            
         default:
             return <></>
     }
@@ -91,6 +95,7 @@ export enum TableRules {
     ColumnDisplay = "Column.display",
     ColumnTransform = "Column.textTransform",
     ColumnThreshold = "Column.thresholds",
+    ColumnValueMapping = "Column.valueMapping",
 }
 
 const transformFunc = `

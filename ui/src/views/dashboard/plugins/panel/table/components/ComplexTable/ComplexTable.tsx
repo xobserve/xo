@@ -130,6 +130,7 @@ const ComplexTable = memo((props: Props) => {
     let textWidth = 0;
    
     const colorOverride = findRuleInOverride(override, TableRules.ColumnColor)
+    const mappingOverride = findRuleInOverride(override, TableRules.ColumnValueMapping)
     // modify data
     if (unit || decimal || isFunc || thresholds || columnType || panel.valueMapping.length > 0) {
       for (const row of data) {
@@ -172,6 +173,17 @@ const ComplexTable = memo((props: Props) => {
           }
         }
         
+        if (mappingOverride) {
+          const [r,c1] = mapValueToText(v, mappingOverride)
+          if (r) {
+            row[column.dataIndex] = replaceWithVariables(r, {[VariableCurrentValue]:v})
+            isMapped = true
+          }
+          if (!isEmpty(c1)) {
+            color = c1
+          }
+        }
+
         if (!isMapped) {
           if (unit) {
             row[column.dataIndex] = formatUnit(v, unit.units, decimal)
