@@ -29,7 +29,7 @@ type Config struct {
 		RepoUrl  string `yaml:"repo_url"`
 	}
 	Database struct {
-		ConnectTo     string `yaml:"connect_to"`
+		ConnectTo     string `yaml:"type"`
 		Account       string
 		AccountSecret string `yaml:"account_secret"`
 		Host          string

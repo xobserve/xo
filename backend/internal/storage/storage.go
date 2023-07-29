@@ -15,6 +15,7 @@ package storage
 import (
 	"database/sql"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"os"
 	"strings"
@@ -59,7 +60,7 @@ func connectDatabase() error {
 	var err error
 	if config.Data.Database.ConnectTo == "mysql" {
 		d, err = sql.Open("mysql", fmt.Sprintf("%s:%s@tcp(%s:%d)/%s?parseTime=true", config.Data.Database.Account, config.Data.Database.AccountSecret, config.Data.Database.Host, config.Data.Database.Port, config.Data.Database.Database))
-	} else {
+	} else if config.Data.Database.ConnectTo == "sqlite" {
 		var path string
 		dataPath := strings.TrimSpace(config.Data.Paths.SqliteData)
 		if dataPath == "" {
@@ -78,6 +79,8 @@ func connectDatabase() error {
 		}
 
 		d, err = sql.Open("sqlite3", path)
+	} else {
+		return errors.New("error database")
 	}
 
 	if err != nil {

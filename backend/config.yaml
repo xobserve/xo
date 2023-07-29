@@ -1,0 +1,64 @@
+#################################### Common Configurations##############################
+common:
+    version: 0.6.0
+    log_level: debug
+    is_prod: false
+    app_name: "datav"
+    repo_url: "https://github.com/DataObserve/datav"
+
+#################################### Server ##############################
+server:
+    addr: ":8080"
+    base_url: "/api/test"
+
+#################################### Database ##############################
+database:
+    connect_to: mysql
+    account: root
+    account_secret: Sunface-Mysql-im.dev
+    host: localhost
+    port: 3306
+    database: test
+
+#################################### User/Session ##############################
+user: 
+    # a session is created when user login to im.dev, this session will be expired after X seconds
+    session_expire: 2592000
+
+
+#################################### Paths ##############################
+# Path to where im.dev can store temp files, sessions, and the sqlite3 db (if that is used)
+paths:
+    # sqlite3 db files
+    data: ""
+    logs: ""
+
+
+
+#################################### Datasource Plugins ##############################
+datasource:
+   prometheus_addr: http://localhost:9090
+   jaeger_addr: 
+   external_http_addr: 
+
+#################################### Panel Plugins ##############################
+panel:
+  echarts: 
+    enable_baidu_map: false
+    baidu_map_ak: 'KOmVjPVUAey1G2E8zNhPiuQ6QiEmAwZu'
+
+#################################### SMTP ##############################
+smtp:
+  addr: ""
+  from_address: ""
+  from_name: ""
+  auth_username: "" 
+  auth_password: ""
+
+
+#################################### Paths ##############################
+# Path to where datav can store temp files, sessions, and the sqlite3 db (if that is used)
+paths:
+    # sqlite3 db files
+    sqlite_data: ""
+    logs: ""
