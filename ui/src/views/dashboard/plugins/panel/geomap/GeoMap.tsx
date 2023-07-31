@@ -18,8 +18,9 @@ import TileLayer from 'ol/layer/Tile';
 import XYZ from 'ol/source/XYZ';
 import { PanelProps } from "types/dashboard";
 import { SeriesData } from "types/seriesData";
-import heatmapLayer from "./layers/dataLayer/heatmap";
+import getHeatmapLayer from "./layers/dataLayer/heatmap";
 import getBaseMap from "./layers/basemap/BaseMap";
+import { DataLayerType } from "types/plugins/geoMap";
 
 interface Props extends PanelProps {
     data: SeriesData[][]
@@ -28,27 +29,54 @@ interface Props extends PanelProps {
 
 const GeoMapPanel = (props: Props) => {
     const { width, height, panel, data } = props
+    const options = panel.plugins.geomap
     console.log("here33333:", data)
     const ref = useRef(null)
+    let dataLayer;
+    switch (options.dataLayer.layer) {
+        case DataLayerType.Heatmap:
+            dataLayer = getHeatmapLayer()
+            break;
+        default:
+            break;
+    }
+    
+    
+    useEffect(() => {
+        if (options.dataLayer.layer == DataLayerType.Heatmap) {
+            const source = dataLayer.getSource() 
+            //@ts-ignore
+            source.update(data.flat())
+            source.forEachFeature( (f) => {
+            const idx = f.get('rowIndex') as number;
+    
+            if(idx != null) {
+                f.set('_weight', 0.5);
+            }
+            });
+        }
+
+    },[data, options.dataLayer.layer])
 
     useEffect(() => {
         const baseMap = getBaseMap(panel.plugins.geomap)
+        const layers = [baseMap]
+        if (dataLayer) {
+            layers.push(dataLayer)
+        }
         const map = new Map({
             target: ref.current,
-            layers: [
-                baseMap,
-                heatmapLayer
-            ],
+            layers: layers,
             view: new View({
                 center: [0, 0],
                 zoom: 2
             })
         });
-
+      
         return () => {
             map.dispose()
         }
-    }, [panel.plugins.geomap])
+    }, [options])
 
 
     return (

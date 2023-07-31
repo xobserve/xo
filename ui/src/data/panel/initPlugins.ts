@@ -13,7 +13,7 @@
 import { PanelType } from "types/dashboard";
 import { LayoutOrientation } from "types/layout";
 import { PanelPlugins, PieLegendPlacement, ThresholdDisplay, Units, UnitsType } from "types/panel/plugins";
-import { ArcGisMapServer, BaseLayerType } from "types/plugins/geoMap";
+import { ArcGisMapServer, BaseLayerType, DataLayerType } from "types/plugins/geoMap";
 import { ThresholdsConfig, ThresholdsMode } from "types/threshold";
 import { ValueCalculationType } from "types/value";
 import { colors, palettes } from "utils/colors";
@@ -314,6 +314,9 @@ function registerEvents(options, chart) {
                 mapServer: ArcGisMapServer.WorldStreet,
                 url: null,
                 attr: null
+            },
+            dataLayer: {
+                layer: DataLayerType.Heatmap  
             }
         }
     }

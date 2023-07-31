@@ -44,7 +44,7 @@ export interface Field<T = any, V = Vector<T>> {
      *  Field value type (string, number, etc)
      */
     type: FieldType;
-    values: any[]; // The raw field values
+    values: T[]; // The raw field values
     labels?: {[key: string]: string};
 }
 

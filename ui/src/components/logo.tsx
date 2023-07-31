@@ -16,7 +16,7 @@ import React from "react"
 const Logo = ({showText = false, width = 10}) => {
     return (
             <HStack cursor="pointer" spacing="1">
-                <Image width={width} src="/logo.png" animation="spin 20s linear infinite"/>
+                <Image width={width} src="/public/logo.png" animation="spin 20s linear infinite"/>
                 {showText && <Text fontWeight="600" fontSize="xl">Datav</Text>}
             </HStack>
     )

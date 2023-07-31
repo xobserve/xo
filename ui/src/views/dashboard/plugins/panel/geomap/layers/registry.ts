@@ -4,7 +4,7 @@ import { Map as OpenLayersMap } from 'ol';
 
 import { basemapLayers } from './basemaps';
 import { carto } from './basemaps/carto';
-import { dataLayers } from './data';
+import { dataLayers } from './dataLayer';
 import { MapLayerOptions, MapLayerRegistryItem,SelectableValue } from '../types';
 import { PluginState, Registry } from '../utils/registry';
 

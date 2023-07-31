@@ -18,6 +18,7 @@ export default ({ mode }) => {
             svgrPlugin()
         ],
         base: './',
+        publicDir: '/public',
         build: {
             outDir: 'build',
             assetsDir: 'static',

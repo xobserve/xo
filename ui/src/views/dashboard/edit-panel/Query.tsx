@@ -92,7 +92,7 @@ const EditPanelQuery = (props: Props) => {
         <Box className="bordered" p="2" borderRadius="0" height="100%">
             <Flex justifyContent="space-between" alignItems="start">
                 <HStack>
-                    <Image width="30px" height="30px" src={`/plugins/datasource/${panel.datasource.type}.svg`} />
+                    <Image width="30px" height="30px" src={`/public/plugins/datasource/${panel.datasource.type}.svg`} />
                     <Select width="fit-content" variant="unstyled" value={panel.datasource.id} onChange={e => {
                         selectDatasource(e.currentTarget.value)
                     }}>

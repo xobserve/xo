@@ -26,3 +26,13 @@ export enum ArcGisMapServer {
     Ocean = "World_Ocean",
     // Custom = "Custom MapServer"
 }
+
+export enum DataLayerType {
+    Heatmap = "Heatmap",
+    Markers = "Markers"
+}
+
+export interface GeoMapDataLayer {
+    type: DataLayerType
+
+}

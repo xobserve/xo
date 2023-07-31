@@ -244,8 +244,6 @@ async function prepareSVG(url: string, size?: number): Promise<string> {
       return res.text();
     })
     .then((text) => {
-      text = textUtil.sanitizeSVGContent(text);
-
       const parser = new DOMParser();
       const doc = parser.parseFromString(text, 'image/svg+xml');
       const svg = doc.getElementsByTagName('svg')[0];

@@ -26,6 +26,6 @@ export const mapValueToText = (value: number | string, mapping: ValueMappingItem
             break
         }
     }
-
+    
     return [text, color]
 }

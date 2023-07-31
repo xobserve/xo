@@ -116,7 +116,7 @@ const DatasourceEditor = ({ds, onChange=null}) => {
                         return <option key={index} value={DatasourceType[key]}>{key}</option>
                     })}
                 </Select>
-                <Image width="30px" height="30px" src={`/plugins/datasource/${datasource.type}.svg`} />
+                <Image width="30px" height="30px" src={`/public/plugins/datasource/${datasource.type}.svg`} />
             </HStack>
         </FormItem>
         {/* @needs-update-when-add-new-datasource */}

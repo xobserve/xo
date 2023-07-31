@@ -18,13 +18,21 @@ import { useStore } from "@nanostores/react"
 import { commonMsg } from "src/i18n/locales/en"
 import { Select } from "@chakra-ui/select";
 import { EditorInputItem } from "components/editor/EditorItem";
-import { ArcGisMapServer, BaseLayerType } from "types/plugins/geoMap";
+import { ArcGisMapServer, BaseLayerType, DataLayerType } from "types/plugins/geoMap";
+import RadionButtons from "components/RadioButtons";
 
 const GeoMapPanelEditor = memo(({ panel, onChange }: PanelEditorProps) => {
     const t = useStore(commonMsg)
     const options = panel.plugins.geomap  
     return (<>
     <PanelAccordion title={t.basicSetting}>
+    </PanelAccordion>
+    <PanelAccordion title="Data layer">
+        <PanelEditItem title="Layer" desc="Render data on specific layer which is above base map, different data lay has different rendering effects">
+            <RadionButtons options={Object.keys(DataLayerType).map(k => ({label: k, value: DataLayerType[k]}))} value={options.dataLayer.layer} onChange={v => onChange((panel: Panel) => {
+                    panel.plugins.geomap.dataLayer.layer = v
+                })} />
+        </PanelEditItem>
     </PanelAccordion>
     <PanelAccordion title="Base map layer">
         <PanelEditItem title="Layer" desc="Dispaly the base map you are seeing in the panel">

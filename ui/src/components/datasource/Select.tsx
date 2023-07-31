@@ -48,7 +48,7 @@ const DatasourceSelect = ({ value, onChange, allowTypes = [], variant = "unstyle
         options.push({
             label: ds.name,
             value: ds.id,
-            icon: <Image width="30px" height="30px" mr="2" src={`/plugins/datasource/${ds.type}.svg`} />
+            icon: <Image width="30px" height="30px" mr="2" src={`/public/plugins/datasource/${ds.type}.svg`} />
         })
     })
 

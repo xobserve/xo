@@ -1,7 +1,7 @@
 
   
   import { Field, SeriesData } from 'types/seriesData';
-import { ColorDimensionConfig, DimensionSupplier } from './types';
+import { ColorDimensionConfig, DimensionSupplier } from '../../style/dimensions';
   import { findField, getLastNotNullFieldValue } from './utils';
   
   //---------------------------------------------------------

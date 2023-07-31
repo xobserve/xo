@@ -2,8 +2,9 @@ import Map from 'ol/Map';
 
 
 import { MapLayerOptions, MapLayerRegistryItem } from '../../types';
-import { xyzTiles, defaultXYZConfig, XYZConfig } from './generic';
 import { Registry, RegistryItem } from '../../utils/registry';
+import { xyzTiles, defaultXYZConfig, XYZConfig } from './generic';
+
 
 interface PublicServiceItem extends RegistryItem {
   slug: string;

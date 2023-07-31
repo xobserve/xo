@@ -136,7 +136,7 @@ function Login() {
             <Box className="datav-login" width="100vw" height="100vh" display="flex" justifyContent="center" alignItems="center" background="url('/login-bg.png')" backgroundSize="cover" backgroundPosition="center" backgroundRepeat="no-repeat" backgroundColor="#33a2e5">
                 <HStack width="900px" borderRadius="6px" boxShadow="-4px 5px 10px rgba(0, 0, 0, .4)" marginTop="-30px">
                     <Box className="login-left" width="50%" display="flex" justifyContent="center" alignItems="center" flexDir="column">
-                        <Image src="/logo.png" alt="" height="160px" width="160px" marginLeft="-10px" />
+                        <Image src="/public/logo.png" alt="" height="160px" width="160px" marginLeft="-10px" />
                         <Box fontSize="26px" color="white" fontWeight="bold">Datav</Box>
                     </Box>
                     <Box textAlign="center" width="50%" backgroundColor={"hsla(0, 0%, 100%, .3)"} p="12">
