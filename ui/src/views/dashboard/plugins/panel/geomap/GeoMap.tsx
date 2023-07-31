@@ -18,7 +18,7 @@ import TileLayer from 'ol/layer/Tile';
 import XYZ from 'ol/source/XYZ';
 import { PanelProps } from "types/dashboard";
 import { SeriesData } from "types/seriesData";
-import heatmapLayer from "./heatmapLayer";
+import heatmapLayer from "./layers/dataLayer/heatmap";
 import getBaseMap from "./layers/basemap/BaseMap";
 
 interface Props extends PanelProps {
