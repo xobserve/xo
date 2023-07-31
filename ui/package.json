@@ -93,7 +93,9 @@
     "validator": "^13.5.2",
     "viz.js": "1.8.1",
     "@react-aria/overlays": "3.10.1",
-    "@react-aria/dialog": "3.3.1"
+    "@react-aria/dialog": "3.3.1",
+    "rxjs": "7.8.0",
+    "ol-ext": "4.0.6"
   },
   "devDependencies": {
     "@types/lodash": "^4.14.123",
@@ -124,7 +126,7 @@
     "vite": "^4.4.2",
     "vite-plugin-svgr": "^3.2.0",
     "vite-tsconfig-paths": "^4.2.0",
-    "rxjs": "7.8.0"
+    "@types/ol-ext": "npm:@siedlerchr/types-ol-ext@3.0.9"
   },
   "resolutions": {
     "d3-interpolate": "2.0.1"

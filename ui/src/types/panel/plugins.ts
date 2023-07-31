@@ -12,6 +12,7 @@
 // limitations under the License.
 import { PanelType } from "types/dashboard"
 import { LayoutOrientation } from "types/layout"
+import { ArcGisMapServer, BaseLayerType } from "types/plugins/geoMap"
 import { ThresholdsConfig } from "types/threshold"
 import { ValueCalculationType } from "types/value"
 
@@ -38,7 +39,12 @@ export interface DisableDatasource {
 }
 
 export interface GeoMapSettings {
-    
+    baseMap: {
+        layer: BaseLayerType 
+        mapServer: ArcGisMapServer
+        url: string 
+        attr: string
+    }
 }
 
 export interface BarGaugeSettings {

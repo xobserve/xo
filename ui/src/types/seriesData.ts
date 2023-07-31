@@ -32,6 +32,7 @@ export enum FieldType {
     // Used to detect that the value is some kind of trace data to help with the visualisation and processing.
     Trace = 'trace',
     Other = 'other', // Object, Array, etc
+    Geo = "geo"
 }
 
 export interface Field<T = any, V = Vector<T>> {

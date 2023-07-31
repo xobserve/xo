@@ -10,21 +10,19 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-export interface Help {
-    title: string
-    headers: string[]
-    contents: string[][]
+
+export enum BaseLayerType {
+    OpenStreet = "Open Street Map",
+    ArcGis = "ArcGIS Map Server",
+    Custom = "Custom"
 }
 
-export type TNil = null | undefined;
-
-
-export enum ComparisonOperation {
-    EQ = 'eq',
-    GT = 'gt',
-    GTE = 'gte',
-    LT = 'lt',
-    LTE = 'lte',
-    NEQ = 'neq',
-  }
-  
+export enum ArcGisMapServer {
+    WorldStreet = "World_Street_Map",
+    WorldImagery = "World_Imagery",
+    WorldPhysical = "World_Physical",
+    Topographic = "Topographic",
+    UsaTopo = "USA_Topographic",
+    Ocean = "World_Ocean",
+    // Custom = "Custom MapServer"
+}

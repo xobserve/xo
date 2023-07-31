@@ -134,7 +134,7 @@ export const PanelComponent = ({ dashboard, panel, onRemovePanel, width, height,
 
         let data = []
         let needUpdate = false
-        const interval = calculateInterval(timeRange, ds.queryOptions.maxDataPoints ?? DatasourceMaxDataPoints, isEmpty(ds.queryOptions.minInterval)  ? DatasourceMinInterval:ds.queryOptions.minInterval).intervalMs / 1000
+        const interval = calculateInterval(timeRange, ds.queryOptions.maxDataPoints ?? DatasourceMaxDataPoints, isEmpty(ds.queryOptions.minInterval) ? DatasourceMinInterval : ds.queryOptions.minInterval).intervalMs / 1000
         for (const q0 of ds.queries) {
             const q: PanelQuery = { ...cloneDeep(q0), interval }
             replaceQueryWithVariables(q, ds.type)
@@ -235,7 +235,7 @@ export const PanelComponent = ({ dashboard, panel, onRemovePanel, width, height,
         return panelData
     }, [panel.transform, panel.enableTransform, panelData])
 
-    return <Box height={height} width={width} className={panel.styles.border == "None" ? "hover-bordered" : null}  position="relative">
+    return <Box height={height} width={width} className={panel.styles.border == "None" ? "hover-bordered" : null} position="relative">
         <PanelHeader panel={panel} data={data} queryError={queryError} onCopyPanel={onCopyPanel} onRemovePanel={onRemovePanel} />
         {data && <Box
             // panel={panel}
@@ -368,6 +368,9 @@ const formatQueryId = (datasourceId, dashboardId, panelId, queryId, panelType) =
             break;
         case PanelType.Trace:
             tp = PanelType.Trace
+            break
+        case PanelType.GeoMap:
+            tp = PanelType.GeoMap
             break
         default:
             tp = "seriesData"

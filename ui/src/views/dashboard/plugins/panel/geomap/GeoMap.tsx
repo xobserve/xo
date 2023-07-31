@@ -18,39 +18,41 @@ import TileLayer from 'ol/layer/Tile';
 import XYZ from 'ol/source/XYZ';
 import { PanelProps } from "types/dashboard";
 import { SeriesData } from "types/seriesData";
+import heatmapLayer from "./heatmapLayer";
+import getBaseMap from "./layers/basemap/BaseMap";
 
 interface Props extends PanelProps {
     data: SeriesData[][]
 }
 
 
-const GeoMapPanel = (props: Props) => {    
-    const {width, height, panel,data} = props
-    console.log("here33333:",data)
-    const base = "https://services.arcgisonline.com/ArcGIS/rest/services/"
-    const svc = "World_Street_Map"
+const GeoMapPanel = (props: Props) => {
+    const { width, height, panel, data } = props
+    console.log("here33333:", data)
     const ref = useRef(null)
+
     useEffect(() => {
+        const baseMap = getBaseMap(panel.plugins.geomap)
         const map = new Map({
             target: ref.current,
             layers: [
-              new TileLayer({
-                source: new XYZ({
-                  url: `${base}${svc}/MapServer/tile/{z}/{y}/{x}`
-                })
-              })
+                baseMap,
+                heatmapLayer
             ],
             view: new View({
-              center: [0, 0],
-              zoom: 2
+                center: [0, 0],
+                zoom: 2
             })
-          });
-    
-    },[])
+        });
+
+        return () => {
+            map.dispose()
+        }
+    }, [panel.plugins.geomap])
 
 
     return (
         <Box ref={ref} width={width} height={height}></Box>
-   )
+    )
 }
 export default GeoMapPanel
