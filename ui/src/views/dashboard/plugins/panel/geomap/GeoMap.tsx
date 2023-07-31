@@ -21,6 +21,7 @@ import { SeriesData } from "types/seriesData";
 import getHeatmapLayer from "./layers/dataLayer/heatmap";
 import getBaseMap from "./layers/basemap/BaseMap";
 import { DataLayerType } from "types/plugins/geoMap";
+import getMarkersLayer from "./layers/dataLayer/markers";
 
 interface Props extends PanelProps {
     data: SeriesData[][]
@@ -37,26 +38,30 @@ const GeoMapPanel = (props: Props) => {
         case DataLayerType.Heatmap:
             dataLayer = getHeatmapLayer()
             break;
+        case DataLayerType.Markers:
+            dataLayer = getMarkersLayer()
+            break
         default:
             break;
     }
-    
-    
+
+
     useEffect(() => {
-        if (options.dataLayer.layer == DataLayerType.Heatmap) {
-            const source = dataLayer.getSource() 
+        if (dataLayer) {
+            const source = dataLayer.getSource()
             //@ts-ignore
-            source.update(data.flat())
-            source.forEachFeature( (f) => {
-            const idx = f.get('rowIndex') as number;
-    
-            if(idx != null) {
-                f.set('_weight', 0.5);
+            source.update(data.flat(),panel)
+            if (options.dataLayer.layer == DataLayerType.Heatmap) {
+                source.forEachFeature((f) => {
+                    const idx = f.get('rowIndex') as number;
+                    if (idx != null) {
+                        f.set('_weight', 0.5);
+                    }
+                });
             }
-            });
         }
 
-    },[data, options.dataLayer.layer])
+    }, [data,options.baseMap, options.dataLayer, options.thresholds])
 
     useEffect(() => {
         const baseMap = getBaseMap(panel.plugins.geomap)
@@ -72,7 +77,7 @@ const GeoMapPanel = (props: Props) => {
                 zoom: 2
             })
         });
-      
+
         return () => {
             map.dispose()
         }

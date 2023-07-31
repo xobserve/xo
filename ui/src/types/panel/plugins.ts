@@ -47,7 +47,9 @@ export interface GeoMapSettings {
     }
     dataLayer: {
         layer:  DataLayerType
+        opacity: number 
     }
+    thresholds: ThresholdsConfig
 }
 
 export interface BarGaugeSettings {

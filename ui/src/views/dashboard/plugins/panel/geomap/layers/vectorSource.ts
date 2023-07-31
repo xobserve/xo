@@ -1,10 +1,14 @@
 import { Feature } from 'ol';
 import { Geometry, LineString, Point } from 'ol/geom';
 import VectorSource from 'ol/source/Vector';
-import { Field, SeriesData } from 'types/seriesData';
+import { Field, FieldType, SeriesData } from 'types/seriesData';
 import { fromLonLat } from 'ol/proj'
 import countries from 'public/plugins/panel/geomap/countries.json'
 import { count } from 'console';
+import { Panel } from 'types/dashboard';
+import { getThreshold } from 'components/Threshold/utils';
+import { ThresholdsMode } from 'types/threshold';
+import { paletteColorNameToHex } from 'utils/colors';
 
 // "geometry": {
 //     "type": "Point",
@@ -19,32 +23,80 @@ export class FrameVectorSource<T extends Geometry = Geometry> extends VectorSour
         super();
     }
 
-    update(data: SeriesData[]) {
+    update(data: SeriesData[], panel: Panel) {
         this.clear(true);
         let info = {
             name: "Geometry",
             type: "geo",
             points: [],
-            values: []
+            names: [],
+            values: [],
+            colors: []
         }
-    
+
+        let min;
+        let max;
+
+        const thresholds = panel.plugins.geomap.thresholds
+        if (thresholds.mode == ThresholdsMode.Percentage) {
+            for (const s of data) {
+                let value = 0;
+                for (const field of s.fields) {
+                    if (field.type == FieldType.Number && field.values.length > 0) {
+                        value = field.values[field.values.length - 1]
+                        if (min == undefined || value < min) {
+                            min = value
+                        }
+                        if (max == undefined || value > max) {
+                            max = value
+                        }
+                        break
+                    }
+                }
+            }
+        }
+
+
         for (const s of data) {
             const location = s.name
             //@performance: use a map
-            // console.log("here33333:",location)
             const country = countries.find(c => c.key == location || c.keys?.includes(location))
-            // console.log("here33333:",location, country)
             if (country) {
                 const point = new Point(fromLonLat([country.longitude, country.latitude]));
                 info.points.push(point)
+                info.names.push(s.name)
+                let value = 0;
+                for (const field of s.fields) {
+                    if (field.type == FieldType.Number && field.values.length > 0) {
+                        value = field.values[field.values.length - 1]
+                        if (thresholds.mode != ThresholdsMode.Percentage) {
+                            if (min == undefined || value < min) {
+                                min = value
+                            }
+                            if (max == undefined || value > max) {
+                                max = value
+                            }
+                        }
+                        break
+                    }
+
+                }
+                const threshold = getThreshold(value, thresholds, max)
+                info.values.push(value)
+                info.colors.push(paletteColorNameToHex(threshold.color))
             }
         }
         for (let i = 0; i < info.points.length; i++) {
             this.addFeatureInternal(
                 new Feature({
-                    population: 4000,
+                    name: info.names[i],
+                    value: info.values[i],
+                    min: min,
+                    max: max,
                     rowIndex: i,
                     geometry: info.points[i] as T,
+                    opacity: panel.plugins.geomap.dataLayer.opacity,
+                    color: info.colors[i]
                 })
             );
         }
@@ -52,31 +104,4 @@ export class FrameVectorSource<T extends Geometry = Geometry> extends VectorSour
         // only call this at the end
         this.changed();
     }
-
-    // updateLineString(frame: SeriesData) {
-    //     this.clear(true);
-    //     const info = getGeometryField(frame, this.location);
-    //     if (!info.field) {
-    //         this.changed();
-    //         return;
-    //     }
-
-    //     //eslint-disable-next-line
-    //     const field = info.field as Field<Point>;
-    //     //  传给 LineString 的参数: [[
-    //     //     117.655556,
-    //     //     24.513333
-    //     // ]]
-    //     const geometry = new LineString(field.values.map((p) => p.getCoordinates())) as Geometry;
-    //     this.addFeatureInternal(
-    //         new Feature({
-    //             frame,
-    //             rowIndex: 0,
-    //             geometry: geometry as T,
-    //         })
-    //     );
-
-    //     // only call this at the end
-    //     this.changed();
-    // }
 }

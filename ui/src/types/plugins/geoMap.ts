@@ -20,7 +20,7 @@ export enum BaseLayerType {
 export enum ArcGisMapServer {
     WorldStreet = "World_Street_Map",
     WorldImagery = "World_Imagery",
-    WorldPhysical = "World_Physical",
+    WorldPhysical = "World_Physical_Map",
     Topographic = "Topographic",
     UsaTopo = "USA_Topographic",
     Ocean = "World_Ocean",

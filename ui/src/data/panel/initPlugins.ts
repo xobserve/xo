@@ -316,8 +316,10 @@ function registerEvents(options, chart) {
                 attr: null
             },
             dataLayer: {
-                layer: DataLayerType.Heatmap  
-            }
+                layer: DataLayerType.Heatmap  ,
+                opacity: 0.6
+            },
+            thresholds: initThresholds()
         }
     }
 }
