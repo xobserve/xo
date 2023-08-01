@@ -65,15 +65,14 @@ export class FrameVectorSource<T extends Geometry = Geometry> extends VectorSour
 
 
         for (const s of data) {
-            const code = s.name
-            //@performance: use a map
-            const country = countries.find(c => c.key == code || c.keys?.includes(code))
+            const code = s.name.toLowerCase()
+            const country = countries[code]
             const override = findOverride(panel, code)
             if (country) {
-                const point = new Point(fromLonLat([country.longitude, country.latitude]));
+                const point = new Point(fromLonLat(country[1]));
                 info.points.push(point)
                 info.codes.push(findRuleInOverride(override, GeomapRules.LocationName)??code)
-                info.names.push(country.name)
+                info.names.push(country[0])
                 let value = 0;
                 for (const field of s.fields) {
                     if (field.type == FieldType.Number && field.values.length > 0) {
