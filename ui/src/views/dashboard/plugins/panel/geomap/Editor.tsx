@@ -137,6 +137,46 @@ const GeoMapPanelEditor = memo(({ panel, onChange }: PanelEditorProps) => {
                     })
                 }} />
             </PanelEditItem>
+            <PanelEditItem title="Show zoom button" desc="Display zoom button in upper left corner">
+                <Switch isChecked={options.controls.showZoom} onChange={e => {
+                    const v = e.target.checked
+                    onChange((panel: Panel) => {
+                        panel.plugins.geomap.controls.showZoom = v
+                    })
+                }} />
+            </PanelEditItem>
+            <PanelEditItem title="Show attribution" desc="Display map source attribution in the lower right corner">
+                <Switch isChecked={options.controls.showAttribution} onChange={e => {
+                    const v = e.target.checked
+                    onChange((panel: Panel) => {
+                        panel.plugins.geomap.controls.showAttribution = v
+                    })
+                }} />
+            </PanelEditItem>
+            <PanelEditItem title="Show scale" desc="Display map scale info  in the lower left corner">
+                <Switch isChecked={options.controls.showScale} onChange={e => {
+                    const v = e.target.checked
+                    onChange((panel: Panel) => {
+                        panel.plugins.geomap.controls.showScale = v
+                    })
+                }} />
+            </PanelEditItem>
+            {/* <PanelEditItem title="Show measure tools" desc="Display map measure tools in the upper right corner">
+                <Switch isChecked={options.controls.showMeasure} onChange={e => {
+                    const v = e.target.checked
+                    onChange((panel: Panel) => {
+                        panel.plugins.geomap.controls.showMeasure = v
+                    })
+                }} />
+            </PanelEditItem> */}
+            {/* <PanelEditItem title="Show debug" desc="Display map debug info on the right">
+                <Switch isChecked={options.controls.showDebug} onChange={e => {
+                    const v = e.target.checked
+                    onChange((panel: Panel) => {
+                        panel.plugins.geomap.controls.showDebug = v
+                    })
+                }} />
+            </PanelEditItem> */}
             </PanelAccordion>
 
         <PanelAccordion title="Thresholds">
@@ -149,7 +189,12 @@ const GeoMapPanelEditor = memo(({ panel, onChange }: PanelEditorProps) => {
 })
 
 export default GeoMapPanelEditor
-
+// showZoom: boolean
+// showAttribution: boolean
+// showScale: boolean
+// showDebug: boolean
+// showMeasure: boolean
+// showTooltip: boolean
 
 const InitialViewEditor = ({ value, onChange }) => {
     return <div>

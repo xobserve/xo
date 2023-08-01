@@ -33,7 +33,8 @@ const getBaseMap = (options: GeoMapSettings) => {
             url = `${arcGisbase}${mapServer}/MapServer/tile/{z}/{y}/{x}`;
             return  new TileLayer({
                 source: new XYZ({
-                  url: url
+                  url: url,
+                  attributions: "Tiles © ArcGIS"
                 })
               })
         case BaseLayerType.Custom:

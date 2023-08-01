@@ -9,23 +9,23 @@ import { TooltipContainer } from '../../graph/Tooltip/Tooltip';
 import { Portal } from '@chakra-ui/portal';
 
 interface Props {
-  ttip?: GeomapHoverPayload;
+  tooltip?: GeomapHoverPayload;
   isOpen: boolean;
   onClose: () => void;
 }
 
-export const GeomapTooltip = ({ ttip, onClose, isOpen }: Props) => {
+export const GeomapTooltip = ({ tooltip, onClose, isOpen }: Props) => {
   const ref = createRef<HTMLElement>();
   const { overlayProps } = useOverlay({ onClose, isDismissable: true, isOpen }, ref);
   const { dialogProps } = useDialog({}, ref);
 
   return (
     <>
-      {ttip && ttip.layers && (
+      {tooltip && tooltip.layers && (
         <Portal>
-          <TooltipContainer position={{ x: ttip.pageX, y: ttip.pageY }} offset={{ x: 10, y: 10 }} allowPointerEvents>
+          <TooltipContainer position={{ x: tooltip.pageX, y: tooltip.pageY }} offset={{ x: 10, y: 10 }} allowPointerEvents>
             <section ref={ref} {...overlayProps} {...dialogProps}>
-              <ComplexDataHoverView layers={ttip.layers} isOpen={isOpen} onClose={onClose} />
+              <ComplexDataHoverView layers={tooltip.layers} isOpen={isOpen} onClose={onClose} />
             </section>
           </TooltipContainer>
         </Portal>

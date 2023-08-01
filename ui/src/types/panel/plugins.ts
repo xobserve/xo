@@ -55,6 +55,12 @@ export interface GeoMapSettings {
     }
     controls: {
         enableZoom: boolean
+        showZoom: boolean
+        showAttribution: boolean
+        showScale: boolean
+        showDebug: boolean
+        showMeasure: boolean
+        showTooltip: boolean
     }
     thresholds: ThresholdsConfig
 }

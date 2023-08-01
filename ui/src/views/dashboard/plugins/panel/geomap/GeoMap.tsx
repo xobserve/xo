@@ -10,6 +10,7 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
+import { Global } from '@emotion/react';
 import { Box } from "@chakra-ui/react"
 import React, { useEffect, useRef, useState } from "react"
 import Map from 'ol/Map';
@@ -21,7 +22,13 @@ import getBaseMap from "./layers/basemap/BaseMap";
 import { DataLayerType } from "types/plugins/geoMap";
 import getMarkersLayer from "./layers/dataLayer/markers";
 import { fromLonLat } from "ol/proj";
-import { MouseWheelZoom, defaults as interactionDefaults  } from "ol/interaction";
+import { MouseWheelZoom, defaults as interactionDefaults } from "ol/interaction";
+import Zoom from 'ol/control/Zoom';
+import ScaleLine from 'ol/control/ScaleLine';
+import Attribution from 'ol/control/Attribution';
+import { GeomapTooltip } from "./components/Tooltip";
+import 'ol/ol.css';
+import 'ol-ext/dist/ol-ext.css';
 
 interface Props extends PanelProps {
     data: SeriesData[][]
@@ -76,11 +83,11 @@ const GeoMapPanel = (props: Props) => {
     }, [options.initialView])
 
     // effects which cause interactions to change
-     useEffect(() => {
+    useEffect(() => {
         if (map) {
-            mouseWheelZoom.current.setActive(options.controls.enableZoom)
+            initControls(map)
         }
-    }, [options.controls.enableZoom])
+    }, [options.controls])
 
     // effects which need to re-create the map
     useEffect(() => {
@@ -99,23 +106,53 @@ const GeoMapPanel = (props: Props) => {
             }),
             interactions: interactionDefaults({
                 mouseWheelZoom: false, // managed by initControls
-              }),
+            }),
         });
 
         mouseWheelZoom.current = new MouseWheelZoom();
         map.addInteraction(mouseWheelZoom.current);
-        mouseWheelZoom.current.setActive(options.controls.enableZoom)
+
+        initControls(map)
 
         setMap(map)
         geomap = map
         return () => {
             map.dispose()
         }
-    }, [])
+    }, [options.baseMap, options.dataLayer])
 
+    const initControls = (map) => {
+        map.getControls().clear()
+        mouseWheelZoom.current.setActive(options.controls.enableZoom)
+        if (options.controls.showZoom) {
+            map.addControl(
+                new Zoom()
+            );
+        }
+
+
+        if (options.controls.showScale) {
+            map.addControl(
+                new ScaleLine({
+                    minWidth: 100,
+                })
+            );
+        }
+
+        if (options.controls.showAttribution) {
+            map.addControl(new Attribution({ collapsed: true, collapsible: true }));
+        }
+
+    }
 
     return (
-        <Box ref={ref} width={width} height={height}></Box>
+        <>
+            <Box ref={ref} width={width} height={height}>
+                {/* <GeomapTooltip /> */}
+            </Box>
+        </>
     )
 }
 export default GeoMapPanel
+
+

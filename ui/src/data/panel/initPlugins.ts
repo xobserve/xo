@@ -325,6 +325,12 @@ function registerEvents(options, chart) {
             },
             controls: {
                 enableZoom: true,
+                showZoom: true,
+                showAttribution: true,
+                showScale: true,
+                showDebug: false,
+                showMeasure: false,
+                showTooltip: true
             },
             thresholds: initThresholds()
         }
