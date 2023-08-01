@@ -161,6 +161,14 @@ const GeoMapPanelEditor = memo(({ panel, onChange }: PanelEditorProps) => {
                     })
                 }} />
             </PanelEditItem>
+            <PanelEditItem title="Show tooltip">
+                <Switch isChecked={options.controls.showTooltip} onChange={e => {
+                    const v = e.target.checked
+                    onChange((panel: Panel) => {
+                        panel.plugins.geomap.controls.showTooltip = v
+                    })
+                }} />
+            </PanelEditItem>
             {/* <PanelEditItem title="Show measure tools" desc="Display map measure tools in the upper right corner">
                 <Switch isChecked={options.controls.showMeasure} onChange={e => {
                     const v = e.target.checked

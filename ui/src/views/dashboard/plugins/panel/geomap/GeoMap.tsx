@@ -152,7 +152,7 @@ const GeoMapPanel = (props: Props) => {
     return (
         <>
             <Box ref={mapContainer} width={width} height={height}>
-                {map && <GeomapTooltip map={map} />}
+                {map && options.controls.showTooltip &&  <GeomapTooltip map={map} />}
             </Box>
         </>
     )

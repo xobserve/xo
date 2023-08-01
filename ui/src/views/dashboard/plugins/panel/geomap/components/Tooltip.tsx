@@ -6,7 +6,6 @@ import { TooltipContainer } from '../../graph/Tooltip/Tooltip';
 // import { Portal } from '@chakra-ui/portal';
 import { Map, MapBrowserEvent } from 'ol';
 import { toLonLat } from 'ol/proj';
-import { Box } from '@chakra-ui/react';
 import { Portal } from 'components/portal/Portal';
 
 interface Props {
@@ -15,7 +14,7 @@ interface Props {
 
 export const GeomapTooltip = ({ map }: Props) => {
   const [tooltip, setTooltip] = useState(null)
-  const onHover = (evt: MapBrowserEvent<MouseEvent>, map) => {
+  function onHover (evt: MapBrowserEvent<MouseEvent>)  {
     const mouse = evt.originalEvent;
     const pixel = map.getEventPixel(mouse);
     const hover = toLonLat(map.getCoordinateFromPixel(pixel));
@@ -49,9 +48,12 @@ export const GeomapTooltip = ({ map }: Props) => {
 
     return hoverPayload.data.length > 0
   };
-
+  
   useEffect(() => {
-    map.on('pointermove', (e) => onHover(e, map));
+    map.on('pointermove', onHover);
+    return  () => {
+      map.un('pointermove', onHover);
+    }
   }, [map])
 
   return (
