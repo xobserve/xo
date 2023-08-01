@@ -11,6 +11,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 import { BarGaugeRules } from "src/views/dashboard/plugins/panel/barGauge/OverrideEditor";
+import { GeomapRules } from "src/views/dashboard/plugins/panel/geomap/OverridesEditor";
 import { GraphRules } from "src/views/dashboard/plugins/panel/graph/OverridesEditor";
 import { StatRules } from "src/views/dashboard/plugins/panel/stat/OverridesEditor";
 import { TableRules } from "src/views/dashboard/plugins/panel/table/OverridesEditor";
@@ -49,6 +50,8 @@ export const getPanelOverridesRules = (panelType):string[] => {
             return  Object.keys(BarGaugeRules).map(k => BarGaugeRules[k])
         case PanelType.Stat:
             return  Object.keys(StatRules).map(k => StatRules[k])
+        case PanelType.GeoMap:
+            return  Object.keys(GeomapRules).map(k => GeomapRules[k])
         default:
             return []
     }
