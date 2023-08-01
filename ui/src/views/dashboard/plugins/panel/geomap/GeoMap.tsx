@@ -14,22 +14,22 @@ import { Box } from "@chakra-ui/react"
 import React, { useEffect, useRef, useState } from "react"
 import Map from 'ol/Map';
 import View from 'ol/View';
-import TileLayer from 'ol/layer/Tile';
-import XYZ from 'ol/source/XYZ';
 import { PanelProps } from "types/dashboard";
 import { SeriesData } from "types/seriesData";
 import getHeatmapLayer from "./layers/dataLayer/heatmap";
 import getBaseMap from "./layers/basemap/BaseMap";
 import { DataLayerType } from "types/plugins/geoMap";
 import getMarkersLayer from "./layers/dataLayer/markers";
+import { fromLonLat } from "ol/proj";
 
 interface Props extends PanelProps {
     data: SeriesData[][]
 }
 
-
+export let geomap: Map = null
 const GeoMapPanel = (props: Props) => {
     const { width, height, panel, data } = props
+    const [map, setMap] = useState<Map>(null)
     const options = panel.plugins.geomap
     console.log("here33333:", data)
     const ref = useRef(null)
@@ -45,12 +45,11 @@ const GeoMapPanel = (props: Props) => {
             break;
     }
 
-
     useEffect(() => {
         if (dataLayer) {
             const source = dataLayer.getSource()
             //@ts-ignore
-            source.update(data.flat(),panel)
+            source.update(data.flat(), panel)
             if (options.dataLayer.layer == DataLayerType.Heatmap) {
                 source.forEachFeature((f) => {
                     const idx = f.get('rowIndex') as number;
@@ -61,8 +60,16 @@ const GeoMapPanel = (props: Props) => {
             }
         }
 
-    }, [data,options.baseMap, options.dataLayer, options.thresholds])
 
+    }, [data, options.baseMap, options.dataLayer, options.thresholds])
+
+    useEffect(() => {
+        if (map) {
+            const view = map.getView()
+            view.setCenter(fromLonLat(options.initialView.center))
+            view.setZoom(options.initialView.zoom)
+        }
+    }, [options.initialView])
     useEffect(() => {
         const baseMap = getBaseMap(panel.plugins.geomap)
         const layers = [baseMap]
@@ -73,11 +80,13 @@ const GeoMapPanel = (props: Props) => {
             target: ref.current,
             layers: layers,
             view: new View({
-                center: [0, 0],
-                zoom: 2
+                center: fromLonLat(options.initialView.center ?? [0, 0]),
+                zoom: options.initialView.zoom ?? 2,
+                // showFullExtent: true, // allows zooming so the full range is visible
             })
         });
-
+        setMap(map)
+        geomap = map
         return () => {
             map.dispose()
         }

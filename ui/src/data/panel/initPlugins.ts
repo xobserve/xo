@@ -309,6 +309,10 @@ function registerEvents(options, chart) {
             thresholds: initThresholds(24)
         },
         [PanelType.GeoMap]: {
+            initialView: {
+                center: [0, 0],
+                zoom: 2,
+            },
             baseMap: {
                 layer: BaseLayerType.ArcGis,
                 mapServer: ArcGisMapServer.WorldStreet,

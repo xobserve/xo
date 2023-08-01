@@ -17,16 +17,62 @@ import React, { memo } from "react";
 import { useStore } from "@nanostores/react"
 import { commonMsg } from "src/i18n/locales/en"
 import { Select } from "@chakra-ui/select";
-import { EditorInputItem, EditorSliderItem } from "components/editor/EditorItem";
+import { EditorInputItem, EditorNumberItem, EditorSliderItem } from "components/editor/EditorItem";
 import { ArcGisMapServer, BaseLayerType, DataLayerType } from "types/plugins/geoMap";
 import RadionButtons from "components/RadioButtons";
 import ThresholdEditor from "components/Threshold/ThresholdEditor";
+import countries from 'public/plugins/panel/geomap/countries.json'
+import { Button, HStack, Text } from "@chakra-ui/react";
+import { geomap } from "./GeoMap";
+import { toLonLat } from "ol/proj";
+import { round } from "lodash";
 
 const GeoMapPanelEditor = memo(({ panel, onChange }: PanelEditorProps) => {
     const t = useStore(commonMsg)
     const options = panel.plugins.geomap
+    console.log("here33333",options)
     return (<>
         <PanelAccordion title={t.basicSetting}>
+            <PanelEditItem title="Initial view" desc="The loation shows when map first loads">
+                <HStack>
+                    <Text fontSize="0.8rem" width="80px">Longitude</Text>
+                    <EditorNumberItem notNull key={options.initialView.center[0]} value={options.initialView.center[0]} min={-180} max={180} step={0.1} onChange={v => {
+                        onChange((panel: Panel) => {
+                            panel.plugins.geomap.initialView.center[0] = v
+                        })
+                    }} />
+                </HStack>
+                <HStack>
+                    <Text fontSize="0.8rem" width="80px">Latitude</Text>
+                    <EditorNumberItem notNull  key={options.initialView.center[1]} value={options.initialView.center[1]} min={-90} max={90} step={0.1} onChange={v => {
+                        onChange((panel: Panel) => {
+                            panel.plugins.geomap.initialView.center[1] = v
+                        })
+                    }} />
+                </HStack>
+                <HStack>
+                    <Text fontSize="0.8rem" width="80px">Zoom</Text>
+                    <EditorNumberItem notNull key={options.initialView.zoom} value={options.initialView.zoom} min={1} max={18} step={1} onChange={v => {
+                        onChange((panel: Panel) => {
+                            panel.plugins.geomap.initialView.zoom = v
+                        })
+                    }} />
+                </HStack>
+            </PanelEditItem>
+            <PanelEditItem title="Use current view" desc="Use the location coordinates you are currently zooming in">
+                <Button size="sm" onClick={() => {
+                    if (geomap) {
+                        const view = geomap.getView()
+                        const center = toLonLat(view.getCenter())
+                        const zoom = view.getZoom()
+                        onChange((panel: Panel) => {
+                            panel.plugins.geomap.initialView.center = [round(center[0],3), round(center[1],3)]
+                            panel.plugins.geomap.initialView.zoom = round(zoom, 3)
+                        })
+                    }
+    
+                }}>Use current view</Button>
+            </PanelEditItem>
         </PanelAccordion>
         <PanelAccordion title="Data layer">
             <PanelEditItem title="Layer" desc="Render data on specific layer which is above base map, different data lay has different rendering effects">
@@ -95,3 +141,11 @@ const GeoMapPanelEditor = memo(({ panel, onChange }: PanelEditorProps) => {
 })
 
 export default GeoMapPanelEditor
+
+
+const InitialViewEditor = ({ value, onChange }) => {
+    return <div>
+        <div>Location</div>
+        <div>Zoom</div>
+    </div>
+}

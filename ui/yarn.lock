@@ -5923,7 +5923,7 @@ ol-mapbox-style@^10.1.0:
     mapbox-to-css-font "^2.4.1"
     ol "^7.3.0"
 
-ol@*, ol@^7.3.0, ol@^7.4.0:
+ol@*, ol@^7.2.2, ol@^7.3.0:
   version "7.4.0"
   resolved "https://registry.yarnpkg.com/ol/-/ol-7.4.0.tgz#935436c0843d1f939972e076d4fcb130530ce9d7"
   integrity sha512-bgBbiah694HhC0jt8ptEFNRXwgO8d6xWH3G97PCg4bmn9Li5nLLbi59oSrvqUI6VPVwonPQF1YcqJymxxyMC6A==

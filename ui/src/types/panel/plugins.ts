@@ -39,6 +39,10 @@ export interface DisableDatasource {
 }
 
 export interface GeoMapSettings {
+    initialView: {
+        center: [number, number],
+        zoom: number
+    },
     baseMap: {
         layer: BaseLayerType 
         mapServer: ArcGisMapServer
