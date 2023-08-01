@@ -32,7 +32,7 @@ export const TooltipView = ({ tooltip }: Props) => {
                 <Text className="color-text">{v.code}</Text>
                 <Text fontSize="0.7rem">{v.name}</Text>
               </HStack>
-              <Text ml="2">{v.value}</Text>
+              <Text ml="2">{v.display}</Text>
             </Flex>)
           }
         </VStack>

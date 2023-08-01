@@ -26,6 +26,9 @@ import { Button, HStack, Switch, Text } from "@chakra-ui/react";
 import { geomap } from "./GeoMap";
 import { toLonLat } from "ol/proj";
 import { round } from "lodash";
+import { UnitPicker } from "components/Unit";
+import { Units } from "types/panel/plugins";
+import ValueCalculation from "components/ValueCalculation";
 
 const GeoMapPanelEditor = memo(({ panel, onChange }: PanelEditorProps) => {
     const t = useStore(commonMsg)
@@ -43,7 +46,7 @@ const GeoMapPanelEditor = memo(({ panel, onChange }: PanelEditorProps) => {
                 </HStack>
                 <HStack>
                     <Text fontSize="0.8rem" width="80px">Latitude</Text>
-                    <EditorNumberItem notNull  key={options.initialView.center[1]} value={options.initialView.center[1]} min={-90} max={90} step={0.1} onChange={v => {
+                    <EditorNumberItem notNull key={options.initialView.center[1]} value={options.initialView.center[1]} min={-90} max={90} step={0.1} onChange={v => {
                         onChange((panel: Panel) => {
                             panel.plugins.geomap.initialView.center[1] = v
                         })
@@ -65,11 +68,11 @@ const GeoMapPanelEditor = memo(({ panel, onChange }: PanelEditorProps) => {
                         const center = toLonLat(view.getCenter())
                         const zoom = view.getZoom()
                         onChange((panel: Panel) => {
-                            panel.plugins.geomap.initialView.center = [round(center[0],3), round(center[1],3)]
+                            panel.plugins.geomap.initialView.center = [round(center[0], 3), round(center[1], 3)]
                             panel.plugins.geomap.initialView.zoom = round(zoom, 3)
                         })
                     }
-    
+
                 }}>Use current view</Button>
             </PanelEditItem>
         </PanelAccordion>
@@ -185,7 +188,28 @@ const GeoMapPanelEditor = memo(({ panel, onChange }: PanelEditorProps) => {
                     })
                 }} />
             </PanelEditItem> */}
-            </PanelAccordion>
+        </PanelAccordion>
+
+        <PanelAccordion title="Value">
+            <PanelEditItem title={t.unit}>
+                <UnitPicker value={panel.plugins.geomap.value} onChange={
+                    (v: Units) => onChange((panel: Panel) => {
+                        panel.plugins.geomap.value.units = v.units
+                        panel.plugins.geomap.value.unitsType = v.unitsType
+                    })
+
+                    // onPanelChange(units, type)
+                } />
+            </PanelEditItem>
+            <PanelEditItem title={t.decimal}>
+                <EditorNumberItem value={panel.plugins.geomap.value.decimal} min={0} max={5} step={1} onChange={v => onChange((panel: Panel) => { panel.plugins.geomap.value.decimal = v })} />
+            </PanelEditItem>
+            <PanelEditItem title={t.calc} desc={t.calcTips}>
+                <ValueCalculation value={panel.plugins.geomap.value.calc} onChange={v => {
+                    onChange((panel: Panel) => { panel.plugins.geomap.value.calc = v })
+                }} />
+            </PanelEditItem>
+        </PanelAccordion>
 
         <PanelAccordion title="Thresholds">
             <ThresholdEditor value={panel.plugins.geomap.thresholds} onChange={(v) => onChange((panel: Panel) => {

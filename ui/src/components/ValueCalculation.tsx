@@ -21,7 +21,7 @@ interface Props {
 }
 const ValueCalculation = ({value,onChange,size="middle"}:Props) => {
     return (<>
-        <Select value={value} onChange={onChange} size={size}>
+        <Select value={value} onChange={onChange} size={size} popupMatchSelectWidth={false}>
             {
                 Object.keys(ValueCalculationType).map(k  => <option key={k} value={ValueCalculationType[k]}>{k}</option>)
             }

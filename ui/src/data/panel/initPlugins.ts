@@ -332,6 +332,11 @@ function registerEvents(options, chart) {
                 showMeasure: false,
                 showTooltip: true
             },
+            value: {
+                ...getInitUnits(),
+                decimal: 1,
+                calc: ValueCalculationType.Last
+            },
             thresholds: initThresholds()
         }
     }

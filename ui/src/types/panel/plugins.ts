@@ -62,6 +62,7 @@ export interface GeoMapSettings {
         showMeasure: boolean
         showTooltip: boolean
     }
+    value: ValueSetting
     thresholds: ThresholdsConfig
 }
 

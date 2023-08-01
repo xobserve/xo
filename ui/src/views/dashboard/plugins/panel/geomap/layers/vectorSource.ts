@@ -9,6 +9,8 @@ import { Panel } from 'types/dashboard';
 import { getThreshold } from 'components/Threshold/utils';
 import { ThresholdsMode } from 'types/threshold';
 import { paletteColorNameToHex } from 'utils/colors';
+import { formatUnit } from 'components/Unit';
+import { calcValueOnArray } from 'utils/seriesData';
 
 // "geometry": {
 //     "type": "Point",
@@ -32,6 +34,7 @@ export class FrameVectorSource<T extends Geometry = Geometry> extends VectorSour
             codes: [],
             names: [],
             values: [],
+            displayValues: [],
             colors: []
         }
 
@@ -70,7 +73,7 @@ export class FrameVectorSource<T extends Geometry = Geometry> extends VectorSour
                 let value = 0;
                 for (const field of s.fields) {
                     if (field.type == FieldType.Number && field.values.length > 0) {
-                        value = field.values[field.values.length - 1]
+                        value = calcValueOnArray(field.values, panel.plugins.geomap.value.calc)
                         if (thresholds.mode != ThresholdsMode.Percentage) {
                             if (min == undefined || value < min) {
                                 min = value
@@ -86,6 +89,7 @@ export class FrameVectorSource<T extends Geometry = Geometry> extends VectorSour
                 const threshold = getThreshold(value, thresholds, max)
                 info.values.push(value)
                 info.colors.push(paletteColorNameToHex(threshold.color))
+                info.displayValues.push(formatUnit(value, panel.plugins.geomap.value.units,  panel.plugins.geomap.value.decimal))
             }
         }
         for (let i = 0; i < info.points.length; i++) {
@@ -99,7 +103,8 @@ export class FrameVectorSource<T extends Geometry = Geometry> extends VectorSour
                     rowIndex: i,
                     geometry: info.points[i] as T,
                     opacity: panel.plugins.geomap.dataLayer.opacity,
-                    color: info.colors[i]
+                    color: info.colors[i],
+                    display: info.displayValues[i]
                 })
             );
         }
