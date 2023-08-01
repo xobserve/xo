@@ -47,7 +47,7 @@ const GeoMapPanel = (props: Props) => {
             dataLayer = getHeatmapLayer()
             break;
         case DataLayerType.Markers:
-            dataLayer = getMarkersLayer()
+            dataLayer = getMarkersLayer(panel)
             break
         default:
             break;

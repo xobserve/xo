@@ -6,9 +6,10 @@ import { Fill, RegularShape, Stroke, Circle, Style, Icon, Text } from 'ol/style'
 import tinycolor from 'tinycolor2';
 import useExtraTheme from 'hooks/useExtraTheme';
 import { colors } from 'utils/colors';
+import { Panel } from 'types/dashboard';
 
 const baseSize = 10
-const getMarkersLayer = () => {   
+const getMarkersLayer = (panel: Panel) => {   
     const source = new FrameVectorSource<Point>()
     const layer = new VectorLayer({
         source: source,

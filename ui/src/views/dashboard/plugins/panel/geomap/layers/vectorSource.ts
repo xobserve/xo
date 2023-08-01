@@ -37,7 +37,8 @@ export class FrameVectorSource<T extends Geometry = Geometry> extends VectorSour
             names: [],
             values: [],
             displayValues: [],
-            colors: []
+            colors: [],
+            opacities: [],
         }
 
         let min;
@@ -94,6 +95,7 @@ export class FrameVectorSource<T extends Geometry = Geometry> extends VectorSour
                 info.values.push(value)
                 info.colors.push(paletteColorNameToHex(threshold.color))
                 info.displayValues.push(formatUnit(value, panel.plugins.geomap.value.units,  panel.plugins.geomap.value.decimal))
+                info.opacities.push(findRuleInOverride(override, GeomapRules.LocationFill)?? panel.plugins.geomap.dataLayer.opacity)
             }
         }
         for (let i = 0; i < info.points.length; i++) {
@@ -106,7 +108,7 @@ export class FrameVectorSource<T extends Geometry = Geometry> extends VectorSour
                     max: max,
                     rowIndex: i,
                     geometry: info.points[i] as T,
-                    opacity: panel.plugins.geomap.dataLayer.opacity,
+                    opacity: info.opacities[i],
                     color: info.colors[i],
                     display: info.displayValues[i]
                 })
