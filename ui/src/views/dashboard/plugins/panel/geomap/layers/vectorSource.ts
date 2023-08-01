@@ -11,6 +11,8 @@ import { ThresholdsMode } from 'types/threshold';
 import { paletteColorNameToHex } from 'utils/colors';
 import { formatUnit } from 'components/Unit';
 import { calcValueOnArray } from 'utils/seriesData';
+import { findOverride, findRuleInOverride } from 'utils/dashboard/panel';
+import { GeomapRules } from '../OverridesEditor';
 
 // "geometry": {
 //     "type": "Point",
@@ -65,10 +67,11 @@ export class FrameVectorSource<T extends Geometry = Geometry> extends VectorSour
             const code = s.name
             //@performance: use a map
             const country = countries.find(c => c.key == code || c.keys?.includes(code))
+            const override = findOverride(panel, code)
             if (country) {
                 const point = new Point(fromLonLat([country.longitude, country.latitude]));
                 info.points.push(point)
-                info.codes.push(code)
+                info.codes.push(findRuleInOverride(override, GeomapRules.LocationName)??code)
                 info.names.push(country.name)
                 let value = 0;
                 for (const field of s.fields) {
