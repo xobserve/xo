@@ -337,6 +337,11 @@ function registerEvents(options, chart) {
                 decimal: 1,
                 calc: ValueCalculationType.Last
             },
+            sizeScale: {
+                enable: true,
+                baseSize: 10, 
+                maxScale : 4
+            },
             thresholds: initThresholds()
         }
     }

@@ -39,6 +39,11 @@ export interface DisableDatasource {
 }
 
 export interface GeoMapSettings {
+    sizeScale: {
+        enable: boolean
+        baseSize: number 
+        maxScale: number
+    }
     initialView: {
         center: [number, number],
         zoom: number
