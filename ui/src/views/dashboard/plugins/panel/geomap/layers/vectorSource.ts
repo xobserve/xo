@@ -89,7 +89,8 @@ export class FrameVectorSource<T extends Geometry = Geometry> extends VectorSour
                     }
 
                 }
-                const threshold = getThreshold(value, thresholds, max)
+                
+                const threshold = getThreshold(value, findRuleInOverride(override, GeomapRules.LocationThresholds)??thresholds, max)
                 info.values.push(value)
                 info.colors.push(paletteColorNameToHex(threshold.color))
                 info.displayValues.push(formatUnit(value, panel.plugins.geomap.value.units,  panel.plugins.geomap.value.decimal))
