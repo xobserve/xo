@@ -13,6 +13,7 @@
 import { Global } from '@emotion/react';
 import { Box } from "@chakra-ui/react"
 import React, { useEffect, useRef, useState } from "react"
+import { MapBrowserEvent } from 'ol';
 import Map from 'ol/Map';
 import View from 'ol/View';
 import { PanelProps } from "types/dashboard";
@@ -21,7 +22,7 @@ import getHeatmapLayer from "./layers/dataLayer/heatmap";
 import getBaseMap from "./layers/basemap/BaseMap";
 import { DataLayerType } from "types/plugins/geoMap";
 import getMarkersLayer from "./layers/dataLayer/markers";
-import { fromLonLat } from "ol/proj";
+import { fromLonLat, toLonLat } from "ol/proj";
 import { MouseWheelZoom, defaults as interactionDefaults } from "ol/interaction";
 import Zoom from 'ol/control/Zoom';
 import ScaleLine from 'ol/control/ScaleLine';
@@ -40,8 +41,8 @@ const GeoMapPanel = (props: Props) => {
     const [map, setMap] = useState<Map>(null)
     const mouseWheelZoom = useRef<MouseWheelZoom>(null)
     const options = panel.plugins.geomap
-    console.log("here33333:", data)
-    const ref = useRef(null)
+    const mapContainer = useRef(null)
+
     let dataLayer;
     switch (options.dataLayer.layer) {
         case DataLayerType.Heatmap:
@@ -97,7 +98,7 @@ const GeoMapPanel = (props: Props) => {
             layers.push(dataLayer)
         }
         const map = new Map({
-            target: ref.current,
+            target: mapContainer.current,
             layers: layers,
             view: new View({
                 center: fromLonLat(options.initialView.center ?? [0, 0]),
@@ -120,6 +121,8 @@ const GeoMapPanel = (props: Props) => {
             map.dispose()
         }
     }, [options.baseMap, options.dataLayer])
+
+ 
 
     const initControls = (map) => {
         map.getControls().clear()
@@ -145,10 +148,11 @@ const GeoMapPanel = (props: Props) => {
 
     }
 
+
     return (
         <>
-            <Box ref={ref} width={width} height={height}>
-                {/* <GeomapTooltip /> */}
+            <Box ref={mapContainer} width={width} height={height}>
+                {map && <GeomapTooltip map={map} />}
             </Box>
         </>
     )

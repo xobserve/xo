@@ -29,6 +29,7 @@ export class FrameVectorSource<T extends Geometry = Geometry> extends VectorSour
             name: "Geometry",
             type: "geo",
             points: [],
+            codes: [],
             names: [],
             values: [],
             colors: []
@@ -58,13 +59,14 @@ export class FrameVectorSource<T extends Geometry = Geometry> extends VectorSour
 
 
         for (const s of data) {
-            const location = s.name
+            const code = s.name
             //@performance: use a map
-            const country = countries.find(c => c.key == location || c.keys?.includes(location))
+            const country = countries.find(c => c.key == code || c.keys?.includes(code))
             if (country) {
                 const point = new Point(fromLonLat([country.longitude, country.latitude]));
                 info.points.push(point)
-                info.names.push(s.name)
+                info.codes.push(code)
+                info.names.push(country.name)
                 let value = 0;
                 for (const field of s.fields) {
                     if (field.type == FieldType.Number && field.values.length > 0) {
@@ -89,6 +91,7 @@ export class FrameVectorSource<T extends Geometry = Geometry> extends VectorSour
         for (let i = 0; i < info.points.length; i++) {
             this.addFeatureInternal(
                 new Feature({
+                    code: info.codes[i],
                     name: info.names[i],
                     value: info.values[i],
                     min: min,

@@ -1,32 +1,65 @@
-import { useDialog } from '@react-aria/dialog';
-import { useOverlay } from '@react-aria/overlays';
-import React, { createRef } from 'react';
+import React, { useEffect, useState } from 'react';
 
 
-import { ComplexDataHoverView } from './ComplexDataHoverView';
-import { GeomapHoverPayload } from './types';
+import { TooltipView } from './TooltipView';
 import { TooltipContainer } from '../../graph/Tooltip/Tooltip';
-import { Portal } from '@chakra-ui/portal';
+// import { Portal } from '@chakra-ui/portal';
+import { Map, MapBrowserEvent } from 'ol';
+import { toLonLat } from 'ol/proj';
+import { Box } from '@chakra-ui/react';
+import { Portal } from 'components/portal/Portal';
 
 interface Props {
-  tooltip?: GeomapHoverPayload;
-  isOpen: boolean;
-  onClose: () => void;
+  map: Map
 }
 
-export const GeomapTooltip = ({ tooltip, onClose, isOpen }: Props) => {
-  const ref = createRef<HTMLElement>();
-  const { overlayProps } = useOverlay({ onClose, isDismissable: true, isOpen }, ref);
-  const { dialogProps } = useDialog({}, ref);
+export const GeomapTooltip = ({ map }: Props) => {
+  const [tooltip, setTooltip] = useState(null)
+  const onHover = (evt: MapBrowserEvent<MouseEvent>, map) => {
+    const mouse = evt.originalEvent;
+    const pixel = map.getEventPixel(mouse);
+    const hover = toLonLat(map.getCoordinateFromPixel(pixel));
+
+    let hoverPayload = {} as any
+    hoverPayload.pageX = mouse.pageX;
+    hoverPayload.pageY = mouse.pageY;
+    hoverPayload.point = {
+      lat: hover[1],
+      lon: hover[0],
+    };
+    hoverPayload.data = [];
+
+    map.forEachFeatureAtPixel(
+      pixel,
+      (feature, layer, geo) => {
+        const props = feature.getProperties();
+        if (props) {
+          hoverPayload.data.push(props)
+        }
+
+
+      }
+    );
+
+    if (hoverPayload.data.length > 0) {
+      setTooltip(hoverPayload)
+    } else {
+      setTooltip(null)
+    }
+
+    return hoverPayload.data.length > 0
+  };
+
+  useEffect(() => {
+    map.on('pointermove', (e) => onHover(e, map));
+  }, [map])
 
   return (
     <>
-      {tooltip && tooltip.layers && (
+      {tooltip && tooltip.data.length > 0 && (
         <Portal>
-          <TooltipContainer position={{ x: tooltip.pageX, y: tooltip.pageY }} offset={{ x: 10, y: 10 }} allowPointerEvents>
-            <section ref={ref} {...overlayProps} {...dialogProps}>
-              <ComplexDataHoverView layers={tooltip.layers} isOpen={isOpen} onClose={onClose} />
-            </section>
+          <TooltipContainer position={{ x: tooltip.pageX, y: tooltip.pageY }} offset={{ x: 0, y: 0 }} allowPointerEvents>
+            <TooltipView tooltip={tooltip} />
           </TooltipContainer>
         </Portal>
       )}
