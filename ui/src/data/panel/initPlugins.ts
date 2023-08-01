@@ -323,6 +323,9 @@ function registerEvents(options, chart) {
                 layer: DataLayerType.Heatmap  ,
                 opacity: 0.6
             },
+            controls: {
+                enableZoom: true,
+            },
             thresholds: initThresholds()
         }
     }

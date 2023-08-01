@@ -21,6 +21,7 @@ import getBaseMap from "./layers/basemap/BaseMap";
 import { DataLayerType } from "types/plugins/geoMap";
 import getMarkersLayer from "./layers/dataLayer/markers";
 import { fromLonLat } from "ol/proj";
+import { MouseWheelZoom, defaults as interactionDefaults  } from "ol/interaction";
 
 interface Props extends PanelProps {
     data: SeriesData[][]
@@ -30,6 +31,7 @@ export let geomap: Map = null
 const GeoMapPanel = (props: Props) => {
     const { width, height, panel, data } = props
     const [map, setMap] = useState<Map>(null)
+    const mouseWheelZoom = useRef<MouseWheelZoom>(null)
     const options = panel.plugins.geomap
     console.log("here33333:", data)
     const ref = useRef(null)
@@ -45,6 +47,7 @@ const GeoMapPanel = (props: Props) => {
             break;
     }
 
+    // effects which cause data to change
     useEffect(() => {
         if (dataLayer) {
             const source = dataLayer.getSource()
@@ -63,6 +66,7 @@ const GeoMapPanel = (props: Props) => {
 
     }, [data, options.baseMap, options.dataLayer, options.thresholds])
 
+    // effects which cause map view to change
     useEffect(() => {
         if (map) {
             const view = map.getView()
@@ -70,6 +74,15 @@ const GeoMapPanel = (props: Props) => {
             view.setZoom(options.initialView.zoom)
         }
     }, [options.initialView])
+
+    // effects which cause interactions to change
+     useEffect(() => {
+        if (map) {
+            mouseWheelZoom.current.setActive(options.controls.enableZoom)
+        }
+    }, [options.controls.enableZoom])
+
+    // effects which need to re-create the map
     useEffect(() => {
         const baseMap = getBaseMap(panel.plugins.geomap)
         const layers = [baseMap]
@@ -83,14 +96,22 @@ const GeoMapPanel = (props: Props) => {
                 center: fromLonLat(options.initialView.center ?? [0, 0]),
                 zoom: options.initialView.zoom ?? 2,
                 // showFullExtent: true, // allows zooming so the full range is visible
-            })
+            }),
+            interactions: interactionDefaults({
+                mouseWheelZoom: false, // managed by initControls
+              }),
         });
+
+        mouseWheelZoom.current = new MouseWheelZoom();
+        map.addInteraction(mouseWheelZoom.current);
+        mouseWheelZoom.current.setActive(options.controls.enableZoom)
+
         setMap(map)
         geomap = map
         return () => {
             map.dispose()
         }
-    }, [options])
+    }, [])
 
 
     return (

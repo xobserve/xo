@@ -22,7 +22,7 @@ import { ArcGisMapServer, BaseLayerType, DataLayerType } from "types/plugins/geo
 import RadionButtons from "components/RadioButtons";
 import ThresholdEditor from "components/Threshold/ThresholdEditor";
 import countries from 'public/plugins/panel/geomap/countries.json'
-import { Button, HStack, Text } from "@chakra-ui/react";
+import { Button, HStack, Switch, Text } from "@chakra-ui/react";
 import { geomap } from "./GeoMap";
 import { toLonLat } from "ol/proj";
 import { round } from "lodash";
@@ -30,7 +30,6 @@ import { round } from "lodash";
 const GeoMapPanelEditor = memo(({ panel, onChange }: PanelEditorProps) => {
     const t = useStore(commonMsg)
     const options = panel.plugins.geomap
-    console.log("here33333",options)
     return (<>
         <PanelAccordion title={t.basicSetting}>
             <PanelEditItem title="Initial view" desc="The loation shows when map first loads">
@@ -129,7 +128,16 @@ const GeoMapPanelEditor = memo(({ panel, onChange }: PanelEditorProps) => {
                 }} />
             </PanelEditItem>}
         </PanelAccordion>
-
+        <PanelAccordion title="Map controls">
+            <PanelEditItem title="Enable zoom" desc="Enable zoom via mouse wheel">
+                <Switch isChecked={options.controls.enableZoom} onChange={e => {
+                    const v = e.target.checked
+                    onChange((panel: Panel) => {
+                        panel.plugins.geomap.controls.enableZoom = v
+                    })
+                }} />
+            </PanelEditItem>
+            </PanelAccordion>
 
         <PanelAccordion title="Thresholds">
             <ThresholdEditor value={panel.plugins.geomap.thresholds} onChange={(v) => onChange((panel: Panel) => {

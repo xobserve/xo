@@ -53,6 +53,9 @@ export interface GeoMapSettings {
         layer:  DataLayerType
         opacity: number 
     }
+    controls: {
+        enableZoom: boolean
+    }
     thresholds: ThresholdsConfig
 }
 
