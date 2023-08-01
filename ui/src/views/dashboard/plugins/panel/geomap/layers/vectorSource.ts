@@ -4,7 +4,7 @@ import VectorSource from 'ol/source/Vector';
 import { Field, FieldType, SeriesData } from 'types/seriesData';
 import { fromLonLat } from 'ol/proj'
 import countries from 'public/plugins/panel/geomap/countries.json'
-import { count } from 'console';
+import cities from 'public/plugins/panel/geomap/cities.json'
 import { Panel } from 'types/dashboard';
 import { getThreshold } from 'components/Threshold/utils';
 import { ThresholdsMode } from 'types/threshold';
@@ -66,13 +66,13 @@ export class FrameVectorSource<T extends Geometry = Geometry> extends VectorSour
 
         for (const s of data) {
             const code = s.name.toLowerCase()
-            const country = countries[code]
+            const location = countries[code] ?? cities[code]
             const override = findOverride(panel, code)
-            if (country) {
-                const point = new Point(fromLonLat(country[1]));
+            if (location) {
+                const point = new Point(fromLonLat(location[1]));
                 info.points.push(point)
                 info.codes.push(findRuleInOverride(override, GeomapRules.LocationName)??code)
-                info.names.push(country[0])
+                info.names.push(location[0])
                 let value = 0;
                 for (const field of s.fields) {
                     if (field.type == FieldType.Number && field.values.length > 0) {

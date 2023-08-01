@@ -21,7 +21,7 @@ import { prometheusToPanels } from "../prometheus/transformData"
 import { Datasource } from "types/datasource"
 import traceData from './mocks/trace.json'
 import { genPrometheusData } from "./mocks/prometheus"
-import geoData from './mocks/geomap.json'
+import geoData from './mocks/geomapSeriesData.json'
 import { Field, SeriesData } from "types/seriesData"
 
 export const run_testdata_query = async (panel: Panel, q: PanelQuery, range: TimeRange,ds: Datasource) => {
@@ -45,7 +45,7 @@ export const run_testdata_query = async (panel: Panel, q: PanelQuery, range: Tim
             data =  traceData.data
             break
         case PanelType.GeoMap:
-            data = transformSchemaDataToSeriesData(geoData)
+            data = geoData
             break
         default:
             break
