@@ -343,6 +343,9 @@ function registerEvents(options, chart) {
                 maxScale : 4
             },
             thresholds: initThresholds()
+        },
+        [PanelType.Log]: {
+            
         }
     }
 }

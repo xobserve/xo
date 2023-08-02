@@ -30,12 +30,18 @@ export interface PanelPlugins {
     [PanelType.Trace]?: TraceSettings
     [PanelType.BarGauge]?: BarGaugeSettings
     [PanelType.GeoMap]?: GeoMapSettings
+    [PanelType.Log]?: LogSettings
 }
 
 /*-------------------- Plugins ----------------------- */
 
 export interface DisableDatasource {
     disableDatasource?: boolean
+}
+
+
+export interface LogSettings {
+
 }
 
 export interface GeoMapSettings {

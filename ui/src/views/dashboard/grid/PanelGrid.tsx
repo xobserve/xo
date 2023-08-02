@@ -267,6 +267,8 @@ const loadablePanels = {
     [PanelType.Trace]: loadable(() => import('../plugins/panel/trace/Trace')),
     [PanelType.BarGauge]: loadable(() => import('../plugins/panel/barGauge/BarGauge')),
     [PanelType.GeoMap]: loadable(() => import('../plugins/panel/geomap/GeoMap')),
+    [PanelType.Log]: loadable(() => import('../plugins/panel/log/Log')),
+
 }
 
 const CustomPanelRender = memo((props: PanelProps) => {
@@ -375,6 +377,9 @@ const formatQueryId = (datasourceId, dashboardId, panelId, queryId, panelType) =
             break
         case PanelType.GeoMap:
             tp = PanelType.GeoMap
+            break
+        case PanelType.Log:
+            tp = PanelType.Log
             break
         default:
             tp = "seriesData"

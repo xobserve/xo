@@ -62,7 +62,7 @@ export const run_loki_query = async (panel: Panel, q: PanelQuery, range: TimeRan
     } else if (resultType=== "streams" && panel.type == PanelType.Log) {
         data =  res.data.result
     }
-
+    console.log("here333333:",res.data)
     return {
         error: null,
         data: data,

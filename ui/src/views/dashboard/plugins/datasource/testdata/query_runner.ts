@@ -23,6 +23,7 @@ import traceData from './mocks/trace.json'
 import { genPrometheusData } from "./mocks/prometheus"
 import geoData from './mocks/geomapSeriesData.json'
 import { Field, SeriesData } from "types/seriesData"
+import logsData from './mocks/logs.json'
 
 export const run_testdata_query = async (panel: Panel, q: PanelQuery, range: TimeRange,ds: Datasource) => {
     let data: any;
@@ -46,6 +47,9 @@ export const run_testdata_query = async (panel: Panel, q: PanelQuery, range: Tim
             break
         case PanelType.GeoMap:
             data = geoData
+            break
+        case PanelType.Log:
+            data =logsData
             break
         default:
             break
