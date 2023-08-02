@@ -114,6 +114,7 @@ export enum PanelType {
     Echarts = "echarts",
     GeoMap = "geomap",
     Row = "row",
+    Log = "log",
 }
 
 export enum DatasourceType {

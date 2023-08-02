@@ -11,7 +11,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { Panel, PanelQuery } from "types/dashboard";
+import { Panel, PanelQuery, PanelType } from "types/dashboard";
 import { Datasource } from "types/datasource";
 import { TimeRange } from "types/time";
 import { replaceWithVariablesHasMultiValues } from "utils/variable";
@@ -54,9 +54,15 @@ export const run_loki_query = async (panel: Panel, q: PanelQuery, range: TimeRan
         }
     }
 
-    console.log("here333333:",res)
-    
-    let data = prometheusToPanels(res.data, panel, q, range);
+ 
+    let data  = [] ;
+    const resultType = res.data.resultType
+    if (resultType=== "matrix" ) {
+        data = prometheusToPanels(res.data, panel, q, range);
+    } else if (resultType=== "streams" && panel.type == PanelType.Log) {
+        data =  res.data.result
+    }
+
     return {
         error: null,
         data: data,
