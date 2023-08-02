@@ -12,24 +12,30 @@
 // limitations under the License.
 
 import { Box, Input } from "@chakra-ui/react";
-import CodeEditor from "components/CodeEditor/CodeEditor";
+import CodeEditor, { LogqlLang } from "components/CodeEditor/CodeEditor";
 import { Form } from "components/form/Form";
 import FormItem from "components/form/Item";
 import { cloneDeep } from "lodash";
-import React, { useState } from "react"
+import React, { useRef, useState } from "react"
 import { PanelQuery } from "types/dashboard";
 import { DatasourceEditorProps } from "types/datasource";
 
 const LokiQueryEditor = ({ datasource, query, onChange }: DatasourceEditorProps) => {
     const [tempQuery, setTempQuery] = useState<PanelQuery>(cloneDeep(query))
+    const containerRef = useRef<HTMLDivElement>(null);
 
     return (
         <Form spacing={1}>
             <FormItem  size="sm"  title="Query">
-                <Box width="100%" height="32px">
-                <CodeEditor language="rust" value={tempQuery.metrics}   onChange={(v) => {
+                <Box width="100%"  ref={containerRef}>
+                <CodeEditor 
+                    language={LogqlLang} 
+                    value={tempQuery.metrics}   
+                    onChange={(v) => {
                         setTempQuery({ ...tempQuery, metrics:  v})
-                    }} showLineNumber={false}/>
+                    }} 
+                    isSingleLine
+                    />
                 {/* <Input
                     value={tempQuery.metrics}
                     onChange={(e) => {
