@@ -90,7 +90,7 @@ export function customClasses(props) {
         },
         ".color-text": {
             color: mode(
-                props.theme.colors.cyan["500"],
+                props.theme.colors.cyan["600"],
                 props.theme.colors.cyan["200"]
             )(props)
         },

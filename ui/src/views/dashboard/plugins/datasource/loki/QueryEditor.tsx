@@ -37,7 +37,7 @@ const LokiQueryEditor = ({ datasource, query, onChange }: DatasourceEditorProps)
                             onChange(tempQuery)
                         }}
                         placeholder={`Enter loki query, e.g sum(rate({job="varlogs"}[10m])) by (level)`}
-                        height="80px"
+                        height="50px"
                         isSingleLine
                     />
                 </Box>

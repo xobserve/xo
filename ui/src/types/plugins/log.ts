@@ -1,9 +1,5 @@
-export interface LogStream  {
-    name: string
-    values: LogItem[]
+export interface LogSeries  {
+    labels: {[key: string]: string};
+    values: [string,string][]
 }
 
-export interface LogItem {
-    timestamp: number // nano second
-    content: string
-}

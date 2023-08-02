@@ -14,9 +14,9 @@ import { Box } from "@chakra-ui/react"
 import { FaChevronRight } from "react-icons/fa"
 import React from "react"
 
-const CollapseIcon = ({ collapsed, onClick }) => {
+const CollapseIcon = ({ collapsed, onClick=null, ...rest }) => {
     return (
-        <Box cursor="pointer" onClick={onClick} transition={"transform 0.15s ease-out;"} transform={collapsed ? 'rotate(0deg);' : 'rotate(90deg);'}>
+        <Box cursor="pointer" onClick={onClick} transition={"transform 0.15s ease-out;"} transform={collapsed ? 'rotate(0deg);' : 'rotate(90deg);'} {...rest}>
             <FaChevronRight />
         </Box>
     )
