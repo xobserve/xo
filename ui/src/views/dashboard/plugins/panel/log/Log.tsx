@@ -13,7 +13,7 @@
 
 import React, { useState } from "react";
 import { Box, HStack, StackDivider, Text, VStack } from "@chakra-ui/react"
-import { PanelProps } from "types/dashboard"
+import { Panel, PanelProps } from "types/dashboard"
 import { LogSeries } from "types/plugins/log";
 import { dateTimeFormat } from "utils/datetime/formatter";
 import { toNumber } from "lodash";
@@ -32,7 +32,7 @@ const LogPanel = (props: LogPanelProps) => {
     console.log("here333333", data)
     return (<VStack alignItems="left" divider={<StackDivider />} py="2" >
         {
-            data[0].values.map(log => <LogItem log={log} labels={data[0].labels} />)
+            data[0].values.map(log => <LogItem log={log} labels={data[0].labels}  panel={props.panel}/>)
         }
     </VStack >)
 }
@@ -43,17 +43,19 @@ export default LogPanel
 interface LogItemProps {
     labels: { [key: string]: string }
     log: [string, string]
+    panel: Panel
 }
-const LogItem = ({ labels, log }: LogItemProps) => {
+const LogItem = ({ labels, log, panel }: LogItemProps) => {
     const [collapsed, setCollapsed] = useState(true)
     const timestamp = toNumber(log[0]) / 1e6
+    const options = panel.plugins.log
     return (<>
-        <HStack pt="1" alignItems="start" spacing={2} px="2" onClick={() => setCollapsed(!collapsed)} cursor="pointer"> 
+        <HStack pt="1" alignItems="start" spacing={2} pl="2" pr="4" onClick={() => setCollapsed(!collapsed)} cursor="pointer"> 
             <HStack spacing={1}>
-                <CollapseIcon collapsed={collapsed}  fontSize="0.6rem" opacity="0.6" />
-                <Text fontSize="0.85rem" fontWeight={450} minWidth="160px">
+                <CollapseIcon collapsed={collapsed}  fontSize="0.6rem" opacity="0.6" mt={options.showTime ? 0 : '6px'} />
+                {options.showTime && <Text fontSize="0.85rem" fontWeight={450} minWidth="160px">
                     {dateTimeFormat(timestamp, { format: 'YY-MM-DD HH:mm:ss.SSS' })}
-                </Text>
+                </Text>}
             </HStack>
             <HStack minWidth="270px" maxWidth="270px" >
                 {
@@ -68,7 +70,7 @@ const LogItem = ({ labels, log }: LogItemProps) => {
                      </HStack>)
                 }
             </HStack>
-            <Text fontSize="0.85rem">{log[1]}</Text>
+            <Text fontSize="0.85rem" wordBreak="break-all">{log[1]}</Text>
         </HStack>
         {
             !collapsed && <Box p="4">

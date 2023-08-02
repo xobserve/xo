@@ -41,7 +41,7 @@ export interface DisableDatasource {
 
 
 export interface LogSettings {
-
+    showTime: boolean
 }
 
 export interface GeoMapSettings {

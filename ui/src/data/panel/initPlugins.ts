@@ -345,7 +345,7 @@ function registerEvents(options, chart) {
             thresholds: initThresholds()
         },
         [PanelType.Log]: {
-            
+            showTime: true,
         }
     }
 }

@@ -10,7 +10,7 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-import { Textarea } from "@chakra-ui/react"
+import { Switch, Textarea } from "@chakra-ui/react"
 import { EditorInputItem } from "components/editor/EditorItem"
 import RadionButtons from "components/RadioButtons"
 import PanelAccordion from "src/views/dashboard/edit-panel/Accordion"
@@ -23,7 +23,11 @@ import { commonMsg } from "src/i18n/locales/en"
 const LogPanelEditor = memo(({ panel, onChange }: PanelEditorProps) => {
     const t = useStore(commonMsg)
     return (<PanelAccordion title={t.basicSetting}>
-     
+        <PanelEditItem title="Show time">
+            <Switch isChecked={panel.plugins.log.showTime} onChange={(e) => onChange((panel: Panel) => {
+                panel.plugins.log.showTime = e.target.checked
+            })} />
+        </PanelEditItem>
     </PanelAccordion>
     )
 })
