@@ -152,15 +152,15 @@ const DashboardWrapper = ({ dashboardId, sideWidth }) => {
     // })
 
 
-    const headerHeight = fullscreen ? 0 : DashboardHeaderHeight
+    const headerHeight = fullscreen ? 0 : DashboardHeaderHeight + 7
     return (<>
-        {dashboard && <Box px="3" width="100%" minHeight="100vh" position="relative">
+        {dashboard && <Box px={fullscreen ? 0 : 3} width="100%" minHeight="100vh" position="relative">
             {/* <Decoration decoration={dashboard.data.styles.decoration}/> */}
             <DashboardHeader dashboard={dashboard} onChange={onDashbardChange} sideWidth={sideWidth} />
             <Box
                 // key={dashboard.id + fullscreen} 
                 id="dashboard-wrapper"
-                pt={headerHeight + 7 + 'px'}
+                pt={headerHeight+ 'px'}
                 pb="2"
                 position="relative"
             >
