@@ -24,6 +24,7 @@ import { Form } from "components/form/Form"
 import InputSelect from "components/select/InputSelect"
 import { prometheusDsMsg } from "src/i18n/locales/en";
 import { useStore } from "@nanostores/react";
+import CodeEditor, { LogqlLang } from "components/CodeEditor/CodeEditor";
 
 
 
@@ -37,7 +38,21 @@ const PrometheusQueryEditor = ({ datasource, query, onChange }: DatasourceEditor
                 setTempQuery({ ...tempQuery, metrics: v })
                 onChange({ ...tempQuery, metrics: v })
             }} />} >
-                <Input
+                 <Box width="100%">
+                    <CodeEditor
+                        language={LogqlLang}
+                        value={tempQuery.metrics}
+                        onChange={(v) => {
+                            setTempQuery({ ...tempQuery, metrics: v })
+                        }}
+                        onBlur={() => {
+                            onChange(tempQuery)
+                        }}
+                        isSingleLine
+                       placeholder={t1.enterPromQL}
+                    />
+                </Box>
+                {/* <Input
                     value={tempQuery.metrics}
                     onChange={(e) => {
                         setTempQuery({ ...tempQuery, metrics: e.currentTarget.value })
@@ -46,7 +61,7 @@ const PrometheusQueryEditor = ({ datasource, query, onChange }: DatasourceEditor
                     width="100%"
                     placeholder={t1.enterPromQL}
                     size="sm"
-                />
+                /> */}
             </FormItem>
             <FormItem labelWidth="150px"  size="sm"  title="Legend">
                 <Input

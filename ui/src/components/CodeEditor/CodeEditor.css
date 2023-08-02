@@ -1,0 +1,12 @@
+.monaco-placeholder {
+    position: absolute;
+    display: none;
+    white-space: pre-wrap;
+    top: 6px;
+    left: 20px;
+    font-size: 13px;
+    font-weight: 450;;
+    pointer-events: none;
+    user-select: none;
+    opacity: 0.6;
+  }

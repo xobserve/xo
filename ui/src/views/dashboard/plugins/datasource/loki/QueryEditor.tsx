@@ -22,33 +22,26 @@ import { DatasourceEditorProps } from "types/datasource";
 
 const LokiQueryEditor = ({ datasource, query, onChange }: DatasourceEditorProps) => {
     const [tempQuery, setTempQuery] = useState<PanelQuery>(cloneDeep(query))
-    const containerRef = useRef<HTMLDivElement>(null);
 
     return (
         <Form spacing={1}>
-            <FormItem  size="sm"  title="Query">
-                <Box width="100%"  ref={containerRef}>
-                <CodeEditor 
-                    language={LogqlLang} 
-                    value={tempQuery.metrics}   
-                    onChange={(v) => {
-                        setTempQuery({ ...tempQuery, metrics:  v})
-                    }} 
-                    isSingleLine
+            <FormItem size="sm" title="Query">
+                <Box width="100%">
+                    <CodeEditor
+                        language={LogqlLang}
+                        value={tempQuery.metrics}
+                        onChange={(v) => {
+                            setTempQuery({ ...tempQuery, metrics: v })
+                        }}
+                        onBlur={() => {
+                            onChange(tempQuery)
+                        }}
+                        placeholder={`Enter loki query, e.g sum(rate({job="varlogs"}[10m])) by (level)`}
+                        isSingleLine
                     />
-                {/* <Input
-                    value={tempQuery.metrics}
-                    onChange={(e) => {
-                        setTempQuery({ ...tempQuery, metrics: e.currentTarget.value })
-                    }}
-                    onBlur={() => onChange(tempQuery)}
-                    width="100%"
-                    placeholder={`Enter a loki query, e.g: sum(rate({job="varlogs"}[10m])) by (level)`}
-                    size="sm"
-                /> */}
                 </Box>
             </FormItem>
-            <FormItem labelWidth="150px"  size="sm"  title="Legend">
+            <FormItem labelWidth="150px" size="sm" title="Legend">
                 <Input
                     value={tempQuery.legend}
                     onChange={(e) => {
