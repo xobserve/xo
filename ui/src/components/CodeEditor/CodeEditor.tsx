@@ -17,6 +17,7 @@ import { useColorMode } from "@chakra-ui/react";
 import { editor } from "monaco-editor";
 import MonacoEditor from "react-monaco-editor"
 import './useMonacoWorker.js'
+import { languageConfiguration, monarchlanguage } from '@grafana/monaco-logql';
 
 interface Props {
     value: string 
@@ -25,9 +26,22 @@ interface Props {
     onMount?: (editor: editor.IStandaloneCodeEditor) => void
     readonly?: boolean
     fontSize?: number
-    
+    showLineNumber?: boolean
 }
-function CodeEditor({value, onChange,onMount,language="typescript",readonly=false,fontSize=12}:Props) {
+const LANG_ID = 'logql';
+// we must only run the lang-setup code once
+let LANGUAGE_SETUP_STARTED = false;
+function ensureLogQL(monaco) {
+  if (LANGUAGE_SETUP_STARTED === false) {
+    LANGUAGE_SETUP_STARTED = true;
+    monaco.languages.register({ id: LANG_ID });
+
+    monaco.languages.setMonarchTokensProvider(LANG_ID, monarchlanguage);
+    monaco.languages.setLanguageConfiguration(LANG_ID, languageConfiguration);
+  }
+}
+
+function CodeEditor({value, onChange,onMount,language="typescript",readonly=false,fontSize=12, showLineNumber=true}:Props) {
   const {colorMode} = useColorMode()
   return ( <MonacoEditor
       language={language}
@@ -37,7 +51,7 @@ function CodeEditor({value, onChange,onMount,language="typescript",readonly=fals
         minimap: {
           enabled: false
         },
-        lineNumbers: "on",
+        lineNumbers: showLineNumber ? "on" : "off",
         automaticLayout: true,
         lineNumbersMinChars: 4,
         lineDecorationsWidth: 0,
@@ -47,10 +61,10 @@ function CodeEditor({value, onChange,onMount,language="typescript",readonly=fals
             horizontalSliderSize: 5,
         },
         readOnly: readonly,
-        fontSize: fontSize
+        fontSize: fontSize,
       }}
       onChange={onChange}
-      
+     editorWillMount={ensureLogQL} 
     />)
 }
 

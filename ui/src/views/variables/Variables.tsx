@@ -31,6 +31,7 @@ import { useStore } from "@nanostores/react"
 import { variableMsg } from "src/i18n/locales/en"
 import { addParamToUrl, getUrlParams } from "utils/url"
 import { useSearchParam } from "react-use"
+import { queryLokiVariableValues } from "../dashboard/plugins/datasource/loki/query_runner"
 
 interface Props {
     id: number
@@ -251,6 +252,9 @@ export const queryVariableValues = async (v:Variable) => {
                 break;
             case DatasourceType.Jaeger:
                 result = await queryJaegerVariableValues(v)
+                break
+            case DatasourceType.Loki:
+                result = await queryLokiVariableValues(v)
                 break
             default:
                 break;

@@ -96,7 +96,8 @@
     "use-deep-compare-effect": "^1.8.1",
     "use-immer": "^0.9.0",
     "validator": "^13.5.2",
-    "viz.js": "1.8.1"
+    "viz.js": "1.8.1",
+    "@grafana/monaco-logql": "^0.0.7"
   },
   "devDependencies": {
     "@types/lodash": "^4.14.123",

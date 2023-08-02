@@ -14,8 +14,8 @@ import { Box, Button, Flex, HStack, Image, Select, Text, VStack } from "@chakra-
 import { useMemo, useState } from "react"
 import { FaAngleDown, FaAngleRight, FaArrowCircleDown, FaArrowRight, FaCog, FaPlus, FaTrashAlt } from "react-icons/fa"
 import { DatasourceType, Panel, PanelQuery } from "types/dashboard"
-import JaegerQueryEditor from "../plugins/datasource/jaeger/Editor"
-import PrometheusQueryEditor from "../plugins/datasource/prometheus/Editor"
+import JaegerQueryEditor from "../plugins/datasource/jaeger/QueryEditor"
+import PrometheusQueryEditor from "../plugins/datasource/prometheus/QueryEditor"
 import TestDataQueryEditor from "../plugins/datasource/testdata/Editor"
 import { initDatasource } from "src/data/panel/initPanel"
 import Label from "components/form/Item"
@@ -24,7 +24,7 @@ import { calculateInterval } from "utils/datetime/range"
 import { getCurrentTimeRange } from "components/DatePicker/TimePicker"
 
 import { Datasource } from "types/datasource"
-import HttpQueryEditor from "../plugins/datasource/http/Editor"
+import HttpQueryEditor from "../plugins/datasource/http/QueryEditor"
 import { datasources } from "src/App"
 import FormItem from "components/form/Item"
 import { Form, FormSection } from "components/form/Form"
@@ -33,6 +33,7 @@ import { commonMsg, panelMsg } from "src/i18n/locales/en"
 import { useStore } from "@nanostores/react"
 import { isEmpty } from "utils/validate"
 import { DatasourceMinInterval } from "src/data/constants"
+import LokiQueryEditor from "../plugins/datasource/loki/QueryEditor"
 
 interface Props {
     panel: Panel
@@ -186,6 +187,8 @@ const CustomQueryEditor = ({ panel,query, onChange, selected }) => {
             return <JaegerQueryEditor datasource={selected} query={query} onChange={onQueryChange} panel={panel}/>
         case DatasourceType.ExternalHttp:
             return <HttpQueryEditor datasource={selected} query={query} onChange={onQueryChange} panel={panel} />
+        case DatasourceType.Loki:
+            return <LokiQueryEditor datasource={selected} query={query} onChange={onQueryChange} panel={panel} />
         default:
             return <></>
     }

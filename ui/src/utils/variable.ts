@@ -20,6 +20,7 @@ import { replaceHttpQueryWithVariables } from "src/views/dashboard/plugins/datas
 import { VariableSplitChar, VarialbeAllOption } from "src/data/variable";
 import { gvariables } from "src/App";
 import { isEmpty } from "lodash";
+import { replaceLokiQueryWithVariables } from "src/views/dashboard/plugins/datasource/loki/query_runner";
 
 export const hasVariableFormat = (s: string) => {
     return parseVariableFormat(s).length > 0
@@ -60,6 +61,8 @@ export const replaceQueryWithVariables = (q: PanelQuery, datasource: DatasourceT
         case DatasourceType.ExternalHttp:
             replaceHttpQueryWithVariables(q)
             break
+        case DatasourceType.Loki:
+            replaceLokiQueryWithVariables(q)
         default:
             break;
     } 

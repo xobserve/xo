@@ -47,6 +47,7 @@ import lodash from 'lodash'
 import moment from "moment";
 import { paletteColorNameToHex } from "utils/colors";
 import { isEmpty } from "utils/validate";
+import { run_loki_query } from "../plugins/datasource/loki/query_runner";
 interface PanelGridProps {
     dashboard: Dashboard
     panel: Panel
@@ -173,6 +174,9 @@ export const PanelComponent = ({ dashboard, panel, onRemovePanel, width, height,
                 case DatasourceType.ExternalHttp:
                     res = await run_http_query(panel, q, timeRange, datasource)
                     break;
+                case DatasourceType.Loki:
+                    res = await run_loki_query(panel, q, timeRange, datasource)
+                    break
                 default:
                     break;
             }

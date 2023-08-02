@@ -10,12 +10,12 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-import {  Button, HStack, Image, Input, Select, useToast } from "@chakra-ui/react"
+import { Button, HStack, Image, Input, Select, useToast } from "@chakra-ui/react"
 import { isEmpty } from "lodash"
 import { checkAndTestHttp } from "src/views/dashboard/plugins/datasource/http/query_runner"
 import { checkAndTestJaeger } from "src/views/dashboard/plugins/datasource/jaeger/query_runner"
 import { checkAndTestPrometheus } from "src/views/dashboard/plugins/datasource/prometheus/query_runner"
-import {  DatasourceType } from "types/dashboard"
+import { DatasourceType } from "types/dashboard"
 import { Datasource } from "types/datasource"
 import { useImmer } from "use-immer"
 import { requestApi } from "utils/axios/request"
@@ -28,9 +28,11 @@ import React from "react";
 import { useNavigate } from "react-router-dom"
 import { useStore } from "@nanostores/react"
 import { commonMsg, newMsg } from "src/i18n/locales/en"
+import { checkAndTestLoki } from "../dashboard/plugins/datasource/loki/query_runner"
+import LokiDatasourceEditor from "../dashboard/plugins/datasource/loki/DatasourceEditor"
 
-const DatasourceEditor = ({ds, onChange=null}) => {
-    const t = useStore(commonMsg) 
+const DatasourceEditor = ({ ds, onChange = null }) => {
+    const t = useStore(commonMsg)
     const t1 = useStore(newMsg)
     const toast = useToast()
     const navigate = useNavigate()
@@ -39,7 +41,7 @@ const DatasourceEditor = ({ds, onChange=null}) => {
     const saveDatasource = async () => {
         const res = await requestApi.post("/datasource/save", datasource)
         toast({
-            title: ds.id == 0 ? t1.dsToast : t.isUpdated({name: t.datasource}),
+            title: ds.id == 0 ? t1.dsToast : t.isUpdated({ name: t.datasource }),
             status: "success",
             duration: 3000,
             isClosable: true,
@@ -57,14 +59,14 @@ const DatasourceEditor = ({ds, onChange=null}) => {
     const testDatasource = async () => {
         if (isEmpty(datasource.name)) {
             toast({
-                title: t.isInvalid({name: t.name}),
+                title: t.isInvalid({ name: t.name }),
                 status: "warning",
                 duration: 3000,
                 isClosable: true,
             })
             return
         }
-        
+
         //@needs-update-when-add-new-datasource
         let passed;
         switch (datasource.type) {
@@ -76,6 +78,9 @@ const DatasourceEditor = ({ds, onChange=null}) => {
                 break
             case DatasourceType.Jaeger:
                 passed = await checkAndTestJaeger(datasource)
+                break
+            case DatasourceType.Loki:
+                passed = await checkAndTestLoki(datasource)
                 break
             case DatasourceType.TestData:
                 passed = true
@@ -101,7 +106,7 @@ const DatasourceEditor = ({ds, onChange=null}) => {
 
     return (<>
         <FormItem title={t.name}>
-            <Input value={datasource.name} placeholder={t.itemName({name: t.datasource})} onChange={e => {
+            <Input value={datasource.name} placeholder={t.itemName({ name: t.datasource })} onChange={e => {
                 const v = e.currentTarget.value
                 setDatasource((d: Datasource) => { d.name = v })
             }} />
@@ -120,10 +125,11 @@ const DatasourceEditor = ({ds, onChange=null}) => {
             </HStack>
         </FormItem>
         {/* @needs-update-when-add-new-datasource */}
-        {datasource.type == DatasourceType.ExternalHttp && <HttpDatasourceEditor datasource={datasource} onChange={setDatasource}/>}
-        {datasource.type == DatasourceType.Prometheus && <PrometheusDatasourceEditor datasource={datasource} onChange={setDatasource}/>}
-        {datasource.type == DatasourceType.TestData && <TestDataDatasourceEditor datasource={datasource} onChange={setDatasource}/>}
-        {datasource.type == DatasourceType.Jaeger && <JaegerDatasourceEditor datasource={datasource} onChange={setDatasource}/>}
+        {datasource.type == DatasourceType.ExternalHttp && <HttpDatasourceEditor datasource={datasource} onChange={setDatasource} />}
+        {datasource.type == DatasourceType.Prometheus && <PrometheusDatasourceEditor datasource={datasource} onChange={setDatasource} />}
+        {datasource.type == DatasourceType.TestData && <TestDataDatasourceEditor datasource={datasource} onChange={setDatasource} />}
+        {datasource.type == DatasourceType.Jaeger && <JaegerDatasourceEditor datasource={datasource} onChange={setDatasource} />}
+        {datasource.type == DatasourceType.Loki && <LokiDatasourceEditor datasource={datasource} onChange={setDatasource} />}
         <Button onClick={testDatasource} size="sm" mt="4">{t.test} & {t.save}</Button>
     </>)
 }

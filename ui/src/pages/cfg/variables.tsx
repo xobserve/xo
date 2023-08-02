@@ -42,6 +42,7 @@ import FormItem from "components/form/Item"
 import JaegerVariableEditor from "src/views/dashboard/plugins/datasource/jaeger/VariableEditor"
 import { useStore } from "@nanostores/react"
 import { cfgVariablemsg, commonMsg } from "src/i18n/locales/en"
+import LokiVariableEditor from "src/views/dashboard/plugins/datasource/loki/VariableEdtiro"
 
 
 
@@ -397,6 +398,9 @@ return (<>
                             }
                             {
                                 currentDatasource?.type == DatasourceType.Jaeger && <JaegerVariableEditor variable={variable} onChange={setVariable} onQueryResult={onQueryResult} />
+                            }
+                             {
+                                currentDatasource?.type == DatasourceType.Jaeger && <LokiVariableEditor variable={variable} onChange={setVariable} onQueryResult={onQueryResult} />
                             }
                         </>
                         }

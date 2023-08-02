@@ -11,8 +11,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-// 1. Run the query to get the data from datasource
-// 2. Convert the data to the format which AiAPM expects
 
 import { isEmpty, round } from "lodash"
 import { Panel, PanelQuery } from "types/dashboard"

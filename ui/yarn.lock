@@ -2065,6 +2065,11 @@
   dependencies:
     tslib "^2.4.0"
 
+"@grafana/monaco-logql@^0.0.7":
+  version "0.0.7"
+  resolved "https://registry.yarnpkg.com/@grafana/monaco-logql/-/monaco-logql-0.0.7.tgz#7a7652f7e44d85d6b6175ef7c37cb65fb5476ffe"
+  integrity sha512-1gFkx3jwU18q9cslSI4Ej2XjWMG7drs8kFrYtfqZg/Y2JCdwHpAnxbjh8U2FdThoH39Z5EYuQkSQG5WuVtplEw==
+
 "@humanwhocodes/config-array@^0.11.10":
   version "0.11.10"
   resolved "https://registry.yarnpkg.com/@humanwhocodes/config-array/-/config-array-0.11.10.tgz#5a3ffe32cc9306365fb3fd572596cd602d5e12d2"
