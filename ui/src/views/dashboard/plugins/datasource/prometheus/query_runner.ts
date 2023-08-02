@@ -65,7 +65,6 @@ export const run_prometheus_query = async (panel: Panel, q: PanelQuery, range: T
     return {
         error: null,
         data: data,
-
     }
 }
 

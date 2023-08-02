@@ -10,7 +10,7 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-import { first, isEmpty, last, round } from "lodash";
+import { cloneDeep, first, isEmpty, last, round } from "lodash";
 import { Panel, PanelQuery, PanelType } from "types/dashboard";
 
 import { FieldType, SeriesData } from "types/seriesData";
@@ -55,12 +55,13 @@ export const prometheusToSeriesData = (data: any, query: PanelQuery, range: Time
                         }
                     }
 
-
                     const lastTs = last(timeValues)
-
-                    for (let i = lastTs + query.interval; i <= v[0]; i += query.interval) {
-                        if (i < v[0]) {
-                            timeValues.push(i)
+                    
+                    let j = lastTs;
+                    while (j < v[0]) {
+                        j += query.interval
+                        if (j < v[0]) {
+                            timeValues.push(j)
                             valueValues.push(null)
                         } else {
                             timeValues.push(v[0])

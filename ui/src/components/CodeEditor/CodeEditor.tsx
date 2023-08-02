@@ -43,7 +43,7 @@ const singleLineOptions: editor.IEditorOptions = {
   folding: false,
   overviewRulerBorder: false,
   overviewRulerLanes: 0,
-  padding: { top: 5, bottom: 0 },
+  padding: { top: 4, bottom: 0 },
   renderLineHighlight: "none",
   scrollBeyondLastLine: false,
   scrollbar: { vertical: "hidden", horizontal: "hidden" },
