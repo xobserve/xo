@@ -31,6 +31,7 @@ interface Props {
   isSingleLine?: boolean
   placeholder?: string
   bordered?: boolean
+  height?: string
 }
 
 const singleLineOptions: editor.IEditorOptions = {
@@ -63,7 +64,7 @@ function installLogQL(monaco) {
   }
 }
 
-function CodeEditor({ value, onChange,onBlur, onMount, language = "typescript", readonly = false, fontSize = 12, options = {}, isSingleLine = false,placeholder=null,bordered=true }: Props) {
+function CodeEditor({ value, onChange,onBlur, onMount, language = "typescript", readonly = false, fontSize = 12, options = {}, isSingleLine = false,placeholder=null,bordered=true, height="100%" }: Props) {
   const { colorMode } = useColorMode()
   const handleEditorOnMount = (editor) => {
     // show placeholder when mounted
@@ -98,7 +99,7 @@ function CodeEditor({ value, onChange,onBlur, onMount, language = "typescript", 
     language={language}
     theme={colorMode === "dark" ? "vs-dark" : "vs-light"}
     value={value}
-    height="100%"
+    height={height}
     options={{
       minimap: {
         enabled: false

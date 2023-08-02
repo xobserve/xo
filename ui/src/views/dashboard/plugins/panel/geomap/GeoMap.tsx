@@ -40,7 +40,7 @@ const GeoMapPanel = (props: Props) => {
     const mouseWheelZoom = useRef<MouseWheelZoom>(null)
     const options = panel.plugins.geomap
     const mapContainer = useRef(null)
-
+    
     let dataLayer;
     switch (options.dataLayer.layer) {
         case DataLayerType.Heatmap:

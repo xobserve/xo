@@ -14,9 +14,17 @@
 import React from "react";
 import { Box } from "@chakra-ui/react"
 import { PanelProps } from "types/dashboard"
+import { LogStream } from "types/plugins/log";
 
+
+interface LogPanelProps extends PanelProps {
+    data: LogStream[][]
+}
 
 const LogPanel = (props: PanelProps) => {
+    const data: LogStream[] = props.data.flat()
+
+    console.log("here333333",data)
     return (<>
     </>)
 }

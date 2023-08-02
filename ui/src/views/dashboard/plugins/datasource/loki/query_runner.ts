@@ -54,15 +54,28 @@ export const run_loki_query = async (panel: Panel, q: PanelQuery, range: TimeRan
         }
     }
 
- 
-    let data  = [] ;
+
+    let data = [];
     const resultType = res.data.resultType
-    if (resultType=== "matrix" ) {
+    if (resultType === "matrix") {
         data = prometheusToPanels(res.data, panel, q, range);
-    } else if (resultType=== "streams" && panel.type == PanelType.Log) {
-        data =  res.data.result
+    } else if (resultType === "streams" && panel.type == PanelType.Log) {
+        data = res.data.result
+        for (let i = 0; i < data.length; i++) {
+            const labels = data[i].stream
+            if (labels['__error__']) {
+                return {
+                    error: `${labels['__error__']}: ${labels['__error_details__']}`,
+                    data: []
+                }
+            }
+            const item = {
+                labels: data[i].stream,
+                values: data[i].values
+            }
+            data[i] = item
+        }
     }
-    console.log("here333333:",res.data)
     return {
         error: null,
         data: data,
@@ -72,7 +85,7 @@ export const run_loki_query = async (panel: Panel, q: PanelQuery, range: TimeRan
 
 export const replaceLokiQueryWithVariables = (query: PanelQuery) => {
     const showServices0 = query.data?.showServices ? query.data?.showServices?.split(",") : []
-    
+
     const ss = []
     showServices0.forEach((item, i) => {
         ss.push(...replaceWithVariablesHasMultiValues(item))
@@ -83,15 +96,15 @@ export const replaceLokiQueryWithVariables = (query: PanelQuery) => {
 
 export const queryLokiVariableValues = async (variable: Variable) => {
     const result = {
-        error:null,
-        data:[]
+        error: null,
+        data: []
     }
 
 
     return result
 }
 
-export const checkAndTestLoki = async (ds:Datasource) => {
+export const checkAndTestLoki = async (ds: Datasource) => {
     // check datasource setting is valid
     const res = isLokiDatasourceValid(ds)
     if (res != null) {
@@ -100,7 +113,7 @@ export const checkAndTestLoki = async (ds:Datasource) => {
 
     // test connection status
     try {
-        await  requestApi.get(`/proxy?proxy_url=${ds.url}/api/services`)
+        await requestApi.get(`/proxy?proxy_url=${ds.url}/api/services`)
         return true
     } catch (error) {
         return error.message

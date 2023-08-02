@@ -1,409 +1,409 @@
 [
     {
-        "stream": {
+        "labels": {
             "filename": "/var/log/install.log",
             "job": "varlogs"
         },
         "values": [
             [
-                "1690962564535799000",
-                "2023-08-02 15:49:24+08 MacBook-Air softwareupdated[88542]: SUOSUServiceDaemon: No available client for autoupdate"
+                "1690967713398089000",
+                "2023-08-02 17:15:13+08 MacBook-Air SoftwareUpdateNotificationManager[7391]: SUOSUShimController: MSU update is not yet downloaded & prepared"
             ],
             [
-                "1690962564534749000",
-                "2023-08-02 15:49:24+08 MacBook-Air softwareupdated[88542]: SUOSUServiceDaemon: No agents found to execute MDM major OS command!"
+                "1690967713398084000",
+                "2023-08-02 17:15:13+08 MacBook-Air softwareupdated[88542]: Descriptor has changed since previous download (13.5 vs 13.4.1)"
             ],
             [
-                "1690962564534734000",
-                "2023-08-02 15:49:24+08 MacBook-Air softwareupdated[88542]: SUOSUServiceDaemon: Periodic autoupdate action called"
-            ],
-            [
-                "1690959262443086000",
-                "2023-08-02 14:54:22+08 MacBook-Air softwareupdated[88542]: Removing client SUUpdateServiceClient pid=2058, uid=0, installAuth=NO rights=(), transactions=0 (/System/Library/PrivateFrameworks/SystemMigration.framework/Versions/A/Resources/systemmigrationd)"
-            ],
-            [
-                "1690959214006029000",
-                "2023-08-02 14:53:33+08 MacBook-Air systemmigrationd[2058]: systemmigrationd: Transitioning scanner request from Local Volumes to Nothing."
-            ],
-            [
-                "1690959212500213000",
-                "2023-08-02 14:53:32+08 MacBook-Air installd[2068]: installd: uid=0, euid=0"
-            ],
-            [
-                "1690959212500106000",
-                "2023-08-02 14:53:32+08 MacBook-Air installd[2068]: installd: Starting"
-            ],
-            [
-                "1690959212500088000",
-                "2023-08-02 14:53:32+08 MacBook-Air system_installd[2071]: installd: uid=0, euid=0"
-            ],
-            [
-                "1690959212500031000",
-                "2023-08-02 14:53:32+08 MacBook-Air system_installd[2071]: installd: Starting"
-            ],
-            [
-                "1690959211998232000",
-                "2023-08-02 14:53:31+08 MacBook-Air softwareupdated[88542]: Adding client SUUpdateServiceClient pid=2058, uid=0, installAuth=NO rights=(), transactions=0 (/System/Library/PrivateFrameworks/SystemMigration.framework/Versions/A/Resources/systemmigrationd)"
-            ],
-            [
-                "1690959211747723000",
-                "2023-08-02 14:53:31+08 MacBook-Air systemmigrationd[2058]: systemmigrationd: Transitioning scanner request from Nothing to Local Volumes."
-            ],
-            [
-                "1690958706096736000",
-                "2023-08-02 14:45:05+08 MacBook-Air softwareupdated[88542]: SUOSUPowerEventObserver: System has powered on"
-            ],
-            [
-                "1690958703535204000",
-                "2023-08-02 14:45:03+08 MacBook-Air softwareupdated[88542]: SUOSUPowerEventObserver: System will power on"
-            ],
-            [
-                "1690957444099540000",
-                "2023-08-02 14:24:04+08 MacBook-Air softwareupdated[88542]: SUOSUPowerEventObserver: System will sleep"
-            ],
-            [
-                "1690957419654897000",
-                "2023-08-02 14:23:39+08 MacBook-Air softwareupdated[88542]: SUOSUServiceDaemon: Removing client: (null) (pid = 1676, uid = 501, path = /System/Library/PrivateFrameworks/SoftwareUpdate.framework/Versions/A/Resources/SoftwareUpdateNotificationManager.app/Contents/MacOS/SoftwareUpdateNotificationManager, connection remote object interface = <NSXPCInterface: 0x154914720>, exported interface = (null), remote object proxy = <__NSXPCInterfaceProxy_SUOSUServiceClientProtocol: 0x155b5ed60>)"
-            ],
-            [
-                "1690957419654883000",
-                "2023-08-02 14:23:39+08 MacBook-Air softwareupdated[88542]: Removing client SUUpdateServiceClient pid=1676, uid=501, installAuth=NO rights=(), transactions=0 (/System/Library/PrivateFrameworks/SoftwareUpdate.framework/Versions/A/Resources/SoftwareUpdateNotificationManager.app/Contents/MacOS/SoftwareUpdateNotificationManager)"
-            ],
-            [
-                "1690957419654870000",
-                "2023-08-02 14:23:39+08 MacBook-Air softwareupdated[88542]: SUOSUServiceDaemon: Removing client: (null) (pid = 1676, uid = 501, path = /System/Library/PrivateFrameworks/SoftwareUpdate.framework/Versions/A/Resources/SoftwareUpdateNotificationManager.app/Contents/MacOS/SoftwareUpdateNotificationManager, connection remote object interface = <NSXPCInterface: 0x155ca1d40>, exported interface = (null), remote object proxy = <__NSXPCInterfaceProxy_SUOSUServiceClientProtocol: 0x15298f490>)"
-            ],
-            [
-                "1690957419654862000",
-                "2023-08-02 14:23:39+08 MacBook-Air softwareupdated[88542]: SUOSUServiceDaemon: Removing client: (null) (pid = 1676, uid = 501, path = /System/Library/PrivateFrameworks/SoftwareUpdate.framework/Versions/A/Resources/SoftwareUpdateNotificationManager.app/Contents/MacOS/SoftwareUpdateNotificationManager, connection remote object interface = <NSXPCInterface: 0x1600f3690>, exported interface = (null), remote object proxy = <__NSXPCInterfaceProxy_SUOSUServiceClientProtocol: 0x15298f490>)"
-            ],
-            [
-                "1690957419654853000",
-                "2023-08-02 14:23:39+08 MacBook-Air softwareupdated[88542]: Removing client SUUpdateServiceClient pid=1676, uid=501, installAuth=NO rights=(), transactions=0 (/System/Library/PrivateFrameworks/SoftwareUpdate.framework/Versions/A/Resources/SoftwareUpdateNotificationManager.app/Contents/MacOS/SoftwareUpdateNotificationManager)"
-            ],
-            [
-                "1690957419654836000",
-                "2023-08-02 14:23:39+08 MacBook-Air softwareupdated[88542]: Removing client SUUpdateServiceClient pid=1676, uid=501, installAuth=NO rights=(), transactions=0 (/System/Library/PrivateFrameworks/SoftwareUpdate.framework/Versions/A/Resources/SoftwareUpdateNotificationManager.app/Contents/MacOS/SoftwareUpdateNotificationManager)"
-            ],
-            [
-                "1690957419654826000",
-                "2023-08-02 14:23:39+08 MacBook-Air softwareupdated[88542]: Removing client SUUpdateServiceClient pid=1676, uid=501, installAuth=NO rights=(), transactions=0 (/System/Library/PrivateFrameworks/SoftwareUpdate.framework/Versions/A/Resources/SoftwareUpdateNotificationManager.app/Contents/MacOS/SoftwareUpdateNotificationManager)"
-            ],
-            [
-                "1690957419654817000",
-                "2023-08-02 14:23:39+08 MacBook-Air softwareupdated[88542]: Removing client SUUpdateServiceClient pid=1676, uid=501, installAuth=NO rights=(), transactions=0 (/System/Library/PrivateFrameworks/SoftwareUpdate.framework/Versions/A/Resources/SoftwareUpdateNotificationManager.app/Contents/MacOS/SoftwareUpdateNotificationManager)"
-            ],
-            [
-                "1690957419654799000",
-                "2023-08-02 14:23:39+08 MacBook-Air softwareupdated[88542]: SUOSUServiceDaemon: Removing client: (null) (pid = 1676, uid = 501, path = /System/Library/PrivateFrameworks/SoftwareUpdate.framework/Versions/A/Resources/SoftwareUpdateNotificationManager.app/Contents/MacOS/SoftwareUpdateNotificationManager, connection remote object interface = <NSXPCInterface: 0x1528cea30>, exported interface = (null), remote object proxy = <__NSXPCInterfaceProxy_SUOSUServiceClientProtocol: 0x15298f490>)"
-            ],
-            [
-                "1690957419654663000",
-                "2023-08-02 14:23:39+08 MacBook-Air softwareupdated[88542]: Removing client SUUpdateServiceClient pid=1676, uid=501, installAuth=NO rights=(), transactions=0 (/System/Library/PrivateFrameworks/SoftwareUpdate.framework/Versions/A/Resources/SoftwareUpdateNotificationManager.app/Contents/MacOS/SoftwareUpdateNotificationManager)"
-            ],
-            [
-                "1690957419654651000",
-                "2023-08-02 14:23:39+08 MacBook-Air softwareupdated[88542]: SUOSUServiceDaemon: Removing client: (null) (pid = 1676, uid = 501, path = /System/Library/PrivateFrameworks/SoftwareUpdate.framework/Versions/A/Resources/SoftwareUpdateNotificationManager.app/Contents/MacOS/SoftwareUpdateNotificationManager, connection remote object interface = <NSXPCInterface: 0x1601325c0>, exported interface = (null), remote object proxy = <__NSXPCInterfaceProxy_SUOSUServiceClientProtocol: 0x15298f490>)"
-            ],
-            [
-                "1690957419654597000",
-                "2023-08-02 14:23:39+08 MacBook-Air softwareupdated[88542]: SUOSUServiceDaemon: Removing client: (null) (pid = 1676, uid = 501, path = /System/Library/PrivateFrameworks/SoftwareUpdate.framework/Versions/A/Resources/SoftwareUpdateNotificationManager.app/Contents/MacOS/SoftwareUpdateNotificationManager, connection remote object interface = <NSXPCInterface: 0x155ab6bc0>, exported interface = (null), remote object proxy = <__NSXPCInterfaceProxy_SUOSUServiceClientProtocol: 0x155b6a7e0>)"
-            ],
-            [
-                "1690957419654581000",
-                "2023-08-02 14:23:39+08 MacBook-Air softwareupdated[88542]: SUOSUServiceDaemon: Removing client: (null) (pid = 1676, uid = 501, path = /System/Library/PrivateFrameworks/SoftwareUpdate.framework/Versions/A/Resources/SoftwareUpdateNotificationManager.app/Contents/MacOS/SoftwareUpdateNotificationManager, connection remote object interface = <NSXPCInterface: 0x155cb0920>, exported interface = (null), remote object proxy = <__NSXPCInterfaceProxy_SUOSUServiceClientProtocol: 0x15298f490>)"
-            ],
-            [
-                "1690957419654552000",
-                "2023-08-02 14:23:39+08 MacBook-Air softwareupdated[88542]: Removing client SUUpdateServiceClient pid=1676, uid=501, installAuth=NO rights=(), transactions=0 (/System/Library/PrivateFrameworks/SoftwareUpdate.framework/Versions/A/Resources/SoftwareUpdateNotificationManager.app/Contents/MacOS/SoftwareUpdateNotificationManager)"
-            ],
-            [
-                "1690957419654516000",
-                "2023-08-02 14:23:39+08 MacBook-Air softwareupdated[88542]: Removing client SUUpdateServiceClient pid=1676, uid=501, installAuth=NO rights=(), transactions=0 (/System/Library/PrivateFrameworks/SoftwareUpdate.framework/Versions/A/Resources/SoftwareUpdateNotificationManager.app/Contents/MacOS/SoftwareUpdateNotificationManager)"
-            ],
-            [
-                "1690957419654441000",
-                "2023-08-02 14:23:39+08 MacBook-Air softwareupdated[88542]: Removing client SUUpdateServiceClient pid=1676, uid=501, installAuth=NO rights=(), transactions=0 (/System/Library/PrivateFrameworks/SoftwareUpdate.framework/Versions/A/Resources/SoftwareUpdateNotificationManager.app/Contents/MacOS/SoftwareUpdateNotificationManager)"
-            ],
-            [
-                "1690957419654394000",
-                "2023-08-02 14:23:39+08 MacBook-Air softwareupdated[88542]: SUOSUServiceDaemon: Removing client: (null) (pid = 1676, uid = 501, path = /System/Library/PrivateFrameworks/SoftwareUpdate.framework/Versions/A/Resources/SoftwareUpdateNotificationManager.app/Contents/MacOS/SoftwareUpdateNotificationManager, connection remote object interface = <NSXPCInterface: 0x1549edf30>, exported interface = (null), remote object proxy = <__NSXPCInterfaceProxy_SUOSUServiceClientProtocol: 0x155b372f0>)"
-            ],
-            [
-                "1690957419654371000",
-                "2023-08-02 14:23:39+08 MacBook-Air softwareupdated[88542]: Removing client SUUpdateServiceClient pid=1676, uid=501, installAuth=NO rights=(), transactions=0 (/System/Library/PrivateFrameworks/SoftwareUpdate.framework/Versions/A/Resources/SoftwareUpdateNotificationManager.app/Contents/MacOS/SoftwareUpdateNotificationManager)"
-            ],
-            [
-                "1690957413615667000",
-                "2023-08-02 14:23:33+08 MacBook-Air softwareupdated[88542]: SUOSUServiceDaemon: Removing client: (null) (pid = 1639, uid = 278, path = /System/Library/PrivateFrameworks/MobileAccessoryUpdater.framework/Support/accessoryupdaterd, connection remote object interface = <NSXPCInterface: 0x16018f020>, exported interface = (null), remote object proxy = <__NSXPCInterfaceProxy_SUOSUServiceClientProtocol: 0x155bee7d0>)"
-            ],
-            [
-                "1690956889456168000",
-                "2023-08-02 14:14:49+08 MacBook-Air SoftwareUpdateNotificationManager[1676]: SUOSUShimController: MSU update is not yet downloaded & prepared"
-            ],
-            [
-                "1690956889456163000",
-                "2023-08-02 14:14:49+08 MacBook-Air softwareupdated[88542]: Descriptor has changed since previous download (13.5 vs 13.4.1)"
-            ],
-            [
-                "1690956889456148000",
+                "1690967713398079000",
                 "\t)"
             ],
             [
-                "1690956889456143000",
+                "1690967713398072000",
+                "2023-08-02 17:15:13+08 MacBook-Air SoftwareUpdateNotificationManager[7391]: SUOSUShimController: Armed: 0, with mode: 0, date: (null), updates queued for later: ("
+            ],
+            [
+                "1690967713398065000",
+                "\t)"
+            ],
+            [
+                "1690967713398064000",
                 "\t    \"<SUOSUProduct: MSU_UPDATE_22G74_patch_13.5_minor>\""
             ],
             [
-                "1690956889456109000",
-                "2023-08-02 14:14:49+08 MacBook-Air softwareupdated[88542]: MSU updates found: ("
+                "1690967713398038000",
+                "2023-08-02 17:15:13+08 MacBook-Air softwareupdated[88542]: MSU updates found: ("
             ],
             [
-                "1690956889456098000",
+                "1690967713398035000",
+                "2023-08-02 17:15:13+08 MacBook-Air softwareupdated[88542]: SoftwareUpdate: request for status for unknown product MSU_UPDATE_22G74_patch_13.5_minor"
+            ],
+            [
+                "1690967713398033000",
                 "\t)"
             ],
             [
-                "1690956889456084000",
-                "2023-08-02 14:14:49+08 MacBook-Air SoftwareUpdateNotificationManager[1676]: SUOSUShimController: Armed: 0, with mode: 0, date: (null), updates queued for later: ("
-            ],
-            [
-                "1690956889456050000",
-                "2023-08-02 14:14:49+08 MacBook-Air softwareupdated[88542]: SoftwareUpdate: request for status for unknown product MSU_UPDATE_22G74_patch_13.5_minor"
-            ],
-            [
-                "1690956889456036000",
-                "\t)"
-            ],
-            [
-                "1690956889456020000",
+                "1690967713398028000",
                 "\t    \"<SUOSUProduct: MSU_UPDATE_22G74_patch_13.5_minor>\""
             ],
             [
-                "1690956889455942000",
-                "2023-08-02 14:14:49+08 MacBook-Air softwareupdated[88542]: MSU updates found: ("
+                "1690967713398026000",
+                "2023-08-02 17:15:13+08 MacBook-Air softwareupdated[88542]: MSU updates found: ("
             ],
             [
-                "1690956889455935000",
-                "2023-08-02 14:14:49+08 MacBook-Air SoftwareUpdateNotificationManager[1676]: Controller: Received availableUpdatesChanged notification; new updates: [MSU_UPDATE_22G74_patch_13.5_minor]; new major updates: [032-69593, 042-01917, 032-84910, 002-75541, 042-15015, 032-97690, 032-82192, 032-71575, 032-63749]"
+                "1690967713398023000",
+                "2023-08-02 17:15:13+08 MacBook-Air SoftwareUpdateNotificationManager[7391]: Controller: Received availableUpdatesChanged notification; new updates: [MSU_UPDATE_22G74_patch_13.5_minor]; new major updates: [032-69593, 042-01917, 032-84910, 002-75541, 042-15015, 032-97690, 032-82192, 032-71575, 032-63749]"
             ],
             [
-                "1690956889455848000",
+                "1690967713398017000",
                 "\t)"
             ],
             [
-                "1690956889455830000",
-                "2023-08-02 14:14:49+08 MacBook-Air SoftwareUpdateNotificationManager[1676]: External updates: ("
+                "1690967713398012000",
+                "2023-08-02 17:15:13+08 MacBook-Air SoftwareUpdateNotificationManager[7391]: External updates: ("
             ],
             [
-                "1690956889205032000",
+                "1690967713398010000",
                 "\t)"
             ],
             [
-                "1690956889205030000",
+                "1690967713397999000",
                 "\t    \"<SUOSUProduct: MSU_UPDATE_22G74_patch_13.5_minor>\""
             ],
             [
-                "1690956889205024000",
-                "2023-08-02 14:14:49+08 MacBook-Air softwareupdated[88542]: MSU updates found: ("
+                "1690967713397997000",
+                "2023-08-02 17:15:13+08 MacBook-Air softwareupdated[88542]: MSU updates found: ("
             ],
             [
-                "1690956889205020000",
-                "2023-08-02 14:14:49+08 MacBook-Air SoftwareUpdateNotificationManager[1676]: SUOSUShimController: MSU update is not yet downloaded & prepared"
+                "1690967713397987000",
+                "2023-08-02 17:15:13+08 MacBook-Air SoftwareUpdateNotificationManager[7391]: SUOSUShimController: MSU update is not yet downloaded & prepared"
             ],
             [
-                "1690956889204998000",
-                "2023-08-02 14:14:49+08 MacBook-Air softwareupdated[88542]: Descriptor has changed since previous download (13.5 vs 13.4.1)"
+                "1690967713397982000",
+                "2023-08-02 17:15:13+08 MacBook-Air softwareupdated[88542]: Descriptor has changed since previous download (13.5 vs 13.4.1)"
             ],
             [
-                "1690956889204995000",
-                "2023-08-02 14:14:49+08 MacBook-Air SoftwareUpdateNotificationManager[1676]: AssertionMgr: Could not cancel com.apple.softwareupdate.NotifyAgentAssertion-BadgingCountChanged assertion - no assertion found for pid 1676"
-            ],
-            [
-                "1690956889204990000",
-                "2023-08-02 14:14:49+08 MacBook-Air softwareupdated[88542]: SUOSUServiceDaemon: Adding client: (null) (pid = 1676, uid = 501, path = /System/Library/PrivateFrameworks/SoftwareUpdate.framework/Versions/A/Resources/SoftwareUpdateNotificationManager.app/Contents/MacOS/SoftwareUpdateNotificationManager, connection remote object interface = <NSXPCInterface: 0x155ab6bc0>, exported interface = <NSXPCInterface: 0x155af89a0>, remote object proxy = <__NSXPCInterfaceProxy_SUOSUServiceClientProtocol: 0x154869800>)"
-            ],
-            [
-                "1690956889204975000",
-                "2023-08-02 14:14:49+08 MacBook-Air softwareupdated[88542]: SoftwareUpdate: request for status for unknown product MSU_UPDATE_22G74_patch_13.5_minor"
-            ],
-            [
-                "1690956889204973000",
+                "1690967713397970000",
                 "\t)"
             ],
             [
-                "1690956889204969000",
+                "1690967713397968000",
                 "\t    \"<SUOSUProduct: MSU_UPDATE_22G74_patch_13.5_minor>\""
             ],
             [
-                "1690956889204964000",
-                "2023-08-02 14:14:49+08 MacBook-Air softwareupdated[88542]: MSU updates found: ("
+                "1690967713397953000",
+                "2023-08-02 17:15:13+08 MacBook-Air softwareupdated[88542]: MSU updates found: ("
             ],
             [
-                "1690956889204961000",
+                "1690967713397949000",
                 "\t)"
             ],
             [
-                "1690956889204959000",
-                "2023-08-02 14:14:49+08 MacBook-Air SoftwareUpdateNotificationManager[1676]: SUOSUShimController: Armed: 0, with mode: 0, date: (null), updates queued for later: ("
+                "1690967713397947000",
+                "2023-08-02 17:15:13+08 MacBook-Air SoftwareUpdateNotificationManager[7391]: SUOSUShimController: Armed: 0, with mode: 0, date: (null), updates queued for later: ("
             ],
             [
-                "1690956889204951000",
-                "2023-08-02 14:14:49+08 MacBook-Air softwareupdated[88542]: SoftwareUpdate: request for status for unknown product MSU_UPDATE_22G74_patch_13.5_minor"
+                "1690967713397933000",
+                "2023-08-02 17:15:13+08 MacBook-Air softwareupdated[88542]: SoftwareUpdate: request for status for unknown product MSU_UPDATE_22G74_patch_13.5_minor"
             ],
             [
-                "1690956889204948000",
-                "2023-08-02 14:14:49+08 MacBook-Air softwareupdated[88542]: Adding client SUUpdateServiceClient pid=1676, uid=501, installAuth=NO rights=(), transactions=0 (/System/Library/PrivateFrameworks/SoftwareUpdate.framework/Versions/A/Resources/SoftwareUpdateNotificationManager.app/Contents/MacOS/SoftwareUpdateNotificationManager)"
+                "1690967713397929000",
+                "2023-08-02 17:15:13+08 MacBook-Air SoftwareUpdateNotificationManager[7391]: AssertionMgr: Could not cancel com.apple.softwareupdate.NotifyAgentAssertion-BadgingCountChanged assertion - no assertion found for pid 7391"
             ],
             [
-                "1690956889204932000",
-                "2023-08-02 14:14:49+08 MacBook-Air SoftwareUpdateNotificationManager[1676]: AssertionMgr: Could not cancel com.apple.softwareupdate.NotifyAgentAssertion-BadgingCountChanged assertion - no assertion found for pid 1676"
+                "1690967713397925000",
+                "2023-08-02 17:15:13+08 MacBook-Air softwareupdated[88542]: SUOSUServiceDaemon: Adding client: (null) (pid = 7391, uid = 501, path = /System/Library/PrivateFrameworks/SoftwareUpdate.framework/Versions/A/Resources/SoftwareUpdateNotificationManager.app/Contents/MacOS/SoftwareUpdateNotificationManager, connection remote object interface = <NSXPCInterface: 0x151f5c800>, exported interface = <NSXPCInterface: 0x151ff1c10>, remote object proxy = <__NSXPCInterfaceProxy_SUOSUServiceClientProtocol: 0x15287fd20>)"
             ],
             [
-                "1690956889204893000",
-                "2023-08-02 14:14:49+08 MacBook-Air softwareupdated[88542]: SUOSUServiceDaemon: Adding client: (null) (pid = 1676, uid = 501, path = /System/Library/PrivateFrameworks/SoftwareUpdate.framework/Versions/A/Resources/SoftwareUpdateNotificationManager.app/Contents/MacOS/SoftwareUpdateNotificationManager, connection remote object interface = <NSXPCInterface: 0x155ca1d40>, exported interface = <NSXPCInterface: 0x155c71740>, remote object proxy = <__NSXPCInterfaceProxy_SUOSUServiceClientProtocol: 0x155eada60>)"
+                "1690967713397923000",
+                "2023-08-02 17:15:13+08 MacBook-Air softwareupdated[88542]: SoftwareUpdate: request for status for unknown product MSU_UPDATE_22G74_patch_13.5_minor"
             ],
             [
-                "1690956889204859000",
+                "1690967713397912000",
+                "2023-08-02 17:15:13+08 MacBook-Air softwareupdated[88542]: Adding client SUUpdateServiceClient pid=7391, uid=501, installAuth=NO rights=(), transactions=0 (/System/Library/PrivateFrameworks/SoftwareUpdate.framework/Versions/A/Resources/SoftwareUpdateNotificationManager.app/Contents/MacOS/SoftwareUpdateNotificationManager)"
+            ],
+            [
+                "1690967713397901000",
                 "\t)"
             ],
             [
-                "1690956889204855000",
+                "1690967713397895000",
                 "\t    \"<SUOSUProduct: MSU_UPDATE_22G74_patch_13.5_minor>\""
             ],
             [
-                "1690956889204853000",
-                "2023-08-02 14:14:49+08 MacBook-Air softwareupdated[88542]: MSU updates found: ("
+                "1690967713397891000",
+                "2023-08-02 17:15:13+08 MacBook-Air softwareupdated[88542]: MSU updates found: ("
             ],
             [
-                "1690956889204844000",
-                "2023-08-02 14:14:49+08 MacBook-Air SoftwareUpdateNotificationManager[1676]: Controller: Received availableUpdatesChanged notification; new updates: [MSU_UPDATE_22G74_patch_13.5_minor]; new major updates: [032-69593, 042-01917, 032-84910, 002-75541, 042-15015, 032-97690, 032-82192, 032-71575, 032-63749]"
+                "1690967713397890000",
+                "2023-08-02 17:15:13+08 MacBook-Air SoftwareUpdateNotificationManager[7391]: Controller: Received availableUpdatesChanged notification; new updates: [MSU_UPDATE_22G74_patch_13.5_minor]; new major updates: [032-69593, 042-01917, 032-84910, 002-75541, 042-15015, 032-97690, 032-82192, 032-71575, 032-63749]"
             ],
             [
-                "1690956889204829000",
+                "1690967713397880000",
                 "\t)"
             ],
             [
-                "1690956889204822000",
-                "2023-08-02 14:14:49+08 MacBook-Air SoftwareUpdateNotificationManager[1676]: External updates: ("
+                "1690967713397873000",
+                "2023-08-02 17:15:13+08 MacBook-Air SoftwareUpdateNotificationManager[7391]: External updates: ("
             ],
             [
-                "1690956889204809000",
-                "2023-08-02 14:14:49+08 MacBook-Air softwareupdated[88542]: SoftwareUpdate: request for status for unknown product MSU_UPDATE_22G74_patch_13.5_minor"
+                "1690967713397869000",
+                "2023-08-02 17:15:13+08 MacBook-Air SoftwareUpdateNotificationManager[7391]: AssertionMgr: Could not cancel com.apple.softwareupdate.NotifyAgentAssertion-BadgingCountChanged assertion - no assertion found for pid 7391"
             ],
             [
-                "1690956889204789000",
-                "2023-08-02 14:14:49+08 MacBook-Air softwareupdated[88542]: Adding client SUUpdateServiceClient pid=1676, uid=501, installAuth=NO rights=(), transactions=0 (/System/Library/PrivateFrameworks/SoftwareUpdate.framework/Versions/A/Resources/SoftwareUpdateNotificationManager.app/Contents/MacOS/SoftwareUpdateNotificationManager)"
+                "1690967713397861000",
+                "2023-08-02 17:15:13+08 MacBook-Air softwareupdated[88542]: SUOSUServiceDaemon: Adding client: (null) (pid = 7391, uid = 501, path = /System/Library/PrivateFrameworks/SoftwareUpdate.framework/Versions/A/Resources/SoftwareUpdateNotificationManager.app/Contents/MacOS/SoftwareUpdateNotificationManager, connection remote object interface = <NSXPCInterface: 0x154da0560>, exported interface = <NSXPCInterface: 0x155ce4dc0>, remote object proxy = <__NSXPCInterfaceProxy_SUOSUServiceClientProtocol: 0x154d971b0>)"
             ],
             [
-                "1690956889204776000",
-                "2023-08-02 14:14:49+08 MacBook-Air SoftwareUpdateNotificationManager[1676]: AssertionMgr: Cancel com.apple.softwareupdate.NotifyAgentAssertion-BadgingCountChanged assertion for pid 1676, id 0xA307"
+                "1690967713397848000",
+                "2023-08-02 17:15:13+08 MacBook-Air softwareupdated[88542]: SoftwareUpdate: request for status for unknown product MSU_UPDATE_22G74_patch_13.5_minor"
             ],
             [
-                "1690956889204765000",
+                "1690967713397841000",
+                "2023-08-02 17:15:13+08 MacBook-Air softwareupdated[88542]: Adding client SUUpdateServiceClient pid=7391, uid=501, installAuth=NO rights=(), transactions=0 (/System/Library/PrivateFrameworks/SoftwareUpdate.framework/Versions/A/Resources/SoftwareUpdateNotificationManager.app/Contents/MacOS/SoftwareUpdateNotificationManager)"
+            ],
+            [
+                "1690967713397836000",
                 "\t)"
             ],
             [
-                "1690956889204763000",
+                "1690967713397832000",
                 "\t    \"<SUOSUProduct: MSU_UPDATE_22G74_patch_13.5_minor>\""
             ],
             [
-                "1690956889204751000",
-                "2023-08-02 14:14:49+08 MacBook-Air softwareupdated[88542]: MSU updates found: ("
+                "1690967713397829000",
+                "2023-08-02 17:15:13+08 MacBook-Air softwareupdated[88542]: MSU updates found: ("
             ],
             [
-                "1690956889204741000",
-                "2023-08-02 14:14:49+08 MacBook-Air softwareupdated[88542]: SUOSUServiceDaemon: Adding client: (null) (pid = 1676, uid = 501, path = /System/Library/PrivateFrameworks/SoftwareUpdate.framework/Versions/A/Resources/SoftwareUpdateNotificationManager.app/Contents/MacOS/SoftwareUpdateNotificationManager, connection remote object interface = <NSXPCInterface: 0x155cb0920>, exported interface = <NSXPCInterface: 0x155c51060>, remote object proxy = <__NSXPCInterfaceProxy_SUOSUServiceClientProtocol: 0x155c6d590>)"
+                "1690967713397827000",
+                "2023-08-02 17:15:13+08 MacBook-Air SoftwareUpdateNotificationManager[7391]: AssertionMgr: Cancel com.apple.softwareupdate.NotifyAgentAssertion-BadgingCountChanged assertion for pid 7391, id 0x81D5"
             ],
             [
-                "1690956889204736000",
-                "2023-08-02 14:14:49+08 MacBook-Air softwareupdated[88542]: SoftwareUpdate: request for status for unknown product MSU_UPDATE_22G74_patch_13.5_minor"
+                "1690967713397797000",
+                "2023-08-02 17:15:13+08 MacBook-Air softwareupdated[88542]: SUOSUServiceDaemon: Adding client: (null) (pid = 7391, uid = 501, path = /System/Library/PrivateFrameworks/SoftwareUpdate.framework/Versions/A/Resources/SoftwareUpdateNotificationManager.app/Contents/MacOS/SoftwareUpdateNotificationManager, connection remote object interface = <NSXPCInterface: 0x155c76900>, exported interface = <NSXPCInterface: 0x155ca1e80>, remote object proxy = <__NSXPCInterfaceProxy_SUOSUServiceClientProtocol: 0x154da67a0>)"
             ],
             [
-                "1690956889204725000",
-                "2023-08-02 14:14:49+08 MacBook-Air softwareupdated[88542]: Adding client SUUpdateServiceClient pid=1676, uid=501, installAuth=NO rights=(), transactions=0 (/System/Library/PrivateFrameworks/SoftwareUpdate.framework/Versions/A/Resources/SoftwareUpdateNotificationManager.app/Contents/MacOS/SoftwareUpdateNotificationManager)"
+                "1690967713397775000",
+                "2023-08-02 17:15:13+08 MacBook-Air softwareupdated[88542]: 0 updates found:"
             ],
             [
-                "1690956889204719000",
-                "2023-08-02 14:14:49+08 MacBook-Air softwareupdated[88542]: 0 updates found:"
+                "1690967713397768000",
+                "2023-08-02 17:15:13+08 MacBook-Air softwareupdated[88542]: Scan (f=1, d=0) completed "
             ],
             [
-                "1690956889204707000",
-                "2023-08-02 14:14:49+08 MacBook-Air softwareupdated[88542]: Scan (f=1, d=0) completed "
+                "1690967713397760000",
+                "2023-08-02 17:15:13+08 MacBook-Air softwareupdated[88542]: SoftwareUpdate: request for status for unknown product MSU_UPDATE_22G74_patch_13.5_minor"
             ],
             [
-                "1690956889204633000",
-                "2023-08-02 14:14:49+08 MacBook-Air softwareupdated[88542]: SUStatisticsManager: Successfully reported statistics for category 5"
+                "1690967713397758000",
+                "2023-08-02 17:15:13+08 MacBook-Air softwareupdated[88542]: Adding client SUUpdateServiceClient pid=7391, uid=501, installAuth=NO rights=(), transactions=0 (/System/Library/PrivateFrameworks/SoftwareUpdate.framework/Versions/A/Resources/SoftwareUpdateNotificationManager.app/Contents/MacOS/SoftwareUpdateNotificationManager)"
             ],
             [
-                "1690956889204629000",
-                "2023-08-02 14:14:49+08 MacBook-Air softwareupdated[88542]: Refreshing available updates from scan"
+                "1690967713397747000",
+                "2023-08-02 17:15:13+08 MacBook-Air softwareupdated[88542]: Refreshing available updates from scan"
             ],
             [
-                "1690956889204600000",
-                "2023-08-02 14:14:49+08 MacBook-Air SoftwareUpdateNotificationManager[1676]: AssertionMgr: Take com.apple.softwareupdate.NotifyAgentAssertion-BadgingCountChanged assertion with type BackgroundTask for pid 1676, id 0xA307"
+                "1690967713397724000",
+                "2023-08-02 17:15:13+08 MacBook-Air softwareupdated[88542]: SUStatisticsManager: Successfully reported statistics for category 5"
             ],
             [
-                "1690956889204589000",
-                "2023-08-02 14:14:49+08 MacBook-Air softwareupdated[88542]: SUScan: Elapsed scan time = 5.2"
+                "1690967713397704000",
+                "2023-08-02 17:15:13+08 MacBook-Air SoftwareUpdateNotificationManager[7391]: AssertionMgr: Take com.apple.softwareupdate.NotifyAgentAssertion-BadgingCountChanged assertion with type BackgroundTask for pid 7391, id 0x81D5"
             ],
             [
-                "1690956889204582000",
-                "2023-08-02 14:14:49+08 MacBook-Air softwareupdated[88542]: Failed to get bridge device"
+                "1690967713397682000",
+                "2023-08-02 17:15:13+08 MacBook-Air softwareupdated[88542]: SUScan: Elapsed scan time = 4.5"
             ],
             [
-                "1690956889204578000",
-                "2023-08-02 14:14:49+08 MacBook-Air softwareupdated[88542]: Failed to get bridge device"
+                "1690967713146752000",
+                "2023-08-02 17:15:13+08 MacBook-Air softwareupdated[88542]: Failed to get bridge device"
             ],
             [
-                "1690956889204575000",
-                "2023-08-02 14:14:48+08 MacBook-Air softwareupdated[88542]: Package Authoring: error running installation-check script: TypeError: null is not an object (evaluating 'cpuFeatures.split') at x-distribution:///installer-gui-script%5B1%5D/installation-check%5B1%5D/@script"
+                "1690967713146733000",
+                "2023-08-02 17:15:13+08 MacBook-Air softwareupdated[88542]: Failed to get bridge device"
             ],
             [
-                "1690956889204512000",
-                "2023-08-02 14:14:48+08 MacBook-Air softwareupdated[88542]: Failed to get bridge device"
+                "1690967713146729000",
+                "2023-08-02 17:15:13+08 MacBook-Air softwareupdated[88542]: Package Authoring: error running installation-check script: TypeError: null is not an object (evaluating 'cpuFeatures.split') at x-distribution:///installer-gui-script%5B1%5D/installation-check%5B1%5D/@script"
             ],
             [
-                "1690956889204505000",
-                "2023-08-02 14:14:48+08 MacBook-Air softwareupdated[88542]: Failed to get bridge device"
+                "1690967713146727000",
+                "2023-08-02 17:15:13+08 MacBook-Air softwareupdated[88542]: Failed to get bridge device"
             ],
             [
-                "1690956888954313000",
-                "2023-08-02 14:14:48+08 MacBook-Air softwareupdated[88542]: Package Authoring: error running installation-check script: TypeError: null is not an object (evaluating 'cpuFeatures.split') at x-distribution:///installer-gui-script%5B1%5D/installation-check%5B1%5D/@script"
+                "1690967713146687000",
+                "2023-08-02 17:15:13+08 MacBook-Air softwareupdated[88542]: Failed to get bridge device"
             ],
             [
-                "1690956888954310000",
-                "2023-08-02 14:14:48+08 MacBook-Air softwareupdated[88542]: bridgeOS: Minimum bridge version requirement satisfied ((null)), skipping search for bridgeOS update"
+                "1690967713146677000",
+                "2023-08-02 17:15:12+08 MacBook-Air softwareupdated[88542]: Package Authoring: error running installation-check script: TypeError: null is not an object (evaluating 'cpuFeatures.split') at x-distribution:///installer-gui-script%5B1%5D/installation-check%5B1%5D/@script"
             ],
             [
-                "1690956888954294000",
-                "2023-08-02 14:14:48+08 MacBook-Air softwareupdated[88542]: Failed to get bridge device"
+                "1690967713146670000",
+                "2023-08-02 17:15:12+08 MacBook-Air softwareupdated[88542]: bridgeOS: Minimum bridge version requirement satisfied ((null)), skipping search for bridgeOS update"
             ],
             [
-                "1690956888954291000",
-                "2023-08-02 14:14:48+08 MacBook-Air softwareupdated[88542]: Failed to get bridge device"
+                "1690967713146666000",
+                "2023-08-02 17:15:12+08 MacBook-Air softwareupdated[88542]: Failed to get bridge device"
             ],
             [
-                "1690956888954289000",
-                "2023-08-02 14:14:48+08 MacBook-Air softwareupdated[88542]: Package Authoring: error running installation-check script: TypeError: null is not an object (evaluating 'cpuFeatures.split') at x-distribution:///installer-gui-script%5B1%5D/installation-check%5B1%5D/@script"
+                "1690967713146659000",
+                "2023-08-02 17:15:12+08 MacBook-Air softwareupdated[88542]: Failed to get bridge device"
             ],
             [
-                "1690956888954283000",
-                "2023-08-02 14:14:48+08 MacBook-Air softwareupdated[88542]: Failed to get bridge device"
+                "1690967713146647000",
+                "2023-08-02 17:15:12+08 MacBook-Air softwareupdated[88542]: Package Authoring: error running installation-check script: TypeError: null is not an object (evaluating 'cpuFeatures.split') at x-distribution:///installer-gui-script%5B1%5D/installation-check%5B1%5D/@script"
             ],
             [
-                "1690956888954279000",
-                "2023-08-02 14:14:48+08 MacBook-Air softwareupdated[88542]: Failed to get bridge device"
+                "1690967713146610000",
+                "2023-08-02 17:15:12+08 MacBook-Air softwareupdated[88542]: Failed to get bridge device"
             ],
             [
-                "1690956888954276000",
-                "2023-08-02 14:14:48+08 MacBook-Air softwareupdated[88542]: Package Authoring: error running installation-check script: TypeError: null is not an object (evaluating 'cpuFeatures.split') at x-distribution:///installer-gui-script%5B1%5D/installation-check%5B1%5D/@script"
+                "1690967713146593000",
+                "2023-08-02 17:15:12+08 MacBook-Air softwareupdated[88542]: Failed to get bridge device"
             ],
             [
-                "1690956888954226000",
-                "2023-08-02 14:14:48+08 MacBook-Air softwareupdated[88542]: bridgeOS: Minimum bridge version requirement satisfied ((null)), skipping search for bridgeOS update"
+                "1690967713146583000",
+                "2023-08-02 17:15:12+08 MacBook-Air softwareupdated[88542]: Package Authoring: error running installation-check script: TypeError: null is not an object (evaluating 'cpuFeatures.split') at x-distribution:///installer-gui-script%5B1%5D/installation-check%5B1%5D/@script"
             ],
             [
-                "1690956888954169000",
-                "2023-08-02 14:14:48+08 MacBook-Air softwareupdated[88542]: Failed to get bridge device"
+                "1690967712895726000",
+                "2023-08-02 17:15:12+08 MacBook-Air softwareupdated[88542]: bridgeOS: Minimum bridge version requirement satisfied ((null)), skipping search for bridgeOS update"
+            ],
+            [
+                "1690967712895723000",
+                "2023-08-02 17:15:12+08 MacBook-Air softwareupdated[88542]: Failed to get bridge device"
+            ],
+            [
+                "1690967712895721000",
+                "2023-08-02 17:15:12+08 MacBook-Air softwareupdated[88542]: Failed to get bridge device"
+            ],
+            [
+                "1690967712895703000",
+                "2023-08-02 17:15:12+08 MacBook-Air softwareupdated[88542]: Failed to get bridge device"
+            ],
+            [
+                "1690967712895696000",
+                "2023-08-02 17:15:12+08 MacBook-Air softwareupdated[88542]: Failed to get bridge device"
+            ],
+            [
+                "1690967712895691000",
+                "2023-08-02 17:15:12+08 MacBook-Air softwareupdated[88542]: Package Authoring: error running installation-check script: TypeError: null is not an object (evaluating 'cpuFeatures.split') at x-distribution:///installer-gui-script%5B1%5D/installation-check%5B1%5D/@script"
+            ],
+            [
+                "1690967712895686000",
+                "2023-08-02 17:15:12+08 MacBook-Air softwareupdated[88542]: Failed to get bridge device"
+            ],
+            [
+                "1690967712895684000",
+                "2023-08-02 17:15:12+08 MacBook-Air softwareupdated[88542]: Failed to get bridge device"
+            ],
+            [
+                "1690967712895599000",
+                "2023-08-02 17:15:12+08 MacBook-Air softwareupdated[88542]: Failed to get bridge device"
+            ],
+            [
+                "1690967712895596000",
+                "2023-08-02 17:15:12+08 MacBook-Air softwareupdated[88542]: Failed to get bridge device"
+            ],
+            [
+                "1690967712895585000",
+                "2023-08-02 17:15:12+08 MacBook-Air softwareupdated[88542]: Package Authoring: error running installation-check script: TypeError: null is not an object (evaluating 'cpuFeatures.split') at x-distribution:///installer-gui-script%5B1%5D/installation-check%5B1%5D/@script"
+            ],
+            [
+                "1690967712895567000",
+                "2023-08-02 17:15:12+08 MacBook-Air softwareupdated[88542]: Failed to get bridge device"
+            ],
+            [
+                "1690967712895557000",
+                "2023-08-02 17:15:12+08 MacBook-Air softwareupdated[88542]: Failed to get bridge device"
+            ],
+            [
+                "1690967712895544000",
+                "2023-08-02 17:15:12+08 MacBook-Air softwareupdated[88542]: Failed to get bridge device"
+            ],
+            [
+                "1690967712895518000",
+                "2023-08-02 17:15:12+08 MacBook-Air softwareupdated[88542]: Failed to get bridge device"
+            ],
+            [
+                "1690967712895499000",
+                "2023-08-02 17:15:12+08 MacBook-Air softwareupdated[88542]: Package Authoring: error running installation-check script: TypeError: null is not an object (evaluating 'cpuFeatures.split') at x-distribution:///installer-gui-script%5B1%5D/installation-check%5B1%5D/@script"
+            ],
+            [
+                "1690967712895492000",
+                "2023-08-02 17:15:12+08 MacBook-Air softwareupdated[88542]: Package Authoring: error running installation-check script: TypeError: null is not an object (evaluating 'cpuFeatures.split') at x-distribution:///installer-gui-script%5B1%5D/installation-check%5B1%5D/@script"
+            ],
+            [
+                "1690967710887850000",
+                "2023-08-02 17:15:10+08 MacBook-Air softwareupdated[88542]: Failed to get bridge device"
+            ],
+            [
+                "1690967710887843000",
+                "2023-08-02 17:15:10+08 MacBook-Air softwareupdated[88542]: Failed to get bridge device"
+            ],
+            [
+                "1690967710887834000",
+                "2023-08-02 17:15:10+08 MacBook-Air softwareupdated[88542]: Package Authoring: error running installation-check script: TypeError: null is not an object (evaluating 'cpuFeatures.split') at x-distribution:///installer-gui-script%5B1%5D/installation-check%5B1%5D/@script"
+            ],
+            [
+                "1690967710887825000",
+                "2023-08-02 17:15:10+08 MacBook-Air softwareupdated[88542]: Package Authoring: error running installation-check script: TypeError: null is not an object (evaluating 'cpuFeatures.split') at x-distribution:///installer-gui-script%5B1%5D/installation-check%5B1%5D/@script"
+            ],
+            [
+                "1690967710887812000",
+                "2023-08-02 17:15:10+08 MacBook-Air softwareupdated[88542]: bridgeOS: Minimum bridge version requirement satisfied ((null)), skipping search for bridgeOS update"
+            ],
+            [
+                "1690967710887796000",
+                "2023-08-02 17:15:10+08 MacBook-Air softwareupdated[88542]: Failed to get bridge device"
+            ],
+            [
+                "1690967710887778000",
+                "2023-08-02 17:15:10+08 MacBook-Air softwareupdated[88542]: Failed to get bridge device"
+            ],
+            [
+                "1690967710887772000",
+                "2023-08-02 17:15:10+08 MacBook-Air softwareupdated[88542]: Package Authoring: error running installation-check script: TypeError: null is not an object (evaluating 'cpuFeatures.split') at x-distribution:///installer-gui-script%5B1%5D/installation-check%5B1%5D/@script"
+            ],
+            [
+                "1690967710636673000",
+                "2023-08-02 17:15:10+08 MacBook-Air softwareupdated[88542]: bridgeOS: Minimum bridge version requirement satisfied ((null)), skipping search for bridgeOS update"
+            ],
+            [
+                "1690967710636663000",
+                "2023-08-02 17:15:10+08 MacBook-Air softwareupdated[88542]: Failed to get bridge device"
+            ],
+            [
+                "1690967710636659000",
+                "2023-08-02 17:15:10+08 MacBook-Air softwareupdated[88542]: Failed to get bridge device"
+            ],
+            [
+                "1690967710636638000",
+                "2023-08-02 17:15:10+08 MacBook-Air softwareupdated[88542]: Package Authoring: error running installation-check script: TypeError: null is not an object (evaluating 'cpuFeatures.split') at x-distribution:///installer-gui-script%5B1%5D/installation-check%5B1%5D/@script"
+            ],
+            [
+                "1690967710636617000",
+                "2023-08-02 17:15:10+08 MacBook-Air softwareupdated[88542]: Package Authoring: error running installation-check script: TypeError: null is not an object (evaluating 'cpuFeatures.split') at x-distribution:///installer-gui-script%5B1%5D/installation-check%5B1%5D/@script"
+            ],
+            [
+                "1690967710636590000",
+                "2023-08-02 17:15:10+08 MacBook-Air softwareupdated[88542]: Package Authoring: error running installation-check script: TypeError: null is not an object (evaluating 'cpuFeatures.split') at x-distribution:///installer-gui-script%5B1%5D/installation-check%5B1%5D/@script"
+            ],
+            [
+                "1690967710636556000",
+                "2023-08-02 17:15:10+08 MacBook-Air softwareupdated[88542]: Package Authoring: error running installation-check script: TypeError: null is not an object (evaluating 'cpuFeatures.split') at x-distribution:///installer-gui-script%5B1%5D/installation-check%5B1%5D/@script"
+            ],
+            [
+                "1690967710636549000",
+                "2023-08-02 17:15:10+08 MacBook-Air softwareupdated[88542]: JS: No bundle at/Applications/SafeView.app"
+            ],
+            [
+                "1690967710386088000",
+                "2023-08-02 17:15:10+08 MacBook-Air softwareupdated[88542]: Package Authoring: error running installation-check script: TypeError: null is not an object (evaluating 'cpuFeatures.split') at x-distribution:///installer-gui-script%5B1%5D/installation-check%5B1%5D/@script"
+            ],
+            [
+                "1690967710386084000",
+                "2023-08-02 17:15:10+08 MacBook-Air softwareupdated[88542]: Failed to get bridge device"
             ]
         ]
     }
