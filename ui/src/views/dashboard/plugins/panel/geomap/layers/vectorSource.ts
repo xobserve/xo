@@ -66,7 +66,14 @@ export class FrameVectorSource<T extends Geometry = Geometry> extends VectorSour
 
         for (const s of data) {
             const code = s.name.toLowerCase()
-            const location = countries[code] ?? cities[code]
+            let location = countries[code] ?? cities[code]
+            if (!location) {
+              
+                const  f = s.fields.find(f => f.type == FieldType.Geo)
+                if (f) {
+                    location = [s.name, f.values]
+                }
+            }
             const override = findOverride(panel, code)
             if (location) {
                 const point = new Point(fromLonLat(location[1]));

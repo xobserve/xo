@@ -41,27 +41,6 @@ const getMarkersLayer = (panel: Panel) => {
 
         const color = feature.get("color")
         const opacity = feature.get("opacity")
-        // const idx = feature.get('rowIndex') as number;
-        // const dims = style.dims;
-        // if (!dims || !isNumber(idx)) {
-        //   return style.maker(style.base);
-        // }
-
-        // const values = { ...style.base };
-
-        // if (dims.color) {
-        //   values.color = dims.color.get(idx);
-        // }
-        // if (dims.size) {
-        //   values.size = dims.size.get(idx);
-        // }
-        // if (dims.text) {
-        //   values.text = dims.text.get(idx);
-        // }
-        // if (dims.rotation) {
-        //   values.rotation = dims.rotation.get(idx);
-        // }
-        // return style.maker(values);
         return circleMarker({ size: size, color: color, opacity: opacity })
     });
     return layer;

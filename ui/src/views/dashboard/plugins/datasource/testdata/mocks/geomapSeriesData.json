@@ -1,8 +1,8 @@
 [
     {
         "id": "A",
-        "name": "AE",
-        "rawName": "AE",
+        "name": "Shanghai",
+        "rawName": "Shanghai",
         "fields": [
             {
                 "name": "Time",
@@ -26,8 +26,8 @@
     },
     {
         "id": "A",
-        "name": "AF",
-        "rawName": "AF",
+        "name": "Chengdu",
+        "rawName": "Chengdu",
         "fields": [
             {
                 "name": "Time",
@@ -640,8 +640,8 @@
     },
     {
         "id": "A",
-        "name": "CM",
-        "rawName": "CM",
+        "name": "Bei_jing",
+        "rawName": "Bei_jing",
         "fields": [
             {
                 "name": "Time",
@@ -659,6 +659,14 @@
                     4,
                     1,
                     4
+                ]
+            },
+            {
+                "name": "Geo",
+                "type": "geo",
+                "values": [
+                    116.4,
+                    39.9
                 ]
             }
         ]
@@ -765,7 +773,7 @@
     },
     {
         "id": "A",
-        "name": "CY",
+        "name": "Xian",
         "rawName": "CY",
         "fields": [
             {
@@ -790,7 +798,7 @@
     },
     {
         "id": "A",
-        "name": "CZ",
+        "name": "Urumqi",
         "rawName": "CZ",
         "fields": [
             {
@@ -815,8 +823,8 @@
     },
     {
         "id": "A",
-        "name": "DE",
-        "rawName": "DE",
+        "name": "Wuhan",
+        "rawName": "Wuhan",
         "fields": [
             {
                 "name": "Time",
@@ -840,8 +848,8 @@
     },
     {
         "id": "A",
-        "name": "DK",
-        "rawName": "DK",
+        "name": "Guiyang",
+        "rawName": "Guiyang",
         "fields": [
             {
                 "name": "Time",
@@ -865,8 +873,8 @@
     },
     {
         "id": "A",
-        "name": "DO",
-        "rawName": "DO",
+        "name": "Kunming",
+        "rawName": "Kunming",
         "fields": [
             {
                 "name": "Time",
