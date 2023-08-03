@@ -114,7 +114,19 @@ const LogPanelEditor = memo((props: PanelEditorProps) => {
             <PanelEditItem title="Toolbar width" desc="In css pixels">
                 <EditorNumberItem min={0} max={500} step={20} value={panel.plugins.log.toolbar.width} onChange={(v) => onChange((panel: Panel) => {
                     panel.plugins.log.toolbar.width = v
-                })}  />
+                })} />
+            </PanelEditItem>
+        </PanelAccordion>
+        <PanelAccordion title="Chart">
+            <PanelEditItem title="Show">
+                <Switch isChecked={panel.plugins.log.chart.show} onChange={(e) => onChange((panel: Panel) => {
+                    panel.plugins.log.chart.show = e.target.checked
+                })} />
+            </PanelEditItem>
+            <PanelEditItem title="Chart height" desc="Css style width">
+                <EditorInputItem value={panel.plugins.log.chart.height} onChange={(v) => onChange((panel: Panel) => {
+                    panel.plugins.log.chart.height = v
+                })} placeholder="e.g 200px 30%" />
             </PanelEditItem>
         </PanelAccordion>
         <PanelAccordion title="Thresholds">

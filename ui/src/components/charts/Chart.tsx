@@ -22,7 +22,7 @@ interface Props {
     options: any
     theme: string
     width?: number
-    height: number
+    height?: number
     onChartCreated: (chart) => void
     onChartEvents?: any
 }
@@ -31,8 +31,8 @@ interface Props {
 export const ChartComponent = memo((props: Props) => {
     const { options, theme, onChartCreated, onChartEvents } = props
     // echarts is weirdly widther than the container, so we need to subtract 15
-    const width = props.width - 11
-    const height = props.height - 3
+    const width = props.width ? props.width - 11 : null
+    const height = props.height ? props.height - 3 : null
     const edit = useSearchParam('edit')
     const container = useRef(null)
     const [chart, setChart] = useState(null)
@@ -87,7 +87,7 @@ export const ChartComponent = memo((props: Props) => {
         ct.off('click')
         ct.on('click', onChartEvents)
     }
-    return (<Box ref={container} width={width} height={height} className="echart-container" />)
+    return (<Box ref={container} width={width ?? "100%"} height={height ?? "100%"} className="echart-container" />)
 })
 
 

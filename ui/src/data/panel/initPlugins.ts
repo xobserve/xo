@@ -364,7 +364,11 @@ function registerEvents(options, chart) {
                 show: true,
                 width: 200,
             },
-            thresholds: [{type: null, value: null, color: 'inherit'}]
+            chart: {
+                show: true,
+                height: '120px'
+            },
+            thresholds: [{type: null, value: null,key:null, color: 'inherit'}]
         }
     }
 }

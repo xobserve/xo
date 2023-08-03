@@ -62,6 +62,10 @@ export interface LogSettings {
         width: number 
 
     }
+    chart: {
+        show: boolean
+        height: string
+    }
     thresholds: LogThreshold[]
 }
 
