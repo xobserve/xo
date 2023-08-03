@@ -347,6 +347,7 @@ function registerEvents(options, chart) {
         [PanelType.Log]: {
             showTime: true,
             timeColumnWidth: 160,
+            orderBy: "newest",
             labels: {
                 display: [],
                 width: 240,

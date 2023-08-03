@@ -44,6 +44,7 @@ export interface DisableDatasource {
 export interface LogSettings {
     showTime: boolean
     timeColumnWidth: number
+    orderBy: "newest" | "oldest"
     labels: {
         display: string[]
         width: number

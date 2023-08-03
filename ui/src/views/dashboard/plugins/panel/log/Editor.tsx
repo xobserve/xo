@@ -55,6 +55,11 @@ const LogPanelEditor = memo((props: PanelEditorProps) => {
                     panel.plugins.log.timeColumnWidth = v
                 })} placeholder="auto" />
             </PanelEditItem>
+            <PanelEditItem title="Order by">
+                <RadionButtons options={[{ label: "Newest First", value: "newest" }, { label: "Oldest First", value: "oldest" }]} value={panel.plugins.log.orderBy} onChange={v => onChange((panel: Panel) => {
+                    panel.plugins.log.orderBy = v
+                })} />
+            </PanelEditItem>
         </PanelAccordion>
         <PanelAccordion title="Labels">
             <PanelEditItem title="Display labels">

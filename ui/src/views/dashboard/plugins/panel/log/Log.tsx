@@ -160,9 +160,17 @@ const LogPanel = (props: LogPanelProps) => {
             }
         }
         
-        return sortBy(result, ['timestamp']).reverse()
+        return result
     },[data, search,active])
     
+    const sortedData = useMemo(() => {
+        if (panel.plugins.log.orderBy == "newest") {
+            return sortBy(filterData, ['timestamp']).reverse()
+        }
+
+        return sortBy(filterData, ['timestamp'])
+    },[filterData, panel.plugins.log.orderBy])
+
     return (<Flex position="relative">
         {panel.plugins.log.toolbar.show &&
             <Box position="absolute" right="2" top="0" onClick={onToobarOpen} fontSize="0.7rem" opacity="0.6" cursor="pointer" p="2px" className="color-text">
@@ -170,7 +178,7 @@ const LogPanel = (props: LogPanelProps) => {
             </Box>}
         <VStack alignItems="left" divider={<StackDivider />} py="2" width={props.width - (toolbarOpen ? panel.plugins.log.toolbar.width : 1)} transition="all 0.3s">
             {
-                filterData.map(log => <LogItem log={log} panel={panel} collapsed={collaseAll} />)
+                sortedData.map(log => <LogItem log={log} panel={panel} collapsed={collaseAll} />)
             }
         </VStack>
         {<Box className="bordered-left" width={toolbarOpen ? panel.plugins.log.toolbar.width : 0} transition="all 0.3s">
