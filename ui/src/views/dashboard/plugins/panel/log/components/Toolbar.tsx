@@ -11,26 +11,36 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { Box, Button, Divider, HStack } from "@chakra-ui/react"
-import React from "react"
+import { Box, Button, Divider, HStack, Input, Text } from "@chakra-ui/react"
+import { EditorInputItem } from "components/editor/EditorItem"
+import React, { memo, useState } from "react"
+import { AiOutlineDoubleRight } from "react-icons/ai"
 import { Panel } from "types/dashboard"
 import { LogSeries } from "types/plugins/log"
 
 interface Props {
     data: LogSeries[]
-    panel : Panel
+    panel: Panel
     onCollapseAll: any
+    onSearchChange: any
 }
-const LogToolbar = (props: Props) => {
-    const {data, panel,onCollapseAll} = props
-    return (<Box mt="2">
-        <Divider mt="5"/>
-        <HStack mt="1">
-            <Button size="sm" variant="ghost" onClick={() => onCollapseAll(false)}>Expand all</Button>
-            <Button size="sm" variant="ghost" onClick={() => onCollapseAll(true)}>Collapse all</Button>
+const LogToolbar = memo((props: Props) => {
+    const [search, setSearch] = useState<string>("")
+    const { data, panel, onCollapseAll, onSearchChange } = props
+    return (<Box>
+        <HStack spacing={2} px="1">
+            <AiOutlineDoubleRight cursor="pointer" style={{
+                transform: 'rotate(90deg)'
+            }} onClick={() => onCollapseAll(false)} />
+            <AiOutlineDoubleRight cursor="pointer" onClick={() => onCollapseAll(true)} />
         </HStack>
-        <Divider mt="1"/>
+        <Divider mt="2" />
+        <Box fontSize="0.9rem" mt="2" px="1">
+            <Text mb="1">Search logs</Text>
+            <EditorInputItem value={search} onChange={v => { setSearch(v); onSearchChange(v) }} placeholder="textA || textB , A && B" />
+        </Box>
+
     </Box>)
-}
+})
 
 export default LogToolbar

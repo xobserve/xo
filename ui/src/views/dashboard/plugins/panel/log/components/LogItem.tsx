@@ -11,28 +11,29 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import React, { useEffect, useMemo, useState } from "react";
-import { Box, HStack, Text, VStack } from "@chakra-ui/react"
+import React, { memo, useEffect, useMemo, useState } from "react";
+import { Box, HStack, Highlight, Text, VStack } from "@chakra-ui/react"
 import { Panel } from "types/dashboard"
 import { dateTimeFormat } from "utils/datetime/formatter";
 import { isEmpty, toNumber } from "lodash";
 import CollapseIcon from "components/icons/Collapse";
 import { LayoutOrientation } from "types/layout";
 import { paletteColorNameToHex } from "utils/colors";
+import { Log } from "types/plugins/log";
 
 interface LogItemProps {
-    labels: { [key: string]: string }
-    log: [string, string]
+    log: Log
     panel: Panel
     collapsed: boolean
 }
-const LogItem = (props: LogItemProps) => {
-    const { labels, log, panel } = props
+const LogItem = memo((props: LogItemProps) => {
+    const { log, panel } = props
+    const labels = log.labels
     const [collapsed, setCollapsed] = useState(true)
     useEffect(() => {
         setCollapsed(props.collapsed)
     },[props.collapsed])
-    const timestamp = toNumber(log[0]) / 1e6
+    const timestamp = toNumber(log.timestamp) / 1e6
     const options = panel.plugins.log
     const LabelLayout = options.labels.layout == LayoutOrientation.Horizontal ? HStack : Box
     const timestampColor = useMemo(() => {
@@ -49,7 +50,7 @@ const LogItem = (props: LogItemProps) => {
             }
 
             if (t.type == "content") {
-                if (log[1].toLowerCase().match(t.value)) {
+                if (log.content.toLowerCase().match(t.value)) {
                     return t.color
                 }
             }
@@ -78,7 +79,7 @@ const LogItem = (props: LogItemProps) => {
                         </LabelLayout>)
                     }
                 </HStack>}
-            <Text wordBreak={options.styles.wordBreak} color={paletteColorNameToHex(options.styles.contentColor)}>{log[1]}</Text>
+            <Text wordBreak={options.styles.wordBreak} color={paletteColorNameToHex(options.styles.contentColor)}><Highlight query={log.highlight??[]} styles={{ px: '1', py: '1',borderRadius: 4,  bg: 'teal.100' }}>{log.content}</Highlight></Text>
         </HStack>
         {
             !collapsed && <Box p="4" fontSize={options.styles.fontSize}>
@@ -88,7 +89,6 @@ const LogItem = (props: LogItemProps) => {
                             <Box minWidth="20em" >
                                 <LabelName name={key} color={options.styles.labelColor}/>
                             </Box>
-
                             <LabelValue value={labels[key]} color={options.styles.labelValueColor}/>
 
                         </HStack>)
@@ -96,7 +96,7 @@ const LogItem = (props: LogItemProps) => {
                 </VStack>
             </Box>}
     </>)
-}
+})
 
 export default LogItem
 

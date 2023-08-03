@@ -7,7 +7,15 @@ export interface LogSeries  {
 
 export interface LogThreshold {
     type: "label" | "content"
-    key?: string
+    key: string
     value: string 
     color: string
+}
+
+
+export interface Log {
+    labels: {[key: string]: string}
+    timestamp: string 
+    content: string 
+    highlight: string[]
 }

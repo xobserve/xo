@@ -11,15 +11,15 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { Box, Flex, StackDivider, VStack } from "@chakra-ui/react"
 import { PanelProps } from "types/dashboard"
-import { LogSeries } from "types/plugins/log";
-import LogItem from "./components/LogItem";
-import CollapseIcon from "components/icons/Collapse";
+import { LogSeries ,Log} from "types/plugins/log";
 import { FaFilter } from "react-icons/fa";
 import LogToolbar from "./components/Toolbar";
 import storage from "utils/localStorage";
+import LogItem from "./components/LogItem";
+
 
 
 
@@ -27,12 +27,15 @@ interface LogPanelProps extends PanelProps {
     data: LogSeries[][]
 }
 
+
+
 const ToolbarStorageKey = "toolbar-"
 const LogPanel = (props: LogPanelProps) => {
     const { dashboardId, panel } = props
     const storageKey = ToolbarStorageKey + dashboardId + panel.id
     const [toolbarOpen, setToolbarOpen] = useState(storage.get(storageKey)??false)
     const [collaseAll, setCollapeAll] = useState(true)
+    const [search, setSearch] = useState("")
     const data: LogSeries[] = props.data.flat()
     if (data.length === 0) {
         return
@@ -55,6 +58,62 @@ const LogPanel = (props: LogPanelProps) => {
         setToolbarOpen(!toolbarOpen)
 
     }
+    
+    const onCollapseAll = useCallback(v => {
+        setCollapeAll(v)
+    },[])
+
+    const onSearchChange = useCallback((v:string) => {
+        setSearch(v.toLowerCase().trim())
+    },[])
+
+    const filterData: Log[] =  useMemo(() => {
+        const result: Log[] = []
+        for (const series of data) {
+            const labels = series.labels
+            for (const v of series.values) {
+                const timestamp = v[0]
+                const content = v[1]
+                const lowerContent = content.toLowerCase()
+                if (search == "") {
+                    result.push({labels, timestamp, content, highlight: null})
+                } else {
+                    const isOr = search.includes("||")
+                    const isAnd = search.includes("&&")
+                    if (!isOr && !isAnd) {
+                        if (lowerContent.includes(search)) {
+                            result.push({labels, timestamp, content, highlight: [search]})
+                        }
+                    } else {
+                        if (isOr) {
+                            const searches = search.split("||") 
+                            for (const s of searches) {
+                                const s1 = s.trim()
+                                if (lowerContent.includes(s1)) {
+                                    result.push({labels, timestamp, content, highlight: [s1]})
+                                    break
+                                }
+                            }
+                        } else if (isAnd) {
+                            const searches = search.split("&&") 
+                            let found = true
+                            for (const s of searches) {
+                                if (!lowerContent.includes(s.trim())) {
+                                    found = false
+                                    break
+                                }
+                            }
+                            if (found) {
+                                result.push({labels, timestamp, content, highlight: searches})
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        return result
+    },[data, search])
+    
     return (<Flex position="relative">
         {panel.plugins.log.toolbar.show &&
             <Box position="absolute" right="2" top="0" onClick={onToobarOpen} fontSize="0.7rem" opacity="0.6" cursor="pointer" p="2px" className="color-text">
@@ -62,11 +121,11 @@ const LogPanel = (props: LogPanelProps) => {
             </Box>}
         <VStack alignItems="left" divider={<StackDivider />} py="2" width={props.width - (toolbarOpen ? panel.plugins.log.toolbar.width : 1)} transition="all 0.3s">
             {
-                data[0].values.map(log => <LogItem log={log} labels={data[0].labels} panel={panel} collapsed={collaseAll} />)
+                filterData.map(log => <LogItem log={log} panel={panel} collapsed={collaseAll} />)
             }
         </VStack>
         {<Box className="bordered-left" width={toolbarOpen ? panel.plugins.log.toolbar.width : 0} transition="all 0.3s">
-            <LogToolbar data={data} panel={panel} onCollapseAll={setCollapeAll}/>
+            <LogToolbar data={data} panel={panel} onCollapseAll={onCollapseAll} onSearchChange={onSearchChange}/>
         </Box>}
     </Flex>)
 }
