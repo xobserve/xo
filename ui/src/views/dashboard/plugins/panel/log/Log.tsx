@@ -55,12 +55,12 @@ const LogItem = ({ labels, log, panel }: LogItemProps) => {
         <HStack pt="1" alignItems="start" spacing={2} pl="2" pr="4" onClick={() => setCollapsed(!collapsed)} cursor="pointer"  fontSize={options.styles.fontSize}>
             <HStack spacing={1}>
                 <CollapseIcon collapsed={collapsed} fontSize="0.6rem" opacity="0.6" mt={options.showTime ? 0 : '6px'} />
-                {options.showTime && <Text fontWeight={450} minWidth="160px">
+                {options.showTime && <Text fontWeight={450} minWidth={options.timeColumnWidth ?? 155}>
                     {dateTimeFormat(timestamp, { format: 'YY-MM-DD HH:mm:ss.SSS' })}
                 </Text>}
             </HStack>
             {options.labels.display.length > 0 &&
-                <HStack minWidth={options.labels.width ?? options.labels.display.length * 150} maxWidth={options.labels.width ?? 300} justifyContent="center" spacing={3} transition="width 0.3s">
+                <HStack minWidth={options.labels.width ?? options.labels.display.length * 150} maxWidth={options.labels.width ?? 300} justifyContent="center" spacing={options.labels.layout == LayoutOrientation.Horizontal ? 2 : 3} transition="width 0.3s">
                     {
                         Object.keys(labels).map(key => options.labels.display.includes(key) && <LabelLayout spacing={0}>
                             <LabelName name={key} color={options.styles.labelColor}/>

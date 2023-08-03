@@ -44,6 +44,11 @@ const LogPanelEditor = memo((props: PanelEditorProps) => {
                 panel.plugins.log.showTime = e.target.checked
             })} />
         </PanelEditItem>
+        <PanelEditItem title="Timestamp column width" desc="In css pixels">
+           <EditorNumberItem min={0} max={500} step={5} value={panel.plugins.log.timeColumnWidth} onChange={(v) => onChange((panel: Panel) => {
+                panel.plugins.log.timeColumnWidth= v
+            })} placeholder="auto"/>
+        </PanelEditItem>
     </PanelAccordion>
     <PanelAccordion title="Labels">
         <PanelEditItem title="Display labels">
@@ -60,6 +65,13 @@ const LogPanelEditor = memo((props: PanelEditorProps) => {
             <RadionButtons options={[{ label: LayoutOrientation.Horizontal, value: LayoutOrientation.Horizontal }, { label: LayoutOrientation.Vertical ,value: LayoutOrientation.Vertical }]} value={panel.plugins.log.labels.layout} onChange={v => onChange((panel: Panel) => {
                     panel.plugins.log.labels.layout = v
                 })} />
+        </PanelEditItem>
+    </PanelAccordion>
+    <PanelAccordion title={t.styles}>
+        <PanelEditItem title="Font size" desc="Css style font-size">
+            <EditorInputItem value={panel.plugins.log.styles.fontSize} onChange={(v) => onChange((panel: Panel) => {
+                panel.plugins.log.styles.fontSize = v
+            })} placeholder="e.g 1rem, 16px"/>
         </PanelEditItem>
     </PanelAccordion>
     </>

@@ -346,6 +346,7 @@ function registerEvents(options, chart) {
         },
         [PanelType.Log]: {
             showTime: true,
+            timeColumnWidth: 160,
             labels: {
                 display: [],
                 width: 240,

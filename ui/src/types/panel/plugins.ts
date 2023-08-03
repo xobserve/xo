@@ -42,6 +42,7 @@ export interface DisableDatasource {
 
 export interface LogSettings {
     showTime: boolean
+    timeColumnWidth: number
     labels: {
         display: string[]
         width: number
