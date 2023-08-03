@@ -115,6 +115,19 @@ const LogPanel = (props: LogPanelProps) => {
                             isActive = true
                         }
                     }
+                } else {
+                    let found = true
+                    const labelArray = []
+                    for (const k of Object.keys(labels)) {
+                        labelArray.push({name: k, value: labels[k]})
+                    }
+                    for (const a of active) {
+                        if (!labelArray.find(l => a == formatLabelId(l.name,l.value))) {
+                            found = false 
+                            break
+                        }
+                    }
+                    isActive = found
                 }
 
                 if (!isActive) continue
@@ -161,7 +174,7 @@ const LogPanel = (props: LogPanelProps) => {
         }
         
         return result
-    },[data, search,active])
+    },[data, search, active])
     
     const sortedData = useMemo(() => {
         if (panel.plugins.log.orderBy == "newest") {
