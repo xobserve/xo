@@ -11,7 +11,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import React, { useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { Box, HStack, Text, VStack } from "@chakra-ui/react"
 import { Panel } from "types/dashboard"
 import { dateTimeFormat } from "utils/datetime/formatter";
@@ -24,9 +24,14 @@ interface LogItemProps {
     labels: { [key: string]: string }
     log: [string, string]
     panel: Panel
+    collapsed: boolean
 }
-const LogItem = ({ labels, log, panel }: LogItemProps) => {
+const LogItem = (props: LogItemProps) => {
+    const { labels, log, panel } = props
     const [collapsed, setCollapsed] = useState(true)
+    useEffect(() => {
+        setCollapsed(props.collapsed)
+    },[props.collapsed])
     const timestamp = toNumber(log[0]) / 1e6
     const options = panel.plugins.log
     const LabelLayout = options.labels.layout == LayoutOrientation.Horizontal ? HStack : Box

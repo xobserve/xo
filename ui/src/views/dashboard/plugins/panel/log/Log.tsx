@@ -32,6 +32,7 @@ const LogPanel = (props: LogPanelProps) => {
     const { dashboardId, panel } = props
     const storageKey = ToolbarStorageKey + dashboardId + panel.id
     const [toolbarOpen, setToolbarOpen] = useState(storage.get(storageKey)??false)
+    const [collaseAll, setCollapeAll] = useState(true)
     const data: LogSeries[] = props.data.flat()
     if (data.length === 0) {
         return
@@ -61,11 +62,11 @@ const LogPanel = (props: LogPanelProps) => {
             </Box>}
         <VStack alignItems="left" divider={<StackDivider />} py="2" width={props.width - (toolbarOpen ? panel.plugins.log.toolbar.width : 1)} transition="all 0.3s">
             {
-                data[0].values.map(log => <LogItem log={log} labels={data[0].labels} panel={panel} />)
+                data[0].values.map(log => <LogItem log={log} labels={data[0].labels} panel={panel} collapsed={collaseAll} />)
             }
         </VStack>
         {<Box className="bordered-left" width={toolbarOpen ? panel.plugins.log.toolbar.width : 0} transition="all 0.3s">
-            <LogToolbar data={data} panel={panel} />
+            <LogToolbar data={data} panel={panel} onCollapseAll={setCollapeAll}/>
         </Box>}
     </Flex>)
 }

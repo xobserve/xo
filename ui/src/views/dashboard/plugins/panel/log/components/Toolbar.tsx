@@ -11,6 +11,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+import { Box, Button, Divider, HStack } from "@chakra-ui/react"
 import React from "react"
 import { Panel } from "types/dashboard"
 import { LogSeries } from "types/plugins/log"
@@ -18,10 +19,18 @@ import { LogSeries } from "types/plugins/log"
 interface Props {
     data: LogSeries[]
     panel : Panel
+    onCollapseAll: any
 }
 const LogToolbar = (props: Props) => {
-    const {data, panel} = props
-    return (<></>)
+    const {data, panel,onCollapseAll} = props
+    return (<Box mt="2">
+        <Divider mt="5"/>
+        <HStack mt="1">
+            <Button size="sm" variant="ghost" onClick={() => onCollapseAll(false)}>Expand all</Button>
+            <Button size="sm" variant="ghost" onClick={() => onCollapseAll(true)}>Collapse all</Button>
+        </HStack>
+        <Divider mt="1"/>
+    </Box>)
 }
 
 export default LogToolbar
