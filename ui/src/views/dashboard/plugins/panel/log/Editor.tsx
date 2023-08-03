@@ -10,7 +10,7 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-import { Box, Button, HStack, Switch, Text, Textarea, VStack } from "@chakra-ui/react"
+import { Box, Button, Flex, HStack, Switch, Text, Textarea, VStack } from "@chakra-ui/react"
 import { EditorInputItem, EditorNumberItem } from "components/editor/EditorItem"
 import RadionButtons from "components/RadioButtons"
 import PanelAccordion from "src/views/dashboard/edit-panel/Accordion"
@@ -101,7 +101,7 @@ const LogPanelEditor = memo((props: PanelEditorProps) => {
             </PanelEditItem>
         </PanelAccordion>
         <PanelAccordion title="Thresholds">
-            <ThresholdEditor value={panel.plugins.log.thresholds} onChange={(v) => onChange((panel: Panel) => {
+            <ThresholdEditor labels={labels} value={panel.plugins.log.thresholds} onChange={(v) => onChange((panel: Panel) => {
                 panel.plugins.log.thresholds = v
             })} />
         </PanelAccordion>
@@ -114,6 +114,7 @@ export default LogPanelEditor
 
 
 interface Props {
+    labels: string[]
     value: LogThreshold[]
     onChange: any
 }
@@ -139,6 +140,7 @@ const ThresholdEditor = (props: Props) => {
         const color = palettes[value.length % palettes.length]
         value.unshift({
             type: "label",
+            key: null,
             value: null,
             color: color
         })
@@ -161,18 +163,31 @@ const ThresholdEditor = (props: Props) => {
 
     return (<Box>
         <Button onClick={addThreshod} width="100%" size="sm" colorScheme="gray">+ {t1.addThreshold}</Button>
-        <Text fontSize="0.8rem" textStyle="annotation" mt="2">若目标中有文本匹配，则 Timestamp 的颜色将发生改变</Text>
+        <Text fontSize="0.8rem" textStyle="annotation" mt="2">When target is matched, color of Timestamp will change</Text>
         <VStack alignItems="left" mt="2">
             {value?.map((threshold, i) =>
-                <HStack key={threshold.color + threshold.value + i} spacing={1}>
-                    <ColorPicker color={threshold.color} onChange={v => {
-                        value[i].color = v
-                        changeValue(value)
-                    }} circlePicker />
-
-                    {threshold.type === null && <Text pl="1" fontSize="0.95rem">Base</Text>}
+                <Flex key={threshold.color + threshold.key + threshold.type + threshold.value + i} justifyContent="space-between" alignItems="center">
+                    <HStack spacing={1}>
+                        <ColorPicker color={threshold.color} onChange={v => {
+                            value[i].color = v
+                            changeValue(value)
+                        }} circlePicker />
+                        {threshold.type !== null && <Select value={threshold.type} onChange={v => {
+                            value[i].type = v
+                            changeValue(value)
+                        }} style={{ width: '100px' }} showSearch options={[{ label: "Label", value: "label" },{ label: "Content", value: "content" }]} popupMatchSelectWidth={false}/>}
+                          {threshold.type == "label" && <Select value={threshold.key} onChange={v => {
+                            value[i].key = v
+                            changeValue(value)
+                        }} style={{ width: '120px' }} showSearch options={props.labels.map(l => ({ label: l, value: l }))} placeholder="select label"  popupMatchSelectWidth={false}/>}
+                        {threshold.type !== null && <EditorInputItem value={threshold.value} onChange={v => {
+                            value[i].value = v
+                            changeValue(value)
+                        }} placeholder="match value.."/>}
+                        {threshold.type === null && <Text pl="1" fontSize="0.95rem">Base</Text>}
+                    </HStack>
                     {threshold.type !== null && <FaTimes opacity={0.6} fontSize="0.8rem" onClick={() => removeThreshold(i)} />}
-                </HStack>)}
+                </Flex>)}
         </VStack>
     </Box>)
 }

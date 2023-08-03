@@ -16,7 +16,7 @@ import { Box, HStack, StackDivider, Text, VStack } from "@chakra-ui/react"
 import { Panel, PanelProps } from "types/dashboard"
 import { LogSeries } from "types/plugins/log";
 import { dateTimeFormat } from "utils/datetime/formatter";
-import { toNumber } from "lodash";
+import { isEmpty, toNumber } from "lodash";
 import CollapseIcon from "components/icons/Collapse";
 import { LayoutOrientation } from "types/layout";
 import { paletteColorNameToHex } from "utils/colors";
@@ -54,16 +54,19 @@ const LogItem = ({ labels, log, panel }: LogItemProps) => {
     const LabelLayout = options.labels.layout == LayoutOrientation.Horizontal ? HStack : Box
     const timestampColor = useMemo(() => {
         for (const t of panel.plugins.log.thresholds) {
+            if (isEmpty(t.value)) {
+                continue
+            }
             if (t.type == "label") {
                 for (const k of Object.keys(labels)) {
-                    if (k == t.key && labels[k] == t.value) {
+                    if (k == t.key && labels[k].match(t.value)) {
                         return t.color
                     }
                 }
             }
 
             if (t.type == "content") {
-                if (log[1].match(t.value)) {
+                if (log[1].toLowerCase().match(t.value)) {
                     return t.color
                 }
             }
