@@ -367,7 +367,8 @@ function registerEvents(options, chart) {
             },
             chart: {
                 show: true,
-                height: '120px'
+                height: '120px',
+                showLabel: "auto"
             },
             thresholds: [{type: null, value: null,key:null, color: 'inherit'}]
         }

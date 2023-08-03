@@ -31,6 +31,7 @@ interface Props {
 
 const LogChart = (props: Props) => {
     const { panel, width } = props
+    const options = panel.plugins.log.chart
     const [chart, setChart] = useState(null)
     const { colorMode } = useColorMode()
     const [timeline, names, data] = useMemo(() => {
@@ -97,7 +98,7 @@ const LogChart = (props: Props) => {
     }, [props.data])
     
     const max = Math.max(...data.flat())
-    const options = {
+    const chartOptions = {
         animation: true,
         tooltip: {
             show: true,
@@ -143,8 +144,14 @@ const LogChart = (props: Props) => {
             type: 'bar',
             stack: 'total',
             label: {
-                show: true,
-                formatter: (v) => {return (v.data / max) >= 0.2 ? v.data : ''}
+                show: options.showLabel != "none" ? true : false,
+                formatter: (v) => {
+                    if (options.showLabel == "always") {
+                        return v.data 
+                    }
+
+                    return (v.data / max) >= 0.2 ? v.data : ''
+                }
             },
             emphasis: {
                 focus: 'series'
@@ -154,7 +161,7 @@ const LogChart = (props: Props) => {
     };
 
     return (<>
-        <ChartComponent key={colorMode} options={options} theme={colorMode} onChartCreated={c => setChart(c)} width={width} />
+        <ChartComponent key={colorMode} options={chartOptions} theme={colorMode} onChartCreated={c => setChart(c)} width={width} />
     </>)
 }
 

@@ -66,6 +66,7 @@ export interface LogSettings {
     chart: {
         show: boolean
         height: string
+        showLabel: "auto" | "always" | "none"
     }
     thresholds: LogThreshold[]
 }
