@@ -18,6 +18,7 @@ import { LogSeries } from "types/plugins/log";
 import { dateTimeFormat } from "utils/datetime/formatter";
 import { toNumber } from "lodash";
 import CollapseIcon from "components/icons/Collapse";
+import { LayoutOrientation } from "types/layout";
 
 
 interface LogPanelProps extends PanelProps {
@@ -32,7 +33,7 @@ const LogPanel = (props: LogPanelProps) => {
     console.log("here333333", data)
     return (<VStack alignItems="left" divider={<StackDivider />} py="2" >
         {
-            data[0].values.map(log => <LogItem log={log} labels={data[0].labels}  panel={props.panel}/>)
+            data[0].values.map(log => <LogItem log={log} labels={data[0].labels} panel={props.panel} />)
         }
     </VStack >)
 }
@@ -49,27 +50,30 @@ const LogItem = ({ labels, log, panel }: LogItemProps) => {
     const [collapsed, setCollapsed] = useState(true)
     const timestamp = toNumber(log[0]) / 1e6
     const options = panel.plugins.log
+    const LabelLayout = options.labels.layout == LayoutOrientation.Horizontal ? HStack : Box
     return (<>
-        <HStack pt="1" alignItems="start" spacing={2} pl="2" pr="4" onClick={() => setCollapsed(!collapsed)} cursor="pointer"> 
+        <HStack pt="1" alignItems="start" spacing={2} pl="2" pr="4" onClick={() => setCollapsed(!collapsed)} cursor="pointer">
             <HStack spacing={1}>
-                <CollapseIcon collapsed={collapsed}  fontSize="0.6rem" opacity="0.6" mt={options.showTime ? 0 : '6px'} />
+                <CollapseIcon collapsed={collapsed} fontSize="0.6rem" opacity="0.6" mt={options.showTime ? 0 : '6px'} />
                 {options.showTime && <Text fontSize="0.85rem" fontWeight={450} minWidth="160px">
                     {dateTimeFormat(timestamp, { format: 'YY-MM-DD HH:mm:ss.SSS' })}
                 </Text>}
             </HStack>
-            <HStack minWidth="270px" maxWidth="270px" >
-                {
-                     Object.keys(labels).map(key => <HStack spacing={0} fontSize="0.85rem" alignItems="start">
-                           <Text fontWeight={450} className="color-text">
+            {options.labels.display.length > 0 &&
+                <HStack minWidth={options.labels.width ?? options.labels.display.length * 150} maxWidth={options.labels.width ?? 300} justifyContent="center" spacing={3} transition="width 0.3s">
+                    {
+                        Object.keys(labels).map(key => options.labels.display.includes(key) && <LabelLayout fontSize="0.85rem" spacing={0}>
+                            <Text fontWeight={450} className="color-text">
                                 {key}
                             </Text>
-                            <Text>=</Text>
+                            {options.labels.layout == LayoutOrientation.Horizontal &&
+                                <Text>=</Text>}
                             <Text>
                                 {labels[key]}
                             </Text>
-                     </HStack>)
-                }
-            </HStack>
+                        </LabelLayout>)
+                    }
+                </HStack>}
             <Text fontSize="0.85rem" wordBreak="break-all">{log[1]}</Text>
         </HStack>
         {

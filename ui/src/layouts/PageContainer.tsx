@@ -43,7 +43,7 @@ import Search from "src/views/search/Search"
 import { Session } from "types/user"
 import PopoverTooltip from "components/PopoverTooltip"
 
-const miniWidth = 70
+const miniWidth = 65
 const navSize = 16
 const maxNavSize = 200
 

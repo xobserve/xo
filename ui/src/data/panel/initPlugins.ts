@@ -346,6 +346,11 @@ function registerEvents(options, chart) {
         },
         [PanelType.Log]: {
             showTime: true,
+            labels: {
+                display: [],
+                width: 240,
+                layout: LayoutOrientation.Horizontal
+            }
         }
     }
 }

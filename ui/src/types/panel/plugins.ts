@@ -42,6 +42,11 @@ export interface DisableDatasource {
 
 export interface LogSettings {
     showTime: boolean
+    labels: {
+        display: string[]
+        width: number
+        layout: LayoutOrientation
+    }
 }
 
 export interface GeoMapSettings {
