@@ -68,6 +68,7 @@ export interface LogSettings {
         height: string
         showLabel: "auto" | "always" | "none"
         stack: "auto" | "always" | "none"
+        barData: "total" | "labels"
     }
     thresholds: LogThreshold[]
 }

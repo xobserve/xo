@@ -37,7 +37,7 @@ export const run_loki_query = async (panel: Panel, q: PanelQuery, range: TimeRan
     // 1. rather than query directyly to prometheus, we should query to our own backend servie
     // 2. using `axios` instead of `fetch`
 
-    const res: any = await requestApi.get(`/proxy/${ds.id}/loki/api/v1/query_range?query=${q.metrics}&start=${start}&end=${end}&step=${q.interval}`)
+    const res: any = await requestApi.get(`/proxy/${ds.id}/loki/api/v1/query_range?query=${q.metrics}&start=${start}&end=${end}&step=${q.interval}&limit=2000`)
     if (res.status !== "success") {
         console.log("Failed to fetch data from prometheus", res)
         return {

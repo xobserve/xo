@@ -34,7 +34,7 @@ const LogChart = (props: Props) => {
     const options = panel.plugins.log.chart
     const [chart, setChart] = useState(null)
     const { colorMode } = useColorMode()
-    const [timeline, names, data] = useMemo(() => {
+    let [timeline, names, data] = useMemo(() => {
         const names = []
         const data = []
         const timeRange = getCurrentTimeRange()
@@ -54,58 +54,70 @@ const LogChart = (props: Props) => {
         // minStep is 1m
         const timeline = calcStep(round(start / 1000), round(end / 1000)).map(t => t * 1000)
         const now = new Date()
-        const isInToday =  moment(start).isSame(now, 'day')
+        const isInToday = moment(start).isSame(now, 'day')
 
-        const labelMap = new Map()
-        for (const log of props.data) {
-            let ts;
-            const timestamp = round(Number(log.timestamp) / 1e6)
-            for (var i = 0; i <= timeline.length - 1; i++) {
-                if (timestamp <= timeline[i]) {
-                    ts = timeline[i]
-                    break
+        if (options.barData == "labels") {
+            const labelMap = new Map()
+            for (const log of props.data) {
+                const ts = getTimelineBucket(log, timeline)
+                // console.log("here3444433:", log,timestamp,ts)
+                for (const k of Object.keys(log.labels)) {
+                    const labelId = formatLabelId(k, log.labels[k])
+                    const old = labelMap.get(labelId)
+                    if (!old) {
+                        labelMap.set(labelId, {
+                            [ts]: 1
+                        })
+                    } else {
+                        old[ts] = old[ts] ? old[ts] + 1 : 1
+                    }
                 }
             }
 
-            if (!ts) {
-                ts = last(timeline)
+            for (const k of Array.from(labelMap.keys())) {
+                names.push(k)
+                const v = labelMap.get(k)
+                const d = []
+                for (const ts of timeline) {
+                    const v1 = v[ts] ?? null
+                    d.push(v1)
+                }
+                data.push(d)
             }
-            // console.log("here3444433:", log,timestamp,ts)
-            for (const k of Object.keys(log.labels)) {
-                const labelId = formatLabelId(k, log.labels[k])
-                const old = labelMap.get(labelId)
+        } else {
+            names.push("total")
+            const totalMap = new Map()
+            for (const log of props.data) {
+                const ts = getTimelineBucket(log, timeline)
+                const old = totalMap.get(ts)
                 if (!old) {
-                    labelMap.set(labelId, {
-                        [ts]: 1
-                    })
+                    totalMap.set(ts, 1)
                 } else {
-                    old[ts] = old[ts] ? old[ts] + 1 : 1
+                    totalMap.set(ts, old + 1)
                 }
             }
-        }
 
-        for (const k of Array.from(labelMap.keys())) {
-            names.push(k)
-            const v = labelMap.get(k)
             const d = []
             for (const ts of timeline) {
-                const v1 = v[ts] ?? null
-                d.push(v1)
+                const count = totalMap.get(ts) ?? null
+                d.push(count)
             }
             data.push(d)
         }
+
         return [timeline.map(t => dateTimeFormat(t, { format: isInToday ? "HH:mm:ss" : "MM-DD HH:mm:ss" })), names, data]
     }, [props.data])
-    
+
     const max = Math.max(...data.flat())
     let stack;
     if (options.stack == "always") {
         stack = "total"
     } else if (options.stack == "none") {
-        stack = null 
+        stack = null
     } else {
         stack = names.length >= 4 ? "total" : null
     }
+
     const chartOptions = {
         animation: true,
         tooltip: {
@@ -143,7 +155,7 @@ const LogChart = (props: Props) => {
             splitLine: {
                 show: false,
             },
-            show: true,
+            show: stack != "total",
             splitNumber: 3,
         },
         series: names.map((name, i) => ({
@@ -155,11 +167,12 @@ const LogChart = (props: Props) => {
                 show: options.showLabel != "none" ? true : false,
                 formatter: (v) => {
                     if (options.showLabel == "always") {
-                        return v.data 
+                        return v.data
                     }
 
                     return (v.data / max) >= 0.2 ? v.data : ''
-                }
+                },
+                fontSize: 11,
             },
             emphasis: {
                 focus: 'series'
@@ -195,7 +208,7 @@ const calcStep = (start, end) => {
 
     const firstTs = start + (step - start % step)
     const timeline = []
-    for (var i = firstTs; i <= end; i+= step) {
+    for (var i = firstTs; i <= end; i += step) {
         timeline.push(i)
     }
 
@@ -204,4 +217,21 @@ const calcStep = (start, end) => {
     }
 
     return timeline
+}
+
+const getTimelineBucket = (log, timeline) => {
+    let ts;
+    const timestamp = round(Number(log.timestamp) / 1e6)
+    for (var i = 0; i <= timeline.length - 1; i++) {
+        if (timestamp <= timeline[i]) {
+            ts = timeline[i]
+            break
+        }
+    }
+
+    if (!ts) {
+        ts = last(timeline)
+    }
+
+    return ts
 }

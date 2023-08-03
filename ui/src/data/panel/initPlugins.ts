@@ -369,7 +369,8 @@ function registerEvents(options, chart) {
                 show: true,
                 height: '120px',
                 showLabel: "auto",
-                stack: "auto"
+                stack: "auto",
+                barData: "labels"
             },
             thresholds: [{type: null, value: null,key:null, color: 'inherit'}]
         }
