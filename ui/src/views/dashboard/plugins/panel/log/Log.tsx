@@ -14,11 +14,13 @@
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { Box, Flex, StackDivider, VStack } from "@chakra-ui/react"
 import { PanelProps } from "types/dashboard"
-import { LogSeries ,Log} from "types/plugins/log";
+import { LogSeries ,Log, LogLabel} from "types/plugins/log";
 import { FaFilter } from "react-icons/fa";
 import LogToolbar from "./components/Toolbar";
 import storage from "utils/localStorage";
 import LogItem from "./components/LogItem";
+import { formatLabelId } from "./utils";
+import { cloneDeep, remove } from "lodash";
 
 
 
@@ -36,10 +38,30 @@ const LogPanel = (props: LogPanelProps) => {
     const [toolbarOpen, setToolbarOpen] = useState(storage.get(storageKey)??false)
     const [collaseAll, setCollapeAll] = useState(true)
     const [search, setSearch] = useState("")
+    const [active, setActive] = useState<string[]>([])
+    const [activeOp, setActiveOp] = useState<"or" | "and">("or")
     const data: LogSeries[] = props.data.flat()
     if (data.length === 0) {
         return
     }
+
+    const labels = useMemo(() => {
+        const result: LogLabel[] = []
+        for (const series of data) {
+            const ls = series.labels
+            const count = series.values.length
+            for (const k of Object.keys(ls)) {
+                const l = result.find(r => r.name == k && r.value == ls[k])
+                if (!l) {
+                    result.push({id: formatLabelId(k, ls[k]), name: k, value: ls[k], count: count })
+                } else {
+                    l.count += count
+                }
+            }
+        }
+        return result
+    }, [data])
+
     console.log("here333333", data)
 
     useEffect(() => {
@@ -67,10 +89,36 @@ const LogPanel = (props: LogPanelProps) => {
         setSearch(v.toLowerCase().trim())
     },[])
 
+    const onActiveLabel = useCallback((id) => {
+        if (active.includes(id)) {
+            remove(active, i => id == i)
+        } else {
+            active.push(id)
+        }
+
+        setActive(cloneDeep(active))
+    },[active])
+
+    const onActiveOpChange = useCallback(() => {
+        setActiveOp(activeOp == "or" ? "and" : "or") 
+    },[])
+
     const filterData: Log[] =  useMemo(() => {
         const result: Log[] = []
         for (const series of data) {
             const labels = series.labels
+            if (active.length > 0){
+                let isActive = false
+                if (activeOp == "or") {
+                    for (const k of Object.keys(labels)) {
+                        if (active.find(id => id == formatLabelId(k,labels[k]))) {
+                            isActive = true
+                        }
+                    }
+                }
+
+                if (!isActive) continue
+            }
             for (const v of series.values) {
                 const timestamp = v[0]
                 const content = v[1]
@@ -112,7 +160,7 @@ const LogPanel = (props: LogPanelProps) => {
             }
         }
         return result
-    },[data, search])
+    },[data, search,active])
     
     return (<Flex position="relative">
         {panel.plugins.log.toolbar.show &&
@@ -125,7 +173,7 @@ const LogPanel = (props: LogPanelProps) => {
             }
         </VStack>
         {<Box className="bordered-left" width={toolbarOpen ? panel.plugins.log.toolbar.width : 0} transition="all 0.3s">
-            <LogToolbar data={data} panel={panel} onCollapseAll={onCollapseAll} onSearchChange={onSearchChange} height={props.height}/>
+            <LogToolbar active={active} labels={labels} panel={panel} onCollapseAll={onCollapseAll} onSearchChange={onSearchChange} height={props.height} onActiveLabel={onActiveLabel} activeOp={activeOp} onActiveOpChange={onActiveOpChange}/>
         </Box>}
     </Flex>)
 }

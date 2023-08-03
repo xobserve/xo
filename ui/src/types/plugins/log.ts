@@ -19,3 +19,10 @@ export interface Log {
     content: string 
     highlight: string[]
 }
+
+export interface LogLabel {
+    id: string
+    name: string
+    value: string
+    count?: number
+}
