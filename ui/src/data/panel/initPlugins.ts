@@ -348,6 +348,7 @@ function registerEvents(options, chart) {
             showTime: true,
             timeColumnWidth: 160,
             orderBy: "newest",
+            timeStampPrecision: "ms",
             labels: {
                 display: [],
                 width: 240,

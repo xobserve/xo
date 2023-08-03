@@ -60,6 +60,11 @@ const LogPanelEditor = memo((props: PanelEditorProps) => {
                     panel.plugins.log.orderBy = v
                 })} />
             </PanelEditItem>
+            <PanelEditItem title="Timestamp precision">
+                <Select value={panel.plugins.log.timeStampPrecision} onChange={v => onChange((panel: Panel) => {
+                    panel.plugins.log.timeStampPrecision = v
+                })} options={[{ label: "ns", value: "ns" }, { label: "us", value: "us" }, { label: "ms", value: "ms" }, { label: "second", value: "s" }]} popupMatchSelectWidth={false}/>
+            </PanelEditItem>
         </PanelAccordion>
         <PanelAccordion title="Labels">
             <PanelEditItem title="Display labels">

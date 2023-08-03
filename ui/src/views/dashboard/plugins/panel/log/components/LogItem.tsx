@@ -15,7 +15,7 @@ import React, { memo, useEffect, useMemo, useState } from "react";
 import { Box, HStack, Highlight, Text, VStack } from "@chakra-ui/react"
 import { Panel } from "types/dashboard"
 import { dateTimeFormat } from "utils/datetime/formatter";
-import { isEmpty, toNumber } from "lodash";
+import { isEmpty, round, toNumber } from "lodash";
 import CollapseIcon from "components/icons/Collapse";
 import { LayoutOrientation } from "types/layout";
 import { paletteColorNameToHex } from "utils/colors";
@@ -33,7 +33,6 @@ const LogItem = memo((props: LogItemProps) => {
     useEffect(() => {
         setCollapsed(props.collapsed)
     },[props.collapsed])
-    const timestamp = toNumber(log.timestamp) / 1e6
     const options = panel.plugins.log
     const LabelLayout = options.labels.layout == LayoutOrientation.Horizontal ? HStack : Box
     const timestampColor = useMemo(() => {
@@ -60,12 +59,31 @@ const LogItem = memo((props: LogItemProps) => {
             }
         }
     },[panel.plugins.log.thresholds, log, labels])
+    let timeString; 
+  
+    const nsPart = log.timestamp.toString().slice(13)
+    const usPart = nsPart.slice(0, 3)
+    const timestamp = log.timestamp/1e6
+    switch (options.timeStampPrecision) {
+        case "ns":
+            timeString = dateTimeFormat(timestamp, { format: "YY-MM-DD HH:mm:ss.SSS" }) + nsPart 
+            break;
+        case "us":
+            timeString = dateTimeFormat(timestamp, { format: "YY-MM-DD HH:mm:ss.SSS" }) + usPart
+            break
+        case "ms":
+            timeString = dateTimeFormat(timestamp, { format: "YY-MM-DD HH:mm:ss.SSS" })
+            break
+        default:
+            timeString = dateTimeFormat(timestamp, { format: "YY-MM-DD HH:mm:ss" })
+            break;
+    }
     return (<>
         <HStack pt="1" alignItems="start" spacing={2} pl="2" pr="4" onClick={() => setCollapsed(!collapsed)} cursor="pointer"  fontSize={options.styles.fontSize}>
             <HStack spacing={1}>
                 <CollapseIcon collapsed={collapsed} fontSize="0.6rem" opacity="0.6" mt={options.showTime ? 0 : '6px'} />
                 {options.showTime && <Text minWidth={options.timeColumnWidth ?? 155} color={paletteColorNameToHex(timestampColor)}>
-                    {dateTimeFormat(timestamp, { format: 'YY-MM-DD HH:mm:ss.SSS' })}
+                    {timeString}
                 </Text>}
             </HStack>
             {options.labels.display.length > 0 &&

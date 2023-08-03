@@ -45,6 +45,7 @@ export interface LogSettings {
     showTime: boolean
     timeColumnWidth: number
     orderBy: "newest" | "oldest"
+    timeStampPrecision: "ns" | "us" | "ms" | "s" | "m" | "h"
     labels: {
         display: string[]
         width: number

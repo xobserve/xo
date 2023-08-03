@@ -12,7 +12,7 @@
 // limitations under the License.
 
 import React, { useCallback, useEffect, useMemo, useState } from "react";
-import { Box, Flex, StackDivider, VStack } from "@chakra-ui/react"
+import { Box, Center, Flex, StackDivider, VStack } from "@chakra-ui/react"
 import { PanelProps } from "types/dashboard"
 import { LogSeries, Log, LogLabel } from "types/plugins/log";
 import { FaFilter } from "react-icons/fa";
@@ -22,6 +22,7 @@ import LogItem from "./components/LogItem";
 import { formatLabelId } from "./utils";
 import { cloneDeep, remove, sortBy } from "lodash";
 import LogChart from "./components/Chart";
+import { isEmpty } from "utils/validate";
 
 
 
@@ -42,9 +43,6 @@ const LogPanel = (props: LogPanelProps) => {
     const [active, setActive] = useState<string[]>([])
     const [activeOp, setActiveOp] = useState<"or" | "and">("or")
     const data: LogSeries[] = props.data.flat()
-    if (data.length === 0) {
-        return
-    }
 
     const labels = useMemo(() => {
         const result: LogLabel[] = []
@@ -58,6 +56,9 @@ const LogPanel = (props: LogPanelProps) => {
                 } else {
                     l.count += count
                 }
+            }
+            for (const s of series.values) {
+                s[0] = Number(s[0])
             }
         }
         return result
@@ -185,25 +186,30 @@ const LogPanel = (props: LogPanelProps) => {
         return sortBy(filterData, ['timestamp'])
     }, [filterData, panel.plugins.log.orderBy])
 
-    return (<Flex position="relative">
-        {panel.plugins.log.toolbar.show &&
-            <Box position="absolute" right="2" top="0" onClick={onToobarOpen} fontSize="0.7rem" opacity="0.6" cursor="pointer" p="2px" className={toolbarOpen ? "color-text" : null}>
-                <FaFilter />
-            </Box>}
-        <Box height={props.height} width={props.width - (toolbarOpen ? panel.plugins.log.toolbar.width : 1)} transition="all 0.3s" py="2">
-            {panel.plugins.log.chart.show && <Box className="log-panel-chart" height={panel.plugins.log.chart.height}>
-                <LogChart data={sortedData} panel={panel} width={props.width - (toolbarOpen ? panel.plugins.log.toolbar.width : 1)} />
-            </Box>}
-            <VStack alignItems="left" divider={<StackDivider />}  >
-                {
-                    sortedData.map(log => <LogItem log={log} panel={panel} collapsed={collaseAll} />)
-                }
-            </VStack>
-        </Box>
-        {<Box className="bordered-left" width={toolbarOpen ? panel.plugins.log.toolbar.width : 0} transition="all 0.3s">
-            <LogToolbar active={active} labels={labels} panel={panel} onCollapseAll={onCollapseAll} onSearchChange={onSearchChange} height={props.height} onActiveLabel={onActiveLabel} activeOp={activeOp} onActiveOpChange={onActiveOpChange} currentLogsCount={filterData.length} />
-        </Box>}
-    </Flex>)
+    return (<>
+        {
+            isEmpty(sortedData) ? <Center height="100%">No data</Center> : <Flex position="relative">
+                {panel.plugins.log.toolbar.show &&
+                    <Box position="absolute" right="2" top="0" onClick={onToobarOpen} fontSize="0.7rem" opacity="0.6" cursor="pointer" p="2px" className={toolbarOpen ? "color-text" : null}>
+                        <FaFilter />
+                    </Box>}
+                <Box height={props.height} width={props.width - (toolbarOpen ? panel.plugins.log.toolbar.width : 1)} transition="all 0.3s" py="2">
+                    {panel.plugins.log.chart.show && <Box className="log-panel-chart" height={panel.plugins.log.chart.height}>
+                        <LogChart data={sortedData} panel={panel} width={props.width - (toolbarOpen ? panel.plugins.log.toolbar.width : 1)} />
+                    </Box>}
+                    <VStack alignItems="left" divider={<StackDivider />}  >
+                        {
+                            sortedData.map(log => <LogItem log={log} panel={panel} collapsed={collaseAll} />)
+                        }
+                    </VStack>
+                </Box>
+                {<Box className="bordered-left" width={toolbarOpen ? panel.plugins.log.toolbar.width : 0} transition="all 0.3s">
+                    <LogToolbar active={active} labels={labels} panel={panel} onCollapseAll={onCollapseAll} onSearchChange={onSearchChange} height={props.height} onActiveLabel={onActiveLabel} activeOp={activeOp} onActiveOpChange={onActiveOpChange} currentLogsCount={filterData.length} />
+                </Box>}
+            </Flex>
+        }
+    </>
+    )
 }
 
 export default LogPanel

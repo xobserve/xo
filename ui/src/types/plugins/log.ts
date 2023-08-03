@@ -1,6 +1,6 @@
 export interface LogSeries  {
     labels: {[key: string]: string};
-    values: [string,string][]
+    values: [number,string][]
 }
 
 
@@ -15,7 +15,7 @@ export interface LogThreshold {
 
 export interface Log {
     labels: {[key: string]: string}
-    timestamp: string 
+    timestamp: number  // nanoseconds
     content: string 
     highlight: string[]
 }
