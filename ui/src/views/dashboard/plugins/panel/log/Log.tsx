@@ -52,45 +52,52 @@ const LogItem = ({ labels, log, panel }: LogItemProps) => {
     const options = panel.plugins.log
     const LabelLayout = options.labels.layout == LayoutOrientation.Horizontal ? HStack : Box
     return (<>
-        <HStack pt="1" alignItems="start" spacing={2} pl="2" pr="4" onClick={() => setCollapsed(!collapsed)} cursor="pointer">
+        <HStack pt="1" alignItems="start" spacing={2} pl="2" pr="4" onClick={() => setCollapsed(!collapsed)} cursor="pointer"  fontSize={options.styles.fontSize}>
             <HStack spacing={1}>
                 <CollapseIcon collapsed={collapsed} fontSize="0.6rem" opacity="0.6" mt={options.showTime ? 0 : '6px'} />
-                {options.showTime && <Text fontSize="0.85rem" fontWeight={450} minWidth="160px">
+                {options.showTime && <Text fontWeight={450} minWidth="160px">
                     {dateTimeFormat(timestamp, { format: 'YY-MM-DD HH:mm:ss.SSS' })}
                 </Text>}
             </HStack>
             {options.labels.display.length > 0 &&
                 <HStack minWidth={options.labels.width ?? options.labels.display.length * 150} maxWidth={options.labels.width ?? 300} justifyContent="center" spacing={3} transition="width 0.3s">
                     {
-                        Object.keys(labels).map(key => options.labels.display.includes(key) && <LabelLayout fontSize="0.85rem" spacing={0}>
-                            <Text fontWeight={450} className="color-text">
-                                {key}
-                            </Text>
+                        Object.keys(labels).map(key => options.labels.display.includes(key) && <LabelLayout spacing={0}>
+                            <LabelName name={key} color={options.styles.labelColor}/>
                             {options.labels.layout == LayoutOrientation.Horizontal &&
                                 <Text>=</Text>}
-                            <Text>
-                                {labels[key]}
-                            </Text>
+                            <LabelValue value={labels[key]} color={options.styles.labelValueColor}/>
                         </LabelLayout>)
                     }
                 </HStack>}
-            <Text fontSize="0.85rem" wordBreak="break-all">{log[1]}</Text>
+            <Text wordBreak="break-all" color={options.styles.contentColor}>{log[1]}</Text>
         </HStack>
         {
-            !collapsed && <Box p="4">
+            !collapsed && <Box p="4" fontSize={options.styles.fontSize}>
                 <VStack alignItems="left" className="bordered" p="2">
                     {
-                        Object.keys(labels).map(key => <HStack px="2" spacing={1}>
-                            <Text fontSize="0.85rem" fontWeight={450} minWidth="20em" className="color-text">
-                                {key}
-                            </Text>
-                            <Text fontSize="0.85rem" >
-                                {labels[key]}
-                            </Text>
+                        Object.keys(labels).map(key => <HStack px="2" spacing={1}  >
+                            <Box minWidth="20em" >
+                                <LabelName name={key} color={options.styles.labelColor}/>
+                            </Box>
+
+                            <LabelValue value={labels[key]} color={options.styles.labelValueColor}/>
 
                         </HStack>)
                     }
                 </VStack>
             </Box>}
     </>)
+}
+
+const LabelName = ({ name, color }: { name: string; color: string }) => {
+    return <Text fontWeight={500} color={color}>
+        {name}
+    </Text>
+}
+
+const LabelValue = ({ value, color }: { value: string; color: string }) => {
+    return <Text color={color}>
+        {value}
+    </Text>
 }

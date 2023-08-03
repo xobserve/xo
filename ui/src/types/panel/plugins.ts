@@ -47,6 +47,12 @@ export interface LogSettings {
         width: number
         layout: LayoutOrientation
     }
+    styles: {
+       labelColor: string
+       labelValueColor: string 
+       contentColor: string 
+       fontSize: string
+    }
 }
 
 export interface GeoMapSettings {

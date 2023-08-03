@@ -350,6 +350,12 @@ function registerEvents(options, chart) {
                 display: [],
                 width: 240,
                 layout: LayoutOrientation.Horizontal
+            },
+            styles: {
+                labelColor: 'inherit',
+                labelValueColor: 'inherit', 
+                contentColor: 'inherit', 
+                fontSize: "0.85rem"
             }
         }
     }
