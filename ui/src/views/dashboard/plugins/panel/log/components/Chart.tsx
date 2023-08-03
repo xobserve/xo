@@ -98,6 +98,14 @@ const LogChart = (props: Props) => {
     }, [props.data])
     
     const max = Math.max(...data.flat())
+    let stack;
+    if (options.stack == "always") {
+        stack = "total"
+    } else if (options.stack == "none") {
+        stack = null 
+    } else {
+        stack = names.length >= 4 ? "total" : null
+    }
     const chartOptions = {
         animation: true,
         tooltip: {
@@ -142,7 +150,7 @@ const LogChart = (props: Props) => {
             name: name,
             data: data[i],
             type: 'bar',
-            stack: 'total',
+            stack: stack,
             label: {
                 show: options.showLabel != "none" ? true : false,
                 formatter: (v) => {

@@ -138,6 +138,11 @@ const LogPanelEditor = memo((props: PanelEditorProps) => {
                     panel.plugins.log.chart.showLabel = v
                 })} />
             </PanelEditItem>
+            <PanelEditItem title="Stack">
+                <RadionButtons options={[{ label: "Auto", value: "auto" }, { label: "Always", value: 'always' }, { label: "None", value: 'none' }]} value={panel.plugins.log.chart.stack} onChange={v => onChange((panel: Panel) => {
+                    panel.plugins.log.chart.stack = v
+                })} />
+            </PanelEditItem>
         </PanelAccordion>
         <PanelAccordion title="Thresholds">
             <ThresholdEditor labels={labels} value={panel.plugins.log.thresholds} onChange={(v) => onChange((panel: Panel) => {
