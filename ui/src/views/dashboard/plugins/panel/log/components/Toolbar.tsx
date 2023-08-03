@@ -70,7 +70,7 @@ const LogToolbar = memo((props: Props) => {
             <VStack mt="2" alignItems="left" maxHeight={`${height - 165}px`} overflowY="scroll">
                 {
                     labels.map(label =>
-                        <Box fontSize="0.8rem" className={active.includes(label.id) ? "highlight-bordered" : "bordered"} onClick={() => onActiveLabel(label.id)} cursor="pointer" px="2" py="6px">
+                        <Box fontSize="0.85rem" className={active.includes(label.id) ? "highlight-bordered" : "bordered"} onClick={() => onActiveLabel(label.id)} cursor="pointer" px="2" py="6px">
                             <Text color={paletteColorNameToHex(options.styles.labelColor)}>{label.name}</Text>
                             <HStack>
                                 <Text color={paletteColorNameToHex(options.styles.labelValueColor)}>{label.value}</Text>

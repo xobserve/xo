@@ -29,14 +29,11 @@ interface Props {
     width: number
 }
 
-const barWidth = 100
-const maxTicks = 10
 const LogChart = (props: Props) => {
     const { panel, width } = props
     const [chart, setChart] = useState(null)
     const { colorMode } = useColorMode()
     const [timeline, names, data] = useMemo(() => {
-        const timeline = []
         const names = []
         const data = []
         const timeRange = getCurrentTimeRange()
@@ -48,38 +45,33 @@ const LogChart = (props: Props) => {
             dataStart = round(last(props.data).timestamp / 1e6)
             dataEnd = round(props.data[0].timestamp / 1e6)
         }
-        
+
         if (dataStart < start) {
             start = dataStart
         }
 
-        // console.log("here333333:",dateTimeFormat(start), dateTimeFormat(end))
+        // minStep is 1m
+        const timeline = calcStep(round(start / 1000), round(end / 1000)).map(t => t * 1000)
         const now = new Date()
         const isInToday =  moment(start).isSame(now, 'day')
-        const barCount = Math.min(maxTicks, Math.floor(width / barWidth))
-        const step = Math.floor((end - start) / barCount)
-        for (let i = 1; i < barCount; i++) {
-            // 
-            timeline.push(start + i * step)
-        }
-        
+
         const labelMap = new Map()
         for (const log of props.data) {
-            let ts; 
+            let ts;
             const timestamp = round(Number(log.timestamp) / 1e6)
-            for (var i = 0; i <= timeline.length - 1 ; i ++) {
-                if (timestamp <= timeline[i] ) {
+            for (var i = 0; i <= timeline.length - 1; i++) {
+                if (timestamp <= timeline[i]) {
                     ts = timeline[i]
                     break
                 }
             }
-            
+
             if (!ts) {
                 ts = last(timeline)
             }
-            console.log("here3444433:", log,timestamp,ts)
+            // console.log("here3444433:", log,timestamp,ts)
             for (const k of Object.keys(log.labels)) {
-                const labelId = formatLabelId(k,log.labels[k])
+                const labelId = formatLabelId(k, log.labels[k])
                 const old = labelMap.get(labelId)
                 if (!old) {
                     labelMap.set(labelId, {
@@ -101,14 +93,17 @@ const LogChart = (props: Props) => {
             }
             data.push(d)
         }
-        console.log("here333333:",timeline, names, data)  
-        return [timeline.map(t =>  dateTimeFormat(t, {format: isInToday ? "HH:mm:ss" : "MM-DD HH:mm:ss"})), names, data]
-    },[props.data])
-
+        return [timeline.map(t => dateTimeFormat(t, { format: isInToday ? "HH:mm:ss" : "MM-DD HH:mm:ss" })), names, data]
+    }, [props.data])
+    
+    const max = Math.max(...data.flat())
     const options = {
+        animation: true,
         tooltip: {
+            show: true,
             trigger: 'axis',
-          },
+            appendToBody: true
+        },
         grid: {
             left: "1%",
             right: "3%",
@@ -128,10 +123,11 @@ const LogChart = (props: Props) => {
             axisLabel: {
                 show: true,
                 textStyle: {
-                    align:'left',
-                    baseline:'middle',
+                    align: 'left',
+                    baseline: 'middle',
                 },
             },
+            splitNumber: 10
         },
         yAxis: {
             type: 'value',
@@ -141,24 +137,56 @@ const LogChart = (props: Props) => {
             show: true,
             splitNumber: 3,
         },
-        series: names.map((name,i) => (  {   
+        series: names.map((name, i) => ({
             name: name,
             data: data[i],
             type: 'bar',
             stack: 'total',
             label: {
-              show: true
+                show: true,
+                formatter: (v) => {return (v.data / max) >= 0.2 ? v.data : ''}
             },
             emphasis: {
                 focus: 'series'
-              },
-              barWidth: '80%'
-        })) 
+            },
+            // barWidth: '90%'
+        }))
     };
 
     return (<>
-        <ChartComponent key={colorMode}  options={options} theme={colorMode} onChartCreated={c => setChart(c)} width={width}/>
+        <ChartComponent key={colorMode} options={options} theme={colorMode} onChartCreated={c => setChart(c)} width={width} />
     </>)
 }
 
 export default LogChart
+
+
+
+// start, end, minStep : second
+// step should be 30s, 1m, 5m, 10m, 30m, 1h, 3h, 6h, 12h, 1d
+const calcStep = (start, end) => {
+    const steps = [30, 60, 2 * 60, 5 * 60, 10 * 60, 20 * 60, 30 * 60, 45 * 60, 60 * 60, 2 * 60 * 60, 3 * 60 * 60, 6 * 60 * 60, 12 * 60 * 60, 24 * 60 * 60]
+    const interval = end - start
+    const minSteps = 5
+    const maxSteps = 15
+    let step;
+    for (const s of steps) {
+        const c = interval / s
+        if (c >= minSteps && c <= maxSteps) {
+            step = s
+            break
+        }
+    }
+
+    const firstTs = start + (step - start % step)
+    const timeline = []
+    for (var i = firstTs; i <= end; i+= step) {
+        timeline.push(i)
+    }
+
+    if (last(timeline) < end) {
+        timeline.push(end)
+    }
+
+    return timeline
+}
