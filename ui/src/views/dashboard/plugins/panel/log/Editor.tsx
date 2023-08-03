@@ -22,9 +22,10 @@ import { commonMsg } from "src/i18n/locales/en"
 import { LogSeries } from "types/plugins/log"
 import { Select } from "antd"
 import { LayoutOrientation } from "types/layout"
+import { ColorPicker } from "components/ColorPicker"
 
 const LogPanelEditor = memo((props: PanelEditorProps) => {
-    const  { panel, onChange } = props
+    const { panel, onChange } = props
     const data: LogSeries[] = props.data?.flat() ?? []
     const labels = useMemo(() => {
         const labels = new Set<string>()
@@ -34,46 +35,66 @@ const LogPanelEditor = memo((props: PanelEditorProps) => {
             })
         })
         return Array.from(labels).sort()
-    },[props.data])
+    }, [props.data])
 
     const t = useStore(commonMsg)
     return (<>
-    <PanelAccordion title={t.basicSetting}>
-        <PanelEditItem title="Show time">
-            <Switch isChecked={panel.plugins.log.showTime} onChange={(e) => onChange((panel: Panel) => {
-                panel.plugins.log.showTime = e.target.checked
-            })} />
-        </PanelEditItem>
-        <PanelEditItem title="Timestamp column width" desc="In css pixels">
-           <EditorNumberItem min={0} max={500} step={5} value={panel.plugins.log.timeColumnWidth} onChange={(v) => onChange((panel: Panel) => {
-                panel.plugins.log.timeColumnWidth= v
-            })} placeholder="auto"/>
-        </PanelEditItem>
-    </PanelAccordion>
-    <PanelAccordion title="Labels">
-        <PanelEditItem title="Display labels">
-          <Select mode="multiple" value={panel.plugins.log.labels.display} options={labels.map(l => ({label: l, value:l}))} onChange={(v) => onChange((panel: Panel) => {
-                panel.plugins.log.labels.display = v
-            })} popupMatchSelectWidth={false} style={{width: '100%'}} placeholder="select labels.."  allowClear  showSearch />
-        </PanelEditItem>
-        <PanelEditItem title="Label column width" desc="In css pixels">
-           <EditorNumberItem min={0} max={1000} step={5} value={panel.plugins.log.labels.width} onChange={(v) => onChange((panel: Panel) => {
-                panel.plugins.log.labels.width = v
-            })} placeholder="auto"/>
-        </PanelEditItem>
-        <PanelEditItem title="Layout orientation">
-            <RadionButtons options={[{ label: LayoutOrientation.Horizontal, value: LayoutOrientation.Horizontal }, { label: LayoutOrientation.Vertical ,value: LayoutOrientation.Vertical }]} value={panel.plugins.log.labels.layout} onChange={v => onChange((panel: Panel) => {
+        <PanelAccordion title={t.basicSetting}>
+            <PanelEditItem title="Show time">
+                <Switch isChecked={panel.plugins.log.showTime} onChange={(e) => onChange((panel: Panel) => {
+                    panel.plugins.log.showTime = e.target.checked
+                })} />
+            </PanelEditItem>
+            <PanelEditItem title="Timestamp column width" desc="In css pixels">
+                <EditorNumberItem min={0} max={500} step={5} value={panel.plugins.log.timeColumnWidth} onChange={(v) => onChange((panel: Panel) => {
+                    panel.plugins.log.timeColumnWidth = v
+                })} placeholder="auto" />
+            </PanelEditItem>
+        </PanelAccordion>
+        <PanelAccordion title="Labels">
+            <PanelEditItem title="Display labels">
+                <Select mode="multiple" value={panel.plugins.log.labels.display} options={labels.map(l => ({ label: l, value: l }))} onChange={(v) => onChange((panel: Panel) => {
+                    panel.plugins.log.labels.display = v
+                })} popupMatchSelectWidth={false} style={{ width: '100%' }} placeholder="select labels.." allowClear showSearch />
+            </PanelEditItem>
+            <PanelEditItem title="Label column width" desc="In css pixels">
+                <EditorNumberItem min={0} max={1000} step={5} value={panel.plugins.log.labels.width} onChange={(v) => onChange((panel: Panel) => {
+                    panel.plugins.log.labels.width = v
+                })} placeholder="auto" />
+            </PanelEditItem>
+            <PanelEditItem title="Layout orientation">
+                <RadionButtons options={[{ label: LayoutOrientation.Horizontal, value: LayoutOrientation.Horizontal }, { label: LayoutOrientation.Vertical, value: LayoutOrientation.Vertical }]} value={panel.plugins.log.labels.layout} onChange={v => onChange((panel: Panel) => {
                     panel.plugins.log.labels.layout = v
                 })} />
-        </PanelEditItem>
-    </PanelAccordion>
-    <PanelAccordion title={t.styles}>
-        <PanelEditItem title="Font size" desc="Css style font-size">
-            <EditorInputItem value={panel.plugins.log.styles.fontSize} onChange={(v) => onChange((panel: Panel) => {
-                panel.plugins.log.styles.fontSize = v
-            })} placeholder="e.g 1rem, 16px"/>
-        </PanelEditItem>
-    </PanelAccordion>
+            </PanelEditItem>
+        </PanelAccordion>
+        <PanelAccordion title={t.styles}>
+            <PanelEditItem title="Label name color">
+                <ColorPicker color={panel.plugins.log.styles.labelColor} onChange={(v) => onChange((panel: Panel) => {
+                    panel.plugins.log.styles.labelColor = v
+                })} />
+            </PanelEditItem>
+            <PanelEditItem title="Label value color">
+                <ColorPicker color={panel.plugins.log.styles.labelValueColor} onChange={(v) => onChange((panel: Panel) => {
+                    panel.plugins.log.styles.labelValueColor = v
+                })} />
+            </PanelEditItem>
+            <PanelEditItem title="Content color">
+                <ColorPicker color={panel.plugins.log.styles.contentColor} onChange={(v) => onChange((panel: Panel) => {
+                    panel.plugins.log.styles.contentColor = v
+                })} />
+            </PanelEditItem>
+            <PanelEditItem title="Font size" desc="Css style font-size">
+                <EditorInputItem value={panel.plugins.log.styles.fontSize} onChange={(v) => onChange((panel: Panel) => {
+                    panel.plugins.log.styles.fontSize = v
+                })} placeholder="e.g 1rem, 16px" />
+            </PanelEditItem>
+            <PanelEditItem title="Wrap line" desc="Css style word-break">
+                <RadionButtons options={[{ label: "Break All", value: "break-all" },{ label: "Break Word", value: 'break-word' }]} value={panel.plugins.log.styles.wordBreak} onChange={v => onChange((panel: Panel) => {
+                    panel.plugins.log.styles.wordBreak = v
+                })} />
+            </PanelEditItem>
+        </PanelAccordion>
     </>
     )
 })

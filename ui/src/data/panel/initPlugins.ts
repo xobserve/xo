@@ -356,7 +356,8 @@ function registerEvents(options, chart) {
                 labelColor: 'inherit',
                 labelValueColor: 'inherit', 
                 contentColor: 'inherit', 
-                fontSize: "0.85rem"
+                fontSize: "0.85rem",
+                wordBreak: "break-all"
             }
         }
     }

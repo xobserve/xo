@@ -56,11 +56,11 @@ export const ColorPicker = (props: Props) => {
     const color = paletteColorNameToHex(props.color, colorMode)
     return (
         <Popover>
-            <PopoverTrigger><HStack width="fit-content">
+            <PopoverTrigger><HStack width="fit-content" cursor="pointer">
                 {circlePicker ?
                  <Box width="20px" height="20px" bg={color} borderRadius="50%" className="bordered"></Box> 
                 : <>
-                    <Button size="sm" width="fit-content" variant="ghost" >{buttonText ?? t.pickColor}</Button>
+                    <Button size="sm" width="fit-content" variant="text" className="color-text">{buttonText ?? t.pickColor}</Button>
                     <Box width={circleRadius} height={circleRadius} bg={color} borderRadius="50%" className="bordered"></Box>
                     {/* <Text textStyle="annotation">{color}</Text> */}
                 </>}

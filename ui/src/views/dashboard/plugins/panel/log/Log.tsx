@@ -19,6 +19,7 @@ import { dateTimeFormat } from "utils/datetime/formatter";
 import { toNumber } from "lodash";
 import CollapseIcon from "components/icons/Collapse";
 import { LayoutOrientation } from "types/layout";
+import { paletteColorNameToHex } from "utils/colors";
 
 
 interface LogPanelProps extends PanelProps {
@@ -55,12 +56,12 @@ const LogItem = ({ labels, log, panel }: LogItemProps) => {
         <HStack pt="1" alignItems="start" spacing={2} pl="2" pr="4" onClick={() => setCollapsed(!collapsed)} cursor="pointer"  fontSize={options.styles.fontSize}>
             <HStack spacing={1}>
                 <CollapseIcon collapsed={collapsed} fontSize="0.6rem" opacity="0.6" mt={options.showTime ? 0 : '6px'} />
-                {options.showTime && <Text fontWeight={450} minWidth={options.timeColumnWidth ?? 155}>
+                {options.showTime && <Text minWidth={options.timeColumnWidth ?? 155}>
                     {dateTimeFormat(timestamp, { format: 'YY-MM-DD HH:mm:ss.SSS' })}
                 </Text>}
             </HStack>
             {options.labels.display.length > 0 &&
-                <HStack minWidth={options.labels.width ?? options.labels.display.length * 150} maxWidth={options.labels.width ?? 300} justifyContent="center" spacing={options.labels.layout == LayoutOrientation.Horizontal ? 2 : 3} transition="width 0.3s">
+                <HStack minWidth={options.labels.width ?? options.labels.display.length * 150} maxWidth={options.labels.width ?? 300} justifyContent="center" spacing={options.labels.layout == LayoutOrientation.Horizontal ? 2 : 3}>
                     {
                         Object.keys(labels).map(key => options.labels.display.includes(key) && <LabelLayout spacing={0}>
                             <LabelName name={key} color={options.styles.labelColor}/>
@@ -70,7 +71,7 @@ const LogItem = ({ labels, log, panel }: LogItemProps) => {
                         </LabelLayout>)
                     }
                 </HStack>}
-            <Text wordBreak="break-all" color={options.styles.contentColor}>{log[1]}</Text>
+            <Text wordBreak={options.styles.wordBreak} color={paletteColorNameToHex(options.styles.contentColor)}>{log[1]}</Text>
         </HStack>
         {
             !collapsed && <Box p="4" fontSize={options.styles.fontSize}>
@@ -91,13 +92,13 @@ const LogItem = ({ labels, log, panel }: LogItemProps) => {
 }
 
 const LabelName = ({ name, color }: { name: string; color: string }) => {
-    return <Text fontWeight={500} color={color}>
+    return <Text fontWeight={500} color={paletteColorNameToHex(color)}>
         {name}
     </Text>
 }
 
 const LabelValue = ({ value, color }: { value: string; color: string }) => {
-    return <Text color={color}>
+    return <Text color={paletteColorNameToHex(color)}>
         {value}
     </Text>
 }

@@ -49,17 +49,18 @@ export interface LogSettings {
         layout: LayoutOrientation
     }
     styles: {
-       labelColor: string
-       labelValueColor: string 
-       contentColor: string 
-       fontSize: string
+        labelColor: string
+        labelValueColor: string
+        contentColor: string
+        fontSize: string
+        wordBreak: "break-word" | "break-all"
     }
 }
 
 export interface GeoMapSettings {
     sizeScale: {
         enable: boolean
-        baseSize: number 
+        baseSize: number
         maxScale: number
     }
     initialView: {
@@ -67,14 +68,14 @@ export interface GeoMapSettings {
         zoom: number
     },
     baseMap: {
-        layer: BaseLayerType 
+        layer: BaseLayerType
         mapServer: ArcGisMapServer
-        url: string 
+        url: string
         attr: string
     }
     dataLayer: {
-        layer:  DataLayerType
-        opacity: number 
+        layer: DataLayerType
+        opacity: number
     }
     controls: {
         enableZoom: boolean
