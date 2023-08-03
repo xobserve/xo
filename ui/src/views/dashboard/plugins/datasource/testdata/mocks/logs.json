@@ -406,5 +406,45 @@
                 "2023-08-02 17:15:10+08 MacBook-Air softwareupdated[88542]: Failed to get bridge device"
             ]
         ]
+    },
+    {
+        "labels": {
+            "filename": "/var/log/test.log",
+            "job": "varlogs"
+        },
+        "values": [
+            [
+                "1690967713398089000",
+                "2023-08-02 17:15:13+08 MacBook-Air SoftwareUpdateNotificationManager[7391]: SUOSUShimController: MSU update is not yet downloaded & prepared"
+            ],
+            [
+                "1690967713398084000",
+                "2023-08-02 17:15:13+08 MacBook-Air softwareupdated[88542]: Descriptor has changed since previous download (13.5 vs 13.4.1)"
+            ],
+            [
+                "1690967713398079000",
+                "\t)"
+            ],
+            [
+                "1690967713398072000",
+                "2023-08-02 17:15:13+08 MacBook-Air SoftwareUpdateNotificationManager[7391]: SUOSUShimController: Armed: 0, with mode: 0, date: (null), updates queued for later: ("
+            ],
+            [
+                "1690967713398065000",
+                "\t)"
+            ],
+            [
+                "1690967713398064000",
+                "\t    \"<SUOSUProduct: MSU_UPDATE_22G74_patch_13.5_minor>\""
+            ],
+            [
+                "1690967713398038000",
+                "2023-08-02 17:15:13+08 MacBook-Air softwareupdated[88542]: MSU updates found: ("
+            ],
+            [
+                "1690967713398035000",
+                "2023-08-02 17:15:13+08 MacBook-Air softwareupdated[88542]: SoftwareUpdate: request for status for unknown product MSU_UPDATE_22G74_patch_13.5_minor"
+            ]
+        ]
     }
 ]

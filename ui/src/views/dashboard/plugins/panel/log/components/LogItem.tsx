@@ -69,7 +69,7 @@ const LogItem = memo((props: LogItemProps) => {
                 </Text>}
             </HStack>
             {options.labels.display.length > 0 &&
-                <HStack minWidth={options.labels.width ?? options.labels.display.length * 150} maxWidth={options.labels.width ?? 300} justifyContent="center" spacing={options.labels.layout == LayoutOrientation.Horizontal ? 2 : 3}>
+                <HStack minWidth={options.labels.width ?? options.labels.display.length * 150} maxWidth={options.labels.width ?? 300} spacing={options.labels.layout == LayoutOrientation.Horizontal ? 2 : 3}>
                     {
                         Object.keys(labels).map(key => options.labels.display.includes(key) && <LabelLayout spacing={0}>
                             <LabelName name={key} color={options.styles.labelColor}/>

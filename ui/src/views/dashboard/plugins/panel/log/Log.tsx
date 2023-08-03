@@ -20,7 +20,7 @@ import LogToolbar from "./components/Toolbar";
 import storage from "utils/localStorage";
 import LogItem from "./components/LogItem";
 import { formatLabelId } from "./utils";
-import { cloneDeep, remove } from "lodash";
+import { cloneDeep, remove, sortBy } from "lodash";
 
 
 
@@ -159,7 +159,8 @@ const LogPanel = (props: LogPanelProps) => {
                 }
             }
         }
-        return result
+        
+        return sortBy(result, ['timestamp']).reverse()
     },[data, search,active])
     
     return (<Flex position="relative">
