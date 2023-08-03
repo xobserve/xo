@@ -3,3 +3,11 @@ export interface LogSeries  {
     values: [string,string][]
 }
 
+
+
+export interface LogThreshold {
+    type: "label" | "content"
+    key?: string
+    value: string 
+    color: string
+}

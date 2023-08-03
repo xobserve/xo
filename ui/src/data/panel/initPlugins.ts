@@ -356,9 +356,10 @@ function registerEvents(options, chart) {
                 labelColor: 'inherit',
                 labelValueColor: 'inherit', 
                 contentColor: 'inherit', 
-                fontSize: "0.85rem",
+                fontSize: "0.9rem",
                 wordBreak: "break-all"
-            }
+            },
+            thresholds: [{type: null, value: null, color: 'inherit'}]
         }
     }
 }

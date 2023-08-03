@@ -13,6 +13,7 @@
 import { PanelType } from "types/dashboard"
 import { LayoutOrientation } from "types/layout"
 import { ArcGisMapServer, BaseLayerType, DataLayerType } from "types/plugins/geoMap"
+import { LogThreshold } from "types/plugins/log"
 import { ThresholdsConfig } from "types/threshold"
 import { ValueCalculationType } from "types/value"
 
@@ -55,6 +56,7 @@ export interface LogSettings {
         fontSize: string
         wordBreak: "break-word" | "break-all"
     }
+    thresholds: LogThreshold[]
 }
 
 export interface GeoMapSettings {

@@ -10,19 +10,24 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-import { Switch, Textarea } from "@chakra-ui/react"
+import { Box, Button, HStack, Switch, Text, Textarea, VStack } from "@chakra-ui/react"
 import { EditorInputItem, EditorNumberItem } from "components/editor/EditorItem"
 import RadionButtons from "components/RadioButtons"
 import PanelAccordion from "src/views/dashboard/edit-panel/Accordion"
 import PanelEditItem from "src/views/dashboard/edit-panel/PanelEditItem"
 import { Panel, PanelEditorProps } from "types/dashboard"
-import React, { memo, useMemo } from "react";
+import React, { memo, useMemo, useState } from "react";
 import { useStore } from "@nanostores/react"
-import { commonMsg } from "src/i18n/locales/en"
-import { LogSeries } from "types/plugins/log"
+import { commonMsg, componentsMsg } from "src/i18n/locales/en"
+import { LogSeries, LogThreshold } from "types/plugins/log"
 import { Select } from "antd"
 import { LayoutOrientation } from "types/layout"
 import { ColorPicker } from "components/ColorPicker"
+import { ThresholdsConfig } from "types/threshold"
+import { isEmpty } from "utils/validate"
+import { palettes } from "utils/colors"
+import { cloneDeep } from "lodash"
+import { FaTimes } from "react-icons/fa"
 
 const LogPanelEditor = memo((props: PanelEditorProps) => {
     const { panel, onChange } = props
@@ -90,13 +95,84 @@ const LogPanelEditor = memo((props: PanelEditorProps) => {
                 })} placeholder="e.g 1rem, 16px" />
             </PanelEditItem>
             <PanelEditItem title="Wrap line" desc="Css style word-break">
-                <RadionButtons options={[{ label: "Break All", value: "break-all" },{ label: "Break Word", value: 'break-word' }]} value={panel.plugins.log.styles.wordBreak} onChange={v => onChange((panel: Panel) => {
+                <RadionButtons options={[{ label: "Break All", value: "break-all" }, { label: "Break Word", value: 'break-word' }]} value={panel.plugins.log.styles.wordBreak} onChange={v => onChange((panel: Panel) => {
                     panel.plugins.log.styles.wordBreak = v
                 })} />
             </PanelEditItem>
+        </PanelAccordion>
+        <PanelAccordion title="Thresholds">
+            <ThresholdEditor value={panel.plugins.log.thresholds} onChange={(v) => onChange((panel: Panel) => {
+                panel.plugins.log.thresholds = v
+            })} />
         </PanelAccordion>
     </>
     )
 })
 
 export default LogPanelEditor
+
+
+
+interface Props {
+    value: LogThreshold[]
+    onChange: any
+}
+
+
+const ThresholdEditor = (props: Props) => {
+    const t1 = useStore(componentsMsg)
+    const [value, setValue] = useState(props.value)
+    if (isEmpty(value)) {
+        const v = []
+        // add base threshold
+        const color = 'inherit'
+        v.push({
+            color,
+            value: null,
+            type: null,
+        })
+        setValue(v)
+        return
+    }
+
+    const addThreshod = () => {
+        const color = palettes[value.length % palettes.length]
+        value.unshift({
+            type: "label",
+            value: null,
+            color: color
+        })
+        changeValue(value)
+    }
+
+    const removeThreshold = (i) => {
+        value.splice(i, 1)
+        changeValue(value)
+    }
+
+
+
+    const changeValue = v => {
+        const v1 = cloneDeep(v)
+
+        setValue(v1)
+        props.onChange(v1)
+    }
+
+    return (<Box>
+        <Button onClick={addThreshod} width="100%" size="sm" colorScheme="gray">+ {t1.addThreshold}</Button>
+        <Text fontSize="0.8rem" textStyle="annotation" mt="2">若目标中有文本匹配，则 Timestamp 的颜色将发生改变</Text>
+        <VStack alignItems="left" mt="2">
+            {value?.map((threshold, i) =>
+                <HStack key={threshold.color + threshold.value + i} spacing={1}>
+                    <ColorPicker color={threshold.color} onChange={v => {
+                        value[i].color = v
+                        changeValue(value)
+                    }} circlePicker />
+
+                    {threshold.type === null && <Text pl="1" fontSize="0.95rem">Base</Text>}
+                    {threshold.type !== null && <FaTimes opacity={0.6} fontSize="0.8rem" onClick={() => removeThreshold(i)} />}
+                </HStack>)}
+        </VStack>
+    </Box>)
+}

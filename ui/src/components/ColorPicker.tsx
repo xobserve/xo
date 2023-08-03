@@ -58,10 +58,10 @@ export const ColorPicker = (props: Props) => {
         <Popover>
             <PopoverTrigger><HStack width="fit-content" cursor="pointer">
                 {circlePicker ?
-                 <Box width="20px" height="20px" bg={color} borderRadius="50%" className="bordered"></Box> 
+                 <Box width="20px" height="20px" bg={color == "inherit" ? useColorModeValue(customColors.textColor.light, customColors.textColor.dark) : color} borderRadius="50%" className="bordered"></Box> 
                 : <>
                     <Button size="sm" width="fit-content" variant="text" className="color-text">{buttonText ?? t.pickColor}</Button>
-                    <Box width={circleRadius} height={circleRadius} bg={color} borderRadius="50%" className="bordered"></Box>
+                    <Box width={circleRadius} height={circleRadius} bg={color == "inherit" ? useColorModeValue(customColors.textColor.light, customColors.textColor.dark) : color} borderRadius="50%" className="bordered"></Box>
                     {/* <Text textStyle="annotation">{color}</Text> */}
                 </>}
 

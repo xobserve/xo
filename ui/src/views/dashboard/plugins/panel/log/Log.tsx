@@ -11,7 +11,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import React, { useState } from "react";
+import React, { useMemo, useState } from "react";
 import { Box, HStack, StackDivider, Text, VStack } from "@chakra-ui/react"
 import { Panel, PanelProps } from "types/dashboard"
 import { LogSeries } from "types/plugins/log";
@@ -52,11 +52,32 @@ const LogItem = ({ labels, log, panel }: LogItemProps) => {
     const timestamp = toNumber(log[0]) / 1e6
     const options = panel.plugins.log
     const LabelLayout = options.labels.layout == LayoutOrientation.Horizontal ? HStack : Box
+    const timestampColor = useMemo(() => {
+        for (const t of panel.plugins.log.thresholds) {
+            if (t.type == "label") {
+                for (const k of Object.keys(labels)) {
+                    if (k == t.key && labels[k] == t.value) {
+                        return t.color
+                    }
+                }
+            }
+
+            if (t.type == "content") {
+                if (log[1].match(t.value)) {
+                    return t.color
+                }
+            }
+
+            if (t.type == null) {
+                return t.color
+            }
+        }
+    },[panel.plugins.log.thresholds, log, labels])
     return (<>
         <HStack pt="1" alignItems="start" spacing={2} pl="2" pr="4" onClick={() => setCollapsed(!collapsed)} cursor="pointer"  fontSize={options.styles.fontSize}>
             <HStack spacing={1}>
                 <CollapseIcon collapsed={collapsed} fontSize="0.6rem" opacity="0.6" mt={options.showTime ? 0 : '6px'} />
-                {options.showTime && <Text minWidth={options.timeColumnWidth ?? 155}>
+                {options.showTime && <Text minWidth={options.timeColumnWidth ?? 155} color={paletteColorNameToHex(timestampColor)}>
                     {dateTimeFormat(timestamp, { format: 'YY-MM-DD HH:mm:ss.SSS' })}
                 </Text>}
             </HStack>
