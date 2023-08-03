@@ -125,7 +125,7 @@ const LogPanel = (props: LogPanelProps) => {
             }
         </VStack>
         {<Box className="bordered-left" width={toolbarOpen ? panel.plugins.log.toolbar.width : 0} transition="all 0.3s">
-            <LogToolbar data={data} panel={panel} onCollapseAll={onCollapseAll} onSearchChange={onSearchChange}/>
+            <LogToolbar data={data} panel={panel} onCollapseAll={onCollapseAll} onSearchChange={onSearchChange} height={props.height}/>
         </Box>}
     </Flex>)
 }
