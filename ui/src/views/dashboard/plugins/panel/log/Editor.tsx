@@ -100,6 +100,18 @@ const LogPanelEditor = memo((props: PanelEditorProps) => {
                 })} />
             </PanelEditItem>
         </PanelAccordion>
+        <PanelAccordion title="Toolbar">
+            <PanelEditItem title="Show" desc="Show toolbar in upper right corner">
+                <Switch isChecked={panel.plugins.log.toolbar.show} onChange={(e) => onChange((panel: Panel) => {
+                    panel.plugins.log.toolbar.show = e.target.checked
+                })} />
+            </PanelEditItem>
+            <PanelEditItem title="Toolbar width" desc="In css pixels">
+                <EditorNumberItem min={0} max={500} step={20} value={panel.plugins.log.toolbar.width} onChange={(v) => onChange((panel: Panel) => {
+                    panel.plugins.log.toolbar.width = v
+                })}  />
+            </PanelEditItem>
+        </PanelAccordion>
         <PanelAccordion title="Thresholds">
             <ThresholdEditor labels={labels} value={panel.plugins.log.thresholds} onChange={(v) => onChange((panel: Panel) => {
                 panel.plugins.log.thresholds = v
@@ -175,15 +187,15 @@ const ThresholdEditor = (props: Props) => {
                         {threshold.type !== null && <Select value={threshold.type} onChange={v => {
                             value[i].type = v
                             changeValue(value)
-                        }} style={{ width: '100px' }} showSearch options={[{ label: "Label", value: "label" },{ label: "Content", value: "content" }]} popupMatchSelectWidth={false}/>}
-                          {threshold.type == "label" && <Select value={threshold.key} onChange={v => {
+                        }} style={{ width: '100px' }} showSearch options={[{ label: "Label", value: "label" }, { label: "Content", value: "content" }]} popupMatchSelectWidth={false} />}
+                        {threshold.type == "label" && <Select value={threshold.key} onChange={v => {
                             value[i].key = v
                             changeValue(value)
-                        }} style={{ width: '120px' }} showSearch options={props.labels.map(l => ({ label: l, value: l }))} placeholder="select label"  popupMatchSelectWidth={false}/>}
+                        }} style={{ width: '120px' }} showSearch options={props.labels.map(l => ({ label: l, value: l }))} placeholder="select label" popupMatchSelectWidth={false} />}
                         {threshold.type !== null && <EditorInputItem value={threshold.value} onChange={v => {
                             value[i].value = v
                             changeValue(value)
-                        }} placeholder="match value.."/>}
+                        }} placeholder="match value.." />}
                         {threshold.type === null && <Text pl="1" fontSize="0.95rem">Base</Text>}
                     </HStack>
                     {threshold.type !== null && <FaTimes opacity={0.6} fontSize="0.8rem" onClick={() => removeThreshold(i)} />}

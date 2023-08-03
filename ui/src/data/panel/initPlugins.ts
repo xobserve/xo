@@ -359,6 +359,10 @@ function registerEvents(options, chart) {
                 fontSize: "0.9rem",
                 wordBreak: "break-all"
             },
+            toolbar: {
+                show: true,
+                width: 200,
+            },
             thresholds: [{type: null, value: null, color: 'inherit'}]
         }
     }

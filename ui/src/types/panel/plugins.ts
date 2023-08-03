@@ -56,6 +56,11 @@ export interface LogSettings {
         fontSize: string
         wordBreak: "break-word" | "break-all"
     }
+    toolbar: {
+        show: boolean
+        width: number 
+
+    }
     thresholds: LogThreshold[]
 }
 
