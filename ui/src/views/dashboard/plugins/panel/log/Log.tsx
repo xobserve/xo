@@ -11,13 +11,15 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Box, Flex, StackDivider, VStack } from "@chakra-ui/react"
 import { PanelProps } from "types/dashboard"
 import { LogSeries } from "types/plugins/log";
 import LogItem from "./components/LogItem";
 import CollapseIcon from "components/icons/Collapse";
 import { FaFilter } from "react-icons/fa";
+import LogToolbar from "./components/Toolbar";
+import storage from "utils/localStorage";
 
 
 
@@ -25,26 +27,45 @@ interface LogPanelProps extends PanelProps {
     data: LogSeries[][]
 }
 
+const ToolbarStorageKey = "toolbar-"
 const LogPanel = (props: LogPanelProps) => {
-    const { panel } = props
-    const [toolbarOpen, setToolbarOpen] = useState(false)
+    const { dashboardId, panel } = props
+    const storageKey = ToolbarStorageKey + dashboardId + panel.id
+    const [toolbarOpen, setToolbarOpen] = useState(storage.get(storageKey)??false)
     const data: LogSeries[] = props.data.flat()
     if (data.length === 0) {
         return
     }
     console.log("here333333", data)
+
+    useEffect(() => {
+        if (!panel.plugins.log.toolbar.show) {
+            storage.remove(storageKey)
+        }
+    },[panel.plugins.log.toolbar.show])
+
+    const onToobarOpen = () => {
+        if (!toolbarOpen) {
+            storage.set(storageKey, true)
+        } else {
+            storage.remove(storageKey)
+        }
+        
+        setToolbarOpen(!toolbarOpen)
+
+    }
     return (<Flex position="relative">
         {panel.plugins.log.toolbar.show &&
-            <Box position="absolute" right="2" top="0" onClick={() => setToolbarOpen(!toolbarOpen)} fontSize="0.7rem" opacity="0.6" cursor="pointer" p="2px" className="color-text">
+            <Box position="absolute" right="2" top="0" onClick={onToobarOpen} fontSize="0.7rem" opacity="0.6" cursor="pointer" p="2px" className="color-text">
                 <FaFilter />
             </Box>}
         <VStack alignItems="left" divider={<StackDivider />} py="2" width={props.width - (toolbarOpen ? panel.plugins.log.toolbar.width : 1)} transition="all 0.3s">
             {
-                data[0].values.map(log => <LogItem log={log} labels={data[0].labels} panel={props.panel} />)
+                data[0].values.map(log => <LogItem log={log} labels={data[0].labels} panel={panel} />)
             }
         </VStack>
         {<Box className="bordered-left" width={toolbarOpen ? panel.plugins.log.toolbar.width : 0} transition="all 0.3s">
-
+            <LogToolbar data={data} panel={panel} />
         </Box>}
     </Flex>)
 }
