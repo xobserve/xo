@@ -24,8 +24,7 @@ import { replaceQueryWithVariables, replaceWithVariables } from "utils/variable"
 import storage from "utils/localStorage";
 import useBus, { dispatch } from 'use-bus'
 import { getCurrentTimeRange } from "components/DatePicker/TimePicker";
-import { PanelDataEvent, PanelForceRebuildEvent, TimeChangedEvent, VariableChangedEvent } from "src/data/bus-events";
-import { variables } from "../Dashboard";
+import { PanelDataEvent, PanelForceRebuildEvent, TimeChangedEvent } from "src/data/bus-events";
 import { addParamToUrl } from "utils/url";
 import { run_testdata_query } from "../plugins/datasource/testdata/query_runner";
 import { run_jaeger_query } from "../plugins/datasource/jaeger/query_runner";
@@ -48,6 +47,7 @@ import moment from "moment";
 import { paletteColorNameToHex } from "utils/colors";
 import { isEmpty } from "utils/validate";
 import { run_loki_query } from "../plugins/datasource/loki/query_runner";
+import { $variables } from "src/views/variables/store";
 interface PanelGridProps {
     dashboard: Dashboard
     panel: Panel
@@ -72,14 +72,6 @@ export const PanelGrid = memo((props: PanelGridProps) => {
         }
     )
 
-    const [variables1, setVariables] = useState<Variable[]>(variables)
-    useBus(
-        VariableChangedEvent,
-        () => {
-            setVariables([...variables])
-        }
-    )
-
 
     useDedupEvent(PanelForceRebuildEvent + props.panel.id, () => {
         console.log("here33333, panel is forced to rebuild!", props.panel.id)
@@ -89,7 +81,7 @@ export const PanelGrid = memo((props: PanelGridProps) => {
 
     return (
         <PanelBorder width={props.width} height={props.height} border={props.panel.styles?.border}>
-            <PanelComponent key={props.panel.id + forceRenderCount} {...props} timeRange={tr} variables={variables1} />
+            <PanelComponent key={props.panel.id + forceRenderCount} {...props} timeRange={tr}  />
         </PanelBorder>
     )
 })
@@ -98,13 +90,13 @@ interface PanelComponentProps extends PanelGridProps {
     width: number
     height: number
     timeRange: TimeRange
-    variables: Variable[]
 }
 
 export const prevQueries = new Map()
 export const prevQueryData = new Map()
 
-export const PanelComponent = ({ dashboard, panel, onRemovePanel, width, height, sync, timeRange, variables }: PanelComponentProps) => {
+export const PanelComponent = ({ dashboard, panel, onRemovePanel, width, height, sync, timeRange }: PanelComponentProps) => {
+    const variables = useStore($variables)
     const toast = useToast()
     const [panelData, setPanelData] = useState<any[]>(null)
     const [queryError, setQueryError] = useState()

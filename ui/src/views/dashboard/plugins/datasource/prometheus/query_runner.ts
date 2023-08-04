@@ -24,10 +24,10 @@ import { getNewestTimeRange } from "components/DatePicker/TimePicker"
 
 import { PromDsQueryTypes } from "./VariableEditor"
 import { parseVariableFormat } from "utils/format"
-import { variables } from "src/views/dashboard/Dashboard"
 import { VariableSplitChar, VarialbeAllOption } from "src/data/variable"
 import { requestApi } from "utils/axios/request"
 import { replaceWithVariablesHasMultiValues } from "utils/variable"
+import { $variables } from "src/views/variables/store"
 
 export const run_prometheus_query = async (panel: Panel, q: PanelQuery, range: TimeRange, ds: Datasource) => {
     if (isEmpty(q.metrics)) {
@@ -114,7 +114,6 @@ export const queryPromethuesVariableValues = async (variable: Variable) => {
             for (const m of metrics) {
                 url += `${m ? `&match[]=${m}` : ''}`
             }
-            console.log("here3333333:",data.metrics,metrics)
             const res: any = await requestApi.get(url)
             if (res.status == "success") {
                 result.data = result.data.concat(res.data)
@@ -192,9 +191,10 @@ export const queryPrometheusLabels = async (dsId, metric = "", useCurrentTimeran
 }
 
 export const replacePrometheusQueryWithVariables = (query: PanelQuery) => {
+    const vars = $variables.get()
     const formats = parseVariableFormat(query.metrics);
     for (const f of formats) {
-        const v = variables.find(v => v.name == f)
+        const v = vars.find(v => v.name == f)
         if (v) {
             let selected = []
             if (v.selected == VarialbeAllOption) {

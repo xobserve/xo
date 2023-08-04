@@ -21,8 +21,8 @@ import storage from "utils/localStorage";
 import React from "react";
 import { useStore } from "@nanostores/react";
 import { commonMsg } from "src/i18n/locales/en";
-import { variables } from "../Dashboard";
 import { cloneDeep } from "lodash";
+import { $variables } from "src/views/variables/store";
 
 interface Props {
     dashboard: Dashboard
@@ -31,6 +31,7 @@ interface Props {
 
 
 const VariablesSetting = ({ dashboard, onChange }: Props) => {
+    const variables = useStore($variables)
     const t = useStore(commonMsg)
     const toast = useToast()
     const [variable, setVariable] = useState<Variable>()

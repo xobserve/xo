@@ -16,13 +16,13 @@ import { Dashboard, Panel } from "types/dashboard"
 import { requestApi } from "utils/axios/request"
 import DashboardHeader from "src/views/dashboard/DashboardHeader"
 import DashboardGrid from "src/views/dashboard/grid/DashboardGrid"
-import { clone, cloneDeep, concat, defaultsDeep, findIndex } from "lodash"
+import { clone, cloneDeep, concat, defaultsDeep, find, findIndex } from "lodash"
 import { Variable } from "types/variable"
 import { setVariableSelected } from "src/views/variables/Variables"
 import { prevQueries, prevQueryData } from "src/views/dashboard/grid/PanelGrid"
 import { unstable_batchedUpdates } from "react-dom"
 import useBus, { dispatch } from 'use-bus'
-import { SetDashboardEvent, UpdatePanelEvent, VariableChangedEvent } from "src/data/bus-events"
+import { SetDashboardEvent, UpdatePanelEvent } from "src/data/bus-events"
 import React from "react";
 import { useImmer } from "use-immer"
 import { setAutoFreeze } from "immer";
@@ -34,6 +34,8 @@ import { initDashboard } from "src/data/dashboard"
 import { initPanel } from "src/data/panel/initPanel"
 import { DashboardHeaderHeight } from "src/data/constants"
 import { updateTimeToNewest } from "components/DatePicker/DatePicker"
+import { $variables } from "../variables/store"
+import { useStore } from "@nanostores/react"
 
 
 
@@ -43,8 +45,9 @@ setAutoFreeze(false)
 // generally these pages are defined in:
 // 1. team's side menu, asscessed by a specific url path
 // 2. dashboard page, accessed by a dashboard id
-export let variables: Variable[] = []
 const DashboardWrapper = ({ dashboardId, sideWidth }) => {
+    const vars = useStore($variables)
+    console.log("here33333:",vars)
     const [dashboard, setDashboard] = useImmer<Dashboard>(null)
     // const [gVariables, setGVariables] = useState<Variable[]>([])
     const fullscreen = useFullscreen()
@@ -102,11 +105,12 @@ const DashboardWrapper = ({ dashboardId, sideWidth }) => {
 
     const load = async () => {
         const res = await requestApi.get(`/dashboard/byId/${dashboardId}`)
-        const res0 = await requestApi.get(`/variable/all`)
         const dash = initDash(res.data)
         unstable_batchedUpdates(() => {
             setDashboard(cloneDeep(dash))
-            setCombinedVariables(res.data, res0.data)
+            // setTimeout(() => {
+                setDashboardVariables(res.data)
+            // }, 50) 
         })
     }
 
@@ -124,17 +128,11 @@ const DashboardWrapper = ({ dashboardId, sideWidth }) => {
     }
 
     // combine variables which defined separately in dashboard and global
-    const setCombinedVariables = async (dash, gvars) => {
-        const combined = concat(cloneDeep(dash.data.variables) ?? [], gvars)
-        for (const v of combined) {
-            v.values = []
-            // get the selected value for each variable from localStorage
-        }
-        setVariableSelected(combined)
-        variables = combined
-
-        dispatch(VariableChangedEvent)
-
+    const setDashboardVariables = async (dash) => {
+        const dashVars = cloneDeep(dash.data.variables)
+        setVariableSelected(dashVars)
+        console.log("here333333 dash:",dashVars)
+        $variables.set([...$variables.get(), ...dashVars])
     }
 
 
@@ -147,12 +145,12 @@ const DashboardWrapper = ({ dashboardId, sideWidth }) => {
     }, [])
 
 
-    // const visibleVars = variables.filter(v => {
-    //     return !v.id.toString().startsWith("d-") && !find(dashboard?.data?.hidingVars?.split(','),v1 => v1 == v.name)
-    // })
+    const visibleVars = vars.filter(v => {
+        return !v.id.toString().startsWith("d-") && !find(dashboard?.data?.hidingVars?.split(','),v1 => v1 == v.name)
+    })
 
 
-    const headerHeight = fullscreen ? 0 : DashboardHeaderHeight + 7
+    const headerHeight = fullscreen ? 0 : (visibleVars.length > 0 ? DashboardHeaderHeight :  (DashboardHeaderHeight - 25) ) + 7
     return (<>
         {dashboard && <Box px={fullscreen ? 0 : 3} width="100%" minHeight="100vh" position="relative">
             {/* <Decoration decoration={dashboard.data.styles.decoration}/> */}

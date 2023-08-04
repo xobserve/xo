@@ -30,6 +30,7 @@ import { VarialbeAllOption } from 'src/data/variable'
 import AntdWrapper from 'components/AntdWrapper'
 import { routes } from './routes';
 import { initColors } from 'utils/colors';
+import { $variables } from './views/variables/store';
 
 const { ToastContainer } = createStandaloneToast()
 
@@ -90,6 +91,7 @@ const AppView = () => {
       // get the selected value for each variable from localStorage
     }
     gvariables = res.data
+    $variables.set(res.data)
   }
 
   const router = createBrowserRouter(routes);

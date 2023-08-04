@@ -17,14 +17,13 @@ import { cloneDeep, find, isEmpty } from "lodash"
 import React from "react";
 import { memo, useEffect, useRef, useState } from "react"
 import { MdSync } from "react-icons/md"
-import { TimeRefreshEvent, VariableChangedEvent } from "src/data/bus-events"
+import { TimeRefreshEvent } from "src/data/bus-events"
 import ReserveUrls from "src/data/reserve-urls"
 import { Dashboard } from "types/dashboard"
 import { Team } from "types/teams"
 import useBus, { dispatch } from "use-bus"
 import { requestApi } from "utils/axios/request"
 import AddPanel from "./AddPanel"
-import { variables } from "./Dashboard"
 import DashboardSave from "./DashboardSave"
 import DashboardSettings from "./settings/DashboardSettings"
 import Fullscreen from "components/Fullscreen"
@@ -35,6 +34,7 @@ import { useStore } from "@nanostores/react";
 import { dashboardMsg } from "src/i18n/locales/en";
 import DashboardShare from "./DashboardShare";
 import DashboardStar from "./components/DashboardStar";
+import { $variables } from "../variables/store";
 
 interface HeaderProps {
     dashboard: Dashboard
@@ -42,9 +42,10 @@ interface HeaderProps {
     sideWidth?: number
 }
 const DashboardHeader = memo(({ dashboard, onChange, sideWidth }: HeaderProps) => {
+    const vars = useStore($variables)
+    console.log("here333333:",vars)
     const t1 = useStore(dashboardMsg)
     const navigate = useNavigate()
-    const [variablesChanged, setVariablesChanged] = useState(0)
     const [refresh, setRefresh] = useState(0)
     const [team, setTeam] = useState<Team>(null)
     const fullscreen = useFullscreen()
@@ -77,15 +78,6 @@ const DashboardHeader = memo(({ dashboard, onChange, sideWidth }: HeaderProps) =
     const refreshOnce = () => {
         dispatch(TimeRefreshEvent)
     }
-
-    useBus(
-        VariableChangedEvent,
-        () => {
-            console.log("dash header recv variable change event:", variables);
-            setVariablesChanged(variablesChanged + 1)
-        },
-        [variablesChanged]
-    )
 
     return (
         <Box
@@ -138,9 +130,9 @@ const DashboardHeader = memo(({ dashboard, onChange, sideWidth }: HeaderProps) =
                         </HStack>
 
                     </Flex>
-                    {!isEmpty(variables) && <Flex justifyContent="space-between" mt="0">
-                        <SelectVariables id={variablesChanged} variables={variables.filter((v) => v.id.toString().startsWith("d-"))} />
-                        <SelectVariables id={variablesChanged} variables={variables.filter((v) => !v.id.toString().startsWith("d-") && !find(dashboard.data.hidingVars?.split(','), v1 => v1 == v.name))} />
+                    {!isEmpty(vars) && <Flex justifyContent="space-between" mt="0">
+                        <SelectVariables  variables={vars.filter((v) => v.id.toString().startsWith("d-"))} />
+                        <SelectVariables  variables={vars.filter((v) => !v.id.toString().startsWith("d-") && !find(dashboard.data.hidingVars?.split(','), v1 => v1 == v.name))} />
                     </Flex>}
                 </>}
         </Box>

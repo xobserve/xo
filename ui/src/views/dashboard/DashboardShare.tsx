@@ -16,7 +16,6 @@ import React, { useState } from "react"
 import { BsShare } from "react-icons/bs"
 import { Dashboard } from "types/dashboard"
 import { parseVariableFormat } from "utils/format"
-import { variables } from "./Dashboard"
 import { getCurrentTimeRange } from "components/DatePicker/TimePicker"
 import queryString from 'query-string';
 import { FaCopy, FaRegCopy } from "react-icons/fa"
@@ -24,6 +23,7 @@ import { useStore } from "@nanostores/react"
 import { commonMsg } from "src/i18n/locales/en"
 import { dispatch } from "use-bus"
 import { ShareUrlEvent } from "src/data/bus-events"
+import { $variables } from "../variables/store"
 
 interface Props extends StyleProps {
     dashboard: Dashboard
@@ -32,6 +32,7 @@ interface Props extends StyleProps {
 
 export const shareUrlParams = {}
 const DashboardShare = ({ dashboard, ...rest }: Props) => {
+    const variables = useStore($variables)
     const t = useStore(commonMsg)
 
     const { isOpen, onOpen, onClose } = useDisclosure()

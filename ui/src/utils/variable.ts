@@ -15,12 +15,12 @@ import { parseVariableFormat } from "./format";
 import { DatasourceType, PanelQuery } from "types/dashboard";
 import { replacePrometheusQueryWithVariables } from "src/views/dashboard/plugins/datasource/prometheus/query_runner";
 import { replaceJaegerQueryWithVariables } from "src/views/dashboard/plugins/datasource/jaeger/query_runner";
-import { variables } from "src/views/dashboard/Dashboard";
 import { replaceHttpQueryWithVariables } from "src/views/dashboard/plugins/datasource/http/query_runner";
 import { VariableSplitChar, VarialbeAllOption } from "src/data/variable";
 import { gvariables } from "src/App";
 import { isEmpty } from "lodash";
 import { replaceLokiQueryWithVariables } from "src/views/dashboard/plugins/datasource/loki/query_runner";
+import { $variables } from "src/views/variables/store";
 
 export const hasVariableFormat = (s: string) => {
     return parseVariableFormat(s).length > 0
@@ -31,13 +31,14 @@ export const hasVariableFormat = (s: string) => {
 export const replaceWithVariables = (s: string, extraVars?: {
     [varName:string]: string | number, 
 }) => {
+    const vars = $variables.get()
     const formats = parseVariableFormat(s);
     for (const f of formats) {
         const extrav = extraVars && extraVars[f]
         if (extrav) {
             s = s.replace(`\${${f}}`, extrav.toString());
         } else {
-            const v = variables.find(v => v.name ==f)
+            const v = vars.find(v => v.name ==f)
             if (v) {
                 s = s.replace(`\${${f}}`, v.selected);
             }
@@ -71,10 +72,11 @@ export const replaceQueryWithVariables = (q: PanelQuery, datasource: DatasourceT
 // replace ${xxx} format in s with every possible value of the variable
 // if s doesn't contain any variable, return [s]
 export const  replaceWithVariablesHasMultiValues =  (s: string, replaceAllWith?): string[] => {
+    const vars = $variables.get()
     let res = []
     const formats = parseVariableFormat(s);
     for (const f of formats) {
-        const v = (variables.length > 0 ? variables : gvariables).find(v => v.name ==f)
+        const v = (vars.length > 0 ? vars : gvariables).find(v => v.name ==f)
         if (v) {
           
             let selected = []

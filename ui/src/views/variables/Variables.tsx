@@ -11,8 +11,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 import { HStack, Text, Tooltip, useToast } from "@chakra-ui/react"
-import {  variables } from "src/views/dashboard/Dashboard"
-import { TimeChangedEvent, VariableChangedEvent, VariableForceReload } from "src/data/bus-events"
+import { TimeChangedEvent, VariableForceReload } from "src/data/bus-events"
 import { Variable, VariableQueryType, VariableRefresh } from "types/variable"
 import useBus, { dispatch } from "use-bus"
 import storage from "utils/localStorage"
@@ -30,11 +29,10 @@ import React from "react";
 import { useStore } from "@nanostores/react"
 import { variableMsg } from "src/i18n/locales/en"
 import { addParamToUrl, getUrlParams } from "utils/url"
-import { useSearchParam } from "react-use"
 import { queryLokiVariableValues } from "../dashboard/plugins/datasource/loki/query_runner"
+import { $variables } from "./store"
 
 interface Props {
-    id: number
     variables: Variable[]
 }
 
@@ -103,7 +101,7 @@ const SelectVariable = ({ v }: { v: Variable }) => {
                 v.values = []
                 return 
             }
-            res.data.sort()
+            res.data?.sort()
             result = [...result, ...res.data??[]]
             if (v.refresh == VariableRefresh.Manually) {
                 storage.set(VariableManuallyChangedKey+v.id, res)
@@ -122,8 +120,7 @@ const SelectVariable = ({ v }: { v: Variable }) => {
                 } else {
                     v.selected = result[0]
                 }
-            }
-            dispatch(VariableChangedEvent)   
+            } 
         }
 
         setValues(result)
@@ -173,8 +170,8 @@ export const setVariableSelected = (variables: Variable[]) => {
 
     for (const v of variables) {
         const selected = selectedInUrl[v.name]??sv[v.id]
-        if (!selected) {
-            v.selected = v.values[0]
+        if (!selected ) {
+            v.selected = v.values &&  v.values[0]
         } else {
             v.selected = selected
         }
@@ -183,12 +180,17 @@ export const setVariableSelected = (variables: Variable[]) => {
 
 
 export const setVariableValue = (variable: Variable, value) => {    
+    const vars = $variables.get()
     variable.selected = value
-    for (let i = 0; i < variables.length; i++) {
-        if (variables[i].id == variable.id) {
-            variables[i] = variable
+    const newVars = []
+    for (let i = 0; i < vars.length; i++) {
+        if (vars[i].id == variable.id) {
+            newVars.push(variable)
+        } else {
+            newVars.push(vars[i])
         }
     }
+    $variables.set(newVars)
 
     const sv = storage.get(vkey)
     if (!sv) {
@@ -202,16 +204,11 @@ export const setVariableValue = (variable: Variable, value) => {
 
     
 
-    let needReload = true
-    for (const v of variables) {
+    for (const v of vars) {
         if (v.id != variable.id &&  v.value.indexOf('${' + variable.name + '}') >= 0) {
             dispatch(VariableForceReload+v.id)
-            needReload = false
         }
     }
-
-    // dispatch variable changed event until relational variables are reloaded
-    if (needReload) dispatch(VariableChangedEvent)
 
     // sync to url
     addParamToUrl({
@@ -219,11 +216,12 @@ export const setVariableValue = (variable: Variable, value) => {
     })
 }
 
-export const setVariable = (name, value, toast?) => {
+export const setVariable = (name, value) => {
+    const vars = $variables.get()
     let v;
-    for (var i = 0; i < variables.length; i++) {
-        if (variables[i].name == name) {
-            v = variables[i]
+    for (var i = 0; i < vars.length; i++) {
+        if (vars[i].name == name) {
+            v = vars[i]
             break
         }
     }

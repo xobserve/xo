@@ -91,7 +91,6 @@ export const queryLokiSeries = async (dsId, match: [string,string][], timeRange:
        }
     }
 
-    console.log("here33333:",url)
     const res: any = await requestApi.get(url)
     if (res.status !== "success") {
         console.log("Failed to fetch data from loki", res.status)

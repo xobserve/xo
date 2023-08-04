@@ -157,7 +157,7 @@ const Container = ({ children, sidemenu, session }: Props) => {
             <Box cursor="pointer" onClick={onMinimodeChange} opacity="0.2" position="absolute" right="1px" top="14px" className="hover-text" p="1" fontSize="0.7rem"><Icons.FaChevronLeft /></Box>
           }
           {sidemenu.map((link, index) => {
-            return <Box mt={miniMode ? 2 : 3}>
+            return <Box key={link.url} mt={miniMode ? 2 : 3}>
               <Box>
                 <NavItem isActive={miniMode ? asPath.startsWith(link.url) : asPath == link.url} key={index} text={link.title} icon={link.icon} miniMode={miniMode} fontWeight={500} url={link.children?.length > 0 ? link.children[0].url : link.url} children={link.children}/>
               </Box>
@@ -178,9 +178,9 @@ const Container = ({ children, sidemenu, session }: Props) => {
           <VStack alignItems="left" spacing={miniMode ? 1 : 3}>
             {bottomNavs.map((nav, index) => {
               if (nav.url == ReserveUrls.Search) {
-                return <Search title={nav.title} miniMode={miniMode} sideWidth={sideWidth} />
+                return <Search key={nav.url} title={nav.title} miniMode={miniMode} sideWidth={sideWidth} />
               } else {
-                return <Box><NavItem key={index} isActive={nav.isActive} text={nav.title} icon={nav.icon} miniMode={miniMode} url={nav.url} /></Box>
+                return <Box  key={nav.url}><NavItem isActive={nav.isActive} text={nav.title} icon={nav.icon} miniMode={miniMode} url={nav.url} /></Box>
               }
             })}
 

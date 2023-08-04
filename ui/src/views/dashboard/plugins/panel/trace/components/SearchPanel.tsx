@@ -11,13 +11,14 @@ import { TraceSearchKey } from "../config/constants"
 import { TimeRange } from "types/time"
 import { hasVariableFormat, replaceWithVariablesHasMultiValues } from "utils/variable"
 import useBus from "use-bus"
-import { ShareUrlEvent, VariableChangedEvent } from "src/data/bus-events"
+import { ShareUrlEvent } from "src/data/bus-events"
 import React from "react";
 import { useStore } from "@nanostores/react"
 import { tracePanelMsg } from "src/i18n/locales/en"
 import { shareUrlParams } from "src/views/dashboard/DashboardShare"
 import { isEmpty } from "utils/validate"
 import { useSearchParams } from "react-router-dom"
+import { $variables } from "src/views/variables/store"
 interface Props {
     panel: Panel
     onSearch: any
@@ -31,7 +32,7 @@ interface Props {
 const traceServicesCache = new Map()
 const TraceSearchPanel = ({ timeRange, dashboardId, panel, onSearch, onSearchIds }: Props) => {
     const [searchParams] = useSearchParams()
-
+    const variables = useStore($variables)
     const t1 = useStore(tracePanelMsg)
     const [inited, setInited] = useState(false)
     const lastSearch = useMemo(() => storage.get(TraceSearchKey + dashboardId + panel.id) ?? {}, [])
@@ -75,21 +76,17 @@ const TraceSearchPanel = ({ timeRange, dashboardId, panel, onSearch, onSearchIds
         }
     }, [service])
 
-    useBus(
-        VariableChangedEvent,
-        () => {
-            if (hasVariableFormat(operation)) {
-                return
-            }
+    useEffect(() => {
+        if (hasVariableFormat(operation)) {
+            return
+        }
 
-            const services = replaceWithVariablesHasMultiValues(service)
-            const cachedServices = traceServicesCache[dashboardId + panel.id]
-            if (!isEqual(services, cachedServices)) {
-                loadOperations()
-            }
-        },
-        [operation]
-    )
+        const services = replaceWithVariablesHasMultiValues(service)
+        const cachedServices = traceServicesCache[dashboardId + panel.id]
+        if (!isEqual(services, cachedServices)) {
+            loadOperations()
+        }
+    },[variables])
 
     useBus(
         ShareUrlEvent,
