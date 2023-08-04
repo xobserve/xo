@@ -226,7 +226,7 @@ const EditPanel = ({ dashboard, onChange }: EditPanelProps) => {
                                             return <PanelGrid width={width} height={height} key={tempPanel.id + tempPanel.type} dashboard={dashboard} panel={tempPanel} sync={null} />
                                         }}
                                     </AutoSizer>
-                                    {!tempPanel.plugins[tempPanel.type].disableDatasource && <Box zIndex={1} position="absolute" right="0" bottom={hideDatasource ? "0" : "-35px"} opacity="0.3" cursor="pointer" fontSize=".8rem" onClick={() => { setHideDatasource(!hideDatasource) }}>{hideDatasource ? <FaArrowUp /> : <FaArrowDown />}</Box>}
+                                    {!tempPanel.plugins[tempPanel.type].disableDatasource && <Box zIndex={1} position="absolute" right="0" bottom={hideDatasource ? "0" : "-35px"} opacity={hideDatasource ? 0.8 : 0.4} cursor="pointer" className={`hover-text ${hideDatasource ? "color-text" : null}`} fontSize=".8rem" onClick={() => { setHideDatasource(!hideDatasource) }}>{hideDatasource ? <FaArrowUp /> : <FaArrowDown />}</Box>}
                                 </Box>
                                 {/* panel datasource section */}
                                 {!tempPanel.plugins[tempPanel.type].disableDatasource &&

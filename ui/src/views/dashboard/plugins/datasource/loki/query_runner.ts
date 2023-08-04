@@ -19,9 +19,8 @@ import { isLokiDatasourceValid } from "./DatasourceEditor";
 import { requestApi } from "utils/axios/request";
 import { Variable } from "types/variable";
 import { isEmpty } from "utils/validate";
-import { isObject, round } from "lodash";
+import { round } from "lodash";
 import { prometheusToPanels } from "../prometheus/transformData";
-import { isJSON } from "utils/is";
 
 export const run_loki_query = async (panel: Panel, q: PanelQuery, range: TimeRange, ds: Datasource) => {
     if (isEmpty(q.metrics)) {
