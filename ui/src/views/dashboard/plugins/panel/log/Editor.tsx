@@ -23,15 +23,19 @@ import { LogSeries, LogThreshold } from "types/plugins/log"
 import { Select } from "antd"
 import { LayoutOrientation } from "types/layout"
 import { ColorPicker } from "components/ColorPicker"
-import { ThresholdsConfig } from "types/threshold"
 import { isEmpty } from "utils/validate"
 import { palettes } from "utils/colors"
 import { cloneDeep } from "lodash"
 import { FaTimes } from "react-icons/fa"
+import { isSeriesData } from "utils/seriesData"
 
 const LogPanelEditor = memo((props: PanelEditorProps) => {
     const { panel, onChange } = props
     const data: LogSeries[] = props.data?.flat() ?? []
+    if (isSeriesData(data)) {
+        return <></>
+    }
+
     const labels = useMemo(() => {
         const labels = new Set<string>()
         data.forEach(series => {

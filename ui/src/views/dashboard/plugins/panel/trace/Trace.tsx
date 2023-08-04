@@ -27,6 +27,20 @@ import React from "react";
 
 
 
+const TracePanelWrapper = (props: PanelProps) => {
+    return (<>
+        {
+           (props.panel.datasource.type != DatasourceType.Jaeger && props.panel.datasource.type != DatasourceType.TestData) 
+                ?
+                <Center height="100%">Trace panel only support Jaeger and Testdata datasource</Center>
+                :
+                <TracePanel {...props}/>
+        }
+    </>
+    )
+}
+export default TracePanelWrapper
+
 
 const TracePanel = (props: PanelProps) => {
     const [rawTraces, setRawTraces] = useState<TraceData[]>(null)
@@ -101,7 +115,6 @@ const TracePanel = (props: PanelProps) => {
     </>)
 }
 
-export default TracePanel
 
 
 

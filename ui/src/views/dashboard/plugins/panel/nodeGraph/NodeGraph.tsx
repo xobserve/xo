@@ -13,7 +13,7 @@
 
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import G6, { Graph } from '@antv/g6';
-import { Box, Center, useColorMode, useToast } from '@chakra-ui/react';
+import { Box, Center, Text, VStack, useColorMode, useToast } from '@chakra-ui/react';
 import { Panel, PanelData, PanelProps } from 'types/dashboard';
 import { initTooltip } from './plugins/tooltip';
 import { getActiveEdgeLabelCfg } from './default-styles';
@@ -27,7 +27,7 @@ import HiddenItems from './HiddenItem';
 import { filterData } from './filter/filterData';
 import { getDefaultEdgeLabel, getDefaultEdgeStyle, getDefaultNodeLabel, getDefaultNodeStyle } from './default-styles';
 import { NodeGraphPluginData } from 'types/plugins/nodeGraph';
-import { cloneDeep, isEmpty, isFunction } from 'lodash';
+import { isFunction } from 'lodash';
 import { colors, paletteColorNameToHex } from 'utils/colors';
 import './customNode' 
 import { registerCustomNode } from './customNode';
@@ -37,10 +37,37 @@ import { genDynamicFunction } from 'utils/dynamicCode';
 import lodash from 'lodash'
 import { useStore } from '@nanostores/react';
 import { nodeGraphPanelMsg } from 'src/i18n/locales/en';
+import { isEmpty } from 'utils/validate';
+import { isNodeGraphData } from './utils';
+
+
 
 interface NodeGraphPanelProps extends PanelProps {
     data: NodeGraphPluginData[]
 }
+
+const NodeGraphPanelWrapper = (props: NodeGraphPanelProps) => {
+    if (isEmpty(props.data)) {
+        return  <Center height="100%">No data</Center>
+    }
+    
+    return (<>
+        {
+           !isNodeGraphData(props.data[0])
+                ?
+                <Center height="100%">
+                    <VStack>
+                    <Text fontWeight={500} fontSize="1.1rem">Data format not support!</Text>
+                    <Text className='color-text'>Try to change to Testdata datasource, then look into its data format in Panel Debug</Text>
+                    </VStack>
+                </Center>
+                :
+                <NodeGrapPanel {...props}/>
+        }
+    </>
+    )
+}
+export default NodeGraphPanelWrapper
 
 let newestColorMode;
 const NodeGrapPanel = ({ data, panel, dashboardId, width, height }: NodeGraphPanelProps) => {
@@ -337,7 +364,6 @@ const clearSelectedEdgesState = (graph: Graph, defaultEdgeLabelCfg) => {
 }
 
 
-export default NodeGrapPanel
 
 const onColorModeChange = (graph, data, colorMode, dashboardId, panel: Panel) => {
     const defaultNodeLabelCfg = getDefaultNodeLabel(colorMode)

@@ -28,3 +28,7 @@ const logColorGenerator = new ColorGenerator(concat(COLORS_HEX,colors))
 export const getLabelNameColor = id => {
     return logColorGenerator.getColorByKey(id)
 }
+
+export const isLogSeriesData = (data: any): boolean => {
+    return data && data.labels && data.values
+}

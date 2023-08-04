@@ -6,4 +6,3 @@ export const isErrorTag = ({ key, value }: KeyValuePair) =>
 export const isErrorTrace = (t: Trace): boolean =>
     t.spans.some(span => span.tags.some(isErrorTag))
 
-    

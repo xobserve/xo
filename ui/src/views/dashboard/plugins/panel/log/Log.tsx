@@ -12,17 +12,18 @@
 // limitations under the License.
 
 import React, { useCallback, useEffect, useMemo, useState } from "react";
-import { Box, Center, Flex, StackDivider, VStack } from "@chakra-ui/react"
+import { Box, Center, Flex, StackDivider, Text, VStack } from "@chakra-ui/react"
 import { PanelProps } from "types/dashboard"
 import { LogSeries, Log, LogLabel, LogChartView } from "types/plugins/log";
 import { FaFilter } from "react-icons/fa";
 import LogToolbar from "./components/Toolbar";
 import storage from "utils/localStorage";
 import LogItem from "./components/LogItem";
-import { formatLabelId } from "./utils";
+import { formatLabelId, isLogSeriesData } from "./utils";
 import { cloneDeep, remove, sortBy } from "lodash";
 import LogChart from "./components/Chart";
 import { isEmpty } from "utils/validate";
+import { isSeriesData } from "utils/seriesData";
 
 
 
@@ -31,7 +32,29 @@ interface LogPanelProps extends PanelProps {
     data: LogSeries[][]
 }
 
+const LogPanelWrapper = (props: LogPanelProps) => {
+    if (isEmpty(props.data)) {
+        return <Center height="100%">No data</Center>
+    }
 
+    return (<>
+        {
+            !isLogSeriesData(props.data[0][0])
+                ?
+                <Center height="100%">
+                    <VStack>
+                        <Text fontWeight={500} fontSize="1.1rem">Data format not support!</Text>
+                        <Text className='color-text'>Try to change to Testdata or Loki datasource, then look into its data format in Panel Debug</Text>
+                    </VStack>
+                </Center>
+                :
+                <LogPanel {...props} />
+        }
+    </>
+    )
+}
+
+export default LogPanelWrapper
 
 const ToolbarStorageKey = "log-toolbar-"
 const LogViewOptionsStorageKey = "log-view-"
@@ -45,7 +68,7 @@ const LogPanel = (props: LogPanelProps) => {
     const [active, setActive] = useState<string[]>([])
     const [activeOp, setActiveOp] = useState<"or" | "and">("or")
     const [viewOptions, setViewOptions] = useState<LogChartView>(storage.get(viewStorageKey) ?? {
-        maxBars: 20 ,
+        maxBars: 20,
         barType: "labels"
     })
     const data: LogSeries[] = props.data.flat()
@@ -118,12 +141,12 @@ const LogPanel = (props: LogPanelProps) => {
     const onSelectLabel = useCallback(id => {
         setActive(active => {
             if (active.includes(id)) {
-               return []
+                return []
             } else {
-               return [id]
+                return [id]
             }
         })
-    },[])
+    }, [])
     const filterData: Log[] = useMemo(() => {
         const result: Log[] = []
         for (const series of data) {
@@ -206,31 +229,29 @@ const LogPanel = (props: LogPanelProps) => {
     }, [filterData, panel.plugins.log.orderBy])
 
     return (<>
-        {
-            isEmpty(data) ? <Center height="100%">No data</Center> : <Flex position="relative">
-                {panel.plugins.log.toolbar.show &&
-                    <Box position="absolute" right="2" top="0" onClick={onToobarOpen} fontSize="0.7rem" opacity="0.6" cursor="pointer" p="2px" className={toolbarOpen ? "color-text" : null}>
-                        <FaFilter />
-                    </Box>}
-                <Box height={props.height} width={props.width - (toolbarOpen ? panel.plugins.log.toolbar.width : 1)} transition="all 0.3s" py="2">
-                    {panel.plugins.log.chart.show && <Box className="log-panel-chart" height={panel.plugins.log.chart.height}>
-                        <LogChart data={sortedData} panel={panel} width={props.width - (toolbarOpen ? panel.plugins.log.toolbar.width : 1)} viewOptions={viewOptions} onSelectLabel={onSelectLabel} activeLabels={active}/>
-                    </Box>}
-                    <VStack alignItems="left" divider={<StackDivider />}  mt="1">
-                        {
-                            sortedData.map(log => <LogItem log={log} panel={panel} collapsed={collaseAll} />)
-                        }
-                    </VStack>
-                </Box>
-                {<Box className="bordered-left" width={toolbarOpen ? panel.plugins.log.toolbar.width : 0} transition="all 0.3s">
-                    <LogToolbar active={active} labels={labels} panel={panel} onCollapseAll={onCollapseAll} onSearchChange={onSearchChange} height={props.height} onActiveLabel={onActiveLabel} activeOp={activeOp} onActiveOpChange={onActiveOpChange} currentLogsCount={filterData.length} onViewLogChange={onViewOptionsChange} viewOptions={viewOptions}/>
+        <Flex position="relative">
+            {panel.plugins.log.toolbar.show &&
+                <Box position="absolute" right="2" top="0" onClick={onToobarOpen} fontSize="0.7rem" opacity="0.6" cursor="pointer" p="2px" className={toolbarOpen ? "color-text" : null}>
+                    <FaFilter />
                 </Box>}
-            </Flex>
-        }
+            <Box height={props.height} width={props.width - (toolbarOpen ? panel.plugins.log.toolbar.width : 1)} transition="all 0.3s" py="2">
+                {panel.plugins.log.chart.show && <Box className="log-panel-chart" height={panel.plugins.log.chart.height}>
+                    <LogChart data={sortedData} panel={panel} width={props.width - (toolbarOpen ? panel.plugins.log.toolbar.width : 1)} viewOptions={viewOptions} onSelectLabel={onSelectLabel} activeLabels={active} />
+                </Box>}
+                <VStack alignItems="left" divider={<StackDivider />} mt="1">
+                    {
+                        sortedData.map(log => <LogItem log={log} panel={panel} collapsed={collaseAll} />)
+                    }
+                </VStack>
+            </Box>
+            {<Box className="bordered-left" width={toolbarOpen ? panel.plugins.log.toolbar.width : 0} transition="all 0.3s">
+                <LogToolbar active={active} labels={labels} panel={panel} onCollapseAll={onCollapseAll} onSearchChange={onSearchChange} height={props.height} onActiveLabel={onActiveLabel} activeOp={activeOp} onActiveOpChange={onActiveOpChange} currentLogsCount={filterData.length} onViewLogChange={onViewOptionsChange} viewOptions={viewOptions} />
+            </Box>}
+        </Flex>
     </>
     )
 }
 
-export default LogPanel
+
 
 

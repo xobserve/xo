@@ -13,6 +13,7 @@
 import { first, last, toNumber } from "lodash"
 import { SeriesData } from "types/seriesData"
 import { ValueCalculationType } from "types/value"
+import { isEmpty } from "./validate"
 
 export const calcValueOnSeriesData = (series: SeriesData, calc: ValueCalculationType):number => {
     const values = series.fields[1].values
@@ -42,4 +43,15 @@ export const calcValueOnArray = (values: number[], calc: ValueCalculationType):n
         default:
             return last(values)
     }
+}
+
+export const isSeriesData = (d: any) => {
+    const data: SeriesData[] = d?.flat()
+    for (const s of data) {
+        if (s.name !== undefined && s.fields !== undefined) {
+            return true
+        }
+    }
+
+    return false
 }
