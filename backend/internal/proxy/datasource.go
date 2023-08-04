@@ -14,7 +14,6 @@ package proxy
 
 import (
 	"bytes"
-	"fmt"
 	"io"
 	"net"
 	"net/http"
@@ -42,8 +41,8 @@ func ProxyDatasource(c *gin.Context) {
 	client := &http.Client{
 		Transport: &http.Transport{
 			DialContext: (&net.Dialer{
-				Timeout:   time.Duration(time.Minute * 1),
-				KeepAlive: time.Duration(time.Minute * 2),
+				Timeout:   time.Duration(time.Minute * 15),
+				KeepAlive: time.Duration(time.Minute * 1),
 			}).DialContext,
 		},
 	}
@@ -51,8 +50,9 @@ func ProxyDatasource(c *gin.Context) {
 	var params = url.Values{}
 
 	for k, v := range c.Request.URL.Query() {
-		fmt.Println("here33333:", k, v)
-		params.Add(k, v[0])
+		for _, v1 := range v {
+			params.Add(k, v1)
+		}
 	}
 
 	var url1 = ds.URL + targetURL + "?" + params.Encode()
