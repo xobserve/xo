@@ -111,6 +111,7 @@ export const queryPromethuesVariableValues = async (variable: Variable) => {
             // query label values : https://prometheus.io/docs/prometheus/latest/querying/api/#querying-label-values
             const metrics = replaceWithVariablesHasMultiValues(data.metrics)
             for (const m of metrics) {
+                //@performance: should pass all metrics in on request &match[]
                 const url = `/proxy/${variable.datasource}/api/v1/label/${data.label}/values?${data.useCurrentTime ? `&start=${start}&end=${end}` : ""}${m ? `&match[]=${m}` : ''}`
                 const res: any = await requestApi.get(url)
                 if (res.status == "success") {

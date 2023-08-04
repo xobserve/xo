@@ -17,13 +17,18 @@ import CodeEditor, { LogqlLang } from "components/CodeEditor/CodeEditor";
 import { Form } from "components/form/Form";
 import FormItem from "components/form/Item";
 import { cloneDeep } from "lodash";
-import React, { useRef, useState } from "react"
+import React, { useEffect, useRef, useState } from "react"
 import { PanelQuery } from "types/dashboard";
 import { DatasourceEditorProps } from "types/datasource";
+import { queryLokiSeries } from "./query_runner";
+import { getCurrentTimeRange } from "components/DatePicker/TimePicker";
 
 const LokiQueryEditor = ({ datasource, query, onChange }: DatasourceEditorProps) => {
     const [tempQuery, setTempQuery] = useState<PanelQuery>(cloneDeep(query))
 
+    useEffect(() => {
+        queryLokiSeries(datasource.id, [["filename","/var/log/a.log"],["job","varlogs"]], getCurrentTimeRange())
+    },[])
     return (
         <Form spacing={1}>
             <FormItem size="sm" title="Query">

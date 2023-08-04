@@ -14,6 +14,7 @@ package proxy
 
 import (
 	"bytes"
+	"fmt"
 	"io"
 	"net"
 	"net/http"
@@ -50,6 +51,7 @@ func ProxyDatasource(c *gin.Context) {
 	var params = url.Values{}
 
 	for k, v := range c.Request.URL.Query() {
+		fmt.Println("here33333:", k, v)
 		params.Add(k, v[0])
 	}
 

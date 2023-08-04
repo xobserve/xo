@@ -22,7 +22,7 @@ import { isEmpty } from "utils/validate";
 import { round } from "lodash";
 import { prometheusToPanels } from "../prometheus/transformData";
 
-export const run_loki_query = async (panel: Panel, q: PanelQuery, range: TimeRange, ds: Datasource) => {
+export const run_loki_query = async (panel: Panel, q: PanelQuery, timeRange: TimeRange, ds: Datasource) => {
     if (isEmpty(q.metrics)) {
         return {
             error: null,
@@ -30,8 +30,8 @@ export const run_loki_query = async (panel: Panel, q: PanelQuery, range: TimeRan
         }
     }
 
-    const start = round(range.start.getTime() / 1000)
-    const end = round(range.end.getTime() / 1000)
+    const start = round(timeRange.start.getTime() / 1000)
+    const end = round(timeRange.end.getTime() / 1000)
 
     const res: any = await requestApi.get(`/proxy/${ds.id}/loki/api/v1/query_range?query=${q.metrics}&start=${start}&end=${end}&step=${q.interval}&limit=${q.data["limit"] ?? 1000}`)
     if (res.status !== "success") {
@@ -54,7 +54,7 @@ export const run_loki_query = async (panel: Panel, q: PanelQuery, range: TimeRan
     let data = [];
     const resultType = res.data.resultType
     if (resultType === "matrix") {
-        data = prometheusToPanels(res.data, panel, q, range);
+        data = prometheusToPanels(res.data, panel, q, timeRange);
     } else if (resultType === "streams" && panel.type == PanelType.Log) {
         data = res.data.result
         for (let i = 0; i < data.length; i++) {
@@ -79,6 +79,39 @@ export const run_loki_query = async (panel: Panel, q: PanelQuery, range: TimeRan
     }
 }
 
+export const queryLokiSeries = async (dsId, match: [string,string][], timeRange: TimeRange) => {
+    const start = round(timeRange.start.getTime() / 1000)
+    const end = round(timeRange.end.getTime() / 1000)
+
+    let url = `/proxy/${dsId}/loki/api/v1/series?start=${start}&end=${end}`
+    if (match.length > 0) {
+        let d  =""
+       for (const m of match) {
+              url += `&match={${m[0]}="${m[1]}"}`
+       }
+    }
+
+    console.log("here33333:",url)
+    const res: any = await requestApi.get(url)
+    if (res.status !== "success") {
+        console.log("Failed to fetch data from loki", res.status)
+        return {
+            error: res.status !== undefined ?  `${res.errorType}: ${res.error}` : res,
+            data: []
+        }
+    }
+
+
+    if (res.data.length == 0) {
+        return {
+            error: null,
+            data: []
+        }
+    }
+
+    console.log("here333333 query loki series", res.data)
+    return []
+}
 export const replaceLokiQueryWithVariables = (query: PanelQuery) => {
     const showServices0 = query.data?.showServices ? query.data?.showServices?.split(",") : []
 
