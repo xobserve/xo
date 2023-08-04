@@ -12,6 +12,7 @@
 // limitations under the License.
 
 import { Box, Input } from "@chakra-ui/react";
+import { InputNumber } from "antd";
 import CodeEditor, { LogqlLang } from "components/CodeEditor/CodeEditor";
 import { Form } from "components/form/Form";
 import FormItem from "components/form/Item";
@@ -42,16 +43,15 @@ const LokiQueryEditor = ({ datasource, query, onChange }: DatasourceEditorProps)
                     />
                 </Box>
             </FormItem>
-            <FormItem labelWidth="150px" size="sm" title="Legend">
-                <Input
-                    value={tempQuery.legend}
-                    onChange={(e) => {
-                        setTempQuery({ ...tempQuery, legend: e.currentTarget.value })
+            <FormItem labelWidth="100px" size="sm" title="Limit" desc="Max logs returned by query">
+                <InputNumber
+                    value={tempQuery.data.limit}
+                    onChange={(v) => {
+                        setTempQuery({ ...tempQuery, data: {...tempQuery.data, limit: v} })
                     }}
                     onBlur={() => onChange(tempQuery)}
                     width="150px"
-                    placeholder="{{label}}"
-                    size="sm"
+                    placeholder="1000"
                 />
             </FormItem>
         </Form>

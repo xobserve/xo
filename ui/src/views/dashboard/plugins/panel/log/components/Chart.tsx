@@ -23,9 +23,6 @@ import { formatLabelId, getLabelNameColor } from "../utils"
 import moment from "moment"
 import { isEmpty } from "utils/validate"
 import { measureText } from "utils/measureText"
-import { colors, paletteColorNameToHex } from "utils/colors"
-import colorGenerator from "utils/colorGenerator"
-import paletteGenerator from "utils/paletteGenerator"
 
 
 interface Props {

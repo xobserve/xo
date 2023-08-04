@@ -19,8 +19,9 @@ import { isLokiDatasourceValid } from "./DatasourceEditor";
 import { requestApi } from "utils/axios/request";
 import { Variable } from "types/variable";
 import { isEmpty } from "utils/validate";
-import { round } from "lodash";
+import { isObject, round } from "lodash";
 import { prometheusToPanels } from "../prometheus/transformData";
+import { isJSON } from "utils/is";
 
 export const run_loki_query = async (panel: Panel, q: PanelQuery, range: TimeRange, ds: Datasource) => {
     if (isEmpty(q.metrics)) {
@@ -33,15 +34,11 @@ export const run_loki_query = async (panel: Panel, q: PanelQuery, range: TimeRan
     const start = round(range.start.getTime() / 1000)
     const end = round(range.end.getTime() / 1000)
 
-    //@todo: 
-    // 1. rather than query directyly to prometheus, we should query to our own backend servie
-    // 2. using `axios` instead of `fetch`
-
-    const res: any = await requestApi.get(`/proxy/${ds.id}/loki/api/v1/query_range?query=${q.metrics}&start=${start}&end=${end}&step=${q.interval}&limit=2000`)
+    const res: any = await requestApi.get(`/proxy/${ds.id}/loki/api/v1/query_range?query=${q.metrics}&start=${start}&end=${end}&step=${q.interval}&limit=${q.data["limit"] ?? 1000}`)
     if (res.status !== "success") {
-        console.log("Failed to fetch data from prometheus", res)
+        console.log("Failed to fetch data from loki", res.status)
         return {
-            error: `${res.errorType}: ${res.error}`,
+            error: res.status !== undefined ?  `${res.errorType}: ${res.error}` : res,
             data: []
         }
     }

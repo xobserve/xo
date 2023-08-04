@@ -11,10 +11,10 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import  { isArray, isObject,isEmpty as _isEmpty } from 'lodash'
+import  { isArray, isObject,isEmpty as _isEmpty, isString } from 'lodash'
 
 export function isEmpty(value){
-    if(value === null || value === '' || value === undefined){
+    if(value === null || (isString(value) && value.trim() === '') || value === undefined){
         return true
     } 
 
