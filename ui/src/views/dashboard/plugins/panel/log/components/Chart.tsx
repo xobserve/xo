@@ -304,7 +304,6 @@ const getTimeFormat = (start, end, step) => {
 const getTimeInterval = (width, format, fontSize, ticks) => {
     const formatWidth = (measureText(format, fontSize).width + 10)
     const allowTicks = floor(width / formatWidth)
-    console.log("here33333: ", width, format, formatWidth, allowTicks, ticks)
     if ((ticks / allowTicks) > 1 ) {
         return [0,45]
     }

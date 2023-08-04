@@ -13,6 +13,7 @@ import { formatUnit } from 'components/Unit';
 import { calcValueOnArray } from 'utils/seriesData';
 import { findOverride, findRuleInOverride } from 'utils/dashboard/panel';
 import { GeomapRules } from '../OverridesEditor';
+import { isEmpty } from 'lodash';
 
 // "geometry": {
 //     "type": "Point",
@@ -24,11 +25,17 @@ import { GeomapRules } from '../OverridesEditor';
 
 export class FrameVectorSource<T extends Geometry = Geometry> extends VectorSource<T> {
     constructor() {
-        super();
+        super({});
     }
 
     update(data: SeriesData[], panel: Panel) {
         this.clear(true);
+
+        if (isEmpty(data)) {
+            this.changed()
+            return 
+        }
+
         let info = {
             name: "Geometry",
             type: "geo",
@@ -104,6 +111,7 @@ export class FrameVectorSource<T extends Geometry = Geometry> extends VectorSour
                 info.opacities.push(findRuleInOverride(override, GeomapRules.LocationFill)?? panel.plugins.geomap.dataLayer.opacity)
             }
         }
+
         for (let i = 0; i < info.points.length; i++) {
             this.addFeatureInternal(
                 new Feature({

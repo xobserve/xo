@@ -11,7 +11,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 import { Box } from "@chakra-ui/react"
-import React, { useEffect, useRef, useState } from "react"
+import React, { useEffect, useMemo, useRef, useState } from "react"
 import Map from 'ol/Map';
 import View from 'ol/View';
 import { PanelProps } from "types/dashboard";
@@ -41,17 +41,21 @@ const GeoMapPanel = (props: Props) => {
     const options = panel.plugins.geomap
     const mapContainer = useRef(null)
     
-    let dataLayer;
-    switch (options.dataLayer.layer) {
-        case DataLayerType.Heatmap:
-            dataLayer = getHeatmapLayer()
-            break;
-        case DataLayerType.Markers:
-            dataLayer = getMarkersLayer(panel)
-            break
-        default:
-            break;
-    }
+    let dataLayer = useMemo(() => {
+        let dataLayer 
+        switch (options.dataLayer.layer) {
+            case DataLayerType.Heatmap:
+                dataLayer = getHeatmapLayer()
+                break;
+            case DataLayerType.Markers:
+                dataLayer = getMarkersLayer(panel)
+                break
+            default:
+                break;
+        }
+        return dataLayer
+    },[options.dataLayer.layer])
+
 
     // effects which cause data to change
     useEffect(() => {
@@ -70,7 +74,7 @@ const GeoMapPanel = (props: Props) => {
         }
 
 
-    }, [data, options.baseMap, options.dataLayer, options.thresholds,options.value, panel.overrides,options.sizeScale])
+    }, [data,dataLayer, options.baseMap, options.dataLayer, options.thresholds,options.value, panel.overrides,options.sizeScale])
 
     // effects which cause map view to change
     useEffect(() => {
