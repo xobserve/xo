@@ -43,7 +43,6 @@ interface HeaderProps {
 }
 const DashboardHeader = memo(({ dashboard, onChange, sideWidth }: HeaderProps) => {
     const vars = useStore($variables)
-    console.log("here333333:",vars)
     const t1 = useStore(dashboardMsg)
     const navigate = useNavigate()
     const [refresh, setRefresh] = useState(0)

@@ -82,7 +82,7 @@ export const initPanelPlugins = (): PanelPlugins => {
             },
             value: {
                 ...getInitUnits(),
-                decimal: 1
+                decimal: 3
             },
             thresholds: initThresholds(),
             thresholdsDisplay: ThresholdDisplay.None
@@ -207,7 +207,7 @@ function registerEvents(options, chart) {
             },
             value: {
                 ...getInitUnits(),
-                decimal: 2,
+                decimal: 3,
                 calc: ValueCalculationType.Last
             },
             thresholds: initThresholds(24),
@@ -228,7 +228,7 @@ function registerEvents(options, chart) {
                 top: '75%',
                 unit: '%',
                 calc: ValueCalculationType.Last,
-                decimal: 1,
+                decimal: 2,
             },
             scale: {
                 enable: true,
@@ -260,7 +260,7 @@ function registerEvents(options, chart) {
             showLegend: false,
             value: {
                 ...getInitUnits(),
-                decimal: 2,
+                decimal: 3,
                 calc: ValueCalculationType.Last
             },
             styles: {
@@ -291,7 +291,7 @@ function registerEvents(options, chart) {
         [PanelType.BarGauge]: {
             value: {
                 ...getInitUnits(),
-                decimal: 1,
+                decimal: 2,
                 calc: ValueCalculationType.Last
             },
             orientation: "vertical",

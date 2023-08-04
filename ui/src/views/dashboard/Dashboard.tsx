@@ -47,7 +47,6 @@ setAutoFreeze(false)
 // 2. dashboard page, accessed by a dashboard id
 const DashboardWrapper = ({ dashboardId, sideWidth }) => {
     const vars = useStore($variables)
-    console.log("here33333:",vars)
     const [dashboard, setDashboard] = useImmer<Dashboard>(null)
     // const [gVariables, setGVariables] = useState<Variable[]>([])
     const fullscreen = useFullscreen()
@@ -131,7 +130,6 @@ const DashboardWrapper = ({ dashboardId, sideWidth }) => {
     const setDashboardVariables = async (dash) => {
         const dashVars = cloneDeep(dash.data.variables)
         setVariableSelected(dashVars)
-        console.log("here333333 dash:",dashVars)
         $variables.set([...$variables.get(), ...dashVars])
     }
 

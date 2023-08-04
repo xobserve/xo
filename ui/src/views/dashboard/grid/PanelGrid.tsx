@@ -133,8 +133,8 @@ export const PanelComponent = ({ dashboard, panel, onRemovePanel, width, height,
             replaceQueryWithVariables(q, ds.type)
             const id = formatQueryId(ds.id, dashboardId, panel.id, q.id, panel.type)
             const prevQuery = prevQueries.get(id)
+            // console.log("here333333 get query:", id, prevQuery )
             const currentQuery = [q, timeRange]
-
 
             if (isEqual(prevQuery, currentQuery)) {
                 const d = prevQueryData[id]
@@ -176,15 +176,17 @@ export const PanelComponent = ({ dashboard, panel, onRemovePanel, width, height,
             setQueryError(res.error)
 
 
+           
             if (!isEmpty(res.data)) {
                 data.push(res.data)
                 prevQueryData[id] = res.data
+                // console.log("here333333 save query:", id, currentQuery )
                 prevQueries.set(id, currentQuery)
             }
         }
 
         if (needUpdate) {
-            console.log("query and set panel data:", panel.id)
+            console.log("query and set panel data:", panel.id, data)
             setPanelData(data)
         } else {
             if (!isEqual(panelData, data)) {

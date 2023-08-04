@@ -18,7 +18,7 @@ import { replaceJaegerQueryWithVariables } from "src/views/dashboard/plugins/dat
 import { replaceHttpQueryWithVariables } from "src/views/dashboard/plugins/datasource/http/query_runner";
 import { VariableSplitChar, VarialbeAllOption } from "src/data/variable";
 import { gvariables } from "src/App";
-import { isEmpty } from "lodash";
+import { cloneDeep, isEmpty } from "lodash";
 import { replaceLokiQueryWithVariables } from "src/views/dashboard/plugins/datasource/loki/query_runner";
 import { $variables } from "src/views/variables/store";
 
@@ -74,6 +74,7 @@ export const replaceQueryWithVariables = (q: PanelQuery, datasource: DatasourceT
 export const  replaceWithVariablesHasMultiValues =  (s: string, replaceAllWith?): string[] => {
     const vars = $variables.get()
     let res = []
+    console.log("here333 load var", cloneDeep(vars), s)
     const formats = parseVariableFormat(s);
     for (const f of formats) {
         const v = (vars.length > 0 ? vars : gvariables).find(v => v.name ==f)

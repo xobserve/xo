@@ -17,7 +17,7 @@ import useBus, { dispatch } from "use-bus"
 import storage from "utils/localStorage"
 import { useEffect, useState } from "react"
 import { DatasourceType } from "types/dashboard"
-import { isEmpty, isEqual } from "lodash"
+import { cloneDeep, isEmpty, isEqual } from "lodash"
 import { queryPromethuesVariableValues } from "../dashboard/plugins/datasource/prometheus/query_runner"
 import { queryHttpVariableValues } from "../dashboard/plugins/datasource/http/query_runner"
 import { datasources } from "src/App"
@@ -31,6 +31,7 @@ import { variableMsg } from "src/i18n/locales/en"
 import { addParamToUrl, getUrlParams } from "utils/url"
 import { queryLokiVariableValues } from "../dashboard/plugins/datasource/loki/query_runner"
 import { $variables } from "./store"
+import usePrevious from 'react-use/lib/usePrevious';
 
 interface Props {
     variables: Variable[]
@@ -61,24 +62,36 @@ const SelectVariable = ({ v }: { v: Variable }) => {
         },
         [v]
     )
-    
+
     useBus(
-        VariableForceReload+v.id,
+        VariableForceReload + v.id,
         () => {
             console.log("force variable to reload values", v.name);
-            loadValues()
+            forceReload()
         },
         []
     )
 
     useEffect(() => {
-        // console.log("load variable values( useEffect )", v.name)
         loadValues()
-        
     }, [v.value])
-    
+
+    const forceReload = async () => {
+        await loadValues()
+        const vars = $variables.get()
+        const newVars = []
+        for (const v1 of vars) {
+            if (v1.id == v.id) {
+                newVars.push(cloneDeep(v))
+            } else {
+                newVars.push(v1)
+            }
+        }
+        $variables.set(newVars)
+    }
+
     const loadValues = async () => {
-        let result =[]
+        let result = []
         // if (v.enableAll) {
         //     result.push(VarialbeAllOption)
         // }
@@ -86,28 +99,29 @@ const SelectVariable = ({ v }: { v: Variable }) => {
         let needQuery = true
         if (v.refresh == VariableRefresh.Manually) {
             // load from storage first
-            let vs = storage.get(VariableManuallyChangedKey+v.id)
+            let vs = storage.get(VariableManuallyChangedKey + v.id)
             if (vs) {
                 result = [...result, ...vs]
                 needQuery = false
-            } 
-        } 
-        
-        if (needQuery) {
-            console.log("load variable values( query )", v.name)
-            const res = await queryVariableValues(v)
-            if (res.error) {
-                setValues([])
-                v.values = []
-                return 
             }
-            res.data?.sort()
-            result = [...result, ...res.data??[]]
-            if (v.refresh == VariableRefresh.Manually) {
-                storage.set(VariableManuallyChangedKey+v.id, res)
-            }
+    
         }
-        
+        if (needQuery) {
+            console.log("here44444 load values:",v.name)
+            const res = await queryVariableValues(v)
+            console.log("load variable values( query )", v.name,res)
+            if (res.error) {
+                result = []
+            } else {
+                res.data?.sort()
+                result = [...result, ...res.data ?? []]
+                if (v.refresh == VariableRefresh.Manually) {
+                    storage.set(VariableManuallyChangedKey + v.id, res.data)
+                }
+            }  
+        }
+
+        const oldSelected = v.selected
         if (!isEqual(result, v.values)) {
             if (v.selected != VarialbeAllOption) {
                 if (v.selected) {
@@ -116,41 +130,53 @@ const SelectVariable = ({ v }: { v: Variable }) => {
                         v.selected = result[0]
                     } else {
                         v.selected = selected.join(VariableSplitChar)
-                    }    
+                    }
                 } else {
                     v.selected = result[0]
                 }
-            } 
+            }
         }
 
+        if (v.selected != oldSelected) {
+            const vars = $variables.get()
+            console.log(`here4444 var ${v.name}'s selected changes, the var refer to it will also change `, v.selected, oldSelected)
+            for (const variable of vars) {
+                if (v.id != variable.id && variable.value.indexOf('${' + v.name + '}') >= 0) {
+                    // console.log(`here444444 var ${variable.name} value changes, var ${v.name} which refer to it will also change`)
+                    // to avoid cache missing ,add a interval here
+                    // Two consecutive requests will miss the cache, because the result of first request has not been save to cache, but the second request has arrived
+                    setTimeout(() => {
+                        dispatch(VariableForceReload + variable.id)
+                    },100)
+                }
+            }
+        
+        }
         setValues(result)
         v.values = result
-
-    
-
     }
-    
+
 
 
     const value = isEmpty(v.selected) ? [] : v.selected.split(VariableSplitChar)
-    
+
     return <HStack key={v.id} spacing={2}>
-        <Tooltip openDelay={300} label={ (v.id.toString().startsWith("d-") ? t1.dashScoped : t1.globalScoped)}><Text fontSize="sm" minWidth="fit-content">{v.name}</Text></Tooltip>
+        <Tooltip openDelay={300} label={(v.id.toString().startsWith("d-") ? t1.dashScoped : t1.globalScoped)}><Text fontSize="sm" minWidth="fit-content">{v.name}</Text></Tooltip>
         {!isEmpty(values) &&
-        <PopoverSelect 
-            value={value} 
-            size="sm" 
-            variant="unstyled" 
-            onChange={value => {
-                const vs = value.filter(v1 => values.includes(v1))
-                setVariableValue(v, vs.length == 0 ? "" : vs.join(VariableSplitChar))
-            }}
-            options={ values.map(v => ({value:v, label:v == VarialbeAllOption ? "ALL" : v}))}
-            exclusive={VarialbeAllOption}
-            isMulti={v.enableMulti}
-            showArrow={false}
-            matchWidth={v.id.toString().startsWith('d-')}
-        />}
+            <PopoverSelect
+                value={value}
+                size="sm"
+                variant="unstyled"
+                onChange={value => {
+                    const vs = value.filter(v1 => values.includes(v1))
+                    setVariableValue(v, vs.length == 0 ? "" : vs.join(VariableSplitChar))
+                }}
+                options={values.map(v => ({ value: v, label: v == VarialbeAllOption ? "ALL" : v }))}
+                exclusive={VarialbeAllOption}
+                isMulti={v.enableMulti}
+                showArrow={false}
+                matchWidth={v.id.toString().startsWith('d-')}
+            />}
     </HStack>
 }
 export const setVariableSelected = (variables: Variable[]) => {
@@ -162,24 +188,27 @@ export const setVariableSelected = (variables: Variable[]) => {
             selectedInUrl[r] = params[k]
         }
     }
-    
+
     let sv = storage.get(vkey)
     if (!sv) {
         sv = {}
     }
 
+  
     for (const v of variables) {
-        const selected = selectedInUrl[v.name]??sv[v.id]
-        if (!selected ) {
-            v.selected = v.values &&  v.values[0]
+        const selected = selectedInUrl[v.name] ?? sv[v.id]
+        if (!selected) {
+            v.selected = v.values && v.values[0]
         } else {
             v.selected = selected
         }
     }
+
+
 }
 
 
-export const setVariableValue = (variable: Variable, value) => {    
+export const setVariableValue = (variable: Variable, value) => {
     const vars = $variables.get()
     variable.selected = value
     const newVars = []
@@ -202,17 +231,18 @@ export const setVariableValue = (variable: Variable, value) => {
         storage.set(vkey, sv)
     }
 
-    
+
 
     for (const v of vars) {
-        if (v.id != variable.id &&  v.value.indexOf('${' + variable.name + '}') >= 0) {
-            dispatch(VariableForceReload+v.id)
+        if (v.id != variable.id && v.value.indexOf('${' + variable.name + '}') >= 0) {
+            console.log(`here444444 var ${variable.name} value changes, var ${v.name} which refer to it will also change`)
+            dispatch(VariableForceReload + v.id)
         }
     }
 
     // sync to url
     addParamToUrl({
-        ['var-'+ variable.name] : value
+        ['var-' + variable.name]: value
     })
 }
 
@@ -229,7 +259,7 @@ export const setVariable = (name, value) => {
     setVariableValue(v, value)
 }
 
-export const queryVariableValues = async (v:Variable) => {
+export const queryVariableValues = async (v: Variable) => {
     let result = {
         error: null,
         data: null
@@ -267,6 +297,6 @@ export const queryVariableValues = async (v:Variable) => {
         const regex = new RegExp(v.regex)
         result.data = result?.data?.filter(v => regex.test(v))
     }
-   
+
     return result
 }
