@@ -30,4 +30,5 @@ export interface LogLabel {
 
 export interface LogChartView {
     maxBars: number
+    barType: "total" | "labels"
 }

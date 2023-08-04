@@ -12,6 +12,7 @@
 // limitations under the License.
 
 import { Box, Button, Divider, Flex, HStack, Input, Text, VStack } from "@chakra-ui/react"
+import RadionButtons from "components/RadioButtons"
 import { EditorInputItem, EditorNumberItem, EditorSliderItem } from "components/editor/EditorItem"
 import React, { memo, useEffect, useMemo, useState } from "react"
 import { AiOutlineDoubleRight } from "react-icons/ai"
@@ -55,26 +56,28 @@ const LogToolbar = memo((props: Props) => {
            <Box></Box>
         </Flex>
 
-        <Divider mt="2" />
+        <Divider mt="" />
 
-        <Box fontSize="0.9rem" mt="3" px="1">
-            <Text mb="1">Search logs</Text>
+        <Box fontSize="0.8rem" mt="2" px="1">
+            <Text mb="1" fontWeight="500">Search logs</Text>
             <EditorInputItem value={search} onChange={v => { setSearch(v); onSearchChange(v) }} placeholder="textA || textB , A && B" />
         </Box>
 
-        <Divider mt="4" />
-        <Box fontSize="0.9rem" mt="3" px="1">
-            <Text mb="1">Chart options</Text>
+        <Divider mt="2" />
+        <Box fontSize="0.8rem" mt="3" px="1">
+            <Text mb="1"fontWeight="500" >Chart options</Text>
             <Text mb="1" fontSize="0.7rem" ml="2px">Max bars count</Text>
             <EditorSliderItem  value={viewOptions.maxBars} min={15} max={100} step={1} onChange={v => { onViewLogChange({...viewOptions, maxBars: v}) }}  />
+            <Text mb="1" fontSize="0.7rem" ml="2px">Bar type</Text>
+                <RadionButtons size="xs" options={[{ label: "Total", value: "total" }, { label: "Labels", value: 'labels' }]} value={viewOptions.barType} onChange={v => onViewLogChange({...viewOptions, barType: v})} />
         </Box>
-        <Divider mt="4" />      
-        <Box px="1" mt="3">
+        <Divider mt="3" />      
+        <Box px="1" mt="2">
             <Flex alignItems="center" justifyContent="space-between">
-                <Text mb="1" fontSize="0.9rem">Label filter</Text>
+                <Text mb="1" fontSize="0.8rem" fontWeight="500">Label filter</Text>
                 <Button size="xs" mt="-1" onClick={onActiveOpChange}>{activeOp.toUpperCase()}</Button>
             </Flex>
-            <VStack mt="2" alignItems="left" maxHeight={`${height - 270}px`} overflowY="scroll">
+            <VStack mt="2" alignItems="left" maxHeight={`400px`} overflowY="scroll">
                 {
                     labels.map(label =>
                         <Box fontSize="0.85rem" className={active.includes(label.id) ? "highlight-bordered" : "bordered"} onClick={() => onActiveLabel(label.id)} cursor="pointer" px="2" py="1">

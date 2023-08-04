@@ -143,11 +143,6 @@ const LogPanelEditor = memo((props: PanelEditorProps) => {
                     panel.plugins.log.chart.stack = v
                 })} />
             </PanelEditItem>
-            <PanelEditItem title="Bar data">
-                <RadionButtons options={[{ label: "Total", value: "total" }, { label: "Labels", value: 'labels' }]} value={panel.plugins.log.chart.barData} onChange={v => onChange((panel: Panel) => {
-                    panel.plugins.log.chart.barData = v
-                })} />
-            </PanelEditItem>
         </PanelAccordion>
         <PanelAccordion title="Thresholds">
             <ThresholdEditor labels={labels} value={panel.plugins.log.thresholds} onChange={(v) => onChange((panel: Panel) => {

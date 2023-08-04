@@ -45,7 +45,8 @@ const LogPanel = (props: LogPanelProps) => {
     const [active, setActive] = useState<string[]>([])
     const [activeOp, setActiveOp] = useState<"or" | "and">("or")
     const [viewOptions, setViewOptions] = useState<LogChartView>(storage.get(viewStorageKey) ?? {
-        maxBars: 20 
+        maxBars: 20 ,
+        barType: "labels"
     })
     const data: LogSeries[] = props.data.flat()
 

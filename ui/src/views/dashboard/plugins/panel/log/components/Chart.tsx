@@ -67,7 +67,7 @@ const LogChart = (props: Props) => {
         const timeFormat = getTimeFormat(start, now, step)
 
 
-        if (options.barData == "labels") {
+        if (viewOptions.barType == "labels") {
             const labelMap = new Map()
             for (const log of props.data) {
                 const ts = getTimelineBucket(log, timeline)
@@ -155,12 +155,12 @@ const LogChart = (props: Props) => {
             data: timeline,
             show: true,
             axisTick: {
-                alignWithLabel: true,
+                alignWithLabel: false,
             },
             axisLabel: {
                 show: true,
                 textStyle: {
-                    align: 'right',
+                    align: 'center',
                     // baseline: 'end',
                 },
                 interval: interval,

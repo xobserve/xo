@@ -17,7 +17,7 @@ interface Props {
     options: Option[]
     value: string | boolean // selected value
     onChange: any
-    size?: "sm" | "md" | "lg"
+    size?: "xs" | "sm" | "md" | "lg"
     spacing?: number
     fontSize?: string
     theme?: "brand" | "default"
