@@ -14,7 +14,7 @@
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { Box, Center, Flex, StackDivider, VStack } from "@chakra-ui/react"
 import { PanelProps } from "types/dashboard"
-import { LogSeries, Log, LogLabel } from "types/plugins/log";
+import { LogSeries, Log, LogLabel, LogChartView } from "types/plugins/log";
 import { FaFilter } from "react-icons/fa";
 import LogToolbar from "./components/Toolbar";
 import storage from "utils/localStorage";
@@ -33,15 +33,20 @@ interface LogPanelProps extends PanelProps {
 
 
 
-const ToolbarStorageKey = "toolbar-"
+const ToolbarStorageKey = "log-toolbar-"
+const LogViewOptionsStorageKey = "log-view-"
 const LogPanel = (props: LogPanelProps) => {
     const { dashboardId, panel } = props
     const storageKey = ToolbarStorageKey + dashboardId + panel.id
+    const viewStorageKey = LogViewOptionsStorageKey + dashboardId + panel.id
     const [toolbarOpen, setToolbarOpen] = useState(storage.get(storageKey) ?? false)
     const [collaseAll, setCollapeAll] = useState(true)
     const [search, setSearch] = useState("")
     const [active, setActive] = useState<string[]>([])
     const [activeOp, setActiveOp] = useState<"or" | "and">("or")
+    const [viewOptions, setViewOptions] = useState<LogChartView>(storage.get(viewStorageKey) ?? {
+        maxBars: 20 
+    })
     const data: LogSeries[] = props.data.flat()
 
     const labels = useMemo(() => {
@@ -64,7 +69,6 @@ const LogPanel = (props: LogPanelProps) => {
         return result
     }, [data])
 
-    console.log("here333333", data)
 
     useEffect(() => {
         if (!panel.plugins.log.toolbar.show) {
@@ -103,6 +107,11 @@ const LogPanel = (props: LogPanelProps) => {
 
     const onActiveOpChange = useCallback(() => {
         setActiveOp(activeOp == "or" ? "and" : "or")
+    }, [])
+
+    const onViewOptionsChange = useCallback((v) => {
+        setViewOptions(v)
+        storage.set(viewStorageKey, v)
     }, [])
 
     const filterData: Log[] = useMemo(() => {
@@ -188,14 +197,14 @@ const LogPanel = (props: LogPanelProps) => {
 
     return (<>
         {
-            isEmpty(sortedData) ? <Center height="100%">No data</Center> : <Flex position="relative">
+            isEmpty(data) ? <Center height="100%">No data</Center> : <Flex position="relative">
                 {panel.plugins.log.toolbar.show &&
                     <Box position="absolute" right="2" top="0" onClick={onToobarOpen} fontSize="0.7rem" opacity="0.6" cursor="pointer" p="2px" className={toolbarOpen ? "color-text" : null}>
                         <FaFilter />
                     </Box>}
                 <Box height={props.height} width={props.width - (toolbarOpen ? panel.plugins.log.toolbar.width : 1)} transition="all 0.3s" py="2">
                     {panel.plugins.log.chart.show && <Box className="log-panel-chart" height={panel.plugins.log.chart.height}>
-                        <LogChart data={sortedData} panel={panel} width={props.width - (toolbarOpen ? panel.plugins.log.toolbar.width : 1)} />
+                        <LogChart data={sortedData} panel={panel} width={props.width - (toolbarOpen ? panel.plugins.log.toolbar.width : 1)} viewOptions={viewOptions}/>
                     </Box>}
                     <VStack alignItems="left" divider={<StackDivider />}  >
                         {
@@ -204,7 +213,7 @@ const LogPanel = (props: LogPanelProps) => {
                     </VStack>
                 </Box>
                 {<Box className="bordered-left" width={toolbarOpen ? panel.plugins.log.toolbar.width : 0} transition="all 0.3s">
-                    <LogToolbar active={active} labels={labels} panel={panel} onCollapseAll={onCollapseAll} onSearchChange={onSearchChange} height={props.height} onActiveLabel={onActiveLabel} activeOp={activeOp} onActiveOpChange={onActiveOpChange} currentLogsCount={filterData.length} />
+                    <LogToolbar active={active} labels={labels} panel={panel} onCollapseAll={onCollapseAll} onSearchChange={onSearchChange} height={props.height} onActiveLabel={onActiveLabel} activeOp={activeOp} onActiveOpChange={onActiveOpChange} currentLogsCount={filterData.length} onViewLogChange={onViewOptionsChange} viewOptions={viewOptions}/>
                 </Box>}
             </Flex>
         }

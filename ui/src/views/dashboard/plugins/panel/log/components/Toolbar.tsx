@@ -12,11 +12,11 @@
 // limitations under the License.
 
 import { Box, Button, Divider, Flex, HStack, Input, Text, VStack } from "@chakra-ui/react"
-import { EditorInputItem } from "components/editor/EditorItem"
+import { EditorInputItem, EditorNumberItem, EditorSliderItem } from "components/editor/EditorItem"
 import React, { memo, useEffect, useMemo, useState } from "react"
 import { AiOutlineDoubleRight } from "react-icons/ai"
 import { Panel } from "types/dashboard"
-import { LogLabel, LogSeries } from "types/plugins/log"
+import { LogChartView, LogLabel, LogSeries } from "types/plugins/log"
 import { paletteColorNameToHex } from "utils/colors"
 
 interface Props {
@@ -30,11 +30,13 @@ interface Props {
     activeOp: "or" | "and"
     onActiveOpChange: any
     currentLogsCount: number
+    onViewLogChange: any
+    viewOptions: LogChartView
 }
 
 
 const LogToolbar = memo((props: Props) => {
-    const { active, labels, panel, onCollapseAll, onSearchChange, height, onActiveLabel, activeOp, onActiveOpChange, currentLogsCount } = props
+    const { active, labels, panel, onCollapseAll, onSearchChange, height, onActiveLabel, activeOp, onActiveOpChange, currentLogsCount,viewOptions,onViewLogChange } = props
     const [search, setSearch] = useState<string>("")
 
     const options = panel.plugins.log
@@ -61,16 +63,21 @@ const LogToolbar = memo((props: Props) => {
         </Box>
 
         <Divider mt="4" />
-
+        <Box fontSize="0.9rem" mt="3" px="1">
+            <Text mb="1">Chart options</Text>
+            <Text mb="1" fontSize="0.7rem" ml="2px">Max bars count</Text>
+            <EditorSliderItem  value={viewOptions.maxBars} min={15} max={100} step={1} onChange={v => { onViewLogChange({...viewOptions, maxBars: v}) }}  />
+        </Box>
+        <Divider mt="4" />      
         <Box px="1" mt="3">
             <Flex alignItems="center" justifyContent="space-between">
                 <Text mb="1" fontSize="0.9rem">Label filter</Text>
                 <Button size="xs" mt="-1" onClick={onActiveOpChange}>{activeOp.toUpperCase()}</Button>
             </Flex>
-            <VStack mt="2" alignItems="left" maxHeight={`${height - 165}px`} overflowY="scroll">
+            <VStack mt="2" alignItems="left" maxHeight={`${height - 270}px`} overflowY="scroll">
                 {
                     labels.map(label =>
-                        <Box fontSize="0.85rem" className={active.includes(label.id) ? "highlight-bordered" : "bordered"} onClick={() => onActiveLabel(label.id)} cursor="pointer" px="2" py="6px">
+                        <Box fontSize="0.85rem" className={active.includes(label.id) ? "highlight-bordered" : "bordered"} onClick={() => onActiveLabel(label.id)} cursor="pointer" px="2" py="1">
                             <Text color={paletteColorNameToHex(options.styles.labelColor)}>{label.name}</Text>
                             <HStack>
                                 <Text color={paletteColorNameToHex(options.styles.labelValueColor)}>{label.value}</Text>

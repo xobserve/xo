@@ -26,3 +26,8 @@ export interface LogLabel {
     value: string
     count?: number
 }
+
+
+export interface LogChartView {
+    maxBars: number
+}

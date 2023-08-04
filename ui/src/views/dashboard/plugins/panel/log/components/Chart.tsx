@@ -14,29 +14,35 @@
 import { useColorMode } from "@chakra-ui/react"
 import { getCurrentTimeRange } from "components/DatePicker/TimePicker"
 import ChartComponent from "components/charts/Chart"
-import { last, round } from "lodash"
+import { floor, last, round } from "lodash"
 import React, { useMemo, useState } from "react"
 import { Panel } from "types/dashboard"
-import { Log } from "types/plugins/log"
+import { Log, LogChartView } from "types/plugins/log"
 import { dateTimeFormat } from "utils/datetime/formatter"
 import { formatLabelId } from "../utils"
 import moment from "moment"
+import { isEmpty } from "utils/validate"
+import { measureText } from "utils/measureText"
 
 
 interface Props {
     data: Log[]
     panel: Panel
     width: number
+    viewOptions: LogChartView
 }
 
 const LogChart = (props: Props) => {
-    const { panel, width } = props
+    const { panel, width ,viewOptions} = props
     const options = panel.plugins.log.chart
     const [chart, setChart] = useState(null)
     const { colorMode } = useColorMode()
     let [timeline, names, data] = useMemo(() => {
         const names = []
         const data = []
+        if (isEmpty(props.data)) {
+            return [[], names, data]
+        }
         const timeRange = getCurrentTimeRange()
         let start = round(timeRange.start.getTime())
         let end = round(timeRange.end.getTime())
@@ -52,9 +58,14 @@ const LogChart = (props: Props) => {
         }
 
         // minStep is 1m
-        const timeline = calcStep(round(start / 1000), round(end / 1000)).map(t => t * 1000)
+        const minSteps = 10
+        const maxSteps = viewOptions.maxBars ?? 20
+        const [timeline0, step] = calcStep(round(start / 1000), round(end / 1000), minSteps, maxSteps)
+        const timeline = timeline0.map(t => t * 1000)
         const now = new Date()
-        const isInToday = moment(start).isSame(now, 'day')
+
+        const timeFormat = getTimeFormat(start, now, step)
+
 
         if (options.barData == "labels") {
             const labelMap = new Map()
@@ -105,7 +116,7 @@ const LogChart = (props: Props) => {
             data.push(d)
         }
 
-        return [timeline.map(t => dateTimeFormat(t, { format: isInToday ? "HH:mm:ss" : "MM-DD HH:mm:ss" })), names, data]
+        return [timeline.map(t => dateTimeFormat(t, { format: timeFormat })), names, data]
     }, [props.data])
 
     const max = Math.max(...data.flat())
@@ -118,12 +129,18 @@ const LogChart = (props: Props) => {
         stack = names.length >= 4 ? "total" : null
     }
 
+    const timeFontSize = 10
+    const [interval,rotate] = getTimeInterval(width, timeline[0], timeFontSize, timeline.length)
     const chartOptions = {
         animation: true,
         tooltip: {
             show: true,
             trigger: 'axis',
-            appendToBody: true
+            appendToBody: true,
+            axisPointer: {
+                // Use axis to trigger tooltip
+                type: 'none', // 'shadow' as default; can also be 'line' or 'shadow',
+            }
         },
         grid: {
             left: "1%",
@@ -138,17 +155,18 @@ const LogChart = (props: Props) => {
             data: timeline,
             show: true,
             axisTick: {
-                alignWithLabel: false
+                alignWithLabel: true,
             },
-
             axisLabel: {
                 show: true,
                 textStyle: {
-                    align: 'left',
-                    baseline: 'middle',
+                    align: 'right',
+                    // baseline: 'end',
                 },
+                interval: interval,
+                fontSize: rotate != 0 ? timeFontSize - 1: timeFontSize,
+                rotate: rotate,
             },
-            splitNumber: 10
         },
         yAxis: {
             type: 'value',
@@ -157,6 +175,9 @@ const LogChart = (props: Props) => {
             },
             show: stack != "total",
             splitNumber: 3,
+            axisLabel: {
+                fontSize: 11
+            }
         },
         series: names.map((name, i) => ({
             name: name,
@@ -192,11 +213,10 @@ export default LogChart
 
 // start, end, minStep : second
 // step should be 30s, 1m, 5m, 10m, 30m, 1h, 3h, 6h, 12h, 1d
-const calcStep = (start, end) => {
+const calcStep = (start, end, minSteps, maxSteps): [number[], number] => {
     const steps = [30, 60, 2 * 60, 5 * 60, 10 * 60, 20 * 60, 30 * 60, 45 * 60, 60 * 60, 2 * 60 * 60, 3 * 60 * 60, 6 * 60 * 60, 12 * 60 * 60, 24 * 60 * 60]
     const interval = end - start
-    const minSteps = 5
-    const maxSteps = 15
+
     let step;
     for (const s of steps) {
         const c = interval / s
@@ -216,7 +236,7 @@ const calcStep = (start, end) => {
         timeline.push(end)
     }
 
-    return timeline
+    return [timeline, step]
 }
 
 const getTimelineBucket = (log, timeline) => {
@@ -234,4 +254,39 @@ const getTimelineBucket = (log, timeline) => {
     }
 
     return ts
+}
+
+// start, end : ms
+// step: second
+const getTimeFormat = (start, end, step) => {
+    const mstart = moment(start)
+    let format;
+    if (mstart.isSame(end, "month")) {
+        format = ""
+    } else {
+        format = "M-"
+    }
+
+    if (mstart.isSame(end, 'day')) {
+        format += "HH:mm"
+    } else {
+        format += "DD HH:mm"
+    }
+
+    if (step < 60) {
+        format += ":ss"
+    }
+
+    return format
+}
+
+const getTimeInterval = (width, format, fontSize, ticks) => {
+    const formatWidth = (measureText(format, fontSize).width + 10)
+    const allowTicks = floor(width / formatWidth)
+    console.log("here33333: ", width, format, formatWidth, allowTicks, ticks)
+    if ((ticks / allowTicks) > 1 ) {
+        return [0,45]
+    }
+
+    return [0,0]
 }
