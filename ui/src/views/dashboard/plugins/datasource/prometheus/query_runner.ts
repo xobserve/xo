@@ -109,18 +109,18 @@ export const queryPromethuesVariableValues = async (variable: Variable) => {
     if (data.type == PromDsQueryTypes.LabelValues) {
         if (data.label) {
             // query label values : https://prometheus.io/docs/prometheus/latest/querying/api/#querying-label-values
+            let url = `/proxy/${variable.datasource}/api/v1/label/${data.label}/values?${data.useCurrentTime ? `&start=${start}&end=${end}` : ""}`
             const metrics = replaceWithVariablesHasMultiValues(data.metrics)
             for (const m of metrics) {
-                //@performance: should pass all metrics in on request &match[]
-                const url = `/proxy/${variable.datasource}/api/v1/label/${data.label}/values?${data.useCurrentTime ? `&start=${start}&end=${end}` : ""}${m ? `&match[]=${m}` : ''}`
-                const res: any = await requestApi.get(url)
-                if (res.status == "success") {
-                    result.data = result.data.concat(res.data)
-                } else {
-                    result.error = res.error
-                }
+                url += `${m ? `&match[]=${m}` : ''}`
             }
-    
+            console.log("here3333333:",data.metrics,metrics)
+            const res: any = await requestApi.get(url)
+            if (res.status == "success") {
+                result.data = result.data.concat(res.data)
+            } else {
+                result.error = res.error
+            }
         }
     } else if (data.type == PromDsQueryTypes.Metrics) {
         if (!isEmpty(data.regex)) {
@@ -171,7 +171,12 @@ export const queryPrometheusLabels = async (dsId, metric = "", useCurrentTimeran
     const start = timeRange.start.getTime() / 1000
     const end = timeRange.end.getTime() / 1000
 
-    const url = `/proxy/${dsId}/api/v1/labels?${useCurrentTimerange ? `&start=${start}&end=${end}` : ""}${metric ? `&match[]=${metric}` : ''}`
+    const metrics = replaceWithVariablesHasMultiValues(metric)
+    let url = `/proxy/${dsId}/api/v1/labels?${useCurrentTimerange ? `&start=${start}&end=${end}` : ""}`
+    for (const m of metrics) {
+        url += `${m ? `&match[]=${m}` : ''}`
+    }
+
     const res: any = await requestApi.get(url)
     if (res.status == "success") {
         return {

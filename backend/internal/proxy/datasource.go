@@ -14,6 +14,7 @@ package proxy
 
 import (
 	"bytes"
+	"fmt"
 	"io"
 	"net"
 	"net/http"
@@ -55,6 +56,7 @@ func ProxyDatasource(c *gin.Context) {
 		}
 	}
 
+	fmt.Println("here33333 ds proxy params:", params)
 	var url1 = ds.URL + targetURL + "?" + params.Encode()
 
 	// read request json body and write to new request body

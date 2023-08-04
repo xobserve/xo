@@ -87,7 +87,7 @@ export const queryLokiSeries = async (dsId, match: [string,string][], timeRange:
     if (match.length > 0) {
         let d  =""
        for (const m of match) {
-              url += `&match={${m[0]}="${m[1]}"}`
+              url += `&match[]={${m[0]}="${m[1]}"}`
        }
     }
 
