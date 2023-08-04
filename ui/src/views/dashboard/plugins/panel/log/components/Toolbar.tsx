@@ -19,6 +19,7 @@ import { AiOutlineDoubleRight } from "react-icons/ai"
 import { Panel } from "types/dashboard"
 import { LogChartView, LogLabel, LogSeries } from "types/plugins/log"
 import { paletteColorNameToHex } from "utils/colors"
+import { getLabelNameColor } from "../utils"
 
 interface Props {
     active: string[]
@@ -41,6 +42,10 @@ const LogToolbar = memo((props: Props) => {
     const [search, setSearch] = useState<string>("")
 
     const options = panel.plugins.log
+
+    const labelNameColor = id => {
+        return options.styles.labelColorSyncChart ? getLabelNameColor(id) : paletteColorNameToHex(options.styles.labelValueColor)
+    }
     return (<Box>
         <Flex justifyContent="space-between"  pl="1" pr="5" fontSize="0.85rem" mt="-3px">
             <HStack spacing={1}>
@@ -81,7 +86,7 @@ const LogToolbar = memo((props: Props) => {
                 {
                     labels.map(label =>
                         <Box fontSize="0.85rem" className={active.includes(label.id) ? "highlight-bordered" : "bordered"} onClick={() => onActiveLabel(label.id)} cursor="pointer" px="2" py="1">
-                            <Text color={paletteColorNameToHex(options.styles.labelColor)}>{label.name}</Text>
+                            <Text color={labelNameColor(label.id)}>{label.name}</Text>
                             <HStack>
                                 <Text color={paletteColorNameToHex(options.styles.labelValueColor)}>{label.value}</Text>
                                 <Text> ({label.count})</Text>

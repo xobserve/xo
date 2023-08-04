@@ -11,6 +11,20 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+import { concat } from "lodash"
+import { COLORS_HEX, ColorGenerator } from "utils/colorGenerator"
+import { colors } from "utils/colors"
+
+const idSplitter = '='
 export const formatLabelId  = (name, value) => {
-    return name + '--' + value
+    return name + idSplitter + value
+}
+
+export const getLabelFromId = id => {
+    return id.split(idSplitter)
+}
+
+const logColorGenerator = new ColorGenerator(concat(COLORS_HEX,colors))
+export const getLabelNameColor = id => {
+    return logColorGenerator.getColorByKey(id)
 }

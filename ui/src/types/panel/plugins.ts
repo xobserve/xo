@@ -52,6 +52,7 @@ export interface LogSettings {
         layout: LayoutOrientation
     }
     styles: {
+        labelColorSyncChart: boolean
         labelColor: string
         labelValueColor: string
         contentColor: string

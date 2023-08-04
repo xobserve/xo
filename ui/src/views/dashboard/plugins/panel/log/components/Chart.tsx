@@ -15,14 +15,17 @@ import { useColorMode } from "@chakra-ui/react"
 import { getCurrentTimeRange } from "components/DatePicker/TimePicker"
 import ChartComponent from "components/charts/Chart"
 import { floor, last, round } from "lodash"
-import React, { useMemo, useState } from "react"
+import React, { useEffect, useMemo, useState } from "react"
 import { Panel } from "types/dashboard"
 import { Log, LogChartView } from "types/plugins/log"
 import { dateTimeFormat } from "utils/datetime/formatter"
-import { formatLabelId } from "../utils"
+import { formatLabelId, getLabelNameColor } from "../utils"
 import moment from "moment"
 import { isEmpty } from "utils/validate"
 import { measureText } from "utils/measureText"
+import { colors, paletteColorNameToHex } from "utils/colors"
+import colorGenerator from "utils/colorGenerator"
+import paletteGenerator from "utils/paletteGenerator"
 
 
 interface Props {
@@ -30,13 +33,27 @@ interface Props {
     panel: Panel
     width: number
     viewOptions: LogChartView
+    onSelectLabel: any
+    activeLabels: string[]
 }
 
 const LogChart = (props: Props) => {
-    const { panel, width ,viewOptions} = props
+    const { panel, width ,viewOptions, onSelectLabel,activeLabels} = props
     const options = panel.plugins.log.chart
-    const [chart, setChart] = useState(null)
+    const [chart, setChart] = useState<echarts.ECharts>(null)
     const { colorMode } = useColorMode()
+    useEffect(() => {
+        if (chart) {
+            chart.on('click', function (event) {
+                if (event.seriesName != "total") {
+                    onSelectLabel(event.seriesName)
+                }        
+            })
+        }
+        return () => {
+            chart?.off('click')
+        }
+    },[chart])
     let [timeline, names, data] = useMemo(() => {
         const names = []
         const data = []
@@ -74,6 +91,11 @@ const LogChart = (props: Props) => {
                 // console.log("here3444433:", log,timestamp,ts)
                 for (const k of Object.keys(log.labels)) {
                     const labelId = formatLabelId(k, log.labels[k])
+                    if (activeLabels.length != 0) {
+                        if (!activeLabels.includes(labelId)) {
+                            continue
+                        }
+                    }
                     const old = labelMap.get(labelId)
                     if (!old) {
                         labelMap.set(labelId, {
@@ -133,6 +155,7 @@ const LogChart = (props: Props) => {
     const [interval,rotate] = getTimeInterval(width, timeline[0], timeFontSize, timeline.length)
     const chartOptions = {
         animation: true,
+        animationDuration: 500,
         tooltip: {
             show: true,
             trigger: 'axis',
@@ -198,6 +221,7 @@ const LogChart = (props: Props) => {
             emphasis: {
                 focus: 'series'
             },
+            color: getLabelNameColor(name)
             // barWidth: '90%'
         }))
     };

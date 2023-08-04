@@ -84,11 +84,16 @@ const LogPanelEditor = memo((props: PanelEditorProps) => {
             </PanelEditItem>
         </PanelAccordion>
         <PanelAccordion title={t.styles}>
-            <PanelEditItem title="Label name color">
+            <PanelEditItem title="Sync label color" desc="Use the same label name color from Chart">
+                <Switch isChecked={panel.plugins.log.styles.labelColorSyncChart} onChange={(e) => onChange((panel: Panel) => {
+                    panel.plugins.log.styles.labelColorSyncChart = e.target.checked
+                })} />
+                </PanelEditItem>
+            {!panel.plugins.log.styles.labelColorSyncChart  &&  <PanelEditItem title="Label name color">
                 <ColorPicker color={panel.plugins.log.styles.labelColor} onChange={(v) => onChange((panel: Panel) => {
                     panel.plugins.log.styles.labelColor = v
                 })} />
-            </PanelEditItem>
+            </PanelEditItem>}
             <PanelEditItem title="Label value color">
                 <ColorPicker color={panel.plugins.log.styles.labelValueColor} onChange={(v) => onChange((panel: Panel) => {
                     panel.plugins.log.styles.labelValueColor = v

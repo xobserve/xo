@@ -20,6 +20,7 @@ import CollapseIcon from "components/icons/Collapse";
 import { LayoutOrientation } from "types/layout";
 import { paletteColorNameToHex } from "utils/colors";
 import { Log } from "types/plugins/log";
+import { formatLabelId, getLabelNameColor } from "../utils";
 
 interface LogItemProps {
     log: Log
@@ -78,6 +79,11 @@ const LogItem = memo((props: LogItemProps) => {
             timeString = dateTimeFormat(timestamp, { format: "YY-MM-DD HH:mm:ss" })
             break;
     }
+
+    const labelNameColor = (id) => {
+        return options.styles.labelColorSyncChart ? getLabelNameColor(id) : options.styles.labelColor
+    }
+
     return (<>
         <HStack pt="1" alignItems="start" spacing={2} pl="2" pr="4" onClick={() => setCollapsed(!collapsed)} cursor="pointer"  fontSize={options.styles.fontSize}>
             <HStack spacing={1}>
@@ -89,8 +95,8 @@ const LogItem = memo((props: LogItemProps) => {
             {options.labels.display.length > 0 &&
                 <HStack minWidth={options.labels.width ?? options.labels.display.length * 150} maxWidth={options.labels.width ?? 300} spacing={options.labels.layout == LayoutOrientation.Horizontal ? 2 : 3}>
                     {
-                        Object.keys(labels).map(key => options.labels.display.includes(key) && <LabelLayout spacing={0}>
-                            <LabelName name={key} color={options.styles.labelColor}/>
+                        Object.keys(labels).map(key => options.labels.display.includes(key) && <LabelLayout key={key + labels[key]} spacing={0}>
+                            <LabelName name={key} color={labelNameColor(formatLabelId(key, labels[key]))}/>
                             {options.labels.layout == LayoutOrientation.Horizontal &&
                                 <Text>=</Text>}
                             <LabelValue value={labels[key]} color={options.styles.labelValueColor}/>
@@ -103,9 +109,9 @@ const LogItem = memo((props: LogItemProps) => {
             !collapsed && <Box p="4" fontSize={options.styles.fontSize}>
                 <VStack alignItems="left" className="bordered" p="2">
                     {
-                        Object.keys(labels).map(key => <HStack px="2" spacing={1}  >
+                        Object.keys(labels).map(key => <HStack key={key + labels[key]} px="2" spacing={1}  >
                             <Box minWidth="20em" >
-                                <LabelName name={key} color={options.styles.labelColor}/>
+                                <LabelName name={key} color={labelNameColor(formatLabelId(key, labels[key]))}/>
                             </Box>
                             <LabelValue value={labels[key]} color={options.styles.labelValueColor}/>
 

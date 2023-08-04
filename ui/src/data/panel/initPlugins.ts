@@ -355,6 +355,7 @@ function registerEvents(options, chart) {
                 layout: LayoutOrientation.Horizontal
             },
             styles: {
+                labelColorSyncChart: true,
                 labelColor: 'inherit',
                 labelValueColor: 'inherit', 
                 contentColor: 'inherit', 

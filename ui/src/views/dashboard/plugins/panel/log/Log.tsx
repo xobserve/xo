@@ -115,6 +115,15 @@ const LogPanel = (props: LogPanelProps) => {
         storage.set(viewStorageKey, v)
     }, [])
 
+    const onSelectLabel = useCallback(id => {
+        setActive(active => {
+            if (active.includes(id)) {
+               return []
+            } else {
+               return [id]
+            }
+        })
+    },[])
     const filterData: Log[] = useMemo(() => {
         const result: Log[] = []
         for (const series of data) {
@@ -205,9 +214,9 @@ const LogPanel = (props: LogPanelProps) => {
                     </Box>}
                 <Box height={props.height} width={props.width - (toolbarOpen ? panel.plugins.log.toolbar.width : 1)} transition="all 0.3s" py="2">
                     {panel.plugins.log.chart.show && <Box className="log-panel-chart" height={panel.plugins.log.chart.height}>
-                        <LogChart data={sortedData} panel={panel} width={props.width - (toolbarOpen ? panel.plugins.log.toolbar.width : 1)} viewOptions={viewOptions}/>
+                        <LogChart data={sortedData} panel={panel} width={props.width - (toolbarOpen ? panel.plugins.log.toolbar.width : 1)} viewOptions={viewOptions} onSelectLabel={onSelectLabel} activeLabels={active}/>
                     </Box>}
-                    <VStack alignItems="left" divider={<StackDivider />}  >
+                    <VStack alignItems="left" divider={<StackDivider />}  mt="1">
                         {
                             sortedData.map(log => <LogItem log={log} panel={panel} collapsed={collaseAll} />)
                         }
