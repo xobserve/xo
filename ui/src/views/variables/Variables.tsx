@@ -73,11 +73,11 @@ const SelectVariable = ({ v }: { v: Variable }) => {
     )
 
     useEffect(() => {
-        loadValues()
+        loadValues(false)
     }, [v.value])
 
     const forceReload = async () => {
-        await loadValues()
+        await loadValues(true)
         const vars = $variables.get()
         const newVars = []
         for (const v1 of vars) {
@@ -90,26 +90,26 @@ const SelectVariable = ({ v }: { v: Variable }) => {
         $variables.set(newVars)
     }
 
-    const loadValues = async () => {
+    const loadValues = async (forceLoad = false) => {
         let result = []
         // if (v.enableAll) {
         //     result.push(VarialbeAllOption)
         // }
 
         let needQuery = true
-        if (v.refresh == VariableRefresh.Manually) {
+        if (!forceLoad && v.refresh == VariableRefresh.Manually) {
             // load from storage first
             let vs = storage.get(VariableManuallyChangedKey + v.id)
             if (vs) {
                 result = [...result, ...vs]
                 needQuery = false
             }
-    
+
         }
         if (needQuery) {
-            console.log("here44444 load values:",v.name)
+            console.log("here44444 load values:", v.name)
             const res = await queryVariableValues(v)
-            console.log("load variable values( query )", v.name,res)
+            console.log("load variable values( query )", v.name, res)
             if (res.error) {
                 result = []
             } else {
@@ -118,7 +118,7 @@ const SelectVariable = ({ v }: { v: Variable }) => {
                 if (v.refresh == VariableRefresh.Manually) {
                     storage.set(VariableManuallyChangedKey + v.id, res.data)
                 }
-            }  
+            }
         }
 
         const oldSelected = v.selected
@@ -147,10 +147,10 @@ const SelectVariable = ({ v }: { v: Variable }) => {
                     // Two consecutive requests will miss the cache, because the result of first request has not been save to cache, but the second request has arrived
                     setTimeout(() => {
                         dispatch(VariableForceReload + variable.id)
-                    },100)
+                    }, 100)
                 }
             }
-        
+
         }
         setValues(result)
         v.values = result
@@ -194,7 +194,7 @@ export const setVariableSelected = (variables: Variable[]) => {
         sv = {}
     }
 
-  
+
     for (const v of variables) {
         const selected = selectedInUrl[v.name] ?? sv[v.id]
         if (!selected) {
