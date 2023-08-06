@@ -359,7 +359,7 @@ return (<>
                         </FormItem>
                         <FormItem title={t1.refresh}>
                             <RadionButtons options={Object.keys(VariableRefresh).map(k =>
-                                ({ label: t1[k], value: k })
+                                ({ label: t1[k], value: t1[k]})
                             )} value={variable.refresh} onChange={(v) => setVariable({ ...variable, refresh: v })} />
                         </FormItem>
 
