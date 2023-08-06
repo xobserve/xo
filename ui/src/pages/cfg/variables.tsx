@@ -381,7 +381,7 @@ return (<>
                         </FormItem>
 
                         {variable.type == VariableQueryType.Custom && <FormItem title={t1.queryValue}>
-                            <Input width="400px" placeholder={t1.valueTips} value={variable.value} onChange={e => { setVariable({ ...variable, value: e.currentTarget.value }) }} onBlur={() => onQueryResult({error:null,data: variable.value.split(',')})} />
+                            <Input width="400px" placeholder={t1.valueTips} value={variable.value} onChange={e => { setVariable({ ...variable, value: e.currentTarget.value?.trim() }) }} onBlur={() => onQueryResult({error:null,data: variable.value.split(',')})} />
                         </FormItem>}
 
                         {variable.type == VariableQueryType.Datasource && <>
