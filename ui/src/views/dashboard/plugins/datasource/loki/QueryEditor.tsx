@@ -27,8 +27,9 @@ const LokiQueryEditor = ({ datasource, query, onChange }: DatasourceEditorProps)
     const [tempQuery, setTempQuery] = useState<PanelQuery>(cloneDeep(query))
 
     useEffect(() => {
-        queryLokiSeries(datasource.id, [["filename","/var/log/a.log"],["job","varlogs"]], getCurrentTimeRange())
+        queryLokiSeries(datasource.id, [`{filename: "/var/log/a.log"}`, `{job : "varlogs"}`], getCurrentTimeRange())
     },[])
+
     return (
         <Form spacing={1}>
             <FormItem size="sm" title="Query">

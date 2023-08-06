@@ -387,7 +387,7 @@ return (<>
                         {variable.type == VariableQueryType.Datasource && <>
                             <FormItem title={t1.selectDs}>
                                 <Box width="200px">
-                                    <DatasourceSelect value={variable.datasource} onChange={id => setVariable(v => { v.datasource = id; v.value = "" })} allowTypes={[DatasourceType.Prometheus, DatasourceType.ExternalHttp, DatasourceType.Jaeger]} variant="outline" /></Box>
+                                    <DatasourceSelect value={variable.datasource} onChange={id => setVariable(v => { v.datasource = id; v.value = "" })} allowTypes={[DatasourceType.Prometheus, DatasourceType.ExternalHttp, DatasourceType.Jaeger, DatasourceType.Loki]} variant="outline" /></Box>
                             </FormItem>
                             {/* @needs-update-when-add-new-variable-datasource */}
                             {
@@ -400,7 +400,7 @@ return (<>
                                 currentDatasource?.type == DatasourceType.Jaeger && <JaegerVariableEditor variable={variable} onChange={setVariable} onQueryResult={onQueryResult} />
                             }
                              {
-                                currentDatasource?.type == DatasourceType.Jaeger && <LokiVariableEditor variable={variable} onChange={setVariable} onQueryResult={onQueryResult} />
+                                currentDatasource?.type == DatasourceType.Loki && <LokiVariableEditor variable={variable} onChange={setVariable} onQueryResult={onQueryResult} />
                             }
                         </>
                         }

@@ -96,8 +96,10 @@ export const queryPromethuesVariableValues = async (variable: Variable) => {
         data: []
     }
 
-    const data = isJSON(variable.value) ? JSON.parse(variable.value) : null
-    if (!data) {
+    let data;
+    try {
+        data = JSON.parse(variable.value)
+    } catch (error) {
         return result
     }
 

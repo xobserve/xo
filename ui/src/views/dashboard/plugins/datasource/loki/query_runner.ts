@@ -21,6 +21,10 @@ import { Variable } from "types/variable";
 import { isEmpty } from "utils/validate";
 import { round } from "lodash";
 import { prometheusToPanels } from "../prometheus/transformData";
+import { isJSON } from "utils/is";
+import { getNewestTimeRange } from "components/DatePicker/TimePicker";
+import { LokiDsQueryTypes } from "./VariableEdtiro";
+import { is } from "date-fns/locale";
 
 export const run_loki_query = async (panel: Panel, q: PanelQuery, timeRange: TimeRange, ds: Datasource) => {
     if (isEmpty(q.metrics)) {
@@ -37,7 +41,7 @@ export const run_loki_query = async (panel: Panel, q: PanelQuery, timeRange: Tim
     if (res.status !== "success") {
         console.log("Failed to fetch data from loki", res.status)
         return {
-            error: res.status !== undefined ?  `${res.errorType}: ${res.error}` : res,
+            error: res.status !== undefined ? `${res.errorType}: ${res.error}` : res,
             data: []
         }
     }
@@ -79,47 +83,95 @@ export const run_loki_query = async (panel: Panel, q: PanelQuery, timeRange: Tim
     }
 }
 
-export const queryLokiSeries = async (dsId, match: [string,string][], timeRange: TimeRange) => {
-    const start = round(timeRange.start.getTime() / 1000)
-    const end = round(timeRange.end.getTime() / 1000)
+export const queryLokiSeries = async (dsId, match: string[], timeRange: TimeRange) => {
+    let url;
+    if (timeRange) {
+        const start = round(timeRange.start.getTime() / 1000)
+        const end = round(timeRange.end.getTime() / 1000)
+        url = `/proxy/${dsId}/loki/api/v1/series?start=${start}&end=${end}`
+    } else {
+        url = `/proxy/${dsId}/loki/api/v1/series?`
+    }
 
-    let url = `/proxy/${dsId}/loki/api/v1/series?start=${start}&end=${end}`
-    if (match.length > 0) {
-        let d  =""
-       for (const m of match) {
-              url += `&match[]={${m[0]}="${m[1]}"}`
-       }
+    for (const k of match) {
+        if (!isEmpty(k)) {
+            url += `&match[]=${k}`
+        }
     }
 
     const res: any = await requestApi.get(url)
     if (res.status !== "success") {
         console.log("Failed to fetch data from loki", res.status)
         return {
-            error: res.status !== undefined ?  `${res.errorType}: ${res.error}` : res,
+            error: res.status !== undefined ? `${res.errorType}: ${res.error}` : res,
             data: []
         }
     }
 
 
-    if (res.data.length == 0) {
-        return {
-            error: null,
-            data: []
-        }
+    const result = []
+    for (const r of res.data) {
+        let newR = "{"
+        Object.keys(r).forEach((k, i) => {
+            newR += `${k}="${r[k]}"${i == Object.keys(r).length - 1 ? "" : ","}`
+        })
+        newR += "}"
+        result.push(newR)
     }
 
-    console.log("here333333 query loki series", res.data)
-    return []
+    return {
+        error: null,
+        data: result
+    }
 }
 
 
 
 export const queryLokiVariableValues = async (variable: Variable) => {
-    const result = {
+    let result = {
         error: null,
         data: []
     }
 
+
+    let data;
+    try {
+        data = JSON.parse(variable.value)
+    } catch (error) {
+        return result
+    }
+
+
+    const timeRange = getNewestTimeRange()
+    const start = timeRange.start.getTime() / 1000
+    const end = timeRange.end.getTime() / 1000
+
+
+    if (data.type == LokiDsQueryTypes.LabelValues) {
+        if (data.label) {
+            // query label values : https://prometheus.io/docs/prometheus/latest/querying/api/#querying-label-values
+            let url = `/proxy/${variable.datasource}/api/v1/label/${data.label}/values?${data.useCurrentTime ? `&start=${start}&end=${end}` : ""}`
+            const metrics = replaceWithVariablesHasMultiValues(data.metrics)
+            for (const m of metrics) {
+                url += `${m ? `&match[]=${m}` : ''}`
+            }
+            const res: any = await requestApi.get(url)
+            if (res.status == "success") {
+                result.data = result.data.concat(res.data)
+            } else {
+                result.error = res.error
+            }
+        }
+    } else if (data.type == LokiDsQueryTypes.Series) {
+        const res = await queryLokiSeries(variable.datasource, data.seriesSelector.split(' '), data.useCurrentTime ? timeRange : null)
+        if (res.error) {
+            result.error = res.error
+        } else {
+            result.data = res.data
+        }
+    } else if (data.type == LokiDsQueryTypes.LabelNames) {
+        // result = await queryPrometheusLabels(variable.datasource)
+    }
 
     return result
 }
