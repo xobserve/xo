@@ -111,16 +111,8 @@ export const queryLokiSeries = async (dsId, match: [string,string][], timeRange:
     console.log("here333333 query loki series", res.data)
     return []
 }
-export const replaceLokiQueryWithVariables = (query: PanelQuery) => {
-    const showServices0 = query.data?.showServices ? query.data?.showServices?.split(",") : []
 
-    const ss = []
-    showServices0.forEach((item, i) => {
-        ss.push(...replaceWithVariablesHasMultiValues(item))
-    })
-    query.data.showServices = ss
 
-}
 
 export const queryLokiVariableValues = async (variable: Variable) => {
     const result = {

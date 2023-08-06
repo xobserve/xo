@@ -18,7 +18,7 @@ import DashboardHeader from "src/views/dashboard/DashboardHeader"
 import DashboardGrid from "src/views/dashboard/grid/DashboardGrid"
 import { clone, cloneDeep, concat, defaultsDeep, find, findIndex } from "lodash"
 import { Variable } from "types/variable"
-import { setVariableSelected } from "src/views/variables/Variables"
+import { setVariableSelected } from "src/views/variables/SelectVariable"
 import { prevQueries, prevQueryData } from "src/views/dashboard/grid/PanelGrid"
 import { unstable_batchedUpdates } from "react-dom"
 import useBus, { dispatch } from 'use-bus'

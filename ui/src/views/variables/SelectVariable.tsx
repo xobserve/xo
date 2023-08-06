@@ -32,6 +32,7 @@ import { addParamToUrl, getUrlParams } from "utils/url"
 import { queryLokiVariableValues } from "../dashboard/plugins/datasource/loki/query_runner"
 import { $variables } from "./store"
 import usePrevious from 'react-use/lib/usePrevious';
+import { parseVariableFormat } from "utils/format"
 
 interface Props {
     variables: Variable[]
@@ -92,9 +93,9 @@ const SelectVariable = ({ v }: { v: Variable }) => {
 
     const loadValues = async (forceLoad = false) => {
         let result = []
-        // if (v.enableAll) {
-        //     result.push(VarialbeAllOption)
-        // }
+        if (v.enableAll) {
+            result.push(VarialbeAllOption)
+        }
 
         let needQuery = true
         if (!forceLoad && v.refresh == VariableRefresh.Manually) {
@@ -137,11 +138,18 @@ const SelectVariable = ({ v }: { v: Variable }) => {
             }
         }
 
+        const vars = $variables.get()
         if (v.selected != oldSelected) {
-            const vars = $variables.get()
+            const referVars = parseVariableFormat(v.value)
             console.log(`here4444 var ${v.name}'s selected changes, the var refer to it will also change `, v.selected, oldSelected)
             for (const variable of vars) {
-                if (v.id != variable.id && variable.value.indexOf('${' + v.name + '}') >= 0) {
+                // to avoid circle refer evets: 
+                // A refer B : A send event to B, then B refer to A, B send event to A
+                if (v.id == variable.id || referVars.includes(variable.name)) {
+                    continue
+                }
+
+                if (variable.value.indexOf('${' + v.name + '}') >= 0) {
                     // console.log(`here444444 var ${variable.name} value changes, var ${v.name} which refer to it will also change`)
                     // to avoid cache missing ,add a interval here
                     // Two consecutive requests will miss the cache, because the result of first request has not been save to cache, but the second request has arrived
@@ -154,6 +162,10 @@ const SelectVariable = ({ v }: { v: Variable }) => {
         }
         setValues(result)
         v.values = result
+        if (needQuery) {
+          console.log("here333333 vars:",v.name,cloneDeep(vars))
+          $variables.set([...vars])
+        }
     }
 
 
@@ -171,7 +183,7 @@ const SelectVariable = ({ v }: { v: Variable }) => {
                     const vs = value.filter(v1 => values.includes(v1))
                     setVariableValue(v, vs.length == 0 ? "" : vs.join(VariableSplitChar))
                 }}
-                options={values.map(v => ({ value: v, label: v == VarialbeAllOption ? "ALL" : v }))}
+                options={values.map(v => ({ value: v, label: v }))}
                 exclusive={VarialbeAllOption}
                 isMulti={v.enableMulti}
                 showArrow={false}
@@ -231,10 +243,15 @@ export const setVariableValue = (variable: Variable, value) => {
         storage.set(vkey, sv)
     }
 
-
-
+    const referVars = parseVariableFormat(variable.value)
     for (const v of vars) {
-        if (v.id != variable.id && v.value.indexOf('${' + variable.name + '}') >= 0) {
+        // to avoid circle refer evets: 
+        // A refer B : A send event to B, then B refer to A, B send event to A
+        if (v.id == variable.id || referVars.includes(v.name)) {
+            continue
+        }
+
+        if (v.value.indexOf('${' + variable.name + '}') >= 0) {
             console.log(`here444444 var ${variable.name} value changes, var ${v.name} which refer to it will also change`)
             dispatch(VariableForceReload + v.id)
         }

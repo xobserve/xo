@@ -14,7 +14,6 @@ import { isEmpty } from "lodash"
 import { Panel, PanelQuery, PanelType } from "types/dashboard"
 import { NodeGraphPluginData } from "types/plugins/nodeGraph"
 import { TimeRange } from "types/time"
-import { replaceWithVariablesHasMultiValues } from "utils/variable"
 
 export const jaegerToPanels = (rawData: any[], panel: Panel, query: PanelQuery, range: TimeRange) => {
     if (rawData.length == 0) {

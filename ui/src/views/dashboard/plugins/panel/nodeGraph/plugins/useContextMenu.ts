@@ -14,7 +14,7 @@ import G6 from "@antv/g6";
 import { useToast } from "@chakra-ui/react";
 import { isFunction } from "lodash";
 import { useNavigate } from "react-router-dom";
-import { setVariable } from "src/views/variables/Variables";
+import { setVariable } from "src/views/variables/SelectVariable";
 import { NodeGraphSettings } from "types/panel/plugins";
 import { genDynamicFunction } from "utils/dynamicCode";
 

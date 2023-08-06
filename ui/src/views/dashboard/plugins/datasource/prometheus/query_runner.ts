@@ -198,7 +198,7 @@ export const replacePrometheusQueryWithVariables = (query: PanelQuery) => {
         if (v) {
             let selected = []
             if (v.selected == VarialbeAllOption) {
-                selected = v.values
+                selected = v.values?.filter(v1 => v1 != VarialbeAllOption) ?? []
             } else {
                 selected = v.selected?.split(VariableSplitChar) ?? []
             }

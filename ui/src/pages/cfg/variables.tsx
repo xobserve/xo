@@ -33,7 +33,7 @@ import { Datasource } from "types/datasource"
 import { Variable, VariableQueryType, VariableRefresh } from "types/variable"
 import { useImmer } from "use-immer"
 import { requestApi } from "utils/axios/request"
-import { queryVariableValues } from "src/views/variables/Variables"
+import { queryVariableValues } from "src/views/variables/SelectVariable"
 import storage from "utils/localStorage"
 import { VariableManuallyChangedKey } from "src/data/storage-keys"
 import { dispatch } from "use-bus"
@@ -367,9 +367,9 @@ return (<>
                             <Switch defaultChecked={variable.enableMulti} onChange={(e) => setVariable({ ...variable, enableMulti: e.currentTarget.checked })} />
                         </FormItem>
 
-                        {/* <FormItem title="Include all" alignItems="center">
+                        <FormItem title="Include all" alignItems="center">
                                 <Switch defaultChecked={variable.enableAll} onChange={(e) => setVariable({ ...variable, enableAll: e.currentTarget.checked })} />
-                            </FormItem> */}
+                            </FormItem>
 
                     </FormSection>
 

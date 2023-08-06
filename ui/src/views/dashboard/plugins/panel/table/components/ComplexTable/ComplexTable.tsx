@@ -27,7 +27,7 @@ import moment from 'moment';
 import { ThresholdsConfig, ThresholdsMode } from 'types/threshold';
 import { getThreshold } from 'components/Threshold/utils';
 import lodash from 'lodash'
-import { setVariable } from 'src/views/variables/Variables';
+import { setVariable } from 'src/views/variables/SelectVariable';
 import { useNavigate } from 'react-router-dom';
 import { setDateTime } from 'components/DatePicker/DatePicker';
 import { isEmpty } from 'utils/validate';

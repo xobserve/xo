@@ -20,7 +20,7 @@ import { DatasourceMaxDataPoints, DatasourceMinInterval, PANEL_HEADER_HEIGHT, St
 import { cloneDeep, isEqual, isFunction } from "lodash";
 import { TimeRange } from "types/time";
 import { Variable } from "types/variable";
-import { replaceQueryWithVariables, replaceWithVariables } from "utils/variable";
+import { hasVariableFormat, replaceQueryWithVariables, replaceWithVariables } from "utils/variable";
 import storage from "utils/localStorage";
 import useBus, { dispatch } from 'use-bus'
 import { getCurrentTimeRange } from "components/DatePicker/TimePicker";
@@ -131,6 +131,11 @@ export const PanelComponent = ({ dashboard, panel, onRemovePanel, width, height,
         for (const q0 of ds.queries) {
             const q: PanelQuery = { ...cloneDeep(q0), interval }
             replaceQueryWithVariables(q, ds.type)
+            if (hasVariableFormat(q.metrics)) {
+                // there are variables still not replaced, maybe because variable's loadValues has not completed
+                continue 
+            }
+            
             const id = formatQueryId(ds.id, dashboardId, panel.id, q.id, panel.type)
             const prevQuery = prevQueries.get(id)
             // console.log("here333333 get query:", id, prevQuery )

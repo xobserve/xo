@@ -25,7 +25,7 @@ import { requestApi } from 'utils/axios/request'
 import { config, UIConfig } from 'src/data/configs/config'
 import { Datasource } from 'types/datasource'
 import { Variable } from 'types/variable'
-import { queryVariableValues, setVariableSelected } from './views/variables/Variables'
+import { queryVariableValues, setVariableSelected } from './views/variables/SelectVariable'
 import { VarialbeAllOption } from 'src/data/variable'
 import AntdWrapper from 'components/AntdWrapper'
 import { routes } from './routes';

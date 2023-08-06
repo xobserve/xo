@@ -19,11 +19,10 @@ import { replaceHttpQueryWithVariables } from "src/views/dashboard/plugins/datas
 import { VariableSplitChar, VarialbeAllOption } from "src/data/variable";
 import { gvariables } from "src/App";
 import { cloneDeep, isEmpty } from "lodash";
-import { replaceLokiQueryWithVariables } from "src/views/dashboard/plugins/datasource/loki/query_runner";
 import { $variables } from "src/views/variables/store";
 
 export const hasVariableFormat = (s: string) => {
-    return parseVariableFormat(s).length > 0
+    return s.includes("${")
 }
 
 // replace ${xxx} format with corresponding variable
@@ -63,7 +62,8 @@ export const replaceQueryWithVariables = (q: PanelQuery, datasource: DatasourceT
             replaceHttpQueryWithVariables(q)
             break
         case DatasourceType.Loki:
-            replaceLokiQueryWithVariables(q)
+            replacePrometheusQueryWithVariables(q)
+            break
         default:
             break;
     } 
@@ -85,11 +85,13 @@ export const  replaceWithVariablesHasMultiValues =  (s: string, replaceAllWith?)
                 if (replaceAllWith) {
                     selected.push(replaceAllWith)
                 } else {
-                    selected = v.values
+                    selected = v.values??[]
                 } 
             } else {
                 selected = isEmpty(v.selected) ? [] : v.selected.split(VariableSplitChar)
             }
+
+       
             res = selected.map(v => s.replace(`\${${f}}`, v))
         }
     }
@@ -98,5 +100,9 @@ export const  replaceWithVariablesHasMultiValues =  (s: string, replaceAllWith?)
         res.push(s)
     }
 
+    // console.log("here333333:",s, res)
+
     return res
 }
+
+
