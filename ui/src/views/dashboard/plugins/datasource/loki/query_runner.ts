@@ -125,7 +125,30 @@ export const queryLokiSeries = async (dsId, match: string[], timeRange: TimeRang
     }
 }
 
+export const queryLokiLabelNames = async (dsId,timeRange: TimeRange) => {
+    let url;
+    if (timeRange) {
+        const start = round(timeRange.start.getTime() / 1000)
+        const end = round(timeRange.end.getTime() / 1000)
+        url = `/proxy/${dsId}/loki/api/v1/labels?start=${start}&end=${end}`
+    } else {
+        url = `/proxy/${dsId}/loki/api/v1/labels?`
+    }
 
+    const res: any = await requestApi.get(url)
+    if (res.status !== "success") {
+        console.log("Failed to fetch data from loki", res.status)
+        return {
+            error: res.status !== undefined ? `${res.errorType}: ${res.error}` : res,
+            data: []
+        }
+    }
+
+    return {
+        error: null,
+        data: res.data
+    }
+}
 
 export const queryLokiVariableValues = async (variable: Variable) => {
     let result = {
@@ -170,7 +193,12 @@ export const queryLokiVariableValues = async (variable: Variable) => {
             result.data = res.data
         }
     } else if (data.type == LokiDsQueryTypes.LabelNames) {
-        // result = await queryPrometheusLabels(variable.datasource)
+        const res = await queryLokiLabelNames(variable.datasource, data.useCurrentTime ? timeRange : null)
+        if (res.error) {
+            result.error = res.error
+        } else {
+            result.data = res.data
+        }
     }
 
     return result

@@ -45,7 +45,6 @@ const LokiVariableEditor = ({ variable, onChange, onQueryResult }: DatasourceVar
 
     const loadVariables = async (v: Variable) => {
         const result = await queryLokiVariableValues(v)
-        console.log("here3333333:",result)
         onQueryResult(result)
     }
 
@@ -69,14 +68,14 @@ const LokiVariableEditor = ({ variable, onChange, onQueryResult }: DatasourceVar
                 {Object.keys(LokiDsQueryTypes).map(k => <option value={LokiDsQueryTypes[k]}>{LokiDsQueryTypes[k]}</option>)}
             </Select>
         </FormItem>
-        <FormItem title="Series selector" desc={` 'Optional. If defined, a list of values for the specified log series selector is returned. For example: {label="value"}, you can also select multi series, split with space: {label="value1"} {label="value2"}'`}>
+        {data.type == LokiDsQueryTypes.Series && <FormItem title="Series selector" desc={` 'Optional. If defined, a list of values for the specified log series selector is returned. For example: {label="value"}, you can also select multi series, split with space: {label="value1"} {label="value2"}'`}>
             <EditorInputItem value={data.seriesSelector} onChange={v => {
                 data.seriesSelector = v
                 onChange(variable => {
                     variable.value = JSON.stringify(data)
                 })
             }} placeholder="optional series selector" />
-        </FormItem>
+        </FormItem>}
         {/* {
                 data.type == PromDsQueryTypes.LabelValues && <>
                     <FormItem title="Metric" desc={t1.metricTips}>
