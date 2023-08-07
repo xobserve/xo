@@ -157,7 +157,7 @@ export const PanelComponent = ({ dashboard, panel,variables, onRemovePanel, widt
         for (const q0 of ds.queries) {
             const q: PanelQuery = { ...cloneDeep(q0), interval }
             replaceQueryWithVariables(q, datasource.type)
-            if (hasVariableFormat(q.metrics)) {
+            if (datasource.type != DatasourceType.TestData && hasVariableFormat(q.metrics)) {
                 // there are variables still not replaced, maybe because variable's loadValues has not completed
                 continue 
             }

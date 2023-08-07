@@ -24,13 +24,15 @@ import { cloneDeep, uniqBy } from "lodash";
 import { replaceWithVariables, replaceWithVariablesHasMultiValues } from "utils/variable";
 import { getNewestTimeRange } from "components/DatePicker/TimePicker";
 import React from "react";
+import { getDatasource } from "utils/datasource";
 
 
 
 const TracePanelWrapper = (props: PanelProps) => {
+    const ds = getDatasource(props.panel.datasource.id)
     return (<>
         {
-           (props.panel.datasource.type != DatasourceType.Jaeger && props.panel.datasource.type != DatasourceType.TestData) 
+           (ds.type != DatasourceType.Jaeger && ds.type != DatasourceType.TestData) 
                 ?
                 <Center height="100%">Trace panel only support Jaeger and Testdata datasource</Center>
                 :
@@ -44,11 +46,12 @@ export default TracePanelWrapper
 
 const TracePanel = (props: PanelProps) => {
     const [rawTraces, setRawTraces] = useState<TraceData[]>(null)
+    const ds = getDatasource(props.panel.datasource.id)
     useEffect(() => {
-        if (props.panel.datasource.type == DatasourceType.TestData) {
+        if (ds.type == DatasourceType.TestData) {
             onSearch(null, null, null, null, null, null, true)
         }
-    }, [props.panel.datasource.type, props.data]
+    }, [ds.type, props.data]
     )
     const onSearch = async (service, operation, tags, min, max, limit, useLatestTime) => {
         tags = convTagsLogfmt(tags);
@@ -56,7 +59,7 @@ const TracePanel = (props: PanelProps) => {
         if (!useLatestTime) {
             tr = props.timeRange
         }
-        switch (props.panel.datasource.type) {
+        switch (ds.type) {
             case DatasourceType.Jaeger:
                 tags = replaceWithVariables(tags)
                 min = replaceWithVariables(min)
@@ -86,7 +89,7 @@ const TracePanel = (props: PanelProps) => {
 
     const onSearchIds = (traceIds) => {
         const ids = traceIds.split(',')
-        switch (props.panel.datasource.type) {
+        switch (ds.type) {
             case DatasourceType.Jaeger:
                 Promise.all(ids.map(id => queryJaegerTrace(props.panel.datasource.id, id))).then(res => {
                     setRawTraces(res.filter(r => r).flat())
@@ -103,7 +106,7 @@ const TracePanel = (props: PanelProps) => {
     const traces = useMemo(() => rawTraces?.map(transformTraceData), [rawTraces])
 
     return (<>
-        {(props.panel.datasource.type != DatasourceType.Jaeger && props.panel.datasource.type != DatasourceType.TestData) ? <Center height="100%">No data</Center> :
+        {(ds.type != DatasourceType.Jaeger && ds.type != DatasourceType.TestData) ? <Center height="100%">No data</Center> :
             <HStack alignItems="top" px="2" py="1">
                 <Box width="400px" pt="2" pl="1">
                     <TraceSearchPanel timeRange={props.timeRange} dashboardId={props.dashboardId} panel={props.panel} onSearch={onSearch} onSearchIds={onSearchIds} />

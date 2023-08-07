@@ -22,11 +22,12 @@ import ScrollManager from "./scroll/scrollManager"
 import { cancel as cancelScroll, scrollBy, scrollTo } from './scroll/scrollPage';
 import React from "react";
 import { queryTraceInTestData } from "src/views/dashboard/plugins/datasource/testdata/query_runner"
+import { getDatasource } from "utils/datasource"
 
 const TraceDetailWrapper = ({id,dsId}) => {
     const [trace, setTrace] = useState<Trace>(null)
     const [scrollManager, setScrollManager] = useState(null)
-    const datasource = datasources.find(ds => ds.id == dsId)
+    const datasource = getDatasource(dsId)
     useEffect(() => {
         load()
 

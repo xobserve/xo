@@ -19,6 +19,7 @@ import { shareUrlParams } from "src/views/dashboard/DashboardShare"
 import { isEmpty } from "utils/validate"
 import { useSearchParams } from "react-router-dom"
 import { $variables } from "src/views/variables/store"
+import { getDatasource } from "utils/datasource"
 interface Props {
     panel: Panel
     onSearch: any
@@ -46,6 +47,7 @@ const TraceSearchPanel = ({ timeRange, dashboardId, panel, onSearch, onSearchIds
     const [limit, setLimit] = useState(searchParams.get('limit') ?? (lastSearch.limit ?? 20))
     const [traceIds, setTraceIds] = useState<string>(searchParams.get('traceIds') ?? null)
     const [useLatestTime, setUseLatestTime] = useState(true)
+    const ds = getDatasource(panel.datasource.id)
     useEffect(() => {
         return () => {
             delete traceServicesCache[dashboardId + panel.id]
@@ -66,7 +68,7 @@ const TraceSearchPanel = ({ timeRange, dashboardId, panel, onSearch, onSearchIds
 
     useEffect(() => {
         loadServices()
-    }, [panel.datasource.type])
+    }, [ds.type])
 
     useEffect(() => {
         if (service) {
@@ -107,7 +109,7 @@ const TraceSearchPanel = ({ timeRange, dashboardId, panel, onSearch, onSearchIds
 
 
     const loadServices = async () => {
-        switch (panel.datasource.type) {
+        switch (ds.type) {
             case DatasourceType.Jaeger:
                 const res = await queryJaegerServices(panel.datasource.id)
                 const ss = sortBy(res)
@@ -133,7 +135,7 @@ const TraceSearchPanel = ({ timeRange, dashboardId, panel, onSearch, onSearchIds
     }
 
     const loadOperations = async (s?) => {
-        switch (panel.datasource.type) {
+        switch (ds.type) {
             case DatasourceType.Jaeger:
                 const services = s ?? replaceWithVariablesHasMultiValues(service)
                 traceServicesCache[dashboardId + panel.id] = services

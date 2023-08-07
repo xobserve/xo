@@ -6,6 +6,7 @@ import colorGenerator from "utils/colorGenerator"
 import { FaInfoCircle } from "react-icons/fa"
 import moment from "moment"
 import React from "react";
+import { getDatasource } from "utils/datasource"
 
 interface Props {
     trace: Trace
@@ -20,10 +21,10 @@ interface Props {
 const TraceCard = ({ trace, maxDuration,checked=false, onChecked=null,simple=false,checkDisabled=false,dsId=null}: Props) => {
     const mDate = moment(trace.startTime / 1000);
     const timeStr = mDate.format('h:mm:ss a')
-
+    const ds = getDatasource(dsId)
     const onTraceClick = () => {
-        if (dsId) {
-            window.open(`/trace/${trace.traceID}/${dsId}/`)
+        if (ds) {
+            window.open(`/trace/${trace.traceID}/${ds.id}/`)
         }
     }
 

@@ -24,6 +24,7 @@ import { isJSON } from "utils/is"
 import { Variable } from "types/variable"
 import { JaegerDsQueryTypes } from "./VariableEditor"
 import { replaceWithVariablesHasMultiValues } from "utils/variable"
+import { getDatasource } from "utils/datasource"
 
 export const run_jaeger_query = async (panel: Panel, q: PanelQuery,range: TimeRange,ds: Datasource) => {
     let res = []
@@ -47,7 +48,8 @@ export const queryDependencies = async (dsId, range: TimeRange) => {
     const start= range.start.getTime()
     const end = range.end.getTime()
 
-    const res = await requestApi.get(`/proxy/${dsId}/api/dependencies?endTs=${end}&lookback=${end-start}`)
+    const ds = getDatasource(dsId)
+    const res = await requestApi.get(`/proxy/${ds.id}/api/dependencies?endTs=${end}&lookback=${end-start}`)
     return res.data
 }
 
@@ -80,12 +82,14 @@ export const replaceJaegerQueryWithVariables = (query: PanelQuery) => {
 }
 
 export const queryJaegerServices = async (dsId) => {
-    const res = await requestApi.get(`/proxy/${dsId}/api/services`)
+    const ds = getDatasource(dsId)
+    const res = await requestApi.get(`/proxy/${ds.id}/api/services`)
     return res.data
 }
 
 export const queryJaegerOperations = async (dsId, service) => {
-    const res = await requestApi.get(`/proxy/${dsId}/api/services/${service}/operations`)
+    const ds = getDatasource(dsId)
+    const res = await requestApi.get(`/proxy/${ds.id}/api/services/${service}/operations`)
     return res.data
 }
 
@@ -117,10 +121,12 @@ export const queryJaegerVariableValues = async (variable: Variable) => {
 
 
 export const queryJaegerTraces = async (dsId,timeRange:TimeRange, service,operation,tags,min,max,limit) => {
+    const ds = getDatasource(dsId)
+
     const start= timeRange.start.getTime() * 1000
     const end = timeRange.end.getTime() * 1000
 
-    let url = `/proxy/${dsId}/api/traces?limit=${limit}&start=${start}&end=${end}&service=${service}`
+    let url = `/proxy/${ds.id}/api/traces?limit=${limit}&start=${start}&end=${end}&service=${service}`
     if (operation != "all" && operation != '') {
         url += `&operation=${operation}`
     }
@@ -146,6 +152,7 @@ export const queryJaegerTraces = async (dsId,timeRange:TimeRange, service,operat
 }
 
 export const queryJaegerTrace = async (dsId, traceId) => {
-    const res = await requestApi.get(`/proxy/${dsId}/api/traces/${traceId}`)
+    const ds = getDatasource(dsId)
+    const res = await requestApi.get(`/proxy/${ds.id}/api/traces/${traceId}`)
     return res.data
 }
