@@ -69,7 +69,7 @@ export const PanelGrid = memo((props: PanelGridProps) => {
     const variables = useStore($variables)
     useEffect(() => {
         depsCheck.current = setInterval(() => {
-            console.log("here3333 check panel refer vars inited", props.panel.id)
+            console.log("check panel refer vars inited", props.panel.id)
             let inited = true
             const vars = $variables.get()
             for (const q of props.panel.datasource.queries) {
@@ -93,14 +93,13 @@ export const PanelGrid = memo((props: PanelGridProps) => {
     useBus(
         (e) => { return e.type == TimeChangedEvent },
         (e) => {
-            console.log("here33333, time changed!", props.panel.id)
             setTr(e.data)
         }
     )
 
 
     useDedupEvent(PanelForceRebuildEvent + props.panel.id, () => {
-        console.log("here33333, panel is forced to rebuild!", props.panel.id)
+        console.log("panel is forced to rebuild!", props.panel.id)
         setForceRenderCount(f => f + 1)
     })
 
@@ -165,16 +164,14 @@ export const PanelComponent = ({ dashboard, panel,variables, onRemovePanel, widt
             
             const id = formatQueryId(ds.id, dashboardId, panel.id, q.id, panel.type)
             const prevQuery = prevQueries.get(id)
-            // console.log("here333333 get query:", id, prevQuery )
             const currentQuery = [q, timeRange, datasource.type]
-            console.log("here33333 currentQuery:", currentQuery)
             if (isEqual(prevQuery, currentQuery)) {
                 const d = prevQueryData[id]
                 if (d) {
                     data.push(d)
                 }
                 setQueryError(null)
-                console.log("here3333 query data from cache!", panel.id)
+                console.log("query data from cache!", panel.id)
                 continue
             }
 
@@ -212,7 +209,6 @@ export const PanelComponent = ({ dashboard, panel,variables, onRemovePanel, widt
             if (!isEmpty(res.data)) {
                 data.push(res.data)
                 prevQueryData[id] = res.data
-                // console.log("here333333 save query:", id, currentQuery )
                 prevQueries.set(id, currentQuery)
             }
         }

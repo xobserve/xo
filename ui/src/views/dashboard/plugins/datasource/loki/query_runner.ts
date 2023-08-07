@@ -199,8 +199,6 @@ export const queryLokiVariableValues = async (variable: Variable) => {
 
     const timeRange = getNewestTimeRange()
 
-    console.log("here333333:",data, variable.name)
-    
     if (data.type == LokiDsQueryTypes.LabelValues && !isEmpty(data.labelName)) {
         const names = replaceWithVariablesHasMultiValues(data.labelName)
         const tasks = []

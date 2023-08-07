@@ -147,7 +147,7 @@ const SelectVariable = ({ v }: { v: Variable }) => {
                     continue
                 }
 
-                if (variable.value.indexOf('${' + v.name + '}') >= 0) {
+                if ((variable.datasource?.toString() ?? variable.value).indexOf('${' + v.name + '}') >= 0) {
                     // to avoid cache missing ,add a interval here
                     // Two consecutive requests will miss the cache, because the result of first request has not been save to cache, but the second request has arrived
                     setTimeout(() => {
@@ -158,10 +158,8 @@ const SelectVariable = ({ v }: { v: Variable }) => {
 
         }
         setValues(result)
-        console.log("here33333 var", v.name,v.values)
         v.values = result
         if (needQuery) {
-          console.log("here333333 vars:",v.name,cloneDeep(vars))
           $variables.set([...vars])
         }
     }
@@ -248,8 +246,8 @@ export const setVariableValue = (variable: Variable, value) => {
         if (v.id == variable.id || referVars.includes(v.name)) {
             continue
         }
-
-        if (v.value.indexOf('${' + variable.name + '}') >= 0) {
+        const s = v.datasource ?? v.value
+        if ((v.datasource.toString() ?? v.value).indexOf('${' + variable.name + '}') >= 0) {
             dispatch(VariableForceReload + v.id)
         }
     }
@@ -279,7 +277,6 @@ export const queryVariableValues = async (v: Variable) => {
         data: null
     }
 
-    console.log("here44444:", v.name, v.type)
     if (v.type == VariableQueryType.Custom) {
         if (v.value.trim() != "") {
             result.data = v.value.split(",")
