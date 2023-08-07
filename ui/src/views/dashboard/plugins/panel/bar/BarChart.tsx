@@ -11,7 +11,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { useColorMode } from "@chakra-ui/react"
+import { useColorMode, useColorModeValue } from "@chakra-ui/react"
 import { getCurrentTimeRange } from "components/DatePicker/TimePicker"
 import ChartComponent from "components/charts/Chart"
 import { floor, last, round } from "lodash"
@@ -34,7 +34,7 @@ interface Props {
 
 const BarChart = (props: Props) => {
     const { panel, width, onSelect } = props
-    const options = panel.plugins.log.chart
+    const options = panel.plugins.bar
     const [chart, setChart] = useState<echarts.ECharts>(null)
     const { colorMode } = useColorMode()
     useEffect(() => {
@@ -56,14 +56,11 @@ const BarChart = (props: Props) => {
             return [[], names, data]
         }
         const timeRange = getCurrentTimeRange()
-        let start = round(timeRange.start.getTime())
-        let end = round(timeRange.end.getTime())
-        let dataStart;
-        let dataEnd;
-        if (panel.plugins.log.orderBy == "newest") {
-            dataStart = round(props.data[0].timestamps[0] / 1e6)
-            dataEnd = round(last(props.data[0].timestamps) / 1e6)
-        }
+        let start = round(timeRange.start.getTime()/ 1000)
+        let end = round(timeRange.end.getTime() / 1000)
+
+        const dataStart = round(props.data[0].timestamps[0])
+        const dataEnd = round(last(props.data[0].timestamps))
 
         if (dataStart < start) {
             start = dataStart
@@ -73,11 +70,11 @@ const BarChart = (props: Props) => {
         const minSteps = 10
         const maxBars = 20
         const maxSteps = maxBars ?? 20
-        const [timeline0, step] = calcStep(round(start / 1000), round(end / 1000), minSteps, maxSteps)
+        const [timeline0, step] = calcStep(start, end, minSteps, maxSteps)
         const timeline = timeline0.map(t => t * 1000)
         const now = new Date()
 
-        const timeFormat = getTimeFormat(start, now, step)
+        const timeFormat = getTimeFormat(start*1000, now, step)
 
 
 
@@ -85,26 +82,28 @@ const BarChart = (props: Props) => {
         for (const series of props.data) {
             const values = valueMap.get(series.name) ?? {}
             series.timestamps.forEach((timestamp, i) => {
-                const ts = getTimelineBucket(timestamp, timeline)
+                const ts = getTimelineBucket(timestamp * 1000, timeline)
                 values[ts] = (values[ts] ?? 0) + series.values[i]
             })
-            valueMap[series.name] = values
+            valueMap.set(series.name,values)
         }
         
-        // for (const k of Array.from(labelMap.keys())) {
-        //     names.push(k)
-        //     const v = labelMap.get(k)
-        //     const d = []
-        //     for (const ts of timeline) {
-        //         const v1 = v[ts] ?? null
-        //         d.push(v1)
-        //     }
-        //     data.push(d)
-        // }
+        console.log("here333333:",Array.from(valueMap.keys()))
+        for (const k of Array.from(valueMap.keys())) {
+            names.push(k)
+            const v = valueMap.get(k)
+            const d = []
+            for (const ts of timeline) {
+                const v1 = v[ts] ?? null
+                d.push(round(v1,3))
+            }
+            data.push(d)
+        }
 
         return [timeline.map(t => dateTimeFormat(t, { format: timeFormat })), names, data]
     }, [props.data])
 
+    console.log("here333333:",timeline, names,data)
     const max = Math.max(...data.flat())
     let stack;
     if (options.stack == "always") {
@@ -115,7 +114,7 @@ const BarChart = (props: Props) => {
         stack = names.length >= 4 ? "total" : null
     }
 
-    const timeFontSize = 10
+    const timeFontSize = 11
     const [interval, rotate] = getTimeInterval(width, timeline[0], timeFontSize, timeline.length)
     const chartOptions = {
         animation: true,
@@ -127,13 +126,17 @@ const BarChart = (props: Props) => {
             axisPointer: {
                 // Use axis to trigger tooltip
                 type: 'none', // 'shadow' as default; can also be 'line' or 'shadow',
+            },
+            backgroundColor: useColorModeValue("rgba(255,255,255,0.7)", "rgba(255,255,255,0.7)"),
+            textStyle: {
+                color: useColorModeValue("#444", "#222")
             }
         },
         grid: {
             left: "1%",
             right: "3%",
             top: "4%",
-            bottom: '0%',
+            bottom: '1%',
             padding: 0,
             containLabel: true
         },
@@ -158,9 +161,9 @@ const BarChart = (props: Props) => {
         yAxis: {
             type: 'value',
             splitLine: {
-                show: false,
+                show: true,
             },
-            show: stack != "total",
+            show: true,
             splitNumber: 3,
             axisLabel: {
                 fontSize: 11
@@ -170,7 +173,7 @@ const BarChart = (props: Props) => {
             name: name,
             data: data[i],
             type: 'bar',
-            stack: stack,
+            stack: null,
             label: {
                 show: options.showLabel != "none" ? true : false,
                 formatter: (v) => {
@@ -227,9 +230,8 @@ const calcStep = (start, end, minSteps, maxSteps): [number[], number] => {
     return [timeline, step]
 }
 
-const getTimelineBucket = (timestamp0, timeline) => {
+const getTimelineBucket = (timestamp, timeline) => {
     let ts;
-    const timestamp = round(Number(timestamp0) / 1e6)
     for (var i = 0; i <= timeline.length - 1; i++) {
         if (timestamp <= timeline[i]) {
             ts = timeline[i]

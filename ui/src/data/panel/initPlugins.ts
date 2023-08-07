@@ -375,6 +375,8 @@ function registerEvents(options, chart) {
             thresholds: [{type: null, value: null,key:null, color: 'inherit'}]
         },
         [PanelType.Bar]: {
+            showLabel: "auto",
+            stack: "auto"
         }
     }
 }

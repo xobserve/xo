@@ -42,7 +42,8 @@ export interface DisableDatasource {
 }
 
 export interface BarSettings {
-    
+    stack: "auto" | "always" | "none"
+    showLabel: "auto" | "always" | "none"
 }
 
 export interface LogSettings {

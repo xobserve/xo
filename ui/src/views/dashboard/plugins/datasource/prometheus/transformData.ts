@@ -24,10 +24,10 @@ export const prometheusToPanels = (rawData: any, panel: Panel, query: PanelQuery
         return null
     }
 
-    return prometheusToSeriesData(rawData, query, range)
+    return prometheusToSeriesData(rawData, query, range, panel.type == PanelType.Graph)
 }
 
-export const prometheusToSeriesData = (data: any, query: PanelQuery, range: TimeRange): SeriesData[] => {
+export const prometheusToSeriesData = (data: any, query: PanelQuery, range: TimeRange, expandTimeRange = false): SeriesData[] => {
     const formats = parseLegendFormat(query.legend)
 
     let res: SeriesData[] = []
@@ -38,38 +38,46 @@ export const prometheusToSeriesData = (data: any, query: PanelQuery, range: Time
             const timeValues = []
             const valueValues = []
 
-            if (!isEmpty(m.values)) {
-                let start = round(range.start.getTime() / 1000)
-                if (m.values[0][0] <= start) {
-                    start = round(m.values[0][0])
+            if (expandTimeRange) {
+                if (!isEmpty(m.values)) {
+                    let start = round(range.start.getTime() / 1000)
+                    if (m.values[0][0] <= start) {
+                        start = round(m.values[0][0])
+                    }
+    
+                    m.values.forEach((v, i) => {
+                        if (i == 0) {
+                            if (round(v[0]) == start) {
+                                timeValues.push(start)
+                                valueValues.push(parseFloat(v[1]))
+                            } else if (round(v[0]) > start) {
+                                timeValues.push(start)
+                                valueValues.push(null)
+                            }
+                        }
+    
+                        const lastTs = last(timeValues)
+                        
+                        let j = lastTs;
+                        while (j < v[0]) {
+                            j += query.interval
+                            if (j < v[0]) {
+                                timeValues.push(j)
+                                valueValues.push(null)
+                            } else {
+                                timeValues.push(v[0])
+                                valueValues.push(parseFloat(v[1]))
+                            }
+                        }
+                    })
                 }
-
-                m.values.forEach((v, i) => {
-                    if (i == 0) {
-                        if (round(v[0]) == start) {
-                            timeValues.push(start)
-                            valueValues.push(parseFloat(v[1]))
-                        } else if (round(v[0]) > start) {
-                            timeValues.push(start)
-                            valueValues.push(null)
-                        }
-                    }
-
-                    const lastTs = last(timeValues)
-                    
-                    let j = lastTs;
-                    while (j < v[0]) {
-                        j += query.interval
-                        if (j < v[0]) {
-                            timeValues.push(j)
-                            valueValues.push(null)
-                        } else {
-                            timeValues.push(v[0])
-                            valueValues.push(parseFloat(v[1]))
-                        }
-                    }
-                })
+            } else {
+                for (const v of m.values) {
+                    timeValues.push(v[0])
+                    valueValues.push(parseFloat(v[1]))
+                }
             }
+           
 
 
             const series:SeriesData = {
