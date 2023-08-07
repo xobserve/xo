@@ -18,11 +18,11 @@ import { replaceJaegerQueryWithVariables } from "src/views/dashboard/plugins/dat
 import { replaceHttpQueryWithVariables } from "src/views/dashboard/plugins/datasource/http/query_runner";
 import { VariableSplitChar, VarialbeAllOption } from "src/data/variable";
 import { gvariables } from "src/App";
-import { cloneDeep, isEmpty } from "lodash";
 import { $variables } from "src/views/variables/store";
+import { isEmpty } from "./validate";
 
 export const hasVariableFormat = (s: string) => {
-    return s.includes("${")
+    return isEmpty(s) ? false : s.includes("${")
 }
 
 // replace ${xxx} format with corresponding variable

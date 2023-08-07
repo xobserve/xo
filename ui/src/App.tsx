@@ -77,19 +77,19 @@ const AppView = () => {
 
   const loadVariables = async () => {
     const res = await requestApi.get(`/variable/all`)
-    for (const v of res.data) {
-      v.values = []
-      // get the selected value for each variable from localStorage
-    }
+    // for (const v of res.data) {
+    //   v.values = []
+    //   // get the selected value for each variable from localStorage
+    // }
     setVariableSelected(res.data)
 
-    for (const v of res.data) {
-      if (v.selected == VarialbeAllOption) {
-        const res1 = await queryVariableValues(v)
-        v.values = res1.data ?? []
-      }
-      // get the selected value for each variable from localStorage
-    }
+    // for (const v of res.data) {
+    //   if (v.selected == VarialbeAllOption) {
+    //     const res1 = await queryVariableValues(v)
+    //     v.values = res1.data ?? []
+    //   }
+    //   // get the selected value for each variable from localStorage
+    // }
     gvariables = res.data
     $variables.set(res.data)
   }

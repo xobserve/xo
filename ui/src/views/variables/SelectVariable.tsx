@@ -158,6 +158,7 @@ const SelectVariable = ({ v }: { v: Variable }) => {
 
         }
         setValues(result)
+        console.log("here33333 var", v.name,v.values)
         v.values = result
         if (needQuery) {
           console.log("here333333 vars:",v.name,cloneDeep(vars))

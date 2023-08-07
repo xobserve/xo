@@ -18,7 +18,7 @@ import { Datasource } from "types/datasource"
 
 export const getDatasource = (k):Datasource => {
     let currentDatasource
-    if (hasVariableFormat(k)) {
+    if (hasVariableFormat(k.toString())) {
         const name = replaceWithVariables(k)
         currentDatasource = datasources?.find(ds => ds.name == name)
     } else {

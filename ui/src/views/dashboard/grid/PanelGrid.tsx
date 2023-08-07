@@ -11,10 +11,10 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 import { Dashboard, DatasourceType, Panel, PanelProps, PanelQuery, PanelType } from "types/dashboard"
-import { Box, Center, HStack, Menu, MenuButton, MenuDivider, MenuItem, MenuList, Modal, ModalBody, ModalCloseButton, ModalContent, ModalHeader, ModalOverlay, Tab, TabList, TabPanel, TabPanels, Tabs, Text, Textarea, Tooltip, useColorMode, useColorModeValue, useDisclosure, useToast } from "@chakra-ui/react";
+import { Box, Center, HStack, Menu, MenuButton, MenuDivider, MenuItem, MenuList, Modal, ModalBody, ModalCloseButton, ModalContent, ModalHeader, ModalOverlay, Tab, TabList, TabPanel, TabPanels, Tabs, Text, Textarea, Tooltip, useColorMode, useColorModeValue, useDisclosure, usePrevious, useToast } from "@chakra-ui/react";
 import { FaBook, FaBug, FaEdit, FaRegCopy, FaRegEye, FaTrashAlt } from "react-icons/fa";
 import { IoMdInformation } from "react-icons/io";
-import { memo, useCallback, useEffect, useMemo, useState } from "react";
+import { memo, useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import { run_prometheus_query } from "../plugins/datasource/prometheus/query_runner";
 import { DatasourceMaxDataPoints, DatasourceMinInterval, PANEL_HEADER_HEIGHT, StorageCopiedPanelKey } from "src/data/constants";
 import { cloneDeep, isEqual, isFunction } from "lodash";
@@ -48,6 +48,8 @@ import { paletteColorNameToHex } from "utils/colors";
 import { isEmpty } from "utils/validate";
 import { run_loki_query } from "../plugins/datasource/loki/query_runner";
 import { $variables } from "src/views/variables/store";
+import { getDatasource } from "utils/datasource";
+import { parseVariableFormat } from "utils/format";
 interface PanelGridProps {
     dashboard: Dashboard
     panel: Panel
@@ -61,9 +63,33 @@ interface PanelGridProps {
 
 export const PanelGrid = memo((props: PanelGridProps) => {
     const [forceRenderCount, setForceRenderCount] = useState(0)
-
+    const [depsInited, setDepsInited] = useState(false)
     const [tr, setTr] = useState<TimeRange>(getCurrentTimeRange())
+    const depsCheck = useRef(null)
+    const variables = useStore($variables)
+    useEffect(() => {
+        depsCheck.current = setInterval(() => {
+            console.log("here3333 check panel refer vars inited", props.panel.id)
+            let inited = true
+            const vars = $variables.get()
+            for (const q of props.panel.datasource.queries) {
+                const f = parseVariableFormat(q.metrics)
+                for (const v of f) {
+                    const variable = vars.find(v1 => v1.name == v)
+                    if (variable?.values === undefined) {
+                        inited = false 
+                        return 
+                    }
+                }
+            }
 
+            if (inited) {
+                setDepsInited(true)
+                clearInterval(depsCheck.current)
+                depsCheck.current = null
+            }
+        },50)
+    },[])
     useBus(
         (e) => { return e.type == TimeChangedEvent },
         (e) => {
@@ -81,7 +107,7 @@ export const PanelGrid = memo((props: PanelGridProps) => {
 
     return (
         <PanelBorder width={props.width} height={props.height} border={props.panel.styles?.border}>
-            <PanelComponent key={props.panel.id + forceRenderCount} {...props} timeRange={tr}  />
+            {depsInited && <PanelComponent key={props.panel.id + forceRenderCount} {...props} timeRange={tr} variables={variables}  />}
         </PanelBorder>
     )
 })
@@ -90,13 +116,13 @@ interface PanelComponentProps extends PanelGridProps {
     width: number
     height: number
     timeRange: TimeRange
+    variables: Variable[]
 }
 
 export const prevQueries = new Map()
 export const prevQueryData = new Map()
 
-export const PanelComponent = ({ dashboard, panel, onRemovePanel, width, height, sync, timeRange }: PanelComponentProps) => {
-    const variables = useStore($variables)
+export const PanelComponent = ({ dashboard, panel,variables, onRemovePanel, width, height, sync, timeRange }: PanelComponentProps) => {
     const toast = useToast()
     const [panelData, setPanelData] = useState<any[]>(null)
     const [queryError, setQueryError] = useState()
@@ -116,10 +142,11 @@ export const PanelComponent = ({ dashboard, panel, onRemovePanel, width, height,
     }, [panel.datasource, timeRange, variables])
 
 
+
     const queryData = async (panel: Panel, dashboardId: string) => {
         console.time("time used - query data for panel:")
         const ds = panel.datasource
-        const datasource = datasources.find(d => d.id == ds.id)
+        const datasource = getDatasource(ds.id)
         if (!datasource) {
             return
         }
@@ -130,7 +157,7 @@ export const PanelComponent = ({ dashboard, panel, onRemovePanel, width, height,
         const interval = calculateInterval(timeRange, ds.queryOptions.maxDataPoints ?? DatasourceMaxDataPoints, isEmpty(ds.queryOptions.minInterval) ? DatasourceMinInterval : ds.queryOptions.minInterval).intervalMs / 1000
         for (const q0 of ds.queries) {
             const q: PanelQuery = { ...cloneDeep(q0), interval }
-            replaceQueryWithVariables(q, ds.type)
+            replaceQueryWithVariables(q, datasource.type)
             if (hasVariableFormat(q.metrics)) {
                 // there are variables still not replaced, maybe because variable's loadValues has not completed
                 continue 
@@ -139,8 +166,8 @@ export const PanelComponent = ({ dashboard, panel, onRemovePanel, width, height,
             const id = formatQueryId(ds.id, dashboardId, panel.id, q.id, panel.type)
             const prevQuery = prevQueries.get(id)
             // console.log("here333333 get query:", id, prevQuery )
-            const currentQuery = [q, timeRange]
-
+            const currentQuery = [q, timeRange, datasource.type]
+            console.log("here33333 currentQuery:", currentQuery)
             if (isEqual(prevQuery, currentQuery)) {
                 const d = prevQueryData[id]
                 if (d) {
@@ -158,7 +185,7 @@ export const PanelComponent = ({ dashboard, panel, onRemovePanel, width, height,
             let res
 
             //@needs-update-when-add-new-datasource
-            switch (ds.type) {
+            switch (datasource.type) {
                 case DatasourceType.Prometheus:
                     res = await run_prometheus_query(panel, q, timeRange, datasource)
                     break;
@@ -191,7 +218,7 @@ export const PanelComponent = ({ dashboard, panel, onRemovePanel, width, height,
         }
 
         if (needUpdate) {
-            console.log("query and set panel data:", panel.id, data)
+            console.log("query data and set panel data:", panel.id, data)
             setPanelData(data)
         } else {
             if (!isEqual(panelData, data)) {

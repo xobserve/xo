@@ -69,7 +69,7 @@ export const checkAndTestJaeger = async (ds:Datasource) => {
 
 
 export const replaceJaegerQueryWithVariables = (query: PanelQuery) => {
-    const showServices0 = query.data?.showServices ? query.data?.showServices?.split(",") : []
+    const showServices0 = query.metrics ? query.metrics.split(",") : []
     
     const ss = []
     showServices0.forEach((item, i) => {

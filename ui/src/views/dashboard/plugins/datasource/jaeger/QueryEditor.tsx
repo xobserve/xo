@@ -30,9 +30,9 @@ const JaegerQueryEditor = ({ panel, query, onChange }: DatasourceEditorProps) =>
 
             return (<VStack alignItems="left" spacing="1">
                 <FormItem labelWidth="200px" title={t1.showServices} desc={t1.showServicesTips}>
-                    <Input value={tempQuery.data.showServices}  onChange={e => {
+                    <Input value={tempQuery.metrics}  onChange={e => {
                         const v = e.target.value
-                        setTempQuery(q => { q.data.showServices = v })
+                        setTempQuery(q => { q.metrics = v })
                     }} onBlur={() => {
                         onChange(tempQuery)
                     }} placeholder="e.g mysql,redis"/>

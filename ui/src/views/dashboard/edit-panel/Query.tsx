@@ -18,7 +18,6 @@ import JaegerQueryEditor from "../plugins/datasource/jaeger/QueryEditor"
 import PrometheusQueryEditor from "../plugins/datasource/prometheus/QueryEditor"
 import TestDataQueryEditor from "../plugins/datasource/testdata/Editor"
 import { initDatasource } from "src/data/panel/initPanel"
-import Label from "components/form/Item"
 import { EditorInputItem, EditorNumberItem } from "components/editor/EditorItem"
 import { calculateInterval } from "utils/datetime/range"
 import { getCurrentTimeRange } from "components/DatePicker/TimePicker"
@@ -34,6 +33,8 @@ import { useStore } from "@nanostores/react"
 import { isEmpty } from "utils/validate"
 import { DatasourceMinInterval } from "src/data/constants"
 import LokiQueryEditor from "../plugins/datasource/loki/QueryEditor"
+import DatasourceSelect from "components/datasource/Select"
+import { getDatasource } from "utils/datasource"
 
 interface Props {
     panel: Panel
@@ -45,10 +46,8 @@ const EditPanelQuery = (props: Props) => {
     const t1 = useStore(panelMsg)
     const { panel, onChange } = props
     const selectDatasource = (id) => {
-
         onChange((panel: Panel) => {
-            const type = datasources.find(ds => ds.id == id).type
-            panel.datasource = { ...initDatasource, type: type, id: id }
+            panel.datasource = { ...initDatasource, id: id }
         })
     }
 
@@ -88,19 +87,14 @@ const EditPanelQuery = (props: Props) => {
         })
     }
 
-
+    console.log("here333333 id:",panel.datasource.id)
+    const currentDatasource = getDatasource(panel.datasource.id)
     return (<>
         <Box className="bordered" p="2" borderRadius="0" height="100%">
             <Flex justifyContent="space-between" alignItems="start">
                 <HStack>
-                    <Image width="30px" height="30px" src={`/public/plugins/datasource/${panel.datasource.type}.svg`} />
-                    <Select width="fit-content" variant="unstyled" value={panel.datasource.id} onChange={e => {
-                        selectDatasource(e.currentTarget.value)
-                    }}>
-                        {datasources.map((ds: Datasource) => {
-                            return <option key={ds.id} value={ds.id}>{ds.name}</option>
-                        })}
-                    </Select>
+                    <Image width="30px" height="30px" src={`/public/plugins/datasource/${currentDatasource.type}.svg`} />
+                    <Box width="200px"><DatasourceSelect value={panel.datasource.id} onChange={selectDatasource}  variant="unstyled" /></Box>
                 </HStack>
                 <DatasourceQueryOption {...props} />
             </Flex>
@@ -115,7 +109,7 @@ const EditPanelQuery = (props: Props) => {
                             </HStack>
                         </Flex>
                         {
-                            <Box pl="4"><CustomQueryEditor panel={panel} query={query} selected={panel.datasource} onChange={onChange} /></Box>
+                            <Box pl="4"><CustomQueryEditor panel={panel} query={query} selected={panel.datasource} dsType={currentDatasource.type} onChange={onChange} /></Box>
                         }
                     </Box>
                 })}
@@ -164,7 +158,7 @@ const DatasourceQueryOption = ({ panel, onChange }: Props) => {
         </VStack>
     )
 }
-const CustomQueryEditor = ({ panel,query, onChange, selected }) => {
+const CustomQueryEditor = ({ panel,query, onChange, selected,dsType }) => {
     const onQueryChange = (query: PanelQuery) => {
         onChange((panel: Panel) => {
             const ds = panel.datasource
@@ -178,7 +172,7 @@ const CustomQueryEditor = ({ panel,query, onChange, selected }) => {
     }
 
     //@needs-update-when-add-new-datasource
-    switch (selected.type) {
+    switch (dsType) {
         case DatasourceType.Prometheus:
             return <PrometheusQueryEditor datasource={selected} query={query} onChange={onQueryChange} panel={panel} />
         case DatasourceType.TestData:

@@ -111,7 +111,6 @@ export const queryPromethuesVariableValues = async (variable: Variable) => {
 
 
     if (data.type == PromDsQueryTypes.LabelValues) {
-        console.log("here333333",data)
         if (data.label) {
             // query label values : https://prometheus.io/docs/prometheus/latest/querying/api/#querying-label-values
             let url = `/proxy/${ds.id}/api/v1/label/${data.label}/values?${data.useCurrentTime ? `&start=${start}&end=${end}` : ""}`
