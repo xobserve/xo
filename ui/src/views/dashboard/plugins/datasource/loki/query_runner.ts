@@ -125,7 +125,7 @@ export const queryLokiSeries = async (dsId, match: string[], timeRange: TimeRang
     }
 }
 
-export const queryLokiLabelNames = async (dsId,timeRange: TimeRange) => {
+export const queryLokiLabelNames = async (dsId, timeRange: TimeRange) => {
     let url;
     if (timeRange) {
         const start = round(timeRange.start.getTime() / 1000)
@@ -150,6 +150,31 @@ export const queryLokiLabelNames = async (dsId,timeRange: TimeRange) => {
     }
 }
 
+export const queryLokiLabelValues = async (dsId, labelName, timeRange: TimeRange) => {
+    let url;
+    if (timeRange) {
+        const start = round(timeRange.start.getTime() / 1000)
+        const end = round(timeRange.end.getTime() / 1000)
+        url = `/proxy/${dsId}/loki/api/v1/label/${labelName}/values?start=${start}&end=${end}`
+    } else {
+        url = `/proxy/${dsId}/loki/api/v1/label/${labelName}/values?`
+    }
+
+    const res: any = await requestApi.get(url)
+    if (res.status !== "success") {
+        console.log("Failed to fetch data from loki", res.status)
+        return {
+            error: res.status !== undefined ? `${res.errorType}: ${res.error}` : res,
+            data: []
+        }
+    }
+
+    return {
+        error: null,
+        data: res.data
+    }
+}
+
 export const queryLokiVariableValues = async (variable: Variable) => {
     let result = {
         error: null,
@@ -157,32 +182,33 @@ export const queryLokiVariableValues = async (variable: Variable) => {
     }
 
 
+
     let data;
     try {
         data = JSON.parse(variable.value)
     } catch (error) {
+        console.log("here33333 parse variable value error:", error)
         return result
     }
 
 
     const timeRange = getNewestTimeRange()
-    const start = timeRange.start.getTime() / 1000
-    const end = timeRange.end.getTime() / 1000
 
+    console.log("here333333:",data, variable.name)
 
-    if (data.type == LokiDsQueryTypes.LabelValues) {
-        if (data.label) {
-            // query label values : https://prometheus.io/docs/prometheus/latest/querying/api/#querying-label-values
-            let url = `/proxy/${variable.datasource}/api/v1/label/${data.label}/values?${data.useCurrentTime ? `&start=${start}&end=${end}` : ""}`
-            const metrics = replaceWithVariablesHasMultiValues(data.metrics)
-            for (const m of metrics) {
-                url += `${m ? `&match[]=${m}` : ''}`
-            }
-            const res: any = await requestApi.get(url)
-            if (res.status == "success") {
-                result.data = result.data.concat(res.data)
-            } else {
+    if (data.type == LokiDsQueryTypes.LabelValues && !isEmpty(data.labelName)) {
+        const names = replaceWithVariablesHasMultiValues(data.labelName)
+        console.log("here333333:",data.labelName,names)
+        const tasks = []
+        for (const labelName of names) {
+            tasks.push(queryLokiLabelValues(variable.datasource, labelName, data.useCurrentTime ? timeRange : null))
+        }
+        const res0 = await Promise.all(tasks)
+        for (const res of res0) {
+            if (res.error) {
                 result.error = res.error
+            } else {
+                result.data = result.data.concat(res.data)
             }
         }
     } else if (data.type == LokiDsQueryTypes.Series) {

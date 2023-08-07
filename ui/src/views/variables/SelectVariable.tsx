@@ -31,7 +31,6 @@ import { variableMsg } from "src/i18n/locales/en"
 import { addParamToUrl, getUrlParams } from "utils/url"
 import { queryLokiVariableValues } from "../dashboard/plugins/datasource/loki/query_runner"
 import { $variables } from "./store"
-import usePrevious from 'react-use/lib/usePrevious';
 import { parseVariableFormat } from "utils/format"
 
 interface Props {
@@ -108,7 +107,6 @@ const SelectVariable = ({ v }: { v: Variable }) => {
 
         }
         if (needQuery) {
-            console.log("here44444 load values:", v.name)
             const res = await queryVariableValues(v)
             console.log("load variable values( query )", v.name, res)
             if (res.error) {
@@ -139,9 +137,8 @@ const SelectVariable = ({ v }: { v: Variable }) => {
         }
 
         const vars = $variables.get()
-        if (v.selected != oldSelected) {
+        if (v.selected != oldSelected || v.selected == VarialbeAllOption) {
             const referVars = parseVariableFormat(v.value)
-            console.log(`here4444 var ${v.name}'s selected changes, the var refer to it will also change `, v.selected, oldSelected)
             for (const variable of vars) {
                 // to avoid circle refer evets: 
                 // A refer B : A send event to B, then B refer to A, B send event to A
@@ -150,7 +147,6 @@ const SelectVariable = ({ v }: { v: Variable }) => {
                 }
 
                 if (variable.value.indexOf('${' + v.name + '}') >= 0) {
-                    // console.log(`here444444 var ${variable.name} value changes, var ${v.name} which refer to it will also change`)
                     // to avoid cache missing ,add a interval here
                     // Two consecutive requests will miss the cache, because the result of first request has not been save to cache, but the second request has arrived
                     setTimeout(() => {
@@ -252,7 +248,6 @@ export const setVariableValue = (variable: Variable, value) => {
         }
 
         if (v.value.indexOf('${' + variable.name + '}') >= 0) {
-            console.log(`here444444 var ${variable.name} value changes, var ${v.name} which refer to it will also change`)
             dispatch(VariableForceReload + v.id)
         }
     }

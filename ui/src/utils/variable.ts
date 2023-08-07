@@ -74,7 +74,6 @@ export const replaceQueryWithVariables = (q: PanelQuery, datasource: DatasourceT
 export const  replaceWithVariablesHasMultiValues =  (s: string, replaceAllWith?): string[] => {
     const vars = $variables.get()
     let res = []
-    console.log("here333 load var", cloneDeep(vars), s)
     const formats = parseVariableFormat(s);
     for (const f of formats) {
         const v = (vars.length > 0 ? vars : gvariables).find(v => v.name ==f)
@@ -85,7 +84,7 @@ export const  replaceWithVariablesHasMultiValues =  (s: string, replaceAllWith?)
                 if (replaceAllWith) {
                     selected.push(replaceAllWith)
                 } else {
-                    selected = v.values??[]
+                    selected = v.values?.filter(v1 => v1 != VarialbeAllOption )??[]
                 } 
             } else {
                 selected = isEmpty(v.selected) ? [] : v.selected.split(VariableSplitChar)

@@ -10,8 +10,8 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-import { Button, Select, Switch } from "@chakra-ui/react"
-import { useEffect } from "react"
+import { Box, Button, Switch } from "@chakra-ui/react"
+import { useEffect, useState } from "react"
 import { Variable } from "types/variable"
 import { isJSON } from "utils/is"
 import { EditorInputItem } from "components/editor/EditorItem"
@@ -20,7 +20,12 @@ import FormItem from "components/form/Item"
 import React from "react";
 import { useStore } from "@nanostores/react"
 import { cfgVariablemsg } from "src/i18n/locales/en"
-import { queryLokiVariableValues } from "./query_runner"
+import { queryLokiLabelNames, queryLokiVariableValues } from "./query_runner"
+import { getNewestTimeRange } from "components/DatePicker/TimePicker"
+import { Select } from "antd"
+import ChakraSelect from "components/select/ChakraSelect"
+import InputSelect from "components/select/InputSelect"
+
 
 
 export enum LokiDsQueryTypes {
@@ -31,6 +36,7 @@ export enum LokiDsQueryTypes {
 
 const LokiVariableEditor = ({ variable, onChange, onQueryResult }: DatasourceVariableEditorProps) => {
     const t1 = useStore(cfgVariablemsg)
+    const [labelNames, setLabelNames] = useState<string[]>([])
     const data = isJSON(variable.value) ? JSON.parse(variable.value) : {
         type: LokiDsQueryTypes.Series,
     }
@@ -42,6 +48,16 @@ const LokiVariableEditor = ({ variable, onChange, onQueryResult }: DatasourceVar
     useEffect(() => {
         loadVariables(variable)
     }, [variable])
+
+    useEffect(() => {
+        loadLabelNames()
+    },[data.useCurrentTime])
+
+    const loadLabelNames = async () => {
+        const timeRange = getNewestTimeRange()
+        const res = await queryLokiLabelNames(variable.datasource, data.useCurrentTime ? timeRange : null)
+        setLabelNames(res.data)
+    }
 
     const loadVariables = async (v: Variable) => {
         const result = await queryLokiVariableValues(v)
@@ -58,13 +74,12 @@ const LokiVariableEditor = ({ variable, onChange, onQueryResult }: DatasourceVar
             }} />
         </FormItem>
         <FormItem title={t1.queryType}>
-            <Select value={data.type} onChange={e => {
-                const v = e.currentTarget.value
+            <Select size="large" value={data.type} onChange={v => {
                 data.type = v
                 onChange(variable => {
                     variable.value = JSON.stringify(data)
                 })
-            }}>
+            }} popupMatchSelectWidth={false}>
                 {Object.keys(LokiDsQueryTypes).map(k => <option value={LokiDsQueryTypes[k]}>{LokiDsQueryTypes[k]}</option>)}
             </Select>
         </FormItem>
@@ -76,39 +91,15 @@ const LokiVariableEditor = ({ variable, onChange, onQueryResult }: DatasourceVar
                 })
             }} placeholder="optional series selector" />
         </FormItem>}
-        {/* {
-                data.type == PromDsQueryTypes.LabelValues && <>
-                    <FormItem title="Metric" desc={t1.metricTips}>
-                        <PromMetricSelect width="400px" dsId={variable.datasource} variant="outline" value={data.metrics} onChange={m => {
-                            data.metrics = m
-                            onChange(variable => {
-                                variable.value = JSON.stringify(data)
-                            })
-                        }} />
-                    </FormItem>
-                    <FormItem title="Label">
-                        <PromLabelSelect metric={data.metrics} dsId={variable.datasource} variant="outline" value={data.label} onChange={m => {
-                            data.label = m
-                            onChange(variable => {
-                                variable.value = JSON.stringify(data)
-                            })
-                        }} />
-                    </FormItem>
-                </>
-            } */}
+        {data.type == LokiDsQueryTypes.LabelValues && <FormItem title="Select label">
+        <InputSelect width="260px"  isClearable value={data.labelName} placeholder={"input to search, support template"}  size="md" options={labelNames.map((m) => { return { label: m, value: m } })} onChange={v => {
+                data.labelName = v
+                onChange(variable => {
+                    variable.value = JSON.stringify(data)
+                })
+            }} enableInput />
 
-        {/* {
-                data.type == PromDsQueryTypes.Metrics && <>
-                    <FormItem title="Metric regex">
-                        <EditorInputItem placeholder="e.g go_*" value={data.regex} onChange={m => {
-                            data.regex = m
-                            onChange(variable => {
-                                variable.value = JSON.stringify(data)
-                            })
-                        }}/>
-                    </FormItem>
-                </>
-            } */}
+        </FormItem>}
     </>)
 }
 
