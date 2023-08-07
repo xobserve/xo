@@ -23,7 +23,6 @@ import { formatLabelId, isLogSeriesData } from "./utils";
 import { cloneDeep, remove, sortBy } from "lodash";
 import LogChart from "./components/Chart";
 import { isEmpty } from "utils/validate";
-import { isSeriesData } from "utils/seriesData";
 
 
 
