@@ -295,7 +295,7 @@ const loadablePanels = {
     [PanelType.BarGauge]: loadable(() => import('../plugins/panel/barGauge/BarGauge')),
     [PanelType.GeoMap]: loadable(() => import('../plugins/panel/geomap/GeoMap')),
     [PanelType.Log]: loadable(() => import('../plugins/panel/log/Log')),
-
+    [PanelType.Bar]: loadable(() => import('../plugins/panel/bar/Bar')),
 }
 
 const CustomPanelRender = memo((props: PanelProps) => {

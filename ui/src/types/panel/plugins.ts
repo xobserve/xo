@@ -32,6 +32,7 @@ export interface PanelPlugins {
     [PanelType.BarGauge]?: BarGaugeSettings
     [PanelType.GeoMap]?: GeoMapSettings
     [PanelType.Log]?: LogSettings
+    [PanelType.Bar]?: BarSettings
 }
 
 /*-------------------- Plugins ----------------------- */
@@ -40,6 +41,9 @@ export interface DisableDatasource {
     disableDatasource?: boolean
 }
 
+export interface BarSettings {
+    
+}
 
 export interface LogSettings {
     showTime: boolean

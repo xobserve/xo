@@ -14,10 +14,8 @@
 import { Box, Flex, HStack, IconButton, Input, Modal, ModalBody, ModalContent, ModalHeader, Text, Tooltip, VStack, useColorModeValue, useDisclosure } from "@chakra-ui/react"
 import React, { memo, useMemo, useState } from "react"
 import { FaAlignJustify, FaBuffer, FaSearch, FaSitemap, FaTimes } from "react-icons/fa"
-import { useSearchParam } from "react-use"
 import { Dashboard } from "types/dashboard"
 import { requestApi } from "utils/axios/request"
-import { addParamToUrl } from "utils/url"
 import { RxLetterCaseCapitalize } from "react-icons/rx";
 import TagsFilter from "./TagsFilter"
 import { isEmpty } from "utils/validate"
@@ -79,16 +77,7 @@ const Search = memo((props: Props) => {
 
 
 
-    // const urlQuery = useSearchParam('search')
-    // if (urlQuery && query === null) {
-    //     onSearchOpen()
-    //     setQuery(urlQuery)
-    // }
-
     const onQueryChange = (v) => {
-        // addParamToUrl({
-        //     search: v
-        // })
         setQuery(v)
     }
 

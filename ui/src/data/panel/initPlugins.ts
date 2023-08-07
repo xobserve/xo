@@ -373,6 +373,8 @@ function registerEvents(options, chart) {
                 stack: "auto",
             },
             thresholds: [{type: null, value: null,key:null, color: 'inherit'}]
+        },
+        [PanelType.Bar]: {
         }
     }
 }

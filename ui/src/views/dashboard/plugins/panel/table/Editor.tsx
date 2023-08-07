@@ -10,7 +10,7 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-import { Alert, Box, Button, HStack, Modal, ModalBody, ModalContent, ModalOverlay, NumberDecrementStepper, NumberIncrementStepper, NumberInput, NumberInputField, NumberInputStepper, Select, Switch, Text, Textarea, useDisclosure, useTheme, VStack } from "@chakra-ui/react"
+import { Box, Button, HStack, Modal, ModalBody, ModalContent, ModalOverlay,  Select, Switch, Text, useDisclosure, useTheme, VStack } from "@chakra-ui/react"
 import PanelAccordion from "src/views/dashboard/edit-panel/Accordion"
 import { EditorInputItem, EditorNumberItem } from "components/editor/EditorItem"
 import PanelEditItem from "src/views/dashboard/edit-panel/PanelEditItem"

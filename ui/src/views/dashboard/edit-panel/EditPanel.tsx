@@ -321,6 +321,7 @@ const loadablePanels = {
     [PanelType.BarGauge]: loadable(() => import('../plugins/panel/barGauge/Editor')),
     [PanelType.GeoMap]: loadable(() => import('../plugins/panel/geomap/Editor')),
     [PanelType.Log]: loadable(() => import('../plugins/panel/log/Editor')),
+    [PanelType.Bar]: loadable(() => import('../plugins/panel/bar/Editor')),
 }
 
 interface CustomPanelEditorProps {

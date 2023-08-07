@@ -115,6 +115,7 @@ export enum PanelType {
     GeoMap = "geomap",
     Row = "row",
     Log = "log",
+    Bar = "bar"
 }
 
 export enum DatasourceType {
