@@ -35,6 +35,7 @@ import { DatasourceMinInterval } from "src/data/constants"
 import LokiQueryEditor from "../plugins/datasource/loki/QueryEditor"
 import DatasourceSelect from "components/datasource/Select"
 import { getDatasource } from "utils/datasource"
+import { isNumber } from "lodash"
 
 interface Props {
     panel: Panel
@@ -87,7 +88,6 @@ const EditPanelQuery = (props: Props) => {
         })
     }
 
-    console.log("here333333 id:",panel.datasource.id)
     const currentDatasource = getDatasource(panel.datasource.id)
     return (<>
         <Box className="bordered" p="2" borderRadius="0" height="100%">
@@ -95,6 +95,7 @@ const EditPanelQuery = (props: Props) => {
                 <HStack>
                     <Image width="30px" height="30px" src={`/public/plugins/datasource/${currentDatasource.type}.svg`} />
                     <Box width="200px"><DatasourceSelect value={panel.datasource.id} onChange={selectDatasource}  variant="unstyled" /></Box>
+                    {!isNumber(panel.datasource.id) && <Text textStyle="annotation">current: {currentDatasource.name}</Text>}
                 </HStack>
                 <DatasourceQueryOption {...props} />
             </Flex>
@@ -126,7 +127,7 @@ const DatasourceQueryOption = ({ panel, onChange }: Props) => {
     const t1 = useStore(panelMsg)
     const [expanded, setExpanded] = useState(false)
     return (
-        <VStack alignItems="end" mt="4px">
+        <VStack alignItems="end" mt="8px">
 
             <HStack color="brand.500" fontSize=".9rem" spacing={1} cursor="pointer" onClick={() => setExpanded(!expanded)} width="fit-content">
                 {expanded ? <FaAngleDown /> : <FaAngleRight />}
