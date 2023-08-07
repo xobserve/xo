@@ -49,20 +49,20 @@ export const replaceWithVariables = (s: string, extraVars?: {
 }
 
 
-export const replaceQueryWithVariables = (q: PanelQuery, datasource: DatasourceType) => {
+export const replaceQueryWithVariables = (q: PanelQuery, datasource: DatasourceType,interval: string) => {
     //@needs-update-when-add-new-datasource
     switch (datasource) {
         case DatasourceType.Prometheus:
-            replacePrometheusQueryWithVariables(q)
+            replacePrometheusQueryWithVariables(q,interval)
             break;
         case DatasourceType.Jaeger:
             replaceJaegerQueryWithVariables(q)
             break
         case DatasourceType.ExternalHttp:
-            replaceHttpQueryWithVariables(q)
+            replacePrometheusQueryWithVariables(q,interval)
             break
         case DatasourceType.Loki:
-            replacePrometheusQueryWithVariables(q)
+            replacePrometheusQueryWithVariables(q, interval)
             break
         default:
             break;

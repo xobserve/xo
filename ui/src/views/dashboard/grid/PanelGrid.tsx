@@ -50,6 +50,7 @@ import { run_loki_query } from "../plugins/datasource/loki/query_runner";
 import { $variables } from "src/views/variables/store";
 import { getDatasource } from "utils/datasource";
 import { parseVariableFormat } from "utils/format";
+import { VariableInterval } from "src/data/variable";
 interface PanelGridProps {
     dashboard: Dashboard
     panel: Panel
@@ -75,6 +76,9 @@ export const PanelGrid = memo((props: PanelGridProps) => {
             for (const q of props.panel.datasource.queries) {
                 const f = parseVariableFormat(q.metrics)
                 for (const v of f) {
+                    if (v == VariableInterval) {
+                        continue
+                    }
                     const variable = vars.find(v1 => v1.name == v)
                     if (variable?.values === undefined) {
                         inited = false 
@@ -88,7 +92,7 @@ export const PanelGrid = memo((props: PanelGridProps) => {
                 clearInterval(depsCheck.current)
                 depsCheck.current = null
             }
-        },50)
+        },100)
     },[])
     useBus(
         (e) => { return e.type == TimeChangedEvent },
@@ -153,10 +157,11 @@ export const PanelComponent = ({ dashboard, panel,variables, onRemovePanel, widt
 
         let data = []
         let needUpdate = false
-        const interval = calculateInterval(timeRange, ds.queryOptions.maxDataPoints ?? DatasourceMaxDataPoints, isEmpty(ds.queryOptions.minInterval) ? DatasourceMinInterval : ds.queryOptions.minInterval).intervalMs / 1000
+        const intervalObj =  calculateInterval(timeRange, ds.queryOptions.maxDataPoints ?? DatasourceMaxDataPoints, isEmpty(ds.queryOptions.minInterval) ? DatasourceMinInterval : ds.queryOptions.minInterval)
+        const interval = intervalObj.intervalMs / 1000
         for (const q0 of ds.queries) {
             const q: PanelQuery = { ...cloneDeep(q0), interval }
-            replaceQueryWithVariables(q, datasource.type)
+            replaceQueryWithVariables(q, datasource.type, intervalObj.interval)
             if (datasource.type != DatasourceType.TestData && hasVariableFormat(q.metrics)) {
                 // there are variables still not replaced, maybe because variable's loadValues has not completed
                 continue 

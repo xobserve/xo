@@ -121,6 +121,6 @@ export const queryHttpVariableValues = async (variable:Variable, useCurrentTimer
 }
 
 
-export const replaceHttpQueryWithVariables = (query: PanelQuery) => {
+export const replaceHttpQueryWithVariables = (query: PanelQuery,interval:string) => {
 
 }

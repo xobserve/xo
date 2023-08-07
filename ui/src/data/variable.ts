@@ -13,4 +13,5 @@ export const initVariable:Variable = {
 export const VariableSplitChar = '+'
 export const VarialbeAllOption = '__all__'
 
-export const VariableCurrentValue = '__current__'
+export const VariableCurrentValue = '__current__' // refer to the current value of current object, e.g row data of Table panel
+export const VariableInterval = '__interval__'
