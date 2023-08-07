@@ -11,10 +11,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 import React from "react"
-import { Box, Flex, HStack, Input, Placement, Popover, PopoverBody, PopoverContent, PopoverTrigger, Text, Tooltip, VStack, useDisclosure } from "@chakra-ui/react"
+import { Box, Flex, HStack, Input, Placement, Popover, PopoverBody, PopoverContent, PopoverTrigger, Portal, Text, Tooltip, VStack, useDisclosure } from "@chakra-ui/react"
 import { Variant } from "chakra-react-select/dist/types/types"
-import { Portal } from "components/portal/Portal"
-import { remove } from "lodash"
 import { MouseEvent, useEffect, useMemo, useRef, useState } from "react"
 import {  FaCheck, FaChevronDown, FaMinus, FaPlus, FaTimes } from "react-icons/fa"
 
@@ -87,6 +85,7 @@ const InputSelect = ({ value,label, options, onChange, variant = "outline", cust
             <PopoverTrigger >
                 <Box position="absolute"></Box>
             </PopoverTrigger>
+            <Portal>
                 <PopoverContent  borderRadius={2} width="500px">
                     {/* <PopoverArrow /> */}
                     <PopoverBody p="0">
@@ -111,6 +110,7 @@ const InputSelect = ({ value,label, options, onChange, variant = "outline", cust
                         </VStack>
                     </PopoverBody>
                 </PopoverContent>
+                </Portal>
         </Popover>
     </>)
 }

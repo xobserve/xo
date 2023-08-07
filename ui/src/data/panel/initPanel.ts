@@ -52,7 +52,6 @@ export const initPanel = (id?) => {
 
 export const initDatasource: PanelDatasource = {
     id: InitTestDataDatasourceId,
-    type: DatasourceType.TestData,
     queryOptions: {
         minInterval: DatasourceMinInterval,
         maxDataPoints: DatasourceMaxDataPoints
