@@ -11,8 +11,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 import { Box, Button, Flex, HStack, Image, Select, Text, VStack } from "@chakra-ui/react"
-import { useMemo, useState } from "react"
-import { FaAngleDown, FaAngleRight, FaArrowCircleDown, FaArrowRight, FaCog, FaPlus, FaTrashAlt } from "react-icons/fa"
+import { useState } from "react"
+import { FaAngleDown, FaAngleRight, FaPlus, FaTrashAlt } from "react-icons/fa"
 import { DatasourceType, Panel, PanelQuery } from "types/dashboard"
 import JaegerQueryEditor from "../plugins/datasource/jaeger/QueryEditor"
 import PrometheusQueryEditor from "../plugins/datasource/prometheus/QueryEditor"
@@ -22,11 +22,9 @@ import { EditorInputItem, EditorNumberItem } from "components/editor/EditorItem"
 import { calculateInterval } from "utils/datetime/range"
 import { getCurrentTimeRange } from "components/DatePicker/TimePicker"
 
-import { Datasource } from "types/datasource"
 import HttpQueryEditor from "../plugins/datasource/http/QueryEditor"
-import { datasources } from "src/App"
 import FormItem from "components/form/Item"
-import { Form, FormSection } from "components/form/Form"
+import { FormSection } from "components/form/Form"
 import React from "react";
 import { commonMsg, panelMsg } from "src/i18n/locales/en"
 import { useStore } from "@nanostores/react"
@@ -144,7 +142,7 @@ const DatasourceQueryOption = ({ panel, onChange }: Props) => {
 
                     </FormItem>
                     <FormItem title={t1.minInterval} labelWidth="170px" size="sm" desc={t1.minIntervalTips}>
-                        <Box width="100px"><EditorInputItem size="sm" value={panel.datasource.queryOptions.minInterval} onChange={v => {
+                        <Box width="100px"><EditorInputItem  value={panel.datasource.queryOptions.minInterval} onChange={v => {
                             onChange((panel: Panel) => {
                                 panel.datasource.queryOptions.minInterval = v
                             })
@@ -152,7 +150,7 @@ const DatasourceQueryOption = ({ panel, onChange }: Props) => {
                     </FormItem>
 
                     <FormItem labelWidth="170px" size="sm" title={t1.finalInterval} desc={t1.finalIntervalTips} alignItems="center">
-                        <Text width="100px" pl="2">{calculateInterval(getCurrentTimeRange(), panel.datasource.queryOptions.maxDataPoints, isEmpty(panel.datasource.queryOptions.minInterval) ? DatasourceMinInterval : panel.datasource.queryOptions.minInterval).interval}</Text>
+                        <Text width="100px" pl="2" fontSize="0.9rem">{calculateInterval(getCurrentTimeRange(), panel.datasource.queryOptions.maxDataPoints, isEmpty(panel.datasource.queryOptions.minInterval) ? DatasourceMinInterval : panel.datasource.queryOptions.minInterval).interval}</Text>
                     </FormItem>
                 </FormSection>
             }
