@@ -25,6 +25,7 @@ interface Value {
 
 interface SelectProps {
     value?: string
+    label?: string
     onChange?: (value: string) => void
     options?: Value[]
     variant?: Variant
@@ -41,16 +42,16 @@ interface SelectProps {
     width?: string
 }
 
-const InputSelect = ({ value, options, onChange, variant = "outline", customOption = null, placeholder = "...", size = "sm", isClearable = false, placement="bottom", showArrow = true,closeOnBlur=true ,matchWidth=true,enableInput=true,width="200px"}: SelectProps) => {
+const InputSelect = ({ value,label, options, onChange, variant = "outline", customOption = null, placeholder = "...", size = "sm", isClearable = false, placement="bottom", showArrow = true,closeOnBlur=true ,matchWidth=true,enableInput=true,width="200px"}: SelectProps) => {
     const { isOpen, onToggle, onClose } = useDisclosure()
     const [entered, setEntered] = useState(false)
     const [query, setQuery] = useState('')
 
     useEffect(() => {
         if (enableInput) {
-            setQuery(value??'')
+            setQuery(label??(value??''))
         }
-    },[value])
+    },[value,label])
 
     const ref = useRef(null)
 
@@ -66,7 +67,7 @@ const InputSelect = ({ value, options, onChange, variant = "outline", customOpti
             return options
         }
 
-        return options.filter(o => o.value.indexOf(q) >= 0)
+        return options.filter(o => (label !== null ? o.label :  o.value).indexOf(q) >= 0)
     }, [options, query])
 
     const getBorderStyle = () => {
@@ -81,7 +82,7 @@ const InputSelect = ({ value, options, onChange, variant = "outline", customOpti
     }
 
     return (<>
-        {<Flex height={`${size=="md" ? 'var(--chakra-sizes-10)' : (size=="sm" ? 'var(--chakra-sizes-8)' : 'var(--chakra-sizes-12)')}`} px="3" className={getBorderStyle()} py="1"  justifyContent="space-between" alignItems="center" cursor="pointer" onClick={onToggle}><Tooltip placement="right" openDelay={500} label={value}><Text width={width} maxW={width}  noOfLines={1} layerStyle="textSecondary" opacity="0.7" fontSize={size == "sm" ? "0.9rem" : "1rem"}>{value?? placeholder}</Text></Tooltip> {isClearable && value ? <FaTimes fontSize="0.8rem" onClick={clearSelected} opacity="0.6"/> :  showArrow && <Box pl="1"><FaChevronDown fontSize="0.6rem" /></Box>}</Flex>}
+        {<Flex height={`${size=="md" ? 'var(--chakra-sizes-10)' : (size=="sm" ? 'var(--chakra-sizes-8)' : 'var(--chakra-sizes-12)')}`} px="3" className={getBorderStyle()} py="1"  justifyContent="space-between" alignItems="center" cursor="pointer" onClick={onToggle}><Tooltip placement="right" openDelay={500} label={value}><Text width={width} maxW={width}  noOfLines={1} layerStyle="textSecondary" opacity="0.7" fontSize={size == "sm" ? "0.9rem" : "1rem"}>{label ?? (value?? placeholder)}</Text></Tooltip> {isClearable && value ? <FaTimes fontSize="0.8rem" onClick={clearSelected} opacity="0.6"/> :  showArrow && <Box pl="1"><FaChevronDown fontSize="0.6rem" /></Box>}</Flex>}
         <Popover matchWidth={matchWidth} closeOnBlur={closeOnBlur}    placement={placement} isOpen={isOpen} initialFocusRef={ref} onClose={onClose}>
             <PopoverTrigger >
                 <Box position="absolute"></Box>

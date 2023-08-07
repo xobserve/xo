@@ -37,10 +37,19 @@ export enum LokiDsQueryTypes {
 const LokiVariableEditor = ({ variable, onChange, onQueryResult }: DatasourceVariableEditorProps) => {
     const t1 = useStore(cfgVariablemsg)
     const [labelNames, setLabelNames] = useState<string[]>([])
-    const data = isJSON(variable.value) ? JSON.parse(variable.value) : {
-        type: LokiDsQueryTypes.Series,
+    let data
+    if (!isJSON(variable.value)) {
+        data = {
+            type: LokiDsQueryTypes.Series,
+        }
+        onChange(variable => {
+            variable.value = JSON.stringify(data)
+        })
+    } else {
+        data = JSON.parse(variable.value)
     }
 
+    
     if (data.useCurrentTime == undefined) {
         data.useCurrentTime = true
     }

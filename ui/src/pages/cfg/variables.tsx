@@ -43,6 +43,8 @@ import JaegerVariableEditor from "src/views/dashboard/plugins/datasource/jaeger/
 import { useStore } from "@nanostores/react"
 import { cfgVariablemsg, commonMsg } from "src/i18n/locales/en"
 import LokiVariableEditor from "src/views/dashboard/plugins/datasource/loki/VariableEdtiro"
+import { hasVariableFormat, replaceWithVariables } from "utils/variable"
+import { getDatasource } from "utils/datasource"
 
 
 
@@ -336,7 +338,11 @@ export const EditVariable = ({ v, isOpen, onClose, isEdit, onSubmit, isGlobal = 
         setVariableValues([])
 }
 
-const currentDatasource = datasources?.find(ds => ds.id == variable?.datasource)
+let currentDatasource;
+if (variable?.datasource) {
+    const ds = variable.datasource.toString()
+    currentDatasource = getDatasource(ds)
+}
 
 return (<>
     <Modal isOpen={isOpen} onClose={onClose} size="full">
@@ -384,7 +390,7 @@ return (<>
                             <Input width="400px" placeholder={t1.valueTips} value={variable.value} onChange={e => { setVariable({ ...variable, value: e.currentTarget.value?.trim() }) }} onBlur={() => onQueryResult({error:null,data: variable.value.split(',')})} />
                         </FormItem>}
 
-                        {variable.type == VariableQueryType.Datasource && <>
+                        {variable.type == VariableQueryType.Query && <>
                             <FormItem title={t1.selectDs}>
                                 <Box width="200px">
                                     <DatasourceSelect value={variable.datasource} onChange={id => setVariable(v => { v.datasource = id; v.value = "" })} allowTypes={[DatasourceType.Prometheus, DatasourceType.ExternalHttp, DatasourceType.Jaeger, DatasourceType.Loki]} variant="outline" /></Box>

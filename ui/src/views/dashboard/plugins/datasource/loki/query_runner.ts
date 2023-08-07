@@ -25,6 +25,7 @@ import { isJSON } from "utils/is";
 import { getNewestTimeRange } from "components/DatePicker/TimePicker";
 import { LokiDsQueryTypes } from "./VariableEdtiro";
 import { is } from "date-fns/locale";
+import { getDatasource } from "utils/datasource";
 
 export const run_loki_query = async (panel: Panel, q: PanelQuery, timeRange: TimeRange, ds: Datasource) => {
     if (isEmpty(q.metrics)) {
@@ -84,13 +85,14 @@ export const run_loki_query = async (panel: Panel, q: PanelQuery, timeRange: Tim
 }
 
 export const queryLokiSeries = async (dsId, match: string[], timeRange: TimeRange) => {
+    const ds = getDatasource(dsId)
     let url;
     if (timeRange) {
         const start = round(timeRange.start.getTime() / 1000)
         const end = round(timeRange.end.getTime() / 1000)
-        url = `/proxy/${dsId}/loki/api/v1/series?start=${start}&end=${end}`
+        url = `/proxy/${ds.id}/loki/api/v1/series?start=${start}&end=${end}`
     } else {
-        url = `/proxy/${dsId}/loki/api/v1/series?`
+        url = `/proxy/${ds.id}/loki/api/v1/series?`
     }
 
     for (const k of match) {
@@ -126,13 +128,15 @@ export const queryLokiSeries = async (dsId, match: string[], timeRange: TimeRang
 }
 
 export const queryLokiLabelNames = async (dsId, timeRange: TimeRange) => {
+    const ds = getDatasource(dsId)
+
     let url;
     if (timeRange) {
         const start = round(timeRange.start.getTime() / 1000)
         const end = round(timeRange.end.getTime() / 1000)
-        url = `/proxy/${dsId}/loki/api/v1/labels?start=${start}&end=${end}`
+        url = `/proxy/${ds.id}/loki/api/v1/labels?start=${start}&end=${end}`
     } else {
-        url = `/proxy/${dsId}/loki/api/v1/labels?`
+        url = `/proxy/${ds.id}/loki/api/v1/labels?`
     }
 
     const res: any = await requestApi.get(url)
@@ -151,13 +155,15 @@ export const queryLokiLabelNames = async (dsId, timeRange: TimeRange) => {
 }
 
 export const queryLokiLabelValues = async (dsId, labelName, timeRange: TimeRange) => {
+    const ds = getDatasource(dsId)
+
     let url;
     if (timeRange) {
         const start = round(timeRange.start.getTime() / 1000)
         const end = round(timeRange.end.getTime() / 1000)
-        url = `/proxy/${dsId}/loki/api/v1/label/${labelName}/values?start=${start}&end=${end}`
+        url = `/proxy/${ds.id}/loki/api/v1/label/${labelName}/values?start=${start}&end=${end}`
     } else {
-        url = `/proxy/${dsId}/loki/api/v1/label/${labelName}/values?`
+        url = `/proxy/${ds.id}/loki/api/v1/label/${labelName}/values?`
     }
 
     const res: any = await requestApi.get(url)
@@ -187,7 +193,6 @@ export const queryLokiVariableValues = async (variable: Variable) => {
     try {
         data = JSON.parse(variable.value)
     } catch (error) {
-        console.log("here33333 parse variable value error:", error)
         return result
     }
 
@@ -195,10 +200,9 @@ export const queryLokiVariableValues = async (variable: Variable) => {
     const timeRange = getNewestTimeRange()
 
     console.log("here333333:",data, variable.name)
-
+    
     if (data.type == LokiDsQueryTypes.LabelValues && !isEmpty(data.labelName)) {
         const names = replaceWithVariablesHasMultiValues(data.labelName)
-        console.log("here333333:",data.labelName,names)
         const tasks = []
         for (const labelName of names) {
             tasks.push(queryLokiLabelValues(variable.datasource, labelName, data.useCurrentTime ? timeRange : null))
@@ -212,7 +216,7 @@ export const queryLokiVariableValues = async (variable: Variable) => {
             }
         }
     } else if (data.type == LokiDsQueryTypes.Series) {
-        const res = await queryLokiSeries(variable.datasource, data.seriesSelector.split(' '), data.useCurrentTime ? timeRange : null)
+        const res = await queryLokiSeries(variable.datasource, data.seriesSelector?.split(' ')??[], data.useCurrentTime ? timeRange : null)
         if (res.error) {
             result.error = res.error
         } else {

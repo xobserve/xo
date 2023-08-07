@@ -28,6 +28,7 @@ import { VariableSplitChar, VarialbeAllOption } from "src/data/variable"
 import { requestApi } from "utils/axios/request"
 import { replaceWithVariablesHasMultiValues } from "utils/variable"
 import { $variables } from "src/views/variables/store"
+import { getDatasource } from "utils/datasource"
 
 export const run_prometheus_query = async (panel: Panel, q: PanelQuery, range: TimeRange, ds: Datasource) => {
     if (isEmpty(q.metrics)) {
@@ -91,6 +92,7 @@ export const checkAndTestPrometheus = async (ds: Datasource) => {
 }
 
 export const queryPromethuesVariableValues = async (variable: Variable) => {
+    const ds = getDatasource(variable.datasource)
     let result = {
         error: null,
         data: []
@@ -109,9 +111,10 @@ export const queryPromethuesVariableValues = async (variable: Variable) => {
 
 
     if (data.type == PromDsQueryTypes.LabelValues) {
+        console.log("here333333",data)
         if (data.label) {
             // query label values : https://prometheus.io/docs/prometheus/latest/querying/api/#querying-label-values
-            let url = `/proxy/${variable.datasource}/api/v1/label/${data.label}/values?${data.useCurrentTime ? `&start=${start}&end=${end}` : ""}`
+            let url = `/proxy/${ds.id}/api/v1/label/${data.label}/values?${data.useCurrentTime ? `&start=${start}&end=${end}` : ""}`
             const metrics = replaceWithVariablesHasMultiValues(data.metrics)
             for (const m of metrics) {
                 url += `${m ? `&match[]=${m}` : ''}`
@@ -146,12 +149,13 @@ export const queryPromethuesVariableValues = async (variable: Variable) => {
 }
 
 export const queryPrometheusAllMetrics = async (dsId, useCurrentTimerange = true) => {
+    const ds = getDatasource(dsId)
 
     const timeRange = getNewestTimeRange()
     const start = timeRange.start.getTime() / 1000
     const end = timeRange.end.getTime() / 1000
 
-    const url = `/proxy/${dsId}/api/v1/label/__name__/values?${useCurrentTimerange ? `&start=${start}&end=${end}` : ""}`
+    const url = `/proxy/${ds.id}/api/v1/label/__name__/values?${useCurrentTimerange ? `&start=${start}&end=${end}` : ""}`
 
     const res: any = await requestApi.get(url)
     if (res.status == "success") {
@@ -168,12 +172,13 @@ export const queryPrometheusAllMetrics = async (dsId, useCurrentTimerange = true
 }
 
 export const queryPrometheusLabels = async (dsId, metric = "", useCurrentTimerange = true) => {
+    const ds = getDatasource(dsId)
     const timeRange = getNewestTimeRange()
     const start = timeRange.start.getTime() / 1000
     const end = timeRange.end.getTime() / 1000
 
     const metrics = replaceWithVariablesHasMultiValues(metric)
-    let url = `/proxy/${dsId}/api/v1/labels?${useCurrentTimerange ? `&start=${start}&end=${end}` : ""}`
+    let url = `/proxy/${ds.id}/api/v1/labels?${useCurrentTimerange ? `&start=${start}&end=${end}` : ""}`
     for (const m of metrics) {
         url += `${m ? `&match[]=${m}` : ''}`
     }

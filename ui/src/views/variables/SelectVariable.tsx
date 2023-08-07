@@ -32,6 +32,7 @@ import { addParamToUrl, getUrlParams } from "utils/url"
 import { queryLokiVariableValues } from "../dashboard/plugins/datasource/loki/query_runner"
 import { $variables } from "./store"
 import { parseVariableFormat } from "utils/format"
+import { getDatasource } from "utils/datasource"
 
 interface Props {
     variables: Variable[]
@@ -276,12 +277,16 @@ export const queryVariableValues = async (v: Variable) => {
         error: null,
         data: null
     }
+
+    console.log("here44444:", v.name, v.type)
     if (v.type == VariableQueryType.Custom) {
         if (v.value.trim() != "") {
             result.data = v.value.split(",")
         }
+    } else if (v.type == VariableQueryType.Datasource) {
+        result.data =datasources.map(ds => ds.name)
     } else {
-        const ds = datasources.find(d => d.id == v.datasource)
+        const ds = getDatasource(v.datasource)
         //@needs-update-when-add-new-variable-datasource
         switch (ds?.type) {
             case DatasourceType.Prometheus:

@@ -14,6 +14,7 @@ import { Image } from "@chakra-ui/react"
 import {  chakraComponents } from "chakra-react-select"
 import { Variant } from "chakra-react-select/dist/types/types"
 import ChakraSelect from "components/select/ChakraSelect"
+import InputSelect from "components/select/InputSelect"
 import React, { useEffect, useState } from "react"
 import { DatasourceType } from "types/dashboard"
 import { Datasource } from "types/datasource"
@@ -53,10 +54,13 @@ const DatasourceSelect = ({ value, onChange, allowTypes = [], variant = "unstyle
     })
 
 
-    return (<ChakraSelect value={{ value: value, label: datasources.find(ds => ds.id == value)?.name }} placeholder="select datasource" variant={variant} size={size} options={options}
-        onChange={onChange}
-        components={customComponents}
-    />)
+    return (
+        <InputSelect width="100%"  isClearable value={value?.toString()} label={datasources.find(ds => ds.id == value)?.name} placeholder={"select datasource, support template"}  size="md" options={options} onChange={onChange} enableInput />
+    // <ChakraSelect value={{ value: value, label: datasources.find(ds => ds.id == value)?.name }} placeholder="select datasource" variant={variant} size={size} options={options}
+    //     onChange={onChange}
+    //     components={customComponents}
+    // />
+    )
 }
 
 export default DatasourceSelect
