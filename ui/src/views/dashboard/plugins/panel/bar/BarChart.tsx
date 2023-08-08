@@ -130,6 +130,9 @@ const BarChart = (props: Props) => {
             backgroundColor: useColorModeValue("rgba(255,255,255,0.7)", "rgba(255,255,255,0.7)"),
             textStyle: {
                 color: useColorModeValue("#444", "#222")
+            },
+            valueFormatter: (value) => {
+                return formatUnit(value, options.value.units, options.value.decimal)
             }
         },
         grid: {
@@ -166,8 +169,11 @@ const BarChart = (props: Props) => {
             show: true,
             splitNumber: 3,
             axisLabel: {
-                fontSize: 11
-            }
+                fontSize: 11,
+                formatter: (value) => {
+                    return formatUnit(value, options.value.units, options.value.decimal)
+                }
+            },
         },
         series: names.map((name, i) => ({
             name: name,
