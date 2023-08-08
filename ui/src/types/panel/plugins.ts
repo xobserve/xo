@@ -54,6 +54,8 @@ export interface BarSettings {
     }
     axis: {
         swap: boolean
+        scale: "linear" | "log"
+        scaleBase: 2 | 10
     }
     value: ValueSetting
     legend: {

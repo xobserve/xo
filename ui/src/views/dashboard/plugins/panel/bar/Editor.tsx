@@ -58,6 +58,16 @@ const BarPanelEditor = memo(({ panel, onChange }: PanelEditorProps) => {
                     panel.plugins.bar.axis.swap = e.currentTarget.checked
                 })} />
             </PanelEditItem>
+            <PanelEditItem title={t.scale}>
+                <RadionButtons options={[{ label: "Linear", value: "linear" }, { label: "Log", value: "log" }]} value={panel.plugins.bar.axis.scale} onChange={v => onChange((panel: Panel) => {
+                    panel.plugins.bar.axis.scale = v
+                })} />
+            </PanelEditItem>
+            {panel.plugins.bar.axis.scale == "log" && <PanelEditItem title="Scale Base">
+                <RadionButtons options={[{ label: "Base 2", value: "2" }, { label: "Base 10", value: "10" }]} value={panel.plugins.bar.axis.scaleBase as any} onChange={v => onChange((panel: Panel) => {
+                    panel.plugins.bar.axis.scaleBase = v
+                })} />
+            </PanelEditItem>}
         </PanelAccordion>
         <PanelAccordion title="Legend">
             <PanelEditItem title={t.show}>
@@ -98,7 +108,7 @@ const BarPanelEditor = memo(({ panel, onChange }: PanelEditorProps) => {
                 <EditorNumberItem value={panel.plugins.bar.styles.labelFontSize} min={6}  max={20} step={1} onChange={v => onChange((panel: Panel) => { panel.plugins.bar.styles.labelFontSize = v })} placeholder="auto" />
             </PanelEditItem>
             <PanelEditItem title="Bar fill opacity">
-                <EditorSliderItem value={panel.plugins.bar.styles.barOpacity} min={0}  max={100} step={1} onChange={v => onChange((panel: Panel) => { panel.plugins.bar.styles.barOpacity = v })}  />
+                <EditorSliderItem value={panel.plugins.bar.styles.barOpacity} min={10}  max={100} step={1} onChange={v => onChange((panel: Panel) => { panel.plugins.bar.styles.barOpacity = v })}  />
             </PanelEditItem>      
         </PanelAccordion>
 

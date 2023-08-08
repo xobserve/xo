@@ -381,6 +381,8 @@ function registerEvents(options, chart) {
             stack: "auto",
             axis: {
                 swap: false,
+                scale: "linear",
+                scaleBase: 2,
             },
             styles: {
                 barWidth: 85,

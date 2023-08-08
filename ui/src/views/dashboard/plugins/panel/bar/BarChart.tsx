@@ -32,12 +32,12 @@ interface Props {
     data: BarSeries[]
     panel: Panel
     width: number
-    height:number
+    height: number
     onSelect: any
 }
 
 const BarChart = (props: Props) => {
-    const { panel, width, onSelect,height } = props
+    const { panel, width, onSelect, height } = props
     const options = panel.plugins.bar
     const [chart, setChart] = useState<echarts.ECharts>(null)
     const { colorMode } = useColorMode()
@@ -60,7 +60,7 @@ const BarChart = (props: Props) => {
             return [[], names, data]
         }
         const timeRange = getCurrentTimeRange()
-        let start = round(timeRange.start.getTime()/ 1000)
+        let start = round(timeRange.start.getTime() / 1000)
         const dataStart = round(props.data[0].timestamps[0])
         if (dataStart < start) {
             start = dataStart
@@ -68,7 +68,7 @@ const BarChart = (props: Props) => {
 
         const now = new Date()
         let timeline = []
-        props.data.forEach((series,i) => {
+        props.data.forEach((series, i) => {
             if (i == 0) {
                 timeline = series.timestamps.map(t => t * 1000)
             }
@@ -78,9 +78,9 @@ const BarChart = (props: Props) => {
         })
 
         const ds = panel.datasource
-        const intervalObj =  calculateInterval(timeRange, ds.queryOptions.maxDataPoints ?? DatasourceMaxDataPoints, isEmpty(ds.queryOptions.minInterval) ? DatasourceMinInterval : ds.queryOptions.minInterval)    
-        const timeFormat = getTimeFormat(start*1000, now.getTime(), intervalObj.intervalMs / 1000)
-    
+        const intervalObj = calculateInterval(timeRange, ds.queryOptions.maxDataPoints ?? DatasourceMaxDataPoints, isEmpty(ds.queryOptions.minInterval) ? DatasourceMinInterval : ds.queryOptions.minInterval)
+        const timeFormat = getTimeFormat(start * 1000, now.getTime(), intervalObj.intervalMs / 1000)
+
         return [timeline.map(t => dateTimeFormat(t, { format: timeFormat })), names, data]
     }, [props.data])
 
@@ -103,9 +103,21 @@ const BarChart = (props: Props) => {
     } else if (options.showLabel == "none") {
         showLabel = false
     } else { // auto
-        showLabel = (width / timeline.length) > 40 ? true : false
+        showLabel = (width / timeline.length) > 60 ? true : false
+    }
+    
+    if (options.axis.scale === "log") {
+        // https://github.com/apache/echarts/issues/9801 log(0) in echarts is invalid
+        for (const s of data) {
+            s.forEach((v,i) => {
+                if (v === 0) {
+                    s[i] = ""
+                }
+            })
+        }
     }
 
+    console.log("here333333:",timeline, data)
     const chartOptions = {
         animation: true,
         animationDuration: 500,
@@ -152,14 +164,16 @@ const BarChart = (props: Props) => {
             },
         },
         [options.axis.swap ? 'xAxis' : 'yAxis']: {
-            type: 'value',
+            type: options.axis.scale == "log" ? "log" : "value",
+            logBase: options.axis.scaleBase,
+            scalse: true,
             splitLine: {
                 show: options.showGrid,
             },
             show: true,
-            splitNumber: 3,
+            splitNumber: options.axis.scale == "log" ? null : 3,
             axisLabel: {
-                fontSize:  options.styles.axisFontSize,
+                fontSize: options.styles.axisFontSize,
                 formatter: (value) => {
                     return formatUnit(value, options.value.units, options.value.decimal)
                 }
@@ -180,13 +194,13 @@ const BarChart = (props: Props) => {
 
                     return (v.data / max) >= 0.2 ? value : ''
                 },
-                fontSize:  options.styles.labelFontSize,
+                fontSize: options.styles.labelFontSize,
             },
             emphasis: {
                 // focus: 'series'
             },
-            color: alpha(props.data.find(s => s.name == name)?.color, options.styles.barOpacity / 100)  ,
-            barWidth: stack == "total" ? `${options.styles.barWidth}%` : `${options.styles.barWidth/names.length}%`
+            color: alpha(props.data.find(s => s.name == name)?.color, options.styles.barOpacity / 100),
+            barWidth: stack == "total" ? `${options.styles.barWidth}%` : `${options.styles.barWidth / names.length}%`
         }))
     };
 
