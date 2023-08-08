@@ -50,11 +50,23 @@ export interface BarSettings {
         barWidth: number
         axisFontSize: number 
         labelFontSize: number
+        barOpacity: number
     }
     axis: {
         swap: boolean
     }
     value: ValueSetting
+    legend: {
+        show: boolean
+        placement: "bottom" | "right"
+        valueCalcs: ValueCalculationType[]
+        width: number
+        nameWidth: string
+        order: {
+            by: ValueCalculationType
+            sort: "asc" | "desc"
+        }
+    }
 }
 
 export interface LogSettings {

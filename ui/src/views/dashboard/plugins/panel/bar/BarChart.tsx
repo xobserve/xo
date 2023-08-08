@@ -25,17 +25,21 @@ import { BarSeries } from "types/plugins/bar"
 import { formatUnit } from "components/Unit"
 import { calculateInterval } from "utils/datetime/range"
 import { DatasourceMaxDataPoints, DatasourceMinInterval } from "src/data/constants"
+import { getLabelNameColor } from "../log/utils"
+import { paletteColorNameToHex, palettes } from "utils/colors"
+import { alpha } from "components/uPlot/colorManipulator"
 
 
 interface Props {
     data: BarSeries[]
     panel: Panel
     width: number
+    height:number
     onSelect: any
 }
 
 const BarChart = (props: Props) => {
-    const { panel, width, onSelect } = props
+    const { panel, width, onSelect,height } = props
     const options = panel.plugins.bar
     const [chart, setChart] = useState<echarts.ECharts>(null)
     const { colorMode } = useColorMode()
@@ -183,7 +187,7 @@ const BarChart = (props: Props) => {
             emphasis: {
                 focus: 'series'
             },
-            // color: getLabelNameColor(name)
+            color: props.data.find(s => s.name == name)?.color ,
             barWidth: stack == "total" ? `${options.styles.barWidth}%` : `${options.styles.barWidth/names.length}%`
         }))
     };
@@ -209,7 +213,6 @@ const getTimeFormat = (start, end, step) => {
         format = "M-"
     }
 
-    console.log("here333333:", mstart,mend)
     if (mstart.isSame(mend, 'day')) {
         format += "HH:mm"
     } else {
@@ -226,7 +229,7 @@ const getTimeFormat = (start, end, step) => {
 const getTimeInterval = (width, format, fontSize, ticks) => {
     const formatWidth = (measureText(format, fontSize).width + 10)
     const allowTicks = floor(width / formatWidth)
-    console.log("here333333:",ticks, allowTicks, ticks / allowTicks)
+    // console.log("here333333:",ticks, allowTicks, ticks / allowTicks)
     // if ((ticks / allowTicks) > 6) {
     //     return [null, 0]
     // }

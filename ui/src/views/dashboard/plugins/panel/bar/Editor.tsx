@@ -11,7 +11,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 import { Switch, Textarea } from "@chakra-ui/react"
-import { EditorInputItem, EditorNumberItem } from "components/editor/EditorItem"
+import { EditorInputItem, EditorNumberItem, EditorSliderItem } from "components/editor/EditorItem"
 import RadionButtons from "components/RadioButtons"
 import PanelAccordion from "src/views/dashboard/edit-panel/Accordion"
 import PanelEditItem from "src/views/dashboard/edit-panel/PanelEditItem"
@@ -65,7 +65,10 @@ const BarPanelEditor = memo(({ panel, onChange }: PanelEditorProps) => {
             </PanelEditItem> 
             <PanelEditItem title="Label font size">
                 <EditorNumberItem value={panel.plugins.bar.styles.labelFontSize} min={6}  max={20} step={1} onChange={v => onChange((panel: Panel) => { panel.plugins.bar.styles.labelFontSize = v })} placeholder="auto" />
-            </PanelEditItem>   
+            </PanelEditItem>
+            <PanelEditItem title="Bar fill opacity">
+                <EditorSliderItem value={panel.plugins.bar.styles.barOpacity} min={0}  max={1} step={0.1} onChange={v => onChange((panel: Panel) => { panel.plugins.bar.styles.barOpacity = v })}  />
+            </PanelEditItem>      
         </PanelAccordion>
 
         <PanelAccordion title={t.valueSettings}>

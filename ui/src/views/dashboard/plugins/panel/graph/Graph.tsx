@@ -73,21 +73,21 @@ const GraphPanel = memo((props: GraphPanelProps) => {
     const options = useMemo(() => {
         let o;
         data.map((frame, i) => {
-            const override: OverrideItem = findOverride(props.panel, frame.rawName)  
-            const name = findRuleInOverride(override,GraphRules.SeriesName )
+            const override: OverrideItem = findOverride(props.panel, frame.rawName)
+            const name = findRuleInOverride(override, GraphRules.SeriesName)
             if (name) {
                 frame.name = name
             } else {
                 frame.name = frame.rawName
             }
 
-            
+
             let color = findRuleInOverride(override, GraphRules.SeriesColor)
             if (!color) {
                 color = palettes[i % palettes.length]
             }
             frame.color = paletteColorNameToHex(color, colorMode)
-    
+
             // const negativeY = override?.overrides.find(o => o.type ==  GraphRules.SeriesNegativeY)
             // if (negativeY) {
             //     const vals = frame.fields[1].values
@@ -153,6 +153,26 @@ const GraphPanel = memo((props: GraphPanelProps) => {
             }
         } else {
             // 按住 shift
+            // 按住 shift
+            if (inactiveSeries.length == 0) {
+                // 没有处于隐藏的, 显示 s
+                const inactive = []
+                for (const s1 of data) {
+                    if (s1.name != s) {
+                        inactive.push(s1.name)
+                    }
+                }
+                setInactiveSeries(inactive)
+                options.series.map((s1, j) => {
+                    if (s1.label == s) {
+                        uplot.setSeries(j, { show: true })
+                    } else {
+                        uplot.setSeries(j, { show: false })
+                    }
+                })
+                return
+            }
+
             if (inactiveSeries.includes(s)) {
                 // s 处于隐藏状态，点击它，显示它
                 const inactive = inactiveSeries.filter(s1 => s1 != s)
@@ -201,15 +221,15 @@ const GraphPanel = memo((props: GraphPanelProps) => {
 
                             options.width = vizWidth
                             options.height = vizHeight
-                            
-                            let plotOpts = options 
+
+                            let plotOpts = options
                             let plotData = transformDataToUplot(data, props.panel)
                             if (props.panel.plugins.graph.styles.enableStack) {
-                                const r =  getStackedOpts(plotOpts, plotData , null);
+                                const r = getStackedOpts(plotOpts, plotData, null);
                                 plotData = r.data
                                 plotOpts = r.opts
                             }
-                          
+
                             return (options && <UplotReact
                                 options={plotOpts}
                                 data={plotData}
@@ -217,8 +237,8 @@ const GraphPanel = memo((props: GraphPanelProps) => {
                                 onCreate={onChartCreate}
                             >
                                 {props.panel.plugins.graph.tooltip.mode != 'hidden' && <Tooltip props={props} options={options} data={data} inactiveSeries={inactiveSeries} />}
-                                <ZoomPlugin options={options} onZoom={onZoom}/>
-                                {props.panel.plugins.graph.thresholdsDisplay != ThresholdDisplay.None && <ThresholdsPlugin options={options} thresholdsConfig={props.panel.plugins.graph.thresholds} display={props.panel.plugins.graph.thresholdsDisplay}/>}
+                                <ZoomPlugin options={options} onZoom={onZoom} />
+                                {props.panel.plugins.graph.thresholdsDisplay != ThresholdDisplay.None && <ThresholdsPlugin options={options} thresholdsConfig={props.panel.plugins.graph.thresholds} display={props.panel.plugins.graph.thresholdsDisplay} />}
                             </UplotReact>
                             )
                         }}
@@ -247,7 +267,7 @@ const transformDataToUplot = (data: SeriesData[], panel: Panel) => {
 
     // push y-axes series data
     for (const d of data) {
-        const negativeY = findOverrideRule(panel, d.rawName, GraphRules.SeriesNegativeY) 
+        const negativeY = findOverrideRule(panel, d.rawName, GraphRules.SeriesNegativeY)
         if (negativeY) {
             const vals = cloneDeep(d.fields[1].values)
             for (let i = 0; i < vals.length; i++) {

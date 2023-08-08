@@ -10,16 +10,21 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-import { Box, Center, Text, VStack } from "@chakra-ui/react"
-import { MarkdownRender } from "components/markdown/MarkdownRender"
-import { PanelProps } from "types/dashboard"
-import { replaceWithVariables } from "utils/variable"
-import React, { useMemo } from "react";
+import { Box, Center, Text, VStack, useColorMode } from "@chakra-ui/react"
+import { OverrideItem, PanelProps } from "types/dashboard"
+import React, { useCallback, useMemo, useState } from "react";
 import { FieldType, SeriesData } from "types/seriesData";
 import { isEmpty } from "utils/validate";
 import { isSeriesData } from "utils/seriesData";
 import { BarSeries } from "types/plugins/bar";
 import BarChart from "./BarChart";
+import { GraphLayout } from "../graph/GraphLayout";
+import LegendTable from "./components/Legend";
+import { findOverride, findRuleInOverride } from "utils/dashboard/panel";
+import { BarRules } from "./OverridesEditor";
+import { paletteColorNameToHex, palettes } from "utils/colors";
+import { PanelInactiveKey } from "src/data/storage-keys";
+import storage from "utils/localStorage";
 
 
 interface BarPanelProps extends PanelProps {
@@ -30,7 +35,7 @@ const BarPanelWrapper = (props: BarPanelProps) => {
     if (isEmpty(props.data)) {
         return <Center height="100%">No data</Center>
     }
-    
+
     return (<>
         {
             !isSeriesData(props.data[0])
@@ -50,13 +55,51 @@ const BarPanelWrapper = (props: BarPanelProps) => {
 export default BarPanelWrapper
 
 const BarPanel = (props: BarPanelProps) => {
-    const {panel, width} = props
+    const { panel, width } = props
+    const options = props.panel.plugins.bar
+    const inactiveKey = PanelInactiveKey + props.dashboardId + '-' + props.panel.id
+    const [inactiveSeries, setInactiveSeries] = useState(storage.get(inactiveKey) ?? [])
+    const {colorMode} = useColorMode()
 
-    const data: BarSeries[] = useMemo(() => {
-        const data = []
-        for (const series of props.data.flat()) {
+    const data: SeriesData[] = useMemo(() => {
+        const res = []
+        props.data.forEach(d => {
+            d.forEach((d1,i) => {
+                d1.rawName = d1.name
+                const override: OverrideItem = findOverride(props.panel, d1.rawName)  
+                const name = findRuleInOverride(override,BarRules.SeriesName )
+                if (name) {
+                    d1.name = name
+                } else {
+                    d1.name = d1.rawName
+                }
+          
+                let color = findRuleInOverride(override, BarRules.SeriesColor)
+                if (!color) {
+                    color = palettes[i % palettes.length]
+                }
+                d1.color = paletteColorNameToHex(color, colorMode)
+
+                res.push(d1)
+            })
+        })
+        return res
+    }, [props.data])
+
+    const onSeriesActive = useCallback((inacitve) => {
+        setInactiveSeries(inacitve)
+    },[])
+
+    const chartData: BarSeries[] = useMemo(() => {
+        const cdata = []
+        for (const series of data) {
+            if (inactiveSeries.includes(series.name)) {
+                continue
+             } 
+
             const barSeries: BarSeries = {
                 name: series.name,
+                color: series.color,
             }
 
             for (const f of series.fields) {
@@ -65,18 +108,47 @@ const BarPanel = (props: BarPanelProps) => {
                 }
                 if (f.type == FieldType.Time) {
                     barSeries.timestamps = f.values
-                } else if (f.type == FieldType.Number){
+                } else if (f.type == FieldType.Number) {
                     barSeries.values = f.values
                 }
             }
-            data.push(barSeries)
+            cdata.push(barSeries)
         }
 
-        return data
-    },[props.data])
+        return cdata
+    }, [data, inactiveSeries])
 
 
-    return (<BarChart data={data} width={width} panel={panel} onSelect={() => {}} />)
+
+    return (<>
+        <GraphLayout
+            width={props.width}
+            height={props.height}
+            legend={
+                !options.legend.show
+                    ?
+                    null
+                    :
+                    <LegendTable 
+                        placement={options.legend.placement} 
+                        width={options.legend.width} 
+                        props={props} 
+                        data={data} 
+                        inactiveSeries={inactiveSeries}
+                        onSeriesActive={onSeriesActive}  />
+            }
+            >
+            {(vizWidth: number, vizHeight: number) => {
+               return  <BarChart data={chartData} width={vizWidth} height={vizHeight} panel={panel} onSelect={() => { }} />
+            }}
+
+
+
+        </GraphLayout>
+    </>
+
+
+    )
 }
 
 

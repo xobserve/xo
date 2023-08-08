@@ -400,7 +400,7 @@ export const darkPalettes = [{
 
 export const colors = [];
 export const palettes = []
-const sequences = [2,3,4,1,0]
+const sequences = [2,1,0,3,4]
 for (var i=0;i<=4;i++) {
   const seq = sequences[i]
   for (const palette of darkPalettes) {

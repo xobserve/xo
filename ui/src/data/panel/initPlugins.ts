@@ -16,7 +16,7 @@ import { PanelPlugins, PieLegendPlacement, ThresholdDisplay, Units, UnitsType } 
 import { ArcGisMapServer, BaseLayerType, DataLayerType } from "types/plugins/geoMap";
 import { ThresholdsConfig, ThresholdsMode } from "types/threshold";
 import { ValueCalculationType } from "types/value";
-import { colors, palettes } from "utils/colors";
+import { palettes } from "utils/colors";
 
 export const onClickCommonEvent = `
 // setVariable: (varName:string, varValue:string) => void 
@@ -385,12 +385,24 @@ function registerEvents(options, chart) {
             styles: {
                 barWidth: 85,
                 axisFontSize: 11,
-                labelFontSize: 11
+                labelFontSize: 11,
+                barOpacity: 0.8
             },
             value: {
                 ...getInitUnits(),
                 decimal: 2,
             },
+            legend: {
+                show: true,
+                placement: "bottom",
+                valueCalcs: [ValueCalculationType.Last],
+                width: 500,
+                nameWidth: '400',
+                order: {
+                    by: ValueCalculationType.Last,
+                    sort: 'desc'
+                }
+            }
         }
     }
 }
