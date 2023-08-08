@@ -117,7 +117,6 @@ const BarChart = (props: Props) => {
         }
     }
 
-    console.log("here333333:",timeline, data)
     const chartOptions = {
         animation: true,
         animationDuration: 500,

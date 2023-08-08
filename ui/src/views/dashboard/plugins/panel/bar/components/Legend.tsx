@@ -161,7 +161,7 @@ const LegendTable = memo(({ props, data, width,onSeriesActive,inactiveSeries }: 
 
     return (
         <Box fontSize="xs" width="100%">
-            <TableContainer maxW={options.legend.placement == "bottom" ? props.width - 20 : width} p={0} marginLeft="-18px" sx={{
+            <TableContainer maxW={options.legend.placement == "bottom" ? props.width  : width} p={0} marginLeft="-18px" sx={{
                 '::-webkit-scrollbar': {
                     width: '1px',
                     height: '1px',
@@ -177,7 +177,7 @@ const LegendTable = memo(({ props, data, width,onSeriesActive,inactiveSeries }: 
                                     type: UpdatePanelEvent,
                                     data: cloneDeep(props.panel)
                                 })
-                            }}><HStack spacing={0} justifyContent="center" cursor="pointer"><Text>{v[0]}</Text><Text> {options.legend.order.by == v[0] && <Text fontSize="0.6rem" opacity="0.7" position="absolute" top="3.5px">{options.legend.order.sort == "asc" ? <FaChevronUp /> : <FaChevronDown />}</Text>}</Text></HStack></Td>)}
+                            }}><HStack spacing={0} justifyContent="center" cursor="pointer" position="relative"><Text>{v[0]}</Text><Text> {options.legend.order.by == v[0] && <Text fontSize="0.6rem" opacity="0.7" position="absolute" top="3.5px">{options.legend.order.sort == "asc" ? <FaChevronUp /> : <FaChevronDown />}</Text>}</Text></HStack></Td>)}
                         </Tr>
                     </Thead>
                     <Tbody>
