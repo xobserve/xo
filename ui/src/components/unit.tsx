@@ -37,7 +37,7 @@ export const UnitPicker = ({ value, onChange,size="md" }: Props) => {
 
     const onAddUnit = () => {
         units.units.push({
-            operator: units[0].operator ?? 'x',
+            operator: units.units[0].operator ?? 'x',
             rhs: 1,
             unit: ''
         })
@@ -50,7 +50,7 @@ export const UnitPicker = ({ value, onChange,size="md" }: Props) => {
     }
 
     const onLiftUnit = (i) => {
-        [units[i - 1], units[i]] = [units[i], units[i - 1]]
+        [units.units[i - 1], units.units[i]] = [units.units[i], units.units[i - 1]]
 
         setUnits(cloneDeep(units))
     }
@@ -137,6 +137,10 @@ export const UnitPicker = ({ value, onChange,size="md" }: Props) => {
                 })
 
             case "custom":
+                setUnits({
+                    unitsType: t,
+                    units: units.units
+                })
                 break
             default:
                 setUnits({

@@ -49,6 +49,7 @@ export interface BarSettings {
     styles: {
 
     }
+    value: ValueSetting
 }
 
 export interface LogSettings {

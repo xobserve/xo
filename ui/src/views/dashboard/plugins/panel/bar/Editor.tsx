@@ -11,7 +11,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 import { Switch, Textarea } from "@chakra-ui/react"
-import { EditorInputItem } from "components/editor/EditorItem"
+import { EditorInputItem, EditorNumberItem } from "components/editor/EditorItem"
 import RadionButtons from "components/RadioButtons"
 import PanelAccordion from "src/views/dashboard/edit-panel/Accordion"
 import PanelEditItem from "src/views/dashboard/edit-panel/PanelEditItem"
@@ -19,6 +19,9 @@ import { Panel, PanelEditorProps } from "types/dashboard"
 import React, { memo } from "react";
 import { useStore } from "@nanostores/react"
 import { commonMsg, textPanelMsg } from "src/i18n/locales/en"
+import { UnitPicker } from "components/Unit"
+import { Units } from "types/panel/plugins"
+import ValueCalculation from "components/ValueCalculation"
 
 const BarPanelEditor = memo(({ panel, onChange }: PanelEditorProps) => {
     const t = useStore(commonMsg)
@@ -49,6 +52,21 @@ const BarPanelEditor = memo(({ panel, onChange }: PanelEditorProps) => {
         </PanelAccordion>
         <PanelAccordion title={t.styles}>
 
+        </PanelAccordion>
+
+        <PanelAccordion title={t.valueSettings}>
+            <PanelEditItem title={t.unit}>
+                <UnitPicker value={panel.plugins.bar.value} onChange={
+                    (v:Units) => onChange((panel: Panel) => {
+                        panel.plugins.bar.value.units = v.units
+                        panel.plugins.bar.value.unitsType = v.unitsType
+                    })
+                } />
+            </PanelEditItem>
+
+            <PanelEditItem title={t.decimal}>
+                <EditorNumberItem value={panel.plugins.bar.value.decimal} min={0} max={5} step={1} onChange={v => onChange((panel: Panel) => { panel.plugins.bar.value.decimal = v })} />
+            </PanelEditItem>
         </PanelAccordion>
     </>
     )

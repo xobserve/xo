@@ -381,7 +381,11 @@ function registerEvents(options, chart) {
             stack: "auto",
             styles: {
 
-            }
+            },
+            value: {
+                ...getInitUnits(),
+                decimal: 2,
+            },
         }
     }
 }

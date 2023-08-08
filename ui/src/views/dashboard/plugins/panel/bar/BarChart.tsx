@@ -23,6 +23,7 @@ import moment from "moment"
 import { isEmpty } from "utils/validate"
 import { measureText } from "utils/measureText"
 import { BarSeries } from "types/plugins/bar"
+import { formatUnit } from "components/Unit"
 
 
 interface Props {
@@ -95,7 +96,7 @@ const BarChart = (props: Props) => {
             const d = []
             for (const ts of timeline) {
                 const v1 = v[ts] ?? null
-                d.push(round(v1,3))
+                d.push(v1)
             }
             data.push(d)
         }
@@ -103,7 +104,6 @@ const BarChart = (props: Props) => {
         return [timeline.map(t => dateTimeFormat(t, { format: timeFormat })), names, data]
     }, [props.data])
 
-    console.log("here333333:",timeline, names,data)
     const max = Math.max(...data.flat())
     let stack;
     if (options.stack == "always") {
@@ -181,7 +181,7 @@ const BarChart = (props: Props) => {
                         return v.data
                     }
 
-                    return (v.data / max) >= 0.2 ? v.data : ''
+                    return (v.data / max) >= 0.2 ? formatUnit(v.data, options.value.units, options.value.decimal) : ''
                 },
                 fontSize: 11,
             },
