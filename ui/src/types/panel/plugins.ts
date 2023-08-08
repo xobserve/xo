@@ -49,6 +49,9 @@ export interface BarSettings {
     styles: {
 
     }
+    axis: {
+        swap: boolean
+    }
     value: ValueSetting
 }
 

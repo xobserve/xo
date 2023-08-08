@@ -50,6 +50,13 @@ const BarPanelEditor = memo(({ panel, onChange }: PanelEditorProps) => {
                 })} />
             </PanelEditItem>
         </PanelAccordion>
+        <PanelAccordion title={"Axis"}>
+            <PanelEditItem title="Swap XY">
+                <Switch defaultChecked={panel.plugins.bar.axis.swap} onChange={e => onChange((panel: Panel) => {
+                    panel.plugins.bar.axis.swap = e.currentTarget.checked
+                })} />
+            </PanelEditItem>
+        </PanelAccordion>
         <PanelAccordion title={t.styles}>
 
         </PanelAccordion>

@@ -379,6 +379,9 @@ function registerEvents(options, chart) {
             tooltip: "single",
             showLabel: "auto",
             stack: "auto",
+            axis: {
+                swap: false,
+            },
             styles: {
 
             },

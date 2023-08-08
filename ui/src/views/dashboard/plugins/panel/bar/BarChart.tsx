@@ -143,7 +143,7 @@ const BarChart = (props: Props) => {
             padding: 0,
             containLabel: true
         },
-        xAxis: {
+        [options.axis.swap ? 'yAxis' : 'xAxis']: {
             type: 'category',
             data: timeline,
             show: true,
@@ -153,7 +153,7 @@ const BarChart = (props: Props) => {
             axisLabel: {
                 show: true,
                 textStyle: {
-                    align: 'center',
+                    align: options.axis.swap ? null : "center",
                     // baseline: 'end',
                 },
                 interval: interval,
@@ -161,7 +161,7 @@ const BarChart = (props: Props) => {
                 rotate: rotate,
             },
         },
-        yAxis: {
+        [options.axis.swap ? 'xAxis' : 'yAxis']: {
             type: 'value',
             splitLine: {
                 show: options.showGrid,
