@@ -352,7 +352,6 @@ export const panelMsg = i18n("panel", {
   "panelTitle": "Panel Title",
   "panelDesc": "give a short description to this panel",
   "visuization": "Visuization",
-
   "panelBorder": "Panel border",
   "titleDecoration": "Title decoration",
   "panelDecoration": "Panel decoration",
@@ -374,6 +373,8 @@ export const prometheusDsMsg = i18n("prometheusDs", {
   "enterPromQL": "Enter a PromQL query",
   "legendFormat": "support variable",
   "selecMetrics": "Select metrics...",
+  "expandTimeline": "Expand timeline",
+  "expandTimelineDesc": "When enabled, time point will be showed even if there is no value, usefull for showing missing data",
 })
 
 export const httpDsMsg = i18n("httpDs", {

@@ -21,7 +21,6 @@ import { useStore } from "@nanostores/react"
 import { commonMsg, textPanelMsg } from "src/i18n/locales/en"
 import { UnitPicker } from "components/Unit"
 import { Units } from "types/panel/plugins"
-import ValueCalculation from "components/ValueCalculation"
 
 const BarPanelEditor = memo(({ panel, onChange }: PanelEditorProps) => {
     const t = useStore(commonMsg)
@@ -56,12 +55,17 @@ const BarPanelEditor = memo(({ panel, onChange }: PanelEditorProps) => {
                     panel.plugins.bar.axis.swap = e.currentTarget.checked
                 })} />
             </PanelEditItem>
-            <PanelEditItem title="Min bars">
-                <EditorNumberItem value={panel.plugins.bar.value.decimal} min={0} max={5} step={1} onChange={v => onChange((panel: Panel) => { panel.plugins.bar.value.decimal = v })} />
-            </PanelEditItem>
         </PanelAccordion>
         <PanelAccordion title={t.styles}>
-
+            <PanelEditItem title="Bar width">
+                <EditorNumberItem value={panel.plugins.bar.styles.barWidth} min={1}  max={100} step={2} onChange={v => onChange((panel: Panel) => { panel.plugins.bar.styles.barWidth = v })} placeholder="auto" />
+            </PanelEditItem>  
+            <PanelEditItem title="Axis font size">
+                <EditorNumberItem value={panel.plugins.bar.styles.axisFontSize} min={6}  max={20} step={1} onChange={v => onChange((panel: Panel) => { panel.plugins.bar.styles.axisFontSize = v })} placeholder="auto" />
+            </PanelEditItem> 
+            <PanelEditItem title="Label font size">
+                <EditorNumberItem value={panel.plugins.bar.styles.labelFontSize} min={6}  max={20} step={1} onChange={v => onChange((panel: Panel) => { panel.plugins.bar.styles.labelFontSize = v })} placeholder="auto" />
+            </PanelEditItem>   
         </PanelAccordion>
 
         <PanelAccordion title={t.valueSettings}>

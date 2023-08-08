@@ -2,7 +2,7 @@ import { TimeRange } from "types/time";
 import {cloneDeep, random, round} from 'lodash'
 import { calculateInterval } from "utils/datetime/range";
 import { DatasourceMaxDataPoints, DatasourceMinInterval } from "src/data/constants";
-import { PanelDatasource } from "types/dashboard";
+import { PanelDatasource, PanelQuery } from "types/dashboard";
 
 const rawData = {
     "status": "success",
@@ -68,16 +68,16 @@ const rawData = {
     }
 }
 
-export const genPrometheusData = (timeRange: TimeRange,ds: PanelDatasource) => {
+export const genPrometheusData = (timeRange: TimeRange,ds: PanelDatasource,q: PanelQuery) => {
     const data = cloneDeep(rawData)
     const start = timeRange.start.getTime() / 1000 
     const end = timeRange.end.getTime() / 1000 
-    const interval = calculateInterval(timeRange,  ds.queryOptions.maxDataPoints?? DatasourceMaxDataPoints,ds.queryOptions.minInterval??DatasourceMinInterval).intervalMs / 1000
+    const alignedStart = start - start % q.interval
     const timeBucks = []
-    let current = start;
+    let current = alignedStart;
     while (current <= end) {
         timeBucks.push(current)
-        current += interval        
+        current += q.interval        
     }
 
    for (const r of data.data.result) {

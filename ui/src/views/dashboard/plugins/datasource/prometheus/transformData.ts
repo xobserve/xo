@@ -24,7 +24,16 @@ export const prometheusToPanels = (rawData: any, panel: Panel, query: PanelQuery
         return null
     }
 
-    return prometheusToSeriesData(rawData, query, range, panel.type == PanelType.Graph)
+    let expandTimeRange;
+    const et = query.data["expandTimeline"]
+ 
+    if (isEmpty(et) || et=="auto" ) {
+        expandTimeRange = panel.type == PanelType.Graph || panel.type == PanelType.Bar || panel.type == PanelType.Stat
+    } else {
+        expandTimeRange = et == "always"
+    }
+
+    return prometheusToSeriesData(rawData, query, range, expandTimeRange)
 }
 
 export const prometheusToSeriesData = (data: any, query: PanelQuery, range: TimeRange, expandTimeRange = false): SeriesData[] => {

@@ -383,7 +383,9 @@ function registerEvents(options, chart) {
                 swap: false,
             },
             styles: {
-
+                barWidth: 85,
+                axisFontSize: 11,
+                labelFontSize: 11
             },
             value: {
                 ...getInitUnits(),

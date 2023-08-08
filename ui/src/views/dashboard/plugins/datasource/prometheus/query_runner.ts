@@ -41,11 +41,13 @@ export const run_prometheus_query = async (panel: Panel, q: PanelQuery, range: T
     const start = round(range.start.getTime() / 1000)
     const end = range.end.getTime() / 1000
 
+    const alignedStart = start - start % q.interval
+
     //@todo: 
     // 1. rather than query directyly to prometheus, we should query to our own backend servie
     // 2. using `axios` instead of `fetch`
 
-    const res: any = await requestApi.get(`/proxy/${ds.id}/api/v1/query_range?query=${q.metrics}&start=${start}&end=${end}&step=${q.interval}`)
+    const res: any = await requestApi.get(`/proxy/${ds.id}/api/v1/query_range?query=${q.metrics}&start=${alignedStart}&end=${end}&step=${q.interval}`)
     if (res.status !== "success") {
         console.log("Failed to fetch data from prometheus", res)
         return {

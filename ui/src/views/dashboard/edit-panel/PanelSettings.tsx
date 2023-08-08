@@ -21,6 +21,7 @@ import { memo, useEffect } from "react"
 import React from "react";
 import { useStore } from "@nanostores/react"
 import { commonMsg, panelMsg } from "src/i18n/locales/en"
+import RadionButtons from "components/RadioButtons"
 
 // in edit mode, we need to cache all the plugins we have edited, until we save the dashboard
 let pluginsCachedInEdit = {}
@@ -51,7 +52,7 @@ const PanelSettings = memo(({ panel, onChange }: PanelEditorProps) => {
 
     return (
         <>
-            <PanelAccordion title={t.basicSetting} defaultOpen>
+            <PanelAccordion title={t.basicSetting} spacing={2} defaultOpen>
                 <PanelEditItem title={t1.panelTitle}>
                     <EditorInputItem value={panel.title} onChange={v => onChange((tempPanel:Panel) => { tempPanel.title = v })}   />
                 </PanelEditItem>

@@ -14,7 +14,7 @@
 import { Accordion, AccordionButton, AccordionIcon, AccordionItem, AccordionPanel, Text, VStack } from "@chakra-ui/react"
 import React from "react";
 
-const PanelAccordion = ({title, children ,defaultOpen=true}) => {
+const PanelAccordion = ({title, children ,defaultOpen=true,spacing=4}) => {
     return (
         <Accordion defaultIndex={defaultOpen ? [0] : []} allowMultiple>
             <AccordionItem>
@@ -23,7 +23,7 @@ const PanelAccordion = ({title, children ,defaultOpen=true}) => {
                     <Text ml="1">{title}</Text>
                 </AccordionButton>
                 <AccordionPanel pb={4} pt="0">
-                    <VStack alignItems="left" spacing={4}>
+                    <VStack alignItems="left" spacing={spacing}>
                     {children}
                     </VStack>
                 </AccordionPanel>

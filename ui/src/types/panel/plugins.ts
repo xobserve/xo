@@ -47,7 +47,9 @@ export interface BarSettings {
     stack: "auto" | "always" | "none"
     showLabel: "auto" | "always" | "none"
     styles: {
-
+        barWidth: number
+        axisFontSize: number 
+        labelFontSize: number
     }
     axis: {
         swap: boolean

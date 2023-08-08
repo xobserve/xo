@@ -25,6 +25,8 @@ import InputSelect from "components/select/InputSelect"
 import { prometheusDsMsg } from "src/i18n/locales/en";
 import { useStore } from "@nanostores/react";
 import CodeEditor, { LogqlLang } from "components/CodeEditor/CodeEditor";
+import PanelEditItem from "src/views/dashboard/edit-panel/PanelEditItem";
+import RadionButtons from "components/RadioButtons";
 
 
 
@@ -63,6 +65,7 @@ const PrometheusQueryEditor = ({ datasource, query, onChange }: DatasourceEditor
                     size="sm"
                 /> */}
             </FormItem>
+            <HStack>
             <FormItem labelWidth="150px"  size="sm"  title="Legend">
                 <Input
                     value={tempQuery.legend}
@@ -75,6 +78,15 @@ const PrometheusQueryEditor = ({ datasource, query, onChange }: DatasourceEditor
                     size="sm"
                 />
             </FormItem>
+            <FormItem labelWidth="150px" size="sm" title={t1.expandTimeline} desc={t1.expandTimelineDesc}>
+                     <RadionButtons size="sm" options={[{ label: "Auto", value: "auto" }, { label: "Always", value: 'always' }, { label: "None", value: 'none' }]} value={tempQuery.data['expandTimeline']}         onChange={(v) => {
+                            tempQuery.data['expandTimeline'] = v 
+                            const q = { ...tempQuery, data:  cloneDeep(tempQuery.data)}
+                            setTempQuery(q)
+                            onChange(q)
+                        }} />
+                </FormItem>
+                </HStack>
         </Form>
     )
 }
