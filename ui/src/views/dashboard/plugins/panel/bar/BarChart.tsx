@@ -14,7 +14,7 @@
 import { useColorMode, useColorModeValue } from "@chakra-ui/react"
 import { getCurrentTimeRange } from "components/DatePicker/TimePicker"
 import ChartComponent from "components/charts/Chart"
-import { floor, last, round } from "lodash"
+import { floor, round } from "lodash"
 import React, { useEffect, useMemo, useState } from "react"
 import { Panel } from "types/dashboard"
 import { dateTimeFormat } from "utils/datetime/formatter"
@@ -25,8 +25,6 @@ import { BarSeries } from "types/plugins/bar"
 import { formatUnit } from "components/Unit"
 import { calculateInterval } from "utils/datetime/range"
 import { DatasourceMaxDataPoints, DatasourceMinInterval } from "src/data/constants"
-import { getLabelNameColor } from "../log/utils"
-import { paletteColorNameToHex, palettes } from "utils/colors"
 import { alpha } from "components/uPlot/colorManipulator"
 
 
@@ -185,9 +183,9 @@ const BarChart = (props: Props) => {
                 fontSize:  options.styles.labelFontSize,
             },
             emphasis: {
-                focus: 'series'
+                // focus: 'series'
             },
-            color: props.data.find(s => s.name == name)?.color ,
+            color: alpha(props.data.find(s => s.name == name)?.color, options.styles.barOpacity / 100)  ,
             barWidth: stack == "total" ? `${options.styles.barWidth}%` : `${options.styles.barWidth/names.length}%`
         }))
     };

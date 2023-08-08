@@ -386,7 +386,7 @@ function registerEvents(options, chart) {
                 barWidth: 85,
                 axisFontSize: 11,
                 labelFontSize: 11,
-                barOpacity: 0.8
+                barOpacity: 80
             },
             value: {
                 ...getInitUnits(),

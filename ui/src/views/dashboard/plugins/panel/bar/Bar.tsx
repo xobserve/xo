@@ -76,7 +76,7 @@ const BarPanel = (props: BarPanelProps) => {
           
                 let color = findRuleInOverride(override, BarRules.SeriesColor)
                 if (!color) {
-                    color = palettes[i % palettes.length]
+                    color = palettes[(colorMode == "light" ?  i+6 : i) % palettes.length]
                 }
                 d1.color = paletteColorNameToHex(color, colorMode)
 
@@ -84,7 +84,7 @@ const BarPanel = (props: BarPanelProps) => {
             })
         })
         return res
-    }, [props.data])
+    }, [props.data, colorMode, panel.overrides])
 
     const onSeriesActive = useCallback((inacitve) => {
         setInactiveSeries(inacitve)
