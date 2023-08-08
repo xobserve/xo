@@ -42,8 +42,13 @@ export interface DisableDatasource {
 }
 
 export interface BarSettings {
+    showGrid: boolean
+    tooltip: "none" | "single" | "all"
     stack: "auto" | "always" | "none"
     showLabel: "auto" | "always" | "none"
+    styles: {
+
+    }
 }
 
 export interface LogSettings {

@@ -121,7 +121,7 @@ const BarChart = (props: Props) => {
         animationDuration: 500,
         tooltip: {
             show: true,
-            trigger: 'axis',
+            trigger: options.tooltip == "none" ? "none" : (options.tooltip == "all" ? "axis" : "item"),
             appendToBody: true,
             axisPointer: {
                 // Use axis to trigger tooltip
@@ -161,7 +161,7 @@ const BarChart = (props: Props) => {
         yAxis: {
             type: 'value',
             splitLine: {
-                show: true,
+                show: options.showGrid,
             },
             show: true,
             splitNumber: 3,
@@ -173,7 +173,7 @@ const BarChart = (props: Props) => {
             name: name,
             data: data[i],
             type: 'bar',
-            stack: null,
+            stack: stack,
             label: {
                 show: options.showLabel != "none" ? true : false,
                 formatter: (v) => {
@@ -186,7 +186,7 @@ const BarChart = (props: Props) => {
                 fontSize: 11,
             },
             emphasis: {
-                focus: 'series'
+                // focus: 'series'
             },
             // color: getLabelNameColor(name)
             // barWidth: '90%'
