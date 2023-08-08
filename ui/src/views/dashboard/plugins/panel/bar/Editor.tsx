@@ -56,6 +56,9 @@ const BarPanelEditor = memo(({ panel, onChange }: PanelEditorProps) => {
                     panel.plugins.bar.axis.swap = e.currentTarget.checked
                 })} />
             </PanelEditItem>
+            <PanelEditItem title="Min bars">
+                <EditorNumberItem value={panel.plugins.bar.value.decimal} min={0} max={5} step={1} onChange={v => onChange((panel: Panel) => { panel.plugins.bar.value.decimal = v })} />
+            </PanelEditItem>
         </PanelAccordion>
         <PanelAccordion title={t.styles}>
 

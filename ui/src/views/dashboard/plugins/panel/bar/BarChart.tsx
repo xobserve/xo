@@ -67,39 +67,51 @@ const BarChart = (props: Props) => {
             start = dataStart
         }
 
+
         // minStep is 1m
-        const minSteps = 10
-        const maxBars = 20
-        const maxSteps = maxBars ?? 20
-        const [timeline0, step] = calcStep(start, end, minSteps, maxSteps)
-        const timeline = timeline0.map(t => t * 1000)
+        // const minSteps = 10
+        // const maxBars = 100
+        // const maxSteps = maxBars ?? 20
+        
+        // const [timeline0, step] = calcStep(start, end, minSteps, maxSteps, )
+        // const timeline = timeline0.map(t => t * 1000)
         const now = new Date()
 
-        const timeFormat = getTimeFormat(start*1000, now, step)
 
 
 
+        let timeline = []
         const valueMap = new Map()
-        for (const series of props.data) {
-            const values = valueMap.get(series.name) ?? {}
-            series.timestamps.forEach((timestamp, i) => {
-                const ts = getTimelineBucket(timestamp * 1000, timeline)
-                values[ts] = (values[ts] ?? 0) + series.values[i]
-            })
-            valueMap.set(series.name,values)
-        }
-        
-        console.log("here333333:",Array.from(valueMap.keys()))
-        for (const k of Array.from(valueMap.keys())) {
-            names.push(k)
-            const v = valueMap.get(k)
-            const d = []
-            for (const ts of timeline) {
-                const v1 = v[ts] ?? null
-                d.push(v1)
+        props.data.forEach((series,i) => {
+            if (i == 0) {
+                timeline = series.timestamps.map(t => t * 1000)
             }
-            data.push(d)
-        }
+
+            names.push(series.name)
+            data.push(series.values)
+        })
+
+        const timeFormat = getTimeFormat(start*1000, now, 0)
+        // for (const series of props.data) {
+        //     const values = valueMap.get(series.name) ?? {}
+        //     series.timestamps.forEach((timestamp, i) => {
+        //         const ts = getTimelineBucket(timestamp * 1000, timeline)
+        //         values[ts] = (values[ts] ?? 0) + series.values[i]
+        //     })
+        //     valueMap.set(series.name,values)
+        // }
+        
+        // console.log("here333333:",Array.from(valueMap.keys()))
+        // for (const k of Array.from(valueMap.keys())) {
+        //     names.push(k)
+        //     const v = valueMap.get(k)
+        //     const d = []
+        //     for (const ts of timeline) {
+        //         const v1 = v[ts] ?? null
+        //         d.push(v1)
+        //     }
+        //     data.push(d)
+        // }
 
         return [timeline.map(t => dateTimeFormat(t, { format: timeFormat })), names, data]
     }, [props.data])
@@ -158,7 +170,7 @@ const BarChart = (props: Props) => {
                 },
                 interval: interval,
                 fontSize: rotate != 0 ? timeFontSize - 1 : timeFontSize,
-                rotate: rotate,
+                // rotate: rotate,
             },
         },
         [options.axis.swap ? 'xAxis' : 'yAxis']: {
@@ -181,7 +193,7 @@ const BarChart = (props: Props) => {
             type: 'bar',
             stack: stack,
             label: {
-                show: options.showLabel != "none" ? true : false,
+                show: options.showLabel != "none" ? ((width / timeline.length) > 30 ? true : false) : false,
                 formatter: (v) => {
                     if (options.showLabel == "always") {
                         return v.data
@@ -195,7 +207,7 @@ const BarChart = (props: Props) => {
                 // focus: 'series'
             },
             // color: getLabelNameColor(name)
-            // barWidth: '90%'
+            barWidth: stack == "total" ? "80%" : null
         }))
     };
 
@@ -214,15 +226,16 @@ const calcStep = (start, end, minSteps, maxSteps): [number[], number] => {
     const steps = [30, 60, 2 * 60, 5 * 60, 10 * 60, 20 * 60, 30 * 60, 45 * 60, 60 * 60, 2 * 60 * 60, 3 * 60 * 60, 6 * 60 * 60, 12 * 60 * 60, 24 * 60 * 60]
     const interval = end - start
 
-    let step;
+    const allowSteps = []
     for (const s of steps) {
         const c = interval / s
         if (c >= minSteps && c <= maxSteps) {
-            step = s
+            allowSteps.push(s)
             break
         }
     }
 
+    const step = Math.max(...allowSteps)
     const firstTs = start + (step - start % step)
     const timeline = []
     for (var i = firstTs; i <= end; i += step) {
