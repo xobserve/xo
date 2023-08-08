@@ -65,7 +65,7 @@ export const initPanelPlugins = (): PanelPlugins => {
             },
             styles: {
                 style: "lines",
-                lineWidth: 0,
+                lineWidth: 1,
                 fillOpacity: 80,
                 showPoints: "auto",
                 pointSize: 6,

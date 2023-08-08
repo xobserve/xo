@@ -36,12 +36,12 @@ const axisSpace = ((self, axisIdx, scaleMin, scaleMax, plotDim) => {
     return calculateSpace(self, axisIdx, scaleMin, scaleMax, plotDim);
 })
 
-export const parseOptions = (config: PanelProps,rawData: SeriesData[], colorMode,inactiveSeries) => {
+export const parseOptions = (config: PanelProps, rawData: SeriesData[], colorMode, inactiveSeries) => {
 
 
-    const textColor = colorMode == ColorMode.Light ? customColors.textColorRGB.light :  customColors.textColorRGB.dark
+    const textColor = colorMode == ColorMode.Light ? customColors.textColorRGB.light : customColors.textColorRGB.dark
     const axesColor = colorMode == ColorMode.Light ? "rgba(0, 10, 23, 0.09)" : "rgba(240, 250, 255, 0.09)"
-    
+
     // build series
     const series = []
     // push time series option
@@ -65,13 +65,13 @@ export const parseOptions = (config: PanelProps,rawData: SeriesData[], colorMode
         size: ((self, values, axisIdx) => {
             return calculateAxisSize(self, values, axisIdx);
         }),
-        values: (u, vals) => vals.map(v => { return formatUnit(v, config.panel.plugins.graph.value.units,config.panel.plugins.graph.value.decimal) ?? round(v, config.panel.plugins.graph.value.decimal) }),
+        values: (u, vals) => vals.map(v => { return formatUnit(v, config.panel.plugins.graph.value.units, config.panel.plugins.graph.value.decimal) ?? round(v, config.panel.plugins.graph.value.decimal) }),
         units: config.panel.plugins.graph.value.units,
         side: 3
     }]
 
     rawData.forEach((d, i) => {
-        const override:OverrideItem = findOverride(config.panel, d.rawName) 
+        const override: OverrideItem = findOverride(config.panel, d.rawName)
         let opacity = config.panel.plugins.graph.styles.fillOpacity / 100
         const fillOverride = findRuleInOverride(override, GraphRules.SeriesFill)
         if (fillOverride) {
@@ -79,12 +79,12 @@ export const parseOptions = (config: PanelProps,rawData: SeriesData[], colorMode
         }
 
         let style = config.panel.plugins.graph.styles.style
-        let styleOverride = findRuleInOverride(override,GraphRules.SeriesStyle) 
+        let styleOverride = findRuleInOverride(override, GraphRules.SeriesStyle)
         if (styleOverride) {
             style = styleOverride
         }
-        
-        const unitsOverride = findRuleInOverride(override,GraphRules.SeriesUnit)
+
+        const unitsOverride = findRuleInOverride(override, GraphRules.SeriesUnit)
         let scale = 'y'
         if (unitsOverride != undefined) {
 
@@ -97,7 +97,7 @@ export const parseOptions = (config: PanelProps,rawData: SeriesData[], colorMode
             }
 
             let decimal = config.panel.plugins.graph.value.decimal
-            const decimalOverride = findRuleInOverride(override,GraphRules.SeriesDecimal)
+            const decimalOverride = findRuleInOverride(override, GraphRules.SeriesDecimal)
             if (decimalOverride != undefined) {
                 decimal = decimalOverride
             }
@@ -128,27 +128,47 @@ export const parseOptions = (config: PanelProps,rawData: SeriesData[], colorMode
 
 
         }
-        
-        series.push({
-            show: inactiveSeries.includes(d.name) ? false : true,
-            label:  d.name,
-            points: {
-                show: style=="points" ? true : ((config.panel.plugins.graph.styles.showPoints == "always" || config.panel.plugins.graph.styles?.style == "points") ? true : (config.panel.plugins.graph.styles.showPoints =="auto" ? null :false)),
+        let pointCfg;
+        if (config.panel.plugins.graph.styles.showPoints == "auto") {
+            pointCfg = {
+                 // set to null has completely different meaning than undefined, grfn set this to undefined (by delete the show field)
+                show: null,
                 size: config.panel.plugins.graph.styles?.pointSize,
                 stroke: d.color,
                 fill: d.color,
-                filter:  pointsFilter,
-            },
+                filter: pointsFilter,
+            }
+        } else if (style == "points" || config.panel.plugins.graph.styles.showPoints == "always") {
+            pointCfg = {
+                show: true,
+                size: config.panel.plugins.graph.styles?.pointSize,
+                stroke: d.color,
+                fill: d.color,
+                filter: pointsFilter,
+            }
+        } else {
+            pointCfg = {
+                show: false,
+                size: config.panel.plugins.graph.styles?.pointSize,
+                stroke: d.color,
+                fill: d.color,
+                filter: pointsFilter,
+            }
+        }
+        series.push({
+            show: inactiveSeries.includes(d.name) ? false : true,
+            label: d.name,
+            points:pointCfg,
             stroke: d.color,
             width: config.panel.plugins.graph.styles?.style == "points" ? 0 : config.panel.plugins.graph.styles?.lineWidth,
             fill: config.panel.plugins.graph.styles?.style == "points" ? null : (config.panel.plugins.graph.styles?.gradientMode == "none" ? colorManipulator.alpha(d.color ?? '', opacity) : fill(d.color, opacity)),
             spanGaps: config.panel.plugins.graph.styles.connectNulls,
             paths: style == "bars" ? uPlot.paths.bars({
-                size: [1 - config.panel.plugins.graph.styles.barGap/100, BardMaxWidth],
+                size: [1 - config.panel.plugins.graph.styles.barGap / 100, BardMaxWidth],
                 align: -1,
                 radius: config.panel.plugins.graph.styles.barRadius,
             }) : null,
-            scale:  scale,
+            scale: scale,
         })
     })
 
@@ -325,18 +345,18 @@ function calculateAxisSize(self: uPlot, values: string[], axisIdx: number) {
         // Not sure why this += and not normal assignment
         axisSize += axis!.gap! + axis!.labelGap! + textWidthWithLimit;
     }
-    
+
     return Math.ceil(axisSize + 15);
 }
 
 
 function calculateSpace(self: uPlot, axisIdx: number, scaleMin: number, scaleMax: number, plotDim: number): number {
-  
+
     const axis = self.axes[axisIdx];
     const scale = self.scales[axis.scale!];
-    
 
-    const defaultSpacing = axis.scale== 'x' ? 40 : 40;
+
+    const defaultSpacing = axis.scale == 'x' ? 40 : 40;
     // for axis left & right
     if (axis.side !== 2 || !scale) {
         return defaultSpacing;
@@ -351,7 +371,7 @@ function calculateSpace(self: uPlot, axisIdx: number, scaleMin: number, scaleMax
         const width = measureText(sample[0], UPLOT_AXIS_FONT_SIZE).width + 18;
         return width;
     }
-    
+
     return defaultSpacing;
 }
 
@@ -362,50 +382,49 @@ export const pointsFilter = (u, seriesIdx, show, gaps) => {
     let series = u.series[seriesIdx];
 
     if (!show && gaps && gaps.length) {
-      const [firstIdx, lastIdx] = series.idxs!;
-      const xData = u.data[0];
-      const yData = u.data[seriesIdx];
-      const firstPos = Math.round(u.valToPos(xData[firstIdx], 'x', true));
-      const lastPos = Math.round(u.valToPos(xData[lastIdx], 'x', true));
+        const [firstIdx, lastIdx] = series.idxs!;
+        const xData = u.data[0];
+        const yData = u.data[seriesIdx];
+        const firstPos = Math.round(u.valToPos(xData[firstIdx], 'x', true));
+        const lastPos = Math.round(u.valToPos(xData[lastIdx], 'x', true));
 
-      if (gaps[0][0] === firstPos) {
-        filtered.push(firstIdx);
-      }
-
-      // show single points between consecutive gaps that share end/start
-      for (let i = 0; i < gaps.length; i++) {
-        let thisGap = gaps[i];
-        let nextGap = gaps[i + 1];
-
-        if (nextGap && thisGap[1] === nextGap[0]) {
-          // approx when data density is > 1pt/px, since gap start/end pixels are rounded
-          let approxIdx = u.posToIdx(thisGap[1], true);
-
-          if (yData[approxIdx] == null) {
-            // scan left/right alternating to find closest index with non-null value
-            for (let j = 1; j < 100; j++) {
-              if (yData[approxIdx + j] != null) {
-                approxIdx += j;
-                break;
-              }
-              if (yData[approxIdx - j] != null) {
-                approxIdx -= j;
-                break;
-              }
-            }
-          }
-
-          filtered.push(approxIdx);
+        if (gaps[0][0] === firstPos) {
+            filtered.push(firstIdx);
         }
-      }
 
-      if (gaps[gaps.length - 1][1] === lastPos) {
-        filtered.push(lastIdx);
-      }
+        // show single points between consecutive gaps that share end/start
+        for (let i = 0; i < gaps.length; i++) {
+            let thisGap = gaps[i];
+            let nextGap = gaps[i + 1];
+
+            if (nextGap && thisGap[1] === nextGap[0]) {
+                // approx when data density is > 1pt/px, since gap start/end pixels are rounded
+                let approxIdx = u.posToIdx(thisGap[1], true);
+
+                if (yData[approxIdx] == null) {
+                    // scan left/right alternating to find closest index with non-null value
+                    for (let j = 1; j < 100; j++) {
+                        if (yData[approxIdx + j] != null) {
+                            approxIdx += j;
+                            break;
+                        }
+                        if (yData[approxIdx - j] != null) {
+                            approxIdx -= j;
+                            break;
+                        }
+                    }
+                }
+
+                filtered.push(approxIdx);
+            }
+        }
+
+        if (gaps[gaps.length - 1][1] === lastPos) {
+            filtered.push(lastIdx);
+        }
     }
 
     return filtered.length ? filtered : null;
-  }
+}
 
 
-  
