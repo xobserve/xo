@@ -35,7 +35,7 @@ const BarOverridesEditor = ({ override, onChange }: Props) => {
         case BarRules.SeriesName:
             return <EditorInputItem value={override.value} onChange={onChange} size="sm" placeholder="change series name" />
         case BarRules.SeriesUnit:
-            return <UnitPicker size="sm" value={override.value.units} onChange={onChange} />
+            return <UnitPicker size="sm" value={override.value?.units} onChange={onChange} />
         case BarRules.SeriesColor:
             return <ColorPicker  color={override.value} onChange={onChange} />
         case BarRules.SeriesFill:

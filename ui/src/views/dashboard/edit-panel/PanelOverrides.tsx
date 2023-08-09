@@ -28,6 +28,7 @@ import { SeriesData } from "types/seriesData";
 import StatOverridesEditor from "../plugins/panel/stat/OverridesEditor";
 import GeomapOverridesEditor from "../plugins/panel/geomap/OverridesEditor";
 import { Select } from "antd";
+import BarOverridesEditor from "../plugins/panel/bar/OverridesEditor";
 
 const PanelOverrides = ({ panel, onChange, data }: PanelEditorProps) => {
     const t1 = useStore(panelMsg)
@@ -158,6 +159,13 @@ const PanelOverrides = ({ panel, onChange, data }: PanelEditorProps) => {
                             }
                             {
                                 panel.type == PanelType.GeoMap && <GeomapOverridesEditor override={rule} onChange={(v) => {
+                                    onChange((panel: Panel) => {
+                                        panel.overrides[i].overrides[j].value = v
+                                    })
+                                }} />
+                            }
+                              {
+                                panel.type == PanelType.Bar && <BarOverridesEditor override={rule} onChange={(v) => {
                                     onChange((panel: Panel) => {
                                         panel.overrides[i].overrides[j].value = v
                                     })

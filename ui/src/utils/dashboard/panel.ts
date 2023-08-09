@@ -10,6 +10,7 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
+import { BarRules } from "src/views/dashboard/plugins/panel/bar/OverridesEditor";
 import { BarGaugeRules } from "src/views/dashboard/plugins/panel/barGauge/OverrideEditor";
 import { GeomapRules } from "src/views/dashboard/plugins/panel/geomap/OverridesEditor";
 import { GraphRules } from "src/views/dashboard/plugins/panel/graph/OverridesEditor";
@@ -17,7 +18,7 @@ import { StatRules } from "src/views/dashboard/plugins/panel/stat/OverridesEdito
 import { TableRules } from "src/views/dashboard/plugins/panel/table/OverridesEditor";
 import { GridPos, OverrideItem, Panel, PanelType } from "types/dashboard";
 
-export const updateGridPos = (panel: Panel,newPos: GridPos) => {
+export const updateGridPos = (panel: Panel, newPos: GridPos) => {
     panel.gridPos.x = newPos.x;
     panel.gridPos.y = newPos.y;
     panel.gridPos.w = newPos.w;
@@ -25,12 +26,12 @@ export const updateGridPos = (panel: Panel,newPos: GridPos) => {
 }
 
 
-export const findOverrideRule = (panel: Panel, overideTarget,  ruleType) => {
-    const override: OverrideItem = findOverride(panel,overideTarget)
+export const findOverrideRule = (panel: Panel, overideTarget, ruleType) => {
+    const override: OverrideItem = findOverride(panel, overideTarget)
     return findRuleInOverride(override, ruleType)
 }
 
-export const findOverride = (panel:Panel, overideTarget) => {
+export const findOverride = (panel: Panel, overideTarget) => {
     return panel.overrides.find((o) => o.target == overideTarget)
 }
 
@@ -39,19 +40,21 @@ export const findRuleInOverride = (override: OverrideItem, ruleType) => {
 }
 
 
-export const getPanelOverridesRules = (panelType):string[] => {
+export const getPanelOverridesRules = (panelType): string[] => {
     //@needs-update-when-add-new-panel-overrides
     switch (panelType) {
         case PanelType.Graph:
             return Object.keys(GraphRules).map(k => GraphRules[k])
         case PanelType.Table:
-            return  Object.keys(TableRules).map(k => TableRules[k])
+            return Object.keys(TableRules).map(k => TableRules[k])
         case PanelType.BarGauge:
-            return  Object.keys(BarGaugeRules).map(k => BarGaugeRules[k])
+            return Object.keys(BarGaugeRules).map(k => BarGaugeRules[k])
         case PanelType.Stat:
-            return  Object.keys(StatRules).map(k => StatRules[k])
+            return Object.keys(StatRules).map(k => StatRules[k])
         case PanelType.GeoMap:
-            return  Object.keys(GeomapRules).map(k => GeomapRules[k])
+            return Object.keys(GeomapRules).map(k => GeomapRules[k])
+        case PanelType.Bar:
+            return Object.keys(BarRules).map(k => BarRules[k])
         default:
             return []
     }

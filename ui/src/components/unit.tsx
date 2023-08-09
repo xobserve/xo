@@ -11,7 +11,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 import { Button, HStack, Input, NumberInput, NumberInputField, Select, VStack } from "@chakra-ui/react"
-import { cloneDeep, isEmpty, isNumber, round } from "lodash"
+import { cloneDeep, isNumber, round } from "lodash"
 import { useState } from "react"
 import { FaArrowUp, FaMinus, FaPlus } from "react-icons/fa"
 import {  Unit, Units } from "types/panel/plugins"
@@ -19,6 +19,7 @@ import React from "react"
 import { commonMsg } from "src/i18n/locales/en"
 import { useStore } from "@nanostores/react"
 import { getInitUnits } from "src/data/panel/initPlugins"
+import { isEmpty } from "utils/validate"
 
 interface Props {
     value: Units
@@ -31,8 +32,9 @@ interface Props {
 export const UnitPicker = ({ value, onChange,size="md" }: Props) => {
     const t = useStore(commonMsg)
     const [units, setUnits] = useState<Units>(value)
-    if (value == null) {
-        onChange(getInitUnits())
+    if (isEmpty(units)) {
+        setUnits(getInitUnits())
+        return 
     }
 
     const onAddUnit = () => {
