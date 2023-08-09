@@ -12,6 +12,7 @@
 // limitations under the License.
 import { PanelType } from "types/dashboard"
 import { LayoutOrientation } from "types/layout"
+import { BarThresholdArrow } from "types/plugins/bar"
 import { ArcGisMapServer, BaseLayerType, DataLayerType } from "types/plugins/geoMap"
 import { LogThreshold } from "types/plugins/log"
 import { ThresholdsConfig } from "types/threshold"
@@ -71,6 +72,7 @@ export interface BarSettings {
     }
     thresholds: ThresholdsConfig
     thresholdsDisplay: ThresholdDisplay
+    thresholdArrow: BarThresholdArrow
 }
 
 export interface LogSettings {

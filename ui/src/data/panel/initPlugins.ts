@@ -13,6 +13,7 @@
 import { PanelType } from "types/dashboard";
 import { LayoutOrientation } from "types/layout";
 import { PanelPlugins, PieLegendPlacement, ThresholdDisplay, Units, UnitsType } from "types/panel/plugins";
+import { BarThresholdArrow } from "types/plugins/bar";
 import { ArcGisMapServer, BaseLayerType, DataLayerType } from "types/plugins/geoMap";
 import { ThresholdsConfig, ThresholdsMode } from "types/threshold";
 import { ValueCalculationType } from "types/value";
@@ -407,6 +408,7 @@ function registerEvents(options, chart) {
             },
             thresholds: initThresholds(24),
             thresholdsDisplay: ThresholdDisplay.None,
+            thresholdArrow: BarThresholdArrow.None,
         }
     }
 }

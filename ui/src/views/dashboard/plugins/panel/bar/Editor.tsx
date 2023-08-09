@@ -24,6 +24,7 @@ import { ThresholdDisplay, Units } from "types/panel/plugins"
 import PopoverSelect from "components/select/PopoverSelect"
 import { ValueCalculationType } from "types/value"
 import ThresholdEditor from "components/Threshold/ThresholdEditor"
+import { BarThresholdArrow } from "types/plugins/bar"
 
 const BarPanelEditor = memo(({ panel, onChange }: PanelEditorProps) => {
     const t = useStore(commonMsg)
@@ -145,6 +146,19 @@ const BarPanelEditor = memo(({ panel, onChange }: PanelEditorProps) => {
                         <option value={ThresholdDisplay.None}>{ThresholdDisplay.None}</option>
                         <option value={ThresholdDisplay.Line}>{ThresholdDisplay.Line}</option>
                         <option value={ThresholdDisplay.DashedLine}>{ThresholdDisplay.DashedLine}</option>
+                </Select>
+            </PanelEditItem>
+            <PanelEditItem title="Threshold line arrow">
+                <Select value={panel.plugins.bar.thresholdArrow} onChange={e => {
+                    const v = e.currentTarget.value
+                    onChange((panel: Panel) => {
+                        panel.plugins.bar.thresholdArrow = v as BarThresholdArrow
+                        // dispatch(PanelForceRebuildEvent + panel.id)
+                    })
+                }}>
+                    {
+                        Object.keys(BarThresholdArrow).map(k =>   <option value={BarThresholdArrow[k]}>{BarThresholdArrow[k]}</option>)
+                    }
                 </Select>
             </PanelEditItem>
         </PanelAccordion>

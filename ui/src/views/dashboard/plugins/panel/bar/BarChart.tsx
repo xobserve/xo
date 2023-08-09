@@ -322,7 +322,7 @@ const BarChart = memo((props: Props) => {
                 markLine: {
                     [options.axis.swap ? "xAxisIndex" : "yAxisIndex"]: 0,
                     silent: true,
-                    symbol: ["diamond", null],
+                    symbol: [options.thresholdArrow, null],
                     label: {
                         show: false,
                     },
@@ -371,7 +371,7 @@ const BarChart = memo((props: Props) => {
                     },
                     markLine: {
                         silent: true,
-                        symbol: [null, "roundRect"],
+                        symbol: [null, options.thresholdArrow],
                         label: {
                             show: false,
                         },
