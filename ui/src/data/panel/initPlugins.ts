@@ -376,7 +376,7 @@ function registerEvents(options, chart) {
         },
         [PanelType.Bar]: {
             showGrid: true,
-            tooltip: "single",
+            tooltip: "all",
             showLabel: "auto",
             stack: "auto",
             axis: {

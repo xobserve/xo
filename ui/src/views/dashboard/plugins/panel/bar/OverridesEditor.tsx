@@ -32,19 +32,21 @@ const BarOverridesEditor = ({ override, onChange }: Props) => {
         case BarRules.SeriesName:
             return <EditorInputItem value={override.value} onChange={onChange} size="sm" placeholder="change series name" />
         case BarRules.SeriesUnit:
-            return <UnitPicker size="sm" value={override.value?.units} onChange={onChange} />
+            return <UnitPicker size="sm" value={override.value} onChange={onChange} />
         case BarRules.SeriesColor:
-            return <ColorPicker  color={override.value} onChange={onChange} />
+            return <ColorPicker color={override.value} onChange={onChange} />
         case BarRules.SeriesFill:
             return <EditorSliderItem value={override.value} min={10} max={100} step={1} onChange={onChange} />
         case BarRules.SeriesNegativeY:
+            return <></>
+        case BarRules.SeriesYAxist:
             return <></>
         case BarRules.SeriesDecimal:
             return <EditorNumberItem value={override.value} min={0} max={5} step={1} onChange={onChange} />
         default:
             return <></>
     }
-    
+
 }
 
 export default BarOverridesEditor
@@ -56,5 +58,6 @@ export enum BarRules {
     SeriesDecimal = 'Series.decimal',
     SeriesColor = 'Series.color',
     SeriesFill = 'Series.fillOpacity',
-    SeriesNegativeY = 'Series.negativeY'
- } 
+    SeriesNegativeY = 'Series.negativeY',
+    SeriesYAxist = 'Series.separateYAxis'
+} 

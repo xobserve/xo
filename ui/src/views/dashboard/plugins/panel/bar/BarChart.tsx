@@ -127,6 +127,75 @@ const BarChart = (props: Props) => {
         }
     }
 
+    const hasNegativeY = panel.overrides.find(o => o.overrides.find(r => r.type == BarRules.SeriesNegativeY))
+    const hasAxistY = panel.overrides.filter(o => o.overrides.find(r => r.type == BarRules.SeriesYAxist))
+
+    const yAxis = [{
+        id: 0,
+        type: options.axis.scale == "log" ? "log" : "value",
+        logBase: options.axis.scaleBase,
+        scalse: true,
+        splitLine: {
+            show: options.showGrid,
+        },
+        show: true,
+        splitNumber: options.axis.scale == "log" ? null : 3,
+        axisLabel: {
+            fontSize: options.styles.axisFontSize,
+            formatter: (value) => {
+                let useOverrideUnit = true;
+                if (value >= 0 || !hasNegativeY) {
+                    useOverrideUnit = false
+                }
+
+                if (hasNegativeY && (hasAxistY.find(o => o.target === hasNegativeY.target))) {
+                    useOverrideUnit = false
+                }
+
+                if (!useOverrideUnit) {
+                    return formatUnit(value, options.value.units, options.value.decimal)
+                } else {
+                    const override = findOverride(panel, hasNegativeY.target)
+                    const unitOverride = findRuleInOverride(override, BarRules.SeriesUnit)
+                    const decimalOverride = findRuleInOverride(override, BarRules.SeriesDecimal)
+                    return formatUnit(value, unitOverride.units, decimalOverride)
+                }
+
+            }
+        },
+    }]
+
+    const usingAxis = {}
+    for (const o of hasAxistY) {
+        const target = o.target
+        const axisID = yAxis.length
+        yAxis.push({
+            id: axisID,
+            position: "right",
+            offset: Math.max(...[0, (axisID-1) * 40]),
+            type: options.axis.scale == "log" ? "log" : "value",
+            logBase: options.axis.scaleBase,
+            scalse: true,
+            splitLine: {
+                show: options.showGrid,
+            },
+            show: true,
+            splitNumber: options.axis.scale == "log" ? null : 3,
+            axisLabel: {
+                fontSize: options.styles.axisFontSize,
+                formatter: (value) => {
+                    const override = findOverride(panel, target)
+                    const unitOverride = findRuleInOverride(override, BarRules.SeriesUnit)
+                    const decimalOverride = findRuleInOverride(override, BarRules.SeriesDecimal)
+                    return formatUnit(value, unitOverride?.units??options.value.units, decimalOverride??options.value.decimal)
+
+                }
+            },
+        } as any)
+        usingAxis[target] = axisID
+    }
+
+
     const chartOptions = {
         animation: true,
         animationDuration: 500,
@@ -136,7 +205,7 @@ const BarChart = (props: Props) => {
             appendToBody: true,
             axisPointer: {
                 // Use axis to trigger tooltip
-                type: 'none', // 'shadow' as default; can also be 'line' or 'shadow',
+                type: 'shadow', // 'shadow' as default; can also be 'line' or 'shadow',
             },
             backgroundColor: useColorModeValue("rgba(255,255,255,0.7)", "rgba(255,255,255,0.7)"),
             textStyle: {
@@ -145,7 +214,7 @@ const BarChart = (props: Props) => {
         },
         grid: {
             left: "1%",
-            right: "3%",
+            right: "1%",
             top: "4%",
             bottom: '1%',
             padding: 0,
@@ -169,31 +238,21 @@ const BarChart = (props: Props) => {
                 rotate: options.axis.swap ? 0 : rotate,
             },
         },
-        [options.axis.swap ? 'xAxis' : 'yAxis']: {
-            type: options.axis.scale == "log" ? "log" : "value",
-            logBase: options.axis.scaleBase,
-            scalse: true,
-            splitLine: {
-                show: options.showGrid,
-            },
-            show: true,
-            splitNumber: options.axis.scale == "log" ? null : 3,
-            axisLabel: {
-                fontSize: options.styles.axisFontSize,
-                formatter: (value) => {
-                    return formatUnit(value, options.value.units, options.value.decimal)
-                }
-            },
-        },
+        [options.axis.swap ? 'xAxis' : 'yAxis']: yAxis,
         series: names.map((name, i) => {
-            const fillOverride = findOverrideRule(panel, rawNames[i], BarRules.SeriesFill)
-            const color = alpha(props.data.find(s => s.name == name)?.color, (fillOverride ?? options.styles.barOpacity) / 100)
             const override = findOverride(panel, rawNames[i])
+
+            // console.log("here3333names", name,rawNames[i])
+            const fillOverride = findRuleInOverride(override, BarRules.SeriesFill)
             const unitOverride = findRuleInOverride(override, BarRules.SeriesUnit)
             const decimalOverride = findRuleInOverride(override, BarRules.SeriesDecimal)
+
+            const color = alpha(props.data.find(s => s.name == name)?.color, (fillOverride ?? options.styles.barOpacity) / 100)
+
+
             let units = options.value.units
             let decimal = options.value.decimal
-            console.log("here33333,",unitOverride, decimalOverride)
+
             if (unitOverride) {
                 units = unitOverride.units
             }
@@ -203,13 +262,14 @@ const BarChart = (props: Props) => {
 
             return {
                 name: name,
+                [options.axis.swap ? "xAxisIndex" : "yAxisIndex"]: usingAxis[rawNames[i]] ?? 0,
                 data: data[i],
                 type: 'bar',
                 stack: stack,
                 label: {
                     show: showLabel,
                     formatter: (v) => {
-                        const value = formatUnit(v.data, units,decimal)
+                        const value = formatUnit(v.data, units, decimal)
                         if (options.showLabel == "always") {
                             return value
                         }
