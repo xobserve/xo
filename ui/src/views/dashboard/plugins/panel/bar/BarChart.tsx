@@ -304,15 +304,16 @@ const BarChart = (props: Props) => {
                 tooltip: {
                     show: false
                 },
-
+                // [options.axis.swap ? "xAxisIndex" : "yAxisIndex"]: 0,
                 markLine: {
                     silent: true,
                     symbol: 'none',
                     label: {
                         show: false,
                     },
+                   
                     data: [{
-                        yAxis: options.thresholds.mode == ThresholdsMode.Absolute ? threshold.value : threshold.value * max / 100,
+                        [options.axis.swap ? "xAxis" : "yAxis"]: options.thresholds.mode == ThresholdsMode.Absolute ? threshold.value : threshold.value * max / 100,
                         lineStyle: {
                             type: options.thresholdsDisplay == ThresholdDisplay.Line ? "solid" : "dashed",
                             color: paletteColorNameToHex(threshold.color),
