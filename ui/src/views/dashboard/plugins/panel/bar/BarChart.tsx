@@ -29,6 +29,8 @@ import { alpha } from "components/uPlot/colorManipulator"
 import { getTextColorForAlphaBackground, paletteColorNameToHex } from "utils/colors"
 import { ThresholdDisplay } from "types/panel/plugins"
 import { ThresholdsMode } from "types/threshold"
+import { findOverride, findOverrideRule, findRuleInOverride } from "utils/dashboard/panel"
+import { BarRules } from "./OverridesEditor"
 
 
 interface Props {
@@ -109,11 +111,11 @@ const BarChart = (props: Props) => {
     } else { // auto
         showLabel = (width / timeline.length) > 60 ? true : false
     }
-    
+
     if (options.axis.scale === "log") {
         // https://github.com/apache/echarts/issues/9801 log(0) in echarts is invalid
         for (const s of data) {
-            s.forEach((v,i) => {
+            s.forEach((v, i) => {
                 if (v === 0) {
                     s[i] = ""
                 }
@@ -135,9 +137,6 @@ const BarChart = (props: Props) => {
             backgroundColor: useColorModeValue("rgba(255,255,255,0.7)", "rgba(255,255,255,0.7)"),
             textStyle: {
                 color: useColorModeValue("#444", "#222")
-            },
-            valueFormatter: (value) => {
-                return formatUnit(value, options.value.units, options.value.decimal)
             }
         },
         grid: {
@@ -185,30 +184,47 @@ const BarChart = (props: Props) => {
         series: names.map((name, i) => {
             const color = alpha(props.data.find(s => s.name == name)?.color, options.styles.barOpacity / 100)
             return {
-            name: name,
-            data: data[i],
-            type: 'bar',
-            stack: stack,
-            label: {
-                show: showLabel,
-                formatter: (v) => {
-                    const value = formatUnit(v.data, options.value.units, options.value.decimal)
-                    if (options.showLabel == "always") {
-                        return value
-                    }
+                name: name,
+                data: data[i],
+                type: 'bar',
+                stack: stack,
+                label: {
+                    show: showLabel,
+                    formatter: (v) => {
+                        const value = formatUnit(v.data, options.value.units, options.value.decimal)
+                        if (options.showLabel == "always") {
+                            return value
+                        }
 
-                    return (v.data / max) >= 0.2 ? value : ''
+                        return (v.data / max) >= 0.2 ? value : ''
+                    },
+                    fontSize: options.styles.labelFontSize,
+                    color: getTextColorForAlphaBackground(color, colorMode == "dark")
                 },
-                fontSize: options.styles.labelFontSize,
-                color: getTextColorForAlphaBackground(color, colorMode == "dark")
-            },
-            emphasis: {
-                // focus: 'series'
-            },
-            color: color,
-            barWidth: stack == "total" ? `${options.styles.barWidth}%` : `${options.styles.barWidth / names.length}%`
-        }
-    })
+                emphasis: {
+                    // focus: 'series'
+                },
+                color: color,
+                barWidth: stack == "total" ? `${options.styles.barWidth}%` : `${options.styles.barWidth / names.length}%`,
+                tooltip: {
+                    valueFormatter: (value) => {
+                        const override = findOverride(panel, name)
+                        const unitOverride = findRuleInOverride(override, BarRules.SeriesUnit)
+                        const decimalOverride = findRuleInOverride(override, BarRules.SeriesDecimal)
+                        let units = options.value.units
+                        let decimal = options.value.decimal
+                        if (unitOverride) {
+                            units = unitOverride.units
+                        }
+                        if (decimalOverride) {
+                            decimal = decimalOverride.decimal
+                        }
+
+                        return formatUnit(value, units, decimal)
+                    }
+                }
+            }
+        })
     };
 
     if (options.thresholdsDisplay != ThresholdDisplay.None) {
@@ -222,7 +238,7 @@ const BarChart = (props: Props) => {
                 tooltip: {
                     show: false
                 },
-    
+
                 markLine: {
                     silent: true,
                     symbol: 'none',
@@ -241,7 +257,7 @@ const BarChart = (props: Props) => {
             } as any)
         }
     }
-   
+
     return (<>
         <ChartComponent key={colorMode} options={chartOptions} theme={colorMode} onChartCreated={c => setChart(c)} width={width} />
     </>)
