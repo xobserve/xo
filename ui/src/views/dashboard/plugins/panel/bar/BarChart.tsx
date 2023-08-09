@@ -213,11 +213,12 @@ const BarChart = (props: Props) => {
                         const decimalOverride = findRuleInOverride(override, BarRules.SeriesDecimal)
                         let units = options.value.units
                         let decimal = options.value.decimal
+                        console.log("here33333,",unitOverride, decimalOverride)
                         if (unitOverride) {
                             units = unitOverride.units
                         }
                         if (decimalOverride) {
-                            decimal = decimalOverride.decimal
+                            decimal = decimalOverride
                         }
 
                         return formatUnit(value, units, decimal)
