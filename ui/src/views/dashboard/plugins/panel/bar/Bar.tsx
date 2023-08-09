@@ -122,7 +122,6 @@ const BarPanel = (props: BarPanelProps) => {
     }, [data, inactiveSeries])
 
 
-
     return (<>
         <GraphLayout
             width={props.width}
@@ -142,7 +141,7 @@ const BarPanel = (props: BarPanelProps) => {
             }
             >
             {(vizWidth: number, vizHeight: number) => {
-               return  <BarChart data={chartData} width={vizWidth} height={vizHeight} panel={panel} onSelect={() => { }} />
+               return  <BarChart data={chartData} width={vizWidth} height={vizHeight} panel={panel}  />
             }}
 
 

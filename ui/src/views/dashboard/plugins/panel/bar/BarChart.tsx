@@ -14,8 +14,8 @@
 import { useColorMode, useColorModeValue } from "@chakra-ui/react"
 import { getCurrentTimeRange } from "components/DatePicker/TimePicker"
 import ChartComponent from "components/charts/Chart"
-import { floor, round } from "lodash"
-import React, { useEffect, useMemo, useState } from "react"
+import { cloneDeep, floor, round } from "lodash"
+import React, { memo, useEffect, useMemo, useState } from "react"
 import { Panel } from "types/dashboard"
 import { dateTimeFormat } from "utils/datetime/formatter"
 import moment from "moment"
@@ -38,11 +38,10 @@ interface Props {
     panel: Panel
     width: number
     height: number
-    onSelect: any
 }
 
-const BarChart = (props: Props) => {
-    const { panel, width, onSelect, height } = props
+const BarChart = memo((props: Props) => {
+    const { panel, width, height } = props
     const options = panel.plugins.bar
     const [chart, setChart] = useState<echarts.ECharts>(null)
     const { colorMode } = useColorMode()
@@ -50,7 +49,7 @@ const BarChart = (props: Props) => {
         if (chart) {
             chart.on('click', function (event) {
                 if (event.seriesName != "total") {
-                    onSelect(event.seriesName)
+                    // onSelect(event.seriesName)
                 }
             })
         }
@@ -58,7 +57,7 @@ const BarChart = (props: Props) => {
             chart?.off('click')
         }
     }, [chart])
-    let [timeline, names, data, rawNames] = useMemo(() => {
+    let [timeline, names, data0, rawNames] = useMemo(() => {
         const names = []
         const rawNames = []
         const data = []
@@ -81,9 +80,7 @@ const BarChart = (props: Props) => {
 
             names.push(series.name)
             rawNames.push(series.rawName)
-            const negativeY = findOverrideRule(panel, series.rawName, BarRules.SeriesNegativeY)
-            const values = negativeY === null ? series.values.map(v => -v) : series.values
-            data.push(values)
+            data.push(series.values)
         })
 
         const ds = panel.datasource
@@ -92,9 +89,23 @@ const BarChart = (props: Props) => {
 
         return [timeline.map(t => dateTimeFormat(t, { format: timeFormat })), names, data, rawNames]
     }, [props.data])
+    
 
-    const max = Math.max(...data.flat())
+    const max = Math.max(...data0.flat())
 
+    let data = useMemo(() => {
+        data0.forEach((d, i) => {
+            const rawName = rawNames[i]
+            const negativeY = findOverrideRule(panel, rawName, BarRules.SeriesNegativeY)
+            if (negativeY === null) {
+                data0[i] = d.map(v => -v)
+            }
+        })
+
+        return data0
+    },[data0])
+
+    console.log("here333333",rawNames, cloneDeep(data))
     let stack;
     if (options.stack == "always") {
         stack = "total"
@@ -168,11 +179,14 @@ const BarChart = (props: Props) => {
     const usingAxis = {}
     for (const o of hasAxistY) {
         const target = o.target
+        if (!rawNames.includes(target)) {
+            continue
+        }
         const axisID = yAxis.length
         yAxis.push({
             id: axisID,
             position: "right",
-            offset: Math.max(...[0, (axisID-1) * 40]),
+            offset: (axisID-1) * 40,
             type: options.axis.scale == "log" ? "log" : "value",
             logBase: options.axis.scaleBase,
             scalse: true,
@@ -274,7 +288,7 @@ const BarChart = (props: Props) => {
                             return value
                         }
 
-                        return (v.data / max) >= 0.2 ? value : ''
+                        return (Math.abs(v.data) / max) >= 0.2 ? value : ''
                     },
                     fontSize: options.styles.labelFontSize,
                     color: getTextColorForAlphaBackground(color, colorMode == "dark")
@@ -306,8 +320,9 @@ const BarChart = (props: Props) => {
                 },
                 // [options.axis.swap ? "xAxisIndex" : "yAxisIndex"]: 0,
                 markLine: {
+                    [options.axis.swap ? "xAxisIndex" : "yAxisIndex"]: 0,
                     silent: true,
-                    symbol: 'none',
+                    symbol: ["diamond", null],
                     label: {
                         show: false,
                     },
@@ -316,19 +331,70 @@ const BarChart = (props: Props) => {
                         [options.axis.swap ? "xAxis" : "yAxis"]: options.thresholds.mode == ThresholdsMode.Absolute ? threshold.value : threshold.value * max / 100,
                         lineStyle: {
                             type: options.thresholdsDisplay == ThresholdDisplay.Line ? "solid" : "dashed",
-                            color: paletteColorNameToHex(threshold.color),
+                            color: paletteColorNameToHex(threshold.color,colorMode),
                             width: 1,
                         },
                     }],
-                },
+                }
             } as any)
         }
     }
 
+    for (const o of panel.overrides) {
+        const to =  o.overrides.find(r => r.type == BarRules.SeriesThresholds)
+        if (to && to.value) {
+            const target = o.target
+          
+            const mode = to.value.mode
+            let i =  rawNames.indexOf(target)
+            const d = data[i]
+            if (!d) {
+                continue
+            }
+            const negativeY = findOverrideRule(panel, target, BarRules.SeriesNegativeY)
+            let max ;
+            if (negativeY === null) {
+                max = Math.min(...d)
+            } else {
+                max = Math.max(...d)
+            }
+            for (const threshold of to.value.thresholds) {
+                if (threshold.value == null) {
+                    continue
+                }
+                chartOptions.series.push({
+                    [options.axis.swap ? "xAxisIndex" : "yAxisIndex"]: usingAxis[target] ?? 0,
+                    type: 'line',
+                    symbol: 'none',
+                    tooltip: {
+                        show: false
+                    },
+                    markLine: {
+                        silent: true,
+                        symbol: [null, "roundRect"],
+                        label: {
+                            show: false,
+                        },
+                       
+                        data: [{
+                            [options.axis.swap ? "xAxis" : "yAxis"]: mode == ThresholdsMode.Absolute ? negativeY === null ? -threshold.value  : threshold.value : threshold.value * max / 100,
+                            lineStyle: {
+                                type: options.thresholdsDisplay == ThresholdDisplay.Line ? "solid" : "dashed",
+                                color: paletteColorNameToHex(threshold.color,colorMode),
+                                width: 1,
+                            },
+                        }],
+                    }
+                } as any)
+            }
+        }
+    }
+
+
     return (<>
         <ChartComponent key={colorMode} options={chartOptions} theme={colorMode} onChartCreated={c => setChart(c)} width={width} />
     </>)
-}
+})
 
 export default BarChart
 

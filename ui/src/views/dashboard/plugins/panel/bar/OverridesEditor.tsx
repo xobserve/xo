@@ -18,6 +18,7 @@ import { EditorInputItem, EditorNumberItem, EditorSliderItem } from "components/
 import { UnitPicker } from "components/Unit";
 import { OverrideRule } from "types/dashboard";
 import React from "react";
+import ThresholdEditor from "components/Threshold/ThresholdEditor";
 
 interface Props {
     override: OverrideRule
@@ -43,6 +44,8 @@ const BarOverridesEditor = ({ override, onChange }: Props) => {
             return <></>
         case BarRules.SeriesDecimal:
             return <EditorNumberItem value={override.value} min={0} max={5} step={1} onChange={onChange} />
+        case BarRules.SeriesThresholds:
+            return <ThresholdEditor value={override.value} onChange={onChange} />
         default:
             return <></>
     }
@@ -59,5 +62,6 @@ export enum BarRules {
     SeriesColor = 'Series.color',
     SeriesFill = 'Series.fillOpacity',
     SeriesNegativeY = 'Series.negativeY',
-    SeriesYAxist = 'Series.separateYAxis'
+    SeriesYAxist = 'Series.separateYAxis',
+    SeriesThresholds = "Series.thresholds"
 } 
