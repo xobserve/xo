@@ -404,7 +404,9 @@ function registerEvents(options, chart) {
                     by: ValueCalculationType.Last,
                     sort: 'desc'
                 }
-            }
+            },
+            thresholds: initThresholds(24),
+            thresholdsDisplay: ThresholdDisplay.None,
         }
     }
 }

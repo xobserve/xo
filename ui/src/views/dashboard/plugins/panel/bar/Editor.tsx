@@ -10,7 +10,7 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-import { Switch, Textarea } from "@chakra-ui/react"
+import { Select, Switch, Textarea } from "@chakra-ui/react"
 import { EditorInputItem, EditorNumberItem, EditorSliderItem } from "components/editor/EditorItem"
 import RadionButtons from "components/RadioButtons"
 import PanelAccordion from "src/views/dashboard/edit-panel/Accordion"
@@ -20,9 +20,10 @@ import React, { memo } from "react";
 import { useStore } from "@nanostores/react"
 import { commonMsg, graphPanelMsg } from "src/i18n/locales/en"
 import { UnitPicker } from "components/Unit"
-import { Units } from "types/panel/plugins"
+import { ThresholdDisplay, Units } from "types/panel/plugins"
 import PopoverSelect from "components/select/PopoverSelect"
 import { ValueCalculationType } from "types/value"
+import ThresholdEditor from "components/Threshold/ThresholdEditor"
 
 const BarPanelEditor = memo(({ panel, onChange }: PanelEditorProps) => {
     const t = useStore(commonMsg)
@@ -124,6 +125,27 @@ const BarPanelEditor = memo(({ panel, onChange }: PanelEditorProps) => {
 
             <PanelEditItem title={t.decimal}>
                 <EditorNumberItem value={panel.plugins.bar.value.decimal} min={0} max={5} step={1} onChange={v => onChange((panel: Panel) => { panel.plugins.bar.value.decimal = v })} />
+            </PanelEditItem>
+        </PanelAccordion>
+
+        <PanelAccordion title="Thresholds">
+            <ThresholdEditor value={panel.plugins.bar.thresholds} onChange={(v) => onChange((panel: Panel) => {
+                    panel.plugins.bar.thresholds = v
+                    // dispatch(PanelForceRebuildEvent + panel.id)
+                })} />
+            
+            <PanelEditItem title={t1.thresholdsDisplay}>
+                <Select value={panel.plugins.bar.thresholdsDisplay} onChange={e => {
+                    const v = e.currentTarget.value
+                    onChange((panel: Panel) => {
+                        panel.plugins.bar.thresholdsDisplay = v as ThresholdDisplay
+                        // dispatch(PanelForceRebuildEvent + panel.id)
+                    })
+                }}>
+                        <option value={ThresholdDisplay.None}>{ThresholdDisplay.None}</option>
+                        <option value={ThresholdDisplay.Line}>{ThresholdDisplay.Line}</option>
+                        <option value={ThresholdDisplay.DashedLine}>{ThresholdDisplay.DashedLine}</option>
+                </Select>
             </PanelEditItem>
         </PanelAccordion>
     </>

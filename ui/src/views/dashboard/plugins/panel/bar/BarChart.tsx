@@ -26,6 +26,9 @@ import { formatUnit } from "components/Unit"
 import { calculateInterval } from "utils/datetime/range"
 import { DatasourceMaxDataPoints, DatasourceMinInterval } from "src/data/constants"
 import { alpha } from "components/uPlot/colorManipulator"
+import { getTextColorForAlphaBackground, paletteColorNameToHex } from "utils/colors"
+import { ThresholdDisplay } from "types/panel/plugins"
+import { ThresholdsMode } from "types/threshold"
 
 
 interface Props {
@@ -85,6 +88,7 @@ const BarChart = (props: Props) => {
     }, [props.data])
 
     const max = Math.max(...data.flat())
+
     let stack;
     if (options.stack == "always") {
         stack = "total"
@@ -178,7 +182,9 @@ const BarChart = (props: Props) => {
                 }
             },
         },
-        series: names.map((name, i) => ({
+        series: names.map((name, i) => {
+            const color = alpha(props.data.find(s => s.name == name)?.color, options.styles.barOpacity / 100)
+            return {
             name: name,
             data: data[i],
             type: 'bar',
@@ -194,15 +200,48 @@ const BarChart = (props: Props) => {
                     return (v.data / max) >= 0.2 ? value : ''
                 },
                 fontSize: options.styles.labelFontSize,
+                color: getTextColorForAlphaBackground(color, colorMode == "dark")
             },
             emphasis: {
                 // focus: 'series'
             },
-            color: alpha(props.data.find(s => s.name == name)?.color, options.styles.barOpacity / 100),
+            color: color,
             barWidth: stack == "total" ? `${options.styles.barWidth}%` : `${options.styles.barWidth / names.length}%`
-        }))
+        }
+    })
     };
 
+    if (options.thresholdsDisplay != ThresholdDisplay.None) {
+        for (const threshold of options.thresholds.thresholds) {
+            if (threshold.value == null) {
+                continue
+            }
+            chartOptions.series.push({
+                type: 'line',
+                symbol: 'none',
+                tooltip: {
+                    show: false
+                },
+    
+                markLine: {
+                    silent: true,
+                    symbol: 'none',
+                    label: {
+                        show: false,
+                    },
+                    data: [{
+                        yAxis: options.thresholds.mode == ThresholdsMode.Absolute ? threshold.value : threshold.value * max / 100,
+                        lineStyle: {
+                            type: options.thresholdsDisplay == ThresholdDisplay.Line ? "solid" : "dashed",
+                            color: paletteColorNameToHex(threshold.color),
+                            width: 1,
+                        },
+                    }],
+                },
+            } as any)
+        }
+    }
+   
     return (<>
         <ChartComponent key={colorMode} options={chartOptions} theme={colorMode} onChartCreated={c => setChart(c)} width={width} />
     </>)

@@ -28,7 +28,6 @@ import { findOverride, findRuleInOverride } from "utils/dashboard/panel";
 
 
 
-const BarWidthFactor = 0.6
 const BardMaxWidth = 200
 // build uplot options based on given config
 

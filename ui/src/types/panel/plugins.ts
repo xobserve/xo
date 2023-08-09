@@ -69,6 +69,8 @@ export interface BarSettings {
             sort: "asc" | "desc"
         }
     }
+    thresholds: ThresholdsConfig
+    thresholdsDisplay: ThresholdDisplay
 }
 
 export interface LogSettings {
