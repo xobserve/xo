@@ -58,11 +58,12 @@ const BarChart = (props: Props) => {
             chart?.off('click')
         }
     }, [chart])
-    let [timeline, names, data] = useMemo(() => {
+    let [timeline, names, data, rawNames] = useMemo(() => {
         const names = []
+        const rawNames = []
         const data = []
         if (isEmpty(props.data)) {
-            return [[], names, data]
+            return [[], names, data, rawNames]
         }
         const timeRange = getCurrentTimeRange()
         let start = round(timeRange.start.getTime() / 1000)
@@ -79,14 +80,17 @@ const BarChart = (props: Props) => {
             }
 
             names.push(series.name)
-            data.push(series.values)
+            rawNames.push(series.rawName)
+            const negativeY = findOverrideRule(panel, series.rawName, BarRules.SeriesNegativeY)
+            const values = negativeY === null ? series.values.map(v => -v) : series.values
+            data.push(values)
         })
 
         const ds = panel.datasource
         const intervalObj = calculateInterval(timeRange, ds.queryOptions.maxDataPoints ?? DatasourceMaxDataPoints, isEmpty(ds.queryOptions.minInterval) ? DatasourceMinInterval : ds.queryOptions.minInterval)
         const timeFormat = getTimeFormat(start * 1000, now.getTime(), intervalObj.intervalMs / 1000)
 
-        return [timeline.map(t => dateTimeFormat(t, { format: timeFormat })), names, data]
+        return [timeline.map(t => dateTimeFormat(t, { format: timeFormat })), names, data, rawNames]
     }, [props.data])
 
     const max = Math.max(...data.flat())
@@ -182,7 +186,21 @@ const BarChart = (props: Props) => {
             },
         },
         series: names.map((name, i) => {
-            const color = alpha(props.data.find(s => s.name == name)?.color, options.styles.barOpacity / 100)
+            const fillOverride = findOverrideRule(panel, rawNames[i], BarRules.SeriesFill)
+            const color = alpha(props.data.find(s => s.name == name)?.color, (fillOverride ?? options.styles.barOpacity) / 100)
+            const override = findOverride(panel, rawNames[i])
+            const unitOverride = findRuleInOverride(override, BarRules.SeriesUnit)
+            const decimalOverride = findRuleInOverride(override, BarRules.SeriesDecimal)
+            let units = options.value.units
+            let decimal = options.value.decimal
+            console.log("here33333,",unitOverride, decimalOverride)
+            if (unitOverride) {
+                units = unitOverride.units
+            }
+            if (decimalOverride) {
+                decimal = decimalOverride
+            }
+
             return {
                 name: name,
                 data: data[i],
@@ -191,7 +209,7 @@ const BarChart = (props: Props) => {
                 label: {
                     show: showLabel,
                     formatter: (v) => {
-                        const value = formatUnit(v.data, options.value.units, options.value.decimal)
+                        const value = formatUnit(v.data, units,decimal)
                         if (options.showLabel == "always") {
                             return value
                         }
@@ -208,19 +226,6 @@ const BarChart = (props: Props) => {
                 barWidth: stack == "total" ? `${options.styles.barWidth}%` : `${options.styles.barWidth / names.length}%`,
                 tooltip: {
                     valueFormatter: (value) => {
-                        const override = findOverride(panel, name)
-                        const unitOverride = findRuleInOverride(override, BarRules.SeriesUnit)
-                        const decimalOverride = findRuleInOverride(override, BarRules.SeriesDecimal)
-                        let units = options.value.units
-                        let decimal = options.value.decimal
-                        console.log("here33333,",unitOverride, decimalOverride)
-                        if (unitOverride) {
-                            units = unitOverride.units
-                        }
-                        if (decimalOverride) {
-                            decimal = decimalOverride
-                        }
-
                         return formatUnit(value, units, decimal)
                     }
                 }

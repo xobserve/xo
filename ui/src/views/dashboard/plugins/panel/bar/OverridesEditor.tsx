@@ -13,9 +13,6 @@
 
 // Render series table in tooltip
 
-
-import { Box, Button, HStack, Select, Tooltip } from "@chakra-ui/react";
-import RadionButtons from "components/RadioButtons";
 import { ColorPicker } from "components/ColorPicker";
 import { EditorInputItem, EditorNumberItem, EditorSliderItem } from "components/editor/EditorItem";
 import { UnitPicker } from "components/Unit";
@@ -30,8 +27,8 @@ interface Props {
 
 const BarOverridesEditor = ({ override, onChange }: Props) => {
     switch (override.type) {
-        case BarRules.SeriesStyle:
-            return <RadionButtons size="sm" options={[{ label: "Lines", value: "lines" }, { label: "Bars", value: "bars" }, { label: "points", value: "points" }]} value={override.value} onChange={onChange} />
+        // case BarRules.SeriesStyle:
+        //     return <RadionButtons size="sm" options={[{ label: "Lines", value: "lines" }, { label: "Bars", value: "bars" }, { label: "points", value: "points" }]} value={override.value} onChange={onChange} />
         case BarRules.SeriesName:
             return <EditorInputItem value={override.value} onChange={onChange} size="sm" placeholder="change series name" />
         case BarRules.SeriesUnit:
@@ -39,7 +36,7 @@ const BarOverridesEditor = ({ override, onChange }: Props) => {
         case BarRules.SeriesColor:
             return <ColorPicker  color={override.value} onChange={onChange} />
         case BarRules.SeriesFill:
-            return <EditorSliderItem value={override.value} min={0} max={100} step={1} onChange={onChange} />
+            return <EditorSliderItem value={override.value} min={10} max={100} step={1} onChange={onChange} />
         case BarRules.SeriesNegativeY:
             return <></>
         case BarRules.SeriesDecimal:
@@ -55,10 +52,9 @@ export default BarOverridesEditor
 
 export enum BarRules {
     SeriesName = 'Series.name',
-    SeriesStyle =  'Series.style',
     SeriesUnit = 'Series.unit',
     SeriesDecimal = 'Series.decimal',
     SeriesColor = 'Series.color',
-    SeriesFill = 'Series.fill',
+    SeriesFill = 'Series.fillOpacity',
     SeriesNegativeY = 'Series.negativeY'
  } 

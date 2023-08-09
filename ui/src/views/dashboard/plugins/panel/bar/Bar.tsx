@@ -25,6 +25,7 @@ import { BarRules } from "./OverridesEditor";
 import { paletteColorNameToHex, palettes } from "utils/colors";
 import { PanelInactiveKey } from "src/data/storage-keys";
 import storage from "utils/localStorage";
+import { cloneDeep } from "lodash";
 
 
 interface BarPanelProps extends PanelProps {
@@ -60,10 +61,11 @@ const BarPanel = (props: BarPanelProps) => {
     const inactiveKey = PanelInactiveKey + props.dashboardId + '-' + props.panel.id
     const [inactiveSeries, setInactiveSeries] = useState(storage.get(inactiveKey) ?? [])
     const {colorMode} = useColorMode()
-
+    
     const data: SeriesData[] = useMemo(() => {
         const res = []
-        props.data.forEach(d => {
+        props.data.forEach(d0 => {
+            const d = cloneDeep(d0)
             d.forEach((d1,i) => {
                 d1.rawName = d1.name
                 const override: OverrideItem = findOverride(props.panel, d1.rawName)  
@@ -98,6 +100,7 @@ const BarPanel = (props: BarPanelProps) => {
              } 
 
             const barSeries: BarSeries = {
+                rawName: series.rawName,
                 name: series.name,
                 color: series.color,
             }
