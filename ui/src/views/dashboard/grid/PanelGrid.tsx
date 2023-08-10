@@ -425,25 +425,30 @@ const formatQueryId = (datasourceId, dashboardId, panelId, queryId, panelType) =
     return `${datasourceId}-${dashboardId}-${panelId}-${queryId}-${tp}`
 }
 
-const queryAlerts = async (panel, timeRange) => {
-    let res
-    for (const ds of datasources) {
-        if (datasourceSupportAlerts.includes(ds.type)) {
-            switch (ds.type) {
-                case DatasourceType.Prometheus:
-                    res = await query_prometheus_alerts(panel, timeRange, ds)
-                    break;
-                case DatasourceType.Loki:
-                    break
-                default:
-                    break;
-            }
+const queryAlerts = async (panel:Panel, timeRange: TimeRange) => {
+    let result = {
+        error: null,
+        data: []
+    }
+    for (const dsID of panel.plugins.alert.filter.datasources) {
+        const ds = datasources.find(ds => ds.id === dsID)
+        let res
+        switch (ds.type) {
+            case DatasourceType.Prometheus:
+                res = await query_prometheus_alerts(panel, timeRange, ds)
+                break;
+            case DatasourceType.Loki:
+                break
+            case DatasourceType.TestData:
+                res =  query_testdata_alerts(panel, timeRange, ds)
+                break
+            default:
+                break;
         }
-    }
+        result.error = res.error
 
-    if (res.error) {
-        return res
+        result.data = result.data.concat(res.data)
     }
-
-    return res
+  
+    return result
 }

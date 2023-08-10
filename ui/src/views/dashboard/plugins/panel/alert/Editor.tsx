@@ -19,6 +19,9 @@ import { Panel, PanelEditorProps } from "types/dashboard"
 import React, { memo } from "react";
 import { useStore } from "@nanostores/react"
 import { commonMsg, textPanelMsg } from "src/i18n/locales/en"
+import { Select } from "antd"
+import { datasources } from "src/App"
+import { datasourceSupportAlerts } from "src/data/alerts"
 
 const AlertPanelEditor = memo(({ panel, onChange }: PanelEditorProps) => {
     const t = useStore(commonMsg)
@@ -41,6 +44,16 @@ const AlertPanelEditor = memo(({ panel, onChange }: PanelEditorProps) => {
                 })} />
             </PanelEditItem>
         </PanelAccordion>
+        <PanelAccordion title="Filter">
+            <PanelEditItem title="Datasource" desc="Query alerts from these datasources">  
+                <Select style={{minWidth: "300px"}} value={panel.plugins.alert.filter.datasources} allowClear mode="multiple" options={
+                    datasources.filter(ds => datasourceSupportAlerts.includes(ds.type)).map(ds => ({label: ds.name, value: ds.id}))} onChange={
+                    (v) => onChange((panel: Panel) => {
+                        panel.plugins.alert.filter.datasources = v
+                    })
+                } />
+            </PanelEditItem>
+        </PanelAccordion>
         <PanelAccordion title="Chart">
             <PanelEditItem title="Show">
                 <Switch isChecked={panel.plugins.alert.chart.show} onChange={(e) => onChange((panel: Panel) => {
@@ -60,6 +73,11 @@ const AlertPanelEditor = memo(({ panel, onChange }: PanelEditorProps) => {
             <PanelEditItem title="Stack">
                 <RadionButtons options={[{ label: "Auto", value: "auto" }, { label: "Always", value: 'always' }, { label: "None", value: 'none' }]} value={panel.plugins.alert.chart.stack} onChange={v => onChange((panel: Panel) => {
                     panel.plugins.alert.chart.stack = v
+                })} />
+            </PanelEditItem>
+            <PanelEditItem title="Tooltip">
+                <RadionButtons options={[{ label: "Single", value: "single" }, { label: "All", value: "all" }, { label: "None", value: "none" }]} value={panel.plugins.alert.chart.tooltip} onChange={v => onChange((panel: Panel) => {
+                    panel.plugins.alert.chart.tooltip = v
                 })} />
             </PanelEditItem>
         </PanelAccordion>

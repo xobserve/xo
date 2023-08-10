@@ -18,6 +18,7 @@ import { ArcGisMapServer, BaseLayerType, DataLayerType } from "types/plugins/geo
 import { ThresholdsConfig, ThresholdsMode } from "types/threshold";
 import { ValueCalculationType } from "types/value";
 import { palettes } from "utils/colors";
+import { InitTestDataDatasourceId } from "../constants";
 
 export const onClickCommonEvent = `
 // setVariable: (varName:string, varValue:string) => void 
@@ -421,7 +422,11 @@ function registerEvents(options, chart) {
                 show: true,
                 height: '120px',
                 stack: "auto",
-                showLabel: "auto"
+                showLabel: "auto",
+                tooltip: "single",
+            },
+            filter: {
+                datasources: [InitTestDataDatasourceId]
             }
         }
     }

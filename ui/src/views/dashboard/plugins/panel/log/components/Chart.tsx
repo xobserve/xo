@@ -167,17 +167,27 @@ const LogChart = (props: Props) => {
 
     const timeFontSize = 10
     const [interval, rotate] = getTimeInterval(width, timeline[0], timeFontSize, timeline.length)
+    let tooltipMode = "item"
+    if (panel.type == PanelType.Alert) {
+        if (panel.plugins.alert.chart.tooltip == "none") {
+            tooltipMode = "none" 
+        }  else if (panel.plugins.alert.chart.tooltip == "single") {
+            tooltipMode = "item"
+        } else {
+            tooltipMode = "axis"
+        }
+    }
     const chartOptions = {
         animation: true,
         animationDuration: 500,
         tooltip: {
             show: true,
-            trigger: 'axis',
+            trigger: tooltipMode,
             appendToBody: true,
             axisPointer: {
                 // Use axis to trigger tooltip
                 type: 'none', // 'shadow' as default; can also be 'line' or 'shadow',
-            }
+            },
         },
         grid: {
             left: "1%",
@@ -210,7 +220,7 @@ const LogChart = (props: Props) => {
             splitLine: {
                 show: false,
             },
-            show: stack != "total",
+            show: stack != "total" || panel.type == PanelType.Alert,
             splitNumber: 3,
             axisLabel: {
                 fontSize: 11

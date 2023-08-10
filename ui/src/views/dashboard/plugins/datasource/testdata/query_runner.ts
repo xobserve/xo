@@ -66,7 +66,10 @@ export const run_testdata_query = async (panel: Panel, q: PanelQuery, range: Tim
 
 export const query_testdata_alerts = (panel:Panel, timeRange: TimeRange,ds:Datasource) => {
     alertsData.data["fromDs"] = ds.type
-    return alertsData.data
+    return {
+        error: null,
+        data: alertsData.data
+    }
 }
 
 export const queryTraceInTestData = (traceId) => {

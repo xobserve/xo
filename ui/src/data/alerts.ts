@@ -1,3 +1,3 @@
 import { DatasourceType } from "types/dashboard";
 
-export const datasourceSupportAlerts = [DatasourceType.Prometheus, DatasourceType.Loki]
+export const datasourceSupportAlerts = [DatasourceType.Prometheus, DatasourceType.Loki, DatasourceType.TestData]
