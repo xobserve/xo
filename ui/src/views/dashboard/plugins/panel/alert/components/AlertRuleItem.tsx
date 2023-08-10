@@ -10,21 +10,20 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-export interface BarSeries {
-    name: string
-    rawName: string
-    color?: string
-    timestamps?: number[]
-    values?: number[]
+
+import React from "react"
+import { Panel } from "types/dashboard"
+import { AlertRule } from "types/plugins/alert"
+
+interface Props {
+    rule: AlertRule
+    panel: Panel
+    collapsed: boolean
 }
 
-export enum BarThresholdArrow {
-    Circle = 'circle',
-    Rect = 'rect',
-    RoundRect =  'roundRect',
-    Triangle =  'triangle' ,
-    Diamond =  'diamond' ,
-    Pin =  'pin' ,
-    Arrow =  'arrow' ,
-    None =  'none'
+const AlertRuleItem = (props: Props) => {
+    return (<>
+    </>)
 }
+
+export default AlertRuleItem

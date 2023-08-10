@@ -16,8 +16,8 @@ export interface LogThreshold {
 export interface Log {
     labels: {[key: string]: string}
     timestamp: number  // nanoseconds
-    content: string 
-    highlight: string[]
+    content?: string 
+    highlight?: string[]
 }
 
 export interface LogLabel {

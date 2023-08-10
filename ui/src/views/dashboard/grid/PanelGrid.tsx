@@ -15,7 +15,7 @@ import { Box, Center, HStack, Menu, MenuButton, MenuDivider, MenuItem, MenuList,
 import { FaBook, FaBug, FaEdit, FaRegCopy, FaRegEye, FaTrashAlt } from "react-icons/fa";
 import { IoMdInformation } from "react-icons/io";
 import { memo, useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
-import { run_prometheus_query } from "../plugins/datasource/prometheus/query_runner";
+import { query_prometheus_alerts, run_prometheus_query } from "../plugins/datasource/prometheus/query_runner";
 import { DatasourceMaxDataPoints, DatasourceMinInterval, PANEL_HEADER_HEIGHT, StorageCopiedPanelKey } from "src/data/constants";
 import { cloneDeep, isEqual, isFunction } from "lodash";
 import { TimeRange } from "types/time";
@@ -426,25 +426,24 @@ const formatQueryId = (datasourceId, dashboardId, panelId, queryId, panelType) =
 }
 
 const queryAlerts = async (panel, timeRange) => {
-    let data
-    for (const ds of datasourceSupportAlerts) {
-        switch (ds) {
-            case DatasourceType.Prometheus:
-                data = query_prometheus_alerts(panel,timeRange)
-                break;
-            case DatasourceType.Loki:
-                break
-            default:
-                break;
+    let res
+    for (const ds of datasources) {
+        if (datasourceSupportAlerts.includes(ds.type)) {
+            switch (ds.type) {
+                case DatasourceType.Prometheus:
+                    res = await query_prometheus_alerts(panel, timeRange, ds)
+                    break;
+                case DatasourceType.Loki:
+                    break
+                default:
+                    break;
+            }
         }
     }
 
-    if (data.length == 0) {
-        data = query_testdata_alerts(panel,timeRange)
+    if (res.error) {
+        return res
     }
 
-    return {
-        error: null,
-        data: data ?? []
-    }
+    return res
 }

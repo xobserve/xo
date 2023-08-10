@@ -412,6 +412,17 @@ function registerEvents(options, chart) {
         },
         [PanelType.Alert]: {
             disableDatasource: true,
+            orderBy: "newest",
+            toolbar: {
+                show: true,
+                width: 200
+            },
+            chart: {
+                show: true,
+                height: '120px',
+                stack: "auto",
+                showLabel: "auto"
+            }
         }
     }
 }

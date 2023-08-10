@@ -16,27 +16,28 @@ import { getCurrentTimeRange } from "components/DatePicker/TimePicker"
 import ChartComponent from "components/charts/Chart"
 import { floor, last, round } from "lodash"
 import React, { useEffect, useMemo, useState } from "react"
-import { Panel } from "types/dashboard"
+import { Panel, PanelType } from "types/dashboard"
 import { Log, LogChartView } from "types/plugins/log"
 import { dateTimeFormat } from "utils/datetime/formatter"
 import { formatLabelId, getLabelNameColor } from "../utils"
 import moment from "moment"
 import { isEmpty } from "utils/validate"
 import { measureText } from "utils/measureText"
+import { AlertToolbarOptions } from "types/plugins/alert"
 
 
 interface Props {
     data: Log[]
     panel: Panel
     width: number
-    viewOptions: LogChartView
+    viewOptions: AlertToolbarOptions
     onSelectLabel: any
     activeLabels: string[]
 }
 
 const LogChart = (props: Props) => {
     const { panel, width ,viewOptions, onSelectLabel,activeLabels} = props
-    const options = panel.plugins.log.chart
+    const options = panel.type == PanelType.Log?  panel.plugins.log.chart : panel.plugins.alert.chart
     const [chart, setChart] = useState<echarts.ECharts>(null)
     const { colorMode } = useColorMode()
     useEffect(() => {

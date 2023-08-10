@@ -44,6 +44,17 @@ export interface DisableDatasource {
 }
 
 export interface AlerSettings extends DisableDatasource {
+    orderBy: "newest" | "oldest"
+    toolbar: {
+        show: boolean
+        width: number 
+    }
+    chart: {
+        show: boolean
+        height: string
+        showLabel: "auto" | "always" | "none"
+        stack: "auto" | "always" | "none"
+    }
 }
 
 

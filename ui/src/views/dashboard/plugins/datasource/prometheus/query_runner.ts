@@ -224,7 +224,7 @@ export const replacePrometheusQueryWithVariables = (query: PanelQuery,interval: 
     }   
 }
 
-export const query_prometheus_alerts = async (panel:Panel, timeRange: TimeRange, ds: Datasource) => {
+export const query_prometheus_alerts = async (panel:Panel, timeRange: TimeRange, ds:Datasource) => {
     const res: any = await requestApi.get(`/proxy/${ds.id}/api/v1/rules?type=alert`)
     if (res.status !== "success") {
         console.log("Failed to fetch data from prometheus", res)
@@ -233,16 +233,8 @@ export const query_prometheus_alerts = async (panel:Panel, timeRange: TimeRange,
             data: []
         }
     }
-
-
-    if (res.data.result.length == 0 || res.data.result[0].values.length == 0) {
-        return {
-            error: null,
-            data: []
-        }
-    }
-
-
+    
+    res.data.fromDs = ds.type
     return {
         error: null,
         data: res.data,

@@ -10,15 +10,155 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-import { Box } from "@chakra-ui/react"
-import { MarkdownRender } from "components/markdown/MarkdownRender"
-import { PanelProps } from "types/dashboard"
-import { replaceWithVariables } from "utils/variable"
-import React from "react";
+
+import React, { useCallback, useEffect, useMemo, useState } from "react";
+import { Box, Center, Flex, StackDivider, Text, VStack } from "@chakra-ui/react"
+import { DatasourceType, PanelProps } from "types/dashboard"
+import {  Log } from "types/plugins/log";
+import { FaFilter } from "react-icons/fa";
+import storage from "utils/localStorage";
+import { cloneDeep, remove, sortBy } from "lodash";
+import { isEmpty } from "utils/validate";
+import LogChart from "../log/components/Chart";
+import AlertToolbar from "./components/AlertToolbar";
+import { AlertGroup, AlertRule, AlertToolbarOptions } from "types/plugins/alert";
+import AlertRuleItem from "./components/AlertRuleItem";
 
 
-const AlertPanel = (props: PanelProps) => {
-    return (<></>)
+
+
+interface AlertPanelProps extends PanelProps {
+    data: {"groups": AlertGroup[],"fromDs": DatasourceType}[]
+}
+
+
+const ToolbarStorageKey = "alert-toolbar-"
+const AlertViewOptionsStorageKey = "alert-view-"
+const AlertPanel = (props: AlertPanelProps) => {
+    const { dashboardId, panel } = props
+    const options = panel.plugins.alert
+    const storageKey = ToolbarStorageKey + dashboardId + panel.id
+    const viewStorageKey = AlertViewOptionsStorageKey + dashboardId + panel.id
+    const [toolbarOpen, setToolbarOpen] = useState(storage.get(storageKey) ?? false)
+    const [collaseAll, setCollapeAll] = useState(true)
+    const [search, setSearch] = useState("")
+    const [active, setActive] = useState<string[]>([])
+    const [activeOp, setActiveOp] = useState<"or" | "and">("or")
+    const [viewOptions, setViewOptions] = useState<AlertToolbarOptions>(storage.get(viewStorageKey) ?? {
+    })
+
+
+    const [data, chartData] = useMemo(() => {
+        const data: AlertRule[] = []
+        const data0 = props.data.flat()
+        for (const d of data0) {
+            for (const group of d.groups) {
+                for (const rule of group.rules) {
+                    const r = cloneDeep(rule)
+                    r.fromDs = d.fromDs
+                    r.groupName = group.name
+                    r.groupFile = group.file
+                    data.push(r)
+                }
+            }
+        }
+
+        const chartData: Log[] = []
+        return [data, chartData]
+    }, [props.data])
+
+    console.log("here333333:",data)
+    useEffect(() => {
+        if (!options.toolbar.show) {
+            storage.remove(storageKey)
+        }
+    }, [options.toolbar.show])
+
+    const onToobarOpen = () => {
+        if (!toolbarOpen) {
+            storage.set(storageKey, true)
+        } else {
+            storage.remove(storageKey)
+        }
+
+        setToolbarOpen(!toolbarOpen)
+
+    }
+
+    const onCollapseAll = useCallback(v => {
+        setCollapeAll(v)
+    }, [])
+
+    const onSearchChange = useCallback((v: string) => {
+        setSearch(v.toLowerCase().trim())
+    }, [])
+
+    const onActiveLabel = useCallback((id) => {
+        if (active.includes(id)) {
+            remove(active, i => id == i)
+        } else {
+            active.push(id)
+        }
+
+        setActive(cloneDeep(active))
+    }, [active])
+
+    const onActiveOpChange = useCallback(() => {
+        setActiveOp(activeOp == "or" ? "and" : "or")
+    }, [])
+
+    const onViewOptionsChange = useCallback((v) => {
+        setViewOptions(v)
+        storage.set(viewStorageKey, v)
+    }, [])
+
+    const onSelectLabel = useCallback(id => {
+        setActive(active => {
+            if (active.includes(id)) {
+                return []
+            } else {
+                return [id]
+            }
+        })
+    }, [])
+    const filterData: AlertRule[] = useMemo(() => {
+        const result = []
+      
+
+        return result
+    }, [data, search, active])
+
+    const sortedData: AlertRule[] = useMemo(() => {
+        if (panel.plugins.alert.orderBy == "newest") {
+            return sortBy(filterData, ['timestamp']).reverse()
+        }
+
+        return sortBy(filterData, ['timestamp'])
+    }, [filterData, options.orderBy])
+    
+    return (<>
+        <Flex position="relative">
+            {options.toolbar.show &&
+                <Box position="absolute" right="2" top="0" onClick={onToobarOpen} fontSize="0.7rem" opacity="0.6" cursor="pointer" p="2px" className={toolbarOpen ? "color-text" : null}>
+                    <FaFilter />
+                </Box>}
+            <Box height={props.height} width={props.width - (toolbarOpen ? options.toolbar.width : 1)} transition="all 0.3s" py="2">
+                {options.chart.show && <Box className="alert-panel-chart" height={options.chart.height}>
+                    <LogChart data={chartData} panel={panel} width={props.width - (toolbarOpen ? options.toolbar.width : 1)} viewOptions={viewOptions} onSelectLabel={onSelectLabel} activeLabels={active} />
+                </Box>}
+                <VStack alignItems="left" divider={<StackDivider />} mt="1">
+                    {
+                        sortedData.map(rule => <AlertRuleItem rule={rule} panel={panel} collapsed={collaseAll} />)
+                    }
+                </VStack>
+            </Box>
+            {<Box className="bordered-left" width={toolbarOpen ? options.toolbar.width : 0} transition="all 0.3s">
+                <AlertToolbar active={active} labels={[]} panel={panel} onCollapseAll={onCollapseAll} onSearchChange={onSearchChange} height={props.height} onActiveLabel={onActiveLabel} currentCount={filterData.length} onViewLogChange={onViewOptionsChange} viewOptions={viewOptions} />
+            </Box>}
+        </Flex>
+    </>
+    )
 }
 
 export default AlertPanel
+

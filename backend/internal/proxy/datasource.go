@@ -56,7 +56,7 @@ func ProxyDatasource(c *gin.Context) {
 	}
 
 	var url1 = ds.URL + targetURL + "?" + params.Encode()
-
+	
 	// read request json body and write to new request body
 	jsonData, _ := c.GetRawData()
 	reqBody := bytes.NewBuffer(jsonData)
