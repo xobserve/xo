@@ -40,7 +40,7 @@ const AlertPanel = (props: AlertPanelProps) => {
     const storageKey = ToolbarStorageKey + dashboardId + panel.id
     const viewStorageKey = AlertViewOptionsStorageKey + dashboardId + panel.id
     const [toolbarOpen, setToolbarOpen] = useState(storage.get(storageKey) ?? false)
-    const [collaseAll, setCollapeAll] = useState(true)
+    const [collaseAll, setCollapeAll] = useState(false)
     const [search, setSearch] = useState("")
     const [active, setActive] = useState<string[]>([])
     const [activeOp, setActiveOp] = useState<"or" | "and">("or")
@@ -57,7 +57,7 @@ const AlertPanel = (props: AlertPanelProps) => {
                     const r = cloneDeep(rule)
                     r.fromDs = d.fromDs
                     r.groupName = group.name
-                    r.groupFile = group.file
+                    r.groupNamespace = group.file
                     data.push(r)
                 }
             }
@@ -122,7 +122,7 @@ const AlertPanel = (props: AlertPanelProps) => {
         })
     }, [])
     const filterData: AlertRule[] = useMemo(() => {
-        const result = []
+        const result = data
       
 
         return result

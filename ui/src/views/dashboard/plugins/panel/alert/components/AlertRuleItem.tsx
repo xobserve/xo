@@ -11,9 +11,18 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import React from "react"
+import { Box, Flex, HStack, Image, Text, Tooltip, VStack, chakra, useColorMode } from "@chakra-ui/react"
+import moment from "moment"
+import React, { useEffect, useState } from "react"
 import { Panel } from "types/dashboard"
 import { AlertRule } from "types/plugins/alert"
+import { formatDuration } from 'utils/date'
+import { FiringIcon, PendingIcon } from "./Icons"
+import { paletteColorNameToHex } from "utils/colors"
+import { upperFirst } from "lodash"
+import CollapseIcon from "components/icons/Collapse"
+import { dateTimeFormat } from "utils/datetime/formatter"
+import { IoMdInformationCircleOutline } from "react-icons/io"
 
 interface Props {
     rule: AlertRule
@@ -22,8 +31,106 @@ interface Props {
 }
 
 const AlertRuleItem = (props: Props) => {
-    return (<>
-    </>)
+    const { rule, panel } = props
+    const [collapsed, setCollapsed] = useState(true)
+    const { colorMode } = useColorMode()
+    useEffect(() => {
+        setCollapsed(props.collapsed)
+    }, [props.collapsed])
+
+
+    const stateColor = paletteColorNameToHex(rule.state == "firing" ? "$light-red" : "$yellow", colorMode)
+    console.log("here333333:", rule)
+    return (<Box fontSize="0.9rem" className="label-bg" py="1" px="2">
+        <Flex justifyContent="space-between" alignItems="center" cursor="pointer" onClick={() => setCollapsed(!collapsed)} >
+            <HStack>
+                {rule.state == "firing" ? <FiringIcon fill={stateColor} /> : <PendingIcon fill={stateColor} />}
+                <Box>
+                    <Text>{rule.name}</Text>
+                    <HStack textStyle="annotation" spacing={1} mt="2">
+                        <CollapseIcon collapsed={collapsed} fontSize="0.6rem" opacity="0.6" />
+                        <Text>{rule.alerts.length} alerts</Text>
+                        <Text>|</Text>
+                        <Text>group: {rule.groupName}</Text>
+                        <Text>|</Text>
+                        <HStack>
+                            {Object.keys(rule.labels).map((k) => {
+                                return <Flex>
+                                    <Text>{k}=</Text>
+                                    <Text className="color-text">{rule.labels[k]}</Text>
+                                </Flex>
+                            })}
+                        </HStack>
+                    </HStack>
+                </Box>
+            </HStack>
+            {rule.alerts.length > 0 && <Text fontSize="0.8rem">
+                <chakra.span color={stateColor} fontSize="0.9rem">{upperFirst(rule.alerts[0].state)}</chakra.span> for {formatDuration((new Date().getTime() - new Date(rule.alerts[0].activeAt).getTime()) * 1000)}
+            </Text>}
+        </Flex>
+        {
+            !collapsed && <Flex className="bordered" px="2" py="2" ml="6" mt="2" justifyContent="space-between" alignItems="top">
+                <Box>
+                    <VStack alignItems="left">
+                        <HStack>
+                            <Text width="100px">annotations</Text>
+                            <HStack textStyle="annotation">
+                                {Object.keys(rule.annotations).map((k) => {
+                                    return <Flex key={k}>
+                                        <Text>{k}=</Text>
+                                        <Text>{rule.annotations[k]}</Text>
+                                    </Flex>
+                                })}
+                            </HStack>
+                        </HStack>
+                        <HStack>
+                            <Text width="100px">expression</Text>
+                            <Text textStyle="annotation">
+                                {rule.query}
+                            </Text>
+                        </HStack>
+                        <HStack>
+                            <HStack width="100px" spacing={1}>
+                            <Text>evaluation</Text>
+                            <Tooltip label="time info of executing your alert expression, first value is the executing time point, second is how long the executing takes, if it take long, maybe you need to optimize the expression or using cache, e.g use Prometheus recording rules"><Box><IoMdInformationCircleOutline /></Box></Tooltip>
+                            </HStack>
+                            <Text textStyle="annotation">
+                                {dateTimeFormat(rule.lastEvaluation)} / {formatDuration(rule.evaluationTime * 1e6)}
+                            </Text>
+                        </HStack>
+                    </VStack>
+
+
+                    <VStack alignItems="left">
+                        {
+                            rule.alerts.map((alert) => {
+                                return <Flex justifyContent="space-between" alignItems="center" >
+                                    <Box>
+
+                                    </Box>
+                                </Flex>
+                            })
+                        }
+                    </VStack>
+                </Box>
+                <VStack alignItems="left" fontSize="0.85rem">
+                    <Box>
+                        <Text>Datasource</Text>
+                        <HStack alignItems="end">
+                            <Image width="20px" height="20px" src={`/public/plugins/datasource/${rule.fromDs}.svg`}/>
+                            <Text mt="2" textStyle="annotation">{rule.fromDs}</Text>
+                        </HStack>
+                    </Box>
+                    <Box>
+                        <Text>Namespace / Group</Text>
+                        <HStack>
+                            <Text mt="2" textStyle="annotation">{rule.groupNamespace} / {rule.groupName}</Text>
+                        </HStack>
+                    </Box>
+                </VStack>
+            </Flex>
+        }
+    </Box>)
 }
 
 export default AlertRuleItem

@@ -44,7 +44,7 @@ export interface AlertRule {
     evaluationTime: number
 
     groupName: string 
-    groupFile: string 
+    groupNamespace: string 
     fromDs: DatasourceType
 }
 
