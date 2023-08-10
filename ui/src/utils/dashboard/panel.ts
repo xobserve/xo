@@ -10,6 +10,7 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
+import { AlertRules } from "src/views/dashboard/plugins/panel/alert/OverridesEditor";
 import { BarRules } from "src/views/dashboard/plugins/panel/bar/OverridesEditor";
 import { BarGaugeRules } from "src/views/dashboard/plugins/panel/barGauge/OverrideEditor";
 import { GeomapRules } from "src/views/dashboard/plugins/panel/geomap/OverridesEditor";
@@ -55,6 +56,8 @@ export const getPanelOverridesRules = (panelType): string[] => {
             return Object.keys(GeomapRules).map(k => GeomapRules[k])
         case PanelType.Bar:
             return Object.keys(BarRules).map(k => BarRules[k])
+        case PanelType.Alert:
+            return Object.keys(AlertRules).map(k => AlertRules[k])
         default:
             return []
     }

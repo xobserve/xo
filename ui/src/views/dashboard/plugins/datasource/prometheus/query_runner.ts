@@ -223,3 +223,28 @@ export const replacePrometheusQueryWithVariables = (query: PanelQuery,interval: 
         }
     }   
 }
+
+export const query_prometheus_alerts = async (panel:Panel, timeRange: TimeRange, ds: Datasource) => {
+    const res: any = await requestApi.get(`/proxy/${ds.id}/api/v1/rules?type=alert`)
+    if (res.status !== "success") {
+        console.log("Failed to fetch data from prometheus", res)
+        return {
+            error: `${res.errorType}: ${res.error}`,
+            data: []
+        }
+    }
+
+
+    if (res.data.result.length == 0 || res.data.result[0].values.length == 0) {
+        return {
+            error: null,
+            data: []
+        }
+    }
+
+
+    return {
+        error: null,
+        data: res.data,
+    }
+}

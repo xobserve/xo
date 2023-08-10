@@ -34,6 +34,7 @@ export interface PanelPlugins {
     [PanelType.GeoMap]?: GeoMapSettings
     [PanelType.Log]?: LogSettings
     [PanelType.Bar]?: BarSettings
+    [PanelType.Alert]?: AlerSettings
 }
 
 /*-------------------- Plugins ----------------------- */
@@ -41,6 +42,10 @@ export interface PanelPlugins {
 export interface DisableDatasource {
     disableDatasource?: boolean
 }
+
+export interface AlerSettings extends DisableDatasource {
+}
+
 
 export interface BarSettings {
     showGrid: boolean

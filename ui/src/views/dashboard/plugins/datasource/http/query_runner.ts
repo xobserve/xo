@@ -23,7 +23,7 @@ import { isJSON } from "utils/is"
 import { replaceWithVariables } from "utils/variable"
 import { requestApi } from "utils/axios/request"
 
-export const run_http_query = async (panel: Panel, q: PanelQuery,range: TimeRange,ds: Datasource) => {
+export const run_http_query = async (panel: Panel, q: PanelQuery, range: TimeRange, ds: Datasource) => {
     //@todo: 
     // 1. rather than query directyly to prometheus, we should query to our own backend servie
     // 2. using `axios` instead of `fetch`
@@ -34,38 +34,54 @@ export const run_http_query = async (panel: Panel, q: PanelQuery,range: TimeRang
     if (!isEmpty(q.data.transformRequest)) {
         const transformRequest = genDynamicFunction(q.data.transformRequest);
         if (isFunction(transformRequest)) {
-             url = transformRequest(url, headers,start , end, replaceWithVariables)
-        }  else {
+            url = transformRequest(url, headers, start, end, replaceWithVariables)
+        } else {
             return {
                 error: 'transformRequest is not a valid function',
                 data: []
             }
         }
     }
-    
 
-    const res = await requestApi.get(`/proxy?proxy_url=${url}`)
-    let result = res
+
+
+    const res: any = await requestApi.get(`/proxy?proxy_url=${url}`)
+    let result
     if (!isEmpty(q.data.transformResult)) {
         const transformResult = genDynamicFunction(q.data.transformResult);
         if (isFunction(transformResult)) {
-             result = transformResult(res, q, start, end)
-        }  else {
+            result = transformResult(res, q, start, end)
+        } else {
             return {
                 error: 'transformResult is not a valid function',
                 data: []
             }
         }
+    } else {
+        // default return format:
+        // {
+        //     "status": "success",
+        //     "error": "error message",
+        //     "errorType": "error type",
+        //     "data": []
+        // }
+        if (res.status !== "success") {
+            console.log("Failed to fetch data from prometheus", res)
+            return {
+                error: `${res.errorType}: ${res.error}`,
+                data: []
+            }
+        }
+        result = res.data
     }
 
-    
     return {
         error: null,
         data: result
     }
 }
 
-export const checkAndTestHttp = async (ds:Datasource) => {
+export const checkAndTestHttp = async (ds: Datasource) => {
     // check datasource setting is valid
     const res = isHttpDatasourceValid(ds)
     if (res != null) {
@@ -76,7 +92,7 @@ export const checkAndTestHttp = async (ds:Datasource) => {
 }
 
 
-export const queryHttpVariableValues = async (variable:Variable, useCurrentTimerange = true) => {
+export const queryHttpVariableValues = async (variable: Variable, useCurrentTimerange = true) => {
     const result = {
         error: null,
         data: null
@@ -95,32 +111,32 @@ export const queryHttpVariableValues = async (variable:Variable, useCurrentTimer
     if (!isEmpty(data.transformRequest)) {
         const transformRequest = genDynamicFunction(data.transformRequest);
         if (isFunction(transformRequest)) {
-             url = transformRequest(data.url, headers,start , end, replaceWithVariables)
-        }  else {
-            return  []
+            url = transformRequest(data.url, headers, start, end, replaceWithVariables)
+        } else {
+            return []
         }
     }
-    
+
     try {
         const res = await requestApi.get(`/proxy?proxy_url=${url}`)
         result.data = res
-        
+
         if (!isEmpty(data.transformResult)) {
             const transformResult = genDynamicFunction(data.transformResult);
             if (isFunction(transformResult)) {
-                 result.data = transformResult(res)
-            }  else {
+                result.data = transformResult(res)
+            } else {
                 result.data = []
             }
         }
     } catch (error) {
     }
 
-    
+
     return result
 }
 
 
-export const replaceHttpQueryWithVariables = (query: PanelQuery,interval:string) => {
+export const replaceHttpQueryWithVariables = (query: PanelQuery, interval: string) => {
 
 }

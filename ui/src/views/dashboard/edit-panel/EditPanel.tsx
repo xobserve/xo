@@ -322,6 +322,7 @@ const loadablePanels = {
     [PanelType.GeoMap]: loadable(() => import('../plugins/panel/geomap/Editor')),
     [PanelType.Log]: loadable(() => import('../plugins/panel/log/Editor')),
     [PanelType.Bar]: loadable(() => import('../plugins/panel/bar/Editor')),
+    [PanelType.Alert]: loadable(() => import('../plugins/panel/alert/Editor')),
 }
 
 interface CustomPanelEditorProps {

@@ -1,3 +1,21 @@
+## V0.6.0 (2023-08-09)
+
+## Datasource
+1. Loki datasource
+2. Optimize prometheus datasource
+
+## Panels
+1.  New Log panel
+2. New Bar panel
+4. New GeoMap panel
+5. Redesign Table panel, make it easier to use and more useful 
+
+## Others
+1. Use sqlite as default and support migrate to Mysql
+2. Dashboard searching and grouping
+3. Sharing dashboard to others 
+
+
 ## V0.5.0 (2023-07-17)
 
 ### Features

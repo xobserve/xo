@@ -1,0 +1,64 @@
+{
+    "status": "success",
+    "data": {
+        "groups": [
+            {
+                "name": "example",
+                "file": "first_rules.yml",
+                "rules": [
+                    {
+                        "state": "firing",
+                        "name": "HighRequestLatency",
+                        "query": "go_gc_duration_seconds_count > 20",
+                        "duration": 120,
+                        "keepFiringFor": 0,
+                        "labels": {
+                            "severity": "page"
+                        },
+                        "annotations": {
+                            "summary": "High request latency"
+                        },
+                        "alerts": [
+                            {
+                                "labels": {
+                                    "alertname": "HighRequestLatency",
+                                    "instance": "localhost:9100",
+                                    "job": "node",
+                                    "severity": "page"
+                                },
+                                "annotations": {
+                                    "summary": "High request latency"
+                                },
+                                "state": "firing",
+                                "activeAt": "2023-08-09T09:25:55.050285364Z",
+                                "value": "1.9168e+04"
+                            },
+                            {
+                                "labels": {
+                                    "alertname": "HighRequestLatency",
+                                    "instance": "localhost:9090",
+                                    "job": "prometheus",
+                                    "severity": "page"
+                                },
+                                "annotations": {
+                                    "summary": "High request latency"
+                                },
+                                "state": "firing",
+                                "activeAt": "2023-08-09T09:31:40.050285364Z",
+                                "value": "5.2e+01"
+                            }
+                        ],
+                        "health": "ok",
+                        "evaluationTime": 0.00189025,
+                        "lastEvaluation": "2023-08-09T17:41:25.101361+08:00",
+                        "type": "alerting"
+                    }
+                ],
+                "interval": 15,
+                "limit": 0,
+                "evaluationTime": 0.00193375,
+                "lastEvaluation": "2023-08-09T17:41:25.101329+08:00"
+            }
+        ]
+    }
+}

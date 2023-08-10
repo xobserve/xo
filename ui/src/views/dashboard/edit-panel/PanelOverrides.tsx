@@ -10,7 +10,7 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-import { Box, Button, HStack, StackDivider,Select as ChakraSelect, Tooltip, VStack } from "@chakra-ui/react";
+import { Box, Button, HStack, StackDivider, Select as ChakraSelect, Tooltip, VStack } from "@chakra-ui/react";
 import { Form, FormSection } from "components/form/Form";
 import FormItem from "components/form/Item";
 import { flatten, isArray } from "lodash";
@@ -29,6 +29,7 @@ import StatOverridesEditor from "../plugins/panel/stat/OverridesEditor";
 import GeomapOverridesEditor from "../plugins/panel/geomap/OverridesEditor";
 import { Select } from "antd";
 import BarOverridesEditor from "../plugins/panel/bar/OverridesEditor";
+import AlertOverridesEditor from "../plugins/panel/alert/OverridesEditor";
 
 const PanelOverrides = ({ panel, onChange, data }: PanelEditorProps) => {
     const t1 = useStore(panelMsg)
@@ -105,12 +106,12 @@ const PanelOverrides = ({ panel, onChange, data }: PanelEditorProps) => {
                 <FormSection key={o.target + i} title={t1.overrides + (i + 1)} p="1" titleSize="0.9rem" position="relative" bordered>
                     <Box position="absolute" right="2" top="9px" cursor="pointer" onClick={() => removeOverride(i)}><FaTimes fontSize="0.8rem" /></Box>
                     <FormItem title={t1.targetName} alignItems="center">
-                            <Select style={{minWidth: '150px'}} showSearch size="large" value={o.target} onChange={v => {
-                                onChange((panel: Panel) => {
-                                    const o = panel.overrides[i]
-                                    o.target = v
-                                })
-                            }} options={names.map((name, i) => ({value: name.value, label: name.label}))} popupMatchSelectWidth={false} />
+                        <Select style={{ minWidth: '150px' }} showSearch size="large" value={o.target} onChange={v => {
+                            onChange((panel: Panel) => {
+                                const o = panel.overrides[i]
+                                o.target = v
+                            })
+                        }} options={names.map((name, i) => ({ value: name.value, label: name.label }))} popupMatchSelectWidth={false} />
                     </FormItem>
 
                     <VStack alignItems="left" pl="6" divider={<StackDivider />} spacing={3}>
@@ -164,8 +165,15 @@ const PanelOverrides = ({ panel, onChange, data }: PanelEditorProps) => {
                                     })
                                 }} />
                             }
-                              {
+                            {
                                 panel.type == PanelType.Bar && <BarOverridesEditor override={rule} onChange={(v) => {
+                                    onChange((panel: Panel) => {
+                                        panel.overrides[i].overrides[j].value = v
+                                    })
+                                }} />
+                            }
+                            {
+                                panel.type == PanelType.Alert && <AlertOverridesEditor override={rule} onChange={(v) => {
                                     onChange((panel: Panel) => {
                                         panel.overrides[i].overrides[j].value = v
                                     })

@@ -409,6 +409,9 @@ function registerEvents(options, chart) {
             thresholds: initThresholds(24),
             thresholdsDisplay: ThresholdDisplay.None,
             thresholdArrow: BarThresholdArrow.None,
+        },
+        [PanelType.Alert]: {
+            disableDatasource: true,
         }
     }
 }

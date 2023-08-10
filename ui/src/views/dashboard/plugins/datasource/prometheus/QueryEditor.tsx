@@ -16,7 +16,7 @@ import { useEffect, useState } from "react"
 import { PanelQuery } from "types/dashboard"
 import React from "react";
 import { Variant } from "chakra-react-select/dist/types/types"
-import { Datasource, DatasourceEditorProps } from "types/datasource"
+import { DatasourceEditorProps } from "types/datasource"
 import { queryPrometheusAllMetrics, queryPrometheusLabels } from "./query_runner"
 import ChakraSelect from "components/select/ChakraSelect"
 import FormItem from "components/form/Item"
@@ -25,7 +25,6 @@ import InputSelect from "components/select/InputSelect"
 import { prometheusDsMsg } from "src/i18n/locales/en";
 import { useStore } from "@nanostores/react";
 import CodeEditor, { LogqlLang } from "components/CodeEditor/CodeEditor";
-import PanelEditItem from "src/views/dashboard/edit-panel/PanelEditItem";
 import RadionButtons from "components/RadioButtons";
 
 
@@ -128,7 +127,7 @@ export const PromMetricSelect = ({ dsId, value, onChange, width = "200px", varia
             })
             return
         }
-        setMetricsList(res.data)
+        setMetricsList(res.data??[])
     }
 
     return (

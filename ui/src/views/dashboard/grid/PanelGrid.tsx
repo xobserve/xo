@@ -26,7 +26,7 @@ import useBus, { dispatch } from 'use-bus'
 import { getCurrentTimeRange } from "components/DatePicker/TimePicker";
 import { PanelDataEvent, PanelForceRebuildEvent, TimeChangedEvent } from "src/data/bus-events";
 import { addParamToUrl } from "utils/url";
-import { run_testdata_query } from "../plugins/datasource/testdata/query_runner";
+import { query_testdata_alerts, run_testdata_query } from "../plugins/datasource/testdata/query_runner";
 import { run_jaeger_query } from "../plugins/datasource/jaeger/query_runner";
 import PanelBorder from "../../../components/largescreen/components/Border";
 import TitleDecoration from "components/largescreen/components/TitleDecoration";
@@ -51,6 +51,7 @@ import { $variables } from "src/views/variables/store";
 import { getDatasource } from "utils/datasource";
 import { parseVariableFormat } from "utils/format";
 import { VariableInterval } from "src/data/variable";
+import { datasourceSupportAlerts } from "src/data/alerts";
 interface PanelGridProps {
     dashboard: Dashboard
     panel: Panel
@@ -81,8 +82,8 @@ export const PanelGrid = memo((props: PanelGridProps) => {
                     }
                     const variable = vars.find(v1 => v1.name == v)
                     if (variable?.values === undefined) {
-                        inited = false 
-                        return 
+                        inited = false
+                        return
                     }
                 }
             }
@@ -92,8 +93,8 @@ export const PanelGrid = memo((props: PanelGridProps) => {
                 clearInterval(depsCheck.current)
                 depsCheck.current = null
             }
-        },100)
-    },[])
+        }, 100)
+    }, [])
     useBus(
         (e) => { return e.type == TimeChangedEvent },
         (e) => {
@@ -110,7 +111,7 @@ export const PanelGrid = memo((props: PanelGridProps) => {
 
     return (
         <PanelBorder width={props.width} height={props.height} border={props.panel.styles?.border}>
-            {depsInited && <PanelComponent key={props.panel.id + forceRenderCount} {...props} timeRange={tr} variables={variables}  />}
+            {depsInited && <PanelComponent key={props.panel.id + forceRenderCount} {...props} timeRange={tr} variables={variables} />}
         </PanelBorder>
     )
 })
@@ -125,7 +126,7 @@ interface PanelComponentProps extends PanelGridProps {
 export const prevQueries = new Map()
 export const prevQueryData = new Map()
 
-export const PanelComponent = ({ dashboard, panel,variables, onRemovePanel, width, height, sync, timeRange }: PanelComponentProps) => {
+export const PanelComponent = ({ dashboard, panel, variables, onRemovePanel, width, height, sync, timeRange }: PanelComponentProps) => {
     const toast = useToast()
     const [panelData, setPanelData] = useState<any[]>(null)
     const [queryError, setQueryError] = useState()
@@ -157,16 +158,16 @@ export const PanelComponent = ({ dashboard, panel,variables, onRemovePanel, widt
 
         let data = []
         let needUpdate = false
-        const intervalObj =  calculateInterval(timeRange, ds.queryOptions.maxDataPoints ?? DatasourceMaxDataPoints, isEmpty(ds.queryOptions.minInterval) ? DatasourceMinInterval : ds.queryOptions.minInterval)
+        const intervalObj = calculateInterval(timeRange, ds.queryOptions.maxDataPoints ?? DatasourceMaxDataPoints, isEmpty(ds.queryOptions.minInterval) ? DatasourceMinInterval : ds.queryOptions.minInterval)
         const interval = intervalObj.intervalMs / 1000
         for (const q0 of ds.queries) {
             const q: PanelQuery = { ...cloneDeep(q0), interval }
             replaceQueryWithVariables(q, datasource.type, intervalObj.interval)
             if (datasource.type != DatasourceType.TestData && hasVariableFormat(q.metrics)) {
                 // there are variables still not replaced, maybe because variable's loadValues has not completed
-                continue 
+                continue
             }
-            
+
             const id = formatQueryId(ds.id, dashboardId, panel.id, q.id, panel.type)
             const prevQuery = prevQueries.get(id)
             const currentQuery = [q, timeRange, datasource.type]
@@ -186,31 +187,36 @@ export const PanelComponent = ({ dashboard, panel,variables, onRemovePanel, widt
 
             let res
 
-            //@needs-update-when-add-new-datasource
-            switch (datasource.type) {
-                case DatasourceType.Prometheus:
-                    res = await run_prometheus_query(panel, q, timeRange, datasource)
-                    break;
-                case DatasourceType.TestData:
-                    res = await run_testdata_query(panel, q, timeRange, datasource)
-                    break;
-                case DatasourceType.Jaeger:
-                    res = await run_jaeger_query(panel, q, timeRange, datasource)
-                    break;
-                case DatasourceType.ExternalHttp:
-                    res = await run_http_query(panel, q, timeRange, datasource)
-                    break;
-                case DatasourceType.Loki:
-                    res = await run_loki_query(panel, q, timeRange, datasource)
-                    break
-                default:
-                    break;
+            if (panel.type == PanelType.Alert) {
+                res = await queryAlerts(panel, timeRange)
+            } else {
+                //@needs-update-when-add-new-datasource
+                switch (datasource.type) {
+                    case DatasourceType.Prometheus:
+                        res = await run_prometheus_query(panel, q, timeRange, datasource)
+                        break;
+                    case DatasourceType.TestData:
+                        res = await run_testdata_query(panel, q, timeRange, datasource)
+                        break;
+                    case DatasourceType.Jaeger:
+                        res = await run_jaeger_query(panel, q, timeRange, datasource)
+                        break;
+                    case DatasourceType.ExternalHttp:
+                        res = await run_http_query(panel, q, timeRange, datasource)
+                        break;
+                    case DatasourceType.Loki:
+                        res = await run_loki_query(panel, q, timeRange, datasource)
+                        break
+                    default:
+                        break;
+                }
             }
+
 
             setQueryError(res.error)
 
 
-           
+
             if (!isEmpty(res.data)) {
                 data.push(res.data)
                 prevQueryData[id] = res.data
@@ -296,6 +302,7 @@ const loadablePanels = {
     [PanelType.GeoMap]: loadable(() => import('../plugins/panel/geomap/GeoMap')),
     [PanelType.Log]: loadable(() => import('../plugins/panel/log/Log')),
     [PanelType.Bar]: loadable(() => import('../plugins/panel/bar/Bar')),
+    [PanelType.Alert]: loadable(() => import('../plugins/panel/alert/Alert')),
 }
 
 const CustomPanelRender = memo((props: PanelProps) => {
@@ -408,9 +415,36 @@ const formatQueryId = (datasourceId, dashboardId, panelId, queryId, panelType) =
         case PanelType.Log:
             tp = PanelType.Log
             break
+        case PanelType.Alert:
+            tp = PanelType.Alert
+            break
         default:
             tp = "seriesData"
             break;
     }
     return `${datasourceId}-${dashboardId}-${panelId}-${queryId}-${tp}`
+}
+
+const queryAlerts = async (panel, timeRange) => {
+    let data
+    for (const ds of datasourceSupportAlerts) {
+        switch (ds) {
+            case DatasourceType.Prometheus:
+                data = query_prometheus_alerts(panel,timeRange)
+                break;
+            case DatasourceType.Loki:
+                break
+            default:
+                break;
+        }
+    }
+
+    if (data.length == 0) {
+        data = query_testdata_alerts(panel,timeRange)
+    }
+
+    return {
+        error: null,
+        data: data ?? []
+    }
 }
