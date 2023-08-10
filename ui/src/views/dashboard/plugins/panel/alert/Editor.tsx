@@ -10,8 +10,8 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-import { Textarea } from "@chakra-ui/react"
-import { EditorInputItem } from "components/editor/EditorItem"
+import { Switch, Textarea } from "@chakra-ui/react"
+import { EditorInputItem, EditorNumberItem } from "components/editor/EditorItem"
 import RadionButtons from "components/RadioButtons"
 import PanelAccordion from "src/views/dashboard/edit-panel/Accordion"
 import PanelEditItem from "src/views/dashboard/edit-panel/PanelEditItem"
@@ -22,8 +22,48 @@ import { commonMsg, textPanelMsg } from "src/i18n/locales/en"
 
 const AlertPanelEditor = memo(({ panel, onChange }: PanelEditorProps) => {
     const t = useStore(commonMsg)
-    return (<PanelAccordion title={t.basic}>
+    return (<><PanelAccordion title={t.basic}>
+        <PanelEditItem title="Order by">
+            <RadionButtons options={[{ label: "Newest First", value: "newest" }, { label: "Oldest First", value: "oldest" }]} value={panel.plugins.alert.orderBy} onChange={v => onChange((panel: Panel) => {
+                panel.plugins.alert.orderBy = v
+            })} />
+        </PanelEditItem>
     </PanelAccordion>
+        <PanelAccordion title="Toolbar">
+            <PanelEditItem title="Show" desc="Show toolbar in upper right corner">
+                <Switch isChecked={panel.plugins.alert.toolbar.show} onChange={(e) => onChange((panel: Panel) => {
+                    panel.plugins.alert.toolbar.show = e.target.checked
+                })} />
+            </PanelEditItem>
+            <PanelEditItem title="Toolbar width" desc="In css pixels">
+                <EditorNumberItem min={0} max={500} step={20} value={panel.plugins.alert.toolbar.width} onChange={(v) => onChange((panel: Panel) => {
+                    panel.plugins.alert.toolbar.width = v
+                })} />
+            </PanelEditItem>
+        </PanelAccordion>
+        <PanelAccordion title="Chart">
+            <PanelEditItem title="Show">
+                <Switch isChecked={panel.plugins.alert.chart.show} onChange={(e) => onChange((panel: Panel) => {
+                    panel.plugins.alert.chart.show = e.target.checked
+                })} />
+            </PanelEditItem>
+            <PanelEditItem title="Chart height" desc="Css style width">
+                <EditorInputItem value={panel.plugins.alert.chart.height} onChange={(v) => onChange((panel: Panel) => {
+                    panel.plugins.alert.chart.height = v
+                })} placeholder="e.g 200px 30%" />
+            </PanelEditItem>
+            <PanelEditItem title="Show label" desc="Value label display on bars">
+                <RadionButtons options={[{ label: "Auto", value: "auto" }, { label: "Always", value: 'always' }, { label: "None", value: 'none' }]} value={panel.plugins.alert.chart.showLabel} onChange={v => onChange((panel: Panel) => {
+                    panel.plugins.alert.chart.showLabel = v
+                })} />
+            </PanelEditItem>
+            <PanelEditItem title="Stack">
+                <RadionButtons options={[{ label: "Auto", value: "auto" }, { label: "Always", value: 'always' }, { label: "None", value: 'none' }]} value={panel.plugins.alert.chart.stack} onChange={v => onChange((panel: Panel) => {
+                    panel.plugins.alert.chart.stack = v
+                })} />
+            </PanelEditItem>
+        </PanelAccordion>
+    </>
     )
 })
 

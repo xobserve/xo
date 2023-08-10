@@ -139,10 +139,10 @@ const AlertPanel = (props: AlertPanelProps) => {
     return (<>
         <Flex position="relative">
             {options.toolbar.show &&
-                <Box position="absolute" right="2" top="0" onClick={onToobarOpen} fontSize="0.7rem" opacity="0.6" cursor="pointer" p="2px" className={toolbarOpen ? "color-text" : null}>
+                <Box position="absolute" right="2" top="0" onClick={onToobarOpen} fontSize="0.7rem" opacity="0.6" cursor="pointer" px="2px" className={toolbarOpen ? "color-text" : null} py="2">
                     <FaFilter />
                 </Box>}
-            <Box height={props.height} width={props.width - (toolbarOpen ? options.toolbar.width : 1)} transition="all 0.3s" py="2">
+            <Box height={props.height} width={props.width - (toolbarOpen ? options.toolbar.width : 1)} transition="all 0.3s">
                 {options.chart.show && <Box className="alert-panel-chart" height={options.chart.height}>
                     <LogChart data={chartData} panel={panel} width={props.width - (toolbarOpen ? options.toolbar.width : 1)} viewOptions={viewOptions} onSelectLabel={onSelectLabel} activeLabels={active} />
                 </Box>}
@@ -152,7 +152,7 @@ const AlertPanel = (props: AlertPanelProps) => {
                     }
                 </VStack>
             </Box>
-            {<Box className="bordered-left" width={toolbarOpen ? options.toolbar.width : 0} transition="all 0.3s">
+            {<Box className="bordered-left" width={toolbarOpen ? options.toolbar.width : 0} transition="all 0.3s" py="2">
                 <AlertToolbar active={active} labels={[]} panel={panel} onCollapseAll={onCollapseAll} onSearchChange={onSearchChange} height={props.height} onActiveLabel={onActiveLabel} currentCount={filterData.length} onViewLogChange={onViewOptionsChange} viewOptions={viewOptions} />
             </Box>}
         </Flex>

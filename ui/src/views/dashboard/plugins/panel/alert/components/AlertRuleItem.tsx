@@ -11,7 +11,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { Box, Flex, HStack, Image, Text, Tooltip, VStack, chakra, useColorMode } from "@chakra-ui/react"
+import { Box, Divider, Flex, HStack, Image, StackDivider, Table, TableContainer, Tag, Tbody, Td, Text, Th, Thead, Tooltip, Tr, VStack, chakra, useColorMode } from "@chakra-ui/react"
 import moment from "moment"
 import React, { useEffect, useState } from "react"
 import { Panel } from "types/dashboard"
@@ -40,6 +40,7 @@ const AlertRuleItem = (props: Props) => {
 
 
     const stateColor = paletteColorNameToHex(rule.state == "firing" ? "$light-red" : "$yellow", colorMode)
+    const ruleLabelKeys = Object.keys(rule.labels)
     console.log("here333333:", rule)
     return (<Box fontSize="0.9rem" className="label-bg" py="1" px="2">
         <Flex justifyContent="space-between" alignItems="center" cursor="pointer" onClick={() => setCollapsed(!collapsed)} >
@@ -69,66 +70,101 @@ const AlertRuleItem = (props: Props) => {
             </Text>}
         </Flex>
         {
-            !collapsed && <Flex className="bordered" px="2" py="2" ml="6" mt="2" justifyContent="space-between" alignItems="top">
-                <Box>
-                    <VStack alignItems="left">
-                        <HStack>
-                            <Text width="100px">annotations</Text>
-                            <HStack textStyle="annotation">
-                                {Object.keys(rule.annotations).map((k) => {
-                                    return <Flex key={k}>
-                                        <Text>{k}=</Text>
-                                        <Text>{rule.annotations[k]}</Text>
-                                    </Flex>
-                                })}
-                            </HStack>
-                        </HStack>
-                        <HStack>
-                            <Text width="100px">expression</Text>
-                            <Text textStyle="annotation">
-                                {rule.query}
-                            </Text>
-                        </HStack>
-                        <HStack>
-                            <HStack width="100px" spacing={1}>
-                            <Text>evaluation</Text>
-                            <Tooltip label="time info of executing your alert expression, first value is the executing time point, second is how long the executing takes, if it take long, maybe you need to optimize the expression or using cache, e.g use Prometheus recording rules"><Box><IoMdInformationCircleOutline /></Box></Tooltip>
-                            </HStack>
-                            <Text textStyle="annotation">
-                                {dateTimeFormat(rule.lastEvaluation)} / {formatDuration(rule.evaluationTime * 1e6)}
-                            </Text>
-                        </HStack>
-                    </VStack>
-
-
-                    <VStack alignItems="left">
-                        {
-                            rule.alerts.map((alert) => {
-                                return <Flex justifyContent="space-between" alignItems="center" >
-                                    <Box>
-
-                                    </Box>
-                                </Flex>
-                            })
-                        }
-                    </VStack>
-                </Box>
-                <VStack alignItems="left" fontSize="0.85rem">
+            !collapsed && <Box className="bordered"  px="2" py="2" ml="6" mt="2" >
+                <Flex justifyContent="space-between" alignItems="top">
                     <Box>
-                        <Text>Datasource</Text>
-                        <HStack alignItems="end">
-                            <Image width="20px" height="20px" src={`/public/plugins/datasource/${rule.fromDs}.svg`}/>
-                            <Text mt="2" textStyle="annotation">{rule.fromDs}</Text>
-                        </HStack>
+                        <VStack alignItems="left" spacing={3}>
+                            <HStack>
+                                <Text width="100px">annotations</Text>
+                                <HStack textStyle="annotation">
+                                    {Object.keys(rule.annotations).map((k) => {
+                                        return <Flex key={k}>
+                                            <Text>{k}=</Text>
+                                            <Text>{rule.annotations[k]}</Text>
+                                        </Flex>
+                                    })}
+                                </HStack>
+                            </HStack>
+                            <HStack>
+                                <HStack width="100px" spacing={1}>
+                                    <Text>evaluation</Text>
+                                    <Tooltip label="time info of executing your alert expression, first value is the executing time point, second is how long the executing takes, if it take long, maybe you need to optimize the expression or using cache, e.g use Prometheus recording rules"><Box><IoMdInformationCircleOutline /></Box></Tooltip>
+                                </HStack>
+                                <Text textStyle="annotation">
+                                    {dateTimeFormat(rule.lastEvaluation)} / {formatDuration(rule.evaluationTime * 1e6)}
+                                </Text>
+                            </HStack>
+                            <HStack>
+                                <Text width="100px">expression</Text>
+                                <Text textStyle="annotation" className="color-text" fontWeight={600}>
+                                    {rule.query}
+                                </Text>
+                            </HStack>
+                        </VStack>
                     </Box>
-                    <Box>
-                        <Text>Namespace / Group</Text>
-                        <HStack>
-                            <Text mt="2" textStyle="annotation">{rule.groupNamespace} / {rule.groupName}</Text>
-                        </HStack>
-                    </Box>
-                </VStack>
-            </Flex>
+                    <VStack alignItems="left" fontSize="0.85rem" spacing={3}>
+                        <Box>
+                            <Text>Datasource</Text>
+                            <HStack alignItems="end">
+                                <Image width="20px" height="20px" src={`/public/plugins/datasource/${rule.fromDs}.svg`} />
+                                <Text mt="2" textStyle="annotation">{rule.fromDs}</Text>
+                            </HStack>
+                        </Box>
+                        <Box>
+                            <Text>Namespace / Group</Text>
+                            <HStack>
+                                <Text mt="2" textStyle="annotation">{rule.groupNamespace} / {rule.groupName}</Text>
+                            </HStack>
+                        </Box>
+                    </VStack>
+                </Flex>
+                <Divider mt="2"/>
+                <TableContainer mt="2">
+                    <Table variant='simple'>
+                        <Thead>
+                            <Tr>
+                                <Th>Labels</Th>
+                                <Th>State</Th>
+                                <Th>Active</Th>
+                                <Th>Value</Th>
+                            </Tr>
+                        </Thead>
+                        <Tbody>
+                            {
+                                rule.alerts.map((alert) => {
+                                    delete alert.labels.alertname
+                                    for (const k of ruleLabelKeys) {
+                                        if (alert.labels[k] == rule.labels[k]) {
+                                            delete alert.labels[k]
+                                        }
+                                    }
+                                    return <Tr>
+                                        <Td>
+                                            <HStack>
+                                                {
+                                                    Object.keys(alert.labels).map(k => <Tag size="sm">{k}={alert.labels[k]}</Tag>)
+                                                }
+                                            </HStack>
+                                        </Td>
+                                        <Td>
+                                            <chakra.span color={stateColor} fontSize="0.9rem">{upperFirst(alert.state)}</chakra.span>
+                                        </Td>
+                                        <Td>
+                                        <Text>{dateTimeFormat(alert.activeAt)}</Text> <Text textStyle="annotation">{moment(alert.activeAt).fromNow()}</Text>
+                                        </Td>
+                                        <Td>
+                                            {alert.value}
+                                        </Td>
+                                    </Tr>
+                                })
+                            }
+                        </Tbody>
+
+                    </Table>
+                </TableContainer>
+            </Box>
+
+
         }
     </Box>)
 }
