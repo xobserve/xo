@@ -32,5 +32,24 @@ export const parseVariableFormat = (s) => {
     while ((match = reg.exec(s))) {
         result.push(match[1]);
     }
-    return  uniq(result);
+    return uniq(result);
+}
+
+
+// json to {a=b,c=d}
+export const jsonToEqualPairs = v => {
+    let s = "{"
+    const keys = Object.keys(v)
+    keys.forEach((k, i) => {
+        if (i == keys.length - 1) {
+            s = s + `${k}="${v[k]}"`
+        } else {
+            s = s + `${k}="${v[k]}",`
+        }
+
+    })
+
+    s += "}"
+
+    return s
 }

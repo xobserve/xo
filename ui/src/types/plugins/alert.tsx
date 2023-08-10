@@ -42,6 +42,7 @@ export interface AlertRule {
     health: "ok" | "error"
     lastEvaluation: string
     evaluationTime: number
+    activeAt: number
 
     groupName: string 
     groupNamespace: string 
@@ -49,6 +50,7 @@ export interface AlertRule {
 }
 
 export interface Alert {
+    name: string
     labels: Record<string, string>
     annotations: Record<string, string>
     state: "pending" |  "firing" | "resolved"

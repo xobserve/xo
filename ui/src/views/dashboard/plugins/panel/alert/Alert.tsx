@@ -14,7 +14,7 @@
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { Box, Center, Flex, StackDivider, Text, VStack } from "@chakra-ui/react"
 import { DatasourceType, PanelProps } from "types/dashboard"
-import {  Log } from "types/plugins/log";
+import { Log } from "types/plugins/log";
 import { FaFilter } from "react-icons/fa";
 import storage from "utils/localStorage";
 import { cloneDeep, remove, sortBy } from "lodash";
@@ -23,12 +23,13 @@ import LogChart from "../log/components/Chart";
 import AlertToolbar from "./components/AlertToolbar";
 import { AlertGroup, AlertRule, AlertToolbarOptions } from "types/plugins/alert";
 import AlertRuleItem from "./components/AlertRuleItem";
+import { jsonToEqualPairs } from "utils/format";
 
 
 
 
 interface AlertPanelProps extends PanelProps {
-    data: {"groups": AlertGroup[],"fromDs": DatasourceType}[]
+    data: { "groups": AlertGroup[], "fromDs": DatasourceType }[]
 }
 
 
@@ -45,11 +46,14 @@ const AlertPanel = (props: AlertPanelProps) => {
     const [active, setActive] = useState<string[]>([])
     const [activeOp, setActiveOp] = useState<"or" | "and">("or")
     const [viewOptions, setViewOptions] = useState<AlertToolbarOptions>(storage.get(viewStorageKey) ?? {
+        maxBars: 20,
+        barType: "labels",
     })
 
 
     const [data, chartData] = useMemo(() => {
         const data: AlertRule[] = []
+        const chartData: any[] = []
         const data0 = props.data.flat()
         for (const d of data0) {
             for (const group of d.groups) {
@@ -58,16 +62,32 @@ const AlertPanel = (props: AlertPanelProps) => {
                     r.fromDs = d.fromDs
                     r.groupName = group.name
                     r.groupNamespace = group.file
+
                     data.push(r)
+                    const ruleLabelKeys = Object.keys(r.labels)
+                    for (const alert of r.alerts) {
+                        delete alert.labels.alertname
+                        for (const k of ruleLabelKeys) {
+                            if (alert.labels[k] == r.labels[k]) {
+                                delete alert.labels[k]
+                            }
+                        }
+                        alert.name  = jsonToEqualPairs({ rule: r.name,...alert.labels })
+                
+                        chartData.push({
+                            labels:  alert.name,
+                            timestamp: new Date(alert.activeAt).getTime() * 1e6
+                        })
+                    }
                 }
             }
         }
 
-        const chartData: Log[] = []
-        return [data, chartData]
+
+        return [data, sortBy(chartData, ['timestamp'])]
     }, [props.data])
 
-    console.log("here333333:",data)
+    console.log("here333333:", data)
     useEffect(() => {
         if (!options.toolbar.show) {
             storage.remove(storageKey)
@@ -121,9 +141,10 @@ const AlertPanel = (props: AlertPanelProps) => {
             }
         })
     }, [])
+
     const filterData: AlertRule[] = useMemo(() => {
         const result = data
-      
+
 
         return result
     }, [data, search, active])
@@ -135,15 +156,15 @@ const AlertPanel = (props: AlertPanelProps) => {
 
         return sortBy(filterData, ['timestamp'])
     }, [filterData, options.orderBy])
-    
+
     return (<>
         <Flex position="relative">
             {options.toolbar.show &&
-                <Box position="absolute" right="2" top="0" onClick={onToobarOpen} fontSize="0.7rem" opacity="0.6" cursor="pointer" px="2px" className={toolbarOpen ? "color-text" : null} py="2">
+                <Box position="absolute" right="2" top="0" onClick={onToobarOpen} fontSize="0.7rem" opacity="0.6" cursor="pointer" px="2px" className={toolbarOpen ? "color-text" : null} py="2" zIndex={1}>
                     <FaFilter />
                 </Box>}
             <Box height={props.height} width={props.width - (toolbarOpen ? options.toolbar.width : 1)} transition="all 0.3s">
-                {options.chart.show && <Box className="alert-panel-chart" height={options.chart.height}>
+                {options.chart.show && chartData.length != 0 && <Box className="alert-panel-chart" height={options.chart.height}>
                     <LogChart data={chartData} panel={panel} width={props.width - (toolbarOpen ? options.toolbar.width : 1)} viewOptions={viewOptions} onSelectLabel={onSelectLabel} activeLabels={active} />
                 </Box>}
                 <VStack alignItems="left" divider={<StackDivider />} mt="1">

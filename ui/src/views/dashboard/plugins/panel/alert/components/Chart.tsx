@@ -17,17 +17,21 @@ import ChartComponent from "components/charts/Chart"
 import { floor, last, round } from "lodash"
 import React, { useEffect, useMemo, useState } from "react"
 import { Panel, PanelType } from "types/dashboard"
-import { Log, LogChartView } from "types/plugins/log"
 import { dateTimeFormat } from "utils/datetime/formatter"
-import { formatLabelId, getLabelNameColor } from "../utils"
 import moment from "moment"
 import { isEmpty } from "utils/validate"
 import { measureText } from "utils/measureText"
 import { AlertToolbarOptions } from "types/plugins/alert"
+import { getLabelNameColor } from "../../log/utils"
 
+
+export interface AlertChartItem {
+        label: string
+        timestamp: number  // nanoseconds
+}
 
 interface Props {
-    data: Log[]
+    data: AlertChartItem[]
     panel: Panel
     width: number
     viewOptions: AlertToolbarOptions
@@ -35,9 +39,9 @@ interface Props {
     activeLabels: string[]
 }
 
-const LogChart = (props: Props) => {
-    const { panel, width, viewOptions, onSelectLabel, activeLabels } = props
-    const options = panel.type == PanelType.Log ? panel.plugins.log.chart : panel.plugins.alert.chart
+const AlertChart = (props: Props) => {
+    const { panel, width ,viewOptions, onSelectLabel,activeLabels} = props
+    const options = panel.type == PanelType.Log?  panel.plugins.log.chart : panel.plugins.alert.chart
     const [chart, setChart] = useState<echarts.ECharts>(null)
     const { colorMode } = useColorMode()
     useEffect(() => {
@@ -45,13 +49,13 @@ const LogChart = (props: Props) => {
             chart.on('click', function (event) {
                 if (event.seriesName != "total") {
                     onSelectLabel(event.seriesName)
-                }
+                }        
             })
         }
         return () => {
             chart?.off('click')
         }
-    }, [chart])
+    },[chart])
     let [timeline, names, data] = useMemo(() => {
         const names = []
         const data = []
@@ -85,9 +89,7 @@ const LogChart = (props: Props) => {
             const labelMap = new Map()
             for (const log of props.data) {
                 const ts = getTimelineBucket(log, timeline)
-                console.log("here3444433:", log, typeof log.labels)
-                if (typeof log.labels === "string") {
-                    const labelId = log.labels
+                    const labelId = log.label
                     if (activeLabels.length != 0) {
                         if (!activeLabels.includes(labelId)) {
                             continue
@@ -101,25 +103,7 @@ const LogChart = (props: Props) => {
                     } else {
                         old[ts] = old[ts] ? old[ts] + 1 : 1
                     }
-                } else {
-                    for (const k of Object.keys(log.labels)) {
-                        const labelId = formatLabelId(k, log.labels[k])
-                        if (activeLabels.length != 0) {
-                            if (!activeLabels.includes(labelId)) {
-                                continue
-                            }
-                        }
-                        const old = labelMap.get(labelId)
-                        if (!old) {
-                            labelMap.set(labelId, {
-                                [ts]: 1
-                            })
-                        } else {
-                            old[ts] = old[ts] ? old[ts] + 1 : 1
-                        }
-                    }
                 }
-            }
 
             for (const k of Array.from(labelMap.keys())) {
                 names.push(k)
@@ -166,7 +150,7 @@ const LogChart = (props: Props) => {
     }
 
     const timeFontSize = 10
-    const [interval, rotate] = getTimeInterval(width, timeline[0], timeFontSize, timeline.length)
+    const [interval,rotate] = getTimeInterval(width, timeline[0], timeFontSize, timeline.length)
     const chartOptions = {
         animation: true,
         animationDuration: 500,
@@ -201,7 +185,7 @@ const LogChart = (props: Props) => {
                     // baseline: 'end',
                 },
                 interval: interval,
-                fontSize: rotate != 0 ? timeFontSize - 1 : timeFontSize,
+                fontSize: rotate != 0 ? timeFontSize - 1: timeFontSize,
                 rotate: rotate,
             },
         },
@@ -245,7 +229,7 @@ const LogChart = (props: Props) => {
     </>)
 }
 
-export default LogChart
+export default AlertChart
 
 
 
@@ -321,9 +305,9 @@ const getTimeFormat = (start, end, step) => {
 const getTimeInterval = (width, format, fontSize, ticks) => {
     const formatWidth = (measureText(format, fontSize).width + 10)
     const allowTicks = floor(width / formatWidth)
-    if ((ticks / allowTicks) > 1) {
-        return [0, 45]
+    if ((ticks / allowTicks) > 1 ) {
+        return [0,45]
     }
 
-    return [0, 0]
+    return [0,0]
 }

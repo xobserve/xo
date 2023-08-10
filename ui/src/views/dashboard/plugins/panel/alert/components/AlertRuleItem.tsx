@@ -18,11 +18,12 @@ import { Panel } from "types/dashboard"
 import { AlertRule } from "types/plugins/alert"
 import { formatDuration } from 'utils/date'
 import { FiringIcon, PendingIcon } from "./Icons"
-import { paletteColorNameToHex } from "utils/colors"
+import { getTextColorForAlphaBackground, paletteColorNameToHex } from "utils/colors"
 import { upperFirst } from "lodash"
 import CollapseIcon from "components/icons/Collapse"
 import { dateTimeFormat } from "utils/datetime/formatter"
 import { IoMdInformationCircleOutline } from "react-icons/io"
+import { getLabelNameColor } from "../../log/utils"
 
 interface Props {
     rule: AlertRule
@@ -40,7 +41,6 @@ const AlertRuleItem = (props: Props) => {
 
 
     const stateColor = paletteColorNameToHex(rule.state == "firing" ? "$light-red" : "$yellow", colorMode)
-    const ruleLabelKeys = Object.keys(rule.labels)
     console.log("here333333:", rule)
     return (<Box fontSize="0.9rem" className="label-bg" py="1" px="2">
         <Flex justifyContent="space-between" alignItems="center" cursor="pointer" onClick={() => setCollapsed(!collapsed)} >
@@ -132,18 +132,12 @@ const AlertRuleItem = (props: Props) => {
                         <Tbody>
                             {
                                 rule.alerts.map((alert) => {
-                                    delete alert.labels.alertname
-                                    for (const k of ruleLabelKeys) {
-                                        if (alert.labels[k] == rule.labels[k]) {
-                                            delete alert.labels[k]
-                                        }
-                                    }
+                                    const color = getLabelNameColor(alert.name)
                                     return <Tr>
                                         <Td>
                                             <HStack>
-                                                {
-                                                    Object.keys(alert.labels).map(k => <Tag size="sm">{k}={alert.labels[k]}</Tag>)
-                                                }
+                                               <Tag size="sm" bg={color} color={getTextColorForAlphaBackground(color,colorMode == "dark")}>{alert.name}</Tag>
+                                                
                                             </HStack>
                                         </Td>
                                         <Td>
