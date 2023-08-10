@@ -79,7 +79,7 @@ const AlertPanel = (props: AlertPanelProps) => {
 
 
         return [data]
-    }, [props.data])
+    }, [props.data, options.filter.datasources])
 
     console.log("here333333:", data)
     useEffect(() => {

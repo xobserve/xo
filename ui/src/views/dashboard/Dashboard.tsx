@@ -17,7 +17,6 @@ import { requestApi } from "utils/axios/request"
 import DashboardHeader from "src/views/dashboard/DashboardHeader"
 import DashboardGrid from "src/views/dashboard/grid/DashboardGrid"
 import { clone, cloneDeep, concat, defaultsDeep, find, findIndex } from "lodash"
-import { Variable } from "types/variable"
 import { setVariableSelected } from "src/views/variables/SelectVariable"
 import { prevQueries, prevQueryData } from "src/views/dashboard/grid/PanelGrid"
 import { unstable_batchedUpdates } from "react-dom"
@@ -57,9 +56,9 @@ const DashboardWrapper = ({ dashboardId, sideWidth }) => {
             load()
         }
         return () => {
-            for (const k in prevQueries) {
-                delete prevQueries[k]
-                delete prevQueryData[k]
+            for (const k of Array.from(prevQueries.keys())) {
+                prevQueries.delete(k)
+                prevQueryData.delete(k)
             }
         }
     }, [])
