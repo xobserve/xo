@@ -51,9 +51,8 @@ const AlertPanel = (props: AlertPanelProps) => {
     })
 
 
-    const [data, chartData] = useMemo(() => {
+    const [data] = useMemo(() => {
         const data: AlertRule[] = []
-        const chartData: any[] = []
         const data0 = props.data.flat()
         for (const d of data0) {
             for (const group of d.groups) {
@@ -73,18 +72,13 @@ const AlertPanel = (props: AlertPanelProps) => {
                             }
                         }
                         alert.name  = jsonToEqualPairs({ rule: r.name,...alert.labels })
-                
-                        chartData.push({
-                            labels:  alert.name,
-                            timestamp: new Date(alert.activeAt).getTime() * 1e6
-                        })
                     }
                 }
             }
         }
 
 
-        return [data, sortBy(chartData, ['timestamp'])]
+        return [data]
     }, [props.data])
 
     console.log("here333333:", data)
@@ -142,11 +136,38 @@ const AlertPanel = (props: AlertPanelProps) => {
         })
     }, [])
 
-    const filterData: AlertRule[] = useMemo(() => {
-        const result = data
+    const [filterData,chartData] =  useMemo(() => {
+        console.log("here33333:",active)
+        let result = []
+        const chartData = []
+        if (active.length == 0) {
+            result = data 
+        }  else {
+            for (const r0 of data) {
+                const r = cloneDeep(r0)
+                const  alerts = []
+                for (const alert of r.alerts) {
+                    if (active.includes(alert.name)) {
+                        alerts.push(alert)
+                    }
+                }
+                r.alerts = alerts 
+                if (r.alerts.length > 0) {
+                    result.push(r)
+                }
+            }
+        }
+        
+        for (const r of result) {
+            for (const alert of r.alerts) {
+                chartData.push({
+                    labels:  alert.name,
+                    timestamp: new Date(alert.activeAt).getTime() * 1e6
+                })
+            }
+        }
 
-
-        return result
+        return [result, sortBy(chartData, ['timestamp'])]
     }, [data, search, active])
 
     const sortedData: AlertRule[] = useMemo(() => {
@@ -169,12 +190,12 @@ const AlertPanel = (props: AlertPanelProps) => {
                 </Box>}
                 <VStack alignItems="left" divider={<StackDivider />} mt="1">
                     {
-                        sortedData.map(rule => <AlertRuleItem rule={rule} panel={panel} collapsed={collaseAll} />)
+                        sortedData.map(rule => <AlertRuleItem rule={rule} panel={panel} collapsed={collaseAll}  onSelectLabel={onSelectLabel} />)
                     }
                 </VStack>
             </Box>
             {<Box className="bordered-left" width={toolbarOpen ? options.toolbar.width : 0} transition="all 0.3s" py="2">
-                <AlertToolbar active={active} labels={[]} panel={panel} onCollapseAll={onCollapseAll} onSearchChange={onSearchChange} height={props.height} onActiveLabel={onActiveLabel} currentCount={filterData.length} onViewLogChange={onViewOptionsChange} viewOptions={viewOptions} />
+                {toolbarOpen &&  <AlertToolbar active={active} labels={[]} panel={panel} onCollapseAll={onCollapseAll} onSearchChange={onSearchChange} height={props.height} onActiveLabel={onActiveLabel} currentCount={filterData.length} onViewLogChange={onViewOptionsChange} viewOptions={viewOptions} />}
             </Box>}
         </Flex>
     </>

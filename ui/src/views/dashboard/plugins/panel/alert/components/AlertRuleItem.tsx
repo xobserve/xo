@@ -29,10 +29,11 @@ interface Props {
     rule: AlertRule
     panel: Panel
     collapsed: boolean
+    onSelectLabel: any
 }
 
 const AlertRuleItem = (props: Props) => {
-    const { rule, panel } = props
+    const { rule, panel, onSelectLabel } = props
     const [collapsed, setCollapsed] = useState(true)
     const { colorMode } = useColorMode()
     useEffect(() => {
@@ -136,7 +137,7 @@ const AlertRuleItem = (props: Props) => {
                                     return <Tr>
                                         <Td>
                                             <HStack>
-                                               <Tag size="sm" bg={color} color={getTextColorForAlphaBackground(color,colorMode == "dark")}>{alert.name}</Tag>
+                                               <Tag size="sm" bg={color} color={getTextColorForAlphaBackground(color,colorMode == "dark")} onClick={() => onSelectLabel(alert.name)} cursor="pointer">{alert.name}</Tag>
                                                 
                                             </HStack>
                                         </Td>

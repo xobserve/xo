@@ -244,7 +244,7 @@ const LogPanel = (props: LogPanelProps) => {
                 </VStack>
             </Box>
             {<Box className="bordered-left" width={toolbarOpen ? panel.plugins.log.toolbar.width : 0} transition="all 0.3s">
-                <LogToolbar active={active} labels={labels} panel={panel} onCollapseAll={onCollapseAll} onSearchChange={onSearchChange} height={props.height} onActiveLabel={onActiveLabel} activeOp={activeOp} onActiveOpChange={onActiveOpChange} currentLogsCount={filterData.length} onViewLogChange={onViewOptionsChange} viewOptions={viewOptions} />
+                {toolbarOpen && <LogToolbar active={active} labels={labels} panel={panel} onCollapseAll={onCollapseAll} onSearchChange={onSearchChange} height={props.height} onActiveLabel={onActiveLabel} activeOp={activeOp} onActiveOpChange={onActiveOpChange} currentLogsCount={filterData.length} onViewLogChange={onViewOptionsChange} viewOptions={viewOptions} />}
             </Box>}
         </Flex>
     </>
