@@ -25,6 +25,7 @@ import { dateTimeFormat } from "utils/datetime/formatter"
 import { IoMdInformationCircleOutline } from "react-icons/io"
 import { getLabelNameColor } from "../../log/utils"
 import { FaCheck } from "react-icons/fa"
+import { jsonToEqualPairs } from "utils/format"
 
 interface Props {
     rule: AlertRule
@@ -97,6 +98,14 @@ const AlertRuleItem = (props: Props) => {
                                 </HStack>
                                 <Text textStyle="annotation">
                                     {dateTimeFormat(rule.lastEvaluation)} / {formatDuration(rule.evaluationTime * 1e6)}
+                                </Text>
+                            </HStack>
+                            <HStack>
+                                <HStack width="100px" spacing={1}>
+                                    <Text>Rule labels</Text>
+                                </HStack>
+                                <Text textStyle="annotation">
+                                    {jsonToEqualPairs(rule.labels)}
                                 </Text>
                             </HStack>
                             <HStack>

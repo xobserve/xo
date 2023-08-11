@@ -137,7 +137,6 @@ const AlertPanel = (props: AlertPanelProps) => {
     }, [])
 
     const [filterData, chartData] = useMemo(() => {
-        console.log("here33333:", active)
         let result = []
         const chartData = []
 
@@ -149,7 +148,6 @@ const AlertPanel = (props: AlertPanelProps) => {
                 for (const ruleFilter of ruleFilters) {
                     const filter = ruleFilter.trim().toLowerCase()
                     if (!isEmpty(filter) && r0.name.toLowerCase().match(filter)) {
-                        console.log("here3333:", r0.name, filter)
                         pass = true
                         break
                     }
@@ -159,7 +157,19 @@ const AlertPanel = (props: AlertPanelProps) => {
                 }
             }
 
-        
+             // fitler by rule label
+             const labelFilter = equalPairsToJson(options.filter.ruleLabel)
+             if (labelFilter) {
+                 let matches = true
+                 for (const k in labelFilter) {
+                     if (!r0.labels[k].toLowerCase().match(labelFilter[k].toLowerCase())) {
+                         matches = false
+                         break
+                     }
+                 }
+
+                 if (!matches) continue
+             }
 
             const r = {
                 ...r0,
@@ -206,7 +216,7 @@ const AlertPanel = (props: AlertPanelProps) => {
         }
 
         return [result, sortBy(chartData, ['timestamp'])]
-    }, [data, search, active, options.filter.ruleName, options.filter.alertLabel])
+    }, [data, search, active, options.filter])
 
     const sortedData: AlertRule[] = useMemo(() => {
         if (panel.plugins.alert.orderBy == "newest") {
