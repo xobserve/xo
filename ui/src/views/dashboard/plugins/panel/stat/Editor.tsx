@@ -37,17 +37,17 @@ const GraphPanelEditor = memo(({ panel, onChange, data }: PanelEditorProps) => {
     const t2 = useStore(statsPanelMsg)
 
     const seriesNames = [VarialbeAllOption].concat((data.flat() as SeriesData[]).map(s => s.name))
-    if (isEmpty(panel.plugins.stat.diisplaySeries)) {
+    if (isEmpty(panel.plugins.stat.displaySeries)) {
         if (seriesNames?.length >= 1) {
             onChange((panel: Panel) => {
-                panel.plugins.stat.diisplaySeries = seriesNames[0]
+                panel.plugins.stat.displaySeries = seriesNames[0]
             })
         }
     } else {
-        if (!seriesNames.includes(panel.plugins.stat.diisplaySeries)) {
+        if (!seriesNames.includes(panel.plugins.stat.displaySeries)) {
             if (seriesNames?.length >= 1) {
                 onChange((panel: Panel) => {
-                    panel.plugins.stat.diisplaySeries = seriesNames[0]
+                    panel.plugins.stat.displaySeries = seriesNames[0]
                 })
             }
         }
@@ -61,10 +61,10 @@ const GraphPanelEditor = memo(({ panel, onChange, data }: PanelEditorProps) => {
                 })} />
             </PanelEditItem>
             <PanelEditItem title={t.series} desc={t.seriesTips}>
-                <Select value={panel.plugins.stat.diisplaySeries} onChange={e => {
+                <Select value={panel.plugins.stat.displaySeries} onChange={e => {
                     const v = e.currentTarget.value
                     onChange((panel: Panel) => {
-                        panel.plugins.stat.diisplaySeries = v
+                        panel.plugins.stat.displaySeries = v
                     })
                 }}>
                     {seriesNames.map(name => <option value={name}>{name == VarialbeAllOption ? "All" : name}</option>)}

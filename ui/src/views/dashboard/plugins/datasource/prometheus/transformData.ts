@@ -10,12 +10,13 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-import { cloneDeep, first, isEmpty, last, round } from "lodash";
+import { last, round } from "lodash";
 import { Panel, PanelQuery, PanelType } from "types/dashboard";
 
 import { FieldType, SeriesData } from "types/seriesData";
 import { TimeRange } from "types/time";
 import { parseLegendFormat } from "utils/format";
+import { isEmpty } from "utils/validate";
 import { replaceWithVariables } from "utils/variable";
 
 
@@ -45,8 +46,8 @@ export const prometheusToSeriesData = (data: any, query: PanelQuery, range: Time
             delete m.metric.__name__
             const metric = JSON.stringify(m.metric).replace(/":"/g, '"="')
 
-            const timeValues = []
-            const valueValues = []
+            let timeValues = []
+            let valueValues = []
 
             if (expandTimeRange) {
                 if (!isEmpty(m.values)) {
@@ -54,32 +55,73 @@ export const prometheusToSeriesData = (data: any, query: PanelQuery, range: Time
                     if (m.values[0][0] <= start) {
                         start = round(m.values[0][0])
                     }
-    
-                    m.values.forEach((v, i) => {
-                        if (i == 0) {
-                            if (round(v[0]) == start) {
-                                timeValues.push(start)
-                                valueValues.push(parseFloat(v[1]))
-                            } else if (round(v[0]) > start) {
-                                timeValues.push(start)
-                                valueValues.push(null)
-                            }
+                    
+                    let end = round(range.end.getTime() / 1000)
+                    const timeline = []
+                    const alignedStart = start - start % query.interval
+                    for (var i = alignedStart;i <=end; i=i+query.interval) {
+                        timeline.push(i)
+                    }
+                    // if (timeline[timeline.length-1] != end) {
+                    //     timeline.push(end)
+                    // }
+                    
+                    timeValues = timeline
+                    valueValues = new Array(timeline.length).fill(null)
+                    let currentIndex = 0
+                    for (const v of m.values) {
+                        const timestamp  = round(v[0])
+                        const value = parseFloat(v[1])
+                        const index = timeline.slice(currentIndex).findIndex(t =>  timestamp <= t) 
+                        if (index < 0) {
+                            continue
                         }
-    
-                        const lastTs = last(timeValues)
+                        const realIndex = index + currentIndex
+                        valueValues[realIndex] = value
+
                         
-                        let j = lastTs;
-                        while (j < v[0]) {
-                            j += query.interval
-                            if (j < v[0]) {
-                                timeValues.push(j)
-                                valueValues.push(null)
-                            } else {
-                                timeValues.push(v[0])
-                                valueValues.push(parseFloat(v[1]))
-                            }
-                        }
-                    })
+                        currentIndex = realIndex + 1
+                    }
+
+                    // const timestamp  = round(v[0])
+                    // const value = parseFloat(v[1])
+                    // const index = timeline.slice(lastIndex).findIndex(t =>  timestamp <= t) 
+                    // if (index < 0) {
+                    //     continue
+                    // }
+                    // const realIndex = index + lastIndex
+                    // valueValues[realIndex] = value
+
+                    // lastIndex = realIndex
+
+                    // console.log("here44444",index,realIndex, lastIndex)
+           
+    
+                //     m.values.forEach((v, i) => {
+                //         if (i == 0) {
+                //             if (round(v[0]) == start) {
+                //                 timeValues.push(start)
+                //                 valueValues.push(parseFloat(v[1]))
+                //             } else if (round(v[0]) > start) {
+                //                 timeValues.push(start)
+                //                 valueValues.push(null)
+                //             }
+                //         }
+    
+                //         const lastTs = last(timeValues)
+                        
+                //         let j = lastTs;
+                //         while (j < v[0]) {
+                //             j += query.interval
+                //             if (j < v[0]) {
+                //                 timeValues.push(j)
+                //                 valueValues.push(null)
+                //             } else {
+                //                 timeValues.push(v[0])
+                //                 valueValues.push(parseFloat(v[1]))
+                //             }
+                //         }
+                //     })
                 }
             } else {
                 for (const v of m.values) {
@@ -177,12 +219,10 @@ export const prometheusToSeriesData = (data: any, query: PanelQuery, range: Time
                         newValues.push(null)
                     }
                 })
-                console.log("here3333333:",valueField.values, newValues)
                 valueField.values = newValues
                 const timeField = r.fields.find(f => f.type == FieldType.Time)
                 timeField.values = timeline
             }
-            console.log("here333333",res)
         }
 
         return res

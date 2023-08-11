@@ -25,6 +25,7 @@ import { AlertGroup, AlertRule, AlertToolbarOptions } from "types/plugins/alert"
 import AlertRuleItem from "./components/AlertRuleItem";
 import { equalPairsToJson, jsonToEqualPairs } from "utils/format";
 import { AlertState } from "types/alert";
+import AlertStatView from "./components/AlertStatView";
 
 
 
@@ -236,26 +237,34 @@ const AlertPanel = (props: AlertPanelProps) => {
         return sortBy(filterData, ['timestamp'])
     }, [filterData, options.orderBy])
 
+    console.log("here33333:",filterData)
     return (<>
-        <Flex position="relative">
-            {options.toolbar.show &&
-                <Box position="absolute" right="2" top="0" onClick={onToobarOpen} fontSize="0.7rem" opacity="0.6" cursor="pointer" px="2px" className={toolbarOpen ? "color-text" : null} py="2" zIndex={1}>
-                    <FaFilter />
-                </Box>}
-            <Box height={props.height} width={props.width - (toolbarOpen ? options.toolbar.width : 1)} transition="all 0.3s">
-                {options.chart.show && chartData.length != 0 && <Box className="alert-panel-chart" height={options.chart.height}>
-                    <LogChart data={chartData} panel={panel} width={props.width - (toolbarOpen ? options.toolbar.width : 1)} viewOptions={viewOptions} onSelectLabel={onSelectLabel} activeLabels={active} />
-                </Box>}
-                <VStack alignItems="left" divider={<StackDivider />} mt="1">
-                    {
-                        sortedData.map(rule => <AlertRuleItem rule={rule} panel={panel} collapsed={collaseAll} onSelectLabel={onSelectLabel} />)
-                    }
-                </VStack>
-            </Box>
-            {<Box className="bordered-left" width={toolbarOpen ? options.toolbar.width : 0} transition="all 0.3s" py="2">
-                {toolbarOpen && <AlertToolbar active={active} labels={[]} panel={panel} onCollapseAll={onCollapseAll} onSearchChange={onSearchChange} height={props.height} onActiveLabel={onActiveLabel} currentCount={filterData.length} onViewLogChange={onViewOptionsChange} viewOptions={viewOptions} />}
-            </Box>}
-        </Flex>
+        {
+            options.viewMode == "list"
+                ?
+                <Flex position="relative">
+                    {options.toolbar.show &&
+                        <Box position="absolute" right="2" top="0" onClick={onToobarOpen} fontSize="0.7rem" opacity="0.6" cursor="pointer" px="2px" className={toolbarOpen ? "color-text" : null} py="2" zIndex={1}>
+                            <FaFilter />
+                        </Box>}
+                    <Box height={props.height} width={props.width - (toolbarOpen ? options.toolbar.width : 1)} transition="all 0.3s">
+                        {options.chart.show && chartData.length != 0 && <Box className="alert-panel-chart" height={options.chart.height}>
+                            <LogChart data={chartData} panel={panel} width={props.width - (toolbarOpen ? options.toolbar.width : 1)} viewOptions={viewOptions} onSelectLabel={onSelectLabel} activeLabels={active} />
+                        </Box>}
+                        <VStack alignItems="left" divider={<StackDivider />} mt="1">
+                            {
+                                sortedData.map(rule => <AlertRuleItem rule={rule} panel={panel} collapsed={collaseAll} onSelectLabel={onSelectLabel} />)
+                            }
+                        </VStack>
+                    </Box>
+                    {<Box className="bordered-left" width={toolbarOpen ? options.toolbar.width : 0} transition="all 0.3s" py="2">
+                        {toolbarOpen && <AlertToolbar active={active} labels={[]} panel={panel} onCollapseAll={onCollapseAll} onSearchChange={onSearchChange} height={props.height} onActiveLabel={onActiveLabel} currentCount={filterData.length} onViewLogChange={onViewOptionsChange} viewOptions={viewOptions} />}
+                    </Box>}
+                </Flex>
+                :
+                <Box className="alert-stat-view" height={props.height} width={props.width}><AlertStatView   {...props} data={filterData} /></Box>
+        }
+
     </>
     )
 }

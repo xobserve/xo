@@ -26,10 +26,28 @@ import { dispatch } from "use-bus"
 import { PanelForceRebuildEvent } from "src/data/bus-events"
 import { AlertState } from "types/alert"
 import MultiRadionButtons from "components/MultiRadioButtons"
+import { ColorPicker } from "components/ColorPicker"
 
 const AlertPanelEditor = memo(({ panel, onChange }: PanelEditorProps) => {
     const t = useStore(commonMsg)
     return (<><PanelAccordion title={t.basic}>
+        <PanelEditItem title="View mode">
+            <RadionButtons options={[{ label: "List", value: "list" }, { label: "Stat", value: "stat" }]} value={panel.plugins.alert.viewMode} onChange={v => onChange((panel: Panel) => {
+                panel.plugins.alert.viewMode = v
+            })} />
+        </PanelEditItem>
+        {panel.plugins.alert.viewMode === "stat" && <>
+            <PanelEditItem title="Show stat graph">
+                <Switch isChecked={panel.plugins.alert.showStatGraph} onChange={(e) => onChange((panel: Panel) => {
+                    panel.plugins.alert.showStatGraph = e.target.checked
+                })} />
+            </PanelEditItem>
+            <PanelEditItem title="Stat color">
+                <ColorPicker color={panel.plugins.alert.statColor} onChange={c => onChange((panel: Panel) => {
+                    panel.plugins.alert.statColor = c
+                })} circlePicker/>
+            </PanelEditItem>
+        </>}
         <PanelEditItem title="Order by">
             <RadionButtons options={[{ label: "Newest First", value: "newest" }, { label: "Oldest First", value: "oldest" }]} value={panel.plugins.alert.orderBy} onChange={v => onChange((panel: Panel) => {
                 panel.plugins.alert.orderBy = v
@@ -50,37 +68,37 @@ const AlertPanelEditor = memo(({ panel, onChange }: PanelEditorProps) => {
         </PanelAccordion>
         <PanelAccordion title="Filter">
             <PanelEditItem title="State">
-                <MultiRadionButtons options={Object.keys(AlertState).map(k => ({label: AlertState[k], value: AlertState[k]}))} value={panel.plugins.alert.filter.state} onChange={v => onChange((panel: Panel) => {
+                <MultiRadionButtons options={Object.keys(AlertState).map(k => ({ label: AlertState[k], value: AlertState[k] }))} value={panel.plugins.alert.filter.state} onChange={v => onChange((panel: Panel) => {
                     panel.plugins.alert.filter.state = v
                 })} />
             </PanelEditItem>
-            <PanelEditItem title="Datasource" desc="Query alerts from these datasources">  
-                <Select style={{minWidth: "300px"}} value={panel.plugins.alert.filter.datasources} allowClear mode="multiple" options={
-                    datasources.filter(ds => datasourceSupportAlerts.includes(ds.type)).map(ds => ({label: ds.name, value: ds.id}))} onChange={
-                    (v) => {
-                    onChange((panel: Panel) => {
-                        panel.plugins.alert.filter.datasources = v
-                    });
-                    dispatch(PanelForceRebuildEvent + panel.id)
-                }
-                } />
+            <PanelEditItem title="Datasource" desc="Query alerts from these datasources">
+                <Select style={{ minWidth: "300px" }} value={panel.plugins.alert.filter.datasources} allowClear mode="multiple" options={
+                    datasources.filter(ds => datasourceSupportAlerts.includes(ds.type)).map(ds => ({ label: ds.name, value: ds.id }))} onChange={
+                        (v) => {
+                            onChange((panel: Panel) => {
+                                panel.plugins.alert.filter.datasources = v
+                            });
+                            dispatch(PanelForceRebuildEvent + panel.id)
+                        }
+                    } />
             </PanelEditItem>
-            <PanelEditItem title="Rule name" desc="Filter for alert rules containing this text">  
+            <PanelEditItem title="Rule name" desc="Filter for alert rules containing this text">
                 <EditorInputItem value={panel.plugins.alert.filter.ruleName} onChange={(v) => onChange((panel: Panel) => {
                     panel.plugins.alert.filter.ruleName = v
-                })} placeholder="support multi regex, separate with comman e.g: ^service1, ^service2"/>
+                })} placeholder="support multi regex, separate with comman e.g: ^service1, ^service2" />
             </PanelEditItem>
-            <PanelEditItem title="Rule labels" desc={`Filter rule labels using label querying, e.g: {severity="critical"}`}>  
+            <PanelEditItem title="Rule labels" desc={`Filter rule labels using label querying, e.g: {severity="critical"}`}>
                 <EditorInputItem value={panel.plugins.alert.filter.ruleLabel} onChange={(v) => onChange((panel: Panel) => {
                     panel.plugins.alert.filter.ruleLabel = v
-                })} placeholder=""/>
+                })} placeholder="" />
             </PanelEditItem>
-            <PanelEditItem title="Alert label" desc={`Filter alert labels using label querying, e.g: {service="api-gateway", instance=~"cluster-cn-.+"}`}>  
+            <PanelEditItem title="Alert label" desc={`Filter alert labels using label querying, e.g: {service="api-gateway", instance=~"cluster-cn-.+"}`}>
                 <EditorInputItem value={panel.plugins.alert.filter.alertLabel} onChange={(v) => onChange((panel: Panel) => {
                     panel.plugins.alert.filter.alertLabel = v
-                })} placeholder=""/>
+                })} placeholder="" />
             </PanelEditItem>
-            
+
         </PanelAccordion>
         <PanelAccordion title="Chart">
             <PanelEditItem title="Show">

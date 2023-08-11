@@ -64,8 +64,8 @@ export const parseOptions = (config: PanelProps, color: string, rawData: SeriesD
         width: 1,
         fill:  fillColor,
         points: {
-            show: null,
-            size: 5,
+            show: config.panel.plugins.stat.styles.showPoints,
+            size: 8,
             stroke: color,
             fill: color,
             filter: pointsFilter,

@@ -259,7 +259,7 @@ function registerEvents(options, chart) {
         [PanelType.Stat]: {
             showTooltip: true,
             showGraph: true,
-            diisplaySeries: null,
+            displaySeries: null,
             showLegend: false,
             value: {
                 ...getInitUnits(),
@@ -274,7 +274,8 @@ function registerEvents(options, chart) {
                 graphHeight: 60,
                 connectNulls: false,
                 hideGraphHeight: 70,
-                textAlign: "center"
+                textAlign: "center",
+                showPoints: false
             },
             textSize: {
                 value: null,
@@ -413,6 +414,9 @@ function registerEvents(options, chart) {
             thresholdArrow: BarThresholdArrow.None,
         },
         [PanelType.Alert]: {
+            viewMode: "list",
+            showStatGraph: true,
+            statColor: "$orange",
             disableDatasource: true,
             orderBy: "newest",
             toolbar: {

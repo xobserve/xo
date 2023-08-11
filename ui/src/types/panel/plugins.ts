@@ -45,6 +45,9 @@ export interface DisableDatasource {
 }
 
 export interface AlerSettings extends DisableDatasource {
+    viewMode: "list" | "stat"
+    showStatGraph: boolean
+    statColor: string
     orderBy: "newest" | "oldest"
     toolbar: {
         show: boolean
@@ -58,7 +61,7 @@ export interface AlerSettings extends DisableDatasource {
         tooltip: "none" | "single" | "all"
     }
     filter: {
-        state: AlertState
+        state: AlertState[]
         datasources: number[]
         ruleName: string 
         ruleLabel: string
@@ -189,7 +192,7 @@ export interface TraceSettings {
 export interface StatSettings {
     showTooltip: boolean
     showGraph: boolean
-    diisplaySeries: string
+    displaySeries: string
     showLegend: boolean
     styles: {
         colorMode: "none" | "value" | "bg-gradient" | "bg-solid"
@@ -198,6 +201,7 @@ export interface StatSettings {
         fillOpacity: number
         graphHeight: number
         connectNulls: boolean
+        showPoints: boolean
         hideGraphHeight: number
         textAlign: "left" | "center"
     }

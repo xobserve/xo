@@ -32,9 +32,12 @@ const StatPanel = memo((props: StatPanelProps) => {
         return (<Center height="100%">No data</Center>)
     }
 
+
+  
+
     const data: SeriesData[] = useMemo(() => {
         let res: SeriesData[] = [];
-        const displaySeries = props.panel.plugins.stat.diisplaySeries
+        const displaySeries = props.panel.plugins.stat.displaySeries
         if (props.data.length > 0) {
             for (const d of props.data) {
                 for (const s of d) {
@@ -43,6 +46,7 @@ const StatPanel = memo((props: StatPanelProps) => {
                     }
                   
                     const selected = displaySeries == VarialbeAllOption || s.rawName == displaySeries
+                    console.log("here3333 stat", s, selected)
                     if (selected) {
                         res.push(s)
                     }
@@ -51,9 +55,11 @@ const StatPanel = memo((props: StatPanelProps) => {
         }
 
         return res
-    }, [props.data, props.panel.plugins.stat.diisplaySeries])
+    }, [props.data, props.panel.plugins.stat.displaySeries])
     
     const options = props.panel.plugins.stat
+
+    console.log("here3333 stat", data)
     return (
         <>
             {
