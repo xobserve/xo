@@ -13,7 +13,7 @@
 
 import { Box, Divider, Flex, HStack, Image, StackDivider, Table, TableContainer, Tag, Tbody, Td, Text, Th, Thead, Tooltip, Tr, VStack, chakra, useColorMode } from "@chakra-ui/react"
 import moment from "moment"
-import React, { useEffect, useState } from "react"
+import React, { memo, useEffect, useState } from "react"
 import { Panel } from "types/dashboard"
 import { AlertRule } from "types/plugins/alert"
 import { formatDuration } from 'utils/date'
@@ -32,10 +32,11 @@ interface Props {
     panel: Panel
     collapsed: boolean
     onSelectLabel: any
+    width: number
 }
-
-const AlertRuleItem = (props: Props) => {
-    const { rule, panel, onSelectLabel } = props
+ 
+const AlertRuleItem = memo((props: Props) => {
+    const { rule, panel, onSelectLabel,width } = props
     const [collapsed, setCollapsed] = useState(true)
     const { colorMode } = useColorMode()
     useEffect(() => {
@@ -53,25 +54,26 @@ const AlertRuleItem = (props: Props) => {
                 {rule.state == "firing" ? <FiringIcon fill={getStateColor(rule.state)} /> : (rule.state == "pending" ? <PendingIcon fill={getStateColor(rule.state)} /> : <FaCheck color={getStateColor(rule.state)} />)}
                 <Box>
                     <Text>{rule.name}</Text>
-                    <HStack textStyle="annotation" spacing={1} mt="2">
+                    <HStack textStyle="annotation" spacing={1} mt={width > 400 ? 2 : 1}>
                         <CollapseIcon collapsed={collapsed} fontSize="0.6rem" opacity="0.6" />
                         <Text>{rule.alerts.length} alerts</Text>
-                        <Text>|</Text>
-                        <Text>group: {rule.groupName}</Text>
-                        <Text>|</Text>
-                        <HStack>
+                        {width > 400 && <Text>|</Text>}
+                        {width > 600 && <><Text>group: {rule.groupName}</Text>
+                        <Text>|</Text></>}
+                        {width > 400 && <HStack>
                             {Object.keys(rule.labels).map((k) => {
                                 return <Flex>
                                     <Text>{k}=</Text>
                                     <Text className="color-text">{rule.labels[k]}</Text>
                                 </Flex>
                             })}
-                        </HStack>
+                        </HStack>}
                     </HStack>
                 </Box>
             </HStack>
             {rule.alerts.length > 0 && <Text fontSize="0.8rem">
-                <chakra.span color={getStateColor(rule.state)} fontSize="0.9rem" fontWeight="500">{upperFirst(rule.state)}</chakra.span> for {formatDuration((new Date().getTime() - new Date(rule.alerts[0].activeAt).getTime()) * 1000)}
+                <chakra.span color={getStateColor(rule.state)} fontSize={width > 400 ? "0.9rem" : "0.85rem"} fontWeight="500">{upperFirst(rule.state)}</chakra.span>
+                {width > 400 && <chakra.span> for {formatDuration((new Date().getTime() - new Date(rule.alerts[0].activeAt).getTime()) * 1000)}</chakra.span>}
             </Text>}
         </Flex>
         {
@@ -174,6 +176,6 @@ const AlertRuleItem = (props: Props) => {
 
         }
     </Box>)
-}
+})
 
 export default AlertRuleItem

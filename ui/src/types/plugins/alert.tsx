@@ -19,6 +19,10 @@ export interface AlertToolbarOptions {
     barType: "labels" | "total"
     viewMode?: "list" | "stat"
     persist: boolean
+    stateFilter?: AlertState[]
+    ruleNameFilter?: string
+    ruleLabelsFilter?: string
+    labelNameFilter?: string
 }
 
 export interface AlertGroup {

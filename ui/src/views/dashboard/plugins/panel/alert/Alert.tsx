@@ -48,8 +48,8 @@ const initViewOptions = () => ({
     persist: false
 })
 const AlertPanel = (props: AlertPanelProps) => {
-    const { dashboardId, panel } = props
-    const {colorMode} = useColorMode()
+    const { dashboardId, panel,width, height } = props
+    const { colorMode } = useColorMode()
     const options = panel.plugins.alert
     const storageKey = ToolbarStorageKey + dashboardId + panel.id
     const viewStorageKey = AlertViewOptionsStorageKey + dashboardId + panel.id
@@ -70,7 +70,7 @@ const AlertPanel = (props: AlertPanelProps) => {
         ResetPanelToolbalViewModeEvent + panel.id,
         () => {
             delete viewOptions.viewMode
-            onViewOptionsChange({...viewOptions})
+            onViewOptionsChange({ ...viewOptions })
         },
     )
 
@@ -141,7 +141,7 @@ const AlertPanel = (props: AlertPanelProps) => {
         setActive(cloneDeep(active))
     }, [active])
 
-    const onViewOptionsChange = useCallback((v:AlertToolbarOptions) => {
+    const onViewOptionsChange = useCallback((v: AlertToolbarOptions) => {
         setViewOptions(v)
         if (v.persist) {
             storage.set(viewStorageKey, v)
@@ -164,14 +164,16 @@ const AlertPanel = (props: AlertPanelProps) => {
         let result = []
         const chartData = []
 
+        const stateFilter = !isEmpty(viewOptions.stateFilter) ? viewOptions.stateFilter : options.filter.state
         for (const r0 of data) {
             // filter by rule state
-            if (!options.filter.state.includes(r0.state)) {
+            if (!stateFilter.includes(r0.state)) {
                 continue
             }
             // filter by rule name
-            if (!isEmpty(options.filter.ruleName)) {
-                const ruleFilters = options.filter.ruleName.split(",")
+            const ruleFilter = !isEmpty(viewOptions.ruleNameFilter) ? viewOptions.ruleNameFilter : options.filter.ruleName
+            if (!isEmpty(ruleFilter)) {
+                const ruleFilters = ruleFilter.split(",")
                 let pass = false
                 for (const ruleFilter of ruleFilters) {
                     const filter = ruleFilter.trim().toLowerCase()
@@ -186,7 +188,8 @@ const AlertPanel = (props: AlertPanelProps) => {
             }
 
             // fitler by rule label
-            const labelFilter = equalPairsToJson(options.filter.ruleLabel)
+            const labelFilter0 = !isEmpty(viewOptions.ruleLabelsFilter) ? viewOptions.ruleLabelsFilter : options.filter.ruleLabel
+            const labelFilter = equalPairsToJson(labelFilter0)
             if (labelFilter) {
                 let matches = true
                 for (const k in labelFilter) {
@@ -205,7 +208,7 @@ const AlertPanel = (props: AlertPanelProps) => {
             }
             for (const alert of r0.alerts) {
                 // filter by alert state
-                if (!options.filter.state.includes(alert.state)) {
+                if (!stateFilter.includes(alert.state)) {
                     continue
                 }
 
@@ -215,7 +218,8 @@ const AlertPanel = (props: AlertPanelProps) => {
                 }
 
                 // filter by alert label
-                const labelFilter = equalPairsToJson(options.filter.alertLabel)
+                const labelFilter1 = !isEmpty(viewOptions.labelNameFilter) ? viewOptions.labelNameFilter : options.filter.alertLabel
+                const labelFilter = equalPairsToJson(labelFilter1)
                 if (labelFilter) {
                     let matches = true
                     for (const k in labelFilter) {
@@ -249,7 +253,7 @@ const AlertPanel = (props: AlertPanelProps) => {
         }
 
         return [result, sortBy(chartData, ['timestamp'])]
-    }, [data, search, active, options.filter])
+    }, [data, search, active, options.filter, viewOptions.stateFilter, viewOptions.ruleNameFilter, viewOptions.ruleLabelsFilter, viewOptions.labelNameFilter])
 
     const sortedData: AlertRule[] = useMemo(() => {
         if (panel.plugins.alert.orderBy == "newest") {
@@ -259,36 +263,39 @@ const AlertPanel = (props: AlertPanelProps) => {
         return sortBy(filterData, ['timestamp'])
     }, [filterData, options.orderBy])
 
-    const showChart = options.chart.show && chartData.length != 0
+    const showChart = options.chart.show && chartData.length != 0 && (width > 400 && height > 300)
     const viewMode = viewOptions.viewMode ?? options.viewMode
+    const alertsCount = filterData.reduce((acc, r) => acc + r.alerts.length, 0)
+
+    console.log("here333333:",width,height)
     return (<>
         {
             viewMode == "list"
-                ?   
+                ?
                 <Flex position="relative">
                     {options.toolbar.show &&
-                        <Box position="absolute" right="2" top="0" onClick={onToobarOpen} fontSize="0.7rem" opacity="0.6" cursor="pointer" px="2px" className={toolbarOpen ? "color-text" : null} py="2" zIndex={1}>
+                        <Box position="absolute" right="2" top={toolbarOpen ? 2 : 0} onClick={onToobarOpen} fontSize="0.7rem" opacity="0.3  " cursor="pointer" px="2px" className={toolbarOpen ? "color-text" : null} py="2" zIndex={1}>
                             <FaFilter />
                         </Box>}
                     <Box height={props.height} width={props.width - (toolbarOpen ? options.toolbar.width : 1)} transition="all 0.3s">
                         {showChart && <Box className="alert-panel-chart" height={options.chart.height}>
                             <LogChart data={chartData} panel={panel} width={props.width - (toolbarOpen ? options.toolbar.width : 1)} viewOptions={viewOptions} onSelectLabel={onSelectLabel} activeLabels={active} />
-                            <Divider mt="3"/>
+                            <Divider mt="3" />
                         </Box>}
                         <VStack alignItems="left" divider={<StackDivider />} mt={showChart ? 3 : 1} spacing={1}>
                             {
-                                sortedData.map(rule => <AlertRuleItem rule={rule} panel={panel} collapsed={collaseAll} onSelectLabel={onSelectLabel} />)
+                                sortedData.map(rule => <AlertRuleItem rule={rule} panel={panel} collapsed={collaseAll} onSelectLabel={onSelectLabel} width={width} />)
                             }
                         </VStack>
                     </Box>
-                    {<Box className="bordered-left" width={toolbarOpen ? options.toolbar.width : 0} transition="all 0.3s" py="2">
-                        {toolbarOpen && <AlertToolbar active={active} labels={[]} panel={panel} onCollapseAll={onCollapseAll} onSearchChange={onSearchChange} height={props.height} onActiveLabel={onActiveLabel} currentCount={filterData.length} onViewLogChange={onViewOptionsChange} viewOptions={viewOptions} />}
+                    {<Box className={toolbarOpen ? "bordered-left" : null} width={toolbarOpen ? options.toolbar.width : 0} transition="all 0.3s" py="2">
+                        {toolbarOpen && <AlertToolbar active={active} labels={[]} panel={panel} onCollapseAll={onCollapseAll} onSearchChange={onSearchChange} height={props.height} onActiveLabel={onActiveLabel} rulesCount={filterData.length} alertsCount={alertsCount} onViewLogChange={onViewOptionsChange} viewOptions={viewOptions} />}
                     </Box>}
                 </Flex>
                 :
                 <Box className="alert-stat-view" height={props.height} width={props.width} position="relative">
                     <AlertStatView   {...props} data={filterData} />
-                    <Box position="absolute" right="2" top="1" color={getTextColorForAlphaBackground(paletteColorNameToHex(options.stat.color), colorMode == "dark")} cursor="pointer" onClick={() => onViewOptionsChange({...viewOptions, viewMode: "list"})} pb="2"><AiOutlineSwitcher /></Box>
+                    <Box position="absolute" right="2" top="1" color={getTextColorForAlphaBackground(paletteColorNameToHex(options.stat.color), colorMode == "dark")} cursor="pointer" onClick={() => onViewOptionsChange({ ...viewOptions, viewMode: "list" })} pb="2"><AiOutlineSwitcher /></Box>
                 </Box>
         }
 

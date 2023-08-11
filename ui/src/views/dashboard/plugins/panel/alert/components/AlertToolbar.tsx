@@ -12,10 +12,12 @@
 // limitations under the License.
 
 import { Box, Button, Checkbox, Divider, Flex, HStack, Input, Text, VStack } from "@chakra-ui/react"
+import MultiRadionButtons from "components/MultiRadioButtons"
 import RadionButtons from "components/RadioButtons"
 import { EditorInputItem, EditorNumberItem, EditorSliderItem } from "components/editor/EditorItem"
 import React, { memo, useEffect, useMemo, useState } from "react"
 import { AiOutlineDoubleRight } from "react-icons/ai"
+import { AlertState } from "types/alert"
 import { Panel } from "types/dashboard"
 import { AlertToolbarOptions } from "types/plugins/alert"
 import { LogChartView, LogLabel, LogSeries } from "types/plugins/log"
@@ -29,20 +31,21 @@ interface Props {
     onCollapseAll: any
     onSearchChange: any
     onActiveLabel: any
-    currentCount: number
+    rulesCount: number
+    alertsCount: number
     onViewLogChange: any
     viewOptions: AlertToolbarOptions
 }
 
 
 const AlertToolbar = memo((props: Props) => {
-    const { panel, onCollapseAll, onSearchChange, currentCount, viewOptions, onViewLogChange } = props
-    const [search, setSearch] = useState<string>("")
+    const { panel, onCollapseAll, onSearchChange, rulesCount,alertsCount, viewOptions, onViewLogChange } = props
+    // const [search, setSearch] = useState<string>("")
 
-    const options = panel.plugins.log
+    // const options = panel.plugins.log
 
     return (<Box>
-        <Flex justifyContent="space-between" pl="1" pr="5" fontSize="0.85rem" mt="-3px">
+        <Flex justifyContent="space-between" pl="1" pr="5" pt="1" fontSize="0.85rem" >
             <HStack spacing={1}>
                 <AiOutlineDoubleRight cursor="pointer" style={{
                     transform: 'rotate(90deg)'
@@ -50,32 +53,50 @@ const AlertToolbar = memo((props: Props) => {
                 <AiOutlineDoubleRight cursor="pointer" onClick={() => onCollapseAll(true)} />
             </HStack>
             <HStack spacing={1}>
-                <Text className="color-text">{currentCount}</Text>
+                <Text className="color-text">{rulesCount}</Text>
                 <Text opacity="0.7">Rules</Text>
+                <Text className="color-text">{alertsCount}</Text>
+                <Text opacity="0.7">Alerts</Text>
             </HStack>
             <Box></Box>
         </Flex>
 
-        <Divider mt="" />
+        {/* <Divider mt="" />
 
         <Box fontSize="0.8rem" mt="2" px="1">
             <Text mb="1" fontWeight="500">Search logs</Text>
             <EditorInputItem value={search} onChange={v => { setSearch(v); onSearchChange(v) }} placeholder="textA || textB , A && B" />
-        </Box>
+        </Box> */}
 
-        <Divider mt="2" />
-        <VStack alignItems="left" fontSize="0.8rem" mt="3" px="1">
-            <HStack >
-                <Text>View mode</Text>
-                <RadionButtons size="xs" options={[{ label: "List", value: "list" }, { label: "Stat", value: "stat" }]} value={viewOptions.viewMode} onChange={v => onViewLogChange({ ...viewOptions, viewMode: v })} />
-            </HStack>
-            <HStack>
-                <Text>Bar type</Text>
-                <RadionButtons size="xs" options={[{ label: "Total", value: "total" }, { label: "Labels", value: 'labels' }]} value={viewOptions.barType} onChange={v => onViewLogChange({ ...viewOptions, barType: v })} />
-            </HStack>
-        </VStack>
         <Divider mt="3" />
-        <HStack mt="3" px="1">
+        <VStack alignItems="left" fontSize="0.8rem" mt="2" px="2" spacing={2}>
+            <Box >
+                <Text mb="2">View mode</Text>
+                <RadionButtons size="xs" options={[{ label: "List", value: "list" }, { label: "Stat", value: "stat" }]} value={viewOptions.viewMode} onChange={v => onViewLogChange({ ...viewOptions, viewMode: v })} />
+            </Box>
+            <Box>
+                <Text mb="2">Bar type</Text>
+                <RadionButtons size="xs" options={[{ label: "Total", value: "total" }, { label: "Labels", value: 'labels' }]} value={viewOptions.barType} onChange={v => onViewLogChange({ ...viewOptions, barType: v })} />
+            </Box>
+            <Box>
+                <Text  mb="2">Rule name filter</Text>
+                <EditorInputItem value={viewOptions.ruleNameFilter}  onChange={v => onViewLogChange({ ...viewOptions, ruleNameFilter: v })} placeholder="support multi regex" />
+            </Box>
+            <Box>
+                <Text  mb="2">Rule label filter</Text>
+                <EditorInputItem value={viewOptions.ruleLabelsFilter}  onChange={v => onViewLogChange({ ...viewOptions, ruleLabelsFilter: v })} placeholder={`{severity="critical"}`} />
+            </Box>
+            <Box>
+                <Text  mb="2">Alert label filter</Text>
+                <EditorInputItem value={viewOptions.labelNameFilter}  onChange={v => onViewLogChange({ ...viewOptions, labelNameFilter: v })} placeholder={`{service="api-gateway", instance=~"cluster-cn-.+"}`} />
+            </Box>
+            <Box>
+                <Text  mb="2">State filter</Text>
+                <MultiRadionButtons size="xs" options={Object.keys(AlertState).map(k => ({ label: AlertState[k], value: AlertState[k] }))} value={viewOptions.stateFilter}  onChange={v => onViewLogChange({ ...viewOptions, stateFilter: v })}/>
+            </Box>
+        </VStack>
+        <Divider mt="4" />
+        <HStack mt="4" px="2">
             <Text fontSize="0.8rem">Persist options</Text>
             <Checkbox isChecked={viewOptions.persist} onChange={e => onViewLogChange({ ...viewOptions, persist: e.currentTarget.checked})}/>
         </HStack>

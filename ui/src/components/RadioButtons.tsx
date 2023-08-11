@@ -30,7 +30,7 @@ interface Option {
 
 const RadionButtons = ({ options, value, onChange, size = "md", spacing = 1, fontSize = "0.9rem", theme = "default" }: Props) => {
     return (<Wrap spacing={spacing}>
-        {options.map(o => <Button key={o.label} fontSize={fontSize} size={size} onClick={() => onChange(o.value)} borderRadius="0" variant={value == o.value ? "solid" : (theme == "default" ? "outline" : "ghost")} colorScheme={theme == "default" ? "gray" : "brand"}>{o.label}</Button>)}
+        {options.map(o => <Button key={o.label}  fontWeight={size != "xs" ? 550 : 400} fontSize={fontSize} size={size} onClick={() => onChange(o.value)} borderRadius="0" variant={value == o.value ? "solid" : (theme == "default" ? "outline" : "ghost")} colorScheme={theme == "default" ? "gray" : "brand"}>{o.label}</Button>)}
     </Wrap>)
 }
 

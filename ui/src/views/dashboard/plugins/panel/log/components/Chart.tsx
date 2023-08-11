@@ -15,7 +15,7 @@ import { useColorMode } from "@chakra-ui/react"
 import { getCurrentTimeRange } from "components/DatePicker/TimePicker"
 import ChartComponent from "components/charts/Chart"
 import { floor, last, round } from "lodash"
-import React, { useEffect, useMemo, useState } from "react"
+import React, { memo, useEffect, useMemo, useState } from "react"
 import { Panel, PanelType } from "types/dashboard"
 import { Log, LogChartView } from "types/plugins/log"
 import { dateTimeFormat } from "utils/datetime/formatter"
@@ -35,7 +35,7 @@ interface Props {
     activeLabels: string[]
 }
 
-const LogChart = (props: Props) => {
+const LogChart = memo((props: Props) => {
     const { panel, width, viewOptions, onSelectLabel, activeLabels } = props
     const options = panel.type == PanelType.Log ? panel.plugins.log.chart : panel.plugins.alert.chart
     const [chart, setChart] = useState<echarts.ECharts>(null)
@@ -252,7 +252,7 @@ const LogChart = (props: Props) => {
     return (<>
         <ChartComponent key={colorMode} options={chartOptions} theme={colorMode} onChartCreated={c => setChart(c)} width={width} />
     </>)
-}
+})
 
 export default LogChart
 

@@ -12,6 +12,7 @@
 // limitations under the License.
 import { Button, HStack, Wrap } from "@chakra-ui/react"
 import React from "react"
+import { isEmpty } from "utils/validate"
 
 interface Props {
     options: Option[]
@@ -30,13 +31,17 @@ interface Option {
 
 const MultiRadionButtons = ({ options, value, onChange, size = "md", spacing = 1, fontSize = "0.9rem", theme = "default" }: Props) => {
     return (<Wrap spacing={spacing}>
-        {options.map(o => <Button key={o.label} fontSize={fontSize} size={size} onClick={() => {
+        {options.map(o => <Button key={o.label} fontSize={fontSize} fontWeight={size != "xs" ? 550 : 400} size={size} onClick={() => {
+            if (isEmpty(value)) {
+                onChange([o.value])
+                return
+            }
             if (value.includes(o.value)) {
                 onChange(value.filter((v: string) => v != o.value))
             } else {
                 onChange([...value, o.value])
             }
-        }} borderRadius="0" variant={value.includes(o.value) ? "solid" : (theme == "default" ? "outline" : "ghost")} colorScheme={theme == "default" ? "gray" : "brand"}>{o.label}</Button>)}
+        }} borderRadius="0" variant={value?.includes(o.value) ? "solid" : (theme == "default" ? "outline" : "ghost")} colorScheme={theme == "default" ? "gray" : "brand"}>{o.label}</Button>)}
     </Wrap>)
 }
 
