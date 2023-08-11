@@ -53,7 +53,7 @@ export const prometheusToSeriesData = (data: any, query: PanelQuery, range: Time
             if (expandTimeRange) {
                 if (!isEmpty(m.values)) {
                     let start = round(range.start.getTime() / 1000)
-                    if (m.values[0][0] <= start) {
+                    if (m.values[0][0] < start) {
                         start = round(m.values[0][0])
                     }
                     
@@ -63,9 +63,10 @@ export const prometheusToSeriesData = (data: any, query: PanelQuery, range: Time
                         const r= calcSeriesStep(start,end, 10, 30)
                         query.interval = r[1]
                     }
-
+                    
                     const timeline = []
                     const alignedStart = start - start % query.interval
+                    // console.log("here344443:", start,query.interval, alignedStart)
                     for (var i = alignedStart;i <=end; i=i+query.interval) {
                         timeline.push(i)
                     }

@@ -48,7 +48,7 @@ const AlertRuleItem = (props: Props) => {
     } 
 
     console.log("here333333:", rule)
-    return (<Box fontSize="0.9rem" className="label-bg" py="1" px="2">
+    return (<Box fontSize="0.9rem" py="1" px="2">
         <Flex justifyContent="space-between" alignItems="center" cursor="pointer" onClick={() => setCollapsed(!collapsed)} >
             <HStack>
                 {rule.state == "firing" ? <FiringIcon fill={getStateColor(rule.state)} /> : (rule.state == "pending" ? <PendingIcon fill={getStateColor(rule.state)} /> : <FaCheck color={getStateColor(rule.state)} />)}

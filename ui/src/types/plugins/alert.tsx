@@ -17,6 +17,7 @@ import { DatasourceType } from "types/dashboard"
 export interface AlertToolbarOptions {
     maxBars: number
     barType: "labels" | "total"
+    viewMode: "list" | "stat"
 }
 
 export interface AlertGroup {

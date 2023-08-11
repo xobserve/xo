@@ -16,12 +16,11 @@ import React, { useMemo } from "react";
 import { initPanelPlugins } from "src/data/panel/initPlugins";
 import { PanelProps, PanelType } from "types/dashboard";
 import StatPanel from "../../stat/Stat";
-import { Field, FieldType, SeriesData } from "types/seriesData";
+import {  SeriesData } from "types/seriesData";
 import { AlertRule } from "types/plugins/alert";
 import { ValueCalculationType } from "types/value";
 import { VarialbeAllOption } from "src/data/variable";
 import { prometheusToSeriesData } from "../../../datasource/prometheus/transformData";
-import { calcStep } from "./Chart";
 
 const AlertStatView = (props: PanelProps) => {
 
@@ -40,26 +39,12 @@ const AlertStatView = (props: PanelProps) => {
     statOptions.showLegend = true
     newProps.panel.plugins.stat = statOptions
 
-
-    // "data": {
-    //     "resultType": "matrix",
-    //     "result": [
-    //         {
-    //             "metric": {
-    //                 "cpu": "user",
-    //                 "instance": "localhost:9100",
-    //             },
-    //             "values": [
-    //             ]
-    //         },
     const data: SeriesData[] = useMemo(() => {
         const promFormatData = {
             resultType: "matrix",
             result: [
                 {
-                    "metric": {
-                        "alerts": "total"
-                    },
+                    "metric": {},
                     "values": [
 
                     ]
@@ -88,15 +73,14 @@ const AlertStatView = (props: PanelProps) => {
             legend: '',
             interval: null
         } as any,newProps.timeRange,true)
-
-        data[0].name = "Alerts"
+        data[0].name = props.panel.plugins.alert.stat.statName
         return data
     }, [props.data])
     
     newProps.data = [data]
     newProps.panel.type = PanelType.Stat
     newProps.panel.overrides = [  {
-        "target": "Alerts",
+        "target": props.panel.plugins.alert.stat.statName,
         "overrides": [
           {
             "type": "Series.thresholds",
@@ -112,7 +96,6 @@ const AlertStatView = (props: PanelProps) => {
           }
         ]
       }]
-    console.log("here33333#:", newProps)
     //@ts-ignore
     return (<StatPanel  {...newProps} />)
 }

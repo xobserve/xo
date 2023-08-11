@@ -51,7 +51,7 @@ const AlertToolbar = memo((props: Props) => {
             </HStack>
             <HStack spacing={1}>
                  <Text className="color-text">{currentCount}</Text>
-                 <Text opacity="0.7">logs</Text>
+                 <Text opacity="0.7">Rules</Text>
                 </HStack>
            <Box></Box>
         </Flex>
@@ -64,33 +64,14 @@ const AlertToolbar = memo((props: Props) => {
         </Box>
 
         <Divider mt="2" />
-        <Box fontSize="0.8rem" mt="3" px="1">
-            <Text mb="1"fontWeight="500" >Chart options</Text>
+        <HStack fontSize="0.8rem" mt="3" px="1">
+            <Text mb="1"fontWeight="500" >View mode</Text>
+            <RadionButtons size="sm" options={[{ label: "List", value: "list" }, { label: "Stat", value: "stat" }]} value={viewOptions.viewMode} onChange={v => onViewLogChange({...viewOptions, viewMode: v})}/>
             {/* <Text mb="1" fontSize="0.7rem" ml="2px">Max bars count</Text>
             <EditorSliderItem  value={viewOptions.maxBars} min={15} max={100} step={1} onChange={v => { onViewLogChange({...viewOptions, maxBars: v}) }}  />
             <Text mb="1" fontSize="0.7rem" ml="2px">Bar type</Text>
                 <RadionButtons size="xs" options={[{ label: "Total", value: "total" }, { label: "Labels", value: 'labels' }]} value={viewOptions.barType} onChange={v => onViewLogChange({...viewOptions, barType: v})} /> */}
-        </Box>
-        <Divider mt="3" />      
-        <Box px="1" mt="2">
-            <Flex alignItems="center" justifyContent="space-between">
-                <Text mb="1" fontSize="0.8rem" fontWeight="500">Label filter</Text>
-            </Flex>
-            {/* <VStack mt="2" alignItems="left" maxHeight={`400px`} overflowY="scroll">
-                {
-                    labels.map(label =>
-                        <Box fontSize="0.85rem" className={active.includes(label.id) ? "highlight-bordered" : "bordered"} onClick={() => onActiveLabel(label.id)} cursor="pointer" px="2" py="1">
-                            <Text color={labelNameColor(label.id)}>{label.name}</Text>
-                            <HStack>
-                                <Text color={paletteColorNameToHex(options.styles.labelValueColor)}>{label.value}</Text>
-                                <Text> ({label.count})</Text>
-                            </HStack>
-                        </Box>)
-                }
-
-            </VStack> */}
-        </Box>
-
+        </HStack>
     </Box>)
 })
 

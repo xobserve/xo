@@ -10,7 +10,7 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-import { Switch, Textarea } from "@chakra-ui/react"
+import { Button, Switch, Textarea } from "@chakra-ui/react"
 import { EditorInputItem, EditorNumberItem } from "components/editor/EditorItem"
 import RadionButtons from "components/RadioButtons"
 import PanelAccordion from "src/views/dashboard/edit-panel/Accordion"
@@ -23,7 +23,7 @@ import { Select } from "antd"
 import { datasources } from "src/App"
 import { datasourceSupportAlerts } from "src/data/alerts"
 import { dispatch } from "use-bus"
-import { PanelForceRebuildEvent } from "src/data/bus-events"
+import { PanelForceRebuildEvent, ResetPanelToolbalEvent } from "src/data/bus-events"
 import { AlertState } from "types/alert"
 import MultiRadionButtons from "components/MultiRadioButtons"
 import { ColorPicker } from "components/ColorPicker"
@@ -63,6 +63,12 @@ const AlertPanelEditor = memo(({ panel, onChange }: PanelEditorProps) => {
                     panel.plugins.alert.stat.style = v
                 })} />
             </PanelEditItem>
+            <PanelEditItem title="Stat name">
+                <EditorInputItem value={panel.plugins.alert.stat.statName} onChange={(v) => onChange((panel: Panel) => {
+                    panel.plugins.alert.stat.statName = v
+                    dispatch(PanelForceRebuildEvent + panel.id)
+                })} />
+            </PanelEditItem>
         </>}
         <PanelEditItem title="Order by">
             <RadionButtons options={[{ label: "Newest First", value: "newest" }, { label: "Oldest First", value: "oldest" }]} value={panel.plugins.alert.orderBy} onChange={v => onChange((panel: Panel) => {
@@ -80,6 +86,9 @@ const AlertPanelEditor = memo(({ panel, onChange }: PanelEditorProps) => {
                 <EditorNumberItem min={0} max={500} step={20} value={panel.plugins.alert.toolbar.width} onChange={(v) => onChange((panel: Panel) => {
                     panel.plugins.alert.toolbar.width = v
                 })} />
+            </PanelEditItem>
+            <PanelEditItem title="Reset toolbar options">
+                <Button size="sm" onClick={() => dispatch(ResetPanelToolbalEvent + panel.id)}>Reset toolbar options</Button>
             </PanelEditItem>
         </PanelAccordion>
         <PanelAccordion title="Filter">

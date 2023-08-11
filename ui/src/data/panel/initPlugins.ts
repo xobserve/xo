@@ -421,6 +421,7 @@ function registerEvents(options, chart) {
                 layout: LayoutOrientation.Vertical,
                 colorMode: "value",
                 style: "bars",
+                statName: "Alerts"
             },
             disableDatasource: true,
             orderBy: "newest",

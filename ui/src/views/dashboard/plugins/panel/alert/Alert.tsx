@@ -12,7 +12,7 @@
 // limitations under the License.
 
 import React, { useCallback, useEffect, useMemo, useState } from "react";
-import { Box, Center, Flex, StackDivider, Text, VStack } from "@chakra-ui/react"
+import { Box, Center, Divider, Flex, StackDivider, Text, VStack, useColorMode } from "@chakra-ui/react"
 import { DatasourceType, PanelProps } from "types/dashboard"
 import { Log } from "types/plugins/log";
 import { FaFilter } from "react-icons/fa";
@@ -24,8 +24,11 @@ import AlertToolbar from "./components/AlertToolbar";
 import { AlertGroup, AlertRule, AlertToolbarOptions } from "types/plugins/alert";
 import AlertRuleItem from "./components/AlertRuleItem";
 import { equalPairsToJson, jsonToEqualPairs } from "utils/format";
-import { AlertState } from "types/alert";
 import AlertStatView from "./components/AlertStatView";
+import useBus from "use-bus";
+import { ResetPanelToolbalEvent } from "src/data/bus-events";
+import { AiOutlineSwitcher } from "react-icons/ai";
+import { getTextColorForAlphaBackground, paletteColorNameToHex } from "utils/colors";
 
 
 
@@ -37,21 +40,28 @@ interface AlertPanelProps extends PanelProps {
 
 const ToolbarStorageKey = "alert-toolbar-"
 const AlertViewOptionsStorageKey = "alert-view-"
+const initViewOptions = () => ({
+    maxBars: 20,
+    barType: "labels",
+})
 const AlertPanel = (props: AlertPanelProps) => {
     const { dashboardId, panel } = props
+    const {colorMode} = useColorMode()
     const options = panel.plugins.alert
     const storageKey = ToolbarStorageKey + dashboardId + panel.id
     const viewStorageKey = AlertViewOptionsStorageKey + dashboardId + panel.id
     const [toolbarOpen, setToolbarOpen] = useState(storage.get(storageKey) ?? false)
-    const [collaseAll, setCollapeAll] = useState(false)
+    const [collaseAll, setCollapeAll] = useState(true)
     const [search, setSearch] = useState("")
     const [active, setActive] = useState<string[]>([])
-    const [activeOp, setActiveOp] = useState<"or" | "and">("or")
-    const [viewOptions, setViewOptions] = useState<AlertToolbarOptions>(storage.get(viewStorageKey) ?? {
-        maxBars: 20,
-        barType: "labels",
-    })
+    const [viewOptions, setViewOptions] = useState<AlertToolbarOptions>(storage.get(viewStorageKey) ?? initViewOptions())
 
+    useBus(
+        ResetPanelToolbalEvent + panel.id,
+        () => {
+            onViewOptionsChange(initViewOptions())
+        },
+    )
 
     const [data] = useMemo(() => {
         const data: AlertRule[] = []
@@ -90,6 +100,11 @@ const AlertPanel = (props: AlertPanelProps) => {
         }
     }, [options.toolbar.show])
 
+    useEffect(() => {
+        delete viewOptions.viewMode
+        onViewOptionsChange({...viewOptions})
+    },[options.viewMode])
+
     const onToobarOpen = () => {
         if (!toolbarOpen) {
             storage.set(storageKey, true)
@@ -118,10 +133,6 @@ const AlertPanel = (props: AlertPanelProps) => {
 
         setActive(cloneDeep(active))
     }, [active])
-
-    const onActiveOpChange = useCallback(() => {
-        setActiveOp(activeOp == "or" ? "and" : "or")
-    }, [])
 
     const onViewOptionsChange = useCallback((v) => {
         setViewOptions(v)
@@ -237,21 +248,23 @@ const AlertPanel = (props: AlertPanelProps) => {
         return sortBy(filterData, ['timestamp'])
     }, [filterData, options.orderBy])
 
-    console.log("here33333:",filterData)
+    const showChart = options.chart.show && chartData.length != 0
+    const viewMode = viewOptions.viewMode ?? options.viewMode
     return (<>
         {
-            options.viewMode == "list"
-                ?
+            viewMode == "list"
+                ?   
                 <Flex position="relative">
                     {options.toolbar.show &&
                         <Box position="absolute" right="2" top="0" onClick={onToobarOpen} fontSize="0.7rem" opacity="0.6" cursor="pointer" px="2px" className={toolbarOpen ? "color-text" : null} py="2" zIndex={1}>
                             <FaFilter />
                         </Box>}
                     <Box height={props.height} width={props.width - (toolbarOpen ? options.toolbar.width : 1)} transition="all 0.3s">
-                        {options.chart.show && chartData.length != 0 && <Box className="alert-panel-chart" height={options.chart.height}>
+                        {showChart && <Box className="alert-panel-chart" height={options.chart.height}>
                             <LogChart data={chartData} panel={panel} width={props.width - (toolbarOpen ? options.toolbar.width : 1)} viewOptions={viewOptions} onSelectLabel={onSelectLabel} activeLabels={active} />
+                            <Divider mt="3"/>
                         </Box>}
-                        <VStack alignItems="left" divider={<StackDivider />} mt="1">
+                        <VStack alignItems="left" divider={<StackDivider />} mt={showChart ? 3 : 1} spacing={1}>
                             {
                                 sortedData.map(rule => <AlertRuleItem rule={rule} panel={panel} collapsed={collaseAll} onSelectLabel={onSelectLabel} />)
                             }
@@ -262,7 +275,10 @@ const AlertPanel = (props: AlertPanelProps) => {
                     </Box>}
                 </Flex>
                 :
-                <Box className="alert-stat-view" height={props.height} width={props.width}><AlertStatView   {...props} data={filterData} /></Box>
+                <Box className="alert-stat-view" height={props.height} width={props.width} position="relative">
+                    <AlertStatView   {...props} data={filterData} />
+                    <Box position="absolute" right="2" top="2" color={getTextColorForAlphaBackground(paletteColorNameToHex(options.stat.color), colorMode == "dark")} cursor="pointer" onClick={() => onViewOptionsChange({...viewOptions, viewMode: "list"})}><AiOutlineSwitcher /></Box>
+                </Box>
         }
 
     </>
