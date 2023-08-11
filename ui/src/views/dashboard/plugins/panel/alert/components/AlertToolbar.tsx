@@ -11,7 +11,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { Box, Button, Divider, Flex, HStack, Input, Text, VStack } from "@chakra-ui/react"
+import { Box, Button, Checkbox, Divider, Flex, HStack, Input, Text, VStack } from "@chakra-ui/react"
 import RadionButtons from "components/RadioButtons"
 import { EditorInputItem, EditorNumberItem, EditorSliderItem } from "components/editor/EditorItem"
 import React, { memo, useEffect, useMemo, useState } from "react"
@@ -36,13 +36,13 @@ interface Props {
 
 
 const AlertToolbar = memo((props: Props) => {
-    const { active, labels, panel, onCollapseAll, onSearchChange, height, onActiveLabel, currentCount,viewOptions,onViewLogChange } = props
+    const { panel, onCollapseAll, onSearchChange, currentCount, viewOptions, onViewLogChange } = props
     const [search, setSearch] = useState<string>("")
 
     const options = panel.plugins.log
 
     return (<Box>
-        <Flex justifyContent="space-between"  pl="1" pr="5" fontSize="0.85rem" mt="-3px">
+        <Flex justifyContent="space-between" pl="1" pr="5" fontSize="0.85rem" mt="-3px">
             <HStack spacing={1}>
                 <AiOutlineDoubleRight cursor="pointer" style={{
                     transform: 'rotate(90deg)'
@@ -50,10 +50,10 @@ const AlertToolbar = memo((props: Props) => {
                 <AiOutlineDoubleRight cursor="pointer" onClick={() => onCollapseAll(true)} />
             </HStack>
             <HStack spacing={1}>
-                 <Text className="color-text">{currentCount}</Text>
-                 <Text opacity="0.7">Rules</Text>
-                </HStack>
-           <Box></Box>
+                <Text className="color-text">{currentCount}</Text>
+                <Text opacity="0.7">Rules</Text>
+            </HStack>
+            <Box></Box>
         </Flex>
 
         <Divider mt="" />
@@ -64,13 +64,20 @@ const AlertToolbar = memo((props: Props) => {
         </Box>
 
         <Divider mt="2" />
-        <HStack fontSize="0.8rem" mt="3" px="1">
-            <Text mb="1"fontWeight="500" >View mode</Text>
-            <RadionButtons size="sm" options={[{ label: "List", value: "list" }, { label: "Stat", value: "stat" }]} value={viewOptions.viewMode} onChange={v => onViewLogChange({...viewOptions, viewMode: v})}/>
-            {/* <Text mb="1" fontSize="0.7rem" ml="2px">Max bars count</Text>
-            <EditorSliderItem  value={viewOptions.maxBars} min={15} max={100} step={1} onChange={v => { onViewLogChange({...viewOptions, maxBars: v}) }}  />
-            <Text mb="1" fontSize="0.7rem" ml="2px">Bar type</Text>
-                <RadionButtons size="xs" options={[{ label: "Total", value: "total" }, { label: "Labels", value: 'labels' }]} value={viewOptions.barType} onChange={v => onViewLogChange({...viewOptions, barType: v})} /> */}
+        <VStack alignItems="left" fontSize="0.8rem" mt="3" px="1">
+            <HStack >
+                <Text>View mode</Text>
+                <RadionButtons size="xs" options={[{ label: "List", value: "list" }, { label: "Stat", value: "stat" }]} value={viewOptions.viewMode} onChange={v => onViewLogChange({ ...viewOptions, viewMode: v })} />
+            </HStack>
+            <HStack>
+                <Text>Bar type</Text>
+                <RadionButtons size="xs" options={[{ label: "Total", value: "total" }, { label: "Labels", value: 'labels' }]} value={viewOptions.barType} onChange={v => onViewLogChange({ ...viewOptions, barType: v })} />
+            </HStack>
+        </VStack>
+        <Divider mt="3" />
+        <HStack mt="3" px="1">
+            <Text fontSize="0.8rem">Persist options</Text>
+            <Checkbox isChecked={viewOptions.persist} onChange={e => onViewLogChange({ ...viewOptions, persist: e.currentTarget.checked})}/>
         </HStack>
     </Box>)
 })

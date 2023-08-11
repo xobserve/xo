@@ -81,11 +81,10 @@ const LogChart = (props: Props) => {
         const timeFormat = getTimeFormat(start, now, step)
 
 
-        if ((viewOptions.barType) == "labels") {
+        if (viewOptions.barType == "labels") {
             const labelMap = new Map()
             for (const log of props.data) {
                 const ts = getTimelineBucket(log, timeline)
-                console.log("here3444433:", log, typeof log.labels)
                 if (typeof log.labels === "string") {
                     const labelId = log.labels
                     if (activeLabels.length != 0) {
@@ -153,7 +152,7 @@ const LogChart = (props: Props) => {
         }
 
         return [timeline.map(t => dateTimeFormat(t, { format: timeFormat })), names, data]
-    }, [props.data])
+    }, [props.data,viewOptions.barType])
 
     const max = Math.max(...data.flat())
     let stack;

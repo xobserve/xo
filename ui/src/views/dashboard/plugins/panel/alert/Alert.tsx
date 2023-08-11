@@ -26,7 +26,6 @@ import AlertRuleItem from "./components/AlertRuleItem";
 import { equalPairsToJson, jsonToEqualPairs } from "utils/format";
 import AlertStatView from "./components/AlertStatView";
 import useBus from "use-bus";
-import { ResetPanelToolbalEvent } from "src/data/bus-events";
 import { AiOutlineSwitcher } from "react-icons/ai";
 import { getTextColorForAlphaBackground, paletteColorNameToHex } from "utils/colors";
 
@@ -40,9 +39,13 @@ interface AlertPanelProps extends PanelProps {
 
 const ToolbarStorageKey = "alert-toolbar-"
 const AlertViewOptionsStorageKey = "alert-view-"
+export const ResetPanelToolbalEvent = "reset-panel-toolbar"
+export const ResetPanelToolbalViewModeEvent = "reset-panel-toolbar-view-mode"
+
 const initViewOptions = () => ({
     maxBars: 20,
     barType: "labels",
+    persist: false
 })
 const AlertPanel = (props: AlertPanelProps) => {
     const { dashboardId, panel } = props
@@ -59,7 +62,15 @@ const AlertPanel = (props: AlertPanelProps) => {
     useBus(
         ResetPanelToolbalEvent + panel.id,
         () => {
-            onViewOptionsChange(initViewOptions())
+            onViewOptionsChange(initViewOptions() as any)
+        },
+    )
+
+    useBus(
+        ResetPanelToolbalViewModeEvent + panel.id,
+        () => {
+            delete viewOptions.viewMode
+            onViewOptionsChange({...viewOptions})
         },
     )
 
@@ -100,10 +111,6 @@ const AlertPanel = (props: AlertPanelProps) => {
         }
     }, [options.toolbar.show])
 
-    useEffect(() => {
-        delete viewOptions.viewMode
-        onViewOptionsChange({...viewOptions})
-    },[options.viewMode])
 
     const onToobarOpen = () => {
         if (!toolbarOpen) {
@@ -134,9 +141,13 @@ const AlertPanel = (props: AlertPanelProps) => {
         setActive(cloneDeep(active))
     }, [active])
 
-    const onViewOptionsChange = useCallback((v) => {
+    const onViewOptionsChange = useCallback((v:AlertToolbarOptions) => {
         setViewOptions(v)
-        storage.set(viewStorageKey, v)
+        if (v.persist) {
+            storage.set(viewStorageKey, v)
+        } else {
+            storage.remove(viewStorageKey)
+        }
     }, [])
 
     const onSelectLabel = useCallback(id => {
@@ -277,7 +288,7 @@ const AlertPanel = (props: AlertPanelProps) => {
                 :
                 <Box className="alert-stat-view" height={props.height} width={props.width} position="relative">
                     <AlertStatView   {...props} data={filterData} />
-                    <Box position="absolute" right="2" top="2" color={getTextColorForAlphaBackground(paletteColorNameToHex(options.stat.color), colorMode == "dark")} cursor="pointer" onClick={() => onViewOptionsChange({...viewOptions, viewMode: "list"})}><AiOutlineSwitcher /></Box>
+                    <Box position="absolute" right="2" top="1" color={getTextColorForAlphaBackground(paletteColorNameToHex(options.stat.color), colorMode == "dark")} cursor="pointer" onClick={() => onViewOptionsChange({...viewOptions, viewMode: "list"})} pb="2"><AiOutlineSwitcher /></Box>
                 </Box>
         }
 

@@ -47,7 +47,6 @@ const AlertRuleItem = (props: Props) => {
         return paletteColorNameToHex(state == "firing" ? "$light-red" : (state == "pending" ? "$yellow" : "$green"), colorMode)
     } 
 
-    console.log("here333333:", rule)
     return (<Box fontSize="0.9rem" py="1" px="2">
         <Flex justifyContent="space-between" alignItems="center" cursor="pointer" onClick={() => setCollapsed(!collapsed)} >
             <HStack>

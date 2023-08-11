@@ -23,11 +23,12 @@ import { Select } from "antd"
 import { datasources } from "src/App"
 import { datasourceSupportAlerts } from "src/data/alerts"
 import { dispatch } from "use-bus"
-import { PanelForceRebuildEvent, ResetPanelToolbalEvent } from "src/data/bus-events"
+import { PanelForceRebuildEvent } from "src/data/bus-events"
 import { AlertState } from "types/alert"
 import MultiRadionButtons from "components/MultiRadioButtons"
 import { ColorPicker } from "components/ColorPicker"
 import { LayoutOrientation } from "types/layout"
+import { ResetPanelToolbalEvent, ResetPanelToolbalViewModeEvent } from "./Alert"
 
 const AlertPanelEditor = memo(({ panel, onChange }: PanelEditorProps) => {
     const t = useStore(commonMsg)
@@ -35,6 +36,7 @@ const AlertPanelEditor = memo(({ panel, onChange }: PanelEditorProps) => {
         <PanelEditItem title="View mode">
             <RadionButtons options={[{ label: "List", value: "list" }, { label: "Stat", value: "stat" }]} value={panel.plugins.alert.viewMode} onChange={v => onChange((panel: Panel) => {
                 panel.plugins.alert.viewMode = v
+                dispatch(ResetPanelToolbalViewModeEvent + panel.id)
             })} />
         </PanelEditItem>
         {panel.plugins.alert.viewMode === "stat" && <>
