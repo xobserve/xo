@@ -415,8 +415,13 @@ function registerEvents(options, chart) {
         },
         [PanelType.Alert]: {
             viewMode: "list",
-            showStatGraph: true,
-            statColor: "$orange",
+            stat: {
+                showGraph: true,
+                color: "$orange",
+                layout: LayoutOrientation.Vertical,
+                colorMode: "value",
+                style: "bars",
+            },
             disableDatasource: true,
             orderBy: "newest",
             toolbar: {

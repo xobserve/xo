@@ -16,6 +16,7 @@ import { Panel, PanelQuery, PanelType } from "types/dashboard";
 import { FieldType, SeriesData } from "types/seriesData";
 import { TimeRange } from "types/time";
 import { parseLegendFormat } from "utils/format";
+import { calcSeriesStep } from "utils/seriesData";
 import { isEmpty } from "utils/validate";
 import { replaceWithVariables } from "utils/variable";
 
@@ -57,6 +58,12 @@ export const prometheusToSeriesData = (data: any, query: PanelQuery, range: Time
                     }
                     
                     let end = round(range.end.getTime() / 1000)
+
+                    if (!query.interval) {
+                        const r= calcSeriesStep(start,end, 10, 30)
+                        query.interval = r[1]
+                    }
+
                     const timeline = []
                     const alignedStart = start - start % query.interval
                     for (var i = alignedStart;i <=end; i=i+query.interval) {

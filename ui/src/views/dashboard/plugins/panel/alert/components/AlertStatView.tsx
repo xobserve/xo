@@ -21,7 +21,7 @@ import { AlertRule } from "types/plugins/alert";
 import { ValueCalculationType } from "types/value";
 import { VarialbeAllOption } from "src/data/variable";
 import { prometheusToSeriesData } from "../../../datasource/prometheus/transformData";
-import { LayoutOrientation } from "types/layout";
+import { calcStep } from "./Chart";
 
 const AlertStatView = (props: PanelProps) => {
 
@@ -30,10 +30,14 @@ const AlertStatView = (props: PanelProps) => {
     statOptions.value.calc = ValueCalculationType.Sum
     statOptions.value.decimal = 0
     statOptions.displaySeries = VarialbeAllOption
-    statOptions.showGraph = true
+    statOptions.showGraph = props.panel.plugins.alert.stat.showGraph
     statOptions.styles.connectNulls = true
     statOptions.styles.showPoints = true
-    statOptions.styles.layout = LayoutOrientation.Horizontal
+    statOptions.styles.layout = props.panel.plugins.alert.stat.layout
+    statOptions.styles.colorMode = props.panel.plugins.alert.stat.colorMode
+    statOptions.styles.style =  props.panel.plugins.alert.stat.style
+    statOptions.textSize.value = 100
+    statOptions.showLegend = true
     newProps.panel.plugins.stat = statOptions
 
 
@@ -82,11 +86,10 @@ const AlertStatView = (props: PanelProps) => {
         const data: SeriesData[] = prometheusToSeriesData(promFormatData, {
             id: 65,
             legend: '',
-            interval: 300
+            interval: null
         } as any,newProps.timeRange,true)
 
         data[0].name = "Alerts"
-        console.log("here44444:",data)
         return data
     }, [props.data])
     
@@ -101,7 +104,7 @@ const AlertStatView = (props: PanelProps) => {
               "mode": "absolute",
               "thresholds": [
                 {
-                  "color": "$orange",
+                  "color": props.panel.plugins.alert.stat.color,
                   "value": null
                 }
               ]

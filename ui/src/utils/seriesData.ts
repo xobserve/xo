@@ -55,3 +55,32 @@ export const isSeriesData = (d: any) => {
 
     return false
 }
+
+
+// start, end, minStep : second
+// step should be 30s, 1m, 5m, 10m, 30m, 1h, 3h, 6h, 12h, 1d
+export const calcSeriesStep = (start, end, minSteps, maxSteps): [number[], number] => {
+    const steps = [30, 60, 2 * 60, 5 * 60, 10 * 60, 20 * 60, 30 * 60, 45 * 60, 60 * 60, 2 * 60 * 60, 3 * 60 * 60, 6 * 60 * 60, 12 * 60 * 60, 24 * 60 * 60]
+    const interval = end - start
+
+    let step;
+    for (const s of steps) {
+        const c = interval / s
+        if (c >= minSteps && c <= maxSteps) {
+            step = s
+            break
+        }
+    }
+
+    const firstTs = start + (step - start % step)
+    const timeline = []
+    for (var i = firstTs; i <= end; i += step) {
+        timeline.push(i)
+    }
+
+    if (last(timeline) < end) {
+        timeline.push(end)
+    }
+
+    return [timeline, step]
+}

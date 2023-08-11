@@ -27,6 +27,7 @@ import { PanelForceRebuildEvent } from "src/data/bus-events"
 import { AlertState } from "types/alert"
 import MultiRadionButtons from "components/MultiRadioButtons"
 import { ColorPicker } from "components/ColorPicker"
+import { LayoutOrientation } from "types/layout"
 
 const AlertPanelEditor = memo(({ panel, onChange }: PanelEditorProps) => {
     const t = useStore(commonMsg)
@@ -38,14 +39,29 @@ const AlertPanelEditor = memo(({ panel, onChange }: PanelEditorProps) => {
         </PanelEditItem>
         {panel.plugins.alert.viewMode === "stat" && <>
             <PanelEditItem title="Show stat graph">
-                <Switch isChecked={panel.plugins.alert.showStatGraph} onChange={(e) => onChange((panel: Panel) => {
-                    panel.plugins.alert.showStatGraph = e.target.checked
+                <Switch isChecked={panel.plugins.alert.stat.showGraph} onChange={(e) => onChange((panel: Panel) => {
+                    panel.plugins.alert.stat.showGraph = e.target.checked
                 })} />
             </PanelEditItem>
             <PanelEditItem title="Stat color">
-                <ColorPicker color={panel.plugins.alert.statColor} onChange={c => onChange((panel: Panel) => {
-                    panel.plugins.alert.statColor = c
-                })} circlePicker/>
+                <ColorPicker color={panel.plugins.alert.stat.color} onChange={c => onChange((panel: Panel) => {
+                    panel.plugins.alert.stat.color = c
+                })} circlePicker />
+            </PanelEditItem>
+            <PanelEditItem title="Stat layout">
+                <RadionButtons options={Object.keys(LayoutOrientation).map(k => ({ label: LayoutOrientation[k], value: LayoutOrientation[k] }))} value={panel.plugins.alert.stat.layout} onChange={v => onChange((panel: Panel) => {
+                    panel.plugins.alert.stat.layout = v
+                })} />
+            </PanelEditItem>
+            <PanelEditItem title="Stat color mode">
+                <RadionButtons options={[{ label: "Value", value: "value" }, { label: "Background", value: "bg-solid" }, { label: "Background gradient", value: "bg-gradient" }]} value={panel.plugins.alert.stat.colorMode} onChange={v => onChange((panel: Panel) => {
+                    panel.plugins.alert.stat.colorMode = v
+                })} />
+            </PanelEditItem>
+            <PanelEditItem title="Stat graph style">
+                <RadionButtons options={[{ label: "Lines", value: "lines" }, { label: "Bars", value: "bars" }]} value={panel.plugins.alert.stat.style} onChange={v => onChange((panel: Panel) => {
+                    panel.plugins.alert.stat.style = v
+                })} />
             </PanelEditItem>
         </>}
         <PanelEditItem title="Order by">

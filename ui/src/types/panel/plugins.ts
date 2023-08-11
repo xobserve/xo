@@ -46,8 +46,13 @@ export interface DisableDatasource {
 
 export interface AlerSettings extends DisableDatasource {
     viewMode: "list" | "stat"
-    showStatGraph: boolean
-    statColor: string
+    stat: {
+        showGraph: boolean
+        color: string 
+        layout: LayoutOrientation
+        colorMode: "none" | "value" | "bg-gradient" | "bg-solid"
+        style: "lines" | "bars"
+    }
     orderBy: "newest" | "oldest"
     toolbar: {
         show: boolean
