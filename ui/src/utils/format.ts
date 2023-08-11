@@ -12,6 +12,7 @@
 // limitations under the License.
 
 import { uniq } from "lodash";
+import { isEmpty } from "./validate";
 
 // parse all the {{xxx}} to [xxx]
 export const parseLegendFormat = (s) => {
@@ -36,7 +37,7 @@ export const parseVariableFormat = (s) => {
 }
 
 
-// json to {a=b,c=d}
+// json to {a="b",c="d"}
 export const jsonToEqualPairs = v => {
     let s = "{"
     const keys = Object.keys(v)
@@ -52,4 +53,30 @@ export const jsonToEqualPairs = v => {
     s += "}"
 
     return s
+}
+
+export const equalPairsToJson = (s0):Record<string,string> => {
+    const s = s0.trim()
+    if (isEmpty(s)) {
+        return null
+    }
+    
+    if (s[0] !== "{" || s[s.length - 1] !== "}") {
+        return null
+    }
+
+    try {
+        const v = {}
+        const pairs = s.slice(1,s.length-1).split(",")
+        pairs.forEach(p => {
+            const kv = p.split("=")
+            v[kv[0]] = kv[1].slice(1, kv[1].length-1)
+        })
+    
+        return v
+    } catch (error) {
+        console.error("equal pairs convert to json error", s0, error)
+        return null
+    }
+  
 }

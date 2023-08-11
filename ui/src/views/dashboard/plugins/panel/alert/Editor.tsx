@@ -18,7 +18,7 @@ import PanelEditItem from "src/views/dashboard/edit-panel/PanelEditItem"
 import { Panel, PanelEditorProps } from "types/dashboard"
 import React, { memo } from "react";
 import { useStore } from "@nanostores/react"
-import { commonMsg, textPanelMsg } from "src/i18n/locales/en"
+import { commonMsg } from "src/i18n/locales/en"
 import { Select } from "antd"
 import { datasources } from "src/App"
 import { datasourceSupportAlerts } from "src/data/alerts"
@@ -58,6 +58,22 @@ const AlertPanelEditor = memo(({ panel, onChange }: PanelEditorProps) => {
                 }
                 } />
             </PanelEditItem>
+            <PanelEditItem title="Rule name" desc="Filter for alert rules containing this text">  
+                <EditorInputItem value={panel.plugins.alert.filter.ruleName} onChange={(v) => onChange((panel: Panel) => {
+                    panel.plugins.alert.filter.ruleName = v
+                })} placeholder="support multi regex, separate with comman e.g: ^service1, ^service2"/>
+            </PanelEditItem>
+            <PanelEditItem title="Rule labels" desc={`Filter rule labels using label querying, e.g: {severity="critical"}`}>  
+                <EditorInputItem value={panel.plugins.alert.filter.ruleLabel} onChange={(v) => onChange((panel: Panel) => {
+                    panel.plugins.alert.filter.ruleLabel = v
+                })} placeholder=""/>
+            </PanelEditItem>
+            <PanelEditItem title="Alert label" desc={`Filter alert labels using label querying, e.g: {service="api-gateway", instance=~"cluster-cn-.+"}`}>  
+                <EditorInputItem value={panel.plugins.alert.filter.alertLabel} onChange={(v) => onChange((panel: Panel) => {
+                    panel.plugins.alert.filter.alertLabel = v
+                })} placeholder=""/>
+            </PanelEditItem>
+           
         </PanelAccordion>
         <PanelAccordion title="Chart">
             <PanelEditItem title="Show">

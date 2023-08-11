@@ -58,6 +58,9 @@ export interface AlerSettings extends DisableDatasource {
     }
     filter: {
         datasources: number[]
+        ruleName: string 
+        ruleLabel: string
+        alertLabel: string
     }
 }
 

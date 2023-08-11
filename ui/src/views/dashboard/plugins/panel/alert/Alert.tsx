@@ -23,7 +23,7 @@ import LogChart from "../log/components/Chart";
 import AlertToolbar from "./components/AlertToolbar";
 import { AlertGroup, AlertRule, AlertToolbarOptions } from "types/plugins/alert";
 import AlertRuleItem from "./components/AlertRuleItem";
-import { jsonToEqualPairs } from "utils/format";
+import { equalPairsToJson, jsonToEqualPairs } from "utils/format";
 
 
 
@@ -71,7 +71,7 @@ const AlertPanel = (props: AlertPanelProps) => {
                                 delete alert.labels[k]
                             }
                         }
-                        alert.name  = jsonToEqualPairs({ rule: r.name,...alert.labels })
+                        alert.name = r.name + jsonToEqualPairs({ ...alert.labels })
                     }
                 }
             }
@@ -136,39 +136,77 @@ const AlertPanel = (props: AlertPanelProps) => {
         })
     }, [])
 
-    const [filterData,chartData] =  useMemo(() => {
-        console.log("here33333:",active)
+    const [filterData, chartData] = useMemo(() => {
+        console.log("here33333:", active)
         let result = []
         const chartData = []
-        if (active.length == 0) {
-            result = data 
-        }  else {
-            for (const r0 of data) {
-                const r = cloneDeep(r0)
-                const  alerts = []
-                for (const alert of r.alerts) {
-                    if (active.includes(alert.name)) {
-                        alerts.push(alert)
+
+        for (const r0 of data) {
+            // filter by rule name
+            if (!isEmpty(options.filter.ruleName)) {
+                const ruleFilters = options.filter.ruleName.split(",")
+                let pass = false
+                for (const ruleFilter of ruleFilters) {
+                    const filter = ruleFilter.trim().toLowerCase()
+                    if (!isEmpty(filter) && r0.name.toLowerCase().match(filter)) {
+                        console.log("here3333:", r0.name, filter)
+                        pass = true
+                        break
                     }
                 }
-                r.alerts = alerts 
-                if (r.alerts.length > 0) {
-                    result.push(r)
+                if (!pass) {
+                    continue
                 }
             }
-        }
+
         
+
+            const r = {
+                ...r0,
+                alerts: []
+            }
+            for (const alert of r0.alerts) {
+                // filter by active labels
+                if (active.length != 0 && !active.includes(alert.name)) {
+                    continue
+                }
+                
+                // filter by alert label
+                const labelFilter = equalPairsToJson(options.filter.alertLabel)
+                if (labelFilter) {
+                    let matches = true
+                    for (const k in labelFilter) {
+                        if (!alert.labels[k].toLowerCase().match(labelFilter[k].toLowerCase())) {
+           
+                            matches = false
+                            break
+                        }
+                    }
+
+                    if (!matches) continue
+                }
+
+                r.alerts.push(alert)
+            }
+
+            if (r.alerts.length > 0) {
+                result.push(r)
+            }
+        }
+
+
+
         for (const r of result) {
             for (const alert of r.alerts) {
                 chartData.push({
-                    labels:  alert.name,
+                    labels: alert.name,
                     timestamp: new Date(alert.activeAt).getTime() * 1e6
                 })
             }
         }
 
         return [result, sortBy(chartData, ['timestamp'])]
-    }, [data, search, active])
+    }, [data, search, active, options.filter.ruleName, options.filter.alertLabel])
 
     const sortedData: AlertRule[] = useMemo(() => {
         if (panel.plugins.alert.orderBy == "newest") {
@@ -190,12 +228,12 @@ const AlertPanel = (props: AlertPanelProps) => {
                 </Box>}
                 <VStack alignItems="left" divider={<StackDivider />} mt="1">
                     {
-                        sortedData.map(rule => <AlertRuleItem rule={rule} panel={panel} collapsed={collaseAll}  onSelectLabel={onSelectLabel} />)
+                        sortedData.map(rule => <AlertRuleItem rule={rule} panel={panel} collapsed={collaseAll} onSelectLabel={onSelectLabel} />)
                     }
                 </VStack>
             </Box>
             {<Box className="bordered-left" width={toolbarOpen ? options.toolbar.width : 0} transition="all 0.3s" py="2">
-                {toolbarOpen &&  <AlertToolbar active={active} labels={[]} panel={panel} onCollapseAll={onCollapseAll} onSearchChange={onSearchChange} height={props.height} onActiveLabel={onActiveLabel} currentCount={filterData.length} onViewLogChange={onViewOptionsChange} viewOptions={viewOptions} />}
+                {toolbarOpen && <AlertToolbar active={active} labels={[]} panel={panel} onCollapseAll={onCollapseAll} onSearchChange={onSearchChange} height={props.height} onActiveLabel={onActiveLabel} currentCount={filterData.length} onViewLogChange={onViewOptionsChange} viewOptions={viewOptions} />}
             </Box>}
         </Flex>
     </>

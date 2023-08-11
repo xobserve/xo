@@ -24,6 +24,7 @@ import CollapseIcon from "components/icons/Collapse"
 import { dateTimeFormat } from "utils/datetime/formatter"
 import { IoMdInformationCircleOutline } from "react-icons/io"
 import { getLabelNameColor } from "../../log/utils"
+import { FaCheck } from "react-icons/fa"
 
 interface Props {
     rule: AlertRule
@@ -41,12 +42,15 @@ const AlertRuleItem = (props: Props) => {
     }, [props.collapsed])
 
 
-    const stateColor = paletteColorNameToHex(rule.state == "firing" ? "$light-red" : "$yellow", colorMode)
+    const getStateColor = state => {
+        return paletteColorNameToHex(state == "firing" ? "$light-red" : (state == "pending" ? "$yellow" : "$green"), colorMode)
+    } 
+
     console.log("here333333:", rule)
     return (<Box fontSize="0.9rem" className="label-bg" py="1" px="2">
         <Flex justifyContent="space-between" alignItems="center" cursor="pointer" onClick={() => setCollapsed(!collapsed)} >
             <HStack>
-                {rule.state == "firing" ? <FiringIcon fill={stateColor} /> : <PendingIcon fill={stateColor} />}
+                {rule.state == "firing" ? <FiringIcon fill={getStateColor(rule.state)} /> : (rule.state == "pending" ? <PendingIcon fill={getStateColor(rule.state)} /> : <FaCheck color={getStateColor(rule.state)} />)}
                 <Box>
                     <Text>{rule.name}</Text>
                     <HStack textStyle="annotation" spacing={1} mt="2">
@@ -67,7 +71,7 @@ const AlertRuleItem = (props: Props) => {
                 </Box>
             </HStack>
             {rule.alerts.length > 0 && <Text fontSize="0.8rem">
-                <chakra.span color={stateColor} fontSize="0.9rem">{upperFirst(rule.alerts[0].state)}</chakra.span> for {formatDuration((new Date().getTime() - new Date(rule.alerts[0].activeAt).getTime()) * 1000)}
+                <chakra.span color={getStateColor(rule.state)} fontSize="0.9rem" fontWeight="500">{upperFirst(rule.state)}</chakra.span> for {formatDuration((new Date().getTime() - new Date(rule.alerts[0].activeAt).getTime()) * 1000)}
             </Text>}
         </Flex>
         {
@@ -142,7 +146,7 @@ const AlertRuleItem = (props: Props) => {
                                             </HStack>
                                         </Td>
                                         <Td>
-                                            <chakra.span color={stateColor} fontSize="0.9rem">{upperFirst(alert.state)}</chakra.span>
+                                            <chakra.span color={getStateColor(alert.state)} fontSize="0.9rem">{upperFirst(alert.state)}</chakra.span>
                                         </Td>
                                         <Td>
                                         <Text>{dateTimeFormat(alert.activeAt)}</Text> <Text textStyle="annotation">{moment(alert.activeAt).fromNow()}</Text>
