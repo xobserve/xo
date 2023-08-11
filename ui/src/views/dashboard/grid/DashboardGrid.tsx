@@ -215,7 +215,7 @@ const DashboardGrid = memo((props: GridProps) => {
                                         >
                                             {(width: number, height: number) => {
                                                 const Wrapper = dashboard.data.lazyLoading ? LazyLoader : Box
-                                                return (<Box key={panel.id} id={`panel-${panel.id}`}>
+                                                return (<Box key={panel.id} id={`panel-${panel.id}`} >
                                                     {!inEdit && <Wrapper  width={width} height={height}  ><PanelGrid dashboard={dashboard} panel={panel} width={width} height={height} onRemovePanel={onRemovePanel} sync={mooSync} /></Wrapper> }
                                                 </Box>)
                                             }}

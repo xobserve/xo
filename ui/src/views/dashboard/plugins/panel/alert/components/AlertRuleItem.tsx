@@ -48,7 +48,7 @@ const AlertRuleItem = memo((props: Props) => {
         return paletteColorNameToHex(state == "firing" ? "$light-red" : (state == "pending" ? "$yellow" : "$green"), colorMode)
     } 
 
-    return (<Box fontSize="0.9rem" py="1" px="2">
+    return (<Box fontSize={width > 600 ? "0.9rem" : "0.8rem"} py="1" px="2">
         <Flex justifyContent="space-between" alignItems="center" cursor="pointer" onClick={() => setCollapsed(!collapsed)} >
             <HStack>
                 {rule.state == "firing" ? <FiringIcon fill={getStateColor(rule.state)} /> : (rule.state == "pending" ? <PendingIcon fill={getStateColor(rule.state)} /> : <FaCheck color={getStateColor(rule.state)} />)}

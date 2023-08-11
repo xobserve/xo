@@ -268,16 +268,14 @@ const AlertPanel = (props: AlertPanelProps) => {
     const alertsCount = filterData.reduce((acc, r) => acc + r.alerts.length, 0)
 
     console.log("here333333:",width,height)
-    return (<>
+    return (<Box height={height} width={width} position="relative">
         {
-            viewMode == "list"
-                ?
-                <Flex position="relative">
-                    {options.toolbar.show &&
-                        <Box position="absolute" right="2" top={toolbarOpen ? 2 : 0} onClick={onToobarOpen} fontSize="0.7rem" opacity="0.3  " cursor="pointer" px="2px" className={toolbarOpen ? "color-text" : null} py="2" zIndex={1}>
+            viewMode == "list" && <Flex position="relative">
+                    {options.toolbar.show && width > 400 &&
+                        <Box position="absolute" right="2" top={toolbarOpen ? 2 : 0} onClick={onToobarOpen} fontSize="0.7rem" opacity={width < 400 ? 0 : 0.3} _hover={{opacity: 0.3}} cursor="pointer" px="2px" className={toolbarOpen ? "color-text" : null} py="2" zIndex={1}>
                             <FaFilter />
                         </Box>}
-                    <Box height={props.height} width={props.width - (toolbarOpen ? options.toolbar.width : 1)} transition="all 0.3s">
+                    <Box height={props.height} width={width > 400 ? props.width - (toolbarOpen ? options.toolbar.width : 1) : width} transition="all 0.3s">
                         {showChart && <Box className="alert-panel-chart" height={options.chart.height}>
                             <LogChart data={chartData} panel={panel} width={props.width - (toolbarOpen ? options.toolbar.width : 1)} viewOptions={viewOptions} onSelectLabel={onSelectLabel} activeLabels={active} />
                             <Divider mt="3" />
@@ -288,18 +286,20 @@ const AlertPanel = (props: AlertPanelProps) => {
                             }
                         </VStack>
                     </Box>
-                    {<Box className={toolbarOpen ? "bordered-left" : null} width={toolbarOpen ? options.toolbar.width : 0} transition="all 0.3s" py="2">
-                        {toolbarOpen && <AlertToolbar active={active} labels={[]} panel={panel} onCollapseAll={onCollapseAll} onSearchChange={onSearchChange} height={props.height} onActiveLabel={onActiveLabel} rulesCount={filterData.length} alertsCount={alertsCount} onViewLogChange={onViewOptionsChange} viewOptions={viewOptions} />}
+                    { width > 400 &&  <Box className={toolbarOpen ? "bordered-left" : null} width={toolbarOpen ? options.toolbar.width : 0} transition="all 0.3s" py="2">
+                        {toolbarOpen  && <AlertToolbar active={active} labels={[]} panel={panel} onCollapseAll={onCollapseAll} onSearchChange={onSearchChange} height={props.height} onActiveLabel={onActiveLabel} rulesCount={filterData.length} alertsCount={alertsCount} onViewLogChange={onViewOptionsChange} viewOptions={viewOptions} />}
                     </Box>}
                 </Flex>
-                :
-                <Box className="alert-stat-view" height={props.height} width={props.width} position="relative">
+            
+        }
+        {
+            viewMode == "stat" &&     <Box className="alert-stat-view" height={props.height} width={props.width}>
                     <AlertStatView   {...props} data={filterData} />
-                    <Box position="absolute" right="2" top="1" color={getTextColorForAlphaBackground(paletteColorNameToHex(options.stat.color), colorMode == "dark")} cursor="pointer" onClick={() => onViewOptionsChange({ ...viewOptions, viewMode: "list" })} pb="2"><AiOutlineSwitcher /></Box>
+                   
                 </Box>
         }
-
-    </>
+        {(viewMode == "stat" || width < 400) && <Box position="absolute" right="2" top="1" opacity={width < 400 ? 0 : 1}  _hover={{opacity: 1}} color={getTextColorForAlphaBackground(paletteColorNameToHex(options.stat.color), colorMode == "dark")} cursor="pointer" onClick={() => onViewOptionsChange({ ...viewOptions, viewMode: viewOptions.viewMode == "list" ? "stat" : "list" })} pb="2"><AiOutlineSwitcher /></Box>}
+    </Box>
     )
 }
 
