@@ -19,6 +19,7 @@ import { ThresholdsConfig, ThresholdsMode } from "types/threshold";
 import { ValueCalculationType } from "types/value";
 import { palettes } from "utils/colors";
 import { InitTestDataDatasourceId } from "../constants";
+import { AlertState } from "types/alert";
 
 export const onClickCommonEvent = `
 // setVariable: (varName:string, varValue:string) => void 
@@ -426,7 +427,11 @@ function registerEvents(options, chart) {
                 tooltip: "single",
             },
             filter: {
-                datasources: [InitTestDataDatasourceId]
+                state: AlertState.All,
+                datasources: [InitTestDataDatasourceId],
+                ruleLabel: '',
+                alertLabel: '',
+                ruleName: '',
             }
         }
     }

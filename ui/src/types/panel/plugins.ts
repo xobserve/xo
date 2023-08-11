@@ -10,6 +10,7 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
+import { AlertState } from "types/alert"
 import { PanelType } from "types/dashboard"
 import { LayoutOrientation } from "types/layout"
 import { BarThresholdArrow } from "types/plugins/bar"
@@ -57,6 +58,7 @@ export interface AlerSettings extends DisableDatasource {
         tooltip: "none" | "single" | "all"
     }
     filter: {
+        state: AlertState
         datasources: number[]
         ruleName: string 
         ruleLabel: string

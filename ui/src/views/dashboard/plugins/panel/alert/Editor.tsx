@@ -24,6 +24,7 @@ import { datasources } from "src/App"
 import { datasourceSupportAlerts } from "src/data/alerts"
 import { dispatch } from "use-bus"
 import { PanelForceRebuildEvent } from "src/data/bus-events"
+import { AlertState } from "types/alert"
 
 const AlertPanelEditor = memo(({ panel, onChange }: PanelEditorProps) => {
     const t = useStore(commonMsg)
@@ -47,6 +48,11 @@ const AlertPanelEditor = memo(({ panel, onChange }: PanelEditorProps) => {
             </PanelEditItem>
         </PanelAccordion>
         <PanelAccordion title="Filter">
+            <PanelEditItem title="State">
+                <RadionButtons options={Object.keys(AlertState).map(k => ({label: AlertState[k], value: AlertState[k]}))} value={panel.plugins.alert.filter.state} onChange={v => onChange((panel: Panel) => {
+                    panel.plugins.alert.filter.state = v
+                })} />
+            </PanelEditItem>
             <PanelEditItem title="Datasource" desc="Query alerts from these datasources">  
                 <Select style={{minWidth: "300px"}} value={panel.plugins.alert.filter.datasources} allowClear mode="multiple" options={
                     datasources.filter(ds => datasourceSupportAlerts.includes(ds.type)).map(ds => ({label: ds.name, value: ds.id}))} onChange={
@@ -73,7 +79,7 @@ const AlertPanelEditor = memo(({ panel, onChange }: PanelEditorProps) => {
                     panel.plugins.alert.filter.alertLabel = v
                 })} placeholder=""/>
             </PanelEditItem>
-           
+            
         </PanelAccordion>
         <PanelAccordion title="Chart">
             <PanelEditItem title="Show">

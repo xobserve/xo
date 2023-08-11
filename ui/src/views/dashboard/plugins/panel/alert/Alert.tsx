@@ -24,6 +24,7 @@ import AlertToolbar from "./components/AlertToolbar";
 import { AlertGroup, AlertRule, AlertToolbarOptions } from "types/plugins/alert";
 import AlertRuleItem from "./components/AlertRuleItem";
 import { equalPairsToJson, jsonToEqualPairs } from "utils/format";
+import { AlertState } from "types/alert";
 
 
 
@@ -141,6 +142,10 @@ const AlertPanel = (props: AlertPanelProps) => {
         const chartData = []
 
         for (const r0 of data) {
+            // filter by rule state
+            if (options.filter.state != AlertState.All && r0.state != options.filter.state) {
+                continue
+            }
             // filter by rule name
             if (!isEmpty(options.filter.ruleName)) {
                 const ruleFilters = options.filter.ruleName.split(",")
@@ -157,37 +162,42 @@ const AlertPanel = (props: AlertPanelProps) => {
                 }
             }
 
-             // fitler by rule label
-             const labelFilter = equalPairsToJson(options.filter.ruleLabel)
-             if (labelFilter) {
-                 let matches = true
-                 for (const k in labelFilter) {
-                     if (!r0.labels[k].toLowerCase().match(labelFilter[k].toLowerCase())) {
-                         matches = false
-                         break
-                     }
-                 }
+            // fitler by rule label
+            const labelFilter = equalPairsToJson(options.filter.ruleLabel)
+            if (labelFilter) {
+                let matches = true
+                for (const k in labelFilter) {
+                    if (!r0.labels[k].toLowerCase().match(labelFilter[k].toLowerCase())) {
+                        matches = false
+                        break
+                    }
+                }
 
-                 if (!matches) continue
-             }
+                if (!matches) continue
+            }
 
             const r = {
                 ...r0,
                 alerts: []
             }
             for (const alert of r0.alerts) {
+                // filter by alert state
+                if (options.filter.state != AlertState.All && alert.state != options.filter.state) {
+                    continue
+                }
+
                 // filter by active labels
                 if (active.length != 0 && !active.includes(alert.name)) {
                     continue
                 }
-                
+
                 // filter by alert label
                 const labelFilter = equalPairsToJson(options.filter.alertLabel)
                 if (labelFilter) {
                     let matches = true
                     for (const k in labelFilter) {
                         if (!alert.labels[k].toLowerCase().match(labelFilter[k].toLowerCase())) {
-           
+
                             matches = false
                             break
                         }
