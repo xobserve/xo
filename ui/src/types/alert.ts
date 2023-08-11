@@ -1,6 +1,6 @@
 export enum AlertState {
-    All="all",
     Pending="pending",
     Firing="firing",
-    Resolved="resolved"
+    Resolved="resolved",
+    NoData="no_data",
 }

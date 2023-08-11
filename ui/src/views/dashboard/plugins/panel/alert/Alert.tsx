@@ -143,7 +143,7 @@ const AlertPanel = (props: AlertPanelProps) => {
 
         for (const r0 of data) {
             // filter by rule state
-            if (options.filter.state != AlertState.All && r0.state != options.filter.state) {
+            if (!options.filter.state.includes(r0.state)) {
                 continue
             }
             // filter by rule name
@@ -182,7 +182,7 @@ const AlertPanel = (props: AlertPanelProps) => {
             }
             for (const alert of r0.alerts) {
                 // filter by alert state
-                if (options.filter.state != AlertState.All && alert.state != options.filter.state) {
+                if (!options.filter.state.includes(alert.state)) {
                     continue
                 }
 

@@ -427,7 +427,7 @@ function registerEvents(options, chart) {
                 tooltip: "single",
             },
             filter: {
-                state: AlertState.All,
+                state: [AlertState.Firing,AlertState.Pending],
                 datasources: [InitTestDataDatasourceId],
                 ruleLabel: '',
                 alertLabel: '',

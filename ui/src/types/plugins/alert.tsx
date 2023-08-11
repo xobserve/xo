@@ -10,6 +10,7 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 
+import { AlertState } from "types/alert"
 import { DatasourceType } from "types/dashboard"
 
 // limitations under the License.
@@ -31,7 +32,7 @@ export interface AlertGroup {
 
 export interface AlertRule {
     name: string
-    state: "pending" |  "firing" | "resolved"
+    state: AlertState
     type: "alerting" | "recording"
     query: string 
     duration: number
@@ -53,7 +54,7 @@ export interface Alert {
     name: string
     labels: Record<string, string>
     annotations: Record<string, string>
-    state: "pending" |  "firing" | "resolved"
+    state: AlertState
     activeAt: string
     value: number
 }

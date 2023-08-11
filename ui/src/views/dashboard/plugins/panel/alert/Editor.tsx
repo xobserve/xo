@@ -25,6 +25,7 @@ import { datasourceSupportAlerts } from "src/data/alerts"
 import { dispatch } from "use-bus"
 import { PanelForceRebuildEvent } from "src/data/bus-events"
 import { AlertState } from "types/alert"
+import MultiRadionButtons from "components/MultiRadioButtons"
 
 const AlertPanelEditor = memo(({ panel, onChange }: PanelEditorProps) => {
     const t = useStore(commonMsg)
@@ -49,7 +50,7 @@ const AlertPanelEditor = memo(({ panel, onChange }: PanelEditorProps) => {
         </PanelAccordion>
         <PanelAccordion title="Filter">
             <PanelEditItem title="State">
-                <RadionButtons options={Object.keys(AlertState).map(k => ({label: AlertState[k], value: AlertState[k]}))} value={panel.plugins.alert.filter.state} onChange={v => onChange((panel: Panel) => {
+                <MultiRadionButtons options={Object.keys(AlertState).map(k => ({label: AlertState[k], value: AlertState[k]}))} value={panel.plugins.alert.filter.state} onChange={v => onChange((panel: Panel) => {
                     panel.plugins.alert.filter.state = v
                 })} />
             </PanelEditItem>
