@@ -267,7 +267,6 @@ const AlertPanel = (props: AlertPanelProps) => {
     const viewMode = viewOptions.viewMode ?? options.viewMode
     const alertsCount = filterData.reduce((acc, r) => acc + r.alerts.length, 0)
 
-    console.log("here333333:",width,height)
     return (<Box height={height} width={width} position="relative">
         {
             viewMode == "list" && <Flex position="relative">
@@ -298,7 +297,7 @@ const AlertPanel = (props: AlertPanelProps) => {
                    
                 </Box>
         }
-        {(viewMode == "stat" || width < 400) && <Box position="absolute" right="2" top="1" opacity={width < 400 ? 0 : 1}  _hover={{opacity: 1}} color={getTextColorForAlphaBackground(paletteColorNameToHex(options.stat.color), colorMode == "dark")} cursor="pointer" onClick={() => onViewOptionsChange({ ...viewOptions, viewMode: viewOptions.viewMode == "list" ? "stat" : "list" })} pb="2"><AiOutlineSwitcher /></Box>}
+        {(viewMode == "stat" || width < 400) && <Box position="absolute" right="2" top="1" opacity={width < 400 ? 0 : 1}  _hover={{opacity: 1}} color={viewMode == "stat" ? getTextColorForAlphaBackground(paletteColorNameToHex(options.stat.color), colorMode == "dark") : "inherit"} cursor="pointer" onClick={() => onViewOptionsChange({ ...viewOptions, viewMode: viewOptions.viewMode == "list" ? "stat" : "list" })} pb="2"><AiOutlineSwitcher /></Box>}
     </Box>
     )
 }

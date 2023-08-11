@@ -191,7 +191,7 @@ const LogChart = memo((props: Props) => {
         grid: {
             left: "1%",
             right: "3%",
-            top: "4%",
+            top: "6%",
             bottom: '0%',
             padding: 0,
             containLabel: true
@@ -206,7 +206,7 @@ const LogChart = memo((props: Props) => {
             axisLabel: {
                 show: true,
                 textStyle: {
-                    align: 'center',
+                    // align: 'center',
                     // baseline: 'end',
                 },
                 interval: interval,
@@ -330,9 +330,9 @@ const getTimeFormat = (start, end, step) => {
 const getTimeInterval = (width, format, fontSize, ticks) => {
     const formatWidth = (measureText(format, fontSize).width + 10)
     const allowTicks = floor(width / formatWidth)
-    if ((ticks / allowTicks) > 1) {
-        return [0, 45]
-    }
+    // if ((ticks / allowTicks) > 1) {
+    //     return [0, 45]
+    // }
 
-    return [0, 0]
+    return [null, 0]
 }
