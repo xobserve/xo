@@ -269,7 +269,7 @@ const ComplexTable = memo((props: Props) => {
                   isClosable: true,
                 })
               } else {
-                onClick(record, navigate, (k, v) => setVariable(k, v, toast), setDateTime)
+                onClick(record, navigate, (k, v) => setVariable(k, v), setDateTime)
               }
             }}>{action.name}</Button>
           })}
@@ -303,7 +303,7 @@ const ComplexTable = memo((props: Props) => {
                 isClosable: true,
               })
             } else {
-              onRowClick(record, navigate, (k, v) => setVariable(k, v, toast), setDateTime)
+              onRowClick(record, navigate, (k, v) => setVariable(k, v), setDateTime)
             }
           }
         }

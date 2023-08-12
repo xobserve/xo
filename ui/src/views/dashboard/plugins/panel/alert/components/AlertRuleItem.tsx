@@ -11,7 +11,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { Box, Divider, Flex, HStack, Image, StackDivider, Table, TableContainer, Tag, Tbody, Td, Text, Th, Thead, Tooltip, Tr, VStack, chakra, useColorMode } from "@chakra-ui/react"
+import { Box, Button, Divider, Flex, HStack, Image, StackDivider, Table, TableContainer, Tag, Tbody, Td, Text, Th, Thead, Tooltip, Tr, VStack, chakra, useColorMode, useToast } from "@chakra-ui/react"
 import moment from "moment"
 import React, { memo, useEffect, useState } from "react"
 import { Panel } from "types/dashboard"
@@ -19,13 +19,17 @@ import { AlertRule } from "types/plugins/alert"
 import { formatDuration } from 'utils/date'
 import { FiringIcon, PendingIcon } from "./Icons"
 import { getTextColorForAlphaBackground, paletteColorNameToHex } from "utils/colors"
-import { upperFirst } from "lodash"
+import { isFunction, upperFirst } from "lodash"
 import CollapseIcon from "components/icons/Collapse"
 import { dateTimeFormat } from "utils/datetime/formatter"
 import { IoMdInformationCircleOutline } from "react-icons/io"
 import { getLabelNameColor } from "../../log/utils"
 import { FaCheck } from "react-icons/fa"
 import { jsonToEqualPairs } from "utils/format"
+import { genDynamicFunction } from "utils/dynamicCode"
+import { useNavigate } from "react-router-dom"
+import { setVariable } from "src/views/variables/SelectVariable"
+import { setDateTime } from "components/DatePicker/DatePicker"
 
 interface Props {
     rule: AlertRule
@@ -37,6 +41,8 @@ interface Props {
 
 const AlertRuleItem = memo((props: Props) => {
     const { rule, panel, onSelectLabel, width } = props
+    const toast = useToast()
+    const navigate = useNavigate()
     const [collapsed, setCollapsed] = useState(true)
     const { colorMode } = useColorMode()
     useEffect(() => {
@@ -47,7 +53,25 @@ const AlertRuleItem = memo((props: Props) => {
     const getStateColor = state => {
         return paletteColorNameToHex(state == "firing" ? "$light-red" : (state == "pending" ? "$yellow" : "$green"), colorMode)
     }
+    
+    const onActionClick = (e, action, alert, ruleName) => {
+        e.stopPropagation()
 
+        alert.ruleName = ruleName
+        const onClick = genDynamicFunction(action);
+        if (!isFunction(onClick)) {
+            toast({
+              title: "Error",
+              description: "The action function you defined is not valid",
+              status: "error",
+              duration: 4000,
+              isClosable: true,
+            })
+          } else {
+            onClick(alert, navigate, (k, v) => setVariable(k, v), setDateTime)
+          }
+    
+    }
     return (<Box fontSize={width > 600 ? "0.9rem" : "0.8rem"} py="1" pl={width < 400 ? 0 : 2} pr={width < 400 ? 1 : 2}>
         <Flex justifyContent="space-between" alignItems="center" cursor="pointer" onClick={() => setCollapsed(!collapsed)} >
             <HStack>
@@ -145,6 +169,7 @@ const AlertRuleItem = memo((props: Props) => {
                                         <Th>State</Th>
                                         <Th>Active</Th>
                                         <Th>Value</Th>
+                                        {panel.plugins.alert.clickActions && <Th>Actions</Th>}
                                     </Tr>
                                 </Thead>
                                 <Tbody>
@@ -167,6 +192,14 @@ const AlertRuleItem = memo((props: Props) => {
                                                 <Td>
                                                     {alert.value}
                                                 </Td>
+                                                {panel.plugins.alert.clickActions && <Td>
+                                                    <HStack spacing={1}>
+                                                    {
+                                                        panel.plugins.alert.clickActions.map((action) => 
+                                                        <Button size="sm" variant={action.style} colorScheme={action.color} onClick={(e) => onActionClick(e,action.action,alert,rule.name)}>{action.name}</Button>)
+                                                    }
+                                                    </HStack>
+                                                </Td>}
                                             </Tr>
                                         })
                                     }
