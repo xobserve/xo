@@ -28,6 +28,9 @@ import AlertStatView from "./components/AlertStatView";
 import useBus from "use-bus";
 import { AiOutlineSwitcher } from "react-icons/ai";
 import { getTextColorForAlphaBackground, paletteColorNameToHex } from "utils/colors";
+import { replaceWithVariables } from "utils/variable";
+import { useStore } from "@nanostores/react";
+import { $variables } from "src/views/variables/store";
 
 
 
@@ -48,6 +51,7 @@ const initViewOptions = () => ({
     persist: false
 })
 const AlertPanel = (props: AlertPanelProps) => {
+    const vars = useStore($variables)
     const { dashboardId, panel,width, height } = props
     const { colorMode } = useColorMode()
     const options = panel.plugins.alert
@@ -104,7 +108,6 @@ const AlertPanel = (props: AlertPanelProps) => {
         return [data]
     }, [props.data, options.filter.datasources])
 
-    console.log("here333333:", data)
     useEffect(() => {
         if (!options.toolbar.show) {
             storage.remove(storageKey)
@@ -173,7 +176,7 @@ const AlertPanel = (props: AlertPanelProps) => {
             // filter by rule name
             const ruleFilter = !isEmpty(viewOptions.ruleNameFilter) ? viewOptions.ruleNameFilter : options.filter.ruleName
             if (!isEmpty(ruleFilter)) {
-                const ruleFilters = ruleFilter.split(",")
+                const ruleFilters = replaceWithVariables(ruleFilter).split(",")
                 let pass = false
                 for (const ruleFilter of ruleFilters) {
                     const filter = ruleFilter.trim().toLowerCase()
@@ -189,11 +192,11 @@ const AlertPanel = (props: AlertPanelProps) => {
 
             // fitler by rule label
             const labelFilter0 = !isEmpty(viewOptions.ruleLabelsFilter) ? viewOptions.ruleLabelsFilter : options.filter.ruleLabel
-            const labelFilter = equalPairsToJson(labelFilter0)
+            const labelFilter = equalPairsToJson(replaceWithVariables(labelFilter0))
             if (labelFilter) {
                 let matches = true
                 for (const k in labelFilter) {
-                    if (!r0.labels[k].toLowerCase().match(labelFilter[k].toLowerCase())) {
+                    if (!r0.labels[k]?.toLowerCase().match(labelFilter[k]?.toLowerCase())) {
                         matches = false
                         break
                     }
@@ -219,11 +222,11 @@ const AlertPanel = (props: AlertPanelProps) => {
 
                 // filter by alert label
                 const labelFilter1 = !isEmpty(viewOptions.labelNameFilter) ? viewOptions.labelNameFilter : options.filter.alertLabel
-                const labelFilter = equalPairsToJson(labelFilter1)
+                const labelFilter = equalPairsToJson(replaceWithVariables(labelFilter1))
                 if (labelFilter) {
                     let matches = true
                     for (const k in labelFilter) {
-                        if (!alert.labels[k].toLowerCase().match(labelFilter[k].toLowerCase())) {
+                        if (!alert.labels[k]?.toLowerCase().match(labelFilter[k]?.toLowerCase())) {
 
                             matches = false
                             break
@@ -253,7 +256,7 @@ const AlertPanel = (props: AlertPanelProps) => {
         }
 
         return [result, sortBy(chartData, ['timestamp'])]
-    }, [data, search, active, options.filter, viewOptions.stateFilter, viewOptions.ruleNameFilter, viewOptions.ruleLabelsFilter, viewOptions.labelNameFilter])
+    }, [data, search, active, options.filter, viewOptions.stateFilter, viewOptions.ruleNameFilter, viewOptions.ruleLabelsFilter, viewOptions.labelNameFilter,vars])
 
     const sortedData: AlertRule[] = useMemo(() => {
         if (panel.plugins.alert.orderBy == "newest") {
@@ -303,4 +306,3 @@ const AlertPanel = (props: AlertPanelProps) => {
 }
 
 export default AlertPanel
-
