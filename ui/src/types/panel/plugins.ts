@@ -10,6 +10,7 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
+import { ClickAction } from "src/views/dashboard/edit-panel/components/ClickActionsEditor"
 import { AlertState } from "types/alert"
 import { PanelType } from "types/dashboard"
 import { LayoutOrientation } from "types/layout"
@@ -73,6 +74,7 @@ export interface AlerSettings extends DisableDatasource {
         ruleLabel: string
         alertLabel: string
     }
+    clickActions: ClickAction[]
 }
 
 
@@ -328,7 +330,7 @@ export interface TableSettings {
     enablePagination: boolean
 
     onRowClick: string
-    rowActions: { name: string; action: string; style: string; color: string }[]
+    rowActions: ClickAction[]
     actionColumnName: string
     actionClumnWidth: string
     actionButtonSize: "xs" | "sm" | "md"

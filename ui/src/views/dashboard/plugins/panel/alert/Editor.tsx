@@ -29,6 +29,7 @@ import MultiRadionButtons from "components/MultiRadioButtons"
 import { ColorPicker } from "components/ColorPicker"
 import { LayoutOrientation } from "types/layout"
 import { ResetPanelToolbalEvent, ResetPanelToolbalViewModeEvent } from "./Alert"
+import { ClickActionsEditor } from "src/views/dashboard/edit-panel/components/ClickActionsEditor"
 
 const AlertPanelEditor = memo(({ panel, onChange }: PanelEditorProps) => {
     const t = useStore(commonMsg)
@@ -153,6 +154,14 @@ const AlertPanelEditor = memo(({ panel, onChange }: PanelEditorProps) => {
                     panel.plugins.alert.chart.tooltip = v
                 })} />
             </PanelEditItem>
+        </PanelAccordion>
+
+        <PanelAccordion title={t.interaction}>
+            <ClickActionsEditor panel={panel} onChange={v => {
+                onChange((panel: Panel) => {
+                    panel.plugins.alert.clickActions = v
+                })
+            }} actions={panel.plugins.alert.clickActions}/>
         </PanelAccordion>
     </>
     )

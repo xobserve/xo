@@ -442,7 +442,8 @@ function registerEvents(options, chart) {
                 ruleLabel: '',
                 alertLabel: '',
                 ruleName: '',
-            }
+            },
+            clickActions: []
         }
     }
 }

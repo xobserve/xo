@@ -27,6 +27,7 @@ import { FaTimes } from "react-icons/fa"
 import { getColorThemeValues } from "utils/theme"
 import { useStore } from "@nanostores/react"
 import { commonMsg, tablePanelMsg } from "src/i18n/locales/en"
+import { ClickActionsEditor } from "src/views/dashboard/edit-panel/components/ClickActionsEditor"
 
 const TablePanelEditor = memo(({ panel, onChange }: PanelEditorProps) => {
     const t = useStore(commonMsg)
@@ -104,11 +105,11 @@ const TablePanelEditor = memo(({ panel, onChange }: PanelEditorProps) => {
                 })
             }} />
 
-            <RowActionsEditor panel={panel} onChange={v => {
+            <ClickActionsEditor panel={panel} onChange={v => {
                 onChange((panel: Panel) => {
                     panel.plugins.table.rowActions = v
                 })
-            }} />
+            }} actions={panel.plugins.table.rowActions}/>
             {panel.plugins.table.rowActions.length > 0 && <>
                 <PanelEditItem title={t1.actionColumnName}>
                     <EditorInputItem value={panel.plugins.table.actionColumnName} placeholder="default to Action when leave empty" onChange={
@@ -166,53 +167,4 @@ const OnRowClickEditor = ({ panel, onChange }: PanelEditorProps) => {
         </Modal>
     </>
     )
-}
-
-const RowActionsEditor = ({ panel, onChange }: PanelEditorProps) => {
-    const t1 = useStore(tablePanelMsg)
-    const theme = useTheme()
-    const colors = useMemo(() => {
-        return getColorThemeValues(theme).map(c => <option key={c} value={c}>{c}</option>)
-    }, [theme])
-
-    const addAction = () => {
-        onChange([{ name: "New action", action: onClickCommonEvent, style: "solid", color: "brand" }, ...panel.plugins.table.rowActions])
-    }
-
-    const removeAction = (index: number) => {
-        onChange(panel.plugins.table.rowActions.filter((_, i) => i !== index))
-    }
-
-    return (<PanelEditItem title={t1.rowActions} desc={t1.rowActionsTips}>
-        <Button size="sm" colorScheme="gray" width="100%" onClick={addAction}>{t1.addAction}</Button>
-        <VStack alignItems="left" mt="2" key={panel.plugins.table.rowActions.length}>
-            {
-                panel.plugins.table.rowActions.map((action, index) => <HStack key={index}>
-                    <Box width="140px"><EditorInputItem size="sm" placeholder="Action name" value={action.name} onChange={v => {
-                        action.name = v
-                        onChange([...panel.plugins.table.rowActions])
-                    }} /></Box>
-                    <CodeEditorModal value={action.action} onChange={v => {
-                        action.action = v
-                        onChange([...panel.plugins.table.rowActions])
-                    }} />
-                    <Select width="80px" size="sm" variant="unstyled" value={action.style} onChange={e => {
-                        action.style = e.target.value
-                        onChange([...panel.plugins.table.rowActions])
-                    }}>
-                        <option value="solid">Solid</option>
-                        <option value="outline">Outline</option>
-                        <option value="ghost">Ghost</option>
-                    </Select>
-                    <Select width="140px" size="sm" variant="unstyled" value={action.color} onChange={e => {
-                        action.color = e.target.value
-                        onChange([...panel.plugins.table.rowActions])
-                    }}>
-                        {colors}
-                    </Select>
-                    <FaTimes className="action-icon" cursor="pointer" onClick={() => removeAction(index)} />
-                </HStack>)
-            }
-        </VStack>
-    </PanelEditItem>)
 }

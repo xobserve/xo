@@ -17,7 +17,12 @@ import CodeEditor from "components/CodeEditor/CodeEditor"
 import React, { useEffect, useState } from "react";
 import { commonMsg } from "src/i18n/locales/en";
 
-export const CodeEditorModal = ({ value, onChange }: { value: string; onChange: any }) => {
+interface Props {
+    value: string 
+    onChange: any
+    triggerProps?: Record<string, string>
+}
+export const CodeEditorModal = ({ value, onChange, triggerProps={} }:Props) => {
     const t = useStore(commonMsg)
     const { isOpen, onOpen, onClose } = useDisclosure()
     const [temp, setTemp] = useState(null)
@@ -30,9 +35,9 @@ export const CodeEditorModal = ({ value, onChange }: { value: string; onChange: 
         onChange(temp)
         onClose()
     }
-
+    
     return (<>
-        <Button size="sm" onClick={onOpen} >{t.editFunc}</Button>
+        <Button size="sm" onClick={onOpen} {...triggerProps}>{t.editFunc}</Button>
         <Modal isOpen={isOpen} onClose={onClose} size="full">
             <ModalOverlay />
             <ModalContent>
