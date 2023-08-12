@@ -49,7 +49,7 @@ export interface AlertRule {
     health: "ok" | "error"
     lastEvaluation: string
     evaluationTime: number
-    activeAt: number
+    activeAt: string
 
     groupName: string 
     groupNamespace: string 

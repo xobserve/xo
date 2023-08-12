@@ -58,7 +58,7 @@ const AlertPanel = (props: AlertPanelProps) => {
     const storageKey = ToolbarStorageKey + dashboardId + panel.id
     const viewStorageKey = AlertViewOptionsStorageKey + dashboardId + panel.id
     const [toolbarOpen, setToolbarOpen] = useState(storage.get(storageKey) ?? false)
-    const [collaseAll, setCollapeAll] = useState(true)
+    const [collaseAll, setCollapeAll] = useState(false)
     const [search, setSearch] = useState("")
     const [active, setActive] = useState<string[]>([])
     const [viewOptions, setViewOptions] = useState<AlertToolbarOptions>(storage.get(viewStorageKey) ?? initViewOptions())
@@ -163,7 +163,7 @@ const AlertPanel = (props: AlertPanelProps) => {
         })
     }, [])
 
-    const [filterData, chartData] = useMemo(() => {
+    const [filterData, chartData]:[AlertRule[],any] = useMemo(() => {
         let result = []
         const chartData = []
 
@@ -259,11 +259,12 @@ const AlertPanel = (props: AlertPanelProps) => {
     }, [data, search, active, options.filter, viewOptions.stateFilter, viewOptions.ruleNameFilter, viewOptions.ruleLabelsFilter, viewOptions.labelNameFilter,vars])
 
     const sortedData: AlertRule[] = useMemo(() => {
-        if (panel.plugins.alert.orderBy == "newest") {
-            return sortBy(filterData, ['timestamp']).reverse()
+        for (const r of filterData) {
+            sortBy(r.alerts, ['activeAt']).reverse()
+            r.activeAt = r.alerts.length > 0 && r.alerts[0].activeAt
         }
 
-        return sortBy(filterData, ['timestamp'])
+       return sortBy(filterData, ['activeAt']).reverse()
     }, [filterData, options.orderBy])
 
     const showChart = options.chart.show && chartData.length != 0 && (width > 400 && height > 300)

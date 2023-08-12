@@ -24,7 +24,9 @@ export const getLabelFromId = id => {
     return id.split(idSplitter)
 }
 
-const logColorGenerator = new ColorGenerator(concat(COLORS_HEX,colors))
+const logColorGenerator = new ColorGenerator(concat(
+    COLORS_HEX,
+    colors))
 export const getLabelNameColor = id => {
     return logColorGenerator.getColorByKey(id)
 }
