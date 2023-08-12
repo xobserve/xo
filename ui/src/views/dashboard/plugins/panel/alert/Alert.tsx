@@ -164,7 +164,7 @@ const AlertPanel = (props: AlertPanelProps) => {
     }, [])
 
     const [filterData, chartData]:[AlertRule[],any] = useMemo(() => {
-        let result = []
+        let result:AlertRule[] = []
         const chartData = []
 
         const stateFilter = !isEmpty(viewOptions.stateFilter) ? viewOptions.stateFilter : options.filter.state
@@ -204,7 +204,7 @@ const AlertPanel = (props: AlertPanelProps) => {
 
                 if (!matches) continue
             }
-
+            
             const r = {
                 ...r0,
                 alerts: []
@@ -244,18 +244,47 @@ const AlertPanel = (props: AlertPanelProps) => {
             }
         }
 
-
-
+        const result1 = []
         for (const r of result) {
-            for (const alert of r.alerts) {
-                chartData.push({
-                    labels: alert.name,
-                    timestamp: new Date(alert.activeAt).getTime() * 1e6
-                })
+            const r1 = cloneDeep(r)
+            const newAlerts = []
+            if (!isEmpty(search)) {
+                delete r1.alerts
+                const rs = JSON.stringify(r1).toLowerCase()
+               
+                if (!rs.match(search)) {
+                    let match = false
+                    for (const alert of r.alerts) {
+                        const as = JSON.stringify(alert).toLowerCase().replaceAll("\\",'')
+                        console.log("here333333",as)
+                        if (as.match(search)) {
+                            newAlerts.push(alert)
+                            match = true
+                        }
+                    }
+                    if (match) {
+                        r1.alerts = newAlerts
+                        result1.push(r1)
+                    }
+                } else {
+                    r1.alerts = r.alerts
+                    result1.push(r1)
+                }
+            } else {
+                result1.push(r)
+            }
+            
+            if (r1.alerts) {
+                for (const alert of r1.alerts) {
+                    chartData.push({
+                        labels: alert.name,
+                        timestamp: new Date(alert.activeAt).getTime() * 1e6
+                    })
+                }
             }
         }
 
-        return [result, sortBy(chartData, ['timestamp'])]
+        return [result1, sortBy(chartData, ['timestamp'])]
     }, [data, search, active, options.filter, viewOptions.stateFilter, viewOptions.ruleNameFilter, viewOptions.ruleLabelsFilter, viewOptions.labelNameFilter,vars])
 
     const sortedData: AlertRule[] = useMemo(() => {

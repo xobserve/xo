@@ -14,14 +14,12 @@
 import { Box, Button, Checkbox, Divider, Flex, HStack, Input, Text, VStack } from "@chakra-ui/react"
 import MultiRadionButtons from "components/MultiRadioButtons"
 import RadionButtons from "components/RadioButtons"
-import { EditorInputItem, EditorNumberItem, EditorSliderItem } from "components/editor/EditorItem"
-import React, { memo, useEffect, useMemo, useState } from "react"
+import { EditorInputItem } from "components/editor/EditorItem"
+import React, { memo, useState } from "react"
 import { AiOutlineDoubleRight } from "react-icons/ai"
 import { AlertState } from "types/alert"
 import { Panel } from "types/dashboard"
 import { AlertToolbarOptions } from "types/plugins/alert"
-import { LogChartView, LogLabel, LogSeries } from "types/plugins/log"
-import { paletteColorNameToHex } from "utils/colors"
 
 interface Props {
     active: string[]
@@ -40,7 +38,7 @@ interface Props {
 
 const AlertToolbar = memo((props: Props) => {
     const { panel, onCollapseAll, onSearchChange, rulesCount,alertsCount, viewOptions, onViewLogChange } = props
-    // const [search, setSearch] = useState<string>("")
+    const [search, setSearch] = useState<string>("")
 
     // const options = panel.plugins.log
 
@@ -61,12 +59,12 @@ const AlertToolbar = memo((props: Props) => {
             <Box></Box>
         </Flex>
 
-        {/* <Divider mt="" />
+        <Divider mt="" />
 
         <Box fontSize="0.8rem" mt="2" px="1">
-            <Text mb="1" fontWeight="500">Search logs</Text>
-            <EditorInputItem value={search} onChange={v => { setSearch(v); onSearchChange(v) }} placeholder="textA || textB , A && B" />
-        </Box> */}
+            <Text mb="1">Search everthing</Text>
+            <EditorInputItem value={search} onChange={v => { setSearch(v); onSearchChange(v) }} placeholder="support regex" />
+        </Box>
 
         <Divider mt="3" />
         <VStack alignItems="left" fontSize="0.8rem" mt="2" px="2" spacing={2}>
