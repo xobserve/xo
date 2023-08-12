@@ -1,6 +1,6 @@
 enum ReserveUrls {
     Config = "/cfg",
-    Alerts = "/alerts",
+    Alerts = "/alert",
     Search = "/search",
     New = "/new",
 }
