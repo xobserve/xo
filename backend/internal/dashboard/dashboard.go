@@ -131,9 +131,11 @@ func DeleteDashboard(c *gin.Context) {
 		return
 	}
 
-	if id == models.HomeDashboardId {
-		c.JSON(400, common.RespError("home dashboard can not be deleted"))
-		return
+	for _, rid := range models.ReservedDashboardId {
+		if id == rid {
+			c.JSON(400, common.RespError("reserved dashboard can not be deleted"))
+			return
+		}
 	}
 
 	// delete dashboard
@@ -328,9 +330,11 @@ func Delete(c *gin.Context) {
 	id := c.Param("id")
 	u := user.CurrentUser(c)
 
-	if id == models.HomeDashboardId {
-		c.JSON(http.StatusForbidden, common.RespError("d-home is a special Dashboard, you cant delete it"))
-		return
+	for _, rid := range models.ReservedDashboardId {
+		if id == rid {
+			c.JSON(400, common.RespError("reserved dashboard can not be deleted"))
+			return
+		}
 	}
 
 	ownedBy, err := models.QueryDashboardBelongsTo(id)

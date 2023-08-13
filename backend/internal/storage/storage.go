@@ -153,6 +153,13 @@ func initTables() error {
 		return err
 	}
 
+	// insert alert dashboard
+	_, err = dashboard.ImportFromJSON(storageData.AlertDashboard, models.SuperAdminId)
+	if err != nil && !e.IsErrUniqueConstraint(err) {
+		log.RootLogger.Crit("init home dashboard error", "error:", err)
+		return err
+	}
+
 	// insert global sidemenu
 	menu := []map[string]interface{}{
 		{
@@ -160,7 +167,13 @@ func initTables() error {
 			"url":         "/home",
 			"icon":        "FaHome",
 			"dashboardId": models.HomeDashboardId,
-			"expanded":    true,
+		},
+		{
+			"title":       "Alert",
+			"url":         "/alert",
+			"icon":        "FaBell",
+			"dashboardId": models.AlertDashbordId,
+			"hidden":      true,
 		},
 	}
 	menuStr, err := json.Marshal(menu)

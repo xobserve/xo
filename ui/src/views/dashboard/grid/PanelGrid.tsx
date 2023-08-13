@@ -432,6 +432,7 @@ const queryAlerts = async (panel:Panel, timeRange: TimeRange) => {
     }
     for (const dsID of panel.plugins.alert.filter.datasources) {
         const ds = datasources.find(ds => ds.id === dsID)
+        console.log("here3333333:",dsID, ds)
         let res
         switch (ds.type) {
             case DatasourceType.Prometheus:
@@ -445,6 +446,8 @@ const queryAlerts = async (panel:Panel, timeRange: TimeRange) => {
             default:
                 break;
         }
+
+
         result.error = res.error
 
         result.data = result.data.concat(res.data)

@@ -17,7 +17,7 @@ import { DatasourceType, PanelProps } from "types/dashboard"
 import { Log } from "types/plugins/log";
 import { FaFilter } from "react-icons/fa";
 import storage from "utils/localStorage";
-import { cloneDeep, remove, sortBy } from "lodash";
+import { cloneDeep, orderBy, remove, sortBy } from "lodash";
 import { isEmpty } from "utils/validate";
 import LogChart from "../log/components/Chart";
 import AlertToolbar from "./components/AlertToolbar";
@@ -52,7 +52,7 @@ const initViewOptions = () => ({
 })
 const AlertPanel = (props: AlertPanelProps) => {
     const vars = useStore($variables)
-    const { dashboardId, panel,width, height } = props
+    const { dashboardId, panel, width, height } = props
     const { colorMode } = useColorMode()
     const options = panel.plugins.alert
     const storageKey = ToolbarStorageKey + dashboardId + panel.id
@@ -163,8 +163,8 @@ const AlertPanel = (props: AlertPanelProps) => {
         })
     }, [])
 
-    const [filterData, chartData]:[AlertRule[],any] = useMemo(() => {
-        let result:AlertRule[] = []
+    const [filterData, chartData]: [AlertRule[], any] = useMemo(() => {
+        let result: AlertRule[] = []
         const chartData = []
 
         const stateFilter = !isEmpty(viewOptions.stateFilter) ? viewOptions.stateFilter : options.filter.state
@@ -204,7 +204,7 @@ const AlertPanel = (props: AlertPanelProps) => {
 
                 if (!matches) continue
             }
-            
+
             const r = {
                 ...r0,
                 alerts: []
@@ -251,12 +251,12 @@ const AlertPanel = (props: AlertPanelProps) => {
             if (!isEmpty(search)) {
                 delete r1.alerts
                 const rs = JSON.stringify(r1).toLowerCase()
-               
+
                 if (!rs.match(search)) {
                     let match = false
                     for (const alert of r.alerts) {
-                        const as = JSON.stringify(alert).toLowerCase().replaceAll("\\",'')
-                        console.log("here333333",as)
+                        const as = JSON.stringify(alert).toLowerCase().replaceAll("\\", '')
+                        console.log("here333333", as)
                         if (as.match(search)) {
                             newAlerts.push(alert)
                             match = true
@@ -273,7 +273,7 @@ const AlertPanel = (props: AlertPanelProps) => {
             } else {
                 result1.push(r)
             }
-            
+
             if (r1.alerts) {
                 for (const alert of r1.alerts) {
                     chartData.push({
@@ -285,15 +285,23 @@ const AlertPanel = (props: AlertPanelProps) => {
         }
 
         return [result1, sortBy(chartData, ['timestamp'])]
-    }, [data, search, active, options.filter, viewOptions.stateFilter, viewOptions.ruleNameFilter, viewOptions.ruleLabelsFilter, viewOptions.labelNameFilter,vars])
+    }, [data, search, active, options.filter, viewOptions.stateFilter, viewOptions.ruleNameFilter, viewOptions.ruleLabelsFilter, viewOptions.labelNameFilter, vars])
 
     const sortedData: AlertRule[] = useMemo(() => {
         for (const r of filterData) {
-            sortBy(r.alerts, ['activeAt']).reverse()
+            if (options.orderBy == "newest") {
+                sortBy(r.alerts, ['activeAt']).reverse()
+            } else {
+                sortBy(r.alerts, ['activeAt'])
+            }
+
             r.activeAt = r.alerts.length > 0 && r.alerts[0].activeAt
         }
-
-       return sortBy(filterData, ['activeAt']).reverse()
+        if (options.orderBy == "newest") {
+            return sortBy(filterData, ['activeAt']).reverse()
+        } else {
+            return sortBy(filterData, ['activeAt'])
+        }
     }, [filterData, options.orderBy])
 
     const showChart = options.chart.show && chartData.length != 0 && (width > 400 && height > 300)
@@ -303,34 +311,34 @@ const AlertPanel = (props: AlertPanelProps) => {
     return (<Box height={height} width={width} position="relative">
         {
             viewMode == "list" && <Flex position="relative">
-                    {options.toolbar.show && width > 400 &&
-                        <Box position="absolute" right="2" top={toolbarOpen ? 2 : 0} onClick={onToobarOpen} fontSize="0.7rem" opacity={width < 400 ? 0 : 0.3} _hover={{opacity: 0.3}} cursor="pointer" px="2px" className={toolbarOpen ? "color-text" : null} py="2" zIndex={1}>
-                            <FaFilter />
-                        </Box>}
-                    <Box height={props.height} width={width > 400 ? props.width - (toolbarOpen ? options.toolbar.width : 1) : width} transition="all 0.3s">
-                        {showChart && <Box className="alert-panel-chart" height={options.chart.height}>
-                            <LogChart data={chartData} panel={panel} width={props.width - (toolbarOpen ? options.toolbar.width : 1)} viewOptions={viewOptions} onSelectLabel={onSelectLabel} activeLabels={active} />
-                            <Divider mt="3" />
-                        </Box>}
-                        <VStack alignItems="left" divider={<StackDivider />} mt={showChart ? 3 : 1} spacing={1}>
-                            {
-                                sortedData.map(rule => <AlertRuleItem rule={rule} panel={panel} collapsed={collaseAll} onSelectLabel={onSelectLabel} width={width} />)
-                            }
-                        </VStack>
-                    </Box>
-                    { width > 400 &&  <Box className={toolbarOpen ? "bordered-left" : null} width={toolbarOpen ? options.toolbar.width : 0} transition="all 0.3s" py="2">
-                        {toolbarOpen  && <AlertToolbar active={active} labels={[]} panel={panel} onCollapseAll={onCollapseAll} onSearchChange={onSearchChange} height={props.height} onActiveLabel={onActiveLabel} rulesCount={filterData.length} alertsCount={alertsCount} onViewLogChange={onViewOptionsChange} viewOptions={viewOptions} />}
+                {options.toolbar.show && width > 400 &&
+                    <Box position="absolute" right="2" top={toolbarOpen ? 2 : 0} onClick={onToobarOpen} fontSize="0.7rem" opacity={width < 400 ? 0 : 0.3} _hover={{ opacity: 0.3 }} cursor="pointer" px="2px" className={toolbarOpen ? "color-text" : null} py="2" zIndex={1}>
+                        <FaFilter />
                     </Box>}
-                </Flex>
-            
+                <Box height={props.height} width={width > 400 ? props.width - (toolbarOpen ? options.toolbar.width : 1) : width} transition="all 0.3s">
+                    {showChart && <Box className="alert-panel-chart" height={options.chart.height}>
+                        <LogChart data={chartData} panel={panel} width={props.width - (toolbarOpen ? options.toolbar.width : 1)} viewOptions={viewOptions} onSelectLabel={onSelectLabel} activeLabels={active} />
+                        <Divider mt="3" />
+                    </Box>}
+                    <VStack alignItems="left" divider={<StackDivider />} mt={showChart ? 3 : 1} spacing={1}>
+                        {
+                            sortedData.map(rule => <AlertRuleItem rule={rule} panel={panel} collapsed={collaseAll} onSelectLabel={onSelectLabel} width={width} />)
+                        }
+                    </VStack>
+                </Box>
+                {width > 400 && <Box className={toolbarOpen ? "bordered-left" : null} width={toolbarOpen ? options.toolbar.width : 0} transition="all 0.3s" py="2">
+                    {toolbarOpen && <AlertToolbar active={active} labels={[]} panel={panel} onCollapseAll={onCollapseAll} onSearchChange={onSearchChange} height={props.height} onActiveLabel={onActiveLabel} rulesCount={filterData.length} alertsCount={alertsCount} onViewLogChange={onViewOptionsChange} viewOptions={viewOptions} />}
+                </Box>}
+            </Flex>
+
         }
         {
-            viewMode == "stat" &&     <Box className="alert-stat-view" height={props.height} width={props.width}>
-                    <AlertStatView   {...props} data={filterData} />
-                   
-                </Box>
+            viewMode == "stat" && <Box className="alert-stat-view" height={props.height} width={props.width}>
+                <AlertStatView   {...props} data={filterData} />
+
+            </Box>
         }
-        {(viewMode == "stat" || width < 400) && <Box position="absolute" right="2" top="1" opacity={width < 400 ? 0 : 1}  _hover={{opacity: 1}} color={viewMode == "stat" ? getTextColorForAlphaBackground(paletteColorNameToHex(options.stat.color), colorMode == "dark") : "inherit"} cursor="pointer" onClick={() => onViewOptionsChange({ ...viewOptions, viewMode: viewOptions.viewMode == "list" ? "stat" : "list" })} pb="2"><AiOutlineSwitcher /></Box>}
+        {(viewMode == "stat" || width < 400) && <Box position="absolute" right="2" top="1" opacity={width < 400 ? 0 : 1} _hover={{ opacity: 1 }} color={viewMode == "stat" ? getTextColorForAlphaBackground(paletteColorNameToHex(options.stat.color), colorMode == "dark") : "inherit"} cursor="pointer" onClick={() => onViewOptionsChange({ ...viewOptions, viewMode: viewOptions.viewMode == "list" ? "stat" : "list" })} pb="2"><AiOutlineSwitcher /></Box>}
     </Box>
     )
 }

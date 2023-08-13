@@ -45,5 +45,4 @@ export interface MenuItem {
     dashboardId: string
     icon?: string
     children?: MenuItem[]
-    expanded?: boolean
 }

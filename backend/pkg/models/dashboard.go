@@ -21,8 +21,11 @@ import (
 	"github.com/DataObserve/datav/backend/pkg/utils/simplejson"
 )
 
-// you mustn't change the id of home dashboarda, is's reversed
 const HomeDashboardId = "d-home"
+const AlertDashbordId = "d-alert"
+
+// you mustn't change the id of home dashboarda, is's reversed
+var ReservedDashboardId = []string{HomeDashboardId, AlertDashbordId}
 
 type Dashboard struct {
 	Id       string `json:"id"`

@@ -15,10 +15,10 @@ import { DatasourceType } from "types/dashboard"
 
 // limitations under the License.
 export interface AlertToolbarOptions {
-    maxBars: number
-    barType: "labels" | "total"
+    maxBars?: number
+    barType?: "labels" | "total"
     viewMode?: "list" | "stat"
-    persist: boolean
+    persist?: boolean
     stateFilter?: AlertState[]
     ruleNameFilter?: string
     ruleLabelsFilter?: string
