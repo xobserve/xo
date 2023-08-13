@@ -68,7 +68,7 @@ const PageContainer = (props) => {
 
   const loadSidemenu = async () => {
     const res = await requestApi.get(`/team/sidemenu/${session.user.sidemenu}`)
-    setSidemenu(res.data.data)
+    setSidemenu(res.data.data.filter((item) => !item.hidden))
   }
 
   return (sidemenu && <Container {...props} sidemenu={sidemenu} session={session} />)
@@ -94,7 +94,6 @@ const Container = ({ children, sidemenu, session }: Props) => {
     { title: t.configuration, icon: "FaCog", url: `${ReserveUrls.Config}/datasources`, isActive: asPath.startsWith(ReserveUrls.Config) },
     { title: t.alert, icon: "FaBell", url: `${ReserveUrls.Alerts}`, isActive: asPath.startsWith(ReserveUrls.Alerts) },
     { title: t1.search, icon: "FaSearch", url: `${ReserveUrls.Search}`, isActive: asPath.startsWith(ReserveUrls.Search) },
-
   ]
 
   const paddingLeft = 16

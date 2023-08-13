@@ -31,6 +31,7 @@ const DashboardPage = ({sideWidth}) => {
     useEffect(() => {
         if (rawId) {
             setDashboardId(null)
+            setError(null)
             let path = window.location.pathname;
             // if rawId  starts with 'd-', then it's a dashboard id
             // otherwise, it's just a pathname defined in team's sidemenu, we need to get the real dashboard id
