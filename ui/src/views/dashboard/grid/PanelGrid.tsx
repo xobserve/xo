@@ -46,7 +46,7 @@ import lodash from 'lodash'
 import moment from "moment";
 import { paletteColorNameToHex } from "utils/colors";
 import { isEmpty } from "utils/validate";
-import { run_loki_query } from "../plugins/datasource/loki/query_runner";
+import { query_loki_alerts, run_loki_query } from "../plugins/datasource/loki/query_runner";
 import { $variables } from "src/views/variables/store";
 import { getDatasource } from "utils/datasource";
 import { parseVariableFormat } from "utils/format";
@@ -432,13 +432,13 @@ const queryAlerts = async (panel:Panel, timeRange: TimeRange) => {
     }
     for (const dsID of panel.plugins.alert.filter.datasources) {
         const ds = datasources.find(ds => ds.id === dsID)
-        console.log("here3333333:",dsID, ds)
         let res
         switch (ds.type) {
             case DatasourceType.Prometheus:
                 res = await query_prometheus_alerts(panel, timeRange, ds)
                 break;
             case DatasourceType.Loki:
+                res = await query_loki_alerts(panel, timeRange, ds)
                 break
             case DatasourceType.TestData:
                 res =  query_testdata_alerts(panel, timeRange, ds)

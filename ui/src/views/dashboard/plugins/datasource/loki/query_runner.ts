@@ -247,3 +247,21 @@ export const checkAndTestLoki = async (ds: Datasource) => {
         return error.message
     }
 }
+
+
+export const query_loki_alerts = async (panel:Panel, timeRange: TimeRange, ds:Datasource) => {
+    const res: any = await requestApi.get(`/proxy/${ds.id}/api/v1/rules?type=alert`)
+    if (res.status !== "success") {
+        console.log("Failed to fetch data from prometheus", res)
+        return {
+            error: `${res.errorType}: ${res.error}`,
+            data: []
+        }
+    }
+    
+    res.data.fromDs = ds.type
+    return {
+        error: null,
+        data: res.data,
+    }
+}
