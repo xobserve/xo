@@ -126,6 +126,7 @@
   "sidebar": {
     "search": "探索仪表盘",
     "selectSidemenu": "选择侧菜单",
+    "selectSideMenuTips": "你想使用哪个团队的侧面菜单栏?",
     "themeChange": "深浅色主题",
     "accountSetting": "个人设置",
     "adminPanel": "管理员面板",

@@ -76,7 +76,7 @@ const UserSidemenus = ({miniMode}) => {
                 <PopoverContent width="fit-content" minWidth="120px" border="null" pl="1">
 
                     <PopoverBody>
-                        <CardSelect title="Select a team sidemenu you want to use">
+                        <CardSelect title={t1.selectSideMenuTips}>
                             {sidemenus.map(sidemenu => 
                                 <CardSelectItem key={sidemenu.teamId} selected={session?.user.sidemenu == sidemenu.teamId} onClick={() => selectSidemenu(sidemenu.teamId)}>
                                     <Heading size='xs' textTransform='uppercase'>
