@@ -4,6 +4,9 @@ import { PanelBorderType, PanelDecorationType } from "types/panel/styles";
 import { globalTeamId } from "types/teams";
 import { isEmpty } from "utils/validate";
 
+export const HomeDashboardId = "d-home"
+export const AlertDashbordId = "d-alert"
+
 export const initDashboard = (team?): Dashboard => {
     return {
         id: "",

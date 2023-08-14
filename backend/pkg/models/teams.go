@@ -26,6 +26,15 @@ const (
 	GlobalTeamName = "global"
 )
 
+var InitTeamMenu = []map[string]interface{}{
+	{
+		"title":       "Home",
+		"url":         "/home",
+		"icon":        "FaHome",
+		"dashboardId": HomeDashboardId,
+	},
+}
+
 type Team struct {
 	Id          int64     `json:"id"`
 	Name        string    `json:"name"`

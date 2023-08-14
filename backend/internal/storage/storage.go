@@ -161,22 +161,7 @@ func initTables() error {
 	}
 
 	// insert global sidemenu
-	menu := []map[string]interface{}{
-		{
-			"title":       "Home",
-			"url":         "/home",
-			"icon":        "FaHome",
-			"dashboardId": models.HomeDashboardId,
-		},
-		{
-			"title":       "Alert",
-			"url":         "/alert",
-			"icon":        "FaBell",
-			"dashboardId": models.AlertDashbordId,
-			"hidden":      true,
-		},
-	}
-	menuStr, err := json.Marshal(menu)
+	menuStr, err := json.Marshal(models.InitTeamMenu)
 	if err != nil {
 		log.RootLogger.Crit("json encode default menu error ", "error:", err)
 		return err

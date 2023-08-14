@@ -19,6 +19,7 @@ import { dashboardMsg } from "src/i18n/locales/en"
 import DashboardWrapper from "src/views/dashboard/Dashboard"
 import { requestApi } from "utils/axios/request"
 import NotFoundPage from "../NotFound"
+import { AlertDashbordId } from "src/data/dashboard"
 
 
 interface Props {
@@ -33,16 +34,21 @@ const DashboardPage = memo(({sideWidth}: Props) => {
     const [error, setError] = useState(null)
     useEffect(() => {
         if (rawId) {
-            setDashboardId(null)
             setError(null)
-            let path = window.location.pathname;
-            // if rawId  starts with 'd-', then it's a dashboard id
-            // otherwise, it's just a pathname defined in team's sidemenu, we need to get the real dashboard id
-            if (path.startsWith('/d-')) {
-                setDashboardId(path.substring(1))
-            } else {
-                load(path)
+            if (rawId == 'alert') {
+                setDashboardId(AlertDashbordId)
+            } else  {
+                setDashboardId(null)
+                let path = window.location.pathname;
+                // if rawId  starts with 'd-', then it's a dashboard id
+                // otherwise, it's just a pathname defined in team's sidemenu, we need to get the real dashboard id
+                if (path.startsWith('/d-')) {
+                    setDashboardId(path.substring(1))
+                } else {
+                    load(path)
+                }
             }
+           
         }
     }, [rawId])
 

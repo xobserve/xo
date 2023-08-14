@@ -299,17 +299,9 @@ func AddNewTeam(c *gin.Context) {
 		return
 	}
 
-	// copy global team's sidemenu to new team
-	gMenu, err := models.QuerySideMenu(0, models.GlobalTeamId)
-	if err != nil {
-		logger.Warn("query team sidemenu error", "error", err)
-		c.JSON(500, common.RespInternalError())
-		return
-	}
-
-	data, _ := json.Marshal(gMenu.Data)
+	data, _ := json.Marshal(models.InitTeamMenu)
 	_, err = tx.Exec("INSERT INTO sidemenu (team_id,is_public,brief,data,created_by,created,updated) VALUES (?,?,?,?,?,?,?)",
-		id, false, "team's sidemenu,copied from global team initially", data, u.Id, now, now)
+		id, false, req.Name+" team's sidemenu", data, u.Id, now, now)
 	if err != nil {
 		logger.Error("create sidemenu error", "error", err)
 		c.JSON(500, common.RespInternalError())

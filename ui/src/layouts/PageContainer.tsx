@@ -42,6 +42,7 @@ import { isEmpty } from "utils/validate"
 import Search from "src/views/search/Search"
 import { Session } from "types/user"
 import PopoverTooltip from "components/PopoverTooltip"
+import { HomeDashboardId } from "src/data/dashboard"
 
 const miniWidth = 65
 const navSize = 16
@@ -168,7 +169,7 @@ const Container = ({ children, sidemenu, session }: Props) => {
             </Box>
           })}
         
-          {session && !sidemenu.some(nav => nav.dashboardId != 'd-home') &&  <>
+          {session && !sidemenu.some(nav => nav.dashboardId != HomeDashboardId) &&  <>
             <Divider mt={miniMode ? 2 : 3} />
             <Box mt={miniMode ? 2 : 3}><NavItem fontSize={navSize-1} text={t1.newItem} url={`/cfg/team/${session.user.sidemenu}/sidemenu`} miniMode={miniMode} icon="FaPlus" /></Box>
           </>}

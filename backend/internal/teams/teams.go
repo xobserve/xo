@@ -450,6 +450,12 @@ func DeleteTeam(c *gin.Context) {
 		c.JSON(500, common.RespInternalError())
 	}
 
+	_, err = tx.Exec("DELETE FROM sidemenu WHERE team_id=?", teamId)
+	if err != nil {
+		logger.Warn("delete team sidemenu error", "error", err)
+		c.JSON(500, common.RespInternalError())
+	}
+
 	err = tx.Commit()
 	if err != nil {
 		logger.Warn("commit sql transaction error", "error", err)
