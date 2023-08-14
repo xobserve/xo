@@ -141,9 +141,9 @@ const DashboardWrapper = ({ dashboardId, sideWidth }) => {
         setDashboard(f)
     }, [])
 
-
+    const hidingVars = dashboard?.data?.hidingVars?.split(',')
     const visibleVars = vars.filter(v => {
-        return !v.id.toString().startsWith("d-") && !find(dashboard?.data?.hidingVars?.split(','),v1 => v1 == v.name)
+        return v.id.toString().startsWith("d-") || !v.id.toString().startsWith("d-") && !find(hidingVars,v1 => v1 == v.name)
     })
 
 
