@@ -11,7 +11,7 @@ import (
 )
 
 func QueryAuditLogs(c *gin.Context) {
-	rows, err := db.Conn.Query("SELECT op_id,op_type,target_id,data,created FRROM audit_logs ORDER BY created DESC")
+	rows, err := db.Conn.Query("SELECT op_id,op_type,target_id,data,created FROM audit_logs ORDER BY created DESC")
 	if err != nil {
 		logger.Warn("query audit logs error", "error", err)
 		c.JSON(500, common.RespInternalError())

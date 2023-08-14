@@ -13,7 +13,7 @@
 
 import { useStore } from "@nanostores/react"
 import Page from "layouts/page/Page"
-import React, { useState } from "react"
+import React, { useEffect, useState } from "react"
 import { adminLinks } from "src/data/nav-links"
 import { commonMsg } from "src/i18n/locales/en"
 import { MdOutlineAdminPanelSettings } from "react-icons/md"
@@ -21,11 +21,19 @@ import { Box, Button, Input, VStack } from "@chakra-ui/react"
 import FormItem from "components/form/Item"
 
 import { config } from "src/data/configs/config"
+import { requestApi } from "utils/axios/request"
 export const AdminPage = () => {
     const t = useStore(commonMsg)
-
     const [settings, setSettings] = useState(null)
 
+    useEffect(() => {
+        load()
+    },[])
+
+    const load = async () => {
+        const res = await requestApi.get("/admin/auditlogs")
+        
+    }
     return <Page title={t.Admin} subTitle={"Manage datav settings"} icon={<MdOutlineAdminPanelSettings  />} tabs={adminLinks}>
             <Box maxW="600px">
                 <VStack alignItems="left" spacing={4}>
