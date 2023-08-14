@@ -28,18 +28,6 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func QuerySideMenu(id int64, teamId int64) (*models.SideMenu, error) {
-	menu := &models.SideMenu{}
-	var rawJson []byte
-	err := db.Conn.QueryRow("SELECT team_id,is_public,brief,data from sidemenu WHERE id=? or team_id=?", id, teamId).Scan(&menu.TeamId, &menu.IsPublic, &menu.Brief, &rawJson)
-	if err != nil {
-		return nil, err
-	}
-
-	json.Unmarshal(rawJson, &menu.Data)
-	return menu, nil
-}
-
 func GetSideMenu(c *gin.Context) {
 	teamId, _ := strconv.ParseInt(c.Param("id"), 10, 64)
 	if teamId == 0 {
@@ -47,7 +35,7 @@ func GetSideMenu(c *gin.Context) {
 		return
 	}
 
-	menu, err := QuerySideMenu(0, teamId)
+	menu, err := models.QuerySideMenu(0, teamId)
 	if err != nil {
 		if err != sql.ErrNoRows {
 			logger.Error("query side menu error", "error", err)
@@ -164,7 +152,7 @@ func GetAvailableSidMenusForUser(c *gin.Context) {
 	sidemenus := make([]*models.SideMenu, 0)
 
 	for _, tid := range teamIds {
-		sm, err := QuerySideMenu(0, tid)
+		sm, err := models.QuerySideMenu(0, tid)
 		if err != nil {
 			if err != sql.ErrNoRows {
 				logger.Error("query sidemenu error", "teamId:", tid, "error", err)
@@ -205,7 +193,7 @@ func SelectSideMenuForUser(c *gin.Context) {
 func GetCurrentSidemenu(c *gin.Context) {
 	u := user.CurrentUser(c)
 
-	menu, err := QuerySideMenu(u.SideMenu, 0)
+	menu, err := models.QuerySideMenu(u.SideMenu, 0)
 	if err != nil {
 		if err != sql.ErrNoRows {
 			logger.Warn("query sidemenu error", "error", err)

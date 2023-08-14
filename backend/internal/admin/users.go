@@ -19,7 +19,6 @@ import (
 	"strconv"
 	"time"
 
-	"github.com/DataObserve/datav/backend/internal/teams"
 	"github.com/DataObserve/datav/backend/internal/user"
 	"github.com/DataObserve/datav/backend/pkg/common"
 	"github.com/DataObserve/datav/backend/pkg/db"
@@ -301,7 +300,7 @@ func AddNewTeam(c *gin.Context) {
 	}
 
 	// copy global team's sidemenu to new team
-	gMenu, err := teams.QuerySideMenu(0, models.GlobalTeamId)
+	gMenu, err := models.QuerySideMenu(0, models.GlobalTeamId)
 	if err != nil {
 		logger.Warn("query team sidemenu error", "error", err)
 		c.JSON(500, common.RespInternalError())

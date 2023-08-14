@@ -14,6 +14,7 @@ package models
 
 import (
 	"database/sql"
+	"encoding/json"
 	"time"
 
 	"github.com/DataObserve/datav/backend/pkg/db"
@@ -150,4 +151,16 @@ type SideMenu struct {
 	TeamName string      `json:"teamName"`
 	Brief    string      `json:"brief"`
 	Data     interface{} `json:"data"`
+}
+
+func QuerySideMenu(id int64, teamId int64) (*SideMenu, error) {
+	menu := &SideMenu{}
+	var rawJson []byte
+	err := db.Conn.QueryRow("SELECT team_id,is_public,brief,data from sidemenu WHERE id=? or team_id=?", id, teamId).Scan(&menu.TeamId, &menu.IsPublic, &menu.Brief, &rawJson)
+	if err != nil {
+		return nil, err
+	}
+
+	json.Unmarshal(rawJson, &menu.Data)
+	return menu, nil
 }
