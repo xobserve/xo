@@ -129,7 +129,10 @@ const DashboardWrapper = ({ dashboardId, sideWidth }) => {
     const setDashboardVariables = async (dash) => {
         const dashVars = cloneDeep(dash.data.variables)
         setVariableSelected(dashVars)
-        $variables.set([...$variables.get(), ...dashVars])
+        const oldVars = $variables.get()
+        const gVars = oldVars.filter(v => !v.id.toString().startsWith("d-"))
+
+        $variables.set([...gVars, ...dashVars])
     }
 
 
@@ -145,7 +148,6 @@ const DashboardWrapper = ({ dashboardId, sideWidth }) => {
     const visibleVars = vars.filter(v => {
         return v.id.toString().startsWith("d-") || !v.id.toString().startsWith("d-") && !find(hidingVars,v1 => v1 == v.name)
     })
-
 
     const headerHeight = fullscreen ? 0 : (visibleVars.length > 0 ? DashboardHeaderHeight :  (DashboardHeaderHeight - 25) ) + 7
     return (<>
