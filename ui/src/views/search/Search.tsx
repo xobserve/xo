@@ -12,7 +12,7 @@
 // limitations under the License.
 
 import { Box, Flex, HStack, IconButton, Input, Modal, ModalBody, ModalContent, ModalHeader, Text, Tooltip, VStack, useColorModeValue, useDisclosure } from "@chakra-ui/react"
-import React, { memo, useMemo, useState } from "react"
+import React, { memo, useEffect, useMemo, useState } from "react"
 import { FaAlignJustify, FaBuffer, FaSearch, FaSitemap, FaTimes } from "react-icons/fa"
 import { Dashboard } from "types/dashboard"
 import { requestApi } from "utils/axios/request"
@@ -27,6 +27,7 @@ import ListView from "./ListView"
 import TeamsView from "./TeamsView"
 import TagsView from "./TagsView"
 import PopoverTooltip from "components/PopoverTooltip"
+import { useLocation } from "react-router-dom"
 
 interface Props {
     title: string
@@ -37,6 +38,7 @@ interface Props {
 }
 const Search = memo((props: Props) => {
     const { title, miniMode, fontSize = 15, fontWeight = 400, sideWidth = 0 } = props
+    const location = useLocation()
     const [query, setQuery] = useState<string>(null)
     const [caseSensitive, setCaseSensitive] = useState<boolean>(false)
     const [rawDashboards, setRawDashboards] = useState<Dashboard[]>(null)
@@ -48,6 +50,10 @@ const Search = memo((props: Props) => {
     const [starredDashIds, setStarredDashIds] = useState<Set<string>>(new Set())
     const [layout, setLayout] = useState<"teams" | "list" | "tags">("teams")
 
+    useEffect(() => {
+        onClose()
+    },[location])
+    
     const load = async () => {
         const res = await requestApi.get("/teams/all")
         setTeams(res.data)
