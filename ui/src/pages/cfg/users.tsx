@@ -170,6 +170,7 @@ const UsersPage = () => {
             duration: 3000,
             isClosable: true,
         })
+        load()
     }
 
     return <>
