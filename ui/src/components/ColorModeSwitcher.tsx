@@ -32,12 +32,12 @@ export const ColorModeSwitcher: React.FC<ColorModeSwitcherProps & { miniMode: bo
   const text = useColorModeValue("dark", "light")
   const { colorMode } = useColorMode()
 
-  const textComponent = <Text fontSize="0.95rem">{t1.themeChange}</Text>
+  const textComponent = <Text fontSize="1rem">{t1.themeChange}</Text>
   return (
     <PopoverTooltip
       trigger={disableTrigger ? null : (miniMode ? "hover" : null)}
       offset={[0, 14]}
-      triggerComponent={<HStack cursor="pointer" onClick={toggleColorMode} className="hover-text">
+      triggerComponent={<HStack cursor="pointer" onClick={toggleColorMode} className="hover-text" spacing={3}>
         {miniMode ? <IconButton
           size="md"
           fontSize="lg"

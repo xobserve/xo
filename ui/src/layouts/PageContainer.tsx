@@ -184,7 +184,7 @@ const Container = ({ children, sidemenu, session }: Props) => {
             })}
 
             <Divider />
-            <Box color={textColor}><ColorModeSwitcher miniMode={miniMode} /></Box>
+            {/* <Box color={textColor}><ColorModeSwitcher miniMode={miniMode} /></Box> */}
             {!isEmpty(config.repoUrl) && <Box><NavItem text="Github" icon="FaGithub" miniMode={miniMode} url={config.repoUrl} /></Box>}
             <UserMenu miniMode={miniMode} />
           </VStack>

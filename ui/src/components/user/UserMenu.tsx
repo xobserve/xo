@@ -24,7 +24,8 @@ import {
     useToast,
     Text,
     HStack,
-    Portal
+    Portal,
+    Box
 } from "@chakra-ui/react"
 import useSession from "hooks/use-session"
 import storage from "utils/localStorage"
@@ -38,6 +39,7 @@ import { localeSetting, locale } from "src/i18n/i18n"
 import { useStore } from "@nanostores/react"
 import { commonMsg, sidebarMsg } from "src/i18n/locales/en"
 import UserSidemenus from "components/team/UserSidemenus"
+import { ColorModeSwitcher } from "components/ColorModeSwitcher"
 
 const UserMenu = ({ fontSize = "1.2rem", miniMode }) => {
     const t = useStore(commonMsg)
@@ -98,8 +100,10 @@ const UserMenu = ({ fontSize = "1.2rem", miniMode }) => {
                             </MenuItem>
                             <MenuDivider />
                             {isAdmin(session.user.role) && <><Link to={`/admin/audit`}><MenuItem icon={<FaStar fontSize="1rem" />} >{t1.adminPanel}</MenuItem></Link><MenuDivider /></>}
+                            <MenuItem><Box><ColorModeSwitcher miniMode={false} /></Box></MenuItem>
                             <MenuItem onClick={() => changeLang()} icon={<FaFont fontSize="1rem" />}>{t1.currentLang} - {locale.get() == "en" ? "English" : "简体中文"}</MenuItem>
                             <MenuItem mt="2px" >    <UserSidemenus miniMode={false} /></MenuItem>
+                            <MenuDivider />
                             <Link to={`/account/setting`}><MenuItem icon={<FaRegSun fontSize="1rem" />}>{t1.accountSetting}</MenuItem></Link>
                             <MenuItem onClick={() => logout()} icon={<FaSignOutAlt fontSize="1rem" />}>{t.logout}</MenuItem>
 
