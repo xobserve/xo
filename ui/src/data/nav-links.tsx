@@ -35,7 +35,7 @@ export const navLinks: Route[] = [
 
 export const accountLinks = [
     {
-        title: 'Setting',
+        title: 'user',
         url: '/account/setting',
         baseUrl: '/account/setting',
         icon: <FaUserEdit />
