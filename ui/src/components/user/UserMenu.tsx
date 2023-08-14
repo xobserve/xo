@@ -97,7 +97,7 @@ const UserMenu = ({ fontSize = "1.2rem", miniMode }) => {
                                 <chakra.span ml="2" layerStyle="textSecondary">{session.user.username}</chakra.span>
                             </MenuItem>
                             <MenuDivider />
-                            {isAdmin(session.user.role) && <><Link to={`/admin`}><MenuItem icon={<FaStar fontSize="1rem" />} >{t1.adminPanel}</MenuItem></Link><MenuDivider /></>}
+                            {isAdmin(session.user.role) && <><Link to={`/admin/audit`}><MenuItem icon={<FaStar fontSize="1rem" />} >{t1.adminPanel}</MenuItem></Link><MenuDivider /></>}
                             <MenuItem onClick={() => changeLang()} icon={<FaFont fontSize="1rem" />}>{t1.currentLang} - {locale.get() == "en" ? "English" : "简体中文"}</MenuItem>
                             <MenuItem mt="2px" >    <UserSidemenus miniMode={false} /></MenuItem>
                             <Link to={`/account/setting`}><MenuItem icon={<FaRegSun fontSize="1rem" />}>{t1.accountSetting}</MenuItem></Link>

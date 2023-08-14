@@ -12,7 +12,7 @@
 // limitations under the License.
 
 import { useStore } from "@nanostores/react"
-import React from "react"
+import React, { memo } from "react"
 import { useEffect, useState } from "react"
 import { useParams } from "react-router-dom"
 import { dashboardMsg } from "src/i18n/locales/en"
@@ -21,8 +21,11 @@ import { requestApi } from "utils/axios/request"
 import NotFoundPage from "../NotFound"
 
 
+interface Props {
+    sideWidth: number
+}
 // page for dispaly dashboard
-const DashboardPage = ({sideWidth}) => {
+const DashboardPage = memo(({sideWidth}: Props) => {
     const t1 = useStore(dashboardMsg)
     const params = useParams()
     const rawId = params.dashboardId
@@ -80,7 +83,7 @@ const DashboardPage = ({sideWidth}) => {
             {error && <NotFoundPage message={error} />}
         </>
     )
-}
+})
 
 export default DashboardPage
 

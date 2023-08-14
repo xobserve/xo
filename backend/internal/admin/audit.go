@@ -27,6 +27,7 @@ func QueryAuditLogs(c *gin.Context) {
 			logger.Warn("scan audit logs error", "error", err)
 			continue
 		}
+		log.Operator, _ = models.QueryUserById(log.OpId)
 		log.Data = string(rawData)
 		logs = append(logs, log)
 	}

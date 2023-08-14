@@ -45,8 +45,8 @@ export const accountLinks = [
 export const adminLinks = [
     {
         title: 'Admin',
-        url: '/admin',
-        baseUrl: '/admin',
+        url: '/admin/audit',
+        baseUrl: '/admin/audit',
         icon: <MdOutlineAdminPanelSettings />
     }
 ]

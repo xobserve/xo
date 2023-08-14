@@ -3,7 +3,7 @@ package models
 import "time"
 
 type AuditLog struct {
-	OpId     int64       `json:"OpId"`
+	OpId     int64       `json:"opId"`
 	Operator *User       `json:"op"`
 	OpType   string      `json:"opType"`
 	TargetId string      `json:"targetId"`

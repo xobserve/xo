@@ -30,7 +30,7 @@ import TestPage from "./pages/Test";
 import loadable from '@loadable/component';
 import PageContainer from "layouts/PageContainer";
 import { Navigate } from "react-router-dom";
-import AdminPage from "./pages/admin";
+import AdminPage from "./pages/admin/AuditLogs";
 
 
 const DashboardPage = loadable(() => import('./pages/dashboard/index'));
@@ -92,7 +92,7 @@ const newRoutes = [
 
 const adminRoutes = [
   {
-    path: "/admin",
+    path: "/admin/audit",
     element: pageContainer(<AdminPage />),
   },
 ]
