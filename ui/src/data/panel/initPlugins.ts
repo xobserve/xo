@@ -439,6 +439,13 @@ function registerEvents(options, chart) {
             filter: {
                 state: [AlertState.Firing,AlertState.Pending],
                 datasources: [InitTestDataDatasourceId],
+                httpQuery: {
+                    id: 65, 
+                    metrics: '',
+                    legend: '',
+                    data: {},
+                    visible: true
+                },
                 ruleLabel: '',
                 alertLabel: '',
                 ruleName: '',

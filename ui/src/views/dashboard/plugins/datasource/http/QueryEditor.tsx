@@ -16,20 +16,20 @@ import { Form } from "components/form/Form"
 import FormItem from "components/form/Item"
 import { cloneDeep, isEmpty, set } from "lodash"
 import { useEffect, useState } from "react"
-import { PanelQuery } from "types/dashboard"
-import { Datasource, DatasourceEditorProps } from "types/datasource"
+import { PanelQuery, PanelType } from "types/dashboard"
+import { DatasourceEditorProps } from "types/datasource"
 import React from "react";
 import { useStore } from "@nanostores/react"
 import { httpDsMsg } from "src/i18n/locales/en"
 
-const HttpQueryEditor = ({ datasource, query, onChange }: DatasourceEditorProps) => {
+const HttpQueryEditor = ({panel, datasource, query, onChange }: DatasourceEditorProps) => {
     const t1 = useStore(httpDsMsg)
     const [tempQuery, setTempQuery] = useState<PanelQuery>(cloneDeep(query))
     useEffect(() => {
         if (isEmpty(tempQuery.data.transformResult)) {
             setTempQuery({
                 ...tempQuery, data: {
-                    ...tempQuery.data, transformResult: initTransformResult
+                    ...tempQuery.data, transformResult: initTransformResult 
                 }
             })
             onChange(cloneDeep(tempQuery))
@@ -44,10 +44,10 @@ const HttpQueryEditor = ({ datasource, query, onChange }: DatasourceEditorProps)
             onChange(cloneDeep(tempQuery))
         }
     }, [])
-
+    const size = panel?.type == PanelType.Alert ? "sm" : "md"
     return (<>
         <Form spacing={1}>
-            <FormItem title="URL" labelWidth="200px">
+            <FormItem title="URL" labelWidth={size == "md" ? "200px" : "60px"} size={size}>
                 <Input
                     value={tempQuery.metrics}
                     onChange={(e) => {
@@ -55,18 +55,18 @@ const HttpQueryEditor = ({ datasource, query, onChange }: DatasourceEditorProps)
                     }}
                     onBlur={() => onChange(tempQuery)}
                     placeholder={t1.remoteHttp}
-                    size="sm"
+                    size={size}
                 />
             </FormItem>
 
-            <FormItem title={t1.reqTransform} labelWidth="200px" desc={t1.reqTransformTips}>
+            <FormItem title={t1.reqTransform} size={size} labelWidth={size == "md" ? "200px" : "150px"} desc={t1.reqTransformTips} alignItems="center">
                 <CodeEditorModal value={tempQuery.data.transformRequest} onChange={v => {
                     tempQuery.data.transformRequest = v
                     onChange(tempQuery)
                 }} />
             </FormItem>
 
-            <FormItem title={t1.respTransform} labelWidth="200px" desc={t1.respTransformTips}>
+            <FormItem title={t1.respTransform} size={size} labelWidth={size == "md" ? "200px" : "150px"} desc={t1.respTransformTips} alignItems="center">
                 <CodeEditorModal value={tempQuery.data.transformResult} onChange={v => {
                     tempQuery.data.transformResult = v
                     onChange(tempQuery)
@@ -89,74 +89,10 @@ const initTransformRequest =
     return newUrl
 }`
 
+
+
 const initTransformResult =
-    `function transformResult(httpResult, query, startTime, endTime) {
-console.log("here33333 result:", httpResult)
-const data = httpResult.data
-let res = []
-if (data.resultType === "matrix") {
-for (const m of data.result) {
-const metric = JSON.stringify(m.metric).replace(/:/g, '=')
-
-const timeValues = []
-const valueValues = []
-
-if (!_.isEmpty(m.values)) {
-let start = startTime
-if (m.values[0][0] <= start) {
-start = _.round(m.values[0][0])
-}
-
-m.values.forEach((v, i) => {
-if (i == 0) {
-    if (_.round(v[0]) == start) {
-        timeValues.push(start)
-        valueValues.push(v[1])
-    } else if (_.round(v[0]) > start) {
-        timeValues.push(start)
-        valueValues.push(null)
-    }
-}
-
-
-const lastTs = _.last(timeValues)
-
-for (let i = lastTs + query.interval; i <= v[0]; i += query.interval) {
-    if (i < v[0]) {
-        timeValues.push(i)
-        valueValues.push(null)
-    } else {
-        timeValues.push(v[0])
-        valueValues.push(v[1])
-    }
-}
-})
-}
-
-
-const series = {
-
-name: metric,
-length: m.values.length,
-fields: [
-{
-    name: "Time",
-    type: "time",
-    values: timeValues,
-},
-{
-    name: "Value",
-    type: "number",
-    values: valueValues,
-    labels: m.metric
-}
-],
-}
-
-
-res.push(series)
-}
-}
-return res
+`function transformResult(httpResult, query, startTime, endTime) {
+    console.log("here33333 result:", httpResult)
+    return httpResult
 }`
-

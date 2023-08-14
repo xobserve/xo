@@ -443,6 +443,10 @@ const queryAlerts = async (panel:Panel, timeRange: TimeRange) => {
             case DatasourceType.TestData:
                 res =  query_testdata_alerts(panel, timeRange, ds)
                 break
+            case DatasourceType.ExternalHttp:
+                res = await run_http_query(panel,panel.plugins.alert.filter.httpQuery, timeRange, ds)
+                console.log("here33333:",res)
+                break
             default:
                 break;
         }

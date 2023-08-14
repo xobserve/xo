@@ -16,14 +16,21 @@ import { Variable } from "types/variable"
 import { Panel, PanelQuery } from "types/dashboard"
 import { TimeRange } from "types/time"
 import { genDynamicFunction } from "utils/dynamicCode"
-import { isEmpty, isFunction, round } from "lodash"
+import {  isFunction, round } from "lodash"
 import _ from 'lodash'
 import { getNewestTimeRange } from "components/DatePicker/TimePicker"
 import { isJSON } from "utils/is"
 import { replaceWithVariables } from "utils/variable"
 import { requestApi } from "utils/axios/request"
+import { isEmpty } from "utils/validate"
 
 export const run_http_query = async (panel: Panel, q: PanelQuery, range: TimeRange, ds: Datasource) => {
+    if (isEmpty(q.metrics.trim())) {
+        return {
+            error: null,
+            data: []
+        }
+    }
     //@todo: 
     // 1. rather than query directyly to prometheus, we should query to our own backend servie
     // 2. using `axios` instead of `fetch`
@@ -50,7 +57,7 @@ export const run_http_query = async (panel: Panel, q: PanelQuery, range: TimeRan
     if (!isEmpty(q.data.transformResult)) {
         const transformResult = genDynamicFunction(q.data.transformResult);
         if (isFunction(transformResult)) {
-            result = transformResult(res, q, start, end)
+            return  transformResult(res, q, start, end)
         } else {
             return {
                 error: 'transformResult is not a valid function',

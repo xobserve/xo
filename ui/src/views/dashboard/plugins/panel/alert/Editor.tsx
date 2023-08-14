@@ -10,12 +10,12 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-import { Button, Switch, Textarea } from "@chakra-ui/react"
+import { Box, Button, Switch, Textarea } from "@chakra-ui/react"
 import { EditorInputItem, EditorNumberItem } from "components/editor/EditorItem"
 import RadionButtons from "components/RadioButtons"
 import PanelAccordion from "src/views/dashboard/edit-panel/Accordion"
 import PanelEditItem from "src/views/dashboard/edit-panel/PanelEditItem"
-import { Panel, PanelEditorProps } from "types/dashboard"
+import { DatasourceType, Panel, PanelEditorProps } from "types/dashboard"
 import React, { memo } from "react";
 import { useStore } from "@nanostores/react"
 import { commonMsg } from "src/i18n/locales/en"
@@ -30,6 +30,7 @@ import { ColorPicker } from "components/ColorPicker"
 import { LayoutOrientation } from "types/layout"
 import { ResetPanelToolbalEvent, ResetPanelToolbalViewModeEvent } from "./Alert"
 import { ClickActionsEditor } from "src/views/dashboard/edit-panel/components/ClickActionsEditor"
+import HttpQueryEditor from "../../datasource/http/QueryEditor"
 
 const AlertPanelEditor = memo(({ panel, onChange }: PanelEditorProps) => {
     const t = useStore(commonMsg)
@@ -111,6 +112,9 @@ const AlertPanelEditor = memo(({ panel, onChange }: PanelEditorProps) => {
                         }
                     } />
             </PanelEditItem>
+            {panel.plugins.alert.filter.datasources.find(dsId => datasources.find(ds => ds.id == dsId).type == DatasourceType.ExternalHttp) && <HttpQueryEditor panel={panel} datasource={panel.datasource} onChange={v => onChange((panel: Panel) => {
+                    panel.plugins.alert.filter.httpQuery = v
+                })} query={panel.plugins.alert.filter.httpQuery}/>}
             <PanelEditItem title="Rule name" desc="Filter for alert rules containing this text">
                 <EditorInputItem value={panel.plugins.alert.filter.ruleName} onChange={(v) => onChange((panel: Panel) => {
                     panel.plugins.alert.filter.ruleName = v
