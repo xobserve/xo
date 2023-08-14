@@ -36,7 +36,9 @@ paths:
     data: ""
     logs: ""
 
-
+#################################### Datasource Plugins ##############################
+dashboard: 
+    enable_delete: true
 
 #################################### Datasource Plugins ##############################
 datasource:

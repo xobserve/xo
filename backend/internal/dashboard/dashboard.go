@@ -21,6 +21,7 @@ import (
 
 	"github.com/DataObserve/datav/backend/internal/user"
 	"github.com/DataObserve/datav/backend/pkg/common"
+	"github.com/DataObserve/datav/backend/pkg/config"
 	"github.com/DataObserve/datav/backend/pkg/db"
 	"github.com/DataObserve/datav/backend/pkg/e"
 	"github.com/DataObserve/datav/backend/pkg/log"
@@ -327,6 +328,11 @@ func GetAllStarred(c *gin.Context) {
 }
 
 func Delete(c *gin.Context) {
+	if !config.Data.Dashboard.EnableDelete {
+		c.JSON(http.StatusForbidden, common.RespError("Deleting dashboard is disabled in datav config"))
+		return
+	}
+
 	id := c.Param("id")
 	u := user.CurrentUser(c)
 

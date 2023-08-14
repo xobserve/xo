@@ -47,6 +47,10 @@ type Config struct {
 		BaseUrl string `yaml:"base_url"`
 	}
 
+	Dashboard struct {
+		EnableDelete bool `yaml:"enable_delete"`
+	}
+
 	Datasource struct {
 		Prometheus   string `yaml:"prometheus_addr"`
 		Jaeger       string `yaml:"jaeger_addr"`
