@@ -409,6 +409,16 @@ for (var i=0;i<=4;i++) {
 }
 
 
+export const barPalettes = []
+const sequences1 = [1,0,2,3,4]
+for (var i=0;i<=4;i++) {
+  const seq = sequences1[i]
+  for (const palette of darkPalettes) {
+    barPalettes.push(palette.shades[seq].name)
+  }
+}
+
+
 export const initColors = (colorMode) => {
   if (colorMode === "dark") {
     colors.splice(0, colors.length)

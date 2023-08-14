@@ -11,7 +11,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { Box, Button, Divider, Flex, HStack, Input, Text, VStack } from "@chakra-ui/react"
+import { Box, Button, Divider, Flex, HStack, Input, Text, VStack, useColorMode } from "@chakra-ui/react"
 import RadionButtons from "components/RadioButtons"
 import { EditorInputItem, EditorNumberItem, EditorSliderItem } from "components/editor/EditorItem"
 import React, { memo, useEffect, useMemo, useState } from "react"
@@ -40,11 +40,11 @@ interface Props {
 const LogToolbar = memo((props: Props) => {
     const { active, labels, panel, onCollapseAll, onSearchChange, height, onActiveLabel, activeOp, onActiveOpChange, currentLogsCount,viewOptions,onViewLogChange } = props
     const [search, setSearch] = useState<string>("")
-
+    const {colorMode} = useColorMode()
     const options = panel.plugins.log
 
     const labelNameColor = id => {
-        return options.styles.labelColorSyncChart ? getLabelNameColor(id) : paletteColorNameToHex(options.styles.labelValueColor)
+        return options.styles.labelColorSyncChart ? getLabelNameColor(id, colorMode) : paletteColorNameToHex(options.styles.labelValueColor)
     }
     return (<Box>
         <Flex justifyContent="space-between"  pl="1" pr="5" fontSize="0.85rem" mt="-3px">

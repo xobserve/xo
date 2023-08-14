@@ -13,7 +13,7 @@
 
 import { concat } from "lodash"
 import { COLORS_HEX, ColorGenerator } from "utils/colorGenerator"
-import { colors } from "utils/colors"
+import { barPalettes, darkPalettes, paletteColorNameToHex } from "utils/colors"
 
 const idSplitter = '='
 export const formatLabelId  = (name, value) => {
@@ -25,10 +25,10 @@ export const getLabelFromId = id => {
 }
 
 const logColorGenerator = new ColorGenerator(concat(
-    COLORS_HEX,
-    colors))
-export const getLabelNameColor = id => {
-    return logColorGenerator.getColorByKey(id)
+    // COLORS_HEX,
+    barPalettes))
+export const getLabelNameColor = (id,theme) => {
+    return  paletteColorNameToHex(logColorGenerator.getColorByKey(id),theme)
 }
 
 export const isLogSeriesData = (data: any): boolean => {

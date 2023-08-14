@@ -244,7 +244,7 @@ const LogChart = memo((props: Props) => {
             emphasis: {
                 focus: 'series'
             },
-            color: getLabelNameColor(name)
+            color: getLabelNameColor(name,colorMode)
             // barWidth: '90%'
         }))
     };

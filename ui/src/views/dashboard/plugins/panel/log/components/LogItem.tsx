@@ -12,7 +12,7 @@
 // limitations under the License.
 
 import React, { memo, useEffect, useMemo, useState } from "react";
-import { Box, HStack, Highlight, Text, VStack } from "@chakra-ui/react"
+import { Box, HStack, Highlight, Text, VStack, useColorMode } from "@chakra-ui/react"
 import { Panel } from "types/dashboard"
 import { dateTimeFormat } from "utils/datetime/formatter";
 import { isEmpty, round, toNumber } from "lodash";
@@ -29,6 +29,7 @@ interface LogItemProps {
 }
 const LogItem = memo((props: LogItemProps) => {
     const { log, panel } = props
+    const {colorMode} = useColorMode()
     const labels = log.labels
     const [collapsed, setCollapsed] = useState(true)
     useEffect(() => {
@@ -81,7 +82,7 @@ const LogItem = memo((props: LogItemProps) => {
     }
 
     const labelNameColor = (id) => {
-        return options.styles.labelColorSyncChart ? getLabelNameColor(id) : options.styles.labelColor
+        return options.styles.labelColorSyncChart ? getLabelNameColor(id, colorMode) : options.styles.labelColor
     }
 
     return (<>
