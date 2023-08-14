@@ -172,7 +172,7 @@ const NodeGrapPanel = ({ data, panel, dashboardId, width, height }: NodeGraphPan
                 fitViewPadding: 16,
                 plugins: plugins,
                 modes: {
-                    default: ['drag-node', 'activate-relations', 'drag-canvas', 'click-select', {
+                    default: ['scroll-canvas', 'drag-node', 'activate-relations', 'drag-canvas', 'click-select', {
                         type: 'lasso-select',
                         onSelect(nodes, edges) {
                             setSelected(true)

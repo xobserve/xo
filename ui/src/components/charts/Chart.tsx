@@ -41,7 +41,8 @@ export const ChartComponent = memo((props: Props) => {
         if (edit) {
             options.backgroundColor = "transparent"
         } else {
-            options.backgroundColor = "#1A202C"
+            options.backgroundColor = 'transparent'
+            //  "#1A202C"
         }
     }
     

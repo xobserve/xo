@@ -27,7 +27,7 @@ const GaugePanelEditor = memo((props: PanelEditorProps) => {
     const t = useStore(commonMsg)
     const t1 = useStore(gaugePanelMsg)
     const { panel, onChange,data } = props
-    const seriesNames = (data.flat() as SeriesData[]).map(s => s.name)
+    const seriesNames = (data?.flat() as SeriesData[]??[]).map(s => s.name)
     if (isEmpty(panel.plugins.gauge.diisplaySeries )) {
         if (seriesNames?.length >= 1) {
             onChange((panel: Panel) => {
