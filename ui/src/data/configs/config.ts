@@ -24,5 +24,5 @@ export interface UIConfig {
             baiduMapAK: string
         }
     }
-    
+    showAlertIcon?: boolean
 }

@@ -70,6 +70,10 @@ type Config struct {
 		SqliteData string `yaml:"sqlite_data"`
 		Logs       string
 	}
+
+	Sidemenu struct {
+		ShowAlertIcon bool `yaml:"show_alert_icon"`
+	}
 }
 
 // Data ...

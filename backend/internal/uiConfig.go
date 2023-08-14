@@ -21,9 +21,10 @@ import (
 )
 
 type UIConfig struct {
-	AppName string `json:"appName"`
-	RepoUrl string `json:"repoUrl"`
-	Panel   Panel  `json:"panel"`
+	AppName       string `json:"appName"`
+	RepoUrl       string `json:"repoUrl"`
+	Panel         Panel  `json:"panel"`
+	ShowAlertIcon bool   `json:"showAlertIcon"`
 }
 
 type Panel struct {
@@ -45,9 +46,10 @@ func getUIConfig(c *gin.Context) {
 		Echarts: echarts,
 	}
 	cfg := &UIConfig{
-		AppName: config.Data.Common.AppName,
-		RepoUrl: config.Data.Common.RepoUrl,
-		Panel:   panel,
+		AppName:       config.Data.Common.AppName,
+		RepoUrl:       config.Data.Common.RepoUrl,
+		Panel:         panel,
+		ShowAlertIcon: config.Data.Sidemenu.ShowAlertIcon,
 	}
 
 	c.JSON(http.StatusOK, common.RespSuccess(cfg))

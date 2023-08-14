@@ -62,3 +62,7 @@ paths:
     # sqlite3 db files
     sqlite_data: ""
     logs: ""
+
+#################################### Sidemenu ##############################
+sidemenu:
+    show_alert_icon: true
