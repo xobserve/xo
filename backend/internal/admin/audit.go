@@ -4,8 +4,33 @@ import (
 	"encoding/json"
 	"time"
 
+	"github.com/DataObserve/datav/backend/pkg/common"
 	"github.com/DataObserve/datav/backend/pkg/db"
+	"github.com/DataObserve/datav/backend/pkg/models"
+	"github.com/gin-gonic/gin"
 )
+
+func QueryAuditLogs(c *gin.Context) {
+	rows, err := db.Conn.Query("SELECT op_id,op_type,target_id,data,created FRROM audit_logs ORDER BY created DESC")
+	if err != nil {
+		logger.Warn("query audit logs error", "error", err)
+		c.JSON(500, common.RespInternalError())
+		return
+	}
+
+	logs := make([]*models.AuditLog, 0)
+	for rows.Next() {
+		log := &models.AuditLog{}
+		err := rows.Scan(&log.OpId, &log.OpType, &log.TargetId, &log.Data, &log.Created)
+		if err != nil {
+			logger.Warn("scan audit logs error", "error", err)
+			continue
+		}
+		logs = append(logs, log)
+	}
+
+	c.JSON(200, common.RespSuccess(logs))
+}
 
 const (
 	AuditDeleteDashboard  = "dashboard.delete"

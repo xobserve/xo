@@ -119,7 +119,7 @@ func (s *Server) Start() error {
 		r.POST("/admin/user/new", IsLogin(), admin.AddNewUser)
 		r.POST("/admin/user/role", IsLogin(), admin.UpdateUserRole)
 		r.DELETE("/admin/user/:id", IsLogin(), admin.DeleteUser)
-
+		r.GET("/admin/auditlogs", IsLogin(), admin.QueryAuditLogs)
 		// datasource apis
 		r.POST("/datasource/save", IsLogin(), datasource.SaveDatasource)
 		r.GET("/datasource/all", datasource.GetDatasources)
