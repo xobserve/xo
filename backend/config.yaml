@@ -50,7 +50,7 @@ datasource:
 panel:
   echarts: 
     enable_baidu_map: false
-    baidu_map_ak: 'KOmVjPVUAey1G2E8zNhPiuQ6QiEmAwZu'
+    baidu_map_ak: "" # apply at https://lbsyun.baidu.com/apiconsole/center#/home
 
 #################################### SMTP ##############################
 smtp:

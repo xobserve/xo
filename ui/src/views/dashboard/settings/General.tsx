@@ -74,7 +74,7 @@ const GeneralSettings = ({ dashboard, onChange }: Props) => {
         })
 
         setTimeout(() => {
-            navigate(`/cfg/team/${session.user.sidemenu}/dashboards`)
+            navigate(`/cfg/team/${dashboard.ownedBy}/dashboards`)
         },500)
     }
 

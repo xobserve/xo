@@ -413,7 +413,7 @@ func DeleteTeam(c *gin.Context) {
 	u := user.CurrentUser(c)
 
 	if !models.IsSuperAdmin(u.Id) {
-		c.JSON(403, common.RespError(e.NoPermission))
+		c.JSON(403, common.RespError("Only super admin can do this"))
 		return
 	}
 

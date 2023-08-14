@@ -100,7 +100,6 @@ const AppView = () => {
       {cfg && <>
         <AntdWrapper>
           <RouterProvider router={router} />
-          {/* <RouterProvider router={noContainerRoutes} /> */}
         </AntdWrapper>
       </>}
 
