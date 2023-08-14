@@ -19,6 +19,7 @@ import {
   useColorModeValue,
   VStack,
   Divider,
+  useToast,
 } from "@chakra-ui/react"
 import Logo from "components/Logo"
 import React, { useEffect, useMemo, useState } from "react"
@@ -55,7 +56,7 @@ interface Props {
 }
 
 const PageContainer = (props) => {
-
+  const toast = useToast()
   const { session } = useSession()
   const [sidemenu, setSidemenu] = useState<Route[]>(null)
   useEffect(() => {
@@ -69,6 +70,14 @@ const PageContainer = (props) => {
 
   const loadSidemenu = async () => {
     const res = await requestApi.get(`/team/sidemenu/${session.user.sidemenu}`)
+    if (!res?.data) {
+      toast({
+        title: "Failed to load current team's sidemenu, try to select another team's sidemenu",
+        status: "error",
+        duration: 5000,
+      })
+        return 
+    }
     setSidemenu(res.data.data.filter((item) => !item.hidden))
   }
 
