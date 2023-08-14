@@ -24,6 +24,17 @@ export function loadBMap(ak) {
         window.onBMapCallback = function () {
             resolve(BMap)
         }
+        // let link = document.createElement("link")
+        // link.href = "/public/scripts/mapbox-gl.css"
+        // link.rel = "stylesheet"
+        // document.head.appendChild(link)
+
+        // let script0 = document.createElement('script')
+        // script0.type = 'text/javascript'
+        // script0.src = '/public/scripts/mapbox-gl.js'
+        // script0.onerror = reject
+        // document.head.appendChild(script0)
+
         let script = document.createElement('script')
         script.type = 'text/javascript'
         script.src = 'http://api.map.baidu.com/api?v=2.0&ak=' + ak + '&__ec_v__=20190126&callback=onBMapCallback'

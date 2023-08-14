@@ -23,6 +23,7 @@ import React from "react";
 import moment from "moment";
 import { colors } from "utils/colors";
 import loadash from "lodash"
+import 'echarts/extension/bmap/bmap';
 
 const EchartsPanel = (props: PanelProps) => {
     const { panel, width, height } = props
