@@ -10,14 +10,13 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-import { Button, HStack, Select, Switch } from "@chakra-ui/react"
+import { Select, Switch } from "@chakra-ui/react"
 import PanelAccordion from "src/views/dashboard/edit-panel/Accordion"
 import PanelEditItem from "src/views/dashboard/edit-panel/PanelEditItem"
 import RadionButtons from "components/RadioButtons"
 import { UnitPicker } from "components/Unit"
 import { Panel, PanelEditorProps } from "types/dashboard"
 import { EditorNumberItem, EditorSliderItem } from "components/editor/EditorItem"
-import { ColorPicker } from "components/ColorPicker"
 import { dispatch } from "use-bus"
 import { PanelForceRebuildEvent } from "src/data/bus-events"
 import ValueCalculation from "components/ValueCalculation"
@@ -36,7 +35,7 @@ const GraphPanelEditor = memo(({ panel, onChange, data }: PanelEditorProps) => {
     const t1 = useStore(graphPanelMsg)
     const t2 = useStore(statsPanelMsg)
 
-    const seriesNames = [VarialbeAllOption].concat((data.flat() as SeriesData[]).map(s => s.name))
+    const seriesNames = [VarialbeAllOption].concat((data?.flat() as SeriesData[]??[]).map(s => s.name))
     if (isEmpty(panel.plugins.stat.displaySeries)) {
         if (seriesNames?.length >= 1) {
             onChange((panel: Panel) => {
