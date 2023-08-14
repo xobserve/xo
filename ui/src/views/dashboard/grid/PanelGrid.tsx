@@ -425,7 +425,7 @@ const formatQueryId = (datasourceId, dashboardId, panelId, queryId, panelType) =
     return `${datasourceId}-${dashboardId}-${panelId}-${queryId}-${tp}`
 }
 
-const queryAlerts = async (panel:Panel, timeRange: TimeRange) => {
+const queryAlerts = async (panel: Panel, timeRange: TimeRange) => {
     let result = {
         error: null,
         data: []
@@ -441,11 +441,12 @@ const queryAlerts = async (panel:Panel, timeRange: TimeRange) => {
                 res = await query_loki_alerts(panel, timeRange, ds)
                 break
             case DatasourceType.TestData:
-                res =  query_testdata_alerts(panel, timeRange, ds)
+                res = query_testdata_alerts(panel, timeRange, ds)
                 break
             case DatasourceType.ExternalHttp:
-                res = await run_http_query(panel,panel.plugins.alert.filter.httpQuery, timeRange, ds)
-                console.log("here33333:",res)
+                res = await run_http_query(panel, panel.plugins.alert.filter.httpQuery, timeRange, ds)
+                res.data.fromDs = ds.type
+                console.log("here33333:", res)
                 break
             default:
                 break;
@@ -456,6 +457,6 @@ const queryAlerts = async (panel:Panel, timeRange: TimeRange) => {
 
         result.data = result.data.concat(res.data)
     }
-  
+
     return result
 }
