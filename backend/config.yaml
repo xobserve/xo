@@ -4,7 +4,7 @@ common:
     log_level: debug
     is_prod: false
     app_name: "datav"
-    repo_url: "" # leaving empty will hide the github icon in sidemenu
+    repo_url: "https://github.com/DataObserve/datav" # leaving empty will hide the github icon in sidemenu
 
 #################################### Server ##############################
 server:
