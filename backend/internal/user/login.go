@@ -13,6 +13,7 @@
 package user
 
 import (
+	"github.com/DataObserve/datav/backend/pkg/config"
 	"github.com/DataObserve/datav/backend/pkg/e"
 	"github.com/DataObserve/datav/backend/pkg/models"
 	"github.com/DataObserve/datav/backend/pkg/utils"
@@ -61,7 +62,12 @@ func Login(c *gin.Context) {
 		return
 	}
 
-	deleteSessionByUserId(user.Id)
+	if config.Data.User.EnableMultiLogin {
+		lastSid := getToken(c)
+		deleteSession(lastSid)
+	} else {
+		deleteSessionByUserId(user.Id)
+	}
 
 	token := strconv.FormatInt(time.Now().UnixNano(), 10)
 

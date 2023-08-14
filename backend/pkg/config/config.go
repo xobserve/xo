@@ -36,8 +36,10 @@ type Config struct {
 		Port          int
 		Database      string
 	}
+
 	User struct {
-		SessionExpire int64 `yaml:"session_expire"`
+		SessionExpire    int64 `yaml:"session_expire"`
+		EnableMultiLogin bool  `yaml:"enable_multi_login"`
 	}
 
 	Server struct {

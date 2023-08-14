@@ -23,8 +23,11 @@ database:
 #################################### User/Session ##############################
 user: 
     # a session is created when user login to im.dev, this session will be expired after X seconds
+    # default is 1 month
     session_expire: 2592000
 
+    # when enabled, various users can login with the same account name
+    enable_multi_login: false
 
 #################################### Paths ##############################
 # Path to where im.dev can store temp files, sessions, and the sqlite3 db (if that is used)
