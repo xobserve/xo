@@ -21,6 +21,7 @@ export interface Team {
     createdBy?: string
     createdById?: number
     memberCount?: number
+    role?: Role
 }
 
 export interface TeamMember {

@@ -70,6 +70,7 @@ const TeamsPage = () => {
                     <Thead>
                         <Tr>
                             <Th>{t.itemName({name: t.team})}</Th>
+                            <Th>{t.role}</Th>
                             <Th>{t.members}</Th>
                             <Th>{t.createdBy}</Th>
                             <Th>{t.action}</Th>
@@ -79,6 +80,7 @@ const TeamsPage = () => {
                         {teams.map(team => {
                             return <Tr key={team.id}>
                                 <Td>{team.name}</Td>
+                                <Td>{team.role}</Td>
                                 <Td>{team.memberCount}</Td>
                                 <Td>{team.createdBy} {session?.user?.id == team.createdById && <Tag>You</Tag>}</Td>
                                 <Td><Button variant="ghost" size="sm" px="0" onClick={() => navigate(`${ReserveUrls.Config}/team/${team.id}/members`)}>{t.manage}</Button></Td>

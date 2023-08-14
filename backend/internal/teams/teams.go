@@ -96,6 +96,10 @@ func GetTeams(c *gin.Context) {
 		}
 
 		team.MemberCount = count
+		member, _ := models.QueryTeamMember(team.Id, u.Id)
+		if member != nil && member.Id != 0 {
+			team.CurrentUserRole = member.Role
+		}
 		teams = append(teams, team)
 	}
 
