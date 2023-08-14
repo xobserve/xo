@@ -55,6 +55,7 @@ export const commonMsg = i18n("common", {
   "created": "Created",
   "updated": "Updated",
   "role": "Role",
+  "yourRole": "Your Role",
   "joined": "Joined",
   "auto": "Auto",
   "general": "General",
