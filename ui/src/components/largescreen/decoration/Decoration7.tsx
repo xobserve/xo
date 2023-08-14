@@ -27,7 +27,7 @@ const defaultColor = ['#1dc1f5', '#1dc1f5']
 const Decoration7 = ({ children, className, style, color = [],margin }:DecorationProps) => {
   const mergedColor = useMemo(() => deepMerge(deepClone(defaultColor, true), color || []), [color])
 
-  const classNames = useMemo(() => classnames('dv-decoration-7', className), [
+  const classNames = useMemo(() => classnames('dv-decoration-7 panel-decoration', className), [
     className
   ])
 

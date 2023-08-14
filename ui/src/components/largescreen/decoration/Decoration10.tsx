@@ -50,7 +50,7 @@ const Decoration10 = forwardRef(({ className, style, color = [] }:DecorationProp
 
   const mergedColor = useMemo(() => deepMerge(deepClone(defaultColor, true), color || []), [color])
 
-  const classNames = useMemo(() => classnames('dv-decoration-10', className), [
+  const classNames = useMemo(() => classnames('dv-decoration-10 panel-decoration', className), [
     className
   ])
 

@@ -114,7 +114,7 @@ const Decoration12 = forwardRef(({ children, className, style, color = [], scanD
     gradientId: `decoration-12-gradient-${uuid()}`
   })
 
-  const classNames = useMemo(() => classnames('dv-decoration-12', className), [
+  const classNames = useMemo(() => classnames('dv-decoration-12 panel-decoration', className), [
     className
   ])
 

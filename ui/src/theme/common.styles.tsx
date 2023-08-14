@@ -27,6 +27,10 @@ const CommonStyles = () => (
       .chakra-slider__thumb {
         color: black
       }
+
+      .panel-decoration {
+        z-index: 1
+      }
     `}
   />
 )

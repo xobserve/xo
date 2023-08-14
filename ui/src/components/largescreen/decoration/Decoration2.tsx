@@ -40,7 +40,7 @@ const Decoration2 = forwardRef(({ reverse = false, dur = 6, className, style, co
 
   const { x, y, w, h } = useMemo(calcSVGData, [reverse, width, height])
 
-  const classNames = useMemo(() => classnames('dv-decoration-2', className), [
+  const classNames = useMemo(() => classnames('dv-decoration-2 panel-decoration', className), [
     className
   ])
 

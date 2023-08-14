@@ -61,7 +61,7 @@ const Decoration5 = forwardRef(({ className, dur = 1.2, style, color = [] }:Deco
     [width, height]
   )
 
-  const classNames = useMemo(() => classnames('dv-decoration-5', className), [
+  const classNames = useMemo(() => classnames('dv-decoration-5 panel-decoration', className), [
     className
   ])
 

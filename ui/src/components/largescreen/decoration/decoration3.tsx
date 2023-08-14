@@ -66,7 +66,7 @@ const Decoration3 = forwardRef(({ className, style, color = [] }:DecorationProps
 
   const { svgScale, points } = useMemo(calcSVGData, [width, height])
 
-  const classNames = useMemo(() => classnames('dv-decoration-3', className), [
+  const classNames = useMemo(() => classnames('dv-decoration-3 panel-decoration', className), [
     className
   ])
 
