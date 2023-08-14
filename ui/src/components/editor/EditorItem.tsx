@@ -47,14 +47,27 @@ interface NumberInputProps {
     size?: string
     placeholder?: string
     notNull?: boolean // when set to true, value can not be null
+    defaultZero?:boolean
 }
 
 // Value can be null or number 
 // But if min is set, value can not be null
-export const EditorNumberItem = ({ value, onChange, min = null, max = null, step = null, size = "md", placeholder = null, notNull=false }: NumberInputProps) => {
+export const EditorNumberItem = ({ value, onChange, min = null, max = null, step = null, size = "md", placeholder = null, notNull=false,defaultZero=true }: NumberInputProps) => {
     const [temp, setTemp] = useState(value)
+    let newSize;
+    switch (size) {
+        case "sm":
+            newSize = "small"
+            break;
+        case "md":
+            newSize = "middle"
+            break
+        default:
+            newSize = "large"
+            break;
+    }
     return (
-        <InputNumber  placeholder={placeholder} size={size == "sm" ? "small" : "middle"} min={min} max={max} step={step} controls={step !== null} value={temp} onChange={v => setTemp(v === null ? (notNull ? 0 : null) : v)} onBlur={() => onChange(temp)} />
+        <InputNumber  placeholder={placeholder} size={newSize} min={min} max={max} step={step} controls={step !== null} value={temp} onChange={v => setTemp(v === null ? (notNull ? (defaultZero ? 0 : min) : null) : v)} onBlur={() => onChange(temp)} />
     )
 }
 

@@ -282,7 +282,7 @@ export const dashboardSaveMsg = i18n("dashboardSave", {
 export const dashboardSettingMsg = i18n("dashboardSetting", {
   "metaData": "Meta data",
   "tootip": "Shared tooltip",
-  "tootipTips": "Show tooltips at the same timeline position across all panels",
+  "tootipTips": "Show tooltips at the same timeline position across all panels, need reload page to take effect",
   "hideVars": "Hide global variables",
   "hideVarsTips": "enter global variables names, separated with ',' . e.g: app,env",
   "tagTips": "Tag a dashboard and group it into a same collection for searching",

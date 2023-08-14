@@ -157,7 +157,7 @@ const DashboardWrapper = ({ dashboardId, sideWidth }) => {
             <Box
                 // key={dashboard.id + fullscreen} 
                 id="dashboard-wrapper"
-                pt={headerHeight+ 'px'}
+                mt={headerHeight+ 'px'}
                 pb="2"
                 position="relative"
             >
@@ -187,7 +187,7 @@ const DashboardBorder = ({ border }) => {
 
     return (
         <>
-            {height > 0 && <Box key={height} position="absolute" width={'100%'} height={height} id="dashboard-border" top="5px"><Border width="100%" height="100%" border={border}><Box height="100%" width="100%"></Box></Border></Box>}
+            {height > 0 && <Box key={height} position="absolute" width={'100%'} top={0} bottom={0} id="dashboard-border"><Border width="100%" height="100%" border={border}><Box height="100%" width="100%"></Box></Border></Box>}
         </>
     )
 }

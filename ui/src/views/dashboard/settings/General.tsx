@@ -149,7 +149,7 @@ const GeneralSettings = ({ dashboard, onChange }: Props) => {
                 </FormItem>
 
                 {dashboard.data.enableAutoSave && <FormItem title={t1.autoSaveInterval} >
-                    <EditorNumberItem size="md" min={30} max={3600} step={30} value={dashboard.data.autoSaveInterval} onChange={v => onChange((draft: Dashboard) => { draft.data.autoSaveInterval = v })} />
+                    <EditorNumberItem size="lg"  min={10} max={3600} step={30} value={dashboard.data.autoSaveInterval} notNull defaultZero={false} onChange={v => onChange((draft: Dashboard) => { draft.data.autoSaveInterval = v })} />
                 </FormItem>}
             </FormSection>
             <FormSection title={t.dangeSection}>
