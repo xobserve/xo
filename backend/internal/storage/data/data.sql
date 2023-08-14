@@ -9,7 +9,7 @@ CREATE TABLE IF NOT EXISTS user (
     password VARCHAR(100) DEFAULT '',
     salt VARCHAR(50),
     mobile VARCHAR(11) DEFAULT '',
-    email VARCHAR(255) NOT NULL UNIQUE,
+    email VARCHAR(255),
     last_seen_at DATETIME,
     is_diabled BOOL NOT NULL DEFAULT false,
     sidemenu INTEGER DEFAULT 1,
@@ -18,8 +18,6 @@ CREATE TABLE IF NOT EXISTS user (
 );
 
 CREATE INDEX user_username ON user (username);
-
-CREATE INDEX user_email ON user (email);
 
 CREATE TABLE IF NOT EXISTS sessions (
     sid VARCHAR(255) PRIMARY KEY,

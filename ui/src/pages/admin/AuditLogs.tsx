@@ -50,6 +50,7 @@ export const AdminAuditLogs = memo(() => {
                     <Tr>
                         <Th>Type</Th>
                         <Th>Operator</Th>
+                        <Th>Target</Th>
                         <Th>Data</Th>
                         <Th>Date</Th>
                     </Tr>
@@ -59,6 +60,7 @@ export const AdminAuditLogs = memo(() => {
                         logs?.map(log => <Tr>
                             <Td>{log.opType}</Td>
                             <Td>{log.opId} / {log.op.username}</Td>
+                            <Td>{log.targetId}</Td>
                             <Td><Popover>
                                 <PopoverTrigger>
                                     <Box cursor="pointer"><FaEye /></Box>

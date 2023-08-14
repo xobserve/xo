@@ -21,6 +21,7 @@ import { FaUserAlt } from "react-icons/fa";
 import { accountLinks } from "src/data/nav-links";
 import { accountSettingMsg, commonMsg } from "src/i18n/locales/en";
 import { requestApi } from "utils/axios/request";
+import { isEmpty } from "utils/validate";
 import isEmail from "validator/lib/isEmail";
 
 const AccountSetting = () => {
@@ -44,7 +45,7 @@ const AccountSetting = () => {
     }, [session])
 
     const updateAccount = async () => {
-        if (!email || !isEmail(email)) {
+        if (!isEmpty(email) && !isEmail(email)) {
             toast({
                 description: "email format is incorrect",
                 status: "warning",
@@ -54,15 +55,15 @@ const AccountSetting = () => {
             return
         }
 
-        if (!name) {
-            toast({
-                description: "name cannot be empty",
-                status: "warning",
-                duration: 2000,
-                isClosable: true,
-            });
-            return
-        }
+        // if (!name) {
+        //     toast({
+        //         description: "name cannot be empty",
+        //         status: "warning",
+        //         duration: 2000,
+        //         isClosable: true,
+        //     });
+        //     return
+        // }
 
         await requestApi.post('/account/info', { id: session.user.id, email, name })
         toast({
@@ -122,7 +123,7 @@ const AccountSetting = () => {
                         <Input placeholder='give yourself a nick name' value={name} onChange={e => setName(e.currentTarget.value)} />
                     </FormItem>
                     <FormItem title={t.email} labelWidth="200px">
-                        <Input type='email' placeholder='enter a valid email' value={email} onChange={e => setEmail(e.currentTarget.value.trim())} />
+                        <Input placeholder='enter a valid email' value={email} onChange={e => setEmail(e.currentTarget.value.trim())} />
                     </FormItem>
                     <Button width="fit-content" onClick={updateAccount}>{t.submit}</Button>
                 </VStack>

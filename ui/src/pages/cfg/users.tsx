@@ -29,6 +29,7 @@ import isEmail from "validator/lib/isEmail"
 import { useStore } from "@nanostores/react"
 import { cfgUsers, commonMsg } from "src/i18n/locales/en"
 import {format} from 'src/i18n/i18n'
+import { isEmpty } from "utils/validate"
 const UsersPage = () => {
     const t = useStore(commonMsg)
     const t1 = useStore(cfgUsers)
@@ -64,7 +65,7 @@ const UsersPage = () => {
     }
 
     const updateUser = async () => {
-        if (!userInEdit.email || !isEmail(userInEdit.email)) {
+        if (!isEmpty(userInEdit.email) && !isEmail(userInEdit.email)){
             toast({
                 description: t.isInvalid({name: t.email}),
                 status: "warning",
@@ -74,15 +75,15 @@ const UsersPage = () => {
             return
         }
 
-        if (!userInEdit.name) {
-            toast({
-                description: t.isInvalid({name: t.name}),
-                status: "warning",
-                duration: 2000,
-                isClosable: true,
-            });
-            return
-        }
+        // if (!userInEdit.name) {
+        //     toast({
+        //         description: t.isInvalid({name: t.name}),
+        //         status: "warning",
+        //         duration: 2000,
+        //         isClosable: true,
+        //     });
+        //     return
+        // }
 
         await requestApi.post(`/admin/user`, userInEdit)
         toast({
@@ -91,6 +92,7 @@ const UsersPage = () => {
             duration: 3000,
             isClosable: true,
         })
+        load()
     }
 
     const updatePassword = async () => {
@@ -128,15 +130,15 @@ const UsersPage = () => {
     }
 
     const addUser = async () => {
-        if (!userInEdit.email || !isEmail(userInEdit.email)) {
-            toast({
-                description:  t.isInvalid({name: t.email}),
-                status: "warning",
-                duration: 2000,
-                isClosable: true,
-            });
-            return
-        }
+        // if (!userInEdit.email || !isEmail(userInEdit.email)) {
+        //     toast({
+        //         description:  t.isInvalid({name: t.email}),
+        //         status: "warning",
+        //         duration: 2000,
+        //         isClosable: true,
+        //     });
+        //     return
+        // }
 
 
         const res = await requestApi.post(`/admin/user/new`, userInEdit)
