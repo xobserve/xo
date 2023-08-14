@@ -127,3 +127,16 @@ CREATE TABLE IF NOT EXISTS star_dashboard (
     created DATETIME NOT NULL
 );
 CREATE UNIQUE INDEX  star_dashboard_id ON star_dashboard (user_id,dashboard_id);
+
+
+CREATE TABLE IF NOT EXISTS audit_logs (
+    id  INTEGER PRIMARY KEY AUTO_INCREMENT,
+    op_id  INTEGER NOT NULL,
+    op_type VARCHAR(32) NOT NULL,
+    target_id VARCHAR(64),
+    data MEDIUMTEXT,
+    created DATETIME NOT NULL
+);
+
+CREATE INDEX  audit_logs_op_id ON audit_logs (op_id);
+CREATE INDEX  audit_logs_op_type ON audit_logs (op_type);

@@ -19,6 +19,7 @@ import (
 	"net/http"
 	"time"
 
+	"github.com/DataObserve/datav/backend/internal/admin"
 	"github.com/DataObserve/datav/backend/internal/user"
 	"github.com/DataObserve/datav/backend/pkg/common"
 	"github.com/DataObserve/datav/backend/pkg/config"
@@ -343,7 +344,7 @@ func Delete(c *gin.Context) {
 		}
 	}
 
-	ownedBy, err := models.QueryDashboardBelongsTo(id)
+	dash, err := models.QueryDashboard(id)
 	if err != nil {
 		logger.Warn("query dash belongs to error", "error", err)
 		c.JSON(500, common.RespError(e.Internal))
@@ -351,7 +352,7 @@ func Delete(c *gin.Context) {
 	}
 
 	if !u.Role.IsAdmin() {
-		isTeamAdmin, err := models.IsTeamAdmin(ownedBy, u.Id)
+		isTeamAdmin, err := models.IsTeamAdmin(dash.OwnedBy, u.Id)
 		if err != nil {
 			logger.Error("check team admin error", "error", err)
 			c.JSON(500, common.RespInternalError())
@@ -376,6 +377,8 @@ func Delete(c *gin.Context) {
 		c.JSON(500, common.RespError(e.Internal))
 		return
 	}
+
+	admin.WriteAuditLog(u.Id, admin.AuditDeleteDashboard, id, dash)
 
 	c.JSON(200, common.RespSuccess(nil))
 }
