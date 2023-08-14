@@ -20,12 +20,14 @@ func QueryAuditLogs(c *gin.Context) {
 
 	logs := make([]*models.AuditLog, 0)
 	for rows.Next() {
+		var rawData []byte
 		log := &models.AuditLog{}
-		err := rows.Scan(&log.OpId, &log.OpType, &log.TargetId, &log.Data, &log.Created)
+		err := rows.Scan(&log.OpId, &log.OpType, &log.TargetId, &rawData, &log.Created)
 		if err != nil {
 			logger.Warn("scan audit logs error", "error", err)
 			continue
 		}
+		log.Data = string(rawData)
 		logs = append(logs, log)
 	}
 
