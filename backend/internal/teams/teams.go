@@ -20,6 +20,7 @@ import (
 	"strings"
 	"time"
 
+	"github.com/DataObserve/datav/backend/internal/admin"
 	"github.com/DataObserve/datav/backend/internal/user"
 	"github.com/DataObserve/datav/backend/pkg/common"
 	"github.com/DataObserve/datav/backend/pkg/db"
@@ -421,6 +422,13 @@ func DeleteTeam(c *gin.Context) {
 		return
 	}
 
+	t, err := models.QueryTeam(teamId, "")
+	if err != nil {
+		logger.Warn("query team error", "error", err)
+		c.JSON(500, common.RespInternalError())
+		return
+	}
+
 	tx, err := db.Conn.Begin()
 	if err != nil {
 		logger.Warn("start sql transaction error", "error", err)
@@ -448,6 +456,8 @@ func DeleteTeam(c *gin.Context) {
 		c.JSON(500, common.RespInternalError())
 		return
 	}
+
+	admin.WriteAuditLog(u.Id, admin.AuditDeleteTeam, strconv.FormatInt(teamId, 10), t)
 
 	c.JSON(200, common.RespSuccess(nil))
 }

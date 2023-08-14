@@ -45,7 +45,7 @@ const (
 	AuditDeleteDatasource = "datasource.delete"
 )
 
-func WriteAuditLog(userId int64, opType string, targetId string, data interface{}) {
+func WriteAuditLog(opId int64, opType string, targetId string, data interface{}) {
 	now := time.Now()
 	d, err := json.Marshal(data)
 	if err != nil {
@@ -54,7 +54,7 @@ func WriteAuditLog(userId int64, opType string, targetId string, data interface{
 	}
 
 	_, err = db.Conn.Exec("INSERT INTO audit_logs (op_id,op_type,target_id,data,created) VALUES (?,?,?,?,?)",
-		userId, opType, targetId, d, now)
+		opId, opType, targetId, d, now)
 	if err != nil {
 		logger.Warn("write audit log  erorr", "error", err)
 	}

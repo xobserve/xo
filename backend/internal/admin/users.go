@@ -218,7 +218,19 @@ func DeleteUser(c *gin.Context) {
 		return
 	}
 
-	_, err := db.Conn.Exec("DELETE FROM user WHERE id=?", userId)
+	targetUser, err := models.QueryUserById(userId)
+	if err != nil {
+		logger.Warn("query target user error when delete user", "error", err)
+		c.JSON(500, common.RespInternalError())
+		return
+	}
+
+	if targetUser.Id == 0 {
+		c.JSON(400, common.RespError(e.UserNotExist))
+		return
+	}
+
+	_, err = db.Conn.Exec("DELETE FROM user WHERE id=?", userId)
 	if err != nil {
 		logger.Warn("delete user error", "error", err)
 		c.JSON(500, common.RespInternalError())
@@ -232,6 +244,7 @@ func DeleteUser(c *gin.Context) {
 		return
 	}
 
+	WriteAuditLog(currentUser.Id, AuditDeleteUser, strconv.FormatInt(userId, 10), targetUser)
 	c.JSON(200, nil)
 }
 
