@@ -95,7 +95,7 @@ const DatasourcesPage = () => {
                             </Box>
                         </HStack>
 
-                        <HStack spacing={1}>
+                        {ds.id != InitTestDataDatasourceId && <HStack spacing={1}>
                             <Button size="sm" variant="ghost" onClick={() => {
                                 setDatasource(ds)
                                 onOpen()
@@ -104,7 +104,7 @@ const DatasourcesPage = () => {
                                 onAlertOpen()
                                 setDatasource(ds)
                             }}>{t.delete}</Button>
-                        </HStack>
+                        </HStack>}
                     </Flex>)
                 }
             </VStack>

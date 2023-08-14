@@ -30,7 +30,7 @@ interface Props {
 const PopoverTooltip = (props: Props) => {
     const { trigger="hover", triggerComponent, offset = null, showHeaderBorder = false, headerComponent, bodyComponent=null, contentMinWidth = "120px", placement = "right-start" } = props
     return (<>
-        <Popover trigger={trigger} placement={placement} offset={offset}>
+        <Popover trigger={trigger} placement={placement} offset={offset} >
             <PopoverTrigger>
                 {triggerComponent}
             </PopoverTrigger>

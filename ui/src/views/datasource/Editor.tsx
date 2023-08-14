@@ -25,7 +25,6 @@ import TestDataDatasourceEditor from "../dashboard/plugins/datasource/testdata/D
 import JaegerDatasourceEditor from "../dashboard/plugins/datasource/jaeger/DatasourceEditor"
 import FormItem from "components/form/Item"
 import React from "react";
-import { useNavigate } from "react-router-dom"
 import { useStore } from "@nanostores/react"
 import { commonMsg, newMsg } from "src/i18n/locales/en"
 import { checkAndTestLoki } from "../dashboard/plugins/datasource/loki/query_runner"
@@ -35,7 +34,6 @@ const DatasourceEditor = ({ ds, onChange = null }) => {
     const t = useStore(commonMsg)
     const t1 = useStore(newMsg)
     const toast = useToast()
-    const navigate = useNavigate()
     const [datasource, setDatasource] = useImmer<Datasource>(ds)
 
     const saveDatasource = async () => {

@@ -60,6 +60,10 @@ func SaveDatasource(c *gin.Context) {
 		ds.Id = id
 
 	} else {
+		if ds.Id == models.InitTestDataDatasourceId {
+			c.JSON(http.StatusForbidden, common.RespError("default testdata datasource cannot be edit"))
+			return
+		}
 		// update
 		_, err = db.Conn.Exec("UPDATE datasource SET name=?,type=?,url=?,updated=? WHERE id=?", ds.Name, ds.Type, ds.URL, now, ds.Id)
 		if err != nil {
