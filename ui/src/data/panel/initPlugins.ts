@@ -466,8 +466,8 @@ export const setEchartsOptions = `
 // echarts: imported echarts.js module 
 // loadash: imported loadash.js module
 // moment: imported momen.jst module
-
-function setOptions(data, thresholds, colors, echarts, loadash, moment) {
+// colorMode: "light" | "dark"
+function setOptions(data, thresholds, colors, echarts, loadash, moment, colorMode) {
     const colorList = [
         ['rgb(128, 255, 165)', 'rgb(1, 191, 236)'],
         ['rgb(0, 221, 255)', 'rgb(77, 119, 255)'],
@@ -475,6 +475,7 @@ function setOptions(data, thresholds, colors, echarts, loadash, moment) {
         ['rgb(255, 0, 135)', 'rgb(135, 0, 157)'],
         ['rgb(255, 191, 0)', 'rgb(224, 62, 76)'],
     ]
+    
     const legend = []
     const seriesList = []
     if (!echarts) {
@@ -534,12 +535,14 @@ function setOptions(data, thresholds, colors, echarts, loadash, moment) {
             },
         },
         legend: {
+            show: true,
             data: legend
         },
         grid: {
             left: '3%',
             right: '4%',
             bottom: '3%',
+            top: '5%',
             containLabel: true
         },
         xAxis: [
@@ -557,11 +560,13 @@ function setOptions(data, thresholds, colors, echarts, loadash, moment) {
         yAxis: [
             {
                 type: 'value',
-                name: 'Stack',
-                nameLocation: 'end',
+                splitLine: {
+                    show: false
+                }
             }
         ],
         series: seriesList
     }
 }
+
 `

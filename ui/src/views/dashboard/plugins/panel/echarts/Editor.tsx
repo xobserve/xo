@@ -20,7 +20,6 @@ import PanelEditItem from "src/views/dashboard/edit-panel/PanelEditItem"
 import { Panel, PanelEditorProps } from "types/dashboard"
 import { genDynamicFunction } from "utils/dynamicCode"
 import { EchartsComponent } from "./Echarts"
-import * as echarts from 'echarts';
 import { ColorModeSwitcher } from "components/ColorModeSwitcher"
 import React from "react";
 import { useStore } from "@nanostores/react"
@@ -29,6 +28,7 @@ import { colors } from "utils/colors"
 import moment from "moment"
 import loadash from 'lodash'
 import ThresholdEditor from "components/Threshold/ThresholdEditor"
+import * as echarts from 'echarts';
 
 const EchartsPanelEditor = memo(({ panel, onChange, data }: PanelEditorProps) => {
     const t = useStore(commonMsg)
@@ -100,7 +100,7 @@ const SetOptions = ({ panel, onChange, data }: PanelEditorProps) => {
 
     if (isFunction(setOptions)) {
         try {
-            let o = setOptions(cloneDeep(data.flat()), colors, echarts, loadash, moment)
+            let o = setOptions(cloneDeep(data.flat()),panel.plugins.echarts.thresholds, colors, echarts, loadash, moment,colorMode)
             o.animation = false
             options = o
         } catch (error) {
@@ -119,7 +119,7 @@ const SetOptions = ({ panel, onChange, data }: PanelEditorProps) => {
 
                 <ModalBody pt="2" pb="0" px="0">
                     <Flex alignItems="center" justifyContent="space-between" height="40px" pl="5">
-                        <Text textStyle="subTitle"> {t1.liveEdit({ name: panel.datasource.type })} </Text>
+                        <Text textStyle="subTitle"> </Text>
                         <HStack>
                             <ColorModeSwitcher miniMode />
                             <Button size="sm" onClick={onSubmit} >{t.submit}</Button>

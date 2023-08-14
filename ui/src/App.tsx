@@ -31,11 +31,13 @@ import { routes } from './routes';
 import { initColors } from 'utils/colors';
 import { $variables } from './views/variables/store';
 
+
 const { ToastContainer } = createStandaloneToast()
 
 export let canvasCtx;
 export let datasources: Datasource[] = []
 export let gvariables: Variable[] = []
+
 
 export let appInitialized = false
 const AppView = () => {
