@@ -82,8 +82,8 @@ func (s Users) Less(i, j int) bool {
 
 func QueryUserById(id int64) (*User, error) {
 	user := &User{}
-	err := db.Conn.QueryRow(`SELECT id,username,name,email,mobile,password,salt,sidemenu,last_seen_at FROM user WHERE id=?`,
-		id).Scan(&user.Id, &user.Username, &user.Name, &user.Email, &user.Mobile, &user.Password, &user.Salt, &user.SideMenu, &user.LastSeenAt)
+	err := db.Conn.QueryRow(`SELECT id,username,name,email,mobile,password,salt,sidemenu,last_seen_at,created FROM user WHERE id=?`,
+		id).Scan(&user.Id, &user.Username, &user.Name, &user.Email, &user.Mobile, &user.Password, &user.Salt, &user.SideMenu, &user.LastSeenAt, &user.Created)
 	if err != nil && err != sql.ErrNoRows {
 		return user, err
 	}

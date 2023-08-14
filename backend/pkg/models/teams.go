@@ -64,8 +64,8 @@ func (s TeamMembers) Less(i, j int) bool {
 
 func QueryTeam(id int64, name string) (*Team, error) {
 	team := &Team{}
-	err := db.Conn.QueryRow(`SELECT id,name,created_by FROM team WHERE id=? or name=?`,
-		id, name).Scan(&team.Id, &team.Name, &team.CreatedById)
+	err := db.Conn.QueryRow(`SELECT id,name,created_by,created,updated FROM team WHERE id=? or name=?`,
+		id, name).Scan(&team.Id, &team.Name, &team.CreatedById, &team.Created, &team.Updated)
 	if err != nil {
 		return nil, err
 	}
