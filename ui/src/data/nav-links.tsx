@@ -1,6 +1,7 @@
 import React from 'react'
-import {  FaBell, FaConnectdevelop, FaDatabase, FaHome,FaRegChartBar, FaTerminal, FaThLarge, FaUser, FaUserEdit, FaUsersCog } from 'react-icons/fa'
+import { FaConnectdevelop,  FaTerminal, FaUser, FaUserEdit, FaUsersCog } from 'react-icons/fa'
 import { Route } from 'types/route'
+import { MdOutlineAdminPanelSettings } from 'react-icons/md';
 
 // 这里是默认的主菜单设置，但是会被服务器的配置所覆盖！
 export const navLinks: Route[] = [
@@ -38,6 +39,15 @@ export const accountLinks = [
         url: '/account/setting',
         baseUrl: '/account/setting',
         icon: <FaUserEdit />
+    }
+]
+
+export const adminLinks = [
+    {
+        title: 'Admin',
+        url: '/admin',
+        baseUrl: '/admin',
+        icon: <MdOutlineAdminPanelSettings />
     }
 ]
 

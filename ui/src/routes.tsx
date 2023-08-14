@@ -30,6 +30,7 @@ import TestPage from "./pages/Test";
 import loadable from '@loadable/component';
 import PageContainer from "layouts/PageContainer";
 import { Navigate } from "react-router-dom";
+import AdminPage from "./pages/admin";
 
 
 const DashboardPage = loadable(() => import('./pages/dashboard/index'));
@@ -89,6 +90,13 @@ const newRoutes = [
   },
 ]
 
+const adminRoutes = [
+  {
+    path: "/admin",
+    element: pageContainer(<AdminPage />),
+  },
+]
+
 export const routes = [
   {
     path: "/",
@@ -102,6 +110,7 @@ export const routes = [
   },
   ...newRoutes,
   ...cfgRoutes,
+  ...adminRoutes,
   {
     path: "/:dashboardId/*", 
     element: pageContainer(<DashboardPage />),
