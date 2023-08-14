@@ -61,6 +61,7 @@ export const commonMsg = i18n("common", {
   "styles": "Styles",
   "tags": "Tags",
   "copy": "Copy",
+  "clone": "Clone",
   "copied": "Copied",
   "share": "Share",
   "remove": "Remove",

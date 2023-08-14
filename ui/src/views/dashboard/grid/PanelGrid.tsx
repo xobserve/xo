@@ -350,11 +350,9 @@ const PanelHeader = ({ queryError, panel, onCopyPanel, onRemovePanel, data }: Pa
                         </MenuButton>
                         <MenuList p="1">
                             <MenuItem icon={<FaEdit />} onClick={() => addParamToUrl({ edit: panel.id })}>{t.edit}</MenuItem>
-                            <MenuDivider my="1" />
                             <MenuItem icon={<FaRegCopy />} onClick={() => onCopyPanel(panel)}>{t.copy}</MenuItem>
                             <MenuDivider my="1" />
                             <MenuItem icon={<FaBug />} onClick={onOpen}>{t1.debugPanel}</MenuItem>
-                            <MenuDivider my="1" />
                             <MenuItem icon={<FaRegEye />} onClick={() => addParamToUrl({ viewPanel: viewPanel ? null : panel.id })}>{viewPanel ? t1.exitlView : t1.viewPanel}</MenuItem>
                             <MenuDivider my="1" />
                             <MenuItem icon={<FaTrashAlt />} onClick={() => onRemovePanel(panel)}>{t.remove}</MenuItem>

@@ -15,7 +15,7 @@ var HomeDashboard = `
         "enableAutoSave": false,
         "enableUnsavePrompt": true,
         "hidingVars": "",
-        "layout": "null",
+        "layout": "vertical",
         "lazyLoading": true,
         "panels": [
             {
