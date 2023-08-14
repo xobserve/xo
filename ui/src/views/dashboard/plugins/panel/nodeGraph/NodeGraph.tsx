@@ -29,7 +29,7 @@ import { getDefaultEdgeLabel, getDefaultEdgeStyle, getDefaultNodeLabel, getDefau
 import { NodeGraphPluginData } from 'types/plugins/nodeGraph';
 import { isFunction } from 'lodash';
 import { colors, paletteColorNameToHex } from 'utils/colors';
-import './customNode' 
+import './customNode'
 import { registerCustomNode } from './customNode';
 import { dispatch } from 'use-bus';
 import { PanelForceRebuildEvent } from 'src/data/bus-events';
@@ -48,21 +48,21 @@ interface NodeGraphPanelProps extends PanelProps {
 
 const NodeGraphPanelWrapper = (props: NodeGraphPanelProps) => {
     if (isEmpty(props.data)) {
-        return  <Center height="100%">No data</Center>
+        return <Center height="100%">No data</Center>
     }
-    
+
     return (<>
         {
-           !isNodeGraphData(props.data[0])
+            !isNodeGraphData(props.data[0])
                 ?
                 <Center height="100%">
                     <VStack>
-                    <Text fontWeight={500} fontSize="1.1rem">Data format not support!</Text>
-                    <Text className='color-text'>Try to change to Testdata datasource, then look into its data format in Panel Debug</Text>
+                        <Text fontWeight={500} fontSize="1.1rem">Data format not support!</Text>
+                        <Text className='color-text'>Try to change to Testdata datasource, then look into its data format in Panel Debug</Text>
                     </VStack>
                 </Center>
                 :
-                <NodeGrapPanel {...props}/>
+                <NodeGrapPanel {...props} />
         }
     </>
     )
@@ -92,8 +92,8 @@ const NodeGrapPanel = ({ data, panel, dashboardId, width, height }: NodeGraphPan
         if (panel.plugins.nodeGraph.node.enableHighlight) {
             const filterHighlight = genDynamicFunction(panel.plugins.nodeGraph.node.highlightNodesByFunc);
             if (isFunction(filterHighlight)) {
-                 names = filterHighlight(data[0], lodash)
-            }  else {
+                names = filterHighlight(data[0], lodash)
+            } else {
                 toast({
                     description: t1.invalidHighlight,
                     status: "warning",
@@ -103,7 +103,7 @@ const NodeGrapPanel = ({ data, panel, dashboardId, width, height }: NodeGraphPan
             }
         }
         return names
-    },[panel.plugins.nodeGraph.node.highlightNodesByFunc,panel.plugins.nodeGraph.node.enableHighlight])
+    }, [panel.plugins.nodeGraph.node.highlightNodesByFunc, panel.plugins.nodeGraph.node.enableHighlight])
     useEffect(() => {
         if (graph) {
             graph.changeSize(width, height)
@@ -116,11 +116,11 @@ const NodeGrapPanel = ({ data, panel, dashboardId, width, height }: NodeGraphPan
             onColorModeChange(graph, data, colorMode, dashboardId, panel)
         }
         newestColorMode = colorMode
-        registerCustomNode(colorMode, panel.plugins.nodeGraph.node.enableHighlight, panel.plugins.nodeGraph.node.highlightNodes, paletteColorNameToHex(panel.plugins.nodeGraph.node.highlightColor),highlightNodeNames)
+        registerCustomNode(colorMode, panel.plugins.nodeGraph.node.enableHighlight, panel.plugins.nodeGraph.node.highlightNodes, paletteColorNameToHex(panel.plugins.nodeGraph.node.highlightColor), highlightNodeNames)
         if (graph) {
             dispatch(PanelForceRebuildEvent + panel.id)
         }
-    }, [colorMode, panel.plugins.nodeGraph.node.enableHighlight, panel.plugins.nodeGraph.node.highlightNodes, panel.plugins.nodeGraph.node.highlightColor,highlightNodeNames])
+    }, [colorMode, panel.plugins.nodeGraph.node.enableHighlight, panel.plugins.nodeGraph.node.highlightNodes, panel.plugins.nodeGraph.node.highlightColor, highlightNodeNames])
 
     useEffect(() => {
         if (graph) {
@@ -172,12 +172,19 @@ const NodeGrapPanel = ({ data, panel, dashboardId, width, height }: NodeGraphPan
                 fitViewPadding: 16,
                 plugins: plugins,
                 modes: {
-                    default: ['scroll-canvas', 'drag-node', 'activate-relations', 'drag-canvas', 'click-select', {
-                        type: 'lasso-select',
-                        onSelect(nodes, edges) {
-                            setSelected(true)
-                        }
-                    }],
+                    default: [
+                        panel.plugins.nodeGraph.zoomCanvas && 'zoom-canvas',
+                        panel.plugins.nodeGraph.scrollCanvas && 'scroll-canvas',
+                        panel.plugins.nodeGraph.dragNode && 'drag-node',
+                        'activate-relations',
+                        panel.plugins.nodeGraph.dragCanvas && 'drag-canvas',
+                        'click-select',
+                        {
+                            type: 'lasso-select',
+                            onSelect(nodes, edges) {
+                                setSelected(true)
+                            }
+                        }],
                     fisheyeMode: []
                 },
                 layout: {

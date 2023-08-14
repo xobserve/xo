@@ -42,6 +42,44 @@ const NodeGraphPanelEditor = memo((props: PanelEditorProps) => {
     const t1 = useStore(nodeGraphPanelMsg)
     const { panel, onChange } = props
     return (<>
+        <PanelAccordion title={t.basic}>
+            <PanelEditItem title={"Zoom canvas"} desc="Scroll the canvas by wheeling">
+                <Switch defaultChecked={panel.plugins.nodeGraph.zoomCanvas} onChange={e => {
+                    const v = e.currentTarget.checked
+                    onChange((panel: Panel) => {
+                        panel.plugins.nodeGraph.zoomCanvas = v
+                        dispatch(PanelForceRebuildEvent + panel.id)
+                    })
+                }} />
+            </PanelEditItem>
+            {!panel.plugins.nodeGraph.zoomCanvas && <PanelEditItem title={"Scroll canvas"} desc="Scroll the canvas by wheeling">
+                <Switch defaultChecked={panel.plugins.nodeGraph.scrollCanvas} onChange={e => {
+                    const v = e.currentTarget.checked
+                    onChange((panel: Panel) => {
+                        panel.plugins.nodeGraph.scrollCanvas = v
+                        dispatch(PanelForceRebuildEvent + panel.id)
+                    })
+                }} />
+            </PanelEditItem>}
+            <PanelEditItem title={"Drag canvas"}>
+                <Switch defaultChecked={panel.plugins.nodeGraph.dragCanvas} onChange={e => {
+                    const v = e.currentTarget.checked
+                    onChange((panel: Panel) => {
+                        panel.plugins.nodeGraph.dragCanvas = v
+                        dispatch(PanelForceRebuildEvent + panel.id)
+                    })
+                }} />
+            </PanelEditItem>
+            <PanelEditItem title={"Drag node"}>
+                <Switch defaultChecked={panel.plugins.nodeGraph.dragNode} onChange={e => {
+                    const v = e.currentTarget.checked
+                    onChange((panel: Panel) => {
+                        panel.plugins.nodeGraph.dragNode = v
+                        dispatch(PanelForceRebuildEvent + panel.id)
+                    })
+                }} />
+            </PanelEditItem>
+        </PanelAccordion>
         <PanelAccordion title={t1.node}>
             <PanelEditItem title={t1.baseSize}>
                 <EditorSliderItem value={panel.plugins.nodeGraph.node.baseSize} min={20} max={100} step={2} onChange={v => onChange((panel: Panel) => {
@@ -426,7 +464,7 @@ const RightClickMenus = ({ panel, onChange }: PanelEditorProps) => {
 
 const DonutColorsEditor = (props: PanelEditorProps) => {
     const { panel, onChange, data } = props
-    if (data.length == 0 || !data[0].nodes) {
+    if (!data || data.length == 0 || !data[0].nodes) {
         return null
     }
     const toast = useToast()

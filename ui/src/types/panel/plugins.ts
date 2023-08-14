@@ -12,7 +12,7 @@
 // limitations under the License.
 import { ClickAction } from "src/views/dashboard/edit-panel/components/ClickActionsEditor"
 import { AlertState } from "types/alert"
-import { PanelType } from "types/dashboard"
+import { PanelQuery, PanelType } from "types/dashboard"
 import { LayoutOrientation } from "types/layout"
 import { BarThresholdArrow } from "types/plugins/bar"
 import { ArcGisMapServer, BaseLayerType, DataLayerType } from "types/plugins/geoMap"
@@ -70,6 +70,7 @@ export interface AlerSettings extends DisableDatasource {
     filter: {
         state: AlertState[]
         datasources: number[]
+        httpQuery: PanelQuery
         ruleName: string 
         ruleLabel: string
         alertLabel: string
@@ -337,6 +338,11 @@ export interface TableSettings {
 }
 
 export interface NodeGraphSettings {
+    zoomCanvas: boolean
+    scrollCanvas: boolean
+    dragNode: boolean
+    dragCanvas: boolean
+    
     node: {
         baseSize: number
         maxSize: number

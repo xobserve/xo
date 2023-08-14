@@ -123,6 +123,10 @@ export const initPanelPlugins = (): PanelPlugins => {
         },
 
         [PanelType.NodeGraph]: {
+            zoomCanvas: false,
+            scrollCanvas: false,
+            dragNode: true,
+            dragCanvas: true,
             node: {
                 baseSize: 60,
                 maxSize: 1.4,
