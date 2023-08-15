@@ -334,7 +334,8 @@ if (variable?.datasource) {
 
 const filterValues = useMemo(() => {
     if (!isEmpty(variable?.regex)) {
-        return variableValues.filter(v => v.match(variable.regex))
+        const regex = variable.regex.toLowerCase()
+        return variableValues.filter((v:string) => v.toLowerCase().match(regex))
     } else {
         return variableValues
     }

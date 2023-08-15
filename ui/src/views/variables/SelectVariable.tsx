@@ -311,7 +311,8 @@ export const queryVariableValues = async (v: Variable) => {
 
 
     if (!isEmpty(v.regex)) {
-        result.data = result?.data?.filter(r => r.match(v.regex))
+        const regex = v.regex.toLowerCase()
+        result.data = result?.data?.filter((r:string) => r.toLowerCase().match(regex))
     }
 
     return result
