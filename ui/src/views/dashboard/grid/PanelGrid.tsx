@@ -52,6 +52,7 @@ import { getDatasource } from "utils/datasource";
 import { parseVariableFormat } from "utils/format";
 import { VariableInterval } from "src/data/variable";
 import { datasourceSupportAlerts } from "src/data/alerts";
+import Loading from "components/loading/Loading";
 interface PanelGridProps {
     dashboard: Dashboard
     panel: Panel
@@ -69,7 +70,7 @@ export const PanelGrid = memo((props: PanelGridProps) => {
     const [tr, setTr] = useState<TimeRange>(getCurrentTimeRange())
     const depsCheck = useRef(null)
     const variables = useStore($variables)
-  
+
     useEffect(() => {
         var retryNum = 0
         depsCheck.current = setInterval(() => {
@@ -77,9 +78,9 @@ export const PanelGrid = memo((props: PanelGridProps) => {
                 setDepsInited(true)
                 clearInterval(depsCheck.current)
                 depsCheck.current = null
-                return 
+                return
             }
-          
+
             let inited = true
             const vars = $variables.get()
             for (const q of props.panel.datasource.queries) {
@@ -100,7 +101,7 @@ export const PanelGrid = memo((props: PanelGridProps) => {
                 clearInterval(depsCheck.current)
                 depsCheck.current = null
             } else {
-                console.log("check panel refer vars inited", props.panel.id,retryNum)
+                console.log("check panel refer vars inited", props.panel.id, retryNum)
                 retryNum += 1
             }
         }, 100)
@@ -121,7 +122,7 @@ export const PanelGrid = memo((props: PanelGridProps) => {
 
     return (
         <PanelBorder width={props.width} height={props.height} border={props.panel.styles?.border}>
-            {depsInited && <PanelComponent key={props.panel.id + forceRenderCount} {...props} timeRange={tr} variables={variables} />}
+            {depsInited ? <PanelComponent key={props.panel.id + forceRenderCount} {...props} timeRange={tr} variables={variables} /> : <Loading />}
         </PanelBorder>
     )
 })
@@ -157,7 +158,7 @@ export const PanelComponent = ({ dashboard, panel, variables, onRemovePanel, wid
         }
         queryH.current = setTimeout(() => {
             queryData(panel, dashboard.id)
-        }, 300)
+        }, 200)
     }, [panel.datasource, timeRange, variables])
 
 
@@ -288,15 +289,19 @@ export const PanelComponent = ({ dashboard, panel, variables, onRemovePanel, wid
     }, [panel.transform, panel.enableTransform, panelData])
 
     return <Box height={height} width={width} className={panel.styles.border == "None" ? "hover-bordered" : null} border="1px solid transparent" position="relative">
-        <PanelHeader panel={panel} data={data} queryError={queryError} onCopyPanel={onCopyPanel} onRemovePanel={onRemovePanel} />
-        {data && <Box
-            // panel={panel}
-            height={panelInnerHeight}
-            overflowY="scroll"
-            marginLeft={panel.type == PanelType.Graph ? "-10px" : "0px"}
-        >
-            <CustomPanelRender dashboardId={dashboard.id} panel={panel} data={data} height={panelInnerHeight} width={panelInnerWidth} sync={sync} timeRange={timeRange} />
-        </Box>}
+
+        {data ? <>
+            <PanelHeader panel={panel} data={data} queryError={queryError} onCopyPanel={onCopyPanel} onRemovePanel={onRemovePanel} />
+            <Box
+                // panel={panel}
+                height={panelInnerHeight}
+                overflowY="scroll"
+                marginLeft={panel.type == PanelType.Graph ? "-10px" : "0px"}
+            >
+                <CustomPanelRender dashboardId={dashboard.id} panel={panel} data={data} height={panelInnerHeight} width={panelInnerWidth} sync={sync} timeRange={timeRange} />
+            </Box>
+        </>
+            : <Loading />}
     </Box>
 }
 
