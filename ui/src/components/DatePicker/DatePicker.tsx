@@ -11,7 +11,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 import { Box, HStack, Modal, ModalBody, ModalContent, ModalOverlay, Text, Tooltip, useDisclosure } from "@chakra-ui/react"
-import TimePicker, { TimePickerKey, convertRawToRange, getNewestTimeRange } from "./TimePicker"
+import TimePicker, { TimePickerKey, convertRawToRange, getCurrentTimeRange, getNewestTimeRange } from "./TimePicker"
 import { TimeRange } from "types/time"
 import { FaRegClock } from "react-icons/fa"
 import IconButton from "../button/IconButton"
@@ -20,7 +20,7 @@ import useBus, { dispatch } from "use-bus"
 import { SetTimeEvent, TimeChangedEvent, TimeRefreshEvent } from "src/data/bus-events"
 import { subMinutes } from "date-fns"
 import storage from "utils/localStorage"
-import { addParamToUrl } from "utils/url"
+import { addParamToUrl, getUrlParams } from "utils/url"
 import { Moment } from "moment"
 import { useSearchParam } from "react-use"
 import { dateTimeFormat } from "utils/datetime/formatter"
@@ -88,6 +88,14 @@ const DatePicker = ({ showTime = false }: Props) => {
 
 
     const onTimeChange = (t: TimeRange) => {
+        const params = getUrlParams()
+        if (!params.from) {
+            addParamToUrl({
+               from: value.sub == 0 ? value.start.getTime() : value.startRaw,
+               to: value.sub == 0 ? value.end.getTime() : value.endRaw
+            })
+        }
+
         setValue(t)
         onClose()
         dispatch({ type: TimeChangedEvent, data: t })
