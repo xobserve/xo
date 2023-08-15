@@ -161,6 +161,9 @@ func isVariableNameValid(name string) bool {
 			continue
 		}
 
+		if v == '-' || v == '_' {
+			continue
+		}
 		return false
 	}
 

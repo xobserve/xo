@@ -146,9 +146,9 @@ const DashboardWrapper = ({ dashboardId, sideWidth }) => {
         setDashboard(f)
     }, [])
 
-    const hidingVars = dashboard?.data?.hidingVars?.split(',')
+    const hidingVars = dashboard?.data?.hidingVars?.toLowerCase().split(',')
     const visibleVars = vars.filter(v => {
-        return v.id.toString().startsWith("d-") || !v.id.toString().startsWith("d-") && !find(hidingVars,v1 => v1 == v.name)
+        return v.id.toString().startsWith("d-") || !v.id.toString().startsWith("d-") && !find(hidingVars,v1 => v.name.toLowerCase().match(v1))
     })
 
     const headerHeight = fullscreen ? 0 : (visibleVars.length > 0 ? DashboardHeaderHeight :  (DashboardHeaderHeight - 25) ) + 7

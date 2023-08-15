@@ -69,9 +69,17 @@ export const PanelGrid = memo((props: PanelGridProps) => {
     const [tr, setTr] = useState<TimeRange>(getCurrentTimeRange())
     const depsCheck = useRef(null)
     const variables = useStore($variables)
+  
     useEffect(() => {
+        var retryNum = 0
         depsCheck.current = setInterval(() => {
-            console.log("check panel refer vars inited", props.panel.id)
+            if (retryNum > 5) {
+                setDepsInited(true)
+                clearInterval(depsCheck.current)
+                depsCheck.current = null
+                return 
+            }
+          
             let inited = true
             const vars = $variables.get()
             for (const q of props.panel.datasource.queries) {
@@ -83,7 +91,6 @@ export const PanelGrid = memo((props: PanelGridProps) => {
                     const variable = vars.find(v1 => v1.name == v)
                     if (variable?.values === undefined) {
                         inited = false
-                        return
                     }
                 }
             }
@@ -92,6 +99,9 @@ export const PanelGrid = memo((props: PanelGridProps) => {
                 setDepsInited(true)
                 clearInterval(depsCheck.current)
                 depsCheck.current = null
+            } else {
+                console.log("check panel refer vars inited", props.panel.id,retryNum)
+                retryNum += 1
             }
         }, 100)
     }, [])
