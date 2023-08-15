@@ -43,7 +43,6 @@ import JaegerVariableEditor from "src/views/dashboard/plugins/datasource/jaeger/
 import { useStore } from "@nanostores/react"
 import { cfgVariablemsg, commonMsg } from "src/i18n/locales/en"
 import LokiVariableEditor from "src/views/dashboard/plugins/datasource/loki/VariableEdtiro"
-import { hasVariableFormat, replaceWithVariables } from "utils/variable"
 import { getDatasource } from "utils/datasource"
 import { addParamToUrl, removeParamFromUrl } from "utils/url"
 import { useSearchParam } from "react-use"
@@ -65,6 +64,7 @@ const GlobalVariablesPage = () => {
             onEditVariable(variables.find(v => v.id.toString() == editVar))
         }
     },[variables, editVar])
+    
     useEffect(() => {
         load()
     }, [])
@@ -223,7 +223,7 @@ export const VariablesTable = ({ variables, onEdit, onRemove }: TableProps) => {
                             <Td>{variable.name}</Td>
                             <Td>{t[variable.type]}</Td>
                             <Td>{datasources?.find(ds => ds.id == variable.datasource)?.name}</Td>
-                            <Td>{t1[variable.refresh]} {variable.refresh == VariableRefresh.Manually && <Button size="sm" variant="ghost" ml="1" onClick={() => reloadValues(variable.id, variable.name)}>{t1.reload}</Button>}</Td>
+                            <Td>{t1[variable.refresh]} {variable.refresh == VariableRefresh.Manually && <Button size="sm" mt="-1" variant="ghost" ml="1" onClick={() => reloadValues(variable.id, variable.name)}>{t1.reload}</Button>}</Td>
                             <Td>{variable.regex}</Td>
                             <Td>
                                 <Button variant="ghost" size="sm" px="0" onClick={() => onEdit(variable)}>{t.edit}</Button>

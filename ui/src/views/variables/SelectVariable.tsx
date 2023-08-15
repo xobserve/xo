@@ -148,7 +148,7 @@ const SelectVariable = ({ v }: { v: Variable }) => {
                     continue
                 }
 
-                if ((variable.datasource?.toString() ?? variable.value).indexOf('${' + v.name + '}') >= 0) {
+                if ((v.datasource.toString()).indexOf('${' + variable.name + '}') >= 0 || (v.value).indexOf('${' + variable.name + '}') >= 0) {
                     // to avoid cache missing ,add a interval here
                     // Two consecutive requests will miss the cache, because the result of first request has not been save to cache, but the second request has arrived
                     setTimeout(() => {
@@ -247,8 +247,7 @@ export const setVariableValue = (variable: Variable, value) => {
         if (v.id == variable.id || referVars.includes(v.name)) {
             continue
         }
-        const s = v.datasource ?? v.value
-        if ((v.datasource.toString() ?? v.value).indexOf('${' + variable.name + '}') >= 0) {
+        if ((v.datasource.toString()).indexOf('${' + variable.name + '}') >= 0 || (v.value).indexOf('${' + variable.name + '}') >= 0) {
             dispatch(VariableForceReload + v.id)
         }
     }

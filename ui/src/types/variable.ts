@@ -33,7 +33,7 @@ export enum VariableQueryType {
 }
 
 export enum VariableRefresh {
-    OnDashboardLoad = "On dashboard load",
-    OnTimeRangeChange = "On timerange change",
+    OnDashboardLoad = "OnDashboardLoad",
+    OnTimeRangeChange = "OnTimeRangeChange",
     Manually = "Manually"
 }
