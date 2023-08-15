@@ -24,6 +24,7 @@ import TeamLayout from "./components/Layout"
 import '@nosferatu500/react-sortable-tree/style.css';
 import { useStore } from "@nanostores/react"
 import { cfgTeam, commonMsg } from "src/i18n/locales/en"
+import ReserveUrls from "src/data/reserve-urls"
 
 const TeamSidemenuPage = () => {
     return <>
@@ -55,6 +56,8 @@ const TeamSidemenu = ({team}:{team:Team}) => {
         const res = await requestApi.get(`/team/sidemenu/${team.id}`)
         setSideMenu(res.data)
     }
+
+    const reserveUrls = Object.values(ReserveUrls)
 
     const updateSidemenu = async () => {
         for (let i = 0; i < sidemenu.data.length; i++) {
@@ -103,6 +106,16 @@ const TeamSidemenu = ({team}:{team:Team}) => {
             if (!item.url.startsWith('/') || item.url === '/' || item.url.endsWith('/')) {
                 toast({
                     title: t1.sidemenuErrUrl({name: item.url}),
+                    status: "warning",
+                    duration: 3000,
+                    isClosable: true,
+                })
+                return 
+            }
+            
+            if (reserveUrls.some(url => url === item.url)) {
+                toast({
+                    title: `${item.url} is reserved, you cannot use`,
                     status: "warning",
                     duration: 3000,
                     isClosable: true,
@@ -281,11 +294,11 @@ const TeamSidemenu = ({team}:{team:Team}) => {
                                                 treeData: sidemenu.data,
                                                 path,
                                                 getNodeKey,
-                                                newNode: { ...node, url: event.target.value },
+                                                newNode: { ...node, url: event.target.value.trim() },
                                             })
                                             setSideMenu({ ...sidemenu, data: newTreeData as any })
                                         }}
-                                        placeholder="e.g /test"
+                                        placeholder="e.g /home"
                                     />
                                     <Input
                                         width="120px"
