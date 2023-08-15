@@ -23,7 +23,6 @@ import { isJSON } from "utils/is"
 import { replaceWithVariables } from "utils/variable"
 import { requestApi } from "utils/axios/request"
 import { isEmpty } from "utils/validate"
-import { $variables } from "src/views/variables/store"
 
 export const run_http_query = async (panel: Panel, q: PanelQuery, range: TimeRange, ds: Datasource) => {
     if (isEmpty(q.metrics.trim())) {
@@ -53,12 +52,13 @@ export const run_http_query = async (panel: Panel, q: PanelQuery, range: TimeRan
 
 
 
-    const res: any = await requestApi.get(`/proxy?proxy_url=${url}`)
+    const res: any = await requestApi.get(`/proxy?proxy_url=${encodeURIComponent(url)}`)
     let result
     if (!isEmpty(q.data.transformResult)) {
         const transformResult = genDynamicFunction(q.data.transformResult);
         if (isFunction(transformResult)) {
-            return  transformResult(res, q, start, end)
+            // return {error: string, data: any} format
+            return transformResult(res, q, start, end)        
         } else {
             return {
                 error: 'transformResult is not a valid function',
@@ -126,7 +126,7 @@ export const queryHttpVariableValues = async (variable: Variable, useCurrentTime
     }
 
     try {
-        const res = await requestApi.get(`/proxy?proxy_url=${url}`)
+        const res = await requestApi.get(`/proxy?proxy_url=${encodeURIComponent(url)}`)
         result.data = res
 
         if (!isEmpty(data.transformResult)) {

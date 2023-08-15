@@ -94,5 +94,13 @@ const initTransformRequest =
 const initTransformResult =
 `function transformResult(httpResult, query, startTime, endTime) {
     console.log("here33333 result:", httpResult)
-    return httpResult
+
+    // Please resutrn {error: string | null, data: any} format
+    // When using http datasource, it's your responsibility to make the panel you are using work!
+    // so you need to know which data format the panel is using, and return data in that format.
+    // You can find panel data format in Panel Debug.
+    return {
+        error: null, 
+        data: httpResult
+    }
 }`

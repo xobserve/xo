@@ -18,6 +18,7 @@ import { isEmpty } from "lodash"
 import ComplexTable from "./components/ComplexTable/ComplexTable"
 import { SeriesData } from "types/seriesData"
 import customColors from "theme/colors"
+import { isSeriesData } from "utils/seriesData"
 
 interface TablePanelProps extends PanelProps {
     data: SeriesData[][]
@@ -28,6 +29,9 @@ const TablePanel = (props: TablePanelProps) => {
     const { panel } = props
     if (isEmpty(props.data)) {
         return (<Center height="100%">No data</Center>)
+    }
+    if (!isSeriesData(props.data)) {
+        return (<Center height="100%">Data format not support!</Center>)
     }
 
     const tdata: TableSeries[] = seriesDataToTableData(props.data)

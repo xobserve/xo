@@ -35,6 +35,7 @@ import { findOverride, findOverrideRule, findRuleInOverride } from "utils/dashbo
 import { ThresholdsPlugin } from "./uplot-plugins/ThresholdsPlugin";
 import { ThresholdDisplay } from "types/panel/plugins";
 import { getStackedOpts } from "./uplot-plugins/stack";
+import { isSeriesData } from "utils/seriesData";
 
 interface GraphPanelProps extends PanelProps {
     data: SeriesData[][]
@@ -45,6 +46,10 @@ const GraphPanel = memo((props: GraphPanelProps) => {
     const [inactiveSeries, setInactiveSeries] = useState(storage.get(inactiveKey) ?? [])
     const [uplot, setUplot] = useState<uPlot>(null)
     const { colorMode } = useColorMode()
+
+    if (!isSeriesData(props.data)) {
+        return (<Center height="100%">Data format not support!</Center>)
+    }
 
     useEffect(() => {
         if (inactiveSeries.length > 0) {

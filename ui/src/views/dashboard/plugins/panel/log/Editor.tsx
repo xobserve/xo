@@ -28,6 +28,8 @@ import { palettes } from "utils/colors"
 import { cloneDeep } from "lodash"
 import { FaTimes } from "react-icons/fa"
 import { isSeriesData } from "utils/seriesData"
+import { dispatch } from "use-bus"
+import { PanelForceRebuildEvent } from "src/data/bus-events"
 
 const LogPanelEditor = memo((props: PanelEditorProps) => {
     const { panel, onChange } = props
@@ -145,6 +147,7 @@ const LogPanelEditor = memo((props: PanelEditorProps) => {
             <PanelEditItem title="Chart height" desc="Css style width">
                 <EditorInputItem value={panel.plugins.log.chart.height} onChange={(v) => onChange((panel: Panel) => {
                     panel.plugins.log.chart.height = v
+                    dispatch(PanelForceRebuildEvent + panel.id)
                 })} placeholder="e.g 200px 30%" />
             </PanelEditItem>
             <PanelEditItem title="Show label" desc="Value label display on bars">

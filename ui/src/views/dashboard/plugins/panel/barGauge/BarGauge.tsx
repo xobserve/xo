@@ -14,7 +14,7 @@
 import { useMemo } from "react";
 import {  Panel, PanelProps } from "types/dashboard"
 import { SeriesData } from "types/seriesData";
-import { calcValueOnArray } from "utils/seriesData";
+import { calcValueOnArray, isSeriesData } from "utils/seriesData";
 import React from "react";
 import BarGauge, { BarGaugeValue } from "components/BarGauge/BarGauge";
 import { findOverride, findRuleInOverride } from "utils/dashboard/panel";
@@ -34,6 +34,10 @@ const BarGaugePanel = (props: Props) => {
     if (isEmpty(props.data)) {
         return (<Center height="100%">No data</Center>)
       }
+
+      if (!isSeriesData(props.data)) {
+        return (<Center height="100%">Data format not support!</Center>)
+    }
 
     const rawData: SeriesData[] = useMemo(() => {
         let sd: SeriesData[] = props.data.flat()

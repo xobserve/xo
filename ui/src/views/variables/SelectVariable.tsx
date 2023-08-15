@@ -139,7 +139,7 @@ const SelectVariable = memo(({ v }: { v: Variable }) => {
         const oldSelected = v.selected
         if (!isEqual(result, v.values)) {
             if (v.selected != VarialbeAllOption) {
-                if (v.selected) {
+                if (!isEmpty(v.selected)) {
                     const selected = v.selected.split(VariableSplitChar)?.filter(s => result.includes(s))
                     if (selected.length == 0) {
                         v.selected = result[0]

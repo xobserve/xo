@@ -10,7 +10,7 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-import { Box, useColorMode } from "@chakra-ui/react";
+import { Box, Center, useColorMode } from "@chakra-ui/react";
 import ChartComponent from "components/charts/Chart";
 import { formatUnit } from "components/Unit";
 import { useMemo, useState } from "react";
@@ -19,7 +19,7 @@ import { PieLegendPlacement } from "types/panel/plugins";
 import { PiePluginData } from "types/plugins/pie"
 import { SeriesData } from "types/seriesData";
 import { genDynamicFunction } from "utils/dynamicCode";
-import { calcValueOnSeriesData } from "utils/seriesData";
+import { calcValueOnSeriesData, isSeriesData } from "utils/seriesData";
 import React from "react";
 import { paletteColorNameToHex } from "utils/colors";
 import { ValueCalculationType } from "types/value";
@@ -34,6 +34,10 @@ const PiePanel = (props: Props) => {
     const { panel, height, width } = props
     const [chart, setChart] = useState(null)
     const { colorMode } = useColorMode()
+
+    if (!isSeriesData(props.data)) {
+        return (<Center height="100%">Data format not support!</Center>)
+    }
 
     const [options, onEvents] = useMemo(() => {
         // const d = data.length > 0 ? data[0] : []

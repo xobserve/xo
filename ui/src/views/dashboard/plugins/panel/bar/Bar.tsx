@@ -39,7 +39,7 @@ const BarPanelWrapper = (props: BarPanelProps) => {
 
     return (<>
         {
-            !isSeriesData(props.data[0])
+            !isSeriesData(props.data)
                 ?
                 <Center height="100%">
                     <VStack>

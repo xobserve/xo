@@ -21,6 +21,7 @@ import { SeriesData } from "types/seriesData";
 import { VarialbeAllOption } from "src/data/variable";
 import StatGraph from "./StatGraph";
 import AutoGrid  from "components/grid/AutoGrid";
+import { isSeriesData } from "utils/seriesData";
 
 
 interface StatPanelProps extends PanelProps {
@@ -32,7 +33,9 @@ const StatPanel = memo((props: StatPanelProps) => {
         return (<Center height="100%">No data</Center>)
     }
 
-
+    if (!isSeriesData(props.data)) {
+        return (<Center height="100%">Data format not support!</Center>)
+    }
   
 
     const data: SeriesData[] = useMemo(() => {

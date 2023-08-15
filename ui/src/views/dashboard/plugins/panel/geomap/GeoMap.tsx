@@ -10,7 +10,7 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-import { Box } from "@chakra-ui/react"
+import { Box, Center } from "@chakra-ui/react"
 import React, { useEffect, useMemo, useRef, useState } from "react"
 import Map from 'ol/Map';
 import View from 'ol/View';
@@ -28,6 +28,7 @@ import Attribution from 'ol/control/Attribution';
 import { GeomapTooltip } from "./components/Tooltip";
 import 'ol/ol.css';
 import 'ol-ext/dist/ol-ext.css';
+import { isSeriesData } from "utils/seriesData";
 
 interface Props extends PanelProps {
     data: SeriesData[][]
@@ -41,6 +42,12 @@ const GeoMapPanel = (props: Props) => {
     const options = panel.plugins.geomap
     const mapContainer = useRef(null)
     
+
+    if (!isSeriesData(props.data)) {
+        return (<Center height="100%">Data format not support!</Center>)
+    }
+
+
     let dataLayer = useMemo(() => {
         let dataLayer 
         switch (options.dataLayer.layer) {

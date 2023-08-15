@@ -41,8 +41,12 @@ const EchartsPanel = (props: PanelProps) => {
         let onEvents = null;
         const setOptions = genDynamicFunction(panel.plugins.echarts.setOptionsFunc);
         if (isFunction(setOptions)) {
-            const o = setOptions(cloneDeep(data),panel.plugins.echarts.enableThresholds && panel.plugins.echarts.thresholds, colors, echarts, loadash, moment,colorMode)
-            options = o
+            try {
+                const o = setOptions(cloneDeep(data), panel.plugins.echarts.enableThresholds && panel.plugins.echarts.thresholds, colors, echarts, loadash, moment, colorMode)
+                options = o
+            } catch (error) {
+                console.log("parse echarts options error", error)
+            }
         } else {
             toast({
                 title: "set options error",
@@ -68,16 +72,18 @@ const EchartsPanel = (props: PanelProps) => {
             }
         }
 
-        options.animation = panel.plugins.echarts.animation
-
+        if (options) {
+            options.animation = panel.plugins.echarts.animation
+        }
+      
         return [options, onEvents]
     }, [panel.plugins.echarts, props.data, chart])
 
 
     // override  echarts background in panel edit mod
-    const darkBg = edit == panel.id.toString() ? 
-    'transparent' :
-    'transparent'//  "#1A202C"
+    const darkBg = edit == panel.id.toString() ?
+        'transparent' :
+        'transparent'//  "#1A202C"
     return (<>
         {options && <Box height={height} key={colorMode} className="echarts-panel"><EchartsComponent options={options} theme={colorMode} width={width - 11} height={height} onChartCreated={c => setChart(c)} onChartEvents={onEvents} darkBg={darkBg} /></Box>}
     </>)
