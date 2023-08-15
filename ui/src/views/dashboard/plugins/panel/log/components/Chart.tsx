@@ -323,13 +323,13 @@ const getTimeFormat = (start, end, step) => {
     if (step < 60) {
         format += ":ss"
     }
-
+ 
     return format
 }
 
 const getTimeInterval = (width, format, fontSize, ticks) => {
-    const formatWidth = (measureText(format, fontSize).width + 10)
-    const allowTicks = floor(width / formatWidth)
+    // const formatWidth = (measureText(format, fontSize).width + 10)
+    // const allowTicks = floor(width / formatWidth)
     // if ((ticks / allowTicks) > 1) {
     //     return [0, 45]
     // }

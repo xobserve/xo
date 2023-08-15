@@ -105,7 +105,6 @@ const BarChart = memo((props: Props) => {
         return data0
     },[data0])
 
-    console.log("here333333",rawNames, cloneDeep(data))
     let stack;
     if (options.stack == "always") {
         stack = "total"

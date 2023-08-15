@@ -111,7 +111,6 @@ export const registerCustomNode = (colorMode, enableHighlight, highlightNodes, h
               }
             }
             
-            console.log("here444444:")
             group.addShape('text', {
               attrs: {
                 x: 0,

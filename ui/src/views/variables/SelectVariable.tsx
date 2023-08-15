@@ -84,7 +84,6 @@ const SelectVariable = memo(({ v }: { v: Variable }) => {
             return 
         }
         if ( !isEmpty(varInUrl) && varInUrl !== prevVarInUrl) {
-            console.log("here333333:",v.name, varInUrl,prevVarInUrl)
             setValue(v, varInUrl)
         }
     },[varInUrl, prevVarInUrl])
@@ -266,7 +265,6 @@ const setValue = (variable: Variable, value) => {
             newVars.push(vars[i])
         }
     }
-    console.log("here33333",cloneDeep(newVars), variable, value)
     $variables.set(newVars)
 
     const sv = storage.get(vkey)

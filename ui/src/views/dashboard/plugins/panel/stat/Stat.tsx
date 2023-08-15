@@ -46,7 +46,6 @@ const StatPanel = memo((props: StatPanelProps) => {
                     }
                   
                     const selected = displaySeries == VarialbeAllOption || s.rawName == displaySeries
-                    console.log("here3333 stat", s, selected)
                     if (selected) {
                         res.push(s)
                     }
@@ -59,7 +58,6 @@ const StatPanel = memo((props: StatPanelProps) => {
     
     const options = props.panel.plugins.stat
 
-    console.log("here3333 stat", data)
     return (
         <>
             {
