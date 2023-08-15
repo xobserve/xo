@@ -270,7 +270,7 @@
     "tootip": "共享 Tooltip",
     "tootipTips": "在所有图表的同一个时间点显示 tooltip，需要刷新页面来生效",
     "hideVars": "隐藏全局变量",
-    "hideVarsTips": "输入全局变量的名称，使用逗号分隔，例如: app,env ",
+    "hideVarsTips": "输入全局变量名，使用逗号分隔，支持正则例如: app,env ",
     "tagTips": "仪表盘可以按照标签进行分组和查询",
     "tagInputTips": "新建标签(按下 enter 键可以添加)",
     "tagsExceedLimit": "最多只能添加 5 个标签",

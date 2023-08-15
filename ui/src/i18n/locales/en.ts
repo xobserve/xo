@@ -290,7 +290,7 @@ export const dashboardSettingMsg = i18n("dashboardSetting", {
   "tootip": "Shared tooltip",
   "tootipTips": "Show tooltips at the same timeline position across all panels, need reload page to take effect",
   "hideVars": "Hide global variables",
-  "hideVarsTips": "enter global variables names, separated with ',' . e.g: app,env",
+  "hideVarsTips": "enter global variable names, separated with ',' , support regex",
   "tagTips": "Tag a dashboard and group it into a same collection for searching",
   "tagInputTips": "new tag(press enter to add)",
   "tagsExceedLimit": "You can only add up to 5 tags.",
