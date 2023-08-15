@@ -137,7 +137,7 @@ export const UnitPicker = ({ value, onChange,size="md" }: Props) => {
                             unit: "GB"
                         }]
                 })
-
+                break
             case "custom":
                 setUnits({
                     unitsType: t,
