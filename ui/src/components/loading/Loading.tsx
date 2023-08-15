@@ -34,9 +34,9 @@ const Loading = ({ children, className, style }:Props) => {
         <circle
           cx='25'
           cy='25'
-          r='20'
+          r='15'
           fill='transparent'
-          strokeWidth='3'
+          strokeWidth='2'
           strokeDasharray='31.415, 31.415'
           stroke='#02bcfe'
           strokeLinecap='round'
@@ -59,9 +59,9 @@ const Loading = ({ children, className, style }:Props) => {
         <circle
           cx='25'
           cy='25'
-          r='10'
+          r='8'
           fill='transparent'
-          strokeWidth='3'
+          strokeWidth='2'
           strokeDasharray='15.7, 15.7'
           stroke='#3be6cb'
           strokeLinecap='round'

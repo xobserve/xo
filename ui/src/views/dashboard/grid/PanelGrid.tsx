@@ -301,7 +301,7 @@ export const PanelComponent = ({ dashboard, panel, variables, onRemovePanel, wid
                 <CustomPanelRender dashboardId={dashboard.id} panel={panel} data={data} height={panelInnerHeight} width={panelInnerWidth} sync={sync} timeRange={timeRange} />
             </Box>
         </>
-            : <Loading />}
+            : <Box position="fixed" top="0" right="0"><Loading  /></Box>}
     </Box>
 }
 
