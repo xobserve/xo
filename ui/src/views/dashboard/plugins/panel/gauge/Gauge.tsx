@@ -146,8 +146,8 @@ const GaugePanel = (props: Props) => {
             },
           },
           data: data,
-          min: data[0].min,
-          max: data[0].max,
+          min: data[0]?.min,
+          max: data[0]?.max,
 
           /*----scale-----*/
           splitLine: (panel.plugins.gauge.scale.enable && panel.plugins.gauge.scale.splitNumber > 0) ? {

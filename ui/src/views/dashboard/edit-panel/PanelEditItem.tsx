@@ -25,7 +25,7 @@ interface Props {
 const PanelEditItem = (props: Props) => {
     return (<Box>
         <HStack>
-            {props.title && <Text fontSize="sm" layerStyle="textSecondary" fontWeight="550">{props.title}</Text>}
+            {props.title && <Text fontSize="sm" fontWeight="550">{props.title}</Text>}
             {props.info && <Popover trigger="hover">
                 <PopoverTrigger>
                     <Box cursor="pointer" layerStyle="textFourth"><FaInfoCircle /></Box>

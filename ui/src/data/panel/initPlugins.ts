@@ -217,7 +217,7 @@ function registerEvents(options, chart) {
                 decimal: 3,
                 calc: ValueCalculationType.Last
             },
-            thresholds: initThresholds(24),
+            thresholds: initThresholds(12),
             enableThresholds: false,
             onClickEvent: `function onClickEvent(params) {
     console.log(params)
@@ -257,7 +257,7 @@ function registerEvents(options, chart) {
                 length: '80%',
                 width: 8,
             },
-            thresholds: initThresholds(18)
+            thresholds: initThresholds(6)
         },
 
         [PanelType.Stat]: {
@@ -314,7 +314,7 @@ function registerEvents(options, chart) {
             maxminFrom: "all",
             showMax: true,
             showMin: true,
-            thresholds: initThresholds(24)
+            thresholds: initThresholds(6)
         },
         [PanelType.GeoMap]: {
             initialView: {
@@ -328,7 +328,7 @@ function registerEvents(options, chart) {
                 attr: null
             },
             dataLayer: {
-                layer: DataLayerType.Heatmap  ,
+                layer: DataLayerType.Markers  ,
                 opacity: 0.6
             },
             controls: {
@@ -350,7 +350,7 @@ function registerEvents(options, chart) {
                 baseSize: 10, 
                 maxScale : 4
             },
-            thresholds: initThresholds()
+            thresholds: initThresholds(12)
         },
         [PanelType.Log]: {
             showTime: true,
@@ -368,7 +368,8 @@ function registerEvents(options, chart) {
                 labelValueColor: 'inherit', 
                 contentColor: 'inherit', 
                 fontSize: "0.9rem",
-                wordBreak: "break-all"
+                wordBreak: "break-all",
+                showlineBorder: true
             },
             toolbar: {
                 show: true,
@@ -413,7 +414,7 @@ function registerEvents(options, chart) {
                     sort: 'desc'
                 }
             },
-            thresholds: initThresholds(24),
+            thresholds: initThresholds(12),
             thresholdsDisplay: ThresholdDisplay.None,
             thresholdArrow: BarThresholdArrow.None,
         },

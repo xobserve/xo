@@ -129,6 +129,7 @@ export interface LogSettings {
         contentColor: string
         fontSize: string
         wordBreak: "break-word" | "break-all"
+        showlineBorder: boolean
     }
     toolbar: {
         show: boolean

@@ -12,7 +12,7 @@
 // limitations under the License.
 
 import React, { memo, useEffect, useMemo, useState } from "react";
-import { Box, HStack, Highlight, Text, VStack, useColorMode } from "@chakra-ui/react"
+import { Box, HStack, Highlight, Text, VStack, useColorMode, useColorModeValue } from "@chakra-ui/react"
 import { Panel } from "types/dashboard"
 import { dateTimeFormat } from "utils/datetime/formatter";
 import { isEmpty, round, toNumber } from "lodash";
@@ -104,7 +104,7 @@ const LogItem = memo((props: LogItemProps) => {
                         </LabelLayout>)
                     }
                 </HStack>}
-            <Text wordBreak={options.styles.wordBreak} color={paletteColorNameToHex(options.styles.contentColor)}><Highlight query={log.highlight??[]} styles={{ px: '1', py: '1',borderRadius: 4,  bg: 'teal.100' }}>{log.content}</Highlight></Text>
+            <Text wordBreak={options.styles.wordBreak} color={paletteColorNameToHex(options.styles.contentColor)} fontSize="sm"><Highlight query={log.highlight??[]} styles={{ px: '1', py: '1',borderRadius: 4,  bg: 'teal.100' }}>{log.content}</Highlight></Text>
         </HStack>
         {
             !collapsed && <Box p="4" fontSize={options.styles.fontSize}>

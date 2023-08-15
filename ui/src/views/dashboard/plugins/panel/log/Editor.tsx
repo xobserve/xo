@@ -39,7 +39,7 @@ const LogPanelEditor = memo((props: PanelEditorProps) => {
     const labels = useMemo(() => {
         const labels = new Set<string>()
         data.forEach(series => {
-            Object.keys(series.labels).forEach(k => {
+            series.labels && Object.keys(series.labels).forEach(k => {
                 labels.add(k)
             })
         })
@@ -118,6 +118,11 @@ const LogPanelEditor = memo((props: PanelEditorProps) => {
                     panel.plugins.log.styles.wordBreak = v
                 })} />
             </PanelEditItem>
+            <PanelEditItem title="Line border">
+                <Switch isChecked={panel.plugins.log.styles.showlineBorder} onChange={(e) => onChange((panel: Panel) => {
+                    panel.plugins.log.styles.showlineBorder = e.target.checked
+                })} />
+                </PanelEditItem>
         </PanelAccordion>
         <PanelAccordion title="Toolbar">
             <PanelEditItem title="Show" desc="Show toolbar in upper right corner">

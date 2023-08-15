@@ -31,6 +31,10 @@ const CommonStyles = () => (
       .panel-decoration {
         z-index: 1
       }
+
+      .chakra-stack__divider {
+        border-bottom-width: 0.5px!important
+      }
     `}
   />
 )

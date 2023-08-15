@@ -87,8 +87,12 @@ export const registerCustomNode = (colorMode, enableHighlight, highlightNodes, h
           draggable: true,
           name: `${this.type}-keyShape`
         });
-
+        
         const { width, height, show, text } = icon;
+        // if (cfg.id == "frontend") {
+          console.log("here3333:",cfg,icon)
+        // }
+
         if (show) {
           if (text) {
             let matched = false

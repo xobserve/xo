@@ -13,13 +13,13 @@
 import G6 from "@antv/g6";
 import { NodeGraphSettings } from "types/panel/plugins";
 import { NodeGraphPluginData } from "types/plugins/nodeGraph";
-import { paletteColorNameToHex } from "utils/colors";
+import { colors, paletteColorNameToHex } from "utils/colors";
 import { getDefaultEdgeStyle } from "./default-styles";
 
-export const setAttrsForData = (settings: NodeGraphSettings, data: NodeGraphPluginData,colorMode) => {
+export const setAttrsForData = (settings: NodeGraphSettings, data: NodeGraphPluginData, colorMode) => {
     const donutColors = {}
     settings.node.donutColors.forEach(item => { donutColors[item.attr] = item.color })
-    
+
     // 计算 node size
     // 找出最小的那个作为基准 size
     let base;
@@ -35,7 +35,7 @@ export const setAttrsForData = (settings: NodeGraphSettings, data: NodeGraphPlug
                 attrs[k] = null
             }
         })
-        
+
         node.donutAttrs = attrs
         if (!node.icon?.show) {
             for (const k of Object.keys(node.data)) {
@@ -50,13 +50,13 @@ export const setAttrsForData = (settings: NodeGraphSettings, data: NodeGraphPlug
             }
         }
 
-        
+
         node.type = nodeShape
         node.donutColorMap = donutColors
-        
+
         let t = 0;
         Object.keys(node.donutAttrs).forEach(key => {
-            t += node.donutAttrs[key]??0;
+            t += node.donutAttrs[key] ?? 0;
         })
         if (i == 0) {
             base = t
@@ -71,7 +71,7 @@ export const setAttrsForData = (settings: NodeGraphSettings, data: NodeGraphPlug
     data.nodes?.forEach((node: any) => {
         let t = 0;
         Object.keys(node.donutAttrs).forEach(key => {
-            t += node.donutAttrs[key]??0;
+            t += node.donutAttrs[key] ?? 0;
         })
 
         const p = Math.log2(t / base)
@@ -79,7 +79,7 @@ export const setAttrsForData = (settings: NodeGraphSettings, data: NodeGraphPlug
             node.size = settings.node.baseSize
         } else if (p >= settings.node.maxSize) {
             node.size = settings.node.baseSize * settings.node.maxSize
-         
+
         } else {
             node.size = p * settings.node.baseSize
         }
@@ -88,12 +88,22 @@ export const setAttrsForData = (settings: NodeGraphSettings, data: NodeGraphPlug
             node.icon.width = node.size / 2.5
             node.icon.height = node.size / 2.5
         }
+
+        if (t == 0) {
+            // if data is 0, we must and a border to node, otherwise , the node will not show
+            // because custom node will show nothing when data is 0
+            node.style = {
+                lineWidth: 1,
+                fill: 'transparent',
+                stroke: colors[0]
+            }
+        }
     })
 
     data.edges?.forEach(edge => {
         edge.type = settings.edge.shape
         if (edge.style) {
-            edge.style.endArrow = settings.edge.arrow == "default" ? true :{
+            edge.style.endArrow = settings.edge.arrow == "default" ? true : {
                 path: G6.Arrow[settings.edge.arrow](),
                 fill: colorMode == "light" ? paletteColorNameToHex(settings.edge.color.light, colorMode) : paletteColorNameToHex(settings.edge.color.dark, colorMode),
             }
@@ -101,9 +111,9 @@ export const setAttrsForData = (settings: NodeGraphSettings, data: NodeGraphPlug
             edge.style.stroke = colorMode == "light" ? paletteColorNameToHex(settings.edge.color.light, colorMode) : paletteColorNameToHex(settings.edge.color.dark, colorMode)
             edge.style.opacity = settings.edge.opacity
         }
-       
+
         if (!edge.stateStyles) edge.stateStyles = {}
-        const defaultEdgeStyle = getDefaultEdgeStyle(settings,colorMode)
+        const defaultEdgeStyle = getDefaultEdgeStyle(settings, colorMode)
         Object.keys(defaultEdgeStyle).forEach(key => {
             edge.stateStyles[key] = defaultEdgeStyle[key]
         })

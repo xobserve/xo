@@ -94,6 +94,12 @@ export function customClasses(props) {
                 props.theme.colors.cyan["200"]
             )(props)
         },
+        ".annotation-text": {
+            color: mode(
+                "rgb(71,85,105)",
+                "rgb(148,163,184)",
+            )(props)
+        },
         ".chakra-form__label": {
             fontSize: ".85rem !important",
             fontWeight: "550 !important",
