@@ -29,7 +29,7 @@ var logger = log.RootLogger.New("logger", "variables")
 // name VARCHAR(60) PRIMARY KEY NOT NULL,
 // type VARCHAR(10) NOT NULL,
 // value TEXT,
-// external_url VARCHAR(255) DEFAULT '',
+// external_url VARCHAR(255) DEFAULT ”,
 // created DATETIME NOT NULL,
 // updated DATETIME NOT NULL
 func AddNewVariable(c *gin.Context) {
@@ -55,8 +55,8 @@ func AddNewVariable(c *gin.Context) {
 	}
 
 	now := time.Now()
-	_, err = db.Conn.Exec("INSERT INTO variable(name,type,value,datasource,description,refresh,enableMulti,enableAll,created,updated) VALUES(?,?,?,?,?,?,?,?,?,?)",
-		v.Name, v.Type, v.Value, v.Datasource, v.Desc, v.Refresh, v.EnableMulti, v.EnableAll, now, now)
+	_, err = db.Conn.Exec("INSERT INTO variable(name,type,value,datasource,description,refresh,enableMulti,enableAll,regex,created,updated) VALUES(?,?,?,?,?,?,?,?,?,?,?)",
+		v.Name, v.Type, v.Value, v.Datasource, v.Desc, v.Refresh, v.EnableMulti, v.EnableAll, v.Regex, now, now)
 	if err != nil {
 		if e.IsErrUniqueConstraint(err) {
 			c.JSON(400, common.RespError("variable name already exists"))
@@ -71,7 +71,7 @@ func AddNewVariable(c *gin.Context) {
 
 func GetVariables() ([]*models.Variable, error) {
 	vars := []*models.Variable{}
-	rows, err := db.Conn.Query("SELECT id,name,type,value,datasource,description,refresh,enableMulti,enableAll FROM variable")
+	rows, err := db.Conn.Query("SELECT id,name,type,value,datasource,description,refresh,enableMulti,enableAll,regex FROM variable")
 	if err != nil {
 
 		return nil, err
@@ -79,7 +79,7 @@ func GetVariables() ([]*models.Variable, error) {
 
 	for rows.Next() {
 		v := &models.Variable{}
-		err = rows.Scan(&v.Id, &v.Name, &v.Type, &v.Value, &v.Datasource, &v.Desc, &v.Refresh, &v.EnableMulti, &v.EnableAll)
+		err = rows.Scan(&v.Id, &v.Name, &v.Type, &v.Value, &v.Datasource, &v.Desc, &v.Refresh, &v.EnableMulti, &v.EnableAll, &v.Regex)
 		if err != nil {
 			logger.Warn("scan variable error", "error", err)
 			continue
@@ -114,8 +114,8 @@ func UpdateVariable(c *gin.Context) {
 	}
 
 	now := time.Now()
-	_, err = db.Conn.Exec("UPDATE variable SET name=?,type=?,value=?,datasource=?,description=?,refresh=?,enableMulti=?,enableAll=?,updated=? WHERE id=?",
-		v.Name, v.Type, v.Value, v.Datasource, v.Desc, v.Refresh, v.EnableMulti, v.EnableAll, now, v.Id)
+	_, err = db.Conn.Exec("UPDATE variable SET name=?,type=?,value=?,datasource=?,description=?,refresh=?,enableMulti=?,enableAll=?,regex=?,updated=? WHERE id=?",
+		v.Name, v.Type, v.Value, v.Datasource, v.Desc, v.Refresh, v.EnableMulti, v.EnableAll, v.Regex, now, v.Id)
 	if err != nil {
 		if e.IsErrUniqueConstraint(err) {
 			c.JSON(400, common.RespError("variable name already exists"))

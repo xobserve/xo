@@ -25,4 +25,5 @@ type Variable struct {
 	Refresh     string    `json:"refresh"`
 	EnableMulti bool      `json:"enableMulti"`
 	EnableAll   bool      `json:"enableAll"`
+	Regex       *string   `json:"regex"`
 }

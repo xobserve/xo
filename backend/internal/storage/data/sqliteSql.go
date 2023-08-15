@@ -80,6 +80,7 @@ CREATE TABLE IF NOT EXISTS variable (
     enableMulti BOOL NOT NULL DEFAULT false,
     enableAll BOOL NOT NULL DEFAULT false,
     sort TINYINT DEFAULT 0,
+    regex TEXT,
     created DATETIME NOT NULL,
     updated DATETIME NOT NULL
 );

@@ -19,7 +19,7 @@ import DatasourceSelect from "components/datasource/Select"
 import { EditorInputItem } from "components/editor/EditorItem"
 import { Form, FormSection } from "components/form/Form"
 import Page from "layouts/page/Page"
-import { isArray, isEmpty } from "lodash"
+import { cloneDeep, isArray, isEmpty } from "lodash"
 import { datasources } from "src/App"
 import { useEffect, useRef, useState } from "react"
 import { FaCog } from "react-icons/fa"
@@ -343,7 +343,6 @@ if (variable?.datasource) {
     currentDatasource = getDatasource(ds)
 }
 
-console.log("here3333333:",variable)
 return (<>
     <Modal isOpen={isOpen} onClose={onClose} size="full">
         <ModalOverlay />
@@ -422,7 +421,7 @@ return (<>
 
                     <FormSection title={t1.varValues} >
                         <Box pt="1">
-                            {!isEmpty(variableValues) && variableValues.slice(0, displayCount).map(v => <Tag size="sm" variant="outline" ml="1">{v}</Tag>)}
+                            {!isEmpty(variableValues) && variableValues.slice(0, displayCount).map(v => <Tag key={v} size="sm" variant="outline" ml="1">{v}</Tag>)}
                         </Box>
                         {variableValues?.length > displayCount && <Button mt="2" size="sm" colorScheme="gray" ml="1" onClick={() => setDisplayCount(displayCount + 30)}>{t.showMore}</Button>}
                     </FormSection>
