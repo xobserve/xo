@@ -19,7 +19,7 @@ import DatasourceSelect from "components/datasource/Select"
 import { EditorInputItem } from "components/editor/EditorItem"
 import { Form, FormSection } from "components/form/Form"
 import Page from "layouts/page/Page"
-import { cloneDeep, isArray, isEmpty } from "lodash"
+import { isEmpty } from "lodash"
 import { datasources } from "src/App"
 import { useEffect, useRef, useState } from "react"
 import { FaCog } from "react-icons/fa"
@@ -309,15 +309,6 @@ export const EditVariable = ({ v, isOpen, onClose, isEdit, onSubmit, isGlobal = 
                     res = []
                 }
                 setVariableValues(res)
-                // if (result.data) {
-                //     toast({
-                //         title: "Variable values updated!",
-                //         status: "success",
-                //         duration: 2000,
-                //         isClosable: true,
-                //     });
-                // }
-            
                 return
             } catch (error) {
                 result.error = error.message

@@ -17,7 +17,7 @@ import useBus, { dispatch } from "use-bus"
 import storage from "utils/localStorage"
 import { useEffect, useState } from "react"
 import { DatasourceType } from "types/dashboard"
-import { cloneDeep, isEmpty, isEqual } from "lodash"
+import { cloneDeep, isEqual } from "lodash"
 import { queryPromethuesVariableValues } from "../dashboard/plugins/datasource/prometheus/query_runner"
 import { queryHttpVariableValues } from "../dashboard/plugins/datasource/http/query_runner"
 import { datasources } from "src/App"
@@ -33,6 +33,7 @@ import { queryLokiVariableValues } from "../dashboard/plugins/datasource/loki/qu
 import { $variables } from "./store"
 import { parseVariableFormat } from "utils/format"
 import { getDatasource } from "utils/datasource"
+import { isEmpty } from "utils/validate"
 
 interface Props {
     variables: Variable[]
@@ -304,13 +305,13 @@ export const queryVariableValues = async (v: Variable) => {
         }
     }
 
-    if (!result.error) {
+    if (result.error) {
         return result
     }
 
+
     if (!isEmpty(v.regex)) {
-        const regex = new RegExp(v.regex)
-        result.data = result?.data?.filter(v => regex.test(v))
+        result.data = result?.data?.filter(r => r.match(v.regex))
     }
 
     return result
