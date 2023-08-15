@@ -99,7 +99,7 @@ const GlobalVariablesPage = () => {
         })
 
         setVariable(null)
-        load()
+        window.location.reload()
     }
 
 
@@ -131,7 +131,7 @@ const GlobalVariablesPage = () => {
             isClosable: true,
         })
         setVariable(null)
-        load()
+        window.location.reload()
     }
 
     const onRemoveVariable = async (v: Variable) => {
@@ -343,6 +343,7 @@ if (variable?.datasource) {
     currentDatasource = getDatasource(ds)
 }
 
+console.log("here3333333:",variable)
 return (<>
     <Modal isOpen={isOpen} onClose={onClose} size="full">
         <ModalOverlay />
@@ -364,7 +365,7 @@ return (<>
                         </FormItem>
                         <FormItem title={t1.refresh}>
                             <RadionButtons options={Object.keys(VariableRefresh).map(k =>
-                                ({ label: t1[k], value: t1[k]})
+                                ({ label: t1[k], value: VariableRefresh[k]})
                             )} value={variable.refresh} onChange={(v) => setVariable({ ...variable, refresh: v })} />
                         </FormItem>
 
