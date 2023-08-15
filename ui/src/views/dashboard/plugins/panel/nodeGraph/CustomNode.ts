@@ -12,8 +12,8 @@
 // limitations under the License.
 
 import { IGroup, IShape } from '@antv/g-base';
+import { registerNode } from '@antv/g6';
 import {
-  registerNode,
   Item,
   NodeConfig,
   ShapeStyle,
@@ -111,6 +111,7 @@ export const registerCustomNode = (colorMode, enableHighlight, highlightNodes, h
               }
             }
             
+            console.log("here444444:")
             group.addShape('text', {
               attrs: {
                 x: 0,
@@ -222,7 +223,7 @@ export const registerCustomNode = (colorMode, enableHighlight, highlightNodes, h
           }
         }
 
-        (this as any).drawLinkPoints(cfg, group);
+        // (this as any).drawLinkPoints(cfg, group);
 
         return keyShape;
       },

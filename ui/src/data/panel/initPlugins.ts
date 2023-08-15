@@ -133,8 +133,8 @@ export const initPanelPlugins = (): PanelPlugins => {
                 icon: [],
                 shape: "donut",
                 donutColors: [
-                    {attr: 'success',color: palettes[24]},
-                    {attr: 'error', color: palettes[27]}
+                    {attr: 'success',color: palettes[0]},
+                    {attr: 'error', color: palettes[9]}
                 ],
                 tooltipTrigger: 'mouseenter',
                 menu: [],

@@ -9,7 +9,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@antv/g6": "latest",
+    "@antv/g6": "4.8.19",
     "@antv/g6-core": "^0.8.20",
     "@antv/util": "^3.3.4",
     "@chakra-ui/cli": "2.3.0",

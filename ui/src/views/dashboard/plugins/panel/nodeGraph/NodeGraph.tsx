@@ -220,9 +220,9 @@ const NodeGrapPanel = ({ data, panel, dashboardId, width, height }: NodeGraphPan
                     }
                 },
                 defaultNode: {
-                    type: 'custom',
+                    type: 'donut',
                     style: {
-                        lineWidth: 2,
+                        lineWidth: 0,
                         fill: 'transparent',
                         stroke: colors[0]
                     },
@@ -311,7 +311,7 @@ const NodeGrapPanel = ({ data, panel, dashboardId, width, height }: NodeGraphPan
 
             const newData = filterData(data[0], dashboardId, panel.id)
             gh.data(newData);
-
+            
             gh.render();
 
             setGraph(gh)

@@ -342,12 +342,12 @@ export interface NodeGraphSettings {
     scrollCanvas: boolean
     dragNode: boolean
     dragCanvas: boolean
-    
+
     node: {
         baseSize: number
         maxSize: number
         icon: NodeGraphIcon[]
-        shape: 'circle' | 'donut',
+        shape: 'circle' | 'donut' | 'custom',
         donutColors: { attr: string; color: string }[]
         tooltipTrigger: 'mouseenter' | 'click'
         menu: NodeGraphMenuItem[]

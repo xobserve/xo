@@ -175,7 +175,7 @@ const AlertRuleItem = memo((props: Props) => {
                                 <Tbody>
                                     {
                                         rule.alerts.map((alert) => {
-                                            const color = getLabelNameColor(alert.name)
+                                            const color = getLabelNameColor(alert.name, colorMode)
                                             return <Tr>
                                                 <Td>
                                                     <HStack>
@@ -243,7 +243,7 @@ const AlertRuleItem = memo((props: Props) => {
                         <VStack alignItems="left" divider={<StackDivider />}>
                             {
                                 rule.alerts.map((alert) => {
-                                    const color = getLabelNameColor(alert.name)
+                                    const color = getLabelNameColor(alert.name, colorMode)
                                     return <Box fontSize="0.75rem">
                                         <Text size="sm" onClick={() => onSelectLabel(alert.name)} cursor="pointer" fontWeight={500}>{jsonToEqualPairs(alert.labels)}</Text>
                                         <HStack mt="2">
