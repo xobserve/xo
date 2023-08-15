@@ -51,7 +51,7 @@ const HttpQueryEditor = ({panel, datasource, query, onChange }: DatasourceEditor
                 <Input
                     value={tempQuery.metrics}
                     onChange={(e) => {
-                        setTempQuery({ ...tempQuery, metrics: e.currentTarget.value })
+                        setTempQuery({ ...tempQuery, metrics: e.currentTarget.value.trim() })
                     }}
                     onBlur={() => onChange(tempQuery)}
                     placeholder={t1.remoteHttp}
@@ -83,7 +83,7 @@ export default HttpQueryEditor
 
 
 const initTransformRequest =
-    `function transformRequest(url,headers,startTime, endTime, replaceWithVariables) {
+    `function transformRequest(url,headers,startTime, endTime) {
     console.log("here33333:", url, headers, startTime, endTime)
     let newUrl = url + \`&start=$\{startTime}&end=$\{endTime}\`
     return newUrl
@@ -99,6 +99,7 @@ const initTransformResult =
     // When using http datasource, it's your responsibility to make the panel you are using work!
     // so you need to know which data format the panel is using, and return data in that format.
     // You can find panel data format in Panel Debug.
+    // Find more info in https://datav.io/docs or play the online demo https://play.datav.io
     return {
         error: null, 
         data: httpResult

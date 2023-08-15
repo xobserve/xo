@@ -17,6 +17,7 @@ import (
 	// "time"
 
 	"bytes"
+	"fmt"
 	"io"
 	"net"
 	"net/http"
@@ -44,6 +45,7 @@ func Proxy(c *gin.Context) {
 	jsonData, _ := c.GetRawData()
 	reqBody := bytes.NewBuffer(jsonData)
 
+	fmt.Println("proxy_url", targetURL, jsonData)
 	outReq, err := http.NewRequest(c.Request.Method, targetURL, reqBody)
 	if err != nil {
 		logger.Warn("build datasource proxy req error", "url", targetURL, "error", err.Error())

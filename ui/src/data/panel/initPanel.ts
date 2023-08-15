@@ -38,7 +38,7 @@ export const initPanel = (id?) => {
     const data = lodash.cloneDeep(rawData)
     return data
 }`,
-        enableTransform: true,
+        enableTransform: false,
     }
 
     if (id) {
