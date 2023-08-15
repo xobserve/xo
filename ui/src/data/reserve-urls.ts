@@ -3,7 +3,11 @@ enum ReserveUrls {
     Alerts = "/alert",
     Search = "/search",
     New = "/new",
-    Test = "/test"
+    Test = "/test",
+    Account = "/account",
+    Admin = "/admin",
+    D = "/d",
+    Explore = "/explore",
 }
 
 export default ReserveUrls;
