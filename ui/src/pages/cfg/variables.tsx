@@ -11,7 +11,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import React from "react"
+import React, { useMemo } from "react"
 import { Button, Table, TableContainer, Tag, Tbody, Td, Th, Thead, Tr, Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay, useDisclosure, Input, Flex, Box, useToast, Text, Switch, AlertDialog, AlertDialogOverlay, AlertDialogContent, AlertDialogHeader, AlertDialogBody, AlertDialogFooter } from "@chakra-ui/react"
 import { DetailAlert, DetailAlertItem } from "components/DetailAlert"
 import RadionButtons from "components/RadioButtons"
@@ -289,9 +289,12 @@ export const EditVariable = ({ v, isOpen, onClose, isEdit, onSubmit, isGlobal = 
 
     useEffect(() => {
         load()
-        queryVariableValues(v).then(result => setVariableValues(result.data ?? []))
-
+        queryValues()
     }, [])
+
+    const queryValues = () => {
+        queryVariableValues(v).then(result => setVariableValues(result.data ?? []))
+    }
 
     const load = async () => {
         const res = await requestApi.get("/datasource/all")
@@ -301,12 +304,7 @@ export const EditVariable = ({ v, isOpen, onClose, isEdit, onSubmit, isGlobal = 
     const onQueryResult = result => {
         if (!result.error) {
             try {
-                const regex = new RegExp(variable.regex)
                 let res = result.data
-                if (variable.regex) {
-                    res = result?.data?.filter(r => regex.test(r))
-                }
-
                 if (!res) {
                     res = []
                 }
@@ -342,6 +340,16 @@ if (variable?.datasource) {
     const ds = variable.datasource.toString()
     currentDatasource = getDatasource(ds)
 }
+
+const filterValues = useMemo(() => {
+    if (!isEmpty(variable?.regex)) {
+        return variableValues.filter(v => v.match(variable.regex))
+    } else {
+        return variableValues
+    }
+},[variable, variableValues])
+
+
 
 return (<>
     <Modal isOpen={isOpen} onClose={onClose} size="full">
@@ -414,16 +422,16 @@ return (<>
                     <FormSection title={`${t1.regexFilter} ( ${t.optional} )`} >
                         <EditorInputItem value={variable.regex} placeholder={t1.fitlerTips} onChange={v => {
                             setVariable({ ...variable, regex: v })
-                        }} />
+                        }}  />
                     </FormSection>
 
 
 
                     <FormSection title={t1.varValues} >
                         <Box pt="1">
-                            {!isEmpty(variableValues) && variableValues.slice(0, displayCount).map(v => <Tag key={v} size="sm" variant="outline" ml="1">{v}</Tag>)}
+                            {!isEmpty(filterValues) && filterValues.slice(0, displayCount).map(v => <Tag key={v} size="sm" variant="outline" ml="1">{v}</Tag>)}
                         </Box>
-                        {variableValues?.length > displayCount && <Button mt="2" size="sm" colorScheme="gray" ml="1" onClick={() => setDisplayCount(displayCount + 30)}>{t.showMore}</Button>}
+                        {filterValues?.length > displayCount && <Button mt="2" size="sm" colorScheme="gray" ml="1" onClick={() => setDisplayCount(displayCount + 30)}>{t.showMore}</Button>}
                     </FormSection>
                 </Form>
             </ModalBody>}
