@@ -368,7 +368,7 @@ export const EditVariable = ({ v, isOpen, onClose, isEdit, onSubmit, isGlobal = 
                         }
                     }}>
                         <FormSection title={t.basicSetting}>
-                            <FormItem title={t.name}>
+                            <FormItem title={t.name} desc={t1.nameDesc}>
                                 <Input placeholder={t1.nameTips} value={variable.name} onChange={e => { setVariable({ ...variable, name: e.currentTarget.value }) }} />
                             </FormItem>
                             <FormItem title={t.description}>

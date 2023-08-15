@@ -184,6 +184,7 @@ export const cfgVariablemsg = i18n("cfgVariable", {
   "OnTimeRangeChange": "On timerange change",
   "Manually": "Manually",
   "nameTips": "Only alphabet and digit numbers are allowed",
+  "nameDesc": "Variable name is unique both in global and dashboard scope",
   "descTips": "give this variable a simple description",
   "valueTips": "Values separated by comma,e.g 1,10,20,a,b,c",
   "fitlerTips": "further filter the query result through a Regex pattern",

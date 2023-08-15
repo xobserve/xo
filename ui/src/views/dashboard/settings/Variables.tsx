@@ -51,6 +51,15 @@ const VariablesSetting = ({ dashboard, onChange }: Props) => {
     }
 
     const addVariable = async (v:Variable) => {
+        if (variables.find(v1 => v1.name.toLowerCase() == v.name.toLowerCase())) {
+            toast({
+                title: t.isExist({name: v.name}),
+                status: "error",
+                duration: 3000,
+                isClosable: true,
+            })
+            return
+        }
         if (!dashboard.data.variables) {
             dashboard.data.variables = []
         }
@@ -78,6 +87,15 @@ const VariablesSetting = ({ dashboard, onChange }: Props) => {
 
 
     const editVariable = async (v:Variable) => {
+        if (variables.find(v1 => v1.name.toLowerCase() == v.name.toLowerCase())) {
+            toast({
+                title: t.isExist({name: v.name}),
+                status: "error",
+                duration: 3000,
+                isClosable: true,
+            })
+            return
+        }
         onClose()
         setVariable(null)
 
