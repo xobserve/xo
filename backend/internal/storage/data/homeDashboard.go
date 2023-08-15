@@ -91,7 +91,7 @@ var HomeDashboard = `
         ],
         "sharedTooltip": false,
         "styles": {
-            "bg": "url(http://datav-react.jiaminghi.com/demo/manage-desk/static/media/bg.110420cf.png)",
+            "bg": "url(/public/dashboard-bg.png)",
             "bgEnabled": false,
             "border": "None"
         },

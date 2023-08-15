@@ -20,7 +20,7 @@ export const initDashboard = (team?): Dashboard => {
             hidingVars: "",
             description: "",
             styles: {
-                bg: "url(http://datav-react.jiaminghi.com/demo/manage-desk/static/media/bg.110420cf.png)",
+                bg: "url(/public/dashboard-bg.png)",
                 bgEnabled: false,
                 border: PanelBorderType.None,
                 // decoration: {
