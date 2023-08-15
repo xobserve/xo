@@ -176,7 +176,7 @@ export const cfgVariablemsg = i18n("cfgVariable", {
   "valueUpdated": params(`Values of {name} has been updated`),
   "reload": "Reload values",
   "multiValue": "Multi Value",
-  "allValue": "All Value",
+  "allValue": "Include all",
   "queryValue": "Query values",
   "varValues": "Variable Values",
   "selectDs": "Select Datasource",

@@ -372,7 +372,7 @@ return (<>
                             <Switch defaultChecked={variable.enableMulti} onChange={(e) => setVariable({ ...variable, enableMulti: e.currentTarget.checked })} />
                         </FormItem>
 
-                        <FormItem title="Include all" alignItems="center">
+                        <FormItem title={t1.allValue} alignItems="center">
                                 <Switch defaultChecked={variable.enableAll} onChange={(e) => setVariable({ ...variable, enableAll: e.currentTarget.checked })} />
                             </FormItem>
 
