@@ -54,6 +54,17 @@ const DashboardShare = ({ dashboard, ...rest }: Props) => {
         for (const v of variables) {
             if (usingVariables.includes(v.name)) {
                 shareUrlParams['var-'+ v.name] =  v.selected
+                for (const v1 of variables) {
+                    // to avoid circle refer evets: 
+                    // A refer B : A send event to B, then B refer to A, B send event to A
+                    if (v1.id == v.id) {
+                        continue
+                    }
+                    if ((v.datasource?.toString())?.indexOf('${' + v1.name + '}') >= 0 || v.value?.indexOf('${' + v1.name + '}') >= 0) {
+                        shareUrlParams['var-'+ v1.name] =  v1.selected
+                    }
+                }
+
             }
         }
         dispatch(ShareUrlEvent)
