@@ -10,7 +10,7 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-import { Alert, AlertDescription, AlertIcon, AlertStatus, AlertTitle, Box, Divider, Flex, HStack, Text } from "@chakra-ui/react"
+import { Alert, AlertDescription, AlertIcon, AlertStatus, AlertTitle, Box, Divider, Flex, HStack, Text, VStack } from "@chakra-ui/react"
 import React from "react"
 
 interface Props {
@@ -38,10 +38,10 @@ export const DetailAlert = ({ status, title, children,width="fit-content" }: Pro
 
             </HStack>
 
-            <Divider />
-            <Box mt="2" pb="1">
+            <Divider mt="1"/>
+            <VStack mt="1">
                 {children}
-            </Box>
+            </VStack>
 
         </Alert>
     )

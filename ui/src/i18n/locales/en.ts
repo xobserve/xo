@@ -189,7 +189,13 @@ export const cfgVariablemsg = i18n("cfgVariable", {
   "fitlerTips": "further filter the query result through a Regex pattern",
   "useCurrentTime": "Use current time",
   "selectMetrics": "Select metrics",
-  "metricTips": "support using variables"
+  "metricTips": "support using variables",
+  "noVariableTitle": "There is no variables yet.",
+  "whatIsVariable": "What is variable?",
+  "whatIsVariableTips": "Variables enable more interactive and dynamic dashboards. Instead of hard-coding things like server or sensor names in your metric queries you can use variables in their place. Variables are shown as dropdown select boxes at the top of the dashboard. These dropdowns make it easy to change the data being displayed in your dashboard.",
+  "globalVariable": "Global Variable",
+  "globalVariableTips1": "Variables created in dashboard setting are called scoped variable, created in /cfg/variables page are called Global variable. Global variables are used in every dashboard, most importantly, once you have selected a global variable in one place, all the other places using this variable can also be affected.",
+  "globalVariableTips2": "This is really userful in APM scenarios, you can set application list, environments, host namses as global variable。 e.g:  If you set 'application' variable to 'A' in one page, then when you entering a new page, 'application' variable is aslo set to 'A' automaticly"
 })
 
 export const cfgUsers = i18n("cfgUsers", {
