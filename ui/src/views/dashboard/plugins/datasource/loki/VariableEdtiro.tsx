@@ -101,7 +101,7 @@ const LokiVariableEditor = ({ variable, onChange, onQueryResult }: DatasourceVar
             }} placeholder="optional series selector" />
         </FormItem>}
         {data.type == LokiDsQueryTypes.LabelValues && <FormItem title="Select label">
-        <InputSelect width="260px"  isClearable value={data.labelName} placeholder={"input to search, support template"}  size="md" options={labelNames.map((m) => { return { label: m, value: m } })} onChange={v => {
+        <InputSelect width="260px"  isClearable value={data.labelName} placeholder={"input to search, support variables"}  size="md" options={labelNames.map((m) => { return { label: m, value: m } })} onChange={v => {
                 data.labelName = v
                 onChange(variable => {
                     variable.value = JSON.stringify(data)
