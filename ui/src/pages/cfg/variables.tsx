@@ -45,6 +45,8 @@ import { cfgVariablemsg, commonMsg } from "src/i18n/locales/en"
 import LokiVariableEditor from "src/views/dashboard/plugins/datasource/loki/VariableEdtiro"
 import { hasVariableFormat, replaceWithVariables } from "utils/variable"
 import { getDatasource } from "utils/datasource"
+import { addParamToUrl, removeParamFromUrl } from "utils/url"
+import { useSearchParam } from "react-use"
 
 
 
@@ -52,12 +54,17 @@ import { getDatasource } from "utils/datasource"
 const GlobalVariablesPage = () => {
     const t = useStore(commonMsg)
     const t1 = useStore(cfgVariablemsg)
-
+    const editVar = useSearchParam('editVar')
     const toast = useToast()
     const [variables, setVariables] = useState<Variable[]>([])
     const [variable, setVariable] = useState<Variable>()
     const [editMode, setEditMode] = useState<boolean>(false)
-
+    
+    useEffect(() => {
+        if (variables.length > 0 && editVar) {
+            onEditVariable(variables.find(v => v.id.toString() == editVar))
+        }
+    },[variables, editVar])
     useEffect(() => {
         load()
     }, [])
@@ -81,7 +88,7 @@ const GlobalVariablesPage = () => {
     const addVariable = async (v: Variable) => {
         if (!v.name) {
             toast({
-                title: t.isReqiiured({name: t.itemName({name: t.variable}) }),
+                title: t.isReqiiured({ name: t.itemName({ name: t.variable }) }),
                 status: "error",
                 duration: 3000,
                 isClosable: true,
@@ -92,7 +99,7 @@ const GlobalVariablesPage = () => {
         await requestApi.post("/variable/new", v)
         onClose()
         toast({
-            title: t.isAdded({name: t.variable}),
+            title: t.isAdded({ name: t.variable }),
             status: "success",
             duration: 3000,
             isClosable: true,
@@ -108,13 +115,14 @@ const GlobalVariablesPage = () => {
         setVariable(variable)
         onOpen()
         setEditMode(true)
+        addParamToUrl({'editVar': variable.id})
     }
 
 
     const editVariable = async (v: Variable) => {
         if (!v.name) {
             toast({
-                title: t.isReqiiured({name: t.itemName({name: t.variable}) }),
+                title: t.isReqiiured({ name: t.itemName({ name: t.variable }) }),
                 status: "error",
                 duration: 3000,
                 isClosable: true,
@@ -125,7 +133,21 @@ const GlobalVariablesPage = () => {
         await requestApi.post("/variable/update", v)
         onClose()
         toast({
-            title: t.isUpdated({name: t.variable}),
+            title: t.isUpdated({ name: t.variable }),
+            status: "success",
+            duration: 3000,
+            isClosable: true,
+        })
+        setVariable(null)
+        removeParamFromUrl(['editVar'])
+        window.location.reload()
+    }
+
+    const onRemoveVariable = async (v: Variable) => {
+        await requestApi.delete(`/variable/${v.id}`,)
+        onClose()
+        toast({
+            title: t.isDeleted({ name: t.variable }),
             status: "success",
             duration: 3000,
             isClosable: true,
@@ -134,28 +156,18 @@ const GlobalVariablesPage = () => {
         window.location.reload()
     }
 
-    const onRemoveVariable = async (v: Variable) => {
-        await requestApi.delete(`/variable/${v.id}`,)
-        onClose()
-        toast({
-            title:  t.isDeleted({name: t.variable}),
-            status: "success",
-            duration: 3000,
-            isClosable: true,
-        })
-        setVariable(null)
-        load()
-    }
-
     return <>
         <Page title={t.configuration} subTitle={t1.subTitle} icon={<FaCog />} tabs={cfgLinks}>
             <Flex justifyContent="space-between">
                 <Box></Box>
-                <Button size="sm" onClick={onAddVariable}>{t.newItem({name: t.variable})}</Button>
+                <Button size="sm" onClick={onAddVariable}>{t.newItem({ name: t.variable })}</Button>
             </Flex>
             <VariablesTable variables={variables} onEdit={onEditVariable} onRemove={onRemoveVariable} />
         </Page>
-        {variable && <EditVariable key={variable.id} v={variable} isEdit={editMode} onClose={onClose} isOpen={isOpen} onSubmit={editMode ? editVariable : addVariable} isGlobal />}
+        {variable && <EditVariable key={variable.id} v={variable} isEdit={editMode} onClose={() => {
+            removeParamFromUrl(['editVar'])
+            onClose()
+        }} isOpen={isOpen} onSubmit={editMode ? editVariable : addVariable} isGlobal />}
     </>
 }
 
@@ -180,7 +192,7 @@ export const VariablesTable = ({ variables, onEdit, onRemove }: TableProps) => {
         storage.remove(VariableManuallyChangedKey + id)
         dispatch(VariableForceReload + id)
         toast({
-            description: t1.valueUpdated({name}),
+            description: t1.valueUpdated({ name }),
             status: "success",
             duration: 3000,
             isClosable: true,
@@ -197,7 +209,7 @@ export const VariablesTable = ({ variables, onEdit, onRemove }: TableProps) => {
             <Table variant="simple">
                 <Thead>
                     <Tr>
-                        <Th>{t.itemName({name: t.variable})}</Th>
+                        <Th>{t.itemName({ name: t.variable })}</Th>
                         <Th>{t1.queryType}</Th>
                         <Th>{t.datasource}</Th>
                         <Th>{t1.refresh}</Th>
@@ -244,7 +256,7 @@ export const VariablesTable = ({ variables, onEdit, onRemove }: TableProps) => {
             <AlertDialogOverlay>
                 {selectedVariable && <AlertDialogContent>
                     <AlertDialogHeader fontSize='lg' fontWeight='bold'>
-                        {t.deleteItem({name: t.variable})} - {selectedVariable.name}
+                        {t.deleteItem({ name: t.variable })} - {selectedVariable.name}
                     </AlertDialogHeader>
 
                     <AlertDialogBody>
@@ -292,8 +304,8 @@ export const EditVariable = ({ v, isOpen, onClose, isEdit, onSubmit, isGlobal = 
         queryValues()
     }, [])
 
-    const queryValues = () => {
-        queryVariableValues(v).then(result => setVariableValues(result.data ?? []))
+    const queryValues = (v0?) => {
+        queryVariableValues(v0??v).then(result => setVariableValues(result.data ?? []))
     }
 
     const load = async () => {
@@ -324,116 +336,123 @@ export const EditVariable = ({ v, isOpen, onClose, isEdit, onSubmit, isGlobal = 
         });
 
         setVariableValues([])
-}
-
-let currentDatasource;
-if (variable?.datasource) {
-    const ds = variable.datasource.toString()
-    currentDatasource = getDatasource(ds)
-}
-
-const filterValues = useMemo(() => {
-    if (!isEmpty(variable?.regex)) {
-        const regex = variable.regex.toLowerCase()
-        return variableValues.filter((v:string) => v.toLowerCase().match(regex))
-    } else {
-        return variableValues
     }
-},[variable, variableValues])
+
+    let currentDatasource;
+    if (variable?.datasource) {
+        const ds = variable.datasource.toString()
+        currentDatasource = getDatasource(ds)
+    }
+
+    const filterValues = useMemo(() => {
+        if (!isEmpty(variable?.regex)) {
+            const regex = variable.regex.toLowerCase()
+            return variableValues.filter((v: string) => v.toLowerCase().match(regex))
+        } else {
+            return variableValues
+        }
+    }, [variable, variableValues])
 
 
 
-return (<>
-    <Modal isOpen={isOpen} onClose={onClose} size="full">
-        <ModalOverlay />
-        <ModalContent minW="600px">
-            <ModalHeader>{isEdit ? t.editItem({name: t.variable}): t.newItem({name: t.variable})} </ModalHeader>
-            <ModalCloseButton />
-            {variable && <ModalBody>
-                <Form maxWidth="600px" sx={{
-                    '.form-item-label': {
-                        width: "150px"
-                    }
-                }}>
-                    <FormSection title={t.basicSetting}>
-                        <FormItem title={t.name}>
-                            <Input placeholder={t1.nameTips} value={variable.name} onChange={e => { setVariable({ ...variable, name: e.currentTarget.value }) }} />
-                        </FormItem>
-                        <FormItem title={t.description}>
-                            <Input placeholder={t1.descTips} value={variable.description} onChange={e => { setVariable({ ...variable, description: e.currentTarget.value }) }} />
-                        </FormItem>
-                        <FormItem title={t1.refresh}>
-                            <RadionButtons options={Object.keys(VariableRefresh).map(k =>
-                                ({ label: t1[k], value: VariableRefresh[k]})
-                            )} value={variable.refresh} onChange={(v) => setVariable({ ...variable, refresh: v })} />
-                        </FormItem>
+    return (<>
+        <Modal isOpen={isOpen} onClose={onClose} size="full">
+            <ModalOverlay />
+            <ModalContent minW="600px">
+                <ModalHeader>{isEdit ? t.editItem({ name: t.variable }) : t.newItem({ name: t.variable })} </ModalHeader>
+                <ModalCloseButton />
+                {variable && <ModalBody>
+                    <Form maxWidth="600px" sx={{
+                        '.form-item-label': {
+                            width: "150px"
+                        }
+                    }}>
+                        <FormSection title={t.basicSetting}>
+                            <FormItem title={t.name}>
+                                <Input placeholder={t1.nameTips} value={variable.name} onChange={e => { setVariable({ ...variable, name: e.currentTarget.value }) }} />
+                            </FormItem>
+                            <FormItem title={t.description}>
+                                <Input placeholder={t1.descTips} value={variable.description} onChange={e => { setVariable({ ...variable, description: e.currentTarget.value }) }} />
+                            </FormItem>
+                            <FormItem title={t1.refresh}>
+                                <RadionButtons options={Object.keys(VariableRefresh).map(k =>
+                                    ({ label: t1[k], value: VariableRefresh[k] })
+                                )} value={variable.refresh} onChange={(v) => setVariable({ ...variable, refresh: v })} />
+                            </FormItem>
 
-                        <FormItem title={t1.multiValue} alignItems="center">
-                            <Switch defaultChecked={variable.enableMulti} onChange={(e) => setVariable({ ...variable, enableMulti: e.currentTarget.checked })} />
-                        </FormItem>
+                            <FormItem title={t1.multiValue} alignItems="center">
+                                <Switch defaultChecked={variable.enableMulti} onChange={(e) => setVariable({ ...variable, enableMulti: e.currentTarget.checked })} />
+                            </FormItem>
 
-                        <FormItem title={t1.allValue} alignItems="center">
+                            <FormItem title={t1.allValue} alignItems="center">
                                 <Switch defaultChecked={variable.enableAll} onChange={(e) => setVariable({ ...variable, enableAll: e.currentTarget.checked })} />
                             </FormItem>
 
-                    </FormSection>
+                        </FormSection>
 
-                    <FormSection title={t.query}>
-                        <FormItem title={t1.queryType}>
-                            <RadionButtons options={Object.keys(VariableQueryType).map(k =>
-                                ({ label: t[VariableQueryType[k]] , value: VariableQueryType[k] })
-                            )} value={variable.type} onChange={v => setVariable({ ...variable, type: v, value: '' })} />
-                        </FormItem>
-
-                        {variable.type == VariableQueryType.Custom && <FormItem title={t1.queryValue}>
-                            <Input width="400px" placeholder={t1.valueTips} value={variable.value} onChange={e => { setVariable({ ...variable, value: e.currentTarget.value?.trim() }) }} onBlur={() => onQueryResult({error:null,data: variable.value.split(',')})} />
-                        </FormItem>}
-
-                        {variable.type == VariableQueryType.Query && <>
-                            <FormItem title={t1.selectDs}>
-                                <Box width="200px">
-                                    <DatasourceSelect value={variable.datasource} onChange={id => setVariable(v => { v.datasource = id; v.value = "" })} allowTypes={[DatasourceType.Prometheus, DatasourceType.ExternalHttp, DatasourceType.Jaeger, DatasourceType.Loki]} variant="outline" /></Box>
+                        <FormSection title={t.query}>
+                            <FormItem title={t1.queryType}>
+                                <RadionButtons options={Object.keys(VariableQueryType).map(k =>
+                                    ({ label: t[VariableQueryType[k]], value: VariableQueryType[k] })
+                                )} value={variable.type} onChange={v => {
+                                    const newVar = { ...variable, type: v, value: '' }
+                                    setVariable(newVar)
+                                    setVariableValues([])
+                                    if (v == VariableQueryType.Datasource) {
+                                        queryValues(newVar)
+                                    }
+                                }} />
                             </FormItem>
-                            {/* @needs-update-when-add-new-variable-datasource */}
-                            {
-                                currentDatasource?.type == DatasourceType.Prometheus && <PrometheusVariableEditor variable={variable} onChange={setVariable} onQueryResult={onQueryResult} />
-                            }
-                            {
-                                currentDatasource?.type == DatasourceType.ExternalHttp && <HttpVariableEditor variable={variable} onChange={setVariable} onQueryResult={onQueryResult} />
-                            }
-                            {
-                                currentDatasource?.type == DatasourceType.Jaeger && <JaegerVariableEditor variable={variable} onChange={setVariable} onQueryResult={onQueryResult} />
-                            }
-                             {
-                                currentDatasource?.type == DatasourceType.Loki && <LokiVariableEditor variable={variable} onChange={setVariable} onQueryResult={onQueryResult} />
-                            }
-                        </>
-                        }
-                    </FormSection>
 
-                    <FormSection title={`${t1.regexFilter} ( ${t.optional} )`} >
-                        <EditorInputItem value={variable.regex} placeholder={t1.fitlerTips} onChange={v => {
-                            setVariable({ ...variable, regex: v })
-                        }}  />
-                    </FormSection>
+                            {variable.type == VariableQueryType.Custom && <FormItem title={t1.queryValue}>
+                                <Input width="400px" placeholder={t1.valueTips} value={variable.value} onChange={e => { setVariable({ ...variable, value: e.currentTarget.value?.trim() }) }} onBlur={() => onQueryResult({ error: null, data: variable.value.split(',') })} />
+                            </FormItem>}
+
+                            {variable.type == VariableQueryType.Query && <>
+                                <FormItem title={t1.selectDs}>
+                                    <Box width="200px">
+                                        <DatasourceSelect value={variable.datasource} onChange={id => setVariable(v => { v.datasource = id; v.value = "" })} allowTypes={[DatasourceType.Prometheus, DatasourceType.ExternalHttp, DatasourceType.Jaeger, DatasourceType.Loki]} variant="outline" /></Box>
+                                </FormItem>
+                                {/* @needs-update-when-add-new-variable-datasource */}
+                                {
+                                    currentDatasource?.type == DatasourceType.Prometheus && <PrometheusVariableEditor variable={variable} onChange={setVariable} onQueryResult={onQueryResult} />
+                                }
+                                {
+                                    currentDatasource?.type == DatasourceType.ExternalHttp && <HttpVariableEditor variable={variable} onChange={setVariable} onQueryResult={onQueryResult} />
+                                }
+                                {
+                                    currentDatasource?.type == DatasourceType.Jaeger && <JaegerVariableEditor variable={variable} onChange={setVariable} onQueryResult={onQueryResult} />
+                                }
+                                {
+                                    currentDatasource?.type == DatasourceType.Loki && <LokiVariableEditor variable={variable} onChange={setVariable} onQueryResult={onQueryResult} />
+                                }
+                            </>
+                            }
+                        </FormSection>
+
+                        <FormSection title={`${t1.regexFilter} ( ${t.optional} )`} >
+                            <EditorInputItem value={variable.regex} placeholder={t1.fitlerTips} onChange={v => {
+                                setVariable({ ...variable, regex: v })
+                            }} />
+                        </FormSection>
 
 
 
-                    <FormSection title={t1.varValues} >
-                        <Box pt="1">
-                            {!isEmpty(filterValues) && filterValues.slice(0, displayCount).map(v => <Tag key={v} size="sm" variant="outline" ml="1">{v}</Tag>)}
-                        </Box>
-                        {filterValues?.length > displayCount && <Button mt="2" size="sm" colorScheme="gray" ml="1" onClick={() => setDisplayCount(displayCount + 30)}>{t.showMore}</Button>}
-                    </FormSection>
-                </Form>
-            </ModalBody>}
-            <ModalFooter>
-                <Button mr={3} onClick={onClose}>
-                    {t.cancel}
-                </Button>
-                <Button variant='ghost' onClick={() => onSubmit(variable)}>{t.submit}</Button>
-            </ModalFooter>
-        </ModalContent>
-    </Modal>
-</>)
+                        <FormSection title={t1.varValues} >
+                            <Box pt="1">
+                                {!isEmpty(filterValues) && filterValues.slice(0, displayCount).map(v => <Tag key={v} size="sm" variant="outline" ml="1">{v}</Tag>)}
+                            </Box>
+                            {filterValues?.length > displayCount && <Button mt="2" size="sm" colorScheme="gray" ml="1" onClick={() => setDisplayCount(displayCount + 30)}>{t.showMore}</Button>}
+                        </FormSection>
+                    </Form>
+                </ModalBody>}
+                <ModalFooter>
+                    <Button mr={3} onClick={onClose}>
+                        {t.cancel}
+                    </Button>
+                    <Button variant='ghost' onClick={() => onSubmit(variable)}>{t.submit}</Button>
+                </ModalFooter>
+            </ModalContent>
+        </Modal>
+    </>)
 }
