@@ -93,11 +93,16 @@ func SaveDashboard(c *gin.Context) {
 			return
 		}
 	} else {
-		_, err = db.Conn.Exec(`UPDATE dashboard SET title=?,tags=?,data=?,updated=? WHERE id=?`,
+		res, err := db.Conn.Exec(`UPDATE dashboard SET title=?,tags=?,data=?,updated=? WHERE id=?`,
 			dash.Title, tags, jsonData, dash.Updated, dash.Id)
 		if err != nil {
 			logger.Error("update dashboard error", "error", err)
 			c.JSON(500, common.RespInternalError())
+			return
+		}
+		affected, _ := res.RowsAffected()
+		if affected == 0 {
+			c.JSON(http.StatusBadRequest, common.RespError("dashboard id not exist"))
 			return
 		}
 	}
