@@ -19,7 +19,7 @@ import DatasourceSelect from "components/datasource/Select"
 import { EditorInputItem } from "components/editor/EditorItem"
 import { Form, FormSection } from "components/form/Form"
 import Page from "layouts/page/Page"
-import { isEmpty } from "lodash"
+import { isArray, isEmpty } from "lodash"
 import { datasources } from "src/App"
 import { useEffect, useRef, useState } from "react"
 import { FaCog } from "react-icons/fa"
@@ -440,7 +440,7 @@ export const EditVariable = ({ v, isOpen, onClose, isEdit, onSubmit, isGlobal = 
 
                         <FormSection title={t1.varValues} >
                             <Box pt="1">
-                                {!isEmpty(filterValues) && filterValues.slice(0, displayCount).map(v => <Tag key={v} size="sm" variant="outline" ml="1">{v}</Tag>)}
+                                {isArray(filterValues) && filterValues.slice(0, displayCount).map(v => <Tag key={v} size="sm" variant="outline" ml="1">{v}</Tag>)}
                             </Box>
                             {filterValues?.length > displayCount && <Button mt="2" size="sm" colorScheme="gray" ml="1" onClick={() => setDisplayCount(displayCount + 30)}>{t.showMore}</Button>}
                         </FormSection>

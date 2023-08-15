@@ -59,6 +59,7 @@ const HttpVariableEditor = ({ variable, onChange, onQueryResult }: DatasourceVar
                         variable.value = JSON.stringify(data)
                     })
                 }}
+                placeholder="support variable"
             />
         </FormItem>
         <FormItem title={t1.reqTransform}>
@@ -89,7 +90,9 @@ export default HttpVariableEditor
 
 
 const initTransformRequest =
-`function transformRequest(url,headers,startTime, endTime,replaceWithVariables) {
+`
+// support variables
+function transformRequest(url,headers,startTime, endTime) {
     let newUrl = url + \`&start=$\{startTime}&end=$\{endTime}\`
     console.log("here333 transform request :", url, newUrl, headers, startTime, endTime)
     return newUrl
@@ -98,5 +101,5 @@ const initTransformRequest =
 const initTransformResult =
 `function transformResult(httpResult) {
     console.log("here333 transformResult:", httpResult)
-    returen httpResult.data    
+    return httpResult    
 }`

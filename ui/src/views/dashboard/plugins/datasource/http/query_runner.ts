@@ -23,6 +23,7 @@ import { isJSON } from "utils/is"
 import { replaceWithVariables } from "utils/variable"
 import { requestApi } from "utils/axios/request"
 import { isEmpty } from "utils/validate"
+import { $variables } from "src/views/variables/store"
 
 export const run_http_query = async (panel: Panel, q: PanelQuery, range: TimeRange, ds: Datasource) => {
     if (isEmpty(q.metrics.trim())) {
@@ -100,12 +101,12 @@ export const checkAndTestHttp = async (ds: Datasource) => {
 
 
 export const queryHttpVariableValues = async (variable: Variable, useCurrentTimerange = true) => {
-    const result = {
+    let result = {
         error: null,
         data: null
     }
     const data = isJSON(variable.value) ? JSON.parse(variable.value) : null
-    if (!data) {
+    if (!data || isEmpty(data.url)) {
         return result
     }
     const timeRange = getNewestTimeRange()
@@ -116,9 +117,9 @@ export const queryHttpVariableValues = async (variable: Variable, useCurrentTime
     const headers = {}
     let url
     if (!isEmpty(data.transformRequest)) {
-        const transformRequest = genDynamicFunction(data.transformRequest);
+        const transformRequest = genDynamicFunction(replaceWithVariables(data.transformRequest));
         if (isFunction(transformRequest)) {
-            url = transformRequest(data.url, headers, start, end, replaceWithVariables)
+            url = transformRequest(replaceWithVariables(data.url), headers, start, end)
         } else {
             return []
         }
@@ -131,12 +132,13 @@ export const queryHttpVariableValues = async (variable: Variable, useCurrentTime
         if (!isEmpty(data.transformResult)) {
             const transformResult = genDynamicFunction(data.transformResult);
             if (isFunction(transformResult)) {
-                result.data = transformResult(res)
+                result = transformResult(res)
             } else {
                 result.data = []
             }
         }
     } catch (error) {
+        console.error("variable http request error:",error)
     }
 
 
