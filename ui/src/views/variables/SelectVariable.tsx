@@ -15,7 +15,7 @@ import { TimeChangedEvent, VariableForceReload } from "src/data/bus-events"
 import { Variable, VariableQueryType, VariableRefresh } from "types/variable"
 import useBus, { dispatch } from "use-bus"
 import storage from "utils/localStorage"
-import { useEffect, useState } from "react"
+import { memo, useEffect, useState } from "react"
 import { DatasourceType } from "types/dashboard"
 import { cloneDeep, isEqual } from "lodash"
 import { queryPromethuesVariableValues } from "../dashboard/plugins/datasource/prometheus/query_runner"
@@ -34,6 +34,8 @@ import { $variables } from "./store"
 import { parseVariableFormat } from "utils/format"
 import { getDatasource } from "utils/datasource"
 import { isEmpty } from "utils/validate"
+import { useLocation } from "react-router-dom"
+import { usePrevious, useSearchParam } from "react-use"
 
 interface Props {
     variables: Variable[]
@@ -50,10 +52,13 @@ const SelectVariables = ({ variables }: Props) => {
 
 export default SelectVariables
 
-const SelectVariable = ({ v }: { v: Variable }) => {
+const SelectVariable = memo(({ v }: { v: Variable }) => {
     const t1 = useStore(variableMsg)
-    const [values, setValues] = useState<string[]>([])
-
+    const [values, setValues] = useState<string[]>(null)
+    const urlKey = 'var-' + v.name
+    const varInUrl = useSearchParam(urlKey)
+    const prevVarInUrl = usePrevious(varInUrl)
+    
     useBus(
         (e) => { return e.type == TimeChangedEvent },
         (e) => {
@@ -73,6 +78,16 @@ const SelectVariable = ({ v }: { v: Variable }) => {
         },
         []
     )
+
+    useEffect(() => {
+        if (values === null) {
+            return 
+        }
+        if ( !isEmpty(varInUrl) && varInUrl !== prevVarInUrl) {
+            console.log("here333333:",v.name, varInUrl,prevVarInUrl)
+            setValue(v, varInUrl)
+        }
+    },[varInUrl, prevVarInUrl])
 
     useEffect(() => {
         loadValues(false)
@@ -167,7 +182,7 @@ const SelectVariable = ({ v }: { v: Variable }) => {
             }
 
         }
-        setValues(result)
+        setValues(result??[])
         v.values = result
         if (needQuery) {
           $variables.set([...vars])
@@ -196,7 +211,7 @@ const SelectVariable = ({ v }: { v: Variable }) => {
                 matchWidth={v.id.toString().startsWith('d-')}
             />}
     </HStack>
-}
+})
 export const setVariableSelected = (variables: Variable[]) => {
     const params = getUrlParams()
     const selectedInUrl = {}
@@ -227,16 +242,31 @@ export const setVariableSelected = (variables: Variable[]) => {
 
 
 export const setVariableValue = (variable: Variable, value) => {
+    const k = 'var-' + variable.name
+    const params = getUrlParams()
+    if (!params[k]) {
+        addParamToUrl({
+            [k]: variable.selected
+        })
+    }
+    // sync to url
+    addParamToUrl({
+        [k]: value
+    })
+}
+
+const setValue = (variable: Variable, value) => {
     const vars = $variables.get()
     variable.selected = value
     const newVars = []
     for (let i = 0; i < vars.length; i++) {
         if (vars[i].id == variable.id) {
-            newVars.push(variable)
+            newVars.push(cloneDeep(variable))
         } else {
             newVars.push(vars[i])
         }
     }
+    console.log("here33333",cloneDeep(newVars), variable, value)
     $variables.set(newVars)
 
     const sv = storage.get(vkey)
@@ -260,13 +290,7 @@ export const setVariableValue = (variable: Variable, value) => {
             dispatch(VariableForceReload + v.id)
         }
     }
-
-    // sync to url
-    addParamToUrl({
-        ['var-' + variable.name]: value
-    })
 }
-
 export const setVariable = (name, value) => {
     const vars = $variables.get()
     let v;

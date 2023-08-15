@@ -147,7 +147,7 @@ export const PanelComponent = ({ dashboard, panel, variables, onRemovePanel, wid
         }
         queryH.current = setTimeout(() => {
             queryData(panel, dashboard.id)
-        }, 200)
+        }, 300)
     }, [panel.datasource, timeRange, variables])
 
 
