@@ -44,7 +44,7 @@ export const prometheusToSeriesData = (data: any, query: PanelQuery, range: Time
     let res: SeriesData[] = []
     if (data.resultType === "matrix") {
         for (const m of data.result) {
-            delete m.metric.__name__
+            // delete m.metric.__name__
             const metric = JSON.stringify(m.metric).replace(/":"/g, '"="')
 
             let timeValues = []

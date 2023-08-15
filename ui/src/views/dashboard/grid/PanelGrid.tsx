@@ -125,7 +125,6 @@ interface PanelComponentProps extends PanelGridProps {
 
 export const prevQueries = new Map()
 export const prevQueryData = new Map()
-
 export const PanelComponent = ({ dashboard, panel, variables, onRemovePanel, width, height, sync, timeRange }: PanelComponentProps) => {
     const toast = useToast()
     const [panelData, setPanelData] = useState<any[]>(null)
@@ -141,8 +140,14 @@ export const PanelComponent = ({ dashboard, panel, variables, onRemovePanel, wid
         }
     }, [])
 
+    const queryH = useRef(null)
     useEffect(() => {
-        queryData(panel, dashboard.id)
+        if (queryH.current) {
+            clearTimeout(queryH.current)
+        }
+        queryH.current = setTimeout(() => {
+            queryData(panel, dashboard.id)
+        }, 200)
     }, [panel.datasource, timeRange, variables])
 
 
@@ -444,7 +449,6 @@ const queryAlerts = async (panel: Panel, timeRange: TimeRange) => {
             case DatasourceType.ExternalHttp:
                 res = await run_http_query(panel, panel.plugins.alert.filter.httpQuery, timeRange, ds)
                 res.data.fromDs = ds.type
-                console.log("here33333:", res)
                 break
             default:
                 break;

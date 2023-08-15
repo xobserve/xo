@@ -18,7 +18,7 @@ import DashboardHeader from "src/views/dashboard/DashboardHeader"
 import DashboardGrid from "src/views/dashboard/grid/DashboardGrid"
 import { clone, cloneDeep, concat, defaultsDeep, find, findIndex } from "lodash"
 import { setVariableSelected } from "src/views/variables/SelectVariable"
-import { prevQueries, prevQueryData } from "src/views/dashboard/grid/PanelGrid"
+import {  prevQueries, prevQueryData } from "src/views/dashboard/grid/PanelGrid"
 import { unstable_batchedUpdates } from "react-dom"
 import useBus, { dispatch } from 'use-bus'
 import { SetDashboardEvent, UpdatePanelEvent } from "src/data/bus-events"
@@ -56,10 +56,12 @@ const DashboardWrapper = ({ dashboardId, sideWidth }) => {
             load()
         }
         return () => {
-            for (const k of Array.from(prevQueries.keys())) {
-                prevQueries.delete(k)
-                prevQueryData.delete(k)
-            }
+            // for (const k of Array.from(prevQueries.keys())) {
+            //     prevQueries.delete(k)
+            //     prevQueryData.delete(k)
+            // }
+            prevQueries.clear()
+            prevQueryData.clear()
         }
     }, [])
 
