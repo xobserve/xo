@@ -23,6 +23,8 @@ import uPlot from "uplot";
 import { dateTimeFormat } from "utils/datetime/formatter";
 import { SeriesData } from "types/seriesData";
 import React from "react";
+import { findOverrideRule } from "utils/dashboard/panel";
+import { GraphRules } from "./OverridesEditor";
 
 interface Props {
     props: PanelProps
@@ -68,6 +70,7 @@ const Tooltip = memo(({ props, options,data,inactiveSeries }: Props) => {
                 const { x, y } = positionTooltip(uplot, bbox)
 
                 if (x !== undefined && y !== undefined) {
+                  
                     const idx = uplot.cursor.idx
                     // find nearest time val
                     let xVal = uplot.data[0][idx];
@@ -77,8 +80,12 @@ const Tooltip = memo(({ props, options,data,inactiveSeries }: Props) => {
                     const yval = uplot.posToVal(uplot.cursor.top, "y")
                     let gap;
                     let fs;
+
                     for (const d of data) {
-                        const newGap = Math.abs(d.fields[1].values[idx] - yval)
+                        const negativeY = findOverrideRule(props.panel, d.rawName, GraphRules.SeriesNegativeY)
+                        const separateY = findOverrideRule(props.panel, d.rawName, GraphRules.SeriesYAxis)
+                        const op = separateY ? 1 : (negativeY ? -1 : 1)
+                        const newGap = Math.abs(d.fields[1].values[idx] - (op * yval))
                         if (!gap) {
                             gap = newGap
                             fs = d
@@ -95,7 +102,7 @@ const Tooltip = memo(({ props, options,data,inactiveSeries }: Props) => {
                         setCoords({ x, y });
                         setFocusXVal(xVal)
                         setFocusSeries(fs)
-                        setFocusYVal(round(yval, 2))
+                        // setFocusYVal(round(yval, 2))
                         setFocusIdx(idx)
                     })
                 } else {

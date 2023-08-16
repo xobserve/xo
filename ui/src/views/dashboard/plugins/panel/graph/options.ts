@@ -84,10 +84,10 @@ export const parseOptions = (config: PanelProps, rawData: SeriesData[], colorMod
             style = styleOverride
         }
 
-        const unitsOverride = findRuleInOverride(override, GraphRules.SeriesUnit)
         let scale = 'y'
-        if (unitsOverride != undefined) {
-
+        const yOverride = findRuleInOverride(override, GraphRules.SeriesYAxis)
+        if (yOverride) {
+            const unitsOverride = findRuleInOverride(override, GraphRules.SeriesUnit)
             let unitExist = false
             for (const axis of yAxis) {
                 if (isEqual(unitsOverride, axis.units)) {
@@ -102,32 +102,29 @@ export const parseOptions = (config: PanelProps, rawData: SeriesData[], colorMod
                 decimal = decimalOverride
             }
 
-            if (findRuleInOverride(override, GraphRules.SeriesYAxis)) {
-                yAxis.push({
-                    grid: {
-                        show: config.panel.plugins.graph.axis?.showGrid,
-                        width: 0.5,
-                        stroke: axesColor
-                    },
-                    ticks: {
-                        size: 4
-                    },
-                    scale: d.rawName,
-                    stroke: textColor,
-                    space: axisSpace,
-                    size: ((self, values, axisIdx) => {
-                        return calculateAxisSize(self, values, axisIdx);
-                    }),
-                    values: (u, vals) => vals.map(v => { return formatUnit(v, unitsOverride?.units, decimal) ?? round(v, decimal) }),
-                    units: unitsOverride,
-                    side: 1
-                })
+            yAxis.push({
+                grid: {
+                    show: false,
+                    width: 0.5,
+                    stroke: axesColor
+                },
+                ticks: {
+                    size: 4
+                },
+                scale: d.rawName,
+                stroke: textColor,
+                space: axisSpace,
+                size: ((self, values, axisIdx) => {
+                    return calculateAxisSize(self, values, axisIdx);
+                }),
+                values: (u, vals) => vals.map(v => { return formatUnit(v, unitsOverride?.units, decimal) ?? round(v, decimal) }),
+                units: unitsOverride,
+                side: 1
+            })
 
-                scale = d.rawName
-            }
-
-
+            scale = d.rawName
         }
+
         let pointCfg;
         if (style == "points" || config.panel.plugins.graph.styles.showPoints == "always") {
             pointCfg = {
@@ -137,16 +134,16 @@ export const parseOptions = (config: PanelProps, rawData: SeriesData[], colorMod
                 fill: d.color,
                 filter: pointsFilter,
             }
-           
+
         } else if (config.panel.plugins.graph.styles.showPoints == "auto") {
             pointCfg = {
                 // set to null has completely different meaning than undefined, grfn set this to undefined (by delete the show field)
-               show: null,
-               size: config.panel.plugins.graph.styles?.pointSize,
-               stroke: d.color,
-               fill: d.color,
-               filter: pointsFilter,
-           }
+                show: null,
+                size: config.panel.plugins.graph.styles?.pointSize,
+                stroke: d.color,
+                fill: d.color,
+                filter: pointsFilter,
+            }
         } else {
             pointCfg = {
                 show: false,
@@ -162,9 +159,10 @@ export const parseOptions = (config: PanelProps, rawData: SeriesData[], colorMod
         series.push({
             show: inactiveSeries.includes(d.name) ? false : true,
             label: d.name,
-            points:pointCfg,
+            rawLabel: d.rawName,
+            points: pointCfg,
             stroke: d.color,
-            width:  lineWidth,
+            width: lineWidth,
             fill: config.panel.plugins.graph.styles?.gradientMode == "none" ? colorManipulator.alpha(d.color ?? '', opacity) : fill(d.color, opacity),
             spanGaps: config.panel.plugins.graph.styles.connectNulls,
             paths: style == "bars" ? uPlot.paths.bars({
