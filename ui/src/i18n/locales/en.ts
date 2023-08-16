@@ -306,6 +306,8 @@ export const dashboardSettingMsg = i18n("dashboardSetting", {
   "autoSave": "Enable auto save",
   "autoSaveTips": "Dashboard will be auto saved at intervals, you can find old versions in save history list",
   "autoSaveInterval": "Auto save interval(seconds)",
+  "hiddenPanel":  "Hidden panels",
+  "hiddenPanelTips": "You can hide a panel by clicking its header and select hide panel",
 
   "background": "Background",
   "backgroundTips": "Set dashboard background color or image",
@@ -346,6 +348,7 @@ export const variableMsg = i18n("variable", {
 })
 
 export const panelMsg = i18n("panel", {
+  "hidePanel": "Hide panel",
   "viewPanel": "View Panel",
   "exitlView": "Exit View",
   "debugPanel": "Debug Panel",

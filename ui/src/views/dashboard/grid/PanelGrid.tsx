@@ -12,7 +12,7 @@
 // limitations under the License.
 import { Dashboard, DatasourceType, Panel, PanelProps, PanelQuery, PanelType } from "types/dashboard"
 import { Box, Center, HStack, Menu, MenuButton, MenuDivider, MenuItem, MenuList, Modal, ModalBody, ModalCloseButton, ModalContent, ModalHeader, ModalOverlay, Tab, TabList, TabPanel, TabPanels, Tabs, Text, Textarea, Tooltip, useColorMode, useColorModeValue, useDisclosure, usePrevious, useToast } from "@chakra-ui/react";
-import { FaBook, FaBug, FaEdit, FaRegCopy, FaRegEye, FaTrashAlt } from "react-icons/fa";
+import { FaBook, FaBug, FaEdit, FaRegCopy, FaRegEye, FaRegEyeSlash, FaTrashAlt } from "react-icons/fa";
 import { IoMdInformation } from "react-icons/io";
 import { memo, useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import { query_prometheus_alerts, run_prometheus_query } from "../plugins/datasource/prometheus/query_runner";
@@ -57,6 +57,7 @@ interface PanelGridProps {
     dashboard: Dashboard
     panel: Panel
     onRemovePanel?: any
+    onHidePanel?: any
     sync: any
     onVariablesChange?: any
     width: number
@@ -136,7 +137,7 @@ interface PanelComponentProps extends PanelGridProps {
 
 export const prevQueries = new Map()
 export const prevQueryData = new Map()
-export const PanelComponent = ({ dashboard, panel, variables, onRemovePanel, width, height, sync, timeRange }: PanelComponentProps) => {
+export const PanelComponent = ({ dashboard, panel, variables, onRemovePanel,onHidePanel, width, height, sync, timeRange }: PanelComponentProps) => {
     const toast = useToast()
     const [panelData, setPanelData] = useState<any[]>(null)
     const [queryError, setQueryError] = useState()
@@ -292,7 +293,7 @@ export const PanelComponent = ({ dashboard, panel, variables, onRemovePanel, wid
     return <Box height={height} width={width} className={panel.styles.border == "None" && panel.styles.borderOnHover ? "hover-bordered" : null} border="1px solid transparent" position="relative">
 
         {data ? <>
-            <PanelHeader panel={panel} data={data} queryError={queryError} onCopyPanel={onCopyPanel} onRemovePanel={onRemovePanel} />
+            <PanelHeader panel={panel} data={data} queryError={queryError} onCopyPanel={onCopyPanel} onRemovePanel={onRemovePanel} onHidePanel={onHidePanel} />
             <Box
                 // panel={panel}
                 height={panelInnerHeight}
@@ -340,10 +341,11 @@ interface PanelHeaderProps {
     panel: Panel
     onCopyPanel: (panel: Panel) => void
     onRemovePanel: (panel: Panel) => void
+    onHidePanel: (panel: Panel) => void
     data: any[]
 }
 
-const PanelHeader = ({ queryError, panel, onCopyPanel, onRemovePanel, data }: PanelHeaderProps) => {
+const PanelHeader = ({ queryError, panel, onCopyPanel, onRemovePanel,onHidePanel, data }: PanelHeaderProps) => {
     const viewPanel = useSearchParam("viewPanel")
     const t = useStore(commonMsg)
     const t1 = useStore(panelMsg)
@@ -375,6 +377,8 @@ const PanelHeader = ({ queryError, panel, onCopyPanel, onRemovePanel, data }: Pa
                             <MenuDivider my="1" />
                             <MenuItem icon={<FaBug />} onClick={onOpen}>{t1.debugPanel}</MenuItem>
                             <MenuItem icon={<FaRegEye />} onClick={() => addParamToUrl({ viewPanel: viewPanel ? null : panel.id })}>{viewPanel ? t1.exitlView : t1.viewPanel}</MenuItem>
+                            <MenuDivider my="1" />
+                            <MenuItem icon={<FaRegEyeSlash />} onClick={() => onHidePanel(panel)}>{t1.hidePanel}</MenuItem>
                             <MenuDivider my="1" />
                             <MenuItem icon={<FaTrashAlt />} onClick={() => onRemovePanel(panel)}>{t.remove}</MenuItem>
                         </MenuList>

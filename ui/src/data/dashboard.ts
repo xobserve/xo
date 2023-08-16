@@ -38,7 +38,8 @@ export const initDashboard = (team?): Dashboard => {
             enableUnsavePrompt: true,
             enableAutoSave: false,
             autoSaveInterval: 120,
-            lazyLoading: true
+            lazyLoading: true,
+            hiddenPanels: []
         },
         ownedBy: (team == 0 || isNaN(team)) ? globalTeamId :  team ,
     }

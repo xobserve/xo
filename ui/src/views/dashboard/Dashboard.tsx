@@ -172,6 +172,10 @@ const DashboardWrapper = ({ dashboardId, sideWidth }) => {
                     render = true
                 }
                 
+                if (dashboard.data.hiddenPanels.includes(panel.id)) {
+                    render = false
+                }
+                
                return render
             })
     

@@ -11,7 +11,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { AlertDialog, AlertDialogBody, AlertDialogContent, AlertDialogFooter, AlertDialogHeader, AlertDialogOverlay, Button, Divider, HStack, Input, Select, Switch, useDisclosure, useToast } from "@chakra-ui/react"
+import { AlertDialog, AlertDialogBody, AlertDialogContent, AlertDialogFooter, AlertDialogHeader, AlertDialogOverlay, Button, Divider, HStack, Input, Select, Switch, Tag, TagCloseButton, TagLabel, useDisclosure, useToast } from "@chakra-ui/react"
 import { EditorNumberItem } from "components/editor/EditorItem"
 import { Form, FormSection } from "components/form/Form"
 import FormItem from "components/form/Item"
@@ -31,7 +31,7 @@ interface Props {
 }
 
 const GeneralSettings = ({ dashboard, onChange }: Props) => {
-    const {session} = useSession()
+    const { session } = useSession()
     const navigate = useNavigate()
     const t = useStore(commonMsg)
     const t1 = useStore(dashboardSettingMsg)
@@ -75,7 +75,7 @@ const GeneralSettings = ({ dashboard, onChange }: Props) => {
 
         setTimeout(() => {
             navigate(`/cfg/team/${dashboard.ownedBy}/dashboards`)
-        },500)
+        }, 500)
     }
 
     return (<>
@@ -133,6 +133,18 @@ const GeneralSettings = ({ dashboard, onChange }: Props) => {
                 <FormItem title={t1.panelOverlap} desc={t1.panelOverlapTips} alignItems="center">
                     <Switch isChecked={dashboard.data.allowPanelsOverlap} onChange={e => onChange((draft: Dashboard) => { draft.data.allowPanelsOverlap = e.currentTarget.checked })} />
                 </FormItem>
+                <FormItem title={t1.hiddenPanel} desc={t1.hiddenPanelTips} alignItems="center">
+                    <HStack>
+                        {
+                            dashboard.data.hiddenPanels.map(id => <Tag colorScheme="gray">
+                                <TagLabel>{id} / {dashboard.data.panels.find(p => p.id == id).title}</TagLabel>
+                                <TagCloseButton onClick={() => {
+                                    onChange((draft: Dashboard) => { draft.data.hiddenPanels.splice(draft.data.hiddenPanels.indexOf(id), 1) })
+                                }} />
+                            </Tag>)
+                        }
+                    </HStack>
+                </FormItem>
             </FormSection>
             <FormSection title={t1.loadData}>
                 <FormItem title={t1.lazyRender} desc={t1.lazyRenderTips} alignItems="center">
@@ -149,7 +161,7 @@ const GeneralSettings = ({ dashboard, onChange }: Props) => {
                 </FormItem>
 
                 {dashboard.data.enableAutoSave && <FormItem title={t1.autoSaveInterval} >
-                    <EditorNumberItem size="lg"  min={10} max={3600} step={30} value={dashboard.data.autoSaveInterval} notNull defaultZero={false} onChange={v => onChange((draft: Dashboard) => { draft.data.autoSaveInterval = v })} />
+                    <EditorNumberItem size="lg" min={10} max={3600} step={30} value={dashboard.data.autoSaveInterval} notNull defaultZero={false} onChange={v => onChange((draft: Dashboard) => { draft.data.autoSaveInterval = v })} />
                 </FormItem>}
             </FormSection>
             <FormSection title={t.dangeSection}>
@@ -161,31 +173,31 @@ const GeneralSettings = ({ dashboard, onChange }: Props) => {
         </Form>
 
         <AlertDialog
-        isOpen={isOpen}
-        leastDestructiveRef={cancelRef}
-        onClose={onClose}
-      >
-        <AlertDialogOverlay>
-          <AlertDialogContent>
-            <AlertDialogHeader fontSize='lg' fontWeight='bold'>
-              {t.deleteItem({ name: t.dashboard })}
-            </AlertDialogHeader>
+            isOpen={isOpen}
+            leastDestructiveRef={cancelRef}
+            onClose={onClose}
+        >
+            <AlertDialogOverlay>
+                <AlertDialogContent>
+                    <AlertDialogHeader fontSize='lg' fontWeight='bold'>
+                        {t.deleteItem({ name: t.dashboard })}
+                    </AlertDialogHeader>
 
-            <AlertDialogBody>
-              {t.deleteAlert}
-            </AlertDialogBody>
+                    <AlertDialogBody>
+                        {t.deleteAlert}
+                    </AlertDialogBody>
 
-            <AlertDialogFooter>
-              <Button ref={cancelRef} onClick={onClose}>
-                {t.cancel}
-              </Button>
-              <Button colorScheme='red' onClick={onDelete} ml={3}>
-                {t.delete}
-              </Button>
-            </AlertDialogFooter>
-          </AlertDialogContent>
-        </AlertDialogOverlay>
-      </AlertDialog>
+                    <AlertDialogFooter>
+                        <Button ref={cancelRef} onClick={onClose}>
+                            {t.cancel}
+                        </Button>
+                        <Button colorScheme='red' onClick={onDelete} ml={3}>
+                            {t.delete}
+                        </Button>
+                    </AlertDialogFooter>
+                </AlertDialogContent>
+            </AlertDialogOverlay>
+        </AlertDialog>
     </>)
 }
 

@@ -47,6 +47,7 @@ export interface DashboardData {
     enableAutoSave: boolean
     autoSaveInterval: number
     lazyLoading: boolean
+    hiddenPanels: number[]
 }
 
 export interface Panel {

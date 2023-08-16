@@ -289,6 +289,8 @@
     "autoSave": "自动保存",
     "autoSaveTips": "仪表盘每隔一段时间将自动保存一次，你可以在保存历史中找到这些保存记录",
     "autoSaveInterval": "自动保存间隔( 秒 )",
+    "hiddenPanel":  "隐藏图表",
+    "hiddenPanelTips": "你可以点击图表的顶部，然后选择隐藏图表",
 
     "background": "背景",
     "backgroundTips": "设置仪表盘的背景颜色或图片",
@@ -326,6 +328,7 @@
     "globalScoped": "全局变量"
   },
   "panel": {
+    "hidePanel": "隐藏图表",
     "viewPanel": "查看图表",
     "exitlView": "退出查看",
     "debugPanel": "Debug 图表",

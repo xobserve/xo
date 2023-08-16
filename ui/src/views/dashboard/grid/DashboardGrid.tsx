@@ -115,10 +115,19 @@ const DashboardGrid = memo((props: GridProps) => {
         })
     }, [dashboard])
 
+    const onHidePanel = useCallback((panel: Panel) => {
+        console.log("here3333333:",panel.id)
+        onChange((dashboard:Dashboard) => {
+            dashboard.data.hiddenPanels.push(panel.id)
+        })
+    }, [dashboard])
+    
     let mooSync = dashboard.data.sharedTooltip ? uPlot.sync(dashboard.id) : null
 
 
-    const onDragStop = (layout, oldItem, newItem) => { };
+    const onDragStop = (layout, oldItem, newItem) => {
+        onLayoutChange(layout)
+     };
 
     const onResize = (layout, oldItem, newItem) => { 
     };
@@ -198,7 +207,7 @@ const DashboardGrid = memo((props: GridProps) => {
                                 onDragStop={onDragStop}
                                 onResize={onResize}
                                 onResizeStop={onResizeStop}
-                                onLayoutChange={onLayoutChange}
+                                // onLayoutChange={onLayoutChange}
                                 compactType={dashboard.data.layout as any}
                                 allowOverlap={dashboard.data.allowPanelsOverlap}
                             >
@@ -215,7 +224,7 @@ const DashboardGrid = memo((props: GridProps) => {
                                             {(width: number, height: number) => {
                                                 const Wrapper = dashboard.data.lazyLoading ? LazyLoader : Box
                                                 return (<Box key={panel.id} id={`panel-${panel.id}`} >
-                                                    {!inEdit && <Wrapper  width={width} height={height}  ><PanelGrid dashboard={dashboard} panel={panel} width={width} height={height} onRemovePanel={onRemovePanel} sync={mooSync} /></Wrapper> }
+                                                    {!inEdit && <Wrapper  width={width} height={height}  ><PanelGrid dashboard={dashboard} panel={panel} width={width} height={height} onRemovePanel={onRemovePanel} onHidePanel={onHidePanel}  sync={mooSync} /></Wrapper> }
                                                 </Box>)
                                             }}
                                         </GridItem>
@@ -225,7 +234,7 @@ const DashboardGrid = memo((props: GridProps) => {
                             </ReactGridLayout>
                             :
                             <>
-                                {!inEdit && <PanelGrid dashboard={dashboard} panel={panels.find(p => p.id.toString() == viewPanel)} width={width} height={viewPanelHeight} onRemovePanel={onRemovePanel} sync={mooSync} />}
+                                {!inEdit && <PanelGrid dashboard={dashboard} panel={panels.find(p => p.id.toString() == viewPanel)} width={width} height={viewPanelHeight} onRemovePanel={onRemovePanel} onHidePanel={onHidePanel}  sync={mooSync} />}
                             </>
                         }
                     </Box>}</>
