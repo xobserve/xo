@@ -156,7 +156,7 @@ const SeriesTable = memo(({ props, data, nearestSeries, filterIdx, mode, onSelec
                             return (
                                 <Tr verticalAlign="top">
                                     <Td fontSize="0.75rem" py="1" cursor="pointer" onClick={mode == seriesTableMode.Legend ? () => onSelect(v.name, i, pressShift[0]): null}>
-                                        <HStack alignItems="center" opacity={(inactiveSeries.includes(v.name)) ? '0.6' : (v.name == nearestSeries?.name ? 1 : 1)} fontWeight={v.name == nearestSeries?.name ? 'bold' : "inherit"}  userSelect="none">
+                                        <HStack alignItems="center" opacity={(inactiveSeries.includes(v.name)) ? '0.6' : (v.name == nearestSeries?.name ? 1 : (mode == seriesTableMode.Tooltip ? 0.8 : 1))} fontWeight={v.name == nearestSeries?.name ? 'bold' : "inherit"}  userSelect="none">
                                             <Box width="10px" height="4px" background={v.color} mt="2px"></Box>
                                             {
                                                 (props.panel.plugins.graph?.legend.placement == "bottom" || mode == seriesTableMode.Tooltip) ?

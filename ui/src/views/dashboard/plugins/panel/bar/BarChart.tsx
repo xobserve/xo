@@ -97,7 +97,7 @@ const BarChart = memo((props: Props) => {
         data0.forEach((d, i) => {
             const rawName = rawNames[i]
             const negativeY = findOverrideRule(panel, rawName, BarRules.SeriesNegativeY)
-            if (negativeY === null) {
+            if (negativeY) {
                 data0[i] = d.map(v => -v)
             }
         })
@@ -352,7 +352,7 @@ const BarChart = memo((props: Props) => {
             }
             const negativeY = findOverrideRule(panel, target, BarRules.SeriesNegativeY)
             let max ;
-            if (negativeY === null) {
+            if (negativeY) {
                 max = Math.min(...d)
             } else {
                 max = Math.max(...d)
@@ -376,7 +376,7 @@ const BarChart = memo((props: Props) => {
                         },
                        
                         data: [{
-                            [options.axis.swap ? "xAxis" : "yAxis"]: mode == ThresholdsMode.Absolute ? negativeY === null ? -threshold.value  : threshold.value : threshold.value * max / 100,
+                            [options.axis.swap ? "xAxis" : "yAxis"]: mode == ThresholdsMode.Absolute ? (negativeY ? -threshold.value  : threshold.value ): threshold.value * max / 100,
                             lineStyle: {
                                 type: options.thresholdsDisplay == ThresholdDisplay.Line ? "solid" : "dashed",
                                 color: paletteColorNameToHex(threshold.color,colorMode),

@@ -10,7 +10,7 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-import { Box, Button, HStack, Select, Tooltip } from "@chakra-ui/react";
+import { Box, Button, HStack, Select, Switch, Tooltip } from "@chakra-ui/react";
 import RadionButtons from "components/RadioButtons";
 import { ColorPicker } from "components/ColorPicker";
 import { EditorInputItem, EditorNumberItem, EditorSliderItem } from "components/editor/EditorItem";
@@ -29,23 +29,25 @@ const GraphOverridesEditor = ({ override, onChange }: Props) => {
         case GraphRules.SeriesStyle:
             return <RadionButtons size="sm" options={[{ label: "Lines", value: "lines" }, { label: "Bars", value: "bars" }, { label: "points", value: "points" }]} value={override.value} onChange={onChange} />
         case GraphRules.SeriesLineWidth:
-            return   <EditorSliderItem value={override.value} min={0} max={10} step={1} onChange={onChange} />
+            return <EditorSliderItem value={override.value} min={0} max={10} step={1} onChange={onChange} />
         case GraphRules.SeriesName:
             return <EditorInputItem value={override.value} onChange={onChange} size="sm" placeholder="change series name" />
         case GraphRules.SeriesUnit:
             return <UnitPicker size="sm" value={override.value} onChange={onChange} />
         case GraphRules.SeriesColor:
-            return <ColorPicker  color={override.value} onChange={onChange} />
+            return <ColorPicker color={override.value} onChange={onChange} />
         case GraphRules.SeriesFill:
             return <EditorSliderItem value={override.value} min={0} max={100} step={1} onChange={onChange} />
         case GraphRules.SeriesNegativeY:
-            return <></>
+            return <Switch defaultChecked={override.value} onChange={e => onChange(e.currentTarget.checked)} />
+        case GraphRules.SeriesYAxis:
+            return <Switch defaultChecked={override.value} onChange={e => onChange(e.currentTarget.checked)} />
         case GraphRules.SeriesDecimal:
             return <EditorNumberItem value={override.value} min={0} max={5} step={1} onChange={onChange} />
         default:
             return <></>
     }
-    
+
 }
 
 export default GraphOverridesEditor
@@ -53,12 +55,12 @@ export default GraphOverridesEditor
 
 export enum GraphRules {
     SeriesName = 'Series.name',
-    SeriesStyle =  'Series.style',
-    SeriesLineWidth =  'Series.lineWidth',
+    SeriesStyle = 'Series.style',
+    SeriesLineWidth = 'Series.lineWidth',
     SeriesUnit = 'Series.unit',
     SeriesDecimal = 'Series.decimal',
     SeriesColor = 'Series.color',
     SeriesFill = 'Series.fill',
-    SeriesNegativeY = 'Series.negativeY'
- } 
- 
+    SeriesNegativeY = 'Series.negativeY',
+    SeriesYAxis = 'Series.separateYAxis',
+}

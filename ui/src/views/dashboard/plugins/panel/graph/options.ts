@@ -10,7 +10,7 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-import { round, isEmpty, isNumber, isEqual, over } from "lodash";
+import { round, isNumber, isEqual, over } from "lodash";
 import { ColorMode } from "src/data/constants";
 import * as colorManipulator from 'components/uPlot/colorManipulator';
 import { canvasCtx } from 'src/App';
@@ -24,6 +24,7 @@ import { measureText } from "utils/measureText";
 import { SeriesData } from "types/seriesData";
 import { GraphRules } from "./OverridesEditor";
 import { findOverride, findRuleInOverride } from "utils/dashboard/panel";
+import { isEmpty } from "utils/validate";
 
 
 
@@ -73,8 +74,8 @@ export const parseOptions = (config: PanelProps, rawData: SeriesData[], colorMod
         const override: OverrideItem = findOverride(config.panel, d.rawName)
         let opacity = config.panel.plugins.graph.styles.fillOpacity / 100
         const fillOverride = findRuleInOverride(override, GraphRules.SeriesFill)
-        if (fillOverride) {
-            opacity = fillOverride.value / 100
+        if (!isEmpty(fillOverride)) {
+            opacity = fillOverride / 100
         }
 
         let style = config.panel.plugins.graph.styles.style
@@ -101,7 +102,7 @@ export const parseOptions = (config: PanelProps, rawData: SeriesData[], colorMod
                 decimal = decimalOverride
             }
 
-            if (!unitExist) {
+            if (findRuleInOverride(override, GraphRules.SeriesYAxis)) {
                 yAxis.push({
                     grid: {
                         show: config.panel.plugins.graph.axis?.showGrid,
@@ -163,8 +164,8 @@ export const parseOptions = (config: PanelProps, rawData: SeriesData[], colorMod
             label: d.name,
             points:pointCfg,
             stroke: d.color,
-            width: config.panel.plugins.graph.styles?.style == "points" ? 0 : lineWidth,
-            fill: config.panel.plugins.graph.styles?.style == "points" ? null : (config.panel.plugins.graph.styles?.gradientMode == "none" ? colorManipulator.alpha(d.color ?? '', opacity) : fill(d.color, opacity)),
+            width:  lineWidth,
+            fill: config.panel.plugins.graph.styles?.gradientMode == "none" ? colorManipulator.alpha(d.color ?? '', opacity) : fill(d.color, opacity),
             spanGaps: config.panel.plugins.graph.styles.connectNulls,
             paths: style == "bars" ? uPlot.paths.bars({
                 size: [1 - config.panel.plugins.graph.styles.barGap / 100, BardMaxWidth],

@@ -19,6 +19,7 @@ import { UnitPicker } from "components/Unit";
 import { OverrideRule } from "types/dashboard";
 import React from "react";
 import ThresholdEditor from "components/Threshold/ThresholdEditor";
+import { Switch } from "@chakra-ui/react";
 
 interface Props {
     override: OverrideRule
@@ -39,7 +40,7 @@ const BarOverridesEditor = ({ override, onChange }: Props) => {
         case BarRules.SeriesFill:
             return <EditorSliderItem value={override.value} min={10} max={100} step={1} onChange={onChange} />
         case BarRules.SeriesNegativeY:
-            return <></>
+           return <Switch defaultChecked={override.value} onChange={e => onChange(e.currentTarget.checked)} />
         case BarRules.SeriesYAxist:
             return <></>
         case BarRules.SeriesDecimal:

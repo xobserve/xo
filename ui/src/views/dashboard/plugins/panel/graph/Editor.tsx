@@ -89,7 +89,7 @@ const GraphPanelEditor = memo(({ panel, onChange }: PanelEditorProps) => {
                     </PanelEditItem>
                  </>
             }
-            {panel.plugins.graph.styles.style != "points" &&
+            {
                 <>
                     <PanelEditItem title={t1.lineWidth}>
                         <EditorSliderItem value={panel.plugins.graph.styles.lineWidth} min={0} max={10} step={1} onChange={v => onChange((panel: Panel) => {
