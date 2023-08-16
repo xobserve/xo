@@ -11,7 +11,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 import { Box, useToast } from "@chakra-ui/react"
-import { useCallback, useEffect, useRef, useState } from "react"
+import { useCallback, useEffect, useMemo, useRef, useState } from "react"
 import { Dashboard, Panel } from "types/dashboard"
 import { requestApi } from "utils/axios/request"
 import DashboardHeader from "src/views/dashboard/DashboardHeader"
@@ -35,6 +35,8 @@ import { DashboardHeaderHeight } from "src/data/constants"
 import { updateTimeToNewest } from "components/DatePicker/DatePicker"
 import { $variables } from "../variables/store"
 import { useStore } from "@nanostores/react"
+import { VarialbeAllOption } from "src/data/variable"
+import EditPanel from "./edit-panel/EditPanel"
 
 
 
@@ -139,9 +141,6 @@ const DashboardWrapper = ({ dashboardId, sideWidth }) => {
 
 
 
-
-
-
     const onDashbardChange = useCallback(f => {
         setDashboard(f)
     }, [])
@@ -152,6 +151,42 @@ const DashboardWrapper = ({ dashboardId, sideWidth }) => {
     })
 
     const headerHeight = fullscreen ? 0 : (visibleVars.length > 0 ? DashboardHeaderHeight :  (DashboardHeaderHeight - 25) ) + 7
+
+    const panels = useMemo(() => {
+        let panels
+        if (dashboard) {
+           const panels0 =  dashboard.data.panels.filter((panel: Panel) => {
+                let render = false
+                if (panel.enableConditionRender) {
+                    if (panel.conditionRender.type == "variable") {
+                        const cond = panel.conditionRender.value.split("=")
+                        if (cond.length == 2) {
+                            const v = vars.find(v => v.name == cond[0])
+                            if (v.selected == VarialbeAllOption || v.selected.match(cond[1])) {
+                                render = true 
+                            }
+                          
+                        }
+                    }
+                } else {
+                    render = true
+                }
+                
+               return render
+            })
+    
+            if (panels0.length != dashboard.data.panels.length) {
+                panels = panels0
+            } else {
+                panels = dashboard.data.panels
+            }
+        }
+
+        return panels
+    },[dashboard, vars])
+  
+
+
     return (<>
         {dashboard && <Box px={fullscreen ? 0 : 3} width="100%" minHeight="100vh" position="relative">
             {/* <Decoration decoration={dashboard.data.styles.decoration}/> */}
@@ -164,8 +199,9 @@ const DashboardWrapper = ({ dashboardId, sideWidth }) => {
                 position="relative"
             >
                 <DashboardBorder border={dashboard.data.styles.border} />
-                {dashboard.data.panels?.length > 0 && <DashboardGrid dashboard={dashboard} onChange={onDashbardChange} />}
+                {dashboard.data.panels?.length > 0 && <DashboardGrid dashboard={dashboard} panels={panels} onChange={onDashbardChange} />}
             </Box>
+            <EditPanel dashboard={dashboard} onChange={onDashbardChange} />
         </Box>}
     </>)
 }

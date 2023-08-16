@@ -70,6 +70,11 @@ export interface Panel {
     valueMapping: ValueMappingItem[]
     transform: string
     enableTransform: boolean
+    enableConditionRender: boolean
+    conditionRender: {
+        type: "variable" | "custom",
+        value: ""
+    }
 }
 
 export interface ValueMappingItem {

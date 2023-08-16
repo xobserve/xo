@@ -41,6 +41,25 @@ interface GraphPanelProps extends PanelProps {
     data: SeriesData[][]
 }
 
+
+
+const GraphPanelWrapper = (props: GraphPanelProps) => {
+    if (isEmpty(props.data)) {
+        return <Center height="100%">No data</Center>
+    }
+
+    if (!isSeriesData(props.data)) {
+        return (<Center height="100%">Data format not support!</Center>)
+    }
+
+    return (<>
+        <GraphPanel {...props} />
+    </>
+    )
+}
+
+export default GraphPanelWrapper
+
 const GraphPanel = memo((props: GraphPanelProps) => {
     const inactiveKey = PanelInactiveKey + props.dashboardId + '-' + props.panel.id
     const [inactiveSeries, setInactiveSeries] = useState(storage.get(inactiveKey) ?? [])
@@ -255,8 +274,6 @@ const GraphPanel = memo((props: GraphPanelProps) => {
         </>
     )
 })
-
-export default GraphPanel
 
 
 const transformDataToUplot = (data: SeriesData[], panel: Panel) => {

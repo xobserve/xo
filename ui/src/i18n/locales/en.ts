@@ -379,6 +379,8 @@ export const panelMsg = i18n("panel", {
   Many transforms are not suitable if you're using the Graph visualization, as it currently only supports time series data.
   It can help to switch to the Table visualization to understand what a transformation is doing.`,
   "enableTransform": "Whether enable transform",
+  "conditionRender": "Conditional render", 
+  "conditionRenderTips": "If the condition you set is satisfied, the panel will be rendered, otherwise it will be hidden",
 })
 
 

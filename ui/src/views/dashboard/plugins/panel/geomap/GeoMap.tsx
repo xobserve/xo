@@ -29,12 +29,32 @@ import { GeomapTooltip } from "./components/Tooltip";
 import 'ol/ol.css';
 import 'ol-ext/dist/ol-ext.css';
 import { isSeriesData } from "utils/seriesData";
+import { isEmpty } from "utils/validate";
 
 interface Props extends PanelProps {
     data: SeriesData[][]
 }
 
 export let geomap: Map = null
+
+const GeoMapPanelWrapper = (props: Props) => {
+    if (isEmpty(props.data)) {
+        return <Center height="100%">No data</Center>
+    }
+
+    if (!isSeriesData(props.data)) {
+        return (<Center height="100%">Data format not support!</Center>)
+    }
+
+    return (<>
+        <GeoMapPanel {...props} />
+    </>
+    )
+}
+
+export default GeoMapPanelWrapper
+
+
 const GeoMapPanel = (props: Props) => {
     const { width, height, panel, data } = props
     const [map, setMap] = useState<Map>(null)
@@ -166,6 +186,6 @@ const GeoMapPanel = (props: Props) => {
         </>
     )
 }
-export default GeoMapPanel
+
 
 

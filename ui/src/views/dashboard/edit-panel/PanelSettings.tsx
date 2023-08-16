@@ -10,7 +10,7 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-import { Box, Center, Checkbox, Image, Input, SimpleGrid, Switch, Text, Textarea } from "@chakra-ui/react"
+import { Box, Button, Center, Checkbox, HStack, Image, Input, SimpleGrid, Switch, Text, Textarea } from "@chakra-ui/react"
 import { upperFirst } from "lodash"
 import { Panel, PanelEditorProps, PanelType } from "types/dashboard"
 import PanelAccordion from "./Accordion"
@@ -22,6 +22,7 @@ import React from "react";
 import { useStore } from "@nanostores/react"
 import { commonMsg, panelMsg } from "src/i18n/locales/en"
 import RadionButtons from "components/RadioButtons"
+import { CodeEditorModal } from "components/CodeEditor/CodeEditorModal"
 
 // in edit mode, we need to cache all the plugins we have edited, until we save the dashboard
 let pluginsCachedInEdit = {}
@@ -32,36 +33,58 @@ const PanelSettings = memo(({ panel, onChange }: PanelEditorProps) => {
     const onChangeVisualization = type => {
         pluginsCachedInEdit[panel.type] = panel.plugins[panel.type]
         overridesCacheInEdit[panel.type] = panel.overrides
-        onChange((tempPanel:Panel) => {
+        onChange((tempPanel: Panel) => {
             tempPanel.type = type
-                        
+
             tempPanel.plugins = {
-                [type]: pluginsCachedInEdit[type] ??  initPanelPlugins()[type]
+                [type]: pluginsCachedInEdit[type] ?? initPanelPlugins()[type]
             }
 
             tempPanel.overrides = overridesCacheInEdit[type] ?? []
         })
     }
-    
+
     useEffect(() => {
         return () => {
             pluginsCachedInEdit = {}
-            overridesCacheInEdit= {}
+            overridesCacheInEdit = {}
         }
-    },[])
+    }, [])
 
     return (
         <>
-            <PanelAccordion title={t.basicSetting} spacing={2} defaultOpen>
+            <PanelAccordion title={t.basicSetting} spacing={2}>
                 <PanelEditItem title={t1.panelTitle}>
-                    <EditorInputItem value={panel.title} onChange={v => onChange((tempPanel:Panel) => { tempPanel.title = v })}   />
+                    <EditorInputItem value={panel.title} onChange={v => onChange((tempPanel: Panel) => { tempPanel.title = v })} />
                 </PanelEditItem>
                 <PanelEditItem title={t.description} desc={t1.panelDesc}>
-                    <EditorInputItem type="textarea" value={panel.desc} onChange={v => onChange((tempPanel:Panel) => { tempPanel.desc = v })}   />
+                    <EditorInputItem type="textarea" value={panel.desc} onChange={v => onChange((tempPanel: Panel) => { tempPanel.desc = v })} />
                 </PanelEditItem>
                 <PanelEditItem title={t.transform} desc={t1.enableTransform}>
-                    <Switch isChecked={panel.enableTransform} onChange={e => onChange((tempPanel:Panel) => { tempPanel.enableTransform = e.currentTarget.checked })}  />
+                    <Switch isChecked={panel.enableTransform} onChange={e => onChange((tempPanel: Panel) => { tempPanel.enableTransform = e.currentTarget.checked })} />
                 </PanelEditItem>
+                <PanelEditItem title={t1.conditionRender} desc={t1.conditionRenderTips}>
+                    <Switch isChecked={panel.enableConditionRender} onChange={e => onChange((tempPanel: Panel) => { tempPanel.enableConditionRender = e.currentTarget.checked })} />
+                </PanelEditItem>
+                {
+                    panel.enableConditionRender && <>
+                        {/* <PanelEditItem title={"Condition type"} desc={panel.conditionRender.type == "variable" ? "Ensure the specify variable is set to a given value" : "Check condition in a function, return true or false"}>
+                            <RadionButtons options={[{ label: "Variable", value: "variable" }, { label: "Custom", value: "custom" }]} value={panel.conditionRender.type } onChange={v => onChange((panel: Panel) => {
+                                panel.conditionRender.type = v
+                            })} />
+                        </PanelEditItem> */}
+                        <PanelEditItem title={"Condition"} desc={panel.conditionRender.type == "variable" ? "Check a variable is set to a given value" : "Check condition in a function, return true or false"}>
+                            {panel.conditionRender.type == "variable" ?
+                             <EditorInputItem  value={panel.conditionRender.value} placeholder="e.g varNameA=value1, value1 can be regex"  onChange={v => onChange((panel: Panel) => {
+                                panel.conditionRender.value = v
+                            })}/> :
+                             <CodeEditorModal value={panel.conditionRender.value} onChange={v => onChange((panel: Panel) => {
+                                panel.conditionRender.value = v
+                            })}/>
+                            }
+                        </PanelEditItem>
+                    </>
+                }
             </PanelAccordion>
 
             {/* panel visulization choosing */}

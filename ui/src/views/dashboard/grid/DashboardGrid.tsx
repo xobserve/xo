@@ -19,7 +19,6 @@ import { DashboardHeaderHeight, GRID_CELL_HEIGHT, GRID_CELL_VMARGIN, GRID_COLUMN
 import { updateGridPos } from "utils/dashboard/panel";
 import { Box, Grid, Text, useColorModeValue } from "@chakra-ui/react";
 import React, { CSSProperties, memo, useCallback, useMemo, useRef } from "react";
-import EditPanel from "../edit-panel/EditPanel";
 import uPlot from "uplot";
 import AutoSizer from "react-virtualized-auto-sizer";
 import useGranaTheme from 'hooks/useExtraTheme';
@@ -33,6 +32,7 @@ import { LazyLoader } from "./LazyLoader";
 interface GridProps {
     dashboard: Dashboard
     onChange: any
+    panels: Panel[]
 }
 
 let windowHeight = 1200;
@@ -40,13 +40,11 @@ let windowWidth = 1920;
 
 let gridWidth = 0;
 const DashboardGrid = memo((props: GridProps) => {
-    console.log("dashboard grid rendered:")
+    console.log("dashboard grid rendered:",props.panels)
     const inEdit = useSearchParam('edit')
     const viewPanel = useSearchParam("viewPanel")
 
-    const { dashboard, onChange } = props
-    const panelMap = {}
-    const [finalWidth, setFinalWidth] = React.useState(0);
+    const { dashboard,panels, onChange } = props
 
     useKey(
         "Escape",
@@ -62,9 +60,7 @@ const DashboardGrid = memo((props: GridProps) => {
     const buildLayout = () => {
         const layout: ReactGridLayout.Layout[] = [];
 
-        for (const panel of props.dashboard.data.panels) {
-            panelMap[panel.id] = panel;
-
+        for (const panel of panels) {
             if (!panel.gridPos) {
                 console.log('panel without gridpos');
                 continue;
@@ -96,7 +92,7 @@ const DashboardGrid = memo((props: GridProps) => {
     const onLayoutChange = (newLayout: ReactGridLayout.Layout[]) => {
         for (const newPos of newLayout) {
             let p;
-            if (p = dashboard.data.panels.find(p => p.id.toString() === newPos.i)) {
+            if (p = panels.find(p => p.id.toString() === newPos.i)) {
                 updateGridPos(p, newPos)
             }
         }
@@ -113,9 +109,8 @@ const DashboardGrid = memo((props: GridProps) => {
     };
 
     const onRemovePanel = useCallback((panel: Panel) => {
-        const index = dashboard.data.panels.indexOf(panel);
-        onChange(dashboard => {
-            dashboard.data.panels.splice(index, 1);
+        onChange((dashboard:Dashboard) => {
+            dashboard.data.panels = dashboard.data.panels.filter(p => p.id !== panel.id)
         })
     }, [dashboard])
 
@@ -204,7 +199,7 @@ const DashboardGrid = memo((props: GridProps) => {
                                 allowOverlap={dashboard.data.allowPanelsOverlap}
                             >
                                 {
-                                    dashboard.data.panels.map((panel) => {
+                                    panels.map((panel) => {
                                         return <GridItem
                                             key={panel.id}
                                             data-panelid={panel.id}
@@ -226,13 +221,12 @@ const DashboardGrid = memo((props: GridProps) => {
                             </ReactGridLayout>
                             :
                             <>
-                                {!inEdit && <PanelGrid dashboard={dashboard} panel={dashboard.data.panels.find(p => p.id.toString() == viewPanel)} width={width} height={viewPanelHeight} onRemovePanel={onRemovePanel} sync={mooSync} />}
+                                {!inEdit && <PanelGrid dashboard={dashboard} panel={panels.find(p => p.id.toString() == viewPanel)} width={width} height={viewPanelHeight} onRemovePanel={onRemovePanel} sync={mooSync} />}
                             </>
                         }
                     </Box>}</>
             }}
         </AutoSizer>
-        <EditPanel dashboard={dashboard} onChange={onChange} />
     </Box>)
 })
 

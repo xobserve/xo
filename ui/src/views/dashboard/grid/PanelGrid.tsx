@@ -70,7 +70,7 @@ export const PanelGrid = memo((props: PanelGridProps) => {
     const [tr, setTr] = useState<TimeRange>(getCurrentTimeRange())
     const depsCheck = useRef(null)
     const variables = useStore($variables)
-
+    
     useEffect(() => {
         var retryNum = 0
         depsCheck.current = setInterval(() => {
@@ -141,6 +141,7 @@ export const PanelComponent = ({ dashboard, panel, variables, onRemovePanel, wid
     const [panelData, setPanelData] = useState<any[]>(null)
     const [queryError, setQueryError] = useState()
     const edit = useSearchParam('edit')
+
     useEffect(() => {
         return () => {
             // delete data query cache when panel is unmounted

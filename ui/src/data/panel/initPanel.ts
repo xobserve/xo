@@ -39,6 +39,11 @@ export const initPanel = (id?) => {
     return data
 }`,
         enableTransform: false,
+        enableConditionRender: false,
+        conditionRender: {
+            type: "variable",
+            value: ""
+        }
     }
 
     if (id) {

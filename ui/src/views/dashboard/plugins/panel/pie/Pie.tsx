@@ -25,10 +25,28 @@ import { paletteColorNameToHex } from "utils/colors";
 import { ValueCalculationType } from "types/value";
 import { getThreshold } from "components/Threshold/utils";
 import { ThresholdsMode } from "types/threshold";
+import { isEmpty } from "utils/validate";
 
 interface Props extends PanelProps {
     data: SeriesData[][]
 }
+
+const PiePanelWrapper = (props: Props) => {
+    if (isEmpty(props.data)) {
+        return <Center height="100%">No data</Center>
+    }
+
+    if (!isSeriesData(props.data)) {
+        return (<Center height="100%">Data format not support!</Center>)
+    }
+
+    return (<>
+        <PiePanel {...props} />
+    </>
+    )
+}
+
+export default PiePanelWrapper
 
 const PiePanel = (props: Props) => {
     const { panel, height, width } = props
@@ -121,7 +139,6 @@ const PiePanel = (props: Props) => {
     </>)
 }
 
-export default PiePanel
 
 
 
