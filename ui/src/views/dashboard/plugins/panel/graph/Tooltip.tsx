@@ -23,7 +23,7 @@ import uPlot from "uplot";
 import { dateTimeFormat } from "utils/datetime/formatter";
 import { SeriesData } from "types/seriesData";
 import React from "react";
-import { findOverrideRule } from "utils/dashboard/panel";
+import { findOverride, findOverrideRule, findRuleInOverride } from "utils/dashboard/panel";
 import { GraphRules } from "./OverridesEditor";
 
 interface Props {
@@ -61,7 +61,7 @@ const Tooltip = memo(({ props, options,data,inactiveSeries }: Props) => {
 
         if (options) {
             options.hooks.syncRect = [(u, rect) => (bbox = rect)]
-
+            
             const setcusor = (uplot) => {
                 if (!uplot || !bbox) {
                     return
@@ -81,9 +81,11 @@ const Tooltip = memo(({ props, options,data,inactiveSeries }: Props) => {
                     let gap;
                     let fs;
 
+
                     for (const d of data) {
-                        const negativeY = findOverrideRule(props.panel, d.rawName, GraphRules.SeriesNegativeY)
-                        const separateY = findOverrideRule(props.panel, d.rawName, GraphRules.SeriesYAxis)
+                        const override = findOverride(props.panel, d.rawName)
+                        const negativeY = findRuleInOverride(override, GraphRules.SeriesNegativeY)
+                        const separateY = findRuleInOverride(override, GraphRules.SeriesYAxis)
                         const op = separateY ? 1 : (negativeY ? -1 : 1)
                         const newGap = Math.abs(d.fields[1].values[idx] - (op * yval))
                         if (!gap) {
