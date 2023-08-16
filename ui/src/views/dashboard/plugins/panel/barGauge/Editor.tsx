@@ -95,12 +95,12 @@ const BarGaugeEditor = memo(({ panel, onChange }: PanelEditorProps) => {
                 })} />
             </PanelEditItem>
             <PanelEditItem title={t1.titleSize}>
-                <EditorNumberItem value={panel.plugins.barGauge.style.titleSize} onChange={(v) => onChange((panel: Panel) => {
+                <EditorNumberItem value={panel.plugins.barGauge.style.titleSize} step={1} onChange={(v) => onChange((panel: Panel) => {
                     panel.plugins.barGauge.style.titleSize = v
                 })} />
             </PanelEditItem>
             <PanelEditItem title={t1.valueSize}>
-                <EditorNumberItem value={panel.plugins.barGauge.style.valueSize} onChange={(v) => onChange((panel: Panel) => {
+                <EditorNumberItem value={panel.plugins.barGauge.style.valueSize} step={1}  onChange={(v) => onChange((panel: Panel) => {
                     panel.plugins.barGauge.style.valueSize = v
                 })} />
             </PanelEditItem>
