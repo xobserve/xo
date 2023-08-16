@@ -28,6 +28,8 @@ const GraphOverridesEditor = ({ override, onChange }: Props) => {
     switch (override.type) {
         case GraphRules.SeriesStyle:
             return <RadionButtons size="sm" options={[{ label: "Lines", value: "lines" }, { label: "Bars", value: "bars" }, { label: "points", value: "points" }]} value={override.value} onChange={onChange} />
+        case GraphRules.SeriesLineWidth:
+            return   <EditorSliderItem value={override.value} min={0} max={10} step={1} onChange={onChange} />
         case GraphRules.SeriesName:
             return <EditorInputItem value={override.value} onChange={onChange} size="sm" placeholder="change series name" />
         case GraphRules.SeriesUnit:
@@ -52,6 +54,7 @@ export default GraphOverridesEditor
 export enum GraphRules {
     SeriesName = 'Series.name',
     SeriesStyle =  'Series.style',
+    SeriesLineWidth =  'Series.lineWidth',
     SeriesUnit = 'Series.unit',
     SeriesDecimal = 'Series.decimal',
     SeriesColor = 'Series.color',

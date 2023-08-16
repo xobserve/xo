@@ -128,16 +128,7 @@ export const parseOptions = (config: PanelProps, rawData: SeriesData[], colorMod
 
         }
         let pointCfg;
-        if (config.panel.plugins.graph.styles.showPoints == "auto") {
-            pointCfg = {
-                 // set to null has completely different meaning than undefined, grfn set this to undefined (by delete the show field)
-                show: null,
-                size: config.panel.plugins.graph.styles?.pointSize,
-                stroke: d.color,
-                fill: d.color,
-                filter: pointsFilter,
-            }
-        } else if (style == "points" || config.panel.plugins.graph.styles.showPoints == "always") {
+        if (style == "points" || config.panel.plugins.graph.styles.showPoints == "always") {
             pointCfg = {
                 show: true,
                 size: config.panel.plugins.graph.styles?.pointSize,
@@ -145,6 +136,16 @@ export const parseOptions = (config: PanelProps, rawData: SeriesData[], colorMod
                 fill: d.color,
                 filter: pointsFilter,
             }
+           
+        } else if (config.panel.plugins.graph.styles.showPoints == "auto") {
+            pointCfg = {
+                // set to null has completely different meaning than undefined, grfn set this to undefined (by delete the show field)
+               show: null,
+               size: config.panel.plugins.graph.styles?.pointSize,
+               stroke: d.color,
+               fill: d.color,
+               filter: pointsFilter,
+           }
         } else {
             pointCfg = {
                 show: false,
@@ -154,12 +155,15 @@ export const parseOptions = (config: PanelProps, rawData: SeriesData[], colorMod
                 filter: pointsFilter,
             }
         }
+
+        let lineWidth = findRuleInOverride(override, GraphRules.SeriesLineWidth) ?? config.panel.plugins.graph.styles?.lineWidth
+
         series.push({
             show: inactiveSeries.includes(d.name) ? false : true,
             label: d.name,
             points:pointCfg,
             stroke: d.color,
-            width: config.panel.plugins.graph.styles?.style == "points" ? 0 : config.panel.plugins.graph.styles?.lineWidth,
+            width: config.panel.plugins.graph.styles?.style == "points" ? 0 : lineWidth,
             fill: config.panel.plugins.graph.styles?.style == "points" ? null : (config.panel.plugins.graph.styles?.gradientMode == "none" ? colorManipulator.alpha(d.color ?? '', opacity) : fill(d.color, opacity)),
             spanGaps: config.panel.plugins.graph.styles.connectNulls,
             paths: style == "bars" ? uPlot.paths.bars({
