@@ -69,7 +69,7 @@ export const jaegerToPanels = (rawData: any[], panel: Panel, query: PanelQuery, 
 //   })
 // }
 const jaegerToNodeGraphData = (rawData: any[], query: PanelQuery):NodeGraphPluginData => {
-    const data = {
+    const data: NodeGraphPluginData = {
         nodes: [],
         edges: []
     }
@@ -109,6 +109,13 @@ const jaegerToNodeGraphData = (rawData: any[], query: PanelQuery):NodeGraphPlugi
             data: {
                 success: item.callCount,
             }
+        })
+
+        data.nodes.forEach(n => {
+            n.icon =  {
+                show: true,
+                text:  `${n.data.success}`
+              }
         })
     })
 
