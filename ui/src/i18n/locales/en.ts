@@ -117,6 +117,7 @@ export const commonMsg = i18n("common", {
   "clorMode": "Color mode",
   "textSize": "Text size",
   "auditLog": "Audit Log",
+  "borderColor": "Border color",
   "valueMapping": "Value mapping",
   "inputTips": params("Enter {name}.."),
   "isReqiiured": params("{name} is required"),

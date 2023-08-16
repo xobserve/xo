@@ -102,6 +102,11 @@ const NodeGraphPanelEditor = memo((props: PanelEditorProps) => {
                 })} />
             </PanelEditItem> */}
             {panel.plugins.nodeGraph.node.shape == 'donut' && <DonutColorsEditor {...props} />}
+            <PanelEditItem title={t.borderColor}>
+                <ColorPicker color={panel.plugins.nodeGraph.node.borderColor} onChange={c => onChange((panel: Panel) => {
+                    panel.plugins.nodeGraph.node.borderColor = c
+                })} circlePicker />
+            </PanelEditItem>
             <PanelEditItem title={t1.enableHighlight}>
                 <Switch defaultChecked={panel.plugins.nodeGraph.node.enableHighlight} onChange={e => {
                     const v = e.currentTarget.checked

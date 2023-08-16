@@ -224,7 +224,7 @@ const NodeGrapPanel = ({ data, panel, dashboardId, width, height }: NodeGraphPan
                     style: {
                         lineWidth: 0,
                         fill: 'transparent',
-                        stroke: colors[0]
+                        stroke: paletteColorNameToHex(panel.plugins.nodeGraph.node.borderColor,colorMode)
                     },
                     size: panel.plugins.nodeGraph.node.baseSize,
                     labelCfg: defaultNodeLabelCfg,

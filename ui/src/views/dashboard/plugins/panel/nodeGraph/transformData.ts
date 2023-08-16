@@ -107,7 +107,7 @@ export const setAttrsForData = (settings: NodeGraphSettings, data: NodeGraphPlug
             node.style = {
                 lineWidth: 1,
                 fill: 'transparent',
-                stroke: colors[0]
+                stroke: paletteColorNameToHex(settings.node.borderColor,colorMode)
             }
         }
     })

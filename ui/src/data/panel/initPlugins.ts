@@ -136,6 +136,7 @@ export const initPanelPlugins = (): PanelPlugins => {
                     {attr: 'success',color: palettes[0]},
                     {attr: 'error', color: palettes[9]}
                 ],
+                borderColor: palettes[0],
                 tooltipTrigger: 'mouseenter',
                 menu: [],
                 enableHighlight: false,

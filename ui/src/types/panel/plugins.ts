@@ -350,6 +350,7 @@ export interface NodeGraphSettings {
         icon: NodeGraphIcon[]
         shape: 'circle' | 'donut' | 'custom',
         donutColors: { attr: string; color: string }[]
+        borderColor: string
         tooltipTrigger: 'mouseenter' | 'click'
         menu: NodeGraphMenuItem[]
         enableHighlight: boolean

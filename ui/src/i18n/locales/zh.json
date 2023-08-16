@@ -111,6 +111,7 @@
     "textSize": "文本大小",
     "valueMapping": "值映射",
     "auditLog": "审计日志",
+    "borderColor": "边框颜色",
     "isAdded": "{name}添加成功!",
     "isUpdated": "{name}更新成功!",
     "isDeleted": "{name}删除成功!",
