@@ -116,7 +116,6 @@ const jaegerToNodeGraphData = (rawData: any[], query: PanelQuery):NodeGraphPlugi
                 show: true,
                 text:  `${n.data.success}`
               }
-              n.data.label = n.label
         })
     })
 

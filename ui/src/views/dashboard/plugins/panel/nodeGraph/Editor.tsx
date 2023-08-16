@@ -120,7 +120,7 @@ const NodeGraphPanelEditor = memo((props: PanelEditorProps) => {
             {panel.plugins.nodeGraph.node.enableHighlight && panel.plugins.nodeGraph.node.highlightNodes && <PanelEditItem title={t.highlightColor}>
                 <ColorPicker color={panel.plugins.nodeGraph.node.highlightColor} onChange={c => onChange((panel: Panel) => {
                     panel.plugins.nodeGraph.node.highlightColor = c
-                })}  />
+                })} />
             </PanelEditItem>}
         </PanelAccordion>
 
@@ -230,14 +230,14 @@ const NodeGraphPanelEditor = memo((props: PanelEditorProps) => {
 
 export default NodeGraphPanelEditor
 
-const initIcon = { key: '', value: '', icon: '' }
+const initIcon: NodeGraphIcon = { key: '', value: '', icon: '', type: 'label' }
 const IconSetting = ({ panel, onChange }: PanelEditorProps) => {
     const t1 = useStore(nodeGraphPanelMsg)
     const toast = useToast()
     const { isOpen, onOpen, onClose } = useDisclosure()
     const [temp, setTemp] = useImmer<NodeGraphIcon>(initIcon)
     const onSubmit = () => {
-        if (isEmpty(temp.key) || isEmpty(temp.value) || isEmpty(temp.icon)) {
+        if (isEmpty(temp.value) || isEmpty(temp.icon) || (temp.type == 'data' && isEmpty(temp.key))) {
             toast({
                 description: "field cannot be empty",
                 status: "warning",
@@ -276,11 +276,17 @@ const IconSetting = ({ panel, onChange }: PanelEditorProps) => {
         <Divider mt="2" />
         <VStack alignItems="sleft" mt="1">
             {
-                panel.plugins.nodeGraph.node.icon.map((icon, i) => <Flex justifyContent="space-between" alignItems="center">
+                panel.plugins.nodeGraph.node.icon.map((icon, i) => <Flex key={i} justifyContent="space-between" alignItems="center">
                     <HStack>
-                        <Text>{icon.key} : {icon.value} -&gt;</Text>
+                        <HStack spacing={0}>
+                            <Text>{icon.type}</Text>
+                            {icon.type == "data" && <Text>.{icon.key}</Text>}
+                            <Text>&nbsp;= {icon.value }</Text>
+                            <Text className="color-text">&nbsp;-&gt;</Text>
+                        </HStack>
                         <Image src={icon.icon} width="30px" height="30px" />
                     </HStack>
+
                     <Box layerStyle="textFourth" cursor="pointer" onClick={() => removeIcon(i)}><Icons.FaTimes /></Box>
                 </Flex>)
             }
@@ -289,23 +295,28 @@ const IconSetting = ({ panel, onChange }: PanelEditorProps) => {
 
         <Modal isOpen={isOpen} onClose={onClose}>
             <ModalOverlay />
-            <ModalContent minWidth="700px">
+            <ModalContent minWidth="800px">
                 <ModalBody>
                     <HStack>
                         <Text fontWeight="600">When </Text>
-                        <Input onChange={e => {
+                        <Button size="sm" variant="outline" onClick={() => {
+                            setTemp(draft => {
+                                draft.type = temp.type == "label" ? "data" : "label"
+                            })
+                        }}>{temp.type}</Button>
+                        {temp.type == "data" && <Input onChange={e => {
                             const v = e.currentTarget.value.trim()
                             setTemp(draft => {
                                 draft.key = v
                             })
-                        }} placeholder="attribute name, e.g: service_type" size="sm" width="250px" />
+                        }} placeholder={"key, hover a node to see, e.g service_type"} size="sm" width="300px" />}
                         <Text fontWeight="600">=</Text>
                         <Input onChange={e => {
                             const v = e.currentTarget.value.trim()
                             setTemp(draft => {
                                 draft.value = v
                             })
-                        }} placeholder="attribute value, e.g: java" size="sm" width="250px" />
+                        }} placeholder={temp.type == "label" ? "label name, e.g mysql" : "data attribute value, e.g database"} size="sm" width="260px" />
                     </HStack>
                     <HStack>
                         <Text fontWeight="600">show icon </Text>
@@ -321,7 +332,7 @@ const IconSetting = ({ panel, onChange }: PanelEditorProps) => {
                     <Button my="4" size="sm" onClick={onSubmit}>Submit</Button>
                     <Alert status='success' flexDir="column" alignItems="left">
                         <Text>
-                            1. You can find node attributes by hovering on a node, e.g 'error: 45' , 'error' is attribute name, '45' is value
+                            1. You can find data attributes by hovering on a node, e.g 'error: 45' , 'error' is attribute name, '45' is value
                         </Text>
                         {/* <Text mt="2">
                             2. Find icons on https://react-icons.github.io/react-icons/icons?name=fa

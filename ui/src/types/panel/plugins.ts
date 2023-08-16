@@ -441,6 +441,7 @@ export interface NodeGraphIcon {
     key: string
     value: string
     icon: string
+    type: "label" | "data"
 }
 
 export interface NodeGraphMenuItem {
