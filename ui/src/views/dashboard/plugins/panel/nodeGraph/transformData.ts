@@ -39,12 +39,23 @@ export const setAttrsForData = (settings: NodeGraphSettings, data: NodeGraphPlug
         node.donutAttrs = attrs
         if (node.icon?.show) {
             for (const k of Object.keys(node.data)) {
-                for (const j of settings.node.icon) {
-                    if (j.key == k && j.value == node.data[k]) {
+                for (const rule of settings.node.icon) {
+                    let matched = false
+                    if (rule.type == "label") {
+                        if (node.label.match(rule.value)) {
+                            matched = true
+                        }
+                    } else {
+                        if (rule.key == k && node.data[k].toString().match(rule.value)) {
+                            matched = true
+                        }
+                    }
+                    if (matched) {
                         node.icon = {
                             show: true,
-                            img: j.icon,
+                            img: rule.icon,
                         }
+                        break
                     }
                 }
             }

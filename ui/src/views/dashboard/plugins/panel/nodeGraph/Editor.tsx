@@ -91,7 +91,10 @@ const NodeGraphPanelEditor = memo((props: PanelEditorProps) => {
                 })} />
             </PanelEditItem>
 
-            <IconSetting {...props} />
+            <IconSetting panel={panel} onChange={v => {
+                onChange(v)
+                dispatch(PanelForceRebuildEvent + panel.id)
+            }} />
 
             {/* <PanelEditItem title={t1.shape}>
                 <RadionButtons options={[{ label: t1.circle, value: "circle" },{ label: t1.donut, value: "donut" }]} value={panel.plugins.nodeGraph.node.shape} onChange={v => onChange((panel:Panel) => {
@@ -277,7 +280,7 @@ const IconSetting = ({ panel, onChange }: PanelEditorProps) => {
         <VStack alignItems="sleft" mt="1">
             {
                 panel.plugins.nodeGraph.node.icon.map((icon, i) => <Flex key={i} justifyContent="space-between" alignItems="center">
-                    <HStack>
+                    <HStack fontSize="0.9rem">
                         <HStack spacing={0}>
                             <Text>{icon.type}</Text>
                             {icon.type == "data" && <Text>.{icon.key}</Text>}
