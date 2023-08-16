@@ -90,14 +90,15 @@ const DashboardGrid = memo((props: GridProps) => {
     }
 
     const onLayoutChange = (newLayout: ReactGridLayout.Layout[]) => {
-        for (const newPos of newLayout) {
-            let p;
-            if (p = panels.find(p => p.id.toString() === newPos.i)) {
-                updateGridPos(p, newPos)
-            }
-        }
-
+        console.log("dashboard grid on layout change")
         onChange(dashboard => {
+            for (const newPos of newLayout) {
+                let p;
+                if (p = dashboard.data.panels.find(p => p.id.toString() === newPos.i)) {
+                    updateGridPos(p, newPos)
+                }
+            }
+
             dashboard.data.panels.sort((panelA, panelB) => {
                 if (panelA.gridPos.y === panelB.gridPos.y) {
                     return panelA.gridPos.x - panelB.gridPos.x;
@@ -119,9 +120,12 @@ const DashboardGrid = memo((props: GridProps) => {
 
     const onDragStop = (layout, oldItem, newItem) => { };
 
-    const onResize = (layout, oldItem, newItem) => { };
+    const onResize = (layout, oldItem, newItem) => { 
+    };
 
-    const onResizeStop = (layout, oldItem, newItem) => { };
+    const onResizeStop = (layout, oldItem, newItem) => { 
+        onLayoutChange(layout)
+    };
 
     const h = useRef(null)
 
