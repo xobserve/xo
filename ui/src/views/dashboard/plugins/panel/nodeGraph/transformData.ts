@@ -15,6 +15,7 @@ import { NodeGraphSettings } from "types/panel/plugins";
 import { NodeGraphPluginData } from "types/plugins/nodeGraph";
 import { colors, paletteColorNameToHex } from "utils/colors";
 import { getDefaultEdgeStyle } from "./default-styles";
+import { Field, FieldType, SeriesData } from "types/seriesData";
 
 export const setAttrsForData = (settings: NodeGraphSettings, data: NodeGraphPluginData, colorMode) => {
     const donutColors = {}
@@ -129,4 +130,51 @@ export const setAttrsForData = (settings: NodeGraphSettings, data: NodeGraphPlug
             edge.stateStyles[key] = defaultEdgeStyle[key]
         })
     })
+}
+
+
+export const nodeGraphDataToSeries = (data: NodeGraphPluginData): SeriesData[] => {
+    const result: SeriesData[] = []
+    const series: SeriesData = {
+        id: 65,
+        name: "nodeGraphSeries",
+        fields: [] 
+    }
+
+    const sourceField:Field = {
+        name: "source",
+        type: FieldType.String,
+        values: []
+    }
+
+    const targetField:Field = {
+        name: "target",
+        type: FieldType.String,
+        values: []
+    }
+
+    const valueField: Map<string, Field> = new Map()
+    data.edges.forEach(edge => {
+        sourceField.values.push(edge.source)
+        targetField.values.push(edge.target)
+        Object.keys(edge.data).forEach(key => {
+            if (!valueField.has(key)) {
+                valueField.set(key, {
+                    name: key,
+                    type: FieldType.Number,
+                    values: []
+                })
+            }
+            valueField.get(key).values.push(edge.data[key])
+        })
+    })
+
+    series.fields.push(sourceField)
+    series.fields.push(targetField)
+    valueField.forEach(field => {
+        series.fields.push(field)
+    })
+
+    result.push(series)
+    return result
 }

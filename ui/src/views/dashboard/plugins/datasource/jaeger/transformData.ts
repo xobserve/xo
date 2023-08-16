@@ -14,6 +14,7 @@ import { isEmpty } from "lodash"
 import { Panel, PanelQuery, PanelType } from "types/dashboard"
 import { NodeGraphPluginData } from "types/plugins/nodeGraph"
 import { TimeRange } from "types/time"
+import { nodeGraphDataToSeries } from "../../panel/nodeGraph/transformData"
 
 export const jaegerToPanels = (rawData: any[], panel: Panel, query: PanelQuery, range: TimeRange) => {
     if (rawData.length == 0) {
@@ -23,7 +24,9 @@ export const jaegerToPanels = (rawData: any[], panel: Panel, query: PanelQuery, 
     switch (panel.type) {
         case PanelType.NodeGraph:
             return jaegerToNodeGraphData(rawData, query)
-
+        case PanelType.Table:
+            const data = jaegerToNodeGraphData(rawData, query)
+            return nodeGraphDataToSeries(data)
         case PanelType.Graph:
         case PanelType.Stat:
         case PanelType.Gauge:

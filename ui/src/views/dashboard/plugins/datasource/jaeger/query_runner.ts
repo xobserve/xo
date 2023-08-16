@@ -26,18 +26,18 @@ import { JaegerDsQueryTypes } from "./VariableEditor"
 import { replaceWithVariablesHasMultiValues } from "utils/variable"
 import { getDatasource } from "utils/datasource"
 
-export const run_jaeger_query = async (panel: Panel, q: PanelQuery,range: TimeRange,ds: Datasource) => {
+export const run_jaeger_query = async (panel: Panel, q: PanelQuery, range: TimeRange, ds: Datasource) => {
     let res = []
     switch (panel.type) {
         case PanelType.NodeGraph:
+        case PanelType.Table:
             res = await queryDependencies(ds.id, range)
             break
-    
         default:
             break;
     }
-    
-    const data =  jaegerToPanels(res, panel,q, range)
+
+    const data = jaegerToPanels(res, panel, q, range)
     return {
         error: null,
         data: data
@@ -45,15 +45,15 @@ export const run_jaeger_query = async (panel: Panel, q: PanelQuery,range: TimeRa
 }
 
 export const queryDependencies = async (dsId, range: TimeRange) => {
-    const start= range.start.getTime()
+    const start = range.start.getTime()
     const end = range.end.getTime()
 
     const ds = getDatasource(dsId)
-    const res = await requestApi.get(`/proxy/${ds.id}/api/dependencies?endTs=${end}&lookback=${end-start}`)
+    const res = await requestApi.get(`/proxy/${ds.id}/api/dependencies?endTs=${end}&lookback=${end - start}`)
     return res.data
 }
 
-export const checkAndTestJaeger = async (ds:Datasource) => {
+export const checkAndTestJaeger = async (ds: Datasource) => {
     // check datasource setting is valid
     const res = isJaegerDatasourceValid(ds)
     if (res != null) {
@@ -62,7 +62,7 @@ export const checkAndTestJaeger = async (ds:Datasource) => {
 
     // test connection status
     try {
-        await  requestApi.get(`/proxy?proxy_url=${ds.url}/api/services`)
+        await requestApi.get(`/proxy?proxy_url=${ds.url}/api/services`)
         return true
     } catch (error) {
         return error.message
@@ -72,7 +72,7 @@ export const checkAndTestJaeger = async (ds:Datasource) => {
 
 export const replaceJaegerQueryWithVariables = (query: PanelQuery) => {
     const showServices0 = query.metrics ? query.metrics.split(",") : []
-    
+
     const ss = []
     showServices0.forEach((item, i) => {
         ss.push(...replaceWithVariablesHasMultiValues(item))
@@ -95,8 +95,8 @@ export const queryJaegerOperations = async (dsId, service) => {
 
 export const queryJaegerVariableValues = async (variable: Variable) => {
     const result = {
-        error:null,
-        data:[]
+        error: null,
+        data: []
     }
     const data = isJSON(variable.value) ? JSON.parse(variable.value) : null
     if (!data) {
@@ -104,26 +104,26 @@ export const queryJaegerVariableValues = async (variable: Variable) => {
     }
 
     if (data.type == JaegerDsQueryTypes.Services) {
-            const res = await queryJaegerServices(variable.datasource)
-            result.data = res
+        const res = await queryJaegerServices(variable.datasource)
+        result.data = res
     } else if (data.type == JaegerDsQueryTypes.Operations) {
         if (data.service) {
-            const services  = replaceWithVariablesHasMultiValues(data.service)
+            const services = replaceWithVariablesHasMultiValues(data.service)
             for (let i = 0; i < services.length; i++) {
                 const res = await queryJaegerOperations(variable.datasource, services[i])
                 result.data = result.data.concat(res)
             }
         }
-    } 
+    }
 
     return result
 }
 
 
-export const queryJaegerTraces = async (dsId,timeRange:TimeRange, service,operation,tags,min,max,limit) => {
+export const queryJaegerTraces = async (dsId, timeRange: TimeRange, service, operation, tags, min, max, limit) => {
     const ds = getDatasource(dsId)
 
-    const start= timeRange.start.getTime() * 1000
+    const start = timeRange.start.getTime() * 1000
     const end = timeRange.end.getTime() * 1000
 
     let url = `/proxy/${ds.id}/api/traces?limit=${limit}&start=${start}&end=${end}&service=${service}`
