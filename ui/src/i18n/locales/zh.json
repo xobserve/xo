@@ -350,6 +350,8 @@
     "panelDecoration": "图表装饰",
     "reverseTips": "只有部分装饰支持 reverse 模式",
     "titleStyles": "标题样式",
+    "borderType": "边框类型",
+    "borderOnHover": "鼠标悬浮时显示边框",
 
     "targetName": "目标名称",
     "addRule": "新建覆盖规则",

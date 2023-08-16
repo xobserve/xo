@@ -13,7 +13,7 @@
 import { Select, Switch } from "@chakra-ui/react"
 import { ColorPicker } from "components/ColorPicker"
 import { Panel, PanelEditorProps } from "types/dashboard"
-import { PanelTitleDecorationType } from "types/panel/styles"
+import { PanelBorderType, PanelTitleDecorationType } from "types/panel/styles"
 import PanelAccordion from "./Accordion"
 import { EditorInputItem } from "../../../components/editor/EditorItem"
 import PanelEditItem from "./PanelEditItem"
@@ -28,11 +28,21 @@ const PanelStyles = ({ panel, onChange }: PanelEditorProps) => {
     return (
         <>
             <PanelAccordion title={t1.panelBorder} defaultOpen>
-                <BorderSelect value={panel.styles?.border} onChange={v => {
-                    onChange(panel => {
-                        panel.styles.border = v
-                    })
-                }}/>
+                <PanelEditItem title={t1.borderType}>
+                    <BorderSelect value={panel.styles?.border} onChange={v => {
+                        onChange(panel => {
+                            panel.styles.border = v
+                        })
+                    }} />
+                    </PanelEditItem>
+                {panel.styles.border == PanelBorderType.None &&<PanelEditItem title={t1.borderOnHover}>
+                    <Switch defaultChecked={panel.styles.borderOnHover} onChange={e => {
+                        const checked = e.currentTarget.checked
+                        onChange(panel => {
+                            panel.styles.borderOnHover = checked
+                        })
+                    }} />
+                </PanelEditItem>}
             </PanelAccordion>
             <PanelAccordion title={t1.titleDecoration}>
                 <PanelEditItem title="type">
@@ -77,7 +87,7 @@ const PanelStyles = ({ panel, onChange }: PanelEditorProps) => {
                     })} />
                 </PanelEditItem>
                 <PanelEditItem title="color">
-                    <ColorPicker  color={panel.styles.title.color} onChange={c => onChange((panel: Panel) => {
+                    <ColorPicker color={panel.styles.title.color} onChange={c => onChange((panel: Panel) => {
                         panel.styles.title.color = c
                     })} />
                 </PanelEditItem>
@@ -109,7 +119,7 @@ const PanelStyles = ({ panel, onChange }: PanelEditorProps) => {
                         onChange(panel => {
                             panel.styles.decoration.type = v
                         })
-                    }}/>
+                    }} />
                     {/* <Select size="sm" value={panel.styles?.decoration.type} onChange={e => {
                         const v = e.currentTarget.value
                         onChange(panel => {
@@ -127,7 +137,7 @@ const PanelStyles = ({ panel, onChange }: PanelEditorProps) => {
                         onChange(panel => {
                             panel.styles.decoration.reverse = checked
                         })
-                    }}/>
+                    }} />
                 </PanelEditItem>
                 <PanelEditItem title="width">
                     <EditorInputItem type="input" value={panel.styles.decoration.width} onChange={v => onChange(panel => {

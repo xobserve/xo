@@ -92,8 +92,10 @@ const ComplexTable = memo((props: Props) => {
 
     const sort = findRuleInOverride(override, TableRules.ColumnSort)
     if (options.column.enableSort || sort) {
-      column.sorter = (a, b) => a >= b ? 1 : -1
-      column.sortDirections = ['descend', 'ascend']
+      column.sorter = (a, b) => {
+        return  a.__value__[column.dataIndex] >= b.__value__[column.dataIndex] ? 1 : -1
+      }
+      column.sortDirections = ['descend', 'ascend','descend']
       if (sort) column.defaultSortOrder = sort
     }
 
@@ -248,6 +250,7 @@ const ComplexTable = memo((props: Props) => {
 
     columns.push(column)
   }
+
 
   if (options.rowActions.length > 0) {
     columns.push({ 

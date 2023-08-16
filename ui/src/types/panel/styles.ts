@@ -16,6 +16,7 @@
 // /></Box>
 export interface PanelStyles {
     border?: string
+    borderOnHover: boolean
     decoration: DecorationStyles
     title: {
         decoration: {

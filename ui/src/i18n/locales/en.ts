@@ -368,7 +368,8 @@ export const panelMsg = i18n("panel", {
   "panelDecoration": "Panel decoration",
   "reverseTips": "only a few decorations support reverse mode",
   "titleStyles": "Title styles",
-  
+  "borderType": "Border type",
+  "borderOnHover": "Show border on hover",
   "targetName": "Target name",
   "addRule": "Add override rule",
   "addOverride": "Add override",

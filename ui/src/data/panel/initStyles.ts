@@ -15,6 +15,7 @@ import { PanelBorderType, PanelDecorationType, PanelStyles, PanelTitleDecoration
 
 export const initPanelStyles: PanelStyles = {
     border: PanelBorderType.Normal,
+    borderOnHover: true,
     title: {
         decoration: {
             type: PanelTitleDecorationType.None,
