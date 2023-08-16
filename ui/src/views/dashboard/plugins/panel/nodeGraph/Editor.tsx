@@ -530,6 +530,7 @@ const DonutColorsEditor = (props: PanelEditorProps) => {
         changeValue()
     }
 
+    const filterValue = value.filter(v => attrNames.includes(v.attr))
     return (
         <PanelEditItem title={t1.donutColors} info={<VStack alignItems='left' fontWeight="600">
             <Text>{t1.donutTips1}</Text>
@@ -541,15 +542,15 @@ const DonutColorsEditor = (props: PanelEditorProps) => {
             </Alert>
         </VStack>}>
             <Box>
-                {value.length < attrNames.length && <Button onClick={addItem} width="100%" size="sm" colorScheme="gray">+ {t.new}</Button>}
+                {filterValue.length < attrNames.length && <Button onClick={addItem} width="100%" size="sm" colorScheme="gray">+ {t.new}</Button>}
                 <VStack alignItems="left" mt="2">
-                    {value.map((item, i) => <HStack key={item.attr + i + item.color} spacing={1}>
+                    {filterValue.map((item, i) =>  <HStack key={item.attr + i + item.color} spacing={1}>
                         <ColorPicker color={item.color} onChange={v => {
                             item.color = v
                             changeValue()
                         }} circlePicker />
                         <Select value={item.attr} onChange={e => {
-                            if (value.find(v => v.attr == e.currentTarget.value)) {
+                            if (filterValue.find(v => v.attr == e.currentTarget.value)) {
                                 return
                             }
                             item.attr = e.currentTarget.value
