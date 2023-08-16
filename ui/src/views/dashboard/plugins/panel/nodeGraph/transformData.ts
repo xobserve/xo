@@ -37,7 +37,7 @@ export const setAttrsForData = (settings: NodeGraphSettings, data: NodeGraphPlug
         })
 
         node.donutAttrs = attrs
-        if (!node.icon?.show) {
+        if (node.icon?.show) {
             for (const k of Object.keys(node.data)) {
                 for (const j of settings.node.icon) {
                     if (j.key == k && j.value == node.data[k]) {

@@ -181,6 +181,7 @@ const NodeGraphFilter = ({ graph, dashboardId, panelId, onFilterRulesChange }: P
         rule.disabled = !rule.disabled
         const newRules = cloneDeep(rules)
         setRules(newRules);
+        storage.set(FilteringStorageKey + dashboardId + '-' + panelId, newRules)
         onFilterRulesChange(newRules)
     }
     const getKeyType = () => {

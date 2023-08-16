@@ -24,7 +24,6 @@ import PanelEditItem from "src/views/dashboard/edit-panel/PanelEditItem"
 import { Panel, PanelEditorProps } from "types/dashboard"
 import { NodeGraphIcon, NodeGraphMenuItem } from "types/panel/plugins"
 import { useImmer } from "use-immer"
-import { isJSON } from "utils/is"
 import CodeEditor from "components/CodeEditor/CodeEditor"
 import React from "react";
 import { useStore } from "@nanostores/react"
@@ -121,7 +120,7 @@ const NodeGraphPanelEditor = memo((props: PanelEditorProps) => {
             {panel.plugins.nodeGraph.node.enableHighlight && panel.plugins.nodeGraph.node.highlightNodes && <PanelEditItem title={t.highlightColor}>
                 <ColorPicker color={panel.plugins.nodeGraph.node.highlightColor} onChange={c => onChange((panel: Panel) => {
                     panel.plugins.nodeGraph.node.highlightColor = c
-                })} buttonText={t1.pickLightColor} />
+                })}  />
             </PanelEditItem>}
         </PanelAccordion>
 
