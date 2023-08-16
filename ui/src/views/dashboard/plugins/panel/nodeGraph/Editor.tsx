@@ -429,7 +429,7 @@ const RightClickMenus = ({ panel, onChange }: PanelEditorProps) => {
             <Text>{t.applyToSeeEffect}</Text>
         }>
             <Button size="xs" onClick={() => { onOpen(); setTemp(initMenuItem) }}>{t1.addMenuItem}</Button>
-            <Divider my="2" />
+            {panel.plugins.nodeGraph.node.menu.length > 0 && <Divider my="2" />}
             <VStack alignItems="left" pl="2">
                 {
                     panel.plugins.nodeGraph.node.menu.map((item, i) => <Flex alignItems="center" justifyContent="space-between">
