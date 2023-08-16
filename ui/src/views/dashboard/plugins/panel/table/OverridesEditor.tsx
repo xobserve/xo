@@ -14,7 +14,7 @@ import RadionButtons from "components/RadioButtons";
 import { ColorPicker } from "components/ColorPicker";
 import { EditorInputItem, EditorNumberItem, EditorSliderItem } from "components/editor/EditorItem";
 import { UnitPicker } from "components/Unit";
-import { OverrideRule } from "types/dashboard";
+import { OverrideRule, Panel } from "types/dashboard";
 import React from "react";
 import { useStore } from "@nanostores/react";
 import { commonMsg, tablePanelMsg } from "src/i18n/locales/en";
@@ -24,15 +24,18 @@ import { CodeEditorModal } from "components/CodeEditor/CodeEditorModal";
 import ThresholdEditor from "components/Threshold/ThresholdEditor";
 import { cloneDeep } from "lodash";
 import ValueMapping from "components/ValueMapping/ValueMapping";
+import { dispatch } from "use-bus";
+import { PanelForceRebuildEvent } from "src/data/bus-events";
 
 
 interface Props {
+    panel: Panel
     override: OverrideRule
     onChange: any
 }
 
 
-const TableOverridesEditor = ({ override, onChange }: Props) => {
+const TableOverridesEditor = ({panel, override, onChange }: Props) => {
     const t = useStore(commonMsg)
     const t1 = useStore(tablePanelMsg)
     switch (override.type) {
@@ -58,7 +61,10 @@ const TableOverridesEditor = ({ override, onChange }: Props) => {
             return <RadionButtons size="sm" options={[{ label: t1.seriesFilter1, value: "number" }, { label: t1.seriesFilter2, value: "string" }]} value={override.value} onChange={onChange} />
         case TableRules.ColumnSort:
             return <Box>
-                <RadionButtons size="sm" options={[{ label: t.descend, value: "descend" }, { label: t.ascend, value: "ascend" }]} value={override.value} onChange={onChange} />
+                <RadionButtons size="sm" options={[{ label: t.descend, value: "descend" }, { label: t.ascend, value: "ascend" }]} value={override.value} onChange={v => {
+                    onChange(v)
+                    dispatch(PanelForceRebuildEvent + panel.id)
+                }} />
             </Box>
         case TableRules.ColumnEllipsis:
             return <Checkbox size="lg" isChecked={override.value} onChange={e => onChange(e.currentTarget.checked)} />

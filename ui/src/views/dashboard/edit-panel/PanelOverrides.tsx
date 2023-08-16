@@ -131,14 +131,14 @@ const PanelOverrides = ({ panel, onChange, data }: PanelEditorProps) => {
                             </FormItem>
                             {/* @needs-update-when-add-new-panel-overrides */}
                             {
-                                panel.type == PanelType.Graph && <GraphOverridesEditor override={rule} onChange={(v) => {
+                                panel.type == PanelType.Graph && <GraphOverridesEditor  override={rule} onChange={(v) => {
                                     onChange((panel: Panel) => {
                                         panel.overrides[i].overrides[j].value = v
                                     })
                                 }} />
                             }
                             {
-                                panel.type == PanelType.Table && <TableOverridesEditor override={rule} onChange={(v) => {
+                                panel.type == PanelType.Table && <TableOverridesEditor panel={panel} override={rule} onChange={(v) => {
                                     onChange((panel: Panel) => {
                                         panel.overrides[i].overrides[j].value = v
                                     })
