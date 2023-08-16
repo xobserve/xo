@@ -27,7 +27,7 @@ const JaegerQueryEditor = ({ panel, query, onChange }: DatasourceEditorProps) =>
 
     switch (panel.type) {
         case PanelType.NodeGraph:
-
+        case PanelType.Table:
             return (<VStack alignItems="left" spacing="1">
                 <FormItem labelWidth="200px" title={t1.showServices} desc={t1.showServicesTips}>
                     <Input value={tempQuery.metrics}  onChange={e => {
