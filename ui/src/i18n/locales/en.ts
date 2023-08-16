@@ -384,6 +384,8 @@ export const panelMsg = i18n("panel", {
   "enableTransform": "Whether enable transform",
   "conditionRender": "Conditional render", 
   "conditionRenderTips": "If the condition you set is satisfied, the panel will be rendered, otherwise it will be hidden",
+  "condition": "Condition",
+  "conditionTips": "Check a variable is set to a given value"
 })
 
 

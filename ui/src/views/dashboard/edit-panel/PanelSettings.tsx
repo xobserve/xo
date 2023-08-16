@@ -73,7 +73,7 @@ const PanelSettings = memo(({ panel, onChange }: PanelEditorProps) => {
                                 panel.conditionRender.type = v
                             })} />
                         </PanelEditItem> */}
-                        <PanelEditItem title={"Condition"} desc={panel.conditionRender.type == "variable" ? "Check a variable is set to a given value" : "Check condition in a function, return true or false"}>
+                        <PanelEditItem title={t1.condition} desc={panel.conditionRender.type == "variable" ? t1.conditionTips : "Check condition in a function, return true or false"}>
                             {panel.conditionRender.type == "variable" ?
                              <EditorInputItem  value={panel.conditionRender.value} placeholder="e.g varNameA=value1, value1 can be regex"  onChange={v => onChange((panel: Panel) => {
                                 panel.conditionRender.value = v

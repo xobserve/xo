@@ -23,7 +23,6 @@ import { cfgVariablemsg } from "src/i18n/locales/en"
 import { queryLokiLabelNames, queryLokiVariableValues } from "./query_runner"
 import { getNewestTimeRange } from "components/DatePicker/TimePicker"
 import { Select } from "antd"
-import ChakraSelect from "components/select/ChakraSelect"
 import InputSelect from "components/select/InputSelect"
 
 

@@ -15,6 +15,7 @@
 import { datasources } from "src/App"
 import { hasVariableFormat, replaceWithVariables } from "./variable"
 import { Datasource } from "types/datasource"
+import { floor } from "lodash"
 
 export const getDatasource = (k):Datasource => {
     let currentDatasource
@@ -25,4 +26,8 @@ export const getDatasource = (k):Datasource => {
         currentDatasource = datasources?.find(ds => ds.id == k)
     }
     return currentDatasource
+}
+
+export const roundDsTime = timestamp => {
+    return floor(timestamp)
 }

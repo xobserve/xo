@@ -10,10 +10,9 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-import { FormLabel, HStack, Input, VStack } from "@chakra-ui/react"
+import { Input, VStack } from "@chakra-ui/react"
 import FormItem from "components/form/Item"
 import { cloneDeep } from "lodash"
-import { useState } from "react"
 import { PanelQuery, PanelType } from "types/dashboard"
 import { DatasourceEditorProps } from "types/datasource"
 import { useImmer } from "use-immer"

@@ -25,7 +25,7 @@ import { isJSON } from "utils/is";
 import { getNewestTimeRange } from "components/DatePicker/TimePicker";
 import { LokiDsQueryTypes } from "./VariableEdtiro";
 import { is } from "date-fns/locale";
-import { getDatasource } from "utils/datasource";
+import { getDatasource, roundDsTime } from "utils/datasource";
 
 export const run_loki_query = async (panel: Panel, q: PanelQuery, timeRange: TimeRange, ds: Datasource) => {
     if (isEmpty(q.metrics)) {
@@ -35,8 +35,8 @@ export const run_loki_query = async (panel: Panel, q: PanelQuery, timeRange: Tim
         }
     }
 
-    const start = round(timeRange.start.getTime() / 1000)
-    const end = round(timeRange.end.getTime() / 1000)
+    const start = roundDsTime(timeRange.start.getTime() / 1000)
+    const end = roundDsTime(timeRange.end.getTime() / 1000)
 
     const res: any = await requestApi.get(`/proxy/${ds.id}/loki/api/v1/query_range?query=${q.metrics}&start=${start}&end=${end}&step=${q.interval}&limit=${q.data["limit"] ?? 1000}`)
     if (res.status !== "success") {
@@ -88,8 +88,8 @@ export const queryLokiSeries = async (dsId, match: string[], timeRange: TimeRang
     const ds = getDatasource(dsId)
     let url;
     if (timeRange) {
-        const start = round(timeRange.start.getTime() / 1000)
-        const end = round(timeRange.end.getTime() / 1000)
+        const start = roundDsTime(timeRange.start.getTime() / 1000)
+        const end = roundDsTime(timeRange.end.getTime() / 1000)
         url = `/proxy/${ds.id}/loki/api/v1/series?start=${start}&end=${end}`
     } else {
         url = `/proxy/${ds.id}/loki/api/v1/series?`
@@ -132,8 +132,8 @@ export const queryLokiLabelNames = async (dsId, timeRange: TimeRange) => {
 
     let url;
     if (timeRange) {
-        const start = round(timeRange.start.getTime() / 1000)
-        const end = round(timeRange.end.getTime() / 1000)
+        const start = roundDsTime(timeRange.start.getTime() / 1000)
+        const end = roundDsTime(timeRange.end.getTime() / 1000)
         url = `/proxy/${ds.id}/loki/api/v1/labels?start=${start}&end=${end}`
     } else {
         url = `/proxy/${ds.id}/loki/api/v1/labels?`
@@ -159,8 +159,8 @@ export const queryLokiLabelValues = async (dsId, labelName, timeRange: TimeRange
 
     let url;
     if (timeRange) {
-        const start = round(timeRange.start.getTime() / 1000)
-        const end = round(timeRange.end.getTime() / 1000)
+        const start = roundDsTime(timeRange.start.getTime() / 1000)
+        const end = roundDsTime(timeRange.end.getTime() / 1000)
         url = `/proxy/${ds.id}/loki/api/v1/label/${labelName}/values?start=${start}&end=${end}`
     } else {
         url = `/proxy/${ds.id}/loki/api/v1/label/${labelName}/values?`

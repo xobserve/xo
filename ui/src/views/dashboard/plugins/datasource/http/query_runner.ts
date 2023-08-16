@@ -23,6 +23,7 @@ import { isJSON } from "utils/is"
 import { replaceWithVariables } from "utils/variable"
 import { requestApi } from "utils/axios/request"
 import { isEmpty } from "utils/validate"
+import { roundDsTime } from "utils/datasource"
 
 export const run_http_query = async (panel: Panel, q: PanelQuery, range: TimeRange, ds: Datasource) => {
     if (isEmpty(q.metrics.trim())) {
@@ -34,8 +35,8 @@ export const run_http_query = async (panel: Panel, q: PanelQuery, range: TimeRan
     //@todo: 
     // 1. rather than query directyly to prometheus, we should query to our own backend servie
     // 2. using `axios` instead of `fetch`
-    const start = round(range.start.getTime() / 1000)
-    const end = round(range.end.getTime() / 1000)
+    const start = roundDsTime(range.start.getTime() / 1000)
+    const end = roundDsTime(range.end.getTime() / 1000)
     let url = q.metrics
     const headers = {}
     if (!isEmpty(q.data.transformRequest)) {
@@ -110,8 +111,8 @@ export const queryHttpVariableValues = async (variable: Variable, useCurrentTime
         return result
     }
     const timeRange = getNewestTimeRange()
-    const start = timeRange.start.getTime() / 1000
-    const end = timeRange.end.getTime() / 1000
+    const start = roundDsTime(timeRange.start.getTime() / 1000)
+    const end = roundDsTime(timeRange.end.getTime() / 1000)
 
 
     const headers = {}

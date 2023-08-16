@@ -364,7 +364,9 @@
     "transformTips": "通过自定义的变换函数对查询到的结果进行进一步的处理，推荐在 Table 图表中使用",
     "enableTransform": "是否启用查询数据变换函数",
     "conditionRender": "条件渲染", 
-    "conditionRenderTips": "开启后，只有当设置的条件被满足时，当前 panel 才会被渲染"
+    "conditionRenderTips": "开启后，只有当设置的条件被满足时，当前 panel 才会被渲染",
+    "condition": "设置条件",
+  "conditionTips": "检查一个变量是否等于给定的值"
   },
 
   "prometheusDs": {

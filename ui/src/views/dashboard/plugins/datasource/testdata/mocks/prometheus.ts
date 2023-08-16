@@ -70,8 +70,8 @@ const rawData = {
 
 export const genPrometheusData = (timeRange: TimeRange,ds: PanelDatasource,q: PanelQuery) => {
     const data = cloneDeep(rawData)
-    const start = timeRange.start.getTime() / 1000 
-    const end = timeRange.end.getTime() / 1000 
+    const start = round(timeRange.start.getTime() / 1000 )
+    const end = round(timeRange.end.getTime() / 1000) 
     const alignedStart = start - start % q.interval
     const timeBucks = []
     let current = alignedStart;

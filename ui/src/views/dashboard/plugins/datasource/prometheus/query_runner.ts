@@ -19,7 +19,6 @@ import { prometheusToPanels } from "./transformData"
 import { Datasource } from "types/datasource"
 import { isPromethesDatasourceValid } from "./DatasourceEditor"
 import { Variable } from "types/variable"
-import { isJSON } from "utils/is"
 import { getNewestTimeRange } from "components/DatePicker/TimePicker"
 
 import { PromDsQueryTypes } from "./VariableEditor"
@@ -28,7 +27,7 @@ import { VariableInterval, VariableSplitChar, VarialbeAllOption } from "src/data
 import { requestApi } from "utils/axios/request"
 import { replaceWithVariablesHasMultiValues } from "utils/variable"
 import { $variables } from "src/views/variables/store"
-import { getDatasource } from "utils/datasource"
+import { getDatasource, roundDsTime } from "utils/datasource"
 
 export const run_prometheus_query = async (panel: Panel, q: PanelQuery, range: TimeRange, ds: Datasource) => {
     if (isEmpty(q.metrics)) {
@@ -38,8 +37,8 @@ export const run_prometheus_query = async (panel: Panel, q: PanelQuery, range: T
         }
     }
 
-    const start = round(range.start.getTime() / 1000)
-    const end = range.end.getTime() / 1000
+    const start = roundDsTime(range.start.getTime() / 1000)
+    const end = roundDsTime(range.end.getTime() / 1000)
 
     const alignedStart = start - start % q.interval
 
@@ -108,8 +107,8 @@ export const queryPromethuesVariableValues = async (variable: Variable) => {
     }
 
     const timeRange = getNewestTimeRange()
-    const start = timeRange.start.getTime() / 1000
-    const end = timeRange.end.getTime() / 1000
+    const start = roundDsTime(timeRange.start.getTime() / 1000)
+    const end = roundDsTime(timeRange.end.getTime() / 1000)
 
 
     if (data.type == PromDsQueryTypes.LabelValues) {
@@ -153,8 +152,8 @@ export const queryPrometheusAllMetrics = async (dsId, useCurrentTimerange = true
     const ds = getDatasource(dsId)
 
     const timeRange = getNewestTimeRange()
-    const start = timeRange.start.getTime() / 1000
-    const end = timeRange.end.getTime() / 1000
+    const start = roundDsTime(timeRange.start.getTime() / 1000)
+    const end = roundDsTime(timeRange.end.getTime() / 1000)
 
     const url = `/proxy/${ds.id}/api/v1/label/__name__/values?${useCurrentTimerange ? `&start=${start}&end=${end}` : ""}`
 
@@ -175,9 +174,9 @@ export const queryPrometheusAllMetrics = async (dsId, useCurrentTimerange = true
 export const queryPrometheusLabels = async (dsId, metric = "", useCurrentTimerange = true) => {
     const ds = getDatasource(dsId)
     const timeRange = getNewestTimeRange()
-    const start = timeRange.start.getTime() / 1000
-    const end = timeRange.end.getTime() / 1000
-
+    const start = roundDsTime(timeRange.start.getTime() / 1000)
+    const end = roundDsTime(timeRange.end.getTime() / 1000
+)
     const metrics = replaceWithVariablesHasMultiValues(metric)
     let url = `/proxy/${ds.id}/api/v1/labels?${useCurrentTimerange ? `&start=${start}&end=${end}` : ""}`
     for (const m of metrics) {
