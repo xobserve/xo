@@ -25,6 +25,7 @@ import React from "react";
 import { useStore } from "@nanostores/react"
 import { commonMsg, piePanelMsg } from "src/i18n/locales/en"
 import ThresholdEditor from "components/Threshold/ThresholdEditor"
+import { CodeEditorModal } from "components/CodeEditor/CodeEditorModal"
 
 const PiePanelEditor = memo(({ panel, onChange }: PanelEditorProps) => {
     const t = useStore(commonMsg)
@@ -42,12 +43,6 @@ const PiePanelEditor = memo(({ panel, onChange }: PanelEditorProps) => {
                     panel.plugins.pie.showLabel = e.currentTarget.checked
                 })} />
             </PanelEditItem>
-
-            <OnClickEvent panel={panel} onChange={v => {
-                onChange((panel: Panel) => {
-                    panel.plugins.pie.onClickEvent = v
-                })
-            }} />
         </PanelAccordion>
 
         <PanelAccordion title={t1.shape}>
@@ -118,6 +113,14 @@ const PiePanelEditor = memo(({ panel, onChange }: PanelEditorProps) => {
             </PanelEditItem>
         </PanelAccordion>
 
+        <PanelAccordion title={t.interaction}>
+            <PanelEditItem title={t.onClickEvent} desc={t.onClickEventTips}>
+                <CodeEditorModal value={panel.plugins.pie.onClickEvent} onChange={v => onChange((panel: Panel) => {
+                    panel.plugins.pie.onClickEvent = v
+                })} />
+            </PanelEditItem>
+        </PanelAccordion>
+
         <PanelAccordion title="Thresholds">
             <ThresholdEditor value={panel.plugins.pie.thresholds} onChange={(v) => onChange((panel: Panel) => {
                     panel.plugins.pie.thresholds = v
@@ -135,35 +138,3 @@ const PiePanelEditor = memo(({ panel, onChange }: PanelEditorProps) => {
 
 export default PiePanelEditor
 
-
-const OnClickEvent = ({ panel, onChange }: PanelEditorProps) => {
-    const t = useStore(commonMsg)
-    const { isOpen, onOpen, onClose } = useDisclosure()
-    const [temp, setTemp] = useState(panel.plugins.pie.onClickEvent)
-
-    const onSubmit = () => {
-        onChange(temp)
-        onClose()
-    }
-
-    return (<>
-        <PanelEditItem title={t.onClickEvent} desc={t.onClickEventTips}>
-            <Button size="sm" onClick={onOpen}>{t.editFunc}</Button>
-        </PanelEditItem>
-        <Modal isOpen={isOpen} onClose={onClose} size="full">
-            <ModalOverlay />
-            <ModalContent>
-                <ModalHeader py="2">
-                    {t.editFunc}
-                    <ModalCloseButton />
-                </ModalHeader>
-                <ModalBody pt="2" pb="0" px="0">
-                    <Box height="400px"><CodeEditor value={temp} onChange={v => setTemp(v)} /></Box>
-                    <Button onClick={onSubmit} width="100%">{t.submit}</Button>
-                </ModalBody>
-
-            </ModalContent>
-        </Modal>
-    </>
-    )
-}

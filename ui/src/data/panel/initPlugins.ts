@@ -220,9 +220,7 @@ function registerEvents(options, chart) {
             },
             thresholds: initThresholds(12),
             enableThresholds: false,
-            onClickEvent: `function onClickEvent(params) {
-    console.log(params)
-}`
+            onClickEvent: onClickCommonEvent
         },
         [PanelType.Gauge]: {
             animation: true,

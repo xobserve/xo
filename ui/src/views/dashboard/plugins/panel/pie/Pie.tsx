@@ -26,6 +26,9 @@ import { ValueCalculationType } from "types/value";
 import { getThreshold } from "components/Threshold/utils";
 import { ThresholdsMode } from "types/threshold";
 import { isEmpty } from "utils/validate";
+import { setVariable } from "src/views/variables/SelectVariable";
+import { setDateTime } from "components/DatePicker/DatePicker";
+import { useNavigate } from "react-router-dom";
 
 interface Props extends PanelProps {
     data: SeriesData[][]
@@ -52,7 +55,7 @@ const PiePanel = (props: Props) => {
     const { panel, height, width } = props
     const [chart, setChart] = useState(null)
     const { colorMode } = useColorMode()
-
+    const navigate = useNavigate()
     if (!isSeriesData(props.data)) {
         return (<Center height="100%">Data format not support!</Center>)
     }
@@ -135,7 +138,7 @@ const PiePanel = (props: Props) => {
 
 
     return (<>
-        {options && <Box height={height} key={colorMode} className="echarts-panel"><ChartComponent options={options} theme={colorMode} width={width} height={height} onChartCreated={c => setChart(c)} onChartEvents={onEvents} /></Box>}
+        {options && <Box height={height} key={colorMode} className="echarts-panel"><ChartComponent options={options} theme={colorMode} width={width} height={height} onChartCreated={c => setChart(c)} onChartEvents={(row) => onEvents(row, navigate, (k, v) => setVariable(k, v), setDateTime)} /></Box>}
     </>)
 }
 
