@@ -215,7 +215,7 @@ const BarChart = memo((props: Props) => {
 
 
     const chartOptions = {
-        animation: true,
+        animation: options.animation,
         animationDuration: 500,
         tooltip: {
             show: true,

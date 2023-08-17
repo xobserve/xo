@@ -32,6 +32,11 @@ const BarPanelEditor = memo(({ panel, onChange }: PanelEditorProps) => {
     const t1 = useStore(graphPanelMsg)
     return (<>
         <PanelAccordion title={t.basic}>
+            <PanelEditItem title={t.animation} desc={t.animationTips}>
+                <Switch defaultChecked={panel.plugins.bar.animation} onChange={e => onChange((panel: Panel) => {
+                    panel.plugins.bar.animation = e.currentTarget.checked
+                })} />
+            </PanelEditItem>
             <PanelEditItem title="Show grid">
                 <Switch defaultChecked={panel.plugins.bar.showGrid} onChange={e => onChange((panel: Panel) => {
                     panel.plugins.bar.showGrid = e.currentTarget.checked

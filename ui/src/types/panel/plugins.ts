@@ -80,6 +80,7 @@ export interface AlerSettings extends DisableDatasource {
 
 
 export interface BarSettings {
+    animation: boolean
     showGrid: boolean
     tooltip: "none" | "single" | "all"
     stack: "auto" | "always" | "none"

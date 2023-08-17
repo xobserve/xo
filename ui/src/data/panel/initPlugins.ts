@@ -385,6 +385,7 @@ function registerEvents(options, chart) {
             thresholds: [{type: null, value: null,key:null, color: 'inherit'}]
         },
         [PanelType.Bar]: {
+            animation: true,
             showGrid: true,
             tooltip: "all",
             showLabel: "auto",
