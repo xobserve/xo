@@ -415,6 +415,7 @@ function registerEvents(options, chart) {
                     sort: 'desc'
                 }
             },
+            onClickEvent: onClickCommonEvent,
             thresholds: initThresholds(12),
             thresholdsDisplay: ThresholdDisplay.None,
             thresholdArrow: BarThresholdArrow.None,

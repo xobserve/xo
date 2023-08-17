@@ -25,6 +25,7 @@ import PopoverSelect from "components/select/PopoverSelect"
 import { ValueCalculationType } from "types/value"
 import ThresholdEditor from "components/Threshold/ThresholdEditor"
 import { BarThresholdArrow } from "types/plugins/bar"
+import { CodeEditorModal } from "components/CodeEditor/CodeEditorModal"
 
 const BarPanelEditor = memo(({ panel, onChange }: PanelEditorProps) => {
     const t = useStore(commonMsg)
@@ -101,23 +102,23 @@ const BarPanelEditor = memo(({ panel, onChange }: PanelEditorProps) => {
         </PanelAccordion>
         <PanelAccordion title={t.styles}>
             <PanelEditItem title="Bar width">
-                <EditorNumberItem value={panel.plugins.bar.styles.barWidth} min={1}  max={100} step={2} onChange={v => onChange((panel: Panel) => { panel.plugins.bar.styles.barWidth = v })} placeholder="auto" />
-            </PanelEditItem>  
+                <EditorNumberItem value={panel.plugins.bar.styles.barWidth} min={1} max={100} step={2} onChange={v => onChange((panel: Panel) => { panel.plugins.bar.styles.barWidth = v })} placeholder="auto" />
+            </PanelEditItem>
             <PanelEditItem title="Axis font size">
-                <EditorNumberItem value={panel.plugins.bar.styles.axisFontSize} min={6}  max={20} step={1} onChange={v => onChange((panel: Panel) => { panel.plugins.bar.styles.axisFontSize = v })} placeholder="auto" />
-            </PanelEditItem> 
+                <EditorNumberItem value={panel.plugins.bar.styles.axisFontSize} min={6} max={20} step={1} onChange={v => onChange((panel: Panel) => { panel.plugins.bar.styles.axisFontSize = v })} placeholder="auto" />
+            </PanelEditItem>
             <PanelEditItem title="Label font size">
-                <EditorNumberItem value={panel.plugins.bar.styles.labelFontSize} min={6}  max={20} step={1} onChange={v => onChange((panel: Panel) => { panel.plugins.bar.styles.labelFontSize = v })} placeholder="auto" />
+                <EditorNumberItem value={panel.plugins.bar.styles.labelFontSize} min={6} max={20} step={1} onChange={v => onChange((panel: Panel) => { panel.plugins.bar.styles.labelFontSize = v })} placeholder="auto" />
             </PanelEditItem>
             <PanelEditItem title="Bar fill opacity">
-                <EditorSliderItem value={panel.plugins.bar.styles.barOpacity} min={10}  max={100} step={1} onChange={v => onChange((panel: Panel) => { panel.plugins.bar.styles.barOpacity = v })}  />
-            </PanelEditItem>      
+                <EditorSliderItem value={panel.plugins.bar.styles.barOpacity} min={10} max={100} step={1} onChange={v => onChange((panel: Panel) => { panel.plugins.bar.styles.barOpacity = v })} />
+            </PanelEditItem>
         </PanelAccordion>
 
         <PanelAccordion title={t.valueSettings}>
             <PanelEditItem title={t.unit}>
                 <UnitPicker value={panel.plugins.bar.value} onChange={
-                    (v:Units) => onChange((panel: Panel) => {
+                    (v: Units) => onChange((panel: Panel) => {
                         panel.plugins.bar.value.units = v.units
                         panel.plugins.bar.value.unitsType = v.unitsType
                     })
@@ -129,12 +130,19 @@ const BarPanelEditor = memo(({ panel, onChange }: PanelEditorProps) => {
             </PanelEditItem>
         </PanelAccordion>
 
+        <PanelAccordion title={t.interaction}>
+            <PanelEditItem title={t.onClickEvent} desc={t.onClickEventTips}>
+                <CodeEditorModal value={panel.plugins.bar.onClickEvent} onChange={v => onChange((panel: Panel) => {
+                    panel.plugins.bar.onClickEvent = v
+                })} />
+            </PanelEditItem>
+        </PanelAccordion>
         <PanelAccordion title="Thresholds">
             <ThresholdEditor value={panel.plugins.bar.thresholds} onChange={(v) => onChange((panel: Panel) => {
-                    panel.plugins.bar.thresholds = v
-                    // dispatch(PanelForceRebuildEvent + panel.id)
-                })} />
-            
+                panel.plugins.bar.thresholds = v
+                // dispatch(PanelForceRebuildEvent + panel.id)
+            })} />
+
             <PanelEditItem title={t1.thresholdsDisplay}>
                 <Select value={panel.plugins.bar.thresholdsDisplay} onChange={e => {
                     const v = e.currentTarget.value
@@ -143,9 +151,9 @@ const BarPanelEditor = memo(({ panel, onChange }: PanelEditorProps) => {
                         // dispatch(PanelForceRebuildEvent + panel.id)
                     })
                 }}>
-                        <option value={ThresholdDisplay.None}>{ThresholdDisplay.None}</option>
-                        <option value={ThresholdDisplay.Line}>{ThresholdDisplay.Line}</option>
-                        <option value={ThresholdDisplay.DashedLine}>{ThresholdDisplay.DashedLine}</option>
+                    <option value={ThresholdDisplay.None}>{ThresholdDisplay.None}</option>
+                    <option value={ThresholdDisplay.Line}>{ThresholdDisplay.Line}</option>
+                    <option value={ThresholdDisplay.DashedLine}>{ThresholdDisplay.DashedLine}</option>
                 </Select>
             </PanelEditItem>
             <PanelEditItem title="Threshold line arrow">
@@ -157,7 +165,7 @@ const BarPanelEditor = memo(({ panel, onChange }: PanelEditorProps) => {
                     })
                 }}>
                     {
-                        Object.keys(BarThresholdArrow).map(k =>   <option value={BarThresholdArrow[k]}>{BarThresholdArrow[k]}</option>)
+                        Object.keys(BarThresholdArrow).map(k => <option value={BarThresholdArrow[k]}>{BarThresholdArrow[k]}</option>)
                     }
                 </Select>
             </PanelEditItem>
@@ -167,3 +175,5 @@ const BarPanelEditor = memo(({ panel, onChange }: PanelEditorProps) => {
 })
 
 export default BarPanelEditor
+
+

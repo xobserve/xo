@@ -31,6 +31,10 @@ import { ThresholdDisplay } from "types/panel/plugins"
 import { ThresholdsMode } from "types/threshold"
 import { findOverride, findOverrideRule, findRuleInOverride } from "utils/dashboard/panel"
 import { BarRules } from "./OverridesEditor"
+import { genDynamicFunction } from "utils/dynamicCode"
+import { setVariable } from "src/views/variables/SelectVariable"
+import { setDateTime } from "components/DatePicker/DatePicker"
+import { useNavigate } from "react-router-dom"
 
 
 interface Props {
@@ -45,6 +49,7 @@ const BarChart = memo((props: Props) => {
     const options = panel.plugins.bar
     const [chart, setChart] = useState<echarts.ECharts>(null)
     const { colorMode } = useColorMode()
+    const navigate = useNavigate()
     useEffect(() => {
         if (chart) {
             chart.on('click', function (event) {
@@ -390,9 +395,9 @@ const BarChart = memo((props: Props) => {
         }
     }
 
-
+    const onEvents = genDynamicFunction(panel.plugins.bar.onClickEvent);
     return (<>
-        <ChartComponent key={colorMode} options={chartOptions} theme={colorMode} onChartCreated={c => setChart(c)} width={width} />
+        <ChartComponent key={colorMode} options={chartOptions} theme={colorMode} onChartCreated={c => setChart(c)} width={width} onChartEvents={(row) => onEvents(row, navigate, (k, v) => setVariable(k, v), setDateTime)} />
     </>)
 })
 

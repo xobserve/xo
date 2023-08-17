@@ -107,6 +107,7 @@ export interface BarSettings {
             sort: "asc" | "desc"
         }
     }
+    onClickEvent: string
     thresholds: ThresholdsConfig
     thresholdsDisplay: ThresholdDisplay
     thresholdArrow: BarThresholdArrow
