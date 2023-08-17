@@ -21,6 +21,7 @@ interface Props {
 const TraceCard = ({ trace, maxDuration,checked=false, onChecked=null,simple=false,checkDisabled=false,dsId=null}: Props) => {
     const mDate = moment(trace.startTime / 1000);
     const timeStr = mDate.format('h:mm:ss a')
+    console.log("here3333333:",dsId)
     const ds = getDatasource(dsId)
     const onTraceClick = () => {
         if (ds) {

@@ -36,7 +36,7 @@ const TraceCompareGraph = ({ traceA, traceB }: Props) => {
             lm.stopAndRelease()
         }
     }, [])
-
+    
     const { edges, vertices } = getEdgesAndVertices(traceA, traceB);
     const keys = getUiFindVertexKeys(search, vertices);
     return (<>

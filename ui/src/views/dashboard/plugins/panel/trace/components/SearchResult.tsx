@@ -68,7 +68,7 @@ const TraceSearchResult = ({ panel, traces, timeRange }: Props) => {
 
     const comparedTraces = comparison.map(traceId => {
         return traces.find(t => t.traceID == traceId)
-    })
+    }).filter(t => t)
 
     const removeFromCompare = traceId => {
         remove(comparison, i => i == traceId)

@@ -19,7 +19,7 @@ import { floor } from "lodash"
 
 export const getDatasource = (k):Datasource => {
     let currentDatasource
-    if (hasVariableFormat(k.toString())) {
+    if (hasVariableFormat(k?.toString())) {
         const name = replaceWithVariables(k)
         currentDatasource = datasources?.find(ds => ds.name == name)
     } else {
