@@ -89,7 +89,6 @@ const TraceTimeline = ({ trace, updateNextViewRangeTime, updateViewRangeTime, vi
         setChildrenHiddenIDs(ids)
     },[])
 
-
     return (<>
         <Box sx={{
             '.TimelineHeaderRow': {

@@ -129,6 +129,7 @@ const TraceDetail = ({ trace, scrollManager }: Props) => {
             viewComponent = <TraceFlamegraph trace={trace}/>
             break
         case ETraceViewType.TraceSpansView:
+            //@ts-ignore
             viewComponent = <TraceSpanView trace={trace} uiFindVertexKeys={spanFindMatches} uiFind={search}/>
             break
         case ETraceViewType.TraceStatistics:

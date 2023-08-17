@@ -117,12 +117,6 @@ limitations under the License.
   }
   
   
- 
-  .span-row.is-expanded:hover .span-view {
-    background: #eee;
-  }
-
-  
   .span-row.clipping-right .span-view::before {
     content: ' ';
     height: 100%;
