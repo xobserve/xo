@@ -168,7 +168,7 @@ const BarChart = memo((props: Props) => {
                     const override = findOverride(panel, hasNegativeY.target)
                     const unitOverride = findRuleInOverride(override, BarRules.SeriesUnit)
                     const decimalOverride = findRuleInOverride(override, BarRules.SeriesDecimal)
-                    return formatUnit(value, unitOverride.units, decimalOverride)
+                    return formatUnit(value, unitOverride?.units, decimalOverride)
                 }
 
             }
@@ -190,7 +190,7 @@ const BarChart = memo((props: Props) => {
             logBase: options.axis.scaleBase,
             scalse: true,
             splitLine: {
-                show: options.showGrid,
+                show: false,
             },
             show: true,
             splitNumber: options.axis.scale == "log" ? null : 3,
@@ -357,6 +357,7 @@ const BarChart = memo((props: Props) => {
             } else {
                 max = Math.max(...d)
             }
+            const separateY = findOverrideRule(panel, target, BarRules.SeriesYAxist)
             for (const threshold of to.value.thresholds) {
                 if (threshold.value == null) {
                     continue
@@ -370,7 +371,7 @@ const BarChart = memo((props: Props) => {
                     },
                     markLine: {
                         silent: true,
-                        symbol: [null, options.thresholdArrow],
+                        symbol: separateY === null ? [null, options.thresholdArrow] : [options.thresholdArrow,null],
                         label: {
                             show: false,
                         },

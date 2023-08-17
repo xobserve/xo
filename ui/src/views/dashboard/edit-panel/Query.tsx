@@ -134,7 +134,7 @@ const DatasourceQueryOption = ({ panel, onChange }: Props) => {
             {
                 expanded && <FormSection mt="1" position="relative">
                     <FormItem size="sm" labelWidth="170px" title={t1.maxDataPoints} desc={t1.maxDataPointsTips}>
-                        <Box width="100px"><EditorNumberItem min={100} max={2000} step={50} value={panel.datasource.queryOptions.maxDataPoints} onChange={v => {
+                        <Box width="100px"><EditorNumberItem min={1} max={2000} step={20} value={panel.datasource.queryOptions.maxDataPoints} onChange={v => {
                             onChange((panel: Panel) => {
                                 panel.datasource.queryOptions.maxDataPoints = v
                             })

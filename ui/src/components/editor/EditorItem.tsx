@@ -67,7 +67,9 @@ export const EditorNumberItem = ({ value, onChange, min = null, max = null, step
             break;
     }
     return (
-        <InputNumber  placeholder={placeholder} size={newSize} min={min} max={max} step={step} controls={step !== null} value={temp} onChange={v => setTemp(v === null ? (notNull ? (defaultZero ? 0 : min) : null) : v)} onBlur={() => onChange(temp)} />
+        <InputNumber  placeholder={placeholder} size={newSize} min={min} max={max} step={step} controls={step !== null} value={temp} onChange={v => {
+            setTemp(v === null ? (notNull ? (defaultZero ? 0 : min) : null) : v)
+        }} onBlur={() => onChange(temp)} />
     )
 }
 
