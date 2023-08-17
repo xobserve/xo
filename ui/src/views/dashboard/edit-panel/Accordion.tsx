@@ -16,9 +16,9 @@ import React from "react";
 
 const PanelAccordion = ({title, children ,defaultOpen=true,spacing=4}) => {
     return (
-        <Accordion defaultIndex={defaultOpen ? [0] : []} allowMultiple>
-            <AccordionItem>
-                <AccordionButton fontSize="sm" pl="0" py="3" _hover={{background:null}} width="fit-content">
+        <Accordion defaultIndex={defaultOpen ? [0] : []} allowMultiple >
+            <AccordionItem borderBottomWidth={'0 !important'}>
+                <AccordionButton fontSize="sm" pl="0" py="3"  _hover={{background:null}} width="100%">
                     <AccordionIcon />
                     <Text ml="1">{title}</Text>
                 </AccordionButton>
