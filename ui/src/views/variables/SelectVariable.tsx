@@ -299,7 +299,8 @@ export const setVariable = (name, value) => {
         }
     }
 
-    setVariableValue(v, value)
+    
+    v && setVariableValue(v, value)
 }
 
 export const queryVariableValues = async (v: Variable) => {

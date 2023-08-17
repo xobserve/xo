@@ -138,9 +138,10 @@ const AlertPanelEditor = memo(({ panel, onChange }: PanelEditorProps) => {
                     panel.plugins.alert.chart.show = e.target.checked
                 })} />
             </PanelEditItem>
-            <PanelEditItem title="Chart height" desc="Css style width">
+            <PanelEditItem title="Chart height" desc="Css style height">
                 <EditorInputItem value={panel.plugins.alert.chart.height} onChange={(v) => onChange((panel: Panel) => {
                     panel.plugins.alert.chart.height = v
+                    dispatch(PanelForceRebuildEvent + panel.id)
                 })} placeholder="e.g 200px 30%" />
             </PanelEditItem>
             <PanelEditItem title="Show label" desc="Value label display on bars">
