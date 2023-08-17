@@ -87,7 +87,7 @@ const VariablesSetting = ({ dashboard, onChange }: Props) => {
 
 
     const editVariable = async (v:Variable) => {
-        if (variables.find(v1 => v1.name.toLowerCase() == v.name.toLowerCase())) {
+        if (variables.find(v1 =>v1.id != v.id &&  v1.name.toLowerCase() == v.name.toLowerCase())) {
             toast({
                 title: t.isExist({name: v.name}),
                 status: "error",

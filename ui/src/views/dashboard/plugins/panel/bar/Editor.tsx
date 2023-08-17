@@ -26,6 +26,8 @@ import { ValueCalculationType } from "types/value"
 import ThresholdEditor from "components/Threshold/ThresholdEditor"
 import { BarThresholdArrow } from "types/plugins/bar"
 import { CodeEditorModal } from "components/CodeEditor/CodeEditorModal"
+import { dispatch } from "use-bus"
+import { PanelForceRebuildEvent } from "src/data/bus-events"
 
 const BarPanelEditor = memo(({ panel, onChange }: PanelEditorProps) => {
     const t = useStore(commonMsg)
@@ -64,6 +66,7 @@ const BarPanelEditor = memo(({ panel, onChange }: PanelEditorProps) => {
             <PanelEditItem title="Swap XY">
                 <Switch defaultChecked={panel.plugins.bar.axis.swap} onChange={e => onChange((panel: Panel) => {
                     panel.plugins.bar.axis.swap = e.currentTarget.checked
+                    dispatch(PanelForceRebuildEvent + panel.id)
                 })} />
             </PanelEditItem>
             <PanelEditItem title={t.scale}>

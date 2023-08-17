@@ -396,6 +396,8 @@ const BarChart = memo((props: Props) => {
     }
 
     const onEvents = genDynamicFunction(panel.plugins.bar.onClickEvent);
+
+    console.log("here333333:",options)
     return (<>
         <ChartComponent key={colorMode} options={chartOptions} theme={colorMode} onChartCreated={c => setChart(c)} width={width} onChartEvents={(row) => onEvents(row, navigate, (k, v) => setVariable(k, v), setDateTime)} />
     </>)
