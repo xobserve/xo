@@ -101,7 +101,7 @@ const GeoMapPanel = (props: Props) => {
         }
 
 
-    }, [data,dataLayer, options.baseMap, options.dataLayer, options.thresholds,options.value, panel.overrides,options.sizeScale])
+    }, [data,dataLayer, options.baseMap, options.dataLayer, options.thresholds,options.value, panel.overrides])
 
     // effects which cause map view to change
     useEffect(() => {
@@ -149,7 +149,7 @@ const GeoMapPanel = (props: Props) => {
         return () => {
             map.dispose()
         }
-    }, [options.baseMap, options.dataLayer, options.thresholds,options.value,  options.sizeScale])
+    }, [options.baseMap, options.dataLayer, options.value])
 
  
 

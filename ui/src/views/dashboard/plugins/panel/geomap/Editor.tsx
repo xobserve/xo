@@ -29,6 +29,8 @@ import { round } from "lodash";
 import { UnitPicker } from "components/Unit";
 import { Units } from "types/panel/plugins";
 import ValueCalculation from "components/ValueCalculation";
+import { dispatch } from "use-bus";
+import { PanelForceRebuildEvent } from "src/data/bus-events";
 
 const GeoMapPanelEditor = memo(({ panel, onChange }: PanelEditorProps) => {
     const t = useStore(commonMsg)
@@ -217,13 +219,20 @@ const GeoMapPanelEditor = memo(({ panel, onChange }: PanelEditorProps) => {
                     onChange((panel: Panel) => {
                         panel.plugins.geomap.sizeScale.enable = v
                     })
+                    dispatch(PanelForceRebuildEvent + panel.id)
                 }} />
             </PanelEditItem>
             <PanelEditItem title="Circle base size" desc="In Css pixels, base size is also min size">
-                <EditorNumberItem value={panel.plugins.geomap.sizeScale.baseSize} min={1} max={50} step={1} onChange={v => onChange((panel: Panel) => { panel.plugins.geomap.sizeScale.baseSize = v })} />
+                <EditorNumberItem value={panel.plugins.geomap.sizeScale.baseSize} min={1} max={50} step={1} onChange={v => onChange((panel: Panel) => { 
+                    panel.plugins.geomap.sizeScale.baseSize = v 
+                    dispatch(PanelForceRebuildEvent + panel.id)
+                })} />
             </PanelEditItem>
             <PanelEditItem title="Max scale" desc="maxCircleSize = baseSize * maxScale, if base size is 10, maxScale is 4, then max size will not exceed 40 ">
-                <EditorNumberItem value={panel.plugins.geomap.sizeScale.maxScale} min={1} max={50} step={1} onChange={v => onChange((panel: Panel) => { panel.plugins.geomap.sizeScale.maxScale = v })} />
+                <EditorNumberItem value={panel.plugins.geomap.sizeScale.maxScale} min={1} max={50} step={1} onChange={v => onChange((panel: Panel) => { 
+                    panel.plugins.geomap.sizeScale.maxScale = v 
+                    dispatch(PanelForceRebuildEvent + panel.id)
+                })} />
             </PanelEditItem>
         </PanelAccordion>
 
