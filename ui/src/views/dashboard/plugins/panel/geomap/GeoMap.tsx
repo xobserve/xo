@@ -149,7 +149,7 @@ const GeoMapPanel = (props: Props) => {
         return () => {
             map.dispose()
         }
-    }, [options.baseMap, options.dataLayer, options.thresholds,options.value,  panel.overrides, options.sizeScale])
+    }, [options.baseMap, options.dataLayer, options.thresholds,options.value,  options.sizeScale])
 
  
 

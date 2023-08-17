@@ -81,7 +81,8 @@ export class FrameVectorSource<T extends Geometry = Geometry> extends VectorSour
                     location = [s.name, f.values]
                 }
             }
-            const override = findOverride(panel, code)
+            const override = findOverride(panel, s.name)
+ 
             if (location) {
                 const point = new Point(fromLonLat(location[1]));
                 info.points.push(point)
