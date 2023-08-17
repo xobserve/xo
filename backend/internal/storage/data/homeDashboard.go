@@ -32,7 +32,7 @@ var HomeDashboard = `
                         }
                     ],
                     "queryOptions": {
-                        "maxDataPoints": 1000,
+                        "maxDataPoints": 400,
                         "minInterval": "15s"
                     },
                     "type": "testdata"
