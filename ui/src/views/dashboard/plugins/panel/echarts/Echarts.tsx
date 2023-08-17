@@ -13,7 +13,7 @@
 
 import { ECharts } from "echarts"
 import * as echarts from 'echarts';
-import { useEffect, useMemo, useRef, useState } from "react"
+import { memo, useEffect, useMemo, useRef, useState } from "react"
 import { PanelProps } from "types/dashboard";
 import { Box, Center, useColorMode, useToast } from "@chakra-ui/react";
 import { genDynamicFunction } from "utils/dynamicCode";
@@ -25,7 +25,7 @@ import { colors } from "utils/colors";
 import loadash from "lodash"
 import 'echarts/extension/bmap/bmap';
 
-const EchartsPanel = (props: PanelProps) => {
+const EchartsPanel = memo((props: PanelProps) => {
     const { panel, width, height } = props
     if (!panel.plugins.echarts.allowEmptyData && isEmpty(props.data)) {
         return (<Center height="100%">No data</Center>)
@@ -87,7 +87,7 @@ const EchartsPanel = (props: PanelProps) => {
     return (<>
         {options && <Box height={height} key={colorMode} className="echarts-panel"><EchartsComponent options={options} theme={colorMode} width={width - 11} height={height} onChartCreated={c => setChart(c)} onChartEvents={onEvents} darkBg={darkBg} /></Box>}
     </>)
-}
+})
 
 export default EchartsPanel
 
@@ -129,7 +129,6 @@ export const EchartsComponent = ({ options, theme, width, height, onChartCreated
 
     useEffect(() => {
         if (chart) {
-            chart.clear()
             tryCatchCall(() => chart.setOption(options), toast)
         }
     }, [options])

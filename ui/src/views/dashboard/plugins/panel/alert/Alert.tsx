@@ -11,7 +11,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import React, { useCallback, useEffect, useMemo, useState } from "react";
+import React, { memo, useCallback, useEffect, useMemo, useState } from "react";
 import { Box, Center, Divider, Flex, StackDivider, Text, VStack, useColorMode } from "@chakra-ui/react"
 import { DatasourceType, PanelProps } from "types/dashboard"
 import { Log } from "types/plugins/log";
@@ -50,7 +50,7 @@ const initViewOptions = () => ({
     barType: "labels",
     persist: false
 })
-const AlertPanel = (props: AlertPanelProps) => {
+const AlertPanel = memo((props: AlertPanelProps) => {
     const vars = useStore($variables)
     const { dashboardId, panel, width, height } = props
     const { colorMode } = useColorMode()
@@ -340,6 +340,6 @@ const AlertPanel = (props: AlertPanelProps) => {
         {(viewMode == "stat" || width < 400) && <Box position="absolute" right="2" top="1" opacity={width < 400 ? 0 : 1} _hover={{ opacity: 1 }} color={viewMode == "stat" ? getTextColorForAlphaBackground(paletteColorNameToHex(options.stat.color), colorMode == "dark") : "inherit"} cursor="pointer" onClick={() => onViewOptionsChange({ ...viewOptions, viewMode: viewOptions.viewMode == "list" ? "stat" : "list" })} pb="2"><AiOutlineSwitcher /></Box>}
     </Box>
     )
-}
+})
 
 export default AlertPanel

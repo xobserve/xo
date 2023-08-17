@@ -11,7 +11,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { useMemo } from "react";
+import { memo, useMemo } from "react";
 import {  Panel, PanelProps } from "types/dashboard"
 import { SeriesData } from "types/seriesData";
 import { calcValueOnArray, isSeriesData } from "utils/seriesData";
@@ -28,7 +28,7 @@ interface Props extends PanelProps {
     data: SeriesData[][]
 }
 
-const BarGaugePanel = (props: Props) => {
+const BarGaugePanel = memo((props: Props) => {
     const { panel, height, width } = props
 
     if (isEmpty(props.data)) {
@@ -61,7 +61,7 @@ const BarGaugePanel = (props: Props) => {
         showMax={options.showMax}
         showMin={options.showMin}
     />)
-}
+})
 
 export default BarGaugePanel
 

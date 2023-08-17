@@ -167,7 +167,6 @@ export interface PanelProps {
     height?: number
     sync?: any
     data?: any
-    timeRange?: TimeRange
 }
 
 export type PanelData = any

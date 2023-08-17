@@ -11,7 +11,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 import { Box, Center } from "@chakra-ui/react"
-import React, { useEffect, useMemo, useRef, useState } from "react"
+import React, { memo, useEffect, useMemo, useRef, useState } from "react"
 import Map from 'ol/Map';
 import View from 'ol/View';
 import { PanelProps } from "types/dashboard";
@@ -37,7 +37,7 @@ interface Props extends PanelProps {
 
 export let geomap: Map = null
 
-const GeoMapPanelWrapper = (props: Props) => {
+const GeoMapPanelWrapper = memo((props: Props) => {
     if (isEmpty(props.data)) {
         return <Center height="100%">No data</Center>
     }
@@ -50,7 +50,7 @@ const GeoMapPanelWrapper = (props: Props) => {
         <GeoMapPanel {...props} />
     </>
     )
-}
+})
 
 export default GeoMapPanelWrapper
 

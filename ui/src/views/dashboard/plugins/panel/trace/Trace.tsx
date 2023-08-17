@@ -16,7 +16,7 @@ import { DatasourceType, PanelProps } from "types/dashboard"
 import TraceSearchPanel from "./components/SearchPanel"
 import logfmtParser from 'logfmt/lib/logfmt_parser';
 import { queryJaegerTrace, queryJaegerTraces } from "../../datasource/jaeger/query_runner"
-import { useEffect, useMemo, useState } from "react"
+import { memo, useEffect, useMemo, useState } from "react"
 import { TraceData } from "types/plugins/trace"
 import TraceSearchResult from "./components/SearchResult"
 import transformTraceData from "./utils/transform-trace-data"
@@ -28,7 +28,7 @@ import { getDatasource } from "utils/datasource";
 
 
 
-const TracePanelWrapper = (props: PanelProps) => {
+const TracePanelWrapper = memo((props: PanelProps) => {
     const ds = getDatasource(props.panel.datasource.id)
     return (<>
         {
@@ -40,7 +40,7 @@ const TracePanelWrapper = (props: PanelProps) => {
         }
     </>
     )
-}
+})
 export default TracePanelWrapper
 
 

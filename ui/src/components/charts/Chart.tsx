@@ -45,7 +45,7 @@ export const ChartComponent = memo((props: Props) => {
             //  "#1A202C"
         }
     }
-    
+
     useEffect(() => {
         if (container.current) {
             const c = echarts.init(container.current, theme)
@@ -66,7 +66,6 @@ export const ChartComponent = memo((props: Props) => {
 
     useEffect(() => {
         if (chart) {
-            chart.clear()
             chart.setOption(options)
         }
     }, [options])

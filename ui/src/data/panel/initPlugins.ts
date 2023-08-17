@@ -221,7 +221,7 @@ function registerEvents(options, chart) {
 }`
             },
             legend: {
-                show: true,
+                show: false,
                 orient: 'horizontal',
                 placement: PieLegendPlacement.Bottom
             },

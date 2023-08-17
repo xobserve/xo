@@ -12,7 +12,7 @@
 // limitations under the License.
 import { Box, Center, Text, VStack, useColorMode } from "@chakra-ui/react"
 import { OverrideItem, PanelProps } from "types/dashboard"
-import React, { useCallback, useMemo, useState } from "react";
+import React, { memo, useCallback, useMemo, useState } from "react";
 import { FieldType, SeriesData } from "types/seriesData";
 import { isEmpty } from "utils/validate";
 import { isSeriesData } from "utils/seriesData";
@@ -32,7 +32,7 @@ interface BarPanelProps extends PanelProps {
     data: SeriesData[][]
 }
 
-const BarPanelWrapper = (props: BarPanelProps) => {
+const BarPanelWrapper = memo((props: BarPanelProps) => {
     if (isEmpty(props.data)) {
         return <Center height="100%">No data</Center>
     }
@@ -52,7 +52,8 @@ const BarPanelWrapper = (props: BarPanelProps) => {
         }
     </>
     )
-}
+})
+
 export default BarPanelWrapper
 
 const BarPanel = (props: BarPanelProps) => {

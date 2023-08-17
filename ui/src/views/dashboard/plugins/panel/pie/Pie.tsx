@@ -13,7 +13,7 @@
 import { Box, Center, useColorMode } from "@chakra-ui/react";
 import ChartComponent from "components/charts/Chart";
 import { formatUnit } from "components/Unit";
-import { useMemo, useState } from "react";
+import { memo, useMemo, useState } from "react";
 import { Panel, PanelProps } from "types/dashboard"
 import { PieLegendPlacement } from "types/panel/plugins";
 import { PiePluginData } from "types/plugins/pie"
@@ -35,7 +35,7 @@ interface Props extends PanelProps {
     data: SeriesData[][]
 }
 
-const PiePanelWrapper = (props: Props) => {
+const PiePanelWrapper = memo((props: Props) => {
     if (isEmpty(props.data)) {
         return <Center height="100%">No data</Center>
     }
@@ -48,7 +48,7 @@ const PiePanelWrapper = (props: Props) => {
         <PiePanel {...props} />
     </>
     )
-}
+})
 
 export default PiePanelWrapper
 

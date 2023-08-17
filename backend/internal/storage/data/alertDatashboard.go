@@ -32,7 +32,7 @@ const AlertDashboard = `
                         }
                     ],
                     "queryOptions": {
-                        "maxDataPoints": 400,
+                        "maxDataPoints": 600,
                         "minInterval": "15s"
                     }
                 },

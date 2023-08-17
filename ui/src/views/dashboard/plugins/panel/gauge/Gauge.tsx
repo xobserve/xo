@@ -14,7 +14,7 @@ import { Box, Center, useColorMode } from "@chakra-ui/react";
 import ChartComponent from "components/charts/Chart";
 import { cloneDeep, round } from "lodash";
 
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { memo, useCallback, useEffect, useMemo, useState } from "react";
 import { PanelProps } from "types/dashboard"
 import { GaugePluginData } from "types/plugins/gauge";
 import { SeriesData } from "types/seriesData";
@@ -31,7 +31,7 @@ interface Props extends PanelProps {
   data: SeriesData[][]
 }
 
-const GaugePanel = (props: Props) => {
+const GaugePanel = memo((props: Props) => {
   const { panel, height, width } = props
   const [chart, setChart] = useState(null)
   const { colorMode } = useColorMode()
@@ -191,6 +191,6 @@ const GaugePanel = (props: Props) => {
   return (<>
     {isEmpty(props.data) ? <Center height="100%">No data</Center> :options && <Box height={height} key={colorMode} className="echarts-panel"><ChartComponent options={options} theme={colorMode} width={width} height={height} onChartCreated={onChartCreated} onChartEvents={null} /></Box> }
   </>)
-}
+})
 
 export default GaugePanel

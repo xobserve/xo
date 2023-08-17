@@ -11,20 +11,20 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 import { Box, Center, Flex, Select, useColorMode } from "@chakra-ui/react"
-import React, { useMemo } from "react"
+import React, { memo, useMemo } from "react"
 import { PanelProps } from "types/dashboard"
 import { TableSeries } from "types/plugins/table"
-import { isEmpty } from "lodash"
 import ComplexTable from "./components/ComplexTable/ComplexTable"
 import { SeriesData } from "types/seriesData"
 import customColors from "theme/colors"
 import { isSeriesData } from "utils/seriesData"
+import { isEmpty } from "utils/validate"
 
 interface TablePanelProps extends PanelProps {
     data: SeriesData[][]
 }
 
-const TablePanel = (props: TablePanelProps) => {
+const TablePanel = memo((props: TablePanelProps) => {
     const {colorMode} = useColorMode()
     const { panel } = props
     if (isEmpty(props.data)) {
@@ -87,7 +87,7 @@ const TablePanel = (props: TablePanelProps) => {
 
 
     )
-}
+})
 
 export default TablePanel
 

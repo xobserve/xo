@@ -11,7 +11,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import React, { useCallback, useEffect, useMemo, useState } from "react";
+import React, { memo, useCallback, useEffect, useMemo, useState } from "react";
 import { Box, Center, Flex, StackDivider, Text, VStack } from "@chakra-ui/react"
 import { PanelProps } from "types/dashboard"
 import { LogSeries, Log, LogLabel, LogChartView } from "types/plugins/log";
@@ -31,7 +31,7 @@ interface LogPanelProps extends PanelProps {
     data: LogSeries[][]
 }
 
-const LogPanelWrapper = (props: LogPanelProps) => {
+const LogPanelWrapper = memo((props: LogPanelProps) => {
     if (isEmpty(props.data)) {
         return <Center height="100%">No data</Center>
     }
@@ -51,7 +51,7 @@ const LogPanelWrapper = (props: LogPanelProps) => {
         }
     </>
     )
-}
+})
 
 export default LogPanelWrapper
 
