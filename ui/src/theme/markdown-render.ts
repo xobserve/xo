@@ -19,7 +19,7 @@ export default function markdownRender(props) {
                }
            },
            'h1': {
-               fontSize: '2rem',
+               fontSize: '1.8em',
                fontWeight: 'bold',
                marginBottom: '0.8rem'
            },
