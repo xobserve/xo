@@ -256,7 +256,6 @@ const AlertPanel = (props: AlertPanelProps) => {
                     let match = false
                     for (const alert of r.alerts) {
                         const as = JSON.stringify(alert).toLowerCase().replaceAll("\\", '')
-                        console.log("here333333", as)
                         if (as.match(search)) {
                             newAlerts.push(alert)
                             match = true

@@ -71,7 +71,6 @@ export const prometheusToSeriesData = (data: any, query: PanelQuery, range: Time
                         timeline.push(i)
                     }
 
-                    console.log("here333333:", alignedStart, end, timeline, m.values)
                     // if (timeline[timeline.length-1] != end) {
                     //     timeline.push(end)
                     // }

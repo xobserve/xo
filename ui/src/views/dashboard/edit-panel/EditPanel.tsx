@@ -24,7 +24,7 @@ import { FaArrowDown, FaArrowUp } from "react-icons/fa";
 import PanelStyles from "./PanelStyles";
 import PanelSettings from "./PanelSettings";
 import { useLeavePageConfirm } from "hooks/useLeavePage"
-import { cloneDeep, isEqual } from "lodash"
+import { cloneDeep, isEqual, set } from "lodash"
 import useBus, { dispatch } from "use-bus"
 import { DashboardSavedEvent, OnDashboardSaveEvent, PanelDataEvent, PanelForceRebuildEvent, SaveDashboardEvent } from "src/data/bus-events"
 import AutoSizer from "react-virtualized-auto-sizer";
@@ -39,12 +39,14 @@ import EditPanelTransform from "./Transform"
 import { getPanelOverridesRules } from "utils/dashboard/panel"
 import ValueMapping from "components/ValueMapping/ValueMapping"
 import PanelAccordion from "./Accordion"
+import storage from "utils/localStorage"
 
 interface EditPanelProps {
     dashboard: Dashboard
     onChange: any
 }
 
+const StorageHideDsKey = "hide-ds-"
 const EditPanel = ({ dashboard, onChange }: EditPanelProps) => {
     const t = useStore(commonMsg)
     const t1 = useStore(panelMsg)
@@ -57,6 +59,9 @@ const EditPanel = ({ dashboard, onChange }: EditPanelProps) => {
     const [pageChanged, setPageChanged] = useState(false)
     const [data, setData] = useState(null)
 
+    useEffect(() => {
+
+    },[])
     useLeavePageConfirm(dashboard.data.enableUnsavePrompt ? pageChanged : false)
 
 
@@ -92,6 +97,10 @@ const EditPanel = ({ dashboard, onChange }: EditPanelProps) => {
             if (p) {
                 setTempPanel(p)
                 onOpen()
+                const hide = storage.get(StorageHideDsKey + dashboard.id +  p.id)
+                if (hide !== undefined) {
+                    setHideDatasource(hide)
+                }
             } else {
                 onDiscard()
             }
@@ -226,7 +235,7 @@ const EditPanel = ({ dashboard, onChange }: EditPanelProps) => {
                                             return <PanelGrid width={width} height={height} key={tempPanel.id + tempPanel.type} dashboard={dashboard} panel={tempPanel} sync={null} />
                                         }}
                                     </AutoSizer>
-                                    {!tempPanel.plugins[tempPanel.type].disableDatasource && <Box zIndex={1} position="absolute" right="0" bottom={hideDatasource ? "0" : "-35px"} opacity={hideDatasource ? 0.8 : 0.4} cursor="pointer" className={`hover-text ${hideDatasource ? "color-text" : null}`} fontSize=".8rem" onClick={() => { setHideDatasource(!hideDatasource) }}>{hideDatasource ? <FaArrowUp /> : <FaArrowDown />}</Box>}
+                                    {!tempPanel.plugins[tempPanel.type].disableDatasource && <Box zIndex={1} position="absolute" right="0" bottom={hideDatasource ? "0" : "-35px"} opacity={hideDatasource ? 0.8 : 0.4} cursor="pointer" className={`hover-text ${hideDatasource ? "color-text" : null}`} fontSize=".8rem" onClick={() => { setHideDatasource(!hideDatasource); storage.set(StorageHideDsKey + dashboard.id + tempPanel.id, !hideDatasource)}}>{hideDatasource ? <FaArrowUp /> : <FaArrowDown />}</Box>}
                                 </Box>
                                 {/* panel datasource section */}
                                 {!tempPanel.plugins[tempPanel.type].disableDatasource &&

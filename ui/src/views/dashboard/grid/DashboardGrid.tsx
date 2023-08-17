@@ -116,7 +116,6 @@ const DashboardGrid = memo((props: GridProps) => {
     }, [dashboard])
 
     const onHidePanel = useCallback((panel: Panel) => {
-        console.log("here3333333:",panel.id)
         onChange((dashboard:Dashboard) => {
             dashboard.data.hiddenPanels.push(panel.id)
         })
