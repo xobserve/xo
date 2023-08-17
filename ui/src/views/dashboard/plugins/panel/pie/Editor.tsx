@@ -37,14 +37,45 @@ const PiePanelEditor = memo(({ panel, onChange }: PanelEditorProps) => {
                     panel.plugins.pie.animation = e.currentTarget.checked
                 })} />
             </PanelEditItem>
+        </PanelAccordion>
 
+        <PanelAccordion title={t.label}>
             <PanelEditItem title={t1.showLabel}>
-                <Switch defaultChecked={panel.plugins.pie.showLabel} onChange={e => onChange((panel: Panel) => {
-                    panel.plugins.pie.showLabel = e.currentTarget.checked
+                <Switch defaultChecked={panel.plugins.pie.label.show} onChange={e => onChange((panel: Panel) => {
+                    panel.plugins.pie.label.show = e.currentTarget.checked
+                })} />
+            </PanelEditItem>
+            <PanelEditItem title={"Show name"}>
+                <Switch defaultChecked={panel.plugins.pie.label.showName} onChange={e => onChange((panel: Panel) => {
+                    panel.plugins.pie.label.showName = e.currentTarget.checked
+                })} />
+            </PanelEditItem>
+            <PanelEditItem title={"Show value"}>
+                <Switch defaultChecked={panel.plugins.pie.label.showValue} onChange={e => onChange((panel: Panel) => {
+                    panel.plugins.pie.label.showValue = e.currentTarget.checked
+                })} />
+            </PanelEditItem>
+            <PanelEditItem title={"Align to"}>
+            <RadionButtons options={[{ label: "None", value: "none" }, { label: "LabelLine", value: "labelLine" },{ label: "edge", value: "edge" }]} value={panel.plugins.pie.label.align} onChange={v => onChange((panel: Panel) => {
+                   panel.plugins.pie.label.align = v
+                })} />
+            </PanelEditItem>
+            <PanelEditItem title={"Margin"}>
+                <EditorNumberItem value={panel.plugins.pie.label.margin} min={0} max={50} step={1} onChange={(v) => onChange((panel: Panel) => {
+                    panel.plugins.pie.label.margin = v
+                })} />
+            </PanelEditItem>
+            <PanelEditItem title={"Font size"}>
+                <EditorNumberItem value={panel.plugins.pie.label.fontSize} min={8} max={30} step={1} onChange={(v) => onChange((panel: Panel) => {
+                    panel.plugins.pie.label.fontSize = v
+                })} />
+            </PanelEditItem>
+            <PanelEditItem title={"Transform label name"}>
+                <CodeEditorModal value={panel.plugins.pie.label.transformName} onChange={v => onChange((panel: Panel) => {
+                    panel.plugins.pie.label.transformName = v
                 })} />
             </PanelEditItem>
         </PanelAccordion>
-
         <PanelAccordion title={t1.shape}>
             <PanelEditItem title={t.type}>
                 <RadionButtons options={[{ label: "Normal", value: "normal" }, { label: "Rose", value: "rose" }]} value={panel.plugins.pie.shape.type} onChange={v => onChange((panel: Panel) => {
@@ -97,7 +128,7 @@ const PiePanelEditor = memo(({ panel, onChange }: PanelEditorProps) => {
         <PanelAccordion title="Value">
             <PanelEditItem title={t.unit}>
                 <UnitPicker value={panel.plugins.pie.value} onChange={
-                    (v:Units) => onChange((panel: Panel) => {
+                    (v: Units) => onChange((panel: Panel) => {
                         panel.plugins.pie.value.units = v.units
                         panel.plugins.pie.value.unitsType = v.unitsType
                     })
@@ -123,14 +154,20 @@ const PiePanelEditor = memo(({ panel, onChange }: PanelEditorProps) => {
 
         <PanelAccordion title="Thresholds">
             <ThresholdEditor value={panel.plugins.pie.thresholds} onChange={(v) => onChange((panel: Panel) => {
-                    panel.plugins.pie.thresholds = v
-                })} />
-            
+                panel.plugins.pie.thresholds = v
+            })} />
+
             <PanelEditItem title={t.enable}>
                 <Switch defaultChecked={panel.plugins.pie.enableThresholds} onChange={e => onChange((panel: Panel) => {
                     panel.plugins.pie.enableThresholds = e.currentTarget.checked
                 })} />
             </PanelEditItem>
+
+            {panel.plugins.pie.enableThresholds && <PanelEditItem title="Show border">
+                <Switch defaultChecked={panel.plugins.pie.showThreshodBorder} onChange={e => onChange((panel: Panel) => {
+                    panel.plugins.pie.showThreshodBorder = e.currentTarget.checked
+                })} />
+            </PanelEditItem>}
         </PanelAccordion>
     </>
     )

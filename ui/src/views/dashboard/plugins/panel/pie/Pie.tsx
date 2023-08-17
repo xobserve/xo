@@ -29,6 +29,7 @@ import { isEmpty } from "utils/validate";
 import { setVariable } from "src/views/variables/SelectVariable";
 import { setDateTime } from "components/DatePicker/DatePicker";
 import { useNavigate } from "react-router-dom";
+import { isFunction } from "lodash";
 
 interface Props extends PanelProps {
     data: SeriesData[][]
@@ -92,7 +93,9 @@ const PiePanel = (props: Props) => {
 
         const lp = parseLegendPlacement(panel)
 
+       
 
+        const transformLabel = genDynamicFunction(panel.plugins.pie.label.transformName);
         return [{
             animation: panel.plugins.pie.animation,
             legend: {
@@ -114,9 +117,9 @@ const PiePanel = (props: Props) => {
                     roseType: panel.plugins.pie.shape.type == "rose" ? "area" : null,
                     itemStyle: {
                         borderRadius: panel.plugins.pie.shape.borderRadius,
-                        opacity: 0.8,
-                        borderWidth: colorMode == "light" ? 1 : 0.5,
-                        borderColor: color.length > 0 ? true : null 
+                        opacity: 0.7,
+                        borderWidth: colorMode == "light" ? 0.5 : 0.5,
+                        borderColor: color.length > 0 && panel.plugins.pie.showThreshodBorder ? true : null
                     },
                     data: data,
                     emphasis: {
@@ -127,8 +130,45 @@ const PiePanel = (props: Props) => {
                         }
                     },
                     label: {
-                        show: panel.plugins.pie.showLabel,
+                        show: panel.plugins.pie.label.show,
+                        alignTo: panel.plugins.pie.label.align,
+                        minMargin: panel.plugins.pie.label.margin,
+                        edgeDistance: 1,
+                        opacity: 1,
+                        formatter: params => {
+                            let labelFormater = ''
+                            if (panel.plugins.pie.label.showName) {
+                                if (isFunction(transformLabel)) {
+                                    labelFormater += transformLabel(params.data.name, params)
+                                } else {
+                                    labelFormater += params.data.name
+                                }
+                              
+                            }
+                            if (panel.plugins.pie.label.showValue) {
+                                if (!isEmpty(labelFormater)) {
+                                    labelFormater += '\n'
+                                }
+                                
+                                labelFormater += formatUnit(params.data.value, panel.plugins.pie.value.units, panel.plugins.pie.value.decimal)
+                            }
+
+                            return labelFormater
+                        },
+                        lineHeight: 15,
+                        fontSize: panel.plugins.pie.label.fontSize,
                     },
+                    labelLayout: panel.plugins.pie.label.show && panel.plugins.pie.label.showName && panel.plugins.pie.label.showValue &&  ( function (params) {
+                        const isLeft = params.labelRect.x < chart?.getWidth() / 2;
+                        const points = params.labelLinePoints;
+                        // Update the end point.
+                        points[2][0] = isLeft
+                            ? params.labelRect.x
+                            : params.labelRect.x + params.labelRect.width;
+                        return {
+                            labelLinePoints: points
+                        };
+                    }),
                     color: color,
                 }
             ]

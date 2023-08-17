@@ -56,8 +56,6 @@ export const getPanelOverridesRules = (panelType): string[] => {
             return Object.keys(GeomapRules).map(k => GeomapRules[k])
         case PanelType.Bar:
             return Object.keys(BarRules).map(k => BarRules[k])
-        case PanelType.Alert:
-            return Object.keys(AlertRules).map(k => AlertRules[k])
         default:
             return []
     }

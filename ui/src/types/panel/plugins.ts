@@ -231,7 +231,15 @@ export interface StatSettings {
 
 export interface PieSettings {
     animation: boolean
-    showLabel: boolean
+    label: {
+        show: boolean
+        showValue: boolean
+        showName: boolean
+        align: "none" | "labelLine" | "edge"
+        margin: number
+        fontSize: number
+        transformName: string
+    }
     onClickEvent: string
     shape: {
         type: 'normal' | 'rose'
@@ -247,6 +255,7 @@ export interface PieSettings {
     value: ValueSetting
     thresholds: ThresholdsConfig
     enableThresholds: boolean
+    showThreshodBorder: boolean
 }
 
 export enum PieLegendPlacement {

@@ -207,7 +207,18 @@ function registerEvents(options, chart) {
                 radius: 80,
                 innerRadius: 0,
             },
-            showLabel: false,
+            label: {
+                show: true,
+                align: "none",
+                margin:5,
+                showValue: false,
+                showName: true,
+                fontSize: 12,
+                transformName: 
+`function transformName(rawName, params) {
+    return rawName
+}`
+            },
             legend: {
                 show: true,
                 orient: 'horizontal',
@@ -220,6 +231,7 @@ function registerEvents(options, chart) {
             },
             thresholds: initThresholds(12),
             enableThresholds: false,
+            showThreshodBorder: true,
             onClickEvent: onClickCommonEvent
         },
         [PanelType.Gauge]: {

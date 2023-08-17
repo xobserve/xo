@@ -172,13 +172,6 @@ const PanelOverrides = ({ panel, onChange, data }: PanelEditorProps) => {
                                     })
                                 }} />
                             }
-                            {
-                                panel.type == PanelType.Alert && <AlertOverridesEditor override={rule} onChange={(v) => {
-                                    onChange((panel: Panel) => {
-                                        panel.overrides[i].overrides[j].value = v
-                                    })
-                                }} />
-                            }
                             <Box position="absolute" right="1" top="5px" cursor="pointer" onClick={() => removeRule(i, j)}><FaTimes fontSize="0.8rem" /></Box>
                         </FormSection>
                         )}
