@@ -52,7 +52,6 @@ import { getDatasource } from "utils/datasource";
 import { parseVariableFormat } from "utils/format";
 import { VariableInterval } from "src/data/variable";
 import Loading from "components/loading/Loading";
-import { shallowEqual } from "recompose";
 interface PanelGridProps {
     dashboard: Dashboard
     panel: Panel
@@ -71,7 +70,7 @@ export const PanelGrid = memo((props: PanelGridProps) => {
     const [tr, setTr] = useState<TimeRange>(getCurrentTimeRange())
     const depsCheck = useRef(null)
     const variables = useStore($variables)
-
+    
     useEffect(() => {
         var retryNum = 0
         depsCheck.current = setInterval(() => {
@@ -137,7 +136,7 @@ interface PanelComponentProps extends PanelGridProps {
 
 export const prevQueries = new Map()
 export const prevQueryData = new Map()
-export const PanelComponent = ({ dashboard, panel, variables, onRemovePanel, onHidePanel, width, height, sync, timeRange }: PanelComponentProps) => {
+export const PanelComponent = ({ dashboard, panel, variables, onRemovePanel,onHidePanel, width, height, sync, timeRange }: PanelComponentProps) => {
     const toast = useToast()
     const [panelData, setPanelData] = useState<any[]>(null)
     const [queryError, setQueryError] = useState()
@@ -300,10 +299,10 @@ export const PanelComponent = ({ dashboard, panel, variables, onRemovePanel, onH
                 overflowY="scroll"
                 marginLeft={panel.type == PanelType.Graph ? "-10px" : "0px"}
             >
-                <CustomPanelRender dashboardId={dashboard.id} panel={panel} data={data} height={panelInnerHeight} width={panelInnerWidth} sync={sync} />
+                <CustomPanelRender dashboardId={dashboard.id} panel={panel} data={data} height={panelInnerHeight} width={panelInnerWidth} sync={sync} timeRange={timeRange} />
             </Box>
         </>
-            : <Box position="fixed" top="0" right="0"><Loading /></Box>}
+            : <Box position="fixed" top="0" right="0"><Loading  /></Box>}
     </Box>
 }
 
@@ -334,30 +333,7 @@ const CustomPanelRender = memo((props: PanelProps) => {
     }
 
     return <></>
-},
-    // (prevProps, nextProps) => {
-    //     // destructure the prop you want to specifically target for deep comparison
-    //     // the rest will be shallow compared
-    //     const { data: prevDeep, ...prevRest } = prevProps;
-    //     const { data: nextDeep, ...nextRest } = nextProps;
-
-    //     // your custom logic for the deep comparison
-    //     // i took this function from https://stackoverflow.com/a/16436975/8680805
-    //     function arraysEqual(a, b) {
-    //         return isEqual(a,b)
-    //     }
-
-    //     const deep_comparison_result = arraysEqual(prevDeep, nextDeep);
-    //     console.log(`here33333 deep comparison`, deep_comparison_result);
-
-    //     // use same logic provided by reeact for shallow comparison
-    //     // from https://github.com/facebook/react/blob/master/packages/shared/shallowEqual.js
-    //     const shallow_comparison_result = shallowEqual(prevRest, nextRest);
-    //     console.log(`here33333 shallow comparison`, shallow_comparison_result);
-
-    //     return deep_comparison_result && shallow_comparison_result;
-    // }
-)
+})
 
 interface PanelHeaderProps {
     queryError: string
@@ -368,7 +344,7 @@ interface PanelHeaderProps {
     data: any[]
 }
 
-const PanelHeader = ({ queryError, panel, onCopyPanel, onRemovePanel, onHidePanel, data }: PanelHeaderProps) => {
+const PanelHeader = ({ queryError, panel, onCopyPanel, onRemovePanel,onHidePanel, data }: PanelHeaderProps) => {
     const viewPanel = useSearchParam("viewPanel")
     const t = useStore(commonMsg)
     const t1 = useStore(panelMsg)
