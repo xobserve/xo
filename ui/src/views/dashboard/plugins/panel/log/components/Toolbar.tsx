@@ -64,7 +64,7 @@ const LogToolbar = memo((props: Props) => {
         <Divider mt="" />
 
         <Box fontSize="0.8rem" mt="2" px="1">
-            <Text mb="1" fontWeight="500">Search logs</Text>
+            <Text mb="1" fontWeight="500">Search log content</Text>
             <EditorInputItem value={search} onChange={v => { setSearch(v); onSearchChange(v) }} placeholder="textA || textB , A && B" />
         </Box>
 

@@ -53,7 +53,7 @@ const PanelSettings = memo(({ panel, onChange }: PanelEditorProps) => {
 
     return (
         <>
-            <PanelAccordion title={t.basicSetting} spacing={2}>
+            <PanelAccordion title={t.basicSetting} spacing={2} defaultOpen={false}>
                 <PanelEditItem title={t1.panelTitle}>
                     <EditorInputItem value={panel.title} onChange={v => onChange((tempPanel: Panel) => { tempPanel.title = v })} />
                 </PanelEditItem>
@@ -88,7 +88,7 @@ const PanelSettings = memo(({ panel, onChange }: PanelEditorProps) => {
             </PanelAccordion>
 
             {/* panel visulization choosing */}
-            <PanelAccordion title={t1.visuization} defaultOpen>
+            <PanelAccordion title={t1.visuization} defaultOpen={false}>
                 <SimpleGrid columns={3} spacing="2">
                     {
                         Object.keys(PanelType).map((key) => {
