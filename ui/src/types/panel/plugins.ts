@@ -239,6 +239,7 @@ export interface PieSettings {
         margin: number
         fontSize: number
         transformName: string
+        lineHeight: number
     }
     onClickEvent: string
     shape: {

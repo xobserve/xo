@@ -70,6 +70,11 @@ const PiePanelEditor = memo(({ panel, onChange }: PanelEditorProps) => {
                     panel.plugins.pie.label.fontSize = v
                 })} />
             </PanelEditItem>
+            <PanelEditItem title={"Line height"}>
+                <EditorNumberItem value={panel.plugins.pie.label.lineHeight} min={1} max={50} step={1} onChange={(v) => onChange((panel: Panel) => {
+                    panel.plugins.pie.label.lineHeight = v
+                })} />
+            </PanelEditItem>
             <PanelEditItem title={"Transform label name"}>
                 <CodeEditorModal value={panel.plugins.pie.label.transformName} onChange={v => onChange((panel: Panel) => {
                     panel.plugins.pie.label.transformName = v

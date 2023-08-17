@@ -214,6 +214,7 @@ function registerEvents(options, chart) {
                 showValue: false,
                 showName: true,
                 fontSize: 12,
+                lineHeight: 16,
                 transformName: 
 `function transformName(rawName, params) {
     return rawName

@@ -155,7 +155,7 @@ const PiePanel = (props: Props) => {
 
                             return labelFormater
                         },
-                        lineHeight: 15,
+                        lineHeight: panel.plugins.pie.label.lineHeight,
                         fontSize: panel.plugins.pie.label.fontSize,
                     },
                     labelLayout: panel.plugins.pie.label.show && panel.plugins.pie.label.showName && panel.plugins.pie.label.showValue &&  ( function (params) {
@@ -173,7 +173,7 @@ const PiePanel = (props: Props) => {
                 }
             ]
         }, onEvents]
-    }, [panel.plugins.pie, props.data, colorMode])
+    }, [panel.plugins.pie, props.data, colorMode, chart])
 
 
 
