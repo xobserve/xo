@@ -15,6 +15,7 @@ export const commonMsg = i18n("common", {
   "description": "Description",
   "basic": "Basic",
   "variable": "Variable",
+  "annotation": "Annotation",
   "settings": "Settings", 
   "new": "New",
   "login": "Log in",

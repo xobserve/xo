@@ -42,6 +42,7 @@ interface Props {
     buttonText?: string
     circlePicker?: boolean
     circleRadius?: string
+    presetColors?: {label: string;value: string}[]
 }
 
 export const ColorPicker = (props: Props) => {
@@ -50,7 +51,7 @@ export const ColorPicker = (props: Props) => {
         return 
     }
 
-    const { onChange, buttonText = null, circlePicker = false, circleRadius = "16px" } = props
+    const { onChange, buttonText = null, circlePicker = false, circleRadius = "16px",presetColors=[] } = props
     const {colorMode} = useColorMode()
     const t = useStore(commonMsg)
     const color = paletteColorNameToHex(props.color, colorMode)
@@ -79,7 +80,7 @@ export const ColorPicker = (props: Props) => {
                                 (colorMode == "light" ? lightPalettes : darkPalettes).map(palette => <Flex justifyContent="space-between" alignItems="center">
                                     <Text fontSize="0.9rem">{upperFirst(palette.name)}</Text>
                                     <HStack spacing={3}>
-                                        {palette.shades.map((c,i) => <Box p="1px" borderRadius={4} border={props.color == c.name ? `1.5px solid ${c.color}` : null}><Box cursor="pointer"  borderRadius="50%" width={i==2 ? "30px" : "20px"} height={i==2 ? "30px" : "20px"} display="block" bg={c.color} onClick={() => onChange(c.name)}/></Box>)}
+                                        {palette.shades.map((c,i) => <Box p="1px" borderRadius={4} border={`1.5px solid ${props.color == c.name ?  c.color : 'transparent'}`}><Box cursor="pointer"  borderRadius="50%" width={i==2 ? "30px" : "20px"} height={i==2 ? "30px" : "20px"} display="block" bg={c.color} onClick={() => onChange(c.name)}/></Box>)}
                                     </HStack>
                                 </Flex>)
                             }
@@ -88,13 +89,22 @@ export const ColorPicker = (props: Props) => {
                             <HStack mt="3" spacing={4}>
                                 <HStack>
                                     <Text fontSize="0.8rem">Transparent</Text>
-                                    <Box p="1px" borderRadius={4} className={props.color === 'transparent' ? 'bordered' : null} ><Box cursor="pointer" width="20px" height="20px" bg='transparent' borderRadius="50%" className="bordered" onClick={() => onChange('transparent')}/></Box>
+                                    <Box p="1px" borderRadius={4} className="bordered" borderColor={props.color === 'transparent' ? 'inherit' : 'transparent'}><Box cursor="pointer" width="20px" height="20px" bg='transparent' borderRadius="50%" className="bordered" onClick={() => onChange('transparent')}/></Box>
                                 </HStack>
                                 <HStack>
                                     <Text fontSize="0.8rem">Inherit</Text>
-                                    <Box p="1px" borderRadius={4} className={props.color === 'inherit' ? 'bordered' : null}><Box cursor="pointer" width="20px" height="20px" bg={useColorModeValue(customColors.textColor.light, customColors.textColor.dark)} borderRadius="50%" className="bordered" onClick={() => onChange('inherit')} /></Box>
+                                    <Box p="1px" borderRadius={4} className="bordered" borderColor={props.color === 'inherit' ? 'inherit' : 'transparent'}><Box cursor="pointer" width="20px" height="20px" bg={useColorModeValue(customColors.textColor.light, customColors.textColor.dark)} borderRadius="50%" className="bordered" onClick={() => onChange('inherit')} /></Box>
                                 </HStack>
                             </HStack>
+                            
+                            {presetColors.length > 0 && <HStack mt="3" spacing={4}>
+                                {
+                                    presetColors.map(preset => <HStack>
+                                        <Text fontSize="0.8rem">{preset.label}</Text>
+                                        <Box p="1px" borderRadius={4} border={ `1.5px solid ${props.color == preset.value ? preset.value : 'transparent'}`}><Box cursor="pointer"  borderRadius="50%" width={ "20px"} height={ "20px"} display="block" bg={preset.value} onClick={() => onChange(preset.value)}/></Box>
+                                    </HStack>)
+                                }
+                            </HStack>}
                         </TabPanel>
                         <TabPanel>
                         <SketchPicker

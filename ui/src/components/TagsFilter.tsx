@@ -21,10 +21,10 @@ interface Props {
     tags: string[]
     value: string[]
     onChange: any
-    tagCount: Object
+    tagCount?: Object
 }
 
-const TagsFilter = ({ value, tags, onChange,tagCount }: Props) => {
+const TagsFilter = ({ value, tags, onChange,tagCount={} }: Props) => {
     const tagRender = (props: CustomTagProps) => {
         const { value, onClose } = props;
         return (

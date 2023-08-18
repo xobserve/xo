@@ -12,6 +12,7 @@
 // limitations under the License.
 import { PanelPlugins } from "./panel/plugins"
 import { PanelStyles } from "./panel/styles"
+import { Role } from "./role"
 import { TimeRange } from "./time"
 import { Variable } from "./variable"
 
@@ -48,6 +49,12 @@ export interface DashboardData {
     autoSaveInterval: number
     lazyLoading: boolean
     hiddenPanels: number[]
+    annotation: {
+        enable: boolean
+        enableRole: Role
+        color: string 
+        tagsFilter: string
+    }
 }
 
 export interface Panel {

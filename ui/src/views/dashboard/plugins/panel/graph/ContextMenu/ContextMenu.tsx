@@ -1,11 +1,21 @@
-import { Box, Button, Divider, HStack, Portal, StackDivider, Text, VStack, useOutsideClick } from "@chakra-ui/react";
+// Copyright 2023 Datav.io Team
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+// http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
+import { Box, Button, Divider, HStack, Portal, StackDivider, Text, VStack, useToast } from "@chakra-ui/react";
 import { TooltipContainer } from "../Tooltip/Tooltip";
 import React, { memo, useLayoutEffect, useRef, useState } from "react";
 import { PanelProps } from "types/dashboard";
 import { SeriesData } from "types/seriesData";
-import { isEmpty } from "utils/validate";
-import { findOverride, findRuleInOverride } from "utils/dashboard/panel";
-import { GraphRules } from "../OverridesEditor";
 import { findNearestSeriesAndDataPoint } from "../Tooltip";
 import { dispatch } from "use-bus";
 import { OnGraphPanelClickEvent } from "src/data/bus-events";
@@ -13,6 +23,7 @@ import { dateTimeFormat } from "utils/datetime/formatter";
 import AnnotationEditor from "../../../../../Annotation/AnnotationEditor";
 import { Annotation } from "types/annotation";
 import { roundDsTime } from "utils/datasource";
+import { $dashboard } from "src/views/dashboard/store/dashboard";
 
 interface Props {
     props: PanelProps
@@ -24,7 +35,7 @@ interface Props {
 const ContextMenu = memo(({ props, options, data, container }: Props) => {
     const [annotation, setAnnotation] = useState<Annotation>(null)
     const [coords, setCoords] = useState(null);
-
+    const toast = useToast()
     const plotInstance = useRef<uPlot>();
 
     const dataIdx = useRef(null)
@@ -121,7 +132,7 @@ const ContextMenu = memo(({ props, options, data, container }: Props) => {
             namespace: props.dashboardId,
         })
     }
-
+    
     const startTime = roundDsTime(plotInstance.current?.posToVal(xVal.current,'x'))
     return (<>
         <Portal key={props.panel.id}>
@@ -134,7 +145,20 @@ const ContextMenu = memo(({ props, options, data, container }: Props) => {
                     </HStack>
                     <Divider mt="2" />
                     <VStack alignItems={"left"} mt="2" divider={<StackDivider />}>
-                        <Button size="sm" variant="ghost" onClick={() => onAddAnnotation(startTime)}>Add annotation</Button>
+                        <Button size="sm" variant="ghost" onClick={() => {
+                            const dash = $dashboard.get()
+                            if (dash.data.annotation.enable) {
+                                onAddAnnotation(startTime)
+                            } else {
+                                toast({
+                                    title: "Annotation is disabled",
+                                    status: "warning",
+                                    duration: 3000,
+                                    isClosable: true,
+                                })
+                            }
+                            
+                        }}>Add annotation</Button>
                     </VStack>
                 </Box>
             </TooltipContainer>

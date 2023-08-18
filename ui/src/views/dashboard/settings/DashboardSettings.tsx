@@ -25,6 +25,7 @@ import VariablesSetting from "./Variables"
 import React from "react";
 import { useStore } from "@nanostores/react"
 import { commonMsg, dashboardSettingMsg } from "src/i18n/locales/en"
+import AnnotationSettings from "./Annotation"
 
 interface Props {
     dashboard: Dashboard
@@ -36,7 +37,8 @@ enum DashboardSettingType  {
     General = 0,
     Styles = 1,
     Variables = 2,
-    MetaData = 3
+    MetaData = 3,
+    Annotation = 4
 }
 // color-scheme: dark;height: 100%;background-image: url(http://datav-react.jiaminghi.com/demo/manage-desk/static/media/bg.110420cf.png);background-size: auto;
 const DashboardSettings = ({ dashboard,onChange }: Props) => {
@@ -70,6 +72,7 @@ const DashboardSettings = ({ dashboard,onChange }: Props) => {
                             <Tab>{t.general}</Tab>
                             <Tab>{t.styles}</Tab>
                             <Tab>{t.variable}</Tab>
+                            <Tab>{t.annotation}</Tab>
                             <Tab>{t1.metaData}</Tab>
                         </TabList>
 
@@ -82,6 +85,9 @@ const DashboardSettings = ({ dashboard,onChange }: Props) => {
                             </TabPanel>
                             <TabPanel  py="0" tabIndex={DashboardSettingType.Variables}>
                                 <VariablesSetting dashboard={dashboard} onChange={onChange} />
+                            </TabPanel>
+                            <TabPanel  py="0" tabIndex={DashboardSettingType.Annotation}>
+                                <AnnotationSettings dashboard={dashboard} onChange={onChange} />
                             </TabPanel>
                             <TabPanel  py="0" tabIndex={DashboardSettingType.MetaData}>
                                 <MetaSettings dashboard={dashboard} onChange={onChange} />

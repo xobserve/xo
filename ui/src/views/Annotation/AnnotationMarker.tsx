@@ -1,13 +1,22 @@
+// Copyright 2023 Datav.io Team
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+// http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
 import { Box, Flex, HStack, Popover, PopoverArrow, PopoverBody, PopoverContent, PopoverTrigger, Portal, Text, VStack } from "@chakra-ui/react";
 import React from "react"
-import { FaEdit, FaTrash, FaTrashAlt } from "react-icons/fa";
+import { FaEdit, FaTrashAlt } from "react-icons/fa";
 import { Annotation } from "types/annotation";
-import { requestApi } from "utils/axios/request";
 import { durationToSeconds } from "utils/date";
 import { dateTimeFormat } from "utils/datetime/formatter";
-import { $dashAnnotations } from "../dashboard/store/annotation";
-import { dispatch } from "use-bus";
-import { PanelForceRebuildEvent } from "src/data/bus-events";
 import ColorTag from "components/ColorTag";
 
 interface Props {
@@ -38,7 +47,7 @@ const AnnotationMarker = ({ annotation, width,onEditAnnotation, onRemoveAnnotati
                                 height: 0,
                                 borderLeft: '4px solid transparent',
                                 borderRight: '4px solid transparent',
-                                borderBottom: '4px solid rgba(0, 211, 255, 1)'
+                                borderBottom: `4px solid ${annotation.color}`
                             }}
                         /> : <div
                             style={{
@@ -47,7 +56,7 @@ const AnnotationMarker = ({ annotation, width,onEditAnnotation, onRemoveAnnotati
                                 transform: 'translate3d(0%,-50%, 0)',
                                 // borderLeft: '4px solid transparent',
                                 // borderRight: '4px solid transparent',
-                                background: 'rgba(0, 211, 255, 1)'
+                                background: annotation.color
                             }}
                         />
 

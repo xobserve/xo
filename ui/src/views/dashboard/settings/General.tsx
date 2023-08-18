@@ -84,7 +84,7 @@ const GeneralSettings = ({ dashboard, onChange }: Props) => {
                 width: '180px'
             }
         }}>
-            <FormSection title={t.basicSetting}>
+            <FormSection title={t.basicSetting} spacing={1}>
                 <FormItem title={t.title} >
                     <Input value={title} onChange={e => setTitle(e.currentTarget.value)} onBlur={() => onChange((draft: Dashboard) => { draft.title = title })} />
                 </FormItem>

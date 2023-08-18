@@ -1,6 +1,7 @@
 import { isNaN } from "lodash";
 import { Dashboard, DashboardLayout } from "types/dashboard";
 import { PanelBorderType, PanelDecorationType } from "types/panel/styles";
+import { Role } from "types/role";
 import { globalTeamId } from "types/teams";
 import { isEmpty } from "utils/validate";
 
@@ -39,7 +40,13 @@ export const initDashboard = (team?): Dashboard => {
             enableAutoSave: false,
             autoSaveInterval: 120,
             lazyLoading: true,
-            hiddenPanels: []
+            hiddenPanels: [],
+            annotation: {
+                enable: true,
+                color: 'rgba(0, 211, 255, 1)',
+                tagsFilter: "",
+                enableRole: Role.ADMIN
+            }
         },
         ownedBy: (team == 0 || isNaN(team)) ? globalTeamId :  team ,
     }

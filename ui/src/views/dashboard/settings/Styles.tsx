@@ -31,7 +31,7 @@ const StyleSettings = ({ dashboard, onChange }: Props) => {
         '.form-item-label': {
             width: '200px'
         }
-    }}>
+    }} spacing={1}>
         <FormItem title={t1.background} desc={t1.backgroundTips} labelWidth="100%">
             <EditorInputItem value={dashboard.data.styles?.bg} onChange={(v) => onChange(draft => { draft.data.styles.bg = v })} />
         </FormItem>

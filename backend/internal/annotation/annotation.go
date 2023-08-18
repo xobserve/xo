@@ -16,6 +16,11 @@ import (
 
 var logger = log.RootLogger.New("logger", "annotation")
 
+type AnnotationSettings struct {
+	Enable     bool            `json:"enable"`
+	EnableRole models.RoleType `json:"enableRole"`
+}
+
 func SetAnnotation(c *gin.Context) {
 	anno := &models.Annotation{}
 	err := c.Bind(&anno)
@@ -32,7 +37,49 @@ func SetAnnotation(c *gin.Context) {
 		return
 	}
 
+	dash, err := models.QueryDashboard(anno.NamespaceId)
+	if err != nil {
+		logger.Warn("query dashboard error", "error", err)
+		c.JSON(http.StatusBadRequest, common.RespError("dashboard not found"))
+		return
+	}
+
+	enableAnnotation, err := dash.Data.Get("annotation").Get("enable").Bool()
+	if err != nil {
+		logger.Warn("get annotation enable err", "error", err)
+		c.JSON(http.StatusBadRequest, common.RespError("dashboard annotation settings invalid"))
+		return
+	}
+
+	if !enableAnnotation {
+		c.JSON(http.StatusBadRequest, common.RespError("dashboard annotation disabled"))
+		return
+	}
+
+	enableRole, err := dash.Data.Get("annotation").Get("enableRole").String()
+	if err != nil {
+		logger.Warn("get annotation enable role err", "error", err)
+		c.JSON(http.StatusBadRequest, common.RespError("dashboard annotation settings invalid"))
+		return
+	}
+
 	u := user.CurrentUser(c)
+	if enableRole != models.ROLE_VIEWER {
+		if !u.Role.IsAdmin() {
+			isTeamAdmin, err := models.IsTeamAdmin(dash.OwnedBy, u.Id)
+			if err != nil {
+				logger.Warn("check team admin err", "error", err)
+				c.JSON(http.StatusInternalServerError, common.RespError("check team admin err"))
+				return
+			}
+
+			if !isTeamAdmin {
+				c.JSON(http.StatusForbidden, common.RespError("no permission"))
+				return
+			}
+		}
+	}
+
 	now := time.Now()
 
 	if anno.Id == 0 {

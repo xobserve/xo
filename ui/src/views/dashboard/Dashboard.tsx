@@ -10,7 +10,7 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-import { Box, useToast } from "@chakra-ui/react"
+import { Box, useColorMode, useToast } from "@chakra-ui/react"
 import { useCallback, useEffect, useMemo, useRef, useState } from "react"
 import { Dashboard, Panel } from "types/dashboard"
 import { requestApi } from "utils/axios/request"
@@ -40,6 +40,8 @@ import EditPanel from "./edit-panel/EditPanel"
 import { $dashAnnotations } from "./store/annotation"
 import { getCurrentTimeRange } from "components/DatePicker/TimePicker"
 import { roundDsTime } from "utils/datasource"
+import { paletteColorNameToHex } from "utils/colors"
+import { $dashboard } from "./store/dashboard"
 
 
 
@@ -54,6 +56,7 @@ const DashboardWrapper = ({ dashboardId, sideWidth }) => {
     const [dashboard, setDashboard] = useImmer<Dashboard>(null)
     // const [gVariables, setGVariables] = useState<Variable[]>([])
     const fullscreen = useFullscreen()
+    const {colorMode} = useColorMode()
 
     useEffect(() => {
         updateTimeToNewest()
@@ -101,6 +104,7 @@ const DashboardWrapper = ({ dashboardId, sideWidth }) => {
 
     useEffect(() => {
         if (dashboard) {
+            $dashboard.set(dashboard)
             setTimeout(() => {
                 if (dashboard.data.styles?.bgEnabled && dashboard?.data.styles?.bg) {
                     let bodyStyle = document.body.style
@@ -108,7 +112,6 @@ const DashboardWrapper = ({ dashboardId, sideWidth }) => {
                     bodyStyle.backgroundSize = "cover"
                 }
             }, 1)
-            
         }
 
         return () => {
@@ -121,7 +124,7 @@ const DashboardWrapper = ({ dashboardId, sideWidth }) => {
         const timerange = getCurrentTimeRange()
         const res = await requestApi.get(`/annotation/${dashboardId}?start=${roundDsTime(timerange.start.getTime() / 1000)}&end=${roundDsTime(timerange.end.getTime() / 1000)}` )
         for (const anno of res.data) {
-            anno.color = 'rgba(0, 211, 255, 1)'
+            anno.color = paletteColorNameToHex(dashboard?.data.annotation.color ?? initDashboard().data.annotation.color, colorMode)
         }
         $dashAnnotations.set(res.data)
     }
@@ -183,7 +186,7 @@ const DashboardWrapper = ({ dashboardId, sideWidth }) => {
                         const cond = panel.conditionRender.value.split("=")
                         if (cond.length == 2) {
                             const v = vars.find(v => v.name == cond[0])
-                            if (v.selected == VarialbeAllOption || v.selected.match(cond[1])) {
+                            if (v.selected == VarialbeAllOption || v.selected?.match(cond[1])) {
                                 render = true 
                             }
                           

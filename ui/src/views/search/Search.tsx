@@ -17,7 +17,7 @@ import { FaAlignJustify, FaBuffer, FaSearch, FaSitemap, FaTimes } from "react-ic
 import { Dashboard } from "types/dashboard"
 import { requestApi } from "utils/axios/request"
 import { RxLetterCaseCapitalize } from "react-icons/rx";
-import TagsFilter from "./TagsFilter"
+import TagsFilter from "components/TagsFilter"
 import { isEmpty } from "utils/validate"
 import { Team } from "types/teams"
 import TeamsFilter from "./TeamsFilter"

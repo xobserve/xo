@@ -14,7 +14,6 @@ package models
 
 import (
 	"encoding/json"
-	"fmt"
 	"time"
 
 	"github.com/DataObserve/datav/backend/pkg/db"
@@ -64,7 +63,6 @@ func QueryDashboard(id string) (*Dashboard, error) {
 	tags := make([]string, 0)
 	err = json.Unmarshal(rawTags, &tags)
 	if err != nil {
-		fmt.Println(tags, rawTags, err)
 		return nil, err
 	}
 	dash.Tags = tags
