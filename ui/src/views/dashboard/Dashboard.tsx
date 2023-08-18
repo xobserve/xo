@@ -21,7 +21,7 @@ import { setVariableSelected } from "src/views/variables/SelectVariable"
 import {  prevQueries, prevQueryData } from "src/views/dashboard/grid/PanelGrid"
 import { unstable_batchedUpdates } from "react-dom"
 import useBus, { dispatch } from 'use-bus'
-import { SetDashboardEvent, UpdatePanelEvent } from "src/data/bus-events"
+import { SetDashboardEvent, TimeChangedEvent, UpdatePanelEvent } from "src/data/bus-events"
 import React from "react";
 import { useImmer } from "use-immer"
 import { setAutoFreeze } from "immer";
@@ -37,6 +37,9 @@ import { $variables } from "../variables/store"
 import { useStore } from "@nanostores/react"
 import { VarialbeAllOption } from "src/data/variable"
 import EditPanel from "./edit-panel/EditPanel"
+import { $dashAnnotations } from "./store/annotation"
+import { getCurrentTimeRange } from "components/DatePicker/TimePicker"
+import { roundDsTime } from "utils/datasource"
 
 
 
@@ -56,6 +59,7 @@ const DashboardWrapper = ({ dashboardId, sideWidth }) => {
         updateTimeToNewest()
         if (!dashboard) {
             load()
+            loadAnnotations()
         }
         return () => {
             // for (const k of Array.from(prevQueries.keys())) {
@@ -64,8 +68,16 @@ const DashboardWrapper = ({ dashboardId, sideWidth }) => {
             // }
             prevQueries.clear()
             prevQueryData.clear()
-        }
+        } 
     }, [])
+
+
+    useBus(
+        TimeChangedEvent,
+        (e) => {
+           loadAnnotations()
+        }
+    )
 
     useBus(
         (e) => { return e.type == SetDashboardEvent },
@@ -105,6 +117,15 @@ const DashboardWrapper = ({ dashboardId, sideWidth }) => {
         }
     }, [dashboard])
 
+    const loadAnnotations = async () => {
+        const timerange = getCurrentTimeRange()
+        const res = await requestApi.get(`/annotation/${dashboardId}?start=${roundDsTime(timerange.start.getTime() / 1000)}&end=${roundDsTime(timerange.end.getTime() / 1000)}` )
+        for (const anno of res.data) {
+            anno.color = 'rgba(0, 211, 255, 1)'
+        }
+        $dashAnnotations.set(res.data)
+    }
+    
     const load = async () => {
         const res = await requestApi.get(`/dashboard/byId/${dashboardId}`)
         const dash = initDash(res.data)

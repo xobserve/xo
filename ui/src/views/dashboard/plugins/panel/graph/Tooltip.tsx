@@ -25,6 +25,8 @@ import { SeriesData } from "types/seriesData";
 import React from "react";
 import { findOverride, findOverrideRule, findRuleInOverride } from "utils/dashboard/panel";
 import { GraphRules } from "./OverridesEditor";
+import useBus from "use-bus";
+import { OnGraphPanelClickEvent } from "src/data/bus-events";
 
 interface Props {
     props: PanelProps
@@ -42,6 +44,13 @@ const Tooltip = memo(({ props, options,data,inactiveSeries }: Props) => {
     const [focusXVal, setFocusXVal] = useState(null)
     const [focusYVal, setFocusYVal] = useState(null)
     const isMounted = useMountedState();
+
+    useBus(
+        OnGraphPanelClickEvent + props.panel.id,
+        () => {
+            setCoords(null)
+        },
+    )
 
     useLayoutEffect(() => {
         let bbox: DOMRect | undefined = undefined;
@@ -67,39 +76,13 @@ const Tooltip = memo(({ props, options,data,inactiveSeries }: Props) => {
                     return
                 }
 
-                const { x, y } = positionTooltip(uplot, bbox)
+                const idx = uplot.cursor.idx
 
-                if (x !== undefined && y !== undefined) {
-                  
-                    const idx = uplot.cursor.idx
-                    // find nearest time val
-                    let xVal = uplot.data[0][idx];
+                
 
-                    // find nearest series
-
-                    const yval = uplot.posToVal(uplot.cursor.top, "y")
-                    let gap;
-                    let fs;
-
-
-                    for (const d of data) {
-                        const override = findOverride(props.panel, d.rawName)
-                        const negativeY = findRuleInOverride(override, GraphRules.SeriesNegativeY)
-                        const separateY = findRuleInOverride(override, GraphRules.SeriesYAxis)
-                        const op = separateY ? 1 : (negativeY ? -1 : 1)
-                        const newGap = Math.abs(d.fields[1].values[idx] - (op * yval))
-                        if (!gap) {
-                            gap = newGap
-                            fs = d
-                        } else {
-                            if (newGap < gap) {
-                                gap = newGap
-                                fs = d
-                            }
-                        }
-
-                    }
-
+                const r = findNearestSeriesAndDataPoint(uplot,bbox,data,props.panel)
+                if (r) {
+                    const [fs,xVal, x,y] = r
                     unstable_batchedUpdates(() => {
                         setCoords({ x, y });
                         setFocusXVal(xVal)
@@ -109,7 +92,7 @@ const Tooltip = memo(({ props, options,data,inactiveSeries }: Props) => {
                     })
                 } else {
                     setCoords(null)
-                }
+                }       
             }
 
 
@@ -251,4 +234,43 @@ export function findMidPointYPosition(u: uPlot, idx: number) {
     }
 
     return y;
+}
+
+
+export const findNearestSeriesAndDataPoint = (uplot, bbox, data,panel) => {
+    const { x, y } = positionTooltip(uplot, bbox)
+    if (x !== undefined && y !== undefined) {
+        const idx = uplot.cursor.idx
+        // find nearest time val
+        let xVal = uplot.data[0][idx];
+
+        // find nearest series
+
+        const yval = uplot.posToVal(uplot.cursor.top, "y")
+        let gap;
+        let fs;
+
+
+        for (const d of data) {
+            const override = findOverride(panel, d.rawName)
+            const negativeY = findRuleInOverride(override, GraphRules.SeriesNegativeY)
+            const separateY = findRuleInOverride(override, GraphRules.SeriesYAxis)
+            const op = separateY ? 1 : (negativeY ? -1 : 1)
+            const newGap = Math.abs(d.fields[1].values[idx] - (op * yval))
+            if (!gap) {
+                gap = newGap
+                fs = d
+            } else {
+                if (newGap < gap) {
+                    gap = newGap
+                    fs = d
+                }
+            }
+
+        }
+
+        return [fs,xVal, x, y]
+    }
+
+    return null
 }

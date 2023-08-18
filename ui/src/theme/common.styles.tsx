@@ -35,6 +35,10 @@ const CommonStyles = () => (
       .chakra-stack__divider {
         border-bottom-width: 0.5px!important
       }
+
+      .uplot .u-over {
+        pointer-events: auto !important;
+      }
     `}
   />
 )

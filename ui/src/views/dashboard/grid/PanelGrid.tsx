@@ -145,10 +145,10 @@ export const PanelComponent = ({ dashboard, panel, variables, onRemovePanel,onHi
     useEffect(() => {
         return () => {
             // delete data query cache when panel is unmounted
-            for (const q of panel.datasource.queries) {
-                const id = formatQueryId(panel.datasource.id, dashboard.id, panel.id, q.id, panel.type)
-                prevQueries.delete(id)
-            }
+            // for (const q of panel.datasource.queries) {
+            //     const id = formatQueryId(panel.datasource.id, dashboard.id, panel.id, q.id, panel.type)
+            //     prevQueries.delete(id)
+            // }
         }
     }, [])
 

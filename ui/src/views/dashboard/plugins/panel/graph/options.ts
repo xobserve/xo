@@ -56,9 +56,7 @@ export const parseOptions = (config: PanelProps, rawData: SeriesData[], colorMod
             width: 0.5,
             stroke: axesColor
         },
-        ticks: {
-            size: 4
-        },
+        ticks: { show: true, stroke: 'rgba(0, 10, 23, 0.09)', width: 0.5, size: 4 },
         scale: 'y',
         stroke: textColor,
         space: axisSpace,
@@ -108,9 +106,7 @@ export const parseOptions = (config: PanelProps, rawData: SeriesData[], colorMod
                     width: 0.5,
                     stroke: axesColor
                 },
-                ticks: {
-                    size: 4
-                },
+                ticks: { show: true, stroke: 'rgba(0, 10, 23, 0.09)', width: 0.5, size: 4 },
                 scale: d.rawName,
                 stroke: textColor,
                 space: axisSpace,
@@ -183,7 +179,13 @@ export const parseOptions = (config: PanelProps, rawData: SeriesData[], colorMod
         legend: {
             show: false,
         },
-        hooks: {},
+        hooks: {
+            init: [],
+            setCursor: [],
+            setSelect: [],
+            ready: [],
+            draw: []
+        },
         // padding: [0, 10, 0, 1],
         plugins: [
             // tooltipPlugin(config.panel.id),
@@ -228,6 +230,7 @@ export const parseOptions = (config: PanelProps, rawData: SeriesData[], colorMod
                 space: axisSpace,
                 values: formatTime,
                 stroke: textColor,
+                ticks: { show: true, stroke: 'rgba(0, 10, 23, 0.09)', width: 0.5, size: 4 }
             },
             ...yAxis
         ]

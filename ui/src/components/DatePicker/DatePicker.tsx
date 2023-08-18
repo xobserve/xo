@@ -41,9 +41,9 @@ const DatePicker = ({ showTime = false }: Props) => {
             // from and to can only be two types:
             // 1. from and to are all timestamp strings, e.g from: 1690284107553 to: 1690300803000
             // 2. from and to are all quick time strings, e.g from: now-5m to: now
-            if (from == value.startRaw && to == value.endRaw) {
-                return
-            }
+            // if (from == value.startRaw && to == value.endRaw) {
+            //     return
+            // }
             const fn = Number(from)
             const ft = Number(to)
 
@@ -98,7 +98,7 @@ const DatePicker = ({ showTime = false }: Props) => {
 
         setValue(t)
         onClose()
-        dispatch({ type: TimeChangedEvent, data: t })
+        // dispatch({ type: TimeChangedEvent, data: t })
         syncTimeToUrl(
             t.sub == 0 ? t.start.getTime() : t.startRaw,
             t.sub == 0 ? t.end.getTime() : t.endRaw
@@ -169,8 +169,6 @@ export default DatePicker
 // from, to : timestamp in seconds
 export const setDateTime = (from: number, to: number) => {
     dispatch({ type: SetTimeEvent, data: { from, to } })
-
-
 }
 
 export const updateTimeToNewest = () => {

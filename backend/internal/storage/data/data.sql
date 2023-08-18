@@ -139,3 +139,19 @@ CREATE TABLE IF NOT EXISTS audit_logs (
 
 CREATE INDEX  audit_logs_op_id ON audit_logs (op_id);
 CREATE INDEX  audit_logs_op_type ON audit_logs (op_type);
+
+CREATE TABLE IF NOT EXISTS annotation (
+    id  INTEGER PRIMARY KEY AUTO_INCREMENT,
+    text TEXT,
+    time  INTEGER NOT NULL,
+    timeEnd INTEGER NOT NULL,
+    tags VARCHAR(255),
+    namespaceId VARCHAR(40),
+    groupId INTEGER,
+    userId INTEGER,
+    created DATETIME NOT NULL,
+    updated DATETIME NOT NULL
+);
+
+CREATE INDEX  annotation_npid ON annotation (namespaceId);
+CREATE UNIQUE INDEX  annotation_time_ng ON annotation (namespaceId,groupId,time);

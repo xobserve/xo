@@ -29,7 +29,7 @@ export const EditorInputItem = ({ value, onChange, type = "input", size = "md", 
     switch (type) {
         case "input":
             return (
-                <Input width="100%" placeholder={placeholder} size={size == "sm" ? "small" : "middle"} bordered={bordered}  value={temp} onChange={e => setTemp(e.currentTarget.value)} onBlur={() => onChange(temp)} disabled={disabled} />
+                <Input width="100%" placeholder={placeholder} size={size == "sm" ? "small" : (size == "md"?  "middle" : "large")} bordered={bordered}  value={temp} onChange={e => setTemp(e.currentTarget.value)} onBlur={() => onChange(temp)} disabled={disabled} />
             )
         case "textarea":
             return (

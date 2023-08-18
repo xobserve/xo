@@ -133,6 +133,21 @@ export function formatDuration(duration: number): string {
   return secondaryValue === 0 ? primaryUnitString : `${primaryUnitString} ${secondaryUnitString}`;
 }
 
+export function durationToSeconds(timeExpr) {
+	var units = {'h': 3600, 'm': 60, 's': 1};
+	var regex = /(\d+)([hms])/g;
+
+	let seconds = 0;
+	var match;
+	while ((match = regex.exec(timeExpr))) 
+	{
+		seconds += parseInt(match[1]) * units[match[2]];
+	}
+
+	return seconds;
+}
+
+
 export function formatRelativeDate(value: any, fullMonthName: boolean = false) {
   const m = moment.isMoment(value) ? value : moment(value);
   const monthFormat = fullMonthName ? 'MMMM' : 'MMM';

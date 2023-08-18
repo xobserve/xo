@@ -17,6 +17,7 @@ import (
 	"time"
 
 	"github.com/DataObserve/datav/backend/internal/admin"
+	"github.com/DataObserve/datav/backend/internal/annotation"
 	"github.com/DataObserve/datav/backend/internal/api"
 	"github.com/DataObserve/datav/backend/internal/dashboard"
 	"github.com/DataObserve/datav/backend/internal/datasource"
@@ -112,6 +113,11 @@ func (s *Server) Start() error {
 		r.GET("/dashboard/starred", IsLogin(), dashboard.GetAllStarred)
 		r.GET("/dashboard/starred/:id", IsLogin(), dashboard.GetStarred)
 		r.DELETE("/dashboard/:id", IsLogin(), dashboard.Delete)
+
+		// annotation
+		r.POST("/annotation", IsLogin(), annotation.SetAnnotation)
+		r.GET("/annotation/:namespace", IsLogin(), annotation.QueryNamespaceAnnotations)
+
 		// admin apis
 		r.GET("/admin/users", IsLogin(), admin.GetUsers)
 		r.POST("/admin/user", IsLogin(), admin.UpdateUser)
