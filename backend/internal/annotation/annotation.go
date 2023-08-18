@@ -56,8 +56,8 @@ func SetAnnotation(c *gin.Context) {
 		}
 		anno.Id = id
 	} else {
-		_, err := db.Conn.Exec("UPDATE annotation SET text=?,tags=?, updated=? WHERE id=?",
-			anno.Text, tags, now, anno.Id)
+		_, err := db.Conn.Exec("UPDATE annotation SET text=?,tags=?,duration=?, updated=? WHERE id=?",
+			anno.Text, tags, anno.Duration, now, anno.Id)
 		if err != nil {
 			logger.Warn("update annotation err", "error", err)
 			c.JSON(http.StatusInternalServerError, common.RespError("update annotation err"))
@@ -99,4 +99,16 @@ func QueryNamespaceAnnotations(c *gin.Context) {
 	}
 
 	c.JSON(200, common.RespSuccess(annos))
+}
+
+func RemoveAnnotation(c *gin.Context) {
+	id := c.Param("id")
+	_, err := db.Conn.Exec("DELETE FROM annotation WHERE id=?", id)
+	if err != nil {
+		logger.Warn("delete annotation err", "error", err)
+		c.JSON(http.StatusInternalServerError, common.RespError("delete annotation err"))
+		return
+	}
+
+	c.JSON(200, common.RespSuccess(nil))
 }

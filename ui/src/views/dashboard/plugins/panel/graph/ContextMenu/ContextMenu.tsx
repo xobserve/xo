@@ -126,7 +126,7 @@ const ContextMenu = memo(({ props, options, data, container }: Props) => {
     return (<>
         <Portal key={props.panel.id}>
             {coords && <TooltipContainer allowPointerEvents position={{ x: coords.x, y: coords.y }} offset={{ x: -8, y: 2 }}>
-                <Box className="bordered" background={'var(--chakra-colors-chakra-body-bg)'} p="2" fontSize="xs">
+                <Box  className="bordered" background={'var(--chakra-colors-chakra-body-bg)'} p="2" fontSize="xs">
                     <Text fontWeight="600">{dateTimeFormat(startTime * 1000)}</Text>
                     <HStack mt="1">
                         <Box width="10px" height="4px" background={seriesIdx.current.color} mt="2px"></Box>

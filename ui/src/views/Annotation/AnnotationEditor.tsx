@@ -8,15 +8,13 @@ import { cloneDeep } from "lodash"
 import React, { useEffect, useState } from "react"
 import { commonMsg, dashboardSettingMsg } from "src/i18n/locales/en"
 import { Annotation } from "types/annotation"
-import { Panel } from "types/dashboard"
 import { requestApi } from "utils/axios/request"
 import { isEmpty } from "utils/validate"
 import { $dashAnnotations } from "../dashboard/store/annotation"
 import { dispatch } from "use-bus"
 import { PanelForceRebuildEvent } from "src/data/bus-events"
 import { dateTimeFormat } from "utils/datetime/formatter"
-import moment from "moment"
-import { durationToSeconds,formatDuration } from "utils/date"
+import { durationToSeconds } from "utils/date"
 
 interface Props {
     annotation: Annotation
@@ -25,7 +23,6 @@ interface Props {
 const AnnotationEditor = (props: Props) => {
     const { onEditorClose } = props
     const [annotation, setAnnotation] = useState<Annotation>(cloneDeep(props.annotation))
-    const [duration, setDuration] = useState(annotation.duration)
     const t = useStore(commonMsg)
     const t1 = useStore(dashboardSettingMsg)
     const { isOpen, onOpen, onClose } = useDisclosure()
@@ -77,13 +74,14 @@ const AnnotationEditor = (props: Props) => {
         annotation.id = res.data
         if (id == 0) {
             $dashAnnotations.set([...$dashAnnotations.get(), annotation])
-            dispatch(PanelForceRebuildEvent + annotation.group)
         } else {
             const index = $dashAnnotations.get().findIndex(a => a.id == id)
             const annos = $dashAnnotations.get()
             annos[index] = annotation
             $dashAnnotations.set([...annos])
         }
+
+        dispatch(PanelForceRebuildEvent + annotation.group)
 
         onModalClose()
     }
@@ -121,7 +119,7 @@ const AnnotationEditor = (props: Props) => {
                             </HStack>}
                             <FormItem title="Duration" labelWidth="70px">
                                 <Box>
-                                    <EditorInputItem size="lg" value={duration} onChange={v => {
+                                    <EditorInputItem size="lg" value={annotation.duration} onChange={v => {
                                         setAnnotation({ ...annotation, duration: v })
                                     }} placeholder="e.g 1s 2m 1h 3h20m30s" />
                                 </Box>

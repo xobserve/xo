@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useLayoutEffect, useRef } from 'react';
+import React, { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react';
 import uPlot from 'uplot';
 
 
@@ -13,17 +13,22 @@ import { useStore } from '@nanostores/react';
 import { $dashAnnotations } from '../dashboard/store/annotation';
 import { durationToSeconds } from 'utils/date';
 import { Annotation } from 'types/annotation';
+import AnnotationEditor from './AnnotationEditor';
+import { requestApi } from 'utils/axios/request';
+import { dispatch } from 'use-bus';
+import { PanelForceRebuildEvent } from 'src/data/bus-events';
 
 interface AnnotationsPluginProps {
   options: uPlot.Options;
-  dashboardId: string 
+  dashboardId: string
   panelId: number
 }
 
-export const AnnotationsPlugin = ({ dashboardId,panelId, options }: AnnotationsPluginProps) => {
+export const AnnotationsPlugin = ({ dashboardId, panelId, options }: AnnotationsPluginProps) => {
   const annotations = useStore($dashAnnotations).filter(anno => anno.namespace == dashboardId && anno.group == panelId)
   const theme = useExtraTheme();
   const plotInstance = useRef<uPlot>();
+  const [annotation, setAnnotation] = useState<Annotation>(null)
 
   useLayoutEffect(() => {
     options.hooks.init.push((u) => {
@@ -55,22 +60,22 @@ export const AnnotationsPlugin = ({ dashboardId,panelId, options }: AnnotationsP
       for (let i = 0; i < annotations.length; i++) {
         const annotation = annotations[i];
 
-          if (!annotation.time) {
-            continue;
-          }
+        if (!annotation.time) {
+          continue;
+        }
 
-          let x0 = u.valToPos(annotation.time, 'x', true);
-          const color = paletteColorNameToHex(annotation.color);
-          renderLine(x0, color);
-          
-          const timeEnd = annotation.time + durationToSeconds(annotation.duration)
-            let x1 = u.valToPos(timeEnd, 'x', true);
+        let x0 = u.valToPos(annotation.time, 'x', true);
+        const color = paletteColorNameToHex(annotation.color);
+        renderLine(x0, color);
 
-            renderLine(x1, color);
+        const timeEnd = annotation.time + durationToSeconds(annotation.duration)
+        let x1 = u.valToPos(timeEnd, 'x', true);
 
-            ctx.fillStyle = alpha(color, 0.1);
-            ctx.rect(x0, u.bbox.top, x1 - x0, u.bbox.height);
-            ctx.fill();
+        renderLine(x1, color);
+
+        ctx.fillStyle = alpha(color, 0.1);
+        ctx.rect(x0, u.bbox.top, x1 - x0, u.bbox.height);
+        ctx.fill();
       }
       ctx.restore();
       return;
@@ -93,6 +98,15 @@ export const AnnotationsPlugin = ({ dashboardId,panelId, options }: AnnotationsP
     };
   }, []);
 
+  const onRemoveAnnotation = async (annotation) => {
+    await requestApi.delete(`/annotation/${annotation.id}`)
+    const index = $dashAnnotations.get().findIndex(a => a.id == annotation.id)
+    const annos = $dashAnnotations.get()
+    annos.splice(index, 1)
+    $dashAnnotations.set([...annos])
+    dispatch(PanelForceRebuildEvent + annotation.group)
+}
+
   const renderMarker = useCallback(
     (annotation: Annotation) => {
       let width = 0;
@@ -112,18 +126,25 @@ export const AnnotationsPlugin = ({ dashboardId,panelId, options }: AnnotationsP
         width = x1 - x0;
       }
 
-      return <AnnotationMarker annotation={annotation}  width={width} />;
+      return <AnnotationMarker annotation={annotation} width={width} onEditAnnotation={() => setAnnotation(annotation)} onRemoveAnnotation={() => onRemoveAnnotation(annotation)}/>;
     },
     []
   );
 
   return (
-    <EventsCanvas
-      id="annotations"
-      options={options}
-      events={annotations}
-      renderEventMarker={renderMarker}
-      mapEventToXYCoords={mapAnnotationToXYCoords}
-    />
+    <>
+      <EventsCanvas
+        id="annotations"
+        options={options}
+        events={annotations}
+        renderEventMarker={renderMarker}
+        mapEventToXYCoords={mapAnnotationToXYCoords}
+      />
+      {annotation && <AnnotationEditor annotation={annotation} onEditorClose={() => {
+        setAnnotation(null)
+        // plotInstance.current.setSelect({ top: 0, left: 0, width: 0, height: 0 });
+      }} />}
+    </>
+
   );
 };

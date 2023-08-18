@@ -17,6 +17,7 @@ export const XYCanvas = ({ children, left, top }: React.PropsWithChildren<XYCanv
       overflow: visible;
       left: ${left}px;
       top: ${top}px;
+      z-index: 1;
     `;
   }, [left, top]);
 
