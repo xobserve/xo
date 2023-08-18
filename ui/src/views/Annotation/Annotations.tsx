@@ -11,6 +11,8 @@ import { SeriesData } from 'types/seriesData';
 import { alpha } from 'components/uPlot/colorManipulator';
 import { useStore } from '@nanostores/react';
 import { $dashAnnotations } from '../dashboard/store/annotation';
+import { durationToSeconds } from 'utils/date';
+import { Annotation } from 'types/annotation';
 
 interface AnnotationsPluginProps {
   options: uPlot.Options;
@@ -60,16 +62,15 @@ export const AnnotationsPlugin = ({ dashboardId,panelId, options }: AnnotationsP
           let x0 = u.valToPos(annotation.time, 'x', true);
           const color = paletteColorNameToHex(annotation.color);
           renderLine(x0, color);
-
-          if (annotation.timeEnd) {
-            let x1 = u.valToPos(annotation.timeEnd, 'x', true);
+          
+          const timeEnd = annotation.time + durationToSeconds(annotation.duration)
+            let x1 = u.valToPos(timeEnd, 'x', true);
 
             renderLine(x1, color);
 
             ctx.fillStyle = alpha(color, 0.1);
             ctx.rect(x0, u.bbox.top, x1 - x0, u.bbox.height);
             ctx.fill();
-          }
       }
       ctx.restore();
       return;
@@ -93,11 +94,12 @@ export const AnnotationsPlugin = ({ dashboardId,panelId, options }: AnnotationsP
   }, []);
 
   const renderMarker = useCallback(
-    (annotation) => {
+    (annotation: Annotation) => {
       let width = 0;
       if (plotInstance.current) {
         let x0 = plotInstance.current.valToPos(annotation.time, 'x');
-        let x1 = plotInstance.current.valToPos(annotation.timeEnd, 'x');
+        const timeEnd = annotation.time + durationToSeconds(annotation.duration)
+        let x1 = plotInstance.current.valToPos(timeEnd, 'x');
 
         // markers are rendered relatively to uPlot canvas overly, not caring about axes width
         if (x0 < 0) {

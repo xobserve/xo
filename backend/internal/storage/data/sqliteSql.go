@@ -151,7 +151,7 @@ CREATE TABLE IF NOT EXISTS annotation (
     id  INTEGER PRIMARY KEY AUTOINCREMENT,
     text TEXT,
     time  INTEGER NOT NULL,
-    timeEnd INTEGER NOT NULL,
+    duration VARCHAR(32) NOT NULL,
     tags VARCHAR(255),
     namespaceId VARCHAR(40),
     groupId INTEGER,

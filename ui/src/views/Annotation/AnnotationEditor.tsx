@@ -16,7 +16,7 @@ import { dispatch } from "use-bus"
 import { PanelForceRebuildEvent } from "src/data/bus-events"
 import { dateTimeFormat } from "utils/datetime/formatter"
 import moment from "moment"
-import { durationToSeconds } from "utils/date"
+import { durationToSeconds,formatDuration } from "utils/date"
 
 interface Props {
     annotation: Annotation
@@ -25,7 +25,7 @@ interface Props {
 const AnnotationEditor = (props: Props) => {
     const { onEditorClose } = props
     const [annotation, setAnnotation] = useState<Annotation>(cloneDeep(props.annotation))
-    const [duration, setDuration] = useState((annotation.timeEnd - annotation.time) + 's')
+    const [duration, setDuration] = useState(annotation.duration)
     const t = useStore(commonMsg)
     const t1 = useStore(dashboardSettingMsg)
     const { isOpen, onOpen, onClose } = useDisclosure()
@@ -122,8 +122,7 @@ const AnnotationEditor = (props: Props) => {
                             <FormItem title="Duration" labelWidth="70px">
                                 <Box>
                                     <EditorInputItem size="lg" value={duration} onChange={v => {
-                                        setDuration(v)
-                                        setAnnotation({ ...annotation, timeEnd: annotation.time + durationToSeconds(v) })
+                                        setAnnotation({ ...annotation, duration: v })
                                     }} placeholder="e.g 1s 2m 1h 3h20m30s" />
                                 </Box>
                             </FormItem>
@@ -131,7 +130,7 @@ const AnnotationEditor = (props: Props) => {
                                 <Text textStyle="annotation">{dateTimeFormat(annotation.time * 1000)}</Text>
                             </FormItem>
                             <FormItem title="End time" alignItems="center" labelWidth="70px">
-                                <Text textStyle="annotation">{dateTimeFormat(annotation.timeEnd * 1000)}</Text>
+                                <Text textStyle="annotation">{dateTimeFormat((annotation.time + durationToSeconds(annotation.duration)) * 1000)}</Text>
                             </FormItem>
                         </FormSection>
                     </ModalBody>

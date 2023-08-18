@@ -5,7 +5,7 @@ export interface Annotation {
     userId?: number
     color?: string 
     time: number 
-    timeEnd: number
+    duration: string // 1s, 2m, 3h, 6h30m15s
     text: string
     tags: string[]
 }

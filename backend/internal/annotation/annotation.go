@@ -36,8 +36,8 @@ func SetAnnotation(c *gin.Context) {
 	now := time.Now()
 
 	if anno.Id == 0 {
-		res, err := db.Conn.Exec("INSERT INTO annotation (text,time,timeEnd,tags,namespaceId,groupId,userId,created,updated) VALUES (?,?,?,?,?,?,?,?,?)",
-			anno.Text, anno.Time, anno.TimeEnd, tags, anno.NamespaceId, anno.GroupId, u.Id, now, now)
+		res, err := db.Conn.Exec("INSERT INTO annotation (text,time,duration,tags,namespaceId,groupId,userId,created,updated) VALUES (?,?,?,?,?,?,?,?,?)",
+			anno.Text, anno.Time, anno.Duration, tags, anno.NamespaceId, anno.GroupId, u.Id, now, now)
 		if err != nil {
 			if e.IsErrUniqueConstraint(err) {
 				c.JSON(http.StatusBadRequest, common.RespError("annotation already exist in this time point"))
@@ -72,7 +72,7 @@ func QueryNamespaceAnnotations(c *gin.Context) {
 	namespace := c.Param("namespace")
 	start := c.Query("start")
 	end := c.Query("end")
-	rows, err := db.Conn.Query("SELECT id,text,time,timeEnd,tags,groupId,userId,created FROM annotation WHERE namespaceId=? and time >= ? and time <= ?", namespace, start, end)
+	rows, err := db.Conn.Query("SELECT id,text,time,duration,tags,groupId,userId,created FROM annotation WHERE namespaceId=? and time >= ? and time <= ?", namespace, start, end)
 	if err != nil {
 		logger.Warn("query annotation err", "error", err)
 		c.JSON(http.StatusInternalServerError, common.RespError("query annotation err"))
@@ -83,7 +83,7 @@ func QueryNamespaceAnnotations(c *gin.Context) {
 	for rows.Next() {
 		anno := &models.Annotation{}
 		var tags []byte
-		err := rows.Scan(&anno.Id, &anno.Text, &anno.Time, &anno.TimeEnd, &tags, &anno.GroupId, &anno.UserId, &anno.Created)
+		err := rows.Scan(&anno.Id, &anno.Text, &anno.Time, &anno.Duration, &tags, &anno.GroupId, &anno.UserId, &anno.Created)
 		if err != nil {
 			logger.Warn("scan annotation err", "error", err)
 			continue
