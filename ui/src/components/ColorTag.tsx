@@ -11,9 +11,11 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { Tag, TagCloseButton, TagLabel } from "@chakra-ui/react"
+import { Tag, TagCloseButton, TagLabel, useColorMode } from "@chakra-ui/react"
 import React from "react"
 import colorGenerator from "utils/colorGenerator"
+import { getTextColorForAlphaBackground } from "utils/colors"
+import paletteGenerator from "utils/paletteGenerator"
 
 
 interface Props {
@@ -23,8 +25,10 @@ interface Props {
     style?: Object
 }
 const ColorTag = ({ name, onRemove,style,label }: Props) => {
+    const {colorMode} = useColorMode()
+    const bg = colorGenerator.getColorByKey(name)
     return (
-        <Tag style={style} bg={colorGenerator.getColorByKey(name)} color="#444" onMouseDown={(e) => {
+        <Tag style={style} bg={bg} color={getTextColorForAlphaBackground(bg,colorMode == "dark" )} onMouseDown={(e) => {
             e.preventDefault();
             e.stopPropagation();
         }} borderRadius={2}>

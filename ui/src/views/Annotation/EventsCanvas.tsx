@@ -19,7 +19,6 @@ import uPlot from 'uplot';
 
 import { Marker } from './Marker';
 import { XYCanvas } from './XYCanvas';
-import { SeriesData } from 'types/seriesData';
 import { Annotation } from 'types/annotation';
 
 interface EventsCanvasProps {

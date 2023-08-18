@@ -39,7 +39,7 @@ export const AnnotationsPlugin = ({ dashboardId, panelId, options }: Annotations
   const theme = useExtraTheme();
   const plotInstance = useRef<uPlot>();
   const [annotation, setAnnotation] = useState<Annotation>(null)
-
+  
   useLayoutEffect(() => {
     options.hooks.init.push((u) => {
       plotInstance.current = u;
@@ -51,6 +51,7 @@ export const AnnotationsPlugin = ({ dashboardId, panelId, options }: Annotations
       if (!ctx) {
         return;
       }
+    
       ctx.save();
       ctx.beginPath();
       ctx.rect(u.bbox.left, u.bbox.top, u.bbox.width, u.bbox.height);
