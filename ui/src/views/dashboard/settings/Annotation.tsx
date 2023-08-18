@@ -53,10 +53,10 @@ const AnnotationSettings = ({ dashboard, onChange }: Props) => {
         </FormSection>
 
         <FormSection title="Filter" spacing={1}>
-            <FormItem title={t.tags} labelWidth="100px" desc="Annotations has below tags will be show, leave empty to show all">
+            <FormItem title={t.tags} labelWidth="100px" desc="Annotation which has one of below tags will be show, leave empty to show all">
                 <EditorInputItem value={dashboard.data.annotation.tagsFilter} onChange={
-                    v => onChange((draft: Dashboard) => { draft.data.annotation.tagsFilter = v })
-                } placeholder="split with comma, support regex e.g: warn,error|critical"/>
+                    (v: string) => onChange((draft: Dashboard) => { draft.data.annotation.tagsFilter = v.trim() })
+                } placeholder="split with comma e.g: warn,error,critical"/>
             </FormItem>
         </FormSection>
     </Form>)

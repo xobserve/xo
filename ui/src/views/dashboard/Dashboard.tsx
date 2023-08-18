@@ -10,7 +10,7 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-import { Box, useColorMode, useToast } from "@chakra-ui/react"
+import { Box, useColorMode } from "@chakra-ui/react"
 import { useCallback, useEffect, useMemo, useRef, useState } from "react"
 import { Dashboard, Panel } from "types/dashboard"
 import { requestApi } from "utils/axios/request"
@@ -20,7 +20,7 @@ import { clone, cloneDeep, concat, defaultsDeep, find, findIndex } from "lodash"
 import { setVariableSelected } from "src/views/variables/SelectVariable"
 import {  prevQueries, prevQueryData } from "src/views/dashboard/grid/PanelGrid"
 import { unstable_batchedUpdates } from "react-dom"
-import useBus, { dispatch } from 'use-bus'
+import useBus from 'use-bus'
 import { SetDashboardEvent, TimeChangedEvent, UpdatePanelEvent } from "src/data/bus-events"
 import React from "react";
 import { useImmer } from "use-immer"
@@ -37,11 +37,8 @@ import { $variables } from "../variables/store"
 import { useStore } from "@nanostores/react"
 import { VarialbeAllOption } from "src/data/variable"
 import EditPanel from "./edit-panel/EditPanel"
-import { $dashAnnotations } from "./store/annotation"
-import { getCurrentTimeRange } from "components/DatePicker/TimePicker"
-import { roundDsTime } from "utils/datasource"
-import { paletteColorNameToHex } from "utils/colors"
 import { $dashboard } from "./store/dashboard"
+import DashboardAnnotations from "./DashboardAnnotations"
 
 
 
@@ -56,13 +53,11 @@ const DashboardWrapper = ({ dashboardId, sideWidth }) => {
     const [dashboard, setDashboard] = useImmer<Dashboard>(null)
     // const [gVariables, setGVariables] = useState<Variable[]>([])
     const fullscreen = useFullscreen()
-    const {colorMode} = useColorMode()
 
     useEffect(() => {
         updateTimeToNewest()
         if (!dashboard) {
             load()
-            loadAnnotations()
         }
         return () => {
             // for (const k of Array.from(prevQueries.keys())) {
@@ -74,13 +69,6 @@ const DashboardWrapper = ({ dashboardId, sideWidth }) => {
         } 
     }, [])
 
-
-    useBus(
-        TimeChangedEvent,
-        (e) => {
-           loadAnnotations()
-        }
-    )
 
     useBus(
         (e) => { return e.type == SetDashboardEvent },
@@ -120,14 +108,7 @@ const DashboardWrapper = ({ dashboardId, sideWidth }) => {
         }
     }, [dashboard])
 
-    const loadAnnotations = async () => {
-        const timerange = getCurrentTimeRange()
-        const res = await requestApi.get(`/annotation/${dashboardId}?start=${roundDsTime(timerange.start.getTime() / 1000)}&end=${roundDsTime(timerange.end.getTime() / 1000)}` )
-        for (const anno of res.data) {
-            anno.color = paletteColorNameToHex(dashboard?.data.annotation.color ?? initDashboard().data.annotation.color, colorMode)
-        }
-        $dashAnnotations.set(res.data)
-    }
+
     
     const load = async () => {
         const res = await requestApi.get(`/dashboard/byId/${dashboardId}`)
@@ -230,6 +211,7 @@ const DashboardWrapper = ({ dashboardId, sideWidth }) => {
                 {dashboard.data.panels?.length > 0 && <DashboardGrid dashboard={dashboard} panels={panels} onChange={onDashbardChange} />}
             </Box>
             <EditPanel dashboard={dashboard} onChange={onDashbardChange} />
+            <DashboardAnnotations dashboard={dashboard}/>
         </Box>}
     </>)
 }
