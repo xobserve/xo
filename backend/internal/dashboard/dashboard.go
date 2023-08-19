@@ -369,17 +369,39 @@ func Delete(c *gin.Context) {
 		}
 	}
 
-	_, err = db.Conn.Exec("DELETE FROM dashboard WHERE id=?", id)
+	tx, err := db.Conn.Begin()
+	if err != nil {
+		logger.Warn("start sql transaction error", "error", err)
+		c.JSON(500, common.RespInternalError())
+		return
+	}
+	defer tx.Rollback()
+
+	_, err = tx.Exec("DELETE FROM dashboard WHERE id=?", id)
 	if err != nil {
 		logger.Warn("delete dashboard erorr", "error", err)
 		c.JSON(500, common.RespError(e.Internal))
 		return
 	}
 
-	_, err = db.Conn.Exec("DELETE FROM star_dashboard WHERE dashboard_id=?", id)
+	_, err = tx.Exec("DELETE FROM star_dashboard WHERE dashboard_id=?", id)
 	if err != nil {
 		logger.Warn("delete dashboard star erorr", "error", err)
 		c.JSON(500, common.RespError(e.Internal))
+		return
+	}
+
+	_, err = tx.Exec("DELETE FROM annotation WHERE namespaceId=?", id)
+	if err != nil {
+		logger.Warn("delete dashboard annotations erorr", "error", err)
+		c.JSON(500, common.RespError(e.Internal))
+		return
+	}
+
+	err = tx.Commit()
+	if err != nil {
+		logger.Warn("commit sql transaction error", "error", err)
+		c.JSON(500, common.RespInternalError())
 		return
 	}
 
