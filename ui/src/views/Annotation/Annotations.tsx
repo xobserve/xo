@@ -16,7 +16,7 @@ import uPlot from 'uplot';
 import AnnotationMarker from './AnnotationMarker';
 import { EventsCanvas } from './EventsCanvas';
 import useExtraTheme from 'hooks/useExtraTheme';
-import { paletteColorNameToHex } from 'utils/colors';
+import { colors, paletteColorNameToHex, palettes } from 'utils/colors';
 import { alpha } from 'components/uPlot/colorManipulator';
 import { useStore } from '@nanostores/react';
 import { $dashAnnotations, $rawDashAnnotations } from '../dashboard/store/annotation';
@@ -24,31 +24,77 @@ import { durationToSeconds } from 'utils/date';
 import { Annotation } from 'types/annotation';
 import AnnotationEditor from './AnnotationEditor';
 import { requestApi } from 'utils/axios/request';
-import { dispatch } from 'use-bus';
-import { PanelForceRebuildEvent } from 'src/data/bus-events';
-import { cloneDeep } from 'lodash';
+import { queryAlerts } from '../dashboard/grid/PanelGrid/PanelGrid';
+import { Panel } from 'types/dashboard';
+import { getCurrentTimeRange } from 'components/DatePicker/TimePicker';
+import { TimeRange } from 'types/time';
+import { filterAlerts } from '../dashboard/plugins/panel/alert/Alert';
+import { AlertRule } from 'types/plugins/alert';
+import { AlertState } from 'types/alert';
+import { useColorMode } from '@chakra-ui/react';
 
 interface AnnotationsPluginProps {
+  panel: Panel
   options: uPlot.Options;
-  namespace: string
-  group: number
+  dashboardId: string
+  timeRange: TimeRange
 }
 
-export const AnnotationsPlugin = ({ namespace, group, options }: AnnotationsPluginProps) => {
-  const annotations0 = useStore($dashAnnotations).filter(anno => anno.namespace == namespace && anno.group == group)
+export const AnnotationsPlugin = ({ panel, dashboardId, options, timeRange }: AnnotationsPluginProps) => {
+  const annotations0 = useStore($dashAnnotations).filter(anno => anno.namespace == dashboardId && anno.group == panel.id)
+  const [alertAnnotations, setAlertAnnotations] = useState<Annotation[]>([])
   const annotations = useRef<Annotation[]>(null)
+  const {colorMode} = useColorMode()
 
-
-  const theme = useExtraTheme();
   const plotInstance = useRef<uPlot>();
   const [annotation, setAnnotation] = useState<Annotation>(null)
-  
   useEffect(() => {
-    annotations.current = annotations0
+    panel.plugins.graph.enableAlert && loadAlerts()
+  }, [timeRange, panel.plugins.graph.alertFilter,panel.plugins.graph.enableAlert])
+
+  const loadAlerts = async () => {
+    const timeRange = getCurrentTimeRange()
+    const res = await queryAlerts(panel, timeRange, panel.plugins.graph.alertFilter.datasources, panel.plugins.graph.alertFilter.httpQuery)
+
+    let alerts = []
+    if (res.data?.length > 0) {
+      const stateFilter = panel.plugins.graph.alertFilter.state
+
+      const ruleNameFilter = panel.plugins.graph.alertFilter.ruleName
+      const ruleLabelFilter = panel.plugins.graph.alertFilter.ruleLabel
+      const alertLabelFilter = panel.plugins.graph.alertFilter.alertLabel
+      const [result, _] = filterAlerts(res.data, stateFilter, ruleNameFilter, ruleLabelFilter, alertLabelFilter, [], "", false)
+      alerts = result
+    }
+
+    const annos = []
+    alerts.forEach((rule: AlertRule) => {
+      rule.alerts.forEach((alert) => {
+        const anno = {
+          time: new Date(alert.activeAt).getTime() / 1000,
+          duration: '1s',
+          color: alert.state == AlertState.Firing ? palettes[3] : (alert.state == AlertState.Pending ? palettes[1] :  palettes[0]),
+          text: `[ ${alert.state} ] [ ${rule.fromDs} ] ${alert.name}`,
+          tags: [`query="${rule.query}"`,]
+        }
+        annos.push(anno)
+      })
+    })
+
+    setAlertAnnotations(annos)
+    annotations.current = annotations0.concat(annos)
+    // if (plotInstance.current) {
+      // plotInstance.current.redraw()
+    // }
+  }
+
+
+  useEffect(() => {
+    annotations.current = annotations0.concat(alertAnnotations)
     if (plotInstance.current) {
       plotInstance.current.redraw()
     }
-  },[annotations0])
+  }, [annotations0,alertAnnotations])
 
   useLayoutEffect(() => {
     options.hooks.init.push((u) => {
@@ -61,7 +107,7 @@ export const AnnotationsPlugin = ({ namespace, group, options }: AnnotationsPlug
       if (!ctx) {
         return;
       }
-    
+
       ctx.save();
       ctx.beginPath();
       ctx.rect(u.bbox.left, u.bbox.top, u.bbox.width, u.bbox.height);
@@ -86,7 +132,7 @@ export const AnnotationsPlugin = ({ namespace, group, options }: AnnotationsPlug
         }
 
         let x0 = u.valToPos(annotation.time, 'x', true);
-        const color = paletteColorNameToHex(annotation.color);
+        const color = paletteColorNameToHex(annotation.color, colorMode);
         renderLine(x0, color);
 
         const timeEnd = annotation.time + durationToSeconds(annotation.duration)
@@ -101,7 +147,7 @@ export const AnnotationsPlugin = ({ namespace, group, options }: AnnotationsPlug
       ctx.restore();
       return;
     });
-  }, [options, theme]);
+  }, [options, colorMode]);
 
   const mapAnnotationToXYCoords = useCallback((annotation, dataFrameFieldIndex) => {
     if (!annotation.time || !plotInstance.current) {
@@ -140,7 +186,7 @@ export const AnnotationsPlugin = ({ namespace, group, options }: AnnotationsPlug
         width = x1 - x0;
       }
 
-      return <AnnotationMarker annotation={annotation} width={width} onEditAnnotation={() => setAnnotation(annotation)} onRemoveAnnotation={() => onRemoveAnnotation(annotation)}/>;
+      return <AnnotationMarker annotation={annotation} width={width} onEditAnnotation={() => setAnnotation(annotation)} onRemoveAnnotation={() => onRemoveAnnotation(annotation)} />;
     },
     []
   );
@@ -150,7 +196,7 @@ export const AnnotationsPlugin = ({ namespace, group, options }: AnnotationsPlug
       <EventsCanvas
         id="annotations"
         options={options}
-        events={annotations0}
+        events={annotations0.concat(alertAnnotations)}
         renderEventMarker={renderMarker}
         mapEventToXYCoords={mapAnnotationToXYCoords}
       />

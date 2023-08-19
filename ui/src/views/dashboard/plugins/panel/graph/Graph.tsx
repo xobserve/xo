@@ -232,8 +232,8 @@ const GraphPanel = memo((props: GraphPanelProps) => {
     const onZoom = (tr) => {
         setDateTime(tr.from, tr.to)
     }
-
-
+    
+    
     return (
         <>{
             isEmpty(props.data) ? <Center height="100%">No data</Center> :
@@ -268,7 +268,7 @@ const GraphPanel = memo((props: GraphPanelProps) => {
                                 {props.panel.plugins.graph.tooltip.mode != 'hidden' && <Tooltip props={props} options={options} data={data} inactiveSeries={inactiveSeries} />}
                                 <ContextMenu props={props} options={options} data={data} container={containerRef}/>
                                 <ZoomPlugin options={options} onZoom={onZoom} />
-                                <AnnotationsPlugin namespace={props.dashboardId} group={props.panel.id} options={options}/>
+                                <AnnotationsPlugin dashboardId={props.dashboardId}  options={options} timeRange={props.timeRange} panel={props.panel}/>
                                 {props.panel.plugins.graph.thresholdsDisplay != ThresholdDisplay.None && <ThresholdsPlugin options={options} thresholdsConfig={props.panel.plugins.graph.thresholds} display={props.panel.plugins.graph.thresholdsDisplay} />}
                             </UplotReact>
                             )

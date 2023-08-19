@@ -67,17 +67,19 @@ export interface AlerSettings extends DisableDatasource {
         stack: "auto" | "always" | "none"
         tooltip: "none" | "single" | "all"
     }
-    filter: {
-        state: AlertState[]
-        datasources: number[]
-        httpQuery: PanelQuery
-        ruleName: string 
-        ruleLabel: string
-        alertLabel: string
-    }
+    filter:AlertFilter
     clickActions: ClickAction[]
 }
 
+
+export interface AlertFilter {
+    state: AlertState[]
+    datasources: number[]
+    httpQuery: PanelQuery
+    ruleName: string 
+    ruleLabel: string
+    alertLabel: string
+}
 
 export interface BarSettings {
     animation: boolean
@@ -433,6 +435,8 @@ export interface GraphSettings {
     value: ValueSetting
     thresholds: ThresholdsConfig
     thresholdsDisplay: ThresholdDisplay
+    enableAlert: boolean
+    alertFilter: AlertFilter
 }
 
 

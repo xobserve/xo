@@ -15,7 +15,7 @@ import { EditorInputItem, EditorNumberItem } from "components/editor/EditorItem"
 import RadionButtons from "components/RadioButtons"
 import PanelAccordion from "src/views/dashboard/edit-panel/Accordion"
 import PanelEditItem from "src/views/dashboard/edit-panel/PanelEditItem"
-import { DatasourceType, Panel, PanelEditorProps } from "types/dashboard"
+import { DatasourceType, Panel, PanelEditorProps, PanelType } from "types/dashboard"
 import React, { memo } from "react";
 import { useStore } from "@nanostores/react"
 import { commonMsg } from "src/i18n/locales/en"
@@ -31,8 +31,10 @@ import { LayoutOrientation } from "types/layout"
 import { ResetPanelToolbalEvent, ResetPanelToolbalViewModeEvent } from "./Alert"
 import { ClickActionsEditor } from "src/views/dashboard/edit-panel/components/ClickActionsEditor"
 import HttpQueryEditor from "../../datasource/http/QueryEditor"
+import { AlertFilter } from "types/panel/plugins"
 
-const AlertPanelEditor = memo(({ panel, onChange }: PanelEditorProps) => {
+const AlertPanelEditor = memo((props: PanelEditorProps) => {
+    const { panel, onChange } = props
     const t = useStore(commonMsg)
     return (<><PanelAccordion title={t.basic}>
         <PanelEditItem title="View mode">
@@ -95,43 +97,9 @@ const AlertPanelEditor = memo(({ panel, onChange }: PanelEditorProps) => {
                 <Button size="sm" onClick={() => dispatch(ResetPanelToolbalEvent + panel.id)}>Reset toolbar options</Button>
             </PanelEditItem>
         </PanelAccordion>
-        <PanelAccordion title="Filter">
-            <PanelEditItem title="State">
-                <MultiRadionButtons options={Object.keys(AlertState).map(k => ({ label: AlertState[k], value: AlertState[k] }))} value={panel.plugins.alert.filter.state} onChange={v => onChange((panel: Panel) => {
-                    panel.plugins.alert.filter.state = v
-                })} />
-            </PanelEditItem>
-            <PanelEditItem title="Datasource" desc="Query alerts from these datasources">
-                <Select style={{ minWidth: "300px" }} value={panel.plugins.alert.filter.datasources} allowClear mode="multiple" options={
-                    datasources.filter(ds => datasourceSupportAlerts.includes(ds.type)).map(ds => ({ label: ds.name, value: ds.id }))} onChange={
-                        (v) => {
-                            onChange((panel: Panel) => {
-                                panel.plugins.alert.filter.datasources = v
-                            });
-                            dispatch(PanelForceRebuildEvent + panel.id)
-                        }
-                    } />
-            </PanelEditItem>
-            {panel.plugins.alert.filter.datasources.find(dsId => datasources.find(ds => ds.id == dsId).type == DatasourceType.ExternalHttp) && <HttpQueryEditor panel={panel} datasource={panel.datasource} onChange={v => onChange((panel: Panel) => {
-                    panel.plugins.alert.filter.httpQuery = v
-                })} query={panel.plugins.alert.filter.httpQuery}/>}
-            <PanelEditItem title="Rule name" desc="Filter for alert rules containing this text">
-                <EditorInputItem value={panel.plugins.alert.filter.ruleName} onChange={(v) => onChange((panel: Panel) => {
-                    panel.plugins.alert.filter.ruleName = v
-                })} placeholder="support multi regex, separate with comman e.g: ^service1, ^service2" />
-            </PanelEditItem>
-            <PanelEditItem title="Rule labels" desc={`Filter rule labels using label querying, e.g: {severity="critical"}`}>
-                <EditorInputItem value={panel.plugins.alert.filter.ruleLabel} onChange={(v) => onChange((panel: Panel) => {
-                    panel.plugins.alert.filter.ruleLabel = v
-                })} placeholder="" />
-            </PanelEditItem>
-            <PanelEditItem title="Alert label" desc={`Filter alert labels using label querying, e.g: {service="api-gateway", instance=~"cluster-cn-.+"}`}>
-                <EditorInputItem value={panel.plugins.alert.filter.alertLabel} onChange={(v) => onChange((panel: Panel) => {
-                    panel.plugins.alert.filter.alertLabel = v
-                })} placeholder="" />
-            </PanelEditItem>
 
-        </PanelAccordion>
+        <AlertFilterEditor panel={panel} filter={panel.plugins.alert.filter} onChange={onChange} />
+
         <PanelAccordion title="Chart">
             <PanelEditItem title="Show">
                 <Switch isChecked={panel.plugins.alert.chart.show} onChange={(e) => onChange((panel: Panel) => {
@@ -166,10 +134,111 @@ const AlertPanelEditor = memo(({ panel, onChange }: PanelEditorProps) => {
                 onChange((panel: Panel) => {
                     panel.plugins.alert.clickActions = v
                 })
-            }} actions={panel.plugins.alert.clickActions}/>
+            }} actions={panel.plugins.alert.clickActions} />
         </PanelAccordion>
     </>
     )
 })
 
 export default AlertPanelEditor
+
+export interface AlertFilterProps {
+    panel: Panel
+    filter: AlertFilter
+    onChange: any
+}
+
+export const AlertFilterEditor = ({ panel, filter, onChange }: AlertFilterProps) => {
+    return <PanelAccordion title="Alert Filter">
+        <PanelEditItem title="State">
+            <MultiRadionButtons options={Object.keys(AlertState).map(k => ({ label: AlertState[k], value: AlertState[k] }))} value={filter.state} onChange={v => onChange((panel: Panel) => {
+                switch (panel.type) {
+                    case PanelType.Alert:
+                        panel.plugins.alert.filter.state = v
+                        break;
+                    case PanelType.Graph:
+                        panel.plugins.graph.alertFilter.state = v
+                        break
+                    default:
+                        break;
+                }
+
+            })} />
+        </PanelEditItem>
+        <PanelEditItem title="Datasource" desc="Query alerts from these datasources">
+            <Select style={{ minWidth: "300px" }} value={filter.datasources} allowClear mode="multiple" options={
+                datasources.filter(ds => datasourceSupportAlerts.includes(ds.type)).map(ds => ({ label: ds.name, value: ds.id }))} onChange={
+                    (v) => {
+                        onChange((panel: Panel) => {
+                            switch (panel.type) {
+                                case PanelType.Alert:
+                                    panel.plugins.alert.filter.datasources = v
+                                    break;
+                                case PanelType.Graph:
+                                    panel.plugins.graph.alertFilter.datasources = v
+                                    break
+                                default:
+                                    break;
+                            }
+                        });
+                        dispatch(PanelForceRebuildEvent + panel.id)
+                    }
+                } />
+        </PanelEditItem>
+        {filter.datasources.find(dsId => datasources.find(ds => ds.id == dsId).type == DatasourceType.ExternalHttp) && <HttpQueryEditor panel={panel} datasource={panel.datasource} onChange={v => onChange((panel: Panel) => {
+            switch (panel.type) {
+                case PanelType.Alert:
+                    panel.plugins.alert.filter.httpQuery = v
+                    break;
+                case PanelType.Graph:
+                    panel.plugins.graph.alertFilter.httpQuery = v
+                    break
+                default:
+                    break;
+            }
+        })} query={filter.httpQuery} />}
+        <PanelEditItem title="Rule name" desc="Filter for alert rules containing this text">
+            <EditorInputItem value={filter.ruleName} onChange={(v) => onChange((panel: Panel) => {
+                switch (panel.type) {
+                    case PanelType.Alert:
+                        panel.plugins.alert.filter.ruleName = v
+                        break;
+                    case PanelType.Graph:
+                        panel.plugins.graph.alertFilter.ruleName = v
+                        break
+                    default:
+                        break;
+                   }
+            })} placeholder="support multi regex, separate with comman e.g: ^service1, ^service2" />
+        </PanelEditItem>
+        <PanelEditItem title="Rule labels" desc={`Filter rule labels using label querying, e.g: {severity="critical"}`}>
+            <EditorInputItem value={filter.ruleLabel} onChange={(v) => onChange((panel: Panel) => {
+                switch (panel.type) {
+                    case PanelType.Alert:
+                        panel.plugins.alert.filter.ruleLabel = v
+                        break;
+                    case PanelType.Graph:
+                        panel.plugins.graph.alertFilter.ruleLabel = v
+                        break
+                    default:
+                        break;
+                   }
+            })} placeholder="" />
+        </PanelEditItem>
+        <PanelEditItem title="Alert label" desc={`Filter alert labels using label querying, e.g: {service="api-gateway", instance=~"cluster-cn-.+"}`}>
+            <EditorInputItem value={filter.alertLabel} onChange={(v) => onChange((panel: Panel) => {
+                switch (panel.type) {
+                    case PanelType.Alert:
+                        panel.plugins.alert.filter.alertLabel = v
+                        break;
+                    case PanelType.Graph:
+                        panel.plugins.graph.alertFilter.alertLabel = v
+                        break
+                    default:
+                        break;
+                   }
+            })} placeholder="" />
+        </PanelEditItem>
+
+    </PanelAccordion>
+}

@@ -49,10 +49,11 @@ import { isEmpty } from "utils/validate";
 import { query_loki_alerts, run_loki_query } from "../../plugins/datasource/loki/query_runner";
 import { $variables } from "src/views/variables/store";
 import { getDatasource } from "utils/datasource";
-import { parseVariableFormat } from "utils/format";
+import { jsonToEqualPairs, parseVariableFormat } from "utils/format";
 import { VariableInterval } from "src/data/variable";
 import Loading from "components/loading/Loading";
 import DebugPanel from "./DebugPanel";
+import { AlertGroup, AlertRule } from "types/plugins/alert";
 interface PanelGridProps {
     dashboard: Dashboard
     panel: Panel
@@ -146,10 +147,12 @@ export const PanelComponent = ({ dashboard, panel, variables, onRemovePanel,onHi
     useEffect(() => {
         return () => {
             // delete data query cache when panel is unmounted
-            // for (const q of panel.datasource.queries) {
-            //     const id = formatQueryId(panel.datasource.id, dashboard.id, panel.id, q.id, panel.type)
-            //     prevQueries.delete(id)
-            // }
+            if (panel.type == PanelType.Alert) {
+                for (const q of panel.datasource.queries) {
+                    const id = formatQueryId(panel.datasource.id, dashboard.id, panel.id, q.id, panel.type)
+                    prevQueries.delete(id)
+                }
+            }
         }
     }, [])
 
@@ -178,69 +181,73 @@ export const PanelComponent = ({ dashboard, panel, variables, onRemovePanel,onHi
         let needUpdate = false
         const intervalObj = calculateInterval(timeRange, ds.queryOptions.maxDataPoints ?? DatasourceMaxDataPoints, isEmpty(ds.queryOptions.minInterval) ? DatasourceMinInterval : ds.queryOptions.minInterval)
         const interval = intervalObj.intervalMs / 1000
-        for (const q0 of ds.queries) {
-            const q: PanelQuery = { ...cloneDeep(q0), interval }
-            replaceQueryWithVariables(q, datasource.type, intervalObj.interval)
-            if (datasource.type != DatasourceType.TestData && hasVariableFormat(q.metrics)) {
-                // there are variables still not replaced, maybe because variable's loadValues has not completed
-                continue
-            }
 
-            const id = formatQueryId(ds.id, dashboardId, panel.id, q.id, panel.type)
-            const prevQuery = prevQueries.get(id)
-            const currentQuery = [q, timeRange, datasource.type]
-            if (isEqual(prevQuery, currentQuery)) {
-                const d = prevQueryData[id]
-                if (d) {
-                    data.push(d)
-                }
-                setQueryError(null)
-                console.log("query data from cache!", panel.id)
-                continue
-            }
-
-            needUpdate = true
-            // console.log("re-query data! metrics id:", q.id, " query id:", queryId)
-
-
-            let res
-
-            if (panel.type == PanelType.Alert) {
-                res = await queryAlerts(panel, timeRange)
-            } else {
-                //@needs-update-when-add-new-datasource
-                switch (datasource.type) {
-                    case DatasourceType.Prometheus:
-                        res = await run_prometheus_query(panel, q, timeRange, datasource)
-                        break;
-                    case DatasourceType.TestData:
-                        res = await run_testdata_query(panel, q, timeRange, datasource)
-                        break;
-                    case DatasourceType.Jaeger:
-                        res = await run_jaeger_query(panel, q, timeRange, datasource)
-                        break;
-                    case DatasourceType.ExternalHttp:
-                        res = await run_http_query(panel, q, timeRange, datasource)
-                        break;
-                    case DatasourceType.Loki:
-                        res = await run_loki_query(panel, q, timeRange, datasource)
-                        break
-                    default:
-                        break;
-                }
-            }
-
-
+        if (panel.type == PanelType.Alert) {
+            const res = await queryAlerts(panel, timeRange, panel.plugins.alert.filter.datasources,  panel.plugins.alert.filter.httpQuery)
             setQueryError(res.error)
-
-
-
-            if (!isEmpty(res.data)) {
-                data.push(res.data)
-                prevQueryData[id] = res.data
-                prevQueries.set(id, currentQuery)
+            data = res.data
+        } else {
+            for (const q0 of ds.queries) {
+                const q: PanelQuery = { ...cloneDeep(q0), interval }
+                replaceQueryWithVariables(q, datasource.type, intervalObj.interval)
+                if (datasource.type != DatasourceType.TestData && hasVariableFormat(q.metrics)) {
+                    // there are variables still not replaced, maybe because variable's loadValues has not completed
+                    continue
+                }
+    
+                const id = formatQueryId(ds.id, dashboardId, panel.id, q.id, panel.type)
+                const prevQuery = prevQueries.get(id)
+                const currentQuery = [q, timeRange, datasource.type]
+                if (isEqual(prevQuery, currentQuery)) {
+                    const d = prevQueryData[id]
+                    if (d) {
+                        data.push(d)
+                    }
+                    setQueryError(null)
+                    console.log("query data from cache!", panel.id)
+                    continue
+                }
+    
+                needUpdate = true
+                // console.log("re-query data! metrics id:", q.id, " query id:", queryId)
+    
+    
+                let res
+    
+                    //@needs-update-when-add-new-datasource
+                    switch (datasource.type) {
+                        case DatasourceType.Prometheus:
+                            res = await run_prometheus_query(panel, q, timeRange, datasource)
+                            break;
+                        case DatasourceType.TestData:
+                            res = await run_testdata_query(panel, q, timeRange, datasource)
+                            break;
+                        case DatasourceType.Jaeger:
+                            res = await run_jaeger_query(panel, q, timeRange, datasource)
+                            break;
+                        case DatasourceType.ExternalHttp:
+                            res = await run_http_query(panel, q, timeRange, datasource)
+                            break;
+                        case DatasourceType.Loki:
+                            res = await run_loki_query(panel, q, timeRange, datasource)
+                            break
+                        default:
+                            break;
+                    }
+    
+    
+                setQueryError(res.error)
+    
+    
+    
+                if (!isEmpty(res.data)) {
+                    data.push(res.data)
+                    prevQueryData[id] = res.data
+                    prevQueries.set(id, currentQuery)
+                }
             }
         }
+        
 
         if (needUpdate) {
             console.log("query data and set panel data:", panel.id, data)
@@ -421,12 +428,12 @@ const formatQueryId = (datasourceId, dashboardId, panelId, queryId, panelType) =
     return `${datasourceId}-${dashboardId}-${panelId}-${queryId}-${tp}`
 }
 
-const queryAlerts = async (panel: Panel, timeRange: TimeRange) => {
+export const queryAlerts = async (panel: Panel, timeRange: TimeRange, dsIds: number[], httpQuery: PanelQuery ) => {
     let result = {
         error: null,
         data: []
     }
-    for (const dsID of panel.plugins.alert.filter.datasources) {
+    for (const dsID of dsIds) {
         const ds = datasources.find(ds => ds.id === dsID)
         let res
         switch (ds.type) {
@@ -440,7 +447,7 @@ const queryAlerts = async (panel: Panel, timeRange: TimeRange) => {
                 res = query_testdata_alerts(panel, timeRange, ds)
                 break
             case DatasourceType.ExternalHttp:
-                res = await run_http_query(panel, panel.plugins.alert.filter.httpQuery, timeRange, ds)
+                res = await run_http_query(panel, httpQuery, timeRange, ds)
                 res.data.fromDs = ds.type
                 break
             default:
@@ -453,5 +460,31 @@ const queryAlerts = async (panel: Panel, timeRange: TimeRange) => {
         result.data = result.data.concat(res.data)
     }
 
+    const data0 : { "groups": AlertGroup[], "fromDs": DatasourceType }[] = result.data
+    const data: AlertRule[] = []
+    for (const d of data0) {
+        for (const group of d.groups) {
+            for (const rule of group.rules) {
+                const r = cloneDeep(rule)
+                r.fromDs = d.fromDs
+                r.groupName = group.name
+                r.groupNamespace = group.file
+
+                data.push(r)
+                const ruleLabelKeys = Object.keys(r.labels)
+                for (const alert of r.alerts) {
+                    delete alert.labels.alertname
+                    for (const k of ruleLabelKeys) {
+                        if (alert.labels[k] == r.labels[k]) {
+                            delete alert.labels[k]
+                        }
+                    }
+                    alert.name = r.name + jsonToEqualPairs({ ...alert.labels })
+                }
+            }
+        }
+    }
+
+    result.data = data
     return result
 }

@@ -11,7 +11,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { Box, Button, Divider, HStack, Portal, StackDivider, Text, VStack, useToast } from "@chakra-ui/react";
+import { Box, Button, Divider, HStack, Portal, StackDivider, Text, VStack, useOutsideClick, useToast } from "@chakra-ui/react";
 import { TooltipContainer } from "../Tooltip/Tooltip";
 import React, { memo, useLayoutEffect, useRef, useState } from "react";
 import { PanelProps } from "types/dashboard";
@@ -45,7 +45,9 @@ const ContextMenu = memo(({ props, options, data, container }: Props) => {
     const xVal = useRef(null)
     // useOutsideClick({
     //     ref: container,
-    //     handler: () => setCoords(null)
+    //     handler: () => {
+    //         setCoords(null)
+    //     }
     //   })
 
     useLayoutEffect(() => {

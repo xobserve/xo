@@ -11,11 +11,12 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 import { Select, Switch } from "@chakra-ui/react"
+import {Select as AntdSelect} from 'antd'
 import PanelAccordion from "src/views/dashboard/edit-panel/Accordion"
 import PanelEditItem from "src/views/dashboard/edit-panel/PanelEditItem"
 import RadionButtons from "components/RadioButtons"
 import { UnitPicker } from "components/Unit"
-import { Panel, PanelEditorProps } from "types/dashboard"
+import { DatasourceType, Panel, PanelEditorProps } from "types/dashboard"
 import { EditorInputItem, EditorNumberItem, EditorSliderItem } from "components/editor/EditorItem"
 import { dispatch } from "use-bus"
 import { PanelForceRebuildEvent } from "src/data/bus-events"
@@ -26,8 +27,13 @@ import { commonMsg, graphPanelMsg } from "src/i18n/locales/en"
 import { useStore } from "@nanostores/react"
 import ThresholdEditor from "components/Threshold/ThresholdEditor"
 import { ThresholdDisplay, Units } from "types/panel/plugins"
+import { datasources } from "src/App"
+import { datasourceSupportAlerts } from "src/data/alerts"
+import HttpQueryEditor from "../../datasource/http/QueryEditor"
+import { AlertFilterEditor } from "../alert/Editor"
 
-const GraphPanelEditor = memo(({ panel, onChange }: PanelEditorProps) => {
+const GraphPanelEditor = memo((props: PanelEditorProps) => {
+    const { panel, onChange } = props
     const t = useStore(commonMsg)
     const t1 = useStore(graphPanelMsg)
 
@@ -74,8 +80,8 @@ const GraphPanelEditor = memo(({ panel, onChange }: PanelEditorProps) => {
                 })} />
             </PanelEditItem>
             {
-                 panel.plugins.graph.styles.style == "bars" && <>
-                     <PanelEditItem title={t1.barRadius}>
+                panel.plugins.graph.styles.style == "bars" && <>
+                    <PanelEditItem title={t1.barRadius}>
                         <EditorNumberItem value={panel.plugins.graph.styles.barRadius} min={0} max={0.5} step={0.1} onChange={v => onChange((panel: Panel) => {
                             panel.plugins.graph.styles.barRadius = v
                             dispatch(PanelForceRebuildEvent + panel.id)
@@ -87,7 +93,7 @@ const GraphPanelEditor = memo(({ panel, onChange }: PanelEditorProps) => {
                             dispatch(PanelForceRebuildEvent + panel.id)
                         })} />
                     </PanelEditItem>
-                 </>
+                </>
             }
             {
                 <>
@@ -117,7 +123,7 @@ const GraphPanelEditor = memo(({ panel, onChange }: PanelEditorProps) => {
                         })} />
                     </PanelEditItem>
                 </>}
-       
+
             <PanelEditItem title={t1.pointSize}>
                 <EditorSliderItem value={panel.plugins.graph.styles.pointSize} min={1} max={20} step={1} onChange={v => onChange((panel: Panel) => {
                     panel.plugins.graph.styles.pointSize = v
@@ -130,7 +136,7 @@ const GraphPanelEditor = memo(({ panel, onChange }: PanelEditorProps) => {
                 })} />
             </PanelEditItem>
             <PanelEditItem title="Stack">
-            <Switch defaultChecked={panel.plugins.graph.styles.enableStack} onChange={e => onChange((panel: Panel) => {
+                <Switch defaultChecked={panel.plugins.graph.styles.enableStack} onChange={e => onChange((panel: Panel) => {
                     panel.plugins.graph.styles.enableStack = e.currentTarget.checked
                 })} />
             </PanelEditItem>
@@ -163,7 +169,7 @@ const GraphPanelEditor = memo(({ panel, onChange }: PanelEditorProps) => {
         <PanelAccordion title="Value">
             <PanelEditItem title={t.unit}>
                 <UnitPicker value={panel.plugins.graph.value} onChange={
-                    (v:Units) => onChange((panel: Panel) => {
+                    (v: Units) => onChange((panel: Panel) => {
                         panel.plugins.graph.value.units = v.units
                         panel.plugins.graph.value.unitsType = v.unitsType
                     })
@@ -178,10 +184,10 @@ const GraphPanelEditor = memo(({ panel, onChange }: PanelEditorProps) => {
 
         <PanelAccordion title="Thresholds">
             <ThresholdEditor value={panel.plugins.graph.thresholds} onChange={(v) => onChange((panel: Panel) => {
-                    panel.plugins.graph.thresholds = v
-                    dispatch(PanelForceRebuildEvent + panel.id)
-                })} />
-            
+                panel.plugins.graph.thresholds = v
+                dispatch(PanelForceRebuildEvent + panel.id)
+            })} />
+
             <PanelEditItem title={t1.thresholdsDisplay}>
                 <Select value={panel.plugins.graph.thresholdsDisplay} onChange={e => {
                     const v = e.currentTarget.value
@@ -190,14 +196,23 @@ const GraphPanelEditor = memo(({ panel, onChange }: PanelEditorProps) => {
                         dispatch(PanelForceRebuildEvent + panel.id)
                     })
                 }}>
-                   {
-                    Object.keys(ThresholdDisplay).map(k => 
-                        <option value={ThresholdDisplay[k]}>{ThresholdDisplay[k]}</option>
-                    )
-                   }
+                    {
+                        Object.keys(ThresholdDisplay).map(k =>
+                            <option value={ThresholdDisplay[k]}>{ThresholdDisplay[k]}</option>
+                        )
+                    }
                 </Select>
             </PanelEditItem>
         </PanelAccordion>
+        
+        <PanelAccordion title="Alert correlation">
+            <PanelEditItem title="Enable" desc="When enabled, associated alerts will be display as annotations">
+                <Switch defaultChecked={panel.plugins.graph.enableAlert} onChange={e => onChange((panel: Panel) => {
+                    panel.plugins.graph.enableAlert = e.currentTarget.checked
+                })} />
+            </PanelEditItem>
+        </PanelAccordion>
+        {panel.plugins.graph.enableAlert && <AlertFilterEditor panel={panel} onChange={onChange} filter={panel.plugins.graph.alertFilter}/>}
     </>
     )
 })

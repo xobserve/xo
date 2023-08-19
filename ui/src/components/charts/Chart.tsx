@@ -25,11 +25,12 @@ interface Props {
     height?: number
     onChartCreated: (chart) => void
     onChartEvents?: any
+    clearWhenSetOption? :boolean
 }
 
 
 export const ChartComponent = memo((props: Props) => {
-    const { options, theme, onChartCreated, onChartEvents } = props
+    const { options, theme, onChartCreated, onChartEvents,clearWhenSetOption=false } = props
     // echarts is weirdly widther than the container, so we need to subtract 15
     const width = props.width ? props.width - 11 : null
     const height = props.height ? props.height - 3 : null
@@ -66,6 +67,9 @@ export const ChartComponent = memo((props: Props) => {
 
     useEffect(() => {
         if (chart) {
+            if (clearWhenSetOption) {
+                chart?.clear()
+            }
             chart.setOption(options)
         }
     }, [options])

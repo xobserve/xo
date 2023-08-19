@@ -35,14 +35,14 @@ export const getInitUnits = (): Units => {
         unitsType: 'none',
         units: [],
     }
-} 
+}
 
 const initThresholds = (colorIndex?): ThresholdsConfig => {
     return {
         mode: ThresholdsMode.Absolute,
         thresholds: [{
             value: null,
-            color: palettes[colorIndex??0]
+            color: palettes[colorIndex ?? 0]
         }]
     }
 }
@@ -88,7 +88,9 @@ export const initPanelPlugins = (): PanelPlugins => {
                 decimal: 3
             },
             thresholds: initThresholds(),
-            thresholdsDisplay: ThresholdDisplay.None
+            thresholdsDisplay: ThresholdDisplay.None,
+            enableAlert: false,
+            alertFilter: initAlertFilter()
         },
 
         [PanelType.Text]: {
@@ -133,16 +135,16 @@ export const initPanelPlugins = (): PanelPlugins => {
                 icon: [],
                 shape: "donut",
                 donutColors: [
-                    {attr: 'success',color: palettes[0]},
-                    {attr: 'error', color: palettes[9]}
+                    { attr: 'success', color: palettes[0] },
+                    { attr: 'error', color: palettes[9] }
                 ],
                 borderColor: palettes[0],
                 tooltipTrigger: 'mouseenter',
                 menu: [],
                 enableHighlight: false,
                 highlightNodes: '',
-                highlightNodesByFunc: 
-`// data: {nodes, edges}
+                highlightNodesByFunc:
+                    `// data: {nodes, edges}
 // return nodes name list, e.g ['node-1', 'node-2']
 function highlightNodes(data, lodash) {
     console.log("here3333", data)
@@ -210,13 +212,13 @@ function registerEvents(options, chart) {
             label: {
                 show: true,
                 align: "none",
-                margin:5,
+                margin: 5,
                 showValue: false,
                 showName: true,
                 fontSize: 12,
                 lineHeight: 16,
-                transformName: 
-`function transformName(rawName, params) {
+                transformName:
+                    `function transformName(rawName, params) {
     return rawName
 }`
             },
@@ -340,7 +342,7 @@ function registerEvents(options, chart) {
                 attr: null
             },
             dataLayer: {
-                layer: DataLayerType.Markers  ,
+                layer: DataLayerType.Markers,
                 opacity: 0.6
             },
             controls: {
@@ -359,8 +361,8 @@ function registerEvents(options, chart) {
             },
             sizeScale: {
                 enable: true,
-                baseSize: 10, 
-                maxScale : 4
+                baseSize: 10,
+                maxScale: 4
             },
             thresholds: initThresholds(12)
         },
@@ -377,8 +379,8 @@ function registerEvents(options, chart) {
             styles: {
                 labelColorSyncChart: true,
                 labelColor: 'inherit',
-                labelValueColor: 'inherit', 
-                contentColor: 'inherit', 
+                labelValueColor: 'inherit',
+                contentColor: 'inherit',
                 fontSize: "0.9rem",
                 wordBreak: "break-all",
                 showlineBorder: true
@@ -393,7 +395,7 @@ function registerEvents(options, chart) {
                 showLabel: "auto",
                 stack: "auto",
             },
-            thresholds: [{type: null, value: null,key:null, color: 'inherit'}]
+            thresholds: [{ type: null, value: null, key: null, color: 'inherit' }]
         },
         [PanelType.Bar]: {
             animation: true,
@@ -438,7 +440,7 @@ function registerEvents(options, chart) {
                 showGraph: true,
                 color: "$orange",
                 layout: LayoutOrientation.Vertical,
-                colorMode: "value",
+                colorMode: "bg-gradient",
                 style: "bars",
                 statName: "Alerts"
             },
@@ -455,27 +457,29 @@ function registerEvents(options, chart) {
                 showLabel: "auto",
                 tooltip: "single",
             },
-            filter: {
-                state: [AlertState.Firing,AlertState.Pending],
-                datasources: [InitTestDataDatasourceId],
-                httpQuery: {
-                    id: 65, 
-                    metrics: '',
-                    legend: '',
-                    data: {},
-                    visible: true
-                },
-                ruleLabel: '',
-                alertLabel: '',
-                ruleName: '',
-            },
+            filter: initAlertFilter(),
             clickActions: []
         }
     }
 }
 
 
-
+const initAlertFilter = () => {
+    return {
+        state: [],
+        datasources: [],
+        httpQuery: {
+            id: 65,
+            metrics: '',
+            legend: '',
+            data: {},
+            visible: true
+        },
+        ruleLabel: '',
+        alertLabel: '',
+        ruleName: '',
+    }
+}
 export const setEchartsOptions = `
 // setOptions return echarts.Options, it is directly passed to a echarts chart.
 // Find more options examples: https://echarts.apache.org/examples/en/index.html#chart-type-line

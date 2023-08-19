@@ -250,7 +250,7 @@ const LogChart = memo((props: Props) => {
     };
 
     return (<>
-        <ChartComponent key={colorMode} options={chartOptions} theme={colorMode} onChartCreated={c => setChart(c)} width={width} />
+        <ChartComponent key={colorMode} options={chartOptions} clearWhenSetOption theme={colorMode} onChartCreated={c => setChart(c)} width={width} />
     </>)
 })
 

@@ -83,7 +83,7 @@ const PanelAnnotations = ({ dashboardId, panel }: PanelAnnotationsProps) => {
     const cancelRef = useRef()
     const t = useStore(commonMsg)
     const toast = useToast()
-    const [expires, setExpires] = useState(0)
+    const [expires, setExpires] = useState(1)
     const deletelAnnotations = async () => {
         await requestApi.delete(`/annotation/group/${dashboardId}/${panel.id}/${expires}`)
         dispatch(ReloadDashAnnotationsEvent)
