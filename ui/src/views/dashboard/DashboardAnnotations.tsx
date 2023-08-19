@@ -20,16 +20,16 @@ import useBus from "use-bus"
 import { requestApi } from "utils/axios/request"
 import { paletteColorNameToHex } from "utils/colors"
 import { roundDsTime } from "utils/datasource"
-import { $dashAnnotations } from "./store/annotation"
+import { $dashAnnotations, $rawDashAnnotations } from "./store/annotation"
 import { isEmpty } from "utils/validate"
-import { Annotation } from "types/annotation"
+import { useStore } from "@nanostores/react"
 
 interface Props {
     dashboard: Dashboard
 }
 const DashboardAnnotations = ({ dashboard }: Props) => {
-    const [rawAnnotations, setRawAnnotations] = useState<Annotation[]>([])
     const { colorMode } = useColorMode()
+    const rawAnnotations = useStore($rawDashAnnotations)
     useBus(
         TimeChangedEvent,
         (e) => {
@@ -37,6 +37,10 @@ const DashboardAnnotations = ({ dashboard }: Props) => {
         },
         [dashboard]
     )
+        
+    useEffect(() => {
+        filterAnnotations(rawAnnotations)
+    },[rawAnnotations])
     
     useEffect(() => {
         if (rawAnnotations.length > 0) {
@@ -47,8 +51,7 @@ const DashboardAnnotations = ({ dashboard }: Props) => {
     const loadAnnotations = async () => {
         const timerange = getCurrentTimeRange()
         const res = await requestApi.get(`/annotation/${dashboard.id}?start=${roundDsTime(timerange.start.getTime() / 1000)}&end=${roundDsTime(timerange.end.getTime() / 1000)}`)
-        filterAnnotations(res.data)
-        setRawAnnotations(res.data)
+        $rawDashAnnotations.set(res.data)
     }
 
     const filterAnnotations = (annotations) => {

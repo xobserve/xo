@@ -15,7 +15,7 @@ import { Box, Center, HStack, Menu, MenuButton, MenuDivider, MenuItem, MenuList,
 import { FaBook, FaBug, FaEdit, FaRegCopy, FaRegEye, FaRegEyeSlash, FaTrashAlt } from "react-icons/fa";
 import { IoMdInformation } from "react-icons/io";
 import { memo, useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
-import { query_prometheus_alerts, run_prometheus_query } from "../plugins/datasource/prometheus/query_runner";
+import { query_prometheus_alerts, run_prometheus_query } from "../../plugins/datasource/prometheus/query_runner";
 import { DatasourceMaxDataPoints, DatasourceMinInterval, PANEL_HEADER_HEIGHT, StorageCopiedPanelKey } from "src/data/constants";
 import { cloneDeep, isEqual, isFunction } from "lodash";
 import { TimeRange } from "types/time";
@@ -26,16 +26,16 @@ import useBus, { dispatch } from 'use-bus'
 import { getCurrentTimeRange } from "components/DatePicker/TimePicker";
 import { PanelDataEvent, PanelForceRebuildEvent, TimeChangedEvent } from "src/data/bus-events";
 import { addParamToUrl } from "utils/url";
-import { query_testdata_alerts, run_testdata_query } from "../plugins/datasource/testdata/query_runner";
-import { run_jaeger_query } from "../plugins/datasource/jaeger/query_runner";
-import PanelBorder from "../../../components/largescreen/components/Border";
+import { query_testdata_alerts, run_testdata_query } from "../../plugins/datasource/testdata/query_runner";
+import { run_jaeger_query } from "../../plugins/datasource/jaeger/query_runner";
+import PanelBorder from "../../../../components/largescreen/components/Border";
 import TitleDecoration from "components/largescreen/components/TitleDecoration";
 import PanelDecoration from "components/largescreen/components/Decoration";
 import { useDedupEvent } from "hooks/useDedupEvent";
 import loadable from '@loadable/component'
 import CodeEditor from "components/CodeEditor/CodeEditor";
 import { calculateInterval } from "utils/datetime/range";
-import { run_http_query } from "../plugins/datasource/http/query_runner";
+import { run_http_query } from "../../plugins/datasource/http/query_runner";
 import { datasources } from "src/App";
 import { useSearchParam } from "react-use";
 import React from "react";
@@ -46,12 +46,13 @@ import lodash from 'lodash'
 import moment from "moment";
 import { paletteColorNameToHex } from "utils/colors";
 import { isEmpty } from "utils/validate";
-import { query_loki_alerts, run_loki_query } from "../plugins/datasource/loki/query_runner";
+import { query_loki_alerts, run_loki_query } from "../../plugins/datasource/loki/query_runner";
 import { $variables } from "src/views/variables/store";
 import { getDatasource } from "utils/datasource";
 import { parseVariableFormat } from "utils/format";
 import { VariableInterval } from "src/data/variable";
 import Loading from "components/loading/Loading";
+import DebugPanel from "./DebugPanel";
 interface PanelGridProps {
     dashboard: Dashboard
     panel: Panel
@@ -310,20 +311,20 @@ export const PanelComponent = ({ dashboard, panel, variables, onRemovePanel,onHi
 
 //@needs-update-when-add-new-panel
 const loadablePanels = {
-    [PanelType.Text]: loadable(() => import('../plugins/panel/text/Text')),
-    [PanelType.Graph]: loadable(() => import('../plugins/panel/graph/Graph')),
-    [PanelType.Table]: loadable(() => import('../plugins/panel/table/Table')),
-    [PanelType.NodeGraph]: loadable(() => import('../plugins/panel/nodeGraph/NodeGraph')),
-    [PanelType.Echarts]: loadable(() => import('../plugins/panel/echarts/Echarts')),
-    [PanelType.Pie]: loadable(() => import('../plugins/panel/pie/Pie')),
-    [PanelType.Gauge]: loadable(() => import('../plugins/panel/gauge/Gauge')),
-    [PanelType.Stat]: loadable(() => import('../plugins/panel/stat/Stat')),
-    [PanelType.Trace]: loadable(() => import('../plugins/panel/trace/Trace')),
-    [PanelType.BarGauge]: loadable(() => import('../plugins/panel/barGauge/BarGauge')),
-    [PanelType.GeoMap]: loadable(() => import('../plugins/panel/geomap/GeoMap')),
-    [PanelType.Log]: loadable(() => import('../plugins/panel/log/Log')),
-    [PanelType.Bar]: loadable(() => import('../plugins/panel/bar/Bar')),
-    [PanelType.Alert]: loadable(() => import('../plugins/panel/alert/Alert')),
+    [PanelType.Text]: loadable(() => import('../../plugins/panel/text/Text')),
+    [PanelType.Graph]: loadable(() => import('../../plugins/panel/graph/Graph')),
+    [PanelType.Table]: loadable(() => import('../../plugins/panel/table/Table')),
+    [PanelType.NodeGraph]: loadable(() => import('../../plugins/panel/nodeGraph/NodeGraph')),
+    [PanelType.Echarts]: loadable(() => import('../../plugins/panel/echarts/Echarts')),
+    [PanelType.Pie]: loadable(() => import('../../plugins/panel/pie/Pie')),
+    [PanelType.Gauge]: loadable(() => import('../../plugins/panel/gauge/Gauge')),
+    [PanelType.Stat]: loadable(() => import('../../plugins/panel/stat/Stat')),
+    [PanelType.Trace]: loadable(() => import('../../plugins/panel/trace/Trace')),
+    [PanelType.BarGauge]: loadable(() => import('../../plugins/panel/barGauge/BarGauge')),
+    [PanelType.GeoMap]: loadable(() => import('../../plugins/panel/geomap/GeoMap')),
+    [PanelType.Log]: loadable(() => import('../../plugins/panel/log/Log')),
+    [PanelType.Bar]: loadable(() => import('../../plugins/panel/bar/Bar')),
+    [PanelType.Alert]: loadable(() => import('../../plugins/panel/alert/Alert')),
 }
 
 const CustomPanelRender = memo((props: PanelProps) => {
@@ -391,34 +392,6 @@ const PanelHeader = ({ queryError, panel, onCopyPanel, onRemovePanel,onHidePanel
     )
 }
 
-const DebugPanel = ({ panel, isOpen, onClose, data }) => {
-    const [tabIndex, setTabIndex] = useState(0)
-
-
-    return (<Modal isOpen={isOpen} onClose={onClose}>
-        <ModalOverlay />
-        <ModalContent minWidth="800px">
-            <ModalCloseButton />
-            <ModalBody>
-                <Tabs onChange={(index) => setTabIndex(index)} >
-                    <TabList>
-                        <Tab>Panel JSON</Tab>
-                        <Tab>Panel Data</Tab>
-                    </TabList>
-                    <TabPanels p="1">
-                        <TabPanel h="600px">
-                            <CodeEditor value={JSON.stringify(panel, null, 2)} language="json" readonly />
-                        </TabPanel>
-                        <TabPanel h="600px">
-                            <CodeEditor value={JSON.stringify(data, null, 2)} language="json" readonly />
-                        </TabPanel>
-                    </TabPanels>
-                </Tabs>
-            </ModalBody>
-        </ModalContent>
-    </Modal>
-    )
-}
 
 const formatQueryId = (datasourceId, dashboardId, panelId, queryId, panelType) => {
     // because some panels has their own data parser in datasource query runner

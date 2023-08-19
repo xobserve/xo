@@ -17,29 +17,39 @@ import AnnotationMarker from './AnnotationMarker';
 import { EventsCanvas } from './EventsCanvas';
 import useExtraTheme from 'hooks/useExtraTheme';
 import { paletteColorNameToHex } from 'utils/colors';
-import { SeriesData } from 'types/seriesData';
 import { alpha } from 'components/uPlot/colorManipulator';
 import { useStore } from '@nanostores/react';
-import { $dashAnnotations } from '../dashboard/store/annotation';
+import { $dashAnnotations, $rawDashAnnotations } from '../dashboard/store/annotation';
 import { durationToSeconds } from 'utils/date';
 import { Annotation } from 'types/annotation';
 import AnnotationEditor from './AnnotationEditor';
 import { requestApi } from 'utils/axios/request';
 import { dispatch } from 'use-bus';
 import { PanelForceRebuildEvent } from 'src/data/bus-events';
+import { cloneDeep } from 'lodash';
 
 interface AnnotationsPluginProps {
   options: uPlot.Options;
-  dashboardId: string
-  panelId: number
+  namespace: string
+  group: number
 }
 
-export const AnnotationsPlugin = ({ dashboardId, panelId, options }: AnnotationsPluginProps) => {
-  const annotations = useStore($dashAnnotations).filter(anno => anno.namespace == dashboardId && anno.group == panelId)
+export const AnnotationsPlugin = ({ namespace, group, options }: AnnotationsPluginProps) => {
+  const annotations0 = useStore($dashAnnotations).filter(anno => anno.namespace == namespace && anno.group == group)
+  const annotations = useRef<Annotation[]>(null)
+
+
   const theme = useExtraTheme();
   const plotInstance = useRef<uPlot>();
   const [annotation, setAnnotation] = useState<Annotation>(null)
   
+  useEffect(() => {
+    annotations.current = annotations0
+    if (plotInstance.current) {
+      plotInstance.current.redraw()
+    }
+  },[annotations0])
+
   useLayoutEffect(() => {
     options.hooks.init.push((u) => {
       plotInstance.current = u;
@@ -68,8 +78,8 @@ export const AnnotationsPlugin = ({ dashboardId, panelId, options }: Annotations
         ctx.closePath();
       };
 
-      for (let i = 0; i < annotations.length; i++) {
-        const annotation = annotations[i];
+      for (let i = 0; i < annotations.current.length; i++) {
+        const annotation = annotations.current[i];
 
         if (!annotation.time) {
           continue;
@@ -91,7 +101,7 @@ export const AnnotationsPlugin = ({ dashboardId, panelId, options }: Annotations
       ctx.restore();
       return;
     });
-  }, [options, theme, annotations]);
+  }, [options, theme]);
 
   const mapAnnotationToXYCoords = useCallback((annotation, dataFrameFieldIndex) => {
     if (!annotation.time || !plotInstance.current) {
@@ -109,14 +119,7 @@ export const AnnotationsPlugin = ({ dashboardId, panelId, options }: Annotations
     };
   }, []);
 
-  const onRemoveAnnotation = async (annotation) => {
-    await requestApi.delete(`/annotation/${annotation.id}`)
-    const index = $dashAnnotations.get().findIndex(a => a.id == annotation.id)
-    const annos = $dashAnnotations.get()
-    annos.splice(index, 1)
-    $dashAnnotations.set([...annos])
-    dispatch(PanelForceRebuildEvent + annotation.group)
-}
+
 
   const renderMarker = useCallback(
     (annotation: Annotation) => {
@@ -147,7 +150,7 @@ export const AnnotationsPlugin = ({ dashboardId, panelId, options }: Annotations
       <EventsCanvas
         id="annotations"
         options={options}
-        events={annotations}
+        events={annotations0}
         renderEventMarker={renderMarker}
         mapEventToXYCoords={mapAnnotationToXYCoords}
       />
@@ -159,3 +162,12 @@ export const AnnotationsPlugin = ({ dashboardId, panelId, options }: Annotations
 
   );
 };
+
+export const onRemoveAnnotation = async (annotation) => {
+  await requestApi.delete(`/annotation/${annotation.id}`)
+  const index = $rawDashAnnotations.get().findIndex(a => a.id == annotation.id)
+  const annos = $rawDashAnnotations.get()
+  annos.splice(index, 1)
+  $rawDashAnnotations.set([...annos])
+  // forceRebuild && dispatch(PanelForceRebuildEvent + annotation.group)
+}

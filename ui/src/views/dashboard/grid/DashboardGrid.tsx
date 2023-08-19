@@ -22,10 +22,10 @@ import React, { CSSProperties, memo, useCallback, useMemo, useRef } from "react"
 import uPlot from "uplot";
 import AutoSizer from "react-virtualized-auto-sizer";
 import useGranaTheme from 'hooks/useExtraTheme';
-import { PanelGrid } from "./PanelGrid";
+import { PanelGrid } from "./PanelGrid/PanelGrid";
 import { useKey, useSearchParam } from "react-use";
 import { addParamToUrl } from "utils/url";
-import { LazyLoader } from "./LazyLoader";
+import { LazyLoader } from "../../../components/LazyLoader";
 
 
 

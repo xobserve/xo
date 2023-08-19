@@ -28,7 +28,7 @@ import { cloneDeep, isEqual, set } from "lodash"
 import useBus, { dispatch } from "use-bus"
 import { DashboardSavedEvent, OnDashboardSaveEvent, PanelDataEvent, PanelForceRebuildEvent, SaveDashboardEvent } from "src/data/bus-events"
 import AutoSizer from "react-virtualized-auto-sizer";
-import { PanelGrid } from "../grid/PanelGrid"
+import { PanelGrid } from "../grid/PanelGrid/PanelGrid"
 import loadable from '@loadable/component'
 import DatePicker from "components/DatePicker/DatePicker"
 import PanelOverrides from "./PanelOverrides"

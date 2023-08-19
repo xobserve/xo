@@ -23,7 +23,7 @@ import { commonMsg, dashboardSettingMsg } from "src/i18n/locales/en"
 import { Annotation } from "types/annotation"
 import { requestApi } from "utils/axios/request"
 import { isEmpty } from "utils/validate"
-import { $dashAnnotations } from "../dashboard/store/annotation"
+import { $rawDashAnnotations } from "../dashboard/store/annotation"
 import { dispatch } from "use-bus"
 import { PanelForceRebuildEvent } from "src/data/bus-events"
 import { dateTimeFormat } from "utils/datetime/formatter"
@@ -86,15 +86,13 @@ const AnnotationEditor = (props: Props) => {
         const res = await requestApi.post(`/annotation`, annotation)
         annotation.id = res.data
         if (id == 0) {
-            $dashAnnotations.set([...$dashAnnotations.get(), annotation])
+            $rawDashAnnotations.set([...$rawDashAnnotations.get(), annotation])
         } else {
-            const index = $dashAnnotations.get().findIndex(a => a.id == id)
-            const annos = $dashAnnotations.get()
+            const index = $rawDashAnnotations.get().findIndex(a => a.id == id)
+            const annos = $rawDashAnnotations.get()
             annos[index] = annotation
-            $dashAnnotations.set([...annos])
+            $rawDashAnnotations.set([...annos])
         }
-
-        dispatch(PanelForceRebuildEvent + annotation.group)
 
         onModalClose()
     }

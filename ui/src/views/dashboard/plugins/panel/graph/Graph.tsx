@@ -38,7 +38,6 @@ import { getStackedOpts } from "./uplot-plugins/stack";
 import { isSeriesData } from "utils/seriesData";
 import ContextMenu from "./ContextMenu/ContextMenu";
 import { AnnotationsPlugin } from "../../../../Annotation/Annotations";
-import { $dashAnnotations } from "src/views/dashboard/store/annotation";
 
 interface GraphPanelProps extends PanelProps {
     data: SeriesData[][]
@@ -269,7 +268,7 @@ const GraphPanel = memo((props: GraphPanelProps) => {
                                 {props.panel.plugins.graph.tooltip.mode != 'hidden' && <Tooltip props={props} options={options} data={data} inactiveSeries={inactiveSeries} />}
                                 <ContextMenu props={props} options={options} data={data} container={containerRef}/>
                                 <ZoomPlugin options={options} onZoom={onZoom} />
-                                <AnnotationsPlugin dashboardId={props.dashboardId} panelId={props.panel.id} options={options}/>
+                                <AnnotationsPlugin namespace={props.dashboardId} group={props.panel.id} options={options}/>
                                 {props.panel.plugins.graph.thresholdsDisplay != ThresholdDisplay.None && <ThresholdsPlugin options={options} thresholdsConfig={props.panel.plugins.graph.thresholds} display={props.panel.plugins.graph.thresholdsDisplay} />}
                             </UplotReact>
                             )
