@@ -391,7 +391,7 @@ func Delete(c *gin.Context) {
 		return
 	}
 
-	_, err = tx.Exec("DELETE FROM annotation WHERE namespaceId=?", id)
+	_, err = tx.Exec("DELETE FROM annotation WHERE namespace_id=?", id)
 	if err != nil {
 		logger.Warn("delete dashboard annotations erorr", "error", err)
 		c.JSON(500, common.RespError(e.Internal))

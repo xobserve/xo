@@ -83,7 +83,7 @@ func SetAnnotation(c *gin.Context) {
 	now := time.Now()
 
 	if anno.Id == 0 {
-		res, err := db.Conn.Exec("INSERT INTO annotation (text,time,duration,tags,namespaceId,groupId,userId,created,updated) VALUES (?,?,?,?,?,?,?,?,?)",
+		res, err := db.Conn.Exec("INSERT INTO annotation (text,time,duration,tags,namespace_id,group_id,userId,created,updated) VALUES (?,?,?,?,?,?,?,?,?)",
 			anno.Text, anno.Time, anno.Duration, tags, anno.NamespaceId, anno.GroupId, u.Id, now, now)
 		if err != nil {
 			if e.IsErrUniqueConstraint(err) {
@@ -119,7 +119,7 @@ func QueryNamespaceAnnotations(c *gin.Context) {
 	namespace := c.Param("namespace")
 	start := c.Query("start")
 	end := c.Query("end")
-	rows, err := db.Conn.Query("SELECT id,text,time,duration,tags,groupId,userId,created FROM annotation WHERE namespaceId=? and time >= ? and time <= ?", namespace, start, end)
+	rows, err := db.Conn.Query("SELECT id,text,time,duration,tags,group_id,userId,created FROM annotation WHERE namespace_id=? and time >= ? and time <= ?", namespace, start, end)
 	if err != nil {
 		logger.Warn("query annotation err", "error", err)
 		c.JSON(http.StatusInternalServerError, common.RespError("query annotation err"))
@@ -209,7 +209,7 @@ func RemoveGroupAnnotations(c *gin.Context) {
 		}
 	}
 
-	_, err := db.Conn.Exec("DELETE FROM annotation WHERE namespaceId=? and groupId=?", namespace, group)
+	_, err := db.Conn.Exec("DELETE FROM annotation WHERE namespace_id=? and group_id=?", namespace, group)
 	if err != nil {
 		logger.Warn("delete annotation err", "error", err)
 		c.JSON(http.StatusInternalServerError, common.RespError("delete annotation err"))

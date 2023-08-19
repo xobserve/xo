@@ -153,13 +153,13 @@ CREATE TABLE IF NOT EXISTS annotation (
     time  INTEGER NOT NULL,
     duration VARCHAR(32) NOT NULL,
     tags VARCHAR(255),
-    namespaceId VARCHAR(40),
-    groupId INTEGER,
+    namespace_id VARCHAR(40),
+    group_id INTEGER,
     userId INTEGER,
     created DATETIME NOT NULL,
     updated DATETIME NOT NULL
 );
 
-CREATE INDEX IF NOT EXISTS annotation_npid ON annotation (namespaceId);
-CREATE UNIQUE INDEX IF NOT EXISTS  annotation_time_ng ON annotation (namespaceId,groupId,time);
+CREATE INDEX IF NOT EXISTS annotation_npid ON annotation (namespace_id);
+CREATE UNIQUE INDEX IF NOT EXISTS  annotation_time_ng ON annotation (namespace_id,group_id,time);
 `
