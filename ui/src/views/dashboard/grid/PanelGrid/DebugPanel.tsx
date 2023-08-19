@@ -13,7 +13,7 @@
 
 import { AlertDialog, AlertDialogBody, AlertDialogContent, AlertDialogFooter, AlertDialogHeader, AlertDialogOverlay, Box, Button, Divider, Flex, HStack, Modal, ModalBody, ModalCloseButton, ModalContent, ModalOverlay, StackDivider, Tab, TabList, TabPanel, TabPanels, Tabs, Text, VStack, useDisclosure, useToast } from "@chakra-ui/react"
 import CodeEditor from "components/CodeEditor/CodeEditor"
-import React, { useEffect, useRef, useState } from "react"
+import React, {  useRef, useState } from "react"
 import { Panel } from "types/dashboard"
 import { $rawDashAnnotations } from "../../store/annotation"
 import { Annotation } from "types/annotation"
@@ -26,6 +26,9 @@ import { useStore } from "@nanostores/react"
 import Empty from "components/Empty"
 import { commonMsg } from "src/i18n/locales/en"
 import { requestApi } from "utils/axios/request"
+import { EditorNumberItem } from "components/editor/EditorItem"
+import { dispatch } from "use-bus"
+import { ReloadDashAnnotationsEvent } from "src/data/bus-events"
 
 
 interface Props {
@@ -80,10 +83,10 @@ const PanelAnnotations = ({ dashboardId, panel }: PanelAnnotationsProps) => {
     const cancelRef = useRef()
     const t = useStore(commonMsg)
     const toast = useToast()
-    const deleteAllAnnotations = async () => {
-        await requestApi.delete(`/annotation/group/${dashboardId}/${panel.id}`)
-        const annos = $rawDashAnnotations.get().filter(a => a.group != panel.id)
-        $rawDashAnnotations.set([...annos])
+    const [expires, setExpires] = useState(0)
+    const deletelAnnotations = async () => {
+        await requestApi.delete(`/annotation/group/${dashboardId}/${panel.id}/${expires}`)
+        dispatch(ReloadDashAnnotationsEvent)
         toast({
             title: "Annotations deleted",
             status: "success",
@@ -107,8 +110,11 @@ const PanelAnnotations = ({ dashboardId, panel }: PanelAnnotationsProps) => {
                             </HStack>
                         </Box>
 
-                        <HStack fontSize="0.9rem">
-                            <Text>{dateTimeFormat(anno.time * 1000)}</Text>
+                        <HStack fontSize="0.9rem" spacing={4}>
+                            <Box>
+                                <Text>Time: &nbsp; &nbsp;&nbsp;&nbsp;&nbsp; {dateTimeFormat(anno.time * 1000)}</Text>
+                                <Text>Created: &nbsp; {dateTimeFormat(anno.created)}</Text>
+                            </Box>
                             <HStack spacing={3} className="action-icon">
                                 <FaEdit cursor="pointer" onClick={() => setAnnotation(anno)} />
                                 <FaTrashAlt cursor="pointer" onClick={() => {
@@ -126,7 +132,14 @@ const PanelAnnotations = ({ dashboardId, panel }: PanelAnnotationsProps) => {
             }} />}
 
             <Divider mt="2" />
-            <Button mt="3" colorScheme="red" onClick={onOpen}>Delete All Anotations</Button>
+            <HStack fontSize="0.9rem" alignItems="center" mt="4" fontWeight={550}>
+                <Button  colorScheme="red" onClick={onOpen}>Delete Anotations</Button>
+                <Text>
+                    created more than
+                </Text>
+                <EditorNumberItem min={0} max={1000} step={1} value={expires} onChange={setExpires}/>
+                <Text>days ago</Text>
+            </HStack>
         </Box> : <Empty />}
 
         <AlertDialog
@@ -137,7 +150,7 @@ const PanelAnnotations = ({ dashboardId, panel }: PanelAnnotationsProps) => {
             <AlertDialogOverlay>
                 <AlertDialogContent>
                     <AlertDialogHeader fontSize='lg' fontWeight='bold'>
-                        Delete all panel annotations
+                        Delete  panel annotations
                     </AlertDialogHeader>
 
                     <AlertDialogBody>
@@ -148,7 +161,7 @@ const PanelAnnotations = ({ dashboardId, panel }: PanelAnnotationsProps) => {
                         <Button ref={cancelRef} onClick={onClose}>
                             {t.cancel}
                         </Button>
-                        <Button colorScheme='red' onClick={deleteAllAnnotations} ml={3}>
+                        <Button colorScheme='red' onClick={deletelAnnotations} ml={3}>
                             {t.delete}
                         </Button>
                     </AlertDialogFooter>

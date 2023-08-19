@@ -3,6 +3,7 @@ package annotation
 import (
 	"encoding/json"
 	"net/http"
+	"strconv"
 	"time"
 
 	"github.com/DataObserve/datav/backend/internal/user"
@@ -187,6 +188,11 @@ func RemoveAnnotation(c *gin.Context) {
 func RemoveGroupAnnotations(c *gin.Context) {
 	namespace := c.Param("namespace")
 	group := c.Param("group")
+	expires, err := strconv.Atoi(c.Param("expires"))
+	if err != nil {
+		c.JSON(http.StatusBadRequest, common.RespError("invalid expires"))
+		return
+	}
 
 	u := user.CurrentUser(c)
 	if !u.Role.IsAdmin() {
@@ -209,7 +215,8 @@ func RemoveGroupAnnotations(c *gin.Context) {
 		}
 	}
 
-	_, err := db.Conn.Exec("DELETE FROM annotation WHERE namespace_id=? and group_id=?", namespace, group)
+	deleteBefore := time.Now().Add(-time.Duration(expires) * time.Hour * 24)
+	_, err = db.Conn.Exec("DELETE FROM annotation WHERE namespace_id=? and group_id=? and created < ?", namespace, group, deleteBefore)
 	if err != nil {
 		logger.Warn("delete annotation err", "error", err)
 		c.JSON(http.StatusInternalServerError, common.RespError("delete annotation err"))

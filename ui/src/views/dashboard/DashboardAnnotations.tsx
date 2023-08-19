@@ -14,7 +14,7 @@
 import { useColorMode } from "@chakra-ui/react"
 import { getCurrentTimeRange } from "components/DatePicker/TimePicker"
 import React, { useEffect, useState } from "react"
-import { TimeChangedEvent } from "src/data/bus-events"
+import { ReloadDashAnnotationsEvent, TimeChangedEvent } from "src/data/bus-events"
 import { Dashboard } from "types/dashboard"
 import useBus from "use-bus"
 import { requestApi } from "utils/axios/request"
@@ -31,13 +31,13 @@ const DashboardAnnotations = ({ dashboard }: Props) => {
     const { colorMode } = useColorMode()
     const rawAnnotations = useStore($rawDashAnnotations)
     useBus(
-        TimeChangedEvent,
+        e => e.type == TimeChangedEvent || e.type == ReloadDashAnnotationsEvent,
         (e) => {
             loadAnnotations()
         },
         [dashboard]
     )
-    
+
     useEffect(() => {
         loadAnnotations()
     }, [])

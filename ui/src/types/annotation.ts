@@ -8,4 +8,5 @@ export interface Annotation {
     duration: string // 1s, 2m, 3h, 6h30m15s
     text: string
     tags: string[]
+    created: string
 }
