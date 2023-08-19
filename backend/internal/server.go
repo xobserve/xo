@@ -23,6 +23,7 @@ import (
 	"github.com/DataObserve/datav/backend/internal/datasource"
 	"github.com/DataObserve/datav/backend/internal/proxy"
 	"github.com/DataObserve/datav/backend/internal/storage"
+	"github.com/DataObserve/datav/backend/internal/task"
 	"github.com/DataObserve/datav/backend/internal/teams"
 	"github.com/DataObserve/datav/backend/internal/user"
 	"github.com/DataObserve/datav/backend/internal/variables"
@@ -63,6 +64,8 @@ func (s *Server) Start() error {
 	}
 
 	go dashboard.InitHistory()
+
+	go task.Init()
 
 	go func() {
 		router := gin.New()

@@ -1,7 +1,7 @@
 #################################### Common Configurations##############################
 common:
     version: 0.7.0-dev
-    log_level: debug
+    log_level: info
     is_prod: false
     app_name: "datav"
     repo_url: "https://github.com/DataObserve/datav" # leaving empty will hide the github icon in sidemenu
@@ -36,9 +36,15 @@ paths:
     data: ""
     logs: ""
 
-#################################### Datasource Plugins ##############################
+#################################### Dashboard  ##############################
 dashboard: 
     enable_delete: true
+
+#################################### Clean Tasks  ##############################
+task: 
+    # annotations created longer than this will be auto deleted
+    # default is 90 days
+    clean_annotations: 90
 
 #################################### Datasource Plugins ##############################
 datasource:

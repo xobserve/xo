@@ -80,6 +80,10 @@ type Config struct {
 	Sidemenu struct {
 		ShowAlertIcon bool `yaml:"show_alert_icon"`
 	}
+
+	Task struct {
+		CleanAnnotations int `yaml:"clean_annotations"`
+	}
 }
 
 // Data ...
