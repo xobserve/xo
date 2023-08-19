@@ -117,7 +117,9 @@ func (s *Server) Start() error {
 		// annotation
 		r.POST("/annotation", IsLogin(), annotation.SetAnnotation)
 		r.GET("/annotation/:namespace", IsLogin(), annotation.QueryNamespaceAnnotations)
-		r.DELETE("/annotation/:id", IsLogin(), annotation.RemoveAnnotation)
+		r.DELETE("/annotation/:namespace/:id", IsLogin(), annotation.RemoveAnnotation)
+		r.DELETE("/annotation/group/:namespace/:group", IsLogin(), annotation.RemoveGroupAnnotations)
+
 		// admin apis
 		r.GET("/admin/users", IsLogin(), admin.GetUsers)
 		r.POST("/admin/user", IsLogin(), admin.UpdateUser)

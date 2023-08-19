@@ -163,11 +163,10 @@ export const AnnotationsPlugin = ({ namespace, group, options }: AnnotationsPlug
   );
 };
 
-export const onRemoveAnnotation = async (annotation) => {
-  await requestApi.delete(`/annotation/${annotation.id}`)
+export const onRemoveAnnotation = async (annotation: Annotation) => {
+  await requestApi.delete(`/annotation/${annotation.namespace}/${annotation.id}`)
   const index = $rawDashAnnotations.get().findIndex(a => a.id == annotation.id)
   const annos = $rawDashAnnotations.get()
   annos.splice(index, 1)
   $rawDashAnnotations.set([...annos])
-  // forceRebuild && dispatch(PanelForceRebuildEvent + annotation.group)
 }

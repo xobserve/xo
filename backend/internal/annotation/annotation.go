@@ -149,8 +149,67 @@ func QueryNamespaceAnnotations(c *gin.Context) {
 }
 
 func RemoveAnnotation(c *gin.Context) {
+	namespace := c.Param("namespace")
 	id := c.Param("id")
+
+	u := user.CurrentUser(c)
+	if !u.Role.IsAdmin() {
+		ownedBy, err := models.QueryDashboardBelongsTo(namespace)
+		if err != nil {
+			logger.Warn("query dashboard err", "error", err)
+			c.JSON(http.StatusInternalServerError, common.RespError("query dashboard err"))
+			return
+		}
+
+		isTeamAdmin, err := models.IsTeamAdmin(ownedBy, u.Id)
+		if err != nil {
+			logger.Warn("check team admin err", "error", err)
+			c.JSON(http.StatusInternalServerError, common.RespError("check team admin err"))
+			return
+		}
+
+		if !isTeamAdmin {
+			c.JSON(http.StatusForbidden, common.RespError("no permission"))
+			return
+		}
+	}
+
 	_, err := db.Conn.Exec("DELETE FROM annotation WHERE id=?", id)
+	if err != nil {
+		logger.Warn("delete annotation err", "error", err)
+		c.JSON(http.StatusInternalServerError, common.RespError("delete annotation err"))
+		return
+	}
+
+	c.JSON(200, common.RespSuccess(nil))
+}
+
+func RemoveGroupAnnotations(c *gin.Context) {
+	namespace := c.Param("namespace")
+	group := c.Param("group")
+
+	u := user.CurrentUser(c)
+	if !u.Role.IsAdmin() {
+		ownedBy, err := models.QueryDashboardBelongsTo(namespace)
+		if err != nil {
+			logger.Warn("query dashboard err", "error", err)
+			c.JSON(http.StatusInternalServerError, common.RespError("query dashboard err"))
+			return
+		}
+		isTeamAdmin, err := models.IsTeamAdmin(ownedBy, u.Id)
+		if err != nil {
+			logger.Warn("check team admin err", "error", err)
+			c.JSON(http.StatusInternalServerError, common.RespError("check team admin err"))
+			return
+		}
+
+		if !isTeamAdmin {
+			c.JSON(http.StatusForbidden, common.RespError("no permission"))
+			return
+		}
+	}
+
+	_, err := db.Conn.Exec("DELETE FROM annotation WHERE namespaceId=? and groupId=?", namespace, group)
 	if err != nil {
 		logger.Warn("delete annotation err", "error", err)
 		c.JSON(http.StatusInternalServerError, common.RespError("delete annotation err"))

@@ -293,7 +293,7 @@ export const PanelComponent = ({ dashboard, panel, variables, onRemovePanel,onHi
     return <Box height={height} width={width} className={panel.styles.border == "None" && panel.styles.borderOnHover ? "hover-bordered" : null} border="1px solid transparent" position="relative">
 
         {data ? <>
-            <PanelHeader panel={panel} data={data} queryError={queryError} onCopyPanel={onCopyPanel} onRemovePanel={onRemovePanel} onHidePanel={onHidePanel} />
+            <PanelHeader dashboardId={dashboard.id} panel={panel} data={data} queryError={queryError} onCopyPanel={onCopyPanel} onRemovePanel={onRemovePanel} onHidePanel={onHidePanel} />
             <Box
                 // panel={panel}
                 height={panelInnerHeight}
@@ -337,6 +337,7 @@ const CustomPanelRender = memo((props: PanelProps) => {
 })
 
 interface PanelHeaderProps {
+    dashboardId: string
     queryError: string
     panel: Panel
     onCopyPanel: (panel: Panel) => void
@@ -345,7 +346,7 @@ interface PanelHeaderProps {
     data: any[]
 }
 
-const PanelHeader = ({ queryError, panel, onCopyPanel, onRemovePanel,onHidePanel, data }: PanelHeaderProps) => {
+const PanelHeader = ({ dashboardId, queryError, panel, onCopyPanel, onRemovePanel,onHidePanel, data }: PanelHeaderProps) => {
     const viewPanel = useSearchParam("viewPanel")
     const t = useStore(commonMsg)
     const t1 = useStore(panelMsg)
@@ -387,7 +388,7 @@ const PanelHeader = ({ queryError, panel, onCopyPanel, onRemovePanel,onHidePanel
                 <Box display="none"><FaBook className="grid-drag-handle" /></Box>
             </HStack>
             <PanelDecoration decoration={panel.styles.decoration} />
-            {isOpen && <DebugPanel panel={panel} isOpen={isOpen} onClose={onClose} data={data} />}
+            {isOpen && <DebugPanel dashboardId={dashboardId} panel={panel} isOpen={isOpen} onClose={onClose} data={data} />}
         </>
     )
 }

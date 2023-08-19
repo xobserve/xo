@@ -37,7 +37,11 @@ const DashboardAnnotations = ({ dashboard }: Props) => {
         },
         [dashboard]
     )
-        
+    
+    useEffect(() => {
+        loadAnnotations()
+    }, [])
+    
     useEffect(() => {
         filterAnnotations(rawAnnotations)
     },[rawAnnotations])
