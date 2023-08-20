@@ -105,6 +105,11 @@ const EditPanel = ({ dashboard, onChange }: EditPanelProps) => {
             } else {
                 onDiscard()
             }
+        }  else {
+            if (!pageChanged) {
+                setTempPanel(null)
+                onClose() 
+            }
         }
     }, [edit])
 
