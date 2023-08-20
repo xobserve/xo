@@ -289,7 +289,7 @@ const IconSetting = ({ panel, onChange }: PanelEditorProps) => {
                         <HStack spacing={0}>
                             <Text>{icon.type}</Text>
                             {icon.type == "data" && <Text>.{icon.key}</Text>}
-                            <Text>&nbsp;= {icon.value }</Text>
+                            <Text>&nbsp;= {icon.value}</Text>
                             <Text className="color-text">&nbsp;-&gt;</Text>
                         </HStack>
                         <Image src={icon.icon} width="30px" height="30px" />
@@ -358,7 +358,8 @@ const RightClickMenus = ({ panel, onChange }: PanelEditorProps) => {
 
     const initMenuItem = {
         name: '',
-        event: onClickCommonEvent
+        event: onClickCommonEvent,
+        enable: true
     }
 
     const toast = useToast()
@@ -439,6 +440,12 @@ const RightClickMenus = ({ panel, onChange }: PanelEditorProps) => {
                             {i != 0 && <Icons.FaArrowUp cursor="pointer" onClick={() => moveUp(i)} />}
                             {i != panel.plugins.nodeGraph.node.menu.length - 1 && <Icons.FaArrowDown cursor="pointer" onClick={() => moveDown(i)} />}
                             <MdEdit onClick={() => { setTemp(item); onOpen() }} cursor="pointer" />
+                            <Icons.FaEye className={item.enable ? 'color-text' : null} cursor="pointer" onClick={() => {
+                                onChange(panel => {
+                                    panel.plugins.nodeGraph.node.menu[i].enable = !item.enable
+                                })
+                                dispatch(PanelForceRebuildEvent + panel.id)
+                            }} />
                             <Icons.FaTimes onClick={() => removeItem(i)} cursor="pointer" />
                         </HStack>
                     </Flex>)
@@ -549,7 +556,7 @@ const DonutColorsEditor = (props: PanelEditorProps) => {
             <Box>
                 {filterValue.length < attrNames.length && <Button onClick={addItem} width="100%" size="sm" colorScheme="gray">+ {t.new}</Button>}
                 <VStack alignItems="left" mt="2">
-                    {filterValue.map((item, i) =>  <HStack key={item.attr + i + item.color} spacing={1}>
+                    {filterValue.map((item, i) => <HStack key={item.attr + i + item.color} spacing={1}>
                         <ColorPicker color={item.color} onChange={v => {
                             item.color = v
                             changeValue()

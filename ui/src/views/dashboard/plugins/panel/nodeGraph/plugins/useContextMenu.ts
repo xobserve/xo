@@ -16,7 +16,7 @@ import { isFunction } from "lodash";
 import { useNavigate } from "react-router-dom";
 import { setVariable } from "src/views/variables/SelectVariable";
 import { NodeGraphSettings } from "types/panel/plugins";
-import { genDynamicFunction } from "utils/dashboard/dynamicCall";
+import { commonInteractionEvent, genDynamicFunction } from "utils/dashboard/dynamicCall";
 
 const useContextMenu = (settings: NodeGraphSettings) => {
   const toast = useToast()
@@ -46,7 +46,9 @@ const useContextMenu = (settings: NodeGraphSettings) => {
         outDiv.style.fontSize = '14px';
         let li = ''
         settings.node.menu.forEach(item => {
-          li += `<li id=${item.id} style="cursor:pointer;">${item.name}</li>`
+          if (item.enable) {
+            li += `<li id=${item.id} style="cursor:pointer;">${item.name}</li>`
+          }
         })
         outDiv.innerHTML = `
                 <strong><h3>${model.label} menu</h3></strong>
@@ -64,7 +66,7 @@ const useContextMenu = (settings: NodeGraphSettings) => {
       let menuItem = settings.node.menu.find(item => item.id.toString() === target.id)
       const clickFunc = genDynamicFunction(menuItem.event); 
       if (isFunction(clickFunc)) {
-        clickFunc(item.getModel(), navigate, (k, v) => setVariable(k, v, toast))
+        commonInteractionEvent(clickFunc, item.getModel())
       } else {
         toast({
           title: "Click node menu error",

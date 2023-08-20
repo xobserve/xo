@@ -256,7 +256,7 @@ function registerEvents(options, chart) {
             },
             scale: {
                 enable: true,
-                splitNumber: 3,
+                splitNumber: 2,
                 fontSize: 14
             },
             axis: {

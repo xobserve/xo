@@ -472,6 +472,7 @@ export interface NodeGraphMenuItem {
     id?: number
     name: string
     event: string
+    enable: boolean
 }
 
 
