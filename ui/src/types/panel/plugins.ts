@@ -198,6 +198,8 @@ export interface BarGaugeSettings {
     maxminFrom: "series" | "all"
     showMax: boolean
     showMin: boolean
+    enableClick: boolean
+    clickAction: string
     thresholds: ThresholdsConfig
 }
 export interface TraceSettings {

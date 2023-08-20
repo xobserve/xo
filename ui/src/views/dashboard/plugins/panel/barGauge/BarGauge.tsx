@@ -22,7 +22,9 @@ import { formatUnit } from "components/Unit";
 import { measureText } from "utils/measureText";
 import { BarGaugeRules } from "./OverrideEditor";
 import { isEmpty } from "utils/validate";
-import { Center } from "@chakra-ui/react";
+import { Center, useToast } from "@chakra-ui/react";
+import { commonInteractionEvent, genDynamicFunction } from "utils/dashboard/dynamicCall";
+import { isFunction } from "lodash";
 
 interface Props extends PanelProps {
     data: SeriesData[][]
@@ -30,7 +32,7 @@ interface Props extends PanelProps {
 
 const BarGaugePanel = memo((props: Props) => {
     const { panel, height, width } = props
-
+    const  toast = useToast()
     if (isEmpty(props.data)) {
         return (<Center height="100%">No data</Center>)
       }
@@ -60,6 +62,7 @@ const BarGaugePanel = memo((props: Props) => {
         textSize={options.style.valueSize}
         showMax={options.showMax}
         showMin={options.showMin}
+        onClick={options.enableClick ? options.clickAction : null}
     />)
 })
 

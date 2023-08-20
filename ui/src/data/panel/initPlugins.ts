@@ -332,6 +332,8 @@ function registerEvents(options, chart) {
             maxminFrom: "all",
             showMax: true,
             showMin: true,
+            enableClick: true,
+            clickAction: onClickCommonEvent,
             thresholds: initThresholds(6)
         },
         [PanelType.GeoMap]: {

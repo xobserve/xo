@@ -25,6 +25,7 @@ import RadionButtons from "components/RadioButtons"
 import { Switch } from "@chakra-ui/react"
 import ThresholdEditor from "components/Threshold/ThresholdEditor"
 import { Units } from "types/panel/plugins"
+import { CodeEditorModal } from "components/CodeEditor/CodeEditorModal"
 
 const BarGaugeEditor = memo(({ panel, onChange }: PanelEditorProps) => {
     const t = useStore(commonMsg)
@@ -103,6 +104,21 @@ const BarGaugeEditor = memo(({ panel, onChange }: PanelEditorProps) => {
                 <EditorNumberItem value={panel.plugins.barGauge.style.valueSize} step={1}  onChange={(v) => onChange((panel: Panel) => {
                     panel.plugins.barGauge.style.valueSize = v
                 })} />
+            </PanelEditItem>
+        </PanelAccordion>
+        
+        <PanelAccordion title={t.interaction}>
+            <PanelEditItem title={t.enable}>
+                <Switch defaultChecked={panel.plugins.barGauge.enableClick} onChange={e => onChange((panel: Panel) => {
+                    panel.plugins.barGauge.enableClick = e.currentTarget.checked
+                })} />
+            </PanelEditItem>
+            <PanelEditItem title={t.onClickEvent} desc={t.onClickEventTips}>
+                <CodeEditorModal onChange={v => {
+                    onChange((panel: Panel) => {
+                        panel.plugins.barGauge.clickAction = v
+                    })
+                }} value={panel.plugins.barGauge.clickAction} />
             </PanelEditItem>
         </PanelAccordion>
 

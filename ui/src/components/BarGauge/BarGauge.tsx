@@ -11,7 +11,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { Box, Flex, HStack, Text, useColorMode, useColorModeValue, VStack } from "@chakra-ui/react"
+import { Box, Flex, HStack, Text, useColorMode, useColorModeValue, useToast, VStack } from "@chakra-ui/react"
 import { formatUnit } from "components/Unit"
 import React from "react"
 import { Unit } from "types/panel/plugins"
@@ -20,6 +20,8 @@ import { paletteColorNameToHex } from "utils/colors"
 import { measureText } from "utils/measureText"
 import { getThreshold } from "../Threshold/utils"
 import { alpha } from "../uPlot/colorManipulator"
+import { commonInteractionEvent, genDynamicFunction } from "utils/dashboard/dynamicCall"
+import { isFunction } from "lodash"
 
 interface Props {
     data: BarGaugeValue[]
@@ -36,6 +38,7 @@ interface Props {
     height?: number
     showMax?: boolean
     showMin?: boolean
+    onClick?: string
 }
 
 export interface BarGaugeValue {
@@ -56,6 +59,7 @@ const lcdCellSpacing = 2
 const minMaxHeight = 15
 const BarGauge = (props: Props) => {
     const {colorMode} = useColorMode()
+    const toast = useToast()
     const { data, width, height, orientation = "horizontal", mode = "basic", titleSize = 18, textSize = 16, borderRadius = "4px", showUnfilled = true, fillOpacity = 0.6, showMax = false, showMin = false } = props
     const Stack = orientation == "horizontal" ? VStack : HStack
     // add a margin left for text width
@@ -78,8 +82,22 @@ const BarGauge = (props: Props) => {
                     const threshold = getThreshold(v.value, thresholds, v.max)
                     let color = threshold?.color ?? v.color
                     color = paletteColorNameToHex(color, colorMode)
+                    const onClick = props.onClick ? () => {
+                        const onClick = genDynamicFunction(props.onClick);
+                        if (isFunction(onClick)) {
+                            const tData = commonInteractionEvent(onClick, v)
+                            return tData
+                        } else {
+                            toast({
+                                title: "Invalid click action",
+                                status: "warning",
+                                duration: 3000,
+                                isClosable: true,
+                            })
+                        }
+                    } : null
                     if (orientation == "horizontal") {
-                        return <Box key={i} height={`${100 / data.length}%`} width="99%">
+                        return <Box key={i} height={`${100 / data.length}%`} width="99%" onClick={onClick} cursor={onClick ? "pointer" : null}>
                             {
                                 <> {v.title && <Box height={`${titleHeight}px`}><Text fontSize={`${titleSize}px`} fontWeight={500} noOfLines={1}>{v.title}</Text></Box>}
                                     <Flex justifyContent="space-between" alignItems="center" width="100%" height={v.title ? `calc(100% - ${titleHeight}px)` : '100%'} borderRadius={borderRadius}>
@@ -109,7 +127,7 @@ const BarGauge = (props: Props) => {
                             }
                         </Box>
                     } else {
-                        return <Box width={`${width / data.length}px`} height={height} textAlign="center">
+                        return <Box width={`${width / data.length}px`} height={height} textAlign="center" onClick={onClick}  cursor={onClick ? "pointer" : null}>
                             <Text lineHeight={`${titleHeight}px`} fontSize={`${textSize}px`} color={color} noOfLines={1}>{v.text}</Text>
                             <Box height={lcdSize - gap} width="100%" bg={showUnfilled ? useColorModeValue("rgb(244, 245, 245)", "rgba(255,255,255,0.1)") : null} position="relative">
                                 {mode == "lcd" ?
