@@ -13,16 +13,18 @@
 
 import React from "react";
 
+//--- import monaco-editor from node-modules instead of cdn ---
+// import * as monaco from 'monaco-editor';
+// import { loader } from '@monaco-editor/react';
+// loader.config({ monaco });
+// ---
+
+
 import { Box, useColorMode } from "@chakra-ui/react";
 import { editor } from "monaco-editor";
 import MonacoEditor from '@monaco-editor/react';
 import { languageConfiguration, monarchlanguage } from '@grafana/monaco-logql';
 
-//--- import monaco-editor from node-modules instead of cdn ---
-import * as monaco from 'monaco-editor';
-import { loader } from '@monaco-editor/react';
-loader.config({ monaco });
-// ---
 
 import './CodeEditor.css'
 

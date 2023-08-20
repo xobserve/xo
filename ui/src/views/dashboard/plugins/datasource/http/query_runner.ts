@@ -53,7 +53,7 @@ export const run_http_query = async (panel: Panel, q: PanelQuery, range: TimeRan
 
 
 
-    const res: any = await requestApi.get(`/proxy?proxy_url=${encodeURIComponent(url)}`)
+    const res: any = await requestApi.get(`/proxy?proxy_url=${encodeURIComponent(url)}`, {headers})
     let result
     if (!isEmpty(q.data.transformResult)) {
         const transformResult = genDynamicFunction(q.data.transformResult);
@@ -127,7 +127,7 @@ export const queryHttpVariableValues = async (variable: Variable, useCurrentTime
     }
 
     try {
-        const res = await requestApi.get(`/proxy?proxy_url=${encodeURIComponent(url)}`)
+        const res = await requestApi.get(`/proxy?proxy_url=${encodeURIComponent(url)}`,{headers})
         result.data = res
 
         if (!isEmpty(data.transformResult)) {
