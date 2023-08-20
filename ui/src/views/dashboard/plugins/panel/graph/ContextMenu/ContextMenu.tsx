@@ -27,6 +27,7 @@ import { $dashboard } from "src/views/dashboard/store/dashboard";
 import { commonInteractionEvent, genDynamicFunction } from "utils/dashboard/dynamicCall";
 import { isFunction } from "lodash";
 import { useNavigate } from "react-router-dom";
+import { isEmpty } from "utils/validate";
 
 interface Props {
     props: PanelProps
@@ -169,7 +170,7 @@ const ContextMenu = memo(({ props, options, data, container }: Props) => {
 
                         {
                             props.panel.plugins.graph.clickActions.map((action,i) => (
-                            <Button 
+                            !isEmpty(action.name) && <Button 
                                 key={i+action.name}
                                 size="sm"
                                 variant="ghost"
