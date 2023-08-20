@@ -150,7 +150,7 @@ const DatePicker = ({ showTime = true,showRealTime=false }: Props) => {
                                 <Text layerStyle="textSecondary" fontSize="0.9rem" fontWeight="500">
                                 {value.startRaw.toString().startsWith('now')? value.startRaw : dateTimeFormat(value.start) } to {value.endRaw.toString().startsWith('now')? value.endRaw : dateTimeFormat(value.end)}
                                 </Text>
-                                { showRealTime &&
+                                { showRealTime && value.startRaw.toString().startsWith('now') &&
                                 <Text layerStyle="textSecondary" fontSize="0.9rem" fontWeight="500">
                                       {dateTimeFormat(value.start)} - {dateTimeFormat(value.end)}
                                 </Text>}
