@@ -408,7 +408,9 @@
     "showGrid": "显示网格线",
     "thresholdsDisplay": "Thresholds 显示类型",
     "barRadius": "柱状图的边角弧度",
-    "barGap": "柱状图之间的间距，单位是 CSS 像素"
+    "barGap": "柱状图之间的间距，单位是 CSS 像素",
+    "alertCorrelation": "告警关联",
+  "alertCorrelationTips": "启用后，相关联的告警会以 Annotation 的形式展现在图表中"
   },
   "nodeGraphPanel": {
     "node": "节点( Node )",
@@ -583,5 +585,10 @@
   },
 
   "valueMapping": {
+  },
+  "alert": {
+    "alertFilter": "告警过滤",
+    "alertState": "告警状态",
+    "datasourceTips": "从下面的数据源中查询告警"
   }
 }

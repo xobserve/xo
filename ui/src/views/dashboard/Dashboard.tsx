@@ -39,6 +39,7 @@ import { VarialbeAllOption } from "src/data/variable"
 import EditPanel from "./edit-panel/EditPanel"
 import { $dashboard } from "./store/dashboard"
 import DashboardAnnotations from "./DashboardAnnotations"
+import { clearPanelRealTime } from "./store/panelRealtime"
 
 
 
@@ -66,6 +67,7 @@ const DashboardWrapper = ({ dashboardId, sideWidth }) => {
             // }
             prevQueries.clear()
             prevQueryData.clear()
+            clearPanelRealTime()
         } 
     }, [])
 

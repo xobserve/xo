@@ -430,7 +430,9 @@ export const graphPanelMsg = i18n("graphPanel", {
   "showGrid": "Show grid",
   "thresholdsDisplay": "Thresholds display",
   "barRadius": "Bar corner radius",
-  "barGap": "Fixed-size gap between bars in CSS pixels "
+  "barGap": "Fixed-size gap between bars in CSS pixels ",
+  "alertCorrelation": "Alert correlation",
+  "alertCorrelationTips": "When enabled, associated alerts will be display as annotations"
 })
 
 export const nodeGraphPanelMsg = i18n("nodeGraphPanel", {
@@ -616,4 +618,10 @@ export const barGaugePanelMsg = i18n("barGaugePanel", {
 
 export const ValueMappingMsg = i18n("valueMapping", {
   
+})
+
+export const alertMsg = i18n("alert", {
+   "alertFilter": "Alert filter",
+   "alertState": "Alert state",
+   "datasourceTips": "Query alerts from these datasources"
 })

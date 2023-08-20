@@ -27,10 +27,11 @@ import { dateTimeFormat } from "utils/datetime/formatter"
 
 interface Props {
     showTime?: boolean
+    showRealTime?: boolean
 }
 
 
-const DatePicker = ({ showTime = false }: Props) => {
+const DatePicker = ({ showTime = true,showRealTime=false }: Props) => {
     const { isOpen, onOpen, onClose } = useDisclosure()
     const [value, setValue] = useState<TimeRange>(getNewestTimeRange())
 
@@ -145,7 +146,15 @@ const DatePicker = ({ showTime = false }: Props) => {
                             <FaRegClock />
                         </IconButton>
                         {
-                            showTime && <Text layerStyle="textSecondary" fontSize="0.9rem" fontWeight="500">{value.startRaw.toString().startsWith('now')? value.startRaw : dateTimeFormat(value.start) } to {value.endRaw.toString().startsWith('now')? value.endRaw : dateTimeFormat(value.end)}</Text>
+                            showTime && <Box>
+                                <Text layerStyle="textSecondary" fontSize="0.9rem" fontWeight="500">
+                                {value.startRaw.toString().startsWith('now')? value.startRaw : dateTimeFormat(value.start) } to {value.endRaw.toString().startsWith('now')? value.endRaw : dateTimeFormat(value.end)}
+                                </Text>
+                                { showRealTime &&
+                                <Text layerStyle="textSecondary" fontSize="0.9rem" fontWeight="500">
+                                      {dateTimeFormat(value.start)} - {dateTimeFormat(value.end)}
+                                </Text>}
+                            </Box>
                         }
                     </HStack>
                 </Tooltip>

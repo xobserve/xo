@@ -24,8 +24,6 @@ import { Annotation } from "types/annotation"
 import { requestApi } from "utils/axios/request"
 import { isEmpty } from "utils/validate"
 import { $rawDashAnnotations } from "../dashboard/store/annotation"
-import { dispatch } from "use-bus"
-import { PanelForceRebuildEvent } from "src/data/bus-events"
 import { dateTimeFormat } from "utils/datetime/formatter"
 import { durationToSeconds } from "utils/date"
 

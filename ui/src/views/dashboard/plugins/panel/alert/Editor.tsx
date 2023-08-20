@@ -18,7 +18,7 @@ import PanelEditItem from "src/views/dashboard/edit-panel/PanelEditItem"
 import { DatasourceType, Panel, PanelEditorProps, PanelType } from "types/dashboard"
 import React, { memo } from "react";
 import { useStore } from "@nanostores/react"
-import { commonMsg } from "src/i18n/locales/en"
+import { alertMsg, commonMsg } from "src/i18n/locales/en"
 import { Select } from "antd"
 import { datasources } from "src/App"
 import { datasourceSupportAlerts } from "src/data/alerts"
@@ -149,8 +149,10 @@ export interface AlertFilterProps {
 }
 
 export const AlertFilterEditor = ({ panel, filter, onChange }: AlertFilterProps) => {
-    return <PanelAccordion title="Alert Filter">
-        <PanelEditItem title="State">
+    const t1 = useStore(alertMsg)
+    const t = useStore(commonMsg)
+    return <PanelAccordion title={t1.alertFilter}>
+        <PanelEditItem title={t1.alertState}>
             <MultiRadionButtons options={Object.keys(AlertState).map(k => ({ label: AlertState[k], value: AlertState[k] }))} value={filter.state} onChange={v => onChange((panel: Panel) => {
                 switch (panel.type) {
                     case PanelType.Alert:
@@ -165,7 +167,7 @@ export const AlertFilterEditor = ({ panel, filter, onChange }: AlertFilterProps)
 
             })} />
         </PanelEditItem>
-        <PanelEditItem title="Datasource" desc="Query alerts from these datasources">
+        <PanelEditItem title={t.datasource} desc={t1.datasourceTips}>
             <Select style={{ minWidth: "300px" }} value={filter.datasources} allowClear mode="multiple" options={
                 datasources.filter(ds => datasourceSupportAlerts.includes(ds.type)).map(ds => ({ label: ds.name, value: ds.id }))} onChange={
                     (v) => {

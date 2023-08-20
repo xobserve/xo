@@ -72,7 +72,7 @@ export const PanelGrid = memo((props: PanelGridProps) => {
     const [tr, setTr] = useState<TimeRange>(getCurrentTimeRange())
     const depsCheck = useRef(null)
     const variables = useStore($variables)
-    
+
     useEffect(() => {
         var retryNum = 0
         depsCheck.current = setInterval(() => {
@@ -138,7 +138,7 @@ interface PanelComponentProps extends PanelGridProps {
 
 export const prevQueries = new Map()
 export const prevQueryData = new Map()
-export const PanelComponent = ({ dashboard, panel, variables, onRemovePanel,onHidePanel, width, height, sync, timeRange }: PanelComponentProps) => {
+export const PanelComponent = ({ dashboard, panel, variables, onRemovePanel, onHidePanel, width, height, sync, timeRange }: PanelComponentProps) => {
     const toast = useToast()
     const [panelData, setPanelData] = useState<any[]>(null)
     const [queryError, setQueryError] = useState()
@@ -183,7 +183,7 @@ export const PanelComponent = ({ dashboard, panel, variables, onRemovePanel,onHi
         const interval = intervalObj.intervalMs / 1000
 
         if (panel.type == PanelType.Alert) {
-            const res = await queryAlerts(panel, timeRange, panel.plugins.alert.filter.datasources,  panel.plugins.alert.filter.httpQuery)
+            const res = await queryAlerts(panel, timeRange, panel.plugins.alert.filter.datasources, panel.plugins.alert.filter.httpQuery)
             setQueryError(res.error)
             data = res.data
         } else {
@@ -194,7 +194,7 @@ export const PanelComponent = ({ dashboard, panel, variables, onRemovePanel,onHi
                     // there are variables still not replaced, maybe because variable's loadValues has not completed
                     continue
                 }
-    
+
                 const id = formatQueryId(ds.id, dashboardId, panel.id, q.id, panel.type)
                 const prevQuery = prevQueries.get(id)
                 const currentQuery = [q, timeRange, datasource.type]
@@ -207,39 +207,38 @@ export const PanelComponent = ({ dashboard, panel, variables, onRemovePanel,onHi
                     console.log("query data from cache!", panel.id)
                     continue
                 }
-    
+
                 needUpdate = true
                 // console.log("re-query data! metrics id:", q.id, " query id:", queryId)
-    
-    
+
+
                 let res
-    
-                    //@needs-update-when-add-new-datasource
-                    switch (datasource.type) {
-                        case DatasourceType.Prometheus:
-                            res = await run_prometheus_query(panel, q, timeRange, datasource)
-                            break;
-                        case DatasourceType.TestData:
-                            res = await run_testdata_query(panel, q, timeRange, datasource)
-                            break;
-                        case DatasourceType.Jaeger:
-                            res = await run_jaeger_query(panel, q, timeRange, datasource)
-                            break;
-                        case DatasourceType.ExternalHttp:
-                            res = await run_http_query(panel, q, timeRange, datasource)
-                            break;
-                        case DatasourceType.Loki:
-                            res = await run_loki_query(panel, q, timeRange, datasource)
-                            break
-                        default:
-                            break;
-                    }
-    
-    
+                //@needs-update-when-add-new-datasource
+                switch (datasource.type) {
+                    case DatasourceType.Prometheus:
+                        res = await run_prometheus_query(panel, q, timeRange, datasource)
+                        break;
+                    case DatasourceType.TestData:
+                        res = await run_testdata_query(panel, q, timeRange, datasource)
+                        break;
+                    case DatasourceType.Jaeger:
+                        res = await run_jaeger_query(panel, q, timeRange, datasource)
+                        break;
+                    case DatasourceType.ExternalHttp:
+                        res = await run_http_query(panel, q, timeRange, datasource)
+                        break;
+                    case DatasourceType.Loki:
+                        res = await run_loki_query(panel, q, timeRange, datasource)
+                        break
+                    default:
+                        break;
+                }
+
+
                 setQueryError(res.error)
-    
-    
-    
+
+
+
                 if (!isEmpty(res.data)) {
                     data.push(res.data)
                     prevQueryData[id] = res.data
@@ -247,7 +246,7 @@ export const PanelComponent = ({ dashboard, panel, variables, onRemovePanel,onHi
                 }
             }
         }
-        
+
 
         if (needUpdate) {
             console.log("query data and set panel data:", panel.id, data)
@@ -310,7 +309,7 @@ export const PanelComponent = ({ dashboard, panel, variables, onRemovePanel,onHi
                 <CustomPanelRender dashboardId={dashboard.id} panel={panel} data={data} height={panelInnerHeight} width={panelInnerWidth} sync={sync} timeRange={timeRange} />
             </Box>
         </>
-            : <Box position="fixed" top="0" right="0"><Loading  /></Box>}
+            : <Box position="fixed" top="0" right="0"><Loading /></Box>}
     </Box>
 }
 
@@ -353,7 +352,7 @@ interface PanelHeaderProps {
     data: any[]
 }
 
-const PanelHeader = ({ dashboardId, queryError, panel, onCopyPanel, onRemovePanel,onHidePanel, data }: PanelHeaderProps) => {
+const PanelHeader = ({ dashboardId, queryError, panel, onCopyPanel, onRemovePanel, onHidePanel, data }: PanelHeaderProps) => {
     const viewPanel = useSearchParam("viewPanel")
     const t = useStore(commonMsg)
     const t1 = useStore(panelMsg)
@@ -428,7 +427,7 @@ const formatQueryId = (datasourceId, dashboardId, panelId, queryId, panelType) =
     return `${datasourceId}-${dashboardId}-${panelId}-${queryId}-${tp}`
 }
 
-export const queryAlerts = async (panel: Panel, timeRange: TimeRange, dsIds: number[], httpQuery: PanelQuery ) => {
+export const queryAlerts = async (panel: Panel, timeRange: TimeRange, dsIds: number[], httpQuery: PanelQuery) => {
     let result = {
         error: null,
         data: []
@@ -460,7 +459,7 @@ export const queryAlerts = async (panel: Panel, timeRange: TimeRange, dsIds: num
         result.data = result.data.concat(res.data)
     }
 
-    const data0 : { "groups": AlertGroup[], "fromDs": DatasourceType }[] = result.data
+    const data0: { "groups": AlertGroup[], "fromDs": DatasourceType }[] = result.data
     const data: AlertRule[] = []
     for (const d of data0) {
         for (const group of d.groups) {

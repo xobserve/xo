@@ -40,6 +40,7 @@ import { getPanelOverridesRules } from "utils/dashboard/panel"
 import ValueMapping from "components/ValueMapping/ValueMapping"
 import PanelAccordion from "./Accordion"
 import storage from "utils/localStorage"
+import EditPanelAlert from "./Alert"
 
 interface EditPanelProps {
     dashboard: Dashboard
@@ -215,7 +216,7 @@ const EditPanel = ({ dashboard, onChange }: EditPanelProps) => {
                         <Flex justifyContent="space-between">
                             <Text>{dashboard.title} / {t1.editPanel}</Text>
                             <HStack spacing={1}>
-                                <DatePicker showTime />
+                                <DatePicker showTime showRealTime />
                                 <ColorModeSwitcher miniMode disableTrigger />
                                 <Button variant="outline" onClick={() => { onDiscard(), onClose() }} >{t1.discard}</Button>
                                 <Button onClick={onApplyChanges}>{t1.apply}</Button>
@@ -241,10 +242,11 @@ const EditPanel = ({ dashboard, onChange }: EditPanelProps) => {
                                 {!tempPanel.plugins[tempPanel.type].disableDatasource &&
                                     <Box maxHeight={maxDatasourceHeight()} mt="2" overflowY="scroll">
                                         <Box position="relative" zIndex={0}>
-                                            <Tabs variant="unstyled">
+                                            <Tabs variant="unstyled" isLazy>
                                                 <TabList pb="0">
                                                     <Tab>{t.query}</Tab>
                                                     <Tab>{t.transform}</Tab>
+                                                    {tempPanel.type == PanelType.Graph && tempPanel.plugins.graph.enableAlert && <Tab>{t.alert}</Tab>}
                                                 </TabList>
                                                 <TabIndicator
                                                     mt="3px"
@@ -260,6 +262,10 @@ const EditPanel = ({ dashboard, onChange }: EditPanelProps) => {
                                                     <TabPanel px="0" pt="1" pb="0">
                                                         <EditPanelTransform panel={tempPanel} onChange={setTempPanel} />
                                                     </TabPanel>
+                                                    {tempPanel.type == PanelType.Graph && tempPanel.plugins.graph.enableAlert && 
+                                                    <TabPanel px="0" pt="1" pb="0">
+                                                        <EditPanelAlert panel={tempPanel} onChange={setTempPanel} />
+                                                    </TabPanel>}
                                                 </TabPanels>
                                             </Tabs>
 

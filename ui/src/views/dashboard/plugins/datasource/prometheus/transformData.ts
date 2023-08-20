@@ -10,6 +10,7 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
+import { setPanelRealTime } from "src/views/dashboard/store/panelRealtime";
 import { Panel, PanelQuery, PanelType } from "types/dashboard";
 
 import { FieldType, SeriesData } from "types/seriesData";
@@ -35,10 +36,10 @@ export const prometheusToPanels = (rawData: any, panel: Panel, query: PanelQuery
         expandTimeRange = et == "always"
     }
 
-    return prometheusToSeriesData(rawData, query, range, expandTimeRange)
+    return prometheusToSeriesData(panel, rawData, query, range, expandTimeRange)
 }
 
-export const prometheusToSeriesData = (data: any, query: PanelQuery, range: TimeRange, expandTimeRange = false): SeriesData[] => {
+export const prometheusToSeriesData = (panel: Panel, data: any, query: PanelQuery, range: TimeRange, expandTimeRange = false): SeriesData[] => {
     const formats = parseLegendFormat(query.legend)
 
     let res: SeriesData[] = []
@@ -49,7 +50,7 @@ export const prometheusToSeriesData = (data: any, query: PanelQuery, range: Time
 
             let timeValues = []
             let valueValues = []
-
+            
             if (expandTimeRange) {
                 if (!isEmpty(m.values)) {
                     let start = roundDsTime(range.start.getTime() / 1000)
@@ -193,7 +194,10 @@ export const prometheusToSeriesData = (data: any, query: PanelQuery, range: Time
                 timeField.values = timeline
             }
         }
-
+        if (res.length > 0) {
+            const timeline = res[0].fields.find(f => f.type == FieldType.Time).values
+            setPanelRealTime(panel.id, timeline)
+        }
         return res
     }
     return []

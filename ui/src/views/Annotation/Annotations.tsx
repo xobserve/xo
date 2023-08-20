@@ -15,8 +15,7 @@ import React, { useCallback, useEffect, useLayoutEffect, useRef, useState } from
 import uPlot from 'uplot';
 import AnnotationMarker from './AnnotationMarker';
 import { EventsCanvas } from './EventsCanvas';
-import useExtraTheme from 'hooks/useExtraTheme';
-import { colors, paletteColorNameToHex, palettes } from 'utils/colors';
+import { paletteColorNameToHex, palettes } from 'utils/colors';
 import { alpha } from 'components/uPlot/colorManipulator';
 import { useStore } from '@nanostores/react';
 import { $dashAnnotations, $rawDashAnnotations } from '../dashboard/store/annotation';

@@ -205,8 +205,8 @@ const GraphPanelEditor = memo((props: PanelEditorProps) => {
             </PanelEditItem>
         </PanelAccordion>
         
-        <PanelAccordion title="Alert correlation">
-            <PanelEditItem title="Enable" desc="When enabled, associated alerts will be display as annotations">
+        <PanelAccordion title={t1.alertCorrelation}>
+            <PanelEditItem title="Enable" desc={t1.alertCorrelationTips}>
                 <Switch defaultChecked={panel.plugins.graph.enableAlert} onChange={e => onChange((panel: Panel) => {
                     panel.plugins.graph.enableAlert = e.currentTarget.checked
                 })} />
