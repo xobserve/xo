@@ -48,7 +48,12 @@ export const AnnotationsPlugin = ({ panel, dashboardId, options, timeRange }: An
   const plotInstance = useRef<uPlot>();
   const [annotation, setAnnotation] = useState<Annotation>(null)
   useEffect(() => {
-    panel.plugins.graph.enableAlert && loadAlerts()
+    if (panel.plugins.graph.enableAlert) {
+      loadAlerts()
+    } else {
+      setAlertAnnotations([])
+      annotations.current = annotations0.concat([])
+    }
   }, [timeRange, panel.plugins.graph.alertFilter,panel.plugins.graph.enableAlert])
 
   const loadAlerts = async () => {
@@ -82,9 +87,6 @@ export const AnnotationsPlugin = ({ panel, dashboardId, options, timeRange }: An
 
     setAlertAnnotations(annos)
     annotations.current = annotations0.concat(annos)
-    // if (plotInstance.current) {
-      // plotInstance.current.redraw()
-    // }
   }
 
 
