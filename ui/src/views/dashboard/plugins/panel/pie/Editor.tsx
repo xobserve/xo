@@ -26,6 +26,8 @@ import { useStore } from "@nanostores/react"
 import { commonMsg, piePanelMsg } from "src/i18n/locales/en"
 import ThresholdEditor from "components/Threshold/ThresholdEditor"
 import { CodeEditorModal } from "components/CodeEditor/CodeEditorModal"
+import { dispatch } from "use-bus"
+import { PanelForceRebuildEvent } from "src/data/bus-events"
 
 const PiePanelEditor = memo(({ panel, onChange }: PanelEditorProps) => {
     const t = useStore(commonMsg)
@@ -153,6 +155,7 @@ const PiePanelEditor = memo(({ panel, onChange }: PanelEditorProps) => {
             <PanelEditItem title={t.enable}>
                 <Switch defaultChecked={panel.plugins.pie.enableClick} onChange={e => onChange((panel: Panel) => {
                     panel.plugins.pie.enableClick = e.currentTarget.checked
+                    dispatch(PanelForceRebuildEvent + panel.id)
                 })} />
             </PanelEditItem>
             <PanelEditItem title={t.onClickEvent} desc={t.onClickEventTips}>

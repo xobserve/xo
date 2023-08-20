@@ -77,8 +77,6 @@ export const ChartComponent = memo((props: Props) => {
     useEffect(() => {
         if (onChartEvents && chart) {
             registerEvents()
-        } else {
-            chart?.off('click')
         }
     }, [onChartEvents])
 

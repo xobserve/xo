@@ -16,7 +16,6 @@ import * as echarts from 'echarts';
 import { memo, useEffect, useMemo, useRef, useState } from "react"
 import { PanelProps } from "types/dashboard";
 import { Box, Center, useColorMode, useToast } from "@chakra-ui/react";
-import { genDynamicFunction } from "utils/dashboard/dynamicCall";
 import { cloneDeep, isEmpty, isFunction } from "lodash";
 import { useSearchParam } from "react-use";
 import React from "react";
@@ -24,6 +23,11 @@ import moment from "moment";
 import { colors } from "utils/colors";
 import loadash from "lodash"
 import 'echarts/extension/bmap/bmap';
+import { genDynamicFunction } from "utils/dashboard/dynamicCall";
+import { gnavigate } from "layouts/PageContainer";
+import { setVariable } from "src/views/variables/SelectVariable";
+import { setDateTime } from "components/DatePicker/DatePicker";
+import { $variables } from "src/views/variables/store";
 
 const EchartsPanel = memo((props: PanelProps) => {
     const { panel, width, height } = props
@@ -85,7 +89,7 @@ const EchartsPanel = memo((props: PanelProps) => {
         'transparent' :
         'transparent'//  "#1A202C"
     return (<>
-        {options && <Box height={height} key={colorMode} className="echarts-panel"><EchartsComponent options={options} theme={colorMode} width={width - 11} height={height} onChartCreated={c => setChart(c)} onChartEvents={onEvents} darkBg={darkBg} /></Box>}
+        {options && <Box height={height} key={colorMode} className="echarts-panel"><EchartsComponent options={options} theme={colorMode} width={width - 11} height={height} onChartCreated={c => setChart(c)} onChartEvents={panel.plugins.echarts.enableClick ? onEvents : null} darkBg={darkBg} /></Box>}
     </>)
 })
 
@@ -135,8 +139,8 @@ export const EchartsComponent = ({ options, theme, width, height, onChartCreated
 
     useEffect(() => {
         if (onChartEvents && chart) {
-            onChartEvents(options, chart)
-        }
+            onChartEvents(options, chart, gnavigate, (k, v) => setVariable(k, v), setDateTime, $variables)
+        } 
     }, [onChartEvents])
 
     useEffect(() => {

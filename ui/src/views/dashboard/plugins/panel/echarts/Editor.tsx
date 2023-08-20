@@ -29,6 +29,8 @@ import moment from "moment"
 import loadash from 'lodash'
 import ThresholdEditor from "components/Threshold/ThresholdEditor"
 import * as echarts from 'echarts';
+import { dispatch } from "use-bus"
+import { PanelForceRebuildEvent } from "src/data/bus-events"
 
 const EchartsPanelEditor = memo(({ panel, onChange, data }: PanelEditorProps) => {
     const t = useStore(commonMsg)
@@ -57,6 +59,15 @@ const EchartsPanelEditor = memo(({ panel, onChange, data }: PanelEditorProps) =>
                         panel.plugins.echarts.setOptionsFunc = v
                     })
                 }} data={data} />
+
+            </PanelAccordion>
+            <PanelAccordion title={t.interaction}>
+                <PanelEditItem title={t.enable}>
+                    <Switch defaultChecked={panel.plugins.echarts.enableClick} onChange={e => onChange((panel: Panel) => {
+                        panel.plugins.echarts.enableClick = e.currentTarget.checked
+                        dispatch(PanelForceRebuildEvent + panel.id)
+                    })} />
+                </PanelEditItem>
 
                 <RegisterEvents panel={panel} onChange={v => {
                     onChange((panel: Panel) => {
@@ -100,7 +111,7 @@ const SetOptions = ({ panel, onChange, data }: PanelEditorProps) => {
 
     if (isFunction(setOptions)) {
         try {
-            let o = setOptions(cloneDeep(data.flat()),panel.plugins.echarts.thresholds, colors, echarts, loadash, moment,colorMode)
+            let o = setOptions(cloneDeep(data.flat()), panel.plugins.echarts.thresholds, colors, echarts, loadash, moment, colorMode)
             o.animation = false
             options = o
         } catch (error) {

@@ -28,6 +28,7 @@ import { FaCheck } from "react-icons/fa"
 import { jsonToEqualPairs } from "utils/format"
 import {  commonInteractionEvent, genDynamicFunction } from "utils/dashboard/dynamicCall"
 import { useNavigate } from "react-router-dom"
+import { isEmpty } from "utils/validate"
 
 
 interface Props {
@@ -168,7 +169,7 @@ const AlertRuleItem = memo((props: Props) => {
                                         <Th>State</Th>
                                         <Th>Active</Th>
                                         <Th>Value</Th>
-                                        {panel.plugins.alert?.clickActions && <Th>Actions</Th>}
+                                        {panel.plugins.alert?.clickActions  && <Th>Actions</Th>}
                                     </Tr>
                                 </Thead>
                                 <Tbody>
@@ -194,8 +195,8 @@ const AlertRuleItem = memo((props: Props) => {
                                                 {panel.plugins.alert?.clickActions && <Td>
                                                     <HStack spacing={1}>
                                                     {
-                                                        panel.plugins.alert.clickActions.map((action) => 
-                                                        <Button size="sm" variant={action.style} colorScheme={action.color} onClick={(e) => onActionClick(e,action.action,alert,rule.name)}>{action.name}</Button>)
+                                                        panel.plugins.alert.clickActions.map((action,i) => 
+                                                        !isEmpty(action.name) && <Button key={i + action.name} size="sm" variant={action.style} colorScheme={action.color} onClick={(e) => onActionClick(e,action.action,alert,rule.name)}>{action.name}</Button>)
                                                     }
                                                     </HStack>
                                                 </Td>}

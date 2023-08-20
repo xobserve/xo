@@ -321,6 +321,7 @@ export interface EchartsSettings {
     animation: boolean
     allowEmptyData: boolean
     setOptionsFunc: string
+    enableClick: boolean
     registerEventsFunc: string
     thresholds: ThresholdsConfig
     enableThresholds: boolean
