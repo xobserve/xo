@@ -42,7 +42,7 @@ export const run_http_query = async (panel: Panel, q: PanelQuery, range: TimeRan
     if (!isEmpty(q.data.transformRequest)) {
         const transformRequest = genDynamicFunction(replaceWithVariables(q.data.transformRequest));
         if (isFunction(transformRequest)) {
-            url = transformRequest(url, headers, start, end)
+            url = transformRequest(url, headers, start, end, panel)
         } else {
             return {
                 error: 'transformRequest is not a valid function',

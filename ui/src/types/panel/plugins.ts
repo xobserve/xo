@@ -73,6 +73,7 @@ export interface AlerSettings extends DisableDatasource {
 
 
 export interface AlertFilter {
+    enableFilter: boolean
     state: AlertState[]
     datasources: number[]
     httpQuery: PanelQuery

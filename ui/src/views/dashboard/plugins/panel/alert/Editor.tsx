@@ -152,6 +152,23 @@ export const AlertFilterEditor = ({ panel, filter, onChange }: AlertFilterProps)
     const t1 = useStore(alertMsg)
     const t = useStore(commonMsg)
     return <PanelAccordion title={t1.alertFilter}>
+        <PanelEditItem title="Enable">
+            <Switch isChecked={filter.enableFilter} onChange={(e) => {
+                const v = e.currentTarget.checked
+                onChange((panel: Panel) => {
+                    switch (panel.type) {
+                        case PanelType.Alert:
+                            panel.plugins.alert.filter.enableFilter = v
+                            break;
+                        case PanelType.Graph:
+                            panel.plugins.graph.alertFilter.enableFilter = v
+                            break
+                        default:
+                            break;
+                    }
+                })
+            }} />
+        </PanelEditItem>
         <PanelEditItem title={t1.alertState}>
             <MultiRadionButtons options={Object.keys(AlertState).map(k => ({ label: AlertState[k], value: AlertState[k] }))} value={filter.state} onChange={v => onChange((panel: Panel) => {
                 switch (panel.type) {
@@ -210,7 +227,7 @@ export const AlertFilterEditor = ({ panel, filter, onChange }: AlertFilterProps)
                         break
                     default:
                         break;
-                   }
+                }
             })} placeholder="support multi regex, separate with comman e.g: ^service1, ^service2" />
         </PanelEditItem>
         <PanelEditItem title="Rule labels" desc={`Filter rule labels using label querying, e.g: {severity="critical"}`}>
@@ -224,7 +241,7 @@ export const AlertFilterEditor = ({ panel, filter, onChange }: AlertFilterProps)
                         break
                     default:
                         break;
-                   }
+                }
             })} placeholder="" />
         </PanelEditItem>
         <PanelEditItem title="Alert label" desc={`Filter alert labels using label querying, e.g: {service="api-gateway", instance=~"cluster-cn-.+"}`}>
@@ -238,7 +255,7 @@ export const AlertFilterEditor = ({ panel, filter, onChange }: AlertFilterProps)
                         break
                     default:
                         break;
-                   }
+                }
             })} placeholder="" />
         </PanelEditItem>
 

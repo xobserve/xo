@@ -466,6 +466,7 @@ function registerEvents(options, chart) {
 
 const initAlertFilter = () => {
     return {
+        enableFilter: true,
         state: [],
         datasources: [],
         httpQuery: {

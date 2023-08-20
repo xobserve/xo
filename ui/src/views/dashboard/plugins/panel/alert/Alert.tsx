@@ -135,14 +135,23 @@ const AlertPanel = memo((props: AlertPanelProps) => {
 
 
     const [filterData, chartData]: [AlertRule[], any] = useMemo(() => {
-        const stateFilter = !isEmpty(viewOptions.stateFilter) ? viewOptions.stateFilter : options.filter.state
+        const stateFilter = options.filter.enableFilter ? 
+            (!isEmpty(viewOptions.stateFilter) ? viewOptions.stateFilter : options.filter.state)
+             : null
     
-        const ruleNameFilter = !isEmpty(viewOptions.ruleNameFilter) ? viewOptions.ruleNameFilter : options.filter.ruleName
-        const ruleLabelFilter= !isEmpty(viewOptions.ruleLabelsFilter) ? viewOptions.ruleLabelsFilter : options.filter.ruleLabel
-        const alertLabelFilter = !isEmpty(viewOptions.labelNameFilter) ? viewOptions.labelNameFilter : options.filter.alertLabel
+        const ruleNameFilter =  options.filter.enableFilter ? 
+            (!isEmpty(viewOptions.ruleNameFilter) ? viewOptions.ruleNameFilter : options.filter.ruleName)
+            : ""
+        const ruleLabelFilter=  options.filter.enableFilter ?  
+        (!isEmpty(viewOptions.ruleLabelsFilter) ? viewOptions.ruleLabelsFilter : options.filter.ruleLabel)
+        : ""
+        const alertLabelFilter =  options.filter.enableFilter ? 
+        (!isEmpty(viewOptions.labelNameFilter) ? viewOptions.labelNameFilter : options.filter.alertLabel)
+        : ""
+
         const [result, chartData] = filterAlerts(props.data, stateFilter, ruleNameFilter, ruleLabelFilter, alertLabelFilter, active, search)
         return [result, chartData]
-    }, [props.data, search, active, options.filter, viewOptions.stateFilter, viewOptions.ruleNameFilter, viewOptions.ruleLabelsFilter, viewOptions.labelNameFilter, vars])
+    }, [props.data, search, active, options.filter, viewOptions.stateFilter, viewOptions.ruleNameFilter, viewOptions.ruleLabelsFilter, viewOptions.labelNameFilter, vars, options.filter.enableFilter])
 
     const sortedData: AlertRule[] = useMemo(() => {
         for (const r of filterData) {
@@ -210,7 +219,7 @@ export const filterAlerts = (data: AlertRule[], stateFilter, ruleNameFilter, rul
 
     for (const r0 of data) {
         // filter by rule state
-        if (enableRuleStateFilter && !stateFilter.includes(r0.state)) {
+        if (enableRuleStateFilter && stateFilter !== null && !stateFilter.includes(r0.state)) {
             continue
         }
         // filter by rule name
@@ -250,7 +259,7 @@ export const filterAlerts = (data: AlertRule[], stateFilter, ruleNameFilter, rul
         }
         for (const alert of r0.alerts) {
             // filter by alert state
-            if (!stateFilter.includes(alert.state)) {
+            if (stateFilter !== null &&  !stateFilter.includes(alert.state)) {
                 continue
             }
 

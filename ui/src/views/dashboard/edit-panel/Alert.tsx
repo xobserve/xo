@@ -65,11 +65,12 @@ const EditPanelAlert = ({ panel, onChange }: Props) => {
 
         let rules: AlertRule[] = []
         if (res.data?.length > 0) {
-            const stateFilter = panel.plugins.graph.alertFilter.state
+            const enableFilter = panel.plugins.graph.alertFilter.enableFilter
+            const stateFilter = enableFilter ? panel.plugins.graph.alertFilter.state : null
 
-            const ruleNameFilter = panel.plugins.graph.alertFilter.ruleName
-            const ruleLabelFilter = panel.plugins.graph.alertFilter.ruleLabel
-            const alertLabelFilter = panel.plugins.graph.alertFilter.alertLabel
+            const ruleNameFilter =  enableFilter ?  panel.plugins.graph.alertFilter.ruleName : ""
+            const ruleLabelFilter =  enableFilter ? panel.plugins.graph.alertFilter.ruleLabel : ""
+            const alertLabelFilter =  enableFilter ? panel.plugins.graph.alertFilter.alertLabel : ""
             const [result, _] = filterAlerts(res.data, stateFilter, ruleNameFilter, ruleLabelFilter, alertLabelFilter, [], "", false)
             rules = result
         }
