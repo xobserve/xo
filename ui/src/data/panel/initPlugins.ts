@@ -119,6 +119,7 @@ export const initPanelPlugins = (): PanelPlugins => {
             globalSearch: false,
             enablePagination: false,
 
+            enableRowClick: true,
             onRowClick: onClickCommonEvent,
             rowActions: [],
             actionColumnName: null,

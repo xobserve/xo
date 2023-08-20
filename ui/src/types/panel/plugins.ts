@@ -350,6 +350,7 @@ export interface TableSettings {
     globalSearch: boolean
     enablePagination: boolean
 
+    enableRowClick: boolean
     onRowClick: string
     rowActions: ClickAction[]
     actionColumnName: string

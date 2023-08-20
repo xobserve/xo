@@ -48,7 +48,7 @@ const storagePageKey = "tablePage"
 const ComplexTable = memo((props: Props) => {
   const toast = useToast()
   const navigate = useNavigate()
-  const {colorMode} = useColorMode()
+  const { colorMode } = useColorMode()
 
   const { dashboardId, panel } = props
   const data = cloneDeep(props.data)
@@ -91,9 +91,9 @@ const ComplexTable = memo((props: Props) => {
     const sort = findRuleInOverride(override, TableRules.ColumnSort)
     if (options.column.enableSort || sort) {
       column.sorter = (a, b) => {
-        return  a.__value__[column.dataIndex] >= b.__value__[column.dataIndex] ? 1 : -1
+        return a.__value__[column.dataIndex] >= b.__value__[column.dataIndex] ? 1 : -1
       }
-      column.sortDirections = ['descend', 'ascend','descend']
+      column.sortDirections = ['descend', 'ascend', 'descend']
       if (sort) column.defaultSortOrder = sort
     }
 
@@ -126,9 +126,9 @@ const ComplexTable = memo((props: Props) => {
     }
 
     let bg = findRuleInOverride(override, TableRules.ColumnBg)
-    bg = paletteColorNameToHex(bg,colorMode)
+    bg = paletteColorNameToHex(bg, colorMode)
     let textWidth = 0;
-   
+
     const colorOverride = findRuleInOverride(override, TableRules.ColumnColor)
     const mappingOverride = findRuleInOverride(override, TableRules.ColumnValueMapping)
     // modify data
@@ -143,7 +143,7 @@ const ComplexTable = memo((props: Props) => {
           ...row['__value__'],
           [column.dataIndex]: v
         }
-        
+
         if (bg) {
           row['__bg__'] = {
             ...row['__bg__'],
@@ -163,20 +163,20 @@ const ComplexTable = memo((props: Props) => {
 
         let isMapped = false
         if (panel.valueMapping?.length > 0) {
-          const [r,c1] = mapValueToText(v, panel.valueMapping)
+          const [r, c1] = mapValueToText(v, panel.valueMapping)
           if (r) {
-            row[column.dataIndex] = replaceWithVariables(r, {[VariableCurrentValue]:v})
+            row[column.dataIndex] = replaceWithVariables(r, { [VariableCurrentValue]: v })
             isMapped = true
             if (!isEmpty(c1)) {
               color = c1
             }
           }
         }
-        
+
         if (mappingOverride) {
-          const [r,c1] = mapValueToText(v, mappingOverride)
+          const [r, c1] = mapValueToText(v, mappingOverride)
           if (r) {
-            row[column.dataIndex] = replaceWithVariables(r, {[VariableCurrentValue]:v})
+            row[column.dataIndex] = replaceWithVariables(r, { [VariableCurrentValue]: v })
             isMapped = true
             if (!isEmpty(c1)) {
               color = c1
@@ -197,14 +197,14 @@ const ComplexTable = memo((props: Props) => {
         if (isFunc) {
           row[column.dataIndex] = transformFunc(row[column.dataIndex], lodash, moment)
         }
-        
+
         if (columnType?.type == "gauge") {
-            const width = measureText(row[column.dataIndex].toString()).width
-            if (width > textWidth) {
-              textWidth = width
-            }
+          const width = measureText(row[column.dataIndex].toString()).width
+          if (width > textWidth) {
+            textWidth = width
+          }
         }
-        color = paletteColorNameToHex(color,colorMode)
+        color = paletteColorNameToHex(color, colorMode)
         if (color) {
           row['__color__'] = {
             ...row['__color__'] as any,
@@ -221,10 +221,10 @@ const ComplexTable = memo((props: Props) => {
       const bg = record['__bg__']?.[column.dataIndex]
       const color = record['__color__']?.[column.dataIndex]
       if (columnType?.type == "gauge") {
-        return  <AutoSizer>
-        {({ width,height }) => {
+        return <AutoSizer>
+          {({ width, height }) => {
             if (width === 0) {
-                return null;
+              return null;
             }
 
             return <Box position="absolute" top="6px" left="6px" right="6px" bottom="6px"><BarGauge width={width} height={height} data={[{
@@ -233,14 +233,14 @@ const ComplexTable = memo((props: Props) => {
               min: min,
               text: text,
               color: color,
-            }]} textWidth={textWidth} threshods={thresholds} showUnfilled={true} fillOpacity={opacity ?? 0.6} mode={columnType.mode}/></Box>
-        }}
-    </AutoSizer>
-       
+            }]} textWidth={textWidth} threshods={thresholds} showUnfilled={true} fillOpacity={opacity ?? 0.6} mode={columnType.mode} /></Box>
+          }}
+        </AutoSizer>
+
       } else {
         return <Box padding={cellPadding} bg={bg}><Tooltip label={ellipsis ? text : null} openDelay={300}><Text color={color ?? "inherit"} wordBreak="break-all" noOfLines={ellipsis ? 1 : null}>{text}</Text></Tooltip></Box>
       }
-      
+
     }
 
     const title = findOverrideRule(panel, column.dataIndex, TableRules.ColumnTitle)
@@ -250,18 +250,21 @@ const ComplexTable = memo((props: Props) => {
   }
 
 
-  if (options.rowActions.length > 0) {
-    columns.push({ 
-      title: isEmpty(options.actionColumnName) ? "Action" : options.actionColumnName ,
+  if (options.rowActions.length > 0 && options.rowActions.some(a => !isEmpty(a.name))) {
+    columns.push({
+      title: isEmpty(options.actionColumnName) ? "Action" : options.actionColumnName,
       key: 'action',
       width: isEmpty(options.actionClumnWidth) ? 90 * options.rowActions.length : options.actionClumnWidth,
       render: (_, record) => (
         <HStack spacing={1}>
           {props.panel.plugins.table.rowActions.map((action, index) => {
+            if (isEmpty(action.name)) {
+              return
+            }
             const onClick = genDynamicFunction(action.action);
-            return <Button colorScheme={action.color} variant={action.style} size={options.actionButtonSize} onClick={(e) => {
+            return <Button key={index + action.name} colorScheme={action.color} variant={action.style} size={options.actionButtonSize} onClick={(e) => {
               e.stopPropagation()
-              if (!isFunction(onRowClick)) {
+              if (!isFunction(onClick)) {
                 toast({
                   title: "Error",
                   description: "The action function you defined is not valid",
@@ -292,7 +295,7 @@ const ComplexTable = memo((props: Props) => {
       showSorterTooltip={false}
       scroll={{ x: options.tableWidth + '%' }}
       bordered={options.bordered}
-      onRow={record => {
+      onRow={options.enableRowClick ? record => {
         return {
           onClick: _ => {
             if (!isFunction(onRowClick)) {
@@ -308,7 +311,7 @@ const ComplexTable = memo((props: Props) => {
             }
           }
         }
-      }
+      } : null
       }
     />
   </>)

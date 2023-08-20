@@ -95,6 +95,11 @@ const TablePanelEditor = memo(({ panel, onChange }: PanelEditorProps) => {
         </PanelAccordion>
 
         <PanelAccordion title={t.interaction}>
+            <PanelEditItem title="Enable row click">
+                <Switch isChecked={panel.plugins.table.enableRowClick} onChange={(e) => onChange((panel: Panel) => {
+                    panel.plugins.table.enableRowClick = e.target.checked
+                })} />
+            </PanelEditItem>
             <OnRowClickEditor panel={panel} onChange={v => {
                 onChange((panel: Panel) => {
                     panel.plugins.table.onRowClick = v
