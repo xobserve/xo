@@ -37,10 +37,10 @@ const AnnotationMarker = ({ annotation, width, onEditAnnotation, onRemoveAnnotat
 
 
     return (
-        <Popover trigger="hover" openDelay={10} closeDelay={500} onOpen={() => console.log("here333333, open ")} onClose={() => console.log("here333333, close ")}>
+        <Popover trigger="hover" openDelay={10} closeDelay={500}>
             <PopoverTrigger>
                 <Box cursor="pointer" className="annotation-marker">
-                    {
+                    { 
                         !isRegionAnnotation ? <div
                             style={{
                                 left,

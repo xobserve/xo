@@ -305,6 +305,8 @@ function registerEvents(options, chart) {
                 scale: "linear",
                 scaleBase: 2
             },
+            enableClick: true,
+            clickAction: onClickCommonEvent,
             thresholds: initThresholds()
         },
 

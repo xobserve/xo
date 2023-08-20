@@ -168,8 +168,9 @@ const ContextMenu = memo(({ props, options, data, container }: Props) => {
                         }}>Add annotation</Button>
 
                         {
-                            props.panel.plugins.graph.clickActions.map(action => (
+                            props.panel.plugins.graph.clickActions.map((action,i) => (
                             <Button 
+                                key={i+action.name}
                                 size="sm"
                                 variant="ghost"
                                 bg={action.color}

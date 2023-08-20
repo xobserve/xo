@@ -29,13 +29,14 @@ import { isEmpty } from "utils/validate"
 import { VarialbeAllOption } from "src/data/variable"
 import { LayoutOrientation } from "types/layout"
 import { Units } from "types/panel/plugins"
+import { CodeEditorModal } from "components/CodeEditor/CodeEditorModal"
 
 const GraphPanelEditor = memo(({ panel, onChange, data }: PanelEditorProps) => {
     const t = useStore(commonMsg)
     const t1 = useStore(graphPanelMsg)
     const t2 = useStore(statsPanelMsg)
 
-    const seriesNames = [VarialbeAllOption].concat((data?.flat() as SeriesData[]??[]).map(s => s.name))
+    const seriesNames = [VarialbeAllOption].concat((data?.flat() as SeriesData[] ?? []).map(s => s.name))
     if (isEmpty(panel.plugins.stat.displaySeries)) {
         if (seriesNames?.length >= 1) {
             onChange((panel: Panel) => {
@@ -83,7 +84,7 @@ const GraphPanelEditor = memo(({ panel, onChange, data }: PanelEditorProps) => {
         <PanelAccordion title={t.value}>
             <PanelEditItem title={t.unit}>
                 <UnitPicker value={panel.plugins.stat.value} onChange={
-                    (v:Units) => onChange((panel: Panel) => {
+                    (v: Units) => onChange((panel: Panel) => {
                         panel.plugins.stat.value.units = v.units
                         panel.plugins.stat.value.unitsType = v.unitsType
                     })
@@ -120,7 +121,7 @@ const GraphPanelEditor = memo(({ panel, onChange, data }: PanelEditorProps) => {
                     panel.plugins.stat.styles.style = v
                 })} />
             </PanelEditItem>
-            {panel.plugins.stat.styles.colorMode == "value" &&<PanelEditItem title={t1.opacity}>
+            {panel.plugins.stat.styles.colorMode == "value" && <PanelEditItem title={t1.opacity}>
                 <EditorSliderItem value={panel.plugins.stat.styles.fillOpacity} min={0} max={100} step={1} onChange={v => {
                     onChange((panel: Panel) => {
                         panel.plugins.stat.styles.fillOpacity = v
@@ -151,10 +152,10 @@ const GraphPanelEditor = memo(({ panel, onChange, data }: PanelEditorProps) => {
         </PanelAccordion>
         <PanelAccordion title={t.textSize}>
             <PanelEditItem title="Value">
-                <EditorNumberItem value={panel.plugins.stat.textSize.value}   max={50} step={1} onChange={v => onChange((panel: Panel) => { panel.plugins.stat.textSize.value = v })} />
+                <EditorNumberItem value={panel.plugins.stat.textSize.value} max={50} step={1} onChange={v => onChange((panel: Panel) => { panel.plugins.stat.textSize.value = v })} />
             </PanelEditItem>
             <PanelEditItem title="Legend">
-                <EditorNumberItem value={panel.plugins.stat.textSize.legend}  max={50} step={1} onChange={v => onChange((panel: Panel) => { panel.plugins.stat.textSize.legend = v })} />
+                <EditorNumberItem value={panel.plugins.stat.textSize.legend} max={50} step={1} onChange={v => onChange((panel: Panel) => { panel.plugins.stat.textSize.legend = v })} />
             </PanelEditItem>
         </PanelAccordion>
         {/* <PanelAccordion title={t.axis}>
@@ -173,6 +174,20 @@ const GraphPanelEditor = memo(({ panel, onChange, data }: PanelEditorProps) => {
             </PanelEditItem>}
         </PanelAccordion> */}
 
+        <PanelAccordion title={t.interaction}>
+            <PanelEditItem title={t.enable}>
+                <Switch defaultChecked={panel.plugins.stat.enableClick} onChange={e => onChange((panel: Panel) => {
+                    panel.plugins.stat.enableClick = e.currentTarget.checked
+                })} />
+            </PanelEditItem>
+            <PanelEditItem title={t.onClickEvent} desc={t.onClickEventTips}>
+                <CodeEditorModal onChange={v => {
+                    onChange((panel: Panel) => {
+                        panel.plugins.stat.clickAction = v
+                    })
+                }} value={panel.plugins.stat.clickAction} />
+            </PanelEditItem>
+        </PanelAccordion>
         <PanelAccordion title="Thresholds">
             <ThresholdEditor value={panel.plugins.stat.thresholds} onChange={(v) => onChange((panel: Panel) => {
                 panel.plugins.stat.thresholds = v

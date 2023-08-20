@@ -83,7 +83,7 @@ export const commonMsg = i18n("common", {
   "vertical": "Vertical",
   "horizontal": "Horizontal",
   "onClickEvent": "On click event",
-  "onClickEventTips": "When click on the chart, this event will be executed",
+  "onClickEventTips": "When click on parts of the panel, this event will be executed",
   "editFunc": "Edit Function",
   "animation": "Animation",
   "animationTips": "Display chart animation",

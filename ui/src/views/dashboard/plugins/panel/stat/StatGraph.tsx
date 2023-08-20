@@ -16,9 +16,9 @@ import { OverrideItem, Panel } from "types/dashboard"
 import 'uplot/dist/uPlot.min.css';
 import React from "react";
 import { parseOptions } from './options';
-import { isEmpty } from "lodash"
+import { isEmpty, isFunction } from "lodash"
 import Tooltip from "../graph/Tooltip";
-import { Box, Center, Flex, Text, useColorMode, Tooltip as ChakraTooltip } from "@chakra-ui/react";
+import { Box, Center, Flex, Text, useColorMode, Tooltip as ChakraTooltip, useToast } from "@chakra-ui/react";
 import { formatUnit } from "components/Unit";
 import { ValueCalculationType } from "types/value";
 import { calcValueOnSeriesData } from "utils/seriesData";
@@ -30,6 +30,7 @@ import { LayoutOrientation } from "types/layout";
 import tinycolor from "tinycolor2";
 import { findOverride, findRuleInOverride } from "utils/dashboard/panel";
 import { StatRules } from "./OverridesEditor";
+import { commonInteractionEvent, genDynamicFunction } from "utils/dashboard/dynamicCall";
 
 
 interface Props {
@@ -113,7 +114,7 @@ const StatGraph = memo((props: Props) => {
                                 <Center height="100%" pt={height > statOptions.styles.hideGraphHeight ? 2 : 0}>
                                     <Flex width="100%" px={4} alignItems="center" justifyContent={statOptions.showLegend ? "space-between" : "center"} >
                                         {statOptions.showLegend && <LegentText legend={legend} height={height} width={width} options={statOptions} color={legendColor} />}
-                                        <ValueText value={valueText} options={statOptions} width={width} height={height} layout={statOptions.styles.layout} color={valueColor} />
+                                        <ValueText data={data} value={valueText} options={statOptions} width={width} height={height} layout={statOptions.styles.layout} color={valueColor} />
                                     </Flex>
                                 </Center>
                             </Box>}
@@ -128,7 +129,7 @@ const StatGraph = memo((props: Props) => {
                             {graphHeight < 100 && <TextContainer height={height > statOptions.styles.hideGraphHeight ? `${100 - graphHeight}%` : '100%'} className="stat-graph-text">
                                 <Box width="100%" pl="2" pt={height > statOptions.styles.hideGraphHeight ? 2 : 0} textAlign={textAlign}>
                                     {statOptions.showLegend && <LegentText legend={legend} height={height} width={width} options={statOptions} color={legendColor} />}
-                                    <ValueText value={valueText} options={statOptions} width={width} height={height} layout={statOptions.styles.layout} color={valueColor} />
+                                    <ValueText data={data} value={valueText} options={statOptions} width={width} height={height} layout={statOptions.styles.layout} color={valueColor} />
                                 </Box>
                             </TextContainer>}
                             {statOptions.showGraph && height > statOptions.styles.hideGraphHeight && <Box height={graphHeight + '%'} className="stat-graph-container">
@@ -183,7 +184,8 @@ const LegentText = ({ legend, width, height, options, color }) => {
     )
 }
 
-const ValueText = ({ value, options, width, height, layout, color }) => {
+const ValueText = ({ data, value, options, width, height, layout, color }) => {
+    const toast = useToast()
     let fontSize = 16
     if (layout == "horizontal") {
         fontSize = height / 3.5
@@ -205,12 +207,28 @@ const ValueText = ({ value, options, width, height, layout, color }) => {
         if (fontSize > maxFontSize) fontSize = maxFontSize
     }
 
+    console.log("here3333333:",options)
     return (<>
         <Text
+            cursor={options.enableClick ? "pointer" : "default"}
             fontSize={options.textSize.value?? fontSize  + 'px'}
             color={color}
             fontWeight="bold"
             lineHeight={1.2}
+            onClick={options.enableClick ? () => {
+                const onClick = genDynamicFunction(options.clickAction);
+                if (isFunction(onClick)) {
+                    const tData = commonInteractionEvent(onClick, data)
+                    return tData
+                } else {
+                    toast({
+                        title: "Invalid click action",
+                        status: "warning",
+                        duration: 3000,
+                        isClosable: true,
+                    })
+                }
+            } : null}
         >{value}</Text>
     </>)
 }
