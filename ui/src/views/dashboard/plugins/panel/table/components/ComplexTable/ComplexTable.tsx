@@ -22,14 +22,12 @@ import { Panel } from 'types/dashboard';
 import { TableRules } from '../../OverridesEditor';
 import { formatUnit } from 'components/Unit';
 import { DefaultDecimal } from 'src/data/constants';
-import { genDynamicFunction } from 'utils/dynamicCode';
+import { commonInteractionEvent, genDynamicFunction } from 'utils/dashboard/dynamicCall';
 import moment from 'moment';
 import { ThresholdsConfig, ThresholdsMode } from 'types/threshold';
 import { getThreshold } from 'components/Threshold/utils';
 import lodash from 'lodash'
-import { setVariable } from 'src/views/variables/SelectVariable';
 import { useNavigate } from 'react-router-dom';
-import { setDateTime } from 'components/DatePicker/DatePicker';
 import { isEmpty } from 'utils/validate';
 import BarGauge from 'components/BarGauge/BarGauge';
 import { measureText } from 'utils/measureText';
@@ -272,7 +270,7 @@ const ComplexTable = memo((props: Props) => {
                   isClosable: true,
                 })
               } else {
-                onClick(record, navigate, (k, v) => setVariable(k, v), setDateTime)
+                commonInteractionEvent(onClick, record)
               }
             }}>{action.name}</Button>
           })}
@@ -306,7 +304,7 @@ const ComplexTable = memo((props: Props) => {
                 isClosable: true,
               })
             } else {
-              onRowClick(record, navigate, (k, v) => setVariable(k, v), setDateTime)
+              commonInteractionEvent(onRowClick, record)
             }
           }
         }

@@ -24,6 +24,9 @@ import AnnotationEditor from "../../../../../Annotation/AnnotationEditor";
 import { Annotation } from "types/annotation";
 import { roundDsTime } from "utils/datasource";
 import { $dashboard } from "src/views/dashboard/store/dashboard";
+import { commonInteractionEvent, genDynamicFunction } from "utils/dashboard/dynamicCall";
+import { isFunction } from "lodash";
+import { useNavigate } from "react-router-dom";
 
 interface Props {
     props: PanelProps
@@ -36,6 +39,8 @@ const ContextMenu = memo(({ props, options, data, container }: Props) => {
     const [annotation, setAnnotation] = useState<Annotation>(null)
     const [coords, setCoords] = useState(null);
     const toast = useToast()
+    const navigate = useNavigate()
+
     const plotInstance = useRef<uPlot>();
 
     const dataIdx = useRef(null)
@@ -137,16 +142,16 @@ const ContextMenu = memo(({ props, options, data, container }: Props) => {
     
     const startTime = roundDsTime(plotInstance.current?.posToVal(xVal.current,'x'))
     return (<>
-        <Portal key={props.panel.id}>
+        {/* <Portal key={props.panel.id}> */}
             {coords && <TooltipContainer allowPointerEvents position={{ x: coords.x, y: coords.y }} offset={{ x: -8, y: 2 }}>
-                <Box  className="bordered" background={'var(--chakra-colors-chakra-body-bg)'} p="2" fontSize="xs">
+                <Box  className="bordered" background={'var(--chakra-colors-chakra-body-bg)'} p="2" pb="0" fontSize="xs">
                     <Text fontWeight="600">{dateTimeFormat(startTime * 1000)}</Text>
                     <HStack mt="1">
                         <Box width="10px" height="4px" background={seriesIdx.current.color} mt="2px"></Box>
                         <Text>{seriesIdx.current.name}</Text>
                     </HStack>
                     <Divider mt="2" />
-                    <VStack alignItems={"left"} mt="2" divider={<StackDivider />}>
+                    <VStack alignItems={"left"}  spacing={0} divider={<StackDivider />}>
                         <Button size="sm" variant="ghost" onClick={() => {
                             const dash = $dashboard.get()
                             if (dash.data.annotation.enable) {
@@ -161,6 +166,29 @@ const ContextMenu = memo(({ props, options, data, container }: Props) => {
                             }
                             
                         }}>Add annotation</Button>
+
+                        {
+                            props.panel.plugins.graph.clickActions.map(action => (
+                            <Button 
+                                size="sm"
+                                variant="ghost"
+                                bg={action.color}
+                                onClick={() => {
+                                    const onGraphClick = genDynamicFunction(action.action);
+                                    if (isFunction(onGraphClick)) {
+                                        const tData = commonInteractionEvent(onGraphClick, {series: seriesIdx.current,time: startTime })
+                                        return tData
+                                    } else {
+                                        toast({
+                                            title: "Invalid click action",
+                                            status: "warning",
+                                            duration: 3000,
+                                            isClosable: true,
+                                        })
+                                    }
+                                }}
+                            >{action.name}</Button>))
+                        }
                     </VStack>
                 </Box>
             </TooltipContainer>
@@ -170,7 +198,7 @@ const ContextMenu = memo(({ props, options, data, container }: Props) => {
                 setAnnotation(null)
                 // plotInstance.current.setSelect({ top: 0, left: 0, width: 0, height: 0 });
                 }}/>}
-        </Portal>
+        {/* </Portal> */}
     </>)
 })
 

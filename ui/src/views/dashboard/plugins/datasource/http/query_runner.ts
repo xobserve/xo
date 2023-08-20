@@ -15,7 +15,7 @@ import { isHttpDatasourceValid } from "./DatasourceEditor"
 import { Variable } from "types/variable"
 import { Panel, PanelQuery } from "types/dashboard"
 import { TimeRange } from "types/time"
-import { genDynamicFunction } from "utils/dynamicCode"
+import { genDynamicFunction } from "utils/dashboard/dynamicCall"
 import {  isFunction, round } from "lodash"
 import _ from 'lodash'
 import { getNewestTimeRange } from "components/DatePicker/TimePicker"

@@ -41,7 +41,7 @@ import { useSearchParam } from "react-use";
 import React from "react";
 import { useStore } from "@nanostores/react";
 import { commonMsg, panelMsg } from "src/i18n/locales/en";
-import { genDynamicFunction } from "utils/dynamicCode";
+import { genDynamicFunction } from "utils/dashboard/dynamicCall";
 import lodash from 'lodash'
 import moment from "moment";
 import { paletteColorNameToHex } from "utils/colors";

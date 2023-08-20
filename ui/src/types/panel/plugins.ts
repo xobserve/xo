@@ -438,6 +438,7 @@ export interface GraphSettings {
     thresholdsDisplay: ThresholdDisplay
     enableAlert: boolean
     alertFilter: AlertFilter
+    clickActions: ClickAction[]
 }
 
 

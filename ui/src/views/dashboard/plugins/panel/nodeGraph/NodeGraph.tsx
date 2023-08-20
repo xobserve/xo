@@ -33,7 +33,7 @@ import './customNode'
 import { registerCustomNode } from './customNode';
 import { dispatch } from 'use-bus';
 import { PanelForceRebuildEvent } from 'src/data/bus-events';
-import { genDynamicFunction } from 'utils/dynamicCode';
+import { genDynamicFunction } from 'utils/dashboard/dynamicCall';
 import lodash from 'lodash'
 import { useStore } from '@nanostores/react';
 import { nodeGraphPanelMsg } from 'src/i18n/locales/en';

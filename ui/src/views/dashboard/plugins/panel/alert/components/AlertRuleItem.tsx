@@ -26,10 +26,9 @@ import { IoMdInformationCircleOutline } from "react-icons/io"
 import { getLabelNameColor } from "../../log/utils"
 import { FaCheck } from "react-icons/fa"
 import { jsonToEqualPairs } from "utils/format"
-import { genDynamicFunction } from "utils/dynamicCode"
+import {  commonInteractionEvent, genDynamicFunction } from "utils/dashboard/dynamicCall"
 import { useNavigate } from "react-router-dom"
-import { setVariable } from "src/views/variables/SelectVariable"
-import { setDateTime } from "components/DatePicker/DatePicker"
+
 
 interface Props {
     rule: AlertRule
@@ -68,7 +67,7 @@ const AlertRuleItem = memo((props: Props) => {
               isClosable: true,
             })
           } else {
-            onClick(alert, navigate, (k, v) => setVariable(k, v), setDateTime)
+            commonInteractionEvent(onClick, alert)
           }
     
     }

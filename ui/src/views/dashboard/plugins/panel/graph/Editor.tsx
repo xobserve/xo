@@ -31,6 +31,7 @@ import { datasources } from "src/App"
 import { datasourceSupportAlerts } from "src/data/alerts"
 import HttpQueryEditor from "../../datasource/http/QueryEditor"
 import { AlertFilterEditor } from "../alert/Editor"
+import { ClickActionsEditor } from "src/views/dashboard/edit-panel/components/ClickActionsEditor"
 
 const GraphPanelEditor = memo((props: PanelEditorProps) => {
     const { panel, onChange } = props
@@ -182,6 +183,13 @@ const GraphPanelEditor = memo((props: PanelEditorProps) => {
             </PanelEditItem>
         </PanelAccordion>
 
+        <PanelAccordion title={t.interaction}>
+            <ClickActionsEditor panel={panel} onChange={v => {
+                onChange((panel: Panel) => {
+                    panel.plugins.graph.clickActions = v
+                })
+            }} actions={panel.plugins.graph.clickActions}/>
+        </PanelAccordion>
         <PanelAccordion title="Thresholds">
             <ThresholdEditor value={panel.plugins.graph.thresholds} onChange={(v) => onChange((panel: Panel) => {
                 panel.plugins.graph.thresholds = v

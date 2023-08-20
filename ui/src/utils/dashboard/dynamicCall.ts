@@ -9,6 +9,12 @@
 // distributed under the License is distributed on an "AS IS" BASIS,
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
+
+import { setDateTime } from "components/DatePicker/DatePicker"
+import { gnavigate } from "layouts/PageContainer"
+import { setVariable } from "src/views/variables/SelectVariable"
+import { $variables } from "src/views/variables/store"
+
 // limitations under the License.
 export const genDynamicFunction = (ast) => {
     try {
@@ -17,4 +23,9 @@ export const genDynamicFunction = (ast) => {
     } catch (error) {
         return error
     }
+}
+
+
+export const commonInteractionEvent= (callback, data) => {
+    return callback(data, gnavigate, (k, v) => setVariable(k, v), setDateTime, $variables)
 }

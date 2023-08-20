@@ -16,7 +16,7 @@ import { isFunction } from "lodash";
 import { useNavigate } from "react-router-dom";
 import { setVariable } from "src/views/variables/SelectVariable";
 import { NodeGraphSettings } from "types/panel/plugins";
-import { genDynamicFunction } from "utils/dynamicCode";
+import { genDynamicFunction } from "utils/dashboard/dynamicCall";
 
 const useContextMenu = (settings: NodeGraphSettings) => {
   const toast = useToast()

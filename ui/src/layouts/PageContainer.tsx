@@ -26,7 +26,6 @@ import React, { useEffect, useMemo, useState } from "react"
 import { measureText } from "utils/measureText"
 import * as Icons from "react-icons/fa"
 import { concat } from "lodash"
-import { ColorModeSwitcher } from "components/ColorModeSwitcher"
 import { requestApi } from "utils/axios/request"
 import { useStore } from "@nanostores/react"
 import { commonMsg, sidebarMsg } from "src/i18n/locales/en"
@@ -45,6 +44,9 @@ import { Session } from "types/user"
 import PopoverTooltip from "components/PopoverTooltip"
 import { HomeDashboardId } from "src/data/dashboard"
 
+import { useNavigate } from "react-router-dom"
+export let gnavigate
+
 const miniWidth = 65
 const navSize = 16
 const maxNavSize = 200
@@ -57,6 +59,7 @@ interface Props {
 
 const PageContainer = (props) => {
   const toast = useToast()
+  gnavigate = useNavigate()
   const { session } = useSession()
   const [sidemenu, setSidemenu] = useState<Route[]>(null)
   useEffect(() => {

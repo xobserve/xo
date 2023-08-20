@@ -31,9 +31,7 @@ import { ThresholdDisplay } from "types/panel/plugins"
 import { ThresholdsMode } from "types/threshold"
 import { findOverride, findOverrideRule, findRuleInOverride } from "utils/dashboard/panel"
 import { BarRules } from "./OverridesEditor"
-import { genDynamicFunction } from "utils/dynamicCode"
-import { setVariable } from "src/views/variables/SelectVariable"
-import { setDateTime } from "components/DatePicker/DatePicker"
+import { commonInteractionEvent, genDynamicFunction } from "utils/dashboard/dynamicCall"
 import { useNavigate } from "react-router-dom"
 
 
@@ -397,9 +395,8 @@ const BarChart = memo((props: Props) => {
 
     const onEvents = genDynamicFunction(panel.plugins.bar.onClickEvent);
 
-    console.log("here333333:",options)
     return (<>
-        <ChartComponent key={colorMode} options={chartOptions} theme={colorMode} onChartCreated={c => setChart(c)} width={width} onChartEvents={(row) => onEvents(row, navigate, (k, v) => setVariable(k, v), setDateTime)} />
+        <ChartComponent key={colorMode} options={chartOptions} theme={colorMode} onChartCreated={c => setChart(c)} width={width} onChartEvents={(row) => commonInteractionEvent(onEvents, row)} />
     </>)
 })
 

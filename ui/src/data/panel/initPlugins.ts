@@ -18,15 +18,16 @@ import { ArcGisMapServer, BaseLayerType, DataLayerType } from "types/plugins/geo
 import { ThresholdsConfig, ThresholdsMode } from "types/threshold";
 import { ValueCalculationType } from "types/value";
 import { palettes } from "utils/colors";
-import { InitTestDataDatasourceId } from "../constants";
-import { AlertState } from "types/alert";
+
 
 export const onClickCommonEvent = `
 // setVariable: (varName:string, varValue:string) => void 
 // navigate: react-router-dom -> useNavigate() -> navigate 
 // setDateTime: (from: Timestamp, to: TimeStamp) => void
-function onRowClick(row, navigate, setVariable, setDateTime) {
-    console.log(row)
+function onRowClick(row, navigate, setVariable, setDateTime, $variables) {
+    // You can get all current variables in this way
+    // const currentVariables = $variables.get()
+    // console.log(row, currentVariables)
 }
 `
 
@@ -90,7 +91,8 @@ export const initPanelPlugins = (): PanelPlugins => {
             thresholds: initThresholds(),
             thresholdsDisplay: ThresholdDisplay.None,
             enableAlert: false,
-            alertFilter: initAlertFilter()
+            alertFilter: initAlertFilter(),
+            clickActions: []
         },
 
         [PanelType.Text]: {

@@ -15,6 +15,7 @@ import { useColorMode } from '@chakra-ui/react'
 import {
   createBrowserRouter,
   RouterProvider,
+  useNavigate,
 
 } from "react-router-dom";
 import React, { useEffect, useState } from 'react'
@@ -42,7 +43,6 @@ export let gvariables: Variable[] = []
 export let appInitialized = false
 const AppView = () => {
   const { colorMode } = useColorMode()
-
   initColors(colorMode)
 
 

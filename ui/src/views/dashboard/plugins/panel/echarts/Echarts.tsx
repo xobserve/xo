@@ -16,7 +16,7 @@ import * as echarts from 'echarts';
 import { memo, useEffect, useMemo, useRef, useState } from "react"
 import { PanelProps } from "types/dashboard";
 import { Box, Center, useColorMode, useToast } from "@chakra-ui/react";
-import { genDynamicFunction } from "utils/dynamicCode";
+import { genDynamicFunction } from "utils/dashboard/dynamicCall";
 import { cloneDeep, isEmpty, isFunction } from "lodash";
 import { useSearchParam } from "react-use";
 import React from "react";

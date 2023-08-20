@@ -18,7 +18,7 @@ import { Panel, PanelProps } from "types/dashboard"
 import { PieLegendPlacement } from "types/panel/plugins";
 import { PiePluginData } from "types/plugins/pie"
 import { SeriesData } from "types/seriesData";
-import { genDynamicFunction } from "utils/dynamicCode";
+import { commonInteractionEvent, genDynamicFunction } from "utils/dashboard/dynamicCall";
 import { calcValueOnSeriesData, isSeriesData } from "utils/seriesData";
 import React from "react";
 import { paletteColorNameToHex } from "utils/colors";
@@ -26,8 +26,6 @@ import { ValueCalculationType } from "types/value";
 import { getThreshold } from "components/Threshold/utils";
 import { ThresholdsMode } from "types/threshold";
 import { isEmpty } from "utils/validate";
-import { setVariable } from "src/views/variables/SelectVariable";
-import { setDateTime } from "components/DatePicker/DatePicker";
 import { useNavigate } from "react-router-dom";
 import { isFunction } from "lodash";
 
@@ -178,7 +176,7 @@ const PiePanel = (props: Props) => {
 
 
     return (<>
-        {options && <Box height={height} key={colorMode} className="echarts-panel"><ChartComponent options={options} theme={colorMode} width={width} height={height} onChartCreated={c => setChart(c)} onChartEvents={(row) => onEvents(row, navigate, (k, v) => setVariable(k, v), setDateTime)} /></Box>}
+        {options && <Box height={height} key={colorMode} className="echarts-panel"><ChartComponent options={options} theme={colorMode} width={width} height={height} onChartCreated={c => setChart(c)} onChartEvents={(row) => commonInteractionEvent(onEvents, row)} /></Box>}
     </>)
 }
 

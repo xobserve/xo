@@ -18,7 +18,7 @@ import AutoSizer from "react-virtualized-auto-sizer"
 import PanelAccordion from "src/views/dashboard/edit-panel/Accordion"
 import PanelEditItem from "src/views/dashboard/edit-panel/PanelEditItem"
 import { Panel, PanelEditorProps } from "types/dashboard"
-import { genDynamicFunction } from "utils/dynamicCode"
+import { genDynamicFunction } from "utils/dashboard/dynamicCall"
 import { EchartsComponent } from "./Echarts"
 import { ColorModeSwitcher } from "components/ColorModeSwitcher"
 import React from "react";

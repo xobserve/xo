@@ -45,6 +45,7 @@ import { clearPanelRealTime } from "./store/panelRealtime"
 
 
 setAutoFreeze(false)
+
 // All of the paths that is not defined in pages directory will redirect to this page,
 // generally these pages are defined in:
 // 1. team's side menu, asscessed by a specific url path
@@ -54,7 +55,6 @@ const DashboardWrapper = ({ dashboardId, sideWidth }) => {
     const [dashboard, setDashboard] = useImmer<Dashboard>(null)
     // const [gVariables, setGVariables] = useState<Variable[]>([])
     const fullscreen = useFullscreen()
-
     useEffect(() => {
         updateTimeToNewest()
         if (!dashboard) {
