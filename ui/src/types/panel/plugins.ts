@@ -111,6 +111,7 @@ export interface BarSettings {
             sort: "asc" | "desc"
         }
     }
+    enableClick: boolean
     onClickEvent: string
     thresholds: ThresholdsConfig
     thresholdsDisplay: ThresholdDisplay
@@ -180,6 +181,8 @@ export interface GeoMapSettings {
         showTooltip: boolean
     }
     value: ValueSetting
+    enableClick: boolean
+    onClickEvent: string
     thresholds: ThresholdsConfig
 }
 

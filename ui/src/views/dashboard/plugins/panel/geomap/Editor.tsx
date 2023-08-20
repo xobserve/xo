@@ -31,6 +31,7 @@ import { Units } from "types/panel/plugins";
 import ValueCalculation from "components/ValueCalculation";
 import { dispatch } from "use-bus";
 import { PanelForceRebuildEvent } from "src/data/bus-events";
+import { CodeEditorModal } from "components/CodeEditor/CodeEditorModal";
 
 const GeoMapPanelEditor = memo(({ panel, onChange }: PanelEditorProps) => {
     const t = useStore(commonMsg)
@@ -236,6 +237,19 @@ const GeoMapPanelEditor = memo(({ panel, onChange }: PanelEditorProps) => {
             </PanelEditItem>
         </PanelAccordion>
 
+        <PanelAccordion title={t.interaction}>
+            <PanelEditItem title={t.enable}>
+                <Switch defaultChecked={panel.plugins.geomap.enableClick} onChange={e => onChange((panel: Panel) => {
+                    panel.plugins.geomap.enableClick = e.currentTarget.checked
+                    // dispatch(PanelForceRebuildEvent + panel.id)
+                })} />
+            </PanelEditItem>
+            <PanelEditItem title={t.onClickEvent} desc={t.onClickEventTips}>
+                <CodeEditorModal value={panel.plugins.geomap.onClickEvent} onChange={v => onChange((panel: Panel) => {
+                    panel.plugins.geomap.onClickEvent = v
+                })} />
+            </PanelEditItem>
+        </PanelAccordion>
 
         <PanelAccordion title="Thresholds">
             <ThresholdEditor value={panel.plugins.geomap.thresholds} onChange={(v) => onChange((panel: Panel) => {

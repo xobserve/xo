@@ -373,6 +373,21 @@ function registerEvents(options, chart, navigate, setVariable, setDateTime, $var
                 baseSize: 10,
                 maxScale: 4
             },
+            enableClick: true,
+            onClickEvent: `
+// map:  openlayer map <https://openlayers.org/en/latest/apidoc/module-ol_Map-Map.html>
+// setVariable: (varName:string, varValue:string) => void 
+// navigate: react-router-dom -> useNavigate() -> navigate 
+// setDateTime: (from: Timestamp, to: TimeStamp) => void
+
+function onClick(data, map, navigate, setVariable, setDateTime, $variables) {
+    // You can get all current variables in this way
+    const coords = data[0].getGeometry().flatCoordinates
+    const view = map.getView()
+    view.setCenter(coords)
+    view.setZoom(10)
+}
+`,
             thresholds: initThresholds(12)
         },
         [PanelType.Log]: {
@@ -438,6 +453,7 @@ function registerEvents(options, chart, navigate, setVariable, setDateTime, $var
                     sort: 'desc'
                 }
             },
+            enableClick: true,
             onClickEvent: onClickCommonEvent,
             thresholds: initThresholds(12),
             thresholdsDisplay: ThresholdDisplay.None,

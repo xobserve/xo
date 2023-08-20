@@ -10,7 +10,7 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-import { Box, Center } from "@chakra-ui/react"
+import { Box, Center, useToast } from "@chakra-ui/react"
 import React, { memo, useEffect, useMemo, useRef, useState } from "react"
 import Map from 'ol/Map';
 import View from 'ol/View';
@@ -30,6 +30,12 @@ import 'ol/ol.css';
 import 'ol-ext/dist/ol-ext.css';
 import { isSeriesData } from "utils/seriesData";
 import { isEmpty } from "utils/validate";
+import { genDynamicFunction } from "utils/dashboard/dynamicCall";
+import { isFunction } from "lodash";
+import { gnavigate } from "layouts/PageContainer";
+import { setVariable } from "src/views/variables/SelectVariable";
+import { setDateTime } from "components/DatePicker/DatePicker";
+import { $variables } from "src/views/variables/store";
 
 interface Props extends PanelProps {
     data: SeriesData[][]
@@ -56,6 +62,7 @@ export default GeoMapPanelWrapper
 
 
 const GeoMapPanel = (props: Props) => {
+    const toast = useToast()
     const { width, height, panel, data } = props
     const [map, setMap] = useState<Map>(null)
     const mouseWheelZoom = useRef<MouseWheelZoom>(null)
@@ -146,10 +153,35 @@ const GeoMapPanel = (props: Props) => {
 
         setMap(map)
         geomap = map
+
+        if (options.value,options.enableClick) {
+            const onClick = genDynamicFunction(panel.plugins.geomap.onClickEvent);
+            map.on('click', function(e) {
+                var item = map.getFeaturesAtPixel(e.pixel);
+                if (item !== null) {
+                    //@ts-ignore
+                    if (isFunction(onClick)) {
+                        onClick(item, map, gnavigate, (k, v) => setVariable(k, v), setDateTime, $variables)
+                    } else {
+                        toast({
+                            title: "on click event error",
+                            description: "The function you defined is not valid",
+                            status: "error",
+                            duration: 3000,
+                            isClosable: true,
+                        })
+                    }
+
+                
+                }
+              }); 
+        }
+
+          
         return () => {
             map.dispose()
         }
-    }, [options.baseMap, options.dataLayer, options.value])
+    }, [options.baseMap, options.dataLayer, options.value,options.enableClick, options.onClickEvent])
 
  
 

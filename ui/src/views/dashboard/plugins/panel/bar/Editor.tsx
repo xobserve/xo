@@ -139,6 +139,12 @@ const BarPanelEditor = memo(({ panel, onChange }: PanelEditorProps) => {
         </PanelAccordion>
 
         <PanelAccordion title={t.interaction}>
+            <PanelEditItem title={t.enable}>
+                <Switch defaultChecked={panel.plugins.bar.enableClick} onChange={e => onChange((panel: Panel) => {
+                    panel.plugins.bar.enableClick = e.currentTarget.checked
+                    dispatch(PanelForceRebuildEvent + panel.id)
+                })} />
+            </PanelEditItem>
             <PanelEditItem title={t.onClickEvent} desc={t.onClickEventTips}>
                 <CodeEditorModal value={panel.plugins.bar.onClickEvent} onChange={v => onChange((panel: Panel) => {
                     panel.plugins.bar.onClickEvent = v

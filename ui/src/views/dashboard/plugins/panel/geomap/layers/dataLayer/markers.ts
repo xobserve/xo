@@ -4,7 +4,7 @@ import VectorLayer from 'ol/layer/Vector';
 import { FeatureLike } from 'ol/Feature';
 import { Fill, RegularShape, Stroke, Circle, Style, Icon, Text } from 'ol/style';
 import tinycolor from 'tinycolor2';
-import useExtraTheme from 'hooks/useExtraTheme';
+// import useExtraTheme from 'hooks/useExtraTheme';
 import { colors } from 'utils/colors';
 import { Panel } from 'types/dashboard';
 
@@ -80,7 +80,7 @@ const textLabel = (cfg) => {
         return undefined;
     }
 
-    const fontFamily = useExtraTheme().typography.fontFamily;
+    // const fontFamily = useExtraTheme().typography.fontFamily;
     const textConfig = {
         ...defaultStyleConfig.textConfig,
         ...cfg?.textConfig,
@@ -88,7 +88,7 @@ const textLabel = (cfg) => {
     return new Text({
         text: cfg?.text,
         fill: new Fill({ color: cfg?.color ?? 'inherit' }),
-        font: `normal ${textConfig.fontSize}px ${fontFamily}`,
+        font: `normal ${textConfig.fontSize}px`,
         ...textConfig,
     });
 };
