@@ -150,6 +150,11 @@ const PiePanelEditor = memo(({ panel, onChange }: PanelEditorProps) => {
         </PanelAccordion>
 
         <PanelAccordion title={t.interaction}>
+            <PanelEditItem title={t.enable}>
+                <Switch defaultChecked={panel.plugins.pie.enableClick} onChange={e => onChange((panel: Panel) => {
+                    panel.plugins.pie.enableClick = e.currentTarget.checked
+                })} />
+            </PanelEditItem>
             <PanelEditItem title={t.onClickEvent} desc={t.onClickEventTips}>
                 <CodeEditorModal value={panel.plugins.pie.onClickEvent} onChange={v => onChange((panel: Panel) => {
                     panel.plugins.pie.onClickEvent = v

@@ -176,7 +176,7 @@ const PiePanel = (props: Props) => {
 
 
     return (<>
-        {options && <Box height={height} key={colorMode} className="echarts-panel"><ChartComponent options={options} theme={colorMode} width={width} height={height} onChartCreated={c => setChart(c)} onChartEvents={(row) => commonInteractionEvent(onEvents, row)} /></Box>}
+        {options && <Box height={height} key={colorMode} className="echarts-panel"><ChartComponent options={options} theme={colorMode} width={width} height={height} onChartCreated={c => setChart(c)} onChartEvents={panel.plugins.pie.enableClick ? (row) => commonInteractionEvent(onEvents, row) : null} /></Box>}
     </>)
 }
 

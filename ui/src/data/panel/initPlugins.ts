@@ -238,6 +238,7 @@ function registerEvents(options, chart) {
             thresholds: initThresholds(12),
             enableThresholds: false,
             showThreshodBorder: true,
+            enableClick: true,
             onClickEvent: onClickCommonEvent
         },
         [PanelType.Gauge]: {

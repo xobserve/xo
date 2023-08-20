@@ -248,6 +248,7 @@ export interface PieSettings {
         transformName: string
         lineHeight: number
     }
+    enableClick: boolean
     onClickEvent: string
     shape: {
         type: 'normal' | 'rose'
