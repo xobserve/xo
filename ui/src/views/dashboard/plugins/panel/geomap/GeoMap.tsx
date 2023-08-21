@@ -174,7 +174,13 @@ const GeoMapPanel = (props: Props) => {
 
                 
                 }
-              }); 
+              });
+              
+              map.on('pointermove', function(e){
+                var pixel = map.getEventPixel(e.originalEvent);
+                var hit = map.hasFeatureAtPixel(pixel);
+                map.getViewport().style.cursor = hit ? 'pointer' : '';
+              });
         }
 
           
