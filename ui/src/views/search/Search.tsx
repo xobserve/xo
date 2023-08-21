@@ -22,12 +22,14 @@ import { isEmpty } from "utils/validate"
 import { Team } from "types/teams"
 import TeamsFilter from "./TeamsFilter"
 import { AiFillStar, AiOutlineStar } from "react-icons/ai"
-import { sortBy } from "lodash"
+import { cloneDeep, sortBy } from "lodash"
 import ListView from "./ListView"
 import TeamsView from "./TeamsView"
 import TagsView from "./TagsView"
 import PopoverTooltip from "components/PopoverTooltip"
 import { useLocation } from "react-router-dom"
+import useBus from "use-bus"
+import { OnDashboardWeightChangeEvent } from "src/data/bus-events"
 
 interface Props {
     title: string
@@ -50,6 +52,16 @@ const Search = memo((props: Props) => {
     const [starredDashIds, setStarredDashIds] = useState<Set<string>>(new Set())
     const [layout, setLayout] = useState<"teams" | "list" | "tags">("teams")
 
+    useBus(
+        OnDashboardWeightChangeEvent,
+        (e) => {
+            requestApi.get(`/dashboard/simpleList`).then(res => {
+                setRawDashboards(res.data)
+            })    
+        },
+        [rawDashboards]
+    )
+        
     useEffect(() => {
         onClose()
     },[location])
@@ -154,6 +166,7 @@ const Search = memo((props: Props) => {
         return [result, tagCount, teamCount]
     }, [query, rawDashboards, caseSensitive, selectedTags, selectedTeams, filterStarred, starredDashIds])
 
+    console.log("here333333:",rawDashboards, teamCount)
     const dashboards: Dashboard[] | Map<string, Dashboard[]> = useMemo(() => {
         if (layout == "list") {
             return dashboards1

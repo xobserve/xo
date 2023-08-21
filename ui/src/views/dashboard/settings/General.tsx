@@ -145,9 +145,9 @@ const GeneralSettings = ({ dashboard, onChange }: Props) => {
                         }
                     </HStack>
                 </FormItem>
-                <FormItem title={t1.sortWeight} desc={t1.sortWeightTips} alignItems="center">
+                {/* <FormItem title={t1.sortWeight} desc={t1.sortWeightTips} alignItems="center">
                     <EditorNumberItem size="lg" min={0} max={500} step={1} value={dashboard.weight} notNull defaultZero={true} onChange={v => onChange((draft: Dashboard) => { draft.weight = v })} />
-                </FormItem>
+                </FormItem> */}
             </FormSection>
             <FormSection title={t1.loadData}>
                 <FormItem title={t1.lazyRender} desc={t1.lazyRenderTips} alignItems="center">

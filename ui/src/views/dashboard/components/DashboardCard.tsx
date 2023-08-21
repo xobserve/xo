@@ -23,6 +23,8 @@ import DashboardStar from "./DashboardStar"
 import { Divider, InputNumber } from "antd"
 import { EditorNumberItem } from "components/editor/EditorItem"
 import { requestApi } from "utils/axios/request"
+import { dispatch } from "use-bus"
+import { OnDashboardWeightChangeEvent } from "src/data/bus-events"
 
 
 interface Props {
@@ -46,6 +48,7 @@ const DashboardCard = ({ dashboard, owner, query, onClick, starred }: Props) => 
         await requestApi.post("/dashboard/weight", {id: dashboard.id, weight})
         setWeight(null)
         dashboard.weight = weight
+        dispatch(OnDashboardWeightChangeEvent)
     }
 
     return (
