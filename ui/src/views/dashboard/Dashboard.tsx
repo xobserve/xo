@@ -40,6 +40,8 @@ import EditPanel from "./edit-panel/EditPanel"
 import { $dashboard } from "./store/dashboard"
 import DashboardAnnotations from "./DashboardAnnotations"
 import { clearPanelRealTime } from "./store/panelRealtime"
+import storage from "utils/localStorage"
+import { PreviousColorModeKey } from "src/data/storage-keys"
 
 
 
@@ -53,7 +55,7 @@ setAutoFreeze(false)
 const DashboardWrapper = ({ dashboardId, sideWidth }) => {
     const vars = useStore($variables)
     const [dashboard, setDashboard] = useImmer<Dashboard>(null)
-    const { colorMode, toggleColorMode } = useColorMode()
+    const { setColorMode, colorMode, toggleColorMode } = useColorMode()
     const toast = useToast()
     // const [gVariables, setGVariables] = useState<Variable[]>([])
     const fullscreen = useFullscreen()
@@ -105,13 +107,8 @@ const DashboardWrapper = ({ dashboardId, sideWidth }) => {
                         bodyStyle.background = bg.url
                         bodyStyle.backgroundSize = "cover"
                         if (colorMode !== bg.colorMode) {
+                            storage.set(PreviousColorModeKey, colorMode)
                             toggleColorMode()
-                            // toast({
-                            //     title: `Change to <${bg.colorMode}> mode to better use current background`,
-                            //     status: "info",
-                            //     duration: 3000,
-                            //     isClosable: true,
-                            // })
                         }
                     }
                 }
@@ -121,6 +118,11 @@ const DashboardWrapper = ({ dashboardId, sideWidth }) => {
         return () => {
             let bodyStyle = document.body.style
             bodyStyle.background = null
+            const previousColorMode = storage.get(PreviousColorModeKey)
+            if (previousColorMode) {
+                setColorMode(previousColorMode)
+                storage.remove(PreviousColorModeKey)
+            }
         }
     }, [dashboard])
 
