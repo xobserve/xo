@@ -72,6 +72,11 @@ const DashboardWrapper = ({ dashboardId, sideWidth }) => {
             prevQueries.clear()
             prevQueryData.clear()
             clearPanelRealTime()
+            const previousColorMode = storage.get(PreviousColorModeKey)
+            if (previousColorMode) {
+                storage.remove(PreviousColorModeKey)
+                setColorMode(previousColorMode)
+            }
         } 
     }, [])
 
@@ -107,8 +112,10 @@ const DashboardWrapper = ({ dashboardId, sideWidth }) => {
                         bodyStyle.background = bg.url
                         bodyStyle.backgroundSize = "cover"
                         if (colorMode !== bg.colorMode) {
-                            storage.set(PreviousColorModeKey, colorMode)
-                            toggleColorMode()
+                            if (!storage.get(PreviousColorModeKey)) {
+                                storage.set(PreviousColorModeKey, colorMode)
+                                toggleColorMode()
+                            }
                         }
                     }
                 }
@@ -118,11 +125,6 @@ const DashboardWrapper = ({ dashboardId, sideWidth }) => {
         return () => {
             let bodyStyle = document.body.style
             bodyStyle.background = null
-            const previousColorMode = storage.get(PreviousColorModeKey)
-            if (previousColorMode) {
-                setColorMode(previousColorMode)
-                storage.remove(PreviousColorModeKey)
-            }
         }
     }, [dashboard])
 

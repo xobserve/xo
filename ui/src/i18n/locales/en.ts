@@ -312,6 +312,8 @@ export const dashboardSettingMsg = i18n("dashboardSetting", {
 
   "background": "Background",
   "backgroundTips": "Set dashboard background color or image",
+  "backgroundColorMode": "Background color mode",
+  "backgroundColorModeTips": "Change to this color mode when using background image",
   "enableBg": "Enable background",
   "enableBgTips": "Whether using the background image set above",
   "dashBorder":  "Dashboard border",

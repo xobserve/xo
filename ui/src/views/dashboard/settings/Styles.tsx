@@ -10,7 +10,7 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-import {  Switch } from "@chakra-ui/react"
+import {  Select, Switch } from "@chakra-ui/react"
 import { EditorInputItem } from "components/editor/EditorItem"
 import { Form } from "components/form/Form"
 import { Dashboard } from "types/dashboard"
@@ -20,6 +20,7 @@ import React from "react";
 import { useStore } from "@nanostores/react"
 import { dashboardSettingMsg } from "src/i18n/locales/en"
 import InputSelect from "components/select/InputSelect"
+import { isEmpty } from "utils/validate"
 
 interface Props {
     dashboard: Dashboard
@@ -53,11 +54,21 @@ const StyleSettings = ({ dashboard, onChange }: Props) => {
                 size="md"
                  value={dashboard.data.styles.bg.url} 
                  onChange={(v) => onChange(draft => { draft.data.styles.bg = {
-                    url: v,
-                    colorMode: bgOptions.find(item => item.value === v)?.colorMode,
+                    url: v.trim(),
+                    colorMode: bgOptions.find(item => item.value === v.trim())?.colorMode ?? "dark",
                  } })} 
                  options={bgOptions as any}  
             />
+        </FormItem>
+        <FormItem title={t1.backgroundColorMode}>
+            <Select value={dashboard.data.styles.bg.colorMode} onChange={
+                (e) => {
+                    const v = e.currentTarget.value
+                    onChange(draft => { draft.data.styles.bg.colorMode = v })}
+            } isDisabled={!isEmpty(bgOptions.find(item => item.value === dashboard.data.styles.bg.url))}>
+                <option value="light">light</option>
+                <option value="dark">Dark</option>
+            </Select>
         </FormItem>
         <FormItem title={t1.enableBg} desc={t1.enableBgTips} alignItems="center">
             <Switch defaultChecked={dashboard.data.styles?.bgEnabled} onChange={(e) => onChange(draft => { draft.data.styles.bgEnabled = e.currentTarget.checked })} />
