@@ -19,11 +19,25 @@ import FormItem from "components/form/Item"
 import React from "react";
 import { useStore } from "@nanostores/react"
 import { dashboardSettingMsg } from "src/i18n/locales/en"
+import InputSelect from "components/select/InputSelect"
 
 interface Props {
     dashboard: Dashboard
     onChange: any
 } 
+
+const bgOptions = [
+    {
+    label: "Universe",
+    value: "url(/public/dashboard/universe.png)",
+    colorMode: "dark",
+ },
+ {
+    label: "Rainbow",
+    value: "url(/public/dashboard/rainbow.jpg)",
+    colorMode: "light",
+ },
+]
 
 const StyleSettings = ({ dashboard, onChange }: Props) => {
     const t1 = useStore(dashboardSettingMsg)
@@ -32,8 +46,18 @@ const StyleSettings = ({ dashboard, onChange }: Props) => {
             width: '200px'
         }
     }} spacing={1}>
-        <FormItem title={t1.background} desc={t1.backgroundTips} labelWidth="100%">
-            <EditorInputItem value={dashboard.data.styles?.bg} onChange={(v) => onChange(draft => { draft.data.styles.bg = v })} />
+        <FormItem size="md" title={t1.background} desc={t1.backgroundTips} labelWidth="100%">
+        {/* url(/public/dashboard-bg.png) */}
+            <InputSelect 
+                width="500px" 
+                size="md"
+                 value={dashboard.data.styles.bg.url} 
+                 onChange={(v) => onChange(draft => { draft.data.styles.bg = {
+                    url: v,
+                    colorMode: bgOptions.find(item => item.value === v)?.colorMode,
+                 } })} 
+                 options={bgOptions as any}  
+            />
         </FormItem>
         <FormItem title={t1.enableBg} desc={t1.enableBgTips} alignItems="center">
             <Switch defaultChecked={dashboard.data.styles?.bgEnabled} onChange={(e) => onChange(draft => { draft.data.styles.bgEnabled = e.currentTarget.checked })} />

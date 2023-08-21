@@ -37,7 +37,7 @@ export interface DashboardData {
     editable: boolean
     hidingVars: string
     styles: {
-        bg: string
+        bg: Record<string, string>
         bgEnabled: boolean
         border: string
         // decoration: DecorationStyles

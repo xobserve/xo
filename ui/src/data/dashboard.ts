@@ -21,7 +21,7 @@ export const initDashboard = (team?): Dashboard => {
             hidingVars: "",
             description: "",
             styles: {
-                bg: "url(/public/dashboard-bg.png)",
+                bg: {},
                 bgEnabled: false,
                 border: PanelBorderType.None,
                 // decoration: {

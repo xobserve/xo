@@ -10,7 +10,7 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-import { Box, useColorMode } from "@chakra-ui/react"
+import { Box, useColorMode, useToast } from "@chakra-ui/react"
 import { useCallback, useEffect, useMemo, useRef, useState } from "react"
 import { Dashboard, Panel } from "types/dashboard"
 import { requestApi } from "utils/axios/request"
@@ -21,7 +21,7 @@ import { setVariableSelected } from "src/views/variables/SelectVariable"
 import {  prevQueries, prevQueryData } from "src/views/dashboard/grid/PanelGrid/PanelGrid"
 import { unstable_batchedUpdates } from "react-dom"
 import useBus from 'use-bus'
-import { SetDashboardEvent, TimeChangedEvent, UpdatePanelEvent } from "src/data/bus-events"
+import { SetDashboardEvent, UpdatePanelEvent } from "src/data/bus-events"
 import React from "react";
 import { useImmer } from "use-immer"
 import { setAutoFreeze } from "immer";
@@ -53,6 +53,8 @@ setAutoFreeze(false)
 const DashboardWrapper = ({ dashboardId, sideWidth }) => {
     const vars = useStore($variables)
     const [dashboard, setDashboard] = useImmer<Dashboard>(null)
+    const { colorMode, toggleColorMode } = useColorMode()
+    const toast = useToast()
     // const [gVariables, setGVariables] = useState<Variable[]>([])
     const fullscreen = useFullscreen()
     useEffect(() => {
@@ -98,8 +100,20 @@ const DashboardWrapper = ({ dashboardId, sideWidth }) => {
             setTimeout(() => {
                 if (dashboard.data.styles?.bgEnabled && dashboard?.data.styles?.bg) {
                     let bodyStyle = document.body.style
-                    bodyStyle.background = dashboard?.data.styles?.bg
-                    bodyStyle.backgroundSize = "cover"
+                    const bg = dashboard?.data.styles?.bg
+                    if (bg) {
+                        bodyStyle.background = bg.url
+                        bodyStyle.backgroundSize = "cover"
+                        if (colorMode !== bg.colorMode) {
+                            toggleColorMode()
+                            // toast({
+                            //     title: `Change to <${bg.colorMode}> mode to better use current background`,
+                            //     status: "info",
+                            //     duration: 3000,
+                            //     isClosable: true,
+                            // })
+                        }
+                    }
                 }
             }, 1)
         }

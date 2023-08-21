@@ -37,7 +37,7 @@ const DashboardPage = memo(({sideWidth}: Props) => {
             setError(null)
             if (rawId == 'alert') {
                 setDashboardId(AlertDashbordId)
-            } else  {
+            } else  {   
                 setDashboardId(null)
                 let path = window.location.pathname;
                 // if rawId  starts with 'd-', then it's a dashboard id
