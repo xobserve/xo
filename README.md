@@ -12,7 +12,7 @@
 
 
 <!--<h1 align="center">
-  The new version of Datav and online demo is coming soon.. 
+  First production available versison is abount to release on 8.28
 </h1>-->
 
 
