@@ -1,10 +1,14 @@
 import React from 'react'
 
 import { Global, css } from "@emotion/react"
+import { ChakraTheme, useColorMode } from '@chakra-ui/react'
 
 const CommonStyles = () => (
+ 
   <Global
-    styles={(theme: any) => css` 
+    styles={(theme: ChakraTheme) => {
+      const {colorMode} = useColorMode()
+      return css` 
       .infinite-scroller {
         ::-webkit-scrollbar {
           width: 1px;
@@ -12,7 +16,6 @@ const CommonStyles = () => (
         }   
       }
 
-    
       .top-gradient-border {
         ::before {
           display: block;
@@ -39,7 +42,7 @@ const CommonStyles = () => (
       .uplot .u-over {
         pointer-events: auto !important;
       }
-    `}
+    `}}
   />
 )
 

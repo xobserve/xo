@@ -14,10 +14,30 @@
 import PanelAccordion from "src/views/dashboard/edit-panel/Accordion"
 import { Panel, PanelEditorProps } from "types/dashboard"
 import React from "react";
+import { useStore } from "@nanostores/react";
+import { commonMsg } from "src/i18n/locales/en";
+import PanelEditItem from "src/views/dashboard/edit-panel/PanelEditItem";
+import { Switch } from "@chakra-ui/react";
+import { EditorInputItem } from "components/editor/EditorItem";
+import { dispatch } from "use-bus";
+import { PanelForceRebuildEvent } from "src/data/bus-events";
 
 const TracePanelEditor = ({ panel, onChange }: PanelEditorProps) => {
-    return (<>
-    </>
+    const t = useStore(commonMsg)
+    return (<PanelAccordion title={t.basic}>
+        <PanelEditItem title="Default service">
+            <EditorInputItem value={panel.plugins.trace.defaultService} onChange={(v) => onChange((panel: Panel) => {
+                    panel.plugins.trace.defaultService = v
+                    dispatch(PanelForceRebuildEvent + panel.id)
+                })} />
+        </PanelEditItem>
+        <PanelEditItem title="Enable edit service" desc="when diabled, service will be automatically set to default service">
+            <Switch isChecked={panel.plugins.trace.enableEditService} onChange={(e) => onChange((panel: Panel) => {
+                    panel.plugins.trace.enableEditService = e.target.checked
+                    dispatch(PanelForceRebuildEvent + panel.id)
+                })} />
+        </PanelEditItem>
+    </PanelAccordion>
     )
 }
 

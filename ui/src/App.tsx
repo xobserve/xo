@@ -15,8 +15,6 @@ import { useColorMode } from '@chakra-ui/react'
 import {
   createBrowserRouter,
   RouterProvider,
-  useNavigate,
-
 } from "react-router-dom";
 import React, { useEffect, useState } from 'react'
 import { createStandaloneToast } from '@chakra-ui/toast'

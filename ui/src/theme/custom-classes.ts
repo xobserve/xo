@@ -118,6 +118,9 @@ export function customClasses(props) {
         '.action-icon': {
             fontSize: "0.8rem",
             opacity: 0.6
-        }
+        },
+        '.cursor-pointer': {
+            cursor: 'pointer'
+          }
     }
 }

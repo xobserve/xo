@@ -206,7 +206,8 @@ export interface BarGaugeSettings {
     thresholds: ThresholdsConfig
 }
 export interface TraceSettings {
-
+    defaultService: string 
+    enableEditService: boolean
 }
 
 export interface StatSettings {

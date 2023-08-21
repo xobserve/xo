@@ -3,9 +3,9 @@ import InputSelect from "components/select/InputSelect"
 import { useEffect, useMemo, useState } from "react"
 import { DatasourceType, Panel } from "types/dashboard"
 import { queryJaegerOperations, queryJaegerServices } from "../../../datasource/jaeger/query_runner"
-import {  isEqual, set, sortBy, uniq } from "lodash"
+import { isEqual, set, sortBy, uniq } from "lodash"
 import { EditorInputItem, EditorNumberItem } from "components/editor/EditorItem"
-import { Button, Checkbox, Divider, HStack, Text } from "@chakra-ui/react"
+import { Button, Checkbox, Divider, HStack, Input, Text } from "@chakra-ui/react"
 import storage from "utils/localStorage"
 import { TraceSearchKey } from "../config/constants"
 import { TimeRange } from "types/time"
@@ -36,18 +36,22 @@ const TraceSearchPanel = ({ timeRange, dashboardId, panel, onSearch, onSearchIds
     const variables = useStore($variables)
     const t1 = useStore(tracePanelMsg)
     const [inited, setInited] = useState(false)
-    const lastSearch = useMemo(() => storage.get(TraceSearchKey + dashboardId + panel.id) ?? {}, [])
     const [services, setServices] = useState([])
-    const [service, setService] = useState<string>(searchParams.get('service')?? (lastSearch.service ?? null))
     const [operations, setOperations] = useState([])
-    const [operation, setOperation] = useState<string>(searchParams.get('operation') ?? (lastSearch.operation ?? null))
-    const [tags, setTags] = useState<string>(searchParams.get('tags') ?? (lastSearch.tags ?? ''))
-    const [max, setMax] = useState<string>(searchParams.get('max')??(lastSearch.max ?? ''))
-    const [min, setMin] = useState<string>(searchParams.get('min')??(lastSearch.min ?? ''))
-    const [limit, setLimit] = useState(searchParams.get('limit') ?? (lastSearch.limit ?? 20))
-    const [traceIds, setTraceIds] = useState<string>(searchParams.get('traceIds') ?? null)
+
+    const lastSearch = useMemo(() => storage.get(TraceSearchKey + dashboardId + panel.id) ?? {}, [])
+    const [initService, initOperation, initTags, initMax, initMin, initLimit, initTraceIds] = getInitParams(searchParams, panel, lastSearch)
+    const [service, setService] = useState<string>(initService)
+    const [operation, setOperation] = useState<string>(initOperation)
+    const [tags, setTags] = useState<string>(initTags)
+    const [max, setMax] = useState<string>(initMax)
+    const [min, setMin] = useState<string>(initMin)
+    const [limit, setLimit] = useState<number>(initLimit)
+    const [traceIds, setTraceIds] = useState<string>(initTraceIds)
+
     const [useLatestTime, setUseLatestTime] = useState(true)
     const ds = getDatasource(panel.datasource.id)
+
     useEffect(() => {
         return () => {
             delete traceServicesCache[dashboardId + panel.id]
@@ -73,6 +77,7 @@ const TraceSearchPanel = ({ timeRange, dashboardId, panel, onSearch, onSearchIds
     useEffect(() => {
         if (service) {
             loadOperations()
+            onSearch(service, operation, tags, min, max, limit, useLatestTime)
         } else {
             setOperations([])
         }
@@ -86,16 +91,21 @@ const TraceSearchPanel = ({ timeRange, dashboardId, panel, onSearch, onSearchIds
         const services = replaceWithVariablesHasMultiValues(service)
         const cachedServices = traceServicesCache[dashboardId + panel.id]
         if (!isEqual(services, cachedServices)) {
-            loadOperations()
+            onVariablesChange()
         }
-    },[variables])
+    }, [variables])
+
+    const onVariablesChange = async () => {
+        loadOperations()
+        onSearch(service, operation, tags, min, max, limit, useLatestTime)
+    }
 
     useBus(
         ShareUrlEvent,
         () => {
             if (!isEmpty(traceIds)) {
                 shareUrlParams['traceIds'] = traceIds
-            }  else {
+            } else {
                 if (!isEmpty(service)) shareUrlParams['service'] = service
                 if (!isEmpty(operation)) shareUrlParams['operation'] = operation
                 if (!isEmpty(tags)) shareUrlParams['tags'] = tags
@@ -115,12 +125,9 @@ const TraceSearchPanel = ({ timeRange, dashboardId, panel, onSearch, onSearchIds
                 const ss = sortBy(res)
                 setServices(ss)
                 if (ss.length > 0) {
-                    if (!service) {
+                    if (isEmpty(service)) {
                         setService(ss[0])
-                        onSearch(ss[0], 'all', tags, min, max, limit)
-                    } else {
-                        onSearch(service, operation ?? 'all', tags, min, max, limit)
-                    }
+                    } 
                 }
 
                 setTimeout(() => {
@@ -171,7 +178,11 @@ const TraceSearchPanel = ({ timeRange, dashboardId, panel, onSearch, onSearchIds
     return (<>
         <Form spacing={4}>
             <FormSection title="Service" titleSize="0.85rem" spacing={1}>
-                <InputSelect value={service} options={services.map(s => ({ label: s, value: s }))} size="md" onChange={v => setService(v)} />
+                {
+                    panel.plugins.trace.enableEditService ?
+                        <InputSelect value={service} options={services.map(s => ({ label: s, value: s }))} size="md" onChange={v => setService(v)} />
+                        : <Input value={service} disabled />
+                }
             </FormSection>
             <FormSection title="Operation" titleSize="0.85rem" spacing={1}>
                 <InputSelect value={operation} options={operations.map(s => ({ label: s, value: s }))} size="md" onChange={v => setOperation(v)} />
@@ -205,3 +216,24 @@ const TraceSearchPanel = ({ timeRange, dashboardId, panel, onSearch, onSearchIds
 }
 
 export default TraceSearchPanel
+
+
+const getInitParams = (searchParams, panel, lastSearch) => {
+    let service
+    const urlService = searchParams.get('service')
+    if (!isEmpty(urlService)) {
+        service = urlService
+    } else if (!panel.plugins.trace.enableEditService) {
+        service = panel.plugins.trace.defaultService
+    } else {
+        service = lastSearch.service ?? null
+    }
+
+    const operation = searchParams.get('operation') ?? (lastSearch.operation ?? null)
+    const tags = searchParams.get('tags') ?? (lastSearch.tags ?? '')
+    const max = searchParams.get('max') ?? (lastSearch.max ?? '')
+    const min = searchParams.get('min') ?? (lastSearch.min ?? '')
+    const limit = searchParams.get('limit') ?? (lastSearch.limit ?? 20)
+    const traceIds = searchParams.get('traceIds') ?? null
+    return [service, operation, tags, max, min, limit, traceIds]
+}

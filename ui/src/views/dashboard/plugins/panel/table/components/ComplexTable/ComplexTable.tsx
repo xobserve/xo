@@ -295,6 +295,7 @@ const ComplexTable = memo((props: Props) => {
       showSorterTooltip={false}
       scroll={{ x: options.tableWidth + '%' }}
       bordered={options.bordered}
+      rowClassName={options.enableRowClick ? "cursor-pointer" : null}
       onRow={options.enableRowClick ? record => {
         return {
           onClick: _ => {
