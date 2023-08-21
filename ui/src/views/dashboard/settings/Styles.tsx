@@ -64,7 +64,7 @@ const StyleSettings = ({ dashboard, onChange }: Props) => {
                     })
                     storage.remove(PreviousColorModeKey)
                 }}
-                options={bgOptions as any}
+                options={bgOptions as any} 
             />
         </FormItem>
         <FormItem title={t1.backgroundColorMode}>

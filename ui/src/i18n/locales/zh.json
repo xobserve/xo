@@ -292,6 +292,8 @@
     "autoSaveInterval": "自动保存间隔( 秒 )",
     "hiddenPanel":  "隐藏图表",
     "hiddenPanelTips": "你可以点击图表的顶部，然后选择隐藏图表",
+    "sortWeight": "排序优先级",
+    "sortWeightTips": "更大的值意味着更高的排序优先级，该优先级用于搜索仪表盘时",
 
     "background": "背景",
     "backgroundTips": "设置仪表盘的背景颜色或图片",

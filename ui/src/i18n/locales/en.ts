@@ -309,7 +309,8 @@ export const dashboardSettingMsg = i18n("dashboardSetting", {
   "autoSaveInterval": "Auto save interval(seconds)",
   "hiddenPanel":  "Hidden panels",
   "hiddenPanelTips": "You can hide a panel by clicking its header and select hide panel",
-
+  "sortWeight": "Sort priority",
+  "sortWeightTips": "Higher value means higher sort priority, this is used in Search dashboards",
   "background": "Background",
   "backgroundTips": "Set dashboard background color or image",
   "backgroundColorMode": "Background color mode",

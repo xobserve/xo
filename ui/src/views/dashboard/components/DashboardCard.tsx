@@ -11,16 +11,18 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { Box, Flex, HStack, Highlight, Tag, Text } from "@chakra-ui/react"
+import { Box, Flex, HStack, Highlight, Tag, Text, useOutsideClick } from "@chakra-ui/react"
 import ColorTag from "components/ColorTag"
 import CopyToClipboard from "components/CopyToClipboard"
-import React, { useState } from "react"
+import React, { useRef, useState } from "react"
 import { useNavigate } from "react-router-dom"
 import { Dashboard } from "types/dashboard"
 import { Team } from "types/teams"
 import { getDashboardLink } from "utils/dashboard/dashboard"
 import DashboardStar from "./DashboardStar"
-import { Divider } from "antd"
+import { Divider, InputNumber } from "antd"
+import { EditorNumberItem } from "components/editor/EditorItem"
+import { requestApi } from "utils/axios/request"
 
 
 interface Props {
@@ -34,6 +36,17 @@ interface Props {
 const DashboardCard = ({ dashboard, owner, query, onClick, starred }: Props) => {
     const [active, setActive] = useState(false)
     const navigate = useNavigate()
+    const [weight, setWeight] = useState(null)
+    const ref = useRef()
+    useOutsideClick({
+        ref: ref,
+        handler: () => setWeight(null),
+    })
+    const submitWeight = async () => {
+        await requestApi.post("/dashboard/weight", {id: dashboard.id, weight})
+        setWeight(null)
+        dashboard.weight = weight
+    }
 
     return (
         <Flex
@@ -44,14 +57,12 @@ const DashboardCard = ({ dashboard, owner, query, onClick, starred }: Props) => 
             p="2"
             onMouseEnter={() => setActive(true)}
             onMouseLeave={() => setActive(false)}
-            cursor="pointer"
-            onClick={() => {
-                navigate(getDashboardLink(dashboard.id))
-                onClick && onClick()
-            }}
         >
             <Box>
-                <Flex alignItems="center">
+                <Flex alignItems="center" cursor="pointer" onClick={() => {
+                        navigate(getDashboardLink(dashboard.id))
+                        onClick && onClick()
+                    }}>
                     <Text><Highlight query={query ?? ""} styles={{ bg: 'cyan.100' }} >{dashboard.title}</Highlight></Text>
                     {location.pathname == '/' + dashboard.id && <Tag ml="1">current</Tag>}
                     {(query || active) &&
@@ -62,6 +73,22 @@ const DashboardCard = ({ dashboard, owner, query, onClick, starred }: Props) => 
                 </Flex>
                 <HStack alignItems="center" mt="2" spacing={1}>
                     <Text minWidth="fit-content" textStyle="annotation">{owner?.name}</Text>
+                    <Divider type="vertical" />
+                    {weight === null
+                        ?
+                        <Text textStyle="annotation" cursor="text" onClick={(e) => {
+                            setWeight(dashboard.weight)
+                            e.stopPropagation()
+                        }}>{dashboard.weight}</Text>
+                        :
+                        <InputNumber ref={ref} value={weight} min={0} max={500} step={1} onChange={v => {
+                            setWeight(v??0)
+                        }} onKeyDown={e => {
+                            if (e.key === 'Enter') {
+                                console.log
+                                submitWeight()
+                            }
+                        }} />}
                     {starred && <>
                         <Divider type="vertical" />
                         <DashboardStar dashboardId={dashboard.id} colorScheme="gray" enableClick={false} starred />

@@ -21,6 +21,7 @@ export interface Dashboard {
     title: string
     ownedBy: number
     data: DashboardData
+    weight: number
     tags?: string[]
     editable?: boolean
     createdBy?: string

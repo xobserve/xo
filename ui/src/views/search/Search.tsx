@@ -72,7 +72,7 @@ const Search = memo((props: Props) => {
         const r2 = requestApi.get(`/dashboard/starred`)
         const res = await Promise.all([r1, r2])
 
-        setRawDashboards(sortBy(res[0].data, dash => dash.title))
+        setRawDashboards(res[0].data)
         const starred = new Set<string>()
         for (const id of res[1].data) {
             starred.add(id)

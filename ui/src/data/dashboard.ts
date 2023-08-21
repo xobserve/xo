@@ -3,7 +3,6 @@ import { Dashboard, DashboardLayout } from "types/dashboard";
 import { PanelBorderType, PanelDecorationType } from "types/panel/styles";
 import { Role } from "types/role";
 import { globalTeamId } from "types/teams";
-import { isEmpty } from "utils/validate";
 
 export const HomeDashboardId = "d-home"
 export const AlertDashbordId = "d-alert"
@@ -21,7 +20,10 @@ export const initDashboard = (team?): Dashboard => {
             hidingVars: "",
             description: "",
             styles: {
-                bg: {},
+                bg: {
+                    url: "",
+                    colorMode: "dark"
+                },
                 bgEnabled: false,
                 border: PanelBorderType.None,
                 // decoration: {
@@ -49,6 +51,7 @@ export const initDashboard = (team?): Dashboard => {
             }
         },
         ownedBy: (team == 0 || isNaN(team)) ? globalTeamId :  team ,
+        weight: 0
     }
 }
 
