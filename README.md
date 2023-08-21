@@ -11,9 +11,9 @@
 </p>
 
 
-<!--<h1 align="center">
+<h1 align="center">
   First production available versison is abount to release on 8.28
-</h1>-->
+</h1>
 
 
 
