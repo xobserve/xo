@@ -91,7 +91,6 @@ var HomeDashboard = `
         ],
         "sharedTooltip": false,
         "styles": {
-            "bg": "url(/public/dashboard-bg.png)",
             "bgEnabled": false,
             "border": "None"
         },

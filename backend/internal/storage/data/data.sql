@@ -72,7 +72,7 @@ CREATE TABLE IF NOT EXISTS variable (
     refresh VARCHAR(32),
     enableMulti BOOL NOT NULL DEFAULT false,
     enableAll BOOL NOT NULL DEFAULT false,
-    sort TINYINT DEFAULT 0,
+    sort SMALLINT DEFAULT 0,
     regex TEXT,
     created DATETIME NOT NULL,
     updated DATETIME NOT NULL
@@ -87,6 +87,7 @@ CREATE TABLE IF NOT EXISTS dashboard (
     created_by INTEGER NOT NULL,
     tags TEXT,
     data MEDIUMTEXT NOT NULL,
+    weight TINYINT DEFAULT 0,
     created DATETIME NOT NULL,
     updated DATETIME NOT NULL
 );

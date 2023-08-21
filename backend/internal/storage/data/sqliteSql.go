@@ -94,6 +94,7 @@ CREATE TABLE IF NOT EXISTS dashboard (
     created_by INTEGER NOT NULL,
     tags TEXT,
     data MEDIUMTEXT NOT NULL,
+    weight SMALLINT DEFAULT 0,
     created DATETIME NOT NULL,
     updated DATETIME NOT NULL
 );

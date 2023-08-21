@@ -136,7 +136,6 @@ const AlertDashboard = `
         ],
         "sharedTooltip": false,
         "styles": {
-            "bg": "url(http://datav-react.jiaminghi.com/demo/manage-desk/static/media/bg.110420cf.png)",
             "bgEnabled": false,
             "border": "None"
         },

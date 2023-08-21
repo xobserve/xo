@@ -93,8 +93,8 @@ func SaveDashboard(c *gin.Context) {
 			return
 		}
 	} else {
-		res, err := db.Conn.Exec(`UPDATE dashboard SET title=?,tags=?,data=?,updated=? WHERE id=?`,
-			dash.Title, tags, jsonData, dash.Updated, dash.Id)
+		res, err := db.Conn.Exec(`UPDATE dashboard SET title=?,tags=?,data=?,weight=?,updated=? WHERE id=?`,
+			dash.Title, tags, jsonData, dash.SortWeight, dash.Updated, dash.Id)
 		if err != nil {
 			logger.Error("update dashboard error", "error", err)
 			c.JSON(500, common.RespInternalError())
@@ -237,7 +237,7 @@ func GetTeamDashboards(c *gin.Context) {
 func GetSimpleList(c *gin.Context) {
 	dashboards := make([]*models.Dashboard, 0)
 
-	rows, err := db.Conn.Query("SELECT id,title, owned_by, tags FROM dashboard ORDER BY created")
+	rows, err := db.Conn.Query("SELECT id,title, owned_by, tags, weight FROM dashboard ORDER BY weight DESC,created DESC")
 	if err != nil {
 		logger.Warn("query simple dashboards error", "error", err)
 		c.JSON(500, common.RespError(e.Internal))
@@ -247,7 +247,7 @@ func GetSimpleList(c *gin.Context) {
 	for rows.Next() {
 		dash := &models.Dashboard{}
 		var rawTags []byte
-		err = rows.Scan(&dash.Id, &dash.Title, &dash.OwnedBy, &rawTags)
+		err = rows.Scan(&dash.Id, &dash.Title, &dash.OwnedBy, &rawTags, &dash.SortWeight)
 		if err != nil {
 			logger.Warn("get simple dashboards scan error", "error", err)
 			c.JSON(500, common.RespError(e.Internal))
@@ -406,6 +406,50 @@ func Delete(c *gin.Context) {
 	}
 
 	admin.WriteAuditLog(u.Id, admin.AuditDeleteDashboard, id, dash)
+
+	c.JSON(200, common.RespSuccess(nil))
+}
+
+type DashboardReq struct {
+	Id     string `json:"id"`
+	Weight int    `json:"weight"`
+}
+
+func UpdateWeight(c *gin.Context) {
+	req := &DashboardReq{}
+	err := c.Bind(req)
+	if err != nil {
+		logger.Warn("update dashboard weight bind error", "error", err)
+		c.JSON(400, common.RespError(e.ParamInvalid))
+		return
+	}
+
+	u := user.CurrentUser(c)
+	if !u.Role.IsAdmin() {
+		ownedBy, err := models.QueryDashboardBelongsTo(req.Id)
+		if err != nil {
+			logger.Warn("query dash belongs to error", "error", err)
+			c.JSON(500, common.RespError(e.Internal))
+			return
+		}
+		isTeamAdmin, err := models.IsTeamAdmin(ownedBy, u.Id)
+		if err != nil {
+			logger.Error("check team admin error", "error", err)
+			c.JSON(500, common.RespInternalError())
+			return
+		}
+		if !isTeamAdmin {
+			c.JSON(403, common.RespError(e.NoPermission))
+			return
+		}
+	}
+
+	_, err = db.Conn.Exec("UPDATE dashboard SET weight=? WHERE id=?", req.Weight, req.Id)
+	if err != nil {
+		logger.Warn("update dashboard weight error", "error", err)
+		c.JSON(500, common.RespError(e.Internal))
+		return
+	}
 
 	c.JSON(200, common.RespSuccess(nil))
 }

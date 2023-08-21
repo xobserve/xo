@@ -116,7 +116,7 @@ func (s *Server) Start() error {
 		r.GET("/dashboard/starred", IsLogin(), dashboard.GetAllStarred)
 		r.GET("/dashboard/starred/:id", IsLogin(), dashboard.GetStarred)
 		r.DELETE("/dashboard/:id", IsLogin(), dashboard.Delete)
-
+		r.POST("/dashboard/weight", IsLogin(), dashboard.UpdateWeight)
 		// annotation
 		r.POST("/annotation", IsLogin(), annotation.SetAnnotation)
 		r.GET("/annotation/:namespace", IsLogin(), annotation.QueryNamespaceAnnotations)
