@@ -109,7 +109,7 @@ const DashboardWrapper = ({ dashboardId, sideWidth }) => {
                     let bodyStyle = document.body.style
                     const bg = dashboard?.data.styles?.bg
                     if (bg) {
-                        bodyStyle.background = bg.url
+                        bodyStyle.background = `url(${bg.url})`
                         bodyStyle.backgroundSize = "cover"
                         if (colorMode !== bg.colorMode) {
                             if (!storage.get(PreviousColorModeKey)) {

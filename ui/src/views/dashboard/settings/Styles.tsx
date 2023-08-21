@@ -10,7 +10,7 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-import {  Select, Switch } from "@chakra-ui/react"
+import { Select, Switch } from "@chakra-ui/react"
 import { EditorInputItem } from "components/editor/EditorItem"
 import { Form } from "components/form/Form"
 import { Dashboard } from "types/dashboard"
@@ -21,23 +21,25 @@ import { useStore } from "@nanostores/react"
 import { dashboardSettingMsg } from "src/i18n/locales/en"
 import InputSelect from "components/select/InputSelect"
 import { isEmpty } from "utils/validate"
+import storage from "utils/localStorage"
+import { PreviousColorModeKey } from "src/data/storage-keys"
 
 interface Props {
     dashboard: Dashboard
     onChange: any
-} 
+}
 
 const bgOptions = [
     {
-    label: "Universe",
-    value: "url(/public/dashboard/universe.png)",
-    colorMode: "dark",
- },
- {
-    label: "Rainbow",
-    value: "url(/public/dashboard/rainbow.jpg)",
-    colorMode: "light",
- },
+        label: "Universe",
+        value: "/public/dashboard/universe.png",
+        colorMode: "dark",
+    },
+    {
+        label: "Rainbow",
+        value: "/public/dashboard/rainbow.jpg",
+        colorMode: "light",
+    },
 ]
 
 const StyleSettings = ({ dashboard, onChange }: Props) => {
@@ -48,25 +50,32 @@ const StyleSettings = ({ dashboard, onChange }: Props) => {
         }
     }} spacing={1}>
         <FormItem size="md" title={t1.background} desc={t1.backgroundTips} labelWidth="100%">
-        {/* url(/public/dashboard-bg.png) */}
-            <InputSelect 
-                width="500px" 
+            {/* url(/public/dashboard-bg.png) */}
+            <InputSelect
+                width="500px"
                 size="md"
-                 value={dashboard.data.styles.bg.url} 
-                 onChange={(v) => onChange(draft => { draft.data.styles.bg = {
-                    url: v.trim(),
-                    colorMode: bgOptions.find(item => item.value === v.trim())?.colorMode ?? "dark",
-                 } })} 
-                 options={bgOptions as any}  
+                value={dashboard.data.styles.bg.url}
+                onChange={(v) => {
+                    onChange(draft => {
+                        draft.data.styles.bg = {
+                            url: v.trim(),
+                            colorMode: bgOptions.find(item => item.value === v.trim())?.colorMode ?? "dark",
+                        }
+                    })
+                    storage.remove(PreviousColorModeKey)
+                }}
+                options={bgOptions as any}
             />
         </FormItem>
         <FormItem title={t1.backgroundColorMode}>
             <Select value={dashboard.data.styles.bg.colorMode} onChange={
                 (e) => {
                     const v = e.currentTarget.value
-                    onChange(draft => { draft.data.styles.bg.colorMode = v })}
+                    onChange(draft => { draft.data.styles.bg.colorMode = v })
+                    storage.remove(PreviousColorModeKey)
+                }
             } isDisabled={!isEmpty(bgOptions.find(item => item.value === dashboard.data.styles.bg.url))}>
-                <option value="light">light</option>
+                <option value="light">Light</option>
                 <option value="dark">Dark</option>
             </Select>
         </FormItem>
