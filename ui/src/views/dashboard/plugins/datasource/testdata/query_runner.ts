@@ -23,8 +23,8 @@ import traceData from './mocks/trace.json'
 import { genPrometheusData } from "./mocks/prometheus"
 import geoData from './mocks/geomapSeriesData.json'
 import { Field, SeriesData } from "types/seriesData"
-import logsData from './mocks/logs.json'
-import alertsData from './mocks/alerts.json'
+import { getMockLogs } from "./mocks/logs"
+import { getMockAlerts } from "./mocks/alerts"
 
 export const run_testdata_query = async (panel: Panel, q: PanelQuery, range: TimeRange,ds: Datasource) => {
     let data: any;
@@ -51,7 +51,7 @@ export const run_testdata_query = async (panel: Panel, q: PanelQuery, range: Tim
             data = geoData
             break
         case PanelType.Log:
-            data =logsData
+            data = getMockLogs(range)
             break
         default:
             break
@@ -65,6 +65,7 @@ export const run_testdata_query = async (panel: Panel, q: PanelQuery, range: Tim
 
 
 export const query_testdata_alerts = (panel:Panel, timeRange: TimeRange,ds:Datasource) => {
+    const alertsData = getMockAlerts(timeRange)
     alertsData.data["fromDs"] = ds.type
     return {
         error: null,
