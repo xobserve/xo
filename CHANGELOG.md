@@ -14,6 +14,10 @@
 
 - fix about 50+ bugs
 
+### Commit Statistics
+
+- 178 commits since last release
+
 ## V0.6.0 (2023-08-09)
 
 ### Datasource
