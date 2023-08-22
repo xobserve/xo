@@ -46,7 +46,7 @@ var rootCmd = &cobra.Command{
 			return
 		}
 
-		log.RootLogger.Info("配置初始化成功", "config", config.Data)
+		log.RootLogger.Info("init config", "config", config.Data)
 		server := server.New()
 		err = server.Start()
 		if err != nil {

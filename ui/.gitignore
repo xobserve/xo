@@ -1,8 +1,6 @@
 # local changelog cache (lerna-changelog)
 .changelog/
 
-.env
-
 # website public/ folder (temporary; copied to root for docs:build and vercel compat)
 # public/
 
@@ -82,8 +80,7 @@ typings/
 *.tgz
 
 # dotenv environment variables file
-.env
-.env.*
+.env.local
 
 
 # Yarn

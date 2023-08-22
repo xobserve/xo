@@ -47,7 +47,7 @@ func New() *Server {
 	}
 }
 
-var logger = log.RootLogger.New("logger", "server")
+var logger = log.RootLogger.New()
 
 // Start ...1=
 func (s *Server) Start() error {
@@ -60,7 +60,7 @@ func (s *Server) Start() error {
 
 	err = user.Init()
 	if err != nil {
-		logger.Crit("初始化用户模块失败", "error", err)
+		logger.Crit("init user module failed", "error", err)
 	}
 
 	go dashboard.InitHistory()
@@ -147,7 +147,7 @@ func (s *Server) Start() error {
 			Addr:    config.Data.Server.Addr,
 			Handler: router,
 		}
-
+		logger.Info("Datav is listening on address", "address", config.Data.Server.Addr)
 		err := s.srv.ListenAndServe()
 		if err != nil && err != http.ErrServerClosed {
 			logger.Crit("start backend server error", "error", err)

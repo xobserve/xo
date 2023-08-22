@@ -15,7 +15,6 @@ import { parseVariableFormat } from "./format";
 import { DatasourceType, PanelQuery } from "types/dashboard";
 import { replacePrometheusQueryWithVariables } from "src/views/dashboard/plugins/datasource/prometheus/query_runner";
 import { replaceJaegerQueryWithVariables } from "src/views/dashboard/plugins/datasource/jaeger/query_runner";
-import { replaceHttpQueryWithVariables } from "src/views/dashboard/plugins/datasource/http/query_runner";
 import { VariableSplitChar, VarialbeAllOption } from "src/data/variable";
 import { gvariables } from "src/App";
 import { $variables } from "src/views/variables/store";

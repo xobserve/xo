@@ -18,14 +18,16 @@ type APIS = {
   allowOrigin: string
 }
 
+//@ts-ignore
+const env = import.meta.env
 // api地址结尾不要带'/' ,2
 const apis = ({
   development: {
-    target: 'http://localhost:10086',
+    target: env.VITE_API_SERVER_DEV,
     allowOrigin: '*',
   },
   production: {
-    target: 'https://api.codecc.com',
+    target: env.VITE_API_SERVER_PROD,
     allowOrigin: '*',
   },
   testing: {
