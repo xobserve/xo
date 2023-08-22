@@ -25,6 +25,8 @@ import { EditorNumberItem } from "components/editor/EditorItem"
 import { requestApi } from "utils/axios/request"
 import { dispatch } from "use-bus"
 import { OnDashboardWeightChangeEvent } from "src/data/bus-events"
+import { Session } from "types/user"
+import { isAdmin } from "types/role"
 
 
 interface Props {
@@ -33,9 +35,10 @@ interface Props {
     query: string
     onClick?: any
     starred: boolean
+    session?: Session
 }
 
-const DashboardCard = ({ dashboard, owner, query, onClick, starred }: Props) => {
+const DashboardCard = ({ dashboard, owner, query, onClick, starred, session }: Props) => {
     const [active, setActive] = useState(false)
     const navigate = useNavigate()
     const [weight, setWeight] = useState(null)
@@ -76,7 +79,9 @@ const DashboardCard = ({ dashboard, owner, query, onClick, starred }: Props) => 
                 </Flex>
                 <HStack alignItems="center" mt="2" spacing={1}>
                     <Text minWidth="fit-content" textStyle="annotation">{owner?.name}</Text>
-                    <Divider type="vertical" />
+                   
+                    {isAdmin(session.user.role) && <>
+                        <Divider type="vertical" />
                     {weight === null
                         ?
                         <Text textStyle="annotation" cursor="text" onClick={(e) => {
@@ -92,6 +97,7 @@ const DashboardCard = ({ dashboard, owner, query, onClick, starred }: Props) => 
                                 submitWeight()
                             }
                         }} />}
+                    </>}
                     {starred && <>
                         <Divider type="vertical" />
                         <DashboardStar dashboardId={dashboard.id} colorScheme="gray" enableClick={false} starred />

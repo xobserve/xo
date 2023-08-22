@@ -17,6 +17,7 @@ import { Dashboard } from "types/dashboard";
 import DashboardCard from "../dashboard/components/DashboardCard";
 import { Team } from "types/teams";
 import ColorTag from "components/ColorTag";
+import useSession from "hooks/use-session";
 
 interface Props {
     teams: Team[]
@@ -27,14 +28,15 @@ interface Props {
 }
 
 const TagsView = memo(({teams, dashboards, query, onItemClick,starredIds }: Props) => {
+    const {session} = useSession()
     const keys = Array.from(dashboards.keys()).sort()
     return (
         <>
             {
-                keys.map(tag => <Box>
+                session && keys.map(tag => <Box>
                     <ColorTag name={tag}/>
                     <VStack alignItems="left" mt="2">
-                        {dashboards.get(tag).map(dash => <DashboardCard dashboard={dash} owner={teams.find(team => team.id == dash.ownedBy)} onClick={onItemClick} query={query} starred={starredIds.has(dash.id)}/> )}
+                        {dashboards.get(tag).map(dash => <DashboardCard dashboard={dash} owner={teams.find(team => team.id == dash.ownedBy)} onClick={onItemClick} query={query} starred={starredIds.has(dash.id)} session={session}/> )}
                     </VStack>
                 </Box>)
             }

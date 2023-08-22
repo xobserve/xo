@@ -166,7 +166,6 @@ const Search = memo((props: Props) => {
         return [result, tagCount, teamCount]
     }, [query, rawDashboards, caseSensitive, selectedTags, selectedTeams, filterStarred, starredDashIds])
 
-    console.log("here333333:",rawDashboards, teamCount)
     const dashboards: Dashboard[] | Map<string, Dashboard[]> = useMemo(() => {
         if (layout == "list") {
             return dashboards1
