@@ -49,6 +49,7 @@ const PrometheusQueryEditor = ({ datasource, query, onChange }: DatasourceEditor
                         onBlur={() => {
                             onChange(tempQuery)
                         }}
+                        height="70px"
                         isSingleLine
                        placeholder={t1.enterPromQL}
                     />
