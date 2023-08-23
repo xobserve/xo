@@ -21,7 +21,6 @@ import { EditorInputItem, EditorNumberItem, EditorSliderItem } from "components/
 import { ArcGisMapServer, BaseLayerType, DataLayerType } from "types/plugins/geoMap";
 import RadionButtons from "components/RadioButtons";
 import ThresholdEditor from "components/Threshold/ThresholdEditor";
-import countries from 'public/plugins/panel/geomap/countries.json'
 import { Button, HStack, Switch, Text } from "@chakra-ui/react";
 import { geomap } from "./GeoMap";
 import { toLonLat } from "ol/proj";
