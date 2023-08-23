@@ -1,5 +1,17 @@
 import {  testimonials } from '@/components/Testimonials'
 
+// import { DarkMode } from '@/components/home/DarkMode'
+// import { ConstraintBased } from '@/components/home/ConstraintBased'
+// import { BuildAnything } from '@/components/home/BuildAnything'
+// import { Performance } from '@/components/home/Performance'
+// import { MobileFirst } from '@/components/home/MobileFirst'
+// import { StateVariants } from '@/components/home/StateVariants'
+// import { ComponentDriven } from '@/components/home/ComponentDriven'
+// import { Customization } from '@/components/home/Customization'
+// import { ModernFeatures } from '@/components/home/ModernFeatures'
+// import { EditorTools } from '@/components/home/EditorTools'
+// import { ReadyMadeComponents } from '@/components/home/ReadyMadeComponents'
+
 import { SearchButton } from '@/components/Search'
 import { Logo } from '@/components/Logo'
 import NextLink from 'next/link'
@@ -28,7 +40,7 @@ function Header() {
             }}
           />
         </div>
-        <div className="relative pt-4 lg:pt-8 flex items-center justify-between text-slate-700 font-semibold text-sm leading-6 dark:text-slate-200">
+        <div className="relative pt-4 lg:pt-4 flex items-center justify-between text-slate-700 font-semibold text-sm leading-6 dark:text-slate-200">
           <Logo />
           <SearchButton className="hidden sm:flex items-center w-72 text-left space-x-3 px-4 h-12 bg-white ring-1 ring-slate-900/10 hover:ring-slate-300 focus:outline-none focus:ring-2 focus:ring-sky-500 shadow-sm rounded-lg text-slate-400 dark:bg-slate-800 dark:ring-0 dark:text-slate-300 dark:highlight-white/5 dark:hover:bg-slate-700">
               {({ actionKey }) => (
@@ -150,17 +162,7 @@ export default function Home() {
         <Header />
       </div>
       {/* <div className="mb-20 flex flex-col gap-y-20 overflow-hidden sm:mb-32 sm:gap-y-32 md:mb-40 md:gap-y-40">
-        <ConstraintBased />
-        <BuildAnything />
-        <Performance />
-        <MobileFirst />
-        <StateVariants />
-        <ComponentDriven />
-        <DarkMode />
-        <Customization />
-        <ModernFeatures />
-        <EditorTools />
-        <ReadyMadeComponents />
+
       </div> */}
       {/* <Footer /> */}
     </>

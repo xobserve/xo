@@ -10,7 +10,7 @@ import {
 } from '@/components/home/common'
 import { Tabs } from '@/components/Tabs'
 import { CodeWindow, getClassNameForToken } from '@/components/CodeWindow'
-import { HtmlZenGarden } from '@/components/HtmlZenGarden'
+// import { HtmlZenGarden } from '@/components/HtmlZenGarden'
 import clsx from 'clsx'
 import { GridLockup } from '../GridLockup'
 import { lines } from '../../samples/build-anything.html?highlight'
@@ -272,7 +272,7 @@ export function BuildAnything() {
       <GridLockup
         className="mt-10 xl:mt-2"
         beams={1}
-        left={<HtmlZenGarden theme={theme} />}
+        // left={<HtmlZenGarden theme={theme} />}
         right={
           <CodeWindow>
             <CodeWindow.Code2 lines={lines.length}>

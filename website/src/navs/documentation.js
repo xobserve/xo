@@ -20,10 +20,12 @@ export const documentationNav = {
     pages['tutorial-home'],
     pages['tutorial-dashboard'],
     pages['tutorial-datasource'],
+    pages['tutorial-time-refresh'],
     pages['tutorial-search'],
     pages['tutorial-variables'],
     pages['tutorial-admin'],
     pages['tutorial-team'],
+    pages['tutorial-alert'],
     pages['tutorial-share'],
   ],
   Aministration: [
@@ -35,8 +37,6 @@ export const documentationNav = {
     pages['configuration']
   ],
   Dashboard: [
-    pages['new-dashboard'],
-    pages['time-refresh'],
     pages['dashboard-setting'],
     pages['dashboard-share'],
   ],

@@ -6,7 +6,7 @@ import { addClassTokens2 } from '@/utils/addClassTokens'
 import clsx from 'clsx'
 import { GridLockup } from '../GridLockup'
 import { useIsomorphicLayoutEffect } from '@/hooks/useIsomorphicLayoutEffect'
-import { lines } from '../../pages/examples/mobile-first-demo'
+// import { lines } from '../../pages/examples/mobile-first-demo'
 
 addClassTokens2(lines)
 
