@@ -37,7 +37,7 @@ const GeoMapPanelEditor = memo(({ panel, onChange }: PanelEditorProps) => {
     const t = useStore(commonMsg)
     const options = panel.plugins.geomap
     return (<>
-        <PanelAccordion title={t.basicSetting}>
+        <PanelAccordion title={t.basic}>
             <PanelEditItem title="Initial view" desc="The loation shows when map first loads">
                 <HStack>
                     <Text fontSize="0.8rem" width="80px">Longitude</Text>
