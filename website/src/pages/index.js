@@ -1,26 +1,13 @@
-import { Testimonial, Testimonials, testimonials } from '@/components/Testimonials'
-import { DarkMode } from '@/components/home/DarkMode'
-import { ConstraintBased } from '@/components/home/ConstraintBased'
-import { BuildAnything } from '@/components/home/BuildAnything'
-import { Performance } from '@/components/home/Performance'
-import { MobileFirst } from '@/components/home/MobileFirst'
-import { StateVariants } from '@/components/home/StateVariants'
-import { ComponentDriven } from '@/components/home/ComponentDriven'
-import { Customization } from '@/components/home/Customization'
-import { ModernFeatures } from '@/components/home/ModernFeatures'
-import { EditorTools } from '@/components/home/EditorTools'
-import { ReadyMadeComponents } from '@/components/home/ReadyMadeComponents'
+import {  testimonials } from '@/components/Testimonials'
+
 import { SearchButton } from '@/components/Search'
-import { Hero } from '@/components/home/Hero'
 import { Logo } from '@/components/Logo'
-import { Footer } from '@/components/home/Footer'
 import NextLink from 'next/link'
 import Head from 'next/head'
 import { NavItems, NavPopover } from '@/components/Header'
 import styles from './index.module.css'
 import clsx from 'clsx'
 import { ThemeToggle } from '@/components/ThemeToggle'
-import socialCardLarge from '@/img/social-card-large.jpg'
 import { config } from '@/data/config'
 
 function Header() {
@@ -182,7 +169,6 @@ export default function Home() {
 
 Home.layoutProps = {
   meta: {
-    ogImage: socialCardLarge.src,
   },
 }
 

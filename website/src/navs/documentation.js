@@ -12,8 +12,19 @@ export const documentationNav = {
       href: '/docs/installation',
       match: /^\/docs\/(installation|guides)/,
     },
-    pages['tutorial'],
+
     pages['compare-to-alter'],
+  ],
+  Tutorials: [
+    pages['tutorial-login'],
+    pages['tutorial-home'],
+    pages['tutorial-dashboard'],
+    pages['tutorial-datasource'],
+    pages['tutorial-search'],
+    pages['tutorial-variables'],
+    pages['tutorial-admin'],
+    pages['tutorial-team'],
+    pages['tutorial-share'],
   ],
   Aministration: [
     pages['admin-mysql-sqlite'],
@@ -30,7 +41,7 @@ export const documentationNav = {
     pages['dashboard-share'],
   ],
   Panel: [
-    pages["panel-data-trasform"],
+    pages["panel-data-transform"],
     pages["panel-conditional-rendering"],
     pages["panel-styles"],
     pages["panel-overrides"],
