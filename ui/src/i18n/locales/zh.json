@@ -299,6 +299,7 @@
     "backgroundTips": "设置仪表盘的背景颜色或图片",
     "backgroundColorMode": "背景主题",
     "backgroundColorModeTips": "当使用背景图片时，自动切换至该主题",
+    "backgroundColor": "背景颜色",
     "enableBg": "启用背景样式",
     "enableBgTips": "是否启用上面设置的背景样式",
     "dashBorder": "仪表盘边框",

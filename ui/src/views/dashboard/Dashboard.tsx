@@ -42,6 +42,7 @@ import DashboardAnnotations from "./DashboardAnnotations"
 import { clearPanelRealTime } from "./store/panelRealtime"
 import storage from "utils/localStorage"
 import { PreviousColorModeKey } from "src/data/storage-keys"
+import { isEmpty } from "utils/validate"
 
 
 
@@ -110,6 +111,8 @@ const DashboardWrapper = ({ dashboardId, sideWidth }) => {
                     const bg = dashboard?.data.styles?.bg
                     if (bg) {
                         bodyStyle.background = `url(${bg.url})`
+                  
+                       
                         bodyStyle.backgroundSize = "cover"
                         if (colorMode !== bg.colorMode) {
                             if (!storage.get(PreviousColorModeKey)) {
@@ -118,6 +121,11 @@ const DashboardWrapper = ({ dashboardId, sideWidth }) => {
                             }
                         }
                     }
+                    
+                    if (!isEmpty(dashboard.data.styles.bgColor)) {
+                        bodyStyle.backgroundColor = dashboard.data.styles.bgColor
+                    }
+                   
                 }
             }, 1)
         }

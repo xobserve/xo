@@ -26,6 +26,7 @@ export const initDashboard = (team?): Dashboard => {
                 },
                 bgEnabled: false,
                 border: PanelBorderType.None,
+                bgColor: ""
                 // decoration: {
                 //     type: PanelDecorationType.None,
                 //     width: '100%',

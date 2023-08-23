@@ -40,6 +40,11 @@ const bgOptions = [
         value: "/public/dashboard/rainbow.jpg",
         colorMode: "light",
     },
+    {
+        label: "Dark Rainbow",
+        value: "/public/dashboard/dark-rainbow.png",
+        colorMode: "dark",
+    }
 ]
 
 const StyleSettings = ({ dashboard, onChange }: Props) => {
@@ -78,6 +83,13 @@ const StyleSettings = ({ dashboard, onChange }: Props) => {
                 <option value="light">Light</option>
                 <option value="dark">Dark</option>
             </Select>
+        </FormItem>
+        <FormItem size="md" title={t1.backgroundColor} labelWidth="100%">
+            <EditorInputItem type="input" value={dashboard.data.styles.bgColor} onChange={(v) => {
+                onChange(draft => {
+                    draft.data.styles.bgColor = v
+                })
+        }}  placeholder="try rgb(15,23,42) for dark mode"/>
         </FormItem>
         <FormItem title={t1.enableBg} desc={t1.enableBgTips} alignItems="center">
             <Switch defaultChecked={dashboard.data.styles?.bgEnabled} onChange={(e) => onChange(draft => { draft.data.styles.bgEnabled = e.currentTarget.checked })} />

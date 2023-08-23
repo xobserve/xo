@@ -41,6 +41,7 @@ export interface DashboardData {
         bg: Record<string, string>
         bgEnabled: boolean
         border: string
+        bgColor: string
         // decoration: DecorationStyles
     }
     layout: DashboardLayout

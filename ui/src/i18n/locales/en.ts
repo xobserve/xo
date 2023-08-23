@@ -313,6 +313,7 @@ export const dashboardSettingMsg = i18n("dashboardSetting", {
   "sortWeightTips": "Higher value means higher sort priority, this is used in Search dashboards",
   "background": "Background",
   "backgroundTips": "Set dashboard background color or image",
+  "backgroundColor": "Background color",
   "backgroundColorMode": "Background color mode",
   "backgroundColorModeTips": "Change to this color mode when using background image",
   "enableBg": "Enable background",
