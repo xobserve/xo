@@ -22,7 +22,7 @@ const rawData = {
         "result": [
             {
                 "metric": {
-                    "cpu": "user",
+                    "located": "Asia",
                     "instance": "localhost:9100",
                 },
                 "values": [
@@ -30,7 +30,7 @@ const rawData = {
             },
             {
                 "metric": {
-                    "cpu": "user",
+                    "located": "Europe",
                     "instance": "localhost:9101",
                 },
                 "values": [
@@ -38,43 +38,13 @@ const rawData = {
             },
             {
                 "metric": {
-                    "cpu": "user",
+                    "located": "North America",
                     "instance": "localhost:9102",
                 },
                 "values": [
                     
                 ]
             },
-            // {
-            //     "metric": {
-            //         "cpu": "0",
-            //         "instance": "localhost:9100",
-            //         "job": "node",
-            //         "mode": "user"
-            //     },
-            //     "values": [
-            //     ]
-            // },
-            // {
-            //     "metric": {
-            //         "cpu": "1",
-            //         "instance": "localhost:9100",
-            //         "job": "node",
-            //         "mode": "idle"
-            //     },
-            //     "values": [
-            //     ]
-            // },
-            // {
-            //     "metric": {
-            //         "cpu": "1",
-            //         "instance": "localhost:9100",
-            //         "job": "node",
-            //         "mode": "nice"
-            //     },
-            //     "values": [
-            //     ]
-            // }
         ]
     }
 }
@@ -92,7 +62,7 @@ export const genPrometheusData = (timeRange: TimeRange,ds: PanelDatasource,q: Pa
     }
 
    for (const r of data.data.result) {
-        const max = random(0, 10, true)
+        const max = random(0, 2, true)
         for (const t of timeBucks) {
             r.values.push([round(t), random(0, max, true)])
         }

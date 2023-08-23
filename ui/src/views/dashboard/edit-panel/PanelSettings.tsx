@@ -87,7 +87,7 @@ const PanelSettings = memo(({ panel, onChange }: PanelEditorProps) => {
             </PanelAccordion>
 
             {/* panel visulization choosing */}
-            <PanelAccordion title={t1.visuization} defaultOpen={false}>
+            <PanelAccordion title={t1.visualization} defaultOpen={false}>
                 <SimpleGrid columns={3} spacing="2">
                     {
                         Object.keys(PanelType).map((key) => {

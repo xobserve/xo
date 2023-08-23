@@ -352,7 +352,7 @@
 
     "panelTitle": "图表标题",
     "panelDesc": "给图表一个简单描述",
-    "visuization": "图表类型",
+    "visualization": "图表类型",
 
 
     "panelBorder": "图表边框",

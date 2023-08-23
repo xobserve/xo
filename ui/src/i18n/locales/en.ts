@@ -371,7 +371,7 @@ export const panelMsg = i18n("panel", {
 
   "panelTitle": "Panel Title",
   "panelDesc": "give a short description to this panel",
-  "visuization": "Visuization",
+  "visualization": "Visualization",
   "panelBorder": "Panel border",
   "titleDecoration": "Title decoration",
   "panelDecoration": "Panel decoration",
