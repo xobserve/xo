@@ -3,10 +3,13 @@ title: Make dashboard more dynamic
 description: 
 ---
 
+import TextList  from '@/components/docs/TextList'
+import Code  from '@/components/docs/Code'
+
 The dashboards we created before are static, which means values are statically written. 
 
-A prometheus query `go_gc_duration_seconds{job="node"}` is a static query string, what if we want to query another job? We have to change the query string to 
-`go_gc_duration_seconds{job="prometheus"}`, that's not convenient for a lot of cases.
+A prometheus query <Code>{'go_gc_duration_seconds{job="node"}'}</Code> is a static query string, what if we want to query another job? We have to change the query string to 
+ <Code>{'go_gc_duration_seconds{job="prometheus"}'}</Code> , that's not convenient for a lot of cases.
 
 So, it's time to introduce some features to make our dashboard dynamic. In this doc, we will make the dashboard more dynamic by adding variables.
 
@@ -15,7 +18,7 @@ So, it's time to introduce some features to make our dashboard dynamic. In this 
 
 There are two kinds of variables: dashboard variable and global variable. Let's start from dashboard variable first.
 
-1. Visit `User stats` dashboard and open its settings modal, select `Variables` tab.
+1. Visit `Hosts info` dashboard and open its settings modal, select `Variables` tab.
 2. Click `New Variable` button, you will see a modal like this:
 
 <img src="https://github.com/data-observe/assets/blob/main/tutorial/dashboard-variable.jpg?raw=true" style={{height: "400px"}} />
@@ -43,8 +46,157 @@ Now close the setting modal, you will see a new dropdown list appears in the top
 <img src="https://github.com/data-observe/assets/blob/main/tutorial/job-variable.jpg?raw=true" style={{height: "100px"}} />
 
 
-## multi-value
+## Use variable 
 
-### Dashboard variable
+In this section, we will use the variable we created in previous section.
 
-### Global variable 
+### Use variable in query
+Now open the editor of panel `go gc info`, change the query string to `go_gc_duration_seconds{job="${job}"}`, then click `Apply` button.
+
+Because `job` variable is automatically set to `node`, so our `go gc info` panel will show the data of `node` job, the same as <Code>{'go_gc_duration_seconds{job="node"}'}</Code>.
+
+<img src="https://github.com/data-observe/assets/blob/main/tutorial/chart-with-job-var.jpg?raw=true" style={{height: "300px"}} />
+
+Try to change the value of `job` variable to `prometheus`, and see what will happen to the chart data.
+
+
+
+### Variable format
+
+`${job}` in the query string is a variable format, it will be replaced by the value of variable `job` when the query is executed. You can use as many as variables in the query string, e.g <Code>{'go_gc_duration_seconds{job="${job}", instance="${instance}"}'}</Code>.
+
+### Use variable in panel title 
+
+Variable can be used in many places, usually there will be a `Support variables` tips in the input box. 
+
+Because our panel is dependent on variable `job`, so we can add it to panel title so that we can know which job we are currently viewing.
+
+Modify the panel title to `go gc info - ${job}`:
+
+<img src="https://github.com/data-observe/assets/blob/main/tutorial/variable-in-panel-title.jpg?raw=true" style={{height: "100px"}} />
+
+
+
+### Multi value and All 
+
+What if we want show use multiple variable values in query? Maybe you can create multiple variables, but it's not a good idea. 
+
+The better way is to enalbe `Multi Value` or `Include all` options for variable, thus we can select multiple values from variable dropdown list.
+
+Modify `job` variable as below: 
+
+<img src="https://github.com/data-observe/assets/blob/main/tutorial/job-var-enable-multi.jpg?raw=true" style={{height: "300px"}} />
+
+Back to dashboard page, you will see the `job` variable dropdown switches to multiple selection mode, and there is a new option `__all__` in the dropdown.
+
+Try to select all or select both `node` and `prometheus`, you will see....nothing?
+
+Yep, you will see nothing in the chart, because the query string is <Code>{'go_gc_duration_seconds{job="${job}"}'}</Code>, it's not a valid query string when `job` variable has multiple values.
+
+According to the [Prometheus document](https://prometheus.io/docs/prometheus/latest/querying/basics/#instant-vector-selectors), we should  modify our query string to `go_gc_duration_seconds{job=~"${job}"}`.
+
+Modify the query string to see the result as below image: 
+
+<img src="https://github.com/data-observe/assets/blob/main/tutorial/query-support-multi-var.jpg?raw=true" />
+
+
+## Query from datasource
+
+In previous section, we are using variable query from a manually inputing string, what if we want to get some values from external services, like Prometheus datasource?
+
+Let's create a new variable named `instance` to query all instance names from Prometheus.
+
+1. Open the settings modal of `Hosts info` dashboard, select `Variables` tab, click `New Variable` button.
+2. Fill the form like this:
+
+<img src="https://github.com/data-observe/assets/blob/main/tutorial/edit-instance-var.jpg?raw=true" style={{height: "500px"}} />
+
+We do several things here:
+
+1. Set `Query Type` field to `Query`, it means query from configured datasources.
+2. Select datasource `Prometheus` 
+3. Set `Use current time` to `On`, it means the query will be executed within the current time range being selected, otherwise if you set it to `Off`,  the query will bring no timerange, maybe you will get values from months even years ago.
+4. Because we want get the values of label `instance` , so select `Label values` for `Query type` field.
+5. If `Metric` field is left empty, the query will return all values of all metrics for `instance` label. Therefore we can specify a metric name here, such as <Code>go_gc_duration_seconds</Code>. However, for demonstration purpose, we will leave this field empty.
+6. Set `Label`field to `instance`
+
+
+Now let's modify the query string of `go gc info` panel to <Code>{'go_gc_duration_seconds{job=~"$\{job\}", instance=~"${instance}"}`'}</Code>, and see what will happen.
+
+> Try to change `job` variable from using Custom query to datasource query
+
+
+## Make datasource dynamic 
+
+Currently, we select datasource directly in panel editor, what if we have multiple datasources in different data center and we want to select datasource dynamically?
+
+Before we start, let's create a new datasource named `prometheus1` first:
+
+<img src="https://github.com/data-observe/assets/blob/main/tutorial/prometheus1-ds.jpg?raw=true" />
+
+Then visit `Hosts info` dashboard, and open its variable editor, create a new variable named `datasource`:
+
+<img src="https://github.com/data-observe/assets/blob/main/tutorial/edit-ds-variable.jpg?raw=true" style={{height: "500px"}}/>
+
+There are several things we need to pay attention to:
+
+<TextList>
+    <li>`Multi and All` options all only supported by some places, datasource selection is not one of those, so we need to set theme to `off`</li>
+    <li>Set `Query type` to `Datasource`</li>
+    <li>Use `Regex filter` to filter out `TestData` datasource, because we don't want to select it</li>
+</TextList>
+
+
+This varialbe is easy to created, now let's use it in panel edtitor.
+
+Open panel editor of `go gc info` panel, and find the `Datasource` dropdown in `Query` tab: 
+
+<img src="https://github.com/data-observe/assets/blob/main/tutorial/use-ds-variable.jpg?raw=true" style={{height: "300px"}}/>
+
+Don't select any datasource here, we need to input <Code>{'${datasource}'}</Code>  to use our `datasource` variable.
+
+<img src="https://github.com/data-observe/assets/blob/main/tutorial/input-datasource-var.jpg?raw=true" style={{height: "200px"}}/>
+
+Press `Enter` key to confirm, then input <Code>{'go_gc_duration_seconds{job=~"${job}", instance=~"${instance}"}'}</Code> as query string.
+
+> Change datasource will cause the previous query to be cleared, so you'd better copy it first before changing  datasource.
+
+Apply the changes and go back to dashboard page, change the value of `datasource` variable, you will see the chart data.. not changes, because we use the same datasource indeed.
+
+
+**Here is an excercise for our readers**: try to add back `TestData` datasource, and change the value of `datasource` variable between `prometheus` and `TestData`, you will see the chart data changes.
+
+## Use variable in querying variable 
+
+When querying a variable, we can use another variable as input. 
+
+First, create a new variable named metrics :
+
+<img src="https://github.com/data-observe/assets/blob/main/tutorial/metrics-variable.jpg?raw=true" style={{height: "500px"}}/>
+
+We query metrics from Prometheus datasource, and filter out metrics starts with `go_gc`.
+
+### More dynamic panel query
+
+Before using `metrics` variable in query another variable, we can update our panel query to use it to make our panel query more dynamic.
+
+Open panel editor, input <Code>{'${metrics}{job=~"${job}", instance=~"${instance}"}'}</Code> in `Query` tab:
+
+
+<img src="https://github.com/data-observe/assets/blob/main/tutorial/dynamic-query.jpg?raw=true"/>
+
+Click `Apply` button and go back to dashboard page, then select different `metrics` variable value to see what happens.
+
+It seems our dashbaord is much more powerful than before, great job !
+
+### use in variable query 
+
+Now, let's edit the `instance` variable created in previous section, rename it to `metrics name` and uses `metrics` variable as `Metric` field input:
+
+<img src="https://github.com/data-observe/assets/blob/main/tutorial/rename-instance-var.jpg?raw=true" style={{height: "500px"}}/>
+
+You can see, in `Query -> Metric` field , rather than select a value from dropdown, we use the value from variable `metrics` as input. 
+
+Try to change the value of `metrics` variable, and see how `metrics name` variable changes.
+
+## Global variable 
