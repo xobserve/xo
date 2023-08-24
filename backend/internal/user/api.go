@@ -45,10 +45,15 @@ func UpdateUserPassword(c *gin.Context) {
 	u := CurrentUser(c)
 
 	// check old password matched
-	password, _ := utils.EncodePassword(upm.Old, u.Salt)
-	if password != u.Password {
-		c.JSON(400, common.RespError(e.PasswordIncorrect))
-		return
+	// super admin can set password without old password
+	if u.Username == models.SuperAdminUsername && upm.Old == "" && u.Password == "" {
+
+	} else {
+		password, _ := utils.EncodePassword(upm.Old, u.Salt)
+		if password != u.Password {
+			c.JSON(400, common.RespError(e.PasswordIncorrect))
+			return
+		}
 	}
 
 	err := UpdatePassword(u, upm.New)

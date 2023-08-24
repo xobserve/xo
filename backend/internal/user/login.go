@@ -56,10 +56,16 @@ func Login(c *gin.Context) {
 		return
 	}
 
-	encodedPassword, _ := utils.EncodePassword(password, user.Salt)
-	if encodedPassword != user.Password {
-		c.JSON(http.StatusForbidden, common.RespError(e.PasswordIncorrect))
-		return
+	// admin can reset password to empty
+	if username == models.SuperAdminUsername && password == "" && password == user.Password {
+
+	} else {
+		encodedPassword, _ := utils.EncodePassword(password, user.Salt)
+
+		if encodedPassword != user.Password {
+			c.JSON(http.StatusForbidden, common.RespError(e.PasswordIncorrect))
+			return
+		}
 	}
 
 	if config.Data.User.EnableMultiLogin {
