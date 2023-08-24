@@ -22,6 +22,7 @@ export const documentationNav = {
     pages['tutorial-datasource'],
     pages['tutorial-time-refresh'],
     pages['tutorial-search'],
+    pages['tutorial-sidebar'],
     pages['tutorial-variables'],
     pages['tutorial-admin'],
     pages['tutorial-team'],
