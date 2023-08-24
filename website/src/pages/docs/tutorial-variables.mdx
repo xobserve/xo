@@ -3,8 +3,47 @@ title: Make dashboard more dynamic
 description: 
 ---
 
+The dashboards we created before are static, which means values are statically written. 
 
-## Variables 
+A prometheus query `go_gc_duration_seconds{job="node"}` is a static query string, what if we want to query another job? We have to change the query string to 
+`go_gc_duration_seconds{job="prometheus"}`, that's not convenient for a lot of cases.
+
+So, it's time to introduce some features to make our dashboard dynamic. In this doc, we will make the dashboard more dynamic by adding variables.
+
+
+## Create a variable 
+
+There are two kinds of variables: dashboard variable and global variable. Let's start from dashboard variable first.
+
+1. Visit `User stats` dashboard and open its settings modal, select `Variables` tab.
+2. Click `New Variable` button, you will see a modal like this:
+
+<img src="https://github.com/data-observe/assets/blob/main/tutorial/dashboard-variable.jpg?raw=true" style={{height: "400px"}} />
+
+wow, it seems complex, but don't worry, let's start from a simple one :)
+
+In this secion, our target is to make `job` dynamic, as it has two values: `node` and `prometheus`, we need to create a variable also has these two values.
+
+3. Fill the form like this: 
+
+<img src="https://github.com/data-observe/assets/blob/main/tutorial/edit-job-variable.jpg?raw=true" style={{height: "400px"}} />
+
+Look at he `Variable Values` field, this is the result that our variable query returns, so if you see values listing here, it means our variable is probably created successfully(maybe wrong values).
+
+The `job` variable we are creating is a `Custom` type variable, its values comes from our input string, each value is separated by a comma, e.g `1,2,3` means we have three values: `1`, `2`, `3`.
+
+4. Click `Submit` button, you will see a new variable named `job` in the `Variables` tab
+
+
+> Don't forget to save dashboard ! Everthing you changed in the dashboard will not be saved.
+
+
+Now close the setting modal, you will see a new dropdown list appears in the top left corner of the dashboard, it's our `job` variable.
+
+<img src="https://github.com/data-observe/assets/blob/main/tutorial/job-variable.jpg?raw=true" style={{height: "100px"}} />
+
+
+## multi-value
 
 ### Dashboard variable
 
