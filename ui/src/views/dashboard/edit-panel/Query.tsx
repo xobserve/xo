@@ -108,7 +108,7 @@ const EditPanelQuery = (props: Props) => {
                             </HStack>
                         </Flex>
                         {
-                            <Box pl="4"><CustomQueryEditor panel={panel} query={query} selected={panel.datasource} dsType={currentDatasource?.type} onChange={onChange} /></Box>
+                            <Box pl="4"><CustomQueryEditor key={panel.datasource.id + query.id} panel={panel} query={query} selected={panel.datasource} dsType={currentDatasource?.type} onChange={onChange} /></Box>
                         }
                     </Box>
                 })}
