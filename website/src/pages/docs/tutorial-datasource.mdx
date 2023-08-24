@@ -3,11 +3,22 @@ title: Query data from Prometheus
 description: 
 ---
 
+import TextList  from '@/components/docs/TextList'
+import Code  from '@/components/docs/Code'
+
 The dashboard we created in previous docs is powerful, but it has a huge limitation: it query data from Testdata datasource, which is a fake datasource. It's time to use real datasource to build a real dashboard.
 
-In this doc, we will use [Prometheus](https://prometheus.io/)  as datasource to build a dashboard, so you need to install it first, and make sure the Prometheus server is running.
+In this doc, we will use [Prometheus](https://prometheus.io/)  as datasource to build a dashboard, so you **need**:
+
+<TextList>
+    <li>**Install prometheus first**, and make sure the Prometheus server is running.</li>
+    <li>**Start the node_exporter** binary in prometheus directory, this service will collect cpu,memory,disk,network info from your machine.</li>
+</TextList>
+
 
 Let's assume Prometheus is running on `http://localhost:9090` . First, we need to create a new datasource for Prometheus.
+
+ 
 
 ## Create Prometheus datasource
 
