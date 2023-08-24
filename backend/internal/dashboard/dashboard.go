@@ -45,8 +45,15 @@ func SaveDashboard(c *gin.Context) {
 
 	dash := req.Dashboard
 
+	belongs, err := models.QueryDashboardBelongsTo(dash.Id)
+	if err != nil {
+		logger.Error("query dashboarde owner error", "error", err)
+		c.JSON(500, common.RespInternalError())
+		return
+	}
+
 	if !u.Role.IsAdmin() {
-		isTeamAdmin, err := models.IsTeamAdmin(dash.OwnedBy, u.Id)
+		isTeamAdmin, err := models.IsTeamAdmin(belongs, u.Id)
 		if err != nil {
 			logger.Error("check team admin error", "error", err)
 			c.JSON(500, common.RespInternalError())
@@ -93,8 +100,8 @@ func SaveDashboard(c *gin.Context) {
 			return
 		}
 	} else {
-		res, err := db.Conn.Exec(`UPDATE dashboard SET title=?,tags=?,data=?,updated=? WHERE id=?`,
-			dash.Title, tags, jsonData, dash.Updated, dash.Id)
+		res, err := db.Conn.Exec(`UPDATE dashboard SET title=?,tags=?,data=?,owned_by=?,updated=? WHERE id=?`,
+			dash.Title, tags, jsonData, dash.OwnedBy, dash.Updated, dash.Id)
 		if err != nil {
 			logger.Error("update dashboard error", "error", err)
 			c.JSON(500, common.RespInternalError())
