@@ -18,6 +18,7 @@ import useSession from "hooks/use-session";
 import Page from "layouts/page/Page"
 import React, { useEffect, useState } from "react";
 import { FaUserAlt } from "react-icons/fa";
+import { useNavigate } from "react-router-dom";
 import { accountLinks } from "src/data/nav-links";
 import { accountSettingMsg, commonMsg } from "src/i18n/locales/en";
 import { requestApi } from "utils/axios/request";
@@ -29,7 +30,8 @@ const AccountSetting = () => {
     const t1 = useStore(accountSettingMsg)
 
     const toast = useToast()
-    const { session } = useSession();
+    const navigate = useNavigate()
+    const { session,logout } = useSession();
     const [oldpw, setOldpw] = useState('')
     const [newpw, setNewpw] = useState('')
     const [confirmpw, setConfirmpw] = useState('')
@@ -75,15 +77,15 @@ const AccountSetting = () => {
     }
 
     const updatePassword = async () => {
-        if (!oldpw) {
-            toast({
-                description: "old password cannot be empty",
-                status: "warning",
-                duration: 2000,
-                isClosable: true,
-            });
-            return
-        }
+        // if (!oldpw) {
+        //     toast({
+        //         description: "old password cannot be empty",
+        //         status: "warning",
+        //         duration: 2000,
+        //         isClosable: true,
+        //     });
+        //     return
+        // }
 
         if (newpw.length < 5 || confirmpw.length < 5) {
             toast({
@@ -112,6 +114,9 @@ const AccountSetting = () => {
             duration: 2000,
             isClosable: true,
         });
+
+        logout()
+        navigate("/login")
     }
 
     return (
