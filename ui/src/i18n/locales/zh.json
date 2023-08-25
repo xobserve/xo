@@ -367,7 +367,7 @@
     "addRule": "新建覆盖规则",
     "addOverride": "新建覆盖",
 
-    "transformTips": "通过自定义的变换函数对查询到的结果进行进一步的处理，推荐在 Table 图表中使用",
+    "transformTips": "通过自定义的变换函数对查询到的结果进行进一步的处理",
     "enableTransform": "是否启用查询数据变换函数",
     "conditionRender": "条件渲染", 
     "conditionRenderTips": "开启后，只有当设置的条件被满足时，当前 panel 才会被渲染",
