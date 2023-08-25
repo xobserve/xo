@@ -41,9 +41,11 @@ export const documentationNav = {
   
   Dashboard: [
     pages['dashboard-setting'],
+    pages['dashboard-styles'],
     pages['dashboard-import'],
   ],
   Panel: [
+    pages["panel-annotation"],
     pages["panel-data-transform"],
     pages["panel-conditional-rendering"],
     pages["panel-styles"],
@@ -52,15 +54,11 @@ export const documentationNav = {
     pages["panel-thresholds"],
     pages["panel-interactivity"]
   ],
-  Variable: [
+  Misc: [
     pages["variable-query"],
-    
-  ],
-  Alerting: [
     pages["alert-setting"],
-  ],
-  Search:[
     pages["search-priority"]
+    
   ],
   'Panel Plugins': [
     pages["plugin-overview"],
