@@ -46,8 +46,8 @@ export const documentationNav = {
   ],
   Panel: [
     pages["panel-annotation"],
-    pages["panel-data-transform"],
     pages["panel-conditional-rendering"],
+    pages["panel-data-transform"],
     pages["panel-styles"],
     pages["panel-overrides"],
     pages["panel-debug"],

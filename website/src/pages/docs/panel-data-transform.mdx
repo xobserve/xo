@@ -1,11 +1,374 @@
-
 ---
-title: Data transformation
-description: Plugins and configuration settings that can improve the developer experience when working with Tailwind CSS.
+title: Panel data and transformation
+description:
 ---
 
+import TextList  from '@/components/docs/TextList'
+import Code  from '@/components/docs/Code'
+import { TipGood, TipBad } from '@/components/Tip'
 
-## Panel data transform 
+In grafana, all data is in `Dataframe` formats, but in Datav, the data passed to panel for rendering has various formats, such as 
+
+<TextList>
+    <li>Series data format, this is the most common format for timeseries data, used in many panels, such as Graph, Gauge, Table, Stats etc.</li>
+    <li>NodeGraph data format, includes nodes and edges info </li>
+    <li>Trace data format, same as jaeger</li>
+</TextList>
+
+The data formats these panels require are not compatible with each other, if we use one unify format to represent them, the data format would be hard to understand and use. So we use different data formats for different panels.
+
+For most users, there is no need to care about the data format, because the data format is automatically converted by the panel. But if you want to query data from your own http backend, you need to know the data format of the panel you are using.
+
+But we are not going to talk much about the detail about each data format, because what is more important is how you can find the data format when needed.
+
+## How to find the data format
+
+We can find the data format of the panel in the following ways:
+
+1. Click panel header and select `Debug Panel`
+2. Select `Panel Data` tab, you should see the data format as below: 
+
+```json
+[
+  [
+    {
+      "id": 65,
+      "name": "{\"__name__\"=\"go_goroutines\",\"instance\"=\"localhost:9090\",\"job\"=\"prometheus\"}",
+      "length": 21,
+      "fields": [
+        {
+          "name": "Time",
+          "type": "time",
+          "values": [
+            1692950385,
+            1692950400,
+            1692950415,
+          ]
+        },
+        {
+          "name": "Value",
+          "type": "number",
+          "values": [
+            34,
+            34,
+            34,
+          ],
+          "labels": {
+            "__name__": "go_goroutines",
+            "instance": "localhost:9090",
+            "job": "prometheus"
+          }
+        }
+      ],
+      "rawName": "{\"__name__\"=\"go_goroutines\",\"instance\"=\"localhost:9090\",\"job\"=\"prometheus\"}",
+      "color": "#73BF69"
+    },
+    {
+      "id": 65,
+      "name": "{\"__name__\"=\"go_goroutines\",\"instance\"=\"localhost:9100\",\"job\"=\"node\"}",
+      "length": 21,
+      "fields": [
+        {
+          "name": "Time",
+          "type": "time",
+          "values": [
+            1692950385,
+            1692950400,
+            1692950415,
+          ]
+        },
+        {
+          "name": "Value",
+          "type": "number",
+          "values": [
+            7,
+            7,
+            7,
+          ],
+          "labels": {
+            "__name__": "go_goroutines",
+            "instance": "localhost:9100",
+            "job": "node"
+          }
+        }
+      ],
+      "rawName": "{\"__name__\"=\"go_goroutines\",\"instance\"=\"localhost:9100\",\"job\"=\"node\"}",
+      "color": "#FADE2A"
+    }
+  ]
+]
+```
+
+## Panel data format
+
+This is the panel data for `Graph` panel, we call this kind format `SeriesData`, because each item in the panel data is a time series.
+
+The panel data looks like this: 
+
+```json
+[
+    dataOfQueryA,
+    dataOfQueryB,
+    ...
+]
+```
+
+The above data is consist of two queries: query A and query B, each of them will get data from  datasource independently, and push the result into panel data list.
+
+<img src="https://github.com/data-observe/assets/blob/main/panel/panel-query.jpg?raw=true" />
+
+In above image, you can clearly see what's the two queries look like. In fact, you can add as many queries as you like to a panel, but we don't recommand, it will make the panel more complex than you would think.
+
+**Therefore, if you need query data from you own http api, the api should return the data format same as `dataOfQueryA`, never return [dataOfQueryA], 
+otherwise the data passed to panel will become :
+
+<TipBad> Won't work </TipBad>
+```json
+[
+    [
+        dataOfQueryA,
+        dataOfQueryB,
+        ...
+    ]
+]
+```
+
+### The data http datasource should return
+
+For example, if you are going to get data from your own http api, it should return 
+
+```js
+const response = {
+    error:  null,
+    data: [
+    {
+      "id": 65,
+      "name": "{\"__name__\"=\"go_goroutines\",\"instance\"=\"localhost:9090\",\"job\"=\"prometheus\"}",
+      "length": 21,
+      "fields": [
+        {
+          "name": "Time",
+          "type": "time",
+          "values": [
+            1692950385,
+            1692950400,
+            1692950415,
+          ]
+        },
+        {
+          "name": "Value",
+          "type": "number",
+          "values": [
+            34,
+            34,
+            34,
+          ],
+          "labels": {
+            "__name__": "go_goroutines",
+            "instance": "localhost:9090",
+            "job": "prometheus"
+          }
+        }
+      ],
+      "rawName": "{\"__name__\"=\"go_goroutines\",\"instance\"=\"localhost:9090\",\"job\"=\"prometheus\"}",
+      "color": "#73BF69"
+    },
+    {
+      "id": 65,
+      "name": "{\"__name__\"=\"go_goroutines\",\"instance\"=\"localhost:9100\",\"job\"=\"node\"}",
+      "length": 21,
+      "fields": [
+        {
+          "name": "Time",
+          "type": "time",
+          "values": [
+            1692950385,
+            1692950400,
+            1692950415,
+          ]
+        },
+        {
+          "name": "Value",
+          "type": "number",
+          "values": [
+            7,
+            7,
+            7,
+          ],
+          "labels": {
+            "__name__": "go_goroutines",
+            "instance": "localhost:9100",
+            "job": "node"
+          }
+        }
+      ],
+      "rawName": "{\"__name__\"=\"go_goroutines\",\"instance\"=\"localhost:9100\",\"job\"=\"node\"}",
+      "color": "#FADE2A"
+    }
+  ]
+}
+```
+
+The return format is very clear, but you may wonder, why shou I return a list for `response.data` ? 
+
+### SerieData format
+That is because the format of `SeriesData` is a list, it usually has two fields: 
+a time field and a value field, only with them, we can draw a time series chart: using time field for X-axis, using value field for Y-axis.
+
+### Nodegraph format 
+
+For comparison, let's change panel visualization to `NodeGraph` and view panel data n `Panel Debug`:
+
+```json
+[
+  {
+    "nodes": [
+      {
+        "id": "frontend",
+        "label": "frontend",
+        "data": {
+          "success": 0
+        },
+      },
+      {
+        "id": "route",
+        "label": "route",
+        "data": {
+          "success": 70
+        },
+      },
+    ],
+    "edges": [
+      {
+        "source": "customer",
+        "target": "mysql",
+        "label": "7",
+        "data": {
+          "success": 7
+        },
+      },
+      {
+        "source": "frontend",
+        "target": "customer",
+        "label": "7",
+        "data": {
+          "success": 7
+        },
+      }
+    ]
+  }
+]
+```
+
+You can see, the format of panel data is like: 
+
+```json 
+[
+    {
+        "nodes": nodesList1,
+        "edges": edgeList1
+    },
+    {
+        "nodes": nodesList2,
+        "edges": edgeList1
+    },
+    ...
+]
+```
+
+ This time, if you are also going to get data from your own http api, what would the api return? The answer is :
+
+ ```js
+{
+    error:  null,
+    data:  {
+        "nodes": nodesList1,
+        "edges": edgeList1
+    }
+}
+```
 
 
-## Transform functions in panel settings 
+### Conclusion
+
+In a word, the panel data in `Panel Debug -> Panel Data` looks like this: 
+
+```json
+[
+    dataOfQueryA,
+    dataOfQueryB,
+    ...
+]
+```
+
+If we want query data from http api, you should find what `dataOfQueryA` look like in `Panel Debug -> Panel Data`,
+and make your http api return below format:
+
+```json
+{
+    error:  null,
+    data:  dataOfQueryA
+}
+```
+
+## Panel data transform
+
+Sometimes the data query from datasource is not compatible with the data that panel chart requires. 
+
+So we need a way to modify the data, for now, Datav provide a common panel data transform func to us.
+
+### Transform timestamp to time string 
+
+For table panel, we already know how to convert a timestamp column to a readable time string, if you don't know how, please visit [tutorial doc](/docs/tutorial-dashboard#make-time-column-readable).
+
+Now let's find another way to do this for Table panel. 
+
+1. Create a Table panel and use TestData datasource.
+2. Select `Transform` tab
+
+<img src="https://github.com/data-observe/assets/blob/main/panel/panel-data-transform.jpg?raw=true" />
+
+3. Click `Edit Function` button
+4. Fill function with code as below: 
+
+```js
+function transform(rawData,lodash, moment) {
+    for (const d of rawData) {
+        for (const series of d) {
+            for (const field of series.fields) {
+                if (field.type == "time") {
+                    const values = []
+                    for (const v of field.values) {
+                        values.push(moment(v * 1000).format("YY-MM-DD HH:mm::ss"))
+                    }
+                    field.values = values
+                }
+            }
+        }
+    }
+    return rawData
+}
+```
+
+5. Press `Submit` button 
+
+The data format of Table panel is `SeriesData`, and we change its time field's value from timestamp to timestring to make it more readalbe.
+
+It's not a complex funtion, but very useful and is a good start for you to define your own transform function.
+
+But, wait.. our table does not changes, it still shows time field as `timestamp` format. 
+
+### Enable transfom
+
+This is because we need manually enable the transform switcher in panel settings, otherwise the transform function will has no effect.
+
+1. Find the `Transform` field in `Panel` tab and `Basic Setting` section 
+2. Switch `Transform` option to `on`
+
+<img src="https://github.com/data-observe/assets/blob/main/panel/transform-option.jpg?raw=true" style={{height: "400px"}}/>
+
+
+After doing this, the `Time` column of Table should show time string instead of the previous timestamp:
+
+
+<img src="https://github.com/data-observe/assets/blob/main/panel/transformed-table.jpg?raw=true" style={{height: "260px"}}/>
