@@ -17,7 +17,7 @@ server:
 
 #################################### Database ##############################
 database:
-    type: sqlite
+    type: mysql
     account: root
     account_secret: 
     host: localhost
