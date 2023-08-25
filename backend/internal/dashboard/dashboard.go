@@ -45,33 +45,47 @@ func SaveDashboard(c *gin.Context) {
 
 	dash := req.Dashboard
 
-	belongs, err := models.QueryDashboardBelongsTo(dash.Id)
-	if err != nil {
-		logger.Error("query dashboarde owner error", "error", err)
-		c.JSON(500, common.RespInternalError())
-		return
-	}
-
-	if !u.Role.IsAdmin() {
-		isTeamAdmin, err := models.IsTeamAdmin(belongs, u.Id)
-		if err != nil {
-			logger.Error("check team admin error", "error", err)
-			c.JSON(500, common.RespInternalError())
-			return
-		}
-		if !isTeamAdmin {
-			c.JSON(403, common.RespError(e.NoPermission))
-			return
-		}
-	}
-
 	now := time.Now()
 	isUpdate := dash.Id != ""
 	if !isUpdate { // create dashboard
 		dash.Id = "d-" + utils.GenerateShortUID()
 		dash.CreatedBy = u.Id
 		dash.Created = &now
+
+		if !u.Role.IsAdmin() {
+			isTeamAdmin, err := models.IsTeamAdmin(dash.OwnedBy, u.Id)
+			if err != nil {
+				logger.Error("check team admin error", "error", err)
+				c.JSON(500, common.RespInternalError())
+				return
+			}
+			if !isTeamAdmin {
+				c.JSON(403, common.RespError(e.NoPermission))
+				return
+			}
+		}
+	} else {
+		belongs, err := models.QueryDashboardBelongsTo(dash.Id)
+		if err != nil {
+			logger.Error("query dashboarde owner error", "error", err)
+			c.JSON(500, common.RespInternalError())
+			return
+		}
+
+		if !u.Role.IsAdmin() {
+			isTeamAdmin, err := models.IsTeamAdmin(belongs, u.Id)
+			if err != nil {
+				logger.Error("check team admin error", "error", err)
+				c.JSON(500, common.RespInternalError())
+				return
+			}
+			if !isTeamAdmin {
+				c.JSON(403, common.RespError(e.NoPermission))
+				return
+			}
+		}
 	}
+
 	dash.Updated = &now
 
 	jsonData, err := dash.Data.Encode()
