@@ -104,12 +104,12 @@ const AnnotationEditor = (props: Props) => {
                     <ModalCloseButton />
                     <ModalBody>
                         <FormSection>
-                            <FormItem title={t.description} labelWidth="70px">
+                            <FormItem title={t.description} labelWidth="90px">
                                 <EditorInputItem type="textarea" placeholder={t.inputTips({ name: t.description })} value={annotation.text} onChange={v => {
                                     setAnnotation({ ...annotation, text: v })
                                 }} />
                             </FormItem>
-                            <FormItem title={t.tags} labelWidth="70px">
+                            <FormItem title={t.tags} labelWidth="90px">
                                 <Input value={tag} onChange={e => setTag(e.currentTarget.value)} placeholder={t1.tagInputTips} onKeyDown={e => {
                                     if (e.key === 'Enter') {
                                         addTag()
@@ -126,17 +126,17 @@ const AnnotationEditor = (props: Props) => {
                                 }
 
                             </HStack>}
-                            <FormItem title="Duration" labelWidth="70px">
+                            <FormItem title="Duration" labelWidth="90px">
                                 <Box>
                                     <EditorInputItem size="lg" value={annotation.duration} onChange={v => {
                                         setAnnotation({ ...annotation, duration: v })
                                     }} placeholder="e.g 1s 2m 1h 3h20m30s" />
                                 </Box>
                             </FormItem>
-                            <FormItem title="Start time" alignItems="center" labelWidth="70px">
+                            <FormItem title="Start time" alignItems="center" labelWidth="90px">
                                 <Text textStyle="annotation">{dateTimeFormat(annotation.time * 1000)}</Text>
                             </FormItem>
-                            <FormItem title="End time" alignItems="center" labelWidth="70px">
+                            <FormItem title="End time" alignItems="center" labelWidth="90px">
                                 <Text textStyle="annotation">{dateTimeFormat((annotation.time + durationToSeconds(annotation.duration)) * 1000)}</Text>
                             </FormItem>
                         </FormSection>

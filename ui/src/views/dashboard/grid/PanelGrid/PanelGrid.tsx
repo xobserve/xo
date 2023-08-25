@@ -283,23 +283,24 @@ export const PanelComponent = ({ dashboard, panel, variables, onRemovePanel, onH
 
     console.log("panel grid rendered, panel data: ", panelData)
     const data = useMemo(() => {
-        if (panel.enableTransform && panelData) {
+        const d = cloneDeep(panelData)
+        if (panel.enableTransform && d) {
             const transform = genDynamicFunction(panel.transform);
             if (isFunction(transform)) {
-                const tData = transform(panelData, lodash, moment)
+                const tData = transform(d, lodash, moment)
                 console.log("panel grid rendered, transform data: ", tData)
                 return tData
             } else {
-                return panelData
+                return d
             }
         }
-        return panelData
+        return d
     }, [panel.transform, panel.enableTransform, panelData])
 
     return <Box height={height} width={width} className={panel.styles.border == "None" && panel.styles.borderOnHover ? "hover-bordered" : null} border="1px solid transparent" position="relative">
 
         {data ? <>
-            <PanelHeader dashboardId={dashboard.id} panel={panel} data={data} queryError={queryError} onCopyPanel={onCopyPanel} onRemovePanel={onRemovePanel} onHidePanel={onHidePanel} />
+            <PanelHeader dashboardId={dashboard.id} panel={panel} data={panelData} queryError={queryError} onCopyPanel={onCopyPanel} onRemovePanel={onRemovePanel} onHidePanel={onHidePanel} />
             <Box
                 // panel={panel}
                 height={panelInnerHeight}

@@ -29,14 +29,10 @@ export const initPanel = (id?) => {
         styles: initPanelStyles,
         overrides: [],
         valueMapping: null,
-        transform:
-`function transform(rawData,lodash, moment) {
+        transform: `function transform(rawData,lodash, moment) {
     // for demonstration purpose: how to use 'moment'
-    const t = moment(new Date()).format("YY-MM-DD HH:mm::ss")
-    console.log(t)
-    // DON'T modify rawData, use lodash.cloneDeep to create a new object
-    const data = lodash.cloneDeep(rawData)
-    return data
+    // const t = moment(new Date()).format("YY-MM-DD HH:mm::ss")
+    return rawData
 }`,
         enableTransform: false,
         enableConditionRender: false,

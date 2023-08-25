@@ -132,7 +132,7 @@ const ContextMenu = memo(({ props, options, data, container }: Props) => {
         setAnnotation({
             color: "rgba(0, 211, 255, 1)",
             time: ts,
-            duration: '1s',
+            duration: '0s',
             text: "",
             tags: [],
             id: 0,
