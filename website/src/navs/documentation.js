@@ -32,10 +32,10 @@ export const documentationNav = {
   ],
   Administration: [
     pages['admin-mysql-sqlite'],
-    pages['role'],
-    pages['sidebar-nav'],
-    pages['audit-log'],
-    pages['configuration']
+    pages['admin-role'],
+    pages['admin-sidebar-nav'],
+    pages['admin-audit-log'],
+    pages['admin-configuration']
   ],
   
   Dashboard: [
