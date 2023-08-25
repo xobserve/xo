@@ -278,7 +278,7 @@
     "tagInputTips": "新建标签(按下 enter 键可以添加)",
     "tagsExceedLimit": "最多只能添加 5 个标签",
     "panelLayout": "图表排列",
-    "panelLayoutTips": "按照竖直或水平方向来自动排列图表，如果设置为自定义，你可以随意放置图表",
+    "panelLayoutTips": "按照竖直或水平方向来自动排列图表，如果设置为 null ，你可以随意放置图表",
     "Vertical": "竖直自动",
     "Custom": "自行排列",
     "Horizontal": "水平自动",

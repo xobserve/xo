@@ -298,7 +298,7 @@ export const dashboardSettingMsg = i18n("dashboardSetting", {
   "tagInputTips": "new tag(press enter to add)",
   "tagsExceedLimit": "You can only add up to 5 tags.",
   "panelLayout": "Panels layout",
-  "panelLayoutTips": "Auto place panels in horizontal or vertical direction, when set to random, you can place panels anywhere",
+  "panelLayoutTips": "Auto place panels in horizontal or vertical direction, when set to null, you can place panels anywhere",
   "panelOverlap": "Allow panels overlap",
   "panelOverlapTips": "Allow panels to be placed overlap each other",
   "saveDash": "Save dashboard",

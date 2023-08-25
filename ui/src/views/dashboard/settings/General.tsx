@@ -22,7 +22,6 @@ import { useStore } from "@nanostores/react"
 import { commonMsg, dashboardSettingMsg } from "src/i18n/locales/en"
 import ColorTag from "../../../components/ColorTag"
 import { requestApi } from "utils/axios/request"
-import useSession from "hooks/use-session"
 import { useNavigate } from "react-router"
 
 interface Props {
@@ -31,7 +30,6 @@ interface Props {
 }
 
 const GeneralSettings = ({ dashboard, onChange }: Props) => {
-    const { session } = useSession()
     const navigate = useNavigate()
     const t = useStore(commonMsg)
     const t1 = useStore(dashboardSettingMsg)
@@ -125,7 +123,7 @@ const GeneralSettings = ({ dashboard, onChange }: Props) => {
                         onChange((draft: Dashboard) => { draft.data.layout = v as DashboardLayout })
                     }}>
                         {
-                            Object.keys(DashboardLayout).map(k => <option value={[DashboardLayout[k]]}>{t1[k]}</option>)
+                            Object.keys(DashboardLayout).map(k => <option value={[DashboardLayout[k]]}>{DashboardLayout[k]}</option>)
                         }
                     </Select>
                 </FormItem>
