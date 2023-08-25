@@ -30,17 +30,17 @@ export const documentationNav = {
     pages['tutorial-alert'],
     pages['tutorial-share'],
   ],
-  Aministration: [
+  Administration: [
     pages['admin-mysql-sqlite'],
-    pages['team'],
     pages['role'],
     pages['sidebar-nav'],
     pages['audit-log'],
     pages['configuration']
   ],
+  
   Dashboard: [
     pages['dashboard-setting'],
-    pages['dashboard-share'],
+    pages['dashboard-import'],
   ],
   Panel: [
     pages["panel-data-transform"],
@@ -52,19 +52,13 @@ export const documentationNav = {
     pages["panel-interactivity"]
   ],
   Variable: [
-    pages["variable-using"],
-    pages["variable-scope"],
     pages["variable-query"],
     
   ],
   Alerting: [
-    pages["alert-about"],
     pages["alert-setting"],
-    pages["alert-prometheus"],
-    pages["alert-correlation"]
   ],
   Search:[
-    pages["search-about"],
     pages["search-priority"]
   ],
   'Panel Plugins': [
