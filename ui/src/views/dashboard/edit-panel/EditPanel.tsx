@@ -279,7 +279,7 @@ const EditPanel = ({ dashboard, onChange }: EditPanelProps) => {
                                     </Box>}
                             </Box>
                             {/* panel settings section */}
-                            <Box width="35%" maxHeight="100%" overflowY={"scroll"}>
+                            <Box width="35%" maxHeight="100%" overflowY={"scroll"} zIndex={1}>
                                 <Box className="top-gradient-border bordered-left bordered-right" >
                                     <Tabs position="relative" variant="unstyled">
                                         <TabList pb="0">

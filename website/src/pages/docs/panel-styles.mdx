@@ -1,4 +1,45 @@
 ---
 title: Styles
-description: Plugins and configuration settings that can improve the developer experience when working with Tailwind CSS.
+description: 
 ---
+
+import TextList  from '@/components/docs/TextList'
+import Code  from '@/components/docs/Code'
+
+Currently Datav has provided serveral ways for us to customize our panel styles, they may not as beautiful as you expected, but we will keep improving them as time goes by.
+
+Panel styles and Dashboard styles is mainly used for beautiful large screen display, they are still in an early stage.
+
+Before start, let's create a panel with `Echarts` visualization and TestData datasource. Then open panel editor and select `Styles` tab in right side.
+
+<img src="https://github.com/data-observe/assets/blob/main/panel/panel-border-editor.jpg?raw=true" />
+
+## Panel border 
+
+As default, every panel has a border set to type `Normal`, you can change it to `None` or other border types.
+
+Click the button in `Panel border` section, you can see a list of border types, select one of them to see the effect.
+
+Wow, I have chose `Border8` and it seems not bad, now let's go on setting the `title decoration`.
+
+## Title decoration
+
+Unlike borders, there are only a few title decorations now, let's set it to `Decoration11`.
+
+The default width of decoration is a little narrow, let's change it to `200px`.
+
+If you set `marin` to another value, you should find there seems no effect at all. This is because the `margin` style is useful only when the `title decoration` is set to `Decoration7`.
+
+After these changes, you should see the same result as I do: 
+
+<img src="https://github.com/data-observe/assets/blob/main/panel/title-decoration.jpg?raw=true" />
+
+## Title styles 
+
+The white title color is not good for us when add some decorations, let's change it to blue:
+
+<img src="https://github.com/data-observe/assets/blob/main/panel/title-color.jpg?raw=true" style={{height: '300px'}}/>
+
+The title position is just ok, so we don't need to change them: the `padding` styles is for ajusting the position of panel title.
+
+

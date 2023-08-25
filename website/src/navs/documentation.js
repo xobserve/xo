@@ -50,7 +50,6 @@ export const documentationNav = {
     pages["panel-data-transform"],
     pages["panel-styles"],
     pages["panel-overrides"],
-    pages["panel-debug"],
     pages["panel-thresholds"],
     pages["panel-interactivity"]
   ],
