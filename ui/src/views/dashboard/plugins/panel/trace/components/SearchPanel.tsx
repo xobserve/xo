@@ -188,7 +188,7 @@ const TraceSearchPanel = ({ timeRange, dashboardId, panel, onSearch, onSearchIds
                 <InputSelect value={operation} options={operations.map(s => ({ label: s, value: s }))} size="md" onChange={v => setOperation(v)} />
             </FormSection>
             <FormSection title="Tags" titleSize="0.85rem" spacing={1}>
-                <EditorInputItem value={tags} placeholder={`e.g {"error":"true", "http.status.code":"200"}`} onChange={v => setTags(v)} />
+                <EditorInputItem value={tags} placeholder={`e.g http.status_code=200 error=true`} onChange={v => setTags(v)} />
             </FormSection>
             <HStack>
                 <FormSection title={t1.maxDuration} titleSize="0.85rem" spacing={1}>

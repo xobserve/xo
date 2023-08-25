@@ -69,6 +69,7 @@ const TeamsPage = () => {
                 <Table variant="simple">
                     <Thead>
                         <Tr>
+                            <Th>Id</Th>
                             <Th>{t.itemName({name: t.team})}</Th>
                             <Th>{t.yourRole}</Th>
                             <Th>{t.members}</Th>
@@ -79,6 +80,7 @@ const TeamsPage = () => {
                     <Tbody>
                         {teams.map(team => {
                             return <Tr key={team.id}>
+                                <Td>{team.id}</Td>
                                 <Td>{team.name}</Td>
                                 <Td>{t[team.role] }</Td>
                                 <Td>{team.memberCount}</Td>
