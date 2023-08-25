@@ -16,6 +16,7 @@ export const documentationNav = {
     pages['compare-to-alter'],
   ],
   Tutorials: [
+    pages['tutorial-intro'],
     pages['tutorial-login'],
     pages['tutorial-home'],
     pages['tutorial-dashboard'],
@@ -35,7 +36,7 @@ export const documentationNav = {
     pages['admin-role'],
     pages['admin-sidebar-nav'],
     pages['admin-audit-log'],
-    pages['admin-configuration']
+    // pages['admin-configuration']
   ],
   
   Dashboard: [
