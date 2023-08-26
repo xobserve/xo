@@ -55,7 +55,10 @@ const GraphOverridesEditor = ({ override, onChange, panel }: Props) => {
         case GraphRules.SeriesDecimal:
             return <EditorNumberItem value={override.value} min={0} max={5} step={1} onChange={onChange} />
         case GraphRules.SeriesThresholds:
-            return <ThresholdEditor value={override.value} onChange={onChange} />
+            return <ThresholdEditor value={override.value} onChange={v => {
+                onChange(v)
+                dispatch(PanelForceRebuildEvent + panel.id)
+            }} />
         default:
             return <></>
     }
