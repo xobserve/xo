@@ -29,7 +29,6 @@ import StatOverridesEditor from "../plugins/panel/stat/OverridesEditor";
 import GeomapOverridesEditor from "../plugins/panel/geomap/OverridesEditor";
 import { Select } from "antd";
 import BarOverridesEditor from "../plugins/panel/bar/OverridesEditor";
-import AlertOverridesEditor from "../plugins/panel/alert/OverridesEditor";
 
 const PanelOverrides = ({ panel, onChange, data }: PanelEditorProps) => {
     const t1 = useStore(panelMsg)
@@ -135,7 +134,7 @@ const PanelOverrides = ({ panel, onChange, data }: PanelEditorProps) => {
                                     onChange((panel: Panel) => {
                                         panel.overrides[i].overrides[j].value = v
                                     })
-                                }} />
+                                }} panel={panel}/>
                             }
                             {
                                 panel.type == PanelType.Table && <TableOverridesEditor panel={panel} override={rule} onChange={(v) => {

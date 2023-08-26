@@ -15,16 +15,19 @@ import RadionButtons from "components/RadioButtons";
 import { ColorPicker } from "components/ColorPicker";
 import { EditorInputItem, EditorNumberItem, EditorSliderItem } from "components/editor/EditorItem";
 import { UnitPicker } from "components/Unit";
-import { OverrideRule } from "types/dashboard";
+import { OverrideRule, Panel } from "types/dashboard";
 import React from "react";
+import { dispatch } from "use-bus";
+import { PanelForceRebuildEvent } from "src/data/bus-events";
 
 interface Props {
     override: OverrideRule
     onChange: any
+    panel: Panel
 }
 
 
-const GraphOverridesEditor = ({ override, onChange }: Props) => {
+const GraphOverridesEditor = ({ override, onChange,panel }: Props) => {
     switch (override.type) {
         case GraphRules.SeriesStyle:
             return <RadionButtons size="sm" options={[{ label: "Lines", value: "lines" }, { label: "Bars", value: "bars" }, { label: "points", value: "points" }]} value={override.value} onChange={onChange} />
@@ -37,7 +40,10 @@ const GraphOverridesEditor = ({ override, onChange }: Props) => {
         case GraphRules.SeriesColor:
             return <ColorPicker color={override.value} onChange={onChange} />
         case GraphRules.SeriesFill:
-            return <EditorSliderItem value={override.value} min={0} max={100} step={1} onChange={onChange} />
+            return <EditorSliderItem value={override.value} min={0} max={100} step={1} onChange={v => {
+                onChange(v)
+                dispatch(PanelForceRebuildEvent + panel.id)
+            }} />
         case GraphRules.SeriesNegativeY:
             return <Switch defaultChecked={override.value} onChange={e => onChange(e.currentTarget.checked)} />
         case GraphRules.SeriesYAxis:
