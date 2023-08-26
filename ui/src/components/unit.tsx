@@ -39,7 +39,7 @@ export const UnitPicker = ({ value, onChange,size="md" }: Props) => {
 
     const onAddUnit = () => {
         units.units.push({
-            operator: units.units[0].operator ?? 'x',
+            operator: units.units[0]?.operator ?? 'x',
             rhs: 1,
             unit: ''
         })
@@ -195,7 +195,7 @@ export const UnitPicker = ({ value, onChange,size="md" }: Props) => {
                             <NumberInputField />
                         </NumberInput>
 
-                        <Input width="70px" size="sm" value={unit.unit} placeholder="e.g % , bytes" onChange={e => {
+                        <Input width="100px" size="sm" value={unit.unit} placeholder="e.g % , bytes" onChange={e => {
                             unit.unit = e.currentTarget.value
                             setUnits(cloneDeep(units))
                         }} />
