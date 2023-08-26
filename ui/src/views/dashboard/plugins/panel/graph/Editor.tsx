@@ -11,12 +11,11 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 import { Select, Switch } from "@chakra-ui/react"
-import {Select as AntdSelect} from 'antd'
 import PanelAccordion from "src/views/dashboard/edit-panel/Accordion"
 import PanelEditItem from "src/views/dashboard/edit-panel/PanelEditItem"
 import RadionButtons from "components/RadioButtons"
 import { UnitPicker } from "components/Unit"
-import { DatasourceType, Panel, PanelEditorProps } from "types/dashboard"
+import { Panel, PanelEditorProps } from "types/dashboard"
 import { EditorInputItem, EditorNumberItem, EditorSliderItem } from "components/editor/EditorItem"
 import { dispatch } from "use-bus"
 import { PanelForceRebuildEvent } from "src/data/bus-events"
@@ -27,9 +26,6 @@ import { commonMsg, graphPanelMsg } from "src/i18n/locales/en"
 import { useStore } from "@nanostores/react"
 import ThresholdEditor from "components/Threshold/ThresholdEditor"
 import { ThresholdDisplay, Units } from "types/panel/plugins"
-import { datasources } from "src/App"
-import { datasourceSupportAlerts } from "src/data/alerts"
-import HttpQueryEditor from "../../datasource/http/QueryEditor"
 import { AlertFilterEditor } from "../alert/Editor"
 import { ClickActionsEditor } from "src/views/dashboard/edit-panel/components/ClickActionsEditor"
 

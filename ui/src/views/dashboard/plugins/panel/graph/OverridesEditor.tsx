@@ -36,7 +36,10 @@ const GraphOverridesEditor = ({ override, onChange,panel }: Props) => {
         case GraphRules.SeriesName:
             return <EditorInputItem value={override.value} onChange={onChange} size="sm" placeholder="change series name" />
         case GraphRules.SeriesUnit:
-            return <UnitPicker size="sm" value={override.value} onChange={onChange} />
+            return <UnitPicker size="sm" value={override.value}  onChange={v => {
+                onChange(v)
+                dispatch(PanelForceRebuildEvent + panel.id)
+            }} />
         case GraphRules.SeriesColor:
             return <ColorPicker color={override.value} onChange={onChange} />
         case GraphRules.SeriesFill:

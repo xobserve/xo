@@ -29,6 +29,8 @@ import StatOverridesEditor from "../plugins/panel/stat/OverridesEditor";
 import GeomapOverridesEditor from "../plugins/panel/geomap/OverridesEditor";
 import { Select } from "antd";
 import BarOverridesEditor from "../plugins/panel/bar/OverridesEditor";
+import { dispatch } from "use-bus";
+import { PanelForceRebuildEvent } from "src/data/bus-events";
 
 const PanelOverrides = ({ panel, onChange, data }: PanelEditorProps) => {
     const t1 = useStore(panelMsg)
@@ -96,6 +98,8 @@ const PanelOverrides = ({ panel, onChange, data }: PanelEditorProps) => {
         onChange((panel: Panel) => {
             panel.overrides[i].overrides.splice(j, 1)
         })
+        
+        dispatch(PanelForceRebuildEvent + panel.id)
     }
 
 

@@ -23,7 +23,7 @@ import { formatUnit } from "components/Unit";
 import { measureText } from "utils/measureText";
 import { SeriesData } from "types/seriesData";
 import { GraphRules } from "./OverridesEditor";
-import { findOverride, findRuleInOverride } from "utils/dashboard/panel";
+import { findOverride, findOverrideRule, findRuleInOverride } from "utils/dashboard/panel";
 import { isEmpty } from "utils/validate";
 
 
@@ -50,6 +50,10 @@ export const parseOptions = (config: PanelProps, rawData: SeriesData[], colorMod
 
     })
 
+    // show its own units for negative-y series
+    const negativeYTarget =  config.panel.overrides.find(override => findRuleInOverride(override,  GraphRules.SeriesNegativeY)) 
+    const negativeYUnit = findRuleInOverride(negativeYTarget, GraphRules.SeriesUnit)
+
     const yAxis = [{
         grid: {
             show: config.panel.plugins.graph.axis?.showGrid,
@@ -63,7 +67,15 @@ export const parseOptions = (config: PanelProps, rawData: SeriesData[], colorMod
         size: ((self, values, axisIdx) => {
             return calculateAxisSize(self, values, axisIdx);
         }),
-        values: (u, vals) => vals.map(v => { return formatUnit(v, config.panel.plugins.graph.value.units, config.panel.plugins.graph.value.decimal) ?? round(v, config.panel.plugins.graph.value.decimal) }),
+        values: (u, vals) => vals.map(v => { 
+            // console.log("here33333:",u, vals)   
+            let units = config.panel.plugins.graph.value.units
+            if (negativeYTarget && negativeYUnit && v < 0) {
+                units = negativeYUnit.units
+            }
+            
+            return formatUnit(v, units, config.panel.plugins.graph.value.decimal) ?? round(v, config.panel.plugins.graph.value.decimal) 
+        }),
         units: config.panel.plugins.graph.value.units,
         side: 3
     }]
