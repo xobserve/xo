@@ -259,6 +259,9 @@ const GraphPanel = memo((props: GraphPanelProps) => {
                                 plotOpts = r.opts
                             }
 
+                            const thresholdsOverride =  props.panel.overrides.find(override => findRuleInOverride(override,  GraphRules.SeriesThresholds)) 
+                            const v = findRuleInOverride(thresholdsOverride, GraphRules.SeriesThresholds)
+                            
                             return (options && <UplotReact
                                 options={plotOpts}
                                 data={plotData}
@@ -270,6 +273,7 @@ const GraphPanel = memo((props: GraphPanelProps) => {
                                 <ZoomPlugin options={options} onZoom={onZoom} />
                                 <AnnotationsPlugin dashboardId={props.dashboardId}  options={options} timeRange={props.timeRange} panel={props.panel}/>
                                 {props.panel.plugins.graph.thresholdsDisplay != ThresholdDisplay.None && <ThresholdsPlugin options={options} thresholdsConfig={props.panel.plugins.graph.thresholds} display={props.panel.plugins.graph.thresholdsDisplay} />}
+                                {v && props.panel.plugins.graph.thresholdsDisplay != ThresholdDisplay.None && <ThresholdsPlugin options={options} thresholdsConfig={v} display={props.panel.plugins.graph.thresholdsDisplay} />}
                             </UplotReact>
                             )
                         }}

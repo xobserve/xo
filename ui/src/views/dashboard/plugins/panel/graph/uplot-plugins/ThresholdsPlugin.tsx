@@ -11,9 +11,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 import { useColorMode } from '@chakra-ui/react';
-import { alpha } from 'components/uPlot/colorManipulator';
-import { cloneDeep, reverse } from 'lodash';
-import { useEffect, useLayoutEffect, useState } from 'react';
+import { useLayoutEffect } from 'react';
 import tinycolor from 'tinycolor2';
 import { ThresholdDisplay } from 'types/panel/plugins';
 import { Threshold, ThresholdsConfig, ThresholdsMode } from 'types/threshold';
@@ -105,7 +103,7 @@ export const ThresholdsPlugin = ({ thresholdsConfig, options, display }: Props) 
       }
       
     useLayoutEffect(() => {
-        options.hooks.drawClear = [(u: uPlot) => {
+        options.hooks.drawClear.push((u: uPlot) => {
             const ctx = u.ctx;
             const { min: xMin, max: xMax } = u.scales.x;
             const { min: yMin, max: yMax } = u.scales[scaleKey];
@@ -148,7 +146,7 @@ export const ThresholdsPlugin = ({ thresholdsConfig, options, display }: Props) 
             }
         
             ctx.restore();
-        }]
+        })
     }, [options, thresholdsConfig]);
 
     return null;

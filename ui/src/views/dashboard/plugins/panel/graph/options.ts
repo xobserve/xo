@@ -23,7 +23,7 @@ import { formatUnit } from "components/Unit";
 import { measureText } from "utils/measureText";
 import { SeriesData } from "types/seriesData";
 import { GraphRules } from "./OverridesEditor";
-import { findOverride, findOverrideRule, findRuleInOverride } from "utils/dashboard/panel";
+import { findOverride, findRuleInOverride } from "utils/dashboard/panel";
 import { isEmpty } from "utils/validate";
 
 
@@ -196,7 +196,8 @@ export const parseOptions = (config: PanelProps, rawData: SeriesData[], colorMod
             setCursor: [],
             setSelect: [],
             ready: [],
-            draw: []
+            draw: [],
+            drawClear: []
         },
         // padding: [0, 10, 0, 1],
         plugins: [

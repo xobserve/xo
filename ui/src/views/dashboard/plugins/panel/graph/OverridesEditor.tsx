@@ -19,6 +19,7 @@ import { OverrideRule, Panel } from "types/dashboard";
 import React from "react";
 import { dispatch } from "use-bus";
 import { PanelForceRebuildEvent } from "src/data/bus-events";
+import ThresholdEditor from "components/Threshold/ThresholdEditor";
 
 interface Props {
     override: OverrideRule
@@ -27,7 +28,7 @@ interface Props {
 }
 
 
-const GraphOverridesEditor = ({ override, onChange,panel }: Props) => {
+const GraphOverridesEditor = ({ override, onChange, panel }: Props) => {
     switch (override.type) {
         case GraphRules.SeriesStyle:
             return <RadionButtons size="sm" options={[{ label: "Lines", value: "lines" }, { label: "Bars", value: "bars" }, { label: "points", value: "points" }]} value={override.value} onChange={onChange} />
@@ -36,7 +37,7 @@ const GraphOverridesEditor = ({ override, onChange,panel }: Props) => {
         case GraphRules.SeriesName:
             return <EditorInputItem value={override.value} onChange={onChange} size="sm" placeholder="change series name" />
         case GraphRules.SeriesUnit:
-            return <UnitPicker size="sm" value={override.value}  onChange={v => {
+            return <UnitPicker size="sm" value={override.value} onChange={v => {
                 onChange(v)
                 dispatch(PanelForceRebuildEvent + panel.id)
             }} />
@@ -53,6 +54,8 @@ const GraphOverridesEditor = ({ override, onChange,panel }: Props) => {
             return <Switch defaultChecked={override.value} onChange={e => onChange(e.currentTarget.checked)} />
         case GraphRules.SeriesDecimal:
             return <EditorNumberItem value={override.value} min={0} max={5} step={1} onChange={onChange} />
+        case GraphRules.SeriesThresholds:
+            return <ThresholdEditor value={override.value} onChange={onChange} />
         default:
             return <></>
     }
@@ -72,4 +75,5 @@ export enum GraphRules {
     SeriesFill = 'Series.fill',
     SeriesNegativeY = 'Series.negativeY',
     SeriesYAxis = 'Series.separateYAxis',
+    SeriesThresholds = "Series.thresholds"
 }
