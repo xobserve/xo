@@ -16,6 +16,26 @@ In this doc, we will continue using the panel created in last doc, and add a thr
 
 Open panel editor of the panel we created in last doc, and find the `Thresholds` section in `Panel` tab.
 
+<img src="https://github.com/data-observe/assets/blob/main/panel/common-threshold.jpg?raw=true" style={{height: '350px'}}/>
+
+Fill in the `Thresholds` section as above, you can see there is a warning line add to the chart. That's easy and intuitive.
+
+But there is a big problem, this threshold only works for `node_load5` series, if we want to add the same threshold to `node_load1` series, we have to find another way.
+
+## Add threshold to `node_load1` series 
+
+To add threshold to `node_load1` series, we have to set a override rule.
+
+Add a override like below:
+
+
+<img src="https://github.com/data-observe/assets/blob/main/panel/override-threshold.jpg?raw=true" style={{height: '300px'}}/>
+
+## Final result 
+
+Let's have a look at what the final chart looks like:
+
+<img src="https://github.com/data-observe/assets/blob/main/panel/threshold-final.jpg?raw=true" style={{height: '300px'}}/>
 
 
 
