@@ -24,6 +24,7 @@ import { replaceWithVariables } from "utils/variable"
 import { requestApi } from "utils/axios/request"
 import { isEmpty } from "utils/validate"
 import { roundDsTime } from "utils/datasource"
+import { $variables } from "src/views/variables/store"
 
 export const run_http_query = async (panel: Panel, q: PanelQuery, range: TimeRange, ds: Datasource) => {
     if (isEmpty(q.metrics.trim())) {
@@ -37,12 +38,12 @@ export const run_http_query = async (panel: Panel, q: PanelQuery, range: TimeRan
     // 2. using `axios` instead of `fetch`
     const start = roundDsTime(range.start.getTime() / 1000)
     const end = roundDsTime(range.end.getTime() / 1000)
-    let url = q.metrics
+    let url = replaceWithVariables(q.metrics)
     const headers = {}
     if (!isEmpty(q.data.transformRequest)) {
-        const transformRequest = genDynamicFunction(replaceWithVariables(q.data.transformRequest));
+        const transformRequest = genDynamicFunction(q.data.transformRequest);
         if (isFunction(transformRequest)) {
-            url = transformRequest(url, headers, start, end, panel)
+            url = transformRequest(url, headers, start, end, panel, $variables.get())
         } else {
             return {
                 error: 'transformRequest is not a valid function',
@@ -118,9 +119,9 @@ export const queryHttpVariableValues = async (variable: Variable, useCurrentTime
     const headers = {}
     let url
     if (!isEmpty(data.transformRequest)) {
-        const transformRequest = genDynamicFunction(replaceWithVariables(data.transformRequest));
+        const transformRequest = genDynamicFunction(data.transformRequest);
         if (isFunction(transformRequest)) {
-            url = transformRequest(replaceWithVariables(data.url), headers, start, end)
+            url = transformRequest(replaceWithVariables(data.url), headers, start, end, $variables.get())
         } else {
             return []
         }

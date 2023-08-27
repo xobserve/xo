@@ -92,9 +92,8 @@ export default HttpVariableEditor
 const initTransformRequest =
 `
 // support variables
-function transformRequest(url,headers,startTime, endTime) {
-    let newUrl = url + \`&start=$\{startTime}&end=$\{endTime}\`
-    console.log("here333 transform request :", url, newUrl, headers, startTime, endTime)
+function transformRequest(url,headers,startTime, endTime, variables) {
+    let newUrl = url + \`?&start=$\{startTime}&end=$\{endTime}\`
     return newUrl
 }`
 
