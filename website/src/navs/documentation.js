@@ -53,8 +53,14 @@ export const documentationNav = {
     pages["panel-thresholds"],
     pages["panel-interactivity"]
   ],
-  Misc: [
+  Variable: [
     pages["variable-query"],
+    pages["variable-jaeger"],
+    pages["variable-loki"],
+    pages["variable-http"],
+  ],  
+  Misc: [
+ 
     pages["alert-setting"],
     pages["search-priority"]
     
