@@ -47,7 +47,7 @@ const LogToolbar = memo((props: Props) => {
         return options.styles.labelColorSyncChart ? getLabelNameColor(id, colorMode) : paletteColorNameToHex(options.styles.labelValueColor)
     }
     return (<Box>
-        <Flex justifyContent="space-between"  pl="1" pr="5" fontSize="0.85rem" mt="-3px">
+        <Flex justifyContent="space-between" py="2"  pl="1" pr="5" fontSize="0.85rem" mt="-3px">
             <HStack spacing={1}>
                 <AiOutlineDoubleRight cursor="pointer" style={{
                     transform: 'rotate(90deg)'

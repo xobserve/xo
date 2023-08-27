@@ -230,7 +230,7 @@ const LogPanel = (props: LogPanelProps) => {
     return (<>
         <Flex position="relative">
             {panel.plugins.log.toolbar.show &&
-                <Box position="absolute" right="2" top="0" onClick={onToobarOpen} fontSize="0.7rem" opacity="0.6" cursor="pointer" p="2px" className={toolbarOpen ? "color-text" : null}>
+                <Box position="absolute" right="2" top="2" zIndex={1} onClick={onToobarOpen} fontSize="0.7rem" opacity="0.4" cursor="pointer" p="2px" className={toolbarOpen ? "color-text" : null}>
                     <FaFilter />
                 </Box>}
             <Box height={props.height} width={props.width - (toolbarOpen ? panel.plugins.log.toolbar.width : 1)} transition="all 0.3s" py="2">
