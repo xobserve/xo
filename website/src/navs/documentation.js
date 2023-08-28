@@ -43,6 +43,7 @@ export const documentationNav = {
     pages['dashboard-setting'],
     pages['dashboard-styles'],
     pages['dashboard-import'],
+    pages["dashboard-sort"]
   ],
   Panel: [
     pages["panel-annotation"],
@@ -59,11 +60,9 @@ export const documentationNav = {
     pages["variable-loki"],
     pages["variable-http"],
   ],  
-  Misc: [
- 
-    pages["alert-setting"],
-    pages["search-priority"]
-    
+  Alert: [
+    pages["alert"],
+    pages["alert-correlate"],
   ],
   'Panel Plugins': [
     pages["plugin-overview"],
