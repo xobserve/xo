@@ -1,0 +1,53 @@
+---
+title: Graph for timeseries 
+description: 
+---
+
+import TextList  from '@/components/docs/TextList'
+import Code  from '@/components/docs/Code'
+
+For timeseries data, the most used panel is `Graph` visualization.
+
+Its x-axis is always time, and y-axis is the value of the metric, because of this, the `Graph` panel is the born for [timeseries data](/docs/panel-data-transform).
+
+
+<img src="https://github.com/data-observe/assets/blob/main/plugin/graph.jpg?raw=true" style={{height: '300px'}}/>
+
+Next, let's see how to configure some of the options.
+
+## Connect null values 
+
+When query data from datasource, if there is no data in some time points, the panel will show a gap in the graph.
+
+<img src="https://github.com/data-observe/assets/blob/main/plugin/null-data.jpg?raw=true" style={{height: '300px'}}/>
+
+There many gaps in this graph, if hover on one of them, you should see a tootip with no value as the above image.
+
+If we checked the `Connect null values` option in `Graph styles` section, the panel will connect the null values with the adjacent values.
+
+<img src="https://github.com/data-observe/assets/blob/main/plugin/connect-null.jpg?raw=true" style={{height: '300px'}}/>
+
+
+## Value -> Units
+
+Refer to [Create user stats dashboard](/docs/tutorial-dashboard#add-units) for more info.
+
+## Interaction 
+
+[Panel interactivity](/docs/panel-interactivity)
+
+## Thresholds 
+
+[Panel Thresholds](/docs/panel-thresholds)
+
+## Alert correlation
+
+[Correlate alerts to Graph](/docs/tutorial-alert#correlate-alerts-to-graph-panel)
+
+## Styles 
+
+[Panel styles](/docs/panel-styles)
+
+## Overrides 
+
+[Panel Overrides](/docs/panel-overrides)

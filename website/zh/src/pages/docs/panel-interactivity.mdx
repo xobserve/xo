@@ -1,0 +1,140 @@
+---
+title: Interactivity
+description:
+---
+
+In previous [tutorial doc](), if you click on a point on GeoMap panel, the map will automatically zoom in to that point. 
+
+We can define such interactivity for many  panels in Datav, in this doc, let's see  how to define interactivity for Graph panel.
+
+In this doc, we will continue using the panel created in last doc, and add interactivity to it.
+
+## Basic click event  
+
+First, let's add a basic click event to the panel, and print the input data.
+
+Open the panel editor and find the `interaction` setion in `Panel` tab, click `Add action` and rename `New action` to `Test click`
+
+<img src="https://github.com/data-observe/assets/blob/main/panel/add-interaction.jpg?raw=true" style={{height: "400px"}}/>
+
+As show in above image, we have created an click action named `Test click`, and now let's add some code to it.
+
+Click `Edit function` button, add fill the code as below:
+
+<img src="https://github.com/data-observe/assets/blob/main/panel/edit-basic-interaction.jpg?raw=true" style={{height: "300px"}}/>
+
+You can also copy below code into the editor:
+
+```js
+// setVariable: (varName:string, varValue:string) => void 
+// navigate: react-router-dom -> useNavigate() -> navigate 
+// setDateTime: (from: Timestamp, to: TimeStamp) => void
+function onRowClick(row, navigate, setVariable, setDateTime, $variables) {
+    // You can get all current variables in this way
+    const currentVariables = $variables.get()
+    console.log(row, currentVariables)
+}
+```
+
+Click `Sumit`, then click on `Graph`, you shold see a popup modal like this:
+
+<img src="https://github.com/data-observe/assets/blob/main/panel/click-popup.jpg?raw=true" style={{height: "200px"}}/>
+
+Click `Test click`, you should see the data printed in the browser console: 
+
+<img src="https://github.com/data-observe/assets/blob/main/panel/interaction-first-output.jpg?raw=true" style={{height: "160px"}}/>
+
+## Event params
+
+As you can see in the image above, the first input param is our series data, it includes neary all the data you need for define click event.
+
+There are also some other params, they are also very important, let's goes through them one by one.
+
+### navigate
+
+`navigate` is the return of `useNavigate` which is defined in `react-router-dom`:
+
+```js
+import { useNavigate } from "react-router-dom"
+const navigate = useNavigate()
+```
+
+we can use it to navigate to other pages.
+
+```js
+navigate("/home")
+```
+
+But you can't open a new browser tab with `navigate`, if you want to open a new tab, you can use `window.open`:
+
+### setVariable
+
+With `setVariable`, you can set a variable to the value you want, and add params to url.
+
+```js
+setVariable("host", "localhost:9100")
+```
+
+### setDateTime
+
+`setDateTime` is used to set current time range, it will change the url params as well.
+
+```js
+setDateTime(1693049230, 1693049356)
+```
+
+
+### $variables 
+
+`$variables` is a store value which stores the current variables, you can get all the current variables by this way:
+
+```js
+const currentVariables = $variables.get()
+```
+
+### Advance click event
+
+Let's use these params to create a more advance click event: set a variable, set the time range around the clicked point, and navigate to a url which is get from the param data.
+
+```js
+// setVariable: (varName:string, varValue:string) => void 
+// navigate: react-router-dom -> useNavigate() -> navigate 
+// setDateTime: (from: Timestamp, to: TimeStamp) => void
+function onRowClick(row, navigate, setVariable, setDateTime, $variables) {
+    // get host from clicked series
+    const valueField = row.series.fields.find(f => f.labels)
+    const host = valueField.labels["instance"]
+    console.log("here333333:",host)
+    if (host) {
+        // set timerange to [clickTime - 2m, clickTime + 2m]
+        setDateTime(row.time - 120, row.time + 120)
+
+        // set the value of host variable to the new host
+        setVariable("host", host)
+
+        // visit host info dashboard to view the new host info
+        // wait some time for seting variable complete
+        setTimeout(() => {
+             navigate("/service/hosts")
+        }, 100)  
+    }
+}
+```
+
+Add above code to the click function, in this code, we get the host from the clicked series, and set the time range to 2 minutes before and after the clicked point, then set the host variable to the new host, and navigate to the host info dashboard, this is very similar to the real world scenario: 
+
+when you find some issues, you click the issue series and select the time point that issue happens, and go to a dashboard to view more info.
+
+
+## Final result
+
+First, let's see a image before clicking: 
+
+<img src="https://github.com/data-observe/assets/blob/main/panel/before-click.jpg?raw=true"/>
+
+
+Next, let's trigger the click event, and see the result:
+
+<img src="https://github.com/data-observe/assets/blob/main/panel/after-click.jpg?raw=true"/>
+
+You can see all three places the arrows point to have changed as we expected, nice!

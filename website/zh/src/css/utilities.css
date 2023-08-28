@@ -1,0 +1,39 @@
+@tailwind utilities;
+
+.scrollbar-none {
+  scrollbar-width: none;
+  &::-webkit-scrollbar {
+    display: none !important;
+  }
+}
+
+.bg-checkered {
+  background-image: url("data:image/svg+xml,%0A%3Csvg xmlns='http://www.w3.org/2000/svg'%3E%3Cpath fill='%23F0F0F0' d='M0 0h8v8H0zm8 8h8v8H8z'/%3E%3C/svg%3E");
+  background-size: 16px 16px;
+}
+
+.code-highlight {
+  border-radius: 0.25rem;
+  padding: 0.125rem 0.1875rem;
+  margin: 0 -0.1875rem;
+}
+
+.dragging-ew,
+.dragging-ew * {
+  cursor: ew-resize !important;
+  user-select: none !important;
+}
+
+.mono-active > div:not(.not-mono) > span {
+  color: theme('colors.slate.600');
+}
+
+.mono > div > span {
+  transition-duration: 0.5s;
+  transition-property: background-color, border-color, color, fill, stroke;
+}
+
+.changing-theme,
+.changing-theme * {
+  transition: none !important;
+}

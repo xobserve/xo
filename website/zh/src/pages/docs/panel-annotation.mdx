@@ -1,0 +1,82 @@
+---
+title: Annotation
+description: 
+---
+
+import TextList  from '@/components/docs/TextList'
+import Code  from '@/components/docs/Code'
+
+Using annotatin can add marks to your Graph panel chart, like this: 
+
+<img src="https://github.com/data-observe/assets/blob/main/panel/annotation-demo1.jpg?raw=true" style={{height: '300px'}} />
+
+The line and range with sky blue color are our annotations. Let's create an annotation first.
+
+> Annotation is only support in <Code>Graph</Code> panel
+
+## Annotation
+
+### Create annotation 
+
+1. Add a new panel and open its panel editor, then select `Grapn` visualization for it, apply and return back to dashboard page.
+2. Click on the Graph chart, you will see a context menu popup:
+
+<img src="https://github.com/data-observe/assets/blob/main/panel/annotation-context-menu.jpg?raw=true" style={{height: '300px'}} />
+
+3. Click `Add annotation` button, you will see a annotation editor popup:
+
+<img src="https://github.com/data-observe/assets/blob/main/panel/annotation-editor.jpg?raw=true" style={{height: '300px'}} />
+
+4. `Duration` field is the time range of annotation, if you want the annotation to be a vertical line, set it to `0s`, otherwise set to the real timerange ,
+let's set it to `2m` here
+
+Fill in other fields and click `Submit` button, you will see the annotation in the chart.
+
+<img src="https://github.com/data-observe/assets/blob/main/panel/annotation-hover.jpg?raw=true" style={{height: '300px'}} />
+
+### View annotation
+
+In above image, we can see an arrow points to a marker, if you hover on the marker, you will see the annotation details popup like the image above.
+
+### Edit annotation
+
+Click the `edit icon` in the top right corner of the popup annotation detail card, you will see the annotation editor appeared.
+
+We can edit annotation infos and timerange here, let's change the `Duration` to `1m` now, and see what will happen.
+
+
+### Delete annotation 
+
+Click the `trash icon` in the top right corner of the popup annotation detail card to delete the annotation.
+
+
+## Manage panel annotations 
+
+Manage annotation through chart is not convenient, so Datav provides a panel annotation manager to manage all annotations.
+
+1. Click panel header(click where the arrow points to in below image) and click `Panel Debug` menu item 
+
+<img src="https://github.com/data-observe/assets/blob/main/panel/debug-panel-menu.jpg?raw=true" style={{height: '300px'}} />
+
+2. Select `Panel Annotations` tab 
+
+Now you will see all the annotations in this panel and current selected time range
+
+## Annotation settings
+
+Open dashboard settings modal, select `Annotation` tab, you will see the annotation settings.
+
+<img src="https://github.com/data-observe/assets/blob/main/panel/annotation-setting.jpg?raw=true" style={{height: '300px'}} />
+
+You can try:
+
+<TextList>
+    <li>change the color of annotation markers</li>
+    <li>add tags to some annotations, and set the `tags filter setting` to only show the annotations which matched the tags</li>
+</TextList>
+
+
+## Correlate alert with panels
+
+In previous [tutorial](/docs/tutorial-alert#correlate-alerts-to-graph-panel), we have learned how to create an alert to `Graph` panel, these alerts are shown as annotations, but you can't edit them,
+because they are automatically created by Datav, not by user.

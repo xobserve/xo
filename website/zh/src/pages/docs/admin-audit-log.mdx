@@ -1,0 +1,18 @@
+---
+title: Audit logs
+description: 
+---
+
+
+Audit logs is very important for enterprise users. It can help you to track the changes of your core data. 
+
+In Datav, we use audit logs to track the removings, such as dashboard removing, team removing etc. 
+ 
+You may wonder: why not to track dashboard changes, it is also very important too. The answer is that we have [dahsobard history](http://localhost:3002/docs/tutorial-home#view-history) to track the changes of dashboard, that is much more powerful.
+
+
+<img src="https://github.com/data-observe/assets/blob/main/admin/audit-log.jpg?raw=true"/>
+
+As you can see, there are many important infos in these audit logs, especially the `Data` column.
+
+If someone has removed a dashboard by mistake, you can restore it by clicking the `Data` column and copy the meta data , then [import this dashboard](/docs/dashboard-import) with the meta data.

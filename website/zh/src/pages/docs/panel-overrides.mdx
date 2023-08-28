@@ -1,0 +1,109 @@
+---
+title: Overrides
+description: 
+---
+
+import TextList  from '@/components/docs/TextList'
+
+In Datav, you can set options for overall charts, when these options is set, every series in the chart will inherit these options. 
+
+But somtimes we hope to override some options for a specific series, now you can do it with `Panel Overrides`.
+
+## Create a panel 
+
+First, create a panel and select `Graph` visualization, then add datasource queries as below: 
+
+<img src="https://github.com/data-observe/assets/blob/main/panel/panel-with-two-queries.jpg?raw=true" style={{height: "260px"}}/>
+
+Don't forget to set `Legend` field to `{{__name__}}` to display their series name in graph legend.
+
+> This panel will be reused in the next `Thresholds` and `Interactivity` docs 
+
+## Set common options 
+
+Now, you can see there are two series in the `Graph` chart: `node_load1` and `node_load5`, let's set some common options to them.
+
+### area fill 
+
+The below options will change the area fill style of all series in the chart:
+
+<img src="https://github.com/data-observe/assets/blob/main/panel/fill-area.jpg?raw=true" style={{height: "260px"}}/>
+
+### unit 
+
+Now, let's set the unit of all series in the chart:
+
+<img src="https://github.com/data-observe/assets/blob/main/panel/unit.jpg?raw=true" style={{height: "260px"}}/>
+
+It should be noted that value in `Unit` is actually ` / load5` with a `space` char at the beginning.
+
+<img src="https://github.com/data-observe/assets/blob/main/panel/panel-with-common-options.jpg?raw=true" />
+
+This is a bit weird, `load1` series is also using a `load5` unit. Let's fix it first.
+
+
+## Override options
+
+To fix the unit issue, the only way is to override the options for `load1` series.
+
+But if you look at the `Graph` panel, you will find that there is no Y-axis space for `load1` series to show its unit ` / load1`.
+
+So we need to add a new Y-axis for `load1` series, and set its unit to ` / load1`:
+
+### Add override item to `load1` 
+
+Click `Override` tab and add a new override for `load1` sereis as below:
+
+<img src="https://github.com/data-observe/assets/blob/main/panel/override-item.jpg?raw=true" />
+
+### Add Y-axis override
+
+Click `Add override rule` and select `Series.separateYAxis` type ,then enable it as below: 
+
+<img src="https://github.com/data-observe/assets/blob/main/panel/yaxis-override.jpg?raw=true" />
+
+Where the arrow points to is the new `Y-axis` we set for `load1` series.
+
+Now it's time to set its unit.
+
+### Add unit override 
+
+Click `Add override rule` and select `Series.Unit` type, then set its value as below and click `Submit` button: 
+
+<img src="https://github.com/data-observe/assets/blob/main/panel/override-unit.jpg?raw=true" />
+
+Nice, now the `load1` series has its own Y-axis and unit.
+
+But there is also a problem: the `load1` and `load5` series are shown mixed together. Maybe we should separate them.
+
+A viable approach is show `load1` in `negative y-axis`.
+
+### Add negative y-axis override
+
+For now, we don't need `separateYAxis` any more, so change it to `negativeY` as below:
+
+<img src="https://github.com/data-observe/assets/blob/main/panel/negativey-override1.jpg?raw=true" />
+
+
+Ok, the two series never mixed together now and the units is also correct. Let's override some styles next.
+
+
+### Override color and fill 
+
+Add some overrides as below :
+
+<img src="https://github.com/data-observe/assets/blob/main/panel/styles-override.jpg?raw=true" style={{height: "400px"}}/>
+
+<TextList>
+    <li>Override `Series.style` to change `node_load1` series from `Lines` type that set in common options to `Points` type</li>
+    <li>Set `Series.fill` it to `10` for `node_load1` to make it less opacity</li>
+    <li>Remove the line from chartSet by seting `Series.lineWidth` to 0 </li>
+    <li>Assign a new color to `node_load1` rather than using a default color by seting the `Series.color` override</li>
+</TextList>
+
+
+## Final result
+
+After all these overrides, the final result is not bad:
+
+<img src="https://github.com/data-observe/assets/blob/main/panel/override-final.jpg?raw=true" style={{height: "300px"}}/>

@@ -1,0 +1,91 @@
+.token.tag,
+.token.class-name,
+.token.selector,
+.token.selector .class,
+.token.selector.class,
+.token.function {
+  @apply text-pink-400;
+}
+
+.token.attr-name,
+.token.keyword,
+.token.module,
+.token.rule,
+.token.pseudo-class,
+.token.important {
+  @apply text-slate-300;
+}
+
+.token.attr-value,
+.token.class,
+.token.string {
+  @apply text-sky-300;
+}
+
+.token.punctuation,
+.token.attr-equals {
+  @apply text-slate-500;
+}
+
+.token.attr-value * {
+  @apply text-sky-300;
+}
+
+.token.attr-value .attr-equals,
+.token.attr-value .attr-equals + .punctuation,
+.token.attr-value > .punctuation:last-child {
+  @apply text-slate-500;
+}
+
+.token.property {
+  @apply text-sky-300;
+}
+
+.token.unit {
+  @apply text-teal-200;
+}
+
+.language-shell .token:not(.comment),
+.token.atapply .token:not(.rule):not(.important):not(.punctuation) {
+  color: inherit;
+}
+
+.language-css .token.function {
+  @apply text-teal-200;
+}
+
+.token.comment,
+.token.operator,
+.token.combinator {
+  @apply text-slate-400;
+}
+
+.token.unchanged {
+  @apply block;
+}
+
+.token.deleted,
+.token.inserted {
+  @apply block relative -mx-9 pl-8 pr-5 border-l-4 before:absolute before:top-0 before:left-4;
+}
+
+.token.inserted {
+  @apply bg-teal-400/[0.15] border-teal-400 before:content-['+'] before:text-teal-400;
+}
+
+.token.deleted {
+  @apply bg-rose-500/[0.15] border-rose-400 before:content-['-'] before:text-rose-400;
+}
+
+pre[class^='language-diff-'] {
+  @apply flex px-9;
+}
+
+pre[class^='language-diff-'] > code {
+  @apply flex-none min-w-full;
+}
+
+/* targets the `&shy;` in a code example */
+span.code-highlight.bg-code-highlight:has(> span[title*='\AD']) {
+  @apply bg-pink-500/10 text-pink-400 mx-[1px];
+}

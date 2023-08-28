@@ -1,0 +1,52 @@
+---
+title: Storage
+description:
+---
+
+import TextList  from '@/components/docs/TextList'
+import Code  from '@/components/docs/Code'
+
+Datav support two databases at the moment: `Mysql` and `Sqlite`. You can use either of them to store your data.
+
+By default, Datav uses `sqlite` to store data. You can find a file named `datav.db` in the root directory of Datav. This file is the database store file of sqlite.
+
+<img src="https://github.com/data-observe/assets/blob/main/admin/sqlite-file.jpg?raw=true" style={{height: '100px'}} />
+
+Therefore, if you use default `sqlite`, please backup this `datav.db` file regularly.
+
+## Sqlite 
+
+Using `sqlite` is very easy:
+
+<TextList>
+    <li>Datav will use `sqlite` as the default database if you have not configured the database.</li>
+    <li> Modify `config.yml` to use `sqlite`</li>
+</TextList>
+
+```yml
+# in config.yml
+database:
+    type: sqlite
+```
+
+## Mysql 
+
+Using mysql means you can deploy multipe Datav instances and share the same database. So we recommend you to use mysql in production environment.
+
+1. Configure mysql in `config.yml`
+
+```yml
+database:
+    type: mysql
+    account: root
+    account_secret: 
+    host: localhost
+    port: 3306
+    database: datav
+```
+
+2. Import the `datav.sql` file in the <Code>datav/backend</Code> directory into mysql.
+
+
+
+

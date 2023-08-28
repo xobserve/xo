@@ -1,0 +1,101 @@
+---
+title: Http
+description:
+---
+
+import TextList  from '@/components/docs/TextList'
+import Code  from '@/components/docs/Code'
+
+Sometimes, you may need to query variables from datasources other than we already provided.  
+
+In these cases, you should  make a http request and parse the response data to get the variable values you want.
+
+In this doc, we will make http request to jaeger to get its operation under `frontend` service.
+
+> Before start, you should have a <Code>Jaeger</Code> instance running, refer to https://www.jaegertracing.io/ for more info.
+
+## Create http datasource
+
+<img src="https://github.com/data-observe/assets/blob/main/variable/http-datasource.jpg?raw=true" style={{height: "400px"}}/>
+
+## Create http Variable
+
+Let's create a variable named `operation` to query data from jaeger http api: `http://localhost:16686/api/services/frontend/operations`.
+
+> We will use `service` variable created in [Jaeger](/docs/variable-jaeger#jaeger-services) doc, please make sure it still exists.
+
+### Basic info 
+
+First fill in the variable editor with: 
+
+<img src="https://github.com/data-observe/assets/blob/main/variable/basic-http.jpg?raw=true" style={{height: "500px"}}/>
+
+You should have noticed, we have use a `service` variable in  `Query values` field: `http://localhost:16686/api/services/${service}/operations`, which means **we can use variable in HTTP request url**.
+
+
+### Edit request 
+
+In `Request transform` section, we can set params for http request, such as `start time`, `end time` etc.
+
+You can't use variable format in  `function body`, but you can use its `variables` param instead.
+
+As we don't need any params for this request, just leave it as default.
+
+> If you look into the `Request transform` function, you should see it default add `start` and `end` params to you request.
+
+### Edit response
+
+This is the most important part of HTTP datasource, we need to parse the response data to get the variable values we want.
+
+`Response transform` function must return a object as below: 
+
+```json 
+{
+    "error": null,
+    "data": ['value1', 'value2']
+}
+```
+
+As we already know this http request will return :
+
+```json
+{
+  "data": [
+    "/logproto.Querier/Label",
+  ],
+  "total": 31,
+  "limit": 0,
+  "offset": 0,
+  "errors": null
+}
+```
+so Let's modify this function to :
+
+```js
+function transformResult(httpResult) {
+    return {
+        error: httpResult.errors,
+        data: httpResult.data
+    }
+}
+```
+
+Now we can successfully get the `operation` variable values with `service` variable set to `frontend` :
+
+<img src="https://github.com/data-observe/assets/blob/main/variable/http-variable.jpg?raw=true" style={{height: "500px"}}/>
+
+## Final result 
+
+This is easy just because the response of jaeger api is already in the format we want, but in most cases, you need to do some extra work to get the variable values you want.
+
+<video controls autoPlay src="https://github.com/data-observe/assets/blob/main/variable/http-final.mov?raw=true" style={{height: "500px"}}/>
+
+As you can see, because we use `service` variable in Http request url, when we change the `service` variable value, the `operation` variable values will change accordingly, great!
+
+
+
+
+
+
+
+

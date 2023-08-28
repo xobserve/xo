@@ -1,0 +1,141 @@
+---
+title: Organize dashboards with team 
+description: 
+---
+
+Let's assume you have deploy a datav server in your Company, as the time goes on, you will have more and more dashboards and users.
+
+In this case, you may want to organize your dashboards with different groups, so that you and other admins/users can easily manage them.
+
+This kind group is called Team in Datav.
+
+## Why we need teams 
+
+In a company, there is usually a team called ops, which is responsible for the operation and maintenance of the infrastructures, such as servers, databases, netword etc. 
+
+If the ops team uses Datav, they may want to create a team to manage their dashboards, because they probably don't care the dashboards about business.
+
+Therefore, we can create a team called ops, and add all the ops users to this team, and associated server, network dashboards with this team.
+
+## Create a ops team
+
+1. Click `configuration` icon in the bottom section of sidebar and select `Team` tab.
+
+<img src="https://github.com/data-observe/assets/blob/main/tutorial/team-table.jpg?raw=true" />
+
+2. Click `New Team` button in the top right corner 
+3. Fill in `Team Name` field with `ops`
+4. Click `Submit` button
+
+That's unbelievable easy.
+
+## Add users to ops team
+
+Every team should has its own admins and users, so that they can manage and view their dashboards. 
+
+Let's add `datav-admin` to ops team, add give him the admin role.
+
+> In fact, if a user is `Admin` in `global` team, he is also the admin of Datav, so we can get a conclusion: 
+> `global` admins are also the admins of all teams.
+
+1. Select `Member` tab in `ops` team page and click `New member` button
+
+<img src="https://github.com/data-observe/assets/blob/main/tutorial/add-team-member.jpg?raw=true" style={{height: "300px"}} />
+
+2. Login with `datav-admin` to complete next steps.
+
+
+## Create a dashboard 
+
+Now, let's create a dashboard for ops team. 
+
+Select `Dashboard` tab in `ops` team page, and click the `New Dashboard` button. It seems there is no difference than before.
+
+But if you look at `Belong to team` field, you can find that value has automatically set to `ops` team rather than the previous `global` team.
+
+Sure, you can change it to `global` team, but this is no sense for our cases, so keep it to `opt` team.
+
+<img src="https://github.com/data-observe/assets/blob/main/tutorial/add-team-dashboard.jpg?raw=true" style={{height: "300px"}} />
+
+Click `Submit` button to create our `Network stat` dashboard.
+
+Look at the top left corner of the new dashboard, there shows that our new `Network stat` is `ops` team , great! Try to click on `ops` text and see what happens.
+
+<img src="https://github.com/data-observe/assets/blob/main/tutorial/dashboard-lef-top-corner.jpg?raw=true" style={{height: "50px"}} />
+
+
+As this is just for demonstration purpose, we will not create any charts in this dashboard, but you can do it by yourself.
+
+
+## Transfer dashbaord to ops team
+
+First dashboard is ok, let's get the second one, this time , we are not creating a dashboard, we want to get back our rightfully dashboard : `Hosts info dashboard`, because it's all about servers :)
+
+So we need to transfer that dashboard to `ops` team, but Datav does not privide any transfer operation at this moment, we need to find a way to do this.
+
+### Dashboard meta data 
+
+In datav, all settings include panel settings are described in a JSON format, we call that: `dashboard meta data`.
+
+If you are familiar with these settings, you can modify dashboard settings directly in meta data. 
+
+Because there is no other way to transfer dashboard to a team, we have to modify the `ownedBy` field in meta data.
+
+### Modify meta data 
+
+First, we need to know the team id of `ops`: visit `/cfg/teams` page, and get it from teams table. 
+
+In this situation, id of `ops` should be `2`, because we have not created any teams yet, and id of `global` team is `1`.
+
+1. Visit `Hosts info` dashboard and open its settings modal.
+2. Select `Meta data` tab 
+3. Set the value of  `ownedBy` field to `2`
+
+<img src="https://github.com/data-observe/assets/blob/main/tutorial/dashboard-metadata.jpg?raw=true"/>
+
+4. Click `Submit` button
+
+Go back to dashboard page, you should see :
+
+<img src="https://github.com/data-observe/assets/blob/main/tutorial/dashboard-new-owner.jpg?raw=true" style={{height: "50px"}} />
+
+This means we have successfully transferred `Hosts info` dashboard to `ops` team.
+
+To ensure that, you can open search panel to see if `Hosts info` dashboard is in `ops` team.
+
+<img src="https://github.com/data-observe/assets/blob/main/tutorial/new-owner-show-in-search.jpg?raw=true"/>
+
+
+## Create sidebar
+
+Now, we have two dashboards in `ops` team, but we can't see them in sidebar, visit by search is not a good choice, especially for enterprise use cases.
+
+So let's created a sidebar for `ops` team.
+
+1. Click `configuration` icon in sidebar and select `Team` tab
+2. Click `manage` button on `ops` row 
+3. Select `Side menu` tab 
+
+You can see there is already a menu item navigate to `Home` dashboard, but why can't we see it? 
+
+Don't worry, we will cover it later, for now, just create our sidebar menu items.
+
+<img src="https://github.com/data-observe/assets/blob/main/tutorial/team-sidebar.jpg?raw=true"/>
+
+
+Now, sidebar for `ops` team has been created, but we are still using the sidebar from global menu.
+
+## Switch sidebar
+
+To use the new `ops` sidebar, we need to switch the sidebar to `ops`.
+
+Click `user` icon at bottom of sidebar and hover on `Select sidemenu` item,you should see : 
+
+<img src="https://github.com/data-observe/assets/blob/main/tutorial/select-sidebar.jpg?raw=true" style={{height: "300px"}} />
+
+
+You see, just click the `ops` item, and the sidebar will be switched to `ops`.
+
+Once selected, each time you access Datav, the sidebar will be `ops` sidebar, until you switch to another sidebar.
+
+<img src="https://github.com/data-observe/assets/blob/main/tutorial/switched-team-sidebar.jpg?raw=true"/>

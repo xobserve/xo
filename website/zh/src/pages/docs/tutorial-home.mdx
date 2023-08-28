@@ -1,0 +1,104 @@
+---
+title: Beutify home dashboard
+description: 
+---
+
+
+
+## Make home more beautiful
+
+It seems cool, but if you are using dark mode viewing this doc page, you will find the above image is a bit weird: its background does not match our docs page, it is too gray.So let's change it.
+
+1. In `/home` url path, Click dashboard settin button on the top right corner of dashboard
+2. Select `styles` tab
+3. Select `Dark Rainbow` background image 
+4. Set <code>background color</code> to `rgb(15,23,42)`
+5. Set `enable background` to `on`
+
+close the setting modal, you will see the dashboard is more beautiful now.
+
+![](https://github.com/data-observe/assets/blob/main/tutorial/pretty-dashboard.jpg?raw=true)
+
+## Save our settings 
+
+### Save dashboard
+
+If you refresh home page, all changes will be lost, so we need to save our settings. 
+
+1. Click save button on the top right corner of dashboard or press `Ctrl+S` to open saving modal
+2. Click `View changes` to see what changes you have made, then close it, go back to saving modal
+3. Input a message in `describe changes`, e.g: update dashboard background styles
+4. click `Submit` to save your changes.
+
+Now, we have save our dashboard, and give a message to describe our changes, so we can easily find it in the future.
+
+### View history
+
+Sometimes we need to view history changes, so we can easily find what has changed, and revert to a history version if needed.
+
+1. Click save button on the top right corner 
+2. Choose `View History` menu item
+3. Here you can see last 50 history changes
+4. Click `preview` button on a history can set current dashboard to that history version
+5. If you want to revert dashboard to this `preview` version, just save it again, that easy !
+
+<img src="https://github.com/data-observe/assets/blob/main/tutorial/dashboard-history.jpg?raw=true" style={{height: "500px"}} />
+
+## Switch language and theme
+
+Default language is English and default theme is dark, you can change them:
+
+1. Click on the user button on the bottom of the left sidebar
+2. Choose change theme or change language 
+
+### Dashboard background image issues 
+When `background image` of a dashboard is set, the dashboard will has its own theme, you can view it in   `Dashboard setting -> Styels -> Background color mode`, in this situation , **change theme may have no effects to current dashboard.**
+
+As we set background image for Home dashboard, you can see nothing happended to background when switching theme, only text color seems to be weird.
+
+Try to fix it by:
+
+1. Revert to a history version
+2. Setting `backgrond enable` to `off`
+
+Then change theme again, you will see the background color is changed.
+
+## Add title to welcome panel
+
+Next, let's modify the welcome panel to add a panel title: Hello.
+
+At this moment, you will see no title in the welcome panel, because the title is empty. But we need to click the title to edit the panel, how can we do that?
+
+![panel header](https://github.com/data-observe/assets/blob/main/tutorial/panel-header.jpg?raw=true)
+
+The above image shows what to do, hover the mouse over the center of the panel header, then you will see mouse cursor changes to a hand, click it to open the edit menu.
+
+1. Click `Eidt` menu item to open panel editor
+2. Wow, a complicated panel editor is opened, don't worry, we will explain it later in Panel docs, for now , we just need to modify the title of panel.
+3. Click `Panel` tab on the right
+4. Click `Basic Setting` to expand basic section 
+5. Input `Hello` in `Panel Title` input box, you should see there is a title appeared in the header of left panel
+6. Click `Apply` button on the top right corner to apply changes to current panel 
+
+Now, you have added a title to panel, but wait.. `Hello` text is on our panel border, it is not beautiful, let's fix it.
+
+### Update panel title position
+
+For now, `hello` title is on the border of panel, we want to move it a bit to the top:
+
+1. Open panel editor and Select `styles` tab on the right, besides `Panel` tab
+2. Here we can edit panel styles, do you see `Panel border` section? `Border5` is our panel border, you can change it to other borders you like, but for now, leave it as it is.
+3. Find `Title styles` section, modify `padding bottom` to `35px`
+
+You can see, the title is moved up a bit, and not on the border anymore.
+
+Ok thats all, `Apply` the changes in panel editor, and save the dashboard, let's move on.
+
+
+
+
+
+
+
+
+

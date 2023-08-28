@@ -1,0 +1,48 @@
+---
+title: Jaeger
+description:
+---
+
+import TextList  from '@/components/docs/TextList'
+import Code  from '@/components/docs/Code'
+
+In this doc, let's see how to query variables from <Code>Jaeger</Code>.
+
+As a result, we should select jaeger services like this in Jaeger UI:
+
+<img src="https://github.com/data-observe/assets/blob/main/variable/jaeger-services.jpg?raw=true" style={{height: "400px"}}/>
+
+> Before start, you should have a <Code>Jaeger</Code> instance running, refer to https://www.jaegertracing.io/ for more info.
+
+## Jaeger services 
+
+Services can be useful in many dashboards, such as `Application info`, `hosts info`, `JVM info`, `SQL stats` etc, it is the core object for a monitoring system.
+
+So we should create it as a `Global Variable`.
+
+1. Click `configuration icon` in the bottom section of sidebar and select `Variable` tab.
+2. Create a new global variable with name `services` as below:
+
+<img src="https://github.com/data-observe/assets/blob/main/variable/edit-jaeger-services.jpg?raw=true" style={{height: "500px"}}/>
+
+
+Click `Submit` and go to a dashboard, you should see a variable dropdown list as below:
+
+<img src="https://github.com/data-observe/assets/blob/main/variable/jaeger-services-dropdown.jpg?raw=true" style={{height: "300px"}}/>
+
+
+Exactly the same as services in Jaeger UI.
+
+## Jaeger operations
+
+Operations are the next level of services, its creation step is similar to services: 
+
+<img src="https://github.com/data-observe/assets/blob/main/variable/edit-jaeger-operations.jpg?raw=true" style={{height: "500px"}}/>
+
+The only difference is that you should select a service in `Service` dropdown list, and variable is supported, so we use <Code>{'${services}'}</Code> here to refer to the `services` variable created in last section.
+
+## Final result 
+
+<video controls autoPlay src="https://github.com/data-observe/assets/blob/main/variable/jaeger-final.mov?raw=true" style={{height: "500px"}}/>
+
+Here you can see, when we select a service, the dropdown list of  `operation` variable will be updated automatically, at the same time the traces will be updated as well.

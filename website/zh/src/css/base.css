@@ -1,0 +1,18 @@
+@tailwind base;
+
+.dark {
+  color-scheme: dark;
+}
+
+html {
+  height: 100%;
+  font-feature-settings: 'cv02', 'cv03', 'cv04', 'cv11';
+}
+
+body {
+  min-height: 100%;
+}
+
+abbr[title] {
+  text-decoration: none;
+}

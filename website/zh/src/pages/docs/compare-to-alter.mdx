@@ -1,0 +1,93 @@
+---
+title: Comparison to alternatives
+description: Datav is not the only data visualization tool out there. This page compares Datav to other popular dashboarding tools, mainly to Grafana.
+---
+
+import TextList  from '@/components/docs/TextList'
+import Code  from '@/components/docs/Code'
+
+
+## Datav vs Grafana
+
+Grafana is a great product, and it is the most popular dashboarding tool in the world. Apparently Datav is not as good as Grafana, but we have our own advantages.
+
+### Main features
+
+Datav has nearly all main features that Grafana has, maybe not as powerful as Grafana, but enough for most use cases.
+
+### Better panel plugins
+
+Some plugins in Datav are significantly better than Grafana, such as: 
+
+<TextList>
+<li>[NodeGraph](/docs/plugin-nodegraph), for dependency graph display </li>
+<li> [Echarts](/docs/plugin-echarts), for general purporse chart</li>
+<li> [Trace](/docs/plugin-trace)</li>
+<li> [Logs](/docs/plugin-log)</li>
+</TextList>
+These panels are better than grafana doesn't mean Datav is better than Grafana, it is just because we are mainly for Observability and APM scenario, and these panels are the core of APM dashboards.
+
+### Easier to use and redevelop
+
+Datav is much easier to use than Grafana, especially for developers. If you has dig into Grafana's codebase, you should know what I mean. In a word, Datav is much 
+easier to redevelop and customize.
+
+### Better APM support
+
+Datav is much more powerful in Observability and APM fields. Besides the basic dashboarding features, you can 
+
+<TextList>
+<li> Provide various kinds of interactivity </li>
+<li> Custom dashboard styles to provide a beautiful large screen dispaly </li>
+<li> Teams can build their own sidemenu to provice better navigation features </li>
+<li> Global variables to provide global context: select in one place, effect everywhere, e.g applications, environments, etc. </li>
+<li> General HTTP datasource and Echarts panel, you can build everything you want with them </li>
+<li> Custom your own data processing logic with Javascript, transform your data to any format you want </li>
+</TextList>
+
+In a word, you can use Datav to build any kinds of APM UI! We provide you nearly all the tools you need. 
+
+As comparison, grafana is focusing on exploring data, which make it impossible to meet what APM and Observability really needs.
+
+
+### Beautiful UI (maybe)
+
+As datav is a new product, we have a chance to build a modern and beautiful UI from scratch. 
+
+You can customize dashboard and panel styles to build beautiful dashboard, even you build a large screen display with Datav, maybe your Boss will like it :)
+
+
+### Different alert choice
+
+Grafana has a powerful alerting system, you can define alerts, query alerts and display alerts, it's really awesome. 
+ 
+But it is not easy to use, and it is not compatible with your existing alert system.
+
+After careful consideration, Datav decides to focus on alerting display:
+
+<TextList>
+<li> Query alerts from various datasources, including http request. </li>
+<li> Display alerts stats in a separate dashboard or a panel, it support many kinds of visualization. </li>
+<li> Various alerts interactivity, e.g clicking on an alert to dig deeper into other pages. </li>
+<li> Correlate alerts to a timeseries Graph panel, and display alerts as annotations in the graph. </li>
+</TextList>
+
+So, configure alert rules in your existing alert system: e.g prometheus alert manager, then query and display your alerts in Datav, which is really powerful in alert display.
+
+
+### Better License
+
+Datav is using Apache License 2.0, which is more friendly to commercial use.
+
+We promise: we will never CHANGE LICENSE and CLOSE-SOURCE in the future, datav is and will be 100% open source forever !
+
+### Which one to use 
+
+If you need general purpose data visualization, you can choose Grafana, sure, Datav is also a good choice.
+
+If you need APM and Observability, you can try Datav. By the way, https://play.datav.io is a APM demo for demonstration purpose.
+
+If you need redevelop, choose Datav, trust me, it's codebase is  much more easier to develop and collaborate with.
+
+
+ 
