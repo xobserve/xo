@@ -1,4 +1,65 @@
 ---
 title: Dependency graph
-description: Plugins and configuration settings that can improve the developer experience when working with Tailwind CSS.
+description: 
 ---
+
+import TextList  from '@/components/docs/TextList'
+import Code  from '@/components/docs/Code'
+
+
+
+<img src="https://github.com/data-observe/assets/blob/main/plugin/nodegraph-hover.jpg?raw=true" style={{height: '300px'}}/>
+
+
+
+## Filter
+
+There is a toolbox in the top left corner of `NodeGraph`, the most one is the fitler tool. You can use it to filter the nodes and edges you want.
+
+
+<img src="https://github.com/data-observe/assets/blob/main/plugin/filter-nodes.jpg?raw=true" />
+
+In above image, we set a filter rule to match `node-1` and `node-2` nodes.
+
+If you want see the relation nodes of them, check `Show realtion`:
+
+
+<img src="https://github.com/data-observe/assets/blob/main/plugin/filter-relation.jpg?raw=true" />
+
+
+### Enable/disalbe 
+
+The filter rules you set is automatically store in browser local storage, if you don't need them, you can remove or just disable them:
+
+<img src="https://github.com/data-observe/assets/blob/main/plugin/enable-filter.jpg?raw=true" />
+
+You can see that when we disalbed the rule by clicking the `eye icon`, all the nodes and edges are shown now.
+
+
+## Donut colors
+
+Nodes in `NodeGraph` panel are all render in <Code>Donut</Code> shapes, you can define own colors for them.
+
+Let's assume your [node data format](/docs/panel-data-transform#nodegraph-format) is like this: 
+
+```json
+"data": {
+    "success": 72,
+    "error": 28
+}
+```
+
+Then you can set donut colors as below: 
+
+<img src="https://github.com/data-observe/assets/blob/main/plugin/donut-setting.jpg?raw=true" style={{height: '300px'}}/>
+
+And the result is:
+
+<img src="https://github.com/data-observe/assets/blob/main/plugin/donut-color.jpg?raw=true" />
+
+
+## Table View
+
+Sometimes, dependency data in table format is very useful, for how to change view between NodeGraph and Table panel, please refer to [Conditional rendering](/docs/panel-conditional-rendering).
+
+
