@@ -68,6 +68,8 @@ export const documentationNav = {
     pages["plugin-overview"],
     pages["plugin-graph"],
     pages["plugin-table"],
+    pages["plugin-stat"],
+    pages["plugin-gauge"],
     pages["plugin-nodegraph"],
     pages["plugin-trace"],
     pages["plugin-geomap"],
