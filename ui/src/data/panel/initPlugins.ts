@@ -437,7 +437,8 @@ function onClick(data, map, navigate, setVariable, setDateTime, $variables) {
                 barWidth: 85,
                 axisFontSize: 11,
                 labelFontSize: 11,
-                barOpacity: 80
+                barOpacity: 80,
+                useDatavColors: false
             },
             value: {
                 ...getInitUnits(),

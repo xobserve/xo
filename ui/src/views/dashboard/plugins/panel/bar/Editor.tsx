@@ -121,6 +121,12 @@ const BarPanelEditor = memo(({ panel, onChange }: PanelEditorProps) => {
             <PanelEditItem title="Bar fill opacity">
                 <EditorSliderItem value={panel.plugins.bar.styles.barOpacity} min={10} max={100} step={1} onChange={v => onChange((panel: Panel) => { panel.plugins.bar.styles.barOpacity = v })} />
             </PanelEditItem>
+            <PanelEditItem title={"Use datav colors"}>
+                <Switch defaultChecked={panel.plugins.bar.styles.useDatavColors} onChange={e => onChange((panel: Panel) => {
+                    panel.plugins.bar.styles.useDatavColors = e.currentTarget.checked
+                })} />
+
+            </PanelEditItem>
         </PanelAccordion>
 
         <PanelAccordion title={t.valueSettings}>

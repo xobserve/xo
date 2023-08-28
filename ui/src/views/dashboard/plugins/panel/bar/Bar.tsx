@@ -76,18 +76,21 @@ const BarPanel = (props: BarPanelProps) => {
                 } else {
                     d1.name = d1.rawName
                 }
-          
-                let color = findRuleInOverride(override, BarRules.SeriesColor)
-                if (!color) {
-                    color = palettes[(colorMode == "light" ?  i+6 : i) % palettes.length]
+                
+                if (panel.plugins.bar.styles.useDatavColors) {
+                    let color = findRuleInOverride(override, BarRules.SeriesColor)
+                    if (!color) {
+                        color = palettes[(colorMode == "light" ?  i+6 : i) % palettes.length]
+                    }
+                    d1.color = paletteColorNameToHex(color, colorMode)
                 }
-                d1.color = paletteColorNameToHex(color, colorMode)
+
 
                 res.push(d1)
             })
         })
         return res
-    }, [props.data, colorMode, panel.overrides])
+    }, [props.data, colorMode, panel.overrides,panel.plugins.bar.styles.useDatavColors])
 
     const onSeriesActive = useCallback((inacitve) => {
         setInactiveSeries(inacitve)

@@ -293,12 +293,12 @@ const BarChart = memo((props: Props) => {
                         return (Math.abs(v.data) / max) >= 0.2 ? value : ''
                     },
                     fontSize: options.styles.labelFontSize,
-                    color: getTextColorForAlphaBackground(color, colorMode == "dark")
+                    color:  options.styles.useDatavColors ? getTextColorForAlphaBackground(color, colorMode == "dark") : null
                 },
                 emphasis: {
                     // focus: 'series'
                 },
-                color: color,
+                color: options.styles.useDatavColors ? color : null,
                 barWidth: stack == "total" ? `${options.styles.barWidth}%` : `${options.styles.barWidth / names.length}%`,
                 tooltip: {
                     valueFormatter: (value) => {
