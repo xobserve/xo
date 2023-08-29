@@ -1,82 +1,81 @@
 ---
-title: Annotation
+title: 图表注释
 description: 
 ---
 
 import TextList  from '@/components/docs/TextList'
 import Code  from '@/components/docs/Code'
 
-Using annotatin can add marks to your Graph panel chart, like this: 
+使用图表注释( annotation )，你可以为 Graph 图表在指定的位置打上标记，并辅以文字注释：
 
 <img src="https://github.com/data-observe/assets/blob/main/panel/annotation-demo1.jpg?raw=true" style={{height: '300px'}} />
 
-The line and range with sky blue color are our annotations. Let's create an annotation first.
+如上图所示，天蓝色的线和区域都是我们的注释，下面一起来看看.
 
-> Annotation is only support in <Code>Graph</Code> panel
+> 图表注释只能在 <Code>Graph</Code> 类型中使用
 
-## Annotation
+## 图表注释
 
-### Create annotation 
+### 创建注释
 
-1. Add a new panel and open its panel editor, then select `Grapn` visualization for it, apply and return back to dashboard page.
-2. Click on the Graph chart, you will see a context menu popup:
+1. 创建一个新的图表，打开图表编辑面板，选择 `Graph` 类型，然后返回仪表盘页面
+2. 在 Graph 图表上点击鼠标，你可以看到如下的菜单弹出:
 
 <img src="https://github.com/data-observe/assets/blob/main/panel/annotation-context-menu.jpg?raw=true" style={{height: '300px'}} />
 
-3. Click `Add annotation` button, you will see a annotation editor popup:
+3. 点击 `Add annotation` 按钮, 一个注释编辑器顺势弹出:
 
 <img src="https://github.com/data-observe/assets/blob/main/panel/annotation-editor.jpg?raw=true" style={{height: '300px'}} />
 
-4. `Duration` field is the time range of annotation, if you want the annotation to be a vertical line, set it to `0s`, otherwise set to the real timerange ,
-let's set it to `2m` here
+4. 其中，`Duration` 字段是注释持续的时间，如果你想要一根直线类型的注释，就填写 `0s`, 我们这里设置为 `2m`。
 
-Fill in other fields and click `Submit` button, you will see the annotation in the chart.
+填写完成并点击 `提交` 按钮，你将看到图表上出现了我们刚添加的注释：
 
 <img src="https://github.com/data-observe/assets/blob/main/panel/annotation-hover.jpg?raw=true" style={{height: '300px'}} />
 
-### View annotation
+> **图表注释无需保存仪表盘，创建、编辑、删除都是立即生效**
 
-In above image, we can see an arrow points to a marker, if you hover on the marker, you will see the annotation details popup like the image above.
+### 查看注释内容
 
-### Edit annotation
+在上一张图片中，可以看到有一个箭头指向了注释标记，如果将数据悬浮在该标记上，就能看到一个弹出框，里面有注释的详细信息。
 
-Click the `edit icon` in the top right corner of the popup annotation detail card, you will see the annotation editor appeared.
+### 编辑注释
 
-We can edit annotation infos and timerange here, let's change the `Duration` to `1m` now, and see what will happen.
-
-
-### Delete annotation 
-
-Click the `trash icon` in the top right corner of the popup annotation detail card to delete the annotation.
+在上一步弹出的详细信息中，点击右上角的 `编辑` 图标，就能打开注释的编辑弹出框。在这里，让我们把 `Duration` 修改为 `1m` 看看最新的效果。
 
 
-## Manage panel annotations 
+### 删除注释
 
-Manage annotation through chart is not convenient, so Datav provides a panel annotation manager to manage all annotations.
+点击 `查看注释内容` 弹出的详细信息右上角的 `垃圾桶` 图标，可以直接删除注释。
 
-1. Click panel header(click where the arrow points to in below image) and click `Panel Debug` menu item 
+## 管理图表注释
+
+总是通过图表来管理注释很不方便，因此 Datav 提供了更便捷的管理方式：
+
+1. 点击图表的标题区域，打开图表菜单，选择 `Debug 图表`
 
 <img src="https://github.com/data-observe/assets/blob/main/panel/debug-panel-menu.jpg?raw=true" style={{height: '300px'}} />
 
-2. Select `Panel Annotations` tab 
+2. 选择 `Panel Annotations` 标签页 
 
-Now you will see all the annotations in this panel and current selected time range
+此时你可以看到一个注释列表，这些注释仅限于当前的图表和已选择的时间范围。
 
-## Annotation settings
 
-Open dashboard settings modal, select `Annotation` tab, you will see the annotation settings.
+## 设置
+
+打开仪表盘的设置面板，选择 `Annotation` 标签页，可以看到如下图片内容：
 
 <img src="https://github.com/data-observe/assets/blob/main/panel/annotation-setting.jpg?raw=true" style={{height: '300px'}} />
 
-You can try:
-
+你可以尝试：
 <TextList>
-    <li>change the color of annotation markers</li>
-    <li>add tags to some annotations, and set the `tags filter setting` to only show the annotations which matched the tags</li>
+    <li>修改注释标记的颜色</li>
+    <li>为注释增加一些标签，然后在这里通过标签来控制哪些注释能被显示</li>
 </TextList>
 
 
-## Correlate alert with panels
+## 关联告警到图表
 
-In previous [tutorial](/docs/tutorial-alert#correlate-alerts-to-graph-panel), we have learned how to create an alert to `Graph` panel, these alerts are shown as annotations, but you can't edit them,
-because they are automatically created by Datav, not by user.
+在之前的[章节](/docs/tutorial-alert#correlate-alerts-to-graph-panel)中, 我们了解了该如何将告警关联到 `Graph` 图表。
+
+当时没有详细讲解相应的标记，但是现在回想起来，可以发现那些标记就是 `注释`，但是与本章手动创建的注释相比，你无法修改告警关联的，原因在于它们并没有被保存在数据库，而是由 Datav 自动生成。
