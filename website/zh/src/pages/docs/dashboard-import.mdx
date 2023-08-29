@@ -1,43 +1,41 @@
 ---
-title: Import dashboard 
+title: 导入仪表盘
 description: 
 ---
 
 import TextList  from '@/components/docs/TextList'
 import Code  from '@/components/docs/Code'
 
-We have talked about dashboard <Code>meta data</Code> in [tutorial](/docs/tutorial-team#dashboard-meta-data). 
+在 [元数据](/docs/tutorial-team#dashboard-meta-data) 章节中，我们已经讲过什么是仪表盘元数据。因此，你应该已经了解该如何通过修改元数据来修改仪表盘。
 
-Therefore you should already know that you can change dashboard settings by modify meta data. 
+但是这还不是全部，我们还可以使用元数据来完整的导入一个仪表盘，例如别人分享了一个好看的仪表盘，你可以导入其配置信息到自己的 Datav 中。
 
-But a more common use case for meta data is to import a dashboard.
+## 复制元数据
 
-## Copy meta data 
-
-Let's open the setting modal of `Home` dashboard and select `Meta data` tab.
+打开 `Homne` 仪表盘的设置面板，选择 `元数据` 标签页，你将看到如下内容：
 
 ![dashboard metadata](https://github.com/data-observe/assets/blob/main/dashboard/metadata.jpg?raw=true)
 
-Then copy these meta data of JSON format.
+二话不说，先拷贝这些 JSON 格式的元数据。
 
-## Import dashboard
+## 导入仪表盘
 
-1. Click `+` icon in the bottom section of sidebar
-2. Select `Import dashboard` tab 
-3. Paste the meta data you copied into `Meta JSON` field 
-4. Select the team you want to import this dashboard to
+1. 点击侧边导航栏下半区域的 `+` 图标
+2. 选择导入仪表盘标签页
+3. 将刚才拷贝的元数据粘贴到 `Meta JSON` 中
+4. 选择你想将仪表盘导入到的团队
 
 ![import dashboard](https://github.com/data-observe/assets/blob/main/dashboard/import.jpg?raw=true)
 
-You can modify meta data before imported, such as rename the title from `Home Dashboard` to <Code>  "title": "A imported dashboard" </Code>.
+当然，在导入之前，我们还可以修改元数据，例如将标题修改为 <Code>  "title": "A imported dashboard" </Code>。
 
-Click `Submit` button to see the result.
+点击 `提交` 按钮，即可完成导入，非常简单。
 
 
-## What has changed?
+## 哪些改变了？
 
-When a dashboard is imported, what has changed when compared to the original dashboard?
+当一个仪表盘被导入后，相比之前的仪表盘，到底哪些属性发生了变化？
 
-The answer is dashboard id:  <Code>d-home</Code> -> <Code>d-c52NkURSz</Code>.
+答案就一个， dashboard id, 例如在上面的导入中，仪表盘 id 变化： <Code>d-home</Code> -> <Code>d-c52NkURSz</Code>.
 
-Therefore the imported dashboard and the original dashboard are two different dashboards, although the looks exactly the same.
+因此，可以看出导入的和原始的是两个完全不同的仪表盘，虽然它们看起来一模一样。
