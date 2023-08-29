@@ -104,7 +104,6 @@ function onRowClick(row, navigate, setVariable, setDateTime, $variables) {
     // get host from clicked series
     const valueField = row.series.fields.find(f => f.labels)
     const host = valueField.labels["instance"]
-    console.log("here333333:",host)
     if (host) {
         // set timerange to [clickTime - 2m, clickTime + 2m]
         setDateTime(row.time - 120, row.time + 120)

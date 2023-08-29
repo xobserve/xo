@@ -1,59 +1,60 @@
 ---
-title: Time picker and refresh
+title: 时间选择和刷新
 description: 
 ---
 
-Time system in Datav is very simple: when you picked a time range, that time range will be used in all dashboards.
+Datav 中的时间设计很简洁： 当你选择一个时间范围，那该时间将被所有仪表盘所使用，也就是说时间选择在 Datav 中是一个全局变量。
 
-## Time picker 
+## 时间选择器
 
-Time picker is located at the top right corner of the dashboard. There are four ways to set the time range, the mose common way is select the quick times.
+你可以在仪表盘的右上角找到时间选择器，有四种方式可以设置时间，其中最常用的就是快捷时间选择。
 
 
-### Quick select 
+### 快速选择
 
-Quick select always select a time range relative to current time. For example, if you select `Last 1 hour`, it will select the time range from 1 hour ago to now. 
+快速选择设置的是一个相对时间：从过去某个时间点到当下。例如，当你选择了 `过去 1 小时`, 那就意味着你选择了 `now-1h` 至 `now`。
 
-So when you refresh the dashboard, it will always show the latest data in the last 1 hour.
+因此当你刷新仪表盘时，获取的数据总是最新的 1 小时之内的数据。
 
-This relative time range is showed as `now-1h to now` both in the time picker and the url.
 
 <img src="https://github.com/data-observe/assets/blob/main/tutorial/quick-time.jpg?raw=true" style={{width: "100%"}} />
 
-There are four places in above image shows `last 1 hour` or `now-1h to now`, can you find them all? 
+在上面图表中，有四处地方显示了我们选择了 `过去一小时` 的时间范围，你能找到全部吗？ 
 
-### Custom time range
+### 自定义时间范围
+
 
 <img src="https://github.com/data-observe/assets/blob/main/tutorial/custom-time-range.jpg?raw=true" style={{height: "400px"}} />
 
-Here shows another way to set time range, look at the left part of above image, you can directly input the time range you want. 
+这里展示了另一种设置时间范围的方式，看图片的左半边， 你可以直接输入想要的时间范围。
 
-In above image, we first select `Last 1 hours`, and modify `from` field in `Custom time range ` section, then click `Apply time range` button to make the changes take effect.
+在图片中，我们首先选择了 `过去 1 小时`，然后修改 `自定义时间` 中的 `起始` 字段，然后点击 `应用时间范围` 来让新的修改生效。
 
-You can see: with the time change from `now-1h to now` to `now-30m to now`, the data in the panels also changed, that's nice and also intuitive..
-
-
-
-### Select calendar
-
-Have you seen the two calendar icons besides `from` and `to` fields? You can click them to select a date range in calendar.
-
-### Modify url
-
-When you select a time range, the url will be changed at the same time. Try to modify `from` and `to` params in url and refresh the page to see what will happen.
+可以看到，当时间从 `now-1h to now` 修改为 `now-30m to now` 后，图表中的数据也发生了变化，这很好，也符合直觉。
 
 
-## Sync to local storage
 
-When you select a time range, it will be saved to local storage in browser. If you refresh the page, the time range will be restored from local storage.
+### 选择日期
+
+选择时间面板的 `起始` 和 `终止` 字段旁，有两个日历图标， 点击它们可以直接选择一个日期范围。
 
 
-## Refresh 
+### 修改 url
 
-Sometimes we hope to refresh the dashboard data automatically, for example, refresh the dashboard every 60 seconds.
+当选择时间范围后，`URL` 也会随之变化，尝试修改 url 中的 `from` 和 `to` 参数，然后重新访问该 URL， 看看时间会如何变化。
 
-This is easy to do in Datav, just select a refresh interval next to `Refresh` icon in the top right corner.
 
-If you just want to refresh the dashboard once, you can click the `Refresh` icon directly.
+
+## 同步到 local storiage
+
+当选择时间后，该时间将被同步到浏览器的 local storage 中，这样当你刷新页面时，时间范围还是你之前选择的时间。
+
+## 刷新 
+
+有时我们希望仪表盘的数据能自动刷新，例如每隔 60 秒刷新一次。
+
+在 Datav 中，只需要在仪表盘右上角的 `刷新` 图标旁选择一个刷新间隔即可。
+
+如果你只想刷新一次，可以直接点击 `刷新` 图标。
 
 <img src="https://github.com/data-observe/assets/blob/main/tutorial/refresh-icon.jpg?raw=true" style={{height: "50px"}} />
