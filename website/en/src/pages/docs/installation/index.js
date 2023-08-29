@@ -12,7 +12,7 @@ let steps = [
           Server is written in Go, so you need to install <Link href="https://go.dev/dl/">Go environments</Link> first.
         </p>
         <p>
-          Then running command on the right in DatavRoot/backend dir.
+          Then running command on the right in `DatavRoot/backend` dir.
         </p>
       </>
     ),
@@ -27,7 +27,7 @@ let steps = [
     body: () => (
       <>
         <p>
-          Still in DatavRoot/backend dir, executing the binary file compiled in the previous step.
+          Still in `DatavRoot/backend` dir, executing the binary file compiled in the previous step.
         </p>
         <p>
           Finally, you can see the following output, which means that the server has started successfully.
@@ -45,7 +45,7 @@ INFO[08-22|13:40:25] Datav is listening on address            address=:10086`,
     title: 'Build frontend UI',
     body: () => (
       <p>
-        Open another terminal and go to DatavRoot/ui dir, then run the following command to install the dependencies.
+        Open another terminal and go to `DatavRoot/ui` dir, then run the following command to install the dependencies.
       </p>
     ),
     code: {

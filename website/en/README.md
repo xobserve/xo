@@ -1,3 +1,3 @@
-# Datav website
+# datav.io
 
-Build with Tailwindcss.
+Website for Datav

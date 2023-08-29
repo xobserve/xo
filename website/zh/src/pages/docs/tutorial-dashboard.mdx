@@ -1,200 +1,197 @@
 ---
-title: Create user stats dashboard
+title: 用户行为统计
 description: 
 ---
 
+一般来说，首页仪表盘用于展示一些大盘数据，如果我们想要专项的展示，比如用户行为统计，就需要创建一个新的仪表盘。
 
-Home dashboard is used for display general purpose panels, now, we want to display some user stats, we can create a new dashboard.
+## 创建仪表盘
 
-## Create dashboard
+1. 点击左侧导航栏下半区域的 `+` 按钮
+2. 在新建仪表盘中，将标题设置为 `User stats dashboard`
+3. 点击 `提交` 按钮 
 
-1. Click `+` Button on the bottom section of sidebar, you will see `New Dashboard` tab is already selected. 
-2. Set dashboard tilte to `User stats dashboard`
-3. Click `Submit` button 
+完成后，页面将自动跳转到新创建的仪表盘，此时仪表盘是空的，我们需要添加一些图表。
 
-The page will automatically redirect to the new dashboard, it is empty now, let's add some panels to it.
+## 新建 Graph 图表
 
-## Add graph panel
+点击仪表盘页面右上角的 `+` 图标， 你将看到一个名为 `New panel 1` 的图表被创建了，它看起来和首页的欢迎面板一模一样，只是没有了边框。
 
+欢迎面板对用户统计来说不能说毫无用处，只能说 totally useless。现在来修改下：
 
-Click `+` button on the top right corner of dashboard, you will see a panel named `New panel 1` is created, so weird.. why it looks like the welcome panel in Home - , -
-
-Yep, welcome panel is absolutely no use for user stats cases, let's modify it to show  user's request duration stats.
-
-1. Click panel title and select `Edit` to open panel editor.
-2. Change title to `Request duration stats` in `Panel` tab
-3. Click `visualization` section in `Panel` tab and select `Graph` panel
+1. 点击图表标题区域，选择 `编辑` 打开编辑面板
+2. 将图表标题修改为 `Request duration stats`, 表明它是一个用户请求耗时统计
+3. 在 `图表` 标签中点击 `图表类型` ， 选择 `Graph` 图表类型
 
 
-A beautiful chart will show:
+<img src="https://github.com/data-observe/assets/blob/main/tutorial/select-visualization.jpg?raw=true" style={{height: '400px'}}/>
+
+此时一个好看的图表在右边出现：
 
 ![request duration stats](https://github.com/data-observe/assets/blob/main/tutorial/request-duration-panel.jpg?raw=true)
 
-In the chart, you can see three series, they are representing users from `Asia`, `Europe` and `North America`, and their request duration changes over time.
+图表中有三条曲线，分别代表来自 `亚洲`，`欧洲` 和 `北美` 的用户，他们的请求耗时随时间的变化。
 
-### TestData datasource 
+### TestData 数据源
 
-You may wonder where the data comes from, we have not set any datasource for this panel, how can it show data? 
+你可能会好奇，这些数据是从哪里来的，我们并没有为图表设置数据源，它怎么就显示出来了呢？
 
-In fact, Datav has a built-in datasource named `TestData`, it is used for testing purpose, and it is very useful for new users to get familiar with Datav.
+事实上，Datav 内置了一个名为 `TestData` 的数据源，一般来说，它用于测试目的。但对于新用户，它也非常有用：可以帮助我们快速熟悉 Datav 的使用。
 
-When you select a panel visualization, Datav will automatically query mock data from `TestData` datasource, so you can see the chart rendering immediately.
+当你选择一个图表类型时，Datav 会自动从 `TestData` 数据源中查询数据，这样你就可以立即看到图表的渲染效果。
 
-You can see the info of panel datasource on left bottom of panel editor.
+在图表编辑面板的左下区域，可以看到数据源的相关设置。
 
-### Add units
+### 为值添加单位
 
-This panel is all about duration, but we can not see any duration units in the chart, let's fix it.
+我们可以看到图表中的值都是一个个的数字，但是我们并不知道这些数字代表的是什么，比如 `0.6` 是什么意思？`0.6` 秒？`0.6` 分钟？还是 `0.6` 小时？
 
-1. Find `Value` section in `Panel` tab 
-2. Select `Time` in `Unit` dropdown
-3. The current base unit is `ms`, but our stats is in `second`, so we need to change base unit to `s` (base unit is determined by `x` 1 or `/` 1)
-4. First select `Time`, then select `Custom` in `Unit` dropdown 
+1. 在 `图表` 标签中找到 `Vlue` 设置区
+2. 在 `单位` 下来列表中选择 `Time` 
+3. 默认的基本单位为 `ms`, 但是我们的图表数据单位是`second`, 因此我们需要修改下基本单位：将基本单位设置为 `s` 。( `x 1` 或者 `/ 1` 就是基本单位)
+4. 注意：由于我们既想要设置时间单位，又想要自定义，那么最好的方式就是先选择 `Time` 单位，然后再修改为 `Custom` 
 
 <img src="https://github.com/data-observe/assets/blob/main/tutorial/panel-units.jpg?raw=true" style={{height: '300px'}}/>
 
-Modify your unit to the value shown in the above image, and click `Submit`, now you will see chart will show duration unit as expected.
+总之，尝试将单位修改为如上图所示，然后点击 `提交` 按钮，你将看到图表的单位已经变成了 `s`。
 
-> Dont forget to save your dashboard after you have made changes to it, you can press `Ctrl+S` in panel editor to save it.
+> 在修改完图表后，别忘了保存仪表盘，你可以在图表编辑面板中按 `Ctrl+S` 快捷键保存。
 
-### Add threshold
+### 添加阈值 threshold
 
-Now, we want to add a threshold to the chart, so that we can easily find out whether our users are experiencing long request duration, this can have a significant impact on  their using experience.
+现在，我们想要在图表中添加一个阈值，这样就可以很容易的发现用户是否在经历长时间的请求，这对他们的使用体验有很大的影响。
 
-1. Locate `Threshold` section in `Panel` tab 
-2. Click `Add Threshold` button 
-3. Set values as below image 
+1. 定位到 `图表` 标签中的 `Threshold` 设置区
+2. 点击 `+添加 Threshold` 按钮 
+3. 依照下图设置
 
 <img src="https://github.com/data-observe/assets/blob/main/tutorial/panel-threshold.jpg?raw=true" style={{height: '300px'}}/>
 
-Now, you will see a red line in the chart,  and the chart is split into two parts, the upper part rendering in pink-red color is duration larger than `1s`, and the lower part in green color is duration less than `1s`.
+点击 `提交` 按钮，你将看到图表中出现了一条红色的线，图表被分成了两部分，上部分为红色，表示耗时大于 `1s` 的请求，下部分为绿色，表示耗时小于 `1s` 的请求。
 
-For more info, please refer to [Threshold](/docs/panel-thresholds)
+> 更多阈值的设置，请参考 [Threshold](/docs/panel-thresholds)
 
-## Add Geomap panel
+## 新建 Geomap 图表
 
-Our boss wants to know where our users come from, so we need to add a Geomap panel to show user's location and request count. 
+老板一般想要知道用户的地理信息，因此我们需要添加一个 Geomap 图表来展示用户的地理位置和请求次数。
 
-Apply the previous changes and go back to dashboard , then click add panel button to create a new panel.
+回到仪表盘页面，继续创建一个新的图表
 
-1. Open panel editor and select `Geomap` in `Visualization` section
-2. Set panel title to empty, because it will make our map ugly :(
+1. 打开图表编辑面板，选择 `Geomap` 图表类型
+2. 将图表标题设置为空，不然会有点丑 :(
 
-At this moment, you should see as below: 
+此时，你应该看到如下的图表：
 
 ![geomap editor](https://github.com/data-observe/assets/blob/main/tutorial/geomap-editor.jpg?raw=true)
 
-> If you cant see any map, just green points, please check your network connection, because the map is loaded from internet.
-
-The green point on the map represent a country or a city, the bigger the point is, the more requests come from that location.
-
-### Focus to a country
-
-We can see the map is too large, we can not see the whole world, let's focus to a country, let's assume you are from China, and you want to focus to China.
-
-1. Find China on the map, you can using mouse wheel to zoom in and out
-2. Click on `wuhan` point, and zoom in/out to adjust the map to your favorite size, or you can ignore clicking `wuhan`, just use mouse wheel to find a suitable size for displaying China map.
-3. Find `Basic` section in `Panel` tab, and click `Use current view` button
-
-this will set current view as default view for the map, `Apply` and save dashboard, then refresh the page to see the effect.
+> 如果你看不到任何地图，只能看到一堆绿色的点，请检查你的网络链接是否可用, 因为基础的地图层信息是从网络上加载的，而这些地图层之上的绿点才是在本地渲染
 
 
-### Click event 
+### 定位到某个国家
 
-If you click on a green point, the map will automatically zoom in to that point, you may think that is provide by the map, but the real answer is no, it is provided by Datav.
+我们可以看到默认的世界地图太大了，让我们定位到一个国家，比如说你来自中国，那肯定想看中国的地图。
 
-You can define various interactivity for various panels in Datav,  including Geomap panel. Just have a look at `Interaction` section in `Panel` tab, for more info, please refer to [Interaction](/docs/panel-interactivity)
+1. 在地图上找到 `China`，可以通过鼠标的滚动来实现视图的放大和缩小
+2. 点击 `wuhan` 所在的绿点, 然后将地图放大/缩小到你喜欢的尺寸
+3. 在 `图表` 标签中找到 `基本内容` 设置，然后点击 `Use current view` 按钮
 
-### Add threshold
+此时，你将看到地图已经定位到了 `wuhan` 所在的位置，而且地图的尺寸也和你刚才设置的一样。
 
-What if we want to render points in yellow color when request count is larger than `1000`, and red color when request count is larger than `10000`? 
+> `Use current view` 按钮的作用是将当前视图设置为地图的默认视图，这样每次打开仪表盘时，都会显示这个视图，如果你不想要这个效果，可以不用点击此按钮。
 
-This is left to our readers as an exercise, the answer is in the last section of this tutorial.
 
-## Add table panel
+### 点击交互事件
 
-Sometimes we hope to see our data in table format, so we can easily find out the top 10 users, or top 10 countries, etc.
+如果你点击地图上的某个点，地图会自动缩放到该点，你可能以为这是地图自带的功能，但是并不是，这是我们自定义的点击交互事件。
 
-In this sectino, we will make a simple table to show the request duration over time, yep, that's the same data as the previous Graph panel, but in different representation.
+在 Datav 中，你可以为各种类型的图表添加各种各样的交互事件，比如点击、双击、鼠标移动等等，这些事件可以帮助你更好的实现可交互需求。
 
-1. Add a new panel and open Panel editor, then select `Table` in `Visualization` section
-2. Set panel title to empty
-3. Turn off `Table Setting > Show header` to hide table header
-4. Add time units to table as previous Graph panel ..wait, where is units section?
+### 添加阈值 threshold
 
-Obviously, there is no `Unit` section in `Panel` tab, so how can we add units to table?
+假设我们想要在地图上将请求次数大于 `1000` 的国家标记为黄色，大于 `10000` 的标记为红色，这样就可以很容易的发现哪些国家的用户使用 Datav 最多。
 
-The reason Table has no units setting is simple: Table columns should has different units, for example, the first column is `Time`, the second column is `Value`, they cant have the same `seconds` unit. 
+该如何做呢？答案是使用 Threshold, 大家可以当作练习来完成，答案可以参考 [这里](docs/plugin-geomap#thresholds)。
 
-Luckily, in Datav we can achive this by using Override feature.
+## 新建 Table 图表
 
-### Override the column units 
+有时候，我们希望以表格的形式来展示数据，这样可以很容易的找出前 10 个用户，或者前 10 个国家等等。
 
-In Datav, nearly all the panel types provides Override features, they are used for ovverride the default settings of panel for specified series or columns.
+在本节中，我们将创建一个简单的表格来展示请求耗时随时间的变化，是的，这和前面的 Graph 图表是一样的数据，只是以不同的形式展示。
 
-1. Select `Overrides` tab next to `Panel` tab
-2. Click `Add override` button 
-3. Because we need to add units to `Value` column, thus select `Value` for `Targe name`
+1. 新建一个图表，打开图表编辑面板，选择 `Table` 图表类型
+2. 和之前一样，将标题设置为空
+3. 隐藏表头： 禁用 `表格设置 > 显示表头` 选项
+4. 添加时间单位，类似之前的 `Graph` 图表，但是等等。。在哪里设置，就没有这个设置项！
 
-Now, we have created first override for Panel, and its target is `Value` column in Table, next, let's add rules to this override.
+是的，显然在 `图表` 标签下，你是找不到 `单位` 设置的，那么该如何设置呢？    
 
-1. Click `Add override rule` button 
-2. Select `Column.unit` for `type` field 
-3. Set units, same as previous Graph units 
+其实 Table 的通用设置中没有单位的原因很简单：Table 的每一列都可以有不同的单位，比如第一列是 `Time`，第二列是 `Value`，它们显然不能有相同的单位，因此你不应该为它们设置一个通用的单位。
 
-**Don't forget to click `Submit` button to make units setting take effect** !
+那么，我们该如何为 `Value` 列设置单位呢？在 Datav 中，可以使用 Override 功能来实现。
+
+### 覆盖 ( Override ) 列单位
+
+在 Datav 中，几乎所有的图表类型都提供了 Override 功能，它们用于覆盖图表的通用认设置，比如我们想要为某个图表曲线或者某一列设置单位，就可以使用 Override 功能。
+
+1. 选择 `覆盖` 子标签，紧挨在 `样式` 标签旁
+2. 点击 `新建覆盖` 按钮
+3. 由于我们想为 `Value` 列添加单位，因此在 `目标名称` 中选择 `Value`
+
+此时，一个新的 Override 就创建好了，它的目标是 `Table` 中的 `Value` 列，接下来，我们需要为它添加规则。
+
+1. 点击 `新建覆盖规则` 按钮
+2. 选择 `Column.unit` 类型
+3. 设置单位，和之前的 Graph 一样
+
+**别忘了一点要点击 `提交` 按钮后，单位设置才能生效 !** !
 
 <img src="https://github.com/data-observe/assets/blob/main/tutorial/units-override.jpg?raw=true" style={{height: "400px"}}/>
 
-### Mark value with color
+### 颜色标记
 
-In previous sections, we have saw how thresholds are added to Graph, Geomap panels, and what they looks like. But in table, there is 
-a bit different. 
+在之前的内容中，我们已经知道如何使用 `阈值 thresholds` 来为 `Graph` 、`Geomap` 图表增加颜色标记，但是在 `Table` 中，有点不一样。
+ 
+在 `Table` 中，阈值和单位一样，都需要使用 Override 来添加，但是，我们还有另外一种方式来实现相同的效果，稍后再讲。
 
-In table panel, threshold is similar to units, we need to use Override feature to add it. Also, there is another way to achive the same goal, we will talk it later.
+#### 使用 Override 来添加阈值
 
-#### Add threshold using Override
-
-As you already know how to add threshold and override, so we will not repeat it here, just add a new override rule for `Value` column, and set threshold as below:
+由于我们已经知道如何添加 Override，因此这里就不再赘述，只需要为 `Value` 列添加一个 Override，然后为它添加一个阈值规则即可。
 
 <img src="https://github.com/data-observe/assets/blob/main/tutorial/threshold-override.jpg?raw=true" style={{height: "400px"}}/>
 
-#### Value mapping 
+#### 值映射 Value mapping 
 
-What if you want to mark a range of value with a color? For example, you want to mark value in range [0.6, 1] with red color.
+如果你想要将大于 0.6 小于 1 的值都标记为某个颜色，该如何做呢？ 当然，设置阈值是可以实现的，但是更复杂的需求呢？例如： 将 `cn` 字符串值标记为 `🇨🇳cn` ？
 
-Apparently, using threshold can make it work, but what if we have more complex requirements? For example , we want mark `cn` string values as `🇨🇳cn` ? 
+此时阈值就不太好用了，因此，我们需要使用 Value mapping，它可以将一个值映射为另一个值，这对于 Table 图表来说非常有用。
 
-In a word, value mapping is used for map a value to another value, it is very useful for table panel.
+接下来，我们来使用 Value mapping 将 [0.6, 1] 区间的值标记为红色, 你可以选择在通用设置中使用，也可以通过 `覆盖` 子标签来使用，这里我们选择前者。
 
-Lets mark value in [0.6, 1] with red color. This time we can use Value mapping in `Panel` tab, we also can use value mapping in `Override` tab, let's choose the first one.
 
-For more info about value mapping, please read [value mapping in Table](/docs/plugin-table#value-mapping). 
+> 想要了解更多关于 value mapping 的内容, 可以阅读 [这篇文档](/docs/plugin-table#value-mapping). 
 
-For now, find the `Value mapping` section in `Panel` tab, and click `Edit value mapping` button, then set value mapping as below:
+现在，找到 `图表` 标签中的 `Value mapping` 设置区，点击 `编辑值映射` 按钮，然后设置如下：
 
 ![value mapping](https://github.com/data-observe/assets/blob/main/tutorial/tutorial-value-mapping.jpg?raw=true)
 
-#### Same rule exist, which takes effect?
+#### 同样的规则，哪个设置生效?
 
-Look, they are all there. Threshold color and value mapping color can be seen at the same time.
+有一个问题：假如我们在 `图表` 标签下的通用设置中设置了值映射，然后又在 `覆盖` 子标签下设置了值映射，那么哪个设置会生效呢？  
 
-So, here comes the question: if we have values mapping in `Panel` tab, we also set values mapping in `Override` tab, which one will take effect?
-
-The answer is: smaller scope override large scope, that is to say, value mapping in `Override` tab will take effect.
+答案是：小范围覆盖大范围，也就是说，`覆盖` 子标签下的设置会覆盖 `图表` 标签下的设置。
 
 
-### Make time column readable
+### 提升时间列可读性
 
-Timestamp as `1692778335` is never readable, we need to convert it to a human readable format, for example, `2023-08-21 12:00:00`.
+在 `Table` 中，时间列的值是一个时间戳，比如 `1692778335`，这显然不是一个可读的时间，我们需要将它转换为人类可读的时间，比如 `2023-08-21 12:00:00`。
 
-Another time to use our Override weapon, but the override created before is for column `Value`, so we need to create a new override for column `Time`.
+又到了使用 `覆盖 Override` 武器之时， 但是这次覆盖的目标不是 `Value` 列，而是 `Time` 列。
 
 <img src="https://github.com/data-observe/assets/blob/main/tutorial/time-override.jpg?raw=true" style={{height: "400px"}}/>
 
-Here, `Column.textTransform` is a function, it will be called for each value in `Time` column, and its return value will be displayed in `Time` column.
+在 `覆盖规则` 中，我们使用了一个函数来实现时间转换，这个函数的名字叫 `Column.textTransform`，它的作用是将 `Time` 列的值传递给我们自定义的函数，然后将函数的返回值显示在 `Time` 列中。
 
-Let's have a look at the function, click `Edit Function` button, you will see below code in the editor modal:
+一起来看看这个函数的定义，点击 `编辑函数` 按钮，你将看到如下代码：
 
 ```javascript 
 function transform(text, lodash, moment)  {
@@ -204,7 +201,8 @@ function transform(text, lodash, moment)  {
 }
 ```
 
-The demo function already implement datetime format change for us, all we need to do is modify the return statement to return t rather than the raw text.
+可以看到，上面的代码已经实现了时间转换，但是它并没有生效，因为我们返回的是 `text`，而不是 `t`，因此我们需要修改下返回值。
+
 
 ```javascript 
 function transform(text, lodash, moment)  {
@@ -214,25 +212,24 @@ function transform(text, lodash, moment)  {
 }
 ```
 
-modify to above code, and click `Submit` button, check `Time` column, it should be readable now.
+将函数代码修改为如上，然后点击 `提交` 按钮，你将看到 `Time` 列的值已经变成了可读的时间。
 
-For more info about transform functions,  see [data transform](/docs/panel-data-transform)
+> 更多关于转换函数的更多内容，请参考 [数据转换](/docs/panel-data-transform)
 
-## Adjust panel size and position
+## 调整图表大小和位置
 
-Now, we have two panels in our dashboard, but they are quite small, particularly the Geomap panel, let's adjust their size and position.
+当前仪表盘中已经有了三个图表，但是它们都很小，特别是 `Geomap` 图表，让我们来调整下它们的大小和位置。
 
-First, you need to go back to the dashboard view ( from panel editor).
+首先，你需要回到仪表盘视图（从图表编辑面板中）。
 
-When you hover over the Graph panel, you should notice a `resize` icon on the bottom right corner of the panel, similarly, when hovering over panel header(excluding the title area), the mouse cursor will change to `move` icon. The former is used for resizing panel, while the latter is used for moving panel.
+当你将鼠标悬停在 `Graph` 图表上时，你应该会看到一个 `resize` 图标，它位于图表右下角，类似的，当你将鼠标悬停在图表标题区域时，鼠标会变成 `move` 图标，前者用于调整图表大小，后者用于移动图表。
 
-The next operation is simple: click on the icon and drag it to resize or move.
+接下来的操作很简单：点击图标并拖动即可。 现在，调整图表的大小和位置，使其看起来像下图一样：
 
-Now adjust the panels to below image:
 
 ![resized panels](https://github.com/data-observe/assets/blob/main/tutorial/panels-after-resizing.jpg?raw=true)
 
+还不错，对吗？下面，一起来使用真实的数据来替换掉 `TestData` 数据源。真实才是王道！
 
-Not bad, right?  Let's try to use some datasource to replace the mock data, real is the best!
 
 
