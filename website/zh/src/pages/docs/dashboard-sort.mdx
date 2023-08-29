@@ -1,34 +1,31 @@
 ---
-title: Dashboard sort priority
+title: 排序权重
 description: 
 ---
 
 import TextList  from '@/components/docs/TextList'
 import Code  from '@/components/docs/Code'
 
-If you are the `Admin` of `Datav`, sometimes you may want to arrange some dashboards at the top of the `search modal`, such as the dashboard represent the new features of Datav.
+如果你是 Datav 的管理员，可能对于仪表盘在搜索页面展示的排序优先级，会有自己的考虑，例如重要业务的或者新功能的仪表盘，你可以会希望它往前排，被更多人看到。
 
-You can set the `sort priority` of the dashboard to achieve this.
+此时，我们可以通过设置仪表盘的排序权重来实现。
 
-> Only the `Admin` of `Datav` can modify the sort priority of dashboard.
+> 只有管理员才能编辑排序权重，毕竟你不会希望任何人都夹带私心把仪表盘往前放吧 :D
 
-## Set sort priority
-Now let's set the sort priority for `Host info` dashboard to make it be shown at the top of search modal.
+## 设置排序权重
 
-Here is a image of the current sort orders: 
+下面，让我们修改 `Host info` 仪表盘的优先级，让它排到搜索列表的最前面。
+
+下面是当前的排序结果：
 
 <img src="https://github.com/data-observe/assets/blob/main/dashboard/default-sorts.jpg?raw=true"/>
 
-`Host info` is at the 3th place in the list. Let's modify its sort priority: click the `0` number which the arrow points to in the image
+可以看到 `Host info` 排在了第三，下面来修改权重： 点击红色箭头所指的数字 `0` ：
 
 <img src="https://github.com/data-observe/assets/blob/main/dashboard/modify-sort.jpg?raw=true" style={{height: '100px'}} />
 
-## Final result
-
-Set the new priority to 50 and press `Enter` to save it, now you should see the sort order has been changed:
+将权重修改为 50 并按下 `Enter` 保存修改，此时，你应该能看到排序结果发生了改变：
 
 <img src="https://github.com/data-observe/assets/blob/main/dashboard/after-modify-sort.jpg?raw=true"/>
-
-Try to modify other dashboard's sort priority to see the effect. 
 
 
