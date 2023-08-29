@@ -1,46 +1,46 @@
 ---
-title: Admin is dangerous 
+title: 危险的 Admin
 description: 
 ---
 
-Do you still remember we are login with default `admin` user? The worse thing is that default password is `admin` too.
+大家应该记得，我们是用了默认的 `admin` 用户登录的，更糟糕的是，密码也是 `admin`。
 
-`admin` user in Datav has all privileges, the role of `admin` is `Super Admin`, other users can never set to this role.
+Datav 中的 `admin` 用户拥有所有权限，其角色是 `超级管理员`，其他用户永远无法设置为这个角色。
 
-As a result,  `admin` can do everthing , therefore, it's not safe to use `admin` user in production environment, it's even dangerous to use `admin` as password :(
+因此，`admin` 可以做任何事情，在生产环境中使用 `admin` 用户是不安全的，而使用 `admin` 作为密码则更加危险 :(
 
-So, let's start with changing password.
+所以，我们先来修改密码。
 
-## Change password 
+## 修改密码
 
-1. Click `user` icon in the bottom of sidebar and select `Account setting`.
-2. Fill in the forms in `Change Password` section 
-3. Click `Submit`
+1. 点击左侧导航栏最下方的用户图标，选择 `个人设置`.
+2. 填写 `修改密码` 处的表单
+3. 点击提交
 
-When you change password, you will be logout automatically, you need to login again with new password.
-
-### I forget `admin` password 
-
-If you forget `admin` password, you have to manually set it to `empty` in database, don't set to any other strings, as the password is encrypted. 
-
-Once re-login `admin` with empty password, you must **change it to a new one for safety** !
+当密码修改完成后，你将自动登出，并且需要重新登录。
 
 
-## Create a new Admin user 
+### 糟糕，我忘了 `admin` 密码
 
-Another way is to create a new user and assign him with `Admin` role.
+`admin` 账户如此重要，遗忘密码肯定是要找回的，目前只有一个办法：在数据库中手动将 `admin` 的密码设置为空, 不要设置为其他字符串，因为密码是加密的，其它的无法匹配。
 
-1. Click `configuration` icon in the bottom of sidebar and select `User` tab
+当你用空密码登录 `admin` 后，你必须**立即修改密码**，否则会有极大的安全隐患。
+
+## 创建新的管理员
+
+另一个方法就是创建一个新的用户，然后给他分配管理员，日常使用该用户来管理。
+
+1. 点击左侧菜单栏的 `配置` 图标，然后选择 `用户` 标签页
 
 ![request duration stats](https://github.com/data-observe/assets/blob/main/tutorial/user-table.jpg?raw=true)
 
-2. Click `New User` button in the top right corner
-3. Let's create a user named `datav-admin` with password `datav-admin` and role `Admin`
+2. 点击右上角的 `新建用户` 按钮
+3. 创建一个用户名和密码都是 `datav-admin` 的用户，并分配角色 `管理员 Admin`
 
 <img src="https://github.com/data-observe/assets/blob/main/tutorial/add-user.jpg?raw=true" style={{height: '300px'}} />
 
-4. Click `Submit` button
+4. 点击提交按钮
 
-Now, you can login with `datav-admin` and `datav-admin` password. This user can also manage datav as `admin` user. 
+现在，你可以用 `datav-admin` 和 `datav-admin` 密码登录了，这个用户也可以作为 `admin` 用户来管理 Datav。
 
-> For more information about Role and privilege, please refer to [User role](/docs/role)
+> 阅读更多关于角色和权限的内容，请参见 [角色与权限](/docs/role)
