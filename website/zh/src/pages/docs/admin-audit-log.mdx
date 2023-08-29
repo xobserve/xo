@@ -1,18 +1,17 @@
 ---
-title: Audit logs
+title: 审计日志
 description: 
 ---
 
+审计日志对于企业用户来说非常重要，它可以帮助你追踪核心数据的变更。
 
-Audit logs is very important for enterprise users. It can help you to track the changes of your core data. 
+目前 Datav 的审计日志种类还不多，我们主要用来追踪删除操作，比如删除仪表盘、删除团队等。
 
-In Datav, we use audit logs to track the removings, such as dashboard removing, team removing etc. 
- 
-You may wonder: why not to track dashboard changes, it is also very important too. The answer is that we have [dahsobard history](http://localhost:3002/docs/tutorial-home#view-history) to track the changes of dashboard, that is much more powerful.
+你可能会问：为什么不追踪仪表盘的变更，这也很重要啊。答案是我们有[这个](/docs/dashboard-history)功能，它可以追踪仪表盘的变更，而且功能更强大。
 
 
 <img src="https://github.com/data-observe/assets/blob/main/admin/audit-log.jpg?raw=true"/>
 
-As you can see, there are many important infos in these audit logs, especially the `Data` column.
+可以看到，审计日志中有很多重要的信息，尤其是 `Data` 列。
 
-If someone has removed a dashboard by mistake, you can restore it by clicking the `Data` column and copy the meta data , then [import this dashboard](/docs/dashboard-import) with the meta data.
+如果有人不小心删除了一个仪表盘，你可以点击 `Data` 列，复制元数据，然后用这个元数据[导入仪表盘](/docs/dashboard-import),就可以恢复到删除前的状态了，但是无法恢复历史保存数据。
