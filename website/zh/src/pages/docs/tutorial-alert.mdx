@@ -1,56 +1,49 @@
 ---
-title: Query alerts, correlate to Graph
+title: 查询告警和关联 Graph 图表
 description: 
 ---
 
 import TextList  from '@/components/docs/TextList'
 import Code  from '@/components/docs/Code'
 
-You can't configure alerts rules in Datav, because we believe: leave professional work to professional people. 
+Datav 没有提供告警配置的功能，因为我们认为：专业的事情交给专业的人做。
 
-In you use Prometheus, you can create alerts rules in Prometheus, if you have your own APM services, you can create alerts in these systems. 
+如果你使用的是 Prometheus，你可以在 Prometheus 中配置告警规则，如果你使用的是其他 APM 服务，你也可以在这些服务中配置告警规则。
 
-Datav is mainly focus on Alert dispaly. There are two ways to display alerts in Datav:
-
-<TextList>
-    <li>Viewing alerts in alert page</li>
-    <li>Correlate alerts to centain panel</li>
-</TextList>
-
-They have different use cases, let's talk about them one by one.
-
-## Alert dashboard 
-
-There are two special dashboards predefined in Datav, they have their own special ids.
+Datav 主要负责告警展示：
 
 <TextList>
-    <li>Home dashboard with id `d-home`</li>
-    <li>Alert dashboard with id `d-alert`</li>
+    <li>在告警页面或者告警图表中查看告警</li>
+    <li>将告警关联到 Graph 图表中展示</li>
 </TextList>
 
-Specially, the alert dashboard also has a predefined url path : <Code>/alert</Code>.
+它们各有各的用途，下面分别来看看。
 
-You can visit alert dashboard by clicking the alert icon in sidebar, or visit <Code>http://localhost:5173/alert</Code> url directly.
+## 告警仪表盘
 
-Now let's assume you are already in alert dashboard page, you will see a list of alerts in this page.
+在 Datav 中有两个特殊的仪表盘，它们都拥有自己特殊的 id:
 
-Maybe you would wonder: why there are so many alerts here? I didn't create any alerts in Datav. The answer is simple: the alerts you see are all from TestData datasource.
+<TextList>
+    <li>Home 仪表盘:  `d-home`</li>
+    <li>Alert 仪表盘: `d-alert`</li>
+</TextList>
 
-### Add alerts rules in Prometheus 
+它们都是在 Data 初始化时自动创建的，无法被删除，也无法修改 id (当然，其它 dashboard 也不能修改 id)。
 
-TestData is useful, but they are also useless. To make it usefull, we should query the real alerts.
+特别的，Alert 仪表盘还有一个预定义的 url 路径: <Code>/alert</Code>。你可以点击侧边导航栏中的告警图标，或者直接访问 <Code>http://localhost:5173/alert</Code> 来访问告警仪表盘。
 
-Because Prometheus is the core datasource of Datav, we will use it here to show how to add alerts to Datav.
+假设你已经访问了告警页面，那么你应该会看到一堆告警。 你可能会想：为什么这里有这么多告警？我并没有在 Datav 中创建告警。答案很简单：这些告警都来自 TestData 数据源。
 
-First, let's create some alert rules in Promtheus.
+### 在 Prometheus 中添加告警规则
 
-At the moment, we can only create alert rules through the config file of Prometheus, there are no plans for configure theme through web api :(
+对于想看到告警长啥样，`TestData` 很有用，如果你想要展示真实的告警，它直等于没用。由于 Prometheus 是 Datav 的核心数据源，所以我们将使用它来展示如何在 Datav 中添加告警。
 
-But don't worry, it's easy to use, and compare to web api, this way can reduce much unnecessary alert rules.
+首先，让我们在 Prometheus 中创建一些告警规则。
 
-Find the `promtheus.yml` config file in your prometheus install directory (maybe you have other config file name or install path).
+目前，我们只能通过 Prometheus 的配置文件来创建告警规则，官方没有计划通过 web api 来配置它 :( 但是不用担心，这种方式很容易使用，并且与 web api 相比，通过配置文件配置告警还可以减少很多不必要的告警规则，懂得都懂。。
 
-Add such content to this file: 
+在 Prometheus 安装目录中找到 `promtheus.yml` 配置文件（也许你有其他配置文件名或安装路径），并添加如下内容：
+
 
 ```yml
 # Load rules once and periodically evaluate them according to the global 'evaluation_interval'.
@@ -59,9 +52,9 @@ rule_files:
   # - "second_rules.yml"
 ```
 
-We only need to define the rule files here, the concrete alert rules are defined in `first_rules.yml`.
+在该配置文件中，只需要定义告警规则所在的文件名，具体的告警规则定义在 `first_rules.yml` 中。
 
-Then create a new file named `first_rules.yml` along side `prometheus.yml`, and fill in below content: 
+接着在 `prometheus.yml` 的同级目录中，创建一个新的文件：`first_rules.yml`, 并写入如下内容:
 
 ```yml
 groups:
@@ -76,131 +69,133 @@ groups:
       summary: High request latency
 ```
 
-You can see our alert rule has no sense: when value of <Code>go_gc_duration_seconds_count</Code> is larger than `20` and last for `2` minutes, promtheus will throw out an alert.
+可以看出，这个告警规则毫无意义： 当 <Code>go_gc_duration_seconds_count</Code> 的值大于 `20` 并持续超过 `2` 分钟就进行告警。
 
-Why we said it is no sense is because this is a `Counter` metrics, it will surely be larger than 20 in a short time after you start `Prometheus` server which will ensurely trigger the alert rules, therefore we can easily view the alerts in Datav.
+说它毫无意义，是因为在 Prometheus 启动一小段时候后，这个语句的值肯定是妥妥的大于 `20` 的，可以说是 100% 能触发告警。
 
+但是话说回来，我们想要的不就是这样一个必定触发告警的规则吗？不然你如何快速观察到告警数据 ：)
 
-After configuration, start Prometheus server and go back to our Datav ui.
+总之，在配置后，重新启动 Prometheus 服务器，然后回到我们的 Datav UI。
 
-> For more information, please visit [Prometheus website](https://prometheus.io/docs/alerting/latest/overview/), Datav does not dependent on Prometheus, we just query alerts from it, how the alerts is configured and fired, it is all the 
-> responsibility of Prometheus
+> 获取更多关于告警配置的信息，请访问 [Prometheus 官网](https://prometheus.io/docs/alerting/latest/overview/)。还是那句话， Datav 并不依赖于 Prometheus, 我们只是查询数据。 
+> 至于告警的配置和发送，这都是 Prometheus 完成的。
 
-### Query alerts from prometheus 
+### 从 Prometheus 查询告警
 
-Because we already set up a prometheus datasource, we can directly query from it, there is no need to write any queries.
+由于我们之前已经设置了 Prometheus 数据源，因此只需：
 
-All we need to do is :
-
-1.  Visit <Code>/alert</Code> page and open its panel editor 
+1.  访问 <Code>/alert</Code> 页面，打开它的图表编辑面板
 
 ![request duration stats](https://github.com/data-observe/assets/blob/main/tutorial/alert-page.jpg?raw=true)
 
-2. Find `Alert Filter` section in `Panel tab` in panel editor, this section is used for filter the alerts that are querying from given datasources.
+2. 在 `图表` 的标签页下找到 `告警过滤`
 
 ![request duration stats](https://github.com/data-observe/assets/blob/main/tutorial/alert-filter.jpg?raw=true)
 
-3. Add `prometheus` datasource to `Datasource` filter, and remove `TestData` datasource.
+3. 在 `数据源` 中选择 `prometheus` ，并且移除 `TestData`，注意这里可以多选
 
-You should see the reult as below: 
+如下图所示:
 
 <img src="https://github.com/data-observe/assets/blob/main/tutorial/alert-prometheus-ds.jpg?raw=true" />
 
 
-Here we successfully query the real alerts from Prometheus, let's have a deep view into this alert rule.
+ 此时，我们已经从 Prometheus 中查询到真实的告警，下面来深入了解一下这个告警规则。
 
 <img src="https://github.com/data-observe/assets/blob/main/tutorial/alert-rule.jpg?raw=true" />
 
-You can compre alert info to the alert rule defined in prometheus config files. For more info please visit [Alert settings](/docs/alert-setting).
+可以看到，告警规则的定义与 Prometheus 中的定义完全一致，因为 Datav 原生支持 Prometheus 的告警规则展示，而无需任何转换。
+
+> 如果你通过 HTTP API 加载其它系统的告警列表，那么你需要将其转换为 Datav 的告警格式，然后才能展示出来
 
 
-### When to use
+### 何时使用
 
-Alert page is designed for general purpose using: when you want view all alerts happened in your system, and want explore them, you can visit `/alert` page.
+告警页面是一个通用的告警展示页面，当你想要查看系统中发生的所有告警，并且想要自由探索它们时，你可以访问 `/alert` 页面。
 
 
-## Correlate alerts to Graph panel
+## 将告警关联到 Graph 图表
 
-You can also correlate some alerts to Graph panel, this will show marks on Graph panel to provide more clear info about alerts time point and status.
+除了在告警页面查看告警外，你还可以将告警关联到 Graph 图表中，这样可以更直观的看到告警发生的时间点和状态。
 
-Let's create a panel in `Home` dashboard, because alerts graph is usually place in home dashboard.
+让我们在 `Home` 仪表盘中创建一个 Graph 图表用于告警关联，因为告警图表通常放在首页的仪表盘中。
 
-### Switch sidebar to global team 
 
-Click `user` icon at bottom of sidebar, then hover on  `Select Sidemenu` item and select `Global` team's sidemenu.
+### 选择 global 团队的侧边导航栏
 
-When sidebar is switched, you should see `Home` dashboard at the top of sidebar.
+在侧边导航栏的底部，点击 `用户` 图标，然后将鼠标悬停在 `选择侧边导航栏` 上，选择 `global` 团队的侧边导航栏。
+
+当侧边导航栏切换后，你应该会看到侧边导航栏顶部出现了 `Home` 仪表盘。
 
 <img src="https://github.com/data-observe/assets/blob/main/tutorial/home-dashboard.jpg?raw=true" />
 
 
-### Create a Graph panel 
-At this time, welcome panel is useless for us, let's change to a Graph panel. 
+### 创建 Graph 图表
 
-1. Open panel editor of welcome panel
-2. Change visualization to `Graph`
-3. Change datasource to `prometheus`, select metrics `go_gc_duration_seconds_count`, because our alert rule is based on this metrics.
+此时，那个欢迎图表对我们来说已经没有用了，我们将其替换为一个 Graph 图表。
 
-Now, you should see a Graph panel like this: 
+1. 打开欢迎图表的编辑面板
+2. 将类型修改为 `Graph`
+3. 将数据源修改为 `prometheus`，并选择 `go_gc_duration_seconds_count` 指标，因为我们的告警规则就是基于该指标的。
+
+此时你将看到如下的图表：
 
 <img src="https://github.com/data-observe/assets/blob/main/tutorial/home-graph-panel.jpg?raw=true" style={{height: '400px'}} />
 
-It seems that the current panel border and decoration is not very suited to our Graph panel, let's try to change it.
+等等，看上去这个图表的边框和装饰都不适合告警，有些过于花里胡哨了，必须换！
 
-### Change panel border and decoration
+### 修改图表的边框和装饰
 
-1. Open panel editor of Graph panel, select `Style` tab in right side.
-2. Click below button to select a new border 
+1. 打开图表的编辑面板，在右边选择 `样式` 标签页
+2. 点击下面的按钮选择一个新的边框
 
 <img src="https://github.com/data-observe/assets/blob/main/tutorial/select-panel-border.jpg?raw=true" style={{height: '200px'}} />
 
-3. For convenient, just select no border for now
+3.  为了简洁，直接选择无边框：`None`
 
 <img src="https://github.com/data-observe/assets/blob/main/tutorial/panel-border-list.jpg?raw=true" style={{height: '300px'}} />
 
-4. Same to panel decoration, find `Panel decoration` section and  set it to none 
+4. 找到 `图表装饰` 设置，也将其设置为 `None`
 
 <img src="https://github.com/data-observe/assets/blob/main/tutorial/panel-decoration.jpg?raw=true" style={{height: '500px'}} />
 
-Now, you should see a Graph panel like this:
+在设置后，我们的图表变成了这样：
 
 <img src="https://github.com/data-observe/assets/blob/main/tutorial/none-border-panel.jpg?raw=true"  />
 
-It looks much cleaner now, no border and no decoration, just a pure Graph panel.
+看上去干净多了，没有边框和装饰，只有一个纯粹的 Graph 图表。
 
-### Enable alert correlation 
+### 开启告警关联
 
-Locate the `Alert correlation` section in `Panel` tab in right side of panel editor.
+现在，我们已经有了一个 Graph 图表，接下来就是将告警关联到它上面。
 
-As you can see in the field tips: when correlation is enabled, alerts will be shown as annotation marks on the Graph.
+在图表编辑面板的 `图表` 标签页下，找到 `告警关联` 设置：
 
-Now, lets enable it and see what will happen.
-
-1. Switch `Enable` to `on`
-2. Select `prometheus` datasource, if there is no alerts, you can also add `TestData` datasource.
-3. Set `Alert state` filter to `Pending`,`Firing` and `Resolved`, if you choose none, then no alerts will be shown on Graph.
-4. Maybe you need to set time to a wider range, such as `now-12h to now`
+1. 开启关联
+2. 选择 `prometheus` 数据源, 如果实在没有告警数据，也可以选择 `TestData`
+3. 设置 `告警状态` 过滤器，选择 `Pending`,`Firing` 和 `Resolved`, 如果啥都不选，那么将没有告警被展示
+4. 也许你需要将时间范围设置到更宽广的范围，例如 `now-12h to now`
 
 <img src="https://github.com/data-observe/assets/blob/main/tutorial/alert-correlation.jpg?raw=true" style={{height: '500px'}} />
 
 
-If everything is ok, you should see a Graph panel like this:
+如果一切正常，那你将看到如下的 Graph 图表:
 
 <img src="https://github.com/data-observe/assets/blob/main/tutorial/graph-alerts.jpg?raw=true"  />
 
-Hover your mouse on the mark which the arrow points to, you will see the alert info pop up.
+看图表上的标记了吗？将鼠标悬停在箭头指向的标记上，你将看到告警信息的弹出框。
 
 
-### View alerts details 
 
-Annotation marks on Graph panel is just a simple way to show alerts, if you want to view more details about alerts, you can do this: 
+### 查看告警详情
 
-1. Open panel editor of Graph panel
-2. Select `Alert` tab in bottom-left side of panel editor
+Graph 图表上的告警标记一般用于快速最近的告警总体状况，如果你想要查看更多关于告警的信息，可以这么做：
+
+
+1. 打开 Graph 图表的编辑面板
+2. 在左下方选择 `告警` 标签页
 
 <img src="https://github.com/data-observe/assets/blob/main/tutorial/panel-alerts-detail.jpg?raw=true"  />
 
-It is very similar to `/alert` page, but here you can see the alerts and Graph at the same place.
+这里的数据跟 `/alert` 页面很像，但是在这里，你可以看同时看到告警列表和被标记的 Graph 图表。
 
-
-> For more info about alert settings, please visit [Alert settings](/docs/alert-setting)
+> 事实上，你可以定制 `/alert` 页面，用两个图表来实现同样的效果：一个 Graph 展示告警标记，另一个 Alert 展示告警列表
