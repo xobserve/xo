@@ -1,89 +1,90 @@
 ---
-title: Dashboard settings
+title: 仪表盘设置
 description:
 ---
 
 import TextList  from '@/components/docs/TextList'
 import Code  from '@/components/docs/Code'
 
-You can open the dashboard settings by clicking the `settings` icon in the top right corner of the dashboard.
+点击仪表盘页面右上角的 `设置` 图标，可以打开仪表盘设置页面。
 
-## Shared tooltip
+## 共享 tooltip
 
-When enabled, when you hover on a Graph panel, the tooltip will also be shown in other Graph panels in the dashboard.
+启用后，当你在一个图表上 hover 时，其他图表也会显示各自的 tooltip。
 
-> This only works for Graph panel. 
+> 该功能只对 Graph 类型的图表有效。
 
 <img src="https://github.com/data-observe/assets/blob/main/dashboard/shared-tooltip.jpg?raw=true" style={{height: '400px'}} />
 
 
-## Hide global variables
+## 隐藏全局变量
 
-Obviously, not all global variables are useful for all dashboards. Therefore you can hide the global variables that you don't need.
+显而易见，不是所有的全局变量都适用于所有的仪表盘。因此你可以需要隐藏当前仪表盘不需要的全局变量。
+
 
 <img src="https://github.com/data-observe/assets/blob/main/dashboard/global-vars.jpg?raw=true" style={{height: '60px'}} />
 
-In above image we have two global variables, now let's hide the `no-use` one.
+如上图所示，我们有两个全局变量，现在先隐藏 `no-use` 这个全局变量。
+
 
 <img src="https://github.com/data-observe/assets/blob/main/dashboard/hide-vars.jpg?raw=true" style={{height: '60px'}} />
 
-Go back to the dashboard page and you will see the `no-use` global variable is hidden.
+回到仪表盘页面，你会发现 `no-use` 这个全局变量已经被隐藏了。
 
-So how can we hide `no-use` and `host` at the same time? Just add a comma between them: <Code>no-use,host</Code>
+那么如果我们想同时隐藏 `no-use` 和 `host` 这两个全局变量呢？只需要在它们之间加上逗号即可： <Code>no-use,host</Code>
 
-## Tags 
+## 标签
 
-Tags is used for searching, we have talked it in [tutorial](/docs/tutorial-search#add-tags-to-dashboard), please visit it for more details.
+标签可用于搜索，我们在 [教程](/docs/tutorial-search#add-tags-to-dashboard) 中已经讲过了，大家可以去看看。
 
-## Panels layout
+## 图表排列
 
-This option will decide how dashboard  automatically arrange  the positions of panel. 
+该选项决定了仪表盘中的图表,它们的位置该如何排列。
 
 <TextList>
-    <li>`vertical` : when a panel has spaces in top of it, it will be automatically moved up until it reaches another panel.</li>
-    <li>`horizontal` : when a panel has spaces in left of it, it will be automatically moved left until it reaches another panel.</li>
-    <li> `null`: you can move the panel to anywhere you want.</li>
+    <li>`vertical` : 当图表上方有空间时，图表会自动向上对齐，直到挨到另一个上方图表.</li>
+    <li>`horizontal` : 当图表左边有空间时，图表会自动向左对齐，直到紧贴着另一个图表.</li>
+    <li> `null`: 想放哪里放哪里，随心所欲.</li>
 </TextList>
 
-Let's see what `null` looks like.
+默认情况下，使用的是 `vertical` 排列方式，相信你已经使用过了，下面我们来看看 `null` 的效果。
 
 <img src="https://github.com/data-observe/assets/blob/main/dashboard/custom-layout.jpg?raw=true" style={{height: '400px'}} />
 
-As shown in above image, the panel in bottom right corner is not automatically moved to top ( vertical ) or left (horizontal).
+如图所示，真的是可以想放哪里放哪里，右下角的图表既不会向上靠拢，也不会向左靠拢，就孤零零的待在右下方角落里。
 
-It just stays at where we put it, that's cool ! But when you have many panels, it will be hard to arrange them.
+> 可能你会觉得自由排列很酷很方便，但是一旦图表多起来，管理的成本就直线上升，所以还是推荐尽量使用 `vertical` 排列
 
-## Panel overlap
+## 图表重叠放置
 
-When enabled, panel can be placed over other panels. It's useful when you are building a beautiful large screen.
+开启后，图表可以彼此重叠放置，对于一些特殊形状的图表以及数据大屏来说，较为有用。
 
 <img src="https://github.com/data-observe/assets/blob/main/dashboard/panel-overlap.jpg?raw=true" style={{height: '400px'}} />
 
-If you disable it, the image shown above will never be possible.
+可以看出，如果禁用了该选项，上述的效果永远不可能实现。
 
 
-## Lazy render panels 
+## 懒加载的图表 
 
-By default, a panel will only be rendered when it's visible in our browser screen. 
+默认情况下， 一个图表只有在它进入我们的视野时，才会被渲染，这样做的好处是，如果你的仪表盘中有很多图表，那么只有当你滚动到它们的位置时，它们才会被渲染，这样可以大大提升性能。
 
-If you have many panels in a dashboard, it will be a huge performance boost, otherwise all the panels will be loaded and rendered when dashboard is load.
+但是如果你希望用户在滚动到图表位置时，立即看到图表，那么你应该禁用该选项，毕竟加载怎么也得需要过程。
 
-But if you hope user can see the panel chart immediately when we scroll to that panel, you should disable this option.
 
-## Enable unsaved prompt
+## 未保存提示
 
-When enabled, if you have unsaved changes in dashboard, you will be prompted when you try to leave the dashboard page.
+当开启后，如果你在仪表盘中有未保存的修改，那么在离开仪表盘页面时，会弹出提示,防止未保存的内容丢失。
 
 
 <img src="https://github.com/data-observe/assets/blob/main/dashboard/unsaved-prompt.jpg?raw=true" style={{height: '400px'}} />
 
 
-## Auto save 
+## 自动保存 
 
-When enabled, dashboard will be automatically saved every X seconds. 
+开启后，仪表盘会以一个固定的间隔自动进行保存，这样即使你忘记了保存，也不会丢失太长时间的内容。
 
 <img src="https://github.com/data-observe/assets/blob/main/dashboard/auto-save.jpg?raw=true" style={{height: '300px'}} />
 
-But this will be automatically disabled when you are in panel edit mode ( maybe remove this limitation in the future ).
+但是在图表编辑模式下时， 自动保存会被禁用，你还是需要手动保存，也许在未来，我们会在编辑模式也启用自动保存，但目前出于一些权衡考虑，暂时关闭 :)
 
 <img src="https://github.com/data-observe/assets/blob/main/dashboard/auto-save-disabled.jpg?raw=true" style={{height: '300px'}} />
