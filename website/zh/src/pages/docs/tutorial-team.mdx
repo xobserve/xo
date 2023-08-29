@@ -1,141 +1,141 @@
 ---
-title: Organize dashboards with team 
+title: 通过 Team 来组织仪表盘
 description: 
 ---
 
-Let's assume you have deploy a datav server in your Company, as the time goes on, you will have more and more dashboards and users.
+假设你在公司部署了一个 Datav 服务，随着时间的推移，你会有越来越多的仪表盘和用户。
 
-In this case, you may want to organize your dashboards with different groups, so that you and other admins/users can easily manage them.
+在这种情况下，你可能希望使用不同的组来组织你的仪表盘，这样你和其他管理员就可以轻松地管理它们。
 
-This kind group is called Team in Datav.
+这种分组在 Datav 被称为 团队 Team。
 
-## Why we need teams 
 
-In a company, there is usually a team called ops, which is responsible for the operation and maintenance of the infrastructures, such as servers, databases, netword etc. 
+## 为何需要 Team
 
-If the ops team uses Datav, they may want to create a team to manage their dashboards, because they probably don't care the dashboards about business.
+在一个公司中，通常会有一个叫做 ops 的团队，负责运维基础设施，比如服务器，数据库，网络等。
 
-Therefore, we can create a team called ops, and add all the ops users to this team, and associated server, network dashboards with this team.
+如果 ops 团队使用 Datav，他们可能希望创建一个单独的团队来管理相应的仪表盘，因为他们可能并不关心业务相关的仪表盘长啥样。
 
-## Create a ops team
+因此，我们可以创建一个叫做 ops 的团队，把所有的 ops 用户都加入到这个团队，并把服务器，网络相关的监控仪表盘关联到这个团队。
 
-1. Click `configuration` icon in the bottom section of sidebar and select `Team` tab.
+## 创建 ops Team
+
+1. 点击左侧导航栏的 `配置` 按钮，选择 `团队 Team` 标签页
 
 <img src="https://github.com/data-observe/assets/blob/main/tutorial/team-table.jpg?raw=true" />
 
-2. Click `New Team` button in the top right corner 
-3. Fill in `Team Name` field with `ops`
-4. Click `Submit` button
+2. 点击右上方的 `新建团队` 按钮
+3. 将 `团队名称` 设置为 `ops`
+4. 提交
 
-That's unbelievable easy.
+简单到难以置信！
 
-## Add users to ops team
+## 添加用户到 ops 团队
 
-Every team should has its own admins and users, so that they can manage and view their dashboards. 
+每个团队都应该有自己的管理员和用户，这样他们就可以管理和查看他们的仪表盘。
 
-Let's add `datav-admin` to ops team, add give him the admin role.
+让我们把 `datav-admin` 添加到 ops 团队，并给他赋予管理员角色。
 
-> In fact, if a user is `Admin` in `global` team, he is also the admin of Datav, so we can get a conclusion: 
-> `global` admins are also the admins of all teams.
+> 实际上，如果一个用户在 `global` 团队中是 `管理员`，那么他也是 Datav 的管理员，所以我们可以得出一个结论：
+> `global` 团队的管理员也是所有团队的管理员。
 
-1. Select `Member` tab in `ops` team page and click `New member` button
+
+1. 在 `ops` 团队的首页，选择 `成员` 标签页，然后点击 `新建成员` 按钮
 
 <img src="https://github.com/data-observe/assets/blob/main/tutorial/add-team-member.jpg?raw=true" style={{height: "300px"}} />
 
-2. Login with `datav-admin` to complete next steps.
+2. 接着使用 `datav-admin` 登录并完成后续的操作步骤
 
 
-## Create a dashboard 
+## 创建仪表盘
 
-Now, let's create a dashboard for ops team. 
+现在，我们已经创建了一个团队，接下来，我们来为 ops 团队创建一个仪表盘： 在 `ops` 团队页面选择 `仪表盘` 标签页，然后点击 `新建仪表盘` 按钮。
 
-Select `Dashboard` tab in `ops` team page, and click the `New Dashboard` button. It seems there is no difference than before.
+看起来跟之前创建仪表盘的页面没有任何区别，但是如果你自信观察 `归属于团队` 这个字段，会发现它的值已经自动设置为了 `ops` 而不是之前的 `global`。
 
-But if you look at `Belong to team` field, you can find that value has automatically set to `ops` team rather than the previous `global` team.
-
-Sure, you can change it to `global` team, but this is no sense for our cases, so keep it to `opt` team.
+当然，你也可以在这里更改为 `globa` 团队，但是毫无意义，毕竟我们要为 `ops` 团队创建仪表盘。
 
 <img src="https://github.com/data-observe/assets/blob/main/tutorial/add-team-dashboard.jpg?raw=true" style={{height: "300px"}} />
 
-Click `Submit` button to create our `Network stat` dashboard.
+点击 `提交` 按钮，我们的 `Network stat` 仪表盘就创建好了。
 
-Look at the top left corner of the new dashboard, there shows that our new `Network stat` is `ops` team , great! Try to click on `ops` text and see what happens.
+现在，我们可以在左上角看到我们的新仪表盘的 `Network stat` 是 `ops` 团队的，太棒了！试着点击 `ops` 文字，看看会发生什么。
 
 <img src="https://github.com/data-observe/assets/blob/main/tutorial/dashboard-lef-top-corner.jpg?raw=true" style={{height: "50px"}} />
 
+由于该仪表盘只是演示目的，因此无需在这里创建任何图表。
 
-As this is just for demonstration purpose, we will not create any charts in this dashboard, but you can do it by yourself.
+
+## 将仪表盘转移给 ops 团队
+
+第一个仪表盘没问题，让我们再来一个，这次，不创建新仪表盘，而是要拿回本该属于我们的仪表盘：`Hosts info dashboard`，因为它是关于服务器的，Born for ops   :)
+
+因此，我们需要将该仪表盘转移到 `ops` 团队，但是 Datav 目前并没有提供任何转移操作，那只能另寻出路了。
 
 
-## Transfer dashbaord to ops team
+### 仪表盘元数据
 
-First dashboard is ok, let's get the second one, this time , we are not creating a dashboard, we want to get back our rightfully dashboard : `Hosts info dashboard`, because it's all about servers :)
+在 Datav 中，仪表盘的所有的设置信息都包含在一个 JSON 格式的数据中，我们称之为：`仪表盘元数据`。如果你熟悉这些设置，你可以直接在元数据中修改仪表盘设置。
 
-So we need to transfer that dashboard to `ops` team, but Datav does not privide any transfer operation at this moment, we need to find a way to do this.
+因为没有其他方法可以将仪表盘转移给团队，所以我们必须修改元数据中的 `ownedBy` 字段来达成目的。
 
-### Dashboard meta data 
+### 修改元数据
 
-In datav, all settings include panel settings are described in a JSON format, we call that: `dashboard meta data`.
+首先，既然要转移给 `ops` ，那么肯定要知道它们的 `team id`，我们可以在 `/cfg/teams` 页面中找到它，然后从团队列表中获取它的 id。
 
-If you are familiar with these settings, you can modify dashboard settings directly in meta data. 
+在这种情况下，`ops` 的 id 应该是 `2`，因为我们还没有创建任何团队，而 `global` 团队的 id 是 `1`。
 
-Because there is no other way to transfer dashboard to a team, we have to modify the `ownedBy` field in meta data.
-
-### Modify meta data 
-
-First, we need to know the team id of `ops`: visit `/cfg/teams` page, and get it from teams table. 
-
-In this situation, id of `ops` should be `2`, because we have not created any teams yet, and id of `global` team is `1`.
-
-1. Visit `Hosts info` dashboard and open its settings modal.
-2. Select `Meta data` tab 
-3. Set the value of  `ownedBy` field to `2`
+接下来，重头戏来了:
+1. 访问 `Hosts info` 仪表盘，打开设置面板
+2. 选择 `元数据` 标签页
+3. 将 JSON 中的 `ownedBy` 字段的值设置为 `2`
 
 <img src="https://github.com/data-observe/assets/blob/main/tutorial/dashboard-metadata.jpg?raw=true"/>
 
-4. Click `Submit` button
+4. 点击 `提交` 按钮
 
-Go back to dashboard page, you should see :
+返回仪表盘页面，你可以看到 :
 
 <img src="https://github.com/data-observe/assets/blob/main/tutorial/dashboard-new-owner.jpg?raw=true" style={{height: "50px"}} />
 
-This means we have successfully transferred `Hosts info` dashboard to `ops` team.
+这意味着我们已经成功地将 `Hosts info` 仪表盘转移到了 `ops` 团队。
 
-To ensure that, you can open search panel to see if `Hosts info` dashboard is in `ops` team.
+为了验证，你可以打开搜索面板，看看 `Hosts info` 仪表盘是否在 `ops` 团队中。
 
 <img src="https://github.com/data-observe/assets/blob/main/tutorial/new-owner-show-in-search.jpg?raw=true"/>
 
 
-## Create sidebar
+## 创建侧边导航栏
 
-Now, we have two dashboards in `ops` team, but we can't see them in sidebar, visit by search is not a good choice, especially for enterprise use cases.
+团队的另一个重要作用就是它们可以属于自己的侧边导航栏，例如 `ops` 团队可能会想看到一个基础设施监控相关的导航栏，而不是业务相关的导航栏。
 
-So let's created a sidebar for `ops` team.
+现在 `ops` 团队已经有了两个仪表盘，但是我们在侧边导航栏中看不到它们，通过搜索访问也不是一个好的选择，尤其是对于企业级的使用场景。
 
-1. Click `configuration` icon in sidebar and select `Team` tab
-2. Click `manage` button on `ops` row 
-3. Select `Side menu` tab 
+因此，让我们为 `ops` 团队创建一个侧边导航栏。
 
-You can see there is already a menu item navigate to `Home` dashboard, but why can't we see it? 
+1. 点击侧边导航的 `配置` 图标, 选择 `团队` 标签页 
+2. 点击 `ops` 团队所在行的 `管理` 按钮进入团队管理页面
+3. 选择左侧菜单标签页
 
-Don't worry, we will cover it later, for now, just create our sidebar menu items.
+可以看到，这里已经有了一个默认的 `Home` 菜单项，和 `global` 团队的一样，都指向同一个 `d-home` 仪表盘。
+
+那么问题来了，我们怎么看不到 `ops` 的 `Home` 呢？目前只能看到 `global` 的导航栏。 别急，我们马上就来解决。
+
+现在先来创建几个菜单项:
 
 <img src="https://github.com/data-observe/assets/blob/main/tutorial/team-sidebar.jpg?raw=true"/>
 
+提交后，新的菜单项就已经创建完成，来看看该如何使用。
 
-Now, sidebar for `ops` team has been created, but we are still using the sidebar from global menu.
+## 使用侧边导航栏
 
-## Switch sidebar
-
-To use the new `ops` sidebar, we need to switch the sidebar to `ops`.
-
-Click `user` icon at bottom of sidebar and hover on `Select sidemenu` item,you should see : 
+使用其实很简单，只需要点击侧边导航的 `用户` 图标，然后在 `选择侧菜单` 中选择 `ops` 即可。
 
 <img src="https://github.com/data-observe/assets/blob/main/tutorial/select-sidebar.jpg?raw=true" style={{height: "300px"}} />
 
-
-You see, just click the `ops` item, and the sidebar will be switched to `ops`.
-
-Once selected, each time you access Datav, the sidebar will be `ops` sidebar, until you switch to another sidebar.
+当选择后，网页自动刷新，新的侧边导航栏将呈现到我们眼前：
 
 <img src="https://github.com/data-observe/assets/blob/main/tutorial/switched-team-sidebar.jpg?raw=true"/>
+
+
+> 一旦选择，后续的每次访问都将使用该导航栏，直到你换成其它的
