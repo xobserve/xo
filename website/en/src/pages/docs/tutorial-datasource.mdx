@@ -1,3 +1,4 @@
+
 ---
 title: Query data from Prometheus
 description: 
@@ -58,6 +59,8 @@ Find a input box which prompt you `Enter a PromQL query` , and then type `go_gc_
 
 Have you noticed the red line in the above image ? We can select metrics from there, click the red line, and then select `go_gc_duration_seconds` , you will see the same result as above image.
 
+<img src="https://github.com/data-observe/assets/blob/main/tutorial/select-metrics.jpg?raw=true" style={{height: '400px'}}/>
+
 
 ## Legend
 
@@ -73,4 +76,3 @@ then set legend to `cpu idle - {{instance}}`, result is as below:
 In above result, `{{instance}}` is  replaced by `instance` label value in query result.
 
 > Don't forget to add units to `cpu idle` panel, `%` is a good choice.
-

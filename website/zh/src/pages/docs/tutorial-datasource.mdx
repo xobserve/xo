@@ -1,76 +1,80 @@
 ---
-title: Query data from Prometheus
+title: 从 Prometheus 查询数据
 description: 
 ---
 
 import TextList  from '@/components/docs/TextList'
 import Code  from '@/components/docs/Code'
 
-The dashboard we created in previous docs is powerful, but it has a huge limitation: it query data from Testdata datasource, which is a fake datasource. It's time to use real datasource to build a real dashboard.
+上一个章节中创建的仪表盘很强大，但是它也有巨大的限制：它从 Testdata 数据源中查询数据，而 Testdata 数据源是一个假数据源。现在是时候使用真实的数据源来构建一个真实的仪表盘了。
 
-In this doc, we will use [Prometheus](https://prometheus.io/)  as datasource to build a dashboard, so you **need**:
+在本文档中，我们将使用 [Prometheus](https://prometheus.io/) 作为数据源来构建一个仪表盘，所以你需要：
 
 <TextList>
-    <li>**Install prometheus first**, and make sure the Prometheus server is running.</li>
-    <li>**Start the node_exporter** binary in prometheus directory, this service will collect cpu,memory,disk,network info from your machine.</li>
+    <li>**安装 Prometheust**, 并确保 Prometheus 已经在运行</li>
+    <li>**在 prometheus 的目录下，找到并运行 node_exporter** , 这个服务会从你的机器上收集 cpu,memory,disk,network 等信息</li>
 </TextList>
 
 
-Let's assume Prometheus is running on `http://localhost:9090` . First, we need to create a new datasource for Prometheus.
+假设 Prometheus 运行在 `http://localhost:9090` , 首先，我们需要为 Prometheus 创建一个新的数据源。
 
- 
+## 创建 Prometheus 数据源
 
-## Create Prometheus datasource
+点击左侧导航栏底部的 `+` 按钮，然后选择 `新建数据源` 标签页。
 
-Click `+` button in the bottom section of sidebar, and select `New Datasource` tab.
-
-Then fill the form as below: 
+然后填入如下数据:
 
 <img src="https://github.com/data-observe/assets/blob/main/tutorial/create-prometheus-ds.jpg?raw=true" style={{height: '500px'}}/>
 
-Click `Save & Test` button, if everything is ok, you will see a green message `Datasource is added, redirecting..` in the bottom of the form. 
+点击 `保存&测试` 按钮，如果一切正常，你会在表单底部看到一个绿色的提示信息 `Datasource is added, redirecting..` , 然后页面会跳转到数据源管理页面:
 
-Then the page will redirect to datasources managing page: 
+接着会跳转到数据源管理页面:
 
 ![datasource managing](https://github.com/data-observe/assets/blob/main/tutorial/datasource-managing.jpg?raw=true)
 
-You can see Prometheus datasource is listed in the table, next to the default Testdata datasource which we used in previous docs.
+你可以看到 Prometheus 数据源已经在表格中了，它在默认的 Testdata 数据源的下面，而 Testdata 数据源是我们在前面章节中使用的。
 
-## Select panel datasource
+## 为图表设置数据源
 
-Before querying data from Prometheus, we need to create a new dashboard first, let's name it 'Hosts info'.
+在从 Prometheus 查询数据之前，我们需要先创建一个新的仪表盘，让我们把它命名为 `Hosts info`。
 
-Then add a new table named `go gc info` , open panel editor and select `Graph` visulization.
+然后添加一个名为 `go gc info` 的新表格，打开面板编辑器并选择 `Graph` 类型。
 
-Look at the `Query` tab on the left bottom of panel editor, you can see the default datasource is `Testdata` currently, we need to change it to `Prometheus` .
+在面板编辑器左下角的 `Query` 标签页中，你可以看到默认的数据源是 `Testdata` ，我们需要把它改为 `Prometheus` 。
 
-## Query data from Prometheus
+## 从 Prometheus 中查询数据
 
-From panel name, we can know that this panel is used to query go gc info from Prometheus, so we need to write a PromQL query to get the data, there are two ways:
+从面板名称中，我们可以知道这个面板是用来从 Prometheus 查询 go gc 信息的，所以我们需要写一个 PromQL 查询来获取数据，有两种方式：
 
-### Write PromQL query manually
+### 手动编写 PromQL 查询
 
-Find a input box which prompt you `Enter a PromQL query` , and then type `go_gc_duration_seconds` , you will see the result as below.
+在图表编辑面板左下角的 `查询` 标签中，你可以看到一个输入框，它提示你输入一个 PromQL 查询，让我们输入 `go_gc_duration_seconds` ，你会看到如下结果:
+
 
 ![enter promql query](https://github.com/data-observe/assets/blob/main/tutorial/enter-prometheus-query.jpg?raw=true)
 
-### Select metrics from metrics list
+### 从 metrics 下拉列表中选择
 
-Have you noticed the red line in the above image ? We can select metrics from there, click the red line, and then select `go_gc_duration_seconds` , you will see the same result as above image.
+在图表编辑面板左下角的 `metrics` 标签中，你可以看到一个下拉列表，它包含了所有的 metrics，让我们选择 `go_gc_duration_seconds` ，你同样会看到如上图所示的结果。
 
+<img src="https://github.com/data-observe/assets/blob/main/tutorial/select-metrics.jpg?raw=true" style={{height: '400px'}}/>
 
-## Legend
+## 为图表曲线设置别名
 
-We can change `Graph` legend names by using `Prometheus` legend, let's create a new panel named: Cpu idle, and then open panel editor, select `Graph` visulization and `Prometheus` datasource.
+我们可以使用 Prometheus `legend` 设置 `Graph` 图表的曲线别名，让我们创建一个新的面板，命名为 `Cpu idle`，然后打开面板编辑器，选择 `Graph` 类型和 `Prometheus` 数据源。
 
-This panel will show  cpu idle usage of our host servers, to achive this, type `sum(rate(node_cpu_seconds_total{mode="idle"}[1m])) by (instance) / sum(rate(node_cpu_seconds_total[1m])) by (instance) * 100` in PromQL input box, 
+该图表将显示我们主机的 cpu 空闲使用率，为了实现这一点，我们需要在 PromQL 输入框中输入 `sum(rate(node_cpu_seconds_total{mode="idle"}[1m])) by (instance) / sum(rate(node_cpu_seconds_total[1m])) by (instance) * 100` ，
 
-then set legend to `cpu idle - {{instance}}`, result is as below: 
+然后将图例 legend 设置为 `cpu idle - {{instance}}` ，结果如下:
 
 
 ![enter promql query](https://github.com/data-observe/assets/blob/main/tutorial/prometheus-legend.jpg?raw=true)
 
-In above result, `{{instance}}` is  replaced by `instance` label value in query result.
+在上图中，`{{instance}}` 是一个标签提取语法，它会被替换为查询结果中的 `instance` 标签值。
 
-> Don't forget to add units to `cpu idle` panel, `%` is a good choice.
+
+> 别忘了给  `cpu idle` 面板添加单位，`%` 是一个不错的选择。
+
+
+
 
