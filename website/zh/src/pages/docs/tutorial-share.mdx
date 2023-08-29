@@ -1,43 +1,44 @@
 ---
-title: Sharing dashboard
+title: 分享给他人
 description: 
 ---
 
-Sharing dashboard to other uses is very common, the core point of sharing is to restore the dashboard to the same state as you see it.
+分享仪表盘给其它人是非常常见的，**分享的核心是保证仪表盘能够恢复到分享时的状态。**
 
-## Basic sharing 
+## 基本分享
 
-It's really to share dashboard, just click the `sharing icon` next to dashboard title: 
+分享仪表盘非常简单，点开仪表盘标题旁的分享图表中即可：
 
 
 <img src="https://github.com/data-observe/assets/blob/main/tutorial/share-dashboard.jpg?raw=true" style={{height: "50px"}} />
 
 
-Then you will see a modal popup like this:
+然后你能看到一个弹出框:
 
-<img src="https://github.com/data-observe/assets/blob/main/tutorial/share-dashboard-modal.jpg?raw=true" style={{height: "300px"}} />
+<img src="https://github.com/data-observe/assets/blob/main/tutorial/share-dashboard-modal.jpg?raw=true" style={{height: "200px"}} />
 
-This is only the basic share link, the time info is automatically added to the link.
+这是最基本的分享形式，里面只有相关的时间信息。
 
 
-## Variables 
+## 变量
 
-Variables is very important when sharing, but there is not any variable appeared in previous share link, because we have not use any variable in the panels of  `Home` dashboard.
+在正常的生产使用中，仪表盘的状态有一大半都是变量决定的，因此添加变量信息对于分享来说非常重要。
 
-Try to use some variables in panels, and see what will happen in the share link.
+上面的分享中，尽管当前仪表盘有变量的存在，但是依然没有在分享链接中找到变量的身影，原因在于：只有被图表所引用的变量，才会被添加到分享链接中，否则链接会变得非常非常长。
 
-## Special panels 
+大家可以试着在图表中使用几个变量，然后看看分享的链接该如何变化。
 
-For special panels, such as trace panel, there is more info need to be shared in addition to timerange and variables. 
+
+## 特殊的图表
+
+对于某些特定的图表，例如 Trace， 需要额外的信息才能够恢复到分享时的状态。
+
 
 <img src="https://github.com/data-observe/assets/blob/main/tutorial/trace-panel-share.jpg?raw=true" />
 
 
-Look at the search panel in above image, it has lots of infos to be shared.
-
-In these cases, Datav will automatically add these infos to the share link, so you don't need to worry about it.
+观察上图中的搜索面板，它包含了不少信息，而这些信息都需要被分享出去。 尽管很复杂，但是大家不用担心， Datav 会自动帮我们处理好这一切。
 
 <img src="https://github.com/data-observe/assets/blob/main/tutorial/trace-share-modal.jpg?raw=true" style={{height: "300px"}} />
 
-
-In above image, we add some search conditions and use a variable named `service` in search, you can see how it works in the share link. 
+在上面图片中，添加了一些搜索条件，并且使用了 `service` 变量，你可以看到分享链接中的变化完全符合我们的预期。
