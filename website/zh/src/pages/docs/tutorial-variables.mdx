@@ -1,201 +1,205 @@
 ---
-title: Make dashboard more dynamic
+title: 用变量让仪表盘动起来
 description: 
 ---
 
 import TextList  from '@/components/docs/TextList'
 import Code  from '@/components/docs/Code'
 
-The dashboards we created before are static, which means values are statically written. 
+我们之前创造的仪表盘都是静态的，也就是说，仪表盘中的查询语句等内容都是写死的。
 
-A prometheus query <Code>{'go_gc_duration_seconds{job="node"}'}</Code> is a static query string, what if we want to query another job? We have to change the query string to 
- <Code>{'go_gc_duration_seconds{job="prometheus"}'}</Code> , that's not convenient for a lot of cases.
+比如，我们之前创建的查询语句是 <Code>{'go_gc_duration_seconds{job="node"}'}</Code> ，此时我们想查询另一个 job 的数据，就需要修改查询语句为 <Code>{'go_gc_duration_seconds{job="prometheus"}'}</Code> ，对于很多场景来说，都很不方便。
 
-So, it's time to introduce some features to make our dashboard dynamic. In this doc, we will make the dashboard more dynamic by adding variables.
+所以，我们需要引入一些特性，让我们的仪表盘变得动态起来。在这篇文档中，我们将通过添加变量来实现这一点。
 
 
-## Create a variable 
+## 创建变量
 
-There are two kinds of variables: dashboard variable and global variable. Let's start from dashboard variable first.
+变量有两种类型：仪表盘变量和全局变量。我们先从仪表盘变量开始。
 
-1. Visit `Hosts info` dashboard and open its settings modal, select `Variables` tab.
-2. Click `New Variable` button, you will see a modal like this:
+1. 访问 `Hosts info` 仪表盘，打开设置面板，选择 `变量` 选项卡。
+2. 点击 `新建变量` 按钮，你将看到如下的弹出框：
 
 <img src="https://github.com/data-observe/assets/blob/main/tutorial/dashboard-variable.jpg?raw=true" style={{height: "400px"}} />
 
-wow, it seems complex, but don't worry, let's start from a simple one :)
+看起来还挺复杂的，不过别担心，让我们从简单的开始 :)
 
-In this secion, our target is to make `job` dynamic, as it has two values: `node` and `prometheus`, we need to create a variable also has these two values.
+下面，我们的目标是让查询语句中的 `job` 动态起来，因为它有两个值：`node` 和 `prometheus`，我们需要创建一个变量也有这两个值。
 
-3. Fill the form like this: 
+3. 填写表格如下: 
 
 <img src="https://github.com/data-observe/assets/blob/main/tutorial/edit-job-variable.jpg?raw=true" style={{height: "400px"}} />
 
-Look at he `Variable Values` field, this is the result that our variable query returns, so if you see values listing here, it means our variable is probably created successfully(maybe wrong values).
+请观查下 `Variable Values` 字段，这是我们的变量查询返回的结果，如果你看到了值列表，那么说明我们的变量创建成功了。
 
-The `job` variable we are creating is a `Custom` type variable, its values comes from our input string, each value is separated by a comma, e.g `1,2,3` means we have three values: `1`, `2`, `3`.
+请注意，我们创建的变量是 `Custom` 类型的，它的值来自于我们输入的字符串，每个值都是用逗号分隔的，比如 `1,2,3` 表示我们有三个值：`1`、`2`、`3`。
 
-4. Click `Submit` button, you will see a new variable named `job` in the `Variables` tab
+4. 点击 `提交` 按钮，你将在 `变量` 选项卡中看到一个名为 `job` 的变量
 
+ 
+> 别忘记存储仪表盘：对仪表盘所做的几乎任何改变，都不会自动保存！
 
-> Don't forget to save dashboard ! Everthing you changed in the dashboard will not be saved.
-
-
-Now close the setting modal, you will see a new dropdown list appears in the top left corner of the dashboard, it's our `job` variable.
+现在关闭设置面板，你将看到仪表盘左上角出现了一个下拉列表，它就是我们刚刚创建的 `job` 变量。
 
 <img src="https://github.com/data-observe/assets/blob/main/tutorial/job-variable.jpg?raw=true" style={{height: "100px"}} />
 
 
-## Use variable 
+## 使用变量
 
-In this section, we will use the variable we created in previous section.
+在这一节中，我们将使用上一节中创建的变量。
 
-### Use variable in query
-Now open the editor of panel `go gc info`, change the query string to `go_gc_duration_seconds{job="${job}"}`, then click `Apply` button.
+### 在查询语句中使用变量
 
-Because `job` variable is automatically set to `node`, so our `go gc info` panel will show the data of `node` job, the same as <Code>{'go_gc_duration_seconds{job="node"}'}</Code>.
+现在打开 `go gc info` 图表的编辑面板，在左下方将查询语句修改为 `go_gc_duration_seconds{job="${job}"}`，然后点击应用按钮，回到仪表盘页面。
+
+可以看到，我们的图表已经在展示 `job="node"` 的数据 ：
 
 <img src="https://github.com/data-observe/assets/blob/main/tutorial/chart-with-job-var.jpg?raw=true" style={{height: "300px"}} />
 
-Try to change the value of `job` variable to `prometheus`, and see what will happen to the chart data.
+尝试将 `job` 变量的值更改为 `prometheus`， 然后看看会怎样变化。
 
 
 
-### Variable format
+### 变量格式
 
-`${job}` in the query string is a variable format, it will be replaced by the value of variable `job` when the query is executed. You can use as many as variables in the query string, e.g <Code>{'go_gc_duration_seconds{job="${job}", instance="${instance}"}'}</Code>.
+你可能已经注意到查询语句中的 `${job}`，它是我们使用一个变量的标准格式，在语句执行之前，Datav 会将语句中的变量格式替换为变量当前选择的值。
 
-### Use variable in panel title 
+你可以在一条语句中使用多个变量，例如: <Code>{'go_gc_duration_seconds{job="${job}", instance="${instance}"}'}</Code>.
 
-Variable can be used in many places, usually there will be a `Support variables` tips in the input box. 
+### 在图表标题中使用变量
 
-Because our panel is dependent on variable `job`, so we can add it to panel title so that we can know which job we are currently viewing.
+变量不仅可以在查询语句中使用，还可以在很多其他地方使用： 可以使用变量的地方通常在输入框中会有一个 `Support variables` 的提示。
 
-Modify the panel title to `go gc info - ${job}`:
+由于我们的图表在查询语句中依赖于变量 `job` ，可以将它添加到图表标题中，这样我们就可以知道当前正在查看哪个 job 的数据。
+
+将图表标题修改为 `go gc info - ${job}`:
 
 <img src="https://github.com/data-observe/assets/blob/main/tutorial/variable-in-panel-title.jpg?raw=true" style={{height: "100px"}} />
 
 
 
-### Multi value and All 
+### 值的多选和全选
 
-What if we want show use multiple variable values in query? Maybe you can create multiple variables, but it's not a good idea. 
+在之前，`job` 变量只能选择一个值，如果我们想要在查询中使用多个变量值呢？也许你可以创建多个变量，但这并不是一个好主意。
 
-The better way is to enalbe `Multi Value` or `Include all` options for variable, thus we can select multiple values from variable dropdown list.
+更好的方式是为变量启用 `支持多选` 或 `支持全选` 选项，这样我们就可以从变量下拉列表中选择多个值。
 
-Modify `job` variable as below: 
+修改 `job` 变量如下:
+
 
 <img src="https://github.com/data-observe/assets/blob/main/tutorial/job-var-enable-multi.jpg?raw=true" style={{height: "300px"}} />
 
-Back to dashboard page, you will see the `job` variable dropdown switches to multiple selection mode, and there is a new option `__all__` in the dropdown.
+回到仪表盘页面，你将看到 `job` 变量的下拉列表变成了多选模式，并且有一个新的选项 `__all__`。
 
-Try to select all or select both `node` and `prometheus`, you will see....nothing?
+尝试选择所有或者选择 `node` 和 `prometheus`，你会看到....什么都没有？
 
-Yep, you will see nothing in the chart, because the query string is <Code>{'go_gc_duration_seconds{job="${job}"}'}</Code>, it's not a valid query string when `job` variable has multiple values.
+没错，你将在图表中看到空白，因为查询语句是 <Code>{'go_gc_duration_seconds{job="${job}"}'}</Code>，当 `job` 变量有多个值时，这不是一个有效的查询语句。
 
-According to the [Prometheus document](https://prometheus.io/docs/prometheus/latest/querying/basics/#instant-vector-selectors), we should  modify our query string to `go_gc_duration_seconds{job=~"${job}"}`.
+根据 [Prometheus 文档](https://prometheus.io/docs/prometheus/latest/querying/basics/#instant-vector-selectors) ，我们应该将查询语句修改为 `go_gc_duration_seconds{job=~"${job}"}`。
 
-Modify the query string to see the result as below image: 
+修改查询语句后，你将看到如下的图表：
 
 <img src="https://github.com/data-observe/assets/blob/main/tutorial/query-support-multi-var.jpg?raw=true" />
 
 
-## Query from datasource
+## 从数据源查询变量值
 
-In previous section, we are using variable query from a manually inputing string, what if we want to get some values from external services, like Prometheus datasource?
+在之前的章节中，我们都是手动输入变量值的，如果我们想从外部服务中获取一些值，比如 Prometheus 数据源，该怎么办呢？
 
-Let's create a new variable named `instance` to query all instance names from Prometheus.
+让我们创建一个名为 `instance` 的变量，它代表了主机列表，下面我们来从 Prometheus 查询所有的主机名。
 
-1. Open the settings modal of `Hosts info` dashboard, select `Variables` tab, click `New Variable` button.
-2. Fill the form like this:
+1. 打开 `Hosts info` 仪表盘的设置面板，选择 `变量` 选项卡，点击 `新建变量` 按钮。
+2. 填写表格如下:
+
 
 <img src="https://github.com/data-observe/assets/blob/main/tutorial/edit-instance-var.jpg?raw=true" style={{height: "500px"}} />
 
-We do several things here:
+这里我们做了几件事情：
 
-1. Set `Query Type` field to `Query`, it means query from configured datasources.
-2. Select datasource `Prometheus` 
-3. Set `Use current time` to `On`, it means the query will be executed within the current time range being selected, otherwise if you set it to `Off`,  the query will bring no timerange, maybe you will get values from months even years ago.
-4. Because we want get the values of label `instance` , so select `Label values` for `Query type` field.
-5. If `Metric` field is left empty, the query will return all values of all metrics for `instance` label. Therefore we can specify a metric name here, such as <Code>go_gc_duration_seconds</Code>. However, for demonstration purpose, we will leave this field empty.
-6. Set `Label`field to `instance`
-
-
-Now let's modify the query string of `go gc info` panel to <Code>{'go_gc_duration_seconds{job=~"$\{job\}", instance=~"${instance}"}`'}</Code>, and see what will happen.
-
-> Try to change `job` variable from using Custom query to datasource query
+1. 将 `查询类型` 字段设置为 `Query`，它表示从配置的数据源中查询。
+2. 选择数据源 `Prometheus`
+3. 将 `使用当前时间` 字段设置为启用，它表示查询将在当前选择的时间范围内执行，否则如果设置为 `Off`，查询将不会带上时间范围，你可能会得到几个月甚至几年前的值，查询效率可能会降低。
+4. 因为我们想要获取 `instance` 标签的值，所以将 `查询类型` 字段设置为 `Label values`。
+5. 如果 `Metric` 字段留空，查询将返回 `instance` 标签在所有语句中的所有值。因此我们可以在这里指定一个指标名称，比如 <Code>go_gc_duration_seconds</Code>。不过，为了演示的目的，我们将保留此字段为空。
+6. 将 `Label` 字段设置为 `instance`
 
 
-## Make datasource dynamic 
+现在，我们将 `go gc info` 图表的查询语句修改为  <Code>{'go_gc_duration_seconds{job=~"$\{job\}", instance=~"${instance}"}`'}</Code>, 然后看看会如何变化。
 
-Currently, we select datasource directly in panel editor, what if we have multiple datasources in different data center and we want to select datasource dynamically?
+> 试着将 `job` 变量也修改为从 Promethues 中查询，而不是使用 Custom 字符串
 
-Before we start, let's create a new datasource named `prometheus1` first:
+
+## 让数据源动态起来
+
+目前，我们是在图表编辑器中直接选择某个需要的数据源，如果在不同的数据中心中有多个数据源，并且想动态选择数据源该怎么办？
+
+在开始之前，我们再来创建一个新的数据源 `prometheus2`: 
 
 <img src="https://github.com/data-observe/assets/blob/main/tutorial/prometheus1-ds.jpg?raw=true" />
 
-Then visit `Hosts info` dashboard, and open its variable editor, create a new variable named `datasource`:
+接着访问 `Hosts info` 仪表盘，打开设置面板，选择 `变量` 选项卡，创建一个名为 `datasource` 的变量:
 
 <img src="https://github.com/data-observe/assets/blob/main/tutorial/edit-ds-variable.jpg?raw=true" style={{height: "500px"}}/>
 
-There are several things we need to pay attention to:
+这里有几点值得注意：
 
 <TextList>
-    <li>`Multi and All` options all only supported by some places, datasource selection is not one of those, so we need to set theme to `off`</li>
-    <li>Set `Query type` to `Datasource`</li>
-    <li>Use `Regex filter` to filter out `TestData` datasource, because we don't want to select it</li>
+    <li>多选和全选只在部分场景可以使用，数据源选择显然不是这种场景，否则逻辑将非常复杂，因此请关闭这两个选项</li>
+    <li>将 `查询类型` 设置为 `数据源`</li>
+    <li>使用正则表达式过滤掉 `TestData` 数据源，毕竟我们玩的就是真实</li>
 </TextList>
 
+创建该变量很简单，现在让我们在图表中使用它。
 
-This varialbe is easy to created, now let's use it in panel edtitor.
-
-Open panel editor of `go gc info` panel, and find the `Datasource` dropdown in `Query` tab: 
+打开 `go gc info` 图表的编辑面板，在左下方 `查询` 选项卡中找到选择数据源的地方:
 
 <img src="https://github.com/data-observe/assets/blob/main/tutorial/use-ds-variable.jpg?raw=true" style={{height: "300px"}}/>
 
-Don't select any datasource here, we need to input <Code>{'${datasource}'}</Code>  to use our `datasource` variable.
+不要选择任何数据源，因为我们要使用变量，因此直接输入变量的引用格式 <Code>{'${datasource}'}</Code> 即可。
 
 <img src="https://github.com/data-observe/assets/blob/main/tutorial/input-datasource-var.jpg?raw=true" style={{height: "200px"}}/>
 
-Press `Enter` key to confirm, then input <Code>{'go_gc_duration_seconds{job=~"${job}", instance=~"${instance}"}'}</Code> as query string.
+输入完后按回车确认，然后输入 <Code>{'go_gc_duration_seconds{job=~"${job}", instance=~"${instance}"}'}</Code> 作为查询语句。
 
-> Change datasource will cause the previous query to be cleared, so you'd better copy it first before changing  datasource.
+> 注意：更改数据源将导致之前的查询被清除，因此在更改数据源之前最好先复制查询语句。
 
-Apply the changes and go back to dashboard page, change the value of `datasource` variable, you will see the chart data.. not changes, because we use the same datasource indeed.
+ 应用修改并回到仪表盘页面，重新选择 `datasource` 变量的值，你将看到图表数据发生了... 无变化，因为 `prometheus` 和 `prometheus1` 完全是一个数据源，只是名称不一样。
 
+**给大家留一个小练习： 尝试添加回 `TestData` 数据源，然后在 `datasource` 变量的值之间切换，你将看到图表数据发生了变化。**
 
-**Here is an excercise for our readers**: try to add back `TestData` datasource, and change the value of `datasource` variable between `prometheus` and `TestData`, you will see the chart data changes.
+## 在查询变量时使用变量 
 
-## Use variable in querying variable 
+俄罗斯有套娃，我们有套变量： 在查询变量的语句中，你还可以使用其它的变量，这样可以实现变量依赖的关系，例如当你选择一个应用列表的变量 `application` 时，依赖它的 `host` 变量也将随之变化，毕竟每个应用都有自己独有的主机列表。
 
-When querying a variable, we can use another variable as input. 
-
-First, create a new variable named metrics :
+首先，来创建一个名为 `metrics` 的变量：
 
 <img src="https://github.com/data-observe/assets/blob/main/tutorial/metrics-variable.jpg?raw=true" style={{height: "500px"}}/>
 
-We query metrics from Prometheus datasource, and filter out metrics starts with `go_gc`.
+这里从 Prometheus 中查询所有的 metrics 列表，然后过滤出以 `go_gc` 开头的 metrics。
 
-### More dynamic panel query
+### 更加动感的查询语句
 
-Before using `metrics` variable in query another variable, we can update our panel query to use it to make our panel query more dynamic.
+在另外一个变量查询中使用 `metrics` 之前，我们先来让图表的查询语句更加动态一些。
 
-Open panel editor, input <Code>{'${metrics}{job=~"${job}", instance=~"${instance}"}'}</Code> in `Query` tab:
-
+打开图表编辑面板，输入查询语句 <Code>{'${metrics}{job=~"${job}", instance=~"${instance}"}'}</Code>:
 
 <img src="https://github.com/data-observe/assets/blob/main/tutorial/dynamic-query.jpg?raw=true"/>
 
-Click `Apply` button and go back to dashboard page, then select different `metrics` variable value to see what happens.
+点击应用按钮回到仪表盘页面，然后选择 `metrcs` 变量，看看图表会怎么变化。
 
-It seems our dashbaord is much more powerful than before, great job !
+可以看出：现在的图表就连基本的语句都可以变化，而不仅仅是标签值！
 
-### use in variable query 
 
-Now, let's edit the `instance` variable created in previous section, rename it to `metrics name` and uses `metrics` variable as `Metric` field input:
+### 在查询变量中使用
+
+言归正传，我们现在重新编辑下之前创建的 `instance` 变量，并将其重命名为 `metrics name`, 然后在查询中使用 `metrics` 变量：
+
 
 <img src="https://github.com/data-observe/assets/blob/main/tutorial/rename-instance-var.jpg?raw=true" style={{height: "500px"}}/>
 
-You can see, in `Query -> Metric` field , rather than select a value from dropdown, we use the value from variable `metrics` as input. 
+可以看出，在 `查询 -> Metric` 字段中，相比之前使用的下拉框选择，现在使用的变量名 `${metrics}`明显动态的多。
 
-Try to change the value of `metrics` variable, and see how `metrics name` variable changes.
+尝试选择 `metrics` 变量的值，看看 `metrics name` 变量将如何变化。
+
+
 
