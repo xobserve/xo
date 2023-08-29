@@ -8,12 +8,13 @@ export let testimonials = [
   [
     {
       content: <>
-    <p>We build Datav not only for common users but also for developers.</p>
-    <p className='mt-[4px]'>Developers should feel very easy and intuitive to redevelop on Datav's codebase and we love how it can help developers solving their problems faster and better.</p>
+        <p>Data 不仅仅是面向普通用户，更重要的是面向广大开发者，我们希望能更好的帮助开发者快速定位、解决问题。</p>
+        <p className='mt-[4px]'>既然是开源，那代码应该足够干净、简洁，这样开发者才能随心所欲的打造他们想要的个性化功能。</p>
+        <p className='mt-[4px]'>毕竟 Life is short.</p>
       </>,
       url: 'http://im.dev',
       author: {
-        name: 'Sunface',
+        name: '孙飞 Sunface',
         role: 'Datav Creator',
         avatar: "https://camo.githubusercontent.com/6530409ed816fdc50a14bcb697837a0a51d9c1c124f75317a94ca90c31537dd9/68747470733a2f2f706963322e7a68696d672e636f6d2f76322d61613634393037383362303066623137333365386235326632663635373634375f786c6c2e6a7067",
       },

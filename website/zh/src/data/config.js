@@ -3,5 +3,5 @@ export const config = {
     "github_repo": "https://github.com/data-observe/datav",
     "community_addr": "https://github.com/data-observe/datav/discussions",
     "app_name": "Datav",
-    "slogan": "Most powerful data visulization platform for APM and Observability",
+    "slogan": "为 APM 和可观测性量身打造的现代化数据可视平台",
 }

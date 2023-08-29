@@ -1,3 +1,3 @@
-# Datav website
+# zh.datav.io
 
-Build with Tailwindcss.
+Website for Chinese developers.

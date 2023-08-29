@@ -60,7 +60,7 @@ function Header() {
                     <path d="m19 19-3.5-3.5" />
                     <circle cx="11" cy="11" r="6" />
                   </svg>
-                  <span className="flex-auto">Quick search...</span>
+                  <span className="flex-auto">搜索...</span>
                   {actionKey && (
                     <kbd className="font-sans font-semibold dark:text-slate-500">
                       <abbr
@@ -109,28 +109,28 @@ function Header() {
             {config.slogan}
           </h1>
           <p className="mt-10 text-2xl text-slate-600 text-center max-w-3xl mx-auto dark:text-slate-400">
-          You can visualize {' '}
+          定制基于 {' '}
             <code className="font-mono font-medium text-sky-500 dark:text-sky-400">metrics</code>,{' '}
             <code className="font-mono font-medium text-sky-500 dark:text-sky-400">traces</code>,{' '}
-            and {' '}
+            和 {' '}
             <code className="font-mono font-medium text-sky-500 dark:text-sky-400">
             logs
             </code>{' '}
-            from various datasource, and correlate them easily and deeply.
+            的图表，功能强大、可交互、UI设计美观，支持多种数据源，原生支持图表关联和下钻，甚至有老板喜欢的数据大屏.
           </p>
           <div className="mt-16 sm:mt-10 flex justify-center space-x-6 text-sm">
             <NextLink
               href="/docs/installation"
               className="bg-slate-900 hover:bg-slate-700 focus:outline-none focus:ring-2 focus:ring-slate-400 focus:ring-offset-2 focus:ring-offset-slate-50 text-white font-semibold h-12 px-6 rounded-lg w-full flex items-center justify-center sm:w-auto  dark:highlight-white/30 dark:hover:bg-sky-400"
             >
-              Get Started
+              开始使用
             </NextLink>
             <NextLink
               href={config.play_addr}
               className="bg-slate-900 hover:bg-slate-700 focus:outline-none focus:ring-2 focus:ring-slate-400 focus:ring-offset-2 focus:ring-offset-slate-50 text-white font-semibold h-12 px-6 rounded-lg w-full flex items-center justify-center sm:w-auto bg-[linear-gradient(0deg,#1786fb,#2cfefe)] dark:highlight-white/20 dark:hover:bg-sky-400"
               // style={{background: "linear-gradient(0deg,#1786fb,#2cfefe)!important"}}
             >
-              Play Online
+              在线 Demo
             </NextLink>
           </div>
           <div className="mt-6 lg:pt-20  flex items-center justify-center">

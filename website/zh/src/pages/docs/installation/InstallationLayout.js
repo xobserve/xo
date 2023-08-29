@@ -5,7 +5,7 @@ import Link from 'next/link'
 import { IconContainer } from '@/components/home/common'
 
 let tabs = {
-  'Local development': '/docs/installation',
+  '本地开发环境': '/docs/installation',
   // "Build for production": "/docs/installation/production",
 }
 
@@ -82,7 +82,7 @@ let readNext = [
   //   },
   // },
   {
-    title: 'Datav Tutorials',
+    title: 'Datav 入门教程',
     href: '/docs/tutorial',
     icon: {
       className: 'dark:bg-pink-500 dark:highlight-white/30',
@@ -91,7 +91,7 @@ let readNext = [
     },
     body: () => (
       <p>
-        Learn the tutorial and get familiar with Datav's core concepts and features.
+        学习如何使用 Datav, 在此过程中迅速熟悉 Datav 的核心概念和特性。
       </p>
     )
   },
@@ -105,24 +105,18 @@ export function InstallationLayout({ children }) {
       <header id="header" className="mb-10 md:flex md:items-start">
         <div className="flex-auto max-w-4xl">
           <p className="mb-4 text-sm leading-6 font-semibold text-sky-500 dark:text-sky-400">
-            First steps
+            安装启动
           </p>
           <h1 className="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight dark:text-slate-200">
-            Installation and Start datav
+            安装和启动 Datav
           </h1>
           <p className="mt-4 text-lg text-slate-700 dark:text-slate-400">
-             Unlike Grafana, datav's has a much simpler codebase, so its installation is also very simple, especially for Developers !
+            与 Grafana 不同，Datav 的代码非常简洁，依赖较少，因此它的开发环境配置非常简单，而且启动也很迅速。
           </p>
         </div>
       </header>
       <section className="mb-16 relative">
         <div className="relative z-10">
-          <h2
-            data-docsearch-ignore
-            className="text-slate-900 text-xl tracking-tight font-bold mb-3 dark:text-slate-200"
-          >
-            Installation
-          </h2>
           <div className="flex overflow-auto mb-6 -mx-4 sm:-mx-6">
             <div className="flex-none min-w-full px-4 sm:px-6">
               <ul className="border-b border-slate-200 space-x-6 flex whitespace-nowrap dark:border-slate-200/5 mb-px">
@@ -153,7 +147,7 @@ export function InstallationLayout({ children }) {
 
       <section className="relative">
         <h2 className="text-slate-900 text-xl tracking-tight font-bold mb-3 dark:text-slate-200">
-          What to read next
+          下一步做什么
         </h2>
    
         <ul className="mt-10 grid grid-cols-1 gap-x-16 gap-y-8 xl:grid-cols-2 xl:gap-y-10">

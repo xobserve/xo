@@ -126,7 +126,7 @@ export function NavItems() {
     <>
       <li>
         <Link href="/docs/installation" className="hover:text-sky-500 dark:hover:text-sky-400">
-          Docs
+          文档
         </Link>
       </li>
       {/* <li>
@@ -136,7 +136,7 @@ export function NavItems() {
       </li> */}
       <li>
         <Link href="http://play.datav.io" className="hover:text-sky-500 dark:hover:text-sky-400">
-          Demo
+          在线 Demo
         </Link>
       </li>
     </>
@@ -234,7 +234,7 @@ export function Header({ hasNav = false, navIsOpen, onNavToggle, title, section 
                       <path d="m19 19-3.5-3.5" />
                       <circle cx="11" cy="11" r="6" />
                     </svg>
-                    <span className="flex-auto">Quick search...</span>
+                    <span className="flex-auto">搜索...</span>
                     {actionKey && (
                       <kbd className="font-sans font-semibold dark:text-slate-500">
                         <abbr

@@ -7,16 +7,16 @@ const pages = createPageList(
 )
 
 export const documentationNav = {
-  'Getting Started': [
+  '开始使用': [
     {
-      title: 'First steps',
+      title: '安装启动',
       href: '/docs/installation',
       match: /^\/docs\/(installation|guides)/,
     },
 
     pages['compare-to-alter'],
   ],
-  Tutorials: [
+  '入门教程': [
     pages['tutorial-intro'],
     pages['tutorial-login'],
     pages['tutorial-home'],
@@ -32,7 +32,7 @@ export const documentationNav = {
     pages['tutorial-alert'],
     pages['tutorial-share'],
   ],
-  Administration: [
+  '管理配置': [
     pages['admin-mysql-sqlite'],
     pages['admin-role'],
     pages['admin-sidebar-nav'],
@@ -40,13 +40,13 @@ export const documentationNav = {
     // pages['admin-configuration']
   ],
   
-  Dashboard: [
+  '仪表盘 Dashboard': [
     pages['dashboard-setting'],
     pages['dashboard-styles'],
     pages['dashboard-import'],
     pages["dashboard-sort"]
   ],
-  Panel: [
+  '图表 Panel': [
     pages["panel-annotation"],
     pages["panel-conditional-rendering"],
     pages["panel-data-transform"],
@@ -55,17 +55,17 @@ export const documentationNav = {
     pages["panel-thresholds"],
     pages["panel-interactivity"]
   ],
-  Variable: [
+  '变量 Variable': [
     pages["variable-query"],
     pages["variable-jaeger"],
     pages["variable-loki"],
     pages["variable-http"],
   ],  
-  Alert: [
+  '告警': [
     pages["alert"],
     pages["alert-correlate"],
   ],
-  'Panel Plugins': [
+  '图表插件': [
     pages["plugin-overview"],
     pages["plugin-graph"],
     pages["plugin-table"],

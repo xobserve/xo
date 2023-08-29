@@ -1,93 +1,92 @@
 ---
-title: Comparison to alternatives
-description: Datav is not the only data visualization tool out there. This page compares Datav to other popular dashboarding tools, mainly to Grafana.
+title: Datav vs Grafana
+description: 在 Datav 之前已经有了不少数据可视化平台，一起来看看相比竞品，Datav 的优势有哪些。
 ---
 
 import TextList  from '@/components/docs/TextList'
 import Code  from '@/components/docs/Code'
 
+不得不说 Grafana 是一款开创性的伟大开源产品，它是全世界最流行的数据可视化平台。Datav 与 Grafana 相比，未必更全面更优秀，但是我们也有自己的**巨大优势**。
 
-## Datav vs Grafana
+## 主要功能
 
-Grafana is a great product, and it is the most popular dashboarding tool in the world. Apparently Datav is not as good as Grafana, but we have our own advantages.
+Datav 拥有 Grafana 有的几乎所有功能，虽然一些功能插件未必像 Grafana 那么强大，但是对于绝大多数场景已足够使用，而且我们还有通用的图表和数据源，可以满足所有场景的需求。
 
-### Main features
+## 更好的监控图表插件
 
-Datav has nearly all main features that Grafana has, maybe not as powerful as Grafana, but enough for most use cases.
-
-### Better panel plugins
-
-Some plugins in Datav are significantly better than Grafana, such as: 
+Datav 的一些插件会显著强于 Grafana ，例如: 
 
 <TextList>
-<li>[NodeGraph](/docs/plugin-nodegraph), for dependency graph display </li>
-<li> [Echarts](/docs/plugin-echarts), for general purporse chart</li>
-<li> [Trace](/docs/plugin-trace)</li>
-<li> [Logs](/docs/plugin-log)</li>
+<li>[NodeGraph](/docs/plugin-nodegraph), 用于依赖关系图展示 </li>
+<li> [Echarts](/docs/plugin-echarts), 通用的图表插件，可以创建几乎所有类型的图表</li>
+<li> [Trace](/docs/plugin-trace), 链路跟踪图表</li>
+<li> [Logs](/docs/plugin-log), 日志图表</li>
 </TextList>
-These panels are better than grafana doesn't mean Datav is better than Grafana, it is just because we are mainly for Observability and APM scenario, and these panels are the core of APM dashboards.
 
-### Easier to use and redevelop
+这些图表特别适用于可观测性和 APM 领域，这也是 Datav 与 Grafana 最大的不同之处， 我们的目标主要是 APM 和 Observability ，而不是通用( 当然，也很通用 )。
 
-Datav is much easier to use than Grafana, especially for developers. If you has dig into Grafana's codebase, you should know what I mean. In a word, Datav is much 
-easier to redevelop and customize.
+## 更易使用和二次开发
 
-### Better APM support
+Datav 比 Grafana 要更易用，特别是对于开发者，如果你深入研究过 Grafana 源码就能明白，总之由于 Datav 开发于2023年，同时得益于我们的设计取舍，它是一个更易于使用的优秀产品。
 
-Datav is much more powerful in Observability and APM fields. Besides the basic dashboarding features, you can 
+
+## 更好的 APM 支持
+
+Datav 在可观测性和 APM 领域非常强大，这并不是我们在自吹自擂，如果你深入使用并对比过，相信你也会认可这个说法。
 
 <TextList>
-<li> Provide various kinds of interactivity </li>
-<li> Custom dashboard styles to provide a beautiful large screen dispaly </li>
-<li> Teams can build their own sidemenu to provice better navigation features </li>
-<li> Global variables to provide global context: select in one place, effect everywhere, e.g applications, environments, etc. </li>
-<li> General HTTP datasource and Echarts panel, you can build everything you want with them </li>
-<li> Custom your own data processing logic with Javascript, transform your data to any format you want </li>
+<li> 提供多样化的可交互性 </li>
+<li> 可定制仪表盘的样式实现酷炫大屏 </li>
+<li> 支持自定义侧边菜单栏以实现强大的自定义导航菜单 </li>
+<li> 自定义全局变量，可以实现全局应用列表、服务器列表等全局性的下拉选框. </li>
+<li> 通用的 HTTP 数据源和 Echarts 图表，使用它们可以打造任何你想要的东东 </li>
+<li> 使用 JS 自定义数据处理逻辑 </li>
 </TextList>
 
-In a word, you can use Datav to build any kinds of APM UI! We provide you nearly all the tools you need. 
+总之，你可以使用 Datav 构建任何形式的 APM UI。至少，在功能上，我们提供了所有必须的，如果有缺失，可以提 issues :)
 
-As comparison, grafana is focusing on exploring data, which make it impossible to meet what APM and Observability really needs.
-
-
-### Beautiful UI (maybe)
-
-As datav is a new product, we have a chance to build a modern and beautiful UI from scratch. 
-
-You can customize dashboard and panel styles to build beautiful dashboard, even you build a large screen display with Datav, maybe your Boss will like it :)
+作为对比，grafana 的设计目标更通用，更偏向于数据探索，这使得它无法满足 APM 和 Observability 领域的进阶需求。
 
 
-### Different alert choice
+## 好看的 UI 设计
 
-Grafana has a powerful alerting system, you can define alerts, query alerts and display alerts, it's really awesome. 
- 
-But it is not easy to use, and it is not compatible with your existing alert system.
+由于 Datav 是 2023 年的新产品，因此我们使用了现代化的 UI 框架和设计。
 
-After careful consideration, Datav decides to focus on alerting display:
+并且，由于数据大屏这个特殊的需求，我们提供了仪表盘和图表的样式定制功能，可以实现非常酷炫的大屏效果。
 
+当然，也不是说 Grafana 不好看，主要是缺少了一些自定义功能。
+
+## 不同的告警选择
+
+Grafana 有一套强大的告警系统，你可以定义告警规则、查询和展示告警结果，真的很棒。不过，它并不容易使用，而且它也不兼容你现有的告警系统。
+
+在经过仔细权衡后，Datav 决定：监控配置还是应该交给 APM 去做，专业的事情交给专业的人做，而我们只需要专注于告警查询和展示即可。
+
+因此 Datav 支持：
 <TextList>
-<li> Query alerts from various datasources, including http request. </li>
-<li> Display alerts stats in a separate dashboard or a panel, it support many kinds of visualization. </li>
-<li> Various alerts interactivity, e.g clicking on an alert to dig deeper into other pages. </li>
-<li> Correlate alerts to a timeseries Graph panel, and display alerts as annotations in the graph. </li>
+<li> 从多种数据源查询告警，包括 HTTP API. </li>
+<li> 可以在独立的页面，也可以在一个图表中展示告警，我们支持多样化的展示形式. </li>
+<li> 自定义可交互性，实现类似告警 -> 图表的下钻功能. </li>
+<li> 将告警关联到某个图表，并以图表标记的形式进行展示. </li>
 </TextList>
 
-So, configure alert rules in your existing alert system: e.g prometheus alert manager, then query and display your alerts in Datav, which is really powerful in alert display.
+总之，告警配置在监控系统中完成，例如 Prometheus 也提供了强大的告警配置，并且 Datav 对 Prometheus 提供了原生支持，最后在 Datav 中完成查询和展示。
 
 
-### Better License
+## 更好的开源协议
 
-Datav is using Apache License 2.0, which is more friendly to commercial use.
+Datav 使用了 Apache License 2.0 开源协议，这个协议对商业使用更加友好。
 
-We promise: we will never CHANGE LICENSE and CLOSE-SOURCE in the future, datav is and will be 100% open source forever !
+**我们保证：在未来永远不会更改开源协议，也不会闭源，Datav 永远是 100% 开源的！**
 
-### Which one to use 
 
-If you need general purpose data visualization, you can choose Grafana, sure, Datav is also a good choice.
+## 如何选择
 
-If you need APM and Observability, you can try Datav. By the way, https://play.datav.io is a APM demo for demonstration purpose.
+如果你需要通用的图表平台，并且需要从更多的数据源中查询数据，也不想使用 HTTP API， 那么你应该使用 Grafana，它目前支持大量的数据源，而 Datav 还在快速发展中。
 
-If you need redevelop, choose Datav, trust me, it's codebase is  much more easier to develop and collaborate with.
+如果你需要打造 APM 和可观测性，那么闭眼选择 Datav，在这个领域我们有强大的自信。 顺便说一句, https://play.datav.io 本身就是一个演示目的的 APM demo.
+
+如果你想要对源码进行二次开发，Datav 是不二的选择，相信我，它们的二次开发难易度完全是两个次元的。
 
 
  

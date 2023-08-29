@@ -5,14 +5,14 @@ import Link from 'next/link'
 
 let steps = [
   {
-    title: 'Build backend server',
+    title: '构建后端服务',
     body: () => (
       <>
         <p>
-          Server is written in Go, so you need to install <Link href="https://go.dev/dl/">Go environments</Link> first.
+           我们的后端服务器使用 Go 语言开发，因此你需要先安装 <Link href="https://go.dev/dl/">Go 语言</Link>的环境.
         </p>
         <p>
-          Then running command on the right in DatavRoot/backend dir.
+           然后在 `DatavRoot/backend` 目录下运行右边的命令.
         </p>
       </>
     ),
@@ -23,14 +23,14 @@ let steps = [
     },
   },
   {
-    title: 'Start server',
+    title: '启动服务端',
     body: () => (
       <>
         <p>
-          Still in DatavRoot/backend dir, executing the binary file compiled in the previous step.
+          在 `DatavRoot/backend` 目录下, 运行上一步编译出的二进制可执行文件 `datav`。
         </p>
         <p>
-          Finally, you can see the following output, which means that the server has started successfully.
+          你可以看到如右边的输出，这意味着我们的后端服务已经成功启动。
         </p>
       </>
     ),
@@ -42,10 +42,10 @@ INFO[08-22|13:40:25] Datav is listening on address            address=:10086`,
     },
   },
   {
-    title: 'Build frontend UI',
+    title: '构建前端 UI',
     body: () => (
       <p>
-        Open another terminal and go to DatavRoot/ui dir, then run the following command to install the dependencies.
+        打开一个新的终端窗口，进入 `DatavRoot/ui` 目录, 然后运行右边的命令来安装依赖。
       </p>
     ),
     code: {
@@ -56,8 +56,8 @@ yarn install`,
     },
   },
   {
-    title: 'Start frontend dev server',
-    body: () => <p>For local development purpose, there is no need to use Nginx, so we should start the ViteJS dev server.</p>,
+    title: '启动前端的 dev 服务器',
+    body: () => <p>由于我们是在开发环境使用，可以直接启动前端的 `ViteJS` dev server。</p>,
     code: {
       name: 'DataRoot/ui',
       lang: 'terminal',
@@ -76,16 +76,16 @@ export default function TailwindCli({ code }) {
       >
         <h3 className="sr-only">Installing Datav</h3>
         <p>
-          It's easy to use source code building and running Datav from scratch. You can download the latest release from <Link href="https://github.com/data-observe/datav/releases">Github</Link>.
+          从源码构建和运行 Datav 非常简单，首先下载 `release` 版本的源码 <Link href="https://github.com/data-observe/datav/releases">Github</Link>.
         </p>
       </div>
       <Steps level={4} steps={steps} code={code} />
       
       <div>
       <h2 className="text-slate-900 text-xl tracking-tight font-bold mb-3 dark:text-slate-200">
-          Try Datav in browser
+          打开浏览器来访问下试试
         </h2>
-        <p>It's really easy and fast, right? Now you can open Chrome or Safari browser and visit <Link href="http://localhost:5173">http://localhost:5173</Link> to explore Datav UI.</p>
+        <p>至此，安装已全部完成，是不是很简单？ 打开你的谷歌或 Safari 浏览器并访问 <Link href="http://localhost:5173">http://localhost:5173</Link> ，此时一个欢迎界面应该已呈现在你眼前。</p>
       </div>
       {/*
         <Cta
@@ -118,8 +118,6 @@ export function getStaticProps() {
 TailwindCli.layoutProps = {
   meta: {
     title: 'Installation',
-    description:
-      'The simplest and fastest way to get up and running with Tailwind CSS from scratch is with the Tailwind CLI tool.',
   },
   Layout: DocumentationLayout,
   allowOverflow: false,
