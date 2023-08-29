@@ -1,73 +1,75 @@
 ---
-title: User roles
+title: 角色和权限
 description:
 ---
 
 import TextList  from '@/components/docs/TextList'
 import Code  from '@/components/docs/Code'
 
-Every user in Datav is assinged a role. The role determines what the user can do. 
-
-There are currenly 3 roles in Datav: 
+Datav 中的每个用户都有自己的角色，而角色则决定了用户的权限。目前有三种角色：
 
 <TextList>
-    <li> Super admin </li>
-    <li> Admin </li>
-    <li> Viewer </li>
+    <li> 超级管理员 Super admin </li>
+    <li> 管理员 Admin </li>
+    <li> 使用者 Viewer </li>
 </TextList>
 
-## Super admin 
+## 超级管理员 Super admin 
 
-Among these roles, super admin is very special: only `admin` user is `Super admin` role, it's hard coded in Datav, 
-therefor you cant chagne the username and role of `admin` user.
+在这些角色中，超级管理员是最特别的： 只有 `admin` 用户是超级管理员，这是直接在代码中写死的。因此你无法修改 `admin` 用户的用户名和角色。
 
-`Super admin` has all the permissions in Datav, including manage `Admin` users and teams.
+超级管理员拥有全部的权限，包括管理 `Admin` 角色。
 
-## Team role 
+## 团队角色 
 
-`Admin` role can create teams, add users to that team and assign team roles to them.
+`Admin` 可以创建团队，也可以向团队中添加用户以及管理用户在团队中的角色。
 
-There are 2 team roles: 
+团队角色有两种
 <TextList>
-    <li> Admin: manage team user, dashboards and settings </li>
-    <li> Viewer: view team info, dashboards and use team sidebar </li>
+    <li>管理员 Admin: 管理团队的用户、仪表盘和设置 </li>
+    <li>使用者 Viewer: 可以查看团队信息、仪表盘，还能使用团队的导航栏 </li>
 </TextList>
 
-Here is an intresting thing: in fact, there are no user roles in Datav, only team roles. Let's see how it works.
+事实上， Datav 根本就没有传统意义上的用户角色，只有团队角色，只是为了方便管理，我们把 `global` 团队的用户和角色抽象出来，形成了 `Datav` 的用户和角色。
 
-## Datav and global team
+## global 团队
 
-For some reasons, user roles in Datav are just roles in `global` team.
+如上所述，`Datav` 中的用户和角色其实就是 `global` 团队的用户和角色。
 
 <img src="https://github.com/data-observe/assets/blob/main/admin/user-roles.jpg?raw=true" style={{height: '260px'}} />
 
-As you can see, this is the user configuration page, the roles of user are actually geting from `global` team.
+如上图所示，这是用户配置页面，用户的角色其实是从 `global` 团队中获取的。
 
-Let's check the global team :
+我们来看看 `global` 团队：
 
 <img src="https://github.com/data-observe/assets/blob/main/admin/global-roles.jpg?raw=true" style={{height: '260px'}} />
 
-They are almost the same, except that there is no `Super admin` in `global` team, because `Super admin` is only assigned to `admin` user, it is hard coded.
+可以看到，`global` 团队中的用户和角色和 `Datav` 中的用户和角色是一样的，只是没有 `Super admin`，因为 `Super admin` 是写死在代码中的。
 
-By the way, we even have not added `datav-admin` to `global` team, when we add this user and assigned `Admin` role to him, he is actually added to `global` team with the same role.
+另外有趣的是，我们甚至没有把 `datav-admin` 添加到 `global` 团队中: 当添加一个用户到 Datav 时，`global` team 会自动添加这个用户和相同的角色。
 
-In a word, **every user you add in Datav is actually added to `gloal` team, when you set role for a user, you are just set his role in `global` team, and vice versa**.
+总之，**在 Datav 中，用户其实是添加到 `global` 团队的，当你为一个用户设置角色时，你其实是在设置他在 `global` 团队中的角色，反之亦然**。
 
-## Admin role
+## 管理员角色
 
-Admin role can do many things in `Datav`, therefore we recommand you to manage `Datav` using `Admin` role user.
+`Admin` 角色可以在 `Datav` 中做很多事情，因此我们建议你使用 `Admin` 角色来管理 `Datav`。
 
-There is something you need to know about Admin role:
+关于 `Admin` 角色，有一些你需要知道的事情：
 
 <TextList>
-    <li> Admin( or global team admin) can manage a team, even he is not in that team </li>
-    <li> Admin can't manage another admin user, only Super admin can do so </li>
+    <li> Admin 可以管理任何团队，即使他不在这个团队中 </li>
+    <li> Admin 不能管理另一个 Admin 用户，只有 Super admin 可以这么做 </li>
 </TextList>
 
-## Who can edit a dashboard?
 
-Currently, only team admin (team that dashboard belongs to) can save a dashboard.
+## 谁可以编辑仪表盘?
 
-Viewer can only view and edit a dashboard, but they can not save it. 
+目前来说:
 
-Maybe we will introduce more roles in the future, such as `Edtidor` role, who can edit and save a dashboard, but can not manage team users and settings.
+<TextList>
+    <li> `global` 团队的管理员可以编辑任何仪表盘 </li>
+    <li> 团队管理员可以管理归属于他们的仪表盘 </li>
+    <li> 使用者只能查看和编辑仪表盘，但是不能保存。 </li>
+</TextList>
+
+也许我们会在未来引入更多的角色，比如 `编辑者` 角色，他可以编辑和保存仪表盘，但是不能管理团队用户和设置。
