@@ -1,64 +1,63 @@
 ---
-title: Add navigation to sidebar
+title: 自定义侧边导航栏
 description: 
 ---
 
-Find dashbaords by searching is really easy. As comparasion, add navigation is not that easy, but it's much more powerful.
+通过搜索的方式来查找仪表盘还是蛮容易的，作为对比，添加导航栏这个操作就没有那么容易了，但是它更加强大。
 
-If you look at the top section of sidebar, you will find there are much room left, the reason is that we can add our own navigation items to sidebar.
+如果你仔细观察侧边栏的顶部，你会发现有很多空间，这些空间是预留给我们自定义图标的地方。
 
-## Team 
+## 团队 Team
 
-Before we add our own navigation items, we need to know what is `Team` in Datav. 
+在我们添加自定义导航项之前，我们需要知道什么是 `Team`。
 
-Every dashboard belongs to a team. In default, dashboards we created are owned by `global` team, which is the default team.
+每个仪表盘都属于一个团队。默认情况下，我们创建的仪表板都属于 `global` 团队，这是默认团队。
 
 <img src="https://github.com/data-observe/assets/blob/main/tutorial/dashboard-team.jpg?raw=true" style={{height: "60px"}} />
 
-Each team can has its own sidebar, the default sidebar we use is belongs to `global` team. So if you does not specify a team when you do something, e.g create a dashboard, everything will default belongs to `global` team.
 
-For more information about team, please refer to [Team tutorial](/docs/tutorial-team). For now, you just need to know that we are operating everthing in `global` team.
+每个团队都有自己的侧边栏，我们当前使用的默认侧边栏属于 `global` 团队。因此，如果您在做某些事情时没有指定团队，例如创建仪表板，则所有内容都将默认属于 `global` 团队。
+
+有关团队的更多信息，请参阅 [这里](/docs/tutorial-team)。目前，你只需要知道我们正在 `global` 团队中操作所有内容。
 
 
-## Modify sidebar 
+## 编辑侧边栏
 
-As we are using sidebar which belongs to `global` team, we need to modify the sidebar in `global` team page.
+既然我们正在使用属于 `global` 团队的侧边栏，我们需要在 `global` 团队页面中修改侧边栏。
 
-1. Click `configuration` icon in the bottom section of sidebar, this will open the configuration panel, or you can just click the `Add new item` icon in top section of the sidebar, this icon will be 
- disappeared when we add our first navigation item.
+1. 点击侧边栏底部的 `配置` 图标，这将打开配置面板，或者你也可以直接点击侧边栏顶部的 `+` 图标，当我们添加第一个自定义导航项时，此图标将消失。
 
-2. In last step, if you choose to  click the `configuration` icon, then select `Team` tab, you should see below image
+2. 在上一步中，如果你选择点击 `配置` 图标，然后选择 `团队 Team` 选项卡，你应该看到下面的图片
 
 <img src="https://github.com/data-observe/assets/blob/main/tutorial/team-manage.jpg?raw=true" />
 
-3. Click `manage` button in `global` team row and select `Side Menu` tab
-
-4. Try to add menu items as below image 
+3. 点击 `global` 团队行的 `管理` 按钮，然后选择 `左侧菜单` 选项卡
+ 
+4. 像下图这样，添加新的菜单项:
 
 <img src="https://github.com/data-observe/assets/blob/main/tutorial/manage-sidebar.jpg?raw=true" />
 
-You may wonder how can we get the dashboard id, the simplest way is copy it from `search` panel: search the dashboard you want, hover on its card and click copy icon.
+你可能会想知道如何获取仪表盘的 id，最简单的方法是从 `搜索` 面板复制，搜索你想要的仪表盘，将鼠标悬停在其卡片上，然后点击复制图标。
 
 <img src="https://github.com/data-observe/assets/blob/main/tutorial/copy-dashboard-id.jpg?raw=true" style={{height: "200px"}}  />
 
-5. Click `Submit` button
+5. 点击 `提交` 按钮
 
-
-When doing this, current page will be automatically refreshed, and you will see the new navigation item: 
+完成后，当前页面将自动刷新，你将看到新的导航项:
 
 <img src="https://github.com/data-observe/assets/blob/main/tutorial/new-sidemenu-item.jpg?raw=true" style={{height: "200px"}}  />
 
 
-## Expand sidebar to width mode
+## 展开侧边栏 
 
-When you have more sidebar items, especially when they have secondary children items,  maybe expand the sidebar is a nice choice, as the user can clearly see what is in the sidebar,rather then hover on a icon to see it .
+当你有更多的侧边栏项时，特别是当它们有二级子项时，展开侧边栏可能是一个不错的选择，因为用户可以清楚地看到侧边栏中的内容，而不是悬停在图标上查看它。
 
-Click on the Datav logo in top of sidebar to see what will happens.
+点击侧边栏顶部的 Datav logo，看看会发生什么。
 
 
 <img src="https://github.com/data-observe/assets/blob/main/tutorial/expand-sidebar.jpg?raw=true" style={{width: "150px"}}  />
 
-That's cool, everything is clearly presented in our view, but.. how can we collapse it? 
+很酷，所有内容都清晰地呈现在我们的视野中，但是..我们如何折叠它呢？
 
-If looking carefully, you will find there is a `<` icon in the top right corner of sidebar when being expanded, click it will collapse the sidebar to mini mode.
+如果仔细查看，你会发现侧边栏右上角有一个 `<` 图标，点击它将折叠侧边栏到迷你模式。
 
