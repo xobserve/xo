@@ -1,53 +1,53 @@
 ---
-title: Graph for timeseries 
+title: 时间序列 Graph 
 description: 
 ---
 
 import TextList  from '@/components/docs/TextList'
 import Code  from '@/components/docs/Code'
 
-For timeseries data, the most used panel is `Graph` visualization.
+对于时间序列数据而言，最强大的就是 `Graph` 图表类型。
 
-Its x-axis is always time, and y-axis is the value of the metric, because of this, the `Graph` panel is the born for [timeseries data](/docs/panel-data-transform).
+它的 x 轴永远是时间，y 轴是指标的值，因此 `Graph` 图表是时间序列数据的天生伴侣。
 
 
 <img src="https://github.com/data-observe/assets/blob/main/plugin/graph.jpg?raw=true" style={{height: '300px'}}/>
 
-Next, let's see how to configure some of the options.
+下面一起来看看它的一些配，由于篇幅原因，这里只讲解较难理解的配置，其它的建议大家自行尝试。
 
-## Connect null values 
+## 连接空值 Connect null values 
 
-When query data from datasource, if there is no data in some time points, the panel will show a gap in the graph.
+当从数据源查询数据时，如果某些时间点没有数据，那么图表中就会出现无数据的部分：
 
 <img src="https://github.com/data-observe/assets/blob/main/plugin/null-data.jpg?raw=true" style={{height: '300px'}}/>
 
-There many gaps in this graph, if hover on one of them, you should see a tootip with no value as the above image.
+上图中，有大量的无数据部分，如果你将鼠标悬停在其中的一个空值上，你会发现它的 tooltip 中没有任何数据。
 
-If we checked the `Connect null values` option in `Graph styles` section, the panel will connect the null values with the adjacent values.
+如果勾选了 `Connect null values` 选项，那么图表中的空值部分就会被连接起来：
 
 <img src="https://github.com/data-observe/assets/blob/main/plugin/connect-null.jpg?raw=true" style={{height: '300px'}}/>
 
 
 ## Value -> Units
 
-Refer to [Create user stats dashboard](/docs/tutorial-dashboard#add-units) for more info.
+阅读[这里](/docs/tutorial-dashboard#add-units)获取更多信息。
 
-## Interaction 
+## 交互 
 
-[Panel interactivity](/docs/panel-interactivity)
+[图表的可交互性](/docs/panel-interactivity)
 
-## Thresholds 
+## 阈值 Thresholds 
 
-[Panel Thresholds](/docs/panel-thresholds)
+[图表 Thresholds](/docs/panel-thresholds)
 
-## Alert correlation
+## 告警关联
 
-[Correlate alerts to Graph](/docs/tutorial-alert#correlate-alerts-to-graph-panel)
+[将告警关联到 Graph 图表](/docs/tutorial-alert#correlate-alerts-to-graph-panel)
 
-## Styles 
+## 样式 
 
-[Panel styles](/docs/panel-styles)
+[图表样式](/docs/panel-styles)
 
-## Overrides 
+## 覆盖 
 
-[Panel Overrides](/docs/panel-overrides)
+[图表覆盖](/docs/panel-overrides)
