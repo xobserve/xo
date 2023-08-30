@@ -18,7 +18,7 @@ const Empty = () => {
   return (
     <VStack spacing="16" py="16">
     <Text fontSize="1.2rem">Moommm..It seems there are nothing here ..</Text>
-    <Image src="/public/empty.svg" height="260px" />
+    <Image src="/empty.svg" height="260px" />
   </VStack>
   )
 } 

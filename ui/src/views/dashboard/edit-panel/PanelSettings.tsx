@@ -97,7 +97,7 @@ const PanelSettings = memo(({ panel, onChange }: PanelEditorProps) => {
                             return <VisulizationItem
                                 selected={panel.type == PanelType[key]}
                                 title={upperFirst(PanelType[key])}
-                                imageUrl={`/public/plugins/panel/${PanelType[key].toLowerCase()}.svg`}
+                                imageUrl={`/plugins/panel/${PanelType[key].toLowerCase()}.svg`}
                                 onClick={() => onChangeVisualization(PanelType[key])}
                             />
                         })

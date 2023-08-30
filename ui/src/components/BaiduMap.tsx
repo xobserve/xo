@@ -25,13 +25,13 @@ export function loadBMap(ak) {
             resolve(BMap)
         }
         // let link = document.createElement("link")
-        // link.href = "/public/scripts/mapbox-gl.css"
+        // link.href = "/scripts/mapbox-gl.css"
         // link.rel = "stylesheet"
         // document.head.appendChild(link)
 
         // let script0 = document.createElement('script')
         // script0.type = 'text/javascript'
-        // script0.src = '/public/scripts/mapbox-gl.js'
+        // script0.src = '/scripts/mapbox-gl.js'
         // script0.onerror = reject
         // document.head.appendChild(script0)
 

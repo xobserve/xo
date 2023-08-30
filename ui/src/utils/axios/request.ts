@@ -97,15 +97,15 @@ requestApi.interceptors.response.use(
         // session expires
         toast({
           title: 'Session expires',
-          description: 'Login redirecting...',
+          // description: 'Login redirecting...',
           status: "error",
           duration: 3000,
           isClosable: true,
         })
-        setTimeout(() => {
-          storage.set("current-page", location.pathname)
-          location.href = '/login'
-        }, 2000)
+        // setTimeout(() => {
+        //   storage.set("current-page", location.pathname)
+        //   location.href = '/login'
+        // }, 2000)
       } else {
         // normal backend error
         const id = message

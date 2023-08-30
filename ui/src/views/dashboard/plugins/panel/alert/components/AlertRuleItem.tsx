@@ -148,7 +148,7 @@ const AlertRuleItem = memo((props: Props) => {
                                 <Box>
                                     <Text>Datasource</Text>
                                     <HStack alignItems="end">
-                                        <Image width="20px" height="20px" src={`/public/plugins/datasource/${rule.fromDs}.svg`} />
+                                        <Image width="20px" height="20px" src={`/plugins/datasource/${rule.fromDs}.svg`} />
                                         <Text mt="2" textStyle="annotation">{rule.fromDs}</Text>
                                     </HStack>
                                 </Box>
@@ -213,7 +213,7 @@ const AlertRuleItem = memo((props: Props) => {
                         <HStack alignItems="top">
                             <Text width="100px">Datasource</Text>
                             <HStack alignItems="end">
-                                <Image width="15px" height="15px" src={`/public/plugins/datasource/${rule.fromDs}.svg`} />
+                                <Image width="15px" height="15px" src={`/plugins/datasource/${rule.fromDs}.svg`} />
                                 <Text textStyle="annotation">{rule.fromDs}</Text>
                             </HStack>
                         </HStack>

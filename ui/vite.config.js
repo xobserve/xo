@@ -17,8 +17,8 @@ export default ({ mode }) => {
             viteTsconfigPaths(),
             svgrPlugin()
         ],
-        base: './',
-        publicDir: '/public',
+        base: '/',
+        publicDir: './public',
         build: {
             outDir: 'build',
             assetsDir: 'static',

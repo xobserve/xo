@@ -1,3 +1,5 @@
+deploy.sh
+
 # local changelog cache (lerna-changelog)
 .changelog/
 

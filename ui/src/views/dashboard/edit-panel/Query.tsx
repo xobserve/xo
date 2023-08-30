@@ -91,7 +91,7 @@ const EditPanelQuery = (props: Props) => {
         <Box className="bordered" p="2" borderRadius="0" height="100%">
             <Flex justifyContent="space-between" alignItems="start">
                 <HStack>
-                    <Image width="30px" height="30px" src={`/public/plugins/datasource/${currentDatasource?.type}.svg`} />
+                    <Image width="30px" height="30px" src={`/plugins/datasource/${currentDatasource?.type}.svg`} />
                     <Box width="200px"><DatasourceSelect value={panel.datasource.id} onChange={selectDatasource}  variant="unstyled" /></Box>
                     {!isNumber(panel.datasource.id) && <Text textStyle="annotation">current: {currentDatasource?.name}</Text>}
                 </HStack>

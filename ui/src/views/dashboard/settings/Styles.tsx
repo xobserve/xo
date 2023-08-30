@@ -32,17 +32,17 @@ interface Props {
 const bgOptions = [
     {
         label: "Universe",
-        value: "/public/dashboard/universe.png",
+        value: "/dashboard/universe.png",
         colorMode: "dark",
     },
     {
         label: "Rainbow",
-        value: "/public/dashboard/rainbow.jpg",
+        value: "/dashboard/rainbow.jpg",
         colorMode: "light",
     },
     {
         label: "Dark Rainbow",
-        value: "/public/dashboard/dark-rainbow.png",
+        value: "/dashboard/dark-rainbow.png",
         colorMode: "dark",
     }
 ]
@@ -55,7 +55,7 @@ const StyleSettings = ({ dashboard, onChange }: Props) => {
         }
     }} spacing={1}>
         <FormItem size="md" title={t1.background} desc={t1.backgroundTips} labelWidth="100%">
-            {/* url(/public/dashboard-bg.png) */}
+            {/* url(/dashboard-bg.png) */}
             <InputSelect
                 width="500px"
                 size="md"

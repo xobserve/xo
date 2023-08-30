@@ -467,7 +467,7 @@
     "settings": "Echarts 设置",
     "allowEmptyData": "允许传入空数据",
     "allowEmptyDataTips": "当你不使用数据源提供的数据，而是在 setOptions 函数中模拟生成数据时，你需要开启此选项；否则请关闭它",
-    "setOption": "设置 echarts 的 options",
+    "setOption": "设置 Echarts options",
     "setOptionTips": "从数据源中获取的数据将直接传给该函数，此函数处理完成后返回的 options 也将直接传给 echart 实例进行渲染",
     "liveEdit": "实时编辑( 从 {name} 数据源加载数据 )",
     "regEvents": "注册事件函数",
