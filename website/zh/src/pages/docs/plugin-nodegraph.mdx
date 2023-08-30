@@ -1,5 +1,5 @@
 ---
-title: Dependency graph
+title: NodeGraph
 description: 
 ---
 
@@ -12,35 +12,36 @@ import Code  from '@/components/docs/Code'
 
 
 
-## Filter
+## 节点过滤
 
-There is a toolbox in the top left corner of `NodeGraph`, the most one is the fitler tool. You can use it to filter the nodes and edges you want.
+在 `NodeGraph` 图表的左上角有一个工具栏，其中最有用的就是过滤工具，你可以使用它来过滤你想要的节点和边。
+
 
 
 <img src="https://github.com/data-observe/assets/blob/main/plugin/filter-nodes.jpg?raw=true" />
 
-In above image, we set a filter rule to match `node-1` and `node-2` nodes.
+在上图中，我们设置了一个过滤规则，来匹配 `node-1` 和 `node-2` 节点。
 
-If you want see the relation nodes of them, check `Show realtion`:
-
+如果你想看到它们的关系节点，勾选 `Show realtion` 即可：
 
 <img src="https://github.com/data-observe/assets/blob/main/plugin/filter-relation.jpg?raw=true" />
 
 
-### Enable/disalbe 
+### 启用/禁用
 
-The filter rules you set is automatically store in browser local storage, if you don't need them, you can remove or just disable them:
+我们创建的过滤规则会自动保存在浏览器的本地存储中，如果你不需要它们，可以删除或者禁用它们：
+
 
 <img src="https://github.com/data-observe/assets/blob/main/plugin/enable-filter.jpg?raw=true" />
 
-You can see that when we disalbed the rule by clicking the `eye icon`, all the nodes and edges are shown now.
+你可以看到，当我们点击 `眼睛图标` 禁用规则后，所有的节点和边都显示出来了。
 
 
-## Donut colors
+## 甜甜圈颜色(Donut Color)
 
-Nodes in `NodeGraph` panel are all render in <Code>Donut</Code> shapes, you can define own colors for them.
+`NodeGraph` 中的节点全部用甜甜圈形状来渲染，你可以为它们定义自己的颜色。
 
-Let's assume your [node data format](/docs/panel-data-transform#nodegraph-format) is like this: 
+假设你的[节点数据格式](/docs/panel-data-transform#node-graph)如下所示：
 
 ```json
 "data": {
@@ -49,17 +50,17 @@ Let's assume your [node data format](/docs/panel-data-transform#nodegraph-format
 }
 ```
 
-Then you can set donut colors as below: 
+那么你可以这样设置甜甜圈颜色：
 
 <img src="https://github.com/data-observe/assets/blob/main/plugin/donut-setting.jpg?raw=true" style={{height: '300px'}}/>
 
-And the result is:
+结果如下：
 
 <img src="https://github.com/data-observe/assets/blob/main/plugin/donut-color.jpg?raw=true" />
 
 
-## Table View
+## 表格形式呈现
 
-Sometimes, dependency data in table format is very useful, for how to change view between NodeGraph and Table panel, please refer to [Conditional rendering](/docs/panel-conditional-rendering).
+有时，表格形式的依赖关系数据非常有用，关于如何在 `NodeGraph` 和 `Table` 之间切换，请参考[条件渲染](/docs/panel-conditional-rendering)。
 
 
