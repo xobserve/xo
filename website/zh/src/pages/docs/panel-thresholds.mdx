@@ -1,42 +1,39 @@
 ---
-title: Thresholds
+title: 阈值 Threshold
 description: 
 ---
 
 import TextList  from '@/components/docs/TextList'
 import Code  from '@/components/docs/Code'
 
-We can add thresholds to our charts to provide a marked line or area. This can be useful to indicate a warning level.
+通过添加阈值，可以在图表中添加一条标记线或者标记区域，用来标记某个值的临界点，这在告警场景中非常有用。
 
-In this doc, we will continue using the panel created in last doc, and add a threshold to it: 
+本文将继续使用上一篇文档中创建的面板，为其添加阈值：
 
-**If load1 or load5 value is great than 2, then we will show a warning line to indicate the user that the load is too high if it is greater than 1.**
+**如果 load1 或者 load5 的值大于 2，那么我们就在图表中添加一条警告线，用来提示用户 load 过高。**
 
-## Add threshold to Graph panel 
+## 为 Graph 图表添加阈值
 
-Open panel editor of the panel we created in last doc, and find the `Thresholds` section in `Panel` tab.
+打开上一篇文档中创建的面板的编辑器，找到 `图表` 选项卡中的 `Thresholds` 部分。
 
 <img src="https://github.com/data-observe/assets/blob/main/panel/common-threshold.jpg?raw=true" style={{height: '350px'}}/>
 
-Fill in the `Thresholds` section as above, you can see there is a warning line add to the chart. That's easy and intuitive.
+在 `Thresholds` 部分填写如上内容， 你能看到图表中多了一条警告线，这样的方式非常直观。
 
-But there is a big problem, this threshold only works for `node_load5` series, if we want to add the same threshold to `node_load1` series, we have to find another way.
+但是这样的方式有一个很大的问题，这个阈值只对 `node_load5` 这个系列生效，如果我们想要对 `node_load1` 这个系列添加同样的阈值，就得另寻他法了。
 
-## Add threshold to `node_load1` series 
+## 为 `node_load1` 曲线添加 Threshold 
 
-To add threshold to `node_load1` series, we have to set a override rule.
-
-Add a override like below:
-
+相信大家已经能猜到，要给 `node_load1` 添加 threshold, 必须使用覆盖的方式: 
 
 <img src="https://github.com/data-observe/assets/blob/main/panel/override-threshold.jpg?raw=true" style={{height: '300px'}}/>
 
-## Final result 
+## 最终效果
 
-Let's have a look at what the final chart looks like:
+最终结果如下图所示，虽然两个曲线在各种不同的区域，但它们仍然有了各自的 threshold 标记:
 
 <img src="https://github.com/data-observe/assets/blob/main/panel/threshold-final.jpg?raw=true" style={{height: '300px'}}/>
 
 
-
+> 其它类型图表的阈值设置方式请参加各自的插件文档。
 
