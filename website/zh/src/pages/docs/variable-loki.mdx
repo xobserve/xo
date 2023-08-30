@@ -6,24 +6,26 @@ description:
 import TextList  from '@/components/docs/TextList'
 import Code  from '@/components/docs/Code'
 
-Loki is a great product developed by Grafana, it's like Prometheus but for logs. It's a great tool to have in your observability stack.
+Loki 是一款伟大的产品，它由 Grafana 开发，产品的设计跟 Prometheus 类似，但是 Loki 用于日志的存储和查询。它是你的可观察性堆栈中必不可少的工具。
 
-In this doc, let's see how to query variables from <Code>Loki</Code>.
+下面我们来看看该如何从 <Code>Loki</Code> 中查询变量。
 
 
-## Configture loki datasource 
+## 配置 Loki 数据源
 
-Create loki datasource is really easy: 
+创建 Loki 数据源非常简单：
 
 <img src="https://github.com/data-observe/assets/blob/main/variable/loki-datasource.jpg?raw=true" style={{height: "300px"}}/>
 
-## Query variables
+## 查询变量
 
-Query variables from loki is very similar to Prometheus. So you can refer to [Make dashboard more dynamic](/docs/tutorial-variables#query-from-datasource) for more details.
+由于 Loki 在接口设计上跟 Prometheus 非常相似，因此你可以参考 [从 Prometheus 查询变量](/docs/tutorial-variables#query-from-datasource).
 
-## Final result 
+## 最终效果
 
 <img src="https://github.com/data-observe/assets/blob/main/variable/loki-final1.jpg?raw=true" style={{height: "500px"}}/>
 
 
 <video controls autoPlay src="https://github.com/data-observe/assets/blob/main/variable/loki-final2.mov?raw=true" style={{height: "500px"}}/>
+
+呦呵，配上从 `Loki` 查询来的变量后，`Loki` 日志的展示果然变得轻而易举，甚至还能动态起来！
