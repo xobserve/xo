@@ -22,7 +22,7 @@ import { GraphLayout } from "../graph/GraphLayout";
 import LegendTable from "./components/Legend";
 import { findOverride, findRuleInOverride } from "utils/dashboard/panel";
 import { BarRules } from "./OverridesEditor";
-import { paletteColorNameToHex, palettes } from "utils/colors";
+import { paletteColorNameToHex, paletteMap, palettes } from "utils/colors";
 import { PanelInactiveKey } from "src/data/storage-keys";
 import storage from "utils/localStorage";
 import { cloneDeep } from "lodash";
@@ -61,47 +61,46 @@ const BarPanel = (props: BarPanelProps) => {
     const options = props.panel.plugins.bar
     const inactiveKey = PanelInactiveKey + props.dashboardId + '-' + props.panel.id
     const [inactiveSeries, setInactiveSeries] = useState(storage.get(inactiveKey) ?? [])
-    const {colorMode} = useColorMode()
-    
+    const { colorMode } = useColorMode()
+
     const data: SeriesData[] = useMemo(() => {
         const res = []
+        const colors = paletteMap[props.panel.styles.palette] ?? palettes
         props.data.forEach(d0 => {
             const d = cloneDeep(d0)
-            d.forEach((d1,i) => {
+            d.forEach((d1, i) => {
                 d1.rawName = d1.name
-                const override: OverrideItem = findOverride(props.panel, d1.rawName)  
-                const name = findRuleInOverride(override,BarRules.SeriesName )
+                const override: OverrideItem = findOverride(props.panel, d1.rawName)
+                const name = findRuleInOverride(override, BarRules.SeriesName)
                 if (name) {
                     d1.name = name
                 } else {
                     d1.name = d1.rawName
                 }
-                
-                if (panel.plugins.bar.styles.useDatavColors) {
-                    let color = findRuleInOverride(override, BarRules.SeriesColor)
-                    if (!color) {
-                        color = palettes[(colorMode == "light" ?  i+6 : i) % palettes.length]
-                    }
-                    d1.color = paletteColorNameToHex(color, colorMode)
+
+                let color = findRuleInOverride(override, BarRules.SeriesColor)
+                if (!color) {
+                    color = colors[ i % colors.length]
                 }
+                d1.color = paletteColorNameToHex(color, colorMode)
 
 
                 res.push(d1)
             })
         })
         return res
-    }, [props.data, colorMode, panel.overrides,panel.plugins.bar.styles.useDatavColors])
+    }, [props.data, colorMode, panel.overrides, panel.styles.palette])
 
     const onSeriesActive = useCallback((inacitve) => {
         setInactiveSeries(inacitve)
-    },[])
+    }, [])
 
     const chartData: BarSeries[] = useMemo(() => {
         const cdata = []
         for (const series of data) {
             if (inactiveSeries.includes(series.name)) {
                 continue
-             } 
+            }
 
             const barSeries: BarSeries = {
                 rawName: series.rawName,
@@ -135,17 +134,17 @@ const BarPanel = (props: BarPanelProps) => {
                     ?
                     null
                     :
-                    <LegendTable 
-                        placement={options.legend.placement} 
-                        width={options.legend.width} 
-                        props={props} 
-                        data={data} 
+                    <LegendTable
+                        placement={options.legend.placement}
+                        width={options.legend.width}
+                        props={props}
+                        data={data}
                         inactiveSeries={inactiveSeries}
-                        onSeriesActive={onSeriesActive}  />
+                        onSeriesActive={onSeriesActive} />
             }
-            >
+        >
             {(vizWidth: number, vizHeight: number) => {
-               return  <BarChart data={chartData} width={vizWidth} height={vizHeight} panel={panel}  />
+                return <BarChart data={chartData} width={vizWidth} height={vizHeight} panel={panel} />
             }}
 
 

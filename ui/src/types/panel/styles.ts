@@ -15,6 +15,7 @@
 // <Decoration6 style={{height: '20px',width:"100%",position:"absolute",top:"null",right:"null",left:"null"}} 
 // /></Box>
 export interface PanelStyles {
+    palette: string
     border?: string
     borderOnHover: boolean
     decoration: DecorationStyles

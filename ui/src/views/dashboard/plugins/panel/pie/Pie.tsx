@@ -21,7 +21,7 @@ import { SeriesData } from "types/seriesData";
 import { commonInteractionEvent, genDynamicFunction } from "utils/dashboard/dynamicCall";
 import { calcValueOnSeriesData, isSeriesData } from "utils/seriesData";
 import React from "react";
-import { paletteColorNameToHex } from "utils/colors";
+import { paletteColorNameToHex, paletteMap, palettes } from "utils/colors";
 import { ValueCalculationType } from "types/value";
 import { getThreshold } from "components/Threshold/utils";
 import { ThresholdsMode } from "types/threshold";
@@ -64,26 +64,34 @@ const PiePanel = (props: Props) => {
 
         const data: PiePluginData = []
         const color = []
-        for (const s of props.data) {
-            for (const series of s) {
-                const v = calcValueOnSeriesData(series, props.panel.plugins.pie.value.calc)
-                data.push({
-                    name: series.name,
-                    value: v,
-                })
+        const colors = paletteMap[props.panel.styles.palette] ?? palettes
+        const d = props.data.flat()
+        d.forEach((series,i) => {
+            const v = calcValueOnSeriesData(series, props.panel.plugins.pie.value.calc)
+            data.push({
+                name: series.name,
+                value: v,
+            })
 
-                if (panel.plugins.pie.enableThresholds) {
-                    let max = 0
-                    if (panel.plugins.pie.thresholds.mode == ThresholdsMode.Percentage) {
-                        max = calcValueOnSeriesData(series, ValueCalculationType.Max)
-                    }
-                    const threshold = getThreshold(v, panel.plugins.pie.thresholds, max)
-                    if (threshold) {
-                        color.push(paletteColorNameToHex(threshold.color))
-                    }
+            let c
+            if (panel.plugins.pie.enableThresholds) {
+                let max = 0
+                if (panel.plugins.pie.thresholds.mode == ThresholdsMode.Percentage) {
+                    max = calcValueOnSeriesData(series, ValueCalculationType.Max)
                 }
+                const threshold = getThreshold(v, panel.plugins.pie.thresholds, max)
+                if (threshold) {
+                    c = threshold.color
+                } 
             }
-        }
+
+            if (!c) {
+                c = colors[i % colors.length]
+            }
+
+            color.push(paletteColorNameToHex(c))
+        })
+
 
         const onEvents = genDynamicFunction(panel.plugins.pie.onClickEvent);
 
@@ -91,7 +99,7 @@ const PiePanel = (props: Props) => {
 
         const lp = parseLegendPlacement(panel)
 
-       
+
 
         const transformLabel = genDynamicFunction(panel.plugins.pie.label.transformName);
         return [{
@@ -141,13 +149,13 @@ const PiePanel = (props: Props) => {
                                 } else {
                                     labelFormater += params.data.name
                                 }
-                              
+
                             }
                             if (panel.plugins.pie.label.showValue) {
                                 if (!isEmpty(labelFormater)) {
                                     labelFormater += '\n'
                                 }
-                                
+
                                 labelFormater += formatUnit(params.data.value, panel.plugins.pie.value.units, panel.plugins.pie.value.decimal)
                             }
 
@@ -156,7 +164,7 @@ const PiePanel = (props: Props) => {
                         lineHeight: panel.plugins.pie.label.lineHeight,
                         fontSize: panel.plugins.pie.label.fontSize,
                     },
-                    labelLayout: panel.plugins.pie.label.show && panel.plugins.pie.label.showName && panel.plugins.pie.label.showValue &&  ( function (params) {
+                    labelLayout: panel.plugins.pie.label.show && panel.plugins.pie.label.showName && panel.plugins.pie.label.showValue && (function (params) {
                         const isLeft = params.labelRect.x < chart?.getWidth() / 2;
                         const points = params.labelLinePoints;
                         // Update the end point.
@@ -171,7 +179,7 @@ const PiePanel = (props: Props) => {
                 }
             ]
         }, onEvents]
-    }, [panel.plugins.pie, props.data, colorMode, chart])
+    }, [panel.plugins.pie, props.data, colorMode, chart, panel.styles.palette])
 
 
 

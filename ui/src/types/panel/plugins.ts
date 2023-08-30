@@ -93,7 +93,6 @@ export interface BarSettings {
         axisFontSize: number 
         labelFontSize: number
         barOpacity: number
-        useDatavColors: boolean
     }
     axis: {
         swap: boolean

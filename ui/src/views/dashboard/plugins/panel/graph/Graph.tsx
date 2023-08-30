@@ -23,7 +23,7 @@ import Tooltip from "./Tooltip";
 import SeriesTable, { seriesTableMode } from "src/views/dashboard/plugins/panel/graph/Tooltip/SeriesTable";
 import { GraphLayout } from "src/views/dashboard/plugins/panel/graph/GraphLayout";
 import { Box, Center, Text, useColorMode } from "@chakra-ui/react";
-import {  paletteColorNameToHex, palettes } from "utils/colors";
+import {  paletteColorNameToHex, paletteMap, palettes } from "utils/colors";
 import { SeriesData } from "types/seriesData";
 import storage from "utils/localStorage";
 import { PanelInactiveKey } from "src/data/storage-keys";
@@ -98,6 +98,7 @@ const GraphPanel = memo((props: GraphPanelProps) => {
 
     const options = useMemo(() => {
         let o;
+        const colors = paletteMap[props.panel.styles.palette]??palettes 
         data.map((frame, i) => {
             const override: OverrideItem = findOverride(props.panel, frame.rawName)
             const name = findRuleInOverride(override, GraphRules.SeriesName)
@@ -110,7 +111,7 @@ const GraphPanel = memo((props: GraphPanelProps) => {
 
             let color = findRuleInOverride(override, GraphRules.SeriesColor)
             if (!color) {
-                color = palettes[i % palettes.length]
+                color = colors[i % colors.length]
             }
             frame.color = paletteColorNameToHex(color, colorMode)
 

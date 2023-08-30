@@ -38,6 +38,7 @@ import { SketchPicker } from "react-color";
 
 interface Props {
     color: string
+    defaultColor?: string
     onChange: any
     buttonText?: string
     circlePicker?: boolean
@@ -47,7 +48,7 @@ interface Props {
 
 export const ColorPicker = (props: Props) => {
     if (!props.color) {
-        props.onChange('inherit')
+        props.onChange(props.defaultColor ?? 'inherit')
         return 
     }
 

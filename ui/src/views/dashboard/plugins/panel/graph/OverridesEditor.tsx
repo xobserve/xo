@@ -20,6 +20,7 @@ import React from "react";
 import { dispatch } from "use-bus";
 import { PanelForceRebuildEvent } from "src/data/bus-events";
 import ThresholdEditor from "components/Threshold/ThresholdEditor";
+import { palettes } from "utils/colors";
 
 interface Props {
     override: OverrideRule
@@ -42,7 +43,7 @@ const GraphOverridesEditor = ({ override, onChange, panel }: Props) => {
                 dispatch(PanelForceRebuildEvent + panel.id)
             }} />
         case GraphRules.SeriesColor:
-            return <ColorPicker color={override.value} onChange={onChange} />
+            return <ColorPicker color={override.value} onChange={onChange} defaultColor={palettes[0]} />
         case GraphRules.SeriesFill:
             return <EditorSliderItem value={override.value} min={0} max={100} step={1} onChange={v => {
                 onChange(v)

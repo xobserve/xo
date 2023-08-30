@@ -10,7 +10,7 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-import { Select, Switch } from "@chakra-ui/react"
+import { Box, HStack, Select, Switch, VStack } from "@chakra-ui/react"
 import { ColorPicker } from "components/ColorPicker"
 import { Panel, PanelEditorProps } from "types/dashboard"
 import { PanelBorderType, PanelTitleDecorationType } from "types/panel/styles"
@@ -22,11 +22,29 @@ import BorderSelect from "components/largescreen/components/BorderSelect"
 import React from "react";
 import { useStore } from "@nanostores/react"
 import { panelMsg } from "src/i18n/locales/en"
+import { paletteColorNameToHex, paletteMap } from "utils/colors"
 
 const PanelStyles = ({ panel, onChange }: PanelEditorProps) => {
     const t1 = useStore(panelMsg)
     return (
         <>
+            <PanelAccordion title="Color palette" defaultOpen>
+                <PanelEditItem>
+                    <VStack spacing={1} alignItems="left">
+                    {
+                        Object.keys(paletteMap).map(name => <HStack width="fit-content" spacing={0} borderWidth={"4px"} borderColor={name != panel.styles.palette ? "transparent" : "inherit"} cursor="pointer" onClick={e => {
+                            onChange((panel:Panel) => {
+                                panel.styles.palette = name
+                            })
+                        }} >
+                            {
+                                paletteMap[name].map(color => <Box className="color" width="14px" height="20px"  style={{ backgroundColor: paletteColorNameToHex(color) }} />)
+                            }
+                        </HStack>)
+                    }
+                    </VStack>
+                </PanelEditItem>
+            </PanelAccordion>
             <PanelAccordion title={t1.panelBorder} defaultOpen>
                 <PanelEditItem title={t1.borderType}>
                     <BorderSelect value={panel.styles?.border} onChange={v => {
@@ -165,7 +183,6 @@ const PanelStyles = ({ panel, onChange }: PanelEditorProps) => {
 }
 
 export default PanelStyles
-
 
 
 

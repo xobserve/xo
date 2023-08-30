@@ -20,7 +20,7 @@ import { cloneDeep, isEmpty, isFunction } from "lodash";
 import { useSearchParam } from "react-use";
 import React from "react";
 import moment from "moment";
-import { colors } from "utils/colors";
+import { colors, paletteMap, palettes } from "utils/colors";
 import loadash from "lodash"
 import 'echarts/extension/bmap/bmap';
 import { genDynamicFunction } from "utils/dashboard/dynamicCall";
@@ -43,6 +43,7 @@ const EchartsPanel = memo((props: PanelProps) => {
         const data = props.data.flat()
         let options = null;
         let onEvents = null;
+        const colors = paletteMap[props.panel.styles.palette] ?? palettes
         const setOptions = genDynamicFunction(panel.plugins.echarts.setOptionsFunc);
         if (isFunction(setOptions)) {
             try {

@@ -14,6 +14,7 @@
 import { PanelBorderType, PanelDecorationType, PanelStyles, PanelTitleDecorationType } from "types/panel/styles";
 
 export const initPanelStyles: PanelStyles = {
+    palette: 'classic',
     border: PanelBorderType.Normal,
     borderOnHover: true,
     title: {

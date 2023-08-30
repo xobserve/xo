@@ -50,19 +50,6 @@ const BarChart = memo((props: Props) => {
     const navigate = useNavigate()
     useEffect(() => {
         if (chart) {
-            const colors = chart.getOption().color
-            // [
-            //     "#4992ff",
-            //     "#7cffb2",
-            //     "#fddd60",
-            //     "#ff6e76",
-            //     "#58d9f9",
-            //     "#05c091",
-            //     "#ff8a45",
-            //     "#8d48e3",
-            //     "#dd79ff"
-            // ]
-            console.log("here3333333:",colors)
             chart.on('click', function (event) {
                 if (event.seriesName != "total") {
                     // onSelect(event.seriesName)
@@ -306,12 +293,12 @@ const BarChart = memo((props: Props) => {
                         return (Math.abs(v.data) / max) >= 0.2 ? value : ''
                     },
                     fontSize: options.styles.labelFontSize,
-                    color:  options.styles.useDatavColors ? getTextColorForAlphaBackground(color, colorMode == "dark") : null
+                    color:  getTextColorForAlphaBackground(color, colorMode == "dark")
                 },
                 emphasis: {
                     // focus: 'series'
                 },
-                color: options.styles.useDatavColors ? color : null,
+                color: color,
                 barWidth: stack == "total" ? `${options.styles.barWidth}%` : `${options.styles.barWidth / names.length}%`,
                 tooltip: {
                     valueFormatter: (value) => {
