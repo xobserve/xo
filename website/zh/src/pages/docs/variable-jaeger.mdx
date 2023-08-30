@@ -6,43 +6,44 @@ description:
 import TextList  from '@/components/docs/TextList'
 import Code  from '@/components/docs/Code'
 
-In this doc, let's see how to query variables from <Code>Jaeger</Code>.
+下面我们一起来看看该如何从 <Code>Jaeger</Code> 中查询变量。
 
-As a result, we should select jaeger services like this in Jaeger UI:
+最终结果如下，可以像 Jaeger 自带的 UI 那样，在下拉选择框中选择 service 列表:
 
 <img src="https://github.com/data-observe/assets/blob/main/variable/jaeger-services.jpg?raw=true" style={{height: "400px"}}/>
 
-> Before start, you should have a <Code>Jaeger</Code> instance running, refer to https://www.jaegertracing.io/ for more info.
+> 在开始之前，你需要先启动一个 <Code>Jaeger</Code> 实例，参考 https://www.jaegertracing.io/ 了解更多信息。
 
 ## Jaeger services 
 
-Services can be useful in many dashboards, such as `Application info`, `hosts info`, `JVM info`, `SQL stats` etc, it is the core object for a monitoring system.
+Services 可以在很多仪表盘中使用，比如 `Application info`, `hosts info`, `JVM info`, `SQL stats` 等，它是监控系统的核心对象，相当于 Application 应用的概念
 
-So we should create it as a `Global Variable`.
+因此，我们可以为其创建一个全局变量: 
 
-1. Click `configuration icon` in the bottom section of sidebar and select `Variable` tab.
-2. Create a new global variable with name `services` as below:
+1. 点击侧边导航栏下方的 `配置` 图表，然后选择变量标签页
+2. 创建一个名为 `services` 的全局变量:
 
 <img src="https://github.com/data-observe/assets/blob/main/variable/edit-jaeger-services.jpg?raw=true" style={{height: "500px"}}/>
 
+点击 `提交` 按钮并前往一个仪表盘，你应该看到如下的变量：
 
-Click `Submit` and go to a dashboard, you should see a variable dropdown list as below:
 
 <img src="https://github.com/data-observe/assets/blob/main/variable/jaeger-services-dropdown.jpg?raw=true" style={{height: "300px"}}/>
 
-
-Exactly the same as services in Jaeger UI.
+跟 Jaeger UI 中的 services 列表一模一样 ！
 
 ## Jaeger operations
 
-Operations are the next level of services, its creation step is similar to services: 
+Operations 是 services 里面的概念，你可以理解为应用内的 HTTP API 列表，它的创建方式跟上面很相似:
 
 <img src="https://github.com/data-observe/assets/blob/main/variable/edit-jaeger-operations.jpg?raw=true" style={{height: "500px"}}/>
 
-The only difference is that you should select a service in `Service` dropdown list, and variable is supported, so we use <Code>{'${services}'}</Code> here to refer to the `services` variable created in last section.
+唯一的区别在于，你需要在 `Service` 下拉选择框中选择一个服务。
 
-## Final result 
+> 可以看到 services 的输入值是支持变量的，因此我们在这里使用 <Code>{'${services}'}</Code> 来引用上面创建的 `services` 变量。
+
+## 最终效果 
 
 <video controls autoPlay src="https://github.com/data-observe/assets/blob/main/variable/jaeger-final.mov?raw=true" style={{height: "500px"}}/>
 
-Here you can see, when we select a service, the dropdown list of  `operation` variable will be updated automatically, at the same time the traces will be updated as well.
+如上所示，当我们选择一个 `service` 应用后，`operation` 变量的值也会随之自动变化，同时相应的 Traces 也会重新被查询，完美！
