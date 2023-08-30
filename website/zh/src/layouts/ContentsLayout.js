@@ -255,7 +255,7 @@ export function ContentsLayout({ children, meta, classes, tableOfContents, secti
 
       <DocsFooter previous={prev} next={next}>
         <Link
-          href={`https://github.com/data-observe/datav/tree/main/website/zh/src/pages/${router.pathname}.mdx`}
+          href={`https://github.com/data-observe/datav/tree/main/website/zh/src/pages${router.pathname}.mdx`}
           className="hover:text-slate-900 dark:hover:text-slate-400"
         >
           Edit this page on GitHub
