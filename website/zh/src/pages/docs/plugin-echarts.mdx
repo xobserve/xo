@@ -1,24 +1,25 @@
 ---
-title: Echarts for general purpose
+title: Echarts 通用图表
 description:
 ---
 
 import TextList  from '@/components/docs/TextList'
 import Code  from '@/components/docs/Code'
 
-Apache ECharts is a free, powerful charting and visualization library offering easy ways to add intuitive, interactive, and highly customizable charts to your products。
+Apache Echarts 是一个免费的、功能强大的图表和可视化库，提供了简单的方式来为你的产品添加直观、交互式和高度可定制的图表。
 
-In datav we have wrapped echarts options in a function, so you should feel not hard to use echarts.
+在 Datav 中，为了便于使用,我们已经将 Echarts 的配置项封装成一个函数。
 
 <img src="https://github.com/data-observe/assets/blob/main/plugin/echarts1.jpg?raw=true" style={{height: '300px'}}/>
 
-Let's make a simple chart as above image first.
+先来看看一个简单的例子，我们将使用 Echarts 来绘制一个如上所示的折线图。
 
-## Echarts settings -> Set echarts options 
+## Echarts 设置 -> 设置 Echarts options
 
-All we need to do is to set the echarts options based on the passed in data that query from datasource.
+在这个函数中，我们需要做的就是根据从数据源查询到的数据，设置 Echarts 的配置项。
 
-Click `Edit function` and fill in the following code:
+点击 `编辑函数`，填入以下代码：
+
 
 ```js
 
@@ -134,26 +135,28 @@ function setOptions(data, thresholds, colors, echarts, loadash, moment, colorMod
 }
 ```
 
-In above code, we have done these things:
+在上述代码中，做了以下事情： 
 
 <TextList>
-    <li>1. Transform the passed in data of type `SeriesData` to the format that Echarts needs. </li>
-    <li>2. Return the options that will pass to Echarts instance. </li>
+    <li>1. 将传入的 `SeriesData` 最终格式数据转换为 Echarts 所需的数据格式. </li>
+    <li>2. 返回 Echarts 需要的 options 配置 </li>
 </TextList>
 
-In a word, Datav:
-1. Query data of [`SeriesData`](docs/panel-data-transform#how-to-find-the-data-format) type from datasource, such as Prometheus.
-2. This data is passed into `setOptions` function,
-3. The function transform `SeriesData` to the format that Echarts needs
-4. Return [an options object](https://echarts.apache.org/examples/zh/editor.html?c=area-stack-gradient)  and pass it to Echarts instance to render the chart.
+总之， Datav:
 
-## Interactions 
+1. 从数据源查询 [`SeriesData`](docs/panel-data-transform#how-to-find-the-data-format) 类型的数据，例如 Prometheus.
+2. 将这些数据传入 `setOptions` 函数，
+3. 函数将 `SeriesData` 转换为 Echarts 需要的格式
+4. 返回 [options 对象](https://echarts.apache.org/examples/zh/editor.html?c=area-stack-gradient) 并将其传递给 Echarts 实例以渲染图表。
 
-We can add interactions to echarts chart, such as click event: 
+
+## 交互
+
+Echarts 图表一样可以设置交互事件，例如点击事件：
 
 <img src="https://github.com/data-observe/assets/blob/main/plugin/echarts-interaction.jpg?raw=true" style={{height: '200px'}}/>
 
-Then click `Edit function`, for now , you should see a default function body as below: 
+点击 `编辑函数`，你可以看到默认的函数体如下：
 
 ```js
 // In registerEvents, you can custom events on your chart, e.g mouse click event, mouse over event etc.
@@ -172,24 +175,27 @@ function registerEvents(options, chart, navigate, setVariable, setDateTime, $var
 }
 ```
 
-Oh, nice, Datav already define a basic click event for us, let's try to click che chart and see what will happen.
+不错，Datav 已经为我们定义了一个基本的点击事件，让我们试着点击一下图表，看看会发生什么：
+
 
 <img src="https://github.com/data-observe/assets/blob/main/plugin/echarts-interaction-effect.jpg?raw=true" />
 
-As shown above, we click on a point of the chart and then call `console.log` to write something to the browser console.
+如上图所示，我们点击了图表上的一个点，Datav 将会在控制台输出点击的点的信息。
 
 
-## More examples
+## 更多示例
 
-Here are more examples for Echarts.
+下面是一些更多的示例，你可以直接复制到 `setOptions` 函数中，然后点击 `保存` 按钮，即可看到效果。
 
 > All echarts demos can be found here: https://echarts.apache.org/examples/en/index.html#chart-type-line
 
-### Baidu map 
+### 百度地图
 
 <img src="https://github.com/data-observe/assets/blob/main/plugin/echarts-map.jpg?raw=true"/>
 
-1. Enable `Baidu map` sdk in `datav.conf` file 
+百度地图比较特殊，你需要做完成一些配置才能使用：
+
+1. 在 `datav.conf` 文件中启用 `Baidu map` SDK
 
 ```yml
 panel:
@@ -198,22 +204,22 @@ panel:
     baidu_map_ak: 'AK for Baidu map, apply from https://lbsyun.baidu.com/apiconsole/key#/home'
 ```
 
-2. edit `setOption` function, and copy in the source code from [Github gist](https://gist.github.com/sunface/e92b6fedfa51407b599c377cc1d2a4c3#file-baidu-map-js)
+2. 将  [Github gist](https://gist.github.com/sunface/e92b6fedfa51407b599c377cc1d2a4c3#file-baidu-map-js) 中的代码拷贝进 `setOptions` 函数中 
 
 
-### Radar 
+### 雷达图
 
 <img src="https://github.com/data-observe/assets/blob/main/plugin/echarts-radar.jpg?raw=true"/>
 
 [source code](https://gist.github.com/sunface/e92b6fedfa51407b599c377cc1d2a4c3#file-radar-js)
 
-### Calendar Heatmap
+### 日历热力图
 
 <img src="https://github.com/data-observe/assets/blob/main/plugin/echarts-heatmap.jpg?raw=true"/>
 
 [source code](https://gist.github.com/sunface/e92b6fedfa51407b599c377cc1d2a4c3#file-calendar-heatmap-js)
 
-### Polar heatmap 
+### 极圈热力图
 
 <img src="https://github.com/data-observe/assets/blob/main/plugin/echarts-polar.jpg?raw=true"/>
 
