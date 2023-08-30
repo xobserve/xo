@@ -1,29 +1,29 @@
 ---
-title: Interactivity
+title: 可定制交互性
 description:
 ---
 
-In previous [tutorial doc](), if you click on a point on GeoMap panel, the map will automatically zoom in to that point. 
+在之前的[入门教程](/docs/tutorial-dashboard#-3)中，我们已经看到了该如何在 GeoMap 面板上定义交互性：当点击地图上的某个点时，地图会自动缩放到该点。
 
-We can define such interactivity for many  panels in Datav, in this doc, let's see  how to define interactivity for Graph panel.
+实际上，我们可以为 Datav 中的很多面板定义交互性，本文档将以 Graph 面板为例，看看如何为面板定义交互性。
 
-In this doc, we will continue using the panel created in last doc, and add interactivity to it.
+本文档将继续使用上一篇文档中创建的面板，并为其添加交互性。
 
-## Basic click event  
+## 基础点击事件
 
-First, let's add a basic click event to the panel, and print the input data.
+首先，我们为面板添加一个基础的点击事件，当点击面板时，打印输入的数据。
 
-Open the panel editor and find the `interaction` setion in `Panel` tab, click `Add action` and rename `New action` to `Test click`
+打开面板编辑器，找到 `图表` 标签页中的 `交互` 部分，点击 `新增操作` 按钮，将 `New action` 重命名为 `Test click`：
 
 <img src="https://github.com/data-observe/assets/blob/main/panel/add-interaction.jpg?raw=true" style={{height: "400px"}}/>
 
-As show in above image, we have created an click action named `Test click`, and now let's add some code to it.
+如上图所示，我们创建了一个名为 `Test click` 的点击操作，现在为其添加一些代码。
 
-Click `Edit function` button, add fill the code as below:
+点击 `编辑函数` 按钮，填写如下代码：
 
 <img src="https://github.com/data-observe/assets/blob/main/panel/edit-basic-interaction.jpg?raw=true" style={{height: "300px"}}/>
 
-You can also copy below code into the editor:
+你也可以将下面的代码复制到编辑器中：
 
 ```js
 // setVariable: (varName:string, varValue:string) => void 
@@ -36,40 +36,40 @@ function onRowClick(row, navigate, setVariable, setDateTime, $variables) {
 }
 ```
 
-Click `Sumit`, then click on `Graph`, you shold see a popup modal like this:
+点击 `提交` 按钮，然后点击 `Graph` 图表上的任意一处，你应该会看到一个弹出框：
 
 <img src="https://github.com/data-observe/assets/blob/main/panel/click-popup.jpg?raw=true" style={{height: "200px"}}/>
 
-Click `Test click`, you should see the data printed in the browser console: 
+点击 `Test click`，我们就能在浏览器控制台中看到打印的数据：
 
 <img src="https://github.com/data-observe/assets/blob/main/panel/interaction-first-output.jpg?raw=true" style={{height: "160px"}}/>
 
-## Event params
+## 函数参数
 
-As you can see in the image above, the first input param is our series data, it includes neary all the data you need for define click event.
+如上图所示，事件函数的第一个参数是被点击曲线的数据，它包含了几乎所有你需要的数据。
 
-There are also some other params, they are also very important, let's goes through them one by one.
+除了第一个参数，还有一些其他参数，它们也非常重要，让我们一一来看看。
 
 ### navigate
 
-`navigate` is the return of `useNavigate` which is defined in `react-router-dom`:
+`navigate` 是 `useNavigate` 的返回值，`useNavigate` 定义在 `react-router-dom` 中：
 
 ```js
 import { useNavigate } from "react-router-dom"
 const navigate = useNavigate()
 ```
 
-we can use it to navigate to other pages.
+`navigate` 用于导航到其他页面：
 
 ```js
 navigate("/home")
 ```
 
-But you can't open a new browser tab with `navigate`, if you want to open a new tab, you can use `window.open`:
+但是，你不能使用 `navigate` 打开一个新的浏览器标签，如果你想打开一个新的标签，可以使用 `window.open`：
 
 ### setVariable
 
-With `setVariable`, you can set a variable to the value you want, and add params to url.
+`setVariable` 用于设置变量的值，同时会将变量的值添加到 url 中，跟你直接选择一个变量的行为一致。
 
 ```js
 setVariable("host", "localhost:9100")
@@ -77,7 +77,7 @@ setVariable("host", "localhost:9100")
 
 ### setDateTime
 
-`setDateTime` is used to set current time range, it will change the url params as well.
+`setDateTime` 用于设置当前的时间范围，它也会改变 url 中的时间参数。
 
 ```js
 setDateTime(1693049230, 1693049356)
@@ -86,15 +86,15 @@ setDateTime(1693049230, 1693049356)
 
 ### $variables 
 
-`$variables` is a store value which stores the current variables, you can get all the current variables by this way:
+`$variables` 中存储了当前的所有变量，你可以通过这种方式获取所有当前的变量：
 
 ```js
 const currentVariables = $variables.get()
 ```
 
-### Advance click event
+## 进阶点击事件
 
-Let's use these params to create a more advance click event: set a variable, set the time range around the clicked point, and navigate to a url which is get from the param data.
+我们可以使用上面的参数来创建一个更加复杂的点击事件：设置一个变量，以点击点为中心设置新的时间范围，然后跳转到一个 url，这个 url 是从参数数据中获取的。
 
 ```js
 // setVariable: (varName:string, varValue:string) => void 
@@ -120,20 +120,28 @@ function onRowClick(row, navigate, setVariable, setDateTime, $variables) {
 }
 ```
 
-Add above code to the click function, in this code, we get the host from the clicked series, and set the time range to 2 minutes before and after the clicked point, then set the host variable to the new host, and navigate to the host info dashboard, this is very similar to the real world scenario: 
+将上面的代码复制到编辑器中，在这段代码中:
 
-when you find some issues, you click the issue series and select the time point that issue happens, and go to a dashboard to view more info.
+1. 我们从点击的曲线中获取了主机名
+2. 设置时间范围到点击点前后各 2 分钟
+3. 将 `host` 变量的值设置为新的主机名
+4. 导航到 `Hosts info` 仪表盘
+
+这一系列操作跟现实世界的使用非常相似，可以说很具有参考性了:
+
+当你发现一些问题，你会点击这个问题所在的曲线，然后选择问题发生的时间点，最后跳转到一个仪表盘查看更多信息。
+
+这不就是大名鼎鼎的下钻嘛 ：D
 
 
-## Final result
+## 最终效果
 
-First, let's see a image before clicking: 
+先来看一张点击之前的图片:
 
 <img src="https://github.com/data-observe/assets/blob/main/panel/before-click.jpg?raw=true"/>
 
-
-Next, let's trigger the click event, and see the result:
+下面让我们触发点击事件，然后看看结果如何：
 
 <img src="https://github.com/data-observe/assets/blob/main/panel/after-click.jpg?raw=true"/>
 
-You can see all three places the arrows point to have changed as we expected, nice!
+你可以看到图中三处通过箭头标记的地方全部发生了改变，如我们所料，nice!
