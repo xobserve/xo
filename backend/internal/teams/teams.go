@@ -194,7 +194,6 @@ func AddTeamMembers(c *gin.Context) {
 	req := &AddMemberReq{}
 	c.Bind(&req)
 
-	fmt.Println(req)
 	members := req.Members
 	role := req.Role
 
