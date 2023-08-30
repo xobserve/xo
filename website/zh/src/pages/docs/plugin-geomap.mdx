@@ -6,29 +6,27 @@ description:
 import TextList  from '@/components/docs/TextList'
 import Code  from '@/components/docs/Code'
 
-Geo Map is a plugin that can render data points at specific locations on a map, including country codes, city names and coordinates.
+GeoMap 插件可以在地图的指定位置上渲染相应的数据点，例如根据国家编码、城市名以及坐标来渲染。
 
+> 具体的国家编码、城市名，可以在[这里](https://github.com/data-observe/datav/tree/main/ui/public/plugins/panel/geomap)查阅
 
-## World countries and cities
-Render countries and cities on a world map:
+## 在世界地图上渲染国家和城市
 
 <img src="https://github.com/data-observe/assets/blob/main/plugin/geomap.jpg?raw=true" />
 
-## China cities
-
-Render cities on `China` map:
+## 在中国地图上渲染城市
 
 <img src="https://github.com/data-observe/assets/blob/main/plugin/china-map.jpg?raw=true" />
 
 
-## Heat map type 
+## 热力图类型
 
 <img src="https://github.com/data-observe/assets/blob/main/plugin/heat-map.jpg?raw=true" />
 
 
-## Interactions 
+## 交互
 
-You can define click events for data points on map: 
+你可以为地图上的点定义点击事件：
 
 ```js
 // map:  openlayer map <https://openlayers.org/en/latest/apidoc/module-ol_Map-Map.html>
@@ -45,13 +43,13 @@ function onClick(data, map, navigate, setVariable, setDateTime, $variables) {
 }
 ```
 
-Triggering this event will cause the map to zoom in and center the clicked point: if you click on `Hangzhou` city in `China`, the map will be zoomed in and centered on `Hangzhou`:
+有了如上交互事件后，点击地图上的点将自动以该点为中心，并进行缩放聚焦: 例如你点击中国的杭州：
 
 <img src="https://github.com/data-observe/assets/blob/main/plugin/zoom-hangzhou.jpg?raw=true" />
 
-## Thresholds
+## 阈值 Thresholds
 
-When the value of data points is larger than a threshold value, the data point will render in a different color that defines by threshold:
+当数据点的值大于给定阈值时，该数据点将被渲染为指定的颜色：
 
 <img src="https://github.com/data-observe/assets/blob/main/plugin/geomap-threshold.jpg?raw=true" style={{height: '260px'}}/>
 
