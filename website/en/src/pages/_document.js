@@ -23,8 +23,8 @@ export default class Document extends NextDocument {
           <link rel="manifest" href={v('/favicons/site.webmanifest')} />
           <link rel="mask-icon" href={v('/favicons/safari-pinned-tab.svg')} color="#38bdf8" />
           <link rel="shortcut icon" href={v('/favicons/favicon.ico')} />
-          <meta name="apple-mobile-web-app-title" content="Tailwind CSS" />
-          <meta name="application-name" content="Tailwind CSS" />
+          <meta name="apple-mobile-web-app-title" content="Datav.io" />
+          <meta name="application-name" content="Datav.io" />
           <meta name="msapplication-TileColor" content="#38bdf8" />
           <meta name="msapplication-config" content={v('/favicons/browserconfig.xml')} />
           <meta name="theme-color" content="#f8fafc" />
