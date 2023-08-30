@@ -12,7 +12,7 @@
 // limitations under the License.
 import { Box, HStack, Select, Switch, VStack } from "@chakra-ui/react"
 import { ColorPicker } from "components/ColorPicker"
-import { Panel, PanelEditorProps } from "types/dashboard"
+import { Panel, PanelEditorProps, PanelType } from "types/dashboard"
 import { PanelBorderType, PanelTitleDecorationType } from "types/panel/styles"
 import PanelAccordion from "./Accordion"
 import { EditorInputItem } from "../../../components/editor/EditorItem"
@@ -26,10 +26,21 @@ import { paletteColorNameToHex, paletteMap } from "utils/colors"
 
 const PanelStyles = ({ panel, onChange }: PanelEditorProps) => {
     const t1 = useStore(panelMsg)
+    // let usePalette = false 
+    // switch (panel.type) {
+    //     case PanelType.Bar:
+    //     case PanelType.Graph:
+    //     case PanelType.Echarts:
+    //     case PanelType.Pie:
+    //         usePalette =true
+    //         break;
+    //     default:
+    //         break;
+    // }
     return (
         <>
-            <PanelAccordion title="Color palette" defaultOpen>
-                <PanelEditItem>
+            {<PanelAccordion title="Color palette" defaultOpen>
+                <PanelEditItem desc="Only support Graph, Bar, Pie and Echarts panel">
                     <VStack spacing={1} alignItems="left">
                     {
                         Object.keys(paletteMap).map(name => <HStack width="fit-content" spacing={0} borderWidth={"4px"} borderColor={name != panel.styles.palette ? "transparent" : "inherit"} cursor="pointer" onClick={e => {
@@ -44,7 +55,7 @@ const PanelStyles = ({ panel, onChange }: PanelEditorProps) => {
                     }
                     </VStack>
                 </PanelEditItem>
-            </PanelAccordion>
+            </PanelAccordion>}
             <PanelAccordion title={t1.panelBorder} defaultOpen>
                 <PanelEditItem title={t1.borderType}>
                     <BorderSelect value={panel.styles?.border} onChange={v => {
