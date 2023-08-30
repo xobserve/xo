@@ -207,7 +207,6 @@ const ValueText = ({ data, value, options, width, height, layout, color }) => {
         if (fontSize > maxFontSize) fontSize = maxFontSize
     }
 
-    console.log("here3333333:",options)
     return (<>
         <Text
             cursor={options.enableClick ? "pointer" : "default"}

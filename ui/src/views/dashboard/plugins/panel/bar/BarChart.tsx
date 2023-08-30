@@ -50,6 +50,19 @@ const BarChart = memo((props: Props) => {
     const navigate = useNavigate()
     useEffect(() => {
         if (chart) {
+            const colors = chart.getOption().color
+            // [
+            //     "#4992ff",
+            //     "#7cffb2",
+            //     "#fddd60",
+            //     "#ff6e76",
+            //     "#58d9f9",
+            //     "#05c091",
+            //     "#ff8a45",
+            //     "#8d48e3",
+            //     "#dd79ff"
+            // ]
+            console.log("here3333333:",colors)
             chart.on('click', function (event) {
                 if (event.seriesName != "total") {
                     // onSelect(event.seriesName)
@@ -223,7 +236,7 @@ const BarChart = memo((props: Props) => {
                 // Use axis to trigger tooltip
                 type: 'shadow', // 'shadow' as default; can also be 'line' or 'shadow',
             },
-            backgroundColor: useColorModeValue("rgba(255,255,255,0.7)", "rgba(255,255,255,0.7)"),
+            backgroundColor: useColorModeValue("rgba(255,255,255,0.7)", "rgba(255,255,255,0.9)"),
             textStyle: {
                 color: useColorModeValue("#444", "#222")
             }
@@ -396,7 +409,7 @@ const BarChart = memo((props: Props) => {
     const onEvents = genDynamicFunction(panel.plugins.bar.onClickEvent);
 
     return (<>
-        <ChartComponent key={colorMode} options={chartOptions} theme={colorMode} onChartCreated={c => setChart(c)} width={width} onChartEvents={panel.plugins.bar.enableClick?  (row) => commonInteractionEvent(onEvents, row) : null} />
+        <ChartComponent key={colorMode} options={chartOptions} theme={colorMode} onChartCreated={c => setChart(c)} width={width} onChartEvents={panel.plugins.bar.enableClick?  (row) => commonInteractionEvent(onEvents, row) : null} clearWhenSetOption />
     </>)
 })
 

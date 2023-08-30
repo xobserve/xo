@@ -11,14 +11,13 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { Box, Button, Center, Flex, HStack, Image, Input, Modal, ModalBody, ModalContent, ModalHeader, ModalOverlay, SimpleGrid, Switch, Tab, TabIndicator, TabList, TabPanel, TabPanels, Tabs, Text, Textarea, useDisclosure } from "@chakra-ui/react"
+import { Box, Button, Flex, HStack,  Modal, ModalBody, ModalContent, ModalHeader, ModalOverlay,  Tab, TabIndicator, TabList, TabPanel, TabPanels, Tabs, Text, useDisclosure } from "@chakra-ui/react"
 import { ColorModeSwitcher } from "components/ColorModeSwitcher"
 import { memo, useCallback, useEffect, useState } from "react"
 import { Dashboard, Panel, PanelType } from "types/dashboard"
 import EditPanelQuery from "./Query"
 import { useImmer } from "use-immer";
 import { removeParamFromUrl } from "utils/url";
-import { useSearchParam } from "react-use";
 // import NodeGraphPanelEditor from "../plugins/panel/nodeGraph/Editor";
 import { FaArrowDown, FaArrowUp } from "react-icons/fa";
 import PanelStyles from "./PanelStyles";
@@ -41,17 +40,28 @@ import ValueMapping from "components/ValueMapping/ValueMapping"
 import PanelAccordion from "./Accordion"
 import storage from "utils/localStorage"
 import EditPanelAlert from "./Alert"
+import { useLocation, useSearchParam } from "react-use"
 
 interface EditPanelProps {
     dashboard: Dashboard
     onChange: any
+    edit?: string
 }
 
 const StorageHideDsKey = "hide-ds-"
-const EditPanel = ({ dashboard, onChange }: EditPanelProps) => {
+
+const EditPanelWrapper =  memo((props: EditPanelProps) => {
+    const edit = useSearchParam('edit')
+    useLocation()
+    return <EditPanel {...props} edit={edit}/>
+})
+
+export default EditPanelWrapper
+
+const EditPanel = memo(({ dashboard, onChange, edit }: EditPanelProps) => {
     const t = useStore(commonMsg)
     const t1 = useStore(panelMsg)
-    const edit = useSearchParam('edit')
+    
 
     const [tempPanel, setTempPanel] = useImmer<Panel>(null)
     const [rawPanel, setRawPanel] = useState<Panel>(null)
@@ -323,9 +333,7 @@ const EditPanel = ({ dashboard, onChange }: EditPanelProps) => {
                 </ModalContent>}
         </Modal>
     </>)
-}
-
-export default EditPanel
+})
 
 //@needs-update-when-add-new-panel
 const loadablePanels = {

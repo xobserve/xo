@@ -34,7 +34,6 @@ import { $variables } from "./store"
 import { parseVariableFormat } from "utils/format"
 import { getDatasource } from "utils/datasource"
 import { isEmpty } from "utils/validate"
-import { useLocation } from "react-router-dom"
 import { usePrevious, useSearchParam } from "react-use"
 
 interface Props {

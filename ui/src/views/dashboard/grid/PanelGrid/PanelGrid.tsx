@@ -33,7 +33,6 @@ import TitleDecoration from "components/largescreen/components/TitleDecoration";
 import PanelDecoration from "components/largescreen/components/Decoration";
 import { useDedupEvent } from "hooks/useDedupEvent";
 import loadable from '@loadable/component'
-import CodeEditor from "components/CodeEditor/CodeEditor";
 import { calculateInterval } from "utils/datetime/range";
 import { run_http_query } from "../../plugins/datasource/http/query_runner";
 import { datasources } from "src/App";

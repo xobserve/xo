@@ -12,8 +12,8 @@
 // limitations under the License.
 
 import { concat } from "lodash"
-import { COLORS_HEX, ColorGenerator } from "utils/colorGenerator"
-import { barPalettes, darkPalettes, paletteColorNameToHex } from "utils/colors"
+import {  ColorGenerator } from "utils/colorGenerator"
+import { barPalettes, paletteColorNameToHex } from "utils/colors"
 
 const idSplitter = '='
 export const formatLabelId  = (name, value) => {

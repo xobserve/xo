@@ -65,6 +65,7 @@ export const updateUrl = (params?: string) => {
     if (params != '') {
         url = url + '?' + params
     }
+    
     // router.replace(url,url)
     window.history.pushState({}, null, url);
 }
