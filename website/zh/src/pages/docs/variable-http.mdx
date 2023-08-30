@@ -6,48 +6,47 @@ description:
 import TextList  from '@/components/docs/TextList'
 import Code  from '@/components/docs/Code'
 
-Sometimes, you may need to query variables from datasources other than we already provided.  
+有时，我们需要从已提供的数据源之外的地方查询变量，例如从某个 HTTP API。
 
-In these cases, you should  make a http request and parse the response data to get the variable values you want.
+在这种情况下，你需要发起一个 HTTP 请求，并解析返回的数据，以获取你想要的变量值。
 
-In this doc, we will make http request to jaeger to get its operation under `frontend` service.
+在这篇文档中，我们将发起一个 HTTP 请求，从 Jaeger 中获取 `frontend` 服务的 `operation` 变量值。
 
-> Before start, you should have a <Code>Jaeger</Code> instance running, refer to https://www.jaegertracing.io/ for more info.
+> 在开始之前，你需要有一个运行中的 <Code>Jaeger</Code> 实例，参考 https://www.jaegertracing.io/ 了解更多信息。
 
-## Create http datasource
+
+## 创建 HTTP 数据源
 
 <img src="https://github.com/data-observe/assets/blob/main/variable/http-datasource.jpg?raw=true" style={{height: "400px"}}/>
 
-## Create http Variable
+## 创建 HTTP 变量
 
-Let's create a variable named `operation` to query data from jaeger http api: `http://localhost:16686/api/services/frontend/operations`.
+我们将创建一个变量，用于从 jaeger http api 查询数据：`http://localhost:16686/api/services/frontend/operations`。
 
-> We will use `service` variable created in [Jaeger](/docs/variable-jaeger#jaeger-services) doc, please make sure it still exists.
+> 我们将使用 [Jaeger](/docs/variable-jaeger#jaeger-services) 文档中创建的 `service` 变量，请确保它仍然存在。
 
-### Basic info 
+### 基本信息
 
-First fill in the variable editor with: 
+如下所示，填写变量基本信息：
 
 <img src="https://github.com/data-observe/assets/blob/main/variable/basic-http.jpg?raw=true" style={{height: "500px"}}/>
 
-You should have noticed, we have use a `service` variable in  `Query values` field: `http://localhost:16686/api/services/${service}/operations`, which means **we can use variable in HTTP request url**.
+大家应该有注意到，在 `Query values` 字段中，我们使用了 `service` 变量：`http://localhost:16686/api/services/${service}/operations`，这意味着**我们可以在 HTTP 请求 url 中使用变量**。
 
 
-### Edit request 
+### 编辑 HTTP 请求
 
-In `Request transform` section, we can set params for http request, such as `start time`, `end time` etc.
+在 `Request transform` 部分，我们可以设置 HTTP 请求的参数，例如 `start time`，`end time` 等。
 
-You can't use variable format in  `function body`, but you can use its `variables` param instead.
+你**不能**在 `function body` 中使用变量格式 `${var1}`，但是你可以使用它的 `variables` 参数作为替代。
 
-As we don't need any params for this request, just leave it as default.
+由于我们不需要任何参数，所以保持默认即可。
 
-> If you look into the `Request transform` function, you should see it default add `start` and `end` params to you request.
+> 如果你查看 `Request transform` 函数，你应该看到它默认为你的请求添加了 `start` 和 `end` 参数。
 
-### Edit response
+### 编辑 HTTP 响应
 
-This is the most important part of HTTP datasource, we need to parse the response data to get the variable values we want.
-
-`Response transform` function must return a object as below: 
+这是 HTTP 数据源最重要的部分，我们需要解析响应数据，以获取我们想要的变量值，下面是 HTTP 数据源的返回格式：
 
 ```json 
 {
@@ -56,8 +55,7 @@ This is the most important part of HTTP datasource, we need to parse the respons
 }
 ```
 
-As we already know this http request will return :
-
+而发起到 Jaeger 的 HTTP 请求返回格式如下：
 ```json
 {
   "data": [
@@ -69,7 +67,8 @@ As we already know this http request will return :
   "errors": null
 }
 ```
-so Let's modify this function to :
+
+因此我们需要对返回格式进行一下简单转换: 
 
 ```js
 function transformResult(httpResult) {
@@ -80,17 +79,17 @@ function transformResult(httpResult) {
 }
 ```
 
-Now we can successfully get the `operation` variable values with `service` variable set to `frontend` :
+现在我们可以成功获取到 `frontend` service 的 `operation` 变量值。
 
 <img src="https://github.com/data-observe/assets/blob/main/variable/http-variable.jpg?raw=true" style={{height: "500px"}}/>
 
-## Final result 
+## 最终效果
 
-This is easy just because the response of jaeger api is already in the format we want, but in most cases, you need to do some extra work to get the variable values you want.
+上面的代码很简单，原因只有一个： Jaeger 的 API 返回格式跟我们需要的几乎一致，但是大多数情况下，你都需要做一些额外的工作来确保数据格式被正确转换。
 
 <video controls autoPlay src="https://github.com/data-observe/assets/blob/main/variable/http-final.mov?raw=true" style={{height: "500px"}}/>
 
-As you can see, because we use `service` variable in Http request url, when we change the `service` variable value, the `operation` variable values will change accordingly, great!
+如上所示，由于我们在 http 请求的 url 中使用了 `service` 变量，因此当改变 `service` 变量值时，`operation` 变量的值也会随之变化，666.
 
 
 
