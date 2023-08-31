@@ -40,6 +40,7 @@ const LogChart = memo((props: Props) => {
     const options = panel.type == PanelType.Log ? panel.plugins.log.chart : panel.plugins.alert.chart
     const [chart, setChart] = useState<echarts.ECharts>(null)
     const { colorMode } = useColorMode()
+
     useEffect(() => {
         if (chart) {
             chart.on('click', function (event) {
@@ -166,16 +167,15 @@ const LogChart = memo((props: Props) => {
 
     const timeFontSize = 10
     const [interval, rotate] = getTimeInterval(width, timeline[0], timeFontSize, timeline.length)
+    const tooltipOptions = panel.type == PanelType.Alert ? panel.plugins.alert.chart.tooltip : panel.plugins.log.chart.tooltip
     let tooltipMode = "item"
-    if (panel.type == PanelType.Alert) {
-        if (panel.plugins.alert.chart.tooltip == "none") {
+        if (tooltipOptions == "none") {
             tooltipMode = "none" 
-        }  else if (panel.plugins.alert.chart.tooltip == "single") {
+        }  else if (tooltipOptions == "single") {
             tooltipMode = "item"
         } else {
             tooltipMode = "axis"
         }
-    }
     const chartOptions = {
         animation: true,
         animationDuration: 500,

@@ -147,6 +147,7 @@ export interface LogSettings {
         height: string
         showLabel: "auto" | "always" | "none"
         stack: "auto" | "always" | "none"
+        tooltip: "none" | "single" | "all"
     }
     thresholds: LogThreshold[]
 }

@@ -419,6 +419,7 @@ function onClick(data, map, navigate, setVariable, setDateTime, $variables) {
                 height: '120px',
                 showLabel: "auto",
                 stack: "auto",
+                tooltip: "all"
             },
             thresholds: [{ type: null, value: null, key: null, color: 'inherit' }]
         },
