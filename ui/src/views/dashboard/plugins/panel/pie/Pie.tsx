@@ -26,7 +26,6 @@ import { ValueCalculationType } from "types/value";
 import { getThreshold } from "components/Threshold/utils";
 import { ThresholdsMode } from "types/threshold";
 import { isEmpty } from "utils/validate";
-import { useNavigate } from "react-router-dom";
 import { isFunction } from "lodash";
 
 interface Props extends PanelProps {
@@ -54,7 +53,6 @@ const PiePanel = (props: Props) => {
     const { panel, height, width } = props
     const [chart, setChart] = useState(null)
     const { colorMode } = useColorMode()
-    const navigate = useNavigate()
     if (!isSeriesData(props.data)) {
         return (<Center height="100%">Data format not support!</Center>)
     }

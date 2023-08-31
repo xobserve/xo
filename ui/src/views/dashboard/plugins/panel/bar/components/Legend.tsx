@@ -41,7 +41,7 @@ interface Props {
 }
 
 
-const LegendTable = memo(({ props, data, width,onSeriesActive,inactiveSeries }: Props) => {
+const LegendTable = memo(({ props, data, width, onSeriesActive, inactiveSeries }: Props) => {
     const options = props.panel.plugins.bar
     const inactiveKey = PanelInactiveKey + props.dashboardId + '-' + props.panel.id
     useEffect(() => {
@@ -53,14 +53,14 @@ const LegendTable = memo(({ props, data, width,onSeriesActive,inactiveSeries }: 
     }, [inactiveSeries])
 
 
-    const  pressShift = useKeyPress((event) => {
-            if (event.key === 'Shift') {
-                event.stopPropagation()
-                event.preventDefault()
-                return true
-            }
-            return false
-        })
+    const pressShift = useKeyPress((event) => {
+        if (event.key === 'Shift') {
+            event.stopPropagation()
+            event.preventDefault()
+            return true
+        }
+        return false
+    })
 
 
     const valueSettings: ValueSetting = options.value
@@ -88,7 +88,7 @@ const LegendTable = memo(({ props, data, width,onSeriesActive,inactiveSeries }: 
 
     for (const v of values) {
         const override: OverrideItem = findOverride(props.panel, v.rawName)
-        const unitsOverride = findRuleInOverride(override,  BarRules.SeriesUnit)
+        const unitsOverride = findRuleInOverride(override, BarRules.SeriesUnit)
         let units = valueSettings.units
         let unitsType = valueSettings.unitsType
         let decimal = valueSettings.decimal
@@ -106,62 +106,62 @@ const LegendTable = memo(({ props, data, width,onSeriesActive,inactiveSeries }: 
         v.decimal = decimal
     }
 
-    const onSelectSeries = (s,i,pressShift) => {
+    const onSelectSeries = (s, i, pressShift) => {
         if (!pressShift) { // 未按住 shift
-                    if (inactiveSeries.length == 0) {
-                        // 也没有隐藏的 series: 只显示 s, 隐藏其它
-                        const inactive = []
-                        for (const s1 of data) {
-                            if (s1.name != s) {
-                                inactive.push(s1.name)
-                            }
-                        }
-                        onSeriesActive(inactive)
-                    } else {
-                        // 已经有 series 被隐藏
-                        if (inactiveSeries.includes(s)) {
-                            //  s 处于隐藏状态，点击它，显示它，并隐藏其它
-                            const inactive = []
-                            for (const s1 of data) {
-                                if (s1.name != s) {
-                                    inactive.push(s1.name)
-                                }
-                            }
-                            onSeriesActive(inactive)
-                        } else {
-                            // s 目前处于显示状态，再次点击它，显示所有
-                            onSeriesActive([])
-                        }
-                    }
-                } else {
-                    // 按住 shift
-                    if (inactiveSeries.length == 0) {
-                        // 没有处于隐藏的, 显示 s
-                        const inactive = []
-                        for (const s1 of data) {
-                            if (s1.name != s) {
-                                inactive.push(s1.name)
-                            }
-                        }
-                        onSeriesActive(inactive)
-                        return 
-                    }
-                    if (inactiveSeries.includes(s) ) {
-                        // s 处于隐藏状态，点击它，显示它
-                        const inactive = inactiveSeries.filter(s1 => s1 != s)
-                        onSeriesActive(inactive)
-                    } else {
-                        // s 处于显示状态，点击它，隐藏它
-                        const inactive = [...inactiveSeries]
-                        inactive.push(s)
-                        onSeriesActive(inactive)
+            if (inactiveSeries.length == 0) {
+                // 也没有隐藏的 series: 只显示 s, 隐藏其它
+                const inactive = []
+                for (const s1 of data) {
+                    if (s1.name != s) {
+                        inactive.push(s1.name)
                     }
                 }
+                onSeriesActive(inactive)
+            } else {
+                // 已经有 series 被隐藏
+                if (inactiveSeries.includes(s)) {
+                    //  s 处于隐藏状态，点击它，显示它，并隐藏其它
+                    const inactive = []
+                    for (const s1 of data) {
+                        if (s1.name != s) {
+                            inactive.push(s1.name)
+                        }
+                    }
+                    onSeriesActive(inactive)
+                } else {
+                    // s 目前处于显示状态，再次点击它，显示所有
+                    onSeriesActive([])
+                }
+            }
+        } else {
+            // 按住 shift
+            if (inactiveSeries.length == 0) {
+                // 没有处于隐藏的, 显示 s
+                const inactive = []
+                for (const s1 of data) {
+                    if (s1.name != s) {
+                        inactive.push(s1.name)
+                    }
+                }
+                onSeriesActive(inactive)
+                return
+            }
+            if (inactiveSeries.includes(s)) {
+                // s 处于隐藏状态，点击它，显示它
+                const inactive = inactiveSeries.filter(s1 => s1 != s)
+                onSeriesActive(inactive)
+            } else {
+                // s 处于显示状态，点击它，隐藏它
+                const inactive = [...inactiveSeries]
+                inactive.push(s)
+                onSeriesActive(inactive)
+            }
+        }
     }
 
     return (
         <Box fontSize="xs" width="100%">
-            <TableContainer maxW={options.legend.placement == "bottom" ? props.width  : width} p={0} marginLeft="-18px" sx={{
+            <TableContainer maxW={options.legend.placement == "bottom" ? props.width : width} p={0} marginLeft="-18px" sx={{
                 '::-webkit-scrollbar': {
                     width: '1px',
                     height: '1px',
@@ -171,22 +171,25 @@ const LegendTable = memo(({ props, data, width,onSeriesActive,inactiveSeries }: 
                     <Thead>
                         <Tr>
                             <Th> </Th>
-                            {values[0].value.map(v => <Td fontSize="0.8remt" pt="0" pb="1" pr="1" pl="0" textAlign="center" fontWeight="500" onClick={() => {
-                                options.legend.order = { by: v[0], sort: options.legend.order.sort == "asc" ? "desc" : "asc" }
-                                dispatch({
-                                    type: UpdatePanelEvent,
-                                    data: cloneDeep(props.panel)
-                                })
-                            }}><HStack spacing={0} justifyContent="center" cursor="pointer" position="relative"><Text>{v[0]}</Text><Text> {options.legend.order.by == v[0] && <Text fontSize="0.6rem" opacity="0.7" position="absolute" top="3.5px">{options.legend.order.sort == "asc" ? <FaChevronUp /> : <FaChevronDown />}</Text>}</Text></HStack></Td>)}
+                            {values[0].value.map(v =>
+                                <Th width="50px" fontSize="0.8remt" pt="0" pb="1" pr="1" pl="0" textAlign="center" fontWeight="500" onClick={() => {
+                                    options.legend.order = { by: v[0], sort: options.legend.order.sort == "asc" ? "desc" : "asc" }
+                                    dispatch({
+                                        type: UpdatePanelEvent,
+                                        data: cloneDeep(props.panel)
+                                    })
+                                }}>
+                                    <HStack spacing={0} justifyContent="end" cursor="pointer" position="relative"><Text>{v[0]}</Text><Text> {options.legend.order.by == v[0] && <Text fontSize="0.6rem" opacity="0.7" position="absolute" top="3.5px">{options.legend.order.sort == "asc" ? <FaChevronUp /> : <FaChevronDown />}</Text>}</Text></HStack>
+                                </Th>)}
                         </Tr>
                     </Thead>
                     <Tbody>
                         {values.map((v, i) => {
                             return (
-                                <Tr verticalAlign="top">
+                                <Tr verticalAlign="top" width="100%">
                                     <Td fontSize="0.75rem" py="1" cursor="pointer" onClick={() => onSelectSeries(v.name, i, pressShift[0])}>
                                         <HStack alignItems="center" opacity={(inactiveSeries.includes(v.name)) ? '0.6' : 1} userSelect="none">
-                                            <Box width="10px" height="4px" background={ v.color} mt="2px"></Box>
+                                            <Box width="10px" height="4px" background={v.color} mt="2px"></Box>
                                             {
                                                 (options.legend.placement == "bottom") ?
                                                     <Text noOfLines={3} minWidth="fit-content" wordBreak="break-all" whiteSpace={"break-spaces"}>{v.name}</Text>
@@ -196,7 +199,7 @@ const LegendTable = memo(({ props, data, width,onSeriesActive,inactiveSeries }: 
 
                                         </HStack>
                                     </Td>
-                                    {v.value.map((v0, i) => <Td textAlign="center" fontSize="0.75rem" py="1" px="1">{v0[1] ? (v.unitsType != "none"
+                                    {v.value.map((v0, i) => <Td textAlign="right" fontSize="0.75rem" py="1" px="1">{v0[1] ? (v.unitsType != "none"
                                         ? formatUnit(v0[1], v.units, v.decimal)
                                         : round(v0[1], v.decimal)) : v0[1]}</Td>)}
                                 </Tr>
