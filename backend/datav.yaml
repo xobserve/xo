@@ -27,7 +27,7 @@ user:
     # when enabled, various users can login with the same account name
     enable_multi_login: true
     # When enabled, a github login button will appears at Login page
-    enable_github_login: true
+    enable_github_login: false
     # Apply at https://github.com/settings/developers
     github_oauth_token: 
     github_oauth_secret: 

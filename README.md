@@ -12,7 +12,7 @@
 
 
 <h1 align="center">
-  Website and demo is going to release on 8.28
+  Website and demo is going to release on 9.3 - 9.4
 </h1>
 
 

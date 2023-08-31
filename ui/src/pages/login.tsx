@@ -150,7 +150,7 @@ function Login() {
                     <Box textAlign="center" width="50%" backgroundColor={useColorModeValue("hsla(0, 0%, 100%, 0.2)", "hsla(0, 0%, 100%, 0.2)")} p="12">
                         <Heading size="lg" color={"white"}>Welcome</Heading>
                         <Input borderWidth={0} value={username} onChange={e => setUsername(e.currentTarget.value)} placeholder={window.location.href.indexOf("play.datav.io") >= 0 ? "guest" : 'username'} mt="10" />
-                        <Input borderWidth={0}  value={password} type="password" onChange={e => setPassword(e.currentTarget.value)} placeholder={window.location.href.indexOf("localhost") >= 0 ? "guest" : 'password'} mt="6" onKeyPress={e => {
+                        <Input borderWidth={0}  value={password} type="password" onChange={e => setPassword(e.currentTarget.value)} placeholder={window.location.href.indexOf("play.datav.io") >= 0 ? "guest" : 'password'} mt="6" onKeyPress={e => {
                             if (e.key === 'Enter') {
                                 onFinish()
                             }

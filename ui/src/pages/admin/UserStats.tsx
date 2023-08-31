@@ -56,7 +56,7 @@ export const AdminUsers = memo(() => {
                             <Td>{user.username} {session?.user?.id == user.id && <Tag>You</Tag>}</Td>
                             <Td>{user.name}</Td>
                             <Td>{moment(user.created).fromNow()}</Td>
-                            <Td>{moment(user.lastSeenAt).fromNow()}</Td>
+                            <Td>{user.lastSeenAt && moment(user.lastSeenAt).fromNow()}</Td>
                             <Th>{user.visits??0}</Th>
                         </Tr>
                     })}
