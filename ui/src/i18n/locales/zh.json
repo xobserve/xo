@@ -105,6 +105,7 @@
     "descend": "降序",
     "ascend": "升序",
     "palette": "调色板",
+    "classic": "经典",
     "series": "数据序列 series",
     "seriesTips": "一个数据序列 series 可以绘制一条曲线",
     "highlightColor": "高亮颜色",
@@ -356,6 +357,7 @@
 
 
     "panelBorder": "图表边框",
+    "paletteTips": "只支持 Graph, Bar, Pie 和 Echarts 图表",
     "titleDecoration": "标题装饰",
     "panelDecoration": "图表装饰",
     "reverseTips": "只有部分装饰支持 reverse 模式",

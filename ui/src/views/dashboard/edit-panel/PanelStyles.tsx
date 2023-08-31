@@ -21,10 +21,12 @@ import DecorationSelect from "components/largescreen/components/DecorationSelect
 import BorderSelect from "components/largescreen/components/BorderSelect"
 import React from "react";
 import { useStore } from "@nanostores/react"
-import { panelMsg } from "src/i18n/locales/en"
-import { paletteColorNameToHex, paletteMap } from "utils/colors"
+import { commonMsg, panelMsg } from "src/i18n/locales/en"
+import { paletteColorNameToHex, paletteMap, palettes } from "utils/colors"
+import { FaCheck } from "react-icons/fa"
 
 const PanelStyles = ({ panel, onChange }: PanelEditorProps) => {
+    const t = useStore(commonMsg)
     const t1 = useStore(panelMsg)
     // let usePalette = false 
     // switch (panel.type) {
@@ -39,18 +41,19 @@ const PanelStyles = ({ panel, onChange }: PanelEditorProps) => {
     // }
     return (
         <>
-            {<PanelAccordion title="Color palette" defaultOpen>
-                <PanelEditItem desc="Only support Graph, Bar, Pie and Echarts panel">
-                    <VStack spacing={1} alignItems="left">
+            {<PanelAccordion title={t.palette} defaultOpen>
+                <PanelEditItem desc={t1.paletteTips}>
+                    <VStack spacing={2} alignItems="left">
                     {
-                        Object.keys(paletteMap).map(name => <HStack width="fit-content" spacing={0} borderWidth={"4px"} borderColor={name != panel.styles.palette ? "transparent" : "inherit"} cursor="pointer" onClick={e => {
+                        Object.keys(paletteMap).map(name => <HStack width="fit-content" spacing={0} className="hightlight-border" borderRadius={4}  cursor="pointer" onClick={e => {
                             onChange((panel:Panel) => {
                                 panel.styles.palette = name
                             })
                         }} >
                             {
-                                paletteMap[name].map(color => <Box className="color" width="14px" height="20px"  style={{ backgroundColor: paletteColorNameToHex(color) }} />)
+                                paletteMap[name].map(color => <Box  width="14px" height="20px" borderRadius={2}  style={{ backgroundColor: paletteColorNameToHex(color) }} />)
                             }
+                            {name == panel.styles.palette && <Box pl="2" className="action-icon"><FaCheck /></Box>}
                         </HStack>)
                     }
                     </VStack>
