@@ -4,6 +4,7 @@
 
 - Website
 - Basic docs
+- Github login
 
 ### Fixes
 

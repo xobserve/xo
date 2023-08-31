@@ -20,7 +20,7 @@ import useSession from "hooks/use-session"
 
 import { requestApi } from 'utils/axios/request';
 import storage from 'utils/localStorage';
-import { Box, Button, Heading, HStack, Image, Input, Text } from '@chakra-ui/react';
+import { Box, Button, Heading, HStack, Image, Input, Text, useColorModeValue } from '@chakra-ui/react';
 import { removeToken, saveToken } from 'utils/axios/getToken';
 import { useNavigate } from 'react-router-dom';
 import { useStore } from '@nanostores/react';
@@ -142,22 +142,21 @@ function Login() {
             />
 
             <Box className="datav-login" width="100vw" height="100vh" display="flex" justifyContent="center" alignItems="center" background="url('/login-bg.png')" backgroundSize="cover" backgroundPosition="center" backgroundRepeat="no-repeat" backgroundColor="#33a2e5">
-                <HStack width="900px" borderRadius="6px" boxShadow="-4px 5px 10px rgba(0, 0, 0, .4)" marginTop="-30px">
+                <HStack width="900px" borderRadius="6px" boxShadow="-1px 1px 10px rgba(0, 0, 0, .4)" marginTop="-30px">
                     <Box className="login-left" width="50%" display="flex" justifyContent="center" alignItems="center" flexDir="column">
                         <Image src="/logo.png" alt="" height="160px" width="160px" marginLeft="-10px" />
                         <Box fontSize="26px" color="white" fontWeight="bold">Datav</Box>
                     </Box>
-                    <Box textAlign="center" width="50%" backgroundColor={"hsla(0, 0%, 100%, .3)"} p="12">
+                    <Box textAlign="center" width="50%" backgroundColor={useColorModeValue("hsla(0, 0%, 100%, 0.2)", "hsla(0, 0%, 100%, 0.2)")} p="12">
                         <Heading size="lg" color={"white"}>Welcome</Heading>
-                        <Input value={username} onChange={e => setUsername(e.currentTarget.value)} placeholder='username' mt="10" />
-                        <Input value={password} type="password" onChange={e => setPassword(e.currentTarget.value)} placeholder='password' mt="6" onKeyPress={e => {
+                        <Input borderWidth={0} value={username} onChange={e => setUsername(e.currentTarget.value)} placeholder={window.location.href.indexOf("play.datav.io") >= 0 ? "guest" : 'username'} mt="10" />
+                        <Input borderWidth={0}  value={password} type="password" onChange={e => setPassword(e.currentTarget.value)} placeholder={window.location.href.indexOf("localhost") >= 0 ? "guest" : 'password'} mt="6" onKeyPress={e => {
                             if (e.key === 'Enter') {
                                 onFinish()
                             }
                         }} />
                         <Button colorScheme="twitter" mt="10" width="100%" _hover={{ background: null }} onClick={onFinish}>{t.login}</Button>
                         {config.enableGithubLogin && <Button colorScheme="gray" width="100%" mt="2" leftIcon={<FaGithub />} onClick={loginGithub}>Sign in with Github</Button>}
-                        {/* <Text fontWeight="500" mt="2">Try login with: guest / guest</Text> */}
                     </Box>
                 </HStack>
             </Box>

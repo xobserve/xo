@@ -161,8 +161,8 @@ func LoginGithub(c *gin.Context) {
 		}
 		defer tx.Rollback()
 
-		res, err := tx.Exec("INSERT INTO user (username,name,password,salt,created,updated) VALUES (?,?,?,?,?,?)",
-			githubUser.Username, githubUser.Name, encodedPW, salt, now, now)
+		res, err := tx.Exec("INSERT INTO user (username,name,password,salt,come_from,created,updated) VALUES (?,?,?,?,?,?,?)",
+			githubUser.Username, githubUser.Name, encodedPW, salt, "github", now, now)
 		if err != nil {
 			logger.Warn("new user error", "error", err)
 			c.JSON(500, common.RespInternalError())
