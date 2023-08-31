@@ -10,7 +10,7 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-import { Box, HStack, Modal, ModalBody, ModalContent, ModalOverlay, Text, Tooltip, useDisclosure } from "@chakra-ui/react"
+import { Box, HStack, Modal, ModalBody, ModalContent, ModalOverlay, Text, Tooltip, useDisclosure, useMediaQuery } from "@chakra-ui/react"
 import TimePicker, { TimePickerKey, convertRawToRange, getCurrentTimeRange, getNewestTimeRange } from "./TimePicker"
 import { TimeRange } from "types/time"
 import { FaRegClock } from "react-icons/fa"
@@ -137,6 +137,8 @@ const DatePicker = ({ showTime = true,showRealTime=false }: Props) => {
         setValue(tr)
     }
 
+    const [isLargerThan500] = useMediaQuery('(min-width: 800px)')
+
     return (
         <>
             <Box>
@@ -146,7 +148,7 @@ const DatePicker = ({ showTime = true,showRealTime=false }: Props) => {
                             <FaRegClock />
                         </IconButton>
                         {
-                            showTime && <Box>
+                            isLargerThan500 && showTime && <Box>
                                 <Text layerStyle="textSecondary" fontSize="0.9rem" fontWeight="500">
                                 {value.startRaw.toString().startsWith('now')? value.startRaw : dateTimeFormat(value.start) } to {value.endRaw.toString().startsWith('now')? value.endRaw : dateTimeFormat(value.end)}
                                 </Text>

@@ -10,7 +10,7 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-import { Box, useColorMode, useToast } from "@chakra-ui/react"
+import { Box, useColorMode, useMediaQuery, useToast } from "@chakra-ui/react"
 import { useCallback, useEffect, useMemo, useRef, useState } from "react"
 import { Dashboard, Panel } from "types/dashboard"
 import { requestApi } from "utils/axios/request"
@@ -223,9 +223,10 @@ const DashboardWrapper = ({ dashboardId, sideWidth }) => {
     },[dashboard, vars])
   
 
+    const [isLargeScreen] = useMediaQuery('(min-width: 600px)')
 
     return (<>
-        {dashboard && <Box px={fullscreen ? 0 : 3} width="100%" minHeight="100vh" position="relative">
+        {dashboard && <Box px={fullscreen ? 0 : (isLargeScreen ? 3 : 1)} width="100%" minHeight="100vh" position="relative">
             {/* <Decoration decoration={dashboard.data.styles.decoration}/> */}
             <DashboardHeader dashboard={dashboard} onChange={onDashbardChange} sideWidth={sideWidth} />
             <Box

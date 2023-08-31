@@ -11,7 +11,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { Box, Flex, HStack, IconButton, Input, Modal, ModalBody, ModalContent, ModalHeader, Text, Tooltip, VStack, useColorModeValue, useDisclosure } from "@chakra-ui/react"
+import { Box, Flex, HStack, IconButton, Input, Modal, ModalBody, ModalContent, ModalHeader, Text, Tooltip, VStack, useColorModeValue, useDisclosure, useMediaQuery } from "@chakra-ui/react"
 import React, { memo, useEffect, useMemo, useState } from "react"
 import { FaAlignJustify, FaBuffer, FaSearch, FaSitemap, FaTimes } from "react-icons/fa"
 import { Dashboard } from "types/dashboard"
@@ -199,6 +199,8 @@ const Search = memo((props: Props) => {
 
     }, [dashboards1, layout])
 
+    const [isLargeScreen] = useMediaQuery('(min-width: 600px)')
+
     return (
         <Box>
             <PopoverTooltip
@@ -208,7 +210,7 @@ const Search = memo((props: Props) => {
                     <HStack color={isOpen ? useColorModeValue("brand.500", "brand.200") : 'inherit'} className="hover-text" cursor="pointer" onClick={onSearchOpen}>
                     <Box>
                         {miniMode ?
-                            <IconButton fontSize={"1.2rem"} aria-label="" variant="ghost" color="current" _focus={{ border: null }} icon={<FaSearch />} />
+                            <IconButton fontSize={isLargeScreen ? "1.2rem" : "1rem"} aria-label="" variant="ghost" color="current" _focus={{ border: null }} icon={<FaSearch />} />
                             : <FaSearch />
                         }
                     </Box>

@@ -194,7 +194,7 @@ const DashboardGrid = memo((props: GridProps) => {
                             <ReactGridLayout
                                 width={width}
                                 isDraggable={draggable}
-                                isResizable={dashboard.editable}
+                                isResizable={draggable}
                                 containerPadding={[0, 0]}
                                 useCSSTransforms={false}
                                 margin={[GRID_CELL_VMARGIN, GRID_CELL_VMARGIN]}
@@ -270,8 +270,8 @@ const GridItem = React.forwardRef<HTMLDivElement, GridItemProps>((props, ref) =>
         // Mobile layout is a bit different, every panel take up full width
         width = props.gridWidth!;
         height = translateGridHeightToScreenHeight(gridPos!.h);
-        style.height = height;
-        style.width = '100%';
+        // style.height = height;
+        // style.width = '100%';
     } else {
         // Normal grid layout. The grid framework passes width and height directly to children as style props.
         width = parseFloat(props.style.width);
@@ -280,7 +280,7 @@ const GridItem = React.forwardRef<HTMLDivElement, GridItemProps>((props, ref) =>
 
     // props.children[0] is our main children. RGL adds the drag handle at props.children[1]
     return (
-        <Box {...divProps} ref={ref} className="react-grid-item" sx={{
+        <Box {...divProps} ref={ref} className="react-grid-item" sx={windowWidth > 769 ? {
             ".react-resizable-handle": {
                 position: "absolute",
                 width: "20px",
@@ -304,7 +304,7 @@ const GridItem = React.forwardRef<HTMLDivElement, GridItemProps>((props, ref) =>
                 borderRight: `2px solid ${useColorModeValue('rgba(0, 0, 0, 0.3)', 'rgba(255, 255, 255, 0.4)')}`,
                 borderBottom: `2px solid ${useColorModeValue('rgba(0, 0, 0, 0.3)', 'rgba(255, 255, 255, 0.4)')}`
             },
-        }}>
+        } : null}>
             {/* Pass width and height to children as render props */}
             {[props.children[0](width, height), props.children.slice(1)]}
         </Box>

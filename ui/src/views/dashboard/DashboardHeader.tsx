@@ -10,7 +10,7 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-import { Box, Flex, HStack, Select, Tooltip } from "@chakra-ui/react"
+import { Box, Flex, HStack, Select, Tooltip, useMediaQuery } from "@chakra-ui/react"
 import IconButton from "components/button/IconButton"
 import SelectVariables from "src/views/variables/SelectVariable"
 import { cloneDeep, find, isEmpty } from "lodash"
@@ -78,6 +78,8 @@ const DashboardHeader = memo(({ dashboard, onChange, sideWidth }: HeaderProps) =
         dispatch(TimeRefreshEvent)
     }
 
+    const [isLargerThan500] = useMediaQuery('(min-width: 600px)')
+    
     return (
         <Box
             id="dashboard-header"
@@ -95,12 +97,16 @@ const DashboardHeader = memo(({ dashboard, onChange, sideWidth }: HeaderProps) =
             {team &&
                 <>
                     <Flex justifyContent="space-between" >
-                        <HStack textStyle="title">
-                            <Tooltip label={t1.headerTeamTips}><Box cursor="pointer" onClick={() => navigate(`${ReserveUrls.Config}/team/${team.id}/members`)}>{team?.name}</Box></Tooltip>
-                            <Box>/</Box>
+                        <HStack textStyle={ isLargerThan500 ? "title" : null}>
+                            {isLargerThan500 && <>
+                                <Tooltip label={t1.headerTeamTips}><Box cursor="pointer" onClick={() => navigate(`${ReserveUrls.Config}/team/${team.id}/members`)}>{team?.name}</Box></Tooltip>
+                                <Box>/</Box>
+                            </>}
                             <Box>{dashboard.title}</Box>
+                            {isLargerThan500 &&  <>
                             <DashboardStar dashboardId={dashboard.id} fontSize="1.2rem" />
                             <DashboardShare dashboard={dashboard} fontSize="0.9rem" opacity="0.8" cursor="pointer" className="hover-text" />
+                            </>}
                         </HStack>
 
                         <HStack mr="2">
@@ -109,7 +115,7 @@ const DashboardHeader = memo(({ dashboard, onChange, sideWidth }: HeaderProps) =
                                 <DashboardSave dashboard={dashboard} />
                                 {dashboard && <DashboardSettings dashboard={dashboard} onChange={onChange} />}
                                 <DatePicker showTime />
-                                <HStack spacing={0}>
+                                {isLargerThan500 && <HStack spacing={0}>
                                     <Tooltip label={t1.refreshOnce}><Box onClick={refreshOnce}><IconButton variant="ghost"><MdSync /></IconButton></Box></Tooltip>
                                     <Tooltip label={t1.refreshInterval}>
                                         <Select variant="unstyled" value={refresh} onChange={(e) => setRefresh(Number(e.target.value))}>
@@ -121,7 +127,7 @@ const DashboardHeader = memo(({ dashboard, onChange, sideWidth }: HeaderProps) =
                                         </Select>
                                     </Tooltip>
                                     <Fullscreen />
-                                </HStack>
+                                </HStack>}
 
 
                             </HStack>
@@ -130,8 +136,8 @@ const DashboardHeader = memo(({ dashboard, onChange, sideWidth }: HeaderProps) =
 
                     </Flex>
                     {!isEmpty(vars) && <Flex justifyContent="space-between" mt="0">
-                        <SelectVariables  variables={vars.filter((v) => v.id.toString().startsWith("d-"))} />
-                        <SelectVariables  variables={vars.filter((v) => !v.id.toString().startsWith("d-") && !find(dashboard.data.hidingVars?.split(','), v1 => v.name.toLowerCase().match(v1)))} />
+                        <SelectVariables variables={vars.filter((v) => v.id.toString().startsWith("d-"))} />
+                        <SelectVariables variables={vars.filter((v) => !v.id.toString().startsWith("d-") && !find(dashboard.data.hidingVars?.split(','), v1 => v.name.toLowerCase().match(v1)))} />
                     </Flex>}
                 </>}
         </Box>

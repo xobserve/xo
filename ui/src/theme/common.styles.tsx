@@ -9,10 +9,10 @@ const CommonStyles = () => (
     styles={(theme: ChakraTheme) => {
       const {colorMode} = useColorMode()
       return css` 
-      .infinite-scroller {
+      .thin-scroller {
         ::-webkit-scrollbar {
-          width: 1px;
-          height: 1px;
+          width: 5px;
+          height: 5px;
         }   
       }
 
