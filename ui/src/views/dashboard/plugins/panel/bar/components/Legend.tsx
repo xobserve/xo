@@ -188,8 +188,9 @@ const LegendTable = memo(({ props, data, width, onSeriesActive, inactiveSeries }
                             return (
                                 <Tr verticalAlign="top" width="100%">
                                     <Td fontSize="0.75rem" py="1" cursor="pointer" onClick={() => onSelectSeries(v.name, i, pressShift[0])}>
-                                        <HStack alignItems="center" opacity={(inactiveSeries.includes(v.name)) ? '0.6' : 1} userSelect="none">
-                                            <Box width="10px" height="4px" background={v.color} mt="2px"></Box>
+                                        <HStack alignItems="start" opacity={(inactiveSeries.includes(v.name)) ? '0.6' : 1} userSelect="none">
+                                        <Box width="10px" minWidth="10px" height="4px" background={v.color} mt="7.5px"></Box>
+                                            
                                             {
                                                 (options.legend.placement == "bottom") ?
                                                     <Text noOfLines={3} minWidth="fit-content" wordBreak="break-all" whiteSpace={"break-spaces"}>{v.name}</Text>

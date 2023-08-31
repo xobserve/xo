@@ -138,13 +138,13 @@ const SeriesTable = memo(({ props, data, nearestSeries, filterIdx, mode, onSelec
                     <Thead>
                         <Tr>
                             <Th> </Th>
-                            {values[0].value.map(v => <Td fontSize="0.8remt" pt="0" pb="1" pr="1" pl="0" textAlign="center" fontWeight="500" onClick={() => {
+                            {values[0].value.map(v => <Th width="55px" fontSize="0.8remt" pt="0" pb="1" pr="1" pl="0" textAlign="center" fontWeight="500" onClick={() => {
                                 props.panel.plugins.graph.legend.order = { by: v[0], sort: props.panel.plugins.graph?.legend.order.sort == "asc" ? "desc" : "asc" }
                                 dispatch({
                                     type: UpdatePanelEvent,
                                     data: cloneDeep(props.panel)
                                 })
-                            }}><HStack spacing={0} justifyContent="center" cursor="pointer"><Text>{v[0]}</Text><Text> {props.panel.plugins.graph?.legend.order.by == v[0] && <Text fontSize="0.6rem" opacity="0.7" position="absolute" top="3.5px">{props.panel.plugins.graph.legend.order.sort == "asc" ? <FaChevronUp /> :<FaChevronDown />}</Text>}</Text></HStack></Td>)}
+                            }}><HStack spacing={0} justifyContent="end" cursor="pointer"><Text>{v[0]}</Text><Text> {props.panel.plugins.graph?.legend.order.by == v[0] && <Text fontSize="0.6rem" opacity="0.7" position="absolute" top="3.5px">{props.panel.plugins.graph.legend.order.sort == "asc" ? <FaChevronUp /> :<FaChevronDown />}</Text>}</Text></HStack></Th>)}
                         </Tr>
                     </Thead>
                     <Tbody>
@@ -156,8 +156,8 @@ const SeriesTable = memo(({ props, data, nearestSeries, filterIdx, mode, onSelec
                             return (
                                 <Tr verticalAlign="top">
                                     <Td fontSize="0.75rem" py="1" cursor="pointer" onClick={mode == seriesTableMode.Legend ? () => onSelect(v.name, i, pressShift[0]): null}>
-                                        <HStack alignItems="center" opacity={(inactiveSeries.includes(v.name)) ? '0.6' : (v.name == nearestSeries?.name ? 1 : (mode == seriesTableMode.Tooltip ? 0.8 : 1))} fontWeight={v.name == nearestSeries?.name ? 'bold' : "inherit"}  userSelect="none">
-                                            <Box width="10px" height="4px" background={v.color} mt="2px"></Box>
+                                        <HStack alignItems="start" opacity={(inactiveSeries.includes(v.name)) ? '0.6' : (v.name == nearestSeries?.name ? 1 : (mode == seriesTableMode.Tooltip ? 0.8 : 1))} fontWeight={v.name == nearestSeries?.name ? 'bold' : "inherit"}  userSelect="none">
+                                            <Box width="10px" minWidth="10px" height="4px" background={v.color} mt="7.5px"></Box>
                                             {
                                                 (props.panel.plugins.graph?.legend.placement == "bottom" || mode == seriesTableMode.Tooltip) ?
                                                     <Text noOfLines={3} minWidth="fit-content" wordBreak="break-all" whiteSpace={"break-spaces"}>{v.name}</Text>
@@ -167,7 +167,7 @@ const SeriesTable = memo(({ props, data, nearestSeries, filterIdx, mode, onSelec
 
                                         </HStack>
                                     </Td>
-                                    {v.value.map((v0, i) => <Td textAlign="center" fontSize="0.75rem" py="1" px="1">{v0[1] ? (v.unitsType != "none"
+                                    {v.value.map((v0, i) => <Td textAlign="right" fontSize="0.75rem" py="1" px="1">{v0[1] ? (v.unitsType != "none"
                                         ? formatUnit(v0[1], v.units, v.decimal)
                                         : round(v0[1], v.decimal)) : v0[1]}</Td>)}
                                 </Tr>
