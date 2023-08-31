@@ -11,7 +11,7 @@ In grafana, all data is in `Dataframe` formats, but in Datav, the data passed to
 
 <TextList>
     <li>Timeseries data( <Code>SeriesData</Code> ) format, this is the most common format for timeseries data, used in many panels, such as Graph, Gauge, Table, Stats etc.</li>
-    <li>NodeGraph data format, includes nodes and edges info </li>
+    <li>NodeGraph d`ata format, includes nodes and edges info </li>
     <li>Trace data format, same as jaeger</li>
 </TextList>
 
@@ -20,6 +20,14 @@ The data formats these panels require are not compatible with each other, if we 
 For most users, there is no need to care about the data format, because the data format is automatically converted by the panel. But if you want to query data from your own http backend, you need to know the data format of the panel you are using.
 
 But we are not going to talk much about the detail about each data format, because what is more important is how you can find the data format when needed.
+
+
+## Final data format 
+
+Defination for final data format: **The data format that is directly used by the panel is the final data format**.
+
+For example, if you use HTTP datasource to query data from external HTTP API, and the data format is A, then you must convert A format to the final data format that the chart requires before displaying it.
+
 
 ## How to find the data format
 
@@ -96,6 +104,18 @@ We can find the data format of the panel in the following ways:
       "color": "#FADE2A"
     }
   ]
+]
+```
+
+The above data is the final data format of `Graph` panel, each item in the list is a `SeriesData` format.
+
+This final data format can be described as below:
+{/* 
+```json 
+[
+  SeriesData1,
+  SeriesData2,
+  ...
 ]
 ```
 
@@ -213,11 +233,13 @@ The return format is very clear, but you may wonder, why shou I return a list fo
 
 ### SerieData format
 That is because the format of `SeriesData` is a list, it usually has two fields: 
-a time field and a value field, only with them, we can draw a time series chart: using time field for X-axis, using value field for Y-axis.
+a time field and a value field, only with them, we can draw a time series chart: using time field for X-axis, using value field for Y-axis. */}
 
-### Nodegraph format 
+## Nodegraph format 
 
-For comparison, let's change panel visualization to `NodeGraph` and view panel data n `Panel Debug`:
+Let's have a look at the final data format of `NodeGraph` panel.
+
+Change panel visualization to `NodeGraph` and view panel data n `Panel Debug -> Panel Data`:
 
 ```json
 [
@@ -260,62 +282,19 @@ For comparison, let's change panel visualization to `NodeGraph` and view panel d
 ]
 ```
 
-You can see, the format of panel data is like: 
+If we want query data from http api, you should transform the query result to above format to make it work.
 
-```json 
-[
-    {
-        "nodes": nodesList1,
-        "edges": edgeList1
-    },
-    {
-        "nodes": nodesList2,
-        "edges": edgeList1
-    },
-    ...
-]
-```
-
- This time, if you are also going to get data from your own http api, what would the api return? The answer is :
-
- ```js
-{
-    error:  null,
-    data:  {
-        "nodes": nodesList1,
-        "edges": edgeList1
-    }
-}
-```
-
-
-### Conclusion
-
-In a word, the panel data in `Panel Debug -> Panel Data` looks like this: 
-
-```json
-[
-    dataOfQueryA,
-    dataOfQueryB,
-    ...
-]
-```
-
-If we want query data from http api, you should find what `dataOfQueryA` look like in `Panel Debug -> Panel Data`,
-and make your http api return below format:
-
-```json
-{
-    error:  null,
-    data:  dataOfQueryA
-}
-```
 
 ## Panel data transform
 
-Sometimes the data query from datasource is not compatible with the data that panel chart requires. 
+Nomatter how the data is transformed, it must be compatible with the `final data format` required by the chart, otherwise the chart will not be displayed correctly.
 
-So we need a way to modify the data, for now, Datav provide a common panel data transform func to us.
+Sometimes, the data queried from datasource does not meet the requirements of the chart, so we need to transform the query result to the format that the chart requires.
+
+For this reason, we need a method to modify the data queried from the datasource , and Datav has provided a common data transformation function for us to do this.
+
+Let's take a look at an example: We need to convert the timestamp field in the data to a time string, so that we can see a more friendly time format in the Table.
+
 
 ### Transform timestamp to time string 
 
@@ -372,3 +351,335 @@ After doing this, the `Time` column of Table should show time string instead of 
 
 
 <img src="https://github.com/data-observe/assets/blob/main/panel/transformed-table.jpg?raw=true" style={{height: "260px"}}/>
+
+
+## Conclusion: Final data format is very important
+
+The final data format is very important in Datav, no matter you want to transform the existing data or convert the incompatible data from external query, the ultimate goal is to achieve the final data format.
+
+If you want to know the final data format of a chart type, it's also very simple: use TestData as datasource and select the chart type you need, then open `Panel Debug -> Panel Data`, the data format you saw is the final data format.
+
+### Composition of final data format
+
+The final data format is like this:
+
+```json 
+[
+    dataOfQueryA,
+    dataOfQueryB,
+]
+```
+
+You can see, the final data format is a list, each item in the list is the result of a query.
+
+
+There are two objects in the list above, `dataOfQueryA` and `dataOfQueryB`, which are respectively queried by query A and query B defined in the chart.
+
+<img src="https://github.com/data-observe/assets/blob/main/panel/panel-query.jpg?raw=true" />
+
+In the above image, you can clearly see there are two queries in the panel, each of them will query a result and insert it into the final data format. In fact, you can add as many queries as you like to a chart, but we don't recommend it, it will make the chart more complex than you would think.
+
+### Result query from HTTP datasource
+
+If you are using HTTP datasource to query data from external HTTP API, then **each HTTP request is equivalent to a query statement in the above chart**.
+
+There are two possibilities for the results queried by HTTP datasource:
+
+1. The format of the result is not supported by Datav, in this case, you need to transform it to the final data format in the `Transform` tab.
+2. The format of the result is the same as the element format in the final data format list, in this case, you don't need to transform it.
+
+But if it is the second case, one thing is certain: the HTTP API is specially developed for Datav, so the question is: **what format should I return if I want to develop a native data query API for Datav?**
+
+### Implement native data query API for Datav
+
+First of all, the format of the result returned by the HTTP API must be consistent with the element format in the final data format list.
+
+Let's use `NodeGraph` as an example, suppose the final data format we see in `Panel Debug -> Panel Data` is as below:
+
+```json
+[
+  {
+    "nodes": [
+      {
+        "id": "frontend",
+        "label": "frontend",
+        "data": {
+          "success": 0
+        },
+      },
+      {
+        "id": "route",
+        "label": "route",
+        "data": {
+          "success": 70
+        },
+      },
+    ],
+    "edges": [
+      {
+        "source": "customer",
+        "target": "mysql",
+        "label": "7",
+        "data": {
+          "success": 7
+        },
+      },
+      {
+        "source": "frontend",
+        "target": "customer",
+        "label": "7",
+        "data": {
+          "success": 7
+        },
+      }
+    ]
+  }
+]
+```
+
+Then result format returned by HTTP API should be consistent with the element format in the list above:
+
+
+```json 
+{
+  "nodes": [
+    {
+      "id": "frontend",
+      "label": "frontend",
+      "data": {
+        "success": 0
+      },
+    },
+    {
+      "id": "route",
+      "label": "route",
+      "data": {
+        "success": 70
+      },
+    },
+  ],
+  "edges": [
+    {
+      "source": "customer",
+      "target": "mysql",
+      "label": "7",
+      "data": {
+        "success": 7
+      },
+    },
+    {
+      "source": "frontend",
+      "target": "customer",
+      "label": "7",
+      "data": {
+        "success": 7
+      },
+    }
+  ]
+}
+```
+
+The above JSON is the result format return by HTTP API, but this is not enough, we should wrap the data with some fields to make the return result more resonable:
+
+```json
+{
+    "status": "success",
+    "error": "error message",
+    "data": {
+      "nodes": [
+        {
+          "id": "frontend",
+          "label": "frontend",
+          "data": {
+            "success": 0
+          },
+        },
+        {
+          "id": "route",
+          "label": "route",
+          "data": {
+            "success": 70
+          },
+        },
+      ],
+      "edges": [
+        {
+          "source": "customer",
+          "target": "mysql",
+          "label": "7",
+          "data": {
+            "success": 7
+          },
+        },
+        {
+          "source": "frontend",
+          "target": "customer",
+          "label": "7",
+          "data": {
+            "success": 7
+          },
+        }
+      ]
+    }
+}
+```
+
+You can see, the `data` field in the above JSON is an element of the required final data format list by `NodeGraph` panel.
+
+#### Qustion
+
+Here is a question for our readers: If the final data format is as below:
+
+```json 
+[
+  [
+    {
+      "id": 65,
+      "name": "{\"__name__\"=\"go_goroutines\",\"instance\"=\"localhost:9090\",\"job\"=\"prometheus\"}",
+      "length": 21,
+      "fields": [
+        {
+          "name": "Time",
+          "type": "time",
+          "values": [
+            1692950385,
+            1692950400,
+            1692950415,
+          ]
+        },
+        {
+          "name": "Value",
+          "type": "number",
+          "values": [
+            34,
+            34,
+            34,
+          ],
+          "labels": {
+            "__name__": "go_goroutines",
+            "instance": "localhost:9090",
+            "job": "prometheus"
+          }
+        }
+      ],
+      "rawName": "{\"__name__\"=\"go_goroutines\",\"instance\"=\"localhost:9090\",\"job\"=\"prometheus\"}",
+      "color": "#73BF69"
+    },
+    {
+      "id": 65,
+      "name": "{\"__name__\"=\"go_goroutines\",\"instance\"=\"localhost:9100\",\"job\"=\"node\"}",
+      "length": 21,
+      "fields": [
+        {
+          "name": "Time",
+          "type": "time",
+          "values": [
+            1692950385,
+            1692950400,
+            1692950415,
+          ]
+        },
+        {
+          "name": "Value",
+          "type": "number",
+          "values": [
+            7,
+            7,
+            7,
+          ],
+          "labels": {
+            "__name__": "go_goroutines",
+            "instance": "localhost:9100",
+            "job": "node"
+          }
+        }
+      ],
+      "rawName": "{\"__name__\"=\"go_goroutines\",\"instance\"=\"localhost:9100\",\"job\"=\"node\"}",
+      "color": "#FADE2A"
+    }
+  ]
+]
+```
+
+Then 1. How many queries are there in the panel? 2. Which format should the HTTP API returns?
+
+
+#### Answer
+
+As we can see, there are only one element in the final data format list, so the answer for question 1 is: there is only one query in the panel.
+
+
+The result format returned by HTTP API should be as below:
+
+```json 
+{
+    "status": "success",
+    "error": "error message",
+    "data": [
+      {
+        "id": 65,
+        "name": "{\"__name__\"=\"go_goroutines\",\"instance\"=\"localhost:9090\",\"job\"=\"prometheus\"}",
+        "length": 21,
+        "fields": [
+          {
+            "name": "Time",
+            "type": "time",
+            "values": [
+              1692950385,
+              1692950400,
+              1692950415,
+            ]
+          },
+          {
+            "name": "Value",
+            "type": "number",
+            "values": [
+              34,
+              34,
+              34,
+            ],
+            "labels": {
+              "__name__": "go_goroutines",
+              "instance": "localhost:9090",
+              "job": "prometheus"
+            }
+          }
+        ],
+        "rawName": "{\"__name__\"=\"go_goroutines\",\"instance\"=\"localhost:9090\",\"job\"=\"prometheus\"}",
+        "color": "#73BF69"
+      },
+      {
+        "id": 65,
+        "name": "{\"__name__\"=\"go_goroutines\",\"instance\"=\"localhost:9100\",\"job\"=\"node\"}",
+        "length": 21,
+        "fields": [
+          {
+            "name": "Time",
+            "type": "time",
+            "values": [
+              1692950385,
+              1692950400,
+              1692950415,
+            ]
+          },
+          {
+            "name": "Value",
+            "type": "number",
+            "values": [
+              7,
+              7,
+              7,
+            ],
+            "labels": {
+              "__name__": "go_goroutines",
+              "instance": "localhost:9100",
+              "job": "node"
+            }
+          }
+        ],
+        "rawName": "{\"__name__\"=\"go_goroutines\",\"instance\"=\"localhost:9100\",\"job\"=\"node\"}",
+        "color": "#FADE2A"
+      }
+    ]
+}
+```
