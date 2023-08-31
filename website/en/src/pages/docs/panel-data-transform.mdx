@@ -282,12 +282,12 @@ Change panel visualization to `NodeGraph` and view panel data n `Panel Debug -> 
 ]
 ```
 
-If we want query data from http api, you should transform the query result to above format to make it work.
+If we want query data from http api, we should transform the query result to the above format to make it work.
 
 
 ## Panel data transform
 
-Nomatter how the data is transformed, it must be compatible with the `final data format` required by the chart, otherwise the chart will not be displayed correctly.
+No matter how the data is transformed, it must be compatible with the `final data format` required by the chart, otherwise the chart will not be displayed correctly.
 
 Sometimes, the data queried from datasource does not meet the requirements of the chart, so we need to transform the query result to the format that the chart requires.
 
@@ -355,9 +355,9 @@ After doing this, the `Time` column of Table should show time string instead of 
 
 ## Conclusion: Final data format is very important
 
-The final data format is very important in Datav, no matter you want to transform the existing data or convert the incompatible data from external query, the ultimate goal is to achieve the final data format.
+The final data format is very important in Datav, no matter whether you want to transform the existing data or convert the incompatible data that query from an external HTTP API, the ultimate goal is to achieve the final data format.
 
-If you want to know the final data format of a chart type, it's also very simple: use TestData as datasource and select the chart type you need, then open `Panel Debug -> Panel Data`, the data format you saw is the final data format.
+If you want to know the final data format of a chart type, it's also very simple: use TestData as datasource and select the chart type you need, then open `Panel Debug -> Panel Data`, the data format you see  is the final data format.
 
 ### Composition of final data format
 

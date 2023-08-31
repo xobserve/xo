@@ -72,6 +72,7 @@ func (s *Server) Start() error {
 		router.Use(Cors())
 
 		r := router.Group("/api")
+		r.Use(gzip.Gzip(gzip.DefaultCompression))
 
 		// global config
 		r.GET("/config/ui", getUIConfig)
@@ -140,8 +141,6 @@ func (s *Server) Start() error {
 		r.Any("/proxy/:id/*path", proxy.ProxyDatasource)
 		r.Any("/proxy/:id", proxy.ProxyDatasource)
 		r.GET("/proxy", proxy.Proxy)
-
-		r.Use(gzip.Gzip(gzip.DefaultCompression))
 
 		s.srv = &http.Server{
 			Addr:    config.Data.Server.Addr,
