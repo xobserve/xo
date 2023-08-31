@@ -31,6 +31,7 @@ import loadable from '@loadable/component';
 import PageContainer from "layouts/PageContainer";
 import { Navigate } from "react-router-dom";
 import AdminPage from "./pages/admin/AuditLogs";
+import GithubLogin from "./pages/GithubLogin";
 
 
 const DashboardPage = loadable(() => import('./pages/dashboard/index'));
@@ -130,6 +131,10 @@ export const routes = [
   {
     path: "/login",
     element: <Login />,
+  },
+  {
+    path: "/login/github",
+    element: <GithubLogin />,
   },
 ]
 

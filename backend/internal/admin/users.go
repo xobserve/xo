@@ -160,7 +160,7 @@ func AddNewUser(c *gin.Context) {
 	c.JSON(200, common.RespSuccess(&models.User{
 		Id:       id,
 		Username: req.Username,
-		Email:    req.Email,
+		Email:    &req.Email,
 		Created:  now,
 		Updated:  now,
 		Role:     req.Role,

@@ -79,6 +79,7 @@ func (s *Server) Start() error {
 
 		// user apis
 		r.POST("/login", user.Login)
+		r.POST("/login/github", user.LoginGithub)
 		r.POST("/logout", user.Logout)
 		r.GET("/user/session", user.GetSession)
 		r.POST("/account/password", IsLogin(), user.UpdateUserPassword)

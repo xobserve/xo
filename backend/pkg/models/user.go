@@ -39,7 +39,7 @@ type User struct {
 	Id         int64      `json:"id"`
 	Username   string     `json:"username"`
 	Name       string     `json:"name"`
-	Email      string     `json:"email"`
+	Email      *string    `json:"email"`
 	Mobile     string     `json:"mobile"`
 	Role       RoleType   `json:"role"`
 	LastSeenAt *time.Time `json:"last_seen_at,omitempty"`
@@ -115,4 +115,14 @@ func QueryUserByName(username string) (*User, error) {
 	}
 
 	return user, nil
+}
+
+type GithubUser struct {
+	ID       int64  `json:"id"`
+	Avatar   string `json:"avatar_url"`
+	Username string `json:"login"`
+	Name     string `json:"name"`
+	Tagline  string `json:"bio"`
+	Website  string `json:"blog"`
+	Location string `json:"location"`
 }

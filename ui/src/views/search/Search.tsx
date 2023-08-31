@@ -46,7 +46,7 @@ const Search = memo((props: Props) => {
     const [rawDashboards, setRawDashboards] = useState<Dashboard[]>(null)
     const { isOpen, onOpen, onClose } = useDisclosure()
     const [selectedTags, setSelectedTags] = useState<string[]>([])
-    const [teams, setTeams] = useState<Team[]>([])
+    const [teams, setTeams] = useState<Team[]>(null)
     const [selectedTeams, setSelectedTeams] = useState<number[]>([])
     const [filterStarred, setFilterStarred] = useState<boolean>(false)
     const [starredDashIds, setStarredDashIds] = useState<Set<string>>(new Set())
@@ -71,7 +71,7 @@ const Search = memo((props: Props) => {
         setTeams(res.data)
     }
     
-    if (teams.length == 0) {
+    if (!teams) {
         load()
     }
 

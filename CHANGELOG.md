@@ -1,3 +1,18 @@
+## V0.8.0 (2023-08-31)
+
+### Features
+
+- Website
+- Basic docs
+
+### Fixes
+
+- fix about 20+ bugs
+
+### Commit Statistics
+
+- 127 commits since last release in 10 days
+
 ## V0.7.0 (2023-08-21)
 
 ### Features

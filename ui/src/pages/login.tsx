@@ -20,11 +20,13 @@ import useSession from "hooks/use-session"
 
 import { requestApi } from 'utils/axios/request';
 import storage from 'utils/localStorage';
-import { Box, Button, Heading, HStack, Image, Input } from '@chakra-ui/react';
-import { saveToken } from 'utils/axios/getToken';
+import { Box, Button, Heading, HStack, Image, Input, Text } from '@chakra-ui/react';
+import { removeToken, saveToken } from 'utils/axios/getToken';
 import { useNavigate } from 'react-router-dom';
 import { useStore } from '@nanostores/react';
 import { commonMsg } from 'src/i18n/locales/en';
+import { FaGithub } from 'react-icons/fa';
+import { config } from 'src/data/configs/config';
 
 // login page
 function Login() {
@@ -37,6 +39,7 @@ function Login() {
     const [username, setUsername] = React.useState('')
     const [password, setPassword] = React.useState('')
     const { useLogin } = useSession()
+
     const onFinish = async () => {
         const res = await requestApi.post(
             '/login',
@@ -56,6 +59,11 @@ function Login() {
             }
         }, 200)
     };
+
+    const loginGithub = () => {
+       window.location.href = `https://github.com/login/oauth/authorize?client_id=${config.githubOAuthToken}&redirect_url=${config.githubCallBackUrl}/login/github`
+    }
+
 
     return (
         <>
@@ -131,7 +139,7 @@ function Login() {
                     },
                     detectRetina: true,
                 }}
-                />
+            />
 
             <Box className="datav-login" width="100vw" height="100vh" display="flex" justifyContent="center" alignItems="center" background="url('/login-bg.png')" backgroundSize="cover" backgroundPosition="center" backgroundRepeat="no-repeat" backgroundColor="#33a2e5">
                 <HStack width="900px" borderRadius="6px" boxShadow="-4px 5px 10px rgba(0, 0, 0, .4)" marginTop="-30px">
@@ -142,12 +150,14 @@ function Login() {
                     <Box textAlign="center" width="50%" backgroundColor={"hsla(0, 0%, 100%, .3)"} p="12">
                         <Heading size="lg" color={"white"}>Welcome</Heading>
                         <Input value={username} onChange={e => setUsername(e.currentTarget.value)} placeholder='username' mt="10" />
-                        <Input value={password} type="password" onChange={e => setPassword(e.currentTarget.value)} placeholder='password' mt="6" onKeyPress={e=> {
-        if (e.key === 'Enter') {
-           onFinish()
-        }
-     }} />
+                        <Input value={password} type="password" onChange={e => setPassword(e.currentTarget.value)} placeholder='password' mt="6" onKeyPress={e => {
+                            if (e.key === 'Enter') {
+                                onFinish()
+                            }
+                        }} />
                         <Button colorScheme="twitter" mt="10" width="100%" _hover={{ background: null }} onClick={onFinish}>{t.login}</Button>
+                        {config.enableGithubLogin && <Button colorScheme="gray" width="100%" mt="2" leftIcon={<FaGithub />} onClick={loginGithub}>Sign in with Github</Button>}
+                        {/* <Text fontWeight="500" mt="2">Try login with: guest / guest</Text> */}
                     </Box>
                 </HStack>
             </Box>

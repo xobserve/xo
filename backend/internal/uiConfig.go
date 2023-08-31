@@ -25,6 +25,10 @@ type UIConfig struct {
 	RepoUrl       string `json:"repoUrl"`
 	Panel         Panel  `json:"panel"`
 	ShowAlertIcon bool   `json:"showAlertIcon"`
+
+	EnableGithubLogin bool   `json:"enableGithubLogin"`
+	GithubOAuthToken  string `json:"githubOAuthToken"`
+	GithubCallBackUrl string `json:"githubCallBackUrl"`
 }
 
 type Panel struct {
@@ -46,10 +50,13 @@ func getUIConfig(c *gin.Context) {
 		Echarts: echarts,
 	}
 	cfg := &UIConfig{
-		AppName:       config.Data.Common.AppName,
-		RepoUrl:       config.Data.Common.RepoUrl,
-		Panel:         panel,
-		ShowAlertIcon: config.Data.Sidemenu.ShowAlertIcon,
+		AppName:           config.Data.Common.AppName,
+		RepoUrl:           config.Data.Common.RepoUrl,
+		Panel:             panel,
+		ShowAlertIcon:     config.Data.Sidemenu.ShowAlertIcon,
+		EnableGithubLogin: config.Data.User.EnableGithubLogin,
+		GithubOAuthToken:  config.Data.User.GithubOAuthToken,
+		GithubCallBackUrl: config.Data.User.GithubCallBackUrl,
 	}
 
 	c.JSON(http.StatusOK, common.RespSuccess(cfg))

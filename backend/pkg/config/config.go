@@ -38,8 +38,12 @@ type Config struct {
 	}
 
 	User struct {
-		SessionExpire    int64 `yaml:"session_expire"`
-		EnableMultiLogin bool  `yaml:"enable_multi_login"`
+		SessionExpire     int64  `yaml:"session_expire"`
+		EnableMultiLogin  bool   `yaml:"enable_multi_login"`
+		EnableGithubLogin bool   `yaml:"enable_github_login"`
+		GithubOAuthToken  string `yaml:"github_oauth_token"`
+		GithubOAuthSecret string `yaml:"github_oauth_secret"`
+		GithubCallBackUrl string `yaml:"github_callback_url"`
 	}
 
 	Server struct {

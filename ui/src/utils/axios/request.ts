@@ -95,13 +95,16 @@ requestApi.interceptors.response.use(
       // request to our api server
       if (status == 406) {
         // session expires
-        toast({
-          title: 'Session expires',
-          // description: 'Login redirecting...',
-          status: "error",
-          duration: 3000,
-          isClosable: true,
-        })
+        const id = "Session expires"
+        if (!toast.isActive(id)) {
+          toast({
+            id: id,
+            title: id,
+            status: "error",
+            duration: 4000,
+            isClosable: true,
+          })
+        }
         // setTimeout(() => {
         //   storage.set("current-page", location.pathname)
         //   location.href = '/login'
