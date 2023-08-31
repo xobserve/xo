@@ -21,6 +21,7 @@ const AntdWrapper = ({ children }) => {
     const edit = useSearchParam("edit")
     const { colorMode } = useColorMode()
     const { defaultAlgorithm, darkAlgorithm } = theme;
+    
     return (<Box sx={{
         // set right border of antd Table header to null
         'th.ant-table-cell:before': {

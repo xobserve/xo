@@ -94,10 +94,10 @@ const UserMenu = ({ fontSize = "1.2rem", miniMode }) => {
                     }
                     <Portal>
                         <MenuList>
-                            <MenuItem icon={<FaUserAlt fontSize="1rem" />} >
-                                <span>{session.user.name}</span>
-                                <chakra.span ml="2" layerStyle="textSecondary">{session.user.username}</chakra.span>
-                            </MenuItem>
+                            <Link to={`/account/setting`}><MenuItem icon={<FaUserAlt fontSize="1rem" />} >
+                                <Text>{session.user.name}</Text>
+                                <Text textStyle="annotation">{session.user.username}</Text>
+                            </MenuItem></Link>
                             <MenuDivider />
                             {isAdmin(session.user.role) && <><Link to={`/admin/audit`}><MenuItem icon={<FaStar fontSize="1rem" />} >{t1.adminPanel}</MenuItem></Link><MenuDivider /></>}
                             <MenuItem><Box><ColorModeSwitcher miniMode={false} /></Box></MenuItem>

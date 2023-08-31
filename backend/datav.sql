@@ -14,6 +14,7 @@ CREATE TABLE IF NOT EXISTS user (
     is_diabled BOOL NOT NULL DEFAULT false,
     sidemenu INTEGER DEFAULT 1,
     come_from VARCHAR(32) DEFAULT 'local',
+    visit_count INTEGER DEFAULT 0,
     created DATETIME NOT NULL,
     updated DATETIME NOT NULL
 );

@@ -128,7 +128,7 @@ const AccountSetting = () => {
                         <Input placeholder='give yourself a nick name' value={name} onChange={e => setName(e.currentTarget.value)} />
                     </FormItem>
                     <FormItem title={t.email} labelWidth="200px">
-                        <Input placeholder='enter a valid email' value={email} onChange={e => setEmail(e.currentTarget.value.trim())} />
+                        <Input  placeholder='enter a valid email' value={email} onChange={e => setEmail(e.currentTarget.value.trim())} />
                     </FormItem>
                     <Button width="fit-content" onClick={updateAccount}>{t.submit}</Button>
                 </VStack>
@@ -136,13 +136,13 @@ const AccountSetting = () => {
                 <VStack alignItems="left" mt="8" spacing={3}>
                     <Box mb="2" textStyle="subTitle">{t1.changePassword}</Box>
                     <FormItem title={t1.oldPassword} labelWidth="200px">
-                        <Input type="password" placeholder="******" value={oldpw} onChange={e => setOldpw(e.currentTarget.value.trim())} />
+                        <Input  placeholder="******" value={oldpw} onChange={e => setOldpw(e.currentTarget.value.trim())} />
                     </FormItem>
                     <FormItem title={t1.newPassword} labelWidth="200px">
-                        <Input type="password" placeholder="******" value={newpw} onChange={e => setNewpw(e.currentTarget.value.trim())} />
+                        <Input  placeholder="******" value={newpw} onChange={e => setNewpw(e.currentTarget.value.trim())} />
                     </FormItem>
                     <FormItem title={t1.confirmPassword} labelWidth="200px">
-                        <Input type="password" placeholder="******" value={confirmpw} onChange={e => setConfirmpw(e.currentTarget.value.trim())} />
+                        <Input placeholder="******" value={confirmpw} onChange={e => setConfirmpw(e.currentTarget.value.trim())} />
                     </FormItem>
                     <Button width="fit-content" onClick={updatePassword}>{t.submit}</Button>
                 </VStack>

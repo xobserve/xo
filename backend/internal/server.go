@@ -84,6 +84,7 @@ func (s *Server) Start() error {
 		r.GET("/user/session", user.GetSession)
 		r.POST("/account/password", IsLogin(), user.UpdateUserPassword)
 		r.POST("/account/info", IsLogin(), user.UpdateUserInfo)
+		r.POST("/user/visit", IsLogin(), user.Visit)
 
 		// teams apis
 		r.GET("/teams/all", IsLogin(), teams.GetTeams)

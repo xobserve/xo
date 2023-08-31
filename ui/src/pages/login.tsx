@@ -20,8 +20,8 @@ import useSession from "hooks/use-session"
 
 import { requestApi } from 'utils/axios/request';
 import storage from 'utils/localStorage';
-import { Box, Button, Heading, HStack, Image, Input, Text, useColorModeValue } from '@chakra-ui/react';
-import { removeToken, saveToken } from 'utils/axios/getToken';
+import { Box, Button, Heading, HStack, Image, Input, useColorModeValue } from '@chakra-ui/react';
+import { saveToken } from 'utils/axios/getToken';
 import { useNavigate } from 'react-router-dom';
 import { useStore } from '@nanostores/react';
 import { commonMsg } from 'src/i18n/locales/en';
