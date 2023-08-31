@@ -75,7 +75,6 @@ export class FrameVectorSource<T extends Geometry = Geometry> extends VectorSour
             const code = s.name.toLowerCase()
             let location = countries[code] ?? cities[code]
             if (!location) {
-              
                 const  f = s.fields.find(f => f.type == FieldType.Geo)
                 if (f) {
                     location = [s.name, f.values]

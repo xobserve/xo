@@ -103,9 +103,9 @@ export const prometheusToSeriesData = (panel: Panel, data: any, query: PanelQuer
 
 
             const series: SeriesData = {
-                id: query.id,
+                // id: query.id,
                 name: metric,
-                length: m.values.length,
+                // length: m.values.length,
                 fields: [
                     {
                         name: "Time",

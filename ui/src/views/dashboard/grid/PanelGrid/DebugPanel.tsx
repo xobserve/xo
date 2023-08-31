@@ -130,7 +130,7 @@ const PanelAnnotations = ({ dashboardId, panel }: PanelAnnotationsProps) => {
             {annotation && <AnnotationEditor annotation={annotation} onEditorClose={() => {
                     setAnnotation(null)
             }} />}
-
+            
             <Divider mt="2" />
             <HStack fontSize="0.9rem" alignItems="center" mt="4" fontWeight={550}>
                 <Button  colorScheme="red" onClick={onOpen}>Delete Anotations</Button>

@@ -11,7 +11,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 export interface SeriesData {
-    id: number;
+    id?: number;
     name?: string;
     fields: Field[]; // All fields of equal length
 

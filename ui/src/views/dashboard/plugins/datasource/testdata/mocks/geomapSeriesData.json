@@ -1,8 +1,6 @@
 [
     {
-        "id": "A",
         "name": "Shanghai",
-        "rawName": "Shanghai",
         "fields": [
             {
                 "name": "Time",
@@ -25,9 +23,7 @@
         ]
     },
     {
-        "id": "A",
         "name": "Chengdu",
-        "rawName": "Chengdu",
         "fields": [
             {
                 "name": "Time",
@@ -46,9 +42,7 @@
         ]
     },
     {
-        "id": "A",
         "name": "AL",
-        "rawName": "AL",
         "fields": [
             {
                 "name": "Time",
@@ -71,9 +65,7 @@
         ]
     },
     {
-        "id": "A",
         "name": "AM",
-        "rawName": "AM",
         "fields": [
             {
                 "name": "Time",
@@ -96,9 +88,7 @@
         ]
     },
     {
-        "id": "A",
         "name": "AO",
-        "rawName": "AO",
         "fields": [
             {
                 "name": "Time",
@@ -119,9 +109,7 @@
         ]
     },
     {
-        "id": "A",
         "name": "AP",
-        "rawName": "AP",
         "fields": [
             {
                 "name": "Time",
@@ -144,9 +132,7 @@
         ]
     },
     {
-        "id": "A",
         "name": "AR",
-        "rawName": "AR",
         "fields": [
             {
                 "name": "Time",
@@ -169,9 +155,7 @@
         ]
     },
     {
-        "id": "A",
         "name": "AT",
-        "rawName": "AT",
         "fields": [
             {
                 "name": "Time",
@@ -194,9 +178,7 @@
         ]
     },
     {
-        "id": "A",
         "name": "AU",
-        "rawName": "AU",
         "fields": [
             {
                 "name": "Time",
@@ -219,9 +201,7 @@
         ]
     },
     {
-        "id": "A",
         "name": "AW",
-        "rawName": "AW",
         "fields": [
             {
                 "name": "Time",
@@ -240,9 +220,7 @@
         ]
     },
     {
-        "id": "A",
         "name": "AZ",
-        "rawName": "AZ",
         "fields": [
             {
                 "name": "Time",
@@ -261,9 +239,7 @@
         ]
     },
     {
-        "id": "A",
         "name": "BA",
-        "rawName": "BA",
         "fields": [
             {
                 "name": "Time",
@@ -284,9 +260,7 @@
         ]
     },
     {
-        "id": "A",
         "name": "BB",
-        "rawName": "BB",
         "fields": [
             {
                 "name": "Time",
@@ -305,9 +279,7 @@
         ]
     },
     {
-        "id": "A",
         "name": "BD",
-        "rawName": "BD",
         "fields": [
             {
                 "name": "Time",
@@ -330,9 +302,7 @@
         ]
     },
     {
-        "id": "A",
         "name": "BE",
-        "rawName": "BE",
         "fields": [
             {
                 "name": "Time",
@@ -355,9 +325,7 @@
         ]
     },
     {
-        "id": "A",
         "name": "BG",
-        "rawName": "BG",
         "fields": [
             {
                 "name": "Time",
@@ -380,9 +348,7 @@
         ]
     },
     {
-        "id": "A",
         "name": "BH",
-        "rawName": "BH",
         "fields": [
             {
                 "name": "Time",
@@ -405,9 +371,7 @@
         ]
     },
     {
-        "id": "A",
         "name": "BN",
-        "rawName": "BN",
         "fields": [
             {
                 "name": "Time",
@@ -428,9 +392,7 @@
         ]
     },
     {
-        "id": "A",
         "name": "BO",
-        "rawName": "BO",
         "fields": [
             {
                 "name": "Time",
@@ -451,9 +413,7 @@
         ]
     },
     {
-        "id": "A",
         "name": "BR",
-        "rawName": "BR",
         "fields": [
             {
                 "name": "Time",
@@ -476,9 +436,7 @@
         ]
     },
     {
-        "id": "A",
         "name": "BW",
-        "rawName": "BW",
         "fields": [
             {
                 "name": "Time",
@@ -497,9 +455,7 @@
         ]
     },
     {
-        "id": "A",
         "name": "BY",
-        "rawName": "BY",
         "fields": [
             {
                 "name": "Time",
@@ -520,9 +476,7 @@
         ]
     },
     {
-        "id": "A",
         "name": "CA",
-        "rawName": "CA",
         "fields": [
             {
                 "name": "Time",
@@ -545,9 +499,7 @@
         ]
     },
     {
-        "id": "A",
         "name": "CG",
-        "rawName": "CG",
         "fields": [
             {
                 "name": "Time",
@@ -566,9 +518,7 @@
         ]
     },
     {
-        "id": "A",
         "name": "CH",
-        "rawName": "CH",
         "fields": [
             {
                 "name": "Time",
@@ -591,9 +541,7 @@
         ]
     },
     {
-        "id": "A",
         "name": "CI",
-        "rawName": "CI",
         "fields": [
             {
                 "name": "Time",
@@ -614,9 +562,7 @@
         ]
     },
     {
-        "id": "A",
         "name": "CL",
-        "rawName": "CL",
         "fields": [
             {
                 "name": "Time",
@@ -639,9 +585,7 @@
         ]
     },
     {
-        "id": "A",
         "name": "Bei_jing",
-        "rawName": "Bei_jing",
         "fields": [
             {
                 "name": "Time",
@@ -672,9 +616,7 @@
         ]
     },
     {
-        "id": "A",
         "name": "HangZhou",
-        "rawName": "HangZhou",
         "fields": [
             {
                 "name": "Time",
@@ -697,9 +639,7 @@
         ]
     },
     {
-        "id": "A",
         "name": "NingBo",
-        "rawName": "NingBo",
         "fields": [
             {
                 "name": "Time",
@@ -722,9 +662,7 @@
         ]
     },
     {
-        "id": "A",
         "name": "Zhangzhou",
-        "rawName": "Zhangzhou",
         "fields": [
             {
                 "name": "Time",
@@ -747,9 +685,7 @@
         ]
     },
     {
-        "id": "A",
         "name": "Xiamen",
-        "rawName": "Xiamen",
         "fields": [
             {
                 "name": "Time",
@@ -772,9 +708,7 @@
         ]
     },
     {
-        "id": "A",
         "name": "Xian",
-        "rawName": "CY",
         "fields": [
             {
                 "name": "Time",
@@ -797,9 +731,7 @@
         ]
     },
     {
-        "id": "A",
         "name": "Urumqi",
-        "rawName": "CZ",
         "fields": [
             {
                 "name": "Time",
@@ -822,9 +754,7 @@
         ]
     },
     {
-        "id": "A",
         "name": "Wuhan",
-        "rawName": "Wuhan",
         "fields": [
             {
                 "name": "Time",
@@ -847,9 +777,7 @@
         ]
     },
     {
-        "id": "A",
         "name": "Guiyang",
-        "rawName": "Guiyang",
         "fields": [
             {
                 "name": "Time",
@@ -872,9 +800,7 @@
         ]
     },
     {
-        "id": "A",
         "name": "Kunming",
-        "rawName": "Kunming",
         "fields": [
             {
                 "name": "Time",
@@ -897,9 +823,7 @@
         ]
     },
     {
-        "id": "A",
         "name": "DZ",
-        "rawName": "DZ",
         "fields": [
             {
                 "name": "Time",
@@ -922,9 +846,7 @@
         ]
     },
     {
-        "id": "A",
         "name": "EC",
-        "rawName": "EC",
         "fields": [
             {
                 "name": "Time",
@@ -945,9 +867,7 @@
         ]
     },
     {
-        "id": "A",
         "name": "EE",
-        "rawName": "EE",
         "fields": [
             {
                 "name": "Time",
@@ -968,9 +888,7 @@
         ]
     },
     {
-        "id": "A",
         "name": "EG",
-        "rawName": "EG",
         "fields": [
             {
                 "name": "Time",
@@ -993,9 +911,7 @@
         ]
     },
     {
-        "id": "A",
         "name": "ES",
-        "rawName": "ES",
         "fields": [
             {
                 "name": "Time",
@@ -1018,9 +934,7 @@
         ]
     },
     {
-        "id": "A",
         "name": "ET",
-        "rawName": "ET",
         "fields": [
             {
                 "name": "Time",
@@ -1043,9 +957,7 @@
         ]
     },
     {
-        "id": "A",
         "name": "EU",
-        "rawName": "EU",
         "fields": [
             {
                 "name": "Time",
@@ -1068,9 +980,7 @@
         ]
     },
     {
-        "id": "A",
         "name": "FI",
-        "rawName": "FI",
         "fields": [
             {
                 "name": "Time",
@@ -1093,9 +1003,7 @@
         ]
     },
     {
-        "id": "A",
         "name": "FJ",
-        "rawName": "FJ",
         "fields": [
             {
                 "name": "Time",
@@ -1114,9 +1022,7 @@
         ]
     },
     {
-        "id": "A",
         "name": "FR",
-        "rawName": "FR",
         "fields": [
             {
                 "name": "Time",
@@ -1139,9 +1045,7 @@
         ]
     },
     {
-        "id": "A",
         "name": "GA",
-        "rawName": "GA",
         "fields": [
             {
                 "name": "Time",
@@ -1160,9 +1064,7 @@
         ]
     },
     {
-        "id": "A",
         "name": "GB",
-        "rawName": "GB",
         "fields": [
             {
                 "name": "Time",
@@ -1185,9 +1087,7 @@
         ]
     },
     {
-        "id": "A",
         "name": "GE",
-        "rawName": "GE",
         "fields": [
             {
                 "name": "Time",
@@ -1210,9 +1110,7 @@
         ]
     },
     {
-        "id": "A",
         "name": "GH",
-        "rawName": "GH",
         "fields": [
             {
                 "name": "Time",
@@ -1235,9 +1133,7 @@
         ]
     },
     {
-        "id": "A",
         "name": "GI",
-        "rawName": "GI",
         "fields": [
             {
                 "name": "Time",
@@ -1256,9 +1152,7 @@
         ]
     },
     {
-        "id": "A",
         "name": "GM",
-        "rawName": "GM",
         "fields": [
             {
                 "name": "Time",
@@ -1277,9 +1171,7 @@
         ]
     },
     {
-        "id": "A",
         "name": "GR",
-        "rawName": "GR",
         "fields": [
             {
                 "name": "Time",
@@ -1302,9 +1194,7 @@
         ]
     },
     {
-        "id": "A",
         "name": "GT",
-        "rawName": "GT",
         "fields": [
             {
                 "name": "Time",
@@ -1325,9 +1215,7 @@
         ]
     },
     {
-        "id": "A",
         "name": "GU",
-        "rawName": "GU",
         "fields": [
             {
                 "name": "Time",
@@ -1346,9 +1234,7 @@
         ]
     },
     {
-        "id": "A",
         "name": "GY",
-        "rawName": "GY",
         "fields": [
             {
                 "name": "Time",
@@ -1367,9 +1253,7 @@
         ]
     },
     {
-        "id": "A",
         "name": "HK",
-        "rawName": "HK",
         "fields": [
             {
                 "name": "Time",
@@ -1392,9 +1276,7 @@
         ]
     },
     {
-        "id": "A",
         "name": "HN",
-        "rawName": "HN",
         "fields": [
             {
                 "name": "Time",
@@ -1415,9 +1297,7 @@
         ]
     },
     {
-        "id": "A",
         "name": "HR",
-        "rawName": "HR",
         "fields": [
             {
                 "name": "Time",
@@ -1440,9 +1320,7 @@
         ]
     },
     {
-        "id": "A",
         "name": "HT",
-        "rawName": "HT",
         "fields": [
             {
                 "name": "Time",
@@ -1461,9 +1339,7 @@
         ]
     },
     {
-        "id": "A",
         "name": "HU",
-        "rawName": "HU",
         "fields": [
             {
                 "name": "Time",
@@ -1486,9 +1362,7 @@
         ]
     },
     {
-        "id": "A",
         "name": "ID",
-        "rawName": "ID",
         "fields": [
             {
                 "name": "Time",
@@ -1511,9 +1385,7 @@
         ]
     },
     {
-        "id": "A",
         "name": "IE",
-        "rawName": "IE",
         "fields": [
             {
                 "name": "Time",
@@ -1536,9 +1408,7 @@
         ]
     },
     {
-        "id": "A",
         "name": "IL",
-        "rawName": "IL",
         "fields": [
             {
                 "name": "Time",
@@ -1561,9 +1431,7 @@
         ]
     },
     {
-        "id": "A",
         "name": "IM",
-        "rawName": "IM",
         "fields": [
             {
                 "name": "Time",
@@ -1582,9 +1450,7 @@
         ]
     },
     {
-        "id": "A",
         "name": "IN",
-        "rawName": "IN",
         "fields": [
             {
                 "name": "Time",
@@ -1607,9 +1473,7 @@
         ]
     },
     {
-        "id": "A",
         "name": "IQ",
-        "rawName": "IQ",
         "fields": [
             {
                 "name": "Time",
@@ -1632,9 +1496,7 @@
         ]
     },
     {
-        "id": "A",
         "name": "IR",
-        "rawName": "IR",
         "fields": [
             {
                 "name": "Time",
@@ -1657,9 +1519,7 @@
         ]
     },
     {
-        "id": "A",
         "name": "IS",
-        "rawName": "IS",
         "fields": [
             {
                 "name": "Time",
@@ -1680,9 +1540,7 @@
         ]
     },
     {
-        "id": "A",
         "name": "IT",
-        "rawName": "IT",
         "fields": [
             {
                 "name": "Time",
@@ -1705,9 +1563,7 @@
         ]
     },
     {
-        "id": "A",
         "name": "JM",
-        "rawName": "JM",
         "fields": [
             {
                 "name": "Time",
@@ -1730,9 +1586,7 @@
         ]
     },
     {
-        "id": "A",
         "name": "JO",
-        "rawName": "JO",
         "fields": [
             {
                 "name": "Time",
@@ -1755,9 +1609,7 @@
         ]
     },
     {
-        "id": "A",
         "name": "JP",
-        "rawName": "JP",
         "fields": [
             {
                 "name": "Time",
@@ -1780,9 +1632,7 @@
         ]
     },
     {
-        "id": "A",
         "name": "KE",
-        "rawName": "KE",
         "fields": [
             {
                 "name": "Time",
@@ -1805,9 +1655,7 @@
         ]
     },
     {
-        "id": "A",
         "name": "KG",
-        "rawName": "KG",
         "fields": [
             {
                 "name": "Time",
@@ -1826,9 +1674,7 @@
         ]
     },
     {
-        "id": "A",
         "name": "KH",
-        "rawName": "KH",
         "fields": [
             {
                 "name": "Time",
@@ -1851,9 +1697,7 @@
         ]
     },
     {
-        "id": "A",
         "name": "KN",
-        "rawName": "KN",
         "fields": [
             {
                 "name": "Time",
@@ -1872,9 +1716,7 @@
         ]
     },
     {
-        "id": "A",
         "name": "KR",
-        "rawName": "KR",
         "fields": [
             {
                 "name": "Time",
@@ -1897,9 +1739,7 @@
         ]
     },
     {
-        "id": "A",
         "name": "KW",
-        "rawName": "KW",
         "fields": [
             {
                 "name": "Time",
@@ -1922,9 +1762,7 @@
         ]
     },
     {
-        "id": "A",
         "name": "KZ",
-        "rawName": "KZ",
         "fields": [
             {
                 "name": "Time",
@@ -1947,9 +1785,7 @@
         ]
     },
     {
-        "id": "A",
         "name": "LB",
-        "rawName": "LB",
         "fields": [
             {
                 "name": "Time",
@@ -1972,9 +1808,7 @@
         ]
     },
     {
-        "id": "A",
         "name": "LK",
-        "rawName": "LK",
         "fields": [
             {
                 "name": "Time",
@@ -1995,9 +1829,7 @@
         ]
     },
     {
-        "id": "A",
         "name": "LT",
-        "rawName": "LT",
         "fields": [
             {
                 "name": "Time",
@@ -2020,9 +1852,7 @@
         ]
     },
     {
-        "id": "A",
         "name": "LU",
-        "rawName": "LU",
         "fields": [
             {
                 "name": "Time",
@@ -2043,9 +1873,7 @@
         ]
     },
     {
-        "id": "A",
         "name": "LV",
-        "rawName": "LV",
         "fields": [
             {
                 "name": "Time",
@@ -2068,9 +1896,7 @@
         ]
     },
     {
-        "id": "A",
         "name": "LY",
-        "rawName": "LY",
         "fields": [
             {
                 "name": "Time",
@@ -2091,9 +1917,7 @@
         ]
     },
     {
-        "id": "A",
         "name": "MA",
-        "rawName": "MA",
         "fields": [
             {
                 "name": "Time",
@@ -2116,9 +1940,7 @@
         ]
     },
     {
-        "id": "A",
         "name": "MC",
-        "rawName": "MC",
         "fields": [
             {
                 "name": "Time",
@@ -2141,9 +1963,7 @@
         ]
     },
     {
-        "id": "A",
         "name": "MD",
-        "rawName": "MD",
         "fields": [
             {
                 "name": "Time",
@@ -2166,9 +1986,7 @@
         ]
     },
     {
-        "id": "A",
         "name": "ME",
-        "rawName": "ME",
         "fields": [
             {
                 "name": "Time",
@@ -2189,9 +2007,7 @@
         ]
     },
     {
-        "id": "A",
         "name": "MG",
-        "rawName": "MG",
         "fields": [
             {
                 "name": "Time",
@@ -2212,9 +2028,7 @@
         ]
     },
     {
-        "id": "A",
         "name": "MK",
-        "rawName": "MK",
         "fields": [
             {
                 "name": "Time",
@@ -2235,9 +2049,7 @@
         ]
     },
     {
-        "id": "A",
         "name": "ML",
-        "rawName": "ML",
         "fields": [
             {
                 "name": "Time",
@@ -2256,9 +2068,7 @@
         ]
     },
     {
-        "id": "A",
         "name": "MM",
-        "rawName": "MM",
         "fields": [
             {
                 "name": "Time",
@@ -2281,9 +2091,7 @@
         ]
     },
     {
-        "id": "A",
         "name": "MN",
-        "rawName": "MN",
         "fields": [
             {
                 "name": "Time",
@@ -2304,9 +2112,7 @@
         ]
     },
     {
-        "id": "A",
         "name": "MP",
-        "rawName": "MP",
         "fields": [
             {
                 "name": "Time",
@@ -2327,9 +2133,7 @@
         ]
     },
     {
-        "id": "A",
         "name": "MT",
-        "rawName": "MT",
         "fields": [
             {
                 "name": "Time",
@@ -2352,9 +2156,7 @@
         ]
     },
     {
-        "id": "A",
         "name": "MU",
-        "rawName": "MU",
         "fields": [
             {
                 "name": "Time",
@@ -2375,9 +2177,7 @@
         ]
     },
     {
-        "id": "A",
         "name": "MV",
-        "rawName": "MV",
         "fields": [
             {
                 "name": "Time",
@@ -2400,9 +2200,7 @@
         ]
     },
     {
-        "id": "A",
         "name": "MW",
-        "rawName": "MW",
         "fields": [
             {
                 "name": "Time",
@@ -2425,9 +2223,7 @@
         ]
     },
     {
-        "id": "A",
         "name": "MX",
-        "rawName": "MX",
         "fields": [
             {
                 "name": "Time",
@@ -2450,9 +2246,7 @@
         ]
     },
     {
-        "id": "A",
         "name": "MY",
-        "rawName": "MY",
         "fields": [
             {
                 "name": "Time",
@@ -2475,9 +2269,7 @@
         ]
     },
     {
-        "id": "A",
         "name": "NA",
-        "rawName": "NA",
         "fields": [
             {
                 "name": "Time",
@@ -2498,9 +2290,7 @@
         ]
     },
     {
-        "id": "A",
         "name": "NG",
-        "rawName": "NG",
         "fields": [
             {
                 "name": "Time",
@@ -2523,9 +2313,7 @@
         ]
     },
     {
-        "id": "A",
         "name": "NL",
-        "rawName": "NL",
         "fields": [
             {
                 "name": "Time",
@@ -2548,9 +2336,7 @@
         ]
     },
     {
-        "id": "A",
         "name": "NO",
-        "rawName": "NO",
         "fields": [
             {
                 "name": "Time",
@@ -2573,9 +2359,7 @@
         ]
     },
     {
-        "id": "A",
         "name": "NP",
-        "rawName": "NP",
         "fields": [
             {
                 "name": "Time",
@@ -2598,9 +2382,7 @@
         ]
     },
     {
-        "id": "A",
         "name": "NZ",
-        "rawName": "NZ",
         "fields": [
             {
                 "name": "Time",
@@ -2623,9 +2405,7 @@
         ]
     },
     {
-        "id": "A",
         "name": "OM",
-        "rawName": "OM",
         "fields": [
             {
                 "name": "Time",
@@ -2646,9 +2426,7 @@
         ]
     },
     {
-        "id": "A",
         "name": "PA",
-        "rawName": "PA",
         "fields": [
             {
                 "name": "Time",
@@ -2671,9 +2449,7 @@
         ]
     },
     {
-        "id": "A",
         "name": "PE",
-        "rawName": "PE",
         "fields": [
             {
                 "name": "Time",
@@ -2696,9 +2472,7 @@
         ]
     },
     {
-        "id": "A",
         "name": "PG",
-        "rawName": "PG",
         "fields": [
             {
                 "name": "Time",
@@ -2717,9 +2491,7 @@
         ]
     },
     {
-        "id": "A",
         "name": "PH",
-        "rawName": "PH",
         "fields": [
             {
                 "name": "Time",
@@ -2742,9 +2514,7 @@
         ]
     },
     {
-        "id": "A",
         "name": "PK",
-        "rawName": "PK",
         "fields": [
             {
                 "name": "Time",
@@ -2767,9 +2537,7 @@
         ]
     },
     {
-        "id": "A",
         "name": "PL",
-        "rawName": "PL",
         "fields": [
             {
                 "name": "Time",
@@ -2792,9 +2560,7 @@
         ]
     },
     {
-        "id": "A",
         "name": "PR",
-        "rawName": "PR",
         "fields": [
             {
                 "name": "Time",
@@ -2817,9 +2583,7 @@
         ]
     },
     {
-        "id": "A",
         "name": "PS",
-        "rawName": "PS",
         "fields": [
             {
                 "name": "Time",
@@ -2840,9 +2604,7 @@
         ]
     },
     {
-        "id": "A",
         "name": "PT",
-        "rawName": "PT",
         "fields": [
             {
                 "name": "Time",
@@ -2865,9 +2627,7 @@
         ]
     },
     {
-        "id": "A",
         "name": "PY",
-        "rawName": "PY",
         "fields": [
             {
                 "name": "Time",
@@ -2888,9 +2648,7 @@
         ]
     },
     {
-        "id": "A",
         "name": "QA",
-        "rawName": "QA",
         "fields": [
             {
                 "name": "Time",
@@ -2913,9 +2671,7 @@
         ]
     },
     {
-        "id": "A",
         "name": "RE",
-        "rawName": "RE",
         "fields": [
             {
                 "name": "Time",
@@ -2938,9 +2694,7 @@
         ]
     },
     {
-        "id": "A",
         "name": "RO",
-        "rawName": "RO",
         "fields": [
             {
                 "name": "Time",
@@ -2963,9 +2717,7 @@
         ]
     },
     {
-        "id": "A",
         "name": "RS",
-        "rawName": "RS",
         "fields": [
             {
                 "name": "Time",
@@ -2988,9 +2740,7 @@
         ]
     },
     {
-        "id": "A",
         "name": "RU",
-        "rawName": "RU",
         "fields": [
             {
                 "name": "Time",
@@ -3013,9 +2763,7 @@
         ]
     },
     {
-        "id": "A",
         "name": "RW",
-        "rawName": "RW",
         "fields": [
             {
                 "name": "Time",
@@ -3034,9 +2782,7 @@
         ]
     },
     {
-        "id": "A",
         "name": "SA",
-        "rawName": "SA",
         "fields": [
             {
                 "name": "Time",
@@ -3059,9 +2805,7 @@
         ]
     },
     {
-        "id": "A",
         "name": "SC",
-        "rawName": "SC",
         "fields": [
             {
                 "name": "Time",
@@ -3080,9 +2824,7 @@
         ]
     },
     {
-        "id": "A",
         "name": "SD",
-        "rawName": "SD",
         "fields": [
             {
                 "name": "Time",
@@ -3103,9 +2845,7 @@
         ]
     },
     {
-        "id": "A",
         "name": "SE",
-        "rawName": "SE",
         "fields": [
             {
                 "name": "Time",
@@ -3128,9 +2868,7 @@
         ]
     },
     {
-        "id": "A",
         "name": "SG",
-        "rawName": "SG",
         "fields": [
             {
                 "name": "Time",
@@ -3153,9 +2891,7 @@
         ]
     },
     {
-        "id": "A",
         "name": "SI",
-        "rawName": "SI",
         "fields": [
             {
                 "name": "Time",
@@ -3178,9 +2914,7 @@
         ]
     },
     {
-        "id": "A",
         "name": "SK",
-        "rawName": "SK",
         "fields": [
             {
                 "name": "Time",
@@ -3203,9 +2937,7 @@
         ]
     },
     {
-        "id": "A",
         "name": "SN",
-        "rawName": "SN",
         "fields": [
             {
                 "name": "Time",
@@ -3226,9 +2958,7 @@
         ]
     },
     {
-        "id": "A",
         "name": "SO",
-        "rawName": "SO",
         "fields": [
             {
                 "name": "Time",
@@ -3249,9 +2979,7 @@
         ]
     },
     {
-        "id": "A",
         "name": "SR",
-        "rawName": "SR",
         "fields": [
             {
                 "name": "Time",
@@ -3272,9 +3000,7 @@
         ]
     },
     {
-        "id": "A",
         "name": "SV",
-        "rawName": "SV",
         "fields": [
             {
                 "name": "Time",
@@ -3293,9 +3019,7 @@
         ]
     },
     {
-        "id": "A",
         "name": "SX",
-        "rawName": "SX",
         "fields": [
             {
                 "name": "Time",
@@ -3314,9 +3038,7 @@
         ]
     },
     {
-        "id": "A",
         "name": "SY",
-        "rawName": "SY",
         "fields": [
             {
                 "name": "Time",
@@ -3339,9 +3061,7 @@
         ]
     },
     {
-        "id": "A",
         "name": "TG",
-        "rawName": "TG",
         "fields": [
             {
                 "name": "Time",
@@ -3362,9 +3082,7 @@
         ]
     },
     {
-        "id": "A",
         "name": "TH",
-        "rawName": "TH",
         "fields": [
             {
                 "name": "Time",
@@ -3387,9 +3105,7 @@
         ]
     },
     {
-        "id": "A",
         "name": "TJ",
-        "rawName": "TJ",
         "fields": [
             {
                 "name": "Time",
@@ -3408,9 +3124,7 @@
         ]
     },
     {
-        "id": "A",
         "name": "TM",
-        "rawName": "TM",
         "fields": [
             {
                 "name": "Time",
@@ -3429,9 +3143,7 @@
         ]
     },
     {
-        "id": "A",
         "name": "TN",
-        "rawName": "TN",
         "fields": [
             {
                 "name": "Time",
@@ -3454,9 +3166,7 @@
         ]
     },
     {
-        "id": "A",
         "name": "TR",
-        "rawName": "TR",
         "fields": [
             {
                 "name": "Time",
@@ -3479,9 +3189,7 @@
         ]
     },
     {
-        "id": "A",
         "name": "TT",
-        "rawName": "TT",
         "fields": [
             {
                 "name": "Time",
@@ -3500,9 +3208,7 @@
         ]
     },
     {
-        "id": "A",
         "name": "TW",
-        "rawName": "TW",
         "fields": [
             {
                 "name": "Time",
@@ -3525,9 +3231,7 @@
         ]
     },
     {
-        "id": "A",
         "name": "TZ",
-        "rawName": "TZ",
         "fields": [
             {
                 "name": "Time",
@@ -3548,9 +3252,7 @@
         ]
     },
     {
-        "id": "A",
         "name": "UA",
-        "rawName": "UA",
         "fields": [
             {
                 "name": "Time",
@@ -3573,9 +3275,7 @@
         ]
     },
     {
-        "id": "A",
         "name": "UG",
-        "rawName": "UG",
         "fields": [
             {
                 "name": "Time",
@@ -3598,9 +3298,7 @@
         ]
     },
     {
-        "id": "A",
         "name": "US",
-        "rawName": "US",
         "fields": [
             {
                 "name": "Time",
@@ -3623,9 +3321,7 @@
         ]
     },
     {
-        "id": "A",
         "name": "UY",
-        "rawName": "UY",
         "fields": [
             {
                 "name": "Time",
@@ -3644,9 +3340,7 @@
         ]
     },
     {
-        "id": "A",
         "name": "UZ",
-        "rawName": "UZ",
         "fields": [
             {
                 "name": "Time",
@@ -3667,9 +3361,7 @@
         ]
     },
     {
-        "id": "A",
         "name": "VE",
-        "rawName": "VE",
         "fields": [
             {
                 "name": "Time",
@@ -3692,9 +3384,7 @@
         ]
     },
     {
-        "id": "A",
         "name": "VG",
-        "rawName": "VG",
         "fields": [
             {
                 "name": "Time",
@@ -3713,9 +3403,7 @@
         ]
     },
     {
-        "id": "A",
         "name": "VN",
-        "rawName": "VN",
         "fields": [
             {
                 "name": "Time",
@@ -3738,9 +3426,7 @@
         ]
     },
     {
-        "id": "A",
         "name": "YE",
-        "rawName": "YE",
         "fields": [
             {
                 "name": "Time",
@@ -3759,9 +3445,7 @@
         ]
     },
     {
-        "id": "A",
         "name": "ZA",
-        "rawName": "ZA",
         "fields": [
             {
                 "name": "Time",
@@ -3784,9 +3468,7 @@
         ]
     },
     {
-        "id": "A",
         "name": "ZM",
-        "rawName": "ZM",
         "fields": [
             {
                 "name": "Time",
@@ -3809,9 +3491,7 @@
         ]
     },
     {
-        "id": "A",
         "name": "ZW",
-        "rawName": "ZW",
         "fields": [
             {
                 "name": "Time",
