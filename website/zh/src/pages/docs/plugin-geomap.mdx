@@ -55,3 +55,142 @@ function onClick(data, map, navigate, setVariable, setDateTime, $variables) {
 
 
 <img src="https://github.com/data-observe/assets/blob/main/plugin/geomap-threshold-effect.jpg?raw=true" style={{height: '260px'}}/>
+
+
+## 数据格式
+
+> 在开始之前，你应该先阅读 [这篇文档](/docs/panel-data-transform) 并且需要了解什么是 `最终数据格式`。
+
+如果你想在地图上渲染数据点，你必须了解 `Geomap` 需要什么样的数据格式，然后你可以将传入的数据转换为所需的格式。
+
+选择 `TestData` 数据源和 `Geomap` 图表类型，然后打开 `Panel Debug -> Panel Data`，我们可以看到 Geomap 需要的如下最终数据格式：
+
+```json
+[
+  [
+    {
+      "name": "US",
+      "fields": [
+        {
+          "name": "Time",
+          "type": "time",
+          "values": [
+            1690416000000,
+            1690502400000,
+            1690588800000
+          ]
+        },
+        {
+          "name": "Value",
+          "type": "number",
+          "values": [
+            27379,
+            22114,
+            23268
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Shanghai",
+      "fields": [
+        {
+          "name": "Time",
+          "type": "time",
+          "values": [
+            1690416000000,
+            1690502400000,
+            1690588800000
+          ]
+        },
+        {
+          "name": "Value",
+          "type": "number",
+          "values": [
+            39,
+            22,
+            16
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Bei_jing",
+      "fields": [
+        {
+          "name": "Time",
+          "type": "time",
+          "values": [
+            1690416000000,
+            1690502400000,
+            1690588800000
+          ]
+        },
+        {
+          "name": "Value",
+          "type": "number",
+          "values": [
+            4,
+            1,
+            4
+          ]
+        },
+        {
+          "name": "Geo",
+          "type": "geo",
+          "values": [
+            116.4,
+            39.9
+          ]
+        }
+      ]
+    }
+  ]
+]
+```
+
+这里包含了三个地图上的数据点： `US` 是 `United States` 的国家编码，`Shanghai` 是中国的一个城市名，`Bei_jing` 也是中国的一个城市名。
+
+其中 `Shanghai` 和 `Bei_jing` 的区别在于后者包含了一个坐标字段：
+
+```json 
+{
+    "name": "Geo",
+    "type": "geo",
+    "values": [
+        116.4, // longitude
+        39.9 // latitude
+    ]
+}
+```
+
+而前者仅仅是一个 `name` 索引。总之，三个点分别代表了三种坐标索引类型：
+
+<TextList>
+    <li> 国家编码 `US`，坐标索引定义在 [countries.json](https://github.com/data-observe/datav/blob/main/ui/public/plugins/panel/geomap/countries.json) </li>
+    <li> 城市名称 `Shanghai`, 坐标索引定义在 cities.json](https://github.com/data-observe/datav/blob/main/ui/public/plugins/panel/geomap/cities.json)</li>
+    <li> 通过 <Code>"type":"geo"</Code>类型的字段传递的具体坐标</li>
+</TextList>
+
+Datav 在通过索引查询坐标时，具体的顺序是：先通过国家编码查询，如果没有找到则通过城市名称查询，如果还是没有找到则通过坐标查询。
+
+事实上， 数据点的`Time` 字段是从未被使用的，它仅仅是因为 `Geomap` 的数据格式和 `Graph` 以及 `Table` 的数据格式是一样的，都是 `SeriesData` 格式。
+
+因此如果你是从某个 HTTP API 查询，或者自行转换数据格式为 `Geomap` 的格式，可以直接忽略 `Time` 字段：
+
+```json
+{
+    "name": "US",
+    "fields": [
+        {
+            "name": "Value",
+            "type": "number",
+            "values": [
+                27379,
+            ]
+        }
+    ]
+},
+```
+
+上面的格式是一个数据点非常标准的格式，大家可以参考下。

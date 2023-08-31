@@ -58,3 +58,142 @@ When the value of data points is larger than a threshold value, the data point w
 
 
 <img src="https://github.com/data-observe/assets/blob/main/plugin/geomap-threshold-effect.jpg?raw=true" style={{height: '260px'}}/>
+
+## Data format
+
+> You should read [this doc](/docs/panel-data-transform) first and already know what is `Final data format`。
+
+If you want to render data points on map, you must understand what data format Geomap requires, then you can transform the incoming data into the required format.
+
+Select `TestData` datasource and `Geomap` visualization, then open `Panel Debug -> Panel Data`, you should see below `final data format` that geomap requires: 
+
+
+
+```json
+[
+  [
+    {
+      "name": "US",
+      "fields": [
+        {
+          "name": "Time",
+          "type": "time",
+          "values": [
+            1690416000000,
+            1690502400000,
+            1690588800000
+          ]
+        },
+        {
+          "name": "Value",
+          "type": "number",
+          "values": [
+            27379,
+            22114,
+            23268
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Shanghai",
+      "fields": [
+        {
+          "name": "Time",
+          "type": "time",
+          "values": [
+            1690416000000,
+            1690502400000,
+            1690588800000
+          ]
+        },
+        {
+          "name": "Value",
+          "type": "number",
+          "values": [
+            39,
+            22,
+            16
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Bei_jing",
+      "fields": [
+        {
+          "name": "Time",
+          "type": "time",
+          "values": [
+            1690416000000,
+            1690502400000,
+            1690588800000
+          ]
+        },
+        {
+          "name": "Value",
+          "type": "number",
+          "values": [
+            4,
+            1,
+            4
+          ]
+        },
+        {
+          "name": "Geo",
+          "type": "geo",
+          "values": [
+            116.4,
+            39.9
+          ]
+        }
+      ]
+    }
+  ]
+]
+```
+
+Here are three data points on the map: `US` is the country code for `United States`, `Shanghai` is a city name in China,  `Bei_jing` is also a city name in `China`.
+
+The difference between `Shanghai` and `Bei_jing` is that `Bei_jing` has a coordinates in its field data: 
+
+```json 
+{
+    "name": "Geo",
+    "type": "geo",
+    "values": [
+        116.4, // longitude
+        39.9 // latitude
+    ]
+}
+```
+
+The three points can be divide into three types:
+<TextList>
+    <li>Country code `US`,  defined in [countries.json](https://github.com/data-observe/datav/blob/main/ui/public/plugins/panel/geomap/countries.json) </li>
+    <li>City names `Shanghai`, defined in [cities.json](https://github.com/data-observe/datav/blob/main/ui/public/plugins/panel/geomap/cities.json)</li>
+    <li>Coordinates, passed by field with <Code>"type":"geo"</Code></li>
+</TextList>
+
+Datav lookup the coordinates of points first by country code, then by city name, and finally by coordinates.
+
+In fact, the `Time` field in data point is never used, why it is exist is just because data format of `Geomap` is acutally the same as `Graph` and `Table`: `SeriesData` format. 
+
+Therefore if you get data from a HTTP API, or transform data into `Geomap` format, you can ignore the `Time` field: 
+
+```json
+{
+    "name": "US",
+    "fields": [
+    {
+        "name": "Value",
+        "type": "number",
+        "values": [
+            27379,
+        ]
+    }
+    ]
+},
+```
+
+The above data format is the standard format for render a data point on `Geomap`.
