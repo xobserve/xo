@@ -32,6 +32,7 @@ import PageContainer from "layouts/PageContainer";
 import { Navigate } from "react-router-dom";
 import AdminPage from "./pages/admin/AuditLogs";
 import GithubLogin from "./pages/GithubLogin";
+import AdminUsers from "./pages/admin/UserStats";
 
 
 const DashboardPage = loadable(() => import('./pages/dashboard/index'));
@@ -95,6 +96,10 @@ const adminRoutes = [
   {
     path: "/admin/audit",
     element: pageContainer(<AdminPage />),
+  },
+  {
+    path: "/admin/users",
+    element: pageContainer(<AdminUsers />),
   },
 ]
 

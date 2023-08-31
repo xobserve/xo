@@ -73,10 +73,9 @@ func GetVariables() ([]*models.Variable, error) {
 	vars := []*models.Variable{}
 	rows, err := db.Conn.Query("SELECT id,name,type,value,datasource,description,refresh,enableMulti,enableAll,regex FROM variable")
 	if err != nil {
-
 		return nil, err
 	}
-
+	defer rows.Close()
 	for rows.Next() {
 		v := &models.Variable{}
 		err = rows.Scan(&v.Id, &v.Name, &v.Type, &v.Value, &v.Datasource, &v.Desc, &v.Refresh, &v.EnableMulti, &v.EnableAll, &v.Regex)

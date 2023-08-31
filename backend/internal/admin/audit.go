@@ -17,6 +17,7 @@ func QueryAuditLogs(c *gin.Context) {
 		c.JSON(500, common.RespInternalError())
 		return
 	}
+	defer rows.Close()
 
 	logs := make([]*models.AuditLog, 0)
 	for rows.Next() {

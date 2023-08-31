@@ -126,7 +126,7 @@ func QueryNamespaceAnnotations(c *gin.Context) {
 		c.JSON(http.StatusInternalServerError, common.RespError("query annotation err"))
 		return
 	}
-
+	defer rows.Close()
 	annos := make([]*models.Annotation, 0)
 	for rows.Next() {
 		anno := &models.Annotation{}

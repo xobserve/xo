@@ -84,7 +84,6 @@ func (s *Server) Start() error {
 		r.GET("/user/session", user.GetSession)
 		r.POST("/account/password", IsLogin(), user.UpdateUserPassword)
 		r.POST("/account/info", IsLogin(), user.UpdateUserInfo)
-		r.POST("/user/visit", IsLogin(), user.Visit)
 
 		// teams apis
 		r.GET("/teams/all", IsLogin(), teams.GetTeams)
@@ -102,6 +101,7 @@ func (s *Server) Start() error {
 		r.GET("/team/sidemenus/forUser", IsLogin(), teams.GetAvailableSidMenusForUser)
 		r.POST("/team/sidemenu/select/:teamId", IsLogin(), teams.SelectSideMenuForUser)
 		r.GET("/team/sidemenu/current", IsLogin(), teams.GetCurrentSidemenu)
+
 		// variable apis
 		r.POST("/variable/new", IsLogin(), variables.AddNewVariable)
 		r.GET("/variable/all", api.GetVariables)

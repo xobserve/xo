@@ -16,7 +16,6 @@ import (
 	"net/http"
 
 	"github.com/DataObserve/datav/backend/pkg/common"
-	"github.com/DataObserve/datav/backend/pkg/db"
 	"github.com/DataObserve/datav/backend/pkg/e"
 	"github.com/DataObserve/datav/backend/pkg/models"
 	"github.com/DataObserve/datav/backend/pkg/utils"
@@ -83,10 +82,4 @@ func UpdateUserInfo(c *gin.Context) {
 	}
 
 	c.JSON(http.StatusForbidden, common.RespError(e.NoPermission))
-}
-
-func Visit(c *gin.Context) {
-	u := CurrentUser(c)
-
-	db.Conn.Exec("UPDATE user SET visit_count=visit_count+1 WHERE id=?", u.Id)
 }

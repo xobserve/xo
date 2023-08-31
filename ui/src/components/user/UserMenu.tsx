@@ -99,7 +99,7 @@ const UserMenu = ({ fontSize = "1.2rem", miniMode }) => {
                                 <Text textStyle="annotation">{session.user.username}</Text>
                             </MenuItem></Link>
                             <MenuDivider />
-                            {isAdmin(session.user.role) && <><Link to={`/admin/audit`}><MenuItem icon={<FaStar fontSize="1rem" />} >{t1.adminPanel}</MenuItem></Link><MenuDivider /></>}
+                            {isAdmin(session.user.role) && <><Link to={`/admin/users`}><MenuItem icon={<FaStar fontSize="1rem" />} >{t1.adminPanel}</MenuItem></Link><MenuDivider /></>}
                             <MenuItem><Box><ColorModeSwitcher miniMode={false} /></Box></MenuItem>
                             <MenuItem onClick={() => changeLang()} icon={<FaFont fontSize="1rem" />}>{t1.currentLang} - {locale.get() == "en" ? "English" : "简体中文"}</MenuItem>
                             <MenuItem mt="2px" >    <UserSidemenus miniMode={false} /></MenuItem>

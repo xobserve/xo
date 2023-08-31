@@ -29,7 +29,7 @@ import (
 )
 
 func GetUsers(c *gin.Context) {
-	rows, err := db.Conn.Query(`SELECT id,username,name,email,mobile,last_seen_at,created FROM user`)
+	rows, err := db.Conn.Query(`SELECT id,username,name,email,mobile,last_seen_at,created,visit_count FROM user`)
 	if err != nil {
 		logger.Warn("get all users error", "error", err)
 		c.JSON(500, common.RespInternalError())
@@ -37,9 +37,11 @@ func GetUsers(c *gin.Context) {
 	}
 
 	users := make(models.Users, 0)
+	defer rows.Close()
+
 	for rows.Next() {
 		user := &models.User{}
-		err := rows.Scan(&user.Id, &user.Username, &user.Name, &user.Email, &user.Mobile, &user.LastSeenAt, &user.Created)
+		err := rows.Scan(&user.Id, &user.Username, &user.Name, &user.Email, &user.Mobile, &user.LastSeenAt, &user.Created, &user.Visits)
 		if err != nil {
 			logger.Warn("get all users scan error", "error", err)
 			continue

@@ -77,7 +77,7 @@ func GetTeams(c *gin.Context) {
 		c.JSON(500, common.RespInternalError())
 		return
 	}
-
+	defer rows.Close()
 	for rows.Next() {
 		team := &models.Team{}
 		err := rows.Scan(&team.Id, &team.Name, &team.Brief, &team.CreatedById)
@@ -144,7 +144,7 @@ func GetTeamMembers(c *gin.Context) {
 		c.JSON(500, common.RespInternalError())
 		return
 	}
-
+	defer rows.Close()
 	for rows.Next() {
 		member := &models.TeamMember{}
 		err := rows.Scan(&member.Id, &member.Role, &member.Created)

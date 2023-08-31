@@ -19,7 +19,6 @@ import {
   calcRequestTimeEnd,
   calcRequestTimeStart,
   handleError,
-  printResData,
   printResUrlTime,
   reThrowError,
   rewriteApiUrl,

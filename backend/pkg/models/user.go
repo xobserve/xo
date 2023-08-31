@@ -42,10 +42,11 @@ type User struct {
 	Email      *string    `json:"email"`
 	Mobile     string     `json:"mobile"`
 	Role       RoleType   `json:"role"`
-	LastSeenAt *time.Time `json:"last_seen_at,omitempty"`
+	LastSeenAt *time.Time `json:"lastSeenAt,omitempty"`
 	Created    time.Time  `json:"created,omitempty"`
 	Updated    time.Time  `json:"updated,omitempty"`
 	SideMenu   int64      `json:"sidemenu,omitempty"`
+	Visits     int        `json:"visits,omitempty"`
 	Salt       string     `json:"-"`
 	Password   string     `json:"-"`
 }

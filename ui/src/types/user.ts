@@ -29,4 +29,6 @@ export interface User {
     created: string
     password?: string
     sidemenu?: number
+    visits?: number
+    lastSeenAt?: string
 }

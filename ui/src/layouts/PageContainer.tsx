@@ -71,13 +71,6 @@ const PageContainer = (props) => {
 
   }, [session])
 
-  const location = useLocation()
-  useEffect(() => {
-    if (session) {
-      requestApi.post("/user/visit")
-    }
-  },[location.pathname])
-
   const loadSidemenu = async () => {
     const res = await requestApi.get(`/team/sidemenu/${session.user.sidemenu}`)
     if (!res?.data) {

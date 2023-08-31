@@ -133,7 +133,7 @@ func GetAvailableSidMenusForUser(c *gin.Context) {
 		c.JSON(500, common.RespInternalError())
 		return
 	}
-
+	defer rows.Close()
 	for rows.Next() {
 		var tid int64
 		rows.Scan(&tid)

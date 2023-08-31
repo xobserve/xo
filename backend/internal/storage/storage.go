@@ -78,7 +78,7 @@ func connectDatabase() error {
 			path = dataPath + "/datav.db"
 		}
 
-		d, err = sql.Open("sqlite3", path)
+		d, err = sql.Open("sqlite3", path+"?cache=shared&mode=rwc")
 	} else {
 		return errors.New("error database")
 	}

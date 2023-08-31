@@ -97,7 +97,7 @@ func login(user *models.User, c *gin.Context) {
 	}
 
 	// 更新数据库中的user表
-	_, err = db.Conn.Exec(`UPDATE user SET last_seen_at=? WHERE id=?`, time.Now(), user.Id)
+	_, err = db.Conn.Exec(`UPDATE user SET last_seen_at=?,visit_count=visit_count+1 WHERE id=?`, time.Now(), user.Id)
 	if err != nil {
 		logger.Warn("set last login date error", "error", err)
 	}

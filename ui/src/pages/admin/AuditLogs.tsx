@@ -17,8 +17,8 @@ import React, { memo, useEffect, useState } from "react"
 import { adminLinks } from "src/data/nav-links"
 import { commonMsg } from "src/i18n/locales/en"
 import { MdOutlineAdminPanelSettings } from "react-icons/md"
-import { Box, Button, Input, Popover, PopoverArrow, PopoverBody, PopoverContent, PopoverTrigger, Table, TableContainer, Tbody, Td, Th, Thead, Tooltip, Tr, VStack } from "@chakra-ui/react"
-import FormItem from "components/form/Item"
+import { Box,  Popover, PopoverArrow, PopoverBody, PopoverContent, PopoverTrigger, Table, TableContainer, Tbody, Td, Th, Thead, Tooltip, Tr, VStack } from "@chakra-ui/react"
+
 
 import { requestApi } from "utils/axios/request"
 import { AuditLog } from "types/admin"

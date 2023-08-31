@@ -88,7 +88,7 @@ func GetDatasources(c *gin.Context) {
 		c.JSON(http.StatusInternalServerError, common.RespInternalError())
 		return
 	}
-
+	defer rows.Close()
 	for rows.Next() {
 		ds := &models.Datasource{}
 		err := rows.Scan(&ds.Id, &ds.Name, &ds.Type, &ds.URL, &ds.Created)

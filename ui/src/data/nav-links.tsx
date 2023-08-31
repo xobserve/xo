@@ -1,5 +1,5 @@
 import React from 'react'
-import { FaConnectdevelop,  FaTerminal, FaUser, FaUserEdit, FaUsersCog } from 'react-icons/fa'
+import { FaConnectdevelop,  FaTerminal, FaUser, FaUserEdit,  FaUsersCog } from 'react-icons/fa'
 import { Route } from 'types/route'
 import { MdOutlineAdminPanelSettings } from 'react-icons/md';
 
@@ -48,6 +48,12 @@ export const adminLinks = [
         url: '/admin/audit',
         baseUrl: '/admin/audit',
         icon: <MdOutlineAdminPanelSettings />
+    },
+    {
+        title: 'user',
+        url: '/admin/users',
+        baseUrl: '/admin/users',
+        icon: <FaUser />
     }
 ]
 

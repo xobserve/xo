@@ -88,7 +88,7 @@ func QueryDashboardsByTeamId(teamId int64) ([]*Dashboard, error) {
 	if err != nil {
 		return nil, err
 	}
-
+	defer rows.Close()
 	for rows.Next() {
 		dash := &Dashboard{OwnedBy: teamId}
 		err := rows.Scan(&dash.Id)

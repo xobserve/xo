@@ -123,7 +123,7 @@ func QueryTeamMembersByUserId(userId int64) ([]*TeamMember, error) {
 	if err != nil && err != sql.ErrNoRows {
 		return nil, err
 	}
-
+	defer rows.Close()
 	for rows.Next() {
 		m := &TeamMember{}
 		err := rows.Scan(&m.TeamId, &m.Role)

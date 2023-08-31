@@ -239,7 +239,7 @@ func GetTeamDashboards(c *gin.Context) {
 		c.JSON(500, common.RespError(e.Internal))
 		return
 	}
-
+	defer rows.Close()
 	for rows.Next() {
 		dash := &models.Dashboard{}
 		err = rows.Scan(&dash.Id, &dash.Title, &dash.Created, &dash.Updated)
@@ -264,7 +264,7 @@ func GetSimpleList(c *gin.Context) {
 		c.JSON(500, common.RespError(e.Internal))
 		return
 	}
-
+	defer rows.Close()
 	for rows.Next() {
 		dash := &models.Dashboard{}
 		var rawTags []byte
@@ -337,7 +337,7 @@ func GetAllStarred(c *gin.Context) {
 		c.JSON(500, common.RespError(e.Internal))
 		return
 	}
-
+	defer rows.Close()
 	starredList := make([]string, 0)
 	for rows.Next() {
 		var id string
