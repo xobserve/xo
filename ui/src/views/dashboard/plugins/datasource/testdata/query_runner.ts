@@ -19,7 +19,7 @@ import { TimeRange } from "types/time"
 import { nodeGraphData } from "./mocks/node_graph"
 import { prometheusToPanels } from "../prometheus/transformData"
 import { Datasource } from "types/datasource"
-import traceData from './mocks/trace.json'
+import traceData from './mocks/traces.json'
 import { genPrometheusData } from "./mocks/prometheus"
 import geoData from './mocks/geomapSeriesData.json'
 import { Field, SeriesData } from "types/seriesData"
