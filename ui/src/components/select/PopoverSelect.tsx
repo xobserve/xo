@@ -138,7 +138,7 @@ const PopoverSelect = ({ value, options, onChange, variant = "outline", customOp
                             <Text >Selected {value.length}</Text>
                         </HStack>}
 
-                        <VStack alignItems="left" spacing="0" maxH="300px" overflowY="scroll">
+                        <VStack alignItems="left" spacing="0" maxH="300px" overflowY="auto">
                             {
                                 searchedResult.map(option => <HStack key={option.label} className="hover-bg" py="1" px="2" cursor="pointer" onClick={() => onOptionClick(option)} fontSize="0.9rem">
                                     <Box color="brand.500" fontSize="0.6rem" width="12px">{value.includes(option.value) && <FaCheck />}</Box>

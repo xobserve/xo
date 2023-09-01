@@ -90,7 +90,7 @@ export class DiffNode extends React.PureComponent<Props> {
                     <PopoverContent minWidth="800px">
                         <PopoverArrow />
                         <PopoverBody>
-                            <HStack spacing={4} divider={<StackDivider />} alignItems="top" maxH="400px" overflowY="scroll">
+                            <HStack spacing={4} divider={<StackDivider />} alignItems="top" maxH="400px" overflowY="auto">
                                 {dataA?.length > 0 && <Box width="50%"><NodeCard service={service} operation={operation} data={dataA} data1={dataB} /></Box>}
                                 {dataB?.length > 0 && <Box width="50%"><NodeCard service={service} operation={operation} data={dataB} data1={dataA} /></Box>}
                             </HStack>

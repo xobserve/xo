@@ -8,14 +8,76 @@ const CommonStyles = () => (
   <Global
     styles={(theme: ChakraTheme) => {
       const {colorMode} = useColorMode()
+      const scrollBg = colorMode == "dark" ? 'rgba(204,204,220,0.16)'  : 'rgba(36,41,46,0.07)'
       return css` 
-      .thin-scroller {
         ::-webkit-scrollbar {
           width: 5px;
           height: 5px;
-        }   
-      }
-
+        }
+      
+        ::-webkit-scrollbar:hover {
+          height: 8px;
+        }
+      
+        ::-webkit-scrollbar-button:start:decrement,
+        ::-webkit-scrollbar-button:end:increment {
+          display: none;
+        }
+        ::-webkit-scrollbar-button:horizontal:decrement {
+          display: none;
+        }
+        ::-webkit-scrollbar-button:horizontal:increment {
+          display: none;
+        }
+        ::-webkit-scrollbar-button:vertical:decrement {
+          display: none;
+        }
+        ::-webkit-scrollbar-button:vertical:increment {
+          display: none;
+        }
+        ::-webkit-scrollbar-button:horizontal:decrement:active {
+          background-image: none;
+        }
+        ::-webkit-scrollbar-button:horizontal:increment:active {
+          background-image: none;
+        }
+        ::-webkit-scrollbar-button:vertical:decrement:active {
+          background-image: none;
+        }
+        ::-webkit-scrollbar-button:vertical:increment:active {
+          background-image: none;
+        }
+        ::-webkit-scrollbar-track-piece {
+          background-color: transparent;
+        }
+      
+        ::-webkit-scrollbar-thumb:vertical {
+          height: 50px;
+          background: -webkit-gradient(
+            linear,
+            left top,
+            right top,
+            color-stop(0%, ${scrollBg}),
+            color-stop(100%, ${scrollBg})
+          );
+          border: 1px solid ${scrollBg};
+          border-top: 1px solid ${scrollBg};
+          border-left: 1px solid ${scrollBg};
+        }
+      
+        ::-webkit-scrollbar-thumb:horizontal {
+          width: 50px;
+          background: -webkit-gradient(
+            linear,
+            left top,
+            left bottom,
+            color-stop(0%, ${scrollBg}),
+            color-stop(100%, ${scrollBg})
+          );
+          border: 1px solid ${scrollBg};
+          border-top: 1px solid ${scrollBg};
+          border-left: 1px solid ${scrollBg};
+        }
       .top-gradient-border {
         ::before {
           display: block;

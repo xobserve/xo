@@ -7,6 +7,9 @@ import svgrPlugin from 'vite-plugin-svgr';
 export default ({ mode }) => {
     const env = loadEnv(mode, process.cwd(), "");
     return defineConfig({
+        server: {
+            host: "192.168.50.105"
+        },
         define: {
             "process.env": env,
         },

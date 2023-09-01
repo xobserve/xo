@@ -97,7 +97,7 @@ const TraceSearchResult = ({ panel, traces, timeRange }: Props) => {
                     </Select>
                 </HStack>
             </Flex>
-            <VStack alignItems="left" maxH="500px" overflowY="scroll">
+            <VStack alignItems="left" maxH="500px" overflowY="auto">
                 {sortedTraces.map(trace => <TraceCard key={trace.traceID} trace={trace} maxDuration={maxDuration} checked={comparison.includes(trace.traceID)} checkDisabled={comparison.length >= 2 && !comparison.includes(trace.traceID)} onChecked={onTraceChecked} dsId={panel.datasource.id}/>)}
             </VStack>
         </Box>

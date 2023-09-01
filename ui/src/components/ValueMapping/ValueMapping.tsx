@@ -109,7 +109,7 @@ const ValueMapping = memo((props: Props) => {
                 <ModalHeader>{t.valueMapping}</ModalHeader>
                 <ModalCloseButton />
                 <ModalBody>
-                    <VStack alignItems="left" divider={<StackDivider />} spacing={3} maxH="600px" overflowY="scroll" >
+                    <VStack alignItems="left" divider={<StackDivider />} spacing={3} maxH="600px" overflowY="auto" >
                         {
                             value.map((v, i) => {
                                 const typeOption = typeOptions.find(t => t.value === v.type)

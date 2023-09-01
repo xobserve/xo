@@ -255,7 +255,7 @@ const EditPanel = memo(({ dashboard, onChange, edit }: EditPanelProps) => {
                                 </Box>
                                 {/* panel datasource section */}
                                 {!tempPanel.plugins[tempPanel.type].disableDatasource &&
-                                    <Box maxHeight={maxDatasourceHeight()} mt="2" overflowY="scroll">
+                                    <Box maxHeight={maxDatasourceHeight()} mt="2" overflowY="auto">
                                         <Box position="relative" zIndex={0}>
                                             <Tabs variant="unstyled" isLazy>
                                                 <TabList pb="0">
@@ -289,7 +289,7 @@ const EditPanel = memo(({ dashboard, onChange, edit }: EditPanelProps) => {
                                     </Box>}
                             </Box>
                             {/* panel settings section */}
-                            <Box width="35%" maxHeight="100%" overflowY={"scroll"} zIndex={1}>
+                            <Box width="35%" maxHeight="100%" overflowY={"auto"} zIndex={1}>
                                 <Box className="top-gradient-border bordered-left bordered-right" >
                                     <Tabs position="relative" variant="unstyled">
                                         <TabList pb="0">

@@ -12,7 +12,7 @@
 // limitations under the License.
 
 import React, { useMemo } from "react"
-import { Button, Table, TableContainer, Tag, Tbody, Td, Th, Thead, Tr, Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay, useDisclosure, Input, Flex, Box, useToast, Text, Switch, AlertDialog, AlertDialogOverlay, AlertDialogContent, AlertDialogHeader, AlertDialogBody, AlertDialogFooter } from "@chakra-ui/react"
+import { Button, Table, TableContainer, Tag, Tbody, Td, Th, Thead, Tr, Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay, useDisclosure, Input, Flex, Box, useToast, Text, Switch, AlertDialog, AlertDialogOverlay, AlertDialogContent, AlertDialogHeader, AlertDialogBody, AlertDialogFooter, useMediaQuery } from "@chakra-ui/react"
 import { DetailAlert, DetailAlertItem } from "components/DetailAlert"
 import RadionButtons from "components/RadioButtons"
 import DatasourceSelect from "components/datasource/Select"
@@ -46,6 +46,7 @@ import LokiVariableEditor from "src/views/dashboard/plugins/datasource/loki/Vari
 import { getDatasource } from "utils/datasource"
 import { addParamToUrl, removeParamFromUrl } from "utils/url"
 import { useSearchParam } from "react-use"
+import { MobileBreakpoint } from "src/data/constants"
 
 
 
@@ -58,13 +59,13 @@ const GlobalVariablesPage = () => {
     const [variables, setVariables] = useState<Variable[]>([])
     const [variable, setVariable] = useState<Variable>()
     const [editMode, setEditMode] = useState<boolean>(false)
-    
+
     useEffect(() => {
         if (variables.length > 0 && editVar) {
             onEditVariable(variables.find(v => v.id.toString() == editVar))
         }
-    },[variables, editVar])
-    
+    }, [variables, editVar])
+
     useEffect(() => {
         load()
     }, [])
@@ -115,7 +116,7 @@ const GlobalVariablesPage = () => {
         setVariable(variable)
         onOpen()
         setEditMode(true)
-        addParamToUrl({'editVar': variable.id})
+        addParamToUrl({ 'editVar': variable.id })
     }
 
 
@@ -204,16 +205,22 @@ export const VariablesTable = ({ variables, onEdit, onRemove }: TableProps) => {
         setSelectedVariable(null)
         onClose()
     }
+    const [isLargeScreen] = useMediaQuery('(min-width: 900px)')
     return (<>
         {variables.length > 0 ? <TableContainer>
             <Table variant="simple">
                 <Thead>
                     <Tr>
                         <Th>{t.itemName({ name: t.variable })}</Th>
-                        <Th>{t1.queryType}</Th>
-                        <Th>{t.datasource}</Th>
-                        <Th>{t1.refresh}</Th>
-                        <Th>{t1.regexFilter}</Th>
+                        {
+                            isLargeScreen && <>
+                                <Th>{t1.queryType}</Th>
+                                <Th>{t.datasource}</Th>
+                                <Th>{t1.refresh}</Th>
+                                <Th>{t1.regexFilter}</Th>
+                            </>
+                        }
+
                         <Th>{t.action}</Th>
                     </Tr>
                 </Thead>
@@ -221,10 +228,14 @@ export const VariablesTable = ({ variables, onEdit, onRemove }: TableProps) => {
                     {variables.map(variable => {
                         return <Tr key={variable.name} className={`${variable.id == selectedVariable?.id ? "highlight-bg" : ''}`}>
                             <Td>{variable.name}</Td>
-                            <Td>{t[variable.type]}</Td>
-                            <Td>{datasources?.find(ds => ds.id == variable.datasource)?.name}</Td>
-                            <Td>{t1[variable.refresh]} {variable.refresh == VariableRefresh.Manually && <Button size="sm" mt="-1" variant="ghost" ml="1" onClick={() => reloadValues(variable.id, variable.name)}>{t1.reload}</Button>}</Td>
-                            <Td>{variable.regex}</Td>
+                            {
+                                isLargeScreen && <>
+                                    <Td>{t[variable.type]}</Td>
+                                    <Td>{datasources?.find(ds => ds.id == variable.datasource)?.name}</Td>
+                                    <Td>{t1[variable.refresh]} {variable.refresh == VariableRefresh.Manually && <Button size="sm" mt="-1" variant="ghost" ml="1" onClick={() => reloadValues(variable.id, variable.name)}>{t1.reload}</Button>}</Td>
+                                    <Td>{variable.regex}</Td>
+                                </>
+                            }
                             <Td>
                                 <Button variant="ghost" size="sm" px="0" onClick={() => onEdit(variable)}>{t.edit}</Button>
                                 <Button variant="ghost" colorScheme="orange" size="sm" px="0" ml="1" onClick={() => { setSelectedVariable(variable); onOpen() }}>{t.delete}</Button>
@@ -305,7 +316,7 @@ export const EditVariable = ({ v, isOpen, onClose, isEdit, onSubmit, isGlobal = 
     }, [])
 
     const queryValues = (v0?) => {
-        queryVariableValues(v0??v).then(result => setVariableValues(result.data ?? []))
+        queryVariableValues(v0 ?? v).then(result => setVariableValues(result.data ?? []))
     }
 
     const load = async () => {
@@ -358,7 +369,7 @@ export const EditVariable = ({ v, isOpen, onClose, isEdit, onSubmit, isGlobal = 
     return (<>
         <Modal isOpen={isOpen} onClose={onClose} size="full">
             <ModalOverlay />
-            <ModalContent minW="600px">
+            <ModalContent w="600px">
                 <ModalHeader>{isEdit ? t.editItem({ name: t.variable }) : t.newItem({ name: t.variable })} </ModalHeader>
                 <ModalCloseButton />
                 {variable && <ModalBody>

@@ -11,7 +11,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { AlertDialog, AlertDialogBody, AlertDialogContent, AlertDialogFooter, AlertDialogHeader, AlertDialogOverlay, Button, Divider, HStack, Input, Select, Switch, Tag, TagCloseButton, TagLabel, useDisclosure, useToast } from "@chakra-ui/react"
+import { AlertDialog, AlertDialogBody, AlertDialogContent, AlertDialogFooter, AlertDialogHeader, AlertDialogOverlay, Button, Divider, HStack, Input, Select, Switch, Tag, TagCloseButton, TagLabel, useDisclosure, useMediaQuery, useToast } from "@chakra-ui/react"
 import { EditorNumberItem } from "components/editor/EditorItem"
 import { Form, FormSection } from "components/form/Form"
 import FormItem from "components/form/Item"
@@ -23,6 +23,7 @@ import { commonMsg, dashboardSettingMsg } from "src/i18n/locales/en"
 import ColorTag from "../../../components/ColorTag"
 import { requestApi } from "utils/axios/request"
 import { useNavigate } from "react-router"
+import { MobileBreakpoint } from "src/data/constants"
 
 interface Props {
     dashboard: Dashboard
@@ -75,11 +76,12 @@ const GeneralSettings = ({ dashboard, onChange }: Props) => {
             navigate(`/cfg/team/${dashboard.ownedBy}/dashboards`)
         }, 500)
     }
-
+    
+    const [isLargeScreen] = useMediaQuery(MobileBreakpoint)
     return (<>
         <Form spacing={5} maxW="600px" sx={{
             '.form-item-label': {
-                width: '180px'
+                width: isLargeScreen ? '180px' : "110px"
             }
         }}>
             <FormSection title={t.basicSetting} spacing={1}>

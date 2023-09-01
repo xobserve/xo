@@ -268,7 +268,7 @@ const Search = memo((props: Props) => {
                                     <TeamsFilter value={selectedTeams} teams={teams} onChange={setSelectedTeams} teamCount={teamCount} />
                                 </HStack>
                             </Flex>
-                            <VStack alignItems="left" maxH="calc(100vh - 130px)" overflowY="scroll" spacing={3} pt="3">
+                            <VStack alignItems="left" maxH="calc(100vh - 130px)" overflowY="auto" spacing={3} pt="3">
                                 {
                                     layout == "list" && <ListView teams={teams} dashboards={dashboards as Dashboard[]} onItemClick={onClose} query={query} starredIds={starredDashIds} />
                                 }

@@ -19,6 +19,7 @@ import { SeriesData } from "types/seriesData"
 import customColors from "theme/colors"
 import { isSeriesData } from "utils/seriesData"
 import { isEmpty } from "utils/validate"
+import CustomScrollbar from "components/CustomScrollbar/CustomScrollbar"
 
 interface TablePanelProps extends PanelProps {
     data: SeriesData[][]
@@ -74,9 +75,11 @@ const TablePanel = memo((props: TablePanelProps) => {
                 <Center height="100%">No data</Center>
                 :
                 <Flex h="100%" justify="space-between" direction="column">
-                    <Box maxH={series && seriesList.length > 1  ? "calc(100% - 32px)" : "100%"} overflowY="scroll" sx={cssStyles(colorMode, props.panel.plugins.table.column.colorTitle)}>
+                    <CustomScrollbar>
+                    <Box maxH={series && seriesList.length > 1  ? "calc(100% - 32px)" : "100%"}  sx={cssStyles(colorMode, props.panel.plugins.table.column.colorTitle)}>
                         <ComplexTable panel={props.panel} dashboardId={props.dashboardId} columns={tableColumns} data={tableData} />
                     </Box>
+                    </CustomScrollbar>
                     {series && seriesList.length > 1 && <Select value={series} mt="1" size="sm" onChange={e => setSeries(e.currentTarget.value)}>
                         {seriesList.map(series => {
                             return <option key={series} value={series}>{series}</option>

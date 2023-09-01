@@ -129,7 +129,7 @@ const DashboardHeader = memo(({ dashboard, onChange, sideWidth,team }: HeaderPro
                         </HStack>
 
                     </Flex>
-                    {!isEmpty(vars) && <Flex justifyContent="space-between" mt="0">
+                    {!isEmpty(vars) && <Flex justifyContent="space-between" mt="0" overflowX="auto">
                         <SelectVariables variables={vars.filter((v) => v.id.toString().startsWith("d-"))} />
                         <SelectVariables variables={vars.filter((v) => !v.id.toString().startsWith("d-") && !find(dashboard.data.hidingVars?.split(','), v1 => v.name.toLowerCase().match(v1)))} />
                     </Flex>}

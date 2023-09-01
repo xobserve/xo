@@ -10,7 +10,7 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-import {  Modal, ModalBody, ModalCloseButton, ModalContent, ModalOverlay, Tab, TabList, TabPanel, TabPanels, Tabs, Text, useDisclosure } from "@chakra-ui/react"
+import {  Modal, ModalBody, ModalCloseButton, ModalContent, ModalOverlay, Tab, TabList, TabPanel, TabPanels, Tabs, Text, useDisclosure, useMediaQuery } from "@chakra-ui/react"
 import IconButton from "components/button/IconButton"
 import { toNumber } from "lodash"
 import { useEffect } from "react"
@@ -26,6 +26,8 @@ import React from "react";
 import { useStore } from "@nanostores/react"
 import { commonMsg, dashboardSettingMsg } from "src/i18n/locales/en"
 import AnnotationSettings from "./Annotation"
+import { use } from "echarts"
+import { MobileBreakpoint } from "src/data/constants"
 
 interface Props {
     dashboard: Dashboard
@@ -59,16 +61,18 @@ const DashboardSettings = ({ dashboard,onChange }: Props) => {
         removeParamFromUrl(['settings'])
         onClose()
     }
+
+    const [isLargeScreen] = useMediaQuery(MobileBreakpoint)
     return (<>
         <IconButton onClick={() => addParamToUrl({ settings: DashboardSettingType.General })} variant="ghost"><FaCog /></IconButton>
         <Modal isOpen={isOpen} onClose={onSettingClose} size="full">
             <ModalOverlay />
-            <ModalContent>
+            <ModalContent >
                 <ModalCloseButton mt="2"/>
-                <ModalBody>
+                <ModalBody p={isLargeScreen ? 2 : 1}>
                     <Text textStyle="subTitle" mt="2">{dashboard.title} / Settings</Text>
                     <Tabs orientation="vertical"  mt="7" defaultIndex={toNumber(settings)} onChange={index => addParamToUrl({ settings: index })}>
-                        <TabList pr="2" width="200px" >
+                        <TabList pr={isLargeScreen ? 2 : 0} width={isLargeScreen ? "200px" : "70px"} >
                             <Tab>{t.general}</Tab>
                             <Tab>{t.styles}</Tab>
                             <Tab>{t.variable}</Tab>
@@ -76,7 +80,7 @@ const DashboardSettings = ({ dashboard,onChange }: Props) => {
                             <Tab>{t1.metaData}</Tab>
                         </TabList>
 
-                        <TabPanels  p="2"> 
+                        <TabPanels  p={isLargeScreen ? 2 : 0}> 
                             <TabPanel py="0" tabIndex={DashboardSettingType.General}>
                                 <GeneralSettings dashboard={dashboard} onChange={onChange} />
                             </TabPanel>

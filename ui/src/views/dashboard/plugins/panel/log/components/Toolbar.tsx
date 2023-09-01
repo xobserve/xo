@@ -82,7 +82,7 @@ const LogToolbar = memo((props: Props) => {
                 <Text mb="1" fontSize="0.8rem" fontWeight="500">Label filter</Text>
                 <Button size="xs" mt="-1" onClick={onActiveOpChange}>{activeOp.toUpperCase()}</Button>
             </Flex>
-            <VStack mt="2" alignItems="left" maxHeight={`400px`} overflowY="scroll">
+            <VStack mt="2" alignItems="left" maxHeight={`400px`} overflowY="auto">
                 {
                     labels.map(label =>
                         <Box fontSize="0.85rem" className={active.includes(label.id) ? "highlight-bordered" : "bordered"} onClick={() => onActiveLabel(label.id)} cursor="pointer" px="2" py="1">

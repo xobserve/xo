@@ -10,7 +10,7 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-import { Select, Switch } from "@chakra-ui/react"
+import { Select, Switch, useMediaQuery } from "@chakra-ui/react"
 import { EditorInputItem } from "components/editor/EditorItem"
 import { Form } from "components/form/Form"
 import { Dashboard } from "types/dashboard"
@@ -23,6 +23,7 @@ import InputSelect from "components/select/InputSelect"
 import { isEmpty } from "utils/validate"
 import storage from "utils/localStorage"
 import { PreviousColorModeKey } from "src/data/storage-keys"
+import { MobileBreakpoint } from "src/data/constants"
 
 interface Props {
     dashboard: Dashboard
@@ -47,17 +48,19 @@ const bgOptions = [
     }
 ]
 
+
 const StyleSettings = ({ dashboard, onChange }: Props) => {
     const t1 = useStore(dashboardSettingMsg)
+    const [isLargeScreen] = useMediaQuery(MobileBreakpoint)
     return (<Form sx={{
         '.form-item-label': {
-            width: '200px'
+            width: isLargeScreen ? '200px' : "100px"
         }
     }} spacing={1}>
         <FormItem size="md" title={t1.background} desc={t1.backgroundTips} labelWidth="100%">
             {/* url(/dashboard-bg.png) */}
             <InputSelect
-                width="500px"
+                width={isLargeScreen ? "500px" : "100%"}
                 size="md"
                 value={dashboard.data.styles.bg.url}
                 onChange={(v) => {

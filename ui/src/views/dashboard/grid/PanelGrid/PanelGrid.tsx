@@ -303,7 +303,6 @@ export const PanelComponent = ({ dashboard, panel, variables, onRemovePanel, onH
             <Box
                 // panel={panel}
                 height={panelInnerHeight}
-                overflowY="scroll"
                 marginLeft={panel.type == PanelType.Graph ? "-10px" : "0px"}
             >
                 <CustomPanelRender dashboardId={dashboard.id} panel={panel} data={data} height={panelInnerHeight} width={panelInnerWidth} sync={sync} timeRange={timeRange} />

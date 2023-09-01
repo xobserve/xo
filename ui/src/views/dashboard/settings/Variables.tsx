@@ -163,7 +163,7 @@ const VariablesSetting = ({ dashboard, onChange }: Props) => {
     }
 
     return <>
-            <Flex justifyContent="space-between">
+            <Flex justifyContent="space-between" mb="2">
                 <Text textStyle="subTitle"></Text>
                 <Button size="sm" onClick={onAddVariable}>{t.newItem({name: t.variable})}</Button>
             </Flex>
