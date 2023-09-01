@@ -118,7 +118,7 @@ export const routes = [
   ...cfgRoutes,
   ...adminRoutes,
   {
-    path: "/:dashboardId/*", 
+    path: "/*", 
     element: pageContainer(<DashboardPage />),
   },
   {

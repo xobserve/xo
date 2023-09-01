@@ -22,7 +22,6 @@ import { dateTimeFormat } from "utils/datetime/formatter"
 import { formatLabelId, getLabelNameColor } from "../utils"
 import moment from "moment"
 import { isEmpty } from "utils/validate"
-import { measureText } from "utils/measureText"
 import { AlertToolbarOptions } from "types/plugins/alert"
 
 

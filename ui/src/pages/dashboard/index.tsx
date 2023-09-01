@@ -14,7 +14,7 @@
 import { useStore } from "@nanostores/react"
 import React, { memo } from "react"
 import { useEffect, useState } from "react"
-import { useParams } from "react-router-dom"
+import { useLocation, useParams } from "react-router-dom"
 import { dashboardMsg } from "src/i18n/locales/en"
 import DashboardWrapper from "src/views/dashboard/Dashboard"
 import { requestApi } from "utils/axios/request"
@@ -28,18 +28,18 @@ interface Props {
 // page for dispaly dashboard
 const DashboardPage = memo(({sideWidth}: Props) => {
     const t1 = useStore(dashboardMsg)
-    const params = useParams()
-    const rawId = params.dashboardId
+    const location = useLocation()
     const [dashboardId, setDashboardId] = useState<string>(null)
     const [error, setError] = useState(null)
+    console.log("here333333:",location)
     useEffect(() => {
-        if (rawId) {
+        if (location) {
             setError(null)
-            if (rawId == 'alert') {
+            if (location.pathname == '/alert') {
                 setDashboardId(AlertDashbordId)
             } else  {   
                 setDashboardId(null)
-                let path = window.location.pathname;
+                let path = location.pathname;
                 // if rawId  starts with 'd-', then it's a dashboard id
                 // otherwise, it's just a pathname defined in team's sidemenu, we need to get the real dashboard id
                 if (path.startsWith('/d-')) {
@@ -50,7 +50,7 @@ const DashboardPage = memo(({sideWidth}: Props) => {
             }
            
         }
-    }, [rawId])
+    }, [location.pathname])
 
     const load = async path => {
         const res = await requestApi.get(`/team/sidemenu/current`)
