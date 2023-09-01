@@ -69,10 +69,6 @@ const customTheme = extendTheme(
                     // }
                     '.chakra-portal .chakra-popover__popper': {
                         zIndex: 2000
-                    },
-
-                    body: {
-                        
                     }
                 }
             }

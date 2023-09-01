@@ -52,6 +52,7 @@ import { HomeDashboardId } from "src/data/dashboard"
 import { useNavigate } from "react-router-dom"
 import { MobileBreakpoint } from "src/data/constants"
 import { AddIcon, HamburgerIcon } from "@chakra-ui/icons"
+import CustomScrollbar from "components/CustomScrollbar/CustomScrollbar"
 export let gnavigate
 
 
@@ -117,8 +118,8 @@ const Container = ({ children, sidemenu, session }: Props) => {
 
   const [isLargeScreen] = useMediaQuery(MobileBreakpoint)
 
-  const paddingLeft = 16
-  const paddingRight = 16
+  const paddingLeft = 8
+  const paddingRight = 8
   const childMarginLeft = 24
   const navSize = 15
   const navWidth = useMemo(() => {
@@ -151,7 +152,7 @@ const Container = ({ children, sidemenu, session }: Props) => {
     return navWidth
   }, [sidemenu, miniMode, bottomNavs])
 
-  const miniWidth = isLargeScreen ? 65 : 0
+  const miniWidth = isLargeScreen ?55 : 0
   const sideWidth = (fullscreen || !isLargeScreen) ? 0 : (miniMode ? miniWidth : navWidth)
   const textColor = useColorModeValue("gray.500", "whiteAlpha.800")
 
@@ -163,61 +164,68 @@ const Container = ({ children, sidemenu, session }: Props) => {
           ?
           <Flex
             display={fullscreen ? "none" : "flex"}
-            flexDir="column" pl={paddingLeft + 'px'}
-            pr={paddingRight + 'px'}
+            flexDir="column" 
+            pl={miniMode ? null : paddingLeft + 'px'}
+            pr={miniMode ? null : paddingRight + 'px'}
             justifyContent="space-between"
             id="sidemenu"
             position="fixed"
             top="0"
             left="0"
             bottom="0"
+            right="0"
             width={sideWidth + 'px'}
             transition="all 0.2s"
             height="100vh"
             className="bordered-right"
-            overflowY="auto" overflowX="hidden"
+          // overflowY="auto" overflowX="hidden"
           >
-            <Flex id="sidemenu-top" flexDir="column" alignItems={(miniMode || isEmpty(sidemenu)) ? "center" : "left"}     >
-              {(miniMode || isEmpty(sidemenu)) ?
-                <Box cursor="pointer" onClick={onMinimodeChange} mt="2" ><Logo /></Box>
-                :
-                <Box cursor="pointer" onClick={onMinimodeChange} opacity="0.2" position="absolute" right="1px" top="14px" className="hover-text" p="1" fontSize="0.7rem"><Icons.FaChevronLeft /></Box>
-              }
-              {sidemenu.map((link, index) => {
-                return <Box key={link.url} mt={miniMode ? (index > 0 ? 2 : 3) : 3}>
-                  <Box>
-                    <NavItem isActive={miniMode ? asPath.startsWith(link.url) : asPath == link.url} key={index} text={link.title} icon={link.icon} miniMode={miniMode} fontWeight={500} url={link.children?.length > 0 ? link.children[0].url : link.url} children={link.children} />
-                  </Box>
-                  {
-                    !miniMode && link.children && link.children.map((child, index) => {
-                      return <Box mt="5px" ml={childMarginLeft + 'px'}><NavItem isActive={asPath == child.url} key={index} text={child.title} miniMode={miniMode} url={child.url} /></Box>
-                    })
+            <CustomScrollbar hideHorizontalTrack>
+              <Flex flexDir="column" height="100%"  justifyContent="space-between">
+                <Flex id="sidemenu-top" flexDir="column" alignItems={(miniMode || isEmpty(sidemenu)) ? "center" : "left"}     >
+                  {(miniMode || isEmpty(sidemenu)) ?
+                    <Box cursor="pointer" onClick={onMinimodeChange} mt="2" ><Logo /></Box>
+                    :
+                    <Box cursor="pointer" onClick={onMinimodeChange} opacity="0.2" position="absolute" right="1px" top="14px" className="hover-text" p="1" fontSize="0.7rem"><Icons.FaChevronLeft /></Box>
                   }
-                </Box>
-              })}
+                  {sidemenu.map((link, index) => {
+                    return <Box key={link.url} mt={miniMode ? (index > 0 ? 2 : 3) : 3}>
+                      <Box>
+                        <NavItem isActive={miniMode ? asPath.startsWith(link.url) : asPath == link.url} key={index} text={link.title} icon={link.icon} miniMode={miniMode} fontWeight={500} url={link.children?.length > 0 ? link.children[0].url : link.url} children={link.children} />
+                      </Box>
+                      {
+                        !miniMode && link.children && link.children.map((child, index) => {
+                          return <Box mt="5px" ml={childMarginLeft + 'px'}><NavItem isActive={asPath == child.url} key={index} text={child.title} miniMode={miniMode} url={child.url} /></Box>
+                        })
+                      }
+                    </Box>
+                  })}
 
-              {session && !sidemenu.some(nav => nav.dashboardId != HomeDashboardId) && <>
-                <Divider mt={miniMode ? 2 : 3} />
-                <Box mt={miniMode ? 2 : 3}><NavItem fontSize={navSize - 1} text={t1.newItem} url={`/cfg/team/${session.user.sidemenu}/sidemenu`} miniMode={miniMode} icon="FaPlus" /></Box>
-              </>}
-            </Flex>
-            <Flex id="sidemenu-bottom" flexDir="column" pb="2" alignItems={miniMode ? "center" : "left"} color={textColor}   >
-              <VStack alignItems="left" spacing={miniMode ? 1 : 3}>
-                {bottomNavs.map((nav, index) => {
-                  if (nav.url == ReserveUrls.Search) {
-                    return <Search key={nav.url} title={nav.title} miniMode={miniMode} sideWidth={sideWidth} fontSize={navSize} />
-                  } else {
-                    return <Box key={nav.url}><NavItem isActive={nav.isActive} text={nav.title} icon={nav.icon} miniMode={miniMode} url={nav.url} /></Box>
-                  }
-                })}
+                  {session && !sidemenu.some(nav => nav.dashboardId != HomeDashboardId) && <>
+                    <Divider mt={miniMode ? 2 : 3} />
+                    <Box mt={miniMode ? 2 : 3}><NavItem fontSize={navSize - 1} text={t1.newItem} url={`/cfg/team/${session.user.sidemenu}/sidemenu`} miniMode={miniMode} icon="FaPlus" /></Box>
+                  </>}
+                </Flex>
+                <Flex id="sidemenu-bottom" flexDir="column" pb="2" alignItems={miniMode ? "center" : "left"} color={textColor}   >
+                  <VStack alignItems="left" spacing={miniMode ? 1 : 3}>
+                    {bottomNavs.map((nav, index) => {
+                      if (nav.url == ReserveUrls.Search) {
+                        return <Search key={nav.url} title={nav.title} miniMode={miniMode} sideWidth={sideWidth} fontSize={navSize} />
+                      } else {
+                        return <Box key={nav.url}><NavItem isActive={nav.isActive} text={nav.title} icon={nav.icon} miniMode={miniMode} url={nav.url} /></Box>
+                      }
+                    })}
 
-                <Divider />
-                {/* <Box color={textColor}><ColorModeSwitcher miniMode={miniMode} /></Box> */}
-                {!isEmpty(config.repoUrl) && <Box><NavItem text="Github" icon="FaGithub" miniMode={miniMode} url={config.repoUrl} /></Box>}
-                <UserMenu miniMode={miniMode} fontSize={navSize + 'px'} />
-              </VStack>
+                    <Divider />
+                    {/* <Box color={textColor}><ColorModeSwitcher miniMode={miniMode} /></Box> */}
+                    {!isEmpty(config.repoUrl) && <Box><NavItem text="Github" icon="FaGithub" miniMode={miniMode} url={config.repoUrl} /></Box>}
+                    <UserMenu miniMode={miniMode} fontSize={navSize + 'px'} />
+                  </VStack>
 
-            </Flex>
+                </Flex>
+              </Flex>
+            </CustomScrollbar>
+
           </Flex>
           :
           <Box position="absolute" zIndex={1} top="10px">
@@ -239,9 +247,9 @@ const Container = ({ children, sidemenu, session }: Props) => {
                     {
                       link.children && link.children.map((child) => {
                         return <Link key={child.url} to={child.url}>
-                        <MenuItem pl="36px">
-                          {child.title}
-                        </MenuItem></Link>
+                          <MenuItem pl="36px">
+                            {child.title}
+                          </MenuItem></Link>
                       })
                     }
                   </Link>
@@ -252,7 +260,7 @@ const Container = ({ children, sidemenu, session }: Props) => {
                     const Icon = Icons[nav.icon]
                     if (nav.url == ReserveUrls.Search) {
                       return <MenuItem  >
-                        <Search key={nav.url} title={nav.title} miniMode={false} sideWidth={sideWidth}  />
+                        <Search key={nav.url} title={nav.title} miniMode={false} sideWidth={sideWidth} />
                       </MenuItem>
                     } else {
                       return <Link key={nav.url} to={nav.url}>
