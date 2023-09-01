@@ -87,7 +87,8 @@ func (s *Server) Start() error {
 
 		// teams apis
 		r.GET("/teams/all", IsLogin(), teams.GetTeams)
-		r.GET("/team/:id", IsLogin(), teams.GetTeam)
+		r.GET("/team/byId/:id", IsLogin(), teams.GetTeam)
+		r.GET("/team/byDashId/:id", IsLogin(), teams.GetTeamByDashId)
 		r.GET("/team/:id/members", IsLogin(), teams.GetTeamMembers)
 		r.POST("/team/member", IsLogin(), teams.UpdateTeamMember)
 		r.POST("/team/add/member", IsLogin(), teams.AddTeamMembers)

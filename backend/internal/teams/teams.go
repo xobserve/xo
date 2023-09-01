@@ -130,6 +130,40 @@ func GetTeam(c *gin.Context) {
 	c.JSON(200, common.RespSuccess(team))
 }
 
+func GetTeamByDashId(c *gin.Context) {
+	id := strings.TrimSpace(c.Param("id"))
+	if id == "" {
+		c.JSON(400, common.RespError(e.ParamInvalid))
+		return
+	}
+
+	teamId, err := models.QueryDashboardBelongsTo(id)
+	if err != nil {
+		if err != sql.ErrNoRows {
+			logger.Warn("get team  error", "error", err)
+			c.JSON(500, common.RespInternalError())
+			return
+		}
+
+		c.JSON(400, common.RespError(e.ParamInvalid))
+		return
+	}
+
+	team, err := models.QueryTeam(teamId, "")
+	if err != nil {
+		if err != sql.ErrNoRows {
+			logger.Warn("get team  error", "error", err)
+			c.JSON(500, common.RespInternalError())
+			return
+		}
+
+		c.JSON(200, common.RespSuccess(models.Team{}))
+		return
+	}
+
+	c.JSON(200, common.RespSuccess(team))
+}
+
 func GetTeamMembers(c *gin.Context) {
 	id, _ := strconv.ParseInt(c.Param("id"), 10, 64)
 	if id == 0 {
