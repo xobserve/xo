@@ -27,6 +27,7 @@ import { addParamToUrl } from 'utils/url'
 import React from "react";
 import { dateTimeFormat } from "utils/datetime/formatter"
 import { MobileBreakpoint } from "src/data/constants"
+import { Select } from "antd"
 
 interface Props {
     trace: Trace
@@ -43,6 +44,13 @@ interface Props {
     search: string
 }
 
+const detailTypes = [    { label: "Timeline", value: ETraceViewType.TraceTimelineViewer },
+{ label: "FlameGraph", value: ETraceViewType.TraceFlamegraph },
+{ label: "NodeGraph", value: ETraceViewType.TraceGraph },
+{ label: "Spans", value: ETraceViewType.TraceSpansView },
+{ label: "Statistics", value: ETraceViewType.TraceStatistics },
+{ label: "JSON", value: ETraceViewType.TraceJSON }]
+
 const TraceDetailHeader = ({ trace, viewRange, updateNextViewRangeTime, updateViewRangeTime, collapsed, onGraphCollapsed, searchCount, prevResult, nextResult, viewType, onViewTypeChange, search }: Props) => {
     const [search1, setSearch] = useState(search)
     const onSearchChange = (v) => {
@@ -57,8 +65,8 @@ const TraceDetailHeader = ({ trace, viewRange, updateNextViewRangeTime, updateVi
             <HStack>
                 <CollapseIcon collapsed={collapsed} onClick={onGraphCollapsed} opacity="0.5" fontSize={size} />
                 <Flex flexDir={isLargeScreen ? "row" : "column"} alignItems={isLargeScreen ? "center"  : "start"} gap={isLargeScreen ? 2 : 0}>
-                    <Text fontSize={size}>{trace.traceName}</Text>
-                    <Text textStyle="annotation">{trace.traceID.slice(0, 7)}</Text>
+                    <Text fontSize={isLargeScreen ? size : "xs"} noOfLines={1}>{trace.traceName}</Text>
+                    {isLargeScreen && <Text textStyle="annotation">{trace.traceID.slice(0, 7)}</Text>}
                 </Flex>
             </HStack>
             <HStack spacing={1}>
@@ -66,21 +74,17 @@ const TraceDetailHeader = ({ trace, viewRange, updateNextViewRangeTime, updateVi
                     <Text fontSize={size} layerStyle="gradientText" mr="20px">Click code area and Press Command+F to search </Text>
                     : ((viewType != ETraceViewType.TraceFlamegraph && viewType != ETraceViewType.TraceSpansView) && <HStack spacing={0}>
                         <HStack spacing={0} position="relative">
-                            <Input width={isLargeScreen ? "240px" : "150px"} size={size} placeholder="Search.." value={search1} onChange={e => onSearchChange(e.currentTarget.value)} />
+                            <Input width={isLargeScreen ? "240px" : "120px"} size={size} placeholder="Search.." value={search1} onChange={e => onSearchChange(e.currentTarget.value)} />
                             <Text textStyle="annotation" width="30px" position="absolute" right="0" mt="2px">{searchCount}</Text>
                         </HStack>
                         {viewType == ETraceViewType.TraceTimelineViewer && <><IconButton size={size} onClick={prevResult} isDisabled={search == ''} fontSize="1rem"><AiOutlineUp /></IconButton>
                             <IconButton size={size} onClick={nextResult} isDisabled={search == ''} fontSize="1rem"><AiOutlineDown /></IconButton></>}
                         {/* <Button size="sm" variant="outline" onClick={prevResult} isDisabled={search == ''}></Button> */}
                     </HStack>)}
-                <RadionButtons width={isLargeScreen ? null : 300} size={isLargeScreen ? "sm" : "xs"} theme="brand" fontSize="0.85rem" spacing={0} value={viewType} onChange={v => onViewTypeChange(v)} options={[
-                    { label: "Timeline", value: ETraceViewType.TraceTimelineViewer },
-                    { label: "FlameGraph", value: ETraceViewType.TraceFlamegraph },
-                    { label: "NodeGraph", value: ETraceViewType.TraceGraph },
-                    { label: "Spans", value: ETraceViewType.TraceSpansView },
-                    { label: "Statistics", value: ETraceViewType.TraceStatistics },
-                    { label: "JSON", value: ETraceViewType.TraceJSON },
-                ]} />
+
+                {isLargeScreen ? <RadionButtons size="sm" theme="brand" fontSize="0.85rem" spacing={0} value={viewType} onChange={v => onViewTypeChange(v)} options={detailTypes} /> 
+                : 
+                <Select options={detailTypes} value={viewType} onChange={v => onViewTypeChange(v)}  />}
                 {/* <ColorModeSwitcher miniMode fontSize={size} disableTrigger /> */}
             </HStack>
         </Flex>

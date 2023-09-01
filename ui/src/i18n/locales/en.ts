@@ -121,6 +121,7 @@ export const commonMsg = i18n("common", {
   "auditLog": "Audit Log",
   "borderColor": "Border color",
   "valueMapping": "Value mapping",
+  "landscapeModeTips":"Please turn your phone to landscape mode for better experience.",
   "inputTips": params("Enter {name}.."),
   "isReqiiured": params("{name} is required"),
   "isInvalid": params("{name} is invalid"),
