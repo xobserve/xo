@@ -11,7 +11,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { Box, useColorMode, useColorModeValue } from "@chakra-ui/react"
+import { Box, useColorMode, useColorModeValue, useMediaQuery } from "@chakra-ui/react"
 import { Trace } from "types/plugins/trace"
 import TraceDetailHeader from "./TraceHeader"
 
@@ -32,6 +32,7 @@ import TraceStatistics from "./TraceStats";
 import { useSearchParam } from "react-use";
 import { addParamToUrl } from "utils/url";
 import React from "react";
+import { MobileBreakpoint } from "src/data/constants";
 
 interface Props {
     trace: Trace
@@ -139,11 +140,13 @@ const TraceDetail = ({ trace, scrollManager }: Props) => {
         viewComponent = <></>
             break
     }
+
+    const [isLargeScreen] = useMediaQuery(MobileBreakpoint)
     return (<Box position="absolute"  minH="100vh" width="100%">
         <Box position="fixed" width="100%" bg={useColorModeValue('#fff', customColors.bodyBg.dark)} zIndex="1000">
             <TraceDetailHeader trace={trace} viewRange={viewRange} updateNextViewRangeTime={updateNextViewRangeTime} updateViewRangeTime={updateViewRangeTime} onGraphCollapsed={() => setCollapsed(!collapsed)} collapsed={collapsed}  searchCount={findCount} prevResult={prevResult} nextResult={nextResult} onViewTypeChange={onViewTypeChange} viewType={viewType} search={search} />
         </Box>
-        <Box mt={collapsed ? "67px" : "144px"} >
+        <Box mt={collapsed ? (isLargeScreen ? "60px" : "70px") : (isLargeScreen ? "136px" : "146px")} >
             {viewComponent}
 
         </Box>

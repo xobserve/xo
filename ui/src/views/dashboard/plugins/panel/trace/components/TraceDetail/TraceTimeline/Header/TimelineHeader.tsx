@@ -27,7 +27,6 @@ const NUM_TICKS = 5;
 const TimelineHeader = ({ duration, nameColumnWidth, onCollapseAll, onCollapseOne, onColummWidthChange, onExpandAll, onExpandOne, updateNextViewRangeTime, updateViewRangeTime, viewRangeTime }: Props) => {
     const [viewStart, viewEnd] = viewRangeTime.current;
     const [isLargeScreen] = useMediaQuery(MobileBreakpoint)
-    console.log("here3333333 large",isLargeScreen)
     return (<TimelineRow className="TimelineHeaderRow bordered-bottom">
         <TimelineRow.Cell className="ub-flex ub-px2" width={nameColumnWidth} style={{display: "flex",paddingLeft: '0.5rem',paddingRight: '1.5rem'}}>
             <Text fontSize={isLargeScreen ? "md" : "xs"} mr="2">Service &amp; Operation</Text>

@@ -84,7 +84,7 @@ const TraceDetailHeader = ({ trace, viewRange, updateNextViewRangeTime, updateVi
                 {/* <ColorModeSwitcher miniMode fontSize={size} disableTrigger /> */}
             </HStack>
         </Flex>
-        <HStack className="label-bg" px="2" py="1" fontSize={isLargeScreen ? "0.9rem" : "0.75rem"} spacing={4}>
+        <HStack className="label-bg" px="2" py={isLargeScreen ? "4px" : "1px"} fontSize={isLargeScreen ? "0.9rem" : "0.9rem"} spacing={4}>
             <HStack>
                 <Text opacity="0.8">Start time</Text>
                 <Text>{dateTimeFormat(trace.startTime / 1000)}</Text>
