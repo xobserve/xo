@@ -49,7 +49,7 @@ const TeamLayout = ({children}: Props) => {
     }, [id])
 
     const load = async () => {
-        const res = await requestApi.get(`/team/${id}`)
+        const res = await requestApi.get(`/team/byId/${id}`)
         setTeam(res.data)
     }
     

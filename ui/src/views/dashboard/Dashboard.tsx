@@ -43,6 +43,8 @@ import { clearPanelRealTime } from "./store/panelRealtime"
 import storage from "utils/localStorage"
 import { PreviousColorModeKey } from "src/data/storage-keys"
 import { isEmpty } from "utils/validate"
+import Loading from "components/loading/Loading"
+import { Team } from "types/teams"
 
 
 
@@ -59,9 +61,17 @@ const DashboardWrapper = ({ dashboardId, sideWidth }) => {
     const { setColorMode, colorMode, toggleColorMode } = useColorMode()
     const toast = useToast()
     // const [gVariables, setGVariables] = useState<Variable[]>([])
+    const [team, setTeam] = useState<Team>(null)
     const fullscreen = useFullscreen()
+
+    const loadTeam = async () => {
+        const res1 = await requestApi.get(`/team/byDashId/${dashboardId}`)
+        setTeam(res1.data)
+    }
+
     useEffect(() => {
         updateTimeToNewest()
+        loadTeam()
         if (!dashboard) {
             load()
         }
@@ -226,9 +236,9 @@ const DashboardWrapper = ({ dashboardId, sideWidth }) => {
     const [isLargeScreen] = useMediaQuery('(min-width: 600px)')
 
     return (<>
-        {dashboard && <Box px={fullscreen ? 0 : (isLargeScreen ? 3 : 1)} width="100%" minHeight="100vh" position="relative">
+        {dashboard && team ? <Box px={fullscreen ? 0 : (isLargeScreen ? 3 : 1)} width="100%" minHeight="100vh" position="relative">
             {/* <Decoration decoration={dashboard.data.styles.decoration}/> */}
-            <DashboardHeader dashboard={dashboard} onChange={onDashbardChange} sideWidth={sideWidth} />
+            <DashboardHeader dashboard={dashboard} onChange={onDashbardChange} sideWidth={sideWidth} team={team}/>
             <Box
                 // key={dashboard.id + fullscreen} 
                 id="dashboard-wrapper"
@@ -241,7 +251,7 @@ const DashboardWrapper = ({ dashboardId, sideWidth }) => {
             </Box>
             <EditPanel dashboard={dashboard} onChange={onDashbardChange} />
             <DashboardAnnotations dashboard={dashboard}/>
-        </Box>}
+        </Box> : <Box position="fixed" top="50vh" left="50vw"><Loading /></Box>}
     </>)
 }
 

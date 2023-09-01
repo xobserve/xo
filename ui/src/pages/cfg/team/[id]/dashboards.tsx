@@ -52,7 +52,7 @@ const TeamDashboards = ({team}: {team:Team}) => {
     }, [])
 
     const load = async () => {
-        const res1 = await requestApi.get(`/dashboard/team/${team.id}`)
+        const res1 = await requestApi.get(`/dashboard/team/byId/${team.id}`)
         setDashboards(res1.data)
     }
 

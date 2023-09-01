@@ -39,25 +39,17 @@ import { MobileBreakpoint } from "src/data/constants";
 
 interface HeaderProps {
     dashboard: Dashboard
+    team: Team
     onChange: any
     sideWidth?: number
 }
-const DashboardHeader = memo(({ dashboard, onChange, sideWidth }: HeaderProps) => {
+const DashboardHeader = memo(({ dashboard, onChange, sideWidth,team }: HeaderProps) => {
     const vars = useStore($variables)
     const t1 = useStore(dashboardMsg)
     const navigate = useNavigate()
     const [refresh, setRefresh] = useState(0)
-    const [team, setTeam] = useState<Team>(null)
     const fullscreen = useFullscreen()
 
-    useEffect(() => {
-        getTeam()
-    }, [])
-
-    const getTeam = async () => {
-        const res1 = await requestApi.get(`/team/${dashboard.ownedBy}`)
-        setTeam(res1.data)
-    }
 
     const refreshH = useRef(null)
 

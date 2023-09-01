@@ -12,6 +12,9 @@
         .svgLoader {
             animation: spin 2s linear infinite;
             margin: auto;
+            position:absolute;
+            top: 48%;
+            left: 48%;
         }
 
         #first-page-loading {
@@ -61,8 +64,8 @@
 
 <body>
     <div id="first-page-loading">
-        <div><img class="svgLoader" src="/logo.png" /></div>
-        <div style="font-size: 1.1rem;color: rgb(0, 181, 216)">Loading...</div>
+        <div><img class="svgLoader" src="/logo.png" width="60px" height="60px"/></div>
+        <!-- <div style="font-size: 1.1rem;color: rgb(0, 181, 216)">Loading...</div> -->
     </div>
     <div id="root"></div>
     <script type="module" src="/src/index.tsx"></script>

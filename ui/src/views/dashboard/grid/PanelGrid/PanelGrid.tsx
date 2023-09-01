@@ -123,7 +123,7 @@ export const PanelGrid = memo((props: PanelGridProps) => {
 
     return (
         <PanelBorder width={props.width} height={props.height} border={props.panel.styles?.border}>
-            {depsInited ? <PanelComponent key={props.panel.id + forceRenderCount} {...props} timeRange={tr} variables={variables} /> : <Loading />}
+            {depsInited && <PanelComponent key={props.panel.id + forceRenderCount} {...props} timeRange={tr} variables={variables} /> }
         </PanelBorder>
     )
 })
@@ -309,7 +309,7 @@ export const PanelComponent = ({ dashboard, panel, variables, onRemovePanel, onH
                 <CustomPanelRender dashboardId={dashboard.id} panel={panel} data={data} height={panelInnerHeight} width={panelInnerWidth} sync={sync} timeRange={timeRange} />
             </Box>
         </>
-            : <Box position="fixed" top="0" right="0"><Loading /></Box>}
+            : <Box position="absolute" top="0" right="0"><Loading  /></Box>}
     </Box>
 }
 

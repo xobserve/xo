@@ -23,18 +23,18 @@ interface Props {
     className?: string
     style?: React.CSSProperties
 }
-const Loading = ({ children, className, style }:Props) => {
+const Loading = ({ children, className,  style }:Props) => {
   const classNames = useMemo(() => classnames('dv-loading', className), [
     className
   ])
 
   return (
     <Box className={classNames} style={style} sx={cssStyles}>
-      <svg width='50px' height='50px'>
+      <svg width={"50px"} height={"50px"}>
         <circle
           cx='25'
           cy='25'
-          r='15'
+          r='10'
           fill='transparent'
           strokeWidth='2'
           strokeDasharray='31.415, 31.415'
@@ -59,7 +59,7 @@ const Loading = ({ children, className, style }:Props) => {
         <circle
           cx='25'
           cy='25'
-          r='8'
+          r='6'
           fill='transparent'
           strokeWidth='2'
           strokeDasharray='15.7, 15.7'
