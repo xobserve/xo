@@ -35,6 +35,7 @@ import React from "react";
 import { MobileBreakpoint, MobileVerticalBreakpoint } from "src/data/constants";
 import { useStore } from "@nanostores/react";
 import { commonMsg } from "src/i18n/locales/en";
+import { useLandscapeMode } from "hooks/useLandscapeMode";
 
 interface Props {
     trace: Trace
@@ -53,18 +54,7 @@ const TraceDetail = ({ trace, scrollManager }: Props) => {
     const [collapsed, setCollapsed] = useState(true)
 
     const [isLargeScreen] = useMediaQuery(MobileBreakpoint)
-    const [isMobileVertical] =  useMediaQuery(MobileVerticalBreakpoint)
-    const toast = useToast()
-    useEffect(() => {
-        if (isMobileVertical) {
-            toast({
-                title: t.landscapeModeTips,
-                status: "info",
-                duration: 5000,
-                isClosable: true,
-            })
-        }
-    },[isMobileVertical])
+    useLandscapeMode()
 
     useEffect(() => {
         scrollManager.setTrace(trace);
