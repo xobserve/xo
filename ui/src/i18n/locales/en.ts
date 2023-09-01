@@ -514,6 +514,7 @@ export const textPanelMsg = i18n("textPanel", {
 
 export const piePanelMsg = i18n("piePanel", {
     "showLabel": "Show label",
+    "showLabelTips": "When view in mobile screen, show label will automatically become show legend for better user experience",
     "shape": "Shape",
     "borderRadius": "Border radius",
     "pieRadius": "Pie radius",

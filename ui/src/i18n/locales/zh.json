@@ -490,6 +490,7 @@
   },
   "piePanel": {
     "showLabel": "显示标签",
+    "showLabelTips": "当在手机屏幕上浏览时，显示标签将自动变成显示 Legend，这样可以获得更好的用户体验",
     "shape": "形状",
     "borderRadius": "边线弧度",
     "pieRadius": "Pie 半径",

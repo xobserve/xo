@@ -10,13 +10,12 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-import { Box, Button, Modal, ModalBody, ModalCloseButton, ModalContent, ModalHeader, ModalOverlay, Select, Switch, useDisclosure } from "@chakra-ui/react"
-import CodeEditor from "components/CodeEditor/CodeEditor"
+import { Select, Switch } from "@chakra-ui/react"
 import RadionButtons from "components/RadioButtons"
 import ValueCalculation from "components/ValueCalculation"
-import { EditorInputItem, EditorNumberItem } from "components/editor/EditorItem"
+import { EditorNumberItem } from "components/editor/EditorItem"
 import { UnitPicker } from "components/Unit"
-import { memo, useState } from "react"
+import { memo } from "react"
 import PanelAccordion from "src/views/dashboard/edit-panel/Accordion"
 import PanelEditItem from "src/views/dashboard/edit-panel/PanelEditItem"
 import { Panel, PanelEditorProps } from "types/dashboard"
@@ -42,7 +41,7 @@ const PiePanelEditor = memo(({ panel, onChange }: PanelEditorProps) => {
         </PanelAccordion>
 
         <PanelAccordion title={t.label}>
-            <PanelEditItem title={t1.showLabel}>
+            <PanelEditItem title={t1.showLabel} desc={t1.showLabelTips}>
                 <Switch defaultChecked={panel.plugins.pie.label.show} onChange={e => onChange((panel: Panel) => {
                     panel.plugins.pie.label.show = e.currentTarget.checked
                 })} />

@@ -10,7 +10,7 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-import { Box, Center, useColorMode } from "@chakra-ui/react";
+import { Box, Center, border, useColorMode, useMediaQuery } from "@chakra-ui/react";
 import ChartComponent from "components/charts/Chart";
 import { formatUnit } from "components/Unit";
 import { memo, useMemo, useState } from "react";
@@ -27,6 +27,7 @@ import { getThreshold } from "components/Threshold/utils";
 import { ThresholdsMode } from "types/threshold";
 import { isEmpty } from "utils/validate";
 import { isFunction } from "lodash";
+import { MobileVerticalBreakpoint } from "src/data/constants";
 
 interface Props extends PanelProps {
     data: SeriesData[][]
@@ -57,6 +58,7 @@ const PiePanel = (props: Props) => {
         return (<Center height="100%">Data format not support!</Center>)
     }
 
+    const [isMobileScreen] = useMediaQuery(MobileVerticalBreakpoint)
     const [options, onEvents] = useMemo(() => {
         // const d = data.length > 0 ? data[0] : []
 
@@ -100,10 +102,23 @@ const PiePanel = (props: Props) => {
 
 
         const transformLabel = genDynamicFunction(panel.plugins.pie.label.transformName);
+
+        let showLabel = false 
+        if (panel.plugins.pie.label.show) {
+            showLabel = !isMobileScreen
+        }
+        let showLegend = false 
+        if (panel.plugins.pie.legend.show) {
+            showLegend = true
+        } else if (panel.plugins.pie.label.show && isMobileScreen) {
+            showLegend = true
+        }
+
+        const borderColor = color.length > 0 && panel.plugins.pie.enableThresholds &&  panel.plugins.pie.showThreshodBorder ? true : null
         return [{
             animation: panel.plugins.pie.animation,
             legend: {
-                show: panel.plugins.pie.legend.show,
+                show: showLegend,
                 orient: panel.plugins.pie.legend.orient,
                 ...lp
             },
@@ -123,7 +138,7 @@ const PiePanel = (props: Props) => {
                         borderRadius: panel.plugins.pie.shape.borderRadius,
                         opacity: 0.7,
                         borderWidth: colorMode == "light" ? 0.5 : 0.5,
-                        borderColor: color.length > 0 && panel.plugins.pie.showThreshodBorder ? true : null
+                        borderColor: borderColor
                     },
                     data: data,
                     emphasis: {
@@ -134,7 +149,7 @@ const PiePanel = (props: Props) => {
                         }
                     },
                     label: {
-                        show: panel.plugins.pie.label.show,
+                        show: showLabel,
                         alignTo: panel.plugins.pie.label.align,
                         minMargin: panel.plugins.pie.label.margin,
                         edgeDistance: 1,
@@ -177,7 +192,7 @@ const PiePanel = (props: Props) => {
                 }
             ]
         }, onEvents]
-    }, [panel.plugins.pie, props.data, colorMode, chart, panel.styles.palette])
+    }, [panel.plugins.pie, props.data, colorMode, chart, panel.styles.palette, isMobileScreen])
 
 
 

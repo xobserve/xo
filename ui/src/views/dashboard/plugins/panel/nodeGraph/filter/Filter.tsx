@@ -11,7 +11,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 import { Graph } from "@antv/g6"
-import { chakra, Box, Button, Divider, Drawer, DrawerBody, DrawerContent, DrawerHeader, DrawerOverlay, Flex, HStack, Input,  Select, Text, Tooltip, useDisclosure, Wrap, useToast, NumberInput, NumberInputField, Alert, VStack, Switch } from "@chakra-ui/react"
+import { chakra, Box, Button, Divider, Drawer, DrawerBody, DrawerContent, DrawerHeader, DrawerOverlay, Flex, HStack, Input,  Select, Text, Tooltip, useDisclosure, Wrap, useToast, NumberInput, NumberInputField, Alert, VStack, Switch, useMediaQuery } from "@chakra-ui/react"
 import { cloneDeep, isNumber } from "lodash"
 import { useEffect, useState } from "react"
 import { FaArrowDown, FaArrowUp, FaEye, FaFilter, FaPlus, FaTimes } from "react-icons/fa"
@@ -19,6 +19,7 @@ import { MdEdit } from "react-icons/md"
 import { useImmer } from "use-immer"
 import storage from "utils/localStorage"
 import React from "react";
+import { MobileBreakpoint } from "src/data/constants"
 
 interface Props {
     graph: Graph
@@ -212,6 +213,7 @@ const NodeGraphFilter = ({ graph, dashboardId, panelId, onFilterRulesChange }: P
     }
 
     const placeholder = tempRule?.operator == FilterOperator.Regex ? 'enter a regex to match' : 'enter a number'
+    const [isLargeScreen] = useMediaQuery(MobileBreakpoint)
     return (
         <>
             <Tooltip label="Filtering the nodes and edges you want to see">
@@ -219,7 +221,7 @@ const NodeGraphFilter = ({ graph, dashboardId, panelId, onFilterRulesChange }: P
             </Tooltip>
             <Drawer placement="left" onClose={onClose} isOpen={isOpen}>
                 <DrawerOverlay />
-                <DrawerContent minW="300px">
+                <DrawerContent maxWidth={isLargeScreen ? "350px" : "200px"}>
                     <DrawerHeader px="1" borderBottomWidth='1px' p="2">
                         <Flex justifyContent="space-between" alignItems="center">
                             <Text textStyle="title">Filtering nodes and edges</Text>
