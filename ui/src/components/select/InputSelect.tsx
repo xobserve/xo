@@ -11,10 +11,11 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 import React from "react"
-import { Box, Flex, HStack, Input, Placement, Popover, PopoverBody, PopoverContent, PopoverTrigger, Portal, Text, Tooltip, VStack, useDisclosure } from "@chakra-ui/react"
+import { Box, Flex, HStack, Input, Placement, Popover, PopoverBody, PopoverContent, PopoverTrigger, Portal, Text, Tooltip, VStack, useDisclosure, useMediaQuery } from "@chakra-ui/react"
 import { Variant } from "chakra-react-select/dist/types/types"
 import { MouseEvent, useEffect, useMemo, useRef, useState } from "react"
-import {  FaCheck, FaChevronDown, FaMinus, FaPlus, FaTimes } from "react-icons/fa"
+import {  FaCheck, FaChevronDown,  FaTimes } from "react-icons/fa"
+import { MobileBreakpoint } from "src/data/constants"
 
 interface Value {
     value: string,
@@ -79,6 +80,7 @@ const InputSelect = ({ value,label, options, onChange, variant = "outline", cust
         onChange('')
     }
 
+    const [isLargeScreen] = useMediaQuery(MobileBreakpoint)
     return (<>
         {<Flex height={`${size=="md" ? 'var(--chakra-sizes-10)' : (size=="sm" ? 'var(--chakra-sizes-8)' : 'var(--chakra-sizes-12)')}`} px="3" className={getBorderStyle()} py="1"  justifyContent="space-between" alignItems="center" cursor="pointer" onClick={onToggle}><Tooltip placement="right" openDelay={500} label={value}><Text width={width} maxW={width}  noOfLines={1} layerStyle="textSecondary" opacity="0.7" fontSize={size == "sm" ? "0.9rem" : "1rem"}>{label ?? (value?? placeholder)}</Text></Tooltip> {isClearable && value ? <FaTimes fontSize="0.8rem" onClick={clearSelected} opacity="0.6"/> :  showArrow && <Box pl="1"><FaChevronDown fontSize="0.6rem" /></Box>}</Flex>}
         <Popover matchWidth={matchWidth} closeOnBlur={closeOnBlur}    placement={placement} isOpen={isOpen} initialFocusRef={ref} onClose={onClose}>
@@ -86,7 +88,7 @@ const InputSelect = ({ value,label, options, onChange, variant = "outline", cust
                 <Box position="absolute"></Box>
             </PopoverTrigger>
             <Portal>
-                <PopoverContent  borderRadius={2} width="500px">
+                <PopoverContent  borderRadius={2} width={isLargeScreen ? "500px" : "240px"}>
                     {/* <PopoverArrow /> */}
                     <PopoverBody p="0">
                         <Box>

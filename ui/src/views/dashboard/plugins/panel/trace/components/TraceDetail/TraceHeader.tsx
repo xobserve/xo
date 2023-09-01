@@ -11,7 +11,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { Flex, HStack, Input,Text } from "@chakra-ui/react"
+import { Flex, HStack, Input, Text, useMediaQuery } from "@chakra-ui/react"
 import { ColorModeSwitcher } from "components/ColorModeSwitcher"
 import moment from "moment"
 import { Trace } from "types/plugins/trace"
@@ -20,12 +20,13 @@ import SpanGraph from "./SpanGraph"
 import { useState } from "react"
 import { ETraceViewType, IViewRange, ViewRangeTimeUpdate } from "../../types/types"
 import CollapseIcon from "components/icons/Collapse"
-import {  AiOutlineDown, AiOutlineUp } from "react-icons/ai"
+import { AiOutlineDown, AiOutlineUp } from "react-icons/ai"
 import IconButton from "components/button/IconButton"
 import RadionButtons from "components/RadioButtons"
-import {addParamToUrl} from 'utils/url'
+import { addParamToUrl } from 'utils/url'
 import React from "react";
 import { dateTimeFormat } from "utils/datetime/formatter"
+import { MobileBreakpoint } from "src/data/constants"
 
 interface Props {
     trace: Trace
@@ -42,32 +43,37 @@ interface Props {
     search: string
 }
 
-const TraceDetailHeader = ({ trace, viewRange, updateNextViewRangeTime, updateViewRangeTime, collapsed, onGraphCollapsed, searchCount, prevResult, nextResult, viewType, onViewTypeChange,search }: Props) => {
+const TraceDetailHeader = ({ trace, viewRange, updateNextViewRangeTime, updateViewRangeTime, collapsed, onGraphCollapsed, searchCount, prevResult, nextResult, viewType, onViewTypeChange, search }: Props) => {
     const [search1, setSearch] = useState(search)
     const onSearchChange = (v) => {
         setSearch(v)
-        addParamToUrl({search: v})
+        addParamToUrl({ search: v })
     }
+
+    const [isLargeScreen] = useMediaQuery(MobileBreakpoint)
+    const size = isLargeScreen ? "sm" : "sm"
     return (<>
         <Flex justifyContent="space-between" alignItems="center">
             <HStack>
-                <CollapseIcon collapsed={collapsed} onClick={onGraphCollapsed} />
-                <Text>{trace.traceName}</Text>
-                <Text textStyle="annotation">{trace.traceID.slice(0, 7)}</Text>
+                <CollapseIcon collapsed={collapsed} onClick={onGraphCollapsed} opacity="0.5" fontSize={size} />
+                <Flex flexDir={isLargeScreen ? "row" : "column"} alignItems={isLargeScreen ? "center"  : "start"} gap={isLargeScreen ? 2 : 0}>
+                    <Text fontSize={size}>{trace.traceName}</Text>
+                    <Text textStyle="annotation">{trace.traceID.slice(0, 7)}</Text>
+                </Flex>
             </HStack>
             <HStack spacing={1}>
                 {viewType == ETraceViewType.TraceJSON ?
-                    <Text fontSize="0.95rem" layerStyle="gradientText" mr="20px">Click code area and Press Command+F to search </Text>
-                    : ((viewType != ETraceViewType.TraceFlamegraph && viewType != ETraceViewType.TraceSpansView)&& <HStack spacing={0}>
+                    <Text fontSize={size} layerStyle="gradientText" mr="20px">Click code area and Press Command+F to search </Text>
+                    : ((viewType != ETraceViewType.TraceFlamegraph && viewType != ETraceViewType.TraceSpansView) && <HStack spacing={0}>
                         <HStack spacing={0} position="relative">
-                            <Input width="240px" placeholder="Search.." value={search1} onChange={e => onSearchChange(e.currentTarget.value)} />
+                            <Input width={isLargeScreen ? "240px" : "150px"} size={size} placeholder="Search.." value={search1} onChange={e => onSearchChange(e.currentTarget.value)} />
                             <Text textStyle="annotation" width="30px" position="absolute" right="0" mt="2px">{searchCount}</Text>
                         </HStack>
-                        {viewType == ETraceViewType.TraceTimelineViewer && <><IconButton onClick={prevResult} isDisabled={search == ''} fontSize="1rem"><AiOutlineUp /></IconButton>
-                            <IconButton onClick={nextResult} isDisabled={search == ''} fontSize="1rem"><AiOutlineDown /></IconButton></>}
+                        {viewType == ETraceViewType.TraceTimelineViewer && <><IconButton size={size} onClick={prevResult} isDisabled={search == ''} fontSize="1rem"><AiOutlineUp /></IconButton>
+                            <IconButton size={size} onClick={nextResult} isDisabled={search == ''} fontSize="1rem"><AiOutlineDown /></IconButton></>}
                         {/* <Button size="sm" variant="outline" onClick={prevResult} isDisabled={search == ''}></Button> */}
                     </HStack>)}
-                <RadionButtons theme="brand" fontSize="0.85rem" spacing={0} value={viewType} onChange={v => onViewTypeChange(v)} options={[
+                <RadionButtons width={isLargeScreen ? null : 300} size={isLargeScreen ? "sm" : "xs"} theme="brand" fontSize="0.85rem" spacing={0} value={viewType} onChange={v => onViewTypeChange(v)} options={[
                     { label: "Timeline", value: ETraceViewType.TraceTimelineViewer },
                     { label: "FlameGraph", value: ETraceViewType.TraceFlamegraph },
                     { label: "NodeGraph", value: ETraceViewType.TraceGraph },
@@ -75,10 +81,10 @@ const TraceDetailHeader = ({ trace, viewRange, updateNextViewRangeTime, updateVi
                     { label: "Statistics", value: ETraceViewType.TraceStatistics },
                     { label: "JSON", value: ETraceViewType.TraceJSON },
                 ]} />
-                <ColorModeSwitcher miniMode disableTrigger/>
+                {/* <ColorModeSwitcher miniMode fontSize={size} disableTrigger /> */}
             </HStack>
         </Flex>
-        <HStack className="label-bg" px="2" py="1" fontSize="0.9rem" spacing={4}>
+        <HStack className="label-bg" px="2" py="1" fontSize={isLargeScreen ? "0.9rem" : "0.75rem"} spacing={4}>
             <HStack>
                 <Text opacity="0.8">Start time</Text>
                 <Text>{dateTimeFormat(trace.startTime / 1000)}</Text>

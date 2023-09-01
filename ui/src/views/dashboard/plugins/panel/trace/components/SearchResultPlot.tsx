@@ -1,23 +1,25 @@
-import { Box, useColorMode } from "@chakra-ui/react";
+import { Box, useColorMode, useMediaQuery } from "@chakra-ui/react";
 import ChartComponent from "components/charts/Chart";
 import { alpha } from "components/uPlot/colorManipulator";
 import { max, round } from "lodash";
 import moment from "moment";
-import { useEffect, useMemo, useState } from "react";
+import { memo, useEffect, useMemo, useState } from "react";
 import { Trace } from "types/plugins/trace"
 import { TimeRange } from "types/time";
 import { isErrorTrace } from "../utils/trace";
 import React from "react";
 import { useStore } from "@nanostores/react";
 import { commonMsg, tracePanelMsg } from "src/i18n/locales/en";
+import { MobileBreakpoint } from "src/data/constants";
 
 interface Props {
     traces: Trace[]
     timeRange: TimeRange
     onSelect: (traceIds: string[]) => void
+    height: number
 }
 
-const SearchResultPlot = ({ traces, timeRange, onSelect }: Props) => {
+const SearchResultPlot = memo(({ traces, timeRange, onSelect,height }: Props) => {
     const t1 = useStore(tracePanelMsg)
     const t = useStore(commonMsg)
     const [chart, setChart] = useState(null)
@@ -152,6 +154,8 @@ const SearchResultPlot = ({ traces, timeRange, onSelect }: Props) => {
         },
     }
 
+    const [isLargeScreen] = useMediaQuery(MobileBreakpoint)
+
     const options = useMemo(() => {
         return {
             brush: {
@@ -162,14 +166,14 @@ const SearchResultPlot = ({ traces, timeRange, onSelect }: Props) => {
                 top: 10,
                 data: ['Success', 'Error'],
                 textStyle: {
-                    fontSize: 16
+                    fontSize: isLargeScreen ? 13 : 10
                 }
             },
             grid: {
                 left: '50px',
-                right: '20px',
+                right: '40px',
                 top: '18%',
-                bottom: '10%'
+                bottom: '10%',
             },
             tooltip: {
                 backgroundColor: 'rgba(255,255,255,0.9)',
@@ -202,10 +206,12 @@ const SearchResultPlot = ({ traces, timeRange, onSelect }: Props) => {
                     formatter: (function (value) {
                         return moment(value).format('MM-DD HH:mm:ss');
                     }),
+                    fontSize: isLargeScreen? 12 : 10
                 },
+
                 min: minX,
                 max: maxX,
-                splitNumber: 3,
+                splitNumber: 2,
                 // minInterval: 100,
             },
             yAxis: {
@@ -222,7 +228,8 @@ const SearchResultPlot = ({ traces, timeRange, onSelect }: Props) => {
                 axisLabel: {
                     formatter: function (value, index) {
                         return value + 'ms';
-                    }
+                    },
+                    fontSize: isLargeScreen? 12 : 10
                 },
                 nameTextStyle: {
                     align: "right"
@@ -236,9 +243,9 @@ const SearchResultPlot = ({ traces, timeRange, onSelect }: Props) => {
     }, [colorMode, traces])
 
     return (<>
-        {options && <Box width="100%" key={colorMode} className="echarts-panel"><ChartComponent height={350} options={options} theme={colorMode} onChartCreated={c => setChart(c)} /></Box>}
+        {options && <Box width="100%" key={colorMode} className="echarts-panel"><ChartComponent height={height} options={options} theme={colorMode} onChartCreated={c => setChart(c)} /></Box>}
     </>)
-}
+})
 
 export default SearchResultPlot
 

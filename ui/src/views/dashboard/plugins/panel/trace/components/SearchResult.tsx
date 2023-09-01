@@ -2,23 +2,26 @@ import { Panel } from "types/dashboard"
 import { Trace } from "types/plugins/trace"
 import SearchResultPlot from "./SearchResultPlot"
 import { TimeRange } from "types/time"
-import { Box, Button, Flex, HStack, Popover, PopoverArrow, PopoverBody, PopoverContent, PopoverTrigger, Select, StackDivider, Text, VStack, chakra } from "@chakra-ui/react"
+import { Box, Button, Flex, HStack, Popover, PopoverArrow, PopoverBody, PopoverContent, PopoverTrigger, Select, StackDivider, Text, VStack, chakra, useMediaQuery } from "@chakra-ui/react"
 import TraceCard from "./TraceCard"
-import { useEffect, useMemo, useState } from "react"
+import { useCallback, useEffect, useMemo, useState } from "react"
 import { clone, cloneDeep, remove } from "lodash"
 import TraceCompare from "./TraceCompare/TraceCompare"
 import { FaTimes } from "react-icons/fa"
 import React from "react";
 import { useStore } from "@nanostores/react"
 import { tracePanelMsg } from "src/i18n/locales/en"
+import CustomScrollbar from "components/CustomScrollbar/CustomScrollbar"
+import { MobileBreakpoint } from "src/data/constants"
 
 interface Props {
     panel: Panel
     traces: Trace[]
     timeRange: TimeRange
+    height: number
 }
 
-const TraceSearchResult = ({ panel, traces, timeRange }: Props) => {
+const TraceSearchResult = ({ panel, traces, timeRange ,height}: Props) => {
     const t1 = useStore(tracePanelMsg)
     const [selectedTraces, setSelectedTraces] = useState<Trace[]>([])
     const [sort, setSort] = useState(traceSortTypes[0].value)
@@ -31,10 +34,10 @@ const TraceSearchResult = ({ panel, traces, timeRange }: Props) => {
 
     const maxDuration = useMemo(() => Math.max(...traces.map(trace => trace.duration)), [traces])
 
-    const onSelect = (traceIds: string[]) => {
+    const onSelect = useCallback((traceIds: string[]) => {
         const selected = traces.filter(trace => traceIds.includes(trace.traceID))
         setSelectedTraces(selected)
-    }
+    },[])
 
     const sortedTraces = useMemo(() => {
         switch (sort) {
@@ -75,12 +78,15 @@ const TraceSearchResult = ({ panel, traces, timeRange }: Props) => {
         setComparison([...comparison])
     }
 
+    const [isLargeScreen] = useMediaQuery(MobileBreakpoint)
+    const plotHeight = 200
+
 
     return (<Box pl="2">
-        <SearchResultPlot traces={traces} timeRange={timeRange} onSelect={onSelect} />
+        <SearchResultPlot traces={traces} timeRange={timeRange} onSelect={onSelect} height={plotHeight} />
         <Box pl="2" pr="20px">
-            <Flex alignItems="center" justifyContent="space-between" mb="1">
-                <HStack height="40px" textStyle="title">
+            <Flex alignItems="center" justifyContent="space-between" mb="1" fontSize={isLargeScreen ? null : "xs"}>
+                <HStack height="40px" textStyle={isLargeScreen ? "title" : null}>
                     {selectedTraces.length != traces.length ? <Text>{selectedTraces.length} {t1.tracesSelected}</Text> : <Text>{selectedTraces.length} {t1.tracesTotal}</Text>}
                     {selectedTraces.length != traces.length && <Button size="sm" variant="outline" onClick={() => setSelectedTraces(clone(traces))}>{t1.clearSelection}</Button>}
                 </HStack>
@@ -92,13 +98,15 @@ const TraceSearchResult = ({ panel, traces, timeRange }: Props) => {
                 }
                 <HStack alignItems="center">
                     <Text minWidth="fit-content">排序</Text>
-                    <Select size="sm" value={sort} onChange={e => setSort(e.currentTarget.value)}>
+                    <Select size={isLargeScreen ? "sm" : "xs"} value={sort} onChange={e => setSort(e.currentTarget.value)}>
                         {traceSortTypes.map(sortType => <option key={sortType.value} value={sortType.value}>{t1[sortType.value]}</option>)}
                     </Select>
                 </HStack>
             </Flex>
-            <VStack alignItems="left" maxH="500px" overflowY="auto">
-                {sortedTraces.map(trace => <TraceCard key={trace.traceID} trace={trace} maxDuration={maxDuration} checked={comparison.includes(trace.traceID)} checkDisabled={comparison.length >= 2 && !comparison.includes(trace.traceID)} onChecked={onTraceChecked} dsId={panel.datasource.id}/>)}
+            <VStack alignItems="left" maxH={height - plotHeight}>
+                <CustomScrollbar>
+                    {sortedTraces.map(trace => <TraceCard key={trace.traceID} trace={trace} maxDuration={maxDuration} checked={comparison.includes(trace.traceID)} checkDisabled={comparison.length >= 2 && !comparison.includes(trace.traceID)} onChecked={onTraceChecked} dsId={panel.datasource.id}/>)}
+                </CustomScrollbar>
             </VStack>
         </Box>
     </Box>)

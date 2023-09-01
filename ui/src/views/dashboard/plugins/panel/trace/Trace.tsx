@@ -11,7 +11,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { Box, Center, HStack } from "@chakra-ui/react"
+import { Box, Center, HStack, useMediaQuery } from "@chakra-ui/react"
 import { DatasourceType, PanelProps } from "types/dashboard"
 import TraceSearchPanel from "./components/SearchPanel"
 import logfmtParser from 'logfmt/lib/logfmt_parser';
@@ -26,6 +26,7 @@ import { getNewestTimeRange } from "components/DatePicker/TimePicker";
 import React from "react";
 import { getDatasource } from "utils/datasource";
 import CustomScrollbar from "components/CustomScrollbar/CustomScrollbar";
+import { MobileBreakpoint } from "src/data/constants";
 
 
 
@@ -106,17 +107,20 @@ const TracePanel = (props: PanelProps) => {
 
     const traces = useMemo(() => rawTraces?.map(transformTraceData), [rawTraces])
 
+    const resultHeight= props.height - 7
+    const [isLargeScreen] = useMediaQuery(MobileBreakpoint)
+    const searchPanelWidth = isLargeScreen ? "400px" : "120px"
     return (<>
         {(ds.type != DatasourceType.Jaeger && ds.type != DatasourceType.TestData) ? <Center height="100%">No data</Center> :
             <HStack alignItems="top" px="2" py="1">
-                <Box width="400px" pt="2" pl="1" maxH={props.height}>
+                <Box width={searchPanelWidth} pt="2" pl="1" maxH={props.height}>
                     <CustomScrollbar>
                         <TraceSearchPanel timeRange={props.timeRange} dashboardId={props.dashboardId} panel={props.panel} onSearch={onSearch} onSearchIds={onSearchIds} />
                     </CustomScrollbar>
                 </Box>
-                <Box width="calc(100% - 300px)" maxH={props.height - 7}>
+                <Box width={`calc(100% - ${searchPanelWidth})`} maxH={resultHeight}>
                     <CustomScrollbar>
-                        {traces && <TraceSearchResult traces={traces} panel={props.panel} timeRange={props.timeRange} />}
+                        {traces && <TraceSearchResult traces={traces} panel={props.panel} timeRange={props.timeRange} height={resultHeight} />}
                     </CustomScrollbar>
                 </Box>
             </HStack>}

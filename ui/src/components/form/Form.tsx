@@ -35,7 +35,7 @@ interface FormItemProps {
     desc?: string
 }
 
-export const FormSection = ({ children, title = null, spacing = 1, bordered = false, titleSize = "1rem", desc = null, ...rest }: FormItemProps & StyleProps) => {
+export const FormSection = ({ children, title = null, spacing = 1, bordered = false, titleSize = "1em", desc = null, ...rest }: FormItemProps & StyleProps) => {
     return <>
 
         <VStack alignItems="left" spacing={spacing} className={`${bordered ? "bordered" : ""}`} {...rest}>

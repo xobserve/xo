@@ -12,9 +12,10 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { Box } from '@chakra-ui/react';
+import { Box, useMediaQuery } from '@chakra-ui/react';
 import * as React from 'react';
 import './TimelineRow.css';
+import { MobileBreakpoint } from 'src/data/constants';
 
 type TTimelineRowProps = {
   children: React.ReactNode;
@@ -49,8 +50,9 @@ function TimelineRowCell(props: ITimelineRowCellProps) {
   const { children, className = '', width, style, ...rest } = props;
   const widthPercent = `${width * 100}%`;
   const mergedStyle = { ...style, flexBasis: widthPercent, maxWidth: widthPercent };
+  const [isLargeScreen] = useMediaQuery(MobileBreakpoint)
   return (
-    <Box position="relative" className={`${className}`} style={mergedStyle} {...rest} fontSize="0.9rem">
+    <Box position="relative" className={`${className}`} style={mergedStyle} {...rest} fontSize={isLargeScreen ? "0.8rem" : "0.7rem"}>
       {children}
     </Box>
   );

@@ -5,7 +5,7 @@ import { DatasourceType, Panel } from "types/dashboard"
 import { queryJaegerOperations, queryJaegerServices } from "../../../datasource/jaeger/query_runner"
 import { isEqual, set, sortBy, uniq } from "lodash"
 import { EditorInputItem, EditorNumberItem } from "components/editor/EditorItem"
-import { Button, Checkbox, Divider, HStack, Input, Text } from "@chakra-ui/react"
+import { Button, Checkbox, Divider, Flex, HStack, Input, Text, useMediaQuery } from "@chakra-ui/react"
 import storage from "utils/localStorage"
 import { TraceSearchKey } from "../config/constants"
 import { TimeRange } from "types/time"
@@ -20,6 +20,7 @@ import { isEmpty } from "utils/validate"
 import { useSearchParams } from "react-router-dom"
 import { $variables } from "src/views/variables/store"
 import { getDatasource } from "utils/datasource"
+import { MobileBreakpoint } from "src/data/constants"
 interface Props {
     panel: Panel
     onSearch: any
@@ -127,7 +128,7 @@ const TraceSearchPanel = ({ timeRange, dashboardId, panel, onSearch, onSearchIds
                 if (ss.length > 0) {
                     if (isEmpty(service)) {
                         setService(ss[0])
-                    } 
+                    }
                 }
 
                 setTimeout(() => {
@@ -175,41 +176,45 @@ const TraceSearchPanel = ({ timeRange, dashboardId, panel, onSearch, onSearchIds
         }
     }
 
+    const [isLargeScreen] = useMediaQuery(MobileBreakpoint)
+    const size = "sm"
     return (<>
-        <Form spacing={4}>
-            <FormSection title="Service" titleSize="0.85rem" spacing={1}>
+        <Form spacing={isLargeScreen ? 4 : 2} fontSize={isLargeScreen ? '0.8rem' : "0.7rem"}>
+            <FormSection title="Service"  spacing={1}>
                 {
                     panel.plugins.trace.enableEditService ?
-                        <InputSelect value={service} options={services.map(s => ({ label: s, value: s }))} size="md" onChange={v => setService(v)} />
-                        : <Input value={service} disabled />
+                        <InputSelect value={service} options={services.map(s => ({ label: s, value: s }))} size={size} onChange={v => setService(v)} />
+                        : <Input value={service} disabled size={size} />
                 }
             </FormSection>
-            <FormSection title="Operation" titleSize="0.85rem" spacing={1}>
-                <InputSelect value={operation} options={operations.map(s => ({ label: s, value: s }))} size="md" onChange={v => setOperation(v)} />
+            <FormSection title="Operation" spacing={1}>
+                <InputSelect value={operation} options={operations.map(s => ({ label: s, value: s }))} size={size} onChange={v => setOperation(v)} />
             </FormSection>
-            <FormSection title="Tags" titleSize="0.85rem" spacing={1}>
+            <FormSection title="Tags" spacing={1}>
                 <EditorInputItem value={tags} placeholder={`e.g http.status_code=200 error=true`} onChange={v => setTags(v)} />
             </FormSection>
-            <HStack>
-                <FormSection title={t1.maxDuration} titleSize="0.85rem" spacing={1}>
+            <Flex flexDir={isLargeScreen ? "row" : "column"} gap={1}>
+                <FormSection title={t1.maxDuration}  spacing={1}>
                     <EditorInputItem value={max} placeholder="e.g 1.2s,100ms" onChange={v => setMax(v)} />
                 </FormSection>
-                <FormSection title={t1.minDuration} titleSize="0.85rem" spacing={1}>
+                <FormSection title={t1.minDuration}  spacing={1}>
                     <EditorInputItem value={min} placeholder="e.g 1.2s,100ms" onChange={v => setMin(v)} />
                 </FormSection>
-            </HStack>
-            <FormSection title={t1.limitResults} titleSize="0.85rem" spacing={1}>
+            </Flex>
+            <FormSection title={t1.limitResults} spacing={1}>
                 <EditorNumberItem value={limit} min={0} onChange={v => setLimit(v)} size="md" />
             </FormSection>
             <Divider pt="2" />
-            <FormSection title="Trace ids" titleSize="0.85rem" spacing={1} desc={t1.traceIdsTips}>
+            <FormSection title="Trace ids" spacing={1} desc={t1.traceIdsTips}>
                 <EditorInputItem placeholder={t1.traceIdsInputTips} value={traceIds} onChange={v => setTraceIds(v)} size="md" />
             </FormSection>
-            <HStack>
-                <Button width="150px" onClick={onClickSearch}>{t1.findTraces}</Button>
-                <Checkbox isChecked={useLatestTime} onChange={e => setUseLatestTime(e.currentTarget.checked)} />
-                <Text textStyle="annotation">{t1.useLatestTime}</Text>
-            </HStack>
+            <Flex flexDir={isLargeScreen ? "row" : "column"} gap={1}>
+                <Button width={isLargeScreen ? "150px" : null} size={size} onClick={onClickSearch}>{isLargeScreen ? t1.findTraces : "Search"}</Button>
+                <HStack spacing={1}>
+                    <Checkbox isChecked={useLatestTime} onChange={e => setUseLatestTime(e.currentTarget.checked)} />
+                    <Text opacity="0.7">{t1.useLatestTime}</Text>
+                </HStack>
+            </Flex>
 
         </Form>
     </>)
