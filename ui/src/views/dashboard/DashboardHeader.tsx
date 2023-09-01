@@ -92,7 +92,7 @@ const DashboardHeader = memo(({ dashboard, onChange, sideWidth, team }: HeaderPr
             {team &&
                 <>
                     <Flex justifyContent="space-between" >
-                        <HStack textStyle={isLargeScreen ? "title" : null} pl={isLargeScreen ? 0 : "15px"}>
+                        <HStack textStyle={isLargeScreen ? "title" : null} pl={isLargeScreen ? 0 : "17px"}>
                             {isLargeScreen && <>
                                 <Tooltip label={t1.headerTeamTips}><Box cursor="pointer" onClick={() => navigate(`${ReserveUrls.Config}/team/${team.id}/members`)}>{team?.name}</Box></Tooltip>
                                 <Box>/</Box>

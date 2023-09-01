@@ -12,7 +12,7 @@
 // limitations under the License.
 
 import React, { memo, useEffect, useMemo, useState } from "react";
-import { Box, HStack, Highlight, Text, VStack, useColorMode, useColorModeValue } from "@chakra-ui/react"
+import { Box, Flex, HStack, Highlight, Text, VStack, useColorMode, useColorModeValue, useMediaQuery } from "@chakra-ui/react"
 import { Panel } from "types/dashboard"
 import { dateTimeFormat } from "utils/datetime/formatter";
 import { isEmpty, round, toNumber } from "lodash";
@@ -21,6 +21,7 @@ import { LayoutOrientation } from "types/layout";
 import { paletteColorNameToHex } from "utils/colors";
 import { Log } from "types/plugins/log";
 import { formatLabelId, getLabelNameColor } from "../utils";
+import { MobileVerticalBreakpoint } from "src/data/constants";
 
 interface LogItemProps {
     log: Log
@@ -85,8 +86,9 @@ const LogItem = memo((props: LogItemProps) => {
         return options.styles.labelColorSyncChart ? getLabelNameColor(id, colorMode) : options.styles.labelColor
     }
 
+    const [isMobileScreen] = useMediaQuery(MobileVerticalBreakpoint)
     return (<>
-        <HStack pt="1" alignItems="start" spacing={2} pl="2" pr="4" onClick={() => setCollapsed(!collapsed)} cursor="pointer"  fontSize={options.styles.fontSize}>
+        <Flex flexDir={isMobileScreen ? "column" : "row"} pt="1" alignItems="start" gap={isMobileScreen ? 1 : 2} pl="2" pr="4" onClick={() => setCollapsed(!collapsed)} cursor="pointer"  fontSize={options.styles.fontSize}>
             <HStack spacing={1}>
                 <CollapseIcon collapsed={collapsed} fontSize="0.6rem" opacity="0.6" mt={options.showTime ? 0 : '6px'} />
                 {options.showTime && <Text minWidth={options.timeColumnWidth ?? 155} color={paletteColorNameToHex(timestampColor)}>
@@ -105,13 +107,13 @@ const LogItem = memo((props: LogItemProps) => {
                     }
                 </HStack>}
             <Text wordBreak={options.styles.wordBreak} color={paletteColorNameToHex(options.styles.contentColor)}><Highlight query={log.highlight??[]} styles={{ px: '1', py: '1',borderRadius: 4,  bg: 'teal.100' }}>{log.content}</Highlight></Text>
-        </HStack>
+        </Flex>
         {
             !collapsed && <Box p="4" fontSize={options.styles.fontSize}>
                 <VStack alignItems="left" className="bordered" p="2">
                     {
                         Object.keys(labels).map(key => <HStack key={key + labels[key]} px="2" spacing={1}  >
-                            <Box minWidth="20em" >
+                            <Box minWidth={isMobileScreen ? "10em" : "20em" }>
                                 <LabelName name={key} color={labelNameColor(formatLabelId(key, labels[key]))}/>
                             </Box>
                             <LabelValue value={labels[key]} color={options.styles.labelValueColor}/>

@@ -1,5 +1,5 @@
 import { Feature } from 'ol';
-import { Geometry, LineString, Point } from 'ol/geom';
+import { Geometry, Point } from 'ol/geom';
 import VectorSource from 'ol/source/Vector';
 import { Field, FieldType, SeriesData } from 'types/seriesData';
 import { fromLonLat } from 'ol/proj'
