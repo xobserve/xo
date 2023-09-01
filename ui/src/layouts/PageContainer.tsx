@@ -21,6 +21,10 @@ import {
   Divider,
   useToast,
   useMediaQuery,
+  Menu,
+  MenuButton,
+  MenuList,
+  MenuItem,
 } from "@chakra-ui/react"
 import Logo from "components/Logo"
 import React, { useEffect, useMemo, useState } from "react"
@@ -46,6 +50,8 @@ import PopoverTooltip from "components/PopoverTooltip"
 import { HomeDashboardId } from "src/data/dashboard"
 
 import { useNavigate } from "react-router-dom"
+import { MobileBreakpoint } from "src/data/constants"
+import { AddIcon, HamburgerIcon } from "@chakra-ui/icons"
 export let gnavigate
 
 
@@ -79,7 +85,7 @@ const PageContainer = (props) => {
         status: "error",
         duration: 5000,
       })
-        return 
+      return
     }
     setSidemenu(res.data.data.filter((item) => !item.hidden))
   }
@@ -109,12 +115,12 @@ const Container = ({ children, sidemenu, session }: Props) => {
     { title: t1.search, icon: "FaSearch", url: `${ReserveUrls.Search}`, isActive: asPath.startsWith(ReserveUrls.Search) },
   ]
 
-  const [isLargeScreen] = useMediaQuery('(min-width: 600px)')
+  const [isLargeScreen] = useMediaQuery(MobileBreakpoint)
 
   const paddingLeft = 16
   const paddingRight = 16
   const childMarginLeft = 24
-  const navSize = isLargeScreen ? 16 : 14
+  const navSize = 15
   const navWidth = useMemo(() => {
     let navWidth = 0
 
@@ -145,76 +151,130 @@ const Container = ({ children, sidemenu, session }: Props) => {
     return navWidth
   }, [sidemenu, miniMode, bottomNavs])
 
-  const miniWidth = isLargeScreen ? 60 : 47
-  const sideWidth = fullscreen ? 0 : (miniMode ? miniWidth : navWidth)
+  const miniWidth = isLargeScreen ? 65 : 0
+  const sideWidth = (fullscreen || !isLargeScreen) ? 0 : (miniMode ? miniWidth : navWidth)
   const textColor = useColorModeValue("gray.500", "whiteAlpha.800")
 
 
   return (
     <HStack id="page-container" width="100%" alignItems="top">
-      <Flex
-        display={fullscreen ? "none" : "flex"}
-        flexDir="column" pl={paddingLeft + 'px'}
-        pr={paddingRight + 'px'}
-        justifyContent="space-between"
-        id="sidemenu"
-        position="fixed"
-        top="0"
-        left="0"
-        bottom="0"
-        width={sideWidth + 'px'}
-        transition="all 0.2s"
-        height="100vh"
-        className="bordered-right"
-        sx={{
-                '::-webkit-scrollbar': {
-                    width: '1px',
-                    height: '1px',
-                }
-            }}
-      >
-        <Flex id="sidemenu-top" flexDir="column" alignItems={(miniMode || isEmpty(sidemenu)) ? "center" : "left"} overflowY="auto" >
-          {(miniMode || isEmpty(sidemenu)) ?
-            <Box cursor="pointer" onClick={onMinimodeChange} mt="2" width={isLargeScreen ? null : "15px"}><Logo /></Box>
-            :
-            <Box cursor="pointer" onClick={onMinimodeChange} opacity="0.2" position="absolute" right="1px" top="14px" className="hover-text" p="1" fontSize="0.7rem"><Icons.FaChevronLeft /></Box>
-          }
-          {sidemenu.map((link, index) => {
-            return <Box key={link.url} mt={miniMode ? (isLargeScreen ? (index>0?2:3): (index > 0 ? 0 : 2)) : 3}>
-              <Box>
-                <NavItem isActive={miniMode ? asPath.startsWith(link.url) : asPath == link.url} key={index} text={link.title} icon={link.icon} miniMode={miniMode} fontWeight={500} url={link.children?.length > 0 ? link.children[0].url : link.url} children={link.children} fontSize={navSize}/>
-              </Box>
-              {
-                !miniMode && link.children && link.children.map((child, index) => {
-                  return <Box mt="5px" ml={childMarginLeft + 'px'}><NavItem isActive={asPath == child.url} key={index} text={child.title} miniMode={miniMode} fontSize={navSize} url={child.url} /></Box>
-                })
+      {
+        isLargeScreen
+          ?
+          <Flex
+            display={fullscreen ? "none" : "flex"}
+            flexDir="column" pl={paddingLeft + 'px'}
+            pr={paddingRight + 'px'}
+            justifyContent="space-between"
+            id="sidemenu"
+            position="fixed"
+            top="0"
+            left="0"
+            bottom="0"
+            width={sideWidth + 'px'}
+            transition="all 0.2s"
+            height="100vh"
+            className="bordered-right"
+            overflowY="auto" overflowX="hidden"
+          >
+            <Flex id="sidemenu-top" flexDir="column" alignItems={(miniMode || isEmpty(sidemenu)) ? "center" : "left"}     >
+              {(miniMode || isEmpty(sidemenu)) ?
+                <Box cursor="pointer" onClick={onMinimodeChange} mt="2" ><Logo /></Box>
+                :
+                <Box cursor="pointer" onClick={onMinimodeChange} opacity="0.2" position="absolute" right="1px" top="14px" className="hover-text" p="1" fontSize="0.7rem"><Icons.FaChevronLeft /></Box>
               }
-            </Box>
-          })}
-        
-          {isLargeScreen && session && !sidemenu.some(nav => nav.dashboardId != HomeDashboardId) &&  <>
-            <Divider mt={miniMode ? 2 : 3} />
-            <Box mt={miniMode ? 2 : 3}><NavItem fontSize={navSize-1} text={t1.newItem} url={`/cfg/team/${session.user.sidemenu}/sidemenu`} miniMode={miniMode} icon="FaPlus" /></Box>
-          </>}
-        </Flex>
-        <Flex id="sidemenu-bottom" flexDir="column" pb="2" alignItems={miniMode ? "center" : "left"} color={textColor} maxH={isLargeScreen ? null : "150px"}  overflowY="auto">
-          <VStack alignItems="left" spacing={miniMode ? (isLargeScreen ? 1 : 0)  : 3}>
-            {bottomNavs.map((nav, index) => {
-              if (nav.url == ReserveUrls.Search) {
-                return <Search key={nav.url} title={nav.title} miniMode={miniMode} sideWidth={sideWidth} fontSize={navSize}/>
-              } else {
-                return <Box  key={nav.url}><NavItem isActive={nav.isActive} text={nav.title} icon={nav.icon} miniMode={miniMode} url={nav.url} fontSize={navSize}/></Box>
-              }
-            })}
+              {sidemenu.map((link, index) => {
+                return <Box key={link.url} mt={miniMode ? (index > 0 ? 2 : 3) : 3}>
+                  <Box>
+                    <NavItem isActive={miniMode ? asPath.startsWith(link.url) : asPath == link.url} key={index} text={link.title} icon={link.icon} miniMode={miniMode} fontWeight={500} url={link.children?.length > 0 ? link.children[0].url : link.url} children={link.children} />
+                  </Box>
+                  {
+                    !miniMode && link.children && link.children.map((child, index) => {
+                      return <Box mt="5px" ml={childMarginLeft + 'px'}><NavItem isActive={asPath == child.url} key={index} text={child.title} miniMode={miniMode} url={child.url} /></Box>
+                    })
+                  }
+                </Box>
+              })}
 
-            <Divider />
-            {/* <Box color={textColor}><ColorModeSwitcher miniMode={miniMode} /></Box> */}
-            {!isEmpty(config.repoUrl) && <Box><NavItem text="Github" icon="FaGithub" miniMode={miniMode} url={config.repoUrl} fontSize={navSize}/></Box>}
-            <UserMenu miniMode={miniMode} fontSize={navSize + 'px'} />
-          </VStack>
+              {session && !sidemenu.some(nav => nav.dashboardId != HomeDashboardId) && <>
+                <Divider mt={miniMode ? 2 : 3} />
+                <Box mt={miniMode ? 2 : 3}><NavItem fontSize={navSize - 1} text={t1.newItem} url={`/cfg/team/${session.user.sidemenu}/sidemenu`} miniMode={miniMode} icon="FaPlus" /></Box>
+              </>}
+            </Flex>
+            <Flex id="sidemenu-bottom" flexDir="column" pb="2" alignItems={miniMode ? "center" : "left"} color={textColor}   >
+              <VStack alignItems="left" spacing={miniMode ? 1 : 3}>
+                {bottomNavs.map((nav, index) => {
+                  if (nav.url == ReserveUrls.Search) {
+                    return <Search key={nav.url} title={nav.title} miniMode={miniMode} sideWidth={sideWidth} fontSize={navSize} />
+                  } else {
+                    return <Box key={nav.url}><NavItem isActive={nav.isActive} text={nav.title} icon={nav.icon} miniMode={miniMode} url={nav.url} /></Box>
+                  }
+                })}
 
-        </Flex>
-      </Flex>
+                <Divider />
+                {/* <Box color={textColor}><ColorModeSwitcher miniMode={miniMode} /></Box> */}
+                {!isEmpty(config.repoUrl) && <Box><NavItem text="Github" icon="FaGithub" miniMode={miniMode} url={config.repoUrl} /></Box>}
+                <UserMenu miniMode={miniMode} fontSize={navSize + 'px'} />
+              </VStack>
+
+            </Flex>
+          </Flex>
+          :
+          <Box position="absolute" zIndex={1} top="10px">
+            <Menu>
+              <MenuButton
+                as={IconButton}
+                aria-label='Options'
+                icon={<HamburgerIcon />}
+                variant='outline'
+                size="xs"
+              />
+              <MenuList fontSize="15px" py="0">
+                {sidemenu.map((link) => {
+                  const Icon = Icons[link.icon]
+                  return <Link key={link.url} to={link.url}>
+                    <MenuItem icon={<Icon />} >
+                      {link.title}
+                    </MenuItem>
+                    {
+                      link.children && link.children.map((child) => {
+                        return <Link key={child.url} to={child.url}>
+                        <MenuItem pl="36px">
+                          {child.title}
+                        </MenuItem></Link>
+                      })
+                    }
+                  </Link>
+                })}
+                <Divider />
+                <>
+                  {bottomNavs.map((nav, index) => {
+                    const Icon = Icons[nav.icon]
+                    if (nav.url == ReserveUrls.Search) {
+                      return <MenuItem  >
+                        <Search key={nav.url} title={nav.title} miniMode={false} sideWidth={sideWidth}  />
+                      </MenuItem>
+                    } else {
+                      return <Link key={nav.url} to={nav.url}>
+                        <MenuItem icon={<Icon />}  >
+                          {nav.title}
+                        </MenuItem></Link>
+
+                    }
+                  })}
+
+                  <Divider />
+                </>
+                {!isEmpty(config.repoUrl) && <Link to={config.repoUrl}>
+                  <MenuItem icon={<Icons.FaGithub />}>
+                    Github
+                  </MenuItem></Link>}
+                <MenuItem  >
+                  <UserMenu miniMode={false} fontSize="14px" />
+                </MenuItem>
+              </MenuList>
+            </Menu>
+          </Box>}
       <Box id="main-container" transition="all 0.2s" width={`calc(100% - ${sideWidth}px)`} ml={sideWidth + 'px'}>
         {React.cloneElement(children, { sideWidth })}
       </Box>
@@ -223,11 +283,10 @@ const Container = ({ children, sidemenu, session }: Props) => {
 
 
 
-const NavItem = ({ text, icon = null, miniMode, fontWeight = 400, fontSize = 16, url, isActive = false, children = null }) => {
+const NavItem = ({ text, icon = null, miniMode, fontWeight = 400, fontSize = 15, url, isActive = false, children = null }) => {
   const Icon = Icons[icon]
   const textColor = useColorModeValue("gray.500", "whiteAlpha.800")
   const { pathname: asPath } = useLocation()
-  const [isLargeScreen] = useMediaQuery('(min-width: 600px)')
   return (
     <PopoverTooltip
       trigger={miniMode ? "hover" : null}
@@ -237,7 +296,7 @@ const NavItem = ({ text, icon = null, miniMode, fontWeight = 400, fontSize = 16,
           <HStack color={isActive ? useColorModeValue("brand.500", "brand.200") : useColorModeValue("gray.500", "whiteAlpha.800")} className="hover-text" cursor="pointer">
             {icon && <Box>
               {miniMode ?
-                <IconButton fontSize={isLargeScreen ? "1.2rem": "1rem"} aria-label="" variant="ghost" color="current" _focus={{ border: null }} icon={<Icon />} />
+                <IconButton fontSize={"1.1rem"} aria-label="" variant="ghost" color="current" _focus={{ border: null }} icon={<Icon />} />
                 : <Icon />
               }
             </Box>}

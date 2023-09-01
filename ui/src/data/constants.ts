@@ -20,3 +20,5 @@ export const DatasourceMinInterval = '15s'
 export const InitTestDataDatasourceId = 1
 
 export const DefaultDecimal = 3
+
+export const MobileBreakpoint = '(min-width: 600px)'

@@ -35,6 +35,7 @@ import { dashboardMsg } from "src/i18n/locales/en";
 import DashboardShare from "./DashboardShare";
 import DashboardStar from "./components/DashboardStar";
 import { $variables } from "../variables/store";
+import { MobileBreakpoint } from "src/data/constants";
 
 interface HeaderProps {
     dashboard: Dashboard
@@ -78,10 +79,11 @@ const DashboardHeader = memo(({ dashboard, onChange, sideWidth }: HeaderProps) =
         dispatch(TimeRefreshEvent)
     }
 
-    const [isLargerThan500] = useMediaQuery('(min-width: 600px)')
+    const [isLargeScreen] = useMediaQuery(MobileBreakpoint)
     
     return (
         <Box
+            pl={isLargeScreen ? 0 : "25px"}
             id="dashboard-header"
             display={fullscreen ? "none" : "block"}
             py="1"
@@ -97,13 +99,13 @@ const DashboardHeader = memo(({ dashboard, onChange, sideWidth }: HeaderProps) =
             {team &&
                 <>
                     <Flex justifyContent="space-between" >
-                        <HStack textStyle={ isLargerThan500 ? "title" : null}>
-                            {isLargerThan500 && <>
+                        <HStack textStyle={ isLargeScreen ? "title" : null}>
+                            {isLargeScreen && <>
                                 <Tooltip label={t1.headerTeamTips}><Box cursor="pointer" onClick={() => navigate(`${ReserveUrls.Config}/team/${team.id}/members`)}>{team?.name}</Box></Tooltip>
                                 <Box>/</Box>
                             </>}
                             <Box>{dashboard.title}</Box>
-                            {isLargerThan500 &&  <>
+                            {isLargeScreen &&  <>
                             <DashboardStar dashboardId={dashboard.id} fontSize="1.2rem" />
                             <DashboardShare dashboard={dashboard} fontSize="0.9rem" opacity="0.8" cursor="pointer" className="hover-text" />
                             </>}
@@ -115,7 +117,7 @@ const DashboardHeader = memo(({ dashboard, onChange, sideWidth }: HeaderProps) =
                                 <DashboardSave dashboard={dashboard} />
                                 {dashboard && <DashboardSettings dashboard={dashboard} onChange={onChange} />}
                                 <DatePicker showTime />
-                                {isLargerThan500 && <HStack spacing={0}>
+                                {isLargeScreen && <HStack spacing={0}>
                                     <Tooltip label={t1.refreshOnce}><Box onClick={refreshOnce}><IconButton variant="ghost"><MdSync /></IconButton></Box></Tooltip>
                                     <Tooltip label={t1.refreshInterval}>
                                         <Select variant="unstyled" value={refresh} onChange={(e) => setRefresh(Number(e.target.value))}>

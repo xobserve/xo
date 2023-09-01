@@ -232,7 +232,7 @@ const DashboardWrapper = ({ dashboardId, sideWidth }) => {
             <Box
                 // key={dashboard.id + fullscreen} 
                 id="dashboard-wrapper"
-                mt={headerHeight+ 'px'}
+                mt={sideWidth == 0 ? 0 : headerHeight+ 'px'}
                 pb="2"
                 position="relative"
             >

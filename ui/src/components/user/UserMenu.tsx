@@ -41,7 +41,7 @@ import { commonMsg, sidebarMsg } from "src/i18n/locales/en"
 import UserSidemenus from "components/team/UserSidemenus"
 import { ColorModeSwitcher } from "components/ColorModeSwitcher"
 
-const UserMenu = ({ fontSize = "1.2rem", miniMode }) => {
+const UserMenu = ({ fontSize = "1.1rem", miniMode }) => {
     const t = useStore(commonMsg)
     const t1 = useStore(sidebarMsg)
     const { session, logout } = useSession()
@@ -88,7 +88,7 @@ const UserMenu = ({ fontSize = "1.2rem", miniMode }) => {
                             <MenuButton className="hover-text">
                                 <HStack >
                                     <FaUserAlt />
-                                    <Text fontSize="0.95rem">{t1.accountSetting}</Text>
+                                    <Text fontSize={fontSize}>{t1.accountSetting}</Text>
                                 </HStack>
                             </MenuButton>
                     }
