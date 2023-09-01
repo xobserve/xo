@@ -153,7 +153,7 @@ const Container = ({ children, sidemenu, session }: Props) => {
   }, [sidemenu, miniMode, bottomNavs])
 
   const miniWidth = isLargeScreen ?55 : 0
-  const sideWidth = (fullscreen || !isLargeScreen) ? 0 : (miniMode ? miniWidth : navWidth)
+  const sideWidth = (fullscreen || !isLargeScreen) ? 0 : (miniMode ? miniWidth : navWidth + 13)
   const textColor = useColorModeValue("gray.500", "whiteAlpha.800")
 
 
@@ -186,7 +186,7 @@ const Container = ({ children, sidemenu, session }: Props) => {
                   {(miniMode || isEmpty(sidemenu)) ?
                     <Box cursor="pointer" onClick={onMinimodeChange} mt="2" ><Logo /></Box>
                     :
-                    <Box cursor="pointer" onClick={onMinimodeChange} opacity="0.2" position="absolute" right="1px" top="14px" className="hover-text" p="1" fontSize="0.7rem"><Icons.FaChevronLeft /></Box>
+                    <Box cursor="pointer" onClick={onMinimodeChange} opacity="0.2" position="absolute" right="-7px" top="14px" className="hover-text" p="1" fontSize="0.7rem" zIndex={1}><Icons.FaChevronLeft /></Box>
                   }
                   {sidemenu.map((link, index) => {
                     return <Box key={link.url} mt={miniMode ? (index > 0 ? 2 : 3) : 3}>
@@ -195,7 +195,7 @@ const Container = ({ children, sidemenu, session }: Props) => {
                       </Box>
                       {
                         !miniMode && link.children && link.children.map((child, index) => {
-                          return <Box mt="5px" ml={childMarginLeft + 'px'}><NavItem isActive={asPath == child.url} key={index} text={child.title} miniMode={miniMode} url={child.url} /></Box>
+                          return <Box mt="5px" ml={childMarginLeft + 'px'}><NavItem isActive={asPath == child.url} key={index} text={child.title} miniMode={miniMode} url={child.url} fontSize={navSize}/></Box>
                         })
                       }
                     </Box>

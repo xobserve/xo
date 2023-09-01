@@ -156,7 +156,6 @@ export default CustomScrollbar;
 const getStyles = (theme) => {
   const {colorMode} = useColorMode()
   const bg = colorMode == "light" ? customColors.scrollBg.light : customColors.scrollBg.dark
-  console.log("here3333333:",bg)
   return {
     customScrollbar: css`
       // Fix for Firefox. For some reason sometimes .view container gets a height of its content, but in order to

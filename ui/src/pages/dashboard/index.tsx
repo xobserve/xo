@@ -31,7 +31,6 @@ const DashboardPage = memo(({sideWidth}: Props) => {
     const location = useLocation()
     const [dashboardId, setDashboardId] = useState<string>(null)
     const [error, setError] = useState(null)
-    console.log("here333333:",location)
     useEffect(() => {
         if (location) {
             setError(null)
