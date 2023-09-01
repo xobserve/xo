@@ -94,7 +94,7 @@ requestApi.interceptors.response.use(
       // request to our api server
       if (status == 406) {
         // session expires
-        const id = "Session expires"
+        const id = "Session expires, redirect to login page.."
         if (!toast.isActive(id)) {
           toast({
             id: id,
@@ -104,10 +104,10 @@ requestApi.interceptors.response.use(
             isClosable: true,
           })
         }
-        // setTimeout(() => {
-        //   storage.set("current-page", location.pathname)
-        //   location.href = '/login'
-        // }, 2000)
+        setTimeout(() => {
+          storage.set("current-page", location.pathname)
+          location.href = '/login'
+        }, 2000)
       } else {
         // normal backend error
         const id = message

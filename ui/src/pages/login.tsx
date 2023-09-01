@@ -20,13 +20,14 @@ import useSession from "hooks/use-session"
 
 import { requestApi } from 'utils/axios/request';
 import storage from 'utils/localStorage';
-import { Box, Button, Heading, HStack, Image, Input, useColorModeValue } from '@chakra-ui/react';
+import { Box, Button, Heading, HStack, Image, Input, useColorModeValue, useMediaQuery } from '@chakra-ui/react';
 import { saveToken } from 'utils/axios/getToken';
 import { useNavigate } from 'react-router-dom';
 import { useStore } from '@nanostores/react';
 import { commonMsg } from 'src/i18n/locales/en';
 import { FaGithub } from 'react-icons/fa';
 import { config } from 'src/data/configs/config';
+import { MobileBreakpoint } from 'src/data/constants';
 
 // login page
 function Login() {
@@ -64,6 +65,7 @@ function Login() {
        window.location.href = `https://github.com/login/oauth/authorize?client_id=${config.githubOAuthToken}&redirect_url=${config.githubCallBackUrl}/login/github`
     }
 
+    const [isLargeScreen] = useMediaQuery(MobileBreakpoint)
 
     return (
         <>
@@ -143,11 +145,11 @@ function Login() {
 
             <Box className="datav-login" width="100vw" height="100vh" display="flex" justifyContent="center" alignItems="center" background="url('/login-bg.png')" backgroundSize="cover" backgroundPosition="center" backgroundRepeat="no-repeat" backgroundColor="#33a2e5">
                 <HStack width="900px" borderRadius="6px" boxShadow="-1px 1px 10px rgba(0, 0, 0, .4)" marginTop="-30px">
-                    <Box className="login-left" width="50%" display="flex" justifyContent="center" alignItems="center" flexDir="column">
-                        <Image src="/logo.png" alt="" height="160px" width="160px" marginLeft="-10px" />
+                    <Box className="login-left" width={isLargeScreen ? "50%" : "30%"} display="flex" justifyContent="center" alignItems="center" flexDir="column">
+                        <Image src="/logo.png" alt="" height={isLargeScreen ? "160px" : "80px"} width={isLargeScreen ? "160px" : "80px"} marginLeft="-10px" />
                         <Box fontSize="26px" color="white" fontWeight="bold">Datav</Box>
                     </Box>
-                    <Box textAlign="center" width="50%" backgroundColor={useColorModeValue("hsla(0, 0%, 100%, 0.2)", "hsla(0, 0%, 100%, 0.2)")} p="12">
+                    <Box textAlign="center" width={isLargeScreen ? "50%" : "70%"}  backgroundColor={useColorModeValue("hsla(0, 0%, 100%, 0.2)", "hsla(0, 0%, 100%, 0.2)")} p="12">
                         <Heading size="lg" color={"white"}>Welcome</Heading>
                         <Input borderWidth={0} value={username} onChange={e => setUsername(e.currentTarget.value)} placeholder={window.location.href.indexOf("play.datav.io") >= 0 ? "guest" : 'username'} mt="10" />
                         <Input borderWidth={0}  value={password} type="password" onChange={e => setPassword(e.currentTarget.value)} placeholder={window.location.href.indexOf("play.datav.io") >= 0 ? "guest" : 'password'} mt="6" onKeyPress={e => {
