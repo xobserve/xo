@@ -25,6 +25,7 @@ import { replaceWithVariables, replaceWithVariablesHasMultiValues } from "utils/
 import { getNewestTimeRange } from "components/DatePicker/TimePicker";
 import React from "react";
 import { getDatasource } from "utils/datasource";
+import CustomScrollbar from "components/CustomScrollbar/CustomScrollbar";
 
 
 
@@ -32,11 +33,11 @@ const TracePanelWrapper = memo((props: PanelProps) => {
     const ds = getDatasource(props.panel.datasource.id)
     return (<>
         {
-           (ds.type != DatasourceType.Jaeger && ds.type != DatasourceType.TestData) 
+            (ds.type != DatasourceType.Jaeger && ds.type != DatasourceType.TestData)
                 ?
                 <Center height="100%">Trace panel only support Jaeger and Testdata datasource</Center>
                 :
-                <TracePanel {...props}/>
+                <TracePanel {...props} />
         }
     </>
     )
@@ -108,11 +109,15 @@ const TracePanel = (props: PanelProps) => {
     return (<>
         {(ds.type != DatasourceType.Jaeger && ds.type != DatasourceType.TestData) ? <Center height="100%">No data</Center> :
             <HStack alignItems="top" px="2" py="1">
-                <Box width="400px" pt="2" pl="1">
-                    <TraceSearchPanel timeRange={props.timeRange} dashboardId={props.dashboardId} panel={props.panel} onSearch={onSearch} onSearchIds={onSearchIds} />
+                <Box width="400px" pt="2" pl="1" maxH={props.height}>
+                    <CustomScrollbar>
+                        <TraceSearchPanel timeRange={props.timeRange} dashboardId={props.dashboardId} panel={props.panel} onSearch={onSearch} onSearchIds={onSearchIds} />
+                    </CustomScrollbar>
                 </Box>
-                <Box width="calc(100% - 300px)">
-                    {traces && <TraceSearchResult traces={traces} panel={props.panel} timeRange={props.timeRange} />}
+                <Box width="calc(100% - 300px)" maxH={props.height - 7}>
+                    <CustomScrollbar>
+                        {traces && <TraceSearchResult traces={traces} panel={props.panel} timeRange={props.timeRange} />}
+                    </CustomScrollbar>
                 </Box>
             </HStack>}
     </>)
