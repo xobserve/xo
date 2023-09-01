@@ -11,45 +11,38 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 import { Box, Tooltip, useToast } from "@chakra-ui/react";
-import { useEffect, useState } from "react";
+import {  useState } from "react";
 import { FaTv } from "react-icons/fa";
-import { useKey } from "react-use";
-import { FullscreenEvent } from "src/data/bus-events";
-import { FullscreenKey } from "src/data/storage-keys";
-import { dispatch } from "use-bus";
-import storage from "utils/localStorage";
+import { useKey, useSearchParam } from "react-use";
 import React from "react"
 import { useStore } from "@nanostores/react";
 import { dashboardMsg } from "src/i18n/locales/en";
+import { addParamToUrl, removeParamFromUrl } from "utils/url";
 
 const Fullscreen = () => {
     const t1 = useStore(dashboardMsg)
     const toast = useToast()
-    const [fullscreen, setFullscreen] = useState(storage.get(FullscreenKey)??false)
+    const fullscreenParam = useSearchParam("fullscreen")
+    const [fullscreen, setFullscreen] = useState(fullscreenParam == "on" ? true : false)
 
     useKey("Escape", () => onFullscreenChange(true))
-
-    useEffect(() => {
-        if (fullscreen) {
-            toast({
-                description: t1.exitFullscreenTips,
-                status: "success",
-                duration: 3000,
-                isClosable: true,
-            });
-        }
-        dispatch({ type: FullscreenEvent, data: fullscreen })
-        storage.set(FullscreenKey, fullscreen)
-    },[fullscreen])
 
     const onFullscreenChange = (isExit?) => {
         setFullscreen(f => {
             if (isExit) {
-                if (f == false) {
-                    return  false
-                }
+                f && removeParamFromUrl(["fullscreen"])
+                return false
             }
 
+            if (!f) { 
+                toast({
+                    description: t1.exitFullscreenTips,
+                    status: "success",
+                    duration: 3000,
+                    isClosable: true,
+                });
+            }
+            addParamToUrl({fullscreen: "on"})
             return !f
         })
     }
