@@ -63,7 +63,7 @@ const DashboardWrapper = ({ dashboardId, sideWidth }) => {
     // const [gVariables, setGVariables] = useState<Variable[]>([])
     const [team, setTeam] = useState<Team>(null)
     const fullscreen = useFullscreen()
-
+    
     const loadTeam = async () => {
         const res1 = await requestApi.get(`/team/byDashId/${dashboardId}`)
         setTeam(res1.data)
@@ -236,7 +236,7 @@ const DashboardWrapper = ({ dashboardId, sideWidth }) => {
     const [isLargeScreen] = useMediaQuery('(min-width: 600px)')
 
     return (<>
-        {dashboard && team ? <Box px={fullscreen ? 0 : (isLargeScreen ? 3 : 1)} width="100%" minHeight="100vh" position="relative">
+        {dashboard && team ? <Box  px={fullscreen ? 0 : (isLargeScreen ? 2 : 1)} width="100%" minHeight="100vh" maxHeight="100vh" overflowY="auto" position="relative">
             {/* <Decoration decoration={dashboard.data.styles.decoration}/> */}
             <DashboardHeader dashboard={dashboard} onChange={onDashbardChange} sideWidth={sideWidth} team={team}/>
             <Box
@@ -246,7 +246,7 @@ const DashboardWrapper = ({ dashboardId, sideWidth }) => {
                 pb="2"
                 position="relative"
             >
-                <DashboardBorder border={dashboard.data.styles.border} />
+                <DashboardBorder key={fullscreen.toString()} border={dashboard.data.styles.border} />
                 {dashboard.data.panels?.length > 0 && <DashboardGrid dashboard={dashboard} panels={panels} onChange={onDashbardChange} />}
             </Box>
             <EditPanel dashboard={dashboard} onChange={onDashbardChange} />
@@ -263,7 +263,7 @@ const DashboardBorder = ({ border }) => {
     useEffect(() => {
         ref.current = setInterval(() => {
             const ele = document.getElementById("dashboard-grid")
-            const h = ele?.offsetHeight + 12
+            const h = ele?.offsetHeight
             setHeight(h)
         }, 500)
         return () => {

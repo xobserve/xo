@@ -18,7 +18,8 @@ const CommonStyles = () => (
         }
       
         ::-webkit-scrollbar:hover {
-          height: 8px;
+          height: 5px;
+          width: 5px;
         }
       
         ::-webkit-scrollbar-button:start:decrement,

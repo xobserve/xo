@@ -25,6 +25,7 @@ import {
   MenuButton,
   MenuList,
   MenuItem,
+  Portal,
 } from "@chakra-ui/react"
 import Logo from "components/Logo"
 import React, { useEffect, useMemo, useState } from "react"
@@ -152,7 +153,7 @@ const Container = ({ children, sidemenu, session }: Props) => {
     return navWidth
   }, [sidemenu, miniMode, bottomNavs])
 
-  const miniWidth = isLargeScreen ?55 : 0
+  const miniWidth = isLargeScreen ? 55 : 0
   const sideWidth = (fullscreen || !isLargeScreen) ? 0 : (miniMode ? miniWidth : navWidth + 13)
   const textColor = useColorModeValue("gray.500", "whiteAlpha.800")
 
@@ -164,7 +165,7 @@ const Container = ({ children, sidemenu, session }: Props) => {
           ?
           <Flex
             display={fullscreen ? "none" : "flex"}
-            flexDir="column" 
+            flexDir="column"
             pl={miniMode ? null : paddingLeft + 'px'}
             pr={miniMode ? null : paddingRight + 'px'}
             justifyContent="space-between"
@@ -181,7 +182,7 @@ const Container = ({ children, sidemenu, session }: Props) => {
           // overflowY="auto" overflowX="hidden"
           >
             <CustomScrollbar hideHorizontalTrack>
-              <Flex flexDir="column" height="100%"  justifyContent="space-between">
+              <Flex flexDir="column" height="100%" justifyContent="space-between">
                 <Flex id="sidemenu-top" flexDir="column" alignItems={(miniMode || isEmpty(sidemenu)) ? "center" : "left"}     >
                   {(miniMode || isEmpty(sidemenu)) ?
                     <Box cursor="pointer" onClick={onMinimodeChange} mt="2" ><Logo /></Box>
@@ -195,7 +196,7 @@ const Container = ({ children, sidemenu, session }: Props) => {
                       </Box>
                       {
                         !miniMode && link.children && link.children.map((child, index) => {
-                          return <Box mt="5px" ml={childMarginLeft + 'px'}><NavItem isActive={asPath == child.url} key={index} text={child.title} miniMode={miniMode} url={child.url} fontSize={navSize}/></Box>
+                          return <Box mt="5px" ml={childMarginLeft + 'px'}><NavItem isActive={asPath == child.url} key={index} text={child.title} miniMode={miniMode} url={child.url} fontSize={navSize} /></Box>
                         })
                       }
                     </Box>
@@ -237,50 +238,52 @@ const Container = ({ children, sidemenu, session }: Props) => {
                 variant='outline'
                 size="xs"
               />
-              <MenuList fontSize="15px" py="0">
-                {sidemenu.map((link) => {
-                  const Icon = Icons[link.icon]
-                  return <Link key={link.url} to={link.url}>
-                    <MenuItem icon={<Icon />} >
-                      {link.title}
-                    </MenuItem>
-                    {
-                      link.children && link.children.map((child) => {
-                        return <Link key={child.url} to={child.url}>
-                          <MenuItem pl="36px">
-                            {child.title}
-                          </MenuItem></Link>
-                      })
-                    }
-                  </Link>
-                })}
-                <Divider />
-                <>
-                  {bottomNavs.map((nav, index) => {
-                    const Icon = Icons[nav.icon]
-                    if (nav.url == ReserveUrls.Search) {
-                      return <MenuItem  >
-                        <Search key={nav.url} title={nav.title} miniMode={false} sideWidth={sideWidth} />
+              <Portal>
+                <MenuList fontSize="15px" py="0" zIndex={1000}>
+                  {sidemenu.map((link) => {
+                    const Icon = Icons[link.icon]
+                    return <Link key={link.url} to={link.url}>
+                      <MenuItem icon={<Icon />} >
+                        {link.title}
                       </MenuItem>
-                    } else {
-                      return <Link key={nav.url} to={nav.url}>
-                        <MenuItem icon={<Icon />}  >
-                          {nav.title}
-                        </MenuItem></Link>
-
-                    }
+                      {
+                        link.children && link.children.map((child) => {
+                          return <Link key={child.url} to={child.url}>
+                            <MenuItem pl="36px">
+                              {child.title}
+                            </MenuItem></Link>
+                        })
+                      }
+                    </Link>
                   })}
-
                   <Divider />
-                </>
-                {!isEmpty(config.repoUrl) && <Link to={config.repoUrl}>
-                  <MenuItem icon={<Icons.FaGithub />}>
-                    Github
-                  </MenuItem></Link>}
-                <MenuItem  >
-                  <UserMenu miniMode={false} fontSize="14px" />
-                </MenuItem>
-              </MenuList>
+                  <>
+                    {bottomNavs.map((nav, index) => {
+                      const Icon = Icons[nav.icon]
+                      if (nav.url == ReserveUrls.Search) {
+                        return <MenuItem  >
+                          <Search key={nav.url} title={nav.title} miniMode={false} sideWidth={sideWidth} />
+                        </MenuItem>
+                      } else {
+                        return <Link key={nav.url} to={nav.url}>
+                          <MenuItem icon={<Icon />}  >
+                            {nav.title}
+                          </MenuItem></Link>
+
+                      }
+                    })}
+
+                    <Divider />
+                  </>
+                  {!isEmpty(config.repoUrl) && <Link to={config.repoUrl}>
+                    <MenuItem icon={<Icons.FaGithub />}>
+                      Github
+                    </MenuItem></Link>}
+                  <MenuItem  >
+                    <UserMenu miniMode={false} fontSize="14px" />
+                  </MenuItem>
+                </MenuList>
+              </Portal>
             </Menu>
           </Box>}
       <Box id="main-container" transition="all 0.2s" width={`calc(100% - ${sideWidth}px)`} ml={sideWidth + 'px'}>

@@ -93,7 +93,7 @@ const UserMenu = ({ fontSize = "1.1rem", miniMode }) => {
                             </MenuButton>
                     }
                     <Portal>
-                        <MenuList>
+                        <MenuList zIndex={1000}>
                             <Link to={`/account/setting`}><MenuItem icon={<FaUserAlt fontSize="1rem" />} >
                                 <Text>{session.user.name}</Text>
                                 <Text textStyle="annotation">{session.user.username}</Text>
