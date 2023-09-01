@@ -13,7 +13,7 @@
 import { Select, Switch } from "@chakra-ui/react"
 import RadionButtons from "components/RadioButtons"
 import ValueCalculation from "components/ValueCalculation"
-import { EditorNumberItem } from "components/editor/EditorItem"
+import { EditorInputItem, EditorNumberItem } from "components/editor/EditorItem"
 import { UnitPicker } from "components/Unit"
 import { memo } from "react"
 import PanelAccordion from "src/views/dashboard/edit-panel/Accordion"
@@ -38,6 +38,16 @@ const PiePanelEditor = memo(({ panel, onChange }: PanelEditorProps) => {
                     panel.plugins.pie.animation = e.currentTarget.checked
                 })} />
             </PanelEditItem>
+            <PanelEditItem title={"Top"}>
+                <EditorInputItem value={panel.plugins.pie.top} onChange={(v) => onChange((panel: Panel) => {
+                    panel.plugins.pie.top = v
+                })} placeholder="css top, e.g 50%, 100px" />
+            </PanelEditItem>
+            <PanelEditItem title={"Left"}>
+                <EditorInputItem value={panel.plugins.pie.left} onChange={(v) => onChange((panel: Panel) => {
+                    panel.plugins.pie.left = v
+                })} placeholder="css left, e.g 50%, 100px" />
+            </PanelEditItem>
         </PanelAccordion>
 
         <PanelAccordion title={t.label}>
@@ -57,8 +67,8 @@ const PiePanelEditor = memo(({ panel, onChange }: PanelEditorProps) => {
                 })} />
             </PanelEditItem>
             <PanelEditItem title={"Align to"}>
-            <RadionButtons options={[{ label: "None", value: "none" }, { label: "LabelLine", value: "labelLine" },{ label: "edge", value: "edge" }]} value={panel.plugins.pie.label.align} onChange={v => onChange((panel: Panel) => {
-                   panel.plugins.pie.label.align = v
+                <RadionButtons options={[{ label: "None", value: "none" }, { label: "LabelLine", value: "labelLine" }, { label: "edge", value: "edge" }]} value={panel.plugins.pie.label.align} onChange={v => onChange((panel: Panel) => {
+                    panel.plugins.pie.label.align = v
                 })} />
             </PanelEditItem>
             <PanelEditItem title={"Margin"}>

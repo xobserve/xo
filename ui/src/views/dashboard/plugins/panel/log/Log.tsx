@@ -242,7 +242,7 @@ const LogPanel = (props: LogPanelProps) => {
                 </Box>}
                 <VStack  alignItems="left" divider={panel.plugins.log.styles.showlineBorder && <StackDivider />} mt="1">
                     {
-                        sortedData.map(log => <LogItem log={log} panel={panel} collapsed={collaseAll} />)
+                        sortedData.map(log => <LogItem log={log} panel={panel} collapsed={collaseAll} width={props.width}/>)
                     }
                 </VStack>
             </Box>

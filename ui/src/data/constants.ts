@@ -22,4 +22,5 @@ export const InitTestDataDatasourceId = 1
 export const DefaultDecimal = 3
 
 export const MobileBreakpoint = '(min-width: 900px)'
-export const MobileVerticalBreakpoint = '(max-width: 600px)'
+export const MobileVerticalBreakpointNum = 600
+export const MobileVerticalBreakpoint = `(max-width: ${MobileVerticalBreakpointNum}px)`

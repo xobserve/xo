@@ -231,6 +231,8 @@ function registerEvents(options, chart, navigate, setVariable, setDateTime, $var
                 orient: 'horizontal',
                 placement: PieLegendPlacement.Bottom
             },
+            top: "50%",
+            left: "50%",
             value: {
                 ...getInitUnits(),
                 decimal: 3,

@@ -11,10 +11,11 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { Box, Button, Modal, ModalBody, ModalCloseButton, ModalContent, ModalHeader, ModalOverlay, useDisclosure } from "@chakra-ui/react"
+import { Box, Button, Modal, ModalBody, ModalCloseButton, ModalContent, ModalHeader, ModalOverlay, useDisclosure, useMediaQuery } from "@chakra-ui/react"
 import { useStore } from "@nanostores/react";
 import CodeEditor from "components/CodeEditor/CodeEditor"
 import React, { useEffect, useState } from "react";
+import { MobileBreakpoint } from "src/data/constants";
 import { commonMsg } from "src/i18n/locales/en";
 
 interface Props {
@@ -36,8 +37,9 @@ export const CodeEditorModal = ({ value, onChange, triggerProps={} }:Props) => {
         onClose()
     }
     
+    const [isLargeScreen] = useMediaQuery(MobileBreakpoint)
     return (<>
-        <Button size="sm" onClick={onOpen} {...triggerProps}>{t.editFunc}</Button>
+        <Button size="sm" onClick={onOpen} {...triggerProps}>{isLargeScreen ? t.editFunc : t.edit}</Button>
         <Modal isOpen={isOpen} onClose={onClose} size="full">
             <ModalOverlay />
             <ModalContent>

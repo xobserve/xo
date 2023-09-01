@@ -26,7 +26,7 @@ import { IoMdInformationCircleOutline } from "react-icons/io"
 import { getLabelNameColor } from "../../log/utils"
 import { FaCheck } from "react-icons/fa"
 import { jsonToEqualPairs } from "utils/format"
-import {  commonInteractionEvent, genDynamicFunction } from "utils/dashboard/dynamicCall"
+import { commonInteractionEvent, genDynamicFunction } from "utils/dashboard/dynamicCall"
 import { useNavigate } from "react-router-dom"
 import { isEmpty } from "utils/validate"
 
@@ -53,7 +53,7 @@ const AlertRuleItem = memo((props: Props) => {
     const getStateColor = state => {
         return paletteColorNameToHex(state == "firing" ? "$light-red" : (state == "pending" ? "$yellow" : "$green"), colorMode)
     }
-    
+
     const onActionClick = (e, action, alert, ruleName) => {
         e.stopPropagation()
 
@@ -61,21 +61,22 @@ const AlertRuleItem = memo((props: Props) => {
         const onClick = genDynamicFunction(action);
         if (!isFunction(onClick)) {
             toast({
-              title: "Error",
-              description: "The action function you defined is not valid",
-              status: "error",
-              duration: 4000,
-              isClosable: true,
+                title: "Error",
+                description: "The action function you defined is not valid",
+                status: "error",
+                duration: 4000,
+                isClosable: true,
             })
-          } else {
+        } else {
             commonInteractionEvent(onClick, alert)
-          }
-    
+        }
+
     }
+    
     return (<Box fontSize={width > 600 ? "0.9rem" : "0.8rem"} py="1" pl={width < 400 ? 0 : 2} pr={width < 400 ? 1 : 2}>
         <Flex justifyContent="space-between" alignItems="center" cursor="pointer" onClick={() => setCollapsed(!collapsed)} >
             <HStack>
-                {rule.state == "firing" ? <FiringIcon fill={getStateColor(rule.state)} width="14" height="14"  /> : (rule.state == "pending" ? <PendingIcon width="14" height="14" fill={getStateColor(rule.state)} /> : <FaCheck color={getStateColor(rule.state)} />)}
+                {rule.state == "firing" ? <FiringIcon fill={getStateColor(rule.state)} width="14" height="14" /> : (rule.state == "pending" ? <PendingIcon width="14" height="14" fill={getStateColor(rule.state)} /> : <FaCheck color={getStateColor(rule.state)} />)}
                 <Box>
                     <Text>{rule.name}</Text>
                     <HStack textStyle="annotation" spacing={1} mt={width > 400 ? 2 : 1}>
@@ -169,7 +170,7 @@ const AlertRuleItem = memo((props: Props) => {
                                         <Th>State</Th>
                                         <Th>Active</Th>
                                         <Th>Value</Th>
-                                        {panel.plugins.alert?.clickActions  && <Th>Actions</Th>}
+                                        {panel.plugins.alert?.clickActions && <Th>Actions</Th>}
                                     </Tr>
                                 </Thead>
                                 <Tbody>
@@ -194,10 +195,10 @@ const AlertRuleItem = memo((props: Props) => {
                                                 </Td>
                                                 {panel.plugins.alert?.clickActions && <Td>
                                                     <HStack spacing={1}>
-                                                    {
-                                                        panel.plugins.alert.clickActions.map((action,i) => 
-                                                        !isEmpty(action.name) && <Button key={i + action.name} size="sm" variant={action.style} colorScheme={action.color} onClick={(e) => onActionClick(e,action.action,alert,rule.name)}>{action.name}</Button>)
-                                                    }
+                                                        {
+                                                            panel.plugins.alert.clickActions.map((action, i) =>
+                                                                !isEmpty(action.name) && <Button key={i + action.name} size="sm" variant={action.style} colorScheme={action.color} onClick={(e) => onActionClick(e, action.action, alert, rule.name)}>{action.name}</Button>)
+                                                        }
                                                     </HStack>
                                                 </Td>}
                                             </Tr>
@@ -229,7 +230,7 @@ const AlertRuleItem = memo((props: Props) => {
                             <Text width="100px">annotations</Text>
                             <HStack textStyle="annotation">
                                 {Object.keys(rule.annotations).map((k) => {
-                                    return  <Text key={k}>{k}={rule.annotations[k]}</Text>
+                                    return <Text key={k}>{k}={rule.annotations[k]}</Text>
                                 })}
                             </HStack>
                         </HStack>
@@ -251,6 +252,13 @@ const AlertRuleItem = memo((props: Props) => {
                                             <Text>{dateTimeFormat(alert.activeAt)}</Text> <Text>{moment(alert.activeAt).fromNow()}</Text>
                                         </HStack>
                                         <Text mt="2">{alert.value}</Text>
+                                        {panel.plugins.alert?.clickActions && 
+                                            <HStack spacing={1}>
+                                                {
+                                                    panel.plugins.alert.clickActions.map((action, i) =>
+                                                        !isEmpty(action.name) && <Button key={i + action.name} size={width > 600 ? "sm" : "xs"} variant={action.style} colorScheme={action.color} onClick={(e) => onActionClick(e, action.action, alert, rule.name)}>{action.name}</Button>)
+                                                }
+                                            </HStack>}
                                     </Box>
                                 })
                             }

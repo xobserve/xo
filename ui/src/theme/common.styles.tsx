@@ -14,6 +14,7 @@ const CommonStyles = () => (
         ::-webkit-scrollbar {
           width: 5px;
           height: 5px;
+          border-radius: 4px;
         }
       
         ::-webkit-scrollbar:hover {
@@ -64,9 +65,11 @@ const CommonStyles = () => (
           border: 1px solid ${scrollBg};
           border-top: 1px solid ${scrollBg};
           border-left: 1px solid ${scrollBg};
+          border-radius: 4px;
         }
       
         ::-webkit-scrollbar-thumb:horizontal {
+          border-radius: 4px;
           width: 50px;
           background: -webkit-gradient(
             linear,

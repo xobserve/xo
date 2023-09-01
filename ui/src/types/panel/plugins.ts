@@ -266,6 +266,8 @@ export interface PieSettings {
         orient: 'vertical' | 'horizontal'
         placement: PieLegendPlacement
     }
+    top: string 
+    left: string
     value: ValueSetting
     thresholds: ThresholdsConfig
     enableThresholds: boolean

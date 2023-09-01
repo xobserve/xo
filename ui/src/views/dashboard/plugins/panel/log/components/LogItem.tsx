@@ -21,15 +21,17 @@ import { LayoutOrientation } from "types/layout";
 import { paletteColorNameToHex } from "utils/colors";
 import { Log } from "types/plugins/log";
 import { formatLabelId, getLabelNameColor } from "../utils";
-import { MobileVerticalBreakpoint } from "src/data/constants";
+import { MobileVerticalBreakpoint, MobileVerticalBreakpointNum } from "src/data/constants";
 
 interface LogItemProps {
     log: Log
     panel: Panel
     collapsed: boolean
+    width: number
 }
+
 const LogItem = memo((props: LogItemProps) => {
-    const { log, panel } = props
+    const { log, panel,width } = props
     const {colorMode} = useColorMode()
     const labels = log.labels
     const [collapsed, setCollapsed] = useState(true)
@@ -86,7 +88,8 @@ const LogItem = memo((props: LogItemProps) => {
         return options.styles.labelColorSyncChart ? getLabelNameColor(id, colorMode) : options.styles.labelColor
     }
 
-    const [isMobileScreen] = useMediaQuery(MobileVerticalBreakpoint)
+    const isMobileScreen =  width < MobileVerticalBreakpointNum
+    
     return (<>
         <Flex flexDir={isMobileScreen ? "column" : "row"} pt="1" alignItems="start" gap={isMobileScreen ? 1 : 2} pl="2" pr="4" onClick={() => setCollapsed(!collapsed)} cursor="pointer"  fontSize={options.styles.fontSize}>
             <HStack spacing={1}>
@@ -96,7 +99,7 @@ const LogItem = memo((props: LogItemProps) => {
                 </Text>}
             </HStack>
             {options.labels.display.length > 0 &&
-                <HStack minWidth={options.labels.width ?? options.labels.display.length * 150} maxWidth={options.labels.width ?? 300} spacing={options.labels.layout == LayoutOrientation.Horizontal ? 2 : 3}>
+                <HStack minWidth={options.labels.width ?? options.labels.display.length * 150} maxWidth={isMobileScreen ? null : (options.labels.width ?? 300)} spacing={options.labels.layout == LayoutOrientation.Horizontal ? 2 : 3}>
                     {
                         Object.keys(labels).map(key => options.labels.display.includes(key) && <LabelLayout key={key + labels[key]} spacing={0}>
                             <LabelName name={key} color={labelNameColor(formatLabelId(key, labels[key]))}/>

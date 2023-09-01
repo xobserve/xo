@@ -27,7 +27,7 @@ import { getThreshold } from "components/Threshold/utils";
 import { ThresholdsMode } from "types/threshold";
 import { isEmpty } from "utils/validate";
 import { isFunction } from "lodash";
-import { MobileVerticalBreakpoint } from "src/data/constants";
+import { MobileVerticalBreakpoint, MobileVerticalBreakpointNum } from "src/data/constants";
 
 interface Props extends PanelProps {
     data: SeriesData[][]
@@ -58,7 +58,7 @@ const PiePanel = (props: Props) => {
         return (<Center height="100%">Data format not support!</Center>)
     }
 
-    const [isMobileScreen] = useMediaQuery(MobileVerticalBreakpoint)
+    const isMobileScreen = width < MobileVerticalBreakpointNum
     const [options, onEvents] = useMemo(() => {
         // const d = data.length > 0 ? data[0] : []
 
@@ -132,7 +132,7 @@ const PiePanel = (props: Props) => {
                 {
                     type: 'pie',
                     radius: [`${panel.plugins.pie.shape.innerRadius}%`, `${panel.plugins.pie.shape.radius}%`],
-                    center: ['50%', '50%'],
+                    center: [panel.plugins.pie.left, panel.plugins.pie.top],
                     roseType: panel.plugins.pie.shape.type == "rose" ? "area" : null,
                     itemStyle: {
                         borderRadius: panel.plugins.pie.shape.borderRadius,

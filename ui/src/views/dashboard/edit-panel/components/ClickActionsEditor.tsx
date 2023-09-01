@@ -11,7 +11,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { Box, Button, HStack, Select, VStack, useTheme } from "@chakra-ui/react"
+import { Box, Button, HStack, Select, VStack, Wrap, useMediaQuery, useTheme } from "@chakra-ui/react"
 import { useStore } from "@nanostores/react"
 import React, { useMemo } from "react"
 import { onClickCommonEvent } from "src/data/panel/initPlugins"
@@ -22,6 +22,7 @@ import PanelEditItem from "../PanelEditItem"
 import { EditorInputItem } from "components/editor/EditorItem"
 import { CodeEditorModal } from "components/CodeEditor/CodeEditorModal"
 import { FaTimes } from "react-icons/fa"
+import { MobileBreakpoint } from "src/data/constants"
 
 export interface ClickAction {
     name: string; 
@@ -51,11 +52,13 @@ export const ClickActionsEditor = ({ panel, onChange, actions }) => {
         onChange(actions.filter((_, i) => i !== index))
     }
 
+    const [isLargeScreen] = useMediaQuery(MobileBreakpoint)
+    const Stack = isLargeScreen ? HStack : Wrap
     return (<PanelEditItem title={t1.rowActions} desc={t1.rowActionsTips}>
         <Button size="sm" colorScheme="gray" width="100%" onClick={addAction}>{t1.addAction}</Button>
         <VStack alignItems="left" mt="2" key={actions.length}>
             {
-                actions.map((action: ClickAction, index) => <HStack key={index}>
+                actions.map((action: ClickAction, index) => <Stack key={index}>
                     <Box width="140px"><EditorInputItem placeholder="Action name" value={action.name} onChange={v => {
                         action.name = v
                         onChange([...actions])
@@ -79,7 +82,7 @@ export const ClickActionsEditor = ({ panel, onChange, actions }) => {
                         {colors}
                     </Select>
                     <FaTimes className="action-icon" cursor="pointer" onClick={() => removeAction(index)} />
-                </HStack>)
+                </Stack>)
             }
         </VStack>
     </PanelEditItem>)
