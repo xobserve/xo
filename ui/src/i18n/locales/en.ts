@@ -601,7 +601,7 @@ export const tablePanelMsg = i18n("tablePanel", {
     "seriesName": "change column display name",
     "seriesFilter1": "Number min/max",
     "seriesFilter2": "String match",
-    "colorTitle": "Color title"
+    "colorTitle": "Title color"
 })
 
 export const barGaugePanelMsg = i18n("barGaugePanel", {

@@ -573,7 +573,7 @@
     "seriesName": "修改列标题",
     "seriesFilter1": "数字 min/max 匹配",
     "seriesFilter2": "字符串匹配",
-    "colorTitle": "彩色文字"
+    "colorTitle": "彩色标题"
   },
   "barGaugePanel": {
     "orientation": "方向",

@@ -111,7 +111,7 @@ export const initPanelPlugins = (): PanelPlugins => {
             stickyHeader: false,
             tableWidth: 100,
             column: {
-                colorTitle: true,
+                colorTitle: palettes[0],
                 align: "left",
                 enableSort: false,
                 enableFilter: false

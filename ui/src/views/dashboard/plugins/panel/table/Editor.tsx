@@ -24,6 +24,7 @@ import { PanelForceRebuildEvent } from "src/data/bus-events"
 import { useStore } from "@nanostores/react"
 import { commonMsg, tablePanelMsg } from "src/i18n/locales/en"
 import { ClickActionsEditor } from "src/views/dashboard/edit-panel/components/ClickActionsEditor"
+import { ColorPicker } from "components/ColorPicker"
 
 const TablePanelEditor = memo(({ panel, onChange }: PanelEditorProps) => {
     const t = useStore(commonMsg)
@@ -68,8 +69,8 @@ const TablePanelEditor = memo(({ panel, onChange }: PanelEditorProps) => {
         </PanelAccordion>
         <PanelAccordion title={t1.column}>
             <PanelEditItem title={t1.colorTitle}>
-                <Switch isChecked={panel.plugins.table.column.colorTitle} onChange={(e) => onChange((panel: Panel) => {
-                    panel.plugins.table.column.colorTitle = e.target.checked
+                <ColorPicker color={panel.plugins.table.column.colorTitle} onChange={v => onChange((panel: Panel) => {
+                    panel.plugins.table.column.colorTitle = v
                 })} />
             </PanelEditItem>
 

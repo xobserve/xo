@@ -20,6 +20,7 @@ import customColors from "theme/colors"
 import { isSeriesData } from "utils/seriesData"
 import { isEmpty } from "utils/validate"
 import CustomScrollbar from "components/CustomScrollbar/CustomScrollbar"
+import { paletteColorNameToHex } from "utils/colors"
 
 interface TablePanelProps extends PanelProps {
     data: SeriesData[][]
@@ -108,7 +109,7 @@ const cssStyles = (colorMode: "light" | "dark", colorTitle) =>{
     },
     'th.ant-table-cell': {
         background: "inherit !important",
-        color:colorTitle ? `${colorMode == "light" ? customColors.primaryColor.light : customColors.primaryColor.dark} !important` : 'inherit !important'
+        color:`${paletteColorNameToHex(colorTitle, colorMode)} !important`
     },
     '.ant-table-cell.ant-table-column-sort': {
         background: "inherit !important"
