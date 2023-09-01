@@ -23,6 +23,7 @@ import { formatLabelId, isLogSeriesData } from "./utils";
 import { cloneDeep, remove, sortBy } from "lodash";
 import LogChart from "./components/Chart";
 import { isEmpty } from "utils/validate";
+import CustomScrollbar from "components/CustomScrollbar/CustomScrollbar";
 
 
 
@@ -233,18 +234,24 @@ const LogPanel = (props: LogPanelProps) => {
                 <Box position="absolute" right="2" top="2" zIndex={1} onClick={onToobarOpen} fontSize="0.7rem" opacity="0.4" cursor="pointer" p="2px" className={toolbarOpen ? "color-text" : null}>
                     <FaFilter />
                 </Box>}
-            <Box height={props.height} width={props.width - (toolbarOpen ? panel.plugins.log.toolbar.width : 1)} transition="all 0.3s" py="2">
+                <CustomScrollbar hideHorizontalTrack>
+
+            <Box height={props.height} maxHeight={props.height} width={props.width - (toolbarOpen ? panel.plugins.log.toolbar.width : 1)} transition="all 0.3s" py="2">
                 {panel.plugins.log.chart.show && <Box className="log-panel-chart" height={panel.plugins.log.chart.height}>
                     <LogChart data={sortedData} panel={panel} width={props.width - (toolbarOpen ? panel.plugins.log.toolbar.width : 1)} viewOptions={viewOptions} onSelectLabel={onSelectLabel} activeLabels={active} />
                 </Box>}
-                <VStack alignItems="left" divider={panel.plugins.log.styles.showlineBorder && <StackDivider />} mt="1">
+                <VStack  alignItems="left" divider={panel.plugins.log.styles.showlineBorder && <StackDivider />} mt="1">
                     {
                         sortedData.map(log => <LogItem log={log} panel={panel} collapsed={collaseAll} />)
                     }
                 </VStack>
             </Box>
-            {<Box className="bordered-left" width={toolbarOpen ? panel.plugins.log.toolbar.width : 0} transition="all 0.3s">
+            </CustomScrollbar>
+
+            {<Box className="bordered-left" height={props.height} maxHeight={props.height}  width={toolbarOpen ? panel.plugins.log.toolbar.width : 0} transition="all 0.3s">
+                <CustomScrollbar>
                 {toolbarOpen && <LogToolbar active={active} labels={labels} panel={panel} onCollapseAll={onCollapseAll} onSearchChange={onSearchChange} height={props.height} onActiveLabel={onActiveLabel} activeOp={activeOp} onActiveOpChange={onActiveOpChange} currentLogsCount={filterData.length} onViewLogChange={onViewOptionsChange} viewOptions={viewOptions} />}
+                </CustomScrollbar>
             </Box>}
         </Flex>
     </>

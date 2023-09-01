@@ -31,6 +31,7 @@ import { getTextColorForAlphaBackground, paletteColorNameToHex } from "utils/col
 import { replaceWithVariables } from "utils/variable";
 import { useStore } from "@nanostores/react";
 import { $variables } from "src/views/variables/store";
+import CustomScrollbar from "components/CustomScrollbar/CustomScrollbar";
 
 
 
@@ -135,19 +136,19 @@ const AlertPanel = memo((props: AlertPanelProps) => {
 
 
     const [filterData, chartData]: [AlertRule[], any] = useMemo(() => {
-        const stateFilter = options.filter.enableFilter ? 
+        const stateFilter = options.filter.enableFilter ?
             (!isEmpty(viewOptions.stateFilter) ? viewOptions.stateFilter : options.filter.state)
-             : null
-    
-        const ruleNameFilter =  options.filter.enableFilter ? 
+            : null
+
+        const ruleNameFilter = options.filter.enableFilter ?
             (!isEmpty(viewOptions.ruleNameFilter) ? viewOptions.ruleNameFilter : options.filter.ruleName)
             : ""
-        const ruleLabelFilter=  options.filter.enableFilter ?  
-        (!isEmpty(viewOptions.ruleLabelsFilter) ? viewOptions.ruleLabelsFilter : options.filter.ruleLabel)
-        : ""
-        const alertLabelFilter =  options.filter.enableFilter ? 
-        (!isEmpty(viewOptions.labelNameFilter) ? viewOptions.labelNameFilter : options.filter.alertLabel)
-        : ""
+        const ruleLabelFilter = options.filter.enableFilter ?
+            (!isEmpty(viewOptions.ruleLabelsFilter) ? viewOptions.ruleLabelsFilter : options.filter.ruleLabel)
+            : ""
+        const alertLabelFilter = options.filter.enableFilter ?
+            (!isEmpty(viewOptions.labelNameFilter) ? viewOptions.labelNameFilter : options.filter.alertLabel)
+            : ""
 
         const [result, chartData] = filterAlerts(props.data, stateFilter, ruleNameFilter, ruleLabelFilter, alertLabelFilter, active, search)
         return [result, chartData]
@@ -182,19 +183,23 @@ const AlertPanel = memo((props: AlertPanelProps) => {
                     <Box position="absolute" right="2" top={toolbarOpen ? 2 : 0} onClick={onToobarOpen} fontSize="0.7rem" opacity={width < 400 ? 0 : 0.3} _hover={{ opacity: 0.3 }} cursor="pointer" px="2px" className={toolbarOpen ? "color-text" : null} py="2" zIndex={1}>
                         <FaFilter />
                     </Box>}
-                <Box height={props.height} width={width > 400 ? props.width - (toolbarOpen ? options.toolbar.width : 1) : width} transition="all 0.3s">
-                    {showChart && <Box className="alert-panel-chart" height={options.chart.height}>
-                        <LogChart data={chartData} panel={panel} width={props.width - (toolbarOpen ? options.toolbar.width : 1)} viewOptions={viewOptions} onSelectLabel={onSelectLabel} activeLabels={active} />
-                        <Divider mt="3" />
-                    </Box>}
-                    <VStack alignItems="left" divider={<StackDivider />} mt={showChart ? 3 : 1} spacing={1}>
-                        {
-                            sortedData.map(rule => <AlertRuleItem rule={rule} panel={panel} collapsed={collaseAll} onSelectLabel={onSelectLabel} width={width} />)
-                        }
-                    </VStack>
-                </Box>
-                {width > 400 && <Box className={toolbarOpen ? "bordered-left" : null} width={toolbarOpen ? options.toolbar.width : 0} transition="all 0.3s" py="2">
-                    {toolbarOpen && <AlertToolbar active={active} labels={[]} panel={panel} onCollapseAll={onCollapseAll} onSearchChange={onSearchChange} height={props.height} onActiveLabel={onActiveLabel} rulesCount={filterData.length} alertsCount={alertsCount} onViewLogChange={onViewOptionsChange} viewOptions={viewOptions} />}
+                <CustomScrollbar>
+                    <Box height={props.height} maxHeight={props.height} width={width > 400 ? props.width - (toolbarOpen ? options.toolbar.width : 1) : width} transition="all 0.3s">
+                        {showChart && <Box className="alert-panel-chart" height={options.chart.height}>
+                            <LogChart data={chartData} panel={panel} width={props.width - (toolbarOpen ? options.toolbar.width : 1)} viewOptions={viewOptions} onSelectLabel={onSelectLabel} activeLabels={active} />
+                            <Divider mt="3" />
+                        </Box>}
+                        <VStack alignItems="left" divider={<StackDivider />} mt={showChart ? 3 : 1} spacing={1}>
+                            {
+                                sortedData.map(rule => <AlertRuleItem rule={rule} panel={panel} collapsed={collaseAll} onSelectLabel={onSelectLabel} width={width} />)
+                            }
+                        </VStack>
+                    </Box>
+                </CustomScrollbar>
+                {width > 400 && <Box className={toolbarOpen ? "bordered-left" : null} height={props.height} maxHeight={props.height} width={toolbarOpen ? options.toolbar.width : 0} transition="all 0.3s" py="2">
+                    <CustomScrollbar>
+                        {toolbarOpen && <AlertToolbar active={active} labels={[]} panel={panel} onCollapseAll={onCollapseAll} onSearchChange={onSearchChange} height={props.height} onActiveLabel={onActiveLabel} rulesCount={filterData.length} alertsCount={alertsCount} onViewLogChange={onViewOptionsChange} viewOptions={viewOptions} />}
+                    </CustomScrollbar>
                 </Box>}
             </Flex>
 
@@ -213,7 +218,7 @@ const AlertPanel = memo((props: AlertPanelProps) => {
 export default AlertPanel
 
 
-export const filterAlerts = (data: AlertRule[], stateFilter, ruleNameFilter, ruleLabelFilter,alertLabelFilter, active, search, enableRuleStateFilter=true) => {
+export const filterAlerts = (data: AlertRule[], stateFilter, ruleNameFilter, ruleLabelFilter, alertLabelFilter, active, search, enableRuleStateFilter = true) => {
     let result: AlertRule[] = []
     const chartData = []
 
@@ -223,7 +228,7 @@ export const filterAlerts = (data: AlertRule[], stateFilter, ruleNameFilter, rul
             continue
         }
         // filter by rule name
-       
+
         if (!isEmpty(ruleNameFilter)) {
             const ruleFilters = replaceWithVariables(ruleNameFilter).split(",")
             let pass = false
@@ -259,7 +264,7 @@ export const filterAlerts = (data: AlertRule[], stateFilter, ruleNameFilter, rul
         }
         for (const alert of r0.alerts) {
             // filter by alert state
-            if (stateFilter !== null &&  !stateFilter.includes(alert.state)) {
+            if (stateFilter !== null && !stateFilter.includes(alert.state)) {
                 continue
             }
 
