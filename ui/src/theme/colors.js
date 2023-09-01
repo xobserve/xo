@@ -48,7 +48,11 @@ const  customColors = {
     modalBg: {
         light: "#fff",
         dark: "#2D3748"
-    }
+    },
+    scrollBg: {
+        light: 'rgba(36,41,46,0.07)',
+        dark: 'rgba(204,204,220,0.16)'
+    }  
 }
 
 export default customColors

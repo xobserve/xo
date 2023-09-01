@@ -192,7 +192,7 @@ const SelectVariable = memo(({ v }: { v: Variable }) => {
     const value = isEmpty(v.selected) ? [] : v.selected.split(VariableSplitChar)
 
     return <HStack key={v.id} spacing={2}>
-        <Tooltip openDelay={300} label={(v.id.toString().startsWith("d-") ? t1.dashScoped : t1.globalScoped)}><Text fontSize="sm" minWidth="fit-content" maxWidth="fit-content">{v.name}</Text></Tooltip>
+        <Tooltip openDelay={300} label={(v.id.toString().startsWith("d-") ? t1.dashScoped : t1.globalScoped) + ": " + v.name}><Text fontSize="sm" minWidth="max-content" noOfLines={1}>{v.name}</Text></Tooltip>
         {!isEmpty(values) &&
             <PopoverSelect
                 value={value}

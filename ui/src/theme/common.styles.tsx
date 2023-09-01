@@ -2,13 +2,14 @@ import React from 'react'
 
 import { Global, css } from "@emotion/react"
 import { ChakraTheme, useColorMode } from '@chakra-ui/react'
+import customColors from './colors'
 
 const CommonStyles = () => (
  
   <Global
     styles={(theme: ChakraTheme) => {
       const {colorMode} = useColorMode()
-      const scrollBg = colorMode == "dark" ? 'rgba(204,204,220,0.16)'  : 'rgba(36,41,46,0.07)'
+      const scrollBg = colorMode == "dark" ? customColors.scrollBg.dark : customColors.scrollBg.light
       return css` 
         ::-webkit-scrollbar {
           width: 5px;

@@ -10,7 +10,7 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-import { Box, Flex, HStack, Select, Tooltip, useMediaQuery } from "@chakra-ui/react"
+import { Box, Flex, HStack, Select, SimpleGrid, Tooltip, Wrap, useMediaQuery } from "@chakra-ui/react"
 import IconButton from "components/button/IconButton"
 import SelectVariables from "src/views/variables/SelectVariable"
 import { cloneDeep, find, isEmpty } from "lodash"
@@ -31,11 +31,12 @@ import useFullscreen from "hooks/useFullscreen"
 import DatePicker from "components/DatePicker/DatePicker"
 import { useNavigate } from "react-router-dom"
 import { useStore } from "@nanostores/react";
-import { dashboardMsg } from "src/i18n/locales/en";
+import { dashboardMsg, sidebarMsg } from "src/i18n/locales/en";
 import DashboardShare from "./DashboardShare";
 import DashboardStar from "./components/DashboardStar";
 import { $variables } from "../variables/store";
 import { MobileBreakpoint } from "src/data/constants";
+import CustomScrollbar from "components/CustomScrollbar/CustomScrollbar";
 
 interface HeaderProps {
     dashboard: Dashboard
@@ -43,7 +44,7 @@ interface HeaderProps {
     onChange: any
     sideWidth?: number
 }
-const DashboardHeader = memo(({ dashboard, onChange, sideWidth,team }: HeaderProps) => {
+const DashboardHeader = memo(({ dashboard, onChange, sideWidth, team }: HeaderProps) => {
     const vars = useStore($variables)
     const t1 = useStore(dashboardMsg)
     const navigate = useNavigate()
@@ -72,10 +73,10 @@ const DashboardHeader = memo(({ dashboard, onChange, sideWidth,team }: HeaderPro
     }
 
     const [isLargeScreen] = useMediaQuery(MobileBreakpoint)
-    
+
     return (
         <Box
-            pl={isLargeScreen ? 0 : "25px"}
+
             id="dashboard-header"
             display={fullscreen ? "none" : "block"}
             pt="1"
@@ -91,19 +92,19 @@ const DashboardHeader = memo(({ dashboard, onChange, sideWidth,team }: HeaderPro
             {team &&
                 <>
                     <Flex justifyContent="space-between" >
-                        <HStack textStyle={ isLargeScreen ? "title" : null}>
+                        <HStack textStyle={isLargeScreen ? "title" : null} pl={isLargeScreen ? 0 : "15px"}>
                             {isLargeScreen && <>
                                 <Tooltip label={t1.headerTeamTips}><Box cursor="pointer" onClick={() => navigate(`${ReserveUrls.Config}/team/${team.id}/members`)}>{team?.name}</Box></Tooltip>
                                 <Box>/</Box>
                             </>}
                             <Box>{dashboard.title}</Box>
-                            {isLargeScreen &&  <>
-                            <DashboardStar dashboardId={dashboard.id} fontSize="1.2rem" />
-                            <DashboardShare dashboard={dashboard} fontSize="0.9rem" opacity="0.8" cursor="pointer" className="hover-text" />
+                            {isLargeScreen && <>
+                                <DashboardStar dashboardId={dashboard.id} fontSize="1.2rem" />
+                                <DashboardShare dashboard={dashboard} fontSize="0.9rem" opacity="0.8" cursor="pointer" className="hover-text" />
                             </>}
                         </HStack>
 
-                        <HStack mr="2">
+                        <HStack>
                             <HStack spacing="0">
                                 <AddPanel dashboard={dashboard} onChange={onChange} />
                                 <DashboardSave dashboard={dashboard} />
@@ -129,10 +130,15 @@ const DashboardHeader = memo(({ dashboard, onChange, sideWidth,team }: HeaderPro
                         </HStack>
 
                     </Flex>
-                    {!isEmpty(vars) && <Flex justifyContent="space-between" mt="0" overflowX="auto">
-                        <SelectVariables variables={vars.filter((v) => v.id.toString().startsWith("d-"))} />
-                        <SelectVariables variables={vars.filter((v) => !v.id.toString().startsWith("d-") && !find(dashboard.data.hidingVars?.split(','), v1 => v.name.toLowerCase().match(v1)))} />
-                    </Flex>}
+                    {!isEmpty(vars) &&
+                        <Flex mt="0" maxW={`calc(100% - ${10}px)`}>
+                            <CustomScrollbar hideVerticalTrack>
+                                <Flex justifyContent="space-between" >
+                                    <SelectVariables variables={vars.filter((v) => v.id.toString().startsWith("d-"))} />
+                                    <SelectVariables variables={vars.filter((v) => !v.id.toString().startsWith("d-") && !find(dashboard.data.hidingVars?.split(','), v1 => v.name.toLowerCase().match(v1)))} />
+                                </Flex>
+                            </CustomScrollbar>
+                        </Flex>}
                 </>}
         </Box>
     )

@@ -5,6 +5,8 @@ import Scrollbars, { positionValues } from 'react-custom-scrollbars-2';
 
 import { ScrollIndicators } from './ScrollIndicators';
 import { useExtraStyles } from 'hooks/useExtraTheme';
+import { useColorMode } from '@chakra-ui/react';
+import customColors from 'theme/colors';
 
 export type ScrollbarPosition = positionValues;
 
@@ -152,6 +154,9 @@ export const CustomScrollbar = ({
 export default CustomScrollbar;
 
 const getStyles = (theme) => {
+  const {colorMode} = useColorMode()
+  const bg = colorMode == "light" ? customColors.scrollBg.light : customColors.scrollBg.dark
+  console.log("here3333333:",bg)
   return {
     customScrollbar: css`
       // Fix for Firefox. For some reason sometimes .view container gets a height of its content, but in order to
@@ -166,25 +171,25 @@ const getStyles = (theme) => {
       }
       .track-vertical {
         border-radius: 4px;
-        width: 6px !important;
+        width: 5px !important;
         right: 0px;
         bottom: 2px;
         top: 2px;
       }
       .track-horizontal {
         border-radius: 4px;
-        height: 6px!important;
+        height: 5px!important;
         right: 2px;
         bottom: 2px;
         left: 2px;
       }
       .thumb-vertical {
-        background: ${theme.colors.action.focus};
+        background: ${bg};
         border-radius: 4px;
         opacity: 0;
       }
       .thumb-horizontal {
-        background: ${theme.colors.action.focus};
+        background: ${bg};
         border-radius: 4px;
         opacity: 0;
       }
