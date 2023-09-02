@@ -17,7 +17,7 @@ import { BarThresholdArrow } from "types/plugins/bar";
 import { ArcGisMapServer, BaseLayerType, DataLayerType } from "types/plugins/geoMap";
 import { ThresholdsConfig, ThresholdsMode } from "types/threshold";
 import { ValueCalculationType } from "types/value";
-import { getDefaultPanelColor, palettes } from "utils/colors";
+import { colors1, getDefaultPanelColor, palettes } from "utils/colors";
 
 
 export const onClickCommonEvent = `
@@ -140,8 +140,8 @@ export const initPanelPlugins = (): PanelPlugins => {
                 icon: [],
                 shape: "donut",
                 donutColors: [
-                    { attr: 'success', color: palettes[0] },
-                    { attr: 'error', color: palettes[9] }
+                    { attr: 'success', color: colors1[2] },
+                    { attr: 'error', color: colors1[6] }
                 ],
                 borderColor: defaultColor,
                 tooltipTrigger: 'mouseenter',

@@ -26,7 +26,7 @@ const TraceSearchResult = ({ panel, traces, timeRange ,height}: Props) => {
     const [selectedTraces, setSelectedTraces] = useState<Trace[]>([])
     const [sort, setSort] = useState(traceSortTypes[0].value)
     const [comparison, setComparison] = useState<string[]>([])
-
+    
     useEffect(() => {
         setSelectedTraces(clone(traces))
         setComparison([])

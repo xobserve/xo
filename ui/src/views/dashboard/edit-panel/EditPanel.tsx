@@ -43,6 +43,7 @@ import EditPanelAlert from "./Alert"
 import { useLocation, useSearchParam } from "react-use"
 import { useLandscapeMode } from "hooks/useLandscapeMode"
 import { MobileBreakpoint } from "src/data/constants"
+import { isEmpty } from "utils/validate"
 
 interface EditPanelProps {
     dashboard: Dashboard
@@ -72,7 +73,7 @@ const EditPanel = memo(({ dashboard, onChange, edit }: EditPanelProps) => {
     const [pageChanged, setPageChanged] = useState(false)
     const [data, setData] = useState(null)
 
-    useLandscapeMode()
+    useLandscapeMode(!isEmpty(edit))
     useLeavePageConfirm(dashboard.data.enableUnsavePrompt ? pageChanged : false)
 
 

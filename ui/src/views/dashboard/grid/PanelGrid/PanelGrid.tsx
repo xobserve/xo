@@ -53,20 +53,20 @@ import { VariableInterval } from "src/data/variable";
 import Loading from "components/loading/Loading";
 import DebugPanel from "./DebugPanel";
 import { AlertGroup, AlertRule } from "types/plugins/alert";
-import TextPanel from "../../plugins/panel/text/Text";
-import GraphPanelWrapper from "../../plugins/panel/graph/Graph";
-import TablePanel from "../../plugins/panel/table/Table";
-import NodeGraphPanelWrapper from "../../plugins/panel/nodeGraph/NodeGraph";
-import EchartsPanel from "../../plugins/panel/echarts/Echarts";
-import PiePanelWrapper from "../../plugins/panel/pie/Pie";
-import GaugePanel from "../../plugins/panel/gauge/Gauge";
-import StatPanel from "../../plugins/panel/stat/Stat";
-import TracePanelWrapper from "../../plugins/panel/trace/Trace";
-import BarGaugePanel from "../../plugins/panel/barGauge/BarGauge";
-import GeoMapPanelWrapper from "../../plugins/panel/geomap/GeoMap";
-import LogPanelWrapper from "../../plugins/panel/log/Log";
-import BarPanelWrapper from "../../plugins/panel/bar/Bar";
-import AlertPanel from "../../plugins/panel/alert/Alert";
+// import TextPanel from "../../plugins/panel/text/Text";
+// import GraphPanelWrapper from "../../plugins/panel/graph/Graph";
+// import TablePanel from "../../plugins/panel/table/Table";
+// import NodeGraphPanelWrapper from "../../plugins/panel/nodeGraph/NodeGraph";
+// import EchartsPanel from "../../plugins/panel/echarts/Echarts";
+// import PiePanelWrapper from "../../plugins/panel/pie/Pie";
+// import GaugePanel from "../../plugins/panel/gauge/Gauge";
+// import StatPanel from "../../plugins/panel/stat/Stat";
+// import TracePanelWrapper from "../../plugins/panel/trace/Trace";
+// import BarGaugePanel from "../../plugins/panel/barGauge/BarGauge";
+// import GeoMapPanelWrapper from "../../plugins/panel/geomap/GeoMap";
+// import LogPanelWrapper from "../../plugins/panel/log/Log";
+// import BarPanelWrapper from "../../plugins/panel/bar/Bar";
+// import AlertPanel from "../../plugins/panel/alert/Alert";
 interface PanelGridProps {
     dashboard: Dashboard
     panel: Panel

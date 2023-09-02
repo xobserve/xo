@@ -11,7 +11,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { Box, useColorMode, useColorModeValue, useMediaQuery, useToast } from "@chakra-ui/react"
+import { Box, useColorModeValue, useMediaQuery } from "@chakra-ui/react"
 import { Trace } from "types/plugins/trace"
 import TraceDetailHeader from "./TraceHeader"
 
@@ -32,19 +32,18 @@ import TraceStatistics from "./TraceStats";
 import { useSearchParam } from "react-use";
 import { addParamToUrl } from "utils/url";
 import React from "react";
-import { MobileBreakpoint, MobileVerticalBreakpoint } from "src/data/constants";
-import { useStore } from "@nanostores/react";
-import { commonMsg } from "src/i18n/locales/en";
+import { MobileBreakpoint } from "src/data/constants";
 import { useLandscapeMode } from "hooks/useLandscapeMode";
+import { useLocation } from "react-router-dom";
 
 interface Props {
     trace: Trace
     scrollManager: ScrollManager
 }
 const TraceDetail = ({ trace, scrollManager }: Props) => {
-    const t = useStore(commonMsg)
     const search = useSearchParam('search')
     const view = useSearchParam("view")
+    useLocation()
     const [viewType, setViewType] = useState<ETraceViewType>(view as any ?? ETraceViewType.TraceTimelineViewer)
     const [viewRange, setViewRange] = useState<IViewRange>({
         time: {

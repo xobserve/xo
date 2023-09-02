@@ -4,12 +4,12 @@ import { useEffect } from "react"
 import { MobileVerticalBreakpoint } from "src/data/constants"
 import { commonMsg } from "src/i18n/locales/en"
 
-export const useLandscapeMode = () => {
+export const useLandscapeMode = (trigger=true) => {
     const t = useStore(commonMsg)
     const [isMobileVertical] =  useMediaQuery(MobileVerticalBreakpoint)
     const toast = useToast()
     useEffect(() => {
-        if (isMobileVertical) {
+        if (isMobileVertical && trigger) {
             toast({
                 title: t.landscapeModeTips,
                 status: "info",
@@ -17,7 +17,7 @@ export const useLandscapeMode = () => {
                 isClosable: true,
             })
         }
-    },[isMobileVertical])
+    },[isMobileVertical, trigger])
 
     return null
 }

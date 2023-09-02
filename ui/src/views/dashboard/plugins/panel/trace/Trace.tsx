@@ -27,11 +27,18 @@ import React from "react";
 import { getDatasource } from "utils/datasource";
 import CustomScrollbar from "components/CustomScrollbar/CustomScrollbar";
 import { MobileBreakpoint } from "src/data/constants";
+import { isTraceData } from "./utils/trace";
 
 
 
 const TracePanelWrapper = memo((props: PanelProps) => {
     const ds = getDatasource(props.panel.datasource.id)
+
+    if (!isTraceData(props.data)) {
+        return (<Center height="100%">Trace panel only support Jaeger and Testdata datasource!</Center>)
+    }
+
+    console.log("here33333: ", props.data)
     return (<>
         {
             (ds.type != DatasourceType.Jaeger && ds.type != DatasourceType.TestData)
