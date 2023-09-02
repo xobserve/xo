@@ -29,12 +29,11 @@ import TraceJSON from "./TraceJSON";
 import TraceFlamegraph from "./TraceFlameGraph";
 import TraceSpanView from "./TraceSpanTable";
 import TraceStatistics from "./TraceStats";
-import { useSearchParam } from "react-use";
+import { useLocation, useSearchParam } from "react-use";
 import { addParamToUrl } from "utils/url";
 import React from "react";
 import { MobileBreakpoint } from "src/data/constants";
 import { useLandscapeMode } from "hooks/useLandscapeMode";
-import { useLocation } from "react-router-dom";
 
 interface Props {
     trace: Trace
@@ -44,6 +43,7 @@ const TraceDetail = ({ trace, scrollManager }: Props) => {
     const search = useSearchParam('search')
     const view = useSearchParam("view")
     useLocation()
+    console.log("here333333 trace search:", search )
     const [viewType, setViewType] = useState<ETraceViewType>(view as any ?? ETraceViewType.TraceTimelineViewer)
     const [viewRange, setViewRange] = useState<IViewRange>({
         time: {
