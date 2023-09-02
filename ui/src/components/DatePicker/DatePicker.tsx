@@ -24,7 +24,7 @@ import { addParamToUrl, getUrlParams } from "utils/url"
 import { Moment } from "moment"
 import { useSearchParam } from "react-use"
 import { dateTimeFormat } from "utils/datetime/formatter"
-import { MobileBreakpoint } from "src/data/constants"
+import { MobileBreakpoint, MobileVerticalBreakpoint } from "src/data/constants"
 
 interface Props {
     showTime?: boolean
@@ -39,6 +39,7 @@ const DatePicker = ({ showTime = true, showRealTime = false }: Props) => {
     const from = useSearchParam("from")
     const to = useSearchParam("to")
     const [isLargeScreen] = useMediaQuery(MobileBreakpoint)
+    const [isMobileScreen] = useMediaQuery(MobileVerticalBreakpoint)
     useEffect(() => {
         if (from && to) {
             // from and to can only be two types:
@@ -152,9 +153,9 @@ const DatePicker = ({ showTime = true, showRealTime = false }: Props) => {
                             showTime && <>
                                 {
                                    <Box>
-                                        <Text layerStyle="textSecondary" fontSize="0.9rem" fontWeight="500">
+                                        {!isMobileScreen && <Text layerStyle="textSecondary" fontSize="0.9rem" fontWeight="500">
                                             {value.startRaw.toString().startsWith('now') ? value.startRaw : dateTimeFormat(value.start)} to {value.endRaw.toString().startsWith('now') ? value.endRaw : dateTimeFormat(value.end)}
-                                        </Text>
+                                        </Text>}
                                         { isLargeScreen && showRealTime && value.startRaw.toString().startsWith('now') &&
                                             <Text layerStyle="textSecondary" fontSize="0.9rem" fontWeight="500">
                                                 {dateTimeFormat(value.start)} - {dateTimeFormat(value.end)}
