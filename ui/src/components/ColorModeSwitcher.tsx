@@ -37,13 +37,12 @@ export const ColorModeSwitcher: React.FC<ColorModeSwitcherProps & { miniMode: bo
     <PopoverTooltip
       trigger={disableTrigger ? null : (miniMode ? "hover" : null)}
       offset={[0, 14]}
-      triggerComponent={<HStack cursor="pointer" onClick={toggleColorMode} className="hover-text" spacing={3}>
+      triggerComponent={<HStack cursor="pointer" onClick={toggleColorMode} className="hover-text" spacing={3} >
         {miniMode ? <IconButton
           size="md"
           fontSize="lg"
           variant="ghost"
           color="current"
-          onClick={toggleColorMode}
           icon={colorMode == 'light' ? <FaMoon /> : <FaSun />}
           aria-label={`Switch to ${text} mode`}
           {...props}

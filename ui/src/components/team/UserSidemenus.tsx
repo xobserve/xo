@@ -59,7 +59,7 @@ const UserSidemenus = ({miniMode}) => {
         <>
             <Popover trigger="hover" placement="right">
                 <PopoverTrigger>
-                    <HStack spacing={3} cursor="pointer">
+                    <HStack spacing={3} cursor="pointer" width="100%">
                     {miniMode ? <IconButton
                         size="md"
                         fontSize="1.3rem"

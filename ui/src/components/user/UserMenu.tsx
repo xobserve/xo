@@ -99,13 +99,13 @@ const UserMenu = ({ fontSize = "1.1rem", miniMode }) => {
                                 <Text textStyle="annotation">{session.user.username}</Text>
                             </MenuItem></Link>
                             <MenuDivider />
-                            {isAdmin(session.user.role) && <><Link to={`/admin/users`}><MenuItem icon={<FaStar fontSize="1rem" />} >{t1.adminPanel}</MenuItem></Link><MenuDivider /></>}
-                            <MenuItem><Box><ColorModeSwitcher miniMode={false} /></Box></MenuItem>
-                            <MenuItem onClick={() => changeLang()} icon={<FaFont fontSize="1rem" />}>{t1.currentLang} - {locale.get() == "en" ? "English" : "简体中文"}</MenuItem>
-                            <MenuItem mt="2px" >    <UserSidemenus miniMode={false} /></MenuItem>
+                            {isAdmin(session.user.role) && <><Link to={`/admin/users`}><MenuItem width="100%" icon={<FaStar fontSize="1rem" />} >{t1.adminPanel}</MenuItem></Link><MenuDivider /></>}
+                            <MenuItem width="100%"><Box width="100%"><ColorModeSwitcher miniMode={false} /></Box></MenuItem>
+                            <MenuItem width="100%" onClick={() => changeLang()} icon={<FaFont fontSize="1rem" />}>{t1.currentLang} - {locale.get() == "en" ? "English" : "简体中文"}</MenuItem>
+                            <MenuItem mt="2px" width="100%">    <UserSidemenus miniMode={false} /></MenuItem>
                             <MenuDivider />
-                            <Link to={`/account/setting`}><MenuItem icon={<FaRegSun fontSize="1rem" />}>{t1.accountSetting}</MenuItem></Link>
-                            <MenuItem onClick={() => logout()} icon={<FaSignOutAlt fontSize="1rem" />}>{t.logout}</MenuItem>
+                            <Link to={`/account/setting`}><MenuItem  width="100%"icon={<FaRegSun fontSize="1rem" />}>{t1.accountSetting}</MenuItem></Link>
+                            <MenuItem width="100%" onClick={() => logout()} icon={<FaSignOutAlt fontSize="1rem" />}>{t.logout}</MenuItem>
 
                         </MenuList>
                     </Portal>
