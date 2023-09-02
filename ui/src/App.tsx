@@ -66,9 +66,12 @@ const AppView = () => {
   }, [cfg])
 
   const loadConfig = async () => {
-    const res0 = await requestApi.get("/datasource/all")
-    datasources = res0.data
-    const res = await requestApi.get("/config/ui")
+    const r0 = requestApi.get("/datasource/all")
+    const r =  requestApi.get("/config/ui")
+    const res1 = await Promise.all([r0, r])
+    datasources = res1[0].data
+
+    const res = res1[1]
     const cfg = res.data.config
     cfg.sidemenu = cfg.sidemenu.data.filter((item) => !item.hidden)
     setConfig(cfg)

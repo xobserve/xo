@@ -22,7 +22,6 @@ import { isEmpty } from "utils/validate"
 import { Team } from "types/teams"
 import TeamsFilter from "./TeamsFilter"
 import { AiFillStar, AiOutlineStar } from "react-icons/ai"
-import { cloneDeep, sortBy } from "lodash"
 import ListView from "./ListView"
 import TeamsView from "./TeamsView"
 import TagsView from "./TagsView"
@@ -66,14 +65,8 @@ const Search = memo((props: Props) => {
         onClose()
     },[location])
     
-    const load = async () => {
-        const res = await requestApi.get("/teams/all")
-        setTeams(res.data)
-    }
-    
-    if (!teams) {
-        load()
-    }
+
+
 
     const onSearchOpen = async () => {
         if (isOpen) {
@@ -82,7 +75,8 @@ const Search = memo((props: Props) => {
         }
         const r1 = requestApi.get(`/dashboard/simpleList`)
         const r2 = requestApi.get(`/dashboard/starred`)
-        const res = await Promise.all([r1, r2])
+        const r3 = requestApi.get("/teams/all")
+        const res = await Promise.all([r1, r2,r3])
 
         setRawDashboards(res[0].data)
         const starred = new Set<string>()
@@ -90,6 +84,7 @@ const Search = memo((props: Props) => {
             starred.add(id)
         }
         setStarredDashIds(starred)
+        setTeams(res[2].data)
         onOpen()
     }
 

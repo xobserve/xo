@@ -34,11 +34,11 @@ type Dashboard struct {
 	Created *time.Time `json:"created,omitempty"`
 	Updated *time.Time `json:"updated,omitempty"`
 
-	CreatedBy int64 `json:"createdBy,omitempty"`
-	OwnedBy   int64 `json:"ownedBy,omitempty"` // team that ownes this dashboard
-
-	Tags []string         `json:"tags,omitempty"`
-	Data *simplejson.Json `json:"data,omitempty"`
+	CreatedBy int64            `json:"createdBy,omitempty"`
+	OwnedBy   int64            `json:"ownedBy,omitempty"` // team that ownes this dashboard
+	OwnerName string           `json:"ownerName,omitempty"`
+	Tags      []string         `json:"tags,omitempty"`
+	Data      *simplejson.Json `json:"data,omitempty"`
 
 	SortWeight int         `json:"weight"`
 	Variables  []*Variable `json:"variables,omitempty"`

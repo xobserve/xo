@@ -83,6 +83,17 @@ func QueryTeam(id int64, name string) (*Team, error) {
 	return team, nil
 }
 
+func QueryTeamNameById(id int64) (string, error) {
+	var name string
+	err := db.Conn.QueryRow(`SELECT name FROM team WHERE id=?`,
+		id).Scan(&name)
+	if err != nil {
+		return "", err
+	}
+
+	return name, nil
+}
+
 func IsTeamExist(id int64, name string) bool {
 	var qid int64
 	err := db.Conn.QueryRow(`SELECT id FROM team WHERE id=? or name=?`,

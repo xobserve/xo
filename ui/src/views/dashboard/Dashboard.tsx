@@ -60,17 +60,11 @@ const DashboardWrapper = ({ dashboardId, sideWidth }) => {
     const [dashboard, setDashboard] = useImmer<Dashboard>(null)
     const { setColorMode, colorMode, toggleColorMode } = useColorMode()
     // const [gVariables, setGVariables] = useState<Variable[]>([])
-    const [team, setTeam] = useState<Team>(null)
     const fullscreen = useFullscreen()
-    
-    const loadTeam = async () => {
-        const res1 = await requestApi.get(`/team/byDashId/${dashboardId}`)
-        setTeam(res1.data)
-    }
+
 
     useEffect(() => {
         updateTimeToNewest()
-        loadTeam()
         if (!dashboard) {
             load()
         }
@@ -235,9 +229,9 @@ const DashboardWrapper = ({ dashboardId, sideWidth }) => {
     const [isLargeScreen] = useMediaQuery('(min-width: 600px)')
 
     return (<>
-        {dashboard && team ? <Box  px={fullscreen ? 0 : (isLargeScreen ? 2 : 1)} width="100%" minHeight="100vh" maxHeight="100vh" overflowY="auto" position="relative">
+        {dashboard ? <Box  px={fullscreen ? 0 : (isLargeScreen ? 2 : 1)} width="100%" minHeight="100vh" maxHeight="100vh" overflowY="auto" position="relative">
             {/* <Decoration decoration={dashboard.data.styles.decoration}/> */}
-            <DashboardHeader dashboard={dashboard} onChange={onDashbardChange} sideWidth={sideWidth} team={team}/>
+            <DashboardHeader dashboard={dashboard} onChange={onDashbardChange} sideWidth={sideWidth}/>
             <Box
                 // key={dashboard.id + fullscreen} 
                 id="dashboard-wrapper"

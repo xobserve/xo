@@ -146,8 +146,12 @@ func GetDashboard(c *gin.Context) {
 		return
 	}
 
+	teamName, _ := models.QueryTeamNameById(dash.OwnedBy)
+	if teamName == "" {
+		teamName = "not_found"
+	}
 	dash.Editable = true
-
+	dash.OwnerName = teamName
 	c.JSON(200, common.RespSuccess(dash))
 }
 

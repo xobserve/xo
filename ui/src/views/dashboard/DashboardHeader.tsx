@@ -39,11 +39,10 @@ import CustomScrollbar from "components/CustomScrollbar/CustomScrollbar";
 
 interface HeaderProps {
     dashboard: Dashboard
-    team: Team
     onChange: any
     sideWidth?: number
 }
-const DashboardHeader = memo(({ dashboard, onChange, sideWidth, team }: HeaderProps) => {
+const DashboardHeader = memo(({ dashboard, onChange, sideWidth }: HeaderProps) => {
     const vars = useStore($variables)
     const t1 = useStore(dashboardMsg)
     const navigate = useNavigate()
@@ -88,12 +87,12 @@ const DashboardHeader = memo(({ dashboard, onChange, sideWidth, team }: HeaderPr
             zIndex={1}
             transition="all 0.2s"
         >
-            {team &&
+            {
                 <>
                     <Flex justifyContent="space-between" >
                         <HStack textStyle={isLargeScreen ? "title" : null} pl={isLargeScreen ? 0 : "17px"}>
                             {isLargeScreen && <>
-                                <Tooltip label={t1.headerTeamTips}><Box cursor="pointer" onClick={() => navigate(`${ReserveUrls.Config}/team/${team.id}/members`)}>{team?.name}</Box></Tooltip>
+                                <Tooltip label={t1.headerTeamTips}><Box cursor="pointer" onClick={() => navigate(`${ReserveUrls.Config}/team/${dashboard.ownedBy}/members`)}>{dashboard.ownerName}</Box></Tooltip>
                                 <Box>/</Box>
                             </>}
                             <Box>{dashboard.title}</Box>

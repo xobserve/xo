@@ -14,19 +14,19 @@
 import { useStore } from "@nanostores/react"
 import React, { memo } from "react"
 import { useEffect, useState } from "react"
-import { useLocation, useParams } from "react-router-dom"
+import { useLocation } from "react-router-dom"
 import { dashboardMsg } from "src/i18n/locales/en"
 import DashboardWrapper from "src/views/dashboard/Dashboard"
-import { requestApi } from "utils/axios/request"
 import NotFoundPage from "../NotFound"
 import { AlertDashbordId } from "src/data/dashboard"
+import { config } from "src/data/configs/config"
 
 
 interface Props {
     sideWidth: number
 }
 // page for dispaly dashboard
-const DashboardPage = memo(({sideWidth}: Props) => {
+const DashboardPage = memo(({ sideWidth }: Props) => {
     const t1 = useStore(dashboardMsg)
     const location = useLocation()
     const [dashboardId, setDashboardId] = useState<string>(null)
@@ -36,7 +36,7 @@ const DashboardPage = memo(({sideWidth}: Props) => {
             setError(null)
             if (location.pathname == '/alert') {
                 setDashboardId(AlertDashbordId)
-            } else  {   
+            } else {
                 setDashboardId(null)
                 let path = location.pathname;
                 // if rawId  starts with 'd-', then it's a dashboard id
@@ -47,32 +47,30 @@ const DashboardPage = memo(({sideWidth}: Props) => {
                     load(path)
                 }
             }
-           
+
         }
     }, [location.pathname])
 
-    const load = async path => {
-        const res = await requestApi.get(`/team/sidemenu/current`)
+    const load = path => {
         let menuitem;
-        if (res.data) {
-            for (const item of res.data.data) {
-                if (item.url == path) {
-                    menuitem = item
-                } else {
-                    if (item.children) {
-                        for (const child of item.children) {
-                            if (child.url == path) {
-                                menuitem = child
-                                break
-                            }
+        for (const item of config.sidemenu) {
+            if (item.url == path) {
+                menuitem = item
+            } else {
+                if (item.children) {
+                    for (const child of item.children) {
+                        if (child.url == path) {
+                            menuitem = child
+                            break
                         }
                     }
                 }
-    
-                if (menuitem) break
             }
+
+            if (menuitem) break
         }
-        
+
+
 
         if (!menuitem) {
             setError(t1.notFound)
