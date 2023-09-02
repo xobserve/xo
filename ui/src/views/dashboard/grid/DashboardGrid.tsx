@@ -178,7 +178,6 @@ const DashboardGrid = memo((props: GridProps) => {
                     gridWidth = width;
                 }
 
-                console.log("here3333333:",width,gridWidth)
                 // we need a finalWidth key to force refreshing the grid layout
                 // it solves the issues when resizing browser window
                 return <>{

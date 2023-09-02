@@ -10,10 +10,14 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 
+import { SideMenu } from "types/teams";
+
 
 
 // limitations under the License.
-export let config:UIConfig = {};
+export let config:UIConfig = {
+    sidemenu: []
+};
 
 export interface UIConfig {
     appName?: string 
@@ -28,4 +32,5 @@ export interface UIConfig {
     githubOAuthToken?: string
     githubCallBackUrl?: string
     enableGithubLogin?: boolean
+    sidemenu?: SideMenu[]
 }

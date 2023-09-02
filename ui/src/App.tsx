@@ -24,7 +24,7 @@ import { requestApi } from 'utils/axios/request'
 import { config, UIConfig } from 'src/data/configs/config'
 import { Datasource } from 'types/datasource'
 import { Variable } from 'types/variable'
-import {  setVariableSelected } from './views/variables/SelectVariable'
+import { setVariableSelected } from './views/variables/SelectVariable'
 import AntdWrapper from 'components/AntdWrapper'
 import { routes } from './routes';
 import { initColors } from 'utils/colors';
@@ -49,7 +49,6 @@ const AppView = () => {
 
   useEffect(() => {
     loadConfig()
-    loadVariables()
     // we add background color in index.html to make loading screen shows the same color as the app pages
     // but we need to remove it after the App is loaded, otherwise the bg color in index.html will override the bg color in App ,
     // especilally when we changed the color mode, but the bg color will never change
@@ -70,28 +69,16 @@ const AppView = () => {
     const res0 = await requestApi.get("/datasource/all")
     datasources = res0.data
     const res = await requestApi.get("/config/ui")
-    setConfig(res.data)
-    Object.assign(config, res.data)
+    const cfg = res.data.config
+    cfg.sidemenu = cfg.sidemenu.data.filter((item) => !item.hidden)
+    setConfig(cfg)
+    Object.assign(config, cfg)
+    const vars = res.data.vars
+    setVariableSelected(vars)
+    gvariables = vars
+    $variables.set(vars)
   }
 
-  const loadVariables = async () => {
-    const res = await requestApi.get(`/variable/all`)
-    // for (const v of res.data) {
-    //   v.values = []
-    //   // get the selected value for each variable from localStorage
-    // }
-    setVariableSelected(res.data)
-
-    // for (const v of res.data) {
-    //   if (v.selected == VarialbeAllOption) {
-    //     const res1 = await queryVariableValues(v)
-    //     v.values = res1.data ?? []
-    //   }
-    //   // get the selected value for each variable from localStorage
-    // }
-    gvariables = res.data
-    $variables.set(res.data)
-  }
 
   const router = createBrowserRouter(routes);
 

@@ -13,10 +13,15 @@
 package internal
 
 import (
+	"database/sql"
 	"net/http"
 
+	"github.com/DataObserve/datav/backend/internal/user"
+	"github.com/DataObserve/datav/backend/internal/variables"
 	"github.com/DataObserve/datav/backend/pkg/common"
 	"github.com/DataObserve/datav/backend/pkg/config"
+	"github.com/DataObserve/datav/backend/pkg/e"
+	"github.com/DataObserve/datav/backend/pkg/models"
 	"github.com/gin-gonic/gin"
 )
 
@@ -29,6 +34,8 @@ type UIConfig struct {
 	EnableGithubLogin bool   `json:"enableGithubLogin"`
 	GithubOAuthToken  string `json:"githubOAuthToken"`
 	GithubCallBackUrl string `json:"githubCallBackUrl"`
+
+	Sidemenu *models.SideMenu `json:"sidemenu"`
 }
 
 type Panel struct {
@@ -59,5 +66,34 @@ func getUIConfig(c *gin.Context) {
 		GithubCallBackUrl: config.Data.User.GithubCallBackUrl,
 	}
 
-	c.JSON(http.StatusOK, common.RespSuccess(cfg))
+	// query sidemenu
+	u := user.CurrentUser(c)
+	var sidemenuId int64
+	if u != nil {
+		sidemenuId = u.SideMenu
+	} else {
+		sidemenuId = models.GlobalTeamId
+	}
+	menu, err := models.QuerySideMenu(sidemenuId, 0)
+	if err != nil {
+		if err != sql.ErrNoRows {
+			logger.Warn("query sidemenu error", "error", err)
+			c.JSON(http.StatusInternalServerError, common.RespError(err.Error()))
+			return
+		}
+	}
+
+	cfg.Sidemenu = menu
+
+	vars, err := variables.GetVariables()
+	if err != nil {
+		logger.Warn("query variables error", "error", err)
+		c.JSON(500, common.RespError(e.Internal))
+		return
+	}
+
+	c.JSON(http.StatusOK, common.RespSuccess(map[string]interface{}{
+		"config": cfg,
+		"vars":   vars,
+	}))
 }

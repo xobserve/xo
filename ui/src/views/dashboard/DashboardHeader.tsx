@@ -10,10 +10,10 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-import { Box, Flex, HStack, Select, SimpleGrid, Tooltip, Wrap, useMediaQuery } from "@chakra-ui/react"
+import { Box, Flex, HStack, Select, Tooltip, useMediaQuery } from "@chakra-ui/react"
 import IconButton from "components/button/IconButton"
 import SelectVariables from "src/views/variables/SelectVariable"
-import { cloneDeep, find, isEmpty } from "lodash"
+import { find, isEmpty } from "lodash"
 import React from "react";
 import { memo, useEffect, useRef, useState } from "react"
 import { MdSync } from "react-icons/md"
@@ -21,8 +21,7 @@ import { TimeRefreshEvent } from "src/data/bus-events"
 import ReserveUrls from "src/data/reserve-urls"
 import { Dashboard } from "types/dashboard"
 import { Team } from "types/teams"
-import useBus, { dispatch } from "use-bus"
-import { requestApi } from "utils/axios/request"
+import  { dispatch } from "use-bus"
 import AddPanel from "./AddPanel"
 import DashboardSave from "./DashboardSave"
 import DashboardSettings from "./settings/DashboardSettings"

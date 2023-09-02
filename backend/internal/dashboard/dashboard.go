@@ -135,7 +135,6 @@ func SaveDashboard(c *gin.Context) {
 
 func GetDashboard(c *gin.Context) {
 	id := c.Param("id")
-
 	dash, err := models.QueryDashboard(id)
 	if err != nil {
 		if err == sql.ErrNoRows {

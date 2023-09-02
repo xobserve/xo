@@ -28,16 +28,14 @@ import {
   Portal,
 } from "@chakra-ui/react"
 import Logo from "components/Logo"
-import React, { useEffect, useMemo, useState } from "react"
+import React, {  useMemo, useState } from "react"
 import { measureText } from "utils/measureText"
 import * as Icons from "react-icons/fa"
 import { concat } from "lodash"
-import { requestApi } from "utils/axios/request"
 import { useStore } from "@nanostores/react"
 import { commonMsg, sidebarMsg } from "src/i18n/locales/en"
 import useSession from "hooks/use-session"
 import useFullscreen from "hooks/useFullscreen"
-import { Route } from "types/route"
 import { Link, useLocation } from "react-router-dom"
 import storage from "utils/localStorage"
 import { SidemenuMinimodeKey } from "src/data/storage-keys"
@@ -46,13 +44,12 @@ import UserMenu from "components/user/UserMenu"
 import { config } from "src/data/configs/config"
 import { isEmpty } from "utils/validate"
 import Search from "src/views/search/Search"
-import { Session } from "types/user"
 import PopoverTooltip from "components/PopoverTooltip"
 import { HomeDashboardId } from "src/data/dashboard"
 
 import { useNavigate } from "react-router-dom"
 import { MobileBreakpoint } from "src/data/constants"
-import { AddIcon, HamburgerIcon } from "@chakra-ui/icons"
+import { HamburgerIcon } from "@chakra-ui/icons"
 import CustomScrollbar from "components/CustomScrollbar/CustomScrollbar"
 export let gnavigate
 
@@ -62,41 +59,17 @@ const maxNavSize = 200
 interface Props {
   children: any
   sidemenu: any[]
-  session: Session
 }
 
 const PageContainer = (props) => {
-  const toast = useToast()
   gnavigate = useNavigate()
-  const { session } = useSession()
-  const [sidemenu, setSidemenu] = useState<Route[]>(null)
-  useEffect(() => {
-    if (session) {
-      loadSidemenu()
-    } else {
-      setSidemenu([])
-    }
-
-  }, [session])
-
-  const loadSidemenu = async () => {
-    const res = await requestApi.get(`/team/sidemenu/${session.user.sidemenu}`)
-    if (!res?.data) {
-      toast({
-        title: "Failed to load current team's sidemenu, try to select another team's sidemenu",
-        status: "error",
-        duration: 5000,
-      })
-      return
-    }
-    setSidemenu(res.data.data.filter((item) => !item.hidden))
-  }
-
-  return (sidemenu && <Container {...props} sidemenu={sidemenu} session={session} />)
+  const sidemenu = config.sidemenu
+  return (<Container {...props} sidemenu={sidemenu} />)
 }
 
 export default PageContainer
-const Container = ({ children, sidemenu, session }: Props) => {
+const Container = ({ children, sidemenu }: Props) => {
+  const { session } = useSession()
   const { pathname: asPath } = useLocation()
   const t = useStore(commonMsg)
   const t1 = useStore(sidebarMsg)

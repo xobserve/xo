@@ -59,7 +59,6 @@ const DashboardWrapper = ({ dashboardId, sideWidth }) => {
     const vars = useStore($variables)
     const [dashboard, setDashboard] = useImmer<Dashboard>(null)
     const { setColorMode, colorMode, toggleColorMode } = useColorMode()
-    const toast = useToast()
     // const [gVariables, setGVariables] = useState<Variable[]>([])
     const [team, setTeam] = useState<Team>(null)
     const fullscreen = useFullscreen()
