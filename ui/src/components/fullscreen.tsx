@@ -48,7 +48,7 @@ const Fullscreen = () => {
     }
 
     return (
-        <Tooltip label={t1.fullscreenTips}><Box onClick={() =>onFullscreenChange(false)} cursor="pointer"><FaTv /></Box></Tooltip>
+        <Box onClick={() =>onFullscreenChange(false)} cursor="pointer" title={t1.fullscreenTips}><FaTv /></Box>
     )
 }
 
