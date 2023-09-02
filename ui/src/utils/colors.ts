@@ -18,6 +18,7 @@ import chunk from 'lodash/chunk';
 import zip from 'lodash/zip';
 import tinycolor from 'tinycolor2';
 import { isEmpty } from 'lodash';
+import { initPanelStyles } from 'src/data/panel/initStyles';
 
 export const PALETTE_ROWS = 4;
 export const PALETTE_COLUMNS = 14;
@@ -402,9 +403,9 @@ export const colors = [];
 // classic palettes
 export const palettes = []
 // echarts light
-export const colors1 = ['#37A2DA', '#32C5E9', '#67E0E3', '#9FE6B8', '#FFDB5C', '#ff9f7f', '#fb7293', '#E062AE', '#E690D1', '#e7bcf3', '#9d96f5', '#8378EA', '#96BFFF']
+export const colors1 = ['#9FE6B8', '#37A2DA', '#32C5E9', '#67E0E3',  '#FFDB5C', '#ff9f7f', '#fb7293', '#E062AE', '#E690D1', '#e7bcf3', '#9d96f5', '#8378EA', '#96BFFF']
 // echarts dark
-export const colors2 = ['#4992ff', '#7cffb2', '#fddd60', '#ff6e76', '#58d9f9', '#05c091', '#ff8a45', '#8d48e3', '#dd79ff']
+export const colors2 = ['#7cffb2', '#4992ff',  '#fddd60', '#ff6e76', '#58d9f9', '#05c091', '#ff8a45', '#8d48e3', '#dd79ff']
 // jaeger colors
 export const colors3 = ['#17B8BE','#F8DCA1','#B7885E','#FFCB99','#F89570','#829AE3','#E79FD5','#1E96BE','#89DAC1','#B3AD9E','#12939A','#DDB27C','#88572C','#FF9833','#EF5D28','#162A65','#DA70BF','#125C77','#4DC19C','#776E57',];
 
@@ -526,3 +527,9 @@ export function getGradientBackgroundColor(color: string, themeIsDark: boolean) 
         
     return `linear-gradient(120deg, ${bgColor2}, ${bgColor3})`
 }
+
+export function getDefaultPanelColor() {
+    const defaultPalette = initPanelStyles.palette
+    const palette = paletteMap[defaultPalette]
+    return paletteColorNameToHex(palette[0])
+};

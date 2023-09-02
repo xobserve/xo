@@ -11,13 +11,13 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { Box, Button, Divider, Flex, HStack, Input, Text, VStack, useColorMode } from "@chakra-ui/react"
+import { Box, Button, Divider, Flex, HStack, Text, VStack, useColorMode } from "@chakra-ui/react"
 import RadionButtons from "components/RadioButtons"
-import { EditorInputItem, EditorNumberItem, EditorSliderItem } from "components/editor/EditorItem"
-import React, { memo, useEffect, useMemo, useState } from "react"
+import { EditorInputItem,  EditorSliderItem } from "components/editor/EditorItem"
+import React, { memo, useState } from "react"
 import { AiOutlineDoubleRight } from "react-icons/ai"
 import { Panel } from "types/dashboard"
-import { LogChartView, LogLabel, LogSeries } from "types/plugins/log"
+import { LogChartView, LogLabel } from "types/plugins/log"
 import { paletteColorNameToHex } from "utils/colors"
 import { getLabelNameColor } from "../utils"
 
@@ -34,17 +34,18 @@ interface Props {
     currentLogsCount: number
     onViewLogChange: any
     viewOptions: LogChartView
+    colorGenerator: any
 }
 
 
 const LogToolbar = memo((props: Props) => {
-    const { active, labels, panel, onCollapseAll, onSearchChange, height, onActiveLabel, activeOp, onActiveOpChange, currentLogsCount,viewOptions,onViewLogChange } = props
+    const { active, labels, panel, onCollapseAll, onSearchChange, height, onActiveLabel, activeOp, onActiveOpChange, currentLogsCount,viewOptions,onViewLogChange,colorGenerator } = props
     const [search, setSearch] = useState<string>("")
     const {colorMode} = useColorMode()
     const options = panel.plugins.log
 
     const labelNameColor = id => {
-        return options.styles.labelColorSyncChart ? getLabelNameColor(id, colorMode) : paletteColorNameToHex(options.styles.labelValueColor)
+        return options.styles.labelColorSyncChart ? getLabelNameColor(id, colorMode,colorGenerator) : paletteColorNameToHex(options.styles.labelValueColor)
     }
     return (<Box>
         <Flex justifyContent="space-between" py="2"  pl="1" pr="5" fontSize="0.85rem" mt="-3px">

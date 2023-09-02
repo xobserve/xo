@@ -12,12 +12,12 @@
 // limitations under the License.
 import { PanelType } from "types/dashboard";
 import { LayoutOrientation } from "types/layout";
-import { PanelPlugins, PieLegendPlacement, ThresholdDisplay, Units, UnitsType } from "types/panel/plugins";
+import { PanelPlugins, PieLegendPlacement, ThresholdDisplay, Units } from "types/panel/plugins";
 import { BarThresholdArrow } from "types/plugins/bar";
 import { ArcGisMapServer, BaseLayerType, DataLayerType } from "types/plugins/geoMap";
 import { ThresholdsConfig, ThresholdsMode } from "types/threshold";
 import { ValueCalculationType } from "types/value";
-import { palettes } from "utils/colors";
+import { getDefaultPanelColor, palettes } from "utils/colors";
 
 
 export const onClickCommonEvent = `
@@ -39,17 +39,19 @@ export const getInitUnits = (): Units => {
 }
 
 const initThresholds = (colorIndex?): ThresholdsConfig => {
+    const defaultColor = getDefaultPanelColor()
     return {
         mode: ThresholdsMode.Absolute,
         thresholds: [{
             value: null,
-            color: palettes[colorIndex ?? 0]
+            color: defaultColor
         }]
     }
 }
 
 //@needs-update-when-add-new-panel
 export const initPanelPlugins = (): PanelPlugins => {
+    const defaultColor = getDefaultPanelColor()
     return {
         [PanelType.Graph]: {
             tooltip: {
@@ -111,7 +113,7 @@ export const initPanelPlugins = (): PanelPlugins => {
             stickyHeader: false,
             tableWidth: 100,
             column: {
-                colorTitle: palettes[0],
+                colorTitle: defaultColor,
                 align: "left",
                 enableSort: false,
                 enableFilter: false
@@ -141,7 +143,7 @@ export const initPanelPlugins = (): PanelPlugins => {
                     { attr: 'success', color: palettes[0] },
                     { attr: 'error', color: palettes[9] }
                 ],
-                borderColor: palettes[0],
+                borderColor: defaultColor,
                 tooltipTrigger: 'mouseenter',
                 menu: [],
                 enableHighlight: false,
@@ -459,7 +461,7 @@ function onClick(data, map, navigate, setVariable, setDateTime, $variables) {
             },
             enableClick: true,
             onClickEvent: onClickCommonEvent,
-            thresholds: initThresholds(12),
+            thresholds: initThresholds(0),
             thresholdsDisplay: ThresholdDisplay.None,
             thresholdArrow: BarThresholdArrow.None,
         },

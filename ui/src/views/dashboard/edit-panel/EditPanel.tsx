@@ -11,7 +11,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { Box, Button, Flex, HStack,  Modal, ModalBody, ModalContent, ModalHeader, ModalOverlay,  Tab, TabIndicator, TabList, TabPanel, TabPanels, Tabs, Text, useDisclosure } from "@chakra-ui/react"
+import { Box, Button, Flex, HStack,  Modal, ModalBody, ModalContent, ModalHeader, ModalOverlay,  Tab, TabIndicator, TabList, TabPanel, TabPanels, Tabs, Text, useDisclosure, useMediaQuery } from "@chakra-ui/react"
 import { ColorModeSwitcher } from "components/ColorModeSwitcher"
 import { memo, useCallback, useEffect, useState } from "react"
 import { Dashboard, Panel, PanelType } from "types/dashboard"
@@ -41,6 +41,8 @@ import PanelAccordion from "./Accordion"
 import storage from "utils/localStorage"
 import EditPanelAlert from "./Alert"
 import { useLocation, useSearchParam } from "react-use"
+import { useLandscapeMode } from "hooks/useLandscapeMode"
+import { MobileBreakpoint } from "src/data/constants"
 
 interface EditPanelProps {
     dashboard: Dashboard
@@ -70,9 +72,7 @@ const EditPanel = memo(({ dashboard, onChange, edit }: EditPanelProps) => {
     const [pageChanged, setPageChanged] = useState(false)
     const [data, setData] = useState(null)
 
-    useEffect(() => {
-
-    },[])
+    useLandscapeMode()
     useLeavePageConfirm(dashboard.data.enableUnsavePrompt ? pageChanged : false)
 
 
@@ -221,6 +221,8 @@ const EditPanel = memo(({ dashboard, onChange, edit }: EditPanelProps) => {
         default:
             break;
     }
+
+    const [isLargeScreen] = useMediaQuery(MobileBreakpoint)
     return (<>
         <Modal isOpen={isOpen} onClose={onEditClose} autoFocus={false} size="full">
             <ModalOverlay />
@@ -229,16 +231,16 @@ const EditPanel = memo(({ dashboard, onChange, edit }: EditPanelProps) => {
                     {/* editor header section */}
                     <ModalHeader>
                         <Flex justifyContent="space-between">
-                            <Text>{dashboard.title} / {t1.editPanel}</Text>
+                            {isLargeScreen ? <Text>{dashboard.title} / {t1.editPanel}</Text> : <Text>{t1.editPanel}</Text>}
                             <HStack spacing={1}>
                                 <DatePicker showTime showRealTime />
                                 <ColorModeSwitcher miniMode disableTrigger />
-                                <Button variant="outline" onClick={() => { onDiscard(), onClose() }} >{t1.discard}</Button>
-                                <Button onClick={onApplyChanges}>{t1.apply}</Button>
+                                <Button size={isLargeScreen ? "md" : "sm"} variant="outline" onClick={() => { onDiscard(), onClose() }} >{t1.discard}</Button>
+                                <Button size={isLargeScreen ? "md" : "sm"} onClick={onApplyChanges}>{t1.apply}</Button>
                             </HStack>
                         </Flex>
                     </ModalHeader>
-                    <ModalBody>
+                    <ModalBody pt={isLargeScreen ? null : 0}>
                         <HStack height="calc(100vh - 100px)" alignItems="top">
                             <Box width="65%" height={`calc(100%)`}>
                                 {/* panel rendering section */}
@@ -295,7 +297,7 @@ const EditPanel = memo(({ dashboard, onChange, edit }: EditPanelProps) => {
                                         <TabList pb="0">
                                             <Tab>{t.panel}</Tab>
                                             <Tab>{t.styles}</Tab>
-                                            {panelOverridesRules.length > 0 && <Tab>{t1.overrides}  {tempPanel.overrides.length > 0 && <Text textStyle="annotation">&nbsp; ({tempPanel.overrides.length}/{tempPanel.overrides.reduce((t, v) => t + v.overrides.length, 0)})</Text>}</Tab>}
+                                            {panelOverridesRules.length > 0 && <Tab>{t1.overrides}  {(tempPanel.overrides.length > 0 && isLargeScreen) && <Text textStyle="annotation">&nbsp; ({tempPanel.overrides.length}/{tempPanel.overrides.reduce((t, v) => t + v.overrides.length, 0)})</Text>}</Tab>}
                                         </TabList>
                                         <TabIndicator
                                             mt="3px"

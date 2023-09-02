@@ -24,6 +24,8 @@ import { cloneDeep, remove, sortBy } from "lodash";
 import LogChart from "./components/Chart";
 import { isEmpty } from "utils/validate";
 import CustomScrollbar from "components/CustomScrollbar/CustomScrollbar";
+import { paletteMap } from "utils/colors";
+import { ColorGenerator } from "utils/colorGenerator";
 
 
 
@@ -72,6 +74,11 @@ const LogPanel = (props: LogPanelProps) => {
         barType: "labels"
     })
     const data: LogSeries[] = props.data.flat()
+
+    const generator = useMemo(() => {
+        const palette = paletteMap[panel.styles.palette]
+        return new ColorGenerator(palette)
+    }, [panel.styles.palette])
 
     const labels = useMemo(() => {
         const result: LogLabel[] = []
@@ -238,11 +245,11 @@ const LogPanel = (props: LogPanelProps) => {
 
             <Box height={props.height} maxHeight={props.height} width={props.width - (toolbarOpen ? panel.plugins.log.toolbar.width : 1)} transition="all 0.3s" py="2">
                 {panel.plugins.log.chart.show && <Box className="log-panel-chart" height={panel.plugins.log.chart.height}>
-                    <LogChart data={sortedData} panel={panel} width={props.width - (toolbarOpen ? panel.plugins.log.toolbar.width : 1)} viewOptions={viewOptions} onSelectLabel={onSelectLabel} activeLabels={active} />
+                    <LogChart data={sortedData} panel={panel} width={props.width - (toolbarOpen ? panel.plugins.log.toolbar.width : 1)} viewOptions={viewOptions} onSelectLabel={onSelectLabel} activeLabels={active} colorGenerator={generator}/>
                 </Box>}
                 <VStack  alignItems="left" divider={panel.plugins.log.styles.showlineBorder && <StackDivider />} mt="1">
                     {
-                        sortedData.map(log => <LogItem log={log} panel={panel} collapsed={collaseAll} width={props.width}/>)
+                        sortedData.map(log => <LogItem log={log} panel={panel} collapsed={collaseAll} width={props.width} colorGenerator={generator}/>)
                     }
                 </VStack>
             </Box>
@@ -250,7 +257,7 @@ const LogPanel = (props: LogPanelProps) => {
 
             {<Box className="bordered-left" height={props.height} maxHeight={props.height}  width={toolbarOpen ? panel.plugins.log.toolbar.width : 0} transition="all 0.3s">
                 <CustomScrollbar>
-                {toolbarOpen && <LogToolbar active={active} labels={labels} panel={panel} onCollapseAll={onCollapseAll} onSearchChange={onSearchChange} height={props.height} onActiveLabel={onActiveLabel} activeOp={activeOp} onActiveOpChange={onActiveOpChange} currentLogsCount={filterData.length} onViewLogChange={onViewOptionsChange} viewOptions={viewOptions} />}
+                {toolbarOpen && <LogToolbar active={active} labels={labels} panel={panel} onCollapseAll={onCollapseAll} onSearchChange={onSearchChange} height={props.height} onActiveLabel={onActiveLabel} activeOp={activeOp} onActiveOpChange={onActiveOpChange} currentLogsCount={filterData.length} onViewLogChange={onViewOptionsChange} viewOptions={viewOptions} colorGenerator={generator}/>}
                 </CustomScrollbar>
             </Box>}
         </Flex>

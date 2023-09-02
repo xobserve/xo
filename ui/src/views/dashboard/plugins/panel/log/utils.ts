@@ -27,8 +27,8 @@ export const getLabelFromId = id => {
 const logColorGenerator = new ColorGenerator(concat(
     // COLORS_HEX,
     barPalettes))
-export const getLabelNameColor = (id,theme) => {
-    return  paletteColorNameToHex(logColorGenerator.getColorByKey(id),theme)
+export const getLabelNameColor = (id,theme, generator?) => {
+    return  paletteColorNameToHex((generator??logColorGenerator).getColorByKey(id),theme)
 }
 
 export const isLogSeriesData = (data: any): boolean => {

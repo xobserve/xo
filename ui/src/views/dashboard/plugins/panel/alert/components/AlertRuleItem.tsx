@@ -27,7 +27,6 @@ import { getLabelNameColor } from "../../log/utils"
 import { FaCheck } from "react-icons/fa"
 import { jsonToEqualPairs } from "utils/format"
 import { commonInteractionEvent, genDynamicFunction } from "utils/dashboard/dynamicCall"
-import { useNavigate } from "react-router-dom"
 import { isEmpty } from "utils/validate"
 
 
@@ -37,12 +36,12 @@ interface Props {
     collapsed: boolean
     onSelectLabel: any
     width: number
+    colorGenerator: any
 }
 
 const AlertRuleItem = memo((props: Props) => {
-    const { rule, panel, onSelectLabel, width } = props
+    const { rule, panel, onSelectLabel, width,colorGenerator } = props
     const toast = useToast()
-    const navigate = useNavigate()
     const [collapsed, setCollapsed] = useState(true)
     const { colorMode } = useColorMode()
     useEffect(() => {
@@ -176,7 +175,7 @@ const AlertRuleItem = memo((props: Props) => {
                                 <Tbody>
                                     {
                                         rule.alerts.map((alert) => {
-                                            const color = getLabelNameColor(alert.name, colorMode)
+                                            const color = getLabelNameColor(alert.name, colorMode,colorGenerator)
                                             return <Tr>
                                                 <Td>
                                                     <HStack>
@@ -244,7 +243,7 @@ const AlertRuleItem = memo((props: Props) => {
                         <VStack alignItems="left" divider={<StackDivider />}>
                             {
                                 rule.alerts.map((alert) => {
-                                    const color = getLabelNameColor(alert.name, colorMode)
+                                    const color = getLabelNameColor(alert.name, colorMode, colorGenerator)
                                     return <Box fontSize="0.75rem">
                                         <Text size="sm" onClick={() => onSelectLabel(alert.name)} cursor="pointer" fontWeight={500}>{jsonToEqualPairs(alert.labels)}</Text>
                                         <HStack mt="2">

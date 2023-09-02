@@ -10,7 +10,7 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-import { Box, HStack, Input, VStack, useToast } from "@chakra-ui/react"
+import { Box, HStack, Input, VStack, useMediaQuery, useToast } from "@chakra-ui/react"
 import { cloneDeep } from "lodash"
 import { useEffect, useState } from "react"
 import { PanelQuery } from "types/dashboard"
@@ -26,20 +26,21 @@ import { prometheusDsMsg } from "src/i18n/locales/en";
 import { useStore } from "@nanostores/react";
 import CodeEditor, { LogqlLang } from "components/CodeEditor/CodeEditor";
 import RadionButtons from "components/RadioButtons";
+import { MobileBreakpoint } from "src/data/constants";
 
 
 
 const PrometheusQueryEditor = ({ datasource, query, onChange }: DatasourceEditorProps) => {
     const t1 = useStore(prometheusDsMsg)
     const [tempQuery, setTempQuery] = useState<PanelQuery>(cloneDeep(query))
-
+    const [isLargeScreen] = useMediaQuery(MobileBreakpoint)
     return (
         <Form spacing={1}>
-            <FormItem  size="sm" title={<PromMetricSelect enableInput={false} width="300px" dsId={datasource.id} value={tempQuery.metrics} onChange={v => {
+            <FormItem size="sm" title={<PromMetricSelect enableInput={false} width={isLargeScreen ? "300px" : "100px"} dsId={datasource.id} value={tempQuery.metrics} onChange={v => {
                 setTempQuery({ ...tempQuery, metrics: v })
                 onChange({ ...tempQuery, metrics: v })
             }} />} >
-                 <Box width="100%">
+                <Box width="100%">
                     <CodeEditor
                         language={LogqlLang}
                         value={tempQuery.metrics}
@@ -51,7 +52,7 @@ const PrometheusQueryEditor = ({ datasource, query, onChange }: DatasourceEditor
                         }}
                         height="70px"
                         isSingleLine
-                       placeholder={t1.enterPromQL}
+                        placeholder={t1.enterPromQL}
                     />
                 </Box>
                 {/* <Input
@@ -66,27 +67,21 @@ const PrometheusQueryEditor = ({ datasource, query, onChange }: DatasourceEditor
                 /> */}
             </FormItem>
             <HStack>
-            <FormItem labelWidth="150px"  size="sm"  title="Legend">
-                <Input
-                    value={tempQuery.legend}
-                    onChange={(e) => {
-                        setTempQuery({ ...tempQuery, legend: e.currentTarget.value })
-                    }}
-                    onBlur={() => onChange(tempQuery)}
-                    width="150px"
-                    placeholder={t1.legendFormat}
-                    size="sm"
-                />
-            </FormItem>
-            <FormItem labelWidth="150px" size="sm" title={t1.expandTimeline} desc={t1.expandTimelineDesc}>
-                     <RadionButtons size="sm" options={[{ label: "Auto", value: "auto" }, { label: "Always", value: 'always' }, { label: "None", value: 'none' }]} value={tempQuery.data['expandTimeline']}         onChange={(v) => {
-                            tempQuery.data['expandTimeline'] = v 
-                            const q = { ...tempQuery, data:  cloneDeep(tempQuery.data)}
-                            setTempQuery(q)
-                            onChange(q)
-                        }} />
+                <FormItem labelWidth={"150px"} size="sm" title="Legend">
+                    <Input
+                        value={tempQuery.legend}
+                        onChange={(e) => {
+                            setTempQuery({ ...tempQuery, legend: e.currentTarget.value })
+                        }}
+                        onBlur={() => onChange(tempQuery)}
+                        width="150px"
+                        placeholder={t1.legendFormat}
+                        size="sm"
+                    />
                 </FormItem>
-                </HStack>
+                {isLargeScreen && <ExpandTimeline t1={t1} tempQuery={tempQuery} setTempQuery={setTempQuery} onChange={onChange}/>}
+            </HStack>
+            {!isLargeScreen && <ExpandTimeline t1={t1} tempQuery={tempQuery} setTempQuery={setTempQuery} onChange={onChange}/>}
         </Form>
     )
 }
@@ -94,6 +89,16 @@ const PrometheusQueryEditor = ({ datasource, query, onChange }: DatasourceEditor
 export default PrometheusQueryEditor
 
 
+const ExpandTimeline = ({t1, tempQuery,setTempQuery,onChange}) => {
+    return <FormItem labelWidth="150px" size="sm" title={t1.expandTimeline} desc={t1.expandTimelineDesc}>
+    <RadionButtons size="sm" options={[{ label: "Auto", value: "auto" }, { label: "Always", value: 'always' }, { label: "None", value: 'none' }]} value={tempQuery.data['expandTimeline']} onChange={(v) => {
+        tempQuery.data['expandTimeline'] = v
+        const q = { ...tempQuery, data: cloneDeep(tempQuery.data) }
+        setTempQuery(q)
+        onChange(q)
+    }} />
+</FormItem>
+}
 interface MetricSelectProps {
     dsId: number
     value: string
@@ -104,7 +109,7 @@ interface MetricSelectProps {
     enableInput?: boolean
 }
 
-export const PromMetricSelect = ({ dsId, value, onChange, width = "200px", variant = "unstyled", useCurrentTimerange = true,enableInput=true }: MetricSelectProps) => {
+export const PromMetricSelect = ({ dsId, value, onChange, width = "200px", variant = "unstyled", useCurrentTimerange = true, enableInput = true }: MetricSelectProps) => {
     const t1 = useStore(prometheusDsMsg)
     const toast = useToast()
     const [metricsList, setMetricsList] = useState<string[]>([])
@@ -128,12 +133,12 @@ export const PromMetricSelect = ({ dsId, value, onChange, width = "200px", varia
             })
             return
         }
-        setMetricsList(res.data??[])
+        setMetricsList(res.data ?? [])
     }
 
     return (
         <Box onClick={loadMetrics}>
-            <InputSelect width={width}  isClearable value={value} placeholder={t1.selecMetrics} variant={variant} size="md" options={metricsList.map((m) => { return { label: m, value: m } })} onChange={v => onChange(v) }  enableInput={enableInput}
+            <InputSelect width={width} isClearable value={value} placeholder={t1.selecMetrics} variant={variant} size="md" options={metricsList.map((m) => { return { label: m, value: m } })} onChange={v => onChange(v)} enableInput={enableInput}
             />
         </Box>
 

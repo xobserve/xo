@@ -13,8 +13,9 @@
 
 import { Button } from "@chakra-ui/button"
 import { useDisclosure } from "@chakra-ui/hooks"
-import { Box, Flex, HStack, StackDivider, Text, VStack } from "@chakra-ui/layout"
+import { Box, Flex, HStack, StackDivider, Text, VStack, Wrap } from "@chakra-ui/layout"
 import { Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay } from "@chakra-ui/modal"
+import { useMediaQuery } from "@chakra-ui/react"
 
 import { useStore } from "@nanostores/react"
 import { Select } from "antd"
@@ -23,6 +24,7 @@ import { EditorInputItem, EditorNumberItem } from "components/editor/EditorItem"
 import { cloneDeep } from "lodash"
 import React, { memo, useState } from "react"
 import { FaChevronDown, FaChevronUp, FaPlus, FaRegCopy, FaTimes } from "react-icons/fa"
+import { MobileBreakpoint } from "src/data/constants"
 import { ValueMappingMsg, commonMsg } from "src/i18n/locales/en"
 import { ValueMappingItem } from "types/dashboard"
 import { paletteColorNameToHex } from "utils/colors"
@@ -86,6 +88,7 @@ const ValueMapping = memo((props: Props) => {
         setValue(cloneDeep(value))
     }
 
+    const [isLargeScreen] = useMediaQuery(MobileBreakpoint)
     return (<>
         <VStack alignItems="left">
             {
@@ -105,7 +108,7 @@ const ValueMapping = memo((props: Props) => {
         <Button size="sm" colorScheme="gray" onClick={onOpen}>{t.editItem({ name: t.valueMapping })}</Button>
         <Modal isOpen={isOpen} onClose={onClose}>
             <ModalOverlay />
-            <ModalContent minWidth="950px">
+            <ModalContent maxWidth={isLargeScreen ? "950px" : "100%"}>
                 <ModalHeader>{t.valueMapping}</ModalHeader>
                 <ModalCloseButton />
                 <ModalBody>
@@ -114,7 +117,7 @@ const ValueMapping = memo((props: Props) => {
                             value.map((v, i) => {
                                 const typeOption = typeOptions.find(t => t.value === v.type)
                                 return (
-                                    <HStack key={i + v.type + v.value} divider={<StackDivider />} spacing={3}>
+                                    <Wrap key={i + v.type + v.value} spacing={3}>
                                         <Select
                                             style={{ minWidth: '120px' }}
                                             placeholder="mapping type"
@@ -183,7 +186,7 @@ const ValueMapping = memo((props: Props) => {
                                             {i != 0 && <FaChevronUp cursor="pointer" className="hover-text" onClick={() => moveUp(i)} />}
                                             {i != value.length - 1 && <FaChevronDown cursor="pointer" className="hover-text" onClick={() => moveDown(i)} />}
                                         </HStack>
-                                    </HStack>)
+                                    </Wrap>)
                             })
 
                         }

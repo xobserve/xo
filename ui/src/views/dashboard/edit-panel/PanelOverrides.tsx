@@ -10,19 +10,19 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-import { Box, Button, HStack, StackDivider, Select as ChakraSelect, Tooltip, VStack } from "@chakra-ui/react";
+import { Box, Button, HStack, StackDivider, Select as ChakraSelect, Tooltip, VStack, useMediaQuery } from "@chakra-ui/react";
 import { Form, FormSection } from "components/form/Form";
 import FormItem from "components/form/Item";
 import { flatten, isArray } from "lodash";
 import { useMemo } from "react";
 import { FaTimes } from "react-icons/fa";
 import { Panel, PanelEditorProps, PanelType } from "types/dashboard";
-import GraphOverridesEditor, { GraphRules } from "../plugins/panel/graph/OverridesEditor";
+import GraphOverridesEditor from "../plugins/panel/graph/OverridesEditor";
 import React from "react";
 import { useStore } from "@nanostores/react";
 import { panelMsg } from "src/i18n/locales/en";
 import TableOverridesEditor from "../plugins/panel/table/OverridesEditor";
-import BarGaugeOverridesEditor, { BarGaugeRules } from "../plugins/panel/barGauge/OverrideEditor";
+import BarGaugeOverridesEditor from "../plugins/panel/barGauge/OverrideEditor";
 import { getPanelOverridesRules } from "utils/dashboard/panel";
 import { SeriesData } from "types/seriesData";
 import StatOverridesEditor from "../plugins/panel/stat/OverridesEditor";
@@ -31,6 +31,7 @@ import { Select } from "antd";
 import BarOverridesEditor from "../plugins/panel/bar/OverridesEditor";
 import { dispatch } from "use-bus";
 import { PanelForceRebuildEvent } from "src/data/bus-events";
+import { MobileBreakpoint } from "src/data/constants";
 
 const PanelOverrides = ({ panel, onChange, data }: PanelEditorProps) => {
     const t1 = useStore(panelMsg)
@@ -102,14 +103,14 @@ const PanelOverrides = ({ panel, onChange, data }: PanelEditorProps) => {
         dispatch(PanelForceRebuildEvent + panel.id)
     }
 
-
+    const [isLargeScreen] = useMediaQuery(MobileBreakpoint)
     return (<Form p="2">
         {
             overrides.map((o, i) =>
                 <FormSection key={o.target + i} title={t1.overrides + (i + 1)} p="1" titleSize="0.9rem" position="relative" bordered>
                     <Box position="absolute" right="2" top="9px" cursor="pointer" onClick={() => removeOverride(i)}><FaTimes fontSize="0.8rem" /></Box>
                     <FormItem title={t1.targetName} alignItems="center">
-                        <Select style={{ minWidth: '150px' }} showSearch size="large" value={o.target} onChange={v => {
+                        <Select style={{ minWidth: isLargeScreen ? '150px' : '100px' }} showSearch size="large" value={o.target} onChange={v => {
                             onChange((panel: Panel) => {
                                 const o = panel.overrides[i]
                                 o.target = v

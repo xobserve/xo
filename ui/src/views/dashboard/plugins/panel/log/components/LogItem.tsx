@@ -21,17 +21,18 @@ import { LayoutOrientation } from "types/layout";
 import { paletteColorNameToHex } from "utils/colors";
 import { Log } from "types/plugins/log";
 import { formatLabelId, getLabelNameColor } from "../utils";
-import { MobileVerticalBreakpoint, MobileVerticalBreakpointNum } from "src/data/constants";
+import {  MobileVerticalBreakpointNum } from "src/data/constants";
 
 interface LogItemProps {
     log: Log
     panel: Panel
     collapsed: boolean
     width: number
+    colorGenerator: any
 }
 
 const LogItem = memo((props: LogItemProps) => {
-    const { log, panel,width } = props
+    const { log, panel,width,colorGenerator } = props
     const {colorMode} = useColorMode()
     const labels = log.labels
     const [collapsed, setCollapsed] = useState(true)
@@ -85,7 +86,7 @@ const LogItem = memo((props: LogItemProps) => {
     }
 
     const labelNameColor = (id) => {
-        return options.styles.labelColorSyncChart ? getLabelNameColor(id, colorMode) : options.styles.labelColor
+        return options.styles.labelColorSyncChart ? getLabelNameColor(id, colorMode,colorGenerator) : options.styles.labelColor
     }
 
     const isMobileScreen =  width < MobileVerticalBreakpointNum

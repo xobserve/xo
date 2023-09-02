@@ -60,7 +60,7 @@ export const ColorPicker = (props: Props) => {
     const t = useStore(commonMsg)
     const color = paletteColorNameToHex(props.color, colorMode)
     return (
-        <Popover>
+        <Popover placement="left">
             <PopoverTrigger><HStack width="fit-content" cursor="pointer">
                 {circlePicker ?
                  <Box width="20px" height="20px" bg={color == "inherit" ? useColorModeValue(customColors.textColor.light, customColors.textColor.dark) : color} borderRadius="50%" className="bordered"></Box> 

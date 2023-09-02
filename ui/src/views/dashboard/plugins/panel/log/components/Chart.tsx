@@ -32,10 +32,11 @@ interface Props {
     viewOptions: AlertToolbarOptions
     onSelectLabel: any
     activeLabels: string[]
+    colorGenerator: any
 }
 
 const LogChart = memo((props: Props) => {
-    const { panel, width, viewOptions, onSelectLabel, activeLabels } = props
+    const { panel, width, viewOptions, onSelectLabel, activeLabels, colorGenerator } = props
     const options = panel.type == PanelType.Log ? panel.plugins.log.chart : panel.plugins.alert.chart
     const [chart, setChart] = useState<echarts.ECharts>(null)
     const { colorMode } = useColorMode()
@@ -243,7 +244,7 @@ const LogChart = memo((props: Props) => {
             emphasis: {
                 focus: 'series'
             },
-            color: getLabelNameColor(name,colorMode)
+            color: getLabelNameColor(name,colorMode,colorGenerator)
             // barWidth: '90%'
         }))
     };
