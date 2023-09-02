@@ -53,20 +53,20 @@ import { VariableInterval } from "src/data/variable";
 import Loading from "components/loading/Loading";
 import DebugPanel from "./DebugPanel";
 import { AlertGroup, AlertRule } from "types/plugins/alert";
-import TextPanel from "../../plugins/panel/text/Text";
-import GraphPanelWrapper from "../../plugins/panel/graph/Graph";
-import TablePanel from "../../plugins/panel/table/Table";
-import NodeGraphPanelWrapper from "../../plugins/panel/nodeGraph/NodeGraph";
-import EchartsPanel from "../../plugins/panel/echarts/Echarts";
-import PiePanelWrapper from "../../plugins/panel/pie/Pie";
-import GaugePanel from "../../plugins/panel/gauge/Gauge";
-import StatPanel from "../../plugins/panel/stat/Stat";
-import TracePanelWrapper from "../../plugins/panel/trace/Trace";
-import BarGaugePanel from "../../plugins/panel/barGauge/BarGauge";
-import GeoMapPanelWrapper from "../../plugins/panel/geomap/GeoMap";
-import LogPanelWrapper from "../../plugins/panel/log/Log";
-import BarPanelWrapper from "../../plugins/panel/bar/Bar";
-import AlertPanel from "../../plugins/panel/alert/Alert";
+// import TextPanel from "../../plugins/panel/text/Text";
+// import GraphPanelWrapper from "../../plugins/panel/graph/Graph";
+// import TablePanel from "../../plugins/panel/table/Table";
+// import NodeGraphPanelWrapper from "../../plugins/panel/nodeGraph/NodeGraph";
+// import EchartsPanel from "../../plugins/panel/echarts/Echarts";
+// import PiePanelWrapper from "../../plugins/panel/pie/Pie";
+// import GaugePanel from "../../plugins/panel/gauge/Gauge";
+// import StatPanel from "../../plugins/panel/stat/Stat";
+// import TracePanelWrapper from "../../plugins/panel/trace/Trace";
+// import BarGaugePanel from "../../plugins/panel/barGauge/BarGauge";
+// import GeoMapPanelWrapper from "../../plugins/panel/geomap/GeoMap";
+// import LogPanelWrapper from "../../plugins/panel/log/Log";
+// import BarPanelWrapper from "../../plugins/panel/bar/Bar";
+// import AlertPanel from "../../plugins/panel/alert/Alert";
 interface PanelGridProps {
     dashboard: Dashboard
     panel: Panel
@@ -329,38 +329,38 @@ export const PanelComponent = ({ dashboard, panel, variables, onRemovePanel, onH
 
 
 //@needs-update-when-add-new-panel
-// const loadablePanels = {
-//     [PanelType.Text]: loadable(() => import('../../plugins/panel/text/Text')),
-//     [PanelType.Graph]: loadable(() => import('../../plugins/panel/graph/Graph')),
-//     [PanelType.Table]: loadable(() => import('../../plugins/panel/table/Table')),
-//     [PanelType.NodeGraph]: loadable(() => import('../../plugins/panel/nodeGraph/NodeGraph')),
-//     [PanelType.Echarts]: loadable(() => import('../../plugins/panel/echarts/Echarts')),
-//     [PanelType.Pie]: loadable(() => import('../../plugins/panel/pie/Pie')),
-//     [PanelType.Gauge]: loadable(() => import('../../plugins/panel/gauge/Gauge')),
-//     [PanelType.Stat]: loadable(() => import('../../plugins/panel/stat/Stat')),
-//     [PanelType.Trace]: loadable(() => import('../../plugins/panel/trace/Trace')),
-//     [PanelType.BarGauge]: loadable(() => import('../../plugins/panel/barGauge/BarGauge')),
-//     [PanelType.GeoMap]: loadable(() => import('../../plugins/panel/geomap/GeoMap')),
-//     [PanelType.Log]: loadable(() => import('../../plugins/panel/log/Log')),
-//     [PanelType.Bar]: loadable(() => import('../../plugins/panel/bar/Bar')),
-//     [PanelType.Alert]: loadable(() => import('../../plugins/panel/alert/Alert')),
-// }
 const loadablePanels = {
-    [PanelType.Text]: TextPanel,
-    [PanelType.Graph]: GraphPanelWrapper,
-    [PanelType.Table]: TablePanel,
-    [PanelType.NodeGraph]: NodeGraphPanelWrapper,
-    [PanelType.Echarts]: EchartsPanel,
-    [PanelType.Pie]: PiePanelWrapper,
-    [PanelType.Gauge]: GaugePanel,
-    [PanelType.Stat]: StatPanel,
-    [PanelType.Trace]: TracePanelWrapper,
-    [PanelType.BarGauge]: BarGaugePanel,
-    [PanelType.GeoMap]: GeoMapPanelWrapper,
-    [PanelType.Log]: LogPanelWrapper,
-    [PanelType.Bar]: BarPanelWrapper,
-    [PanelType.Alert]: AlertPanel,
+    [PanelType.Text]: loadable(() => import('../../plugins/panel/text/Text')),
+    [PanelType.Graph]: loadable(() => import('../../plugins/panel/graph/Graph')),
+    [PanelType.Table]: loadable(() => import('../../plugins/panel/table/Table')),
+    [PanelType.NodeGraph]: loadable(() => import('../../plugins/panel/nodeGraph/NodeGraph')),
+    [PanelType.Echarts]: loadable(() => import('../../plugins/panel/echarts/Echarts')),
+    [PanelType.Pie]: loadable(() => import('../../plugins/panel/pie/Pie')),
+    [PanelType.Gauge]: loadable(() => import('../../plugins/panel/gauge/Gauge')),
+    [PanelType.Stat]: loadable(() => import('../../plugins/panel/stat/Stat')),
+    [PanelType.Trace]: loadable(() => import('../../plugins/panel/trace/Trace')),
+    [PanelType.BarGauge]: loadable(() => import('../../plugins/panel/barGauge/BarGauge')),
+    [PanelType.GeoMap]: loadable(() => import('../../plugins/panel/geomap/GeoMap')),
+    [PanelType.Log]: loadable(() => import('../../plugins/panel/log/Log')),
+    [PanelType.Bar]: loadable(() => import('../../plugins/panel/bar/Bar')),
+    [PanelType.Alert]: loadable(() => import('../../plugins/panel/alert/Alert')),
 }
+// const loadablePanels = {
+//     [PanelType.Text]: TextPanel,
+//     [PanelType.Graph]: GraphPanelWrapper,
+//     [PanelType.Table]: TablePanel,
+//     [PanelType.NodeGraph]: NodeGraphPanelWrapper,
+//     [PanelType.Echarts]: EchartsPanel,
+//     [PanelType.Pie]: PiePanelWrapper,
+//     [PanelType.Gauge]: GaugePanel,
+//     [PanelType.Stat]: StatPanel,
+//     [PanelType.Trace]: TracePanelWrapper,
+//     [PanelType.BarGauge]: BarGaugePanel,
+//     [PanelType.GeoMap]: GeoMapPanelWrapper,
+//     [PanelType.Log]: LogPanelWrapper,
+//     [PanelType.Bar]: BarPanelWrapper,
+//     [PanelType.Alert]: AlertPanel,
+// }
 const CustomPanelRender = memo((props: PanelProps) => {
     const P = loadablePanels[props.panel.type]
     if (P) {
