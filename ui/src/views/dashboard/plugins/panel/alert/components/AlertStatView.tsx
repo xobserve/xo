@@ -44,7 +44,7 @@ const AlertStatView = (props: PanelProps) => {
             resultType: "matrix",
             result: [
                 {
-                    "metric": {},
+                    "metric": {"__name__":"alert"},
                     "values": [
 
                     ]
@@ -68,7 +68,7 @@ const AlertStatView = (props: PanelProps) => {
             promFormatData.result[0].values.push([ts, timeMap.get(ts)])
         }
 
-        const data: SeriesData[] = prometheusToSeriesData(promFormatData, {
+        const data: SeriesData[] = prometheusToSeriesData(newProps.panel,promFormatData, {
             id: 65,
             legend: '',
             interval: null

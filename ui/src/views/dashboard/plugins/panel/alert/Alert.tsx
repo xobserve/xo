@@ -175,7 +175,7 @@ const AlertPanel = memo((props: AlertPanelProps) => {
         }
     }, [filterData, options.orderBy])
 
-    const showChart = options.chart.show && chartData.length != 0 && (width > 400 && height > 100)
+    const showChart = options.chart.show && chartData.length != 0 && (height > 100)
     const viewMode = viewOptions.viewMode ?? options.viewMode
     const alertsCount = filterData.reduce((acc, r) => acc + r.alerts.length, 0)
 
@@ -183,8 +183,8 @@ const AlertPanel = memo((props: AlertPanelProps) => {
     return (<Box height={height} width={width} position="relative">
         {
             viewMode == "list" && <Flex position="relative">
-                {options.toolbar.show && width > 400 &&
-                    <Box position="absolute" right="2" top={toolbarOpen ? 2 : 0} onClick={onToobarOpen} fontSize="0.7rem" opacity={width < 400 ? 0 : 0.3} _hover={{ opacity: 0.3 }} cursor="pointer" px="2px" className={toolbarOpen ? "color-text" : null} py="2" zIndex={1}>
+                {options.toolbar.show &&
+                    <Box position="absolute" right="2" top={toolbarOpen ? 2 : 0} onClick={onToobarOpen} fontSize="0.7rem" opacity={width < 400 ? 0.3 : 0.3} _hover={{ opacity: 0.3 }} cursor="pointer" px="2px" className={toolbarOpen ? "color-text" : null} py="2" zIndex={1}>
                         <FaFilter />
                     </Box>}
                 <CustomScrollbar>
@@ -200,7 +200,7 @@ const AlertPanel = memo((props: AlertPanelProps) => {
                         </VStack>
                     </Box>
                 </CustomScrollbar>
-                {width > 400 && <Box className={toolbarOpen ? "bordered-left" : null} height={props.height} maxHeight={props.height} width={toolbarOpen ? options.toolbar.width : 0} transition="all 0.3s" py="2">
+                {<Box className={toolbarOpen ? "bordered-left" : null} height={props.height} maxHeight={props.height} width={toolbarOpen ? options.toolbar.width : 0} transition="all 0.3s" py="2">
                     <CustomScrollbar>
                         {toolbarOpen && <AlertToolbar active={active} labels={[]} panel={panel} onCollapseAll={onCollapseAll} onSearchChange={onSearchChange} height={props.height} onActiveLabel={onActiveLabel} rulesCount={filterData.length} alertsCount={alertsCount} onViewLogChange={onViewOptionsChange} viewOptions={viewOptions} />}
                     </CustomScrollbar>

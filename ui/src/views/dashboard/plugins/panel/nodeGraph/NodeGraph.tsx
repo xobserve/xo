@@ -331,7 +331,7 @@ const NodeGrapPanel = ({ data, panel, dashboardId, width, height }: NodeGraphPan
 
     return <>
         {graph && <NodeGraphToolbar graph={graph} dashboardId={dashboardId} panelId={panel.id} data={data[0]} onFilterRulesChange={onFilterRulesChange} />}
-        <Box width="100%" height="100%" ref={container} />
+        <Box ml="10px" width="calc(100% - 20px)" height="100%" ref={container} />
         <Help data={nodeGraphHelp} iconSize="0.8rem" />
         {graph && <Box><HiddenItems dashboardId={dashboardId} panelId={panel.id} selected={selected} graph={graph} onSelectChange={onSelectChange} data={data} /></Box>}
     </>;
