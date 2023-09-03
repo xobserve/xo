@@ -11,14 +11,14 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { Box, Button, Divider, HStack, Portal, StackDivider, Text, VStack, useOutsideClick, useToast } from "@chakra-ui/react";
+import { Box, Button, Divider, HStack, Portal,  StackDivider, Text, VStack, useMediaQuery, useOutsideClick, useToast } from "@chakra-ui/react";
 import { TooltipContainer } from "../Tooltip/Tooltip";
 import React, { memo, useLayoutEffect, useRef, useState } from "react";
 import { PanelProps } from "types/dashboard";
 import { SeriesData } from "types/seriesData";
 import { findNearestSeriesAndDataPoint } from "../Tooltip";
 import { dispatch } from "use-bus";
-import { OnGraphPanelClickEvent, PanelForceRebuildEvent } from "src/data/bus-events";
+import { OnGraphPanelClickEvent } from "src/data/bus-events";
 import { dateTimeFormat } from "utils/datetime/formatter";
 import AnnotationEditor from "../../../../../Annotation/AnnotationEditor";
 import { Annotation } from "types/annotation";
@@ -27,6 +27,7 @@ import { $dashboard } from "src/views/dashboard/store/dashboard";
 import { commonInteractionEvent, genDynamicFunction } from "utils/dashboard/dynamicCall";
 import { isFunction } from "lodash";
 import { isEmpty } from "utils/validate";
+import { MobileVerticalBreakpoint } from "src/data/constants";
 
 interface Props {
     props: PanelProps
@@ -54,6 +55,7 @@ const ContextMenu = memo(({ props, options, data, container }: Props) => {
         }
     })
 
+    const [isMobileScreen] = useMediaQuery(MobileVerticalBreakpoint)
     useLayoutEffect(() => {
         let bbox: DOMRect | undefined = undefined;
 
@@ -79,9 +81,10 @@ const ContextMenu = memo(({ props, options, data, container }: Props) => {
                 if (r) {
                     const [fs, xv, x, y] = r
                     seriesIdx.current = fs
-
                     coordX.current = x
                     coordY.current = y
+                    console.log("here3333333:", x,y)
+
                 }
                 xVal.current = uplot.cursor.left
 
@@ -112,6 +115,7 @@ const ContextMenu = memo(({ props, options, data, container }: Props) => {
                         // clicked in-place
                         if (e.clientX == clientX && e.clientY == clientY) {
                             if (seriesIdx.current != null && dataIdx.current != null) {
+                                console.log("here333333:", coordX.current, coordY.current)
                                 setCoords(cd => cd ? null : { x: coordX.current, y: coordY.current })
                                 dispatch(OnGraphPanelClickEvent + props.panel.id)
                             }
@@ -124,7 +128,7 @@ const ContextMenu = memo(({ props, options, data, container }: Props) => {
         }
 
         return () => { }
-    }, [options])
+    }, [options,isMobileScreen])
 
     const onAddAnnotation = (ts) => {
         setAnnotation({
@@ -140,14 +144,15 @@ const ContextMenu = memo(({ props, options, data, container }: Props) => {
     }
 
     const startTime = roundDsTime(plotInstance.current?.posToVal(xVal.current, 'x'))
+    const Portal1 = isMobileScreen ?  Portal : Box
     return (<>
-        {/* <Portal key={props.panel.id}> */}
+        <Portal1>
         {coords && <TooltipContainer allowPointerEvents position={{ x: coords.x, y: coords.y }} offset={{ x: -8, y: 2 }}>
             <Box className="bordered" background={'var(--chakra-colors-chakra-body-bg)'} p="2" pb="0" fontSize="xs">
                 <Text fontWeight="600">{dateTimeFormat(startTime * 1000)}</Text>
                 <HStack mt="1">
                     <Box width="10px" height="4px" background={seriesIdx.current.color} mt="2px"></Box>
-                    <Text>{seriesIdx.current.name}</Text>
+                    <Text maxW={isMobileScreen ? props.width / 2 : null}>{seriesIdx.current.name}</Text>
                 </HStack>
                 <Divider mt="2" />
                 <VStack alignItems={"left"} spacing={0} divider={<StackDivider />}>
@@ -198,7 +203,7 @@ const ContextMenu = memo(({ props, options, data, container }: Props) => {
             setAnnotation(null)
             // plotInstance.current.setSelect({ top: 0, left: 0, width: 0, height: 0 });
         }} />}
-        {/* </Portal> */}
+        </Portal1>
     </>)
 })
 

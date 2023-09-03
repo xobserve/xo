@@ -36,7 +36,7 @@ const axisSpace = ((self, axisIdx, scaleMin, scaleMax, plotDim) => {
     return calculateSpace(self, axisIdx, scaleMin, scaleMax, plotDim);
 })
 
-export const parseOptions = (config: PanelProps, rawData: SeriesData[], colorMode, inactiveSeries) => {
+export const parseOptions = (config: PanelProps, rawData: SeriesData[], colorMode, inactiveSeries):uPlot.Options => {
 
 
     const textColor = colorMode == ColorMode.Light ? customColors.textColorRGB.light : customColors.textColorRGB.dark
