@@ -11,15 +11,31 @@ const CommonStyles = () => (
       const {colorMode} = useColorMode()
       const scrollBg = colorMode == "dark" ? customColors.scrollBg.dark : customColors.scrollBg.light
       return css` 
+        .dashboard-container {
+          ::-webkit-scrollbar {
+            width: ${colorMode == "light" ? "5px" : "3px"};
+            height: 3px;
+            border-radius: 4px;
+          }
+          ::-webkit-scrollbar-thumb:vertical {
+            background: -webkit-gradient(
+              linear,
+              left top,
+              right top,
+              color-stop(0%, ${"rgba(36,41,46,0.15)"}),
+              color-stop(100%, ${"rgba(36,41,46,0.15)"})
+            );
+          }
+        }
         ::-webkit-scrollbar {
-          width: 5px;
-          height: 5px;
+          width: 3px;
+          height: 3px;
           border-radius: 4px;
         }
       
         ::-webkit-scrollbar:hover {
-          height: 5px;
-          width: 5px;
+          height: 4px;
+          width: 4px;
         }
       
         ::-webkit-scrollbar-button:start:decrement,

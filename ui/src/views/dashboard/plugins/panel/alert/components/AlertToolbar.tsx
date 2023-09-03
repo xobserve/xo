@@ -17,6 +17,7 @@ import RadionButtons from "components/RadioButtons"
 import { EditorInputItem } from "components/editor/EditorItem"
 import React, { memo, useState } from "react"
 import { AiOutlineDoubleRight } from "react-icons/ai"
+import { MobileVerticalBreakpointNum } from "src/data/constants"
 import { AlertState } from "types/alert"
 import { Panel } from "types/dashboard"
 import { AlertToolbarOptions } from "types/plugins/alert"
@@ -33,11 +34,12 @@ interface Props {
     alertsCount: number
     onViewLogChange: any
     viewOptions: AlertToolbarOptions
+    width: number
 }
 
 
 const AlertToolbar = memo((props: Props) => {
-    const { panel, onCollapseAll, onSearchChange, rulesCount,alertsCount, viewOptions, onViewLogChange } = props
+    const { panel, onCollapseAll, onSearchChange, rulesCount,alertsCount, viewOptions, onViewLogChange,width } = props
     const [search, setSearch] = useState<string>("")
 
     // const options = panel.plugins.log
@@ -51,8 +53,10 @@ const AlertToolbar = memo((props: Props) => {
                 <AiOutlineDoubleRight cursor="pointer" onClick={() => onCollapseAll(true)} />
             </HStack>
             <HStack spacing={1}>
+                {width > MobileVerticalBreakpointNum && <>
                 <Text className="color-text">{rulesCount}</Text>
                 <Text opacity="0.7">Rules</Text>
+                </>}
                 <Text className="color-text">{alertsCount}</Text>
                 <Text opacity="0.7">Alerts</Text>
             </HStack>

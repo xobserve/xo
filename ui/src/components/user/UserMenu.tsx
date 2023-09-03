@@ -20,12 +20,11 @@ import {
     MenuItem,
     MenuDivider,
     useColorModeValue,
-    chakra,
     useToast,
     Text,
     HStack,
-    Portal,
-    Box
+    Box,
+    Portal
 } from "@chakra-ui/react"
 import useSession from "hooks/use-session"
 import storage from "utils/localStorage"
@@ -104,9 +103,8 @@ const UserMenu = ({ fontSize = "1.1rem", miniMode }) => {
                             <MenuItem width="100%" onClick={() => changeLang()} icon={<FaFont fontSize="1rem" />}>{t1.currentLang} - {locale.get() == "en" ? "English" : "简体中文"}</MenuItem>
                             <MenuItem mt="2px" width="100%">    <UserSidemenus miniMode={false} /></MenuItem>
                             <MenuDivider />
-                            <Link to={`/account/setting`}><MenuItem  width="100%"icon={<FaRegSun fontSize="1rem" />}>{t1.accountSetting}</MenuItem></Link>
+                            <Link to={`/account/setting`}><MenuItem  width="100%" icon={<FaRegSun fontSize="1rem" />}>{t1.accountSetting}</MenuItem></Link>
                             <MenuItem width="100%" onClick={() => logout()} icon={<FaSignOutAlt fontSize="1rem" />}>{t.logout}</MenuItem>
-
                         </MenuList>
                     </Portal>
                 </Menu> :

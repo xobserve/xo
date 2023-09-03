@@ -142,7 +142,7 @@ export const miscMsg = i18n("misc", {
 export const sidebarMsg = i18n("sidebar", {
     "search": "Search Dashboards",
     "selectSidemenu": "Select Sidemenu",
-    "selectSideMenuTips": "Select the team sidemenu you want to use",
+    "selectSideMenuTips": "Select a team sidemenu",
     "themeChange": "Change Theme",
     "accountSetting": "Account Setting",
     "adminPanel": "Admin Panel",

@@ -202,7 +202,7 @@ const AlertPanel = memo((props: AlertPanelProps) => {
                 </CustomScrollbar>
                 {<Box className={toolbarOpen ? "bordered-left" : null} height={props.height} maxHeight={props.height} width={toolbarOpen ? options.toolbar.width : 0} transition="all 0.3s" py="2">
                     <CustomScrollbar>
-                        {toolbarOpen && <AlertToolbar active={active} labels={[]} panel={panel} onCollapseAll={onCollapseAll} onSearchChange={onSearchChange} height={props.height} onActiveLabel={onActiveLabel} rulesCount={filterData.length} alertsCount={alertsCount} onViewLogChange={onViewOptionsChange} viewOptions={viewOptions} />}
+                        {toolbarOpen && <AlertToolbar active={active} labels={[]} panel={panel} onCollapseAll={onCollapseAll} onSearchChange={onSearchChange} height={props.height} onActiveLabel={onActiveLabel} rulesCount={filterData.length} alertsCount={alertsCount} onViewLogChange={onViewOptionsChange} viewOptions={viewOptions} width={width}/>}
                     </CustomScrollbar>
                 </Box>}
             </Flex>
@@ -214,7 +214,7 @@ const AlertPanel = memo((props: AlertPanelProps) => {
 
             </Box>
         }
-        {(viewMode == "stat" || width < 400) && <Box position="absolute" right="2" top="1" opacity={width < 400 ? 0 : 1} _hover={{ opacity: 1 }} color={viewMode == "stat" ? getTextColorForAlphaBackground(paletteColorNameToHex(options.stat.color), colorMode == "dark") : "inherit"} cursor="pointer" onClick={() => onViewOptionsChange({ ...viewOptions, viewMode: viewOptions.viewMode == "list" ? "stat" : "list" })} pb="2"><AiOutlineSwitcher /></Box>}
+        {(viewMode == "stat") && <Box position="absolute" right="2" top="1" opacity={width < 400 ? 0.5 : 1} _hover={{ opacity: 1 }} color={viewMode == "stat" ? getTextColorForAlphaBackground(paletteColorNameToHex(options.stat.color), colorMode == "dark") : "inherit"} cursor="pointer" onClick={() => onViewOptionsChange({ ...viewOptions, viewMode: viewOptions.viewMode == "list" ? "stat" : "list" })} pb="2"><AiOutlineSwitcher /></Box>}
     </Box>
     )
 })

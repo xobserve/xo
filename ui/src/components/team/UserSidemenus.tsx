@@ -15,12 +15,13 @@
 // 1. teams which the user is a member of 
 // 2. teams whose sidemenu has been set to public
 
-import { Heading, HStack, IconButton, Popover, PopoverBody, PopoverContent, PopoverTrigger,  Text, useToast } from "@chakra-ui/react"
+import { Heading, HStack, IconButton, Popover, PopoverBody, PopoverContent, PopoverTrigger,  Portal,  Text, useMediaQuery, useToast } from "@chakra-ui/react"
 import { useStore } from "@nanostores/react"
 import CardSelect, { CardSelectItem } from "components/cards/CardSelect"
 import useSession from "hooks/use-session"
 import React, { useEffect, useState } from "react"
 import { FaAlignLeft } from "react-icons/fa"
+import { MobileVerticalBreakpoint } from "src/data/constants"
 import { sidebarMsg } from "src/i18n/locales/en"
 import { SideMenu } from "types/teams"
 import { requestApi } from "utils/axios/request"
@@ -55,9 +56,10 @@ const UserSidemenus = ({miniMode}) => {
         }, 1000)
     }
 
+    const [isMobileScreen] = useMediaQuery(MobileVerticalBreakpoint)
     return (
         <>
-            <Popover trigger="hover" placement="right">
+            <Popover trigger={isMobileScreen ? "click" : "hover"} placement="auto">
                 <PopoverTrigger>
                     <HStack spacing={3} cursor="pointer" width="100%">
                     {miniMode ? <IconButton
@@ -73,6 +75,7 @@ const UserSidemenus = ({miniMode}) => {
                     </HStack>
                
                 </PopoverTrigger>
+                <Portal>
                 <PopoverContent width="fit-content" minWidth="120px" border="null" pl="1">
 
                     <PopoverBody>
@@ -90,6 +93,7 @@ const UserSidemenus = ({miniMode}) => {
                         </CardSelect>
                     </PopoverBody>
                 </PopoverContent>
+                </Portal>
             </Popover>
 
         </>
