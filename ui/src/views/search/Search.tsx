@@ -73,6 +73,7 @@ const Search = memo((props: Props) => {
             onClose()
             return 
         }
+        onOpen()
         const r1 = requestApi.get(`/dashboard/simpleList`)
         const r2 = requestApi.get(`/dashboard/starred`)
         const r3 = requestApi.get("/teams/all")
@@ -85,7 +86,6 @@ const Search = memo((props: Props) => {
         }
         setStarredDashIds(starred)
         setTeams(res[2].data)
-        onOpen()
     }
 
 
@@ -260,10 +260,10 @@ const Search = memo((props: Props) => {
                                     </Box>
 
                                     <TagsFilter value={selectedTags} tags={tags} onChange={setSelectedTags} tagCount={tagCount} />
-                                    <TeamsFilter value={selectedTeams} teams={teams} onChange={setSelectedTeams} teamCount={teamCount} />
+                                    {teams && <TeamsFilter value={selectedTeams} teams={teams} onChange={setSelectedTeams} teamCount={teamCount} />}
                                 </HStack>
                             </Flex>
-                            <VStack alignItems="left" maxH="calc(100vh - 130px)" overflowY="auto" spacing={3} pt="3">
+                            {teams && dashboards && <VStack alignItems="left" maxH="calc(100vh - 130px)" overflowY="auto" spacing={3} pt="3">
                                 {
                                     layout == "list" && <ListView teams={teams} dashboards={dashboards as Dashboard[]} onItemClick={onClose} query={query} starredIds={starredDashIds} />
                                 }
@@ -273,7 +273,7 @@ const Search = memo((props: Props) => {
                                 {
                                     layout == "tags" && <TagsView teams={teams} dashboards={dashboards as Map<string, Dashboard[]>} onItemClick={onClose} query={query} starredIds={starredDashIds} />
                                 }    
-                            </VStack>
+                            </VStack>}
                         </ModalBody>
                     </ModalContent>
                 </Box>

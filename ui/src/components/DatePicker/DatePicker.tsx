@@ -167,7 +167,7 @@ const DatePicker = ({ showTime = true, showRealTime = false }: Props) => {
                     </HStack>
                 </Tooltip>
             </Box>
-            <Modal isOpen={isOpen} onClose={onClose} initialFocusRef={null}>
+            <Modal isOpen={isOpen} onClose={onClose} initialFocusRef={null} autoFocus={false}>
                 <ModalOverlay />
                 <ModalContent minW="fit-content">
                     <ModalBody>
