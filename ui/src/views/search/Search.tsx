@@ -29,6 +29,7 @@ import PopoverTooltip from "components/PopoverTooltip"
 import { useLocation } from "react-router-dom"
 import useBus from "use-bus"
 import { OnDashboardWeightChangeEvent } from "src/data/bus-events"
+import { MobileBreakpoint } from "src/data/constants"
 
 interface Props {
     title: string
@@ -56,28 +57,28 @@ const Search = memo((props: Props) => {
         (e) => {
             requestApi.get(`/dashboard/simpleList`).then(res => {
                 setRawDashboards(res.data)
-            })    
+            })
         },
         [rawDashboards]
     )
-        
+
     useEffect(() => {
         onClose()
-    },[location])
-    
+    }, [location])
+
 
 
 
     const onSearchOpen = async () => {
         if (isOpen) {
             onClose()
-            return 
+            return
         }
         onOpen()
         const r1 = requestApi.get(`/dashboard/simpleList`)
         const r2 = requestApi.get(`/dashboard/starred`)
         const r3 = requestApi.get("/teams/all")
-        const res = await Promise.all([r1, r2,r3])
+        const res = await Promise.all([r1, r2, r3])
 
         setRawDashboards(res[0].data)
         const starred = new Set<string>()
@@ -173,10 +174,10 @@ const Search = memo((props: Props) => {
                 if (!result.has(teamId)) {
                     result.set(teamId, [])
                 }
-    
+
                 result.get(teamId).push(dash)
             }
-    
+
             return result
         }
 
@@ -186,7 +187,7 @@ const Search = memo((props: Props) => {
                 if (!result.has(tag)) {
                     result.set(tag, [])
                 }
-    
+
                 result.get(tag).push(dash)
             }
         }
@@ -194,7 +195,7 @@ const Search = memo((props: Props) => {
 
     }, [dashboards1, layout])
 
-    const [isLargeScreen] = useMediaQuery('(min-width: 600px)')
+    const [isLargeScreen] = useMediaQuery(MobileBreakpoint)
 
     return (
         <Box>
@@ -203,14 +204,14 @@ const Search = memo((props: Props) => {
                 offset={[0, 14]}
                 triggerComponent={
                     <HStack color={isOpen ? useColorModeValue("brand.500", "brand.200") : 'inherit'} className="hover-text" cursor="pointer" onClick={onSearchOpen}>
-                    <Box>
-                        {miniMode ?
-                            <IconButton fontSize={isLargeScreen ? "1.2rem" : "1rem"} aria-label="" variant="ghost" color="current" _focus={{ border: null }} icon={<FaSearch />} />
-                            : <FaSearch />
-                        }
-                    </Box>
-                    {!miniMode && <Text fontSize={`${fontSize}px`} fontWeight={fontWeight} >{title}</Text>}
-                </HStack>
+                        <Box>
+                            {miniMode ?
+                                <IconButton fontSize={isLargeScreen ? "1.2rem" : "1rem"} aria-label="" variant="ghost" color="current" _focus={{ border: null }} icon={<FaSearch />} />
+                                : <FaSearch />
+                            }
+                        </Box>
+                        {!miniMode && <Text fontSize={`${fontSize}px`} fontWeight={fontWeight} >{title}</Text>}
+                    </HStack>
                 }
                 headerComponent={
                     <Text fontSize={`${fontSize}px`} fontWeight={fontWeight} >{title}</Text>
@@ -232,9 +233,9 @@ const Search = memo((props: Props) => {
                             </Flex>
                         </ModalHeader>
                         <ModalBody >
-                            <Flex justifyContent="space-between" alignItems="center" mb="2">
+                            <Flex justifyContent="space-between" flexDir={isLargeScreen ? "row" : "column"} alignItems={isLargeScreen ? "center" : "start"} mb="2" gap={isLargeScreen ? 0 : 2}>
                                 <HStack>
-                                    <Input value={query} onChange={e => onQueryChange(e.currentTarget.value)} w="320px" placeholder="enter dashboard name or id to search.." />
+                                    <Input value={query} onChange={e => onQueryChange(e.currentTarget.value)} w={isLargeScreen ? "320px" : "150px"} placeholder="enter dashboard name or id to search.." />
                                     <Tooltip label={caseSensitive ? "Case sensitive" : "Case insensitive"}>
                                         <Box
                                             cursor="pointer"
@@ -248,20 +249,21 @@ const Search = memo((props: Props) => {
                                             <RxLetterCaseCapitalize />
                                         </Box>
                                     </Tooltip>
+                                    <HStack spacing={4} fontSize="1.1rem">
+                                        <Tooltip label="Teams view"><Box cursor="pointer" className={layout == "teams" ? "color-text" : null} onClick={() => setLayout("teams")}><FaSitemap /></Box></Tooltip>
+                                        <Tooltip label="List view"><Box cursor="pointer" className={layout == "list" ? "color-text" : null} onClick={() => setLayout("list")}><FaAlignJustify /></Box></Tooltip>
+                                        <Tooltip label="Tags view"><Box cursor="pointer" className={layout == "tags" ? "color-text" : null} onClick={() => setLayout("tags")}><FaBuffer /></Box></Tooltip>
+                                    </HStack>
                                 </HStack>
-                                <HStack spacing={4} fontSize="1.1rem">
-                                    <Tooltip label="Teams view"><Box cursor="pointer" className={layout == "teams" ? "color-text" : null} onClick={() => setLayout("teams")}><FaSitemap /></Box></Tooltip>
-                                    <Tooltip label="List view"><Box cursor="pointer" className={layout == "list" ? "color-text" : null} onClick={() => setLayout("list")}><FaAlignJustify /></Box></Tooltip>
-                                    <Tooltip label="Tags view"><Box cursor="pointer" className={layout == "tags" ? "color-text" : null} onClick={() => setLayout("tags")}><FaBuffer /></Box></Tooltip>
-                                </HStack>
-                                <HStack>
+
+                                <Flex alignItems={"center"} width={isLargeScreen ? null : "100%"}>
                                     <Box cursor="pointer" onClick={() => setFilterStarred(!filterStarred)} fontSize="1.3rem" color={useColorModeValue("orange.300", "orange.200")}>
                                         {filterStarred ? <AiFillStar /> : <AiOutlineStar />}
                                     </Box>
 
-                                    <TagsFilter value={selectedTags} tags={tags} onChange={setSelectedTags} tagCount={tagCount} />
-                                    {teams && <TeamsFilter value={selectedTeams} teams={teams} onChange={setSelectedTeams} teamCount={teamCount} />}
-                                </HStack>
+                                    <TagsFilter value={selectedTags} tags={tags} onChange={setSelectedTags} tagCount={tagCount} minWidth={isLargeScreen ? "260px" : "48%" }/>
+                                    {teams && <TeamsFilter value={selectedTeams} teams={teams} onChange={setSelectedTeams} teamCount={teamCount} minWidth={isLargeScreen ? "260px" : "48%"}/>}
+                                </Flex>
                             </Flex>
                             {teams && dashboards && <VStack alignItems="left" maxH="calc(100vh - 130px)" overflowY="auto" spacing={3} pt="3">
                                 {
@@ -272,7 +274,7 @@ const Search = memo((props: Props) => {
                                 }
                                 {
                                     layout == "tags" && <TagsView teams={teams} dashboards={dashboards as Map<string, Dashboard[]>} onItemClick={onClose} query={query} starredIds={starredDashIds} />
-                                }    
+                                }
                             </VStack>}
                         </ModalBody>
                     </ModalContent>

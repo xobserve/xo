@@ -22,9 +22,10 @@ interface Props {
     value: string[]
     onChange: any
     tagCount?: Object
+    minWidth?: string
 }
 
-const TagsFilter = ({ value, tags, onChange,tagCount={} }: Props) => {
+const TagsFilter = ({ value, tags, onChange,tagCount={},minWidth="260px" }: Props) => {
     const tagRender = (props: CustomTagProps) => {
         const { value, onClose } = props;
         return (
@@ -43,7 +44,7 @@ const TagsFilter = ({ value, tags, onChange,tagCount={} }: Props) => {
                 size="large"
                 allowClear
                 mode="multiple"
-                style={{ width: 'fit-content', minWidth: "300px" }}
+                style={{ width: 'fit-content', minWidth: minWidth}}
                 defaultValue={value}
                 tagRender={tagRender}
                 onChange={onChange}

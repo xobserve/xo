@@ -11,10 +11,12 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+import { useMediaQuery } from "@chakra-ui/react";
 import { Select } from "antd";
 import ColorTag from "components/ColorTag";
 import type { CustomTagProps } from 'rc-select/lib/BaseSelect';
 import React from "react";
+import { MobileBreakpoint } from "src/data/constants";
 import { Team } from "types/teams";
 const { Option } = Select;
 
@@ -23,8 +25,10 @@ interface Props {
     value: number[]
     onChange: any
     teamCount: Object
+    minWidth?: string
 }
-const TeamsFilter = ({ value, teams, onChange,teamCount }: Props) => {
+const TeamsFilter = ({ value, teams, onChange,teamCount, minWidth }: Props) => {
+    const [isLargeScreen] = useMediaQuery(MobileBreakpoint)
     return (
         <>
             <Select
@@ -32,7 +36,7 @@ const TeamsFilter = ({ value, teams, onChange,teamCount }: Props) => {
                 size="large"
                 allowClear
                 mode="multiple"
-                style={{ width: 'fit-content', minWidth: "300px" }}
+                style={{ width: 'fit-content', minWidth }}
                 defaultValue={value}
                 onChange={onChange}
                 options= {
