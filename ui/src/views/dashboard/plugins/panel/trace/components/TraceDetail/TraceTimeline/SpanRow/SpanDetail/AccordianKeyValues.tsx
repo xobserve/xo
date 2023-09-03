@@ -21,7 +21,7 @@ import { TNil } from 'types/misc';
 import { KeyValuePair, SpanLink } from 'types/plugins/trace';
 
 import { AiOutlineArrowDown, AiOutlineArrowRight, AiOutlineDown, AiOutlineRight } from 'react-icons/ai';
-import { Box, useColorModeValue } from '@chakra-ui/react';
+import { Box, Wrap, WrapItem, useColorModeValue } from '@chakra-ui/react';
 import customColors from 'src/theme/colors';
 
 type AccordianKeyValuesProps = {
@@ -42,17 +42,17 @@ export function KeyValuesSummary(props: { data?: KeyValuePair[] }) {
     return null;
   }
   return (
-    <ul className="AccordianKeyValues--summary">
+    <Wrap spacingY={0} spacingX={2}>
       {data.map((item, i) => (
         // `i` is necessary in the key because item.key can repeat
         // eslint-disable-next-line react/no-array-index-key
-        <li className="AccordianKeyValues--summaryItem" key={`${item.key}-${i}`}>
+        <WrapItem  key={`${item.key}-${i}`}>
           <span className="AccordianKeyValues--summaryLabel">{item.key}</span>
           <span className="AccordianKeyValues--summaryDelim">=</span>
           {String(item.value)}
-        </li>
+        </WrapItem>
       ))}
-    </ul>
+    </Wrap>
   );
 }
 

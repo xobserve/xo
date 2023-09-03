@@ -108,7 +108,6 @@ function SpanBar(props: TInnerProps) {
                             pointAtCenter: true
                         }}
                         overlayClassName="SpanBar--logHint"
-                        placement="topLeft"
                         content={
                             <AccordianLogs
                                 interactive={false}
@@ -118,7 +117,10 @@ function SpanBar(props: TInnerProps) {
                             />
                         }
                     >
-                        <Box  width="20px" display="inline-block" position="absolute" height="60%" top="20%" left={`calc(${positionKey} - 11px)`} textAlign="center">
+                        <Box  width="20px" display="inline-block" position="absolute" height="60%" top="20%" left={`calc(${positionKey} - 11px)`} textAlign="center" onClick={e => {
+                            e.stopPropagation()
+                            e.preventDefault()
+                        }}>
                             <Box className="SpanBar--logMarker"
                                 display="inline-block"
                                 _hover={{ bg: 'orange' }}
