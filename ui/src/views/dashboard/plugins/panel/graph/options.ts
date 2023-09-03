@@ -205,7 +205,7 @@ export const parseOptions = (config: PanelProps, rawData: SeriesData[], colorMod
             // renderStatsPlugin()
         ],
         cursor: {
-            lock: true,
+            lock: false,
             // focus: {
             //     prox: 16,
             // },

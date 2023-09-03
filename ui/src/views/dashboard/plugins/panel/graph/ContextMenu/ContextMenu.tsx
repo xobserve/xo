@@ -18,7 +18,7 @@ import { PanelProps } from "types/dashboard";
 import { SeriesData } from "types/seriesData";
 import { findNearestSeriesAndDataPoint } from "../Tooltip";
 import { dispatch } from "use-bus";
-import { OnGraphPanelClickEvent } from "src/data/bus-events";
+import { OnGraphPanelClickEvent, PanelForceRebuildEvent } from "src/data/bus-events";
 import { dateTimeFormat } from "utils/datetime/formatter";
 import AnnotationEditor from "../../../../../Annotation/AnnotationEditor";
 import { Annotation } from "types/annotation";
@@ -26,7 +26,6 @@ import { roundDsTime } from "utils/datasource";
 import { $dashboard } from "src/views/dashboard/store/dashboard";
 import { commonInteractionEvent, genDynamicFunction } from "utils/dashboard/dynamicCall";
 import { isFunction } from "lodash";
-import { useNavigate } from "react-router-dom";
 import { isEmpty } from "utils/validate";
 
 interface Props {
@@ -40,7 +39,6 @@ const ContextMenu = memo(({ props, options, data, container }: Props) => {
     const [annotation, setAnnotation] = useState<Annotation>(null)
     const [coords, setCoords] = useState(null);
     const toast = useToast()
-    const navigate = useNavigate()
 
     const plotInstance = useRef<uPlot>();
 
@@ -49,20 +47,20 @@ const ContextMenu = memo(({ props, options, data, container }: Props) => {
     const coordX = useRef(null)
     const coordY = useRef(null)
     const xVal = useRef(null)
-    // useOutsideClick({
-    //     ref: container,
-    //     handler: () => {
-    //         setCoords(null)
-    //     }
-    //   })
+    useOutsideClick({
+        ref: container,
+        handler: () => {
+            setCoords(null)
+        }
+    })
 
     useLayoutEffect(() => {
         let bbox: DOMRect | undefined = undefined;
 
         options.hooks.init.push((u) => {
             plotInstance.current = u;
-          });
-      
+        });
+
 
         if (options) {
             options.hooks.syncRect.push((u, rect) => (bbox = rect))
@@ -81,7 +79,7 @@ const ContextMenu = memo(({ props, options, data, container }: Props) => {
                 if (r) {
                     const [fs, xv, x, y] = r
                     seriesIdx.current = fs
-                   
+
                     coordX.current = x
                     coordY.current = y
                 }
@@ -140,45 +138,45 @@ const ContextMenu = memo(({ props, options, data, container }: Props) => {
             namespace: props.dashboardId,
         })
     }
-    
-    const startTime = roundDsTime(plotInstance.current?.posToVal(xVal.current,'x'))
+
+    const startTime = roundDsTime(plotInstance.current?.posToVal(xVal.current, 'x'))
     return (<>
         {/* <Portal key={props.panel.id}> */}
-            {coords && <TooltipContainer allowPointerEvents position={{ x: coords.x, y: coords.y }} offset={{ x: -8, y: 2 }}>
-                <Box  className="bordered" background={'var(--chakra-colors-chakra-body-bg)'} p="2" pb="0" fontSize="xs">
-                    <Text fontWeight="600">{dateTimeFormat(startTime * 1000)}</Text>
-                    <HStack mt="1">
-                        <Box width="10px" height="4px" background={seriesIdx.current.color} mt="2px"></Box>
-                        <Text>{seriesIdx.current.name}</Text>
-                    </HStack>
-                    <Divider mt="2" />
-                    <VStack alignItems={"left"}  spacing={0} divider={<StackDivider />}>
-                        <Button size="sm" variant="ghost" onClick={() => {
-                            const dash = $dashboard.get()
-                            if (dash.data.annotation.enable) {
-                                onAddAnnotation(startTime)
-                            } else {
-                                toast({
-                                    title: "Annotation is disabled",
-                                    status: "warning",
-                                    duration: 3000,
-                                    isClosable: true,
-                                })
-                            }
-                            
-                        }}>Add annotation</Button>
+        {coords && <TooltipContainer allowPointerEvents position={{ x: coords.x, y: coords.y }} offset={{ x: -8, y: 2 }}>
+            <Box className="bordered" background={'var(--chakra-colors-chakra-body-bg)'} p="2" pb="0" fontSize="xs">
+                <Text fontWeight="600">{dateTimeFormat(startTime * 1000)}</Text>
+                <HStack mt="1">
+                    <Box width="10px" height="4px" background={seriesIdx.current.color} mt="2px"></Box>
+                    <Text>{seriesIdx.current.name}</Text>
+                </HStack>
+                <Divider mt="2" />
+                <VStack alignItems={"left"} spacing={0} divider={<StackDivider />}>
+                    <Button size="sm" variant="ghost" onClick={() => {
+                        const dash = $dashboard.get()
+                        if (dash.data.annotation.enable) {
+                            onAddAnnotation(startTime)
+                        } else {
+                            toast({
+                                title: "Annotation is disabled",
+                                status: "warning",
+                                duration: 3000,
+                                isClosable: true,
+                            })
+                        }
 
-                        {
-                            props.panel.plugins.graph.clickActions.map((action,i) => (
-                            !isEmpty(action.name) && <Button 
-                                key={i+action.name}
+                    }}>Add annotation</Button>
+
+                    {
+                        props.panel.plugins.graph.clickActions.map((action, i) => (
+                            !isEmpty(action.name) && <Button
+                                key={i + action.name}
                                 size="sm"
                                 variant="ghost"
                                 bg={action.color}
                                 onClick={() => {
                                     const onGraphClick = genDynamicFunction(action.action);
                                     if (isFunction(onGraphClick)) {
-                                        const tData = commonInteractionEvent(onGraphClick, {series: seriesIdx.current,time: startTime })
+                                        const tData = commonInteractionEvent(onGraphClick, { series: seriesIdx.current, time: startTime })
                                         return tData
                                     } else {
                                         toast({
@@ -190,16 +188,16 @@ const ContextMenu = memo(({ props, options, data, container }: Props) => {
                                     }
                                 }}
                             >{action.name}</Button>))
-                        }
-                    </VStack>
-                </Box>
-            </TooltipContainer>
-            }
+                    }
+                </VStack>
+            </Box>
+        </TooltipContainer>
+        }
 
-            {annotation && <AnnotationEditor annotation={annotation} onEditorClose={() => {
-                setAnnotation(null)
-                // plotInstance.current.setSelect({ top: 0, left: 0, width: 0, height: 0 });
-                }}/>}
+        {annotation && <AnnotationEditor annotation={annotation} onEditorClose={() => {
+            setAnnotation(null)
+            // plotInstance.current.setSelect({ top: 0, left: 0, width: 0, height: 0 });
+        }} />}
         {/* </Portal> */}
     </>)
 })

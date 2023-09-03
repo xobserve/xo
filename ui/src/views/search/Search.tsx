@@ -11,7 +11,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { Box, Flex, HStack, IconButton, Input, Modal, ModalBody, ModalContent, ModalHeader, Text, Tooltip, VStack, useColorModeValue, useDisclosure, useMediaQuery } from "@chakra-ui/react"
+import { Box, Button, Flex, HStack, IconButton, Input, Modal, ModalBody, ModalContent, ModalHeader, Text, Tooltip, VStack, useColorModeValue, useDisclosure, useMediaQuery } from "@chakra-ui/react"
 import React, { memo, useEffect, useMemo, useState } from "react"
 import { FaAlignJustify, FaBuffer, FaSearch, FaSitemap, FaTimes } from "react-icons/fa"
 import { Dashboard } from "types/dashboard"
@@ -217,7 +217,7 @@ const Search = memo((props: Props) => {
                     <Text fontSize={`${fontSize}px`} fontWeight={fontWeight} >{title}</Text>
                 }
             />
-            <Modal isOpen={isOpen} onClose={onClose} size="full">
+            <Modal isOpen={isOpen} onClose={onClose} size="full" autoFocus={false} trapFocus={false}>
                 <Box sx={{
                     '.chakra-modal__content-container': {
                         marginLeft: sideWidth + 'px',
@@ -265,7 +265,7 @@ const Search = memo((props: Props) => {
                                     {teams && <TeamsFilter value={selectedTeams} teams={teams} onChange={setSelectedTeams} teamCount={teamCount} minWidth={isLargeScreen ? "260px" : "48%"}/>}
                                 </Flex>
                             </Flex>
-                            {teams && dashboards && <VStack alignItems="left" maxH="calc(100vh - 130px)" overflowY="auto" spacing={3} pt="3">
+                            {teams && dashboards && <VStack alignItems="left" maxH={`calc(100vh - ${isLargeScreen ? 130 : 215}px)`} overflowY="auto" spacing={3} pt="3">
                                 {
                                     layout == "list" && <ListView teams={teams} dashboards={dashboards as Dashboard[]} onItemClick={onClose} query={query} starredIds={starredDashIds} />
                                 }
@@ -276,6 +276,7 @@ const Search = memo((props: Props) => {
                                     layout == "tags" && <TagsView teams={teams} dashboards={dashboards as Map<string, Dashboard[]>} onItemClick={onClose} query={query} starredIds={starredDashIds} />
                                 }
                             </VStack>}
+                            {!isLargeScreen && <Button mt="2" onClick={onClose}>Close</Button>}  
                         </ModalBody>
                     </ModalContent>
                 </Box>
