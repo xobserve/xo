@@ -13,7 +13,7 @@
 
 // Render series table in tooltip
 import React from "react";
-import { Box, Flex, HStack, Table, TableContainer, Tbody, Td, Text, Th, Thead, Tr, VStack } from "@chakra-ui/react"
+import { Box, Flex, HStack, Table, TableContainer, Tbody, Td, Text, Th, Thead, Tr, VStack, useMediaQuery } from "@chakra-ui/react"
 import { formatUnit } from "components/Unit"
 import { cloneDeep, orderBy, round } from "lodash"
 import { memo } from "react"
@@ -29,6 +29,7 @@ import { calcValueOnArray } from "utils/seriesData"
 import { findOverride, findRuleInOverride } from "utils/dashboard/panel";
 import { GraphRules } from "../OverridesEditor";
 import { StatRules } from "../../stat/OverridesEditor";
+import { MobileVerticalBreakpoint } from "src/data/constants";
 
 interface Props {
     props: PanelProps
@@ -125,7 +126,7 @@ const SeriesTable = memo(({ props, data, nearestSeries, filterIdx, mode, onSelec
         v.decimal = decimal
     }
 
-
+    const [isMobileScreen] = useMediaQuery(MobileVerticalBreakpoint)
     return (
         <Box fontSize="xs" width="100%">
             <TableContainer maxW={props.panel.plugins.graph?.legend.placement == "bottom" ? props.width - 20 : width} p={0} marginLeft="-18px" sx={{
@@ -160,7 +161,7 @@ const SeriesTable = memo(({ props, data, nearestSeries, filterIdx, mode, onSelec
                                             <Box width="10px" minWidth="10px" height="4px" background={v.color} mt="7.5px"></Box>
                                             {
                                                 (props.panel.plugins.graph?.legend.placement == "bottom" || mode == seriesTableMode.Tooltip) ?
-                                                    <Text noOfLines={3} minWidth="fit-content" wordBreak="break-all" whiteSpace={"break-spaces"}>{v.name}</Text>
+                                                    <Text noOfLines={3} minWidth="fit-content" wordBreak="break-all" whiteSpace={"break-spaces"} maxW={(mode == seriesTableMode.Tooltip && isMobileScreen) ? props.width / 3 : null}>{v.name}</Text>
                                                     :
                                                     <Text w={props.panel.plugins.graph?.legend.nameWidth === "full" ? "100%" : props.panel.plugins.graph?.legend.nameWidth + 'px'} noOfLines={3} wordBreak="break-all" whiteSpace={props.panel.plugins.graph?.legend.nameWidth === "full" ? "nowrap" : "break-spaces"}>{v.name}</Text>
                                             }
