@@ -62,7 +62,7 @@ function Login() {
     };
 
     const loginGithub = () => {
-       window.location.href = `https://github.com/login/oauth/authorize?client_id=${config.githubOAuthToken}&redirect_url=${config.githubCallBackUrl}/login/github`
+       window.location.href = `https://github.com/login/oauth/authorize?client_id=${config.githubOAuthToken}`
     }
 
     const [isLargeScreen] = useMediaQuery(MobileBreakpoint)

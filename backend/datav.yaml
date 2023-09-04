@@ -8,8 +8,8 @@ common:
 
 #################################### Server ##############################
 server:
+    ## datav server address
     addr: ":10086"
-    base_url: "/api"
     
 #################################### Database ##############################
 database:
@@ -31,8 +31,6 @@ user:
     # Apply at https://github.com/settings/developers
     github_oauth_token: 
     github_oauth_secret: 
-    # Base URL of datav UI
-    github_callback_url: http://localhost:5173
 
 #################################### Paths ##############################
 # Path to where im.dev can store temp files, sessions, and the sqlite3 db (if that is used)

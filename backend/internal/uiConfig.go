@@ -33,7 +33,6 @@ type UIConfig struct {
 
 	EnableGithubLogin bool   `json:"enableGithubLogin"`
 	GithubOAuthToken  string `json:"githubOAuthToken"`
-	GithubCallBackUrl string `json:"githubCallBackUrl"`
 
 	Sidemenu *models.SideMenu `json:"sidemenu"`
 }
@@ -63,7 +62,6 @@ func getUIConfig(c *gin.Context) {
 		ShowAlertIcon:     config.Data.Sidemenu.ShowAlertIcon,
 		EnableGithubLogin: config.Data.User.EnableGithubLogin,
 		GithubOAuthToken:  config.Data.User.GithubOAuthToken,
-		GithubCallBackUrl: config.Data.User.GithubCallBackUrl,
 	}
 
 	// query sidemenu

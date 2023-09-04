@@ -54,9 +54,9 @@ const TeamLayout = ({children}: Props) => {
     }
     
     return <>
-        {team && <Page title={t1.title} subTitle={`${t1.subTitle} - ${team?.name}`} icon={<FaUserFriends />} tabs={tabLinks}>
-            {React.cloneElement(children, { team })}
-        </Page>}
+        <Page title={t1.title} subTitle={`${t1.subTitle} - ${team?.name}`} icon={<FaUserFriends />} tabs={tabLinks}>
+            {team && React.cloneElement(children, { team })}
+        </Page>
 
     </>
 }

@@ -4,6 +4,8 @@ go 1.14
 
 require (
 	github.com/gin-contrib/gzip v0.0.5
+	github.com/gin-contrib/static v0.0.1 // indirect
+	github.com/gin-gonic/contrib v0.0.0-20221130124618-7e01895a63f2 // indirect
 	github.com/gin-gonic/gin v1.7.4
 	github.com/go-sql-driver/mysql v1.7.0
 	github.com/go-stack/stack v1.8.0
@@ -11,10 +13,12 @@ require (
 	github.com/golang/snappy v0.0.4
 	github.com/google/go-cmp v0.5.7 // indirect
 	github.com/google/uuid v1.2.0 // indirect
+	github.com/gorilla/mux v1.8.0 // indirect
 	github.com/gosimple/slug v1.9.0
 	github.com/inconshreveable/log15 v0.0.0-20201112154412-8562bdadbbac
 	github.com/json-iterator/go v1.1.12 // indirect
 	github.com/lithammer/shortuuid/v3 v3.0.5
+	github.com/mandrigin/gin-spa v0.0.0-20200212133200-790d0c0c7335 // indirect
 	github.com/mattn/go-sqlite3 v1.14.17 // indirect
 	github.com/spf13/cobra v1.1.1
 	github.com/teris-io/shortid v0.0.0-20220617161101-71ec9f2aa569

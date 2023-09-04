@@ -20,21 +20,8 @@ import { useRef, useState } from "react"
 import { Team } from "types/teams"
 import { requestApi } from "utils/axios/request"
 import { useNavigate } from "react-router-dom"
-import TeamLayout from "./components/Layout"
 import { useStore } from "@nanostores/react"
 import { cfgTeam, commonMsg } from "src/i18n/locales/en"
-
-const TeamSettingPage = () => {
-  return <>
-    <TeamLayout>
-      {/* @ts-ignore */}
-      <TeamSettings />
-    </TeamLayout>
-
-  </>
-}
-
-export default TeamSettingPage
 
 const TeamSettings = (props: { team: Team }) => {
   const t = useStore(commonMsg)
@@ -162,3 +149,5 @@ const TeamSettings = (props: { team: Team }) => {
     </AlertDialog>
   </>
 }
+
+export default TeamSettings

@@ -34,7 +34,10 @@ const GithubLogin = () => {
             }
         }, 200)
     }
-    return (<></>)
+    return ( <div id="first-page-loading">
+    <div><img className="svgLoader" src="/logo.png" width="60px" height="60px"/></div>
+    <div>Wait for github to response...</div>
+</div>)
 }
 
 export default GithubLogin

@@ -13,7 +13,10 @@
 package internal
 
 import (
+	"fmt"
 	"net/http"
+	"os"
+	"path/filepath"
 	"time"
 
 	"github.com/DataObserve/datav/backend/internal/admin"
@@ -32,6 +35,7 @@ import (
 	"github.com/DataObserve/datav/backend/pkg/e"
 	"github.com/DataObserve/datav/backend/pkg/log"
 	"github.com/gin-contrib/gzip"
+	"github.com/gin-contrib/static"
 	"github.com/gin-gonic/gin"
 )
 
@@ -145,17 +149,43 @@ func (s *Server) Start() error {
 		r.Any("/proxy/:id", proxy.ProxyDatasource)
 		r.GET("/proxy", proxy.Proxy)
 
+		// server a directory called static
+		// ui static files
+		// router.NoRoute(gin.WrapH(http.FileServer(http.Dir("ui"))))
+		router.Use(SpaMiddleware("/", "./ui")) // your build of React or other SPA
+		// router.Use(static.Serve("/", static.LocalFile("ui", false)))
+
 		s.srv = &http.Server{
 			Addr:    config.Data.Server.Addr,
 			Handler: router,
 		}
-		logger.Info("Datav is listening on address", "address", config.Data.Server.Addr)
+		logger.Info("Datav server is listening on address", "address", config.Data.Server.Addr)
 		err := s.srv.ListenAndServe()
 		if err != nil && err != http.ErrServerClosed {
 			logger.Crit("start backend server error", "error", err)
 			panic(err)
 		}
 	}()
+
+	// go func() {
+	// 	router := mux.NewRouter()
+
+	// 	spa := spaHandler{staticPath: "ui/", indexPath: "index.html"}
+	// 	router.PathPrefix("/").Handler(spa)
+
+	// 	srv := &http.Server{
+	// 		Handler: router,
+	// 		Addr:    config.Data.Server.UIAddr,
+	// 		// Good practice: enforce timeouts for servers you create!
+	// 		WriteTimeout: 15 * time.Second,
+	// 		ReadTimeout:  15 * time.Second,
+	// 	}
+
+	// 	logger.Info("Datav's ui server is listening on address", "address", config.Data.Server.UIAddr)
+
+	// 	srv.ListenAndServe()
+	// }()
+
 	return nil
 }
 
@@ -228,5 +258,70 @@ func IsProd() gin.HandlerFunc {
 			return
 		}
 		c.Next()
+	}
+}
+
+// spaHandler implements the http.Handler interface, so we can use it
+// to respond to HTTP requests. The path to the static directory and
+// path to the index file within that static directory are used to
+// serve the SPA in the given static directory.
+type spaHandler struct {
+	staticPath string
+	indexPath  string
+}
+
+// ServeHTTP inspects the URL path to locate a file within the static dir
+// on the SPA handler. If a file is found, it will be served. If not, the
+// file located at the index path on the SPA handler will be served. This
+// is suitable behavior for serving an SPA (single page application).
+func (h spaHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
+	// get the absolute path to prevent directory traversal
+	path, err := filepath.Abs(r.URL.Path)
+	if err != nil {
+		// if we failed to get the absolute path respond with a 400 bad request
+		// and stop
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
+
+	// prepend the path with the path to the static directory
+	path = filepath.Join(h.staticPath, path)
+
+	// check whether a file exists at the given path
+	_, err = os.Stat(path)
+	if os.IsNotExist(err) {
+		// file does not exist, serve index.html
+		http.ServeFile(w, r, filepath.Join(h.staticPath, h.indexPath))
+		return
+	} else if err != nil {
+		// if we got an error (that wasn't that the file doesn't exist) stating the
+		// file, return a 500 internal server error and stop
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	// otherwise, use http.FileServer to serve the static dir
+	http.FileServer(http.Dir(h.staticPath)).ServeHTTP(w, r)
+}
+
+func SpaMiddleware(urlPrefix, spaDirectory string) gin.HandlerFunc {
+	directory := static.LocalFile(spaDirectory, true)
+	fileserver := http.FileServer(directory)
+	if urlPrefix != "" {
+		fileserver = http.StripPrefix(urlPrefix, fileserver)
+	}
+
+	return func(c *gin.Context) {
+		fmt.Println("here3333:", urlPrefix, c.Request.URL.Path)
+		if directory.Exists(urlPrefix, c.Request.URL.Path) {
+
+			fileserver.ServeHTTP(c.Writer, c.Request)
+			c.Abort()
+		} else {
+			fmt.Println("here33331111:", urlPrefix, c.Request.URL.Path)
+			c.Request.URL.Path = "/"
+			fileserver.ServeHTTP(c.Writer, c.Request)
+			c.Abort()
+		}
 	}
 }

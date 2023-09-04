@@ -30,7 +30,6 @@ export interface UIConfig {
     }
     showAlertIcon?: boolean
     githubOAuthToken?: string
-    githubCallBackUrl?: string
     enableGithubLogin?: boolean
     sidemenu?: MenuItem[]
 }

@@ -8,7 +8,7 @@ export default ({ mode }) => {
     const env = loadEnv(mode, process.cwd(), "");
     return defineConfig({
         server: {
-            host: "192.168.50.105"
+            host: "localhost"
         },
         define: {
             "process.env": env,

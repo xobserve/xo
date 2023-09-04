@@ -21,25 +21,7 @@ import { commonMsg } from "src/i18n/locales/en"
 import { Dashboard } from "types/dashboard"
 import { Team } from "types/teams"
 import { requestApi } from "utils/axios/request"
-import TeamLayout from "./components/Layout"
 import Loading from "components/loading/Loading"
-
-
-
-
-const TeamDashboardsPage = () => {
-    return <>
-        <TeamLayout>
-            {/* @ts-ignore */}
-            <TeamDashboards />
-        </TeamLayout>
-
-    </>
-}
-
-export default TeamDashboardsPage
-
-
 
 const TeamDashboards = ({team}: {team:Team}) => {
     const t = useStore(commonMsg)
@@ -93,3 +75,5 @@ const TeamDashboards = ({team}: {team:Team}) => {
         </Box>
     </>
 }
+
+export default TeamDashboards

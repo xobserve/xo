@@ -33,6 +33,7 @@ import { Navigate } from "react-router-dom";
 import AdminPage from "./pages/admin/AuditLogs";
 import GithubLogin from "./pages/GithubLogin";
 import AdminUsers from "./pages/admin/UserStats";
+import TeamLayout from "./pages/cfg/team/[id]/components/Layout";
 
 
 const DashboardPage = loadable(() => import('./pages/dashboard/index'));
@@ -40,6 +41,10 @@ const TracePage = loadable(() => import('./pages/dashboard/Trace'));
 
 const pageContainer = ele => {
   return <PageContainer>{ele}</PageContainer>
+}
+
+const teamPageContainer = ele => {
+  return <TeamLayout>{ele}</TeamLayout>
 }
 
 const cfgRoutes = [
@@ -61,19 +66,19 @@ const cfgRoutes = [
   },
   {
     path: "/cfg/team/:id/dashboards",
-    element: pageContainer(<TeamDashboardsPage />),
+    element: pageContainer(teamPageContainer(<TeamDashboardsPage />)),
   },
   {
     path: "/cfg/team/:id/members",
-    element: pageContainer(<TeamMembersPage />),
+    element: pageContainer(teamPageContainer(<TeamMembersPage />)),
   },
   {
     path: "/cfg/team/:id/setting",
-    element: pageContainer(<TeamSettingPage />),
+    element: pageContainer(teamPageContainer(<TeamSettingPage />)),
   },
   {
     path: "/cfg/team/:id/sidemenu",
-    element: pageContainer(<TeamSidemenuPage />),
+    element: pageContainer(teamPageContainer(<TeamSidemenuPage />)),
   },
 ]
 

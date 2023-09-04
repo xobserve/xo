@@ -20,20 +20,10 @@ import { cfgTeam, commonMsg } from "src/i18n/locales/en"
 import { Role } from "types/role"
 import { Team, TeamMember } from "types/teams"
 import { requestApi } from "utils/axios/request"
-import TeamLayout from "./components/Layout"
 import Loading from "components/loading/Loading"
 
-const TeamMembersPage = () => {
-    return <>
-        <TeamLayout>
-            {/* @ts-ignore */}
-            <TeamMembers />
-        </TeamLayout>
 
-    </>
-}
 
-export default TeamMembersPage
 
 const TeamMembers = ({team}: {team: Team}) => {
     const t = useStore(commonMsg)
@@ -225,3 +215,5 @@ const TeamMembers = ({team}: {team: Team}) => {
         </AlertDialog>
     </>
 }
+
+export default TeamMembers

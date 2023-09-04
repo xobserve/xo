@@ -19,23 +19,12 @@ import { MenuItem, SideMenu, Team } from "types/teams"
 import { requestApi } from "utils/axios/request"
 import SortableTree, { changeNodeAtPath } from '@nosferatu500/react-sortable-tree';
 import * as Icons from 'react-icons/fa'
-import TeamLayout from "./components/Layout"
 
 import '@nosferatu500/react-sortable-tree/style.css';
 import { useStore } from "@nanostores/react"
 import { cfgTeam, commonMsg } from "src/i18n/locales/en"
 import ReserveUrls from "src/data/reserve-urls"
 import Loading from "components/loading/Loading"
-
-const TeamSidemenuPage = () => {
-    return <>
-      <TeamLayout>
-        {/* @ts-ignore */}
-        <TeamSidemenu />
-      </TeamLayout>
-  
-    </>
-  }
 
   
 const TeamSidemenu = ({team}:{team:Team}) => {
@@ -344,4 +333,4 @@ const TeamSidemenu = ({team}:{team:Team}) => {
     </>
 }
 
-export default TeamSidemenuPage
+export default TeamSidemenu

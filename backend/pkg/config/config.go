@@ -43,12 +43,10 @@ type Config struct {
 		EnableGithubLogin bool   `yaml:"enable_github_login"`
 		GithubOAuthToken  string `yaml:"github_oauth_token"`
 		GithubOAuthSecret string `yaml:"github_oauth_secret"`
-		GithubCallBackUrl string `yaml:"github_callback_url"`
 	}
 
 	Server struct {
-		Addr    string
-		BaseUrl string `yaml:"base_url"`
+		Addr string `yaml:"addr"`
 	}
 
 	Dashboard struct {
