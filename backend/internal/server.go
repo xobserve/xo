@@ -159,7 +159,7 @@ func (s *Server) Start() error {
 			Addr:    config.Data.Server.ListeningAddr,
 			Handler: router,
 		}
-		logger.Info("Datav server is listening on address", "address", config.Data.Server.ListeningAddr)
+		logger.Info("Datav server is ready and listening on", "address", config.Data.Server.ListeningAddr)
 		err := s.srv.ListenAndServe()
 		if err != nil && err != http.ErrServerClosed {
 			logger.Crit("start backend server error", "error", err)
