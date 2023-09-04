@@ -13,7 +13,6 @@
 package internal
 
 import (
-	"fmt"
 	"net/http"
 	"os"
 	"path/filepath"
@@ -71,6 +70,7 @@ func (s *Server) Start() error {
 
 	go task.Init()
 
+	go overrideApiServerAddrInLocalUI()
 	go func() {
 		router := gin.New()
 		router.Use(Cors())
@@ -156,10 +156,10 @@ func (s *Server) Start() error {
 		// router.Use(static.Serve("/", static.LocalFile("ui", false)))
 
 		s.srv = &http.Server{
-			Addr:    config.Data.Server.Addr,
+			Addr:    config.Data.Server.ListeningAddr,
 			Handler: router,
 		}
-		logger.Info("Datav server is listening on address", "address", config.Data.Server.Addr)
+		logger.Info("Datav server is listening on address", "address", config.Data.Server.ListeningAddr)
 		err := s.srv.ListenAndServe()
 		if err != nil && err != http.ErrServerClosed {
 			logger.Crit("start backend server error", "error", err)
@@ -312,13 +312,10 @@ func SpaMiddleware(urlPrefix, spaDirectory string) gin.HandlerFunc {
 	}
 
 	return func(c *gin.Context) {
-		fmt.Println("here3333:", urlPrefix, c.Request.URL.Path)
 		if directory.Exists(urlPrefix, c.Request.URL.Path) {
-
 			fileserver.ServeHTTP(c.Writer, c.Request)
 			c.Abort()
 		} else {
-			fmt.Println("here33331111:", urlPrefix, c.Request.URL.Path)
 			c.Request.URL.Path = "/"
 			fileserver.ServeHTTP(c.Writer, c.Request)
 			c.Abort()

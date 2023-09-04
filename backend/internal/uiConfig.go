@@ -13,8 +13,15 @@
 package internal
 
 import (
+	"bytes"
 	"database/sql"
+	"fmt"
+	"io"
+	"log"
 	"net/http"
+	"os"
+	"path/filepath"
+	"strings"
 
 	"github.com/DataObserve/datav/backend/internal/user"
 	"github.com/DataObserve/datav/backend/internal/variables"
@@ -94,4 +101,69 @@ func getUIConfig(c *gin.Context) {
 		"config": cfg,
 		"vars":   vars,
 	}))
+}
+
+// overrideApiServerAddrInLocalUI is used to override api server address in local ui automatically
+func overrideApiServerAddrInLocalUI() {
+	root := config.Data.Server.UiStaticPath
+	filepath.Walk(root, func(path string, info os.FileInfo, err error) error {
+		paths := strings.Split(path, "/")
+		if len(paths) >= 1 {
+			filename := paths[len(paths)-1]
+			// if strings.HasPrefix(filename, "index-") {
+			if strings.HasSuffix(filename, ".js") {
+				content, err := os.ReadFile(path)
+				if err != nil {
+					log.Fatal(err.Error() + ":" + filename)
+				}
+
+				base := "VITE_API_SERVER_PROD:"
+				index := bytes.Index(content, []byte("VITE_API_SERVER_PROD:"))
+				if index >= 0 {
+					start := index + 22
+					var end int
+					for i := start + 1; i < len(content); i++ {
+						if content[i] == '"' {
+							end = i
+							break
+						}
+					}
+
+					var newAddr string
+
+					if strings.TrimSpace(config.Data.Server.OverrideApiServerAddrForUI) != "" {
+						newAddr = config.Data.Server.OverrideApiServerAddrForUI
+					} else {
+						newAddr = "http://" + config.Data.Server.ListeningAddr
+					}
+					newAddr = fmt.Sprintf(`%s"%s"`, base, newAddr)
+					old := fmt.Sprintf(`%s"%s"`, base, string(content[start:end]))
+					content = bytes.Replace(content, []byte(old), []byte(newAddr), 1)
+
+					f, err := os.OpenFile(path, os.O_WRONLY|os.O_TRUNC|os.O_CREATE|os.O_SYNC, 0644)
+					if err != nil {
+						logger.Crit("open ui static file error", "error", err, "path", path)
+					} else {
+						// offset
+						//os.Truncate(filename, 0) //clear
+						n, _ := f.Seek(0, io.SeekEnd)
+						c, err := f.WriteAt([]byte(content), n)
+						if err != nil {
+							logger.Crit("write content to ui static file error", "error", err, "path", path, "length", c)
+						}
+						err = f.Sync()
+						if err != nil {
+							logger.Crit("sync ui static file error", "error", err, "path", path)
+						}
+						logger.Info("Successfully override api server address for ui", "path", path, "old_addr", string(old), "new_addr", newAddr)
+						defer f.Close()
+					}
+				}
+
+			}
+		}
+		// }
+
+		return nil
+	})
 }

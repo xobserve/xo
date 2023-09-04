@@ -22,6 +22,7 @@ import { getThreshold } from "../Threshold/utils"
 import { alpha } from "../uPlot/colorManipulator"
 import { commonInteractionEvent, genDynamicFunction } from "utils/dashboard/dynamicCall"
 import { isFunction } from "lodash"
+import CustomScrollbar from "components/CustomScrollbar/CustomScrollbar"
 
 interface Props {
     data: BarGaugeValue[]
@@ -127,7 +128,7 @@ const BarGauge = (props: Props) => {
                             }
                         </Box>
                     } else {
-                        return <Box width={`${width / data.length}px`} height={height} textAlign="center" onClick={onClick}  cursor={onClick ? "pointer" : null}>
+                        return <CustomScrollbar hideHorizontalTrack><Box width={`${width / data.length - 6}px`} maxH={height} textAlign="center" onClick={onClick}  cursor={onClick ? "pointer" : null}>
                             <Text lineHeight={`${titleHeight}px`} fontSize={`${textSize}px`} color={color} noOfLines={1}>{v.text}</Text>
                             <Box height={lcdSize - gap} width="100%" bg={showUnfilled ? useColorModeValue("rgb(244, 245, 245)", "rgba(255,255,255,0.1)") : null} position="relative">
                                 {mode == "lcd" ?
@@ -148,8 +149,9 @@ const BarGauge = (props: Props) => {
                                 {showMin ? <Text fontSize="0.6rem" opacity="0.4">{`${formatUnit(v.min, v.units, v.decimal)}`} </Text> : <Box></Box>}
                                 {showMax ? <Text fontSize="0.6rem" opacity="0.4"> {`${formatUnit(v.max, v.units, v.decimal)}`}</Text> : <Box></Box>}
                             </Flex>
-                            {v.title && <Box height={`${titleHeight}px`}><Text fontSize={`${titleSize}px`} fontWeight={500}>{v.title}</Text></Box>}
+                            {v.title && <Box><Text fontSize={`${titleSize}px`} fontWeight={500} wordBreak={"break-all"}>{v.title}</Text></Box>}
                         </Box>
+                        </CustomScrollbar>
                     }
 
                 })
