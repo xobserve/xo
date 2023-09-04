@@ -31,7 +31,7 @@ const TeamsPage = () => {
     const { session } = useSession()
     const toast = useToast()
     const navigate = useNavigate()
-    const [teams, setTeams] = useState<Team[]>([])
+    const [teams, setTeams] = useState<Team[]>(null)
     const [teamName, setTeamName] = useState<string>("")
     const [teamDesc, setTeamDesc] = useState<string>("")
     useEffect(() => {
@@ -60,7 +60,7 @@ const TeamsPage = () => {
     }
 
     return <>
-        <Page title={t.configuration} subTitle={t.manageItem({name: t.team})} icon={<FaCog />} tabs={cfgLinks}>
+        <Page title={t.configuration} subTitle={t.manageItem({name: t.team})} icon={<FaCog />} tabs={cfgLinks} isLoading={teams === null}>
             <Flex justifyContent="space-between">
                 <Box></Box>
                 <Button size="sm" onClick={onOpen}>{t.newItem({name: t.team})}</Button>
@@ -78,7 +78,7 @@ const TeamsPage = () => {
                         </Tr>
                     </Thead>
                     <Tbody>
-                        {teams.map(team => {
+                        {teams?.map(team => {
                             return <Tr key={team.id}>
                                 <Td>{team.id}</Td>
                                 <Td>{team.name}</Td>

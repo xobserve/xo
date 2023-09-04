@@ -83,7 +83,6 @@ const ContextMenu = memo(({ props, options, data, container }: Props) => {
                     seriesIdx.current = fs
                     coordX.current = x
                     coordY.current = y
-                    console.log("here3333333:", x,y)
 
                 }
                 xVal.current = uplot.cursor.left
@@ -115,7 +114,6 @@ const ContextMenu = memo(({ props, options, data, container }: Props) => {
                         // clicked in-place
                         if (e.clientX == clientX && e.clientY == clientY) {
                             if (seriesIdx.current != null && dataIdx.current != null) {
-                                console.log("here333333:", coordX.current, coordY.current)
                                 setCoords(cd => cd ? null : { x: coordX.current, y: coordY.current })
                                 dispatch(OnGraphPanelClickEvent + props.panel.id)
                             }

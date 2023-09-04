@@ -56,12 +56,12 @@ const GlobalVariablesPage = () => {
     const t1 = useStore(cfgVariablemsg)
     const editVar = useSearchParam('editVar')
     const toast = useToast()
-    const [variables, setVariables] = useState<Variable[]>([])
+    const [variables, setVariables] = useState<Variable[]>(null)
     const [variable, setVariable] = useState<Variable>()
     const [editMode, setEditMode] = useState<boolean>(false)
 
     useEffect(() => {
-        if (variables.length > 0 && editVar) {
+        if (variables?.length > 0 && editVar) {
             onEditVariable(variables.find(v => v.id.toString() == editVar))
         }
     }, [variables, editVar])
@@ -158,12 +158,12 @@ const GlobalVariablesPage = () => {
     }
 
     return <>
-        <Page title={t.configuration} subTitle={t1.subTitle} icon={<FaCog />} tabs={cfgLinks}>
+        <Page title={t.configuration} subTitle={t1.subTitle} icon={<FaCog />} tabs={cfgLinks} isLoading={variables === null}>
             <Flex justifyContent="space-between">
                 <Box></Box>
                 <Button size="sm" onClick={onAddVariable}>{t.newItem({ name: t.variable })}</Button>
             </Flex>
-            <VariablesTable variables={variables} onEdit={onEditVariable} onRemove={onRemoveVariable} />
+            {variables && <VariablesTable variables={variables} onEdit={onEditVariable} onRemove={onRemoveVariable} />}
         </Page>
         {variable && <EditVariable key={variable.id} v={variable} isEdit={editMode} onClose={() => {
             removeParamFromUrl(['editVar'])

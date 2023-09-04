@@ -33,10 +33,9 @@ import { isEmpty } from "utils/validate"
 const UsersPage = () => {
     const t = useStore(commonMsg)
     const t1 = useStore(cfgUsers)
-    const {time} = useStore(format)
     const {session} = useSession()
     const toast = useToast()
-    const [users, setUsers] = useState<User[]>([])
+    const [users, setUsers] = useState<User[]>(null)
     useEffect(() => {
         load()
     }, [])
@@ -174,7 +173,7 @@ const UsersPage = () => {
     }
 
     return <>
-        <Page title={t.configuration} subTitle={t.manageItem({name: t.user})} icon={<FaCog />} tabs={cfgLinks}>
+        <Page title={t.configuration} subTitle={t.manageItem({name: t.user})} icon={<FaCog />} tabs={cfgLinks} isLoading={users === null}>
             <Flex justifyContent="space-between">
                 <Box></Box>
                 <Button size="sm" onClick={onAddUser}>{t.newItem({name: t.user})}</Button>
@@ -193,7 +192,7 @@ const UsersPage = () => {
                         </Tr>
                     </Thead>
                     <Tbody>
-                        {users.map(user => {
+                        {users?.map(user => {
                             return <Tr key={user.id}>
                                 <Td>{user.username} {session?.user?.id == user.id && <Tag>You</Tag>}</Td>
                                 <Td>{user.name}</Td>

@@ -11,7 +11,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { Box, Button, Heading, Input, useToast, VStack } from "@chakra-ui/react";
+import { Box, Button, Heading, Input, useMediaQuery, useToast, VStack } from "@chakra-ui/react";
 import { useStore } from "@nanostores/react";
 import FormItem from "components/form/Item";
 import useSession from "hooks/use-session";
@@ -19,6 +19,7 @@ import Page from "layouts/page/Page"
 import React, { useEffect, useState } from "react";
 import { FaUserAlt } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
+import { MobileVerticalBreakpoint } from "src/data/constants";
 import { accountLinks } from "src/data/nav-links";
 import { accountSettingMsg, commonMsg } from "src/i18n/locales/en";
 import { requestApi } from "utils/axios/request";
@@ -118,12 +119,16 @@ const AccountSetting = () => {
         logout()
         navigate("/login")
     }
-
+    
+    const [isMobileScreen] = useMediaQuery(MobileVerticalBreakpoint)
     return (
-        <Page title={`${t1.navTitle} - ${session?.user.username}`} subTitle={t1.subTitle} icon={<FaUserAlt />} tabs={accountLinks}>
+        <Page title={isMobileScreen ? t1.navTitle : `${t1.navTitle} - ${session?.user.username}`} subTitle={t1.subTitle} icon={<FaUserAlt />} tabs={accountLinks}>
             <Box alignItems="left" maxW="600px">
                 <VStack alignItems="left" spacing={4}>
                     <Box mb="2" textStyle="subTitle">{t.basicSetting}</Box>
+                    <FormItem title={t.userName} labelWidth="200px">
+                        <Input value={session?.user.username} disabled />
+                    </FormItem>
                     <FormItem title={t.nickname} labelWidth="200px">
                         <Input placeholder='give yourself a nick name' value={name} onChange={e => setName(e.currentTarget.value)} />
                     </FormItem>

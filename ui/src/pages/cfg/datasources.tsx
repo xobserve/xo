@@ -33,7 +33,7 @@ const DatasourcesPage = () => {
     const t1 = useStore(cfgDatasourceMsg)
     const toast = useToast()
     const navigate = useNavigate()
-    const [datasources, setDatasources] = useState<Datasource[]>([])
+    const [datasources, setDatasources] = useState<Datasource[]>(null)
     const [datasource, setDatasource] = useState<Datasource>(null)
     useEffect(() => {
         load()
@@ -78,7 +78,7 @@ const DatasourcesPage = () => {
     }
 
     return <>
-        <Page title={t.configuration} subTitle={t.manageItem({name: t.datasource})} icon={<FaCog />} tabs={cfgLinks}>
+        <Page title={t.configuration} subTitle={t.manageItem({name: t.datasource})} icon={<FaCog />} tabs={cfgLinks} isLoading={datasources === null}>
             <Flex justifyContent="space-between">
                 <Box></Box>
                 <Button size="sm" onClick={() => navigate(ReserveUrls.New + '/datasource')}>{t.newItem({name: t.datasource})}</Button>
@@ -86,7 +86,7 @@ const DatasourcesPage = () => {
 
             <VStack alignItems="left" spacing={3} mt="3">
                 {
-                    datasources.map(ds => <Flex key={ds.id} className={`${datasource?.id == ds.id ? "tag-bg" : ""} label-bg`} p="4" alignItems="center" justifyContent="space-between">
+                    datasources?.map(ds => <Flex key={ds.id} className={`${datasource?.id == ds.id ? "tag-bg" : ""} label-bg`} p="4" alignItems="center" justifyContent="space-between">
                         <HStack>
                             <Image width="50px" height="50px" src={`/plugins/datasource/${ds.type}.svg`} />
                             <Box>
