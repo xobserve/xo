@@ -25,6 +25,7 @@ import '@nosferatu500/react-sortable-tree/style.css';
 import { useStore } from "@nanostores/react"
 import { cfgTeam, commonMsg } from "src/i18n/locales/en"
 import ReserveUrls from "src/data/reserve-urls"
+import Loading from "components/loading/Loading"
 
 const TeamSidemenuPage = () => {
     return <>
@@ -41,7 +42,7 @@ const TeamSidemenu = ({team}:{team:Team}) => {
     const t = useStore(commonMsg)
     const t1 = useStore(cfgTeam)
     const toast = useToast()
-    const [sidemenu, setSideMenu] = useState<SideMenu>()
+    const [sidemenu, setSideMenu] = useState<SideMenu>(null)
 
 
     const getNodeKey = ({ treeIndex }) => treeIndex
@@ -227,7 +228,7 @@ const TeamSidemenu = ({team}:{team:Team}) => {
         setSideMenu(cloneDeep(sidemenu))
     }
     return <>
-        {sidemenu && <Box>
+        {sidemenu ? <Box>
             <Alert status='info' maxWidth="700px" flexDirection="column" alignItems="left">
                 <Text>{t1.sidemenuTip1}</Text>
 
@@ -339,7 +340,7 @@ const TeamSidemenu = ({team}:{team:Team}) => {
                     })}
                 />
             </Box>
-        </Box>}
+        </Box> :  <Loading style={{marginTop: '50px'}}/>}
     </>
 }
 

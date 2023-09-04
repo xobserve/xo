@@ -30,6 +30,7 @@ import { useLocation } from "react-router-dom"
 import useBus from "use-bus"
 import { OnDashboardWeightChangeEvent } from "src/data/bus-events"
 import { MobileBreakpoint } from "src/data/constants"
+import Loading from "components/loading/Loading"
 
 interface Props {
     title: string
@@ -75,18 +76,20 @@ const Search = memo((props: Props) => {
             return
         }
         onOpen()
-        const r1 = requestApi.get(`/dashboard/simpleList`)
-        const r2 = requestApi.get(`/dashboard/starred`)
-        const r3 = requestApi.get("/teams/all")
-        const res = await Promise.all([r1, r2, r3])
-
-        setRawDashboards(res[0].data)
-        const starred = new Set<string>()
-        for (const id of res[1].data) {
-            starred.add(id)
-        }
-        setStarredDashIds(starred)
-        setTeams(res[2].data)
+        if (!rawDashboards) {
+            const r1 = requestApi.get(`/dashboard/simpleList`)
+            const r2 = requestApi.get(`/dashboard/starred`)
+            const r3 = requestApi.get("/teams/all")
+            const res = await Promise.all([r1, r2, r3])
+    
+            setRawDashboards(res[0].data)
+            const starred = new Set<string>()
+            for (const id of res[1].data) {
+                starred.add(id)
+            }
+            setStarredDashIds(starred)
+            setTeams(res[2].data)
+        }   
     }
 
 
@@ -265,7 +268,7 @@ const Search = memo((props: Props) => {
                                     {teams && <TeamsFilter value={selectedTeams} teams={teams} onChange={setSelectedTeams} teamCount={teamCount} minWidth={isLargeScreen ? "260px" : "48%"}/>}
                                 </Flex>
                             </Flex>
-                            {teams && dashboards && <VStack alignItems="left" maxH={`calc(100vh - ${isLargeScreen ? 130 : 215}px)`} overflowY="auto" spacing={3} pt="3">
+                            {(teams && dashboards) ? <VStack alignItems="left" maxH={`calc(100vh - ${isLargeScreen ? 130 : 215}px)`} overflowY="auto" spacing={3} pt="3">
                                 {
                                     layout == "list" && <ListView teams={teams} dashboards={dashboards as Dashboard[]} onItemClick={onClose} query={query} starredIds={starredDashIds} />
                                 }
@@ -275,7 +278,7 @@ const Search = memo((props: Props) => {
                                 {
                                     layout == "tags" && <TagsView teams={teams} dashboards={dashboards as Map<string, Dashboard[]>} onItemClick={onClose} query={query} starredIds={starredDashIds} />
                                 }
-                            </VStack>}
+                            </VStack> : <Loading />}
                             {!isLargeScreen && <Button mt="2" onClick={onClose}>Close</Button>}  
                         </ModalBody>
                     </ModalContent>

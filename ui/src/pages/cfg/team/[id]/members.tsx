@@ -21,6 +21,7 @@ import { Role } from "types/role"
 import { Team, TeamMember } from "types/teams"
 import { requestApi } from "utils/axios/request"
 import TeamLayout from "./components/Layout"
+import Loading from "components/loading/Loading"
 
 const TeamMembersPage = () => {
     return <>
@@ -39,7 +40,7 @@ const TeamMembers = ({team}: {team: Team}) => {
     const t1 = useStore(cfgTeam)
     const toast = useToast()
 
-    const [members, setMembers] = useState<TeamMember[]>([])
+    const [members, setMembers] = useState<TeamMember[]>(null)
     const [memberInEdit, setMemberInEdit] = useState<TeamMember>(null)
 
     const { isOpen, onOpen, onClose } = useDisclosure()
@@ -117,7 +118,7 @@ const TeamMembers = ({team}: {team: Team}) => {
                 <Box></Box>
                 <Button size="sm" onClick={onAddMemberOpen}>{t.newItem({name: t.members})}</Button>
             </Flex>
-            <TableContainer>
+            {members ? <TableContainer>
                 <Table variant="simple">
                     <Thead>
                         <Tr>
@@ -141,7 +142,7 @@ const TeamMembers = ({team}: {team: Team}) => {
                         })}
                     </Tbody>
                 </Table>
-            </TableContainer>
+            </TableContainer>:  <Loading style={{marginTop: '50px'}}/>}
         </Box>
 
         <Modal isOpen={isOpen} onClose={onClose}>

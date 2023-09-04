@@ -22,6 +22,7 @@ import { Dashboard } from "types/dashboard"
 import { Team } from "types/teams"
 import { requestApi } from "utils/axios/request"
 import TeamLayout from "./components/Layout"
+import Loading from "components/loading/Loading"
 
 
 
@@ -44,7 +45,7 @@ const TeamDashboards = ({team}: {team:Team}) => {
     const t = useStore(commonMsg)
     const navigate = useNavigate()
 
-    const [dashboards, setDashboards] = useState<Dashboard[]>([])
+    const [dashboards, setDashboards] = useState<Dashboard[]>(null)
 
 
     useEffect(() => {
@@ -63,7 +64,7 @@ const TeamDashboards = ({team}: {team:Team}) => {
                 <Box></Box>
                 <Button size="sm" onClick={() => navigate(`${ReserveUrls.New}/dashboard?team=${team.id}`)}>{t.newItem({name: t.dashboard})}</Button>
             </Flex>
-            <TableContainer>
+            {dashboards ? <TableContainer>
                 <Table variant="simple">
                     <Thead>
                         <Tr>
@@ -75,7 +76,7 @@ const TeamDashboards = ({team}: {team:Team}) => {
                         </Tr>
                     </Thead>
                     <Tbody>
-                        {dashboards.map(dash => {
+                        {dashboards?.map(dash => {
                             return <Tr key={dash.id}>
                                 <Td>{dash.title}</Td>
                                 <Td>{dash.id}</Td>
@@ -88,7 +89,7 @@ const TeamDashboards = ({team}: {team:Team}) => {
                         })}
                     </Tbody>
                 </Table>
-            </TableContainer>
+            </TableContainer> : <Loading style={{marginTop: '50px'}}/>}
         </Box>
     </>
 }
