@@ -2,6 +2,7 @@ import { Steps } from '@/components/Steps'
 import { DocumentationLayout } from '@/layouts/DocumentationLayout'
 import { InstallationLayout } from '@/pages/docs/installation/InstallationLayout'
 import Link from 'next/link'
+import Code  from '@/components/docs/Code'
 
 let steps = [
   {
@@ -37,7 +38,7 @@ let steps = [
     code: {
       name: 'DatavRoot/backend',
       lang: 'terminal',
-      code: `./datav --config config.yaml
+      code: `./datav --config datav.yaml
 INFO[08-22|13:40:25] Datav is listening on address            address=:10086`,
     },
   },
@@ -85,7 +86,7 @@ export default function TailwindCli({ code }) {
       <h2 className="text-slate-900 text-xl tracking-tight font-bold mb-3 dark:text-slate-200">
           Try Datav in browser
         </h2>
-        <p>It's really easy and fast, right? Now you can open Chrome or Safari browser and visit <Link href="http://localhost:5173">http://localhost:5173</Link> to explore Datav UI.</p>
+        <p>It's really easy and fast, right? Now you can open Chrome or Safari browser and visit <Code><Link href="http://localhost:5173">http://localhost:5173</Link></Code> to explore Datav UI.</p>
       </div>
       {/*
         <Cta

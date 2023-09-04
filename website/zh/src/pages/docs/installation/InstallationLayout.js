@@ -6,8 +6,10 @@ import { IconContainer } from '@/components/home/common'
 
 let tabs = {
   '本地开发环境': '/docs/installation',
-  // "Build for production": "/docs/installation/production",
+  "二进制安装包": "/docs/installation/production",
+  "从源码部署": '/docs/installation/deploy-ui',
 }
+
 
 let readNext = [
   // {

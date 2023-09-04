@@ -1,117 +1,40 @@
 import { DocumentationLayout } from '@/layouts/DocumentationLayout'
 import { InstallationLayout } from './InstallationLayout'
-import { Cta } from '@/components/Cta'
 import { Steps } from '@/components/Steps'
+import Link from 'next/link'
+import Code  from '@/components/docs/Code'
 
 let steps = [
   {
-    title: 'Install Tailwind CSS',
+    title: 'Configure listening address for datav server( optional )',
     body: () => (
       <p>
-        Install <code>tailwindcss</code> and its peer dependencies via npm, and create your{' '}
-        <code>tailwind.config.js</code> file.
+        Now, we need to configure a listening address for our Datav api server and static file server of UI. The default address is `localhost:10086`
       </p>
     ),
     code: {
-      name: 'Terminal',
+      name: 'DatavRoot/datav.yaml',
+      lang: 'yaml',
+      code: `server:
+  ## api server listening address
+  ## ip:host
+  listening_addr: localhost:10086`,
+    },
+  },
+  {
+    title: 'Start Datav',
+    body: () => (
+      <p>
+        Enter the root directory of Datav and run the following command to start Datav server.
+      </p>
+    ),
+    code: {
+      name: 'DatavRoot/',
       lang: 'terminal',
-      code: 'npm install -D tailwindcss postcss autoprefixer\nnpx tailwindcss init',
+      code: `./datav
+INFO[08-22|13:40:25] Datav is ready and listening on address=localhost:10086`,
     },
-  },
-  {
-    title: 'Add Tailwind to your PostCSS configuration',
-    body: () => (
-      <p>
-        Add <code>tailwindcss</code> and <code>autoprefixer</code> to your{' '}
-        <code>postcss.config.js</code> file, or wherever PostCSS is configured in your project.
-      </p>
-    ),
-    code: {
-      name: 'postcss.config.js',
-      lang: 'js',
-      code: `  module.exports = {
-    plugins: {
->     tailwindcss: {},
->     autoprefixer: {},
-    }
-  }`,
-    },
-  },
-  {
-    title: 'Configure your template paths',
-    body: () => (
-      <p>
-        Add the paths to all of your template files in your <code>tailwind.config.js</code> file.
-      </p>
-    ),
-    code: {
-      name: 'tailwind.config.js',
-      lang: 'js',
-      code: `  /** @type {import('tailwindcss').Config} */
-  module.exports = {
->   content: ["./src/**/*.{html,js}"],
-    theme: {
-      extend: {},
-    },
-    plugins: [],
-  }`,
-    },
-  },
-  {
-    title: 'Add the Tailwind directives to your CSS',
-    body: () => (
-      <p>
-        Add the <code>@tailwind</code> directives for each of Tailwind’s layers to your main CSS
-        file.
-      </p>
-    ),
-    code: {
-      name: 'main.css',
-      lang: 'css',
-      code: '@tailwind base;\n@tailwind components;\n@tailwind utilities;',
-    },
-  },
-  {
-    title: 'Start your build process',
-    body: () => (
-      <p>
-        Run your build process with <code>npm run dev</code> or whatever command is configured in
-        your <code>package.json</code> file.
-      </p>
-    ),
-    code: {
-      name: 'Terminal',
-      lang: 'terminal',
-      code: 'npm run dev',
-    },
-  },
-  {
-    title: 'Start using Tailwind in your HTML',
-    body: () => (
-      <p>
-        Make sure your compiled CSS is included in the <code>{'<head>'}</code>{' '}
-        <em>(your framework might handle this for you)</em>, then start using Tailwind’s utility
-        classes to style your content.
-      </p>
-    ),
-    code: {
-      name: 'index.html',
-      lang: 'html',
-      code: `  <!doctype html>
-  <html>
-  <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link href="/dist/main.css" rel="stylesheet">
-  </head>
-  <body>
->   <h1 class="text-3xl font-bold underline">
->     Hello world!
->   </h1>
-  </body>
-  </html>`,
-    },
-  },
+  }
 ]
 
 export default function UsingPostCss({ code }) {
@@ -121,27 +44,48 @@ export default function UsingPostCss({ code }) {
         id="content-wrapper"
         className="relative z-10 max-w-3xl mb-16 prose prose-slate dark:prose-dark"
       >
-        <h3 className="sr-only">Installing Tailwind CSS as a PostCSS plugin</h3>
+        <h3 className="sr-only"></h3>
         <p>
-          Installing Tailwind CSS as a PostCSS plugin is the most seamless way to integrate it with
-          build tools like webpack, Rollup, Vite, and Parcel.
+          Datav provides pre-built binary and UI static files for every release, you can download them in  <Link href="https://github.com/data-observe/datav/releases">Github</Link>.
+        </p>
+        <p>
+          Pre-built binary files are very convenient for users to use, but they are not suitable for developers to develop and debug. If you want to develop Datav, you need to build the source code yourself.
         </p>
       </div>
+
       <Steps level={4} steps={steps} code={code} />
-      <Cta
-        label="Explore our framework guides"
-        href="/docs/installation/framework-guides"
-        description={
-          <>
-            <strong className="font-semibold text-slate-900 dark:text-slate-200">
-              Are you stuck?
-            </strong>{' '}
-            Setting up Tailwind with PostCSS can be a bit different across different build tools.
-            Check our framework guides to see if we have more specific instructions for your
-            particular setup.
-          </>
-        }
-      />
+
+      <div>
+        <h2 className="text-slate-900 text-xl tracking-tight font-bold mb-3 dark:text-slate-200">
+          Try Datav in browser
+        </h2>
+        <p>That's it, all we need to do is configuring a listening address  and start `Datav`, it's super easy. Now you can open Chrome or Safari browser and visit <Code><Link href="http://localhost:10086">http://localhost:10086</Link></Code> to explore Datav UI.</p>
+      </div>
+
+      <div className="mt-8">
+        <h2 className="text-slate-900 text-xl tracking-tight font-bold mb-3 dark:text-slate-200">
+          Why not require nginx or vite dev server?
+        </h2>
+        <p>This is because we have a built-in static file server in Datav, and the UI static files you access are provided by this file server. Another important thing is that the API server and file server shares the same address `localhost:10086`, it's very convinient for deploying.</p>
+      </div>
+      <div className="mt-8">
+        <h2 className="text-slate-900 text-xl tracking-tight font-bold mb-3 dark:text-slate-200">
+          What if I want to points a domain name to UI and api server?
+        </h2>
+        <p>If your boss want to access Datav when he is not in company, then you should assign an externap ip or domain name to datav, such as `https://mydatav.io`. In this case, you should override the api server address for UI: </p>
+        
+        <p className="mt-4">Modify `datav.yaml`, set field `override_api_server_addr_for_ui` to `https://mydatav.io`</p>
+
+        <p className="mt-4">Now your api server and UI are both served at `https://mydatav.io`</p>
+
+        <p className="mt-4"><strong>This is not bad, but a much better way is to separate UI static files and api server as below.</strong></p>
+      </div>
+      <div className="mt-8">
+        <h2 className="text-slate-900 text-xl tracking-tight font-bold mb-3 dark:text-slate-200">
+          What if I want to use nginx for serving UI static files?
+        </h2>
+        <p>It's a good practice to separate UI static files and API server in production environment. If you have such requirements, please read the next installation tab <Code><Link href="/docs/installation/deploy-ui">Deploy UI your separately from API server</Link></Code></p>
+      </div>
     </InstallationLayout>
   )
 }

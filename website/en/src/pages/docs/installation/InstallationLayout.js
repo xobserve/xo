@@ -6,7 +6,8 @@ import { IconContainer } from '@/components/home/common'
 
 let tabs = {
   'Local development': '/docs/installation',
-  // "Build for production": "/docs/installation/production",
+  "Prebuilt binary": "/docs/installation/production",
+  'Deploy from source': '/docs/installation/deploy-ui',
 }
 
 let readNext = [
