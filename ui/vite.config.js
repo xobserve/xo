@@ -25,11 +25,11 @@ export default ({ mode }) => {
         build: {
             outDir: 'build',
             assetsDir: 'static',
-            commonjsOptions: {
-                // Ensure we transform modules that contain a mix of ES imports
-                // and CommonJS require() calls to avoid stray require() calls in production.
-                transformMixedEsModules: true,
-            },   
+            // commonjsOptions: {
+            //     // Ensure we transform modules that contain a mix of ES imports
+            //     // and CommonJS require() calls to avoid stray require() calls in production.
+            //     transformMixedEsModules: true,
+            // },   
             rollupOptions: {
                 external: 'NonExistingPath'
               }
