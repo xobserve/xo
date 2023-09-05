@@ -43,7 +43,6 @@ const TraceDetail = ({ trace, scrollManager }: Props) => {
     const search = useSearchParam('search')
     const view = useSearchParam("view")
     useLocation()
-    console.log("here333333 trace search:", search )
     const [viewType, setViewType] = useState<ETraceViewType>(view as any ?? ETraceViewType.TraceTimelineViewer)
     const [viewRange, setViewRange] = useState<IViewRange>({
         time: {
