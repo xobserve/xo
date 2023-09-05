@@ -24,8 +24,9 @@ import { TNil } from 'types/misc';
 import { KeyValuePair, SpanLink, SpanLog, TraceSpan } from 'types/plugins/trace';
 
 import { formatDuration } from 'utils/date';
-import { Box, Divider, Flex, HStack, Text } from '@chakra-ui/react';
+import { Box, Divider, Flex, HStack, Text, useMediaQuery } from '@chakra-ui/react';
 import LabeledList from 'src/components/LabelList';
+import { MobileBreakpoint } from 'src/data/constants';
 
 type SpanDetailProps = {
   detailState: DetailState;
@@ -58,8 +59,9 @@ export default function SpanDetail(props: SpanDetailProps) {
   const { isTagsOpen, isProcessOpen, logs: logsState, isWarningsOpen, isReferencesOpen } = detailState;
   const { operationName, process, duration, relativeStartTime, spanID, logs, tags, warnings, references } =
     span;
+  const [isLargeScreen] = useMediaQuery(MobileBreakpoint)
   const overviewItems = [
-    {
+    isLargeScreen && {
       key: 'svc',
       label: 'Service:',
       value: process.serviceName,
@@ -77,11 +79,12 @@ export default function SpanDetail(props: SpanDetailProps) {
   ];
   const deepLinkCopyText = `${window.location.origin}${window.location.pathname}?uiFind=${spanID}`;
 
+
   return (
     <div>
       <Flex justifyContent="space-between" alignItems="center" pt="0" pb="2">
         <HStack>
-          <Text textStyle="subTitle">{operationName}</Text>
+          <Text textStyle={isLargeScreen ? "subTitle" : null} minWidth="fit-content">{operationName}</Text>
           <Text opacity="0.7" mb="-2px">{spanID}</Text>
         </HStack>
         <LabeledList
@@ -90,7 +93,7 @@ export default function SpanDetail(props: SpanDetailProps) {
         />
       </Flex>
       <Divider className="SpanDetail--divider" />
-      <Box mt="3">
+      <Box mt={isLargeScreen ? 3 : 1}>
         <div>
           <AccordianKeyValues
             data={tags}
@@ -101,7 +104,6 @@ export default function SpanDetail(props: SpanDetailProps) {
           />
           {process.tags && (
             <AccordianKeyValues
-              className="ub-mb1"
               data={process.tags}
               label="Process"
               linksGetter={linksGetter}

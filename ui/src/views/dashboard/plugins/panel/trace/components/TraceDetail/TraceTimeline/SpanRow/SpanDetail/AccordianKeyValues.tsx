@@ -97,11 +97,11 @@ export default function AccordianKeyValues(props: AccordianKeyValuesProps) {
         {...headerProps}
       >
         {arrow}
-        <strong data-test={markers.LABEL} style={{fontSize: '0.85rem'}}>
+        <strong data-test={markers.LABEL} style={{fontSize: '0.8rem'}}>
           {label}
           {isOpen || ':'}
         </strong>
-        {!isOpen && <KeyValuesSummary data={data} />}
+        {!isOpen && <Box mt="1"><KeyValuesSummary data={data} /></Box>}
       </Box>}
       {isOpen && <KeyValuesTable data={data} linksGetter={linksGetter} />}
     </Box>
