@@ -1,6 +1,6 @@
 import { Steps } from '@/components/Steps'
 import { DocumentationLayout } from '@/layouts/DocumentationLayout'
-import { InstallationLayout } from '@/pages/docs/installation/InstallationLayout'
+import { InstallationLayout } from '@/layouts/InstallationLayout'
 import Link from 'next/link'
 import Code from '@/components/docs/Code'
 
