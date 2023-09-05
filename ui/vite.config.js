@@ -20,7 +20,7 @@ export default ({ mode }) => {
             viteTsconfigPaths(),
             svgrPlugin()
         ],
-        base: '/',
+        base: './',
         publicDir: './public',
         build: {
             outDir: 'build',
