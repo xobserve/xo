@@ -6,9 +6,6 @@ description: "Tailwind CSS brand assets and usage guidelines."
 import {DocumentationLayout} from '@/layouts/DocumentationLayout'
 import {ContentsLayout} from '@/layouts/ContentsLayout'
 
-import tailwindcssLogoMark from '@/img/brand/tailwindcss-mark.svg'
-import tailwindcssLogoType from '@/img/brand/tailwindcss-logotype.svg'
-import tailwindcssLogoTypeWhite from '@/img/brand/tailwindcss-logotype-white.svg'
 
 export const Layout = DocumentationLayout
 export default ContentsLayout
@@ -34,27 +31,24 @@ These assets are provided for use in situations like articles and video tutorial
 ### Mark
 
 <div className="pt-5 pb-8">
-  <a href={tailwindcssLogoMark} download>
+  <a download>
     <span className="sr-only">Download mark</span>
     <div className="max-w-xl">
       <div className="relative" style={{ paddingTop: `${33 / 262 * 100}%` }}>
-        <img className="absolute inset-0 w-full h-full object-contain object-left" src={tailwindcssLogoMark} alt="" width={54} height={33} style={{ margin: 0 }} />
       </div>
     </div>
   </a>
 </div>
 
-<a href={tailwindcssLogoMark} download>Download mark</a>
+<a  download>Download mark</a>
 
 ### Logotype
 
 <div className="pt-5 pb-8">
-  <a href={tailwindcssLogoMark} download>
+  <a  download>
     <span className="sr-only">Download logotype</span>
     <div className="max-w-xl">
       <div className="relative" style={{ paddingTop: `${33 / 262 * 100}%` }}>
-        <img className="absolute inset-0 w-full h-full block dark:hidden" src={tailwindcssLogoType} alt="" width={262} height={33} style={{ margin: 0 }} />
-        <img className="absolute inset-0 w-full h-full hidden dark:block" src={tailwindcssLogoTypeWhite} alt="" width={262} height={33} style={{ margin: 0 }} />
       </div>
     </div>
   </a>

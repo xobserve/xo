@@ -199,3 +199,5 @@ export function InstallationLayout({ children }) {
     </BasicLayout>
   )
 }
+
+

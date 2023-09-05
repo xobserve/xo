@@ -1,5 +1,5 @@
 import { DocumentationLayout } from '@/layouts/DocumentationLayout'
-import { InstallationLayout } from './InstallationLayout'
+import { InstallationLayout } from '@/layouts/InstallationLayout'
 import { Steps } from '@/components/Steps'
 import Link from 'next/link'
 import Code  from '@/components/docs/Code'
