@@ -12,14 +12,14 @@
 // limitations under the License.
 import { round, isNumber, isEqual, over } from "lodash";
 import { ColorMode } from "src/data/constants";
-import * as colorManipulator from 'components/uPlot/colorManipulator';
+import * as colorManipulator from 'src/components/uPlot/colorManipulator';
 import { canvasCtx } from 'src/App';
 import { OverrideItem, PanelProps } from "types/dashboard";
 import uPlot from "uplot";
 import { systemDateFormats } from "utils/datetime/formats";
 import { dateTimeFormat } from "utils/datetime/formatter";
 import customColors from "src/theme/colors";
-import { formatUnit } from "components/Unit";
+import { formatUnit } from "src/components/Unit";
 import { measureText } from "utils/measureText";
 import { SeriesData } from "types/seriesData";
 import { GraphRules } from "./OverridesEditor";

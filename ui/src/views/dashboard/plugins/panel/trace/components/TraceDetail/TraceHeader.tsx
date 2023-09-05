@@ -12,17 +12,17 @@
 // limitations under the License.
 
 import { Flex, HStack, Input, Text, useMediaQuery } from "@chakra-ui/react"
-import { ColorModeSwitcher } from "components/ColorModeSwitcher"
+import { ColorModeSwitcher } from "src/components/ColorModeSwitcher"
 import moment from "moment"
 import { Trace } from "types/plugins/trace"
 import { formatDuration } from "utils/date"
 import SpanGraph from "./SpanGraph"
 import { useState } from "react"
 import { ETraceViewType, IViewRange, ViewRangeTimeUpdate } from "../../types/types"
-import CollapseIcon from "components/icons/Collapse"
+import CollapseIcon from "src/components/icons/Collapse"
 import { AiOutlineDown, AiOutlineUp } from "react-icons/ai"
-import IconButton from "components/button/IconButton"
-import RadionButtons from "components/RadioButtons"
+import IconButton from "src/components/button/IconButton"
+import RadionButtons from "src/components/RadioButtons"
 import { addParamToUrl } from 'utils/url'
 import React from "react";
 import { dateTimeFormat } from "utils/datetime/formatter"

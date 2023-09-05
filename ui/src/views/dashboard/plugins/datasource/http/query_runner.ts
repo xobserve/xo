@@ -18,7 +18,7 @@ import { TimeRange } from "types/time"
 import { genDynamicFunction } from "utils/dashboard/dynamicCall"
 import {  isFunction, round } from "lodash"
 import _ from 'lodash'
-import { getNewestTimeRange } from "components/DatePicker/TimePicker"
+import { getNewestTimeRange } from "src/components/DatePicker/TimePicker"
 import { isJSON } from "utils/is"
 import { replaceWithVariables } from "utils/variable"
 import { requestApi } from "utils/axios/request"

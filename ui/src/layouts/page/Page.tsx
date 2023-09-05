@@ -20,7 +20,7 @@ import { Link } from "react-router-dom"
 import { useStore } from "@nanostores/react"
 import { commonMsg, navigateMsg } from "src/i18n/locales/en"
 import { MobileVerticalBreakpoint } from "src/data/constants"
-import Loading from "components/loading/Loading"
+import Loading from "src/components/loading/Loading"
 
 interface Props {
     title: string

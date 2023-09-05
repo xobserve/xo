@@ -12,7 +12,7 @@
 // limitations under the License.
 
 import { Box, Flex, HStack, Text, useColorMode, useColorModeValue, useToast, VStack } from "@chakra-ui/react"
-import { formatUnit } from "components/Unit"
+import { formatUnit } from "src/components/Unit"
 import React from "react"
 import { Unit } from "types/panel/plugins"
 import { ThresholdsConfig } from "types/threshold"
@@ -22,7 +22,7 @@ import { getThreshold } from "../Threshold/utils"
 import { alpha } from "../uPlot/colorManipulator"
 import { commonInteractionEvent, genDynamicFunction } from "utils/dashboard/dynamicCall"
 import { isFunction } from "lodash"
-import CustomScrollbar from "components/CustomScrollbar/CustomScrollbar"
+import CustomScrollbar from "src/components/CustomScrollbar/CustomScrollbar"
 
 interface Props {
     data: BarGaugeValue[]

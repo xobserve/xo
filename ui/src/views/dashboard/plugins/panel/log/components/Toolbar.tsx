@@ -12,8 +12,8 @@
 // limitations under the License.
 
 import { Box, Button, Divider, Flex, HStack, Text, VStack, useColorMode } from "@chakra-ui/react"
-import RadionButtons from "components/RadioButtons"
-import { EditorInputItem,  EditorSliderItem } from "components/editor/EditorItem"
+import RadionButtons from "src/components/RadioButtons"
+import { EditorInputItem,  EditorSliderItem } from "src/components/editor/EditorItem"
 import React, { memo, useState } from "react"
 import { AiOutlineDoubleRight } from "react-icons/ai"
 import { Panel } from "types/dashboard"

@@ -11,7 +11,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 import { Box } from "@chakra-ui/react"
-import { MarkdownRender } from "components/markdown/MarkdownRender"
+import { MarkdownRender } from "src/components/markdown/MarkdownRender"
 import { PanelProps } from "types/dashboard"
 import { replaceWithVariables } from "utils/variable"
 import React from "react";

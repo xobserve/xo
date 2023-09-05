@@ -13,8 +13,8 @@
 
 import React from "react"
 import { Box, Button, Input, useDisclosure, useToast, VStack, AlertDialog, AlertDialogBody, AlertDialogContent, AlertDialogFooter, AlertDialogHeader, AlertDialogOverlay, HStack, FormLabel } from "@chakra-ui/react"
-import { Form, FormSection } from "components/form/Form"
-import FormItem from "components/form/Item"
+import { Form, FormSection } from "src/components/form/Form"
+import FormItem from "src/components/form/Item"
 import { cloneDeep } from "lodash"
 import { useRef, useState } from "react"
 import { Team } from "types/teams"

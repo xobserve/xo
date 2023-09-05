@@ -11,7 +11,7 @@ import { FaTimes } from "react-icons/fa"
 import React from "react";
 import { useStore } from "@nanostores/react"
 import { tracePanelMsg } from "src/i18n/locales/en"
-import CustomScrollbar from "components/CustomScrollbar/CustomScrollbar"
+import CustomScrollbar from "src/components/CustomScrollbar/CustomScrollbar"
 import { MobileBreakpoint } from "src/data/constants"
 
 interface Props {

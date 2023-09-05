@@ -14,16 +14,16 @@ import { Box, Button, Switch } from "@chakra-ui/react"
 import { useEffect, useState } from "react"
 import { Variable } from "types/variable"
 import { isJSON } from "utils/is"
-import { EditorInputItem } from "components/editor/EditorItem"
+import { EditorInputItem } from "src/components/editor/EditorItem"
 import { DatasourceVariableEditorProps } from "types/datasource"
-import FormItem from "components/form/Item"
+import FormItem from "src/components/form/Item"
 import React from "react";
 import { useStore } from "@nanostores/react"
 import { cfgVariablemsg } from "src/i18n/locales/en"
 import { queryLokiLabelNames, queryLokiVariableValues } from "./query_runner"
-import { getNewestTimeRange } from "components/DatePicker/TimePicker"
+import { getNewestTimeRange } from "src/components/DatePicker/TimePicker"
 import { Select } from "antd"
-import InputSelect from "components/select/InputSelect"
+import InputSelect from "src/components/select/InputSelect"
 
 
 

@@ -23,7 +23,7 @@ import HttpDatasourceEditor from "../dashboard/plugins/datasource/http/Datasourc
 import PrometheusDatasourceEditor from "../dashboard/plugins/datasource/prometheus/DatasourceEditor"
 import TestDataDatasourceEditor from "../dashboard/plugins/datasource/testdata/DatasourceEditor"
 import JaegerDatasourceEditor from "../dashboard/plugins/datasource/jaeger/DatasourceEditor"
-import FormItem from "components/form/Item"
+import FormItem from "src/components/form/Item"
 import React from "react";
 import { useStore } from "@nanostores/react"
 import { commonMsg, newMsg } from "src/i18n/locales/en"

@@ -13,7 +13,7 @@
 
 import { Box, Button, Heading, Input, useMediaQuery, useToast, VStack } from "@chakra-ui/react";
 import { useStore } from "@nanostores/react";
-import FormItem from "components/form/Item";
+import FormItem from "src/components/form/Item";
 import useSession from "hooks/use-session";
 import Page from "layouts/page/Page"
 import React, { useEffect, useState } from "react";

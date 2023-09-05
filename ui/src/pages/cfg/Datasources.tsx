@@ -13,7 +13,7 @@
 
 import React from "react"
 import { Button, Modal, ModalBody, ModalCloseButton, ModalContent, ModalHeader, ModalOverlay, useDisclosure, VStack, Flex, Box, useToast, HStack, Image, Text, AlertDialog, AlertDialogOverlay, AlertDialogContent, AlertDialogHeader, AlertDialogBody, AlertDialogFooter, Tag } from "@chakra-ui/react"
-import { Form } from "components/form/Form"
+import { Form } from "src/components/form/Form"
 import Page from "layouts/page/Page"
 import { isEmpty } from "lodash"
 import { useEffect, useRef, useState } from "react"

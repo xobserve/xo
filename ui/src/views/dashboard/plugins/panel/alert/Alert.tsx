@@ -30,7 +30,7 @@ import { getTextColorForAlphaBackground, paletteColorNameToHex, paletteMap } fro
 import { replaceWithVariables } from "utils/variable";
 import { useStore } from "@nanostores/react";
 import { $variables } from "src/views/variables/store";
-import CustomScrollbar from "components/CustomScrollbar/CustomScrollbar";
+import CustomScrollbar from "src/components/CustomScrollbar/CustomScrollbar";
 import { ColorGenerator } from "utils/colorGenerator";
 
 

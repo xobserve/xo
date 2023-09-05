@@ -12,7 +12,7 @@
 // limitations under the License.
 import { Box } from '@chakra-ui/react';
 import { css } from '@emotion/css';
-import CustomScrollbar from 'components/CustomScrollbar/CustomScrollbar';
+import CustomScrollbar from 'src/components/CustomScrollbar/CustomScrollbar';
 import { useExtraStyles } from 'hooks/useExtraTheme';
 import React, { FC, CSSProperties, ComponentType } from 'react';
 import { useMeasure } from 'react-use';

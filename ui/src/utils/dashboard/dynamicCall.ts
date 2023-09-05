@@ -10,7 +10,7 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 
-import { setDateTime } from "components/DatePicker/DatePicker"
+import { setDateTime } from "src/components/DatePicker/DatePicker"
 import { gnavigate } from "layouts/PageContainer"
 import { setVariable } from "src/views/variables/SelectVariable"
 import { $variables } from "src/views/variables/store"

@@ -13,8 +13,8 @@
 
 import React from "react"
 import { Box, Button, Input, Select, Text, useToast, VStack } from "@chakra-ui/react"
-import { Form, FormSection } from "components/form/Form"
-import FormItem from "components/form/Item"
+import { Form, FormSection } from "src/components/form/Form"
+import FormItem from "src/components/form/Item"
 import Page from "layouts/page/Page"
 import { cloneDeep } from "lodash"
 import { useEffect, useState } from "react"

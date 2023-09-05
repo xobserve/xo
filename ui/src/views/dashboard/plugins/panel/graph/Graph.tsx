@@ -10,7 +10,7 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-import UplotReact from "components/uPlot/UplotReact"
+import UplotReact from "src/components/uPlot/UplotReact"
 import { memo, useCallback, useEffect, useMemo, useRef, useState } from "react"
 import { OverrideItem, Panel, PanelProps } from "types/dashboard"
 import 'uplot/dist/uPlot.min.css';
@@ -28,7 +28,7 @@ import { SeriesData } from "types/seriesData";
 import storage from "utils/localStorage";
 import { PanelInactiveKey } from "src/data/storage-keys";
 import { ZoomPlugin } from "./uplot-plugins/ZoomPlugin";
-import { setDateTime } from "components/DatePicker/DatePicker";
+import { setDateTime } from "src/components/DatePicker/DatePicker";
 import React from "react";
 import { GraphRules } from "./OverridesEditor";
 import { findOverride, findOverrideRule, findRuleInOverride } from "utils/dashboard/panel";

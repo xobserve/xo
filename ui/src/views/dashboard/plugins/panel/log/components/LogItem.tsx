@@ -16,7 +16,7 @@ import { Box, Flex, HStack, Highlight, Text, VStack, useColorMode, useColorModeV
 import { Panel } from "types/dashboard"
 import { dateTimeFormat } from "utils/datetime/formatter";
 import { isEmpty, round, toNumber } from "lodash";
-import CollapseIcon from "components/icons/Collapse";
+import CollapseIcon from "src/components/icons/Collapse";
 import { LayoutOrientation } from "types/layout";
 import { paletteColorNameToHex } from "utils/colors";
 import { Log } from "types/plugins/log";

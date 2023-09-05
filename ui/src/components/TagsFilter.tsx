@@ -12,7 +12,7 @@
 // limitations under the License.
 
 import { Select } from "antd";
-import ColorTag from "components/ColorTag";
+import ColorTag from "src/components/ColorTag";
 import type { CustomTagProps } from 'rc-select/lib/BaseSelect';
 import React from "react";
 const { Option } = Select;

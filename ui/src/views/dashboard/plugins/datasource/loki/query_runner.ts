@@ -22,7 +22,7 @@ import { isEmpty } from "utils/validate";
 import { round } from "lodash";
 import { prometheusToPanels } from "../prometheus/transformData";
 import { isJSON } from "utils/is";
-import { getNewestTimeRange } from "components/DatePicker/TimePicker";
+import { getNewestTimeRange } from "src/components/DatePicker/TimePicker";
 import { LokiDsQueryTypes } from "./VariableEdtiro";
 import { is } from "date-fns/locale";
 import { getDatasource, roundDsTime } from "utils/datasource";

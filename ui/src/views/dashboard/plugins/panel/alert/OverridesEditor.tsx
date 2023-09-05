@@ -13,12 +13,12 @@
 
 // Render series table in tooltip
 
-import { ColorPicker } from "components/ColorPicker";
-import { EditorInputItem, EditorNumberItem, EditorSliderItem } from "components/editor/EditorItem";
-import { UnitPicker } from "components/Unit";
+import { ColorPicker } from "src/components/ColorPicker";
+import { EditorInputItem, EditorNumberItem, EditorSliderItem } from "src/components/editor/EditorItem";
+import { UnitPicker } from "src/components/Unit";
 import { OverrideRule } from "types/dashboard";
 import React from "react";
-import ThresholdEditor from "components/Threshold/ThresholdEditor";
+import ThresholdEditor from "src/components/Threshold/ThresholdEditor";
 
 interface Props {
     override: OverrideRule

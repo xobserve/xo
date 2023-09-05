@@ -19,7 +19,7 @@ import { SeriesData } from "types/seriesData"
 import customColors from "theme/colors"
 import { isSeriesData } from "utils/seriesData"
 import { isEmpty } from "utils/validate"
-import CustomScrollbar from "components/CustomScrollbar/CustomScrollbar"
+import CustomScrollbar from "src/components/CustomScrollbar/CustomScrollbar"
 import { paletteColorNameToHex } from "utils/colors"
 
 interface TablePanelProps extends PanelProps {

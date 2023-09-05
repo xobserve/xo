@@ -11,7 +11,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 import { Box, StackDivider, VStack } from "@chakra-ui/react"
-import { getCurrentTimeRange } from "components/DatePicker/TimePicker"
+import { getCurrentTimeRange } from "src/components/DatePicker/TimePicker"
 import React, { useEffect, useState } from "react"
 import { Panel } from "types/dashboard"
 import { queryAlerts } from "../grid/PanelGrid/PanelGrid"

@@ -20,7 +20,7 @@ import './KeyValuesTable.css';
 import { TNil } from 'types/misc';
 import { KeyValuePair, SpanLink } from 'types/plugins/trace';
 
-import CopyToClipboard from 'components/CopyToClipboard';
+import CopyToClipboard from 'src/components/CopyToClipboard';
 import { FaLink } from 'react-icons/fa';
 import { Box, useColorModeValue } from '@chakra-ui/react';
 import customColors from 'src/theme/colors';

@@ -20,7 +20,7 @@ import { formatDuration } from 'utils/date'
 import { FiringIcon, PendingIcon } from "./Icons"
 import { getTextColorForAlphaBackground, paletteColorNameToHex } from "utils/colors"
 import { isFunction, upperFirst } from "lodash"
-import CollapseIcon from "components/icons/Collapse"
+import CollapseIcon from "src/components/icons/Collapse"
 import { dateTimeFormat } from "utils/datetime/formatter"
 import { IoMdInformationCircleOutline } from "react-icons/io"
 import { getLabelNameColor } from "../../log/utils"

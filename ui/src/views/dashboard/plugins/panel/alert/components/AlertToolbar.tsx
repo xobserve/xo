@@ -12,9 +12,9 @@
 // limitations under the License.
 
 import { Box, Button, Checkbox, Divider, Flex, HStack, Input, Text, VStack } from "@chakra-ui/react"
-import MultiRadionButtons from "components/MultiRadioButtons"
-import RadionButtons from "components/RadioButtons"
-import { EditorInputItem } from "components/editor/EditorItem"
+import MultiRadionButtons from "src/components/MultiRadioButtons"
+import RadionButtons from "src/components/RadioButtons"
+import { EditorInputItem } from "src/components/editor/EditorItem"
 import React, { memo, useState } from "react"
 import { AiOutlineDoubleRight } from "react-icons/ai"
 import { MobileVerticalBreakpointNum } from "src/data/constants"

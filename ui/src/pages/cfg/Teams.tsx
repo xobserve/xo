@@ -12,8 +12,8 @@
 // limitations under the License.
 import React from "react"
 import { Button, Table, TableContainer, Tag, Tbody, Td, Th, Thead, Tr, Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay, useDisclosure,  Input, Flex, Box, useToast } from "@chakra-ui/react"
-import { Form } from "components/form/Form"
-import FormItem from "components/form/Item"
+import { Form } from "src/components/form/Form"
+import FormItem from "src/components/form/Item"
 import useSession from "hooks/use-session"
 import Page from "layouts/page/Page"
 import { useEffect, useState } from "react"

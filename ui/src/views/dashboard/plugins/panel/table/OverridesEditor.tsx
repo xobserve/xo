@@ -10,20 +10,20 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-import RadionButtons from "components/RadioButtons";
-import { ColorPicker } from "components/ColorPicker";
-import { EditorInputItem, EditorNumberItem, EditorSliderItem } from "components/editor/EditorItem";
-import { UnitPicker } from "components/Unit";
+import RadionButtons from "src/components/RadioButtons";
+import { ColorPicker } from "src/components/ColorPicker";
+import { EditorInputItem, EditorNumberItem, EditorSliderItem } from "src/components/editor/EditorItem";
+import { UnitPicker } from "src/components/Unit";
 import { OverrideRule, Panel } from "types/dashboard";
 import React from "react";
 import { useStore } from "@nanostores/react";
 import { commonMsg, tablePanelMsg } from "src/i18n/locales/en";
 import { Box, Checkbox, Text } from "@chakra-ui/react";
 import { isEmpty } from "utils/validate";
-import { CodeEditorModal } from "components/CodeEditor/CodeEditorModal";
-import ThresholdEditor from "components/Threshold/ThresholdEditor";
+import { CodeEditorModal } from "src/components/CodeEditor/CodeEditorModal";
+import ThresholdEditor from "src/components/Threshold/ThresholdEditor";
 import { cloneDeep } from "lodash";
-import ValueMapping from "components/ValueMapping/ValueMapping";
+import ValueMapping from "src/components/ValueMapping/ValueMapping";
 import { dispatch } from "use-bus";
 import { PanelForceRebuildEvent } from "src/data/bus-events";
 

@@ -10,14 +10,14 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-import RadionButtons from "components/RadioButtons";
-import { ColorPicker } from "components/ColorPicker";
-import { EditorInputItem, EditorNumberItem, EditorSliderItem } from "components/editor/EditorItem";
-import { UnitPicker } from "components/Unit";
+import RadionButtons from "src/components/RadioButtons";
+import { ColorPicker } from "src/components/ColorPicker";
+import { EditorInputItem, EditorNumberItem, EditorSliderItem } from "src/components/editor/EditorItem";
+import { UnitPicker } from "src/components/Unit";
 import { OverrideRule } from "types/dashboard";
 import React from "react";
-import ValueCalculation from "components/ValueCalculation";
-import ThresholdEditor from "components/Threshold/ThresholdEditor";
+import ValueCalculation from "src/components/ValueCalculation";
+import ThresholdEditor from "src/components/Threshold/ThresholdEditor";
 
 interface Props {
     override: OverrideRule

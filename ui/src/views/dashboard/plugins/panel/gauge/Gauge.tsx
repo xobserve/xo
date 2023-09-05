@@ -11,7 +11,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 import { Box, Center, useColorMode } from "@chakra-ui/react";
-import ChartComponent from "components/charts/Chart";
+import ChartComponent from "src/components/charts/Chart";
 import { cloneDeep, round } from "lodash";
 
 import { memo, useCallback, useEffect, useMemo, useState } from "react";

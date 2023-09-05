@@ -11,15 +11,15 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 import { Select, Switch, useMediaQuery } from "@chakra-ui/react"
-import { EditorInputItem } from "components/editor/EditorItem"
-import { Form } from "components/form/Form"
+import { EditorInputItem } from "src/components/editor/EditorItem"
+import { Form } from "src/components/form/Form"
 import { Dashboard } from "types/dashboard"
-import BorderSelect from "components/largescreen/components/BorderSelect"
-import FormItem from "components/form/Item"
+import BorderSelect from "src/components/largescreen/components/BorderSelect"
+import FormItem from "src/components/form/Item"
 import React from "react";
 import { useStore } from "@nanostores/react"
 import { dashboardSettingMsg } from "src/i18n/locales/en"
-import InputSelect from "components/select/InputSelect"
+import InputSelect from "src/components/select/InputSelect"
 import { isEmpty } from "utils/validate"
 import storage from "utils/localStorage"
 import { PreviousColorModeKey } from "src/data/storage-keys"

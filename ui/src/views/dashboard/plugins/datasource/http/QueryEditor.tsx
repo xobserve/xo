@@ -11,9 +11,9 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 import { HStack, Input, VStack } from "@chakra-ui/react"
-import { CodeEditorModal } from "components/CodeEditor/CodeEditorModal"
-import { Form } from "components/form/Form"
-import FormItem from "components/form/Item"
+import { CodeEditorModal } from "src/components/CodeEditor/CodeEditorModal"
+import { Form } from "src/components/form/Form"
+import FormItem from "src/components/form/Item"
 import { cloneDeep, isEmpty, set } from "lodash"
 import { useEffect, useState } from "react"
 import { PanelQuery, PanelType } from "types/dashboard"

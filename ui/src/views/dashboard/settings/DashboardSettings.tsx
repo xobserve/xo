@@ -11,7 +11,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 import {  Modal, ModalBody, ModalCloseButton, ModalContent, ModalOverlay, Tab, TabList, TabPanel, TabPanels, Tabs, Text, useDisclosure, useMediaQuery } from "@chakra-ui/react"
-import IconButton from "components/button/IconButton"
+import IconButton from "src/components/button/IconButton"
 import { toNumber } from "lodash"
 import { useEffect } from "react"
 import { FaCog } from "react-icons/fa"

@@ -31,9 +31,9 @@ import { TDenseSpanMembers } from '../../../model/trace-dag/types';
 import TDagPlexusVertex from '../../../model/trace-dag/types/TDagPlexusVertex';
 import { TNil } from 'types/misc';
 import { Box, Button, Flex, Tooltip, useColorModeValue } from '@chakra-ui/react';
-import IconButton from 'components/button/IconButton';
+import IconButton from 'src/components/button/IconButton';
 import { FaQuestion, FaTimes } from 'react-icons/fa';
-import Card from 'components/Card';
+import Card from 'src/components/Card';
 
 
 type Props = {

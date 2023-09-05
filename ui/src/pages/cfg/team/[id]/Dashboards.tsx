@@ -21,7 +21,7 @@ import { commonMsg } from "src/i18n/locales/en"
 import { Dashboard } from "types/dashboard"
 import { Team } from "types/teams"
 import { requestApi } from "utils/axios/request"
-import Loading from "components/loading/Loading"
+import Loading from "src/components/loading/Loading"
 
 const TeamDashboards = ({team}: {team:Team}) => {
     const t = useStore(commonMsg)

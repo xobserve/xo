@@ -23,14 +23,14 @@ import { Variable } from "types/variable";
 import { hasVariableFormat, replaceQueryWithVariables, replaceWithVariables } from "utils/variable";
 import storage from "utils/localStorage";
 import useBus, { dispatch } from 'use-bus'
-import { getCurrentTimeRange } from "components/DatePicker/TimePicker";
+import { getCurrentTimeRange } from "src/components/DatePicker/TimePicker";
 import { PanelDataEvent, PanelForceRebuildEvent, TimeChangedEvent } from "src/data/bus-events";
 import { addParamToUrl } from "utils/url";
 import { query_testdata_alerts, run_testdata_query } from "../../plugins/datasource/testdata/query_runner";
 import { run_jaeger_query } from "../../plugins/datasource/jaeger/query_runner";
 import PanelBorder from "../../../../components/largescreen/components/Border";
-import TitleDecoration from "components/largescreen/components/TitleDecoration";
-import PanelDecoration from "components/largescreen/components/Decoration";
+import TitleDecoration from "src/components/largescreen/components/TitleDecoration";
+import PanelDecoration from "src/components/largescreen/components/Decoration";
 import { useDedupEvent } from "hooks/useDedupEvent";
 import loadable from '@loadable/component'
 import { calculateInterval } from "utils/datetime/range";
@@ -50,7 +50,7 @@ import { $variables } from "src/views/variables/store";
 import { getDatasource } from "utils/datasource";
 import { jsonToEqualPairs, parseVariableFormat } from "utils/format";
 import { VariableInterval } from "src/data/variable";
-import Loading from "components/loading/Loading";
+import Loading from "src/components/loading/Loading";
 import DebugPanel from "./DebugPanel";
 import { AlertGroup, AlertRule } from "types/plugins/alert";
 // import TextPanel from "../../plugins/panel/text/Text";

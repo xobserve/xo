@@ -11,7 +11,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 import { isEmpty } from "lodash";
-import * as colorManipulator from 'components/uPlot/colorManipulator';
+import * as colorManipulator from 'src/components/uPlot/colorManipulator';
 import { canvasCtx } from 'src/App';
 import { OverrideItem, PanelProps } from "types/dashboard";
 import uPlot from "uplot";

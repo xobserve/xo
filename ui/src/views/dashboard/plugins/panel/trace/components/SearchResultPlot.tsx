@@ -1,6 +1,6 @@
 import { Box, useColorMode, useMediaQuery } from "@chakra-ui/react";
-import ChartComponent from "components/charts/Chart";
-import { alpha } from "components/uPlot/colorManipulator";
+import ChartComponent from "src/components/charts/Chart";
+import { alpha } from "src/components/uPlot/colorManipulator";
 import { max, round } from "lodash";
 import moment from "moment";
 import { memo, useEffect, useMemo, useState } from "react";

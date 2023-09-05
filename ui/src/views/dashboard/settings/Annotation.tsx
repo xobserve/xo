@@ -13,15 +13,15 @@
 
 import { Switch } from "@chakra-ui/react"
 import { useStore } from "@nanostores/react"
-import { ColorPicker } from "components/ColorPicker"
-import { Form, FormSection } from "components/form/Form"
-import FormItem from "components/form/Item"
+import { ColorPicker } from "src/components/ColorPicker"
+import { Form, FormSection } from "src/components/form/Form"
+import FormItem from "src/components/form/Item"
 import React from "react"
 import { initDashboard } from "src/data/dashboard"
 import { commonMsg, dashboardSettingMsg } from "src/i18n/locales/en"
 import { Dashboard } from "types/dashboard"
-import { EditorInputItem } from "components/editor/EditorItem"
-import RadionButtons from "components/RadioButtons"
+import { EditorInputItem } from "src/components/editor/EditorItem"
+import RadionButtons from "src/components/RadioButtons"
 import { Role } from "types/role"
 
 

@@ -11,21 +11,21 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 import { Select, Switch, Textarea } from "@chakra-ui/react"
-import { EditorInputItem, EditorNumberItem, EditorSliderItem } from "components/editor/EditorItem"
-import RadionButtons from "components/RadioButtons"
+import { EditorInputItem, EditorNumberItem, EditorSliderItem } from "src/components/editor/EditorItem"
+import RadionButtons from "src/components/RadioButtons"
 import PanelAccordion from "src/views/dashboard/edit-panel/Accordion"
 import PanelEditItem from "src/views/dashboard/edit-panel/PanelEditItem"
 import { Panel, PanelEditorProps } from "types/dashboard"
 import React, { memo } from "react";
 import { useStore } from "@nanostores/react"
 import { commonMsg, graphPanelMsg } from "src/i18n/locales/en"
-import { UnitPicker } from "components/Unit"
+import { UnitPicker } from "src/components/Unit"
 import { ThresholdDisplay, Units } from "types/panel/plugins"
-import PopoverSelect from "components/select/PopoverSelect"
+import PopoverSelect from "src/components/select/PopoverSelect"
 import { ValueCalculationType } from "types/value"
-import ThresholdEditor from "components/Threshold/ThresholdEditor"
+import ThresholdEditor from "src/components/Threshold/ThresholdEditor"
 import { BarThresholdArrow } from "types/plugins/bar"
-import { CodeEditorModal } from "components/CodeEditor/CodeEditorModal"
+import { CodeEditorModal } from "src/components/CodeEditor/CodeEditorModal"
 import { dispatch } from "use-bus"
 import { PanelForceRebuildEvent } from "src/data/bus-events"
 

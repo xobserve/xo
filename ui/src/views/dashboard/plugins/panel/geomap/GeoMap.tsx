@@ -34,7 +34,7 @@ import { genDynamicFunction } from "utils/dashboard/dynamicCall";
 import { isFunction } from "lodash";
 import { gnavigate } from "layouts/PageContainer";
 import { setVariable } from "src/views/variables/SelectVariable";
-import { setDateTime } from "components/DatePicker/DatePicker";
+import { setDateTime } from "src/components/DatePicker/DatePicker";
 import { $variables } from "src/views/variables/store";
 
 interface Props extends PanelProps {

@@ -13,9 +13,9 @@
 
 import { Box, HStack, Input, Text, VStack,Button } from "@chakra-ui/react"
 import { useStore } from "@nanostores/react"
-import { ColorPicker } from "components/ColorPicker"
-import { EditorNumberItem } from "components/editor/EditorItem"
-import RadionButtons from "components/RadioButtons"
+import { ColorPicker } from "src/components/ColorPicker"
+import { EditorNumberItem } from "src/components/editor/EditorItem"
+import RadionButtons from "src/components/RadioButtons"
 import { cloneDeep } from "lodash"
 import React, { useState } from "react"
 import { FaTimes } from "react-icons/fa"

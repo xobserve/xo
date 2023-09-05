@@ -16,7 +16,7 @@ import React, { useState } from "react"
 import { BsShare } from "react-icons/bs"
 import { Dashboard } from "types/dashboard"
 import { parseVariableFormat } from "utils/format"
-import { getCurrentTimeRange } from "components/DatePicker/TimePicker"
+import { getCurrentTimeRange } from "src/components/DatePicker/TimePicker"
 import queryString from 'query-string';
 import { FaCopy, FaRegCopy } from "react-icons/fa"
 import { useStore } from "@nanostores/react"

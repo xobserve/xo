@@ -11,8 +11,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 import { Box, Button, HStack, StackDivider, Select as ChakraSelect, Tooltip, VStack, useMediaQuery } from "@chakra-ui/react";
-import { Form, FormSection } from "components/form/Form";
-import FormItem from "components/form/Item";
+import { Form, FormSection } from "src/components/form/Form";
+import FormItem from "src/components/form/Item";
 import { flatten, isArray } from "lodash";
 import { useMemo } from "react";
 import { FaTimes } from "react-icons/fa";

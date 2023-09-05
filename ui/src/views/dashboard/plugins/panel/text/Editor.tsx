@@ -11,8 +11,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 import { Textarea } from "@chakra-ui/react"
-import { EditorInputItem } from "components/editor/EditorItem"
-import RadionButtons from "components/RadioButtons"
+import { EditorInputItem } from "src/components/editor/EditorItem"
+import RadionButtons from "src/components/RadioButtons"
 import PanelAccordion from "src/views/dashboard/edit-panel/Accordion"
 import PanelEditItem from "src/views/dashboard/edit-panel/PanelEditItem"
 import { Panel, PanelEditorProps } from "types/dashboard"

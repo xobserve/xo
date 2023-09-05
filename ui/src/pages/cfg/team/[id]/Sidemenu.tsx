@@ -24,7 +24,7 @@ import '@nosferatu500/react-sortable-tree/style.css';
 import { useStore } from "@nanostores/react"
 import { cfgTeam, commonMsg } from "src/i18n/locales/en"
 import ReserveUrls from "src/data/reserve-urls"
-import Loading from "components/loading/Loading"
+import Loading from "src/components/loading/Loading"
 
   
 const TeamSidemenu = ({team}:{team:Team}) => {

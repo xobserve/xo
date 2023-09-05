@@ -32,12 +32,12 @@ import React, { useEffect, useState } from "react"
 import * as Icons from "react-icons/fa"
 
 
-import Logo from "components/Logo"
+import Logo from "src/components/Logo"
 import { navLinks } from "src/data/nav-links"
-import { ColorModeSwitcher } from "components/ColorModeSwitcher"
+import { ColorModeSwitcher } from "src/components/ColorModeSwitcher"
 import customColors from "src/theme/colors"
 
-import UserMenu from "components/user/UserMenu"
+import UserMenu from "src/components/user/UserMenu"
 import ReserveUrls from "src/data/reserve-urls"
 
 import useSession from "hooks/use-session"

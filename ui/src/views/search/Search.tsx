@@ -17,7 +17,7 @@ import { FaAlignJustify, FaBuffer, FaSearch, FaSitemap, FaTimes } from "react-ic
 import { Dashboard } from "types/dashboard"
 import { requestApi } from "utils/axios/request"
 import { RxLetterCaseCapitalize } from "react-icons/rx";
-import TagsFilter from "components/TagsFilter"
+import TagsFilter from "src/components/TagsFilter"
 import { isEmpty } from "utils/validate"
 import { Team } from "types/teams"
 import TeamsFilter from "./TeamsFilter"
@@ -25,12 +25,12 @@ import { AiFillStar, AiOutlineStar } from "react-icons/ai"
 import ListView from "./ListView"
 import TeamsView from "./TeamsView"
 import TagsView from "./TagsView"
-import PopoverTooltip from "components/PopoverTooltip"
+import PopoverTooltip from "src/components/PopoverTooltip"
 import { useLocation } from "react-router-dom"
 import useBus from "use-bus"
 import { OnDashboardWeightChangeEvent } from "src/data/bus-events"
 import { MobileBreakpoint } from "src/data/constants"
-import Loading from "components/loading/Loading"
+import Loading from "src/components/loading/Loading"
 
 interface Props {
     title: string

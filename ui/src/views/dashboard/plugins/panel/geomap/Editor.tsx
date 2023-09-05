@@ -17,20 +17,20 @@ import React, { memo } from "react";
 import { useStore } from "@nanostores/react"
 import { commonMsg } from "src/i18n/locales/en"
 import { Select } from "@chakra-ui/select";
-import { EditorInputItem, EditorNumberItem, EditorSliderItem } from "components/editor/EditorItem";
+import { EditorInputItem, EditorNumberItem, EditorSliderItem } from "src/components/editor/EditorItem";
 import { ArcGisMapServer, BaseLayerType, DataLayerType } from "types/plugins/geoMap";
-import RadionButtons from "components/RadioButtons";
-import ThresholdEditor from "components/Threshold/ThresholdEditor";
+import RadionButtons from "src/components/RadioButtons";
+import ThresholdEditor from "src/components/Threshold/ThresholdEditor";
 import { Button, HStack, Switch, Text } from "@chakra-ui/react";
 import { geomap } from "./GeoMap";
 import { toLonLat } from "ol/proj";
 import { round } from "lodash";
-import { UnitPicker } from "components/Unit";
+import { UnitPicker } from "src/components/Unit";
 import { Units } from "types/panel/plugins";
-import ValueCalculation from "components/ValueCalculation";
+import ValueCalculation from "src/components/ValueCalculation";
 import { dispatch } from "use-bus";
 import { PanelForceRebuildEvent } from "src/data/bus-events";
-import { CodeEditorModal } from "components/CodeEditor/CodeEditorModal";
+import { CodeEditorModal } from "src/components/CodeEditor/CodeEditorModal";
 
 const GeoMapPanelEditor = memo(({ panel, onChange }: PanelEditorProps) => {
     const t = useStore(commonMsg)

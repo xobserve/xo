@@ -11,7 +11,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 import { Box, Flex, HStack, Select, Tooltip, useMediaQuery } from "@chakra-ui/react"
-import IconButton from "components/button/IconButton"
+import IconButton from "src/components/button/IconButton"
 import SelectVariables from "src/views/variables/SelectVariable"
 import { find, isEmpty } from "lodash"
 import React from "react";
@@ -25,9 +25,9 @@ import  { dispatch } from "use-bus"
 import AddPanel from "./AddPanel"
 import DashboardSave from "./DashboardSave"
 import DashboardSettings from "./settings/DashboardSettings"
-import Fullscreen from "components/Fullscreen"
+import Fullscreen from "src/components/Fullscreen"
 import useFullscreen from "hooks/useFullscreen"
-import DatePicker from "components/DatePicker/DatePicker"
+import DatePicker from "src/components/DatePicker/DatePicker"
 import { useNavigate } from "react-router-dom"
 import { useStore } from "@nanostores/react";
 import { dashboardMsg, sidebarMsg } from "src/i18n/locales/en";
@@ -35,7 +35,7 @@ import DashboardShare from "./DashboardShare";
 import DashboardStar from "./components/DashboardStar";
 import { $variables } from "../variables/store";
 import { MobileBreakpoint } from "src/data/constants";
-import CustomScrollbar from "components/CustomScrollbar/CustomScrollbar";
+import CustomScrollbar from "src/components/CustomScrollbar/CustomScrollbar";
 
 interface HeaderProps {
     dashboard: Dashboard

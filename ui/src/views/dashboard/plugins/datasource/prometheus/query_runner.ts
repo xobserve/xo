@@ -19,7 +19,7 @@ import { prometheusToPanels } from "./transformData"
 import { Datasource } from "types/datasource"
 import { isPromethesDatasourceValid } from "./DatasourceEditor"
 import { Variable } from "types/variable"
-import { getNewestTimeRange } from "components/DatePicker/TimePicker"
+import { getNewestTimeRange } from "src/components/DatePicker/TimePicker"
 
 import { PromDsQueryTypes } from "./VariableEditor"
 import { parseVariableFormat } from "utils/format"

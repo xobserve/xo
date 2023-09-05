@@ -11,7 +11,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 import { Box, Button, Center, Flex, HStack, Modal, ModalBody, ModalCloseButton, ModalContent, ModalHeader, ModalOverlay, Switch, Text, Textarea, useColorMode, useDisclosure, useToast } from "@chakra-ui/react"
-import CodeEditor from "components/CodeEditor/CodeEditor"
+import CodeEditor from "src/components/CodeEditor/CodeEditor"
 import { cloneDeep, isFunction } from "lodash"
 import { memo, useState } from "react"
 import AutoSizer from "react-virtualized-auto-sizer"
@@ -20,14 +20,14 @@ import PanelEditItem from "src/views/dashboard/edit-panel/PanelEditItem"
 import { Panel, PanelEditorProps } from "types/dashboard"
 import { genDynamicFunction } from "utils/dashboard/dynamicCall"
 import { EchartsComponent } from "./Echarts"
-import { ColorModeSwitcher } from "components/ColorModeSwitcher"
+import { ColorModeSwitcher } from "src/components/ColorModeSwitcher"
 import React from "react";
 import { useStore } from "@nanostores/react"
 import { commonMsg, echartsPanelMsg } from "src/i18n/locales/en"
 import { colors } from "utils/colors"
 import moment from "moment"
 import loadash from 'lodash'
-import ThresholdEditor from "components/Threshold/ThresholdEditor"
+import ThresholdEditor from "src/components/Threshold/ThresholdEditor"
 import * as echarts from 'echarts';
 import { dispatch } from "use-bus"
 import { PanelForceRebuildEvent } from "src/data/bus-events"

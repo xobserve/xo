@@ -37,8 +37,8 @@ import { Link, useLocation, useNavigate } from "react-router-dom"
 import { localeSetting, locale } from "src/i18n/i18n"
 import { useStore } from "@nanostores/react"
 import { commonMsg, sidebarMsg } from "src/i18n/locales/en"
-import UserSidemenus from "components/team/UserSidemenus"
-import { ColorModeSwitcher } from "components/ColorModeSwitcher"
+import UserSidemenus from "src/components/team/UserSidemenus"
+import { ColorModeSwitcher } from "src/components/ColorModeSwitcher"
 
 const UserMenu = ({ fontSize = "1.1rem", miniMode }) => {
     const t = useStore(commonMsg)

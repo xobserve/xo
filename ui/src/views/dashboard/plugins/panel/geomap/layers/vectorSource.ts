@@ -6,10 +6,10 @@ import { fromLonLat } from 'ol/proj'
 import countries from 'public/plugins/panel/geomap/countries.json'
 import cities from 'public/plugins/panel/geomap/cities.json'
 import { Panel } from 'types/dashboard';
-import { getThreshold } from 'components/Threshold/utils';
+import { getThreshold } from 'src/components/Threshold/utils';
 import { ThresholdsMode } from 'types/threshold';
 import { paletteColorNameToHex } from 'utils/colors';
-import { formatUnit } from 'components/Unit';
+import { formatUnit } from 'src/components/Unit';
 import { calcValueOnArray } from 'utils/seriesData';
 import { findOverride, findRuleInOverride } from 'utils/dashboard/panel';
 import { GeomapRules } from '../OverridesEditor';

@@ -11,7 +11,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 import { Input, VStack } from "@chakra-ui/react"
-import FormItem from "components/form/Item"
+import FormItem from "src/components/form/Item"
 import { cloneDeep } from "lodash"
 import { PanelQuery, PanelType } from "types/dashboard"
 import { DatasourceEditorProps } from "types/datasource"

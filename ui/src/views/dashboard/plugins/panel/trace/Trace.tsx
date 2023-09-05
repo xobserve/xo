@@ -22,10 +22,10 @@ import TraceSearchResult from "./components/SearchResult"
 import transformTraceData from "./utils/transform-trace-data"
 import { cloneDeep, uniqBy } from "lodash";
 import { replaceWithVariables, replaceWithVariablesHasMultiValues } from "utils/variable";
-import { getNewestTimeRange } from "components/DatePicker/TimePicker";
+import { getNewestTimeRange } from "src/components/DatePicker/TimePicker";
 import React from "react";
 import { getDatasource } from "utils/datasource";
-import CustomScrollbar from "components/CustomScrollbar/CustomScrollbar";
+import CustomScrollbar from "src/components/CustomScrollbar/CustomScrollbar";
 import { MobileBreakpoint } from "src/data/constants";
 import { isTraceData } from "./utils/trace";
 

@@ -10,15 +10,15 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-import { CodeEditorModal } from "components/CodeEditor/CodeEditorModal"
-import Label from "components/form/Item"
+import { CodeEditorModal } from "src/components/CodeEditor/CodeEditorModal"
+import Label from "src/components/form/Item"
 import { isEmpty } from "lodash"
 import { DatasourceVariableEditorProps } from "types/datasource"
 import { isJSON } from "utils/is"
 import { useEffect } from "react"
 import { queryHttpVariableValues } from "./query_runner"
-import FormItem from "components/form/Item"
-import { EditorInputItem } from "components/editor/EditorItem"
+import FormItem from "src/components/form/Item"
+import { EditorInputItem } from "src/components/editor/EditorItem"
 import React from "react";
 import { useStore } from "@nanostores/react"
 import { httpDsMsg } from "src/i18n/locales/en"

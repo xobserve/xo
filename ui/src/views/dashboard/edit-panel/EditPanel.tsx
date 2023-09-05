@@ -12,7 +12,7 @@
 // limitations under the License.
 
 import { Box, Button, Flex, HStack,  Modal, ModalBody, ModalContent, ModalHeader, ModalOverlay,  Tab, TabIndicator, TabList, TabPanel, TabPanels, Tabs, Text, useDisclosure, useMediaQuery } from "@chakra-ui/react"
-import { ColorModeSwitcher } from "components/ColorModeSwitcher"
+import { ColorModeSwitcher } from "src/components/ColorModeSwitcher"
 import { memo, useCallback, useEffect, useState } from "react"
 import { Dashboard, Panel, PanelType } from "types/dashboard"
 import EditPanelQuery from "./Query"
@@ -29,14 +29,14 @@ import { DashboardSavedEvent, OnDashboardSaveEvent, PanelDataEvent, PanelForceRe
 import AutoSizer from "react-virtualized-auto-sizer";
 import { PanelGrid } from "../grid/PanelGrid/PanelGrid"
 import loadable from '@loadable/component'
-import DatePicker from "components/DatePicker/DatePicker"
+import DatePicker from "src/components/DatePicker/DatePicker"
 import PanelOverrides from "./PanelOverrides"
 import React from "react";
 import { useStore } from "@nanostores/react"
 import { commonMsg, panelMsg } from "src/i18n/locales/en"
 import EditPanelTransform from "./Transform"
 import { getPanelOverridesRules } from "utils/dashboard/panel"
-import ValueMapping from "components/ValueMapping/ValueMapping"
+import ValueMapping from "src/components/ValueMapping/ValueMapping"
 import PanelAccordion from "./Accordion"
 import storage from "utils/localStorage"
 import EditPanelAlert from "./Alert"

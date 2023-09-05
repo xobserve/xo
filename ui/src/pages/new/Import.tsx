@@ -13,7 +13,7 @@
 
 import React from "react"
 import { Box, Button,  Select, Text, Textarea, useToast, VStack } from "@chakra-ui/react"
-import FormItem from "components/form/Item"
+import FormItem from "src/components/form/Item"
 import Page from "layouts/page/Page"
 import { isEmpty } from "lodash"
 import { useEffect, useState } from "react"

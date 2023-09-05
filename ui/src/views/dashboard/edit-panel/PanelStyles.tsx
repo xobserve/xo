@@ -11,14 +11,14 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 import { Box, HStack, Select, Switch, VStack, useColorModeValue } from "@chakra-ui/react"
-import { ColorPicker } from "components/ColorPicker"
+import { ColorPicker } from "src/components/ColorPicker"
 import { Panel, PanelEditorProps, PanelType } from "types/dashboard"
 import { PanelBorderType, PanelTitleDecorationType } from "types/panel/styles"
 import PanelAccordion from "./Accordion"
 import { EditorInputItem } from "../../../components/editor/EditorItem"
 import PanelEditItem from "./PanelEditItem"
-import DecorationSelect from "components/largescreen/components/DecorationSelect"
-import BorderSelect from "components/largescreen/components/BorderSelect"
+import DecorationSelect from "src/components/largescreen/components/DecorationSelect"
+import BorderSelect from "src/components/largescreen/components/BorderSelect"
 import React from "react";
 import { useStore } from "@nanostores/react"
 import { commonMsg, panelMsg } from "src/i18n/locales/en"

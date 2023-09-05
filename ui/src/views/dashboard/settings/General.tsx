@@ -12,9 +12,9 @@
 // limitations under the License.
 
 import { AlertDialog, AlertDialogBody, AlertDialogContent, AlertDialogFooter, AlertDialogHeader, AlertDialogOverlay, Button, Divider, HStack, Input, Select, Switch, Tag, TagCloseButton, TagLabel, useDisclosure, useMediaQuery, useToast } from "@chakra-ui/react"
-import { EditorNumberItem } from "components/editor/EditorItem"
-import { Form, FormSection } from "components/form/Form"
-import FormItem from "components/form/Item"
+import { EditorNumberItem } from "src/components/editor/EditorItem"
+import { Form, FormSection } from "src/components/form/Form"
+import FormItem from "src/components/form/Item"
 import { useState } from "react"
 import { Dashboard, DashboardLayout } from "types/dashboard"
 import React from "react";

@@ -10,7 +10,7 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-import UplotReact from "components/uPlot/UplotReact"
+import UplotReact from "src/components/uPlot/UplotReact"
 import { memo, useMemo } from "react"
 import { OverrideItem, Panel } from "types/dashboard"
 import 'uplot/dist/uPlot.min.css';
@@ -19,13 +19,13 @@ import { parseOptions } from './options';
 import { isEmpty, isFunction } from "lodash"
 import Tooltip from "../graph/Tooltip";
 import { Box, Center, Flex, Text, useColorMode, Tooltip as ChakraTooltip, useToast } from "@chakra-ui/react";
-import { formatUnit } from "components/Unit";
+import { formatUnit } from "src/components/Unit";
 import { ValueCalculationType } from "types/value";
 import { calcValueOnSeriesData } from "utils/seriesData";
 import { SeriesData } from "types/seriesData";
 import { getGradientBackgroundColor, getTextColorForAlphaBackground, paletteColorNameToHex } from "utils/colors";
 import { ThresholdsMode } from "types/threshold";
-import { getThreshold } from "components/Threshold/utils";
+import { getThreshold } from "src/components/Threshold/utils";
 import { LayoutOrientation } from "types/layout";
 import tinycolor from "tinycolor2";
 import { findOverride, findRuleInOverride } from "utils/dashboard/panel";

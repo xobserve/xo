@@ -13,8 +13,8 @@
 
 import React from "react"
 import { Button, Table, TableContainer, Tbody, Td, Th, Thead, Tr, useDisclosure, AlertDialog, AlertDialogBody, AlertDialogContent, AlertDialogFooter, AlertDialogHeader, AlertDialogOverlay, Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay, Text, RadioGroup, Stack, Radio, useToast, VStack, Box, Input, Flex, Tag } from "@chakra-ui/react"
-import { Form, FormSection } from "components/form/Form"
-import FormItem from "components/form/Item"
+import { Form, FormSection } from "src/components/form/Form"
+import FormItem from "src/components/form/Item"
 import useSession from "hooks/use-session"
 import Page from "layouts/page/Page"
 import { cloneDeep } from "lodash"

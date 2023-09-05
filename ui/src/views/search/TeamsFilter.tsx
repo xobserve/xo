@@ -13,7 +13,7 @@
 
 import { useMediaQuery } from "@chakra-ui/react";
 import { Select } from "antd";
-import ColorTag from "components/ColorTag";
+import ColorTag from "src/components/ColorTag";
 import type { CustomTagProps } from 'rc-select/lib/BaseSelect';
 import React from "react";
 import { MobileBreakpoint } from "src/data/constants";

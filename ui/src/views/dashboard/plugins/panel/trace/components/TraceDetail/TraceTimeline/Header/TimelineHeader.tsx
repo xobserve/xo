@@ -2,7 +2,7 @@ import { IViewRangeTime, TUpdateViewRangeTimeFunction, ViewRangeTimeUpdate } fro
 import TimelineRow from "../TimelineRow";
 import TimelineCollapser from "./TimelineCollapser";
 import Ticks from "../Ticks";
-import VerticalResizer from "components/VerticalResizer/VerticalResizer";
+import VerticalResizer from "src/components/VerticalResizer/VerticalResizer";
 import TimelineViewingLayer from "./TimelineLayer";
 import React from "react";
 import './TimelineHeader.css'

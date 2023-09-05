@@ -13,7 +13,7 @@
 
 import { Box, Button, Modal, ModalBody, ModalCloseButton, ModalContent, ModalHeader, ModalOverlay, useDisclosure, useMediaQuery } from "@chakra-ui/react"
 import { useStore } from "@nanostores/react";
-import CodeEditor from "components/CodeEditor/CodeEditor"
+import CodeEditor from "src/components/CodeEditor/CodeEditor"
 import React, { useEffect, useState } from "react";
 import { MobileBreakpoint } from "src/data/constants";
 import { commonMsg } from "src/i18n/locales/en";

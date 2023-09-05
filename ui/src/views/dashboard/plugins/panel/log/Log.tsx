@@ -23,7 +23,7 @@ import { formatLabelId, isLogSeriesData } from "./utils";
 import { cloneDeep, remove, sortBy } from "lodash";
 import LogChart from "./components/Chart";
 import { isEmpty } from "utils/validate";
-import CustomScrollbar from "components/CustomScrollbar/CustomScrollbar";
+import CustomScrollbar from "src/components/CustomScrollbar/CustomScrollbar";
 import { paletteMap } from "utils/colors";
 import { ColorGenerator } from "utils/colorGenerator";
 

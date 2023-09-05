@@ -17,7 +17,7 @@
 
 import { Heading, HStack, IconButton, Popover, PopoverBody, PopoverContent, PopoverTrigger,  Portal,  Text, useMediaQuery, useToast } from "@chakra-ui/react"
 import { useStore } from "@nanostores/react"
-import CardSelect, { CardSelectItem } from "components/cards/CardSelect"
+import CardSelect, { CardSelectItem } from "src/components/cards/CardSelect"
 import useSession from "hooks/use-session"
 import React, { useEffect, useState } from "react"
 import { FaAlignLeft } from "react-icons/fa"

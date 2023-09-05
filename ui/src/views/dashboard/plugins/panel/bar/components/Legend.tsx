@@ -14,7 +14,7 @@
 // Render series table in tooltip
 import React, { useEffect, useMemo, useState } from "react";
 import { Box, Flex, HStack, Table, TableContainer, Tbody, Td, Text, Th, Thead, Tr, VStack } from "@chakra-ui/react"
-import { formatUnit } from "components/Unit"
+import { formatUnit } from "src/components/Unit"
 import { cloneDeep, orderBy, round } from "lodash"
 import { memo } from "react"
 import { FaChevronDown, FaChevronUp } from "react-icons/fa"

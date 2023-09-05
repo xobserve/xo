@@ -23,7 +23,7 @@ import { DashboardSavedEvent, OnDashboardSaveEvent, SaveDashboardEvent, SetDashb
 import ReactDiffViewer from 'react-diff-viewer';
 import { useSearchParam } from "react-use"
 import { cloneDeep, isEqual } from "lodash"
-import FormItem from "components/form/Item"
+import FormItem from "src/components/form/Item"
 import { useStore } from "@nanostores/react";
 import { commonMsg, dashboardSaveMsg } from "src/i18n/locales/en";
 import { dateTimeFormat } from "utils/datetime/formatter";

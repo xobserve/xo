@@ -11,8 +11,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 import { Button, Modal, ModalBody, ModalContent, ModalOverlay, useColorModeValue, useDisclosure, VStack } from "@chakra-ui/react";
-import IconButton from "components/button/IconButton";
-import { PanelAdd } from "components/icons/PanelAdd";
+import IconButton from "src/components/button/IconButton";
+import { PanelAdd } from "src/components/icons/PanelAdd";
 import { StorageCopiedPanelKey } from "src/data/constants";
 import { initPanel } from "src/data/panel/initPanel";
 import { Dashboard,  Panel } from "types/dashboard";

@@ -11,7 +11,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 import { Input } from "@chakra-ui/react"
-import FormItem from "components/form/Item"
+import FormItem from "src/components/form/Item"
 import { Datasource } from "types/datasource"
 import isURL from "validator/lib/isURL"
 import React from "react";

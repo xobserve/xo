@@ -12,8 +12,8 @@
 // limitations under the License.
 import { Alert, AlertDescription, AlertDialog, AlertDialogBody, AlertDialogContent, AlertDialogFooter, AlertDialogHeader, AlertDialogOverlay, AlertIcon, AlertTitle, Box, Button, Text, Textarea, useDisclosure, useToast } from "@chakra-ui/react"
 import { useStore } from "@nanostores/react";
-import CodeEditor from "components/CodeEditor/CodeEditor"
-import { DetailAlert, DetailAlertItem } from "components/DetailAlert"
+import CodeEditor from "src/components/CodeEditor/CodeEditor"
+import { DetailAlert, DetailAlertItem } from "src/components/DetailAlert"
 import React from "react";
 import { useRef, useState } from "react"
 import { commonMsg, dashboardSettingMsg } from "src/i18n/locales/en";

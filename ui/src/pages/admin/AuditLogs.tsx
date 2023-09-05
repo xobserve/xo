@@ -25,7 +25,7 @@ import { AuditLog } from "types/admin"
 import { FaEye } from "react-icons/fa"
 import { dateTimeFormat } from "utils/datetime/formatter"
 import { prettyJson } from "utils/string"
-import CodeEditor from "components/CodeEditor/CodeEditor"
+import CodeEditor from "src/components/CodeEditor/CodeEditor"
 export const AdminAuditLogs = memo(() => {
     const t = useStore(commonMsg)
     const [logs, setLogs] = useState<AuditLog[]>(null)

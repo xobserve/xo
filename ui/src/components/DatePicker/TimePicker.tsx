@@ -24,7 +24,7 @@ import {
     CalendarWeek,
     CalendarDays,
 } from '@uselessdev/datepicker'
-import { EditorInputItem } from 'components/editor/EditorItem'
+import { EditorInputItem } from 'src/components/editor/EditorItem'
 import { subMinutes } from 'date-fns'
 import { cloneDeep, includes, isDate, isEmpty } from 'lodash'
 import moment from 'moment'

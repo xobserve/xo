@@ -17,7 +17,7 @@ import { FaEdit, FaTrashAlt } from "react-icons/fa";
 import { Annotation } from "types/annotation";
 import { durationToSeconds } from "utils/date";
 import { dateTimeFormat } from "utils/datetime/formatter";
-import ColorTag from "components/ColorTag";
+import ColorTag from "src/components/ColorTag";
 import { isEmpty } from "utils/validate";
 import { paletteColorNameToHex } from "utils/colors";
 

@@ -16,7 +16,7 @@ import React, { memo, useState } from "react";
 import { Dashboard } from "types/dashboard";
 import DashboardCard from "../dashboard/components/DashboardCard";
 import { Team } from "types/teams";
-import ColorTag from "components/ColorTag";
+import ColorTag from "src/components/ColorTag";
 import useSession from "hooks/use-session";
 
 interface Props {

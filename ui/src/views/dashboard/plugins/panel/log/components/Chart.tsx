@@ -12,8 +12,8 @@
 // limitations under the License.
 
 import { useColorMode } from "@chakra-ui/react"
-import { getCurrentTimeRange } from "components/DatePicker/TimePicker"
-import ChartComponent from "components/charts/Chart"
+import { getCurrentTimeRange } from "src/components/DatePicker/TimePicker"
+import ChartComponent from "src/components/charts/Chart"
 import { floor, last, round } from "lodash"
 import React, { memo, useEffect, useMemo, useState } from "react"
 import { Panel, PanelType } from "types/dashboard"

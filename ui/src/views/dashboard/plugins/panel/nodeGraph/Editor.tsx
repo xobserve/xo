@@ -11,20 +11,20 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 import { Alert, Box, Button, Divider, Flex, HStack, Image, Input, Modal, ModalBody, ModalContent, ModalOverlay, NumberInput, NumberInputField, Select, Slider, SliderFilledTrack, SliderThumb, SliderTrack, Switch, Text, Textarea, Tooltip, useDisclosure, useToast, VStack } from "@chakra-ui/react"
-import { ColorPicker } from "components/ColorPicker"
-import RadionButtons from "components/RadioButtons"
+import { ColorPicker } from "src/components/ColorPicker"
+import RadionButtons from "src/components/RadioButtons"
 import { cloneDeep, isArray, isEmpty } from "lodash"
 import { memo, useMemo, useState } from "react"
 import * as Icons from 'react-icons/fa'
 import { MdEdit } from "react-icons/md"
 import { onClickCommonEvent } from "src/data/panel/initPlugins"
 import PanelAccordion from "src/views/dashboard/edit-panel/Accordion"
-import { EditorInputItem, EditorNumberItem, EditorSliderItem } from "components/editor/EditorItem"
+import { EditorInputItem, EditorNumberItem, EditorSliderItem } from "src/components/editor/EditorItem"
 import PanelEditItem from "src/views/dashboard/edit-panel/PanelEditItem"
 import { Panel, PanelEditorProps } from "types/dashboard"
 import { NodeGraphIcon, NodeGraphMenuItem } from "types/panel/plugins"
 import { useImmer } from "use-immer"
-import CodeEditor from "components/CodeEditor/CodeEditor"
+import CodeEditor from "src/components/CodeEditor/CodeEditor"
 import React from "react";
 import { useStore } from "@nanostores/react"
 import { commonMsg, nodeGraphPanelMsg } from "src/i18n/locales/en"
@@ -32,7 +32,7 @@ import { dispatch } from "use-bus"
 import { PanelForceRebuildEvent } from "src/data/bus-events"
 import { Node } from "types/plugins/nodeGraph"
 import { palettes } from "utils/colors"
-import { CodeEditorModal } from "components/CodeEditor/CodeEditorModal"
+import { CodeEditorModal } from "src/components/CodeEditor/CodeEditorModal"
 
 
 

@@ -13,15 +13,15 @@
 
 import { Box, Input } from "@chakra-ui/react";
 import { InputNumber } from "antd";
-import CodeEditor, { LogqlLang } from "components/CodeEditor/CodeEditor";
-import { Form } from "components/form/Form";
-import FormItem from "components/form/Item";
+import CodeEditor, { LogqlLang } from "src/components/CodeEditor/CodeEditor";
+import { Form } from "src/components/form/Form";
+import FormItem from "src/components/form/Item";
 import { cloneDeep } from "lodash";
 import React, { useEffect, useRef, useState } from "react"
 import { PanelQuery } from "types/dashboard";
 import { DatasourceEditorProps } from "types/datasource";
 import { queryLokiSeries } from "./query_runner";
-import { getCurrentTimeRange } from "components/DatePicker/TimePicker";
+import { getCurrentTimeRange } from "src/components/DatePicker/TimePicker";
 
 const LokiQueryEditor = ({ datasource, query, onChange }: DatasourceEditorProps) => {
     const [tempQuery, setTempQuery] = useState<PanelQuery>(cloneDeep(query))

@@ -18,7 +18,7 @@ import { useStore } from "@nanostores/react";
 import { commonMsg } from "src/i18n/locales/en";
 import PanelEditItem from "src/views/dashboard/edit-panel/PanelEditItem";
 import { Switch } from "@chakra-ui/react";
-import { EditorInputItem } from "components/editor/EditorItem";
+import { EditorInputItem } from "src/components/editor/EditorItem";
 import { dispatch } from "use-bus";
 import { PanelForceRebuildEvent } from "src/data/bus-events";
 

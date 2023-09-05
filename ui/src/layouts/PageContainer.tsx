@@ -27,7 +27,7 @@ import {
   MenuItem,
   Portal,
 } from "@chakra-ui/react"
-import Logo from "components/Logo"
+import Logo from "src/components/Logo"
 import React, {  useMemo, useState } from "react"
 import { measureText } from "utils/measureText"
 import * as Icons from "react-icons/fa"
@@ -40,17 +40,17 @@ import { Link, useLocation } from "react-router-dom"
 import storage from "utils/localStorage"
 import { SidemenuMinimodeKey } from "src/data/storage-keys"
 import ReserveUrls from "src/data/reserve-urls"
-import UserMenu from "components/user/UserMenu"
+import UserMenu from "src/components/user/UserMenu"
 import { config } from "src/data/configs/config"
 import { isEmpty } from "utils/validate"
 import Search from "src/views/search/Search"
-import PopoverTooltip from "components/PopoverTooltip"
+import PopoverTooltip from "src/components/PopoverTooltip"
 import { HomeDashboardId } from "src/data/dashboard"
 
 import { useNavigate } from "react-router-dom"
 import { MobileBreakpoint } from "src/data/constants"
 import { HamburgerIcon } from "@chakra-ui/icons"
-import CustomScrollbar from "components/CustomScrollbar/CustomScrollbar"
+import CustomScrollbar from "src/components/CustomScrollbar/CustomScrollbar"
 export let gnavigate
 
 

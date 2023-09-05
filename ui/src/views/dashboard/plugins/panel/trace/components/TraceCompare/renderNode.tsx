@@ -22,10 +22,10 @@ import TDagPlexusVertex from '../../model/trace-dag/types/TDagPlexusVertex';
 
 import { FaCopy, FaInfoCircle } from "react-icons/fa";
 import { chakra, Box, Divider, Flex, HStack, Popover, PopoverArrow, PopoverBody, PopoverContent, PopoverTrigger, StackDivider, Text, VStack, Tooltip, Button, Textarea } from "@chakra-ui/react";
-import { Portal } from "components/portal/Portal";
+import { Portal } from "src/components/portal/Portal";
 import { formatDuration } from "utils/date";
 import { isErrorTag } from "../../utils/trace";
-import CodeEditor from "components/CodeEditor/CodeEditor";
+import CodeEditor from "src/components/CodeEditor/CodeEditor";
 import { cloneDeep } from "lodash";
 
 type Props = {

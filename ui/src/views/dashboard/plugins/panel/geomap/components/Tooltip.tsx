@@ -6,7 +6,7 @@ import { TooltipContainer } from '../../graph/Tooltip/Tooltip';
 // import { Portal } from '@chakra-ui/portal';
 import { Map, MapBrowserEvent } from 'ol';
 import { toLonLat } from 'ol/proj';
-import { Portal } from 'components/portal/Portal';
+import { Portal } from 'src/components/portal/Portal';
 
 interface Props {
   map: Map

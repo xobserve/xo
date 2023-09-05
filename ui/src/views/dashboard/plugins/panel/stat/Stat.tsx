@@ -20,7 +20,7 @@ import { SeriesData } from "types/seriesData";
 
 import { VarialbeAllOption } from "src/data/variable";
 import StatGraph from "./StatGraph";
-import AutoGrid  from "components/grid/AutoGrid";
+import AutoGrid  from "src/components/grid/AutoGrid";
 import { isSeriesData } from "utils/seriesData";
 
 

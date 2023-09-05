@@ -12,19 +12,19 @@
 // limitations under the License.
 import { Box, Button, HStack, Modal, ModalBody, ModalContent, ModalOverlay,  Select, Switch, Text, useDisclosure, useTheme, VStack } from "@chakra-ui/react"
 import PanelAccordion from "src/views/dashboard/edit-panel/Accordion"
-import { EditorInputItem, EditorNumberItem } from "components/editor/EditorItem"
+import { EditorInputItem, EditorNumberItem } from "src/components/editor/EditorItem"
 import PanelEditItem from "src/views/dashboard/edit-panel/PanelEditItem"
 import { Panel, PanelEditorProps } from "types/dashboard"
-import CodeEditor from "components/CodeEditor/CodeEditor"
+import CodeEditor from "src/components/CodeEditor/CodeEditor"
 import { memo, useMemo, useState } from "react"
 import React from "react";
-import RadionButtons from "components/RadioButtons"
+import RadionButtons from "src/components/RadioButtons"
 import { dispatch } from "use-bus"
 import { PanelForceRebuildEvent } from "src/data/bus-events"
 import { useStore } from "@nanostores/react"
 import { commonMsg, tablePanelMsg } from "src/i18n/locales/en"
 import { ClickActionsEditor } from "src/views/dashboard/edit-panel/components/ClickActionsEditor"
-import { ColorPicker } from "components/ColorPicker"
+import { ColorPicker } from "src/components/ColorPicker"
 
 const TablePanelEditor = memo(({ panel, onChange }: PanelEditorProps) => {
     const t = useStore(commonMsg)

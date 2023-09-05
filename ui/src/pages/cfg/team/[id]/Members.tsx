@@ -20,7 +20,7 @@ import { cfgTeam, commonMsg } from "src/i18n/locales/en"
 import { Role } from "types/role"
 import { Team, TeamMember } from "types/teams"
 import { requestApi } from "utils/axios/request"
-import Loading from "components/loading/Loading"
+import Loading from "src/components/loading/Loading"
 
 
 

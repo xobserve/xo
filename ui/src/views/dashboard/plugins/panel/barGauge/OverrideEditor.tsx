@@ -11,16 +11,16 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-import RadionButtons from "components/RadioButtons";
-import { EditorInputItem, EditorNumberItem, EditorSliderItem } from "components/editor/EditorItem";
-import { UnitPicker } from "components/Unit";
+import RadionButtons from "src/components/RadioButtons";
+import { EditorInputItem, EditorNumberItem, EditorSliderItem } from "src/components/editor/EditorItem";
+import { UnitPicker } from "src/components/Unit";
 import { OverrideRule, Panel } from "types/dashboard";
 import React, { useEffect } from "react";
 import { useStore } from "@nanostores/react";
 import { barGaugePanelMsg, commonMsg, tablePanelMsg } from "src/i18n/locales/en";
 import { Checkbox, HStack, Text } from "@chakra-ui/react";
 import { isEmpty } from "utils/validate";
-import ThresholdEditor from "components/Threshold/ThresholdEditor";
+import ThresholdEditor from "src/components/Threshold/ThresholdEditor";
 import { cloneDeep } from "lodash";
 
 

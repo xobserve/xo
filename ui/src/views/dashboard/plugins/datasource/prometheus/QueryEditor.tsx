@@ -18,14 +18,14 @@ import React from "react";
 import { Variant } from "chakra-react-select/dist/types/types"
 import { DatasourceEditorProps } from "types/datasource"
 import { queryPrometheusAllMetrics, queryPrometheusLabels } from "./query_runner"
-import ChakraSelect from "components/select/ChakraSelect"
-import FormItem from "components/form/Item"
-import { Form } from "components/form/Form"
-import InputSelect from "components/select/InputSelect"
+import ChakraSelect from "src/components/select/ChakraSelect"
+import FormItem from "src/components/form/Item"
+import { Form } from "src/components/form/Form"
+import InputSelect from "src/components/select/InputSelect"
 import { prometheusDsMsg } from "src/i18n/locales/en";
 import { useStore } from "@nanostores/react";
-import CodeEditor, { LogqlLang } from "components/CodeEditor/CodeEditor";
-import RadionButtons from "components/RadioButtons";
+import CodeEditor, { LogqlLang } from "src/components/CodeEditor/CodeEditor";
+import RadionButtons from "src/components/RadioButtons";
 import { MobileBreakpoint } from "src/data/constants";
 
 

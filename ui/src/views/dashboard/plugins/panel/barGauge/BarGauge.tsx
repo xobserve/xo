@@ -16,9 +16,9 @@ import {  Panel, PanelProps } from "types/dashboard"
 import { SeriesData } from "types/seriesData";
 import { calcValueOnArray, isSeriesData } from "utils/seriesData";
 import React from "react";
-import BarGauge, { BarGaugeValue } from "components/BarGauge/BarGauge";
+import BarGauge, { BarGaugeValue } from "src/components/BarGauge/BarGauge";
 import { findOverride, findRuleInOverride } from "utils/dashboard/panel";
-import { formatUnit } from "components/Unit";
+import { formatUnit } from "src/components/Unit";
 import { measureText } from "utils/measureText";
 import { BarGaugeRules } from "./OverrideEditor";
 import { isEmpty } from "utils/validate";

@@ -12,7 +12,7 @@
 // limitations under the License.
 
 import React from "react"
-import { FormSection } from "components/form/Form"
+import { FormSection } from "src/components/form/Form"
 import Page from "layouts/page/Page"
 import { FaPlus } from "react-icons/fa"
 import { newLinks } from "src/data/nav-links"

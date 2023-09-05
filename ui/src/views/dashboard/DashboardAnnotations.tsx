@@ -12,7 +12,7 @@
 // limitations under the License.
 
 import { useColorMode } from "@chakra-ui/react"
-import { getCurrentTimeRange } from "components/DatePicker/TimePicker"
+import { getCurrentTimeRange } from "src/components/DatePicker/TimePicker"
 import React, { useEffect, useState } from "react"
 import { ReloadDashAnnotationsEvent, TimeChangedEvent } from "src/data/bus-events"
 import { Dashboard } from "types/dashboard"

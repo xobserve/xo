@@ -12,7 +12,7 @@
 // limitations under the License.
 
 import { Box, Button, HStack } from "@chakra-ui/react";
-import CodeEditor from "components/CodeEditor/CodeEditor";
+import CodeEditor from "src/components/CodeEditor/CodeEditor";
 import { cloneDeep } from "lodash";
 import { useState } from "react";
 import { Trace } from "types/plugins/trace";

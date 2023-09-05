@@ -11,10 +11,10 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 import { Select, Switch } from "@chakra-ui/react"
-import RadionButtons from "components/RadioButtons"
-import ValueCalculation from "components/ValueCalculation"
-import { EditorInputItem, EditorNumberItem } from "components/editor/EditorItem"
-import { UnitPicker } from "components/Unit"
+import RadionButtons from "src/components/RadioButtons"
+import ValueCalculation from "src/components/ValueCalculation"
+import { EditorInputItem, EditorNumberItem } from "src/components/editor/EditorItem"
+import { UnitPicker } from "src/components/Unit"
 import { memo } from "react"
 import PanelAccordion from "src/views/dashboard/edit-panel/Accordion"
 import PanelEditItem from "src/views/dashboard/edit-panel/PanelEditItem"
@@ -23,8 +23,8 @@ import { PieLegendPlacement, Units } from "types/panel/plugins"
 import React from "react";
 import { useStore } from "@nanostores/react"
 import { commonMsg, piePanelMsg } from "src/i18n/locales/en"
-import ThresholdEditor from "components/Threshold/ThresholdEditor"
-import { CodeEditorModal } from "components/CodeEditor/CodeEditorModal"
+import ThresholdEditor from "src/components/Threshold/ThresholdEditor"
+import { CodeEditorModal } from "src/components/CodeEditor/CodeEditorModal"
 import { dispatch } from "use-bus"
 import { PanelForceRebuildEvent } from "src/data/bus-events"
 
