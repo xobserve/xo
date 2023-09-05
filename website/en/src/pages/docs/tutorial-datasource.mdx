@@ -27,13 +27,13 @@ Click `+` button in the bottom section of sidebar, and select `New Datasource` t
 
 Then fill the form as below: 
 
-<img src="https://github.com/data-observe/assets/blob/main/tutorial/create-prometheus-ds.jpg?raw=true" style={{height: '500px'}}/>
+<img src={require('@/img/docs/tutorial/create-prometheus-ds.jpg').default.src} alt="create-prometheus-ds" style={{height: '500px'}}className="rounded-lg ring-1 ring-black/5" />
 
 Click `Save & Test` button, if everything is ok, you will see a green message `Datasource is added, redirecting..` in the bottom of the form. 
 
 Then the page will redirect to datasources managing page: 
 
-![datasource managing](https://github.com/data-observe/assets/blob/main/tutorial/datasource-managing.jpg?raw=true)
+<img src={require('@/img/docs/tutorial/datasource-managing.jpg').default.src} alt="datasource-managing" width={3086} height={1658} className="rounded-lg ring-1 ring-black/5" />
 
 You can see Prometheus datasource is listed in the table, next to the default Testdata datasource which we used in previous docs.
 
@@ -53,13 +53,13 @@ From panel name, we can know that this panel is used to query go gc info from Pr
 
 Find a input box which prompt you `Enter a PromQL query` , and then type `go_gc_duration_seconds` , you will see the result as below.
 
-![enter promql query](https://github.com/data-observe/assets/blob/main/tutorial/enter-prometheus-query.jpg?raw=true)
+<img src={require('@/img/docs/tutorial/enter-prometheus-query.jpg').default.src} alt="enter-prometheus-query" width={3086} height={1658} className="rounded-lg ring-1 ring-black/5" />
 
 ### Select metrics from metrics list
 
 Have you noticed the red line in the above image ? We can select metrics from there, click the red line, and then select `go_gc_duration_seconds` , you will see the same result as above image.
 
-<img src="https://github.com/data-observe/assets/blob/main/tutorial/select-metrics.jpg?raw=true" style={{height: '400px'}}/>
+<img src={require('@/img/docs/tutorial/select-metrics.jpg').default.src} alt="select-metrics" style={{height: '400px'}}className="rounded-lg ring-1 ring-black/5" />
 
 
 ## Legend
@@ -71,7 +71,7 @@ This panel will show  cpu idle usage of our host servers, to achive this, type `
 then set legend to `cpu idle - {{instance}}`, result is as below: 
 
 
-![enter promql query](https://github.com/data-observe/assets/blob/main/tutorial/prometheus-legend.jpg?raw=true)
+<img src={require('@/img/docs/tutorial/prometheus-legend.jpg').default.src} alt="prometheus-legend" width={3086} height={1658} className="rounded-lg ring-1 ring-black/5" />
 
 In above result, `{{instance}}` is  replaced by `instance` label value in query result.
 

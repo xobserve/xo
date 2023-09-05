@@ -17,7 +17,8 @@ import Code  from '@/components/docs/Code'
 
 ## 创建 HTTP 数据源
 
-<img src="https://github.com/data-observe/assets/blob/main/variable/http-datasource.jpg?raw=true" style={{height: "400px"}}/>
+<img src={require('@/img/docs/variable/http-datasource.jpg').default.src} alt="http-datasource"  className="rounded-lg ring-1 ring-black/5" style={{height: "400px"}} />
+
 
 ## 创建 HTTP 变量
 
@@ -29,7 +30,8 @@ import Code  from '@/components/docs/Code'
 
 如下所示，填写变量基本信息：
 
-<img src="https://github.com/data-observe/assets/blob/main/variable/basic-http.jpg?raw=true" style={{height: "500px"}}/>
+<img src={require('@/img/docs/variable/basic-http.jpg').default.src} alt="basic-http"  className="rounded-lg ring-1 ring-black/5" style={{height: "500px"}} />
+
 
 大家应该有注意到，在 `Query values` 字段中，我们使用了 `service` 变量：`http://localhost:16686/api/services/${service}/operations`，这意味着**我们可以在 HTTP 请求 url 中使用变量**。
 
@@ -81,13 +83,14 @@ function transformResult(httpResult) {
 
 现在我们可以成功获取到 `frontend` service 的 `operation` 变量值。
 
-<img src="https://github.com/data-observe/assets/blob/main/variable/http-variable.jpg?raw=true" style={{height: "500px"}}/>
+<img src={require('@/img/docs/variable/http-variable.jpg').default.src} alt="http-variable"  className="rounded-lg ring-1 ring-black/5" style={{height: "500px"}} />
+
 
 ## 最终效果
 
 上面的代码很简单，原因只有一个： Jaeger 的 API 返回格式跟我们需要的几乎一致，但是大多数情况下，你都需要做一些额外的工作来确保数据格式被正确转换。
 
-<video controls autoPlay src="https://github.com/data-observe/assets/blob/main/variable/http-final.mov?raw=true" style={{height: "500px"}}/>
+<video controls autoPlay src="/docs/http-final.mov"/>
 
 如上所示，由于我们在 http 请求的 url 中使用了 `service` 变量，因此当改变 `service` 变量值时，`operation` 变量的值也会随之变化，666.
 

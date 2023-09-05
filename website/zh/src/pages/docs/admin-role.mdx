@@ -36,13 +36,15 @@ Datav 中的每个用户都有自己的角色，而角色则决定了用户的�
 
 如上所述，`Datav` 中的用户和角色其实就是 `global` 团队的用户和角色。
 
-<img src="https://github.com/data-observe/assets/blob/main/admin/user-roles.jpg?raw=true" style={{height: '260px'}} />
+<img src={require('@/img/docs/admin/user-roles.jpg').default.src} alt="user-roles"  className="rounded-lg ring-1 ring-black/5"  style={{height: '260px'}}/>
+
 
 如上图所示，这是用户配置页面，用户的角色其实是从 `global` 团队中获取的。
 
 我们来看看 `global` 团队：
 
-<img src="https://github.com/data-observe/assets/blob/main/admin/global-roles.jpg?raw=true" style={{height: '260px'}} />
+<img src={require('@/img/docs/admin/global-roles.jpg').default.src} alt="global-roles"  className="rounded-lg ring-1 ring-black/5"  style={{height: '260px'}}/>
+
 
 可以看到，`global` 团队中的用户和角色和 `Datav` 中的用户和角色是一样的，只是没有 `Super admin`，因为 `Super admin` 是写死在代码中的。
 

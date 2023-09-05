@@ -25,12 +25,14 @@ Yep, welcome panel is absolutely no use for user stats cases, let's modify it to
 2. Change title to `Request duration stats` in `Panel` tab
 3. Click `visualization` section in `Panel` tab and select `Graph` panel
 
+<img src={require('@/img/docs/tutorial/select-visualization.jpg').default.src} alt="select-visualization" style={{height: '400px'}} className="rounded-lg ring-1 ring-black/5" />
 
 A beautiful chart will show:
 
-![request duration stats](https://github.com/data-observe/assets/blob/main/tutorial/request-duration-panel.jpg?raw=true)
+<img src={require('@/img/docs/tutorial/request-duration-panel.jpg').default.src} alt="request-duration-panel" width={3086} height={1658} className="rounded-lg ring-1 ring-black/5" />
 
 In the chart, you can see three series, they are representing users from `Asia`, `Europe` and `North America`, and their request duration changes over time.
+
 
 ### TestData datasource 
 
@@ -51,7 +53,7 @@ This panel is all about duration, but we can not see any duration units in the c
 3. The current base unit is `ms`, but our stats is in `second`, so we need to change base unit to `s` (base unit is determined by `x` 1 or `/` 1)
 4. First select `Time`, then select `Custom` in `Unit` dropdown 
 
-<img src="https://github.com/data-observe/assets/blob/main/tutorial/panel-units.jpg?raw=true" style={{height: '300px'}}/>
+<img src={require('@/img/docs/tutorial/panel-units.jpg').default.src} alt="panel-units" style={{height: '300px'}} className="rounded-lg ring-1 ring-black/5" />
 
 Modify your unit to the value shown in the above image, and click `Submit`, now you will see chart will show duration unit as expected.
 
@@ -65,7 +67,7 @@ Now, we want to add a threshold to the chart, so that we can easily find out whe
 2. Click `Add Threshold` button 
 3. Set values as below image 
 
-<img src="https://github.com/data-observe/assets/blob/main/tutorial/panel-threshold.jpg?raw=true" style={{height: '300px'}}/>
+<img src={require('@/img/docs/tutorial/panel-threshold.jpg').default.src} alt="panel-threshold" style={{height: '300px'}} className="rounded-lg ring-1 ring-black/5" />
 
 Now, you will see a red line in the chart,  and the chart is split into two parts, the upper part rendering in pink-red color is duration larger than `1s`, and the lower part in green color is duration less than `1s`.
 
@@ -82,7 +84,7 @@ Apply the previous changes and go back to dashboard , then click add panel butto
 
 At this moment, you should see as below: 
 
-![geomap editor](https://github.com/data-observe/assets/blob/main/tutorial/geomap-editor.jpg?raw=true)
+<img src={require('@/img/docs/tutorial/geomap-editor.jpg').default.src} alt="geomap-editor" width={3086} height={1658} className="rounded-lg ring-1 ring-black/5" />
 
 > If you cant see any map, just green points, please check your network connection, because the map is loaded from internet.
 
@@ -144,7 +146,7 @@ Now, we have created first override for Panel, and its target is `Value` column 
 
 **Don't forget to click `Submit` button to make units setting take effect** !
 
-<img src="https://github.com/data-observe/assets/blob/main/tutorial/units-override.jpg?raw=true" style={{height: "400px"}}/>
+<img src={require('@/img/docs/tutorial/units-override.jpg').default.src} alt="units-override" style={{height: '400px'}} className="rounded-lg ring-1 ring-black/5" />
 
 ### Mark value with color
 
@@ -157,7 +159,7 @@ In table panel, threshold is similar to units, we need to use Override feature t
 
 As you already know how to add threshold and override, so we will not repeat it here, just add a new override rule for `Value` column, and set threshold as below:
 
-<img src="https://github.com/data-observe/assets/blob/main/tutorial/threshold-override.jpg?raw=true" style={{height: "400px"}}/>
+<img src={require('@/img/docs/tutorial/threshold-override.jpg').default.src} alt="threshold-override" style={{height: '400px'}} className="rounded-lg ring-1 ring-black/5" />
 
 #### Value mapping 
 
@@ -173,7 +175,7 @@ For more info about value mapping, please read [value mapping in Table](/docs/pl
 
 For now, find the `Value mapping` section in `Panel` tab, and click `Edit value mapping` button, then set value mapping as below:
 
-![value mapping](https://github.com/data-observe/assets/blob/main/tutorial/tutorial-value-mapping.jpg?raw=true)
+<img src={require('@/img/docs/tutorial/tutorial-value-mapping.jpg').default.src} alt="tutorial-value-mapping" width={3086} height={1658} className="rounded-lg ring-1 ring-black/5" />
 
 #### Same rule exist, which takes effect?
 
@@ -190,7 +192,7 @@ Timestamp as `1692778335` is never readable, we need to convert it to a human re
 
 Another time to use our Override weapon, but the override created before is for column `Value`, so we need to create a new override for column `Time`.
 
-<img src="https://github.com/data-observe/assets/blob/main/tutorial/time-override.jpg?raw=true" style={{height: "400px"}}/>
+<img src={require('@/img/docs/tutorial/time-override.jpg').default.src} alt="time-override" style={{height: '400px'}} className="rounded-lg ring-1 ring-black/5" />
 
 Here, `Column.textTransform` is a function, it will be called for each value in `Time` column, and its return value will be displayed in `Time` column.
 
@@ -230,7 +232,7 @@ The next operation is simple: click on the icon and drag it to resize or move.
 
 Now adjust the panels to below image:
 
-![resized panels](https://github.com/data-observe/assets/blob/main/tutorial/panels-after-resizing.jpg?raw=true)
+<img src={require('@/img/docs/tutorial/panels-after-resizing.jpg').default.src} alt="panels-after-resizing" width={3086} height={1658} className="rounded-lg ring-1 ring-black/5" />
 
 
 Not bad, right?  Let's try to use some datasource to replace the mock data, real is the best!

@@ -21,7 +21,7 @@ Therefore, we can create a team called ops, and add all the ops users to this te
 
 1. Click `configuration` icon in the bottom section of sidebar and select `Team` tab.
 
-<img src="https://github.com/data-observe/assets/blob/main/tutorial/team-table.jpg?raw=true" />
+<img src={require('@/img/docs/tutorial/team-table.jpg').default.src} alt="team-table"  className="rounded-lg ring-1 ring-black/5"  width={3086} height={1658}/>
 
 2. Click `New Team` button in the top right corner 
 3. Fill in `Team Name` field with `ops`
@@ -40,7 +40,7 @@ Let's add `datav-admin` to ops team, add give him the admin role.
 
 1. Select `Member` tab in `ops` team page and click `New member` button
 
-<img src="https://github.com/data-observe/assets/blob/main/tutorial/add-team-member.jpg?raw=true" style={{height: "300px"}} />
+<img src={require('@/img/docs/tutorial/add-team-member.jpg').default.src} alt="add-team-member"  className="rounded-lg ring-1 ring-black/5"  style={{height: "300px"}} />
 
 2. Login with `datav-admin` to complete next steps.
 
@@ -55,13 +55,13 @@ But if you look at `Belong to team` field, you can find that value has automatic
 
 Sure, you can change it to `global` team, but this is no sense for our cases, so keep it to `opt` team.
 
-<img src="https://github.com/data-observe/assets/blob/main/tutorial/add-team-dashboard.jpg?raw=true" style={{height: "300px"}} />
+<img src={require('@/img/docs/tutorial/add-team-dashboard.jpg').default.src} alt="add-team-dashboard"  className="rounded-lg ring-1 ring-black/5"  style={{height: "300px"}} />
 
 Click `Submit` button to create our `Network stat` dashboard.
 
 Look at the top left corner of the new dashboard, there shows that our new `Network stat` is `ops` team , great! Try to click on `ops` text and see what happens.
 
-<img src="https://github.com/data-observe/assets/blob/main/tutorial/dashboard-lef-top-corner.jpg?raw=true" style={{height: "50px"}} />
+<img src={require('@/img/docs/tutorial/dashboard-lef-top-corner.jpg').default.src} alt="dashboard-lef-top-corner"  className="rounded-lg ring-1 ring-black/5"  style={{height: "50px"}} />
 
 
 As this is just for demonstration purpose, we will not create any charts in this dashboard, but you can do it by yourself.
@@ -91,19 +91,19 @@ In this situation, id of `ops` should be `2`, because we have not created any te
 2. Select `Meta data` tab 
 3. Set the value of  `ownedBy` field to `2`
 
-<img src="https://github.com/data-observe/assets/blob/main/tutorial/dashboard-metadata.jpg?raw=true"/>
+<img src={require('@/img/docs/tutorial/dashboard-metadata.jpg').default.src} alt="dashboard-metadata"  className="rounded-lg ring-1 ring-black/5"  width={3086} height={1658}/>
 
 4. Click `Submit` button
 
 Go back to dashboard page, you should see :
 
-<img src="https://github.com/data-observe/assets/blob/main/tutorial/dashboard-new-owner.jpg?raw=true" style={{height: "50px"}} />
+<img src={require('@/img/docs/tutorial/dashboard-new-owner.jpg').default.src} alt="dashboard-new-owner"  className="rounded-lg ring-1 ring-black/5"  style={{height: "50px"}} />
 
 This means we have successfully transferred `Hosts info` dashboard to `ops` team.
 
 To ensure that, you can open search panel to see if `Hosts info` dashboard is in `ops` team.
 
-<img src="https://github.com/data-observe/assets/blob/main/tutorial/new-owner-show-in-search.jpg?raw=true"/>
+<img src={require('@/img/docs/tutorial/new-owner-show-in-search.jpg').default.src} alt="new-owner-show-in-search"  className="rounded-lg ring-1 ring-black/5"  width={3086} height={1658}/>
 
 
 ## Create sidebar
@@ -120,7 +120,7 @@ You can see there is already a menu item navigate to `Home` dashboard, but why c
 
 Don't worry, we will cover it later, for now, just create our sidebar menu items.
 
-<img src="https://github.com/data-observe/assets/blob/main/tutorial/team-sidebar.jpg?raw=true"/>
+<img src={require('@/img/docs/tutorial/team-sidebar.jpg').default.src} alt="team-sidebar"  className="rounded-lg ring-1 ring-black/5"  width={3086} height={1658}/>
 
 
 Now, sidebar for `ops` team has been created, but we are still using the sidebar from global menu.
@@ -131,11 +131,11 @@ To use the new `ops` sidebar, we need to switch the sidebar to `ops`.
 
 Click `user` icon at bottom of sidebar and hover on `Select sidemenu` item,you should see : 
 
-<img src="https://github.com/data-observe/assets/blob/main/tutorial/select-sidebar.jpg?raw=true" style={{height: "300px"}} />
+<img src={require('@/img/docs/tutorial/select-sidebar.jpg').default.src} alt="select-sidebar"  className="rounded-lg ring-1 ring-black/5"  style={{height: "300px"}} />
 
 
 You see, just click the `ops` item, and the sidebar will be switched to `ops`.
 
 Once selected, each time you access Datav, the sidebar will be `ops` sidebar, until you switch to another sidebar.
 
-<img src="https://github.com/data-observe/assets/blob/main/tutorial/switched-team-sidebar.jpg?raw=true"/>
+<img src={require('@/img/docs/tutorial/switched-team-sidebar.jpg').default.src} alt="switched-team-sidebar"  className="rounded-lg ring-1 ring-black/5"  width={3086} height={1658}/>

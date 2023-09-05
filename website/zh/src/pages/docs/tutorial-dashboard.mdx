@@ -24,11 +24,13 @@ description:
 3. 在 `图表` 标签中点击 `图表类型` ， 选择 `Graph` 图表类型
 
 
-<img src="https://github.com/data-observe/assets/blob/main/tutorial/select-visualization.jpg?raw=true" style={{height: '400px'}}/>
+<img src={require('@/img/docs/tutorial/select-visualization.jpg').default.src} alt="select-visualization" style={{height: '400px'}} className="rounded-lg ring-1 ring-black/5" />
+
 
 此时一个好看的图表在右边出现：
 
-![request duration stats](https://github.com/data-observe/assets/blob/main/tutorial/request-duration-panel.jpg?raw=true)
+<img src={require('@/img/docs/tutorial/request-duration-panel.jpg').default.src} alt="request-duration-panel" width={3086} height={1658} className="rounded-lg ring-1 ring-black/5" />
+
 
 图表中有三条曲线，分别代表来自 `亚洲`，`欧洲` 和 `北美` 的用户，他们的请求耗时随时间的变化。
 
@@ -51,7 +53,8 @@ description:
 3. 默认的基本单位为 `ms`, 但是我们的图表数据单位是`second`, 因此我们需要修改下基本单位：将基本单位设置为 `s` 。( `x 1` 或者 `/ 1` 就是基本单位)
 4. 注意：由于我们既想要设置时间单位，又想要自定义，那么最好的方式就是先选择 `Time` 单位，然后再修改为 `Custom` 
 
-<img src="https://github.com/data-observe/assets/blob/main/tutorial/panel-units.jpg?raw=true" style={{height: '300px'}}/>
+<img src={require('@/img/docs/tutorial/panel-units.jpg').default.src} alt="panel-units" style={{height: '300px'}} className="rounded-lg ring-1 ring-black/5" />
+
 
 总之，尝试将单位修改为如上图所示，然后点击 `提交` 按钮，你将看到图表的单位已经变成了 `s`。
 
@@ -65,7 +68,8 @@ description:
 2. 点击 `+添加 Threshold` 按钮 
 3. 依照下图设置
 
-<img src="https://github.com/data-observe/assets/blob/main/tutorial/panel-threshold.jpg?raw=true" style={{height: '300px'}}/>
+<img src={require('@/img/docs/tutorial/panel-threshold.jpg').default.src} alt="panel-threshold" style={{height: '300px'}} className="rounded-lg ring-1 ring-black/5" />
+
 
 点击 `提交` 按钮，你将看到图表中出现了一条红色的线，图表被分成了两部分，上部分为红色，表示耗时大于 `1s` 的请求，下部分为绿色，表示耗时小于 `1s` 的请求。
 
@@ -82,7 +86,8 @@ description:
 
 此时，你应该看到如下的图表：
 
-![geomap editor](https://github.com/data-observe/assets/blob/main/tutorial/geomap-editor.jpg?raw=true)
+<img src={require('@/img/docs/tutorial/geomap-editor.jpg').default.src} alt="geomap-editor" width={3086} height={1658} className="rounded-lg ring-1 ring-black/5" />
+
 
 > 如果你看不到任何地图，只能看到一堆绿色的点，请检查你的网络链接是否可用, 因为基础的地图层信息是从网络上加载的，而这些地图层之上的绿点才是在本地渲染
 
@@ -145,7 +150,8 @@ description:
 
 **别忘了一点要点击 `提交` 按钮后，单位设置才能生效 !** !
 
-<img src="https://github.com/data-observe/assets/blob/main/tutorial/units-override.jpg?raw=true" style={{height: "400px"}}/>
+<img src={require('@/img/docs/tutorial/units-override.jpg').default.src} alt="units-override" style={{height: '400px'}} className="rounded-lg ring-1 ring-black/5" />
+
 
 ### 颜色标记
 
@@ -157,7 +163,8 @@ description:
 
 由于我们已经知道如何添加 Override，因此这里就不再赘述，只需要为 `Value` 列添加一个 Override，然后为它添加一个阈值规则即可。
 
-<img src="https://github.com/data-observe/assets/blob/main/tutorial/threshold-override.jpg?raw=true" style={{height: "400px"}}/>
+<img src={require('@/img/docs/tutorial/threshold-override.jpg').default.src} alt="threshold-override" style={{height: '400px'}} className="rounded-lg ring-1 ring-black/5" />
+
 
 #### 值映射 Value mapping 
 
@@ -172,7 +179,8 @@ description:
 
 现在，找到 `图表` 标签中的 `Value mapping` 设置区，点击 `编辑值映射` 按钮，然后设置如下：
 
-![value mapping](https://github.com/data-observe/assets/blob/main/tutorial/tutorial-value-mapping.jpg?raw=true)
+<img src={require('@/img/docs/tutorial/tutorial-value-mapping.jpg').default.src} alt="tutorial-value-mapping" width={3086} height={1658} className="rounded-lg ring-1 ring-black/5" />
+
 
 #### 同样的规则，哪个设置生效?
 
@@ -187,7 +195,9 @@ description:
 
 又到了使用 `覆盖 Override` 武器之时， 但是这次覆盖的目标不是 `Value` 列，而是 `Time` 列。
 
-<img src="https://github.com/data-observe/assets/blob/main/tutorial/time-override.jpg?raw=true" style={{height: "400px"}}/>
+<img src={require('@/img/docs/tutorial/time-override.jpg').default.src} alt="time-override" style={{height: '400px'}} className="rounded-lg ring-1 ring-black/5" />
+
+
 
 在 `覆盖规则` 中，我们使用了一个函数来实现时间转换，这个函数的名字叫 `Column.textTransform`，它的作用是将 `Time` 列的值传递给我们自定义的函数，然后将函数的返回值显示在 `Time` 列中。
 
@@ -226,8 +236,8 @@ function transform(text, lodash, moment)  {
 
 接下来的操作很简单：点击图标并拖动即可。 现在，调整图表的大小和位置，使其看起来像下图一样：
 
+<img src={require('@/img/docs/tutorial/panels-after-resizing.jpg').default.src} alt="panels-after-resizing" width={3086} height={1658} className="rounded-lg ring-1 ring-black/5" />
 
-![resized panels](https://github.com/data-observe/assets/blob/main/tutorial/panels-after-resizing.jpg?raw=true)
 
 还不错，对吗？下面，一起来使用真实的数据来替换掉 `TestData` 数据源。真实才是王道！
 

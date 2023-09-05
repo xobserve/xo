@@ -23,13 +23,13 @@ Let's create a global variable named `host`:
 
 1. Click `configuration` icon in the bottom section of sidebar and select `Variable` tab
 
-<img src="https://github.com/data-observe/assets/blob/main/tutorial/global-vars.jpg?raw=true"  />
+<img src={require('@/img/docs/tutorial/global-vars.jpg').default.src} alt="global-vars" width={3086} height={1658} className="rounded-lg ring-1 ring-black/5" />
 
 
 2. Click `New variable` button to open variable editor
 3. Fill in the form as below
 
-<img src="https://github.com/data-observe/assets/blob/main/tutorial/edit-host-var.jpg?raw=true" style={{height: '600px'}} />
+<img src={require('@/img/docs/tutorial/edit-host-var.jpg').default.src} alt="edit-host-var" style={{height: '600px'}} className="rounded-lg ring-1 ring-black/5" />
 
 
 aha, looks exactly the same as dashboard variable, so you should be familiar with it.
@@ -38,7 +38,7 @@ Yep, `host` is just another `instance`, it is the same as `instance` variable we
 
 Click `Submit` button, you should see it appears in global variables table.
 
-<img src="https://github.com/data-observe/assets/blob/main/tutorial/global-vars-table.jpg?raw=true"  />
+<img src={require('@/img/docs/tutorial/global-vars-table.jpg').default.src} alt="global-vars-table" width={3086} height={1658} className="rounded-lg ring-1 ring-black/5" />
 
 
 ## Use global variables 
@@ -47,7 +47,7 @@ Using global variable is also the same as dashboard variable.
 
 Let's go back to `Hosts info` dashboard, and see what has changed to the variables selector row.
 
-<img src="https://github.com/data-observe/assets/blob/main/tutorial/variable-selector.jpg?raw=true" style={{height: '30px'}} />
+<img src={require('@/img/docs/tutorial/variable-selector.jpg').default.src} alt="variable-selector" style={{height: '30px'}} className="rounded-lg ring-1 ring-black/5" />
 
 Yep, opposite to dashboard variable, global variable appeared in the right side of varaibles selector row.
 
@@ -60,9 +60,8 @@ The most important feature of global variable is : if you set `host` to value `A
 
 Let's try it, first, in `Hosts info` dashboard, set host to `localhost:9100`, then switch to `Home` and `User stats` dashboard to see its value, you should see: 
 
-<img src="https://github.com/data-observe/assets/blob/main/tutorial/gvar-in-host-info.jpg?raw=true" style={{height: '50px'}} />
-<img src="https://github.com/data-observe/assets/blob/main/tutorial/gvar-in-home.jpg?raw=true" style={{height: '50px'}} />
-<img src="https://github.com/data-observe/assets/blob/main/tutorial/gvar-in-user-stats.jpg?raw=true" style={{height: '50px'}} />
-
+<img src={require('@/img/docs/tutorial/gvar-in-host-info.jpg').default.src} alt="gvar-in-host-info" style={{height: '50px'}} className="rounded-lg ring-1 ring-black/5" />
+<img src={require('@/img/docs/tutorial/gvar-in-home.jpg').default.src} alt="gvar-in-home" style={{height: '50px'}} className="rounded-lg ring-1 ring-black/5" />
+<img src={require('@/img/docs/tutorial/gvar-in-user-stats.jpg').default.src} alt="gvar-in-user-stats" style={{height: '50px'}} className="rounded-lg ring-1 ring-black/5" />
 
 Great, they are changed to the same value as we expected.

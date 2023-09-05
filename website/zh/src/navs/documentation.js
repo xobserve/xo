@@ -78,7 +78,7 @@ export const documentationNav = {
     pages["plugin-gauge"],
     pages["plugin-bar"],
     // pages["plugin-bargauge"],
-    // pages["plugin-pie"],
+    pages["plugin-pie"],
   ],
   // Accessibility: [pages['screen-readers']],
   // 'Official Plugins': [

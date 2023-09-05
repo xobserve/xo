@@ -94,22 +94,22 @@ All we need to do is :
 
 1.  Visit <Code>/alert</Code> page and open its panel editor 
 
-![request duration stats](https://github.com/data-observe/assets/blob/main/tutorial/alert-page.jpg?raw=true)
+<img src={require('@/img/docs/tutorial/alert-page.jpg').default.src} alt="alert page" width={3086} height={1658} className="rounded-lg ring-1 ring-black/5" />
 
 2. Find `Alert Filter` section in `Panel tab` in panel editor, this section is used for filter the alerts that are querying from given datasources.
 
-![request duration stats](https://github.com/data-observe/assets/blob/main/tutorial/alert-filter.jpg?raw=true)
+<img src={require('@/img/docs/tutorial/alert-filter.jpg').default.src} alt="alert filter" width={3086} height={1658} className="rounded-lg ring-1 ring-black/5" />
 
 3. Add `prometheus` datasource to `Datasource` filter, and remove `TestData` datasource.
 
 You should see the reult as below: 
 
-<img src="https://github.com/data-observe/assets/blob/main/tutorial/alert-prometheus-ds.jpg?raw=true" />
+<img src={require('@/img/docs/tutorial/alert-prometheus-ds.jpg').default.src} alt="alert prometheus datasource" width={3086} height={1658} className="rounded-lg ring-1 ring-black/5" />
 
 
 Here we successfully query the real alerts from Prometheus, let's have a deep view into this alert rule.
 
-<img src="https://github.com/data-observe/assets/blob/main/tutorial/alert-rule.jpg?raw=true" />
+<img src={require('@/img/docs/tutorial/alert-rule.jpg').default.src} alt="alert rule" width={3086} height={1658} className="rounded-lg ring-1 ring-black/5" />
 
 You can compre alert info to the alert rule defined in prometheus config files. For more info please visit [Alert settings](/docs/alert-setting).
 
@@ -131,7 +131,7 @@ Click `user` icon at bottom of sidebar, then hover on  `Select Sidemenu` item an
 
 When sidebar is switched, you should see `Home` dashboard at the top of sidebar.
 
-<img src="https://github.com/data-observe/assets/blob/main/tutorial/home-dashboard.jpg?raw=true" />
+<img src={require('@/img/docs/tutorial/home-dashboard.jpg').default.src} alt="home-dashboard" width={3086} height={1658} className="rounded-lg ring-1 ring-black/5" />
 
 
 ### Create a Graph panel 
@@ -143,7 +143,7 @@ At this time, welcome panel is useless for us, let's change to a Graph panel.
 
 Now, you should see a Graph panel like this: 
 
-<img src="https://github.com/data-observe/assets/blob/main/tutorial/home-graph-panel.jpg?raw=true" style={{height: '400px'}} />
+<img src={require('@/img/docs/tutorial/home-graph-panel.jpg').default.src} alt="home-graph-panel" style={{height: '400px'}} className="rounded-lg ring-1 ring-black/5" />
 
 It seems that the current panel border and decoration is not very suited to our Graph panel, let's try to change it.
 
@@ -152,19 +152,19 @@ It seems that the current panel border and decoration is not very suited to our 
 1. Open panel editor of Graph panel, select `Style` tab in right side.
 2. Click below button to select a new border 
 
-<img src="https://github.com/data-observe/assets/blob/main/tutorial/select-panel-border.jpg?raw=true" style={{height: '200px'}} />
+<img src={require('@/img/docs/tutorial/select-panel-border.jpg').default.src} alt="select-panel-border" style={{height: '200px'}} className="rounded-lg ring-1 ring-black/5" />
 
 3. For convenient, just select no border for now
 
-<img src="https://github.com/data-observe/assets/blob/main/tutorial/panel-border-list.jpg?raw=true" style={{height: '300px'}} />
+<img src={require('@/img/docs/tutorial/panel-border-list.jpg').default.src} alt="panel-border-list" style={{height: '300px'}} className="rounded-lg ring-1 ring-black/5" />
 
 4. Same to panel decoration, find `Panel decoration` section and  set it to none 
 
-<img src="https://github.com/data-observe/assets/blob/main/tutorial/panel-decoration.jpg?raw=true" style={{height: '500px'}} />
+<img src={require('@/img/docs/tutorial/panel-decoration.jpg').default.src} alt="panel-decoration" style={{height: '500px'}} className="rounded-lg ring-1 ring-black/5" />
 
 Now, you should see a Graph panel like this:
 
-<img src="https://github.com/data-observe/assets/blob/main/tutorial/none-border-panel.jpg?raw=true"  />
+<img src={require('@/img/docs/tutorial/none-border-panel.jpg').default.src} alt="none-border-panel" width={3086} height={1658} className="rounded-lg ring-1 ring-black/5" />
 
 It looks much cleaner now, no border and no decoration, just a pure Graph panel.
 
@@ -181,12 +181,12 @@ Now, lets enable it and see what will happen.
 3. Set `Alert state` filter to `Pending`,`Firing` and `Resolved`, if you choose none, then no alerts will be shown on Graph.
 4. Maybe you need to set time to a wider range, such as `now-12h to now`
 
-<img src="https://github.com/data-observe/assets/blob/main/tutorial/alert-correlation.jpg?raw=true" style={{height: '500px'}} />
+<img src={require('@/img/docs/tutorial/alert-correlation.jpg').default.src} alt="alert-correlation" style={{height: '500px'}} className="rounded-lg ring-1 ring-black/5" />
 
 
 If everything is ok, you should see a Graph panel like this:
 
-<img src="https://github.com/data-observe/assets/blob/main/tutorial/graph-alerts.jpg?raw=true"  />
+<img src={require('@/img/docs/tutorial/graph-alerts.jpg').default.src} alt="graph-alerts"  width={3086} height={1658}  className="rounded-lg ring-1 ring-black/5" />
 
 Hover your mouse on the mark which the arrow points to, you will see the alert info pop up.
 
@@ -198,7 +198,7 @@ Annotation marks on Graph panel is just a simple way to show alerts, if you want
 1. Open panel editor of Graph panel
 2. Select `Alert` tab in bottom-left side of panel editor
 
-<img src="https://github.com/data-observe/assets/blob/main/tutorial/panel-alerts-detail.jpg?raw=true"  />
+<img src={require('@/img/docs/tutorial/panel-alerts-detail.jpg').default.src} alt="panel-alerts-detail"  width={3086} height={1658}  className="rounded-lg ring-1 ring-black/5" />
 
 It is very similar to `/alert` page, but here you can see the alerts and Graph at the same place.
 

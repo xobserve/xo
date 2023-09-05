@@ -22,7 +22,8 @@ description:
 
 1. 点击左侧导航栏的 `配置` 按钮，选择 `团队 Team` 标签页
 
-<img src="https://github.com/data-observe/assets/blob/main/tutorial/team-table.jpg?raw=true" />
+<img src={require('@/img/docs/tutorial/team-table.jpg').default.src} alt="team-table"  className="rounded-lg ring-1 ring-black/5"  width={3086} height={1658}/>
+
 
 2. 点击右上方的 `新建团队` 按钮
 3. 将 `团队名称` 设置为 `ops`
@@ -42,7 +43,8 @@ description:
 
 1. 在 `ops` 团队的首页，选择 `成员` 标签页，然后点击 `新建成员` 按钮
 
-<img src="https://github.com/data-observe/assets/blob/main/tutorial/add-team-member.jpg?raw=true" style={{height: "300px"}} />
+<img src={require('@/img/docs/tutorial/add-team-member.jpg').default.src} alt="add-team-member"  className="rounded-lg ring-1 ring-black/5"  style={{height: "300px"}} />
+
 
 2. 接着使用 `datav-admin` 登录并完成后续的操作步骤
 
@@ -55,13 +57,14 @@ description:
 
 当然，你也可以在这里更改为 `globa` 团队，但是毫无意义，毕竟我们要为 `ops` 团队创建仪表盘。
 
-<img src="https://github.com/data-observe/assets/blob/main/tutorial/add-team-dashboard.jpg?raw=true" style={{height: "300px"}} />
+<img src={require('@/img/docs/tutorial/add-team-dashboard.jpg').default.src} alt="add-team-dashboard"  className="rounded-lg ring-1 ring-black/5"  style={{height: "300px"}} />
+
 
 点击 `提交` 按钮，我们的 `Network stat` 仪表盘就创建好了。
 
 现在，我们可以在左上角看到我们的新仪表盘的 `Network stat` 是 `ops` 团队的，太棒了！试着点击 `ops` 文字，看看会发生什么。
 
-<img src="https://github.com/data-observe/assets/blob/main/tutorial/dashboard-lef-top-corner.jpg?raw=true" style={{height: "50px"}} />
+<img src={require('@/img/docs/tutorial/dashboard-lef-top-corner.jpg').default.src} alt="dashboard-lef-top-corner"  className="rounded-lg ring-1 ring-black/5"  style={{height: "50px"}} />
 
 由于该仪表盘只是演示目的，因此无需在这里创建任何图表。
 
@@ -90,19 +93,21 @@ description:
 2. 选择 `元数据` 标签页
 3. 将 JSON 中的 `ownedBy` 字段的值设置为 `2`
 
-<img src="https://github.com/data-observe/assets/blob/main/tutorial/dashboard-metadata.jpg?raw=true"/>
+<img src={require('@/img/docs/tutorial/dashboard-metadata.jpg').default.src} alt="dashboard-metadata"  className="rounded-lg ring-1 ring-black/5"  width={3086} height={1658}/>
 
 4. 点击 `提交` 按钮
 
 返回仪表盘页面，你可以看到 :
 
-<img src="https://github.com/data-observe/assets/blob/main/tutorial/dashboard-new-owner.jpg?raw=true" style={{height: "50px"}} />
+<img src={require('@/img/docs/tutorial/dashboard-new-owner.jpg').default.src} alt="dashboard-new-owner"  className="rounded-lg ring-1 ring-black/5"  style={{height: "50px"}} />
+
 
 这意味着我们已经成功地将 `Hosts info` 仪表盘转移到了 `ops` 团队。
 
 为了验证，你可以打开搜索面板，看看 `Hosts info` 仪表盘是否在 `ops` 团队中。
 
-<img src="https://github.com/data-observe/assets/blob/main/tutorial/new-owner-show-in-search.jpg?raw=true"/>
+<img src={require('@/img/docs/tutorial/new-owner-show-in-search.jpg').default.src} alt="new-owner-show-in-search"  className="rounded-lg ring-1 ring-black/5"  width={3086} height={1658}/>
+
 
 
 ## 创建侧边导航栏
@@ -123,7 +128,7 @@ description:
 
 现在先来创建几个菜单项:
 
-<img src="https://github.com/data-observe/assets/blob/main/tutorial/team-sidebar.jpg?raw=true"/>
+<img src={require('@/img/docs/tutorial/team-sidebar.jpg').default.src} alt="team-sidebar"  className="rounded-lg ring-1 ring-black/5"  width={3086} height={1658}/>
 
 提交后，新的菜单项就已经创建完成，来看看该如何使用。
 
@@ -131,11 +136,13 @@ description:
 
 使用其实很简单，只需要点击侧边导航的 `用户` 图标，然后在 `选择侧菜单` 中选择 `ops` 即可。
 
-<img src="https://github.com/data-observe/assets/blob/main/tutorial/select-sidebar.jpg?raw=true" style={{height: "300px"}} />
+<img src={require('@/img/docs/tutorial/select-sidebar.jpg').default.src} alt="select-sidebar"  className="rounded-lg ring-1 ring-black/5"  style={{height: "300px"}} />
+
 
 当选择后，网页自动刷新，新的侧边导航栏将呈现到我们眼前：
 
-<img src="https://github.com/data-observe/assets/blob/main/tutorial/switched-team-sidebar.jpg?raw=true"/>
+<img src={require('@/img/docs/tutorial/switched-team-sidebar.jpg').default.src} alt="switched-team-sidebar"  className="rounded-lg ring-1 ring-black/5"  width={3086} height={1658}/>
+
 
 
 > 一旦选择，后续的每次访问都将使用该导航栏，直到你换成其它的

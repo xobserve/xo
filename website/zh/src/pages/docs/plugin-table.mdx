@@ -8,7 +8,8 @@ import Code  from '@/components/docs/Code'
 
 Table 图表是 Datav 中最常用、最强大的图表之一。
 
-<img src="https://github.com/data-observe/assets/blob/main/plugin/table.jpg?raw=true" style={{height: '300px'}}/>
+<img src={require('@/img/docs/plugin/table.jpg').default.src} alt="table"  style={{height: '300px'}} className="rounded-lg ring-1 ring-black/5" />
+
 
 下面，我们一起来看看 Table 图表的一些配置。
 
@@ -40,12 +41,13 @@ Table 图表有两种交互方式：
 
 值映射是一个非常有用的功能，它可以表格中符合条件的值映射到另一个值，例如，你可以将某些值映射到一个颜色，或者将某些的值映射到一个图标。
 
-
-<img src="https://github.com/data-observe/assets/blob/main/plugin/table.jpg?raw=true" style={{height: '300px'}}/>
+<img src={require('@/img/docs/plugin/table.jpg').default.src} alt="table"  style={{height: '300px'}} className="rounded-lg ring-1 ring-black/5" />
+  
 
 上面图片中，第一列的第四个值，就是通过值映射得到的：
 
-<img src="https://github.com/data-observe/assets/blob/main/plugin/value-mapping.jpg?raw=true" style={{height: '130px'}}/>
+<img src={require('@/img/docs/plugin/value-mapping.jpg').default.src} alt="value-mapping"  style={{height: '130px'}} className="rounded-lg ring-1 ring-black/5" />
+
 
 在这个映射规则中，我们创建了一个 `Value` 类型的映射规则： 将 `23-08-28 09:30::00` 的值映射到 `${__current__} 🇨🇳 time`，并将其颜色设置为 `pink-red`。
 

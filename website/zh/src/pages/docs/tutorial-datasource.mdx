@@ -24,13 +24,15 @@ import Code  from '@/components/docs/Code'
 
 然后填入如下数据:
 
-<img src="https://github.com/data-observe/assets/blob/main/tutorial/create-prometheus-ds.jpg?raw=true" style={{height: '500px'}}/>
+<img src={require('@/img/docs/tutorial/create-prometheus-ds.jpg').default.src} alt="create-prometheus-ds" style={{height: '500px'}}className="rounded-lg ring-1 ring-black/5" />
+
 
 点击 `保存&测试` 按钮，如果一切正常，你会在表单底部看到一个绿色的提示信息 `Datasource is added, redirecting..` , 然后页面会跳转到数据源管理页面:
 
 接着会跳转到数据源管理页面:
 
-![datasource managing](https://github.com/data-observe/assets/blob/main/tutorial/datasource-managing.jpg?raw=true)
+<img src={require('@/img/docs/tutorial/datasource-managing.jpg').default.src} alt="datasource-managing" width={3086} height={1658} className="rounded-lg ring-1 ring-black/5" />
+
 
 你可以看到 Prometheus 数据源已经在表格中了，它在默认的 Testdata 数据源的下面，而 Testdata 数据源是我们在前面章节中使用的。
 
@@ -51,13 +53,15 @@ import Code  from '@/components/docs/Code'
 在图表编辑面板左下角的 `查询` 标签中，你可以看到一个输入框，它提示你输入一个 PromQL 查询，让我们输入 `go_gc_duration_seconds` ，你会看到如下结果:
 
 
-![enter promql query](https://github.com/data-observe/assets/blob/main/tutorial/enter-prometheus-query.jpg?raw=true)
+<img src={require('@/img/docs/tutorial/enter-prometheus-query.jpg').default.src} alt="enter-prometheus-query" width={3086} height={1658} className="rounded-lg ring-1 ring-black/5" />
+
 
 ### 从 metrics 下拉列表中选择
 
 在图表编辑面板左下角的 `metrics` 标签中，你可以看到一个下拉列表，它包含了所有的 metrics，让我们选择 `go_gc_duration_seconds` ，你同样会看到如上图所示的结果。
 
-<img src="https://github.com/data-observe/assets/blob/main/tutorial/select-metrics.jpg?raw=true" style={{height: '400px'}}/>
+<img src={require('@/img/docs/tutorial/select-metrics.jpg').default.src} alt="select-metrics" style={{height: '400px'}}className="rounded-lg ring-1 ring-black/5" />
+
 
 ## 为图表曲线设置别名
 
@@ -67,8 +71,7 @@ import Code  from '@/components/docs/Code'
 
 然后将图例 legend 设置为 `cpu idle - {{instance}}` ，结果如下:
 
-
-![enter promql query](https://github.com/data-observe/assets/blob/main/tutorial/prometheus-legend.jpg?raw=true)
+<img src={require('@/img/docs/tutorial/prometheus-legend.jpg').default.src} alt="prometheus-legend" width={3086} height={1658} className="rounded-lg ring-1 ring-black/5" />
 
 在上图中，`{{instance}}` 是一个标签提取语法，它会被替换为查询结果中的 `instance` 标签值。
 

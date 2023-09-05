@@ -5,7 +5,8 @@ description:
 
 如果你想基于某个条件来显示或隐藏一个图表，那这篇文档就很适合。
 
-<video autoPlay controls src="https://github.com/data-observe/assets/blob/main/panel/condition-demo.mov?raw=true" style={{height:"400px"}}/>
+<video controls autoPlay src="/docs/condition-demo.mov" style={{width: "100%"}}/>
+
 
 从上面的视频我们能看出：仪表盘中有两个图表，一个是 NodeGraph ，用于展示依赖关系图，另一个是表格，是具体的依赖数据，因此它们是同一套数据的两种展示形式。都很有用。
 
@@ -31,13 +32,15 @@ description:
 
 新建一个图表，选择 `NodeGraph` 类型，然后设置它的数据源为 Jaeger，可以看到: 
 
-<img src="https://github.com/data-observe/assets/blob/main/panel/nodegraph-jaeger.jpg?raw=true"/>
+<img src={require('@/img/docs/panel/nodegraph-jaeger.jpg').default.src} alt="panel/nodegraph-jaeger" width={3086} height={1658} className="rounded-lg ring-1 ring-black/5" />
+
 
 ### 创建 Table 图表
 
 再次新建一个图表，选择 `Table` 类型，也设置为 Jaeger 数据源： 
 
-<img src="https://github.com/data-observe/assets/blob/main/panel/table-jaeger.jpg?raw=true"/>
+<img src={require('@/img/docs/panel/table-jaeger.jpg').default.src} alt="panel/table-jaeger" width={3086} height={1658} className="rounded-lg ring-1 ring-black/5" />
+
 
 回到仪表盘页面，此时已经有两个图表，它们同时被显示出来。
 
@@ -53,7 +56,8 @@ description:
 
 打开 NodeGrapl 的图表编辑面板，点击 `图表` 标签页，展开 `基本设置` 部分，找到 `条件渲染`，然后填写如下：
 
-<img src="https://github.com/data-observe/assets/blob/main/panel/nodegraph-condition.jpg?raw=true" style={{height: "400px"}}/>
+<img src={require('@/img/docs/panel/nodegraph-condition.jpg').default.src} alt="panel/table-jaeger" style={{height: "400px"}} className="rounded-lg ring-1 ring-black/5" />
+
 
 条件值 `view=nodegraph` 表示只有当 `view` 变量的值为 `nodegraph` 时才渲染这个图表。
 

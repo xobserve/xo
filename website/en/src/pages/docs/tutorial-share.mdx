@@ -10,12 +10,12 @@ Sharing dashboard to other uses is very common, the core point of sharing is to 
 It's really easy to share dashboard, just click the `sharing icon` next to dashboard title: 
 
 
-<img src="https://github.com/data-observe/assets/blob/main/tutorial/share-dashboard.jpg?raw=true" style={{height: "50px"}} />
+<img src={require('@/img/docs/tutorial/share-dashboard.jpg').default.src} alt="share-dashboard"  className="rounded-lg ring-1 ring-black/5"  style={{height: "50px"}} />
 
 
 Then you will see a modal popup like this:
 
-<img src="https://github.com/data-observe/assets/blob/main/tutorial/share-dashboard-modal.jpg?raw=true" style={{height: "200px"}} />
+<img src={require('@/img/docs/tutorial/share-dashboard-modal.jpg').default.src} alt="share-dashboard-modal"  className="rounded-lg ring-1 ring-black/5"  style={{height: "200px"}} />
 
 This is only the basic share link, the time info is automatically added to the link.
 
@@ -30,14 +30,14 @@ Try to use some variables in panels, and see what will happen in the share link.
 
 For special panels, such as trace panel, there is more info need to be shared in addition to timerange and variables. 
 
-<img src="https://github.com/data-observe/assets/blob/main/tutorial/trace-panel-share.jpg?raw=true" />
+<img src={require('@/img/docs/tutorial/trace-panel-share.jpg').default.src} alt="trace-panel-share"  className="rounded-lg ring-1 ring-black/5"  width={3086} height={1658}/>
 
 
 Look at the search panel in above image, it has lots of infos to be shared.
 
 In these cases, Datav will automatically add these infos to the share link, so you don't need to worry about it.
 
-<img src="https://github.com/data-observe/assets/blob/main/tutorial/trace-share-modal.jpg?raw=true" style={{height: "300px"}} />
+<img src={require('@/img/docs/tutorial/trace-share-modal.jpg').default.src} alt="trace-share-modal"  className="rounded-lg ring-1 ring-black/5"  style={{height: "300px"}} />
 
 
 In above image, we add some search conditions and use a variable named `service` in search, you can see how it works in the share link. 

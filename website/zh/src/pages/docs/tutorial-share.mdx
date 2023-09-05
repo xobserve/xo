@@ -9,13 +9,13 @@ description:
 
 分享仪表盘非常简单，点开仪表盘标题旁的分享图表中即可：
 
-
-<img src="https://github.com/data-observe/assets/blob/main/tutorial/share-dashboard.jpg?raw=true" style={{height: "50px"}} />
+<img src={require('@/img/docs/tutorial/share-dashboard.jpg').default.src} alt="share-dashboard"  className="rounded-lg ring-1 ring-black/5"  style={{height: "50px"}} />
 
 
 然后你能看到一个弹出框:
 
-<img src="https://github.com/data-observe/assets/blob/main/tutorial/share-dashboard-modal.jpg?raw=true" style={{height: "200px"}} />
+<img src={require('@/img/docs/tutorial/share-dashboard-modal.jpg').default.src} alt="share-dashboard-modal"  className="rounded-lg ring-1 ring-black/5"  style={{height: "200px"}} />
+
 
 这是最基本的分享形式，里面只有相关的时间信息。
 
@@ -33,12 +33,13 @@ description:
 
 对于某些特定的图表，例如 Trace， 需要额外的信息才能够恢复到分享时的状态。
 
+<img src={require('@/img/docs/tutorial/trace-panel-share.jpg').default.src} alt="trace-panel-share"  className="rounded-lg ring-1 ring-black/5"  width={3086} height={1658}/>
 
-<img src="https://github.com/data-observe/assets/blob/main/tutorial/trace-panel-share.jpg?raw=true" />
 
 
 观察上图中的搜索面板，它包含了不少信息，而这些信息都需要被分享出去。 尽管很复杂，但是大家不用担心， Datav 会自动帮我们处理好这一切。
 
-<img src="https://github.com/data-observe/assets/blob/main/tutorial/trace-share-modal.jpg?raw=true" style={{height: "300px"}} />
+<img src={require('@/img/docs/tutorial/trace-share-modal.jpg').default.src} alt="trace-share-modal"  className="rounded-lg ring-1 ring-black/5"  style={{height: "300px"}} />
+
 
 在上面图片中，添加了一些搜索条件，并且使用了 `service` 变量，你可以看到分享链接中的变化完全符合我们的预期。

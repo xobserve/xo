@@ -13,7 +13,7 @@ But somtimes we hope to override some options for a specific series, now you can
 
 First, create a panel and select `Graph` visualization, then add datasource queries as below: 
 
-<img src="https://github.com/data-observe/assets/blob/main/panel/panel-with-two-queries.jpg?raw=true" style={{height: "260px"}}/>
+<img src={require('@/img/docs/panel/panel-with-two-queries.jpg').default.src} alt="panel-with-two-queries" style={{height: '260px'}} className="rounded-lg ring-1 ring-black/5" />
 
 Don't forget to set `Legend` field to `{{__name__}}` to display their series name in graph legend.
 
@@ -27,17 +27,17 @@ Now, you can see there are two series in the `Graph` chart: `node_load1` and `no
 
 The below options will change the area fill style of all series in the chart:
 
-<img src="https://github.com/data-observe/assets/blob/main/panel/fill-area.jpg?raw=true" style={{height: "260px"}}/>
+<img src={require('@/img/docs/panel/fill-area.jpg').default.src} alt="fill-area" style={{height: '260px'}} className="rounded-lg ring-1 ring-black/5" />
 
 ### unit 
 
 Now, let's set the unit of all series in the chart:
 
-<img src="https://github.com/data-observe/assets/blob/main/panel/unit.jpg?raw=true" style={{height: "260px"}}/>
+<img src={require('@/img/docs/panel/unit.jpg').default.src} alt="unit" style={{height: '260px'}} className="rounded-lg ring-1 ring-black/5" />
 
 It should be noted that value in `Unit` is actually ` / load5` with a `space` char at the beginning.
 
-<img src="https://github.com/data-observe/assets/blob/main/panel/panel-with-common-options.jpg?raw=true" />
+<img src={require('@/img/docs/panel/panel-with-common-options.jpg').default.src} alt="panel-with-common-options" width={3086} height={1658} className="rounded-lg ring-1 ring-black/5" />
 
 This is a bit weird, `load1` series is also using a `load5` unit. Let's fix it first.
 
@@ -54,13 +54,13 @@ So we need to add a new Y-axis for `load1` series, and set its unit to ` / load1
 
 Click `Override` tab and add a new override for `load1` sereis as below:
 
-<img src="https://github.com/data-observe/assets/blob/main/panel/override-item.jpg?raw=true" />
+<img src={require('@/img/docs/panel/override-item.jpg').default.src} alt="override-item" width={3086} height={1658} className="rounded-lg ring-1 ring-black/5" />
 
 ### Add Y-axis override
 
 Click `Add override rule` and select `Series.separateYAxis` type ,then enable it as below: 
 
-<img src="https://github.com/data-observe/assets/blob/main/panel/yaxis-override.jpg?raw=true" />
+<img src={require('@/img/docs/panel/yaxis-override.jpg').default.src} alt="yaxis-override" width={3086} height={1658} className="rounded-lg ring-1 ring-black/5" />
 
 Where the arrow points to is the new `Y-axis` we set for `load1` series.
 
@@ -70,7 +70,7 @@ Now it's time to set its unit.
 
 Click `Add override rule` and select `Series.Unit` type, then set its value as below and click `Submit` button: 
 
-<img src="https://github.com/data-observe/assets/blob/main/panel/override-unit.jpg?raw=true" />
+<img src={require('@/img/docs/panel/override-unit.jpg').default.src} alt="override-unit" width={3086} height={1658} className="rounded-lg ring-1 ring-black/5" />
 
 Nice, now the `load1` series has its own Y-axis and unit.
 
@@ -82,7 +82,7 @@ A viable approach is show `load1` in `negative y-axis`.
 
 For now, we don't need `separateYAxis` any more, so change it to `negativeY` as below:
 
-<img src="https://github.com/data-observe/assets/blob/main/panel/negativey-override1.jpg?raw=true" />
+<img src={require('@/img/docs/panel/negativey-override1.jpg').default.src} alt="negativey-override1" width={3086} height={1658} className="rounded-lg ring-1 ring-black/5" />
 
 
 Ok, the two series never mixed together now and the units is also correct. Let's override some styles next.
@@ -92,7 +92,7 @@ Ok, the two series never mixed together now and the units is also correct. Let's
 
 Add some overrides as below :
 
-<img src="https://github.com/data-observe/assets/blob/main/panel/styles-override.jpg?raw=true" style={{height: "400px"}}/>
+<img src={require('@/img/docs/panel/styles-override.jpg').default.src} alt="styles-override" style={{height: "400px"}} className="rounded-lg ring-1 ring-black/5" />
 
 <TextList>
     <li>Override `Series.style` to change `node_load1` series from `Lines` type that set in common options to `Points` type</li>
@@ -106,4 +106,4 @@ Add some overrides as below :
 
 After all these overrides, the final result is not bad:
 
-<img src="https://github.com/data-observe/assets/blob/main/panel/override-final.jpg?raw=true" style={{height: "300px"}}/>
+<img src={require('@/img/docs/panel/override-final.jpg').default.src} alt="override-final" style={{height: "300px"}} className="rounded-lg ring-1 ring-black/5" />

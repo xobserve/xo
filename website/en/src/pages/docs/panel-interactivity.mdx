@@ -15,13 +15,13 @@ First, let's add a basic click event to the panel, and print the input data.
 
 Open the panel editor and find the `interaction` setion in `Panel` tab, click `Add action` and rename `New action` to `Test click`
 
-<img src="https://github.com/data-observe/assets/blob/main/panel/add-interaction.jpg?raw=true" style={{height: "400px"}}/>
+<img src={require('@/img/docs/panel/add-interaction.jpg').default.src} alt="add-interaction" style={{height: '400px'}} className="rounded-lg ring-1 ring-black/5" />
 
 As show in above image, we have created an click action named `Test click`, and now let's add some code to it.
 
 Click `Edit function` button, add fill the code as below:
 
-<img src="https://github.com/data-observe/assets/blob/main/panel/edit-basic-interaction.jpg?raw=true" style={{height: "300px"}}/>
+<img src={require('@/img/docs/panel/edit-basic-interaction.jpg').default.src} alt="edit-basic-interaction" style={{height: '300px'}} className="rounded-lg ring-1 ring-black/5" />
 
 You can also copy below code into the editor:
 
@@ -38,11 +38,11 @@ function onRowClick(row, navigate, setVariable, setDateTime, $variables) {
 
 Click `Sumit`, then click on `Graph`, you shold see a popup modal like this:
 
-<img src="https://github.com/data-observe/assets/blob/main/panel/click-popup.jpg?raw=true" style={{height: "200px"}}/>
+<img src={require('@/img/docs/panel/click-popup.jpg').default.src} alt="click-popup" style={{height: '200px'}} className="rounded-lg ring-1 ring-black/5" />
 
 Click `Test click`, you should see the data printed in the browser console: 
 
-<img src="https://github.com/data-observe/assets/blob/main/panel/interaction-first-output.jpg?raw=true" style={{height: "160px"}}/>
+<img src={require('@/img/docs/panel/interaction-first-output.jpg').default.src} alt="interaction-first-output" style={{height: '160px'}} className="rounded-lg ring-1 ring-black/5" />
 
 ## Event params
 
@@ -129,11 +129,11 @@ when you find some issues, you click the issue series and select the time point 
 
 First, let's see a image before clicking: 
 
-<img src="https://github.com/data-observe/assets/blob/main/panel/before-click.jpg?raw=true"/>
+<img src={require('@/img/docs/panel/before-click.jpg').default.src} alt="before-click" width={3086} height={1658} className="rounded-lg ring-1 ring-black/5" />
 
 
 Next, let's trigger the click event, and see the result:
 
-<img src="https://github.com/data-observe/assets/blob/main/panel/after-click.jpg?raw=true"/>
+<img src={require('@/img/docs/panel/after-click.jpg').default.src} alt="after-click" width={3086} height={1658} className="rounded-lg ring-1 ring-black/5" />
 
 You can see all three places the arrows point to have changed as we expected, nice!

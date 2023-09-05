@@ -8,7 +8,7 @@ import Code  from '@/components/docs/Code'
 
 
 
-<img src="https://github.com/data-observe/assets/blob/main/plugin/nodegraph-hover.jpg?raw=true" style={{height: '300px'}}/>
+<img src={require('@/img/docs/plugin/nodegraph-hover.jpg').default.src} alt="nodegraph-hover" style={{height: '300px'}} className="rounded-lg ring-1 ring-black/5" />
 
 
 
@@ -17,21 +17,21 @@ import Code  from '@/components/docs/Code'
 There is a toolbox in the top left corner of `NodeGraph`, the most useful one is the fitler tool. You can use it to filter the nodes and edges you want.
 
 
-<img src="https://github.com/data-observe/assets/blob/main/plugin/filter-nodes.jpg?raw=true" />
+<img src={require('@/img/docs/plugin/filter-nodes.jpg').default.src} alt="filter-nodes" width={3086} height={1658} className="rounded-lg ring-1 ring-black/5" />
 
 In above image, we set a filter rule to match `node-1` and `node-2` nodes.
 
 If you want see the relation nodes of them, check `Show realtion`:
 
 
-<img src="https://github.com/data-observe/assets/blob/main/plugin/filter-relation.jpg?raw=true" />
+<img src={require('@/img/docs/plugin/filter-relation.jpg').default.src} alt="filter-relation" width={3086} height={1658} className="rounded-lg ring-1 ring-black/5" />
 
 
 ### Enable/disalbe 
 
 The filter rules you set is automatically store in browser local storage, if you don't need them, you can remove or just disable them:
 
-<img src="https://github.com/data-observe/assets/blob/main/plugin/enable-filter.jpg?raw=true" />
+<img src={require('@/img/docs/plugin/enable-filter.jpg').default.src} alt="enable-filter" width={3086} height={1658} className="rounded-lg ring-1 ring-black/5" />
 
 You can see that when we disalbed the rule by clicking the `eye icon`, all the nodes and edges are shown now.
 
@@ -51,11 +51,11 @@ Let's assume your [node data format](/docs/panel-data-transform#nodegraph-format
 
 Then you can set donut colors as below: 
 
-<img src="https://github.com/data-observe/assets/blob/main/plugin/donut-setting.jpg?raw=true" style={{height: '300px'}}/>
+<img src={require('@/img/docs/plugin/donut-setting.jpg').default.src} alt="donut-setting" style={{height: '300px'}} className="rounded-lg ring-1 ring-black/5" />
 
 And the result is:
 
-<img src="https://github.com/data-observe/assets/blob/main/plugin/donut-color.jpg?raw=true" />
+<img src={require('@/img/docs/plugin/donut-color.jpg').default.src} alt="donut-color" width={3086} height={1658} className="rounded-lg ring-1 ring-black/5" />
 
 
 ## Table View

@@ -14,20 +14,21 @@ import Code  from '@/components/docs/Code'
 
 > 该功能只对 Graph 类型的图表有效。
 
-<img src="https://github.com/data-observe/assets/blob/main/dashboard/shared-tooltip.jpg?raw=true" style={{height: '400px'}} />
+<img src={require('@/img/docs/dashboard/shared-tooltip.jpg').default.src} alt="shared-tooltip" style={{height: '400px'}} className="rounded-lg ring-1 ring-black/5" />
+
 
 
 ## 隐藏全局变量
 
 显而易见，不是所有的全局变量都适用于所有的仪表盘。因此你可以需要隐藏当前仪表盘不需要的全局变量。
 
+<img src={require('@/img/docs/dashboard/global-vars.jpg').default.src} alt="global-vars" style={{height: '60px'}} className="rounded-lg ring-1 ring-black/5" />
 
-<img src="https://github.com/data-observe/assets/blob/main/dashboard/global-vars.jpg?raw=true" style={{height: '60px'}} />
 
 如上图所示，我们有两个全局变量，现在先隐藏 `no-use` 这个全局变量。
 
+<img src={require('@/img/docs/dashboard/hide-vars.jpg').default.src} alt="hide-vars" style={{height: '60px'}} className="rounded-lg ring-1 ring-black/5" />
 
-<img src="https://github.com/data-observe/assets/blob/main/dashboard/hide-vars.jpg?raw=true" style={{height: '60px'}} />
 
 回到仪表盘页面，你会发现 `no-use` 这个全局变量已经被隐藏了。
 
@@ -49,7 +50,8 @@ import Code  from '@/components/docs/Code'
 
 默认情况下，使用的是 `vertical` 排列方式，相信你已经使用过了，下面我们来看看 `null` 的效果。
 
-<img src="https://github.com/data-observe/assets/blob/main/dashboard/custom-layout.jpg?raw=true" style={{height: '400px'}} />
+<img src={require('@/img/docs/dashboard/custom-layout.jpg').default.src} alt="custom-layout" style={{height: '400px'}} className="rounded-lg ring-1 ring-black/5" />
+
 
 如图所示，真的是可以想放哪里放哪里，右下角的图表既不会向上靠拢，也不会向左靠拢，就孤零零的待在右下方角落里。
 
@@ -59,7 +61,8 @@ import Code  from '@/components/docs/Code'
 
 开启后，图表可以彼此重叠放置，对于一些特殊形状的图表以及数据大屏来说，较为有用。
 
-<img src="https://github.com/data-observe/assets/blob/main/dashboard/panel-overlap.jpg?raw=true" style={{height: '400px'}} />
+<img src={require('@/img/docs/dashboard/panel-overlap.jpg').default.src} alt="panel-overlap" style={{height: '400px'}} className="rounded-lg ring-1 ring-black/5" />
+
 
 可以看出，如果禁用了该选项，上述的效果永远不可能实现。
 
@@ -75,16 +78,18 @@ import Code  from '@/components/docs/Code'
 
 当开启后，如果你在仪表盘中有未保存的修改，那么在离开仪表盘页面时，会弹出提示,防止未保存的内容丢失。
 
+<img src={require('@/img/docs/dashboard/unsaved-prompt.jpg').default.src} alt="unsaved-prompt" style={{height: '400px'}} className="rounded-lg ring-1 ring-black/5" />
 
-<img src="https://github.com/data-observe/assets/blob/main/dashboard/unsaved-prompt.jpg?raw=true" style={{height: '400px'}} />
 
 
 ## 自动保存 
 
 开启后，仪表盘会以一个固定的间隔自动进行保存，这样即使你忘记了保存，也不会丢失太长时间的内容。
 
-<img src="https://github.com/data-observe/assets/blob/main/dashboard/auto-save.jpg?raw=true" style={{height: '300px'}} />
+<img src={require('@/img/docs/dashboard/auto-save.jpg').default.src} alt="auto-save" style={{height: '300px'}} className="rounded-lg ring-1 ring-black/5" />
+
 
 但是在图表编辑模式下时， 自动保存会被禁用，你还是需要手动保存，也许在未来，我们会在编辑模式也启用自动保存，但目前出于一些权衡考虑，暂时关闭 :)
 
-<img src="https://github.com/data-observe/assets/blob/main/dashboard/auto-save-disabled.jpg?raw=true" style={{height: '300px'}} />
+<img src={require('@/img/docs/dashboard/auto-save-disabled.jpg').default.src} alt="auto-save-disabled" style={{height: '300px'}} className="rounded-lg ring-1 ring-black/5" />
+

@@ -10,7 +10,7 @@ Apache ECharts is a free, powerful charting and visualization library offering e
 
 In datav we have wrapped echarts options in a function, so you should feel not hard to use echarts.
 
-<img src="https://github.com/data-observe/assets/blob/main/plugin/echarts1.jpg?raw=true" style={{height: '300px'}}/>
+<img src={require('@/img/docs/plugin/echarts1.jpg').default.src} alt="echarts1" style={{height: '300px'}} className="rounded-lg ring-1 ring-black/5" />
 
 Let's make a simple chart as above image first.
 
@@ -151,7 +151,7 @@ In a word, Datav:
 
 We can add interactions to echarts chart, such as click event: 
 
-<img src="https://github.com/data-observe/assets/blob/main/plugin/echarts-interaction.jpg?raw=true" style={{height: '200px'}}/>
+<img src={require('@/img/docs/plugin/echarts-interaction.jpg').default.src} alt="echarts-interaction" style={{height: '200px'}} className="rounded-lg ring-1 ring-black/5" />
 
 Then click `Edit function`, for now , you should see a default function body as below: 
 
@@ -174,7 +174,7 @@ function registerEvents(options, chart, navigate, setVariable, setDateTime, $var
 
 Oh, nice, Datav already define a basic click event for us, let's try to click che chart and see what will happen.
 
-<img src="https://github.com/data-observe/assets/blob/main/plugin/echarts-interaction-effect.jpg?raw=true" />
+<img src={require('@/img/docs/plugin/echarts-map.jpg').default.src} alt="echarts-map" width={3086} height={1658} className="rounded-lg ring-1 ring-black/5" />
 
 As shown above, we click on a point of the chart and then call `console.log` to write something to the browser console.
 
@@ -187,7 +187,7 @@ Here are more examples for Echarts.
 
 ### Baidu map 
 
-<img src="https://github.com/data-observe/assets/blob/main/plugin/echarts-map.jpg?raw=true"/>
+<img src={require('@/img/docs/plugin/echarts-radar.jpg').default.src} alt="echarts-radar" width={3086} height={1658} className="rounded-lg ring-1 ring-black/5" />
 
 Baidu map is a special plugin for Echarts, so you need to do some configuration to use it:
 
@@ -205,19 +205,19 @@ panel:
 
 ### Radar 
 
-<img src="https://github.com/data-observe/assets/blob/main/plugin/echarts-radar.jpg?raw=true"/>
+<img src={require('@/img/docs/plugin/echarts-heatmap.jpg').default.src} alt="echarts-heatmap" width={3086} height={1658} className="rounded-lg ring-1 ring-black/5" />
 
 [source code](https://gist.github.com/sunface/e92b6fedfa51407b599c377cc1d2a4c3#file-radar-js)
 
 ### Calendar Heatmap
 
-<img src="https://github.com/data-observe/assets/blob/main/plugin/echarts-heatmap.jpg?raw=true"/>
+<img src={require('@/img/docs/plugin/echarts-heatmap.jpg').default.src} alt="echarts-heatmap" width={3086} height={1658} className="rounded-lg ring-1 ring-black/5" />
 
 [source code](https://gist.github.com/sunface/e92b6fedfa51407b599c377cc1d2a4c3#file-calendar-heatmap-js)
 
 ### Polar heatmap 
 
-<img src="https://github.com/data-observe/assets/blob/main/plugin/echarts-polar.jpg?raw=true"/>
+<img src={require('@/img/docs/plugin/echarts-polar.jpg').default.src} alt="echarts-polar" width={3086} height={1658} className="rounded-lg ring-1 ring-black/5" />
 
 [source code](https://gist.github.com/sunface/e92b6fedfa51407b599c377cc1d2a4c3#file-polar-heatmap-js)
 

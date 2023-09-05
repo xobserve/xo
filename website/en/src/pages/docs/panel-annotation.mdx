@@ -8,7 +8,7 @@ import Code  from '@/components/docs/Code'
 
 Using annotatin can add marks to your Graph panel chart, like this: 
 
-<img src="https://github.com/data-observe/assets/blob/main/panel/annotation-demo1.jpg?raw=true" style={{height: '300px'}} />
+<img src={require('@/img/docs/panel/annotation-demo1.jpg').default.src} alt="annotation-demo1" style={{height: '300px'}} className="rounded-lg ring-1 ring-black/5" />
 
 The line and range with sky blue color are our annotations. Let's create an annotation first.
 
@@ -21,18 +21,18 @@ The line and range with sky blue color are our annotations. Let's create an anno
 1. Add a new panel and open its panel editor, then select `Grapn` visualization for it, apply and return back to dashboard page.
 2. Click on the Graph chart, you will see a context menu popup:
 
-<img src="https://github.com/data-observe/assets/blob/main/panel/annotation-context-menu.jpg?raw=true" style={{height: '300px'}} />
+<img src={require('@/img/docs/panel/annotation-context-menu.jpg').default.src} alt="annotation-context-menu" style={{height: '300px'}} className="rounded-lg ring-1 ring-black/5" />
 
 3. Click `Add annotation` button, you will see a annotation editor popup:
 
-<img src="https://github.com/data-observe/assets/blob/main/panel/annotation-editor.jpg?raw=true" style={{height: '300px'}} />
+<img src={require('@/img/docs/panel/annotation-editor.jpg').default.src} alt="annotation-editor" style={{height: '300px'}} className="rounded-lg ring-1 ring-black/5" />
 
 4. `Duration` field is the time range of annotation, if you want the annotation to be a vertical line, set it to `0s`, otherwise set to the real timerange ,
 let's set it to `2m` here
 
 Fill in other fields and click `Submit` button, you will see the annotation in the chart.
 
-<img src="https://github.com/data-observe/assets/blob/main/panel/annotation-hover.jpg?raw=true" style={{height: '300px'}} />
+<img src={require('@/img/docs/panel/annotation-hover.jpg').default.src} alt="annotation-hover" style={{height: '300px'}} className="rounded-lg ring-1 ring-black/5" />
 
 ### View annotation
 
@@ -56,7 +56,7 @@ Manage annotation through chart is not convenient, so Datav provides a panel ann
 
 1. Click panel header(click where the arrow points to in below image) and click `Panel Debug` menu item 
 
-<img src="https://github.com/data-observe/assets/blob/main/panel/debug-panel-menu.jpg?raw=true" style={{height: '300px'}} />
+<img src={require('@/img/docs/panel/debug-panel-menu.jpg').default.src} alt="debug-panel-menu" style={{height: '300px'}} className="rounded-lg ring-1 ring-black/5" />
 
 2. Select `Panel Annotations` tab 
 
@@ -66,7 +66,7 @@ Now you will see all the annotations in this panel and current selected time ran
 
 Open dashboard settings modal, select `Annotation` tab, you will see the annotation settings.
 
-<img src="https://github.com/data-observe/assets/blob/main/panel/annotation-setting.jpg?raw=true" style={{height: '300px'}} />
+<img src={require('@/img/docs/panel/annotation-setting.jpg').default.src} alt="annotation-setting" style={{height: '300px'}} className="rounded-lg ring-1 ring-black/5" />
 
 You can try:
 

@@ -13,7 +13,7 @@ description:
 
 每个仪表盘都属于一个团队。默认情况下，我们创建的仪表板都属于 `global` 团队，这是默认团队。
 
-<img src="https://github.com/data-observe/assets/blob/main/tutorial/dashboard-team.jpg?raw=true" style={{height: "60px"}} />
+<img src={require('@/img/docs/tutorial/dashboard-team.jpg').default.src} alt="dashboard-team"  className="rounded-lg ring-1 ring-black/5"  style={{height: "60px"}}/>
 
 
 每个团队都有自己的侧边栏，我们当前使用的默认侧边栏属于 `global` 团队。因此，如果您在做某些事情时没有指定团队，例如创建仪表板，则所有内容都将默认属于 `global` 团队。
@@ -29,23 +29,26 @@ description:
 
 2. 在上一步中，如果你选择点击 `配置` 图标，然后选择 `团队 Team` 选项卡，你应该看到下面的图片
 
-<img src="https://github.com/data-observe/assets/blob/main/tutorial/team-manage.jpg?raw=true" />
+<img src={require('@/img/docs/tutorial/team-manage.jpg').default.src} alt="team-manage"  className="rounded-lg ring-1 ring-black/5"  width={3086} height={1658}/>
+
 
 3. 点击 `global` 团队行的 `管理` 按钮，然后选择 `左侧菜单` 选项卡
  
 4. 像下图这样，添加新的菜单项:
 
-<img src="https://github.com/data-observe/assets/blob/main/tutorial/manage-sidebar.jpg?raw=true" />
+<img src={require('@/img/docs/tutorial/manage-sidebar.jpg').default.src} alt="manage-sidebar"  className="rounded-lg ring-1 ring-black/5"  width={3086} height={1658}/>
+
 
 你可能会想知道如何获取仪表盘的 id，最简单的方法是从 `搜索` 面板复制，搜索你想要的仪表盘，将鼠标悬停在其卡片上，然后点击复制图标。
 
-<img src="https://github.com/data-observe/assets/blob/main/tutorial/copy-dashboard-id.jpg?raw=true" style={{height: "200px"}}  />
+<img src={require('@/img/docs/tutorial/copy-dashboard-id.jpg').default.src} alt="copy-dashboard-id"  className="rounded-lg ring-1 ring-black/5"  style={{height: "200px"}}/>
+
 
 5. 点击 `提交` 按钮
 
 完成后，当前页面将自动刷新，你将看到新的导航项:
 
-<img src="https://github.com/data-observe/assets/blob/main/tutorial/new-sidemenu-item.jpg?raw=true" style={{height: "200px"}}  />
+<img src={require('@/img/docs/tutorial/new-sidemenu-item.jpg').default.src} alt="new-sidemenu-item"  className="rounded-lg ring-1 ring-black/5"  style={{height: "200px"}}/>
 
 
 ## 展开侧边栏 
@@ -54,8 +57,8 @@ description:
 
 点击侧边栏顶部的 Datav logo，看看会发生什么。
 
+<img src={require('@/img/docs/tutorial/expand-sidebar.jpg').default.src} alt="expand-sidebar"  className="rounded-lg ring-1 ring-black/5"  style={{width: "150px"}}/>
 
-<img src="https://github.com/data-observe/assets/blob/main/tutorial/expand-sidebar.jpg?raw=true" style={{width: "150px"}}  />
 
 很酷，所有内容都清晰地呈现在我们的视野中，但是..我们如何折叠它呢？
 

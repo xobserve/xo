@@ -305,7 +305,7 @@ Now let's find another way to do this for Table panel.
 1. Create a Table panel and use TestData datasource.
 2. Select `Transform` tab
 
-<img src="https://github.com/data-observe/assets/blob/main/panel/panel-data-transform.jpg?raw=true" />
+<img src={require('@/img/docs/dashboard/panel-data-transform.jpg').default.src} alt="panel-data-transform" width={3086} height={1658} className="rounded-lg ring-1 ring-black/5" />
 
 3. Click `Edit Function` button
 4. Fill function with code as below: 
@@ -344,13 +344,13 @@ This is because we need manually enable the transform switcher in panel settings
 1. Find the `Transform` field in `Panel` tab and `Basic Setting` section 
 2. Switch `Transform` option to `on`
 
-<img src="https://github.com/data-observe/assets/blob/main/panel/transform-option.jpg?raw=true" style={{height: "400px"}}/>
+<img src={require('@/img/docs/dashboard/transform-option.jpg').default.src} alt="transform-option" style={{height: "400px"}} className="rounded-lg ring-1 ring-black/5" />
 
 
 After doing this, the `Time` column of Table should show time string instead of the previous timestamp:
 
 
-<img src="https://github.com/data-observe/assets/blob/main/panel/transformed-table.jpg?raw=true" style={{height: "260px"}}/>
+<img src={require('@/img/docs/dashboard/transformed-table.jpg').default.src} alt="transformed-table" style={{height: "260px"}} className="rounded-lg ring-1 ring-black/5" />
 
 
 ## Conclusion: Final data format is very important
@@ -375,7 +375,7 @@ You can see, the final data format is a list, each item in the list is the resul
 
 There are two objects in the list above, `dataOfQueryA` and `dataOfQueryB`, which are respectively queried by query A and query B defined in the chart.
 
-<img src="https://github.com/data-observe/assets/blob/main/panel/panel-query.jpg?raw=true" />
+<img src={require('@/img/docs/dashboard/panel-query.jpg').default.src} alt="panel-query" width={3086} height={1658} className="rounded-lg ring-1 ring-black/5" />
 
 In the above image, you can clearly see there are two queries in the panel, each of them will query a result and insert it into the final data format. In fact, you can add as many queries as you like to a chart, but we don't recommend it, it will make the chart more complex than you would think.
 

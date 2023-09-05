@@ -16,7 +16,7 @@ In this doc, we will make http request to jaeger to get its operation under `fro
 
 ## Create http datasource
 
-<img src="https://github.com/data-observe/assets/blob/main/variable/http-datasource.jpg?raw=true" style={{height: "400px"}}/>
+<img src={require('@/img/docs/variable/http-datasource.jpg').default.src} alt="http-datasource"  className="rounded-lg ring-1 ring-black/5" style={{height: "400px"}} />
 
 ## Create http Variable
 
@@ -28,7 +28,7 @@ Let's create a variable named `operation` to query data from jaeger http api: `h
 
 First fill in the variable editor with: 
 
-<img src="https://github.com/data-observe/assets/blob/main/variable/basic-http.jpg?raw=true" style={{height: "500px"}}/>
+<img src={require('@/img/docs/variable/basic-http.jpg').default.src} alt="basic-http"  className="rounded-lg ring-1 ring-black/5" style={{height: "500px"}} />
 
 You should have noticed, we have use a `service` variable in  `Query values` field: `http://localhost:16686/api/services/${service}/operations`, which means **we can use variable in HTTP request url**.
 
@@ -82,13 +82,13 @@ function transformResult(httpResult) {
 
 Now we can successfully get the `operation` variable values with `service` variable set to `frontend` :
 
-<img src="https://github.com/data-observe/assets/blob/main/variable/http-variable.jpg?raw=true" style={{height: "500px"}}/>
+<img src={require('@/img/docs/variable/http-variable.jpg').default.src} alt="http-variable"  className="rounded-lg ring-1 ring-black/5" style={{height: "500px"}} />
 
 ## Final result 
 
 This is easy just because the response of jaeger api is already in the format we want, but in most cases, you need to do some extra work to get the variable values you want.
 
-<video controls autoPlay src="https://github.com/data-observe/assets/blob/main/variable/http-final.mov?raw=true" style={{height: "500px"}}/>
+<video controls autoPlay src="/docs/http-final.mov"/>
 
 As you can see, because we use `service` variable in Http request url, when we change the `service` variable value, the `operation` variable values will change accordingly, great!
 

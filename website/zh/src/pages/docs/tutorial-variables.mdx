@@ -20,7 +20,8 @@ import Code  from '@/components/docs/Code'
 1. 访问 `Hosts info` 仪表盘，打开设置面板，选择 `变量` 选项卡。
 2. 点击 `新建变量` 按钮，你将看到如下的弹出框：
 
-<img src="https://github.com/data-observe/assets/blob/main/tutorial/dashboard-variable.jpg?raw=true" style={{height: "400px"}} />
+<img src={require('@/img/docs/tutorial/dashboard-variable.jpg').default.src} alt="dashboard-variable"  className="rounded-lg ring-1 ring-black/5" style={{height: "400px"}} />
+
 
 看起来还挺复杂的，不过别担心，让我们从简单的开始 :)
 
@@ -28,7 +29,8 @@ import Code  from '@/components/docs/Code'
 
 3. 填写表格如下: 
 
-<img src="https://github.com/data-observe/assets/blob/main/tutorial/edit-job-variable.jpg?raw=true" style={{height: "400px"}} />
+<img src={require('@/img/docs/tutorial/edit-job-variable.jpg').default.src} alt="edit-job-variable"  className="rounded-lg ring-1 ring-black/5" style={{height: "400px"}} />
+
 
 请观查下 `Variable Values` 字段，这是我们的变量查询返回的结果，如果你看到了值列表，那么说明我们的变量创建成功了。
 
@@ -41,7 +43,7 @@ import Code  from '@/components/docs/Code'
 
 现在关闭设置面板，你将看到仪表盘左上角出现了一个下拉列表，它就是我们刚刚创建的 `job` 变量。
 
-<img src="https://github.com/data-observe/assets/blob/main/tutorial/job-variable.jpg?raw=true" style={{height: "100px"}} />
+<img src={require('@/img/docs/tutorial/job-variable.jpg').default.src} alt="job-variable"  className="rounded-lg ring-1 ring-black/5" style={{height: "100px"}} />
 
 
 ## 使用变量
@@ -54,7 +56,7 @@ import Code  from '@/components/docs/Code'
 
 可以看到，我们的图表已经在展示 `job="node"` 的数据 ：
 
-<img src="https://github.com/data-observe/assets/blob/main/tutorial/chart-with-job-var.jpg?raw=true" style={{height: "300px"}} />
+<img src={require('@/img/docs/tutorial/chart-with-job-var.jpg').default.src} alt="chart-with-job-var"  className="rounded-lg ring-1 ring-black/5" style={{height: "300px"}} />
 
 尝试将 `job` 变量的值更改为 `prometheus`， 然后看看会怎样变化。
 
@@ -74,7 +76,8 @@ import Code  from '@/components/docs/Code'
 
 将图表标题修改为 `go gc info - ${job}`:
 
-<img src="https://github.com/data-observe/assets/blob/main/tutorial/variable-in-panel-title.jpg?raw=true" style={{height: "100px"}} />
+<img src={require('@/img/docs/tutorial/variable-in-panel-title.jpg').default.src} alt="variable-in-panel-title"  className="rounded-lg ring-1 ring-black/5" style={{height: "100px"}} />
+
 
 
 
@@ -86,8 +89,8 @@ import Code  from '@/components/docs/Code'
 
 修改 `job` 变量如下:
 
+<img src={require('@/img/docs/tutorial/job-var-enable-multi.jpg').default.src} alt="job-var-enable-multi"  className="rounded-lg ring-1 ring-black/5" style={{height: "300px"}} />
 
-<img src="https://github.com/data-observe/assets/blob/main/tutorial/job-var-enable-multi.jpg?raw=true" style={{height: "300px"}} />
 
 回到仪表盘页面，你将看到 `job` 变量的下拉列表变成了多选模式，并且有一个新的选项 `__all__`。
 
@@ -99,7 +102,7 @@ import Code  from '@/components/docs/Code'
 
 修改查询语句后，你将看到如下的图表：
 
-<img src="https://github.com/data-observe/assets/blob/main/tutorial/query-support-multi-var.jpg?raw=true" />
+<img src={require('@/img/docs/tutorial/query-support-multi-var.jpg').default.src} alt="query-support-multi-var"  className="rounded-lg ring-1 ring-black/5"  width={3086} height={1658}/>
 
 
 ## 从数据源查询变量值
@@ -111,8 +114,7 @@ import Code  from '@/components/docs/Code'
 1. 打开 `Hosts info` 仪表盘的设置面板，选择 `变量` 选项卡，点击 `新建变量` 按钮。
 2. 填写表格如下:
 
-
-<img src="https://github.com/data-observe/assets/blob/main/tutorial/edit-instance-var.jpg?raw=true" style={{height: "500px"}} />
+<img src={require('@/img/docs/tutorial/edit-instance-var.jpg').default.src} alt="edit-instance-var"  className="rounded-lg ring-1 ring-black/5" style={{height: "400px"}} />
 
 这里我们做了几件事情：
 
@@ -135,11 +137,13 @@ import Code  from '@/components/docs/Code'
 
 在开始之前，我们再来创建一个新的数据源 `prometheus2`: 
 
-<img src="https://github.com/data-observe/assets/blob/main/tutorial/prometheus1-ds.jpg?raw=true" />
+<img src={require('@/img/docs/tutorial/prometheus1-ds.jpg').default.src} alt="prometheus1-ds"  className="rounded-lg ring-1 ring-black/5"  width={3086} height={1658}/>
+
 
 接着访问 `Hosts info` 仪表盘，打开设置面板，选择 `变量` 选项卡，创建一个名为 `datasource` 的变量:
 
-<img src="https://github.com/data-observe/assets/blob/main/tutorial/edit-ds-variable.jpg?raw=true" style={{height: "500px"}}/>
+<img src={require('@/img/docs/tutorial/edit-ds-variable.jpg').default.src} alt="edit-ds-variable"  className="rounded-lg ring-1 ring-black/5" style={{height: "500px"}} />
+
 
 这里有几点值得注意：
 
@@ -153,11 +157,13 @@ import Code  from '@/components/docs/Code'
 
 打开 `go gc info` 图表的编辑面板，在左下方 `查询` 选项卡中找到选择数据源的地方:
 
-<img src="https://github.com/data-observe/assets/blob/main/tutorial/use-ds-variable.jpg?raw=true" style={{height: "300px"}}/>
+<img src={require('@/img/docs/tutorial/use-ds-variable.jpg').default.src} alt="use-ds-variable"  className="rounded-lg ring-1 ring-black/5" style={{height: "300px"}} />
+
 
 不要选择任何数据源，因为我们要使用变量，因此直接输入变量的引用格式 <Code>{'${datasource}'}</Code> 即可。
 
-<img src="https://github.com/data-observe/assets/blob/main/tutorial/input-datasource-var.jpg?raw=true" style={{height: "200px"}}/>
+<img src={require('@/img/docs/tutorial/input-datasource-var.jpg').default.src} alt="input-datasource-var"  className="rounded-lg ring-1 ring-black/5" style={{height: "200px"}} />
+
 
 输入完后按回车确认，然后输入 <Code>{'go_gc_duration_seconds{job=~"${job}", instance=~"${instance}"}'}</Code> 作为查询语句。
 
@@ -173,7 +179,8 @@ import Code  from '@/components/docs/Code'
 
 首先，来创建一个名为 `metrics` 的变量：
 
-<img src="https://github.com/data-observe/assets/blob/main/tutorial/metrics-variable.jpg?raw=true" style={{height: "500px"}}/>
+<img src={require('@/img/docs/tutorial/metrics-variable.jpg').default.src} alt="metrics-variable"  className="rounded-lg ring-1 ring-black/5" style={{height: "500px"}} />
+
 
 这里从 Prometheus 中查询所有的 metrics 列表，然后过滤出以 `go_gc` 开头的 metrics。
 
@@ -183,7 +190,8 @@ import Code  from '@/components/docs/Code'
 
 打开图表编辑面板，输入查询语句 <Code>{'${metrics}{job=~"${job}", instance=~"${instance}"}'}</Code>:
 
-<img src="https://github.com/data-observe/assets/blob/main/tutorial/dynamic-query.jpg?raw=true"/>
+<img src={require('@/img/docs/tutorial/dynamic-query.jpg').default.src} alt="dynamic-query"  className="rounded-lg ring-1 ring-black/5"  width={3086} height={1658}/>
+
 
 点击应用按钮回到仪表盘页面，然后选择 `metrcs` 变量，看看图表会怎么变化。
 
@@ -194,8 +202,8 @@ import Code  from '@/components/docs/Code'
 
 言归正传，我们现在重新编辑下之前创建的 `instance` 变量，并将其重命名为 `metrics name`, 然后在查询中使用 `metrics` 变量：
 
+<img src={require('@/img/docs/tutorial/rename-instance-var.jpg').default.src} alt="rename-instance-var"  className="rounded-lg ring-1 ring-black/5" style={{height: "500px"}} />
 
-<img src="https://github.com/data-observe/assets/blob/main/tutorial/rename-instance-var.jpg?raw=true" style={{height: "500px"}}/>
 
 可以看出，在 `查询 -> Metric` 字段中，相比之前使用的下拉框选择，现在使用的变量名 `${metrics}`明显动态的多。
 

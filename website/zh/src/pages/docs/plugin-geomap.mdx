@@ -12,16 +12,19 @@ GeoMap 插件可以在地图的指定位置上渲染相应的数据点，例如�
 
 ## 在世界地图上渲染国家和城市
 
-<img src="https://github.com/data-observe/assets/blob/main/plugin/geomap.jpg?raw=true" />
+<img src={require('@/img/docs/plugin/geomap.jpg').default.src} alt="geomap" width={3086} height={1658} className="rounded-lg ring-1 ring-black/5" />
+
 
 ## 在中国地图上渲染城市
 
-<img src="https://github.com/data-observe/assets/blob/main/plugin/china-map.jpg?raw=true" />
+<img src={require('@/img/docs/plugin/china-map.jpg').default.src} alt="china-map" width={3086} height={1658} className="rounded-lg ring-1 ring-black/5" />
+
 
 
 ## 热力图类型
 
-<img src="https://github.com/data-observe/assets/blob/main/plugin/heat-map.jpg?raw=true" />
+<img src={require('@/img/docs/plugin/heat-map.jpg').default.src} alt="heat-map" width={3086} height={1658} className="rounded-lg ring-1 ring-black/5" />
+
 
 
 ## 交互
@@ -45,16 +48,18 @@ function onClick(data, map, navigate, setVariable, setDateTime, $variables) {
 
 有了如上交互事件后，点击地图上的点将自动以该点为中心，并进行缩放聚焦: 例如你点击中国的杭州：
 
-<img src="https://github.com/data-observe/assets/blob/main/plugin/zoom-hangzhou.jpg?raw=true" />
+<img src={require('@/img/docs/plugin/zoom-hangzhou.jpg').default.src} alt="zoom-hangzhou" width={3086} height={1658} className="rounded-lg ring-1 ring-black/5" />
+
 
 ## 阈值 Thresholds
 
 当数据点的值大于给定阈值时，该数据点将被渲染为指定的颜色：
 
-<img src="https://github.com/data-observe/assets/blob/main/plugin/geomap-threshold.jpg?raw=true" style={{height: '260px'}}/>
+<img src={require('@/img/docs/plugin/geomap-threshold.jpg').default.src} alt="geomap-threshold" style={{height: '260px'}} className="rounded-lg ring-1 ring-black/5" />
 
 
-<img src="https://github.com/data-observe/assets/blob/main/plugin/geomap-threshold-effect.jpg?raw=true" style={{height: '260px'}}/>
+<img src={require('@/img/docs/plugin/geomap-threshold-effect.jpg').default.src} alt="geomap-threshold-effect" style={{height: '260px'}} className="rounded-lg ring-1 ring-black/5" />
+
 
 
 ## 数据格式

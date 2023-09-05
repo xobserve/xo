@@ -12,7 +12,7 @@ Panel styles and Dashboard styles is mainly used for beautiful large screen disp
 
 Before start, let's create a panel with `Echarts` visualization and TestData datasource. Then open panel editor and select `Styles` tab in right side.
 
-<img src="https://github.com/data-observe/assets/blob/main/panel/panel-border-editor.jpg?raw=true" />
+<img src={require('@/img/docs/panel/panel-border-editor.jpg').default.src} alt="panel-border-editor" width={3086} height={1658} className="rounded-lg ring-1 ring-black/5" />
 
 ## Panel border 
 
@@ -32,13 +32,13 @@ If you set `marin` to another value, you should find there seems no effect at al
 
 After these changes, you should see the same result as I do: 
 
-<img src="https://github.com/data-observe/assets/blob/main/panel/title-decoration.jpg?raw=true" />
+<img src={require('@/img/docs/panel/title-decoration.jpg').default.src} alt="title-decoration" width={3086} height={1658} className="rounded-lg ring-1 ring-black/5" />
 
 ## Title styles 
 
 The white title color is not good for us when add some decorations, let's change it to blue:
 
-<img src="https://github.com/data-observe/assets/blob/main/panel/title-color.jpg?raw=true" style={{height: '300px'}}/>
+<img src={require('@/img/docs/panel/title-color.jpg').default.src} alt="title-color" style={{height: '300px'}} className="rounded-lg ring-1 ring-black/5" />
 
 The title position is just ok, so we don't need to change them: the `padding` styles is for ajusting the position of panel title.
 
@@ -58,4 +58,4 @@ Wow, it's height is large enough for us to see, but it's position is not good, l
 
 Finally, we have got a beautiful(maybe..) panel that looks like this:
 
-<video autoPlay controls src="https://github.com/data-observe/assets/blob/main/panel/style-final.mov?raw=true" />
+<video controls autoPlay src="/docs/style-final.mov" />

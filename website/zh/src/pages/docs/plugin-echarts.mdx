@@ -10,7 +10,8 @@ Apache Echarts 是一个免费的、功能强大的图表和可视化库，提�
 
 在 Datav 中，为了便于使用,我们已经将 Echarts 的配置项封装成一个函数。
 
-<img src="https://github.com/data-observe/assets/blob/main/plugin/echarts1.jpg?raw=true" style={{height: '300px'}}/>
+<img src={require('@/img/docs/plugin/echarts1.jpg').default.src} alt="echarts1" style={{height: '300px'}} className="rounded-lg ring-1 ring-black/5" />
+
 
 先来看看一个简单的例子，我们将使用 Echarts 来绘制一个如上所示的折线图。
 
@@ -154,7 +155,8 @@ function setOptions(data, thresholds, colors, echarts, loadash, moment, colorMod
 
 Echarts 图表一样可以设置交互事件，例如点击事件：
 
-<img src="https://github.com/data-observe/assets/blob/main/plugin/echarts-interaction.jpg?raw=true" style={{height: '200px'}}/>
+<img src={require('@/img/docs/plugin/echarts-interaction.jpg').default.src} alt="echarts-interaction" style={{height: '200px'}} className="rounded-lg ring-1 ring-black/5" />
+
 
 点击 `编辑函数`，你可以看到默认的函数体如下：
 
@@ -177,8 +179,8 @@ function registerEvents(options, chart, navigate, setVariable, setDateTime, $var
 
 不错，Datav 已经为我们定义了一个基本的点击事件，让我们试着点击一下图表，看看会发生什么：
 
+<img src={require('@/img/docs/plugin/echarts-interaction-effect.jpg').default.src} alt="echarts-interaction-effect" width={3086} height={1658} className="rounded-lg ring-1 ring-black/5" />
 
-<img src="https://github.com/data-observe/assets/blob/main/plugin/echarts-interaction-effect.jpg?raw=true" />
 
 如上图所示，我们点击了图表上的一个点，Datav 将会在控制台输出点击的点的信息。
 
@@ -191,7 +193,8 @@ function registerEvents(options, chart, navigate, setVariable, setDateTime, $var
 
 ### 百度地图
 
-<img src="https://github.com/data-observe/assets/blob/main/plugin/echarts-map.jpg?raw=true"/>
+<img src={require('@/img/docs/plugin/echarts-map.jpg').default.src} alt="echarts-map" width={3086} height={1658} className="rounded-lg ring-1 ring-black/5" />
+
 
 百度地图比较特殊，你需要做完成一些配置才能使用：
 
@@ -209,24 +212,27 @@ panel:
 
 ### 雷达图
 
-<img src="https://github.com/data-observe/assets/blob/main/plugin/echarts-radar.jpg?raw=true"/>
+<img src={require('@/img/docs/plugin/echarts-radar.jpg').default.src} alt="echarts-radar" width={3086} height={1658} className="rounded-lg ring-1 ring-black/5" />
+
 
 [source code](https://gist.github.com/sunface/e92b6fedfa51407b599c377cc1d2a4c3#file-radar-js)
 
 ### 日历热力图
 
-<img src="https://github.com/data-observe/assets/blob/main/plugin/echarts-heatmap.jpg?raw=true"/>
+<img src={require('@/img/docs/plugin/echarts-heatmap.jpg').default.src} alt="echarts-heatmap" width={3086} height={1658} className="rounded-lg ring-1 ring-black/5" />
+
 
 [source code](https://gist.github.com/sunface/e92b6fedfa51407b599c377cc1d2a4c3#file-calendar-heatmap-js)
 
 ### 极圈热力图
 
-<img src="https://github.com/data-observe/assets/blob/main/plugin/echarts-polar.jpg?raw=true"/>
+<img src={require('@/img/docs/plugin/echarts-polar.jpg').default.src} alt="echarts-polar" width={3086} height={1658} className="rounded-lg ring-1 ring-black/5" />
+
 
 [source code](https://gist.github.com/sunface/e92b6fedfa51407b599c377cc1d2a4c3#file-polar-heatmap-js)
 
 {/* ### Shanghai index 
 
-<img src="https://github.com/data-observe/assets/blob/main/plugin/shanghai-index.jpg?raw=true"/>
+<img src={require('@/img/docs/plugin/shanghai-index.jpg').default.src} alt="shanghai-index" width={3086} height={1658} className="rounded-lg ring-1 ring-black/5" />
 
 [source code](https://gist.github.com/sunface/e92b6fedfa51407b599c377cc1d2a4c3#file-shanghai-index-js) */}

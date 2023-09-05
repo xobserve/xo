@@ -86,22 +86,26 @@ groups:
 
 1.  访问 <Code>/alert</Code> 页面，打开它的图表编辑面板
 
-![request duration stats](https://github.com/data-observe/assets/blob/main/tutorial/alert-page.jpg?raw=true)
+<img src={require('@/img/docs/tutorial/alert-page.jpg').default.src} alt="alert page" width={3086} height={1658} className="rounded-lg ring-1 ring-black/5" />
+
 
 2. 在 `图表` 的标签页下找到 `告警过滤`
 
-![request duration stats](https://github.com/data-observe/assets/blob/main/tutorial/alert-filter.jpg?raw=true)
+<img src={require('@/img/docs/tutorial/alert-filter.jpg').default.src} alt="alert filter" width={3086} height={1658} className="rounded-lg ring-1 ring-black/5" />
+
 
 3. 在 `数据源` 中选择 `prometheus` ，并且移除 `TestData`，注意这里可以多选
 
 如下图所示:
 
-<img src="https://github.com/data-observe/assets/blob/main/tutorial/alert-prometheus-ds.jpg?raw=true" />
+<img src={require('@/img/docs/tutorial/alert-prometheus-ds.jpg').default.src} alt="alert prometheus datasource" width={3086} height={1658} className="rounded-lg ring-1 ring-black/5" />
 
 
- 此时，我们已经从 Prometheus 中查询到真实的告警，下面来深入了解一下这个告警规则。
+此时，我们已经从 Prometheus 中查询到真实的告警，下面来深入了解一下这个告警规则。
 
-<img src="https://github.com/data-observe/assets/blob/main/tutorial/alert-rule.jpg?raw=true" />
+<img src={require('@/img/docs/tutorial/alert-rule.jpg').default.src} alt="alert rule" width={3086} height={1658} className="rounded-lg ring-1 ring-black/5" />
+
+
 
 可以看到，告警规则的定义与 Prometheus 中的定义完全一致，因为 Datav 原生支持 Prometheus 的告警规则展示，而无需任何转换。
 
@@ -126,7 +130,8 @@ groups:
 
 当侧边导航栏切换后，你应该会看到侧边导航栏顶部出现了 `Home` 仪表盘。
 
-<img src="https://github.com/data-observe/assets/blob/main/tutorial/home-dashboard.jpg?raw=true" />
+<img src={require('@/img/docs/tutorial/home-dashboard.jpg').default.src} alt="home-dashboard" width={3086} height={1658} className="rounded-lg ring-1 ring-black/5" />
+
 
 
 ### 创建 Graph 图表
@@ -139,7 +144,8 @@ groups:
 
 此时你将看到如下的图表：
 
-<img src="https://github.com/data-observe/assets/blob/main/tutorial/home-graph-panel.jpg?raw=true" style={{height: '400px'}} />
+<img src={require('@/img/docs/tutorial/home-graph-panel.jpg').default.src} alt="home-graph-panel" style={{height: '400px'}} className="rounded-lg ring-1 ring-black/5" />
+
 
 等等，看上去这个图表的边框和装饰都不适合告警，有些过于花里胡哨了，必须换！
 
@@ -148,19 +154,23 @@ groups:
 1. 打开图表的编辑面板，在右边选择 `样式` 标签页
 2. 点击下面的按钮选择一个新的边框
 
-<img src="https://github.com/data-observe/assets/blob/main/tutorial/select-panel-border.jpg?raw=true" style={{height: '200px'}} />
+<img src={require('@/img/docs/tutorial/select-panel-border.jpg').default.src} alt="select-panel-border" style={{height: '200px'}} className="rounded-lg ring-1 ring-black/5" />
+
 
 3.  为了简洁，直接选择无边框：`None`
 
-<img src="https://github.com/data-observe/assets/blob/main/tutorial/panel-border-list.jpg?raw=true" style={{height: '300px'}} />
+<img src={require('@/img/docs/tutorial/panel-border-list.jpg').default.src} alt="panel-border-list" style={{height: '300px'}} className="rounded-lg ring-1 ring-black/5" />
+
 
 4. 找到 `图表装饰` 设置，也将其设置为 `None`
 
-<img src="https://github.com/data-observe/assets/blob/main/tutorial/panel-decoration.jpg?raw=true" style={{height: '500px'}} />
+<img src={require('@/img/docs/tutorial/panel-decoration.jpg').default.src} alt="panel-decoration" style={{height: '500px'}} className="rounded-lg ring-1 ring-black/5" />
+
 
 在设置后，我们的图表变成了这样：
 
-<img src="https://github.com/data-observe/assets/blob/main/tutorial/none-border-panel.jpg?raw=true"  />
+<img src={require('@/img/docs/tutorial/none-border-panel.jpg').default.src} alt="none-border-panel" width={3086} height={1658} className="rounded-lg ring-1 ring-black/5" />
+
 
 看上去干净多了，没有边框和装饰，只有一个纯粹的 Graph 图表。
 
@@ -175,12 +185,13 @@ groups:
 3. 设置 `告警状态` 过滤器，选择 `Pending`,`Firing` 和 `Resolved`, 如果啥都不选，那么将没有告警被展示
 4. 也许你需要将时间范围设置到更宽广的范围，例如 `now-12h to now`
 
-<img src="https://github.com/data-observe/assets/blob/main/tutorial/alert-correlation.jpg?raw=true" style={{height: '500px'}} />
+<img src={require('@/img/docs/tutorial/alert-correlation.jpg').default.src} alt="alert-correlation" style={{height: '500px'}} className="rounded-lg ring-1 ring-black/5" />
 
 
 如果一切正常，那你将看到如下的 Graph 图表:
 
-<img src="https://github.com/data-observe/assets/blob/main/tutorial/graph-alerts.jpg?raw=true"  />
+<img src={require('@/img/docs/tutorial/graph-alerts.jpg').default.src} alt="graph-alerts"  width={3086} height={1658}  className="rounded-lg ring-1 ring-black/5" />
+
 
 看图表上的标记了吗？将鼠标悬停在箭头指向的标记上，你将看到告警信息的弹出框。
 
@@ -194,7 +205,8 @@ Graph 图表上的告警标记一般用于快速最近的告警总体状况，�
 1. 打开 Graph 图表的编辑面板
 2. 在左下方选择 `告警` 标签页
 
-<img src="https://github.com/data-observe/assets/blob/main/tutorial/panel-alerts-detail.jpg?raw=true"  />
+<img src={require('@/img/docs/tutorial/panel-alerts-detail.jpg').default.src} alt="panel-alerts-detail"  width={3086} height={1658}  className="rounded-lg ring-1 ring-black/5" />
+
 
 这里的数据跟 `/alert` 页面很像，但是在这里，你可以看同时看到告警列表和被标记的 Graph 图表。
 

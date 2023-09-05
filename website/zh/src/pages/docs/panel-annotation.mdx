@@ -8,7 +8,8 @@ import Code  from '@/components/docs/Code'
 
 使用图表注释( annotation )，你可以为 Graph 图表在指定的位置打上标记，并辅以文字注释：
 
-<img src="https://github.com/data-observe/assets/blob/main/panel/annotation-demo1.jpg?raw=true" style={{height: '300px'}} />
+<img src={require('@/img/docs/panel/annotation-demo1.jpg').default.src} alt="annotation-demo1" style={{height: '300px'}} className="rounded-lg ring-1 ring-black/5" />
+
 
 如上图所示，天蓝色的线和区域都是我们的注释，下面一起来看看.
 
@@ -21,17 +22,20 @@ import Code  from '@/components/docs/Code'
 1. 创建一个新的图表，打开图表编辑面板，选择 `Graph` 类型，然后返回仪表盘页面
 2. 在 Graph 图表上点击鼠标，你可以看到如下的菜单弹出:
 
-<img src="https://github.com/data-observe/assets/blob/main/panel/annotation-context-menu.jpg?raw=true" style={{height: '300px'}} />
+<img src={require('@/img/docs/panel/annotation-context-menu.jpg').default.src} alt="annotation-context-menu" style={{height: '300px'}} className="rounded-lg ring-1 ring-black/5" />
+
 
 3. 点击 `Add annotation` 按钮, 一个注释编辑器顺势弹出:
 
-<img src="https://github.com/data-observe/assets/blob/main/panel/annotation-editor.jpg?raw=true" style={{height: '300px'}} />
+<img src={require('@/img/docs/panel/annotation-editor.jpg').default.src} alt="annotation-editor" style={{height: '300px'}} className="rounded-lg ring-1 ring-black/5" />
+
 
 4. 其中，`Duration` 字段是注释持续的时间，如果你想要一根直线类型的注释，就填写 `0s`, 我们这里设置为 `2m`。
 
 填写完成并点击 `提交` 按钮，你将看到图表上出现了我们刚添加的注释：
 
-<img src="https://github.com/data-observe/assets/blob/main/panel/annotation-hover.jpg?raw=true" style={{height: '300px'}} />
+<img src={require('@/img/docs/panel/annotation-hover.jpg').default.src} alt="annotation-hover" style={{height: '300px'}} className="rounded-lg ring-1 ring-black/5" />
+
 
 > **图表注释无需保存仪表盘，创建、编辑、删除都是立即生效**
 
@@ -54,7 +58,8 @@ import Code  from '@/components/docs/Code'
 
 1. 点击图表的标题区域，打开图表菜单，选择 `Debug 图表`
 
-<img src="https://github.com/data-observe/assets/blob/main/panel/debug-panel-menu.jpg?raw=true" style={{height: '300px'}} />
+<img src={require('@/img/docs/panel/debug-panel-menu.jpg').default.src} alt="debug-panel-menu" style={{height: '300px'}} className="rounded-lg ring-1 ring-black/5" />
+
 
 2. 选择 `Panel Annotations` 标签页 
 
@@ -65,7 +70,8 @@ import Code  from '@/components/docs/Code'
 
 打开仪表盘的设置面板，选择 `Annotation` 标签页，可以看到如下图片内容：
 
-<img src="https://github.com/data-observe/assets/blob/main/panel/annotation-setting.jpg?raw=true" style={{height: '300px'}} />
+<img src={require('@/img/docs/panel/annotation-setting.jpg').default.src} alt="annotation-setting" style={{height: '300px'}} className="rounded-lg ring-1 ring-black/5" />
+
 
 你可以尝试：
 <TextList>

@@ -5,7 +5,7 @@ description: Plugins and configuration settings that can improve the developer e
 
 If you want to show or hide a panel based on a condition, you can read this doc.
 
-<video autoPlay controls src="https://github.com/data-observe/assets/blob/main/panel/condition-demo.mov?raw=true" style={{height:"400px"}}/>
+<video controls autoPlay src="/docs/condition-demo.mov" style={{width: "100%"}}/>
 
 From this short video, we can see: there are two panels in the dashboard, one is NodeGraph panel, the other one is Table panel, they both 
 show the dependency graph from Jaeger in different view type, and they are both very useful.
@@ -33,13 +33,13 @@ Before we start, we need to do some preparation:
 
 Add a new panel and select `NodeGraph` visualization for it, then set its datasource to Jaeger, you should see:
 
-<img src="https://github.com/data-observe/assets/blob/main/panel/nodegraph-jaeger.jpg?raw=true"/>
+<img src={require('@/img/docs/panel/nodegraph-jaeger.jpg').default.src} alt="panel/nodegraph-jaeger" width={3086} height={1658} className="rounded-lg ring-1 ring-black/5" />
 
 ### Create Table panel 
 
 Add another panel and select `Table` visualization for it, then set its datasource to Jaeger, you should see:
 
-<img src="https://github.com/data-observe/assets/blob/main/panel/table-jaeger.jpg?raw=true"/>
+<img src={require('@/img/docs/panel/table-jaeger.jpg').default.src} alt="panel/table-jaeger" width={3086} height={1658} className="rounded-lg ring-1 ring-black/5" />
 
 
 Return back to dashboard page, as you can see, there are two panels show in the dashboard.
@@ -57,7 +57,7 @@ We need to set condition for both panels, so let's start with the NodeGraph pane
 Open panel editor of NodeGraph panel, and click `Panel` tab, expand `Basic Setting` section and find `Conditional Render`, then fill it as below:
 
 
-<img src="https://github.com/data-observe/assets/blob/main/panel/nodegraph-condition.jpg?raw=true" style={{height: "400px"}}/>
+<img src={require('@/img/docs/panel/nodegraph-condition.jpg').default.src} alt="panel/table-jaeger" style={{height: "400px"}} className="rounded-lg ring-1 ring-black/5" />
 
 Condition value `view=nodegraph` means only render this panel when `view` variable is set to `nodegraph`.
 

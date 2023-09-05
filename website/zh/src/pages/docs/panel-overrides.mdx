@@ -13,7 +13,8 @@ import TextList  from '@/components/docs/TextList'
 
 首先，创建一个图表，选择 `图表` 可视化，然后添加两个数据源查询：
 
-<img src="https://github.com/data-observe/assets/blob/main/panel/panel-with-two-queries.jpg?raw=true" style={{height: "260px"}}/>
+<img src={require('@/img/docs/panel/panel-with-two-queries.jpg').default.src} alt="panel-with-two-queries" style={{height: '260px'}} className="rounded-lg ring-1 ring-black/5" />
+
 
 大家别忘了将 `图例 Legend` 字段设置为 `{{__name__}}`，这样可以在图表的图例中显示曲线的名称。
 
@@ -27,17 +28,20 @@ import TextList  from '@/components/docs/TextList'
 
 首先，我们将为所有曲线设置区域填充样式：
 
-<img src="https://github.com/data-observe/assets/blob/main/panel/fill-area.jpg?raw=true" style={{height: "260px"}}/>
+<img src={require('@/img/docs/panel/fill-area.jpg').default.src} alt="fill-area" style={{height: '260px'}} className="rounded-lg ring-1 ring-black/5" />
+
 
 ### 单位
 
 接下来，我们将为图表中的所有曲线设置单位：
 
-<img src="https://github.com/data-observe/assets/blob/main/panel/unit.jpg?raw=true" style={{height: "260px"}}/>
+<img src={require('@/img/docs/panel/unit.jpg').default.src} alt="unit" style={{height: '260px'}} className="rounded-lg ring-1 ring-black/5" />
+
 
 大家需要注意，`单位` 中的值实际上是 ` / load5`，前面有一个空格。
 
-<img src="https://github.com/data-observe/assets/blob/main/panel/panel-with-common-options.jpg?raw=true" />
+<img src={require('@/img/docs/panel/panel-with-common-options.jpg').default.src} alt="panel-with-common-options" width={3086} height={1658} className="rounded-lg ring-1 ring-black/5" />
+
 
 有些奇怪， `load1` 曲线也使用了 `load5` 的单位，让我们先修复它。
 
@@ -54,13 +58,15 @@ import TextList  from '@/components/docs/TextList'
 
 点击 `覆盖` 标签页，然后为 `load1` 曲线添加一个新的覆盖项：
 
-<img src="https://github.com/data-observe/assets/blob/main/panel/override-item.jpg?raw=true" />
+<img src={require('@/img/docs/panel/override-item.jpg').default.src} alt="override-item" width={3086} height={1658} className="rounded-lg ring-1 ring-black/5" />
+
 
 ### 新建 Y 轴覆盖
 
 点击 `添加覆盖规则`，选择 `Series.separateYAxis` 类型，然后启用它：
 
-<img src="https://github.com/data-observe/assets/blob/main/panel/yaxis-override.jpg?raw=true" />
+<img src={require('@/img/docs/panel/yaxis-override.jpg').default.src} alt="yaxis-override" width={3086} height={1658} className="rounded-lg ring-1 ring-black/5" />
+
 
 上图中箭头指向的就是我们为 `load1` 曲线新建的 Y 轴。
 
@@ -71,7 +77,8 @@ import TextList  from '@/components/docs/TextList'
 
 点击 `添加覆盖规则`，选择 `Series.Unit` 类型，然后设置它的值如下:
 
-<img src="https://github.com/data-observe/assets/blob/main/panel/override-unit.jpg?raw=true" />
+<img src={require('@/img/docs/panel/override-unit.jpg').default.src} alt="override-unit" width={3086} height={1658} className="rounded-lg ring-1 ring-black/5" />
+
 
 点击 `提交` 按钮后，可以看到 `load1` 曲线已经有了自己的 Y 轴和单位。
 
@@ -83,7 +90,8 @@ import TextList  from '@/components/docs/TextList'
 
 目前我们不再需要 `separateYAxis` 了，所以将它改为 `negativeY`：
 
-<img src="https://github.com/data-observe/assets/blob/main/panel/negativey-override1.jpg?raw=true" />
+<img src={require('@/img/docs/panel/negativey-override1.jpg').default.src} alt="negativey-override1" width={3086} height={1658} className="rounded-lg ring-1 ring-black/5" />
+
 
 如上图所示，此时两条曲线不再混在一起显示，并且都有了各自正确的单位。
 
@@ -92,7 +100,8 @@ import TextList  from '@/components/docs/TextList'
 
 如下图所示新建覆盖：
 
-<img src="https://github.com/data-observe/assets/blob/main/panel/styles-override.jpg?raw=true" style={{height: "400px"}}/>
+<img src={require('@/img/docs/panel/styles-override.jpg').default.src} alt="styles-override" style={{height: "400px"}} className="rounded-lg ring-1 ring-black/5" />
+
 
 
 <TextList>
@@ -107,4 +116,4 @@ import TextList  from '@/components/docs/TextList'
 
 在覆盖了这么多选项后，我们的图表看起来还不赖: 
 
-<img src="https://github.com/data-observe/assets/blob/main/panel/override-final.jpg?raw=true" style={{height: "300px"}}/>
+<img src={require('@/img/docs/panel/override-final.jpg').default.src} alt="override-final" style={{height: "300px"}} className="rounded-lg ring-1 ring-black/5" />

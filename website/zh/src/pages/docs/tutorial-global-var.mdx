@@ -22,13 +22,15 @@ import Code  from '@/components/docs/Code'
 
 1. 点击侧边导航的 `配置` 图标，然后选择 `变量` 标签页
 
-<img src="https://github.com/data-observe/assets/blob/main/tutorial/global-vars.jpg?raw=true"  />
+<img src={require('@/img/docs/tutorial/global-vars.jpg').default.src} alt="global-vars" width={3086} height={1658} className="rounded-lg ring-1 ring-black/5" />
+
 
 
 2. 点击 `新建变量` 打开变量编辑器
 3. 填写如下内容:
 
-<img src="https://github.com/data-observe/assets/blob/main/tutorial/edit-host-var.jpg?raw=true" style={{height: '600px'}} />
+<img src={require('@/img/docs/tutorial/edit-host-var.jpg').default.src} alt="edit-host-var" style={{height: '600px'}} className="rounded-lg ring-1 ring-black/5" />
+
 
 啊哈，看起来是不是跟仪表盘变量一样？ 所以大家应该很熟悉才对。
 
@@ -36,14 +38,16 @@ import Code  from '@/components/docs/Code'
 
 点击 `提交` 按钮，你应该看到它出现在全局变量列表中。
 
-<img src="https://github.com/data-observe/assets/blob/main/tutorial/global-vars-table.jpg?raw=true"  />
+<img src={require('@/img/docs/tutorial/global-vars-table.jpg').default.src} alt="global-vars-table" width={3086} height={1658} className="rounded-lg ring-1 ring-black/5" />
+
 
 
 ## 使用全局变量 
 
 首先，回到 `Hosts info` 仪表盘，看看全局变量的选择器长啥样。
 
-<img src="https://github.com/data-observe/assets/blob/main/tutorial/variable-selector.jpg?raw=true" style={{height: '30px'}} />
+<img src={require('@/img/docs/tutorial/variable-selector.jpg').default.src} alt="variable-selector" style={{height: '30px'}} className="rounded-lg ring-1 ring-black/5" />
+
 
 是的，跟仪表盘变量一样，全局变量也有一个选择器，它们的区别是：全局变量的选择器在仪表盘的右侧，而仪表盘变量的选择器在左侧。
 
@@ -56,8 +60,9 @@ import Code  from '@/components/docs/Code'
 
 我们来尝试下，首先， 在 `Hosts info` 仪表盘中将 `host` 设置为 `localhost:9100`，然后切换到 `Home` 和 `User stats` 仪表盘，你会发现:
 
-<img src="https://github.com/data-observe/assets/blob/main/tutorial/gvar-in-host-info.jpg?raw=true" style={{height: '50px'}} />
-<img src="https://github.com/data-observe/assets/blob/main/tutorial/gvar-in-home.jpg?raw=true" style={{height: '50px'}} />
-<img src="https://github.com/data-observe/assets/blob/main/tutorial/gvar-in-user-stats.jpg?raw=true" style={{height: '50px'}} />
+<img src={require('@/img/docs/tutorial/gvar-in-host-info.jpg').default.src} alt="gvar-in-host-info" style={{height: '50px'}} className="rounded-lg ring-1 ring-black/5" />
+<img src={require('@/img/docs/tutorial/gvar-in-home.jpg').default.src} alt="gvar-in-home" style={{height: '50px'}} className="rounded-lg ring-1 ring-black/5" />
+<img src={require('@/img/docs/tutorial/gvar-in-user-stats.jpg').default.src} alt="gvar-in-user-stats" style={{height: '50px'}} className="rounded-lg ring-1 ring-black/5" />
+
 
 非常棒，如我预期那样，在一个仪表盘中修改后，其它所有的都发生了变化，这样一来，我们可以玩出很多花样了。

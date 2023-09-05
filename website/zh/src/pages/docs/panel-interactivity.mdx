@@ -15,13 +15,15 @@ description:
 
 打开面板编辑器，找到 `图表` 标签页中的 `交互` 部分，点击 `新增操作` 按钮，将 `New action` 重命名为 `Test click`：
 
-<img src="https://github.com/data-observe/assets/blob/main/panel/add-interaction.jpg?raw=true" style={{height: "400px"}}/>
+<img src={require('@/img/docs/panel/add-interaction.jpg').default.src} alt="add-interaction" style={{height: '400px'}} className="rounded-lg ring-1 ring-black/5" />
+
 
 如上图所示，我们创建了一个名为 `Test click` 的点击操作，现在为其添加一些代码。
 
 点击 `编辑函数` 按钮，填写如下代码：
 
-<img src="https://github.com/data-observe/assets/blob/main/panel/edit-basic-interaction.jpg?raw=true" style={{height: "300px"}}/>
+<img src={require('@/img/docs/panel/edit-basic-interaction.jpg').default.src} alt="edit-basic-interaction" style={{height: '300px'}} className="rounded-lg ring-1 ring-black/5" />
+
 
 你也可以将下面的代码复制到编辑器中：
 
@@ -38,11 +40,13 @@ function onRowClick(row, navigate, setVariable, setDateTime, $variables) {
 
 点击 `提交` 按钮，然后点击 `Graph` 图表上的任意一处，你应该会看到一个弹出框：
 
-<img src="https://github.com/data-observe/assets/blob/main/panel/click-popup.jpg?raw=true" style={{height: "200px"}}/>
+<img src={require('@/img/docs/panel/click-popup.jpg').default.src} alt="click-popup" style={{height: '200px'}} className="rounded-lg ring-1 ring-black/5" />
+
 
 点击 `Test click`，我们就能在浏览器控制台中看到打印的数据：
 
-<img src="https://github.com/data-observe/assets/blob/main/panel/interaction-first-output.jpg?raw=true" style={{height: "160px"}}/>
+<img src={require('@/img/docs/panel/interaction-first-output.jpg').default.src} alt="interaction-first-output" style={{height: '160px'}} className="rounded-lg ring-1 ring-black/5" />
+
 
 ## 函数参数
 
@@ -138,10 +142,12 @@ function onRowClick(row, navigate, setVariable, setDateTime, $variables) {
 
 先来看一张点击之前的图片:
 
-<img src="https://github.com/data-observe/assets/blob/main/panel/before-click.jpg?raw=true"/>
+<img src={require('@/img/docs/panel/before-click.jpg').default.src} alt="before-click" width={3086} height={1658} className="rounded-lg ring-1 ring-black/5" />
+
 
 下面让我们触发点击事件，然后看看结果如何：
 
-<img src="https://github.com/data-observe/assets/blob/main/panel/after-click.jpg?raw=true"/>
+<img src={require('@/img/docs/panel/after-click.jpg').default.src} alt="after-click" width={3086} height={1658} className="rounded-lg ring-1 ring-black/5" />
+
 
 你可以看到图中三处通过箭头标记的地方全部发生了改变，如我们所料，nice!

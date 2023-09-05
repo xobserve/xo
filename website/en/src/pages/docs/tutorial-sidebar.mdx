@@ -13,7 +13,7 @@ Before we add our own navigation items, we need to know what is `Team` in Datav.
 
 Every dashboard belongs to a team. In default, dashboards we created are owned by `global` team, which is the default team.
 
-<img src="https://github.com/data-observe/assets/blob/main/tutorial/dashboard-team.jpg?raw=true" style={{height: "60px"}} />
+<img src={require('@/img/docs/tutorial/dashboard-team.jpg').default.src} alt="dashboard-team"  className="rounded-lg ring-1 ring-black/5"  style={{height: "60px"}}/>
 
 Each team can has its own sidebar, the default sidebar we use is belongs to `global` team. So if you does not specify a team when you do something, e.g create a dashboard, everything will default belongs to `global` team.
 
@@ -29,24 +29,24 @@ As we are using sidebar which belongs to `global` team, we need to modify the si
 
 2. In last step, if you choose to  click the `configuration` icon, then select `Team` tab, you should see below image
 
-<img src="https://github.com/data-observe/assets/blob/main/tutorial/team-manage.jpg?raw=true" />
+<img src={require('@/img/docs/tutorial/team-manage.jpg').default.src} alt="team-manage"  className="rounded-lg ring-1 ring-black/5"  width={3086} height={1658}/>
 
 3. Click `manage` button in `global` team row and select `Side Menu` tab
 
 4. Try to add menu items as below image 
 
-<img src="https://github.com/data-observe/assets/blob/main/tutorial/manage-sidebar.jpg?raw=true" />
+<img src={require('@/img/docs/tutorial/manage-sidebar.jpg').default.src} alt="manage-sidebar"  className="rounded-lg ring-1 ring-black/5"  width={3086} height={1658}/>
 
 You may wonder how can we get the dashboard id, the simplest way is copy it from `search` panel: search the dashboard you want, hover on its card and click copy icon.
 
-<img src="https://github.com/data-observe/assets/blob/main/tutorial/copy-dashboard-id.jpg?raw=true" style={{height: "200px"}}  />
+<img src={require('@/img/docs/tutorial/copy-dashboard-id.jpg').default.src} alt="copy-dashboard-id"  className="rounded-lg ring-1 ring-black/5"  style={{height: "200px"}}/>
 
 5. Click `Submit` button
 
 
 When doing this, current page will be automatically refreshed, and you will see the new navigation item: 
 
-<img src="https://github.com/data-observe/assets/blob/main/tutorial/new-sidemenu-item.jpg?raw=true" style={{height: "200px"}}  />
+<img src={require('@/img/docs/tutorial/new-sidemenu-item.jpg').default.src} alt="new-sidemenu-item"  className="rounded-lg ring-1 ring-black/5"  style={{height: "200px"}}/>
 
 
 ## Expand sidebar to width mode
@@ -56,7 +56,7 @@ When you have more sidebar items, especially when they have secondary children i
 Click on the Datav logo in top of sidebar to see what will happens.
 
 
-<img src="https://github.com/data-observe/assets/blob/main/tutorial/expand-sidebar.jpg?raw=true" style={{width: "150px"}}  />
+<img src={require('@/img/docs/tutorial/expand-sidebar.jpg').default.src} alt="expand-sidebar"  className="rounded-lg ring-1 ring-black/5"  style={{width: "150px"}}/>
 
 That's cool, everything is clearly presented in our view, but.. how can we collapse it? 
 

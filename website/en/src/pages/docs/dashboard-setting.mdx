@@ -14,18 +14,18 @@ When enabled, when you hover on a Graph panel, the tooltip will also be shown in
 
 > This only works for Graph panel. 
 
-<img src="https://github.com/data-observe/assets/blob/main/dashboard/shared-tooltip.jpg?raw=true" style={{height: '400px'}} />
+<img src={require('@/img/docs/dashboard/shared-tooltip.jpg').default.src} alt="shared-tooltip" style={{height: '400px'}} className="rounded-lg ring-1 ring-black/5" />
 
 
 ## Hide global variables
 
 Obviously, not all global variables are useful for all dashboards. Therefore you can hide the global variables that you don't need.
 
-<img src="https://github.com/data-observe/assets/blob/main/dashboard/global-vars.jpg?raw=true" style={{height: '60px'}} />
+<img src={require('@/img/docs/dashboard/global-vars.jpg').default.src} alt="global-vars" style={{height: '60px'}} className="rounded-lg ring-1 ring-black/5" />
 
 In above image we have two global variables, now let's hide the `no-use` one.
 
-<img src="https://github.com/data-observe/assets/blob/main/dashboard/hide-vars.jpg?raw=true" style={{height: '60px'}} />
+<img src={require('@/img/docs/dashboard/hide-vars.jpg').default.src} alt="hide-vars" style={{height: '60px'}} className="rounded-lg ring-1 ring-black/5" />
 
 Go back to the dashboard page and you will see the `no-use` global variable is hidden.
 
@@ -47,7 +47,7 @@ This option will decide how dashboard  automatically arrange  the positions of p
 
 Let's see what `null` looks like.
 
-<img src="https://github.com/data-observe/assets/blob/main/dashboard/custom-layout.jpg?raw=true" style={{height: '400px'}} />
+<img src={require('@/img/docs/dashboard/custom-layout.jpg').default.src} alt="custom-layout" style={{height: '400px'}} className="rounded-lg ring-1 ring-black/5" />
 
 As shown in above image, the panel in bottom right corner is not automatically moved to top ( vertical ) or left (horizontal).
 
@@ -57,7 +57,7 @@ It just stays at where we put it, that's cool ! But when you have many panels, i
 
 When enabled, panel can be placed over other panels. It's useful when you are building a beautiful large screen.
 
-<img src="https://github.com/data-observe/assets/blob/main/dashboard/panel-overlap.jpg?raw=true" style={{height: '400px'}} />
+<img src={require('@/img/docs/dashboard/panel-overlap.jpg').default.src} alt="panel-overlap" style={{height: '400px'}} className="rounded-lg ring-1 ring-black/5" />
 
 If you disable it, the image shown above will never be possible.
 
@@ -75,15 +75,15 @@ But if you hope user can see the panel chart immediately when we scroll to that 
 When enabled, if you have unsaved changes in dashboard, you will be prompted when you try to leave the dashboard page.
 
 
-<img src="https://github.com/data-observe/assets/blob/main/dashboard/unsaved-prompt.jpg?raw=true" style={{height: '400px'}} />
+<img src={require('@/img/docs/dashboard/unsaved-prompt.jpg').default.src} alt="unsaved-prompt" style={{height: '400px'}} className="rounded-lg ring-1 ring-black/5" />
 
 
 ## Auto save 
 
 When enabled, dashboard will be automatically saved every X seconds. 
 
-<img src="https://github.com/data-observe/assets/blob/main/dashboard/auto-save.jpg?raw=true" style={{height: '300px'}} />
+<img src={require('@/img/docs/dashboard/auto-save.jpg').default.src} alt="auto-save" style={{height: '300px'}} className="rounded-lg ring-1 ring-black/5" />
 
 But this will be automatically disabled when you are in panel edit mode ( maybe remove this limitation in the future ).
 
-<img src="https://github.com/data-observe/assets/blob/main/dashboard/auto-save-disabled.jpg?raw=true" style={{height: '300px'}} />
+<img src={require('@/img/docs/dashboard/auto-save-disabled.jpg').default.src} alt="auto-save-disabled" style={{height: '300px'}} className="rounded-lg ring-1 ring-black/5" />

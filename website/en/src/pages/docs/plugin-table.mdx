@@ -8,7 +8,7 @@ import Code  from '@/components/docs/Code'
 
 Table panel is one of the most important and powerful panels in Datav.
 
-<img src="https://github.com/data-observe/assets/blob/main/plugin/table.jpg?raw=true" style={{height: '300px'}}/>
+<img src={require('@/img/docs/plugin/table.jpg').default.src} alt="table"  style={{height: '300px'}} className="rounded-lg ring-1 ring-black/5" />
 
 
 Next, let's see how to configure some of the options.
@@ -44,11 +44,11 @@ Value mapping is a very useful feature, it can map the value of a column to anot
 
 > Value mapping is only available for Table panel at this moment
 
-<img src="https://github.com/data-observe/assets/blob/main/plugin/table.jpg?raw=true" style={{height: '300px'}}/>
+<img src={require('@/img/docs/plugin/table.jpg').default.src} alt="table"  style={{height: '300px'}} className="rounded-lg ring-1 ring-black/5" />
 
 In above image, the fourth value in the first column is set with a value mapping:
 
-<img src="https://github.com/data-observe/assets/blob/main/plugin/value-mapping.jpg?raw=true" style={{height: '130px'}}/>
+<img src={require('@/img/docs/plugin/value-mapping.jpg').default.src} alt="value-mapping"  style={{height: '130px'}} className="rounded-lg ring-1 ring-black/5" />
 
 In this mapping, we have created a mapping rule with type `Value`: mapped  `23-08-28 09:30::00` to `${__current__} 🇨🇳 time`, set set its color to `pink-red`. 
 

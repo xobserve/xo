@@ -8,7 +8,8 @@ import Code  from '@/components/docs/Code'
 
 顾名思义，Log 图表用于显示日志，特别是 [Loki](https://github.com/search?q=loki&type=repositories) 日志。
 
-<img src="https://github.com/data-observe/assets/blob/main/plugin/log.jpg?raw=true"/>
+<img src={require('@/img/docs/plugin/log.jpg').default.src} alt="log" width={3086} height={1658} className="rounded-lg ring-1 ring-black/5" />
+
 
 喔，看起来 Log 图表中有很多颜色，为什么要这样设计呢？
 
@@ -21,7 +22,8 @@ import Code  from '@/components/docs/Code'
 
 ### 通过标签过滤日志
 
-<video controls autoPlay src="https://github.com/data-observe/assets/blob/main/plugin/log-toolbar.mov?raw=true" style={{height: "300px"}}/>
+<video controls autoPlay src="/docs/log-toolbar.mov" />
+
 
 我们可以点击工具栏中的标签列表来过滤日志，还可以直接点击图表中的标签来过滤日志。
 
@@ -30,7 +32,8 @@ import Code  from '@/components/docs/Code'
 
 搜索日志是非常强大的工具，你可以它找到任何你想要的日志。
 
-<img src="https://github.com/data-observe/assets/blob/main/plugin/search-logs.jpg?raw=true" />
+<img src={require('@/img/docs/plugin/search-logs.jpg').default.src} alt="search-logs" width={3086} height={1658} className="rounded-lg ring-1 ring-black/5" />
+
 
 ## 阈值 Threshold 
 
@@ -41,11 +44,13 @@ import Code  from '@/components/docs/Code'
 
 > Threshold 改变的是时间戳的颜色，而不是整行日志的颜色
 
-<img src="https://github.com/data-observe/assets/blob/main/plugin/log-threshold.jpg?raw=true" style={{height: '200px'}}/>
+<img src={require('@/img/docs/plugin/log-threshold.jpg').default.src} alt="log-threshold" style={{height: '200px'}} className="rounded-lg ring-1 ring-black/5" />
+
 
 这里我们查询所有包含 `84957` 的日志内容： 
 
-<img src="https://github.com/data-observe/assets/blob/main/plugin/log-threshold-effect.jpg?raw=true" style={{height: '100px'}}/>
+<img src={require('@/img/docs/plugin/log-threshold-effect.jpg').default.src} alt="log-threshold-effect" style={{height: '100px'}} className="rounded-lg ring-1 ring-black/5" />
+
 
 
 
