@@ -104,11 +104,11 @@ function Header() {
             </div>
           </div>
         </div>
-        <div className="relative max-w-5xl mx-auto pt-20 sm:pt-24 lg:pt-32">
+        <div className="relative max-w-5xl mx-auto pt-12 sm:pt-24 lg:pt-32">
           <h1 className="text-slate-900 font-extrabold text-4xl sm:text-5xl lg:text-6xl tracking-tight text-center dark:text-white">
             {config.slogan}
           </h1>
-          <p className="mt-10 text-2xl text-slate-600 text-center max-w-3xl mx-auto dark:text-slate-400">
+          <p className="lg:mt-10 mt-6  text-2xl text-slate-600 text-center max-w-3xl mx-auto dark:text-slate-400">
           You can visualize {' '}
             <code className="font-mono font-medium text-sky-500 dark:text-sky-400">metrics</code>,{' '}
             <code className="font-mono font-medium text-sky-500 dark:text-sky-400">traces</code>,{' '}
@@ -118,7 +118,7 @@ function Header() {
             </code>{' '}
             from various datasource, and correlate them easily and deeply.
           </p>
-          <div className="mt-16 sm:mt-10 flex justify-center space-x-6 text-sm">
+          <div className="lg:mt-16 mt-10 flex justify-center space-x-6 text-sm">
             <NextLink
               href="/docs/installation"
               className="bg-slate-900 hover:bg-slate-700 focus:outline-none focus:ring-2 focus:ring-slate-400 focus:ring-offset-2 focus:ring-offset-slate-50 text-white font-semibold h-12 px-6 rounded-lg w-full flex items-center justify-center sm:w-auto  dark:highlight-white/30 dark:hover:bg-sky-400"
@@ -176,9 +176,8 @@ Home.layoutProps = {
   },
 }
 
-
 const AuthorSay = ({author, content, url}) => {
-  return <figure className="relative flex bg-slate-50 rounded-lg p-6 dark:bg-[transparent] dark:highlight-white/5">
+  return <figure className="relative lg:flex bg-slate-50 rounded-lg p-6 dark:bg-[transparent] dark:highlight-white/5">
     <figcaption className="flex items-center space-x-4">
       <img
         src={author.avatar}
@@ -201,7 +200,7 @@ const AuthorSay = ({author, content, url}) => {
         <div className="mt-0.5">{author.role}</div>
       </div>
     </figcaption>
-    <blockquote className="ml-6 text-slate-700 dark:text-slate-300 w-[30rem]">
+    <blockquote className="lg:ml-6 mt-3 lg:mt-0 text-slate-700 dark:text-slate-300 lg:w-[30rem]">
       {typeof content === 'string' ? <p>{content}</p> : content}
     </blockquote>
   </figure>
