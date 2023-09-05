@@ -5,8 +5,8 @@ import Link from 'next/link'
 import { IconContainer } from '@/components/home/common'
 
 let tabs = {
-  '本地开发环境': '/docs/installation',
-  "二进制安装包": "/docs/installation/production",
+  "二进制安装包": "/docs/installation",
+  '本地开发环境': '/docs/installation/dev',
   "从源码部署": '/docs/installation/deploy-ui',
 }
 

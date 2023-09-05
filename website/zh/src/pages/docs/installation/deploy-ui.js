@@ -101,7 +101,7 @@ datav		datav.sql	datav.yaml	ui`,
     },
 ]
 
-export default function TailwindCli({ code }) {
+export default function Index({ code }) {
     return (
         <InstallationLayout>
             <div
@@ -159,12 +159,14 @@ export function getStaticProps() {
     }
 }
 
-TailwindCli.layoutProps = {
+
+Index.layoutProps = {
     meta: {
-        title: 'Installation',
-        description:
-            'The simplest and fastest way to get up and running with Tailwind CSS from scratch is with the Tailwind CLI tool.',
+      title: '从源码部署',
+      description:
+        '',
+      section: '开始使用',
     },
     Layout: DocumentationLayout,
     allowOverflow: false,
-}
+  }
