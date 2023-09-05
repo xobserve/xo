@@ -29,7 +29,10 @@ export default ({ mode }) => {
                 // Ensure we transform modules that contain a mix of ES imports
                 // and CommonJS require() calls to avoid stray require() calls in production.
                 transformMixedEsModules: true,
-            },
+            },   
+            rollupOptions: {
+                external: 'NonExistingPath'
+              }
         },
         //   resolve: {
         //     alias: {
