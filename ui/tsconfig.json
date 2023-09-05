@@ -19,7 +19,7 @@
     "isolatedModules": true,
     "allowSyntheticDefaultImports": true,
     "jsx": "preserve",
-    "baseUrl": ".",
+    "baseUrl": "./",
     "paths": {
       "hooks/*": [
         "src/hooks/*"
