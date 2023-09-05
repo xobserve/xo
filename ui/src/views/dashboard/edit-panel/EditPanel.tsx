@@ -44,6 +44,20 @@ import { useLocation, useSearchParam } from "react-use"
 import { useLandscapeMode } from "hooks/useLandscapeMode"
 import { MobileBreakpoint } from "src/data/constants"
 import { isEmpty } from "utils/validate"
+import TextPanelEditor from "../plugins/panel/text/Editor"
+import GraphPanelEditor from "../plugins/panel/graph/Editor"
+import TablePanelEditor from "../plugins/panel/table/Editor"
+import NodeGraphPanelEditor from "../plugins/panel/nodeGraph/Editor"
+import EchartsPanelEditor from "../plugins/panel/echarts/Editor"
+import PiePanelEditor from "../plugins/panel/pie/Editor"
+import GaugePanelEditor from "../plugins/panel/gauge/Editor"
+import StatPanelEditor from "../plugins/panel/stat/Editor"
+import TracePanelEditor from "../plugins/panel/trace/Editor"
+import BarGaugeEditor from "../plugins/panel/barGauge/Editor"
+import GeoMapPanelEditor from "../plugins/panel/geomap/Editor"
+import LogPanelEditor from "../plugins/panel/log/Editor"
+import BarPanelEditor from "../plugins/panel/bar/Editor"
+import AlertPanelEditor from "../plugins/panel/alert/Editor"
 
 interface EditPanelProps {
     dashboard: Dashboard
@@ -339,21 +353,38 @@ const EditPanel = memo(({ dashboard, onChange, edit }: EditPanelProps) => {
 })
 
 //@needs-update-when-add-new-panel
+// const loadablePanels = {
+//     [PanelType.Text]: loadable(() => import('../plugins/panel/text/Editor')),
+//     [PanelType.Graph]: loadable(() => import('../plugins/panel/graph/Editor')),
+//     [PanelType.Table]: loadable(() => import('../plugins/panel/table/Editor')),
+//     [PanelType.NodeGraph]: loadable(() => import('../plugins/panel/nodeGraph/Editor')),
+//     [PanelType.Echarts]: loadable(() => import('../plugins/panel/echarts/Editor')),
+//     [PanelType.Pie]: loadable(() => import('../plugins/panel/pie/Editor')),
+//     [PanelType.Gauge]: loadable(() => import('../plugins/panel/gauge/Editor')),
+//     [PanelType.Stat]: loadable(() => import('../plugins/panel/stat/Editor')),
+//     [PanelType.Trace]: loadable(() => import('../plugins/panel/trace/Editor')),
+//     [PanelType.BarGauge]: loadable(() => import('../plugins/panel/barGauge/Editor')),
+//     [PanelType.GeoMap]: loadable(() => import('../plugins/panel/geomap/Editor')),
+//     [PanelType.Log]: loadable(() => import('../plugins/panel/log/Editor')),
+//     [PanelType.Bar]: loadable(() => import('../plugins/panel/bar/Editor')),
+//     [PanelType.Alert]: loadable(() => import('../plugins/panel/alert/Editor')),
+// }
+
 const loadablePanels = {
-    [PanelType.Text]: loadable(() => import('../plugins/panel/text/Editor')),
-    [PanelType.Graph]: loadable(() => import('../plugins/panel/graph/Editor')),
-    [PanelType.Table]: loadable(() => import('../plugins/panel/table/Editor')),
-    [PanelType.NodeGraph]: loadable(() => import('../plugins/panel/nodeGraph/Editor')),
-    [PanelType.Echarts]: loadable(() => import('../plugins/panel/echarts/Editor')),
-    [PanelType.Pie]: loadable(() => import('../plugins/panel/pie/Editor')),
-    [PanelType.Gauge]: loadable(() => import('../plugins/panel/gauge/Editor')),
-    [PanelType.Stat]: loadable(() => import('../plugins/panel/stat/Editor')),
-    [PanelType.Trace]: loadable(() => import('../plugins/panel/trace/Editor')),
-    [PanelType.BarGauge]: loadable(() => import('../plugins/panel/barGauge/Editor')),
-    [PanelType.GeoMap]: loadable(() => import('../plugins/panel/geomap/Editor')),
-    [PanelType.Log]: loadable(() => import('../plugins/panel/log/Editor')),
-    [PanelType.Bar]: loadable(() => import('../plugins/panel/bar/Editor')),
-    [PanelType.Alert]: loadable(() => import('../plugins/panel/alert/Editor')),
+    [PanelType.Text]: TextPanelEditor,
+    [PanelType.Graph]:GraphPanelEditor,
+    [PanelType.Table]: TablePanelEditor,
+    [PanelType.NodeGraph]: NodeGraphPanelEditor,
+    [PanelType.Echarts]: EchartsPanelEditor,
+    [PanelType.Pie]: PiePanelEditor,
+    [PanelType.Gauge]: GaugePanelEditor,
+    [PanelType.Stat]: StatPanelEditor,
+    [PanelType.Trace]: TracePanelEditor,
+    [PanelType.BarGauge]: BarGaugeEditor,
+    [PanelType.GeoMap]: GeoMapPanelEditor,
+    [PanelType.Log]: LogPanelEditor,
+    [PanelType.Bar]: BarPanelEditor,
+    [PanelType.Alert]: AlertPanelEditor,
 }
 
 interface CustomPanelEditorProps {

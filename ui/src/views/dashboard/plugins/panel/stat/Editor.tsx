@@ -31,7 +31,7 @@ import { LayoutOrientation } from "types/layout"
 import { Units } from "types/panel/plugins"
 import { CodeEditorModal } from "src/components/CodeEditor/CodeEditorModal"
 
-const GraphPanelEditor = memo(({ panel, onChange, data }: PanelEditorProps) => {
+const StatPanelEditor = memo(({ panel, onChange, data }: PanelEditorProps) => {
     const t = useStore(commonMsg)
     const t1 = useStore(graphPanelMsg)
     const t2 = useStore(statsPanelMsg)
@@ -197,4 +197,4 @@ const GraphPanelEditor = memo(({ panel, onChange, data }: PanelEditorProps) => {
     )
 })
 
-export default GraphPanelEditor
+export default StatPanelEditor
