@@ -61,7 +61,7 @@ const TraceDetailHeader = ({ trace, viewRange, updateNextViewRangeTime, updateVi
     const [isLargeScreen] = useMediaQuery(MobileBreakpoint)
     const size = isLargeScreen ? "sm" : "sm"
     return (<>
-        <Flex justifyContent="space-between" alignItems="center">
+        <Flex justifyContent="space-between" alignItems="center" p={isLargeScreen ? 1 : 0}>
             <HStack>
                 <CollapseIcon collapsed={collapsed} onClick={onGraphCollapsed} opacity="0.5" fontSize={size} />
                 <Flex flexDir={isLargeScreen ? "row" : "column"} alignItems={isLargeScreen ? "center"  : "start"} gap={isLargeScreen ? 2 : 0}>

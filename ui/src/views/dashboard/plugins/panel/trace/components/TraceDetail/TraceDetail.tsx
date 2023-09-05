@@ -151,7 +151,7 @@ const TraceDetail = ({ trace, scrollManager }: Props) => {
         <Box position="fixed" width="100%" bg={useColorModeValue('#fff', customColors.bodyBg.dark)} zIndex="1000">
             <TraceDetailHeader trace={trace} viewRange={viewRange} updateNextViewRangeTime={updateNextViewRangeTime} updateViewRangeTime={updateViewRangeTime} onGraphCollapsed={() => setCollapsed(!collapsed)} collapsed={collapsed}  searchCount={findCount} prevResult={prevResult} nextResult={nextResult} onViewTypeChange={onViewTypeChange} viewType={viewType} search={search} />
         </Box>
-        <Box mt={collapsed ? (isLargeScreen ? "60px" : "52px") : (isLargeScreen ? "136px" : "146px")} >
+        <Box mt={collapsed ? (isLargeScreen ? "65px" : "52px") : (isLargeScreen ? "141px" : "130px")} >
             {viewComponent}
 
         </Box>
