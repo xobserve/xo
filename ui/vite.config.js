@@ -2,6 +2,7 @@ import { defineConfig, loadEnv } from 'vite';
 import react from '@vitejs/plugin-react';
 import viteTsconfigPaths from 'vite-tsconfig-paths';
 import svgrPlugin from 'vite-plugin-svgr';
+import { fileURLToPath } from 'url';
 // https://vitejs.dev/config/
 
 export default ({ mode }) => {
@@ -20,25 +21,17 @@ export default ({ mode }) => {
             viteTsconfigPaths(),
             svgrPlugin()
         ],
-        base: './',
+        base: '/',
         publicDir: './public',
         build: {
             outDir: 'build',
             assetsDir: 'static',
-            // commonjsOptions: {
-            //     // Ensure we transform modules that contain a mix of ES imports
-            //     // and CommonJS require() calls to avoid stray require() calls in production.
-            //     transformMixedEsModules: true,
-            // },   
-            rollupOptions: {
-                external: 'NonExistingPath'
-              }
-        },
-        //   resolve: {
-        //     alias: {
-        //       "@": fileURLToPath(new URL("./src", import.meta.url)),
-        //     },
-        //   },
+            commonjsOptions: {
+                // Ensure we transform modules that contain a mix of ES imports
+                // and CommonJS require() calls to avoid stray require() calls in production.
+                transformMixedEsModules: true,
+            },
+        }
     });
 };
 

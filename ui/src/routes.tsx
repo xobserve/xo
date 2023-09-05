@@ -15,13 +15,13 @@ import React from "react";
 import Login from "src/pages/Login";
 import NotFoundPage from "src/pages/NotFound";
 import AccountSetting from "src/pages/account/Setting";
-import NewDashboardPage from "src/pages/new/Dashboard";
+import NewDashboardPage from "pages/new/Dashboard";
 import NewDatasourcePage from "src/pages/new/Datasource";
 import ImportDashboardPage from "src/pages/new/Import";
 import DatasourcesPage from "src/pages/cfg/Datasources";
 import TeamsPage from "src/pages/cfg/Teams";
 import GlobalVariablesPage from "src/pages/cfg/Variables";
-import UsersPage from "src/pages/cfg/Users";
+import UsersPage from "pages/cfg/Users"; 
 import TeamDashboardsPage from "src/pages/cfg/team/[id]/Dashboards";
 import TeamMembersPage from "src/pages/cfg/team/[id]/Members";
 import TeamSettingPage from "src/pages/cfg/team/[id]/Setting";
@@ -66,18 +66,22 @@ const cfgRoutes = [
   },
   {
     path: "/cfg/team/:id/dashboards",
+    //@ts-ignore
     element: pageContainer(teamPageContainer(<TeamDashboardsPage />)),
   },
   {
     path: "/cfg/team/:id/members",
+    //@ts-ignore
     element: pageContainer(teamPageContainer(<TeamMembersPage />)),
   },
   {
     path: "/cfg/team/:id/setting",
+    //@ts-ignore
     element: pageContainer(teamPageContainer(<TeamSettingPage />)),
   },
   {
     path: "/cfg/team/:id/sidemenu",
+    //@ts-ignore
     element: pageContainer(teamPageContainer(<TeamSidemenuPage />)),
   },
 ]
