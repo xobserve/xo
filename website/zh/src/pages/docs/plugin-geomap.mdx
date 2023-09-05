@@ -5,6 +5,7 @@ description:
 
 import TextList  from '@/components/docs/TextList'
 import Code  from '@/components/docs/Code'
+import Link from 'next/link'
 
 GeoMap 插件可以在地图的指定位置上渲染相应的数据点，例如根据国家编码、城市名以及坐标来渲染。
 
@@ -172,8 +173,8 @@ function onClick(data, map, navigate, setVariable, setDateTime, $variables) {
 而前者仅仅是一个 `name` 索引。总之，三个点分别代表了三种坐标索引类型：
 
 <TextList>
-    <li> 国家编码 `US`，坐标索引定义在 [countries.json](https://github.com/data-observe/datav/blob/main/ui/public/plugins/panel/geomap/countries.json) </li>
-    <li> 城市名称 `Shanghai`, 坐标索引定义在 cities.json](https://github.com/data-observe/datav/blob/main/ui/public/plugins/panel/geomap/cities.json)</li>
+    <li> 国家编码 `US`，坐标索引定义在 <Link href="https://github.com/data-observe/datav/blob/main/ui/public/plugins/panel/geomap/countries.json">countries.json</Link> </li>
+    <li> 城市名称 `Shanghai`, 坐标索引定义在 <Link href="https://github.com/data-observe/datav/blob/main/ui/public/plugins/panel/geomap/cities.json">cities.json</Link></li>
     <li> 通过 <Code>"type":"geo"</Code>类型的字段传递的具体坐标</li>
 </TextList>
 

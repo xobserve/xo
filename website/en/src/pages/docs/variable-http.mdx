@@ -20,7 +20,9 @@ In this doc, we will make http request to jaeger to get its operation under `fro
 
 ## Create http Variable
 
-Let's create a variable named `operation` to query data from jaeger http api: `http://localhost:16686/api/services/frontend/operations`.
+Let's create a variable named `operation` to query data from jaeger http api:  
+
+<p style={{wordBreak: "break-all"}}>http://localhost:16686/api/services/frontend/operations</p>
 
 > We will use `service` variable created in [Jaeger](/docs/variable-jaeger#jaeger-services) doc, please make sure it still exists.
 
@@ -30,7 +32,11 @@ First fill in the variable editor with:
 
 <img src={require('@/img/docs/variable/basic-http.jpg').default.src} alt="basic-http"  className="rounded-lg ring-1 ring-black/5" style={{height: "500px"}} />
 
-You should have noticed, we have use a `service` variable in  `Query values` field: `http://localhost:16686/api/services/${service}/operations`, which means **we can use variable in HTTP request url**.
+You should have noticed, we have use a `service` variable in  `Query values` field:
+
+<p style={{wordBreak: "break-all"}}>http://localhost:16686/api/services/${service}/operations</p>
+
+which means **we can use variable in HTTP request url**.
 
 
 ### Edit request 

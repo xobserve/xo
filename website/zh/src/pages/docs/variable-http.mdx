@@ -22,7 +22,9 @@ import Code  from '@/components/docs/Code'
 
 ## 创建 HTTP 变量
 
-我们将创建一个变量，用于从 jaeger http api 查询数据：`http://localhost:16686/api/services/frontend/operations`。
+我们将创建一个变量，用于从 jaeger http api 查询数据：
+
+<p style={{wordBreak: "break-all"}}>http://localhost:16686/api/services/frontend/operations</p>
 
 > 我们将使用 [Jaeger](/docs/variable-jaeger#jaeger-services) 文档中创建的 `service` 变量，请确保它仍然存在。
 
@@ -33,7 +35,11 @@ import Code  from '@/components/docs/Code'
 <img src={require('@/img/docs/variable/basic-http.jpg').default.src} alt="basic-http"  className="rounded-lg ring-1 ring-black/5" style={{height: "500px"}} />
 
 
-大家应该有注意到，在 `Query values` 字段中，我们使用了 `service` 变量：`http://localhost:16686/api/services/${service}/operations`，这意味着**我们可以在 HTTP 请求 url 中使用变量**。
+大家应该有注意到，在 `Query values` 字段中，我们使用了 `service` 变量：
+
+<p style={{wordBreak: "break-all"}}>http://localhost:16686/api/services/${service}/operations</p>
+
+这意味着**我们可以在 HTTP 请求 url 中使用变量**。
 
 
 ### 编辑 HTTP 请求

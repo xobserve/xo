@@ -5,6 +5,7 @@ description:
 
 import TextList  from '@/components/docs/TextList'
 import Code  from '@/components/docs/Code'
+import Link from 'next/link'
 
 Geo Map is a plugin that can render data points at specific locations on a map, including country codes, city names and coordinates.
 
@@ -170,8 +171,8 @@ The difference between `Shanghai` and `Bei_jing` is that `Bei_jing` has a coordi
 
 The three points can be divide into three types:
 <TextList>
-    <li>Country code `US`,  defined in [countries.json](https://github.com/data-observe/datav/blob/main/ui/public/plugins/panel/geomap/countries.json) </li>
-    <li>City names `Shanghai`, defined in [cities.json](https://github.com/data-observe/datav/blob/main/ui/public/plugins/panel/geomap/cities.json)</li>
+    <li>Country code `US`,  defined in <Link href="https://github.com/data-observe/datav/blob/main/ui/public/plugins/panel/geomap/countries.json">countries.json</Link> </li>
+    <li>City names `Shanghai`, defined in <Link href="https://github.com/data-observe/datav/blob/main/ui/public/plugins/panel/geomap/cities.json">cities.json</Link></li>
     <li>Coordinates, passed by field with <Code>"type":"geo"</Code></li>
 </TextList>
 
