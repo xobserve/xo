@@ -8,8 +8,7 @@ export const isErrorTrace = (t: Trace): boolean =>
 
 
 
-export const isTraceData = (d: any) => {
-    const data: Trace[] = d?.flat()
+export const isTraceData = (data: any[]) => {
     for (const s of data) {
         if (s.traceID) {
             return true
