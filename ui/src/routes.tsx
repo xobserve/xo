@@ -20,7 +20,7 @@ import NewDatasourcePage from "src/pages/new/Datasource";
 import ImportDashboardPage from "src/pages/new/Import";
 import DatasourcesPage from "src/pages/cfg/Datasources";
 import TeamsPage from "src/pages/cfg/Teams";
-import GlobalVariablesPage from "./pages/cfg/Variables";
+import GlobalVariablesPage from "src/pages/cfg/Variables";
 import UsersPage from "src/pages/cfg/Users";
 import TeamDashboardsPage from "src/pages/cfg/team/[id]/Dashboards";
 import TeamMembersPage from "src/pages/cfg/team/[id]/Members";
