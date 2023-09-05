@@ -394,7 +394,7 @@ const response = {
 1. 创建一个 Table 图表，并使用 TestData 数据源。
 2. 选择 `变换` 标签页
 
-<img src={require('@/img/docs/dashboard/panel-data-transform.jpg').default.src} alt="panel-data-transform" width={3086} height={1658} className="rounded-lg ring-1 ring-black/5" />
+<img src={require('@/img/docs/panel/panel-data-transform.jpg').default.src} alt="panel-data-transform" width={3086} height={1658} className="rounded-lg ring-1 ring-black/5" />
 
 
 3. 点击 `编辑函数` 按钮
@@ -430,12 +430,12 @@ Table 图表使用的是 `SeriesData` 时间序列数据格式，这里我们对
 
 原因是我们还需要在图表设置中启用变换功能，否则变换函数不会有任何效果：
 
-<img src={require('@/img/docs/dashboard/transform-option.jpg').default.src} alt="transform-option" style={{height: "400px"}} className="rounded-lg ring-1 ring-black/5" />
+<img src={require('@/img/docs/panel/transform-option.jpg').default.src} alt="transform-option" style={{height: "400px"}} className="rounded-lg ring-1 ring-black/5" />
 
 
 如上所示，在图表的基础设置中，开启变换选项，这次你会看到 Table 成功显示了时间字符串，不再是时间戳:
 
-<img src={require('@/img/docs/dashboard/transformed-table.jpg').default.src} alt="transformed-table" style={{height: "260px"}} className="rounded-lg ring-1 ring-black/5" />
+<img src={require('@/img/docs/panel/transformed-table.jpg').default.src} alt="transformed-table" style={{height: "260px"}} className="rounded-lg ring-1 ring-black/5" />
 
 
 
@@ -462,7 +462,7 @@ Table 图表使用的是 `SeriesData` 时间序列数据格式，这里我们对
 
 上面的列表中，有两个数据对象组成，分别是 `dataOfQueryA` 和 `dataOfQueryB`，它们分别由图表中定义的查询语句 A 和 B 查询而来。
 
-<img src={require('@/img/docs/dashboard/panel-query.jpg').default.src} alt="panel-query" width={3086} height={1658} className="rounded-lg ring-1 ring-black/5" />
+<img src={require('@/img/docs/panel/panel-query.jpg').default.src} alt="panel-query" width={3086} height={1658} className="rounded-lg ring-1 ring-black/5" />
 
 
 在上图中，你可以清晰看到该图表有两条查询语句，每一条查询语句都可以查询到一个结果，然后插入到最终的结果列表中。实际上，你可以在一个图表中添加任意多个查询语句，但是我们不推荐这么做，因为这会让图表变得比想象的更复杂。
