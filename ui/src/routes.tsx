@@ -14,30 +14,30 @@
 import React from "react";
 import Login from "src/pages/Login";
 import NotFoundPage from "src/pages/NotFound";
-import AccountSetting from "./pages/account/Setting";
-import NewDashboardPage from "./pages/new/Dashboard";
-import NewDatasourcePage from "./pages/new/Datasource";
-import ImportDashboardPage from "./pages/new/Import";
-import DatasourcesPage from "./pages/cfg/Datasources";
-import TeamsPage from "./pages/cfg/Teams";
+import AccountSetting from "src/pages/account/Setting";
+import NewDashboardPage from "src/pages/new/Dashboard";
+import NewDatasourcePage from "src/pages/new/Datasource";
+import ImportDashboardPage from "src/pages/new/Import";
+import DatasourcesPage from "src/pages/cfg/Datasources";
+import TeamsPage from "src/pages/cfg/Teams";
 import GlobalVariablesPage from "./pages/cfg/Variables";
-import UsersPage from "./pages/cfg/Users";
-import TeamDashboardsPage from "./pages/cfg/team/[id]/Dashboards";
-import TeamMembersPage from "./pages/cfg/team/[id]/Members";
-import TeamSettingPage from "./pages/cfg/team/[id]/Setting";
-import TeamSidemenuPage from "./pages/cfg/team/[id]/Sidemenu";
-import TestPage from "./pages/Test";
+import UsersPage from "src/pages/cfg/Users";
+import TeamDashboardsPage from "src/pages/cfg/team/[id]/Dashboards";
+import TeamMembersPage from "src/pages/cfg/team/[id]/Members";
+import TeamSettingPage from "src/pages/cfg/team/[id]/Setting";
+import TeamSidemenuPage from "src/pages/cfg/team/[id]/Sidemenu";
+import TestPage from "src/pages/Test";
 import loadable from '@loadable/component';
 import PageContainer from "layouts/PageContainer";
 import { Navigate } from "react-router-dom";
-import AdminPage from "./pages/admin/AuditLogs";
-import GithubLogin from "./pages/GithubLogin";
-import AdminUsers from "./pages/admin/UserStats";
-import TeamLayout from "./pages/cfg/team/[id]/components/Layout";
+import AdminPage from "src/pages/admin/AuditLogs";
+import GithubLogin from "src/pages/GithubLogin";
+import AdminUsers from "src/pages/admin/UserStats";
+import TeamLayout from "src/pages/cfg/team/[id]/components/Layout";
 
 
-const DashboardPage = loadable(() => import('./pages/dashboard/index'));
-const TracePage = loadable(() => import('./pages/dashboard/Trace'));
+const DashboardPage = loadable(() => import('src/pages/dashboard/index'));
+const TracePage = loadable(() => import('src/pages/dashboard/Trace'));
 
 const pageContainer = ele => {
   return <PageContainer>{ele}</PageContainer>
