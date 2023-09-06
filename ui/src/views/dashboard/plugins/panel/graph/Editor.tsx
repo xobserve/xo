@@ -191,7 +191,11 @@ const GraphPanelEditor = memo((props: PanelEditorProps) => {
                 } />
             </PanelEditItem>
             <PanelEditItem title={t.decimal}>
-                <EditorNumberItem value={panel.plugins.graph.value.decimal} min={0} max={5} step={1} onChange={v => onChange((panel: Panel) => { panel.plugins.graph.value.decimal = v })} />
+                <EditorNumberItem value={panel.plugins.graph.value.decimal} min={0} max={5} step={1} onChange={v => onChange(
+                    (panel: Panel) => { 
+                        panel.plugins.graph.value.decimal = v 
+                        dispatch(PanelForceRebuildEvent + panel.id)
+                    })} />
             </PanelEditItem>
         </PanelAccordion>
 
