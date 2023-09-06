@@ -67,7 +67,7 @@ import GeoMapPanelWrapper from "../../plugins/panel/geomap/GeoMap";
 import LogPanelWrapper from "../../plugins/panel/log/Log";
 import BarPanelWrapper from "../../plugins/panel/bar/Bar";
 import AlertPanel from "../../plugins/panel/alert/Alert";
-import ErrorBoundary from "components/ErrorBoudary";
+import ErrorBoundary from "src/components/ErrorBoudary";
 interface PanelGridProps {
     dashboard: Dashboard
     panel: Panel
@@ -203,6 +203,7 @@ export const PanelComponent = ({ dashboard, panel, variables, onRemovePanel, onH
             setQueryError(res.error)
             data = res.data
         } else {
+            const promises = []
             for (const q0 of ds.queries) {
                 const q: PanelQuery = { ...cloneDeep(q0), interval }
                 replaceQueryWithVariables(q, datasource.type, intervalObj.interval)
@@ -232,35 +233,44 @@ export const PanelComponent = ({ dashboard, panel, variables, onRemovePanel, onH
                 //@needs-update-when-add-new-datasource
                 switch (datasource.type) {
                     case DatasourceType.Prometheus:
-                        res = await run_prometheus_query(panel, q, timeRange, datasource)
+                        res =  run_prometheus_query(panel, q, timeRange, datasource)
                         break;
                     case DatasourceType.TestData:
-                        res = await run_testdata_query(panel, q, timeRange, datasource)
+                        res =  run_testdata_query(panel, q, timeRange, datasource)
                         break;
                     case DatasourceType.Jaeger:
-                        res = await run_jaeger_query(panel, q, timeRange, datasource)
+                        res =  run_jaeger_query(panel, q, timeRange, datasource)
                         break;
                     case DatasourceType.ExternalHttp:
-                        res = await run_http_query(panel, q, timeRange, datasource)
+                        res =  run_http_query(panel, q, timeRange, datasource)
                         break;
                     case DatasourceType.Loki:
-                        res = await run_loki_query(panel, q, timeRange, datasource)
+                        res =  run_loki_query(panel, q, timeRange, datasource)
                         break
                     default:
                         break;
                 }
 
+                promises.push({
+                    h: res ,
+                    id: id, 
+                    query: currentQuery
+                })
+            }
 
+            console.log("here333333311:",panel.id,promises)
+            const res0 = await Promise.all(promises.map(p => p.h))
+            console.log("here333333322:",panel.id)
+            res0.forEach((res,i) => {
+                const id = promises[i].id
+                const currentQuery = promises[i].query
                 setQueryError(res.error)
-
-
-
                 if (!isEmpty(res.data)) {
                     data.push(res.data)
                     prevQueryData[id] = res.data
                     prevQueries.set(id, currentQuery)
                 }
-            }
+            })
         }
 
 

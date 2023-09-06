@@ -36,6 +36,7 @@ var client = &http.Client{
 }
 
 func ProxyDatasource(c *gin.Context) {
+	time.Sleep(2 * time.Second)
 	dsID, _ := strconv.ParseInt(c.Param("id"), 10, 64)
 	// find datasource store url
 	ds, err := datasource.GetDatasource(dsID)

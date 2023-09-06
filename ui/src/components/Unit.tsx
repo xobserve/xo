@@ -14,7 +14,7 @@ import { Button, HStack, Input, NumberInput, NumberInputField, Select, VStack } 
 import { cloneDeep, isNumber, round } from "lodash"
 import { useState } from "react"
 import { FaArrowUp, FaMinus, FaPlus } from "react-icons/fa"
-import {  Unit, Units } from "types/panel/plugins"
+import { Unit, Units } from "types/panel/plugins"
 import React from "react"
 import { commonMsg } from "src/i18n/locales/en"
 import { useStore } from "@nanostores/react"
@@ -29,12 +29,12 @@ interface Props {
 
 
 
-export const UnitPicker = ({ value, onChange,size="md" }: Props) => {
+export const UnitPicker = ({ value, onChange, size = "md" }: Props) => {
     const t = useStore(commonMsg)
     const [units, setUnits] = useState<Units>(value)
     if (isEmpty(units)) {
         setUnits(getInitUnits())
-        return 
+        return
     }
 
     const onAddUnit = () => {
@@ -65,6 +65,28 @@ export const UnitPicker = ({ value, onChange,size="md" }: Props) => {
                     units: []
                 })
                 break;
+            case "short":
+                setUnits({
+                    unitsType: t,
+                    units: [
+                        {
+                            operator: "/",
+                            rhs: 1,
+                            unit: ""
+                        },
+                        {
+                            operator: "/",
+                            rhs: 1000,
+                            unit: "k"
+                        },
+                        {
+                            operator: "/",
+                            rhs: 1000000,
+                            unit: "m"
+                        },
+                    ]
+                })
+                break;
             case "percent":
                 setUnits({
                     unitsType: t,
@@ -88,7 +110,7 @@ export const UnitPicker = ({ value, onChange,size="md" }: Props) => {
             case "time":
                 setUnits({
                     unitsType: t,
-                    units:[
+                    units: [
                         {
                             operator: "/",
                             rhs: 1,
@@ -117,7 +139,7 @@ export const UnitPicker = ({ value, onChange,size="md" }: Props) => {
             case "bytes":
                 setUnits({
                     unitsType: t,
-                    units:[
+                    units: [
                         {
                             operator: "/",
                             rhs: 1,
@@ -171,6 +193,7 @@ export const UnitPicker = ({ value, onChange,size="md" }: Props) => {
             <HStack>
                 <Select size={size} value={units.unitsType} onChange={e => onChangeUnitType(e.currentTarget.value)}>
                     <option value="none">None</option>
+                    <option value="short">Short</option>
                     <option value="percent">Percent: 1 -&gt; 100%</option>
                     <option value="percent%">Percent: 1 -&gt; 1%</option>
                     <option value="time">Time: ms/s/m/.../day</option>
@@ -214,23 +237,23 @@ export const UnitPicker = ({ value, onChange,size="md" }: Props) => {
 export const formatUnit = (v0: any, units: Unit[], decimal: number) => {
     if (!isNumber(v0)) {
         if (units.length == 0) {
-            return v0 
+            return v0
         } else {
             return v0 + units[0].unit
         }
     }
 
-    let v = v0 
+    let v = v0
     if (v0 < 0) {
         v = -1 * v0
     }
 
     if (isEmpty(units)) {
-        return  v0 < 0 ?  round(v, decimal) * -1 : round(v, decimal)
+        return v0 < 0 ? round(v, decimal) * -1 : round(v, decimal)
     }
 
     if (v == 0) {
-        return v 
+        return v
     }
 
     let index = 0;
@@ -269,10 +292,10 @@ export const formatUnit = (v0: any, units: Unit[], decimal: number) => {
 
     const unit = units[index]
     const res = calcValue(v, unit)
-    if (v0 <0) {
-        return round(res,decimal) * -1 + unit.unit
+    if (v0 < 0) {
+        return round(res, decimal) * -1 + unit.unit
     } else {
-        return round(res,decimal) + unit.unit
+        return round(res, decimal) + unit.unit
     }
 }
 
