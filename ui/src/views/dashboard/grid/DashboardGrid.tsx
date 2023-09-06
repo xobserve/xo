@@ -17,7 +17,7 @@ const ReactGridLayout = WidthProvider(RGL);
 
 import { DashboardHeaderHeight, GRID_CELL_HEIGHT, GRID_CELL_VMARGIN, GRID_COLUMN_COUNT } from "src/data/constants";
 import { updateGridPos } from "utils/dashboard/panel";
-import { Box, Grid, Text, useColorModeValue } from "@chakra-ui/react";
+import { Box, useColorModeValue } from "@chakra-ui/react";
 import React, { CSSProperties, memo, useCallback, useMemo, useRef } from "react";
 import uPlot from "uplot";
 import AutoSizer from "react-virtualized-auto-sizer";
@@ -45,7 +45,7 @@ const DashboardGrid = memo((props: GridProps) => {
     const viewPanel = useSearchParam("viewPanel")
 
     const { dashboard,panels, onChange } = props
-
+    const [finalWidth, setFinalWidth] = React.useState(0);
     useKey(
         "Escape",
         () => {
@@ -155,18 +155,18 @@ const DashboardGrid = memo((props: GridProps) => {
                     return null;
                 }
 
-                // if (finalWidth == 0) {
-                //     setFinalWidth(width)
-                // } else {
-                //     if (h.current) {
-                //         clearTimeout(h.current)
-                //     }
+                if (finalWidth == 0) {
+                    setFinalWidth(width)
+                } else {
+                    if (h.current) {
+                        clearTimeout(h.current)
+                    }
 
-                //     h.current = setTimeout(() => {
-                //         setFinalWidth(width)
-                //         clearTimeout(h.current)
-                //     },200)
-                // }
+                    h.current = setTimeout(() => {
+                        setFinalWidth(width)
+                        clearTimeout(h.current)
+                    },300)
+                }
 
                 const draggable = width <= 769 ? false : dashboard.editable;
 
@@ -184,7 +184,7 @@ const DashboardGrid = memo((props: GridProps) => {
                     // finalWidth > 0
                     // &&
                     <Box
-                        key={gridWidth}  
+                        key={finalWidth}  
                         width={width}
                         height="100%"
                         className="grid-layout-wrapper"
