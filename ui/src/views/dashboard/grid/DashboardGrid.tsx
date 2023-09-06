@@ -39,6 +39,7 @@ let windowHeight = 1200;
 let windowWidth = 1920;
 
 let gridWidth = 0;
+let gridkey = 0
 const DashboardGrid = memo((props: GridProps) => {
     console.log("dashboard grid rendered:",props.panels)
     const inEdit = useSearchParam('edit')
@@ -170,6 +171,11 @@ const DashboardGrid = memo((props: GridProps) => {
 
                 const draggable = width <= 769 ? false : dashboard.editable;
 
+                if (Math.abs(width - gridkey) > 6) {
+                    gridkey = width 
+                } 
+                console.log("here33333:",width,gridWidth,gridkey)
+
                 // This is to avoid layout re-flows, accessing window.innerHeight can trigger re-flow
                 // We assume here that if width change height might have changed as well
                 if (gridWidth !== width) {
@@ -180,12 +186,12 @@ const DashboardGrid = memo((props: GridProps) => {
 
                 // we need a finalWidth key to force refreshing the grid layout
                 // it solves the issues when resizing browser window
-                console.log("here33333:",width)
+
                 return <>{
                     // finalWidth > 0
                     // &&
                     <Box
-                        key={width}  
+                        key={gridkey}  
                         width={width}
                         height="100%"
                         className="grid-layout-wrapper"
@@ -194,6 +200,7 @@ const DashboardGrid = memo((props: GridProps) => {
                             ?
                             <ReactGridLayout
                                 width={width}
+                                isBounded
                                 isDraggable={draggable}
                                 isResizable={draggable}
                                 containerPadding={[0, 0]}
