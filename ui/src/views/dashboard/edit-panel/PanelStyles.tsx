@@ -15,7 +15,7 @@ import { ColorPicker } from "src/components/ColorPicker"
 import { Panel, PanelEditorProps, PanelType } from "types/dashboard"
 import { PanelBorderType, PanelTitleDecorationType } from "types/panel/styles"
 import PanelAccordion from "./Accordion"
-import { EditorInputItem } from "../../../components/editor/EditorItem"
+import { EditorInputItem, EditorNumberItem } from "../../../components/editor/EditorItem"
 import PanelEditItem from "./PanelEditItem"
 import DecorationSelect from "src/components/largescreen/components/DecorationSelect"
 import BorderSelect from "src/components/largescreen/components/BorderSelect"
@@ -40,8 +40,8 @@ const PanelStyles = ({ panel, onChange }: PanelEditorProps) => {
     // }
     return (
         <>
-            {<PanelAccordion title={t.palette} defaultOpen>
-                <PanelEditItem desc={t1.paletteTips}>
+            {<PanelAccordion title={t.basic} defaultOpen>
+                <PanelEditItem title={t.palette} desc={t1.paletteTips}>
                     <VStack spacing={1} alignItems="left">
                     {
                         Object.keys(paletteMap).map(name => <HStack width="fit-content" spacing={0}  borderRadius={4} borderWidth={"2px"} borderColor={name != panel.styles.palette ? "transparent" : useColorModeValue("brand.300","brand.500")}  cursor="pointer" onClick={e => {
@@ -55,6 +55,11 @@ const PanelStyles = ({ panel, onChange }: PanelEditorProps) => {
                         </HStack>)
                     }
                     </VStack>
+                </PanelEditItem>
+                <PanelEditItem title="width" desc="panel width in dashboard, value range is [1,24], 24 is the same as 100%">
+                    <EditorNumberItem min={1} max={24} step={1}  value={panel.gridPos.w} onChange={v => onChange(panel => {
+                        panel.gridPos.w = v
+                    })} />
                 </PanelEditItem>
             </PanelAccordion>}
             <PanelAccordion title={t1.panelBorder} defaultOpen>
