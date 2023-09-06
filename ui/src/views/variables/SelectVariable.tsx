@@ -42,7 +42,7 @@ interface Props {
 
 const vkey = "variables"
 const SelectVariables = ({ variables }: Props) => {
-    return (<HStack spacing={2}>
+    return (variables.length > 0 && <HStack spacing={2}>
         {variables.map(v => {
             return <SelectVariable key={v.id} v={v} />
         })}
