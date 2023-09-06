@@ -18,9 +18,7 @@ import (
 
 	"bytes"
 	"io"
-	"net"
 	"net/http"
-	"time"
 
 	"github.com/DataObserve/datav/backend/pkg/common"
 	"github.com/DataObserve/datav/backend/pkg/log"
@@ -32,14 +30,6 @@ var logger = log.RootLogger.New("logger", "datasource")
 func Proxy(c *gin.Context) {
 	targetURL := c.Query("proxy_url")
 
-	client := &http.Client{
-		Transport: &http.Transport{
-			DialContext: (&net.Dialer{
-				Timeout:   time.Duration(time.Minute * 1),
-				KeepAlive: time.Duration(time.Minute * 2),
-			}).DialContext,
-		},
-	}
 	// read request json body and write to new request body
 	jsonData, _ := c.GetRawData()
 	reqBody := bytes.NewBuffer(jsonData)
@@ -68,6 +58,7 @@ func Proxy(c *gin.Context) {
 		c.JSON(502, common.RespError(err.Error()))
 		return
 	}
+	defer res.Body.Close()
 
 	buffer := bytes.NewBuffer(nil)
 	io.Copy(buffer, res.Body)

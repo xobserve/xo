@@ -26,6 +26,15 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+var client = &http.Client{
+	Transport: &http.Transport{
+		DialContext: (&net.Dialer{
+			Timeout:   time.Duration(time.Minute * 15),
+			KeepAlive: time.Duration(time.Minute * 1),
+		}).DialContext,
+	},
+}
+
 func ProxyDatasource(c *gin.Context) {
 	dsID, _ := strconv.ParseInt(c.Param("id"), 10, 64)
 	// find datasource store url
@@ -37,15 +46,6 @@ func ProxyDatasource(c *gin.Context) {
 	}
 
 	targetURL := c.Param("path")
-
-	client := &http.Client{
-		Transport: &http.Transport{
-			DialContext: (&net.Dialer{
-				Timeout:   time.Duration(time.Minute * 15),
-				KeepAlive: time.Duration(time.Minute * 1),
-			}).DialContext,
-		},
-	}
 
 	var params = url.Values{}
 
@@ -85,6 +85,7 @@ func ProxyDatasource(c *gin.Context) {
 		c.JSON(502, common.RespError(err.Error()))
 		return
 	}
+	defer res.Body.Close()
 
 	buffer := bytes.NewBuffer(nil)
 	io.Copy(buffer, res.Body)
