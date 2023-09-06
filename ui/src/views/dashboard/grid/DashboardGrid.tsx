@@ -45,7 +45,7 @@ const DashboardGrid = memo((props: GridProps) => {
     const viewPanel = useSearchParam("viewPanel")
 
     const { dashboard,panels, onChange } = props
-    const [finalWidth, setFinalWidth] = React.useState(0);
+    // const [finalWidth, setFinalWidth] = React.useState(null);
     useKey(
         "Escape",
         () => {
@@ -155,18 +155,18 @@ const DashboardGrid = memo((props: GridProps) => {
                     return null;
                 }
 
-                if (finalWidth == 0) {
-                    setFinalWidth(width)
-                } else {
-                    if (h.current) {
-                        clearTimeout(h.current)
-                    }
+                // if (finalWidth == 0) {
+                //     setFinalWidth(width)
+                // } else {
+                //     if (h.current) {
+                //         clearTimeout(h.current)
+                //     }
 
-                    h.current = setTimeout(() => {
-                        setFinalWidth(width)
-                        clearTimeout(h.current)
-                    },300)
-                }
+                //     h.current = setTimeout(() => {
+                //         setFinalWidth(width)
+                //         clearTimeout(h.current)
+                //     },300)
+                // }
 
                 const draggable = width <= 769 ? false : dashboard.editable;
 
@@ -177,14 +177,12 @@ const DashboardGrid = memo((props: GridProps) => {
                     windowWidth = window.innerWidth;
                     gridWidth = width;
                 }
-
+                
                 // we need a finalWidth key to force refreshing the grid layout
                 // it solves the issues when resizing browser window
                 return <>{
-                    // finalWidth > 0
-                    // &&
                     <Box
-                        key={finalWidth}  
+                        // key={finalWidth}  
                         width={width}
                         height="100%"
                         className="grid-layout-wrapper"
