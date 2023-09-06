@@ -13,8 +13,8 @@
 export enum ValueCalculationType {
     Sum = "Sum",
     Avg = "Avg",
-    Min = "Minimum",
-    Max = "Maximum",
+    Min = "Min",
+    Max = "Max",
     First = "First",
     Last = "Last",
     Count = "Count",
