@@ -136,7 +136,7 @@ const SeriesTable = memo(({ props, data, nearestSeries, filterIdx, mode, onSelec
                 }
             }}>
                 <Table variant='unstyled' size="sm" p="0">
-                    {props.panel.plugins.graph.legend.showValuesName && <Thead>
+                    {props.panel.plugins.graph?.legend.showValuesName && <Thead>
                         <Tr>
                             <Th> </Th>
                             {values[0].value.map(v => <Th width="55px" fontSize="0.8remt" pt="0" pb="1" pr="1" pl="0" textAlign="center" fontWeight="500" onClick={() => {
