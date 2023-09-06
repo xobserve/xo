@@ -30,7 +30,7 @@ import { initPanelStyles } from "src/data/panel/initStyles"
 import Border from "src/components/largescreen/components/Border"
 import useFullscreen from "hooks/useFullscreen"
 import { initDashboard } from "src/data/dashboard"
-import { initPanel } from "src/data/panel/initPanel"
+import { initPanel, initPanelType } from "src/data/panel/initPanel"
 import { DashboardHeaderHeight } from "src/data/constants"
 import { updateTimeToNewest } from "src/components/DatePicker/DatePicker"
 import { $variables } from "../variables/store"
@@ -155,7 +155,7 @@ const DashboardWrapper = ({ dashboardId, sideWidth }) => {
     const initDash = (dash) => {
         dash.data.panels.forEach((panel: Panel) => {
             // console.log("33333 before",cloneDeep(panel.plugins))
-            panel = defaultsDeep(panel, delete initPanel().plugins.text)
+            panel = defaultsDeep(panel, delete initPanel().plugins[initPanelType])
             panel.plugins[panel.type] = defaultsDeep(panel.plugins[panel.type], initPanelPlugins()[panel.type])
             panel.styles = defaultsDeep(panel.styles, initPanelStyles)
             // console.log("33333 after",cloneDeep(panel.plugins[panel.type]),cloneDeep(panel.overrides))

@@ -15,15 +15,15 @@ import { initPanelPlugins } from "./initPlugins";
 import { initPanelStyles } from "./initStyles";
 import { DatasourceMaxDataPoints, DatasourceMinInterval, InitTestDataDatasourceId } from "../constants";
 
+export const initPanelType = PanelType.Graph
 export const initPanel = (id?) => {
-    const type = PanelType.Text
     const p: Panel = {
         desc: "",
         collapsed: false,
-        type: type,
+        type: initPanelType,
         gridPos: { x: 0, y: 0, w: 13, h: 20 },
         plugins: {
-            [type]: initPanelPlugins()[type]
+            [initPanelType]: initPanelPlugins()[initPanelType]
         },
         datasource: initDatasource,
         styles: initPanelStyles,
