@@ -118,7 +118,7 @@ export const initPanelPlugins = (): PanelPlugins => {
             tableWidth: 100,
             column: {
                 colorTitle: defaultColor,
-                align: "left",
+                align: "auto",
                 enableSort: false,
                 enableFilter: false
             },

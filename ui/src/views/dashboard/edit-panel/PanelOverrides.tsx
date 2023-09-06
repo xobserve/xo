@@ -67,6 +67,7 @@ const PanelOverrides = ({ panel, onChange, data }: PanelEditorProps) => {
     }, [data])
 
 
+
     const allRules = getPanelOverridesRules(panel.type)
 
     const onAddOverride = () => {

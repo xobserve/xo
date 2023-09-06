@@ -273,10 +273,6 @@ export const PanelComponent = ({ dashboard, panel, variables, onRemovePanel, onH
             }
         }
 
-        if (edit == panel.id.toString()) {
-            dispatch({ type: PanelDataEvent + panel.id, data: data })
-        }
-
         console.timeEnd("time used - query data for panel:")
     }
 
@@ -300,17 +296,23 @@ export const PanelComponent = ({ dashboard, panel, variables, onRemovePanel, onH
     console.log("panel grid rendered, panel data: ", panelData)
     const data = useMemo(() => {
         const d = cloneDeep(panelData)
+        let res = d 
         if (panel.enableTransform && d) {
             const transform = genDynamicFunction(panel.transform);
             if (isFunction(transform)) {
                 const tData = transform(d, lodash, moment)
                 console.log("panel grid rendered, transform data: ", tData)
-                return tData
+                res =  tData
             } else {
-                return d
+                res =  d
             }
         }
-        return d
+
+        if (edit == panel.id.toString()) {
+            dispatch({ type: PanelDataEvent + panel.id, data: res })
+        }
+
+        return res
     }, [panel.transform, panel.enableTransform, panelData])
 
     return <Box height={height} width={width} className={panel.styles.border == "None" && panel.styles.borderOnHover ? "hover-bordered" : null} border="1px solid transparent" position="relative">
