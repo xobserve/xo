@@ -89,7 +89,7 @@
     "ts-key-enum": "^2.0.0",
     "tsparticles": "^2.9.3",
     "tween-functions": "^1.2.0",
-    "uplot": "^1.6.24",
+    "uplot": "^1.6.25",
     "use-bus": "^2.5.2",
     "use-deep-compare-effect": "^1.8.1",
     "use-immer": "^0.9.0",

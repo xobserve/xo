@@ -24,7 +24,7 @@ export const initPanelStyles: PanelStyles = {
             height: '50px',
             margin: '10px'
         },
-        fontSize: '1rem',
+        fontSize: '14px',
         fontWeight: '500',
         color: 'inherit',
         paddingTop: '0px',
