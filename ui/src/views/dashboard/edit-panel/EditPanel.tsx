@@ -11,7 +11,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { Box, Button, Flex, HStack,  Modal, ModalBody, ModalContent, ModalHeader, ModalOverlay,  Tab, TabIndicator, TabList, TabPanel, TabPanels, Tabs, Text, useDisclosure, useMediaQuery } from "@chakra-ui/react"
+import { Box, Button, Flex, HStack, Modal, ModalBody, ModalContent, ModalHeader, ModalOverlay, Tab, TabIndicator, TabList, TabPanel, TabPanels, Tabs, Text, useDisclosure, useMediaQuery } from "@chakra-ui/react"
 import { ColorModeSwitcher } from "src/components/ColorModeSwitcher"
 import { memo, useCallback, useEffect, useState } from "react"
 import { Dashboard, Panel, PanelType } from "types/dashboard"
@@ -67,10 +67,10 @@ interface EditPanelProps {
 
 const StorageHideDsKey = "hide-ds-"
 
-const EditPanelWrapper =  memo((props: EditPanelProps) => {
+const EditPanelWrapper = memo((props: EditPanelProps) => {
     const edit = useSearchParam('edit')
     useLocation()
-    return <EditPanel {...props} edit={edit}/>
+    return <EditPanel {...props} edit={edit} />
 })
 
 export default EditPanelWrapper
@@ -78,7 +78,7 @@ export default EditPanelWrapper
 const EditPanel = memo(({ dashboard, onChange, edit }: EditPanelProps) => {
     const t = useStore(commonMsg)
     const t1 = useStore(panelMsg)
-    
+
 
     const [tempPanel, setTempPanel] = useImmer<Panel>(null)
     const [rawPanel, setRawPanel] = useState<Panel>(null)
@@ -88,8 +88,6 @@ const EditPanel = memo(({ dashboard, onChange, edit }: EditPanelProps) => {
     const [data, setData] = useState(null)
 
     useLandscapeMode(!isEmpty(edit))
-    useLeavePageConfirm(dashboard.data.enableUnsavePrompt ? pageChanged : false)
-
 
     useBus(
         DashboardSavedEvent,
@@ -98,7 +96,7 @@ const EditPanel = memo(({ dashboard, onChange, edit }: EditPanelProps) => {
         },
         []
     )
- 
+
     useBus(
         OnDashboardSaveEvent,
         () => {
@@ -123,17 +121,17 @@ const EditPanel = memo(({ dashboard, onChange, edit }: EditPanelProps) => {
             if (p) {
                 setTempPanel(p)
                 onOpen()
-                const hide = storage.get(StorageHideDsKey + dashboard.id +  p.id)
+                const hide = storage.get(StorageHideDsKey + dashboard.id + p.id)
                 if (hide !== undefined) {
                     setHideDatasource(hide)
                 }
             } else {
                 onDiscard()
             }
-        }  else {
+        } else {
             if (!pageChanged) {
                 setTempPanel(null)
-                onClose() 
+                onClose()
             }
         }
     }, [edit])
@@ -148,7 +146,7 @@ const EditPanel = memo(({ dashboard, onChange, edit }: EditPanelProps) => {
             setRawPanel(cloneDeep(tempPanel))
             return
         }
-        
+
         const changed = !isEqual(rawPanel, tempPanel)
 
         setPageChanged(changed)
@@ -268,7 +266,7 @@ const EditPanel = memo(({ dashboard, onChange, edit }: EditPanelProps) => {
                                             return <PanelGrid width={width} height={height} key={tempPanel.id + tempPanel.type} dashboard={dashboard} panel={tempPanel} sync={null} />
                                         }}
                                     </AutoSizer>
-                                    {!tempPanel.plugins[tempPanel.type].disableDatasource && <Box zIndex={1} position="absolute" right="0" bottom={hideDatasource ? "0" : "-35px"} opacity={hideDatasource ? 0.8 : 0.4} cursor="pointer" className={`hover-text ${hideDatasource ? "color-text" : null}`} fontSize=".8rem" onClick={() => { setHideDatasource(!hideDatasource); storage.set(StorageHideDsKey + dashboard.id + tempPanel.id, !hideDatasource)}}>{hideDatasource ? <FaArrowUp /> : <FaArrowDown />}</Box>}
+                                    {!tempPanel.plugins[tempPanel.type].disableDatasource && <Box zIndex={1} position="absolute" right="0" bottom={hideDatasource ? "0" : "-35px"} opacity={hideDatasource ? 0.8 : 0.4} cursor="pointer" className={`hover-text ${hideDatasource ? "color-text" : null}`} fontSize=".8rem" onClick={() => { setHideDatasource(!hideDatasource); storage.set(StorageHideDsKey + dashboard.id + tempPanel.id, !hideDatasource) }}>{hideDatasource ? <FaArrowUp /> : <FaArrowDown />}</Box>}
                                 </Box>
                                 {/* panel datasource section */}
                                 {!tempPanel.plugins[tempPanel.type].disableDatasource &&
@@ -294,10 +292,10 @@ const EditPanel = memo(({ dashboard, onChange, edit }: EditPanelProps) => {
                                                     <TabPanel px="0" pt="1" pb="0">
                                                         <EditPanelTransform panel={tempPanel} onChange={setTempPanel} />
                                                     </TabPanel>
-                                                    {tempPanel.type == PanelType.Graph && tempPanel.plugins.graph.enableAlert && 
-                                                    <TabPanel px="0" pt="1" pb="0">
-                                                        <EditPanelAlert panel={tempPanel} onChange={setTempPanel} />
-                                                    </TabPanel>}
+                                                    {tempPanel.type == PanelType.Graph && tempPanel.plugins.graph.enableAlert &&
+                                                        <TabPanel px="0" pt="1" pb="0">
+                                                            <EditPanelAlert panel={tempPanel} onChange={setTempPanel} />
+                                                        </TabPanel>}
                                                 </TabPanels>
                                             </Tabs>
 
@@ -349,6 +347,7 @@ const EditPanel = memo(({ dashboard, onChange, edit }: EditPanelProps) => {
                     </ModalBody>
                 </ModalContent>}
         </Modal>
+        {edit && dashboard.data.enableUnsavePrompt  && <PageLeave pageChanged={pageChanged}/>}
     </>)
 })
 
@@ -372,7 +371,7 @@ const EditPanel = memo(({ dashboard, onChange, edit }: EditPanelProps) => {
 
 const loadablePanels = {
     [PanelType.Text]: TextPanelEditor,
-    [PanelType.Graph]:GraphPanelEditor,
+    [PanelType.Graph]: GraphPanelEditor,
     [PanelType.Table]: TablePanelEditor,
     [PanelType.NodeGraph]: NodeGraphPanelEditor,
     [PanelType.Echarts]: EchartsPanelEditor,
@@ -401,3 +400,9 @@ const CustomPanelEditor = memo(({ tempPanel, setTempPanel, data }: CustomPanelEd
 
     return null
 })
+
+
+const PageLeave = ({ pageChanged }) => {
+    useLeavePageConfirm(pageChanged)
+    return <></>
+}

@@ -174,7 +174,6 @@ const DashboardGrid = memo((props: GridProps) => {
                 if (Math.abs(width - gridkey) > 6) {
                     gridkey = width 
                 } 
-                console.log("here33333:",width,gridWidth,gridkey)
 
                 // This is to avoid layout re-flows, accessing window.innerHeight can trigger re-flow
                 // We assume here that if width change height might have changed as well

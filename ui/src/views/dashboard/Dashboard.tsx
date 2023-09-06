@@ -227,7 +227,7 @@ const DashboardWrapper = ({ dashboardId, sideWidth }) => {
   
 
     const [isLargeScreen] = useMediaQuery('(min-width: 600px)')
-    
+
     return (<>
         {dashboard ? <Box className="dashboard-container" px={fullscreen ? 0 : (isLargeScreen ? 2 : 3)} width="100%" minHeight="100vh" maxHeight="100vh" overflowY="auto" position="relative">
             {/* <Decoration decoration={dashboard.data.styles.decoration}/> */}

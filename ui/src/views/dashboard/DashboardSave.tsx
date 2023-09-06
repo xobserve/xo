@@ -27,7 +27,6 @@ import FormItem from "src/components/form/Item"
 import { useStore } from "@nanostores/react";
 import { commonMsg, dashboardSaveMsg } from "src/i18n/locales/en";
 import { dateTimeFormat } from "utils/datetime/formatter";
-import { asyncSleep } from "utils/async";
 
 interface Props {
     dashboard: Dashboard
@@ -47,8 +46,10 @@ const DashboardSave = ({ dashboard }: Props) => {
     const [updateChanges, setUpdateChanges] = useState("")
     const [pressed] = useKeyboardJs("ctrl+s")
     
+    useLeavePageConfirm(dashboard.data.enableUnsavePrompt ? pageChanged : false)
+
     useBus(
-        SaveDashboardEvent,
+        SaveDashboardEvent, 
         () => {
            onSave(false)
         },
@@ -63,7 +64,6 @@ const DashboardSave = ({ dashboard }: Props) => {
 
     }, [pressed])
 
-    useLeavePageConfirm(dashboard.data.enableUnsavePrompt ? pageChanged : false)
 
     useEffect(() => {
         if (!saved && dashboard) {

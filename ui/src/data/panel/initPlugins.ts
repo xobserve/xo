@@ -156,7 +156,6 @@ export const initPanelPlugins = (): PanelPlugins => {
                     `// data: {nodes, edges}
 // return nodes name list, e.g ['node-1', 'node-2']
 function highlightNodes(data, lodash) {
-    console.log("here3333", data)
     const matchingNodeNames = []
     return matchingNodeNames
 }
