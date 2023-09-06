@@ -317,7 +317,7 @@ export const PanelComponent = ({ dashboard, panel, variables, onRemovePanel, onH
             <Box
                 // panel={panel}
                 height={panelInnerHeight}
-                marginLeft={panel.type == PanelType.Graph ? "-10px" : "0px"}
+                // marginLeft={panel.type == PanelType.Graph ? "0px" : "0px"}
             >
                 <CustomPanelRender dashboardId={dashboard.id} panel={panel} data={data} height={panelInnerHeight} width={panelInnerWidth} sync={sync} timeRange={timeRange} />
             </Box>

@@ -156,6 +156,16 @@ const GraphPanelEditor = memo((props: PanelEditorProps) => {
                     panel.plugins.graph.axis.showGrid = v
                 })} />
             </PanelEditItem>
+            <PanelEditItem title="Show X axis">
+                <Switch defaultChecked={panel.plugins.graph.axis.showX} onChange={e => onChange((panel: Panel) => {
+                    panel.plugins.graph.axis.showX = e.currentTarget.checked
+                })} />
+            </PanelEditItem>
+            <PanelEditItem title="Show Y axis">
+                <Switch defaultChecked={panel.plugins.graph.axis.showY} onChange={e => onChange((panel: Panel) => {
+                    panel.plugins.graph.axis.showY = e.currentTarget.checked
+                })} />
+            </PanelEditItem>
             <PanelEditItem title={t.scale}>
                 <RadionButtons options={[{ label: "Linear", value: "linear" }, { label: "Log", value: "log" }]} value={panel.plugins.graph.axis.scale} onChange={v => onChange((panel: Panel) => {
                     panel.plugins.graph.axis.scale = v
@@ -166,6 +176,7 @@ const GraphPanelEditor = memo((props: PanelEditorProps) => {
                     panel.plugins.graph.axis.scaleBase = v
                 })} />
             </PanelEditItem>}
+            
         </PanelAccordion>
 
         <PanelAccordion title="Value">

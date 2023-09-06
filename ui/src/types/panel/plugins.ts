@@ -445,6 +445,8 @@ export interface GraphSettings {
     axis?: {
         label?: string
         showGrid?: boolean
+        showX?: boolean
+        showY?: boolean
         scale?: "linear" | "log"
         scaleBase?: 2 | 10
     },

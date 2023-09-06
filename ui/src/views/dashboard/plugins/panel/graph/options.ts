@@ -55,6 +55,7 @@ export const parseOptions = (config: PanelProps, rawData: SeriesData[], colorMod
     const negativeYUnit = findRuleInOverride(negativeYTarget, GraphRules.SeriesUnit)
 
     const yAxis = [{
+        show: config.panel.plugins.graph.axis.showY,
         grid: {
             show: config.panel.plugins.graph.axis?.showGrid,
             width: 0.5,
@@ -113,6 +114,7 @@ export const parseOptions = (config: PanelProps, rawData: SeriesData[], colorMod
             }
 
             yAxis.push({
+                show: config.panel.plugins.graph.axis.showY,
                 grid: {
                     show: false,
                     width: 0.5,
@@ -199,7 +201,7 @@ export const parseOptions = (config: PanelProps, rawData: SeriesData[], colorMod
             draw: [],
             drawClear: []
         },
-        padding: [0, 15, 0, 1],
+        padding: [0, 15, 0,  config.panel.plugins.graph.axis.showY ? -15 : 10],
         plugins: [
             // tooltipPlugin(config.panel.id),
             // renderStatsPlugin()
@@ -233,6 +235,7 @@ export const parseOptions = (config: PanelProps, rawData: SeriesData[], colorMod
         },
         axes: [
             {
+                show: config.panel.plugins.graph.axis.showX,
                 grid: {
                     show: config.panel.plugins.graph.axis?.showGrid,
                     width: 0.5,

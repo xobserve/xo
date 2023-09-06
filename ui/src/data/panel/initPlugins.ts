@@ -84,6 +84,8 @@ export const initPanelPlugins = (): PanelPlugins => {
             },
             axis: {
                 showGrid: true,
+                showX: true,
+                showY: true,
                 scale: "linear",
                 scaleBase: 2
             },
