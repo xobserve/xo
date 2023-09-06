@@ -201,7 +201,7 @@ export const parseOptions = (config: PanelProps, rawData: SeriesData[], colorMod
             draw: [],
             drawClear: []
         },
-        padding: [0, 15, 0,  config.panel.plugins.graph.axis.showY ? -15 : 10],
+        padding: [0, 15, 5,  config.panel.plugins.graph.axis.showY ? -15 : 10],
         plugins: [
             // tooltipPlugin(config.panel.id),
             // renderStatsPlugin()
