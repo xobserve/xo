@@ -441,6 +441,7 @@ export interface GraphSettings {
         barRadius: number
         barGap: 10
         enableStack: boolean
+        padding: number[]
     }
     axis?: {
         label?: string

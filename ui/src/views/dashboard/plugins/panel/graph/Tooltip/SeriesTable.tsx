@@ -13,7 +13,7 @@
 
 // Render series table in tooltip
 import React from "react";
-import { Box, Flex, HStack, Table, TableContainer, Tbody, Td, Text, Th, Thead, Tr, VStack, useMediaQuery } from "@chakra-ui/react"
+import { Box, HStack, Table, TableContainer, Tbody, Td, Text, Th, Thead, Tr, VStack, useMediaQuery } from "@chakra-ui/react"
 import { formatUnit } from "src/components/Unit"
 import { cloneDeep, orderBy, round } from "lodash"
 import { memo } from "react"

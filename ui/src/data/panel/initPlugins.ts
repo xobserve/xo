@@ -80,7 +80,8 @@ export const initPanelPlugins = (): PanelPlugins => {
                 connectNulls: false,
                 barRadius: 0,
                 barGap: 10,
-                enableStack: false
+                enableStack: false,
+                padding: [null,null,null,null]
             },
             axis: {
                 showGrid: true,
