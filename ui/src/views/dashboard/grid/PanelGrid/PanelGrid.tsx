@@ -28,7 +28,7 @@ import { PanelDataEvent, PanelForceRebuildEvent, TimeChangedEvent } from "src/da
 import { addParamToUrl } from "utils/url";
 import { query_testdata_alerts, run_testdata_query } from "../../plugins/datasource/testdata/query_runner";
 import { run_jaeger_query } from "../../plugins/datasource/jaeger/query_runner";
-import PanelBorder from "../../../../components/largescreen/components/Border";
+import PanelBorder from "src/components/largescreen/components/Border";
 import TitleDecoration from "src/components/largescreen/components/TitleDecoration";
 import PanelDecoration from "src/components/largescreen/components/Decoration";
 import { useDedupEvent } from "hooks/useDedupEvent";
@@ -258,17 +258,21 @@ export const PanelComponent = ({ dashboard, panel, variables, onRemovePanel, onH
                 })
             }
 
-            console.log("here333333311:",panel.id,promises)
-            const res0 = await Promise.all(promises.map(p => p.h))
-            console.log("here333333322:",panel.id)
-            res0.forEach((res,i) => {
-                const id = promises[i].id
-                const currentQuery = promises[i].query
-                setQueryError(res.error)
-                if (!isEmpty(res.data)) {
-                    data.push(res.data)
-                    prevQueryData[id] = res.data
-                    prevQueries.set(id, currentQuery)
+            const res0 = await Promise.allSettled(promises.map(p => p.h))
+            res0.forEach((res0,i) => {
+                if (res0.status == "fulfilled") {
+                    const res = res0.value
+                    const id = promises[i].id
+                    const currentQuery = promises[i].query
+                    setQueryError(res.error)
+                    if (!isEmpty(res.data)) {
+                        data.push(res.data)
+                        prevQueryData[id] = res.data
+                        prevQueries.set(id, currentQuery)
+                    }
+                } else {
+                    console.log("query data error:", res0.reason)
+                    setQueryError(res0.reason)
                 }
             })
         }

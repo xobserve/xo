@@ -62,7 +62,7 @@ export const checkAndTestJaeger = async (ds: Datasource) => {
 
     // test connection status
     try {
-        await requestApi.get(`/proxy?proxy_url=${ds.url}/api/services`)
+        await requestApi.get(`/common/proxy/${ds.id}?proxy_url=${ds.url}/api/services`)
         return true
     } catch (error) {
         return error.message

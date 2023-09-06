@@ -147,7 +147,7 @@ func (s *Server) Start() error {
 		// proxy apis
 		r.Any("/proxy/:id/*path", proxy.ProxyDatasource)
 		r.Any("/proxy/:id", proxy.ProxyDatasource)
-		r.GET("/proxy", proxy.Proxy)
+		r.GET("/common/proxy/:panelId", proxy.Proxy)
 
 		// server a directory called static
 		// ui static files

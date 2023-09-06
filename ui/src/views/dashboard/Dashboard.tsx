@@ -44,7 +44,6 @@ import storage from "utils/localStorage"
 import { PreviousColorModeKey } from "src/data/storage-keys"
 import { isEmpty } from "utils/validate"
 import Loading from "src/components/loading/Loading"
-import { Team } from "types/teams"
 
 
 
