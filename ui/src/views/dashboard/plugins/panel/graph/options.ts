@@ -199,7 +199,7 @@ export const parseOptions = (config: PanelProps, rawData: SeriesData[], colorMod
             draw: [],
             drawClear: []
         },
-        // padding: [0, 10, 0, 1],
+        padding: [0, 15, -10, 1],
         plugins: [
             // tooltipPlugin(config.panel.id),
             // renderStatsPlugin()

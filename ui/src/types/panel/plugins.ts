@@ -422,6 +422,7 @@ export interface GraphSettings {
         mode: "table" | "hidden"
         placement: "bottom" | "right"
         valueCalcs: ValueCalculationType[]
+        showValuesName: boolean
         width: number
         nameWidth: string
         order: {

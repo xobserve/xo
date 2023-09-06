@@ -68,6 +68,11 @@ const GraphPanelEditor = memo((props: PanelEditorProps) => {
                         panel.plugins.graph.legend.valueCalcs = v as any
                     })} />
                 </PanelEditItem>
+                <PanelEditItem title={t1.showValuesName}>
+                    <Switch defaultChecked={panel.plugins.graph.legend.showValuesName} onChange={e => onChange((panel: Panel) => {
+                        panel.plugins.graph.legend.showValuesName = e.currentTarget.checked
+                    })} />
+                </PanelEditItem>
             </>}
         </PanelAccordion>
         <PanelAccordion title={t1.graphStyles}>
@@ -184,7 +189,7 @@ const GraphPanelEditor = memo((props: PanelEditorProps) => {
                 onChange((panel: Panel) => {
                     panel.plugins.graph.clickActions = v
                 })
-            }} actions={panel.plugins.graph.clickActions}/>
+            }} actions={panel.plugins.graph.clickActions} />
         </PanelAccordion>
         <PanelAccordion title="Thresholds">
             <ThresholdEditor value={panel.plugins.graph.thresholds} onChange={(v) => onChange((panel: Panel) => {
@@ -208,7 +213,7 @@ const GraphPanelEditor = memo((props: PanelEditorProps) => {
                 </Select>
             </PanelEditItem>
         </PanelAccordion>
-        
+
         <PanelAccordion title={t1.alertCorrelation}>
             <PanelEditItem title="Enable" desc={t1.alertCorrelationTips}>
                 <Switch defaultChecked={panel.plugins.graph.enableAlert} onChange={e => onChange((panel: Panel) => {
@@ -216,7 +221,7 @@ const GraphPanelEditor = memo((props: PanelEditorProps) => {
                 })} />
             </PanelEditItem>
         </PanelAccordion>
-        {panel.plugins.graph.enableAlert && <AlertFilterEditor panel={panel} onChange={onChange} filter={panel.plugins.graph.alertFilter}/>}
+        {panel.plugins.graph.enableAlert && <AlertFilterEditor panel={panel} onChange={onChange} filter={panel.plugins.graph.alertFilter} />}
     </>
     )
 })

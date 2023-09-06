@@ -62,6 +62,7 @@ export const initPanelPlugins = (): PanelPlugins => {
                 mode: "table",
                 placement: "bottom",
                 valueCalcs: [ValueCalculationType.Last],
+                showValuesName: true,
                 width: 500,
                 nameWidth: '400',
                 order: {

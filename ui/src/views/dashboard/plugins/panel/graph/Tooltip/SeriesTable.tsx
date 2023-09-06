@@ -136,7 +136,7 @@ const SeriesTable = memo(({ props, data, nearestSeries, filterIdx, mode, onSelec
                 }
             }}>
                 <Table variant='unstyled' size="sm" p="0">
-                    <Thead>
+                    {props.panel.plugins.graph.legend.showValuesName && <Thead>
                         <Tr>
                             <Th> </Th>
                             {values[0].value.map(v => <Th width="55px" fontSize="0.8remt" pt="0" pb="1" pr="1" pl="0" textAlign="center" fontWeight="500" onClick={() => {
@@ -147,7 +147,7 @@ const SeriesTable = memo(({ props, data, nearestSeries, filterIdx, mode, onSelec
                                 })
                             }}><HStack spacing={0} justifyContent="end" cursor="pointer"><Text>{v[0]}</Text><Text> {props.panel.plugins.graph?.legend.order.by == v[0] && <Text fontSize="0.6rem" opacity="0.7" position="absolute" top="3.5px">{props.panel.plugins.graph.legend.order.sort == "asc" ? <FaChevronUp /> :<FaChevronDown />}</Text>}</Text></HStack></Th>)}
                         </Tr>
-                    </Thead>
+                    </Thead>}
                     <Tbody>
                         {values.map((v, i) => {
                             if ((mode == seriesTableMode.Tooltip) && inactiveSeries.includes(v.name)) {

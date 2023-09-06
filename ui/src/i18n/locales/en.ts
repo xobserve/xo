@@ -424,6 +424,7 @@ export const graphPanelMsg = i18n("graphPanel", {
   "nameWidth": "Name width",
   "nameWidthTips": "width of legend name, support 'full' or any number",
   "values": "Values",
+  "showValuesName": "Show values name",
   "valuesTips": "caculate values for legend&tooltip to show",
   "graphStyles": "Graph styles",
   "lineWidth": "Line width",
