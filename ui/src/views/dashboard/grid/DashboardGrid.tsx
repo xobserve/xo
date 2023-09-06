@@ -45,7 +45,7 @@ const DashboardGrid = memo((props: GridProps) => {
     const viewPanel = useSearchParam("viewPanel")
 
     const { dashboard,panels, onChange } = props
-    // const [finalWidth, setFinalWidth] = React.useState(null);
+
     useKey(
         "Escape",
         () => {
@@ -165,7 +165,7 @@ const DashboardGrid = memo((props: GridProps) => {
                 //     h.current = setTimeout(() => {
                 //         setFinalWidth(width)
                 //         clearTimeout(h.current)
-                //     },300)
+                //     },200)
                 // }
 
                 const draggable = width <= 769 ? false : dashboard.editable;
@@ -177,12 +177,15 @@ const DashboardGrid = memo((props: GridProps) => {
                     windowWidth = window.innerWidth;
                     gridWidth = width;
                 }
-                
+
                 // we need a finalWidth key to force refreshing the grid layout
                 // it solves the issues when resizing browser window
+                console.log("here33333:",width)
                 return <>{
+                    // finalWidth > 0
+                    // &&
                     <Box
-                        // key={finalWidth}  
+                        key={width}  
                         width={width}
                         height="100%"
                         className="grid-layout-wrapper"
