@@ -67,6 +67,7 @@ import GeoMapPanelWrapper from "../../plugins/panel/geomap/GeoMap";
 import LogPanelWrapper from "../../plugins/panel/log/Log";
 import BarPanelWrapper from "../../plugins/panel/bar/Bar";
 import AlertPanel from "../../plugins/panel/alert/Alert";
+import ErrorBoundary from "components/ErrorBoudary";
 interface PanelGridProps {
     dashboard: Dashboard
     panel: Panel
@@ -137,7 +138,9 @@ export const PanelGrid = memo((props: PanelGridProps) => {
 
     return (
         <PanelBorder width={props.width} height={props.height} border={props.panel.styles?.border}>
+            <ErrorBoundary>
             {depsInited && <PanelComponent key={props.panel.id + forceRenderCount} {...props} timeRange={tr} variables={variables} /> }
+            </ErrorBoundary>
         </PanelBorder>
     )
 })
