@@ -3,6 +3,9 @@ import customColors from "./colors";
 
 export function customClasses(props) {
     return {
+        ".panel-bg": {
+            bg: mode('rgb(248 250 252)','rgba(255,255,255,0.04)')(props)
+        },
         ".highlight-bg": {
             background: 'brand.50',
             borderRadius: "6px",
