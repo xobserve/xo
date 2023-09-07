@@ -20,6 +20,8 @@ import { commonMsg } from "src/i18n/locales/en"
 import { useStore } from "@nanostores/react"
 import { getInitUnits } from "src/data/panel/initPlugins"
 import { isEmpty } from "utils/validate"
+import { VariableCurrentValue } from "src/data/variable"
+import { replaceWithVariables } from "utils/variable"
 
 interface Props {
     value: Units
@@ -160,6 +162,16 @@ export const UnitPicker = ({ value, onChange, size = "md" }: Props) => {
                         }]
                 })
                 break
+            case "format":
+                setUnits({
+                    unitsType: t,
+                    units: [{
+                        operator: "x",
+                        rhs: 0,
+                        unit: `$\{${VariableCurrentValue}\}`
+                    }]
+                })
+                break
             case "custom":
                 setUnits({
                     unitsType: t,
@@ -198,6 +210,7 @@ export const UnitPicker = ({ value, onChange, size = "md" }: Props) => {
                     <option value="percent%">Percent: 1 -&gt; 1%</option>
                     <option value="time">Time: ms/s/m/.../day</option>
                     <option value="bytes">Bytes: b/KB/MB/GB</option>
+                    <option value="format">String format</option>
                     <option value="custom">Custom units</option>
                 </Select>
                 {units.unitsType == "custom" && <FaPlus cursor="pointer" onClick={onAddUnit} opacity="0.8" fontSize="sm" />}
@@ -206,23 +219,23 @@ export const UnitPicker = ({ value, onChange, size = "md" }: Props) => {
                 {units.units?.map((unit, i) => {
                     return <HStack>
 
-                        <Button size="sm" onClick={() => {
+                        <Button isDisabled={units.unitsType == "format"} size="sm" onClick={() => {
                             unit.operator = unit.operator == 'x' ? '/' : 'x'
                             setUnits(cloneDeep(units))
                         }}>{unit.operator}</Button>
 
-                        <NumberInput size="sm" value={unit.rhs} onChange={(_, v) => {
+                        <NumberInput isDisabled={units.unitsType == "format"} size="sm" value={unit.rhs} onChange={(_, v) => {
                             unit.rhs = v
                             setUnits(cloneDeep(units))
                         }}>
                             <NumberInputField />
                         </NumberInput>
 
-                        <Input width="100px" size="sm" value={unit.unit} placeholder="e.g % , bytes" onChange={e => {
+                        <Input width="200px" size="sm" value={unit.unit} placeholder="e.g % , bytes" onChange={e => {
                             unit.unit = e.currentTarget.value
                             setUnits(cloneDeep(units))
                         }} />
-                        <FaMinus opacity="0.8" cursor="pointer" onClick={() => onRemoveUnit(i)} fontSize="0.9rem" />
+                        {units.unitsType != "format" && <FaMinus opacity="0.8" cursor="pointer" onClick={() => onRemoveUnit(i)} fontSize="0.9rem" />}
                         {i != 0 && <FaArrowUp opacity="0.8" cursor="pointer" onClick={() => onLiftUnit(i)} fontSize="0.9rem" />}
                     </HStack>
 
@@ -235,6 +248,14 @@ export const UnitPicker = ({ value, onChange, size = "md" }: Props) => {
 
 // v0: string or number
 export const formatUnit = (v0: any, units: Unit[], decimal: number) => {
+    if (units.length == 1 && units[0].operator == "x" && units[0].rhs == 0) {
+        // string format unit
+        const v = replaceWithVariables(units[0].unit, {
+            [VariableCurrentValue]: v0
+        })
+        return v
+    }
+
     if (!isNumber(v0)) {
         if (units.length == 0) {
             return v0
