@@ -4,7 +4,10 @@ import customColors from "./colors";
 export function customClasses(props) {
     return {
         ".panel-bg": {
-            bg: mode('rgb(251 253 254)','rgba(255,255,255,0.03)')(props)
+            bg: mode('rgba(251,253,254,1)','rgba(255,255,255,0.02)')(props)
+        },
+        ".panel-bg-alpha": {
+            bg: mode('rgba(251,253,254,0.3)','rgba(255,255,255,0.03)')(props)
         },
         ".highlight-bg": {
             background: 'brand.50',

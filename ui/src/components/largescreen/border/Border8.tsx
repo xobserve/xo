@@ -68,7 +68,7 @@ const BorderBox8 = forwardRef((
   
   return (
     <Box key={new Date().getTime()} className={classNames} style={style} ref={domRef} sx={cssStyles}>
-      <svg className='dv-border-svg-container' width={width} height={height}>
+      <svg className='dv-border-svg-container' width={width} height={height} style={{zIndex: 1}}>
         <defs>
           <path id={path} d={pathD} fill='transparent' />
           <radialGradient id={gradient} cx='50%' cy='50%' r='50%'>

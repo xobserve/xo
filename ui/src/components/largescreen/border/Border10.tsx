@@ -42,7 +42,7 @@ const BorderBox10 = forwardRef(({ children, className, style, color = [], backgr
 
     return (
         <Box className={classNames} style={styles} ref={domRef} sx={cssStyles}>
-            <svg className='dv-border-svg-container' width={width} height={height}>
+            <svg className='dv-border-svg-container' width={width} height={height} style={{zIndex: 1}}>
                 <polygon fill={backgroundColor} points={`
           4, 0 ${width - 4}, 0 ${width}, 4 ${width}, ${height - 4} ${width - 4}, ${height}
           4, ${height} 0, ${height - 4} 0, 4

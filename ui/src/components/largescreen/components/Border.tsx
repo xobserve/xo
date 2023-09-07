@@ -60,10 +60,9 @@ const Border = ({ border, children,width,height }) => {
         case PanelBorderType.Border13:
             return <BorderBox13 style={{width,height}}>{children}</BorderBox13>
         default:
-            return <Box className="bordered" height={height} width={width}>{children}</Box>
+            return <Box  height={height} width={width}>{children}</Box>
     }
 }
 
 
 export default Border
-
