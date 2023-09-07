@@ -12,7 +12,7 @@
 // limitations under the License.
 
 
-import { isEmpty, round } from "lodash"
+import { cloneDeep, isEmpty, round } from "lodash"
 import { Panel, PanelQuery } from "types/dashboard"
 import { TimeRange } from "types/time"
 import { prometheusToPanels } from "./transformData"
@@ -202,7 +202,7 @@ export const replacePrometheusQueryWithVariables = (query: PanelQuery,interval: 
     const formats = parseVariableFormat(query.metrics);
     for (const f of formats) {
         if (f == VariableInterval) {
-            query.metrics = query.metrics.replace(`\${${f}}`, interval);
+            query.metrics = query.metrics.replaceAll(`\${${f}}`, interval);
             continue;
         }
         
@@ -214,10 +214,9 @@ export const replacePrometheusQueryWithVariables = (query: PanelQuery,interval: 
             } else {
                 selected = v.selected?.split(VariableSplitChar) ?? []
             }
-
             const joined = selected.join('|')
             if (joined) {
-                query.metrics = query.metrics.replace(`\${${f}}`,joined );
+                query.metrics = query.metrics.replaceAll(`\${${f}}`,joined );
             }
         }
     }   

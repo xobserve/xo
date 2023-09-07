@@ -34,11 +34,11 @@ export const replaceWithVariables = (s: string, extraVars?: {
     for (const f of formats) {
         const extrav = extraVars && extraVars[f]
         if (extrav) {
-            s = s.replace(`\${${f}}`, extrav.toString());
+            s = s.replaceAll(`\${${f}}`, extrav.toString());
         } else {
             const v = vars.find(v => v.name ==f)
             if (v) {
-                s = s.replace(`\${${f}}`, v.selected);
+                s = s.replaceAll(`\${${f}}`, v.selected);
             }
         }
        
@@ -90,7 +90,7 @@ export const  replaceWithVariablesHasMultiValues =  (s: string, replaceAllWith?)
             }
 
        
-            res = selected.map(v => s.replace(`\${${f}}`, v))
+            res = selected.map(v => s.replaceAll(`\${${f}}`, v))
         }
     }
 
