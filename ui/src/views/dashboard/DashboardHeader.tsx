@@ -20,7 +20,6 @@ import { MdSync } from "react-icons/md"
 import { TimeRefreshEvent } from "src/data/bus-events"
 import ReserveUrls from "src/data/reserve-urls"
 import { Dashboard } from "types/dashboard"
-import { Team } from "types/teams"
 import  { dispatch } from "use-bus"
 import AddPanel from "./AddPanel"
 import DashboardSave from "./DashboardSave"
@@ -30,7 +29,7 @@ import useFullscreen from "hooks/useFullscreen"
 import DatePicker from "src/components/DatePicker/DatePicker"
 import { useNavigate } from "react-router-dom"
 import { useStore } from "@nanostores/react";
-import { dashboardMsg, sidebarMsg } from "src/i18n/locales/en";
+import { dashboardMsg } from "src/i18n/locales/en";
 import DashboardShare from "./DashboardShare";
 import DashboardStar from "./components/DashboardStar";
 import { $variables } from "../variables/store";
@@ -81,10 +80,11 @@ const DashboardHeader = memo(({ dashboard, onChange, sideWidth }: HeaderProps) =
             // width={sideWidth ? `calc(100% - ${sideWidth})` : "100%"}
             position={sideWidth ? "fixed" : "static"}
             top="0"
-            right="12px"
-            left={sideWidth + 12 + 'px'}
+            right="0"
+            left={sideWidth  + 'px'}
+            px="10px"
             bg={(dashboard.data.styles.bgEnabled && dashboard.data.styles?.bg) ? 'transparent' : 'var(--chakra-colors-chakra-body-bg)'}
-            zIndex={1}
+            zIndex={1001}
             transition="all 0.2s"
         >
             {
