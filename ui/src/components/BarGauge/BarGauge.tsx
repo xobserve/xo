@@ -29,7 +29,7 @@ interface Props {
     textWidth: number
     threshods?: ThresholdsConfig
     titleSize?: number
-    textSize?: number
+    textSize?: number | string
     mode?: "basic" | "lcd"
     orientation?: "horizontal" | "vertical"
     borderRadius?: string

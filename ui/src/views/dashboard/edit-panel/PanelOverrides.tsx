@@ -127,6 +127,7 @@ const PanelOverrides = ({ panel, onChange, data }: PanelEditorProps) => {
                                     const v = e.currentTarget.value
                                     onChange((panel: Panel) => {
                                         panel.overrides[i].overrides[j].type = v
+                                        panel.overrides[i].overrides[j].value = null
                                     })
                                 }}>
                                     {allRules.map(r => {

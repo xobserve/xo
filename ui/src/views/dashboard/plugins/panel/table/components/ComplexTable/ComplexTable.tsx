@@ -227,7 +227,7 @@ const ComplexTable = memo((props: Props) => {
               return null;
             }
 
-            return <Box position="absolute" top="6px" left="6px" right="6px" bottom="6px"><BarGauge width={width} height={height} data={[{
+            return <Box position="absolute" top="6px" left="6px" right="6px" bottom="6px"><BarGauge textSize="inherit" width={width} height={height} data={[{
               value: record['__value__']?.[column.dataIndex],
               max: max,
               min: min,
