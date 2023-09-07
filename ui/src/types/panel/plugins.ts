@@ -290,7 +290,8 @@ export enum PieLegendPlacement {
 export interface GaugeSettings {
     animation: boolean
     diisplaySeries: string
-    value: GaugeValueSettings
+    value: ValueSetting
+    valueStyle: GaugeValueStyles
     scale: {
         enable: boolean
         splitNumber: number
@@ -316,16 +317,13 @@ export interface GaugeSettings {
 
 export type GaugeAxisSplit = [number, string]
 
-export interface GaugeValueSettings {
+export interface GaugeValueStyles {
     show: boolean
     min: number
     max: number
     fontSize: number
     left: string
     top: string
-    decimal: number
-    unit: string
-    calc: ValueCalculationType
 }
 
 export interface EchartsSettings {

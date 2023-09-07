@@ -259,16 +259,18 @@ function registerEvents(options, chart, navigate, setVariable, setDateTime, $var
         [PanelType.Gauge]: {
             animation: true,
             diisplaySeries: null,
-            value: {
+            valueStyle: {
                 show: true,
                 min: 0,
                 max: 100,
                 fontSize: 15,
                 left: '0%',
                 top: '75%',
-                unit: '%',
-                calc: ValueCalculationType.Last,
-                decimal: 2,
+            },
+            value: {
+                ...getInitUnits(),
+                decimal: 3,
+                calc: ValueCalculationType.Last
             },
             scale: {
                 enable: true,

@@ -26,6 +26,7 @@ import { isEmpty } from "utils/validate";
 import { ThresholdsMode } from "types/threshold";
 import { replaceWithVariables } from "utils/variable";
 import { VariableCurrentValue } from "src/data/variable";
+import { formatUnit } from "components/Unit";
 
 interface Props extends PanelProps {
   data: SeriesData[][]
@@ -58,8 +59,8 @@ const GaugePanel = memo((props: Props) => {
     }
     const value = calcValueOnSeriesData(sd[0], props.panel.plugins.gauge.value.calc)
     const name = isEmpty(props.panel.plugins.gauge.title.display) ? sd[0].name : replaceWithVariables(props.panel.plugins.gauge.title.display, { [VariableCurrentValue]: sd[0].name })
-    const min = panel.plugins.gauge.value.min ?? calcValueOnSeriesData(sd[0], ValueCalculationType.Min)
-    const max = panel.plugins.gauge.value.max ?? calcValueOnSeriesData(sd[0], ValueCalculationType.Max)
+    const min = panel.plugins.gauge.valueStyle.min ?? calcValueOnSeriesData(sd[0], ValueCalculationType.Min)
+    const max = panel.plugins.gauge.valueStyle.max ?? calcValueOnSeriesData(sd[0], ValueCalculationType.Max)
     return [{ name, value, min, max }]
   }, [props.data, props.panel.plugins.gauge.value, props.panel.plugins.gauge.title.display, props.panel.plugins.gauge.diisplaySeries])
 
@@ -102,14 +103,14 @@ const GaugePanel = memo((props: Props) => {
             color: 'inherit'
           },
           detail: {
-            show: panel.plugins.gauge.value.show,
+            show: panel.plugins.gauge.valueStyle.show,
             valueAnimation: true,
-            formatter: value => `${round(value, panel.plugins.gauge.value.decimal)}${panel.plugins.gauge.value.unit}`,
+            formatter: value => formatUnit(value, panel.plugins.gauge.value.units, panel.plugins.gauge.value.decimal),
             // borderColor: 'inherit',
             // borderWidth: 1,
             color: 'inherit',
-            fontSize: panel.plugins.gauge.value.fontSize,
-            offsetCenter: [panel.plugins.gauge.value.left, panel.plugins.gauge.value.top],
+            fontSize: panel.plugins.gauge.valueStyle.fontSize,
+            offsetCenter: [panel.plugins.gauge.valueStyle.left, panel.plugins.gauge.valueStyle.top],
             // color: '#fff',
             // backgroundColor: 'inherit',
             // width: 50,
@@ -162,7 +163,7 @@ const GaugePanel = memo((props: Props) => {
             distance: 14,
             fontSize: panel.plugins.gauge.scale.fontSize,
             show: panel.plugins.gauge.scale.enable && panel.plugins.gauge.scale.splitNumber > 0,
-            formatter: value => `${round(value, panel.plugins.gauge.value.decimal)}${panel.plugins.gauge.value.unit}`,
+            formatter: value => formatUnit(value, panel.plugins.gauge.value.units, panel.plugins.gauge.value.decimal),
           },
           splitNumber: panel.plugins.gauge.scale.splitNumber,
           /*------------*/
@@ -189,7 +190,7 @@ const GaugePanel = memo((props: Props) => {
   }, [])
 
   return (<>
-    {isEmpty(props.data) ? <Center height="100%">No data</Center> :options && <Box height={height} key={colorMode} className="echarts-panel"><ChartComponent options={options} theme={colorMode} width={width} height={height} onChartCreated={onChartCreated} onChartEvents={null} /></Box> }
+    {isEmpty(props.data) ? <Center height="100%">No data</Center> : options && <Box height={height} key={colorMode} className="echarts-panel"><ChartComponent options={options} theme={colorMode} width={width} height={height} onChartCreated={onChartCreated} onChartEvents={null} /></Box>}
   </>)
 })
 

@@ -23,6 +23,8 @@ import { commonMsg, gaugePanelMsg } from "src/i18n/locales/en"
 import ThresholdEditor from "src/components/Threshold/ThresholdEditor"
 import { SeriesData } from "types/seriesData"
 import { isEmpty } from "utils/validate"
+import { UnitPicker } from "components/Unit"
+import { Units } from "types/panel/plugins"
 const GaugePanelEditor = memo((props: PanelEditorProps) => {
     const t = useStore(commonMsg)
     const t1 = useStore(gaugePanelMsg)
@@ -65,35 +67,39 @@ const GaugePanelEditor = memo((props: PanelEditorProps) => {
             </PanelAccordion>
             <PanelAccordion title={t.valueSettings}>
                 <PanelEditItem title={t.show}>
-                    <Switch defaultChecked={panel.plugins.gauge.value.show} onChange={e => onChange((panel: Panel) => {
-                        panel.plugins.gauge.value.show = e.currentTarget.checked
+                    <Switch defaultChecked={panel.plugins.gauge.valueStyle.show} onChange={e => onChange((panel: Panel) => {
+                        panel.plugins.gauge.valueStyle.show = e.currentTarget.checked
                     })} />
                 </PanelEditItem>
                 <PanelEditItem title="Font size">
-                    <EditorNumberItem value={panel.plugins.gauge.value.fontSize} onChange={(v) => onChange((panel: Panel) => {
-                        panel.plugins.gauge.value.fontSize = v
+                    <EditorNumberItem value={panel.plugins.gauge.valueStyle.fontSize} onChange={(v) => onChange((panel: Panel) => {
+                        panel.plugins.gauge.valueStyle.fontSize = v
                     })} step={1}/>
                 </PanelEditItem>
 
 
                 <PanelEditItem title="Left" desc={t1.leftTips}>
-                    <EditorInputItem value={panel.plugins.gauge.value.left} onChange={(v) => onChange((panel: Panel) => {
-                        panel.plugins.gauge.value.left = v
+                    <EditorInputItem value={panel.plugins.gauge.valueStyle.left} onChange={(v) => onChange((panel: Panel) => {
+                        panel.plugins.gauge.valueStyle.left = v
                     })} />
                 </PanelEditItem>
                 <PanelEditItem title="Top" desc={t1.topTips}>
-                    <EditorInputItem value={panel.plugins.gauge.value.top} onChange={(v) => onChange((panel: Panel) => {
-                        panel.plugins.gauge.value.top = v
+                    <EditorInputItem value={panel.plugins.gauge.valueStyle.top} onChange={(v) => onChange((panel: Panel) => {
+                        panel.plugins.gauge.valueStyle.top = v
                     })} />
-                </PanelEditItem>
-
-                <PanelEditItem title={t.unit}>
-                    <EditorInputItem value={panel.plugins.gauge.value.unit} onChange={(v) => onChange((panel: Panel) => {
-                        panel.plugins.gauge.value.unit = v
-                    })} />
-                </PanelEditItem>
-
-                <PanelEditItem title={t.decimal}>
+                </PanelEditItem>  
+            </PanelAccordion>
+            
+        <PanelAccordion title="Value">
+            <PanelEditItem title={t.unit}>
+                <UnitPicker value={panel.plugins.gauge.value} onChange={
+                    (v: Units) => onChange((panel: Panel) => {
+                        panel.plugins.gauge.value.units = v.units
+                        panel.plugins.gauge.value.unitsType = v.unitsType
+                    })
+                } />
+            </PanelEditItem>
+            <PanelEditItem title={t.decimal}>
                     <EditorNumberItem value={panel.plugins.gauge.value.decimal} min={0} max={5} step={1} onChange={v => onChange((panel: Panel) => { panel.plugins.gauge.value.decimal = v })} />
                 </PanelEditItem>
                 <PanelEditItem title={t.calc} desc={t.calcTips}>
@@ -101,8 +107,7 @@ const GaugePanelEditor = memo((props: PanelEditorProps) => {
                         onChange((panel: Panel) => { panel.plugins.gauge.value.calc = v })
                     }} />
                 </PanelEditItem>
-            </PanelAccordion>
-
+        </PanelAccordion>
             <PanelAccordion title={t.title}>
                 <PanelEditItem title={t.show}>
                     <Switch defaultChecked={panel.plugins.gauge.title.show} onChange={e => onChange((panel: Panel) => {
@@ -144,13 +149,13 @@ const GaugePanelEditor = memo((props: PanelEditorProps) => {
             </PanelAccordion>
             <PanelAccordion title={t.axis}>
                 <PanelEditItem title="Min">
-                    <EditorNumberItem value={panel.plugins.gauge.value.min} onChange={(v) => onChange((panel: Panel) => {
-                        panel.plugins.gauge.value.min = v
+                    <EditorNumberItem value={panel.plugins.gauge.valueStyle.min} onChange={(v) => onChange((panel: Panel) => {
+                        panel.plugins.gauge.valueStyle.min = v
                     })} />
                 </PanelEditItem>
                 <PanelEditItem title="Max">
-                    <EditorNumberItem value={panel.plugins.gauge.value.max} onChange={(v) => onChange((panel: Panel) => {
-                        panel.plugins.gauge.value.max = v
+                    <EditorNumberItem value={panel.plugins.gauge.valueStyle.max} onChange={(v) => onChange((panel: Panel) => {
+                        panel.plugins.gauge.valueStyle.max = v
                     })} />
                 </PanelEditItem>
 
