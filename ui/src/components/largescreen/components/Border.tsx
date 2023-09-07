@@ -27,9 +27,11 @@ import BorderBox9 from "src/components/largescreen/border/Border9"
 import { useRef } from "react"
 import { PanelBorderType } from "types/panel/styles"
 import React from "react"
+import { useSearchParam } from "react-use"
 
 const Border = ({ border, children,width,height }) => {
     const ref = useRef()
+    const edit = useSearchParam("edit")
     switch (border) {
         case PanelBorderType.None:
             return <Box height={height} width={width}>{children}</Box>
@@ -60,7 +62,7 @@ const Border = ({ border, children,width,height }) => {
         case PanelBorderType.Border13:
             return <BorderBox13 style={{width,height}}>{children}</BorderBox13>
         default:
-            return <Box  height={height} width={width}>{children}</Box>
+            return <Box className={edit ? "bordered" : null}height={height} width={width}>{children}</Box>
     }
 }
 
