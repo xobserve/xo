@@ -10,6 +10,7 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
+import { thresholdTransform } from "components/Threshold/ThresholdEditor";
 import { PanelType } from "types/dashboard";
 import { LayoutOrientation } from "types/layout";
 import { PanelPlugins, PieLegendPlacement, ThresholdDisplay, Units } from "types/panel/plugins";
@@ -45,7 +46,9 @@ const initThresholds = (colorIndex?): ThresholdsConfig => {
         thresholds: [{
             value: null,
             color: defaultColor
-        }]
+        }],
+        transform: thresholdTransform,
+        enableTransform: false
     }
 }
 

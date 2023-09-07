@@ -11,7 +11,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { Box, HStack, Input, Text, VStack,Button } from "@chakra-ui/react"
+import { Box, HStack, Input, Text, VStack,Button, Switch } from "@chakra-ui/react"
 import { useStore } from "@nanostores/react"
 import { ColorPicker } from "src/components/ColorPicker"
 import { EditorNumberItem } from "src/components/editor/EditorItem"
@@ -21,22 +21,27 @@ import React, { useState } from "react"
 import { FaTimes } from "react-icons/fa"
 import { componentsMsg } from "src/i18n/locales/en"
 import { ThresholdsConfig, ThresholdsMode } from "types/threshold"
-import { colors, palettes } from "utils/colors"
+import { palettes } from "utils/colors"
 import { isEmpty } from "utils/validate"
+import { CodeEditorModal } from "components/CodeEditor/CodeEditorModal"
 
 interface Props {
     value: ThresholdsConfig
     onChange: any
 }
 
+export const thresholdTransform = `function transform(seriesData, fieldName, value,min,max, lodash){
 
+}`
 const ThresholdEditor = (props: Props) => {
     const t1 = useStore(componentsMsg)
     const [value, setValue] = useState(props.value)
     if (isEmpty(value)) {
         const v = {
             mode: ThresholdsMode.Absolute,
-            thresholds: []
+            thresholds: [],
+            enableTransform: false,
+            transform: thresholdTransform,
         }
         // add base threshold
         const color = palettes[0]
@@ -48,6 +53,20 @@ const ThresholdEditor = (props: Props) => {
         return 
     }
 
+    const changeValue = v => {
+        sortThresholds(v)
+        const v1 = cloneDeep(v)
+
+        setValue(v1)
+        props.onChange(v1)
+    }
+
+
+    if (isEmpty(value.transform)) {
+        value.transform = thresholdTransform
+        changeValue(value)
+        return 
+    } 
     const addThreshod = () => {
         const color = palettes[value.thresholds.length % palettes.length]
         const v = value.thresholds.length > 1 ? value.thresholds[0].value : 0
@@ -73,14 +92,6 @@ const ThresholdEditor = (props: Props) => {
             }
             return b.value - a.value
         })
-    }
-
-    const changeValue = v => {
-        sortThresholds(v)
-        const v1 = cloneDeep(v)
-
-        setValue(v1)
-        props.onChange(v1)
     }
 
     return (<Box>
@@ -110,6 +121,21 @@ const ThresholdEditor = (props: Props) => {
                 changeValue(value)
             }}/>
         </Box>
+        <Box mt="2">
+            <Text fontSize="0.8rem">{t1.valueTransform}</Text>
+            <Text fontSize="0.8rem" textStyle="annotation"> {t1.valueTransformTips} </Text>
+            <Switch isChecked={value.enableTransform} onChange={e => {
+                value.enableTransform = e.currentTarget.checked
+                changeValue(value)
+            }} />
+        </Box>
+        {value.enableTransform && <Box mt="2">
+            <Text fontSize="0.8rem" mb="1">{t1.valueTransform}</Text>
+            <CodeEditorModal value={value.transform}  onChange={v => {
+                value.transform = v
+                changeValue(value)
+            }} />
+        </Box>}
     </Box>)
 }
 

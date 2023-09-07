@@ -49,6 +49,7 @@ export interface BarGaugeValue {
     min?: number
     max: number
     color?: string
+    disableOverrideColor?: boolean
     text: string
     thresholds?: ThresholdsConfig
     units?: Unit[]
@@ -59,7 +60,8 @@ const lcdCellWidth = 12
 const lcdCellSpacing = 2
 const minMaxHeight = 15
 const BarGauge = (props: Props) => {
-    const {colorMode} = useColorMode()
+
+    const { colorMode } = useColorMode()
     const toast = useToast()
     const { data, width, height, orientation = "horizontal", mode = "basic", titleSize = 18, textSize = 16, borderRadius = "4px", showUnfilled = true, fillOpacity = 0.6, showMax = false, showMin = false } = props
     const Stack = orientation == "horizontal" ? VStack : HStack
@@ -73,16 +75,25 @@ const BarGauge = (props: Props) => {
                         v.min = 0
                     }
 
+                    console.log("here333333:", v)
                     const metrics = measureText(v.title, titleSize, 500)
                     const titleHeight = metrics.fontBoundingBoxAscent + metrics.fontBoundingBoxDescent;
                     const lcdSize = orientation == "horizontal" ? width - textWidth - 20 : height - titleHeight - 20 - ((showMin || showMax) ? minMaxHeight : 0)
                     const lcdCellCount = Math.floor(lcdSize / lcdCellWidth!);
                     const lcdCellSize = Math.floor((lcdSize - lcdCellSpacing * lcdCellCount) / lcdCellCount);
-                    const gap = lcdSize - (lcdCellCount *(lcdCellSize + lcdCellSpacing)) + 1
+                    const gap = lcdSize - (lcdCellCount * (lcdCellSize + lcdCellSpacing)) + 1
                     const thresholds = v.thresholds ?? props.threshods
                     const threshold = getThreshold(v.value, thresholds, v.max)
-                    let color = threshold?.color ?? v.color
+                    let color
+                    if (v.disableOverrideColor) {
+                        color = v.color
+                    } else {
+                        color = threshold?.color ?? v.color
+                    }
+
                     color = paletteColorNameToHex(color, colorMode)
+
+
                     const onClick = props.onClick ? () => {
                         const onClick = genDynamicFunction(props.onClick);
                         if (isFunction(onClick)) {
@@ -107,8 +118,14 @@ const BarGauge = (props: Props) => {
                                                 <HStack spacing={`${lcdCellSpacing}px`} height="100%">
                                                     {
                                                         Array.from({ length: lcdCellCount }, (_, i) => {
-                                                            const threshold = getThreshold(v.min + ((i + 1) / lcdCellCount) * (v.max - v.min), thresholds, v.max)
-                                                            let color = threshold?.color ?? v.color
+                                                            let color
+                                                            if (v.disableOverrideColor) {
+                                                                color = v.color
+                                                            } else {
+                                                                const threshold = getThreshold(v.min + ((i + 1) / lcdCellCount) * (v.max - v.min), thresholds, v.max)
+                                                                color = threshold?.color ?? v.color
+                                                            }
+
                                                             color = paletteColorNameToHex(color, colorMode)
                                                             const cellColor = i < Math.floor((v.value - v.min) * lcdCellCount / (v.max - v.min)) ? `radial-gradient(${alpha(color, 0.95)} 10%, ${alpha(color, 0.55)} )` : alpha(color, 0.25);
                                                             return <Box key={i} width={`${lcdCellSize}px`} height="100%" bg={cellColor} borderRadius="2px"></Box>
@@ -128,15 +145,21 @@ const BarGauge = (props: Props) => {
                             }
                         </Box>
                     } else {
-                        return <CustomScrollbar hideHorizontalTrack><Box width={`${width / data.length - 6}px`} maxH={height} textAlign="center" onClick={onClick}  cursor={onClick ? "pointer" : null}>
+                        return <CustomScrollbar hideHorizontalTrack><Box width={`${width / data.length - 6}px`} maxH={height} textAlign="center" onClick={onClick} cursor={onClick ? "pointer" : null}>
                             <Text lineHeight={`${titleHeight}px`} fontSize={`${textSize}px`} color={color} noOfLines={1}>{v.text}</Text>
                             <Box height={lcdSize - gap} width="100%" bg={showUnfilled ? useColorModeValue("rgb(244, 245, 245)", "rgba(255,255,255,0.1)") : null} position="relative">
                                 {mode == "lcd" ?
                                     <VStack width="100%" height={lcdSize} alignItems="left">
                                         {
                                             Array.from({ length: lcdCellCount }, (_, i) => {
-                                                const threshold = getThreshold(v.min + ((i + 1) / lcdCellCount) * (v.max - v.min), thresholds, v.max)
-                                                let color = paletteColorNameToHex(threshold.color, colorMode)
+                                                let color
+                                                if (v.disableOverrideColor) {
+                                                    color = v.color
+                                                } else {
+                                                    const threshold = getThreshold(v.min + ((i + 1) / lcdCellCount) * (v.max - v.min), thresholds, v.max)
+                                                    color = threshold.color
+                                                }
+                                                color = paletteColorNameToHex(threshold.color, colorMode)
                                                 const cellColor = i < Math.floor((v.value - v.min) * lcdCellCount / (v.max - v.min)) ? `radial-gradient(${alpha(color, 0.95)} 10%, ${alpha(color, 0.55)} )` : alpha(color, 0.2);
                                                 return <Box position="absolute" bottom={`${(i) * (lcdCellSize + lcdCellSpacing)}px`} key={i} height={`${lcdCellSize}px`} width="100%" bg={cellColor} borderRadius="2px"></Box>
                                             })

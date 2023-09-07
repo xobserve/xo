@@ -545,6 +545,9 @@
     "percentage": "百分比",
     "thresholdMode": "Threshold 类型",
     "thresholdModeTips": "绝对值： threshold 直接跟当前的值比较大小; 百分比: 当前值/最大值 得到一个百分比，然后跟 threshold 进行比较",
+    "valueTransform": "启用值变换",
+    "valueTransformTips": "对当前的值进行变换, 用变换结果跟阈值进行比较",
+    "valueTransformFunc": "值变换函数",
     "thresholdTips": "若表格单元格中的<原始>值比 threshold 大，那它的颜色将被改变"
   },
   "tablePanel": {

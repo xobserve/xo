@@ -151,9 +151,21 @@ const ComplexTable = memo((props: Props) => {
           }
         }
         if (thresholds && isNumber(v)) {
-          const t = getThreshold(v as number, thresholds, max)
+          // seriesData, fieldName, value,min,max, lodash
+          let v1 = v
+          if (thresholds.enableTransform) {
+            const transformFunc = genDynamicFunction(thresholds.transform); 
+            if (isFunction(transformFunc)) {
+              v1 = transformFunc(row, column.dataIndex, v,min,max, lodash)
+            }
+          }
+
+        
+          const t = getThreshold(v1 as number, thresholds, max)
+       
           if (t) {
             const c = paletteColorNameToHex(t.color, colorMode)
+            console.log("here33333:",column.dataIndex,v1, t,c)
             row['__bg__'] = {
               ...row['__bg__'],
               [column.dataIndex]: c
@@ -227,12 +239,14 @@ const ComplexTable = memo((props: Props) => {
               return null;
             }
 
+            console.log("here333333:", text, color)
             return <Box position="absolute" top="6px" left="6px" right="6px" bottom="6px"><BarGauge textSize="inherit" width={width} height={height} data={[{
               value: record['__value__']?.[column.dataIndex],
               max: max,
               min: min,
               text: text,
-              color: color,
+              color: bg,
+              disableOverrideColor: true
             }]} textWidth={textWidth} threshods={thresholds} showUnfilled={true} fillOpacity={opacity ?? 0.6} mode={columnType.mode} /></Box>
           }}
         </AutoSizer>

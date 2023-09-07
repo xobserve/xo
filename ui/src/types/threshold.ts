@@ -24,6 +24,7 @@ export enum ThresholdsMode {
    *  between 0 and 1 (based on min/max)
    */
   Percentage = 'percentage',
+  Custom = "Custom",
 }
 
 /**
@@ -36,4 +37,6 @@ export interface ThresholdsConfig {
    *  Must be sorted by 'value' 
    */
   thresholds: Threshold[];
+  enableTransform: boolean
+  transform: string
 }
