@@ -329,7 +329,7 @@ export const PanelComponent = ({ dashboard, panel, variables, onRemovePanel, onH
         return res
     }, [panel.transform, panel.enableTransform, panelData])
 
-    return <Box height={height} width={width} className={panel.styles.border == "None" && panel.styles.borderOnHover ? "hover-bordered" : null} border="1px solid transparent" position="relative">
+    return <Box height={height} width={width} className={(panel.styles.border == "None" && panel.styles.borderOnHover ? "hover-bordered" : "" ) + useColorModeValue(" panel-bg"," panel-bg")} border={`0.5px solid transparent`} position="relative">
 
         {data ? <>
             <PanelHeader dashboardId={dashboard.id} panel={panel} data={panelData} queryError={queryError} onCopyPanel={onCopyPanel} onRemovePanel={onRemovePanel} onHidePanel={onHidePanel} />

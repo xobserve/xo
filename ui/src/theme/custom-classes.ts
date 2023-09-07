@@ -4,7 +4,7 @@ import customColors from "./colors";
 export function customClasses(props) {
     return {
         ".panel-bg": {
-            bg: mode('rgb(248 250 252)','rgba(255,255,255,0.04)')(props)
+            bg: mode('rgb(251 253 254)','rgba(255,255,255,0.03)')(props)
         },
         ".highlight-bg": {
             background: 'brand.50',
@@ -31,14 +31,14 @@ export function customClasses(props) {
             letterSpacing: '1.5px'
         },
         ".hover-bordered:hover": {
-            border: `1px solid ${mode(
+            border: `0.5px solid ${mode(
                 customColors.borderColor.light,
                 customColors.borderColor.dark
             )(props)}`,
             borderRadius: "6px",
         },
         ".bordered": {
-            border: `1px solid ${mode(
+            border: `0.5px solid ${mode(
                 customColors.borderColor.light,
                 customColors.borderColor.dark
             )(props)}`,
