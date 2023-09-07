@@ -496,9 +496,9 @@ export interface ValueSetting extends Units {
     calc?: ValueCalculationType
 }
 
-export type UnitsType = 'none' | 'time' | 'bytes' | 'percent' |'short' | 'format' | 'custom';
+export type UnitsType = 'none' | 'time' | 'bytes' | 'percent' |'short' | 'format' | "enum" | 'custom';
 export interface Unit {
-    operator: "x" | "/",
+    operator: "x" | "/" | "=",
     rhs: number,
     unit: string
 }

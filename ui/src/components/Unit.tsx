@@ -22,6 +22,7 @@ import { getInitUnits } from "src/data/panel/initPlugins"
 import { isEmpty } from "utils/validate"
 import { VariableCurrentValue } from "src/data/variable"
 import { replaceWithVariables } from "utils/variable"
+import { EditorInputItem } from "./editor/EditorItem"
 
 interface Props {
     value: Units
@@ -172,11 +173,34 @@ export const UnitPicker = ({ value, onChange, size = "md" }: Props) => {
                     }]
                 })
                 break
-            case "custom":
+            case "enum":
                 setUnits({
                     unitsType: t,
-                    units: units.units
+                    units: [{
+                        operator: "=",
+                        rhs: 0,
+                        unit: `Down`
+                    },
+                    {
+                        operator: "=",
+                        rhs: 1,
+                        unit: `Up`
+                    }
+                    ]
                 })
+                break
+            case "custom":
+                if (units.unitsType != "enum") {
+                    setUnits({
+                        unitsType: t,
+                        units: units.units
+                    })
+                } else {
+                    setUnits({
+                        unitsType: t,
+                        units: []
+                    })
+                }
                 break
             default:
                 setUnits({
@@ -211,25 +235,31 @@ export const UnitPicker = ({ value, onChange, size = "md" }: Props) => {
                     <option value="time">Time: ms/s/m/.../day</option>
                     <option value="bytes">Bytes: b/KB/MB/GB</option>
                     <option value="format">String format</option>
+                    <option value="enum">Enum</option>
                     <option value="custom">Custom units</option>
                 </Select>
-                {units.unitsType == "custom" && <FaPlus cursor="pointer" onClick={onAddUnit} opacity="0.8" fontSize="sm" />}
+                {(units.unitsType == "custom" || units.unitsType == "enum") && <FaPlus cursor="pointer" onClick={onAddUnit} opacity="0.8" fontSize="0.8rem" />}
             </HStack>
             <VStack alignItems="left" mt="2">
                 {units.units?.map((unit, i) => {
                     return <HStack>
 
-                        <Button isDisabled={units.unitsType == "format"} size="sm" onClick={() => {
+                        <Button isDisabled={units.unitsType == "format" || units.unitsType == "enum"} size="sm" onClick={() => {
                             unit.operator = unit.operator == 'x' ? '/' : 'x'
                             setUnits(cloneDeep(units))
                         }}>{unit.operator}</Button>
 
-                        <NumberInput isDisabled={units.unitsType == "format"} size="sm" value={unit.rhs} onChange={(_, v) => {
-                            unit.rhs = v
-                            setUnits(cloneDeep(units))
-                        }}>
-                            <NumberInputField />
-                        </NumberInput>
+                        {units.unitsType == "enum" ?
+                            <EditorInputItem value={unit.rhs.toString()} onChange={v => {
+                                unit.rhs = v
+                                setUnits(cloneDeep(units))
+                            }} />
+                            : <NumberInput isDisabled={units.unitsType == "format"} size="sm" value={unit.rhs} onChange={(_, v) => {
+                                unit.rhs = v
+                                setUnits(cloneDeep(units))
+                            }}>
+                                <NumberInputField />
+                            </NumberInput>}
 
                         <Input width="200px" size="sm" value={unit.unit} placeholder="e.g % , bytes" onChange={e => {
                             unit.unit = e.currentTarget.value
@@ -256,6 +286,17 @@ export const formatUnit = (v0: any, units: Unit[], decimal: number) => {
         return v
     }
 
+    if (units.length > 0 && units[0].operator == "=") {
+        // enum unit 
+        for (var i = 0; i < units.length; i++) {
+            const unit = units[i]
+            if (unit.rhs == v0) {
+                return replaceWithVariables(unit.unit, {
+                    [VariableCurrentValue]: v0
+                })
+            }
+        }
+    }
     if (!isNumber(v0)) {
         if (units.length == 0) {
             return v0
