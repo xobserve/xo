@@ -31,7 +31,7 @@ interface Props {
     enableTransform?: boolean
 }
 
-export const thresholdTransform = `function transform(seriesData, fieldName, value,min,max, lodash){
+export const thresholdTransform = `function transform(data, lodash){
 
 }`
 const ThresholdEditor = (props: Props) => {

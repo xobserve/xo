@@ -68,7 +68,7 @@ const StatPanel = memo((props: StatPanelProps) => {
                     {
                         data.map((seriesData,i) => {
                             const h = props.height / data.length
-                            return <Box width={props.width}  height={h + 'px' }><StatGraph data={seriesData} panel={props.panel} width={props.width} height={h} /></Box>
+                            return <Box width={props.width}  height={h + 'px' }><StatGraph panelData={data}  data={seriesData} panel={props.panel} width={props.width} height={h} /></Box>
                         })  
                     }
                 </>
@@ -78,7 +78,7 @@ const StatPanel = memo((props: StatPanelProps) => {
                     {
                         data.map(seriesData => {
                             const width = (props.width - 3) / data.length
-                            return <Box height={props.height}  width={width}><StatGraph data={seriesData} panel={props.panel} width={width} height={props.height} /></Box>
+                            return <Box height={props.height}  width={width}><StatGraph panelData={data}  data={seriesData} panel={props.panel} width={width} height={props.height} /></Box>
                         })
                     }
                 </Flex>
@@ -89,12 +89,12 @@ const StatPanel = memo((props: StatPanelProps) => {
                         width={props.width}
                         height={props.height}
                         orientation={options.styles.layout}
-                        itemSpacing={3}
+                        itemSpacing={0}
                         autoGrid={true}
                         values={data ?? []}
                         renderValue={({width, height, value})=> {
                             return (<>
-                            <Box height={height}  width={width}><StatGraph data={value} panel={props.panel} width={width} height={height} /></Box>
+                            <Box height={height}  width={width}><StatGraph panelData={data} data={value} panel={props.panel} width={width} height={height} /></Box>
                             </>)
                         }}
                     />

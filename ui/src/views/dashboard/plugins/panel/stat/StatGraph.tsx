@@ -17,6 +17,7 @@ import 'uplot/dist/uPlot.min.css';
 import React from "react";
 import { parseOptions } from './options';
 import { isEmpty, isFunction } from "lodash"
+import lodash from "lodash"
 import Tooltip from "../graph/Tooltip";
 import { Box, Center, Flex, Text, useColorMode, Tooltip as ChakraTooltip, useToast } from "@chakra-ui/react";
 import { formatUnit } from "src/components/Unit";
@@ -35,13 +36,14 @@ import { commonInteractionEvent, genDynamicFunction } from "utils/dashboard/dyna
 
 interface Props {
     panel: Panel
+    panelData: any
     data: SeriesData
     width: number
     height: number
 }
 
 const StatGraph = memo((props: Props) => {
-    const { data, width, height, panel } = props
+    const { data, width, height, panel, panelData } = props
     const { colorMode } = useColorMode()
 
     const statOptions = panel.plugins.stat
@@ -57,7 +59,16 @@ const StatGraph = memo((props: Props) => {
             max = calcValueOnSeriesData(data, ValueCalculationType.Max)
         }
 
-        const threshold = getThreshold(value, findRuleInOverride(override, StatRules.SeriesThresholds) ?? statOptions.thresholds, max)
+        const thresholds = findRuleInOverride(override, StatRules.SeriesThresholds) ?? statOptions.thresholds
+        let v1 = value
+        if (thresholds.enableTransform) {
+            const transformFunc = genDynamicFunction(thresholds.transform); 
+            if (isFunction(transformFunc)) {
+              v1 = transformFunc(panelData, data.name, value,null,max, lodash)
+            }
+          }
+        const threshold = getThreshold(v1, findRuleInOverride(override, StatRules.SeriesThresholds) ?? statOptions.thresholds, max)
+        console.log("here33333:",value, v1)
         const color = paletteColorNameToHex(threshold.color, colorMode)
 
         let o;

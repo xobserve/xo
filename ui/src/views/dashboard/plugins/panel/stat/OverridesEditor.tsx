@@ -42,7 +42,7 @@ const StatOverridesEditor = ({ override, onChange }: Props) => {
         case StatRules.SeriesValueCalc:
             return <ValueCalculation value={override.value} onChange={onChange} />
         case StatRules.SeriesThresholds:
-            return <ThresholdEditor value={override.value} onChange={onChange} />
+            return <ThresholdEditor value={override.value} onChange={onChange} enableTransform/>
         default:
             return <></>
     }

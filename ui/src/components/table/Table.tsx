@@ -16,7 +16,6 @@ import { useTable, useFilters, useGlobalFilter,  useSortBy, usePagination } from
 
 import { HStack, Table, Tbody, Td, Th, Thead, Tr } from '@chakra-ui/react'
 import { DefaultColumnFilter, fuzzyTextFilterFn, GlobalFilter } from './filters'
-import { round } from 'lodash'
 
 
 // Our table component

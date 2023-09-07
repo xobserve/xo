@@ -156,7 +156,13 @@ const ComplexTable = memo((props: Props) => {
           if (thresholds.enableTransform) {
             const transformFunc = genDynamicFunction(thresholds.transform); 
             if (isFunction(transformFunc)) {
-              v1 = transformFunc(row, column.dataIndex, v,min,max, lodash)
+              v1 = transformFunc({
+                row, 
+                column: column.dataIndex, 
+                value: v,
+                min,
+                max
+              }, lodash)
             }
           }
 
