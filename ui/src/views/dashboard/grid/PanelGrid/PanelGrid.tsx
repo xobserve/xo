@@ -159,7 +159,7 @@ export const PanelComponent = ({ dashboard, panel, variables, onRemovePanel, onH
     const [panelData, setPanelData] = useState<any[]>(null)
     const [queryError, setQueryError] = useState()
     const edit = useSearchParam('edit')
-
+    const [loading, setLoading] = useState(false)
     useEffect(() => {
         return () => {
             // delete data query cache when panel is unmounted
@@ -198,6 +198,7 @@ export const PanelComponent = ({ dashboard, panel, variables, onRemovePanel, onH
         const intervalObj = calculateInterval(timeRange, ds.queryOptions.maxDataPoints ?? DatasourceMaxDataPoints, isEmpty(ds.queryOptions.minInterval) ? DatasourceMinInterval : ds.queryOptions.minInterval)
         const interval = intervalObj.intervalMs / 1000
 
+        setLoading(true)
         if (panel.type == PanelType.Alert) {
             const res = await queryAlerts(panel, timeRange, panel.plugins.alert.filter.datasources, panel.plugins.alert.filter.httpQuery)
             setQueryError(res.error)
@@ -268,6 +269,7 @@ export const PanelComponent = ({ dashboard, panel, variables, onRemovePanel, onH
                     const id = promises[i].id
                     const currentQuery = promises[i].query
                     setQueryError(res.error)
+                    // currently only cache not empty data
                     if (!isEmpty(res.data)) {
                         data.push(res.data)
                         prevQueryData[id] = res.data
@@ -290,6 +292,7 @@ export const PanelComponent = ({ dashboard, panel, variables, onRemovePanel, onH
             }
         }
 
+        setLoading(false)
         console.timeEnd("time used - query data for panel:")
     }
 
@@ -343,8 +346,9 @@ export const PanelComponent = ({ dashboard, panel, variables, onRemovePanel, onH
             >
                 <CustomPanelRender dashboardId={dashboard.id} panel={panel} data={data} height={panelInnerHeight} width={panelInnerWidth} sync={sync} timeRange={timeRange} />
             </Box>
+            {loading && <Box position="absolute" top="0" right="0"><Loading  size="sm"/></Box>}
         </>
-            : <Box position="absolute" top="0" right="0"><Loading  /></Box>}
+            : <Box position="absolute" top="0" right="0"><Loading  size="sm"/></Box>}
     </Box>
 }
 

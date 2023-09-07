@@ -22,21 +22,23 @@ interface Props {
     children?: React.ReactNode
     className?: string
     style?: React.CSSProperties
+    size?: "sm" | "md"
 }
-const Loading = ({ children, className,  style }:Props) => {
+const Loading = ({ children, className,  style, size="md" }:Props) => {
   const classNames = useMemo(() => classnames('dv-loading', className), [
     className
   ])
 
+  const radius = size == "sm" ? '15' : '25'
   return (
     <Box className={classNames} style={style} sx={cssStyles}>
-      <svg width={"50px"} height={"50px"}>
+      <svg width={size == "sm" ? "25px" : "50px"} height={size == "sm" ? "25px" : "50px"}>
         <circle
-          cx='25'
-          cy='25'
-          r='10'
+          cx={radius}
+          cy={radius}
+          r={size == "sm" ? '6' : '10'}
           fill='transparent'
-          strokeWidth='2'
+          strokeWidth={size == "sm" ? '1' : '2'}
           strokeDasharray='31.415, 31.415'
           stroke='#02bcfe'
           strokeLinecap='round'
@@ -44,7 +46,7 @@ const Loading = ({ children, className,  style }:Props) => {
           <animateTransform
             attributeName='transform'
             type='rotate'
-            values='0, 25 25;360, 25 25'
+            values={`0, ${radius} ${radius};360, ${radius} ${radius}`}
             dur='1.5s'
             repeatCount='indefinite'
           />
@@ -57,11 +59,11 @@ const Loading = ({ children, className,  style }:Props) => {
         </circle>
 
         <circle
-          cx='25'
-          cy='25'
-          r='6'
+          cx={radius}
+          cy={radius}
+          r={size == "sm" ? '4' : '8'}
           fill='transparent'
-          strokeWidth='2'
+          strokeWidth={size == "sm" ? '1' : '2'}
           strokeDasharray='15.7, 15.7'
           stroke='#3be6cb'
           strokeLinecap='round'
@@ -69,7 +71,7 @@ const Loading = ({ children, className,  style }:Props) => {
           <animateTransform
             attributeName='transform'
             type='rotate'
-            values='360, 25 25;0, 25 25'
+            values={`360, ${radius} ${radius};0, ${radius} ${radius}`}
             dur='1.5s'
             repeatCount='indefinite'
           />
