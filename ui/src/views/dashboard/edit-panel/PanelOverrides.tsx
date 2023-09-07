@@ -32,6 +32,7 @@ import BarOverridesEditor from "../plugins/panel/bar/OverridesEditor";
 import { dispatch } from "use-bus";
 import { PanelForceRebuildEvent } from "src/data/bus-events";
 import { MobileBreakpoint } from "src/data/constants";
+import PieOverridesEditor from "../plugins/panel/pie/OverridesEditor";
 
 const PanelOverrides = ({ panel, onChange, data }: PanelEditorProps) => {
     const t1 = useStore(panelMsg)
@@ -173,6 +174,13 @@ const PanelOverrides = ({ panel, onChange, data }: PanelEditorProps) => {
                             }
                             {
                                 panel.type == PanelType.Bar && <BarOverridesEditor override={rule} onChange={(v) => {
+                                    onChange((panel: Panel) => {
+                                        panel.overrides[i].overrides[j].value = v
+                                    })
+                                }} />
+                            }
+                            {
+                                panel.type == PanelType.Pie && <PieOverridesEditor override={rule} onChange={(v) => {
                                     onChange((panel: Panel) => {
                                         panel.overrides[i].overrides[j].value = v
                                     })

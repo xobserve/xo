@@ -73,7 +73,7 @@ const TableOverridesEditor = ({panel, override, onChange }: Props) => {
         case TableRules.ColumnTransform:
             return <CodeEditorModal value={isEmpty(override.value) ? transformFunc : override.value} onChange={onChange} />
         case TableRules.ColumnThreshold:
-            return <ThresholdEditor value={override.value} onChange={onChange} />
+            return <ThresholdEditor value={override.value} onChange={onChange} enableTransform />
         case TableRules.ColumnValueMapping:
             return  <ValueMapping value={override.value} onChange={onChange} />
             

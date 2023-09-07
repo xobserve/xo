@@ -15,6 +15,7 @@ import { BarRules } from "src/views/dashboard/plugins/panel/bar/OverridesEditor"
 import { BarGaugeRules } from "src/views/dashboard/plugins/panel/barGauge/OverrideEditor";
 import { GeomapRules } from "src/views/dashboard/plugins/panel/geomap/OverridesEditor";
 import { GraphRules } from "src/views/dashboard/plugins/panel/graph/OverridesEditor";
+import { PieRules } from "src/views/dashboard/plugins/panel/pie/OverridesEditor";
 import { StatRules } from "src/views/dashboard/plugins/panel/stat/OverridesEditor";
 import { TableRules } from "src/views/dashboard/plugins/panel/table/OverridesEditor";
 import { GridPos, OverrideItem, Panel, PanelType } from "types/dashboard";
@@ -56,6 +57,8 @@ export const getPanelOverridesRules = (panelType): string[] => {
             return Object.keys(GeomapRules).map(k => GeomapRules[k])
         case PanelType.Bar:
             return Object.keys(BarRules).map(k => BarRules[k])
+        case PanelType.Pie:
+            return Object.keys(PieRules).map(k => PieRules[k])
         default:
             return []
     }

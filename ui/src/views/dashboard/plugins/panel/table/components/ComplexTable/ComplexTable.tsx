@@ -165,7 +165,6 @@ const ComplexTable = memo((props: Props) => {
        
           if (t) {
             const c = paletteColorNameToHex(t.color, colorMode)
-            console.log("here33333:",column.dataIndex,v1, t,c)
             row['__bg__'] = {
               ...row['__bg__'],
               [column.dataIndex]: c
@@ -239,7 +238,6 @@ const ComplexTable = memo((props: Props) => {
               return null;
             }
 
-            console.log("here333333:", text, color)
             return <Box position="absolute" top="6px" left="6px" right="6px" bottom="6px"><BarGauge textSize="inherit" width={width} height={height} data={[{
               value: record['__value__']?.[column.dataIndex],
               max: max,

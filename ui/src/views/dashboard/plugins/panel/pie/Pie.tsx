@@ -14,7 +14,7 @@ import { Box, Center, border, useColorMode, useMediaQuery } from "@chakra-ui/rea
 import ChartComponent from "src/components/charts/Chart";
 import { formatUnit } from "src/components/Unit";
 import { memo, useMemo, useState } from "react";
-import { Panel, PanelProps } from "types/dashboard"
+import { OverrideItem, Panel, PanelProps } from "types/dashboard"
 import { PieLegendPlacement } from "types/panel/plugins";
 import { PiePluginData } from "types/plugins/pie"
 import { SeriesData } from "types/seriesData";
@@ -27,7 +27,9 @@ import { getThreshold } from "src/components/Threshold/utils";
 import { ThresholdsMode } from "types/threshold";
 import { isEmpty } from "utils/validate";
 import { isFunction } from "lodash";
-import { MobileVerticalBreakpoint, MobileVerticalBreakpointNum } from "src/data/constants";
+import {  MobileVerticalBreakpointNum } from "src/data/constants";
+import { findOverride, findRuleInOverride } from "utils/dashboard/panel";
+import { PieRules } from "./OverridesEditor";
 
 interface Props extends PanelProps {
     data: SeriesData[][]
@@ -68,8 +70,10 @@ const PiePanel = (props: Props) => {
         const d = props.data.flat()
         d.forEach((series,i) => {
             const v = calcValueOnSeriesData(series, props.panel.plugins.pie.value.calc)
+            const override: OverrideItem = findOverride(props.panel, series.name)
+            const nameOverride = findRuleInOverride(override, PieRules.SeriesName)
             data.push({
-                name: series.name,
+                name: !isEmpty(nameOverride) ? nameOverride :  series.name,
                 value: v,
             })
 
@@ -89,6 +93,9 @@ const PiePanel = (props: Props) => {
                 c = colors[i % colors.length]
             }
 
+       
+            const colorOverride = findRuleInOverride(override, PieRules.SeriesColor)
+            if (colorOverride) c = colorOverride
             color.push(paletteColorNameToHex(c))
         })
 
@@ -192,7 +199,7 @@ const PiePanel = (props: Props) => {
                 }
             ]
         }, onEvents]
-    }, [panel.plugins.pie, props.data, colorMode, chart, panel.styles.palette, isMobileScreen])
+    }, [panel.plugins.pie, props.data, colorMode, chart, panel.styles.palette, isMobileScreen, panel.overrides])
 
 
 

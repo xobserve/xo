@@ -75,7 +75,6 @@ const BarGauge = (props: Props) => {
                         v.min = 0
                     }
 
-                    console.log("here333333:", v)
                     const metrics = measureText(v.title, titleSize, 500)
                     const titleHeight = metrics.fontBoundingBoxAscent + metrics.fontBoundingBoxDescent;
                     const lcdSize = orientation == "horizontal" ? width - textWidth - 20 : height - titleHeight - 20 - ((showMin || showMax) ? minMaxHeight : 0)
