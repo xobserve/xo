@@ -10,7 +10,7 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-import { Box, Button, Center, Checkbox, HStack, Image, Input, SimpleGrid, Switch, Text, Textarea } from "@chakra-ui/react"
+import { Box, Center, Image, SimpleGrid, Switch, Text } from "@chakra-ui/react"
 import { upperFirst } from "lodash"
 import { Panel, PanelEditorProps, PanelType } from "types/dashboard"
 import PanelAccordion from "./Accordion"
@@ -33,12 +33,14 @@ const PanelSettings = memo(({ panel, onChange }: PanelEditorProps) => {
         pluginsCachedInEdit[panel.type] = panel.plugins[panel.type]
         overridesCacheInEdit[panel.type] = panel.overrides
         onChange((tempPanel: Panel) => {
+            const oldPlugin = tempPanel.plugins[tempPanel.type]
             tempPanel.type = type
-
             tempPanel.plugins = {
                 [type]: pluginsCachedInEdit[type] ?? initPanelPlugins()[type]
             }
-
+            if (oldPlugin.value) {
+                tempPanel.plugins[type].value = oldPlugin.value
+            }
             tempPanel.overrides = overridesCacheInEdit[type] ?? []
         })
     }
