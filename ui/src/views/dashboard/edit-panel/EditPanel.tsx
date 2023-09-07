@@ -42,7 +42,7 @@ import storage from "utils/localStorage"
 import EditPanelAlert from "./Alert"
 import { useLocation, useSearchParam } from "react-use"
 import { useLandscapeMode } from "hooks/useLandscapeMode"
-import { MobileBreakpoint } from "src/data/constants"
+import { GRID_COLUMN_COUNT, MobileBreakpoint } from "src/data/constants"
 import { isEmpty } from "utils/validate"
 import TextPanelEditor from "../plugins/panel/text/Editor"
 import GraphPanelEditor from "../plugins/panel/graph/Editor"
@@ -58,6 +58,7 @@ import GeoMapPanelEditor from "../plugins/panel/geomap/Editor"
 import LogPanelEditor from "../plugins/panel/log/Editor"
 import BarPanelEditor from "../plugins/panel/bar/Editor"
 import AlertPanelEditor from "../plugins/panel/alert/Editor"
+import { translateGridHeightToScreenHeight } from "../grid/DashboardGrid"
 
 interface EditPanelProps {
     dashboard: Dashboard
@@ -86,6 +87,7 @@ const EditPanel = memo(({ dashboard, onChange, edit }: EditPanelProps) => {
     const [hideDatasource, setHideDatasource] = useState(false)
     const [pageChanged, setPageChanged] = useState(false)
     const [data, setData] = useState(null)
+    const [view, setView] = useState<"fill" | "actual">("fill")
 
     useLandscapeMode(!isEmpty(edit))
 
@@ -236,6 +238,18 @@ const EditPanel = memo(({ dashboard, onChange, edit }: EditPanelProps) => {
     }
 
     const [isLargeScreen] = useMediaQuery(MobileBreakpoint)
+
+    let w 
+    let h
+    if (tempPanel && view == "actual") {
+        const ele = document.getElementById("dashboard-grid")
+        const gridW = ele?.offsetWidth
+        w = gridW * (tempPanel.gridPos.w / GRID_COLUMN_COUNT)
+        h = translateGridHeightToScreenHeight(tempPanel.gridPos.h)
+    }
+
+
+
     return (<>
         <Modal isOpen={isOpen} onClose={onEditClose} autoFocus={false} size="full">
             <ModalOverlay />
@@ -245,6 +259,10 @@ const EditPanel = memo(({ dashboard, onChange, edit }: EditPanelProps) => {
                     <ModalHeader>
                         <Flex justifyContent="space-between">
                             {isLargeScreen ? <Text>{dashboard.title} / {t1.editPanel}</Text> : <Text>{t1.editPanel}</Text>}
+                            <HStack spacing={0}>
+                                <Button size="sm" variant={view == "fill" ? "solid" : "outline"} colorScheme="gray" onClick={() => setView("fill")}>Fill</Button>
+                                <Button size="sm" variant={view == "actual" ? "solid" : "outline"} colorScheme="gray" onClick={() => setView("actual")}>Actual</Button>
+                            </HStack>
                             <HStack spacing={1}>
                                 <DatePicker showTime showRealTime />
                                 <ColorModeSwitcher miniMode disableTrigger />
@@ -257,15 +275,20 @@ const EditPanel = memo(({ dashboard, onChange, edit }: EditPanelProps) => {
                         <HStack height="calc(100vh - 100px)" alignItems="top">
                             <Box width="65%" height={`calc(100%)`}>
                                 {/* panel rendering section */}
-                                <Box height={maxPanelHeight()} id="edit-panel-render" position="relative" >
-                                    <AutoSizer>
+                                <Box  height={maxPanelHeight()} id="edit-panel-render" position="relative" >
+                                    {view == "fill" ? <AutoSizer>
                                         {({ width, height }) => {
                                             if (width === 0) {
                                                 return null;
                                             }
+
+
                                             return <PanelGrid width={width} height={height} key={tempPanel.id + tempPanel.type} dashboard={dashboard} panel={tempPanel} sync={null} />
                                         }}
-                                    </AutoSizer>
+                                    </AutoSizer> :
+                                        <Box width="100%" display="flex" justifyContent={"center"}>
+                                            <PanelGrid width={w} height={h} key={tempPanel.id + tempPanel.type} dashboard={dashboard} panel={tempPanel} sync={null} />
+                                        </Box>}
                                     {!tempPanel.plugins[tempPanel.type].disableDatasource && <Box zIndex={1} position="absolute" right="0" bottom={hideDatasource ? "0" : "-35px"} opacity={hideDatasource ? 0.8 : 0.4} cursor="pointer" className={`hover-text ${hideDatasource ? "color-text" : null}`} fontSize=".8rem" onClick={() => { setHideDatasource(!hideDatasource); storage.set(StorageHideDsKey + dashboard.id + tempPanel.id, !hideDatasource) }}>{hideDatasource ? <FaArrowUp /> : <FaArrowDown />}</Box>}
                                 </Box>
                                 {/* panel datasource section */}
@@ -347,7 +370,7 @@ const EditPanel = memo(({ dashboard, onChange, edit }: EditPanelProps) => {
                     </ModalBody>
                 </ModalContent>}
         </Modal>
-        {edit && dashboard.data.enableUnsavePrompt  && <PageLeave pageChanged={pageChanged}/>}
+        {edit && dashboard.data.enableUnsavePrompt && <PageLeave pageChanged={pageChanged} />}
     </>)
 })
 

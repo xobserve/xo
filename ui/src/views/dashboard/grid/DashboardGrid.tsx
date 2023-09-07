@@ -321,6 +321,6 @@ const GridItem = React.forwardRef<HTMLDivElement, GridItemProps>((props, ref) =>
 /**
 * This translates grid height dimensions to real pixels
 */
-function translateGridHeightToScreenHeight(gridHeight: number): number {
+export function translateGridHeightToScreenHeight(gridHeight: number): number {
     return gridHeight * (GRID_CELL_HEIGHT + GRID_CELL_VMARGIN) - GRID_CELL_VMARGIN;
 }
