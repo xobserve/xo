@@ -48,7 +48,7 @@ const TraceCard = ({ trace, maxDuration,checked=false, onChecked=null,simple=fal
                 </Flex>
             </HStack>
         </Box>
-        <Flex flexDir={isLargeScreen ? "row" : "column"} alignItems={isLargeScreen ? "center" : "start"} width="100%" justifyContent={isLargeScreen ? "space-between"  : null} pt={isLargeScreen ? 2 : 2} pb={isLargeScreen ? 5 : 3} px={isLargeScreen ? 2 : 1}>
+        <Flex flexDir={isLargeScreen ? "row" : "column"} alignItems={isLargeScreen ? "center" : "start"} width="100%" justifyContent={isLargeScreen ? "space-between"  : null} pt={isLargeScreen ? 2 : 2} pb={isLargeScreen ? 4 : 3} px={isLargeScreen ? 2 : 1}>
             <Box>
                 <HStack alignItems="top">
                     <Tag size="md" variant="subtle" colorScheme="gray" bg="transparent" fontSize="0.7rem">{trace.spans.length} Spans</Tag>
