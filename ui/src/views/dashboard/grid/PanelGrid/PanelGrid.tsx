@@ -205,6 +205,9 @@ export const PanelComponent = ({ dashboard, panel, variables, onRemovePanel, onH
         } else {
             const promises = []
             for (const q0 of ds.queries) {
+                if (!q0.visible) {
+                    continue
+                }
                 const q: PanelQuery = { ...cloneDeep(q0), interval }
                 replaceQueryWithVariables(q, datasource.type, intervalObj.interval)
                 if (datasource.type != DatasourceType.TestData && hasVariableFormat(q.metrics)) {

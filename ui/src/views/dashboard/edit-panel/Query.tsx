@@ -12,7 +12,7 @@
 // limitations under the License.
 import { Box, Button, Flex, HStack, Image, Select, Text, VStack } from "@chakra-ui/react"
 import { useState } from "react"
-import { FaAngleDown, FaAngleRight, FaPlus, FaTrashAlt } from "react-icons/fa"
+import { FaAngleDown, FaAngleRight, FaEye, FaEyeSlash, FaPlus, FaTrashAlt } from "react-icons/fa"
 import { DatasourceType, Panel, PanelQuery } from "types/dashboard"
 import JaegerQueryEditor from "../plugins/datasource/jaeger/QueryEditor"
 import PrometheusQueryEditor from "../plugins/datasource/prometheus/QueryEditor"
@@ -34,6 +34,7 @@ import LokiQueryEditor from "../plugins/datasource/loki/QueryEditor"
 import DatasourceSelect from "src/components/datasource/Select"
 import { getDatasource } from "utils/datasource"
 import { isNumber } from "lodash"
+import { id } from "date-fns/locale"
 
 interface Props {
     panel: Panel
@@ -86,6 +87,17 @@ const EditPanelQuery = (props: Props) => {
         })
     }
 
+    const onVisibleChange = (id, visible) => {
+            onChange((panel: Panel) => {
+                const ds = panel.datasource
+                for (var i = 0; i < ds.queries.length; i++) {
+                    if (ds.queries[i].id === id) {
+                        ds.queries[i].visible = visible
+                        break
+                    }
+                }
+            })
+        }
     const currentDatasource = getDatasource(panel.datasource.id)
     return (<>
         <Box className="bordered" p="2" borderRadius="0" height="100%">
@@ -103,8 +115,9 @@ const EditPanelQuery = (props: Props) => {
                     return <Box key={index}>
                         <Flex justifyContent="space-between" className="label-bg" py="1" px="2" mb="1">
                             <Text className="color-text">{String.fromCharCode(query.id)}</Text>
-                            <HStack layerStyle="textSecondary">
-                                <FaTrashAlt fontSize="12px" cursor="pointer" onClick={() => removeQuery(query.id)} />
+                            <HStack layerStyle="textSecondary" fontSize="12px" spacing={3}>
+                                {query.visible ? <FaEye cursor="pointer" onClick={() => onVisibleChange(query.id, false)}/> : <FaEyeSlash cursor="pointer" onClick={() => onVisibleChange(query.id, true)}/>}
+                                <FaTrashAlt  cursor="pointer" onClick={() => removeQuery(query.id)} />
                             </HStack>
                         </Flex>
                         {
