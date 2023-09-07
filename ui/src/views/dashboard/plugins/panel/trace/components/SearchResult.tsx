@@ -5,7 +5,7 @@ import { TimeRange } from "types/time"
 import { Box, Button, Flex, HStack, Popover, PopoverArrow, PopoverBody, PopoverContent, PopoverTrigger, Select, StackDivider, Text, VStack, chakra, useMediaQuery } from "@chakra-ui/react"
 import TraceCard from "./TraceCard"
 import { useCallback, useEffect, useMemo, useState } from "react"
-import { clone, cloneDeep, remove } from "lodash"
+import { clone, remove } from "lodash"
 import TraceCompare from "./TraceCompare/TraceCompare"
 import { FaTimes } from "react-icons/fa"
 import React from "react";
@@ -84,9 +84,9 @@ const TraceSearchResult = ({ panel, traces, timeRange ,height}: Props) => {
 
     return (<Box pl="2">
         <SearchResultPlot traces={traces} timeRange={timeRange} onSelect={onSelect} height={plotHeight} />
-        <Box pl="2" pr="20px">
+        <Box pl="2" pr="20px" pt="4">
             <Flex alignItems="center" justifyContent="space-between" mb="1" fontSize={isLargeScreen ? null : "xs"}>
-                <HStack height="40px" textStyle={isLargeScreen ? "title" : null}>
+                <HStack height="40px" fontSize="0.9rem">
                     {selectedTraces.length != traces.length ? <Text>{selectedTraces.length} {t1.tracesSelected}</Text> : <Text>{selectedTraces.length} {t1.tracesTotal}</Text>}
                     {selectedTraces.length != traces.length && <Button size="sm" variant="outline" onClick={() => setSelectedTraces(clone(traces))}>{t1.clearSelection}</Button>}
                 </HStack>
@@ -97,13 +97,13 @@ const TraceSearchResult = ({ panel, traces, timeRange ,height}: Props) => {
                     </HStack>
                 }
                 <HStack alignItems="center">
-                    <Text minWidth="fit-content">排序</Text>
-                    <Select size={isLargeScreen ? "sm" : "xs"} value={sort} onChange={e => setSort(e.currentTarget.value)}>
+                    {/* <Text minWidth="fit-content" fontSize="0.9rem">排序</Text> */}
+                    <Select variant="unstyled" size={isLargeScreen ? "sm" : "xs"} value={sort} onChange={e => setSort(e.currentTarget.value)}>
                         {traceSortTypes.map(sortType => <option key={sortType.value} value={sortType.value}>{t1[sortType.value]}</option>)}
                     </Select>
                 </HStack>
             </Flex>
-            <VStack alignItems="left" maxH={height - plotHeight}>
+            <VStack alignItems="left" maxH={height - plotHeight - 58}>
                 <CustomScrollbar>
                     {sortedTraces.map(trace => <TraceCard key={trace.traceID} trace={trace} maxDuration={maxDuration} checked={comparison.includes(trace.traceID)} checkDisabled={comparison.length >= 2 && !comparison.includes(trace.traceID)} onChecked={onTraceChecked} dsId={panel.datasource.id}/>)}
                 </CustomScrollbar>

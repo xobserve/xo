@@ -183,33 +183,33 @@ const TraceSearchPanel = ({ timeRange, dashboardId, panel, onSearch, onSearchIds
             <FormSection title="Service"  spacing={1}>
                 {
                     panel.plugins.trace.enableEditService ?
-                        <InputSelect value={service} options={services.map(s => ({ label: s, value: s }))} size={size} onChange={v => setService(v)} />
-                        : <Input value={service} disabled size={size} />
+                        <InputSelect variant="flushed" value={service} options={services.map(s => ({ label: s, value: s }))} size={size} onChange={v => setService(v)} />
+                        : <Input variant="flushed" value={service} disabled size={size} />
                 }
             </FormSection>
             <FormSection title="Operation" spacing={1}>
-                <InputSelect value={operation} options={operations.map(s => ({ label: s, value: s }))} size={size} onChange={v => setOperation(v)} />
+                <InputSelect variant="flushed" value={operation} options={operations.map(s => ({ label: s, value: s }))} size={size} onChange={v => setOperation(v)} />
             </FormSection>
             <FormSection title="Tags" spacing={1}>
-                <EditorInputItem value={tags} placeholder={`e.g http.status_code=200 error=true`} onChange={v => setTags(v)} />
+                <EditorInputItem bordered={false} borderedBottom value={tags} placeholder={`e.g http.status_code=200 error=true`} onChange={v => setTags(v)} />
             </FormSection>
             <Flex flexDir={isLargeScreen ? "row" : "column"} gap={1}>
                 <FormSection title={t1.maxDuration}  spacing={1}>
-                    <EditorInputItem value={max} placeholder="e.g 1.2s,100ms" onChange={v => setMax(v)} />
+                    <EditorInputItem bordered={false} borderedBottom value={max} placeholder="e.g 1.2s,100ms" onChange={v => setMax(v)} />
                 </FormSection>
                 <FormSection title={t1.minDuration}  spacing={1}>
-                    <EditorInputItem value={min} placeholder="e.g 1.2s,100ms" onChange={v => setMin(v)} />
+                    <EditorInputItem bordered={false} borderedBottom value={min} placeholder="e.g 1.2s,100ms" onChange={v => setMin(v)} />
                 </FormSection>
             </Flex>
             <FormSection title={t1.limitResults} spacing={1}>
-                <EditorNumberItem value={limit} min={0} onChange={v => setLimit(v)} size="md" />
+                <EditorNumberItem bordered={false} value={limit} min={0} onChange={v => setLimit(v)} size="md" />
             </FormSection>
             <Divider pt="2" />
             <FormSection title="Trace ids" spacing={1} desc={t1.traceIdsTips}>
-                <EditorInputItem placeholder={t1.traceIdsInputTips} value={traceIds} onChange={v => setTraceIds(v)} size="md" />
+                <EditorInputItem  placeholder={t1.traceIdsInputTips} value={traceIds} onChange={v => setTraceIds(v)} size="md" />
             </FormSection>
-            <Flex flexDir={isLargeScreen ? "row" : "column"} gap={1}>
-                <Button width={isLargeScreen ? "150px" : null} size={size} onClick={onClickSearch}>{isLargeScreen ? t1.findTraces : "Search"}</Button>
+            <Flex flexDir={isLargeScreen ? "row" : "column"} gap={3} pt="2">
+                <Button width={isLargeScreen ? "120px" : null} size={size} onClick={onClickSearch}>{isLargeScreen ? t1.findTraces : "Search"}</Button>
                 <HStack spacing={1}>
                     <Checkbox isChecked={useLatestTime} onChange={e => setUseLatestTime(e.currentTarget.checked)} />
                     <Text opacity="0.7">{t1.useLatestTime}</Text>

@@ -142,9 +142,9 @@ const SearchResultPlot = memo(({ traces, timeRange, onSelect,height }: Props) =>
         symbolSize: function (data) {
             let size = Math.sqrt(data[1])
             if (size < 20) {
+                size = 10
+            } else if (size > 20) {
                 size = 20
-            } else if (size > 50) {
-                size = 50
             }
 
             return size;
@@ -176,6 +176,7 @@ const SearchResultPlot = memo(({ traces, timeRange, onSelect,height }: Props) =>
                 bottom: '10%',
             },
             tooltip: {
+                show:false,
                 backgroundColor: 'rgba(255,255,255,0.9)',
                 trigger: 'item',
                 axisPointer: {
@@ -206,7 +207,7 @@ const SearchResultPlot = memo(({ traces, timeRange, onSelect,height }: Props) =>
                     formatter: (function (value) {
                         return moment(value).format('MM-DD HH:mm:ss');
                     }),
-                    fontSize: isLargeScreen? 12 : 10
+                    fontSize: isLargeScreen? 11 : 10
                 },
 
                 min: minX,
@@ -222,14 +223,14 @@ const SearchResultPlot = memo(({ traces, timeRange, onSelect,height }: Props) =>
                 nameLocation: 'end',
                 nameGap: 20,
                 splitLine: {
-                    show: true
+                    show: false
                 },
                 splitNumber: 3,
                 axisLabel: {
                     formatter: function (value, index) {
                         return value + 'ms';
                     },
-                    fontSize: isLargeScreen? 12 : 10
+                    fontSize: isLargeScreen? 11 : 10
                 },
                 nameTextStyle: {
                     align: "right"

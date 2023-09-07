@@ -8,6 +8,7 @@ import moment from "moment"
 import React from "react";
 import { getDatasource } from "utils/datasource"
 import { MobileBreakpoint } from "src/data/constants"
+import { colors, paletteColorNameToHex, palettes } from "utils/colors"
 
 interface Props {
     trace: Trace
@@ -31,12 +32,12 @@ const TraceCard = ({ trace, maxDuration,checked=false, onChecked=null,simple=fal
 
     const [isLargeScreen] = useMediaQuery(MobileBreakpoint)
 
-    return (<Box width="100%" className="bordered" borderRadius="0" cursor="pointer" onClick={onTraceClick} fontSize={isLargeScreen ? "sm" : "xs"}>
+    return (<Box width="100%" className="" borderRadius="0" cursor="pointer" onClick={onTraceClick} fontSize={isLargeScreen ? "sm" : "xs"}>
         <Box width="100%" position="relative" className="label-bg">
-            <HStack spacing={0} py="5px">
+            <HStack spacing={0} py="2px">
                 {onChecked && <Flex alignItems="center" px="2" zIndex={2}  onClick={e => {
                     e.stopPropagation(); 
-                }}><Checkbox defaultChecked={checked} isChecked={checked} isDisabled={checkDisabled} bg={useColorModeValue("white", "transparent")} onChange={e =>  onChecked(trace.traceID)  }/></Flex>}
+                }}><Checkbox size="sm" defaultChecked={checked} isChecked={checked} isDisabled={checkDisabled} bg={useColorModeValue("white", "transparent")} onChange={e =>  onChecked(trace.traceID)  }/></Flex>}
                 <Box width={`${(trace.duration / maxDuration) * 100}%`} bg={useColorModeValue("#d7e7ea", "brand.800")} height="100%" position="absolute" top="0"></Box>
                 <Flex alignItems="center" width="100%" justifyContent="space-between" position="relative" pr="2" >
                     <Flex flexDir={isLargeScreen ? "row" : "column"} gap={isLargeScreen ? 1 : 0}>
@@ -47,15 +48,15 @@ const TraceCard = ({ trace, maxDuration,checked=false, onChecked=null,simple=fal
                 </Flex>
             </HStack>
         </Box>
-        <Flex flexDir={isLargeScreen ? "row" : "column"} alignItems={isLargeScreen ? "center" : "start"} width="100%" justifyContent={isLargeScreen ? "space-between"  : null} pt={isLargeScreen ? 4 : 2} pb={isLargeScreen ? 3 : 1} px={isLargeScreen ? 2 : 1}>
+        <Flex flexDir={isLargeScreen ? "row" : "column"} alignItems={isLargeScreen ? "center" : "start"} width="100%" justifyContent={isLargeScreen ? "space-between"  : null} pt={isLargeScreen ? 2 : 2} pb={isLargeScreen ? 5 : 3} px={isLargeScreen ? 2 : 1}>
             <Box>
                 <HStack alignItems="top">
-                    <Tag size="md" variant="subtle" colorScheme="gray" bg="transparent" className="bordered" fontSize="0.7rem">{trace.spans.length} Spans</Tag>
-                    <Tag size="md" variant="subtle" colorScheme="gray" bg="transparent" className="bordered" fontSize="0.7rem">{Object.keys(trace.processes).length} Services</Tag>
-                    {trace.errorsCount > 0 && <Tag size="md" variant="subtle" colorScheme="red" className="bordered" fontSize="0.8rem">{trace.errorsCount} Errors</Tag>}
+                    <Tag size="md" variant="subtle" colorScheme="gray" bg="transparent" fontSize="0.7rem">{trace.spans.length} Spans</Tag>
+                    <Tag size="md" variant="subtle" colorScheme="gray" bg="transparent"  fontSize="0.7rem">{Object.keys(trace.processes).length} Services</Tag>
+                    {trace.errorsCount > 0 && <Tag size="sm" variant="subtle" colorScheme="gray" bg="transparent" color={paletteColorNameToHex(palettes[15])}  fontSize="0.7rem">{trace.errorsCount} Errors</Tag>}
                   
                 </HStack>
-                {!simple && <Wrap mt={isLargeScreen? 4: 2} spacingX={3}>
+                {!simple && <Wrap mt={1} spacingX={3}>
                     {sortBy(trace.services, s => s.name).map(service => {
                         const { name, numberOfSpans: count } = service;
                         return (
@@ -65,12 +66,12 @@ const TraceCard = ({ trace, maxDuration,checked=false, onChecked=null,simple=fal
                                     colorScheme="gray"
                                     bg="transparent"
                                     className="bordered"
-                                    borderLeft={`12px solid ${colorGenerator.getColorByKey(name)}`}
+                                    borderLeft={`6px solid ${colorGenerator.getColorByKey(name)}`}
                                     size="sm"
                                     borderRadius={4}
                                     opacity={0.8}
                                 >
-                                    {trace.errorServices.has(name) && <TagLeftIcon color="red" as={FaInfoCircle} />}
+                                    {trace.errorServices.has(name) && <TagLeftIcon color={paletteColorNameToHex(palettes[15])} as={FaInfoCircle} />}
                                     <TagLabel >{name} {count}</TagLabel>
                                 </Tag>
                             </WrapItem>

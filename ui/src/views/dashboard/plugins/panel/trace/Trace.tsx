@@ -117,10 +117,10 @@ const TracePanel = (props: PanelProps) => {
 
     const resultHeight= props.height - 7
     const [isLargeScreen] = useMediaQuery(MobileBreakpoint)
-    const searchPanelWidth = isLargeScreen ? "400px" : "120px"
+    const searchPanelWidth = isLargeScreen ? "350px" : "140px"
     return (<>
         {(ds.type != DatasourceType.Jaeger && ds.type != DatasourceType.TestData) ? <Center height="100%">No data</Center> :
-            <HStack alignItems="top" px="2" py="1">
+            <HStack alignItems="top" px="2" py="1" spacing={isLargeScreen ? 8 : 2}>
                 <Box width={searchPanelWidth} pt="2" pl="1" maxH={props.height}>
                     <CustomScrollbar>
                         <TraceSearchPanel timeRange={props.timeRange} dashboardId={props.dashboardId} panel={props.panel} onSearch={onSearch} onSearchIds={onSearchIds} />
