@@ -138,7 +138,26 @@ const PiePanelEditor = memo(({ panel, onChange }: PanelEditorProps) => {
                     }
                 </Select>
             </PanelEditItem>
-
+            <PanelEditItem title={t.width}>
+                <EditorNumberItem value={panel.plugins.pie.legend.width} min={0} max={50} step={1} onChange={(v) => onChange((panel: Panel) => {
+                    panel.plugins.pie.legend.width = v
+                })} />
+            </PanelEditItem>
+            <PanelEditItem title={t.height}>
+                <EditorNumberItem value={panel.plugins.pie.legend.height} min={0} max={50} step={1} onChange={(v) => onChange((panel: Panel) => {
+                    panel.plugins.pie.legend.height = v
+                })} />
+            </PanelEditItem>
+            <PanelEditItem title="Gap">
+                <EditorNumberItem value={panel.plugins.pie.legend.gap} min={0} max={50} step={1} onChange={(v) => onChange((panel: Panel) => {
+                    panel.plugins.pie.legend.gap = v
+                })} />
+            </PanelEditItem>
+            <PanelEditItem title="Font size">
+                <EditorNumberItem value={panel.plugins.pie.legend.fontSize} min={8} max={30} step={1} onChange={(v) => onChange((panel: Panel) => {
+                    panel.plugins.pie.legend.fontSize = v
+                })} />
+            </PanelEditItem>
         </PanelAccordion>
 
         <PanelAccordion title="Value">

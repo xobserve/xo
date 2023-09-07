@@ -265,6 +265,10 @@ export interface PieSettings {
         show: boolean
         orient: 'vertical' | 'horizontal'
         placement: PieLegendPlacement
+        fontSize: number
+        width: number
+        height: number
+        gap: number
     }
     top: string 
     left: string

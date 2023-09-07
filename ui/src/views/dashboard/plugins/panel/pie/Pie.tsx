@@ -126,7 +126,14 @@ const PiePanel = (props: Props) => {
             animation: panel.plugins.pie.animation,
             legend: {
                 show: showLegend,
+                itemGap: panel.plugins.pie.legend.gap,
+                itemWidth: panel.plugins.pie.legend.width,
+                itemHeight: panel.plugins.pie.legend.height,
                 orient: panel.plugins.pie.legend.orient,
+
+                textStyle: {
+                    fontSize: panel.plugins.pie.legend.fontSize
+                },
                 ...lp
             },
             tooltip: {

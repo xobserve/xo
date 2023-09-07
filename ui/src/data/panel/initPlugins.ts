@@ -237,7 +237,11 @@ function registerEvents(options, chart, navigate, setVariable, setDateTime, $var
             legend: {
                 show: false,
                 orient: 'horizontal',
-                placement: PieLegendPlacement.Bottom
+                placement: PieLegendPlacement.Bottom,
+                width: 25, 
+                height: 14, 
+                gap: 10,
+                fontSize: 12
             },
             top: "50%",
             left: "50%",
