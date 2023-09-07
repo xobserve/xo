@@ -176,7 +176,6 @@ const SearchResultPlot = memo(({ traces, timeRange, onSelect,height }: Props) =>
                 bottom: '10%',
             },
             tooltip: {
-                show:false,
                 backgroundColor: 'rgba(255,255,255,0.9)',
                 trigger: 'item',
                 axisPointer: {
