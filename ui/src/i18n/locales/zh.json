@@ -184,7 +184,7 @@
     "descTips": "简单介绍下变量",
     "valueTips": "使用逗号分隔多个值，例如 1,10,20,a,b,c",
     "fitlerTips": "使用正则表达式进一步过滤查询到的结果",
-    "useCurrentTime": "使用当前已选时间",
+    "useCurrentTime": "使用设置的时间查询",
     "selectMetrics": "选择 metrics",
     "metricTips": "支持变量",
     "noVariableTitle": "还没创建任何变量",

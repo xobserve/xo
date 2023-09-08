@@ -194,7 +194,7 @@ export const cfgVariablemsg = i18n("cfgVariable", {
   "descTips": "give this variable a simple description",
   "valueTips": "Values separated by comma,e.g 1,10,20,a,b,c",
   "fitlerTips": "further filter the query result through a Regex pattern",
-  "useCurrentTime": "Use current time",
+  "useCurrentTime": "Query with current time",
   "selectMetrics": "Select metrics",
   "metricTips": "support using variables",
   "noVariableTitle": "There is no variables yet.",

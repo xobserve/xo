@@ -10,7 +10,7 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-import { Button, Select, Switch } from "@chakra-ui/react"
+import { Button, Select, Switch, Text } from "@chakra-ui/react"
 import { useEffect } from "react"
 import { Variable } from "types/variable"
 import { isJSON } from "utils/is"
@@ -22,6 +22,8 @@ import FormItem from "src/components/form/Item"
 import React from "react";
 import { useStore } from "@nanostores/react"
 import { cfgVariablemsg } from "src/i18n/locales/en"
+import { getCurrentTimeRange } from "components/DatePicker/TimePicker"
+import { dateTimeFormat } from "utils/datetime/formatter"
 
 
 export enum PromDsQueryTypes {
@@ -49,6 +51,7 @@ const PrometheusVariableEditor = ({ variable, onChange,onQueryResult }: Datasour
         onQueryResult(result)
     }
 
+    const timeRange = getCurrentTimeRange()
     return (<>
             <FormItem title={t1.useCurrentTime} alignItems="center">
                 <Switch size="md" defaultChecked={data.useCurrentTime} onChange={e => {
@@ -57,6 +60,7 @@ const PrometheusVariableEditor = ({ variable, onChange,onQueryResult }: Datasour
                         variable.value = JSON.stringify(data)
                     })
                 }}/>
+                {data.useCurrentTime && <Text textStyle="annotation">{dateTimeFormat(timeRange.start)} - {dateTimeFormat(timeRange.end)}</Text>}
             </FormItem>
             <FormItem title={t1.queryType}>
                 <Select value={data.type} onChange={e => {

@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import React from "react"
+import React, { useEffect } from "react"
 
 export function loadBMap(ak) {
     return new Promise(function (resolve, reject) {
@@ -48,7 +48,10 @@ interface Props {
 }
 
 const BaiduMap = ({ak}:Props) => {
-    loadBMap(ak)
+    useEffect(() => {
+        loadBMap(ak)
+    },[])
+
     return (<></>)
 }
 
