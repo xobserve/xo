@@ -180,7 +180,7 @@ export const PanelComponent = ({ dashboard, panel, variables, onRemovePanel, onH
         queryH.current = setTimeout(() => {
             queryData(panel, dashboard.id)
         }, 200)
-    }, [panel.datasource, timeRange, variables])
+    }, [panel.datasource, timeRange, variables, datasources])
 
 
 
@@ -198,8 +198,8 @@ export const PanelComponent = ({ dashboard, panel, variables, onRemovePanel, onH
         const intervalObj = calculateInterval(timeRange, ds.queryOptions.maxDataPoints ?? DatasourceMaxDataPoints, isEmpty(ds.queryOptions.minInterval) ? DatasourceMinInterval : ds.queryOptions.minInterval)
         const interval = intervalObj.intervalMs / 1000
 
-        setLoading(true)
         if (panel.type == PanelType.Alert) {
+            setLoading(true)
             const res = await queryAlerts(panel, timeRange, panel.plugins.alert.filter.datasources, panel.plugins.alert.filter.httpQuery, datasources)
             setQueryError(res.error)
             data = res.data
@@ -261,7 +261,7 @@ export const PanelComponent = ({ dashboard, panel, variables, onRemovePanel, onH
                     query: currentQuery
                 })
             }
-
+            setLoading(true)
             const res0 = await Promise.allSettled(promises.map(p => p.h))
             res0.forEach((res0, i) => {
                 if (res0.status == "fulfilled") {
