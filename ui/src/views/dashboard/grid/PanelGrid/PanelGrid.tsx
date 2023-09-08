@@ -280,13 +280,6 @@ export const PanelComponent = ({ dashboard, panel, variables, onRemovePanel, onH
                     }
 
                 })
-            } else {
-                if (panelData === null && ds.queries.length > 0) {
-                    // panel are waiting for its dependent variables to be loaded
-                    // dont change panel data now
-                    setLoading(false)
-                    return 
-                }
             }
 
         }
