@@ -341,9 +341,9 @@ export const PanelComponent = ({ dashboard, panel, variables, onRemovePanel, onH
 
     return <Box height={height} width={width} className={(panel.styles.border == "Normal" && "bordered") + (dashboard.data.styles.bgEnabled ? " panel-bg-alpha" : " panel-bg")} position="relative">
 
-        {data ? <>
+        {!isEmpty(data) ? <>
             <PanelHeader dashboardId={dashboard.id} panel={panel} data={panelData} queryError={queryError} onCopyPanel={onCopyPanel} onRemovePanel={onRemovePanel} onHidePanel={onHidePanel} />
-            <ErrorBoundary>
+            {/* <ErrorBoundary> */}
                 <Box
                     // panel={panel}
                     height={panelInnerHeight}
@@ -351,7 +351,7 @@ export const PanelComponent = ({ dashboard, panel, variables, onRemovePanel, onH
                 >
                     <CustomPanelRender dashboardId={dashboard.id} panel={panel} data={data} height={panelInnerHeight} width={panelInnerWidth} sync={sync} timeRange={timeRange} />
                 </Box>
-            </ErrorBoundary>
+            {/* </ErrorBoundary> */}
             {loading && <Box position="absolute" top="0" right="0"><Loading size="sm" /></Box>}
         </>
             : <Box position="absolute" top="0" right="0"><Loading size="sm" /></Box>}
