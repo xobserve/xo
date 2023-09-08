@@ -202,7 +202,11 @@ const SelectVariable = memo(({ v }: { v: Variable }) => {
                 variant="unstyled"
                 onChange={value => {
                     const vs = value.filter(v1 => values.includes(v1))
+                    if (isEmpty(vs)) {
+                        setValue(v, "")
+                    } 
                     setVariableValue(v, vs.length == 0 ? "" : vs.join(VariableSplitChar))
+                    
                 }}
                 options={values.map(v => ({ value: v, label: v }))}
                 exclusive={VarialbeAllOption}
