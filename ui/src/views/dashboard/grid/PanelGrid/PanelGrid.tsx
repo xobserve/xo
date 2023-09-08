@@ -118,7 +118,6 @@ export const PanelGrid = memo((props: PanelGridProps) => {
                 clearInterval(depsCheck.current)
                 depsCheck.current = null
             } else {
-                console.log("check panel refer vars inited", props.panel.id, retryNum)
                 retryNum += 1
             }
         }, 100)
@@ -261,25 +260,30 @@ export const PanelComponent = ({ dashboard, panel, variables, onRemovePanel, onH
                     query: currentQuery
                 })
             }
-            setLoading(true)
-            const res0 = await Promise.allSettled(promises.map(p => p.h))
-            res0.forEach((res0, i) => {
-                if (res0.status == "fulfilled") {
-                    const res = res0.value
-                    const id = promises[i].id
-                    const currentQuery = promises[i].query
-                    setQueryError(res.error)
-                    // currently only cache not empty data
-                    if (!isEmpty(res.data)) {
-                        data.push(res.data)
-                        prevQueryData[id] = res.data
-                        prevQueries.set(id, currentQuery)
+            if (promises.length > 0) {
+                setLoading(true)
+                const res0 = await Promise.allSettled(promises.map(p => p.h))
+                res0.forEach((res0, i) => {
+                    if (res0.status == "fulfilled") {
+                        const res = res0.value
+                        const id = promises[i].id
+                        const currentQuery = promises[i].query
+                        setQueryError(res.error)
+                        // currently only cache not empty data
+                        if (!isEmpty(res.data)) {
+                            data.push(res.data)
+                            prevQueryData[id] = res.data
+                            prevQueries.set(id, currentQuery)
+                        }
+                    } else {
+                        console.log("query data error:", res0.reason)
+                        setQueryError(res0.reason)
                     }
-                } else {
-                    console.log("query data error:", res0.reason)
-                    setQueryError(res0.reason)
-                }
-            })
+
+                    setLoading(false)
+                })
+            }
+
         }
 
 
@@ -292,7 +296,7 @@ export const PanelComponent = ({ dashboard, panel, variables, onRemovePanel, onH
             }
         }
 
-        setLoading(false)
+
         console.timeEnd("time used - query data for panel:")
     }
 
