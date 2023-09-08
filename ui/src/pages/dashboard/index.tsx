@@ -35,7 +35,7 @@ const DashboardPage = memo(({ sideWidth }: Props) => {
     const [dashboardId, setDashboardId] = useState<string>(null)
     const [error, setError] = useState(null)
     useEffect(() => {
-        if (location && config) {
+        if (location && config.sidemenu) {
             setError(null)
             if (location.pathname == '/alert') {
                 setDashboardId(AlertDashbordId)

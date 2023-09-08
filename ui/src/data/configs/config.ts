@@ -30,7 +30,7 @@ const config: UIConfig = {
     showAlertIcon: false,
     githubOAuthToken: '',
     enableGithubLogin: false,
-    sidemenu: []
+    sidemenu: null
 };
 
 export const $config = atom<UIConfig>(config)
