@@ -138,7 +138,9 @@ export const PanelGrid = memo((props: PanelGridProps) => {
 
     return (
         <PanelBorder width={props.width} height={props.height} border={props.panel.styles?.border}>
-            {depsInited && <PanelComponent key={props.panel.id + forceRenderCount} {...props} timeRange={tr} variables={variables} />}
+            {depsInited ?
+                 <PanelComponent key={props.panel.id + forceRenderCount} {...props} timeRange={tr} variables={variables} />
+                : <Box position="absolute" top="0" right="0"><Loading size="sm" /></Box>}
         </PanelBorder>
     )
 })
