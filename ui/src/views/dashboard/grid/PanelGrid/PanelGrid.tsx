@@ -280,19 +280,24 @@ export const PanelComponent = ({ dashboard, panel, variables, onRemovePanel, onH
                     }
 
                 })
+            } else {
+                if (panelData === null && ds.queries.length > 0) {
+                    // panel are waiting for its dependent variables to be loaded
+                    // dont change panel data now
+                    setLoading(false)
+                    return 
+                }
             }
 
         }
 
-        const isInitDataEmpty = panelData === null && isEmpty(data)
-        if (!isInitDataEmpty) {
-            if (needUpdate) {
-                console.log("query data and set panel data:", panel.id, data)
+
+        if (needUpdate) {
+            console.log("query data and set panel data:", panel.id, data)
+            setPanelData(data)
+        } else {
+            if (!isEqual(panelData, data)) {
                 setPanelData(data)
-            } else {
-                if (!isEqual(panelData, data)) {
-                    setPanelData(data)
-                }
             }
         }
 
