@@ -63,14 +63,16 @@ interface Props {
 }
 
 const PageContainer = (props) => {
-  const config = useStore($config)
   gnavigate = useNavigate()
-  const sidemenu = config.sidemenu
-  return (<Container {...props} sidemenu={sidemenu} config={config}/>)
+  return (<Container {...props} />)
 }
 
 export default PageContainer
-const Container = ({ children, sidemenu, config }: Props) => {
+
+const Container = (props: Props) => {
+  const { children } = props
+  const config = useStore($config)
+  const sidemenu = config.sidemenu
   const { session } = useSession()
   const { pathname: asPath } = useLocation()
   const t = useStore(commonMsg)
@@ -102,7 +104,7 @@ const Container = ({ children, sidemenu, config }: Props) => {
     let navWidth = 0
 
     if (!miniMode) {
-      concat(sidemenu??[], bottomNavs).forEach(nav => {
+      concat(sidemenu??[], bottomNavs as any).forEach(nav => {
         // text width + margin + icon width + padding
         const width = measureText(nav.title, navSize).width + 10 + 16 + paddingLeft + paddingRight
         if (width > navWidth) {

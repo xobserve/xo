@@ -31,7 +31,7 @@ interface Props {
 /**
  * Wraps component into <Scrollbars> component from `react-custom-scrollbars`
  */
-export const CustomScrollbar = ({
+const CustomScrollbar = ({
   autoHide = false,
   autoHideTimeout = 200,
   setScrollTop,

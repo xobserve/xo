@@ -197,8 +197,8 @@ export const PanelComponent = ({ dashboard, panel, variables, onRemovePanel, onH
         const intervalObj = calculateInterval(timeRange, ds.queryOptions.maxDataPoints ?? DatasourceMaxDataPoints, isEmpty(ds.queryOptions.minInterval) ? DatasourceMinInterval : ds.queryOptions.minInterval)
         const interval = intervalObj.intervalMs / 1000
 
+        setLoading(true)
         if (panel.type == PanelType.Alert) {
-            setLoading(true)
             const res = await queryAlerts(panel, timeRange, panel.plugins.alert.filter.datasources, panel.plugins.alert.filter.httpQuery, datasources)
             setQueryError(res.error)
             data = res.data
@@ -261,7 +261,6 @@ export const PanelComponent = ({ dashboard, panel, variables, onRemovePanel, onH
                 })
             }
             if (promises.length > 0) {
-                setLoading(true)
                 const res0 = await Promise.allSettled(promises.map(p => p.h))
                 res0.forEach((res0, i) => {
                     if (res0.status == "fulfilled") {
@@ -280,7 +279,6 @@ export const PanelComponent = ({ dashboard, panel, variables, onRemovePanel, onH
                         setQueryError(res0.reason)
                     }
 
-                    setLoading(false)
                 })
             }
 
@@ -296,6 +294,7 @@ export const PanelComponent = ({ dashboard, panel, variables, onRemovePanel, onH
             }
         }
 
+        setLoading(false)
 
         console.timeEnd("time used - query data for panel:")
     }
