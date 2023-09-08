@@ -102,7 +102,7 @@ const Container = ({ children, sidemenu, config }: Props) => {
     let navWidth = 0
 
     if (!miniMode) {
-      concat(sidemenu, bottomNavs).forEach(nav => {
+      concat(sidemenu??[], bottomNavs).forEach(nav => {
         // text width + margin + icon width + padding
         const width = measureText(nav.title, navSize).width + 10 + 16 + paddingLeft + paddingRight
         if (width > navWidth) {
@@ -164,7 +164,7 @@ const Container = ({ children, sidemenu, config }: Props) => {
                     :
                     <Box cursor="pointer" onClick={onMinimodeChange} opacity="0.2" position="absolute" right="-7px" top="14px" className="hover-text" p="1" fontSize="0.7rem" zIndex={1}><Icons.FaChevronLeft /></Box>
                   }
-                  {sidemenu.map((link, index) => {
+                  {sidemenu?.map((link, index) => {
                     return <Box key={link.url} mt={miniMode ? (index > 0 ? 2 : 3) : 3}>
                       <Box>
                         <NavItem isActive={miniMode ? asPath.startsWith(link.url) : asPath == link.url} key={index} text={link.title} icon={link.icon} miniMode={miniMode} fontWeight={500} url={link.children?.length > 0 ? link.children[0].url : link.url} children={link.children} />
@@ -177,7 +177,7 @@ const Container = ({ children, sidemenu, config }: Props) => {
                     </Box>
                   })}
 
-                  {session && !sidemenu.some(nav => nav.dashboardId != HomeDashboardId) && <>
+                  {session && !sidemenu?.some(nav => nav.dashboardId != HomeDashboardId) && <>
                     <Divider mt={miniMode ? 2 : 3} />
                     <Box mt={miniMode ? 2 : 3}><NavItem fontSize={navSize - 1} text={t1.newItem} url={`/cfg/team/${session.user.sidemenu}/sidemenu`} miniMode={miniMode} icon="FaPlus" /></Box>
                   </>}
@@ -215,7 +215,7 @@ const Container = ({ children, sidemenu, config }: Props) => {
               />
               <Portal>
                 <MenuList fontSize="15px" py="0" zIndex={1000}>
-                  {sidemenu.map((link) => {
+                  {sidemenu?.map((link) => {
                     const Icon = Icons[link.icon]
                     return <Link key={link.url} to={link.url}>
                       <MenuItem icon={<Icon />} >
