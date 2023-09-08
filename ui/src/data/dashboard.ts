@@ -42,7 +42,7 @@ export const initDashboard = (team?): Dashboard => {
             enableUnsavePrompt: true,
             enableAutoSave: false,
             autoSaveInterval: 120,
-            lazyLoading: true,
+            lazyLoading: false,
             hiddenPanels: [],
             annotation: {
                 enable: true,

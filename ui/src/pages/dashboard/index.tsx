@@ -20,6 +20,8 @@ import DashboardWrapper from "src/views/dashboard/Dashboard"
 import NotFoundPage from "../NotFound"
 import { AlertDashbordId } from "src/data/dashboard"
 import { $config } from "src/data/configs/config"
+import { Box } from "@chakra-ui/react"
+import Loading from "components/loading/Loading"
 
 
 interface Props {
@@ -33,7 +35,7 @@ const DashboardPage = memo(({ sideWidth }: Props) => {
     const [dashboardId, setDashboardId] = useState<string>(null)
     const [error, setError] = useState(null)
     useEffect(() => {
-        if (location) {
+        if (location && config) {
             setError(null)
             if (location.pathname == '/alert') {
                 setDashboardId(AlertDashbordId)
@@ -85,6 +87,7 @@ const DashboardPage = memo(({ sideWidth }: Props) => {
         <>
             {dashboardId && <DashboardWrapper key={dashboardId} sideWidth={sideWidth} dashboardId={dashboardId} />}
             {error && <NotFoundPage message={error} />}
+            {!dashboardId && !error && <Box position="fixed" top="50vh" left="50vw"><Loading /></Box>}
         </>
     )
 })
