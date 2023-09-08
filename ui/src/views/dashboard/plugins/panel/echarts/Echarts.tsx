@@ -32,7 +32,7 @@ import { $variables } from "src/views/variables/store";
 const EchartsPanel = memo((props: PanelProps) => {
     const { panel, width, height } = props
     if (!panel.plugins.echarts.allowEmptyData && isEmpty(props.data)) {
-        return (<Center height="100%">No data</Center>)
+        return (<Center height="100%"></Center>)
     }
 
     const { colorMode } = useColorMode()

@@ -48,7 +48,7 @@ interface NodeGraphPanelProps extends PanelProps {
 
 const NodeGraphPanelWrapper = (props: NodeGraphPanelProps) => {
     if (isEmpty(props.data)) {
-        return <Center height="100%">No data</Center>
+        return <Center height="100%"></Center>
     }
 
     return (<>

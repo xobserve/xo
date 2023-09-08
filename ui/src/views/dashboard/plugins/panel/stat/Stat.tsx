@@ -30,7 +30,7 @@ interface StatPanelProps extends PanelProps {
 
 const StatPanel = memo((props: StatPanelProps) => {
     if (isEmpty(props.data)) {
-        return (<Center height="100%">No data</Center>)
+        return (<Center height="100%"></Center>)
     }
 
     if (!isSeriesData(props.data)) {

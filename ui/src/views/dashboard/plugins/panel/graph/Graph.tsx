@@ -47,7 +47,7 @@ interface GraphPanelProps extends PanelProps {
 
 const GraphPanelWrapper = (props: GraphPanelProps) => {
     if (isEmpty(props.data)) {
-        return <Center height="100%">No data</Center>
+        return <Center height="100%"></Center>
     }
 
     if (!isSeriesData(props.data)) {

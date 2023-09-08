@@ -36,7 +36,7 @@ interface LogPanelProps extends PanelProps {
 
 const LogPanelWrapper = memo((props: LogPanelProps) => {
     if (isEmpty(props.data)) {
-        return <Center height="100%">No data</Center>
+        return <Center height="100%"></Center>
     }
 
     return (<>

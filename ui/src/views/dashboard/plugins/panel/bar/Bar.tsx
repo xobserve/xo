@@ -34,7 +34,7 @@ interface BarPanelProps extends PanelProps {
 
 const BarPanelWrapper = memo((props: BarPanelProps) => {
     if (isEmpty(props.data)) {
-        return <Center height="100%">No data</Center>
+        return <Center height="100%"></Center>
     }
 
     return (<>

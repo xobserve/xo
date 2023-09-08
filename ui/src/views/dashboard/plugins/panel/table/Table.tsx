@@ -29,7 +29,7 @@ const TablePanel = memo((props: TablePanelProps) => {
     const {colorMode} = useColorMode()
     const { panel } = props
     if (isEmpty(props.data)) {
-        return (<Center height="100%">No data</Center>)
+        return (<Center height="100%"></Center>)
     }
     if (!isSeriesData(props.data)) {
         return (<Center height="100%">Data format not support!</Center>)

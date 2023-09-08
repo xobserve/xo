@@ -31,7 +31,7 @@ interface Props extends PanelProps {
 const BarGaugePanel = memo((props: Props) => {
     const { panel, height, width } = props
     if (isEmpty(props.data)) {
-        return (<Center height="100%">No data</Center>)
+        return (<Center height="100%"></Center>)
       }
 
       if (!isSeriesData(props.data)) {
