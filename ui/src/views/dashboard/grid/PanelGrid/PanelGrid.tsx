@@ -284,7 +284,7 @@ export const PanelComponent = ({ dashboard, panel, variables, onRemovePanel, onH
 
         }
 
-        const isInitDataEmpty = data === null && isEmpty(panelData)
+        const isInitDataEmpty = panelData === null && isEmpty(data)
         if (!isInitDataEmpty) {
             if (needUpdate) {
                 console.log("query data and set panel data:", panel.id, data)
