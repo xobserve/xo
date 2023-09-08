@@ -138,9 +138,7 @@ export const PanelGrid = memo((props: PanelGridProps) => {
 
     return (
         <PanelBorder width={props.width} height={props.height} border={props.panel.styles?.border}>
-            {depsInited ?
-                 <PanelComponent key={props.panel.id + forceRenderCount} {...props} timeRange={tr} variables={variables} />
-                : <Box position="absolute" top="0" right="0"><Loading size="sm" /></Box>}
+            {depsInited && <PanelComponent key={props.panel.id + forceRenderCount} {...props} timeRange={tr} variables={variables} />}
         </PanelBorder>
     )
 })
@@ -286,13 +284,15 @@ export const PanelComponent = ({ dashboard, panel, variables, onRemovePanel, onH
 
         }
 
-
-        if (needUpdate) {
-            console.log("query data and set panel data:", panel.id, data)
-            setPanelData(data)
-        } else {
-            if (!isEqual(panelData, data)) {
+        const isInitDataEmpty = data === null && isEmpty(panelData)
+        if (!isInitDataEmpty) {
+            if (needUpdate) {
+                console.log("query data and set panel data:", panel.id, data)
                 setPanelData(data)
+            } else {
+                if (!isEqual(panelData, data)) {
+                    setPanelData(data)
+                }
             }
         }
 
@@ -344,7 +344,7 @@ export const PanelComponent = ({ dashboard, panel, variables, onRemovePanel, onH
 
         {data && <>
             <PanelHeader dashboardId={dashboard.id} panel={panel} data={panelData} queryError={queryError} onCopyPanel={onCopyPanel} onRemovePanel={onRemovePanel} onHidePanel={onHidePanel} />
-            {/* <ErrorBoundary> */}
+            <ErrorBoundary>
                 <Box
                     // panel={panel}
                     height={panelInnerHeight}
@@ -352,8 +352,8 @@ export const PanelComponent = ({ dashboard, panel, variables, onRemovePanel, onH
                 >
                     <CustomPanelRender dashboardId={dashboard.id} panel={panel} data={data} height={panelInnerHeight} width={panelInnerWidth} sync={sync} timeRange={timeRange} />
                 </Box>
-            {/* </ErrorBoundary> */}
-            
+            </ErrorBoundary>
+
         </>}
         {loading && <Box position="absolute" top="0" right="0"><Loading size="sm" /></Box>}
     </Box>
