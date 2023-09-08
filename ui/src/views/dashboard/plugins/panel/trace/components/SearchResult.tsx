@@ -13,6 +13,8 @@ import { useStore } from "@nanostores/react"
 import { tracePanelMsg } from "src/i18n/locales/en"
 import CustomScrollbar from "src/components/CustomScrollbar/CustomScrollbar"
 import { MobileBreakpoint } from "src/data/constants"
+import { $datasources } from "src/views/datasource/store"
+import { Datasource } from "types/datasource"
 
 interface Props {
     panel: Panel
@@ -23,6 +25,7 @@ interface Props {
 
 const TraceSearchResult = ({ panel, traces, timeRange ,height}: Props) => {
     const t1 = useStore(tracePanelMsg)
+    const datasources = useStore($datasources)
     const [selectedTraces, setSelectedTraces] = useState<Trace[]>([])
     const [sort, setSort] = useState(traceSortTypes[0].value)
     const [comparison, setComparison] = useState<string[]>([])
@@ -92,7 +95,7 @@ const TraceSearchResult = ({ panel, traces, timeRange ,height}: Props) => {
                 </HStack>
                 {
                     comparison.length > 0 && <HStack textStyle="title">
-                        <Text><ComparisonTraces removeFromCompare={removeFromCompare} comparedTraces={comparedTraces} maxDuration={maxDuration}/> {t1.selectForCompre}</Text>
+                        <Text><ComparisonTraces removeFromCompare={removeFromCompare} comparedTraces={comparedTraces} maxDuration={maxDuration} datasources={datasources}/> {t1.selectForCompre}</Text>
                         <TraceCompare traces={comparedTraces}/>
                     </HStack>
                 }
@@ -105,7 +108,7 @@ const TraceSearchResult = ({ panel, traces, timeRange ,height}: Props) => {
             </Flex>
             <VStack alignItems="left" maxH={height - plotHeight - 58}>
                 <CustomScrollbar>
-                    {sortedTraces.map(trace => <TraceCard key={trace.traceID} trace={trace} maxDuration={maxDuration} checked={comparison.includes(trace.traceID)} checkDisabled={comparison.length >= 2 && !comparison.includes(trace.traceID)} onChecked={onTraceChecked} dsId={panel.datasource.id}/>)}
+                    {sortedTraces.map(trace => <TraceCard key={trace.traceID} trace={trace} maxDuration={maxDuration} checked={comparison.includes(trace.traceID)} checkDisabled={comparison.length >= 2 && !comparison.includes(trace.traceID)} onChecked={onTraceChecked} dsId={panel.datasource.id} datasources={datasources}/>)}
                 </CustomScrollbar>
             </VStack>
         </Box>
@@ -115,7 +118,7 @@ const TraceSearchResult = ({ panel, traces, timeRange ,height}: Props) => {
 export default TraceSearchResult
 
 
-const ComparisonTraces = ({ comparedTraces,maxDuration,removeFromCompare }: { comparedTraces: Trace[],maxDuration: number,removeFromCompare:any }) => {
+const ComparisonTraces = ({ comparedTraces,maxDuration,removeFromCompare, datasources }: { comparedTraces: Trace[],maxDuration: number,removeFromCompare:any, datasources: Datasource[] }) => {
     return (<>
         <Popover trigger="hover" placement="left">
             <PopoverTrigger>
@@ -126,7 +129,7 @@ const ComparisonTraces = ({ comparedTraces,maxDuration,removeFromCompare }: { co
                 <PopoverBody>
                     <VStack alignItems="left" divider={<StackDivider />}>
                         {comparedTraces.map(trace => {return trace && <HStack spacing={2}>
-                        <TraceCard  trace={trace} maxDuration={maxDuration} simple/>
+                        <TraceCard  trace={trace} maxDuration={maxDuration} datasources={datasources} simple/>
                         <FaTimes cursor="pointer" onClick={() => removeFromCompare(trace.traceID)}/>
                         </HStack>})}
                     </VStack>

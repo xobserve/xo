@@ -48,7 +48,7 @@ import { MiniSidemenuEvent } from "src/data/bus-events"
 import storage from "utils/localStorage"
 import { SidemenuMinimodeKey } from "src/data/storage-keys"
 import useFullscreen from "hooks/useFullscreen"
-import { config } from "src/data/configs/config"
+import { $config } from "src/data/configs/config"
 import { Link, useLocation } from "react-router-dom"
 import { useStore } from "@nanostores/react"
 import { commonMsg, sidebarMsg } from "src/i18n/locales/en"
@@ -61,6 +61,7 @@ interface Props {
 
 
 const Sidebar = (props: Props) => {
+  const config = useStore($config)
   const t = useStore(commonMsg)
   const t1 = useStore(sidebarMsg)
   const { session } = useSession()

@@ -35,7 +35,6 @@ import { useDedupEvent } from "hooks/useDedupEvent";
 import loadable from '@loadable/component'
 import { calculateInterval } from "utils/datetime/range";
 import { run_http_query } from "../../plugins/datasource/http/query_runner";
-import { datasources } from "src/App";
 import { useSearchParam } from "react-use";
 import React from "react";
 import { useStore } from "@nanostores/react";
@@ -68,6 +67,8 @@ import LogPanelWrapper from "../../plugins/panel/log/Log";
 import BarPanelWrapper from "../../plugins/panel/bar/Bar";
 import AlertPanel from "../../plugins/panel/alert/Alert";
 import ErrorBoundary from "src/components/ErrorBoudary";
+import { $datasources } from "src/views/datasource/store";
+import { Datasource } from "types/datasource";
 interface PanelGridProps {
     dashboard: Dashboard
     panel: Panel
@@ -138,9 +139,7 @@ export const PanelGrid = memo((props: PanelGridProps) => {
 
     return (
         <PanelBorder width={props.width} height={props.height} border={props.panel.styles?.border}>
-            <ErrorBoundary>
-            {depsInited && <PanelComponent key={props.panel.id + forceRenderCount} {...props} timeRange={tr} variables={variables} /> }
-            </ErrorBoundary>
+            {depsInited && <PanelComponent key={props.panel.id + forceRenderCount} {...props} timeRange={tr} variables={variables} />}
         </PanelBorder>
     )
 })
@@ -160,6 +159,7 @@ export const PanelComponent = ({ dashboard, panel, variables, onRemovePanel, onH
     const [queryError, setQueryError] = useState()
     const edit = useSearchParam('edit')
     const [loading, setLoading] = useState(false)
+    const datasources = useStore($datasources)
     useEffect(() => {
         return () => {
             // delete data query cache when panel is unmounted
@@ -200,7 +200,7 @@ export const PanelComponent = ({ dashboard, panel, variables, onRemovePanel, onH
 
         setLoading(true)
         if (panel.type == PanelType.Alert) {
-            const res = await queryAlerts(panel, timeRange, panel.plugins.alert.filter.datasources, panel.plugins.alert.filter.httpQuery)
+            const res = await queryAlerts(panel, timeRange, panel.plugins.alert.filter.datasources, panel.plugins.alert.filter.httpQuery, datasources)
             setQueryError(res.error)
             data = res.data
         } else {
@@ -237,33 +237,33 @@ export const PanelComponent = ({ dashboard, panel, variables, onRemovePanel, onH
                 //@needs-update-when-add-new-datasource
                 switch (datasource.type) {
                     case DatasourceType.Prometheus:
-                        res =  run_prometheus_query(panel, q, timeRange, datasource)
+                        res = run_prometheus_query(panel, q, timeRange, datasource)
                         break;
                     case DatasourceType.TestData:
-                        res =  run_testdata_query(panel, q, timeRange, datasource)
+                        res = run_testdata_query(panel, q, timeRange, datasource)
                         break;
                     case DatasourceType.Jaeger:
-                        res =  run_jaeger_query(panel, q, timeRange, datasource)
+                        res = run_jaeger_query(panel, q, timeRange, datasource)
                         break;
                     case DatasourceType.ExternalHttp:
-                        res =  run_http_query(panel, q, timeRange, datasource)
+                        res = run_http_query(panel, q, timeRange, datasource)
                         break;
                     case DatasourceType.Loki:
-                        res =  run_loki_query(panel, q, timeRange, datasource)
+                        res = run_loki_query(panel, q, timeRange, datasource)
                         break
                     default:
                         break;
                 }
 
                 promises.push({
-                    h: res ,
-                    id: id, 
+                    h: res,
+                    id: id,
                     query: currentQuery
                 })
             }
 
             const res0 = await Promise.allSettled(promises.map(p => p.h))
-            res0.forEach((res0,i) => {
+            res0.forEach((res0, i) => {
                 if (res0.status == "fulfilled") {
                     const res = res0.value
                     const id = promises[i].id
@@ -316,15 +316,15 @@ export const PanelComponent = ({ dashboard, panel, variables, onRemovePanel, onH
     console.log("panel grid rendered, panel data: ", panelData)
     const data = useMemo(() => {
         const d = cloneDeep(panelData)
-        let res = d 
+        let res = d
         if (panel.enableTransform && d) {
             const transform = genDynamicFunction(panel.transform);
             if (isFunction(transform)) {
                 const tData = transform(d, lodash, moment)
                 console.log("panel grid rendered, transform data: ", tData)
-                res =  tData
+                res = tData
             } else {
-                res =  d
+                res = d
             }
         }
 
@@ -335,20 +335,22 @@ export const PanelComponent = ({ dashboard, panel, variables, onRemovePanel, onH
         return res
     }, [panel.transform, panel.enableTransform, panelData])
 
-    return <Box height={height} width={width} className={(panel.styles.border == "Normal" && "bordered") + (dashboard.data.styles.bgEnabled ? " panel-bg-alpha" : " panel-bg")}  position="relative">
+    return <Box height={height} width={width} className={(panel.styles.border == "Normal" && "bordered") + (dashboard.data.styles.bgEnabled ? " panel-bg-alpha" : " panel-bg")} position="relative">
 
         {data ? <>
             <PanelHeader dashboardId={dashboard.id} panel={panel} data={panelData} queryError={queryError} onCopyPanel={onCopyPanel} onRemovePanel={onRemovePanel} onHidePanel={onHidePanel} />
-            <Box
-                // panel={panel}
-                height={panelInnerHeight}
-                marginLeft={panel.type == PanelType.Graph ? "-10px" : "0px"}
-            >
-                <CustomPanelRender dashboardId={dashboard.id} panel={panel} data={data} height={panelInnerHeight} width={panelInnerWidth} sync={sync} timeRange={timeRange} />
-            </Box>
-            {loading && <Box position="absolute" top="0" right="0"><Loading  size="sm"/></Box>}
+            <ErrorBoundary>
+                <Box
+                    // panel={panel}
+                    height={panelInnerHeight}
+                    marginLeft={panel.type == PanelType.Graph ? "-10px" : "0px"}
+                >
+                    <CustomPanelRender dashboardId={dashboard.id} panel={panel} data={data} height={panelInnerHeight} width={panelInnerWidth} sync={sync} timeRange={timeRange} />
+                </Box>
+            </ErrorBoundary>
+            {loading && <Box position="absolute" top="0" right="0"><Loading size="sm" /></Box>}
         </>
-            : <Box position="absolute" top="0" right="0"><Loading  size="sm"/></Box>}
+            : <Box position="absolute" top="0" right="0"><Loading size="sm" /></Box>}
     </Box>
 }
 
@@ -481,7 +483,7 @@ const formatQueryId = (datasourceId, dashboardId, panelId, queryId, panelType) =
     return `${datasourceId}-${dashboardId}-${panelId}-${queryId}-${tp}`
 }
 
-export const queryAlerts = async (panel: Panel, timeRange: TimeRange, dsIds: number[], httpQuery: PanelQuery) => {
+export const queryAlerts = async (panel: Panel, timeRange: TimeRange, dsIds: number[], httpQuery: PanelQuery, datasources: Datasource[]) => {
     let result = {
         error: null,
         data: []

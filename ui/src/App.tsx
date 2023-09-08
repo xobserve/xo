@@ -21,33 +21,38 @@ import { createStandaloneToast } from '@chakra-ui/toast'
 import CommonStyles from "src/theme/common.styles"
 import BaiduMap from 'src/components/BaiduMap'
 import { requestApi } from 'utils/axios/request'
-import { config, UIConfig } from 'src/data/configs/config'
-import { Datasource } from 'types/datasource'
+import { $config, UIConfig } from 'src/data/configs/config'
 import { Variable } from 'types/variable'
 import { setVariableSelected } from './views/variables/SelectVariable'
 import AntdWrapper from 'src/components/AntdWrapper'
 import { routes } from './routes';
 import { initColors } from 'utils/colors';
 import { $variables } from './views/variables/store';
+import { $datasources } from './views/datasource/store';
 
 
 const { ToastContainer } = createStandaloneToast()
 
-export let canvasCtx;
-export let datasources: Datasource[] = []
+export let canvasCtx;                                                                                                                                                                                                                                                                                                                                                ``
 export let gvariables: Variable[] = []
 
 
 export let appInitialized = false
+
 const AppView = () => {
   const { colorMode } = useColorMode()
   initColors(colorMode)
 
 
-  const [cfg, setConfig] = useState<UIConfig>(null)
+  const [cfg, setConfig] = useState<UIConfig>($config.get())
   canvasCtx = document.createElement('canvas').getContext('2d')!;
 
   useEffect(() => {
+    const firstPageLoading = document.getElementById('first-page-loading');
+    if (firstPageLoading) {
+      firstPageLoading.style.display = "none"
+    }
+
     loadConfig()
     // we add background color in index.html to make loading screen shows the same color as the app pages
     // but we need to remove it after the App is loaded, otherwise the bg color in index.html will override the bg color in App ,
@@ -56,26 +61,18 @@ const AppView = () => {
     bodyStyle.background = null
   }, [])
 
-  useEffect(() => {
-    if (cfg) {
-      const firstPageLoading = document.getElementById('first-page-loading');
-      if (firstPageLoading) {
-        firstPageLoading.style.display = "none"
-      }
-    }
-  }, [cfg])
+
 
   const loadConfig = async () => {
     const r0 = requestApi.get("/datasource/all")
-    const r =  requestApi.get("/config/ui")
+    const r = requestApi.get("/config/ui")
     const res1 = await Promise.all([r0, r])
-    datasources = res1[0].data
-
+    $datasources.set(res1[0].data)
     const res = res1[1]
     const cfg = res.data.config
     cfg.sidemenu = cfg.sidemenu.data.filter((item) => !item.hidden)
     setConfig(cfg)
-    Object.assign(config, cfg)
+    $config.set(cfg)
     const vars = res.data.vars
     setVariableSelected(vars)
     gvariables = vars
@@ -87,7 +84,7 @@ const AppView = () => {
 
   return (
     <>
-      {cfg && <>
+      {<>
         <AntdWrapper>
           <RouterProvider router={router} />
         </AntdWrapper>

@@ -26,11 +26,12 @@ import { useNavigate } from 'react-router-dom';
 import { useStore } from '@nanostores/react';
 import { commonMsg } from 'src/i18n/locales/en';
 import { FaGithub } from 'react-icons/fa';
-import { config } from 'src/data/configs/config';
+import { $config } from 'src/data/configs/config';
 import { MobileBreakpoint } from 'src/data/constants';
 
 // login page
 function Login() {
+    const config = useStore($config)
     const t = useStore(commonMsg)
     const particlesInit = useCallback(async (engine: Engine) => {
         await loadFull(engine);

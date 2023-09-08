@@ -61,7 +61,7 @@ task:
 #################################### Panel Plugins ##############################
 panel:
   echarts: 
-    enable_baidu_map: true
+    enable_baidu_map: false
     baidu_map_ak: 
 
 #################################### SMTP ##############################

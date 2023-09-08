@@ -41,10 +41,7 @@ export const run_prometheus_query = async (panel: Panel, q: PanelQuery, range: T
     const end = roundDsTime(range.end.getTime() / 1000)
 
     const alignedStart = start - start % q.interval
-
-    //@todo: 
-    // 1. rather than query directyly to prometheus, we should query to our own backend servie
-    // 2. using `axios` instead of `fetch`
+    const alignedEnd = end - end % q.interval
 
     const res: any = await requestApi.get(`/proxy/${ds.id}/api/v1/query_range?query=${q.metrics}&start=${alignedStart}&end=${end}&step=${q.interval}`)
     if (res.status !== "success") {

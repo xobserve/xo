@@ -20,7 +20,6 @@ import { DatasourceType } from "types/dashboard"
 import { cloneDeep, isEqual } from "lodash"
 import { queryPromethuesVariableValues } from "../dashboard/plugins/datasource/prometheus/query_runner"
 import { queryHttpVariableValues } from "../dashboard/plugins/datasource/http/query_runner"
-import { datasources } from "src/App"
 import PopoverSelect from "src/components/select/PopoverSelect"
 import { VarialbeAllOption, VariableSplitChar } from "src/data/variable"
 import { VariableManuallyChangedKey } from "src/data/storage-keys"
@@ -35,6 +34,8 @@ import { parseVariableFormat } from "utils/format"
 import { getDatasource } from "utils/datasource"
 import { isEmpty } from "utils/validate"
 import { usePrevious, useSearchParam } from "react-use"
+import { $datasources } from "../datasource/store"
+import { Datasource } from "types/datasource"
 
 interface Props {
     variables: Variable[]
@@ -52,6 +53,7 @@ const SelectVariables = ({ variables }: Props) => {
 export default SelectVariables
 
 const SelectVariable = memo(({ v }: { v: Variable }) => {
+    const datasourcs = useStore($datasources)
     const t1 = useStore(variableMsg)
     const [values, setValues] = useState<string[]>(null)
     const urlKey = 'var-' + v.name
@@ -122,7 +124,7 @@ const SelectVariable = memo(({ v }: { v: Variable }) => {
 
         }
         if (needQuery) {
-            const res = await queryVariableValues(v)
+            const res = await queryVariableValues(v, datasourcs)
             console.log("load variable values( query )", v.name, res)
             if (res.error) {
                 result = []
@@ -302,7 +304,7 @@ export const setVariable = (name, value) => {
     v && setVariableValue(v, value)
 }
 
-export const queryVariableValues = async (v: Variable) => {
+export const queryVariableValues = async (v: Variable, datasources: Datasource[]) => {
     let result = {
         error: null,
         data: null
@@ -315,7 +317,7 @@ export const queryVariableValues = async (v: Variable) => {
     } else if (v.type == VariableQueryType.Datasource) {
         result.data =datasources.map(ds => ds.name)
     } else {
-        const ds = getDatasource(v.datasource)
+        const ds = getDatasource(v.datasource, datasources)
         //@needs-update-when-add-new-variable-datasource
         switch (ds?.type) {
             case DatasourceType.Prometheus:

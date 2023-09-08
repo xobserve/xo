@@ -41,7 +41,7 @@ import storage from "utils/localStorage"
 import { SidemenuMinimodeKey } from "src/data/storage-keys"
 import ReserveUrls from "src/data/reserve-urls"
 import UserMenu from "src/components/user/UserMenu"
-import { config } from "src/data/configs/config"
+import { $config, UIConfig } from "src/data/configs/config"
 import { isEmpty } from "utils/validate"
 import Search from "src/views/search/Search"
 import PopoverTooltip from "src/components/PopoverTooltip"
@@ -59,16 +59,18 @@ const maxNavSize = 200
 interface Props {
   children: any
   sidemenu: any[]
+  config: UIConfig
 }
 
 const PageContainer = (props) => {
+  const config = useStore($config)
   gnavigate = useNavigate()
   const sidemenu = config.sidemenu
-  return (<Container {...props} sidemenu={sidemenu} />)
+  return (<Container {...props} sidemenu={sidemenu} config={config}/>)
 }
 
 export default PageContainer
-const Container = ({ children, sidemenu }: Props) => {
+const Container = ({ children, sidemenu, config }: Props) => {
   const { session } = useSession()
   const { pathname: asPath } = useLocation()
   const t = useStore(commonMsg)

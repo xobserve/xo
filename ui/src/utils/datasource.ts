@@ -12,12 +12,14 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { datasources } from "src/App"
+
 import { hasVariableFormat, replaceWithVariables } from "./variable"
 import { Datasource } from "types/datasource"
 import { floor } from "lodash"
+import { $datasources } from "src/views/datasource/store"
 
-export const getDatasource = (k):Datasource => {
+export const getDatasource = (k, ds?):Datasource => {
+    const datasources = ds ?? $datasources.get()
     let currentDatasource
     if (hasVariableFormat(k?.toString())) {
         const name = replaceWithVariables(k)

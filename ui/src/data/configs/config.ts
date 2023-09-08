@@ -13,16 +13,32 @@
 import { MenuItem } from "types/teams";
 
 
+import { atom } from 'nanostores'
+
+
 
 // limitations under the License.
-export let config:UIConfig = {
+const config: UIConfig = {
+    appName: 'datav',
+    repoUrl: 'https://github.com/data-observe/datav',
+    panel: {
+        echarts: {
+            enableBaiduMap: false,
+            baiduMapAK: ''
+        }
+    },
+    showAlertIcon: false,
+    githubOAuthToken: '',
+    enableGithubLogin: false,
     sidemenu: []
 };
 
+export const $config = atom<UIConfig>(config)
+
 export interface UIConfig {
-    appName?: string 
-    repoUrl?: string 
-    panel?:{
+    appName?: string
+    repoUrl?: string
+    panel?: {
         echarts: {
             enableBaiduMap: boolean
             baiduMapAK: string

@@ -14,7 +14,6 @@
 import { useEffect, useState } from "react"
 import { Trace } from "types/plugins/trace"
 import { queryJaegerTrace } from "../../../../datasource/jaeger/query_runner"
-import { datasources } from "src/App"
 import { DatasourceType } from "types/dashboard"
 import TraceDetail from "./TraceDetail"
 import transformTraceData from "../../utils/transform-trace-data"
@@ -23,11 +22,14 @@ import { cancel as cancelScroll, scrollBy, scrollTo } from './scroll/scrollPage'
 import React from "react";
 import { queryTraceInTestData } from "src/views/dashboard/plugins/datasource/testdata/query_runner"
 import { getDatasource } from "utils/datasource"
+import { useStore } from "@nanostores/react"
+import { $datasources } from "src/views/datasource/store"
 
 const TraceDetailWrapper = ({id,dsId}) => {
     const [trace, setTrace] = useState<Trace>(null)
     const [scrollManager, setScrollManager] = useState(null)
-    const datasource = getDatasource(dsId)
+    const datasources = useStore($datasources)
+    const datasource = getDatasource(dsId, datasources)
     useEffect(() => {
         load()
 

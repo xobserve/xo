@@ -20,7 +20,6 @@ import { EditorInputItem } from "src/components/editor/EditorItem"
 import { Form, FormSection } from "src/components/form/Form"
 import Page from "layouts/page/Page"
 import { isArray, isEmpty } from "lodash"
-import { datasources } from "src/App"
 import { useEffect, useRef, useState } from "react"
 import { FaCog } from "react-icons/fa"
 import { cfgLinks } from "src/data/nav-links"
@@ -47,6 +46,7 @@ import { getDatasource } from "utils/datasource"
 import { addParamToUrl, removeParamFromUrl } from "utils/url"
 import { useSearchParam } from "react-use"
 import { MobileBreakpoint } from "src/data/constants"
+import { $datasources } from "src/views/datasource/store"
 
 
 
@@ -184,7 +184,7 @@ interface TableProps {
 export const VariablesTable = ({ variables, onEdit, onRemove }: TableProps) => {
     const t = useStore(commonMsg)
     const t1 = useStore(cfgVariablemsg)
-
+    const datasources = useStore($datasources)
     const { isOpen, onOpen, onClose } = useDisclosure()
     const [selectedVariable, setSelectedVariable] = useState<Variable>(null)
 
@@ -301,9 +301,9 @@ interface EditProps {
 export const EditVariable = ({ v, isOpen, onClose, isEdit, onSubmit, isGlobal = false }: EditProps) => {
     const t = useStore(commonMsg)
     const t1 = useStore(cfgVariablemsg)
+    const datasources = useStore($datasources)
     const toast = useToast()
     const [variable, setVariable] = useImmer<Variable>(null)
-    const [datasources, setDatasources] = useState<Datasource[]>(null)
     const [variableValues, setVariableValues] = useState<string[]>([])
     const [displayCount, setDisplayCount] = useState(30)
     useEffect(() => {
@@ -311,18 +311,13 @@ export const EditVariable = ({ v, isOpen, onClose, isEdit, onSubmit, isGlobal = 
     }, [v])
 
     useEffect(() => {
-        load()
         queryValues()
     }, [])
 
     const queryValues = (v0?) => {
-        queryVariableValues(v0 ?? v).then(result => setVariableValues(result.data ?? []))
+        queryVariableValues(v0 ?? v, datasources).then(result => setVariableValues(result.data ?? []))
     }
 
-    const load = async () => {
-        const res = await requestApi.get("/datasource/all")
-        setDatasources(res.data)
-    }
 
     const onQueryResult = result => {
         if (!result.error) {

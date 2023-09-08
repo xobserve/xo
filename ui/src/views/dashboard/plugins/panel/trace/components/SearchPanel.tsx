@@ -21,6 +21,7 @@ import { useSearchParams } from "react-router-dom"
 import { $variables } from "src/views/variables/store"
 import { getDatasource } from "utils/datasource"
 import { MobileBreakpoint } from "src/data/constants"
+import { $datasources } from "src/views/datasource/store"
 interface Props {
     panel: Panel
     onSearch: any
@@ -51,7 +52,8 @@ const TraceSearchPanel = ({ timeRange, dashboardId, panel, onSearch, onSearchIds
     const [traceIds, setTraceIds] = useState<string>(initTraceIds)
 
     const [useLatestTime, setUseLatestTime] = useState(true)
-    const ds = getDatasource(panel.datasource.id)
+    const datasources = useStore($datasources)
+    const ds = getDatasource(panel.datasource.id, datasources)
 
     useEffect(() => {
         return () => {

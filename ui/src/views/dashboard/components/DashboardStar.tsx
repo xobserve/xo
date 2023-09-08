@@ -12,7 +12,8 @@
 // limitations under the License.
 
 import { Box, useColorMode, useColorModeValue } from "@chakra-ui/react"
-import React, { useState } from "react"
+import { use } from "echarts"
+import React, { useEffect, useState } from "react"
 import { AiFillStar, AiOutlineStar } from "react-icons/ai"
 import { FaStar } from "react-icons/fa"
 import { requestApi } from "utils/axios/request"
@@ -29,15 +30,14 @@ const DashboardStar = (props: Props) => {
     const {dashboardId,fontSize="1rem", colorScheme="orange", enableClick=true} = props
     const [starred, setStarred] = useState(props.starred)
 
-
+    useEffect(() => {
+        load()
+    },[])
     const load = async () => {
         const res = await requestApi.get(`/dashboard/starred/${dashboardId}`)
         setStarred(res.data)
     }
 
-    if (starred === undefined) {
-        load()
-    }
 
     const onStar = async () => {
         if (!starred) {

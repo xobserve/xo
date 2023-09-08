@@ -13,12 +13,11 @@
 import { Image } from "@chakra-ui/react"
 import {  chakraComponents } from "chakra-react-select"
 import { Variant } from "chakra-react-select/dist/types/types"
-import ChakraSelect from "src/components/select/ChakraSelect"
 import InputSelect from "src/components/select/InputSelect"
-import React, { useEffect, useState } from "react"
+import React from "react"
 import { DatasourceType } from "types/dashboard"
-import { Datasource } from "types/datasource"
-import { requestApi } from "utils/axios/request"
+import { useStore } from "@nanostores/react"
+import { $datasources } from "src/views/datasource/store"
 
 interface Props {
     value: number
@@ -29,16 +28,7 @@ interface Props {
 }
 
 const DatasourceSelect = ({ value, onChange, allowTypes = [], variant = "unstyled",size="md" }: Props) => {
-    const [datasources, setDatasources] = useState<Datasource[]>([])
-
-    useEffect(() => {
-        load()
-    }, [])
-
-    const load = async () => {
-        const res = await requestApi.get("/datasource/all")
-        setDatasources(res.data)
-    }
+    const datasources = useStore($datasources)
 
     const options = []
     datasources.forEach((ds) => {

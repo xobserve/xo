@@ -20,7 +20,7 @@ import React, { memo } from "react";
 import { useStore } from "@nanostores/react"
 import { alertMsg, commonMsg } from "src/i18n/locales/en"
 import { Select } from "antd"
-import { datasources } from "src/App"
+
 import { datasourceSupportAlerts } from "src/data/alerts"
 import { dispatch } from "use-bus"
 import { PanelForceRebuildEvent } from "src/data/bus-events"
@@ -32,6 +32,7 @@ import { ResetPanelToolbalEvent, ResetPanelToolbalViewModeEvent } from "./Alert"
 import { ClickActionsEditor } from "src/views/dashboard/edit-panel/components/ClickActionsEditor"
 import HttpQueryEditor from "../../datasource/http/QueryEditor"
 import { AlertFilter } from "types/panel/plugins"
+import { $datasources } from "src/views/datasource/store"
 
 const AlertPanelEditor = memo((props: PanelEditorProps) => {
     const { panel, onChange } = props
@@ -151,6 +152,7 @@ export interface AlertFilterProps {
 export const AlertFilterEditor = ({ panel, filter, onChange }: AlertFilterProps) => {
     const t1 = useStore(alertMsg)
     const t = useStore(commonMsg)
+    const datasources = useStore($datasources)
     return <PanelAccordion title={t1.alertFilter}>
         <PanelEditItem title="Enable">
             <Switch isChecked={filter.enableFilter} onChange={(e) => {

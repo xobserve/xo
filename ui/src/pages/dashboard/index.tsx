@@ -19,7 +19,7 @@ import { dashboardMsg } from "src/i18n/locales/en"
 import DashboardWrapper from "src/views/dashboard/Dashboard"
 import NotFoundPage from "../NotFound"
 import { AlertDashbordId } from "src/data/dashboard"
-import { config } from "src/data/configs/config"
+import { $config } from "src/data/configs/config"
 
 
 interface Props {
@@ -27,6 +27,7 @@ interface Props {
 }
 // page for dispaly dashboard
 const DashboardPage = memo(({ sideWidth }: Props) => {
+    const config = useStore($config)
     const t1 = useStore(dashboardMsg)
     const location = useLocation()
     const [dashboardId, setDashboardId] = useState<string>(null)
@@ -49,7 +50,7 @@ const DashboardPage = memo(({ sideWidth }: Props) => {
             }
 
         }
-    }, [location.pathname])
+    }, [location.pathname, config])
 
     const load = path => {
         let menuitem;

@@ -9,6 +9,9 @@ import React from "react";
 import { getDatasource } from "utils/datasource"
 import { MobileBreakpoint } from "src/data/constants"
 import { colors, paletteColorNameToHex, palettes } from "utils/colors"
+import { useStore } from "@nanostores/react"
+import { $datasources } from "src/views/datasource/store"
+import { Datasource } from "types/datasource"
 
 interface Props {
     trace: Trace
@@ -18,12 +21,14 @@ interface Props {
     checkDisabled?: boolean
     simple?: boolean
     dsId?: number
+    datasources: Datasource[]
 }
 
-const TraceCard = ({ trace, maxDuration,checked=false, onChecked=null,simple=false,checkDisabled=false,dsId=null}: Props) => {
+const TraceCard = ({ trace, maxDuration,checked=false, onChecked=null,simple=false,checkDisabled=false,dsId=null, datasources}: Props) => {
     const mDate = moment(trace.startTime / 1000);
     const timeStr = mDate.format('h:mm:ss a')
-    const ds = getDatasource(dsId)
+
+    const ds = getDatasource(dsId, datasources)
     const onTraceClick = () => {
         if (ds) {
             window.open(`/trace/${trace.traceID}/${ds.id}/`)

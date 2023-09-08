@@ -29,6 +29,8 @@ import CustomScrollbar from "src/components/CustomScrollbar/CustomScrollbar";
 import { MobileBreakpoint } from "src/data/constants";
 import { isTraceData } from "./utils/trace";
 import { isEmpty } from "utils/validate";
+import { useStore } from "@nanostores/react";
+import { $datasources } from "src/views/datasource/store";
 
 
 
@@ -56,7 +58,8 @@ export default TracePanelWrapper
 
 const TracePanel = (props: PanelProps) => {
     const [rawTraces, setRawTraces] = useState<TraceData[]>(null)
-    const ds = getDatasource(props.panel.datasource.id)
+    const datasources = useStore($datasources)
+    const ds = getDatasource(props.panel.datasource.id, datasources)
     useEffect(() => {
         if (ds.type == DatasourceType.TestData) {
             onSearch(null, null, null, null, null, null, true)
