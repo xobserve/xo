@@ -38,6 +38,7 @@ import { getStackedOpts } from "./uplot-plugins/stack";
 import { isSeriesData } from "utils/seriesData";
 import ContextMenu from "./ContextMenu/ContextMenu";
 import { AnnotationsPlugin } from "../../../../Annotation/Annotations";
+import NoData from "src/views/dashboard/components/PanelNoData";
 
 interface GraphPanelProps extends PanelProps {
     data: SeriesData[][]
@@ -47,7 +48,7 @@ interface GraphPanelProps extends PanelProps {
 
 const GraphPanelWrapper = (props: GraphPanelProps) => {
     if (isEmpty(props.data)) {
-        return <Center height="100%"></Center>
+        return <Center height="100%"><NoData /></Center>
     }
 
     if (!isSeriesData(props.data)) {

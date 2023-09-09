@@ -30,6 +30,7 @@ import { isFunction } from "lodash";
 import {  MobileVerticalBreakpointNum } from "src/data/constants";
 import { findOverride, findRuleInOverride } from "utils/dashboard/panel";
 import { PieRules } from "./OverridesEditor";
+import NoData from "src/views/dashboard/components/PanelNoData";
 
 interface Props extends PanelProps {
     data: SeriesData[][]
@@ -37,7 +38,7 @@ interface Props extends PanelProps {
 
 const PiePanelWrapper = memo((props: Props) => {
     if (isEmpty(props.data)) {
-        return <Center height="100%"></Center>
+        return <Center height="100%"><NoData /></Center>
     }
 
     if (!isSeriesData(props.data)) {

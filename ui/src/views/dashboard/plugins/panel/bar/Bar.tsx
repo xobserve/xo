@@ -26,6 +26,7 @@ import { paletteColorNameToHex, paletteMap, palettes } from "utils/colors";
 import { PanelInactiveKey } from "src/data/storage-keys";
 import storage from "utils/localStorage";
 import { cloneDeep } from "lodash";
+import NoData from "src/views/dashboard/components/PanelNoData";
 
 
 interface BarPanelProps extends PanelProps {
@@ -34,7 +35,7 @@ interface BarPanelProps extends PanelProps {
 
 const BarPanelWrapper = memo((props: BarPanelProps) => {
     if (isEmpty(props.data)) {
-        return <Center height="100%"></Center>
+        return <Center height="100%"><NoData /></Center>
     }
 
     return (<>

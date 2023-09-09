@@ -39,6 +39,7 @@ import { useStore } from '@nanostores/react';
 import { nodeGraphPanelMsg } from 'src/i18n/locales/en';
 import { isEmpty } from 'utils/validate';
 import { isNodeGraphData } from './utils';
+import NoData from 'src/views/dashboard/components/PanelNoData';
 
 
 
@@ -48,7 +49,7 @@ interface NodeGraphPanelProps extends PanelProps {
 
 const NodeGraphPanelWrapper = (props: NodeGraphPanelProps) => {
     if (isEmpty(props.data)) {
-        return <Center height="100%"></Center>
+        return <Center height="100%"><NoData /></Center>
     }
 
     return (<>

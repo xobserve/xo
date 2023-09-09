@@ -23,6 +23,7 @@ import { measureText } from "utils/measureText";
 import { BarGaugeRules } from "./OverrideEditor";
 import { isEmpty } from "utils/validate";
 import { Center } from "@chakra-ui/react";
+import NoData from "src/views/dashboard/components/PanelNoData";
 
 interface Props extends PanelProps {
     data: SeriesData[][]
@@ -31,7 +32,7 @@ interface Props extends PanelProps {
 const BarGaugePanel = memo((props: Props) => {
     const { panel, height, width } = props
     if (isEmpty(props.data)) {
-        return (<Center height="100%"></Center>)
+        return (<Center height="100%"><NoData /></Center>)
       }
 
       if (!isSeriesData(props.data)) {

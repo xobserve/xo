@@ -36,6 +36,7 @@ import { gnavigate } from "layouts/PageContainer";
 import { setVariable } from "src/views/variables/SelectVariable";
 import { setDateTime } from "src/components/DatePicker/DatePicker";
 import { $variables } from "src/views/variables/store";
+import NoData from "src/views/dashboard/components/PanelNoData";
 
 interface Props extends PanelProps {
     data: SeriesData[][]
@@ -45,7 +46,7 @@ export let geomap: Map = null
 
 const GeoMapPanelWrapper = memo((props: Props) => {
     if (isEmpty(props.data)) {
-        return <Center height="100%"></Center>
+        return <Center height="100%"><NoData /></Center>
     }
 
     if (!isSeriesData(props.data)) {

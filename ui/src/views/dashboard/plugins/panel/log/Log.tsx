@@ -26,6 +26,7 @@ import { isEmpty } from "utils/validate";
 import CustomScrollbar from "src/components/CustomScrollbar/CustomScrollbar";
 import { paletteMap } from "utils/colors";
 import { ColorGenerator } from "utils/colorGenerator";
+import NoData from "src/views/dashboard/components/PanelNoData";
 
 
 
@@ -36,7 +37,7 @@ interface LogPanelProps extends PanelProps {
 
 const LogPanelWrapper = memo((props: LogPanelProps) => {
     if (isEmpty(props.data)) {
-        return <Center height="100%"></Center>
+        return <Center height="100%"><NoData /></Center>
     }
 
     return (<>

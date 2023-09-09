@@ -28,11 +28,12 @@ import { gnavigate } from "layouts/PageContainer";
 import { setVariable } from "src/views/variables/SelectVariable";
 import { setDateTime } from "src/components/DatePicker/DatePicker";
 import { $variables } from "src/views/variables/store";
+import NoData from "src/views/dashboard/components/PanelNoData";
 
 const EchartsPanel = memo((props: PanelProps) => {
     const { panel, width, height } = props
     if (!panel.plugins.echarts.allowEmptyData && isEmpty(props.data)) {
-        return (<Center height="100%"></Center>)
+        return (<Center height="100%"><NoData /></Center>)
     }
 
     const { colorMode } = useColorMode()

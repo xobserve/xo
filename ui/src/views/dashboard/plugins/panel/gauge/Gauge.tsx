@@ -27,6 +27,7 @@ import { ThresholdsMode } from "types/threshold";
 import { replaceWithVariables } from "utils/variable";
 import { VariableCurrentValue } from "src/data/variable";
 import { formatUnit } from "components/Unit";
+import NoData from "src/views/dashboard/components/PanelNoData";
 
 interface Props extends PanelProps {
   data: SeriesData[][]
@@ -190,7 +191,7 @@ const GaugePanel = memo((props: Props) => {
   }, [])
 
   return (<>
-    {isEmpty(props.data) ? <Center height="100%"></Center> : options && <Box height={height} key={colorMode} className="echarts-panel"><ChartComponent options={options} theme={colorMode} width={width} height={height} onChartCreated={onChartCreated} onChartEvents={null} /></Box>}
+    {isEmpty(props.data) ? <Center height="100%"><NoData /></Center> : options && <Box height={height} key={colorMode} className="echarts-panel"><ChartComponent options={options} theme={colorMode} width={width} height={height} onChartCreated={onChartCreated} onChartEvents={null} /></Box>}
   </>)
 })
 

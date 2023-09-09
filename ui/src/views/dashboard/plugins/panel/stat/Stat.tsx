@@ -22,6 +22,7 @@ import { VarialbeAllOption } from "src/data/variable";
 import StatGraph from "./StatGraph";
 import AutoGrid  from "src/components/grid/AutoGrid";
 import { isSeriesData } from "utils/seriesData";
+import NoData from "src/views/dashboard/components/PanelNoData";
 
 
 interface StatPanelProps extends PanelProps {
@@ -30,7 +31,7 @@ interface StatPanelProps extends PanelProps {
 
 const StatPanel = memo((props: StatPanelProps) => {
     if (isEmpty(props.data)) {
-        return (<Center height="100%"></Center>)
+        return (<Center height="100%"><NoData /></Center>)
     }
 
     if (!isSeriesData(props.data)) {

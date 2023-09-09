@@ -20,6 +20,7 @@ import { isSeriesData } from "utils/seriesData"
 import { isEmpty } from "utils/validate"
 import CustomScrollbar from "src/components/CustomScrollbar/CustomScrollbar"
 import { paletteColorNameToHex } from "utils/colors"
+import NoData from "src/views/dashboard/components/PanelNoData"
 
 interface TablePanelProps extends PanelProps {
     data: SeriesData[][]
@@ -29,7 +30,7 @@ const TablePanel = memo((props: TablePanelProps) => {
     const {colorMode} = useColorMode()
     const { panel } = props
     if (isEmpty(props.data)) {
-        return (<Center height="100%"></Center>)
+        return (<Center height="100%">No data</Center>)
     }
     if (!isSeriesData(props.data)) {
         return (<Center height="100%">Data format not support!</Center>)
@@ -72,7 +73,7 @@ const TablePanel = memo((props: TablePanelProps) => {
         <>
             {isEmpty(tableData)
                 ?
-                <Center height="100%">No data</Center>
+                <Center height="100%"><NoData /></Center>
                 :
                 <Flex h="100%" justify="space-between" direction="column">
                     <CustomScrollbar>
