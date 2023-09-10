@@ -30,7 +30,7 @@ import {
 import Logo from "src/components/Logo"
 import React, {  useMemo, useState } from "react"
 import { measureText } from "utils/measureText"
-import * as Icons from "react-icons/fa"
+// import * as Icons from "react-icons/fa"
 import { concat } from "lodash"
 import { useStore } from "@nanostores/react"
 import { commonMsg, sidebarMsg } from "src/i18n/locales/en"
@@ -51,6 +51,7 @@ import { useNavigate } from "react-router-dom"
 import { MobileBreakpoint } from "src/data/constants"
 import { HamburgerIcon } from "@chakra-ui/icons"
 import CustomScrollbar from "src/components/CustomScrollbar/CustomScrollbar"
+import { FaUser } from "react-icons/fa"
 export let gnavigate
 
 
@@ -164,7 +165,7 @@ const Container = (props: Props) => {
                   {(miniMode || isEmpty(sidemenu)) ?
                     <Box cursor="pointer" onClick={onMinimodeChange} mt="2" ><Logo /></Box>
                     :
-                    <Box cursor="pointer" onClick={onMinimodeChange} opacity="0.2" position="absolute" right="-7px" top="14px" className="hover-text" p="1" fontSize="0.7rem" zIndex={1}><Icons.FaChevronLeft /></Box>
+                    <Box cursor="pointer" onClick={onMinimodeChange} opacity="0.2" position="absolute" right="-7px" top="14px" className="hover-text" p="1" fontSize="0.7rem" zIndex={1}><FaUser /></Box>
                   }
                   {sidemenu?.map((link, index) => {
                     return <Box key={link.url} mt={miniMode ? (index > 0 ? 2 : 3) : 3}>
@@ -218,7 +219,7 @@ const Container = (props: Props) => {
               <Portal>
                 <MenuList fontSize="15px" py="0" zIndex={1000}>
                   {sidemenu?.map((link) => {
-                    const Icon = Icons[link.icon]
+                    const Icon = FaUser
                     return <Link key={link.url} to={link.url}>
                       <MenuItem icon={<Icon />} >
                         {link.title}
@@ -236,7 +237,7 @@ const Container = (props: Props) => {
                   <Divider />
                   <>
                     {bottomNavs.map((nav, index) => {
-                      const Icon = Icons[nav.icon]
+                      const Icon = FaUser
                       if (nav.url == ReserveUrls.Search) {
                         return <MenuItem  >
                           <Search key={nav.url} title={nav.title} miniMode={false} sideWidth={sideWidth} />
@@ -253,7 +254,7 @@ const Container = (props: Props) => {
                     <Divider />
                   </>
                   {!isEmpty(config.repoUrl) && <Link to={config.repoUrl}>
-                    <MenuItem icon={<Icons.FaGithub />}>
+                    <MenuItem icon={<FaUser />}>
                       Github
                     </MenuItem></Link>}
                   <MenuItem  >
@@ -272,7 +273,7 @@ const Container = (props: Props) => {
 
 
 const NavItem = ({ text, icon = null, miniMode, fontWeight = 400, fontSize = 15, url, isActive = false, children = null }) => {
-  const Icon = Icons[icon]
+  const Icon = FaUser
   const textColor = useColorModeValue("gray.500", "whiteAlpha.800")
   const { pathname: asPath } = useLocation()
   return (
