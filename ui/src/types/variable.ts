@@ -24,6 +24,7 @@ export interface Variable {
     refresh?: VariableRefresh
     enableMulti?: boolean
     enableAll?: boolean
+    sortWeight?: number
 }
 
 export enum VariableQueryType {

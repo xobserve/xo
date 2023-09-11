@@ -16,7 +16,7 @@ import { Button, Table, TableContainer, Tag, Tbody, Td, Th, Thead, Tr, Modal, Mo
 import { DetailAlert, DetailAlertItem } from "src/components/DetailAlert"
 import RadionButtons from "src/components/RadioButtons"
 import DatasourceSelect from "src/components/datasource/Select"
-import { EditorInputItem } from "src/components/editor/EditorItem"
+import { EditorInputItem, EditorNumberItem } from "src/components/editor/EditorItem"
 import { Form, FormSection } from "src/components/form/Form"
 import Page from "layouts/page/Page"
 import { isArray, isEmpty } from "lodash"
@@ -392,6 +392,10 @@ export const EditVariable = ({ v, isOpen, onClose, isEdit, onSubmit, isGlobal = 
 
                             <FormItem title={t1.allValue} alignItems="center">
                                 <Switch defaultChecked={variable.enableAll} onChange={(e) => setVariable({ ...variable, enableAll: e.currentTarget.checked })} />
+                            </FormItem>
+                            
+                            <FormItem title={t.sortWeight} desc="Larger weight means higher sort priority when being display in dashboard">
+                                <EditorNumberItem size="lg" placeholder="auto" value={variable.sortWeight} min={0} max={100} step={1}  onChange={v => { setVariable({ ...variable, sortWeight: v }) }} />
                             </FormItem>
 
                         </FormSection>

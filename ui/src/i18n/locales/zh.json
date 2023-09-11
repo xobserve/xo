@@ -117,6 +117,7 @@
     "landscapeModeTips": "请使用手机横屏的方式来访问，以获得更好的体验",
     "width": "宽度",
     "height": "高度",
+    "sortWeight": "排序权重",
     "isAdded": "{name}添加成功!",
     "isUpdated": "{name}更新成功!",
     "isDeleted": "{name}删除成功!",

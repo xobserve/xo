@@ -123,6 +123,7 @@ export const commonMsg = i18n("common", {
   "valueMapping": "Value mapping",
   "width": "Width",
   "height": "Height",
+  "sortWeight": "Sort weight",
   "landscapeModeTips":"Please turn your phone to landscape mode for better experience.",
   "inputTips": params("Enter {name}.."),
   "isReqiiured": params("{name} is required"),

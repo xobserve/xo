@@ -26,4 +26,5 @@ type Variable struct {
 	EnableMulti bool      `json:"enableMulti"`
 	EnableAll   bool      `json:"enableAll"`
 	Regex       *string   `json:"regex"`
+	SortWeight  int       `json:"sortWeight"`
 }
