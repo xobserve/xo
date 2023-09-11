@@ -143,12 +143,12 @@ const SelectVariable = memo(({ v }: { v: Variable }) => {
                 if (!isEmpty(v.selected)) {
                     const selected = v.selected.split(VariableSplitChar)?.filter(s => result.includes(s))
                     if (selected.length == 0) {
-                        v.selected = result[0]
+                        autoSetSelected(v, result)
                     } else {
                         v.selected = selected.join(VariableSplitChar)
                     }
                 } else {
-                    v.selected = result[0]
+                    autoSetSelected(v, result)
                 }
             }
         }
@@ -352,4 +352,13 @@ export const queryVariableValues = async (v: Variable, datasources: Datasource[]
     }
 
     return result
+}
+
+const autoSetSelected = (v: Variable, result: string[]) => {
+    for (const value of result) {
+        if (value != VarialbeAllOption) {
+            v.selected = value 
+            return 
+        }
+    }
 }
