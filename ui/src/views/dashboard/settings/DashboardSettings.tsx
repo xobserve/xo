@@ -26,7 +26,6 @@ import React from "react";
 import { useStore } from "@nanostores/react"
 import { commonMsg, dashboardSettingMsg } from "src/i18n/locales/en"
 import AnnotationSettings from "./Annotation"
-import { use } from "echarts"
 import { MobileBreakpoint } from "src/data/constants"
 
 interface Props {

@@ -13,7 +13,7 @@
 import { Box, Flex, HStack, Select, Tooltip, useMediaQuery } from "@chakra-ui/react"
 import IconButton from "src/components/button/IconButton"
 import SelectVariables from "src/views/variables/SelectVariable"
-import { find, isEmpty } from "lodash"
+import { find, isEmpty, orderBy } from "lodash"
 import React from "react";
 import { memo, useEffect, useRef, useState } from "react"
 import { MdSync } from "react-icons/md"
@@ -70,6 +70,9 @@ const DashboardHeader = memo(({ dashboard, onChange, sideWidth }: HeaderProps) =
     }
 
     const [isLargeScreen] = useMediaQuery(MobileBreakpoint)
+
+    const dvars = orderBy(vars.filter((v) => v.id.toString().startsWith("d-")),['sortWeight','name'], ['desc','asc'])
+    const gvars = orderBy(vars.filter((v) => !v.id.toString().startsWith("d-") && !find(dashboard.data.hidingVars?.split(','), v1 => v.name.toLowerCase().match(v1))),['sortWeight','name'], ['desc','asc'])
 
     return (
         <Box
@@ -132,8 +135,8 @@ const DashboardHeader = memo(({ dashboard, onChange, sideWidth }: HeaderProps) =
                         <Flex mt="0" maxW={`calc(100% - ${10}px)`}>
                             <CustomScrollbar hideVerticalTrack>
                                 <Flex justifyContent="space-between" >
-                                    <SelectVariables variables={vars.filter((v) => v.id.toString().startsWith("d-"))} />
-                                    <SelectVariables variables={vars.filter((v) => !v.id.toString().startsWith("d-") && !find(dashboard.data.hidingVars?.split(','), v1 => v.name.toLowerCase().match(v1)))} />
+                                    <SelectVariables variables={dvars} />
+                                    <SelectVariables variables={gvars} />
                                 </Flex>
                             </CustomScrollbar>
                         </Flex>}

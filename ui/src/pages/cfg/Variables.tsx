@@ -21,7 +21,7 @@ import { Form, FormSection } from "src/components/form/Form"
 import Page from "layouts/page/Page"
 import { isArray, isEmpty } from "lodash"
 import { useEffect, useRef, useState } from "react"
-import { FaCog } from "react-icons/fa"
+import { FaArrowDown, FaArrowUp, FaChevronDown, FaChevronUp, FaCog } from "react-icons/fa"
 import { cfgLinks } from "src/data/nav-links"
 import { initVariable } from "src/data/variable"
 
@@ -45,7 +45,6 @@ import LokiVariableEditor from "src/views/dashboard/plugins/datasource/loki/Vari
 import { getDatasource } from "utils/datasource"
 import { addParamToUrl, removeParamFromUrl } from "utils/url"
 import { useSearchParam } from "react-use"
-import { MobileBreakpoint } from "src/data/constants"
 import { $datasources } from "src/views/datasource/store"
 
 
@@ -225,7 +224,7 @@ export const VariablesTable = ({ variables, onEdit, onRemove }: TableProps) => {
                     </Tr>
                 </Thead>
                 <Tbody>
-                    {variables.map(variable => {
+                    {variables.map((variable,i ) => {
                         return <Tr key={variable.name} className={`${variable.id == selectedVariable?.id ? "highlight-bg" : ''}`}>
                             <Td>{variable.name}</Td>
                             {
