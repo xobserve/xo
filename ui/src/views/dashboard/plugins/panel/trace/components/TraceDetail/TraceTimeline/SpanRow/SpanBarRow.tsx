@@ -28,7 +28,7 @@ import { IoAlert } from 'react-icons/io5';
 import { AiOutlineArrowRight } from 'react-icons/ai';
 import { FaNetworkWired } from 'react-icons/fa';
 import { MdOutlineUploadFile } from 'react-icons/md';
-import { Box, useColorMode, useColorModeValue } from '@chakra-ui/react';
+import { Box, Flex, Text, useColorMode, useColorModeValue } from '@chakra-ui/react';
 import customColors from 'src/theme/colors';
 import {formatDuration} from 'utils/date'
 
@@ -197,7 +197,7 @@ const SpanBarRow = (props: SpanBarRowProps) => {
                             addHoverIndentId={addHoverIndentId}
                             removeHoverIndentId={removeHoverIndentId}
                         />
-                        <a
+                        <Flex
                             className={`span-name ${isDetailExpanded ? 'is-detail-expanded' : ''}`}
                             aria-checked={isDetailExpanded}
                             onClick={_detailToggle}
@@ -205,32 +205,33 @@ const SpanBarRow = (props: SpanBarRowProps) => {
                             style={{ borderColor: color }}
                             tabIndex={0}
                         >
-                            <span
+                            <Flex
+                                alignItems="center"
                                 className={`span-svc-name ${isParent && !isChildrenExpanded ? 'is-children-collapsed' : ''}`}
                             // style={{verticalAlign: "middle"}}
                             >
                                 {showErrorIcon && <IoAlert style={{ display: "inline-block", marginBottom: '-2px' }} className="SpanBarRow--errorIcon" />}
-                                {serviceName}{' '}
+                                <Text>{serviceName}{' '}</Text>
                                 {rpc && (
-                                    <span>
-                                        <AiOutlineArrowRight style={{ display: "inline-block", marginBottom: '-2px' }} />{' '}
+                                    <Flex>
+                                        <AiOutlineArrowRight />
                                         <i className="SpanBarRow--rpcColorMarker" style={{ background: rpc.color }} />
-                                        {rpc.serviceName}
-                                    </span>
+                                        <Text>{rpc.serviceName}</Text>
+                                    </Flex>
                                 )}
                                 {noInstrumentedServer && (
-                                    <span>
-                                        <AiOutlineArrowRight />{' '}
+                                    <Flex alignItems="center">
+                                        <AiOutlineArrowRight />
                                         <i
                                             className="SpanBarRow--rpcColorMarker"
                                             style={{ background: noInstrumentedServer.color }}
                                         />
-                                        {noInstrumentedServer.serviceName}
-                                    </span>
+                                        <Text>{noInstrumentedServer.serviceName}</Text>
+                                    </Flex>
                                 )}
-                            </span>
+                            </Flex>
                             <small className="endpoint-name">{rpc ? rpc.operationName : operationName}</small>
-                        </a>
+                        </Flex>
                         {span.references && span.references.length > 1 && (
                             <ReferencesButton
                                 references={span.references}
