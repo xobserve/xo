@@ -42,7 +42,7 @@ const TraceDetailWrapper = ({id,dsId}) => {
                 });
             }
         }
-    },[])
+    },[datasource])
 
     const load = async () => {
         let data
