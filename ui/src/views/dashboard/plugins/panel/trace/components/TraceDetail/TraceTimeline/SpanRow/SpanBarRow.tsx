@@ -213,7 +213,7 @@ const SpanBarRow = (props: SpanBarRowProps) => {
                                 {showErrorIcon && <IoAlert style={{ display: "inline-block", marginBottom: '-2px' }} className="SpanBarRow--errorIcon" />}
                                 <Text>{serviceName}{' '}</Text>
                                 {rpc && (
-                                    <Flex>
+                                    <Flex alignItems="center">
                                         <AiOutlineArrowRight />
                                         <i className="SpanBarRow--rpcColorMarker" style={{ background: rpc.color }} />
                                         <Text>{rpc.serviceName}</Text>

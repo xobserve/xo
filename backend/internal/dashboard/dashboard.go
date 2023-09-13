@@ -20,6 +20,7 @@ import (
 	"time"
 
 	"github.com/DataObserve/datav/backend/internal/admin"
+	ot "github.com/DataObserve/datav/backend/internal/opentelemetry"
 	"github.com/DataObserve/datav/backend/internal/user"
 	"github.com/DataObserve/datav/backend/pkg/common"
 	"github.com/DataObserve/datav/backend/pkg/config"
@@ -29,6 +30,10 @@ import (
 	"github.com/DataObserve/datav/backend/pkg/models"
 	"github.com/DataObserve/datav/backend/pkg/utils"
 	"github.com/gin-gonic/gin"
+	"go.opentelemetry.io/otel/attribute"
+	"go.opentelemetry.io/otel/codes"
+	semconv "go.opentelemetry.io/otel/semconv/v1.4.0"
+	"go.opentelemetry.io/otel/trace"
 )
 
 var logger = log.RootLogger.New("logger", "dashboard")
@@ -134,9 +139,19 @@ func SaveDashboard(c *gin.Context) {
 }
 
 func GetDashboard(c *gin.Context) {
+	_, span := ot.Tracer.Start(c.Request.Context(), "getDashboard", trace.WithSpanKind(trace.SpanKindClient))
 	id := c.Param("id")
+	span.SetAttributes(
+		semconv.PeerServiceKey.String("mysql"),
+		attribute.
+			Key("sql.query").
+			String(fmt.Sprintf("SELECT * FROM dashboard WHERE id=%s", id)),
+	)
+
 	dash, err := models.QueryDashboard(id)
 	if err != nil {
+		span.SetStatus(codes.Error, err.Error())
+		span.End()
 		if err == sql.ErrNoRows {
 			c.JSON(404, common.RespError(fmt.Sprintf("dashboard id `%s` not found", id)))
 			return
@@ -146,6 +161,15 @@ func GetDashboard(c *gin.Context) {
 		return
 	}
 
+	span.End()
+	_, span1 := ot.Tracer.Start(c.Request.Context(), "getTeam", trace.WithSpanKind(trace.SpanKindClient))
+	defer span1.End()
+	span1.SetAttributes(
+		semconv.PeerServiceKey.String("mysql"),
+		attribute.
+			Key("sql.query").
+			String(fmt.Sprintf("SELECT name FROM team WHERE id=%d", dash.OwnedBy)),
+	)
 	teamName, _ := models.QueryTeamNameById(dash.OwnedBy)
 	if teamName == "" {
 		teamName = "not_found"

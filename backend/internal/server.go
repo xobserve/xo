@@ -13,6 +13,7 @@
 package internal
 
 import (
+	"context"
 	"net/http"
 	"os"
 	"path/filepath"
@@ -23,6 +24,7 @@ import (
 	"github.com/DataObserve/datav/backend/internal/api"
 	"github.com/DataObserve/datav/backend/internal/dashboard"
 	"github.com/DataObserve/datav/backend/internal/datasource"
+	ot "github.com/DataObserve/datav/backend/internal/opentelemetry"
 	"github.com/DataObserve/datav/backend/internal/proxy"
 	"github.com/DataObserve/datav/backend/internal/storage"
 	"github.com/DataObserve/datav/backend/internal/task"
@@ -36,6 +38,7 @@ import (
 	"github.com/gin-contrib/gzip"
 	"github.com/gin-contrib/static"
 	"github.com/gin-gonic/gin"
+	"go.opentelemetry.io/contrib/instrumentation/github.com/gin-gonic/gin/otelgin"
 )
 
 type Server struct {
@@ -54,6 +57,8 @@ var logger = log.RootLogger.New()
 
 // Start ...1=
 func (s *Server) Start() error {
+	ot.InitOpentelemetry()
+
 	err := storage.Init()
 	if err != nil {
 		return err
@@ -114,7 +119,7 @@ func (s *Server) Start() error {
 		r.DELETE("/variable/:id", IsLogin(), variables.DeleteVariable)
 
 		// dashboard apis
-		r.GET("/dashboard/byId/:id", IsLogin(), dashboard.GetDashboard)
+		r.GET("/dashboard/byId/:id", IsLogin(), otelgin.Middleware(config.Data.Common.AppName), dashboard.GetDashboard)
 		r.POST("/dashboard/save", IsLogin(), dashboard.SaveDashboard)
 		r.GET("/dashboard/team/:id", IsLogin(), dashboard.GetTeamDashboards)
 		r.GET("/dashboard/history/:id", IsLogin(), dashboard.GetHistory)
@@ -197,6 +202,15 @@ func (s *Server) Close() error {
 	} else {
 		waited = 1 * time.Second
 	}
+
+	if err := ot.TraceProvider.Shutdown(context.Background()); err != nil {
+		logger.Warn("Error shutting down tracer provider: %v", "error", err)
+	}
+
+	if err := ot.MeterProvider.Shutdown(context.Background()); err != nil {
+		logger.Warn("Error shutting down meter provider: %v", "error", err)
+	}
+
 	close(s.closeCh)
 
 	time.Sleep(waited)
