@@ -69,7 +69,7 @@ const LogPanelEditor = memo((props: PanelEditorProps) => {
             <PanelEditItem title="Timestamp precision">
                 <Select value={panel.plugins.log.timeStampPrecision} onChange={v => onChange((panel: Panel) => {
                     panel.plugins.log.timeStampPrecision = v
-                })} options={[{ label: "ns", value: "ns" }, { label: "us", value: "us" }, { label: "ms", value: "ms" }, { label: "second", value: "s" }]} popupMatchSelectWidth={false}/>
+                })} options={[{ label: "ns", value: "ns" }, { label: "us", value: "us" }, { label: "ms", value: "ms" }, { label: "second", value: "s" }]} popupMatchSelectWidth={false} />
             </PanelEditItem>
         </PanelAccordion>
         <PanelAccordion title="Labels">
@@ -94,8 +94,8 @@ const LogPanelEditor = memo((props: PanelEditorProps) => {
                 <Switch isChecked={panel.plugins.log.styles.labelColorSyncChart} onChange={(e) => onChange((panel: Panel) => {
                     panel.plugins.log.styles.labelColorSyncChart = e.target.checked
                 })} />
-                </PanelEditItem>
-            {!panel.plugins.log.styles.labelColorSyncChart  &&  <PanelEditItem title="Label name color">
+            </PanelEditItem>
+            {!panel.plugins.log.styles.labelColorSyncChart && <PanelEditItem title="Label name color">
                 <ColorPicker color={panel.plugins.log.styles.labelColor} onChange={(v) => onChange((panel: Panel) => {
                     panel.plugins.log.styles.labelColor = v
                 })} />
@@ -124,7 +124,18 @@ const LogPanelEditor = memo((props: PanelEditorProps) => {
                 <Switch isChecked={panel.plugins.log.styles.showlineBorder} onChange={(e) => onChange((panel: Panel) => {
                     panel.plugins.log.styles.showlineBorder = e.target.checked
                 })} />
-                </PanelEditItem>
+            </PanelEditItem>
+
+            <PanelEditItem title="Highlight labels" desc="Highlight the matched content words with color">
+                <EditorInputItem value={panel.plugins.log.styles.highlight} onChange={(v) => onChange((panel: Panel) => {
+                    panel.plugins.log.styles.highlight = v
+                })} placeholder="separate with comman, e.g job,filename" />
+            </PanelEditItem>
+            <PanelEditItem title="Highlight color">
+                <ColorPicker color={panel.plugins.log.styles.highlightColor} onChange={(v) => onChange((panel: Panel) => {
+                    panel.plugins.log.styles.highlightColor = v
+                })} />
+            </PanelEditItem>
         </PanelAccordion>
         <PanelAccordion title="Toolbar">
             <PanelEditItem title="Show" desc="Show toolbar in upper right corner">

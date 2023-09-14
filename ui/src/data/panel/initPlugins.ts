@@ -84,7 +84,7 @@ export const initPanelPlugins = (): PanelPlugins => {
                 barRadius: 0,
                 barGap: 10,
                 enableStack: false,
-                padding: [null,null,null,null]
+                padding: [null, null, null, null]
             },
             axis: {
                 showGrid: true,
@@ -238,8 +238,8 @@ function registerEvents(options, chart, navigate, setVariable, setDateTime, $var
                 show: false,
                 orient: 'horizontal',
                 placement: PieLegendPlacement.Bottom,
-                width: 25, 
-                height: 14, 
+                width: 25,
+                height: 14,
                 gap: 10,
                 fontSize: 12
             },
@@ -415,7 +415,7 @@ function onClick(data, map, navigate, setVariable, setDateTime, $variables) {
             labels: {
                 display: [],
                 width: 240,
-                layout: LayoutOrientation.Horizontal
+                layout: LayoutOrientation.Horizontal,
             },
             styles: {
                 labelColorSyncChart: true,
@@ -424,7 +424,9 @@ function onClick(data, map, navigate, setVariable, setDateTime, $variables) {
                 contentColor: 'inherit',
                 fontSize: "0.9rem",
                 wordBreak: "break-all",
-                showlineBorder: true
+                showlineBorder: true,
+                highlight: "",
+                highlightColor: palettes[6]
             },
             toolbar: {
                 show: true,

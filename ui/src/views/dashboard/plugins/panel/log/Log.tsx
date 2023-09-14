@@ -72,7 +72,7 @@ const LogPanel = (props: LogPanelProps) => {
     const [activeOp, setActiveOp] = useState<"or" | "and">("or")
     const [viewOptions, setViewOptions] = useState<LogChartView>(storage.get(viewStorageKey) ?? {
         maxBars: 20,
-        barType: "labels"
+        barType: "total"
     })
     const data: LogSeries[] = props.data.flat()
 
@@ -236,6 +236,12 @@ const LogPanel = (props: LogPanelProps) => {
         return sortBy(filterData, ['timestamp'])
     }, [filterData, panel.plugins.log.orderBy])
 
+    for (const l of sortedData) {
+        if (!isEmpty(panel.plugins.log.styles.highlight)) {
+            l.highlight = (l.highlight ?? []).concat(panel.plugins.log.styles.highlight.split(",").filter(v => !isEmpty(v)))
+        }
+        
+    }
     return (<>
         <Flex position="relative">
             {panel.plugins.log.toolbar.show &&

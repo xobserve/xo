@@ -91,6 +91,7 @@ const LogItem = memo((props: LogItemProps) => {
 
     const isMobileScreen =  width < MobileVerticalBreakpointNum
     
+
     return (<>
         <Flex flexDir={isMobileScreen ? "column" : "row"} pt="1" alignItems="start" gap={isMobileScreen ? 1 : 2} pl="2" pr="4" onClick={() => setCollapsed(!collapsed)} cursor="pointer"  fontSize={options.styles.fontSize}>
             <HStack spacing={1}>
@@ -110,7 +111,7 @@ const LogItem = memo((props: LogItemProps) => {
                         </LabelLayout>)
                     }
                 </HStack>}
-            <Text wordBreak={options.styles.wordBreak} color={paletteColorNameToHex(options.styles.contentColor)}><Highlight query={log.highlight??[]} styles={{ px: '1', py: '1',borderRadius: 4,  bg: 'teal.100' }}>{log.content}</Highlight></Text>
+            <Text wordBreak={options.styles.wordBreak} color={paletteColorNameToHex(options.styles.contentColor)}><Highlight query={log.highlight??[]} styles={{ px: '0', py: '0',borderRadius: 4,  color: paletteColorNameToHex(options.styles.highlightColor),fontWeight: 600 }}>{log.content}</Highlight></Text>
         </Flex>
         {
             !collapsed && <Box p="4" fontSize={options.styles.fontSize}>
