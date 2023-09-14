@@ -240,7 +240,7 @@ const getInitParams = (searchParams, panel, lastSearch) => {
     const tags = searchParams.get('tags') ?? (lastSearch.tags ?? '')
     const max = searchParams.get('max') ?? (lastSearch.max ?? '')
     const min = searchParams.get('min') ?? (lastSearch.min ?? '')
-    const limit = searchParams.get('limit') ?? (lastSearch.limit ?? 20)
+    const limit = searchParams.get('limit') ?? (lastSearch.limit ?? 100)
     const traceIds = searchParams.get('traceIds') ?? null
     return [service, operation, tags, max, min, limit, traceIds]
 }

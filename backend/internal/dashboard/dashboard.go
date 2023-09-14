@@ -180,13 +180,9 @@ func GetDashboard(c *gin.Context) {
 	}
 	dash.Editable = true
 	dash.OwnerName = teamName
-	if id == models.HomeDashboardId {
-		// log user info when accessing homoe dashboard
-		log.WithTrace(traceCtx).Info("Get dashboard", zap.String("id", dash.Id), zap.String("title", dash.Title), zap.String("username", u.Username), zap.String("ip", c.ClientIP()))
-	} else {
-		log.WithTrace(traceCtx).Info("Get dashboard", zap.String("id", dash.Id), zap.String("title", dash.Title), zap.String("username", u.Username))
 
-	}
+	log.WithTrace(traceCtx).Info("Get dashboard", zap.String("id", dash.Id), zap.String("title", dash.Title), zap.String("username", u.Username), zap.String("ip", c.ClientIP()))
+
 	c.JSON(200, common.RespSuccess(dash))
 }
 

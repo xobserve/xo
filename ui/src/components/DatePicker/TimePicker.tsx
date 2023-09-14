@@ -192,6 +192,11 @@ const TimePicker = ({ onClose, onTimeChange }: Props) => {
         value: 3 * 60,
         raw: 'now-3h'
 
+    },{
+        label: t1.lastHours({ name: "6" }),
+        value: 6 * 60,
+        raw: 'now-6h'
+
     }, {
         label: t1.lastHours({ name: "12" }),
         value: 12 * 60,

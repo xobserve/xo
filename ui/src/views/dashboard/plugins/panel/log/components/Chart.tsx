@@ -177,7 +177,7 @@ const LogChart = memo((props: Props) => {
             tooltipMode = "axis"
         }
     const chartOptions = {
-        animation: true,
+        animation: false,
         animationDuration: 500,
         tooltip: {
             show: true,
