@@ -11,24 +11,45 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+import { $config } from "src/data/configs/config";
+
 export const nodeGraphData = (nodesCount, rand) => {
     const nodes = [];
+    const config = $config.get()
     for (let i = 0; i < nodesCount; i++) {
       const success =  Math.round(Math.random() * 1000)
       const error = Math.round(Math.random() * 100)
-      const node: any = {
-        id: `node-${i}`,
-        label: `node-${i}`,
-        data: {
-          success: success,
-          error: error
-        },
-        icon: {
-          show: true,
-          img : i % 5 === 4 ?  'https://gw.alipayobjects.com/zos/bmw-prod/5d015065-8505-4e7a-baec-976f81e3c41d.svg' : null,
-          text:  i % 5 !== 4 ? `${success}\n${error}` : null
+      let node 
+      if (i == 0) {
+        node = {
+          id: "web-datav-1",
+          label: "web-datav-1",
+          data: {
+            success: success,
+            error: error
+          },
+          icon: {
+            show: true,
+            img : null,
+            text:  `${success}\n${error}` 
+          }
+        }
+      } else {
+        node = {
+          id: `fake-node-${i}`,
+          label: `fake-node-${i}`,
+          data: {
+            success: success,
+            error: error
+          },
+          icon: {
+            show: true,
+            img : i % 5 === 4 ?  'https://gw.alipayobjects.com/zos/bmw-prod/5d015065-8505-4e7a-baec-976f81e3c41d.svg' : null,
+            text:  i % 5 !== 4 ? `${success}\n${error}` : null
+          }
         }
       }
+    
       nodes.push(node)
     }
 
@@ -38,15 +59,15 @@ export const nodeGraphData = (nodesCount, rand) => {
     for (let i = 0; i < nodesCount; i++) {
       for (let j = 0; j < nodesCount; j++) {
         if (i !== j) {
-          if (edgesSet.has(`node-${j}` + `node-${i}`)) {
+          if (edgesSet.has(nodes[j].id + nodes[i].id)) {
              continue 
           }
           if (Math.random() > rand) {
             const req = Math.round(Math.random() * 1000)
             const error = Math.round(Math.random() * 100)
             edges.push({
-              source: `node-${i}`,
-              target: `node-${j}`,
+              source: nodes[i].id,
+              target: nodes[j].id,
               label:  `${req} / ${error}`,
               data: {
                 req: req,
@@ -54,7 +75,7 @@ export const nodeGraphData = (nodesCount, rand) => {
               },
             })
 
-            edgesSet.add(`node-${i}` + `node-${j}`)
+            edgesSet.add(nodes[i].id + nodes[j].id)
           }
         }
       }

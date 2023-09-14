@@ -42,7 +42,7 @@ export const run_testdata_query = async (panel: Panel, q: PanelQuery, range: Tim
             data = prometheusToPanels(genPrometheusData(range,panel.datasource,q), panel, q, range)
             break;
         case PanelType.NodeGraph:
-            data = nodeGraphData(10, 0.9)
+            data = nodeGraphData(6, 0.8)
             break;
         case PanelType.Trace:
             data =  traceData.data
