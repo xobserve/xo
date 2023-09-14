@@ -16,9 +16,54 @@
 package log
 
 import (
+	"context"
+
+	"go.opentelemetry.io/otel/trace"
 	"go.uber.org/zap"
 	"go.uber.org/zap/zapcore"
 )
+
+func createLogger() *zap.Logger {
+	encoderCfg := zap.NewProductionEncoderConfig()
+	encoderCfg.TimeKey = "ts"
+	encoderCfg.EncodeTime = zapcore.ISO8601TimeEncoder
+
+	config := zap.Config{
+		Level:             zap.NewAtomicLevelAt(zap.InfoLevel),
+		Development:       false,
+		DisableCaller:     false,
+		DisableStacktrace: false,
+		Sampling:          nil,
+		Encoding:          "json",
+		EncoderConfig:     encoderCfg,
+		OutputPaths: []string{
+			"stderr",
+		},
+		ErrorOutputPaths: []string{
+			"stderr",
+		},
+		InitialFields: map[string]interface{}{},
+	}
+
+	l, _ := config.Build()
+	return l
+}
+
+var L = createLogger()
+
+// For returns a context-aware Logger. If the context
+// contains a span, all logging calls are also
+// echo-ed into the span.
+func WithTrace(ctx context.Context) *zap.Logger {
+	if span := trace.SpanFromContext(ctx); span != nil {
+		f := []zapcore.Field{
+			zap.String("trace_id", span.SpanContext().TraceID().String()),
+			zap.String("span_id", span.SpanContext().SpanID().String()),
+		}
+		return L.With(f...)
+	}
+	return L
+}
 
 // Logger is a simplified abstraction of the zap.Logger
 type Logger interface {

@@ -4,3 +4,7 @@ datav.db
 commit.sh
 testConfig.yaml
 start.sh
+
+*.log
+*.mmdb
+

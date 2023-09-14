@@ -27,6 +27,7 @@ import (
 	"github.com/DataObserve/datav/backend/pkg/config"
 	"github.com/DataObserve/datav/backend/pkg/db"
 	"github.com/DataObserve/datav/backend/pkg/e"
+	"github.com/DataObserve/datav/backend/pkg/log"
 	"github.com/DataObserve/datav/backend/pkg/models"
 	"github.com/DataObserve/datav/backend/pkg/utils"
 	"github.com/gin-gonic/gin"
@@ -34,6 +35,7 @@ import (
 	"go.opentelemetry.io/otel/codes"
 	semconv "go.opentelemetry.io/otel/semconv/v1.4.0"
 	"go.opentelemetry.io/otel/trace"
+	"go.uber.org/zap"
 )
 
 var logger = colorlog.RootLogger.New("logger", "dashboard")
@@ -140,7 +142,7 @@ func SaveDashboard(c *gin.Context) {
 
 func GetDashboard(c *gin.Context) {
 	id := c.Param("id")
-	// u := user.CurrentUser(c)
+	u := user.CurrentUser(c)
 	traceCtx := c.Request.Context()
 	_, span := ot.Tracer.Start(traceCtx, "getDashboard", trace.WithSpanKind(trace.SpanKindClient))
 	span.SetAttributes(
@@ -178,7 +180,13 @@ func GetDashboard(c *gin.Context) {
 	}
 	dash.Editable = true
 	dash.OwnerName = teamName
-	// log.Info(traceCtx, "Get dashboard", "id", dash.Id, "title", dash.Title, "username", u.Username)
+	if id == models.HomeDashboardId {
+		// log user info when accessing homoe dashboard
+		log.WithTrace(traceCtx).Info("Get dashboard", zap.String("id", dash.Id), zap.String("title", dash.Title), zap.String("username", u.Username), zap.String("ip", c.ClientIP()))
+	} else {
+		log.WithTrace(traceCtx).Info("Get dashboard", zap.String("id", dash.Id), zap.String("title", dash.Title), zap.String("username", u.Username))
+
+	}
 	c.JSON(200, common.RespSuccess(dash))
 }
 

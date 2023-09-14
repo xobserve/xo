@@ -35,10 +35,12 @@ import (
 	"github.com/DataObserve/datav/backend/pkg/common"
 	"github.com/DataObserve/datav/backend/pkg/config"
 	"github.com/DataObserve/datav/backend/pkg/e"
+	"github.com/DataObserve/datav/backend/pkg/log"
 	"github.com/gin-contrib/gzip"
 	"github.com/gin-contrib/static"
 	"github.com/gin-gonic/gin"
 	"go.opentelemetry.io/contrib/instrumentation/github.com/gin-gonic/gin/otelgin"
+	"go.uber.org/zap"
 )
 
 type Server struct {
@@ -58,6 +60,8 @@ var logger = colorlog.RootLogger.New()
 // Start ...1=
 func (s *Server) Start() error {
 	ot.InitOpentelemetry()
+
+	log.L = log.L.With(zap.String("service", config.Data.Common.AppName))
 
 	err := storage.Init()
 	if err != nil {
