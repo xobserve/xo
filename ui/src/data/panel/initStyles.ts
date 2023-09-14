@@ -40,5 +40,10 @@ export const initPanelStyles: PanelStyles = {
         left: '',
         justifyContent: "center",
         reverse: false
-    }
+    },
+
+    heightReduction: 0 ,
+    widthReduction: 0 ,
+    marginTop: 0,
+    marginLeft: 0
 }

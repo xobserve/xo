@@ -23,6 +23,8 @@ import React from "react";
 import { useStore } from "@nanostores/react"
 import { commonMsg, panelMsg } from "src/i18n/locales/en"
 import { paletteColorNameToHex, paletteMap } from "utils/colors"
+import { dispatch } from "use-bus"
+import { PanelForceRebuildEvent } from "src/data/bus-events"
 
 const PanelStyles = ({ panel, onChange }: PanelEditorProps) => {
     const t = useStore(commonMsg)
@@ -78,6 +80,27 @@ const PanelStyles = ({ panel, onChange }: PanelEditorProps) => {
                         })
                     }} />
                 </PanelEditItem>}
+
+                <PanelEditItem title="Width reduction" desc="reduce panel width">
+                    <EditorNumberItem min={0} max={1000} step={1}  value={panel.styles.widthReduction} onChange={v => onChange(panel => {
+                        panel.styles.widthReduction= v
+                    })} />
+                </PanelEditItem>
+                <PanelEditItem title="Height reduction" desc="reduce panel height">
+                    <EditorNumberItem min={0} max={1000} step={1}  value={panel.styles.heightReduction} onChange={v => onChange(panel => {
+                        panel.styles.heightReduction= v
+                    })} />
+                </PanelEditItem>
+                <PanelEditItem title="Margin left">
+                    <EditorNumberItem min={0} max={1000} step={1}  value={panel.styles.marginLeft} onChange={v => onChange(panel => {
+                        panel.styles.marginLeft= v
+                    })} />
+                </PanelEditItem>
+                <PanelEditItem title="Margin top">
+                    <EditorNumberItem min={0} max={1000} step={1}  value={panel.styles.marginTop} onChange={v => onChange(panel => {
+                        panel.styles.marginTop= v
+                    })} />
+                </PanelEditItem>
             </PanelAccordion>
             <PanelAccordion title={t1.titleDecoration}>
                 <PanelEditItem title="type">

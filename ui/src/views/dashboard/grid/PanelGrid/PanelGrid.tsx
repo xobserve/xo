@@ -137,9 +137,9 @@ export const PanelGrid = memo((props: PanelGridProps) => {
 
 
     return (
-        <PanelBorder width={props.width} height={props.height} border={props.panel.styles?.border}>
+        <>
             {depsInited && <PanelComponent key={props.panel.id + forceRenderCount} {...props} timeRange={tr} variables={variables} />}
-        </PanelBorder>
+        </>
     )
 })
 
@@ -338,22 +338,24 @@ export const PanelComponent = ({ dashboard, panel, variables, onRemovePanel, onH
         return res
     }, [panel.transform, panel.enableTransform, panelData])
 
-    return <Box height={height} width={width} className={(panel.styles.border == "Normal" && "bordered") + (dashboard.data.styles.bgEnabled ? " panel-bg-alpha" : " panel-bg")} position="relative">
+    return <Box height={height} width={width} className={(panel.styles.border == "Normal" && "bordered")} position="relative">
 
-        {data && <>
+        {data && <Box className={ (dashboard.data.styles.bgEnabled ? " panel-bg-alpha" : " panel-bg")} overflow="hidden">
             <PanelHeader dashboardId={dashboard.id} panel={panel} data={panelData} queryError={queryError} onCopyPanel={onCopyPanel} onRemovePanel={onRemovePanel} onHidePanel={onHidePanel} />
             <ErrorBoundary>
                 <Box
                     // panel={panel}
                     height={panelInnerHeight}
-                    marginLeft={panel.type == PanelType.Graph ? "-10px" : "0px"}
+                    marginLeft={panel.type == PanelType.Graph ? -10 + panel.styles.marginLeft + 'px' : panel.styles.marginLeft + 'px'}
+                    marginTop={panel.styles.marginTop + 'px'}
                 >
-                    <CustomPanelRender dashboardId={dashboard.id} panel={panel} data={data} height={panelInnerHeight} width={panelInnerWidth} sync={sync} timeRange={timeRange} />
+                    <CustomPanelRender dashboardId={dashboard.id} panel={panel} data={data} height={panelInnerHeight - panel.styles.heightReduction} width={panelInnerWidth - panel.styles.widthReduction} sync={sync} timeRange={timeRange} />
                 </Box>
             </ErrorBoundary>
 
-        </>}
+        </Box>}
         {loading && <Box position="absolute" top="0" right="0"><Loading size="sm" /></Box>}
+        <Box position="absolute" top="0" left="0" right="0" bottom="0" zIndex={-1} overflow="hidden"><PanelBorder width={width} height={height} border={panel.styles?.border} > <Box></Box></PanelBorder></Box>
     </Box>
 }
 

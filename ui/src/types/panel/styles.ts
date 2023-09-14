@@ -34,6 +34,10 @@ export interface PanelStyles {
         paddingLeft:string
         paddingRight: string
     }
+    heightReduction: number 
+    widthReduction: number 
+    marginTop: number 
+    marginLeft: number
 }
 
 export interface DecorationStyles {

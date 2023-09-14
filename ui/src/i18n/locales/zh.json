@@ -360,7 +360,7 @@
     "visualization": "图表类型",
 
 
-    "panelBorder": "图表边框",
+    "panelBorder": "图表布局和边框",
     "paletteTips": "只支持 Graph, Bar, Pie 和 Echarts 图表",
     "titleDecoration": "标题装饰",
     "panelDecoration": "图表装饰",
