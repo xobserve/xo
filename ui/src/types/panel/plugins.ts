@@ -54,6 +54,8 @@ export interface AlerSettings extends DisableDatasource {
         colorMode: "none" | "value" | "bg-gradient" | "bg-solid"
         style: "lines" | "bars"
         statName: string
+        valueSize: number 
+        legendSize: number
     }
     orderBy: "newest" | "oldest"
     toolbar: {

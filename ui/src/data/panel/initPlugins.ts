@@ -487,7 +487,9 @@ function onClick(data, map, navigate, setVariable, setDateTime, $variables) {
                 layout: LayoutOrientation.Vertical,
                 colorMode: "bg-gradient",
                 style: "bars",
-                statName: "Alerts"
+                statName: "Alerts",
+                valueSize: 60,
+                legendSize: 30,
             },
             disableDatasource: true,
             orderBy: "newest",

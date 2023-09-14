@@ -35,7 +35,8 @@ const AlertStatView = (props: PanelProps) => {
     statOptions.styles.layout = props.panel.plugins.alert.stat.layout
     statOptions.styles.colorMode = props.panel.plugins.alert.stat.colorMode
     statOptions.styles.style =  props.panel.plugins.alert.stat.style
-    statOptions.textSize.value = 100
+    statOptions.textSize.value = props.panel.plugins.alert.stat.valueSize
+    statOptions.textSize.legend = props.panel.plugins.alert.stat.legendSize
     statOptions.showLegend = true
     newProps.panel.plugins.stat = statOptions
 

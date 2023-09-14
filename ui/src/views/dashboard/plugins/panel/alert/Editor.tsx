@@ -76,6 +76,16 @@ const AlertPanelEditor = memo((props: PanelEditorProps) => {
                     dispatch(PanelForceRebuildEvent + panel.id)
                 })} />
             </PanelEditItem>
+            <PanelEditItem title="Stat value size">
+                <EditorNumberItem min={8} max={100} step={1} value={panel.plugins.alert.stat.valueSize} onChange={(v) => onChange((panel: Panel) => {
+                    panel.plugins.alert.stat.valueSize = v
+                })} />
+            </PanelEditItem>
+            <PanelEditItem title="Stat name size">
+                <EditorNumberItem min={8} max={100} step={1} value={panel.plugins.alert.stat.legendSize} onChange={(v) => onChange((panel: Panel) => {
+                    panel.plugins.alert.stat.legendSize = v
+                })} />
+            </PanelEditItem>
         </>}
         <PanelEditItem title="Order by">
             <RadionButtons options={[{ label: "Newest First", value: "newest" }, { label: "Oldest First", value: "oldest" }]} value={panel.plugins.alert.orderBy} onChange={v => onChange((panel: Panel) => {
@@ -101,7 +111,7 @@ const AlertPanelEditor = memo((props: PanelEditorProps) => {
 
         <AlertFilterEditor panel={panel} filter={panel.plugins.alert.filter} onChange={onChange} />
 
-        <PanelAccordion title="Chart">
+        <PanelAccordion title="Bar Chart">
             <PanelEditItem title="Show">
                 <Switch isChecked={panel.plugins.alert.chart.show} onChange={(e) => onChange((panel: Panel) => {
                     panel.plugins.alert.chart.show = e.target.checked
