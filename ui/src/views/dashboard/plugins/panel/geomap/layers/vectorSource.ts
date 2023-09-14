@@ -16,13 +16,6 @@ import { findOverride, findRuleInOverride } from 'utils/dashboard/panel';
 import { GeomapRules } from '../OverridesEditor';
 import { isEmpty } from 'lodash';
 
-// "geometry": {
-//     "type": "Point",
-//     "coordinates": [
-//         117.655556,
-//         24.513333
-//     ]
-// },
 
 export class FrameVectorSource<T extends Geometry = Geometry> extends VectorSource<T> {
     constructor() {

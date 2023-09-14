@@ -47,6 +47,9 @@ export const calcValueOnArray = (values: number[], calc: ValueCalculationType):n
 
 export const isSeriesData = (d: any) => {
     const data: SeriesData[] = d?.flat()
+    if (isEmpty(data)) {
+        return true
+    }
     for (const s of data) {
         if (s.name !== undefined && s.fields !== undefined) {
             return true

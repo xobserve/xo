@@ -1,7 +1,4 @@
-import GeoJSON from 'ol/format/GeoJSON.js';
 import HeatmapLayer from 'ol/layer/Heatmap.js';
-import VectorSource from 'ol/source/Vector.js';
-import { SeriesData } from 'types/seriesData';
 import { FrameVectorSource } from '../vectorSource';
 import { Point } from 'ol/geom';
 

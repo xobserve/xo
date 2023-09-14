@@ -45,9 +45,9 @@ interface Props extends PanelProps {
 export let geomap: Map = null
 
 const GeoMapPanelWrapper = memo((props: Props) => {
-    if (isEmpty(props.data)) {
-        return <Center height="100%"><NoData /></Center>
-    }
+    // if (isEmpty(props.data)) {
+    //     return <Center height="100%"><NoData /></Center>
+    // }
 
     if (!isSeriesData(props.data)) {
         return (<Center height="100%">Data format not support!</Center>)
