@@ -6,8 +6,8 @@ import (
 	"fmt"
 	"time"
 
+	"github.com/DataObserve/datav/backend/pkg/colorlog"
 	"github.com/DataObserve/datav/backend/pkg/config"
-	"github.com/DataObserve/datav/backend/pkg/log"
 	"go.opentelemetry.io/contrib/instrumentation/runtime"
 	"go.opentelemetry.io/otel"
 	"go.opentelemetry.io/otel/attribute"
@@ -25,7 +25,7 @@ var TraceProvider *sdktrace.TracerProvider
 var MeterProvider *sdkmetric.MeterProvider
 var Tracer trace.Tracer
 
-var logger = log.RootLogger.New("logger", "ot")
+var logger = colorlog.RootLogger.New("logger", "ot")
 
 func InitOpentelemetry() {
 	TraceProvider = initTracerProvider()

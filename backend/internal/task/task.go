@@ -3,12 +3,12 @@ package task
 import (
 	"time"
 
+	"github.com/DataObserve/datav/backend/pkg/colorlog"
 	"github.com/DataObserve/datav/backend/pkg/config"
 	"github.com/DataObserve/datav/backend/pkg/db"
-	"github.com/DataObserve/datav/backend/pkg/log"
 )
 
-var logger = log.RootLogger.New("logger", "task")
+var logger = colorlog.RootLogger.New("logger", "task")
 
 func Init() {
 	for {

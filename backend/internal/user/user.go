@@ -16,15 +16,15 @@ import (
 	"net/http"
 	"time"
 
+	"github.com/DataObserve/datav/backend/pkg/colorlog"
 	"github.com/DataObserve/datav/backend/pkg/db"
 	"github.com/DataObserve/datav/backend/pkg/e"
-	"github.com/DataObserve/datav/backend/pkg/log"
 	"github.com/DataObserve/datav/backend/pkg/models"
 	"github.com/DataObserve/datav/backend/pkg/utils"
 	"github.com/gin-gonic/gin"
 )
 
-var logger = log.RootLogger.New("logger", "user")
+var logger = colorlog.RootLogger.New("logger", "user")
 
 func Init() error {
 	return nil

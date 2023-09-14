@@ -22,11 +22,11 @@ import (
 	"github.com/DataObserve/datav/backend/internal/admin"
 	ot "github.com/DataObserve/datav/backend/internal/opentelemetry"
 	"github.com/DataObserve/datav/backend/internal/user"
+	"github.com/DataObserve/datav/backend/pkg/colorlog"
 	"github.com/DataObserve/datav/backend/pkg/common"
 	"github.com/DataObserve/datav/backend/pkg/config"
 	"github.com/DataObserve/datav/backend/pkg/db"
 	"github.com/DataObserve/datav/backend/pkg/e"
-	"github.com/DataObserve/datav/backend/pkg/log"
 	"github.com/DataObserve/datav/backend/pkg/models"
 	"github.com/DataObserve/datav/backend/pkg/utils"
 	"github.com/gin-gonic/gin"
@@ -36,7 +36,7 @@ import (
 	"go.opentelemetry.io/otel/trace"
 )
 
-var logger = log.RootLogger.New("logger", "dashboard")
+var logger = colorlog.RootLogger.New("logger", "dashboard")
 
 func SaveDashboard(c *gin.Context) {
 	u := user.CurrentUser(c)
@@ -139,8 +139,10 @@ func SaveDashboard(c *gin.Context) {
 }
 
 func GetDashboard(c *gin.Context) {
-	_, span := ot.Tracer.Start(c.Request.Context(), "getDashboard", trace.WithSpanKind(trace.SpanKindClient))
 	id := c.Param("id")
+	// u := user.CurrentUser(c)
+	traceCtx := c.Request.Context()
+	_, span := ot.Tracer.Start(traceCtx, "getDashboard", trace.WithSpanKind(trace.SpanKindClient))
 	span.SetAttributes(
 		semconv.PeerServiceKey.String("mysql"),
 		attribute.
@@ -162,7 +164,7 @@ func GetDashboard(c *gin.Context) {
 	}
 
 	span.End()
-	_, span1 := ot.Tracer.Start(c.Request.Context(), "getTeam", trace.WithSpanKind(trace.SpanKindClient))
+	_, span1 := ot.Tracer.Start(traceCtx, "getTeam", trace.WithSpanKind(trace.SpanKindClient))
 	defer span1.End()
 	span1.SetAttributes(
 		semconv.PeerServiceKey.String("mysql"),
@@ -176,6 +178,7 @@ func GetDashboard(c *gin.Context) {
 	}
 	dash.Editable = true
 	dash.OwnerName = teamName
+	// log.Info(traceCtx, "Get dashboard", "id", dash.Id, "title", dash.Title, "username", u.Username)
 	c.JSON(200, common.RespSuccess(dash))
 }
 
@@ -284,6 +287,15 @@ func GetTeamDashboards(c *gin.Context) {
 
 func GetSimpleList(c *gin.Context) {
 	dashboards := make([]*models.Dashboard, 0)
+
+	_, span := ot.Tracer.Start(c.Request.Context(), "getDashboardList", trace.WithSpanKind(trace.SpanKindClient))
+	defer span.End()
+	span.SetAttributes(
+		semconv.PeerServiceKey.String("mysql"),
+		attribute.
+			Key("sql.query").
+			String("SELECT * FROM dashboard"),
+	)
 
 	rows, err := db.Conn.Query("SELECT id,title, owned_by, tags, weight FROM dashboard ORDER BY weight DESC,created DESC")
 	if err != nil {

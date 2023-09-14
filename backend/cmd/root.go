@@ -20,8 +20,8 @@ import (
 	"syscall"
 
 	server "github.com/DataObserve/datav/backend/internal"
+	"github.com/DataObserve/datav/backend/pkg/colorlog"
 	"github.com/DataObserve/datav/backend/pkg/config"
-	"github.com/DataObserve/datav/backend/pkg/log"
 	"github.com/spf13/cobra"
 )
 
@@ -40,24 +40,24 @@ var rootCmd = &cobra.Command{
 			cfg = cfgFile
 		}
 		config.Init(cfg)
-		err := log.InitLogger(config.Data.Common.LogLevel)
+		err := colorlog.InitLogger(config.Data.Common.LogLevel)
 		if err != nil {
 			fmt.Println("init logger error", err)
 			return
 		}
 
-		log.RootLogger.Info("init config", "config", config.Data)
+		colorlog.RootLogger.Info("init config", "config", config.Data)
 		server := server.New()
 		err = server.Start()
 		if err != nil {
-			log.RootLogger.Crit("init server error", "error", err)
+			colorlog.RootLogger.Crit("init server error", "error", err)
 			return
 		}
 		// 等待服务器停止信号
 		chSig := make(chan os.Signal)
 		signal.Notify(chSig, syscall.SIGINT, syscall.SIGTERM)
 		sig := <-chSig
-		log.RootLogger.Info("server received signal", "signal", sig)
+		colorlog.RootLogger.Info("server received signal", "signal", sig)
 		server.Close()
 	},
 }

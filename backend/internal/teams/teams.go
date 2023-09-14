@@ -22,15 +22,15 @@ import (
 
 	"github.com/DataObserve/datav/backend/internal/admin"
 	"github.com/DataObserve/datav/backend/internal/user"
+	"github.com/DataObserve/datav/backend/pkg/colorlog"
 	"github.com/DataObserve/datav/backend/pkg/common"
 	"github.com/DataObserve/datav/backend/pkg/db"
 	"github.com/DataObserve/datav/backend/pkg/e"
-	"github.com/DataObserve/datav/backend/pkg/log"
 	"github.com/DataObserve/datav/backend/pkg/models"
 	"github.com/gin-gonic/gin"
 )
 
-var logger = log.RootLogger.New("logger", "teams")
+var logger = colorlog.RootLogger.New("logger", "teams")
 
 func GetTeams(c *gin.Context) {
 	teams := make(models.Teams, 0)

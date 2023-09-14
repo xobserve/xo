@@ -22,12 +22,12 @@ import (
 	"net/http"
 	"time"
 
+	"github.com/DataObserve/datav/backend/pkg/colorlog"
 	"github.com/DataObserve/datav/backend/pkg/common"
-	"github.com/DataObserve/datav/backend/pkg/log"
 	"github.com/gin-gonic/gin"
 )
 
-var logger = log.RootLogger.New("logger", "datasource")
+var logger = colorlog.RootLogger.New("logger", "datasource")
 
 func Proxy(c *gin.Context) {
 	targetURL := c.Query("proxy_url")

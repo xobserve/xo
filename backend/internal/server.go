@@ -31,10 +31,10 @@ import (
 	"github.com/DataObserve/datav/backend/internal/teams"
 	"github.com/DataObserve/datav/backend/internal/user"
 	"github.com/DataObserve/datav/backend/internal/variables"
+	"github.com/DataObserve/datav/backend/pkg/colorlog"
 	"github.com/DataObserve/datav/backend/pkg/common"
 	"github.com/DataObserve/datav/backend/pkg/config"
 	"github.com/DataObserve/datav/backend/pkg/e"
-	"github.com/DataObserve/datav/backend/pkg/log"
 	"github.com/gin-contrib/gzip"
 	"github.com/gin-contrib/static"
 	"github.com/gin-gonic/gin"
@@ -53,7 +53,7 @@ func New() *Server {
 	}
 }
 
-var logger = log.RootLogger.New()
+var logger = colorlog.RootLogger.New()
 
 // Start ...1=
 func (s *Server) Start() error {
@@ -83,6 +83,7 @@ func (s *Server) Start() error {
 		r := router.Group("/api")
 		r.Use(gzip.Gzip(gzip.DefaultCompression))
 
+		otelPlugin := otelgin.Middleware(config.Data.Common.AppName)
 		// global config
 		r.GET("/config/ui", getUIConfig)
 
@@ -119,11 +120,11 @@ func (s *Server) Start() error {
 		r.DELETE("/variable/:id", IsLogin(), variables.DeleteVariable)
 
 		// dashboard apis
-		r.GET("/dashboard/byId/:id", IsLogin(), otelgin.Middleware(config.Data.Common.AppName), dashboard.GetDashboard)
-		r.POST("/dashboard/save", IsLogin(), dashboard.SaveDashboard)
+		r.GET("/dashboard/byId/:id", IsLogin(), otelPlugin, dashboard.GetDashboard)
+		r.POST("/dashboard/save", IsLogin(), otelPlugin, dashboard.SaveDashboard)
 		r.GET("/dashboard/team/:id", IsLogin(), dashboard.GetTeamDashboards)
-		r.GET("/dashboard/history/:id", IsLogin(), dashboard.GetHistory)
-		r.GET("/dashboard/simpleList", dashboard.GetSimpleList)
+		r.GET("/dashboard/history/:id", IsLogin(), otelPlugin, dashboard.GetHistory)
+		r.GET("/dashboard/simpleList", otelPlugin, dashboard.GetSimpleList)
 		r.POST("/dashboard/star/:id", IsLogin(), dashboard.Star)
 		r.POST("/dashboard/unstar/:id", IsLogin(), dashboard.UnStar)
 		r.GET("/dashboard/starred", IsLogin(), dashboard.GetAllStarred)

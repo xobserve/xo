@@ -13,6 +13,6 @@
 
 package admin
 
-import "github.com/DataObserve/datav/backend/pkg/log"
+import "github.com/DataObserve/datav/backend/pkg/colorlog"
 
-var logger = log.RootLogger.New("logger", "admin")
+var logger = colorlog.RootLogger.New("logger", "admin")

@@ -7,15 +7,15 @@ import (
 	"time"
 
 	"github.com/DataObserve/datav/backend/internal/user"
+	"github.com/DataObserve/datav/backend/pkg/colorlog"
 	"github.com/DataObserve/datav/backend/pkg/common"
 	"github.com/DataObserve/datav/backend/pkg/db"
 	"github.com/DataObserve/datav/backend/pkg/e"
-	"github.com/DataObserve/datav/backend/pkg/log"
 	"github.com/DataObserve/datav/backend/pkg/models"
 	"github.com/gin-gonic/gin"
 )
 
-var logger = log.RootLogger.New("logger", "annotation")
+var logger = colorlog.RootLogger.New("logger", "annotation")
 
 type AnnotationSettings struct {
 	Enable     bool            `json:"enable"`

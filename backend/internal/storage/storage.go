@@ -23,16 +23,16 @@ import (
 
 	"github.com/DataObserve/datav/backend/internal/dashboard"
 	storageData "github.com/DataObserve/datav/backend/internal/storage/data"
+	"github.com/DataObserve/datav/backend/pkg/colorlog"
 	"github.com/DataObserve/datav/backend/pkg/config"
 	"github.com/DataObserve/datav/backend/pkg/db"
 	"github.com/DataObserve/datav/backend/pkg/e"
-	"github.com/DataObserve/datav/backend/pkg/log"
 	"github.com/DataObserve/datav/backend/pkg/models"
 	"github.com/DataObserve/datav/backend/pkg/utils"
 	_ "github.com/go-sql-driver/mysql"
 )
 
-var logger = log.RootLogger.New("logger", "storage")
+var logger = colorlog.RootLogger.New("logger", "storage")
 
 var adminSalt, adminPW string
 
@@ -84,7 +84,7 @@ func connectDatabase() error {
 	}
 
 	if err != nil {
-		log.RootLogger.Crit("connect to mysql error", "error:", err)
+		logger.Crit("connect to mysql error", "error:", err)
 		return err
 	}
 
@@ -128,49 +128,49 @@ func initTables() error {
 	_, err = db.Conn.Exec(`INSERT INTO user (id,username,password,salt,email,created,updated) VALUES (?,?,?,?,?,?,?)`,
 		models.SuperAdminId, models.SuperAdminUsername, adminPW, adminSalt, "", now, now)
 	if err != nil && !e.IsErrUniqueConstraint(err) {
-		log.RootLogger.Crit("init super admin error", "error:", err)
+		logger.Crit("init super admin error", "error:", err)
 		return err
 	}
 
 	_, err = db.Conn.Exec(`INSERT INTO team (id,name,created_by,created,updated) VALUES (?,?,?,?,?)`,
 		models.GlobalTeamId, models.GlobalTeamName, models.SuperAdminId, now, now)
 	if err != nil && !e.IsErrUniqueConstraint(err) {
-		log.RootLogger.Crit("init global team error", "error:", err)
+		logger.Crit("init global team error", "error:", err)
 		return err
 	}
 
 	_, err = db.Conn.Exec(`INSERT INTO team_member (team_id,user_id,role,created,updated) VALUES (?,?,?,?,?)`,
 		models.GlobalTeamId, models.SuperAdminId, models.ROLE_ADMIN, now, now)
 	if err != nil && !e.IsErrUniqueConstraint(err) {
-		log.RootLogger.Crit("init global team member error", "error:", err)
+		logger.Crit("init global team member error", "error:", err)
 		return err
 	}
 
 	// insert home dashboard
 	_, err = dashboard.ImportFromJSON(storageData.HomeDashboard, models.SuperAdminId)
 	if err != nil && !e.IsErrUniqueConstraint(err) {
-		log.RootLogger.Crit("init home dashboard error", "error:", err)
+		logger.Crit("init home dashboard error", "error:", err)
 		return err
 	}
 
 	// insert alert dashboard
 	_, err = dashboard.ImportFromJSON(storageData.AlertDashboard, models.SuperAdminId)
 	if err != nil && !e.IsErrUniqueConstraint(err) {
-		log.RootLogger.Crit("init home dashboard error", "error:", err)
+		logger.Crit("init home dashboard error", "error:", err)
 		return err
 	}
 
 	// insert global sidemenu
 	menuStr, err := json.Marshal(models.InitTeamMenu)
 	if err != nil {
-		log.RootLogger.Crit("json encode default menu error ", "error:", err)
+		logger.Crit("json encode default menu error ", "error:", err)
 		return err
 	}
 
 	_, err = db.Conn.Exec(`INSERT INTO sidemenu (id,team_id,is_public,brief,data,created_by,created,updated) VALUES (?,?,?,?,?,?,?,?)`,
 		models.DefaultMenuId, models.GlobalTeamId, true, models.DefaultMenuBrief, menuStr, models.SuperAdminId, now, now)
 	if err != nil && !e.IsErrUniqueConstraint(err) {
-		log.RootLogger.Crit("init default side menu  error", "error:", err)
+		logger.Crit("init default side menu  error", "error:", err)
 		return err
 	}
 
@@ -178,7 +178,7 @@ func initTables() error {
 	_, err = db.Conn.Exec(`INSERT INTO datasource (id,name,type,url,created,updated) VALUES (?,?,?,?,?,?)`,
 		models.InitTestDataDatasourceId, "TestData", models.DatasourceTestData, "", now, now)
 	if err != nil && !e.IsErrUniqueConstraint(err) {
-		log.RootLogger.Crit("init testdata datasource  error", "error:", err)
+		logger.Crit("init testdata datasource  error", "error:", err)
 		return err
 	}
 
