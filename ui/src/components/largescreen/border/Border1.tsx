@@ -38,7 +38,7 @@ const BorderBox1 = forwardRef(({ children, className, style, color = [], backgro
   ])
 
   return (
-    <Box className={classNames} style={style} ref={domRef} sx={cssStyles} >
+    <Box className={classNames} style={style} ref={domRef} sx={cssStyles}>
       <svg className='border' width={width} height={height} >
         <polygon fill={backgroundColor} points={`10, 27 10, ${height - 27} 13, ${height - 24} 13, ${height - 21} 24, ${height - 11}
         38, ${height - 11} 41, ${height - 8} 73, ${height - 8} 75, ${height - 10} 81, ${height - 10}
@@ -56,7 +56,6 @@ const BorderBox1 = forwardRef(({ children, className, style, color = [], backgro
           height='150px'
           key={borderName}
           className={`${borderName} border`}
-          style={{zIndex: 1}}
         >
           <polygon
             fill={mergedColor[0]}

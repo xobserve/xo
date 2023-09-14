@@ -40,7 +40,6 @@ const BorderBox5 = forwardRef(({ children, reverse = false, className, style, co
         className={`dv-border-svg-container  ${reverse && 'dv-reverse'}`}
         width={width}
         height={height}
-        style={{zIndex: 1}}
       >
         <polygon fill={backgroundColor} points={`
           10, 22 ${width - 22}, 22 ${width - 22}, ${height - 86} ${width - 84}, ${height - 24} 10, ${height - 24}

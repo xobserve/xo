@@ -41,7 +41,7 @@ const BorderBox12 = forwardRef(({ children, className, style, color = [], backgr
   
   return (
     <Box className={classNames} style={style} ref={domRef} sx={cssStyles}>
-      <svg className='dv-border-svg-container' width={width} height={height} style={{zIndex: 1}}>
+      <svg className='dv-border-svg-container' width={width} height={height}>
         <defs>
           <filter id={filterId} height='150%' width='150%' x='-25%' y='-25%'>
             <feMorphology operator='dilate' radius='1' in='SourceAlpha' result='thicken' />

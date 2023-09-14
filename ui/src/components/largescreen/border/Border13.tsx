@@ -36,7 +36,7 @@ const BorderBox13 = forwardRef(({ children, className, style, color = [], backgr
 
   return (
     <Box className={classNames} style={style} ref={domRef} sx={cssStyles}>
-      <svg className='dv-border-svg-container' width={width} height={height} style={{zIndex: 1}}>
+      <svg className='dv-border-svg-container' width={width} height={height} >
         <path
           fill={backgroundColor}
           stroke={mergedColor[0]}
