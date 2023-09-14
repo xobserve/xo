@@ -11,7 +11,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { Box, Input } from "@chakra-ui/react";
+import { Box, HStack, Input } from "@chakra-ui/react";
 import { InputNumber } from "antd";
 import CodeEditor, { LogqlLang } from "src/components/CodeEditor/CodeEditor";
 import { Form } from "src/components/form/Form";
@@ -49,17 +49,30 @@ const LokiQueryEditor = ({ datasource, query, onChange }: DatasourceEditorProps)
                     />
                 </Box>
             </FormItem>
-            <FormItem labelWidth="100px" size="sm" title="Limit" desc="Max logs returned by query">
-                <InputNumber
-                    value={tempQuery.data.limit}
-                    onChange={(v) => {
-                        setTempQuery({ ...tempQuery, data: {...tempQuery.data, limit: v} })
-                    }}
-                    onBlur={() => onChange(tempQuery)}
-                    width="150px"
-                    placeholder="1000"
-                />
-            </FormItem>
+            <HStack>
+                <FormItem labelWidth={"150px"} size="sm" title="Legend">
+                    <Input
+                        value={tempQuery.legend}
+                        onChange={(e) => {
+                            setTempQuery({ ...tempQuery, legend: e.currentTarget.value })
+                        }}
+                        onBlur={() => onChange(tempQuery)}
+                        width="150px"
+                        size="sm"
+                    />
+                </FormItem>
+                <FormItem labelWidth="100px" size="sm" title="Limit" desc="Max logs returned by query">
+                    <InputNumber
+                        value={tempQuery.data.limit}
+                        onChange={(v) => {
+                            setTempQuery({ ...tempQuery, data: { ...tempQuery.data, limit: v } })
+                        }}
+                        onBlur={() => onChange(tempQuery)}
+                        width="150px"
+                        placeholder="1000"
+                    />
+                </FormItem>
+            </HStack>
         </Form>
     )
 }

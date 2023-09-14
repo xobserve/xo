@@ -4,6 +4,7 @@ import VectorSource from 'ol/source/Vector';
 import { Field, FieldType, SeriesData } from 'types/seriesData';
 import { fromLonLat } from 'ol/proj'
 import countries from 'public/plugins/panel/geomap/countries.json'
+import countryNames from 'public/plugins/panel/geomap/countryNames.json'
 import cities from 'public/plugins/panel/geomap/cities.json'
 import { Panel } from 'types/dashboard';
 import { getThreshold } from 'src/components/Threshold/utils';
@@ -73,7 +74,7 @@ export class FrameVectorSource<T extends Geometry = Geometry> extends VectorSour
 
         for (const s of data) {
             const code = s.name.toLowerCase()
-            let location = countries[code] ?? cities[code]
+            let location = countries[code] ?? countryNames[code.toLowerCase()]  ?? cities[code]
             if (!location) {
                 const  f = s.fields.find(f => f.type == FieldType.Geo)
                 if (f) {
