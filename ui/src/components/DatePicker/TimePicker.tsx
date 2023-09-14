@@ -25,7 +25,7 @@ import {
     CalendarDays,
 } from '@uselessdev/datepicker'
 import { EditorInputItem } from 'src/components/editor/EditorItem'
-import { subMinutes } from 'date-fns'
+import { subHours, subMinutes } from 'date-fns'
 import { cloneDeep, includes, isDate, isEmpty } from 'lodash'
 import moment from 'moment'
 import React, { useMemo, useState } from 'react'
@@ -45,7 +45,7 @@ interface Props {
 export const TimePickerKey = "time-picker"
 
 const now = new Date()
-export const initTimeRange = { start: subMinutes(now, 15), end: now, startRaw: 'now-15m', endRaw: 'now', sub: 15 }
+export const initTimeRange = { start: subHours(now, 12), end: now, startRaw: 'now-12h', endRaw: 'now', sub: 12 * 60 }
 // get newest time range from raw time
 export const getNewestTimeRange = () => {
     const rawT = storage.get(TimePickerKey)
