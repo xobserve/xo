@@ -338,9 +338,9 @@ export const PanelComponent = ({ dashboard, panel, variables, onRemovePanel, onH
         return res
     }, [panel.transform, panel.enableTransform, panelData])
 
-    return <Box height={height} width={width} className={(panel.styles.border == "Normal" && "bordered")} position="relative">
+    return <Box height={height} width={width} className={(panel.styles.border == "Normal" && "bordered") + (dashboard.data.styles.bgEnabled ? " panel-bg-alpha" : " panel-bg")} position="relative">
 
-        {data && <Box className={ (dashboard.data.styles.bgEnabled ? " panel-bg-alpha" : " panel-bg")} overflow="hidden">
+        {data && <Box overflow="hidden">
             <PanelHeader dashboardId={dashboard.id} panel={panel} data={panelData} queryError={queryError} onCopyPanel={onCopyPanel} onRemovePanel={onRemovePanel} onHidePanel={onHidePanel} />
             <ErrorBoundary>
                 <Box
