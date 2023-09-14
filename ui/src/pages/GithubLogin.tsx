@@ -28,9 +28,9 @@ const GithubLogin = () => {
             const oldPage = storage.get('current-page')
             if (oldPage) {
                 storage.remove('current-page')
-                navigate(oldPage)
+                location.href = oldPage
             } else {
-                navigate('/')
+                location.href = '/'
             }
         }, 200)
     }
