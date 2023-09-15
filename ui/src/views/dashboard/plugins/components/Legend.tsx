@@ -12,22 +12,22 @@
 // limitations under the License.
 
 // Render series table in tooltip
-import React, { useEffect, useMemo, useState } from "react";
-import { Box, Flex, HStack, Table, TableContainer, Tbody, Td, Text, Th, Thead, Tr, VStack } from "@chakra-ui/react"
+import React, { useEffect } from "react";
+import { Box, HStack, Table, TableContainer, Tbody, Td, Text, Th, Thead, Tr } from "@chakra-ui/react"
 import { formatUnit } from "src/components/Unit"
 import { cloneDeep, orderBy, round } from "lodash"
 import { memo } from "react"
 import { FaChevronDown, FaChevronUp } from "react-icons/fa"
 import { useKeyPress } from "react-use"
 import { UpdatePanelEvent } from "src/data/bus-events"
-import { OverrideItem, Panel, PanelProps, PanelType } from "types/dashboard"
+import { OverrideItem, Panel } from "types/dashboard"
 import { ValueSetting } from "types/panel/plugins"
 import { SeriesData } from "types/seriesData"
 import { dispatch } from "use-bus"
 
 import { calcValueOnArray } from "utils/seriesData"
 import { findOverride, findRuleInOverride } from "utils/dashboard/panel";
-import { BarRules } from "../bar/OverridesEditor";
+import { BarRules } from "../panel/bar/OverridesEditor";
 import { PanelInactiveKey } from "src/data/storage-keys";
 import storage from "utils/localStorage";
 

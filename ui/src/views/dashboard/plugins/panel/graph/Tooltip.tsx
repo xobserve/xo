@@ -12,9 +12,9 @@
 // limitations under the License.
 import { Box, Text } from "@chakra-ui/react";
 import { Portal } from "src/components/portal/Portal";
-import SeriesTable, {  seriesTableMode } from "src/views/dashboard/plugins/panel/graph/Tooltip/SeriesTable";
+import SeriesTable from "src/views/dashboard/plugins/panel/graph/Tooltip/SeriesTable";
 import { TooltipContainer } from "src/views/dashboard/plugins/panel/graph/Tooltip/Tooltip";
-import { isEmpty, round } from "lodash";
+import { isEmpty } from "lodash";
 import { memo, useLayoutEffect, useState } from "react";
 import { unstable_batchedUpdates } from "react-dom";
 import { useMountedState } from "react-use";
@@ -23,7 +23,7 @@ import uPlot from "uplot";
 import { dateTimeFormat } from "utils/datetime/formatter";
 import { SeriesData } from "types/seriesData";
 import React from "react";
-import { findOverride, findOverrideRule, findRuleInOverride } from "utils/dashboard/panel";
+import { findOverride,  findRuleInOverride } from "utils/dashboard/panel";
 import { GraphRules } from "./OverridesEditor";
 import useBus from "use-bus";
 import { OnGraphPanelClickEvent } from "src/data/bus-events";
@@ -132,7 +132,7 @@ const Tooltip = memo(({ props, options,data,inactiveSeries }: Props) => {
             {coords && <TooltipContainer position={{ x: coords.x, y: coords.y }} offset={{ x: 0, y: TOOLTIP_OFFSET }}>
                 <Box className="bordered" background={'var(--chakra-colors-chakra-body-bg)'} p="2" fontSize="xs">
                         <Text fontWeight="600">{dateTimeFormat(focusXVal * 1000)}</Text>
-                        <SeriesTable props={props} data={data} nearestSeries={focusSeries} filterIdx={focusIdx} mode={seriesTableMode.Tooltip} panelType={props.panel.type} inactiveSeries={inactiveSeries}/>
+                        <SeriesTable props={props} data={data} nearestSeries={focusSeries} filterIdx={focusIdx} panelType={props.panel.type} inactiveSeries={inactiveSeries}/>
                 </Box>
             </TooltipContainer>
             }

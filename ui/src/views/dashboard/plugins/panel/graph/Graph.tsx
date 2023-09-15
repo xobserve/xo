@@ -11,7 +11,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 import UplotReact from "src/components/uPlot/UplotReact"
-import { memo, useCallback, useEffect, useMemo, useRef, useState } from "react"
+import { memo, useCallback, useMemo, useRef, useState } from "react"
 import { OverrideItem, Panel, PanelProps } from "types/dashboard"
 import 'uplot/dist/uPlot.min.css';
 import uPlot from "uplot"
@@ -20,7 +20,6 @@ import { parseOptions } from './options';
 import { cloneDeep, isEmpty } from "lodash";
 
 import Tooltip from "./Tooltip";
-import SeriesTable, { seriesTableMode } from "src/views/dashboard/plugins/panel/graph/Tooltip/SeriesTable";
 import { GraphLayout } from "src/views/dashboard/plugins/panel/graph/GraphLayout";
 import { Box, Center, Text, useColorMode } from "@chakra-ui/react";
 import { paletteColorNameToHex, paletteMap, palettes } from "utils/colors";
@@ -39,7 +38,7 @@ import { isSeriesData } from "utils/seriesData";
 import ContextMenu from "./ContextMenu/ContextMenu";
 import { AnnotationsPlugin } from "../../../../Annotation/Annotations";
 import NoData from "src/views/dashboard/components/PanelNoData";
-import LegendTable from "../components/Legend";
+import LegendTable from "../../components/Legend";
 
 interface GraphPanelProps extends PanelProps {
     data: SeriesData[][]
