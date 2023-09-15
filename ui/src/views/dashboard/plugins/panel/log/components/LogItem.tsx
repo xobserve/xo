@@ -100,9 +100,9 @@ const LogItem = memo((props: LogItemProps) => {
                 </Text>}
             </HStack>
             {options.labels.display.length > 0 &&
-                <HStack minWidth={options.labels.width ?? options.labels.display.length * 150} maxWidth={isMobileScreen ? null : (options.labels.width ?? 300)} spacing={options.labels.layout == LayoutOrientation.Horizontal ? 2 : 3}>
+                <HStack alignItems="start"  maxW="100%" spacing={options.labels.layout == LayoutOrientation.Horizontal ? 2 : 3}>
                     {
-                        Object.keys(labels).map(key => options.labels.display.includes(key) && <LabelLayout key={key + labels[key]} spacing={0}>
+                        Object.keys(labels).map(key => options.labels.display.includes(key) && <LabelLayout key={key + labels[key]} spacing={0} width={options.labels.width ?? 100} >
                             <LabelName name={key} color={labelNameColor(formatLabelId(key, labels[key]))}/>
                             {options.labels.layout == LayoutOrientation.Horizontal &&
                                 <Text>=</Text>}
