@@ -138,7 +138,7 @@ const LabelName = ({ name, color }: { name: string; color: string }) => {
 }
 
 const LabelValue = ({ value, color }: { value: string; color: string }) => {
-    return <Text color={paletteColorNameToHex(color)}>
+    return <Text color={paletteColorNameToHex(color)} wordBreak="break-all">
         {value}
     </Text>
 }
