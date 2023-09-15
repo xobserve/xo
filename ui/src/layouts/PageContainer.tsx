@@ -98,7 +98,7 @@ const Container = (props: Props) => {
 
   const paddingLeft = 8
   const paddingRight = 8
-  const childMarginLeft = 24
+  const childMarginLeft = 26
   const navSize = 15
   const navWidth = useMemo(() => {
     let navWidth = 0
@@ -173,7 +173,7 @@ const Container = (props: Props) => {
                       </Box>
                       {
                         !miniMode && link.children && link.children.map((child, index) => {
-                          return <Box mt="5px" ml={childMarginLeft + 'px'}><NavItem isActive={asPath == child.url} key={index} text={child.title} miniMode={miniMode} url={child.url} fontSize={navSize} /></Box>
+                          return <Box mt="7px" ml={childMarginLeft + 'px'}><NavItem isActive={asPath == child.url} key={index} text={child.title} miniMode={miniMode} url={child.url} fontSize={navSize} /></Box>
                         })
                       }
                     </Box>
@@ -283,7 +283,7 @@ const NavItem = ({ text, icon = null, miniMode, fontWeight = 400, fontSize = 15,
       offset={[0, 14]}
       triggerComponent={<Box>
         <Link to={url}>
-          <HStack color={isActive ? useColorModeValue("brand.500", "brand.200") : useColorModeValue("gray.500", "whiteAlpha.800")} className="hover-text" cursor="pointer">
+          <HStack spacing={"10px"} color={isActive ? useColorModeValue("brand.500", "brand.200") : useColorModeValue("gray.500", "whiteAlpha.800")} className="hover-text" cursor="pointer">
             {icon && <Box>
               {miniMode ?
                 <IconButton fontSize={"1.1rem"} aria-label="" variant="ghost" color="current" _focus={{ border: null }} icon={<Icon />} />
