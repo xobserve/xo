@@ -22,14 +22,14 @@ interface Props {
     children?: React.ReactNode
     className?: string
     style?: React.CSSProperties
-    size?: "sm" | "md"
+    size?: "xs" |  "sm" | "md"
 }
 const Loading = ({ children, className,  style, size="md" }:Props) => {
   const classNames = useMemo(() => classnames('dv-loading', className), [
     className
   ])
 
-  const radius = size == "sm" ? '15' : '25'
+  const radius = size == "sm" ?  '15' :  '25'
   return (
     <Box className={classNames} style={style} sx={cssStyles}>
       <svg width={size == "sm" ? "25px" : "50px"} height={size == "sm" ? "25px" : "50px"}>

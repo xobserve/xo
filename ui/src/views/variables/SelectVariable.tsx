@@ -36,6 +36,7 @@ import { isEmpty } from "utils/validate"
 import { usePrevious, useSearchParam } from "react-use"
 import { $datasources } from "../datasource/store"
 import { Datasource } from "types/datasource"
+import Loading from "components/loading/Loading"
 
 interface Props {
     variables: Variable[]
@@ -56,10 +57,11 @@ const SelectVariable = memo(({ v }: { v: Variable }) => {
     const datasourcs = useStore($datasources)
     const t1 = useStore(variableMsg)
     const [values, setValues] = useState<string[]>(null)
+    const [loading, setLoading] = useState(false)
     const urlKey = 'var-' + v.name
     const varInUrl = useSearchParam(urlKey)
     const prevVarInUrl = usePrevious(varInUrl)
-    
+
     useBus(
         (e) => { return e.type == TimeChangedEvent },
         (e) => {
@@ -90,7 +92,17 @@ const SelectVariable = memo(({ v }: { v: Variable }) => {
     },[varInUrl, prevVarInUrl])
 
     useEffect(() => {
-        loadValues(false)
+        if (!v.values) { // only load values when first loading
+            loadValues(false)
+        } else {
+            setValues(v.values)
+        }
+    }, [])
+
+    useEffect(() => {
+        if (values) {
+            loadValues(false)
+        }
     }, [v.value])
 
     const forceReload = async () => {
@@ -124,7 +136,9 @@ const SelectVariable = memo(({ v }: { v: Variable }) => {
 
         }
         if (needQuery) {
+            setLoading(true)
             const res = await queryVariableValues(v, datasourcs)
+            setLoading(false)
             console.log("load variable values( query )", v.name, res)
             if (res.error) {
                 result = []
@@ -193,9 +207,9 @@ const SelectVariable = memo(({ v }: { v: Variable }) => {
 
     const value = isEmpty(v.selected) ? [] : v.selected.split(VariableSplitChar)
 
-    return <HStack key={v.id} spacing={2}>
+    return <HStack key={v.id} spacing={1}>
         <Tooltip openDelay={300} label={(v.id.toString().startsWith("d-") ? t1.dashScoped : t1.globalScoped) + ": " + v.name}><Text fontSize="sm" minWidth="max-content" noOfLines={1}>{v.name}</Text></Tooltip>
-        {!isEmpty(values) &&
+        {!loading && !isEmpty(values) &&
             <PopoverSelect
                 value={value}
                 size="sm"
@@ -214,6 +228,7 @@ const SelectVariable = memo(({ v }: { v: Variable }) => {
                 showArrow={false}
                 matchWidth={v.id.toString().startsWith('d-')}
             />}
+        {loading && <Loading size="sm"/>}
     </HStack>
 })
 export const setVariableSelected = (variables: Variable[]) => {
