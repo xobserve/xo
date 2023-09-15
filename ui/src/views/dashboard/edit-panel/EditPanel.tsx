@@ -242,7 +242,7 @@ const EditPanel = memo(({ dashboard, onChange, edit }: EditPanelProps) => {
 
     const [isLargeScreen] = useMediaQuery(MobileBreakpoint)
 
-    let w 
+    let w
     let h
     if (tempPanel && view == "actual") {
         const ele = document.getElementById("dashboard-grid")
@@ -253,7 +253,7 @@ const EditPanel = memo(({ dashboard, onChange, edit }: EditPanelProps) => {
         const ele1 = document.getElementById("edit-panel-render")
         const maxW = ele1?.offsetWidth
         const maxH = ele1?.offsetHeight
-        
+
         if (maxW && w > maxW) {
             w = maxW
         }
@@ -263,8 +263,8 @@ const EditPanel = memo(({ dashboard, onChange, edit }: EditPanelProps) => {
     }
 
 
-    const dvars = orderBy(vars.filter((v) => v.id.toString().startsWith("d-")),['sortWeight','name'], ['desc','asc'])
-    const gvars = orderBy(vars.filter((v) => !v.id.toString().startsWith("d-") && !find(dashboard.data.hidingVars?.split(','), v1 => v.name.toLowerCase().match(v1))),['sortWeight','name'], ['desc','asc'])
+    const dvars = orderBy(vars.filter((v) => v.id.toString().startsWith("d-")), ['sortWeight', 'name'], ['desc', 'asc'])
+    const gvars = orderBy(vars.filter((v) => !v.id.toString().startsWith("d-") && !find(dashboard.data.hidingVars?.split(','), v1 => v.name.toLowerCase().match(v1))), ['sortWeight', 'name'], ['desc', 'asc'])
     return (<>
         <Modal isOpen={isOpen} onClose={onEditClose} autoFocus={false} size="full">
             <ModalOverlay />
@@ -285,21 +285,21 @@ const EditPanel = memo(({ dashboard, onChange, edit }: EditPanelProps) => {
                                 <Button size={isLargeScreen ? "md" : "sm"} onClick={onApplyChanges}>{t1.apply}</Button>
                             </HStack>
                         </Flex>
-                        {!isEmpty(vars) &&
-                        <Flex mt="0" maxW={`calc(100% - ${10}px)`}>
-                            <CustomScrollbar hideVerticalTrack>
-                                <Flex justifyContent="space-between" >
-                                    <SelectVariables variables={dvars} />
-                                    <SelectVariables variables={gvars} />
-                                </Flex>
-                            </CustomScrollbar>
-                        </Flex>}
                     </ModalHeader>
                     <ModalBody pt={isLargeScreen ? null : 0}>
-                        <HStack height="calc(100vh - 110px)" alignItems="top">
-                            <Box width="65%" height={`calc(100%)`}>
+                        <HStack height="calc(100vh - 80px)" alignItems="top">
+                            <Box width="65%" height={`calc(100% - 20px)`}>
+                                {!isEmpty(vars) &&
+                                    <Flex mt="0" maxW={`calc(100% - ${10}px)`}>
+                                        <CustomScrollbar hideVerticalTrack>
+                                            <Flex justifyContent="space-between" >
+                                                <SelectVariables variables={dvars} />
+                                                <SelectVariables variables={gvars} />
+                                            </Flex>
+                                        </CustomScrollbar>
+                                    </Flex>}
                                 {/* panel rendering section */}
-                                <Box  height={maxPanelHeight()} id="edit-panel-render" position="relative" >
+                                <Box height={maxPanelHeight()} id="edit-panel-render" position="relative" >
                                     {view == "fill" ? <AutoSizer>
                                         {({ width, height }) => {
                                             if (width === 0) {
