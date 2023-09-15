@@ -191,7 +191,7 @@ const LegentText = ({ legend, width, height, options, color }) => {
         <>
             <ChakraTooltip label={legend}>
                 <Text
-                    maxWidth={options.styles.layout == "horizontal" ? "50%" : "100%"}
+                    maxWidth={options.styles.layout == "horizontal" ? "70%" : "100%"}
                     fontSize={options.textSize.legend?? fontSize + 'px'}
                     wordBreak="break-all"
                     color={color}
