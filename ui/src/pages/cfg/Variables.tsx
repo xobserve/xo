@@ -419,7 +419,7 @@ export const EditVariable = ({ v, isOpen, onClose, isEdit, onSubmit, isGlobal = 
 
                             {variable.type == VariableQueryType.Query && <>
                                 <FormItem title={t1.selectDs}>
-                                    <Box width="200px">
+                                    <Box width="100%">
                                         <DatasourceSelect value={variable.datasource} onChange={id => setVariable(v => { v.datasource = id; v.value = "" })} allowTypes={[DatasourceType.Prometheus, DatasourceType.ExternalHttp, DatasourceType.Jaeger, DatasourceType.Loki]} variant="outline" /></Box>
                                 </FormItem>
                                 {/* @needs-update-when-add-new-variable-datasource */}

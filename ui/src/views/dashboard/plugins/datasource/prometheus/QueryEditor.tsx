@@ -27,6 +27,7 @@ import { useStore } from "@nanostores/react";
 import CodeEditor, { LogqlLang } from "src/components/CodeEditor/CodeEditor";
 import RadionButtons from "src/components/RadioButtons";
 import { MobileBreakpoint } from "src/data/constants";
+import Loading from "components/loading/Loading";
 
 
 
@@ -113,7 +114,7 @@ export const PromMetricSelect = ({ dsId, value, onChange, width = "200px", varia
     const t1 = useStore(prometheusDsMsg)
     const toast = useToast()
     const [metricsList, setMetricsList] = useState<string[]>([])
-
+    const [loading, setLoading] = useState(false)
 
 
 
@@ -121,8 +122,9 @@ export const PromMetricSelect = ({ dsId, value, onChange, width = "200px", varia
         if (metricsList.length > 0) {
             return
         }
-
+        setLoading(true)
         const res = await queryPrometheusAllMetrics(dsId)
+        setLoading(false)
         if (res.error) {
             toast({
                 title: "Error",
@@ -137,9 +139,10 @@ export const PromMetricSelect = ({ dsId, value, onChange, width = "200px", varia
     }
 
     return (
-        <Box onClick={loadMetrics}>
+        <Box onClick={loadMetrics} position="relative" width={width}>
             <InputSelect width={width} isClearable value={value} placeholder={t1.selecMetrics} variant={variant} size="md" options={metricsList.map((m) => { return { label: m, value: m } })} onChange={v => onChange(v)} enableInput={enableInput}
             />
+            {loading && <Box position="absolute" right="50%" top="6px  "><Loading size="sm"/></Box>}
         </Box>
 
     )
@@ -158,6 +161,8 @@ interface LabelSelectProps {
 export const PromLabelSelect = ({ dsId, metric, value, onChange, width = "220px", variant = "unstyled", useCurrentTimerange = true }: LabelSelectProps) => {
     const [labels, setLabels] = useState<string[]>([])
     const toast = useToast()
+    const [loading, setLoading] = useState(false)
+
     useEffect(() => {
         loadLabels(true)
     }, [metric])
@@ -166,8 +171,9 @@ export const PromLabelSelect = ({ dsId, metric, value, onChange, width = "220px"
         if (!force && labels.length > 0) {
             return
         }
-
+        setLoading(true)
         const res = await queryPrometheusLabels(dsId, metric)
+        setLoading(false)
         if (res.error) {
             setLabels([])
             return
@@ -176,9 +182,10 @@ export const PromLabelSelect = ({ dsId, metric, value, onChange, width = "220px"
     }
 
     return (
-        <Box onClick={loadLabels} width={width}>
+        <Box  width={width} position="relative">
             <ChakraSelect value={{ value: value, label: value }} placeholder="Metrics" variant={variant} size="md" options={labels.map((m) => { return { label: m, value: m } })} onChange={v => onChange(v)}
             />
+            {loading && <Box position="absolute" right="55%" top="6px  "><Loading size="sm"/></Box>}
         </Box>
 
     )
