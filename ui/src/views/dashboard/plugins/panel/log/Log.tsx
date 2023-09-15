@@ -12,21 +12,24 @@
 // limitations under the License.
 
 import React, { memo, useCallback, useEffect, useMemo, useState } from "react";
-import { Box, Center, Flex, StackDivider, Text, VStack } from "@chakra-ui/react"
+import { Box, Center, Flex, StackDivider, Text, VStack, useToast } from "@chakra-ui/react"
 import { PanelProps } from "types/dashboard"
 import { LogSeries, Log, LogLabel, LogChartView } from "types/plugins/log";
 import { FaFilter } from "react-icons/fa";
 import LogToolbar from "./components/Toolbar";
 import storage from "utils/localStorage";
 import LogItem from "./components/LogItem";
-import { formatLabelId, isLogSeriesData } from "./utils";
-import { cloneDeep, remove, sortBy } from "lodash";
+import { isLogSeriesData } from "./utils";
+import { clone, cloneDeep, isFunction, remove, sortBy } from "lodash";
 import LogChart from "./components/Chart";
 import { isEmpty } from "utils/validate";
 import CustomScrollbar from "src/components/CustomScrollbar/CustomScrollbar";
 import { paletteMap } from "utils/colors";
 import { ColorGenerator } from "utils/colorGenerator";
 import NoData from "src/views/dashboard/components/PanelNoData";
+import { genDynamicFunction } from "utils/dashboard/dynamicCall";
+import lodash from 'lodash'
+import moment from "moment";
 
 
 
@@ -63,9 +66,10 @@ const ToolbarStorageKey = "log-toolbar-"
 const LogViewOptionsStorageKey = "log-view-"
 const LogPanel = (props: LogPanelProps) => {
     const { dashboardId, panel } = props
+    const toast = useToast()
     const storageKey = ToolbarStorageKey + dashboardId + panel.id
     const viewStorageKey = LogViewOptionsStorageKey + dashboardId + panel.id
-    const [toolbarOpen, setToolbarOpen] = useState(storage.get(storageKey) ?? false)
+    const [toolbarOpen, setToolbarOpen] = useState(storage.get(storageKey) ?? props.panel.plugins.log.toolbar.defaultOpen)
     const [collaseAll, setCollapeAll] = useState(true)
     const [search, setSearch] = useState("")
     const [active, setActive] = useState<string[]>([])
@@ -74,32 +78,57 @@ const LogPanel = (props: LogPanelProps) => {
         maxBars: 20,
         barType: "total"
     })
-    const data: LogSeries[] = props.data.flat()
+    const data: Log[] = useMemo(() => {
+        const res: Log[] = []
+        let transform
+        if (props.panel.plugins.log.enableTransform) {
+            const tf = genDynamicFunction(props.panel.plugins.log.transform);
+            if (isFunction(tf)) {
+                transform = tf
+            } else {
+                toast({
+                    title: "Invalid log transform function2",
+                    status: "warning",
+                    duration: 3000,
+                    isClosable: true,
+                })
+                console.log("Invalid log transform function1", transform)
+            }
+        }
+
+        let toasted = false
+        for (const s of props.data.flat()) {
+            for (const l of s.values) {
+                const l1 = { labels: s.labels, timestamp: l[0], content: l[1], highlight: null }
+                let nl = l1
+                if (transform) {
+                    try {
+                        nl = transform(l1, lodash, moment)
+                    } catch (error) {
+                        if (!toasted) {
+                            toast({
+                                title: "Invalid log transform function2",
+                                status: "warning",
+                                duration: 3000,
+                                isClosable: true,
+                            })
+                            console.log("Invalid log transform function2", error.message)
+                            toasted = true
+                        }
+                    }
+                }
+                res.push(nl)
+            }
+        }
+
+        return res
+    }, [props.data, props.panel.plugins.log.enableTransform, props.panel.plugins.log.transform])
 
     const generator = useMemo(() => {
         const palette = paletteMap[panel.styles.palette]
         return new ColorGenerator(palette)
     }, [panel.styles.palette])
 
-    const labels = useMemo(() => {
-        const result: LogLabel[] = []
-        for (const series of data) {
-            const ls = series.labels
-            const count = series.values.length
-            for (const k of Object.keys(ls)) {
-                const l = result.find(r => r.name == k && r.value == ls[k])
-                if (!l) {
-                    result.push({ id: formatLabelId(k, ls[k]), name: k, value: ls[k], count: count })
-                } else {
-                    l.count += count
-                }
-            }
-            for (const s of series.values) {
-                s[0] = Number(s[0])
-            }
-        }
-        return result
-    }, [data])
 
 
     useEffect(() => {
@@ -127,24 +156,6 @@ const LogPanel = (props: LogPanelProps) => {
         setSearch(v.toLowerCase().trim())
     }, [])
 
-    const onActiveLabel = useCallback((id) => {
-        if (active.includes(id)) {
-            remove(active, i => id == i)
-        } else {
-            active.push(id)
-        }
-
-        setActive(cloneDeep(active))
-    }, [active])
-
-    const onActiveOpChange = useCallback(() => {
-        setActiveOp(activeOp == "or" ? "and" : "or")
-    }, [])
-
-    const onViewOptionsChange = useCallback((v) => {
-        setViewOptions(v)
-        storage.set(viewStorageKey, v)
-    }, [])
 
     const onSelectLabel = useCallback(id => {
         setActive(active => {
@@ -157,76 +168,79 @@ const LogPanel = (props: LogPanelProps) => {
     }, [])
     const filterData: Log[] = useMemo(() => {
         const result: Log[] = []
-        for (const series of data) {
-            const labels = series.labels
-            if (active.length > 0) {
-                let isActive = false
-                if (activeOp == "or") {
-                    for (const k of Object.keys(labels)) {
-                        if (active.find(id => id == formatLabelId(k, labels[k]))) {
-                            isActive = true
-                        }
-                    }
-                } else {
-                    let found = true
-                    const labelArray = []
-                    for (const k of Object.keys(labels)) {
-                        labelArray.push({ name: k, value: labels[k] })
-                    }
-                    for (const a of active) {
-                        if (!labelArray.find(l => a == formatLabelId(l.name, l.value))) {
-                            found = false
-                            break
-                        }
-                    }
-                    isActive = found
-                }
+        // for (const series of data) {
+        //     const labels = series.labels
+        //     if (active.length > 0) {
+        //         let isActive = false
+        //         if (activeOp == "or") {
+        //             for (const k of Object.keys(labels)) {
+        //                 if (active.find(id => id == formatLabelId(k, labels[k]))) {
+        //                     isActive = true
+        //                 }
+        //             }
+        //         } else {
+        //             let found = true
+        //             const labelArray = []
+        //             for (const k of Object.keys(labels)) {
+        //                 labelArray.push({ name: k, value: labels[k] })
+        //             }
+        //             for (const a of active) {
+        //                 if (!labelArray.find(l => a == formatLabelId(l.name, l.value))) {
+        //                     found = false
+        //                     break
+        //                 }
+        //             }
+        //             isActive = found
+        //         }
 
-                if (!isActive) continue
-            }
-            for (const v of series.values) {
-                const timestamp = v[0]
-                const content = v[1]
-                const lowerContent = content.toLowerCase()
-                if (search == "") {
-                    result.push({ labels, timestamp, content, highlight: null })
+        //         if (!isActive) continue
+        //     }
+        for (const v0 of data) {
+            const v = clone(v0)
+            v.highlight = []
+            const lowerContent = v.content.toLowerCase()
+            if (search == "") {
+                result.push(v)
+            } else {
+                const isOr = search.includes("||")
+                const isAnd = search.includes("&&")
+                if (!isOr && !isAnd) {
+                    if (lowerContent.includes(search)) {
+                        v.highlight = [search]
+                        result.push(v)
+                    }
                 } else {
-                    const isOr = search.includes("||")
-                    const isAnd = search.includes("&&")
-                    if (!isOr && !isAnd) {
-                        if (lowerContent.includes(search)) {
-                            result.push({ labels, timestamp, content, highlight: [search] })
+                    if (isOr) {
+                        const searches = search.split("||")
+                        for (const s of searches) {
+                            const s1 = s.trim()
+                            if (lowerContent.includes(s1)) {
+                                v.highlight = [s1]
+                                result.push(v)
+                                break
+                            }
                         }
-                    } else {
-                        if (isOr) {
-                            const searches = search.split("||")
-                            for (const s of searches) {
-                                const s1 = s.trim()
-                                if (lowerContent.includes(s1)) {
-                                    result.push({ labels, timestamp, content, highlight: [s1] })
-                                    break
-                                }
+                    } else if (isAnd) {
+                        const searches = search.split("&&")
+                        let found = true
+                        for (const s of searches) {
+                            if (!lowerContent.includes(s.trim())) {
+                                found = false
+                                break
                             }
-                        } else if (isAnd) {
-                            const searches = search.split("&&")
-                            let found = true
-                            for (const s of searches) {
-                                if (!lowerContent.includes(s.trim())) {
-                                    found = false
-                                    break
-                                }
-                            }
-                            if (found) {
-                                result.push({ labels, timestamp, content, highlight: searches })
-                            }
+                        }
+                        if (found) {
+                            v.highlight = searches
+                            result.push(v)
                         }
                     }
                 }
             }
         }
-
         return result
     }, [data, search, active])
+
+
 
     const sortedData = useMemo(() => {
         if (panel.plugins.log.orderBy == "newest") {
@@ -240,8 +254,9 @@ const LogPanel = (props: LogPanelProps) => {
         if (!isEmpty(panel.plugins.log.styles.highlight)) {
             l.highlight = (l.highlight ?? []).concat(panel.plugins.log.styles.highlight.split(",").filter(v => !isEmpty(v)))
         }
-        
+
     }
+
     return (<>
         <Flex position="relative">
             {panel.plugins.log.toolbar.show &&
@@ -249,21 +264,21 @@ const LogPanel = (props: LogPanelProps) => {
                     <FaFilter />
                 </Box>}
             {/* <CustomScrollbar> */}
-                <Box height={props.height} maxHeight={props.height} width={props.width - (toolbarOpen ? panel.plugins.log.toolbar.width : 1)} transition="all 0.3s" py="2" overflowY="auto">
-                    {panel.plugins.log.chart.show && <Box className="log-panel-chart" height={panel.plugins.log.chart.height}>
-                        <LogChart data={sortedData} panel={panel} width={props.width - (toolbarOpen ? panel.plugins.log.toolbar.width : 1)} viewOptions={viewOptions} onSelectLabel={onSelectLabel} activeLabels={active} colorGenerator={generator} />
-                    </Box>}
-                    <VStack alignItems="left" divider={panel.plugins.log.styles.showlineBorder && <StackDivider />} mt="1">
-                        {
-                            sortedData.map(log => <LogItem log={log} panel={panel} collapsed={collaseAll} width={props.width} colorGenerator={generator} />)
-                        }
-                    </VStack>
-                </Box>
+            <Box height={props.height} maxHeight={props.height} width={props.width - (toolbarOpen ? panel.plugins.log.toolbar.width : 1)} transition="all 0.3s" py="2" overflowY="auto">
+                {panel.plugins.log.chart.show && <Box className="log-panel-chart" height={panel.plugins.log.chart.height}>
+                    <LogChart data={sortedData} panel={panel} width={props.width - (toolbarOpen ? panel.plugins.log.toolbar.width : 1)} viewOptions={viewOptions}   colorGenerator={generator} />
+                </Box>}
+                <VStack alignItems="left" divider={panel.plugins.log.styles.showlineBorder && <StackDivider />} mt="1">
+                    {
+                        sortedData.map(log => <LogItem log={log} panel={panel} collapsed={collaseAll} width={props.width} colorGenerator={generator} />)
+                    }
+                </VStack>
+            </Box>
             {/* </CustomScrollbar> */}
 
             {<Box className="bordered-left" height={props.height} maxHeight={props.height} width={toolbarOpen ? panel.plugins.log.toolbar.width : 0} transition="all 0.3s">
                 <CustomScrollbar>
-                    {toolbarOpen && <LogToolbar active={active} labels={labels} panel={panel} onCollapseAll={onCollapseAll} onSearchChange={onSearchChange} height={props.height} onActiveLabel={onActiveLabel} activeOp={activeOp} onActiveOpChange={onActiveOpChange} currentLogsCount={filterData.length} onViewLogChange={onViewOptionsChange} viewOptions={viewOptions} colorGenerator={generator} />}
+                    {toolbarOpen && <LogToolbar   panel={panel} onCollapseAll={onCollapseAll} onSearchChange={onSearchChange} height={props.height}  currentLogsCount={filterData.length}viewOptions={viewOptions} />}
                 </CustomScrollbar>
             </Box>}
         </Flex>

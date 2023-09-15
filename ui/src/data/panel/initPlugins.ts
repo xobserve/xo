@@ -416,8 +416,17 @@ function onClick(data, map, navigate, setVariable, setDateTime, $variables) {
             timeColumnWidth: 160,
             orderBy: "newest",
             timeStampPrecision: "ms",
+            enableTransform: false,
+            transform: 
+`function transform(rawlog,lodash, moment) {
+    const newlog = {
+        ...rawlog,
+    }
+
+    return newlog
+}`,
             labels: {
-                display: [],
+                display: "",
                 width: 240,
                 layout: LayoutOrientation.Horizontal,
             },
@@ -434,6 +443,7 @@ function onClick(data, map, navigate, setVariable, setDateTime, $variables) {
             },
             toolbar: {
                 show: true,
+                defaultOpen: false,
                 width: 200,
             },
             chart: {

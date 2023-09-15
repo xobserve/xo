@@ -30,23 +30,10 @@ import { FaTimes } from "react-icons/fa"
 import { isSeriesData } from "utils/seriesData"
 import { dispatch } from "use-bus"
 import { PanelForceRebuildEvent } from "src/data/bus-events"
+import { CodeEditorModal } from "components/CodeEditor/CodeEditorModal"
 
 const LogPanelEditor = memo((props: PanelEditorProps) => {
     const { panel, onChange } = props
-    const data: LogSeries[] = props.data?.flat() ?? []
-    if (isSeriesData(data)) {
-        return <></>
-    }
-
-    const labels = useMemo(() => {
-        const labels = new Set<string>()
-        data.forEach(series => {
-            series.labels && Object.keys(series.labels).forEach(k => {
-                labels.add(k)
-            })
-        })
-        return Array.from(labels).sort()
-    }, [props.data])
 
     const t = useStore(commonMsg)
     return (<>
@@ -71,12 +58,22 @@ const LogPanelEditor = memo((props: PanelEditorProps) => {
                     panel.plugins.log.timeStampPrecision = v
                 })} options={[{ label: "ns", value: "ns" }, { label: "us", value: "us" }, { label: "ms", value: "ms" }, { label: "second", value: "s" }]} popupMatchSelectWidth={false} />
             </PanelEditItem>
+            <PanelEditItem title="Enable log transform">
+                <Switch isChecked={panel.plugins.log.enableTransform} onChange={(e) => onChange((panel: Panel) => {
+                    panel.plugins.log.enableTransform = e.target.checked
+                })} />
+            </PanelEditItem>
+            { panel.plugins.log.enableTransform && <PanelEditItem title="Log transform">
+                <CodeEditorModal value={panel.plugins.log.transform} onChange={v => onChange((panel: Panel) => {
+                    panel.plugins.log.transform = v
+                })} />
+            </PanelEditItem>}
         </PanelAccordion>
         <PanelAccordion title="Labels">
             <PanelEditItem title="Display labels">
-                <Select mode="multiple" value={panel.plugins.log.labels.display} options={labels.map(l => ({ label: l, value: l }))} onChange={(v) => onChange((panel: Panel) => {
+                <EditorInputItem value={panel.plugins.log.labels.display} onChange={(v) => onChange((panel: Panel) => {
                     panel.plugins.log.labels.display = v
-                })} popupMatchSelectWidth={false} style={{ width: '100%' }} placeholder="select labels.." allowClear showSearch />
+                })} placeholder="e.g job,filename" />
             </PanelEditItem>
             <PanelEditItem title="Label column width" desc="In css pixels">
                 <EditorNumberItem min={0} max={1000} step={5} value={panel.plugins.log.labels.width} onChange={(v) => onChange((panel: Panel) => {
@@ -90,7 +87,7 @@ const LogPanelEditor = memo((props: PanelEditorProps) => {
             </PanelEditItem>
         </PanelAccordion>
         <PanelAccordion title={t.styles}>
-            <PanelEditItem title="Sync label color" desc="Use the same label name color from Chart">
+            <PanelEditItem title="Auto color label">
                 <Switch isChecked={panel.plugins.log.styles.labelColorSyncChart} onChange={(e) => onChange((panel: Panel) => {
                     panel.plugins.log.styles.labelColorSyncChart = e.target.checked
                 })} />
@@ -138,9 +135,14 @@ const LogPanelEditor = memo((props: PanelEditorProps) => {
             </PanelEditItem>
         </PanelAccordion>
         <PanelAccordion title="Toolbar">
-            <PanelEditItem title="Show" desc="Show toolbar in upper right corner">
+            <PanelEditItem title="Show icon" desc="Show toolbar in upper right corner">
                 <Switch isChecked={panel.plugins.log.toolbar.show} onChange={(e) => onChange((panel: Panel) => {
                     panel.plugins.log.toolbar.show = e.target.checked
+                })} />
+            </PanelEditItem>
+            <PanelEditItem title="Default open">
+                <Switch isChecked={panel.plugins.log.toolbar.defaultOpen} onChange={(e) => onChange((panel: Panel) => {
+                    panel.plugins.log.toolbar.defaultOpen = e.target.checked
                 })} />
             </PanelEditItem>
             <PanelEditItem title="Toolbar width" desc="In css pixels">
@@ -178,7 +180,7 @@ const LogPanelEditor = memo((props: PanelEditorProps) => {
             </PanelEditItem>
         </PanelAccordion>
         <PanelAccordion title="Thresholds">
-            <ThresholdEditor labels={labels} value={panel.plugins.log.thresholds} onChange={(v) => onChange((panel: Panel) => {
+            <ThresholdEditor labels={[]} value={panel.plugins.log.thresholds} onChange={(v) => onChange((panel: Panel) => {
                 panel.plugins.log.thresholds = v
             })} />
         </PanelAccordion>
@@ -253,10 +255,10 @@ const ThresholdEditor = (props: Props) => {
                             value[i].type = v
                             changeValue(value)
                         }} style={{ width: '100px' }} showSearch options={[{ label: "Label", value: "label" }, { label: "Content", value: "content" }]} popupMatchSelectWidth={false} />}
-                        {threshold.type == "label" && <Select value={threshold.key} onChange={v => {
+                        {threshold.type == "label" && <EditorInputItem value={threshold.key} onChange={v => {
                             value[i].key = v
                             changeValue(value)
-                        }} style={{ width: '120px' }} showSearch options={props.labels.map(l => ({ label: l, value: l }))} placeholder="select label" popupMatchSelectWidth={false} />}
+                        }} placeholder="input a label key"/>}
                         {threshold.type !== null && <EditorInputItem value={threshold.value} onChange={v => {
                             value[i].value = v
                             changeValue(value)

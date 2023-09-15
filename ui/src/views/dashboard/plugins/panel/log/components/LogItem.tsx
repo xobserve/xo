@@ -91,7 +91,6 @@ const LogItem = memo((props: LogItemProps) => {
 
     const isMobileScreen =  width < MobileVerticalBreakpointNum
     
-
     return (<>
         <Flex flexDir={isMobileScreen ? "column" : "row"} pt="1" alignItems="start" gap={isMobileScreen ? 1 : 2} pl="2" pr="4" onClick={() => setCollapsed(!collapsed)} cursor="pointer"  fontSize={options.styles.fontSize}>
             <HStack spacing={1}>

@@ -30,8 +30,8 @@ interface Props {
     panel: Panel
     width: number
     viewOptions: AlertToolbarOptions
-    onSelectLabel: any
-    activeLabels: string[]
+    onSelectLabel?: any
+    activeLabels?: string[]
     colorGenerator: any
 }
 

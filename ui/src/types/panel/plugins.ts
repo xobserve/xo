@@ -125,8 +125,10 @@ export interface LogSettings {
     timeColumnWidth: number
     orderBy: "newest" | "oldest"
     timeStampPrecision: "ns" | "us" | "ms" | "s" | "m" | "h"
+    enableTransform: boolean
+    transform: string
     labels: {
-        display: string[]
+        display: string
         width: number
         layout: LayoutOrientation
     }
@@ -143,6 +145,7 @@ export interface LogSettings {
     }
     toolbar: {
         show: boolean
+        defaultOpen: boolean
         width: number 
 
     }
