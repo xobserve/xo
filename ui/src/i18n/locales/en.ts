@@ -143,11 +143,11 @@ export const miscMsg = i18n("misc", {
 })
 
 export const sidebarMsg = i18n("sidebar", {
-    "search": "Search Dashboards",
+    "search": "Search",
     "selectSidemenu": "Select Sidemenu",
     "selectSideMenuTips": "Select a team sidemenu",
     "themeChange": "Change Theme",
-    "accountSetting": "Account Setting",
+    "accountSetting": "Account",
     "adminPanel": "Admin Panel",
     "currentLang": "Current Lang",
     "newItem": "Add new item",

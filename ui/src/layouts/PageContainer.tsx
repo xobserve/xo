@@ -54,8 +54,8 @@ import CustomScrollbar from "src/components/CustomScrollbar/CustomScrollbar"
 export let gnavigate
 
 
-const maxNavSize = 200
-
+const maxNavSize = 160
+const minNavSize = 100
 interface Props {
   children: any
   sidemenu: any[]
@@ -125,6 +125,10 @@ const Container = (props: Props) => {
 
     if (navWidth > maxNavSize) {
       navWidth = maxNavSize
+    }
+
+    if (navWidth < minNavSize) {
+      navWidth = minNavSize
     }
 
     return navWidth
@@ -291,7 +295,7 @@ const NavItem = ({ text, icon = null, miniMode, fontWeight = 400, fontSize = 15,
                 : <Icon />
               }
             </Box>}
-            {!miniMode && <Text fontSize={`${fontSize}px`} fontWeight={fontWeight} >{text}</Text>}
+            {!miniMode && <Text fontSize={`${fontSize}px`} fontWeight={fontWeight} wordBreak="break-all">{text}</Text>}
           </HStack>
         </Link>
       </Box>}
