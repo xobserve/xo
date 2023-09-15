@@ -72,9 +72,9 @@ const GaugePanelEditor = memo((props: PanelEditorProps) => {
                     })} />
                 </PanelEditItem>
                 <PanelEditItem title="Font size">
-                    <EditorNumberItem value={panel.plugins.gauge.valueStyle.fontSize} onChange={(v) => onChange((panel: Panel) => {
+                    <EditorNumberItem step={1} min={8} max={100} value={panel.plugins.gauge.valueStyle.fontSize} onChange={(v) => onChange((panel: Panel) => {
                         panel.plugins.gauge.valueStyle.fontSize = v
-                    })} step={1}/>
+                    })} />
                 </PanelEditItem>
 
 
@@ -120,7 +120,7 @@ const GaugePanelEditor = memo((props: PanelEditorProps) => {
                     })} />
                 </PanelEditItem>
                 <PanelEditItem title="Font size">
-                    <EditorNumberItem value={panel.plugins.gauge.title.fontSize} onChange={(v) => onChange((panel: Panel) => {
+                    <EditorNumberItem value={panel.plugins.gauge.title.fontSize} step={1} min={8} max={100} onChange={(v) => onChange((panel: Panel) => {
                         panel.plugins.gauge.title.fontSize = v
                     })} />
                 </PanelEditItem>

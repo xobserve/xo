@@ -37,7 +37,7 @@ const TraceCard = ({ trace, maxDuration,checked=false, onChecked=null,simple=fal
 
     const [isLargeScreen] = useMediaQuery(MobileBreakpoint)
 
-    return (<Box width="100%" className="panel-bg" borderRadius="0" cursor="pointer"  onClick={onTraceClick} fontSize={isLargeScreen ? "sm" : "xs"}>
+    return (<Box width="100%" borderRadius="0" cursor="pointer"  onClick={onTraceClick} fontSize={isLargeScreen ? "sm" : "xs"}>
         <Box width="100%" position="relative" className="label-bg">
             <HStack spacing={0} py="2px">
                 {onChecked && <Flex alignItems="center" px="2" zIndex={2}  onClick={e => {
