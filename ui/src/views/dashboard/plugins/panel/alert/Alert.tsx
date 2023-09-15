@@ -48,7 +48,7 @@ export const ResetPanelToolbalViewModeEvent = "reset-panel-toolbar-view-mode"
 
 const initViewOptions = () => ({
     maxBars: 20,
-    barType: "labels",
+    barType: "total",
     persist: false
 })
 const AlertPanel = memo((props: AlertPanelProps) => {
