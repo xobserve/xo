@@ -39,7 +39,7 @@ export function measureText(text: string, fontSize=16, fontWeight = 400): TextMe
   const context = getCanvasContext();
 
   if (ctxFontStyle !== fontStyle) {
-    context.font = ctxFontStyle = fontStyle;
+    context.font = fontStyle;
   }
 
   const metrics = context.measureText(text);
