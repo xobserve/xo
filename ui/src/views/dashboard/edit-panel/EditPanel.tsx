@@ -249,6 +249,17 @@ const EditPanel = memo(({ dashboard, onChange, edit }: EditPanelProps) => {
         const gridW = ele?.offsetWidth
         w = gridW * (tempPanel.gridPos.w / GRID_COLUMN_COUNT)
         h = translateGridHeightToScreenHeight(tempPanel.gridPos.h)
+
+        const ele1 = document.getElementById("edit-panel-render")
+        const maxW = ele1?.offsetWidth
+        const maxH = ele1?.offsetHeight
+        
+        if (maxW && w > maxW) {
+            w = maxW
+        }
+        if (maxH && w > maxH) {
+            h = maxH
+        }
     }
 
 
