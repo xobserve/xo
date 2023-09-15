@@ -36,7 +36,7 @@ const PrometheusQueryEditor = ({ datasource, query, onChange }: DatasourceEditor
     const [isLargeScreen] = useMediaQuery(MobileBreakpoint)
     return (
         <Form spacing={1}>
-            <FormItem size="sm" title={<PromMetricSelect enableInput={false} width={isLargeScreen ? "300px" : "100px"} dsId={datasource.id} value={tempQuery.metrics} onChange={v => {
+            <FormItem size="sm" title={<PromMetricSelect  enableInput={false} width={isLargeScreen ? "300px" : "100px"} dsId={datasource.id} value={tempQuery.metrics} onChange={v => {
                 setTempQuery({ ...tempQuery, metrics: v })
                 onChange({ ...tempQuery, metrics: v })
             }} />} >
