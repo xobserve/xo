@@ -20,19 +20,25 @@ import { memo } from "react"
 import { FaChevronDown, FaChevronUp } from "react-icons/fa"
 import { useKeyPress } from "react-use"
 import { UpdatePanelEvent } from "src/data/bus-events"
-import { OverrideItem, PanelProps, PanelType } from "types/dashboard"
+import { OverrideItem, Panel, PanelProps, PanelType } from "types/dashboard"
 import { ValueSetting } from "types/panel/plugins"
 import { SeriesData } from "types/seriesData"
 import { dispatch } from "use-bus"
 
 import { calcValueOnArray } from "utils/seriesData"
 import { findOverride, findRuleInOverride } from "utils/dashboard/panel";
-import { BarRules } from "../OverridesEditor";
+import { BarRules } from "../bar/OverridesEditor";
 import { PanelInactiveKey } from "src/data/storage-keys";
 import storage from "utils/localStorage";
 
 interface Props {
-    props: PanelProps
+    dashboardId: string
+    panelWidth: number
+    panel: Panel
+    options: {
+        value: ValueSetting
+        legend: any
+    }
     data: SeriesData[]
     placement?: "bottom" | "right"
     width?: number
@@ -41,9 +47,8 @@ interface Props {
 }
 
 
-const LegendTable = memo(({ props, data, width, onSeriesActive, inactiveSeries }: Props) => {
-    const options = props.panel.plugins.bar
-    const inactiveKey = PanelInactiveKey + props.dashboardId + '-' + props.panel.id
+const LegendTable = memo(({dashboardId,panelWidth, options, panel, data, width, onSeriesActive, inactiveSeries }: Props) => {
+    const inactiveKey = PanelInactiveKey + dashboardId + '-' + panel.id
     useEffect(() => {
         if (inactiveSeries.length > 0) {
             storage.set(inactiveKey, inactiveSeries)
@@ -87,7 +92,7 @@ const LegendTable = memo(({ props, data, width, onSeriesActive, inactiveSeries }
 
 
     for (const v of values) {
-        const override: OverrideItem = findOverride(props.panel, v.rawName)
+        const override: OverrideItem = findOverride(panel, v.rawName)
         const unitsOverride = findRuleInOverride(override, BarRules.SeriesUnit)
         let units = valueSettings.units
         let unitsType = valueSettings.unitsType
@@ -160,8 +165,8 @@ const LegendTable = memo(({ props, data, width, onSeriesActive, inactiveSeries }
     }
 
     return (
-        <Box fontSize="xs" width="100%">
-            <TableContainer maxW={options.legend.placement == "bottom" ? props.width : width} p={0} marginLeft="-18px" sx={{
+        <Box  width="100%">
+            <TableContainer maxW={options.legend.placement == "bottom" ? panelWidth : width} p={0} marginLeft="-18px" sx={{
                 '::-webkit-scrollbar': {
                     width: '1px',
                     height: '1px',
@@ -172,15 +177,15 @@ const LegendTable = memo(({ props, data, width, onSeriesActive, inactiveSeries }
                         <Tr>
                             <Th> </Th>
                             {values[0].value.map(v =>
-                                <Th width="50px" fontSize="0.8remt" pt="0" pb="1" pr="1" pl="0" textAlign="center" fontWeight="500" onClick={() => {
+                                <Td width="55px"  pt="-2px" pb="1" pr="1" pl="0" textAlign="center" fontWeight="450" onClick={() => {
                                     options.legend.order = { by: v[0], sort: options.legend.order.sort == "asc" ? "desc" : "asc" }
                                     dispatch({
                                         type: UpdatePanelEvent,
-                                        data: cloneDeep(props.panel)
+                                        data: cloneDeep(panel)
                                     })
                                 }}>
-                                    <HStack spacing={0} justifyContent="end" cursor="pointer" position="relative"><Text>{v[0]}</Text><Text> {options.legend.order.by == v[0] && <Text fontSize="0.6rem" opacity="0.7" position="absolute" top="3.5px">{options.legend.order.sort == "asc" ? <FaChevronUp /> : <FaChevronDown />}</Text>}</Text></HStack>
-                                </Th>)}
+                                    <HStack spacing={0} justifyContent="end" cursor="pointer" position="relative"><Text fontSize="0.6rem !important" lineHeight="13px">{v[0]}</Text><Text> {options.legend.order.by == v[0] && <Text fontSize="0.6rem" opacity="0.7" position="absolute" top="3.5px">{options.legend.order.sort == "asc" ? <FaChevronUp /> : <FaChevronDown />}</Text>}</Text></HStack>
+                                </Td>)}
                         </Tr>
                     </Thead>
                     <Tbody>

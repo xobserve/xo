@@ -19,7 +19,7 @@ import { isSeriesData } from "utils/seriesData";
 import { BarSeries } from "types/plugins/bar";
 import BarChart from "./BarChart";
 import { GraphLayout } from "../graph/GraphLayout";
-import LegendTable from "./components/Legend";
+import LegendTable from "../components/Legend";
 import { findOverride, findRuleInOverride } from "utils/dashboard/panel";
 import { BarRules } from "./OverridesEditor";
 import { paletteColorNameToHex, paletteMap, palettes } from "utils/colors";
@@ -136,9 +136,17 @@ const BarPanel = (props: BarPanelProps) => {
                     null
                     :
                     <LegendTable
+                        panel={props.panel}
+                        panelWidth={props.width}
+                        dashboardId={props.dashboardId}
+                        options={
+                            {
+                                value: props.panel.plugins.bar.value,
+                                legend: props.panel.plugins.bar.legend
+                            }
+                        }
                         placement={options.legend.placement}
                         width={options.legend.width}
-                        props={props}
                         data={data}
                         inactiveSeries={inactiveSeries}
                         onSeriesActive={onSeriesActive} />

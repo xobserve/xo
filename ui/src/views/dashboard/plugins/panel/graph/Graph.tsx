@@ -23,7 +23,7 @@ import Tooltip from "./Tooltip";
 import SeriesTable, { seriesTableMode } from "src/views/dashboard/plugins/panel/graph/Tooltip/SeriesTable";
 import { GraphLayout } from "src/views/dashboard/plugins/panel/graph/GraphLayout";
 import { Box, Center, Text, useColorMode } from "@chakra-ui/react";
-import {  paletteColorNameToHex, paletteMap, palettes } from "utils/colors";
+import { paletteColorNameToHex, paletteMap, palettes } from "utils/colors";
 import { SeriesData } from "types/seriesData";
 import storage from "utils/localStorage";
 import { PanelInactiveKey } from "src/data/storage-keys";
@@ -39,6 +39,7 @@ import { isSeriesData } from "utils/seriesData";
 import ContextMenu from "./ContextMenu/ContextMenu";
 import { AnnotationsPlugin } from "../../../../Annotation/Annotations";
 import NoData from "src/views/dashboard/components/PanelNoData";
+import LegendTable from "../components/Legend";
 
 interface GraphPanelProps extends PanelProps {
     data: SeriesData[][]
@@ -66,20 +67,13 @@ export default GraphPanelWrapper
 const GraphPanel = memo((props: GraphPanelProps) => {
     const inactiveKey = PanelInactiveKey + props.dashboardId + '-' + props.panel.id
     const [inactiveSeries, setInactiveSeries] = useState(storage.get(inactiveKey) ?? [])
+
     const [uplot, setUplot] = useState<uPlot>(null)
     const { colorMode } = useColorMode()
     const containerRef = useRef()
     if (!isSeriesData(props.data)) {
         return (<Center height="100%">Data format not support!</Center>)
     }
-
-    useEffect(() => {
-        if (inactiveSeries.length > 0) {
-            storage.set(inactiveKey, inactiveSeries)
-        } else {
-            storage.remove(inactiveKey)
-        }
-    }, [inactiveSeries])
 
 
 
@@ -99,7 +93,7 @@ const GraphPanel = memo((props: GraphPanelProps) => {
 
     const options = useMemo(() => {
         let o;
-        const colors = paletteMap[props.panel.styles.palette]??palettes 
+        const colors = paletteMap[props.panel.styles.palette] ?? palettes
         data.map((frame, i) => {
             const override: OverrideItem = findOverride(props.panel, frame.rawName)
             const name = findRuleInOverride(override, GraphRules.SeriesName)
@@ -130,119 +124,50 @@ const GraphPanel = memo((props: GraphPanelProps) => {
         o = parseOptions(props, data, colorMode, inactiveSeries)
 
         return o
-    }, [props.panel, props.data, colorMode])
+    }, [props.panel, props.data, colorMode, inactiveSeries])
 
 
-    const onSelectSeries = useCallback((s, i, pressShift) => {
-        if (!pressShift) { // 未按住 shift
-            if (inactiveSeries.length == 0) {
-                // 也没有隐藏的 series: 只显示 s, 隐藏其它
-                const inactive = []
-                options.series.map((s1, j) => {
-                    if (s1.label != s) {
-                        inactive.push(s1.label)
-                    }
-                })
-                setInactiveSeries(inactive)
-                options.series.map((s1, j) => {
-                    if (s1.label == s) {
-                        uplot.setSeries(j, { show: true })
-                    } else {
-                        uplot.setSeries(j, { show: false })
-                    }
-                })
-            } else {
-                // 已经有 series 被隐藏
-                if (inactiveSeries.includes(s)) {
-                    //  s 处于隐藏状态，点击它，显示它，并隐藏其它
-                    const inactive = []
-                    options.series.map((s1, j) => {
-                        if (s1.label != s) {
-                            inactive.push(s1.label)
-                        }
-                    })
-                    setInactiveSeries(inactive)
-                    options.series.map((s1, j) => {
-                        if (s1.label == s) {
-                            uplot.setSeries(j, { show: true })
-                        } else {
-                            uplot.setSeries(j, { show: false })
-                        }
-                    })
-                } else {
-                    // s 目前处于显示状态，再次点击它，显示所有
-                    setInactiveSeries([])
-                    options.series.map((s1, j) => {
-                        // s1.show = true
-                        uplot.setSeries(j, { show: true })
-                    })
-
-                }
-            }
-        } else {
-            // 按住 shift
-            // 按住 shift
-            if (inactiveSeries.length == 0) {
-                // 没有处于隐藏的, 显示 s
-                const inactive = []
-                for (const s1 of data) {
-                    if (s1.name != s) {
-                        inactive.push(s1.name)
-                    }
-                }
-                setInactiveSeries(inactive)
-                options.series.map((s1, j) => {
-                    if (s1.label == s) {
-                        uplot.setSeries(j, { show: true })
-                    } else {
-                        uplot.setSeries(j, { show: false })
-                    }
-                })
-                return
-            }
-
-            if (inactiveSeries.includes(s)) {
-                // s 处于隐藏状态，点击它，显示它
-                const inactive = inactiveSeries.filter(s1 => s1 != s)
-                setInactiveSeries(inactive)
-                options.series.map((s1, j) => {
-                    if (s1.label == s) {
-                        uplot.setSeries(j, { show: true })
-                    }
-                })
-            } else {
-                // s 处于显示状态，点击它，隐藏它
-                const inactive = [...inactiveSeries]
-                inactive.push(s)
-                setInactiveSeries(inactive)
-                options.series.map((s1, j) => {
-                    if (s1.label == s) {
-                        uplot.setSeries(j, { show: false })
-                    }
-                })
-            }
-        }
-
-    }, [uplot, options.series, inactiveSeries])
+    const onSeriesActive = useCallback((inacitve) => {
+        setInactiveSeries(inacitve)
+    }, [])
 
 
     const onChartCreate = useCallback((chart) => {
-         setUplot((chart)); 
-         props.sync?.sub(chart);
+        setUplot((chart));
+        props.sync?.sub(chart);
     }, [props.sync])
 
     const onZoom = (tr) => {
         setDateTime(tr.from, tr.to)
     }
-    
-    
+
+
     return (
         <>{
             isEmpty(props.data) ? <Center height="100%">No data</Center> :
 
                 <Box h="100%" className="panel-graph" ref={containerRef} position="relative">
                     {!isEmpty(props?.panel.plugins.graph.axis?.label) && <Text fontSize="sm" position="absolute" ml="3" mt="-1" className="color-text">{props.panel.plugins.graph.axis.label}</Text>}
-                    {options && <GraphLayout width={props.width} height={props.height} legend={props.panel.plugins.graph.legend.mode == "hidden" ? null : <SeriesTable placement={props.panel.plugins.graph.legend.placement} width={props.panel.plugins.graph.legend.width} props={props} data={data} mode={seriesTableMode.Legend} onSelect={onSelectSeries} panelType={props.panel.type} inactiveSeries={inactiveSeries} />}>
+                    {options && <GraphLayout
+                        width={props.width}
+                        height={props.height}
+                        legend={props.panel.plugins.graph.legend.mode == "hidden" ? null :
+                            <LegendTable
+                                panel={props.panel}
+                                panelWidth={props.width}
+                                dashboardId={props.dashboardId}
+                                options={
+                                    {
+                                        value: props.panel.plugins.graph.value,
+                                        legend: props.panel.plugins.graph.legend
+                                    }
+                                }
+                                placement={props.panel.plugins.graph.legend.placement}
+                                width={props.panel.plugins.graph.legend.width}
+                                data={data}
+                                inactiveSeries={inactiveSeries}
+                                onSeriesActive={onSeriesActive} />}
+                    >
                         {(vizWidth: number, vizHeight: number) => {
                             if (uplot) {
                                 if (props.width != vizWidth || props.height != vizHeight) {
@@ -261,19 +186,19 @@ const GraphPanel = memo((props: GraphPanelProps) => {
                                 plotOpts = r.opts
                             }
 
-                            const thresholdsOverride =  props.panel.overrides.find(override => findRuleInOverride(override,  GraphRules.SeriesThresholds)) 
+                            const thresholdsOverride = props.panel.overrides.find(override => findRuleInOverride(override, GraphRules.SeriesThresholds))
                             const v = findRuleInOverride(thresholdsOverride, GraphRules.SeriesThresholds)
-                            
+
                             return (options && <UplotReact
                                 options={plotOpts}
                                 data={plotData}
                                 onDelete={(chart: uPlot) => { }}
                                 onCreate={onChartCreate}
-                            >   
+                            >
                                 {props.panel.plugins.graph.tooltip.mode != 'hidden' && <Tooltip props={props} options={options} data={data} inactiveSeries={inactiveSeries} />}
-                                <ContextMenu props={props} options={options} data={data} container={containerRef}/>
+                                <ContextMenu props={props} options={options} data={data} container={containerRef} />
                                 <ZoomPlugin options={options} onZoom={onZoom} />
-                                <AnnotationsPlugin dashboardId={props.dashboardId}  options={options} timeRange={props.timeRange} panel={props.panel}/>
+                                <AnnotationsPlugin dashboardId={props.dashboardId} options={options} timeRange={props.timeRange} panel={props.panel} />
                                 {props.panel.plugins.graph.thresholdsDisplay != ThresholdDisplay.None && <ThresholdsPlugin options={options} thresholdsConfig={props.panel.plugins.graph.thresholds} display={props.panel.plugins.graph.thresholdsDisplay} />}
                                 {v && props.panel.plugins.graph.thresholdsDisplay != ThresholdDisplay.None && <ThresholdsPlugin options={options} thresholdsConfig={v} display={props.panel.plugins.graph.thresholdsDisplay} />}
                             </UplotReact>
