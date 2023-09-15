@@ -23,16 +23,18 @@ interface Props {
     height: number
     onCollapseAll: any
     onSearchChange: any
+    onLabelSearch: any
     currentLogsCount: number
     viewOptions: LogChartView
 }
 
 
 const LogToolbar = memo((props: Props) => {
-    const { panel, onCollapseAll, onSearchChange,  currentLogsCount } = props
+    const { panel, onCollapseAll, onSearchChange,onLabelSearch,  currentLogsCount } = props
     const [search, setSearch] = useState<string>("")
+    const [labelSearch, setLabelSearch] = useState<string>("")
 
-    return (<Box>
+    return (<Box px="2">
         <Flex justifyContent="space-between" py="2"  pl="1" pr="5" fontSize="0.85rem" mt="-3px">
             <HStack spacing={1}>
                 <AiOutlineDoubleRight cursor="pointer" style={{
@@ -50,8 +52,11 @@ const LogToolbar = memo((props: Props) => {
         <Divider mt="" />
 
         <Box fontSize="0.8rem" mt="2" px="1">
-            <Text mb="1" fontWeight="500">Search log content</Text>
+            <Text  fontWeight="500">Search log content</Text>
             <EditorInputItem value={search} onChange={v => { setSearch(v); onSearchChange(v) }} placeholder="textA || textB , A && B" />
+
+            <Text mt="2" fontWeight="500">Search log labels</Text>
+            <EditorInputItem value={labelSearch} onChange={v => { setLabelSearch(v); onLabelSearch(v) }} placeholder="labelA=valueA,labelB=valueB" />
         </Box>
     </Box>)
 })

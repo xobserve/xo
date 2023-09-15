@@ -30,6 +30,7 @@ import NoData from "src/views/dashboard/components/PanelNoData";
 import { genDynamicFunction } from "utils/dashboard/dynamicCall";
 import lodash from 'lodash'
 import moment from "moment";
+import { is } from "date-fns/locale";
 
 
 
@@ -72,8 +73,7 @@ const LogPanel = (props: LogPanelProps) => {
     const [toolbarOpen, setToolbarOpen] = useState(storage.get(storageKey) ?? props.panel.plugins.log.toolbar.defaultOpen)
     const [collaseAll, setCollapeAll] = useState(true)
     const [search, setSearch] = useState("")
-    const [active, setActive] = useState<string[]>([])
-    const [activeOp, setActiveOp] = useState<"or" | "and">("or")
+    const [labelSearch, setLabelSearch] = useState<string>("")
     const [viewOptions, setViewOptions] = useState<LogChartView>(storage.get(viewStorageKey) ?? {
         maxBars: 20,
         barType: "total"
@@ -157,46 +157,43 @@ const LogPanel = (props: LogPanelProps) => {
     }, [])
 
 
-    const onSelectLabel = useCallback(id => {
-        setActive(active => {
-            if (active.includes(id)) {
-                return []
-            } else {
-                return [id]
-            }
-        })
+    const onSearchLabel = useCallback((v: string) => {
+        setLabelSearch(v.toLowerCase().trim())
     }, [])
+
     const filterData: Log[] = useMemo(() => {
         const result: Log[] = []
-        // for (const series of data) {
-        //     const labels = series.labels
-        //     if (active.length > 0) {
-        //         let isActive = false
-        //         if (activeOp == "or") {
-        //             for (const k of Object.keys(labels)) {
-        //                 if (active.find(id => id == formatLabelId(k, labels[k]))) {
-        //                     isActive = true
-        //                 }
-        //             }
-        //         } else {
-        //             let found = true
-        //             const labelArray = []
-        //             for (const k of Object.keys(labels)) {
-        //                 labelArray.push({ name: k, value: labels[k] })
-        //             }
-        //             for (const a of active) {
-        //                 if (!labelArray.find(l => a == formatLabelId(l.name, l.value))) {
-        //                     found = false
-        //                     break
-        //                 }
-        //             }
-        //             isActive = found
-        //         }
-
-        //         if (!isActive) continue
-        //     }
         for (const v0 of data) {
             const v = clone(v0)
+            if (labelSearch != "") {
+                const searches = labelSearch.split(",")
+                let found = true
+                for (const s of searches) {
+                    const s1 = s.trim()
+                    if (isEmpty(s1)) {
+                        continue
+                    }
+
+                    const [lkey, lvalue] = s1.split("=")
+                    if (isEmpty(lkey) || isEmpty(lvalue)) {
+                        continue
+                    }
+                    let found1 = false
+                    for (const k of Object.keys(v.labels)) {
+                        if (k.toLowerCase() == lkey && v.labels[k].toLowerCase().match(lvalue)) {
+                            found1 = true
+                            break
+                        }
+                    }
+                    if (!found1) {
+                        found = false
+                        break
+                    }
+                }
+                if (!found) {
+                    continue
+                }
+            }
             v.highlight = []
             const lowerContent = v.content.toLowerCase()
             if (search == "") {
@@ -238,7 +235,7 @@ const LogPanel = (props: LogPanelProps) => {
             }
         }
         return result
-    }, [data, search, active])
+    }, [data, search, labelSearch])
 
 
 
@@ -278,7 +275,7 @@ const LogPanel = (props: LogPanelProps) => {
 
             {<Box className="bordered-left" height={props.height} maxHeight={props.height} width={toolbarOpen ? panel.plugins.log.toolbar.width : 0} transition="all 0.3s">
                 <CustomScrollbar>
-                    {toolbarOpen && <LogToolbar   panel={panel} onCollapseAll={onCollapseAll} onSearchChange={onSearchChange} height={props.height}  currentLogsCount={filterData.length}viewOptions={viewOptions} />}
+                    {toolbarOpen && <LogToolbar   panel={panel} onCollapseAll={onCollapseAll} onSearchChange={onSearchChange} onLabelSearch={onSearchLabel} height={props.height}  currentLogsCount={filterData.length}viewOptions={viewOptions} />}
                 </CustomScrollbar>
             </Box>}
         </Flex>
