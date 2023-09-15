@@ -43,7 +43,7 @@ const TraceCard = ({ trace, maxDuration,checked=false, onChecked=null,simple=fal
                 {onChecked && <Flex alignItems="center" px="2" zIndex={2}  onClick={e => {
                     e.stopPropagation(); 
                 }}><Checkbox size="sm" defaultChecked={checked} isChecked={checked} isDisabled={checkDisabled} bg={useColorModeValue("white", "transparent")} onChange={e =>  onChecked(trace.traceID)  }/></Flex>}
-                <Box width={`${(trace.duration / maxDuration) * 100}%`} bg={useColorModeValue("#d7e7ea", "brand.800")} height="100%" position="absolute" top="0"></Box>
+                <Box width={`${(trace.duration / maxDuration) * 100}%`} bg={useColorModeValue("#c7e7ea", "brand.800")} height="100%" position="absolute" top="0"></Box>
                 <Flex alignItems="center" width="100%" justifyContent="space-between" position="relative" pr="2" >
                     <Flex flexDir={isLargeScreen ? "row" : "column"} gap={isLargeScreen ? 1 : 0}>
                         <Text>{trace.traceName}</Text>
