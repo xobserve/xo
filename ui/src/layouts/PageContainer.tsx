@@ -166,8 +166,9 @@ const Container = (props: Props) => {
                     :
                     <Box cursor="pointer" onClick={onMinimodeChange} opacity="0.2" position="absolute" right="-7px" top="14px" className="hover-text" p="1" fontSize="0.7rem" zIndex={1}><Icons.FaChevronLeft /></Box>
                   }
+                  <VStack alignItems="left" mt={3} spacing={miniMode ? 1 : "10px"}>
                   {sidemenu?.map((link, index) => {
-                    return <Box key={link.url} mt={miniMode ? (index > 0 ? 2 : 3) : 3}>
+                    return <Box key={link.url} >
                       <Box>
                         <NavItem isActive={miniMode ? asPath.startsWith(link.url) : asPath == link.url} key={index} text={link.title} icon={link.icon} miniMode={miniMode} fontWeight={500} url={link.children?.length > 0 ? link.children[0].url : link.url} children={link.children} />
                       </Box>
@@ -178,7 +179,7 @@ const Container = (props: Props) => {
                       }
                     </Box>
                   })}
-
+                  </VStack>
                   {session && !sidemenu?.some(nav => nav.dashboardId != HomeDashboardId) && <>
                     <Divider mt={miniMode ? 2 : 3} />
                     <Box mt={miniMode ? 2 : 3}><NavItem fontSize={navSize - 1} text={t1.newItem} url={`/cfg/team/${session.user.sidemenu}/sidemenu`} miniMode={miniMode} icon="FaPlus" /></Box>
