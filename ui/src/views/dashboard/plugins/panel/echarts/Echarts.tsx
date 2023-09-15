@@ -20,7 +20,7 @@ import { cloneDeep, isEmpty, isFunction } from "lodash";
 import { useSearchParam } from "react-use";
 import React from "react";
 import moment from "moment";
-import { colors, paletteMap, palettes } from "utils/colors";
+import {  paletteMap, palettes } from "utils/colors";
 import loadash from "lodash"
 import 'echarts/extension/bmap/bmap';
 import { genDynamicFunction } from "utils/dashboard/dynamicCall";
@@ -29,6 +29,7 @@ import { setVariable } from "src/views/variables/SelectVariable";
 import { setDateTime } from "src/components/DatePicker/DatePicker";
 import { $variables } from "src/views/variables/store";
 import NoData from "src/views/dashboard/components/PanelNoData";
+import { formatUnit } from "components/Unit";
 
 const EchartsPanel = memo((props: PanelProps) => {
     const { panel, width, height } = props
@@ -48,7 +49,11 @@ const EchartsPanel = memo((props: PanelProps) => {
         const setOptions = genDynamicFunction(panel.plugins.echarts.setOptionsFunc);
         if (isFunction(setOptions)) {
             try {
-                const o = setOptions(cloneDeep(data), panel.plugins.echarts.enableThresholds && panel.plugins.echarts.thresholds, colors, echarts, loadash, moment, colorMode)
+                const o = setOptions(cloneDeep(data), panel.plugins.echarts.enableThresholds && panel.plugins.echarts.thresholds, colors, echarts, loadash, moment, colorMode, {
+                    units: props.panel.plugins.echarts.value.units,
+                    decimal: props.panel.plugins.echarts.value.decimal,
+                    formatUnit: formatUnit
+                })
                 options = o
             } catch (error) {
                 console.log("parse echarts options error", error)

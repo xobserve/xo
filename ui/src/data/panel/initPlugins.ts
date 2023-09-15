@@ -198,6 +198,10 @@ function highlightNodes(data, lodash) {
             thresholds: initThresholds(),
             enableThresholds: true,
             enableClick: true,
+            value: {
+                ...getInitUnits(),
+                decimal: 3
+            },
             registerEventsFunc: `// In registerEvents, you can custom events on your chart, e.g mouse click event, mouse over event etc.
 // chart: a instance of echarts, you can call echarts apis on it
 // options: result of setOptions function
@@ -538,7 +542,7 @@ export const setEchartsOptions = `
 // loadash: imported loadash.js module
 // moment: imported momen.jst module
 // colorMode: "light" | "dark"
-function setOptions(data, thresholds, colors, echarts, loadash, moment, colorMode) {
+function setOptions(data, thresholds, colors, echarts, loadash, moment, colorMode, units) {
     const colorList = [
         ['rgb(128, 255, 165)', 'rgb(1, 191, 236)'],
         ['rgb(0, 221, 255)', 'rgb(77, 119, 255)'],
@@ -546,7 +550,7 @@ function setOptions(data, thresholds, colors, echarts, loadash, moment, colorMod
         ['rgb(255, 0, 135)', 'rgb(135, 0, 157)'],
         ['rgb(255, 191, 0)', 'rgb(224, 62, 76)'],
     ]
-    
+
     const legend = []
     const seriesList = []
     if (!echarts) {
@@ -604,6 +608,9 @@ function setOptions(data, thresholds, colors, echarts, loadash, moment, colorMod
                     backgroundColor: '#6a7985',
                 }
             },
+            valueFormatter: (function (value) {
+                return units.formatUnit(value, units.units, units.decimal)
+            }),
         },
         legend: {
             show: true,
@@ -633,11 +640,15 @@ function setOptions(data, thresholds, colors, echarts, loadash, moment, colorMod
                 type: 'value',
                 splitLine: {
                     show: false
-                }
+                },
+                axisLabel: {
+                    formatter: (function (value) {
+                        return units.formatUnit(value, units.units, units.decimal)
+                    }),
+                },
             }
         ],
         series: seriesList
     }
 }
-
 `

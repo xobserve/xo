@@ -338,6 +338,7 @@ export interface EchartsSettings {
     registerEventsFunc: string
     thresholds: ThresholdsConfig
     enableThresholds: boolean
+    value: ValueSetting
 }
 
 export interface TextPlugin extends DisableDatasource {

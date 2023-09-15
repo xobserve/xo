@@ -31,6 +31,9 @@ import ThresholdEditor from "src/components/Threshold/ThresholdEditor"
 import * as echarts from 'echarts';
 import { dispatch } from "use-bus"
 import { PanelForceRebuildEvent } from "src/data/bus-events"
+import { UnitPicker, formatUnit } from "components/Unit"
+import { Units } from "types/panel/plugins"
+import { EditorNumberItem } from "components/editor/EditorItem"
 
 const EchartsPanelEditor = memo(({ panel, onChange, data }: PanelEditorProps) => {
     const t = useStore(commonMsg)
@@ -60,6 +63,20 @@ const EchartsPanelEditor = memo(({ panel, onChange, data }: PanelEditorProps) =>
                     })
                 }} data={data} />
 
+            </PanelAccordion>
+            <PanelAccordion title={t.valueSettings}>
+                <PanelEditItem title={t.unit}>
+                    <UnitPicker value={panel.plugins.echarts.value} onChange={
+                        (v: Units) => onChange((panel: Panel) => {
+                            panel.plugins.echarts.value.units = v.units
+                            panel.plugins.echarts.value.unitsType = v.unitsType
+                        })
+                    } />
+                </PanelEditItem>
+
+                <PanelEditItem title={t.decimal}>
+                    <EditorNumberItem value={panel.plugins.echarts.value.decimal} min={0} max={5} step={1} onChange={v => onChange((panel: Panel) => { panel.plugins.echarts.value.decimal = v })} />
+                </PanelEditItem>
             </PanelAccordion>
             <PanelAccordion title={t.interaction}>
                 <PanelEditItem title={t.enable}>
@@ -111,7 +128,11 @@ const SetOptions = ({ panel, onChange, data }: PanelEditorProps) => {
 
     if (isFunction(setOptions)) {
         try {
-            let o = setOptions(cloneDeep(data.flat()), panel.plugins.echarts.thresholds, colors, echarts, loadash, moment, colorMode)
+            let o = setOptions(cloneDeep(data.flat()), panel.plugins.echarts.thresholds, colors, echarts, loadash, moment, colorMode, {
+                units: panel.plugins.echarts.value.units,
+                decimal: panel.plugins.echarts.value.decimal,
+                formatUnit: formatUnit
+            })
             o.animation = false
             options = o
         } catch (error) {
