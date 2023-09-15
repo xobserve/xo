@@ -210,8 +210,8 @@ const TraceSearchPanel = ({ timeRange, dashboardId, panel, onSearch, onSearchIds
             <FormSection title="Trace ids" spacing={1} desc={t1.traceIdsTips}>
                 <EditorInputItem  placeholder={t1.traceIdsInputTips} value={traceIds} onChange={v => setTraceIds(v)} size="md" />
             </FormSection>
-            <Flex flexDir={isLargeScreen ? "row" : "column"} gap={3} pt="2">
-                <Button width={isLargeScreen ? "120px" : null} size={size} onClick={onClickSearch}>{isLargeScreen ? t1.findTraces : "Search"}</Button>
+            <Flex flexDir={isLargeScreen ? "row" : "column"} justifyContent="space-between" gap={3} pt="2">
+                <Button variant="outline" width={isLargeScreen ? "120px" : null} size={size} onClick={onClickSearch}>{isLargeScreen ? t1.findTraces : "Search"}</Button>
                 <HStack spacing={1}>
                     <Checkbox isChecked={useLatestTime} onChange={e => setUseLatestTime(e.currentTarget.checked)} />
                     <Text opacity="0.7">{t1.useLatestTime}</Text>
