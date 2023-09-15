@@ -323,9 +323,20 @@ export const PanelComponent = ({ dashboard, panel, variables, onRemovePanel, onH
         if (panel.enableTransform && d) {
             const transform = genDynamicFunction(panel.transform);
             if (isFunction(transform)) {
-                const tData = transform(d, lodash, moment)
-                console.log("panel grid rendered, transform data: ", tData)
-                res = tData
+                try {
+                    const tData = transform(d, lodash, moment)
+                    console.log("panel grid rendered, transform data: ", tData)
+                    res = tData
+                } catch (error) {
+                    toast({
+                        title: "Transform data error",
+                        description: error.message,
+                        status: "error",
+                        duration: 3000,
+                    })
+                    console.error(error)
+                }
+              
             } else {
                 res = d
             }
