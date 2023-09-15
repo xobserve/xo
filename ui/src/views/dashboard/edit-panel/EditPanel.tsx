@@ -23,7 +23,7 @@ import { FaArrowDown, FaArrowUp } from "react-icons/fa";
 import PanelStyles from "./PanelStyles";
 import PanelSettings from "./PanelSettings";
 import { useLeavePageConfirm } from "hooks/useLeavePage"
-import { cloneDeep, isEqual, set } from "lodash"
+import { cloneDeep, find, isEqual, orderBy, set } from "lodash"
 import useBus, { dispatch } from "use-bus"
 import { DashboardSavedEvent, OnDashboardSaveEvent, PanelDataEvent, PanelForceRebuildEvent, SaveDashboardEvent } from "src/data/bus-events"
 import AutoSizer from "react-virtualized-auto-sizer";
@@ -59,6 +59,9 @@ import LogPanelEditor from "../plugins/panel/log/Editor"
 import BarPanelEditor from "../plugins/panel/bar/Editor"
 import AlertPanelEditor from "../plugins/panel/alert/Editor"
 import { translateGridHeightToScreenHeight } from "../grid/DashboardGrid"
+import { $variables } from "src/views/variables/store"
+import CustomScrollbar from "components/CustomScrollbar/CustomScrollbar"
+import SelectVariables from "src/views/variables/SelectVariable"
 
 interface EditPanelProps {
     dashboard: Dashboard
@@ -80,7 +83,7 @@ const EditPanel = memo(({ dashboard, onChange, edit }: EditPanelProps) => {
     const t = useStore(commonMsg)
     const t1 = useStore(panelMsg)
 
-
+    const vars = useStore($variables)
     const [tempPanel, setTempPanel] = useImmer<Panel>(null)
     const [rawPanel, setRawPanel] = useState<Panel>(null)
     const { isOpen, onOpen, onClose } = useDisclosure()
@@ -249,14 +252,15 @@ const EditPanel = memo(({ dashboard, onChange, edit }: EditPanelProps) => {
     }
 
 
-
+    const dvars = orderBy(vars.filter((v) => v.id.toString().startsWith("d-")),['sortWeight','name'], ['desc','asc'])
+    const gvars = orderBy(vars.filter((v) => !v.id.toString().startsWith("d-") && !find(dashboard.data.hidingVars?.split(','), v1 => v.name.toLowerCase().match(v1))),['sortWeight','name'], ['desc','asc'])
     return (<>
         <Modal isOpen={isOpen} onClose={onEditClose} autoFocus={false} size="full">
             <ModalOverlay />
             {dashboard && tempPanel &&
                 <ModalContent>
                     {/* editor header section */}
-                    <ModalHeader>
+                    <ModalHeader px="3" pt="3" pb="0">
                         <Flex justifyContent="space-between">
                             {isLargeScreen ? <Text>{dashboard.title} / {t1.editPanel}</Text> : <Text>{t1.editPanel}</Text>}
                             <HStack spacing={0}>
@@ -270,9 +274,18 @@ const EditPanel = memo(({ dashboard, onChange, edit }: EditPanelProps) => {
                                 <Button size={isLargeScreen ? "md" : "sm"} onClick={onApplyChanges}>{t1.apply}</Button>
                             </HStack>
                         </Flex>
+                        {!isEmpty(vars) &&
+                        <Flex mt="0" maxW={`calc(100% - ${10}px)`}>
+                            <CustomScrollbar hideVerticalTrack>
+                                <Flex justifyContent="space-between" >
+                                    <SelectVariables variables={dvars} />
+                                    <SelectVariables variables={gvars} />
+                                </Flex>
+                            </CustomScrollbar>
+                        </Flex>}
                     </ModalHeader>
                     <ModalBody pt={isLargeScreen ? null : 0}>
-                        <HStack height="calc(100vh - 100px)" alignItems="top">
+                        <HStack height="calc(100vh - 110px)" alignItems="top">
                             <Box width="65%" height={`calc(100%)`}>
                                 {/* panel rendering section */}
                                 <Box  height={maxPanelHeight()} id="edit-panel-render" position="relative" >
