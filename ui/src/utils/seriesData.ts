@@ -18,9 +18,16 @@ import { isEmpty } from "./validate"
 export const calcValueOnSeriesData = (series: SeriesData, calc: ValueCalculationType):number => {
     const values = series.fields.find(f => f.type == FieldType.Number)?.values
     if (!values) {
-        return null
+        const v = series.fields.find(f => f.type == FieldType.String)?.values
+        if (v) {
+               return first(v)
+        } else {
+            if (series.fields.length > 0) {
+                return first(series.fields[0].values)
+            }
+        }
     }
-    
+
     if (!calc) {
         return last(values)
     }

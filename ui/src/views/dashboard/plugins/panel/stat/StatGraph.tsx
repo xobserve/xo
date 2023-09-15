@@ -23,7 +23,7 @@ import { Box, Center, Flex, Text, useColorMode, Tooltip as ChakraTooltip, useToa
 import { formatUnit } from "src/components/Unit";
 import { ValueCalculationType } from "types/value";
 import { calcValueOnArray, calcValueOnSeriesData } from "utils/seriesData";
-import { SeriesData } from "types/seriesData";
+import { FieldType, SeriesData } from "types/seriesData";
 import { getGradientBackgroundColor, getTextColorForAlphaBackground, paletteColorNameToHex } from "utils/colors";
 import { ThresholdsMode } from "types/threshold";
 import { getThreshold } from "src/components/Threshold/utils";
