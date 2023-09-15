@@ -11,12 +11,16 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 import { first, last, toNumber } from "lodash"
-import { SeriesData } from "types/seriesData"
+import { FieldType, SeriesData } from "types/seriesData"
 import { ValueCalculationType } from "types/value"
 import { isEmpty } from "./validate"
 
 export const calcValueOnSeriesData = (series: SeriesData, calc: ValueCalculationType):number => {
-    const values = series.fields[1].values
+    const values = series.fields.find(f => f.type == FieldType.Number)?.values
+    if (!values) {
+        return null
+    }
+    
     if (!calc) {
         return last(values)
     }

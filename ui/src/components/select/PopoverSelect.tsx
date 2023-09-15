@@ -84,7 +84,6 @@ const PopoverSelect = ({ value, options, onChange, variant = "outline", customOp
             })
         }
 
-        console.log("here33333:",res)
         onChange(res)
     }
 
