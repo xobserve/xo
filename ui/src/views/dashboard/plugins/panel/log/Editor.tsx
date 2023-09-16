@@ -112,7 +112,12 @@ const LogPanelEditor = memo((props: PanelEditorProps) => {
                     panel.plugins.log.styles.fontSize = v
                 })} placeholder="e.g 1rem, 16px" />
             </PanelEditItem>
-            <PanelEditItem title="Wrap line" desc="Css style word-break">
+            <PanelEditItem title="Wrap line">
+            <Switch isChecked={panel.plugins.log.styles.wrapLine} onChange={(e) => onChange((panel: Panel) => {
+                    panel.plugins.log.styles.wrapLine = e.target.checked
+                })} />
+            </PanelEditItem>
+            <PanelEditItem title="Word break" desc="Css style word-break">
                 <RadionButtons options={[{ label: "Break All", value: "break-all" }, { label: "Break Word", value: 'break-word' }]} value={panel.plugins.log.styles.wordBreak} onChange={v => onChange((panel: Panel) => {
                     panel.plugins.log.styles.wordBreak = v
                 })} />

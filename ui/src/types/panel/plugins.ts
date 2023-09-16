@@ -138,6 +138,7 @@ export interface LogSettings {
         labelValueColor: string
         contentColor: string
         fontSize: string
+        wrapLine: boolean
         wordBreak: "break-word" | "break-all"
         showlineBorder: boolean
         highlight: string

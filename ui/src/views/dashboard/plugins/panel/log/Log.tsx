@@ -265,7 +265,7 @@ const LogPanel = (props: LogPanelProps) => {
                 {panel.plugins.log.chart.show && <Box className="log-panel-chart" height={panel.plugins.log.chart.height}>
                     <LogChart data={sortedData} panel={panel} width={props.width - (toolbarOpen ? panel.plugins.log.toolbar.width : 1)} viewOptions={viewOptions}   colorGenerator={generator} />
                 </Box>}
-                <VStack alignItems="left" divider={panel.plugins.log.styles.showlineBorder && <StackDivider />} mt="1">
+                <VStack alignItems="left" divider={panel.plugins.log.styles.showlineBorder && <StackDivider />} mt="1" overflowX="auto">
                     {
                         sortedData.map(log => <LogItem log={log} panel={panel} collapsed={collaseAll} width={props.width} colorGenerator={generator} />)
                     }

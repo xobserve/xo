@@ -12,7 +12,7 @@
 // limitations under the License.
 
 import React, { memo, useEffect, useMemo, useState } from "react";
-import { Box, Flex, HStack, Highlight, Text, VStack, useColorMode, useColorModeValue, useMediaQuery } from "@chakra-ui/react"
+import { Box, Flex, HStack, Highlight, Text, Textarea, VStack, useColorMode, useColorModeValue, useMediaQuery } from "@chakra-ui/react"
 import { Panel } from "types/dashboard"
 import { dateTimeFormat } from "utils/datetime/formatter";
 import { isEmpty, round, toNumber } from "lodash";
@@ -22,6 +22,7 @@ import { paletteColorNameToHex } from "utils/colors";
 import { Log } from "types/plugins/log";
 import { formatLabelId, getLabelNameColor } from "../utils";
 import {  MobileVerticalBreakpointNum } from "src/data/constants";
+import { isJSON, toJSON, toPrettyJSON } from "utils/is";
 
 interface LogItemProps {
     log: Log
@@ -90,7 +91,7 @@ const LogItem = memo((props: LogItemProps) => {
     }
 
     const isMobileScreen =  width < MobileVerticalBreakpointNum
-    
+
     return (<>
         <Flex flexDir={isMobileScreen ? "column" : "row"} pt="1" alignItems="start" gap={isMobileScreen ? 1 : 2} pl="2" pr="4" onClick={() => setCollapsed(!collapsed)} cursor="pointer"  fontSize={options.styles.fontSize}>
             <HStack spacing={1}>
@@ -110,7 +111,7 @@ const LogItem = memo((props: LogItemProps) => {
                         </LabelLayout>)
                     }
                 </HStack>}
-            <Text wordBreak={options.styles.wordBreak} color={paletteColorNameToHex(options.styles.contentColor)}><Highlight query={log.highlight??[]} styles={{ px: '0', py: '0',borderRadius: 4,  color: paletteColorNameToHex(options.styles.highlightColor),fontWeight: 600 }}>{log.content}</Highlight></Text>
+            <Box  color={paletteColorNameToHex(options.styles.contentColor)}><pre style={{wordBreak: options.styles.wordBreak,whiteSpace: options.styles.wrapLine ? "pre-wrap" : null}}><Highlight query={log.highlight??[]} styles={{ px: '0', py: '0',borderRadius: 4,  color: paletteColorNameToHex(options.styles.highlightColor),fontWeight: 600 }}>{log.content}</Highlight></pre></Box>
         </Flex>
         {
             !collapsed && <Box p="4" fontSize={options.styles.fontSize}>
@@ -125,6 +126,7 @@ const LogItem = memo((props: LogItemProps) => {
                         </HStack>)
                     }
                 </VStack>
+                <Box p="2"><pre>{toPrettyJSON(log.content)}</pre></Box>
             </Box>}
     </>)
 })
@@ -132,13 +134,13 @@ const LogItem = memo((props: LogItemProps) => {
 export default LogItem
 
 const LabelName = ({ name, color }: { name: string; color: string }) => {
-    return <Text fontWeight={500} color={paletteColorNameToHex(color)}>
+    return <Text fontWeight={500} color={paletteColorNameToHex(color)} minW="fit-content">
         {name}
     </Text>
 }
 
 const LabelValue = ({ value, color }: { value: string; color: string }) => {
-    return <Text color={paletteColorNameToHex(color)} wordBreak="break-all">
+    return <Text color={paletteColorNameToHex(color)} wordBreak="break-all" noOfLines={1}>
         {value}
     </Text>
 }

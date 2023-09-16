@@ -50,4 +50,21 @@ export const isJSON = (str: string) => {
   }
 }
 
+export const toPrettyJSON = (str: string) => {
+  if (typeof str == 'string') {
+    try {
+      const obj = JSON.parse(str)
+      if (typeof obj === 'object' && obj) {
+        return JSON.stringify(obj, null, 2)
+      } else {
+        return str
+      }
+    } catch (e) {
+      return str
+    }
+  } else {
+    return str
+  }
+}
+
 export const compareId = (a: string | number, b: string | number) => a == b

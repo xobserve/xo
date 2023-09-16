@@ -436,6 +436,7 @@ function onClick(data, map, navigate, setVariable, setDateTime, $variables) {
                 labelValueColor: 'inherit',
                 contentColor: 'inherit',
                 fontSize: "0.9rem",
+                wrapLine: false,
                 wordBreak: "break-all",
                 showlineBorder: true,
                 highlight: "",
