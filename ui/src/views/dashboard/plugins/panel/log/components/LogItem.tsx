@@ -95,9 +95,9 @@ const LogItem = memo((props: LogItemProps) => {
     let labelWidthMap = toJSON(options.labels.widthMap) ?? {}
 
     return (<>
-        <Flex flexDir={isMobileScreen ? "column" : "row"} pt="1" alignItems="start" gap={isMobileScreen ? 1 : 2} pl="2" pr="4" onClick={() => setCollapsed(!collapsed)} cursor="pointer"  fontSize={options.styles.fontSize}>
+        <Flex flexDir={isMobileScreen ? "column" : "row"} pt="1" alignItems="start" gap={isMobileScreen ? 1 : 2} pl="2" pr="4" onClick={options.enableDetails ? () => setCollapsed(!collapsed) : null} cursor={options.enableDetails ? "pointer" : null}  fontSize={options.styles.fontSize}>
             <HStack spacing={1}>
-                <CollapseIcon collapsed={collapsed} fontSize="0.6rem" opacity="0.6" mt={options.showTime ? 0 : '6px'} />
+                {options.enableDetails && <CollapseIcon collapsed={collapsed} fontSize="0.6rem" opacity="0.6" mt={options.showTime ? 0 : '6px'} />}
                 {options.showTime && <Text minWidth={options.timeColumnWidth ?? 155} color={paletteColorNameToHex(timestampColor)}>
                     {timeString}
                 </Text>}

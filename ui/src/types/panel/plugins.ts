@@ -125,6 +125,7 @@ export interface LogSettings {
     timeColumnWidth: number
     orderBy: "newest" | "oldest"
     timeStampPrecision: "ns" | "us" | "ms" | "s" | "m" | "h"
+    enableDetails: boolean
     enableTransform: boolean
     transform: string
     labels: {

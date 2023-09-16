@@ -63,6 +63,11 @@ const LogPanelEditor = memo((props: PanelEditorProps) => {
                     panel.plugins.log.enableTransform = e.target.checked
                 })} />
             </PanelEditItem>
+            <PanelEditItem title="Enable log details">
+                <Switch isChecked={panel.plugins.log.enableDetails} onChange={(e) => onChange((panel: Panel) => {
+                    panel.plugins.log.enableDetails = e.target.checked
+                })} />
+            </PanelEditItem>
             { panel.plugins.log.enableTransform && <PanelEditItem title="Log transform">
                 <CodeEditorModal value={panel.plugins.log.transform} onChange={v => onChange((panel: Panel) => {
                     panel.plugins.log.transform = v

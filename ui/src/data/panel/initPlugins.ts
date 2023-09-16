@@ -415,6 +415,7 @@ function onClick(data, map, navigate, setVariable, setDateTime, $variables) {
             showTime: true,
             timeColumnWidth: 160,
             orderBy: "newest",
+            enableDetails: true,
             timeStampPrecision: "ms",
             enableTransform: false,
             transform: 
