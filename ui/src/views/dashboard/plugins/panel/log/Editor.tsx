@@ -75,15 +75,25 @@ const LogPanelEditor = memo((props: PanelEditorProps) => {
                     panel.plugins.log.labels.display = v
                 })} placeholder="e.g job,filename" />
             </PanelEditItem>
-            <PanelEditItem title="Label column width" desc="In css pixels">
+            <PanelEditItem title="Label column common width" desc="In css pixels">
                 <EditorNumberItem min={0} max={1000} step={5} value={panel.plugins.log.labels.width} onChange={(v) => onChange((panel: Panel) => {
                     panel.plugins.log.labels.width = v
+                })} placeholder="auto" />
+            </PanelEditItem>
+            <PanelEditItem title="Label column width" desc={`Set width for specify label,JSON format, key is label key, value is width, e.g {"user":200}`}>
+                <EditorInputItem type="textarea"  value={panel.plugins.log.labels.widthMap} onChange={(v) => onChange((panel: Panel) => {
+                    panel.plugins.log.labels.widthMap = v
                 })} placeholder="auto" />
             </PanelEditItem>
             <PanelEditItem title="Layout orientation">
                 <RadionButtons options={[{ label: LayoutOrientation.Horizontal, value: LayoutOrientation.Horizontal }, { label: LayoutOrientation.Vertical, value: LayoutOrientation.Vertical }]} value={panel.plugins.log.labels.layout} onChange={v => onChange((panel: Panel) => {
                     panel.plugins.log.labels.layout = v
                 })} />
+            </PanelEditItem>
+            <PanelEditItem title="Max value lines" desc="When label value is too long, set this option to hide some">
+                <EditorNumberItem min={1} max={5} step={1} value={panel.plugins.log.labels.maxValueLines} onChange={(v) => onChange((panel: Panel) => {
+                    panel.plugins.log.labels.maxValueLines = v
+                })} placeholder="auto" />
             </PanelEditItem>
         </PanelAccordion>
         <PanelAccordion title={t.styles}>

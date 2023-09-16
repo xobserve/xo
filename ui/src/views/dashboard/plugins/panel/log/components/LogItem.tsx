@@ -22,7 +22,7 @@ import { paletteColorNameToHex } from "utils/colors";
 import { Log } from "types/plugins/log";
 import { formatLabelId, getLabelNameColor } from "../utils";
 import {  MobileVerticalBreakpointNum } from "src/data/constants";
-import { isJSON, toJSON, toPrettyJSON } from "utils/is";
+import { toJSON, toPrettyJSON } from "utils/is";
 
 interface LogItemProps {
     log: Log
@@ -92,6 +92,8 @@ const LogItem = memo((props: LogItemProps) => {
 
     const isMobileScreen =  width < MobileVerticalBreakpointNum
 
+    let labelWidthMap = toJSON(options.labels.widthMap) ?? {}
+
     return (<>
         <Flex flexDir={isMobileScreen ? "column" : "row"} pt="1" alignItems="start" gap={isMobileScreen ? 1 : 2} pl="2" pr="4" onClick={() => setCollapsed(!collapsed)} cursor="pointer"  fontSize={options.styles.fontSize}>
             <HStack spacing={1}>
@@ -103,11 +105,11 @@ const LogItem = memo((props: LogItemProps) => {
             {options.labels.display.length > 0 &&
                 <HStack alignItems="start"  maxW="100%" spacing={options.labels.layout == LayoutOrientation.Horizontal ? 2 : 3}>
                     {
-                        Object.keys(labels).map(key => options.labels.display.includes(key) && <LabelLayout key={key + labels[key]} spacing={0} width={options.labels.width ?? 100} >
+                        Object.keys(labels).map(key => options.labels.display.includes(key) && <LabelLayout alignItems="start" key={key + labels[key]} spacing={0} width={labelWidthMap[key]?? options.labels.width ?? 100} >
                             <LabelName name={key} color={labelNameColor(formatLabelId(key, labels[key]))}/>
                             {options.labels.layout == LayoutOrientation.Horizontal &&
                                 <Text>=</Text>}
-                            <LabelValue value={labels[key]} color={options.styles.labelValueColor}/>
+                            <LabelValue value={labels[key]} color={options.styles.labelValueColor} maxLines={options.labels.maxValueLines}/>
                         </LabelLayout>)
                     }
                 </HStack>}
@@ -121,7 +123,7 @@ const LogItem = memo((props: LogItemProps) => {
                             <Box minWidth={isMobileScreen ? "10em" : "20em" }>
                                 <LabelName name={key} color={labelNameColor(formatLabelId(key, labels[key]))}/>
                             </Box>
-                            <LabelValue value={labels[key]} color={options.styles.labelValueColor}/>
+                            <LabelValue value={labels[key]} color={options.styles.labelValueColor} maxLines={options.labels.maxValueLines}/>
 
                         </HStack>)
                     }
@@ -139,8 +141,8 @@ const LabelName = ({ name, color }: { name: string; color: string }) => {
     </Text>
 }
 
-const LabelValue = ({ value, color }: { value: string; color: string }) => {
-    return <Text color={paletteColorNameToHex(color)} wordBreak="break-all" noOfLines={1}>
+const LabelValue = ({ value, color, maxLines }: { value: string; color: string,maxLines:number }) => {
+    return <Text color={paletteColorNameToHex(color)} wordBreak="break-all" noOfLines={maxLines}>
         {value}
     </Text>
 }

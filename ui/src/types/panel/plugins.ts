@@ -130,7 +130,9 @@ export interface LogSettings {
     labels: {
         display: string
         width: number
+        widthMap: string
         layout: LayoutOrientation
+        maxValueLines: number
     }
     styles: {
         labelColorSyncChart: boolean

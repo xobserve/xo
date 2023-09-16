@@ -50,6 +50,23 @@ export const isJSON = (str: string) => {
   }
 }
 
+export const toJSON = (str: string) => {
+  if (typeof str == 'string') {
+    try {
+      const obj = JSON.parse(str)
+      if (typeof obj === 'object' && obj) {
+        return obj
+      } else {
+        return null
+      }
+    } catch (e) {
+      return null
+    }
+  } else {
+    return null
+  }
+}
+
 export const toPrettyJSON = (str: string) => {
   if (typeof str == 'string') {
     try {

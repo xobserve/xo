@@ -428,7 +428,9 @@ function onClick(data, map, navigate, setVariable, setDateTime, $variables) {
             labels: {
                 display: "",
                 width: 240,
+                widthMap: '{}',
                 layout: LayoutOrientation.Horizontal,
+                maxValueLines: null
             },
             styles: {
                 labelColorSyncChart: true,
