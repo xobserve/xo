@@ -183,7 +183,7 @@ const LogPanel = (props: LogPanelProps) => {
                         continue
                     }
                     v.labelHighlight.push(lkey)
-           
+
                     let found1 = false
                     for (const k of Object.keys(v.labels)) {
                         const v1 = v.labels[k].toLowerCase()
@@ -267,22 +267,22 @@ const LogPanel = (props: LogPanelProps) => {
                 <Box position="absolute" right="2" top="2" zIndex={1} onClick={onToobarOpen} fontSize="0.7rem" opacity="0.4" cursor="pointer" p="2px" className={toolbarOpen ? "color-text" : null}>
                     <FaFilter />
                 </Box>}
-            {/* <CustomScrollbar> */}
-            <Box height={props.height} maxHeight={props.height} width={props.width - (toolbarOpen ? panel.plugins.log.toolbar.width : 1)} transition="all 0.3s" py="2" overflowY="auto">
-                {panel.plugins.log.chart.show && <Box className="log-panel-chart" height={panel.plugins.log.chart.height}>
-                    <LogChart data={sortedData} panel={panel} width={props.width - (toolbarOpen ? panel.plugins.log.toolbar.width : 1)} viewOptions={viewOptions}   colorGenerator={generator} />
-                </Box>}
-                <VStack alignItems="left" divider={panel.plugins.log.styles.showlineBorder && <StackDivider />} mt="1" overflowX="auto">
-                    {
-                        sortedData.map(log => <LogItem log={log} panel={panel} collapsed={collaseAll} width={props.width} colorGenerator={generator} />)
-                    }
-                </VStack>
-            </Box>
-            {/* </CustomScrollbar> */}
+            <CustomScrollbar>
+                <Box height={props.height} maxHeight={props.height} width={props.width - (toolbarOpen ? panel.plugins.log.toolbar.width : 1)} transition="all 0.3s" pt="2" >
+                    {panel.plugins.log.chart.show && <Box className="log-panel-chart" height={panel.plugins.log.chart.height}>
+                        <LogChart data={sortedData} panel={panel} width={props.width - (toolbarOpen ? panel.plugins.log.toolbar.width : 1)} viewOptions={viewOptions} colorGenerator={generator} />
+                    </Box>}
+                    <VStack alignItems="left" divider={panel.plugins.log.styles.showlineBorder && <StackDivider />} mt="1" pb="2">
+                        {
+                            sortedData.map(log => <LogItem log={log} panel={panel} collapsed={collaseAll} width={props.width} colorGenerator={generator} />)
+                        }
+                    </VStack>
+                </Box>
+            </CustomScrollbar>
 
             {<Box className="bordered-left" height={props.height} maxHeight={props.height} width={toolbarOpen ? panel.plugins.log.toolbar.width : 0} transition="all 0.3s">
                 <CustomScrollbar>
-                    {toolbarOpen && <LogToolbar   panel={panel} onCollapseAll={onCollapseAll} onSearchChange={onSearchChange} onLabelSearch={onSearchLabel} height={props.height}  currentLogsCount={filterData.length}viewOptions={viewOptions} />}
+                    {toolbarOpen && <LogToolbar panel={panel} onCollapseAll={onCollapseAll} onSearchChange={onSearchChange} onLabelSearch={onSearchLabel} height={props.height} currentLogsCount={filterData.length} viewOptions={viewOptions} />}
                 </CustomScrollbar>
             </Box>}
             {sortedData.length == 0 && <Text position="absolute" left="calc(50% - 55px)" top="45%">No logs founded</Text>}
