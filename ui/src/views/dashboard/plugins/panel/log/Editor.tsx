@@ -199,6 +199,18 @@ const LogPanelEditor = memo((props: PanelEditorProps) => {
                 })} />
             </PanelEditItem>
         </PanelAccordion>
+        <PanelAccordion title="Search logs">
+            <PanelEditItem title="Search log content" desc="Support variables">
+                <EditorInputItem value={panel.plugins.log.search.log}  placeholder="textA || textB , A && B" onChange={v => onChange((panel: Panel) => {
+                    panel.plugins.log.search.log = v
+                })}/>
+            </PanelEditItem>
+            <PanelEditItem title="Search log labels" desc="Support variables">
+                <EditorInputItem value={panel.plugins.log.search.labels}  placeholder="labelA=valueA,labelB=valueB" onChange={v => onChange((panel: Panel) => {
+                    panel.plugins.log.search.labels = v
+                })}/>
+            </PanelEditItem>
+        </PanelAccordion>
         <PanelAccordion title="Thresholds">
             <ThresholdEditor labels={[]} value={panel.plugins.log.thresholds} onChange={(v) => onChange((panel: Panel) => {
                 panel.plugins.log.thresholds = v

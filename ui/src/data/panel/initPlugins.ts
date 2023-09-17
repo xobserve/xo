@@ -457,6 +457,10 @@ function onClick(data, map, navigate, setVariable, setDateTime, $variables) {
                 stack: "auto",
                 tooltip: "all"
             },
+            search: {
+                log: "",
+                labels: "",
+            },
             thresholds: [{ type: null, value: null, key: null, color: 'inherit' }]
         },
         [PanelType.Bar]: {

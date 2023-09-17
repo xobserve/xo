@@ -160,6 +160,10 @@ export interface LogSettings {
         stack: "auto" | "always" | "none"
         tooltip: "none" | "single" | "all"
     }
+    search: {
+        log: string 
+        labels: string 
+    }
     thresholds: LogThreshold[]
 }
 

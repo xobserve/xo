@@ -13,10 +13,13 @@
 
 import { Box, Divider, Flex, HStack, Text } from "@chakra-ui/react"
 import { EditorInputItem } from "src/components/editor/EditorItem"
-import React, { memo, useState } from "react"
+import React, { memo, useEffect, useState } from "react"
 import { AiOutlineDoubleRight } from "react-icons/ai"
 import { Panel } from "types/dashboard"
 import { LogChartView, LogLabel } from "types/plugins/log"
+import { replaceWithVariables } from "utils/variable"
+import { useStore } from "@nanostores/react"
+import { $variables } from "src/views/variables/store"
 
 interface Props {
     panel: Panel
@@ -31,9 +34,15 @@ interface Props {
 
 const LogToolbar = memo((props: Props) => {
     const { panel, onCollapseAll, onSearchChange,onLabelSearch,  currentLogsCount } = props
-    const [search, setSearch] = useState<string>("")
-    const [labelSearch, setLabelSearch] = useState<string>("")
+    const [search, setSearch] = useState<string>(props.panel.plugins.log.search.log)
+    const [labelSearch, setLabelSearch] = useState<string>(props.panel.plugins.log.search.labels)
 
+    const vars = useStore($variables)
+    useEffect(() => {
+        onSearchChange(replaceWithVariables(search))
+        onLabelSearch(replaceWithVariables(labelSearch))
+    },[vars])
+    
     return (<Box px="2">
         <Flex justifyContent="space-between" py="2"  pl="1" pr="5" fontSize="0.85rem" mt="-3px">
             <HStack spacing={1}>
@@ -53,10 +62,11 @@ const LogToolbar = memo((props: Props) => {
 
         <Box fontSize="0.8rem" mt="2" px="1">
             <Text  fontWeight="500">Search log content</Text>
-            <EditorInputItem value={search} onChange={v => { setSearch(v); onSearchChange(v) }} placeholder="textA || textB , A && B" />
+            <EditorInputItem value={search} onChange={v => { setSearch(v); onSearchChange(replaceWithVariables(v)) }} placeholder="textA || textB , A && B" />
 
             <Text mt="2" fontWeight="500">Search log labels</Text>
-            <EditorInputItem value={labelSearch} onChange={v => { setLabelSearch(v); onLabelSearch(v) }} placeholder="labelA=valueA,labelB=valueB" />
+            <EditorInputItem value={labelSearch} onChange={v => { setLabelSearch(v); onLabelSearch(replaceWithVariables(v)) }} placeholder="labelA=valueA,labelB=valueB" />
+            <Text textStyle="annotation" mt="1" fontSize="12px">support using variables</Text>
         </Box>
     </Box>)
 })
