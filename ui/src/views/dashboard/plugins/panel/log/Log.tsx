@@ -165,6 +165,8 @@ const LogPanel = (props: LogPanelProps) => {
         const result: Log[] = []
         for (const v0 of data) {
             const v = clone(v0)
+            v.highlight = []
+            v.labelHighlight = []
             if (labelSearch != "") {
                 const searches = labelSearch.split(",")
                 let found = true
@@ -178,9 +180,13 @@ const LogPanel = (props: LogPanelProps) => {
                     if (isEmpty(lkey) || isEmpty(lvalue)) {
                         continue
                     }
+                    v.labelHighlight.push(lkey)
+           
                     let found1 = false
                     for (const k of Object.keys(v.labels)) {
-                        if (k.toLowerCase() == lkey && v.labels[k].toLowerCase().match(lvalue)) {
+                        const v1 = v.labels[k].toLowerCase()
+                        if (k.toLowerCase() == lkey && v1.match(lvalue)) {
+                            v.labelHighlight.push(v1)
                             found1 = true
                             break
                         }
@@ -194,7 +200,6 @@ const LogPanel = (props: LogPanelProps) => {
                     continue
                 }
             }
-            v.highlight = []
             const lowerContent = v.content.toLowerCase()
             if (search == "") {
                 result.push(v)
@@ -203,7 +208,7 @@ const LogPanel = (props: LogPanelProps) => {
                 const isAnd = search.includes("&&")
                 if (!isOr && !isAnd) {
                     if (lowerContent.includes(search)) {
-                        v.highlight = [search]
+                        v.highlight.push(search)
                         result.push(v)
                     }
                 } else {
@@ -212,7 +217,7 @@ const LogPanel = (props: LogPanelProps) => {
                         for (const s of searches) {
                             const s1 = s.trim()
                             if (lowerContent.includes(s1)) {
-                                v.highlight = [s1]
+                                v.highlight.push(s1)
                                 result.push(v)
                                 break
                             }
@@ -227,7 +232,7 @@ const LogPanel = (props: LogPanelProps) => {
                             }
                         }
                         if (found) {
-                            v.highlight = searches
+                            v.highlight.push(...searches)
                             result.push(v)
                         }
                     }

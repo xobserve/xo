@@ -18,6 +18,7 @@ export interface Log {
     timestamp: number  // nanoseconds
     content?: string 
     highlight?: string[]
+    labelHighlight?: string[]
 }
 
 export interface LogLabel {

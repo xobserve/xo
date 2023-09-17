@@ -106,14 +106,14 @@ const LogItem = memo((props: LogItemProps) => {
                 <HStack alignItems="start"  maxW="100%" spacing={options.labels.layout == LayoutOrientation.Horizontal ? 2 : 3}>
                     {
                         Object.keys(labels).map(key => options.labels.display.includes(key) && <LabelLayout alignItems="start" key={key + labels[key]} spacing={0} width={labelWidthMap[key]?? options.labels.width ?? 100} >
-                            <LabelName name={key} color={labelNameColor(formatLabelId(key, labels[key]))}/>
+                            <LabelName name={key} color={log.labelHighlight.indexOf(key.toLowerCase()) >=0 ? paletteColorNameToHex(options.styles.highlightColor): labelNameColor(formatLabelId(key, labels[key]))}/>
                             {options.labels.layout == LayoutOrientation.Horizontal &&
                                 <Text>=</Text>}
-                            <LabelValue value={labels[key]} color={options.styles.labelValueColor} maxLines={options.labels.maxValueLines}/>
+                            <LabelValue value={labels[key]} color={log.labelHighlight.indexOf(labels[key].toLowerCase()) >=0 ? paletteColorNameToHex(options.styles.highlightColor): options.styles.labelValueColor} maxLines={options.labels.maxValueLines}/>
                         </LabelLayout>)
                     }
                 </HStack>}
-            <Box  color={paletteColorNameToHex(options.styles.contentColor)}><pre style={{wordBreak: options.styles.wordBreak,whiteSpace: options.styles.wrapLine ? "pre-wrap" : null}}><Highlight query={log.highlight??[]} styles={{ px: '0', py: '0',borderRadius: 4,  color: paletteColorNameToHex(options.styles.highlightColor),fontWeight: 600 }}>{log.content}</Highlight></pre></Box>
+            <Box  color={paletteColorNameToHex(options.styles.contentColor)}><pre style={{wordBreak: options.styles.wordBreak,whiteSpace: options.styles.wrapLine ? "pre-wrap" : null}}><TextHighlight text={log.content} color={options.styles.highlightColor} highlight={log.highlight} /></pre></Box>
         </Flex>
         {
             !collapsed && <Box p="4" fontSize={options.styles.fontSize}>
@@ -145,4 +145,8 @@ const LabelValue = ({ value, color, maxLines }: { value: string; color: string,m
     return <Text color={paletteColorNameToHex(color)} wordBreak="break-all" noOfLines={maxLines}>
         {value}
     </Text>
+}
+
+const TextHighlight = ({text, highlight, color}) => {
+    return <Highlight query={highlight??[]} styles={{ px: '0', py: '0',borderRadius: 4,  color: paletteColorNameToHex(color),fontWeight: 600 }}>{text}</Highlight>
 }
