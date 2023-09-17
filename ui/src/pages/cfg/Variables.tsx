@@ -413,8 +413,8 @@ export const EditVariable = ({ v, isOpen, onClose, isEdit, onSubmit, isGlobal = 
                                 }} />
                             </FormItem>
 
-                            {variable.type == VariableQueryType.Custom && <FormItem title={t1.queryValue}>
-                                <Input width="400px" placeholder={t1.valueTips} value={variable.value} onChange={e => { setVariable({ ...variable, value: e.currentTarget.value?.trim() }) }} onBlur={() => onQueryResult({ error: null, data: variable.value.split(',') })} />
+                            {(variable.type == VariableQueryType.Custom || variable.type == VariableQueryType.TextInput) && <FormItem title={variable.type == VariableQueryType.Custom ? t1.queryValue : t1.defaultValue}>
+                                <Input width="400px" placeholder={variable.type == VariableQueryType.Custom ? t1.valueTips : "input a default value"} value={variable.value} onChange={e => { setVariable({ ...variable, value: e.currentTarget.value?.trim() }) }} onBlur={() => onQueryResult({ error: null, data: variable.value.split(',') })} />
                             </FormItem>}
 
                             {variable.type == VariableQueryType.Query && <>

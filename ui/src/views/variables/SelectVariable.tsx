@@ -37,6 +37,7 @@ import { usePrevious, useSearchParam } from "react-use"
 import { $datasources } from "../datasource/store"
 import { Datasource } from "types/datasource"
 import Loading from "components/loading/Loading"
+import { EditorInputItem } from "components/editor/EditorItem"
 
 interface Props {
     variables: Variable[]
@@ -84,12 +85,12 @@ const SelectVariable = memo(({ v }: { v: Variable }) => {
 
     useEffect(() => {
         if (values === null) {
-            return 
+            return
         }
-        if ( !isEmpty(varInUrl) && varInUrl !== prevVarInUrl) {
+        if (!isEmpty(varInUrl) && varInUrl !== prevVarInUrl) {
             setValue(v, varInUrl)
         }
-    },[varInUrl, prevVarInUrl])
+    }, [varInUrl, prevVarInUrl])
 
     useEffect(() => {
         if (!v.values) { // only load values when first loading
@@ -120,6 +121,10 @@ const SelectVariable = memo(({ v }: { v: Variable }) => {
     }
 
     const loadValues = async (forceLoad = false) => {
+        if (v.type == VariableQueryType.TextInput) {
+            return
+        }
+
         let result = []
         if (v.enableAll) {
             result.push(VarialbeAllOption)
@@ -196,10 +201,10 @@ const SelectVariable = memo(({ v }: { v: Variable }) => {
             }
 
         }
-        setValues(result??[])
+        setValues(result ?? [])
         v.values = result
         if (needQuery) {
-          $variables.set([...vars])
+            $variables.set([...vars])
         }
     }
 
@@ -209,7 +214,7 @@ const SelectVariable = memo(({ v }: { v: Variable }) => {
 
     return <HStack key={v.id} spacing={1}>
         <Tooltip openDelay={300} label={(v.id.toString().startsWith("d-") ? t1.dashScoped : t1.globalScoped) + ": " + v.name}><Text fontSize="sm" minWidth="max-content" noOfLines={1}>{v.name}</Text></Tooltip>
-        {!loading && !isEmpty(values) &&
+        {!loading && v.type != VariableQueryType.TextInput && !isEmpty(values) &&
             <PopoverSelect
                 value={value}
                 size="sm"
@@ -218,9 +223,9 @@ const SelectVariable = memo(({ v }: { v: Variable }) => {
                     const vs = value.filter(v1 => values.includes(v1))
                     if (isEmpty(vs)) {
                         setValue(v, "")
-                    } 
+                    }
                     setVariableValue(v, vs.length == 0 ? "" : vs.join(VariableSplitChar))
-                    
+
                 }}
                 options={values.map(v => ({ value: v, label: v }))}
                 exclusive={VarialbeAllOption}
@@ -228,7 +233,13 @@ const SelectVariable = memo(({ v }: { v: Variable }) => {
                 showArrow={false}
                 matchWidth={v.id.toString().startsWith('d-')}
             />}
-        {loading && <Loading size="sm"/>}
+        {v.type == VariableQueryType.TextInput && <EditorInputItem bordered={false} borderedBottom  value={v.selected} onChange={v1 => {
+            if (v1 != v.selected) {
+                setValue(v, v1)
+                setVariableValue(v, v1)
+            }
+        }}/>}
+        {loading && <Loading size="sm" />}
     </HStack>
 })
 export const setVariableSelected = (variables: Variable[]) => {
@@ -250,13 +261,15 @@ export const setVariableSelected = (variables: Variable[]) => {
     for (const v of variables) {
         const selected = selectedInUrl[v.name] ?? sv[v.id]
         if (!selected) {
-            v.selected = v.values && v.values[0]
+            if (v.type == VariableQueryType.TextInput) {
+                v.selected = v.value
+            } else {
+                v.selected = v.values && v.values[0]
+            }
         } else {
             v.selected = selected
         }
     }
-
-
 }
 
 
@@ -319,7 +332,7 @@ export const setVariable = (name, value) => {
         }
     }
 
-    
+
     v && setVariableValue(v, value)
 }
 
@@ -334,8 +347,8 @@ export const queryVariableValues = async (v: Variable, datasources: Datasource[]
             result.data = v.value.split(",")
         }
     } else if (v.type == VariableQueryType.Datasource) {
-        result.data =datasources.map(ds => ds.name)
-    } else {
+        result.data = datasources.map(ds => ds.name)
+    } else if (v.type == VariableQueryType.Query) {
         const ds = getDatasource(v.datasource, datasources)
         //@needs-update-when-add-new-variable-datasource
         switch (ds?.type) {
@@ -363,7 +376,7 @@ export const queryVariableValues = async (v: Variable, datasources: Datasource[]
 
     if (!isEmpty(v.regex)) {
         const regex = v.regex.toLowerCase()
-        result.data = result?.data?.filter((r:string) => r.toLowerCase().match(regex))
+        result.data = result?.data?.filter((r: string) => r.toLowerCase().match(regex))
     }
 
     return result
@@ -372,8 +385,8 @@ export const queryVariableValues = async (v: Variable, datasources: Datasource[]
 const autoSetSelected = (v: Variable, result: string[]) => {
     for (const value of result) {
         if (value != VarialbeAllOption) {
-            v.selected = value 
-            return 
+            v.selected = value
+            return
         }
     }
 }
