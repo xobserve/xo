@@ -173,11 +173,13 @@ const LogPanel = (props: LogPanelProps) => {
                 for (const s of searches) {
                     const s1 = s.trim()
                     if (isEmpty(s1)) {
+                        found = false
                         continue
                     }
 
                     const [lkey, lvalue] = s1.split("=")
                     if (isEmpty(lkey) || isEmpty(lvalue)) {
+                        found = false
                         continue
                     }
                     v.labelHighlight.push(lkey)
@@ -283,6 +285,7 @@ const LogPanel = (props: LogPanelProps) => {
                     {toolbarOpen && <LogToolbar   panel={panel} onCollapseAll={onCollapseAll} onSearchChange={onSearchChange} onLabelSearch={onSearchLabel} height={props.height}  currentLogsCount={filterData.length}viewOptions={viewOptions} />}
                 </CustomScrollbar>
             </Box>}
+            {sortedData.length == 0 && <Text position="absolute" left="calc(50% - 55px)" top="45%">No logs founded</Text>}
         </Flex>
     </>
     )

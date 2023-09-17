@@ -286,7 +286,7 @@ const EditPanel = memo(({ dashboard, onChange, edit }: EditPanelProps) => {
                             </HStack>
                         </Flex>
                     </ModalHeader>
-                    <ModalBody pt={isLargeScreen ? null : 0}>
+                    <ModalBody pt={isLargeScreen ? 1 : 0}>
                         <HStack height="calc(100vh - 80px)" alignItems="top">
                             <Box width="65%" height={`calc(100% - 20px)`}>
                                 {!isEmpty(vars) &&
