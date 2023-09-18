@@ -49,18 +49,18 @@ export interface AlerSettings extends DisableDatasource {
     viewMode: "list" | "stat"
     stat: {
         showGraph: boolean
-        color: string 
+        color: string
         layout: LayoutOrientation
         colorMode: "none" | "value" | "bg-gradient" | "bg-solid"
         style: "lines" | "bars"
         statName: string
-        valueSize: number 
+        valueSize: number
         legendSize: number
     }
     orderBy: "newest" | "oldest"
     toolbar: {
         show: boolean
-        width: number 
+        width: number
     }
     chart: {
         show: boolean
@@ -69,7 +69,7 @@ export interface AlerSettings extends DisableDatasource {
         stack: "auto" | "always" | "none"
         tooltip: "none" | "single" | "all"
     }
-    filter:AlertFilter
+    filter: AlertFilter
     clickActions: ClickAction[]
 }
 
@@ -79,7 +79,7 @@ export interface AlertFilter {
     state: AlertState[]
     datasources: number[]
     httpQuery: PanelQuery
-    ruleName: string 
+    ruleName: string
     ruleLabel: string
     alertLabel: string
 }
@@ -92,7 +92,7 @@ export interface BarSettings {
     showLabel: "auto" | "always" | "none"
     styles: {
         barWidth: number
-        axisFontSize: number 
+        axisFontSize: number
         labelFontSize: number
         barOpacity: number
     }
@@ -150,7 +150,7 @@ export interface LogSettings {
     toolbar: {
         show: boolean
         defaultOpen: boolean
-        width: number 
+        width: number
 
     }
     chart: {
@@ -161,8 +161,8 @@ export interface LogSettings {
         tooltip: "none" | "single" | "all"
     }
     search: {
-        log: string 
-        labels: string 
+        log: string
+        labels: string
     }
     interaction: {
         enable: boolean
@@ -226,8 +226,12 @@ export interface BarGaugeSettings {
     thresholds: ThresholdsConfig
 }
 export interface TraceSettings {
-    defaultService: string 
+    defaultService: string
     enableEditService: boolean
+    interaction: {
+        enable: boolean
+        actions: ClickAction[]
+    }
 }
 
 export interface StatSettings {
@@ -289,7 +293,7 @@ export interface PieSettings {
         height: number
         gap: number
     }
-    top: string 
+    top: string
     left: string
     value: ValueSetting
     thresholds: ThresholdsConfig
@@ -516,7 +520,7 @@ export interface ValueSetting extends Units {
     calc?: ValueCalculationType
 }
 
-export type UnitsType = 'none' | 'time' | 'bytes' | 'percent' |'short' | 'format' | "enum" | 'custom';
+export type UnitsType = 'none' | 'time' | 'bytes' | 'percent' | 'short' | 'format' | "enum" | 'custom';
 export interface Unit {
     operator: "x" | "/" | "=",
     rhs: number,

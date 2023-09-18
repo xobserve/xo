@@ -11,13 +11,13 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { Flex, HStack, Input, Text, useMediaQuery } from "@chakra-ui/react"
+import { Button, Flex, HStack, Input, Text, useMediaQuery, useToast } from "@chakra-ui/react"
 import { ColorModeSwitcher } from "src/components/ColorModeSwitcher"
 import moment from "moment"
 import { Trace } from "types/plugins/trace"
 import { formatDuration } from "utils/date"
 import SpanGraph from "./SpanGraph"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { ETraceViewType, IViewRange, ViewRangeTimeUpdate } from "../../types/types"
 import CollapseIcon from "src/components/icons/Collapse"
 import { AiOutlineDown, AiOutlineUp } from "react-icons/ai"
@@ -28,6 +28,12 @@ import React from "react";
 import { dateTimeFormat } from "utils/datetime/formatter"
 import { MobileBreakpoint } from "src/data/constants"
 import { Select } from "antd"
+import { useSearchParam } from "react-use"
+import { Dashboard, Panel } from "types/dashboard"
+import { requestApi } from "utils/axios/request"
+import { isEmpty } from "utils/validate"
+import { commonInteractionEvent, genDynamicFunction } from "utils/dashboard/dynamicCall"
+import { isFunction } from "lodash"
 
 interface Props {
     trace: Trace
@@ -44,7 +50,7 @@ interface Props {
     search: string
 }
 
-const detailTypes = [    { label: "Timeline", value: ETraceViewType.TraceTimelineViewer },
+const detailTypes = [{ label: "Timeline", value: ETraceViewType.TraceTimelineViewer },
 { label: "FlameGraph", value: ETraceViewType.TraceFlamegraph },
 { label: "NodeGraph", value: ETraceViewType.TraceGraph },
 { label: "Spans", value: ETraceViewType.TraceSpansView },
@@ -52,7 +58,22 @@ const detailTypes = [    { label: "Timeline", value: ETraceViewType.TraceTimelin
 { label: "JSON", value: ETraceViewType.TraceJSON }]
 
 const TraceDetailHeader = ({ trace, viewRange, updateNextViewRangeTime, updateViewRangeTime, collapsed, onGraphCollapsed, searchCount, prevResult, nextResult, viewType, onViewTypeChange, search }: Props) => {
+    const dashboardId = useSearchParam("dashboardId")
+    const panelId = useSearchParam("panelId")
     const [search1, setSearch] = useState(search)
+    const [panel, setPanel] = useState<Panel>(null)
+    const toast = useToast()
+    useEffect(() => {
+        if (dashboardId && panelId) {
+            loadDashboard(dashboardId)
+        }
+    },[])
+    const loadDashboard = async (id) => {
+        const res = await requestApi.get(`/dashboard/byId/${id}`)
+        const dashboard: Dashboard = res.data
+        const p = dashboard.data.panels.find(p => p.id.toString() == panelId)
+        if (p) setPanel(p)
+    }
     const onSearchChange = (v) => {
         setSearch(v)
         addParamToUrl({ search: v })
@@ -64,12 +85,35 @@ const TraceDetailHeader = ({ trace, viewRange, updateNextViewRangeTime, updateVi
         <Flex justifyContent="space-between" alignItems="center" p={isLargeScreen ? 1 : 0}>
             <HStack>
                 <CollapseIcon collapsed={collapsed} onClick={onGraphCollapsed} opacity="0.5" fontSize={size} />
-                <Flex flexDir={isLargeScreen ? "row" : "column"} alignItems={isLargeScreen ? "center"  : "start"} gap={isLargeScreen ? 2 : 0}>
+                <Flex flexDir={isLargeScreen ? "row" : "column"} alignItems={isLargeScreen ? "center" : "start"} gap={isLargeScreen ? 2 : 0}>
                     <Text fontSize={isLargeScreen ? size : "xs"} noOfLines={1}>{trace.traceName}</Text>
                     {isLargeScreen && <Text textStyle="annotation">{trace.traceID.slice(0, 7)}</Text>}
                 </Flex>
             </HStack>
-            <HStack spacing={1}>
+            <HStack spacing={2}>
+                {panel && panel.plugins.trace.interaction.enable && 
+                    <HStack spacing={1}>
+                        {panel.plugins.trace.interaction.actions.map((action, index) => {
+                            if (isEmpty(action.name)) {
+                                return
+                            }
+                            const onClick = genDynamicFunction(action.action);
+                            return <Button key={index + action.name} colorScheme={action.color} variant={action.style} size={"sm"} onClick={(e) => {
+                                e.stopPropagation()
+                                if (!isFunction(onClick)) {
+                                    toast({
+                                        title: "Error",
+                                        description: "The action function you defined is not valid",
+                                        status: "error",
+                                        duration: 4000,
+                                        isClosable: true,
+                                    })
+                                } else {
+                                    commonInteractionEvent(onClick, trace)
+                                }
+                            }}>{action.name}</Button>
+                        })}
+                    </HStack>}
                 {viewType == ETraceViewType.TraceJSON ?
                     <Text fontSize={size} layerStyle="gradientText" mr="20px">Click code area and Press Command+F to search </Text>
                     : ((viewType != ETraceViewType.TraceFlamegraph && viewType != ETraceViewType.TraceSpansView) && <HStack spacing={0}>
@@ -82,9 +126,9 @@ const TraceDetailHeader = ({ trace, viewRange, updateNextViewRangeTime, updateVi
                         {/* <Button size="sm" variant="outline" onClick={prevResult} isDisabled={search == ''}></Button> */}
                     </HStack>)}
 
-                {isLargeScreen ? <RadionButtons size="sm" theme="brand" fontSize="0.85rem" spacing={0} value={viewType} onChange={v => onViewTypeChange(v)} options={detailTypes} /> 
-                : 
-                <Select options={detailTypes} value={viewType} onChange={v => onViewTypeChange(v)}  />}
+                {isLargeScreen ? <RadionButtons size="sm" theme="brand" fontSize="0.85rem" spacing={0} value={viewType} onChange={v => onViewTypeChange(v)} options={detailTypes} />
+                    :
+                    <Select options={detailTypes} value={viewType} onChange={v => onViewTypeChange(v)} />}
                 {/* <ColorModeSwitcher miniMode fontSize={size} disableTrigger /> */}
             </HStack>
         </Flex>

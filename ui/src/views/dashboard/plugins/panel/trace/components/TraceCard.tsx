@@ -8,9 +8,7 @@ import moment from "moment"
 import React from "react";
 import { getDatasource } from "utils/datasource"
 import { MobileBreakpoint } from "src/data/constants"
-import { colors, paletteColorNameToHex, palettes } from "utils/colors"
-import { useStore } from "@nanostores/react"
-import { $datasources } from "src/views/datasource/store"
+import { paletteColorNameToHex, palettes } from "utils/colors"
 import { Datasource } from "types/datasource"
 
 interface Props {
@@ -20,24 +18,16 @@ interface Props {
     onChecked?: (traceId: string) => void
     checkDisabled?: boolean
     simple?: boolean
-    dsId?: number
-    datasources: Datasource[]
+    onClick?: any
 }
 
-const TraceCard = ({ trace, maxDuration,checked=false, onChecked=null,simple=false,checkDisabled=false,dsId=null, datasources}: Props) => {
+const TraceCard = ({ trace, maxDuration,checked=false, onChecked=null,simple=false,checkDisabled=false, onClick}: Props) => {
     const mDate = moment(trace.startTime / 1000);
     const timeStr = mDate.format('h:mm:ss a')
 
-    const ds = getDatasource(dsId, datasources)
-    const onTraceClick = () => {
-        if (ds) {
-            window.open(`/trace/${trace.traceID}/${ds.id}/`)
-        }
-    }
-
     const [isLargeScreen] = useMediaQuery(MobileBreakpoint)
 
-    return (<Box width="100%" borderRadius="0" cursor="pointer"  onClick={onTraceClick} fontSize={isLargeScreen ? "sm" : "xs"}>
+    return (<Box width="100%" borderRadius="0" cursor="pointer"  onClick={onClick} fontSize={isLargeScreen ? "sm" : "xs"}>
         <Box width="100%" position="relative" className="label-bg">
             <HStack spacing={0} py="2px">
                 {onChecked && <Flex alignItems="center" px="2" zIndex={2}  onClick={e => {

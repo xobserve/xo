@@ -335,7 +335,11 @@ function registerEvents(options, chart, navigate, setVariable, setDateTime, $var
 
         [PanelType.Trace]: {
             defaultService: "",
-            enableEditService: true
+            enableEditService: true,
+            interaction: {
+                enable: false,
+                actions: []
+            }
         },
 
         [PanelType.BarGauge]: {
