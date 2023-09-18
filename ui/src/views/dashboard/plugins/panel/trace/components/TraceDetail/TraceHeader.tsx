@@ -91,7 +91,7 @@ const TraceDetailHeader = ({ trace, viewRange, updateNextViewRangeTime, updateVi
                 </Flex>
             </HStack>
             <HStack spacing={2}>
-                {panel && panel.plugins.trace.interaction.enable && 
+                {panel && panel.plugins.trace.interaction?.enable && 
                     <HStack spacing={1}>
                         {panel.plugins.trace.interaction.actions.map((action, index) => {
                             if (isEmpty(action.name)) {
