@@ -238,7 +238,7 @@ const SelectVariable = memo(({ v }: { v: Variable }) => {
                 setValue(v, v1)
                 setVariableValue(v, v1)
             }
-        }}/>}
+        }} placeholder={t1.textInputTips}/>}
         {loading && <Loading size="sm" />}
     </HStack>
 })

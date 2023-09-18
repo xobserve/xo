@@ -338,7 +338,8 @@
   },
   "variable": {
     "dashScoped": "仪表盘变量",
-    "globalScoped": "全局变量"
+    "globalScoped": "全局变量",
+    "textInputTips": "输入变量值"
   },
   "panel": {
     "hidePanel": "隐藏图表",

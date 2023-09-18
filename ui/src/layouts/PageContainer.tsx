@@ -291,8 +291,8 @@ const NavItem = ({ text, icon = null, miniMode, fontWeight = 400, fontSize = 15,
           <HStack spacing={"10px"} color={isActive ? useColorModeValue("brand.500", "brand.200") : useColorModeValue("gray.500", "whiteAlpha.800")} className="hover-text" cursor="pointer">
             {icon && <Box>
               {miniMode ?
-                <IconButton fontSize={"1.1rem"} aria-label="" variant="ghost" color="current" _focus={{ border: null }} icon={<Icon />} />
-                : <Icon />
+                <IconButton fontSize={"1rem"} aria-label="" variant="ghost" color="current" _focus={{ border: null }} icon={<Icon />} />
+                : <Box fontSize="14px"><Icon /></Box>
               }
             </Box>}
             {!miniMode && <Text fontSize={`${fontSize}px`} fontWeight={fontWeight} wordBreak="break-all">{text}</Text>}

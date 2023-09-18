@@ -210,7 +210,7 @@ const Search = memo((props: Props) => {
                         <Box>
                             {miniMode ?
                                 <IconButton fontSize={isLargeScreen ? "1.2rem" : "1rem"} aria-label="" variant="ghost" color="current" _focus={{ border: null }} icon={<FaSearch />} />
-                                : <FaSearch />
+                                : <FaSearch fontSize="14px"/>
                             }
                         </Box>
                         {!miniMode && <Text fontSize={`${fontSize}px`} fontWeight={fontWeight} >{title}</Text>}
