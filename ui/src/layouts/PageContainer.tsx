@@ -31,7 +31,7 @@ import Logo from "src/components/Logo"
 import React, { useMemo, useState } from "react"
 import { measureText } from "utils/measureText"
 import * as Icons from "react-icons/fa"
-import { concat } from "lodash"
+import { cloneDeep, concat, isArray } from "lodash"
 import { useStore } from "@nanostores/react"
 import { commonMsg, sidebarMsg } from "src/i18n/locales/en"
 import useSession from "hooks/use-session"
@@ -51,6 +51,7 @@ import { useNavigate } from "react-router-dom"
 import { MobileBreakpoint } from "src/data/constants"
 import { HamburgerIcon } from "@chakra-ui/icons"
 import CustomScrollbar from "src/components/CustomScrollbar/CustomScrollbar"
+import { locale } from "src/i18n/i18n"
 export let gnavigate
 
 
@@ -72,16 +73,33 @@ export default PageContainer
 const Container = (props: Props) => {
   const { children } = props
   const config = useStore($config)
-  const sidemenu = config.sidemenu
+  const sidemenu = cloneDeep(config.sidemenu)
   const { session } = useSession()
   const { pathname: asPath } = useLocation()
   const t = useStore(commonMsg)
   const t1 = useStore(sidebarMsg)
-
+  let code = useStore(locale)
   const [miniMode, setMiniMode] = useState(storage.get(SidemenuMinimodeKey) ?? true)
   const fullscreen = useFullscreen()
+  
+  sidemenu?.forEach(nav => {
+    try {
+      const titleMap = JSON.parse(nav.title)
+      const title = titleMap[code]
+      if (title) nav.title = title
+    } catch (_) {}
 
-
+    if (isArray(nav.children)) {
+      nav.children.forEach(child => {
+        try {
+          const titleMap = JSON.parse(child.title)
+          const title = titleMap[code]
+          if (title) child.title = title
+        } catch (_) {}
+    
+      })
+    }
+  })
   const onMinimodeChange = () => {
     setMiniMode(!miniMode);
     storage.set(SidemenuMinimodeKey, !miniMode)
