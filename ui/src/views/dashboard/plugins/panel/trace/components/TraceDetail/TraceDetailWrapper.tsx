@@ -46,7 +46,7 @@ const TraceDetailWrapper = ({id,dsId}) => {
 
     const load = async () => {
         let data
-        switch (datasource.type) {
+        switch (datasource?.type) {
             case DatasourceType.Jaeger:
                 const res = await queryJaegerTrace(dsId, id)
              

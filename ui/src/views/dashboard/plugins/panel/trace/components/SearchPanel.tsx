@@ -120,6 +120,10 @@ const TraceSearchPanel = ({ timeRange, dashboardId, panel, onSearch, onSearchIds
             return
         }
 
+        if (!hasVariableFormat(service)) {
+            return
+        }
+        
         const services = replaceWithVariablesHasMultiValues(service)
         const cachedServices = traceServicesCache[dashboardId + panel.id]
         if (!isEqual(services, cachedServices)) {
@@ -129,6 +133,10 @@ const TraceSearchPanel = ({ timeRange, dashboardId, panel, onSearch, onSearchIds
 
     const onVariablesChange = async () => {
         loadOperations()
+        if (!isEmpty(traceIds)) {
+            onSearchIds(traceIds)
+            return 
+        }
         onSearch(service, operation, tags, min, max, limit, useLatestTime)
     }
 
@@ -165,7 +173,7 @@ const TraceSearchPanel = ({ timeRange, dashboardId, panel, onSearch, onSearchIds
                 setTimeout(() => {
                     setInited(true)
                 }, 500)
-                
+
                 break;
 
             default:
