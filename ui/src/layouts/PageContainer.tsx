@@ -85,7 +85,7 @@ const Container = (props: Props) => {
   sidemenu?.forEach(nav => {
     try {
       const titleMap = JSON.parse(nav.title)
-      const title = titleMap[code]
+      const title = titleMap[code]??titleMap["en"]
       if (title) nav.title = title
     } catch (_) {}
 
@@ -93,7 +93,7 @@ const Container = (props: Props) => {
       nav.children.forEach(child => {
         try {
           const titleMap = JSON.parse(child.title)
-          const title = titleMap[code]
+          const title = titleMap[code]??titleMap["en"]
           if (title) child.title = title
         } catch (_) {}
     
