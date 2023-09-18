@@ -31,6 +31,7 @@ import { isSeriesData } from "utils/seriesData"
 import { dispatch } from "use-bus"
 import { PanelForceRebuildEvent } from "src/data/bus-events"
 import { CodeEditorModal } from "components/CodeEditor/CodeEditorModal"
+import { ClickActionsEditor } from "src/views/dashboard/edit-panel/components/ClickActionsEditor"
 
 const LogPanelEditor = memo((props: PanelEditorProps) => {
     const { panel, onChange } = props
@@ -210,6 +211,18 @@ const LogPanelEditor = memo((props: PanelEditorProps) => {
                     panel.plugins.log.search.labels = v
                 })}/>
             </PanelEditItem>
+        </PanelAccordion>
+        <PanelAccordion title={t.interaction}>
+            <PanelEditItem title={t.enable}>
+                <Switch isChecked={panel.plugins.log.interaction.enable} onChange={(e) => onChange((panel: Panel) => {
+                    panel.plugins.log.interaction.enable = e.target.checked
+                })} />
+            </PanelEditItem>
+            {panel.plugins.log.interaction.enable && <ClickActionsEditor panel={panel} onChange={v => {
+                onChange((panel: Panel) => {
+                    panel.plugins.log.interaction.actions = v
+                })
+            }} actions={panel.plugins.log.interaction.actions}/>}
         </PanelAccordion>
         <PanelAccordion title="Thresholds">
             <ThresholdEditor labels={[]} value={panel.plugins.log.thresholds} onChange={(v) => onChange((panel: Panel) => {

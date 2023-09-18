@@ -164,6 +164,10 @@ export interface LogSettings {
         log: string 
         labels: string 
     }
+    interaction: {
+        enable: boolean
+        actions: ClickAction[]
+    }
     thresholds: LogThreshold[]
 }
 

@@ -461,6 +461,10 @@ function onClick(data, map, navigate, setVariable, setDateTime, $variables) {
                 log: "",
                 labels: "",
             },
+            interaction: {
+                enable: false,
+                actions: []
+            },
             thresholds: [{ type: null, value: null, key: null, color: 'inherit' }]
         },
         [PanelType.Bar]: {
