@@ -58,10 +58,6 @@ const TraceSearchPanel = ({ timeRange, dashboardId, panel, onSearch, onSearchIds
     const ds = getDatasource(panel.datasource.id, datasources)
 
     useEffect(() => {
-        setTimeout(() => {
-            setInited(true)
-        }, 500)
-
         if (!isEmpty(initTraceIds)) {
             onSearchIds(initTraceIds)
             return 
@@ -165,7 +161,11 @@ const TraceSearchPanel = ({ timeRange, dashboardId, panel, onSearch, onSearchIds
                         setService(ss[0])
                     }
                 }
-
+                
+                setTimeout(() => {
+                    setInited(true)
+                }, 500)
+                
                 break;
 
             default:
