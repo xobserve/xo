@@ -81,14 +81,16 @@ const Search = memo((props: Props) => {
             const r2 = requestApi.get(`/dashboard/starred`)
             const r3 = requestApi.get("/teams/all")
             const res = await Promise.all([r1, r2, r3])
-    
-            setRawDashboards(res[0].data)
+            
+            const teams = res[2].data
+            const dashboards = res[0].data.filter((dash: Dashboard) => teams.find(team => team.id == dash.ownedBy))
+            setRawDashboards(dashboards)
             const starred = new Set<string>()
             for (const id of res[1].data) {
                 starred.add(id)
             }
             setStarredDashIds(starred)
-            setTeams(res[2].data)
+            setTeams(teams)
         }   
     }
 
@@ -164,7 +166,7 @@ const Search = memo((props: Props) => {
 
         return [result, tagCount, teamCount]
     }, [query, rawDashboards, caseSensitive, selectedTags, selectedTeams, filterStarred, starredDashIds])
-
+    
     const dashboards: Dashboard[] | Map<string, Dashboard[]> = useMemo(() => {
         if (layout == "list") {
             return dashboards1

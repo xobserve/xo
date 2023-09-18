@@ -128,7 +128,7 @@ func (s *Server) Start() error {
 		r.POST("/dashboard/save", IsLogin(), otelPlugin, dashboard.SaveDashboard)
 		r.GET("/dashboard/team/:id", IsLogin(), dashboard.GetTeamDashboards)
 		r.GET("/dashboard/history/:id", IsLogin(), otelPlugin, dashboard.GetHistory)
-		r.GET("/dashboard/simpleList", otelPlugin, dashboard.GetSimpleList)
+		r.GET("/dashboard/simpleList", IsLogin(), otelPlugin, dashboard.GetSimpleList)
 		r.POST("/dashboard/star/:id", IsLogin(), dashboard.Star)
 		r.POST("/dashboard/unstar/:id", IsLogin(), dashboard.UnStar)
 		r.GET("/dashboard/starred", IsLogin(), dashboard.GetAllStarred)
