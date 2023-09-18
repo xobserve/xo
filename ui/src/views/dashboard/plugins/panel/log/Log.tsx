@@ -14,13 +14,13 @@
 import React, { memo, useCallback, useEffect, useMemo, useState } from "react";
 import { Box, Center, Flex, StackDivider, Text, VStack, useToast } from "@chakra-ui/react"
 import { PanelProps } from "types/dashboard"
-import { LogSeries, Log, LogLabel, LogChartView } from "types/plugins/log";
+import { LogSeries, Log,  LogChartView } from "types/plugins/log";
 import { FaFilter } from "react-icons/fa";
 import LogToolbar from "./components/Toolbar";
 import storage from "utils/localStorage";
 import LogItem from "./components/LogItem";
 import { isLogSeriesData } from "./utils";
-import { clone, cloneDeep, isFunction, remove, sortBy } from "lodash";
+import { clone, isFunction, sortBy } from "lodash";
 import LogChart from "./components/Chart";
 import { isEmpty } from "utils/validate";
 import CustomScrollbar from "src/components/CustomScrollbar/CustomScrollbar";
@@ -30,7 +30,6 @@ import NoData from "src/views/dashboard/components/PanelNoData";
 import { genDynamicFunction } from "utils/dashboard/dynamicCall";
 import lodash from 'lodash'
 import moment from "moment";
-import { is } from "date-fns/locale";
 
 
 

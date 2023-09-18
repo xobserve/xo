@@ -22,6 +22,7 @@ import { $variables } from "src/views/variables/store"
 import { getDatasource } from "utils/datasource"
 import { MobileBreakpoint } from "src/data/constants"
 import { $datasources } from "src/views/datasource/store"
+import { addParamToUrl } from "utils/url"
 interface Props {
     panel: Panel
     onSearch: any
@@ -42,7 +43,8 @@ const TraceSearchPanel = ({ timeRange, dashboardId, panel, onSearch, onSearchIds
     const [operations, setOperations] = useState([])
 
     const lastSearch = useMemo(() => storage.get(TraceSearchKey + dashboardId + panel.id) ?? {}, [])
-    const [initService, initOperation, initTags, initMax, initMin, initLimit, initTraceIds] = getInitParams(searchParams, panel, lastSearch)
+    const [initService, initOperation, initTags, initMax, initMin, initLimit] = getInitParams(searchParams, panel, lastSearch)
+    const initTraceIds = searchParams.get('traceIds')
     const [service, setService] = useState<string>(initService)
     const [operation, setOperation] = useState<string>(initOperation)
     const [tags, setTags] = useState<string>(initTags)
@@ -50,16 +52,32 @@ const TraceSearchPanel = ({ timeRange, dashboardId, panel, onSearch, onSearchIds
     const [min, setMin] = useState<string>(initMin)
     const [limit, setLimit] = useState<number>(initLimit)
     const [traceIds, setTraceIds] = useState<string>(initTraceIds)
-
+    
     const [useLatestTime, setUseLatestTime] = useState(true)
     const datasources = useStore($datasources)
     const ds = getDatasource(panel.datasource.id, datasources)
 
     useEffect(() => {
+        setTimeout(() => {
+            setInited(true)
+        }, 500)
+
+        if (!isEmpty(initTraceIds)) {
+            onSearchIds(initTraceIds)
+            return 
+        }
+
+        if (service) {
+            loadOperations()
+            onSearch(service, operation, tags, min, max, limit, useLatestTime)
+        } 
+
         return () => {
             delete traceServicesCache[dashboardId + panel.id]
         }
     }, [])
+
+
 
     useEffect(() => {
         if (inited) {
@@ -78,15 +96,30 @@ const TraceSearchPanel = ({ timeRange, dashboardId, panel, onSearch, onSearchIds
     }, [ds.type])
 
     useEffect(() => {
-        if (service) {
-            loadOperations()
-            onSearch(service, operation, tags, min, max, limit, useLatestTime)
-        } else {
-            setOperations([])
+        if (inited) {
+            if (!isEmpty(traceIds)) {
+                onSearchIds(traceIds)
+                return 
+            }
+
+            if (service) {
+                loadOperations()
+                onSearch(service, operation, tags, min, max, limit, useLatestTime)
+            } else {
+                setOperations([])
+            }
         }
-    }, [service])
+    }, [service, traceIds])
 
     useEffect(() => {
+        if (inited) {
+            setTraceIds(initTraceIds)
+        }
+    },[initTraceIds])
+    useEffect(() => {
+        if (!inited) {
+            return 
+        }
         if (hasVariableFormat(operation)) {
             return
         }
@@ -133,10 +166,6 @@ const TraceSearchPanel = ({ timeRange, dashboardId, panel, onSearch, onSearchIds
                     }
                 }
 
-                setTimeout(() => {
-                    setInited(true)
-                }, 500)
-
                 break;
 
             default:
@@ -166,7 +195,7 @@ const TraceSearchPanel = ({ timeRange, dashboardId, panel, onSearch, onSearchIds
                 break;
         }
     }
-
+    
     const onClickSearch = () => {
         if (!isEmpty(traceIds)) {
             onSearchIds(traceIds)
@@ -208,7 +237,7 @@ const TraceSearchPanel = ({ timeRange, dashboardId, panel, onSearch, onSearchIds
             </FormSection>
             <Divider pt="2" />
             <FormSection title="Trace ids" spacing={1} desc={t1.traceIdsTips}>
-                <EditorInputItem  placeholder={t1.traceIdsInputTips} value={traceIds} onChange={v => setTraceIds(v)} size="md" />
+                <EditorInputItem key={traceIds}  placeholder={t1.traceIdsInputTips} value={traceIds} onChange={v => {setTraceIds(v); addParamToUrl({traceIds: v})}} size="md" />
             </FormSection>
             <Flex flexDir={isLargeScreen ? "row" : "column"} justifyContent="space-between" gap={3} pt="2">
                 <Button variant="outline" width={isLargeScreen ? "120px" : null} size={size} onClick={onClickSearch}>{isLargeScreen ? t1.findTraces : "Search"}</Button>
@@ -241,6 +270,5 @@ const getInitParams = (searchParams, panel, lastSearch) => {
     const max = searchParams.get('max') ?? (lastSearch.max ?? '')
     const min = searchParams.get('min') ?? (lastSearch.min ?? '')
     const limit = searchParams.get('limit') ?? (lastSearch.limit ?? 100)
-    const traceIds = searchParams.get('traceIds') ?? null
-    return [service, operation, tags, max, min, limit, traceIds]
+    return [service, operation, tags, max, min, limit]
 }
