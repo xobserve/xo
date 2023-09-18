@@ -152,20 +152,42 @@ func GetDashboard(c *gin.Context) {
 			String(fmt.Sprintf("SELECT * FROM dashboard WHERE id=%s", id)),
 	)
 
+	log.WithTrace(traceCtx).Info("Start to get dashboard", zap.String("id", id), zap.String("username", u.Username))
+
 	dash, err := models.QueryDashboard(id)
 	if err != nil {
 		span.SetStatus(codes.Error, err.Error())
 		span.End()
 		if err == sql.ErrNoRows {
+			log.WithTrace(traceCtx).Warn("Error query dashbaord", zap.String("username", u.Username), zap.Error(err))
 			c.JSON(404, common.RespError(fmt.Sprintf("dashboard id `%s` not found", id)))
 			return
 		}
-		logger.Warn("query dashboard error", "error", err)
+		log.WithTrace(traceCtx).Warn("Error query dashbaord", zap.String("username", u.Username), zap.Error(err))
 		c.JSON(500, common.RespError(e.Internal))
 		return
 	}
 
 	span.End()
+
+	_, span0 := ot.Tracer.Start(traceCtx, "checkUserPrivilege", trace.WithSpanKind(trace.SpanKindClient))
+	member, err := models.QueryTeamMember(dash.OwnedBy, u.Id)
+	if err != nil {
+		log.WithTrace(traceCtx).Warn("Error query team member", zap.String("username", u.Username), zap.Error(err))
+		c.JSON(500, common.RespError(e.Internal))
+		span0.SetStatus(codes.Error, err.Error())
+		span0.End()
+		return
+	}
+	if member.Id == 0 {
+		log.WithTrace(traceCtx).Warn("Error no permission", zap.String("username", u.Username), zap.Error(err))
+		c.JSON(http.StatusForbidden, common.RespError("you are not the team menber to view this dashboard"))
+		span0.SetStatus(codes.Error, "no permission")
+		span0.End()
+		return
+	}
+	span0.End()
+
 	_, span1 := ot.Tracer.Start(traceCtx, "getTeam", trace.WithSpanKind(trace.SpanKindClient))
 	defer span1.End()
 	span1.SetAttributes(
@@ -181,7 +203,7 @@ func GetDashboard(c *gin.Context) {
 	dash.Editable = true
 	dash.OwnerName = teamName
 
-	log.WithTrace(traceCtx).Info("Get dashboard", zap.String("id", dash.Id), zap.String("title", dash.Title), zap.String("username", u.Username), zap.String("ip", c.ClientIP()))
+	log.WithTrace(traceCtx).Info("Get dashboard ok", zap.String("id", dash.Id), zap.String("title", dash.Title), zap.String("username", u.Username), zap.String("ip", c.ClientIP()))
 
 	c.JSON(200, common.RespSuccess(dash))
 }

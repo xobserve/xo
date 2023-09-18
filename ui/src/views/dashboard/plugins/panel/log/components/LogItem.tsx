@@ -107,9 +107,9 @@ const LogItem = memo((props: LogItemProps) => {
             {options.labels.display.length > 0 &&
                 <HStack alignItems="start" maxW="100%" spacing={options.labels.layout == LayoutOrientation.Horizontal ? 2 : 3}>
                     {
-                        Object.keys(labels).map(key => options.labels.display.includes(key) && <LabelLayout alignItems="start" key={key + labels[key]} spacing={0} width={labelWidthMap[key] ?? options.labels.width ?? 100} >
-                            <LabelName name={key} color={log.labelHighlight.indexOf(key.toLowerCase()) >= 0 ? paletteColorNameToHex(options.styles.highlightColor) : labelNameColor(formatLabelId(key, labels[key]))} />
-                            {options.labels.layout == LayoutOrientation.Horizontal &&
+                        Object.keys(labels).map(key => options.labels.display.includes(key) &&  <LabelLayout alignItems="start" key={key + labels[key]} spacing={0} width={labelWidthMap[key] ?? options.labels.width ?? 100} >
+                            <LabelName name={!isEmpty(labels[key]) && key} color={log.labelHighlight.indexOf(key.toLowerCase()) >= 0 ? paletteColorNameToHex(options.styles.highlightColor) : labelNameColor(formatLabelId(key, labels[key]))} />
+                            {options.labels.layout == LayoutOrientation.Horizontal && !isEmpty(labels[key]) &&
                                 <Text>=</Text>}
                             <LabelValue value={labels[key]} color={log.labelHighlight.indexOf(labels[key]?.toLowerCase()) >= 0 ? paletteColorNameToHex(options.styles.highlightColor) : options.styles.labelValueColor} maxLines={options.labels.maxValueLines} />
                         </LabelLayout>)
@@ -147,7 +147,7 @@ const LogItem = memo((props: LogItemProps) => {
                     <Divider />
                     </>}
                     {
-                        Object.keys(labels).map(key => <HStack key={key + labels[key]} px="2" spacing={1}  >
+                        Object.keys(labels).map(key => !isEmpty(labels[key]) &&  <HStack key={key + labels[key]} px="2" spacing={1}  >
                             <Box minWidth={isMobileScreen ? "10em" : "20em"}>
                                 <LabelName name={key} color={labelNameColor(formatLabelId(key, labels[key]))} />
                             </Box>
