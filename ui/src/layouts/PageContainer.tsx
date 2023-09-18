@@ -188,7 +188,7 @@ const Container = (props: Props) => {
                     :
                     <Box cursor="pointer" onClick={onMinimodeChange} opacity="0.2" position="absolute" right="-7px" top="14px" className="hover-text" p="1" fontSize="0.7rem" zIndex={1}><Icons.FaChevronLeft /></Box>
                   }
-                  <VStack alignItems="left" mt={3} spacing={miniMode ? 1 : "10px"}>
+                  <VStack alignItems="left" mt={3} spacing={miniMode ? "2px" : "10px"}>
                   {sidemenu?.map((link, index) => {
                     return <Box key={link.url} >
                       <Box>
@@ -208,7 +208,7 @@ const Container = (props: Props) => {
                   </>}
                 </Flex>
                 <Flex id="sidemenu-bottom" flexDir="column" pb="2" alignItems={miniMode ? "center" : "left"} color={textColor}   >
-                  <VStack alignItems="left" spacing={miniMode ? 1 : 3}>
+                  <VStack alignItems="left" spacing={miniMode ? "2px" : 3}>
                     {bottomNavs.map((nav, index) => {
                       if (nav.url == ReserveUrls.Search) {
                         return <Search key={nav.url} title={nav.title} miniMode={miniMode} sideWidth={sideWidth} fontSize={navSize} />

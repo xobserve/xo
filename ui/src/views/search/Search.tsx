@@ -209,7 +209,7 @@ const Search = memo((props: Props) => {
                     <HStack color={isOpen ? useColorModeValue("brand.500", "brand.200") : 'inherit'} className="hover-text" cursor="pointer" onClick={onSearchOpen}>
                         <Box>
                             {miniMode ?
-                                <IconButton fontSize={isLargeScreen ? "1.2rem" : "1rem"} aria-label="" variant="ghost" color="current" _focus={{ border: null }} icon={<FaSearch />} />
+                                <IconButton fontSize={isLargeScreen ? "1rem" : "1rem"} aria-label="" variant="ghost" color="current" _focus={{ border: null }} icon={<FaSearch />} />
                                 : <FaSearch fontSize="14px"/>
                             }
                         </Box>
