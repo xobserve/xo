@@ -300,8 +300,8 @@ const NavItem = ({ text, icon = null, miniMode, fontWeight = 400, fontSize = 15,
         </Link>
       </Box>}
       showHeaderBorder={children?.length > 0}
-      headerComponent={<Link to={children?.length > 0 ? children[0].url : url}>{text}</Link>}
-      bodyComponent={children?.length > 0 && <VStack alignItems="left" spacing="3" py="2">
+      headerComponent={<Link to={children?.length > 0 ? children[0].url : url}><Text fontSize={fontSize}>{text}</Text></Link>}
+      bodyComponent={children?.length > 0 && <VStack alignItems="left" spacing="3" py="2" fontSize={fontSize}>
         {children?.length > 0 && children.map(subLink =>
           <Link to={subLink.url} key={subLink.url}>
             <Text color={asPath == subLink.url ? useColorModeValue("brand.500", "brand.200") : textColor}>{subLink.title}</Text>
