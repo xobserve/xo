@@ -1,3 +1,16 @@
+## V0.9.0 (2023-09-19)
+
+### Features
+
+- Play demo: https://play.datav.io
+- Overall fixing and updating:
+  - fix 80+ bugs
+  - add small features 30+
+
+### Commit Statistics
+
+- 249 commits since last release in 20 days
+
 ## V0.8.0 (2023-08-31)
 
 ### Features
