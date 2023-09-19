@@ -1,5 +1,7 @@
 ## V0.9.0 (2023-09-19)
 
+We are now production ready!
+
 ### Features
 
 - Play demo: https://play.datav.io
