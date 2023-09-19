@@ -177,6 +177,7 @@
     "allValue": "支持全选",
     "queryValue": "查询值",
     "defaultValue": "默认值",
+    "defaultValueTips": "给变量一个默认值，当用户还没为该变量选择任何值时，默认值将被使用",
     "varValues": "变量值",
     "selectDs": "选择数据源",
     "OnDashboardLoad": "加载仪表盘时",

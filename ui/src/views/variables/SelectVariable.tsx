@@ -262,9 +262,9 @@ export const setVariableSelected = (variables: Variable[]) => {
         const selected = selectedInUrl[v.name] ?? sv[v.id]
         if (!selected) {
             if (v.type == VariableQueryType.TextInput) {
-                v.selected = v.value
+                v.selected = v.default
             } else {
-                v.selected = v.values && v.values[0]
+                v.selected = isEmpty(v.default) ? (v.values && v.values[0]) : v.default
             }
         } else {
             v.selected = selected
@@ -383,6 +383,10 @@ export const queryVariableValues = async (v: Variable, datasources: Datasource[]
 }
 
 const autoSetSelected = (v: Variable, result: string[]) => {
+    // if (!isEmpty(v.default)) {
+    //     v.selected = v.default
+    //     return 
+    // }
     for (const value of result) {
         if (value != VarialbeAllOption) {
             v.selected = value

@@ -27,5 +27,15 @@ func update() error {
 		}
 	}
 
+	// default_selected VARCHAR(255),
+	var defaultSelected bool
+	err = db.Conn.QueryRow("SELECT default_selected FROM variable limit 1").Scan(&defaultSelected)
+	if err != nil && e.IsErrNoColumn(err) {
+		_, err = db.Conn.Exec("ALTER TABLE variable ADD COLUMN default_selected VARCHAR(255)")
+		if err != nil {
+			return errors.New("update storage error:" + err.Error())
+		}
+	}
+
 	return nil
 }

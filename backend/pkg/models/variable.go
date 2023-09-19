@@ -19,6 +19,7 @@ type Variable struct {
 	Name        string    `json:"name"`
 	Type        string    `json:"type"`
 	Value       string    `json:"value"`
+	Default     *string   `json:"default"` // default selected
 	Datasource  int       `json:"datasource"`
 	Desc        string    `json:"description"`
 	Created     time.Time `json:"created"`

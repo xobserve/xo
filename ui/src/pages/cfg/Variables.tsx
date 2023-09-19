@@ -224,7 +224,7 @@ export const VariablesTable = ({ variables, onEdit, onRemove }: TableProps) => {
                     </Tr>
                 </Thead>
                 <Tbody>
-                    {variables.map((variable,i ) => {
+                    {variables.map((variable, i) => {
                         return <Tr key={variable.name} className={`${variable.id == selectedVariable?.id ? "highlight-bg" : ''}`}>
                             <Td>{variable.name}</Td>
                             {
@@ -392,9 +392,9 @@ export const EditVariable = ({ v, isOpen, onClose, isEdit, onSubmit, isGlobal = 
                             <FormItem title={t1.allValue} alignItems="center">
                                 <Switch defaultChecked={variable.enableAll} onChange={(e) => setVariable({ ...variable, enableAll: e.currentTarget.checked })} />
                             </FormItem>
-                            
+
                             <FormItem title={t.sortWeight} desc="Larger weight means higher sort priority when being display in dashboard">
-                                <EditorNumberItem size="lg" placeholder="auto" value={variable.sortWeight} min={0} max={100} step={1}  onChange={v => { setVariable({ ...variable, sortWeight: v }) }} />
+                                <EditorNumberItem size="lg" placeholder="auto" value={variable.sortWeight} min={0} max={100} step={1} onChange={v => { setVariable({ ...variable, sortWeight: v }) }} />
                             </FormItem>
 
                         </FormSection>
@@ -413,8 +413,8 @@ export const EditVariable = ({ v, isOpen, onClose, isEdit, onSubmit, isGlobal = 
                                 }} />
                             </FormItem>
 
-                            {(variable.type == VariableQueryType.Custom || variable.type == VariableQueryType.TextInput) && <FormItem title={variable.type == VariableQueryType.Custom ? t1.queryValue : t1.defaultValue}>
-                                <Input width="400px" placeholder={variable.type == VariableQueryType.Custom ? t1.valueTips : "input a default value"} value={variable.value} onChange={e => { setVariable({ ...variable, value: e.currentTarget.value?.trim() }) }} onBlur={() => onQueryResult({ error: null, data: variable.value.split(',') })} />
+                            {(variable.type == VariableQueryType.Custom) && <FormItem title={t1.queryValue}>
+                                <Input width="400px" placeholder={t1.valueTips} value={variable.value} onChange={e => { setVariable({ ...variable, value: e.currentTarget.value?.trim() }) }} onBlur={() => onQueryResult({ error: null, data: variable.value.split(',') })} />
                             </FormItem>}
 
                             {variable.type == VariableQueryType.Query && <>
@@ -445,8 +445,9 @@ export const EditVariable = ({ v, isOpen, onClose, isEdit, onSubmit, isGlobal = 
                             }} />
                         </FormSection>
 
-
-
+                        <FormSection title={t1.defaultValue} desc={t1.defaultValueTips} >
+                            <Input width="400px" placeholder={"input a default value"} value={variable.default} onChange={e => { setVariable({ ...variable, default: e.currentTarget.value?.trim() }) }} />
+                        </FormSection>
                         <FormSection title={t1.varValues} >
                             <Box pt="1">
                                 {isArray(filterValues) && filterValues.slice(0, displayCount).map(v => <Tag key={v} size="sm" variant="outline" ml="1">{v}</Tag>)}

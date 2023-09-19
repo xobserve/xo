@@ -16,6 +16,7 @@ export interface Variable {
     type: string
     datasource?: number
     value?: string // query statement
+    default?: string
     description?: string
     created?: string
     values?: string[]

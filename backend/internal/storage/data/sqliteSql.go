@@ -62,6 +62,7 @@ CREATE TABLE IF NOT EXISTS variable (
     name VARCHAR(60) NOT NULL,
     type VARCHAR(10) NOT NULL,
     value MEDIUMTEXT,
+    default_selected VARCHAR(255),
     description VARCHAR(255) DEFAULT '',
     datasource INTEGER,
     refresh VARCHAR(32),

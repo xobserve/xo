@@ -187,6 +187,7 @@ export const cfgVariablemsg = i18n("cfgVariable", {
   "allValue": "Include all",
   "queryValue": "Query values",
   "defaultValue": "Default value",
+  "defaultValueTips": "give a default value to variable, it will be used when user has not select a value for this variable",
   "varValues": "Variable Values",
   "selectDs": "Select Datasource",
   "OnDashboardLoad": "On dashboard load",
@@ -224,7 +225,7 @@ export const cfgTeam = i18n("cfgTeam", {
   "leaveTeam": "Leave Team",
   "isPublic": "Public",
   "isPublicTips": "When set to public, users not in this team can also view team info and dashboards",
-  
+
   "sidemenuTip1": "Customize the top section of your team's side menu, you can add, edit, delete and reorder the menu items.",
   "sidemenuTip2": "Menu item format",
   "sidemenuTip3": "Url format",
