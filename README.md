@@ -74,6 +74,19 @@ Grafana is a great product, and it is the most popular dashboarding tool in the 
 
 ## Demo images
 
-### Interactivity
+<img src="https://github.com/data-observe/assets/blob/main/datav-readme/home-example.jpg?raw=true" />
 
-<video src="https://github.com/data-observe/assets/blob/main/datav-readme/interactions.mov?raw=true"  />
+<img src="https://github.com/data-observe/assets/blob/main/datav-readme/runtime-example.jpg?raw=true" />
+
+<img src="https://github.com/data-observe/assets/blob/main/datav-readme/host-example.jpg?raw=true" />
+
+<img src="https://github.com/data-observe/assets/blob/main/datav-readme/trace-search-example.jpg?raw=true" />
+
+<img src="https://github.com/data-observe/assets/blob/main/datav-readme/trace-example.jpg?raw=true" />
+
+<img src="https://github.com/data-observe/assets/blob/main/datav-readme/log-example.jpg?raw=true" />
+
+<img src="https://github.com/data-observe/assets/blob/main/datav-readme/alert-example.jpg?raw=true" />
+<!-- ### Interactivity
+
+<video src="https://github.com/data-observe/assets/blob/main/datav-readme/interactions.mov?raw=true"  /> -->
