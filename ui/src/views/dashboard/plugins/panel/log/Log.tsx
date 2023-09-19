@@ -202,7 +202,7 @@ const LogPanel = (props: LogPanelProps) => {
                 }
             }
             const lowerContent = v.content.toLowerCase()
-            if (search == "") {
+            if (isEmpty(search)) {
                 result.push(v)
             } else {
                 const isOr = search.includes("||")

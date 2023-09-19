@@ -262,7 +262,7 @@ export const setVariableSelected = (variables: Variable[]) => {
         const selected = selectedInUrl[v.name] ?? sv[v.id]
         if (!selected) {
             if (v.type == VariableQueryType.TextInput) {
-                v.selected = v.default
+                v.selected = v.default ?? ""
             } else {
                 v.selected = isEmpty(v.default) ? (v.values && v.values[0]) : v.default
             }
