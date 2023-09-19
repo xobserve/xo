@@ -4,7 +4,7 @@
 
 
 <h2 align="center">
-  Most powerful data visulization platform for APM and Observability, 100% open-source.
+  Extremely powerful data visulization platform for APM and Observability, 100% opensource.
 </h2>
 
 <p align="center">
