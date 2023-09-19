@@ -24,6 +24,7 @@ import ColorTag from "../../../components/ColorTag"
 import { requestApi } from "utils/axios/request"
 import { useNavigate } from "react-router"
 import { MobileBreakpoint } from "src/data/constants"
+import RadionButtons from "components/RadioButtons"
 
 interface Props {
     dashboard: Dashboard
@@ -76,7 +77,7 @@ const GeneralSettings = ({ dashboard, onChange }: Props) => {
             navigate(`/cfg/team/${dashboard.ownedBy}/dashboards`)
         }, 500)
     }
-    
+
     const [isLargeScreen] = useMediaQuery(MobileBreakpoint)
     return (<>
         <Form spacing={5} maxW="600px" sx={{
@@ -90,6 +91,11 @@ const GeneralSettings = ({ dashboard, onChange }: Props) => {
                 </FormItem>
                 <FormItem title={t.description}>
                     <Input value={desc} onChange={e => setDesc(e.currentTarget.value)} onBlur={() => onChange((draft: Dashboard) => { draft.data.description = desc })} placeholder={t.inputTips({ name: t.description })} />
+                </FormItem>
+                <FormItem title={t1.visibleTo} desc="Controls who can see this dashboard">
+                    <RadionButtons options={[{ label: "Team", value: "team" }, { label: "All", value: "all" }]} value={dashboard.visibleTo} onChange={v => onChange((draft: Dashboard) => {
+                        draft.visibleTo = v
+                    })} />
                 </FormItem>
                 {/* <Box>
                 <Text textStyle="title">Editable</Text>

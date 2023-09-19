@@ -109,8 +109,8 @@ func SaveDashboard(c *gin.Context) {
 		return
 	}
 	if !isUpdate {
-		_, err := db.Conn.Exec(`INSERT INTO dashboard (id,title, owned_by, created_by,tags, data,created,updated) VALUES (?,?,?,?,?,?,?,?)`,
-			dash.Id, dash.Title, dash.OwnedBy, dash.CreatedBy, tags, jsonData, dash.Created, dash.Updated)
+		_, err := db.Conn.Exec(`INSERT INTO dashboard (id,title, owned_by,visible_to, created_by,tags, data,created,updated) VALUES (?,?,?,?,?,?,?,?,?)`,
+			dash.Id, dash.Title, dash.OwnedBy, dash.VisibleTo, dash.CreatedBy, tags, jsonData, dash.Created, dash.Updated)
 		if err != nil {
 			if e.IsErrUniqueConstraint(err) {
 				c.JSON(409, common.RespError("dashboard id already exists"))
@@ -121,8 +121,8 @@ func SaveDashboard(c *gin.Context) {
 			return
 		}
 	} else {
-		res, err := db.Conn.Exec(`UPDATE dashboard SET title=?,tags=?,data=?,owned_by=?,updated=? WHERE id=?`,
-			dash.Title, tags, jsonData, dash.OwnedBy, dash.Updated, dash.Id)
+		res, err := db.Conn.Exec(`UPDATE dashboard SET title=?,tags=?,data=?,owned_by=?,visible_to=?,updated=? WHERE id=?`,
+			dash.Title, tags, jsonData, dash.OwnedBy, dash.VisibleTo, dash.Updated, dash.Id)
 		if err != nil {
 			logger.Error("update dashboard error", "error", err)
 			c.JSON(500, common.RespInternalError())
@@ -170,23 +170,25 @@ func GetDashboard(c *gin.Context) {
 
 	span.End()
 
-	_, span0 := ot.Tracer.Start(traceCtx, "checkUserPrivilege", trace.WithSpanKind(trace.SpanKindClient))
-	member, err := models.QueryTeamMember(dash.OwnedBy, u.Id)
-	if err != nil {
-		log.WithTrace(traceCtx).Warn("Error query team member", zap.String("username", u.Username), zap.Error(err))
-		c.JSON(500, common.RespError(e.Internal))
-		span0.SetStatus(codes.Error, err.Error())
+	if dash.VisibleTo != "all" && !u.Role.IsAdmin() {
+		_, span0 := ot.Tracer.Start(traceCtx, "checkUserPrivilege", trace.WithSpanKind(trace.SpanKindClient))
+		member, err := models.QueryTeamMember(dash.OwnedBy, u.Id)
+		if err != nil {
+			log.WithTrace(traceCtx).Warn("Error query team member", zap.String("username", u.Username), zap.Error(err))
+			c.JSON(500, common.RespError(e.Internal))
+			span0.SetStatus(codes.Error, err.Error())
+			span0.End()
+			return
+		}
+		if member.Id == 0 {
+			log.WithTrace(traceCtx).Warn("Error no permission", zap.String("username", u.Username), zap.Error(err))
+			c.JSON(http.StatusForbidden, common.RespError("you are not the team menber to view this dashboard"))
+			span0.SetStatus(codes.Error, "no permission")
+			span0.End()
+			return
+		}
 		span0.End()
-		return
 	}
-	if member.Id == 0 {
-		log.WithTrace(traceCtx).Warn("Error no permission", zap.String("username", u.Username), zap.Error(err))
-		c.JSON(http.StatusForbidden, common.RespError("you are not the team menber to view this dashboard"))
-		span0.SetStatus(codes.Error, "no permission")
-		span0.End()
-		return
-	}
-	span0.End()
 
 	_, span1 := ot.Tracer.Start(traceCtx, "getTeam", trace.WithSpanKind(trace.SpanKindClient))
 	defer span1.End()
@@ -323,7 +325,7 @@ func GetSimpleList(c *gin.Context) {
 			String("SELECT * FROM dashboard"),
 	)
 
-	rows, err := db.Conn.Query("SELECT id,title, owned_by, tags, weight FROM dashboard ORDER BY weight DESC,created DESC")
+	rows, err := db.Conn.Query("SELECT dashboard.id,dashboard.title, dashboard.owned_by,team.name,dashboard.visible_to, dashboard.tags, dashboard.weight FROM dashboard INNER JOIN team ON dashboard.owned_by = team.id ORDER BY dashboard.weight DESC,dashboard.created DESC")
 	if err != nil {
 		logger.Warn("query simple dashboards error", "error", err)
 		c.JSON(500, common.RespError(e.Internal))
@@ -333,7 +335,7 @@ func GetSimpleList(c *gin.Context) {
 	for rows.Next() {
 		dash := &models.Dashboard{}
 		var rawTags []byte
-		err = rows.Scan(&dash.Id, &dash.Title, &dash.OwnedBy, &rawTags, &dash.SortWeight)
+		err = rows.Scan(&dash.Id, &dash.Title, &dash.OwnedBy, &dash.OwnerName, &dash.VisibleTo, &rawTags, &dash.SortWeight)
 		if err != nil {
 			logger.Warn("get simple dashboards scan error", "error", err)
 			c.JSON(500, common.RespError(e.Internal))

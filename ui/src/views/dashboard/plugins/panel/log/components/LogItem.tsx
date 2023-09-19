@@ -105,7 +105,7 @@ const LogItem = memo((props: LogItemProps) => {
                 </Text>}
             </HStack>
             {options.labels.display.length > 0 &&
-                <HStack alignItems="start" maxW="100%" spacing={options.labels.layout == LayoutOrientation.Horizontal ? 2 : 3}>
+                <HStack alignItems="center" maxW="100%" spacing={options.labels.layout == LayoutOrientation.Horizontal ? 2 : 3}>
                     {
                         Object.keys(labels).map(key => options.labels.display.includes(key) &&  <LabelLayout alignItems="start" key={key + labels[key]} spacing={0} width={labelWidthMap[key] ?? options.labels.width ?? 100} >
                             <LabelName name={!isEmpty(labels[key]) && key} color={log.labelHighlight.indexOf(key.toLowerCase()) >= 0 ? paletteColorNameToHex(options.styles.highlightColor) : labelNameColor(formatLabelId(key, labels[key]))} />
@@ -165,7 +165,7 @@ const LogItem = memo((props: LogItemProps) => {
 export default LogItem
 
 const LabelName = ({ name, color }: { name: string; color: string }) => {
-    return <Text fontWeight={500} color={paletteColorNameToHex(color)} minW="fit-content">
+    return <Text  color={paletteColorNameToHex(color)} minW="fit-content">
         {name}
     </Text>
 }

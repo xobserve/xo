@@ -20,6 +20,7 @@ export interface Dashboard {
     id: string
     title: string
     ownedBy: number
+    visibleTo: "team" | "all"
     ownerName?:string
     data: DashboardData
     weight: number

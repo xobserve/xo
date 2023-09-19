@@ -46,6 +46,17 @@ func Init() error {
 	if err != nil {
 		return err
 	}
+
+	// update table structure to current version
+	err = update()
+	if err != nil {
+		return err
+	}
+	err = createIndex()
+	if err != nil {
+		return err
+	}
+
 	// insert admin user
 	err = initTables()
 	if err != nil {
@@ -101,6 +112,16 @@ func connectDatabase() error {
 func createTables() error {
 	if config.Data.Database.ConnectTo == "sqlite" {
 		_, err := db.Conn.Exec(storageData.SqliteSQL)
+		return err
+	}
+
+	return nil
+
+}
+
+func createIndex() error {
+	if config.Data.Database.ConnectTo == "sqlite" {
+		_, err := db.Conn.Exec(storageData.SqliteIndex)
 		return err
 	}
 

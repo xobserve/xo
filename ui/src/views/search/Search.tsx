@@ -82,15 +82,23 @@ const Search = memo((props: Props) => {
             const r3 = requestApi.get("/teams/all")
             const res = await Promise.all([r1, r2, r3])
             
-            const teams = res[2].data
-            const dashboards = res[0].data.filter((dash: Dashboard) => teams.find(team => team.id == dash.ownedBy))
+            const userInTeams = res[2].data
+            const dashboards: Dashboard[] = res[0].data.filter((dash: Dashboard) => dash.visibleTo == "all" ||  userInTeams.find(team => team.id == dash.ownedBy))
             setRawDashboards(dashboards)
             const starred = new Set<string>()
             for (const id of res[1].data) {
                 starred.add(id)
             }
             setStarredDashIds(starred)
-            setTeams(teams)
+
+            const dashTeamsMap = {}
+            for (const dash of dashboards) {
+                dashTeamsMap[dash.ownedBy] = {
+                    id: dash.ownedBy,
+                    name: dash.ownerName
+                }
+            }
+            setTeams(Object.values(dashTeamsMap))
         }   
     }
 
@@ -118,6 +126,7 @@ const Search = memo((props: Props) => {
         }
         return result
     }, [rawDashboards])
+
 
     const [dashboards1, tagCount, teamCount] = useMemo(() => {
         let result: Dashboard[] = []

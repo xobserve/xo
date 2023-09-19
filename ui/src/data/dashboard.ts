@@ -1,6 +1,6 @@
 import { isNaN } from "lodash";
 import { Dashboard, DashboardLayout } from "types/dashboard";
-import { PanelBorderType, PanelDecorationType } from "types/panel/styles";
+import { PanelBorderType } from "types/panel/styles";
 import { Role } from "types/role";
 import { globalTeamId } from "types/teams";
 
@@ -13,6 +13,7 @@ export const initDashboard = (team?): Dashboard => {
         title: "New dashboard",
         tags: [],
         data: {
+            visibleTo: "team",
             panels: [],
             variables: [],
             sharedTooltip: false,

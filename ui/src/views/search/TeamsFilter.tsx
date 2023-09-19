@@ -11,14 +11,9 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { useMediaQuery } from "@chakra-ui/react";
 import { Select } from "antd";
-import ColorTag from "src/components/ColorTag";
-import type { CustomTagProps } from 'rc-select/lib/BaseSelect';
 import React from "react";
-import { MobileBreakpoint } from "src/data/constants";
 import { Team } from "types/teams";
-const { Option } = Select;
 
 interface Props {
     teams: Team[]
@@ -28,7 +23,6 @@ interface Props {
     minWidth?: string
 }
 const TeamsFilter = ({ value, teams, onChange,teamCount, minWidth }: Props) => {
-    const [isLargeScreen] = useMediaQuery(MobileBreakpoint)
     return (
         <>
             <Select

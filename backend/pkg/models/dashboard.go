@@ -37,6 +37,7 @@ type Dashboard struct {
 	CreatedBy int64            `json:"createdBy,omitempty"`
 	OwnedBy   int64            `json:"ownedBy,omitempty"` // team that ownes this dashboard
 	OwnerName string           `json:"ownerName,omitempty"`
+	VisibleTo string           `json:"visibleTo"`
 	Tags      []string         `json:"tags,omitempty"`
 	Data      *simplejson.Json `json:"data,omitempty"`
 
@@ -49,7 +50,7 @@ func QueryDashboard(id string) (*Dashboard, error) {
 
 	var rawJSON []byte
 	var rawTags []byte
-	err := db.Conn.QueryRow("SELECT title,tags,data,owned_by,weight,updated FROM dashboard WHERE id = ?", id).Scan(&dash.Title, &rawTags, &rawJSON, &dash.OwnedBy, &dash.SortWeight, &dash.Updated)
+	err := db.Conn.QueryRow("SELECT title,tags,data,owned_by,visible_to,weight,updated FROM dashboard WHERE id = ?", id).Scan(&dash.Title, &rawTags, &rawJSON, &dash.OwnedBy, &dash.VisibleTo, &dash.SortWeight, &dash.Updated)
 	if err != nil {
 		return nil, err
 	}

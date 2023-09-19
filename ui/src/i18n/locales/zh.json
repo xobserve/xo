@@ -278,6 +278,9 @@
   "dashboardSetting": {
     "metaData": "元数据",
     "tootip": "共享 Tooltip",
+    "visibleTo": "对谁可见",
+    "visibleToTips": "选择谁可以看到该仪表盘",
+
     "tootipTips": "在所有图表的同一个时间点显示 tooltip，需要刷新页面来生效",
     "hideVars": "隐藏全局变量",
     "hideVarsTips": "输入全局变量名，使用逗号分隔，支持正则例如: app,env ",
@@ -297,7 +300,7 @@
     "autoSave": "自动保存",
     "autoSaveTips": "仪表盘每隔一段时间将自动保存一次，你可以在保存历史中找到这些保存记录",
     "autoSaveInterval": "自动保存间隔( 秒 )",
-    "hiddenPanel":  "隐藏图表",
+    "hiddenPanel": "隐藏图表",
     "hiddenPanelTips": "你可以点击图表的顶部，然后选择隐藏图表",
     "sortWeight": "排序优先级",
     "sortWeightTips": "更大的值意味着更高的排序优先级，该优先级用于搜索仪表盘时",
@@ -362,7 +365,6 @@
     "panelDesc": "给图表一个简单描述",
     "visualization": "图表类型",
 
-
     "panelBorder": "图表布局和边框",
     "paletteTips": "只支持 Graph, Bar, Pie 和 Echarts 图表",
     "titleDecoration": "标题装饰",
@@ -378,10 +380,10 @@
 
     "transformTips": "通过自定义的变换函数对查询到的结果进行进一步的处理",
     "enableTransform": "是否启用查询数据变换函数",
-    "conditionRender": "条件渲染", 
+    "conditionRender": "条件渲染",
     "conditionRenderTips": "开启后，只有当设置的条件被满足时，当前 panel 才会被渲染",
     "condition": "设置条件",
-  "conditionTips": "检查一个变量是否等于给定的值"
+    "conditionTips": "检查一个变量是否等于给定的值"
   },
 
   "prometheusDs": {
@@ -424,7 +426,7 @@
     "barRadius": "柱状图的边角弧度",
     "barGap": "柱状图之间的间距，单位是 CSS 像素",
     "alertCorrelation": "告警关联",
-  "alertCorrelationTips": "启用后，相关联的告警会以 Annotation 的形式展现在图表中"
+    "alertCorrelationTips": "启用后，相关联的告警会以 Annotation 的形式展现在图表中"
   },
   "nodeGraphPanel": {
     "node": "节点( Node )",
