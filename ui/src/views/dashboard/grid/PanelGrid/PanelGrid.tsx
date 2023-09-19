@@ -188,6 +188,13 @@ export const PanelComponent = ({ dashboard, panel, variables, onRemovePanel, onH
         const ds = panel.datasource
         const datasource = getDatasource(ds.id)
         if (!datasource) {
+            setPanelData([])
+            toast({
+                title: "Datasource not exist on panel: " + panel.title,
+                status: "warning",
+                duration: 4000,
+                isClosable: true,
+            })
             return
         }
 

@@ -35,3 +35,6 @@ zip -r datav-darwin-amd64.zip darwin
 zip -r datav-linux-amd64.zip linux
 zip -r datav-windows-amd64.zip windows
 rm -rf darwin linux windows
+
+
+git status
