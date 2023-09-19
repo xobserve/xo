@@ -32,17 +32,15 @@ Although Grafana is a great product, and it is the most popular dashboarding too
 2. **Build the panelse you want with bountiful options**, comparing to Grafana, Datav provides much more panel settings for you to build your own powerful panel.
 3. **Much better dashboard interactivity**, such as custom your own jumping events between traces, logs and metrics like below video: 
 
-<video width="500" height="300" controls>
-  <source src="https://github.com/data-observe/assets/blob/main/datav-readme/interactions.mov?raw=true" type="video/mp4">
-</video>
+https://github.com/data-observe/assets/blob/main/datav-readme/interactions.mov?raw=true
 
-4. **Better performance**, unlike grafana, codebase in Datav are very clean and simple: we only use React.js and Vite.js, so any bugs and performance issues are easy to resolved
-5. **Sidebar menu can be customized in Datav**. 
+1. **Better performance**, unlike grafana, codebase in Datav are very clean and simple: we only use React.js and Vite.js, so any bugs and performance issues are easy to resolved
+2. **Sidebar menu can be customized in Datav**. 
    you can also use other team's sidebar menu, that is very powerful for building a observability platform.
-6. **Easier to use and redevelop:**
+3. **Easier to use and redevelop:**
   
    Datav is much easier to use than Grafana, especially for developers. If you has dig into Grafana's codebase, you should know what I mean. In a word, Datav is much 
-7. **Much better APM and Observability features**
+4. **Much better APM and Observability features**
 
     Datav is much more powerful in Observability and APM fields. Besides the basic dashboarding features, you can 
 
@@ -57,19 +55,19 @@ Although Grafana is a great product, and it is the most popular dashboarding too
 
     As comparison, grafana is focusing on exploring data, which make it impossible to meet what APM and Observability really needs.
 
-8. **Beautiful and customizable UI**
+5. **Beautiful and customizable UI**
 
     As datav is a new product, we have a chance to build a modern and beautiful UI from scratch. 
 
     You can customize dashboard and panel styles to build beautiful dashboard, even you can build a large screen display with Datav, maybe your Boss will like it :)
 
-9.  **Better open-source License**
+6.  **Better open-source License**
 
     Datav is using Apache License 2.0, which is more friendly to commercial use.
 
     We promise: **we will never CHANGE LICENSE and CLOSE-SOURCE in the future, datav is and will be 100% open source forever**!
 
-10.  **Mobile screeen support**: viewing and editing dashboards at home using your mobile phone.
+7.   **Mobile screeen support**: viewing and editing dashboards at home using your mobile phone.
 
 
 
