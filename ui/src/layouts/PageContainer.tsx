@@ -81,22 +81,22 @@ const Container = (props: Props) => {
   let code = useStore(locale)
   const [miniMode, setMiniMode] = useState(storage.get(SidemenuMinimodeKey) ?? true)
   const fullscreen = useFullscreen()
-  
+
   sidemenu?.forEach(nav => {
     try {
       const titleMap = JSON.parse(nav.title)
-      const title = titleMap[code]??titleMap["en"]
+      const title = titleMap[code] ?? titleMap["en"]
       if (title) nav.title = title
-    } catch (_) {}
+    } catch (_) { }
 
     if (isArray(nav.children)) {
       nav.children.forEach(child => {
         try {
           const titleMap = JSON.parse(child.title)
-          const title = titleMap[code]??titleMap["en"]
+          const title = titleMap[code] ?? titleMap["en"]
           if (title) child.title = title
-        } catch (_) {}
-    
+        } catch (_) { }
+
       })
     }
   })
@@ -165,8 +165,6 @@ const Container = (props: Props) => {
           <Flex
             display={fullscreen ? "none" : "flex"}
             flexDir="column"
-            pl={miniMode ? null : paddingLeft + 'px'}
-            pr={miniMode ? null : paddingRight + 'px'}
             justifyContent="space-between"
             id="sidemenu"
             position="fixed"
@@ -178,29 +176,30 @@ const Container = (props: Props) => {
             transition="all 0.2s"
             height="100vh"
             className="bordered-right"
-          // overflowY="auto" overflowX="hidden"
+            overflowY="auto" overflowX="hidden"
           >
             <CustomScrollbar hideHorizontalTrack>
-              <Flex flexDir="column" height="100%" justifyContent="space-between">
+              <Flex flexDir="column" height="100%" justifyContent="space-between" pl={miniMode ? null : paddingLeft + 'px'}
+                pr={miniMode ? null : paddingRight + 'px'}>
                 <Flex id="sidemenu-top" flexDir="column" alignItems={(miniMode || isEmpty(sidemenu)) ? "center" : "left"}     >
                   {(miniMode || isEmpty(sidemenu)) ?
                     <Box cursor="pointer" onClick={onMinimodeChange} mt="2" ><Logo /></Box>
                     :
-                    <Box cursor="pointer" onClick={onMinimodeChange} opacity="0.2" position="absolute" right="-7px" top="14px" className="hover-text" p="1" fontSize="0.7rem" zIndex={1}><Icons.FaChevronLeft /></Box>
+                    <Box cursor="pointer" onClick={onMinimodeChange} opacity="0.2" position="absolute" right="0px" top="14px" className="hover-text" p="1" fontSize="0.7rem" zIndex={1}><Icons.FaChevronLeft /></Box>
                   }
                   <VStack alignItems="left" mt={3} spacing={miniMode ? "2px" : "10px"}>
-                  {sidemenu?.map((link, index) => {
-                    return <Box key={link.url} >
-                      <Box>
-                        <NavItem isActive={miniMode ? asPath.startsWith(link.url) : asPath == link.url} key={index} text={link.title} icon={link.icon} miniMode={miniMode} fontWeight={500} url={link.children?.length > 0 ? link.children[0].url : link.url} children={link.children} />
+                    {sidemenu?.map((link, index) => {
+                      return <Box key={link.url} >
+                        <Box>
+                          <NavItem isActive={miniMode ? asPath.startsWith(link.url) : asPath == link.url} key={index} text={link.title} icon={link.icon} miniMode={miniMode} fontWeight={500} url={link.children?.length > 0 ? link.children[0].url : link.url} children={link.children} />
+                        </Box>
+                        {
+                          !miniMode && link.children && link.children.map((child, index) => {
+                            return <Box mt="7px" ml={childMarginLeft + 'px'}><NavItem isActive={asPath == child.url} key={index} text={child.title} miniMode={miniMode} url={child.url} fontSize={navSize} /></Box>
+                          })
+                        }
                       </Box>
-                      {
-                        !miniMode && link.children && link.children.map((child, index) => {
-                          return <Box mt="7px" ml={childMarginLeft + 'px'}><NavItem isActive={asPath == child.url} key={index} text={child.title} miniMode={miniMode} url={child.url} fontSize={navSize} /></Box>
-                        })
-                      }
-                    </Box>
-                  })}
+                    })}
                   </VStack>
                   {session && !sidemenu?.some(nav => nav.dashboardId != HomeDashboardId) && <>
                     <Divider mt={miniMode ? 2 : 3} />
