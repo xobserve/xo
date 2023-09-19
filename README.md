@@ -27,17 +27,53 @@
 
 Grafana is a great product, and it is the most popular dashboarding tool in the world. But Datav has its own adavantages: 
 
-1. Native support for observability
-2. Much better panel interactions, such as custom your own jumping events between traces, logs and metrics, like the video below:
+1. **Native support for observability**
+2. **Build the panels as you like**, comparing to Grafana, Datav provides much more panel settings for you to build your own powerful panel.
+3. **Much better dashboard interactivity**, such as custom your own jumping events between traces, logs and metrics, like the video [below](#interactivity)
+4. **Better performance**, unlike grafana, codebase in Datav are very clean and simple: we only use React.js and Vite.js, so any bugs and performance issues are easy to resolved
+5. **Sidebar menu can be customized in Datav**. 
+   you can also use other team's sidebar menu, that is very powerful for building a observability platform.
+6. **Easier to use and redevelop:**
+  
+   Datav is much easier to use than Grafana, especially for developers. If you has dig into Grafana's codebase, you should know what I mean. In a word, Datav is much 
+7. **Much better APM and Observability features**
 
-<video src="https://github.com/data-observe/assets/blob/main/datav-readme/interactions.mov?raw=true" controls autoPlay />
+    Datav is much more powerful in Observability and APM fields. Besides the basic dashboarding features, you can 
 
-3.  Customize sidebar menu,  you can also use other team's sidebar
-4.  Easier to use and redevelop
+    - Provide various kinds of interactivity
+    - Custom dashboard styles to provide a beautiful large screen dispaly 
+    - Teams can build their own sidemenu to provice better navigation features
+    - Global variables to provide global context: select in one place, effect everywhere, e.g applications, environments, etc. 
+    - General HTTP datasource and Echarts panel, you can build everything you want with them 
+    - Custom your own data processing logic with Javascript, transform your data to any format you want
+
+    In a word, **you can use Datav to build any kinds of APM UI**! We provide you nearly all the tools you need. 
+
+    As comparison, grafana is focusing on exploring data, which make it impossible to meet what APM and Observability really needs.
+
+8. **Beautiful and customizable UI**
+
+    As datav is a new product, we have a chance to build a modern and beautiful UI from scratch. 
+
+    You can customize dashboard and panel styles to build beautiful dashboard, even you can build a large screen display with Datav, maybe your Boss will like it :)
+
+9. **Better open-source License**
+
+    Datav is using Apache License 2.0, which is more friendly to commercial use.
+
+    We promise: **we will never CHANGE LICENSE and CLOSE-SOURCE in the future, datav is and will be 100% open source forever**!
 
 
+<!-- 
 ## Visitors Count
 
-<img align="left" src = "https://profile-counter.glitch.me/datav/count.svg" alt ="Loading">
+<img align="left" src = "https://profile-counter.glitch.me/datav/count.svg" alt ="Loading"> -->
 
 
+
+
+## Demo images
+
+### Interactivity
+
+<video src="https://github.com/data-observe/assets/blob/main/datav-readme/interactions.mov?raw=true"  />
