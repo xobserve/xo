@@ -113,12 +113,12 @@ const adminRoutes = [
 ]
 
 export const routes = [
-  {
-    path: "/",
-    Component: () => {
-      return <div><Navigate replace to="/home"/></div>
-    }
-  },
+  // {
+  //   path: "/",
+  //   Component: () => {
+  //     return <div><Navigate replace to="/home"/></div>
+  //   }
+  // },
   {
     path: "/account/setting",
     element: pageContainer(<AccountSetting />),
