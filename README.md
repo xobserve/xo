@@ -32,7 +32,7 @@ Although Grafana is a great product, and it is the most popular dashboarding too
 2. **Build the panelse you want with bountiful options**, comparing to Grafana, Datav provides much more panel settings for you to build your own powerful panel.
 3. **Much better dashboard interactivity**, such as custom your own jumping events between traces, logs and metrics like below video: 
 
-<video controls>
+<video width="500" height="300" controls>
   <source src="https://github.com/data-observe/assets/blob/main/datav-readme/interactions.mov?raw=true" type="video/mp4">
 </video>
 
