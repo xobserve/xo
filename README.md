@@ -1,9 +1,9 @@
 <p align="center">
-  <img src="https://datav.io/logo.png" alt="datav-logo" width="120" />
+  <img src="https://datav.io/logo.png" alt="datav-logo" width="60" />
 </p>
 
 
-<h2 align="center">
+<h3 align="center">
   Most powerful data visulization platform for APM and Observability, 100% open-source.
 </h2>
 
