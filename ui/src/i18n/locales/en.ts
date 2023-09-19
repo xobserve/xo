@@ -222,7 +222,9 @@ export const cfgTeam = i18n("cfgTeam", {
   "subTitle": "Current team",
   "roleInTeam": "Role in team",
   "leaveTeam": "Leave Team",
-
+  "isPublic": "Public",
+  "isPublicTips": "When set to public, users not in this team can also view team info and dashboards",
+  
   "sidemenuTip1": "Customize the top section of your team's side menu, you can add, edit, delete and reorder the menu items.",
   "sidemenuTip2": "Menu item format",
   "sidemenuTip3": "Url format",

@@ -30,6 +30,7 @@ CREATE TABLE IF NOT EXISTS team (
     id INTEGER PRIMARY KEY AUTO_INCREMENT,
     name VARCHAR(255) NOT NULL UNIQUE,
     brief VARCHAR(255) DEFAUlT '',
+    is_public BOOL DEFAULT false,
     created_by INTEGER NOT NULL,
     created DATETIME NOT NULL,
     updated DATETIME NOT NULL
@@ -86,6 +87,7 @@ CREATE TABLE IF NOT EXISTS dashboard (
     id VARCHAR(40) PRIMARY KEY NOT NULL,
     title VARCHAR(255) NOT NULL,
     owned_by INTEGER NOT NULL DEFAULT '1',
+    visible_to VARCHAR(32) DEFAULT 'team',
     created_by INTEGER NOT NULL,
     tags TEXT,
     data MEDIUMTEXT NOT NULL,

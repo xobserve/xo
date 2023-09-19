@@ -40,7 +40,7 @@ func GetTeams(c *gin.Context) {
 	q := `SELECT id,name,brief,created_by FROM team`
 	if !u.Role.IsAdmin() {
 		userId := user.CurrentUserId(c)
-		members, err := models.QueryTeamMembersByUserId(userId)
+		members, err := models.QueryVisibleTeamsByUserId(userId)
 		if err != nil {
 			logger.Warn("get all teams error", "error", err)
 			c.JSON(500, common.RespInternalError())
@@ -53,20 +53,20 @@ func GetTeams(c *gin.Context) {
 		}
 
 		if len(members) == 1 {
-			q = fmt.Sprintf("%s WHERE id = '%d'", q, members[0].TeamId)
+			q = fmt.Sprintf("%s WHERE id = '%d'", q, members[0])
 		} else {
 			for i, m := range members {
 				if i == 0 {
-					q = fmt.Sprintf("%s WHERE id in ('%d'", q, m.TeamId)
+					q = fmt.Sprintf("%s WHERE id in ('%d'", q, m)
 					continue
 				}
 
 				if i == len(members)-1 {
-					q = fmt.Sprintf("%s,'%d')", q, m.TeamId)
+					q = fmt.Sprintf("%s,'%d')", q, m)
 					continue
 				}
 
-				q = fmt.Sprintf("%s,'%d'", q, m.TeamId)
+				q = fmt.Sprintf("%s,'%d'", q, m)
 			}
 		}
 	}
@@ -376,7 +376,7 @@ func UpdateTeam(c *gin.Context) {
 		}
 	}
 
-	_, err := db.Conn.Exec("UPDATE team SET name=? WHERE id=?", team.Name, team.Id)
+	_, err := db.Conn.Exec("UPDATE team SET name=?, is_public=? WHERE id=?", team.Name, team.IsPublic, team.Id)
 	if err != nil {
 		logger.Warn("update team error", "error", err)
 		c.JSON(500, common.RespInternalError())

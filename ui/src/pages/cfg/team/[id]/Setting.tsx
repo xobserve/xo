@@ -12,7 +12,7 @@
 // limitations under the License.
 
 import React from "react"
-import { Box, Button, Input, useDisclosure, useToast, VStack, AlertDialog, AlertDialogBody, AlertDialogContent, AlertDialogFooter, AlertDialogHeader, AlertDialogOverlay, HStack, FormLabel } from "@chakra-ui/react"
+import { Box, Button, Input, useDisclosure, useToast, VStack, AlertDialog, AlertDialogBody, AlertDialogContent, AlertDialogFooter, AlertDialogHeader, AlertDialogOverlay, HStack, FormLabel, Switch } from "@chakra-ui/react"
 import { Form, FormSection } from "src/components/form/Form"
 import FormItem from "src/components/form/Item"
 import { cloneDeep } from "lodash"
@@ -40,7 +40,7 @@ const TeamSettings = (props: { team: Team }) => {
   const updateTeam = async () => {
     await requestApi.post(`/team/update`, team)
     toast({
-      title: t.isUpdated({name: t.members}),
+      title: t.isUpdated({ name: t.team }),
       status: "success",
       duration: 3000,
       isClosable: true,
@@ -50,7 +50,7 @@ const TeamSettings = (props: { team: Team }) => {
   const deleteTeam = async () => {
     await requestApi.delete(`/team/${team.id}`)
     toast({
-      title: t.isDeleted({name: t.team}),
+      title: t.isDeleted({ name: t.team }),
       status: "success",
       duration: 3000,
       isClosable: true,
@@ -79,15 +79,19 @@ const TeamSettings = (props: { team: Team }) => {
     <Box>
       <Form width="500px">
         <FormSection title={t.basicSetting}>
-          <FormItem title={t.itemName({name: t.team})}>
+          <FormItem title={t.itemName({ name: t.team })} labelWidth="150px">
             <Input placeholder="******" value={team.name} onChange={e => { team.name = e.currentTarget.value; setTeam(cloneDeep(team)) }} />
           </FormItem>
+          <FormItem title={t1.isPublic} desc={t1.isPublicTips} labelWidth="150px" alignItems="center">
+            <Switch isChecked={team.isPublic} onChange={e => { team.isPublic = e.currentTarget.checked; setTeam(cloneDeep(team)) }} />
+          </FormItem>
+
           <Button width="fit-content" onClick={updateTeam}>{t.submit}</Button>
         </FormSection>
 
         <FormSection title={t.dangeSection}>
           <HStack>
-            <Button width="fit-content" onClick={onOpen} colorScheme="red">{t.deleteItem({name: t.team})}</Button>
+            <Button width="fit-content" onClick={onOpen} colorScheme="red">{t.deleteItem({ name: t.team })}</Button>
             {/* <Button width="fit-content" onClick={onLeaveOpen} colorScheme="orange">Leave team</Button> */}
           </HStack>
         </FormSection>
@@ -102,11 +106,11 @@ const TeamSettings = (props: { team: Team }) => {
       <AlertDialogOverlay>
         {team && <AlertDialogContent>
           <AlertDialogHeader fontSize='lg' fontWeight='bold'>
-            {t.deleteItem({name: t.team})} - {team.name}
+            {t.deleteItem({ name: t.team })} - {team.name}
           </AlertDialogHeader>
 
           <AlertDialogBody>
-           {t.deleteAlert}
+            {t.deleteAlert}
           </AlertDialogBody>
 
           <AlertDialogFooter>
@@ -129,11 +133,11 @@ const TeamSettings = (props: { team: Team }) => {
       <AlertDialogOverlay>
         {team && <AlertDialogContent>
           <AlertDialogHeader fontSize='lg' fontWeight='bold'>
-           {t1.leaveTeam} - {team.name}
+            {t1.leaveTeam} - {team.name}
           </AlertDialogHeader>
 
           <AlertDialogBody>
-           {t.deleteAlert}
+            {t.deleteAlert}
           </AlertDialogBody>
 
           <AlertDialogFooter>

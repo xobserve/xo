@@ -117,16 +117,11 @@ func UpdateSideMenu(c *gin.Context) {
 func GetAvailableSidMenusForUser(c *gin.Context) {
 	userId := user.CurrentUserId(c)
 
-	members, err := models.QueryTeamMembersByUserId(userId)
+	teamIds, err := models.QueryVisibleTeamsByUserId(userId)
 	if err != nil {
 		logger.Warn("query team members by userId error", "error", err)
 		c.JSON(500, common.RespInternalError())
 		return
-	}
-
-	teamIds := make([]int64, 0)
-	for _, m := range members {
-		teamIds = append(teamIds, m.TeamId)
 	}
 
 	// get sidemenus which are set to public in teams

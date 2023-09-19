@@ -170,7 +170,18 @@ func GetDashboard(c *gin.Context) {
 
 	span.End()
 
-	if dash.VisibleTo != "all" && !u.Role.IsAdmin() {
+	_, span2 := ot.Tracer.Start(traceCtx, "checkTeamPublic", trace.WithSpanKind(trace.SpanKindClient))
+	isTeamPublic, err := models.IsTeamPublic(dash.OwnedBy)
+	if err != nil {
+		span2.SetStatus(codes.Error, err.Error())
+		span2.End()
+		log.WithTrace(traceCtx).Warn("Error check isTeamPublic", zap.String("username", u.Username), zap.Error(err))
+		c.JSON(500, common.RespError(e.Internal))
+		return
+	}
+	span2.End()
+
+	if !isTeamPublic && dash.VisibleTo != "all" && !u.Role.IsAdmin() {
 		_, span0 := ot.Tracer.Start(traceCtx, "checkUserPrivilege", trace.WithSpanKind(trace.SpanKindClient))
 		member, err := models.QueryTeamMember(dash.OwnedBy, u.Id)
 		if err != nil {

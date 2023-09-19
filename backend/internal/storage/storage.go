@@ -153,8 +153,8 @@ func initTables() error {
 		return err
 	}
 
-	_, err = db.Conn.Exec(`INSERT INTO team (id,name,created_by,created,updated) VALUES (?,?,?,?,?)`,
-		models.GlobalTeamId, models.GlobalTeamName, models.SuperAdminId, now, now)
+	_, err = db.Conn.Exec(`INSERT INTO team (id,name,is_public,created_by,created,updated) VALUES (?,?,?,?,?,?)`,
+		models.GlobalTeamId, models.GlobalTeamName, true, models.SuperAdminId, now, now)
 	if err != nil && !e.IsErrUniqueConstraint(err) {
 		logger.Crit("init global team error", "error:", err)
 		return err

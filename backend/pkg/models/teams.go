@@ -38,6 +38,7 @@ var InitTeamMenu = []map[string]interface{}{
 type Team struct {
 	Id              int64     `json:"id"`
 	Name            string    `json:"name"`
+	IsPublic        bool      `json:"isPublic"`
 	Brief           string    `json:"brief"`
 	CreatedBy       string    `json:"createdBy,omitempty"`   // creator's username
 	CreatedById     int64     `json:"createdById,omitempty"` // creator's username
@@ -74,8 +75,8 @@ func (s TeamMembers) Less(i, j int) bool {
 
 func QueryTeam(id int64, name string) (*Team, error) {
 	team := &Team{}
-	err := db.Conn.QueryRow(`SELECT id,name,created_by,created,updated FROM team WHERE id=? or name=?`,
-		id, name).Scan(&team.Id, &team.Name, &team.CreatedById, &team.Created, &team.Updated)
+	err := db.Conn.QueryRow(`SELECT id,name,is_public,created_by,created,updated FROM team WHERE id=? or name=?`,
+		id, name).Scan(&team.Id, &team.Name, &team.IsPublic, &team.CreatedById, &team.Created, &team.Updated)
 	if err != nil {
 		return nil, err
 	}
@@ -128,21 +129,41 @@ func QueryTeamMember(teamId int64, userId int64) (*TeamMember, error) {
 	return member, nil
 }
 
-func QueryTeamMembersByUserId(userId int64) ([]*TeamMember, error) {
-	members := make([]*TeamMember, 0)
-	rows, err := db.Conn.Query("SELECT team_id,role from team_member WHERE user_id=?", userId)
+func QueryVisibleTeamsByUserId(userId int64) ([]int64, error) {
+	membersMap := make(map[int64]bool)
+	rows, err := db.Conn.Query("SELECT team_id from team_member WHERE user_id=?", userId)
 	if err != nil && err != sql.ErrNoRows {
 		return nil, err
 	}
 	defer rows.Close()
 	for rows.Next() {
-		m := &TeamMember{}
-		err := rows.Scan(&m.TeamId, &m.Role)
+		var m int64
+		err := rows.Scan(&m)
 		if err != nil {
 			return nil, err
 		}
 
-		members = append(members, m)
+		membersMap[m] = true
+	}
+
+	rows, err = db.Conn.Query("SELECT id from team WHERE is_public=?", true)
+	if err != nil && err != sql.ErrNoRows {
+		return nil, err
+	}
+	defer rows.Close()
+	for rows.Next() {
+		var m int64
+		err := rows.Scan(&m)
+		if err != nil {
+			return nil, err
+		}
+
+		membersMap[m] = true
+	}
+
+	members := make([]int64, len(membersMap))
+	for v := range membersMap {
+		members = append(members, v)
 	}
 
 	return members, nil
@@ -184,4 +205,14 @@ func QuerySideMenu(id int64, teamId int64) (*SideMenu, error) {
 
 	json.Unmarshal(rawJson, &menu.Data)
 	return menu, nil
+}
+
+func IsTeamPublic(id int64) (bool, error) {
+	var isPublic bool
+	err := db.Conn.QueryRow("SELECT is_public from team WHERE id=?", id).Scan(&isPublic)
+	if err != nil {
+		return false, err
+	}
+
+	return isPublic, nil
 }

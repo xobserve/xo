@@ -207,7 +207,7 @@ const Container = (props: Props) => {
                     <Box mt={miniMode ? 2 : 3}><NavItem fontSize={navSize - 1} text={t1.newItem} url={`/cfg/team/${session.user.sidemenu}/sidemenu`} miniMode={miniMode} icon="FaPlus" /></Box>
                   </>}
                 </Flex>
-                <Flex id="sidemenu-bottom" flexDir="column" pb="2" alignItems={miniMode ? "center" : "left"} color={textColor}   >
+                <Flex id="sidemenu-bottom" flexDir="column" pt="10px" pb="2" alignItems={miniMode ? "center" : "left"} color={textColor}   >
                   <VStack alignItems="left" spacing={miniMode ? "2px" : 3}>
                     {bottomNavs.map((nav, index) => {
                       if (nav.url == ReserveUrls.Search) {

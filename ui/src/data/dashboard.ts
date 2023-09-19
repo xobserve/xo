@@ -12,8 +12,8 @@ export const initDashboard = (team?): Dashboard => {
         id: "",
         title: "New dashboard",
         tags: [],
+        visibleTo: "team",
         data: {
-            visibleTo: "team",
             panels: [],
             variables: [],
             sharedTooltip: false,

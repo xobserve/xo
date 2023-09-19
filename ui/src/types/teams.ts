@@ -17,6 +17,7 @@ export const globalTeamId = 1
 export interface Team {
     id : number 
     name: string
+    isPublic?: boolean
     brief?: string
     createdBy?: string
     createdById?: number

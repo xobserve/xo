@@ -209,6 +209,8 @@
     "subTitle": "当前团队",
     "roleInTeam": "团队中的角色",
     "leaveTeam": "离开团队",
+    "isPublic": "公开团队",
+    "isPublicTips": "当设置为公开时，非团队的用户也能浏览团队信息和仪表盘",
 
     "sidemenuTip1": "定制团队左侧菜单的上半区域, 你可以添加、编辑、删除和排序菜单项",
     "sidemenuTip2": "菜单项格式",
