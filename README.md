@@ -15,6 +15,7 @@
 - Website: https://datav.io
 - Online Demo: https://play.datav.io
 
+<img src="https://github.com/data-observe/assets/blob/main/datav-readme/home-example.jpg?raw=true" />
 
 ## What is datav
 <p>Datav is a very new and modern data visualization platform, you can think it as a modern version of Grafana. </p>
