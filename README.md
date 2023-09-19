@@ -13,7 +13,7 @@
 </p>
 
 - Website: https://datav.io
-- Online demo: [Play](https://play.datav.io)
+- [Online demo](https://play.datav.io)
 
 <img src="https://github.com/data-observe/assets/blob/main/datav-readme/home-example1.jpg?raw=true" />
 
