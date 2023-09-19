@@ -9,14 +9,19 @@
 
 <p align="center">
     <img alt="License" src="https://img.shields.io/badge/license-Apache2.0-brightgreen"> 
-    <a href="/https://github.com/data-observe/datav/blob/main/README_CN.md"><img alt="Chinese readme" src="https://img.shields.io/badge/中文-Readme-brightgreen"></a>
+    <a href="https://github.com/data-observe/datav/blob/main/README_CN.md"><img alt="Chinese readme" src="https://img.shields.io/badge/中文-Readme-orange"></a>
+    <a href="https://datav.io"><img alt="Website" src="https://img.shields.io/badge/Website-datav.io-blue"></a>
+    <a href="https://play.datav.io"><img alt="Online demo" src="https://img.shields.io/badge/Online-demo-blue"></a>
 </p>
 
-- Website: https://datav.io
-- [Online demo](https://play.datav.io)
-
-<img src="https://github.com/data-observe/assets/blob/main/datav-readme/home-example1.jpg?raw=true" />
-
+<div style="width:100%;display:flex;flex-direction:row;gap:2px">
+<span style="width:50%">
+  <img src="https://github.com/data-observe/assets/blob/main/datav-readme/home-example1.jpg?raw=true" />
+</span>
+<span style="width:50%">
+  <img src="https://github.com/data-observe/assets/blob/main/datav-readme/runtime-example.jpg?raw=true" />
+</span>
+</div>
 ## About datav
 
 Datav is a modern data visualization platform built from scratch in 2023, you can visualize metrics, traces, and logs from various datasource, and correlate them easily and deeply.
