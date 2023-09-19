@@ -23,5 +23,5 @@ func IsErrUniqueConstraint(err error) bool {
 }
 
 func IsErrNoColumn(err error) bool {
-	return strings.HasPrefix(err.Error(), "no such column")
+	return strings.HasPrefix(err.Error(), "no such column") || strings.Contains(err.Error(), "Unknown column")
 }

@@ -78,7 +78,7 @@ export const checkAndTestPrometheus = async (ds: Datasource) => {
     // test connection status
     try {
         // http://localhost:9090/api/v1/labels?match[]=up
-        const res = await requestApi.get(`/proxy?proxy_url=${ds.url}/api/v1/labels?match[]=up`)
+        const res = await requestApi.get(`/common/proxy/1?proxy_url=${ds.url}/api/v1/labels?match[]=up`)
         if (res.status) {
             return true
         }

@@ -115,7 +115,7 @@ const DashboardHeader = memo(({ dashboard, onChange, sideWidth }: HeaderProps) =
                                     <Tooltip label={t1.refreshOnce}><Box onClick={refreshOnce}><IconButton variant="ghost"><MdSync /></IconButton></Box></Tooltip>
                                     <Tooltip label={t1.refreshInterval}>
                                         <Select variant="unstyled" value={refresh} onChange={(e) => setRefresh(Number(e.target.value))}>
-                                            <option value={0}>OFF</option>
+                                            <option value={0}>off</option>
                                             <option value={5}>5s</option>
                                             <option value={10}>10s</option>
                                             <option value={30}>30s</option>
