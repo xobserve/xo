@@ -14,14 +14,21 @@
     <a href="https://play.datav.io"><img alt="Online demo" src="https://img.shields.io/badge/Online-demo-blue"></a>
 </p>
 
-<div style="width:100%;display:flex;flex-direction:row;gap:2px">
-<span style="width:50%">
-  <img src="https://github.com/data-observe/assets/blob/main/datav-readme/home-example1.jpg?raw=true" />
-</span>
-<span style="width:50%">
-  <img src="https://github.com/data-observe/assets/blob/main/datav-readme/runtime-example.jpg?raw=true" />
-</span>
-</div>
+<table>
+    <tr>
+        <td align="center">
+            <img src="https://github.com/data-observe/assets/blob/main/datav-readme/home-example1.jpg?raw=true" width="100%" />
+        </td>
+        <td align="center">
+              <img src="https://github.com/data-observe/assets/blob/main/datav-readme/runtime-example.jpg?raw=true" width="100%" />
+        </td>
+    </tr>
+</table>
+
+
+
+
+
 ## About datav
 
 Datav is a modern data visualization platform built from scratch in 2023, you can visualize metrics, traces, and logs from various datasource, and correlate them easily and deeply.
