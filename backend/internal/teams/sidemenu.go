@@ -178,7 +178,7 @@ func SelectSideMenuForUser(c *gin.Context) {
 	userId := user.CurrentUserId(c)
 	teamId := c.Param("teamId")
 
-	_, err := db.Conn.Exec("UPDATE user SET sidemenu=? WHERE id=?", teamId, userId)
+	err := SetSideMenuForUser(teamId, userId)
 	if err != nil {
 		logger.Warn("update side menu error", "error", err)
 		c.JSON(500, common.RespInternalError())
@@ -186,6 +186,15 @@ func SelectSideMenuForUser(c *gin.Context) {
 	}
 
 	c.JSON(200, common.RespSuccess(nil))
+}
+
+func SetSideMenuForUser(teamId string, userId int64) error {
+	_, err := db.Conn.Exec("UPDATE user SET sidemenu=? WHERE id=?", teamId, userId)
+	if err != nil {
+		return err
+	}
+
+	return nil
 }
 
 func GetCurrentSidemenu(c *gin.Context) {

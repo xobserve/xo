@@ -216,3 +216,29 @@ func IsTeamPublic(id int64) (bool, error) {
 
 	return isPublic, nil
 }
+
+func IsTeamVisibleToUser(teamId int64, userId int64) (bool, error) {
+	if teamId == GlobalTeamId {
+		return true, nil
+	}
+
+	isPublic, err := IsTeamPublic(teamId)
+	if err != nil {
+		return false, err
+	}
+
+	if isPublic {
+		return true, nil
+	}
+
+	member, err := QueryTeamMember(teamId, userId)
+	if err != nil {
+		return false, err
+	}
+
+	if member.Id != 0 {
+		return true, nil
+	}
+
+	return false, nil
+}

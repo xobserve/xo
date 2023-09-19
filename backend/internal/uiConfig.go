@@ -21,8 +21,10 @@ import (
 	"net/http"
 	"os"
 	"path/filepath"
+	"strconv"
 	"strings"
 
+	"github.com/DataObserve/datav/backend/internal/teams"
 	"github.com/DataObserve/datav/backend/internal/user"
 	"github.com/DataObserve/datav/backend/internal/variables"
 	"github.com/DataObserve/datav/backend/pkg/common"
@@ -73,13 +75,23 @@ func getUIConfig(c *gin.Context) {
 
 	// query sidemenu
 	u := user.CurrentUser(c)
-	var sidemenuId int64
+	var sidemenuId int64 = models.GlobalTeamId
 	if u != nil {
-		sidemenuId = u.SideMenu
-	} else {
-		sidemenuId = models.GlobalTeamId
+		isTeamVisible, err := models.IsTeamVisibleToUser(u.SideMenu, u.Id)
+		if err != nil {
+			logger.Warn("Error query sidemenu visible ", "error", err)
+			c.JSON(http.StatusInternalServerError, common.RespError(err.Error()))
+			return
+		}
+
+		if isTeamVisible {
+			sidemenuId = u.SideMenu
+		} else {
+			teams.SetSideMenuForUser(strconv.FormatInt(models.GlobalTeamId, 10), u.Id)
+		}
 	}
-	menu, err := models.QuerySideMenu(sidemenuId, 0)
+
+	menu, err := models.QuerySideMenu(int64(sidemenuId), 0)
 	if err != nil {
 		if err != sql.ErrNoRows {
 			logger.Warn("query sidemenu error", "error", err)
@@ -87,7 +99,6 @@ func getUIConfig(c *gin.Context) {
 			return
 		}
 	}
-
 	cfg.Sidemenu = menu
 
 	vars, err := variables.GetVariables()
