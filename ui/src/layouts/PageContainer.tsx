@@ -106,11 +106,11 @@ const Container = (props: Props) => {
   }
 
   const bottomNavs = [
-    { title: t.new, icon: "FaPlus", url: `${ReserveUrls.New}/dashboard`, isActive: asPath.startsWith(ReserveUrls.New) },
-    { title: t.configuration, icon: "FaCog", url: `${ReserveUrls.Config}/datasources`, isActive: asPath.startsWith(ReserveUrls.Config) },
-  ]
-  config.showAlertIcon && bottomNavs.push({ title: t.alert, icon: "FaBell", url: `${ReserveUrls.Alerts}`, isActive: asPath.startsWith(ReserveUrls.Alerts) })
-  bottomNavs.push({ title: t1.search, icon: "FaSearch", url: `${ReserveUrls.Search}`, isActive: asPath.startsWith(ReserveUrls.Search) })
+    { title: t.new, icon: "FaPlus",baseUrl:ReserveUrls.New,  url: `${ReserveUrls.New}/dashboard`, isActive: asPath.startsWith(ReserveUrls.New) },
+    { title: t.configuration, icon: "FaCog", baseUrl:ReserveUrls.Config, url: `${ReserveUrls.Config}/datasources`, isActive: asPath.startsWith(ReserveUrls.Config) },
+  ] 
+  config.showAlertIcon && bottomNavs.push({ title: t.alert, icon: "FaBell",  baseUrl: `${ReserveUrls.Alerts}`, url: `${ReserveUrls.Alerts}`, isActive: asPath.startsWith(ReserveUrls.Alerts) })
+  bottomNavs.push({ title: t1.search, icon: "FaSearch", baseUrl: `${ReserveUrls.Search}`, url: `${ReserveUrls.Search}`, isActive: asPath.startsWith(ReserveUrls.Search) })
 
   const [isLargeScreen] = useMediaQuery(MobileBreakpoint)
 
@@ -176,9 +176,10 @@ const Container = (props: Props) => {
             transition="all 0.2s"
             height="100vh"
             className="bordered-right"
+            borderWidth="0.5px"
             // overflowY="auto" overflowX="hidden"
           >
-            <CustomScrollbar hideHorizontalTrack>
+            <CustomScrollbar  hideHorizontalTrack>
               <Flex flexDir="column" height="100%" justifyContent="space-between" pl={miniMode ? null : paddingLeft + 'px'}
                 pr={miniMode ? null : paddingRight + 'px'}>
                 <Flex id="sidemenu-top" flexDir="column" alignItems={(miniMode || isEmpty(sidemenu)) ? "center" : "left"}     >
@@ -241,14 +242,14 @@ const Container = (props: Props) => {
                 <MenuList fontSize="15px" py="0" zIndex={1000}>
                   {sidemenu?.map((link) => {
                     const Icon = Icons[link.icon]
-                    return <Link key={link.url} to={link.url}>
-                      <MenuItem icon={<Icon />} >
+                    return <Link key={link.url} to={link.children?.length > 0 ? link.children[0].url : link.url}>
+                      <MenuItem icon={<Icon />} color={asPath.startsWith(link.url) ? useColorModeValue("brand.500", "brand.200") : 'inherit'}>
                         {link.title}
                       </MenuItem>
                       {
                         link.children && link.children.map((child) => {
                           return <Link key={child.url} to={child.url}>
-                            <MenuItem pl="36px">
+                            <MenuItem pl="36px" color={asPath == (child.url) ? useColorModeValue("brand.500", "brand.200") : 'inherit'}>
                               {child.title}
                             </MenuItem></Link>
                         })
@@ -266,7 +267,7 @@ const Container = (props: Props) => {
                           </MenuItem>
                         } else {
                           return <Link key={nav.url} to={nav.url}>
-                            <MenuItem icon={<Icon />}  >
+                            <MenuItem icon={<Icon />}  color={asPath.startsWith(nav.baseUrl) ? useColorModeValue("brand.500", "brand.200") : 'inherit'}>
                               {nav.title}
                             </MenuItem></Link>
 

@@ -83,7 +83,6 @@ const Search = memo((props: Props) => {
             const res = await Promise.all([r1, r2, r3])
             
             const visibleTeams = res[2].data
-            console.log("here333333:", visibleTeams)
             const dashboards: Dashboard[] = res[0].data.filter((dash: Dashboard) => dash.visibleTo == "all" ||  visibleTeams.find(team => team.id == dash.ownedBy))
             setRawDashboards(dashboards)
             const starred = new Set<string>()
