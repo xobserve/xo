@@ -185,7 +185,7 @@ const LogPanel = (props: LogPanelProps) => {
 
                     let found1 = false
                     for (const k of Object.keys(v.labels)) {
-                        const v1 = v.labels[k].toLowerCase()
+                        const v1 = v.labels[k]?.toLowerCase()
                         if (k.toLowerCase() == lkey && v1.match(lvalue)) {
                             v.labelHighlight.push(v1)
                             found1 = true

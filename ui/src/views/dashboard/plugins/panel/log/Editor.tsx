@@ -59,14 +59,14 @@ const LogPanelEditor = memo((props: PanelEditorProps) => {
                     panel.plugins.log.timeStampPrecision = v
                 })} options={[{ label: "ns", value: "ns" }, { label: "us", value: "us" }, { label: "ms", value: "ms" }, { label: "second", value: "s" }]} popupMatchSelectWidth={false} />
             </PanelEditItem>
-            <PanelEditItem title="Enable log transform">
-                <Switch isChecked={panel.plugins.log.enableTransform} onChange={(e) => onChange((panel: Panel) => {
-                    panel.plugins.log.enableTransform = e.target.checked
-                })} />
-            </PanelEditItem>
             <PanelEditItem title="Enable log details">
                 <Switch isChecked={panel.plugins.log.enableDetails} onChange={(e) => onChange((panel: Panel) => {
                     panel.plugins.log.enableDetails = e.target.checked
+                })} />
+            </PanelEditItem>
+            <PanelEditItem title="Enable log transform">
+                <Switch isChecked={panel.plugins.log.enableTransform} onChange={(e) => onChange((panel: Panel) => {
+                    panel.plugins.log.enableTransform = e.target.checked
                 })} />
             </PanelEditItem>
             { panel.plugins.log.enableTransform && <PanelEditItem title="Log transform">
