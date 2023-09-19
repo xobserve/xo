@@ -170,14 +170,14 @@ const getStyles = (theme) => {
       }
       .track-vertical {
         border-radius: 4px;
-        width: 5px !important;
+        width: 4px !important;
         right: 0px;
         bottom: 2px;
         top: 2px;
       }
       .track-horizontal {
         border-radius: 4px;
-        height: 5px!important;
+        height: 4px!important;
         right: 2px;
         bottom: 2px;
         left: 2px;

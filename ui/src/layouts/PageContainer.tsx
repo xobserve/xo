@@ -176,7 +176,7 @@ const Container = (props: Props) => {
             transition="all 0.2s"
             height="100vh"
             className="bordered-right"
-            overflowY="auto" overflowX="hidden"
+            // overflowY="auto" overflowX="hidden"
           >
             <CustomScrollbar hideHorizontalTrack>
               <Flex flexDir="column" height="100%" justifyContent="space-between" pl={miniMode ? null : paddingLeft + 'px'}
