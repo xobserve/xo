@@ -43,6 +43,12 @@ Datav is a modern data visualization platform, built in 2023, that enables deep 
 
 You might wonder what's the difference between Datav and Grafana, in short: **Datav focuses on Observability and APM, while Grafana is a general-purpose data visualization platform**.
 
+## Quick start & Documentation
+
+The documentation is available at [datav.io/docs](https://datav.io/docs).
+
+You can also try online demo at [play.datav.io](https://play.datav.io).
+
 ## Compare to Grafana
 
 Although Grafana is a great product, and it is the most popular dashboarding tool in the world, Datav has its own advantages.

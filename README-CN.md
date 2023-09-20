@@ -39,6 +39,12 @@ Datav 是一个现代化的数据可视化平台，构建于 2023 年，可以�
 
 大家可能会好奇 Datav 和 Grafana 有何区别，简单来说：Datav 专注于可观测性和 APM 领域，而 Grafana 则是一个通用的数据可视化平台。
 
+## 快速开始 & 文档
+
+文档地址： [datav.io/docs](https://datav.io/docs).
+
+同时大家也可以试试在线 Demo:  [play.datav.io](https://play.datav.io).
+
 ## 对比 Grafana
 
 虽然 Grafana 是一款伟大的产品，也是目前世界上最流行的图表平台，但是 Datav 依然有自己的优势。
