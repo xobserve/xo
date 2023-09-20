@@ -39,7 +39,7 @@
 
 Datav is a modern data visualization platform, built in 2023, that enables deep visualization and interactivity of Metrics, Traces, and Logs data.
 
-**You can build any Observability and APM UI you want based on Datav, if you cannot, please file an issue and we will support it as soon as possible.**
+**You can build any Observability and APM ( Application Performance Management ) UI you want based on Datav, if you cannot, please file an issue and we will support it as soon as possible.**
 
 You might wonder what's the difference between Datav and Grafana, in short: **Datav focuses on Observability and APM, while Grafana is a general-purpose data visualization platform**.
 
@@ -64,8 +64,7 @@ Although Grafana is a great product, and the most popular dashboarding tool in t
 
     In a word, you can use Datav to build any kinds of APM UI! We provide you nearly all the tools you need.
 
-    As comparison, grafana is focusing on exploring data, which make it impossible to meet what APM and Observability really needs.
-
+  
 
 2. **Quick response and development of new features and bugs**
 
@@ -73,7 +72,7 @@ Although Grafana is a great product, and the most popular dashboarding tool in t
 
 3. **Rich settings for panels**
     
-    Comparing to Grafana, Datav provides much more panel settings for you to build your own powerful panel.
+    Datav provides lots of panel settings for you to build your own powerful panel.
    
 4. **Unbelievable powerful interactivity**
 
@@ -84,7 +83,8 @@ https://github.com/data-observe/datav/assets/7036754/524d2905-ba51-4ba6-b808-ace
 5. **Outstanding performance and user experience**
    Codebase in Datav are very clean and simple: we only use React.js and Vite.js and has taken a lot of optimizations to improve user experiences.
 
-   **Datav is also much more easier to redevelop**, if you are a developers, when you dig into Grafana's codebase, you should know what I mean.
+
+   Datav is designed to be maintenance-friendly, dig into the code and be pleasantly surprised at how easy it is to modify.
    
 6. **Beautiful and customizable UI**
 
