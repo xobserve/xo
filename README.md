@@ -1,10 +1,13 @@
 <p align="center">
-  <img src="https://datav.io/logo.png" alt="datav-logo" width="40" />
+  <img src="https://datav.io/logo.png" alt="datav-logo" width="60" />
 </p>
 
+<p align="center">
+  Extremely powerful data visulization platform for APM and Observability
+</p>
 
 <p align="center">
-  Extremely powerful data visulization platform for APM and Observability, 100% real open-source with Apache2.0 license.
+  100% real open-source with Apache2.0 license.
 </p>
 
 <p align="center">
