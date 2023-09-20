@@ -144,10 +144,10 @@ const LogPanelEditor = memo((props: PanelEditorProps) => {
                 })} />
             </PanelEditItem>
 
-            <PanelEditItem title="Highlight labels" desc="Highlight the matched content words with color">
+            <PanelEditItem title="Highlight content" desc="Highlight the matched content words with color">
                 <EditorInputItem value={panel.plugins.log.styles.highlight} onChange={(v) => onChange((panel: Panel) => {
                     panel.plugins.log.styles.highlight = v
-                })} placeholder="separate with comman, e.g job,filename" />
+                })} placeholder="separate with comma" />
             </PanelEditItem>
             <PanelEditItem title="Highlight color">
                 <ColorPicker color={panel.plugins.log.styles.highlightColor} onChange={(v) => onChange((panel: Panel) => {

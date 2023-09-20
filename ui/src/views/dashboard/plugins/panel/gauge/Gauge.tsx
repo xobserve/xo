@@ -12,7 +12,6 @@
 // limitations under the License.
 import { Box, Center, useColorMode } from "@chakra-ui/react";
 import ChartComponent from "src/components/charts/Chart";
-import { cloneDeep, round } from "lodash";
 
 import { memo, useCallback, useEffect, useMemo, useState } from "react";
 import { PanelProps } from "types/dashboard"
@@ -80,7 +79,7 @@ const GaugePanel = memo((props: Props) => {
           continue
         } else {
           const next = thresholds.thresholds[i - 1]
-          split.push([thresholds.mode == ThresholdsMode.Percentage ? next.value / 100 : (next.value - data[0].min) / (data[0].max - data[0].min), paletteColorNameToHex(t.color, colorMode)])
+          split.push([thresholds.mode == ThresholdsMode.Percentage ? next.value / 100 : (next.value - (data[0]?.min)??0) / (data[0].max - (data[0]?.min)??0), paletteColorNameToHex(t.color, colorMode)])
         }
       }
     }
