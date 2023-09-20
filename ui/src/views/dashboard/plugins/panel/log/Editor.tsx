@@ -27,11 +27,11 @@ import { isEmpty } from "utils/validate"
 import { palettes } from "utils/colors"
 import { cloneDeep } from "lodash"
 import { FaTimes } from "react-icons/fa"
-import { isSeriesData } from "utils/seriesData"
 import { dispatch } from "use-bus"
 import { PanelForceRebuildEvent } from "src/data/bus-events"
 import { CodeEditorModal } from "components/CodeEditor/CodeEditorModal"
 import { ClickActionsEditor } from "src/views/dashboard/edit-panel/components/ClickActionsEditor"
+import StringColorMappingEditor from "components/StringColorMapping"
 
 const LogPanelEditor = memo((props: PanelEditorProps) => {
     const { panel, onChange } = props
@@ -114,7 +114,7 @@ const LogPanelEditor = memo((props: PanelEditorProps) => {
                 })} />
             </PanelEditItem>}
             <PanelEditItem title="Label value color">
-                <ColorPicker color={panel.plugins.log.styles.labelValueColor} onChange={(v) => onChange((panel: Panel) => {
+                <StringColorMappingEditor value={panel.plugins.log.styles.labelValueColor} onChange={(v) => onChange((panel: Panel) => {
                     panel.plugins.log.styles.labelValueColor = v
                 })} />
             </PanelEditItem>
@@ -310,8 +310,9 @@ const ThresholdEditor = (props: Props) => {
                         }} placeholder="match value.." />}
                         {threshold.type === null && <Text pl="1" fontSize="0.95rem">Base</Text>}
                     </HStack>
-                    {threshold.type !== null && <FaTimes opacity={0.6} fontSize="0.8rem" onClick={() => removeThreshold(i)} />}
+                    {threshold.type !== null && <FaTimes opacity={0.6} fontSize="0.8rem" cursor="pointer" onClick={() => removeThreshold(i)} />}
                 </Flex>)}
         </VStack>
     </Box>)
 }
+

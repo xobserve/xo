@@ -24,6 +24,7 @@ import { formatLabelId, getLabelNameColor } from "../utils";
 import { MobileVerticalBreakpointNum } from "src/data/constants";
 import { toJSON, toPrettyJSON } from "utils/is";
 import { commonInteractionEvent, genDynamicFunction } from "utils/dashboard/dynamicCall";
+import { getStringColorMapping } from "components/StringColorMapping";
 
 interface LogItemProps {
     log: Log
@@ -111,7 +112,7 @@ const LogItem = memo((props: LogItemProps) => {
                             <LabelName name={!isEmpty(labels[key]) && key} color={log.labelHighlight.indexOf(key.toLowerCase()) >= 0 ? paletteColorNameToHex(options.styles.highlightColor) : labelNameColor(formatLabelId(key, labels[key]))} />
                             {options.labels.layout == LayoutOrientation.Horizontal && !isEmpty(labels[key]) &&
                                 <Text>=</Text>}
-                            <LabelValue value={labels[key]} color={log.labelHighlight.indexOf(labels[key]?.toLowerCase()) >= 0 ? paletteColorNameToHex(options.styles.highlightColor) : options.styles.labelValueColor} maxLines={options.labels.maxValueLines} />
+                            <LabelValue value={labels[key]} color={log.labelHighlight.indexOf(labels[key]?.toLowerCase()) >= 0 ? paletteColorNameToHex(options.styles.highlightColor) : paletteColorNameToHex(getStringColorMapping(labels[key],options.styles.labelValueColor))} maxLines={options.labels.maxValueLines} />
                         </LabelLayout>)
                     }
                 </HStack>}
@@ -151,7 +152,7 @@ const LogItem = memo((props: LogItemProps) => {
                             <Box minWidth={isMobileScreen ? "10em" : "20em"}>
                                 <LabelName name={key} color={labelNameColor(formatLabelId(key, labels[key]))} />
                             </Box>
-                            <LabelValue value={labels[key]} color={options.styles.labelValueColor} maxLines={options.labels.maxValueLines} />
+                            <LabelValue value={labels[key]} color={paletteColorNameToHex(getStringColorMapping(labels[key],options.styles.labelValueColor))} maxLines={options.labels.maxValueLines} />
 
                         </HStack>)
                     }

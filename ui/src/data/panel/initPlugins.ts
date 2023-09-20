@@ -440,7 +440,7 @@ function onClick(data, map, navigate, setVariable, setDateTime, $variables) {
             styles: {
                 labelColorSyncChart: true,
                 labelColor: 'inherit',
-                labelValueColor: 'inherit',
+                labelValueColor: [{color: 'inherit', value: null}],
                 contentColor: 'inherit',
                 fontSize: "0.9rem",
                 wrapLine: false,

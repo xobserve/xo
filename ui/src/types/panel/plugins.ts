@@ -138,7 +138,7 @@ export interface LogSettings {
     styles: {
         labelColorSyncChart: boolean
         labelColor: string
-        labelValueColor: string
+        labelValueColor: Record<string,string>[]
         contentColor: string
         fontSize: string
         wrapLine: boolean
