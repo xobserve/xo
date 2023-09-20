@@ -107,7 +107,7 @@ const LogItem = memo((props: LogItemProps) => {
             {options.labels.display.length > 0 &&
                 <HStack alignItems="center" maxW="100%" spacing={options.labels.layout == LayoutOrientation.Horizontal ? 2 : 3}>
                     {
-                        Object.keys(labels).map(key => options.labels.display.includes(key) &&  <LabelLayout alignItems="start" key={key + labels[key]} spacing={0} width={labelWidthMap[key] ?? options.labels.width ?? 100} >
+                        Object.keys(labels).map(key => options.labels.display.includes(key) &&  <LabelLayout alignItems="start" key={key + labels[key]} spacing={0} width={(labelWidthMap[key] ?? options.labels.width ?? 100) + 'px'} >
                             <LabelName name={!isEmpty(labels[key]) && key} color={log.labelHighlight.indexOf(key.toLowerCase()) >= 0 ? paletteColorNameToHex(options.styles.highlightColor) : labelNameColor(formatLabelId(key, labels[key]))} />
                             {options.labels.layout == LayoutOrientation.Horizontal && !isEmpty(labels[key]) &&
                                 <Text>=</Text>}
