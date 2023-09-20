@@ -7,7 +7,7 @@
 </p>
 
 <p align="center">
-  100% real open-source with Apache2.0 license.
+  Production ready, 100% real open-source with Apache2.0 license.
 </p>
 
 <p align="center">
