@@ -15,7 +15,9 @@ package dashboard
 import (
 	"database/sql"
 	"encoding/json"
+	"errors"
 	"fmt"
+	"math/rand"
 	"net/http"
 	"time"
 
@@ -166,6 +168,13 @@ func GetDashboard(c *gin.Context) {
 		log.WithTrace(traceCtx).Warn("Error query dashbaord", zap.String("username", u.Username), zap.Error(err))
 		c.JSON(500, common.RespError(e.Internal))
 		return
+	}
+
+	r := rand.Intn(100)
+	if r > 70 {
+		log.WithTrace(traceCtx).Warn("Mock a warn msg for query dashbaord", zap.String("username", u.Username), zap.Error(errors.New("nothing happend, just mock a warn msg")))
+	} else if r > 50 {
+		log.WithTrace(traceCtx).Error("Mock a error msg for query dashbaord", zap.String("username", u.Username), zap.Error(errors.New("nothing happend, just mock a error msg")))
 	}
 
 	span.End()
