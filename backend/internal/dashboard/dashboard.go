@@ -173,7 +173,7 @@ func GetDashboard(c *gin.Context) {
 	r := rand.Intn(100)
 	if r > 70 {
 		log.WithTrace(traceCtx).Warn("Mock a warn msg for query dashbaord", zap.String("username", u.Username), zap.Error(errors.New("nothing happend, just mock a warn msg")))
-	} else if r > 50 {
+	} else if r > 35 {
 		log.WithTrace(traceCtx).Error("Mock a error msg for query dashbaord", zap.String("username", u.Username), zap.Error(errors.New("nothing happend, just mock a error msg")))
 	}
 

@@ -32,7 +32,7 @@ func createLogger() *zap.Logger {
 		Level:             zap.NewAtomicLevelAt(zap.InfoLevel),
 		Development:       false,
 		DisableCaller:     false,
-		DisableStacktrace: false,
+		DisableStacktrace: true,
 		Sampling:          nil,
 		Encoding:          "json",
 		EncoderConfig:     encoderCfg,
