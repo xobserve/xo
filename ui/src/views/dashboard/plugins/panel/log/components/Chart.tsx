@@ -104,17 +104,26 @@ const LogChart = memo((props: Props) => {
                         old[ts] = old[ts] ? old[ts] + 1 : 1
                     }
                 } else {
-                    for (const k of Object.keys(log.labels)) {
+                    let labeled = false
+                    const keys = Object.keys(log.labels)
+                    keys.forEach((k,i) => {
                         let labelId
                         if (panel.type == PanelType.Log && panel.plugins.log.chart.categorize != k ) {
+                            if (i < keys.length -1) {
+                                return 
+                            } 
+                            
+                            if (!labeled) {
                              labelId = formatLabelId(panel.plugins.log.chart.categorize , undefined)
+                            }
                         } else {
                              labelId = formatLabelId(k, log.labels[k])
+                             labeled = true
                         }
-                      
+                        
                         if (activeLabels?.length != 0) {
                             if (!activeLabels.includes(labelId)) {
-                                continue
+                                return 
                             }
                         }
                         const old = labelMap.get(labelId)
@@ -125,7 +134,7 @@ const LogChart = memo((props: Props) => {
                         } else {
                             old[ts] = old[ts] ? old[ts] + 1 : 1
                         }
-                    }
+                    }) 
                 }
             }
 
@@ -271,10 +280,12 @@ const getSeriesColor = (name:string, panel: Panel, colorMode, colorGenerator) =>
         return getLabelNameColor(name,colorMode,colorGenerator)
     }
     
-    if (kv[0] == panel.plugins.log.chart.categorize) {
+    if (kv[0] == panel.plugins.log?.chart.categorize) {
         const color = paletteColorNameToHex(getStringColorMapping(kv[1],panel.plugins.log.styles.labelValueColor))
         return color != "inherit" ? color : getLabelNameColor(name,colorMode,colorGenerator)
     }
+
+    return getLabelNameColor(name,colorMode,colorGenerator)
 }
 
 // start, end, minStep : second

@@ -75,7 +75,7 @@ export const getStringColorMapping = (str: string, mapping) => {
             return m.color 
         }
 
-        if (str.match(m.value)) {
+        if (str?.match(m.value)) {
             return m.color
         }
     }
