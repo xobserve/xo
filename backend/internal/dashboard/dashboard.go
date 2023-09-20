@@ -154,7 +154,7 @@ func GetDashboard(c *gin.Context) {
 			String(fmt.Sprintf("SELECT * FROM dashboard WHERE id=%s", id)),
 	)
 
-	log.WithTrace(traceCtx).Info("Start to get dashboard", zap.String("id", id), zap.String("username", u.Username))
+	// log.WithTrace(traceCtx).Info("Start to get dashboard", zap.String("id", id), zap.String("username", u.Username))
 
 	dash, err := models.QueryDashboard(id)
 	if err != nil {
@@ -225,7 +225,7 @@ func GetDashboard(c *gin.Context) {
 	dash.Editable = true
 	dash.OwnerName = teamName
 
-	log.WithTrace(traceCtx).Info("Get dashboard ok", zap.String("id", dash.Id), zap.String("title", dash.Title), zap.String("username", u.Username), zap.String("ip", c.ClientIP()))
+	log.WithTrace(traceCtx).Info("Get dashboard", zap.String("id", dash.Id), zap.String("title", dash.Title), zap.String("username", u.Username), zap.String("ip", c.ClientIP()))
 
 	c.JSON(200, common.RespSuccess(dash))
 }
