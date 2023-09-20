@@ -199,6 +199,12 @@ const LogPanelEditor = memo((props: PanelEditorProps) => {
                     panel.plugins.log.chart.tooltip = v
                 })} />
             </PanelEditItem>
+            <PanelEditItem title="Categorize bar with label value">
+                <EditorInputItem value={panel.plugins.log.chart.categorize} onChange={(v) => onChange((panel: Panel) => {
+                    panel.plugins.log.chart.categorize = v
+                    dispatch(PanelForceRebuildEvent + panel.id)
+                })} placeholder="e.g 200px 30%" />
+            </PanelEditItem>
         </PanelAccordion>
         <PanelAccordion title="Search logs">
             <PanelEditItem title="Search log content" desc="Support variables">

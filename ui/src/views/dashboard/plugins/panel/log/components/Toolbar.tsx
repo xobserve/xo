@@ -28,7 +28,6 @@ interface Props {
     onSearchChange: any
     onLabelSearch: any
     currentLogsCount: number
-    viewOptions: LogChartView
 }
 
 

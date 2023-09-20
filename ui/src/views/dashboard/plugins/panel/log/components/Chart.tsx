@@ -23,6 +23,8 @@ import { formatLabelId, getLabelNameColor } from "../utils"
 import moment from "moment"
 import { isEmpty } from "utils/validate"
 import { AlertToolbarOptions } from "types/plugins/alert"
+import { paletteColorNameToHex } from "utils/colors"
+import { getStringColorMapping } from "components/StringColorMapping"
 
 
 interface Props {
@@ -103,8 +105,14 @@ const LogChart = memo((props: Props) => {
                     }
                 } else {
                     for (const k of Object.keys(log.labels)) {
-                        const labelId = formatLabelId(k, log.labels[k])
-                        if (activeLabels.length != 0) {
+                        let labelId
+                        if (panel.type == PanelType.Log && panel.plugins.log.chart.categorize != k ) {
+                             labelId = formatLabelId(panel.plugins.log.chart.categorize , undefined)
+                        } else {
+                             labelId = formatLabelId(k, log.labels[k])
+                        }
+                      
+                        if (activeLabels?.length != 0) {
                             if (!activeLabels.includes(labelId)) {
                                 continue
                             }
@@ -225,7 +233,8 @@ const LogChart = memo((props: Props) => {
                 fontSize: 11
             }
         },
-        series: names.map((name, i) => ({
+        series: names.map((name, i) => {
+            return ({
             name: name,
             data: data[i],
             type: 'bar',
@@ -244,9 +253,9 @@ const LogChart = memo((props: Props) => {
             emphasis: {
                 focus: 'series'
             },
-            color: getLabelNameColor(name,colorMode,colorGenerator)
+            color: getSeriesColor(name, panel,colorMode,colorGenerator)
             // barWidth: '90%'
-        }))
+        })})
     };
 
     return (<>
@@ -256,7 +265,17 @@ const LogChart = memo((props: Props) => {
 
 export default LogChart
 
-
+const getSeriesColor = (name:string, panel: Panel, colorMode, colorGenerator) => {
+    const kv = name.split("=")
+    if (kv.length == 1 ) {
+        return getLabelNameColor(name,colorMode,colorGenerator)
+    }
+    
+    if (kv[0] == panel.plugins.log.chart.categorize) {
+        const color = paletteColorNameToHex(getStringColorMapping(kv[1],panel.plugins.log.styles.labelValueColor))
+        return color != "inherit" ? color : getLabelNameColor(name,colorMode,colorGenerator)
+    }
+}
 
 // start, end, minStep : second
 // step should be 30s, 1m, 5m, 10m, 30m, 1h, 3h, 6h, 12h, 1d

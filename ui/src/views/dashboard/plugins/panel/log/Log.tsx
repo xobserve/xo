@@ -73,10 +73,6 @@ const LogPanel = (props: LogPanelProps) => {
     const [collaseAll, setCollapeAll] = useState(true)
     const [search, setSearch] = useState("")
     const [labelSearch, setLabelSearch] = useState<string>("")
-    const [viewOptions, setViewOptions] = useState<LogChartView>(storage.get(viewStorageKey) ?? {
-        maxBars: 20,
-        barType: "total"
-    })
     const data: Log[] = useMemo(() => {
         const res: Log[] = []
         let transform
@@ -269,7 +265,7 @@ const LogPanel = (props: LogPanelProps) => {
             <CustomScrollbar>
                 <Box height={props.height} maxHeight={props.height} width={props.width - (toolbarOpen ? panel.plugins.log.toolbar.width : 1)} transition="all 0.3s" pt="2" >
                     {panel.plugins.log.chart.show && <Box className="log-panel-chart" height={panel.plugins.log.chart.height}>
-                        <LogChart data={sortedData} panel={panel} width={props.width - (toolbarOpen ? panel.plugins.log.toolbar.width : 1)} viewOptions={viewOptions} colorGenerator={generator} />
+                        <LogChart data={sortedData} panel={panel} width={props.width - (toolbarOpen ? panel.plugins.log.toolbar.width : 1)} viewOptions={ {barType:isEmpty(panel.plugins.log.chart.categorize) ? "total" :  "labels"}} colorGenerator={generator} activeLabels={[]}/>
                     </Box>}
                     <VStack alignItems="left" divider={panel.plugins.log.styles.showlineBorder && <StackDivider />} mt="1" pb="2">
                         {
@@ -281,7 +277,7 @@ const LogPanel = (props: LogPanelProps) => {
 
             {<Box className="bordered-left" height={props.height} maxHeight={props.height} width={toolbarOpen ? panel.plugins.log.toolbar.width : 0} transition="all 0.3s">
                 <CustomScrollbar>
-                    {toolbarOpen && <LogToolbar panel={panel} onCollapseAll={onCollapseAll} onSearchChange={onSearchChange} onLabelSearch={onSearchLabel} height={props.height} currentLogsCount={filterData.length} viewOptions={viewOptions} />}
+                    {toolbarOpen && <LogToolbar panel={panel} onCollapseAll={onCollapseAll} onSearchChange={onSearchChange} onLabelSearch={onSearchLabel} height={props.height} currentLogsCount={filterData.length}  />}
                 </CustomScrollbar>
             </Box>}
             {sortedData.length == 0 && <Text position="absolute" left="calc(50% - 55px)" top="45%">No logs founded</Text>}
