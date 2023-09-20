@@ -4,7 +4,7 @@
 
 
 <h2 align="center">
-  Extremely powerful data visulization platform for APM and Observability, 100% opensource.
+  Extremely powerful data visulization platform for APM and Observability, 100% real open-source with Apache2.0 license.
 </h2>
 
 <p align="center">
@@ -17,80 +17,73 @@
 <div>
   <img src="https://github.com/data-observe/assets/blob/main/datav-readme/home-example1.jpg?raw=true" width="100%" />
 
-   <img src="https://github.com/data-observe/assets/blob/main/datav-readme/runtime-example.jpg?raw=true" width="100%" />
+   <!-- <img src="https://github.com/data-observe/assets/blob/main/datav-readme/runtime-example.jpg?raw=true" width="100%" /> -->
 </div>
   
     
-            
+## About Datav
 
+Datav is a modern data visualization platform, built in 2023, that enables deep visualization and interactivity of Metrics, Traces, and Logs data.
 
+**You can build any Observability and APM UI you want based on Datav, if you cannot, please fire an issue, we will support as soon as possible.**
 
-
-
-
-
-
-## About datav
-
-Datav is a modern data visualization platform built from scratch in 2023, you can visualize metrics, traces, and logs from various datasource, and correlate them easily and deeply.
-
-Datav has almost all the features that Grafana has, you may think it as a replacement of Grafana, but it doesn't.
-
-Because, **Datav is focus in observability and APM scenarios**, however, Grafana is designed for general purpose data visualization.
+You might wonder what's the difference between Datav and Grafana, in short: **Datav focuses on Observability and APM, while Grafana is a general-purpose data visualization platform**.
 
 ## Compare to Grafana
 
 Although Grafana is a great product, and it is the most popular dashboarding tool in the world, Datav has its own advantages.
 
-1. **Datav provides native support for observability and APM**
+1. **Native support for observability and APM**
   
-    - **Built in Metrics, Traces and Logs panels**, they are all very very powerful
-    - **Beautiful large screen support**, which looks like big data large screen
-    - **Customize sidebar menu** to provice better navigation features
-    - **Global variables** to provide global context: select in one place, effect everywhere, e.g applications, environments, hosts 
-    - General HTTP datasource and Echarts panel, you can query and build everything you want with them 
-    - Transform data to any format you want before rendering
-  
-    In a word, **you can use Datav to build any kinds of APM UI**! We provide you nearly all the tools you need. 
+ - **Built in powerful Metrics, Traces and Logs panels**
+ - **Support beautiful large data screen**, you can customize dashboards and panel styles as you like.
+ - **Customizable sidebar menu** , the sidebar in Grafana is unchangeable, but Datav gives you plenty of options, even you can create different sidebar menu  for different teams!
+ - **Global variable**，For APM platforms, global variables are very important, when you choose an environment, application or a host, you may want to select in one place, effect everywhere.
+ - **Built in general HTTP datasource and Echarts panel**, you can query and build anything you want with them 
+ - **Powerful data transformation**, in some cases, the data query from datasource is not exactly what you want, for these cases you can customize the data tranformation in Datav, and converted the query result into any format and form you want.
+
+    In a word, you can use Datav to build any kinds of APM UI! We provide you nearly all the tools you need.
 
     As comparison, grafana is focusing on exploring data, which make it impossible to meet what APM and Observability really needs.
 
-2. **Bountiful panel options**, comparing to Grafana, Datav provides much more panel settings for you to build your own powerful panel.
+
+2. **Quick response and development of new features and bugs**
+
+   Grafana is constrained by its commercial product line, complex codebase and development proccess, therefore many features take years to respond to, whereas Datav are ready to support as long as the requirements are reasonable.
+
+3. **Rich settings for panels**
+    
+    Comparing to Grafana, Datav provides much more panel settings for you to build your own powerful panel.
    
-3. **Much better dashboard interactivity**, such as custom your own jumping events between traces, logs and metrics like below video: 
+4. **Unbelievable powerful interactivity**
+
+    As an APM platform, drill-down and associative queries are essential, and Datav provides customizable interactivity for this, almost all panel types can implement any kind of interactive events, such as the drill-down interaction `Metrics -> Trace -> Logs -> Traces` demonstrated in the following video:
 
 https://github.com/data-observe/datav/assets/7036754/524d2905-ba51-4ba6-b808-aceaf3a52682
 
-4. **Outstanding performance and user experience**
-   codebase in Datav are very clean and simple: we only use React.js and Vite.js and has taken a lot of optimizations to improve user experiences.
+5. **Outstanding performance and user experience**
+   Codebase in Datav are very clean and simple: we only use React.js and Vite.js and has taken a lot of optimizations to improve user experiences.
 
    **Datav is also much more easier to redevelop**, if you are a developers, when you dig into Grafana's codebase, you should know what I mean.
    
-5. **Beautiful and customizable UI**
+6. **Beautiful and customizable UI**
 
     As datav is a new product, we have a chance to build a modern and beautiful UI from scratch. 
 
     You can customize dashboard and panel styles to build beautiful dashboard, such as building a large screen display, maybe your Boss will like it :)
 
-6.  **Better open-source License**
+7.  **Better open-source License**
 
     Datav is using Apache License 2.0, which is more friendly to commercial use.
 
-    We promise: **we will never CHANGE LICENSE and CLOSE-SOURCE in the future, datav is and will be 100% open source forever**!
+    We solemnly promise: **we will never CHANGE LICENSE and CLOSE-SOURCE in the future, datav is and will be 100% open source forever**!
 
-7.  **Perfect mobile screeen support**: viewing and editing dashboards at home using your mobile phone.
+8.  **Perfect mobile screeen support**
 
-
-
-<!-- 
-## Visitors Count
-
-<img align="left" src = "https://profile-counter.glitch.me/datav/count.svg" alt ="Loading"> -->
+    There will always be times when you need to access the APM platform outside the company's internal network, so supporting mobile operation is essential
 
 
-
-
-## Demo images
+## Example images
 
 <img src="https://github.com/data-observe/assets/blob/main/datav-readme/home-example1.jpg?raw=true" />
 
@@ -110,3 +103,7 @@ https://github.com/data-observe/datav/assets/7036754/524d2905-ba51-4ba6-b808-ace
 
 
 
+
+## Visitors Count
+
+<img align="left" src = "https://profile-counter.glitch.me/datav/count.svg" alt="Loading">
