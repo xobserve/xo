@@ -15,9 +15,16 @@
 </p>
 
 <div>
-  <img src="https://github.com/data-observe/assets/blob/main/datav-readme/home-example1.jpg?raw=true" width="100%" />
-
-   <!-- <img src="https://github.com/data-observe/assets/blob/main/datav-readme/runtime-example.jpg?raw=true" width="100%" /> -->
+  <table>
+      <tr>
+          <td align="center">
+               <img src="https://github.com/data-observe/assets/blob/main/datav-readme/home-example1.jpg?raw=true" width="100%" />
+          </td>
+          <td align="center">
+                <img src="https://github.com/data-observe/assets/blob/main/datav-readme/runtime-example.jpg?raw=true" width="100%" />
+          </td>
+      </tr>
+  </table>
 </div>
   
     

@@ -7,17 +7,19 @@
   为 APM 和可观测性量身打造的现代化数据可视平台, 100% 真正开源 - Apache2.0 协议
 </h2>
 
-<p align="center">
-    <img alt="License" src="https://img.shields.io/badge/license-Apache2.0-brightgreen"> 
-    <a href="https://zh.datav.io"><img alt="Website" src="https://img.shields.io/badge/Website-datav.io-blue"></a>
-    <a href="https://play.datav.io"><img alt="Online demo" src="https://img.shields.io/badge/Online-demo-blue"></a>
-</p>
-
 <div>
-  <img src="https://github.com/data-observe/assets/blob/main/datav-readme/home-example1.jpg?raw=true" width="100%" />
-
-   <!-- <img src="https://github.com/data-observe/assets/blob/main/datav-readme/runtime-example.jpg?raw=true" width="100%" /> -->
+  <table>
+      <tr>
+          <td align="center">
+               <img src="https://github.com/data-observe/assets/blob/main/datav-readme/home-example1.jpg?raw=true" width="100%" />
+          </td>
+          <td align="center">
+                <img src="https://github.com/data-observe/assets/blob/main/datav-readme/runtime-example.jpg?raw=true" width="100%" />
+          </td>
+      </tr>
+  </table>
 </div>
+  
   
 ## 关于 Datav
 
