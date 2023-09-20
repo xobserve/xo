@@ -8,8 +8,8 @@ import clsx from 'clsx'
 import { useActionKey } from '@/hooks/useActionKey'
 
 const INDEX_NAME = 'datav'
-const API_KEY = 'cb85d7345b312327fad448d36cad9602'
-const APP_ID = 'BH4D9OD16A'
+const API_KEY = '86e3fccad6c7598c6c1af952c456eec0'
+const APP_ID = 'UBF72TF948'
 
 const SearchContext = createContext()
 
