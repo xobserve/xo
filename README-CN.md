@@ -3,9 +3,16 @@
 </p>
 
 
-<h2 align="center">
+<p align="center">
   为 APM 和可观测性量身打造的现代化数据可视平台, 100% 真正开源 - Apache2.0 协议
-</h2>
+</px>
+
+<p align="center">
+    <img alt="License" src="https://img.shields.io/badge/license-Apache2.0-brightgreen"> 
+    <a href="https://datav.io"><img alt="Website" src="https://img.shields.io/badge/官网-datav.io-blue"></a>
+    <a href="https://play.datav.io"><img alt="Online demo" src="https://img.shields.io/badge/在线-demo-blue"></a>
+</p>
+
 
 <div>
   <table>
@@ -18,6 +25,9 @@
           </td>
       </tr>
   </table>
+   <p align="center">
+        <a href="./README.md">English</a> | 简体中文
+  </p>
 </div>
   
   

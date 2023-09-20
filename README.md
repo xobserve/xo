@@ -1,15 +1,14 @@
 <p align="center">
-  <img src="https://datav.io/logo.png" alt="datav-logo" width="80" />
+  <img src="https://datav.io/logo.png" alt="datav-logo" width="40" />
 </p>
 
 
-<h2 align="center">
+<p align="center">
   Extremely powerful data visulization platform for APM and Observability, 100% real open-source with Apache2.0 license.
-</h2>
+</p>
 
 <p align="center">
     <img alt="License" src="https://img.shields.io/badge/license-Apache2.0-brightgreen"> 
-    <a href="https://github.com/data-observe/datav/blob/main/README_CN.md"><img alt="Chinese readme" src="https://img.shields.io/badge/中文-Readme-orange"></a>
     <a href="https://datav.io"><img alt="Website" src="https://img.shields.io/badge/Website-datav.io-blue"></a>
     <a href="https://play.datav.io"><img alt="Online demo" src="https://img.shields.io/badge/Online-demo-blue"></a>
 </p>
@@ -25,9 +24,14 @@
           </td>
       </tr>
   </table>
+  <p align="center">
+    English | <a href="./README-CN.md">简体中文</a>
+  </p>
 </div>
   
-    
+
+
+
 ## About Datav
 
 Datav is a modern data visualization platform, built in 2023, that enables deep visualization and interactivity of Metrics, Traces, and Logs data.
