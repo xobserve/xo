@@ -115,6 +115,14 @@ export function NavPopover({ display = 'md:hidden', className, ...props }) {
           <div className="mt-6 pt-6 border-t border-slate-200 dark:border-slate-200/10">
             <ThemeSelect />
           </div>
+          <div className="mt-6 pt-6 border-t border-slate-200 dark:border-slate-200/10">
+            <div className="flex items-center justify-between">
+            <label htmlFor="theme" className="text-slate-700  font-normal dark:text-slate-400">
+              切换语言
+            </label>
+            <LangSwitcher />
+            </div>
+          </div>
         </div>
       </Dialog>
     </div>
