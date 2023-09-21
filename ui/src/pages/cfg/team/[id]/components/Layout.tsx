@@ -15,18 +15,19 @@ import Page from "layouts/page/Page"
 import React, { useEffect, useRef, useState } from "react"
 import { useNavigate, useParams } from "react-router-dom"
 import { Route } from "types/route"
-import { Team, globalTeamId } from "types/teams"
-import { requestApi } from "utils/axios/request"
+import { globalTeamId } from "types/teams"
 import { FaAlignLeft, FaCog, FaConnectdevelop, FaTerminal, FaUserFriends } from "react-icons/fa"
 import { MdOutlineDashboard } from "react-icons/md"
 import { useStore } from "@nanostores/react"
 import { cfgTeam } from "src/i18n/locales/en"
-import { Box, Button, HStack, Select, Text } from "@chakra-ui/react"
+import { Box, HStack, Select, Text } from "@chakra-ui/react"
 import storage from "utils/localStorage"
 import { $teams } from "src/views/team/store"
 import { $datasources, $teamDatasources } from "src/views/datasource/store"
 import { defaultDatasourceId } from "types/datasource"
 import { concat } from "lodash"
+import { $teamVariables, $variables } from "src/views/variables/store"
+import SelectVariables from "src/views/variables/SelectVariable"
 
 const getTeamSubLinks = (id) => {
     return [
@@ -55,7 +56,7 @@ const TeamLayout = ({children}: Props) => {
     const teams = useStore($teams)
     const team =teams?.find(t => t.id.toString() == id)
     const [onHover, setOnHover] = useState(false)
-
+    const vars = useStore($variables)
     useEffect(() => {
         if (team) {
             let dss = []
@@ -68,8 +69,15 @@ const TeamLayout = ({children}: Props) => {
                 }
             }
             $datasources.set(concat(dss,$teamDatasources.get()[id] ?? []) )
+
+            const gVars = (id !== globalTeamId.toString() && team.allowGlobal) ? $teamVariables.get()[globalTeamId] : []
+ 
+            const teamVars = $teamVariables.get()[id] ?? []
+            
+            $variables.set([...gVars, ...teamVars])
         }
     },[team])
+
     return <>
         <Page title={t1.title} subTitle={
         <HStack mt="1" onMouseEnter={() => setOnHover(true)} onMouseLeave={() => setOnHover(false)} >
@@ -90,7 +98,7 @@ const TeamLayout = ({children}: Props) => {
             {team && React.cloneElement(children, { team })}
             </Box>
         </Page>
-
+        <Box visibility="hidden"><SelectVariables variables={vars} /></Box>
     </>
 }
 
