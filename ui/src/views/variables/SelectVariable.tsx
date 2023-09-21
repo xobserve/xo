@@ -38,6 +38,7 @@ import { $datasources } from "../datasource/store"
 import { Datasource } from "types/datasource"
 import Loading from "components/loading/Loading"
 import { EditorInputItem } from "components/editor/EditorItem"
+import { $teams } from "../team/store"
 
 interface Props {
     variables: Variable[]
@@ -211,9 +212,10 @@ const SelectVariable = memo(({ v }: { v: Variable }) => {
 
 
     const value = isEmpty(v.selected) ? [] : v.selected.split(VariableSplitChar)
-
+    const teams = $teams.get()
+    const isDashVar = v.id.toString().startsWith("d-")
     return <HStack key={v.id} spacing={1}>
-        <Tooltip openDelay={300} label={(v.id.toString().startsWith("d-") ? t1.dashScoped : t1.globalScoped) + ": " + v.name}><Text fontSize="sm" minWidth="max-content" noOfLines={1}>{v.name}</Text></Tooltip>
+        <Tooltip openDelay={300} label={(isDashVar ? t1.dashScoped : (teams.find(t => t.id == v.teamId)?.name  + ' team - ' + t1.globalScoped)) + ": " + v.name} placement="auto"><Text fontSize="sm" minWidth="max-content" noOfLines={1}>{v.name}</Text></Tooltip>
         {!loading && v.type != VariableQueryType.TextInput && !isEmpty(values) &&
             <PopoverSelect
                 value={value}
@@ -231,7 +233,7 @@ const SelectVariable = memo(({ v }: { v: Variable }) => {
                 exclusive={VarialbeAllOption}
                 isMulti={v.enableMulti}
                 showArrow={false}
-                matchWidth={v.id.toString().startsWith('d-')}
+                matchWidth={isDashVar}
             />}
         {v.type == VariableQueryType.TextInput && <EditorInputItem bordered={false} borderedBottom  value={v.selected} onChange={v1 => {
             if (v1 != v.selected) {

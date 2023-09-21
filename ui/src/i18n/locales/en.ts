@@ -365,8 +365,8 @@ export const timePickerMsg = i18n("timePicker", {
 
 
 export const variableMsg = i18n("variable", {
-  "dashScoped": "dashboard scoped variable",
-  "globalScoped": "global scoped variable",
+  "dashScoped": "dashboard variable",
+  "globalScoped": "global variable",
   "textInputTips": "input variable value",
 })
 
