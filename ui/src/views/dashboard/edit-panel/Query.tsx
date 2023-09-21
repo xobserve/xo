@@ -44,7 +44,6 @@ interface Props {
 
 const EditPanelQuery = (props: Props) => {
     const t = useStore(commonMsg)
-    const t1 = useStore(panelMsg)
     const { panel, onChange } = props
     const selectDatasource = (id) => {
         const datasources = $datasources.get()

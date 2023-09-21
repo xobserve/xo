@@ -18,6 +18,7 @@ import React from "react"
 import { DatasourceType } from "types/dashboard"
 import { useStore } from "@nanostores/react"
 import { $datasources } from "src/views/datasource/store"
+import { $teams } from "src/views/team/store"
 
 interface Props {
     value: number
@@ -29,17 +30,18 @@ interface Props {
 
 const DatasourceSelect = ({ value, onChange, allowTypes = [], variant = "unstyled",size="md" }: Props) => {
     const datasources = useStore($datasources)
-
+    const teams = $teams.get()
     const options = []
     datasources.forEach((ds) => {
         if (allowTypes.length > 0 && !allowTypes.includes(ds.type)) {
             return
         }
-
+        
         options.push({
             label: ds.name,
             value: ds.id,
-            icon: <Image width="30px" height="30px" mr="2" src={`/plugins/datasource/${ds.type}.svg`} />
+            icon: <Image width="30px" height="30px" mr="2" src={`/plugins/datasource/${ds.type}.svg`} />,
+            annotation: teams.find(t => ds.teamId == t.id)?.name,
         })
     })
 

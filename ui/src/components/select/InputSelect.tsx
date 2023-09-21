@@ -21,6 +21,7 @@ import { isEmpty } from "utils/validate"
 interface Value {
     value: string,
     label: string
+    annotation?: string
 }
 
 interface SelectProps {
@@ -107,7 +108,10 @@ const InputSelect = ({ value,label, options, onChange, variant = "outline", cust
                             {
                                 searchedResult.map(option => <HStack key={option.label} className="hover-bg" py="1" px="2" cursor="pointer" onClick={() => onOptionClick(option)} fontSize="0.9rem">
                                     <Box color="brand.500" fontSize="0.6rem" width="12px">{value == option.value && <FaCheck />}</Box>
-                                    {customOption ? customOption(option) : <Text>{option.label}</Text>}
+                                    {customOption ? customOption(option) : <Flex justifyContent="space-between" width="100%">
+                                        <Text>{option.label}</Text>
+                                        {!isEmpty(option.annotation) && <Text textStyle="annotation">{option.annotation}</Text>}
+                                        </Flex>}
                                 </HStack>)
                             }
                         </VStack>
