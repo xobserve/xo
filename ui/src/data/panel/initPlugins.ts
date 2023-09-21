@@ -459,7 +459,8 @@ function onClick(data, map, navigate, setVariable, setDateTime, $variables) {
                 height: '120px',
                 showLabel: "auto",
                 stack: "auto",
-                tooltip: "all"
+                tooltip: "all",
+                categorize: "",
             },
             search: {
                 log: "",

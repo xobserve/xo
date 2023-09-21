@@ -159,7 +159,7 @@ export interface LogSettings {
         showLabel: "auto" | "always" | "none"
         stack: "auto" | "always" | "none"
         tooltip: "none" | "single" | "all"
-        categorize: "string"
+        categorize: string
     }
     search: {
         log: string

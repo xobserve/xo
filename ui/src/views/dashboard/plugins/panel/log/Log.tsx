@@ -19,8 +19,8 @@ import { FaFilter } from "react-icons/fa";
 import LogToolbar from "./components/Toolbar";
 import storage from "utils/localStorage";
 import LogItem from "./components/LogItem";
-import { isLogSeriesData } from "./utils";
-import { clone, isFunction, sortBy } from "lodash";
+import { getLabelFromId, isLogSeriesData } from "./utils";
+import { clone, isEqual, isFunction, sortBy } from "lodash";
 import LogChart from "./components/Chart";
 import { isEmpty } from "utils/validate";
 import CustomScrollbar from "src/components/CustomScrollbar/CustomScrollbar";
@@ -68,11 +68,12 @@ const LogPanel = (props: LogPanelProps) => {
     const { dashboardId, panel } = props
     const toast = useToast()
     const storageKey = ToolbarStorageKey + dashboardId + panel.id
-    const viewStorageKey = LogViewOptionsStorageKey + dashboardId + panel.id
     const [toolbarOpen, setToolbarOpen] = useState(storage.get(storageKey) ?? props.panel.plugins.log.toolbar.defaultOpen)
     const [collaseAll, setCollapeAll] = useState(true)
     const [search, setSearch] = useState("")
     const [labelSearch, setLabelSearch] = useState<string>("")
+    const [active, setActive] = useState<string[]>([])
+
     const data: Log[] = useMemo(() => {
         const res: Log[] = []
         let transform
@@ -156,12 +157,43 @@ const LogPanel = (props: LogPanelProps) => {
         setLabelSearch(v.toLowerCase().trim())
     }, [])
 
+    const onSelectLabel = useCallback(id => {
+        setActive(active => {
+            if (active.includes(id)) {
+                return []
+            } else {
+                return [id]
+            }
+        })
+    }, [])
+
     const filterData: Log[] = useMemo(() => {
+        const activeLabels = []
+        for (const l of active) {
+            const label  = getLabelFromId(l)
+            activeLabels.push(label)
+        }
+
         const result: Log[] = []
         for (const v0 of data) {
             const v = clone(v0)
             v.highlight = []
             v.labelHighlight = []
+            
+            if (activeLabels.length > 0) {
+                let labelExist = false
+                for (const l of Object.entries(v0.labels)) {
+                    for (const al of activeLabels) {
+                        if (isEqual(al, l)) {
+                            labelExist = true
+                        }
+                    }
+                }
+
+                if (!labelExist) continue
+            }
+          
+
             if (labelSearch != "") {
                 const searches = labelSearch.split(",")
                 let found = true
@@ -237,7 +269,7 @@ const LogPanel = (props: LogPanelProps) => {
             }
         }
         return result
-    }, [data, search, labelSearch])
+    }, [data, search, labelSearch, active])
 
 
 
@@ -265,7 +297,7 @@ const LogPanel = (props: LogPanelProps) => {
             <CustomScrollbar>
                 <Box height={props.height} maxHeight={props.height} width={props.width - (toolbarOpen ? panel.plugins.log.toolbar.width : 1)} transition="all 0.3s" pt="2" >
                     {panel.plugins.log.chart.show && <Box className="log-panel-chart" height={panel.plugins.log.chart.height}>
-                        <LogChart data={sortedData} panel={panel} width={props.width - (toolbarOpen ? panel.plugins.log.toolbar.width : 1)} viewOptions={ {barType:isEmpty(panel.plugins.log.chart.categorize) ? "total" :  "labels"}} colorGenerator={generator} activeLabels={[]}/>
+                        <LogChart data={sortedData} panel={panel} width={props.width - (toolbarOpen ? panel.plugins.log.toolbar.width : 1)} viewOptions={ {barType:isEmpty(panel.plugins.log.chart.categorize) ? "total" :  "labels"}} colorGenerator={generator} onSelectLabel={onSelectLabel} activeLabels={active}/>
                     </Box>}
                     <VStack alignItems="left" divider={panel.plugins.log.styles.showlineBorder && <StackDivider />} mt="1" pb="2">
                         {
