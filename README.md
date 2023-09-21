@@ -41,7 +41,9 @@ Datav is a modern data visualization platform, built in 2023, that enables deep 
 
 **You can build any Observability and APM ( Application Performance Management ) UI you want based on Datav, if you cannot, please file an issue and we will support it as soon as possible.**
 
-You might wonder what's the difference between Datav and Grafana, in short: **Datav focuses on Observability and APM, while Grafana is a general-purpose data visualization platform**.
+Unlike other general-purpose data visualization platforms, Datav is mainly focus on Observability and APM, and it has many cool features for you to build your own Observablity UI.
+
+<!-- You might wonder what's the difference between Datav and Grafana, in short: **Datav focuses on Observability and APM, while Grafana is a general-purpose data visualization platform**. -->
 
 ## Quick start & Documentation
 
@@ -49,9 +51,9 @@ The documentation is available at [datav.io/docs](https://datav.io/docs).
 
 You can also try online demo at [play.datav.io](https://play.datav.io).
 
-## Compare to Grafana
+## Some features
 
-Although Grafana is a great product, and the most popular dashboarding tool in the world, Datav has its own advantages.
+Grafana is a great product and the most popular dashboarding tool in the world, and Datav has borrowed many of its features, besides these, Datav has its own advantages:
 
 1. **Native support for observability and APM**
   
@@ -68,7 +70,7 @@ Although Grafana is a great product, and the most popular dashboarding tool in t
 
 2. **Quick response and development of new features and bugs**
 
-   Grafana is constrained by its commercial product line, complex codebase and development process, therefore many features may take years to be responded, whereas Datav is always ready to support them as long as they're reasonable.
+   Some products are constrained by its commercial product line, complex codebase and development process, therefore many features may take years to be responded, whereas Datav is always ready to support them as long as they're reasonable.
 
 3. **Rich settings for panels**
     
