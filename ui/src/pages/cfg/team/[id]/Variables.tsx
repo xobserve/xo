@@ -53,7 +53,6 @@ import { Team } from "types/teams"
 
 const TeamVariablesPage = ({team}:{team:Team})  => {
     const t = useStore(commonMsg)
-    const t1 = useStore(cfgVariablemsg)
     const editVar = useSearchParam('editVar')
     const toast = useToast()
     const [variables, setVariables] = useState<Variable[]>(null)

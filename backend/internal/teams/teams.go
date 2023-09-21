@@ -15,6 +15,7 @@ package teams
 import (
 	"database/sql"
 	"fmt"
+	"net/http"
 	"sort"
 	"strconv"
 	"strings"
@@ -35,38 +36,42 @@ var logger = colorlog.RootLogger.New("logger", "teams")
 func GetTeams(c *gin.Context) {
 	teams := make(models.Teams, 0)
 
+	q := `SELECT id,name,brief,allow_global,is_public,created_by FROM team`
 	u := user.CurrentUser(c)
-	// user can see the teams he is in
-	q := `SELECT id,name,brief,created_by FROM team`
-	if !u.Role.IsAdmin() {
-		userId := user.CurrentUserId(c)
-		members, err := models.QueryVisibleTeamsByUserId(userId)
-		if err != nil {
-			logger.Warn("get all teams error", "error", err)
-			c.JSON(500, common.RespInternalError())
-			return
-		}
+	if u == nil {
+		q = fmt.Sprintf("%s WHERE id = '%d'", q, models.GlobalTeamId)
+	} else {
+		// user can see the teams he is in
+		if !u.Role.IsAdmin() {
+			userId := user.CurrentUserId(c)
+			members, err := models.QueryVisibleTeamsByUserId(userId)
+			if err != nil {
+				logger.Warn("get all teams error", "error", err)
+				c.JSON(500, common.RespInternalError())
+				return
+			}
 
-		if len(members) == 0 {
-			c.JSON(200, common.RespSuccess(teams))
-			return
-		}
+			if len(members) == 0 {
+				c.JSON(200, common.RespSuccess(teams))
+				return
+			}
 
-		if len(members) == 1 {
-			q = fmt.Sprintf("%s WHERE id = '%d'", q, members[0])
-		} else {
-			for i, m := range members {
-				if i == 0 {
-					q = fmt.Sprintf("%s WHERE id in ('%d'", q, m)
-					continue
+			if len(members) == 1 {
+				q = fmt.Sprintf("%s WHERE id = '%d'", q, members[0])
+			} else {
+				for i, m := range members {
+					if i == 0 {
+						q = fmt.Sprintf("%s WHERE id in ('%d'", q, m)
+						continue
+					}
+
+					if i == len(members)-1 {
+						q = fmt.Sprintf("%s,'%d')", q, m)
+						continue
+					}
+
+					q = fmt.Sprintf("%s,'%d'", q, m)
 				}
-
-				if i == len(members)-1 {
-					q = fmt.Sprintf("%s,'%d')", q, m)
-					continue
-				}
-
-				q = fmt.Sprintf("%s,'%d'", q, m)
 			}
 		}
 	}
@@ -80,7 +85,7 @@ func GetTeams(c *gin.Context) {
 	defer rows.Close()
 	for rows.Next() {
 		team := &models.Team{}
-		err := rows.Scan(&team.Id, &team.Name, &team.Brief, &team.CreatedById)
+		err := rows.Scan(&team.Id, &team.Name, &team.Brief, &team.AllowGlobal, &team.IsPublic, &team.CreatedById)
 		if err != nil {
 			logger.Warn("get all users scan error", "error", err)
 			continue
@@ -96,10 +101,15 @@ func GetTeams(c *gin.Context) {
 		}
 
 		team.MemberCount = count
-		member, _ := models.QueryTeamMember(team.Id, u.Id)
-		if member != nil && member.Id != 0 {
-			team.CurrentUserRole = member.Role
+		if u != nil {
+			member, _ := models.QueryTeamMember(team.Id, u.Id)
+			if member != nil && member.Id != 0 {
+				team.CurrentUserRole = member.Role
+			}
+		} else {
+			team.CurrentUserRole = models.ROLE_VIEWER
 		}
+
 		teams = append(teams, team)
 	}
 
@@ -535,6 +545,47 @@ func LeaveTeam(c *gin.Context) {
 	_, err = db.Conn.Exec("DELETE FROM team_member where team_id=? and user_id=?", teamId, userId)
 	if err != nil {
 		logger.Warn("leave team  error", "error", err)
+		c.JSON(500, common.RespInternalError())
+		return
+	}
+
+	c.JSON(200, common.RespSuccess(nil))
+}
+
+type UpdateAllowGlobalReq struct {
+	TeamId      int64 `json:"teamId"`
+	AllowGlobal bool  `json:"allowGlobal"`
+}
+
+func UpdateAllowGlobal(c *gin.Context) {
+	req := &UpdateAllowGlobalReq{}
+	err := c.Bind(&req)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, common.RespError(e.ParamInvalid))
+		return
+	}
+
+	fmt.Println(req)
+	if req.TeamId == 0 {
+		c.JSON(400, common.RespError(e.ParamInvalid))
+		return
+	}
+
+	if req.TeamId == models.GlobalTeamId {
+		c.JSON(400, common.RespError("You cant change this opiton for global team"))
+		return
+	}
+
+	u := user.CurrentUser(c)
+
+	if !u.Role.IsAdmin() {
+		c.JSON(403, common.RespError("Only global admin can do this"))
+		return
+	}
+
+	_, err = db.Conn.Exec("UPDATE team SET allow_global = ? WHERE id = ?", req.AllowGlobal, req.TeamId)
+	if err != nil {
+		logger.Warn("update team  error", "error", err)
 		c.JSON(500, common.RespInternalError())
 		return
 	}

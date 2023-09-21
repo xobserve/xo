@@ -33,12 +33,18 @@ import { $teams } from "../team/store"
 import { useSearchParam } from "react-use"
 import { FormSection } from "components/form/Form"
 
-const DatasourceEditor = ({ ds, onChange = null, teamEditable=true }) => {
+interface Props {
+    ds: Datasource
+    onChange?: any
+    teamEditable?: boolean
+}
+
+const DatasourceEditor = ({ ds, onChange = null, teamEditable=true }: Props) => {
     const t = useStore(commonMsg)
     const t1 = useStore(newMsg)
     const toast = useToast()
     const [datasource, setDatasource] = useImmer<Datasource>(ds)
-    const [teamId, setTeamId] = useState( useSearchParam('teamId'))
+    const [teamId, setTeamId] = useState( useSearchParam('teamId')??ds.teamId)
     const teams = useStore($teams)
 
     const saveDatasource = async () => {

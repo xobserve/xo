@@ -46,6 +46,7 @@ type Team struct {
 	Updated         time.Time `json:"updated,omitempty"`
 	MemberCount     int       `json:"memberCount,omitempty"`
 	CurrentUserRole RoleType  `json:"role,omitempty"`
+	AllowGlobal     bool      `json:"allowGlobal"` // allow using global team resources
 }
 
 type Teams []*Team
@@ -75,8 +76,8 @@ func (s TeamMembers) Less(i, j int) bool {
 
 func QueryTeam(id int64, name string) (*Team, error) {
 	team := &Team{}
-	err := db.Conn.QueryRow(`SELECT id,name,is_public,created_by,created,updated FROM team WHERE id=? or name=?`,
-		id, name).Scan(&team.Id, &team.Name, &team.IsPublic, &team.CreatedById, &team.Created, &team.Updated)
+	err := db.Conn.QueryRow(`SELECT id,name,is_public,allow_global,created_by,created,updated FROM team WHERE id=? or name=?`,
+		id, name).Scan(&team.Id, &team.Name, &team.IsPublic, &team.AllowGlobal, &team.CreatedById, &team.Created, &team.Updated)
 	if err != nil {
 		return nil, err
 	}

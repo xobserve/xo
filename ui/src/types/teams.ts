@@ -23,6 +23,7 @@ export interface Team {
     createdById?: number
     memberCount?: number
     role?: Role
+    allowGlobal?: boolean
 }
 
 export interface TeamMember {

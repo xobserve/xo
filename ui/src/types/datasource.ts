@@ -13,6 +13,8 @@
 import { DatasourceType, Panel, PanelDatasource, PanelQuery } from "./dashboard"
 import { Variable } from "./variable"
 
+export const defaultDatasourceId = 1
+
 export interface Datasource {
     id: number 
     name: string

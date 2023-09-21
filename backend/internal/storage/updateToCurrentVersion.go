@@ -55,5 +55,14 @@ func update() error {
 		}
 	}
 
+	// team allow_global
+	var allowGlobal bool
+	err = db.Conn.QueryRow("SELECT allow_global FROM team limit 1").Scan(&allowGlobal)
+	if err != nil && e.IsErrNoColumn(err) {
+		_, err = db.Conn.Exec("ALTER TABLE team ADD COLUMN allow_global BOOL DEFAULT true")
+		if err != nil {
+			return errors.New("update storage error:" + err.Error())
+		}
+	}
 	return nil
 }

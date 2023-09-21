@@ -41,6 +41,7 @@ export const commonMsg = i18n("common", {
   "optional": "optional",
   "query": "Query",
   "basicSetting": "Basic Setting",
+  "advanceSetting": "Advance Setting",
   "showMore": "Show More",
   "custom": "Custom",
   "createdBy": "Created By",
@@ -226,6 +227,8 @@ export const cfgTeam = i18n("cfgTeam", {
   "roleInTeam": "Role in team",
   "leaveTeam": "Leave Team",
   "isPublic": "Public",
+  "allowGlobal": "Using global team resources",
+  "allowGlobalTips": "Only global admin can set this option, when enabled, current team can use global team's resources, such as datasources, variables",
   "isPublicTips": "When set to public, users not in this team can also view team info and dashboards",
 
   "sidemenuTip1": "Customize the top section of your team's side menu, you can add, edit, delete and reorder the menu items.",

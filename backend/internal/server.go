@@ -100,7 +100,7 @@ func (s *Server) Start() error {
 		r.POST("/account/info", IsLogin(), user.UpdateUserInfo)
 
 		// teams apis
-		r.GET("/teams/all", IsLogin(), teams.GetTeams)
+		r.GET("/teams/all", teams.GetTeams)
 		r.GET("/team/byId/:id", IsLogin(), teams.GetTeam)
 		r.GET("/team/byDashId/:id", IsLogin(), teams.GetTeamByDashId)
 		r.GET("/team/:id/members", IsLogin(), teams.GetTeamMembers)
@@ -116,6 +116,7 @@ func (s *Server) Start() error {
 		r.GET("/team/sidemenus/forUser", IsLogin(), teams.GetAvailableSidMenusForUser)
 		r.POST("/team/sidemenu/select/:teamId", IsLogin(), teams.SelectSideMenuForUser)
 		r.GET("/team/sidemenu/current", IsLogin(), teams.GetCurrentSidemenu)
+		r.POST("/team/allowGlobal", IsLogin(), teams.UpdateAllowGlobal)
 
 		// variable apis
 		r.POST("/variable/new", IsLogin(), variables.AddNewVariable)

@@ -31,6 +31,7 @@ CREATE TABLE IF NOT EXISTS team (
     name VARCHAR(255) NOT NULL UNIQUE,
     brief VARCHAR(255) DEFAUlT '',
     is_public BOOL DEFAULT false,
+    allow_global BOOL DEFAULT true,
     created_by INTEGER NOT NULL,
     created DATETIME NOT NULL,
     updated DATETIME NOT NULL

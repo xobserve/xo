@@ -17,7 +17,7 @@ import { Form, FormSection } from "src/components/form/Form"
 import FormItem from "src/components/form/Item"
 import { cloneDeep } from "lodash"
 import { useRef, useState } from "react"
-import { Team } from "types/teams"
+import { Team, globalTeamId } from "types/teams"
 import { requestApi } from "utils/axios/request"
 import { useNavigate } from "react-router-dom"
 import { useStore } from "@nanostores/react"
@@ -75,6 +75,19 @@ const TeamSettings = (props: { team: Team }) => {
     }, 1000)
   }
 
+  const changeAllowGlobal = async (allow) => {
+    await requestApi.post("/team/allowGlobal", {teamId: team.id, allowGlobal: allow})
+    team.allowGlobal = allow
+    setTeam(cloneDeep(team))
+
+    toast({
+      title: t.isUpdated({name: ""}),
+      status: "success",
+      duration: 3000,
+      isClosable: true,
+    })
+  }
+
   return <>
     <Box>
       <Form width="500px">
@@ -85,8 +98,11 @@ const TeamSettings = (props: { team: Team }) => {
           <FormItem title={t1.isPublic} desc={t1.isPublicTips} labelWidth="150px" alignItems="center">
             <Switch isChecked={team.isPublic} onChange={e => { team.isPublic = e.currentTarget.checked; setTeam(cloneDeep(team)) }} />
           </FormItem>
+        </FormSection>
+        <Button width="fit-content" size="sm" onClick={updateTeam} >{t.submit}</Button>
 
-          <Button width="fit-content" onClick={updateTeam}>{t.submit}</Button>
+        <FormSection title={t1.allowGlobal } desc={t1.allowGlobalTips} spacing={2}>
+            <Switch isDisabled={team.id == globalTeamId} isChecked={team.allowGlobal} onChange={e => { changeAllowGlobal(e.currentTarget.checked) }} />
         </FormSection>
 
         <FormSection title={t.dangeSection}>
