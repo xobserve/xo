@@ -31,6 +31,7 @@ import useBus from "use-bus"
 import { OnDashboardWeightChangeEvent } from "src/data/bus-events"
 import { MobileBreakpoint } from "src/data/constants"
 import Loading from "src/components/loading/Loading"
+import { $teams } from "../team/store"
 
 interface Props {
     title: string
@@ -79,10 +80,9 @@ const Search = memo((props: Props) => {
         if (!rawDashboards) {
             const r1 = requestApi.get(`/dashboard/simpleList`)
             const r2 = requestApi.get(`/dashboard/starred`)
-            const r3 = requestApi.get("/teams/all")
-            const res = await Promise.all([r1, r2, r3])
+            const res = await Promise.all([r1, r2])
             
-            const visibleTeams = res[2].data
+            const visibleTeams = $teams.get()
             const dashboards: Dashboard[] = res[0].data.filter((dash: Dashboard) => dash.visibleTo == "all" ||  visibleTeams.find(team => team.id == dash.ownedBy))
             setRawDashboards(dashboards)
             const starred = new Set<string>()

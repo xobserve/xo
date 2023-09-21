@@ -23,6 +23,7 @@ import { useStore } from "@nanostores/react"
 import { cfgTeam } from "src/i18n/locales/en"
 import { Box, Button, HStack, Select, Text } from "@chakra-ui/react"
 import storage from "utils/localStorage"
+import { $teams } from "src/views/team/store"
 
 const getTeamSubLinks = (id) => {
     return [
@@ -48,29 +49,10 @@ const TeamLayout = ({children}: Props) => {
     const id = params.id
     const tabLinks: Route[] = getTeamSubLinks(id)
 
-    const [team, setTeam] = useState<Team>(null)
-    const [teams, setTeams] = useState<Team[]>(null)
+    const teams = useStore($teams)
+    const team =teams?.find(t => t.id.toString() == id)
     const [onHover, setOnHover] = useState(false)
 
-    useEffect(() => {
-        loadTeams()
-    },[])
-    useEffect(() => {
-        if (id) {
-            load()
-         
-        }
-    }, [id])
-
-    const load = async () => {
-        const res = await requestApi.get(`/team/byId/${id}`)
-        setTeam(res.data)
-    }
-    
-    const loadTeams = async () => {
-        const res = await requestApi.get(`/teams/all`)
-        setTeams(res.data)
-    }
 
     return <>
         <Page title={t1.title} subTitle={
