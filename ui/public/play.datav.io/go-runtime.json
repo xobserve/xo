@@ -1,0 +1,1602 @@
+{
+    "id": "d-7_purtmIz",
+    "title": "Go runtime",
+    "editable": true,
+    "updated": "2023-09-20T21:06:49.29107122+08:00",
+    "ownedBy": 2,
+    "ownerName": "ops",
+    "visibleTo": "team",
+    "tags": [
+        "ops"
+    ],
+    "data": {
+        "allowPanelsOverlap": false,
+        "annotation": {
+            "color": "rgba(0, 211, 255, 1)",
+            "enable": true,
+            "enableRole": "Admin",
+            "tagsFilter": ""
+        },
+        "autoSaveInterval": 120,
+        "description": "",
+        "editable": true,
+        "enableAutoSave": false,
+        "enableUnsavePrompt": true,
+        "hiddenPanels": [],
+        "hidingVars": "",
+        "layout": "vertical",
+        "lazyLoading": false,
+        "panels": [
+            {
+                "collapsed": false,
+                "conditionRender": {
+                    "type": "variable",
+                    "value": ""
+                },
+                "datasource": {
+                    "id": 2,
+                    "queries": [
+                        {
+                            "data": {},
+                            "id": 65,
+                            "legend": "Version",
+                            "metrics": "go_info{host=~\"${host}\"}",
+                            "visible": true
+                        }
+                    ],
+                    "queryOptions": {
+                        "maxDataPoints": 600,
+                        "minInterval": "15s"
+                    }
+                },
+                "desc": "",
+                "enableConditionRender": false,
+                "enableTransform": true,
+                "gridPos": {
+                    "h": 6,
+                    "w": 4,
+                    "x": 0,
+                    "y": 0
+                },
+                "id": 3,
+                "overrides": [],
+                "plugins": {
+                    "stat": {
+                        "axisY": {
+                            "scale": "linear",
+                            "scaleBase": 2
+                        },
+                        "clickAction": "\n// setVariable: (varName:string, varValue:string) => void \n// navigate: react-router-dom -> useNavigate() -> navigate \n// setDateTime: (from: Timestamp, to: TimeStamp) => void\nfunction onRowClick(row, navigate, setVariable, setDateTime, $variables) {\n    // You can get all current variables in this way\n    // const currentVariables = $variables.get()\n    // console.log(row, currentVariables)\n}\n",
+                        "displaySeries": "__all__",
+                        "enableClick": true,
+                        "showGraph": false,
+                        "showLegend": true,
+                        "showTooltip": true,
+                        "styles": {
+                            "colorMode": "bg-gradient",
+                            "connectNulls": false,
+                            "fillOpacity": 80,
+                            "graphHeight": 60,
+                            "hideGraphHeight": 70,
+                            "layout": "auto",
+                            "showPoints": false,
+                            "style": "lines",
+                            "textAlign": "center"
+                        },
+                        "textSize": {
+                            "legend": 20,
+                            "value": 30
+                        },
+                        "thresholds": {
+                            "enableTransform": false,
+                            "mode": "absolute",
+                            "thresholds": [
+                                {
+                                    "color": "#37A2DA",
+                                    "value": null
+                                }
+                            ],
+                            "transform": "function transform(data, lodash){\n\n}"
+                        },
+                        "value": {
+                            "calc": "Last",
+                            "decimal": 3,
+                            "units": [],
+                            "unitsType": "none"
+                        }
+                    }
+                },
+                "styles": {
+                    "border": "None",
+                    "borderOnHover": true,
+                    "decoration": {
+                        "height": "20px",
+                        "justifyContent": "center",
+                        "left": "",
+                        "reverse": false,
+                        "top": "-30px",
+                        "type": "None",
+                        "width": "100%"
+                    },
+                    "heightReduction": 0,
+                    "marginLeft": 0,
+                    "marginTop": 0,
+                    "palette": "echarts-light",
+                    "title": {
+                        "color": "inherit",
+                        "decoration": {
+                            "height": "50px",
+                            "margin": "10px",
+                            "type": "None",
+                            "width": "160px"
+                        },
+                        "fontSize": "14px",
+                        "fontWeight": "500",
+                        "paddingBottom": "0px",
+                        "paddingLeft": "0px",
+                        "paddingRight": "0px",
+                        "paddingTop": "0px"
+                    },
+                    "widthReduction": 0
+                },
+                "title": "",
+                "transform": "function transform(rawData,lodash, moment) {\n    // for demonstration purpose: how to use 'moment'\n    // const t = moment(new Date()).format(\"YY-MM-DD HH:mm::ss\")\n    const d = rawData.flat()\n    const data = []\n    for (const s of d) {\n        const version = s.fields.find(f => f.type == \"number\").labels.version\n        const series = {\n            name: s.name,\n            fields: [{\n                type: \"string\",\n                name: \"version\",\n                values:[version]\n            }]\n        }\n        data.push(series)\n    }\n    return data.length > 0 ? [data] : []\n}",
+                "type": "stat",
+                "valueMapping": null
+            },
+            {
+                "collapsed": false,
+                "conditionRender": {
+                    "type": "variable",
+                    "value": ""
+                },
+                "datasource": {
+                    "id": 2,
+                    "queries": [
+                        {
+                            "data": {},
+                            "id": 65,
+                            "legend": "Goroutines",
+                            "metrics": "go_goroutines{host=~\"${host}\"}",
+                            "visible": true
+                        }
+                    ],
+                    "queryOptions": {
+                        "maxDataPoints": 600,
+                        "minInterval": ""
+                    }
+                },
+                "desc": "",
+                "enableConditionRender": false,
+                "enableTransform": false,
+                "gridPos": {
+                    "h": 12,
+                    "w": 6,
+                    "x": 4,
+                    "y": 0
+                },
+                "id": 2,
+                "overrides": [],
+                "plugins": {
+                    "gauge": {
+                        "animation": true,
+                        "axis": {
+                            "showTicks": false,
+                            "width": 23
+                        },
+                        "diisplaySeries": "Goroutines",
+                        "pointer": {
+                            "length": "75%",
+                            "width": 8
+                        },
+                        "scale": {
+                            "enable": true,
+                            "fontSize": 12,
+                            "splitNumber": 1
+                        },
+                        "thresholds": {
+                            "enableTransform": false,
+                            "mode": "absolute",
+                            "thresholds": [
+                                {
+                                    "color": "#fddd60",
+                                    "value": 50
+                                },
+                                {
+                                    "color": "#32C5E9",
+                                    "value": null
+                                }
+                            ],
+                            "transform": "function transform(data, lodash){\n\n}"
+                        },
+                        "title": {
+                            "display": null,
+                            "fontSize": 15,
+                            "left": "0%",
+                            "show": true,
+                            "top": "60%"
+                        },
+                        "value": {
+                            "calc": "Last",
+                            "decimal": 3,
+                            "units": [],
+                            "unitsType": "none"
+                        },
+                        "valueStyle": {
+                            "fontSize": 15,
+                            "left": "0%",
+                            "max": 100,
+                            "min": 0,
+                            "show": true,
+                            "top": "80%"
+                        }
+                    }
+                },
+                "styles": {
+                    "border": "Border3",
+                    "borderOnHover": true,
+                    "decoration": {
+                        "height": "20px",
+                        "justifyContent": "center",
+                        "left": "",
+                        "reverse": false,
+                        "top": "-30px",
+                        "type": "None",
+                        "width": "100%"
+                    },
+                    "heightReduction": 0,
+                    "marginLeft": 0,
+                    "marginTop": 11,
+                    "palette": "echarts-light",
+                    "title": {
+                        "color": "inherit",
+                        "decoration": {
+                            "height": "50px",
+                            "margin": "10px",
+                            "type": "None",
+                            "width": "160px"
+                        },
+                        "fontSize": "14px",
+                        "fontWeight": "500",
+                        "paddingBottom": "0px",
+                        "paddingLeft": "0px",
+                        "paddingRight": "0px",
+                        "paddingTop": "0px"
+                    },
+                    "widthReduction": 0
+                },
+                "title": "",
+                "transform": "function transform(rawData,lodash, moment) {\n    // for demonstration purpose: how to use 'moment'\n    // const t = moment(new Date()).format(\"YY-MM-DD HH:mm::ss\")\n    return rawData\n}",
+                "type": "gauge",
+                "valueMapping": null
+            },
+            {
+                "collapsed": false,
+                "conditionRender": {
+                    "type": "variable",
+                    "value": ""
+                },
+                "datasource": {
+                    "id": 2,
+                    "queries": [
+                        {
+                            "data": {},
+                            "id": 65,
+                            "legend": "gc count",
+                            "metrics": "increase(go_gc_duration_seconds_count{host=~\"${host}\"}[5m])",
+                            "visible": true
+                        }
+                    ],
+                    "queryOptions": {
+                        "maxDataPoints": 600,
+                        "minInterval": "5m"
+                    }
+                },
+                "desc": "",
+                "enableConditionRender": false,
+                "enableTransform": false,
+                "gridPos": {
+                    "h": 12,
+                    "w": 7,
+                    "x": 10,
+                    "y": 0
+                },
+                "id": 6,
+                "overrides": [],
+                "plugins": {
+                    "bar": {
+                        "animation": false,
+                        "axis": {
+                            "scale": "linear",
+                            "scaleBase": 2,
+                            "swap": false
+                        },
+                        "enableClick": true,
+                        "legend": {
+                            "nameWidth": "400",
+                            "order": {
+                                "by": "Max",
+                                "sort": "asc"
+                            },
+                            "placement": "bottom",
+                            "show": true,
+                            "valueCalcs": [
+                                "Last",
+                                "Max"
+                            ],
+                            "width": 500
+                        },
+                        "onClickEvent": "\n// setVariable: (varName:string, varValue:string) => void \n// navigate: react-router-dom -> useNavigate() -> navigate \n// setDateTime: (from: Timestamp, to: TimeStamp) => void\nfunction onRowClick(row, navigate, setVariable, setDateTime, $variables) {\n    // You can get all current variables in this way\n    // const currentVariables = $variables.get()\n    // console.log(row, currentVariables)\n}\n",
+                        "showGrid": false,
+                        "showLabel": "auto",
+                        "stack": "auto",
+                        "styles": {
+                            "axisFontSize": 11,
+                            "barOpacity": 80,
+                            "barWidth": 85,
+                            "labelFontSize": 11
+                        },
+                        "thresholdArrow": "none",
+                        "thresholds": {
+                            "enableTransform": false,
+                            "mode": "absolute",
+                            "thresholds": [
+                                {
+                                    "color": "#9FE6B8",
+                                    "value": null
+                                }
+                            ],
+                            "transform": "function transform(data, lodash){\n\n}"
+                        },
+                        "thresholdsDisplay": "None",
+                        "tooltip": "all",
+                        "value": {
+                            "decimal": 1,
+                            "units": [],
+                            "unitsType": "none"
+                        }
+                    }
+                },
+                "styles": {
+                    "border": "None",
+                    "borderOnHover": true,
+                    "decoration": {
+                        "height": "20px",
+                        "justifyContent": "center",
+                        "left": "",
+                        "reverse": false,
+                        "top": "-30px",
+                        "type": "None",
+                        "width": "100%"
+                    },
+                    "heightReduction": 0,
+                    "marginLeft": 0,
+                    "marginTop": 0,
+                    "palette": "echarts-light",
+                    "title": {
+                        "color": "inherit",
+                        "decoration": {
+                            "height": "50px",
+                            "margin": "10px",
+                            "type": "None",
+                            "width": "160px"
+                        },
+                        "fontSize": "14px",
+                        "fontWeight": "500",
+                        "paddingBottom": "0px",
+                        "paddingLeft": "0px",
+                        "paddingRight": "0px",
+                        "paddingTop": "0px"
+                    },
+                    "widthReduction": 0
+                },
+                "title": "Gc count ( 5m )",
+                "transform": "function transform(rawData,lodash, moment) {\n    // for demonstration purpose: how to use 'moment'\n    // const t = moment(new Date()).format(\"YY-MM-DD HH:mm::ss\")\n    return rawData\n}",
+                "type": "bar",
+                "valueMapping": null
+            },
+            {
+                "collapsed": false,
+                "conditionRender": {
+                    "type": "variable",
+                    "value": ""
+                },
+                "datasource": {
+                    "id": 2,
+                    "queries": [
+                        {
+                            "data": {},
+                            "id": 65,
+                            "legend": "quantile-{{quantile}}",
+                            "metrics": "go_gc_duration_seconds{host=~\"${host}\"}",
+                            "visible": true
+                        }
+                    ],
+                    "queryOptions": {
+                        "maxDataPoints": 600,
+                        "minInterval": "15s"
+                    }
+                },
+                "desc": "",
+                "enableConditionRender": false,
+                "enableTransform": false,
+                "gridPos": {
+                    "h": 12,
+                    "w": 7,
+                    "x": 17,
+                    "y": 0
+                },
+                "id": 1,
+                "overrides": [],
+                "plugins": {
+                    "graph": {
+                        "alertFilter": {
+                            "alertLabel": "",
+                            "datasources": [],
+                            "enableFilter": true,
+                            "httpQuery": {
+                                "data": {},
+                                "id": 65,
+                                "legend": "",
+                                "metrics": "",
+                                "visible": true
+                            },
+                            "ruleLabel": "",
+                            "ruleName": "",
+                            "state": []
+                        },
+                        "axis": {
+                            "scale": "linear",
+                            "scaleBase": 2,
+                            "showGrid": true,
+                            "showX": true,
+                            "showY": true
+                        },
+                        "clickActions": [],
+                        "enableAlert": false,
+                        "legend": {
+                            "mode": "table",
+                            "nameWidth": "400",
+                            "order": {
+                                "by": "Last",
+                                "sort": "desc"
+                            },
+                            "placement": "bottom",
+                            "showValuesName": true,
+                            "valueCalcs": [
+                                "Last"
+                            ],
+                            "width": 500
+                        },
+                        "styles": {
+                            "barGap": 10,
+                            "barRadius": 0,
+                            "connectNulls": false,
+                            "enableStack": false,
+                            "fillOpacity": 80,
+                            "gradientMode": "opacity",
+                            "lineWidth": 1,
+                            "padding": [
+                                null,
+                                null,
+                                null,
+                                null
+                            ],
+                            "pointSize": 6,
+                            "showPoints": "auto",
+                            "style": "lines"
+                        },
+                        "thresholds": {
+                            "enableTransform": false,
+                            "mode": "absolute",
+                            "thresholds": [
+                                {
+                                    "color": "#9FE6B8",
+                                    "value": null
+                                }
+                            ],
+                            "transform": "function transform(data, lodash){\n\n}"
+                        },
+                        "thresholdsDisplay": "None",
+                        "tooltip": {
+                            "mode": "all",
+                            "sort": "desc"
+                        },
+                        "value": {
+                            "decimal": 3,
+                            "units": [
+                                {
+                                    "operator": "x",
+                                    "rhs": 1000,
+                                    "unit": "ms"
+                                },
+                                {
+                                    "operator": "/",
+                                    "rhs": 1,
+                                    "unit": "s"
+                                }
+                            ],
+                            "unitsType": "time"
+                        }
+                    }
+                },
+                "styles": {
+                    "border": "None",
+                    "borderOnHover": true,
+                    "decoration": {
+                        "height": "20px",
+                        "justifyContent": "center",
+                        "left": "",
+                        "reverse": false,
+                        "top": "-30px",
+                        "type": "None",
+                        "width": "100%"
+                    },
+                    "heightReduction": 0,
+                    "marginLeft": 0,
+                    "marginTop": 0,
+                    "palette": "echarts-light",
+                    "title": {
+                        "color": "inherit",
+                        "decoration": {
+                            "height": "50px",
+                            "margin": "10px",
+                            "type": "None",
+                            "width": "160px"
+                        },
+                        "fontSize": "14px",
+                        "fontWeight": "500",
+                        "paddingBottom": "0px",
+                        "paddingLeft": "0px",
+                        "paddingRight": "0px",
+                        "paddingTop": "0px"
+                    },
+                    "widthReduction": 0
+                },
+                "title": "Go GC duration seconds",
+                "transform": "function transform(rawData,lodash, moment) {\n    // for demonstration purpose: how to use 'moment'\n    // const t = moment(new Date()).format(\"YY-MM-DD HH:mm::ss\")\n    return rawData\n}",
+                "type": "graph",
+                "valueMapping": null
+            },
+            {
+                "collapsed": false,
+                "conditionRender": {
+                    "type": "variable",
+                    "value": ""
+                },
+                "datasource": {
+                    "id": 2,
+                    "queries": [
+                        {
+                            "data": {},
+                            "id": 65,
+                            "legend": "OS Threads",
+                            "metrics": "go_threads{host=~\"${host}\"}",
+                            "visible": true
+                        }
+                    ],
+                    "queryOptions": {
+                        "maxDataPoints": 600,
+                        "minInterval": "15s"
+                    }
+                },
+                "desc": "",
+                "enableConditionRender": false,
+                "enableTransform": false,
+                "gridPos": {
+                    "h": 6,
+                    "w": 4,
+                    "x": 0,
+                    "y": 6
+                },
+                "id": 4,
+                "overrides": [],
+                "plugins": {
+                    "stat": {
+                        "axisY": {
+                            "scale": "linear",
+                            "scaleBase": 2
+                        },
+                        "clickAction": "\n// setVariable: (varName:string, varValue:string) => void \n// navigate: react-router-dom -> useNavigate() -> navigate \n// setDateTime: (from: Timestamp, to: TimeStamp) => void\nfunction onRowClick(row, navigate, setVariable, setDateTime, $variables) {\n    // You can get all current variables in this way\n    // const currentVariables = $variables.get()\n    // console.log(row, currentVariables)\n}\n",
+                        "displaySeries": "__all__",
+                        "enableClick": true,
+                        "showGraph": false,
+                        "showLegend": true,
+                        "showTooltip": true,
+                        "styles": {
+                            "colorMode": "bg-gradient",
+                            "connectNulls": false,
+                            "fillOpacity": 80,
+                            "graphHeight": 60,
+                            "hideGraphHeight": 70,
+                            "layout": "vertical",
+                            "showPoints": false,
+                            "style": "lines",
+                            "textAlign": "center"
+                        },
+                        "textSize": {
+                            "legend": 20,
+                            "value": 35
+                        },
+                        "thresholds": {
+                            "enableTransform": false,
+                            "mode": "absolute",
+                            "thresholds": [
+                                {
+                                    "color": "#37A2DA",
+                                    "value": null
+                                }
+                            ],
+                            "transform": "function transform(data, lodash){\n\n}"
+                        },
+                        "value": {
+                            "calc": "Last",
+                            "decimal": 3,
+                            "units": [],
+                            "unitsType": "none"
+                        }
+                    }
+                },
+                "styles": {
+                    "border": "None",
+                    "borderOnHover": true,
+                    "decoration": {
+                        "height": "20px",
+                        "justifyContent": "center",
+                        "left": "",
+                        "reverse": false,
+                        "top": "-30px",
+                        "type": "None",
+                        "width": "100%"
+                    },
+                    "heightReduction": 0,
+                    "marginLeft": 0,
+                    "marginTop": 0,
+                    "palette": "echarts-light",
+                    "title": {
+                        "color": "inherit",
+                        "decoration": {
+                            "height": "50px",
+                            "margin": "10px",
+                            "type": "None",
+                            "width": "160px"
+                        },
+                        "fontSize": "14px",
+                        "fontWeight": "500",
+                        "paddingBottom": "0px",
+                        "paddingLeft": "0px",
+                        "paddingRight": "0px",
+                        "paddingTop": "0px"
+                    },
+                    "widthReduction": 0
+                },
+                "title": "",
+                "transform": "function transform(rawData,lodash, moment) {\n    // for demonstration purpose: how to use 'moment'\n    // const t = moment(new Date()).format(\"YY-MM-DD HH:mm::ss\")\n    return rawData\n}",
+                "type": "stat",
+                "valueMapping": null
+            },
+            {
+                "collapsed": false,
+                "conditionRender": {
+                    "type": "variable",
+                    "value": ""
+                },
+                "datasource": {
+                    "id": 2,
+                    "queries": [
+                        {
+                            "data": {},
+                            "id": 65,
+                            "legend": "{{host}}",
+                            "metrics": "go_memstats_stack_sys_bytes{host=~\"${host}\"}",
+                            "visible": true
+                        }
+                    ],
+                    "queryOptions": {
+                        "maxDataPoints": 600,
+                        "minInterval": "15s"
+                    }
+                },
+                "desc": "",
+                "enableConditionRender": false,
+                "enableTransform": false,
+                "gridPos": {
+                    "h": 15,
+                    "w": 8,
+                    "x": 0,
+                    "y": 12
+                },
+                "id": 7,
+                "overrides": [
+                    {
+                        "overrides": [
+                            {
+                                "type": "Series.color",
+                                "value": "#32C5E9"
+                            }
+                        ],
+                        "target": "web-datav-1"
+                    }
+                ],
+                "plugins": {
+                    "graph": {
+                        "alertFilter": {
+                            "alertLabel": "",
+                            "datasources": [],
+                            "enableFilter": true,
+                            "httpQuery": {
+                                "data": {},
+                                "id": 65,
+                                "legend": "",
+                                "metrics": "",
+                                "visible": true
+                            },
+                            "ruleLabel": "",
+                            "ruleName": "",
+                            "state": []
+                        },
+                        "axis": {
+                            "scale": "linear",
+                            "scaleBase": 2,
+                            "showGrid": true,
+                            "showX": true,
+                            "showY": true
+                        },
+                        "clickActions": [],
+                        "enableAlert": false,
+                        "legend": {
+                            "mode": "table",
+                            "nameWidth": "400",
+                            "order": {
+                                "by": "Last",
+                                "sort": "desc"
+                            },
+                            "placement": "bottom",
+                            "showValuesName": true,
+                            "valueCalcs": [
+                                "Last"
+                            ],
+                            "width": 500
+                        },
+                        "styles": {
+                            "barGap": 10,
+                            "barRadius": 0,
+                            "connectNulls": false,
+                            "enableStack": false,
+                            "fillOpacity": 80,
+                            "gradientMode": "opacity",
+                            "lineWidth": 1,
+                            "padding": [
+                                null,
+                                null,
+                                null,
+                                null
+                            ],
+                            "pointSize": 6,
+                            "showPoints": "auto",
+                            "style": "lines"
+                        },
+                        "thresholds": {
+                            "enableTransform": false,
+                            "mode": "absolute",
+                            "thresholds": [
+                                {
+                                    "color": "#9FE6B8",
+                                    "value": null
+                                }
+                            ],
+                            "transform": "function transform(data, lodash){\n\n}"
+                        },
+                        "thresholdsDisplay": "None",
+                        "tooltip": {
+                            "mode": "all",
+                            "sort": "desc"
+                        },
+                        "value": {
+                            "decimal": 0,
+                            "units": [
+                                {
+                                    "operator": "/",
+                                    "rhs": 1,
+                                    "unit": "B"
+                                },
+                                {
+                                    "operator": "/",
+                                    "rhs": 1024,
+                                    "unit": "KB"
+                                },
+                                {
+                                    "operator": "/",
+                                    "rhs": 1048576,
+                                    "unit": "MB"
+                                },
+                                {
+                                    "operator": "/",
+                                    "rhs": 1073741824,
+                                    "unit": "GB"
+                                }
+                            ],
+                            "unitsType": "bytes"
+                        }
+                    }
+                },
+                "styles": {
+                    "border": "None",
+                    "borderOnHover": true,
+                    "decoration": {
+                        "height": "20px",
+                        "justifyContent": "center",
+                        "left": "",
+                        "reverse": false,
+                        "top": "-30px",
+                        "type": "None",
+                        "width": "100%"
+                    },
+                    "heightReduction": 0,
+                    "marginLeft": 0,
+                    "marginTop": 0,
+                    "palette": "echarts-light",
+                    "title": {
+                        "color": "inherit",
+                        "decoration": {
+                            "height": "50px",
+                            "margin": "10px",
+                            "type": "None",
+                            "width": "160px"
+                        },
+                        "fontSize": "14px",
+                        "fontWeight": "500",
+                        "paddingBottom": "0px",
+                        "paddingLeft": "0px",
+                        "paddingRight": "0px",
+                        "paddingTop": "0px"
+                    },
+                    "widthReduction": 0
+                },
+                "title": "Stack memory use",
+                "transform": "function transform(rawData,lodash, moment) {\n    // for demonstration purpose: how to use 'moment'\n    // const t = moment(new Date()).format(\"YY-MM-DD HH:mm::ss\")\n    return rawData\n}",
+                "type": "graph",
+                "valueMapping": null
+            },
+            {
+                "collapsed": false,
+                "conditionRender": {
+                    "type": "variable",
+                    "value": ""
+                },
+                "datasource": {
+                    "id": 2,
+                    "queries": [
+                        {
+                            "data": {},
+                            "id": 65,
+                            "legend": "Allocated by OS",
+                            "metrics": "go_memstats_heap_sys_bytes{host=~\"${host}\"}",
+                            "visible": true
+                        },
+                        {
+                            "data": {},
+                            "id": 66,
+                            "legend": "Heap in use",
+                            "metrics": "go_memstats_heap_inuse_bytes{host=~\"${host}\"}",
+                            "visible": true
+                        }
+                    ],
+                    "queryOptions": {
+                        "maxDataPoints": 600,
+                        "minInterval": "5m"
+                    }
+                },
+                "desc": "",
+                "enableConditionRender": false,
+                "enableTransform": false,
+                "gridPos": {
+                    "h": 15,
+                    "w": 8,
+                    "x": 8,
+                    "y": 12
+                },
+                "id": 8,
+                "overrides": [],
+                "plugins": {
+                    "graph": {
+                        "alertFilter": {
+                            "alertLabel": "",
+                            "datasources": [],
+                            "enableFilter": true,
+                            "httpQuery": {
+                                "data": {},
+                                "id": 65,
+                                "legend": "",
+                                "metrics": "",
+                                "visible": true
+                            },
+                            "ruleLabel": "",
+                            "ruleName": "",
+                            "state": []
+                        },
+                        "axis": {
+                            "scale": "linear",
+                            "scaleBase": 2,
+                            "showGrid": true,
+                            "showX": true,
+                            "showY": true
+                        },
+                        "clickActions": [],
+                        "enableAlert": false,
+                        "legend": {
+                            "mode": "table",
+                            "nameWidth": "400",
+                            "order": {
+                                "by": "Last",
+                                "sort": "desc"
+                            },
+                            "placement": "bottom",
+                            "showValuesName": true,
+                            "valueCalcs": [
+                                "Last"
+                            ],
+                            "width": 500
+                        },
+                        "styles": {
+                            "barGap": 10,
+                            "barRadius": 0,
+                            "connectNulls": false,
+                            "enableStack": false,
+                            "fillOpacity": 80,
+                            "gradientMode": "none",
+                            "lineWidth": 1,
+                            "padding": [
+                                null,
+                                null,
+                                null,
+                                null
+                            ],
+                            "pointSize": 6,
+                            "showPoints": "auto",
+                            "style": "bars"
+                        },
+                        "thresholds": {
+                            "enableTransform": false,
+                            "mode": "absolute",
+                            "thresholds": [
+                                {
+                                    "color": "#9FE6B8",
+                                    "value": null
+                                }
+                            ],
+                            "transform": "function transform(data, lodash){\n\n}"
+                        },
+                        "thresholdsDisplay": "None",
+                        "tooltip": {
+                            "mode": "all",
+                            "sort": "desc"
+                        },
+                        "value": {
+                            "decimal": 0,
+                            "units": [
+                                {
+                                    "operator": "/",
+                                    "rhs": 1,
+                                    "unit": "B"
+                                },
+                                {
+                                    "operator": "/",
+                                    "rhs": 1024,
+                                    "unit": "KB"
+                                },
+                                {
+                                    "operator": "/",
+                                    "rhs": 1048576,
+                                    "unit": "MB"
+                                },
+                                {
+                                    "operator": "/",
+                                    "rhs": 1073741824,
+                                    "unit": "GB"
+                                }
+                            ],
+                            "unitsType": "bytes"
+                        }
+                    }
+                },
+                "styles": {
+                    "border": "None",
+                    "borderOnHover": true,
+                    "decoration": {
+                        "height": "20px",
+                        "justifyContent": "center",
+                        "left": "",
+                        "reverse": false,
+                        "top": "-30px",
+                        "type": "None",
+                        "width": "100%"
+                    },
+                    "heightReduction": 0,
+                    "marginLeft": 0,
+                    "marginTop": 0,
+                    "palette": "jaeger",
+                    "title": {
+                        "color": "inherit",
+                        "decoration": {
+                            "height": "50px",
+                            "margin": "10px",
+                            "type": "None",
+                            "width": "160px"
+                        },
+                        "fontSize": "14px",
+                        "fontWeight": "500",
+                        "paddingBottom": "0px",
+                        "paddingLeft": "0px",
+                        "paddingRight": "0px",
+                        "paddingTop": "0px"
+                    },
+                    "widthReduction": 0
+                },
+                "title": "Heap memory",
+                "transform": "function transform(rawData,lodash, moment) {\n    // for demonstration purpose: how to use 'moment'\n    // const t = moment(new Date()).format(\"YY-MM-DD HH:mm::ss\")\n    return rawData\n}",
+                "type": "graph",
+                "valueMapping": null
+            },
+            {
+                "collapsed": false,
+                "conditionRender": {
+                    "type": "variable",
+                    "value": ""
+                },
+                "datasource": {
+                    "id": 2,
+                    "queries": [
+                        {
+                            "data": {},
+                            "id": 65,
+                            "legend": "Object",
+                            "metrics": "rate(go_memstats_mallocs_total{host=~\"${host}\"}[${__interval__}])",
+                            "visible": true
+                        },
+                        {
+                            "data": {},
+                            "id": 66,
+                            "legend": "Bytes",
+                            "metrics": "rate(go_memstats_alloc_bytes_total{host=~\"${host}\"}[${__interval__}])",
+                            "visible": true
+                        }
+                    ],
+                    "queryOptions": {
+                        "maxDataPoints": 600,
+                        "minInterval": "1m"
+                    }
+                },
+                "desc": "",
+                "enableConditionRender": false,
+                "enableTransform": false,
+                "gridPos": {
+                    "h": 15,
+                    "w": 8,
+                    "x": 16,
+                    "y": 12
+                },
+                "id": 9,
+                "overrides": [
+                    {
+                        "overrides": [
+                            {
+                                "type": "Series.separateYAxis",
+                                "value": true
+                            },
+                            {
+                                "type": "Series.unit",
+                                "value": {
+                                    "units": [
+                                        {
+                                            "operator": "/",
+                                            "rhs": 1,
+                                            "unit": "B/s"
+                                        },
+                                        {
+                                            "operator": "/",
+                                            "rhs": 1024,
+                                            "unit": "KB/s"
+                                        },
+                                        {
+                                            "operator": "/",
+                                            "rhs": 1048576,
+                                            "unit": "MB/s"
+                                        },
+                                        {
+                                            "operator": "/",
+                                            "rhs": 1073741824,
+                                            "unit": "GB/s"
+                                        }
+                                    ],
+                                    "unitsType": "bytes"
+                                }
+                            }
+                        ],
+                        "target": "Bytes"
+                    }
+                ],
+                "plugins": {
+                    "graph": {
+                        "alertFilter": {
+                            "alertLabel": "",
+                            "datasources": [],
+                            "enableFilter": true,
+                            "httpQuery": {
+                                "data": {},
+                                "id": 65,
+                                "legend": "",
+                                "metrics": "",
+                                "visible": true
+                            },
+                            "ruleLabel": "",
+                            "ruleName": "",
+                            "state": []
+                        },
+                        "axis": {
+                            "scale": "linear",
+                            "scaleBase": 2,
+                            "showGrid": true,
+                            "showX": true,
+                            "showY": true
+                        },
+                        "clickActions": [],
+                        "enableAlert": false,
+                        "legend": {
+                            "mode": "table",
+                            "nameWidth": "400",
+                            "order": {
+                                "by": "Last",
+                                "sort": "desc"
+                            },
+                            "placement": "bottom",
+                            "showValuesName": true,
+                            "valueCalcs": [
+                                "Last",
+                                "Max"
+                            ],
+                            "width": 500
+                        },
+                        "styles": {
+                            "barGap": 10,
+                            "barRadius": 0,
+                            "connectNulls": false,
+                            "enableStack": false,
+                            "fillOpacity": 43,
+                            "gradientMode": "opacity",
+                            "lineWidth": 0,
+                            "padding": [
+                                null,
+                                null,
+                                null,
+                                null
+                            ],
+                            "pointSize": 6,
+                            "showPoints": "auto",
+                            "style": "points"
+                        },
+                        "thresholds": {
+                            "enableTransform": false,
+                            "mode": "absolute",
+                            "thresholds": [
+                                {
+                                    "color": "#9FE6B8",
+                                    "value": null
+                                }
+                            ],
+                            "transform": "function transform(data, lodash){\n\n}"
+                        },
+                        "thresholdsDisplay": "None",
+                        "tooltip": {
+                            "mode": "all",
+                            "sort": "desc"
+                        },
+                        "value": {
+                            "decimal": 0,
+                            "units": [
+                                {
+                                    "operator": "/",
+                                    "rhs": 1,
+                                    "unit": "/s"
+                                },
+                                {
+                                    "operator": "/",
+                                    "rhs": 1000,
+                                    "unit": "k/s"
+                                },
+                                {
+                                    "operator": "/",
+                                    "rhs": 1000000,
+                                    "unit": " m/s"
+                                }
+                            ],
+                            "unitsType": "custom"
+                        }
+                    }
+                },
+                "styles": {
+                    "border": "None",
+                    "borderOnHover": true,
+                    "decoration": {
+                        "height": "20px",
+                        "justifyContent": "center",
+                        "left": "",
+                        "reverse": false,
+                        "top": "-30px",
+                        "type": "None",
+                        "width": "100%"
+                    },
+                    "heightReduction": 0,
+                    "marginLeft": 0,
+                    "marginTop": 0,
+                    "palette": "echarts-light",
+                    "title": {
+                        "color": "inherit",
+                        "decoration": {
+                            "height": "50px",
+                            "margin": "10px",
+                            "type": "None",
+                            "width": "160px"
+                        },
+                        "fontSize": "14px",
+                        "fontWeight": "500",
+                        "paddingBottom": "0px",
+                        "paddingLeft": "0px",
+                        "paddingRight": "0px",
+                        "paddingTop": "0px"
+                    },
+                    "widthReduction": 0
+                },
+                "title": "Allocation rate",
+                "transform": "function transform(rawData,lodash, moment) {\n    // for demonstration purpose: how to use 'moment'\n    // const t = moment(new Date()).format(\"YY-MM-DD HH:mm::ss\")\n    return rawData\n}",
+                "type": "graph",
+                "valueMapping": null
+            },
+            {
+                "collapsed": false,
+                "conditionRender": {
+                    "type": "variable",
+                    "value": ""
+                },
+                "datasource": {
+                    "id": 2,
+                    "queries": [
+                        {
+                            "data": {},
+                            "id": 65,
+                            "legend": "Heap objects",
+                            "metrics": "go_memstats_heap_objects{host=~\"${host}\"}",
+                            "visible": true
+                        },
+                        {
+                            "data": {},
+                            "id": 66,
+                            "legend": "",
+                            "metrics": "",
+                            "visible": true
+                        }
+                    ],
+                    "queryOptions": {
+                        "maxDataPoints": 600,
+                        "minInterval": "5m"
+                    }
+                },
+                "desc": "",
+                "enableConditionRender": false,
+                "enableTransform": false,
+                "gridPos": {
+                    "h": 15,
+                    "w": 12,
+                    "x": 0,
+                    "y": 27
+                },
+                "id": 10,
+                "overrides": [],
+                "plugins": {
+                    "echarts": {
+                        "allowEmptyData": false,
+                        "animation": false,
+                        "enableClick": true,
+                        "enableThresholds": true,
+                        "registerEventsFunc": "// In registerEvents, you can custom events on your chart, e.g mouse click event, mouse over event etc.\n// chart: a instance of echarts, you can call echarts apis on it\n// options: result of setOptions function\n// Find more examples: https://echarts.apache.org/en/api.html#events\nfunction registerEvents(options, chart, navigate, setVariable, setDateTime, $variables) {\n    // !!!!!!!ATTENTION! You must unbind event handler first! \n    // Because each time the options changeds registerEvents function will be called once\n    // If we don't unbind event, next time you click the chart will trigger N  click event ( N = Number of times the options changes)\n    // Rather than unbind all 'click' events, you can also unbind an specific handler: https://echarts.apache.org/en/api.html#echartsInstance.off\n    chart.off('click') \n    chart.on('click', function (params) {\n        console.log(params)\n    })\n}",
+                        "setOptionsFunc": "\n// setOptions return echarts.Options, it is directly passed to a echarts chart.\n// Find more options examples: https://echarts.apache.org/examples/en/index.html#chart-type-line\n// data: SeriesData[] which is the standard data format in Datav\n// thresholds: ThresholdsConfig[] | null\n// colors: color palettes using in Datav\n// echarts: imported echarts.js module \n// loadash: imported loadash.js module\n// moment: imported momen.jst module\n// colorMode: \"light\" | \"dark\"\nfunction setOptions(data, thresholds, colors, echarts, loadash, moment, colorMode) {\n    const colorList = [\n        ['rgb(128, 255, 165)', 'rgb(1, 191, 236)'],\n        ['rgb(0, 221, 255)', 'rgb(77, 119, 255)'],\n        ['rgb(55, 162, 255)', 'rgb(1, 191, 236)'],\n        ['rgb(255, 0, 135)', 'rgb(135, 0, 157)'],\n        ['rgb(255, 191, 0)', 'rgb(224, 62, 76)'],\n    ]\n    \n    const legend = []\n    const seriesList = []\n    if (!echarts) {\n        return null\n    }\n\n    for (let i = 0; i < data.length; i++) {\n        const s = data[i]\n        legend.push(s.name)\n        seriesList.push({\n            name: s.name,\n            type: 'line',\n            stack: 'Total',\n            smooth: true,\n            lineStyle: {\n                width: 0\n            },\n            showSymbol: false,\n            areaStyle: {\n                opacity: 0.8,\n                color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [\n                    {\n                        offset: 0,\n                        color: colorList[i] ? colorList[i][0] : colors[i % colors.length]\n                    },\n                    {\n                        offset: 1,\n                        color: colorList[i] ? colorList[i][1] : colors[i + 1 % colors.length]\n                    }\n                ])\n            },\n            emphasis: {\n                focus: 'series'\n            },\n            data: loadash.zip(...s.fields.map(f => {\n                if (f.type == \"time\") {\n                    return f.values.map(v => v * 1000)\n                } else {\n                    return f.values\n                }\n            }))\n        })\n    }\n\n    //!!!ATTENTION!!!\n    // We need to create a new options Object to return,\n    // because only a new object can trigger react update!\n    return {\n        color: colorList.map(item => item[0]),\n        tooltip: {\n            trigger: 'axis',\n            axisPointer: {\n                type: 'cross',\n                label: {\n                    backgroundColor: '#6a7985',\n                }\n            },\n        },\n        legend: {\n            show: false,\n            data: legend\n        },\n        grid: {\n            left: '3%',\n            right: '4%',\n            bottom: '3%',\n            top: '5%',\n            containLabel: true\n        },\n        xAxis: [\n            {\n                type: 'time',\n                boundaryGap: false,\n                axisLabel: {\n                    formatter: (function (value) {\n                        return moment(value).format('MM-DD HH:mm:ss');\n                    }),\n                },\n                splitNumber: 5,\n            }\n        ],\n        yAxis: [\n            {\n                type: 'value',\n                splitLine: {\n                    show: false\n                }\n            }\n        ],\n        series: seriesList\n    }\n}\n\n",
+                        "thresholds": {
+                            "enableTransform": false,
+                            "mode": "absolute",
+                            "thresholds": [
+                                {
+                                    "color": "#9FE6B8",
+                                    "value": null
+                                }
+                            ],
+                            "transform": "function transform(data, lodash){\n\n}"
+                        },
+                        "value": {
+                            "decimal": 0,
+                            "units": [
+                                {
+                                    "operator": "/",
+                                    "rhs": 1,
+                                    "unit": ""
+                                },
+                                {
+                                    "operator": "/",
+                                    "rhs": 1000,
+                                    "unit": "k"
+                                },
+                                {
+                                    "operator": "/",
+                                    "rhs": 1000000,
+                                    "unit": "m"
+                                }
+                            ],
+                            "unitsType": "short"
+                        }
+                    }
+                },
+                "styles": {
+                    "border": "None",
+                    "borderOnHover": true,
+                    "decoration": {
+                        "height": "20px",
+                        "justifyContent": "center",
+                        "left": "",
+                        "reverse": false,
+                        "top": "-30px",
+                        "type": "None",
+                        "width": "100%"
+                    },
+                    "heightReduction": 0,
+                    "marginLeft": 0,
+                    "marginTop": 0,
+                    "palette": "jaeger",
+                    "title": {
+                        "color": "inherit",
+                        "decoration": {
+                            "height": "50px",
+                            "margin": "10px",
+                            "type": "None",
+                            "width": "160px"
+                        },
+                        "fontSize": "14px",
+                        "fontWeight": "500",
+                        "paddingBottom": "0px",
+                        "paddingLeft": "0px",
+                        "paddingRight": "0px",
+                        "paddingTop": "0px"
+                    },
+                    "widthReduction": 0
+                },
+                "title": "Heap objects",
+                "transform": "function transform(rawData,lodash, moment) {\n    // for demonstration purpose: how to use 'moment'\n    // const t = moment(new Date()).format(\"YY-MM-DD HH:mm::ss\")\n    return rawData\n}",
+                "type": "echarts",
+                "valueMapping": null
+            },
+            {
+                "collapsed": false,
+                "conditionRender": {
+                    "type": "variable",
+                    "value": ""
+                },
+                "datasource": {
+                    "id": 2,
+                    "queries": [
+                        {
+                            "data": {},
+                            "id": 65,
+                            "legend": "Next bytes",
+                            "metrics": "go_memstats_next_gc_bytes{host=~\"${host}\"}",
+                            "visible": true
+                        },
+                        {
+                            "data": {},
+                            "id": 66,
+                            "legend": "Gc duration",
+                            "metrics": "go_gc_duration_seconds{host=~\"${host}\",quantile=\"0.5\"}",
+                            "visible": true
+                        }
+                    ],
+                    "queryOptions": {
+                        "maxDataPoints": 600,
+                        "minInterval": "5m"
+                    }
+                },
+                "desc": "",
+                "enableConditionRender": false,
+                "enableTransform": false,
+                "gridPos": {
+                    "h": 15,
+                    "w": 12,
+                    "x": 12,
+                    "y": 27
+                },
+                "id": 11,
+                "overrides": [
+                    {
+                        "overrides": [
+                            {
+                                "type": "Series.separateYAxis",
+                                "value": true
+                            },
+                            {
+                                "type": "Series.unit",
+                                "value": {
+                                    "units": [
+                                        {
+                                            "operator": "x",
+                                            "rhs": 1000,
+                                            "unit": "ms"
+                                        },
+                                        {
+                                            "operator": "/",
+                                            "rhs": 1,
+                                            "unit": "s"
+                                        }
+                                    ],
+                                    "unitsType": "time"
+                                }
+                            },
+                            {
+                                "type": "Series.style",
+                                "value": "lines"
+                            }
+                        ],
+                        "target": "Gc duration"
+                    }
+                ],
+                "plugins": {
+                    "graph": {
+                        "alertFilter": {
+                            "alertLabel": "",
+                            "datasources": [],
+                            "enableFilter": true,
+                            "httpQuery": {
+                                "data": {},
+                                "id": 65,
+                                "legend": "",
+                                "metrics": "",
+                                "visible": true
+                            },
+                            "ruleLabel": "",
+                            "ruleName": "",
+                            "state": []
+                        },
+                        "axis": {
+                            "scale": "linear",
+                            "scaleBase": 2,
+                            "showGrid": true,
+                            "showX": true,
+                            "showY": true
+                        },
+                        "clickActions": [],
+                        "enableAlert": false,
+                        "legend": {
+                            "mode": "table",
+                            "nameWidth": "400",
+                            "order": {
+                                "by": "Last",
+                                "sort": "desc"
+                            },
+                            "placement": "bottom",
+                            "showValuesName": true,
+                            "valueCalcs": [
+                                "Last"
+                            ],
+                            "width": 500
+                        },
+                        "styles": {
+                            "barGap": 10,
+                            "barRadius": 0,
+                            "connectNulls": false,
+                            "enableStack": false,
+                            "fillOpacity": 80,
+                            "gradientMode": "opacity",
+                            "lineWidth": 1,
+                            "padding": [
+                                null,
+                                null,
+                                null,
+                                null
+                            ],
+                            "pointSize": 6,
+                            "showPoints": "auto",
+                            "style": "bars"
+                        },
+                        "thresholds": {
+                            "enableTransform": false,
+                            "mode": "absolute",
+                            "thresholds": [
+                                {
+                                    "color": "#9FE6B8",
+                                    "value": null
+                                }
+                            ],
+                            "transform": "function transform(data, lodash){\n\n}"
+                        },
+                        "thresholdsDisplay": "None",
+                        "tooltip": {
+                            "mode": "all",
+                            "sort": "desc"
+                        },
+                        "value": {
+                            "decimal": 2,
+                            "units": [
+                                {
+                                    "operator": "/",
+                                    "rhs": 1,
+                                    "unit": "B"
+                                },
+                                {
+                                    "operator": "/",
+                                    "rhs": 1024,
+                                    "unit": "KB"
+                                },
+                                {
+                                    "operator": "/",
+                                    "rhs": 1048576,
+                                    "unit": "MB"
+                                },
+                                {
+                                    "operator": "/",
+                                    "rhs": 1073741824,
+                                    "unit": "GB"
+                                }
+                            ],
+                            "unitsType": "bytes"
+                        }
+                    }
+                },
+                "styles": {
+                    "border": "None",
+                    "borderOnHover": true,
+                    "decoration": {
+                        "height": "20px",
+                        "justifyContent": "center",
+                        "left": "",
+                        "reverse": false,
+                        "top": "-30px",
+                        "type": "None",
+                        "width": "100%"
+                    },
+                    "heightReduction": 0,
+                    "marginLeft": 0,
+                    "marginTop": 0,
+                    "palette": "jaeger",
+                    "title": {
+                        "color": "inherit",
+                        "decoration": {
+                            "height": "50px",
+                            "margin": "10px",
+                            "type": "None",
+                            "width": "160px"
+                        },
+                        "fontSize": "14px",
+                        "fontWeight": "500",
+                        "paddingBottom": "0px",
+                        "paddingLeft": "0px",
+                        "paddingRight": "0px",
+                        "paddingTop": "0px"
+                    },
+                    "widthReduction": 0
+                },
+                "title": "Next GC bytes",
+                "transform": "function transform(rawData,lodash, moment) {\n    // for demonstration purpose: how to use 'moment'\n    // const t = moment(new Date()).format(\"YY-MM-DD HH:mm::ss\")\n    return rawData\n}",
+                "type": "graph",
+                "valueMapping": null
+            }
+        ],
+        "sharedTooltip": true,
+        "styles": {
+            "bg": {
+                "colorMode": "dark",
+                "url": "/dashboard/dark-rainbow.png"
+            },
+            "bgColor": "rgb(15,23,42)",
+            "bgEnabled": true,
+            "border": "None"
+        },
+        "variables": [],
+        "visibleTo": "team"
+    },
+    "weight": 0
+}

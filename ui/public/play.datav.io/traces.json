@@ -1,0 +1,130 @@
+{
+    "id": "d-fv0G5HzIk",
+    "title": "Traces",
+    "editable": true,
+    "updated": "2023-09-21T01:11:00.514876968+08:00",
+    "ownedBy": 1,
+    "ownerName": "global",
+    "visibleTo": "team",
+    "data": {
+        "allowPanelsOverlap": false,
+        "annotation": {
+            "color": "rgba(0, 211, 255, 1)",
+            "enable": true,
+            "enableRole": "Admin",
+            "tagsFilter": ""
+        },
+        "autoSaveInterval": 120,
+        "description": "",
+        "editable": true,
+        "enableAutoSave": false,
+        "enableUnsavePrompt": true,
+        "hiddenPanels": [],
+        "hidingVars": "",
+        "layout": "vertical",
+        "lazyLoading": true,
+        "panels": [
+            {
+                "collapsed": false,
+                "conditionRender": {
+                    "type": "variable",
+                    "value": ""
+                },
+                "datasource": {
+                    "id": 5,
+                    "queries": [
+                        {
+                            "data": {},
+                            "id": 65,
+                            "legend": "",
+                            "metrics": "",
+                            "visible": true
+                        }
+                    ],
+                    "queryOptions": {
+                        "maxDataPoints": 600,
+                        "minInterval": "15s"
+                    }
+                },
+                "desc": "",
+                "enableConditionRender": false,
+                "enableTransform": false,
+                "gridPos": {
+                    "h": 43,
+                    "w": 24,
+                    "x": 0,
+                    "y": 0
+                },
+                "id": 1,
+                "overrides": [],
+                "plugins": {
+                    "trace": {
+                        "defaultService": "${service}",
+                        "enableEditService": true,
+                        "interaction": {
+                            "actions": [
+                                {
+                                    "action": "\n// setVariable: (varName:string, varValue:string) => void \n// navigate: react-router-dom -> useNavigate() -> navigate \n// setDateTime: (from: Timestamp, to: TimeStamp) => void\nfunction onRowClick(row, navigate, setVariable, setDateTime, $variables) {\n    // You can get all current variables in this way\n    // const currentVariables = $variables.get()\n    console.log(\"here3333:\",row)\n    const traceId = row.traceID\n    window.open(`/inspect/logs?var-search=${traceId}`)\n}\n",
+                                    "color": "brand",
+                                    "name": "View logs",
+                                    "style": "outline"
+                                }
+                            ],
+                            "enable": true
+                        }
+                    }
+                },
+                "styles": {
+                    "border": "Normal",
+                    "borderOnHover": true,
+                    "decoration": {
+                        "height": "20px",
+                        "justifyContent": "center",
+                        "left": "",
+                        "reverse": false,
+                        "top": "-30px",
+                        "type": "None",
+                        "width": "100%"
+                    },
+                    "heightReduction": 0,
+                    "marginLeft": 0,
+                    "marginTop": 0,
+                    "palette": "classic",
+                    "title": {
+                        "color": "inherit",
+                        "decoration": {
+                            "height": "50px",
+                            "margin": "10px",
+                            "type": "None",
+                            "width": "160px"
+                        },
+                        "fontSize": "1rem",
+                        "fontWeight": "500",
+                        "paddingBottom": "0px",
+                        "paddingLeft": "0px",
+                        "paddingRight": "0px",
+                        "paddingTop": "0px"
+                    },
+                    "widthReduction": 0
+                },
+                "title": "",
+                "transform": "function transform(rawData,lodash, moment) {\n    // for demonstration purpose: how to use 'moment'\n    // const t = moment(new Date()).format(\"YY-MM-DD HH:mm::ss\")\n    return rawData\n}",
+                "type": "trace",
+                "valueMapping": null
+            }
+        ],
+        "sharedTooltip": false,
+        "styles": {
+            "bg": {
+                "colorMode": "light",
+                "url": "/dashboard/rainbow.jpg"
+            },
+            "bgColor": "",
+            "bgEnabled": false,
+            "border": "None"
+        },
+        "variables": []
+    },
+    "weight": 0,
+    "tags": []
+}

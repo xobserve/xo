@@ -1,0 +1,1051 @@
+{
+    "id": "d-home",
+    "title": "Home Dashboard",
+    "editable": true,
+    "updated": "2023-09-21T00:58:26.670692492+08:00",
+    "ownedBy": 1,
+    "ownerName": "global",
+    "visibleTo": "team",
+    "tags": [
+        "home"
+    ],
+    "data": {
+        "allowPanelsOverlap": false,
+        "annotation": {
+            "color": "rgba(0, 211, 255, 1)",
+            "enable": true,
+            "enableRole": "Admin",
+            "tagsFilter": ""
+        },
+        "autoSaveInterval": 120,
+        "description": "",
+        "editable": true,
+        "enableAutoSave": false,
+        "enableUnsavePrompt": true,
+        "hiddenPanels": [],
+        "hidingVars": "",
+        "layout": "vertical",
+        "lazyLoading": true,
+        "panels": [
+            {
+                "collapsed": false,
+                "conditionRender": {
+                    "type": "variable",
+                    "value": ""
+                },
+                "datasource": {
+                    "id": 1,
+                    "queries": [
+                        {
+                            "data": {},
+                            "id": 65,
+                            "legend": "",
+                            "metrics": "",
+                            "visible": true
+                        }
+                    ],
+                    "queryOptions": {
+                        "maxDataPoints": 600,
+                        "minInterval": "15s"
+                    }
+                },
+                "desc": "",
+                "enableConditionRender": false,
+                "enableTransform": true,
+                "gridPos": {
+                    "h": 5,
+                    "w": 5,
+                    "x": 0,
+                    "y": 0
+                },
+                "id": 7,
+                "overrides": [],
+                "plugins": {
+                    "alert": {
+                        "chart": {
+                            "height": "0px",
+                            "show": true,
+                            "showLabel": "auto",
+                            "stack": "auto",
+                            "tooltip": "single"
+                        },
+                        "clickActions": [
+                            {
+                                "action": "\n// setVariable: (varName:string, varValue:string) => void \n// navigate: react-router-dom -> useNavigate() -> navigate \n// setDateTime: (from: Timestamp, to: TimeStamp) => void\nfunction onRowClick(row, navigate, setVariable, setDateTime) {\n\n    const activeAt = new Date(row.activeAt).getTime() / 1000\n    const job = row.labels.job\n\n    setVariable(\"gtest\", job)\n    setDateTime(activeAt - 300, activeAt + 300)\n    console.log(\"here3333 dig1\",activeAt,job)\n}\n",
+                                "color": "brand",
+                                "name": "Dig",
+                                "style": "solid"
+                            }
+                        ],
+                        "disableDatasource": true,
+                        "filter": {
+                            "alertLabel": "",
+                            "datasources": [
+                                1
+                            ],
+                            "enableFilter": true,
+                            "httpQuery": {
+                                "data": {},
+                                "id": 65,
+                                "legend": "",
+                                "metrics": "",
+                                "visible": true
+                            },
+                            "ruleLabel": "",
+                            "ruleName": "",
+                            "state": [
+                                "firing",
+                                "pending",
+                                "resolved"
+                            ]
+                        },
+                        "orderBy": "newest",
+                        "stat": {
+                            "color": "#fb7293",
+                            "colorMode": "bg-gradient",
+                            "layout": "horizontal",
+                            "legendSize": 27,
+                            "showGraph": true,
+                            "statName": "ALERTS",
+                            "style": "lines",
+                            "valueSize": 29
+                        },
+                        "toolbar": {
+                            "show": true,
+                            "width": 200
+                        },
+                        "viewMode": "stat"
+                    },
+                    "text": {
+                        "alignItems": "top",
+                        "disableDatasource": true,
+                        "fontSize": "1.2rem",
+                        "fontWeight": "500",
+                        "justifyContent": "left",
+                        "md": "#Welcome to Datav\n This is a new panel\n You can edit it by clicking the edit button on the top title\n ###Have fun!"
+                    }
+                },
+                "styles": {
+                    "border": "None",
+                    "borderOnHover": true,
+                    "decoration": {
+                        "height": "100%",
+                        "justifyContent": "center",
+                        "left": "100%",
+                        "reverse": true,
+                        "top": "0",
+                        "type": "None",
+                        "width": "2px"
+                    },
+                    "heightReduction": 0,
+                    "marginLeft": 0,
+                    "marginTop": 0,
+                    "palette": "echarts-light",
+                    "title": {
+                        "color": "inherit",
+                        "decoration": {
+                            "height": "50px",
+                            "margin": "10px",
+                            "type": "None",
+                            "width": "160px"
+                        },
+                        "fontSize": "1rem",
+                        "fontWeight": "500",
+                        "paddingBottom": "0px",
+                        "paddingLeft": "0px",
+                        "paddingRight": "0px",
+                        "paddingTop": "0px"
+                    },
+                    "widthReduction": 0
+                },
+                "title": "",
+                "transform": "function transform(rawData,lodash, moment) {\n    // for demonstration purpose: how to use 'moment'\n    const t = moment(new Date()).format(\"YY-MM-DD HH:mm::ss\")\n    console.log(t)\n    // DON'T modify rawData, use lodash.cloneDeep to create a new object\n    const data = lodash.cloneDeep(rawData)\n    return data\n}",
+                "type": "alert",
+                "valueMapping": null
+            },
+            {
+                "collapsed": false,
+                "conditionRender": {
+                    "type": "variable",
+                    "value": ""
+                },
+                "datasource": {
+                    "id": 1,
+                    "queries": [
+                        {
+                            "data": {},
+                            "id": 65,
+                            "legend": "",
+                            "metrics": "",
+                            "visible": true
+                        }
+                    ],
+                    "queryOptions": {
+                        "maxDataPoints": 600,
+                        "minInterval": "5m"
+                    },
+                    "type": "testdata"
+                },
+                "desc": "",
+                "enableConditionRender": false,
+                "enableTransform": true,
+                "gridPos": {
+                    "h": 10,
+                    "w": 7,
+                    "x": 5,
+                    "y": 0
+                },
+                "id": 1,
+                "overrides": [
+                    {
+                        "overrides": [
+                            {
+                                "type": "Series.negativeY",
+                                "value": true
+                            },
+                            {
+                                "type": "Series.style",
+                                "value": "bars"
+                            }
+                        ],
+                        "target": "{\"located\"=\"Asia\",\"instance\"=\"localhost:9100\"}"
+                    }
+                ],
+                "plugins": {
+                    "graph": {
+                        "alertFilter": {
+                            "alertLabel": "",
+                            "datasources": [],
+                            "enableFilter": true,
+                            "httpQuery": {
+                                "data": {},
+                                "id": 65,
+                                "legend": "",
+                                "metrics": "",
+                                "visible": true
+                            },
+                            "ruleLabel": "",
+                            "ruleName": "",
+                            "state": []
+                        },
+                        "axis": {
+                            "scale": "linear",
+                            "scaleBase": 2,
+                            "showGrid": true,
+                            "showX": false,
+                            "showY": true
+                        },
+                        "clickActions": [
+                            {
+                                "action": "\n// setVariable: (varName:string, varValue:string) => void \n// navigate: react-router-dom -> useNavigate() -> navigate \n// setDateTime: (from: Timestamp, to: TimeStamp) => void\nfunction onRowClick(row, navigate, setVariable, setDateTime, $variables) {\n    // You can get all current variables in this way\n    // const currentVariables = $variables.get()\n    console.log(row)\n    setDateTime(row.time - 15 * 60, row.time + 15 * 60)\n    setTimeout(() => {\n        navigate(\"/inspect/traces\")\n    })\n}\n",
+                                "color": "brand",
+                                "name": "View traces around click time point",
+                                "style": "solid"
+                            }
+                        ],
+                        "enableAlert": false,
+                        "legend": {
+                            "mode": "hidden",
+                            "nameWidth": "400",
+                            "order": {
+                                "by": "Last",
+                                "sort": "desc"
+                            },
+                            "placement": "bottom",
+                            "showValuesName": false,
+                            "valueCalcs": [
+                                "Last"
+                            ],
+                            "width": 500
+                        },
+                        "styles": {
+                            "barGap": 10,
+                            "barRadius": 0,
+                            "connectNulls": false,
+                            "enableStack": false,
+                            "fillOpacity": 80,
+                            "gradientMode": "opacity",
+                            "lineWidth": 1,
+                            "padding": [
+                                null,
+                                null,
+                                -5,
+                                null
+                            ],
+                            "pointSize": 6,
+                            "showPoints": "auto",
+                            "style": "lines"
+                        },
+                        "thresholds": {
+                            "enableTransform": false,
+                            "mode": "absolute",
+                            "thresholds": [
+                                {
+                                    "color": "$green",
+                                    "value": null
+                                }
+                            ],
+                            "transform": "function transform(data, lodash){\n\n}"
+                        },
+                        "thresholdsDisplay": "None",
+                        "tooltip": {
+                            "mode": "all",
+                            "sort": "desc"
+                        },
+                        "value": {
+                            "decimal": 1,
+                            "units": [
+                                {
+                                    "operator": "x",
+                                    "rhs": 1000,
+                                    "unit": "ms"
+                                },
+                                {
+                                    "operator": "/",
+                                    "rhs": 1,
+                                    "unit": "s"
+                                },
+                                {
+                                    "operator": "/",
+                                    "rhs": 60,
+                                    "unit": "m"
+                                }
+                            ],
+                            "unitsType": "custom"
+                        }
+                    },
+                    "text": {
+                        "alignItems": "top",
+                        "disableDatasource": true,
+                        "fontSize": "1.2em",
+                        "fontWeight": "500",
+                        "justifyContent": "left",
+                        "md": "#Welcome to Datav\n This is a new panel\n You can edit it by clicking the edit button on the top title\n ###Have fun!"
+                    }
+                },
+                "styles": {
+                    "border": "Border13",
+                    "borderOnHover": true,
+                    "decoration": {
+                        "height": "10px",
+                        "justifyContent": "center",
+                        "left": "0%",
+                        "reverse": false,
+                        "top": "100%",
+                        "type": "Decoration10",
+                        "width": "100%"
+                    },
+                    "heightReduction": 0,
+                    "marginLeft": 0,
+                    "marginTop": 0,
+                    "palette": "echarts-light",
+                    "title": {
+                        "color": "#9FE6B8",
+                        "decoration": {
+                            "height": "50px",
+                            "margin": "10px",
+                            "type": "None",
+                            "width": "160px"
+                        },
+                        "fontSize": "0.9rem",
+                        "fontWeight": "500",
+                        "paddingBottom": "0px",
+                        "paddingLeft": "0px",
+                        "paddingRight": "0px",
+                        "paddingTop": "15px"
+                    },
+                    "widthReduction": 0
+                },
+                "title": "Response time",
+                "transform": "function transform(rawData,lodash, moment) {\n    // for demonstration purpose: how to use 'moment'\n    const t = moment(new Date()).format(\"YY-MM-DD HH:mm::ss\")\n    console.log(t)\n    // DON'T modify rawData, use lodash.cloneDeep to create a new object\n    const data = lodash.cloneDeep(rawData)\n    return data\n}",
+                "type": "graph",
+                "valueMapping": null
+            },
+            {
+                "collapsed": false,
+                "conditionRender": {
+                    "type": "variable",
+                    "value": ""
+                },
+                "datasource": {
+                    "id": 1,
+                    "queries": [
+                        {
+                            "data": {},
+                            "id": 65,
+                            "legend": "",
+                            "metrics": "",
+                            "visible": true
+                        }
+                    ],
+                    "queryOptions": {
+                        "maxDataPoints": 600,
+                        "minInterval": "15s"
+                    }
+                },
+                "desc": "",
+                "enableConditionRender": false,
+                "enableTransform": false,
+                "gridPos": {
+                    "h": 42,
+                    "w": 12,
+                    "x": 12,
+                    "y": 0
+                },
+                "id": 2,
+                "overrides": [],
+                "plugins": {
+                    "nodeGraph": {
+                        "dragCanvas": true,
+                        "dragNode": true,
+                        "edge": {
+                            "arrow": "default",
+                            "color": {
+                                "dark": "#8CA88C",
+                                "light": "#ddd"
+                            },
+                            "display": true,
+                            "highlightColor": {
+                                "dark": "#00B5D8",
+                                "light": "#C8F2C2"
+                            },
+                            "opacity": 0.6,
+                            "shape": "line"
+                        },
+                        "layout": {
+                            "gravity": 40,
+                            "nodeStrength": 5000
+                        },
+                        "legend": {
+                            "enable": true
+                        },
+                        "node": {
+                            "baseSize": 60,
+                            "borderColor": "$green",
+                            "donutColors": [
+                                {
+                                    "attr": "success",
+                                    "color": "#67E0E3"
+                                },
+                                {
+                                    "attr": "error",
+                                    "color": "#fb7293"
+                                }
+                            ],
+                            "enableHighlight": true,
+                            "highlightColor": "#05c091",
+                            "highlightNodes": "datav",
+                            "highlightNodesByFunc": "// data: {nodes, edges}\n// return nodes name list, e.g ['node-1', 'node-2']\nfunction highlightNodes(data, lodash) {\n    console.log(\"here3333\", data)\n    const matchingNodeNames = []\n    return matchingNodeNames\n}\n",
+                            "icon": [],
+                            "maxSize": 1.4,
+                            "menu": [
+                                {
+                                    "enable": true,
+                                    "event": "\n// setVariable: (varName:string, varValue:string) => void \n// navigate: react-router-dom -> useNavigate() -> navigate \n// setDateTime: (from: Timestamp, to: TimeStamp) => void\nfunction onRowClick(row, navigate, setVariable, setDateTime, $variables) {\n    // You can get all current variables in this way\n    // const currentVariables = $variables.get()\n    console.log(row)\n    const name = row.id \n    if (name.startsWith(\"fake\")) {\n        alert(\"This is a fake node, please click web-datav-1 for more info\")\n        return \n    }\n\n    setVariable(\"host\", name)\n    setTimeout(() => {\n            navigate(\"/host\")\n    }, 500)\n\n}\n",
+                                    "id": 1694688353376,
+                                    "name": "View host metrics"
+                                }
+                            ],
+                            "shape": "donut",
+                            "tooltipTrigger": "mouseenter"
+                        },
+                        "scrollCanvas": true,
+                        "zoomCanvas": true
+                    },
+                    "text": {
+                        "alignItems": "top",
+                        "disableDatasource": true,
+                        "fontSize": "1.2em",
+                        "fontWeight": "500",
+                        "justifyContent": "left",
+                        "md": "#Welcome to Datav\n This is a new panel\n You can edit it by clicking the edit button on the top title\n ###Have fun!"
+                    }
+                },
+                "styles": {
+                    "border": "Normal",
+                    "borderOnHover": true,
+                    "decoration": {
+                        "height": "20px",
+                        "justifyContent": "center",
+                        "left": "",
+                        "reverse": false,
+                        "top": "-30px",
+                        "type": "None",
+                        "width": "100%"
+                    },
+                    "heightReduction": 0,
+                    "marginLeft": 0,
+                    "marginTop": 0,
+                    "palette": "classic",
+                    "title": {
+                        "color": "#9FE6B8",
+                        "decoration": {
+                            "height": "50px",
+                            "margin": "10px",
+                            "type": "None",
+                            "width": "160px"
+                        },
+                        "fontSize": "0.9rem",
+                        "fontWeight": "500",
+                        "paddingBottom": "0px",
+                        "paddingLeft": "0px",
+                        "paddingRight": "0px",
+                        "paddingTop": "0px"
+                    },
+                    "widthReduction": 0
+                },
+                "title": "Service map",
+                "transform": "function transform(rawData,lodash, moment) {\n    // for demonstration purpose: how to use 'moment'\n    // const t = moment(new Date()).format(\"YY-MM-DD HH:mm::ss\")\n    return rawData\n}",
+                "type": "nodeGraph",
+                "valueMapping": null
+            },
+            {
+                "collapsed": false,
+                "conditionRender": {
+                    "type": "variable",
+                    "value": ""
+                },
+                "datasource": {
+                    "id": 3,
+                    "queries": [
+                        {
+                            "data": {},
+                            "id": 65,
+                            "legend": "PV",
+                            "metrics": "sum (count_over_time({job=\"datav-service\"}[${__interval__}]))  ",
+                            "visible": true
+                        }
+                    ],
+                    "queryOptions": {
+                        "maxDataPoints": 600,
+                        "minInterval": "1h"
+                    }
+                },
+                "desc": "",
+                "enableConditionRender": false,
+                "enableTransform": false,
+                "gridPos": {
+                    "h": 5,
+                    "w": 5,
+                    "x": 0,
+                    "y": 5
+                },
+                "id": 3,
+                "overrides": [],
+                "plugins": {
+                    "stat": {
+                        "axisY": {
+                            "scale": "linear",
+                            "scaleBase": 2
+                        },
+                        "clickAction": "\n// setVariable: (varName:string, varValue:string) => void \n// navigate: react-router-dom -> useNavigate() -> navigate \n// setDateTime: (from: Timestamp, to: TimeStamp) => void\nfunction onRowClick(row, navigate, setVariable, setDateTime, $variables) {\n    // You can get all current variables in this way\n    // const currentVariables = $variables.get()\n    // console.log(row, currentVariables)\n}\n",
+                        "displaySeries": "__all__",
+                        "enableClick": true,
+                        "showGraph": true,
+                        "showLegend": true,
+                        "showTooltip": true,
+                        "styles": {
+                            "colorMode": "bg-gradient",
+                            "connectNulls": false,
+                            "fillOpacity": 80,
+                            "graphHeight": 60,
+                            "hideGraphHeight": 70,
+                            "layout": "horizontal",
+                            "showPoints": false,
+                            "style": "bars",
+                            "textAlign": "center"
+                        },
+                        "textSize": {
+                            "legend": 27,
+                            "value": 29
+                        },
+                        "thresholds": {
+                            "enableTransform": false,
+                            "mode": "absolute",
+                            "thresholds": [
+                                {
+                                    "color": "#05c091",
+                                    "value": null
+                                }
+                            ],
+                            "transform": "function transform(data, lodash){\n\n}"
+                        },
+                        "value": {
+                            "calc": "Sum",
+                            "decimal": 3,
+                            "units": [],
+                            "unitsType": "none"
+                        }
+                    },
+                    "text": {
+                        "alignItems": "top",
+                        "disableDatasource": true,
+                        "fontSize": "1.2em",
+                        "fontWeight": "500",
+                        "justifyContent": "left",
+                        "md": "#Welcome to Datav\n This is a new panel\n You can edit it by clicking the edit button on the top title\n ###Have fun!"
+                    }
+                },
+                "styles": {
+                    "border": "None",
+                    "borderOnHover": true,
+                    "decoration": {
+                        "height": "20px",
+                        "justifyContent": "center",
+                        "left": "",
+                        "reverse": false,
+                        "top": "-30px",
+                        "type": "None",
+                        "width": "100%"
+                    },
+                    "heightReduction": 0,
+                    "marginLeft": 0,
+                    "marginTop": 0,
+                    "palette": "classic",
+                    "title": {
+                        "color": "#9FE6B8",
+                        "decoration": {
+                            "height": "50px",
+                            "margin": "10px",
+                            "type": "None",
+                            "width": "160px"
+                        },
+                        "fontSize": "0.9rem",
+                        "fontWeight": "500",
+                        "paddingBottom": "0px",
+                        "paddingLeft": "0px",
+                        "paddingRight": "0px",
+                        "paddingTop": "0px"
+                    },
+                    "widthReduction": 0
+                },
+                "title": "",
+                "transform": "function transform(rawData,lodash, moment) {\n    // for demonstration purpose: how to use 'moment'\n    // const t = moment(new Date()).format(\"YY-MM-DD HH:mm::ss\")\n    return rawData\n}",
+                "type": "stat",
+                "valueMapping": null
+            },
+            {
+                "collapsed": false,
+                "conditionRender": {
+                    "type": "variable",
+                    "value": ""
+                },
+                "datasource": {
+                    "id": 3,
+                    "queries": [
+                        {
+                            "data": {},
+                            "id": 65,
+                            "legend": "",
+                            "metrics": "{job=~\"datav-service\"}",
+                            "visible": true
+                        }
+                    ],
+                    "queryOptions": {
+                        "maxDataPoints": 600,
+                        "minInterval": "15s"
+                    }
+                },
+                "desc": "",
+                "enableConditionRender": false,
+                "enableTransform": false,
+                "gridPos": {
+                    "h": 15,
+                    "w": 12,
+                    "x": 0,
+                    "y": 10
+                },
+                "id": 8,
+                "overrides": [],
+                "plugins": {
+                    "log": {
+                        "chart": {
+                            "categorize": "level",
+                            "height": "100px",
+                            "show": true,
+                            "showLabel": "auto",
+                            "stack": "always",
+                            "tooltip": "all"
+                        },
+                        "enableDetails": true,
+                        "enableTransform": true,
+                        "interaction": {
+                            "actions": [
+                                {
+                                    "action": "\n// setVariable: (varName:string, varValue:string) => void \n// navigate: react-router-dom -> useNavigate() -> navigate \n// setDateTime: (from: Timestamp, to: TimeStamp) => void\nfunction onRowClick(row, navigate, setVariable, setDateTime, $variables) {\n    // You can get all current variables in this way\n    // const currentVariables = $variables.get()\n    const content = JSON.parse(row.content)\n    navigate(`/inspect/traces?traceIds=${content.trace_id}`) \n}\n",
+                                    "color": "brand",
+                                    "name": "View correlated trace",
+                                    "style": "outline"
+                                }
+                            ],
+                            "enable": true
+                        },
+                        "labels": {
+                            "display": "level",
+                            "layout": "horizontal",
+                            "maxValueLines": null,
+                            "width": 65,
+                            "widthMap": "{}"
+                        },
+                        "orderBy": "newest",
+                        "search": {
+                            "labels": "",
+                            "log": ""
+                        },
+                        "showTime": true,
+                        "styles": {
+                            "contentColor": "inherit",
+                            "fontSize": "0.8rem",
+                            "highlight": "error,warn",
+                            "highlightColor": "#ff6e76",
+                            "labelColor": "inherit",
+                            "labelColorSyncChart": false,
+                            "labelValueColor": [
+                                {
+                                    "color": "#ff6e76",
+                                    "value": "error"
+                                },
+                                {
+                                    "color": "#ff9f7f",
+                                    "value": "warn"
+                                },
+                                {
+                                    "color": "inherit",
+                                    "value": null
+                                }
+                            ],
+                            "showlineBorder": true,
+                            "wordBreak": "break-all",
+                            "wrapLine": false
+                        },
+                        "thresholds": [
+                            {
+                                "color": "inherit",
+                                "key": null,
+                                "type": null,
+                                "value": null
+                            }
+                        ],
+                        "timeColumnWidth": 150,
+                        "timeStampPrecision": "ms",
+                        "toolbar": {
+                            "defaultOpen": false,
+                            "show": true,
+                            "width": 200
+                        },
+                        "transform": "function transform(rawlog, lodash, moment) {\n    try {\n        const rawcontent = JSON.parse(rawlog.content)\n        const labels = {\n            level: rawcontent.level,\n        }\n        const content = {\n            \"msg\": rawcontent.msg,\n            \"trace_id\": rawcontent.trace_id,\n            \"span_id\": rawcontent.span_id,\n        }\n        if (rawcontent.error) {\n            content.error = rawcontent.error\n        }\n        const newlog = {\n            timestamp: rawlog.timestamp,\n            content: JSON.stringify(content),\n            labels\n        }\n        return newlog\n    } catch (error) {\n            return rawlog\n    }\n}",
+                        "value": {
+                            "decimal": 3,
+                            "units": [],
+                            "unitsType": "none"
+                        }
+                    }
+                },
+                "styles": {
+                    "border": "None",
+                    "borderOnHover": true,
+                    "decoration": {
+                        "height": "20px",
+                        "justifyContent": "center",
+                        "left": "",
+                        "reverse": false,
+                        "top": "-30px",
+                        "type": "None",
+                        "width": "100%"
+                    },
+                    "heightReduction": 0,
+                    "marginLeft": 0,
+                    "marginTop": 0,
+                    "palette": "echarts-light",
+                    "title": {
+                        "color": "inherit",
+                        "decoration": {
+                            "height": "50px",
+                            "margin": "10px",
+                            "type": "None",
+                            "width": "160px"
+                        },
+                        "fontSize": "14px",
+                        "fontWeight": "500",
+                        "paddingBottom": "0px",
+                        "paddingLeft": "0px",
+                        "paddingRight": "0px",
+                        "paddingTop": "0px"
+                    },
+                    "widthReduction": 0
+                },
+                "title": "",
+                "transform": "function transform(rawData,lodash, moment) {\n    // for demonstration purpose: how to use 'moment'\n    // const t = moment(new Date()).format(\"YY-MM-DD HH:mm::ss\")\n    return rawData\n}",
+                "type": "log",
+                "valueMapping": null
+            },
+            {
+                "collapsed": false,
+                "conditionRender": {
+                    "type": "variable",
+                    "value": ""
+                },
+                "datasource": {
+                    "id": 3,
+                    "queries": [
+                        {
+                            "data": {},
+                            "id": 65,
+                            "legend": "{{geoip_country_name}}",
+                            "metrics": "sum by(geoip_country_name) (count_over_time({job=\"datav-service\"} | geoip_country_name != \"\" \n[${__interval__}]))",
+                            "visible": true
+                        }
+                    ],
+                    "queryOptions": {
+                        "maxDataPoints": 600,
+                        "minInterval": "1h"
+                    }
+                },
+                "desc": "",
+                "enableConditionRender": false,
+                "enableTransform": false,
+                "gridPos": {
+                    "h": 17,
+                    "w": 10,
+                    "x": 0,
+                    "y": 25
+                },
+                "id": 4,
+                "overrides": [],
+                "plugins": {
+                    "geomap": {
+                        "baseMap": {
+                            "attr": null,
+                            "layer": "ArcGIS Map Server",
+                            "mapServer": "World_Street_Map",
+                            "url": null
+                        },
+                        "controls": {
+                            "enableZoom": true,
+                            "showAttribution": false,
+                            "showDebug": false,
+                            "showMeasure": false,
+                            "showScale": false,
+                            "showTooltip": true,
+                            "showZoom": false
+                        },
+                        "dataLayer": {
+                            "layer": "Markers",
+                            "opacity": 0.6
+                        },
+                        "enableClick": true,
+                        "initialView": {
+                            "center": [
+                                0,
+                                0
+                            ],
+                            "zoom": 1
+                        },
+                        "onClickEvent": "\n// map:  openlayer map <https://openlayers.org/en/latest/apidoc/module-ol_Map-Map.html>\n// setVariable: (varName:string, varValue:string) => void \n// navigate: react-router-dom -> useNavigate() -> navigate \n// setDateTime: (from: Timestamp, to: TimeStamp) => void\n\nfunction onClick(data, map, navigate, setVariable, setDateTime, $variables) {\n    // You can get all current variables in this way\n    const coords = data[0].getGeometry().flatCoordinates\n    const view = map.getView()\n    view.setCenter(coords)\n    view.setZoom(10)\n}\n",
+                        "sizeScale": {
+                            "baseSize": 8,
+                            "enable": true,
+                            "maxScale": 2
+                        },
+                        "thresholds": {
+                            "enableTransform": false,
+                            "mode": "absolute",
+                            "thresholds": [
+                                {
+                                    "color": "$yellow",
+                                    "value": 10000
+                                },
+                                {
+                                    "color": "#7cffb2",
+                                    "value": null
+                                }
+                            ],
+                            "transform": "function transform(data, lodash){\n\n}"
+                        },
+                        "value": {
+                            "calc": "Sum",
+                            "decimal": 1,
+                            "units": [],
+                            "unitsType": "none"
+                        }
+                    },
+                    "text": {
+                        "alignItems": "top",
+                        "disableDatasource": true,
+                        "fontSize": "1.2em",
+                        "fontWeight": "500",
+                        "justifyContent": "left",
+                        "md": "#Welcome to Datav\n This is a new panel\n You can edit it by clicking the edit button on the top title\n ###Have fun!"
+                    }
+                },
+                "styles": {
+                    "border": "None",
+                    "borderOnHover": true,
+                    "decoration": {
+                        "height": "20px",
+                        "justifyContent": "center",
+                        "left": "",
+                        "reverse": false,
+                        "top": "-30px",
+                        "type": "None",
+                        "width": "100%"
+                    },
+                    "heightReduction": 0,
+                    "marginLeft": 0,
+                    "marginTop": 0,
+                    "palette": "classic",
+                    "title": {
+                        "color": "#9FE6B8",
+                        "decoration": {
+                            "height": "50px",
+                            "margin": "10px",
+                            "type": "None",
+                            "width": "160px"
+                        },
+                        "fontSize": "0.9rem",
+                        "fontWeight": "500",
+                        "paddingBottom": "0px",
+                        "paddingLeft": "0px",
+                        "paddingRight": "0px",
+                        "paddingTop": "0px"
+                    },
+                    "widthReduction": 0
+                },
+                "title": "Requests to datav",
+                "transform": "function transform(rawData,lodash, moment) {\n    // for demonstration purpose: how to use 'moment'\n    // const t = moment(new Date()).format(\"YY-MM-DD HH:mm::ss\")\n    return rawData\n}",
+                "type": "geomap",
+                "valueMapping": null
+            },
+            {
+                "collapsed": false,
+                "conditionRender": {
+                    "type": "variable",
+                    "value": ""
+                },
+                "datasource": {
+                    "id": 3,
+                    "queries": [
+                        {
+                            "data": {},
+                            "id": 65,
+                            "legend": "{{geoip_country_name}}",
+                            "metrics": "topk(10, sum by (geoip_country_name) (count_over_time({job=\"datav-service\"} | geoip_country_name != \"\" [${__interval__}])))",
+                            "visible": true
+                        }
+                    ],
+                    "queryOptions": {
+                        "maxDataPoints": 600,
+                        "minInterval": "1h"
+                    }
+                },
+                "desc": "",
+                "enableConditionRender": false,
+                "enableTransform": true,
+                "gridPos": {
+                    "h": 18,
+                    "w": 2,
+                    "x": 10,
+                    "y": 25
+                },
+                "id": 5,
+                "overrides": [],
+                "plugins": {
+                    "table": {
+                        "actionButtonSize": "sm",
+                        "actionClumnWidth": null,
+                        "actionColumnName": null,
+                        "bordered": false,
+                        "cellSize": "small",
+                        "column": {
+                            "align": "auto",
+                            "colorTitle": "#9FE6B8",
+                            "enableFilter": false,
+                            "enableSort": false
+                        },
+                        "enablePagination": false,
+                        "enableRowClick": true,
+                        "globalSearch": false,
+                        "onRowClick": "\n// setVariable: (varName:string, varValue:string) => void \n// navigate: react-router-dom -> useNavigate() -> navigate \n// setDateTime: (from: Timestamp, to: TimeStamp) => void\nfunction onRowClick(row, navigate, setVariable, setDateTime, $variables) {\n    // You can get all current variables in this way\n    // const currentVariables = $variables.get()\n    // console.log(row, currentVariables)\n}\n",
+                        "rowActions": [],
+                        "showHeader": false,
+                        "stickyHeader": false,
+                        "tableWidth": 100,
+                        "value": {
+                            "decimal": 3,
+                            "units": [],
+                            "unitsType": "none"
+                        }
+                    }
+                },
+                "styles": {
+                    "border": "None",
+                    "borderOnHover": true,
+                    "decoration": {
+                        "height": "20px",
+                        "justifyContent": "center",
+                        "left": "",
+                        "reverse": false,
+                        "top": "-30px",
+                        "type": "None",
+                        "width": "100%"
+                    },
+                    "heightReduction": 0,
+                    "marginLeft": 0,
+                    "marginTop": 0,
+                    "palette": "echarts-light",
+                    "title": {
+                        "color": "#9FE6B8",
+                        "decoration": {
+                            "height": "50px",
+                            "margin": "10px",
+                            "type": "None",
+                            "width": "160px"
+                        },
+                        "fontSize": "0.9rem",
+                        "fontWeight": "500",
+                        "paddingBottom": "0px",
+                        "paddingLeft": "0px",
+                        "paddingRight": "0px",
+                        "paddingTop": "0px"
+                    },
+                    "widthReduction": 0
+                },
+                "title": "Top regions",
+                "transform": "function transform(rawData,lodash, moment) {\n    // for demonstration purpose: how to use 'moment'\n    // const t = moment(new Date()).format(\"YY-MM-DD HH:mm::ss\")\n    const series = {\n      name: \"total_requests_per_country\",\n      type: \"number\",\n      fields: [\n        {\n          name: \"Top regions\",\n          type: \"string\",\n          values: []\n        }\n      ]\n    }\n\n    for (const s of rawData.flat()) {\n      const name = s.name \n      series.fields[0].values.push(name)\n    }\n    \n    return [[series]]\n}",
+                "type": "table",
+                "valueMapping": [
+                    {
+                        "color": "inherit",
+                        "text": "${__current__} 🇺🇦",
+                        "type": "value",
+                        "value": "Ukraine"
+                    },
+                    {
+                        "color": "inherit",
+                        "text": "${__current__} 🇷🇺",
+                        "type": "value",
+                        "value": "Russia"
+                    },
+                    {
+                        "color": "inherit",
+                        "text": "${__current__} 🇨🇳",
+                        "type": "value",
+                        "value": "China"
+                    }
+                ]
+            }
+        ],
+        "sharedTooltip": false,
+        "styles": {
+            "bg": {
+                "colorMode": "dark",
+                "url": "/dashboard/universe.png"
+            },
+            "bgColor": "",
+            "bgEnabled": true,
+            "border": "None"
+        },
+        "variables": []
+    },
+    "weight": 10
+}

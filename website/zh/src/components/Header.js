@@ -105,7 +105,7 @@ export function NavPopover({ display = 'md:hidden', className, ...props }) {
             <NavItems />
             <li>
               <a
-                href="https://github.com/tailwindlabs/tailwindcss"
+                href="https://github.com/data-observe/datav"
                 className="hover:text-sky-500 dark:hover:text-sky-400"
               >
                 GitHub

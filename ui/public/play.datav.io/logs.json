@@ -1,0 +1,220 @@
+{
+    "id": "d-9KB0s2iIk",
+    "title": "Logs",
+    "editable": true,
+    "updated": "2023-09-21T00:48:43.755963531+08:00",
+    "ownedBy": 1,
+    "ownerName": "global",
+    "visibleTo": "team",
+    "data": {
+        "allowPanelsOverlap": false,
+        "annotation": {
+            "color": "rgba(0, 211, 255, 1)",
+            "enable": true,
+            "enableRole": "Admin",
+            "tagsFilter": ""
+        },
+        "autoSaveInterval": 120,
+        "description": "",
+        "editable": true,
+        "enableAutoSave": false,
+        "enableUnsavePrompt": true,
+        "hiddenPanels": [],
+        "hidingVars": "",
+        "layout": "vertical",
+        "lazyLoading": false,
+        "panels": [
+            {
+                "collapsed": false,
+                "conditionRender": {
+                    "type": "variable",
+                    "value": ""
+                },
+                "datasource": {
+                    "id": 3,
+                    "queries": [
+                        {
+                            "data": {},
+                            "id": 65,
+                            "legend": "",
+                            "metrics": "{job=~\"${job}\"}",
+                            "visible": true
+                        }
+                    ],
+                    "queryOptions": {
+                        "maxDataPoints": 600,
+                        "minInterval": "15s"
+                    }
+                },
+                "desc": "",
+                "enableConditionRender": false,
+                "enableTransform": false,
+                "gridPos": {
+                    "h": 41,
+                    "w": 24,
+                    "x": 0,
+                    "y": 0
+                },
+                "id": 1,
+                "overrides": [],
+                "plugins": {
+                    "log": {
+                        "chart": {
+                            "categorize": "level",
+                            "height": "160px",
+                            "show": true,
+                            "showLabel": "auto",
+                            "stack": "always",
+                            "tooltip": "all"
+                        },
+                        "enableDetails": true,
+                        "enableTransform": true,
+                        "interaction": {
+                            "actions": [
+                                {
+                                    "action": "\n// setVariable: (varName:string, varValue:string) => void \n// navigate: react-router-dom -> useNavigate() -> navigate \n// setDateTime: (from: Timestamp, to: TimeStamp) => void\nfunction onRowClick(row, navigate, setVariable, setDateTime, $variables) {\n    // You can get all current variables in this way\n    // const currentVariables = $variables.get()\n    const content = JSON.parse(row.content)\n    window.open(`/inspect/traces?traceIds=${content.trace_id}`) \n}\n",
+                                    "color": "brand",
+                                    "name": "View trace",
+                                    "style": "outline"
+                                }
+                            ],
+                            "enable": true
+                        },
+                        "labels": {
+                            "display": "level,user,dashboard",
+                            "layout": "horizontal",
+                            "maxValueLines": 1,
+                            "width": 80,
+                            "widthMap": "{\"dashboard\": 150, \"user\": 80}"
+                        },
+                        "orderBy": "newest",
+                        "search": {
+                            "labels": "",
+                            "log": "${search}"
+                        },
+                        "showTime": true,
+                        "styles": {
+                            "contentColor": "inherit",
+                            "fontSize": "0.8rem",
+                            "highlight": "Mock",
+                            "highlightColor": "#ff6e76",
+                            "labelColor": "#05c091",
+                            "labelColorSyncChart": false,
+                            "labelValueColor": [
+                                {
+                                    "color": "#ff6e76",
+                                    "value": "error"
+                                },
+                                {
+                                    "color": "#ff9f7f",
+                                    "value": "warn"
+                                },
+                                {
+                                    "color": "inherit",
+                                    "value": null
+                                }
+                            ],
+                            "showlineBorder": true,
+                            "wordBreak": "break-all",
+                            "wrapLine": false
+                        },
+                        "thresholds": [
+                            {
+                                "color": "inherit",
+                                "key": null,
+                                "type": null,
+                                "value": null
+                            }
+                        ],
+                        "timeColumnWidth": 120,
+                        "timeStampPrecision": "s",
+                        "toolbar": {
+                            "defaultOpen": true,
+                            "show": true,
+                            "width": 200
+                        },
+                        "transform": "function transform(rawlog, lodash, moment) {\n    try {\n        const rawcontent = JSON.parse(rawlog.content)\n        const labels = {\n            user: rawcontent.username,\n            dashboard: rawcontent.title,\n            level: rawcontent.level,\n        }\n        const content = {\n            \"msg\": rawcontent.msg,\n            \"trace_id\": rawcontent.trace_id,\n            \"span_id\": rawcontent.span_id,\n        }\n        if (rawcontent.error) {\n            content.error = rawcontent.error\n        }\n        const newlog = {\n            timestamp: rawlog.timestamp,\n            content: JSON.stringify(content),\n            labels\n        }\n        return newlog\n    } catch (error) {\n            return rawlog\n    }\n}",
+                        "value": {
+                            "decimal": 3,
+                            "units": [],
+                            "unitsType": "none"
+                        }
+                    }
+                },
+                "styles": {
+                    "border": "None",
+                    "borderOnHover": true,
+                    "decoration": {
+                        "height": "20px",
+                        "justifyContent": "center",
+                        "left": "",
+                        "reverse": false,
+                        "top": "-30px",
+                        "type": "None",
+                        "width": "100%"
+                    },
+                    "heightReduction": 30,
+                    "marginLeft": 0,
+                    "marginTop": 15,
+                    "palette": "echarts-light",
+                    "title": {
+                        "color": "inherit",
+                        "decoration": {
+                            "height": "50px",
+                            "margin": "10px",
+                            "type": "Decoration11",
+                            "width": "160px"
+                        },
+                        "fontSize": "16px",
+                        "fontWeight": "500",
+                        "paddingBottom": "0px",
+                        "paddingLeft": "0px",
+                        "paddingRight": "0px",
+                        "paddingTop": "20px"
+                    },
+                    "widthReduction": 0
+                },
+                "title": "Datav logs",
+                "transform": "function transform(rawData,lodash, moment) {\n    // for demonstration purpose: how to use 'moment'\n    // const t = moment(new Date()).format(\"YY-MM-DD HH:mm::ss\")\n    return rawData\n}",
+                "type": "log",
+                "valueMapping": null
+            }
+        ],
+        "sharedTooltip": false,
+        "styles": {
+            "bg": {
+                "colorMode": "dark",
+                "url": ""
+            },
+            "bgColor": "",
+            "bgEnabled": false,
+            "border": "None"
+        },
+        "variables": [
+            {
+                "enableAll": false,
+                "enableMulti": false,
+                "id": "d-9KB0s2iIk1694934144095",
+                "name": "search",
+                "refresh": "OnDashboardLoad",
+                "regex": "",
+                "type": "textinput",
+                "value": ""
+            },
+            {
+                "datasource": 3,
+                "default": "datav-service",
+                "enableAll": false,
+                "enableMulti": false,
+                "id": "d-9KB0s2iIk1694767059998",
+                "name": "job",
+                "refresh": "OnDashboardLoad",
+                "regex": "",
+                "type": "query",
+                "value": "{\"type\":\"Label values\",\"useCurrentTime\":true,\"labelName\":\"job\"}"
+            }
+        ]
+    },
+    "weight": 0,
+    "tags": []
+}

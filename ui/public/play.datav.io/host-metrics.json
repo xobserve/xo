@@ -1,0 +1,2297 @@
+{
+    "id": "d-g8iS6EkIk",
+    "title": "Host metrics",
+    "editable": true,
+    "updated": "2023-09-20T23:45:23.140430722+08:00",
+    "ownedBy": 2,
+    "ownerName": "ops",
+    "visibleTo": "team",
+    "tags": [
+        "ops"
+    ],
+    "data": {
+        "allowPanelsOverlap": false,
+        "annotation": {
+            "color": "rgba(0, 211, 255, 1)",
+            "enable": true,
+            "enableRole": "Admin",
+            "tagsFilter": ""
+        },
+        "autoSaveInterval": 120,
+        "description": "",
+        "editable": true,
+        "enableAutoSave": false,
+        "enableUnsavePrompt": true,
+        "hiddenPanels": [],
+        "hidingVars": "",
+        "layout": "vertical",
+        "lazyLoading": false,
+        "panels": [
+            {
+                "collapsed": false,
+                "conditionRender": {
+                    "type": "variable",
+                    "value": ""
+                },
+                "datasource": {
+                    "id": 2,
+                    "queries": [
+                        {
+                            "data": {},
+                            "id": 65,
+                            "legend": "Uptime",
+                            "metrics": "node_time_seconds{host=~\"${host}\"} - node_boot_time_seconds{host=~\"${host}\"}",
+                            "visible": true
+                        }
+                    ],
+                    "queryOptions": {
+                        "maxDataPoints": 600,
+                        "minInterval": "15s"
+                    }
+                },
+                "desc": "",
+                "enableConditionRender": false,
+                "enableTransform": false,
+                "gridPos": {
+                    "h": 6,
+                    "w": 2,
+                    "x": 0,
+                    "y": 0
+                },
+                "id": 4,
+                "overrides": [],
+                "plugins": {
+                    "stat": {
+                        "axisY": {
+                            "scale": "linear",
+                            "scaleBase": 2
+                        },
+                        "clickAction": "\n// setVariable: (varName:string, varValue:string) => void \n// navigate: react-router-dom -> useNavigate() -> navigate \n// setDateTime: (from: Timestamp, to: TimeStamp) => void\nfunction onRowClick(row, navigate, setVariable, setDateTime, $variables) {\n    // You can get all current variables in this way\n    // const currentVariables = $variables.get()\n    // console.log(row, currentVariables)\n}\n",
+                        "displaySeries": "__all__",
+                        "enableClick": true,
+                        "showGraph": false,
+                        "showLegend": true,
+                        "showTooltip": true,
+                        "styles": {
+                            "colorMode": "bg-gradient",
+                            "connectNulls": false,
+                            "fillOpacity": 80,
+                            "graphHeight": 60,
+                            "hideGraphHeight": 70,
+                            "layout": "auto",
+                            "showPoints": false,
+                            "style": "lines",
+                            "textAlign": "center"
+                        },
+                        "textSize": {
+                            "legend": null,
+                            "value": null
+                        },
+                        "thresholds": {
+                            "enableTransform": false,
+                            "mode": "absolute",
+                            "thresholds": [
+                                {
+                                    "color": "#32C5E9",
+                                    "value": null
+                                }
+                            ],
+                            "transform": "function transform(seriesData, fieldName, value,min,max, lodash){\n\n}"
+                        },
+                        "value": {
+                            "calc": "Last",
+                            "decimal": 0,
+                            "units": [
+                                {
+                                    "operator": "/",
+                                    "rhs": 1,
+                                    "unit": "s"
+                                },
+                                {
+                                    "operator": "/",
+                                    "rhs": 60,
+                                    "unit": "m"
+                                },
+                                {
+                                    "operator": "/",
+                                    "rhs": 3600,
+                                    "unit": "h"
+                                },
+                                {
+                                    "operator": "/",
+                                    "rhs": 86400,
+                                    "unit": "d"
+                                }
+                            ],
+                            "unitsType": "time"
+                        }
+                    }
+                },
+                "styles": {
+                    "border": "None",
+                    "borderOnHover": true,
+                    "decoration": {
+                        "height": "20px",
+                        "justifyContent": "center",
+                        "left": "",
+                        "reverse": false,
+                        "top": "-30px",
+                        "type": "None",
+                        "width": "100%"
+                    },
+                    "heightReduction": 0,
+                    "marginLeft": 0,
+                    "marginTop": 0,
+                    "palette": "echarts-light",
+                    "title": {
+                        "color": "inherit",
+                        "decoration": {
+                            "height": "50px",
+                            "margin": "10px",
+                            "type": "None",
+                            "width": "160px"
+                        },
+                        "fontSize": "14px",
+                        "fontWeight": "500",
+                        "paddingBottom": "0px",
+                        "paddingLeft": "0px",
+                        "paddingRight": "0px",
+                        "paddingTop": "0px"
+                    },
+                    "widthReduction": 0
+                },
+                "title": "",
+                "transform": "function transform(rawData,lodash, moment) {\n    // for demonstration purpose: how to use 'moment'\n    // const t = moment(new Date()).format(\"YY-MM-DD HH:mm::ss\")\n    return rawData\n}",
+                "type": "stat",
+                "valueMapping": null
+            },
+            {
+                "collapsed": false,
+                "conditionRender": {
+                    "type": "variable",
+                    "value": ""
+                },
+                "datasource": {
+                    "id": 2,
+                    "queries": [
+                        {
+                            "data": {},
+                            "id": 65,
+                            "legend": "{{device}}",
+                            "metrics": "node_network_up{host=~\"${host}\", device=~\"eth0|docker0\"}",
+                            "visible": true
+                        }
+                    ],
+                    "queryOptions": {
+                        "maxDataPoints": 600,
+                        "minInterval": "1m"
+                    }
+                },
+                "desc": "",
+                "enableConditionRender": false,
+                "enableTransform": false,
+                "gridPos": {
+                    "h": 6,
+                    "w": 4,
+                    "x": 2,
+                    "y": 0
+                },
+                "id": 6,
+                "overrides": [
+                    {
+                        "overrides": [
+                            {
+                                "type": "Series.colorMode",
+                                "value": "bg-solid"
+                            }
+                        ],
+                        "target": "eth0"
+                    }
+                ],
+                "plugins": {
+                    "stat": {
+                        "axisY": {
+                            "scale": "linear",
+                            "scaleBase": 2
+                        },
+                        "clickAction": "\n// setVariable: (varName:string, varValue:string) => void \n// navigate: react-router-dom -> useNavigate() -> navigate \n// setDateTime: (from: Timestamp, to: TimeStamp) => void\nfunction onRowClick(row, navigate, setVariable, setDateTime, $variables) {\n    // You can get all current variables in this way\n    // const currentVariables = $variables.get()\n    // console.log(row, currentVariables)\n}\n",
+                        "displaySeries": "__all__",
+                        "enableClick": true,
+                        "showGraph": false,
+                        "showLegend": true,
+                        "showTooltip": true,
+                        "styles": {
+                            "colorMode": "bg-gradient",
+                            "connectNulls": false,
+                            "fillOpacity": 80,
+                            "graphHeight": 35,
+                            "hideGraphHeight": 70,
+                            "layout": "auto",
+                            "showPoints": false,
+                            "style": "lines",
+                            "textAlign": "center"
+                        },
+                        "textSize": {
+                            "legend": null,
+                            "value": null
+                        },
+                        "thresholds": {
+                            "enableTransform": false,
+                            "mode": "absolute",
+                            "thresholds": [
+                                {
+                                    "color": "#05c091",
+                                    "value": 1
+                                },
+                                {
+                                    "color": "#fb7293",
+                                    "value": null
+                                }
+                            ],
+                            "transform": "function transform(seriesData, fieldName, value,min,max, lodash){\n\n}"
+                        },
+                        "value": {
+                            "calc": "Last",
+                            "decimal": 1,
+                            "units": [
+                                {
+                                    "operator": "=",
+                                    "rhs": 0,
+                                    "unit": "Down"
+                                },
+                                {
+                                    "operator": "=",
+                                    "rhs": 1,
+                                    "unit": "Up"
+                                }
+                            ],
+                            "unitsType": "enum"
+                        }
+                    }
+                },
+                "styles": {
+                    "border": "None",
+                    "borderOnHover": true,
+                    "decoration": {
+                        "height": "20px",
+                        "justifyContent": "center",
+                        "left": "",
+                        "reverse": false,
+                        "top": "-30px",
+                        "type": "None",
+                        "width": "100%"
+                    },
+                    "heightReduction": 0,
+                    "marginLeft": 0,
+                    "marginTop": 0,
+                    "palette": "echarts-light",
+                    "title": {
+                        "color": "inherit",
+                        "decoration": {
+                            "height": "50px",
+                            "margin": "10px",
+                            "type": "None",
+                            "width": "160px"
+                        },
+                        "fontSize": "14px",
+                        "fontWeight": "500",
+                        "paddingBottom": "0px",
+                        "paddingLeft": "0px",
+                        "paddingRight": "0px",
+                        "paddingTop": "0px"
+                    },
+                    "widthReduction": 0
+                },
+                "title": "",
+                "transform": "function transform(rawData,lodash, moment) {\n    // for demonstration purpose: how to use 'moment'\n    console.log(\"here33333:\",rawData)\n    // const t = moment(new Date()).format(\"YY-MM-DD HH:mm::ss\")\n    rawData[0][0].fields[1].values[rawData[0][0].fields[1].values.length - 1] = 0\n    return rawData\n}",
+                "type": "stat",
+                "valueMapping": null
+            },
+            {
+                "collapsed": false,
+                "conditionRender": {
+                    "type": "variable",
+                    "value": ""
+                },
+                "datasource": {
+                    "id": 2,
+                    "queries": [
+                        {
+                            "data": {},
+                            "id": 65,
+                            "legend": "load1",
+                            "metrics": "node_load1{host=~\"${host}\"}",
+                            "visible": true
+                        },
+                        {
+                            "data": {},
+                            "id": 66,
+                            "legend": "load5",
+                            "metrics": "node_load5{host=~\"${host}\"}",
+                            "visible": true
+                        }
+                    ],
+                    "queryOptions": {
+                        "maxDataPoints": 600,
+                        "minInterval": "15s"
+                    }
+                },
+                "desc": "",
+                "enableConditionRender": false,
+                "enableTransform": false,
+                "gridPos": {
+                    "h": 13,
+                    "w": 5,
+                    "x": 6,
+                    "y": 0
+                },
+                "id": 1,
+                "overrides": [
+                    {
+                        "overrides": [
+                            {
+                                "type": "Series.negativeY",
+                                "value": true
+                            }
+                        ],
+                        "target": "load5"
+                    }
+                ],
+                "plugins": {
+                    "graph": {
+                        "alertFilter": {
+                            "alertLabel": "",
+                            "datasources": [],
+                            "enableFilter": true,
+                            "httpQuery": {
+                                "data": {},
+                                "id": 65,
+                                "legend": "",
+                                "metrics": "",
+                                "visible": true
+                            },
+                            "ruleLabel": "",
+                            "ruleName": "",
+                            "state": []
+                        },
+                        "axis": {
+                            "scale": "linear",
+                            "scaleBase": 2,
+                            "showGrid": false,
+                            "showX": false,
+                            "showY": true
+                        },
+                        "clickActions": [],
+                        "enableAlert": false,
+                        "legend": {
+                            "mode": "table",
+                            "nameWidth": "400",
+                            "order": {
+                                "by": "Last",
+                                "sort": "desc"
+                            },
+                            "placement": "bottom",
+                            "showValuesName": true,
+                            "valueCalcs": [
+                                "Last",
+                                "Max"
+                            ],
+                            "width": 500
+                        },
+                        "styles": {
+                            "barGap": 10,
+                            "barRadius": 0,
+                            "connectNulls": false,
+                            "enableStack": false,
+                            "fillOpacity": 80,
+                            "gradientMode": "none",
+                            "lineWidth": 1,
+                            "padding": [
+                                null,
+                                null,
+                                null,
+                                null
+                            ],
+                            "pointSize": 6,
+                            "showPoints": "auto",
+                            "style": "lines"
+                        },
+                        "thresholds": {
+                            "enableTransform": false,
+                            "mode": "absolute",
+                            "thresholds": [
+                                {
+                                    "color": "#9FE6B8",
+                                    "value": null
+                                }
+                            ],
+                            "transform": "function transform(seriesData, fieldName, value,min,max, lodash){\n\n}"
+                        },
+                        "thresholdsDisplay": "None",
+                        "tooltip": {
+                            "mode": "all",
+                            "sort": "desc"
+                        },
+                        "value": {
+                            "decimal": 2,
+                            "units": [],
+                            "unitsType": "none"
+                        }
+                    },
+                    "text": {
+                        "alignItems": "top",
+                        "disableDatasource": true,
+                        "fontSize": "1.2em",
+                        "fontWeight": "500",
+                        "justifyContent": "left",
+                        "md": "#Welcome to Datav\n This is a new panel\n You can edit it by clicking the edit button on the top title\n ###Have fun!"
+                    }
+                },
+                "styles": {
+                    "border": "None",
+                    "borderOnHover": true,
+                    "decoration": {
+                        "height": "20px",
+                        "justifyContent": "center",
+                        "left": "",
+                        "reverse": false,
+                        "top": "-30px",
+                        "type": "None",
+                        "width": "100%"
+                    },
+                    "heightReduction": 0,
+                    "marginLeft": 0,
+                    "marginTop": 0,
+                    "palette": "echarts-light",
+                    "title": {
+                        "color": "inherit",
+                        "decoration": {
+                            "height": "50px",
+                            "margin": "10px",
+                            "type": "None",
+                            "width": "160px"
+                        },
+                        "fontSize": "14px",
+                        "fontWeight": "500",
+                        "paddingBottom": "0px",
+                        "paddingLeft": "0px",
+                        "paddingRight": "0px",
+                        "paddingTop": "0px"
+                    },
+                    "widthReduction": 0
+                },
+                "title": "System load",
+                "transform": "function transform(rawData,lodash, moment) {\n    // for demonstration purpose: how to use 'moment'\n    // const t = moment(new Date()).format(\"YY-MM-DD HH:mm::ss\")\n    return rawData\n}",
+                "type": "graph",
+                "valueMapping": []
+            },
+            {
+                "collapsed": false,
+                "conditionRender": {
+                    "type": "variable",
+                    "value": ""
+                },
+                "datasource": {
+                    "id": 2,
+                    "queries": [
+                        {
+                            "data": {
+                                "expandTimeline": "auto"
+                            },
+                            "id": 65,
+                            "legend": "{{host}}",
+                            "metrics": "sum(rate(node_cpu_seconds_total{host=~\"${host}\",mode!=\"idle\"}[1m])) by (host) * 100 / scalar(count(node_cpu_seconds_total{host=~\"${host}\",mode=\"user\"}))",
+                            "visible": true
+                        }
+                    ],
+                    "queryOptions": {
+                        "maxDataPoints": 600,
+                        "minInterval": "15s"
+                    }
+                },
+                "desc": "",
+                "enableConditionRender": false,
+                "enableTransform": false,
+                "gridPos": {
+                    "h": 13,
+                    "w": 5,
+                    "x": 11,
+                    "y": 0
+                },
+                "id": 2,
+                "overrides": [],
+                "plugins": {
+                    "graph": {
+                        "alertFilter": {
+                            "alertLabel": "",
+                            "datasources": [],
+                            "enableFilter": true,
+                            "httpQuery": {
+                                "data": {},
+                                "id": 65,
+                                "legend": "",
+                                "metrics": "",
+                                "visible": true
+                            },
+                            "ruleLabel": "",
+                            "ruleName": "",
+                            "state": []
+                        },
+                        "axis": {
+                            "scale": "linear",
+                            "scaleBase": 2,
+                            "showGrid": false,
+                            "showX": false,
+                            "showY": true
+                        },
+                        "clickActions": [],
+                        "enableAlert": false,
+                        "legend": {
+                            "mode": "table",
+                            "nameWidth": "400",
+                            "order": {
+                                "by": "Last",
+                                "sort": "desc"
+                            },
+                            "placement": "bottom",
+                            "showValuesName": true,
+                            "valueCalcs": [
+                                "Last",
+                                "Max"
+                            ],
+                            "width": 500
+                        },
+                        "styles": {
+                            "barGap": 10,
+                            "barRadius": 0,
+                            "connectNulls": false,
+                            "enableStack": false,
+                            "fillOpacity": 83,
+                            "gradientMode": "none",
+                            "lineWidth": 1,
+                            "padding": [
+                                null,
+                                0,
+                                null,
+                                null
+                            ],
+                            "pointSize": 6,
+                            "showPoints": "auto",
+                            "style": "lines"
+                        },
+                        "thresholds": {
+                            "enableTransform": false,
+                            "mode": "absolute",
+                            "thresholds": [
+                                {
+                                    "color": "$yellow",
+                                    "value": 50
+                                },
+                                {
+                                    "color": "#9FE6B8",
+                                    "value": null
+                                }
+                            ],
+                            "transform": "function transform(seriesData, fieldName, value,min,max, lodash){\n\n}"
+                        },
+                        "thresholdsDisplay": "Area Dashed Line",
+                        "tooltip": {
+                            "mode": "all",
+                            "sort": "desc"
+                        },
+                        "value": {
+                            "decimal": 1,
+                            "units": [
+                                {
+                                    "operator": "x",
+                                    "rhs": 1,
+                                    "unit": "%"
+                                }
+                            ],
+                            "unitsType": "percent%"
+                        }
+                    }
+                },
+                "styles": {
+                    "border": "None",
+                    "borderOnHover": true,
+                    "decoration": {
+                        "height": "20px",
+                        "justifyContent": "center",
+                        "left": "",
+                        "reverse": false,
+                        "top": "-30px",
+                        "type": "None",
+                        "width": "100%"
+                    },
+                    "heightReduction": 0,
+                    "marginLeft": 0,
+                    "marginTop": 0,
+                    "palette": "echarts-light",
+                    "title": {
+                        "color": "inherit",
+                        "decoration": {
+                            "height": "50px",
+                            "margin": "10px",
+                            "type": "None",
+                            "width": "160px"
+                        },
+                        "fontSize": "14px",
+                        "fontWeight": "500",
+                        "paddingBottom": "0px",
+                        "paddingLeft": "0px",
+                        "paddingRight": "0px",
+                        "paddingTop": "0px"
+                    },
+                    "widthReduction": 0
+                },
+                "title": "CPU Usage",
+                "transform": "function transform(rawData,lodash, moment) {\n    // for demonstration purpose: how to use 'moment'\n    // const t = moment(new Date()).format(\"YY-MM-DD HH:mm::ss\")\n    return rawData\n}",
+                "type": "graph",
+                "valueMapping": null
+            },
+            {
+                "collapsed": false,
+                "conditionRender": {
+                    "type": "variable",
+                    "value": ""
+                },
+                "datasource": {
+                    "id": 2,
+                    "queries": [
+                        {
+                            "data": {},
+                            "id": 65,
+                            "legend": "{{device}}",
+                            "metrics": "node_filesystem_avail_bytes{host=~\"${host}\"}",
+                            "visible": true
+                        },
+                        {
+                            "data": {},
+                            "id": 66,
+                            "legend": "",
+                            "metrics": "node_filesystem_size_bytes{host=~\"${host}\"}",
+                            "visible": true
+                        }
+                    ],
+                    "queryOptions": {
+                        "maxDataPoints": 600,
+                        "minInterval": "15s"
+                    }
+                },
+                "desc": "",
+                "enableConditionRender": false,
+                "enableTransform": true,
+                "gridPos": {
+                    "h": 13,
+                    "w": 8,
+                    "x": 16,
+                    "y": 0
+                },
+                "id": 11,
+                "overrides": [
+                    {
+                        "overrides": [
+                            {
+                                "type": "Column.title",
+                                "value": "Available"
+                            },
+                            {
+                                "type": "Column.unit",
+                                "value": {
+                                    "units": [
+                                        {
+                                            "operator": "/",
+                                            "rhs": 1,
+                                            "unit": "B"
+                                        },
+                                        {
+                                            "operator": "/",
+                                            "rhs": 1024,
+                                            "unit": "KB"
+                                        },
+                                        {
+                                            "operator": "/",
+                                            "rhs": 1048576,
+                                            "unit": "MB"
+                                        },
+                                        {
+                                            "operator": "/",
+                                            "rhs": 1073741824,
+                                            "unit": "GB"
+                                        }
+                                    ],
+                                    "unitsType": "bytes"
+                                }
+                            },
+                            {
+                                "type": "Column.decimal",
+                                "value": 1
+                            },
+                            {
+                                "type": "Column.cellType",
+                                "value": {
+                                    "mode": "basic",
+                                    "type": "gauge"
+                                }
+                            },
+                            {
+                                "type": "Column.thresholds",
+                                "value": {
+                                    "enableTransform": true,
+                                    "mode": "absolute",
+                                    "thresholds": [
+                                        {
+                                            "color": "#05c091",
+                                            "value": 0.95
+                                        },
+                                        {
+                                            "color": "$light-red",
+                                            "value": null
+                                        }
+                                    ],
+                                    "transform": "function transform(data, lodash){\n   \n    const avail = data.row.__value__.Available\n    const total = data.row.__value__.Total\n    const availPercent = total == 0 ? null : avail / total\n    return availPercent\n}"
+                                }
+                            },
+                            {
+                                "type": "Column.width",
+                                "value": "180px"
+                            }
+                        ],
+                        "target": "Available"
+                    },
+                    {
+                        "overrides": [
+                            {
+                                "type": "Column.unit",
+                                "value": {
+                                    "units": [
+                                        {
+                                            "operator": "/",
+                                            "rhs": 1,
+                                            "unit": "B"
+                                        },
+                                        {
+                                            "operator": "/",
+                                            "rhs": 1024,
+                                            "unit": "KB"
+                                        },
+                                        {
+                                            "operator": "/",
+                                            "rhs": 1048576,
+                                            "unit": "MB"
+                                        },
+                                        {
+                                            "operator": "/",
+                                            "rhs": 1073741824,
+                                            "unit": "GB"
+                                        }
+                                    ],
+                                    "unitsType": "bytes"
+                                }
+                            },
+                            {
+                                "type": "Column.decimal",
+                                "value": 1
+                            }
+                        ],
+                        "target": "Total"
+                    }
+                ],
+                "plugins": {
+                    "table": {
+                        "actionButtonSize": "sm",
+                        "actionClumnWidth": null,
+                        "actionColumnName": null,
+                        "bordered": false,
+                        "cellSize": "small",
+                        "column": {
+                            "align": "auto",
+                            "colorTitle": "#37A2DA",
+                            "enableFilter": false,
+                            "enableSort": false
+                        },
+                        "enablePagination": false,
+                        "enableRowClick": true,
+                        "globalSearch": false,
+                        "onRowClick": "\n// setVariable: (varName:string, varValue:string) => void \n// navigate: react-router-dom -> useNavigate() -> navigate \n// setDateTime: (from: Timestamp, to: TimeStamp) => void\nfunction onRowClick(row, navigate, setVariable, setDateTime, $variables) {\n    // You can get all current variables in this way\n    // const currentVariables = $variables.get()\n    // console.log(row, currentVariables)\n}\n",
+                        "rowActions": [],
+                        "showHeader": true,
+                        "stickyHeader": false,
+                        "tableWidth": 100
+                    }
+                },
+                "styles": {
+                    "border": "None",
+                    "borderOnHover": true,
+                    "decoration": {
+                        "height": "20px",
+                        "justifyContent": "center",
+                        "left": "",
+                        "reverse": false,
+                        "top": "-30px",
+                        "type": "None",
+                        "width": "100%"
+                    },
+                    "heightReduction": 0,
+                    "marginLeft": 0,
+                    "marginTop": 0,
+                    "palette": "echarts-light",
+                    "title": {
+                        "color": "inherit",
+                        "decoration": {
+                            "height": "50px",
+                            "margin": "10px",
+                            "type": "None",
+                            "width": "160px"
+                        },
+                        "fontSize": "14px",
+                        "fontWeight": "500",
+                        "paddingBottom": "0px",
+                        "paddingLeft": "0px",
+                        "paddingRight": "0px",
+                        "paddingTop": "0px"
+                    },
+                    "widthReduction": 0
+                },
+                "title": "",
+                "transform": "function transform(rawData, lodash, moment) {\n    console.log(\"here33333:\", rawData)\n    // for demonstration purpose: how to use 'moment'\n    // const t = moment(new Date()).format(\"YY-MM-DD HH:mm::ss\")\n    const data = []\n    const series = {\n        name: \"disk avaliable spaces\",\n        fields: [\n            {\n                name: \"Disk\",\n                values: []\n            },\n            {\n                name: \"Mount\",\n                values: []\n            },\n            {\n                \"name\": \"Total\",\n                values: []\n            },\n            {\n                \"name\": \"Available\",\n                values: []\n            }\n        ]\n    }\n\n    for (const s of rawData.flat()) {\n        if (s.fields[1].labels.__name__ == \"node_filesystem_avail_bytes\") {\n            series.fields[0].values.push(s.fields[1].labels.device)\n            series.fields[1].values.push(s.fields[1].labels.mountpoint)\n            series.fields[3].values.push(lodash.last(s.fields[1].values))\n        } else if (s.fields[1].labels.__name__ == \"node_filesystem_size_bytes\") {\n            series.fields[2].values.push(lodash.last(s.fields[1].values))\n        }\n\n    }\n\n    data.push(series)\n\n    return [data]\n}",
+                "type": "table",
+                "valueMapping": [
+                    {
+                        "color": "$green",
+                        "text": "${__current__} 🚩",
+                        "type": "value",
+                        "value": "/dev/vda1"
+                    }
+                ]
+            },
+            {
+                "collapsed": false,
+                "conditionRender": {
+                    "type": "variable",
+                    "value": ""
+                },
+                "datasource": {
+                    "id": 2,
+                    "queries": [
+                        {
+                            "data": {
+                                "expandTimeline": "auto"
+                            },
+                            "id": 65,
+                            "legend": "Disk usage",
+                            "metrics": "sum without (device) (\n  max without (fstype, mountpoint) (\n    node_filesystem_size_bytes{host=~\"${host}\",job=\"node\", fstype!=\"\"} - node_filesystem_avail_bytes{host=~\"${host}\",job=\"node\", fstype!=\"\"}\n  )\n) \n/ scalar(sum(max without (fstype, mountpoint) (node_filesystem_size_bytes{host=~\"${host}\",job=\"node\", fstype!=\"\"})))\n",
+                            "visible": true
+                        }
+                    ],
+                    "queryOptions": {
+                        "maxDataPoints": 600,
+                        "minInterval": "15s"
+                    }
+                },
+                "desc": "",
+                "enableConditionRender": false,
+                "enableTransform": false,
+                "gridPos": {
+                    "h": 7,
+                    "w": 2,
+                    "x": 0,
+                    "y": 6
+                },
+                "id": 8,
+                "overrides": [],
+                "plugins": {
+                    "stat": {
+                        "axisY": {
+                            "scale": "linear",
+                            "scaleBase": 2
+                        },
+                        "clickAction": "\n// setVariable: (varName:string, varValue:string) => void \n// navigate: react-router-dom -> useNavigate() -> navigate \n// setDateTime: (from: Timestamp, to: TimeStamp) => void\nfunction onRowClick(row, navigate, setVariable, setDateTime, $variables) {\n    // You can get all current variables in this way\n    // const currentVariables = $variables.get()\n    // console.log(row, currentVariables)\n}\n",
+                        "displaySeries": "__all__",
+                        "enableClick": true,
+                        "showGraph": true,
+                        "showLegend": true,
+                        "showTooltip": true,
+                        "styles": {
+                            "colorMode": "bg-gradient",
+                            "connectNulls": false,
+                            "fillOpacity": 80,
+                            "graphHeight": 60,
+                            "hideGraphHeight": 70,
+                            "layout": "auto",
+                            "showPoints": false,
+                            "style": "lines",
+                            "textAlign": "center"
+                        },
+                        "textSize": {
+                            "legend": null,
+                            "value": null
+                        },
+                        "thresholds": {
+                            "enableTransform": false,
+                            "mode": "absolute",
+                            "thresholds": [
+                                {
+                                    "color": "$yellow",
+                                    "value": 0.8
+                                },
+                                {
+                                    "color": "#32C5E9",
+                                    "value": null
+                                }
+                            ],
+                            "transform": "function transform(seriesData, fieldName, value,min,max, lodash){\n\n}"
+                        },
+                        "value": {
+                            "calc": "Last",
+                            "decimal": 1,
+                            "units": [
+                                {
+                                    "operator": "x",
+                                    "rhs": 100,
+                                    "unit": "%"
+                                }
+                            ],
+                            "unitsType": "percent"
+                        }
+                    }
+                },
+                "styles": {
+                    "border": "None",
+                    "borderOnHover": true,
+                    "decoration": {
+                        "height": "20px",
+                        "justifyContent": "center",
+                        "left": "",
+                        "reverse": false,
+                        "top": "-30px",
+                        "type": "None",
+                        "width": "100%"
+                    },
+                    "heightReduction": 0,
+                    "marginLeft": 0,
+                    "marginTop": 0,
+                    "palette": "echarts-light",
+                    "title": {
+                        "color": "inherit",
+                        "decoration": {
+                            "height": "50px",
+                            "margin": "10px",
+                            "type": "None",
+                            "width": "160px"
+                        },
+                        "fontSize": "14px",
+                        "fontWeight": "500",
+                        "paddingBottom": "0px",
+                        "paddingLeft": "0px",
+                        "paddingRight": "0px",
+                        "paddingTop": "0px"
+                    },
+                    "widthReduction": 0
+                },
+                "title": "",
+                "transform": "function transform(rawData,lodash, moment) {\n    // for demonstration purpose: how to use 'moment'\n    // const t = moment(new Date()).format(\"YY-MM-DD HH:mm::ss\")\n    return rawData\n}",
+                "type": "stat",
+                "valueMapping": null
+            },
+            {
+                "collapsed": false,
+                "conditionRender": {
+                    "type": "variable",
+                    "value": ""
+                },
+                "datasource": {
+                    "id": 2,
+                    "queries": [
+                        {
+                            "data": {},
+                            "id": 65,
+                            "legend": "Mem Used",
+                            "metrics": "node_memory_MemTotal_bytes{host=~\"${host}\"} - node_memory_MemAvailable_bytes{host=~\"${host}\"}",
+                            "visible": true
+                        },
+                        {
+                            "data": {},
+                            "id": 66,
+                            "legend": "Free",
+                            "metrics": "node_memory_MemAvailable_bytes{host=~\"${host}\"}",
+                            "visible": true
+                        }
+                    ],
+                    "queryOptions": {
+                        "maxDataPoints": 600,
+                        "minInterval": "15s"
+                    }
+                },
+                "desc": "",
+                "enableConditionRender": false,
+                "enableTransform": false,
+                "gridPos": {
+                    "h": 7,
+                    "w": 4,
+                    "x": 2,
+                    "y": 6
+                },
+                "id": 5,
+                "overrides": [
+                    {
+                        "overrides": [
+                            {
+                                "type": "Series.thresholds",
+                                "value": {
+                                    "enableTransform": true,
+                                    "mode": "absolute",
+                                    "thresholds": [
+                                        {
+                                            "color": "#fb7293",
+                                            "value": 0.7
+                                        },
+                                        {
+                                            "color": "#05c091",
+                                            "value": null
+                                        }
+                                    ],
+                                    "transform": "function transform(data, lodash){\n    const used = data.value\n    const freeValues = data.data.find(s => s.name == \"Free\").fields.find(f => f.type == \"number\").values\n      \n    const free = data.calcValueOnArray(freeValues, data.calc)\n    return used / (used + free)\n}"
+                                }
+                            },
+                            {
+                                "type": "Series.colorMode",
+                                "value": "bg-solid"
+                            }
+                        ],
+                        "target": "Used"
+                    }
+                ],
+                "plugins": {
+                    "stat": {
+                        "axisY": {
+                            "scale": "linear",
+                            "scaleBase": 2
+                        },
+                        "clickAction": "\n// setVariable: (varName:string, varValue:string) => void \n// navigate: react-router-dom -> useNavigate() -> navigate \n// setDateTime: (from: Timestamp, to: TimeStamp) => void\nfunction onRowClick(row, navigate, setVariable, setDateTime, $variables) {\n    // You can get all current variables in this way\n    // const currentVariables = $variables.get()\n    // console.log(row, currentVariables)\n}\n",
+                        "displaySeries": "__all__",
+                        "enableClick": true,
+                        "showGraph": true,
+                        "showLegend": true,
+                        "showTooltip": true,
+                        "styles": {
+                            "colorMode": "bg-solid",
+                            "connectNulls": false,
+                            "fillOpacity": 80,
+                            "graphHeight": 60,
+                            "hideGraphHeight": 70,
+                            "layout": "vertical",
+                            "showPoints": false,
+                            "style": "lines",
+                            "textAlign": "center"
+                        },
+                        "textSize": {
+                            "legend": 17,
+                            "value": 16
+                        },
+                        "thresholds": {
+                            "enableTransform": false,
+                            "mode": "absolute",
+                            "thresholds": [
+                                {
+                                    "color": "#05c091",
+                                    "value": null
+                                }
+                            ],
+                            "transform": "function transform(seriesData, fieldName, value,min,max, lodash){\n\n}"
+                        },
+                        "value": {
+                            "calc": "Last",
+                            "decimal": 1,
+                            "units": [
+                                {
+                                    "operator": "/",
+                                    "rhs": 1,
+                                    "unit": "B"
+                                },
+                                {
+                                    "operator": "/",
+                                    "rhs": 1024,
+                                    "unit": "KB"
+                                },
+                                {
+                                    "operator": "/",
+                                    "rhs": 1048576,
+                                    "unit": "MB"
+                                },
+                                {
+                                    "operator": "/",
+                                    "rhs": 1073741824,
+                                    "unit": "GB"
+                                }
+                            ],
+                            "unitsType": "bytes"
+                        }
+                    }
+                },
+                "styles": {
+                    "border": "None",
+                    "borderOnHover": true,
+                    "decoration": {
+                        "height": "20px",
+                        "justifyContent": "center",
+                        "left": "",
+                        "reverse": false,
+                        "top": "-30px",
+                        "type": "None",
+                        "width": "100%"
+                    },
+                    "heightReduction": 0,
+                    "marginLeft": 0,
+                    "marginTop": 0,
+                    "palette": "echarts-light",
+                    "title": {
+                        "color": "inherit",
+                        "decoration": {
+                            "height": "50px",
+                            "margin": "10px",
+                            "type": "None",
+                            "width": "160px"
+                        },
+                        "fontSize": "14px",
+                        "fontWeight": "500",
+                        "paddingBottom": "0px",
+                        "paddingLeft": "0px",
+                        "paddingRight": "0px",
+                        "paddingTop": "0px"
+                    },
+                    "widthReduction": 0
+                },
+                "title": "",
+                "transform": "function transform(rawData,lodash, moment) {\n    // for demonstration purpose: how to use 'moment'\n    // const t = moment(new Date()).format(\"YY-MM-DD HH:mm::ss\")\n    return rawData\n}",
+                "type": "stat",
+                "valueMapping": null
+            },
+            {
+                "collapsed": false,
+                "conditionRender": {
+                    "type": "variable",
+                    "value": ""
+                },
+                "datasource": {
+                    "id": 2,
+                    "queries": [
+                        {
+                            "data": {},
+                            "id": 65,
+                            "legend": " {{device}} - in",
+                            "metrics": "rate(node_network_receive_bytes_total{host=~\"${host}\",device=\"eth0\"}[1m])",
+                            "visible": true
+                        },
+                        {
+                            "data": {},
+                            "id": 66,
+                            "legend": " {{device}} - out",
+                            "metrics": "rate(node_network_transmit_bytes_total{host=~\"${host}\",device=\"eth0\"}[1m])",
+                            "visible": true
+                        }
+                    ],
+                    "queryOptions": {
+                        "maxDataPoints": 600,
+                        "minInterval": "1m"
+                    }
+                },
+                "desc": "",
+                "enableConditionRender": false,
+                "enableTransform": false,
+                "gridPos": {
+                    "h": 16,
+                    "w": 6,
+                    "x": 0,
+                    "y": 13
+                },
+                "id": 7,
+                "overrides": [
+                    {
+                        "overrides": [
+                            {
+                                "type": "Series.name",
+                                "value": null
+                            },
+                            {
+                                "type": "Series.negativeY",
+                                "value": true
+                            },
+                            {
+                                "type": "Series.unit",
+                                "value": {
+                                    "units": [
+                                        {
+                                            "operator": "/",
+                                            "rhs": 1,
+                                            "unit": "B / out"
+                                        },
+                                        {
+                                            "operator": "/",
+                                            "rhs": 1024,
+                                            "unit": "KB / out"
+                                        },
+                                        {
+                                            "operator": "/",
+                                            "rhs": 1048576,
+                                            "unit": "MB / out"
+                                        },
+                                        {
+                                            "operator": "/",
+                                            "rhs": 1073741824,
+                                            "unit": "GB / out"
+                                        }
+                                    ],
+                                    "unitsType": "bytes"
+                                }
+                            }
+                        ],
+                        "target": " eth0 - out"
+                    }
+                ],
+                "plugins": {
+                    "graph": {
+                        "alertFilter": {
+                            "alertLabel": "",
+                            "datasources": [],
+                            "enableFilter": true,
+                            "httpQuery": {
+                                "data": {},
+                                "id": 65,
+                                "legend": "",
+                                "metrics": "",
+                                "visible": true
+                            },
+                            "ruleLabel": "",
+                            "ruleName": "",
+                            "state": []
+                        },
+                        "axis": {
+                            "label": "",
+                            "scale": "linear",
+                            "scaleBase": 2,
+                            "showGrid": true,
+                            "showX": true,
+                            "showY": true
+                        },
+                        "clickActions": [],
+                        "enableAlert": false,
+                        "legend": {
+                            "mode": "table",
+                            "nameWidth": "400",
+                            "order": {
+                                "by": "Last",
+                                "sort": "desc"
+                            },
+                            "placement": "bottom",
+                            "showValuesName": true,
+                            "valueCalcs": [
+                                "Last",
+                                "Max"
+                            ],
+                            "width": 500
+                        },
+                        "styles": {
+                            "barGap": 10,
+                            "barRadius": 0,
+                            "connectNulls": false,
+                            "enableStack": false,
+                            "fillOpacity": 80,
+                            "gradientMode": "opacity",
+                            "lineWidth": 1,
+                            "padding": [
+                                null,
+                                null,
+                                null,
+                                null
+                            ],
+                            "pointSize": 6,
+                            "showPoints": "auto",
+                            "style": "bars"
+                        },
+                        "thresholds": {
+                            "enableTransform": false,
+                            "mode": "absolute",
+                            "thresholds": [
+                                {
+                                    "color": "#9FE6B8",
+                                    "value": null
+                                }
+                            ],
+                            "transform": "function transform(seriesData, fieldName, value,min,max, lodash){\n\n}"
+                        },
+                        "thresholdsDisplay": "None",
+                        "tooltip": {
+                            "mode": "all",
+                            "sort": "desc"
+                        },
+                        "value": {
+                            "decimal": 0,
+                            "units": [
+                                {
+                                    "operator": "/",
+                                    "rhs": 1,
+                                    "unit": "B / in"
+                                },
+                                {
+                                    "operator": "/",
+                                    "rhs": 1024,
+                                    "unit": "KB / in"
+                                },
+                                {
+                                    "operator": "/",
+                                    "rhs": 1048576,
+                                    "unit": "MB / in"
+                                },
+                                {
+                                    "operator": "/",
+                                    "rhs": 1073741824,
+                                    "unit": "GB / in"
+                                }
+                            ],
+                            "unitsType": "bytes"
+                        }
+                    }
+                },
+                "styles": {
+                    "border": "None",
+                    "borderOnHover": true,
+                    "decoration": {
+                        "height": "20px",
+                        "justifyContent": "center",
+                        "left": "",
+                        "reverse": false,
+                        "top": "-30px",
+                        "type": "None",
+                        "width": "100%"
+                    },
+                    "heightReduction": 0,
+                    "marginLeft": 0,
+                    "marginTop": 0,
+                    "palette": "jaeger",
+                    "title": {
+                        "color": "inherit",
+                        "decoration": {
+                            "height": "50px",
+                            "margin": "10px",
+                            "type": "None",
+                            "width": "160px"
+                        },
+                        "fontSize": "14px",
+                        "fontWeight": "500",
+                        "paddingBottom": "0px",
+                        "paddingLeft": "0px",
+                        "paddingRight": "0px",
+                        "paddingTop": "0px"
+                    },
+                    "widthReduction": 0
+                },
+                "title": "Traffic per second",
+                "transform": "function transform(rawData,lodash, moment) {\n    // for demonstration purpose: how to use 'moment'\n    // const t = moment(new Date()).format(\"YY-MM-DD HH:mm::ss\")\n    return rawData\n}",
+                "type": "graph",
+                "valueMapping": null
+            },
+            {
+                "collapsed": false,
+                "conditionRender": {
+                    "type": "variable",
+                    "value": ""
+                },
+                "datasource": {
+                    "id": 2,
+                    "queries": [
+                        {
+                            "data": {},
+                            "id": 65,
+                            "legend": "alloc",
+                            "metrics": "node_sockstat_TCP_alloc{host=~\"${host}\"}",
+                            "visible": true
+                        },
+                        {
+                            "data": {},
+                            "id": 66,
+                            "legend": "inuse",
+                            "metrics": "node_sockstat_TCP_inuse{host=~\"${host}\"}",
+                            "visible": true
+                        },
+                        {
+                            "data": {},
+                            "id": 67,
+                            "legend": "timewait",
+                            "metrics": "node_sockstat_TCP_tw{instance=~\"${host}\"}",
+                            "visible": true
+                        },
+                        {
+                            "data": {},
+                            "id": 68,
+                            "legend": "orphan",
+                            "metrics": "node_sockstat_TCP_orphan{instance=~\"${host}\"}",
+                            "visible": true
+                        }
+                    ],
+                    "queryOptions": {
+                        "maxDataPoints": 600,
+                        "minInterval": "15s"
+                    }
+                },
+                "desc": "",
+                "enableConditionRender": false,
+                "enableTransform": false,
+                "gridPos": {
+                    "h": 16,
+                    "w": 12,
+                    "x": 6,
+                    "y": 13
+                },
+                "id": 12,
+                "overrides": [],
+                "plugins": {
+                    "graph": {
+                        "alertFilter": {
+                            "alertLabel": "",
+                            "datasources": [],
+                            "enableFilter": true,
+                            "httpQuery": {
+                                "data": {},
+                                "id": 65,
+                                "legend": "",
+                                "metrics": "",
+                                "visible": true
+                            },
+                            "ruleLabel": "",
+                            "ruleName": "",
+                            "state": []
+                        },
+                        "axis": {
+                            "scale": "linear",
+                            "scaleBase": 2,
+                            "showGrid": true,
+                            "showX": true,
+                            "showY": true
+                        },
+                        "clickActions": [],
+                        "enableAlert": false,
+                        "legend": {
+                            "mode": "table",
+                            "nameWidth": "90",
+                            "order": {
+                                "by": "Last",
+                                "sort": "desc"
+                            },
+                            "placement": "right",
+                            "showValuesName": true,
+                            "valueCalcs": [
+                                "Last",
+                                "Max"
+                            ],
+                            "width": 230
+                        },
+                        "styles": {
+                            "barGap": 10,
+                            "barRadius": 0,
+                            "connectNulls": false,
+                            "enableStack": false,
+                            "fillOpacity": 80,
+                            "gradientMode": "opacity",
+                            "lineWidth": 1,
+                            "padding": [
+                                null,
+                                null,
+                                null,
+                                null
+                            ],
+                            "pointSize": 6,
+                            "showPoints": "auto",
+                            "style": "lines"
+                        },
+                        "thresholds": {
+                            "enableTransform": false,
+                            "mode": "absolute",
+                            "thresholds": [
+                                {
+                                    "color": "#9FE6B8",
+                                    "value": null
+                                }
+                            ],
+                            "transform": "function transform(seriesData, fieldName, value,min,max, lodash){\n\n}"
+                        },
+                        "thresholdsDisplay": "None",
+                        "tooltip": {
+                            "mode": "all",
+                            "sort": "desc"
+                        },
+                        "value": {
+                            "decimal": 3,
+                            "units": [],
+                            "unitsType": "none"
+                        }
+                    }
+                },
+                "styles": {
+                    "border": "None",
+                    "borderOnHover": true,
+                    "decoration": {
+                        "height": "20px",
+                        "justifyContent": "center",
+                        "left": "",
+                        "reverse": false,
+                        "top": "-30px",
+                        "type": "None",
+                        "width": "100%"
+                    },
+                    "heightReduction": 0,
+                    "marginLeft": 0,
+                    "marginTop": 0,
+                    "palette": "jaeger",
+                    "title": {
+                        "color": "inherit",
+                        "decoration": {
+                            "height": "50px",
+                            "margin": "10px",
+                            "type": "None",
+                            "width": "160px"
+                        },
+                        "fontSize": "14px",
+                        "fontWeight": "500",
+                        "paddingBottom": "0px",
+                        "paddingLeft": "0px",
+                        "paddingRight": "0px",
+                        "paddingTop": "0px"
+                    },
+                    "widthReduction": 0
+                },
+                "title": "TCP stats",
+                "transform": "function transform(rawData,lodash, moment) {\n    // for demonstration purpose: how to use 'moment'\n    // const t = moment(new Date()).format(\"YY-MM-DD HH:mm::ss\")\n    return rawData\n}",
+                "type": "graph",
+                "valueMapping": null
+            },
+            {
+                "collapsed": false,
+                "conditionRender": {
+                    "type": "variable",
+                    "value": ""
+                },
+                "datasource": {
+                    "id": 2,
+                    "queries": [
+                        {
+                            "data": {},
+                            "id": 65,
+                            "legend": "in",
+                            "metrics": "rate(node_network_receive_drop_total{host=~\"${host}\",job=\"node\",device=\"eth0\"}[1m])",
+                            "visible": true
+                        },
+                        {
+                            "data": {},
+                            "id": 66,
+                            "legend": "out",
+                            "metrics": "rate(node_network_transmit_drop_total{host=~\"${host}\",job=\"node\",device=\"eth0\"}[1m])",
+                            "visible": true
+                        }
+                    ],
+                    "queryOptions": {
+                        "maxDataPoints": 600,
+                        "minInterval": "1m"
+                    }
+                },
+                "desc": "",
+                "enableConditionRender": false,
+                "enableTransform": false,
+                "gridPos": {
+                    "h": 16,
+                    "w": 6,
+                    "x": 18,
+                    "y": 13
+                },
+                "id": 9,
+                "overrides": [
+                    {
+                        "overrides": [
+                            {
+                                "type": "Series.negativeY",
+                                "value": true
+                            },
+                            {
+                                "type": "Series.unit",
+                                "value": {
+                                    "units": [
+                                        {
+                                            "operator": "x",
+                                            "rhs": 1,
+                                            "unit": " / out"
+                                        }
+                                    ],
+                                    "unitsType": "custom"
+                                }
+                            }
+                        ],
+                        "target": "out"
+                    }
+                ],
+                "plugins": {
+                    "graph": {
+                        "alertFilter": {
+                            "alertLabel": "",
+                            "datasources": [],
+                            "enableFilter": true,
+                            "httpQuery": {
+                                "data": {},
+                                "id": 65,
+                                "legend": "",
+                                "metrics": "",
+                                "visible": true
+                            },
+                            "ruleLabel": "",
+                            "ruleName": "",
+                            "state": []
+                        },
+                        "axis": {
+                            "scale": "linear",
+                            "scaleBase": 2,
+                            "showGrid": true,
+                            "showX": true,
+                            "showY": true
+                        },
+                        "clickActions": [],
+                        "enableAlert": false,
+                        "legend": {
+                            "mode": "table",
+                            "nameWidth": "400",
+                            "order": {
+                                "by": "Last",
+                                "sort": "desc"
+                            },
+                            "placement": "bottom",
+                            "showValuesName": false,
+                            "valueCalcs": [
+                                "Last"
+                            ],
+                            "width": 500
+                        },
+                        "styles": {
+                            "barGap": 10,
+                            "barRadius": 0,
+                            "connectNulls": false,
+                            "enableStack": false,
+                            "fillOpacity": 80,
+                            "gradientMode": "opacity",
+                            "lineWidth": 0,
+                            "padding": [
+                                null,
+                                null,
+                                null,
+                                null
+                            ],
+                            "pointSize": 6,
+                            "showPoints": "auto",
+                            "style": "points"
+                        },
+                        "thresholds": {
+                            "enableTransform": false,
+                            "mode": "absolute",
+                            "thresholds": [
+                                {
+                                    "color": "#9FE6B8",
+                                    "value": null
+                                }
+                            ],
+                            "transform": "function transform(seriesData, fieldName, value,min,max, lodash){\n\n}"
+                        },
+                        "thresholdsDisplay": "None",
+                        "tooltip": {
+                            "mode": "all",
+                            "sort": "desc"
+                        },
+                        "value": {
+                            "decimal": 3,
+                            "units": [
+                                {
+                                    "operator": "x",
+                                    "rhs": 1,
+                                    "unit": " / in"
+                                }
+                            ],
+                            "unitsType": "custom"
+                        }
+                    }
+                },
+                "styles": {
+                    "border": "None",
+                    "borderOnHover": true,
+                    "decoration": {
+                        "height": "20px",
+                        "justifyContent": "center",
+                        "left": "",
+                        "reverse": false,
+                        "top": "-30px",
+                        "type": "None",
+                        "width": "100%"
+                    },
+                    "heightReduction": 0,
+                    "marginLeft": 0,
+                    "marginTop": 0,
+                    "palette": "jaeger",
+                    "title": {
+                        "color": "inherit",
+                        "decoration": {
+                            "height": "50px",
+                            "margin": "10px",
+                            "type": "None",
+                            "width": "160px"
+                        },
+                        "fontSize": "14px",
+                        "fontWeight": "500",
+                        "paddingBottom": "0px",
+                        "paddingLeft": "0px",
+                        "paddingRight": "0px",
+                        "paddingTop": "0px"
+                    },
+                    "widthReduction": 0
+                },
+                "title": "Network drops per second",
+                "transform": "function transform(rawData,lodash, moment) {\n    // for demonstration purpose: how to use 'moment'\n    // const t = moment(new Date()).format(\"YY-MM-DD HH:mm::ss\")\n    return rawData\n}",
+                "type": "graph",
+                "valueMapping": null
+            },
+            {
+                "collapsed": false,
+                "conditionRender": {
+                    "type": "variable",
+                    "value": ""
+                },
+                "datasource": {
+                    "id": 2,
+                    "queries": [
+                        {
+                            "data": {},
+                            "id": 65,
+                            "legend": "{{device}}",
+                            "metrics": "rate(node_disk_io_time_seconds_total{host=~\"${host}\",job=\"node\"}[1m])\n/ scalar(count(rate(node_disk_io_time_seconds_total{host=~\"${host}\",job=\"node\"}[1m])))\n",
+                            "visible": true
+                        }
+                    ],
+                    "queryOptions": {
+                        "maxDataPoints": 600,
+                        "minInterval": "15s"
+                    }
+                },
+                "desc": "",
+                "enableConditionRender": false,
+                "enableTransform": false,
+                "gridPos": {
+                    "h": 19,
+                    "w": 6,
+                    "x": 0,
+                    "y": 29
+                },
+                "id": 10,
+                "overrides": [],
+                "plugins": {
+                    "graph": {
+                        "alertFilter": {
+                            "alertLabel": "",
+                            "datasources": [],
+                            "enableFilter": true,
+                            "httpQuery": {
+                                "data": {},
+                                "id": 65,
+                                "legend": "",
+                                "metrics": "",
+                                "visible": true
+                            },
+                            "ruleLabel": "",
+                            "ruleName": "",
+                            "state": []
+                        },
+                        "axis": {
+                            "scale": "linear",
+                            "scaleBase": 2,
+                            "showGrid": true,
+                            "showX": true,
+                            "showY": true
+                        },
+                        "clickActions": [],
+                        "enableAlert": false,
+                        "legend": {
+                            "mode": "table",
+                            "nameWidth": "200",
+                            "order": {
+                                "by": "Last",
+                                "sort": "desc"
+                            },
+                            "placement": "bottom",
+                            "showValuesName": true,
+                            "valueCalcs": [
+                                "Last",
+                                "Max"
+                            ],
+                            "width": 300
+                        },
+                        "styles": {
+                            "barGap": 10,
+                            "barRadius": 0,
+                            "connectNulls": false,
+                            "enableStack": false,
+                            "fillOpacity": 80,
+                            "gradientMode": "opacity",
+                            "lineWidth": 1,
+                            "padding": [
+                                null,
+                                null,
+                                null,
+                                null
+                            ],
+                            "pointSize": 6,
+                            "showPoints": "auto",
+                            "style": "lines"
+                        },
+                        "thresholds": {
+                            "enableTransform": false,
+                            "mode": "absolute",
+                            "thresholds": [
+                                {
+                                    "color": "#9FE6B8",
+                                    "value": null
+                                }
+                            ],
+                            "transform": "function transform(seriesData, fieldName, value,min,max, lodash){\n\n}"
+                        },
+                        "thresholdsDisplay": "None",
+                        "tooltip": {
+                            "mode": "all",
+                            "sort": "desc"
+                        },
+                        "value": {
+                            "decimal": 3,
+                            "units": [
+                                {
+                                    "operator": "x",
+                                    "rhs": 100,
+                                    "unit": "%"
+                                }
+                            ],
+                            "unitsType": "percent"
+                        }
+                    }
+                },
+                "styles": {
+                    "border": "None",
+                    "borderOnHover": true,
+                    "decoration": {
+                        "height": "20px",
+                        "justifyContent": "center",
+                        "left": "",
+                        "reverse": false,
+                        "top": "-30px",
+                        "type": "None",
+                        "width": "100%"
+                    },
+                    "heightReduction": 0,
+                    "marginLeft": 0,
+                    "marginTop": 0,
+                    "palette": "echarts-light",
+                    "title": {
+                        "color": "inherit",
+                        "decoration": {
+                            "height": "50px",
+                            "margin": "10px",
+                            "type": "None",
+                            "width": "160px"
+                        },
+                        "fontSize": "14px",
+                        "fontWeight": "500",
+                        "paddingBottom": "0px",
+                        "paddingLeft": "0px",
+                        "paddingRight": "0px",
+                        "paddingTop": "0px"
+                    },
+                    "widthReduction": 0
+                },
+                "title": "Disk IO utilization",
+                "transform": "function transform(rawData,lodash, moment) {\n    // for demonstration purpose: how to use 'moment'\n    // const t = moment(new Date()).format(\"YY-MM-DD HH:mm::ss\")\n    return rawData\n}",
+                "type": "graph",
+                "valueMapping": null
+            },
+            {
+                "collapsed": false,
+                "conditionRender": {
+                    "type": "variable",
+                    "value": ""
+                },
+                "datasource": {
+                    "id": 2,
+                    "queries": [
+                        {
+                            "data": {},
+                            "id": 65,
+                            "legend": "{{device}}",
+                            "metrics": "sum(node_filesystem_device_error{host=~\"${host}\"}) by (device)",
+                            "visible": true
+                        }
+                    ],
+                    "queryOptions": {
+                        "maxDataPoints": 600,
+                        "minInterval": "15s"
+                    }
+                },
+                "desc": "",
+                "enableConditionRender": false,
+                "enableTransform": false,
+                "gridPos": {
+                    "h": 19,
+                    "w": 6,
+                    "x": 6,
+                    "y": 29
+                },
+                "id": 14,
+                "overrides": [],
+                "plugins": {
+                    "graph": {
+                        "alertFilter": {
+                            "alertLabel": "",
+                            "datasources": [],
+                            "enableFilter": true,
+                            "httpQuery": {
+                                "data": {},
+                                "id": 65,
+                                "legend": "",
+                                "metrics": "",
+                                "visible": true
+                            },
+                            "ruleLabel": "",
+                            "ruleName": "",
+                            "state": []
+                        },
+                        "axis": {
+                            "scale": "linear",
+                            "scaleBase": 2,
+                            "showGrid": true,
+                            "showX": true,
+                            "showY": true
+                        },
+                        "clickActions": [],
+                        "enableAlert": false,
+                        "legend": {
+                            "mode": "table",
+                            "nameWidth": "200",
+                            "order": {
+                                "by": "Last",
+                                "sort": "desc"
+                            },
+                            "placement": "bottom",
+                            "showValuesName": true,
+                            "valueCalcs": [
+                                "Last",
+                                "Max"
+                            ],
+                            "width": 300
+                        },
+                        "styles": {
+                            "barGap": 10,
+                            "barRadius": 0,
+                            "connectNulls": false,
+                            "enableStack": false,
+                            "fillOpacity": 80,
+                            "gradientMode": "opacity",
+                            "lineWidth": 1,
+                            "padding": [
+                                null,
+                                null,
+                                null,
+                                null
+                            ],
+                            "pointSize": 6,
+                            "showPoints": "auto",
+                            "style": "lines"
+                        },
+                        "thresholds": {
+                            "enableTransform": false,
+                            "mode": "absolute",
+                            "thresholds": [
+                                {
+                                    "color": "#9FE6B8",
+                                    "value": null
+                                }
+                            ],
+                            "transform": "function transform(seriesData, fieldName, value,min,max, lodash){\n\n}"
+                        },
+                        "thresholdsDisplay": "None",
+                        "tooltip": {
+                            "mode": "all",
+                            "sort": "desc"
+                        },
+                        "value": {
+                            "decimal": 1,
+                            "units": [],
+                            "unitsType": "none"
+                        }
+                    }
+                },
+                "styles": {
+                    "border": "None",
+                    "borderOnHover": true,
+                    "decoration": {
+                        "height": "20px",
+                        "justifyContent": "center",
+                        "left": "",
+                        "reverse": false,
+                        "top": "-30px",
+                        "type": "None",
+                        "width": "100%"
+                    },
+                    "heightReduction": 0,
+                    "marginLeft": 0,
+                    "marginTop": 0,
+                    "palette": "echarts-light",
+                    "title": {
+                        "color": "inherit",
+                        "decoration": {
+                            "height": "50px",
+                            "margin": "10px",
+                            "type": "None",
+                            "width": "160px"
+                        },
+                        "fontSize": "14px",
+                        "fontWeight": "500",
+                        "paddingBottom": "0px",
+                        "paddingLeft": "0px",
+                        "paddingRight": "0px",
+                        "paddingTop": "0px"
+                    },
+                    "widthReduction": 0
+                },
+                "title": "Disk errors",
+                "transform": "function transform(rawData,lodash, moment) {\n    // for demonstration purpose: how to use 'moment'\n    // const t = moment(new Date()).format(\"YY-MM-DD HH:mm::ss\")\n    return rawData\n}",
+                "type": "graph",
+                "valueMapping": null
+            },
+            {
+                "collapsed": false,
+                "conditionRender": {
+                    "type": "variable",
+                    "value": ""
+                },
+                "datasource": {
+                    "id": 2,
+                    "queries": [
+                        {
+                            "data": {},
+                            "id": 65,
+                            "legend": "context switch",
+                            "metrics": "rate(node_context_switches_total{host=~\"${host}\"}[1m])",
+                            "visible": true
+                        },
+                        {
+                            "data": {},
+                            "id": 66,
+                            "legend": "open fd",
+                            "metrics": "process_open_fds{host=~\"${host}\"}",
+                            "visible": true
+                        }
+                    ],
+                    "queryOptions": {
+                        "maxDataPoints": 600,
+                        "minInterval": "15s"
+                    }
+                },
+                "desc": "",
+                "enableConditionRender": false,
+                "enableTransform": false,
+                "gridPos": {
+                    "h": 19,
+                    "w": 12,
+                    "x": 12,
+                    "y": 29
+                },
+                "id": 13,
+                "overrides": [
+                    {
+                        "overrides": [
+                            {
+                                "type": "Series.separateYAxis",
+                                "value": true
+                            },
+                            {
+                                "type": "Series.unit",
+                                "value": {
+                                    "units": [
+                                        {
+                                            "operator": "/",
+                                            "rhs": 1,
+                                            "unit": ""
+                                        },
+                                        {
+                                            "operator": "/",
+                                            "rhs": 1000,
+                                            "unit": "k"
+                                        },
+                                        {
+                                            "operator": "/",
+                                            "rhs": 1000000,
+                                            "unit": "m"
+                                        }
+                                    ],
+                                    "unitsType": "short"
+                                }
+                            },
+                            {
+                                "type": "Series.style",
+                                "value": "bars"
+                            }
+                        ],
+                        "target": "context switch"
+                    }
+                ],
+                "plugins": {
+                    "graph": {
+                        "alertFilter": {
+                            "alertLabel": "",
+                            "datasources": [],
+                            "enableFilter": true,
+                            "httpQuery": {
+                                "data": {},
+                                "id": 65,
+                                "legend": "",
+                                "metrics": "",
+                                "visible": true
+                            },
+                            "ruleLabel": "",
+                            "ruleName": "",
+                            "state": []
+                        },
+                        "axis": {
+                            "scale": "linear",
+                            "scaleBase": 2,
+                            "showGrid": true,
+                            "showX": true,
+                            "showY": true
+                        },
+                        "clickActions": [],
+                        "enableAlert": false,
+                        "legend": {
+                            "mode": "table",
+                            "nameWidth": "400",
+                            "order": {
+                                "by": "Last",
+                                "sort": "desc"
+                            },
+                            "placement": "bottom",
+                            "showValuesName": true,
+                            "valueCalcs": [
+                                "Last",
+                                "Max"
+                            ],
+                            "width": 500
+                        },
+                        "styles": {
+                            "barGap": 10,
+                            "barRadius": 0,
+                            "connectNulls": false,
+                            "enableStack": false,
+                            "fillOpacity": 20,
+                            "gradientMode": "opacity",
+                            "lineWidth": 1,
+                            "padding": [
+                                null,
+                                null,
+                                null,
+                                null
+                            ],
+                            "pointSize": 6,
+                            "showPoints": "auto",
+                            "style": "lines"
+                        },
+                        "thresholds": {
+                            "enableTransform": false,
+                            "mode": "absolute",
+                            "thresholds": [
+                                {
+                                    "color": "#9FE6B8",
+                                    "value": null
+                                }
+                            ],
+                            "transform": "function transform(seriesData, fieldName, value,min,max, lodash){\n\n}"
+                        },
+                        "thresholdsDisplay": "None",
+                        "tooltip": {
+                            "mode": "all",
+                            "sort": "desc"
+                        },
+                        "value": {
+                            "decimal": 2,
+                            "units": [
+                                {
+                                    "operator": "/",
+                                    "rhs": 1,
+                                    "unit": ""
+                                },
+                                {
+                                    "operator": "/",
+                                    "rhs": 1000,
+                                    "unit": "k"
+                                },
+                                {
+                                    "operator": "/",
+                                    "rhs": 1000000,
+                                    "unit": "m"
+                                }
+                            ],
+                            "unitsType": "short"
+                        }
+                    }
+                },
+                "styles": {
+                    "border": "None",
+                    "borderOnHover": true,
+                    "decoration": {
+                        "height": "20px",
+                        "justifyContent": "center",
+                        "left": "",
+                        "reverse": false,
+                        "top": "-30px",
+                        "type": "None",
+                        "width": "100%"
+                    },
+                    "heightReduction": 0,
+                    "marginLeft": 0,
+                    "marginTop": 0,
+                    "palette": "echarts-light",
+                    "title": {
+                        "color": "inherit",
+                        "decoration": {
+                            "height": "50px",
+                            "margin": "10px",
+                            "type": "None",
+                            "width": "160px"
+                        },
+                        "fontSize": "14px",
+                        "fontWeight": "500",
+                        "paddingBottom": "0px",
+                        "paddingLeft": "0px",
+                        "paddingRight": "0px",
+                        "paddingTop": "0px"
+                    },
+                    "widthReduction": 0
+                },
+                "title": "Process stats",
+                "transform": "function transform(rawData,lodash, moment) {\n    // for demonstration purpose: how to use 'moment'\n    // const t = moment(new Date()).format(\"YY-MM-DD HH:mm::ss\")\n    return rawData\n}",
+                "type": "graph",
+                "valueMapping": null
+            }
+        ],
+        "sharedTooltip": false,
+        "styles": {
+            "bg": {
+                "colorMode": "dark",
+                "url": ""
+            },
+            "bgColor": "",
+            "bgEnabled": false,
+            "border": "None"
+        },
+        "variables": [],
+        "visibleTo": "team"
+    },
+    "weight": 0
+}

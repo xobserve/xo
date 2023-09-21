@@ -10,7 +10,7 @@ const footerNav = [
   {
     Customization: documentationNav['Customization'],
     Community: [
-      { title: 'GitHub', href: 'https://github.com/tailwindlabs/tailwindcss' },
+      { title: 'GitHub', href: "https://github.com/data-observe/datav" },
       { title: 'Discord', href: '/discord' },
       { title: 'Twitter', href: 'https://twitter.com/tailwindcss' },
       { title: 'YouTube', href: 'https://www.youtube.com/tailwindlabs' },
