@@ -96,7 +96,7 @@ https://github.com/data-observe/datav/assets/7036754/524d2905-ba51-4ba6-b808-ace
 
     相比 Grafana 的 AGPL3.0, Datav 采用了 Apache2.0 协议，对商业产品要更加友好。
 
-    我们郑重承诺: **未来也不会修改开源协议，Datav 将永远做到真正的 100% 开源r**!
+    我们郑重承诺: **未来也不会修改开源协议，Datav 将永远做到真正的 100% 开源**!
 
 8.  **完美支持手机端使用**
    
