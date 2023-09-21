@@ -83,3 +83,8 @@ paths:
 #################################### Sidemenu ##############################
 sidemenu:
     show_alert_icon: true
+
+
+#################################### Self monitoring ##############################
+selfmonitoring:
+    mock_error_logs: true

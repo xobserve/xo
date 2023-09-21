@@ -88,6 +88,10 @@ type Config struct {
 	Task struct {
 		CleanAnnotations int `yaml:"clean_annotations"`
 	}
+
+	SelfMonitoring struct {
+		MockErrorLogs bool `yaml:"mock_error_logs"`
+	}
 }
 
 // Data ...
