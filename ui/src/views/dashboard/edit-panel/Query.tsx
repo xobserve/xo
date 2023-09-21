@@ -35,6 +35,7 @@ import DatasourceSelect from "src/components/datasource/Select"
 import { getDatasource } from "utils/datasource"
 import { isNumber } from "lodash"
 import { id } from "date-fns/locale"
+import { $datasources } from "src/views/datasource/store"
 
 interface Props {
     panel: Panel
@@ -46,8 +47,16 @@ const EditPanelQuery = (props: Props) => {
     const t1 = useStore(panelMsg)
     const { panel, onChange } = props
     const selectDatasource = (id) => {
+        const datasources = $datasources.get()
         onChange((panel: Panel) => {
-            panel.datasource = { ...initDatasource, id: id }
+            const panelDs = datasources.find(ds => ds.id == panel.datasource.id)
+            const newDs = datasources.find(ds => ds.id == id)
+            if (panelDs.type == newDs.type) {
+                panel.datasource = { ...panel.datasource, id: id }
+            } else {
+                panel.datasource = { ...initDatasource, id: id }
+            }
+            
         })
     }
 
