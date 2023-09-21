@@ -15,7 +15,7 @@ import Page from "layouts/page/Page"
 import React, { useEffect, useRef, useState } from "react"
 import { useNavigate, useParams } from "react-router-dom"
 import { Route } from "types/route"
-import { Team } from "types/teams"
+import { Team, globalTeamId } from "types/teams"
 import { requestApi } from "utils/axios/request"
 import { FaAlignLeft, FaCog, FaConnectdevelop, FaTerminal, FaUserFriends } from "react-icons/fa"
 import { MdOutlineDashboard } from "react-icons/md"
@@ -24,6 +24,9 @@ import { cfgTeam } from "src/i18n/locales/en"
 import { Box, Button, HStack, Select, Text } from "@chakra-ui/react"
 import storage from "utils/localStorage"
 import { $teams } from "src/views/team/store"
+import { $datasources, $teamDatasources } from "src/views/datasource/store"
+import { defaultDatasourceId } from "types/datasource"
+import { concat } from "lodash"
 
 const getTeamSubLinks = (id) => {
     return [
@@ -53,7 +56,20 @@ const TeamLayout = ({children}: Props) => {
     const team =teams?.find(t => t.id.toString() == id)
     const [onHover, setOnHover] = useState(false)
 
-
+    useEffect(() => {
+        if (team) {
+            let dss = []
+            if (id != globalTeamId.toString()) {
+                if (team.allowGlobal) {
+                    dss = $teamDatasources.get()[globalTeamId]
+                } else {
+                  dss.push($teamDatasources.get()[globalTeamId]?.find(ds => ds.id == defaultDatasourceId))
+        
+                }
+            }
+            $datasources.set(concat(dss,$teamDatasources.get()[id] ?? []) )
+        }
+    },[team])
     return <>
         <Page title={t1.title} subTitle={
         <HStack mt="1" onMouseEnter={() => setOnHover(true)} onMouseLeave={() => setOnHover(false)} >
