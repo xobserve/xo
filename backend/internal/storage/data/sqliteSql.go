@@ -159,7 +159,7 @@ CREATE UNIQUE INDEX IF NOT EXISTS sidemenu_team_id ON sidemenu  (team_id);
 
 
 CREATE UNIQUE INDEX IF NOT EXISTS variable_name ON variable (name);
-CREATE INDEX  INDEX IF NOT EXISTS variable_team ON variable (team_id);
+CREATE INDEX IF NOT EXISTS variable_team ON variable (team_id);
 
 CREATE INDEX IF NOT EXISTS  dashboard_owned_by ON dashboard (owned_by);
 CREATE INDEX IF NOT EXISTS  dashboard_visible_to ON dashboard (visible_to);
@@ -171,7 +171,7 @@ CREATE UNIQUE INDEX IF NOT EXISTS  dashboard_id_version ON dashboard_history (da
 
 
 CREATE UNIQUE INDEX IF NOT EXISTS  datasource_name ON datasource (name);
-CREATE INDEX  INDEX IF NOT EXISTS datasource_team ON datasource (team_id);
+CREATE INDEX IF NOT EXISTS datasource_team ON datasource (team_id);
 
 
 CREATE UNIQUE INDEX IF NOT EXISTS  star_dashboard_id ON star_dashboard (user_id,dashboard_id);
