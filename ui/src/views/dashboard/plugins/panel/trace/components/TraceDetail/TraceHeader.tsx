@@ -34,6 +34,7 @@ import { requestApi } from "utils/axios/request"
 import { isEmpty } from "utils/validate"
 import { commonInteractionEvent, genDynamicFunction } from "utils/dashboard/dynamicCall"
 import { isFunction } from "lodash"
+import { $teamVariables, $variables } from "src/views/variables/store"
 
 interface Props {
     trace: Trace
@@ -67,12 +68,15 @@ const TraceDetailHeader = ({ trace, viewRange, updateNextViewRangeTime, updateVi
         if (dashboardId && panelId) {
             loadDashboard(dashboardId)
         }
-    },[])
+    }, [])
     const loadDashboard = async (id) => {
         const res = await requestApi.get(`/dashboard/byId/${id}`)
         const dashboard: Dashboard = res.data
         const p = dashboard.data.panels.find(p => p.id.toString() == panelId)
         if (p) setPanel(p)
+
+        const gVars = $teamVariables.get()[dashboard.ownedBy] ?? []
+        $variables.set([...gVars])
     }
     const onSearchChange = (v) => {
         setSearch(v)
@@ -91,7 +95,7 @@ const TraceDetailHeader = ({ trace, viewRange, updateNextViewRangeTime, updateVi
                 </Flex>
             </HStack>
             <HStack spacing={2}>
-                {panel && panel.plugins.trace.interaction?.enable && 
+                {panel && panel.plugins.trace.interaction?.enable &&
                     <HStack spacing={1}>
                         {panel.plugins.trace.interaction.actions.map((action, index) => {
                             if (isEmpty(action.name)) {

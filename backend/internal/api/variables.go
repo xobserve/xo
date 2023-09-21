@@ -13,6 +13,8 @@
 package api
 
 import (
+	"strconv"
+
 	"github.com/DataObserve/datav/backend/internal/variables"
 	"github.com/DataObserve/datav/backend/pkg/common"
 	"github.com/DataObserve/datav/backend/pkg/e"
@@ -20,7 +22,8 @@ import (
 )
 
 func GetVariables(c *gin.Context) {
-	vars, err := variables.GetVariables()
+	teamId, _ := strconv.ParseInt(c.Query("teamId"), 10, 64)
+	vars, err := variables.GetVariables(teamId)
 	if err != nil {
 		logger.Warn("query variables error", "error", err)
 		c.JSON(500, common.RespError(e.Internal))

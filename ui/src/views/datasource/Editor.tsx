@@ -10,7 +10,7 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-import { Button, HStack, Image, Input, Select, useToast } from "@chakra-ui/react"
+import { Box, Button, HStack, Image, Input, Select, Text, useToast } from "@chakra-ui/react"
 import { isEmpty } from "lodash"
 import { checkAndTestHttp } from "src/views/dashboard/plugins/datasource/http/query_runner"
 import { checkAndTestJaeger } from "src/views/dashboard/plugins/datasource/jaeger/query_runner"
@@ -24,20 +24,25 @@ import PrometheusDatasourceEditor from "../dashboard/plugins/datasource/promethe
 import TestDataDatasourceEditor from "../dashboard/plugins/datasource/testdata/DatasourceEditor"
 import JaegerDatasourceEditor from "../dashboard/plugins/datasource/jaeger/DatasourceEditor"
 import FormItem from "src/components/form/Item"
-import React from "react";
+import React, { useState } from "react";
 import { useStore } from "@nanostores/react"
 import { commonMsg, newMsg } from "src/i18n/locales/en"
 import { checkAndTestLoki } from "../dashboard/plugins/datasource/loki/query_runner"
 import LokiDatasourceEditor from "../dashboard/plugins/datasource/loki/DatasourceEditor"
+import { $teams } from "../team/store"
+import { useSearchParam } from "react-use"
+import { FormSection } from "components/form/Form"
 
-const DatasourceEditor = ({ ds, onChange = null }) => {
+const DatasourceEditor = ({ ds, onChange = null, teamEditable=true }) => {
     const t = useStore(commonMsg)
     const t1 = useStore(newMsg)
     const toast = useToast()
     const [datasource, setDatasource] = useImmer<Datasource>(ds)
+    const [teamId, setTeamId] = useState( useSearchParam('teamId'))
+    const teams = useStore($teams)
 
     const saveDatasource = async () => {
-        const res = await requestApi.post("/datasource/save", datasource)
+        await requestApi.post("/datasource/save", {...datasource,teamId: Number(teamId)})
         toast({
             title: ds.id == 0 ? t1.dsToast : t.isUpdated({ name: t.datasource }),
             status: "success",
@@ -47,7 +52,7 @@ const DatasourceEditor = ({ ds, onChange = null }) => {
 
         if (ds.id == 0) {
             setTimeout(() => {
-                location.href = (`/cfg/datasources?id=${res.data}`)
+                location.href = (`/cfg/team/${teamId}/datasources`)
             }, 1000)
         } else {
             onChange()
@@ -102,34 +107,53 @@ const DatasourceEditor = ({ ds, onChange = null }) => {
         })
     }
 
-    return (<>
-        <FormItem title={t.name}>
-            <Input value={datasource.name} placeholder={t.itemName({ name: t.datasource })} onChange={e => {
-                const v = e.currentTarget.value
-                setDatasource((d: Datasource) => { d.name = v })
-            }} />
-        </FormItem>
-        <FormItem title={t.type}>
-            <HStack>
-                <Select width="fit-content" value={datasource.type} onChange={e => {
+    return (<Box sx={{
+        ".form-item-label": {
+            width: "100px"
+        }
+    }}>
+        <FormSection>
+            <FormItem title={t.name}>
+                <Input value={datasource.name} placeholder={t.itemName({ name: t.datasource })} onChange={e => {
                     const v = e.currentTarget.value
-                    setDatasource((d: Datasource) => { d.type = v as any })
+                    setDatasource((d: Datasource) => { d.name = v })
+                }} />
+            </FormItem>
+            <FormItem title={t.type}>
+                <HStack>
+                    <Select width="fit-content" value={datasource.type} onChange={e => {
+                        const v = e.currentTarget.value
+                        setDatasource((d: Datasource) => { d.type = v as any })
+                    }}>
+                        {Object.keys(DatasourceType).map((key, index) => {
+                            return <option key={index} value={DatasourceType[key]}>{key}</option>
+                        })}
+                    </Select>
+                    <Image width="30px" height="30px" src={`/plugins/datasource/${datasource.type}.svg`} />
+                </HStack>
+            </FormItem>
+            <FormItem title={t1.belongTeam}>
+                <Box sx={{
+                    '.chakra-select': {
+                        paddingLeft: '15px'
+                    }
                 }}>
-                    {Object.keys(DatasourceType).map((key, index) => {
-                        return <option key={index} value={DatasourceType[key]}>{key}</option>
-                    })}
-                </Select>
-                <Image width="30px" height="30px" src={`/plugins/datasource/${datasource.type}.svg`} />
-            </HStack>
-        </FormItem>
-        {/* @needs-update-when-add-new-datasource */}
-        {datasource.type == DatasourceType.ExternalHttp && <HttpDatasourceEditor datasource={datasource} onChange={setDatasource} />}
-        {datasource.type == DatasourceType.Prometheus && <PrometheusDatasourceEditor datasource={datasource} onChange={setDatasource} />}
-        {datasource.type == DatasourceType.TestData && <TestDataDatasourceEditor datasource={datasource} onChange={setDatasource} />}
-        {datasource.type == DatasourceType.Jaeger && <JaegerDatasourceEditor datasource={datasource} onChange={setDatasource} />}
-        {datasource.type == DatasourceType.Loki && <LokiDatasourceEditor datasource={datasource} onChange={setDatasource} />}
-        <Button onClick={testDatasource} size="sm" mt="4">{t.test} & {t.save}</Button>
-    </>)
+                    <Select disabled={!teamEditable} value={teamId} variant="flushed" onChange={e => setTeamId(e.currentTarget.value)}>
+                        {teams.map(team => <option key={team.id} value={team.id}>
+                            <Text>{team.name}</Text>
+                        </option>)}
+                    </Select>
+                </Box>
+            </FormItem>
+            {/* @needs-update-when-add-new-datasource */}
+            {datasource.type == DatasourceType.ExternalHttp && <HttpDatasourceEditor datasource={datasource} onChange={setDatasource} />}
+            {datasource.type == DatasourceType.Prometheus && <PrometheusDatasourceEditor datasource={datasource} onChange={setDatasource} />}
+            {datasource.type == DatasourceType.TestData && <TestDataDatasourceEditor datasource={datasource} onChange={setDatasource} />}
+            {datasource.type == DatasourceType.Jaeger && <JaegerDatasourceEditor datasource={datasource} onChange={setDatasource} />}
+            {datasource.type == DatasourceType.Loki && <LokiDatasourceEditor datasource={datasource} onChange={setDatasource} />}
+            <Button onClick={testDatasource} size="sm" mt="4">{t.test} & {t.save}</Button>
+        </FormSection>
+    </Box>)
 }
 
 export default DatasourceEditor

@@ -24,7 +24,7 @@ import { User } from "types/user"
 import moment from "moment"
 import useSession from "hooks/use-session"
 
-export const AdminUsers = memo(() => {
+export const AdminUserStats = memo(() => {
     const {session} = useSession()
     const t = useStore(commonMsg)
     const [users, setUsers] = useState<User[]>([])
@@ -66,4 +66,4 @@ export const AdminUsers = memo(() => {
     </Page >
 })
 
-export default AdminUsers
+export default AdminUserStats

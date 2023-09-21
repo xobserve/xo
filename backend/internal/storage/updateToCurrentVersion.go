@@ -37,5 +37,23 @@ func update() error {
 		}
 	}
 
+	// team_id INTEGER NOT NULL
+	var teamId string
+	err = db.Conn.QueryRow("SELECT team_id FROM variable limit 1").Scan(&teamId)
+	if err != nil && e.IsErrNoColumn(err) {
+		_, err = db.Conn.Exec("ALTER TABLE variable ADD COLUMN team_id INTEGER DEFAULT 1")
+		if err != nil {
+			return errors.New("update storage error:" + err.Error())
+		}
+	}
+
+	err = db.Conn.QueryRow("SELECT team_id FROM datasource limit 1").Scan(&teamId)
+	if err != nil && e.IsErrNoColumn(err) {
+		_, err = db.Conn.Exec("ALTER TABLE datasource ADD COLUMN team_id INTEGER DEFAULT 1")
+		if err != nil {
+			return errors.New("update storage error:" + err.Error())
+		}
+	}
+
 	return nil
 }

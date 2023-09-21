@@ -20,6 +20,7 @@ type Datasource struct {
 	Type    string      `json:"type"`
 	URL     string      `json:"url"`
 	Data    interface{} `json:"data,omitempty"`
+	TeamId  int64       `json:"teamId"`
 	Created *time.Time  `json:"created,omitempty"`
 	Updated *time.Time  `json:"updated,omitempty"`
 }

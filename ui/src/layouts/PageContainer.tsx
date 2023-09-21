@@ -52,6 +52,8 @@ import { MobileBreakpoint } from "src/data/constants"
 import { HamburgerIcon } from "@chakra-ui/icons"
 import CustomScrollbar from "src/components/CustomScrollbar/CustomScrollbar"
 import { locale } from "src/i18n/i18n"
+import { globalTeamId } from "types/teams"
+import { StorageTeamNavId } from "pages/cfg/team/[id]/components/Layout"
 export let gnavigate
 
 
@@ -108,7 +110,7 @@ const Container = (props: Props) => {
 
   const bottomNavs = [
     { title: t.new, icon: "FaPlus",baseUrl:ReserveUrls.New,  url: `${ReserveUrls.New}/dashboard`, isActive: asPath.startsWith(ReserveUrls.New) },
-    { title: t.configuration, icon: "FaCog", baseUrl:ReserveUrls.Config, url: `${ReserveUrls.Config}/datasources`, isActive: asPath.startsWith(ReserveUrls.Config) },
+    { title: t.configuration, icon: "FaCog", baseUrl:ReserveUrls.Config, url: `${ReserveUrls.Config}/team/${storage.get(StorageTeamNavId) ?? globalTeamId}/datasources`, isActive: asPath.startsWith(ReserveUrls.Config) },
   ] 
   config.showAlertIcon && bottomNavs.push({ title: t.alert, icon: "FaBell",  baseUrl: ReserveUrls.Alerts, url: `${ReserveUrls.Alerts}`, isActive: asPath.startsWith(ReserveUrls.Alerts) })
   bottomNavs.push({ title: t1.search, icon: "FaSearch", baseUrl: ReserveUrls.Search, url: `${ReserveUrls.Search}`, isActive: asPath.startsWith(ReserveUrls.Search) })

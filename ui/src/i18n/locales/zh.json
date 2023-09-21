@@ -119,6 +119,7 @@
     "height": "高度",
     "sortWeight": "排序权重",
     "textinput": "文本输入框",
+    "userStats": "用户数据",
     "isAdded": "{name}添加成功!",
     "isUpdated": "{name}更新成功!",
     "isDeleted": "{name}删除成功!",
@@ -206,8 +207,9 @@
     "userNameInput": "输入用户名，用于登录"
   },
   "cfgTeam": {
-    "title": "管理你的团队",
+    "title": "团队配置管理",
     "subTitle": "当前团队",
+  "viewAllTeams": "查看全部团队",
     "roleInTeam": "团队中的角色",
     "leaveTeam": "离开团队",
     "isPublic": "公开团队",

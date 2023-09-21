@@ -46,11 +46,12 @@ import { getDatasource } from "utils/datasource"
 import { addParamToUrl, removeParamFromUrl } from "utils/url"
 import { useSearchParam } from "react-use"
 import { $datasources } from "src/views/datasource/store"
+import { Team } from "types/teams"
 
 
 
 
-const GlobalVariablesPage = () => {
+const TeamVariablesPage = ({team}:{team:Team})  => {
     const t = useStore(commonMsg)
     const t1 = useStore(cfgVariablemsg)
     const editVar = useSearchParam('editVar')
@@ -70,7 +71,7 @@ const GlobalVariablesPage = () => {
     }, [])
 
     const load = async () => {
-        const res = await requestApi.get("/variable/all")
+        const res = await requestApi.get(`/variable/all?teamId=${team.id}`)
         setVariables(res.data)
     }
 
@@ -96,7 +97,7 @@ const GlobalVariablesPage = () => {
             return
         }
 
-        await requestApi.post("/variable/new", v)
+        await requestApi.post("/variable/new", {...v, teamId: team.id})
         onClose()
         toast({
             title: t.isAdded({ name: t.variable }),
@@ -157,13 +158,13 @@ const GlobalVariablesPage = () => {
     }
 
     return <>
-        <Page title={t.configuration} subTitle={t1.subTitle} icon={<FaCog />} tabs={cfgLinks} isLoading={variables === null}>
+        <Box>
             <Flex justifyContent="space-between">
                 <Box></Box>
                 <Button size="sm" onClick={onAddVariable}>{t.newItem({ name: t.variable })}</Button>
             </Flex>
             {variables && <VariablesTable variables={variables} onEdit={onEditVariable} onRemove={onRemoveVariable} />}
-        </Page>
+        </Box>
         {variable && <EditVariable key={variable.id} v={variable} isEdit={editMode} onClose={() => {
             removeParamFromUrl(['editVar'])
             onClose()
@@ -172,7 +173,7 @@ const GlobalVariablesPage = () => {
 }
 
 
-export default GlobalVariablesPage
+export default TeamVariablesPage
 
 interface TableProps {
     variables: Variable[]

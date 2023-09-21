@@ -21,16 +21,16 @@ import { cloneDeep } from "lodash"
 import moment from "moment"
 import { useEffect, useRef, useState } from "react"
 import { FaCog } from "react-icons/fa"
-import { cfgLinks } from "src/data/nav-links"
+import { adminLinks } from "src/data/nav-links"
 import { Role, SuperAdminId } from "types/role"
 import { User } from "types/user"
 import { requestApi } from "utils/axios/request"
 import isEmail from "validator/lib/isEmail"
 import { useStore } from "@nanostores/react"
 import { cfgUsers, commonMsg } from "src/i18n/locales/en"
-import {format} from 'src/i18n/i18n'
 import { isEmpty } from "utils/validate"
-const UsersPage = () => {
+
+const AdminUsers = () => {
     const t = useStore(commonMsg)
     const t1 = useStore(cfgUsers)
     const {session} = useSession()
@@ -173,7 +173,7 @@ const UsersPage = () => {
     }
 
     return <>
-        <Page title={t.configuration} subTitle={t.manageItem({name: t.user})} icon={<FaCog />} tabs={cfgLinks} isLoading={users === null}>
+        <Page title={t.configuration} subTitle={t.manageItem({name: t.user})} icon={<FaCog />} tabs={adminLinks} isLoading={users === null}>
             <Flex justifyContent="space-between">
                 <Box></Box>
                 <Button size="sm" onClick={onAddUser}>{t.newItem({name: t.user})}</Button>
@@ -316,4 +316,4 @@ const UsersPage = () => {
 }
 
 
-export default UsersPage
+export default AdminUsers

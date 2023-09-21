@@ -19,6 +19,7 @@ export interface Datasource {
     type: DatasourceType
     url: string
     data?: {[key: string]: any}
+    teamId?: number
     created?: string 
     updated?: string
 }

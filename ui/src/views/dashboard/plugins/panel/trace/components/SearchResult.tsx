@@ -19,13 +19,14 @@ import { getDatasource } from "utils/datasource"
 
 interface Props {
     dashboardId: string
+    teamId: number
     panel: Panel
     traces: Trace[]
     timeRange: TimeRange
     height: number
 }
 
-const TraceSearchResult = ({dashboardId, panel, traces, timeRange ,height}: Props) => {
+const TraceSearchResult = ({dashboardId, teamId, panel, traces, timeRange ,height}: Props) => {
     const t1 = useStore(tracePanelMsg)
     const datasources = useStore($datasources)
     const [selectedTraces, setSelectedTraces] = useState<Trace[]>([])
@@ -90,7 +91,7 @@ const TraceSearchResult = ({dashboardId, panel, traces, timeRange ,height}: Prop
 
     const onTraceClick = (trace) => {
         if (ds) {
-            window.open(`/trace/${trace.traceID}/${ds.id}?dashboardId=${dashboardId}&panelId=${panel.id}`)
+            window.open(`/trace/${trace.traceID}/${ds.id}?dashboardId=${dashboardId}&panelId=${panel.id}&teamId=${teamId}`)
         }
     }
 

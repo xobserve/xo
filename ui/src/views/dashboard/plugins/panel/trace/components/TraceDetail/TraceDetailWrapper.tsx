@@ -18,18 +18,26 @@ import { DatasourceType } from "types/dashboard"
 import TraceDetail from "./TraceDetail"
 import transformTraceData from "../../utils/transform-trace-data"
 import ScrollManager from "./scroll/scrollManager"
-import { cancel as cancelScroll, scrollBy, scrollTo } from './scroll/scrollPage';
+import {  scrollBy, scrollTo } from './scroll/scrollPage';
 import React from "react";
 import { queryTraceInTestData } from "src/views/dashboard/plugins/datasource/testdata/query_runner"
 import { getDatasource } from "utils/datasource"
 import { useStore } from "@nanostores/react"
-import { $datasources } from "src/views/datasource/store"
+import { $datasources, $teamDatasources } from "src/views/datasource/store"
+import { useSearchParam } from "react-use"
 
 const TraceDetailWrapper = ({id,dsId}) => {
     const [trace, setTrace] = useState<Trace>(null)
     const [scrollManager, setScrollManager] = useState(null)
+    const teamId = useSearchParam("teamId")
+    useEffect(() => {
+        const dss = $teamDatasources.get()[teamId] ?? [] 
+        $datasources.set(dss)
+    },[teamId])
+
     const datasources = useStore($datasources)
     const datasource = getDatasource(dsId, datasources)
+    
     useEffect(() => {
         load()
 

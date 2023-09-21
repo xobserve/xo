@@ -101,7 +101,7 @@ func getUIConfig(c *gin.Context) {
 	}
 	cfg.Sidemenu = menu
 
-	vars, err := variables.GetVariables()
+	vars, err := variables.GetVariables(0)
 	if err != nil {
 		logger.Warn("query variables error", "error", err)
 		c.JSON(500, common.RespError(e.Internal))

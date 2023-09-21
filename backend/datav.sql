@@ -79,11 +79,13 @@ CREATE TABLE IF NOT EXISTS variable (
     enableAll BOOL NOT NULL DEFAULT false,
     sort SMALLINT DEFAULT 0,
     regex TEXT,
+    team_id INTEGER NOT NULL DEFAULT 1,
     created DATETIME NOT NULL,
     updated DATETIME NOT NULL
 );
 
 CREATE UNIQUE INDEX variable_name ON variable (name);
+CREATE INDEX  variable_team ON variable (team_id);
 
 CREATE TABLE IF NOT EXISTS dashboard (
     id VARCHAR(40) PRIMARY KEY NOT NULL,
@@ -120,12 +122,14 @@ CREATE TABLE IF NOT EXISTS datasource (
     type VARCHAR(32),
     url VARCHAR(255),
     data MEDIUMTEXT,
+    team_id INTEGER NOT NULL DEFAULT 1,
     created DATETIME NOT NULL,
     updated DATETIME NOT NULL
 );
 
 
 CREATE UNIQUE INDEX  datasource_name ON datasource (name);
+CREATE INDEX  datasource_team ON datasource (team_id);
 
 CREATE TABLE IF NOT EXISTS star_dashboard (
     user_id  INTEGER NOT NULL,

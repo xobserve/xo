@@ -14,12 +14,9 @@
 import React from "react"
 import { Button, Modal, ModalBody, ModalCloseButton, ModalContent, ModalHeader, ModalOverlay, useDisclosure, VStack, Flex, Box, useToast, HStack, Image, Text, AlertDialog, AlertDialogOverlay, AlertDialogContent, AlertDialogHeader, AlertDialogBody, AlertDialogFooter, Tag } from "@chakra-ui/react"
 import { Form } from "src/components/form/Form"
-import Page from "layouts/page/Page"
 import { isEmpty } from "lodash"
 import { useEffect, useRef, useState } from "react"
-import { FaCog } from "react-icons/fa"
 import { InitTestDataDatasourceId } from "src/data/constants"
-import { cfgLinks } from "src/data/nav-links"
 import ReserveUrls from "src/data/reserve-urls"
 import DatasourceEditor from "src/views/datasource/Editor"
 import { Datasource } from "types/datasource"
@@ -27,8 +24,9 @@ import { requestApi } from "utils/axios/request"
 import { useNavigate } from "react-router-dom"
 import { useStore } from "@nanostores/react"
 import { cfgDatasourceMsg, commonMsg } from "src/i18n/locales/en"
+import { Team } from "types/teams"
 
-const DatasourcesPage = () => {
+const TeamDatasources = ({team}: {team:Team}) => {
     const t = useStore(commonMsg)
     const t1 = useStore(cfgDatasourceMsg)
     const toast = useToast()
@@ -40,7 +38,7 @@ const DatasourcesPage = () => {
     }, [])
 
     const load = async () => {
-        const res = await requestApi.get("/datasource/all")
+        const res = await requestApi.get(`/datasource/all?teamId=${team.id}`)
         setDatasources(res.data)
     }
 
@@ -66,7 +64,7 @@ const DatasourcesPage = () => {
     const deleteDatasource = async () => {
         await requestApi.delete(`/datasource/${datasource.id}`)
         toast({
-            description: t1.deleteToast({name: datasource.name}),
+            description: t1.deleteToast({ name: datasource.name }),
             status: "success",
             duration: 3000,
             isClosable: true,
@@ -78,10 +76,10 @@ const DatasourcesPage = () => {
     }
 
     return <>
-        <Page title={t.configuration} subTitle={t.manageItem({name: t.datasource})} icon={<FaCog />} tabs={cfgLinks} isLoading={datasources === null}>
+        <Box>
             <Flex justifyContent="space-between">
                 <Box></Box>
-                <Button size="sm" onClick={() => navigate(ReserveUrls.New + '/datasource')}>{t.newItem({name: t.datasource})}</Button>
+                <Button size="sm" onClick={() => navigate(ReserveUrls.New + `/datasource?teamId=${team.id}`)}>{t.newItem({ name: t.datasource })}</Button>
             </Flex>
 
             <VStack alignItems="left" spacing={3} mt="3">
@@ -91,7 +89,7 @@ const DatasourcesPage = () => {
                             <Image width="50px" height="50px" src={`/plugins/datasource/${ds.type}.svg`} />
                             <Box>
                                 <Text fontWeight="550">{ds.name}</Text>
-                                <Text textStyle="annotation" mt="1">{ds.type}  {!isEmpty(ds.url) && ` · ` + ds.url } {ds.id == InitTestDataDatasourceId && <Tag size="sm" ml="1"> default</Tag>}</Text>
+                                <Text textStyle="annotation" mt="1">{ds.type}  {!isEmpty(ds.url) && ` · ` + ds.url} {ds.id == InitTestDataDatasourceId && <Tag size="sm" ml="1"> default</Tag>}</Text>
                             </Box>
                         </HStack>
 
@@ -108,18 +106,19 @@ const DatasourcesPage = () => {
                     </Flex>)
                 }
             </VStack>
-
-        </Page>
+        </Box>
         <Modal isOpen={isOpen} onClose={onEditClose}>
             <ModalOverlay />
             <ModalContent>
-                <ModalHeader>{t.editItem({name: t.datasource})}- {datasource?.name}</ModalHeader>
+                <ModalHeader>{t.editItem({ name: t.datasource })}- {datasource?.name}</ModalHeader>
                 <ModalCloseButton />
                 <ModalBody>
-                    <Form spacing={2} sx={{'.form-item-label': {
-                        width: '50px'
-                    }}}>
-                    {datasource && <DatasourceEditor ds={datasource} onChange={onChange} />}
+                    <Form spacing={2} sx={{
+                        '.form-item-label': {
+                            width: '50px'
+                        }
+                    }}>
+                        {datasource && <DatasourceEditor ds={datasource} onChange={onChange} teamEditable={false}/>}
                     </Form>
                 </ModalBody>
             </ModalContent>
@@ -133,7 +132,7 @@ const DatasourcesPage = () => {
             <AlertDialogOverlay>
                 <AlertDialogContent>
                     <AlertDialogHeader fontSize='lg' fontWeight='bold'>
-                        {t.deleteItem({name: t.datasource})} {datasource?.name}
+                        {t.deleteItem({ name: t.datasource })} {datasource?.name}
                     </AlertDialogHeader>
 
                     <AlertDialogBody>
@@ -155,4 +154,4 @@ const DatasourcesPage = () => {
 }
 
 
-export default DatasourcesPage
+export default TeamDatasources

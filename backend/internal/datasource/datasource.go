@@ -13,7 +13,10 @@
 package datasource
 
 import (
+	"database/sql"
 	"net/http"
+	"strconv"
+	"strings"
 	"time"
 
 	"github.com/DataObserve/datav/backend/internal/user"
@@ -37,15 +40,24 @@ func SaveDatasource(c *gin.Context) {
 	}
 
 	u := user.CurrentUser((c))
+	// only admin or team admin can do this
 	if !u.Role.IsAdmin() {
-		c.JSON(403, common.RespError(e.NoPermission))
-		return
+		isTeamAdmin, err := models.IsTeamAdmin(ds.TeamId, u.Id)
+		if err != nil {
+			logger.Warn("Error query team admin", "error", err)
+			c.JSON(500, common.RespError(e.Internal))
+			return
+		}
+		if !isTeamAdmin {
+			c.JSON(403, common.RespError(e.NoPermission))
+			return
+		}
 	}
 
 	now := time.Now()
 	if ds.Id == 0 {
 		// create
-		res, err := db.Conn.Exec("INSERT INTO datasource (name,type,url,created,updated) VALUES (?,?,?,?,?)", ds.Name, ds.Type, ds.URL, now, now)
+		res, err := db.Conn.Exec("INSERT INTO datasource (name,type,url,team_id,created,updated) VALUES (?,?,?,?,?,?)", ds.Name, ds.Type, ds.URL, ds.TeamId, now, now)
 		if err != nil {
 			if e.IsErrUniqueConstraint(err) {
 				c.JSON(http.StatusBadRequest, common.RespError("name alread exist"))
@@ -81,8 +93,18 @@ func SaveDatasource(c *gin.Context) {
 }
 
 func GetDatasources(c *gin.Context) {
+	teamId := c.Query("teamId")
 	dss := make([]*models.Datasource, 0)
-	rows, err := db.Conn.Query("SELECT id,name,type,url, created FROM datasource")
+
+	var rows *sql.Rows
+	var err error
+
+	if strings.TrimSpace(teamId) != "" {
+		rows, err = db.Conn.Query("SELECT id,name,type,url,team_id, created FROM datasource WHERE team_id=?", teamId)
+	} else {
+		rows, err = db.Conn.Query("SELECT id,name,type,url,team_id, created FROM datasource")
+	}
+
 	if err != nil {
 		logger.Warn("get datasource error", "error", err)
 		c.JSON(http.StatusInternalServerError, common.RespInternalError())
@@ -91,7 +113,7 @@ func GetDatasources(c *gin.Context) {
 	defer rows.Close()
 	for rows.Next() {
 		ds := &models.Datasource{}
-		err := rows.Scan(&ds.Id, &ds.Name, &ds.Type, &ds.URL, &ds.Created)
+		err := rows.Scan(&ds.Id, &ds.Name, &ds.Type, &ds.URL, &ds.TeamId, &ds.Created)
 		if err != nil {
 			logger.Warn("get datasource error", "error", err)
 			c.JSON(http.StatusInternalServerError, common.RespInternalError())
@@ -104,20 +126,40 @@ func GetDatasources(c *gin.Context) {
 }
 
 func DeleteDatasource(c *gin.Context) {
-	id := c.Param("id")
+	id, _ := strconv.ParseInt(c.Param("id"), 10, 64)
 
-	if id == "1" {
+	if id == 0 {
+		c.JSON(http.StatusBadRequest, common.RespError("bad datasource id"))
+		return
+	}
+
+	if id == 1 {
 		c.JSON(http.StatusBadRequest, common.RespError("can not delete default test data datasource"))
+		return
+	}
+
+	ds, err := GetDatasource(id)
+	if err != nil {
+		logger.Warn("Error query datasource", "error", err)
+		c.JSON(500, common.RespError(e.Internal))
 		return
 	}
 
 	u := user.CurrentUser((c))
 	if !u.Role.IsAdmin() {
-		c.JSON(403, common.RespError(e.NoPermission))
-		return
+		isTeamAdmin, err := models.IsTeamAdmin(ds.TeamId, u.Id)
+		if err != nil {
+			logger.Warn("Error query team admin", "error", err)
+			c.JSON(500, common.RespError(e.Internal))
+			return
+		}
+		if !isTeamAdmin {
+			c.JSON(403, common.RespError(e.NoPermission))
+			return
+		}
 	}
 
-	_, err := db.Conn.Exec("DELETE FROM datasource WHERE id=?", id)
+	_, err = db.Conn.Exec("DELETE FROM datasource WHERE id=?", id)
 	if err != nil {
 		logger.Warn("delete datasource error", "error", err)
 		c.JSON(http.StatusInternalServerError, common.RespInternalError())

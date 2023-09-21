@@ -28,6 +28,7 @@ import { useNavigate } from "react-router-dom"
 import { commonMsg, newMsg } from "src/i18n/locales/en"
 import { useStore } from "@nanostores/react"
 import { useSearchParam } from "react-use"
+import { $teams } from "src/views/team/store"
 
 
 const NewDashboardPage = () => {
@@ -37,16 +38,8 @@ const NewDashboardPage = () => {
     const navigate = useNavigate()
     const team = useSearchParam('team') 
     const [dashboard, setDashboard] = useState<Dashboard>(initDashboard(Number(team)))
-    const [teams, setTeams] = useState<Team[]>([])
+    const teams = useStore($teams)
 
-    useEffect(() => {
-        load()
-    }, [])
-
-    const load = async () => {
-        const res = await requestApi.get("teams/all")
-        setTeams(res.data)
-    }
 
     const addDashboard = async () => {
         const res = await requestApi.post("/dashboard/save", { dashboard, changes: "Newly created" })

@@ -22,19 +22,19 @@ import CommonStyles from "src/theme/common.styles"
 import BaiduMap from 'src/components/BaiduMap'
 import { requestApi } from 'utils/axios/request'
 import { $config, UIConfig } from 'src/data/configs/config'
-import { Variable } from 'types/variable'
 import { setVariableSelected } from './views/variables/SelectVariable'
 import AntdWrapper from 'src/components/AntdWrapper'
 import { routes } from './routes';
 import { initColors } from 'utils/colors';
-import { $variables } from './views/variables/store';
-import { $datasources } from './views/datasource/store';
+import {  $teamVariables } from './views/variables/store';
+import { $teamDatasources } from './views/datasource/store';
+import { concat } from 'lodash';
+import { $teams } from './views/team/store';
 
 
 const { ToastContainer } = createStandaloneToast()
 
 export let canvasCtx;                                                                                                                                                                                                                                                                                                                                                ``
-export let gvariables: Variable[] = []
 
 
 export let appInitialized = false
@@ -64,20 +64,34 @@ const AppView = () => {
 
 
   const loadConfig = async () => {
-    const r0 = requestApi.get("/datasource/all")
+    const r0 = requestApi.get(`/datasource/all`)
     const r = requestApi.get("/config/ui")
+    const r1 = requestApi.get("teams/all")
+
     const res1 = await Promise.all([r0, r])
-    $datasources.set(res1[0].data)
+
+    $teams.set((await r1).data)
+
+    const datasources = {}
+    for (const ds of res1[0].data) {
+      datasources[ds.teamId] = concat(datasources[ds.teamId]??[], ds)
+    }
+    $teamDatasources.set(datasources)
+
     const res = res1[1]
     const cfg = res.data.config
     cfg.sidemenu = cfg.sidemenu.data.filter((item) => !item.hidden)
     setConfig(cfg)
     $config.set(cfg)
-    const vars = res.data.vars
-    setVariableSelected(vars)
-    gvariables = vars
-    $variables.set(vars)
-  }
+
+    const vars = {}
+    for (const v of res.data.vars) {
+      vars[v.teamId] = concat(vars[v.teamId]??[], v)
+    }
+    setVariableSelected(res.data.vars)
+    $teamVariables.set(vars)
+
+}
 
 
   const router = createBrowserRouter(routes);

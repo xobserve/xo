@@ -16,7 +16,6 @@ import { DatasourceType, PanelQuery } from "types/dashboard";
 import { replacePrometheusQueryWithVariables } from "src/views/dashboard/plugins/datasource/prometheus/query_runner";
 import { replaceJaegerQueryWithVariables } from "src/views/dashboard/plugins/datasource/jaeger/query_runner";
 import { VariableSplitChar, VarialbeAllOption } from "src/data/variable";
-import { gvariables } from "src/App";
 import { $variables } from "src/views/variables/store";
 import { isEmpty } from "./validate";
 
@@ -75,7 +74,8 @@ export const  replaceWithVariablesHasMultiValues =  (s: string, replaceAllWith?)
     let res = []
     const formats = parseVariableFormat(s);
     for (const f of formats) {
-        const v = (vars.length > 0 ? vars : gvariables).find(v => v.name ==f)
+        // const v = (vars.length > 0 ? vars : gvariables).find(v => v.name ==f)
+         const v = vars.find(v => v.name ==f)
         if (v) {
           
             let selected = []

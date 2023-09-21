@@ -131,7 +131,7 @@ const TracePanel = (props: PanelProps) => {
                 </Box>
                 <Box width={`calc(100% - ${searchPanelWidth})`} maxH={resultHeight}>
                     <CustomScrollbar>
-                        {traces && <TraceSearchResult traces={traces} panel={props.panel} dashboardId={props.dashboardId} timeRange={props.timeRange} height={resultHeight} />}
+                        {traces && <TraceSearchResult traces={traces} panel={props.panel} dashboardId={props.dashboardId}  teamId={props.teamId} timeRange={props.timeRange} height={resultHeight} />}
                     </CustomScrollbar>
                 </Box>
             </HStack>}

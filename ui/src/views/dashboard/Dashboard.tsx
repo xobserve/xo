@@ -18,7 +18,7 @@ import DashboardHeader from "src/views/dashboard/DashboardHeader"
 import DashboardGrid from "src/views/dashboard/grid/DashboardGrid"
 import { clone, cloneDeep, concat, defaultsDeep, find, findIndex } from "lodash"
 import { setVariableSelected } from "src/views/variables/SelectVariable"
-import {  prevQueries, prevQueryData } from "src/views/dashboard/grid/PanelGrid/PanelGrid"
+import { prevQueries, prevQueryData } from "src/views/dashboard/grid/PanelGrid/PanelGrid"
 import { unstable_batchedUpdates } from "react-dom"
 import useBus from 'use-bus'
 import { SetDashboardEvent, UpdatePanelEvent } from "src/data/bus-events"
@@ -33,7 +33,7 @@ import { initDashboard } from "src/data/dashboard"
 import { initPanel, initPanelType } from "src/data/panel/initPanel"
 import { DashboardHeaderHeight } from "src/data/constants"
 import { updateTimeToNewest } from "src/components/DatePicker/DatePicker"
-import { $variables } from "../variables/store"
+import { $teamVariables, $variables } from "../variables/store"
 import { useStore } from "@nanostores/react"
 import { VarialbeAllOption } from "src/data/variable"
 import EditPanel from "./edit-panel/EditPanel"
@@ -44,6 +44,7 @@ import storage from "utils/localStorage"
 import { PreviousColorModeKey } from "src/data/storage-keys"
 import { isEmpty } from "utils/validate"
 import Loading from "src/components/loading/Loading"
+import { $datasources, $teamDatasources } from "../datasource/store"
 
 
 
@@ -80,7 +81,7 @@ const DashboardWrapper = ({ dashboardId, sideWidth }) => {
                 storage.remove(PreviousColorModeKey)
                 setColorMode(previousColorMode)
             }
-        } 
+        }
     }, [])
 
 
@@ -113,8 +114,8 @@ const DashboardWrapper = ({ dashboardId, sideWidth }) => {
                     const bg = dashboard?.data.styles?.bg
                     if (bg) {
                         bodyStyle.background = `url(${bg.url})`
-                  
-                       
+
+
                         bodyStyle.backgroundSize = "cover"
                         if (colorMode !== bg.colorMode) {
                             if (!storage.get(PreviousColorModeKey)) {
@@ -123,11 +124,11 @@ const DashboardWrapper = ({ dashboardId, sideWidth }) => {
                             }
                         }
                     }
-                    
+
                     if (!isEmpty(dashboard.data.styles.bgColor)) {
                         bodyStyle.backgroundColor = dashboard.data.styles.bgColor
                     }
-                   
+
                 }
             }, 1)
         }
@@ -139,15 +140,14 @@ const DashboardWrapper = ({ dashboardId, sideWidth }) => {
     }, [dashboard])
 
 
-    
+
     const load = async () => {
         const res = await requestApi.get(`/dashboard/byId/${dashboardId}`)
         const dash = initDash(res.data)
         unstable_batchedUpdates(() => {
+            setDashboardVariables(res.data)
+            setDatasources(res.data)
             setDashboard(cloneDeep(dash))
-            // setTimeout(() => {
-                setDashboardVariables(res.data)
-            // }, 50) 
         })
     }
 
@@ -165,16 +165,17 @@ const DashboardWrapper = ({ dashboardId, sideWidth }) => {
     }
 
     // combine variables which defined separately in dashboard and global
-    const setDashboardVariables = async (dash) => {
+    const setDashboardVariables = (dash: Dashboard) => {
         const dashVars = cloneDeep(dash.data.variables)
         setVariableSelected(dashVars)
-        const oldVars = $variables.get()
-        const gVars = oldVars.filter(v => !v.id.toString().startsWith("d-"))
+        const gVars = $teamVariables.get()[dash.ownedBy] ?? []
 
         $variables.set([...gVars, ...dashVars])
     }
 
-
+    const setDatasources = (dash: Dashboard) => {
+        $datasources.set($teamDatasources.get()[dash.ownedBy] ?? [])
+    }
 
     const onDashbardChange = useCallback(f => {
         setDashboard(f)
@@ -182,15 +183,15 @@ const DashboardWrapper = ({ dashboardId, sideWidth }) => {
 
     const hidingVars = dashboard?.data?.hidingVars?.toLowerCase().split(',')
     const visibleVars = vars.filter(v => {
-        return v.id.toString().startsWith("d-") || !find(hidingVars,v1 => v.name.toLowerCase().match(v1))
+        return v.id.toString().startsWith("d-") || !find(hidingVars, v1 => v.name.toLowerCase().match(v1))
     })
 
-    const headerHeight = fullscreen ? 0 : (visibleVars.length > 0 ? DashboardHeaderHeight :  (DashboardHeaderHeight - 25) ) + 7
+    const headerHeight = fullscreen ? 0 : (visibleVars.length > 0 ? DashboardHeaderHeight : (DashboardHeaderHeight - 25)) + 7
 
     const panels = useMemo(() => {
         let panels
         if (dashboard) {
-           const panels0 =  dashboard.data.panels.filter((panel: Panel) => {
+            const panels0 = dashboard.data.panels.filter((panel: Panel) => {
                 let render = false
                 if (panel.enableConditionRender) {
                     if (panel.conditionRender.type == "variable") {
@@ -198,22 +199,22 @@ const DashboardWrapper = ({ dashboardId, sideWidth }) => {
                         if (cond.length == 2) {
                             const v = vars.find(v => v.name == cond[0])
                             if (v.selected == VarialbeAllOption || v.selected?.match(cond[1])) {
-                                render = true 
+                                render = true
                             }
-                          
+
                         }
                     }
                 } else {
                     render = true
                 }
-                
+
                 if (dashboard.data.hiddenPanels.includes(panel.id)) {
                     render = false
                 }
-                
-               return render
+
+                return render
             })
-    
+
             if (panels0.length != dashboard.data.panels.length) {
                 panels = panels0
             } else {
@@ -222,19 +223,19 @@ const DashboardWrapper = ({ dashboardId, sideWidth }) => {
         }
 
         return panels
-    },[dashboard, vars])
-  
+    }, [dashboard, vars])
+
 
     const [isLargeScreen] = useMediaQuery('(min-width: 600px)')
 
     return (<>
         {dashboard ? <Box className="dashboard-container" px={fullscreen ? 0 : (isLargeScreen ? 2 : 3)} width="100%" minHeight="100vh" maxHeight="100vh" overflowY="auto" position="relative">
             {/* <Decoration decoration={dashboard.data.styles.decoration}/> */}
-            <DashboardHeader dashboard={dashboard} onChange={onDashbardChange} sideWidth={sideWidth}/>
+            <DashboardHeader dashboard={dashboard} onChange={onDashbardChange} sideWidth={sideWidth} />
             <Box
                 // key={dashboard.id + fullscreen} 
                 id="dashboard-wrapper"
-                mt={sideWidth == 0 ? 0 : headerHeight+ 'px'}
+                mt={sideWidth == 0 ? 0 : headerHeight + 'px'}
                 pb="2"
                 position="relative"
             >
@@ -242,7 +243,7 @@ const DashboardWrapper = ({ dashboardId, sideWidth }) => {
                 {dashboard.data.panels?.length > 0 && <DashboardGrid dashboard={dashboard} panels={panels} onChange={onDashbardChange} />}
             </Box>
             <EditPanel dashboard={dashboard} onChange={onDashbardChange} />
-            <DashboardAnnotations dashboard={dashboard}/>
+            <DashboardAnnotations dashboard={dashboard} />
         </Box> : <Box position="fixed" top="50vh" left="50vw"><Loading /></Box>}
     </>)
 }

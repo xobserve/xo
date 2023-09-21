@@ -174,6 +174,7 @@ export interface GridPos {
 export interface PanelProps {
     panel: Panel
     dashboardId?: string
+    teamId?: number
     width?: number
     height?: number
     sync?: any

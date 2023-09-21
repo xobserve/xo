@@ -28,4 +28,5 @@ type Variable struct {
 	EnableAll   bool      `json:"enableAll"`
 	Regex       *string   `json:"regex"`
 	SortWeight  int       `json:"sortWeight"`
+	TeamId      int64     `json:"teamId"`
 }

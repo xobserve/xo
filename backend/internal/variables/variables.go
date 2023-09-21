@@ -13,6 +13,9 @@
 package variables
 
 import (
+	"database/sql"
+	"net/http"
+	"strconv"
 	"time"
 
 	"github.com/DataObserve/datav/backend/internal/user"
@@ -48,15 +51,23 @@ func AddNewVariable(c *gin.Context) {
 	}
 
 	u := user.CurrentUser(c)
-	// only admin can do this
+	// only admin or team admin can do this
 	if !u.Role.IsAdmin() {
-		c.JSON(403, common.RespError(e.NoPermission))
-		return
+		isTeamAdmin, err := models.IsTeamAdmin(v.TeamId, u.Id)
+		if err != nil {
+			logger.Warn("Error query team admin", "error", err)
+			c.JSON(500, common.RespError(e.Internal))
+			return
+		}
+		if !isTeamAdmin {
+			c.JSON(403, common.RespError(e.NoPermission))
+			return
+		}
 	}
 
 	now := time.Now()
-	_, err = db.Conn.Exec("INSERT INTO variable(name,type,value,default_selected,datasource,description,refresh,enableMulti,enableAll,regex,sort,created,updated) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?)",
-		v.Name, v.Type, v.Value, v.Default, v.Datasource, v.Desc, v.Refresh, v.EnableMulti, v.EnableAll, v.Regex, v.SortWeight, now, now)
+	_, err = db.Conn.Exec("INSERT INTO variable(name,type,value,default_selected,datasource,description,refresh,enableMulti,enableAll,regex,sort,team_id,created,updated) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?)",
+		v.Name, v.Type, v.Value, v.Default, v.Datasource, v.Desc, v.Refresh, v.EnableMulti, v.EnableAll, v.Regex, v.SortWeight, v.TeamId, now, now)
 	if err != nil {
 		if e.IsErrUniqueConstraint(err) {
 			c.JSON(400, common.RespError("variable name already exists"))
@@ -69,16 +80,23 @@ func AddNewVariable(c *gin.Context) {
 	c.JSON(200, common.RespSuccess(nil))
 }
 
-func GetVariables() ([]*models.Variable, error) {
+func GetVariables(teamId int64) ([]*models.Variable, error) {
+	var rows *sql.Rows
+	var err error
 	vars := []*models.Variable{}
-	rows, err := db.Conn.Query("SELECT id,name,type,value,default_selected,datasource,description,refresh,enableMulti,enableAll,regex,sort FROM variable")
+	if teamId == 0 {
+		rows, err = db.Conn.Query("SELECT id,name,type,value,default_selected,datasource,description,refresh,enableMulti,enableAll,regex,sort,team_id FROM variable")
+
+	} else {
+		rows, err = db.Conn.Query("SELECT id,name,type,value,default_selected,datasource,description,refresh,enableMulti,enableAll,regex,sort,team_id FROM variable WHERE team_id=?", teamId)
+	}
 	if err != nil {
 		return nil, err
 	}
 	defer rows.Close()
 	for rows.Next() {
 		v := &models.Variable{}
-		err = rows.Scan(&v.Id, &v.Name, &v.Type, &v.Value, &v.Default, &v.Datasource, &v.Desc, &v.Refresh, &v.EnableMulti, &v.EnableAll, &v.Regex, &v.SortWeight)
+		err = rows.Scan(&v.Id, &v.Name, &v.Type, &v.Value, &v.Default, &v.Datasource, &v.Desc, &v.Refresh, &v.EnableMulti, &v.EnableAll, &v.Regex, &v.SortWeight, &v.TeamId)
 		if err != nil {
 			logger.Warn("scan variable error", "error", err)
 			continue
@@ -128,16 +146,34 @@ func UpdateVariable(c *gin.Context) {
 }
 
 func DeleteVariable(c *gin.Context) {
-	id := c.Param("id")
-
-	u := user.CurrentUser(c)
-	// only admin can do this
-	if !u.Role.IsAdmin() {
-		c.JSON(403, common.RespError(e.NoPermission))
+	id, _ := strconv.ParseInt(c.Param("id"), 10, 64)
+	if id == 0 {
+		c.JSON(http.StatusBadRequest, common.RespError("bad variable id"))
 		return
 	}
 
-	_, err := db.Conn.Exec("DELETE FROM variable WHERE id=?", id)
+	teamId, err := getVariableTeamId(id)
+	if err != nil {
+		logger.Warn("Error query variable team id", "error", err)
+		c.JSON(500, common.RespError(e.Internal))
+		return
+	}
+
+	u := user.CurrentUser((c))
+	if !u.Role.IsAdmin() {
+		isTeamAdmin, err := models.IsTeamAdmin(teamId, u.Id)
+		if err != nil {
+			logger.Warn("Error query team admin", "error", err)
+			c.JSON(500, common.RespError(e.Internal))
+			return
+		}
+		if !isTeamAdmin {
+			c.JSON(403, common.RespError(e.NoPermission))
+			return
+		}
+	}
+
+	_, err = db.Conn.Exec("DELETE FROM variable WHERE id=?", id)
 	if err != nil {
 		logger.Warn("delete variable error", "error", err)
 		c.JSON(500, common.RespError(e.Internal))
@@ -167,4 +203,14 @@ func isVariableNameValid(name string) bool {
 	}
 
 	return true
+}
+
+func getVariableTeamId(id int64) (int64, error) {
+	var teamId int64
+	err := db.Conn.QueryRow("SELECT team_id FROM variable WHERE id=?", id).Scan(&teamId)
+	if err != nil {
+		return 0, err
+	}
+
+	return teamId, nil
 }

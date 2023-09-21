@@ -12,7 +12,6 @@
 // limitations under the License.
 
 import { Box, Heading, HStack, Text, useColorModeValue, useMediaQuery } from "@chakra-ui/react"
-import PageContainer from "layouts/PageContainer"
 import customColors from "src/theme/colors"
 import { Route } from "types/route"
 import React from "react"
@@ -24,7 +23,7 @@ import Loading from "src/components/loading/Loading"
 
 interface Props {
     title: string
-    subTitle?: string
+    subTitle?: any
     icon?: any
     children: React.ReactNode
     tabs?: Route[]
@@ -45,9 +44,9 @@ const Page = (props: Props) => {
         <Box width="100%">
             <HStack spacing="4" px={!isMobileScreen ? 12 : 6} pt="10" pb="10">
                 <Box fontSize="40px">{icon}</Box>
-                <Box>
+                <Box width="100%">
                     <Box textStyle="mainTitle">{title}</Box>
-                    <Text mt="1" ml="1">{subTitle}</Text>
+                    {typeof subTitle == "string" ?  <Text mt="1" ml="1">{subTitle}</Text> : subTitle}
                 </Box>
 
 

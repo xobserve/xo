@@ -18,10 +18,9 @@ import AccountSetting from "src/pages/account/Setting";
 import NewDashboardPage from "pages/new/Dashboard";
 import NewDatasourcePage from "src/pages/new/Datasource";
 import ImportDashboardPage from "src/pages/new/Import";
-import DatasourcesPage from "src/pages/cfg/Datasources";
-import TeamsPage from "src/pages/cfg/Teams";
-import GlobalVariablesPage from "src/pages/cfg/Variables";
-import UsersPage from "pages/cfg/Users"; 
+import DatasourcesPage from "pages/cfg/team/[id]/Datasources";
+import TeamsPage from "pages/cfg/Teams";
+import GlobalVariablesPage from "pages/cfg/team/[id]/Variables";
 import TeamDashboardsPage from "src/pages/cfg/team/[id]/Dashboards";
 import TeamMembersPage from "src/pages/cfg/team/[id]/Members";
 import TeamSettingPage from "src/pages/cfg/team/[id]/Setting";
@@ -29,11 +28,13 @@ import TeamSidemenuPage from "src/pages/cfg/team/[id]/Sidemenu";
 import TestPage from "src/pages/Test";
 import loadable from '@loadable/component';
 import PageContainer from "layouts/PageContainer";
-import { Navigate } from "react-router-dom";
 import AdminPage from "src/pages/admin/AuditLogs";
 import GithubLogin from "src/pages/GithubLogin";
-import AdminUsers from "src/pages/admin/UserStats";
+import  AdminUserStats  from "src/pages/admin/UserStats";
 import TeamLayout from "src/pages/cfg/team/[id]/components/Layout";
+import AdminUsers from "pages/admin/Users";
+import TeamDatasources from "pages/cfg/team/[id]/Datasources";
+import TeamVariablesPage from "pages/cfg/team/[id]/Variables";
 
 
 const DashboardPage = loadable(() => import('src/pages/dashboard/index'));
@@ -49,20 +50,18 @@ const teamPageContainer = ele => {
 
 const cfgRoutes = [
   {
-    path: "/cfg/datasources",
-    element: pageContainer(<DatasourcesPage />),
-  },
-  {
     path: "/cfg/teams",
     element: pageContainer(<TeamsPage />),
   },
-  {
-    path: "/cfg/variables",
-    element: pageContainer(<GlobalVariablesPage />),
+    {
+    path: "/cfg/team/:id/datasources",
+    //@ts-ignore
+    element: pageContainer(teamPageContainer(<TeamDatasources />)),
   },
   {
-    path: "/cfg/users",
-    element: pageContainer(<UsersPage />),
+    path: "/cfg/team/:id/variables",
+    //@ts-ignore
+    element: pageContainer(teamPageContainer(<TeamVariablesPage />)),
   },
   {
     path: "/cfg/team/:id/dashboards",
@@ -105,6 +104,10 @@ const adminRoutes = [
   {
     path: "/admin/audit",
     element: pageContainer(<AdminPage />),
+  },
+  {
+    path: "/admin/userStats",
+    element: pageContainer(<AdminUserStats />),
   },
   {
     path: "/admin/users",

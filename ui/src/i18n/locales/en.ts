@@ -126,6 +126,7 @@ export const commonMsg = i18n("common", {
   "sortWeight": "Sort weight",
   "textinput": "Text input",
   "landscapeModeTips":"Please turn your phone to landscape mode for better experience.",
+  "userStats": "User stats",
   "inputTips": params("Enter {name}.."),
   "isReqiiured": params("{name} is required"),
   "isInvalid": params("{name} is invalid"),
@@ -219,8 +220,9 @@ export const cfgUsers = i18n("cfgUsers", {
 
 
 export const cfgTeam = i18n("cfgTeam", {
-  "title": "Manage Your Team",
+  "title": "Team configuration",
   "subTitle": "Current team",
+  "viewAllTeams": "View all teams",
   "roleInTeam": "Role in team",
   "leaveTeam": "Leave Team",
   "isPublic": "Public",

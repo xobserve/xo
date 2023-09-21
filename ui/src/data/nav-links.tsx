@@ -1,5 +1,5 @@
 import React from 'react'
-import { FaConnectdevelop,  FaTerminal, FaUser, FaUserEdit,  FaUsersCog } from 'react-icons/fa'
+import { FaConnectdevelop,  FaTerminal, FaUser, FaUserCog, FaUserEdit,  FaUsersCog } from 'react-icons/fa'
 import { Route } from 'types/route'
 import { MdOutlineAdminPanelSettings } from 'react-icons/md';
 
@@ -50,38 +50,26 @@ export const adminLinks = [
         icon: <MdOutlineAdminPanelSettings />
     },
     {
+        title: 'userStats',
+        url: '/admin/userStats',
+        baseUrl: '/admin/userStats',
+        icon: <FaUser />
+    },
+    {
         title: 'user',
         url: '/admin/users',
         baseUrl: '/admin/users',
-        icon: <FaUser />
-    }
+        icon: <FaUserCog />
+    },
 ]
 
 export const cfgLinks = [
-    {
-        title: 'datasource',
-        url: '/cfg/datasources',
-        baseUrl: '/cfg/datasources',
-        icon: <FaConnectdevelop />
-    },
-    {
-        title: 'variable',
-        url: '/cfg/variables',
-        baseUrl: '/cfg/variables',
-        icon: <FaTerminal />
-    },
     {
         title: 'team',
         url: '/cfg/teams',
         baseUrl: '/cfg/teams',
         icon: <FaUsersCog />
     },
-    {
-        title: 'user',
-        url: '/cfg/users',
-        baseUrl: '/cfg/users',
-        icon: <FaUser />
-    }
 ]
 
 

@@ -26,6 +26,7 @@ export interface Variable {
     enableMulti?: boolean
     enableAll?: boolean
     sortWeight?: number
+    teamId?: number
 }
 
 export enum VariableQueryType {

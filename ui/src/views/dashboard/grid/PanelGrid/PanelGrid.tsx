@@ -367,7 +367,7 @@ export const PanelComponent = ({ dashboard, panel, variables, onRemovePanel, onH
                     marginLeft={panel.type == PanelType.Graph ? -10 + panel.styles.marginLeft + 'px' : panel.styles.marginLeft + 'px'}
                     marginTop={panel.styles.marginTop + 'px'}
                 >
-                    <CustomPanelRender dashboardId={dashboard.id} panel={panel} data={data} height={panelInnerHeight - panel.styles.heightReduction} width={panelInnerWidth - panel.styles.widthReduction} sync={sync} timeRange={timeRange} />
+                    <CustomPanelRender dashboardId={dashboard.id} teamId={dashboard.ownedBy} panel={panel} data={data} height={panelInnerHeight - panel.styles.heightReduction} width={panelInnerWidth - panel.styles.widthReduction} sync={sync} timeRange={timeRange} />
                 </Box>
             </ErrorBoundary>
 
