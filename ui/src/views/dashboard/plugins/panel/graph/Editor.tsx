@@ -242,3 +242,4 @@ const GraphPanelEditor = memo((props: PanelEditorProps) => {
 })
 
 export default GraphPanelEditor
+

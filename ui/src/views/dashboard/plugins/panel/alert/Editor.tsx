@@ -33,6 +33,8 @@ import { ClickActionsEditor } from "src/views/dashboard/edit-panel/components/Cl
 import HttpQueryEditor from "../../datasource/http/QueryEditor"
 import { AlertFilter } from "types/panel/plugins"
 import { $datasources } from "src/views/datasource/store"
+import { externalDatasourcePlugins } from "../../externalPlugins"
+import { cloneDeep } from "lodash"
 
 const AlertPanelEditor = memo((props: PanelEditorProps) => {
     const { panel, onChange } = props
@@ -163,6 +165,14 @@ export const AlertFilterEditor = ({ panel, filter, onChange }: AlertFilterProps)
     const t1 = useStore(alertMsg)
     const t = useStore(commonMsg)
     const datasources = useStore($datasources)
+
+    const dsSupportAlerts = cloneDeep(datasourceSupportAlerts)
+    Object.entries(externalDatasourcePlugins).forEach(([dsType, ds]) => {
+        if (ds.queryAlerts) {
+            dsSupportAlerts.push(dsType as any)
+        }
+    })
+
     return <PanelAccordion title={t1.alertFilter}>
         <PanelEditItem title="Enable">
             <Switch isChecked={filter.enableFilter} onChange={(e) => {
@@ -198,7 +208,7 @@ export const AlertFilterEditor = ({ panel, filter, onChange }: AlertFilterProps)
         </PanelEditItem>
         <PanelEditItem title={t.datasource} desc={t1.datasourceTips}>
             <Select style={{ minWidth: "300px" }} value={filter.datasources} allowClear mode="multiple" options={
-                datasources.filter(ds => datasourceSupportAlerts.includes(ds.type)).map(ds => ({ label: ds.name, value: ds.id }))} onChange={
+                datasources.filter(ds => dsSupportAlerts.includes(ds.type)).map(ds => ({ label: ds.name, value: ds.id }))} onChange={
                     (v) => {
                         onChange((panel: Panel) => {
                             switch (panel.type) {

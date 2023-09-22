@@ -28,6 +28,7 @@ import { replaceWithVariablesHasMultiValues } from "utils/variable"
 import { $variables } from "src/views/variables/store"
 import { getDatasource, roundDsTime } from "utils/datasource"
 import isURL from "validator/lib/isURL"
+import { replacePrometheusQueryWithVariables } from "../prometheus/query_runner"
 
 export const runQuery = async (panel: Panel, q: PanelQuery, range: TimeRange, ds: Datasource) => {
     if (isEmpty(q.metrics)) {
@@ -146,28 +147,7 @@ export const queryVariableValues = async (variable: Variable) => {
 
 
 export const replaceQueryWithVariables = (query: PanelQuery,interval: string) => {
-    const vars = $variables.get()
-    const formats = parseVariableFormat(query.metrics);
-    for (const f of formats) {
-        if (f == VariableInterval) {
-            query.metrics = query.metrics.replaceAll(`\${${f}}`, interval);
-            continue;
-        }
-        
-        const v = vars.find(v => v.name == f)
-        if (v) {
-            let selected = []
-            if (v.selected == VarialbeAllOption) {
-                selected = v.values?.filter(v1 => v1 != VarialbeAllOption) ?? []
-            } else {
-                selected = v.selected?.split(VariableSplitChar) ?? []
-            }
-            const joined = selected.join('|')
-            if (joined) {
-                query.metrics = query.metrics.replaceAll(`\${${f}}`,joined );
-            }
-        }
-    }   
+    replacePrometheusQueryWithVariables(query,interval)   
 }
 
 export const queryAlerts = async (panel:Panel, timeRange: TimeRange, ds:Datasource) => {

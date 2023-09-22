@@ -18,6 +18,7 @@ import { replaceJaegerQueryWithVariables } from "src/views/dashboard/plugins/dat
 import { VariableSplitChar, VarialbeAllOption } from "src/data/variable";
 import { $variables } from "src/views/variables/store";
 import { isEmpty } from "./validate";
+import { externalDatasourcePlugins } from "src/views/dashboard/plugins/externalPlugins";
 
 export const hasVariableFormat = (s: string) => {
     return isEmpty(s) ? false : s.includes("${")
@@ -63,6 +64,10 @@ export const replaceQueryWithVariables = (q: PanelQuery, datasource: DatasourceT
             replacePrometheusQueryWithVariables(q, interval)
             break
         default:
+            const p = externalDatasourcePlugins[datasource]
+            if (p && p.replaceQueryWithVariables) {
+                p.replaceQueryWithVariables(q, interval)
+            }
             break;
     } 
 }

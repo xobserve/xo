@@ -10,8 +10,8 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-import { Box, Button, HStack, Image, Input, Select, Text, useToast } from "@chakra-ui/react"
-import { isEmpty } from "lodash"
+import { Box, Button, Divider, HStack, Image, Input, Select, Text, useToast } from "@chakra-ui/react"
+import { isEmpty, upperFirst } from "lodash"
 import { checkAndTestHttp } from "src/views/dashboard/plugins/datasource/http/query_runner"
 import { checkAndTestJaeger } from "src/views/dashboard/plugins/datasource/jaeger/query_runner"
 import { checkAndTestPrometheus } from "src/views/dashboard/plugins/datasource/prometheus/query_runner"
@@ -32,6 +32,8 @@ import LokiDatasourceEditor from "../dashboard/plugins/datasource/loki/Datasourc
 import { $teams } from "../team/store"
 import { useSearchParam } from "react-use"
 import { FormSection } from "components/form/Form"
+import { externalDatasourcePlugins } from "../dashboard/plugins/externalPlugins"
+import externalDsList  from 'public/plugins/external/datasource/plugins.json'
 
 interface Props {
     ds: Datasource
@@ -44,8 +46,13 @@ const DatasourceEditor = ({ ds, onChange = null, teamEditable=true }: Props) => 
     const t1 = useStore(newMsg)
     const toast = useToast()
     const [datasource, setDatasource] = useImmer<Datasource>(ds)
-    const [teamId, setTeamId] = useState( useSearchParam('teamId')??ds.teamId)
+    const [teamId, setTeamId] = useState( useSearchParam('teamId')?? (ds.teamId))
     const teams = useStore($teams)
+
+
+    const externalDs = externalDatasourcePlugins[datasource.type]
+    const dsIcon =  externalDs ? `/plugins/external/datasource/${datasource.type}.svg`  : `/plugins/datasource/${datasource.type}.svg`
+    const ExternalEditor = externalDs && externalDs.datasourceEditor
 
     const saveDatasource = async () => {
         await requestApi.post("/datasource/save", {...datasource,teamId: Number(teamId)})
@@ -95,6 +102,10 @@ const DatasourceEditor = ({ ds, onChange = null, teamEditable=true }: Props) => 
                 passed = true
                 break
             default:
+                if (externalDs && externalDs.testDatasource) {
+                    passed = await externalDs.testDatasource(datasource)
+                    break
+                }
                 passed = false
                 break
         }
@@ -113,9 +124,10 @@ const DatasourceEditor = ({ ds, onChange = null, teamEditable=true }: Props) => 
         })
     }
 
+
     return (<Box sx={{
         ".form-item-label": {
-            width: "100px"
+            width: "120px"
         }
     }}>
         <FormSection>
@@ -134,8 +146,12 @@ const DatasourceEditor = ({ ds, onChange = null, teamEditable=true }: Props) => 
                         {Object.keys(DatasourceType).map((key, index) => {
                             return <option key={index} value={DatasourceType[key]}>{key}</option>
                         })}
+                        <Divider />
+                        {externalDsList.map(ds => {
+                            return <option key={ds.type} value={ds.type}>{upperFirst(ds.type)}</option>
+                        })}
                     </Select>
-                    <Image width="30px" height="30px" src={`/plugins/datasource/${datasource.type}.svg`} />
+                    <Image width="30px" height="30px" src={dsIcon} />
                 </HStack>
             </FormItem>
             <FormItem title={t1.belongTeam}>
@@ -157,6 +173,7 @@ const DatasourceEditor = ({ ds, onChange = null, teamEditable=true }: Props) => 
             {datasource.type == DatasourceType.TestData && <TestDataDatasourceEditor datasource={datasource} onChange={setDatasource} />}
             {datasource.type == DatasourceType.Jaeger && <JaegerDatasourceEditor datasource={datasource} onChange={setDatasource} />}
             {datasource.type == DatasourceType.Loki && <LokiDatasourceEditor datasource={datasource} onChange={setDatasource} />}
+            {ExternalEditor && <ExternalEditor datasource={datasource} onChange={setDatasource} />}
             <Button onClick={testDatasource} size="sm" mt="4">{t.test} & {t.save}</Button>
         </FormSection>
     </Box>)

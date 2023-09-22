@@ -68,7 +68,7 @@ import AlertPanel from "../../plugins/panel/alert/Alert";
 import ErrorBoundary from "src/components/ErrorBoudary";
 import { $datasources } from "src/views/datasource/store";
 import { Datasource } from "types/datasource";
-import { externalPanelPlugins } from "../../plugins/externalPlugins";
+import { externalDatasourcePlugins, externalPanelPlugins } from "../../plugins/externalPlugins";
 
 interface PanelGridProps {
     dashboard: Dashboard
@@ -259,6 +259,10 @@ export const PanelComponent = ({ dashboard, panel, variables, onRemovePanel, onH
                         res = run_loki_query(panel, q, timeRange, datasource)
                         break
                     default:
+                        const p = externalDatasourcePlugins[datasource.type]
+                        if (p && p.runQuery) {
+                            res = p.runQuery(panel, q, timeRange, datasource)
+                        }
                         break;
                 }
 
@@ -519,6 +523,10 @@ export const queryAlerts = async (panel: Panel, timeRange: TimeRange, dsIds: num
                 res.data.fromDs = ds.type
                 break
             default:
+                const p = externalDatasourcePlugins[ds.type]
+                if (p && p.queryAlerts) {
+                    res = await p.queryAlerts(panel, timeRange, ds)
+                }
                 break;
         }
 

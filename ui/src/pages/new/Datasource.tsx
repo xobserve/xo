@@ -21,12 +21,14 @@ import {  DatasourceType } from "types/dashboard"
 import { Datasource } from "types/datasource"
 import { commonMsg, newMsg } from "src/i18n/locales/en"
 import { useStore } from "@nanostores/react"
+import { globalTeamId } from "types/teams"
 
 const initDatasource: Datasource = {
     id: 0,
     name: '',
     url: '',
-    type: DatasourceType.Prometheus
+    type: DatasourceType.Prometheus,
+    teamId: globalTeamId
 }
 
 const NewDatasourcePage = () => {

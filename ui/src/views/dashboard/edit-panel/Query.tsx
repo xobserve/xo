@@ -34,8 +34,8 @@ import LokiQueryEditor from "../plugins/datasource/loki/QueryEditor"
 import DatasourceSelect from "src/components/datasource/Select"
 import { getDatasource } from "utils/datasource"
 import { isNumber } from "lodash"
-import { id } from "date-fns/locale"
 import { $datasources } from "src/views/datasource/store"
+import { externalDatasourcePlugins } from "../plugins/externalPlugins"
 
 interface Props {
     panel: Panel
@@ -107,11 +107,14 @@ const EditPanelQuery = (props: Props) => {
             })
         }
     const currentDatasource = getDatasource(panel.datasource.id)
+    const externalDs = externalDatasourcePlugins[currentDatasource?.type]
+    const dsIcon = externalDs ? `/plugins/external/datasource/${currentDatasource?.type}.svg`  : `/plugins/datasource/${currentDatasource?.type}.svg`
+    
     return (<>
         <Box className="bordered" p="2" borderRadius="0" height="100%">
             <Flex justifyContent="space-between" alignItems="start">
                 <HStack>
-                    <Image width="30px" height="30px" src={`/plugins/datasource/${currentDatasource?.type}.svg`} />
+                    <Image width="30px" height="30px" src={dsIcon} />
                     <Box width="200px"><DatasourceSelect value={panel.datasource.id} onChange={selectDatasource}  variant="unstyled" /></Box>
                     {!isNumber(panel.datasource.id) && <Text textStyle="annotation">current: {currentDatasource?.name}</Text>}
                 </HStack>
@@ -191,6 +194,7 @@ const CustomQueryEditor = ({ panel,query, onChange, selected,dsType }) => {
         })
     }
 
+    
     //@needs-update-when-add-new-datasource
     switch (dsType) {
         case DatasourceType.Prometheus:
@@ -204,6 +208,10 @@ const CustomQueryEditor = ({ panel,query, onChange, selected,dsType }) => {
         case DatasourceType.Loki:
             return <LokiQueryEditor datasource={selected} query={query} onChange={onQueryChange} panel={panel} />
         default:
+            const p =  externalDatasourcePlugins[dsType]
+            if (p && p.queryEditor) {
+                return <p.queryEditor datasource={selected} query={query} onChange={onQueryChange} panel={panel} />
+            }
             return <></>
     }
 }

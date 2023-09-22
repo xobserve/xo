@@ -39,6 +39,7 @@ import { Datasource } from "types/datasource"
 import Loading from "components/loading/Loading"
 import { EditorInputItem } from "components/editor/EditorItem"
 import { $teams } from "../team/store"
+import { externalDatasourcePlugins } from "../dashboard/plugins/externalPlugins"
 
 interface Props {
     variables: Variable[]
@@ -344,6 +345,7 @@ export const queryVariableValues = async (v: Variable, datasources: Datasource[]
         data: null
     }
 
+
     if (v.type == VariableQueryType.Custom) {
         if (v.value.trim() != "") {
             result.data = v.value.split(",")
@@ -367,6 +369,10 @@ export const queryVariableValues = async (v: Variable, datasources: Datasource[]
                 result = await queryLokiVariableValues(v)
                 break
             default:
+                const p = externalDatasourcePlugins[ds?.type]
+                if (p && p.queryVariableValues) {
+                    result = await p.queryVariableValues(v)
+                }
                 break;
         }
     }

@@ -47,6 +47,7 @@ import { addParamToUrl, removeParamFromUrl } from "utils/url"
 import { useSearchParam } from "react-use"
 import { $datasources } from "src/views/datasource/store"
 import { Team } from "types/teams"
+import { externalDatasourcePlugins } from "src/views/dashboard/plugins/externalPlugins"
 
 
 
@@ -359,6 +360,13 @@ export const EditVariable = ({ v, isOpen, onClose, isEdit, onSubmit, isGlobal = 
     }, [variable, variableValues])
 
 
+    const externalDsList = Object.entries(externalDatasourcePlugins).filter(([k, v]) => v.variableEditor)
+    const allowTypes = []
+    externalDsList.forEach(([k, v]) => {
+        allowTypes.push(k)
+    })
+
+    const ExternalEditor = externalDsList.find(([k, v]) => k == currentDatasource?.type)?.[1]?.variableEditor
 
     return (<>
         <Modal isOpen={isOpen} onClose={onClose} size="full">
@@ -420,7 +428,7 @@ export const EditVariable = ({ v, isOpen, onClose, isEdit, onSubmit, isGlobal = 
                             {variable.type == VariableQueryType.Query && <>
                                 <FormItem title={t1.selectDs}>
                                     <Box width="100%">
-                                        <DatasourceSelect value={variable.datasource} onChange={id => setVariable(v => { v.datasource = id; v.value = "" })} allowTypes={[DatasourceType.Prometheus, DatasourceType.ExternalHttp, DatasourceType.Jaeger, DatasourceType.Loki]} variant="outline" /></Box>
+                                        <DatasourceSelect value={variable.datasource} onChange={id => setVariable(v => { v.datasource = id; v.value = "" })} allowTypes={[DatasourceType.Prometheus, DatasourceType.ExternalHttp, DatasourceType.Jaeger, DatasourceType.Loki, ...allowTypes]} variant="outline" /></Box>
                                 </FormItem>
                                 {/* @needs-update-when-add-new-variable-datasource */}
                                 {
@@ -434,6 +442,9 @@ export const EditVariable = ({ v, isOpen, onClose, isEdit, onSubmit, isGlobal = 
                                 }
                                 {
                                     currentDatasource?.type == DatasourceType.Loki && <LokiVariableEditor variable={variable} onChange={setVariable} onQueryResult={onQueryResult} />
+                                }
+                                {
+                                    ExternalEditor && <ExternalEditor variable={variable} onChange={setVariable} onQueryResult={onQueryResult}/>
                                 }
                             </>
                             }

@@ -4,5 +4,5 @@ export const datasourceSupportAlerts = [
     DatasourceType.Prometheus,
     DatasourceType.Loki,
     DatasourceType.TestData,
-    DatasourceType.ExternalHttp
+    DatasourceType.ExternalHttp,
 ]

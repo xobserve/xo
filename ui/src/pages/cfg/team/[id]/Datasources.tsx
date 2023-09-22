@@ -25,8 +25,9 @@ import { useNavigate } from "react-router-dom"
 import { useStore } from "@nanostores/react"
 import { cfgDatasourceMsg, commonMsg } from "src/i18n/locales/en"
 import { Team } from "types/teams"
+import { externalDatasourcePlugins } from "src/views/dashboard/plugins/externalPlugins"
 
-const TeamDatasources = ({team}: {team:Team}) => {
+const TeamDatasources = ({ team }: { team: Team }) => {
     const t = useStore(commonMsg)
     const t1 = useStore(cfgDatasourceMsg)
     const toast = useToast()
@@ -84,26 +85,30 @@ const TeamDatasources = ({team}: {team:Team}) => {
 
             <VStack alignItems="left" spacing={3} mt="3">
                 {
-                    datasources?.map(ds => <Flex key={ds.id} className={`${datasource?.id == ds.id ? "tag-bg" : ""} label-bg`} p="4" alignItems="center" justifyContent="space-between">
-                        <HStack>
-                            <Image width="50px" height="50px" src={`/plugins/datasource/${ds.type}.svg`} />
-                            <Box>
-                                <Text fontWeight="550">{ds.name}</Text>
-                                <Text textStyle="annotation" mt="1">{ds.type}  {!isEmpty(ds.url) && ` · ` + ds.url} {ds.id == InitTestDataDatasourceId && <Tag size="sm" ml="1"> default</Tag>}</Text>
-                            </Box>
-                        </HStack>
+                    datasources?.map(ds => {
+                        const externalDs = externalDatasourcePlugins[ds.type]
+                        const dsIcon = externalDs ? `/plugins/external/datasource/${ds.type}.svg` : `/plugins/datasource/${ds.type}.svg`
+                        return <Flex key={ds.id} className={`${datasource?.id == ds.id ? "tag-bg" : ""} label-bg`} p="4" alignItems="center" justifyContent="space-between">
+                            <HStack>
+                                <Image width="50px" height="50px" src={dsIcon} />
+                                <Box>
+                                    <Text fontWeight="550">{ds.name}</Text>
+                                    <Text textStyle="annotation" mt="1">{ds.type}  {!isEmpty(ds.url) && ` · ` + ds.url} {ds.id == InitTestDataDatasourceId && <Tag size="sm" ml="1"> default</Tag>}</Text>
+                                </Box>
+                            </HStack>
 
-                        {ds.id != InitTestDataDatasourceId && <HStack spacing={1}>
-                            <Button size="sm" variant="ghost" onClick={() => {
-                                setDatasource(ds)
-                                onOpen()
-                            }}>{t.edit}</Button>
-                            <Button size="sm" variant="ghost" colorScheme="orange" onClick={() => {
-                                onAlertOpen()
-                                setDatasource(ds)
-                            }}>{t.delete}</Button>
-                        </HStack>}
-                    </Flex>)
+                            {ds.id != InitTestDataDatasourceId && <HStack spacing={1}>
+                                <Button size="sm" variant="ghost" onClick={() => {
+                                    setDatasource(ds)
+                                    onOpen()
+                                }}>{t.edit}</Button>
+                                <Button size="sm" variant="ghost" colorScheme="orange" onClick={() => {
+                                    onAlertOpen()
+                                    setDatasource(ds)
+                                }}>{t.delete}</Button>
+                            </HStack>}
+                        </Flex>
+                    })
                 }
             </VStack>
         </Box>
@@ -118,7 +123,7 @@ const TeamDatasources = ({team}: {team:Team}) => {
                             width: '50px'
                         }
                     }}>
-                        {datasource && <DatasourceEditor ds={datasource} onChange={onChange} teamEditable={false}/>}
+                        {datasource && <DatasourceEditor ds={datasource} onChange={onChange} teamEditable={false} />}
                     </Form>
                 </ModalBody>
             </ModalContent>

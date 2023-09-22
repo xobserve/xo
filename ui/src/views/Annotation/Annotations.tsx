@@ -31,6 +31,7 @@ import { filterAlerts } from '../dashboard/plugins/panel/alert/Alert';
 import { AlertRule } from 'types/plugins/alert';
 import { AlertState } from 'types/alert';
 import { useColorMode } from '@chakra-ui/react';
+import { $datasources } from '../datasource/store';
 
 interface AnnotationsPluginProps {
   panel: Panel
@@ -47,6 +48,7 @@ export const AnnotationsPlugin = ({ panel, dashboardId, options, timeRange }: An
 
   const plotInstance = useRef<uPlot>();
   const [annotation, setAnnotation] = useState<Annotation>(null)
+  const datasources = $datasources.get()
   useEffect(() => {
     if (panel.plugins.graph.enableAlert) {
       loadAlerts()
@@ -58,7 +60,7 @@ export const AnnotationsPlugin = ({ panel, dashboardId, options, timeRange }: An
 
   const loadAlerts = async () => {
     const timeRange = getCurrentTimeRange()
-    const res = await queryAlerts(panel, timeRange, panel.plugins.graph.alertFilter.datasources, panel.plugins.graph.alertFilter.httpQuery)
+    const res = await queryAlerts(panel, timeRange, panel.plugins.graph.alertFilter.datasources, panel.plugins.graph.alertFilter.httpQuery, datasources)
 
     const enableFilter =  panel.plugins.graph.alertFilter.enableFilter
     let alerts = []
