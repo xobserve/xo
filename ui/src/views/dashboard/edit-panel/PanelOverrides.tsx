@@ -34,12 +34,21 @@ import { PanelForceRebuildEvent } from "src/data/bus-events";
 import { MobileBreakpoint } from "src/data/constants";
 import PieOverridesEditor from "../plugins/panel/pie/OverridesEditor";
 import { externalpanelPlugins } from "../plugins/externalPlugins";
+import { isEmpty } from "utils/validate";
 
 const PanelOverrides = ({ panel, onChange, data }: PanelEditorProps) => {
     const t1 = useStore(panelMsg)
 
     const overrides = panel.overrides
     const names: { label: string; value: string }[] = useMemo(() => {
+        const p = externalpanelPlugins[panel.type]
+        if (p) {
+            const r = p.getOverrideTargets(panel, data)
+            if (!isEmpty(r)) {
+                return r
+            }
+        }
+
         switch (panel.type) {
             case PanelType.Table:
                 const res = []
@@ -55,7 +64,6 @@ const PanelOverrides = ({ panel, onChange, data }: PanelEditorProps) => {
                     }
                 }
                 return res
-
 
             default:
                 return flatten(data)?.map((s: any) => {
@@ -107,6 +115,7 @@ const PanelOverrides = ({ panel, onChange, data }: PanelEditorProps) => {
     }
 
     const [isLargeScreen] = useMediaQuery(MobileBreakpoint)
+    const ExternalOverrideEditor = externalpanelPlugins[panel.type] && externalpanelPlugins[panel.type].overrideEditor
     return (<Form p="2">
         {
             overrides.map((o, i) =>
@@ -188,11 +197,11 @@ const PanelOverrides = ({ panel, onChange, data }: PanelEditorProps) => {
                                 }} />
                             }
                             {
-                                externalpanelPlugins[panel.type] &&  React.cloneElement(externalpanelPlugins[panel.type].overrideEditor, { override: rule, onChange: (v) => {
+                                ExternalOverrideEditor &&  <ExternalOverrideEditor override={rule} onChange={(v) => {
                                     onChange((panel: Panel) => {
                                         panel.overrides[i].overrides[j].value = v
                                     })
-                                }}) 
+                                }} />
                             }
                             <Box position="absolute" right="1" top="5px" cursor="pointer" onClick={() => removeRule(i, j)}><FaTimes fontSize="0.8rem" /></Box>
                         </FormSection>

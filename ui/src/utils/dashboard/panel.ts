@@ -65,6 +65,7 @@ export const getPanelOverridesRules = (panelType, externalPanels:  Record<string
             if (!p) {
                 return []
             }
-            return p.overrideRules
+            const rules = p.overrideRules
+            return  Object.keys(rules).map(k => rules[k])
     }
 }

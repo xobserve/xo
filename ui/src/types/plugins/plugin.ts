@@ -3,4 +3,5 @@ export interface PanelPluginComponents {
     editor: any,
     overrideEditor: any,
     overrideRules: any,
+    getOverrideTargets: (panel,data) => any
 }
