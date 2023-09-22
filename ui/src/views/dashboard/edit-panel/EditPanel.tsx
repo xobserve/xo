@@ -11,7 +11,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { Box, Button, Flex, HStack, Modal, ModalBody, ModalContent, ModalHeader, ModalOverlay, Tab, TabIndicator, TabList, TabPanel, TabPanels, Tabs, Text, useDisclosure, useMediaQuery } from "@chakra-ui/react"
+import { Box, Button, Flex, HStack, Modal, ModalBody, ModalContent, ModalHeader, ModalOverlay, Tab, TabIndicator, TabList, TabPanel, TabPanels, Tabs, Text, useDisclosure, useMediaQuery, useToast } from "@chakra-ui/react"
 import { ColorModeSwitcher } from "src/components/ColorModeSwitcher"
 import { memo, useCallback, useEffect, useState } from "react"
 import { Dashboard, Panel, PanelType } from "types/dashboard"
@@ -60,7 +60,8 @@ import { translateGridHeightToScreenHeight } from "../grid/DashboardGrid"
 import { $variables } from "src/views/variables/store"
 import CustomScrollbar from "components/CustomScrollbar/CustomScrollbar"
 import SelectVariables from "src/views/variables/SelectVariable"
-import { externalpanelPlugins } from "../plugins/externalPlugins"
+import { externalPanelPlugins } from "../plugins/externalPlugins"
+import ErrorBoundary from "components/ErrorBoudary"
 
 interface EditPanelProps {
     dashboard: Dashboard
@@ -220,7 +221,7 @@ const EditPanel = memo(({ dashboard, onChange, edit }: EditPanelProps) => {
         return '0%'
     }
 
-    const panelOverridesRules = getPanelOverridesRules(tempPanel?.type, externalpanelPlugins)
+    const panelOverridesRules = getPanelOverridesRules(tempPanel?.type, externalPanelPlugins)
     const onValueMappingChange = useCallback((v) => {
         setTempPanel((tempPanel: Panel) => {
             tempPanel.valueMapping = v
@@ -268,6 +269,7 @@ const EditPanel = memo(({ dashboard, onChange, edit }: EditPanelProps) => {
         <Modal isOpen={isOpen} onClose={onEditClose} autoFocus={false} size="full">
             <ModalOverlay />
             {dashboard && tempPanel &&
+
                 <ModalContent>
                     {/* editor header section */}
                     <ModalHeader px="3" pt="3" pb="0">
@@ -286,112 +288,115 @@ const EditPanel = memo(({ dashboard, onChange, edit }: EditPanelProps) => {
                         </Flex>
                     </ModalHeader>
                     <ModalBody pt={isLargeScreen ? 1 : 0}>
-                        <HStack height="calc(100vh - 80px)" alignItems="top">
-                            <Box width="65%" height={`calc(100% - 20px)`}>
-                                {!isEmpty(vars) &&
-                                    <Flex mt="0" maxW={`calc(100% - ${10}px)`}>
-                                        <CustomScrollbar hideVerticalTrack>
-                                            <Flex justifyContent="space-between" >
-                                                <SelectVariables variables={dvars} />
-                                                <SelectVariables variables={gvars} />
-                                            </Flex>
-                                        </CustomScrollbar>
-                                    </Flex>}
-                                {/* panel rendering section */}
-                                <Box height={maxPanelHeight()} id="edit-panel-render" position="relative" >
-                                    {view == "fill" ? <AutoSizer>
-                                        {({ width, height }) => {
-                                            if (width === 0) {
-                                                return null;
-                                            }
+                        <ErrorBoundary>
+                            <HStack height="calc(100vh - 80px)" alignItems="top">
+                                <Box width="65%" height={`calc(100% - 20px)`}>
+                                    {!isEmpty(vars) &&
+                                        <Flex mt="0" maxW={`calc(100% - ${10}px)`}>
+                                            <CustomScrollbar hideVerticalTrack>
+                                                <Flex justifyContent="space-between" >
+                                                    <SelectVariables variables={dvars} />
+                                                    <SelectVariables variables={gvars} />
+                                                </Flex>
+                                            </CustomScrollbar>
+                                        </Flex>}
+                                    {/* panel rendering section */}
+                                    <Box height={maxPanelHeight()} id="edit-panel-render" position="relative" >
+                                        {view == "fill" ? <AutoSizer>
+                                            {({ width, height }) => {
+                                                if (width === 0) {
+                                                    return null;
+                                                }
 
 
-                                            return <PanelGrid width={width} height={height} key={tempPanel.id + tempPanel.type} dashboard={dashboard} panel={tempPanel} sync={null} />
-                                        }}
-                                    </AutoSizer> :
-                                        <Box width="100%" display="flex" justifyContent={"center"}>
-                                            <PanelGrid width={w} height={h} key={tempPanel.id + tempPanel.type} dashboard={dashboard} panel={tempPanel} sync={null} />
-                                        </Box>}
-                                    {!tempPanel.plugins[tempPanel.type].disableDatasource && <Box zIndex={1} position="absolute" right="0" bottom={hideDatasource ? "0" : "-35px"} opacity={hideDatasource ? 0.8 : 0.4} cursor="pointer" className={`hover-text ${hideDatasource ? "color-text" : null}`} fontSize=".8rem" onClick={() => { setHideDatasource(!hideDatasource); storage.set(StorageHideDsKey + dashboard.id + tempPanel.id, !hideDatasource) }}>{hideDatasource ? <FaArrowUp /> : <FaArrowDown />}</Box>}
-                                </Box>
-                                {/* panel datasource section */}
-                                {!tempPanel.plugins[tempPanel.type].disableDatasource &&
-                                    <Box maxHeight={maxDatasourceHeight()} mt="2" overflowY="auto">
-                                        <Box position="relative" zIndex={0}>
-                                            <Tabs variant="unstyled" isLazy>
-                                                <TabList pb="0">
-                                                    <Tab>{t.query}</Tab>
-                                                    <Tab>{t.transform}</Tab>
-                                                    {tempPanel.type == PanelType.Graph && tempPanel.plugins.graph.enableAlert && <Tab>{t.alert}</Tab>}
-                                                </TabList>
-                                                <TabIndicator
-                                                    mt="3px"
-                                                    height="2px"
-                                                    bg="brand.500"
-                                                    borderRadius="1px"
-                                                    position="absolute"
-                                                />
-                                                <TabPanels>
-                                                    <TabPanel px="0" pt="1">
-                                                        <EditPanelQuery key={tempPanel.id + tempPanel.type} panel={tempPanel} onChange={setTempPanel} />
-                                                    </TabPanel>
-                                                    <TabPanel px="0" pt="1" pb="0">
-                                                        <EditPanelTransform panel={tempPanel} onChange={setTempPanel} />
-                                                    </TabPanel>
-                                                    {tempPanel.type == PanelType.Graph && tempPanel.plugins.graph.enableAlert &&
+                                                return <PanelGrid width={width} height={height} key={tempPanel.id + tempPanel.type} dashboard={dashboard} panel={tempPanel} sync={null} />
+                                            }}
+                                        </AutoSizer> :
+                                            <Box width="100%" display="flex" justifyContent={"center"}>
+                                                <PanelGrid width={w} height={h} key={tempPanel.id + tempPanel.type} dashboard={dashboard} panel={tempPanel} sync={null} />
+                                            </Box>}
+                                        {!tempPanel.plugins[tempPanel.type].disableDatasource && <Box zIndex={1} position="absolute" right="0" bottom={hideDatasource ? "0" : "-35px"} opacity={hideDatasource ? 0.8 : 0.4} cursor="pointer" className={`hover-text ${hideDatasource ? "color-text" : null}`} fontSize=".8rem" onClick={() => { setHideDatasource(!hideDatasource); storage.set(StorageHideDsKey + dashboard.id + tempPanel.id, !hideDatasource) }}>{hideDatasource ? <FaArrowUp /> : <FaArrowDown />}</Box>}
+                                    </Box>
+                                    {/* panel datasource section */}
+                                    {!tempPanel.plugins[tempPanel.type].disableDatasource &&
+                                        <Box maxHeight={maxDatasourceHeight()} mt="2" overflowY="auto">
+                                            <Box position="relative" zIndex={0}>
+                                                <Tabs variant="unstyled" isLazy>
+                                                    <TabList pb="0">
+                                                        <Tab>{t.query}</Tab>
+                                                        <Tab>{t.transform}</Tab>
+                                                        {tempPanel.type == PanelType.Graph && tempPanel.plugins.graph.enableAlert && <Tab>{t.alert}</Tab>}
+                                                    </TabList>
+                                                    <TabIndicator
+                                                        mt="3px"
+                                                        height="2px"
+                                                        bg="brand.500"
+                                                        borderRadius="1px"
+                                                        position="absolute"
+                                                    />
+                                                    <TabPanels>
+                                                        <TabPanel px="0" pt="1">
+                                                            <EditPanelQuery key={tempPanel.id + tempPanel.type} panel={tempPanel} onChange={setTempPanel} />
+                                                        </TabPanel>
                                                         <TabPanel px="0" pt="1" pb="0">
-                                                            <EditPanelAlert panel={tempPanel} onChange={setTempPanel} />
-                                                        </TabPanel>}
-                                                </TabPanels>
-                                            </Tabs>
+                                                            <EditPanelTransform panel={tempPanel} onChange={setTempPanel} />
+                                                        </TabPanel>
+                                                        {tempPanel.type == PanelType.Graph && tempPanel.plugins.graph.enableAlert &&
+                                                            <TabPanel px="0" pt="1" pb="0">
+                                                                <EditPanelAlert panel={tempPanel} onChange={setTempPanel} />
+                                                            </TabPanel>}
+                                                    </TabPanels>
+                                                </Tabs>
 
-                                        </Box>
+                                            </Box>
 
-                                    </Box>}
-                            </Box>
-                            {/* panel settings section */}
-                            <Box width="35%" maxHeight="100%" overflowY={"auto"} zIndex={1}>
-                                <Box className="top-gradient-border bordered-left bordered-right" >
-                                    <Tabs position="relative" variant="unstyled">
-                                        <TabList pb="0">
-                                            <Tab>{t.panel}</Tab>
-                                            <Tab>{t.styles}</Tab>
-                                            {panelOverridesRules.length > 0 && <Tab>{t1.overrides}  {(tempPanel.overrides.length > 0 && isLargeScreen) && <Text textStyle="annotation">&nbsp; ({tempPanel.overrides.length}/{tempPanel.overrides.reduce((t, v) => t + v.overrides.length, 0)})</Text>}</Tab>}
-                                        </TabList>
-                                        <TabIndicator
-                                            mt="3px"
-                                            height="2px"
-                                            bg="brand.500"
-                                            borderRadius="1px"
-                                        />
-                                        <TabPanels>
-                                            <TabPanel px="0" pt="1">
-                                                {/* panel basic setting */}
-                                                <PanelSettings panel={tempPanel} onChange={onTempPanelChange} />
+                                        </Box>}
+                                </Box>
+                                {/* panel settings section */}
+                                <Box width="35%" maxHeight="100%" overflowY={"auto"} zIndex={1}>
+                                    <Box className="top-gradient-border bordered-left bordered-right" >
+                                        <Tabs position="relative" variant="unstyled">
+                                            <TabList pb="0">
+                                                <Tab>{t.panel}</Tab>
+                                                <Tab>{t.styles}</Tab>
+                                                {panelOverridesRules.length > 0 && <Tab>{t1.overrides}  {(tempPanel.overrides.length > 0 && isLargeScreen) && <Text textStyle="annotation">&nbsp; ({tempPanel.overrides.length}/{tempPanel.overrides.reduce((t, v) => t + v.overrides.length, 0)})</Text>}</Tab>}
+                                            </TabList>
+                                            <TabIndicator
+                                                mt="3px"
+                                                height="2px"
+                                                bg="brand.500"
+                                                borderRadius="1px"
+                                            />
+                                            <TabPanels>
+                                                <TabPanel px="0" pt="1">
+                                                    {/* panel basic setting */}
+                                                    <PanelSettings panel={tempPanel} onChange={onTempPanelChange} />
 
-                                                {/* panel rendering plugin setting */}
-                                                <CustomPanelEditor tempPanel={tempPanel} setTempPanel={onTempPanelChange} data={data} />
+                                                    {/* panel rendering plugin setting */}
+                                                    <CustomPanelEditor tempPanel={tempPanel} setTempPanel={onTempPanelChange} data={data} />
 
-                                                {enableValueMapping && <PanelAccordion title={t.valueMapping} defaultOpen>
-                                                    <ValueMapping value={tempPanel.valueMapping} onChange={onValueMappingChange} />
-                                                </PanelAccordion>}
+                                                    {enableValueMapping && <PanelAccordion title={t.valueMapping} defaultOpen>
+                                                        <ValueMapping value={tempPanel.valueMapping} onChange={onValueMappingChange} />
+                                                    </PanelAccordion>}
 
-                                            </TabPanel>
-                                            <TabPanel px="0" pt="1" pb="0">
-                                                <PanelStyles panel={tempPanel} onChange={setTempPanel} />
-                                            </TabPanel>
-                                            <TabPanel px="0" pt="1" pb="0">
-                                                <PanelOverrides panel={tempPanel} onChange={setTempPanel} data={data} />
-                                            </TabPanel>
-                                        </TabPanels>
-                                    </Tabs>
+                                                </TabPanel>
+                                                <TabPanel px="0" pt="1" pb="0">
+                                                    <PanelStyles panel={tempPanel} onChange={setTempPanel} />
+                                                </TabPanel>
+                                                <TabPanel px="0" pt="1" pb="0">
+                                                    <PanelOverrides panel={tempPanel} onChange={setTempPanel} data={data} />
+                                                </TabPanel>
+                                            </TabPanels>
+                                        </Tabs>
+
+                                    </Box>
 
                                 </Box>
-
-                            </Box>
-                        </HStack>
+                            </HStack>
+                        </ErrorBoundary>
                     </ModalBody>
-                </ModalContent>}
+                </ModalContent>
+            }
         </Modal>
         {edit && dashboard.data.enableUnsavePrompt && <PageLeave pageChanged={pageChanged} />}
     </>)
@@ -422,12 +427,26 @@ interface CustomPanelEditorProps {
 }
 
 const CustomPanelEditor = memo(({ tempPanel, setTempPanel, data }: CustomPanelEditorProps) => {
+    const toast = useToast()
     const Editor = loadablePanels[tempPanel.type]
     if (Editor) {
         return <Editor panel={tempPanel} onChange={setTempPanel} data={data} />
     }
-
-    const ExternalPluginEditor = externalpanelPlugins[tempPanel.type].editor
+    const p = externalPanelPlugins[tempPanel.type]
+    if (!p) {
+        const toastId = `panel type <${tempPanel.type}> not exist, maybe you need to re-install this plugin`
+        if (!toast.isActive(toastId)) {
+            toast({
+                id: toastId,
+                title: toastId,
+                status: "error",
+                duration: 5000
+            })
+        }
+      
+        return null
+    }
+    const ExternalPluginEditor = p.editor
     if (ExternalPluginEditor) {
         return <ExternalPluginEditor panel={tempPanel} onChange={setTempPanel} data={data} />
     }

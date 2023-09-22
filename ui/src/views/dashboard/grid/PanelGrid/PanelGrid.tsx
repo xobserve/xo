@@ -68,7 +68,7 @@ import AlertPanel from "../../plugins/panel/alert/Alert";
 import ErrorBoundary from "src/components/ErrorBoudary";
 import { $datasources } from "src/views/datasource/store";
 import { Datasource } from "types/datasource";
-import { externalpanelPlugins } from "../../plugins/externalPlugins";
+import { externalPanelPlugins } from "../../plugins/externalPlugins";
 
 interface PanelGridProps {
     dashboard: Dashboard
@@ -402,7 +402,7 @@ const CustomPanelRender = memo((props: PanelProps) => {
         return <P {...props} />
     }
 
-    const ExternalP = externalpanelPlugins[props.panel.type].panel
+    const ExternalP = externalPanelPlugins[props.panel.type].panel
     if (ExternalP) {
         return <ExternalP {...props} />
     }

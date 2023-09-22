@@ -33,7 +33,7 @@ import { dispatch } from "use-bus";
 import { PanelForceRebuildEvent } from "src/data/bus-events";
 import { MobileBreakpoint } from "src/data/constants";
 import PieOverridesEditor from "../plugins/panel/pie/OverridesEditor";
-import { externalpanelPlugins } from "../plugins/externalPlugins";
+import { externalPanelPlugins } from "../plugins/externalPlugins";
 import { isEmpty } from "utils/validate";
 
 const PanelOverrides = ({ panel, onChange, data }: PanelEditorProps) => {
@@ -41,7 +41,7 @@ const PanelOverrides = ({ panel, onChange, data }: PanelEditorProps) => {
 
     const overrides = panel.overrides
     const names: { label: string; value: string }[] = useMemo(() => {
-        const p = externalpanelPlugins[panel.type]
+        const p = externalPanelPlugins[panel.type]
         if (p) {
             const r = p.getOverrideTargets(panel, data)
             if (!isEmpty(r)) {
@@ -78,7 +78,7 @@ const PanelOverrides = ({ panel, onChange, data }: PanelEditorProps) => {
 
 
 
-    const allRules = getPanelOverridesRules(panel.type, externalpanelPlugins)
+    const allRules = getPanelOverridesRules(panel.type, externalPanelPlugins)
 
     const onAddOverride = () => {
         const o = {
@@ -115,7 +115,7 @@ const PanelOverrides = ({ panel, onChange, data }: PanelEditorProps) => {
     }
 
     const [isLargeScreen] = useMediaQuery(MobileBreakpoint)
-    const ExternalOverrideEditor = externalpanelPlugins[panel.type] && externalpanelPlugins[panel.type].overrideEditor
+    const ExternalOverrideEditor = externalPanelPlugins[panel.type] && externalPanelPlugins[panel.type].overrideEditor
     return (<Form p="2">
         {
             overrides.map((o, i) =>
