@@ -121,6 +121,8 @@
     "sortWeight": "排序权重",
     "textinput": "文本输入框",
     "userStats": "用户数据",
+    "builtIn": "内置插件",
+  "external": "外部插件",
     "isAdded": "{name}添加成功!",
     "isUpdated": "{name}更新成功!",
     "isDeleted": "{name}删除成功!",

@@ -152,6 +152,7 @@ const DatasourceEditor = ({ ds, onChange = null, teamEditable=true }: Props) => 
                         })}
                     </Select>
                     <Image width="30px" height="30px" src={dsIcon} />
+                    {externalDs && <Text textStyle="annotation">{t.external}</Text>}
                 </HStack>
             </FormItem>
             <FormItem title={t1.belongTeam}>

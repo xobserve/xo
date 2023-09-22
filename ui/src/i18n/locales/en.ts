@@ -128,6 +128,8 @@ export const commonMsg = i18n("common", {
   "textinput": "Text input",
   "landscapeModeTips":"Please turn your phone to landscape mode for better experience.",
   "userStats": "User stats",
+  "builtIn": "Built-in",
+  "external": "External",
   "inputTips": params("Enter {name}.."),
   "isReqiiured": params("{name} is required"),
   "isInvalid": params("{name} is invalid"),

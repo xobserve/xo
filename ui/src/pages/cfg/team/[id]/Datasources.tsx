@@ -76,38 +76,33 @@ const TeamDatasources = ({ team }: { team: Team }) => {
         closeAlert()
     }
 
+    const builtInDatasources = []
+    const externalDatasources = []
+    datasources?.forEach(ds => {
+        const p = externalDatasourcePlugins[ds.type]
+        if (p) {
+            externalDatasources.push(ds)
+        } else {
+            builtInDatasources.push(ds)
+        }
+    })
     return <>
         <Box>
-            <Flex justifyContent="space-between">
-                <Box></Box>
+            <Flex justifyContent="space-between" alignItems="end">
+                <Text>{t.builtIn}</Text>
                 <Button size="sm" onClick={() => navigate(ReserveUrls.New + `/datasource?teamId=${team.id}`)}>{t.newItem({ name: t.datasource })}</Button>
             </Flex>
 
-            <VStack alignItems="left" spacing={3} mt="3">
+            <VStack alignItems="left" spacing={2} mt="3">
                 {
-                    datasources?.map(ds => {
-                        const externalDs = externalDatasourcePlugins[ds.type]
-                        const dsIcon = externalDs ? `/plugins/external/datasource/${ds.type}.svg` : `/plugins/datasource/${ds.type}.svg`
-                        return <Flex key={ds.id} className={`${datasource?.id == ds.id ? "tag-bg" : ""} label-bg`} p="4" alignItems="center" justifyContent="space-between">
-                            <HStack>
-                                <Image width="50px" height="50px" src={dsIcon} />
-                                <Box>
-                                    <Text fontWeight="550">{ds.name}</Text>
-                                    <Text textStyle="annotation" mt="1">{ds.type}  {!isEmpty(ds.url) && ` · ` + ds.url} {ds.id == InitTestDataDatasourceId && <Tag size="sm" ml="1"> default</Tag>}</Text>
-                                </Box>
-                            </HStack>
-
-                            {ds.id != InitTestDataDatasourceId && <HStack spacing={1}>
-                                <Button size="sm" variant="ghost" onClick={() => {
-                                    setDatasource(ds)
-                                    onOpen()
-                                }}>{t.edit}</Button>
-                                <Button size="sm" variant="ghost" colorScheme="orange" onClick={() => {
-                                    onAlertOpen()
-                                    setDatasource(ds)
-                                }}>{t.delete}</Button>
-                            </HStack>}
-                        </Flex>
+                    builtInDatasources?.map(ds => {
+                        return <DatasourceCard ds={ds} selectedDs={datasource} dsIcon={`/plugins/datasource/${ds.type}.svg`} t={t} onEdit={() => { setDatasource(ds); onOpen() }} onDelete={() => { onAlertOpen(); setDatasource(ds) }} />
+                    })
+                }
+                <Text>{t.external}</Text>
+                {
+                    externalDatasources?.map(ds => {
+                        return <DatasourceCard ds={ds} selectedDs={datasource} dsIcon={`/plugins/external/datasource/${ds.type}.svg`} t={t} onEdit={() => { setDatasource(ds); onOpen() }} onDelete={() => { onAlertOpen(); setDatasource(ds) }} />
                     })
                 }
             </VStack>
@@ -160,3 +155,21 @@ const TeamDatasources = ({ team }: { team: Team }) => {
 
 
 export default TeamDatasources
+
+
+const DatasourceCard = ({ ds, selectedDs, dsIcon, onEdit, onDelete, t }) => {
+    return <Flex key={ds.id} className={`${selectedDs?.id == ds.id ? "tag-bg" : ""} label-bg`} p="4" alignItems="center" justifyContent="space-between">
+        <HStack>
+            <Image width="50px" height="50px" src={dsIcon} />
+            <Box>
+                <Text fontWeight="550">{ds.name}</Text>
+                <Text textStyle="annotation" mt="1">{ds.type}  {!isEmpty(ds.url) && ` · ` + ds.url} {ds.id == InitTestDataDatasourceId && <Tag size="sm" ml="1"> default</Tag>}</Text>
+            </Box>
+        </HStack>
+
+        {ds.id != InitTestDataDatasourceId && <HStack spacing={1}>
+            <Button size="sm" variant="ghost" onClick={onEdit}>{t.edit}</Button>
+            <Button size="sm" variant="ghost" colorScheme="orange" onClick={onDelete}>{t.delete}</Button>
+        </HStack>}
+    </Flex>
+}
