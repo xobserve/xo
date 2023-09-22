@@ -213,7 +213,7 @@ const DashboardGrid = memo((props: GridProps) => {
                                 onDragStop={onDragStop}
                                 onResize={onResize}
                                 onResizeStop={onResizeStop}
-                                // onLayoutChange={onLayoutChange}
+                                onLayoutChange={onLayoutChange}
                                 compactType={dashboard.data.layout as any}
                                 allowOverlap={dashboard.data.allowPanelsOverlap}
                             >
