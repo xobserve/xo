@@ -14,13 +14,13 @@
 import { Accordion, AccordionButton, AccordionIcon, AccordionItem, AccordionPanel, Text, VStack } from "@chakra-ui/react"
 import React from "react";
 
-const PanelAccordion = ({title, children ,defaultOpen=true,spacing=4}) => {
+const PanelAccordion = ({title,colorTitle=false, children ,defaultOpen=true,spacing=4}) => {
     return (
         <Accordion defaultIndex={defaultOpen ? [0] : []} allowMultiple >
             <AccordionItem borderBottomWidth={'0 !important'}>
                 <AccordionButton fontSize="sm" pl="0" py="3"  _hover={{background:null}} width="100%">
                     <AccordionIcon />
-                    <Text ml="1">{title}</Text>
+                    <Text ml="1" className={colorTitle && "color-text"}>{title}</Text>
                 </AccordionButton>
                 <AccordionPanel pb={4} pt="0">
                     <VStack alignItems="left" spacing={spacing}>

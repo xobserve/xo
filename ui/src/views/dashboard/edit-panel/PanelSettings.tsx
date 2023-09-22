@@ -24,6 +24,7 @@ import { commonMsg, panelMsg } from "src/i18n/locales/en"
 import { CodeEditorModal } from "src/components/CodeEditor/CodeEditorModal"
 import plugins from 'public/plugins/external/panel/plugins.json'
 import { $config } from "src/data/configs/config"
+import { isEmpty } from "utils/validate"
 
 // in edit mode, we need to cache all the plugins we have edited, until we save the dashboard
 let pluginsCachedInEdit = {}
@@ -55,8 +56,9 @@ const PanelSettings = memo(({ panel, onChange }: PanelEditorProps) => {
     }, [])
 
     const disabledPanels = $config.get().plugins?.disablePanels
-    const panelPlugins = plugins.filter(p => !disabledPanels?.includes(p.type))
-
+    const externalPanelPlugins = plugins.filter(p => !disabledPanels?.includes(p.type))
+    const builtinPanelPlugins = Object.keys(PanelType).filter(k => !disabledPanels?.includes(k))
+    const isExternalPanel = !isEmpty(externalPanelPlugins.find(p => p.type == panel.type))
     return (
         <>
             <PanelAccordion title={t.basicSetting} spacing={2} defaultOpen={false}>
@@ -94,10 +96,10 @@ const PanelSettings = memo(({ panel, onChange }: PanelEditorProps) => {
             </PanelAccordion>
 
             {/* panel visulization choosing */}
-            <PanelAccordion title={t1.visualization} defaultOpen={false}>
+            <PanelAccordion title={t1.visualization + (!isExternalPanel ? ` -> ${panel.type}` : "")} defaultOpen={false}>
                 <SimpleGrid columns={3} spacing="2">
                     {
-                        Object.keys(PanelType).filter(k => !disabledPanels?.includes(k)).map((key) => {
+                        builtinPanelPlugins.map((key) => {
                             if (PanelType[key] == PanelType.Row) {
                                 return <></>
                             }
@@ -112,10 +114,10 @@ const PanelSettings = memo(({ panel, onChange }: PanelEditorProps) => {
                 </SimpleGrid>
             </PanelAccordion>
             {
-                panelPlugins.length > 0 &&  <PanelAccordion title={t1.externalPanels} defaultOpen={false}>
+                externalPanelPlugins.length > 0 &&  <PanelAccordion  title={t1.externalPanels + (isExternalPanel ? ` -> ${panel.type}` : "")} defaultOpen={false}>
                 <SimpleGrid columns={3} spacing="2">
                     {
-                        panelPlugins.map((p) => {
+                        externalPanelPlugins.map((p) => {
                             return <VisulizationItem
                                 selected={panel.type == p.type}
                                 title={upperFirst(p.type)}

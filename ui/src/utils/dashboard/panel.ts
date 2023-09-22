@@ -19,6 +19,7 @@ import { PieRules } from "src/views/dashboard/plugins/panel/pie/OverridesEditor"
 import { StatRules } from "src/views/dashboard/plugins/panel/stat/OverridesEditor";
 import { TableRules } from "src/views/dashboard/plugins/panel/table/OverridesEditor";
 import { GridPos, OverrideItem, Panel, PanelType } from "types/dashboard";
+import { PanelPluginComponents } from "types/plugins/plugin";
 
 export const updateGridPos = (panel: Panel, newPos: GridPos) => {
     panel.gridPos.x = newPos.x;
@@ -42,7 +43,7 @@ export const findRuleInOverride = (override: OverrideItem, ruleType) => {
 }
 
 
-export const getPanelOverridesRules = (panelType): string[] => {
+export const getPanelOverridesRules = (panelType, externalPanels:  Record<string,PanelPluginComponents> ): string[] => {
     //@needs-update-when-add-new-panel-overrides
     switch (panelType) {
         case PanelType.Graph:
@@ -60,6 +61,10 @@ export const getPanelOverridesRules = (panelType): string[] => {
         case PanelType.Pie:
             return Object.keys(PieRules).map(k => PieRules[k])
         default:
-            return []
+            const p = externalPanels[panelType]
+            if (!p) {
+                return []
+            }
+            return p.overrideRules
     }
 }

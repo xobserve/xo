@@ -60,7 +60,7 @@ import { translateGridHeightToScreenHeight } from "../grid/DashboardGrid"
 import { $variables } from "src/views/variables/store"
 import CustomScrollbar from "components/CustomScrollbar/CustomScrollbar"
 import SelectVariables from "src/views/variables/SelectVariable"
-import { panelPlugins } from "../plugins/externalPlugins"
+import { externalpanelPlugins } from "../plugins/externalPlugins"
 
 interface EditPanelProps {
     dashboard: Dashboard
@@ -220,7 +220,7 @@ const EditPanel = memo(({ dashboard, onChange, edit }: EditPanelProps) => {
         return '0%'
     }
 
-    const panelOverridesRules = getPanelOverridesRules(tempPanel?.type)
+    const panelOverridesRules = getPanelOverridesRules(tempPanel?.type, externalpanelPlugins)
     const onValueMappingChange = useCallback((v) => {
         setTempPanel((tempPanel: Panel) => {
             tempPanel.valueMapping = v
@@ -427,7 +427,7 @@ const CustomPanelEditor = memo(({ tempPanel, setTempPanel, data }: CustomPanelEd
         return <Editor panel={tempPanel} onChange={setTempPanel} data={data} />
     }
 
-    const ExternalPluginEditor = panelPlugins[tempPanel.type].editor
+    const ExternalPluginEditor = externalpanelPlugins[tempPanel.type].editor
     if (ExternalPluginEditor) {
         return <ExternalPluginEditor panel={tempPanel} onChange={setTempPanel} data={data} />
     }

@@ -33,6 +33,7 @@ import { dispatch } from "use-bus";
 import { PanelForceRebuildEvent } from "src/data/bus-events";
 import { MobileBreakpoint } from "src/data/constants";
 import PieOverridesEditor from "../plugins/panel/pie/OverridesEditor";
+import { externalpanelPlugins } from "../plugins/externalPlugins";
 
 const PanelOverrides = ({ panel, onChange, data }: PanelEditorProps) => {
     const t1 = useStore(panelMsg)
@@ -69,7 +70,7 @@ const PanelOverrides = ({ panel, onChange, data }: PanelEditorProps) => {
 
 
 
-    const allRules = getPanelOverridesRules(panel.type)
+    const allRules = getPanelOverridesRules(panel.type, externalpanelPlugins)
 
     const onAddOverride = () => {
         const o = {
@@ -185,6 +186,13 @@ const PanelOverrides = ({ panel, onChange, data }: PanelEditorProps) => {
                                         panel.overrides[i].overrides[j].value = v
                                     })
                                 }} />
+                            }
+                            {
+                                externalpanelPlugins[panel.type] &&  React.cloneElement(externalpanelPlugins[panel.type].overrideEditor, { override: rule, onChange: (v) => {
+                                    onChange((panel: Panel) => {
+                                        panel.overrides[i].overrides[j].value = v
+                                    })
+                                }}) 
                             }
                             <Box position="absolute" right="1" top="5px" cursor="pointer" onClick={() => removeRule(i, j)}><FaTimes fontSize="0.8rem" /></Box>
                         </FormSection>
