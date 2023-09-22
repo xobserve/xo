@@ -62,7 +62,7 @@ import { translateGridHeightToScreenHeight } from "../grid/DashboardGrid"
 import { $variables } from "src/views/variables/store"
 import CustomScrollbar from "components/CustomScrollbar/CustomScrollbar"
 import SelectVariables from "src/views/variables/SelectVariable"
-import panelPlugins from "public/plugins/external/panel/plugins.json"
+import { panelPlugins } from "../plugins/externalPlugins"
 
 interface EditPanelProps {
     dashboard: Dashboard
@@ -400,7 +400,7 @@ const EditPanel = memo(({ dashboard, onChange, edit }: EditPanelProps) => {
 })
 
 
-const externalEditors = {
+// const externalEditors = {
     // [PanelType.Text]: loadable(() => import('../plugins/panel/text/Editor')),
     // [PanelType.Graph]: loadable(() => import('../plugins/panel/graph/Editor')),
     // [PanelType.Table]: loadable(() => import('../plugins/panel/table/Editor')),
@@ -415,11 +415,11 @@ const externalEditors = {
     // [PanelType.Log]: loadable(() => import('../plugins/panel/log/Editor')),
     // [PanelType.Bar]: loadable(() => import('../plugins/panel/bar/Editor')),
     // [PanelType.Alert]: loadable(() => import('../plugins/panel/alert/Editor')),
-}
+// }
 
-panelPlugins.forEach(p => {
-    externalEditors[p.type] = loadable(() => import(p.editorPath))
-})
+// panelPlugins.forEach(p => {
+//     externalEditors[p.type] = loadable(() => import(p.editorPath))
+// })
 
 //@needs-update-when-add-new-panel
 const loadablePanels = {
@@ -451,7 +451,7 @@ const CustomPanelEditor = memo(({ tempPanel, setTempPanel, data }: CustomPanelEd
         return <Editor panel={tempPanel} onChange={setTempPanel} data={data} />
     }
 
-    const ExternalPluginEditor = externalEditors[tempPanel.type]
+    const ExternalPluginEditor = panelPlugins[tempPanel.type].editor
     if (ExternalPluginEditor) {
         return <ExternalPluginEditor panel={tempPanel} onChange={setTempPanel} data={data} />
     }

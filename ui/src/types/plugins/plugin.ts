@@ -1,5 +1,6 @@
-export interface PanelPlugin {
-    name: string 
-    path: string 
-    svgPath: string
+export interface PanelPluginComponents {
+    panel: any,
+    editor: any,
+    overrideEditor: any,
+    overrideRules: any,
 }

@@ -69,7 +69,7 @@ import AlertPanel from "../../plugins/panel/alert/Alert";
 import ErrorBoundary from "src/components/ErrorBoudary";
 import { $datasources } from "src/views/datasource/store";
 import { Datasource } from "types/datasource";
-import panelPlugins from "public/plugins/external/panel/plugins.json"
+import { panelPlugins } from "../../plugins/externalPlugins";
 
 interface PanelGridProps {
     dashboard: Dashboard
@@ -382,7 +382,7 @@ export const PanelComponent = ({ dashboard, panel, variables, onRemovePanel, onH
 
 
 //@needs-update-when-add-new-panel
-const externalPanels = {
+// const externalPanels = {
     // [PanelType.Text]: loadable(() => import('../../plugins/panel/text/Text')),
     // [PanelType.Graph]: loadable(() => import('../../plugins/panel/graph/Graph')),
     // [PanelType.Table]: loadable(() => import('../../plugins/panel/table/Table')),
@@ -397,11 +397,11 @@ const externalPanels = {
     // [PanelType.Log]: loadable(() => import('../../plugins/panel/log/Log')),
     // [PanelType.Bar]: loadable(() => import('../../plugins/panel/bar/Bar')),
     // [PanelType.Alert]: loadable(() => import('../../plugins/panel/alert/Alert')),
-}
+// }
 
-panelPlugins.forEach(p => {
-    externalPanels[p.type] = loadable(() => import(p.path))
-})
+// panelPlugins.forEach(p => {
+//     externalPanels[p.type] = loadable(() => import(p.path))
+// })
 
 const loadablePanels = {
     [PanelType.Text]: TextPanel,
@@ -425,7 +425,7 @@ const CustomPanelRender = memo((props: PanelProps) => {
         return <P {...props} />
     }
 
-    const ExternalP = externalPanels[props.panel.type]
+    const ExternalP = panelPlugins[props.panel.type].panel
     if (ExternalP) {
         return <ExternalP {...props} />
     }
