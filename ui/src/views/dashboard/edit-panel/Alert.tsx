@@ -12,7 +12,7 @@
 // limitations under the License.
 import { Box, StackDivider, VStack } from "@chakra-ui/react"
 import { getCurrentTimeRange } from "src/components/DatePicker/TimePicker"
-import React, { useEffect, useState } from "react"
+import React, { useEffect, useMemo, useState } from "react"
 import { Panel } from "types/dashboard"
 import { queryAlerts } from "../grid/PanelGrid/PanelGrid"
 import { filterAlerts } from "../plugins/panel/alert/Alert"
@@ -23,6 +23,9 @@ import useBus from "use-bus"
 import { TimeChangedEvent } from "src/data/bus-events"
 import { isEmpty } from "utils/validate"
 import { getPanelRealTime } from "../store/panelRealtime"
+import { $datasources } from "src/views/datasource/store"
+import { paletteMap } from "utils/colors"
+import { ColorGenerator } from "utils/colorGenerator"
 
 interface Props {
     panel: Panel
@@ -44,6 +47,7 @@ const EditPanelAlert = ({ panel, onChange }: Props) => {
         }
     )
 
+    const datasources = $datasources.get()
     const loadAlerts = async () => {
         let start
         let end 
@@ -61,7 +65,7 @@ const EditPanelAlert = ({ panel, onChange }: Props) => {
         const res = await queryAlerts(panel, {
             start: new Date(start),
             end: new Date(end)
-        } as any, panel.plugins.graph.alertFilter.datasources, panel.plugins.graph.alertFilter.httpQuery)
+        } as any, panel.plugins.graph.alertFilter.datasources, panel.plugins.graph.alertFilter.httpQuery, datasources)
 
         let rules: AlertRule[] = []
         if (res.data?.length > 0) {
@@ -98,10 +102,15 @@ const EditPanelAlert = ({ panel, onChange }: Props) => {
         setAlerts(newRules)
     }
 
+    const generator = useMemo(() => {
+        const palette = paletteMap[panel.styles.palette]
+        return new ColorGenerator(palette)
+    }, [panel.styles.palette])
+
     return (<Box>
         <VStack alignItems="left" divider={<StackDivider />} mt={2} spacing={1}>
             {
-                alerts?.map(rule => <AlertRuleItem rule={rule} panel={panel} collapsed={true} onSelectLabel={() => { }} width={800} />)
+                alerts?.map(rule => <AlertRuleItem rule={rule} panel={panel} collapsed={true} onSelectLabel={() => { }} width={800}  colorGenerator={generator} />)
             }
         </VStack>
     </Box>)

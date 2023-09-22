@@ -179,7 +179,7 @@ const AlertRuleItem = memo((props: Props) => {
                                             return <Tr>
                                                 <Td>
                                                     <HStack>
-                                                        <Tag size="sm" bg={color} color={getTextColorForAlphaBackground(color, colorMode == "dark")} onClick={() => onSelectLabel(alert.name)} cursor="pointer">{alert.name}</Tag>
+                                                        <Text fontSize="0.8rem" py="2px" px="2" borderColor={color} className="bordered"  onClick={() => onSelectLabel(alert.name)} cursor="pointer">{alert.name}</Text>
 
                                                     </HStack>
                                                 </Td>
@@ -209,7 +209,7 @@ const AlertRuleItem = memo((props: Props) => {
                         </TableContainer>
                     </Box>
                     :
-                    <VStack alignItems="left" className="highlight-bordered" py="1" px="2" mt="2" >
+                    <VStack alignItems="left" className="bordered" py="1" px="2" mt="2" >
                         <HStack alignItems="top">
                             <Text width="100px">Datasource</Text>
                             <HStack alignItems="end">
