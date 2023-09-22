@@ -389,7 +389,8 @@ export const panelMsg = i18n("panel", {
 
   "panelTitle": "Panel Title",
   "panelDesc": "give a short description to this panel",
-  "visualization": "Visualization",
+  "visualization": "Built-in plugins",
+  "externalPanels": "External plugins",
   "panelBorder": "Panel layout and border",
   "paletteTips": "Only support Graph, Bar, Pie and Echarts panel",
   "titleDecoration": "Title decoration",

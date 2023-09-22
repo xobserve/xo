@@ -69,6 +69,8 @@ import AlertPanel from "../../plugins/panel/alert/Alert";
 import ErrorBoundary from "src/components/ErrorBoudary";
 import { $datasources } from "src/views/datasource/store";
 import { Datasource } from "types/datasource";
+import panelPlugins from "public/plugins/external/panel/plugins.json"
+
 interface PanelGridProps {
     dashboard: Dashboard
     panel: Panel
@@ -380,22 +382,27 @@ export const PanelComponent = ({ dashboard, panel, variables, onRemovePanel, onH
 
 
 //@needs-update-when-add-new-panel
-// const loadablePanels = {
-//     [PanelType.Text]: loadable(() => import('../../plugins/panel/text/Text')),
-//     [PanelType.Graph]: loadable(() => import('../../plugins/panel/graph/Graph')),
-//     [PanelType.Table]: loadable(() => import('../../plugins/panel/table/Table')),
-//     [PanelType.NodeGraph]: loadable(() => import('../../plugins/panel/nodeGraph/NodeGraph')),
-//     [PanelType.Echarts]: loadable(() => import('../../plugins/panel/echarts/Echarts')),
-//     [PanelType.Pie]: loadable(() => import('../../plugins/panel/pie/Pie')),
-//     [PanelType.Gauge]: loadable(() => import('../../plugins/panel/gauge/Gauge')),
-//     [PanelType.Stat]: loadable(() => import('../../plugins/panel/stat/Stat')),
-//     [PanelType.Trace]: loadable(() => import('../../plugins/panel/trace/Trace')),
-//     [PanelType.BarGauge]: loadable(() => import('../../plugins/panel/barGauge/BarGauge')),
-//     [PanelType.GeoMap]: loadable(() => import('../../plugins/panel/geomap/GeoMap')),
-//     [PanelType.Log]: loadable(() => import('../../plugins/panel/log/Log')),
-//     [PanelType.Bar]: loadable(() => import('../../plugins/panel/bar/Bar')),
-//     [PanelType.Alert]: loadable(() => import('../../plugins/panel/alert/Alert')),
-// }
+const externalPanels = {
+    // [PanelType.Text]: loadable(() => import('../../plugins/panel/text/Text')),
+    // [PanelType.Graph]: loadable(() => import('../../plugins/panel/graph/Graph')),
+    // [PanelType.Table]: loadable(() => import('../../plugins/panel/table/Table')),
+    // [PanelType.NodeGraph]: loadable(() => import('../../plugins/panel/nodeGraph/NodeGraph')),
+    // [PanelType.Echarts]: loadable(() => import('../../plugins/panel/echarts/Echarts')),
+    // [PanelType.Pie]: loadable(() => import('../../plugins/panel/pie/Pie')),
+    // [PanelType.Gauge]: loadable(() => import('../../plugins/panel/gauge/Gauge')),
+    // [PanelType.Stat]: loadable(() => import('../../plugins/panel/stat/Stat')),
+    // [PanelType.Trace]: loadable(() => import('../../plugins/panel/trace/Trace')),
+    // [PanelType.BarGauge]: loadable(() => import('../../plugins/panel/barGauge/BarGauge')),
+    // [PanelType.GeoMap]: loadable(() => import('../../plugins/panel/geomap/GeoMap')),
+    // [PanelType.Log]: loadable(() => import('../../plugins/panel/log/Log')),
+    // [PanelType.Bar]: loadable(() => import('../../plugins/panel/bar/Bar')),
+    // [PanelType.Alert]: loadable(() => import('../../plugins/panel/alert/Alert')),
+}
+
+panelPlugins.forEach(p => {
+    externalPanels[p.type] = loadable(() => import(p.path))
+})
+
 const loadablePanels = {
     [PanelType.Text]: TextPanel,
     [PanelType.Graph]: GraphPanelWrapper,
@@ -418,6 +425,10 @@ const CustomPanelRender = memo((props: PanelProps) => {
         return <P {...props} />
     }
 
+    const ExternalP = externalPanels[props.panel.type]
+    if (ExternalP) {
+        return <ExternalP {...props} />
+    }
     return <></>
 })
 

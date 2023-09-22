@@ -23,8 +23,6 @@ import React from "react";
 import { useStore } from "@nanostores/react"
 import { commonMsg, panelMsg } from "src/i18n/locales/en"
 import { paletteColorNameToHex, paletteMap } from "utils/colors"
-import { dispatch } from "use-bus"
-import { PanelForceRebuildEvent } from "src/data/bus-events"
 
 const PanelStyles = ({ panel, onChange }: PanelEditorProps) => {
     const t = useStore(commonMsg)

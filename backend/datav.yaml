@@ -88,3 +88,11 @@ sidemenu:
 #################################### Self monitoring ##############################
 selfmonitoring:
     mock_error_logs: true
+
+#################################### Plugins ##############################
+plugins:
+    ## add plugin types to hidden it, e.g Table
+    ## As datav has a example demo panel for explain how to develop external plugins
+    ## but it is no use to you, so we default disable it here
+    disable_panels: ["demo"]
+    disable_datasources: []

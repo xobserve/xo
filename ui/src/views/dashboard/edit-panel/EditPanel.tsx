@@ -62,6 +62,7 @@ import { translateGridHeightToScreenHeight } from "../grid/DashboardGrid"
 import { $variables } from "src/views/variables/store"
 import CustomScrollbar from "components/CustomScrollbar/CustomScrollbar"
 import SelectVariables from "src/views/variables/SelectVariable"
+import panelPlugins from "public/plugins/external/panel/plugins.json"
 
 interface EditPanelProps {
     dashboard: Dashboard
@@ -398,24 +399,29 @@ const EditPanel = memo(({ dashboard, onChange, edit }: EditPanelProps) => {
     </>)
 })
 
-//@needs-update-when-add-new-panel
-// const loadablePanels = {
-//     [PanelType.Text]: loadable(() => import('../plugins/panel/text/Editor')),
-//     [PanelType.Graph]: loadable(() => import('../plugins/panel/graph/Editor')),
-//     [PanelType.Table]: loadable(() => import('../plugins/panel/table/Editor')),
-//     [PanelType.NodeGraph]: loadable(() => import('../plugins/panel/nodeGraph/Editor')),
-//     [PanelType.Echarts]: loadable(() => import('../plugins/panel/echarts/Editor')),
-//     [PanelType.Pie]: loadable(() => import('../plugins/panel/pie/Editor')),
-//     [PanelType.Gauge]: loadable(() => import('../plugins/panel/gauge/Editor')),
-//     [PanelType.Stat]: loadable(() => import('../plugins/panel/stat/Editor')),
-//     [PanelType.Trace]: loadable(() => import('../plugins/panel/trace/Editor')),
-//     [PanelType.BarGauge]: loadable(() => import('../plugins/panel/barGauge/Editor')),
-//     [PanelType.GeoMap]: loadable(() => import('../plugins/panel/geomap/Editor')),
-//     [PanelType.Log]: loadable(() => import('../plugins/panel/log/Editor')),
-//     [PanelType.Bar]: loadable(() => import('../plugins/panel/bar/Editor')),
-//     [PanelType.Alert]: loadable(() => import('../plugins/panel/alert/Editor')),
-// }
 
+const externalEditors = {
+    // [PanelType.Text]: loadable(() => import('../plugins/panel/text/Editor')),
+    // [PanelType.Graph]: loadable(() => import('../plugins/panel/graph/Editor')),
+    // [PanelType.Table]: loadable(() => import('../plugins/panel/table/Editor')),
+    // [PanelType.NodeGraph]: loadable(() => import('../plugins/panel/nodeGraph/Editor')),
+    // [PanelType.Echarts]: loadable(() => import('../plugins/panel/echarts/Editor')),
+    // [PanelType.Pie]: loadable(() => import('../plugins/panel/pie/Editor')),
+    // [PanelType.Gauge]: loadable(() => import('../plugins/panel/gauge/Editor')),
+    // [PanelType.Stat]: loadable(() => import('../plugins/panel/stat/Editor')),
+    // [PanelType.Trace]: loadable(() => import('../plugins/panel/trace/Editor')),
+    // [PanelType.BarGauge]: loadable(() => import('../plugins/panel/barGauge/Editor')),
+    // [PanelType.GeoMap]: loadable(() => import('../plugins/panel/geomap/Editor')),
+    // [PanelType.Log]: loadable(() => import('../plugins/panel/log/Editor')),
+    // [PanelType.Bar]: loadable(() => import('../plugins/panel/bar/Editor')),
+    // [PanelType.Alert]: loadable(() => import('../plugins/panel/alert/Editor')),
+}
+
+panelPlugins.forEach(p => {
+    externalEditors[p.type] = loadable(() => import(p.editorPath))
+})
+
+//@needs-update-when-add-new-panel
 const loadablePanels = {
     [PanelType.Text]: TextPanelEditor,
     [PanelType.Graph]: GraphPanelEditor,
@@ -445,6 +451,10 @@ const CustomPanelEditor = memo(({ tempPanel, setTempPanel, data }: CustomPanelEd
         return <Editor panel={tempPanel} onChange={setTempPanel} data={data} />
     }
 
+    const ExternalPluginEditor = externalEditors[tempPanel.type]
+    if (ExternalPluginEditor) {
+        return <ExternalPluginEditor panel={tempPanel} onChange={setTempPanel} data={data} />
+    }
     return null
 })
 

@@ -48,4 +48,8 @@ export interface UIConfig {
     githubOAuthToken?: string
     enableGithubLogin?: boolean
     sidemenu?: MenuItem[]
+    plugins?: {
+        disablePanels   : string[]   
+        disableDatasources: string[]  
+    }
 }

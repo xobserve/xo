@@ -370,7 +370,8 @@
 
     "panelTitle": "图表标题",
     "panelDesc": "给图表一个简单描述",
-    "visualization": "图表类型",
+    "visualization": "内置图表插件",
+    "externalPanels": "外部图表插件",
 
     "panelBorder": "图表布局和边框",
     "paletteTips": "只支持 Graph, Bar, Pie 和 Echarts 图表",

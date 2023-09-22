@@ -44,8 +44,14 @@ type UIConfig struct {
 	GithubOAuthToken  string `json:"githubOAuthToken"`
 
 	Sidemenu *models.SideMenu `json:"sidemenu"`
+
+	Plugins *Plugins `json:"plugins"`
 }
 
+type Plugins struct {
+	DisablePanels      []string `json:"disablePanels"`
+	DisableDatasources []string `json:"disableDatasources"`
+}
 type Panel struct {
 	Echarts Echarts `json:"echarts"`
 }
@@ -71,6 +77,7 @@ func getUIConfig(c *gin.Context) {
 		ShowAlertIcon:     config.Data.Sidemenu.ShowAlertIcon,
 		EnableGithubLogin: config.Data.User.EnableGithubLogin,
 		GithubOAuthToken:  config.Data.User.GithubOAuthToken,
+		Plugins:           (*Plugins)(&config.Data.Plugins),
 	}
 
 	// query sidemenu

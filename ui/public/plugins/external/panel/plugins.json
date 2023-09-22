@@ -1,0 +1,8 @@
+[
+    {
+        "type": "demo",
+        "path": "../../plugins/panel/demo/Demo",
+        "editorPath": "../plugins/panel/demo/Editor",
+        "icon": "demo.svg"
+    }
+]

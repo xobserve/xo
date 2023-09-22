@@ -92,6 +92,10 @@ type Config struct {
 	SelfMonitoring struct {
 		MockErrorLogs bool `yaml:"mock_error_logs"`
 	}
+	Plugins struct {
+		DisablePanels      []string `yaml:"disable_panels"`
+		DisableDatasources []string `yaml:"disable_datasources"`
+	}
 }
 
 // Data ...

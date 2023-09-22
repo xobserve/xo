@@ -22,6 +22,8 @@ import React from "react";
 import { useStore } from "@nanostores/react"
 import { commonMsg, panelMsg } from "src/i18n/locales/en"
 import { CodeEditorModal } from "src/components/CodeEditor/CodeEditorModal"
+import plugins from 'public/plugins/external/panel/plugins.json'
+import { $config } from "src/data/configs/config"
 
 // in edit mode, we need to cache all the plugins we have edited, until we save the dashboard
 let pluginsCachedInEdit = {}
@@ -36,7 +38,7 @@ const PanelSettings = memo(({ panel, onChange }: PanelEditorProps) => {
             const oldPlugin = tempPanel.plugins[tempPanel.type]
             tempPanel.type = type
             tempPanel.plugins = {
-                [type]: pluginsCachedInEdit[type] ?? initPanelPlugins()[type]
+                [type]: pluginsCachedInEdit[type] ?? initPanelPlugins()[type] ?? {}
             }
             if (oldPlugin.value) {
                 tempPanel.plugins[type].value = oldPlugin.value
@@ -51,6 +53,9 @@ const PanelSettings = memo(({ panel, onChange }: PanelEditorProps) => {
             overridesCacheInEdit = {}
         }
     }, [])
+
+    const disabledPanels = $config.get().plugins?.disablePanels
+    const panelPlugins = plugins.filter(p => !disabledPanels?.includes(p.type))
 
     return (
         <>
@@ -92,7 +97,7 @@ const PanelSettings = memo(({ panel, onChange }: PanelEditorProps) => {
             <PanelAccordion title={t1.visualization} defaultOpen={false}>
                 <SimpleGrid columns={3} spacing="2">
                     {
-                        Object.keys(PanelType).map((key) => {
+                        Object.keys(PanelType).filter(k => !disabledPanels?.includes(k)).map((key) => {
                             if (PanelType[key] == PanelType.Row) {
                                 return <></>
                             }
@@ -106,6 +111,22 @@ const PanelSettings = memo(({ panel, onChange }: PanelEditorProps) => {
                     }
                 </SimpleGrid>
             </PanelAccordion>
+            {
+                panelPlugins.length > 0 &&  <PanelAccordion title={t1.externalPanels} defaultOpen={false}>
+                <SimpleGrid columns={3} spacing="2">
+                    {
+                        panelPlugins.map((p) => {
+                            return <VisulizationItem
+                                selected={panel.type == p.type}
+                                title={upperFirst(p.type)}
+                                imageUrl={`/plugins/external/panel/${p.icon}`}
+                                onClick={() => onChangeVisualization(p.type)}
+                            />
+                        })
+                    }
+                </SimpleGrid>
+            </PanelAccordion>
+            }
         </>
     )
 })

@@ -90,7 +90,6 @@ const AppView = () => {
     }
     setVariableSelected(res.data.vars)
     $teamVariables.set(vars)
-
 }
 
 
