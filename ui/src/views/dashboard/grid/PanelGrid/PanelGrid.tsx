@@ -14,7 +14,7 @@ import { Dashboard, DatasourceType, Panel, PanelProps, PanelQuery, PanelType } f
 import { Box, Center, HStack, Menu, MenuButton, MenuDivider, MenuItem, MenuList, Modal, ModalBody, ModalCloseButton, ModalContent, ModalHeader, ModalOverlay, Portal, Tab, TabList, TabPanel, TabPanels, Tabs, Text, Textarea, Tooltip, useColorMode, useColorModeValue, useDisclosure, usePrevious, useToast } from "@chakra-ui/react";
 import { FaBook, FaBug, FaEdit, FaRegCopy, FaRegEye, FaRegEyeSlash, FaTrashAlt } from "react-icons/fa";
 import { IoMdInformation } from "react-icons/io";
-import { memo, useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
+import { memo, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { query_prometheus_alerts, run_prometheus_query } from "../../plugins/datasource/prometheus/query_runner";
 import { DatasourceMaxDataPoints, DatasourceMinInterval, PANEL_HEADER_HEIGHT, StorageCopiedPanelKey } from "src/data/constants";
 import { cloneDeep, isEqual, isFunction } from "lodash";
@@ -32,7 +32,6 @@ import PanelBorder from "src/components/largescreen/components/Border";
 import TitleDecoration from "src/components/largescreen/components/TitleDecoration";
 import PanelDecoration from "src/components/largescreen/components/Decoration";
 import { useDedupEvent } from "hooks/useDedupEvent";
-import loadable from '@loadable/component'
 import { calculateInterval } from "utils/datetime/range";
 import { run_http_query } from "../../plugins/datasource/http/query_runner";
 import { useSearchParam } from "react-use";
@@ -380,29 +379,7 @@ export const PanelComponent = ({ dashboard, panel, variables, onRemovePanel, onH
 }
 
 
-
 //@needs-update-when-add-new-panel
-// const externalPanels = {
-    // [PanelType.Text]: loadable(() => import('../../plugins/panel/text/Text')),
-    // [PanelType.Graph]: loadable(() => import('../../plugins/panel/graph/Graph')),
-    // [PanelType.Table]: loadable(() => import('../../plugins/panel/table/Table')),
-    // [PanelType.NodeGraph]: loadable(() => import('../../plugins/panel/nodeGraph/NodeGraph')),
-    // [PanelType.Echarts]: loadable(() => import('../../plugins/panel/echarts/Echarts')),
-    // [PanelType.Pie]: loadable(() => import('../../plugins/panel/pie/Pie')),
-    // [PanelType.Gauge]: loadable(() => import('../../plugins/panel/gauge/Gauge')),
-    // [PanelType.Stat]: loadable(() => import('../../plugins/panel/stat/Stat')),
-    // [PanelType.Trace]: loadable(() => import('../../plugins/panel/trace/Trace')),
-    // [PanelType.BarGauge]: loadable(() => import('../../plugins/panel/barGauge/BarGauge')),
-    // [PanelType.GeoMap]: loadable(() => import('../../plugins/panel/geomap/GeoMap')),
-    // [PanelType.Log]: loadable(() => import('../../plugins/panel/log/Log')),
-    // [PanelType.Bar]: loadable(() => import('../../plugins/panel/bar/Bar')),
-    // [PanelType.Alert]: loadable(() => import('../../plugins/panel/alert/Alert')),
-// }
-
-// panelPlugins.forEach(p => {
-//     externalPanels[p.type] = loadable(() => import(p.path))
-// })
-
 const loadablePanels = {
     [PanelType.Text]: TextPanel,
     [PanelType.Graph]: GraphPanelWrapper,
