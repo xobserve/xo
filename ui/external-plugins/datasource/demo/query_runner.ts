@@ -21,14 +21,12 @@ import { Variable } from "types/variable"
 import { getNewestTimeRange } from "src/components/DatePicker/TimePicker"
 
 import { PromDsQueryTypes } from "./VariableEditor"
-import { parseVariableFormat } from "utils/format"
-import { VariableInterval, VariableSplitChar, VarialbeAllOption } from "src/data/variable"
 import { requestApi } from "utils/axios/request"
 import { replaceWithVariablesHasMultiValues } from "utils/variable"
-import { $variables } from "src/views/variables/store"
 import { getDatasource, roundDsTime } from "utils/datasource"
 import isURL from "validator/lib/isURL"
-import { replacePrometheusQueryWithVariables } from "../prometheus/query_runner"
+import { replacePrometheusQueryWithVariables } from "../../../built-in/datasource/prometheus/query_runner"
+
 
 export const runQuery = async (panel: Panel, q: PanelQuery, range: TimeRange, ds: Datasource) => {
     if (isEmpty(q.metrics)) {

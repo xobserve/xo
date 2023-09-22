@@ -27,7 +27,7 @@ import { queryAlerts } from '../dashboard/grid/PanelGrid/PanelGrid';
 import { Panel } from 'types/dashboard';
 import { getCurrentTimeRange } from 'src/components/DatePicker/TimePicker';
 import { TimeRange } from 'types/time';
-import { filterAlerts } from '../dashboard/plugins/panel/alert/Alert';
+import { filterAlerts } from '../dashboard/plugins/built-in/panel/alert/Alert';
 import { AlertRule } from 'types/plugins/alert';
 import { AlertState } from 'types/alert';
 import { useColorMode } from '@chakra-ui/react';

@@ -20,7 +20,7 @@ import { findNearestSeriesAndDataPoint } from "../Tooltip";
 import { dispatch } from "use-bus";
 import { OnGraphPanelClickEvent } from "src/data/bus-events";
 import { dateTimeFormat } from "utils/datetime/formatter";
-import AnnotationEditor from "../../../../../Annotation/AnnotationEditor";
+import AnnotationEditor from "../../../../../../Annotation/AnnotationEditor";
 import { Annotation } from "types/annotation";
 import { roundDsTime } from "utils/datasource";
 import { $dashboard } from "src/views/dashboard/store/dashboard";

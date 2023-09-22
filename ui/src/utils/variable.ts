@@ -13,12 +13,12 @@
 
 import { parseVariableFormat } from "./format";
 import { DatasourceType, PanelQuery } from "types/dashboard";
-import { replacePrometheusQueryWithVariables } from "src/views/dashboard/plugins/datasource/prometheus/query_runner";
-import { replaceJaegerQueryWithVariables } from "src/views/dashboard/plugins/datasource/jaeger/query_runner";
+import { replacePrometheusQueryWithVariables } from "src/views/dashboard/plugins/built-in/datasource/prometheus/query_runner";
+import { replaceJaegerQueryWithVariables } from "src/views/dashboard/plugins/built-in/datasource/jaeger/query_runner";
 import { VariableSplitChar, VarialbeAllOption } from "src/data/variable";
 import { $variables } from "src/views/variables/store";
 import { isEmpty } from "./validate";
-import { externalDatasourcePlugins } from "src/views/dashboard/plugins/externalPlugins";
+import { externalDatasourcePlugins } from "src/views/dashboard/plugins/external/plugins";
 
 export const hasVariableFormat = (s: string) => {
     return isEmpty(s) ? false : s.includes("${")

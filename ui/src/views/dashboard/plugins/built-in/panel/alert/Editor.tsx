@@ -33,7 +33,7 @@ import { ClickActionsEditor } from "src/views/dashboard/edit-panel/components/Cl
 import HttpQueryEditor from "../../datasource/http/QueryEditor"
 import { AlertFilter } from "types/panel/plugins"
 import { $datasources } from "src/views/datasource/store"
-import { externalDatasourcePlugins } from "../../externalPlugins"
+import { externalDatasourcePlugins } from "../../../external/plugins"
 import { cloneDeep } from "lodash"
 
 const AlertPanelEditor = memo((props: PanelEditorProps) => {

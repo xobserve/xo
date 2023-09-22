@@ -27,7 +27,7 @@ import { dispatch } from "use-bus"
 
 import { calcValueOnArray } from "utils/seriesData"
 import { findOverride, findRuleInOverride } from "utils/dashboard/panel";
-import { BarRules } from "../panel/bar/OverridesEditor";
+import { BarRules } from "../built-in/panel/bar/OverridesEditor";
 import { PanelInactiveKey } from "src/data/storage-keys";
 import storage from "utils/localStorage";
 

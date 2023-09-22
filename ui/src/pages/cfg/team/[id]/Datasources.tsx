@@ -25,7 +25,7 @@ import { useNavigate } from "react-router-dom"
 import { useStore } from "@nanostores/react"
 import { cfgDatasourceMsg, commonMsg } from "src/i18n/locales/en"
 import { Team } from "types/teams"
-import { externalDatasourcePlugins } from "src/views/dashboard/plugins/externalPlugins"
+import { externalDatasourcePlugins } from "src/views/dashboard/plugins/external/plugins"
 
 const TeamDatasources = ({ team }: { team: Team }) => {
     const t = useStore(commonMsg)

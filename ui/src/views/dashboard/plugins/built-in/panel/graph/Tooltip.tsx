@@ -12,8 +12,8 @@
 // limitations under the License.
 import { Box, Text } from "@chakra-ui/react";
 import { Portal } from "src/components/portal/Portal";
-import SeriesTable from "src/views/dashboard/plugins/panel/graph/Tooltip/SeriesTable";
-import { TooltipContainer } from "src/views/dashboard/plugins/panel/graph/Tooltip/Tooltip";
+import SeriesTable from "src/views/dashboard/plugins/built-in/panel/graph/Tooltip/SeriesTable";
+import { TooltipContainer } from "src/views/dashboard/plugins/built-in/panel/graph/Tooltip/Tooltip";
 import { isEmpty } from "lodash";
 import { memo, useLayoutEffect, useState } from "react";
 import { unstable_batchedUpdates } from "react-dom";

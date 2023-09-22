@@ -20,7 +20,7 @@ import transformTraceData from "../../utils/transform-trace-data"
 import ScrollManager from "./scroll/scrollManager"
 import {  scrollBy, scrollTo } from './scroll/scrollPage';
 import React from "react";
-import { queryTraceInTestData } from "src/views/dashboard/plugins/datasource/testdata/query_runner"
+import { queryTraceInTestData } from "src/views/dashboard/plugins/built-in/datasource/testdata/query_runner"
 import { getDatasource } from "utils/datasource"
 import { useStore } from "@nanostores/react"
 import { $datasources, $teamDatasources } from "src/views/datasource/store"

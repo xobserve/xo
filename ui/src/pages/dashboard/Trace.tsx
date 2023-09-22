@@ -13,7 +13,7 @@
 
 import React from "react"
 import { useParams } from "react-router-dom"
-import TraceDetailWrapper from "src/views/dashboard/plugins/panel/trace/components/TraceDetail/TraceDetailWrapper"
+import TraceDetailWrapper from "src/views/dashboard/plugins/built-in/panel/trace/components/TraceDetail/TraceDetailWrapper"
 
 
 

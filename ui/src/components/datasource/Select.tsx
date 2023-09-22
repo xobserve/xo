@@ -19,7 +19,7 @@ import { DatasourceType } from "types/dashboard"
 import { useStore } from "@nanostores/react"
 import { $datasources } from "src/views/datasource/store"
 import { $teams } from "src/views/team/store"
-import { externalDatasourcePlugins } from "src/views/dashboard/plugins/externalPlugins"
+import { externalDatasourcePlugins } from "src/views/dashboard/plugins/external/plugins"
 
 interface Props {
     value: number

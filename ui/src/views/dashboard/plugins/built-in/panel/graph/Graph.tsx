@@ -20,7 +20,7 @@ import { parseOptions } from './options';
 import { cloneDeep, isEmpty } from "lodash";
 
 import Tooltip from "./Tooltip";
-import { GraphLayout } from "src/views/dashboard/plugins/panel/graph/GraphLayout";
+import { GraphLayout } from "src/views/dashboard/plugins/built-in/panel/graph/GraphLayout";
 import { Box, Center, Text, useColorMode } from "@chakra-ui/react";
 import { paletteColorNameToHex, paletteMap, palettes } from "utils/colors";
 import { SeriesData } from "types/seriesData";
@@ -36,9 +36,9 @@ import { ThresholdDisplay } from "types/panel/plugins";
 import { getStackedOpts } from "./uplot-plugins/stack";
 import { isSeriesData } from "utils/seriesData";
 import ContextMenu from "./ContextMenu/ContextMenu";
-import { AnnotationsPlugin } from "../../../../Annotation/Annotations";
+import { AnnotationsPlugin } from "../../../../../Annotation/Annotations";
 import NoData from "src/views/dashboard/components/PanelNoData";
-import LegendTable from "../../components/Legend";
+import LegendTable from "../../../components/Legend";
 
 interface GraphPanelProps extends PanelProps {
     data: SeriesData[][]

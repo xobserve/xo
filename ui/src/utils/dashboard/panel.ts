@@ -11,13 +11,13 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { BarRules } from "src/views/dashboard/plugins/panel/bar/OverridesEditor";
-import { BarGaugeRules } from "src/views/dashboard/plugins/panel/barGauge/OverrideEditor";
-import { GeomapRules } from "src/views/dashboard/plugins/panel/geomap/OverridesEditor";
-import { GraphRules } from "src/views/dashboard/plugins/panel/graph/OverridesEditor";
-import { PieRules } from "src/views/dashboard/plugins/panel/pie/OverridesEditor";
-import { StatRules } from "src/views/dashboard/plugins/panel/stat/OverridesEditor";
-import { TableRules } from "src/views/dashboard/plugins/panel/table/OverridesEditor";
+import { BarRules } from "src/views/dashboard/plugins/built-in/panel/bar/OverridesEditor";
+import { BarGaugeRules } from "src/views/dashboard/plugins/built-in/panel/barGauge/OverrideEditor";
+import { GeomapRules } from "src/views/dashboard/plugins/built-in/panel/geomap/OverridesEditor";
+import { GraphRules } from "src/views/dashboard/plugins/built-in/panel/graph/OverridesEditor";
+import { PieRules } from "src/views/dashboard/plugins/built-in/panel/pie/OverridesEditor";
+import { StatRules } from "src/views/dashboard/plugins/built-in/panel/stat/OverridesEditor";
+import { TableRules } from "src/views/dashboard/plugins/built-in/panel/table/OverridesEditor";
 import { GridPos, OverrideItem, Panel, PanelType } from "types/dashboard";
 import { PanelPluginComponents } from "types/plugins/plugin";
 

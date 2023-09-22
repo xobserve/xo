@@ -28,7 +28,7 @@ import { FaCheck } from "react-icons/fa"
 import { jsonToEqualPairs } from "utils/format"
 import { commonInteractionEvent, genDynamicFunction } from "utils/dashboard/dynamicCall"
 import { isEmpty } from "utils/validate"
-import { externalDatasourcePlugins } from "../../../externalPlugins"
+import { externalDatasourcePlugins } from "../../../../external/plugins"
 
 
 interface Props {
