@@ -18,7 +18,7 @@ import { Panel } from "types/dashboard"
 import { AlertRule } from "types/plugins/alert"
 import { formatDuration } from 'utils/date'
 import { FiringIcon, PendingIcon } from "./Icons"
-import { getTextColorForAlphaBackground, paletteColorNameToHex } from "utils/colors"
+import { paletteColorNameToHex } from "utils/colors"
 import { isFunction, upperFirst } from "lodash"
 import CollapseIcon from "src/components/icons/Collapse"
 import { dateTimeFormat } from "utils/datetime/formatter"
@@ -28,6 +28,7 @@ import { FaCheck } from "react-icons/fa"
 import { jsonToEqualPairs } from "utils/format"
 import { commonInteractionEvent, genDynamicFunction } from "utils/dashboard/dynamicCall"
 import { isEmpty } from "utils/validate"
+import { externalDatasourcePlugins } from "../../../externalPlugins"
 
 
 interface Props {
@@ -72,6 +73,8 @@ const AlertRuleItem = memo((props: Props) => {
 
     }
     
+    const externalDs = externalDatasourcePlugins[rule.fromDs]
+    const dsIcon = externalDs ? `/plugins/external/datasource/${rule.fromDs}.svg`  : `/plugins/datasource/${rule.fromDs}.svg`
     return (<Box fontSize={width > 600 ? "0.9rem" : "0.8rem"} py="1" pl={width < 400 ? 0 : 2} pr={width < 400 ? 1 : 2}>
         <Flex justifyContent="space-between" alignItems="center" cursor="pointer" onClick={() => setCollapsed(!collapsed)} >
             <HStack>
@@ -148,7 +151,7 @@ const AlertRuleItem = memo((props: Props) => {
                                 <Box>
                                     <Text>Datasource</Text>
                                     <HStack alignItems="end">
-                                        <Image width="20px" height="20px" src={`/plugins/datasource/${rule.fromDs}.svg`} />
+                                        <Image width="20px" height="20px" src={dsIcon} />
                                         <Text mt="2" textStyle="annotation">{rule.fromDs}</Text>
                                     </HStack>
                                 </Box>
@@ -244,7 +247,7 @@ const AlertRuleItem = memo((props: Props) => {
                             {
                                 rule.alerts.map((alert) => {
                                     const color = getLabelNameColor(alert.name, colorMode, colorGenerator)
-                                    return <Box fontSize="0.75rem">
+                                    return <Box fontSize="0.8rem">
                                         <Text size="sm" onClick={() => onSelectLabel(alert.name)} cursor="pointer" fontWeight={500}>{jsonToEqualPairs(alert.labels)}</Text>
                                         <HStack mt="2">
                                             <Text color={getStateColor(alert.state)}>{upperFirst(alert.state)}</Text>
