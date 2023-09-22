@@ -3,12 +3,10 @@
 import { DatasourcePluginComponents, PanelPluginComponents } from "types/plugins/plugin"
 
 import DemoComponents from "./panel/demo"
-import DatasourceDemoComponents from './datasource/demo'
-
+import DemoDatasrouceComponents from "./datasource/demo"
 export const externalPanelPlugins: Record<string,PanelPluginComponents> = {
 	"demo": DemoComponents,
 }
-
 export const externalDatasourcePlugins: Record<string,DatasourcePluginComponents> = {
-	"demo": DatasourceDemoComponents,
+	"demo": DemoDatasrouceComponents,
 }
