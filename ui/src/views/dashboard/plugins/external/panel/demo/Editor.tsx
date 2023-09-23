@@ -16,16 +16,22 @@ import PanelEditItem from "src/views/dashboard/edit-panel/PanelEditItem"
 import { Panel, PanelEditorProps } from "types/dashboard"
 import React, { memo } from "react";
 import { useStore } from "@nanostores/react"
-import { textPanelMsg } from "src/i18n/locales/en"
+import { commonMsg } from "src/i18n/locales/en"
 import { PluginSettings } from "./types"
 import RadionButtons from "components/RadioButtons";
 import { EditorInputItem } from "components/editor/EditorItem";
+import { locale } from "src/i18n/i18n";
 
 const PanelEditor = memo(({ panel, onChange }: PanelEditorProps) => {
-    const t1 = useStore(textPanelMsg)
+    // i18n text for common messages
+    const t = useStore(commonMsg)
+    // i18n country code: en or zh 
+    // en for English, zh for Chinese
+    // used for your own text messages
+    let code = useStore(locale)
     const options: PluginSettings = panel.plugins[panel.type]
-    return (<PanelAccordion title={t1.textSettings}>
-        <PanelEditItem title={t1.content}>
+    return (<PanelAccordion title={t.basicSetting}>
+        <PanelEditItem title={code == "en" ? "Text content" : "文本内容"}>
             <Textarea value={options.md} onChange={(e) => {
                 const v = e.currentTarget.value
                 onChange((panel: Panel) => {
@@ -35,16 +41,16 @@ const PanelEditor = memo(({ panel, onChange }: PanelEditorProps) => {
             }} />
         </PanelEditItem>
 
-        <PanelEditItem title={t1.horizontalPos}>
-            <RadionButtons options={[{ label: t1.left, value: "left" }, { label: t1.center, value: "center" }, { label: t1.right, value: "right" }]} value={options.justifyContent} onChange={v => onChange((panel: Panel) => {
+        <PanelEditItem title={code == "en" ? "Horizontal position" : "水平位置"}>
+            <RadionButtons options={[{ label: "Left", value: "left" }, { label: "Center", value: "center" }, { label: "Right", value: "right" }]} value={options.justifyContent} onChange={v => onChange((panel: Panel) => {
                 const plugin: PluginSettings = panel.plugins[panel.type]
                 plugin.justifyContent = v
             })} />
 
         </PanelEditItem>
 
-        <PanelEditItem title={t1.verticalPos}>
-            <RadionButtons options={[{ label: t1.top, value: "top" }, { label: t1.center, value: "center" }, { label: t1.bottom, value: "end" }]} value={options.alignItems} onChange={v => onChange((panel: Panel) => {
+        <PanelEditItem title={code == "en" ? "Vertical position" : "竖直位置"}>
+            <RadionButtons options={[{ label: "Top", value: "top" }, { label: "Center", value: "center" }, { label: "Bottom", value: "end" }]} value={options.alignItems} onChange={v => onChange((panel: Panel) => {
                  const plugin: PluginSettings = panel.plugins[panel.type]
                  plugin.alignItems = v
             })} />

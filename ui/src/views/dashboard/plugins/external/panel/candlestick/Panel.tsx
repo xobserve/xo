@@ -20,6 +20,8 @@ import React from "react";
 import { isEmpty } from "utils/validate";
 import { MobileVerticalBreakpointNum } from "src/data/constants";
 import NoData from "src/views/dashboard/components/PanelNoData";
+import { defaultsDeep } from "lodash";
+import { PluginSettings } from "./types";
 
 interface Props extends PanelProps {
     data: SeriesData[][]
@@ -38,13 +40,21 @@ const PanelComponentWrapper = memo((props: Props) => {
 
 export default PanelComponentWrapper
 
+const initSettings: PluginSettings = {
+    animation: false,
+}
+
 const PanelComponent = (props: Props) => {
     const { panel, height, width } = props
     const [chart, setChart] = useState(null)
     const { colorMode } = useColorMode()
 
-    const isMobileScreen = width < MobileVerticalBreakpointNum
-    const options = useMemo(() => {
+    // init panel plugin settings
+    props.panel.plugins[panel.type] = defaultsDeep(props.panel.plugins[panel.type], initSettings)
+    // give plugin settings a name for easy access
+    const options: PluginSettings = props.panel.plugins[panel.type]
+
+    const echartOptions = useMemo(() => {
         // const d = data.length > 0 ? data[0] : []
         
         const upColor = '#ec0000';
@@ -81,10 +91,7 @@ const PanelComponent = (props: Props) => {
             return result;
         }
         const option = {
-            title: {
-                text: '上证指数',
-                left: 0
-            },
+            animation: options.animation,
             tooltip: {
                 trigger: 'axis',
                 axisPointer: {
@@ -267,12 +274,12 @@ const PanelComponent = (props: Props) => {
 
 
         return option
-    }, [props.data, colorMode])
+    }, [props.data, colorMode, options])
 
 
     console.log("here333333:", options)
     return (<>
-        {options && <Box height={height} key={colorMode} className="echarts-panel"><ChartComponent options={options} theme={colorMode} width={width} height={height} onChartCreated={c => setChart(c)} onChartEvents={null} /></Box>}
+        {options && <Box height={height} key={colorMode} className="echarts-panel"><ChartComponent options={echartOptions} theme={colorMode} width={width} height={height} onChartCreated={c => setChart(c)} onChartEvents={null} /></Box>}
     </>)
 }
 
