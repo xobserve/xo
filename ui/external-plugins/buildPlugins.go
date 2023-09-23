@@ -2,6 +2,7 @@ package main
 
 import (
 	"encoding/json"
+	"flag"
 	"fmt"
 	"log"
 	"os"
@@ -9,7 +10,18 @@ import (
 	"strings"
 )
 
+var skip string
+
 func main() {
+	flag.StringVar(&skip, "skip", "", "-skip [panel|datasource]-[pluginType]  e.g. -skip panel.demo,datasource.demo  , this will skip installing the panel plugin with type demo and also skips the datasource plugin with type demo")
+	flag.Parse()
+
+	skipList := strings.Split(skip, ",")
+	skipMap := make(map[string]bool)
+	for _, skip := range skipList {
+		skipMap[skip] = true
+	}
+
 	// Walk("./panel", true, true, walker)
 	cmd := exec.Command("bash", "-c", "mkdir -p ../public/plugins/external/panel")
 	cmd.CombinedOutput()
@@ -51,6 +63,12 @@ export const externalPanelPlugins: Record<string,PanelPluginComponents> = {`
 
 		for _, panel := range panels {
 			panelType := panel.Name()
+			n := strings.Join([]string{"panel", panelType}, ".")
+			if skipMap[n] {
+				log.Println("skip panel plugin: ", panelType)
+				continue
+			}
+
 			if panelType == ".DS_Store" {
 				continue
 			}
@@ -118,6 +136,13 @@ export const externalDatasourcePlugins: Record<string,DatasourcePluginComponents
 
 		for _, ds := range datasources {
 			dsType := ds.Name()
+
+			n := strings.Join([]string{"datasource", dsType}, ".")
+			if skipMap[n] {
+				log.Println("skip datasource plugin: ", dsType)
+				continue
+			}
+
 			if dsType == ".DS_Store" {
 				continue
 			}
