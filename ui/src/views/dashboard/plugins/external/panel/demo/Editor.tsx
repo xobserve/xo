@@ -17,19 +17,19 @@ import { Panel, PanelEditorProps } from "types/dashboard"
 import React, { memo } from "react";
 import { useStore } from "@nanostores/react"
 import { textPanelMsg } from "src/i18n/locales/en"
-import { DemoPlugin } from "./types"
+import { PluginSettings } from "./types"
 import RadionButtons from "components/RadioButtons";
 import { EditorInputItem } from "components/editor/EditorItem";
 
-const DemoPanelEditor = memo(({ panel, onChange }: PanelEditorProps) => {
+const PanelEditor = memo(({ panel, onChange }: PanelEditorProps) => {
     const t1 = useStore(textPanelMsg)
-    const options: DemoPlugin = panel.plugins[panel.type]
+    const options: PluginSettings = panel.plugins[panel.type]
     return (<PanelAccordion title={t1.textSettings}>
         <PanelEditItem title={t1.content}>
             <Textarea value={options.md} onChange={(e) => {
                 const v = e.currentTarget.value
                 onChange((panel: Panel) => {
-                    const plugin: DemoPlugin = panel.plugins[panel.type]
+                    const plugin: PluginSettings = panel.plugins[panel.type]
                     plugin.md = v
                 })
             }} />
@@ -37,7 +37,7 @@ const DemoPanelEditor = memo(({ panel, onChange }: PanelEditorProps) => {
 
         <PanelEditItem title={t1.horizontalPos}>
             <RadionButtons options={[{ label: t1.left, value: "left" }, { label: t1.center, value: "center" }, { label: t1.right, value: "right" }]} value={options.justifyContent} onChange={v => onChange((panel: Panel) => {
-                const plugin: DemoPlugin = panel.plugins[panel.type]
+                const plugin: PluginSettings = panel.plugins[panel.type]
                 plugin.justifyContent = v
             })} />
 
@@ -45,7 +45,7 @@ const DemoPanelEditor = memo(({ panel, onChange }: PanelEditorProps) => {
 
         <PanelEditItem title={t1.verticalPos}>
             <RadionButtons options={[{ label: t1.top, value: "top" }, { label: t1.center, value: "center" }, { label: t1.bottom, value: "end" }]} value={options.alignItems} onChange={v => onChange((panel: Panel) => {
-                 const plugin: DemoPlugin = panel.plugins[panel.type]
+                 const plugin: PluginSettings = panel.plugins[panel.type]
                  plugin.alignItems = v
             })} />
 
@@ -53,14 +53,14 @@ const DemoPanelEditor = memo(({ panel, onChange }: PanelEditorProps) => {
 
         <PanelEditItem title="Font size">
             <EditorInputItem value={options.fontSize} onChange={v => onChange((panel: Panel) => {
-                const plugin: DemoPlugin = panel.plugins[panel.type]
+                const plugin: PluginSettings = panel.plugins[panel.type]
                 plugin.fontSize = v
             })} />
         </PanelEditItem>
 
         <PanelEditItem title="Font weight">
             <EditorInputItem value={options.fontWeight} onChange={v => onChange((panel: Panel) => {
-                const plugin: DemoPlugin = panel.plugins[panel.type]
+                const plugin: PluginSettings = panel.plugins[panel.type]
                 plugin.fontWeight = v
             })} />
         </PanelEditItem>
@@ -68,4 +68,4 @@ const DemoPanelEditor = memo(({ panel, onChange }: PanelEditorProps) => {
     )
 })
 
-export default DemoPanelEditor
+export default PanelEditor

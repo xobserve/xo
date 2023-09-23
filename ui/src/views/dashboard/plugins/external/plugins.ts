@@ -3,9 +3,11 @@
 import { DatasourcePluginComponents, PanelPluginComponents } from "types/plugins/plugin"
 
 import DemoComponents from "./panel/demo"
+import StockIndexComponents from "./panel/stockIndex"
 import DemoDatasrouceComponents from "./datasource/demo"
 export const externalPanelPlugins: Record<string,PanelPluginComponents> = {
 	"demo": DemoComponents,
+	"stockIndex": StockIndexComponents,
 }
 export const externalDatasourcePlugins: Record<string,DatasourcePluginComponents> = {
 	"demo": DemoDatasrouceComponents,

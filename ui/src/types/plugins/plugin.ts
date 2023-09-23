@@ -4,6 +4,7 @@ export interface PanelPluginComponents {
     overrideEditor: any,
     overrideRules: any,
     getOverrideTargets: (panel, data) => any
+    mockDataForTestDataDs: any // mock result data  when querying from TestData datasource
 }
 
 export interface DatasourcePluginComponents {

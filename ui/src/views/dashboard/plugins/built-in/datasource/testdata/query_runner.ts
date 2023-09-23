@@ -25,6 +25,7 @@ import geoData from './mocks/geomapSeriesData.json'
 import { Field, SeriesData } from "types/seriesData"
 import { getMockLogs } from "./mocks/logs"
 import { getMockAlerts } from "./mocks/alerts"
+import { externalPanelPlugins } from "../../../external/plugins"
 
 export const run_testdata_query = async (panel: Panel, q: PanelQuery, range: TimeRange,ds: Datasource) => {
     let data: any;
@@ -54,6 +55,10 @@ export const run_testdata_query = async (panel: Panel, q: PanelQuery, range: Tim
             data = getMockLogs(range)
             break
         default:
+            const p = externalPanelPlugins[panel.type]
+            if (p && p.mockDataForTestDataDs) {
+                data = p.mockDataForTestDataDs()
+            }
             break
     }
 

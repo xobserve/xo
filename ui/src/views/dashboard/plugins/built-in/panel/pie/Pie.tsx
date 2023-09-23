@@ -57,9 +57,6 @@ const PiePanel = (props: Props) => {
     const { panel, height, width } = props
     const [chart, setChart] = useState(null)
     const { colorMode } = useColorMode()
-    if (!isSeriesData(props.data)) {
-        return (<Center height="100%">Data format not support!</Center>)
-    }
 
     const isMobileScreen = width < MobileVerticalBreakpointNum
     const [options, onEvents] = useMemo(() => {
