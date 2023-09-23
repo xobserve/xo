@@ -112,7 +112,7 @@ export function InstallationLayout({ children }) {
             Installation and Start datav
           </h1>
           <p className="mt-4 text-lg text-slate-700 dark:text-slate-400">
-             Unlike Grafana, datav's has a much simpler codebase, so its installation is also very simple, especially for Developers !
+            Benifit of having a clean codebase, Datav's installation is very simple, especially for Developers !
           </p>
         </div>
       </header>

@@ -13,7 +13,7 @@ export const documentationNav = {
       href: '/docs/installation',
       match: /^\/docs\/(installation|guides)/,
     },
-
+    pages['about-datav'],
     pages['compare-to-alter'],
   ],
   Tutorials: [
