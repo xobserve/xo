@@ -15,13 +15,11 @@ import ChartComponent from "src/components/charts/Chart";
 import { memo, useMemo, useState } from "react";
 import { PanelProps } from "types/dashboard"
 import { SeriesData } from "types/seriesData";
-import { isSeriesData } from "utils/seriesData";
 import React from "react";
 import { isEmpty } from "utils/validate";
-import { MobileVerticalBreakpointNum } from "src/data/constants";
 import NoData from "src/views/dashboard/components/PanelNoData";
 import { defaultsDeep } from "lodash";
-import { PluginSettings } from "./types";
+import { PluginSettings, initSettings } from "./types";
 
 interface Props extends PanelProps {
     data: SeriesData[][]
@@ -40,10 +38,6 @@ const PanelComponentWrapper = memo((props: Props) => {
 
 export default PanelComponentWrapper
 
-const initSettings: PluginSettings = {
-    animation: false,
-}
-
 const PanelComponent = (props: Props) => {
     const { panel, height, width } = props
     const [chart, setChart] = useState(null)
@@ -56,7 +50,7 @@ const PanelComponent = (props: Props) => {
 
     const echartOptions = useMemo(() => {
         // const d = data.length > 0 ? data[0] : []
-        
+
         const upColor = '#ec0000';
         const upBorderColor = '#8A0000';
         const downColor = '#00da3c';
@@ -90,6 +84,48 @@ const PanelComponent = (props: Props) => {
             }
             return result;
         }
+        const markPoint = [
+            // {
+            //     name: 'Mark',
+            //     coord: ['2013/5/31', 2300],
+            //     value: 2300,
+            //     itemStyle: {
+            //         color: 'rgb(41,60,85)'
+            //     }
+            // },
+        ]
+        if (options.mark.maxPoint != "none") {
+            markPoint.push({
+                name: 'highest value',
+                type: 'max',
+                valueDim: options.mark.maxPoint,
+                show: false,
+            })
+        }
+        if (options.mark.minPoint != "none") {
+            markPoint.push({
+                name: 'lowest value',
+                type: 'min',
+                valueDim: options.mark.minPoint,
+            })
+        }
+        const markLine = []
+        if (options.mark.minLine != "none") {
+            markLine.push({
+                name: 'min line',
+                type: 'min',
+                valueDim: options.mark.minLine
+            })
+        }
+
+        if (options.mark.maxLine != "none") {
+            markLine.push({
+                name: 'max line',
+                type: 'max',
+                valueDim: options.mark.maxLine
+            })
+        }
+
         const option = {
             animation: options.animation,
             tooltip: {
@@ -102,8 +138,8 @@ const PanelComponent = (props: Props) => {
                 data: ['日K', 'MA5', 'MA10', 'MA20', 'MA30']
             },
             grid: {
-                left: '10%',
-                right: '10%',
+                left: '5%',
+                right: (options.mark.minLine != "none" || options.mark.maxLine != "none") ? '5%' : '2%',
                 bottom: '15%'
             },
             xAxis: {
@@ -141,42 +177,19 @@ const PanelComponent = (props: Props) => {
                     type: 'candlestick',
                     data: data0.values,
                     itemStyle: {
-                        color: upColor,
-                        color0: downColor,
-                        borderColor: upBorderColor,
-                        borderColor0: downBorderColor
+                        // color: upColor,
+                        // color0: downColor,
+                        // borderColor: upBorderColor,
+                        // borderColor0: downBorderColor
                     },
                     markPoint: {
                         label: {
                             formatter: function (param) {
                                 return param != null ? Math.round(param.value) + '' : '';
-                            }
+                            },
+                            fontSize: "10"
                         },
-                        data: [
-                            {
-                                name: 'Mark',
-                                coord: ['2013/5/31', 2300],
-                                value: 2300,
-                                itemStyle: {
-                                    color: 'rgb(41,60,85)'
-                                }
-                            },
-                            {
-                                name: 'highest value',
-                                type: 'max',
-                                valueDim: 'highest'
-                            },
-                            {
-                                name: 'lowest value',
-                                type: 'min',
-                                valueDim: 'lowest'
-                            },
-                            {
-                                name: 'average value on close',
-                                type: 'average',
-                                valueDim: 'close'
-                            }
-                        ],
+                        data: markPoint,
                         tooltip: {
                             formatter: function (param) {
                                 return param.name + '<br>' + (param.data.coord || '');
@@ -186,51 +199,42 @@ const PanelComponent = (props: Props) => {
                     markLine: {
                         symbol: ['none', 'none'],
                         data: [
-                            [
-                                {
-                                    name: 'from lowest to highest',
-                                    type: 'min',
-                                    valueDim: 'lowest',
-                                    symbol: 'circle',
-                                    symbolSize: 10,
-                                    label: {
-                                        show: false
-                                    },
-                                    emphasis: {
-                                        label: {
-                                            show: false
-                                        }
-                                    }
-                                },
-                                {
-                                    type: 'max',
-                                    valueDim: 'highest',
-                                    symbol: 'circle',
-                                    symbolSize: 10,
-                                    label: {
-                                        show: false
-                                    },
-                                    emphasis: {
-                                        label: {
-                                            show: false
-                                        }
-                                    }
-                                }
-                            ],
-                            {
-                                name: 'min line on close',
-                                type: 'min',
-                                valueDim: 'close'
-                            },
-                            {
-                                name: 'max line on close',
-                                type: 'max',
-                                valueDim: 'close'
-                            }
+                            // [
+                            //     {
+                            //         name: 'from lowest to highest',
+                            //         type: 'min',
+                            //         valueDim: 'lowest',
+                            //         symbol: 'circle',
+                            //         symbolSize: 10,
+                            //         label: {
+                            //             show: false
+                            //         },
+                            //         emphasis: {
+                            //             label: {
+                            //                 show: false
+                            //             }
+                            //         }
+                            //     },
+                            //     {
+                            //         type: 'max',
+                            //         valueDim: 'highest',
+                            //         symbol: 'circle',
+                            //         symbolSize: 10,
+                            //         label: {
+                            //             show: false
+                            //         },
+                            //         emphasis: {
+                            //             label: {
+                            //                 show: false
+                            //             }
+                            //         }
+                            //     }
+                            // ],
+                           ...markLine
                         ]
                     }
                 },
-                {
+                options.maLine.ma5 && {
                     name: 'MA5',
                     type: 'line',
                     data: calculateMA(5),
@@ -239,7 +243,7 @@ const PanelComponent = (props: Props) => {
                         opacity: 0.5
                     }
                 },
-                {
+                options.maLine.ma10 && {
                     name: 'MA10',
                     type: 'line',
                     data: calculateMA(10),
@@ -248,7 +252,7 @@ const PanelComponent = (props: Props) => {
                         opacity: 0.5
                     }
                 },
-                {
+                options.maLine.ma20 && {
                     name: 'MA20',
                     type: 'line',
                     data: calculateMA(20),
@@ -257,7 +261,7 @@ const PanelComponent = (props: Props) => {
                         opacity: 0.5
                     }
                 },
-                {
+                options.maLine.ma30 && {
                     name: 'MA30',
                     type: 'line',
                     data: calculateMA(30),
@@ -283,8 +287,8 @@ const PanelComponent = (props: Props) => {
     </>)
 }
 
-export const  mockDataForTestDataDs = () => {
-   return  [
+export const mockDataForTestDataDs = () => {
+    return [
         ['2013/1/24', 2320.26, 2320.26, 2287.3, 2362.94],
         ['2013/1/25', 2300, 2291.3, 2288.26, 2308.38],
         ['2013/1/28', 2295.35, 2346.5, 2295.35, 2346.92],

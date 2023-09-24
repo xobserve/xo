@@ -21,6 +21,8 @@ import { PluginSettings } from "./types"
 import RadionButtons from "components/RadioButtons";
 import { EditorInputItem } from "components/editor/EditorItem";
 import { locale } from "src/i18n/i18n";
+import { defaultsDeep } from "lodash";
+import { initSettings } from "../candlestick/types";
 
 const PanelEditor = memo(({ panel, onChange }: PanelEditorProps) => {
     // i18n text for common messages
@@ -29,6 +31,7 @@ const PanelEditor = memo(({ panel, onChange }: PanelEditorProps) => {
     // en for English, zh for Chinese
     // used for your own text messages
     let code = useStore(locale)
+    panel.plugins[panel.type] = defaultsDeep(panel.plugins[panel.type], initSettings)
     const options: PluginSettings = panel.plugins[panel.type]
     return (<PanelAccordion title={t.basicSetting}>
         <PanelEditItem title={code == "en" ? "Text content" : "文本内容"}>
