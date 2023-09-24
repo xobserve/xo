@@ -18,7 +18,7 @@ import { SeriesData } from "types/seriesData";
 import React from "react";
 import { isEmpty } from "utils/validate";
 import NoData from "src/views/dashboard/components/PanelNoData";
-import { defaultsDeep } from "lodash";
+import { cloneDeep, defaultsDeep } from "lodash";
 import { PluginSettings, initSettings } from "./types";
 
 interface Props extends PanelProps {
@@ -43,20 +43,19 @@ const PanelComponent = (props: Props) => {
     const [chart, setChart] = useState(null)
     const { colorMode } = useColorMode()
 
+
     // init panel plugin settings
     props.panel.plugins[panel.type] = defaultsDeep(props.panel.plugins[panel.type], initSettings)
     // give plugin settings a name for easy access
     const options: PluginSettings = props.panel.plugins[panel.type]
 
     const echartOptions = useMemo(() => {
-        // const d = data.length > 0 ? data[0] : []
-
         const upColor = '#ec0000';
         const upBorderColor = '#8A0000';
         const downColor = '#00da3c';
         const downBorderColor = '#008F28';
         // Each item: open，close，lowest，highest
-        const data0 = splitData(props.data.flat());
+        const data0 = splitData(cloneDeep(props.data.flat()));
         function splitData(rawData) {
             const categoryData = [];
             const values = [];
@@ -135,11 +134,11 @@ const PanelComponent = (props: Props) => {
                 }
             },
             legend: {
-                data: ['日K', 'MA5', 'MA10', 'MA20', 'MA30']
+                data: ['K', 'MA5', 'MA10', 'MA20', 'MA30']
             },
             grid: {
                 left: '5%',
-                right: (options.mark.minLine != "none" || options.mark.maxLine != "none") ? '5%' : '2%',
+                right: (options.mark.minLine != "none" || options.mark.maxLine != "none") ? '6%' : '2%',
                 bottom: '15%'
             },
             xAxis: {
@@ -173,15 +172,9 @@ const PanelComponent = (props: Props) => {
             ],
             series: [
                 {
-                    name: '日K',
+                    name: 'K',
                     type: 'candlestick',
                     data: data0.values,
-                    itemStyle: {
-                        // color: upColor,
-                        // color0: downColor,
-                        // borderColor: upBorderColor,
-                        // borderColor0: downBorderColor
-                    },
                     markPoint: {
                         label: {
                             formatter: function (param) {
@@ -199,37 +192,6 @@ const PanelComponent = (props: Props) => {
                     markLine: {
                         symbol: ['none', 'none'],
                         data: [
-                            // [
-                            //     {
-                            //         name: 'from lowest to highest',
-                            //         type: 'min',
-                            //         valueDim: 'lowest',
-                            //         symbol: 'circle',
-                            //         symbolSize: 10,
-                            //         label: {
-                            //             show: false
-                            //         },
-                            //         emphasis: {
-                            //             label: {
-                            //                 show: false
-                            //             }
-                            //         }
-                            //     },
-                            //     {
-                            //         type: 'max',
-                            //         valueDim: 'highest',
-                            //         symbol: 'circle',
-                            //         symbolSize: 10,
-                            //         label: {
-                            //             show: false
-                            //         },
-                            //         emphasis: {
-                            //             label: {
-                            //                 show: false
-                            //             }
-                            //         }
-                            //     }
-                            // ],
                            ...markLine
                         ]
                     }
@@ -281,7 +243,7 @@ const PanelComponent = (props: Props) => {
     }, [props.data, colorMode, options])
 
 
-    console.log("here333333:", options)
+    console.log("here333333:", echartOptions)
     return (<>
         {options && <Box height={height} key={colorMode} className="echarts-panel"><ChartComponent options={echartOptions} theme={colorMode} width={width} height={height} onChartCreated={c => setChart(c)} onChartEvents={null} /></Box>}
     </>)

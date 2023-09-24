@@ -52,28 +52,24 @@ const PanelEditor = memo(({ panel, onChange }: PanelEditorProps) => {
                 <RadionButtons options={[{ label: "None", value: "none" }, { label: "Highest", value: "highest" }, { label: "Close", value: "close" }]} value={options.mark.maxPoint} onChange={v => onChange((panel: Panel) => {
                     const plugin: PluginSettings = panel.plugins[panel.type]
                     plugin.mark.maxPoint = v
-                    dispatch(PanelForceRebuildEvent + panel.id)
                 })} />
             </PanelEditItem>
             <PanelEditItem title="Min point">
                 <RadionButtons options={[{ label: "None", value: "none" }, { label: "Lowest", value: "lowest" }, { label: "Open", value: "open" }]} value={options.mark.minPoint} onChange={v => onChange((panel: Panel) => {
                     const plugin: PluginSettings = panel.plugins[panel.type]
                     plugin.mark.minPoint = v
-                    dispatch(PanelForceRebuildEvent + panel.id)
                 })} />
             </PanelEditItem>
             <PanelEditItem title="Min Line">
                 <RadionButtons options={[{ label: "None", value: "none" }, { label: "Lowest", value: "lowest" }, { label: "Open", value: "open" }]} value={options.mark.minLine} onChange={v => onChange((panel: Panel) => {
                     const plugin: PluginSettings = panel.plugins[panel.type]
                     plugin.mark.minLine = v
-                    dispatch(PanelForceRebuildEvent + panel.id)
                 })} />
             </PanelEditItem>
             <PanelEditItem title="Max Line">
                 <RadionButtons options={[{ label: "None", value: "none" }, { label: "Highest", value: "highest" }, { label: "Close", value: "close" }]} value={options.mark.maxLine} onChange={v => onChange((panel: Panel) => {
                     const plugin: PluginSettings = panel.plugins[panel.type]
                     plugin.mark.maxLine = v
-                    dispatch(PanelForceRebuildEvent + panel.id)
                 })} />
             </PanelEditItem>
         </PanelAccordion>
