@@ -233,9 +233,9 @@ function TopLevelNav({ mobile }) {
       >
         文档
       </TopLevelLink>
-      {/* <TopLevelLink
+      <TopLevelLink
         mobile={mobile}
-        href="https://tailwindui.com/components?ref=sidebar"
+        href="https://github.com/data-observe/datav/wiki#developer-guides"
         className="mb-4"
         shadow="group-hover:shadow-indigo-200 dark:group-hover:bg-indigo-500"
         icon={
@@ -264,8 +264,8 @@ function TopLevelNav({ mobile }) {
           </>
         }
       >
-        Plugins
-      </TopLevelLink> */}
+         开发者指南
+      </TopLevelLink>
       <TopLevelLink
         mobile={mobile}
         href={config.community_addr}
