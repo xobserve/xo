@@ -1,5 +1,5 @@
 import { getInitUnits } from "src/data/panel/initPlugins"
-import { ValueSetting } from "types/panel/plugins"
+import { Unit, UnitsType, ValueSetting } from "types/panel/plugins"
 
 export interface PluginSettings  {
     animation: boolean
@@ -9,10 +9,15 @@ export interface PluginSettings  {
         fixTooltip: boolean
         upColor: string 
         downColor: string
+        splitLine: boolean
+        splitArea: boolean
     }
     volumeChart: {
         show: boolean
         syncColor: boolean
+        value: ValueSetting
+        splitLine: boolean 
+        showYAxisLabel: boolean
     } 
     maLine: {
         lineSymbol: "none" |"circle" | "emptyCircle" 
@@ -41,11 +46,19 @@ export const initSettings: PluginSettings = {
         displayName: "",
         fixTooltip: true,
         upColor: upColor,
-        downColor: downColor
+        downColor: downColor,
+        splitLine: false, 
+        splitArea: true,
     },
     volumeChart: {
         show: false,
         syncColor: true,
+        value: {
+            ...getInitUnits(),
+            decimal: 2,
+        },
+        splitLine: false,
+        showYAxisLabel: false
     },
     maLine: {
         lineSymbol: "none",

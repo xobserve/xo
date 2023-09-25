@@ -71,6 +71,20 @@ const PanelEditor = memo(({ panel, onChange }: PanelEditorProps) => {
                     plugin.kChart.downColor = v
                 })} />
             </PanelEditItem>
+            <PanelEditItem title="Y-axis split line">
+                <Switch defaultChecked={options.kChart.splitLine} onChange={e => onChange((panel: Panel) => {
+                    const plugin: PluginSettings = panel.plugins[panel.type]
+                    plugin.kChart.splitLine = e.currentTarget.checked
+
+                })} />
+            </PanelEditItem>
+            <PanelEditItem title="Y-axis split area">
+                <Switch defaultChecked={options.kChart.splitArea} onChange={e => onChange((panel: Panel) => {
+                    const plugin: PluginSettings = panel.plugins[panel.type]
+                    plugin.kChart.splitArea = e.currentTarget.checked
+
+                })} />
+            </PanelEditItem>
         </PanelAccordion>
         <PanelAccordion title={"Volume chart"}>
             <PanelEditItem title="Show">
@@ -87,6 +101,30 @@ const PanelEditor = memo(({ panel, onChange }: PanelEditorProps) => {
                     plugin.volumeChart.syncColor = e.currentTarget.checked
 
                 })} />
+            </PanelEditItem>
+            <PanelEditItem title="Show Y-axis label">
+                <Switch defaultChecked={options.volumeChart.showYAxisLabel} onChange={e => onChange((panel: Panel) => {
+                    const plugin: PluginSettings = panel.plugins[panel.type]
+                    plugin.volumeChart.showYAxisLabel = e.currentTarget.checked
+                })} />
+            </PanelEditItem>
+            <PanelEditItem title="Y-axis split line">
+                <Switch defaultChecked={options.volumeChart.splitLine} onChange={e => onChange((panel: Panel) => {
+                    const plugin: PluginSettings = panel.plugins[panel.type]
+                    plugin.volumeChart.splitLine = e.currentTarget.checked
+                })} />
+            </PanelEditItem>
+            <PanelEditItem title={t.unit}>
+                <UnitPicker value={options.volumeChart.value} onChange={
+                    (v: Units) => onChange((panel: Panel) => {
+                        const plugin: PluginSettings = panel.plugins[panel.type]
+                        plugin.volumeChart.value.units = v.units
+                        plugin.volumeChart.value.unitsType = v.unitsType
+                    })
+                } />
+            </PanelEditItem>
+            <PanelEditItem title={t.decimal}>
+                <EditorNumberItem value={options.volumeChart.value.decimal} min={0} max={5} step={1} onChange={v => onChange((panel: Panel) => { const plugin: PluginSettings = panel.plugins[panel.type]; plugin.volumeChart.value.decimal = v })} />
             </PanelEditItem>
         </PanelAccordion>
         <PanelAccordion title={"Mark on chart"} >

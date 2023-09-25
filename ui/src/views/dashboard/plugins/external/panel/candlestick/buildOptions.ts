@@ -83,12 +83,16 @@ export const buildOptions = (panel: Panel, data: any, colorMode: "light" | "dark
 
     const solidKChart = false
     const showVolume = options.volumeChart.show && !isEmpty(data0.volumes)
-    const volumeGrid = showVolume ?  [{
+    const volumeGrid = showVolume ? (!options.volumeChart.showYAxisLabel ? [{
         left: '5%',
-        right: (options.mark.minLine != "none" || options.mark.maxLine != "none") ? '6%' : '2%',
+        right: ((options.mark.minLine != "none" || options.mark.maxLine != "none") ? '6%' : '2%'),
         top: '65%',
         height: '13%'
-    }] : []
+    }] : [{
+        left: '5%',
+        top: '65%',
+        height: '13%'
+    }]): []
 
     const volumeOverride = findOverride(panel, "Volume")
     const ma5verride = findOverride(panel, "MA5")
@@ -99,7 +103,7 @@ export const buildOptions = (panel: Panel, data: any, colorMode: "light" | "dark
 
     return  {
         animation: options.animation,
-        tooltip: {
+        tooltip: [{
             trigger: 'axis',
             axisPointer: {
                 type: 'cross'
@@ -124,7 +128,7 @@ export const buildOptions = (panel: Panel, data: any, colorMode: "light" | "dark
                 return formatUnit(value, options.value.units, options.value.decimal)
             }),
             // extraCssText: 'width: 170px'
-        },
+        }],
         axisPointer: {
             link: [
                 {
@@ -214,7 +218,10 @@ export const buildOptions = (panel: Panel, data: any, colorMode: "light" | "dark
         yAxis: [{
             scale: true,
             splitArea: {
-                show: true
+                show: options.kChart.splitArea
+            },
+            splitLine: {
+                show: options.kChart.splitLine,
             },
             axisLabel: {
                 formatter: (function (value) {
@@ -226,10 +233,16 @@ export const buildOptions = (panel: Panel, data: any, colorMode: "light" | "dark
             scale: true,
             gridIndex: 1,
             splitNumber: 2,
-            axisLabel: { show: false },
+            position: "right",
+            axisLabel: { 
+                show: options.volumeChart.showYAxisLabel,
+                formatter: (function (value) {
+                    return formatUnit(value, options.volumeChart.value.units, options.volumeChart.value.decimal)
+                }),
+            },
             axisLine: { show: false },
             axisTick: { show: false },
-            splitLine: { show: false }
+            splitLine: { show: options.volumeChart.splitLine }
         }
         ],
         dataZoom: [
@@ -295,6 +308,14 @@ export const buildOptions = (panel: Panel, data: any, colorMode: "light" | "dark
                     opacity: options.chartOpacity,
                     color: paletteColorNameToHex(findRuleInOverride(volumeOverride, OverrideRules.SeriesColor),colorMode) ?? null,
                 },
+                tooltip: {
+                    valueFormatter: (function (value) {
+                        if (isEmpty(value)) {
+                            return value
+                        }
+                        return formatUnit(value, options.volumeChart.value.units, options.volumeChart.value.decimal)
+                    }),
+                }
             },
             options.maLine.ma5 && {
                 name: findRuleInOverride(ma5verride, OverrideRules.SeriesName) ?? 'MA5',
