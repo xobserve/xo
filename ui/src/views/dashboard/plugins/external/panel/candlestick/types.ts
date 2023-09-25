@@ -3,6 +3,7 @@ import { ValueSetting } from "types/panel/plugins"
 
 export interface PluginSettings  {
     animation: boolean
+    chartOpacity: number 
     maLine: {
         ma5: boolean
         ma10: boolean
@@ -21,6 +22,7 @@ export interface PluginSettings  {
 
 export const initSettings: PluginSettings = {
     animation: false,
+    chartOpacity: 0.8,
     maLine: {
         ma5: true,
         ma10: true,

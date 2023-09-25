@@ -21,6 +21,7 @@ import NoData from "src/views/dashboard/components/PanelNoData";
 import { cloneDeep, defaultsDeep } from "lodash";
 import { PluginSettings, initSettings } from "./types";
 import { formatUnit } from "components/Unit";
+import { buildOptions } from "./buildOptions";
 
 interface Props extends PanelProps {
     data: SeriesData[][]
@@ -51,213 +52,7 @@ const PanelComponent = (props: Props) => {
     const options: PluginSettings = props.panel.plugins[panel.type]
 
     const echartOptions = useMemo(() => {
-        const upColor = '#ec0000';
-        const upBorderColor = '#8A0000';
-        const downColor = '#00da3c';
-        const downBorderColor = '#008F28';
-        // Each item: open，close，lowest，highest
-        const data0 = splitData(cloneDeep(props.data.flat()));
-        function splitData(rawData) {
-            const categoryData = [];
-            const values = [];
-            for (var i = 0; i < rawData.length; i++) {
-                categoryData.push(rawData[i].splice(0, 1)[0]);
-                values.push(rawData[i]);
-            }
-            return {
-                categoryData: categoryData,
-                values: values
-            };
-        }
-        function calculateMA(dayCount) {
-            var result = [];
-            for (var i = 0, len = data0.values.length; i < len; i++) {
-                if (i < dayCount) {
-                    result.push('-');
-                    continue;
-                }
-                var sum = 0;
-                for (var j = 0; j < dayCount; j++) {
-                    sum += +data0.values[i - j][1];
-                }
-                result.push(sum / dayCount);
-            }
-            return result;
-        }
-        const markPoint = [
-            // {
-            //     name: 'Mark',
-            //     coord: ['2013/5/31', 2300],
-            //     value: 2300,
-            //     itemStyle: {
-            //         color: 'rgb(41,60,85)'
-            //     }
-            // },
-        ]
-        if (options.mark.maxPoint != "none") {
-            markPoint.push({
-                name: 'highest value',
-                type: 'max',
-                valueDim: options.mark.maxPoint,
-                show: false,
-            })
-        }
-        if (options.mark.minPoint != "none") {
-            markPoint.push({
-                name: 'lowest value',
-                type: 'min',
-                valueDim: options.mark.minPoint,
-            })
-        }
-        const markLine = []
-        if (options.mark.minLine != "none") {
-            markLine.push({
-                name: 'min line',
-                type: 'min',
-                valueDim: options.mark.minLine
-            })
-        }
-
-        if (options.mark.maxLine != "none") {
-            markLine.push({
-                name: 'max line',
-                type: 'max',
-                valueDim: options.mark.maxLine
-            })
-        }
-
-        const option = {
-            animation: options.animation,
-            tooltip: {
-                trigger: 'axis',
-                axisPointer: {
-                    type: 'cross',
-                    label: {
-                        backgroundColor: '#6a7985',
-                    }
-                },
-            valueFormatter: (function (value) {
-                if (isEmpty(value)) {
-                    return value
-                }
-                return formatUnit(value, options.value.units, options.value.decimal)
-            }),
-            },
-            legend: {
-                data: ['K', 'MA5', 'MA10', 'MA20', 'MA30']
-            },
-            grid: {
-                left: '5%',
-                right: (options.mark.minLine != "none" || options.mark.maxLine != "none") ? '6%' : '2%',
-                bottom: '15%'
-            },
-            xAxis: {
-                type: 'category',
-                data: data0.categoryData,
-                boundaryGap: false,
-                axisLine: { onZero: false },
-                splitLine: { show: false },
-                min: 'dataMin',
-                max: 'dataMax'
-            },
-            yAxis: {
-                scale: true,
-                splitArea: {
-                    show: true
-                },
-                    axisLabel: {
-                        formatter: (function (value) {
-                            return formatUnit(value, options.value.units, options.value.decimal)
-                        }),
-                    },
-            },
-            dataZoom: [
-                {
-                    type: 'inside',
-                    start: 50,
-                    end: 100
-                },
-                {
-                    show: true,
-                    type: 'slider',
-                    top: '90%',
-                    start: 50,
-                    end: 100
-                }
-            ],
-            series: [
-                {
-                    name: 'K',
-                    type: 'candlestick',
-                    data: data0.values,
-                    markPoint: {
-                        label: {
-                            formatter: function (param) {
-                                const v = param != null ? param.value : ''
-                                return formatUnit(v, options.value.units, options.value.decimal);
-                            },
-                            fontSize: "10"
-                        },
-                        data: markPoint,
-                      
-                    },
-                    markLine: {
-                        symbol: ['none', 'none'],
-                        label: {
-                            formatter: function (param) {
-                                const v = param != null ? param.value : ''
-                                return formatUnit(v, options.value.units, options.value.decimal);
-                            },
-                            // fontSize: "10"
-                        },
-                        data: [
-                           ...markLine
-                        ]
-                    }
-                },
-                options.maLine.ma5 && {
-                    name: 'MA5',
-                    type: 'line',
-                    data: calculateMA(5),
-                    smooth: true,
-                    lineStyle: {
-                        opacity: 0.5
-                    }
-                },
-                options.maLine.ma10 && {
-                    name: 'MA10',
-                    type: 'line',
-                    data: calculateMA(10),
-                    smooth: true,
-                    lineStyle: {
-                        opacity: 0.5
-                    }
-                },
-                options.maLine.ma20 && {
-                    name: 'MA20',
-                    type: 'line',
-                    data: calculateMA(20),
-                    smooth: true,
-                    lineStyle: {
-                        opacity: 0.5
-                    }
-                },
-                options.maLine.ma30 && {
-                    name: 'MA30',
-                    type: 'line',
-                    data: calculateMA(30),
-                    smooth: true,
-                    lineStyle: {
-                        opacity: 0.5
-                    }
-                }
-            ]
-        };
-
-
-
-
-
+        const option = buildOptions(panel, props.data, colorMode)
         return option
     }, [props.data, colorMode, options])
 
@@ -269,7 +64,7 @@ const PanelComponent = (props: Props) => {
 }
 
 export const mockDataForTestDataDs = () => {
-    return [
+    const r = [
         ['2013/1/24', 2320.26, 2320.26, 2287.3, 2362.94],
         ['2013/1/25', 2300, 2291.3, 2288.26, 2308.38],
         ['2013/1/28', 2295.35, 2346.5, 2295.35, 2346.92],
@@ -359,4 +154,10 @@ export const mockDataForTestDataDs = () => {
         ['2013/6/7', 2242.26, 2210.9, 2205.07, 2250.63],
         ['2013/6/13', 2190.1, 2148.35, 2126.22, 2190.1]
     ]
+    // insert mock volumes
+    for (const v of r) {
+        v.push(50000000 * (1 + Math.random()))
+    }
+
+    return r
 }

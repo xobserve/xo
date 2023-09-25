@@ -42,6 +42,9 @@ const PanelEditor = memo(({ panel, onChange }: PanelEditorProps) => {
                     dispatch(PanelForceRebuildEvent + panel.id)
                 })} />
             </PanelEditItem>
+            <PanelEditItem title={"Chart opacity"}>
+                <EditorNumberItem value={options.chartOpacity} min={0} max={1} step={0.1} onChange={v => onChange((panel: Panel) => { const plugin: PluginSettings = panel.plugins[panel.type];plugin.chartOpacity = v })} />
+            </PanelEditItem>
             {/* <PanelEditItem title="Title">
             <EditorInputItem value={options.title} onChange={v => onChange((panel: Panel) => {
                 const plugin: PluginSettings = panel.plugins[panel.type]

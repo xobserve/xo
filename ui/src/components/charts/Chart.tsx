@@ -96,3 +96,4 @@ export const ChartComponent = memo((props: Props) => {
 
 
 export default ChartComponent
+
