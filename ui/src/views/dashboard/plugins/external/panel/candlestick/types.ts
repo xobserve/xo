@@ -1,3 +1,6 @@
+import { getInitUnits } from "src/data/panel/initPlugins"
+import { ValueSetting } from "types/panel/plugins"
+
 export interface PluginSettings  {
     animation: boolean
     maLine: {
@@ -6,6 +9,7 @@ export interface PluginSettings  {
         ma20: boolean
         ma30: boolean
     }
+    value: ValueSetting
     mark: {
         minPoint: "none" | "lowest" | "open"
         maxPoint: "none" | "highest" | "close"
@@ -22,6 +26,10 @@ export const initSettings: PluginSettings = {
         ma10: true,
         ma20: true,
         ma30: true,
+    },
+    value: {
+        ...getInitUnits(),
+        decimal: 2,
     },
     mark: {
         minPoint:  "lowest",

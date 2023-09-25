@@ -18,11 +18,14 @@ import React, { memo } from "react";
 import { useStore } from "@nanostores/react"
 import { commonMsg, textPanelMsg } from "src/i18n/locales/en"
 import { PluginSettings, initSettings } from "./types"
-import { EditorInputItem } from "components/editor/EditorItem";
+import { EditorInputItem, EditorNumberItem } from "components/editor/EditorItem";
 import { dispatch } from "use-bus";
 import { PanelForceRebuildEvent } from "src/data/bus-events";
 import { defaultsDeep } from "lodash";
 import RadionButtons from "components/RadioButtons";
+import { UnitPicker } from "components/Unit";
+import { Units } from "types/panel/plugins";
+import ValueCalculation from "components/ValueCalculation";
 
 const PanelEditor = memo(({ panel, onChange }: PanelEditorProps) => {
     const t = useStore(commonMsg)
@@ -73,8 +76,27 @@ const PanelEditor = memo(({ panel, onChange }: PanelEditorProps) => {
                 })} />
             </PanelEditItem>
         </PanelAccordion>
+        <PanelAccordion title="Value">
+            <PanelEditItem title={t.unit}>
+                <UnitPicker value={options.value} onChange={
+                    (v: Units) => onChange((panel: Panel) => {
+                        const plugin: PluginSettings = panel.plugins[panel.type]
+                        plugin.value.units = v.units
+                        plugin.value.unitsType = v.unitsType
+                    })
+                } />
+            </PanelEditItem>
+            <PanelEditItem title={t.decimal}>
+                <EditorNumberItem value={options.value.decimal} min={0} max={5} step={1} onChange={v => onChange((panel: Panel) => { const plugin: PluginSettings = panel.plugins[panel.type];plugin.value.decimal = v })} />
+            </PanelEditItem>
+            {/* <PanelEditItem title={t.calc} desc={t.calcTips}>
+                <ValueCalculation value={options.value.calc} onChange={v => {
+                    onChange((panel: Panel) => { const plugin: PluginSettings = panel.plugins[panel.type];plugin.value.calc = v })
+                }} />
+            </PanelEditItem> */}
+        </PanelAccordion>
         <PanelAccordion title={"MA line"} >
-            <PanelEditItem title={"MA5"}>
+            <PanelEditItem title={"MA5"} desc="Draw a line chart, the value of each point is the average of last 5 points (including current point)">
                 <Switch defaultChecked={options.maLine.ma5} onChange={e => onChange((panel: Panel) => {
                     const plugin: PluginSettings = panel.plugins[panel.type]
                     plugin.maLine.ma5 = e.currentTarget.checked

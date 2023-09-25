@@ -20,6 +20,7 @@ import { isEmpty } from "utils/validate";
 import NoData from "src/views/dashboard/components/PanelNoData";
 import { cloneDeep, defaultsDeep } from "lodash";
 import { PluginSettings, initSettings } from "./types";
+import { formatUnit } from "components/Unit";
 
 interface Props extends PanelProps {
     data: SeriesData[][]
@@ -130,8 +131,17 @@ const PanelComponent = (props: Props) => {
             tooltip: {
                 trigger: 'axis',
                 axisPointer: {
-                    type: 'cross'
+                    type: 'cross',
+                    label: {
+                        backgroundColor: '#6a7985',
+                    }
+                },
+            valueFormatter: (function (value) {
+                if (isEmpty(value)) {
+                    return value
                 }
+                return formatUnit(value, options.value.units, options.value.decimal)
+            }),
             },
             legend: {
                 data: ['K', 'MA5', 'MA10', 'MA20', 'MA30']
@@ -154,7 +164,12 @@ const PanelComponent = (props: Props) => {
                 scale: true,
                 splitArea: {
                     show: true
-                }
+                },
+                    axisLabel: {
+                        formatter: (function (value) {
+                            return formatUnit(value, options.value.units, options.value.decimal)
+                        }),
+                    },
             },
             dataZoom: [
                 {
@@ -178,19 +193,23 @@ const PanelComponent = (props: Props) => {
                     markPoint: {
                         label: {
                             formatter: function (param) {
-                                return param != null ? Math.round(param.value) + '' : '';
+                                const v = param != null ? param.value : ''
+                                return formatUnit(v, options.value.units, options.value.decimal);
                             },
                             fontSize: "10"
                         },
                         data: markPoint,
-                        tooltip: {
-                            formatter: function (param) {
-                                return param.name + '<br>' + (param.data.coord || '');
-                            }
-                        }
+                      
                     },
                     markLine: {
                         symbol: ['none', 'none'],
+                        label: {
+                            formatter: function (param) {
+                                const v = param != null ? param.value : ''
+                                return formatUnit(v, options.value.units, options.value.decimal);
+                            },
+                            // fontSize: "10"
+                        },
                         data: [
                            ...markLine
                         ]
