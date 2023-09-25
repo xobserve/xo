@@ -23,7 +23,6 @@ interface Props {
 
 const OverrideEditor = (props: Props) => {
     const { override, onChange } = props
-    console.log("here333333:",props)
     switch (override.type) {
         case OverrideRules.SeriesName:
             return <EditorInputItem value={override.value} onChange={onChange} placeholder="change series name" />

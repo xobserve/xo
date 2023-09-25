@@ -6,15 +6,18 @@ import { formatUnit } from "components/Unit";
 import { findOverride, findRuleInOverride } from "utils/dashboard/panel";
 import { OverrideRules } from "./OverrideEditor";
 import { paletteColorNameToHex } from "utils/colors";
+import { FieldType, SeriesData } from "types/seriesData";
 
-export const buildOptions = (panel: Panel, data: any, colorMode: "light" | "dark") => {
+export const buildOptions = (panel: Panel, data: SeriesData[], colorMode: "light" | "dark") => {
     const options: PluginSettings = panel.plugins[panel.type]
 
     const upColor = paletteColorNameToHex(options.kChart.upColor, colorMode)
     const downColor = paletteColorNameToHex(options.kChart.downColor, colorMode)
     
     // Each item: open，close，lowest，highest
-    const data0 = splitData(cloneDeep(data.flat()));
+    const series = cloneDeep(data[0])
+    const kChartName = isEmpty(options.kChart.displayName) ?  (isEmpty(series.name) ? "K" : series.name) : options.kChart.displayName
+    const data0 = splitData(transformSeriesDataToCandlestickFormat(series));
     function splitData(rawData) {
         let categoryData = [];
         let values = [];
@@ -99,7 +102,6 @@ export const buildOptions = (panel: Panel, data: any, colorMode: "light" | "dark
     const ma10verride = findOverride(panel, "MA10")
     const ma20verride = findOverride(panel, "MA20")
     const ma30verride = findOverride(panel, "MA30")
-    const kChartName = options.kChart.displayName
 
     return  {
         animation: options.animation,
@@ -375,4 +377,34 @@ export const buildOptions = (panel: Panel, data: any, colorMode: "light" | "dark
             }
         ]
     };
+}
+
+
+const transformSeriesDataToCandlestickFormat = (s: SeriesData) => {
+    const res = []
+    const timeField = s.fields.find(f => f.type == FieldType.Time)
+    const openField = s.fields.find(f => f.name == "open")
+    const closeField = s.fields.find(f => f.name == "close")
+    const lowestField = s.fields.find(f => f.name == "lowest")
+    const highestField = s.fields.find(f => f.name == "highest")
+    const volumeField = s.fields.find(f => f.name == "volume")
+
+    // [time, open, close, lowest, highest, volume]
+    timeField.values.forEach((t,i) => {
+        const v = [
+            t,
+            openField.values[i],
+            closeField.values[i],
+            lowestField.values[i],
+            highestField.values[i],
+        ]
+
+        if (volumeField) {
+            v.push(volumeField.values[i])
+        }
+
+        res.push(v)
+    }) 
+
+    return res
 }

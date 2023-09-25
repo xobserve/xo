@@ -23,7 +23,6 @@ import { PanelPluginComponents } from "types/plugins/plugin";
 import { isEmpty } from "utils/validate";
 
 export const updateGridPos = (panel: Panel, newPos: GridPos) => {
-    console.log("here333333", panel.id, panel.gridPos.y, newPos.y)
     panel.gridPos.x = newPos.x;
     panel.gridPos.y = newPos.y;
     panel.gridPos.w = newPos.w;
