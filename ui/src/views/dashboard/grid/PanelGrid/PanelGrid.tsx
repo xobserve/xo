@@ -494,7 +494,12 @@ const formatQueryId = (datasourceId, dashboardId, panelId, queryId, panelType) =
             tp = PanelType.Alert
             break
         default:
-            tp = "seriesData"
+            const p = externalPanelPlugins[panelType]
+            if (p) {
+                tp = panelType
+            } else {
+                tp = "seriesData"
+            }
             break;
     }
     return `${datasourceId}-${dashboardId}-${panelId}-${queryId}-${tp}`
